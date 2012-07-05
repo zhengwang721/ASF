@@ -6,6 +6,7 @@
  *
  * This file contains definitions and services related to the features of the
  * EVK1101 board rev. A and B.
+ * As the UC3 D series is pin to pin compatible with the UC3 B, UC3 D devices can be soldered on the EVK1101 kit.
  *
  * To use this board, define BOARD=EVK1101.
  *
