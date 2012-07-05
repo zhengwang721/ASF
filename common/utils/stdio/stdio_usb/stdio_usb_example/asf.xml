@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.utils.stdio.stdio_usb.example" caption="USB Standard I/O (stdio) Example">
+		<info type="description" value="summary">
+			Provide an application example of C-Library Standard I/O serial
+			interface to the USB Communication Device Class (CDC) service.
+		</info>
+		<build type="c-source" value="stdio_usb_example.c"/>
+		<build type="header-file" value="conf_usb.h"/>
+		<build type="include-path" value="."/>
+		<build type="doxygen-entry-point" value="group_common_utils_stdio_stdio_usb_example"/>
+		<require idref="common.services.usb.class.device"/>
+	</module>
+</asf>

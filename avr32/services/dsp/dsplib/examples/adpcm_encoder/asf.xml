@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" id="avr32.services.dsplib.example.adpcm_encoder" caption="DSPLIB - ADPCM encoder example">
+		<info type="description" value="summary">
+		Example application. It demonstrates the use, through a real-time application, of the ADPCM encoder from the DSP library.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Digital signal processing" />
+			<keyword value="Audio" />
+		</info>
+		<build type="c-source" value="adpcm_example.c"/>
+		<require idref="avr32.drivers.pm"/>
+		<require idref="avr32.drivers.pwm"/>
+		<require idref="avr32.drivers.gpio"/>
+		<require idref="avr32.drivers.usart"/>
+		<require idref="avr32.drivers.adc"/>
+		<require idref="avr32.drivers.tc"/>
+		<require idref="avr32.drivers.pdca"/>
+		<require idref="avr32.drivers.intc"/>
+		<require idref="avr32.drivers.cpu.cycle_counter"/>
+		<require idref="avr32.services.dsplib.adpcm"/>
+		<build type="doxygen-image-path" value="."/>
+	</module>
+</asf>

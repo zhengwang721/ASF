@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="xmega.drivers.nvm.unit_tests" caption="Complete set of unit tests for NVM driver">
+		<device-support value="xmega"/>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="unit_tests.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
+		<require idref="common.utils.unit_test"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<require idref="xmega.drivers.nvm"/>
+	</module>
+</asf>

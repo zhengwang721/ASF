@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="application" id="avr32.services.dsplib.simulator_example.adpcm" caption="DSPLIB - ADPCM example">
+		<info type="description" value="summary">
+		Example application. It shows how to encode and decode a vector using the ADPCM algorithm from the DSP library.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Digital signal processing" />
+			<keyword value="Audio" />
+		</info>
+		<build type="c-source" value="adpcm_example.c"/>
+		<build type="doxygen-entry-point" value="group_avr32_services_dsplib_simulator_example_adpcm"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="avr32.drivers.cpu.cycle_counter"/>
+		<require idref="avr32.services.dsplib.adpcm"/>
+	</module>
+</asf>

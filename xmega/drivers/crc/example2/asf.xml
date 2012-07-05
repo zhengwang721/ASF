@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="application" id="xmega.drivers.crc.example2" caption="Example2 for CRC module">
+		<info type="description" value="summary">
+		An example application performing CRC on FLASH memory.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="example2.c"/>
+		<require idref="xmega.drivers.crc"/>
+		<require idref="xmega.drivers.nvm"/>
+		<require idref="common.services.gfx_mono"/>
+		<require idref="common.services.gfx_mono.font"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.boards"/>
+	</module>
+</asf>

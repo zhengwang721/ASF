@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.applications.mxt143e_xplained_multi-touch_demo" caption="mXT143E Xplained multi-touch demo">
+		<info type="description" value="summary">
+		Reads input from maXTouch and gives touch indication on display.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_sysfont.h"/>
+		<build type="c-source" value="multi-touch_demo.c"/>
+		<info type="keyword" value="technology">
+			<keyword value="USB"/>
+			<keyword value="Touch"/>
+		</info>
+		<require idref="common.boards"/>
+		<require idref="common.components.touch.mxt"/>
+		<require idref="common.services.gfx"/>
+		<require idref="common.services.gfx.font"/>
+		<require idref="common.services.basic.clock"/>
+	</module>
+</asf>

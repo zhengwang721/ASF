@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<project caption="PDCA Example for STK600-RCUC3L0" id="avr32.drivers.pdca.example.stk600-rcuc3l0256">
+		<info type="description" value="summary">
+		Interrupt-based PDCA transfer of an ASCII animation stored in internal flash to a USART output.
+		</info>
+		<require idref="avr32.drivers.pdca.example"/>
+		<require idref="board.stk600-rcuc3l0256"/>
+		<config name="config.board.stk600-rcuc3l0.init" value="no"/>
+		<generator value="avr32gcc" />
+		<generator value="as5_32" />
+		<generator value="doxygen"/>
+	</project>
+</asf>

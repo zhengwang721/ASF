@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.gfx.example1" caption="Graphic library example">
+		<info type="description" value="summary">
+		Graphic library graphic primitives example. Draw graphics shapes to a connected LCD display.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Graphics" />
+		</info>
+		<build type="c-source" value="example1.c"/>
+		<require idref="common.boards"/>
+		<require idref="common.services.gfx"/>
+		<require idref="common.services.gfx.font"/>
+		<require idref="common.services.basic.clock"/>
+	</module>
+</asf>

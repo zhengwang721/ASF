@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.freertos.sam_example" caption="FreeRTOS Basic Example">
+		<info type="description" value="summary">
+		Default FreeRTOS.org demo application creating several tasks to showcase the use of the FreeRTOS API.
+		</info>
+		<build type="header-file" value="FreeRTOSConfig.h"/>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.uart"/>
+		<require idref="sam.utils.syscalls"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.os.freertos"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>

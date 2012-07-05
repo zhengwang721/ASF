@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.gfx_mono.example.spinctrl" caption="Example for GFX Monochrome spinner">
+		<info type="description" value="summary">
+		Example showing how to use spinners.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Graphics" />
+		</info>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="example_spinctrl.c"/>
+		<require idref="common.services.gfx_mono.display#c12832_a1z"/>
+		<require idref="common.services.gfx_mono.font"/>
+		<require idref="common.services.gfx_mono.spinctrl"/>
+	</module>
+</asf>

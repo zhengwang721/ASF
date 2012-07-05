@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.drivers.pwm.pwm_sync_example" caption="PWM SYNC Example">
+		<info type="description" value="summary">
+			Pulse Width Modulation example using PDC transfer capabilites.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Clocks"/>
+			<keyword value="DMA Controller"/>
+		</info>
+		<build type="c-source" value="pwm_sync_example.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam"/>
+		<require idref="sam.drivers.pwm"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.pdc"/>
+		<require idref="sam.drivers.uart"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>

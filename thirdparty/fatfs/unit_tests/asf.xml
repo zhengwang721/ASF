@@ -1,0 +1,38 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.services.fs.fatfs.unit_tests" caption="Set of unit tests for FatFS service">
+		<module type="application" id="common.services.fs.fatfs.unit_tests#0" caption="Set of unit tests for FatFS service">
+			<info type="description" value="summary">
+			Unit test application for FatFS service.
+			</info>
+			<build type="c-source" value="memories_initialization_sam.c"/>
+			<build type="c-source" value="unit_tests.c"/>
+			<build type="header-file" value="memories_initialization.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
+			<device-support value="sam"/>
+			<require idref="common.services.fs.fatfs"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<require idref="common.utils.unit_test"/>
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.uart"/>
+		</module>
+		<module type="application" id="common.services.fs.fatfs.unit_tests#1" caption="Set of unit tests for FatFS service">
+			<info type="description" value="summary">
+			Unit test application for FatFS service.
+			</info>
+			<build type="c-source" value="memories_initialization_xmega.c"/>
+			<build type="c-source" value="unit_tests.c"/>
+			<build type="header-file" value="memories_initialization.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
+			<device-support value="xmega"/>
+			<require idref="common.components.memory.virtual_mem"/>
+			<require idref="common.services.basic.hugemem"/>
+			<require idref="common.services.fs.fatfs"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<require idref="common.utils.unit_test"/>
+			<require idref="xmega.drivers.ebi"/>
+		</module>
+	</select-by-device>
+</asf>

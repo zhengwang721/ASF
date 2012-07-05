@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<asf xmlversion="1.0">
+	<board id="board.uc3_l0_qt600" caption="QT600" mcu="at32uc3l064">
+		<build type="header-file" value="uc3_l0_qt600.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="define" name="BOARD" value="UC3_L0_QT600"/>
+		<require idref="common.boards"/>
+		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
+	</board>
+</asf>

@@ -1,0 +1,44 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.components.display.st7565r" caption="LCD - ST7565R Controller">
+		<info type="description" value="summary">
+		Low-level driver for the ST7565R LCD controller.
+		</info>
+		<module type="component" id="common.components.display.st7565r#0" caption="ST7565R LCD Controller - XMEGA implementation">
+			<info type="description" value="summary">
+			Low-level XMEGA driver for the ST7565R LCD controller.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Display" />
+			</info>
+			<build type="c-source" value="st7565r.c"/>
+			<build type="header-file" subtype="api" value="st7565r.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_st7565r.h"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="st7565r_lcd_controller_group"/>
+			<device-support value="xmega"/>
+			<require idref="common.services.basic.gpio"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.basic.spi_master"/>
+			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
+		</module>
+		<!-- Device support for UC3 removed until missing SPI_MODE_3 is added to the UC3 SPI drivers
+		<module type="component" id="common.components.display.st7565r#1" caption="ST7565R LCD Controller - UC3 Implementation">
+			<info type="description" value="summary">
+			Low-level driver for the ST7565R LCD controller.
+			</info>
+			<build type="c-source" value="st7565r.c"/>
+			<build type="header-file" subtype="api" value="st7565r.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_st7565r.h"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="st7565r_lcd_controller_group"/>
+			<device-support value="uc3"/>
+			<require idref="avr32.drivers.gpio"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.basic.spi_master"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3"/>
+		</module>
+		-->
+	</select-by-device>
+</asf>

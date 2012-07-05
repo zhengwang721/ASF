@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" id="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600" caption="QTouch method Example Application - ATXMEGA128A1">
+		<info type="description" value="summary">
+		This QTouch Library Example Application demonstrates usage of the QTouch method on QT600-ATXMEGA128A1-MCU board and QT16 Touch panel.
+		</info>
+		<build type="c-source" value="main_xm128a1.c"/>
+		<build type="c-source" value="BitBangSPI_Master.c"/>
+		<build type="header-file" value="avr_compiler.h"/>
+		<build type="header-file" value="BitBangSPI_Master.h"/>
+		<build type="header-file" value="QDebugSettings.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="include-path" value="."/>
+		<device-support value="atxmega128a1"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="xmega.drivers.cpu"/>
+		<require idref="xmega.drivers.tc"/>
+		<require idref="xmega.drivers.nvm"/>
+		<require idref="config.common.services.qtouch.qdebug.qt600.atxmega128a1"/>
+		<require idref="config.common.services.qtouch.generic.avr8.xmega128a1_qt600.method"/>
+	</module>
+</asf>

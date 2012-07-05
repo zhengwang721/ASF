@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="application" id="avr32.drivers.adcifb.example1" caption="ADCIFB Example">
+		<info type="description" value="summary">
+		Initialize the ADCIFB, use the on-board sensors and display the value change on a terminal.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Analog Conversion"/>
+		</info>
+		<build type="c-source" value="adcifb_example1.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_adcifb_example1.h"/>
+		<device-support value="uc3l"/>
+		<require idref="avr32.drivers.adcifb"/>
+		<require idref="avr32.drivers.gpio"/>
+		<require idref="avr32.drivers.pm"/>
+		<require idref="avr32.utils.print_funcs"/>
+	</module>
+</asf>

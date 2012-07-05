@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.applications.mxt143e_xplained_paint_demo" caption="mXT143E Xplained paint demo">
+		<info type="description" value="summary">
+		Simple paint application using the MXT143E Xplained top module.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_sysfont.h"/>
+		<build type="c-source" value="paint_demo.c"/>
+		<info type="keyword" value="technology">
+			<keyword value="Touch"/>
+		</info>
+		<require idref="common.boards"/>
+		<require idref="common.components.touch.mxt"/>
+		<require idref="common.services.gfx"/>
+		<require idref="common.services.gfx.font"/>
+		<require idref="common.services.basic.clock"/>
+	</module>
+</asf>

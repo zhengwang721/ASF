@@ -1,0 +1,70 @@
+<asf xmlversion="1.0">
+	<select-by-config id="avr32.services.network.tcpip.lwip-port" name="config.services.network.tcpip.lwip-port" caption="Supported ports of the lwIP TCP/IP Stack" default="empty">
+		<info type="description" value="summary">
+		One of the following lwIP ports can be selected:
+
+		- FreeRTOS using AVR UC3 MACB hardware module
+
+		- Standalone using AVR UC3 MACB hardware module
+
+		- Any OS using the H&amp;D wireless hardware modules
+
+		- Empty port for creating a new port
+		</info>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos" caption="lwIP port to FreeRTOS on AVR UC3 MACB hardware module.">
+			<info type="description" value="summary">
+			This lwIP port uses FreeRTOS and is dedicated to the AVR UC3 MACB hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/sys_arch.h"/>
+			<build type="include-path" value="at32uc3/include"/>
+			<build type="c-source" value="at32uc3/netif/ethernetif.c"/>
+			<build type="c-source" value="at32uc3/sys_arch.c"/>
+			<device-support value="uc3a"/>
+			<device-support value="uc3c"/>
+			<require idref="avr32.drivers.macb"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#standalone" caption="Stand-alone port(no OS) of the lwIP stack on AVR U3 MACB hardware module">
+			<info type="description" value="summary">
+			This lwIP port does not use any OS and is dedicated to the AVR UC3 MACB hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="at32uc3/include/arch/sys_arch.h"/>
+			<build type="include-path" value="at32uc3/include"/>
+			<build type="c-source" value="at32uc3/netif/ethernetif.c"/>
+			<device-support value="uc3a"/>
+			<device-support value="uc3c"/>
+			<require idref="avr32.drivers.macb"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#hd" caption="lwIP port for H&amp;D wireless">
+			<info type="description" value="summary">
+			This lwIP port does not use any OS and is dedicated to the H&amp;D wireless hardware modules.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="c-source" value="hd/if/netif/wlif.c"/>
+			<build type="header-file" value="hd/if/include/lwipopts_example.h"/>
+			<build type="header-file" subtype="api" value="hd/if/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="hd/if/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="hd/if/include/netif/wlif.h"/>
+			<build type="include-path" value="hd/if/include"/>
+			<device-support value="uc3"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
+		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#empty" caption="Empty port for lwIP Stack">
+			<info type="description" value="summary">
+			This is the default lwIP port configuration which is empty: this should be used when creating a new lwIP port.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="uc3"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
+		</module>
+	</select-by-config>
+</asf>

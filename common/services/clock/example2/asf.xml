@@ -1,0 +1,64 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.services.basic.clock.example2" caption="Common API for Clocks Control / Example 2">
+		<module type="application" id="common.services.basic.clock.example2#0" caption="Common API for Clocks Control / Example 2">
+			<info type="description" value="summary">
+			Initialize the clock system and output the CPU clock on a dedicated pin.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>			
+			<build type="c-source" value="clock_example2_xmega.c"/>
+			<device-support value="xmega"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="xmega.drivers.cpu"/>
+			<require idref="xmega.drivers.ioport"/>
+			<require idref="xmega.utils"/>
+		</module>
+		<module type="application" id="common.services.basic.clock.example2#1" caption="Common API for Clocks Control / Example 2">
+			<info type="description" value="summary">
+			Initialize the clock system and output the CPU clock on a dedicated pin.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>			
+			<build type="c-source" value="clock_example2_uc3.c"/>
+			<device-support value="uc3a"/>
+			<device-support value="uc3a3"/>
+			<device-support value="uc3b"/>
+			<device-support value="uc3c"/>
+			<require idref="avr32.drivers.flashc"/>
+			<require idref="avr32.drivers.gpio"/>
+			<require idref="common.services.basic.clock"/>
+		</module>
+		<module type="application" id="common.services.basic.clock.example2#2" caption="Common API for Clocks Control / Example 2">
+			<info type="description" value="summary">
+			Initialize the clock system and output the CPU clock on a dedicated pin.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>			
+			<build type="c-source" value="clock_example2_uc3.c"/>
+			<device-support value="uc3l"/>
+			<device-support value="uc3d"/>
+			<require idref="avr32.drivers.flashcdw"/>
+			<require idref="avr32.drivers.gpio"/>
+			<require idref="common.services.basic.clock"/>
+		</module>
+		<module type="application" id="common.services.basic.clock.example2#3" caption="Common API for Clocks Control / Example 2">
+			<info type="description" value="summary">
+			Initialize the clock system and output the CPU clock on a dedicated pin.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>			
+			<build type="c-source" value="clock_example2_sam.c"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.uart"/>
+			<require idref="common.services.basic.gpio"/>
+			<require idref="common.services.basic.clock"/>
+		</module>
+	</select-by-device>
+</asf>

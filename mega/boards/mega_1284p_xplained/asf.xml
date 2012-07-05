@@ -1,0 +1,7 @@
+<asf xmlversion="1.0">
+	<board id="board.mega_1284p_xplained" caption="MEGA-1284P Xplained" mcu="atmega1284p">
+		<build type="define" name="BOARD" value="MEGA_1284P_XPLAINED"/>
+		<build type="c-source" value="init.c"/>
+		<require idref="common.boards"/>
+	</board>
+</asf>

@@ -1,0 +1,9 @@
+<asf xmlversion="1.0">
+	<project caption="Wifi H&amp;D Example SPBFW_DOWNLOAD for EVK1104" id="avr32.components.wifi.spbfw_download.example.evk1104">
+		<require idref="avr32.components.wifi.spbfw_download.example"/>
+		<require idref="board.evk1104"/>
+		<config name="config.board.evk1104.init" value="no"/>
+		<config name="config.board.evk1104.led" value="yes"/>
+		<generator value="avr32gcc" />
+	</project>
+</asf>

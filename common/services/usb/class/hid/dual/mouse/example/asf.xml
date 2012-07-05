@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.usb.class.hid.dual.mouse.example" caption="USB Dual Role (Device and Host) HID mouse example">
+		<info type="description" value="summary">
+		Provide an application example of USB host and device (dual role) HID mouse implementation.
+		</info>
+		<build type="header-file" value="conf_usb_host.h"/>
+		<build type="header-file" value="conf_usb.h"/>
+		<build type="header-file" value="ui.h"/>
+		<build type="header-file" value="main.h"/>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.basic.sleepmgr"/>
+		<require idref="common.services.usb.class.host"/>
+		<require idref="common.services.usb.class.device"/>
+		<info type="keyword" value="technology">
+			<keyword value="USB"/>
+			<keyword value="Communication"/>
+		</info>
+	</module>
+</asf>

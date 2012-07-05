@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.services.basic.fifo.unit_tests" caption="Complete set of unit tests for FIFO service">
+		<device-support value="xmega"/>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="unit_tests.c"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.basic.fifo"/>
+		<require idref="common.utils"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<require idref="common.utils.unit_test"/>
+	</module>
+</asf>

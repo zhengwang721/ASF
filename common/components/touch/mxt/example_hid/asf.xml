@@ -1,0 +1,30 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common.components.touch.mxt.example_hid" caption="USB HID example using the mXT143E Xplained kit as mouse">
+		<info type="description" value="summary">
+		Provide an application example of USB Device HID Mouse implementation. Relies on the native HID driver and uses buttons available on the board as a mouse interfaces.
+		</info>
+		<build type="header-file" value="conf_usb.h"/>
+		<build type="header-file" value="conf_sysfont.h"/>
+		<build type="header-file" value="ui.h"/>
+		<build type="header-file" value="example_hid.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
+		<build type="c-source" value="ui.c"/>
+		<build type="c-source" value="example_hid.c"/>
+		<build type="include-path" value="."/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.basic.sleepmgr"/>
+		<require idref="common.services.usb.class.device"/>
+		<require idref="common.components.touch.mxt"/>
+		<require idref="common.services.delay"/>
+		<require idref="common.services.gfx"/>
+		<require idref="common.services.gfx.font"/>
+		<info type="keyword" value="technology">
+			<keyword value="USB"/>
+			<keyword value="Communication"/>
+			<keyword value="Touch"/>
+		</info>
+		<device-support value="xmegaau"/>
+		<device-support value="uc3a3_a4"/>
+	</module>
+</asf>
+

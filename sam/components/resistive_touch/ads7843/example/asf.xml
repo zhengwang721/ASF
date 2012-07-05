@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+		<module type="application" id="sam.components.resistive_touch.ads7843.example" caption="ADS7843 LCD Resistive Touch Controller Example">
+			<info type="description" value="summary">
+				A simple example using the ADS7843 component.
+			</info>
+			<build type="c-source" value="ads7843_example.c"/>
+			<build type="c-source" value="rtouch_calibrate.c"/>
+			<build type="header-file" subtype="api" value="rtouch_calibrate.h"/>
+			<build type="include-path" value="."/>
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.uart"/>
+			<require idref="sam.drivers.smc"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="sam.components.display.ili9325"/>
+			<require idref="sam.components.display.aat31xx"/> 
+			<require idref="sam.components.resistive_touch.ads7843"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<device-support value="sam"/>
+		</module>
+</asf>

@@ -1,0 +1,76 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.services.basic.serial" caption="USART - Serial interface">
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
+		<info type="description" value="summary">
+		Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
+		</info>
+		<module type="service" id="common.services.basic.serial#0" caption="USART - Serial interface - XMEGA implementation">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
+			</info>
+			<build type="header-file" subtype="api" value="serial.h"/>
+			<build type="header-file" value="xmega_usart/usart_serial.h"/>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="xmega_usart"/>
+			<build type="c-source" value="usart_serial.c"/>
+			<build type="module-config" subtype="path" value="xmega_usart/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_usart_serial.h"/>
+			<build type="doxygen-entry-point" value="serial_group"/>
+			<build type="doxygen-quick-start" value="serial_quickstart"/>
+			<require idref="xmega.utils"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="xmega.drivers.usart"/>
+			<device-support value="xmega"/>
+			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
+		</module>
+		<module type="service" id="common.services.basic.serial#1" caption="USART - Serial interface - UC3 implementation">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
+			</info>
+			<build type="c-source" value="usart_serial.c"/>
+			<build type="header-file" subtype="api" value="serial.h"/>
+			<build type="header-file" value="uc3_usart/usart_serial.h"/>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="uc3_usart"/>
+			<build type="module-config" subtype="path" value="uc3_usart/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_usart_serial.h"/>
+			<build type="doxygen-entry-point" value="serial_group"/>
+			<build type="doxygen-quick-start" value="serial_quickstart"/>
+			<require idref="avr32.utils"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="avr32.drivers.usart"/>
+			<device-support value="uc3"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
+		</module>
+		<module type="service" id="common.services.basic.serial#2" caption="USART - Serial interface">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			Common API which abstracts the user from directly accessing the register and provides a generic serial interface using USART.
+			</info>
+			<build type="c-source" value="usart_serial.c"/>
+			<build type="header-file" subtype="api" value="serial.h"/>
+			<build type="header-file" value="sam_uart/uart_serial.h"/>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="sam_uart"/>
+			<build type="module-config" subtype="path" value="sam_uart/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_uart_serial.h"/>
+			<build type="doxygen-entry-point" value="serial_group"/>
+			<build type="doxygen-quick-start" value="serial_quickstart"/>
+			<require idref="sam.utils"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="sam.drivers.uart"/>
+			<device-support value="sam"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		</module>
+	</select-by-device>
+</asf>

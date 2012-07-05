@@ -1,0 +1,20 @@
+<framework-data>
+        <options>
+		<option config="" content-id="Atmel.ASF" id="avr32.drivers.tc" value="Add"/>
+		<option config="" content-id="Atmel.ASF" id="avr32.drivers.tc.example" value="Add"/>
+	</options>
+        <configurations>
+                <configuration key="config.spi_master_type" value="usart_spi" default="usart_spi" content-id="Atmel.ASF"/>
+        </configurations>
+        <files>
+                <file framework="" version="2.11.1" path="src/asf.h" source="./avr32/drivers/tc/example/a/as5_32/asf.h" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/a.file" source="a.file" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/avr32/drivers/tc/tc.c" source="avr32/drivers/tc/tc.c" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/avr32/drivers/tc/tc.h" source="avr32/drivers/tc/tc.h" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/avr32/drivers/tc/tc_asm.s" source="avr32/drivers/tc/tc_asm.s" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/libavr51g1-4qt-k-0rs.a" source="libavr51g1-4qt-k-0rs.a" changed="False" content-id="Atmel.ASF"/>
+                <file framework="" version="2.11.1" path="src/asf/license.txt" source="license.txt" changed="False" content-id="Atmel.ASF"/>
+		<file changed="False" content-id="Atmel.ASF" framework="" path="src/asf/my.script" source="my.script" version="2.11.1"/>
+        </files>
+        <documentation help="http://asf.atmel.com/docs/2.11.1/avr32.drivers.tc.example.a/html/index.html"/>
+</framework-data>
