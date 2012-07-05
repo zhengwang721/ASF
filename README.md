@@ -1,4 +1,0 @@
-ASF
-===
-
-ATMEL Software Framework
