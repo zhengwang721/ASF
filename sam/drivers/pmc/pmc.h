@@ -69,9 +69,6 @@ extern "C" {
 /** Key used to write SUPC registers */
 #define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
 
-/** PMC xtal startup time */
-#define PMC_XTAL_STARTUP_TIME   (0x3F)
-
 /** Mask to access fast startup input */
 #define PMC_FAST_STARTUP_Msk    (0x7FFFFu)
 
@@ -130,7 +127,8 @@ uint32_t pmc_osc_is_ready_32kxtal(void);
 void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf);
 void pmc_osc_enable_fastrc(uint32_t ul_rc);
 void pmc_osc_disable_fastrc(void);
-void pmc_switch_mainck_to_xtal(uint32_t ul_bypass);
+void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
+		uint32_t ul_xtal_startup_time);
 void pmc_osc_disable_xtal(uint32_t ul_bypass);
 uint32_t pmc_osc_is_ready_mainck(void);
 
@@ -375,7 +373,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * -# Switch the Master CPU frequency to the external crystal oscillator, flash
  *    a LED on the board several times:
  *   \code
- *   pmc_switch_mainck_to_xtal(0);
+ *   pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
  *   flash_led(FLASH_TICK_COUNT, 5); 
  *   \endcode
  */

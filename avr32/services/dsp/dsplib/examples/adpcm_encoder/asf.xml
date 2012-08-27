@@ -18,6 +18,7 @@
 		<require idref="avr32.drivers.intc"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.adpcm"/>
+		<device-support value="uc3"/>
 		<build type="doxygen-image-path" value="."/>
 	</module>
 </asf>

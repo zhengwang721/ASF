@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,6 @@ void format_data(char *_path, char *_pattern, int n_arg)
      char *_buffer;
      int n, n_data;
      FILE *_file;
-     float *_data;
 
      ASSERT(_path);
 

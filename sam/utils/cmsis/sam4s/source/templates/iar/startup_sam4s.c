@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM4S.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,15 +88,31 @@ const intvec_elem __vector_table[] = {
 	{Dummy_Handler},    /* 7  Reserved */
 	{UART0_Handler},    /* 8  UART0 */
 	{UART1_Handler},    /* 9  UART1 */
+#ifdef ID_SMC
 	{SMC_Handler},      /* 10 SMC */
+#else
+	Dummy_Handler,
+#endif
 	{PIOA_Handler},     /* 11 Parallel IO Controller A */
 	{PIOB_Handler},     /* 12 Parallel IO Controller B */
+#ifdef ID_PIOC
 	{PIOC_Handler},     /* 13 Parallel IO Controller C */
+#else
+	Dummy_Handler,
+#endif
 	{USART0_Handler},   /* 14 USART 0 */
+#ifdef ID_USART1
 	{USART1_Handler},   /* 15 USART 1 */
+#else
+	Dummy_Handler,
+#endif
 	{Dummy_Handler},    /* 16 Reserved */
 	{Dummy_Handler},    /* 17 Reserved */
+#ifdef ID_HSMCI
 	{HSMCI_Handler},    /* 18 HSMCI */
+#else
+	Dummy_Handler,
+#endif
 	{TWI0_Handler},     /* 19 TWI 0 */
 	{TWI1_Handler},     /* 20 TWI 1 */
 	{SPI_Handler},      /* 21 SPI */
@@ -104,9 +120,21 @@ const intvec_elem __vector_table[] = {
 	{TC0_Handler},      /* 23 Timer Counter 0 */
 	{TC1_Handler},      /* 24 Timer Counter 1 */
 	{TC2_Handler},      /* 25 Timer Counter 2 */
+#ifdef ID_TC3
 	{TC3_Handler},      /* 26 Timer Counter 3 */
+#else
+	Dummy_Handler,
+#endif
+#ifdef ID_TC4
 	{TC4_Handler},      /* 27 Timer Counter 4 */
+#else
+	Dummy_Handler,
+#endif
+#ifdef ID_TC5
 	{TC5_Handler},      /* 28 Timer Counter 5 */
+#else
+	Dummy_Handler,
+#endif
 	{ADC_Handler},      /* 29 ADC controller */
 	{DACC_Handler},     /* 30 DACC controller */
 	{PWM_Handler},      /* 31 PWM */

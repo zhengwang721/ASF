@@ -137,7 +137,7 @@
 //! \name LCD controller (NHD-C12832A1Z-FSW-FBW-3V3)
 //@{
 #define NHD_C12832A1Z_SPI               &USARTD0
-#define NHD_C12832A1Z_SPI_SCK	        IOPORT_CREATE_PIN(PORTD, 1)
+#define NHD_C12832A1Z_SPI_SCK           IOPORT_CREATE_PIN(PORTD, 1)
 #define NHD_C12832A1Z_SPI_MOSI          IOPORT_CREATE_PIN(PORTD, 3)
 #define NHD_C12832A1Z_CSN               IOPORT_CREATE_PIN(PORTF, 3)
 //! If this signal is set high display data is sent otherwise commands
@@ -224,8 +224,8 @@
 /**
  * \name Pin connections on header J2
  *
- * The upper half of port A is connected to the lower pins of J2 while the
- * lower half of port B is connected to the upper pins of J2.
+ * The lower half of port B is connected to the lower pins of J2 while the
+ * upper half of port A is connected to the upper pins of J2.
  *
  * The port pins are connected directly to this header and are not shared with
  * any on-board functionality.
@@ -244,8 +244,8 @@
 /**
  * \name Pin connections on header J3
  *
- * The lower half of port A is connected to the lower pins of J3 and the upper
- * half of port B is connected to the upper pins of J3.
+ * The lower half of port A is connected to the lower pins of J3 while the
+ * upper half of port B is connected to the upper pins of J3.
  *
  * Following pins are shared with on-board functionality:
  *  - J3_PIN0 Light sensor output (can be disconnected via scratch pad)
@@ -272,18 +272,18 @@
 /**
  * \name Pin connections on header J4
  *
- * The lower half of port E is connected to the lower pins of J4 and the upper
- * half of port B is connected to the upper pins of J3.
+ * The lower half of port E is connected to the lower pins of J4 and the lower
+ * half of port D is connected to the upper pins of J4.
  */
 //@{
 #define J4_PIN0                        IOPORT_CREATE_PIN(PORTE, 0)
 #define J4_PIN1                        IOPORT_CREATE_PIN(PORTE, 1)
 #define J4_PIN2                        IOPORT_CREATE_PIN(PORTE, 2)
 #define J4_PIN3                        IOPORT_CREATE_PIN(PORTE, 3)
-#define J4_PIN4                        IOPORT_CREATE_PIN(PORTC, 4)
-#define J4_PIN5                        IOPORT_CREATE_PIN(PORTC, 5)
-#define J4_PIN6                        IOPORT_CREATE_PIN(PORTC, 6)
-#define J4_PIN7                        IOPORT_CREATE_PIN(PORTC, 7)
+#define J4_PIN4                        IOPORT_CREATE_PIN(PORTD, 0)
+#define J4_PIN5                        IOPORT_CREATE_PIN(PORTD, 3)
+#define J4_PIN6                        IOPORT_CREATE_PIN(PORTD, 2)
+#define J4_PIN7                        IOPORT_CREATE_PIN(PORTD, 1)
 //@}
 
 /**

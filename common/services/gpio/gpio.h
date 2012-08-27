@@ -3,7 +3,7 @@
  *
  * \brief Common GPIO API.
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,9 +46,9 @@
 #include <parts.h>
 
 #if ( SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S )
-# include "sam_ioport/sam_gpio.h"
+# include "sam_gpio/sam_gpio.h"
 #elif XMEGA
-# include "xmega_ioport/xmega_gpio.h"
+# include "xmega_gpio/xmega_gpio.h"
 #else
 # error Unsupported chip type
 #endif

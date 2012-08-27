@@ -58,15 +58,15 @@ extern "C" {
 
 /** Definitions for PWM channel number */
 typedef enum _pwm_ch_t {
-	PWM_CHANNEL_0 = (1 << 0),
-	PWM_CHANNEL_1 = (1 << 1),
-	PWM_CHANNEL_2 = (1 << 2),
-	PWM_CHANNEL_3 = (1 << 3),
+	PWM_CHANNEL_0 = 0,
+	PWM_CHANNEL_1 = 1,
+	PWM_CHANNEL_2 = 2,
+	PWM_CHANNEL_3 = 3,
 #if (SAM3XA)
-	PWM_CHANNEL_4 = (1 << 4),
-	PWM_CHANNEL_5 = (1 << 5),
-	PWM_CHANNEL_6 = (1 << 6),
-	PWM_CHANNEL_7 = (1 << 7)
+	PWM_CHANNEL_4 = 4,
+	PWM_CHANNEL_5 = 5,
+	PWM_CHANNEL_6 = 6,
+	PWM_CHANNEL_7 = 7
 #endif /* (SAM3XA) */
 } pwm_ch_t;
 
@@ -158,14 +158,14 @@ typedef enum {
 
 /** Definitions for PWM comparison unit */
 typedef enum {
-	PWM_CMP_UNIT_0 = (1 << 0),
-	PWM_CMP_UNIT_1 = (1 << 1),
-	PWM_CMP_UNIT_2 = (1 << 2),
-	PWM_CMP_UNIT_3 = (1 << 3),
-	PWM_CMP_UNIT_4 = (1 << 4),
-	PWM_CMP_UNIT_5 = (1 << 5),
-	PWM_CMP_UNIT_6 = (1 << 6),
-	PWM_CMP_UNIT_7 = (1 << 7)
+	PWM_CMP_UNIT_0 = 0,
+	PWM_CMP_UNIT_1 = 1,
+	PWM_CMP_UNIT_2 = 2,
+	PWM_CMP_UNIT_3 = 3,
+	PWM_CMP_UNIT_4 = 4,
+	PWM_CMP_UNIT_5 = 5,
+	PWM_CMP_UNIT_6 = 6,
+	PWM_CMP_UNIT_7 = 7
 } pmc_cmp_unit_t;
 
 /** Definitions for PWM PDC transfer request mode */
@@ -200,8 +200,8 @@ typedef struct {
 
 /** Configurations of PWM comparison */
 typedef struct {
-	/** Unit of comparison */
-	pmc_cmp_unit_t unit;
+	/** Comparison unit number */
+	uint32_t unit;
 	/** Boolean of comparison enable */
 	bool b_enable;
 	/** Comparison value */
@@ -246,7 +246,7 @@ typedef struct {
 /** Input parameters when configuring a PWM channel mode */
 typedef struct {
 	/** Channel number */
-	pwm_ch_t channel;
+	uint32_t channel;
 	/** Channel prescaler */
 	uint32_t ul_prescaler;
     /** Channel alignment */
@@ -315,14 +315,14 @@ void pwm_fault_clear_status(Pwm *p_pwm, pwm_fault_id_t id);
 
 uint32_t pwm_cmp_init(Pwm *p_pwm, pwm_cmp_t *p_cmp);
 uint32_t pwm_cmp_change_setting(Pwm *p_pwm, pwm_cmp_t *p_cmp);
-uint32_t pwm_cmp_get_period_counter(Pwm *p_pwm, pmc_cmp_unit_t unit);
-uint32_t pwm_cmp_get_update_counter(Pwm *p_pwm, pmc_cmp_unit_t unit);
+uint32_t pwm_cmp_get_period_counter(Pwm *p_pwm, uint32_t ul_cmp_unit);
+uint32_t pwm_cmp_get_update_counter(Pwm *p_pwm, uint32_t ul_cmp_unit);
 void pwm_cmp_enable_interrupt(Pwm *p_pwm, uint32_t ul_sources,
 		pwm_cmp_interrupt_t type);
 void pwm_cmp_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources,
 		pwm_cmp_interrupt_t type);
 void pwm_pdc_set_request_mode(Pwm *p_pwm, pwm_pdc_request_mode_t request_mode,
-		pmc_cmp_unit_t cmp_unit);
+		uint32_t ul_cmp_unit);
 
 void pwm_pdc_enable_interrupt(Pwm *p_pwm, uint32_t ul_sources);
 void pwm_pdc_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources);

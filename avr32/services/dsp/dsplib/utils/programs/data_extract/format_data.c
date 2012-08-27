@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -93,8 +93,6 @@ int format_data_get_data(char *_input, char *_pattern, int n_arg)
 {
      char _str[256];
      char _cur_pattern[256];
-     char _value[32];
-     char _str_value[256];
      char *_ppattern, *_pcur_pattern, *_pstr;
      int stop = 0;
      int cur_arg;
@@ -102,9 +100,6 @@ int format_data_get_data(char *_input, char *_pattern, int n_arg)
      int i;
      float f, value_to_print;
      char *_end_of_line;
-
-     char _temp[256];
-     char _buffer_temp[256];
 
      // Main loop
      while(*_input)

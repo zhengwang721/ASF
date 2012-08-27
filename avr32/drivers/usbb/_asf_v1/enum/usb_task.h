@@ -21,7 +21,7 @@
  *   - See the conf_usb.h file for more details about the configuration of
  *     this module.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -232,6 +232,8 @@ extern void usb_task(void *pvParameters);
 #else
 extern void usb_task(void);
 #endif
+
+U32  host_get_timeout( void );
 
 //! @}
 

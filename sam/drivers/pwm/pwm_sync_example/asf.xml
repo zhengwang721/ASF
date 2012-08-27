@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.pwm.pwm_sync_example" caption="PWM SYNC Example">
 		<info type="description" value="summary">
-			Pulse Width Modulation example using PDC transfer capabilites.
+			PWM generation with synchronous channels using PDC transfer capabilites.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Clocks"/>

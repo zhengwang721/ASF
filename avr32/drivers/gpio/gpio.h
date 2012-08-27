@@ -4,7 +4,7 @@
  *
  * \brief GPIO software driver interface for AVR UC3.
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -447,10 +447,7 @@ extern void gpio_clear_pin_interrupt_flag(uint32_t pin);
  * \note This function must have been called at least once before using other
  *       functions in this interface.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_init(void)
+__always_inline static void gpio_local_init(void)
 {
   Set_system_register(AVR32_CPUCR,
                       Get_system_register(AVR32_CPUCR) | AVR32_CPUCR_LOCEN_MASK);
@@ -465,10 +462,7 @@ static inline void gpio_local_init(void)
  * \note This function does not enable the GPIO mode of the pin.
  *       \ref gpio_enable_gpio_pin can be called for this purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_enable_pin_output_driver(uint32_t pin)
+__always_inline static void gpio_local_enable_pin_output_driver(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].oders = 1 << (pin & 0x1F);
 }
@@ -479,10 +473,7 @@ static inline void gpio_local_enable_pin_output_driver(uint32_t pin)
  *
  * \note \ref gpio_local_init must have been called beforehand.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_disable_pin_output_driver(uint32_t pin)
+__always_inline static void gpio_local_disable_pin_output_driver(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].oderc = 1 << (pin & 0x1F);
 }
@@ -495,10 +486,7 @@ static inline void gpio_local_disable_pin_output_driver(uint32_t pin)
  *
  * \note \ref gpio_local_init must have been called beforehand.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int gpio_local_get_pin_value(uint32_t pin)
+__always_inline static int gpio_local_get_pin_value(uint32_t pin)
 {
   return (AVR32_GPIO_LOCAL.port[pin >> 5].pvr >> (pin & 0x1F)) & 1;
 }
@@ -514,10 +502,7 @@ static inline int gpio_local_get_pin_value(uint32_t pin)
  *       \ref gpio_local_enable_pin_output_driver can be called for this
  *       purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_set_gpio_pin(uint32_t pin)
+__always_inline static void gpio_local_set_gpio_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].ovrs = 1 << (pin & 0x1F);
 }
@@ -533,10 +518,7 @@ static inline void gpio_local_set_gpio_pin(uint32_t pin)
  *       \ref gpio_local_enable_pin_output_driver can be called for this
  *       purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_clr_gpio_pin(uint32_t pin)
+__always_inline static void gpio_local_clr_gpio_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].ovrc = 1 << (pin & 0x1F);
 }
@@ -552,10 +534,7 @@ static inline void gpio_local_clr_gpio_pin(uint32_t pin)
  *       \ref gpio_local_enable_pin_output_driver can be called for this
  *       purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_tgl_gpio_pin(uint32_t pin)
+__always_inline static void gpio_local_tgl_gpio_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].ovrt = 1 << (pin & 0x1F);
 }
@@ -568,10 +547,7 @@ static inline void gpio_local_tgl_gpio_pin(uint32_t pin)
  *       \ref gpio_local_clr_gpio_open_drain_pin or
  *       \ref gpio_local_tgl_gpio_open_drain_pin.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_init_gpio_open_drain_pin(uint32_t pin)
+__always_inline static void gpio_local_init_gpio_open_drain_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].ovrc = 1 << (pin & 0x1F);
 }
@@ -586,10 +562,7 @@ static inline void gpio_local_init_gpio_open_drain_pin(uint32_t pin)
  * \note This function does not enable the GPIO mode of the pin.
  *       \ref gpio_enable_gpio_pin can be called for this purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_set_gpio_open_drain_pin(uint32_t pin)
+__always_inline static void gpio_local_set_gpio_open_drain_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].oderc = 1 << (pin & 0x1F);
 }
@@ -604,10 +577,7 @@ static inline void gpio_local_set_gpio_open_drain_pin(uint32_t pin)
  * \note This function does not enable the GPIO mode of the pin.
  *       \ref gpio_enable_gpio_pin can be called for this purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_clr_gpio_open_drain_pin(uint32_t pin)
+__always_inline static void gpio_local_clr_gpio_open_drain_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].oders = 1 << (pin & 0x1F);
 }
@@ -622,10 +592,7 @@ static inline void gpio_local_clr_gpio_open_drain_pin(uint32_t pin)
  * \note This function does not enable the GPIO mode of the pin.
  *       \ref gpio_enable_gpio_pin can be called for this purpose.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_local_tgl_gpio_open_drain_pin(uint32_t pin)
+__always_inline static void gpio_local_tgl_gpio_open_drain_pin(uint32_t pin)
 {
   AVR32_GPIO_LOCAL.port[pin >> 5].odert = 1 << (pin & 0x1F);
 }
@@ -648,10 +615,7 @@ static inline void gpio_local_tgl_gpio_open_drain_pin(uint32_t pin)
  * \param pin The pin number.
  *
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_enable_pin_periph_event(uint32_t pin)
+__always_inline static void gpio_enable_pin_periph_event(uint32_t pin)
 {
   AVR32_GPIO.port[pin >> 5].oderc = 1 << (pin & 0x1F); // The GPIO output driver is disabled for that pin.
   AVR32_GPIO.port[pin >> 5].evers = 1 << (pin & 0x1F);
@@ -662,10 +626,7 @@ static inline void gpio_enable_pin_periph_event(uint32_t pin)
  * \param pin The pin number.
  *
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void gpio_disable_pin_periph_event(uint32_t pin)
+__always_inline static void gpio_disable_pin_periph_event(uint32_t pin)
 {
   AVR32_GPIO.port[pin >> 5].everc = 1 << (pin & 0x1F);
 }

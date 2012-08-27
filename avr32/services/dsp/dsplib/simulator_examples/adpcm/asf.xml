@@ -9,6 +9,7 @@
 		</info>
 		<build type="c-source" value="adpcm_example.c"/>
 		<build type="doxygen-entry-point" value="group_avr32_services_dsplib_simulator_example_adpcm"/>
+		<device-support value="uc3"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.adpcm"/>

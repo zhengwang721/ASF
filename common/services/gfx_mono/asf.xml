@@ -9,6 +9,7 @@
 		<build type="header-file" subtype="api" value="gfx_mono.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="gfx_mono"/>
+		<build type="doxygen-quick-start" value="gfx_mono_quickstart"/>
 		<device-support value="xmega"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa"/>
 		<require idref="common.services.gfx_mono.display"/>

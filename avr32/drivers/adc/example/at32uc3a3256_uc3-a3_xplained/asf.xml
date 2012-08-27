@@ -6,6 +6,8 @@
 		<require idref="avr32.drivers.adc.example"/>
 		<require idref="board.uc3_a3_xplained"/>
 		<config name="config.board.uc3_a3_xplained.init" value="no"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_example.h"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc" />
 		<generator value="as5_32" />

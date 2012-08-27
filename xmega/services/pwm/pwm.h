@@ -291,7 +291,6 @@ static inline void pwm_overflow_int_callback(struct pwm_config *config,
  *
  * Add to application C-file:
  * \code
- *
  * struct pwm_config pwm_cfg;
  *
  * void my_callback(void)
@@ -316,11 +315,12 @@ static inline void pwm_overflow_int_callback(struct pwm_config *config,
  *   \code struct pwm_config pwm_cfg; \endcode
  * -# Define a callback function in the application which does whatever task
  * you want it to do:
- * \code
+ *   \code
  * void my_callback(void)
  * {
  *      do_something();
- * } \endcode
+ * }
+ *   \endcode
  * -# Initialize interrupt controller module:
  *   \code pmic_init();\endcode
  * -# Initialize sysclock module:
@@ -335,17 +335,17 @@ static inline void pwm_overflow_int_callback(struct pwm_config *config,
  *    on what port/pin is used for different timer/counters.
  * \attention This step must not be skipped or the initial content of the
  * structs will be unpredictable, possibly causing misconfiguration.
- * -# Set callback function on PWM TCc channel overflow:
+ * -# Set callback function on PWM TC channel overflow:
  *   \code pwm_overflow_int_callback(&pwm_cfg, my_callback); \endcode
  *
  * \section pwm_use_case_1_usage Usage steps
  * \subsection pwm_use_case_1_usage_code Example code
  * Add to, e.g., main loop in application C-file:
- * \code pwm_start(&pwm_config, 50); \endcode
+ * \code pwm_start(&pwm_cfg, 50); \endcode
  *
  * \subsection pwm_basic_use_case_usage_flow Workflow
  * -# Start PWM with 50% duty cycle:
- *   \code pwm_start(&pwm_config, 50); \endcode
+ *   \code pwm_start(&pwm_cfg, 50); \endcode
  *
  */
 

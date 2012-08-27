@@ -57,7 +57,7 @@
 #define IOPORT_PIOF     5
 
 /**
- * \weakgroup ioport_service_group
+ * \weakgroup ioport_group
  * \section ioport_modes IOPORT Modes
  *
  * For details on these please see the SAM Manual.

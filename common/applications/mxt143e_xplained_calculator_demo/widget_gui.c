@@ -240,8 +240,10 @@ static bool app_calc_handler(struct wtk_basic_frame *frame,
 	struct app_calculator_t *calc = (struct app_calculator_t *)
 			wtk_basic_frame_get_custom_data(frame);
 
+	/* Get button ID from the widget command data */
+	char button_char = (uintptr_t)command_data;
+
 	/* Handle button based on its value. */
-	char button_char = command_data;
 	switch (button_char) {
 	case '0':
 	case '1':
@@ -360,8 +362,11 @@ static bool app_calc_handler(struct wtk_basic_frame *frame,
  * Allocates memory for the application context, and creates all widgets that
  * make up its interface. If memory allocation or widget creation fails, the
  * application exits immediately.
+ *
+ * \return Boolean true if the application was launched successfully, false if
+ *         a memory allocation occurred.
  */
-void app_widget_launch(void)
+bool app_widget_launch(void)
 {
 	/* Layout of control widgets:
 	 *
@@ -391,7 +396,9 @@ void app_widget_launch(void)
 	/* Allocate memory for calculator application context data. */
 	struct app_calculator_t *calc;
 	calc = membag_alloc(sizeof(struct app_calculator_t));
-	Assert(calc);
+	if (!calc) {
+		return false;
+	}
 
 	/* Initialize context data. */
 	calc->calc_regs.display = 0;
@@ -421,6 +428,10 @@ void app_widget_launch(void)
 			app_calc_handler,
 			calc);
 
+	if (!calc->frame) {
+		goto error_frame;
+	}
+	
 	/* Create digit buttons 1-9. */
 	area.size.x = BT_W;
 	area.size.y = BT_H;
@@ -442,6 +453,10 @@ void app_widget_launch(void)
 					&area,
 					caption,
 					(win_command_t)caption[0]);
+
+			if (!button) {
+				goto error_widget;
+			}
 			win_show(wtk_button_as_child(button));
 		}
 	}
@@ -456,6 +471,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	caption[0] = '/';
@@ -465,6 +484,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	caption[0] = '*';
@@ -474,6 +497,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	/* Create the '-' and '+' buttons, double height. */
@@ -488,6 +515,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	caption[0] = '+';
@@ -497,6 +528,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	/* Create the '0' and '=' buttons, double width. */
@@ -511,6 +546,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	area.pos.x = BT_POS_X(2);
@@ -520,6 +559,10 @@ void app_widget_launch(void)
 			&area,
 			caption,
 			(win_command_t)caption[0]);
+
+	if (!button) {
+		goto error_widget;
+	}
 	win_show(wtk_button_as_child(button));
 
 	/* Set the background information for the GUI window */
@@ -538,6 +581,10 @@ void app_widget_launch(void)
 			NULL,
 			NULL,
 			0);
+
+	if (!calc->text_frame) {
+		goto error_widget;
+	}
 	win_show(wtk_basic_frame_as_child(calc->text_frame));
 
 	/* Create static text for values. */
@@ -545,13 +592,26 @@ void app_widget_launch(void)
 	area.pos.y = (T_H - sysfont.height) / 2;
 	calc->text = wtk_label_create(
 		wtk_basic_frame_as_child(calc->text_frame),
-		&area,
-		"0",
+		&area, "0", GFX_COLOR_WHITE, NULL,
 		true);
+
+	if (!calc->text) {
+		goto error_widget;
+	}
 	win_show(wtk_label_as_child(calc->text));
 
 	/* Show entire calculator frame as well. */
 	win_show(wtk_basic_frame_as_child(calc->frame));
+
+	return true;
+
+	/* Error handling to clean up allocations after an error */
+error_widget:
+	win_destroy(wtk_basic_frame_as_child(calc->frame));
+error_frame:
+	membag_free(calc);
+	
+	return false;
 }
 
 /** @} */

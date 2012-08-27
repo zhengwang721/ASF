@@ -53,4 +53,10 @@
 /** Support NAND */
 #define CONF_BOARD_NAND
 
+/* Enable AT45DBX Component when it really connected to the board  */
+//#define CONF_BOARD_AT45DBX
+
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS0
+
 #endif /* CONF_BOARD_H_INCLUDED */

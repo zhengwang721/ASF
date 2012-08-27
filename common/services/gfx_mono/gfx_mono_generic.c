@@ -3,7 +3,7 @@
  *
  * \brief Generic monochrome LCD graphic primitives
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -67,7 +67,7 @@ void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 	uint8_t pixelmask;
 	uint8_t temp;
 
-	// Clip line length if too long
+	/* Clip line length if too long */
 	if (x + length > GFX_MONO_LCD_WIDTH) {
 		length = GFX_MONO_LCD_WIDTH - x;
 	}
@@ -76,7 +76,7 @@ void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 	pixelmask = (1 << (y - (page * 8)));
 
 	if (length == 0) {
-		// Nothing to do. Move along.
+		/* Nothing to do. Move along. */
 		return;
 	}
 
@@ -86,7 +86,7 @@ void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 			temp = gfx_mono_get_byte(page, x + length);
 			temp |= pixelmask;
 			gfx_mono_put_byte(page, x + length, temp);
-		};
+		}
 		break;
 
 	case GFX_PIXEL_CLR:
@@ -94,15 +94,15 @@ void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 			temp = gfx_mono_get_byte(page, x + length);
 			temp &= ~pixelmask;
 			gfx_mono_put_byte(page, x + length, temp);
-		};
+		}
 		break;
 
 	case GFX_PIXEL_XOR:
-		while(length-- > 0) {
+		while (length-- > 0) {
 			temp = gfx_mono_get_byte(page, x + length);
 			temp ^= pixelmask;
 			gfx_mono_put_byte(page, x + length, temp);
-		};
+		}
 		break;
 
 	default:
@@ -130,7 +130,7 @@ void gfx_mono_generic_draw_vertical_line(gfx_coord_t x, gfx_coord_t y,
 		return;
 	}
 
-	gfx_coord_t     y2 = y + length - 1;
+	gfx_coord_t y2 = y + length - 1;
 
 	if (y == y2) {
 		gfx_mono_draw_pixel(x, y, color);
@@ -141,16 +141,16 @@ void gfx_mono_generic_draw_vertical_line(gfx_coord_t x, gfx_coord_t y,
 		y2 = GFX_MONO_LCD_HEIGHT - 1;
 	}
 
-	gfx_coord_t     y1page = y / 8;
-	gfx_coord_t     y2page = y2 / 8;
+	gfx_coord_t y1page = y / 8;
+	gfx_coord_t y2page = y2 / 8;
 
-	uint8_t         y1bitpos = y & 0x07;
-	uint8_t         y2bitpos = y2 & 0x07;
+	uint8_t y1bitpos = y & 0x07;
+	uint8_t y2bitpos = y2 & 0x07;
 
-	uint8_t         y1pixelmask = 0xFF << y1bitpos;
-	uint8_t         y2pixelmask = 0xFF >> (7 - y2bitpos);
+	uint8_t y1pixelmask = 0xFF << y1bitpos;
+	uint8_t y2pixelmask = 0xFF >> (7 - y2bitpos);
 
-	// The pixels are on the same page; combine masks
+	/* The pixels are on the same page; combine masks */
 	if (y1page == y2page) {
 		uint8_t pixelmask = y1pixelmask & y2pixelmask;
 		gfx_mono_mask_byte(y1page, x, pixelmask, color);
@@ -178,14 +178,14 @@ void gfx_mono_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
 		gfx_coord_t x2, gfx_coord_t y2,
 		enum gfx_mono_color color)
 {
-	uint8_t         i;
-	uint8_t         x;
-	uint8_t         y;
-	int8_t          xinc;
-	int8_t          yinc;
-	int8_t          dx;
-	int8_t          dy;
-	int8_t          e;
+	uint8_t i;
+	uint8_t x;
+	uint8_t y;
+	int8_t xinc;
+	int8_t yinc;
+	int8_t dx;
+	int8_t dy;
+	int8_t e;
 
 	/* swap x1,y1  with x2,y2 */
 	if (x1 > x2) {
@@ -209,6 +209,7 @@ void gfx_mono_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
 	} else {
 		xinc = 1;
 	}
+
 	if (dy < 0) {
 		yinc = -1;
 		dy = -dy;
@@ -224,22 +225,23 @@ void gfx_mono_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
 				e -= dx;
 				y += yinc;
 			}
+
 			e += dy;
 			x += xinc;
 		}
 	} else {
 		e = dx - dy;
-		for (i = 0; i <= dy; i++){
+		for (i = 0; i <= dy; i++) {
 			gfx_mono_draw_pixel(x, y, color);
 			if (e >= 0) {
 				e -= dy;
 				x += xinc;
 			}
+
 			e += dx;
 			y += yinc;
 		}
 	}
-
 }
 
 /**
@@ -276,14 +278,13 @@ void gfx_mono_generic_draw_filled_rect(gfx_coord_t x, gfx_coord_t y,
 		enum gfx_mono_color color)
 {
 	if (height == 0) {
-		// Nothing to do. Move along.
+		/* Nothing to do. Move along. */
 		return;
 	}
 
 	while (height-- > 0) {
 		gfx_mono_draw_horizontal_line(x, y + height, width, color);
-	};
-
+	}
 }
 
 /**
@@ -308,42 +309,57 @@ void gfx_mono_generic_draw_circle(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t radius, enum gfx_mono_color color,
 		uint8_t octant_mask)
 {
-	gfx_coord_t     offset_x;
-	gfx_coord_t     offset_y;
-	int16_t         error;
+	gfx_coord_t offset_x;
+	gfx_coord_t offset_y;
+	int16_t error;
 
-	// Draw only a pixel if radius is zero.
+	/* Draw only a pixel if radius is zero. */
 	if (radius == 0) {
 		gfx_mono_draw_pixel(x, y, color);
 		return;
 	}
 
-	// Set up start iterators.
+	/* Set up start iterators. */
 	offset_x = 0;
 	offset_y = radius;
 	error = 3 - 2 * radius;
 
-	// Iterate offsetX from 0 to radius.
+	/* Iterate offsetX from 0 to radius. */
 	while (offset_x <= offset_y) {
-		// Draw one pixel for each octant enabled in octant_mask.
-		if (octant_mask & GFX_OCTANT0)
+		/* Draw one pixel for each octant enabled in octant_mask. */
+		if (octant_mask & GFX_OCTANT0) {
 			gfx_mono_draw_pixel(x + offset_y, y - offset_x, color);
-		if (octant_mask & GFX_OCTANT1)
-			gfx_mono_draw_pixel(x + offset_x, y - offset_y, color);
-		if (octant_mask & GFX_OCTANT2)
-			gfx_mono_draw_pixel(x - offset_x, y - offset_y, color);
-		if (octant_mask & GFX_OCTANT3)
-			gfx_mono_draw_pixel(x - offset_y, y - offset_x, color);
-		if (octant_mask & GFX_OCTANT4)
-			gfx_mono_draw_pixel(x - offset_y, y + offset_x, color);
-		if (octant_mask & GFX_OCTANT5)
-			gfx_mono_draw_pixel(x - offset_x, y + offset_y, color);
-		if (octant_mask & GFX_OCTANT6)
-			gfx_mono_draw_pixel(x + offset_x, y + offset_y, color);
-		if (octant_mask & GFX_OCTANT7)
-			gfx_mono_draw_pixel(x + offset_y, y + offset_x, color);
+		}
 
-		// Update error value and step offset_y when required.
+		if (octant_mask & GFX_OCTANT1) {
+			gfx_mono_draw_pixel(x + offset_x, y - offset_y, color);
+		}
+
+		if (octant_mask & GFX_OCTANT2) {
+			gfx_mono_draw_pixel(x - offset_x, y - offset_y, color);
+		}
+
+		if (octant_mask & GFX_OCTANT3) {
+			gfx_mono_draw_pixel(x - offset_y, y - offset_x, color);
+		}
+
+		if (octant_mask & GFX_OCTANT4) {
+			gfx_mono_draw_pixel(x - offset_y, y + offset_x, color);
+		}
+
+		if (octant_mask & GFX_OCTANT5) {
+			gfx_mono_draw_pixel(x - offset_x, y + offset_y, color);
+		}
+
+		if (octant_mask & GFX_OCTANT6) {
+			gfx_mono_draw_pixel(x + offset_x, y + offset_y, color);
+		}
+
+		if (octant_mask & GFX_OCTANT7) {
+			gfx_mono_draw_pixel(x + offset_y, y + offset_x, color);
+		}
+
+		/* Update error value and step offset_y when required. */
 		if (error < 0) {
 			error += ((offset_x << 2) + 6);
 		} else {
@@ -351,7 +367,7 @@ void gfx_mono_generic_draw_circle(gfx_coord_t x, gfx_coord_t y,
 			--offset_y;
 		}
 
-		// Next X.
+		/* Next X. */
 		++offset_x;
 	}
 }
@@ -382,42 +398,45 @@ void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t radius, enum gfx_mono_color color,
 		uint8_t quadrant_mask)
 {
-	gfx_coord_t     offset_x;
-	gfx_coord_t     offset_y;
-	int16_t         error;
+	gfx_coord_t offset_x;
+	gfx_coord_t offset_y;
+	int16_t error;
 
-	// Draw only a pixel if radius is zero.
+	/* Draw only a pixel if radius is zero. */
 	if (radius == 0) {
 		gfx_mono_draw_pixel(x, y, color);
 		return;
 	}
 
-	// Set up start iterators.
+	/* Set up start iterators. */
 	offset_x = 0;
 	offset_y = radius;
 	error = 3 - 2 * radius;
 
-	// Iterate offset_x from 0 to radius.
+	/* Iterate offset_x from 0 to radius. */
 	while (offset_x <= offset_y) {
-		// Draw vertical lines tracking each quadrant.
+		/* Draw vertical lines tracking each quadrant. */
 		if (quadrant_mask & GFX_QUADRANT0) {
 			gfx_mono_draw_vertical_line(x + offset_y,
 					y - offset_x, offset_x + 1, color);
 			gfx_mono_draw_vertical_line(x + offset_x,
 					y - offset_y, offset_y + 1, color);
 		}
+
 		if (quadrant_mask & GFX_QUADRANT1) {
 			gfx_mono_draw_vertical_line(x - offset_y,
 					y - offset_x, offset_x + 1, color);
 			gfx_mono_draw_vertical_line(x - offset_x,
 					y - offset_y, offset_y + 1, color);
 		}
+
 		if (quadrant_mask & GFX_QUADRANT2) {
 			gfx_mono_draw_vertical_line(x - offset_y,
 					y, offset_x + 1, color);
 			gfx_mono_draw_vertical_line(x - offset_x,
 					y, offset_y + 1, color);
 		}
+
 		if (quadrant_mask & GFX_QUADRANT3) {
 			gfx_mono_draw_vertical_line(x + offset_y,
 					y, offset_x + 1, color);
@@ -425,7 +444,7 @@ void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 					y, offset_y + 1, color);
 		}
 
-		// Update error value and step offset_y when required.
+		/* Update error value and step offset_y when required. */
 		if (error < 0) {
 			error += ((offset_x << 2) + 6);
 		} else {
@@ -433,7 +452,7 @@ void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 			--offset_y;
 		}
 
-		// Next X.
+		/* Next X. */
 		++offset_x;
 	}
 }
@@ -450,12 +469,11 @@ void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 void gfx_mono_generic_put_bitmap(struct gfx_mono_bitmap *bitmap, gfx_coord_t x,
 		gfx_coord_t y)
 {
-	gfx_coord_t         num_pages = bitmap->height / 8;
-	gfx_coord_t         page = y / 8;
-	gfx_coord_t         column;
-	gfx_coord_t         i;
-	gfx_mono_color_t    temp;
-
+	gfx_coord_t num_pages = bitmap->height / 8;
+	gfx_coord_t page = y / 8;
+	gfx_coord_t column;
+	gfx_coord_t i;
+	gfx_mono_color_t temp;
 
 	switch (bitmap->type) {
 	case GFX_MONO_BITMAP_PROGMEM:
@@ -482,4 +500,4 @@ void gfx_mono_generic_put_bitmap(struct gfx_mono_bitmap *bitmap, gfx_coord_t x,
 	}
 }
 
-//! @}
+/** @} */

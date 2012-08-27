@@ -70,18 +70,18 @@ extern "C" {
  * @{
  */
 
-//! TODO: This define should be fetched from the GFX display header file.
+/** TODO: This define should be fetched from the GFX display header file. */
 #define LCD_PAGE_HEIGHT 8
-#define GFX_MONO_LCD_PAGE_COUNT GFX_MONO_LCD_HEIGHT/LCD_PAGE_HEIGHT
+#define GFX_MONO_LCD_PAGE_COUNT GFX_MONO_LCD_HEIGHT / LCD_PAGE_HEIGHT
 
-// define used for stringifying number defines
-#define str(s) #s
+/* Define used for stringifying number defines */
+#define str(s) # s
 
-#define _XPM_HEADER(w, h) "/* XPM */\r\n"\
-		"static char * asf_screen_dump[] = {\r\n"\
-		"\"" str(w) " " str(h) " 2 1\",\r\n"\
-		"\"   c #FFFFFF\",\r\n"\
-		"\".  c #000000\",\r\n"
+#define _XPM_HEADER(w, h) "/* XPM */\r\n" \
+	"static char * asf_screen_dump[] = {\r\n" \
+	"\"" str(w) " " str(h) " 2 1\",\r\n" \
+	"\"   c #FFFFFF\",\r\n"	\
+	"\".  c #000000\",\r\n"
 
 #define XPM_HEADER _XPM_HEADER(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT)
 
@@ -91,7 +91,7 @@ typedef avr32_usart_t dump_usart_t;
 typedef USART_t dump_usart_t;
 #endif
 
-//! storage for the usart to use when dumping data
+/** storage for the usart to use when dumping data */
 dump_usart_t *dump_usart;
 
 static const uint8_t xpm_header[] = XPM_HEADER;
@@ -118,28 +118,32 @@ static inline void gfx_mono_screen_dump_init(dump_usart_t *usart,
 static inline void gfx_mono_screen_dump(void)
 {
 	uint8_t page_buffer[GFX_MONO_LCD_WIDTH];
-	// wait to receive a character on UART before sending
+	/* wait to receive a character on UART before sending */
 	uint8_t dummy;
 	usart_serial_getchar(dump_usart, &dummy);
 
-	// write the XPM header
-	usart_serial_write_packet(dump_usart, xpm_header, (sizeof(xpm_header) - 1));
+	/* write the XPM header */
+	usart_serial_write_packet(dump_usart, xpm_header,
+			(sizeof(xpm_header) - 1));
 
 	for (uint8_t page = 0; page < GFX_MONO_LCD_PAGE_COUNT; ++page) {
 		gfx_mono_get_page(page_buffer, page, 0, GFX_MONO_LCD_WIDTH);
 		for (uint8_t row = 0; row < LCD_PAGE_HEIGHT; ++row) {
 			usart_putchar(dump_usart, '"');
-			for (uint16_t column = 0; column < GFX_MONO_LCD_WIDTH; ++column) {
-				if ((page_buffer[column] & (0x01 << row)) != 0x00) {
+			for (uint16_t column = 0; column < GFX_MONO_LCD_WIDTH;
+					++column) {
+				if ((page_buffer[column] & (0x01 << row)) !=
+						0x00) {
 					usart_putchar(dump_usart, '.');
 				} else {
 					usart_putchar(dump_usart, ' ');
 				}
 			}
-			usart_serial_write_packet(dump_usart, (uint8_t*)"\",\r\n", 4);
+			usart_serial_write_packet(dump_usart,
+					(uint8_t *)"\",\r\n", 4);
 		}
 	}
-	usart_serial_write_packet(dump_usart, (uint8_t*)"};\r\n", 4);
+	usart_serial_write_packet(dump_usart, (uint8_t *)"};\r\n", 4);
 }
 
 /** @} */

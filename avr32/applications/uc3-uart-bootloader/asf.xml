@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.applications.uc3_uart_bootloader" caption="UART Bootloader">
+	<module type="application" id="avr32.applications.uc3_uart_bootloader" caption="AVR UC3 UART Bootloader">
 
 		<info type="description" value="summary">
 		ISP application, allowing R/W access to several on-chip memories through a UART interface.  

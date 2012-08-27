@@ -7,7 +7,7 @@
  * This file contains definitions and services related to the features of the
  * QT1081 touch sensor device.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -64,20 +64,14 @@
 
 /*! \brief Puts the QT1081 into low power mode
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void qt1081_power_down(void)
+__always_inline static void qt1081_power_down(void)
 {
 	gpio_set_gpio_pin(QT1081_LP_MODE);
 }
 
 /*! \brief Puts the QT1081 into low power mode
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void qt1081_power_up(void)
+__always_inline static void qt1081_power_up(void)
 {
 	gpio_clr_gpio_pin(QT1081_LP_MODE);
 }
@@ -86,10 +80,7 @@ static inline void qt1081_power_up(void)
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_0( void )
+__always_inline static int is_touch_sensor_0( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_0)) == QT1081_TOUCH_SENSOR_0_PRESSED;
 }
@@ -100,10 +91,7 @@ static inline int is_touch_sensor_0( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_1( void )
+__always_inline static int is_touch_sensor_1( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_1)) == QT1081_TOUCH_SENSOR_1_PRESSED;
 }
@@ -114,10 +102,7 @@ static inline int is_touch_sensor_1( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_2( void )
+__always_inline static int is_touch_sensor_2( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_2)) == QT1081_TOUCH_SENSOR_2_PRESSED;
 }
@@ -128,10 +113,7 @@ static inline int is_touch_sensor_2( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_3( void )
+__always_inline static int is_touch_sensor_3( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_3)) == QT1081_TOUCH_SENSOR_3_PRESSED;
 }
@@ -142,10 +124,7 @@ static inline int is_touch_sensor_3( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_4( void )
+__always_inline static int is_touch_sensor_4( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_4)) == QT1081_TOUCH_SENSOR_4_PRESSED;
 }
@@ -156,10 +135,7 @@ static inline int is_touch_sensor_4( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_5( void )
+__always_inline static int is_touch_sensor_5( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_5)) == QT1081_TOUCH_SENSOR_5_PRESSED;
 }
@@ -170,10 +146,7 @@ static inline int is_touch_sensor_5( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_6( void )
+__always_inline static int is_touch_sensor_6( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_6)) == QT1081_TOUCH_SENSOR_6_PRESSED;
 }
@@ -184,10 +157,7 @@ static inline int is_touch_sensor_6( void )
  *
  * \return \c true if the sensor is touched, otherwise \c 0.
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline int is_touch_sensor_7( void )
+__always_inline static int is_touch_sensor_7( void )
 {
   return (gpio_get_pin_value(QT1081_TOUCH_SENSOR_7)) == QT1081_TOUCH_SENSOR_7_PRESSED;
 }

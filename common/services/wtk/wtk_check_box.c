@@ -96,6 +96,20 @@ struct win_window *wtk_check_box_as_child(struct wtk_check_box *check_box)
 }
 
 /**
+ * This function returns the window command of the specified check box, as set
+ * when the widget was created.
+ *
+ * \param check_box Check box widget to manage.
+ *
+ * \return Associated window command of the check box widget.
+ */
+win_command_t wtk_check_box_get_command(struct wtk_check_box *check_box)
+{
+	Assert(check_box);
+	return check_box->command;
+}
+
+/**
  * This function toggles the value of a check box. If it is not selected, it
  * will be set to a selected/checked state, and vice versa. The graphics will
  * be updated if the box is visible.
@@ -312,8 +326,12 @@ void wtk_check_box_size_hint(struct win_point *size, const char *caption)
 
 	gfx_get_string_bounding_box(caption, &sysfont, &size->x, &size->y);
 	size->x += WTK_CHECKBOX_CAPTION_X;
-	size->y += max(WTK_CHECKBOX_CAPTION_Y + sysfont.height,
-			WTK_CHECKBOX_BOX_SIZE);
+	size->y += WTK_CHECKBOX_CAPTION_Y;
+	
+	/* Clamp Y height to minimum check box size */
+	if (size->y < WTK_CHECKBOX_BOX_SIZE) {
+		size->y = WTK_CHECKBOX_BOX_SIZE;
+	}
 }
 
 /**

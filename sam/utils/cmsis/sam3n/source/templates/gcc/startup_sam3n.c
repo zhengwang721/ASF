@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM3N.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -96,9 +96,17 @@ IntFunc exception_table[] = {
 	Dummy_Handler,   /* 10 Reserved */
 	PIOA_Handler,    /* 11 Parallel IO Controller A */
 	PIOB_Handler,    /* 12 Parallel IO Controller B */
+#ifdef ID_PIOC
 	PIOC_Handler,    /* 13 Parallel IO Controller C */
+#else
+	Dummy_Handler,
+#endif
 	USART0_Handler,  /* 14 USART 0 */
+#ifdef ID_USART1
 	USART1_Handler,  /* 15 USART 1 */
+#else
+	Dummy_Handler,
+#endif
 	Dummy_Handler,   /* 16 Reserved */
 	Dummy_Handler,   /* 17 Reserved */
 	Dummy_Handler,   /* 18 Reserved */
@@ -109,11 +117,27 @@ IntFunc exception_table[] = {
 	TC0_Handler,     /* 23 Timer Counter 0 */
 	TC1_Handler,     /* 24 Timer Counter 1 */
 	TC2_Handler,     /* 25 Timer Counter 2 */
+#ifdef ID_TC3
 	TC3_Handler,     /* 26 Timer Counter 3 */
+#else
+	Dummy_Handler,
+#endif
+#ifdef ID_TC4
  	TC4_Handler,     /* 27 Timer Counter 4 */
+#else
+	Dummy_Handler,
+#endif
+#ifdef ID_TC5
 	TC5_Handler,     /* 28 Timer Counter 5 */
+#else
+	Dummy_Handler,
+#endif
 	ADC_Handler,     /* 29 ADC controller */
+#ifdef ID_DACC
 	DACC_Handler,    /* 30 DAC controller */
+#else
+	Dummy_Handler,
+#endif
 	PWM_Handler,	 /* 31 PWM */
 	Dummy_Handler    /* 32 not used */
 };

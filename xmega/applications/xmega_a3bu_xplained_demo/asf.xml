@@ -32,7 +32,7 @@
 		<build type="header-file" value="cdc.h"/>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="include-path" value="."/>
-		<build type="distribute" subtype="file" value="XPLAINED_Virtual_Com_Port.inf"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.rtc32"/>

@@ -1197,18 +1197,36 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_items_for_mcu(self):
-		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc")]
+		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
+				self.facade.db.lookup_by_id("avr32.drivers.tc.example")]
 		expected_result.sort()
 		result = self.facade.get_items_for_mcu(MCU("at32uc3a0128", self.facade.db))
 		result.sort()
 		self.assertEqual(expected_result, result)
 
+	def test_PythonFacade_get_items_for_mcu_filtered(self):
+		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc")]
+		expected_result.sort()
+		result = self.facade.get_items_for_mcu(MCU("at32uc3a0128", self.facade.db), mod_types_to_get=["driver"])
+		result.sort()
+		self.assertEqual(expected_result, result)
+
 	def test_PythonFacade_get_all_modules_and_selectors(self):
 		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
-			self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init"),
-			self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led")]
+				self.facade.db.lookup_by_id("avr32.drivers.tc.example"),
+				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init"),
+				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
 		result = self.facade.get_all_modules_and_selectors("at32uc3a0128")
+		result.sort()
+		self.assertEqual(expected_result, result)
+
+	def test_PythonFacade_get_all_modules_and_selectors_filtered(self):
+		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
+				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init"),
+				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led")]
+		expected_result.sort()
+		result = self.facade.get_all_modules_and_selectors("at32uc3a0128", mod_types_to_ignore=["application"])
 		result.sort()
 		self.assertEqual(expected_result, result)
 
@@ -1399,8 +1417,7 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		# Test get_build_from_export for misc build types
 		self.assertEqual(['libc.a'], gen.get_build_from_export(BuildCompilerLibrary))
 		self.assertEqual([('a.file', 'src/asf/a.file')], separator_replace_dic(gen.get_build_from_export(BuildDistributeFile)))
-		self.assertEqual([('./avr32/drivers/tc/example/a/as5_32/asf.h', 'src/asf.h'),
-			('avr32/drivers/tc/tc.h', 'src/asf/avr32/drivers/tc/tc.h')], separator_replace_dic(gen.get_build_from_export(BuildHeader)))
+		self.assertEqual([('avr32/drivers/tc/tc.h', 'src/asf/avr32/drivers/tc/tc.h')], separator_replace_dic(gen.get_build_from_export(BuildHeader)))
 		self.assertEqual(['src/asf/avr32/drivers/tc', 'src', 'src/config'], separator_replace_list(gen.get_build_from_export(BuildInclude)))
 		self.assertEqual([('avr32/drivers/tc/tc_asm.s', 'src/asf/avr32/drivers/tc/tc_asm.s')],
 			separator_replace_dic(gen.get_build_from_export(BuildAssembly)))

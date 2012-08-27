@@ -14,8 +14,11 @@
 		<build type="header-file" value="conf_sysfont.h"/>
 		<build type="header-file" value="conf_wtk.h"/>
 		<build type="header-file" value="conf_win.h"/>
-		<build type="header-file" value="atmel_logo.h"/>
+		<build type="header-file" value="atmel_logo_small.h"/>
 		<build type="include-path" value="."/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.wtk"/>
 		<require idref="common.services.basic.clock"/>

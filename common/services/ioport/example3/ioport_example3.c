@@ -54,7 +54,7 @@
  *
  * \section ioport_service_section services/ioport/ioport.h
  * The common IOPORT service is described in
- * \ref ioport_service_group section.
+ * \ref ioport_group section.
  *
  * \section device_info Device Info
  * All AVR XMEGA and UC3 devices can be used. This example has been tested with
@@ -73,9 +73,7 @@
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  * Support and FAQ: http://support.atmel.no/
  */
-#include "sysclk.h"
-#include "ioport.h"
-#include "board.h"
+#include <asf.h>
 #include "conf_example.h"
 
 int main(void)

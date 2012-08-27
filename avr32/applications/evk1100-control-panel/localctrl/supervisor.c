@@ -9,7 +9,7 @@
  *     * increments the raw time integer value every second,
  *     * TODO : add its other jobs.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -167,6 +167,11 @@
 
 /*! The local time raw value. */
 extern time_t xcptime_LocalTime;
+
+eExecStatus e_supervisor_switch_to_maintenance_mode( eModId xModId,
+signed short FsNavId,
+int ac, signed portCHAR *av[],
+signed portCHAR **ppcStringReply );
 
 #if defined(__GNUC__)
 extern void __heap_start__;

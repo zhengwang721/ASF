@@ -113,6 +113,20 @@ struct win_window *wtk_radio_button_as_child(struct wtk_radio_button
 }
 
 /**
+ * This function returns the window command of the specified radio button, as set
+ * when the widget was created.
+ *
+ * \param button Radio button widget to manage.
+ *
+ * \return Associated window command of the radio button widget.
+ */
+win_command_t wtk_radio_button_get_command(struct wtk_radio_button *radio_button)
+{
+	Assert(radio_button);
+	return radio_button->command;
+}
+
+/**
  * This function sets this radio button to be the single radio button
  * selected within its group. If another radio button was selected, it
  * will be deselected. Both widgets will be redrawn if visible.
@@ -352,9 +366,16 @@ void wtk_radio_button_size_hint(struct win_point *size, const char *caption)
 	Assert(caption);
 
 	gfx_get_string_bounding_box(caption, &sysfont, &size->x, &size->y);
-	size->x += WTK_RADIOBUTTON_CAPTION_X;
-	size->y += max(WTK_RADIOBUTTON_CAPTION_Y + sysfont.height,
-			WTK_RADIOBUTTON_BUTTON_Y + WTK_RADIOBUTTON_RADIUS);
+	
+	/* Add two pixel padding to ensure the outer radio button circle is not
+	 * overlapped when multiple widgets are placed underneath each other */
+	size->x += WTK_RADIOBUTTON_CAPTION_X + 2;
+	size->y += WTK_RADIOBUTTON_CAPTION_Y + 2;
+	
+	/* Clamp Y height to minimum radio button size */
+	if (size->y < (WTK_RADIOBUTTON_BUTTON_Y + WTK_RADIOBUTTON_RADIUS + 2)) {
+		size->y = WTK_RADIOBUTTON_BUTTON_Y + WTK_RADIOBUTTON_RADIUS + 2;
+	}
 }
 
 /**
@@ -426,13 +447,9 @@ struct wtk_radio_button *wtk_radio_button_create(struct win_window *parent,
 
 	/* Add ourselves to the radio group, take over selection if required. */
 	if (selected) {
-		struct wtk_radio_button *old_selected = group->selected;
-		group->selected = radio_button;
-		if (old_selected) {
-			win_redraw(old_selected->container);
-		}
+		wtk_radio_button_select(radio_button);
 	}
-
+	
 	/* Make sure we haven't filled up the group reference count, and
 	 * increment. */
 	Assert(group->num_references < (wtk_radio_group_size_t)-1L);
@@ -448,6 +465,20 @@ outofmem_caption:
 
 outofmem_radio_button:
 	return NULL;
+}
+
+/**
+ * This function retrieves a pointer to the currently selected radio button
+ * in a radio group.
+ *
+ * \return Pointer to the selected radio button in a radio button group,
+ *         or NULL if no item is selected.
+ */
+struct wtk_radio_button *wtk_radio_group_get_selected(struct wtk_radio_group *group)
+{
+	Assert(group);
+	
+	return group->selected;
 }
 
 /**

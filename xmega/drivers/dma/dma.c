@@ -51,7 +51,7 @@
  * \brief DMA private data struct
  */
 struct dma_data_struct {
-	//! Callback on complete
+	/** Callback on complete */
 	dma_callback_t callback;
 };
 
@@ -71,7 +71,8 @@ void dma_enable(void)
 {
 	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_DMA);
 	sleepmgr_lock_mode(SLEEPMGR_IDLE);
-	// Reset DMA controller just to make sure everything is from scratch
+
+	/* Reset DMA controller just to make sure everything is from scratch */
 	DMA.CTRL = DMA_RESET_bm;
 	DMA.CTRL = DMA_ENABLE_bm;
 }
@@ -114,12 +115,12 @@ void dma_set_callback(dma_channel_num_t num, dma_callback_t callback)
 static void dma_interrupt(const dma_channel_num_t num)
 {
 	enum dma_channel_status status;
-	DMA_CH_t                *channel;
+	DMA_CH_t *channel;
 
 	channel = dma_get_channel_address_from_num(num);
 	status  = dma_get_channel_status(num);
 
-	// Clear all interrupt flags to be sure
+	/* Clear all interrupt flags to be sure */
 	channel->CTRLB |= DMA_CH_TRNIF_bm | DMA_CH_ERRIF_bm;
 
 	if (dma_data[num].callback) {
@@ -136,6 +137,7 @@ ISR(DMA_CH0_vect)
 	dma_interrupt(0);
 }
 
+#if DMA_NUMBER_OF_CHANNELS > 1
 /**
  * \internal
  * \brief DMA channel 1 interrupt handler
@@ -144,7 +146,9 @@ ISR(DMA_CH1_vect)
 {
 	dma_interrupt(1);
 }
+#endif
 
+#if DMA_NUMBER_OF_CHANNELS > 2
 /**
  * \internal
  * \brief DMA channel 2 interrupt handler
@@ -153,7 +157,9 @@ ISR(DMA_CH2_vect)
 {
 	dma_interrupt(2);
 }
+#endif
 
+#if DMA_NUMBER_OF_CHANNELS > 3
 /**
  * \internal
  * \brief DMA channel 3 interrupt handler
@@ -162,6 +168,7 @@ ISR(DMA_CH3_vect)
 {
 	dma_interrupt(3);
 }
+#endif
 
 /**
  * \brief Write DMA channel configuration to hardware
@@ -176,8 +183,8 @@ ISR(DMA_CH3_vect)
 void dma_channel_write_config(dma_channel_num_t num,
 		struct dma_channel_config *config)
 {
-	DMA_CH_t        *channel = dma_get_channel_address_from_num(num);
-	irqflags_t      iflags = cpu_irq_save();
+	DMA_CH_t *channel = dma_get_channel_address_from_num(num);
+	irqflags_t iflags = cpu_irq_save();
 
 #ifdef CONFIG_HAVE_HUGEMEM
 	channel->DESTADDR0 = (uint32_t)config->destaddr;
@@ -186,7 +193,9 @@ void dma_channel_write_config(dma_channel_num_t num,
 #else
 	channel->DESTADDR0 = (uint32_t)config->destaddr16;
 	channel->DESTADDR1 = (uint32_t)config->destaddr16 >> 8;
+#  if XMEGA_A || XMEGA_AU
 	channel->DESTADDR2 = 0;
+#  endif
 #endif
 
 #ifdef CONFIG_HAVE_HUGEMEM
@@ -196,7 +205,9 @@ void dma_channel_write_config(dma_channel_num_t num,
 #else
 	channel->SRCADDR0 = (uint32_t)config->srcaddr16;
 	channel->SRCADDR1 = (uint32_t)config->srcaddr16 >> 8;
+#  if XMEGA_A || XMEGA_AU
 	channel->SRCADDR2 = 0;
+#  endif
 #endif
 
 	channel->ADDRCTRL = config->addrctrl;
@@ -206,11 +217,14 @@ void dma_channel_write_config(dma_channel_num_t num,
 
 	channel->CTRLB = config->ctrlb;
 
-	/*
-	 * Make sure the DMA channel is not enabled before dma_channel_enable()
+	/* Make sure the DMA channel is not enabled before dma_channel_enable()
 	 * is called.
 	 */
+#if XMEGA_A || XMEGA_AU
 	channel->CTRLA = config->ctrla & ~DMA_CH_ENABLE_bm;
+#else
+	channel->CTRLA = config->ctrla & ~DMA_CH_CHEN_bm;
+#endif
 
 	cpu_irq_restore(iflags);
 }
@@ -228,12 +242,12 @@ void dma_channel_write_config(dma_channel_num_t num,
 void dma_channel_read_config(dma_channel_num_t num,
 		struct dma_channel_config *config)
 {
-	DMA_CH_t        *channel = dma_get_channel_address_from_num(num);
-	irqflags_t      iflags = cpu_irq_save();
+	DMA_CH_t *channel = dma_get_channel_address_from_num(num);
+	irqflags_t iflags = cpu_irq_save();
 #ifdef CONFIG_HAVE_HUGEMEM
-	uint32_t        address;
+	uint32_t address;
 #else
-	uint16_t        address;
+	uint16_t address;
 #endif
 
 	address = channel->DESTADDR0;

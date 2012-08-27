@@ -10,7 +10,7 @@
  *                       The example is written for UC3 and EVK1100.
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,6 +68,7 @@
 
 #include "tracedump.h"
 #include "cptime.h"
+#include "actuator.h"
 
 //_____ M A C R O S ________________________________________________________
 

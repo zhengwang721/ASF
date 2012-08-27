@@ -128,15 +128,11 @@ int main(int argc, char *_argv[])
   s_wave_fmt_dvi header_dvi;
   s_wave_data header_data;
   s_wave_dvi_block_header header_block;
-  short step_index;
-  short predicted_value;
   char *_buffer;
-  int i, j, k, l, nb_bytes_per_block;
+  int nb_bytes_per_block;
   int block_size;
-  char c;
   int block_sent = 0;
   int end = 0;
-  char _progress_bar[33];
   int file_size;
   int nb_blocks;
 

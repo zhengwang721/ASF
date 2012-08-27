@@ -8,6 +8,7 @@
 		</info>	
 		<build type="c-source" value="adcifa_example.c"/>
 		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clock.h"/>
 		<device-support value="uc3c"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
@@ -15,5 +16,7 @@
 		<require idref="avr32.drivers.usart"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="avr32.drivers.adcifa"/>
+		<require idref="common.services.delay"/>
+		<require idref="common.services.basic.clock"/>
 	</module>
 </asf>

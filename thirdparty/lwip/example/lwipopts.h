@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief lwIP configuration for AVR UC3.
+ * \brief lwIP configuration.
  *
  * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *

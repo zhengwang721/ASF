@@ -7,7 +7,7 @@
  * This file contains basic functions for the AVR32 MCI, with support for all
  * modes, settings and clock speeds.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -175,10 +175,7 @@ void mci_enable(volatile avr32_mci_t *mci);
  *
  * \param mci        Base address of the MCI instance.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_get_sr(volatile avr32_mci_t *mci)
+__always_inline static int mci_get_sr(volatile avr32_mci_t *mci)
 {
   shadow_sr = (shadow_sr & (AVR32_MCI_SR_DTOE_MASK | AVR32_MCI_SR_DCRCE_MASK | AVR32_MCI_SR_CSTOE_MASK | AVR32_MCI_SR_BLKOVRE_MASK)) | mci->sr;
   return shadow_sr;
@@ -281,10 +278,7 @@ extern void mci_wait_busy_signal(volatile avr32_mci_t *mci);
  * \param data  Data to write
  * \retval
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void mci_wr_data(volatile avr32_mci_t *mci,uint32_t data)
+__always_inline static void mci_wr_data(volatile avr32_mci_t *mci,uint32_t data)
 {
   mci->tdr = data;
 }
@@ -295,10 +289,7 @@ static inline void mci_wr_data(volatile avr32_mci_t *mci,uint32_t data)
  *
  * \retval data Data read
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline uint32_t mci_rd_data(volatile avr32_mci_t *mci)
+__always_inline static uint32_t mci_rd_data(volatile avr32_mci_t *mci)
 {
   return (mci->rdr);
 }
@@ -321,10 +312,7 @@ extern int mci_select_card(volatile avr32_mci_t *mci, uint8_t card_slot, uint8_t
  *
  * \return \c 1 if the MCI can take a new command, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_cmd_ready(volatile avr32_mci_t *mci)
+__always_inline static int mci_cmd_ready(volatile avr32_mci_t *mci)
 {
   return ((mci_get_sr(mci)&AVR32_MCI_SR_CMDRDY_MASK) != 0);
 }
@@ -335,10 +323,7 @@ static inline int mci_cmd_ready(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI Transmit Holding Register is free, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_tx_ready(volatile avr32_mci_t *mci)
+__always_inline static int mci_tx_ready(volatile avr32_mci_t *mci)
 {
   return ((mci_get_sr(mci)&AVR32_MCI_SR_TXRDY_MASK) != 0);
 }
@@ -349,10 +334,7 @@ static inline int mci_tx_ready(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI Receive Holding Register is free, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_rx_ready(volatile avr32_mci_t *mci)
+__always_inline static int mci_rx_ready(volatile avr32_mci_t *mci)
 {
   return (mci_get_sr(mci)&AVR32_MCI_SR_RXRDY_MASK) != 0;
 }
@@ -363,10 +345,7 @@ static inline int mci_rx_ready(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI Block is ended, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_data_block_ended(volatile avr32_mci_t *mci)
+__always_inline static int mci_data_block_ended(volatile avr32_mci_t *mci)
 {
   return (mci_get_sr(mci)&AVR32_MCI_SR_XFRDONE_MASK) != 0;
 }
@@ -377,10 +356,7 @@ static inline int mci_data_block_ended(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI CRC Error Flag is set, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_crc_error(volatile avr32_mci_t *mci)
+__always_inline static int mci_crc_error(volatile avr32_mci_t *mci)
 {
   if( mci_get_sr(mci)&AVR32_MCI_SR_DCRCE_MASK )
   {
@@ -397,10 +373,7 @@ static inline int mci_crc_error(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI overrun flag is set, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_overrun_error(volatile avr32_mci_t *mci)
+__always_inline static int mci_overrun_error(volatile avr32_mci_t *mci)
 {
   if( mci_get_sr(mci)&AVR32_MCI_SR_OVRE_MASK )
   {
@@ -416,10 +389,7 @@ static inline int mci_overrun_error(volatile avr32_mci_t *mci)
  *
  * \return \c 1 if the MCI underrun flag is set, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int mci_underrun_error(volatile avr32_mci_t *mci)
+__always_inline static int mci_underrun_error(volatile avr32_mci_t *mci)
 {
   if( mci_get_sr(mci)&AVR32_MCI_SR_UNRE_MASK )
   {

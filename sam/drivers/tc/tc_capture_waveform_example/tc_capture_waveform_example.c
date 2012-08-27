@@ -52,15 +52,16 @@
  * \section Requirements
  *
  * This package can be used with SAM evaluation kits.
- * It generates a waveform on TC0 channel 1 TIOA1, and it captures wave
- * from channel 2 TIOA2. These 2 pins could be found on board extension
- * header. To measure the waveform on TIOA1, connect PIN_TC0_TIOA1 to PIN_TC0_TIOA2,
- * and configure PIN_TC0_TIOA1 as output pin and PIN_TC0_TIOA2 as input pin.
+ * It generates a waveform on TC TC_CHANNEL_WAVEFORM PIN_TC_WAVEFORM, and it captures wave
+ * from TC_CHANNEL_CAPTURE PIN_TC_CAPTURE. Look at the conf_board.h file to check these previous define.
+ *
+ * To measure the wavefrom on channel_waveform, connect PIN_TC_WAVEFORM to TC_CHANNEL_CAPTURE,
+ * and configure PIN_TC_WAVEFORM as output pin and TC_CHANNEL_CAPTURE as input pin.
  *
  * \section Descriptions
  *
  * This example shows how to configure TC in waveform and capture mode.
- * In capture mode, pulse signal (from TIOA1) is set as an input to TIOA2, and RA and RB will be
+ * In capture mode, pulse signal (from PIN_TC_WAVEFORM) is set as an input to PIN_TC_CAPTURE, and RA and RB will be
  * loaded when programmed event occurs. When TC interrupt happens, we could read RA and RB
  * value for calculating pulse frequency and increased pulse number. The current pulse frequency
  * and total pulse number are output on UART.
@@ -68,8 +69,8 @@
  * The code can be roughly broken down as follows:
  * <ul>
  * <li>Select pre-defined waveform frequency and duty cycle to be generated.
- * <li>Configure TC channel 1 as waveform output.
- * <li>Configure TC channel 2 as capture input.
+ * <li>Configure TC_CHANNEL_WAVEFORM as waveform output.
+ * <li>Configure TC_CHANNEL_CAPTURE as capture input.
  * <li>Configure capture Register A loaded when rising edge of TIOA occurs.
  * <li>Configure capture Register B loaded when falling edge of TIOA occurs.
  * <li>Configure an interrupt for TC and enable the RB load interrupt.
@@ -98,10 +99,6 @@
  *    \endcode
  * -# Choose the item in the following menu to test.
  *    \code
- * Configure TC0 channel 1 as waveform operating mode
- * Start waveform: Frequency = 375 Hz,Duty Cycle = 50%
- * Configure TC0 channel 2 as capture operating mode
- *
  *     Menu :
  *     ------
  *       Output waveform property:
@@ -110,7 +107,7 @@
  *       2: Set Frequency = 1000 Hz, Duty Cycle = 80%
  *       3: Set Frequency = 4000 Hz, Duty Cycle = 55%
  *       -------------------------------------------
- *       c: Capture waveform from TC 0 channel 2
+ *       c: Capture waveform from TC(TC_PERIPHERAL) channel(TC_CHANNEL_CAPTURE)
  *       s: Stop capture and display informations what have been captured
  *       h: Display menu
  *     ------
@@ -131,8 +128,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#define TC_CHANNEL_1 1 /* TC Channel number 1 */
-#define TC_CHANNEL_2 2 /* TC Channel number 2 */
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "--TC capture waveform Example --\r\n" \
@@ -188,26 +183,26 @@ static void display_menu(void)
 				(unsigned int)gc_waveconfig[i].
 				us_dutycycle);
 	}
-	puts("  -------------------------------------------\n\r"
-			"  c: Capture waveform from TC 0 channel 2\n\r"
+	printf("  -------------------------------------------\n\r"
+			"  c: Capture waveform from TC%d channel %d\n\r"
 			"  s: Stop capture and display informations what have been captured \n\r"
 			"  h: Display menu \n\r"
-			"------\n\r\r");
+			"------\n\r\r",TC_PERIPHERAL,TC_CHANNEL_CAPTURE);
 }
 
 /**
- * \brief Configure TC0 channel 1 in waveform operating mode.
+ * \brief Configure TC TC_CHANNEL_WAVEFORM in waveform operating mode.
  */
 static void tc_waveform_initialize(void)
 {
 	const uint32_t divisors[5] = { 2, 8, 32, 128, BOARD_MCK / 32768 };
 	uint32_t ra, rc;
 
-	/* Configure the PMC to enable the Timer Counter clock for TC0 channel 1. */
-	pmc_enable_periph_clk(ID_TC1);
+	/* Configure the PMC to enable the Timer Counter clock for TC TC_CHANNEL_WAVEFORM. */
+	pmc_enable_periph_clk(ID_TC_WAVEFORM);
 	
 	/* Init TC clock. */
-	tc_init(TC0, TC_CHANNEL_1, gc_waveconfig[gs_uc_configuration].ul_intclock /* Waveform Clock Selection */
+	tc_init(TC, TC_CHANNEL_WAVEFORM, gc_waveconfig[gs_uc_configuration].ul_intclock /* Waveform Clock Selection */
 			| TC_CMR_WAVE       /* Waveform mode is enabled */
 			| TC_CMR_ACPA_SET	/* RA Compare Effect: set */
 			| TC_CMR_ACPC_CLEAR /* RC Compare Effect: clear */
@@ -215,29 +210,29 @@ static void tc_waveform_initialize(void)
 	);
 	
 	/* Configure waveform frequency and duty cycle. */
-    rc = (sysclk_get_cpu_hz() / divisors[gc_waveconfig[gs_uc_configuration].ul_intclock]) / 
+    rc = (sysclk_get_cpu_hz() / divisors[gc_waveconfig[gs_uc_configuration].ul_intclock]) /
 		gc_waveconfig[gs_uc_configuration].us_frequency;
-    tc_write_rc(TC0, TC_CHANNEL_1, rc);
+    tc_write_rc(TC, TC_CHANNEL_WAVEFORM, rc);
     ra = (100 - gc_waveconfig[gs_uc_configuration].us_dutycycle) * rc / 100;
-    tc_write_ra(TC0, TC_CHANNEL_1, ra);
+    tc_write_ra(TC, TC_CHANNEL_WAVEFORM, ra);
 
-	/* Enable TC0 channel 1. */
-	tc_start(TC0, TC_CHANNEL_1);
+	/* Enable TC TC_CHANNEL_WAVEFORM. */
+	tc_start(TC, TC_CHANNEL_WAVEFORM);
 	printf("Start waveform: Frequency = %d Hz,Duty Cycle = %2d%%\n\r",
 			gc_waveconfig[gs_uc_configuration].us_frequency,
 			gc_waveconfig[gs_uc_configuration].us_dutycycle);
 }
 
 /**
- * \brief Configure TC0 channel 2 in capture operating mode.
+ * \brief Configure TC TC_CHANNEL_CAPTURE in capture operating mode.
  */
 static void tc_capture_initialize(void)
 {
-	/* Configure the PMC to enable the Timer Counter clock TC0 channel 2. */
-	pmc_enable_periph_clk(ID_TC2);
+	/* Configure the PMC to enable the Timer Counter clock TC TC_CHANNEL_CAPTURE */
+	pmc_enable_periph_clk(ID_TC_CAPTURE);
 	
 	/* Init TC clock. */
-	tc_init(TC0, TC_CHANNEL_2, TC_CMR_TCCLKS_TIMER_CLOCK2 /* Clock Selection */
+	tc_init(TC, TC_CHANNEL_CAPTURE, TC_CMR_TCCLKS_TIMER_CLOCK2 /* Clock Selection */
 			| TC_CMR_LDRA_RISING     /* RA Loading Selection: rising edge of TIOA */
 			| TC_CMR_LDRB_FALLING    /* RB Loading Selection: falling edge of TIOA */
 			| TC_CMR_ABETRG          /* External Trigger Selection: TIOA */
@@ -261,14 +256,14 @@ static void configure_console(void)
 }
 
 /**
- * \brief Interrupt handler for the TC0 channel 2.
+ * \brief Interrupt handler for the TC TC_CHANNEL_CAPTURE
  */
-void TC2_Handler(void)
+void TC_Handler(void)
 {
-	if ((tc_get_status(TC0, TC_CHANNEL_2) & TC_SR_LDRBS) == TC_SR_LDRBS) {
+	if ((tc_get_status(TC, TC_CHANNEL_CAPTURE) & TC_SR_LDRBS) == TC_SR_LDRBS) {
 		gs_ul_captured_pulses++;
-		gs_ul_captured_ra = tc_read_ra(TC0, TC_CHANNEL_2);
-		gs_ul_captured_rb = tc_read_rb(TC0, TC_CHANNEL_2);
+		gs_ul_captured_ra = tc_read_ra(TC, TC_CHANNEL_CAPTURE);
+		gs_ul_captured_rb = tc_read_rb(TC, TC_CHANNEL_CAPTURE);
 	}
 }
 
@@ -292,22 +287,22 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	/* Configure PIO Pins for TC0 */
-	gpio_configure_pin(PIN_TC0_TIOA1, PIN_TC0_TIOA1_FLAGS);
-	gpio_configure_pin(PIN_TC0_TIOA2, PIN_TC0_TIOA2_FLAGS);
+	/* Configure PIO Pins for TC */
+	gpio_configure_pin(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_FLAGS);
+	gpio_configure_pin(PIN_TC_CAPTURE, PIN_TC_CAPTURE_FLAGS);
 
-	/* Configure TC0 channel 1 as waveform operating mode */
-	puts("Configure TC0 channel 1 as waveform operating mode \r");
+	/* Configure TC TC_CHANNEL_WAVEFORM as waveform operating mode */
+	printf("Configure TC%d channel %d as waveform operating mode \n\r",TC_PERIPHERAL,TC_CHANNEL_WAVEFORM);
 	tc_waveform_initialize();
-	/* Configure TC0 channel 2 as capture operating mode */
-	puts("Configure TC0 channel 2 as capture operating mode \r");
+	/* Configure TC TC_CHANNEL_CAPTURE as capture operating mode */
+	printf("Configure TC%d channel %d as capture operating mode \n\r",TC_PERIPHERAL,TC_CHANNEL_CAPTURE);
 	tc_capture_initialize();
 
-	/* Configure TC interrupts for TC0 channel 2 only */
-	NVIC_DisableIRQ(TC2_IRQn);
-	NVIC_ClearPendingIRQ(TC2_IRQn);
-	NVIC_SetPriority(TC2_IRQn, 0);
-	NVIC_EnableIRQ(TC2_IRQn);
+	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	NVIC_DisableIRQ(TC_IRQn);
+	NVIC_ClearPendingIRQ(TC_IRQn);
+	NVIC_SetPriority(TC_IRQn, 0);
+	NVIC_EnableIRQ(TC_IRQn);
 
 	/* Display menu */
 	display_menu();
@@ -322,8 +317,8 @@ int main(void)
 
 		case 's':
 			if (gs_ul_captured_pulses) {
-				tc_disable_interrupt(TC0, TC_CHANNEL_2, TC_IDR_LDRBS);
-				printf("Captured %u pulses from TC0 channel 2, RA = %u, RB = %u \n\r", (unsigned int)gs_ul_captured_pulses, (unsigned int)gs_ul_captured_ra, (unsigned int)gs_ul_captured_rb);
+				tc_disable_interrupt(TC, TC_CHANNEL_CAPTURE, TC_IDR_LDRBS);
+				printf("Captured %u pulses from TC%d channel %d, RA = %u, RB = %u \n\r", (unsigned int)gs_ul_captured_pulses, TC_PERIPHERAL, TC_CHANNEL_CAPTURE, (unsigned int)gs_ul_captured_ra, (unsigned int)gs_ul_captured_rb);
 
 				frequence = (sysclk_get_cpu_hz() / 8) / gs_ul_captured_rb;
 				dutycycle = (gs_ul_captured_rb - gs_ul_captured_ra) * 100 / gs_ul_captured_rb;
@@ -340,9 +335,9 @@ int main(void)
 
 		case 'c':
 			puts("Start capture, press 's' to stop \r");
-			tc_enable_interrupt(TC0, TC_CHANNEL_2, TC_IER_LDRBS);
-			/* Start the timer counter on TC0 channel 2 */
-			tc_start(TC0, TC_CHANNEL_2);
+			tc_enable_interrupt(TC, TC_CHANNEL_CAPTURE, TC_IER_LDRBS);
+			/* Start the timer counter on TC TC_CHANNEL_CAPTURE */
+			tc_start(TC, TC_CHANNEL_CAPTURE);
 			break;
 		default:
 			/* Set waveform configuration #n */

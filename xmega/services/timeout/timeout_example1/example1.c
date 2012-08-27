@@ -3,7 +3,7 @@
  *
  * \brief Timeout driver example 1 for XMEGA
  *
- * Copyright (C) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -103,6 +103,7 @@ int main( void )
 	board_init();
 	pmic_init();
 	timeout_init();
+	cpu_irq_enable();
 
 	// Start 8 different timeouts
 	timeout_start_periodic(EXAMPLE_TIMEOUT_0, 1);

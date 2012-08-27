@@ -67,6 +67,9 @@
 /** Master clock frequency */
 #define BOARD_MCK					CHIP_FREQ_CPU_MAX
 
+/** board main clock xtal statup time */
+#define BOARD_OSC_STARTUP_US   15625
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam3u_ek_board_info SAM3U-EK - Board informations
@@ -89,130 +92,7 @@
 #define cortexm3
 
 /*----------------------------------------------------------------------------*/
-/**
- * \page sam3u_ek_pio_info SAM3UE-EK - PIO definitions
- * This pages lists all the pio definitions. The constants
- * are named using the following convention: PIN_* for a constant which defines
- * a single Pin instance (but may include several PIOs sharing the same
- * controller), and PINS_* for a list of Pin instances.
- *
- * \section ADC
- * - \ref PIN_ADC0_AD0
- * - \ref PIN_ADC0_AD1
- * - \ref PIN_ADC0_AD2
- * - \ref PIN_ADC0_AD3
- * - \ref PIN_ADC0_AD4
- * - \ref PIN_ADC0_AD5
- * - \ref PIN_ADC0_AD6
- * - \ref PIN_ADC0_AD7
- * - \ref PINS_ADC
- *
- *
- * \section EBI
- * - \ref PIN_EBI_DATA_BUS
- * - \ref PIN_EBI_NCS0
- * - \ref PIN_EBI_NRD
- * - \ref PIN_EBI_NWE
- * - \ref PIN_EBI_PSRAM_ADDR_BUS
- * - \ref PIN_EBI_PSRAM_NBS
- * - \ref PIN_EBI_A1
- * - \ref PIN_EBI_NCS2
- * - \ref PIN_EBI_LCD_RS
- *
- * \section LEDs
- * - \ref PIN_LED_0
- * - \ref PIN_LED_1
- * - \ref PIN_LED_2
- * - \ref PINS_LEDS
- *
- * \section HSMCI
- * - \ref PINS_HSMCI
- * - \ref PIN_HSMCI_DAT0
- * - \ref PIN_HSMCI_CD
- *
- * \section Push buttons
- * - \ref PIN_PUSHBUTTON_1
- * - \ref PIN_PUSHBUTTON_2
- * - \ref PINS_PUSHBUTTONS
- * - \ref PUSHBUTTON_BP1
- * - \ref PUSHBUTTON_BP2
- *
- * \section PWMC
- * - \ref PIN_PWMC_PWMH0
- * - \ref PIN_PWMC_PWML0
- * - \ref PIN_PWMC_PWMH1
- * - \ref PIN_PWMC_PWML1
- * - \ref PIN_PWMC_PWMH2
- * - \ref PIN_PWMC_PWML2
- * - \ref PIN_PWM_LED0
- * - \ref PIN_PWM_LED1
- * - \ref PIN_PWM_LED2
- * - \ref CHANNEL_PWM_LED0
- * - \ref CHANNEL_PWM_LED1
- * - \ref CHANNEL_PWM_LED2
- *
- * \section SPI0
- * - \ref PIN_SPI0_MISO
- * - \ref PIN_SPI0_MOSI
- * - \ref PIN_SPI0_SPCK
- * - \ref PIN_SPI0_NPCS2_PC14
- * - \ref PINS_SPI0
- *
- * \section  SSC
- * - \ref PIN_SSC_TD
- * - \ref PIN_SSC_TK
- * - \ref PIN_SSC_TF
- * - \ref PINS_SSC_CODEC
- *
- * \section  PCK0
- * - \ref PIN_PCK0
- *
- * \section TWI
- * - \ref TWI_V3XX
- * - \ref PIN_TWI_TWD0
- * - \ref PIN_TWI_TWCK0
- * - \ref PINS_TWI0
- * - \ref PIN_TWI_TWD1
- * - \ref PIN_TWI_TWCK1
- * - \ref PINS_TWI1
- *
- * \section USART0
- * - \ref PIN_USART0_RXD
- * - \ref PIN_USART0_TXD
- * - \ref PIN_USART0_CTS
- * - \ref PIN_USART0_RTS
- * - \ref PIN_USART0_SCK
- *
- * \section USART1
- * - \ref PIN_USART1_RXD
- * - \ref PIN_USART1_TXD
- * - \ref PIN_USART1_CTS
- * - \ref PIN_USART1_RTS
- * - \ref PIN_USART1_SCK
- *
- * \section USB
- * - \ref PIN_USB_VBUS
- */
-//! ADC_AD0 pin definition.
-#define PIN_ADC0_AD0 {1 << 21, PIOA, ID_PIOA, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD1 pin definition.
-#define PIN_ADC0_AD1 {1 << 30, PIOA, ID_PIOA, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD2 pin definition.
-#define PIN_ADC0_AD2 {1 << 3,  PIOB, ID_PIOB, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD3 pin definition.
-#define PIN_ADC0_AD3 {1 << 4, PIOB, ID_PIOB, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD4 pin definition.
-#define PIN_ADC0_AD4 {1 << 15, PIOC, ID_PIOC, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD5 pin definition.
-#define PIN_ADC0_AD5 {1 << 16, PIOC, ID_PIOC, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD6 pin definition.
-#define PIN_ADC0_AD6 {1 << 17, PIOC, ID_PIOC, PIO_INPUT, PIO_DEFAULT}
-//! ADC_AD7 pin definition.
-#define PIN_ADC0_AD7 {1 << 18, PIOC, ID_PIOC, PIO_INPUT, PIO_DEFAULT}
-
 //! Pins ADC
-#define PINS_ADC PIN_ADC0_AD0, PIN_ADC0_AD1, PIN_ADC0_AD2, PIN_ADC0_AD3, PIN_ADC0_AD4, PIN_ADC0_AD5, PIN_ADC0_AD6, PIN_ADC0_AD7
-
 #define PINS_ADC12B_TRIG  PIO_PA2_IDX
 #define PINS_ADC12B_TRIG_FLAG  (PIO_PERIPH_B | PIO_DEFAULT)
 #define PINS_ADC_TRIG  PIO_PA17_IDX
@@ -315,8 +195,8 @@
 #define PIN_EBI_LCD_RS_ATTR PIO_PULLUP
 
 /** Backlight pin definition. */
-#define BOARD_BACKLIGHT                PIO_PC19_IDX
-#define BOARD_BACKLIGHT_FLAG       PIO_OUTPUT_0 | PIO_DEFAULT
+#define BOARD_AAT31XX_SET_GPIO        PIO_PC19_IDX
+#define BOARD_AAT31XX_SET_FLAGS       PIO_OUTPUT_0 | PIO_DEFAULT
 
 /** Definition of MMA7341L x,y,z axis channel number */
 #define MMA7341L_ADC_CHANNEL_X  2
@@ -336,9 +216,9 @@
 #define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 
 /** Define HX8347A base address. */
-#define BOARD_LCD_BASE              0x62000000
+#define BOARD_HX8347A_ADDR            0x62000000
 /** Define HX8347A register select signal. */
-#define BOARD_LCD_RS                (1 << 1)
+#define BOARD_HX8347A_RS              (1 << 1)
 
 /** Define MCP980X TWI instance. */
 #define BOARD_MCP980X_TWI_INSTANCE  (TWI0)
@@ -349,6 +229,7 @@
 #define LED_0_NAME    "green LED D2"
 #define LED0_GPIO     (PIO_PB0_IDX)
 #define LED0_FLAGS    (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
+#define LED0_ACTIVE_LEVEL 0
 
 #define PIN_LED_0   {1 << 0, PIOB, ID_PIOB, PIO_OUTPUT_0, PIO_DEFAULT}
 #define PIN_LED_0_MASK 1 << 0
@@ -361,6 +242,7 @@
 #define LED_1_NAME    "green LED D3"
 #define LED1_GPIO     (PIO_PB1_IDX)
 #define LED1_FLAGS    (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
+#define LED1_ACTIVE_LEVEL 0
 
 #define PIN_LED_1   {1 << 1, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_1_MASK 1 << 1
@@ -372,6 +254,7 @@
 //! LED #2 pin definition (RED).
 #define LED2_GPIO 		(PIO_PB2_IDX)
 #define LED2_GPIO_FLAGS (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
+#define LED2_ACTIVE_LEVEL 1
 
 #define PIN_LED_2   {1 << 2, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_2_MASK 1 << 2
@@ -380,8 +263,7 @@
 #define PIN_LED_2_TYPE PIO_OUTPUT_1
 #define PIN_LED_2_ATTR PIO_DEFAULT
 
-//! List of all LEDs definitions.
-#define PINS_LEDS   PIN_LED_0, PIN_LED_1, PIN_LED_2
+#define BOARD_NUM_OF_LED 3
 
 //!// HSMCI pins definition.
 #define PINS_HSMCI  {0x1f8, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP}, \
@@ -423,10 +305,7 @@
 #define PIN_PUSHBUTTON_2_ATTR PIO_DEGLITCH | PIO_PULLUP | PIO_IT_FALL_EDGE
 //! List of all push button definitions.
 #define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2
-//! Push button #1 index.
-#define PUSHBUTTON_BP1   0
-//! Push button #2 index.
-#define PUSHBUTTON_BP2   1
+
 //! Simulated joystick LEFT index.
 #define JOYSTICK_LEFT    0
 //! Simulated joystick RIGHT index.
@@ -470,12 +349,6 @@
 #define PIN_PWM_LED1 PIN_PWMC_PWMH1
 //! PWM pin definition for LED2
 #define PIN_PWM_LED2 PIN_PWMC_PWMH2
-//! PWM channel for LED0
-#define CHANNEL_PWM_LED0 0
-//! PWM channel for LED1
-#define CHANNEL_PWM_LED1 1
-//! PWM channel for LED2
-#define CHANNEL_PWM_LED2 2
 
 //! PWM LED0 pin definitions.
 #define PIN_PWM_LED0_GPIO    PIO_PB0_IDX
@@ -491,19 +364,6 @@
 #define PIN_PWM_LED2_GPIO    PIO_PB2_IDX
 #define PIN_PWM_LED2_FLAGS   (PIO_PERIPH_A | PIO_DEFAULT)
 
-//! SPI0 MISO pin definition.
-#define PIN_SPI0_MISO  {1 << 13, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-//! SPI0 MOSI pin definition.
-#define PIN_SPI0_MOSI  {1 << 14, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-//! SPI0 SPCK pin definition.
-#define PIN_SPI0_SPCK  {1 << 15, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-//! SPI0 chip select 0 pin definition.
-#define PIN_SPI0_NPCS0_PA16  {1 <<  16, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PIN_SPI0_NPCS0  PIN_SPI0_NPCS0_PA16
-//! SPI0 chip select 2 pin definition.
-#define PIN_SPI0_NPCS2_PC14  {1 <<  14, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT}
-//! List of SPI0 pin definitions (MISO, MOSI & SPCK).
-#define PINS_SPI0      PIN_SPI0_MISO, PIN_SPI0_MOSI, PIN_SPI0_SPCK
 /** SPI MISO pin definition. */
 #define SPI_MISO_GPIO 		(PIO_PA13_IDX)
 #define SPI_MISO_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
@@ -537,11 +397,38 @@
 #define SPI_NPCS3_PC5_GPIO 		  (PIO_PC5_IDX)
 #define SPI_NPCS3_PC5_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
 
+#define BOARD_ADS7843_IRQ_GPIO      PIO_PA24_IDX
+#define BOARD_ADS7843_IRQ_FLAGS     PIO_INPUT | PIO_PULLUP
+#define BOARD_ADS7843_IRQ_WUP_ID    (1 << 23)
+#define BOARD_ADS7843_BUSY_GPIO     PIO_PA2_IDX
+#define BOARD_ADS7843_BUSY_FLAGS    PIO_INPUT | PIO_PULLUP
+
+/** Base address of SPI peripheral connected to the touchscreen controller. */
+#define BOARD_ADS7843_SPI_BASE      SPI
+/** Identifier of SPI peripheral connected to the touchscreen controller. */
+#define BOARD_ADS7843_SPI_ID        ID_SPI
+/** Chip select connected to the touchscreen controller. */
+#define BOARD_ADS7843_SPI_NPCS      0
+
 //! SSC pins definition.
-#define PIN_SSC_TD      {0x1 << 26, PIOA,ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PIN_SSC_TK      {0x1 << 28, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PIN_SSC_TF      {0x1 << 30, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PINS_SSC_CODEC       PIN_SSC_TD,  PIN_SSC_TK, PIN_SSC_TF
+/** SSC pin Transmitter Data (TD) */
+#define PIN_SSC_TD        (PIO_PA26_IDX)
+#define PIN_SSC_TD_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+/** SSC pin Transmitter Clock (TK) */
+#define PIN_SSC_TK        (PIO_PA28_IDX)
+#define PIN_SSC_TK_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+/** SSC pin Transmitter FrameSync (TF) */
+#define PIN_SSC_TF        (PIO_PA30_IDX)
+#define PIN_SSC_TF_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+/** SSC pin Receiver Data (RD) */
+#define PIN_SSC_RD        (PIO_PA27_IDX)
+#define PIN_SSC_RD_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+/** SSC pin Receiver Clock (RK) */
+#define PIN_SSC_RK        (PIO_PA29_IDX)
+#define PIN_SSC_RK_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+/** SSC pin Receiver FrameSync (RF) */
+#define PIN_SSC_RF        (PIO_PA31_IDX)
+#define PIN_SSC_RF_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
 
 //! PCK0
 #define PIN_PCK0		(PIO_PA21_IDX)
@@ -664,15 +551,6 @@
 #define CONF_NF_DMA_CHANNEL    0
 #endif
 
-//! TWI pins definition.
-#define TWI_V3XX
-#define PIN_TWI_TWD0    {0x1 << 9, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PIN_TWI_TWCK0    {0x1 << 10, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PINS_TWI0     PIN_TWI_TWD0, PIN_TWI_TWCK0
-#define PIN_TWI_TWD1    {0x1 << 24, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PIN_TWI_TWCK1    {0x1 << 25, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-#define PINS_TWI1     PIN_TWI_TWD1, PIN_TWI_TWCK1
-
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA9_IDX
 #define TWI0_DATA_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
@@ -725,21 +603,10 @@
 //! USB VBus monitoring pin definition.
 #define PIN_USB_VBUS    {1 << 0, PIOA, ID_PIOA, PIO_INPUT, PIO_DEFAULT}
 
-/** USART RX pin for application */
-#define BOARD_PIN_USART_RXD        PIN_USART1_RXD
-/** USART TX pin for application */
-#define BOARD_PIN_USART_TXD        PIN_USART1_TXD
-/** USART CTS pin for application */
-#define BOARD_PIN_USART_CTS        PIN_USART1_CTS
-/** USART RTS pin for application */
-#define BOARD_PIN_USART_RTS        PIN_USART1_RTS
-/** USART Base for application */
-#define BOARD_USART_BASE           USART1
-/** USART ID for application */
-#define BOARD_ID_USART             ID_USART1
+/** Base address of PSRAM */
+#define BOARD_PSRAM_ADDR         (0x60000000)
 
 #define CONSOLE_UART			   UART
-//------------------------------------------------------------------------------
 #define CONSOLE_UART_ID            ID_UART
 
 /* RE pin. */
@@ -760,5 +627,11 @@
 #define ISO7816_USART              USART0
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (PIO_OUTPUT_0 | PIO_DEFAULT)
+
+/* WM8731 Slave address */
+#define WM8731_SLAVE_ADDRESS        0x1b
+
+/** TWI interface for WM8731 */
+#define TWI_WM8731  TWI0
 
 #endif  // _SAM3U_EK_H_

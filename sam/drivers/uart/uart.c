@@ -52,7 +52,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup sam_drivers_twi_group Universal Asynchronous Receiver Transceiver (UART)
+ * \defgroup sam_drivers_uart_group Universal Asynchronous Receiver Transceiver (UART)
  *
  * The Universal Asynchronous Receiver Transmitter features a two-pin UART that can be 
  * used for communication and trace purposes and offers an ideal medium for in-situ 

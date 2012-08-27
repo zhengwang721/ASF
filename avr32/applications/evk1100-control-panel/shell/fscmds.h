@@ -10,7 +10,7 @@
  *                       Written for UC3 and EVK1100.
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,9 @@
 #define __FSCMDS_H__
 
 #include "fs_com.h"
+
+#include "shell.h"
+
 //_____ M A C R O S ________________________________________________________
 
 
@@ -637,5 +640,62 @@ eFsCmdsStatus e_fscmds_CheckNavError( void );
  */
 void v_fscmds_GetStrMsgFromErr( eFsCmdsStatus ErrStatus, signed portCHAR **ppcStringReply );
 
+/*  \brief The touch basic command
+ *
+ *  \param FsNavId           Input. The file system navigator id to use.
+ *  \param pxStringFilename  Input. The file name.
+ *
+ *  \return the status of the operation.
+ */
+eFsCmdsStatus e_fscmds_touch( signed short FsNavId, const FS_STRING pxStringFilename );
+
+/*!
+ *  \brief The rm all basic command. \n
+ *  Remove all files and directories in current directory == rm {-R} *
+ *
+ *  \param FsNavId           Input. The file system navigator id to use.
+ *  \param bOnlyEmpty        Input. Boolean switch between:\n
+ *                           false(=="non-empty directories can be deleted")\n
+ *                           and true(=="non-empty directories cannot be deleted")
+ *  WARNING: paths are not supported with *; i.e. the command may only be
+ *           rm -R * or rm *
+ *
+ *  \return the status of the operation.
+ */
+eFsCmdsStatus e_fscmds_rm_all( signed short FsNavId, bool bOnlyEmpty );
+
+/*!
+ *  \brief The rm basic command. \n
+ *  Remove a specified file or a specified directory == rm {-R} {filename,dirname}
+ *  NOTE: file and directory names can be used with a path.
+ *
+ *  \param FsNavId           Input. The file system navigator id to use.
+ *  \param pxStringName      Input. The name.
+ *  \param bOnlyEmpty        Input. Boolean switch between:\n
+ *                           false(=="non-empty directories can be deleted")\n
+ *                           and true(=="non-empty directories cannot be deleted")
+ *
+ *  \return the status of the operation.
+ */
+eFsCmdsStatus e_fscmds_rm( signed short FsNavId, const FS_STRING pxStringName,
+                           bool bOnlyEmpty );
+
+/*!
+ *  \brief Shared mount drive command.
+ *
+ *  \note  This function must be of the type pfShellCmd defined by the shell module.
+ *
+ *  \param u8DriveId      Input. The drive id to mount.
+ *  \param FsNavId        Input. The file system navigator id to use.
+ *  \param ac             Input. The argument counter. Should be 0.
+ *  \param ppcStringReply Input/Output. The response string.
+ *                        If Input is NULL, no response string will be output.
+ *                        Else a malloc for the response string is performed here;
+ *                        the caller must free this string.
+ *
+ *  \return the status of the command execution.
+ */
+eExecStatus e_fscmds_goto_drive( unsigned int u8DriveId, signed short FsNavId,
+                                 int ac, signed portCHAR **ppcStringReply );
 
 #endif // __FSCMDS_H__

@@ -3,7 +3,7 @@
  *
  * \brief Control Panel main file.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,6 +94,8 @@ static void prv_at45dbx_resources_init( void ); // FORWARD
 static void prv_sd_mmc_resources_init(void); // FORWARD
 #endif
 static void prv_clk_gen_start(void);        // FORWARD
+
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );
 
 #if defined(__GNUC__)
 const char *const pcCtrlPanelVersion = "GCC "__VERSION__" "__DATE__" "__TIME__" ATMEL_CONTROLPANEL_AVR32_UC3_10400"CRLF; // 1.04.00

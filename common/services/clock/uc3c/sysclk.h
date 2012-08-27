@@ -205,34 +205,39 @@ extern "C" {
  *   \code #define CONFIG_USBCLK_DIV              1 \endcode
  */
 
-// Bugzilla #11808
-#ifndef AVR32_PDCA_CLK_PBC
-#define AVR32_PDCA_CLK_PBC                 128
-#endif
+// Jira DEVXML-45 issue, wrong PBC mask values
+#undef AVR32_PDCA_CLK_PBC
+#undef AVR32_MDMA_CLK_PBC
+#undef AVR32_USART1_CLK_PBC
+#undef AVR32_SPI0_CLK_PBC
+#undef AVR32_CANIF_CLK_PBC
+#undef AVR32_TC0_CLK_PBC
+#undef AVR32_ADCIFA_CLK_PBC
+#undef AVR32_USART4_CLK_PBC
+#undef AVR32_TWIM2_CLK_PBC
+#undef AVR32_TWIS2_CLK_PBC
+#define AVR32_PDCA_CLK_PBC 128
+#define AVR32_MDMA_CLK_PBC 129
+#define AVR32_USART1_CLK_PBC 130
+#define AVR32_SPI0_CLK_PBC 131
+#define AVR32_CANIF_CLK_PBC 132
+#define AVR32_TC0_CLK_PBC 133
+#define AVR32_ADCIFA_CLK_PBC 134
+#define AVR32_USART4_CLK_PBC 135
+#define AVR32_TWIM2_CLK_PBC 136
+#define AVR32_TWIS2_CLK_PBC 137
 
-#ifndef AVR32_MDMA_CLK_PBC
-#define AVR32_MDMA_CLK_PBC                 129
-#endif
+// Jira DEVXML-95 issue, missing PBxSEL values
+#	if !defined(AVR32_PM_PBASEL_PBSEL)
+#		define AVR32_PM_PBASEL_PBSEL         0
+#	endif
+#	if !defined(AVR32_PM_PBBSEL_PBSEL)
+#		define AVR32_PM_PBBSEL_PBSEL         0
+#	endif
+#	if !defined(AVR32_PM_PBCSEL_PBSEL)
+#		define AVR32_PM_PBCSEL_PBSEL         0
+#	endif
 
-#ifndef AVR32_USART1_CLK_PBC
-#define AVR32_USART1_CLK_PBC               130
-#endif
-
-#ifndef AVR32_SPI0_CLK_PBC
-#define AVR32_SPI0_CLK_PBC                 131
-#endif
-
-#ifndef AVR32_CANIF_CLK_PBC
-#define AVR32_CANIF_CLK_PBC                132
-#endif
-
-#ifndef AVR32_TC0_CLK_PBC
-#define AVR32_TC0_CLK_PBC                  133
-#endif
-
-#ifndef AVR32_ADCIFA_CLK_PBC
-#define AVR32_ADCIFA_CLK_PBC               134
-#endif
 /**
  * \weakgroup sysclk_group
  * @{
@@ -372,6 +377,7 @@ extern "C" {
 #define SYSCLK_SRC_PLL0         3       //!< Phase Locked Loop 0
 #define SYSCLK_SRC_PLL1         4       //!< Phase Locked Loop 1
 #define SYSCLK_SRC_RC8M         5       //!< 8 MHz RC oscillator
+#define SYSCLK_SRC_RC120M       7       //!< 120 MHz RC oscillator
 //@}
 
 //! \name USB Clock Sources
@@ -506,6 +512,12 @@ extern "C" {
 #define SYSCLK_TC0              (AVR32_TC0_CLK_PBC % 32)
 //! A/D Converter
 #define SYSCLK_ADCIFA           (AVR32_ADCIFA_CLK_PBC % 32)
+//! USART 4
+#define SYSCLK_USART4           (AVR32_USART4_CLK_PBC % 32)
+//! TWI Master 2
+#define SYSCLK_TWIM2            (AVR32_TWIM2_CLK_PBC % 32)
+//! TWI Slave 2
+#define SYSCLK_TWIS2            (AVR32_TWIS2_CLK_PBC % 32)
 //@}
 
 #ifndef __ASSEMBLY__
@@ -675,6 +687,9 @@ static inline uint32_t sysclk_get_main_hz(void)
 
 	case SYSCLK_SRC_RC8M:
 		return OSC_RC8M_NOMINAL_HZ;
+		
+	case SYSCLK_SRC_RC120M:
+		return OSC_RC120M_NOMINAL_HZ;
 
 	default:
 		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
@@ -807,6 +822,9 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 	case AVR32_CANIF_ADDRESS:
 	case AVR32_TC0_ADDRESS:
 	case AVR32_ADCIFA_ADDRESS:
+	case AVR32_USART4_ADDRESS:
+	case AVR32_TWIM2_ADDRESS:
+	case AVR32_TWIS2_ADDRESS:
 		return sysclk_get_pbc_hz();
 
 	default:
@@ -1093,6 +1111,18 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 		sysclk_enable_pbc_module(SYSCLK_ADCIFA);
 		break;
 
+	case AVR32_USART4_ADDRESS:
+		sysclk_enable_pbc_module(SYSCLK_USART4);
+		break;
+
+	case AVR32_TWIM2_ADDRESS:
+		sysclk_enable_pbc_module(SYSCLK_TWIM2);
+		break;
+
+	case AVR32_TWIS2_ADDRESS:
+		sysclk_enable_pbc_module(SYSCLK_TWIS2);
+		break;
+
 	default:
 		Assert(false);
 		return;
@@ -1277,6 +1307,18 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 		sysclk_disable_pbc_module(SYSCLK_ADCIFA);
 		break;
 
+	case AVR32_USART4_ADDRESS:
+		sysclk_disable_pbc_module(SYSCLK_USART4);
+		break;
+
+	case AVR32_TWIM2_ADDRESS:
+		sysclk_disable_pbc_module(SYSCLK_TWIM2);
+		break;
+
+	case AVR32_TWIS2_ADDRESS:
+		sysclk_disable_pbc_module(SYSCLK_TWIS2);
+		break;
+		
 	default:
 		Assert(false);
 		return;

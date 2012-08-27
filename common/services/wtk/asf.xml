@@ -15,7 +15,9 @@
 		<build type="header-file" value="wtk_basic_frame.h"/>
 		<build type="header-file" value="wtk_check_box.h"/>
 		<build type="header-file" value="wtk_frame.h"/>
+		<build type="header-file" value="wtk_icon.h"/>
 		<build type="header-file" value="wtk_label.h"/>
+		<build type="header-file" value="wtk_plot.h"/>
 		<build type="header-file" value="wtk_progress_bar.h"/>
 		<build type="header-file" value="wtk_radio_button.h"/>
 		<build type="header-file" value="wtk_slider.h"/>
@@ -30,7 +32,9 @@
 		<build type="c-source" value="wtk_basic_frame.c"/>
 		<build type="c-source" value="wtk_check_box.c"/>
 		<build type="c-source" value="wtk_frame.c"/>
+		<build type="c-source" value="wtk_icon.c"/>
 		<build type="c-source" value="wtk_label.c"/>
+		<build type="c-source" value="wtk_plot.c"/>
 		<build type="c-source" value="wtk_progress_bar.c"/>
 		<build type="c-source" value="wtk_radio_button.c"/>
 		<build type="c-source" value="wtk_slider.c"/>

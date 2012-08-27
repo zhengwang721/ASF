@@ -31,7 +31,7 @@
  * Using "asynchronous" functions shall be the preferred solution in order to avoid
  * as much as possible audio "blips".
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -575,10 +575,7 @@ void ai_async_update_cmd_status(ai_async_status_t *cmd_ai_status);
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_is_device_connected( void )
+__always_inline static bool  ai_async_is_device_connected( void )
 {
   return ai_async_cmd_put( CMD_AI_GET_DEVICE_STATUS         , 0, 0, 0, false);
 }
@@ -587,10 +584,7 @@ static inline  bool  ai_async_is_device_connected( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_get_product_id( void )
+__always_inline static bool  ai_async_get_product_id( void )
 {
   return ai_async_cmd_put( CMD_AI_GET_PRODUCT_ID              , 0, 0, 0, false);
 }
@@ -599,10 +593,7 @@ static inline  bool  ai_async_get_product_id( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_get_vendor_id( void )
+__always_inline static bool  ai_async_get_vendor_id( void )
 {
   return ai_async_cmd_put( CMD_AI_GET_VENDOR_ID              , 0, 0, 0, false);
 }
@@ -611,10 +602,7 @@ static inline  bool  ai_async_get_vendor_id( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_get_serial_number( void )
+__always_inline static bool  ai_async_get_serial_number( void )
 {
   return ai_async_cmd_put( CMD_AI_GET_SERIAL_NUMBER          , 0, 0, 0, true);
 }
@@ -624,10 +612,7 @@ static inline  bool  ai_async_get_serial_number( void )
 //! @return    cmd_out_u32    - number of drives, 0 = NO DEVICE AVAILABLE
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_nav_drive_nb( void )
+__always_inline static bool  ai_async_nav_drive_nb( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_NB           , 0, 0, 0, false);
 }
@@ -638,10 +623,7 @@ static inline  bool  ai_async_nav_drive_nb( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_drive_set( uint8_t u8_number )
+__always_inline static bool  ai_async_nav_drive_set( uint8_t u8_number )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_SET          , (uint32_t)u8_number, 0, 0, false);
 }
@@ -652,10 +634,7 @@ static inline bool  ai_async_nav_drive_set( uint8_t u8_number )
 //! @return    cmd_out_u32    - 0xFF in case of no drive selected
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_drive_get        ( void )
+__always_inline static bool  ai_async_nav_drive_get        ( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_GET          , 0, 0, 0, false);
 }
@@ -664,10 +643,7 @@ static inline bool  ai_async_nav_drive_get        ( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_drive_mount      ( void )
+__always_inline static bool  ai_async_nav_drive_mount      ( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_MOUNT        , 0, 0, 0, false);
 }
@@ -676,10 +652,7 @@ static inline bool  ai_async_nav_drive_mount      ( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_drive_total_space( void )
+__always_inline static bool  ai_async_nav_drive_total_space( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_TOTAL_SPACE  , 0, 0, 0, false);
 }
@@ -688,10 +661,7 @@ static inline bool  ai_async_nav_drive_total_space( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_drive_free_space ( void )
+__always_inline static bool  ai_async_nav_drive_free_space ( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DRIVE_FREE_SPACE   , 0, 0, 0, false);
 }
@@ -700,10 +670,7 @@ static inline bool  ai_async_nav_drive_free_space ( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_dir_root( void )
+__always_inline static bool  ai_async_nav_dir_root( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DIR_ROOT           , 0, 0, 0, false);
 }
@@ -712,10 +679,7 @@ static inline bool  ai_async_nav_dir_root( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_dir_cd( void )
+__always_inline static bool  ai_async_nav_dir_cd( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DIR_CD             , 0, 0, 0, false);
 }
@@ -724,10 +688,7 @@ static inline bool  ai_async_nav_dir_cd( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_dir_gotoparent( void )
+__always_inline static bool  ai_async_nav_dir_gotoparent( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DIR_GOTOPARENT     , 0, 0, 0, false);
 }
@@ -737,10 +698,7 @@ static inline bool  ai_async_nav_dir_gotoparent( void )
 //! @return    cmd_out_u32    - true, it is a directory
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_isdir( void )
+__always_inline static bool  ai_async_nav_file_isdir( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_ISDIR         , 0, 0, 0, false);
 }
@@ -749,10 +707,7 @@ static inline bool  ai_async_nav_file_isdir( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_next( void )
+__always_inline static bool  ai_async_nav_file_next( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_NEXT          , 0, 0, 0, false);
 }
@@ -761,10 +716,7 @@ static inline bool  ai_async_nav_file_next( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_previous( void )
+__always_inline static bool  ai_async_nav_file_previous( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_PREVIOUS      , 0, 0, 0, false);
 }
@@ -775,10 +727,7 @@ static inline bool  ai_async_nav_file_previous( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_goto( uint32_t u32_newpos )
+__always_inline static bool  ai_async_nav_file_goto( uint32_t u32_newpos )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_GOTO          , (uint32_t)u32_newpos, 0, 0, false);
 }
@@ -789,24 +738,17 @@ static inline bool  ai_async_nav_file_goto( uint32_t u32_newpos )
 //! @return    cmd_out_u32    - FS_NO_SEL, in case of no file selected
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_pos( void )
+__always_inline static bool  ai_async_nav_file_pos( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_POS           , 0, 0, 0, false);
 }
-
 
 //! Computes the number of files in the filtered list.
 //!
 //! @return    cmd_out_u32    - number of file and directory present in list filtered
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_nb( void )
+__always_inline static bool  ai_async_nav_file_nb( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_NB            , 0, 0, 0, false);
 }
@@ -816,10 +758,7 @@ static inline bool  ai_async_nav_file_nb( void )
 //! @return    cmd_out_u32    - number of file and directory present in list filtered
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_dir_nb( void )
+__always_inline static bool  ai_async_nav_dir_nb( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DIR_NB             , 0, 0, 0, false);
 }
@@ -829,10 +768,7 @@ static inline bool  ai_async_nav_dir_nb( void )
 //! @return    cmd_out_u32    - number of file and directory present in list filtered
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_playlist_nb( void )
+__always_inline static bool  ai_async_nav_playlist_nb( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_PLAYLIST_NB        , 0, 0, 0, false);
 }
@@ -843,10 +779,7 @@ static inline bool  ai_async_nav_playlist_nb( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_dir_name( void )
+__always_inline static bool  ai_async_nav_dir_name( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_DIR_NAME           , 0, 0, 0, true);
 }
@@ -857,10 +790,7 @@ static inline bool  ai_async_nav_dir_name( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_name        ( void )
+__always_inline static bool  ai_async_nav_file_name        ( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_FILE_NAME          , 0, 0, 0, true);
 }
@@ -870,10 +800,7 @@ static inline bool  ai_async_nav_file_name        ( void )
 //! @return    cmd_out_u32    - type of the current file selected
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_type( void )
+__always_inline static bool  ai_async_nav_file_info_type( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_TYPE , 0, 0, 0, false);
 }
@@ -884,10 +811,7 @@ static inline bool  ai_async_nav_file_info_type( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_version( void )
+__always_inline static bool  ai_async_nav_file_info_version( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_VERSION , 0, 0, 0, false);
 }
@@ -898,10 +822,7 @@ static inline bool  ai_async_nav_file_info_version( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_title( void )
+__always_inline static bool  ai_async_nav_file_info_title( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_TITLE   , 0, 0, 0, true);
 }
@@ -912,10 +833,7 @@ static inline bool  ai_async_nav_file_info_title( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_artist( void )
+__always_inline static bool  ai_async_nav_file_info_artist( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_ARTIST , 0, 0, 0, true);
 }
@@ -926,10 +844,7 @@ static inline bool  ai_async_nav_file_info_artist( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_album( void )
+__always_inline static bool  ai_async_nav_file_info_album( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_ALBUM   , 0, 0, 0, true);
 }
@@ -940,10 +855,7 @@ static inline bool  ai_async_nav_file_info_album( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_year( void )
+__always_inline static bool  ai_async_nav_file_info_year( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_YEAR    , 0, 0, 0, false);
 }
@@ -954,10 +866,7 @@ static inline bool  ai_async_nav_file_info_year( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_track( void )
+__always_inline static bool  ai_async_nav_file_info_track( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_TRACK   , 0, 0, 0, false);
 }
@@ -968,10 +877,7 @@ static inline bool  ai_async_nav_file_info_track( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_genre( void )
+__always_inline static bool  ai_async_nav_file_info_genre( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_GENRE  , 0, 0, 0, true);
 }
@@ -982,10 +888,7 @@ static inline bool  ai_async_nav_file_info_genre( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_duration( void )
+__always_inline static bool  ai_async_nav_file_info_duration( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_DURATION   , 0, 0, 0, false);
 }
@@ -996,10 +899,7 @@ static inline bool  ai_async_nav_file_info_duration( void )
 //! @return    ai_async_cmd_out_u32 - pointer on the image data.
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_file_info_image( ai_image_size_t *size )
+__always_inline static bool  ai_async_nav_file_info_image( ai_image_size_t *size )
 {
   return ai_async_cmd_put( CMD_AI_NAV_INFO_IMAGE, (uint32_t) size, 0, 0, false);
 }
@@ -1008,10 +908,7 @@ static inline bool  ai_async_nav_file_info_image( ai_image_size_t *size )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_nav_getplayfile( void )
+__always_inline static bool  ai_async_nav_getplayfile( void )
 {
   return ai_async_cmd_put( CMD_AI_NAV_GETPLAYFILE        , 0, 0, 0, false);
 }
@@ -1020,10 +917,7 @@ static inline bool  ai_async_nav_getplayfile( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_playfile( void )
+__always_inline static bool  ai_async_audio_nav_playfile( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_PLAYFILE     , 0, 0, 0, false);
 }
@@ -1035,10 +929,7 @@ static inline bool  ai_async_audio_nav_playfile( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on St_audio_ctx structure
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_audio_context_save( void )
+__always_inline static bool ai_async_audio_context_save( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CONTEXT_SAVE     , 0, 0, 0, true);
 }
@@ -1050,10 +941,7 @@ static inline bool ai_async_audio_context_save( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_context_restore( void *ctx )
+__always_inline static bool  ai_async_audio_context_restore( void *ctx )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CONTEXT_RESTORE  , 0, 0, (char*)ctx, true);
 }
@@ -1062,10 +950,7 @@ static inline bool  ai_async_audio_context_restore( void *ctx )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_next( void )
+__always_inline static bool  ai_async_audio_nav_next( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_NEXT         , 0, 0, 0, false);
 }
@@ -1074,10 +959,7 @@ static inline bool  ai_async_audio_nav_next( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_previous( void )
+__always_inline static bool  ai_async_audio_nav_previous( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_PREV         , 0, 0, 0, false);
 }
@@ -1088,10 +970,7 @@ static inline bool  ai_async_audio_nav_previous( void )
 //! @return    cmd_out_status - false in case of error, true is success
 //!
 //! TODO: TBD
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_eof_occur( void )
+__always_inline static bool  ai_async_audio_nav_eof_occur( void )
 {
    return ai_async_cmd_put( CMD_AI_AUDIO_NAV_EOF_OCCUR    ,0,0,0,false);
 }
@@ -1102,10 +981,7 @@ static inline bool  ai_async_audio_nav_eof_occur( void )
 //! @return cmd_out_u32    - nb file in directory or play list
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_nb( void )
+__always_inline static bool  ai_async_audio_nav_nb( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_NB           , 0, 0, 0, false);
 }
@@ -1115,10 +991,7 @@ static inline bool  ai_async_audio_nav_nb( void )
 //! @return cmd_out_u32    - 1 to nb file in directory or play list
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_getpos( void )
+__always_inline static bool  ai_async_audio_nav_getpos( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_GETPOS       , 0, 0, 0, false);
 }
@@ -1130,10 +1003,7 @@ static inline bool  ai_async_audio_nav_getpos( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_setpos( uint16_t u16_pos )
+__always_inline static bool  ai_async_audio_nav_setpos( uint16_t u16_pos )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_SETPOS       , (uint32_t)u16_pos, 0, 0, false);
 }
@@ -1144,10 +1014,7 @@ static inline bool  ai_async_audio_nav_setpos( uint16_t u16_pos )
 //! @return cmd_out_u32    - repeat mode used (AUDIO_REPEAT_OFF, AUDIO_REPEAT_TRACK, AUDIO_REPEAT_FOLDER, AUDIO_REPEAT_ALL)
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_repeat_get( void )
+__always_inline static bool  ai_async_audio_nav_repeat_get( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_REPEAT_GET   , 0, 0, 0, false);
 }
@@ -1158,10 +1025,7 @@ static inline bool  ai_async_audio_nav_repeat_get( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_repeat_set( Ai_repeat_mode repeat_mode  )
+__always_inline static bool  ai_async_audio_nav_repeat_set( Ai_repeat_mode repeat_mode  )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_REPEAT_SET   , (uint32_t)repeat_mode, 0, 0, false);
 }
@@ -1171,10 +1035,7 @@ static inline bool  ai_async_audio_nav_repeat_set( Ai_repeat_mode repeat_mode  )
 //! @return    cmd_out_u32    - shuffle mode used (AUDIO_SHUFFLE_OFF, AUDIO_SHUFFLE_FOLDER, AUDIO_SHUFFLE_ALL)
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_shuffle_get( void )
+__always_inline static bool  ai_async_audio_nav_shuffle_get( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_SHUFFLE_GET     , 0, 0, 0, false);
 }
@@ -1185,10 +1046,7 @@ static inline bool  ai_async_audio_nav_shuffle_get( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_shuffle_set( Ai_shuffle_mode shuffle )
+__always_inline static bool  ai_async_audio_nav_shuffle_set( Ai_shuffle_mode shuffle )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_SHUFFLE_SET     , (uint32_t)shuffle, 0, 0, false);
 }
@@ -1198,10 +1056,7 @@ static inline bool  ai_async_audio_nav_shuffle_set( Ai_shuffle_mode shuffle )
 //! @return cmd_out_u32    - mode used (AUDIO_EXPLORER_MODE_DISKS, AUDIO_EXPLORER_MODE_DISK, AUDIO_EXPLORER_MODE_DIRONLY, AUDIO_EXPLORER_MODE_DIRSUB)
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_expmode_get( void )
+__always_inline static bool  ai_async_audio_nav_expmode_get( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_EXPMODE_GET  , 0, 0, 0, false);
 }
@@ -1213,10 +1068,7 @@ static inline bool  ai_async_audio_nav_expmode_get( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_expmode_set( Ai_explorer_mode exp_mode )
+__always_inline static bool  ai_async_audio_nav_expmode_set( Ai_explorer_mode exp_mode )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_EXPMODE_SET  , (uint32_t)exp_mode, 0, 0, false);
 }
@@ -1227,10 +1079,7 @@ static inline bool  ai_async_audio_nav_expmode_set( Ai_explorer_mode exp_mode )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_getname    ( void )
+__always_inline static bool  ai_async_audio_nav_getname    ( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_GETNAME      , 0, 0, 0, true);
 }
@@ -1240,10 +1089,7 @@ static inline bool  ai_async_audio_nav_getname    ( void )
 //! @return    cmd_out_u32    - type of the current file selected
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_type( void )
+__always_inline static bool  ai_async_audio_nav_file_info_type( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_TYPE , 0, 0, 0, false);
 }
@@ -1254,10 +1100,7 @@ static inline bool  ai_async_audio_nav_file_info_type( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_version( void )
+__always_inline static bool  ai_async_audio_nav_file_info_version( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_VERSION , 0, 0, 0, false);
 }
@@ -1268,10 +1111,7 @@ static inline bool  ai_async_audio_nav_file_info_version( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_title ( void )
+__always_inline static bool  ai_async_audio_nav_file_info_title ( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_TITLE   , 0, 0, 0, true);
 }
@@ -1282,10 +1122,7 @@ static inline bool  ai_async_audio_nav_file_info_title ( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_artist( void )
+__always_inline static bool  ai_async_audio_nav_file_info_artist( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_ARTIST , 0, 0, 0, true);
 }
@@ -1296,10 +1133,7 @@ static inline bool  ai_async_audio_nav_file_info_artist( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_audio_nav_file_info_album( void )
+__always_inline static bool ai_async_audio_nav_file_info_album( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_ALBUM   , 0, 0, 0, true);
 }
@@ -1310,10 +1144,7 @@ static inline bool ai_async_audio_nav_file_info_album( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_year( void )
+__always_inline static bool  ai_async_audio_nav_file_info_year( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_YEAR    , 0, 0, 0, false);
 }
@@ -1324,10 +1155,7 @@ static inline bool  ai_async_audio_nav_file_info_year( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_track( void )
+__always_inline static bool  ai_async_audio_nav_file_info_track( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_TRACK   , 0, 0, 0, false);
 }
@@ -1338,10 +1166,7 @@ static inline bool  ai_async_audio_nav_file_info_track( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_genre( void )
+__always_inline static bool  ai_async_audio_nav_file_info_genre( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_GENRE   , 0, 0, 0, true);
 }
@@ -1352,10 +1177,7 @@ static inline bool  ai_async_audio_nav_file_info_genre( void )
 //! @return    cmd_out_PtrArrayU8  - pointer on string allocated by the routine
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_duration( void )
+__always_inline static bool  ai_async_audio_nav_file_info_duration( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_DURATION   , 0, 0, 0, false);
 }
@@ -1366,10 +1188,7 @@ static inline bool  ai_async_audio_nav_file_info_duration( void )
 //! @return    ai_async_cmd_out_u32 - pointer on the image data.
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_nav_file_info_image( ai_image_size_t *size )
+__always_inline static bool  ai_async_audio_nav_file_info_image( ai_image_size_t *size )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_NAV_INFO_IMAGE, (uint32_t) size, 0, 0, false);
 }
@@ -1378,10 +1197,7 @@ static inline bool  ai_async_audio_nav_file_info_image( ai_image_size_t *size )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_stop( void )
+__always_inline static bool  ai_async_audio_ctrl_stop( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_STOP        , 0, 0, 0, false);
 }
@@ -1393,10 +1209,7 @@ static inline  bool  ai_async_audio_ctrl_stop( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_resume( void )
+__always_inline static bool  ai_async_audio_ctrl_resume( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_RESUME      , 0, 0, 0, false);
 }
@@ -1405,10 +1218,7 @@ static inline  bool  ai_async_audio_ctrl_resume( void )
 //!
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_pause( void )
+__always_inline static bool  ai_async_audio_ctrl_pause( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_PAUSE        , 0, 0, 0, false);
 }
@@ -1418,10 +1228,7 @@ static inline  bool  ai_async_audio_ctrl_pause( void )
 //! @return    cmd_out_u32    - current time
 //! @return    cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool  ai_async_audio_ctrl_time( void )
+__always_inline static bool  ai_async_audio_ctrl_time( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_TIME        , 0, 0, 0, false);
 }
@@ -1433,10 +1240,7 @@ static inline bool  ai_async_audio_ctrl_time( void )
 //!
 //! TODO: Add more status flags (new file played, file stopped, TBD)...
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_status( void )
+__always_inline static bool  ai_async_audio_ctrl_status( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_STATUS      , 0, 0, 0, false);
 }
@@ -1447,10 +1251,7 @@ static inline  bool  ai_async_audio_ctrl_status( void )
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_ffw( uint32_t u32_duration )
+__always_inline static bool  ai_async_audio_ctrl_ffw( uint32_t u32_duration )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_FFW      , u32_duration, 0, 0, false);
 }
@@ -1461,10 +1262,7 @@ static inline  bool  ai_async_audio_ctrl_ffw( uint32_t u32_duration )
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_frw( uint32_t u32_duration )
+__always_inline static bool  ai_async_audio_ctrl_frw( uint32_t u32_duration )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_FRW      , u32_duration, 0, 0, false);
 }
@@ -1473,10 +1271,7 @@ static inline  bool  ai_async_audio_ctrl_frw( uint32_t u32_duration )
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_start_ffw( void )
+__always_inline static bool  ai_async_audio_ctrl_start_ffw( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_START_FFW      , 0, 0, 0, false);
 }
@@ -1485,10 +1280,7 @@ static inline  bool  ai_async_audio_ctrl_start_ffw( void )
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_start_frw( void )
+__always_inline static bool  ai_async_audio_ctrl_start_frw( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_START_FRW      , 0, 0, 0, false);
 }
@@ -1497,10 +1289,7 @@ static inline  bool  ai_async_audio_ctrl_start_frw( void )
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  bool  ai_async_audio_ctrl_stop_ffw_frw( void )
+__always_inline static bool  ai_async_audio_ctrl_stop_ffw_frw( void )
 {
   return ai_async_cmd_put( CMD_AI_AUDIO_CTRL_STOP_FFW_FRW   , 0, 0, 0, false);
 }

@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM3U.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,11 +94,19 @@ IntFunc exception_table[] = {
 	SMC_Handler,       /* 9  SMC */
 	PIOA_Handler,      /* 10 Parallel IO Controller A */
 	PIOB_Handler,      /* 11 Parallel IO Controller B */
+#ifdef ID_PIOC
 	PIOC_Handler,      /* 12 Parallel IO Controller C */
+#else
+	Dummy_Handler,
+#endif
 	USART0_Handler,    /* 13 USART 0 */
 	USART1_Handler,    /* 14 USART 1 */
 	USART2_Handler,    /* 15 USART 2 */
+#ifdef ID_USART3
 	USART3_Handler,    /* 16 USART 3 */
+#else
+	Dummy_Handler,
+#endif
 	HSMCI_Handler,     /* 17 MCI */
 	TWI0_Handler,      /* 18 TWI 0 */
 	TWI1_Handler,      /* 19 TWI 1 */

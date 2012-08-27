@@ -15,7 +15,10 @@
 
 // Enable UART Communication Port interface (UART)
 #define CONF_BOARD_ENABLE_USARTC0
-#define CONF_BOARD_ENABLE_USARTE0
+
+/* Enable USART communication on PORTE, which will disable touch buttons
+ * CS2 and CS3, as they share pins. */
+//#define CONF_BOARD_ENABLE_USARTE0
 
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD

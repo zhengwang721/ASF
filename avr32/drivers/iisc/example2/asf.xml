@@ -11,5 +11,7 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.iisc"/>
+		<device-support value="uc3c"/>
+		<device-support value="uc3d3"/>
 	</module>
 </asf>

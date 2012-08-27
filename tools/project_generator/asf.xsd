@@ -67,6 +67,7 @@ A project description is the starting point for the project generator, and must 
       </xs:annotation>
       <xs:complexType>
          <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element ref="board-addon" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="build" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="require" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="info" minOccurs="0" maxOccurs="unbounded"/>
@@ -152,6 +153,13 @@ A project description is the starting point for the project generator, and must 
             <xs:annotation>
                <xs:documentation>
                   The target mcu that is on the board
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="vendor" type="xs:string" use="optional">
+            <xs:annotation>
+               <xs:documentation>
+                  The vendor of the board, defaulting to "User" if unspecified
                </xs:documentation>
             </xs:annotation>
          </xs:attribute>
@@ -610,6 +618,37 @@ It will try to find a module within the tag that contains the same id, with a ha
             <xs:annotation>
                <xs:documentation>
                   The id of the required element
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="board-addon">
+      <xs:annotation>
+         <xs:documentation>
+            The board-addon element is used to specify one or more add-ons to the board that should be mounted.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute name="vendor" type="xs:string" use="optional">
+            <xs:annotation>
+               <xs:documentation>
+                  The vendor of the add-on.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="caption" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The string to use for presenting the add-on.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="position" type="xs:string" use="optional">
+            <xs:annotation>
+               <xs:documentation>
+                  The on-board position of the add-on
                </xs:documentation>
             </xs:annotation>
          </xs:attribute>

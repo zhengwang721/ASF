@@ -58,7 +58,7 @@ static uint8_t ui_hid_report[UDI_HID_REPORT_OUT_SIZE];
 void ui_init(void)
 {
 	// Enable PIO clock for button inputs
-	pmc_enable_periph_clk(ID_PIOB);
+	pmc_enable_periph_clk(ID_PIOC);
 	pmc_enable_periph_clk(ID_PIOD);
 	// Initialize LEDs
 	LED_On(LED0_GPIO);

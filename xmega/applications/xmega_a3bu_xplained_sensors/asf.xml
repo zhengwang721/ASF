@@ -24,6 +24,7 @@
 			<keyword value="Sensors"/>
 		</info>
 		<build type="c-source" value="inertial_sensor.c"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="xmega.applications.avrsbin1_common"/>
 	</module>
 
@@ -38,6 +39,7 @@
 			<keyword value="Sensors"/>
 		</info>
 		<build type="c-source" value="compass_calibrate.c"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="xmega.applications.avrsbin1_common"/>
 	</module>
 
@@ -51,6 +53,7 @@
 			<keyword value="Sensors"/>
 		</info>
 		<build type="c-source" value="drop_detector.c"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="xmega.applications.avrsbin1_common"/>
 	</module>
 </asf>

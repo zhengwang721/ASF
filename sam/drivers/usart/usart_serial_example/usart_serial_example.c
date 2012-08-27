@@ -96,7 +96,7 @@
 #include "conf_example.h"
 
 /** Size of the receive buffer used by the PDC, in bytes. */
-#define BUFFER_SIZE         150
+#define BUFFER_SIZE         100
 
 /** USART PDC transfer type definition. */
 #define PDC_TRANSFER        1
@@ -111,7 +111,7 @@
 #define ALL_INTERRUPT_MASK  0xffffffff
 
 /** Timer counter frequency in Hz. */
-#define TC_FREQ             20
+#define TC_FREQ             1
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "--USART Serial Example --\r\n" \
@@ -121,11 +121,17 @@
 /** Receive buffer. */
 static uint8_t gs_puc_buffer[2][BUFFER_SIZE];
 
+/** Next Receive buffer. */
+static uint8_t gs_puc_nextbuffer[2][BUFFER_SIZE];
+
 /** Current bytes in buffer. */
 static uint32_t gs_ul_size_buffer = BUFFER_SIZE;
 
+/** Current bytes in next buffer. */
+static uint32_t gs_ul_size_nextbuffer = BUFFER_SIZE;
+
 /** Byte mode read buffer. */
-static uint32_t gs_ul_read_buffer = 0;
+static uint16_t gs_us_read_buffer = 0;
 
 /** Current transfer mode. */
 static uint8_t gs_uc_trans_mode = PDC_TRANSFER;
@@ -134,10 +140,13 @@ static uint8_t gs_uc_trans_mode = PDC_TRANSFER;
 static uint8_t gs_uc_buf_num = 0;
 
 /** PDC data packet. */
-pdc_packet_t g_st_packet;
+pdc_packet_t g_st_packet, g_st_nextpacket;
 
 /** Pointer to PDC register base. */
 Pdc *g_p_pdc;
+
+/** Flag of one transfer end. */
+static uint8_t g_uc_transend_flag = 0;
 
 /**
  * \brief Interrupt handler for USART. Echo the bytes received and start the next
@@ -152,22 +161,31 @@ void USART_Handler(void)
 
 	if (gs_uc_trans_mode == PDC_TRANSFER) {
 		/* Receive buffer is full. */
-		if (ul_status & US_CSR_ENDRX) {
+		if (ul_status & US_CSR_RXBUFF) {
 			/* Disable timer. */
 			tc_stop(TC0, 0);
 
 			/* Echo back buffer. */
 			g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
 			g_st_packet.ul_size = gs_ul_size_buffer;
-			pdc_tx_init(g_p_pdc, &g_st_packet, NULL);
-			pdc_enable_transfer(g_p_pdc, PERIPH_PTCR_TXTEN);
-			gs_uc_buf_num = MAX_BUF_NUM - gs_uc_buf_num;
+			g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
+			g_st_nextpacket.ul_size = gs_ul_size_nextbuffer;
+			pdc_tx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
+
+			if(g_uc_transend_flag) {
 			gs_ul_size_buffer = BUFFER_SIZE;
+				gs_ul_size_nextbuffer = BUFFER_SIZE;
+				g_uc_transend_flag = 0;
+			}
+			
+			gs_uc_buf_num = MAX_BUF_NUM - gs_uc_buf_num;
 
 			/* Restart read on buffer. */
 			g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
 			g_st_packet.ul_size = BUFFER_SIZE;
-			pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+			g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[ gs_uc_buf_num];
+			g_st_nextpacket.ul_size = BUFFER_SIZE;
+			pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 
 			/* Restart timer. */
 			tc_start(TC0, 0);
@@ -175,8 +193,8 @@ void USART_Handler(void)
 	} else {
 		/* Transfer without PDC. */
 		if (ul_status & US_CSR_RXRDY) {
-			usart_getchar(BOARD_USART, &gs_ul_read_buffer);
-			usart_write(BOARD_USART, gs_ul_read_buffer);
+			usart_getchar(BOARD_USART, (uint32_t *)&gs_us_read_buffer);
+			usart_write(BOARD_USART, gs_us_read_buffer);
 		}
 	}
 }
@@ -198,17 +216,21 @@ void TC0_Handler(void)
 			(gs_uc_trans_mode == PDC_TRANSFER)) {
 		/* Flush PDC buffer. */
 		ul_byte_total = BUFFER_SIZE - pdc_read_rx_counter(g_p_pdc);
-		if (ul_byte_total == 0) {
-			/* Return when no bytes received. */
-			return;
-		}
-
+		if ((ul_byte_total != 0) && (ul_byte_total != BUFFER_SIZE)) {
 		/* Log current size. */
+			g_uc_transend_flag = 1;
+			if(pdc_read_rx_next_counter(g_p_pdc) == 0) {
+				gs_ul_size_buffer = BUFFER_SIZE;
+				gs_ul_size_nextbuffer = ul_byte_total;
+			} else {
 		gs_ul_size_buffer = ul_byte_total;
+				gs_ul_size_nextbuffer = 0;
+			}
+			
+			/* Trigger USART Receive Buffer Full Interrupt. */
+			pdc_rx_clear_cnt(g_p_pdc);
+                }
 
-		/* Trigger USART ENDRX. */
-		g_st_packet.ul_size = 0;
-		pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
 	}
 }
 
@@ -298,7 +320,9 @@ static void usart_clear(void)
 	/* Clear PDC counter. */
 	g_st_packet.ul_addr = 0;
 	g_st_packet.ul_size = 0;
-	pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+	g_st_nextpacket.ul_addr = 0;
+	g_st_nextpacket.ul_size = 0;
+	pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 
 	/* Enable receiver & transmitter. */
 	usart_enable_tx(BOARD_USART);
@@ -348,9 +372,9 @@ int main(void)
 	/* Start receiving data and start timer. */
 	g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
 	g_st_packet.ul_size = BUFFER_SIZE;
-	pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
-
-	gs_ul_size_buffer = BUFFER_SIZE;
+	g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
+	g_st_nextpacket.ul_size = BUFFER_SIZE;
+	pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 
 	puts("-- Start to echo serial inputs -- \r\n"
 			"-I- Default Transfer with PDC \r\n"
@@ -358,7 +382,7 @@ int main(void)
 	gs_uc_trans_mode = PDC_TRANSFER;
 
 	usart_disable_interrupt(BOARD_USART, US_IDR_RXRDY);
-	usart_enable_interrupt(BOARD_USART, US_IER_ENDRX);
+	usart_enable_interrupt(BOARD_USART, US_IER_RXBUFF);
 
 	tc_start(TC0, 0);
 
@@ -373,8 +397,8 @@ int main(void)
 					/* Disable PDC controller. */
 					pdc_disable_transfer(g_p_pdc,
 							PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
-					/* Transfer to no PDC communication mode, and disable the ENDRX interrupt. */
-					usart_disable_interrupt(BOARD_USART, US_IDR_ENDRX);
+					/* Transfer to no PDC communication mode, and disable the RXBUFF interrupt. */
+					usart_disable_interrupt(BOARD_USART, US_IDR_RXBUFF);
 
 					/* Clear USART controller. */
 					usart_clear();
@@ -392,16 +416,19 @@ int main(void)
 
 					/* Reset pdc current buffer size. */
 					gs_ul_size_buffer = BUFFER_SIZE;
+					gs_ul_size_nextbuffer = BUFFER_SIZE;
 					gs_uc_buf_num = 0;
 
 					/* Start receiving data. */
 					g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
 					g_st_packet.ul_size = BUFFER_SIZE;
-					pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+					g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
+					g_st_nextpacket.ul_size = BUFFER_SIZE;
+					pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 					
-					/* Transfer to PDC communication mode, disable RXRDY interrupt and enable ENDRX interrupt. */
+					/* Transfer to PDC communication mode, disable RXRDY interrupt and enable RXBUFF interrupt. */
 					usart_disable_interrupt(BOARD_USART, US_IER_RXRDY);
-					usart_enable_interrupt(BOARD_USART, US_IER_ENDRX);
+					usart_enable_interrupt(BOARD_USART, US_IER_RXBUFF);
 
 					gs_uc_trans_mode = PDC_TRANSFER;
 					puts("-I- Transfer with PDC \r");

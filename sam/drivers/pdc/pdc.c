@@ -108,6 +108,17 @@ void pdc_rx_init(Pdc *p_pdc, pdc_packet_t *p_packet,
 }
 
 /**
+ * \brief Clear PDC buffer receive counter.
+ *
+ * \param p_pdc Pointer to a PDC instance.
+ */
+void pdc_rx_clear_cnt(Pdc *p_pdc)
+{
+	p_pdc->PERIPH_RNCR = 0;
+	p_pdc->PERIPH_RCR = 0;
+}
+
+/**
  * \brief Enable PDC transfers (TX and/or RX).
  *
  * \note It is forbidden to set both TXTEN and RXTEN for a half duplex 

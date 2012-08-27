@@ -16,12 +16,13 @@
 		</module>
 		<module type="meta" id="config.board.rz600.init#yes" caption="RZ600 initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.rz600s" caption="RZ600S" mcu="at32uc3a3256s">
+	<board id="board.rz600s" vendor="Atmel" caption="RZ600S" mcu="at32uc3a3256s">
 		<build type="define" name="BOARD" value="RZ600"/>
 		<build type="header-file" value="rz600.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

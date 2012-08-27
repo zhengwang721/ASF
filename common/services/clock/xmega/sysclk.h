@@ -400,6 +400,26 @@ enum sysclk_port_id {
 #define SYSCLK_TWI        PR_TWI_bm      //!< TWI controller
 //@}
 
+/**
+ * \name RTC clock source identifiers
+ *
+ * @{
+ */
+
+/** 1kHz from internal ULP oscillator. Low precision */
+#define SYSCLK_RTCSRC_ULP     CLK_RTCSRC_ULP_gc
+/** 1.024kHz from 32.768kHz crystal oscillator TOSC */
+#define SYSCLK_RTCSRC_TOSC    CLK_RTCSRC_TOSC_gc
+/** 1.024kHz from 32.768kHz internal RC oscillator */
+#define SYSCLK_RTCSRC_RCOSC   CLK_RTCSRC_RCOSC_gc
+/** 32.768kHz from crystal oscillator TOSC */
+#define SYSCLK_RTCSRC_TOSC32  CLK_RTCSRC_TOSC32_gc
+/** 32.768kHz from internal RC oscillator */
+#define SYSCLK_RTCSRC_RCOSC32 CLK_RTCSRC_RCOSC32_gc
+/** External clock on TOSC1 */
+#define SYSCLK_RTCSRC_EXTCLK  CLK_RTCSRC_EXTCLK_gc
+
+/** @} */
 
 #if XMEGA_AU || XMEGA_B || XMEGA_C
 //! \name USB Clock Sources
@@ -1307,6 +1327,53 @@ static inline void sysclk_lock(void)
 }
 
 //@}
+
+/**
+ * \name RTC clock source control
+ * @{
+ */
+
+/**
+ * \brief Enable RTC clock with specified clock source
+ *
+ * \param id RTC clock source ID. Select from SYSCLK_RTCSRC_ULP,
+ *           SYSCLK_RTCSRC_RCOSC, SYSCLK_RTCSRC_TOSC, SYSCLK_RTCSRC_RCOSC32,
+ *           SYSCLK_RTCSRC_TOSC32 or SYSCLK_RTCSRC_EXTCLK
+ */
+static inline void sysclk_rtcsrc_enable(uint8_t id)
+{
+	Assert((id & ~CLK_RTCSRC_gm) == 0);
+
+	switch (id) {
+	case SYSCLK_RTCSRC_RCOSC:
+#if !XMEGA_A && !XMEGA_D
+	case SYSCLK_RTCSRC_RCOSC32:
+#endif
+		osc_enable(OSC_ID_RC32KHZ);
+		osc_wait_ready(OSC_ID_RC32KHZ);
+		break;
+	case SYSCLK_RTCSRC_TOSC:
+	case SYSCLK_RTCSRC_TOSC32:
+#if !XMEGA_A && !XMEGA_D
+	case SYSCLK_RTCSRC_EXTCLK:
+#endif
+		osc_enable(OSC_ID_XOSC);
+		osc_wait_ready(OSC_ID_XOSC);
+		break;
+	}
+
+	CLK.RTCCTRL = id | CLK_RTCEN_bm;
+}
+
+/**
+ * \brief Disable RTC clock
+ */
+static inline void sysclk_rtcsrc_disable(void)
+{
+	CLK.RTCCTRL = 0;
+}
+
+/** @} */
 
 //! \name System Clock Initialization
 //@{

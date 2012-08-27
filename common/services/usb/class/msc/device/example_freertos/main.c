@@ -43,6 +43,7 @@
 
 #include <asf.h>
 #include "conf_usb.h"
+#include "conf_board.h"
 #include "ui.h"
 
 static bool main_b_msc_enable = false;
@@ -85,7 +86,11 @@ int main(void)
 	// Create a task to process data transfer
 	xTaskCreate(main_memories_trans_task,
 			((const signed portCHAR *)"DATA TRANSFER"),
+#if defined(CONF_BOARD_NAND)
+			3072/sizeof(portSTACK_TYPE), // NF require large stack
+#else
 			256,
+#endif
 			NULL,
 			tskIDLE_PRIORITY + 1,
 			NULL);
@@ -100,6 +105,7 @@ int main(void)
 	return 0;
 }
 
+void vApplicationIdleHook( void );
 void vApplicationIdleHook( void )
 {
 	// Management of sleep mode in Idle Hook from FreeRTOS
@@ -108,6 +114,7 @@ void vApplicationIdleHook( void )
 
 static void main_memories_trans_task(void *pvParameters)
 {
+	UNUSED(pvParameters);
 	while (true) {
 		// Wait for a semaphore which signals that a transfer is requested
 		if( xSemaphoreTake( main_trans_semphr, portMAX_DELAY ) == pdTRUE ) {

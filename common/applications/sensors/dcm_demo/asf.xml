@@ -22,6 +22,8 @@
 		<build type="build-config" subtype="c++-compiler-flags" value="-fno-implicit-templates" toolchain="avrgcc"/>
 		<build type="build-config" subtype="c++-compiler-flags" value="-fno-implicit-templates" toolchain="avr32gcc"/>
 		<build type="linker-config" subtype="flags" value="-u,vfprintf -lprintf_flt" toolchain="avrgcc"/>
+		<device-support value="uc3"/>
+		<device-support value="xmega"/>
 		<require idref="common.services.sensors"/>
 		<require idref="common.services.sensors.math"/>
 	</module>

@@ -274,7 +274,6 @@ static void visual_stream_init(void)
  */
 int main(void)
 {
-	volatile int delay;
 	sensor_t light_dev;  /* Light sensor device descriptor */
 	sensor_t prox_dev;   /* Proximity sensor device descriptor */
 

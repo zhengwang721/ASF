@@ -53,4 +53,25 @@
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART
 
+
+/** Use TC Peripheral 0 **/
+#define TC  TC0
+#define TC_PERIPHERAL  0
+
+/** Configure TC0 channel 1 as waveform output. **/
+#define TC_CHANNEL_WAVEFORM 1
+#define ID_TC_WAVEFORM ID_TC1
+#define PIN_TC_WAVEFORM PIN_TC0_TIOA1
+#define PIN_TC_WAVEFORM_FLAGS PIN_TC0_TIOA1_FLAGS
+
+/** Configure TC0 channel 0 as capture input. **/
+#define TC_CHANNEL_CAPTURE 0
+#define ID_TC_CAPTURE ID_TC0
+#define PIN_TC_CAPTURE PIN_TC0_TIOA0
+#define PIN_TC_CAPTURE_FLAGS PIN_TC0_TIOA0_FLAGS
+
+/** Use TC2_Handler for TC capture interrupt**/
+#define TC_Handler  TC0_Handler
+#define TC_IRQn     TC0_IRQn
+
 #endif /* CONF_BOARD_H_INCLUDED */

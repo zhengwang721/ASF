@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h" />
 		<build type="header-file" value="conf_example.h" />
 		<require idref="common.services.ioport.example1" />
-		<require idref="board.uc3_a3_xplained" />
+		<require idref="board.evk1104" />
 		<generator value="iarew32" />
 		<generator value="avr32gcc" />
 		<generator value="as5_32" />

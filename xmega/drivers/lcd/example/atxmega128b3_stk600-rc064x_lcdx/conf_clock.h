@@ -3,7 +3,7 @@
  *
  * \brief Clock system configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,5 +55,7 @@
 #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_PLL
 #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
 #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
+
+#define CONFIG_RTC_SOURCE        SYSCLK_RTCSRC_ULP
 
 #endif /* CONF_CLOCK_H_INCLUDED */

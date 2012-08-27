@@ -16,12 +16,13 @@
 		</module>
 		<module type="meta" id="config.board.evk1105.init#yes" caption="EVK1105 initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.evk1105" caption="EVK1105" mcu="at32uc3a0512">
+	<board id="board.evk1105" vendor="Atmel" caption="EVK1105" mcu="at32uc3a0512">
 		<build type="define" name="BOARD" value="EVK1105"/>
 		<build type="header-file" value="evk1105.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

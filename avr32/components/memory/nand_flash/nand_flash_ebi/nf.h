@@ -5,7 +5,7 @@
  * \brief NAND FLASH low-level macros, definition, types and information in
  *        regard to manufacturer IDs.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -76,34 +76,22 @@
 
 #define AVR32_EBI_NAND_FLASH_ADDRESS  AVR32_EBI_CS3_ADDRESS
 
-/*! \brief Read a data byte from the Nand Flash.
- */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ U8 nf_rd_data( void )
+/*! \brief Read a data byte from the Nand Flash. */
+__always_inline static U8 nf_rd_data( void )
 {
   volatile unsigned char *p_data  = ((volatile unsigned char *)AVR32_EBI_NAND_FLASH_ADDRESS);
   return *p_data;
 }
 
-/*! \brief Write a data byte to the Nand Flash.
- */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void nf_wr_data( U8 data )
+/*! \brief Write a data byte to the Nand Flash. */
+__always_inline static void nf_wr_data( U8 data )
 {
   volatile unsigned char *p_data  = ((volatile unsigned char *)AVR32_EBI_NAND_FLASH_ADDRESS);
   *p_data=data;
 }
 
-/*! \brief Ensure that both CLE and ALE are not asserted.
- */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void nf_send_nop( void )
+/*! \brief Ensure that both CLE and ALE are not asserted. */
+__always_inline static void nf_send_nop( void )
 {
   //volatile unsigned char *p_nop  =  (volatile unsigned char *)AVR32_EBI_NAND_FLASH_ADDRESS;
   volatile unsigned char *p_nop  =  (volatile unsigned char *)AVR32_EBI_CS0_ADDRESS;
@@ -114,10 +102,7 @@ static __inline__ void nf_send_nop( void )
  *
  * \param addr address
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void nf_wr_addr(U8 addr)
+__always_inline static void nf_wr_addr(U8 addr)
 {
   volatile int A;
   volatile unsigned char *p_ale  = ((volatile unsigned char *)AVR32_EBI_NAND_FLASH_ADDRESS + 0x00400000);
@@ -131,10 +116,7 @@ static __inline__ void nf_wr_addr(U8 addr)
  *
  * \param cmd command.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void nf_wr_cmd(U8 cmd)
+__always_inline static void nf_wr_cmd(U8 cmd)
 {
   volatile int A;
   volatile unsigned char *p_cle  = ((volatile unsigned char *)AVR32_EBI_NAND_FLASH_ADDRESS + 0x00200000);
@@ -148,10 +130,7 @@ static __inline__ void nf_wr_cmd(U8 cmd)
  *
  * \param dev Device number.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void nf_select(U8 dev)
+__always_inline static void nf_select(U8 dev)
 {
   if( dev==0 )
   {

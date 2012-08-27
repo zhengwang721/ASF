@@ -52,7 +52,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
+void LED_Off(uint32_t led_gpio);
 
 /*! \brief Turns on the specified LEDs.
  *
@@ -60,7 +60,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
+void LED_On(uint32_t led_gpio);
 
 /*! \brief Toggles the specified LEDs.
  *

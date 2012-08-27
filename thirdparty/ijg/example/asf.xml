@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="avr32.services.graphics.ijg.example" caption="IJG JPEG Decoder Example">
-		<module type="application" id="avr32.services.picture.ijg.example#0" caption="IJG JPEG Decoder Example">
+		<module type="application" id="avr32.services.graphics.ijg.example#0" caption="IJG JPEG Decoder Example">
 			<info type="description" value="summary">
 			Using the IJG JPEG Decoder and the external SDRAM for buffering, decode a jpg image pre-stored in internal Flash and display it on the LCD screen.
 			</info>
@@ -28,7 +28,7 @@
 			<require idref="avr32.utils.print_funcs"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="avr32.services.picture.ijp.example#1" caption="IJG JPEG Decoder Example">
+		<module type="application" id="avr32.services.graphics.ijg.example#1" caption="IJG JPEG Decoder Example">
 			<info type="description" value="summary">
 			Using the IJG JPEG Decoder and the external SDRAM for buffering, decode a jpg image pre-stored in internal Flash and display it on a QVGA screen.
 			</info>
@@ -55,7 +55,7 @@
 			<require idref="avr32.utils.print_funcs"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="avr32.services.picture.ijp.example#2" caption="IJG JPEG Decoder Example">
+		<module type="application" id="avr32.services.graphics.ijg.example#2" caption="IJG JPEG Decoder Example">
 			<info type="description" value="summary">
 			Using the IJG JPEG Decoder and the external SDRAM for buffering, decode a jpg image pre-stored in internal Flash and display it on a QVGA screen.
 			</info>

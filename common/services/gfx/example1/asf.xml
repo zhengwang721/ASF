@@ -7,6 +7,9 @@
 			<keyword value="Graphics" />
 		</info>
 		<build type="c-source" value="example1.c"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.gfx"/>
 		<require idref="common.services.gfx.font"/>

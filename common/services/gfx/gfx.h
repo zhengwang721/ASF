@@ -142,6 +142,27 @@ extern "C" {
  * region.
  */
 
+/** \name Standard Color Definitions */
+/** @{ */
+
+#define GFX_COLOR_BLACK      GFX_COLOR(  0,   0,   0)
+#define GFX_COLOR_WHITE      GFX_COLOR(255, 255, 255)
+#define GFX_COLOR_GRAY       GFX_COLOR(128, 128, 128)
+#define GFX_COLOR_RED        GFX_COLOR(255,   0,   0)
+#define GFX_COLOR_DK_RED     GFX_COLOR(128,   0,   0)
+#define GFX_COLOR_GREEN      GFX_COLOR(  0, 255,   0)
+#define GFX_COLOR_DK_GREEN   GFX_COLOR(  0, 128,   0)
+#define GFX_COLOR_BLUE       GFX_COLOR(  0,   0, 255)
+#define GFX_COLOR_DK_BLUE    GFX_COLOR(  0,   0, 128)
+#define GFX_COLOR_MAGENTA    GFX_COLOR(255,   0, 255)
+#define GFX_COLOR_DK_MAGENTA GFX_COLOR(128,   0, 128)
+#define GFX_COLOR_YELLOW     GFX_COLOR(255, 255,   0)
+#define GFX_COLOR_DK_YELLOW  GFX_COLOR(128, 128,   0)
+#define GFX_COLOR_CYAN       GFX_COLOR(  0, 255, 255)
+#define GFX_COLOR_DK_CYAN    GFX_COLOR(  0, 128, 128)
+
+/** @} */
+
 /** @} */
 
 /** \name Circle Sector Definitions */
@@ -285,7 +306,7 @@ void gfx_draw_bitmap(const struct gfx_bitmap *bmp, gfx_coord_t x,
  *                       parent_window_origin_x, parent_window_origin_y);
  * \endcode
  *
- * \note If \ref CONF_WIN_USE_CLIPPING is used, the output is clipped to the
+ * \note If CONF_GFX_USE_CLIPPING is used, the output is clipped to the
  * output area and nothing will be drawn outside the output area.
  *
  * \param bmp           Pointer to bitmap

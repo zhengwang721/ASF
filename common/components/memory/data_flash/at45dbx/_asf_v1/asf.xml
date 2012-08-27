@@ -46,7 +46,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_at45dbx.h"/>
 			<build type="module-config" subtype="path" value="module_config/uc3c"/>
 		</module>
-		<module type="component" id="common.components.memory.data_flash.at45dbx._asf_v1.confuc3lg#uc3c" caption="AT45DBX DataFlash (from ASF ver. 1)">
+		<module type="component" id="common.components.memory.data_flash.at45dbx._asf_v1.config#uc3l" caption="AT45DBX DataFlash (from ASF ver. 1)">
 			<device-support value="uc3l"/>
 			<info type="gui-flag" value="hidden"/>
 			<build type="module-config" subtype="required-header-file" value="conf_at45dbx.h"/>

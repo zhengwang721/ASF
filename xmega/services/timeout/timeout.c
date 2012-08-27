@@ -43,14 +43,14 @@
 #include <asf.h>
 #include <conf_timeout.h>
 
-// Check if RTC32 is defined, otherwise use RTC as default
+/* Check if RTC32 is defined, otherwise use RTC as default */
 #if defined(CLOCK_SOURCE_RTC32)
   #include <rtc32.h>
 #else
   #include <rtc.h>
 #endif
 
-//! \brief Timeout timekeeping data
+/** \brief Timeout timekeeping data */
 struct timeout_struct {
 	/**
 	 * Current count-down value. Counts down for every tick.
@@ -58,6 +58,7 @@ struct timeout_struct {
 	 * may then be reloaded with period.
 	 */
 	uint16_t count;
+
 	/**
 	 * Period between expires. Used to reload count.
 	 * If 0, the count won't be reloaded.
@@ -65,13 +66,13 @@ struct timeout_struct {
 	uint16_t period;
 };
 
-//! Array of configurable timeout timekeeping data
+/** Array of configurable timeout timekeeping data */
 static struct timeout_struct timeout_array[TIMEOUT_COUNT];
 
-//! Bitmask of active timeouts
+/** Bitmask of active timeouts */
 static uint8_t timeout_active;
 
-//! Bitmask of expired timeouts
+/** Bitmask of expired timeouts */
 static uint8_t timeout_expired;
 
 /**
@@ -86,33 +87,37 @@ static void tick_handler(uint32_t time)
 {
 	uint8_t i;
 
-	// Loop through all timeout channels
+	/* Loop through all timeout channels */
 	for (i = 0; i < TIMEOUT_COUNT; i++) {
-
-		// Skip processing on current channel if not active
+		/* Skip processing on current channel if not active */
 		if (!(timeout_active & (1 << i))) {
 			continue;
 		}
-		// Decrement current channel with one tick
+
+		/* Decrement current channel with one tick */
 		timeout_array[i].count--;
 
-		// Skip further processing on current channel if not expired
+		/* Skip further processing on current channel if not expired */
 		if (timeout_array[i].count) {
 			continue;
-		}
-		else {
-			// Update expired bit mask with current channel
+		} else {
+			/* Update expired bit mask with current channel */
 			timeout_expired |= 1 << i;
 
-			// If Periodic timer, reset timeout counter to period time
-			if (timeout_array[i].period)
-				timeout_array[i].count = timeout_array[i].period;
-			// If not periodic timeout, set current channel to in-active
-			else
+			/* If Periodic timer, reset timeout counter to period
+			 * time */
+			if (timeout_array[i].period) {
+				timeout_array[i].count
+					= timeout_array[i].period;
+			}
+			/* If not periodic timeout, set current channel to
+			 * in-active */
+			else {
 				timeout_active &= ~(1 << i);
+			}
 		}
 	}
-	// Reset RTC before next tick
+	/* Reset RTC before next tick */
 	rtc_set_time(0);
 	rtc_set_alarm(TIMEOUT_COMP);
 }
@@ -120,8 +125,13 @@ static void tick_handler(uint32_t time)
 /**
  * \brief Initialize timeout
  *
- * Initializes timeout counter for desired tick rate and starts it. Enable
- * interrupts for tick handler.
+ * Initializes timeout counter for desired tick rate and starts it. The device
+ * interrupt controller should be initialized prior to calling this function,
+ * and global interrupts must be enabled.
+ *
+ * \note If the service is configured to use the asynchronous RTC32 module,
+ *       there are restrictions on the timeout period that can be used - see
+ *       to \ref rtc32_min_alarm_time for details.
  */
 void timeout_init(void)
 {
@@ -129,7 +139,6 @@ void timeout_init(void)
 	rtc_set_callback(tick_handler);
 	rtc_set_time(0);
 	rtc_set_alarm(TIMEOUT_COMP);
-	cpu_irq_enable();
 }
 
 /**
@@ -141,22 +150,22 @@ void timeout_init(void)
  */
 void timeout_start_offset(timeout_id_t id, uint16_t period, uint16_t offset)
 {
-	// Check that ID within the TIMEOUT_COUNT range
-	if ( id < TIMEOUT_COUNT ) {
-
-		// Disable interrupts before tweaking the bitmasks
+	/* Check that ID within the TIMEOUT_COUNT range */
+	if (id < TIMEOUT_COUNT) {
+		/* Disable interrupts before tweaking the bitmasks */
 		irqflags_t flags;
 		flags = cpu_irq_save();
 
-		// Update timeout struct with offset and period
+		/* Update timeout struct with offset and period */
 		timeout_array[id].count = offset;
 		timeout_array[id].period = period;
 
-		// Set current timeout channel bitmasks to active and not expired
+		/* Set current timeout channel bitmasks to active and not
+		 * expired */
 		timeout_active |= 1 << id;
 		timeout_expired &= ~(1 << id);
 
-		// Restore interrupts
+		/* Restore interrupts */
 		cpu_irq_restore(flags);
 	}
 }
@@ -192,11 +201,11 @@ void timeout_start_periodic(timeout_id_t id, uint16_t period)
  */
 bool timeout_test_and_clear_expired(timeout_id_t id)
 {
-	// Check that ID within the TIMEOUT_COUNT range
+	/* Check that ID within the TIMEOUT_COUNT range */
 	if (id < TIMEOUT_COUNT) {
-
 		irqflags_t flags;
-		// Check if timeout has expired
+
+		/* Check if timeout has expired */
 		if (timeout_expired & (1 << id)) {
 			flags = cpu_irq_save();
 			timeout_expired &= ~(1 << id);
@@ -204,6 +213,7 @@ bool timeout_test_and_clear_expired(timeout_id_t id)
 			return true;
 		}
 	}
+
 	return false;
 }
 

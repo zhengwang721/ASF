@@ -41,47 +41,24 @@
  *
  */
 
-//! Configuration of the ADS7843 component
+//! Configuration of the ADS7843 touch driver
 
 #ifndef CONF_ADS7843_H_INCLUDED
 #define CONF_ADS7843_H_INCLUDED
 
-#include "compiler.h"
 #include "board.h"
 
-/*! \brief Interface configuration
- *
- * Currently only EBI mode supported
- */
-#if BOARD == SAM3S_EK
+#if !defined(BOARD_ADS7843_SPI_NPCS) || \
+	!defined(BOARD_ADS7843_IRQ_GPIO) || \
+	!defined(BOARD_ADS7843_IRQ_FLAGS) || \
+	!defined(BOARD_ADS7843_SPI_BASE)
 
-	/*! \brief pointer to the SPI instance connected to the ADS7843 controller
-	 */
-	#define ADS7843_SPI_INTERFACE     (SPI)
+	#warning The ADS7843 SPI configuration does not exist in the board definition file. Using default settings.
 
-#elif BOARD == SAM3S_EK2
-
-	/*! \brief pointer to the SPI instance connected to the ADS7843 controller
-	 */
-	#define ADS7843_SPI_INTERFACE     (SPI)
-	
-#elif BOARD == SAM3U_EK
-
-	/*! \brief pointer to the SPI instance connected to the ADS7843 controller
-	 */
-	#define ADS7843_SPI_INTERFACE     (SPI)
-	
-#elif BOARD == SAM3X_EK
-
-	/*! \brief pointer to the SPI instance connected to the ADS7843 controller
-	 */
-	#define ADS7843_SPI_INTERFACE     (SPI0)
-
-#else
-
-	#warning The ADS7843 setup configuration to use in the driver is missing. Default configuration is used.
-
-	#define ADS7843_SPI_INTERFACE     0
+	#define BOARD_ADS7843_SPI_BASE    0 /* SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI channel is used by ADS7843. */
+	#define BOARD_ADS7843_SPI_NPCS    0 /* SPI chip select number, depends on which SPI CS pin is used by ADS7843. */
+	#define BOARD_ADS7843_IRQ_GPIO    PIO_PA16_IDX /* PIN index, depends on which pin is connnected with nPENIRQ of ADS7843 */
+	#define BOARD_ADS7843_IRQ_FLAGS   (PIO_INPUT | PIO_PULLUP) /* PIO type and attribute of the pin connected with nPENIRQ, normally should be (PIO_INPUT | PIO_PULLUP) */
 
 #endif
 

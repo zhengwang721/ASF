@@ -4,7 +4,7 @@
  *
  * \brief System Control InterFace(SCIF) driver interface.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -281,10 +281,7 @@ typedef struct
  *
  * \param mask the interrupts to enable.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_enable_interrupts(unsigned long mask)
+__always_inline static void scif_enable_interrupts(unsigned long mask)
 {
   AVR32_SCIF.ier = mask;
 }
@@ -293,10 +290,7 @@ static inline void scif_enable_interrupts(unsigned long mask)
  *
  * \param mask the interrupts to disable.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_disable_interrupts(unsigned long mask)
+__always_inline static void scif_disable_interrupts(unsigned long mask)
 {
   AVR32_SCIF.idr = mask;
 }
@@ -305,10 +299,7 @@ static inline void scif_disable_interrupts(unsigned long mask)
  *
  * \return The enabled interrupts.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_enabled_interrupts(void)
+__always_inline static unsigned long scif_get_enabled_interrupts(void)
 {
   return(AVR32_SCIF.imr);
 }
@@ -317,10 +308,7 @@ static inline unsigned long scif_get_enabled_interrupts(void)
  *
  * \return The interrupts which have been triggered.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_interrupts_status(void)
+__always_inline static unsigned long scif_get_interrupts_status(void)
 {
   return(AVR32_SCIF.isr);
 }
@@ -329,10 +317,7 @@ static inline unsigned long scif_get_interrupts_status(void)
  *
  * \param mask The interrupts to clear.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_clear_interrupts_status(unsigned long mask)
+__always_inline static void scif_clear_interrupts_status(unsigned long mask)
 {
   AVR32_SCIF.icr = mask;
 }
@@ -348,10 +333,7 @@ static inline void scif_clear_interrupts_status(unsigned long mask)
  *
  * \return The content of the PCLKSR register
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_pclk_status(void)
+__always_inline static unsigned long scif_get_pclk_status(void)
 {
   return(AVR32_SCIF.pclksr);
 }
@@ -501,10 +483,7 @@ extern long int scif_start_osc32(const scif_osc32_opt_t *opt, bool wait_for_read
  *   \retval true oscillator stable and ready
  *   \retval false oscillator not enabled or not ready.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline bool scif_is_osc32_ready(void)
+__always_inline static bool scif_is_osc32_ready(void)
 {
   return((AVR32_SCIF.pclksr & AVR32_SCIF_PCLKSR_OSC32RDY_MASK)>>AVR32_SCIF_PCLKSR_OSC32RDY_OFFSET);
 }
@@ -512,10 +491,7 @@ static inline bool scif_is_osc32_ready(void)
 /*! \brief Enable the 1kHz output of the OSC32 oscillator
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_osc32_1kout_ena(void)
+__always_inline static void scif_osc32_1kout_ena(void)
 {
   AVR32_SCIF.oscctrl32 |= AVR32_SCIF_EN1K_MASK;
 }
@@ -523,10 +499,7 @@ static inline void scif_osc32_1kout_ena(void)
 /*! \brief Disable the 1kHz output of the OSC32 oscillator
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_osc32_1kout_dis(void)
+__always_inline static void scif_osc32_1kout_dis(void)
 {
   AVR32_SCIF.oscctrl32 &= ~AVR32_SCIF_EN1K_MASK;
 }
@@ -534,10 +507,7 @@ static inline void scif_osc32_1kout_dis(void)
 /*! \brief Enable the 32kHz output of the OSC32 oscillator
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_osc32_32kout_ena(void)
+__always_inline static void scif_osc32_32kout_ena(void)
 {
   AVR32_SCIF.oscctrl32 |= AVR32_SCIF_EN32K_MASK;
 }
@@ -545,10 +515,7 @@ static inline void scif_osc32_32kout_ena(void)
 /*! \brief Disable the 32kHz output of the OSC32 oscillator
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void scif_osc32_32kout_dis(void)
+__always_inline static void scif_osc32_32kout_dis(void)
 {
   AVR32_SCIF.oscctrl32 &= ~AVR32_SCIF_EN32K_MASK;
 }

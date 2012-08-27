@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,7 +78,6 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
   WNDCLASSEX wincl;
   HBRUSH hbrush;
   char szClassName[] = "c_" TITLE;
-  HWND hwnd_temp;
 
     // if no argument is passed to this function, return a usage message
     if (!*lpszArgument)
@@ -216,10 +215,8 @@ LRESULT CALLBACK GraphProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     float offset, scale, y;
     float x, inc;
     int i, j;
-    float dy;
     int start_i;
     char temp[32];
-    HBRUSH hbRed, hbrOld;
     HPEN hp2px, hpOld;
     SIZE sz;
 
@@ -327,7 +324,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 {
     LRESULT result;
     RECT rect;
-    char _config[MAX_PATH];
 
     switch (message)
     {

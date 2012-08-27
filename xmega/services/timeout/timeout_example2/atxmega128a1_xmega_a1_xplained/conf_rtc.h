@@ -3,7 +3,7 @@
  *
  * \brief Configuration file for RTC
  *
- * Copyright (C) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,5 @@
 #define CONF_RTC_H
 
 #define CONFIG_RTC_PRESCALER          RTC_PRESCALER_DIV1_gc
-#define CONFIG_RTC_CLOCK_SOURCE       CLK_RTCSRC_ULP_gc
 
 #endif /* CONF_RTC_H */

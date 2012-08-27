@@ -4,6 +4,7 @@
 		A simple example for verifying that the ST7565R low level driver works.
 		</info>
 		<build type="c-source" value="st7565r_example.c"/>
+		<device-support value="xmega"/>
 		<require idref="common.boards"/>
 		<require idref="common.components.display.st7565r"/>
 		<require idref="common.services.basic.clock"/>

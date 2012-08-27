@@ -82,10 +82,7 @@ int button[] = {QT1081_TOUCH_SENSOR_3,
 
 #endif
 
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static __inline__ int is_pressed(short idx) {
+__always_inline static int is_pressed(short idx) {
 #if BOARD == EVK1104
         return qt60168_is_key_pressed(idx_to_button_map[idx]);
 #else

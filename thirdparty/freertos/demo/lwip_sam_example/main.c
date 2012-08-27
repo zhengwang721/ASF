@@ -1,0 +1,257 @@
+/**
+ * \file
+ *
+ * \brief FreeRTOS with lwIP example.
+ *
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
+/**
+ * \mainpage FreeRTOS with lwIP example
+ *
+ * \section Purpose
+ *
+ * This documents data structures, functions, variables, defines, enums, and
+ * typedefs in the software for the lwIP basic two-in-one web server and TFTP
+ * server demo (with DHCP) example.
+ *
+ * The given example is an example using freeRTOS, the current lwIP stack and
+ * EMAC driver.
+ *
+ * \section Requirements
+ *
+ * This package can be used with SAM3X evaluation kits.
+ *
+ * \section Description
+ *
+ * The demonstration program create two applications. The web server will
+ * feedback the FreeRTOS kernel statistics and the tftp server allows the user
+ * to PUT and GET files.
+ *
+ * \section Usage
+ *
+ * -# Build the program and download it inside the evaluation board. Please
+ *    refer to the
+ *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
+ *    SAM-BA User Guide</a>, the
+ *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
+ *    GNU-Based Software Development</a>
+ *    application note or to the
+ *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
+ *    IAR EWARM User Guide</a>,
+ *    depending on your chosen solution.
+ * -# On the computer, open and configure a terminal application
+ *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
+ *   - 115200 bauds
+ *   - 8 bits of data
+ *   - No parity
+ *   - 1 stop bit
+ *   - No flow control
+ * -# Start the application.
+ * -# LED should start blinking on the board. In the terminal window, the
+ *    following text should appear (values depend on the board and chip used):
+ *    \code
+ *     -- Freertos with lwIP Example xxx --
+ *     -- xxxxxx-xx
+ *     -- Compiled: xxx xx xxxx xx:xx:xx --
+ *    \endcode
+ *
+ */
+
+/* Environment include files. */
+#include <stdlib.h>
+#include <string.h>
+
+/* Scheduler include files. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "status_codes.h"
+#include "conf_uart_serial.h"
+/* Demo file headers. */
+#include "partest.h"
+#include "ethernet.h"
+#include "netif/etharp.h"
+#include "flash.h"
+#include "sysclk.h"
+#include "gpio.h"
+#include "uart_serial.h"
+#include "stdio_serial.h"
+#include <compiler.h>
+
+#define TASK_LED_STACK_SIZE                (128 / sizeof(portSTACK_TYPE))
+#define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
+
+extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
+		signed char *pcTaskName);
+extern void vApplicationIdleHook(void);
+extern void vApplicationTickHook(void);
+
+extern void xPortSysTickHandler(void);
+extern void xPortPendSVHandler(void);
+extern void vPortSVCHandler(void);
+
+/**
+ * \brief Handler for Sytem Tick interrupt.
+ */
+void SysTick_Handler(void)
+{
+	xPortSysTickHandler();
+}
+
+/**
+ * \brief Handler for Sytem interrupt-driven request.
+ */
+void PendSV_Handler(void)
+{
+	xPortPendSVHandler();
+}
+
+/**
+ * \brief Handler for Sytem supervisor call.
+ */
+void SVC_Handler(void)
+{
+	vPortSVCHandler();
+}
+
+/**
+ * \brief Called if stack overflow during execution
+ */
+extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
+		signed char *pcTaskName)
+{
+	printf("stack overflow %x %s\r\n", pxTask, (portCHAR *)pcTaskName);
+
+	/* If the parameters have been corrupted then inspect pxCurrentTCB to
+	 * identify which task has overflowed its stack.
+	 */
+	for (;;) {
+	}
+}
+
+/**
+ * \brief This function is called by FreeRTOS idle task
+ */
+extern void vApplicationIdleHook(void)
+{
+}
+
+/**
+ * \brief This function is called by FreeRTOS each tick
+ */
+extern void vApplicationTickHook(void)
+{
+}
+
+/**
+ * \brief This task, when activated, send every ten seconds on debug UART the
+ *whole report of free heap and total tasks status
+ */
+static void task_led(void *pvParameters)
+{
+	for (;;) {
+		gpio_toggle_pin(LED0_GPIO);
+		vTaskDelay(1000);
+	}
+}
+
+/**
+ * \brief Configure the console UART.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_UART_BAUDRATE,
+		.paritytype = CONF_UART_PARITY
+	};
+
+	/* Configure UART pins */
+	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+
+	/* Specify that stdout should not be buffered. */
+#if defined(__GNUC__)
+	setbuf(stdout, NULL);
+#else
+
+	/* Already the case in IAR's Normal DLIB default configuration: printf()
+	 * emits one character at a time.
+	 */
+#endif
+}
+
+/**
+ *  \brief getting-started Application entry point.
+ *
+ *  \return Unused (ANSI-C compatibility).
+ */
+int main(void)
+{
+	/* Disable the watchdog */
+	WDT->WDT_MR = WDT_MR_WDDIS;
+
+	/* Initilize the SAM system */
+	sysclk_init();
+
+	/* Initialize the console uart */
+	configure_console();
+	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
+	/* Output demo infomation. */
+	printf("-- FreeRTOS with lwIP Example --\n\r");
+	printf("-- %s\n\r", BOARD_NAME);
+	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
+
+	/* Create task to make led blink */
+	if (xTaskCreate(task_led, "Led", TASK_LED_STACK_SIZE, NULL,
+			TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {
+		printf("Failed to create test led task\r\n");
+	}
+
+	/* Start the ethernet tasks */
+	vStartEthernetTaskLauncher( configMAX_PRIORITIES );
+
+	/* Start FreeRTOS */
+	vTaskStartScheduler();
+
+	/* Will only reach here if there was insufficient memory to create the idle task */
+
+	return 0;
+}

@@ -22,6 +22,7 @@
 		<build type="linker-config" subtype="flags" value="--section-start=.data=0x802500"/>
 		<build type="distribute" subtype="file" value="doxygen_images/class_b_demo.png" toolchain="doxygen"/>
 		<build type="doxygen-image-path" value="doxygen_images"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.gpio"/>

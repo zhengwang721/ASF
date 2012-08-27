@@ -41,59 +41,18 @@
  *
  */
 
-//! Configuration of the AAT31XX LCD display driver
+//! Configuration of the AAT31XX Backlight driver
 
 #ifndef CONF_AAT31XX_H_INCLUDED
 #define CONF_AAT31XX_H_INCLUDED
 
-#include "compiler.h"
 #include "board.h"
 
-/*! \brief Interface configuration
- *
- * Currently only EBI mode supported
- */
-#if BOARD == SAM3N_EK
+#if !defined(BOARD_AAT31XX_SET_GPIO)
 
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
+	#warning The AAT31XX PIN configuration does not exist in the board definition file. Using default settings.
 
-#elif BOARD == SAM3S_EK
-
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
-
-#elif BOARD == SAM3S_EK2
-
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
-
-#elif BOARD == SAM3U_EK
-
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
-
-#elif BOARD == SAM3X_EK
-
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
-
-#elif BOARD == SAM4S_EK
-
-	/*! \brief pin connected to the AAT31XX component
-	 */
-	#define AAT31XX_BACKLIGHT_PIN     (BOARD_BACKLIGHT)
-
-#else
-
-	#warning The AAT31XX setup configuration to use in the driver is missing. Default configuration is used.
-
-	#define AAT31XX_BACKLIGHT_PIN     0
+	#define BOARD_AAT31XX_SET_GPIO     PIO_PC19_IDX /* Should use the PIN index of which pin is connected with EN/SET of AAT31XX device */
 
 #endif
 

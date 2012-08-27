@@ -13,6 +13,7 @@
 		<build type="doxygen-quick-start" value="xmega_dma_quickstart"/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegab"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.hugemem"/>

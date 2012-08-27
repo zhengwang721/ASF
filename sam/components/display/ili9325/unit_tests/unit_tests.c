@@ -41,18 +41,8 @@
  *
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <board.h>
-#include <sysclk.h>
-#include <string.h>
-#include <unit_test/suite.h>
-#include <stdio_serial.h>
-#include <conf_clock.h>
-#include <conf_board.h>
-#include <conf_test.h>
-#include <smc.h>
-#include <ili9325.h>
+#include "asf.h"
+#include "conf_test.h"
 
 /**
  * \mainpage
@@ -154,7 +144,18 @@ static void run_test_init(const struct test_case *test)
 	g_ili9325_display_opt.ul_height = ILI9325_LCD_HEIGHT;
 	g_ili9325_display_opt.foreground_color = COLOR_BLACK;
 	g_ili9325_display_opt.background_color = COLOR_WHITE;
+	
+	/* Switch off backlight */
+	aat31xx_disable_backlight();
+	
+	/* Initialize LCD */
 	ili9325_init(&g_ili9325_display_opt);
+
+	/* Set backlight level */
+	aat31xx_set_backlight(AAT31XX_AVG_BACKLIGHT_LEVEL);
+	
+	ili9325_set_foreground_color(COLOR_BLUE);
+	ili9325_draw_filled_rectangle(0, 0, ILI9325_LCD_WIDTH, ILI9325_LCD_HEIGHT);
 
 	/* Check the important none zero setting registers */
 	register_value = ili9325_read_register(ILI9325_DISP_CTRL1);
@@ -269,18 +270,19 @@ int main(void)
 	pmc_enable_periph_clk(ID_SMC);
 
 	/* Configure SMC interface for Lcd */
-	smc_set_setup_timing(SMC, ILI9325_LCD_CS, SMC_SETUP_NWE_SETUP(4)
-			| SMC_SETUP_NCS_WR_SETUP(4)
-			| SMC_SETUP_NRD_SETUP(4)
-			| SMC_SETUP_NCS_RD_SETUP(4));
-	smc_set_pulse_timing(SMC, ILI9325_LCD_CS, SMC_PULSE_NWE_PULSE(6)
-			| SMC_PULSE_NCS_WR_PULSE(6)
-			| SMC_PULSE_NRD_PULSE(12)
-			| SMC_PULSE_NCS_RD_PULSE(12));
-	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(12)
-			| SMC_CYCLE_NRD_CYCLE(30));
+	smc_set_setup_timing(SMC,ILI9325_LCD_CS,SMC_SETUP_NWE_SETUP(2)
+			| SMC_SETUP_NCS_WR_SETUP(2)
+			| SMC_SETUP_NRD_SETUP(2)
+			| SMC_SETUP_NCS_RD_SETUP(2));
+	smc_set_pulse_timing(SMC, ILI9325_LCD_CS , SMC_PULSE_NWE_PULSE(4)
+			| SMC_PULSE_NCS_WR_PULSE(4)
+			| SMC_PULSE_NRD_PULSE(10)
+			| SMC_PULSE_NCS_RD_PULSE(10));
+	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
+			| SMC_CYCLE_NRD_CYCLE(22));
 	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE | SMC_MODE_DBW_8_BIT);
+			| SMC_MODE_WRITE_MODE
+			| SMC_MODE_DBW_8_BIT);
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(ili9325_test_init, NULL, run_test_init, NULL,

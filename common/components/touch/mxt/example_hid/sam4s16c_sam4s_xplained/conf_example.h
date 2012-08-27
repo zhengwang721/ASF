@@ -43,15 +43,8 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-/* Some color definitions */
-#define COLOR_RED   GFX_COLOR(0xFF, 0x00, 0x00)
-#define COLOR_GREEN GFX_COLOR(0x00, 0xFF, 0x00)
-#define COLOR_BLUE  GFX_COLOR(0x00, 0x00, 0xFF)
-#define COLOR_BLACK GFX_COLOR(0x00, 0x00, 0x00)
-#define COLOR_WHITE GFX_COLOR(0xFF, 0xFF, 0xFF)
-
 /* Background color */
-#define COLOR_BACKGROUND       COLOR_BLACK
+#define COLOR_BACKGROUND       GFX_COLOR_BLACK
 
 #define MAXTOUCH_TWI_ADDRESS   0x4a
 #define MAXTOUCH_CHG_PIN       MXT143E_XPLAINED_CHG

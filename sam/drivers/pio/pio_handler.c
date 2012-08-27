@@ -141,6 +141,28 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
 	return 0;
 }
 
+#ifdef ID_PIOA
+/**
+ * \brief Set an interrupt handler for the specified pin.
+ * The provided handler will be called with the triggering pin as its parameter 
+ * as soon as an interrupt is detected. 
+ *
+ * \param ul_pin Pin index to configure.
+ * \param ul_flag Pin flag.
+ * \param p_handler Interrupt handler function pointer.
+ *
+ * \return 0 if successful, 1 if the maximum number of sources has been defined.
+ */
+uint32_t pio_handler_set_pin(uint32_t ul_pin, uint32_t ul_flag,
+		void (*p_handler) (uint32_t, uint32_t))
+{
+	return pio_handler_set((Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5))),
+			ID_PIOA + (ul_pin >> 5),
+			(1 << (ul_pin & 0x1F)),
+			ul_flag,
+			p_handler);
+}
+
 /**
  * \brief Parallel IO Controller A interrupt handler.
  * Redefined PIOA interrupt handler for NVIC interrupt table.
@@ -149,7 +171,9 @@ void PIOA_Handler(void)
 {
 	pio_handler_process(PIOA, ID_PIOA);
 }
+#endif
 
+#ifdef ID_PIOB
 /**
  * \brief Parallel IO Controller B interrupt handler
  * Redefined PIOB interrupt handler for NVIC interrupt table.
@@ -158,7 +182,9 @@ void PIOB_Handler(void)
 {
     pio_handler_process(PIOB, ID_PIOB);
 }
+#endif
 
+#ifdef ID_PIOC
 /**
  * \brief Parallel IO Controller C interrupt handler.
  * Redefined PIOC interrupt handler for NVIC interrupt table.
@@ -167,8 +193,9 @@ void PIOC_Handler(void)
 {
 	pio_handler_process(PIOC, ID_PIOC);
 }
+#endif
 
-#if SAM3XA
+#ifdef ID_PIOD
 /**
  * \brief Parallel IO Controller D interrupt handler.
  * Redefined PIOD interrupt handler for NVIC interrupt table.
@@ -177,8 +204,9 @@ void PIOD_Handler(void)
 {
 	pio_handler_process(PIOD, ID_PIOD);
 }
+#endif
 
-#ifdef _SAM3XA_PIOE_INSTANCE_
+#ifdef ID_PIOE
 /**
  * \brief Parallel IO Controller E interrupt handler.
  * Redefined PIOE interrupt handler for NVIC interrupt table.
@@ -189,7 +217,7 @@ void PIOE_Handler(void)
 }
 #endif
 
-#ifdef _SAM3XA_PIOF_INSTANCE_
+#ifdef ID_PIOF
 /**
  * \brief Parallel IO Controller F interrupt handler.
  * Redefined PIOF interrupt handler for NVIC interrupt table.
@@ -198,7 +226,6 @@ void PIOF_Handler(void)
 {
 	pio_handler_process(PIOF, ID_PIOF);
 }
-#endif
 #endif
 
 /**

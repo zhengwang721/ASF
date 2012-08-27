@@ -52,7 +52,7 @@ static uint8_t lcd_alpha_display[LCD_TEST_DISPLAY_SIZE]  = "       ";
 //! Counter for alphanumeric scrolling current position
 static uint8_t alpha_offset=0;
 
-//! Alphanumeric Display memory (visible+non visible for text srolling)
+//! Alphanumeric Display memory (visible+non visible for text scrolling)
 static uint8_t lcd_alpha[LCD_TEXT_STRING_SIZE+2*LCD_TEST_DISPLAY_SIZE]
 	= "      ";
 

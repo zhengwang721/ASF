@@ -7,7 +7,7 @@
  * - Supported boards:   EVK1100
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,8 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+
+#include "joystick.h"
 
 #include "datalog.h"
 #include "shell.h"

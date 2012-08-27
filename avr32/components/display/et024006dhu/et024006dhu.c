@@ -4,7 +4,7 @@
  *
  * \brief _ET024006DHU_C_ file for ET024006DHU TFT display driver.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1252,26 +1252,19 @@ void et024006_PrintConsole(char *lcd_string, uint16_t fcolor, int bcolor)
 
 /* --- Register manipulation functions --- */
 #if(ET024006_IFACE_MODE == ET024006_IFACE_MODE_EBI)
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void et024006_WriteRegister( uint8_t address, uint8_t value )
+__always_inline static void et024006_WriteRegister( uint8_t address, uint8_t value )
 {
   *ET024006_CMD_ADDR = (uint16_t) address;
   *ET024006_PARAM_ADDR = (uint16_t) value;
 }
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ uint8_t et024006_ReadRegister( uint8_t address )
+
+__always_inline static uint8_t et024006_ReadRegister( uint8_t address )
 {
   *ET024006_CMD_ADDR = (uint16_t) address;
   return *ET024006_PARAM_ADDR;
 }
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ void et024006_SelectRegister( uint8_t address )
+
+__always_inline static void et024006_SelectRegister( uint8_t address )
 {
   *ET024006_CMD_ADDR = (uint16_t) address;
 }
@@ -1280,7 +1273,7 @@ static __inline__ void et024006_SelectRegister( uint8_t address )
 #elif(ET024006_IFACE_MODE == ET024006_IFACE_MODE_SPI)
 
 
-static __inline__ uint8_t et024006_ReadRegister( uint8_t address )
+__always_inline static uint8_t et024006_ReadRegister( uint8_t address )
 {
   et024006_SelectRegister( address );
   et024006_SelectSPI();

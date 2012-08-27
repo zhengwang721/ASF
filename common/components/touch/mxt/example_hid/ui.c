@@ -143,7 +143,7 @@ static void handle_trace(gfx_coord_t x, gfx_coord_t y)
 
 		/* Draw the validated trace coordinates to the display */
 		gfx_draw_rect(x, y, TRACE_RECT_SIZE, TRACE_RECT_SIZE,
-				COLOR_WHITE);
+				GFX_COLOR_WHITE);
 
 		/* Store new trace point */
 		trace[trace_write].x = x;
@@ -284,7 +284,7 @@ void ui_process(uint16_t framenumber)
 			if (ui_touch_event.status & MXT_PRESS_EVENT) {
 				old_x = ui_touch_event.x;
 				old_y = ui_touch_event.y;
-				draw_frame(0, 2, COLOR_RED);
+				draw_frame(0, 2, GFX_COLOR_RED);
 
 			/* Upon release, erase red frame */
 			} else if (ui_touch_event.status & MXT_RELEASE_EVENT) {
@@ -320,7 +320,7 @@ void ui_process(uint16_t framenumber)
 					udi_hid_mouse_btnleft(HID_MOUSE_BTN_DOWN);
 
 					/* Draw a blue inner-frame */
-					draw_frame(2, 2, COLOR_BLUE);
+					draw_frame(2, 2, GFX_COLOR_BLUE);
 
 				/* Must otherwise be a right click. */
 				} else {
@@ -328,7 +328,7 @@ void ui_process(uint16_t framenumber)
 					udi_hid_mouse_btnright(HID_MOUSE_BTN_DOWN);
 
 					/* Draw a green inner-frame */
-					draw_frame(2, 2, COLOR_GREEN);
+					draw_frame(2, 2, GFX_COLOR_GREEN);
 				}
 			}
 

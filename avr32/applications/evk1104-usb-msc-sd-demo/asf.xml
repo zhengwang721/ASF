@@ -48,6 +48,9 @@
 		<require idref="avr32.components.memory.sd_mmc.sd_mmc_mci"/>
 		<require idref="avr32.utils.libs.newlib_addons"/>
 		<require idref="avr32.services.fs.fat"/>
+		<device-support value="uc3a"/>
+		<device-support value="uc3a3_a4"/>
+		<device-support value="uc3b"/>
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 			<keyword value="Communication"/>

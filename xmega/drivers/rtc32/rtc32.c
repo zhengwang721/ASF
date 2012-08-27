@@ -43,6 +43,7 @@
 #include <compiler.h>
 #include <parts.h>
 #include <sysclk.h>
+#include <delay.h>
 #include "rtc32.h"
 
 #ifdef __ICCAVR__
@@ -192,27 +193,6 @@ void rtc_set_callback(rtc_callback_t callback)
 }
 
 /**
- * \internal
- * \brief Delay for \a us microseconds
- * \todo Remove this once we have a generic implementation in place
- * \param us number of microseconds to busy wait
- */
-static void udelay(uint16_t us)
-{
-	uint32_t count;
-
-	// Approximate the number of loop iterations needed.
-	count = sysclk_get_cpu_hz() / 1000000;
-	count *= us;
-	count /= 6;
-
-	while (count--)
-	{
-		asm("");
-	}
-}
-
-/**
  * \brief Checks battery backup system status.
  *
  * This function should be called once after each reset of the device in order
@@ -233,6 +213,9 @@ enum vbat_status_code rtc_vbat_system_check(bool first_time_startup)
 {
 	enum vbat_status_code vbat_status;
 	uint8_t flags = VBAT.STATUS;
+
+	/* Ensure the module is clocked to be able to check the registers */
+	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_RTC);
 
 	/*
 	 * Check if a sufficient voltage was detected on the VBAT input.
@@ -290,7 +273,7 @@ static void vbat_init(void)
 	* time to stabilize before we turn on the oscillator. If we do not
 	* have this delay we may get a failure detection.
 	*/
-	udelay(200);
+	delay_us(200);
 	VBAT.CTRL |= VBAT_XOSCEN_bm | RTC32_CLOCK;
 	while (!(VBAT.STATUS & VBAT_XOSCRDY_bm));
 }

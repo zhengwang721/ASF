@@ -9,7 +9,7 @@
 		</info>
 		<build type="c-source" value="rtc32_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-		<device-support value="xmegaa"/>
+		<device-support value="xmegaa3b"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
 		<require idref="xmega.drivers.pmic"/>

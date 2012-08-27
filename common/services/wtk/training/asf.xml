@@ -18,6 +18,9 @@
 		<build type="header-file" value="conf_win.h"/>
 		<build type="header-file" value="conf_wtk.h"/>
 		<build type="include-path" value="."/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
 		<require idref="common.boards"/>
 		<require idref="common.components.touch.mxt"/>
 		<require idref="common.services.wtk"/>

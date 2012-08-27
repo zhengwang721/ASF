@@ -6,7 +6,7 @@
  * This file defines various status codes returned by functions,
  * indicating success or failure as well as what kind of failure.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,6 +46,19 @@
 #ifndef STATUS_CODES_H_INCLUDED
 #define STATUS_CODES_H_INCLUDED
 
+/* Note: this is a local workaround to avoid a pre-processor clash due to the
+ * lwIP macro ERR_TIMEOUT. */
+#if defined(__LWIP_ERR_H__) && defined(ERR_TIMEOUT)
+#if (ERR_TIMEOUT != -3)
+
+/* Internal check to make sure that the later restore of lwIP's ERR_TIMEOUT
+ * macro is set to the correct value. Note that it is highly improbable that
+ * this value ever changes in lwIP. */
+#error ASF developers: check lwip err.h new value for ERR_TIMEOUT
+#endif
+#undef ERR_TIMEOUT
+#endif
+
 /**
  * Status code that may be returned by shell commands and protocol
  * implementations.
@@ -56,18 +69,18 @@
  * at the same time.
  */
 enum status_code {
-	STATUS_OK		=     0, //!< Success
-	ERR_IO_ERROR		=    -1, //!< I/O error
-	ERR_FLUSHED		=    -2, //!< Request flushed from queue
-	ERR_TIMEOUT		=    -3, //!< Operation timed out
-	ERR_BAD_DATA		=    -4, //!< Data integrity check failed
-	ERR_PROTOCOL		=    -5, //!< Protocol error
-	ERR_UNSUPPORTED_DEV	=    -6, //!< Unsupported device
-	ERR_NO_MEMORY		=    -7, //!< Insufficient memory
-	ERR_INVALID_ARG		=    -8, //!< Invalid argument
-	ERR_BAD_ADDRESS		=    -9, //!< Bad address
-	ERR_BUSY		=   -10, //!< Resource is busy
-	ERR_BAD_FORMAT          =   -11, //!< Data format not recognized
+	STATUS_OK               =  0, //!< Success
+	ERR_IO_ERROR            =  -1, //!< I/O error
+	ERR_FLUSHED             =  -2, //!< Request flushed from queue
+	ERR_TIMEOUT             =  -3, //!< Operation timed out
+	ERR_BAD_DATA            =  -4, //!< Data integrity check failed
+	ERR_PROTOCOL            =  -5, //!< Protocol error
+	ERR_UNSUPPORTED_DEV     =  -6, //!< Unsupported device
+	ERR_NO_MEMORY           =  -7, //!< Insufficient memory
+	ERR_INVALID_ARG         =  -8, //!< Invalid argument
+	ERR_BAD_ADDRESS         =  -9, //!< Bad address
+	ERR_BUSY                =  -10, //!< Resource is busy
+	ERR_BAD_FORMAT          =  -11, //!< Data format not recognized
 
 	/**
 	 * \brief Operation in progress
@@ -82,5 +95,9 @@ enum status_code {
 };
 
 typedef enum status_code status_code_t;
+
+#if defined(__LWIP_ERR_H__)
+#define ERR_TIMEOUT -3
+#endif
 
 #endif /* STATUS_CODES_H_INCLUDED */

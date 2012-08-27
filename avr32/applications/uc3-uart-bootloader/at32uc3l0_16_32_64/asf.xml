@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="UART Bootloader" id="avr32.applications.uc3_uart_bootloader.example">
+	<project caption="AVR UC3 UART Bootloader" id="avr32.applications.uc3_uart_bootloader.example">
 		<require idref="avr32.applications.uc3_uart_bootloader"/>
 		<require idref="board.dummy.at32uc3l016"/>
 		<build type="linker-config" subtype="script" value="link_at32uc3l-isp.lds" toolchain="avr32gcc"/>

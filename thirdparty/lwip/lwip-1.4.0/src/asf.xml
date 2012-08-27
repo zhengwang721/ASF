@@ -68,6 +68,7 @@
 		<build type="header-file" subtype="api" value="include/lwip/timers.h"/>
 		<build type="header-file" subtype="api" value="include/lwip/udp.h"/>
 		<build type="include-path" value="include"/>
+		<build type="include-path" value="include/lwip"/>		
 		<build type="header-file" value="include/netif/ppp_oe.h"/>
 		<build type="header-file" value="include/netif/etharp.h"/>		
 		<build type="distribute" subtype="file" value="../CHANGELOG"/>
@@ -101,6 +102,7 @@
 		<require idref="config.thirdparty.lwip.140.netif.slipif"/>
 		<require idref="thirdparty.lwip-port.140"/>
 		<device-support value="uc3"/>
+		<device-support value="sam"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 	</module>
 	<select-by-config id="config.thirdparty.lwip.140.ipv" name="config.thirdparty.lwip.140.ipv" caption="IPv4 versus IPv6 configuration of lwIP v140" default="4">
@@ -126,6 +128,7 @@
 			<build type="header-file" subtype="api" value="include/ipv4/lwip/ip_frag.h"/>
 			<build type="include-path" value="include/ipv4"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.140.ipv#6" caption="IPv6 support in lwIP v140">
 			<info type="description" value="summary">
@@ -141,6 +144,7 @@
 			<build type="header-file" subtype="api" value="include/ipv6/lwip/ip_addr.h"/>
 			<build type="include-path" value="include/ipv6"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.140.snmp" name="config.thirdparty.lwip.140.snmp" caption="lwIP v140 configuration to use SNMP or not" default="no">
@@ -149,6 +153,7 @@
 			Default lwIP configuration without SNMP support.
 			</info>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.140.snmp#yes" caption="lwIP v140 configuration with SNMP enabled">
 			<info type="description" value="summary">
@@ -162,6 +167,7 @@
 			<build type="c-source" value="core/snmp/msg_out.c"/>
 			<build type="include-path" value="include"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.140.netif.ppp" name="config.thirdparty.lwip.140.netif.ppp" caption="lwIP v140 configuration to use PPP or not" default="no">
@@ -170,6 +176,7 @@
 			Default lwIP configuration without PPP support.
 			</info>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.140.netif.ppp#yes" caption="lwIP v140 configuration with PPP enabled">
 			<info type="description" value="summary">
@@ -203,6 +210,7 @@
 			<build type="header-file" subtype="api" value="netif/ppp/vj.h"/>
 			<build type="header-file" subtype="api" value="netif/ppp/vjbsdhdr.h"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.140.netif.etharp" name="config.thirdparty.lwip.140.netif.etharp" caption="lwIP v140 configuration to use ARP over Ethernet or not" default="yes">
@@ -211,6 +219,7 @@
 			lwIP configuration without ARP-over-ethernet support.
 			</info>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.140.netif.etharp#yes" caption="lwIP v140 configuration with ARP enabled">
 			<info type="description" value="summary">
@@ -218,6 +227,7 @@
 			</info>
 			<build type="c-source" value="netif/etharp.c"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.140.netif.slipif" name="config.thirdparty.lwip.140.netif.slipif" caption="lwIP v140 configuration to include support for the SLIP (Serial Line IP) protocol or not" default="no">
@@ -226,6 +236,7 @@
 			Default lwIP configuration without support for the SLIP protocol.
 			</info>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.140.netif.slipif#yes" caption="lwIP v140 configuration with SLIP enabled">
 			<info type="description" value="summary">
@@ -235,6 +246,7 @@
 			<build type="header-file" subtype="api" value="include/netif/slipif.h"/>
 			<build type="include-path" value="include"/>
 			<device-support value="uc3"/>
+			<device-support value="sam"/>
 		</module>
 	</select-by-config>
 </asf>

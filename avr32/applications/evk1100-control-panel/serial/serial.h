@@ -4,7 +4,7 @@
  *
  * \brief Control Panel USART driver module.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -148,6 +148,16 @@ unsigned portSHORT usUsartPutString( xComPortHandle pxPort, const signed portCHA
  * \param xPort The handle of the usart to close
  */
 void vSerialClose( xComPortHandle xPort );
+
+/*
+ * USART0 interrupt service routine.
+ */
+#if defined(__GNUC__)
+__attribute__((__naked__))
+#elif defined(__ICCAVR32__)
+#pragma shadow_registers = full   // Naked.
+#endif
+void vUSART0_ISR( void );
 
 #endif
 

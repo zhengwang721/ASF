@@ -7,7 +7,7 @@
  * This function should be connected to the audio interface to give access to the mass storage audio player
  * If you use this routines then you don't must use the other FileSystem routine provide in nav_auto.h, navigation.h, file.h, playlist.h
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -622,10 +622,7 @@ bool ai_usb_ms_audio_ctrl_stop_ffw_frw(ai_async_status_t *cmd_ai_status);
 //!
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_get_next_playlist_pos(uint16_t u16_start_file_pos)
+__always_inline static bool ai_async_usb_ms_specific_nav_get_next_playlist_pos(uint16_t u16_start_file_pos)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_GET_NEXT_PLAYLIST_POS, (uint32_t) u16_start_file_pos, 0, 0, false);
 }
@@ -634,10 +631,7 @@ static inline bool ai_async_usb_ms_specific_nav_get_next_playlist_pos(uint16_t u
 //!
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_playlist_link_nb(void)
+__always_inline static bool ai_async_usb_ms_specific_nav_playlist_link_nb(void)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_PLAYLIST_LINK_NB, 0, 0, 0, false);
 }
@@ -648,10 +642,7 @@ static inline bool ai_async_usb_ms_specific_nav_playlist_link_nb(void)
 //!
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_playlist_link_name(uint16_t u16_link_pos)
+__always_inline static bool ai_async_usb_ms_specific_nav_playlist_link_name(uint16_t u16_link_pos)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_PLAYLIST_LINK_NAME, (uint32_t) u16_link_pos, 0, 0, true);
 }
@@ -662,10 +653,7 @@ static inline bool ai_async_usb_ms_specific_nav_playlist_link_name(uint16_t u16_
 //!
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_audio_nav_playlist_play_link(uint16_t u16_link_pos)
+__always_inline static bool ai_async_usb_ms_specific_audio_nav_playlist_play_link(uint16_t u16_link_pos)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_AUDIO_NAV_PLAYLIST_PLAY_LINK, (uint32_t) u16_link_pos, 0, 0, false);
 }
@@ -676,10 +664,7 @@ static inline bool ai_async_usb_ms_specific_audio_nav_playlist_play_link(uint16_
 //!
 //! @return cmd_out_status - false in case of error, true is success
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_audio_nav_get_folder_name(uint8_t u8_size_max)
+__always_inline static bool ai_async_usb_ms_specific_audio_nav_get_folder_name(uint8_t u8_size_max)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_AUDIO_NAV_GET_FOLDER_NAME, (uint32_t) u8_size_max, 0, 0, true);
 }
@@ -688,10 +673,7 @@ static inline bool ai_async_usb_ms_specific_audio_nav_get_folder_name(uint8_t u8
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_getplaylistfile(void)
+__always_inline static bool ai_async_usb_ms_specific_nav_getplaylistfile(void)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_GET_PLAYLIST_FILE, 0, 0, 0, false);
 }
@@ -700,10 +682,7 @@ static inline bool ai_async_usb_ms_specific_nav_getplaylistfile(void)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_save(void **context)
+__always_inline static bool ai_async_usb_ms_specific_nav_save(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_SAVE, (uint32_t) context, 0, 0, false);
 }
@@ -712,10 +691,7 @@ static inline bool ai_async_usb_ms_specific_nav_save(void **context)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_nav_restore(void **context)
+__always_inline static bool ai_async_usb_ms_specific_nav_restore(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_NAV_RESTORE, (uint32_t) context, 0, 0, false);
 }
@@ -724,10 +700,7 @@ static inline bool ai_async_usb_ms_specific_nav_restore(void **context)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_audio_nav_save(void **context)
+__always_inline static bool ai_async_usb_ms_specific_audio_nav_save(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_AUDIO_NAV_SAVE, (uint32_t) context, 0, 0, false);
 }
@@ -736,10 +709,7 @@ static inline bool ai_async_usb_ms_specific_audio_nav_save(void **context)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_audio_nav_restore(void **context)
+__always_inline static bool ai_async_usb_ms_specific_audio_nav_restore(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_AUDIO_NAV_RESTORE, (uint32_t) context, 0, 0, false);
 }
@@ -748,10 +718,7 @@ static inline bool ai_async_usb_ms_specific_audio_nav_restore(void **context)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_playlist_nav_save(void **context)
+__always_inline static bool ai_async_usb_ms_specific_playlist_nav_save(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_PLAYLIST_NAV_SAVE, (uint32_t) context, 0, 0, false);
 }
@@ -760,10 +727,7 @@ static inline bool ai_async_usb_ms_specific_playlist_nav_save(void **context)
 //!
 //! @return    false in case of error
 //!
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool ai_async_usb_ms_specific_playlist_nav_restore(void **context)
+__always_inline static bool ai_async_usb_ms_specific_playlist_nav_restore(void **context)
 {
   return ai_async_cmd_put((cmd_ai_id_t) CMD_AI_USB_MS_PLAYLIST_NAV_RESTORE, (uint32_t) context, 0, 0, false);
 }

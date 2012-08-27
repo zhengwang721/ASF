@@ -55,7 +55,7 @@
 #define LUN_1                DISABLE   //!< AT45DBX Data Flash.
 #define LUN_2                DISABLE   //!< SD/MMC Card over SPI.
 #define LUN_3                DISABLE   //!< SD/MMC Card over MCI Slot 0.
-#define LUN_4                DISABLE
+#define LUN_4                ENABLE    //!< NAND Flash.
 #define LUN_5                DISABLE
 #define LUN_6                DISABLE
 #define LUN_7                DISABLE
@@ -130,6 +130,23 @@
 #define LUN_3_NAME                              "\"SD/MMC Card over MCI Slot 0\""
 //! @}
 
+/*! \name LUN 4 Definitions
+ */
+//! @{
+#define NAND_FLASH_MEM                        	LUN_4
+#define LUN_ID_NAND_FLASH_MEM                 	LUN_ID_4
+#define LUN_4_INCLUDE                           "nand_flash_mem.h"
+#define Lun_4_test_unit_ready                   nand_flash_test_unit_ready
+#define Lun_4_read_capacity                     nand_flash_read_capacity
+#define Lun_4_wr_protect                        nand_flash_wr_protect
+#define Lun_4_removal                           nand_flash_removal
+#define Lun_4_usb_read_10                       nand_flash_usb_read_10
+#define Lun_4_usb_write_10                      nand_flash_usb_write_10
+#define Lun_4_mem_2_ram                         nand_flash_mem_2_ram
+#define Lun_4_ram_2_mem                         nand_flash_ram_2_mem
+#define LUN_4_NAME                              "\"nand_flash on EBI\""
+//! @}
+
 /*! \name USB LUNs Definitions
  */
 //! @{
@@ -167,7 +184,7 @@
 #define ACCESS_MEM_TO_RAM    true    //!< MEM <-> RAM interface.
 #define ACCESS_STREAM        true    //!< Streaming MEM <-> MEM interface.
 #define ACCESS_STREAM_RECORD false   //!< Streaming MEM <-> MEM interface in record mode.
-#define ACCESS_MEM_TO_MEM    false    //!< MEM <-> MEM interface.
+#define ACCESS_MEM_TO_MEM    false   //!< MEM <-> MEM interface.
 #define ACCESS_CODEC         false   //!< Codec interface.
 //! @}
 

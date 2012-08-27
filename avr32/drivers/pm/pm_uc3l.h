@@ -4,7 +4,7 @@
  *
  * \brief Power Manager(PM) driver interface.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -265,10 +265,7 @@ extern long pm_disable_module(unsigned long module);
  * \return The MCU wake cause which can be masked with the
  *         \c AVR32_PM_WCAUSE_x_MASK bit-masks to isolate specific causes.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long pm_get_wake_cause(void)
+__always_inline static unsigned long pm_get_wake_cause(void)
 {
   return AVR32_PM.wcause;
 }
@@ -279,10 +276,7 @@ static inline unsigned long pm_get_wake_cause(void)
  *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
  *  "toolchain folder"/avr32/inc(lude)/avr32/)
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void pm_asyn_wake_up_enable(unsigned long awen_mask)
+__always_inline static void pm_asyn_wake_up_enable(unsigned long awen_mask)
 {
   AVR32_PM.awen |= awen_mask;
 }
@@ -293,10 +287,7 @@ static inline void pm_asyn_wake_up_enable(unsigned long awen_mask)
  *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
  *  "toolchain folder"/avr32/inc(lude)/avr32/)
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void pm_asyn_wake_up_disable(unsigned long awen_mask)
+__always_inline static void pm_asyn_wake_up_disable(unsigned long awen_mask)
 {
   AVR32_PM.awen &= ~awen_mask;
 }
@@ -314,10 +305,7 @@ static inline void pm_asyn_wake_up_disable(unsigned long awen_mask)
  * \return The MCU last reset cause which can be masked with the
  *         \c AVR32_PM_RCAUSE_x_MASK bit-masks to isolate specific causes.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long pm_get_reset_cause(void)
+__always_inline static unsigned long pm_get_reset_cause(void)
 {
   return AVR32_PM.rcause;
 }
@@ -335,10 +323,7 @@ static inline unsigned long pm_get_reset_cause(void)
  * \param mask the interrupts to enable.
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void pm_enable_interrupts(unsigned long mask)
+__always_inline static void pm_enable_interrupts(unsigned long mask)
 {
   AVR32_PM.ier |= mask;
 }
@@ -348,10 +333,7 @@ static inline void pm_enable_interrupts(unsigned long mask)
  * \param mask the interrupts to disable.
  *
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void pm_disable_interrupts(unsigned long mask)
+__always_inline static void pm_disable_interrupts(unsigned long mask)
 {
   AVR32_PM.idr |= mask;
 }
@@ -360,10 +342,7 @@ static inline void pm_disable_interrupts(unsigned long mask)
  *
  * \return mask of the enabled interrupts.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long pm_get_enabled_interrupts(void)
+__always_inline static unsigned long pm_get_enabled_interrupts(void)
 {
   return(AVR32_PM.imr);
 }
@@ -372,10 +351,7 @@ static inline unsigned long pm_get_enabled_interrupts(void)
  *
  * \return mask of the interrupts that have been triggered.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long pm_get_interrupts_status(void)
+__always_inline static unsigned long pm_get_interrupts_status(void)
 {
   return(AVR32_PM.isr);
 }
@@ -384,10 +360,7 @@ static inline unsigned long pm_get_interrupts_status(void)
  *
  * \param mask The interrupts to clear.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void pm_clear_interrupt_status(unsigned long mask)
+__always_inline static void pm_clear_interrupt_status(unsigned long mask)
 {
   AVR32_PM.icr |= mask;
 }
@@ -404,10 +377,7 @@ static inline void pm_clear_interrupt_status(unsigned long mask)
  *
  * \return The content of the PM Status register.
  */
-#ifdef __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long pm_get_status(void)
+__always_inline static unsigned long pm_get_status(void)
 {
   return AVR32_PM.sr;
 }

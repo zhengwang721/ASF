@@ -3,7 +3,7 @@
  *
  * \brief This file contains the default exception handlers.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,11 +87,15 @@ void UART_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SMC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOA_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOB_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_PIOC
 void PIOC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void USART0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void USART1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void USART2_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_USART3
 void USART3_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void HSMCI_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TWI0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TWI1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -133,11 +137,15 @@ void UDPHS_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #pragma weak SMC_Handler=Dummy_Handler
 #pragma weak PIOA_Handler=Dummy_Handler
 #pragma weak PIOB_Handler=Dummy_Handler
+#ifdef ID_PIOC
 #pragma weak PIOC_Handler=Dummy_Handler
+#endif
 #pragma weak USART0_Handler=Dummy_Handler
 #pragma weak USART1_Handler=Dummy_Handler
 #pragma weak USART2_Handler=Dummy_Handler
+#ifdef ID_USART3
 #pragma weak USART3_Handler=Dummy_Handler
+#endif
 #pragma weak HSMCI_Handler=Dummy_Handler
 #pragma weak TWI0_Handler=Dummy_Handler
 #pragma weak TWI1_Handler=Dummy_Handler

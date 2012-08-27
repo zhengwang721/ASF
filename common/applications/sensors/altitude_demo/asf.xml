@@ -24,6 +24,8 @@
 		<build type="build-config" subtype="c++-compiler-flags" value="--diag_suppress Pe815,Pe191" toolchain="iarew"/>
 		<build type="build-config" subtype="c++-compiler-flags" value="--diag_suppress Pe815,Pe191" toolchain="iarew32"/>
 		<build type="linker-config" subtype="flags" value="-u,vfprintf -lprintf_flt" toolchain="avrgcc"/>
+		<device-support value="uc3"/>
+		<device-support value="xmega"/>
 		<require idref="common.services.sensors"/>
 		<require idref="common.services.sensors.physics"/>
 	</module>

@@ -42,7 +42,7 @@
  */
 #include "gfx_mono_c12832_a1z.h"
 
-// If we are using a serial interface without readback, use framebuffer
+/* If we are using a serial interface without readback, use framebuffer */
 #ifdef ST7565R_SERIAL_INTERFACE
 # define CONFIG_ST7565R_FRAMEBUFFER
 #endif
@@ -66,16 +66,16 @@ void gfx_mono_st7565r_init(void)
 	gfx_mono_set_framebuffer(framebuffer);
 #endif
 
-	// Initialize the low-level display controller.
+	/* Initialize the low-level display controller. */
 	st7565r_init();
 
-	// Set display to output data from line 0
+	/* Set display to output data from line 0 */
 	st7565r_set_display_start_line_address(0);
 
 	/* Clear the contents of the display.
 	 * If using a framebuffer (SPI interface) it will both clear the
 	 * controller memory and the framebuffer.
-	*/
+	 */
 	for (page = 0; page < GFX_MONO_LCD_PAGES; page++) {
 		for (column = 0; column < GFX_MONO_LCD_WIDTH; column++) {
 			gfx_mono_put_byte(page, column, 0x00);
@@ -107,7 +107,7 @@ void gfx_mono_st7565r_put_framebuffer(void)
 
 /**
  * \brief Draw pixel to screen
-
+ *
  * \param x         X coordinate of the pixel
  * \param y         Y coordinate of the pixel
  * \param color     Pixel operation
@@ -125,13 +125,14 @@ void gfx_mono_st7565r_put_framebuffer(void)
  * gfx_mono_st7565r_draw_pixel(10, 10, GFX_PIXEL_XOR);
  * \endcode
  */
-void gfx_mono_st7565r_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_coord_t color)
+void gfx_mono_st7565r_draw_pixel(gfx_coord_t x, gfx_coord_t y,
+		gfx_coord_t color)
 {
 	uint8_t page;
 	uint8_t pixel_mask;
 	uint8_t pixel_value;
 
-	// Discard pixels drawn outside the screen
+	/* Discard pixels drawn outside the screen */
 	if ((x > GFX_MONO_LCD_WIDTH - 1) || (y > GFX_MONO_LCD_HEIGHT - 1)) {
 		return;
 	}
@@ -177,7 +178,7 @@ void gfx_mono_st7565r_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_coord_t color
  * \code
  * pixelval = gfx_mono_st7565r_get_pixel(10,10);
  * \endcode
-*/
+ */
 uint8_t gfx_mono_st7565r_get_pixel(gfx_coord_t x, gfx_coord_t y)
 {
 	uint8_t page;
@@ -197,8 +198,9 @@ uint8_t gfx_mono_st7565r_get_pixel(gfx_coord_t x, gfx_coord_t y)
  * \brief Put a page from RAM to display controller.
  *
  * If the controller is accessed by the SPI interface, we can not read
- * back data from the LCD controller RAM. Because of this all data that is written
- * to the LCD controller in this mode is also written to a framebuffer in MCU RAM.
+ * back data from the LCD controller RAM. Because of this all data that is
+ * written to the LCD controller in this mode is also written to a framebuffer 
+ * in MCU RAM.
  *
  * \param data Pointer to data to be written
  * \param page Page address
@@ -215,7 +217,6 @@ uint8_t gfx_mono_st7565r_get_pixel(gfx_coord_t x, gfx_coord_t y)
 void gfx_mono_st7565r_put_page(gfx_mono_color_t *data, gfx_coord_t page,
 		gfx_coord_t column, gfx_coord_t width)
 {
-
 #ifdef CONFIG_ST7565R_FRAMEBUFFER
 	gfx_mono_framebuffer_put_page(data, page, column, width);
 #endif
@@ -224,12 +225,12 @@ void gfx_mono_st7565r_put_page(gfx_mono_color_t *data, gfx_coord_t page,
 
 	do {
 		st7565r_write_data(*data++);
-	} while(--width);
+	} while (--width);
 }
 
 /**
  * \brief Read a page from the LCD controller
-
+ *
  * If the LCD controller is accessed by the SPI interface we cannot read
  * data directly from the controller. In that case we will read the data from
  * the local framebuffer instead.
@@ -256,7 +257,7 @@ void gfx_mono_st7565r_get_page(gfx_mono_color_t *data, gfx_coord_t page,
 
 	do {
 		*data++ = st7565r_read_data();
-	} while(--width);
+	} while (--width);
 #endif
 }
 
@@ -271,7 +272,8 @@ void gfx_mono_st7565r_get_page(gfx_mono_color_t *data, gfx_coord_t page,
  * \param data Data to be written
  *
  * This example will put the value 0xFF to the first byte in the display memory
- * setting a 8 pixel high column of pixels in the upper left corner of the display.
+ * setting a 8 pixel high column of pixels in the upper left corner of the
+ * display.
  * \code
  * gfx_mono_st7565r_put_byte(0, 0, 0xFF);
  * \endcode
@@ -310,11 +312,13 @@ uint8_t gfx_mono_st7565r_get_byte(gfx_coord_t page, gfx_coord_t column)
 {
 #ifdef CONFIG_ST7565R_FRAMEBUFFER
 	return gfx_mono_framebuffer_get_byte(page, column);
+
 #else
 	st7565r_set_page_address(page);
 	st7565r_set_column_address(column);
 
 	return st7565r_read_data();
+
 #endif
 }
 

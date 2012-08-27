@@ -92,7 +92,17 @@ void board_init(void)
 	/* Configure PWM LED2 pin */
 	gpio_configure_pin(PIN_PWM_LED2_GPIO, PIN_PWM_LED2_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_TWI0
+		gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+		gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
 	
+#ifdef CONF_BOARD_TWI1
+		gpio_configure_pin(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+		gpio_configure_pin(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+#endif
+
 	/* Configure SPI pins */
 #ifdef CONF_BOARD_SPI
 	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
@@ -242,7 +252,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_AAT3194
 	/* Configure Backlight control pin */
-	gpio_configure_pin(BOARD_BACKLIGHT, BOARD_BACKLIGHT_FLAG);
+	gpio_configure_pin(BOARD_AAT31XX_SET_GPIO, BOARD_AAT31XX_SET_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_MCP9800
@@ -258,6 +268,16 @@ void board_init(void)
 	gpio_configure_pin(PIN_MMA7341L_X_AXIS, PIN_MMA7341L_X_AXIS_FLAG);
 	gpio_configure_pin(PIN_MMA7341L_Y_AXIS, PIN_MMA7341L_Y_AXIS_FLAG);
 	gpio_configure_pin(PIN_MMA7341L_Z_AXIS, PIN_MMA7341L_Z_AXIS_FLAG);
+#endif
+
+#ifdef CONF_BOARD_ADS7843
+	/* Configure Touchscreen SPI pins */
+	gpio_configure_pin(BOARD_ADS7843_IRQ_GPIO,BOARD_ADS7843_IRQ_FLAGS);
+	gpio_configure_pin(BOARD_ADS7843_BUSY_GPIO, BOARD_ADS7843_BUSY_FLAGS);
+	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_ISO7816_RST
@@ -294,5 +314,23 @@ void board_init(void)
 	gpio_configure_pin(PIN_EBI_NANDIO_15, PIN_EBI_NANDIO_15_FLAGS);
 	gpio_configure_pin(PIN_NF_CE_IDX, PIN_NF_CE_FLAGS);
 	gpio_configure_pin(PIN_NF_RB_IDX, PIN_NF_RB_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI0
+	gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SSC
+	gpio_configure_pin(PIN_SSC_TD, PIN_SSC_TD_FLAGS);
+	gpio_configure_pin(PIN_SSC_TK, PIN_SSC_TK_FLAGS);
+	gpio_configure_pin(PIN_SSC_TF, PIN_SSC_TF_FLAGS);
+	gpio_configure_pin(PIN_SSC_RD, PIN_SSC_RD_FLAGS);
+	gpio_configure_pin(PIN_SSC_RK, PIN_SSC_RK_FLAGS);
+	gpio_configure_pin(PIN_SSC_RF, PIN_SSC_RF_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PCK0
+	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
 #endif
 }

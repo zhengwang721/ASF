@@ -8,7 +8,7 @@
  *
  * To use this board define BOARD=STK600_RCUC3L4.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,20 +94,20 @@
 
 //! \name DataFlash memory (AT45DBX)
 //@{
-#define AT45DBX_SPI                     (&AVR32_SPI)
+#define AT45DBX_SPI                     (&AVR32_USART2)
 #define AT45DBX_SPI_NPCS                0
 //! SCK pin
-#define AT45DBX_SPI_SCK_PIN             AVR32_SPI_SCK_0_0_PIN
-#define AT45DBX_SPI_SCK_FUNCTION        AVR32_SPI_SCK_0_0_FUNCTION
+#define AT45DBX_SPI_SCK_PIN             AVR32_USART2_CLK_0_1_PIN
+#define AT45DBX_SPI_SCK_FUNCTION        AVR32_USART2_CLK_0_1_FUNCTION
 //! MOSI pin
-#define AT45DBX_SPI_MOSI_PIN            AVR32_SPI_MOSI_0_0_PIN
-#define AT45DBX_SPI_MOSI_FUNCTION       AVR32_SPI_MOSI_0_0_FUNCTION
+#define AT45DBX_SPI_MOSI_PIN            AVR32_USART2_TXD_0_0_PIN
+#define AT45DBX_SPI_MOSI_FUNCTION       AVR32_USART2_TXD_0_0_FUNCTION
 //! MISO pin
- #define AT45DBX_SPI_MISO_PIN           AVR32_SPI_MISO_0_0_PIN
-#define AT45DBX_SPI_MISO_FUNCTION       AVR32_SPI_MISO_0_0_FUNCTION
+ #define AT45DBX_SPI_MISO_PIN           AVR32_USART2_RXD_0_0_PIN
+#define AT45DBX_SPI_MISO_FUNCTION       AVR32_USART2_RXD_0_0_FUNCTION
 //! CS pin
-#define AT45DBX_SPI_NPCS0_PIN           AVR32_SPI_NPCS_0_2_PIN
-#define AT45DBX_SPI_NPCS0_FUNCTION      AVR32_SPI_NPCS_0_2_FUNCTION
+#define AT45DBX_SPI_NPCS0_PIN           AVR32_USART2_RTS_0_1_PIN
+#define AT45DBX_SPI_NPCS0_FUNCTION      AVR32_USART2_RTS_0_1_FUNCTION
 //@}
 
 /*! \name USART connection to the UC3B board controller

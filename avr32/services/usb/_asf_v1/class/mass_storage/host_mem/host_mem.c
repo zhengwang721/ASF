@@ -6,7 +6,7 @@
  *
  * This file manages the accesses to the remote USB device memories.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -422,7 +422,8 @@ Ctrl_status host_read_capacity(uint8_t lun, uint32_t *u32_nb_sector)
   else if (get_data_status != PIPE_GOOD)
     return CTRL_FAIL;
 
-  *u32_nb_sector = sbc_format_scsi_to_mcu_data(32, *(uint32_t *)(buf_cmd + 0));
+ *u32_nb_sector = sbc_format_scsi_to_mcu_data(32, *(uint32_t *)(buf_cmd+0));
+
   g_u8_sector_size = sbc_format_scsi_to_mcu_data(32, *(uint32_t *)(buf_cmd + 4)) >> 9;
 
   // Get CSW

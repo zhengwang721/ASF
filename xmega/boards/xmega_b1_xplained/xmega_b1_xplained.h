@@ -134,6 +134,7 @@ static inline void user_led_toggle(void)
 #define	TOUCHMASK       (0x0F)
 #define	TOUCH0POS       PIN0_bp
 
+
 static inline bool is_touch0(void)
 {
 	if (TOUCHPORT.IN & (1<<(TOUCH0POS  ))) return false;
@@ -146,6 +147,11 @@ static inline bool is_touch1(void)
 	else return true;
 }
 
+/* If USARTE0 is enabled, touch buttons CS2 and CS3 will not work, as they
+ * share pins with the USART. These functions are then not defined if the user
+ * tries to use them, generating an error rather than
+ * the buttons not working. */
+#ifndef CONF_BOARD_ENABLE_USARTE0
 static inline bool is_touch2(void)
 {
 	if (TOUCHPORT.IN & (1<<(TOUCH0POS+2))) return false;
@@ -157,14 +163,14 @@ static inline bool is_touch3(void)
 	if (TOUCHPORT.IN & (1<<(TOUCH0POS+3))) return false;
 	else return true;
 }
+#endif
 
 static inline uint8_t touch_get(void)
 {
 	return (((~TOUCHPORT.IN) & TOUCHMASK) << TOUCH0POS);
 }
-
-
 //! @}
+
 
 /*! \name LCD BACKLIGHT
  */

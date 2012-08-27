@@ -3,7 +3,7 @@
  *
  * \brief Monochrome graphic library framebuffer device
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,25 +59,26 @@
  * @{
  */
 
-
 void gfx_mono_set_framebuffer(uint8_t *framebuffer);
 
 void gfx_mono_framebuffer_put_page(gfx_mono_color_t *data, gfx_coord_t page,
-        gfx_coord_t page_offset, gfx_coord_t width);
+		gfx_coord_t page_offset, gfx_coord_t width);
 
 void gfx_mono_framebuffer_get_page(gfx_mono_color_t *data, gfx_coord_t page,
 		gfx_coord_t page_offset, gfx_coord_t width);
 
-void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_mono_color_t color);
+void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y,
+		gfx_mono_color_t color);
 
 uint8_t gfx_mono_framebuffer_get_pixel(gfx_coord_t x, gfx_coord_t y);
 
-void gfx_mono_framebuffer_put_byte(gfx_coord_t page, gfx_coord_t column, uint8_t data);
+void gfx_mono_framebuffer_put_byte(gfx_coord_t page, gfx_coord_t column,
+		uint8_t data);
 
 uint8_t gfx_mono_framebuffer_get_byte(gfx_coord_t page, gfx_coord_t column);
 
 void gfx_mono_framebuffer_mask_byte(gfx_coord_t page, gfx_coord_t column,
-		 gfx_mono_color_t pixel_mask, gfx_mono_color_t color);
+		gfx_mono_color_t pixel_mask, gfx_mono_color_t color);
 
-// @}
+/** @} */
 #endif /* GFX_MONO_FRAMEBUFFER */

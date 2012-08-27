@@ -18,6 +18,7 @@
 		<device-support value="xmegaa3bu"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
+		<require idref="common.services.delay"/>
 		<require idref="xmega.utils"/>
 		<generator value="doxygen-module" default-mcu="atxmega256a3b"/>
 	</module>

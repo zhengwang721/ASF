@@ -7,6 +7,7 @@
 			<keyword value="Communication"/>
 		</info>		
 		<build type="c-source" value="can_example1.c"/>
+		<device-support value="uc3c"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.scif"/>
 		<require idref="avr32.drivers.usart"/>

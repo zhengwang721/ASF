@@ -50,8 +50,8 @@
 #define USART_ID_0         ID_UART
 #define USART_INT_LEVEL_0  3
 
-#define USART_ENABLE_1()   gpio_set_pin_low(PIN_USART0_EN_IDX)
-#define USART_DISABLE_1()  gpio_set_pin_high(PIN_USART0_EN_IDX)
+#define USART_ENABLE_1()
+#define USART_DISABLE_1()
 #define USART_BASE_1       ((Usart*)USART0)
 #define USART_HANDLER_1    USART0_Handler
 #define USART_ID_1         ID_USART0

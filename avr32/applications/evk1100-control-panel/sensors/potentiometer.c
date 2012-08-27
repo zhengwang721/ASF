@@ -7,7 +7,7 @@
  * - Supported boards:   EVK1100
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,6 +52,8 @@
 #include "gpio.h" // Have to include gpio.h before FreeRTOS.h as long as FreeRTOS
                   // redefines the inline keyword to empty.
 #include "FreeRTOS.h"
+
+#include "potentiometer.h"
 
 #include "datalog.h"
 #include "shell.h"

@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="conf_clock.h"/>
 		<build type="header-file" subtype="api" value="conf_example.h"/>
+		<build type="header-file" subtype="api" value="conf_board.h"/>
 		<build type="header-file" subtype="api" value="QDebugSettings.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="board.sam3s_ek2"/>

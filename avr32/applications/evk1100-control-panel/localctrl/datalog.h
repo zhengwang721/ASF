@@ -11,7 +11,7 @@
  *                       This file has been tested on UC3 and EVK1100.
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -184,5 +184,12 @@ bool b_datalog_set_current_log_drive_toDF( void );
  * \return true
  */
 bool b_datalog_set_current_log_drive_toSDMMC( void );
+
+/*!
+ * Return the status of the datalog module.
+ *
+ * \return one of the eStatus enum value.
+ */
+eStatus xDataLog_GetStatus( void );
 
 #endif

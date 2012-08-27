@@ -14,12 +14,13 @@
 		</module>
 		<module type="meta" id="config.board.uc3_a3_xplained.init#yes" caption="UC3-A3 Xplained initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.uc3_a3_xplained" caption="UC3-A3 Xplained" mcu="at32uc3a3256">
+	<board id="board.uc3_a3_xplained" vendor="Atmel" caption="UC3-A3 Xplained" mcu="at32uc3a3256">
 		<build type="define" name="BOARD" value="UC3_A3_XPLAINED"/>
 		<build type="header-file" value="uc3_a3_xplained.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

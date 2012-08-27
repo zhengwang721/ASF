@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,8 +53,5 @@
 /** Configure PWM pins used to control LEDs on board */
 #define CONF_BOARD_PWM_LED0
 #define CONF_BOARD_PWM_LED1
-
-#define PWM_CHANNEL_LED_0  PWM_CHANNEL_0
-#define PWM_CHANNEL_LED_1  PWM_CHANNEL_1
 
 #endif /* CONF_BOARD_H */

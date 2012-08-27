@@ -35,8 +35,16 @@
 
 #include "compiler.h"
 
-
 #define putchar(c) vtracedump_Putchar_Block(c)
+
+#ifdef __GNUC__
+
+int fprintf(__FILE *stream, const char *format, ...);
+
+#endif
+
+int printk(const char *format, ...);
+int sprintf(char *out, const char *format, ...);
 
 static void printchar(char **str, int c)
 {

@@ -91,9 +91,6 @@
 #include "smiley.h"
 #include "atmel_logo.h"
 
-/* White background color */
-#define BGCOLOR GFX_COLOR(0xFF, 0xFF, 0xFF)
-
 #define STEP 20
 #define SPACING 10
 #define GAP (STEP + SPACING)
@@ -101,9 +98,9 @@
 /* Comment this out for portrait mode */
 #define LANDSCAPE_MODE
 
-const gfx_color_t color_table[] = {GFX_COLOR(0, 0, 255), GFX_COLOR(0, 255, 0),
-                                   GFX_COLOR(255, 0, 0), GFX_COLOR(255, 255, 0),
-                                   GFX_COLOR(255, 0, 255), GFX_COLOR(0, 255, 255)};
+const gfx_color_t color_table[] =      {GFX_COLOR_BLUE, GFX_COLOR_GREEN,
+					GFX_COLOR_RED, GFX_COLOR_CYAN,
+					GFX_COLOR_MAGENTA, GFX_COLOR_YELLOW};
 
 const char example_string[] = "Atmel Graphical Library GFX Service Test";
 
@@ -120,7 +117,6 @@ int main(void)
 {
 	uint8_t color_table_index = 0;
 	uint16_t y, color;
-	gfx_coord_t str_width, str_height;
 	uint8_t xoff = 0;
 
 	board_init();
@@ -133,17 +129,19 @@ int main(void)
 #endif
 
 	/* Fill the whole screen with the background color */
-	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(), BGCOLOR);
+	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
+			GFX_COLOR_WHITE);
 
 	/* Write center-aligned text string to the top of the display */
-	gfx_get_string_bounding_box(example_string, &sysfont, &str_width, &str_height);
-	gfx_draw_string(example_string, (gfx_get_width() - str_width) / 2, 2,
-			&sysfont, BGCOLOR, GFX_COLOR(255, 0, 0));
+	gfx_draw_string_aligned(example_string,
+			gfx_get_width() / 2, 2, &sysfont,
+			GFX_COLOR_TRANSPARENT, GFX_COLOR_RED,
+			TEXT_POS_CENTER_X, TEXT_ALIGN_LEFT);
 
 	/* We move down the screen with STEP size increments */
 	for (y = STEP; y < (gfx_get_height() - atmel_logo.height - STEP);
 			y += STEP) {
-						
+
 		/* Generate a color that increments along with the Y coordinate */
 		color = color_table[color_table_index++];
 		color_table_index %= sizeof(color_table) / sizeof(color_table[0]);
@@ -199,9 +197,9 @@ int main(void)
 				/* The gfx_color function expect 8-bit color
 				 * values, so we make the color values 8-bit
 				 * before passing them.
-				 * */
-				gfx_draw_pixel(xoff++, y, gfx_color((r << 3),
-						(g << 2), (b << 3)));
+				 */
+				gfx_draw_pixel(xoff++, y,
+						gfx_color((r << 3), (g << 2), (b << 3)));
 				if (xoff >= start_pos + 8) {
 					xoff = start_pos;
 					y++;

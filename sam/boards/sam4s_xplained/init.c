@@ -63,7 +63,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
-	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+	gpio_configure_group(PINS_UART0_PIO, PINS_UART0, PINS_UART0_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_TWI0

@@ -63,7 +63,7 @@ void board_init(void)
 	
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
-	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+	gpio_configure_group(PINS_UART0_PIO, PINS_UART0, PINS_UART0_FLAGS);
 #endif
 
 	/* Configure ADC example pins */
@@ -83,6 +83,16 @@ void board_init(void)
 #ifdef CONF_BOARD_PWM_LED1
 	/* Configure PWM LED1 pin */
 	gpio_configure_pin(PIN_PWM_LED1_GPIO, PIN_PWM_LED1_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI0
+		gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+		gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+	
+#ifdef CONF_BOARD_TWI1
+		gpio_configure_pin(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+		gpio_configure_pin(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
 	/* Configure SPI pins */
@@ -170,13 +180,13 @@ void board_init(void)
 	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
 	gpio_configure_pin(SPI_NPCS2_PA30_GPIO, SPI_NPCS2_PA30_FLAGS);
-	gpio_configure_pin(PIN_LCD_RS_GPIO, PIN_LCD_RS_FLAGS);
-	gpio_configure_pin(PIN_LCD_RSTN_GPIO, PIN_LCD_RSTN_FLAGS);
+	gpio_configure_pin(BOARD_ILI9225_RS_GPIO, BOARD_ILI9225_RS_FLAGS);
+	gpio_configure_pin(BOARD_ILI9225_RSTN_GPIO, BOARD_ILI9225_RSTN_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_AAT3193
 	/* Configure Backlight control pin */
-	gpio_configure_pin(BOARD_BACKLIGHT, BOARD_BACKLIGHT_FLAG);
+	gpio_configure_pin(BOARD_AAT31XX_SET_GPIO, BOARD_AAT31XX_SET_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_MMA7341L

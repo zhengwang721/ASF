@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xmega_a1_xplained" caption="XMEGA-A1 Xplained" mcu="atxmega128a1">
+	<board id="board.xmega_a1_xplained" vendor="Atmel" caption="XMEGA-A1 Xplained" mcu="atxmega128a1">
 		<build type="define" name="BOARD" value="XMEGA_A1_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="xmega_a1_xplained.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>

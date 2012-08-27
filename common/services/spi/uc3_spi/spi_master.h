@@ -169,9 +169,9 @@ extern void spi_disable(volatile avr32_spi_t *spi);
  *
  * \param spi Base address of the SPI instance.
  *
- * \return \c 1 if the SPI is enabled, otherwise \c 0.
+ * \return \c true if the SPI is enabled, otherwise \c false.
  */
-extern int spi_is_enabled(volatile avr32_spi_t *spi);
+extern bool spi_is_enabled(volatile avr32_spi_t *spi);
 
 /**
  * \brief Select given device on the SPI bus

@@ -61,6 +61,10 @@ void board_init(void)
 
 	ioport_configure_pin(GPIO_PUSH_BUTTON_0, IOPORT_DIR_INPUT
 			| IOPORT_LEVEL | IOPORT_PULL_UP);
+	ioport_configure_pin(GPIO_PUSH_BUTTON_1, IOPORT_DIR_INPUT
+			| IOPORT_LEVEL | IOPORT_PULL_UP);
+	ioport_configure_pin(GPIO_PUSH_BUTTON_2, IOPORT_DIR_INPUT
+			| IOPORT_LEVEL | IOPORT_PULL_UP);
 
 #ifdef CONF_BOARD_C12832A1Z
 	ioport_configure_pin(NHD_C12832A1Z_SPI_SCK, IOPORT_DIR_OUTPUT

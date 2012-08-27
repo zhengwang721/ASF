@@ -60,6 +60,7 @@ struct wtk_check_box *wtk_check_box_create(struct win_window *parent,
 		struct win_area const *area,
 		char const *caption, bool selected, win_command_t command_data);
 struct win_window *wtk_check_box_as_child(struct wtk_check_box *check_box);
+win_command_t wtk_check_box_get_command(struct wtk_check_box *check_box);
 void wtk_check_box_toggle(struct wtk_check_box *check_box);
 void wtk_check_box_set(struct wtk_check_box *check_box, bool selected);
 bool wtk_check_box_is_selected(struct wtk_check_box const *check_box);

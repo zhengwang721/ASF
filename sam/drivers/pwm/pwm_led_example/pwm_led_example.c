@@ -50,13 +50,19 @@
  * generate variable duty cycle signals.
  * The 2 LEDs on the evaluation kit will glow repeatedly.
  *
+ * \section Requirements
+ *
+ * This example can be used on any SAM3/4 boards. The 2 required leds need to
+ * be connected to PWM output pins, else consider probing the PWM output pins
+ * with an oscilloscope.
+ *
  * \par Usage
  *
  * -# Initialize system clock and pins setting on board
  * -# Initialize PWM clock
- * -# Configure PWM_CHANNEL_LED_0
- * -# Configure PWM_CHANNEL_LED_1
- * -# Enable interrupt of counter event and PWM_CHANNEL_LED_0 & PWM_CHANNEL_LED_1
+ * -# Configure PIN_PWM_LED0_CHANNEL
+ * -# Configure PIN_PWM_LED1_CHANNEL
+ * -# Enable interrupt of counter event and PIN_PWM_LED0_CHANNEL & PIN_PWM_LED1_CHANNEL
  * -# Change duty cycle in ISR
  *
  */
@@ -93,8 +99,8 @@ void PWM_Handler(void)
 	static uint8_t fade_in = 1;  /* LED fade in flag */
 	uint32_t events = pwm_channel_get_interrupt_status(PWM);
 
-	/* Interrupt on PWM_CHANNEL_LED_0 */
-	if ((events & PWM_CHANNEL_LED_0) == PWM_CHANNEL_LED_0) {
+	/* Interrupt on PIN_PWM_LED0_CHANNEL */
+	if ((events & (1 << PIN_PWM_LED0_CHANNEL)) == (1 << PIN_PWM_LED0_CHANNEL)) {
 
 		ul_count++;
 
@@ -122,9 +128,9 @@ void PWM_Handler(void)
 
 			/* Set new duty cycle */
 			ul_count = 0;
-			g_pwm_channel_led.channel = PWM_CHANNEL_LED_0;
+			g_pwm_channel_led.channel = PIN_PWM_LED0_CHANNEL;
 			pwm_channel_update_duty(PWM, &g_pwm_channel_led, ul_duty);
-			g_pwm_channel_led.channel = PWM_CHANNEL_LED_1;
+			g_pwm_channel_led.channel = PIN_PWM_LED1_CHANNEL;
 			pwm_channel_update_duty(PWM, &g_pwm_channel_led, ul_duty);
 		}
 	}
@@ -167,7 +173,8 @@ int main(void)
 	pmc_enable_periph_clk(ID_PWM);
 
 	/* Disable PWM channels for LEDs */
-	pwm_channel_disable(PWM, PWM_CHANNEL_LED_0 | PWM_CHANNEL_LED_1);
+	pwm_channel_disable(PWM, PIN_PWM_LED0_CHANNEL);
+	pwm_channel_disable(PWM, PIN_PWM_LED1_CHANNEL);
 
 	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t clock_setting = {
@@ -181,20 +188,20 @@ int main(void)
 	g_pwm_channel_led.ul_prescaler = PWM_CMR_CPRE_CLKA;  /* Use PWM clock A as source clock */
 	g_pwm_channel_led.ul_period = PERIOD_VALUE;  /* Period value of output waveform */
 	g_pwm_channel_led.ul_duty = INIT_DUTY_VALUE;  /* Duty cycle value of output waveform */
-	g_pwm_channel_led.channel = PWM_CHANNEL_LED_0;
+	g_pwm_channel_led.channel = PIN_PWM_LED0_CHANNEL;
 	pwm_channel_init(PWM, &g_pwm_channel_led);
 
 	/* Enable channel counter event interrupt */
-	pwm_channel_enable_interrupt(PWM, PWM_CHANNEL_LED_0, 0);
+	pwm_channel_enable_interrupt(PWM, PIN_PWM_LED0_CHANNEL, 0);
 
 	/* Initialize PWM channel for LED1 */
 	g_pwm_channel_led.alignment = PWM_ALIGN_CENTER;  /* Period is center-aligned */
 	g_pwm_channel_led.polarity = PWM_HIGH;  /* Output waveform starts at a high level */
-	g_pwm_channel_led.channel = PWM_CHANNEL_LED_1;
+	g_pwm_channel_led.channel = PIN_PWM_LED1_CHANNEL;
 	pwm_channel_init(PWM, &g_pwm_channel_led);
 
 	/* Disable channel counter event interrupt */
-	pwm_channel_disable_interrupt(PWM, PWM_CHANNEL_LED_1, 0);
+	pwm_channel_disable_interrupt(PWM, PIN_PWM_LED1_CHANNEL, 0);
 
 	/* Configure interrupt and enable PWM interrupt */
 	NVIC_DisableIRQ(PWM_IRQn);
@@ -203,7 +210,8 @@ int main(void)
 	NVIC_EnableIRQ(PWM_IRQn);
 
 	/* Enable PWM channels for LEDs */
-	pwm_channel_enable(PWM, PWM_CHANNEL_LED_0 | PWM_CHANNEL_LED_1);
+	pwm_channel_enable(PWM, PIN_PWM_LED0_CHANNEL);
+	pwm_channel_enable(PWM, PIN_PWM_LED1_CHANNEL);
 
 	/* Infinite loop */
 	while (1) {

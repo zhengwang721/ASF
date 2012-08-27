@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="PWM SYNC example for SAM4S-EK" id="sam.drivers.pwm.pwm_sync_example.sam4s_ek">
 		<info type="description" value="summary">
-		PWM synchronous channels example on SAM4S-EK.
+			PWM synchronous channels example on SAM4S-EK.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

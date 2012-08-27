@@ -46,49 +46,14 @@
 #ifndef CONF_ILI9325_H_INCLUDED
 #define CONF_ILI9325_H_INCLUDED
 
-#include "compiler.h"
 #include "board.h"
 
-/*! \brief Interface configuration
- *
- * Currently only EBI mode supported
- */
-#if BOARD == SAM3S_EK
+#if !defined(BOARD_ILI9325_ADDR) || !defined(BOARD_ILI9325_RS)
 
-	/*! \brief address used to write to the index register
-	 */
-	#define ILI9325_LCD_BASE     (BOARD_LCD_BASE)
+	#warning The ILI9325 EBI configuration does not exist in the board definition file. Using default settings.
 
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define ILI9325_LCD_RS       (BOARD_LCD_RS)
-
-#elif BOARD == SAM3S_EK2
-
-	/*! \brief address used to write to the index register
-	 */
-	#define ILI9325_LCD_BASE     (BOARD_LCD_BASE)
-
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define ILI9325_LCD_RS       (BOARD_LCD_RS)
-
-#elif BOARD == SAM4S_EK
-
-	/*! \brief address used to write to the index register
-	 */
-	#define ILI9325_LCD_BASE     (BOARD_LCD_BASE)
-
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define ILI9325_LCD_RS       (BOARD_LCD_RS)
-
-#else
-
-	#warning The ILI9325 setup configuration to use in the driver is missing. Default configuration is used.
-
-	#define ILI9325_LCD_BASE     0
-	#define ILI9325_LCD_RS       0
+	#define BOARD_ILI9325_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
+	#define BOARD_ILI9325_RS       1 << 1 /* Register select (1 << 1) */
 
 #endif
 

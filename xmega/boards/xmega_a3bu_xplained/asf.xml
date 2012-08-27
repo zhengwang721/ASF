@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xmega_a3bu_xplained" caption="XMEGA-A3BU Xplained" mcu="atxmega256a3bu">
+	<board id="board.xmega_a3bu_xplained" vendor="Atmel" caption="XMEGA-A3BU Xplained" mcu="atxmega256a3bu">
 		<build type="define" name="BOARD" value="XMEGA_A3BU_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="xmega_a3bu_xplained.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
@@ -32,5 +33,6 @@
 		<require idref="config.board.xmega_a3bu_xplained.led"/>
 		<require idref="config.board.xmega_a3bu_xplained.init"/>
 		<config name="config.spi_master_type" value="usart_and_standard_spi"/>
+		<config name="config.gfx_mono.display" value="c12832_a1z"/>
 	</board>
 </asf>

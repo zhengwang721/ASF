@@ -4,7 +4,7 @@
  *
  * \brief GPIO software driver interface for AVR UC3.
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -278,11 +278,6 @@ void gpio_configure_pin(uint32_t pin, uint32_t flags)
                     gpio_port->odmers = 1 << (pin & 0x1F);
             else
                     gpio_port->odmerc = 1 << (pin & 0x1F);
-
-            if (flags & GPIO_OPEN_DRAIN)
-                    gpio_port->pders = 1 << (pin & 0x1F);
-            else
-                    gpio_port->pderc = 1 << (pin & 0x1F);
 #endif
 
 #if defined(AVR32_GPIO_200_H_INCLUDED) || defined(AVR32_GPIO_210_H_INCLUDED) || defined(AVR32_GPIO_212_H_INCLUDED)

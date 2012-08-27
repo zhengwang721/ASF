@@ -462,18 +462,18 @@
 #define ILI9325_OTP_PROG_ID_KEY_KEY(value) ((ILI9325_OTP_PROG_ID_KEY_KEY_MSK & ((value) << ILI9325_OTP_PROG_ID_KEY_KEY_POS)))
 
 /* Define EBI access for ILI9325 8-bit System Interface.*/
-#if defined(ILI9325_LCD_BASE) && defined (ILI9325_LCD_RS)
+#if defined(BOARD_ILI9325_ADDR) && defined (BOARD_ILI9325_RS)
 	static inline void LCD_IR(uint8_t lcd_index)
 	{
-		*((volatile uint8_t *)(ILI9325_LCD_BASE)) = lcd_index; /* ILI9325 index register address */
+		*((volatile uint8_t *)(BOARD_ILI9325_ADDR)) = lcd_index; /* ILI9325 index register address */
 	}
 	static inline void LCD_WD(uint8_t lcd_data)
 	{
-		*((volatile uint8_t *)((ILI9325_LCD_BASE) | (ILI9325_LCD_RS))) = lcd_data;
+		*((volatile uint8_t *)((BOARD_ILI9325_ADDR) | (BOARD_ILI9325_RS))) = lcd_data;
 	}
 	static inline uint8_t LCD_RD(void)
 	{
-		return *((volatile uint8_t *)((ILI9325_LCD_BASE) | (ILI9325_LCD_RS)));
+		return *((volatile uint8_t *)((BOARD_ILI9325_ADDR) | (BOARD_ILI9325_RS)));
 	}
 #else
 	#error "Missing module configuration for ILI9325!"

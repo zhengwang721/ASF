@@ -66,6 +66,7 @@
 		<build type="include-path" value="xmega/drivers/nvm/example1/atxmega128a1_xplained"/>
 		<require idref="xmega.drivers.nvm.example1"/>
 		<require idref="board.xmega_a1_xplained"/>
+		<board-addon vendor="Some Corp." caption="AwesomeAddon" position="J1"/>
 		<config name="config.board.xmega_a1_xplained.led" value="no"/>
 		<config name="config.board.xmega_a1_xplained.init" value="yes"/>
 		<generator value="iarew"/>
@@ -221,7 +222,7 @@
 			<device-support value="xmega"/>
 		</module>
 	</select-by-config>
-	<board id="board.xmega_a1_xplained" caption="XMEGA-A1 Xplained" mcu="atxmega128a1" basedir="./xmega/boards/xmega_a1_xplained" fromfile="./xmega/boards/xmega_a1_xplained/asf.xml">
+	<board id="board.xmega_a1_xplained" vendor="Atmel" caption="XMEGA-A1 Xplained" mcu="atxmega128a1" basedir="./xmega/boards/xmega_a1_xplained" fromfile="./xmega/boards/xmega_a1_xplained/asf.xml">
 		<build type="define" name="BOARD" value="XMEGA_A1_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="header-file" value="xmega/boards/xmega_a1_xplained/xmega_a1_xplained.h"/>
@@ -299,6 +300,7 @@
 	</project>
 
 	<module type="application" id="avr32.drivers.tc.example" caption="Long caption. Please truncate. Or else this test will fail. And that is bad." basedir="./avr32/drivers/tc/example" fromfile="./avr32/drivers/tc/example/asf.xml">
+		<device-support value="uc3a"/>
 		<info type="description" value="summary">
 		Cute as a kitten.
 		</info>

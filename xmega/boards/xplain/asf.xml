@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xplain" caption="Xplain" mcu="atxmega128a1">
+	<board id="board.xplain" vendor="Atmel" caption="Xplain" mcu="atxmega128a1">
 		<build type="define" name="BOARD" value="XPLAIN"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="xplain.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>

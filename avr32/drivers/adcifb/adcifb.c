@@ -59,7 +59,7 @@
  * \retval 0   ADCIFB successfully enabled and configured
  * \retval <0  ADCIFB initialization failed.
  */
-long int adcifb_configure(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_configure(volatile avr32_adcifb_t *adcifb,
 		const adcifb_opt_t *p_adcifb_opt)
 {
 	uint32_t prescal_tempo;
@@ -96,7 +96,7 @@ long int adcifb_configure(volatile avr32_adcifb_t *adcifb,
  * \retval 0   ADCIFB successfully disabled
  * \retval <0  ADCIFB configuration failed.
  */
-long int adcifb_disable(volatile avr32_adcifb_t *adcifb)
+int32_t adcifb_disable(volatile avr32_adcifb_t *adcifb)
 {
 	uint32_t timeout = ADCIFB_POLL_TIMEOUT;
 	/* Wait till the ADCIFB module is idle */
@@ -116,7 +116,7 @@ long int adcifb_disable(volatile avr32_adcifb_t *adcifb)
  * \param *adcifb Base address of the ADCIFB module
  * \param trgmod Trigger mode, one of AVR32_ADCIFB_TRGR_TRGMOD_* defines
  *               (cf adcifb_xxx.h part header file)
- * \param trgper  defines the Trigger period where
+ * \param trgper Defines the Trigger period where
  *                Trigger Period = trgper *Tclk_adc
  *               (effective only if trigger_mode==AVR32_ADCIFB_TRGMOD_PT)
  *
@@ -124,7 +124,7 @@ long int adcifb_disable(volatile avr32_adcifb_t *adcifb)
  * \retval 0   ADCIFB trigger mode successfully configured
  * \retval <0  ADCIFB trigger mode configuration failed.
  */
-long int adcifb_configure_trigger(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_configure_trigger(volatile avr32_adcifb_t *adcifb,
 		uint8_t trgmod, uint32_t trgper)
 {
 	/*
@@ -210,7 +210,7 @@ uint32_t adcifb_get_last_data(volatile avr32_adcifb_t *adcifb)
  * \retval 0   Status is high.
  * \retval <0  ADCIFB_POLL_TIMEOUT Timeout expired before the status was high
  */
-long int adcifb_sr_statushigh_wait(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_sr_statushigh_wait(volatile avr32_adcifb_t *adcifb,
 		uint32_t statusMask)
 {
 	uint32_t timeout = ADCIFB_POLL_TIMEOUT;

@@ -152,7 +152,7 @@ static struct gfx_bitmap sub_frame_background;
 static bool widget_frame_command_handler(struct wtk_basic_frame *frame,
 		win_command_t command_data)
 {
-	char command = (char)(uintptr_t)command_data;
+	char command = (uintptr_t)command_data;
 
 	switch (command) {
 	case SLIDER_ID:
@@ -253,7 +253,8 @@ void app_widget_launch()
 	 * Create the label and check the return value if an error occured
 	 * while creating the label.
 	 */
-	lbl = wtk_label_create(parent, &area, demo_string, false);
+	lbl = wtk_label_create(parent, &area, demo_string,
+			GFX_COLOR(255, 255, 255), NULL, false);
 	if (!lbl) {
 		goto error_widget;
 	}

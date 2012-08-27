@@ -964,15 +964,15 @@ class SelectByConfig(ModuleSelector):
 
 class Module(ConfigItem):
 	tag = "module"
+	# Meta modules does not require "device-support" tag
+	types_that_support_all_devices = ['meta']
 
 	def __init__(self, element, db):
 		ConfigItem.__init__(self, element, db)
 		self.filelist = set([])
 
 	def get_device_support(self):
-
-		# Meta or application modules do not require "device-support" tags
-		if self.type in ["meta", "application"]:
+		if self.type in self.types_that_support_all_devices:
 			return [self._device_support_all_devices]
 		else:
 			return super(Module, self).get_device_support()
@@ -1148,6 +1148,7 @@ class MCU(object):
 
 class Board(TypelessConfigItem):
 	tag = "board"
+	default_vendor = "User"
 
 	def __init__(self, element, db):
 		ConfigItem.__init__(self, element, db)
@@ -1159,8 +1160,13 @@ class Board(TypelessConfigItem):
 	def mcu(self):
 		return self._mcu
 
+	@property
+	def vendor(self):
+		return self._get_property("vendor") or self.default_vendor
+
 	def get_device_support(self):
 		return [self.mcu.name]
+
 
 class Project(ConfigItem):
 	tag = "project"
@@ -1256,6 +1262,47 @@ class Project(ConfigItem):
 		Return the URI (Uniform Ressource Identifier) of the help entry point
 		"""
 		return "index.html"
+
+
+	def get_board_addons(self):
+		"""
+		Returns a dict that maps board-addon caption to a dict with
+		vendor and position for the board-addon.
+
+		As an example, these tags:
+		<board-addon caption="Foo" vendor="Bar" position="barfoo"/>
+		<board-addon caption="Foobar" vendor="Barfoo" position="foobar"/>
+
+		...will cause this return value:
+		board_addons = {
+			"Foo"    : {
+				"vendor" : "Bar",
+				"position" : "barfoo"
+			},
+			"Foobar" : {
+				"vendor" : "Barfoo",
+				"position" : "foobar",
+			}
+		}
+
+		Vendor and position are optional, and will just result in an
+		empty string if unspecified.
+		"""
+		tag       = "board-addon"
+		key_attr  = "caption"
+		opt_attrs = ["vendor", "position"]
+
+		board_addons = {}
+		for e in self.get_child_elements(tag):
+			opt_attr_vals = [e.attrib.get(key, "") for key in opt_attrs]
+			attrs = dict(zip(opt_attrs, opt_attr_vals))
+			addon = {
+				e.attrib.get(key_attr) : attrs
+			}
+			board_addons.update(addon)
+
+		return board_addons
+
 
 class DummyProject(Project):
 
@@ -1874,12 +1921,20 @@ class ConfigDB(object):
 						errors += 1
 						self.log.critical("%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (str(c), gen_name))
 
+			dev_sup = c.get_child_elements("device-support")
+
 			# Check that "device-support" actually gives support for a device(s)
-			for element in c.get_child_elements("device-support"):
+			for element in dev_sup:
 				dev_name = element.get("value")
 				if not dev_name or not device_map.get_mcu_list(dev_name, True):
 					errors += 1
 					self.log.critical("%s: `%s' is not a valid MCU or MCU group" % (str(c), dev_name))
+
+			# Check that all modules except meta-typed define device-support
+			if isinstance(c, Module) and c.type not in Module.types_that_support_all_devices:
+				if not dev_sup:
+					errors += 1
+					self.log.error("%s does not specify device-support" % str(c))
 
 			# Make sure the 'doxygen-entry-point' attribute is present for non-hidden modules
 			if isinstance(c, Module) and c.type in ["driver", "component", "service"]:
@@ -1892,7 +1947,17 @@ class ConfigDB(object):
 					if not has_doxygen_entry_point:
 						errors += 1
 						self.log.error("Module with id %s is missing doxygen-entry-point attribute" % (id))
-		
+
+		# Verify all select-by-config/device IDs are equal to parent ID
+		for element in self.root.findall(".//%s" % (SelectByConfig.tag)) + self.root.findall(".//%s" % (SelectByDevice.tag)):
+			parent_id = element.attrib['id']
+			# Find direct child elements with an "id" attribute
+			for child in element.findall("./*[@id]"):
+				child_id = child.attrib['id']
+				if child_id.rpartition('#')[0] != parent_id:
+					self.log.critical("Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id))
+
+
 		# Find all select-by-config names, save all possible valid config names and values
 		select_by_config_names = {}
 		config_names = []
@@ -1901,13 +1966,13 @@ class ConfigDB(object):
 			id = element.attrib['id']
 			module = self.lookup_by_id(id)
 			available_options = [x.partition("#")[2] for x in module.get_subids()]
-			
+
 			select_by_config_names[name] = dict([("id", id), ("options", available_options)])
 
 		# Verify all config entries against the saved select-by-config names and values
 		for element in self.root.findall(".//%s" % ("config")):
 			total += 1
-		
+
 			config_name = element.attrib['name']
 			config_value = element.attrib['value']
 			project_id = element.getparent().attrib["id"]
@@ -1930,7 +1995,7 @@ class ConfigDB(object):
 				self.log.critical("Config '%s' in '%s' does not have a corresponding select-by-config module" % (config_name, project_id))
 				# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
 				self.log.critical("    Offending file: %s" % (self.lookup_by_id(project_id).fromfile))
-		
+
 		# Find all IDs and check for duplicates
 		total += 1
 		ids = []

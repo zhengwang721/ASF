@@ -56,6 +56,7 @@ extern "C" {
 
 struct wtk_radio_group;
 struct wtk_radio_group *wtk_radio_group_create(void);
+struct wtk_radio_button *wtk_radio_group_get_selected(struct wtk_radio_group *group);
 
 struct wtk_radio_button;
 
@@ -64,6 +65,7 @@ struct wtk_radio_button *wtk_radio_button_create(struct win_window *parent,
 		struct wtk_radio_group *group, win_command_t command_data);
 struct win_window *wtk_radio_button_as_child(struct wtk_radio_button
 		*radio_button);
+win_command_t wtk_radio_button_get_command(struct wtk_radio_button *radio_button);
 void wtk_radio_button_select(struct wtk_radio_button *radio_button);
 bool wtk_radio_button_is_selected(struct wtk_radio_button const *radio_button);
 void wtk_radio_button_size_hint(struct win_point *size, const char *caption);

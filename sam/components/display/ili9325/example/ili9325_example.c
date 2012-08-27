@@ -130,9 +130,9 @@ int main(void)
 			| SMC_MODE_DBW_8_BIT);
 
 	/* Initialize display parameter */
-	g_ili9325_display_opt.ul_width= ILI9325_LCD_WIDTH;
+	g_ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
 	g_ili9325_display_opt.ul_height = ILI9325_LCD_HEIGHT;
-	g_ili9325_display_opt.foreground_color= COLOR_BLACK;
+	g_ili9325_display_opt.foreground_color = COLOR_BLACK;
 	g_ili9325_display_opt.background_color = COLOR_WHITE;
 
 	/* Switch off backlight */

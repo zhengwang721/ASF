@@ -63,7 +63,7 @@ void board_init(void)
 	
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
-	gpio_configure_group(PINS_UART_PIO, PINS_UART, PINS_UART_FLAGS);
+	gpio_configure_group(PINS_UART0_PIO, PINS_UART0, PINS_UART0_FLAGS);
 #endif
 
 	/* Configure ADC example pins */
@@ -206,17 +206,17 @@ void board_init(void)
 
 #ifdef CONF_BOARD_AAT3155
 	/* Configure Backlight control pin */
-	gpio_configure_pin(BOARD_BACKLIGHT, BOARD_BACKLIGHT_FLAG);
+	gpio_configure_pin(BOARD_AAT31XX_SET_GPIO, BOARD_AAT31XX_SET_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_ADS7843
 	/* Configure Touchscreen SPI pins */
-	gpio_configure_pin(PIN_TSC_IRQ_IDX,PIN_TSC_IRQ_FLAG);
+        gpio_configure_pin(BOARD_ADS7843_IRQ_GPIO,BOARD_ADS7843_IRQ_FLAGS);
+	gpio_configure_pin(BOARD_ADS7843_BUSY_GPIO, BOARD_ADS7843_BUSY_FLAGS);
 	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
 	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
-	gpio_configure_pin(PIN_TSC_BUSY_IDX, PIN_TSC_BUSY_FLAG);
 #endif
 
 #ifdef CONF_BOARD_MMA7341L

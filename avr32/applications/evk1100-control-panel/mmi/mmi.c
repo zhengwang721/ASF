@@ -4,7 +4,7 @@
  *
  * \brief Control Panel MMI module.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -143,6 +143,7 @@ static bool b_mmi_format_a( void );    // FORWARD
 static bool b_mmi_mkdir_aLOG( void );  // FORWARD
 static bool b_mmi_format_b( void );    // FORWARD
 static bool b_mmi_mkdir_bLOG( void );  // FORWARD
+bool b_MMI_do_nothing( void );
 
 #ifdef USB_ENABLE
 /*! lines to display in USB Host menu */
@@ -300,7 +301,7 @@ extern xQueueHandle xSUPERVISORQueue;
 /*! MMI navigator ID. */
 extern signed short sMmiNavId;
 
-static void prvMMI_Init(); // Forward declaration
+static void prvMMI_Init(void); // Forward declaration
 
 /*! The "LOG" string. */
 const signed portCHAR *const pcStringLogDirName = (signed portCHAR *)"LOG";
@@ -763,7 +764,7 @@ static void prvMMI_Init( void )
   };
 
 #if BOARD == EVK1100
-#warning DIP204 and AT45DBX are sharing the same SPI
+//#warning DIP204 and AT45DBX are sharing the same SPI (but both CS pins are different)
   // Only assign CS I/Os to SPI
   gpio_enable_module_pin(DIP204_SPI_NPCS_PIN,  DIP204_SPI_NPCS_FUNCTION); // Chip Select NPCS
 

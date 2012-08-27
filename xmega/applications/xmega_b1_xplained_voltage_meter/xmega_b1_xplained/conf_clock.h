@@ -3,7 +3,7 @@
  *
  * \brief Clock system configuration file
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,6 @@
 #ifndef CONF_CLOCK_H_INCLUDED
 #define CONF_CLOCK_H_INCLUDED
 
-
-
+#define CONFIG_RTC_SOURCE          SYSCLK_RTCSRC_ULP
 
 #endif /* CONF_CLOCK_H_INCLUDED */

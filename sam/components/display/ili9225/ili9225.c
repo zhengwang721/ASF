@@ -60,11 +60,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#ifndef BOARD_LCD_NPCS
-#warning The ILI9225 chip select definition is missing. Default configuration is used.
-#define BOARD_LCD_NPCS 0
-#endif
-
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -291,19 +286,19 @@ const uint8_t p_uc_charset10x14[] = {
 static void ili9225_write_cmd(uint8_t uc_cmd)
 {
 	/* Configure SPI Chip Select: SPI Mode 0, 8bits */
-	spi_set_bits_per_transfer(ILI9225_SPI_INTERFACE, BOARD_LCD_NPCS, SPI_CSR_BITS_8_BIT);
+	spi_set_bits_per_transfer(BOARD_ILI9225_SPI, BOARD_ILI9225_SPI_NPCS, SPI_CSR_BITS_8_BIT);
 	/* Enable SPI */
-	spi_enable(ILI9225_SPI_INTERFACE);
+	spi_enable(BOARD_ILI9225_SPI);
 
 	/* Transfer cmd */
-	gpio_set_pin_low(ILI9225_LCD_RS);
-	spi_write(ILI9225_SPI_INTERFACE, uc_cmd, BOARD_LCD_NPCS, 0);
+	gpio_set_pin_low(BOARD_ILI9225_RS_GPIO);
+	spi_write(BOARD_ILI9225_SPI, uc_cmd, BOARD_ILI9225_SPI_NPCS, 0);
 
 	/* Disable SPI */
-	spi_disable(ILI9225_SPI_INTERFACE);
+	spi_disable(BOARD_ILI9225_SPI);
 
 	/* Back to the default config: SPI Mode 0, 16bits */
-	spi_set_bits_per_transfer(ILI9225_SPI_INTERFACE, BOARD_LCD_NPCS, SPI_CSR_BITS_16_BIT);
+	spi_set_bits_per_transfer(BOARD_ILI9225_SPI, BOARD_ILI9225_SPI_NPCS, SPI_CSR_BITS_16_BIT);
 }
 
 /**
@@ -322,14 +317,14 @@ static void ili9225_write_ram_prepare(void)
 static void ili9225_write_ram(uint16_t us_data)
 {
 	/* Enable SPI */
-	spi_enable(ILI9225_SPI_INTERFACE);
+	spi_enable(BOARD_ILI9225_SPI);
 
 	/* Transfer data */
-	gpio_set_pin_high(ILI9225_LCD_RS);
-	spi_write(ILI9225_SPI_INTERFACE, us_data, BOARD_LCD_NPCS, 0);
+	gpio_set_pin_high(BOARD_ILI9225_RS_GPIO);
+	spi_write(BOARD_ILI9225_SPI, us_data, BOARD_ILI9225_SPI_NPCS, 0);
 
 	/* Disable SPI */
-	spi_disable(ILI9225_SPI_INTERFACE);
+	spi_disable(BOARD_ILI9225_SPI);
 }
 
 /**
@@ -345,15 +340,15 @@ static void ili9225_write_ram_buffer(const ili9225_color_t *p_us_buf, uint32_t u
 		return;
 
 	/* Enable SPI */
-	spi_enable(ILI9225_SPI_INTERFACE);
+	spi_enable(BOARD_ILI9225_SPI);
 
 	/* Transfer data */
-	gpio_set_pin_high(ILI9225_LCD_RS);
+	gpio_set_pin_high(BOARD_ILI9225_RS_GPIO);
 	for(i = 0; i < ul_size; i++){
-		spi_write(ILI9225_SPI_INTERFACE, p_us_buf[i], BOARD_LCD_NPCS, 0);
+		spi_write(BOARD_ILI9225_SPI, p_us_buf[i], BOARD_ILI9225_SPI_NPCS, 0);
 	}
 
-	spi_disable(ILI9225_SPI_INTERFACE);
+	spi_disable(BOARD_ILI9225_SPI);
 }
 
 /**
@@ -440,38 +435,38 @@ uint32_t ili9225_init(struct ili9225_opt_t *p_opt)
 {
 	struct spi_device ILI9225_SPI_DEVICE = {
 		// Board specific chip select configuration
-		.id = BOARD_LCD_NPCS
+		.id = BOARD_ILI9225_SPI_NPCS
 	};
 
 	/* Reset LCD module */
-	gpio_set_pin_high(ILI9225_LCD_RSTN);
+	gpio_set_pin_high(BOARD_ILI9225_RSTN_GPIO);
 	ili9225_delay(2); /* wait for at least 2ms */
 
-	gpio_set_pin_low(ILI9225_LCD_RSTN);
+	gpio_set_pin_low(BOARD_ILI9225_RSTN_GPIO);
 	ili9225_delay(20); /* wait for at least 20ms */
 
-	gpio_set_pin_high(ILI9225_LCD_RSTN);
+	gpio_set_pin_high(BOARD_ILI9225_RSTN_GPIO);
 	ili9225_delay(50); /* wait for at least 50ms */
 
 	/* Finish current transfer and reset SPI */
-	spi_disable(ILI9225_SPI_INTERFACE);
-	spi_reset(ILI9225_SPI_INTERFACE);
-	spi_set_lastxfer(ILI9225_SPI_INTERFACE);
+	spi_disable(BOARD_ILI9225_SPI);
+	spi_reset(BOARD_ILI9225_SPI);
+	spi_set_lastxfer(BOARD_ILI9225_SPI);
 
 	/* Enable Interrupt */
-	NVIC_DisableIRQ(ILI9225_SPI_IRQ_NUM);
-	NVIC_ClearPendingIRQ(ILI9225_SPI_IRQ_NUM);
-	NVIC_SetPriority(ILI9225_SPI_IRQ_NUM, 0);
-	NVIC_EnableIRQ(ILI9225_SPI_IRQ_NUM);
+	NVIC_DisableIRQ(BOARD_ILI9225_SPI_IRQN);
+	NVIC_ClearPendingIRQ(BOARD_ILI9225_SPI_IRQN);
+	NVIC_SetPriority(BOARD_ILI9225_SPI_IRQN, 0);
+	NVIC_EnableIRQ(BOARD_ILI9225_SPI_IRQN);
 
 	/* Init, select and configure the chip */
-	spi_master_init(ILI9225_SPI_INTERFACE);
-	spi_master_setup_device(ILI9225_SPI_INTERFACE, &ILI9225_SPI_DEVICE, SPI_MODE_0, ILI9225_SPI_BAUDRATE, 0);
-	spi_select_device(ILI9225_SPI_INTERFACE, &ILI9225_SPI_DEVICE);
+	spi_master_init(BOARD_ILI9225_SPI);
+	spi_master_setup_device(BOARD_ILI9225_SPI, &ILI9225_SPI_DEVICE, SPI_MODE_0, ILI9225_SPI_BAUDRATE, 0);
+	spi_select_device(BOARD_ILI9225_SPI, &ILI9225_SPI_DEVICE);
 
 	/* Enable the SPI peripheral */
-	spi_enable(ILI9225_SPI_INTERFACE);
-	spi_enable_interrupt(ILI9225_SPI_INTERFACE, SPI_IER_RDRF);
+	spi_enable(BOARD_ILI9225_SPI);
+	spi_enable_interrupt(BOARD_ILI9225_SPI, SPI_IER_RDRF);
 
 	/* Turn off LCD */
 	ili9225_display_off();
@@ -564,8 +559,8 @@ void ili9225_spi_handler(void)
 	uint32_t ul_spi_reg;
 
 	/* Disable interrupts */
-	ul_spi_reg = spi_read_interrupt_mask(ILI9225_SPI_INTERFACE);
-	spi_disable_interrupt(ILI9225_SPI_INTERFACE, ul_spi_reg);
+	ul_spi_reg = spi_read_interrupt_mask(BOARD_ILI9225_SPI);
+	spi_disable_interrupt(BOARD_ILI9225_SPI, ul_spi_reg);
 
 	/* Set the flag to notify the end of transfer */
 	g_by_transfend_flag = 1;

@@ -10,7 +10,7 @@
  *                       The example is written for UC3 and EVK1100.
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -153,5 +153,13 @@ eExecStatus e_actuator_help( eModId xModId, signed short FsNavId,
                              int ac, signed portCHAR *av[],
                              signed portCHAR **ppcStringReply );
 
+
+/*!
+ *  \brief Execute a scheduled command.
+ *
+ *  \param CmdId Input. The set cmd identifier.
+ *  \param pxCmdParams Input. The parameters (ac,*av[]) for the cmd.
+ */
+void vExecScheduledSet( int CmdId, void *pxCmdParams );
 
 #endif // __ACTUATOR_H__

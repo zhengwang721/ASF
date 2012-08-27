@@ -60,7 +60,8 @@
  * This package can be used with all MCU boards with
  * \ref group_common_services_storage_ctrl_access support. The conf_access.h
  * used in the ctrl access module will determine the actually used memory
- * device, i.e., SAM3X_EK will create a file system on the internal RAM.
+ * device, e.g., the file system can be created in the internal RAM, NAND Flash 
+ * and DataFlash (an AT45DBX needs to be connected) on SAM3X-EK.
  *
  *  \section Description
  *
@@ -104,34 +105,25 @@
 #include <asf.h>
 #include "memories_initialization.h"
 
-/* FatFS mount root directory*/
-#define STR_ROOT_DIRECTORY ""
-
 /** Size of the file to write/read. */
 #define DATA_SIZE 2048
 
 /** Test settings: Number of bytes to test */
 #define TEST_SIZE   (4 * 1024)
 
-/** Logical disk device number */
-#define DISK_DEV_NUM    LUN_ID_0
-
 /** Example header */
 #define STRING_EOL    "\r"
 #ifndef BOARD_NAME
 # define BOARD_NAME "Undefined"
 #endif
-#define STRING_HEADER "-- FatFS Example --\r\n"\
-	"-- "BOARD_NAME " --\r\n"\
+#define STRING_HEADER "-- FatFS Example --\r\n" \
+	"-- "BOARD_NAME " --\r\n" \
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
-#define MENU_HEADER "\n\r"\
+#define MENU_HEADER "\n\r" \
 	"---------------------------------------------------------\n\r"
 
 /* Read/write buffer */
 static uint8_t data_buffer[DATA_SIZE];
-
-/* File name to be validated */
-const char *file_name = STR_ROOT_DIRECTORY "Basic.bin";
 
 /**
  * \brief Scan files under a certain path.
@@ -193,9 +185,11 @@ static FRESULT scan_files(char *path)
 /**
  * \brief Do file system tests.
  *
+ * \param disk_dev_num disk number
+ *
  * \return Test result, 1: success.
  */
-static uint8_t run_fatfs_test(void)
+static uint8_t run_fatfs_test(uint32_t disk_dev_num)
 {
 	uint32_t i;
 	UINT byte_to_read;
@@ -206,6 +200,9 @@ static uint8_t run_fatfs_test(void)
 
 	FRESULT res;
 	DIR dirs;
+	TCHAR root_directory[3] = "0:";
+	/* File name to be validated */
+	TCHAR file_name[12] = "0:Basic.bin";
 
 	/* Declare these as static to avoid stack usage.
 	 * They each contain an array of maximum sector size.
@@ -213,25 +210,28 @@ static uint8_t run_fatfs_test(void)
 	static FATFS fs;
 	static FIL file_object;
 
+	root_directory[0] = '0' + disk_dev_num;
+	file_name[0] = '0' + disk_dev_num;
+
 	/* Mount disk*/
-	printf("-I- Mount disk %d\n\r", DISK_DEV_NUM);
+	printf("-I- Mount disk %d\n\r", disk_dev_num);
 	/* Clear file system object */
 	memset(&fs, 0, sizeof(FATFS));
-	res = f_mount(DISK_DEV_NUM, &fs);
+	res = f_mount(disk_dev_num, &fs);
 	if (res != FR_OK) {
 		printf("-E- f_mount pb: 0x%X\n\r", res);
 		return 0;
 	}
 
 	/* Test if the disk is formatted */
-	res = f_opendir(&dirs, STR_ROOT_DIRECTORY);
+	res = f_opendir(&dirs, root_directory);
 	if (res == FR_OK) {
 		/* Erase sd card to reformat it ? */
 		puts("-I- The disk is already formatted.\r");
 
 		/* Display the file tree */
 		puts("-I- Display files contained in the memory :\r");
-		strcpy((char *)data_buffer, STR_ROOT_DIRECTORY);
+		strcpy((char *)data_buffer, root_directory);
 		scan_files((char *)data_buffer);
 
 #if _FS_TINY == 0
@@ -244,9 +244,9 @@ static uint8_t run_fatfs_test(void)
 	if (res == FR_NO_FILESYSTEM) {
 #if _FS_TINY == 0
 		/* Format disk */
-		printf("-I- Format disk %d\n\r", DISK_DEV_NUM);
+		printf("-I- Format disk %d\n\r", disk_dev_num);
 		puts("-I- Please wait a moment during formatting...\r");
-		res = f_mkfs(DISK_DEV_NUM, /* Drv */
+		res = f_mkfs(disk_dev_num, /* Drv */
 				0, /* FDISK partition */
 				512); /* AllocSize */
 		puts("-I- Disk format finished !\r");
@@ -353,6 +353,8 @@ static uint8_t run_fatfs_test(void)
  */
 int main(void)
 {
+	uint32_t disk_dev_num;
+
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate   = CONF_TEST_BAUDRATE,
 		.paritytype = CONF_TEST_PARITY,
@@ -380,11 +382,15 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	if (run_fatfs_test()) {
-		puts("-I- Test passed !\r");
-	} else {
-		puts("-F- Test Failed !\r");
+	for (disk_dev_num = 0; disk_dev_num < get_nb_lun(); disk_dev_num++) {
+		if (run_fatfs_test(disk_dev_num)) {
+			printf("-I- DISK %d Test passed !\n\r\n\r", disk_dev_num);
+		} else {
+			printf("-F- DISK %d Test Failed !\n\r\n\r", disk_dev_num);
+		}
 	}
 
-	return 0;
+	while (1) {
+		/* Do nothing */
+	}
 }

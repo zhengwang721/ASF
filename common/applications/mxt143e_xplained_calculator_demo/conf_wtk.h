@@ -239,22 +239,41 @@ typedef uint8_t wtk_radio_group_size_t;
 /** @} */
 
 /**
- * \ingroup wtk_label_group
- * @{
- */
-
-/** Static text caption text color. */
-#define WTK_STATICTEXT_CAPTION_COLOR GFX_COLOR(255, 255, 255)
-
-/** @} */
-
-/**
  * \ingroup wtk_progress_bar_group
  * @{
  */
 
 /** Color of the progress bar's frame border. */
 #define WTK_PROGRESS_BAR_BORDER_COLOR    GFX_COLOR(0, 0, 0)
+
+/** @} */
+
+/**
+ * \ingroup wtk_icon_button_group
+ * @{
+ */
+
+/** Datatype holding reference count for icon button groups. */
+typedef uint8_t wtk_icon_group_size_t;
+
+/** Icon button select mark color. */
+#define WTK_ICONBUTTON_SELECT_COLOR  GFX_COLOR(0, 0, 255)
+
+/** @} */
+
+/**
+* \ingroup gfx_wtk_plot
+* @{
+*/
+
+/** Color of the plot's frame border. */
+#define WTK_PLOT_BORDER_COLOR GFX_COLOR(0, 0, 0)
+
+/** Scale factor for fixed-point calculation. */
+#define WTK_PLOT_SCALE_FACTOR 128
+
+/** The length of the tick marker. */
+#define WTK_PLOT_TICK_MARKER_LENGTH 5
 
 /** @} */
 

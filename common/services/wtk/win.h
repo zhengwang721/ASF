@@ -256,8 +256,7 @@ enum win_keyboard_event_type {
 /** Event data for all keyboard events, e.g. full keyboards or smaller
  * matrices. */
 struct win_keyboard_event {
-	win_keycode_t keycode;        /**< Key code for pressed or released
-	                               * key. */
+	win_keycode_t keycode;        /**< Key code for pressed or released key. */
 	enum win_keyboard_event_type type; /**< Type of this event. */
 };
 
@@ -366,7 +365,7 @@ void win_reparent(
 		struct win_window *child,
 		struct win_window *new_parent);
 void win_show(struct win_window *win);
-void win_redraw(const struct win_window *win);
+void win_redraw(struct win_window *win);
 void win_hide(struct win_window *win);
 void win_raise(struct win_window *win);
 void win_lower(struct win_window *win);
@@ -395,6 +394,7 @@ bool win_compute_clipping(
 		const struct win_window *win,
 		const struct win_area *dirty_area,
 		struct win_clip_region *clip);
+void win_inflate_area(struct win_area* area, int16_t size);
 
 /** @} */
 

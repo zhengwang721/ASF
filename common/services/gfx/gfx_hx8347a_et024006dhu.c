@@ -143,7 +143,7 @@ void gfx_hx8347a_init(void)
 	gfx_set_clipping(0, 0, gfx_width, gfx_height);
 
 	gfx_draw_filled_rect(0, 0, gfx_width, gfx_height,
-			GFX_COLOR(0xFF, 0xFF, 0xFF));
+			GFX_COLOR_BLACK);
 }
 
 /**

@@ -102,35 +102,24 @@
 
 /** Number of colors in the pallet (computed automatically from number of
  *  entries in the \ref pallet_colors[] array) */
-#define NUM_PALLET_COLORS    (sizeof(pallet_colors) / sizeof(pallet_colors[0]))
+#define NUM_PALLET_COLORS     (sizeof(pallet_colors) / sizeof(pallet_colors[0]))
 
 /** Color increment/decrement amount when in multi-color mode; larger values
  *  will cause the colors to cycle faster */
 #define MULTI_COLOR_INCREMENT 4
 
-/** Some color definitions */
-#define COLOR_BLACK   GFX_COLOR(  0,   0,   0)
-#define COLOR_WHITE   GFX_COLOR(255, 255, 255)
-#define COLOR_RED     GFX_COLOR(255,   0,   0)
-#define COLOR_GREEN   GFX_COLOR(  0, 255,   0)
-#define COLOR_BLUE    GFX_COLOR(  0,   0, 255)
-#define COLOR_PURPLE  GFX_COLOR(255,   0, 255)
-#define COLOR_YELLOW  GFX_COLOR(255, 255,   0)
-#define COLOR_CYAN    GFX_COLOR(  0, 255, 255)
-#define COLOR_GRAY    GFX_COLOR(128, 128, 128)
-
 /** Color pallet for the application; add or remove colors here to update the
  *  pallet in the application */
 const gfx_color_t pallet_colors[] = {
 	0,           /**< First entry is for multi-color mode */
-	COLOR_WHITE,
-	COLOR_BLACK,
-	COLOR_RED,
-	COLOR_GREEN,
-	COLOR_BLUE,
-	COLOR_PURPLE,
-	COLOR_YELLOW,
-	COLOR_CYAN,
+	GFX_COLOR_WHITE,
+	GFX_COLOR_BLACK,
+	GFX_COLOR_RED,
+	GFX_COLOR_GREEN,
+	GFX_COLOR_BLUE,
+	GFX_COLOR_MAGENTA,
+	GFX_COLOR_YELLOW,
+	GFX_COLOR_CYAN,
 	0,           /**< Last entry is for clear function */
 };
 
@@ -223,36 +212,6 @@ static void mxt_init(struct mxt_device *device)
 }
 
 /**
- * \brief Draws a text string to the display centered in a rectangular area
- *
- * This function draws a given ASCII string to the display in the system font,
- * centered around a given rectangular area.
- *
- * \param text    Text to write to the display
- * \param x       Display X coordinate of the bounding box for centering
- * \param y       Display Y coordinate of the bounding box for centering
- * \param width   Width of the bounding box for centering
- * \param height  Height of the bounding box for centering
- * \param color   Color of the text to draw
- */
-static void draw_centered_text(const char *text, const gfx_coord_t x,
-		const gfx_coord_t y, const gfx_coord_t width,
-		const gfx_coord_t height,
-		const gfx_color_t color)
-{
-	gfx_coord_t text_width, text_height;
-
-	/* Retrieve the bounding box of the text string in the system font */
-	gfx_get_string_bounding_box(text, &sysfont, &text_width, &text_height);
-
-	/* Draw the text string to the display centered around the given area */
-	gfx_draw_string(text,
-			(x + (width / 2)) - (text_width / 2),
-			(y + (height / 2)) - (text_height / 2),
-			&sysfont, GFX_COLOR_TRANSPARENT, color);
-}
-
-/**
  * \brief Draws the special function pallet entry text labels
  *
  * This function draws the special function pallet entry text labels to the
@@ -263,19 +222,19 @@ static void draw_centered_text(const char *text, const gfx_coord_t x,
 static void draw_pallet_labels(const bool clearing_display)
 {
 	/* Draw multi-color mode text label to the appropriate pallet entry */
-	draw_centered_text("MUL",
-			PALLET_COLOR_WIDTH * 0,
-			gfx_get_height() - PALLET_HEIGHT,
-			PALLET_COLOR_WIDTH,
-			PALLET_HEIGHT, COLOR_WHITE);
+	gfx_draw_string_aligned("MUL",
+			PALLET_COLOR_WIDTH / 2,
+			gfx_get_height() - (PALLET_HEIGHT / 2), &sysfont,
+			GFX_COLOR_TRANSPARENT, GFX_COLOR_WHITE,
+			TEXT_POS_CENTER, TEXT_ALIGN_LEFT);
 
 	/* Draw display clear text label to the appropriate pallet entry */
-	draw_centered_text("CLR",
-			PALLET_COLOR_WIDTH * (NUM_PALLET_COLORS - 1),
-			gfx_get_height() - PALLET_HEIGHT,
-			PALLET_COLOR_WIDTH,
-			PALLET_HEIGHT,
-			clearing_display ? COLOR_RED : COLOR_WHITE);
+	gfx_draw_string_aligned("CLR",
+			(PALLET_COLOR_WIDTH * NUM_PALLET_COLORS) - (PALLET_COLOR_WIDTH / 2),
+			gfx_get_height() - (PALLET_HEIGHT / 2), &sysfont,
+			GFX_COLOR_TRANSPARENT,
+			clearing_display ? GFX_COLOR_RED : GFX_COLOR_WHITE,
+			TEXT_POS_CENTER, TEXT_ALIGN_LEFT);
 }
 
 /**
@@ -307,7 +266,7 @@ static void update_pallet_selection(void)
 				(gfx_get_height() - PALLET_HEIGHT) + i,
 				PALLET_COLOR_WIDTH - (i * 2),
 				PALLET_HEIGHT - (i * 2),
-				COLOR_GRAY);
+				GFX_COLOR_GRAY);
 	}
 
 	old_selected_color = selected_pallet_color;
@@ -334,7 +293,7 @@ static void draw_paint_pallet(void)
 	/* Draw a dark gray line to separate the drawing area from the pallet */
 	gfx_draw_horizontal_line(0,
 			(gfx_get_height() - PALLET_HEIGHT - 1),
-			gfx_get_width(), COLOR_GRAY);
+			gfx_get_width(), GFX_COLOR_GRAY);
 
 	/* Draw special function labels */
 	draw_pallet_labels(false);
@@ -465,7 +424,7 @@ static void mxt_handler(struct mxt_device *device)
 				/* Clear the display */
 				gfx_draw_filled_rect(0, 0, gfx_get_width(),
 						(gfx_get_height() - PALLET_HEIGHT - 1),
-						COLOR_BLACK);
+						GFX_COLOR_BLACK);
 
 				/* Indicate display has been cleared */
 				draw_pallet_labels(false);
@@ -505,20 +464,24 @@ int main(void)
 
 	/* Clear the display */
 	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
-			COLOR_BLACK);
+			GFX_COLOR_BLACK);
 
 	/* Draw the paint pallet to the display */
 	draw_paint_pallet();
-
-	draw_centered_text("Select a color from the pallet below, and\n"
+	
+	/* Draw instructions to the display */
+	gfx_draw_string_aligned(
+			"Select a color from the pallet below, and\n"
 			"use your finger(s) to draw onto the display.\n\n"
 			"Multiple simultaneous fingers are supported,\n"
 			"and the drawing size varies according to the\n"
 			"pressure of the touch.\n\n"
 			"Select MUL to draw using multiple colors.\n\n"
 			"Select CLR to clear the display.",
-			0, 0, gfx_get_width(),
-			gfx_get_height() - PALLET_HEIGHT, COLOR_WHITE);
+			gfx_get_width() / 2,
+			(gfx_get_height() - PALLET_HEIGHT) / 2,
+			&sysfont, GFX_COLOR_TRANSPARENT, GFX_COLOR_WHITE,
+			TEXT_POS_CENTER, TEXT_ALIGN_LEFT);
 
 	while (true) {
 		/* Check for any pending messages and run message handler if any

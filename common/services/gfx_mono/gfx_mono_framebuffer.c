@@ -43,7 +43,7 @@
 
 #include "gfx_mono_framebuffer.h"
 
-// Pointer to the framebuffer; updated by the gfx_mono_set_framebuffer function
+/* Pointer to the framebuffer; updated by the gfx_mono_set_framebuffer function */
 static uint8_t *fbpointer;
 
 /* \brief Set the LCD framebuffer.
@@ -56,7 +56,7 @@ static uint8_t *fbpointer;
  * uint8_t framebuffer[FRAMEBUFFER_SIZE];
  * gfx_mono_set_framebuffer(framebuffer);
  * \endcode
-*/
+ */
 void gfx_mono_set_framebuffer(uint8_t *framebuffer)
 {
 	fbpointer = framebuffer;
@@ -79,12 +79,13 @@ void gfx_mono_set_framebuffer(uint8_t *framebuffer)
 void gfx_mono_framebuffer_put_page(gfx_mono_color_t *data, gfx_coord_t page,
 		gfx_coord_t column, gfx_coord_t width)
 {
-		gfx_mono_color_t *data_pt = data;
-		gfx_coord_t *framebuffer_pt = fbpointer + ((page * GFX_MONO_LCD_WIDTH) + column);
+	gfx_mono_color_t *data_pt = data;
+	gfx_coord_t *framebuffer_pt = fbpointer +
+			((page * GFX_MONO_LCD_WIDTH) + column);
 
-		do {
-			*framebuffer_pt++ = *data_pt++;
-		} while(--width > 0);
+	do {
+		*framebuffer_pt++ = *data_pt++;
+	} while (--width > 0);
 }
 
 /**
@@ -101,30 +102,32 @@ void gfx_mono_framebuffer_put_page(gfx_mono_color_t *data, gfx_coord_t page,
  * gfx_mono_framebuffer_get_page(read_buffer, 0, 0, 128);
  * \endcode
  */
-void gfx_mono_framebuffer_get_page(gfx_mono_color_t *data, gfx_coord_t page,\
+void gfx_mono_framebuffer_get_page(gfx_mono_color_t *data, gfx_coord_t page, \
 		gfx_coord_t column, gfx_coord_t width)
 {
-		gfx_coord_t *framebuffer_pt = fbpointer + ((page * GFX_MONO_LCD_WIDTH) + column);
-		do {
-			*data++ = *framebuffer_pt++;
-		} while(--width > 0);
+	gfx_coord_t *framebuffer_pt = fbpointer +
+			((page * GFX_MONO_LCD_WIDTH) + column);
+	do {
+		*data++ = *framebuffer_pt++;
+	} while (--width > 0);
 }
 
 /**
  * \brief Draw pixel to framebuffer
-
+ *
  * \param x         X coordinate of the pixel
  * \param y         Y coordinate of the pixel
  * \param color     Pixel operation
  *
  */
-void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_mono_color_t color)
+void gfx_mono_framebuffer_draw_pixel(gfx_coord_t x, gfx_coord_t y,
+		gfx_mono_color_t color)
 {
 	uint8_t page;
 	uint8_t pixel_mask;
 	uint8_t pixel_value;
 
-	// Discard pixels drawn outside the screen
+	/* Discard pixels drawn outside the screen */
 	if ((x > GFX_MONO_LCD_WIDTH - 1) || (y > GFX_MONO_LCD_HEIGHT - 1)) {
 		return;
 	}
@@ -194,7 +197,8 @@ uint8_t gfx_mono_framebuffer_get_pixel(gfx_coord_t x, gfx_coord_t y)
  * gfx_mono_framebuffer_put_byte(0, 0, 0xFF);
  * \endcode
  */
-void gfx_mono_framebuffer_put_byte(gfx_coord_t page, gfx_coord_t column, uint8_t data)
+void gfx_mono_framebuffer_put_byte(gfx_coord_t page, gfx_coord_t column,
+		uint8_t data)
 {
 	*(fbpointer + (page * GFX_MONO_LCD_WIDTH) + column) = data;
 }
@@ -234,22 +238,24 @@ uint8_t gfx_mono_framebuffer_get_byte(gfx_coord_t page, gfx_coord_t column)
  * \endcode
  */
 void gfx_mono_framebuffer_mask_byte(gfx_coord_t page, gfx_coord_t column,
-         gfx_mono_color_t pixel_mask, gfx_mono_color_t color)
+		gfx_mono_color_t pixel_mask, gfx_mono_color_t color)
 {
 	gfx_mono_color_t temp;
 
 	temp = gfx_mono_get_byte(page, column);
 
-	switch(color) {
-		case GFX_PIXEL_SET:
-			temp |= pixel_mask;
-			break;
-		case GFX_PIXEL_CLR:
-			temp &= ~pixel_mask;
-			break;
-		case GFX_PIXEL_XOR:
-			temp ^= pixel_mask;
-			break;
+	switch (color) {
+	case GFX_PIXEL_SET:
+		temp |= pixel_mask;
+		break;
+
+	case GFX_PIXEL_CLR:
+		temp &= ~pixel_mask;
+		break;
+
+	case GFX_PIXEL_XOR:
+		temp ^= pixel_mask;
+		break;
 	}
 
 	gfx_mono_put_byte(page, column, temp);

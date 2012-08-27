@@ -3,7 +3,7 @@
  *
  * \brief Font and text drawing routines
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,23 +79,24 @@
 static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font)
 {
-	uint8_t         i;
-	uint8_t         char_row_size;
-	uint8_t         glyph_size;
-	uint16_t        glyph_data_offset;
-	uint8_t         char_buff[EXTMEM_BUF_SIZE];
-	uint8_t         buffer_pos;
-	uint8_t         rows_left;
+	uint8_t i;
+	uint8_t char_row_size;
+	uint8_t glyph_size;
+	uint16_t glyph_data_offset;
+	uint8_t char_buff[EXTMEM_BUF_SIZE];
+	uint8_t buffer_pos;
+	uint8_t rows_left;
 
-	// Sanity check on parameters, assert if font is NULL.
+	/* Sanity check on parameters, assert if font is NULL. */
 	Assert(font != NULL);
 
 	gfx_coord_t inc_x = x;
 	gfx_coord_t inc_y = y;
 
 	char_row_size = font->width / CONFIG_FONT_PIXELS_PER_BYTE;
-	if (font->width % CONFIG_FONT_PIXELS_PER_BYTE)
+	if (font->width % CONFIG_FONT_PIXELS_PER_BYTE) {
 		char_row_size++;
+	}
 
 	glyph_size = char_row_size * font->height;
 	glyph_data_offset = glyph_size * ((uint8_t)ch - font->first_char);
@@ -103,18 +104,18 @@ static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 	rows_left = font->height;
 
 	do {
-		static uint8_t  glyph_byte = 0;
-		uint8_t         pixelsToDraw = font->width;
+		static uint8_t glyph_byte = 0;
+		uint8_t pixelsToDraw = font->width;
 
 		for (i = 0; i < pixelsToDraw; i++) {
 			if (i % CONFIG_FONT_PIXELS_PER_BYTE == 0) {
-				// Read another byte from hugemem
+				/* Read another byte from hugemem */
 				if (buffer_pos >= EXTMEM_BUF_SIZE) {
-					hugemem_ptr_t source =
-						font->data.hugemem;
+					hugemem_ptr_t source
+						= font->data.hugemem;
 					source = (hugemem_ptr_t)
-						((uint32_t)source +
-						 glyph_data_offset);
+							((uint32_t)source +
+							glyph_data_offset);
 
 					hugemem_read_block(char_buff, source,
 							EXTMEM_BUF_SIZE);
@@ -127,9 +128,10 @@ static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 				buffer_pos++;
 			}
 
-			// Draw bit of glyph to screen
+			/* Draw bit of glyph to screen */
 			if ((glyph_byte & 0x80)) {
-				gfx_mono_draw_pixel(inc_x, inc_y, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(inc_x, inc_y,
+						GFX_PIXEL_SET);
 			}
 
 			inc_x += 1;
@@ -140,6 +142,7 @@ static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 		inc_x = x;
 	} while (--rows_left > 0);
 }
+
 #endif
 
 /**
@@ -163,24 +166,25 @@ static void gfx_mono_draw_char_hugemem(const char ch, const gfx_coord_t x,
 static void gfx_mono_draw_char_progmem(const char ch, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font)
 {
-	uint8_t PROGMEM_PTR_T   glyph_data;
-	uint16_t                glyph_data_offset;
-	uint8_t                 char_row_size;
-	uint8_t                 rows_left;
-	uint8_t                 i;
+	uint8_t PROGMEM_PTR_T glyph_data;
+	uint16_t glyph_data_offset;
+	uint8_t char_row_size;
+	uint8_t rows_left;
+	uint8_t i;
 
-	// Sanity check on parameters, assert if font is NULL.
+	/* Sanity check on parameters, assert if font is NULL. */
 	Assert(font != NULL);
 
 	gfx_coord_t inc_x = x;
 	gfx_coord_t inc_y = y;
 
 	char_row_size = font->width / CONFIG_FONT_PIXELS_PER_BYTE;
-	if (font->width % CONFIG_FONT_PIXELS_PER_BYTE)
+	if (font->width % CONFIG_FONT_PIXELS_PER_BYTE) {
 		char_row_size++;
+	}
 
 	glyph_data_offset = char_row_size * font->height *
-		((uint8_t)ch - font->first_char);
+			((uint8_t)ch - font->first_char);
 	glyph_data = font->data.progmem + glyph_data_offset;
 	rows_left = font->height;
 
@@ -195,7 +199,8 @@ static void gfx_mono_draw_char_progmem(const char ch, const gfx_coord_t x,
 			}
 
 			if ((glyph_byte & 0x80)) {
-				gfx_mono_draw_pixel(inc_x, inc_y, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(inc_x, inc_y,
+						GFX_PIXEL_SET);
 			}
 
 			inc_x += 1;
@@ -217,7 +222,7 @@ static void gfx_mono_draw_char_progmem(const char ch, const gfx_coord_t x,
  * \param font     Font to draw character in
  */
 void gfx_mono_draw_char(const char c, const gfx_coord_t x, const gfx_coord_t y,
-		const struct font* font)
+		const struct font *font)
 {
 	gfx_mono_draw_filled_rect(x, y, font->width, font->height,
 			GFX_PIXEL_CLR);
@@ -226,13 +231,15 @@ void gfx_mono_draw_char(const char c, const gfx_coord_t x, const gfx_coord_t y,
 	case FONT_LOC_PROGMEM:
 		gfx_mono_draw_char_progmem(c, x, y, font);
 		break;
+
 #ifdef CONFIG_HUGEMEM
 	case FONT_LOC_HUGEMEM:
 		gfx_mono_draw_char_hugemem(c, x, y, font);
 		break;
+
 #endif
 	default:
-		// unsupported mode, call assert
+		/* Unsupported mode, call assert */
 		Assert(false);
 		break;
 	}
@@ -251,24 +258,22 @@ void gfx_mono_draw_char(const char c, const gfx_coord_t x, const gfx_coord_t y,
 void gfx_mono_draw_string(const char *str, gfx_coord_t x, gfx_coord_t y,
 		const struct font *font)
 {
-	// Save X in order to know where to return to on CR.
+	/* Save X in order to know where to return to on CR. */
 	const gfx_coord_t start_of_string_position_x = x;
 
-	// Sanity check on parameters, assert if str or font is NULL.
+	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	// Draw characters until trailing null byte
+	/* Draw characters until trailing null byte */
 	do {
-		// Handle '\n' as newline, draw normal characters.
+		/* Handle '\n' as newline, draw normal characters. */
 		if (*str == '\n') {
 			x = start_of_string_position_x;
 			y += font->height + 1;
-		}
-		else if (*str == '\r') {
+		} else if (*str == '\r') {
 			/* Skip '\r' characters. */
-		}
-		else {
+		} else {
 			gfx_mono_draw_char(*str, x, y, font);
 			x += font->width;
 		}
@@ -295,23 +300,22 @@ void gfx_mono_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 {
 	char temp_char;
 
-	// Sanity check on parameters, assert if str or font is NULL.
+	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	// Save X in order to know where to return to on CR.
+	/* Save X in order to know where to return to on CR. */
 	const gfx_coord_t start_of_string_position_x = x;
 
-	// Draw characters until trailing null byte
+	/* Draw characters until trailing null byte */
 	temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)str);
 
 	while (temp_char) {
-		// Handle '\n' as newline, draw normal characters.
+		/* Handle '\n' as newline, draw normal characters. */
 		if (temp_char == '\n') {
 			x = start_of_string_position_x;
 			y += font->height + 1;
-		}
-		else if (temp_char == '\r') {
+		} else if (temp_char == '\r') {
 			/* Skip '\r' characters. */
 		} else {
 			gfx_mono_draw_char(temp_char, x, y, font);
@@ -343,21 +347,19 @@ void gfx_mono_get_string_bounding_box(const char *str, const struct font *font,
 	gfx_coord_t max_height = font_height;
 	gfx_coord_t x = 0;
 
-	// Sanity check on parameters, assert if str or font is NULL.
+	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	// Handle each character until trailing null byte
+	/* Handle each character until trailing null byte */
 	do {
-		// Handle '\n' as newline, draw normal characters.
+		/* Handle '\n' as newline, draw normal characters. */
 		if (*str == '\n') {
 			x = 0;
 			max_height += font_height;
-		}
-		else if (*str == '\r') {
+		} else if (*str == '\r') {
 			/* Skip '\r' characters. */
-		}
-		else {
+		} else {
 			x += font_width;
 			if (x > max_width) {
 				max_width = x;
@@ -365,7 +367,7 @@ void gfx_mono_get_string_bounding_box(const char *str, const struct font *font,
 		}
 	} while (*(++str));
 
-	// Return values through references
+	/* Return values through references */
 	*width = max_width;
 	*height = max_height;
 }
@@ -388,28 +390,26 @@ void gfx_mono_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
 	gfx_coord_t font_width = font->width;
 	gfx_coord_t font_height = font->height;
 
-	char            temp_char;
-	gfx_coord_t     max_width = 1;
-	gfx_coord_t     max_height = font_height;
-	gfx_coord_t     x = 0;
+	char temp_char;
+	gfx_coord_t max_width = 1;
+	gfx_coord_t max_height = font_height;
+	gfx_coord_t x = 0;
 
-	// Sanity check on parameters, assert if str or font is NULL.
+	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	// Handle each character until trailing null byte
+	/* Handle each character until trailing null byte */
 	temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)str);
 
 	while (temp_char) {
-		// Handle '\n' as newline, draw normal characters.
+		/* Handle '\n' as newline, draw normal characters. */
 		if (temp_char == '\n') {
 			x = 0;
 			max_height += font_height;
-		}
-		else if (*str == '\r') {
+		} else if (*str == '\r') {
 			/* Skip '\r' characters. */
-		}
-		else {
+		} else {
 			x += font_width;
 			if (x > max_width) {
 				max_width = x;
@@ -419,7 +419,7 @@ void gfx_mono_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
 		temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(++str));
 	}
 
-	// Return values through references
+	/* Return values through references */
 	*width = max_width;
 	*height = max_height;
 }

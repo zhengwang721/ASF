@@ -110,6 +110,27 @@
 				<require idref="sam.drivers.usart"/>
 				<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 			</module>
+			<module type="service" id="common.services.basic.spi_master#usart_spi#2" caption="SPI - UC3 implementation">
+				<info type="description" value="summary">
+				UC3 implementation for the common SPI API using the USART peripheral in SPI mode.
+				</info>
+				<info type="keyword" value="technology">
+					<keyword value="Communication"/>
+				</info>
+				<build type="header-file" subtype="api" value="usart_spi.h"/>
+				<build type="header-file" subtype="api" value="uc3_usart_spi/usart_spi.h"/>
+				<build type="c-source" value="uc3_usart_spi/usart_spi.c"/>
+				<build type="include-path" value="."/>
+				<build type="include-path" value="uc3_usart_spi"/>
+				<build type="module-config" subtype="required-header-file" value="conf_usart_spi.h"/>
+				<build type="module-config" subtype="path" value="uc3_usart_spi/module_config"/>
+				<build type="doxygen-entry-point" value="spi_group"/>
+				<build type="doxygen-quick-start" value="common_spi_master_quickstart"/>
+				<device-support value="uc3"/>
+				<require idref="common.services.basic.clock"/>
+				<require idref="avr32.drivers.usart"/>
+				<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
+			</module>
 		</select-by-device>
 		<select-by-device id="common.services.basic.spi_master#usart_and_standard_spi">
 			<module type="service" id="common.services.basic.spi_master#usart_and_standard_spi#0" caption="SPI - XMEGA implementation">
@@ -139,6 +160,20 @@
 				<require idref="common.services.basic.spi_master#standard_spi"/>
 				<require idref="common.services.basic.spi_master#usart_spi"/>
 				<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+			</module>
+			<module type="service" id="common.services.basic.spi_master#usart_and_standard_spi#2" caption="SPI - UC3 implementation">
+				<info type="description" value="summary">
+				UC3 implementation for the common SPI API using both standard SPI peripheral and USART peripheral in SPI mode.
+				</info>
+				<info type="keyword" value="technology">
+					<keyword value="Communication"/>
+				</info>
+				<device-support value="uc3"/>
+				<build type="doxygen-entry-point" value="spi_group"/>
+				<build type="doxygen-quick-start" value="common_spi_master_quickstart"/>
+				<require idref="common.services.basic.spi_master#standard_spi"/>
+				<require idref="common.services.basic.spi_master#usart_spi"/>
+				<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 			</module>
 		</select-by-device>
 	</select-by-config>

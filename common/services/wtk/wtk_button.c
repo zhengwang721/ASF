@@ -75,7 +75,7 @@ struct wtk_button {
 	/** Copy of caption string. */
 	char *caption;
 	/** Custom command data, used when "clicked". */
-	win_command_t command_data;
+	win_command_t command;
 	/** Current state. */
 	enum wtk_button_state state;
 };
@@ -92,6 +92,20 @@ struct win_window *wtk_button_as_child(struct wtk_button *button)
 {
 	Assert(button);
 	return button->container;
+}
+
+/**
+ * This function returns the window command of the specified button, as set
+ * when the widget was created.
+ *
+ * \param button Button widget to manage.
+ *
+ * \return Associated window command of the button widget.
+ */
+win_command_t wtk_button_get_command(struct wtk_button *button)
+{
+	Assert(button);
+	return button->command;
 }
 
 /**
@@ -155,21 +169,12 @@ static bool wtk_button_handler(struct win_window *win,
 				area->size.x, area->size.y,
 				WTK_BUTTON_BORDER_COLOR);
 
-		/* Get string size and draw the caption text in the
-		 * center of the button.
-		 */
-		gfx_coord_t width;
-		gfx_coord_t height;
-
-		gfx_get_string_bounding_box(button->caption, &sysfont,
-				&width, &height);
-
-		gfx_draw_string(button->caption,
-				clip->origin.x + (area->size.x / 2) -
-				(width / 2),
-				clip->origin.y + (area->size.y / 2) -
-				(height / 2), &sysfont, GFX_COLOR_TRANSPARENT,
-				caption_color);
+		/* Draw caption. */
+		gfx_draw_string_aligned(button->caption,
+				clip->origin.x + (area->size.x / 2),
+				clip->origin.y + (area->size.y / 2),
+				&sysfont, GFX_COLOR_TRANSPARENT, caption_color,
+				TEXT_POS_CENTER, TEXT_ALIGN_CENTER);
 
 		/* Always accept DRAW events, as the return value is
 		 * ignored anyway for that event type.
@@ -231,7 +236,7 @@ static bool wtk_button_handler(struct win_window *win,
 						= button->
 							container;
 					command.data = button->
-							command_data;
+							command;
 					win_queue_command_event
 						(&command);
 				}
@@ -329,7 +334,7 @@ struct wtk_button *wtk_button_create(struct win_window *parent,
 	}
 
 	button->state = WTK_BUTTON_NORMAL;
-	button->command_data = command_data;
+	button->command = command_data;
 
 	/* Allocate memory for caption string, and copy text. */
 	button->caption = membag_alloc((strlen(caption) + 1) * sizeof(char));

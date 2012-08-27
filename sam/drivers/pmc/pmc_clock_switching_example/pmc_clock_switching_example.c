@@ -392,7 +392,7 @@ int main(void)
 	}
 
     /* Switch mainck to external xtal */
-	pmc_switch_mainck_to_xtal(0);
+	pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 	/* If a new value for CSS field corresponds to Main Clock or Slow Clock, Program the CSS field first. */
 	pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
 	/* Then program the PRES field. */

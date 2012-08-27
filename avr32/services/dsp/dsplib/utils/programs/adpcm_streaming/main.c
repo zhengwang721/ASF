@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -145,7 +145,7 @@ int main(int argc, char *_argv[])
   short step_index;
   short predicted_value;
   char _buffer[4];
-  int i, j, k, l, nb_bytes_per_block;
+  int i, j, k, nb_bytes_per_block;
   int block_size;
   char c;
   int block_sent = 0;

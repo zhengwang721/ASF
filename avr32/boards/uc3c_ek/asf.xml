@@ -14,12 +14,13 @@
 		</module>
 		<module type="meta" id="config.board.uc3c_ek.init#yes" caption="UC3C-EK initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.uc3c_ek" caption="UC3C-EK" mcu="at32uc3c0512c">
+	<board id="board.uc3c_ek" vendor="Atmel" caption="UC3C-EK" mcu="at32uc3c0512c">
 		<build type="define" name="BOARD" value="UC3C_EK"/>
 		<build type="header-file" value="uc3c_ek.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

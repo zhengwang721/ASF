@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the AES on AVR32 devices.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -154,10 +154,7 @@ extern unsigned int aes_get_status( volatile avr32_aes_t *aes );
  * \param  *aes             Base address of the AES
  *
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void aes_start( volatile avr32_aes_t *aes )
+__always_inline static void aes_start( volatile avr32_aes_t *aes )
 {
   aes->cr = AVR32_AES_CR_START_MASK;
 }
@@ -168,10 +165,7 @@ static inline void aes_start( volatile avr32_aes_t *aes )
  * \param  *aes         Base address of the AES
  *
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void aes_swreset( volatile avr32_aes_t *aes )
+__always_inline static void aes_swreset( volatile avr32_aes_t *aes )
 {
   aes->cr = AVR32_AES_CR_SWRST_MASK;
 }
@@ -221,10 +215,7 @@ extern void aes_read_outputdata( volatile avr32_aes_t *aes, unsigned int *pOut);
  * \param  *aes         Base address of the AES
  *
  */
-#if __GNUC__
-__attribute__((__always_inline__))
-#endif
-static inline void aes_load_newseed(volatile avr32_aes_t *aes)
+__always_inline static void aes_load_newseed(volatile avr32_aes_t *aes)
 {
   aes->cr = AVR32_AES_CR_LOADSEED_MASK;
 }

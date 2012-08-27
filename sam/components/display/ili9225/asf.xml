@@ -11,7 +11,7 @@
 		<require idref="common.services.basic.spi_master"/>
 		<build type="module-config" subtype="required-header-file" value="conf_ili9225.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
-		<device-support value="sam3"/>
+		<device-support value="sam"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 	</module>
 </asf>

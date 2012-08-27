@@ -108,6 +108,7 @@ struct wtk_slider *wtk_slider_create(struct win_window *parent,
 		struct win_area const *area, uint8_t maximum, uint8_t value,
 		uint8_t option, win_command_t command_data);
 struct win_window *wtk_slider_as_child(struct wtk_slider *slider);
+win_command_t wtk_slider_get_command(struct wtk_slider *slider);
 bool wtk_slider_is_moving(struct wtk_slider const *slider);
 uint8_t wtk_slider_get_value(struct wtk_slider const *slider);
 bool wtk_slider_set_value(struct wtk_slider *slider, uint8_t value);

@@ -86,7 +86,7 @@ typedef union
  */
 static long int scif_pclksr_statushigh_wait(unsigned long statusMask)
 {
-  unsigned int  timeout = SCIF_POLL_TIMEOUT;
+  unsigned int timeout = SCIF_POLL_TIMEOUT;
 
   while(!(AVR32_SCIF.pclksr & statusMask))
   {
@@ -185,9 +185,15 @@ long int scif_start_osc(scif_osc_t osc, const scif_osc_opt_t *opt, bool wait_for
 
   if(true == wait_for_ready)
   {
-    // Wait until OSC0 is stable and ready to be used.
-    if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC0RDY_MASK))
-      return -1;
+	  if (osc == SCIF_OSC0) {
+		  // Wait until OSC0 is stable and ready to be used.
+		  if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC0RDY_MASK))
+			return -1;
+	  } else {
+		  // Wait until OSC1 is stable and ready to be used.
+		  if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC1RDY_MASK))
+			return -1;
+	  }
   }
   return PASS;
 }
@@ -235,10 +241,10 @@ long int scif_configure_osc_crystalmode(scif_osc_t osc, unsigned int fcrystal)
     // Modify : Configure the oscillator mode to crystal and set the gain according to the
     // crystal frequency.
     u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC0].mode = SCIF_OSC_MODE_2PIN_CRYSTAL;
-    u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC0].gain = (fcrystal <  900000) ? AVR32_SCIF_OSCCTRL0_GAIN_G0 :
-                                                   (fcrystal < 3000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G1 :
-                                                   (fcrystal < 8000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G2 :
-                                                                          AVR32_SCIF_OSCCTRL0_GAIN_G3;
+    u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC0].gain = (fcrystal <  2000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G0 :
+                                                   (fcrystal < 10000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G1 :
+                                                   (fcrystal < 16000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G2 :
+                                                                           AVR32_SCIF_OSCCTRL0_GAIN_G3;
     AVR32_ENTER_CRITICAL_REGION( );
     // Unlock the write-protected OSCCTRL0 register
     SCIF_UNLOCK(AVR32_SCIF_OSCCTRL);
@@ -253,10 +259,10 @@ long int scif_configure_osc_crystalmode(scif_osc_t osc, unsigned int fcrystal)
     // Modify : Configure the oscillator mode to crystal and set the gain according to the
     // crystal frequency.
     u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC1].mode = SCIF_OSC_MODE_2PIN_CRYSTAL;
-    u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC1].gain = (fcrystal <  900000) ? AVR32_SCIF_OSCCTRL1_GAIN_G0 :
-                                                   (fcrystal < 3000000) ? AVR32_SCIF_OSCCTRL1_GAIN_G1 :
-                                                   (fcrystal < 8000000) ? AVR32_SCIF_OSCCTRL1_GAIN_G2 :
-                                                                          AVR32_SCIF_OSCCTRL1_GAIN_G3;
+    u_avr32_scif_oscctrl.OSCCTRL[SCIF_OSC1].gain = (fcrystal <  2000000) ? AVR32_SCIF_OSCCTRL1_GAIN_G0 :
+                                                   (fcrystal < 10000000) ? AVR32_SCIF_OSCCTRL1_GAIN_G1 :
+                                                   (fcrystal < 16000000) ? AVR32_SCIF_OSCCTRL1_GAIN_G2 :
+                                                                           AVR32_SCIF_OSCCTRL1_GAIN_G3;
     AVR32_ENTER_CRITICAL_REGION( );
     // Unlock the write-protected OSCCTRL1 register
     SCIF_UNLOCK(AVR32_SCIF_OSCCTRL + 4);
@@ -306,9 +312,15 @@ long int scif_enable_osc(scif_osc_t osc, unsigned int startup, bool wait_for_rea
 
   if(true == wait_for_ready)
   {
-    // Wait until OSC0 is stable and ready to be used.
-    if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC0RDY_MASK))
-      return -1;
+	  if (osc == SCIF_OSC0) {
+		  // Wait until OSC0 is stable and ready to be used.
+		  if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC0RDY_MASK))
+			return -1;
+	  } else {
+		  // Wait until OSC1 is stable and ready to be used.
+		  if(scif_pclksr_statushigh_wait(AVR32_SCIF_PCLKSR_OSC1RDY_MASK))
+			return -1;
+	  }
   }
 
   return PASS;

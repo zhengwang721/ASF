@@ -65,6 +65,8 @@ struct wtk_label {
 	char *caption;
 	/** True if text should be right aligned. */
 	bool align_right;
+	/** Foreground color of the label text. */
+	gfx_color_t text_color;
 };
 
 /**
@@ -157,7 +159,7 @@ static bool wtk_label_handler(struct win_window *win,
 					clip->origin.y,
 					&sysfont,
 					GFX_COLOR_TRANSPARENT,
-					WTK_STATICTEXT_CAPTION_COLOR);
+					label->text_color);
 		} else {
 			/* Get string size and draw the caption text right
 			 * aligned. */
@@ -171,7 +173,7 @@ static bool wtk_label_handler(struct win_window *win,
 					clip->origin.x + area->size.x -
 					width, clip->origin.y, &sysfont,
 					GFX_COLOR_TRANSPARENT,
-					WTK_STATICTEXT_CAPTION_COLOR);
+					label->text_color);
 		}
 
 		/* Always accept DRAW events, as the return value is
@@ -232,13 +234,16 @@ void wtk_label_size_hint(struct win_point *size, const char *caption)
  * \param parent Parent window, possibly wtk_frame_as_parent(myFramePtr).
  * \param area Area of the internal contents.
  * \param caption Pointer to caption string. Will be copied into widget.
+ * \param text_color Foreground color of the text when drawn.
+ * \param background Background of the label.
  * \param align_right True if caption is to be aligned to the right,
- *                    false otherwise
+ *                    false otherwise.
  * \return Pointer to label, or NULL if failed.
  */
 struct wtk_label *wtk_label_create(struct win_window *parent,
-		struct win_area const *area,
-		char const *caption, bool align_right)
+		struct win_area const *area, char const *caption,
+		gfx_color_t text_color, struct gfx_bitmap *background,
+		bool align_right)
 {
 	struct win_attributes attr;
 	struct wtk_label *label;
@@ -253,6 +258,7 @@ struct wtk_label *wtk_label_create(struct win_window *parent,
 		goto outofmem_label;
 	}
 
+	label->text_color = text_color;
 	label->align_right = align_right;
 
 	/* Allocate memory for caption string, and copy text. */
@@ -262,16 +268,23 @@ struct wtk_label *wtk_label_create(struct win_window *parent,
 	}
 
 	wtk_copy_string(label->caption, caption);
-
+	
 	/* Handling information. */
 	attr.event_handler = wtk_label_handler;
 	attr.custom = label;
 
 	/* Prepare container frame. */
 	attr.area = *area;
-	attr.background = NULL;
-	attr.behavior = WIN_BEHAVIOR_REDRAW_PARENT;
-
+	
+	/* Set background for label. */
+	if (background) {
+		attr.background = background;
+		attr.behavior = 0;
+	} else {
+		attr.background = NULL;
+		attr.behavior = WIN_BEHAVIOR_REDRAW_PARENT;
+	}
+	
 	label->container = win_create(parent, &attr);
 	if (!label->container) {
 		goto outofmem_container;

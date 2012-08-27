@@ -3,7 +3,7 @@
  *
  * \brief HX8347A configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,39 +46,14 @@
 #ifndef CONF_HX8347A_H_INCLUDED
 #define CONF_HX8347A_H_INCLUDED
 
-#include "compiler.h"
 #include "board.h"
 
-/*! \brief Interface configuration
- *
- * Currently only EBI mode supported
- */
-#if BOARD == SAM3U_EK
+#if !defined(BOARD_HX8347A_ADDR) || !defined(BOARD_HX8347A_RS)
 
-	/*! \brief address used to write to the index register
-	 */
-	#define HX8347A_LCD_BASE     (BOARD_LCD_BASE)
+	#warning The HX8347A EBI configuration does not exist in the board definition file. Using default settings.
 
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define HX8347A_LCD_RS       (BOARD_LCD_RS)
-
-#elif BOARD == SAM3X_EK
-
-	/*! \brief address used to write to the index register
-	 */
-	#define HX8347A_LCD_BASE     (BOARD_LCD_BASE)
-
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define HX8347A_LCD_RS       (BOARD_LCD_RS)
-
-#else
-
-	#warning The HX8347A setups configuration to use in the driver is missing. Default configuration is used.
-
-	#define HX8347A_LCD_BASE     0
-	#define HX8347A_LCD_RS       0
+	#define BOARD_HX8347A_ADDR     0x62000000 /* The base address, depends on which SMC chip select is used by HX8347A. */
+	#define BOARD_HX8347A_RS       1 << 1 /* Register select (1 << 1) */
 
 #endif
 

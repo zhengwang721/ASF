@@ -170,15 +170,11 @@ static void configure_console(void)
 	};
 
 	/* Configure PIO */
-	pio_configure(PINS_UART_PIO, PINS_UART_TYPE, PINS_UART_MASK,
-			PINS_UART_ATTR);
+	gpio_configure_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
-#if defined(__GNUC__)
-	setbuf(stdout, NULL);
-#endif
 }
 
 /**

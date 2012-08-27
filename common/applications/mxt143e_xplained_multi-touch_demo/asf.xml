@@ -10,6 +10,9 @@
 			<keyword value="USB"/>
 			<keyword value="Touch"/>
 		</info>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
 		<require idref="common.boards"/>
 		<require idref="common.components.touch.mxt"/>
 		<require idref="common.services.gfx"/>

@@ -7,7 +7,7 @@
  * - Supported boards:   EVK1100
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,8 @@
                   // redefines the inline keyword to empty.
 
 #include "FreeRTOS.h"
+
+#include "light.h"
 
 #include "datalog.h"
 #include "shell.h"

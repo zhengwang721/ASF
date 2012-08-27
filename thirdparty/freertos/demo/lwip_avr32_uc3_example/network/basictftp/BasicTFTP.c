@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief Basic TFTP Server for AVR32 UC3.
+ * \brief Basic TFTP Server for Atmel MCUs.
  *
  * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
@@ -430,7 +430,7 @@ portTASK_FUNCTION( vBasicTFTPServer, pvParameters )
         sLocalAddr.sin_family = AF_INET;
         sLocalAddr.sin_len = sizeof(sLocalAddr);
         sLocalAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-        sLocalAddr.sin_port = TFTP_PORT;
+        sLocalAddr.sin_port = htons(TFTP_PORT);
 
         if (bind(lSocket, (struct sockaddr *)&sLocalAddr, sizeof(sLocalAddr)) < 0) {
             // Problem setting up my end

@@ -53,7 +53,7 @@
  * (max. 32, see device datasheet for details) and conversion triggering.
  * Resistive touch screen mode is not supported by this driver.
  *
- * \{
+ * @{
  */
 
 #include <avr32/io.h>
@@ -65,55 +65,51 @@
 /*! Parameters for initialization of the ADCIFB module */
 typedef struct {
 	/*! Resolution mode */
-	unsigned short resolution;
+	uint16_t resolution;
 
 	/*! Channels Sample & Hold Time in [0,15], where
 	 *  Ts&h = shtim * Tclk_adc. */
-	unsigned short shtim;
+	uint16_t shtim;
 
 	/*! Ratio Fclk_adcifb/Fclk_adc = 2*i with i an integer in [1,64] */
-	unsigned short ratio_clkadcifb_clkadc;
+	uint16_t ratio_clkadcifb_clkadc;
 
 	/**
 	 * ADC Startup time in [0,127],
-	 * where Tstartup = startup * 8 * Tclk_adc 
+	 * where Tstartup = startup * 8 * Tclk_adc
 	 */
-	unsigned short startup;
+	uint16_t startup;
 
 	/*! ADCIFB Sleep Mode enable/disable */
 	bool sleep_mode_enable;
 } adcifb_opt_t;
 
-/* Function Declarations */
-
-extern long int adcifb_configure(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_configure(volatile avr32_adcifb_t *adcifb,
 		const adcifb_opt_t *p_adcifb_opt);
 
-extern void adcifb_enable_pen_detect_mode(volatile avr32_adcifb_t *adcifb,
+void adcifb_enable_pen_detect_mode(volatile avr32_adcifb_t *adcifb,
 		uint8_t pen_dbc_period);
 
-extern void adcifb_enable_touch_screen_mode(volatile avr32_adcifb_t *adcifb,
+void adcifb_enable_touch_screen_mode(volatile avr32_adcifb_t *adcifb,
 		uint8_t touch_screen_pin_offset, bool analog_pin_output_enable);
 
-extern long int adcifb_disable(volatile avr32_adcifb_t *adcifb);
+int32_t adcifb_disable(volatile avr32_adcifb_t *adcifb);
 
-extern long int adcifb_configure_trigger(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_configure_trigger(volatile avr32_adcifb_t *adcifb,
 		uint8_t trgmod, uint32_t trgper);
 
-extern uint32_t adcifb_get_last_data(volatile avr32_adcifb_t *adcifb);
+uint32_t adcifb_get_last_data(volatile avr32_adcifb_t *adcifb);
 
-extern long int adcifb_sr_statushigh_wait(volatile avr32_adcifb_t *adcifb,
+int32_t adcifb_sr_statushigh_wait(volatile avr32_adcifb_t *adcifb,
 		uint32_t statusMask);
 
-extern bool adcifb_is_ready(volatile avr32_adcifb_t *adcifb);
+bool adcifb_is_ready(volatile avr32_adcifb_t *adcifb);
 
-extern bool adcifb_is_busy(volatile avr32_adcifb_t *adcifb);
+bool adcifb_is_busy(volatile avr32_adcifb_t *adcifb);
 
-extern bool adcifb_is_drdy(volatile avr32_adcifb_t *adcifb);
+bool adcifb_is_drdy(volatile avr32_adcifb_t *adcifb);
 
-extern bool adcifb_is_ovre(volatile avr32_adcifb_t *adcifb);
-
-/* Static Inline Functions */
+bool adcifb_is_ovre(volatile avr32_adcifb_t *adcifb);
 
 /**
  * \brief Enable one or several channels.
@@ -596,7 +592,7 @@ static inline void adcifb_clear_data_ready_interrupt_flag(
 }
 
 /**
- * \}
+ * @}
  */
 
 #endif  /* _ADCIFB_H_ */

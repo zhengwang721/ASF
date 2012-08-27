@@ -1058,7 +1058,7 @@ static inline int_fast8_t ilog2(uint32_t x)
  */
 //! @{
 #if (defined __GNUC__)
-#define __always_inline     __attribute__((__always_inline__))
+#define __always_inline     inline __attribute__((__always_inline__))
 #elif (defined __ICCAVR32__)
 #define __always_inline     _Pragma("inline=forced")
 #endif

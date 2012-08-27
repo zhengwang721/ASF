@@ -48,7 +48,7 @@
 #define IOPORT_CREATE_PIN(port, pin) ((port) * 32 + (pin))
 
 /**
- * \weakgroup ioport_service_group
+ * \weakgroup ioport_group
  * \section ioport_modes IOPORT Modes
  *
  * For details on these please see the device datasheet.
@@ -80,7 +80,8 @@
 #define IOPORT_MODE_PULLDOWN            (1 << 4) /*!< Pull-down */
 #endif
 
-#if UC3A
+#if 0
+/* \internal Not currently synthesized on any UC3 parts */
 #define IOPORT_MODE_OPEN_DRAIN          (1 << 5) /*!< Open drain */
 #endif
 

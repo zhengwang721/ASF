@@ -54,6 +54,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#define PIO_DELTA	((uint32_t) PIOB - (uint32_t) PIOA) /* Compute PIO register length */
+
 /* GPIO Support */
 #define PIO_TYPE_Pos                    27
 /* PIO Type Mask */

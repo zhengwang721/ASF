@@ -4,7 +4,7 @@
  *
  * \brief Power Manager driver.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -81,10 +81,7 @@
  *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
  *  "toolchain folder"/avr32/inc(lude)/avr32/)
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void pm_asyn_wake_up_enable(unsigned long awen_mask)
+__always_inline static void pm_asyn_wake_up_enable(unsigned long awen_mask)
 {
   AVR32_PM.awen |= awen_mask;
 }
@@ -95,10 +92,7 @@ static inline void pm_asyn_wake_up_enable(unsigned long awen_mask)
  *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
  *  "toolchain folder"/avr32/inc(lude)/avr32/)
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void pm_asyn_wake_up_disable(unsigned long awen_mask)
+__always_inline static void pm_asyn_wake_up_disable(unsigned long awen_mask)
 {
   AVR32_PM.awen &= ~awen_mask;
 }
@@ -133,10 +127,7 @@ typedef struct
  * \return The MCU reset cause which can be masked with the
  *         \c AVR32_PM_RCAUSE_x_MASK bit-masks to isolate specific causes.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
+__always_inline static unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
 {
   return pm->rcause;
 }

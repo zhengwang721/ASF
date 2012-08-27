@@ -43,12 +43,20 @@ if use_clr:
 					return attr
 			return None
 
-		def get(self, name, default_value):
+		def get(self, name, default_value=None):
 			attr = self.get_attribute(name)
 			if attr is not None:
-				return attr.Value
+				return str(attr.Value)
 			else:
 				return default_value
+
+		def update(self, update_dict):
+			if not isinstance(update_dict, dict):
+				raise TypeError('Input must be of type dict')
+
+			for key, value in update_dict.items():
+				self[key] = value
+
 
 	class Element(object):
 		def __init__(self, tag=None, node=None, attrib={}, **extra):
@@ -145,12 +153,11 @@ if use_clr:
 			if textnode:
 				textnode.value = value
 
-		def get(self,attrib):
-			return self.attributes.get_attribute(attrib)
+		def get(self, attrib, default_value=None):
+			return self.attributes.get(attrib, default_value)
 
 		def set(self,attrib,value):
 			self.node.SetAttributeValue(attrib,value)
-
 
 		def __iter__(self):
 			return (Element(node=e) for e in self.node.Elements())

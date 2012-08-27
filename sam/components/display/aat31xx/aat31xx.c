@@ -72,11 +72,12 @@ extern "C" {
  *
  * \param ul_level backlight level.
  *
- * \note pin AAT31XX_BACKLIGHT_PIN must be configured before calling aat31xx_set_backlight.
+ * \note pin BOARD_AAT31XX_SET_GPIO must be configured before calling aat31xx_set_backlight.
  */
 void aat31xx_set_backlight(uint32_t ul_level)
 {
-	uint32_t i, ul_delay;
+	volatile uint32_t ul_delay;
+	uint32_t i;
 
 #ifdef CONF_BOARD_AAT3155
 	ul_level = AAT31XX_MAX_BACKLIGHT_LEVEL - ul_level + 1;
@@ -92,11 +93,11 @@ void aat31xx_set_backlight(uint32_t ul_level)
 
 	/* Set new backlight level */
 	for (i = 0; i < ul_level; i++) {
-		gpio_set_pin_low(AAT31XX_BACKLIGHT_PIN);
+		gpio_set_pin_low(BOARD_AAT31XX_SET_GPIO);
 		ul_delay = DELAY_PULSE;
 		while (ul_delay--) {
 		}
-		gpio_set_pin_high(AAT31XX_BACKLIGHT_PIN);
+		gpio_set_pin_high(BOARD_AAT31XX_SET_GPIO);
 		ul_delay = DELAY_PULSE;
 		while (ul_delay--) {
 		}
@@ -114,7 +115,7 @@ void aat31xx_disable_backlight(void)
 {
 	volatile uint32_t ul_delay;
 
-	gpio_set_pin_low(AAT31XX_BACKLIGHT_PIN);
+	gpio_set_pin_low(BOARD_AAT31XX_SET_GPIO);
 
 	ul_delay = DELAY_DISABLE;
 	while (ul_delay--) {

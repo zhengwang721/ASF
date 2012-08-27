@@ -31,6 +31,7 @@
 		<build type="header-file" value="user_board.h"/>
 		<build type="header-file" value="led.h"/>
 		<build type="c-source" value="led.c"/>
+		<device-support value="uc3b"/>
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 		</info>

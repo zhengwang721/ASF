@@ -555,18 +555,18 @@
 #define HX8347A_DCCLK_SYNC_TO_CL1_DCCLK_SYNC (0x1u << 0)
 
 /* Define EBI access for HX8347A 16-bit System Interface.*/
-#if defined(HX8347A_LCD_BASE) && defined (HX8347A_LCD_RS)
+#if defined(BOARD_HX8347A_ADDR) && defined (BOARD_HX8347A_RS)
 	static inline void LCD_IR(uint16_t lcd_index)
 	{
-		*((volatile uint16_t *)(HX8347A_LCD_BASE)) = lcd_index; /* HX8347A index register address */
+		*((volatile uint16_t *)(BOARD_HX8347A_ADDR)) = lcd_index; /* HX8347A index register address */
 	}
 	static inline void LCD_WD(uint16_t lcd_data)
 	{
-		*((volatile uint16_t *)((HX8347A_LCD_BASE) | (HX8347A_LCD_RS))) = lcd_data;
+		*((volatile uint16_t *)((BOARD_HX8347A_ADDR) | (BOARD_HX8347A_RS))) = lcd_data;
 	}
 	static inline uint16_t LCD_RD(void)
 	{
-		return *((volatile uint16_t *)((HX8347A_LCD_BASE) | (HX8347A_LCD_RS)));
+		return *((volatile uint16_t *)((BOARD_HX8347A_ADDR) | (BOARD_HX8347A_RS)));
 	}
 #else
 	#error "Missing module configuration for HX8347A!"

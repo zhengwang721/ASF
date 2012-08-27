@@ -105,9 +105,9 @@
 
 //! ADC MUX mask
 #if MEGA_XX8
-#	define ADC_MUX_MASK    (1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0)
+#  define ADC_MUX_MASK    (1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0)
 #else
-#	define ADC_MUX_MASK    (1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 | \
+#  define ADC_MUX_MASK    (1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 | \
 		1 << MUX0)
 #endif
 
@@ -123,13 +123,13 @@
  * macro. For device names see /common/utils/parts.h
  */
 #if MEGA_XX || defined(__DOXYGEN__)
-#	include "adc_megaxx.h"
+#  include "adc_megaxx.h"
 #elif MEGA_XX8 || defined(__DOXYGEN__)
-#	include "adc_megaxx8.h"
+#  include "adc_megaxx8.h"
 #elif MEGA_XX0_1 || MEGA_XX4 || defined(__DOXYGEN__)
-#	include "adc_megaxx0_1_4.h"
+#  include "adc_megaxx0_1_4.h"
 #else
-#	error The selected device is not supported by the ADC driver. To add a new\
+#  error The selected device is not supported by the ADC driver. To add a new\
 	device you need to add a family header file, or use an existing one,\
 	and add any missing defines or enums.
 #endif
@@ -404,7 +404,8 @@ static inline uint8_t adc_read_8bit(enum adc_mux_setting input,
 	} else {
 		ADCSRB &= ~(1 << MUX5);
 	}
-	ADMUX = ((uint8_t)input & ADC_MUX_MASK) | (uint8_t)vref | ADC_ADJUSTMENT_LEFT;
+	ADMUX = ((uint8_t)input & ADC_MUX_MASK) | (uint8_t)vref
+		| ADC_ADJUSTMENT_LEFT;
 #else
 	ADMUX = (uint8_t)input | (uint8_t)vref | ADC_ADJUSTMENT_LEFT;
 #endif
@@ -516,7 +517,7 @@ static inline void adc_disable_digital_inputs(uint8_t pinmask)
 #endif
 }
 
-#if MEGA_XX0
+#if MEGA_XX0_1
 /**
  * \brief Disable digital input buffers on ADC pin 8-15
  *
@@ -533,9 +534,9 @@ static inline void adc_disable_digital_inputs(uint8_t pinmask)
  */
 static inline void adc_disable_digital_inputs_high(uint8_t pinmask)
 {
-	DIDR1 = pinmask;
+	DIDR2 = pinmask;
 }
-#endif // MEGA_XX0
+#endif // MEGA_XX0_1
 
 #endif // DIDR
 //@}

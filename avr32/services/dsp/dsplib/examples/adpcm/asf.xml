@@ -11,5 +11,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.adpcm"/>
+		<device-support value="uc3"/>
 	</module>
 </asf>

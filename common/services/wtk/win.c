@@ -107,16 +107,16 @@ struct win_event_queue {
  */
 static bool win_is_visible(const struct win_window *win);
 static void win_draw(
-		const struct win_window *win,
+		struct win_window *win,
 		const struct win_area *dirty_area);
 static void win_draw_parent(
-		const struct win_window *child,
+		struct win_window *child,
 		const struct win_area *dirty_area);
 static void win_draw_contents(
-		const struct win_window *win,
+		struct win_window *win,
 		const struct win_clip_region *clip);
 static void win_draw_child(
-		const struct win_window *child,
+		struct win_window *child,
 		const struct win_clip_region *parent_clip);
 static bool win_translate_area_to_parent(
 		struct win_area *area,
@@ -170,7 +170,7 @@ static struct win_point win_last_pointer_pos;
 /** Frame background bitmap */
 static struct gfx_bitmap win_root_background = {
 	.type = GFX_BITMAP_SOLID,
-	.data.color = GFX_COLOR(0, 0, 0),
+	.data.color = GFX_COLOR_BLACK,
 };
 /** @} */
 
@@ -588,7 +588,7 @@ void win_show(struct win_window *win)
  *
  * \param  win  Pointer to window.
  */
-void win_redraw(const struct win_window *win)
+void win_redraw(struct win_window *win)
 {
 	if (win_is_visible(win)) {
 		const struct win_area *dirty_area = &win->attributes.area;
@@ -961,6 +961,30 @@ void win_grab_pointer(struct win_window *win)
 }
 
 /**
+ * \brief Expands a given area in all directions by a given amount.
+ *
+ * This function expands a given area in all directions by a given amount,
+ * keeping the area's center point fixed in the same location (i.e. the
+ * logical position of the center point does not move). Negative values
+ * can be specified to shrink an area by a given amount.
+ *
+ * Note that the area boundaries are expanded on all sides by the given amount,
+ * thus the size expansion is twice the specified amount.
+ *
+ * \param  area  Pointer to the area to expand.
+ * \param  size  Signed amount to expand the area by.
+ */
+void win_inflate_area(struct win_area* area, int16_t size)
+{
+	Assert(area);
+	
+	area->pos.x -= size;
+	area->pos.y -= size;
+	area->size.x += size * 2;
+	area->size.y += size * 2;
+}
+
+/**
  * \brief Check if point is inside clipping region.
  *
  * This function checks if a point is inside the clipping region. The origin
@@ -1294,7 +1318,7 @@ static bool win_is_visible(const struct win_window *win)
  * \param  win        Window to draw or redraw.
  * \param  dirty_area Area dictating which parts to draw.
  */
-static void win_draw(const struct win_window *win,
+static void win_draw(struct win_window *win,
 		const struct win_area *dirty_area)
 {
 	struct win_clip_region clip;
@@ -1358,7 +1382,7 @@ static void win_draw(const struct win_window *win,
  * \param  child      Child window.
  * \param  dirty_area  The area, given in same coordinate system as the child.
  */
-static void win_draw_parent(const struct win_window *child,
+static void win_draw_parent(struct win_window *child,
 		const struct win_area *dirty_area)
 {
 	struct win_area area = *dirty_area;
@@ -1385,10 +1409,10 @@ static void win_draw_parent(const struct win_window *child,
  * \param  win   The window to draw.
  * \param  clip  Clipping region, in global coordinates.
  */
-static void win_draw_contents(const struct win_window *win,
+static void win_draw_contents(struct win_window *win,
 		const struct win_clip_region *clip)
 {
-	const struct win_window *child;
+	struct win_window *child;
 
 	/* Set screen clipping limits and draw background. */
 	gfx_set_clipping(clip->NW.x, clip->NW.y, clip->SE.x, clip->SE.y);
@@ -1400,7 +1424,7 @@ static void win_draw_contents(const struct win_window *win,
 				clip->origin.y);
 	}
 
-	win_handle_event((struct win_window *)win, WIN_EVENT_DRAW, clip);
+	win_handle_event(win, WIN_EVENT_DRAW, clip);
 
 	/* Draw all visible children, if any. */
 	child = win->top_child;
@@ -1430,7 +1454,7 @@ static void win_draw_contents(const struct win_window *win,
  * \param  child       Child window to draw.
  * \param  parent_clip  Clipping region, in global coordinates.
  */
-static void win_draw_child(const struct win_window *child,
+static void win_draw_child(struct win_window *child,
 		const struct win_clip_region *parent_clip)
 {
 	struct win_clip_region clip;

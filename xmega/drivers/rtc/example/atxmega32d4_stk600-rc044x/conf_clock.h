@@ -43,6 +43,6 @@
 #ifndef CONF_CLOCK_H
 #define CONF_CLOCK_H
 
-/* Intentionally left empty. */
+#define CONFIG_RTC_SOURCE       SYSCLK_RTCSRC_ULP
 
 #endif /* CONF_CLOCK_H */

@@ -5,6 +5,9 @@
 		Initialize the system clock and blink a LED at a constant 1Hz frequency.
 		</info>
 		<build type="c-source" value="delay_example.c"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<device-support value="xmega"/>
 		<require idref="common.services.delay"/>
 	</module>
 </asf>

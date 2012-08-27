@@ -51,11 +51,11 @@
 /*! \name Activation of Logical Unit Numbers
  */
 //! @{
-#define LUN_0                DISABLE    //!< On-Board Virtual Memory.
+#define LUN_0                ENABLE    //!< On-Board Virtual Memory.
 #define LUN_1                DISABLE   //!< AT45DBX Data Flash.
 #define LUN_2                DISABLE   //!< SD/MMC Card over SPI.
 #define LUN_3                DISABLE   //!< SD/MMC Card over MCI Slot 0.
-#define LUN_4                ENABLE
+#define LUN_4                ENABLE    //!< NAND Flash.
 #define LUN_5                DISABLE
 #define LUN_6                DISABLE
 #define LUN_7                DISABLE
@@ -180,7 +180,7 @@
 /*! \name Activation of Interface Features
  */
 //! @{
-#define ACCESS_USB           true    //!< MEM <-> USB interface.
+#define ACCESS_USB           false   //!< MEM <-> USB interface.
 #define ACCESS_MEM_TO_RAM    true    //!< MEM <-> RAM interface.
 #define ACCESS_STREAM        true    //!< Streaming MEM <-> MEM interface.
 #define ACCESS_STREAM_RECORD false   //!< Streaming MEM <-> MEM interface in record mode.

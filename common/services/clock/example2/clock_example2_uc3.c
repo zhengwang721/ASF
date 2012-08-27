@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -129,6 +129,9 @@ int main(void)
 	board_init();
 
 	genclk_enable_config(GCLK_ID, GCLK_SOURCE, GCLK_DIV);
+
+	/* Enable GPIO Alternate to output GCLK*/
+	gpio_enable_module_pin(GCLK_PIN,GCLK_FUNCTION);
 
 	while (1) {
 		/* Do nothing */

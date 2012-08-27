@@ -78,7 +78,7 @@
  * - sam3sd8c_sam3s_ek2
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
- * - sam4s16c_sam4s_ek 
+ * - sam4s16c_sam4s_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -125,14 +125,15 @@ static volatile uint32_t gs_ul_ms_ticks = 0U;
 void PWM_Handler(void)
 {
 	gs_l_pwm_period_int_flag = pwm_channel_get_interrupt_status(PWM) &
-			PWM_UNIT_TEST_CH;
+			(1 << PWM_UNIT_TEST_CH);
 
 #if (SAM3U || SAM3S || SAM3XA || SAM4S)
 	uint32_t status2 = pwm_get_interrupt_status(PWM);
-	gs_l_pwm_comparison_int_flag = (status2 >> 8) & PWM_UNIT_TEST_CMP;
+	gs_l_pwm_comparison_int_flag = (status2 >> 8) & (1 << PWM_UNIT_TEST_CMP);
 	gs_l_pwm_pdc_tx_int_flag = status2 & PWM_ISR2_ENDTX;
 #endif
 }
+
 
 /**
  * \brief SysTick handler.
@@ -211,7 +212,7 @@ static void run_pwm_test(const struct test_case *test)
 
 	/* Configure comparison unit */
 	pwm_cmp_t comparison_unit = {
-		.unit = PWM_UNIT_TEST_CMP,     /* Use PWM_UNIT_TEST_CMP as comparison unit */
+		.unit =  PWM_UNIT_TEST_CMP,     /* Use PWM_UNIT_TEST_CMP as comparison unit */
 		.b_enable = 1,                 /* Enable the comparison unit */
 		.ul_value = PERIOD_VALUE - 1   /* Comparison value = Period value - 1 */
 	};

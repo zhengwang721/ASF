@@ -4,7 +4,7 @@
  *
  * \brief Cycle counter driver.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -83,10 +83,7 @@ typedef struct
  *
  * \return the converted number of CPU cycles.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline uint32_t cpu_ms_2_cy(unsigned long ms, unsigned long fcpu_hz)
+__always_inline static uint32_t cpu_ms_2_cy(unsigned long ms, unsigned long fcpu_hz)
 {
   return ((unsigned long long)ms * fcpu_hz + 999) / 1000;
 }
@@ -100,10 +97,7 @@ static inline uint32_t cpu_ms_2_cy(unsigned long ms, unsigned long fcpu_hz)
  *
  * \return the converted number of CPU cycles.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline uint32_t cpu_us_2_cy(unsigned long us, unsigned long fcpu_hz)
+__always_inline static uint32_t cpu_us_2_cy(unsigned long us, unsigned long fcpu_hz)
 {
   return ((unsigned long long)us * fcpu_hz + 999999) / 1000000;
 }
@@ -117,10 +111,7 @@ static inline uint32_t cpu_us_2_cy(unsigned long us, unsigned long fcpu_hz)
  *
  * \return the converted number of milli-second.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline uint32_t cpu_cy_2_ms(unsigned long cy, unsigned long fcpu_hz)
+__always_inline static uint32_t cpu_cy_2_ms(unsigned long cy, unsigned long fcpu_hz)
 {
   return ((unsigned long long)cy * 1000 + fcpu_hz-1) / fcpu_hz;
 }
@@ -134,10 +125,7 @@ static inline uint32_t cpu_cy_2_ms(unsigned long cy, unsigned long fcpu_hz)
  *
  * \return the converted number of micro-second.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline uint32_t cpu_cy_2_us(unsigned long cy, unsigned long fcpu_hz)
+__always_inline static uint32_t cpu_cy_2_us(unsigned long cy, unsigned long fcpu_hz)
 {
   return ((unsigned long long)cy * 1000000 + fcpu_hz-1) / fcpu_hz;
 }
@@ -155,10 +143,7 @@ static inline uint32_t cpu_cy_2_us(unsigned long cy, unsigned long fcpu_hz)
  * \param  delay:   (input) delay in CPU cycles before timeout.
  * \param  cpu_time: (output) internal information used by the timer API.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void cpu_set_timeout(unsigned long delay, t_cpu_time *cpu_time)
+__always_inline static void cpu_set_timeout(unsigned long delay, t_cpu_time *cpu_time)
 {
   cpu_time->delay_start_cycle = Get_system_register(AVR32_COUNT);
   cpu_time->delay_end_cycle   = cpu_time->delay_start_cycle + delay;
@@ -182,10 +167,7 @@ static inline void cpu_set_timeout(unsigned long delay, t_cpu_time *cpu_time)
  *
  * \return true if timeout occurred, otherwise false.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long cpu_is_timeout(t_cpu_time *cpu_time)
+__always_inline static unsigned long cpu_is_timeout(t_cpu_time *cpu_time)
 {
   unsigned long current_cycle_count = Get_system_register(AVR32_COUNT);
 
@@ -229,10 +211,7 @@ static inline unsigned long cpu_is_timeout(t_cpu_time *cpu_time)
  *
  * \param  cpu_time:   (input) internal information used by the timer API.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void cpu_stop_timeout(t_cpu_time *cpu_time)
+__always_inline static void cpu_stop_timeout(t_cpu_time *cpu_time)
 {
   cpu_time->timer_state = CPU_TIMER_STATE_STOPPED;
 }
@@ -245,10 +224,7 @@ static inline void cpu_stop_timeout(t_cpu_time *cpu_time)
  *
  * \return true if timer is stopped, otherwise false.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long cpu_is_timer_stopped(t_cpu_time *cpu_time)
+__always_inline static unsigned long cpu_is_timer_stopped(t_cpu_time *cpu_time)
 {
 
   if( cpu_time->timer_state==CPU_TIMER_STATE_STOPPED )
@@ -264,10 +240,7 @@ static inline unsigned long cpu_is_timer_stopped(t_cpu_time *cpu_time)
  * \param  delay:   Number of millisecond to wait.
  * \param  fcpu_hz: CPU frequency in Hz.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void cpu_delay_ms(unsigned long delay, unsigned long fcpu_hz)
+__always_inline static void cpu_delay_ms(unsigned long delay, unsigned long fcpu_hz)
 {
   t_cpu_time timer;
   cpu_set_timeout( cpu_ms_2_cy(delay, fcpu_hz), &timer);
@@ -280,10 +253,7 @@ static inline void cpu_delay_ms(unsigned long delay, unsigned long fcpu_hz)
  * \param  delay:   Number of microsecond to wait.
  * \param  fcpu_hz: CPU frequency in Hz.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void cpu_delay_us(unsigned long delay, unsigned long fcpu_hz)
+__always_inline static void cpu_delay_us(unsigned long delay, unsigned long fcpu_hz)
 {
   t_cpu_time timer;
   cpu_set_timeout( cpu_us_2_cy(delay, fcpu_hz), &timer);
@@ -295,10 +265,7 @@ static inline void cpu_delay_us(unsigned long delay, unsigned long fcpu_hz)
  *
  * \param  delay:   Number of CPU cycles to wait.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void cpu_delay_cy(unsigned long delay)
+__always_inline static void cpu_delay_cy(unsigned long delay)
 {
   t_cpu_time timer;
   cpu_set_timeout( delay, &timer);

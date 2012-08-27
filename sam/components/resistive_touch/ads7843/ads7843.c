@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief API driver for component ads7843.
+ * \brief API driver for component ADS7843.
  *
  * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
@@ -41,22 +41,13 @@
  *
  */
 
-/**
- * \defgroup sam_component_rtouch_ads7843_group LCD Touch- ADS7843 Controller
- *
- * Low-level driver for the ADS7843 LCD Touch controller. This driver provides access to the main
- * features of the ADS7843 controller.
- *
- * \{
- */
-
+#include "ads7843.h"
+#include "conf_ads7843.h"
 #include "board.h"
-#include "pio.h"
+#include "gpio.h"
+#include "pio_handler.h"
 #include "spi_master.h"
 #include "conf_spi_master.h"
-#include "rtouch.h"
-#include "conf_rtouch.h"
-#include "conf_ads7843.h"
 
 #define ADS_CTRL_PD0              (1 << 0)  /* PD0 */
 #define ADS_CTRL_PD1              (1 << 1)  /* PD1 */
@@ -75,6 +66,10 @@
 #define CMD_ENABLE_PENIRQ  ((1 << ADS_CTRL_SWITCH_SHIFT) | ADS_CTRL_START)
 
 #define ADS7843_TIMEOUT        5000000
+#define ADS7843_BUFSIZE           3
+
+/* Frequence rate for sending one bit */
+#define ADS7843_SPI_BAUDRATE      1000000
 
 #define DELAY_BEFORE_SPCK          200  /* 2us min (tCSS) <=> 200/100 000 000 = 2us */
 #define DELAY_BETWEEN_CONS_COM     0xf  /* 5us min (tCSH) <=> (32 * 15) / (100 000 000) = 5us */
@@ -87,14 +82,12 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#define ADS7843_BUFSIZE 3
-
 /**
- * \brief Generic function to send a command to the touchscreen controller.
+ * \brief Send a command to the ADS7843 touch controller.
  *
- * \param uc_cmd command to send
+ * \param uc_cmd command to send.
  *
- * \return command result
+ * \return Command result.
  */
 static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 {
@@ -102,7 +95,7 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	volatile uint32_t i;
 	uint8_t data;
 
-	/* (volatile declaration needed for code optimization by compiler) */
+	/* (volatile declaration needed for code optimisation by compiler) */
 	volatile uint8_t bufferRX[ADS7843_BUFSIZE];
 	volatile uint8_t bufferTX[ADS7843_BUFSIZE];
 
@@ -115,10 +108,10 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	bufferTX[2] = 0;
 
 	for(i = 0; i < ADS7843_BUFSIZE; i++){
-		spi_write_single(ADS7843_SPI_INTERFACE, bufferTX[i]);
+		spi_write_single(BOARD_ADS7843_SPI_BASE, bufferTX[i]);
 	}
 	for(i = 0; i < ADS7843_BUFSIZE; i++){
-		spi_read_single(ADS7843_SPI_INTERFACE, &data);
+		spi_read_single(BOARD_ADS7843_SPI_BASE, &data);
 		bufferRX[i] = data;
 	}
 
@@ -129,60 +122,69 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	return uResult;
 }
 
-/**
- * \brief Get position of the pen from the ADS7843 controller through SPI.
- *
- * \param px_pos pointer to the horizontal position
- * \param py_pos pointer to the vertical position
- *
- */
-static void ads7843_get_position(rtouch_point_t *p_point)
+uint32_t ads7843_is_pressed(void)
 {
+	return gpio_pin_is_low(BOARD_ADS7843_IRQ_GPIO);
+}
+
+void ads7843_set_handler(void (*p_handler) (uint32_t, uint32_t))
+{
+	/* Initialize interrupts */
+	pio_handler_set_pin(BOARD_ADS7843_IRQ_GPIO,
+			BOARD_ADS7843_IRQ_FLAGS,
+			(void (*)(uint32_t, uint32_t)) p_handler
+			);
+
+	/* Enable the interrupt */
+	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
+}
+
+void ads7843_enable_interrupt(void)
+{
+	/* Enable the interrupt */
+	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
+}
+
+void ads7843_disable_interrupt(void)
+{
+	/* Disable the interrupt */
+	pio_disable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
+}
+
+void ads7843_get_raw_point(uint32_t *p_x, uint32_t *p_y)
+{
+	/* Disable interrupt to quickly evaluate the coordinates */
+	pio_disable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
+	
 	/* Get X position */
-	p_point->x = ads7843_send_cmd(CMD_X_POSITION);
+	*p_x = ads7843_send_cmd(CMD_X_POSITION);
 
 	/* Get Y position */
-	p_point->y = ads7843_send_cmd(CMD_Y_POSITION);
+	*p_y = ads7843_send_cmd(CMD_Y_POSITION);
 
 	/* Switch to full power mode */
 	ads7843_send_cmd(CMD_ENABLE_PENIRQ);
+
+	/* Re-enable interrupt */
+	pio_enable_pin_interrupt(BOARD_ADS7843_IRQ_GPIO);
 }
 
-/**
- * \brief Reads and store a touchscreen measurement in the provided array.
- *
- * \param p_point  Array where the measurements will be stored
- */
-void rtouch_get_raw_point(rtouch_point_t *p_point)
-{
-	/* Get the current position of the pressed pen */
-	pio_disable_interrupt(RTOUCH_PIN_TSC_IRQ_PIO, RTOUCH_PIN_TSC_IRQ_MASK);
-	ads7843_get_position(p_point);
-	pio_enable_interrupt(RTOUCH_PIN_TSC_IRQ_PIO, RTOUCH_PIN_TSC_IRQ_MASK);
-}
-
-/* frequency rate for sending one bit */
-#define ADS7843_SPI_BAUDRATE 1000000
-
-/**
- * \brief Initialization of the SPI for communication with ADS7843 component.
- */
-uint32_t rtouch_init_device(void)
+uint32_t ads7843_init(void)
 {
 	volatile uint32_t uDummy;
-	struct spi_device ADS7843_SPI_DEVICE = {
+	struct spi_device ADS7843_SPI_DEVICE_CFG = {
 		// Board specific chip select configuration
-#ifdef BOARD_TSC_NPCS
-		.id = BOARD_TSC_NPCS
+#ifdef BOARD_ADS7843_SPI_NPCS
+		.id = BOARD_ADS7843_SPI_NPCS
 #else
 #warning The board TouchScreen chip select definition is missing. Default configuration is used.
 		.id = 0
 #endif
 	};
 
-	spi_master_init(ADS7843_SPI_INTERFACE);
-	spi_master_setup_device(ADS7843_SPI_INTERFACE, &ADS7843_SPI_DEVICE, SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
-	spi_enable(ADS7843_SPI_INTERFACE);
+	spi_master_init(BOARD_ADS7843_SPI_BASE);
+	spi_master_setup_device(BOARD_ADS7843_SPI_BASE, &ADS7843_SPI_DEVICE_CFG, SPI_MODE_0, ADS7843_SPI_BAUDRATE, 0);
+	spi_enable(BOARD_ADS7843_SPI_BASE);
 
 	for (uDummy = 0; uDummy < 100000; uDummy++) {
 	}

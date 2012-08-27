@@ -10,6 +10,7 @@
 		<build type="header-file" value="adc_oversampling.h"/>
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="required-header-file" value="conf_oversampling.h"/>
+		<device-support value="xmegaa3bu"/>
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="common.boards"/>

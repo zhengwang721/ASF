@@ -3,7 +3,7 @@
  *
  * \brief This file contains the default exception handlers.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,20 +87,32 @@ void UART0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void UART1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOA_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOB_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_PIOC
 void PIOC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void USART0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_USART1
 void USART1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void TWI0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TWI1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void SPI_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC2_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_TC3
 void TC3_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef ID_TC4
 void TC4_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef ID_TC5
 void TC5_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void ADC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_DACC
 void DACC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void PWM_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #endif /* __GNUC__ */
 
@@ -129,20 +141,32 @@ void PWM_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #pragma weak UART1_Handler=Dummy_Handler
 #pragma weak PIOA_Handler=Dummy_Handler
 #pragma weak PIOB_Handler=Dummy_Handler
+#ifdef ID_PIOC
 #pragma weak PIOC_Handler=Dummy_Handler
+#endif
 #pragma weak USART0_Handler=Dummy_Handler
+#ifdef ID_USART1
 #pragma weak USART1_Handler=Dummy_Handler
+#endif
 #pragma weak TWI0_Handler=Dummy_Handler
 #pragma weak TWI1_Handler=Dummy_Handler
 #pragma weak SPI_Handler=Dummy_Handler
 #pragma weak TC0_Handler=Dummy_Handler
 #pragma weak TC1_Handler=Dummy_Handler
 #pragma weak TC2_Handler=Dummy_Handler
+#ifdef ID_TC3
 #pragma weak TC3_Handler=Dummy_Handler
+#endif
+#ifdef ID_TC4
 #pragma weak TC4_Handler=Dummy_Handler
+#endif
+#ifdef ID_TC5
 #pragma weak TC5_Handler=Dummy_Handler
+#endif
 #pragma weak ADC_Handler=Dummy_Handler
+#ifdef ID_DACC
 #pragma weak DACC_Handler=Dummy_Handler
+#endif
 #pragma weak PWM_Handler=Dummy_Handler
 #endif /* __ICCARM__ */
 

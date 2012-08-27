@@ -216,7 +216,9 @@ int main(void)
 {
 	uint32_t wdt_mode, timeout_value;
 
-	SystemInit();
+	/* Initilize the system */
+	sysclk_init();
+	board_init();
 
 	/* Configure pins of console UART, LED and push button on board. */
 	configure_console();

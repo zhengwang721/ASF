@@ -10,7 +10,7 @@
  * - Boards:             EVK1100
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,8 @@
 #include <time.h>
 
 #include "FreeRTOS.h"
+
+#include "shell.h"
 
 #include "supervisor.h"
 

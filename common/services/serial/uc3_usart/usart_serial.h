@@ -81,35 +81,10 @@ static inline bool usart_serial_init(volatile avr32_usart_t *usart,
 {
 	// USART options.
 	opt->channelmode = CONFIG_USART_SERIAL_MODE;
-#if (defined(AVR32_USART0_ADDRESS))
-	if ((uint32_t)usart == AVR32_USART0_ADDRESS)
-	{
-		sysclk_enable_pba_module(SYSCLK_USART0);
-	}
-#endif
-#if (defined(AVR32_USART1_ADDRESS))
-	if ((uint32_t)usart == AVR32_USART1_ADDRESS)
-	{
-#if UC3C
-		sysclk_enable_pbc_module(SYSCLK_USART1);
-#else
-		sysclk_enable_pba_module(SYSCLK_USART1);
-#endif
-	}
-#endif
-#if (defined(AVR32_USART2_ADDRESS))
-	if ((uint32_t)usart == AVR32_USART2_ADDRESS)
-	{
-		sysclk_enable_pba_module(SYSCLK_USART2);
-	}
-#endif
-#if (defined(AVR32_USART3_ADDRESS))
-	if ((uint32_t)usart == AVR32_USART3_ADDRESS)
-	{
-		sysclk_enable_pba_module(SYSCLK_USART3);
-	}
-#endif
-	if (usart_init_rs232(usart, opt, sysclk_get_pba_hz())) {
+
+	sysclk_enable_peripheral_clock(usart);
+
+	if (usart_init_rs232(usart, opt, sysclk_get_peripheral_bus_hz(usart))) {
 		return true;
 	}
 	else {

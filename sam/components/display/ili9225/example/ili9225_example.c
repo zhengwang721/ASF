@@ -117,8 +117,8 @@ int main(void)
 	configure_console();
 
 	/* Initialize display parameter */
-	g_ili9225_display_opt.ul_width = BOARD_LCD_WIDTH;
-	g_ili9225_display_opt.ul_height = BOARD_LCD_HEIGHT;
+	g_ili9225_display_opt.ul_width = ILI9225_LCD_WIDTH;
+	g_ili9225_display_opt.ul_height = ILI9225_LCD_HEIGHT;
 	g_ili9225_display_opt.foreground_color = COLOR_BLACK;
 	g_ili9225_display_opt.background_color = COLOR_WHITE;
 
@@ -136,7 +136,7 @@ int main(void)
 
 	/* Draw filled rectangle with white color */
 	ili9225_set_foreground_color(COLOR_WHITE);
-	ili9225_draw_filled_rectangle(0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT);
+	ili9225_draw_filled_rectangle(0, 0, ILI9225_LCD_WIDTH, ILI9225_LCD_HEIGHT);
 
 	/* Draw text and basic shapes on the LCD */
 	ili9225_set_foreground_color(COLOR_BLACK);

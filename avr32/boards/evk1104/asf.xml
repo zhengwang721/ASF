@@ -16,12 +16,13 @@
 		</module>
 		<module type="meta" id="config.board.evk1104.init#yes" caption="EVK1104 initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.evk1104" caption="EVK1104" mcu="at32uc3a3256">
+	<board id="board.evk1104" vendor="Atmel" caption="EVK1104" mcu="at32uc3a3256">
 		<build type="define" name="BOARD" value="EVK1104"/>
 		<build type="header-file" value="evk1104.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -31,7 +32,7 @@
 		<require idref="config.board.evk1104.led"/>
 		<require idref="config.board.evk1104.init"/>
 	</board>
-	<board id="board.evk1104s" caption="EVK1104S" mcu="at32uc3a3256s">
+	<board id="board.evk1104s" vendor="Atmel" caption="EVK1104S" mcu="at32uc3a3256s">
 		<build type="define" name="BOARD" value="EVK1104"/>
 		<build type="header-file" value="evk1104.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

@@ -5,6 +5,7 @@
 		<build type="header-file" subtype="api" value="user_board.h"/>
 		<build type="c-source" value="init.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<require idref="common.boards"/>
 	</module>
 

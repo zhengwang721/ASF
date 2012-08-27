@@ -3,7 +3,7 @@
  *
  * \brief Monochrome graphic library NULL display device with framebuffer
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
  * @{
  */
 
-// Memory for the framebuffer
+/* Memory for the framebuffer */
 static uint8_t framebuffer[GFX_MONO_LCD_FRAMEBUFFER_SIZE];
 
 /**

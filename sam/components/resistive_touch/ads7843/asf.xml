@@ -4,13 +4,14 @@
 			Low-level driver for the ADS7843 LCD Touch controller.
 			</info>
 			<build type="c-source" value="ads7843.c"/>
+			<build type="header-file" subtype="api" value="ads7843.h"/>
 			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="sam_component_rtouch_ads7843_group"/>
-			<device-support value="sam3"/>
+			<build type="doxygen-entry-point" value="sam_component_ads7843_group"/>
+			<device-support value="sam"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 			<build type="module-config" subtype="required-header-file" value="conf_ads7843.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
-			<require idref="sam.components.resistive_touch"/>
 			<require idref="common.services.basic.spi_master"/>
+			<require idref="common.services.basic.gpio"/>
 		</module>
 </asf>

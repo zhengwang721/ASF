@@ -3,7 +3,7 @@
  *
  * \brief XMEGA timeout example 2
  *
- * Copyright (C) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,6 +99,7 @@ int main( void )
 	board_init();
 	pmic_init();
 	timeout_init();
+	cpu_irq_enable();
 
 	bool button_pressed;
 	bool button_previous_state_pressed = false;

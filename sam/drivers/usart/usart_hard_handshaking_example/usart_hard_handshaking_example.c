@@ -118,7 +118,7 @@
 #define MAX_BPS             500
 
 /** Size of the receive buffer used by the PDC, in bytes. */
-#define BUFFER_SIZE         128
+#define BUFFER_SIZE         125
 
 /** All interrupt mask. */
 #define ALL_INTERRUPT_MASK  0xffffffff
@@ -138,13 +138,19 @@ volatile uint32_t g_ul_bytes_received = 0;
 uint8_t g_uc_buffer;
 
 /** PDC data packet. */
-pdc_packet_t g_st_packet = { (uint32_t)&g_uc_buffer, 1 };
+pdc_packet_t g_st_packet, g_st_nextpacket;
 
 /** Pointer to PDC register base. */
 Pdc *g_p_pdc;
 
 /** String g_uc_buffer. */
 uint8_t g_puc_string[BUFFER_SIZE];
+
+/** Receive buffer. */
+static uint8_t gs_puc_buffer[BUFFER_SIZE],gs_puc_nextbuffer[BUFFER_SIZE];
+
+/** Dump buffer. */
+static uint8_t gs_dump_buffer[BUFFER_SIZE];
 
 /**
  *  \brief Interrupt handler for USART.
@@ -164,14 +170,19 @@ void USART_Handler(void)
 
 	/* Receive buffer is full. */
 	if (ul_status & US_CSR_RXBUFF) {
-		g_ul_bytes_received += 1;
+		g_ul_bytes_received += 2 * BUFFER_SIZE;
 		if (g_ul_bytes_received < MAX_BPS) {
 			/* Restart transfer if BPS is not high enough. */
-			pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+			g_st_packet.ul_addr = (uint32_t)gs_puc_buffer;
+			g_st_packet.ul_size = BUFFER_SIZE;
+			g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer;
+			g_st_nextpacket.ul_size = BUFFER_SIZE;
+			pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 		} else {
 			/* Otherwise disable interrupt. */
 			usart_disable_interrupt(BOARD_USART, US_IDR_RXBUFF);
 		}
+		memcpy(gs_dump_buffer, gs_puc_buffer, BUFFER_SIZE);
 	}
 	tc_start(TC0, 0);
 }
@@ -193,6 +204,22 @@ void TC0_Handler(void)
 
 	/* RC compare. */
 	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS) {
+		if((pdc_read_rx_counter(g_p_pdc) != 0) &&
+				(pdc_read_rx_counter(g_p_pdc) != BUFFER_SIZE)) {
+			if(pdc_read_rx_next_counter(g_p_pdc) == 0) {
+				g_ul_bytes_received += (2 * BUFFER_SIZE - pdc_read_rx_counter(g_p_pdc));
+			} else {
+				g_ul_bytes_received += (BUFFER_SIZE - pdc_read_rx_counter(g_p_pdc));
+			}
+			memset(gs_dump_buffer, 0, BUFFER_SIZE);
+			memcpy(gs_dump_buffer, gs_puc_buffer, BUFFER_SIZE -
+					pdc_read_rx_counter(g_p_pdc));
+		} else if((pdc_read_rx_counter(g_p_pdc) == BUFFER_SIZE) &&
+				(pdc_read_rx_next_counter(g_p_pdc) == 0)) {
+			g_ul_bytes_received += BUFFER_SIZE;
+			memcpy(gs_dump_buffer, gs_puc_buffer, BUFFER_SIZE);
+		}
+
 		/* Display info. */
 		bytes_total += g_ul_bytes_received;
 		memset(g_puc_string, 0, BUFFER_SIZE);
@@ -200,12 +227,14 @@ void TC0_Handler(void)
 				(unsigned long)g_ul_bytes_received,
 				(unsigned long)bytes_total);
 		usart_write_line(BOARD_USART, (char *)g_puc_string);
-
-		/* Resume transfer if needed. */
-		if (g_ul_bytes_received >= MAX_BPS) {
-			pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+		/* Resume transfer */
+		g_st_packet.ul_addr = (uint32_t)gs_puc_buffer;
+		g_st_packet.ul_size = BUFFER_SIZE;
+		g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer;
+		g_st_nextpacket.ul_size = BUFFER_SIZE;
+		pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 			usart_enable_interrupt(BOARD_USART, US_IER_RXBUFF);
-		}
+
 		g_ul_bytes_received = 0;
 	}
 }
@@ -302,6 +331,9 @@ static void configure_console(void)
  */
 int main(void)
 {
+	uint8_t uc_char;
+	uint8_t uc_flag;
+
 	/* Initialize the system. */
 	sysclk_init();
 	board_init();
@@ -320,7 +352,11 @@ int main(void)
 
 	/* Get board USART PDC base address and enable receiver. */
 	g_p_pdc = usart_get_pdc_base(BOARD_USART);
-	pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+	g_st_packet.ul_addr = (uint32_t)gs_puc_buffer;
+	g_st_packet.ul_size = BUFFER_SIZE;
+	g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer;
+	g_st_nextpacket.ul_size = BUFFER_SIZE;
+	pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 	pdc_enable_transfer(g_p_pdc, PERIPH_PTCR_RXTEN);
 
 	usart_enable_interrupt(BOARD_USART, US_IER_RXBUFF);
@@ -329,5 +365,17 @@ int main(void)
 	tc_start(TC0, 0);
 
 	while (1) {
+		uc_char = 0;
+		uc_flag = uart_read(CONSOLE_UART, &uc_char);
+		if (!uc_flag) {
+			switch (uc_char) {
+			case 'd':
+			case 'D':
+				usart_write_line(BOARD_USART, (char *)gs_dump_buffer);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }

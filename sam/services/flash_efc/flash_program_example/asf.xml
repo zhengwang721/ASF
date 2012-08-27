@@ -4,6 +4,7 @@
 		Demostrate how to program the internal flash, and manage secure and lock bits.
 		</info>	
 		<build type="c-source" value="flash_program_example.c"/>
+		<device-support value="sam"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.uart"/>

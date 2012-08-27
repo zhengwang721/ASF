@@ -175,7 +175,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		self._insert_state_elements(self.project_root_element, "CCDefines", self.define_list)
 		self._insert_state_elements(self.project_root_element, "ADefines", self.define_list)
 		self._insert_state_elements(self.project_root_element, "CCIncludePath2", self.include_path_list)
-		self._insert_state_elements(self.project_root_element, "AIncludePaths", self.include_path_list)
+		self._insert_state_elements(self.project_root_element, "AUserIncludes", self.include_path_list)
 		self._insert_single_state_element(self.project_root_element, "IlinkIcfFile", self.linker_script)
 
 		# Fill workspace options.

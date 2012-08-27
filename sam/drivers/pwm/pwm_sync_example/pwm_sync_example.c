@@ -61,9 +61,10 @@
  *
  * -# Initialize system clock and pins setting on board
  * -# Initialize PWM clock
- * -# Configure PIN_PWM_LED0_CHANNEL and PIN_PWM_LED1_CHANNEL
+ * -# Configure PIN_PWM_LED0_CHANNEL
+ * -# Configure PIN_PWM_LED1_CHANNEL
  * -# Configure PDC transfer for PWM duty cycle update
- * -# Enable interrupt of PDC Tx end and PWM_CHANNEL_0
+ * -# Enable interrupt of PDC Tx end and PIN_PWM_LED0_CHANNEL
  * -# Update synchronous period, dead time and override output via UART Console
  * -# Restart PDC transfer in ISR
  *
@@ -74,6 +75,14 @@
 
 /** Baud rate of console UART */
 #define CONSOLE_BAUD_RATE  115200
+
+/*
+In PWM synchronisation mode the channel0 is used as reference channel so it is
+necessary to disable, configure and enable it.
+*/
+#if ((PIN_PWM_LED1_CHANNEL != 0) && (PIN_PWM_LED0_CHANNEL != 0))
+#define PWM_CHANNEL0_REF
+#endif
 
 /** PWM frequency in Hz */
 #define PWM_FREQUENCY  50
@@ -196,7 +205,7 @@ int main(void)
 	sysclk_init();
 	board_init();
 
-	/* Configure the console uart for debug information */
+	/* Configure the console uart for debug infomation */
 	configure_console();
 
 	/* Output example information */
@@ -205,9 +214,13 @@ int main(void)
 	/* Enable PWM peripheral clock */
 	pmc_enable_periph_clk(ID_PWM);
 
-	/* Disable PWM channels for LED0 and LED1 */
+	/* Disable PWM channel of LED1 and LED0 */
 	pwm_channel_disable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_disable(PWM, PIN_PWM_LED1_CHANNEL);
+
+	#ifdef PWM_CHANNEL0_REF
+	pwm_channel_disable(PWM, 0);
+	#endif
 
 	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t clock_setting = {
@@ -238,12 +251,17 @@ int main(void)
 		.output_selection.b_override_pwml = false  /* Disable override PWML outputs */
 	};
 
-	/* Initialize the PWM channel for LED0 */
-	sync_channel.channel = PIN_PWM_LED0_CHANNEL;
+	#ifdef PWM_CHANNEL0_REF
+	sync_channel.channel = 0;
+	pwm_channel_init(PWM, &sync_channel);
+	#endif
+
+	/* Initialize PWM channel of LED1 */
+	sync_channel.channel = PIN_PWM_LED1_CHANNEL;
 	pwm_channel_init(PWM, &sync_channel);
 
-	/* Initialize the PWM channel for LED1 */
-	sync_channel.channel = PIN_PWM_LED1_CHANNEL;
+	/* Initialize PWM channel of LED2 */
+	sync_channel.channel = PIN_PWM_LED0_CHANNEL;
 	pwm_channel_init(PWM, &sync_channel);
 
 	/*
@@ -259,7 +277,7 @@ int main(void)
 	 * Request PDC transfer as soon as the synchronous update period elapses
 	 * (comparison unit is ignored).
 	 */
-	pwm_pdc_set_request_mode(PWM, PWM_PDC_UPDATE_PERIOD_ELAPSED, PWM_CMP_UNIT_0);
+	pwm_pdc_set_request_mode(PWM, PWM_PDC_UPDATE_PERIOD_ELAPSED, (1 << 0));
 
 	/* Configure interrupt for PDC transfer */
 	NVIC_DisableIRQ(PWM_IRQn);
@@ -283,7 +301,11 @@ int main(void)
 	pdc_enable_transfer(PDC_PWM, PERIPH_PTCR_TXTEN);
 
 	/* Enable all synchronous channels by enabling channel 0 */
-	pwm_channel_enable(PWM, PWM_CHANNEL_0);
+	#ifdef PWM_CHANNEL0_REF
+	pwm_channel_enable(PWM, 0);
+	#endif
+	pwm_channel_enable(PWM, PIN_PWM_LED0_CHANNEL);
+	pwm_channel_enable(PWM, PIN_PWM_LED1_CHANNEL);
 
 	while (1) {
 		display_menu();

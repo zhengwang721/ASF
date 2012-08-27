@@ -3,7 +3,7 @@
  *
  * \brief Generic monochrome LCD graphic primitives
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,20 +71,20 @@
  * \brief Storage structure for bitmap pixel data and metadata
  */
 struct gfx_mono_bitmap {
-    //! Width of bitmap
-    gfx_coord_t                            width;
-    //! Height of bitmap
-    gfx_coord_t                            height;
-    //! Bitmap type
-    enum gfx_mono_bitmap_type              type;
-    union {
-        //! Pointer to pixels for bitmap stored in RAM
-        gfx_mono_color_t                       *pixmap;
-        //! Pointer to pixels for bitmap stored in progmem
-        gfx_mono_color_t PROGMEM_T             *progmem;
-    } data;
+	/** Width of bitmap */
+	gfx_coord_t width;
+	/** Height of bitmap */
+	gfx_coord_t height;
+	/** Bitmap type */
+	enum gfx_mono_bitmap_type type;
+	union {
+		/** Pointer to pixels for bitmap stored in RAM */
+		gfx_mono_color_t *pixmap;
+		/** Pointer to pixels for bitmap stored in progmem */
+		gfx_mono_color_t PROGMEM_T *progmem;
+	}
+	data;
 };
-
 
 void gfx_mono_generic_draw_horizontal_line(gfx_coord_t x, gfx_coord_t y,
 		gfx_coord_t length, enum gfx_mono_color color);
@@ -115,6 +115,6 @@ void gfx_mono_generic_draw_filled_circle(gfx_coord_t x, gfx_coord_t y,
 void gfx_mono_generic_put_bitmap(struct gfx_mono_bitmap *bitmap, gfx_coord_t x,
 		gfx_coord_t y);
 
-//! @}
+/** @} */
 
 #endif /* GFX_MONO_GENERIC */

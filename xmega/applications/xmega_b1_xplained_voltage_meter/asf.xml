@@ -8,6 +8,7 @@
 		<build type="header-file" value="ui.h"/>
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
+		<device-support value="xmegab1"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="xmega.drivers.tc"/>

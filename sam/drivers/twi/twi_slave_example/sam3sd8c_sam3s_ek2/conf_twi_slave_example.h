@@ -54,7 +54,5 @@
 #define BOARD_ID_TWI_SLAVE          ID_TWI0
 /** TWI Base for TWI SLAVE application to use */
 #define BOARD_BASE_TWI_SLAVE        TWI0
-/** TWI pins for TWI SLAVE application to use */
-#define BOARD_PINS_TWI_SLAVE        PINS_TWI01
 
 #endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

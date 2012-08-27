@@ -52,7 +52,7 @@
  * - calculator.c: main example implementation
  * - widget_gui.c : display GUI creation and event handling
  * - widget_gui.h : header for the GUI management routines
- * - atmel_logo.h : Atmel logo for output to the display
+ * - atmel_logo_small.h : Atmel logo for output to the display
  * - conf_board.h: board configuration
  * - conf_clock.h: system clock driver configuration
  * - conf_ili9341.h: display driver configuration
@@ -105,7 +105,7 @@
 
 #include <asf.h>
 #include "widget_gui.h"
-#include "atmel_logo.h"
+#include "atmel_logo_small.h"
 
 /** Address of the mXT143E on TWI bus */
 #define MAXTOUCH_TWI_ADDRESS  0x4a
@@ -208,12 +208,89 @@ static void setup_gui_root_window(void)
 
 	win_root = win_get_root();
 	root_attr = *win_get_attributes(win_root);
-	root_attr.background = &atmel_logo;
+	root_attr.background = &atmel_logo_small;
 	win_set_attributes(win_root, &root_attr, WIN_ATTR_BACKGROUND);
 
 	win_show(win_root);
 }
 
+/**
+ * \brief Show an out of memory error on the display
+ *
+ * Shows a full screen error when called, signaling that the system
+ * ran out of memory when initializing a WTK application.
+ */
+static void show_out_of_memory_error(void)
+{
+	const char memory_string[] = "OUT OF MEMORY";
+	gfx_coord_t disp_width, disp_height;
+	gfx_coord_t str_x, str_y;
+
+	/* Get the display width and height */
+	disp_width = gfx_get_width();
+	disp_height = gfx_get_height();
+
+	/* Determine the X,Y coordinates of the error string when centered */
+	gfx_get_string_bounding_box(memory_string, &sysfont, &str_x, &str_y);
+	str_x = (disp_width / 2) - (str_x / 2);
+	str_y = (disp_height / 2) - (str_y / 2);
+
+	/* Blank display, show out of memory error text */
+	gfx_set_clipping(0, 0, disp_width, disp_height);
+	gfx_draw_filled_rect(0, 0, disp_width, disp_height, GFX_COLOR_BLACK);
+	gfx_draw_string(memory_string, str_x, str_y, &sysfont,
+			GFX_COLOR_TRANSPARENT, GFX_COLOR_RED);
+}
+
+/**
+ * \brief Convert touch events from the touchscreen into window pointer events
+ *
+ * Reads touch events in from the touchscreen and converts them into a
+ * Window Manager pointer event, for enqueuing into the window event queue.
+ *
+ * \return Boolean true if a touch event was read, false if no touch event
+ *         or a corrupt touch event was received
+ */
+static bool read_touch_event(struct mxt_device *device,
+		struct win_pointer_event *win_touch_event)
+{
+	struct mxt_touch_event touch_event;
+
+	/* Abort if no touch event is pending */
+	if (!(mxt_is_message_pending(device))) {
+		return false;
+	}
+	
+	/* Get the first touch event in queue */
+	if (mxt_read_touch_event(device, &touch_event) != STATUS_OK) {
+		return false;
+	}
+
+	/* Translate touch event type into a WTK event type */
+	if (touch_event.status & MXT_PRESS_EVENT) {
+		win_touch_event->type = WIN_POINTER_PRESS;
+	} else if (touch_event.status & MXT_MOVE_EVENT) {
+		win_touch_event->type = WIN_POINTER_MOVE;
+	} else if (touch_event.status & MXT_RELEASE_EVENT) {
+		win_touch_event->type = WIN_POINTER_RELEASE;
+	} else {
+		return false;
+	}
+
+	/* Indicate the touch event is a non-relative movement with the virtual
+	 * touch button pressed
+	 */
+	win_touch_event->is_relative = false;
+	win_touch_event->buttons = WIN_TOUCH_BUTTON;
+
+	/* Translate the touch X and Y position into a screen coordinate */
+	win_touch_event->pos.x =
+			((uint32_t)touch_event.x * gfx_get_width()) / 4096;
+	win_touch_event->pos.y =
+			((uint32_t)touch_event.y * gfx_get_height()) / 4096;
+			
+	return true;
+}
 
 /**
  * \brief Main application function
@@ -239,51 +316,23 @@ int main(void)
 	membag_init();
 
 	gfx_init();
-
+	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
+	
 	mxt_init(&device);
 	win_init();
 
 	setup_gui_root_window();
 	win_reset_root_geometry();
-	app_widget_launch();
+	if (app_widget_launch() == false) {
+		show_out_of_memory_error();
+		for (;;);
+	}
 
 	while (true) {
-		/* Process received messages from the maXTouch device */
-		while (mxt_is_message_pending(&device)) {
-			struct mxt_touch_event touch_event;
-			struct win_pointer_event win_touch_event;
-
-			/* Get the first touch event in queue */
-			if (mxt_read_touch_event(&device,
-					&touch_event) != STATUS_OK) {
-				continue;
-			}
-
-			/* Translate touch event type into a WTK event type */
-			if (touch_event.status & MXT_PRESS_EVENT) {
-				win_touch_event.type = WIN_POINTER_PRESS;
-			} else if (touch_event.status & MXT_MOVE_EVENT) {
-				win_touch_event.type = WIN_POINTER_MOVE;
-			} else if (touch_event.status & MXT_RELEASE_EVENT) {
-				win_touch_event.type = WIN_POINTER_RELEASE;
-			} else {
-				continue;
-			}
-
-			/* Indicate the touch event is a non-relative movement
-			 * with the virtual touch button pressed
-			 */
-			win_touch_event.is_relative = false;
-			win_touch_event.buttons = WIN_TOUCH_BUTTON;
-
-			/* Translate the touch X and Y position into a screen
-			 * coordinate
-			 */
-			win_touch_event.pos.x = ((uint32_t)touch_event.y
-					* gfx_get_width()) / 4096;
-			win_touch_event.pos.y = gfx_get_height()
-					- (((uint32_t)touch_event.x
-					* gfx_get_height()) / 4096);
+		struct win_pointer_event win_touch_event;
+	
+		/* Queue touch events from the touchscreen if any are available */
+		while (read_touch_event(&device, &win_touch_event)) {
 			win_queue_pointer_event(&win_touch_event);
 		}
 

@@ -176,8 +176,8 @@ uint32_t usart_init_iso7816(Usart *p_usart, const usart_iso7816_opt_t *p_usart_o
 uint32_t usart_init_spi_master(Usart *p_usart, const usart_spi_opt_t *p_usart_opt, uint32_t ul_mck);
 uint32_t usart_init_spi_slave(Usart *p_usart, const usart_spi_opt_t *p_usart_opt);
 #if SAM3XA
-uint32_t usart_init_lin_master(Usart *p_usart, const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
-uint32_t usart_init_lin_slave(Usart *p_usart, const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
+uint32_t usart_init_lin_master(Usart *p_usart, uint32_t ul_baudrate, uint32_t ul_mck);
+uint32_t usart_init_lin_slave(Usart *p_usart, uint32_t ul_baudrate, uint32_t ul_mck);
 void usart_lin_abort_tx(Usart *p_usart);
 void usart_lin_send_wakeup_signal(Usart *p_usart);
 void usart_lin_set_node_action(Usart *p_usart, uint8_t uc_action);
@@ -195,6 +195,7 @@ void usart_lin_disable_pdc_mode(Usart *p_usart);
 void usart_lin_enable_pdc_mode(Usart *p_usart);
 void usart_lin_set_tx_identifier(Usart *p_usart, uint8_t uc_id);
 uint8_t usart_lin_read_identifier(Usart *p_usart);
+uint8_t usart_lin_get_data_length(Usart *usart);
 #endif
 void usart_enable_tx(Usart *p_usart);
 void usart_disable_tx(Usart *p_usart);

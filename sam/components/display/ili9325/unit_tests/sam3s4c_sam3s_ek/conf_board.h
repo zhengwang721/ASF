@@ -44,6 +44,9 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* Indicates board has an AAT3155 external component to control LCD backlight */
+#define CONF_BOARD_AAT3155
+
 /* Indicates board has an ILI9325 external component to control LCD */
 #define CONF_BOARD_ILI9325
 

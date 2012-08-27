@@ -147,11 +147,11 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 void ui_init(void)
 {
 	// Enable PIO clock for button inputs
-	pmc_enable_periph_clk(ID_PIOB);
+	pmc_enable_periph_clk(ID_PIOC);
 	pmc_enable_periph_clk(ID_PIOD);
 	// Set handler for wakeup
 	pio_handler_set(WAKEUP_PIO, WAKEUP_PIO_ID, WAKEUP_PIO_MASK, WAKEUP_PIO_ATTR, ui_wakeup_handler);
-	// Enable IRQ for button (PIOB)
+	// Enable IRQ for button (PIOC and PIOD)
 	NVIC_EnableIRQ((IRQn_Type) WAKEUP_PIO_ID);
 	// Initialize LEDs
 	LED_On(LED0_GPIO);

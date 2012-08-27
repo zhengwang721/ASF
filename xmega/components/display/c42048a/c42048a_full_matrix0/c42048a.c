@@ -3,7 +3,7 @@
  *
  * \brief Management of C42048A LCD Glass component.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 void c42048a_init(void)
 {
 	// LCD_initialization
-	lcd_clk_init(CLK_LCD_SRC_ULP_gc);
+	lcd_clk_init();
 	lcd_connection_init(COM_SWP, SEG_SWP, PORT_MASK, X_BIAS);
 	lcd_timing_init(LCD_PRESC_16_gc, LCD_CLKDIV_DivBy4_gc,
 			LCD_LP_WAVE_ENABLE_gc, LCD_DUTY);

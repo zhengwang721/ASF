@@ -7,7 +7,7 @@
  * This file defines a useful set of functions for the SPI interface on AVR UC3
  * devices.
  *
- * Copyright (c) 2009 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,15 +54,6 @@
 #include "semphr.h"
 
 #endif
-
-
-#ifdef FREERTOS_USED
-
-//! The SPI mutex.
-static xSemaphoreHandle xSPIMutex;
-
-#endif
-
 
 void spi_master_setup_device(volatile avr32_spi_t *spi,
 		struct spi_device *device, spi_flags_t flags, uint32_t baud_rate,

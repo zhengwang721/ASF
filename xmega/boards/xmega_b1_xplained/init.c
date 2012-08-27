@@ -116,6 +116,8 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_ENABLE_USARTE0
+	/* Note: this will disable touch buttons 2 and 3 as they share the same
+	 * physical pins at the USART E module. */
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 3), IOPORT_DIR_OUTPUT
 			| IOPORT_INIT_HIGH);
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 2), IOPORT_DIR_INPUT);

@@ -6,6 +6,9 @@
 		<!--
 		<build type="include-path" value="."/>
 		-->
+		<build type="header-file" value="pio_sam4s8b.h"/>
+		<build type="header-file" value="pio_sam4s8c.h"/>
+		<build type="header-file" value="pio_sam4s16b.h"/>
 		<build type="header-file" value="pio_sam4s16c.h"/>
 		<device-support value="sam4s"/>
 		<info type="gui-flag" value="hidden"/>

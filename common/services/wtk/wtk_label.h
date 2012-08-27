@@ -57,8 +57,9 @@ extern "C" {
 struct wtk_label;
 
 struct wtk_label *wtk_label_create(struct win_window *parent,
-		struct win_area const *area,
-		char const *caption, bool align_right);
+		struct win_area const *area, char const *caption,
+		gfx_color_t text_color, struct gfx_bitmap *background,
+		bool align_right);
 struct win_window *wtk_label_as_child(struct wtk_label *label);
 bool wtk_label_change(struct wtk_label *label, const char *caption);
 void wtk_label_size_hint(struct win_point *size, const char *caption);

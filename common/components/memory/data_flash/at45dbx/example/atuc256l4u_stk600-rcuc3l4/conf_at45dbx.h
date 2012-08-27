@@ -6,7 +6,7 @@
  *
  * This file contains the possible external configuration of the AT45DBX.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,8 +52,8 @@
 
 //_____ D E F I N I T I O N S ______________________________________________
 
-//! Connect AT45DBx driver to spi master service
-#define AT45DBX_USES_SPI_MASTER_SERVICE
+//! Connect AT45DBx driver to usart spi master service
+#define AT45DBX_USES_USART_SPI_SERVICE
 
 //! Select the SPI module AT45DBX is connected to
 #define AT45DBX_SPI_MODULE          AT45DBX_SPI
@@ -65,7 +65,7 @@
 #define AT45DBX_MEM_CNT             1
 
 //! SPI master speed in Hz.
-#define AT45DBX_SPI_MASTER_SPEED    12000000
+#define AT45DBX_SPI_MASTER_SPEED    1000000
 
 //! First chip select used by AT45DBX components on the SPI module instance.
 #define AT45DBX_CS                  AT45DBX_SPI_NPCS

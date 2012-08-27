@@ -732,26 +732,28 @@ uint32_t usart_init_spi_slave(Usart *p_usart,
  * \note By default, the transmitter and receiver aren't enabled.
  *
  * \param p_usart Pointer to a USART instance.
- * \param p_usart_opt Pointer to sam_usart_opt_t instance.
+ * \param ul_baudrate Baudrate to be used.
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 on success.
  * \retval 1 on failure.
  */
-uint32_t usart_init_lin_master(Usart *p_usart,
-		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck)
+uint32_t usart_init_lin_master(Usart *p_usart,uint32_t ul_baudrate, uint32_t ul_mck)
 {
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
 
 	/* Set up the baudrate. */
-	if (usart_set_async_baudrate(p_usart, p_usart_opt->baudrate, ul_mck)) {
+	if (usart_set_async_baudrate(p_usart, ul_baudrate, ul_mck)) {
 		return 1;
 	}
 	
 	/* Set LIN master mode. */
 	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
 					US_MR_USART_MODE_LIN_MASTER;	
+
+	usart_enable_rx(p_usart);
+	usart_enable_tx(p_usart);
 
 	return 0;
 }
@@ -762,26 +764,28 @@ uint32_t usart_init_lin_master(Usart *p_usart,
  * \note By default, the transmitter and receiver aren't enabled.
  *
  * \param p_usart Pointer to a USART instance.
- * \param p_usart_opt Pointer to sam_usart_opt_t instance.
+ * \param ul_baudrate Baudrate to be used.
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 on success.
  * \retval 1 on failure.
  */
-uint32_t usart_init_lin_slave(Usart *p_usart,
-		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck)
+uint32_t usart_init_lin_slave(Usart *p_usart, uint32_t ul_baudrate, uint32_t ul_mck)
 {
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
 
-	/* Set up the baudrate. */
-	if (usart_set_async_baudrate(p_usart, p_usart_opt->baudrate, ul_mck)) {
-		return 1;
-	}
-	
+	usart_enable_rx(p_usart);
+	usart_enable_tx(p_usart);
+
 	/* Set LIN slave mode. */
 	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
 					US_MR_USART_MODE_LIN_SLAVE;
+
+	/* Set up the baudrate. */
+	if (usart_set_async_baudrate(p_usart, ul_baudrate, ul_mck)) {
+		return 1;
+	}
 
 	return 0;
 }
@@ -875,7 +879,7 @@ void usart_lin_set_checksum_type(Usart *p_usart, uint8_t uc_type)
  * \brief Configure the data length mode during the LIN communication.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_mode Indicate the checksum type: 0 if the data length is defined by the 
+ * \param uc_mode Indicate the data length type: 0 if the data length is defined by the 
  * DLC of LIN mode register or 1 if the data length is defined by the bit 5 and 6 of 
  * the identifier.
  */
@@ -928,7 +932,7 @@ void usart_lin_set_wakeup_signal_type(Usart *p_usart, uint8_t uc_type)
 void usart_lin_set_response_data_len(Usart *p_usart, uint8_t uc_len)
 {
 	p_usart->US_LINMR = (p_usart->US_LINMR & ~US_LINMR_DLC_Msk) |
-			(uc_len << US_LINMR_DLC_Pos);
+			((uc_len-1) << US_LINMR_DLC_Pos);
 }
 
 /**
@@ -973,7 +977,26 @@ void usart_lin_set_tx_identifier(Usart *p_usart, uint8_t uc_id)
  */
 uint8_t usart_lin_read_identifier(Usart *p_usart)
 {
-	return (p_usart->US_LINMR & US_LINIR_IDCHR_Msk);
+	return (p_usart->US_LINIR & US_LINIR_IDCHR_Msk);
+}
+
+/**
+ * \brief Get data length.
+ *
+ * \param p_usart Pointer to a USART instance.
+ *
+ * \return Data length. 
+ */
+uint8_t usart_lin_get_data_length(Usart *usart)
+{
+  if (usart->US_LINMR & US_LINMR_DLM)
+  {
+    uint8_t data_length = 1 << ((usart->US_LINIR >> (US_LINIR_IDCHR_Pos + 4)) & 0x03);
+
+    return data_length;
+  }
+  else
+    return ((usart->US_LINMR & US_LINMR_DLC_Msk) >> US_LINMR_DLC_Pos) + 1;
 }
 #endif
 

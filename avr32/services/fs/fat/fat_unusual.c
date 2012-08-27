@@ -6,7 +6,7 @@
  *
  * This file is a set of rarely-used FAT functions.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -484,7 +484,7 @@ bool  fat_select_filesystem( uint8_t u8_fat_type , bool b_MBR )
 {
    uint8_t u8_i;
    uint8_t u8_tmp = 0;
-   uint16_t  u16_tmp, u16_tmp2;
+   uint16_t  u16_tmp2,u16_tmp=0;
    Fs_format_table _CONST_TYPE_ *ptr_table;
 
    if( (FS_FORMAT_FAT   != u8_fat_type )

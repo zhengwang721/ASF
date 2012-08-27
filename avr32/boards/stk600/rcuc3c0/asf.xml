@@ -15,12 +15,13 @@
 		</module>
 		<module type="meta" id="config.board.stk600-rcuc3c0.init#yes" caption="STK600-RCUC3C0 initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
 			<build type="c-source" value="init.c"/>
 			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rcuc3c0" caption="STK600" mcu="at32uc3c0512c">
+	<board id="board.stk600-rcuc3c0" vendor="Atmel" caption="STK600" mcu="at32uc3c0512c">
 		<build type="define" name="BOARD" value="STK600_RCUC3C0"/>
 		<build type="header-file" value="stk600_rcuc3c0.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

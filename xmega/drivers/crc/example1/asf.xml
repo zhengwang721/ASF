@@ -5,6 +5,9 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="example1.c"/>
+		<device-support value="xmegaa3bu"/>
+		<device-support value="xmegaa3u"/>
+		<device-support value="xmegac"/>
 		<require idref="xmega.drivers.crc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.boards"/>

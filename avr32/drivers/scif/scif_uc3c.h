@@ -227,10 +227,7 @@ typedef struct
  *
  * \param mask the interrupts to enable.
  */
- #if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void scif_enable_interrupts(unsigned long mask)
+__always_inline static void scif_enable_interrupts(unsigned long mask)
 {
   AVR32_SCIF.ier = mask;
 }
@@ -239,10 +236,7 @@ static inline void scif_enable_interrupts(unsigned long mask)
  *
  * \param mask the interrupts to disable.
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void scif_disable_interrupts(unsigned long mask)
+__always_inline static void scif_disable_interrupts(unsigned long mask)
 {
   AVR32_SCIF.idr = mask;
 }
@@ -251,10 +245,7 @@ static inline void scif_disable_interrupts(unsigned long mask)
  *
  * \return The enabled interrupts.
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_enabled_interrupts(void)
+__always_inline static unsigned long scif_get_enabled_interrupts(void)
 {
   return(AVR32_SCIF.imr);
 }
@@ -263,10 +254,7 @@ static inline unsigned long scif_get_enabled_interrupts(void)
  *
  * \return The interrupts which have been triggered.
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_interrupts_status(void)
+__always_inline static unsigned long scif_get_interrupts_status(void)
 {
   return(AVR32_SCIF.isr);
 }
@@ -275,10 +263,7 @@ static inline unsigned long scif_get_interrupts_status(void)
  *
  * \param mask The interrupts to clear.
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void scif_clear_interrupts_status(unsigned long mask)
+__always_inline static void scif_clear_interrupts_status(unsigned long mask)
 {
   AVR32_SCIF.icr = mask;
 }
@@ -294,10 +279,7 @@ static inline void scif_clear_interrupts_status(unsigned long mask)
  *
  * \return The content of the PCLKSR register
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline unsigned long scif_get_pclk_status(void)
+__always_inline static unsigned long scif_get_pclk_status(void)
 {
   return(AVR32_SCIF.pclksr);
 }
@@ -459,10 +441,7 @@ extern long int scif_start_osc32(const scif_osc32_opt_t *opt, bool wait_for_read
  *   \retval true oscillator stable and ready
  *   \retval false oscillator not enabled or not ready.
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline bool scif_is_osc32_ready(void)
+__always_inline static bool scif_is_osc32_ready(void)
 {
   return((AVR32_SCIF.pclksr & AVR32_SCIF_PCLKSR_OSC32RDY_MASK)>>AVR32_SCIF_PCLKSR_OSC32RDY_OFFSET);
 }
@@ -729,10 +708,7 @@ extern void scif_write_gplp(int gplp, unsigned long value);
  *       there's risk that call is split by any interrupts, disable them first.
  *
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void scif_temperature_sensor_enable(void)
+__always_inline static void scif_temperature_sensor_enable(void)
 {
   // Unlock the write-protected TSENS register
   SCIF_UNLOCK(AVR32_SCIF_TSENS);
@@ -745,10 +721,7 @@ static inline void scif_temperature_sensor_enable(void)
  *       there's risk that call is split by an interrupt, disable them first.
  *
  */
-#if defined (__GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void scif_temperature_sensor_disable(void)
+__always_inline static void scif_temperature_sensor_disable(void)
 {
   // Unlock the write-protected TSENS register
   SCIF_UNLOCK(AVR32_SCIF_TSENS);

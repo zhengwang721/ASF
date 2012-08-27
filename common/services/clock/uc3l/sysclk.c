@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -270,7 +270,11 @@ void sysclk_set_prescalers(unsigned int cpu_shift,
 void sysclk_set_source(uint_fast8_t src)
 {
 	irqflags_t flags;
+#if (UC3L0128 || UC3L0256 || UC3L3_L4)
+	Assert(src <= SYSCLK_SRC_PLL0);
+#else
 	Assert(src <= SYSCLK_SRC_RC120M);
+#endif
 
 	flags = cpu_irq_save();
 	AVR32_PM.unlock = 0xaa000000 | AVR32_PM_MCCTRL;

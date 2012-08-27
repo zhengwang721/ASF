@@ -6,6 +6,9 @@
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 		</info>
+		<device-support value="uc3a"/>
+		<device-support value="uc3b"/>
+		<device-support value="uc3a3"/>
 		<require idref="avr32.services.usb.cdc.example.main"/>
 	</module>
 	<module type="meta" id="avr32.services.usb.cdc.example.main" caption="Main module for examples">

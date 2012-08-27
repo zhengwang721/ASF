@@ -3,7 +3,7 @@
  *
  * \brief SAM3S-EK2 LEDs support package.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
+void LED_Off(uint32_t led_gpio);
 
 /*! \brief Turns on the specified LEDs.
  *
@@ -60,7 +60,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
+void LED_On(uint32_t led_gpio);
 
 /*! \brief Toggles the specified LEDs.
  *

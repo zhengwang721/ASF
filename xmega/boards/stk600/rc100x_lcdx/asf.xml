@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rc100x_lcdx.atxmega128b1" caption="STK600" mcu="atxmega128b1">
+	<board id="board.stk600-rc100x_lcdx.atxmega128b1" vendor="Atmel" caption="STK600" mcu="atxmega128b1">
 		<build type="define" name="BOARD" value="STK600_RC100X_LCDX"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x_lcdx.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>
@@ -32,9 +33,10 @@
 		<config name="config.c42048a_type" value="full_matrix0"/>
 	</board>
 
-	<board id="board.stk600-rc100x_lcdx.atxmega64b1" caption="STK600" mcu="atxmega64b1">
+	<board id="board.stk600-rc100x_lcdx.atxmega64b1" vendor="Atmel" caption="STK600" mcu="atxmega64b1">
 		<build type="define" name="BOARD" value="STK600_RC064X_LCDX"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x_lcdx.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>

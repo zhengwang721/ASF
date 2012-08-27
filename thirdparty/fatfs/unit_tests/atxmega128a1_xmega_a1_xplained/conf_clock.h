@@ -58,4 +58,6 @@
 //! Run the CLKper2 on 64 MHz and CLKper on 32 MHz (CPU speed)
 #define CONFIG_SYSCLK_PSBCDIV   SYSCLK_PSBCDIV_1_2
 
+#define CONFIG_RTC_SOURCE       SYSCLK_RTCSRC_ULP
+
 #endif /* CONF_CLOCK_H_INCLUDED */

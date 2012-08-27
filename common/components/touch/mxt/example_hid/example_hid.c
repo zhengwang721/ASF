@@ -73,7 +73,7 @@
  * This example has been tested with the mXT143E Xplained on the following kits:
  * - UC3-A3 Xplained
  * - XMEGA-A3BU Xplained
- * - SAM4S Xplained 
+ * - SAM4S Xplained
  *
  * \section exampledescription Description of the example
  * When the Xplained board is connected to a host computer supporting the USB
@@ -223,24 +223,28 @@ int main(void)
 
 	/* Initialize the board */
 	board_init();
-	
+
 	/* Initialize the mXT touch device */
 	mxt_init(&device);
 
 	/* Initialize the graphical library */
 	gfx_init();
+
 	/* Set correct landscape orientation */
 	gfx_set_orientation(GFX_SWITCH_XY | GFX_FLIP_Y);
+
 	/* Set background color */
 	gfx_draw_filled_rect(0, 0, gfx_get_width(), gfx_get_height(),
 			COLOR_BACKGROUND);
+
 	/* Draw the help text */
-	gfx_draw_string("Middle finger to move cursor", 80, 105,
-			&sysfont, GFX_COLOR_TRANSPARENT, COLOR_RED);
-	gfx_draw_string("Index finger to left click", 80, 115,
-			&sysfont, GFX_COLOR_TRANSPARENT, COLOR_BLUE);
-	gfx_draw_string("Ring finger to right click", 80, 125,
-			&sysfont, GFX_COLOR_TRANSPARENT, COLOR_GREEN);
+	gfx_draw_string_aligned(
+			"Middle finger to move cursor\n"
+			"Index finger to left click\n"
+			"Ring finger to right click",
+			gfx_get_width() / 2, gfx_get_height() / 2,
+			&sysfont, GFX_COLOR_TRANSPARENT, GFX_COLOR_WHITE,
+			TEXT_POS_CENTER, TEXT_ALIGN_CENTER);
 
 	/* Initialize the user interface */
 	ui_init();

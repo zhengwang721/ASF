@@ -61,48 +61,27 @@ void usart_spi_init(Usart *p_usart)
 {
 	uint8_t uc_id;
 
-
+#ifdef USART0
 	if (p_usart == USART0) {
-#if ((SAM3S) || (SAM3N))
-			uc_id = 14;
-#elif (SAM3XA)
-			uc_id = 17;
-#elif (SAM3U)
-			uc_id = 13;
-#endif
+		uc_id = ID_USART0;
 	}
+#endif
 
-#if (SAM3S_WITH_USART1 || SAM3N_WITH_USART1 || SAM3XA || SAM3U)
+#ifdef USART1
 	else if(p_usart == USART1) {
-#if ((SAM3S) || (SAM3N))
-			uc_id = 15;
-#elif (SAM3XA)
-			uc_id = 18;
-#elif (SAM3U)
-			uc_id = 14;
-#endif	
+		uc_id = ID_USART1;
 	}
 #endif
 
-#if (SAM3S_WITH_USART2 || SAM3XA || SAM3U)
+#ifdef USART2
 	else if(p_usart == USART2) {
-#if (SAM3S)
-		uc_id = 16;
-#elif (SAM3XA)
-		uc_id = 19;
-#elif (SAM3U)
-		uc_id = 15;
-#endif		
+		uc_id = ID_USART2;
 	}
 #endif
 
-#if (SAM3XA_WITH_USART3 || SAM3U_WITH_USART3)
+#ifdef USART3
 	else if(p_usart == USART3) {
-#if (SAM3XA)
-		uc_id = 20;
-#elif (SAM3U)
-		uc_id = 16;
-#endif		
+		uc_id = ID_USART3;
 	}
 #endif
 	
@@ -172,9 +151,11 @@ void usart_spi_write_single(Usart *p_usart, uint8_t data)
  */
 uint32_t usart_spi_write_packet(Usart *p_usart, const uint8_t *data, size_t len)
 {
+	uint32_t dummy_data;
 	size_t i=0;
 	while(len) {
 		usart_putchar(p_usart, *(data+i));
+		usart_getchar(p_usart, &dummy_data);
 		len--;
 		i++;
 	}
@@ -211,12 +192,17 @@ void usart_spi_read_single(Usart *p_usart, uint8_t *data)
  */
 uint32_t usart_spi_read_packet(Usart *p_usart, uint8_t *data, size_t len)
 {
+	uint32_t val;
+	uint32_t i = 0;
+
 	while(len) {
 		/* Dummy write one data to slave in order to read data. */
 		usart_putchar(p_usart, CONFIG_USART_SPI_DUMMY);
-		usart_getchar(p_usart, (uint32_t*)data);
+		usart_getchar(p_usart, &val);
+
+		data[i] = (uint8_t)(val & 0xFF);
+		i++;
 		len--;
-		data++;
  	}
 	
 	return 0;	

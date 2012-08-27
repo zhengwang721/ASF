@@ -14,9 +14,5 @@
 		<require idref="common.utils.stdio"/>
 		<require idref="common.applications.mxt143e_xplained_multi-touch_demo"/>
 		<require idref="board.sam4s_xplained"/>
-		<generator value="iarewarm"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
-		<generator value="doxygen"/>
 	</project>
 </asf>

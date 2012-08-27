@@ -4,7 +4,7 @@
  *
  * \brief ECC Hamming Reed-Solomon driver.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,10 +108,7 @@ typedef struct
  *
  * \param ecchrs   Base address of the ECCHRS instance.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void ecchrs_freeze( volatile avr32_ecchrs_t* ecchrs )
+__always_inline static void ecchrs_freeze( volatile avr32_ecchrs_t* ecchrs )
 {
   ecchrs->md |= AVR32_ECCHRS_MD_FREEZE_MASK;
 }
@@ -122,10 +119,7 @@ static inline void ecchrs_freeze( volatile avr32_ecchrs_t* ecchrs )
  *
  * \param ecchrs   Base address of the ECCHRS instance.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void ecchrs_unfreeze( volatile avr32_ecchrs_t* ecchrs )
+__always_inline static void ecchrs_unfreeze( volatile avr32_ecchrs_t* ecchrs )
 {
   ecchrs->md &= ~AVR32_ECCHRS_MD_FREEZE_MASK;
 }
@@ -136,10 +130,7 @@ static inline void ecchrs_unfreeze( volatile avr32_ecchrs_t* ecchrs )
  *
  * \param ecchrs   Base address of the ECCHRS instance.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void ecchrs_reset( volatile avr32_ecchrs_t* ecchrs )
+__always_inline static void ecchrs_reset( volatile avr32_ecchrs_t* ecchrs )
 {
   ecchrs->ctrl = AVR32_ECCHRS_CTRL_RST_MASK;
 }
@@ -150,10 +141,7 @@ static inline void ecchrs_reset( volatile avr32_ecchrs_t* ecchrs )
  *
  * \param ecchrs   Base address of the ECCHRS instance.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void ecchrs_correct_rs( volatile avr32_ecchrs_t* ecchrs )
+__always_inline static void ecchrs_correct_rs( volatile avr32_ecchrs_t* ecchrs )
 {
   ecchrs->md |= AVR32_ECCHRS_MD_CORRS4_MASK;
 }
@@ -164,10 +152,7 @@ static inline void ecchrs_correct_rs( volatile avr32_ecchrs_t* ecchrs )
  * \param ecchrs  Base address of the ECCHRS instance.
  * \param opt     Options needed to set up the ECCHRS (see \ref ecchrs_options_t).
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  void ecchrs_init(volatile avr32_ecchrs_t* ecchrs, const ecchrs_options_t *opt)
+__always_inline static void ecchrs_init(volatile avr32_ecchrs_t* ecchrs, const ecchrs_options_t *opt)
 {
   ecchrs->md =
     opt->pagesize    << AVR32_ECCHRS_MD_PAGESIZE_OFFSET
@@ -181,10 +166,7 @@ static inline  void ecchrs_init(volatile avr32_ecchrs_t* ecchrs, const ecchrs_op
  * \param ecchrs  Base address of the ECCHRS instance.
  * \param id      Codewords id to return.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  U32 ecchrs_get_cw(volatile avr32_ecchrs_t* ecchrs, U32 id)
+__always_inline static U32 ecchrs_get_cw(volatile avr32_ecchrs_t* ecchrs, U32 id)
 {
   volatile U32* p_hecc_cw = (volatile U32* )&ecchrs->cwps00;
   return *(p_hecc_cw+id);
@@ -198,10 +180,7 @@ static inline  U32 ecchrs_get_cw(volatile avr32_ecchrs_t* ecchrs, U32 id)
  *
  * \return \c bitfield of the corrupted sector (bit 0: sector 0; bit 1: sector1, ../..).
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline  U32 ecchrs_4bit_check_error(volatile avr32_ecchrs_t* ecchrs)
+__always_inline static U32 ecchrs_4bit_check_error(volatile avr32_ecchrs_t* ecchrs)
 {
   return ecchrs->sr1;
 }

@@ -3,7 +3,7 @@
  *
  * \brief Management of C42048A LCD Glass component in a reduced form.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,7 @@
 
 #include "compiler.h"
 #include "lcd.h"
+#include "conf_board.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -287,7 +288,8 @@ static inline void c42048a_set_contrast(int8_t fcont)
  *
  *  \param  lcd_blink_rate  Hardware display blinking frequency.
  */
-static inline void c42048a_blinkrate_init(enum LCD_BLINKRATE_enum lcd_blink_rate)
+static inline void c42048a_blinkrate_init(
+		enum LCD_BLINKRATE_enum lcd_blink_rate)
 {
 	lcd_blinkrate_init(lcd_blink_rate);
 }

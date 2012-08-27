@@ -107,20 +107,6 @@
 #endif
 
 /**
- * \def CONFIG_RTC_CLOCK_SOURCE
- * \brief Configuration symbol for which clock source to use
- *
- * Possible values:
- * - CLK_RTCSRC_ULP_gc
- * - CLK_RTCSRC_TOSC_gc
- * - CLK_RTCSRC_RCOSC_gc
- * - CLK_RTCSRC_TOSC32_gc
- */
-#ifdef __DOXYGEN__
-# define CONFIG_RTC_CLOCK_SOURCE
-#endif
-
-/**
  * \brief Callback definition for alarm callback
  *
  * \param time The time of the alarm
@@ -140,8 +126,10 @@ bool rtc_alarm_has_triggered(void);
  * might happen at up to one time unit later. See also \ref
  * rtc_min_alarm_time
  *
- * \note Due to errata, this can be unsafe to do shortly after waking up from
- * sleep.
+ * \note For devices with the errata "RTC Counter value not correctly read
+ *       after sleep", this can be unsafe to do shortly after waking up from sleep.
+ * \note Without this errata this function can block for up to 1 RTC clock
+ *       source cycle after waking up from sleep.
  */
 static inline void rtc_set_alarm_relative(uint32_t offset)
 {
@@ -174,7 +162,10 @@ extern void rtc_init(void);
  * Content of conf_rtc.h:
  * \code
  *    #define CONFIG_RTC_PRESCALER       RTC_PRESCALER_DIV1024_gc
- *    #define CONFIG_RTC_CLOCK_SOURCE    CLK_RTCSRC_ULP_gc
+ * \endcode
+ * Needed in conf_clock.h:
+ * \code
+ *    #define CONFIG_RTC_SOURCE          SYSCLK_RTCSRC_ULP
  * \endcode
  * Add to the initialization code:
  * \code
@@ -188,6 +179,7 @@ extern void rtc_init(void);
  * should not be included by the user.
  * -# Initialize system clock:
  *   - \code sysclk_init(); \endcode
+ *   - \note Make sure the define CONFIG_RTC_SOURCE is defined in conf_clock.h
  * -# Call RTC driver's own init function to start up the RTC and start
  * counting from zero:
  *   - \code rtc_init(); \endcode
@@ -206,7 +198,7 @@ extern void rtc_init(void);
  *
  * \section rtc_use_cases Advanced use cases
  * For more advanced use of the RTC driver, see the following use cases:
- * - \subpage rtc_use_case_1 : 
+ * - \subpage rtc_use_case_1 :
  */
 
 /**
@@ -238,7 +230,10 @@ extern void rtc_init(void);
  * Content of conf_rtc.h:
  * \code
  *    #define CONFIG_RTC_PRESCALER       RTC_PRESCALER_DIV1024_gc
- *    #define CONFIG_RTC_CLOCK_SOURCE    CLK_RTCSRC_ULP_gc
+ * \endcode
+ * Needed in conf_clock.h:
+ * \code
+ *    #define CONFIG_RTC_SOURCE          SYSCLK_RTCSRC_ULP
  * \endcode
  * Add to application initialization:
  * \code
@@ -258,6 +253,7 @@ extern void rtc_init(void);
  *   - \code pmic_init(); \endcode
  * -# Initialize system clock:
  *   - \code sysclk_init(); \endcode
+ *   - \note Make sure the define CONFIG_RTC_SOURCE is defined in conf_clock.h
  * -# Call the init function of the sleep manager driver to be able to sleep
  * waiting for alarm:
  *   - \code sleepmgr_init(); \endcode
@@ -284,7 +280,7 @@ extern void rtc_init(void);
  * -# Set the alarm to trigger on next time unit roll over:
  *   - \code rtc_set_alarm_relative(0); \endcode
  * -# Sleep between each triggered alarm:
- *   - \code 
+ *   - \code
  *      while (true) {
  *          sleepmgr_enter_sleep();
  *      }

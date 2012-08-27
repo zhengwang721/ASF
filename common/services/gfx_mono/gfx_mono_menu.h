@@ -58,7 +58,8 @@
  * 1) Define menu structure.\n
  * 2) Call gfx_mono_menu_init.\n
  * 3) Get user input.\n
- * 4) Update menu with user input using function \ref gfx_mono_menu_process_key.\n
+ * 4) Update menu with user input using function \ref
+ *    gfx_mono_menu_process_key.\n
  * 5) Interpret \ref gfx_mono_menu_process_key return value.\n
  * 6) Go to 3.\n
  *
@@ -75,7 +76,8 @@
  * This function will then return a status code and act depending on the given
  * keycode:
  *
- * MENU_KEYCODE_DOWN : Change selection to next menu item (or first if at bottom).
+ * MENU_KEYCODE_DOWN : Change selection to next menu item (or first if at
+ * bottom).
  * Returns MENU_EVENT_IDLE.
  *
  * MENU_KEYCODE_UP : Change selection to previous menu item (or last if at top).
@@ -93,20 +95,19 @@
  * @{
  */
 
-
-//! \name Menu events definitions
-//@{
-//! Idle. Nothing to report.
+/** \name Menu events definitions */
+/** @{ */
+/** Idle. Nothing to report. */
 #define GFX_MONO_MENU_EVENT_IDLE    0xFF
-//! Exit. User has pressed the back button.
+/** Exit. User has pressed the back button. */
 #define GFX_MONO_MENU_EVENT_EXIT    0xFE
-//@}
+/** @} */
 
-//! Maximum number of menu elements on display
+/** Maximum number of menu elements on display */
 #define GFX_MONO_MENU_ELEMENTS_PER_SCREEN ((GFX_MONO_LCD_HEIGHT / \
-		SYSFONT_LINESPACING) - 1)
+	SYSFONT_LINESPACING) - 1)
 
-//! Menu struct
+/** Menu struct */
 struct gfx_mono_menu {
 	PROGMEM_STRING_T title;
 	PROGMEM_STRING_T *strings;
@@ -120,4 +121,4 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode);
 
 /** @} */
 
-#endif // GFX_MONO_MENU_H
+#endif /* GFX_MONO_MENU_H */

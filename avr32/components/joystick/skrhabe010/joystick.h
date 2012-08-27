@@ -7,7 +7,7 @@
  * This file contains definitions and services related to the features of the
  * 4-directional with Center Push SKRHABE010 joystick.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,10 +66,7 @@
  *
  * \return \c true if the joystick is on the right, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_joystick_right( void )
+__always_inline static int is_joystick_right( void )
 {
   return (gpio_get_pin_value(GPIO_JOYSTICK_RIGHT)) == GPIO_JOYSTICK_RIGHT_PRESSED;
 }
@@ -79,10 +76,7 @@ static inline int is_joystick_right( void )
  *
  * \return \c true if the joystick is on the left, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_joystick_left( void )
+__always_inline static int is_joystick_left( void )
 {
   return (gpio_get_pin_value(GPIO_JOYSTICK_LEFT)) == GPIO_JOYSTICK_LEFT_PRESSED;
 }
@@ -92,10 +86,7 @@ static inline int is_joystick_left( void )
  *
  * \return \c true if the joystick is up, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_joystick_up( void )
+__always_inline static int is_joystick_up( void )
 {
   return (gpio_get_pin_value(GPIO_JOYSTICK_UP)) == GPIO_JOYSTICK_UP_PRESSED;
 }
@@ -105,10 +96,7 @@ static inline int is_joystick_up( void )
  *
  * \return \c true if the joystick is down, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_joystick_down( void )
+__always_inline static int is_joystick_down( void )
 {
   return (gpio_get_pin_value(GPIO_JOYSTICK_DOWN)) == GPIO_JOYSTICK_DOWN_PRESSED;
 }
@@ -118,10 +106,7 @@ static inline int is_joystick_down( void )
  *
  * \return \c true if the joystick is pressed, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int is_joystick_pressed( void )
+__always_inline static int is_joystick_pressed( void )
 {
   return (gpio_get_pin_value(GPIO_JOYSTICK_PUSH)) == GPIO_JOYSTICK_PUSH_PRESSED;
 }

@@ -79,6 +79,42 @@ enum font_data_type {
 #endif
 };
 
+/** Text alignment options for text lines within a paragraph. */
+enum gfx_text_alignment {
+	/**< Align each line to the left side of the paragraph bounding box */
+	TEXT_ALIGN_LEFT,
+	/**< Align each line to the right side of the paragraph bounding box */
+	TEXT_ALIGN_RIGHT,
+	/**< Align each line to the center of the paragraph bounding box */
+	TEXT_ALIGN_CENTER,
+};
+
+/** Text paraphraph positioning options. */
+enum gfx_text_position {
+	/**< Position text paragraph vertically below given coordinate */
+	TEXT_POS_TOP        = (1 << 0),	
+	/**< Position text paragraph vertically centered on given coordinate */
+	TEXT_POS_CENTER_Y   = (1 << 1),
+	/**< Position text paragraph vertically above given coordinate */
+	TEXT_POS_BOTTOM     = (1 << 2),
+	/**< Position text paragraph horizontally right to the given coordinate */
+	TEXT_POS_LEFT       = (1 << 3),
+	/**< Position text paragraph horizontally centered on given coordinate */
+	TEXT_POS_CENTER_X   = (1 << 4),
+	/**< Position text paragraph horizontally left to the given coordinate */
+	TEXT_POS_RIGHT      = (1 << 5),
+	
+	TEXT_POS_TOP_LEFT      = TEXT_POS_TOP      | TEXT_POS_LEFT,
+	TEXT_POS_TOP_CENTER    = TEXT_POS_TOP      | TEXT_POS_CENTER_X,
+	TEXT_POS_TOP_RIGHT     = TEXT_POS_TOP      | TEXT_POS_RIGHT,
+	TEXT_POS_CENTER_LEFT   = TEXT_POS_CENTER_Y | TEXT_POS_LEFT,
+	TEXT_POS_CENTER        = TEXT_POS_CENTER_Y | TEXT_POS_CENTER_X,
+	TEXT_POS_CENTER_RIGHT  = TEXT_POS_CENTER_Y | TEXT_POS_RIGHT,
+	TEXT_POS_BOTTOM_LEFT   = TEXT_POS_BOTTOM   | TEXT_POS_LEFT,
+	TEXT_POS_BOTTOM_CENTER = TEXT_POS_BOTTOM   | TEXT_POS_CENTER_X,
+	TEXT_POS_BOTTOM_RIGHT  = TEXT_POS_BOTTOM   | TEXT_POS_RIGHT,
+};
+
 /** Storage structure for font meta data. */
 struct font {
 	/*! Type of storage used for binary font data. See \ref font_data_type. **/
@@ -115,6 +151,11 @@ void gfx_draw_string(const char *str, const gfx_coord_t x,
 		const gfx_coord_t y, const struct font *font,
 		const gfx_color_t bg_color, const gfx_color_t text_color);
 
+void gfx_draw_string_aligned(const char *str, gfx_coord_t x, gfx_coord_t y,
+		const struct font *font, const gfx_color_t bg_color,
+		const gfx_color_t text_color, enum gfx_text_position text_pos,
+		enum gfx_text_alignment text_align);
+
 void gfx_get_string_bounding_box(char const *str, const struct font *font,
 		gfx_coord_t *width, gfx_coord_t *height);
 /** @} */
@@ -125,6 +166,11 @@ void gfx_get_string_bounding_box(char const *str, const struct font *font,
 void gfx_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 		gfx_coord_t y, const struct font *font,
 		const gfx_color_t bg_color, const gfx_color_t text_color);
+
+void gfx_draw_progmem_string_aligned(char PROGMEM_PTR_T str,
+		gfx_coord_t x, gfx_coord_t y, const struct font *font,
+		const gfx_color_t bg_color, const gfx_color_t text_color,
+		enum gfx_text_position text_pos, enum gfx_text_alignment text_align);
 
 void gfx_get_progmem_string_bounding_box(char PROGMEM_PTR_T str,
 		const struct font *font, gfx_coord_t *width,

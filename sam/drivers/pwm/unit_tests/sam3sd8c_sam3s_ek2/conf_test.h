@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,8 +52,8 @@
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
 /** PWM unit test channel */
-#define PWM_UNIT_TEST_CH  PWM_CHANNEL_0
+#define PWM_UNIT_TEST_CH  PIN_PWM_LED0_CHANNEL
 /** PWM unit test comparison unit */
-#define PWM_UNIT_TEST_CMP PWM_CMP_UNIT_0
+#define PWM_UNIT_TEST_CMP PIN_PWM_LED0_CHANNEL
 
 #endif /* CONF_TEST_H_INCLUDED */

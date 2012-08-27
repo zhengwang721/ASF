@@ -619,7 +619,7 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  *     dac_read_configuration(&SPEAKER_DAC, &conf);
  *     dac_set_conversion_parameters(&conf, DAC_REF_BANDGAP, DAC_ADJ_LEFT);
  *     dac_set_active_channel(&conf, SPEAKER_DAC_CHANNEL, 0);
- *     dac_set_conversion_trigger(&conf, SPEAKER_DAC_CHANNEL, 0);
+ *     dac_set_conversion_trigger(&conf, SPEAKER_DAC_CHANNEL, 3);
  *     #ifdef XMEGA_DAC_VERSION_1
  *     dac_set_conversion_interval(&conf, 1);
  *     #endif
@@ -683,12 +683,15 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  *   - \code
  * dac_set_conversion_parameters(&conf, DAC_REF_BANDGAP, DAC_ADJ_LEFT);
  * dac_set_active_channel(&conf, SPEAKER_DAC_CHANNEL, 0);
- * dac_set_conversion_trigger(&conf, SPEAKER_DAC_CHANNEL, 0);
+ * dac_set_conversion_trigger(&conf, SPEAKER_DAC_CHANNEL, 3);
  * #ifdef XMEGA_DAC_VERSION_1
  * dac_set_conversion_interval(&conf, 1);
  * #endif
  * dac_write_configuration(&SPEAKER_DAC, &conf);
  *     \endcode
+ *    \note If the DAC trigger event channel is changed from channel 3, the
+ *          parameter to dac_set_conversion_trigger() here will also need to be
+ *          altered.
  * -# Enable DAC:
  *   - \code dac_enable(&SPEAKER_DAC); \endcode
  * -# Initialize the clock system, event system, DAC trigger timer, and the DAC:
@@ -761,12 +764,6 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  *
  * -# Add to application initialization:
  * \code
- * static void evsys_init(void)
- * {
- *     sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_EVSYS);
- *     EVSYS.CH3MUX = EVSYS_CHMUX_TCC0_OVF_gc;
- * }
- *
  * void tc_init(void)
  * {
  *     tc_enable(&TCC0);
@@ -782,7 +779,6 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  *     dac_read_configuration(&OUTPUT_DAC, &conf);
  *     dac_set_conversion_parameters(&conf, DAC_REF_AVCC, DAC_ADJ_RIGHT);
  *     dac_set_active_channel(&conf, DAC_CH0 | DAC_CH1, 0);
- *     dac_set_conversion_trigger(&conf, 0, 0);
  *     #ifdef XMEGA_DAC_VERSION_1
  *     dac_set_conversion_interval(&conf, 10);
  *     dac_set_refresh_interval(&conf, 20);
@@ -795,26 +791,11 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  * Add to \c main():
  * \code
  * sysclk_init();
- * evsys_init();
  * tc_init();
  * dac_init();
  * \endcode
  *
  * \subsection dac_use_case_1_setup_flow Workflow
- * -# Create a function \c evsys_init() to intialize the event system clocks and
- *    to link the conversion timer to the correct event channel:
- *     - \code
- * static void evsys_init(void)
- * {
- *     // ...
- * }
- *       \endcode
- * -# Use the sysclk service to enable the clock to the event system:
- *     - \code sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_EVSYS); \endcode
- * -# Connect the TCC0 overflow event to event channel 3:
- *     - \code EVSYS.CH3MUX = EVSYS_CHMUX_TCC0_OVF_gc; \endcode
- *    \note If the DAC trigger timer is changed from TCC0, the \c EVSYS_CHMUX_*
- *          mask here will also need to be altered.
  * -# Create a function \c tc_init() to intialize the DAC trigger timer:
  *     - \code
  * static void tc_init(void)
@@ -850,7 +831,6 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  *     dac_read_configuration(&OUTPUT_DAC, &conf);
  *     dac_set_conversion_parameters(&conf, DAC_REF_AVCC, DAC_ADJ_RIGHT);
  *     dac_set_active_channel(&conf, DAC_CH0 | DAC_CH1, 0);
- *     dac_set_conversion_trigger(&conf, 0, 0);
  *     #ifdef XMEGA_DAC_VERSION_1
  *     dac_set_conversion_interval(&conf, 10);
  *     dac_set_refresh_interval(&conf, 20);
@@ -863,7 +843,6 @@ __always_inline static void dac_set_conversion_trigger(struct dac_config *conf,
  * -# Initialize the clock system, event system, DAC trigger timer, and the DAC:
  *     - \code
  * sysclk_init();
- * evsys_init();
  * tc_init();
  * dac_init();
  *       \endcode

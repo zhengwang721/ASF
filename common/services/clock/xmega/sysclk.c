@@ -146,6 +146,10 @@ void sysclk_init(void)
 	} else {
 		osc_disable(OSC_ID_RC2MHZ);
 	}
+
+#ifdef CONFIG_RTC_SOURCE
+	sysclk_rtcsrc_enable(CONFIG_RTC_SOURCE);
+#endif
 }
 
 void sysclk_enable_module(enum sysclk_port_id port, uint8_t id)

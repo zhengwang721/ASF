@@ -7,7 +7,7 @@
  * This file contains basic functions for the AVR32 USART, with support for all
  * modes, settings and clock speeds.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,10 +62,7 @@
  *
  * \return \c 1 if the USART is in multidrop mode, otherwise \c 0.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static __inline__ int usart_mode_is_multidrop(volatile avr32_usart_t *usart)
+__always_inline static int usart_mode_is_multidrop(volatile avr32_usart_t *usart)
 {
   return ((usart->mr >> AVR32_USART_MR_PAR_OFFSET) & AVR32_USART_MR_PAR_MULTI) == AVR32_USART_MR_PAR_MULTI;
 }

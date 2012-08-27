@@ -113,11 +113,11 @@ static inline void osc_enable(uint32_t ul_id)
 
 
 	case OSC_MAINCK_XTAL:
-		pmc_switch_mainck_to_xtal(PMC_OSC_XTAL);
+		pmc_switch_mainck_to_xtal(PMC_OSC_XTAL, BOARD_OSC_STARTUP_US);
 		break;
 
 	case OSC_MAINCK_BYPASS:
-		pmc_switch_mainck_to_xtal(PMC_OSC_BYPASS);
+		pmc_switch_mainck_to_xtal(PMC_OSC_BYPASS, BOARD_OSC_STARTUP_US);
 		break;
 	}
 }

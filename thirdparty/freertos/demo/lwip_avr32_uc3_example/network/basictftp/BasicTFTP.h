@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief Basic TFTP Server for AVR32 UC3.
+ * \brief Basic TFTP Server for Atmel MCUs.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -124,7 +124,7 @@ char *s_proto; /* protocol to use */
 #define ACK 04      /* acknowledgement */
 #define ERROR 05      /* error code */
 
-#if __ICCAVR32__
+#if (__ICCAVR32__ || __ICCARM__)
 #pragma pack(1)
 #endif
 struct  tftphdr {
@@ -144,7 +144,7 @@ struct  tftphdr {
 __attribute__ ((packed))
 #endif
 ;
-#if __ICCAVR32__
+#if (__ICCAVR32__ || __ICCARM__)
 #pragma pack()
 #endif
 

@@ -3,7 +3,7 @@
  *
  * \brief ILI9225 configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,42 +46,21 @@
 #ifndef CONF_ILI9225_H_INCLUDED
 #define CONF_ILI9225_H_INCLUDED
 
-#include "compiler.h"
 #include "board.h"
 
-/*! \brief Interface configuration
- *
- * Currently only EBI mode supported
- */
-#if BOARD == SAM3N_EK
+#if !defined(BOARD_ILI9225_SPI) || \
+	!defined(BOARD_ILI9225_SPI_IRQN) || \
+	!defined(BOARD_ILI9225_SPI_NPCS) || \
+	!defined(BOARD_ILI9225_RS_GPIO) || \
+	!defined(BOARD_ILI9225_RSTN_GPIO)
 
-	/*! \brief reset pin
-	 */
-	#define ILI9225_SPI_INTERFACE     (SPI)
+	#warning The ILI9225 SPI configuration does not exist in the board definition file. Using default settings.
 
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define ILI9225_SPI_IRQ_NUM       (SPI_IRQn)
-	
-	/*! \brief reset pin
-	 */
-	#define ILI9225_LCD_RSTN          (PIN_LCD_RSTN_GPIO)
-
-	/*! \brief address used to read/write from/to registers or RAM
-	 */
-	#define ILI9225_LCD_RS            (PIN_LCD_RS_GPIO)
-	
-	
-	
-
-#else
-
-	#warning The ILI9225 setup configuration to use in the driver is missing. Default configuration is used.
-
-	#define ILI9225_SPI_INTERFACE     0
-	#define ILI9225_SPI_IRQ_NUM       0
-	#define ILI9225_LCD_RSTN          0
-	#define ILI9225_LCD_RS            0
+	#define BOARD_ILI9225_SPI               0 /* SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI channel is used by ILI9225 */
+	#define BOARD_ILI9225_SPI_IRQN    0 /* SPI interrupt number, which can be SPI_IRQn, SPI0_IRQn or SPI1_IRQn, depends on which SPI channel is used by ILI9225 */
+	#define BOARD_ILI9225_SPI_NPCS    2 /* SPI chip select number, depends on which SPI CS pin is used */
+	#define BOARD_ILI9225_RS_GPIO     PIO_PA28_IDX /* PIN index, depends on which pin is connnected with RS of ILI9225 */
+	#define BOARD_ILI9225_RSTN_GPIO   PIO_PA29_IDX /* PIN index, depends on which pin is connnected with nRESET of ILI9225 */
 
 #endif
 

@@ -314,7 +314,7 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 		ul_needXTEN = 1;
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
 				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
-				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST(PMC_XTAL_STARTUP_TIME) |
+				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
 				ul_moscrcf;
 	}
 
@@ -367,7 +367,8 @@ void pmc_osc_disable_fastrc(void)
  * \retval 0 Success.
  * \retval 1 Timeout error.
  */
-void pmc_switch_mainck_to_xtal(uint32_t ul_bypass)
+void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
+		uint32_t ul_xtal_startup_time)
 {
 	/* Enable Main Xtal oscillator */
 	if (ul_bypass) {
@@ -377,7 +378,7 @@ void pmc_switch_mainck_to_xtal(uint32_t ul_bypass)
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
 				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
-				CKGR_MOR_MOSCXTST(PMC_XTAL_STARTUP_TIME);
+				CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 		/* Wait the Xtal to stabilize */
 		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
 

@@ -154,9 +154,8 @@
 /*! \name PWM Functions of LEDs
  */
 //! @{
-/* TODO: Implement PWM functionality */
-#define LED0_PWM_FUNCTION   (-1)//AVR32_PWM_0_FUNCTION
-#define LED1_PWM_FUNCTION   (-1)//AVR32_PWM_1_FUNCTION
+#define LED0_PWM_FUNCTION   AVR32_PWM_4_1_FUNCTION
+#define LED1_PWM_FUNCTION   AVR32_PWM_5_1_FUNCTION
 #define LED2_PWM_FUNCTION   (-1)
 #define LED3_PWM_FUNCTION   (-1)
 //! @}

@@ -3,7 +3,7 @@
  *
  * \brief SAM USART in SPI mode driver functions.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@ extern "C" {
 
 //! Default Configuration of SPI Master Dummy Field
 #ifndef CONFIG_USART_SPI_DUMMY
-	#define CONFIG_USART_SPI_DUMMY              0x00
+	#define CONFIG_USART_SPI_DUMMY              0xFF
 #endif
 //! @}
 

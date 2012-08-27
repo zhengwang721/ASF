@@ -92,7 +92,7 @@
 /** Address of the mXT143E on TWI bus */
 #define MAXTOUCH_TWI_ADDRESS 0x4a
 /** Background color of display */
-#define DISPLAY_COLOR        GFX_COLOR(0, 0, 0)
+#define DISPLAY_COLOR        GFX_COLOR_BLACK
 /** Minimum size of touch squares to draw */
 #define MIN_SQUARE_SIZE      70
 /** Maximum number of touches to track */
@@ -123,7 +123,7 @@ static void draw_finger_square(const struct finger *draw_finger,
 {
 	gfx_coord_t upper_x, upper_y;
 	uint8_t square_size = MIN_SQUARE_SIZE;
-	
+
 #ifdef ENABLE_TOUCH_SIZE_DISPLAY
 	/* Increase the size of the touch square based on the touch size */
 	square_size += draw_finger->size;
@@ -132,11 +132,11 @@ static void draw_finger_square(const struct finger *draw_finger,
 	/* Calculate upper-left X/Y coordinates for the touch bounding box */
 	upper_x = draw_finger->x - (square_size / 2);
 	upper_y = draw_finger->y - (square_size / 2);
-	
+
 #ifdef ENABLE_COORDINATE_DISPLAY
 	char str_buffer[10];
 	gfx_coord_t str_width, str_height;
-	
+
 	/* Print the formatted touch coordinates into the temporary buffer */
 	sprintf(str_buffer, "%03d, %03d", draw_finger->x, draw_finger->y);
 
@@ -176,7 +176,7 @@ static void get_finger_display_coordinates(const struct mxt_touch_event *touch_e
 	 */
 	finger_data->y = gfx_get_height() - (((uint32_t)touch_event->x *
 			gfx_get_height()) / 4096);
-			
+
 	/* Save the scaled size of the touch */
 	finger_data->size = (touch_event->size * 4);
 }
@@ -279,25 +279,25 @@ static void mxt_handler(struct mxt_device *device)
 {
 	static struct finger fingers[MAX_TOUCHES];
 	static const gfx_color_t finger_colors[MAX_TOUCHES] = {
-		GFX_COLOR(255, 0, 0),
-		GFX_COLOR(0, 255, 0),
-		GFX_COLOR(0, 0, 255),
-		GFX_COLOR(255, 255, 0),
-		GFX_COLOR(0, 255, 255),
-		GFX_COLOR(255, 0, 255),
-		GFX_COLOR(255, 255, 255),
-		GFX_COLOR(128, 128, 128),
+		GFX_COLOR_RED,
+		GFX_COLOR_GREEN,
+		GFX_COLOR_BLUE,
+		GFX_COLOR_CYAN,
+		GFX_COLOR_YELLOW,
+		GFX_COLOR_MAGENTA,
+		GFX_COLOR_WHITE,
+		GFX_COLOR_GRAY,
 	};
 	struct mxt_touch_event touch_event;
 	struct finger *curr_finger;
 	uint8_t finger_index;
-	
+
 	do {
 		/* Get the first touch event in queue */
 		if (mxt_read_touch_event(device, &touch_event) != STATUS_OK) {
 			continue;
 		}
-		
+
 		/* Discard non press, movement or release events */
 		if (!(touch_event.status &
 				(MXT_PRESS_EVENT | MXT_MOVE_EVENT | MXT_RELEASE_EVENT))) {
@@ -319,7 +319,7 @@ static void mxt_handler(struct mxt_device *device)
 		if (curr_finger->enable) {
 			draw_finger_square(curr_finger, DISPLAY_COLOR);
 		}
-		
+
 		/* Update finger info - finger is enabled unless it was released */
 		curr_finger->enable = !(touch_event.status & MXT_RELEASE_EVENT);
 

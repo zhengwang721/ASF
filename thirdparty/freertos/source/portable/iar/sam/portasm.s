@@ -58,7 +58,12 @@
     interrupt priority used by the kernel.
 */
 
-#include "../../../../demo/sam_example/FreeRTOSConfig.h"
+/* Priority 15, or 255 as only the top four bits are implemented.
+ This is the lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY            (0x0f << 4)
+
+/* Priority 5, or 80 as only the top four bits are implemented. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY       (0x05 << 4)
 
 /* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
 defined.  The value zero should also ensure backward compatibility.

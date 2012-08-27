@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -193,22 +193,6 @@ void sysclk_set_prescalers(unsigned int cpu_shift,
 	Assert(cpu_shift <= pba_shift);
 	Assert(cpu_shift <= pbb_shift);
 
-#	if !defined(AVR32_PM_PBASEL_PBSEL)
-#		define AVR32_PM_PBASEL_PBSEL         0
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_PM_PBBSEL_PBSEL)
-#		define AVR32_PM_PBBSEL_PBSEL         0
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_PM_PBCSEL_PBSEL)
-#		define AVR32_PM_PBCSEL_PBSEL         0
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-
 	if (cpu_shift > 0)
 		cpu_cksel = ((cpu_shift - 1) << AVR32_PM_CPUSEL_CPUSEL)
 				| (1U << AVR32_PM_CPUDIV);
@@ -233,7 +217,7 @@ void sysclk_set_prescalers(unsigned int cpu_shift,
 	AVR32_PM.unlock = 0xaa000000 | AVR32_PM_PBBSEL;
 	AVR32_PM.pbbsel = pbb_cksel;
 	AVR32_PM.unlock = 0xaa000000 | AVR32_PM_PBCSEL;
-	AVR32_PM.pbbsel = pbc_cksel;
+	AVR32_PM.pbcsel = pbc_cksel;
 	cpu_irq_restore(flags);
 }
 
@@ -247,7 +231,7 @@ void sysclk_set_source(uint_fast8_t src)
 {
 	irqflags_t flags;
 
-	Assert(src <= SYSCLK_SRC_RC8M);
+	Assert(src <= SYSCLK_SRC_RC120M);
 
 	flags = cpu_irq_save();
 	AVR32_PM.unlock = 0xaa000000 | AVR32_PM_MCCTRL;
@@ -340,6 +324,14 @@ void sysclk_init(void)
 		osc_wait_ready(OSC_ID_RC8M);
 		sysclk_set_source(SYSCLK_SRC_RC8M);
 		break;
+		
+	case SYSCLK_SRC_RC120M:
+		osc_enable(OSC_ID_RC120M);
+		osc_wait_ready(OSC_ID_RC120M);
+		// Set a flash wait state depending on the new cpu frequency.
+		flash_set_bus_freq(sysclk_get_cpu_hz());
+		sysclk_set_source(SYSCLK_SRC_RC120M);
+		break;		
 
 	default:
 		Assert(false);

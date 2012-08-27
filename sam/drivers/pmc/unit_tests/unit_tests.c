@@ -243,7 +243,7 @@ static void run_switch_mainck_as_mck_test(const struct test_case *test)
 	 */
 
 	/* Switch mainck to external xtal */
-	pmc_switch_mainck_to_xtal(0);
+	pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 
 	/* Switch main clock as MCK */
 	rc2 = pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);

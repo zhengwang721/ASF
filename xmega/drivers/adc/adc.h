@@ -102,10 +102,10 @@ extern "C" {
  * \todo Remove workarounds for missing definitions in device header files
  * @{
  */
-  
+
 #ifndef ADC_CH_OFFSET_gp
-#define ADC_CH_OFFSET_gp        4 
-#endif  
+#define ADC_CH_OFFSET_gp        4
+#endif
 
 #define ADC_EVACT_SYNCHSWEEP_tmpfix_gc 0x06
 
@@ -359,17 +359,20 @@ __always_inline ADC_CH_tmpfix_t *adc_get_channel(ADC_t *adc, uint8_t ch_mask)
 		index += 4;
 		ch_mask >>= 4;
 	}
+
 #endif
 #if ADC_NR_OF_CHANNELS > 2
 	if (!(ch_mask & 0x03)) {
 		index += 2;
 		ch_mask >>= 2;
 	}
+
 #endif
 #if ADC_NR_OF_CHANNELS > 1
 	if (!(ch_mask & 0x01)) {
 		index++;
 	}
+
 #endif
 
 	return (ADC_CH_tmpfix_t *)(&adc->CH0 + index);
@@ -609,12 +612,12 @@ static inline void adc_flush(ADC_t *adc)
  *
  * \note The ADC must be enabled for this function to have any effect.
  */
-#define adc_set_compare_value(adc, val)\
-	do {\
-		irqflags_t ATPASTE2(adc_flags, __LINE__) =  cpu_irq_save();\
-		(adc)->CMP = val;\
-		cpu_irq_restore(ATPASTE2(adc_flags, __LINE__));\
-	}\
+#define adc_set_compare_value(adc, val)	\
+	do { \
+		irqflags_t ATPASTE2(adc_flags, __LINE__) =  cpu_irq_save(); \
+		(adc)->CMP = val; \
+		cpu_irq_restore(ATPASTE2(adc_flags, __LINE__));	\
+	} \
 	while (0)
 
 /**
@@ -859,6 +862,7 @@ static inline void adc_set_conversion_trigger(struct adc_config *conf,
 				(base_ev_ch << ADC_EVSEL_gp) |
 				ADC_EVACT_SWEEP_gc;
 		break;
+
 #endif
 #if XMEGA_A || (CONFIG_ADC_VERSION == 2)
 	case ADC_TRIG_EVENT_SYNCSWEEP:
@@ -1035,10 +1039,10 @@ static inline void adc_set_current_limit(struct adc_config *conf,
  * \param conf Pointer to ADC module configuration.
  * \param val Compare value to set.
  */
-#define adc_set_config_compare_value(conf, val)\
-	do {\
-		conf->cmp = (uint16_t)val;\
-	}\
+#define adc_set_config_compare_value(conf, val)	\
+	do { \
+		conf->cmp = (uint16_t)val; \
+	} \
 	while (0)
 
 /**
@@ -1107,16 +1111,17 @@ enum adcch_positive_input {
 
 	/** \name Input pins on alternate port. */
 	/** @{ */
-#if XMEGA_A3U || XMEGA_A4 || XMEGA_A4U || XMEGA_B\
-	|| XMEGA_C || XMEGA_D || defined(__DOXYGEN__)
-	/* A3U, A4, A4U, B, C and D feature ADC8:11 input pins. */
+#if XMEGA_AU || XMEGA_A4 || XMEGA_B || XMEGA_C || XMEGA_D || \
+	defined(__DOXYGEN__)
+	/* AU, A4, B, C and D feature ADC8:11 input pins. */
 	ADCCH_POS_PIN8,
 	ADCCH_POS_PIN9,
 	ADCCH_POS_PIN10,
 	ADCCH_POS_PIN11,
 #endif
-#if XMEGA_A3U || XMEGA_B || XMEGA_C || XMEGA_D3 || defined(__DOXYGEN__)
-	/* A3U, B, C and D3 feature ADC12:15 input pins. */
+#if XMEGA_A1U || XMEGA_A3U || XMEGA_A3BU || XMEGA_B || XMEGA_C || \
+	XMEGA_D3 || defined(__DOXYGEN__)
+	/* A1U, A3U, A3BU, B, C and D3 feature ADC12:15 input pins. */
 	ADCCH_POS_PIN12,
 	ADCCH_POS_PIN13,
 	ADCCH_POS_PIN14,
@@ -1225,6 +1230,7 @@ static inline uint8_t adcch_get_gain_setting(uint8_t gain)
 #if (CONFIG_ADC_VERSION == 2) || XMEGA_D
 	case 0:
 		return ADC_CH_GAIN_DIV2_tmpfix_gc;
+
 #endif
 	case 1:
 		return ADC_CH_GAIN_1X_gc;
@@ -1335,7 +1341,7 @@ static inline void adcch_set_input(struct adc_channel_config *ch_conf,
 			/* Pins 4-7 can be used for all gain settings, including
 			 * unity
 			 * gain, which is available even if the gain stage is
-			 *active.
+			 * active.
 			 */
 			ch_conf->ctrl = ADC_CH_INPUTMODE_DIFFWGAIN_gc |
 					adcch_get_gain_setting(gain);
@@ -1349,16 +1355,15 @@ static inline void adcch_set_input(struct adc_channel_config *ch_conf,
 			/* The bitmasks for the on-chip GND signals change when
 			 * gain is
 			 * enabled. To avoid unnecessary current consumption, do
-			 *not
+			 * not
 			 * enable gainstage for unity gain unless user
-			 *explicitly
+			 * explicitly
 			 * specifies it with the ADCCH_FORCE_1X_GAINSTAGE macro.
 			 */
 			if (gain == 1) {
 				ch_conf->ctrl = ADC_CH_INPUTMODE_DIFF_gc;
 				neg = (neg == ADCCH_NEG_PAD_GND) ?
 						ADCCH_NEG_PIN5 : ADCCH_NEG_PIN7;
-                                                
 			} else {
 				ch_conf->ctrl = ADC_CH_INPUTMODE_DIFFWGAIN_gc |
 						adcch_get_gain_setting(gain);
@@ -1965,7 +1970,8 @@ static inline void adcch_disable_interrupt(struct adc_channel_config *ch_conf)
  *     \endcode
  * -# Set unsigned, 12-bit conversions with internal VCC/1.6 voltage reference:
  *     - \code
- * adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
+ * adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12,
+ *ADC_REF_VCC);
  *     \endcode
  * -# Set event system triggered conversions on the first two ADC channels,
  *    with conversions triggered by event system channel 3:

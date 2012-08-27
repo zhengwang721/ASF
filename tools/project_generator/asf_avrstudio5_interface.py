@@ -20,6 +20,9 @@ class PythonFacade:
 		avrstudio5.AVRStudio5Project.generator_tag,
 		avrstudio5.AVRStudio5Project32.generator_tag,
 		avrstudio5.AVRStudio5ProjectARM.generator_tag,
+		avrstudio5.AVRStudio5ProjectTemplate.generator_tag,
+		avrstudio5.AVRStudio5Project32Template.generator_tag,
+		avrstudio5.AVRStudio5ProjectARMTemplate.generator_tag,
 	]
 
 	def __init__(self, db_file, changedir=True):
@@ -51,12 +54,17 @@ class PythonFacade:
 			mcu_list.extend(map.get_mcu_list())
 		return mcu_list
 
-	def get_items_for_mcu(self, mcu):
+	def get_items_for_mcu(self, mcu, mod_types_to_get=None):
 		"""
 		Return the list of all modules/select-by-device/select-by-config associated with the mcu
+
+		mod_types_to_get is optional, but can be a list of module types:
+		["driver", "component", "service", "library"]
+
+		If unspecified, it defaults to None, and no filtering on type is
+		done.
 		"""
-		types = ["driver", "component", "service","library"]
-		mods = self.db.find_modules_for_mcu(mcu, types, check_hidden=True)
+		mods = self.db.find_modules_for_mcu(mcu, mod_types_to_get, check_hidden=True)
 		return mods
 
 	def find_modules(self):
@@ -74,12 +82,16 @@ class PythonFacade:
 		"""
 		return [id]
 
-	def get_all_modules_and_selectors(self, mcuname):
+	def get_all_modules_and_selectors(self, mcuname, mod_types_to_ignore=None):
 		"""
 		This method returns a list of all modules and module selectors that support the specified MCU.
 
-		The modules can be of type component, service, library, meta or driver but _not_ application or
-		build-specific.
+		mod_types_to_ignore is optional, but can be a list of module types:
+		["application", "build-specific"]
+
+		If unspecified, it defaults to None, and no filtering on type is
+		done. Note that this filter behaves in the opposite way of how
+		the filtering in get_items_for_mcu() does.
 
 		Modules of type meta should not show up in the wizard.
 		"""
@@ -87,12 +99,14 @@ class PythonFacade:
 		mcu = self.get_mcu(mcuname)
 		map = mcu.get_group_map()
 
-		mod_types_to_ignore = ['application', 'build-specific']
 		mods = self.db.iter_modules()
 
 		for mod in mods:
+			if (mod_types_to_ignore is not None) and (mod.type in mod_types_to_ignore):
+				continue
+
 			not_supported = mod.resolve_device_support(map, check_self=True)
-			if (len(not_supported) == 0) and (mod.type not in mod_types_to_ignore):
+			if (len(not_supported) == 0):
 				retlist.append(mod)
 
 		sel_iterators = [self.db.iter_components(SelectByDevice), self.db.iter_components(SelectByConfig)]
@@ -171,6 +185,7 @@ class PythonFacade:
 			<Project>
 				<ProjectId/>
 				<ProjectType/>
+				<ProjectBoardVendor/>
 				<ProjectDevice/>
 				<ProjectDeviceSeries/>
 				<ProjectCaption/>
@@ -187,7 +202,14 @@ class PythonFacade:
 					<LicenseFile/>
 					<LicensedCaption/>
 					<LicensedCaption/>
+					...
 				</ProjectLicense>
+				...
+				<ProjectBoardAddon>
+					<Caption/>
+					<Vendor/>
+					<Position/>
+				</ProjectBoardAddon>
 				...
 			</Project>
 		</AsfProjects>
@@ -198,6 +220,7 @@ class PythonFacade:
 		project_data_key_to_tag = {
 			'id'            : 'ProjectId',
 			'type'          : 'ProjectType',
+			'board_vendor'  : 'ProjectBoardVendor',
 			'device'        : 'ProjectDevice',
 			'device_series' : 'ProjectDeviceSeries',
 			'caption'       : 'ProjectCaption',
@@ -205,9 +228,12 @@ class PythonFacade:
 			'description'   : 'ProjectDescription',
 			'help_url'      : 'ProjectHelpUrl',
 		}
-		project_data_key_to_dict_tags = {
-			'keywords'    : ('ProjectKeywords', 'Category', 'Keyword'),
-			'licenses'    : ('ProjectLicense', 'LicenseFile', 'LicensedCaption'),
+		project_data_key_to_dict_tag_maps = {
+			# These are for dicts which map to a list, where each entry should have the same tag
+			'keywords'      : ('ProjectKeywords', 'Category', 'Keyword'),
+			'licenses'      : ('ProjectLicense', 'LicenseFile', 'LicensedCaption'),
+			# These are for dicts which map to another dict, where each key-value pair has its own tag
+			'board_addons'  : ('ProjectBoardAddon', 'Caption', [('vendor', 'Vendor'), ('position', 'Position')]),
 		}
 
 		# Create the top level XML element
@@ -227,16 +253,25 @@ class PythonFacade:
 					tag_e.text = project_data[key]
 
 				# Add dict-ified project data to XML
-				for key, (top_tag, key_tag, list_tag) in project_data_key_to_dict_tags.items():
-					for data_key, data_list in project_data[key].items():
+				for key, (top_tag, key_tag, data_tag_map) in project_data_key_to_dict_tag_maps.items():
+					for data_key, data_obj in project_data[key].items():
 						top_tag_e = ET.SubElement(project_e, top_tag)
 
 						key_tag_e = ET.SubElement(top_tag_e, key_tag)
 						key_tag_e.text = data_key
 
-						for list_entry in data_list:
-							list_tag_e = ET.SubElement(top_tag_e, list_tag)
-							list_tag_e.text = list_entry
+						if isinstance(data_tag_map, str):
+							data_tag = data_tag_map
+
+							for list_entry in data_obj:
+								data_tag_e = ET.SubElement(top_tag_e, data_tag)
+								data_tag_e.text = list_entry
+
+						else:
+							assert(isinstance(data_tag_map, list))
+							for data_obj_key, data_tag in data_tag_map:
+								data_tag_e = ET.SubElement(top_tag_e, data_tag)
+								data_tag_e.text = data_obj.get(data_obj_key)
 
 		# Now write to file
 		etree = ET.ElementTree(asf_projects_e)
@@ -256,6 +291,8 @@ class PythonFacade:
 			project_data = {
 				'id'            : generator.project_id,
 				'type'          : generator.project_type,
+				'board_vendor'  : generator.project_board_vendor,
+				'board_addons'  : generator.project_board_addons,
 				'device'        : generator.project_device,
 				'device_series' : generator.project_device_series,
 				'caption'       : generator.project_caption,

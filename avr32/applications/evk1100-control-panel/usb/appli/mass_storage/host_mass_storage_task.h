@@ -6,7 +6,7 @@
  *
  * This file manages the USB host mass-storage task.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -100,5 +100,17 @@ extern bool host_mass_storage_task_sync_drives( signed short FsNavId,
                                                 const char *pcdir_name,
                                                 bool bDeleteSrc );
 
+//!
+//! @brief Synchronize the contents of two directories between the USB drive and
+//! the AT45DBX dataflash file systems.
+//!
+//! @param pcdir_name      const char *: directory name null-terminated string
+//! @param sync_direction  U8: DEVICE_TO_HOST, HOST_TO_DEVICE or FULL_SYNC
+//! @param bDeleteSrc   bool: if true delete the src directory content.
+//!
+//! @return bool: true on success else false
+//!
+bool host_mass_storage_task_copy_tree( const char *pcdir_name, U8 sync_direction,
+bool bDeleteSrc );
 
 #endif  // _HOST_MASS_STORAGE_TASK_H_

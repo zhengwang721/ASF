@@ -74,7 +74,7 @@
  * The most relevant module dependencies of this example are:
  *   - \ref sleepmgr_group
  *   - \ref clk_group
- *   - \ref ioport_service_group
+ *   - \ref ioport_group
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for AVR. Other compilers

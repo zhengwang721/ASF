@@ -87,6 +87,8 @@ typedef struct {
 	uint32_t ul_descriptor_addr;  /**< Next descriptor address */
 } dma_transfer_descriptor_t;
 
+#define DMA_MAX_LENGTH 0xFFFu
+
 void dmac_init(Dmac *p_dmac);
 void dmac_set_priority_mode(Dmac *p_dmac, dmac_priority_mode_t mode);
 void dmac_enable(Dmac *p_dmac);

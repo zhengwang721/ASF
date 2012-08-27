@@ -109,6 +109,20 @@ struct win_window *wtk_slider_as_child(struct wtk_slider *slider)
 }
 
 /**
+ * This function returns the window command of the specified slider, as set
+ * when the widget was created.
+ *
+ * \param button Slider widget to manage.
+ *
+ * \return Associated window command of the slider widget.
+ */
+win_command_t wtk_slider_get_command(struct wtk_slider *slider)
+{
+	Assert(slider);
+	return slider->command;
+}
+
+/**
  * \brief Get slider status.
  *
  * Returns whether or not the slider is currently being manipulated by pointer
@@ -229,6 +243,10 @@ static bool wtk_slider_handler(struct win_window *win, enum win_event_type type,
 	uint8_t option;
 	uint8_t value;
 	bool send_command;
+	uint8_t new_position;
+	struct win_area bg1_draw_area;
+	struct win_area bg2_draw_area;
+	struct win_area knob_draw_area;
 
 	slider = (struct wtk_slider *)win_get_custom_data(win);
 
@@ -251,44 +269,60 @@ static bool wtk_slider_handler(struct win_window *win, enum win_event_type type,
 			knob_color = WTK_SLIDER_KNOB_COLOR_MOVING;
 		}
 
+		/* Set up the drawing areas */
+		knob_draw_area.pos = clip->origin;
+		knob_draw_area.size = area->size;
+		bg1_draw_area = knob_draw_area;
+		win_inflate_area(&bg1_draw_area, -1);
+		bg2_draw_area = bg1_draw_area;
+
+		/* Draw the slider knob according to configured orientation. */
+		if (option & WTK_SLIDER_VERTICAL) {
+			knob_draw_area.pos.y += slider->position + 1;
+			knob_draw_area.size.y = WTK_SLIDER_KNOB_WIDTH;
+			bg1_draw_area.size.y = slider->position;
+			bg2_draw_area.pos.y += slider->position +
+					WTK_SLIDER_KNOB_WIDTH;
+			bg2_draw_area.size.y -= slider->position +
+					WTK_SLIDER_KNOB_WIDTH;
+		} else {
+			knob_draw_area.pos.x += slider->position + 1;
+			knob_draw_area.size.x = WTK_SLIDER_KNOB_WIDTH;
+			bg1_draw_area.size.x = slider->position;
+			bg2_draw_area.pos.x += slider->position +
+					WTK_SLIDER_KNOB_WIDTH;
+			bg2_draw_area.size.x -= slider->position +
+					WTK_SLIDER_KNOB_WIDTH;
+		}
+
+		/* Draw slider knob border. */
+		gfx_draw_rect(knob_draw_area.pos.x, knob_draw_area.pos.y,
+				knob_draw_area.size.x, knob_draw_area.size.y,
+				WTK_SLIDER_BORDER_COLOR);
+
+		/* Shrink knob area for the graphical fill */
+		win_inflate_area(&knob_draw_area, -1);
+
+		/* Draw slider knob. */
+		gfx_draw_filled_rect(knob_draw_area.pos.x, knob_draw_area.pos.y,
+				knob_draw_area.size.x, knob_draw_area.size.y,
+				knob_color);
+
+		/* Draw left/top section of background around the slider */
+		gfx_draw_filled_rect(bg1_draw_area.pos.x, bg1_draw_area.pos.y,
+				bg1_draw_area.size.x, bg1_draw_area.size.y,
+				WTK_SLIDER_BACKGROUND_COLOR);
+
+		/* Draw right/bottom section of background around the slider */
+		gfx_draw_filled_rect(bg2_draw_area.pos.x, bg2_draw_area.pos.y,
+				bg2_draw_area.size.x, bg2_draw_area.size.y,
+				WTK_SLIDER_BACKGROUND_COLOR);
+
 		/* Draw slider frame border. */
 		gfx_draw_rect(clip->origin.x,
 				clip->origin.y,
 				area->size.x,
 				area->size.y, WTK_SLIDER_BORDER_COLOR);
-
-		/* Draw slider frame background within frame. */
-		gfx_draw_filled_rect(clip->origin.x + 1,
-				clip->origin.y + 1,
-				area->size.x - 2,
-				area->size.y - 2, WTK_SLIDER_BACKGROUND_COLOR);
-
-		/* Draw the slider knob according to configured orientation. */
-		if (option & WTK_SLIDER_VERTICAL) {
-			/* Draw slider knob border. */
-			gfx_draw_rect(clip->origin.x,
-					clip->origin.y + slider->position,
-					area->size.x,
-					WTK_SLIDER_KNOB_WIDTH,
-					WTK_SLIDER_BORDER_COLOR);
-
-			/* Draw slider knob. */
-			gfx_draw_filled_rect(clip->origin.x + 1,
-					clip->origin.y + slider->position + 1,
-					area->size.x - 2,
-					WTK_SLIDER_KNOB_WIDTH - 2, knob_color);
-		} else {
-			gfx_draw_rect(clip->origin.x + slider->position,
-					clip->origin.y,
-					WTK_SLIDER_KNOB_WIDTH,
-					area->size.y, WTK_SLIDER_BORDER_COLOR);
-
-			gfx_draw_filled_rect(clip->origin.x + slider->position
-					+ 1,
-					clip->origin.y + 1,
-					WTK_SLIDER_KNOB_WIDTH - 2,
-					area->size.y - 2, knob_color);
-		}
 
 		/* Always accept DRAW events, as the return value is ignored
 		 * anyway for that event type.
@@ -370,16 +404,18 @@ static bool wtk_slider_handler(struct win_window *win, enum win_event_type type,
 					/* Compute knob position from value to
 					 * get correct positioning.
 					 */
-					slider->position
-						= wtk_rescale_value(value,
-							slider->maximum,
+					new_position = wtk_rescale_value(
+							value, slider->maximum,
 							length);
 
 					if (option & WTK_SLIDER_CMD_MOVE) {
 						send_command = true;
 					}
 
-					win_redraw(win);
+					if (new_position != slider->position) {
+						slider->position = new_position;
+						win_redraw(win);
+					}
 				}
 			}
 
@@ -416,7 +452,7 @@ static bool wtk_slider_handler(struct win_window *win, enum win_event_type type,
 			win_queue_command_event(&command);
 		}
 
-		/* Accept all POINTER events since all acitivity inside the
+		/* Accept all POINTER events since all activity inside the
 		 * widget window is relevant.
 		 */
 		return true;

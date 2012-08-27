@@ -12,6 +12,7 @@
 		<build type="c-source" value="adc_sensors.c"/>
 		<build type="c-source" value="usb_hid_com.c"/>
 		<build type="include-path" value="."/>
+		<device-support value="xmegab1"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="common.services.usb.class.device"/>

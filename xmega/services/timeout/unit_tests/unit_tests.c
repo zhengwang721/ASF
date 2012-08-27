@@ -265,6 +265,7 @@ int main (void)
 	pmic_init();
 	timeout_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	cpu_irq_enable();
 
 	// Define all the test cases
 	DEFINE_TEST_CASE(timeout_test1, NULL, test_initialization, NULL,

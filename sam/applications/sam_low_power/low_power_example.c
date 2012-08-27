@@ -145,7 +145,7 @@ static void set_default_working_clock(void)
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 	/* Switch mainck to external xtal */
-	pmc_switch_mainck_to_xtal(0);
+	pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 
 	/*
 	 * Configure PLLA and switch clock.
@@ -188,8 +188,7 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 	pmc_enable_periph_clk(CONSOLE_UART_ID);
 
 	/* Configure PIO */
-	pio_configure(PINS_UART_PIO, PINS_UART_TYPE, PINS_UART_MASK,
-			PINS_UART_ATTR);
+	gpio_configure_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
 
 	/* Configure UART */
 	uart_init(CONF_UART, &uart_console_settings);
@@ -268,7 +267,7 @@ static void user_change_clock(uint8_t *p_uc_str)
 		pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 		/* Switch mainck to external xtal */
-		pmc_switch_mainck_to_xtal(0);
+		pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
 		/* Configure PLLA and switch clock */
 		pmc_enable_pllack(g_pll_clock_list[ul_id][1], PLLA_COUNT,
 				g_pll_clock_list[ul_id][2]);

@@ -69,6 +69,7 @@
 			<require idref="sam.utils"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="sam.drivers.uart"/>
+			<require idref="sam.drivers.usart"/>
 			<device-support value="sam"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>

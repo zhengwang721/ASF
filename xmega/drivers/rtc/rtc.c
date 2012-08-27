@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Real Time Counter driver
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,11 @@
 #include <sysclk.h>
 #include <sleepmgr.h>
 #include <rtc.h>
+
+#ifdef CONFIG_RTC_CLOCK_SOURCE
+# error CONFIG_RTC_CLOCK_SOURCE is deprecated. Use CONFIG_RTC_SOURCE in \
+        conf_clock.h as it is now done in sysclk_init()
+#endif
 
 #ifdef CONFIG_RTC_OVERFLOW_INT_LEVEL
 # define RTC_OVERFLOW_INT_LEVEL CONFIG_RTC_OVERFLOW_INT_LEVEL
@@ -119,14 +124,19 @@ void rtc_set_time(uint32_t time)
  *
  * \return Current time value
  *
- * \note Due to errata, this can return old values shortly after waking up from
- * sleep.
+ * \note For devices with the errata "RTC Counter value not correctly read
+ *       after sleep", this can return old values shortly after waking up from
+ *       sleep.
+ * \note Without this errata this function can block for up to 1 RTC
+ *       clock source cycle after waking up from sleep.
  */
 uint32_t rtc_get_time(void)
 {
 	irqflags_t flags;
 	uint16_t   count_high;
 	uint16_t   count_low;
+
+	while (rtc_is_busy());
 
 	flags = cpu_irq_save();
 	count_high = rtc_data.counter_high;
@@ -179,11 +189,13 @@ void rtc_set_callback(rtc_callback_t callback)
  * \brief Initialize the RTC
  *
  * Start up the RTC and start counting from 0
+ *
+ * \note The RTC clock source used by the RTC module should be set up before
+ *       calling this function. 
  */
 void rtc_init(void)
 {
 	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_RTC);
-	CLK.RTCCTRL = CONFIG_RTC_CLOCK_SOURCE | CLK_RTCEN_bm;
 	RTC.PER = 0xffff;
 	RTC.CNT = 0;
 	/* Since overflow interrupt is needed all the time we limit sleep to

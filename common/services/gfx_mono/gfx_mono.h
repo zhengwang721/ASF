@@ -3,7 +3,7 @@
  *
  * \brief Monochrome graphic library API header file
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,8 @@
 /**
  * \defgroup gfx_mono Monochrome graphical display system
  *
+ * See \ref gfx_mono_quickstart.
+ *
  * This library provides an interface to drawing graphics on monochrome
  * graphical displays
  *
@@ -61,9 +63,6 @@
  * - Display driver interface (gfx_mono.h)
  * - General graphics drawing primitives (gfx_mono_generic.h)
  * - Display specific implementation (ex. gfx_mono_c12832_a1z.h)
- *
- * The display driver interface provides an general interface to be used by
- * the application or by libraries like \ref gfx_mono_font
  *
  * The generic drawing primitives is a library of functions for drawing
  * graphics primitives such as lines, rectangles and circles. It uses other
@@ -86,80 +85,80 @@
 typedef uint8_t gfx_mono_color_t;
 typedef uint8_t gfx_coord_t;
 
-//! Pixel operations
+/** Pixel operations */
 enum gfx_mono_color {
-	//! Pixel is cleared
+	/** Pixel is cleared */
 	GFX_PIXEL_CLR = 0,
-	//! Pixel is set on screen (OR)
+	/** Pixel is set on screen (OR) */
 	GFX_PIXEL_SET = 1,
-	//! Pixel is XORed
+	/** Pixel is XORed */
 	GFX_PIXEL_XOR = 2,
 };
 
-//! Bitmap types
+/** Bitmap types */
 enum gfx_mono_bitmap_type {
-	//! Bitmap stored in SRAM
+	/** Bitmap stored in SRAM */
 	GFX_MONO_BITMAP_RAM,
-	//! Bitmap stored in progmem
+	/** Bitmap stored in progmem */
 	GFX_MONO_BITMAP_PROGMEM
 };
 
-// Cannot be moved to top, as they use the bitmap and color enums.
+/* Cannot be moved to top, as they use the bitmap and color enums. */
 #ifdef USE_SDL
 # include "gfx_mono_sdl.h"
 #elif defined(GFX_MONO_C12832_A1Z)
 # include "gfx_mono_c12832_a1z.h"
-// NULL driver by default
+/* NULL driver by default */
 #else
 # include "gfx_mono_null.h"
 #endif
 #include "gfx_mono_generic.h"
 
-//! \name Circle Sector Definitions
-//@{
+/** \name Circle Sector Definitions */
+/** @{ */
 
-//! Bitmask for drawing circle octant 0.
+/** Bitmask for drawing circle octant 0. */
 #define GFX_OCTANT0     (1 << 0)
-//! Bitmask for drawing circle octant 1.
+/** Bitmask for drawing circle octant 1. */
 #define GFX_OCTANT1     (1 << 1)
-//! Bitmask for drawing circle octant 2.
+/** Bitmask for drawing circle octant 2. */
 #define GFX_OCTANT2     (1 << 2)
-//! Bitmask for drawing circle octant 3.
+/** Bitmask for drawing circle octant 3. */
 #define GFX_OCTANT3     (1 << 3)
-//! Bitmask for drawing circle octant 4.
+/** Bitmask for drawing circle octant 4. */
 #define GFX_OCTANT4     (1 << 4)
-//! Bitmask for drawing circle octant 5.
+/** Bitmask for drawing circle octant 5. */
 #define GFX_OCTANT5     (1 << 5)
-//! Bitmask for drawing circle octant 6.
+/** Bitmask for drawing circle octant 6. */
 #define GFX_OCTANT6     (1 << 6)
-//! Bitmask for drawing circle octant 7.
+/** Bitmask for drawing circle octant 7. */
 #define GFX_OCTANT7     (1 << 7)
 
-//! Bitmask for drawing circle quadrant 0.
+/** Bitmask for drawing circle quadrant 0. */
 #define GFX_QUADRANT0   (GFX_OCTANT0 | GFX_OCTANT1)
-//! Bitmask for drawing circle quadrant 1.
+/** Bitmask for drawing circle quadrant 1. */
 #define GFX_QUADRANT1   (GFX_OCTANT2 | GFX_OCTANT3)
-//! Bitmask for drawing circle quadrant 2.
+/** Bitmask for drawing circle quadrant 2. */
 #define GFX_QUADRANT2   (GFX_OCTANT4 | GFX_OCTANT5)
-//! Bitmask for drawing circle quadrant 3.
+/** Bitmask for drawing circle quadrant 3. */
 #define GFX_QUADRANT3   (GFX_OCTANT6 | GFX_OCTANT7)
 
-//! Bitmask for drawing left half of circle.
+/** Bitmask for drawing left half of circle. */
 #define GFX_LEFTHALF    (GFX_QUADRANT3 | GFX_QUADRANT0)
-//! Bitmask for drawing top half of circle.
+/** Bitmask for drawing top half of circle. */
 #define GFX_TOPHALF     (GFX_QUADRANT0 | GFX_QUADRANT1)
-//! Bitmask for drawing right half of circle.
+/** Bitmask for drawing right half of circle. */
 #define GFX_RIGHTHALF   (GFX_QUADRANT1 | GFX_QUADRANT2)
-//! Bitmask for drawing bottom half of circle.
+/** Bitmask for drawing bottom half of circle. */
 #define GFX_BOTTOMHALF  (GFX_QUADRANT2 | GFX_QUADRANT3)
 
-//! Bitmask for drawing whole circle.
+/** Bitmask for drawing whole circle. */
 #define GFX_WHOLE       0xFF
 
-//@}
+/** @} */
 
-//! \name Graphic Drawing Primitives
-//@{
+/** \name Graphic Drawing Primitives */
+/** @{ */
 
 /**
  * \def gfx_mono_draw_horizontal_line(x, y, length, color)
@@ -258,6 +257,45 @@ enum gfx_mono_bitmap_type {
  * \param  quadrant_mask Bitmask indicating which quadrants to draw.
  */
 
-//! @}
+/** @} */
 
-#endif // GFX_MONO_H
+/** @} */
+
+/**
+ * \page gfx_mono_quickstart Quick Start Guide for the mono graphics service
+ *
+ * This is the quick start guide for the \ref gfx_mono "Monochrome Graphics service",
+ * with step-by-step instructions on how to configure and use it for a specific
+ * use case.
+ *
+ * \section gfx_mono_quickstart_basic Basic usage of the graphics service
+ * This use case will demonstrate initializing the mono graphics service and
+ * then draw a black line on the screen from coordinates X=10, Y=10 to X=20,
+ * Y=20.
+ *
+ * \section gfx_mono_basic_usage Usage steps
+ * \subsection gfx_mono_basic_usage_code Example code
+ * Add to, e.g., the main function in the application C-file:
+ * \code
+ * board_init();
+ * sysclk_init();
+ * gfx_mono_init();
+ * gfx_mono_draw_line(10, 10, 20, 20, GFX_PIXEL_SET);
+ * \endcode
+ *
+ * \subsection gfx_mono_basic_usage Workflow
+ * -# Initialize board IO:
+ *  - \code board_init(); \endcode
+ * -# Initialize clocks:
+ *  - \code sysclk_init(); \endcode
+ * -# Initialize monochrome graphics service
+ *  - \code gfx_mono_init(); \endcode
+ *  - \note This will call the init function for the low level display
+ *          controller driver and intialize the screen to a cleared background.
+ * -# Draw a line from 10,10 to 20,20:
+ * -  \code gfx_mono_draw_line(10, 10, 20, 20, GFX_PIXEL_SET); \endcode
+ * -  \note This uses GFX_PIXEL_SET to set the display pixels on the line;
+ *          other options can be found in \ref gfx_mono_color.
+ */
+
+#endif /* GFX_MONO_H */

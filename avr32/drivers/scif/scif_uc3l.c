@@ -190,12 +190,12 @@ long int scif_configure_osc_crystalmode(scif_osc_t osc, unsigned int fcrystal)
   u_avr32_scif_oscctrl0_t   u_avr32_scif_oscctrl0 = {AVR32_SCIF.oscctrl0};
 
   // Configure the oscillator mode to crystal and set the gain according to the
-  // crystal frequency.
+  // crystal frequency. Gain G3 (for power optimization) is unused and if 
+  // required will need to be set manually.
   u_avr32_scif_oscctrl0.OSCCTRL0.mode = SCIF_OSC_MODE_2PIN_CRYSTAL;
-  u_avr32_scif_oscctrl0.OSCCTRL0.gain = (fcrystal <  900000) ? AVR32_SCIF_OSCCTRL0_GAIN_G0 :
-                                        (fcrystal < 3000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G1 :
-                                        (fcrystal < 8000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G2 :
-                                                               AVR32_SCIF_OSCCTRL0_GAIN_G3;
+  u_avr32_scif_oscctrl0.OSCCTRL0.gain = (fcrystal < 12000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G0 :
+                                        (fcrystal < 16000000) ? AVR32_SCIF_OSCCTRL0_GAIN_G1 :
+                                        AVR32_SCIF_OSCCTRL0_GAIN_G2;
   AVR32_ENTER_CRITICAL_REGION( );
   // Unlock the write-protected OSCCTRL0 register
   SCIF_UNLOCK(AVR32_SCIF_OSCCTRL0);

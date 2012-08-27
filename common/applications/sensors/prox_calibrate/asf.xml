@@ -11,6 +11,8 @@
 		</info>
 		<build type="c-source" value="main.c"/>
 		<build type="linker-config" subtype="flags" value="-u,vfprintf -lprintf_flt" toolchain="avrgcc"/>
+		<device-support value="uc3"/>
+		<device-support value="xmega"/>
 		<require idref="common.services.sensors"/>
 	</module>
 </asf>

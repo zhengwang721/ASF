@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rc100x.atxmega128a1" caption="STK600" mcu="atxmega128a1">
+	<board id="board.stk600-rc100x.atxmega128a1" vendor="Atmel" caption="STK600" mcu="atxmega128a1">
 		<build type="define" name="BOARD" value="STK600_RC100X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>
@@ -32,9 +33,10 @@
 		<require idref="config.board.stk600-rc100x.init"/>
 	</board>
 
-	<board id="board.stk600-rc100x.atxmega128b1" caption="STK600" mcu="atxmega128b1">
+	<board id="board.stk600-rc100x.atxmega128b1" vendor="Atmel" caption="STK600" mcu="atxmega128b1">
 		<build type="define" name="BOARD" value="STK600_RC100X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>
@@ -43,9 +45,10 @@
 		<require idref="config.board.stk600-rc100x.init"/>
 	</board>
 
-	<board id="board.stk600-rc100x.atxmega64b1" caption="STK600" mcu="atxmega64b1">
+	<board id="board.stk600-rc100x.atxmega64b1" vendor="Atmel" caption="STK600" mcu="atxmega64b1">
 		<build type="define" name="BOARD" value="STK600_RC100X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>
@@ -54,9 +57,10 @@
 		<require idref="config.board.stk600-rc100x.init"/>
 	</board>
 
-	<board id="board.stk600-rc100x.atxmega128a1u" caption="STK600" mcu="atxmega128a1u">
+	<board id="board.stk600-rc100x.atxmega128a1u" vendor="Atmel" caption="STK600" mcu="atxmega128a1u">
 		<build type="define" name="BOARD" value="STK600_RC100X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>
@@ -65,9 +69,10 @@
 		<require idref="config.board.stk600-rc100x.init"/>
 	</board>
 
-	<board id="board.stk600-rc100x.atxmega64a1u" caption="STK600" mcu="atxmega64a1u">
+	<board id="board.stk600-rc100x.atxmega64a1u" vendor="Atmel" caption="STK600" mcu="atxmega64a1u">
 		<build type="define" name="BOARD" value="STK600_RC100X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="stk600_rc100x.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../.."/>

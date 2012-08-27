@@ -44,6 +44,6 @@
 #ifndef WIDGET_GUI_H_
 #define WIDGET_GUI_H_
 
-void app_widget_launch(void);
+bool app_widget_launch(void);
 
 #endif /* WIDGET_GUI_H_ */

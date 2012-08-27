@@ -7,7 +7,7 @@
  * This file manages the USB Audio streaming player for both the USB Device
  * or Host modes.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -296,10 +296,7 @@ extern usb_stream_context_t *usb_stream_context;
  *
  * \return \c number of used buffers.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int usb_stream_fifo_get_used_room( void )
+__always_inline static int usb_stream_fifo_get_used_room( void )
 {
   return (usb_stream_context->wr_id + 2 * USB_STREAM_BUFFER_NUMBER -
           usb_stream_context->rd_id) % (2 * USB_STREAM_BUFFER_NUMBER) +
@@ -314,10 +311,7 @@ static inline int usb_stream_fifo_get_used_room( void )
  *
  * \return \c number of free buffers.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int usb_stream_fifo_get_free_room( void )
+__always_inline static int usb_stream_fifo_get_free_room( void )
 {
   return USB_STREAM_BUFFER_NUMBER - usb_stream_fifo_get_used_room();
 }
@@ -329,10 +323,7 @@ static inline int usb_stream_fifo_get_free_room( void )
  *
  * \return \c pointer on buffer
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline int8_t* usb_stream_fifo_get_buffer( uint8_t index )
+__always_inline static int8_t* usb_stream_fifo_get_buffer( uint8_t index )
 {
   return (int8_t*)usb_stream_context->audio_buffer[index % USB_STREAM_BUFFER_NUMBER];
 }
@@ -343,10 +334,7 @@ static inline int8_t* usb_stream_fifo_get_buffer( uint8_t index )
  *
  * \param size       Size of the buffer.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void usb_stream_fifo_push( uint16_t size )
+__always_inline static void usb_stream_fifo_push( uint16_t size )
 {
   // Prepare current buffer. Buffer content has been filled before.
   usb_stream_context->audio_buffer_size[usb_stream_context->wr_id % USB_STREAM_BUFFER_NUMBER] = size;
@@ -362,10 +350,7 @@ static inline void usb_stream_fifo_push( uint16_t size )
  * \param pp_buffer  (return parameter) Pointer to the buffer address to update.
  * \param p_size     (return parameter) Pointer to the size of the buffer.
  */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void usb_stream_fifo_get( void** pp_buffer, uint16_t* p_size )
+__always_inline static void usb_stream_fifo_get( void** pp_buffer, uint16_t* p_size )
 {
   // Gives current buffer to PWM DAC driver.
   uint8_t audio_buffer_rd_id = usb_stream_context->rd_id % USB_STREAM_BUFFER_NUMBER;
@@ -374,13 +359,8 @@ static inline void usb_stream_fifo_get( void** pp_buffer, uint16_t* p_size )
   usb_stream_context->audio_buffer_size[audio_buffer_rd_id] = 0;
 }
 
-
-/*! \brief This function increases the read index of the FIFO.
- */
-#if (defined __GNUC__)
-__attribute__((__always_inline__))
-#endif
-static inline void usb_stream_fifo_pull( void )
+/*! \brief This function increases the read index of the FIFO. */
+__always_inline static void usb_stream_fifo_pull( void )
 {
   usb_stream_context->rd_id = (usb_stream_context->rd_id + 1) % (2 * USB_STREAM_BUFFER_NUMBER);
 }

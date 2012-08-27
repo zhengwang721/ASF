@@ -4,6 +4,7 @@
 		Read the flash Unique ID information.
 		</info>
 		<build type="c-source" value="flash_read_unique_id_example.c"/>
+		<device-support value="sam"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.uart"/>

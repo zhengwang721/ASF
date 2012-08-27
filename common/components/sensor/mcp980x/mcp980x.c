@@ -54,6 +54,8 @@ extern "C" {
 /**
  * \defgroup common_component_sensors_mcp980x_group MCP980X Temperature Sensor
  *
+ * See \ref common_component_sensors_mcp980x_quickstart.
+ *
  * \par Purpose
  *
  * The module provides useful API of MCP980X temperature sensor through a TWI interface.

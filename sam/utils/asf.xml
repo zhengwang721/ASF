@@ -11,6 +11,7 @@
 		<build type="doxygen-entry-point" value="group_sam_utils" />
 		<require idref="sam.utils.preprocessor"/>
 		<require idref="sam.utils.makefile"/>
+		<require idref="sam.utils.syscalls"/>
 		<require idref="common.utils.interrupt" />
 		<require idref="common.utils.part_macros" />
 		<info type="gui-flag" value="hidden"/>
@@ -29,7 +30,7 @@
 			<require idref="sam.utils.cmsis.sam3s.include.component"/>
 			<require idref="sam.utils.cmsis.sam3s.include.instance"/>
 			<require idref="sam.utils.cmsis.sam3s.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam3s.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam3s"/>
 		</module>
@@ -44,7 +45,7 @@
 			<require idref="sam.utils.cmsis.sam3s8.include.component"/>
 			<require idref="sam.utils.cmsis.sam3s8.include.instance"/>
 			<require idref="sam.utils.cmsis.sam3s8.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam3sd8.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam3sd"/>
 		</module>
@@ -59,7 +60,7 @@
 			<require idref="sam.utils.cmsis.sam3n.include.component"/>
 			<require idref="sam.utils.cmsis.sam3n.include.instance"/>
 			<require idref="sam.utils.cmsis.sam3n.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam3n.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam3n"/>
 		</module>
@@ -74,7 +75,7 @@
 			<require idref="sam.utils.cmsis.sam3u.include.component"/>
 			<require idref="sam.utils.cmsis.sam3u.include.instance"/>
 			<require idref="sam.utils.cmsis.sam3u.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam3u.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam3u"/>
 		</module>
@@ -89,7 +90,7 @@
 			<require idref="sam.utils.cmsis.sam3x.include.component"/>
 			<require idref="sam.utils.cmsis.sam3x.include.instance"/>
 			<require idref="sam.utils.cmsis.sam3x.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam3x.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam3x"/>
 		</module>
@@ -104,7 +105,7 @@
 			<require idref="sam.utils.cmsis.sam4s.include.component"/>
 			<require idref="sam.utils.cmsis.sam4s.include.instance"/>
 			<require idref="sam.utils.cmsis.sam4s.include.pio"/>
-			<require idref="sam.utils.preprocessor"/>
+			<require idref="sam.utils.cmsis.sam4s.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam4s"/>
 		</module>

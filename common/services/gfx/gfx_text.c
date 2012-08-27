@@ -268,26 +268,100 @@ void gfx_draw_string(const char *str, gfx_coord_t x, gfx_coord_t y,
 		const struct font *font, const gfx_color_t bg_color,
 		const gfx_color_t text_color)
 {
-	/* Save X in order to know where to return to on CR. */
-	const gfx_coord_t start_of_string_position_x = x;
+	gfx_draw_string_aligned(str, x, y, font, bg_color, text_color,
+			TEXT_POS_LEFT, TEXT_ALIGN_LEFT);
+}
+
+/**
+ * \brief Draws an aligned string to the display
+ *
+ * This function will draw a string located in memory to the display
+ * with the specified alignment.
+ *
+ * \param str         Pointer to string
+ * \param x           X coordinate on screen.
+ * \param y           Y coordinate on screen.
+ * \param font        Font to draw string in
+ * \param bg_color    Background color to draw behind the text string
+ * \param text_color  Foreground color to draw the text string in
+ * \param text_pos    Position of the coordinate relative to the text paragraph
+ * \param text_align  Alignment of text lines within the paragraph bounding box
+ */
+void gfx_draw_string_aligned(const char *str, gfx_coord_t x, gfx_coord_t y,
+		const struct font *font, const gfx_color_t bg_color,
+		const gfx_color_t text_color, enum gfx_text_position text_pos,
+		enum gfx_text_alignment text_align)
+{
+	gfx_coord_t bounding_x, bounding_y;
 
 	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	/* Draw characters until trailing null byte */
-	do {
-		/* Handle '\n' as newline, draw normal characters. */
-		if (*str == '\n') {
-			x = start_of_string_position_x;
-			y += font->height + 1;
-		} else if (*str == '\r') {
-			/* Skip '\r' characters. */
-		} else {
-			gfx_draw_char(*str, x, y, font, bg_color, text_color);
-			x += font->width;
+	/* Retrieve the bounding box of the overall text paragraph */
+	gfx_get_string_bounding_box(str, font, &bounding_x, &bounding_y);
+
+	/* Move the Y coordinate according to the Y positional setting given */
+	if (text_pos & TEXT_POS_CENTER_Y) {
+		y -= bounding_y / 2;
+	} else if (text_pos & TEXT_POS_BOTTOM) {
+		y -= bounding_y;
+	}
+
+	/* Move the X coordinate according to the X positional setting given */
+	if (text_pos & TEXT_POS_CENTER_X) {
+		x -= bounding_x / 2;
+	} else if (text_pos & TEXT_POS_RIGHT) {
+		x -= bounding_x;
+	}
+
+	/* Need to draw each line of the text paragraph individually */
+	while (*str != '\0') {
+		const char *curr_line_text = str;
+		gfx_coord_t curr_line_x = x;
+		gfx_coord_t curr_line_width = 0;
+
+		/* Determine width of current line in the the paragraph */
+		do {
+			if (*str == '\n') {
+				str++;
+				break;
+			} else if (*str != '\r') {
+				curr_line_width += font->width;
+			}
+		} while (*(++str) != '\0');
+
+		/* Move the line starting X coordinate on the display according
+		 * to the line width and the specified text alignment parameter
+		 */
+		if (text_align == TEXT_ALIGN_CENTER) {
+			curr_line_x += (bounding_x / 2) - (curr_line_width / 2);
+		} else if (text_align == TEXT_ALIGN_RIGHT) {
+			curr_line_x += bounding_x - curr_line_width;
 		}
-	} while (*(++str));
+
+		/* Draw current line to the display with the calculated
+		 * coordinates
+		 */
+		do {
+			if (*curr_line_text == '\n') {
+				break;
+			} else if (*curr_line_text != '\r') {
+				gfx_draw_char(*curr_line_text, curr_line_x, y,
+						font, bg_color, text_color);
+
+				/* Step to the next character display X
+				 * coordinate
+				 */
+				curr_line_x += font->width;
+			}
+		} while (*(++curr_line_text) != '\0');
+
+		/* Step to the next Y line coordinate for the next line in
+		 * paragraph
+		 */
+		y += font->height + 1;
+	}
 }
 
 /**
@@ -311,32 +385,118 @@ void gfx_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 		gfx_coord_t y, const struct font *font,
 		const gfx_color_t bg_color, const gfx_color_t text_color)
 {
-	char temp_char;
+	gfx_draw_progmem_string_aligned(str, x, y, font, bg_color, text_color,
+			TEXT_POS_LEFT, TEXT_ALIGN_LEFT);
+}
+
+/**
+ * \brief Draws an aligned string located in program memory to the display
+ *
+ * This function will draw a string located in program memory to the display
+ * with the specified alignment. This differs from gfx_draw_aligned_string() by
+ * using constant string data from the program memory instead of string data in
+ * RAM.
+ *
+ * \param str         Pointer to string located in program memory
+ * \param x           X coordinate on screen.
+ * \param y           Y coordinate on screen.
+ * \param font        Font to draw string in
+ * \param bg_color    Background color to draw behind the text string
+ * \param text_color  Foreground color to draw the text string in
+ * \param text_pos    Position of the coordinate relative to the text paragraph
+ * \param text_align  Alignment of text lines within the paragraph bounding box
+ */
+void gfx_draw_progmem_string_aligned(char PROGMEM_PTR_T str,
+		gfx_coord_t x, gfx_coord_t y, const struct font *font,
+		const gfx_color_t bg_color, const gfx_color_t text_color,
+		enum gfx_text_position text_pos,
+		enum gfx_text_alignment text_align)
+{
+	gfx_coord_t bounding_x, bounding_y;
+	char curr_str_char;
 
 	/* Sanity check on parameters, assert if str or font is NULL. */
 	Assert(str != NULL);
 	Assert(font != NULL);
 
-	/* Save X in order to know where to return to on CR. */
-	const gfx_coord_t start_of_string_position_x = x;
+	/* Retrieve the bounding box of the overall text paragraph */
+	gfx_get_progmem_string_bounding_box(str, font,
+			&bounding_x, &bounding_y);
 
-	/* Draw characters until trailing null byte */
-	temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)str);
+	/* Move the Y coordinate according to the Y positional setting given */
+	if (text_pos & TEXT_POS_CENTER_Y) {
+		y -= bounding_y / 2;
+	} else if (text_pos & TEXT_POS_BOTTOM) {
+		y -= bounding_y;
+	}
 
-	while (temp_char) {
-		/* Handle '\n' as newline, draw normal characters. */
-		if (temp_char == '\n') {
-			x = start_of_string_position_x;
-			y += font->height + 1;
-		} else if (*str == '\r') {
-			/* Skip '\r' characters. */
-		} else {
-			gfx_draw_char(temp_char, x, y, font, bg_color,
-					text_color);
-			x += font->width;
+	/* Move the X coordinate according to the X positional setting given */
+	if (text_pos & TEXT_POS_CENTER_X) {
+		x -= bounding_x / 2;
+	} else if (text_pos & TEXT_POS_RIGHT) {
+		x -= bounding_x;
+	}
+
+	curr_str_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)str);
+
+	/* Need to draw each line of the text paragraph individually */
+	while (curr_str_char != '\0') {
+		char PROGMEM_PTR_T curr_line_text = str;
+		char curr_line_char;
+		gfx_coord_t curr_line_x = x;
+		gfx_coord_t curr_line_width = 0;
+
+		/* Determine width of current line in the the paragraph */
+		do {
+			if (curr_str_char == '\n') {
+				curr_str_char
+					= PROGMEM_READ_BYTE(
+						(uint8_t PROGMEM_PTR_T)(++str));
+				break;
+			} else if (curr_str_char != '\r') {
+				curr_line_width += font->width;
+			}
+
+			curr_str_char = PROGMEM_READ_BYTE(
+					(uint8_t PROGMEM_PTR_T)(++str));
+		} while (curr_str_char != '\0');
+
+		/* Move the line starting X coordinate on the display according
+		 * to the line width and the specified text alignment parameter
+		 */
+		if (text_align == TEXT_ALIGN_CENTER) {
+			curr_line_x += (bounding_x / 2) - (curr_line_width / 2);
+		} else if (text_align == TEXT_ALIGN_RIGHT) {
+			curr_line_x += bounding_x - curr_line_width;
 		}
 
-		temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(++str));
+		curr_line_char = PROGMEM_READ_BYTE(
+				(uint8_t PROGMEM_PTR_T)curr_line_text);
+
+		/* Draw current line to the display with the calculated
+		 * coordinates
+		 */
+		do {
+			if (*curr_line_text == '\n') {
+				break;
+			} else if (*curr_line_text != '\r') {
+				gfx_draw_char(*curr_line_text, curr_line_x, y,
+						font, bg_color, text_color);
+
+				/* Step to the next character display X
+				 *coordinate
+				 */
+				curr_line_x += font->width;
+			}
+
+			curr_line_char = PROGMEM_READ_BYTE(
+					(uint8_t PROGMEM_PTR_T)(++curr_line_text));
+		} while (curr_line_char != '\0');
+
+		/* Step to the next Y line coordinate for the next line in
+		 * paragraph
+		 */
+		y += font->height + 1;
 	}
 }
 

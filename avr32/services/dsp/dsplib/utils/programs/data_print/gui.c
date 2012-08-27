@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -318,7 +318,6 @@ void gui_create(s_gui_tab_layout *_gui_layout, HWND hwnd)
 void gui_move(s_gui_tab_layout *_gui_layout, int x, int y)
 {
      int i, inf_x, inf_y;
-     int dx, dy;
      s_gui_tab_layout_item *_gui_item;
 
      ASSERT(_gui_layout);
@@ -436,11 +435,10 @@ LRESULT CALLBACK gui_proc(s_gui_tab_layout *_gui_layout, HWND hwnd, UINT message
     LRESULT result;
     HDC hdc;
     PAINTSTRUCT ps;
-  int item_id, msg_code;
+    int item_id, msg_code;
     int i, x, y;
     s_gui_tab_layout_item *_gui_item;
     COLORREF bg_color, fg_color;
-    char _temp[256];
 
     result = 0;
     switch(message)

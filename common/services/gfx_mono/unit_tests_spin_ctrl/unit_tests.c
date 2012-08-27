@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for spinner widget
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -400,7 +400,6 @@ static void run_three_spinners_spincollection_test(const struct test_case
 static void run_event_back_spincollection_test(const struct test_case *test)
 {
 	int16_t actual[2];
-	int16_t expected[2];
 	uint8_t actual_status_code;
 	uint8_t expected_status_code;
 	struct gfx_mono_spinctrl spinner;

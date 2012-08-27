@@ -60,6 +60,7 @@ struct wtk_button *wtk_button_create(struct win_window *parent,
 		struct win_area const *area,
 		char const *caption, win_command_t command_data);
 struct win_window *wtk_button_as_child(struct wtk_button *button);
+win_command_t wtk_button_get_command(struct wtk_button *button);
 void wtk_button_size_hint(struct win_point *size, const char *caption);
 
 /** @} */

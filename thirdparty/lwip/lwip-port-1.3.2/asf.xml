@@ -10,6 +10,8 @@
 		- Any OS using the H&amp;D wireless hardware modules
 
 		- Empty port for creating a new port
+
+		- Standalone using SAM EMAC hardware module
 		</info>
 		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos" caption="lwIP port to FreeRTOS on AVR UC3 MACB hardware module.">
 			<info type="description" value="summary">
@@ -66,5 +68,44 @@
 			<device-support value="uc3"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos_sam" caption="lwIP v132 port to FreeRTOS on SAM hardware module.">
+			<info type="description" value="summary">
+			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/sys_arch.h"/>
+			<build type="include-path" value="sam/include"/>
+			<build type="c-source" value="sam/netif/ethernetif.c"/>
+			<build type="c-source" value="sam/sys_arch.c"/>
+			<device-support value="sam3x"/>
+			<require idref="sam.drivers.emac"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.rstc"/>
+			<require idref="sam.components.ethernet_phy.dm9161a"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
+		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#standalone_sam" caption="Stand-alone port(no OS) of the lwIP stack on SAM hardware module">
+			<info type="description" value="summary">
+			This lwIP port does not use any OS and is dedicated to the SAM hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="include-path" value="sam/include"/>
+			<build type="include-path" value="sam/include/netif"/>
+			<build type="c-source" value="sam/netif/ethernetif.c"/>
+			<device-support value="sam3x"/>
+			<require idref="sam.drivers.emac"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.rstc"/>
+			<require idref="sam.components.ethernet_phy.dm9161a"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
+		</module>		
 	</select-by-config>
 </asf>

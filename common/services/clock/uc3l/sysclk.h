@@ -151,7 +151,7 @@ extern "C" {
 #define SYSCLK_SRC_DFLL         2     //!< Digital Frequency Locked Loop
 #define SYSCLK_SRC_RC120M       3     //!< 120 MHz RC oscillator
 #if (UC3L0128 || UC3L0256 || UC3L3_L4)
-#define SYSCLK_SRC_PLL0         4       //!< Phase Locked Loop 0
+#define SYSCLK_SRC_PLL0         5       //!< Phase Locked Loop 0
 #endif
 
 #if UC3L3_L4
