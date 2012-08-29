@@ -69,6 +69,8 @@ extern "C" {
  * display using the functionality of \ref win_group "Window system"
  * and \ref gfx_group "Graphics library".
  *
+ * \image html WTK.jpg
+ *
  * The following widgets are implemented:
  * - \ref wtk_basic_frame_group
  * - \ref wtk_button_group

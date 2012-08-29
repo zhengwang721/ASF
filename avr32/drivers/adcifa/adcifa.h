@@ -63,19 +63,19 @@
 #include "compiler.h"
 
 #if UC3C
-#define AVR32_FLASHC_FACTORY_PAGE_ADDRESS    0x80800200
-#define AVR32_FLASHC_FROW_OCAL_WORD          4
-#define AVR32_FLASHC_FROW_OCAL_MASK          0x3F000000
-#define AVR32_FLASHC_FROW_OCAL_OFFSET        24
-#define AVR32_FLASHC_FROW_GCAL_WORD          4
-#define AVR32_FLASHC_FROW_GCAL_MASK          0x00007FFF
-#define AVR32_FLASHC_FROW_GCAL_OFFSET        0
-#define AVR32_FLASHC_FROW_GAIN0_WORD         8
-#define AVR32_FLASHC_FROW_GAIN0_MASK         0x000003FF
-#define AVR32_FLASHC_FROW_GAIN0_OFFSET       0
-#define AVR32_FLASHC_FROW_GAIN1_WORD         8
-#define AVR32_FLASHC_FROW_GAIN1_MASK         0x03FF0000
-#define AVR32_FLASHC_FROW_GAIN1_OFFSET       16
+#  define AVR32_FLASHC_FACTORY_PAGE_ADDRESS    0x80800200
+#  define AVR32_FLASHC_FROW_OCAL_WORD          4
+#  define AVR32_FLASHC_FROW_OCAL_MASK          0x3F000000
+#  define AVR32_FLASHC_FROW_OCAL_OFFSET        24
+#  define AVR32_FLASHC_FROW_GCAL_WORD          4
+#  define AVR32_FLASHC_FROW_GCAL_MASK          0x00007FFF
+#  define AVR32_FLASHC_FROW_GCAL_OFFSET        0
+#  define AVR32_FLASHC_FROW_GAIN0_WORD         8
+#  define AVR32_FLASHC_FROW_GAIN0_MASK         0x000003FF
+#  define AVR32_FLASHC_FROW_GAIN0_OFFSET       0
+#  define AVR32_FLASHC_FROW_GAIN1_WORD         8
+#  define AVR32_FLASHC_FROW_GAIN1_MASK         0x03FF0000
+#  define AVR32_FLASHC_FROW_GAIN1_OFFSET       16
 #endif
 
 /** \name Positive Inputs used by the ADC
@@ -112,12 +112,11 @@
 /** \name References used by the ADC
  * @{
  */
-#define ADCIFA_REF1V              0x0     /** Internal 1V reference */
-#define ADCIFA_REF06VDD           0x1     /** Internal 0.6 x VDDANA reference */
-#define ADCIFA_ADCREF0            0x2     /** External 0 reference ADCREF0 */
-#define ADCIFA_ADCREF1            0x3     /** External 1 reference ADCREF1 */
-#define ADCIFA_ADCREF             0x10    /** External reference ADCREFP/ADCREFN
-	                                  **/
+#define ADCIFA_REF1V              0x0  /** Internal 1V reference */
+#define ADCIFA_REF06VDD           0x1  /** Internal 0.6 x VDDANA reference */
+#define ADCIFA_ADCREF0            0x2  /** External 0 reference ADCREF0 */
+#define ADCIFA_ADCREF1            0x3  /** External 1 reference ADCREF1 */
+#define ADCIFA_ADCREF             0x10 /** External reference ADCREFP/ADCREFN */
 /** @} */
 
 /** \name Triggering Source used by the ADC
@@ -155,9 +154,9 @@
  * @{
  */
 #define ADCIFA_SOCB_ALLSEQ        0x0     /** A complete sequence is performed
-	                                   *  on a SOC event */
+                                           *  on a SOC event */
 #define ADCIFA_SOCB_SINGLECONV    0x1     /** A single conversion is performed
-	                                   *  on a SOC event */
+                                           *  on a SOC event */
 /** @} */
 
 #if (defined AVR32_ADCIFA_100_H_INCLUDED)
@@ -531,135 +530,79 @@
  *  \ref adcifa_get_values_from_sequencer function. */
 #define ADCIFA_STATUS_NOT_COMPLETED                 0x3
 
-/** Parameters for the ADCIFA. */
+/** Parameters for the ADCIFA peripheral. */
 typedef struct {
-        /** Internal ADC Frequency in Hz */
-	uint32_t frequency;
-
-        /** Reference Source */
-	uint8_t reference_source;
-
-        /** Sample and Hold Selection */
-	bool sample_and_hold_disable;
-
-        /** Single Sequencer Mode */
-	bool single_sequencer_mode;
-
-        /** Enable Free Running Mode */
-	bool free_running_mode_enable;
-
-        /** Sleep Mode Selection */
-	bool sleep_mode_enable;
-
-        /** Gain Calibration Value */
-	int16_t gain_calibration_value;
-
-        /** Offset Calibration Value */
-	int16_t offset_calibration_value;
-
-        /** S/H Gain Calibration Value for Seq0 */
-	int16_t sh0_calibration_value;
-
-        /** S/H Gain Calibration Value for Seq1 */
-	int16_t sh1_calibration_value;
+	uint32_t frequency; /**< Internal ADC Frequency in Hz */
+	uint8_t reference_source; /**< Reference Source */
+	bool sample_and_hold_disable; /**< Sample and Hold Selection */
+	bool single_sequencer_mode; /**< Single Sequencer Mode */
+	bool free_running_mode_enable; /**< Enable Free Running Mode */
+	bool sleep_mode_enable; /**< Sleep Mode Selection */
+	int16_t gain_calibration_value; /**< Gain Calibration Value */
+	int16_t offset_calibration_value; /**< Offset Calibration Value */
+	int16_t sh0_calibration_value; /**< S/H Gain Calibration Value for Seq0 */
+	int16_t sh1_calibration_value; /**< S/H Gain Calibration Value for Seq1 */
 } adcifa_opt_t;
 
 /** Parameters for the configuration of the Sequencer. */
 typedef struct {
-        /** Number of conversion. */
-	uint8_t convnb;
-
-        /** Sequencer resolution. */
-	uint8_t resolution;
-
-        /** Trigger selection. */
-	uint8_t trigger_selection;
-
-        /** Start of conversion. */
-	uint8_t start_of_conversion;
-
+	uint8_t convnb; /**< Number of conversion. */
+	uint8_t resolution; /**< Sequencer resolution. */
+	uint8_t trigger_selection; /**< Trigger selection. */
+	uint8_t start_of_conversion; /**< Start of conversion. */
 #if (defined AVR32_ADCIFA_100_H_INCLUDED)
-        /** Oversampling. */
-	uint8_t oversampling;
+	uint8_t oversampling; /**< Oversampling. */
 #else
-        /** Sample & Hold mode. */
-	uint8_t sh_mode;
+	uint8_t sh_mode; /**< Sample & Hold mode. */
 #endif
-        /** Half word adjustment. */
-	uint8_t half_word_adjustment;
-
-        /** Software Acknowledge. */
-	uint8_t software_acknowledge;
+	uint8_t half_word_adjustment; /**< Half word adjustment. */
+	uint8_t software_acknowledge; /**< Software Acknowledge. */
 } adcifa_sequencer_opt_t;
 
 /** Parameters for an conversion in the Sequencer. */
 typedef struct {
-        /** Positive channel. */
-	uint8_t channel_p;
-
-        /** Negative channel. */
-	uint8_t channel_n;
-
-        /** Gain selection */
-	uint8_t gain;
+	uint8_t channel_p; /**< Positive channel. */
+	uint8_t channel_n; /**< Negative channel. */
+	uint8_t gain; /**< Gain selection */
 } adcifa_sequencer_conversion_opt_t;
 
 /** Parameters for the windows monitor mode */
 typedef struct {
-        /** Internal ADC Frequency in Hz */
-	uint8_t mode;
-
-        /** Index of the result register */
-	uint8_t source_index;
-
-        /** Low threshold value */
-	uint16_t low_threshold;
-
-        /** High threshold value */
-	uint16_t high_threshold;
+	uint8_t mode; /**< Internal ADC Frequency in Hz */
+	uint8_t source_index; /**< Index of the result register */
+	uint16_t low_threshold; /**< Low threshold value */
+	uint16_t high_threshold; /**< High threshold value */
 } adcifa_window_monitor_opt_t;
 
-void adcifa_get_calibration_data( volatile avr32_adcifa_t *adcifa,
+void adcifa_get_calibration_data(volatile avr32_adcifa_t *adcifa,
 		adcifa_opt_t *p_adcifa_opt);
-
-uint8_t adcifa_configure( volatile avr32_adcifa_t *adcifa,
+uint8_t adcifa_configure(volatile avr32_adcifa_t *adcifa,
 		adcifa_opt_t *p_adcifa_opt,
 		uint32_t pb_hz);
-
-extern uint8_t adcifa_configure_sequencer( volatile avr32_adcifa_t *adcifa,
+extern uint8_t adcifa_configure_sequencer(volatile avr32_adcifa_t *adcifa,
 		uint8_t sequencer,
 		adcifa_sequencer_opt_t *p_adcifa_sequencer_opt,
-		adcifa_sequencer_conversion_opt_t *p_adcifa_sequencer_conversion_opt );
-
-void adcifa_configure_window_monitor( volatile avr32_adcifa_t *adcifa,
+		adcifa_sequencer_conversion_opt_t *p_adcifa_sequencer_conversion_opt);
+void adcifa_configure_window_monitor(volatile avr32_adcifa_t *adcifa,
 		uint8_t sequencer,
-		adcifa_window_monitor_opt_t *adc_window_monitor_opt );
-
-void adcifa_start_sequencer( volatile avr32_adcifa_t *adcifa,
-		uint8_t sequencer );
-
+		adcifa_window_monitor_opt_t *adc_window_monitor_opt);
+void adcifa_start_sequencer(volatile avr32_adcifa_t *adcifa,
+		uint8_t sequencer);
 bool adcifa_check_eoc(volatile avr32_adcifa_t *adcifa, uint8_t sequencer);
-
 bool adcifa_check_eos(volatile avr32_adcifa_t *adcifa, uint8_t sequencer);
-
-uint8_t adcifa_get_values_from_sequencer( volatile avr32_adcifa_t *adcifa,
+uint8_t adcifa_get_values_from_sequencer(volatile avr32_adcifa_t *adcifa,
 		uint8_t sequencer,
 		adcifa_sequencer_opt_t *p_adcifa_sequencer_opt,
-		int16_t *adcifa_values );
-
+		int16_t *adcifa_values);
 void adcifa_start_itimer(volatile avr32_adcifa_t *adcifa,
 		uint32_t timer_count);
-
 void adcifa_stop_itimer(volatile avr32_adcifa_t *adcifa);
-
-void adcifa_enable_interrupt( volatile avr32_adcifa_t *adcifa,
-		uint32_t interrupt_flags );
-
-void adcifa_disable_interrupt( volatile avr32_adcifa_t *adcifa,
-		uint32_t interrupt_flags );
-
-void adcifa_clear_interrupt( volatile avr32_adcifa_t *adcifa,
-		uint32_t interrupt_flags );
+void adcifa_enable_interrupt(volatile avr32_adcifa_t *adcifa,
+		uint32_t interrupt_flags);
+void adcifa_disable_interrupt(volatile avr32_adcifa_t *adcifa,
+		uint32_t interrupt_flags);
+void adcifa_clear_interrupt(volatile avr32_adcifa_t *adcifa,
+		uint32_t interrupt_flags);
 
 /**
  * @}

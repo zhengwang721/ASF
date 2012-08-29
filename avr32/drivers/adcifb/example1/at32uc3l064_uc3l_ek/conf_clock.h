@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADCIFB channel configuration
+ * \brief System clock configuration header file
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,19 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/*! \name ADCIFB channel configuration
- */
-//! @{
-// Connection of the NTC temperature sensor
-#define EXAMPLE_ADCIFB_PIN          ADC_TEMPERATURE_PIN
-#define EXAMPLE_ADCIFB_FUNCTION     ADC_TEMPERATURE_FUNCTION
-#define EXAMPLE_ADCIFB_CHANNEL_MASK ADC_TEMPERATURE_CHANNEL
-#define EXAMPLE_ADCIFB_CHANNEL_NAME "NTC"
-//! @}
+#define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_DFLL
+
+/* Fbus = Fsys / (2 ^ BUS_div) */
+#define CONFIG_SYSCLK_CPU_DIV         0
+#define CONFIG_SYSCLK_PBA_DIV         0
+#define CONFIG_SYSCLK_PBB_DIV         0
+
+/* Fdfll = (Fclk * DFLL_mul) / DFLL_div */
+#define CONFIG_DFLL0_SOURCE           GENCLK_SRC_OSC32K
+#define CONFIG_DFLL0_MUL              (48000000UL / BOARD_OSC32_HZ)
+#define CONFIG_DFLL0_DIV              1
+
+#endif /* CONF_CLOCK_H_INCLUDED */

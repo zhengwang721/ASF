@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Graphical Widget toolkit
+ * \brief ADCIFB example channel configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,40 +40,12 @@
  * \asf_license_stop
  *
  */
-#ifndef WTK_ICON_BUTTON_H
-#define WTK_ICON_BUTTON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \ingroup wtk_group
- *
- * \defgroup wtk_icon_group Icon button widget
+/** \name ADCIFB channel configuration
  * @{
  */
-
-struct wtk_icon_group;
-struct wtk_icon_group *wtk_icon_group_create(void);
-struct wtk_icon_button *wtk_icon_group_get_selected(struct wtk_icon_group *group);
-struct wtk_icon_button;
-
-struct wtk_icon_button *wtk_icon_button_create(struct win_window *parent,
-		struct win_area const *area, struct gfx_bitmap *icon,
-		bool selected, struct wtk_icon_group *group,
-		win_command_t command_data);
-void wtk_icon_button_size_hint(struct win_point *size, const struct gfx_bitmap *icon_image);
-struct win_window *wtk_icon_button_as_child(struct wtk_icon_button
-		*icon_button);
-win_command_t wtk_icon_button_get_command(struct wtk_icon_button *icon_button);
-void wtk_icon_button_select(struct wtk_icon_button *icon_button);
-bool wtk_icon_button_is_selected(struct wtk_icon_button const *icon_button);
-
+#define EXAMPLE_ADCIFB_PIN            ADC_TEMPERATURE_PIN
+#define EXAMPLE_ADCIFB_FUNCTION       ADC_TEMPERATURE_FUNCTION
+#define EXAMPLE_ADCIFB_CHANNEL_MASK   (1 << ADC_TEMPERATURE_CHANNEL)
+#define EXAMPLE_ADCIFB_CHANNEL_NAME   "NTC"
 /** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

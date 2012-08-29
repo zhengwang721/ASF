@@ -352,6 +352,7 @@ void wtk_icon_button_size_hint(struct win_point *size, const struct gfx_bitmap *
  *
  * \param parent Parent window, possibly wtk_frame_as_parent(myFramePtr).
  * \param area Area of the internal contents.
+ * \param icon Bitmap to draw as the icon.
  * \param selected Initial state of icon button, true if checked/selected.
  * \param group Icon button group to be a member of.
  * \param command Command to send to parent window. Must be non-zero to be

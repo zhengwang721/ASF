@@ -48,12 +48,14 @@ extern "C" {
 #endif
 
 /**
- * \defgroup gfx_wtk_plot Plot widget
+ * \ingroup wtk_group
+ *
+ * \defgroup wtk_plot_group Plot widget
  * @{
  */
 
 /**
- * \defgroup gfx_wtk_plot_options Plot widget options
+ * \defgroup wtk_plot_options Plot widget options
  * These options can be ORed together to specify the behaviour of a
  * plot widget when creating it with \ref wtk_plot_create
  * @{
@@ -99,13 +101,13 @@ extern "C" {
 /**
  * \defgroup gfx_wtk_plot_grid_options Plot widget grid options
  * These options can be ORed together to specify the behaviour of a
- * plot widget grid when adjusting it.\ref wtk_plot_grid
+ * plot widget grid when adjusting it via \ref wtk_plot_set_grid.
  * @{
  */
 
 /**
  * \name grid orientation options.
- * For use with the option parameter of \ref wtk_plot_grid
+ * For use with the option parameter of \ref wtk_plot_set_grid
  * @{
  */
 
@@ -118,7 +120,7 @@ extern "C" {
 
 /**
  * \name axis orientation options.
- * For use with the option parameter of \ref wtk_plot_grid
+ * For use with the option parameter of \ref wtk_plot_set_grid
  * @{
  */
 
@@ -131,7 +133,7 @@ extern "C" {
 
 /**
  * \name zero line options.
- * For use with the option parameter of \ref wtk_plot_grid
+ * For use with the option parameter of \ref wtk_plot_set_grid
  * @{
  */
 

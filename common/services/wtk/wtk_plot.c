@@ -63,39 +63,39 @@
  * these structures are needed externally.
  */
 struct wtk_plot {
-	/* ! Container window of plot. */
+	/** Container window of plot. */
 	struct win_window *container;
-	/* ! Maximum value of plot. */
+	/** Maximum value of plot. */
 	uint8_t maximum;
-	/* ! Number of datapoints in plot. */
+	/** Number of datapoints in plot. */
 	uint8_t num_datapoints;
-	/* ! Space between datapoints. */
+	/** Space between datapoints. */
 	uint8_t spacing;
-	/* ! Error in spacing between datapoints. */
+	/** Error in spacing between datapoints. */
 	uint8_t spacing_error;
-	/* ! Pointer to ring buffer containing values to plot. */
+	/** Pointer to ring buffer containing values to plot. */
 	uint8_t *plot_buffer;
-	/* ! Ring buffer start-point displacement */
+	/** Ring buffer start-point displacement */
 	uint8_t buffer_start;
-	/* ! Configuration of orientation and behavior. */
+	/** Configuration of orientation and behavior. */
 	uint8_t option;
-	/* ! Color for plot. */
+	/** Color for plot. */
 	gfx_color_t draw_color;
-	/* ! Pointer to plot background bitmap. */
+	/** Pointer to plot background bitmap. */
 	struct gfx_bitmap *background;
-	/* ! Configuration of axis, grid and zero-line behaviour. */
+	/** Configuration of axis, grid and zero-line behaviour. */
 	uint8_t axis_option;
-	/* ! Space between x-axis grid lines/tick marks. */
+	/** Space between x-axis grid lines/tick marks. */
 	uint8_t axis_spacing_x;
-	/* ! Grid/axis offset along the x-axis. */
+	/** Grid/axis offset along the x-axis. */
 	uint8_t axis_offset_x;
-	/* ! Space between y-axis grid lines/tick marks. */
+	/** Space between y-axis grid lines/tick marks. */
 	uint8_t axis_spacing_y;
-	/* ! Grid/axis offset along the y-axis. */
+	/** Grid/axis offset along the y-axis. */
 	uint8_t axis_offset_y;
-	/* ! Color for the tick marks and grid lines. */
+	/** Color for the tick marks and grid lines. */
 	gfx_color_t axis_color;
-	/* ! Color for the zero line. */
+	/** Color for the zero line. */
 	gfx_color_t axis_zero_color;
 };
 
@@ -504,7 +504,7 @@ static bool wtk_plot_handler(struct win_window *win,
  * memory, call \ref win_destroy() on the plot's child reference, given
  * by \ref wtk_plot_as_child(), similar to:
  * \code
- *     "win_destroy(wtk_plot_as_child(my_plot_ptr));".\par
+ *     win_destroy(wtk_plot_as_child(my_plot_ptr));
  * \endcode
  *
  * The plotted graph will shift from right to left as new data values are added.

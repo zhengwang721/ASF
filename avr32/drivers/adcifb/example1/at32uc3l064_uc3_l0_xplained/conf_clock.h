@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADCIFB channel configuration
+ * \brief System clock configuration header file
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,19 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/*! \name ADCIFB channel configuration
- */
-//! @{
-// Connection of the battery voltage sensor
-#define EXAMPLE_ADCIFB_PIN          AT32UC3L_EK_VBAT_PIN
-#define EXAMPLE_ADCIFB_FUNCTION     AT32UC3L_EK_VBAT_FUNCTION
-#define EXAMPLE_ADCIFB_CHANNEL_MASK AT32UC3L_EK_VBAT_ADC_CHANNEL
-#define EXAMPLE_ADCIFB_CHANNEL_NAME "VBAT"
-//! @}
+#define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_DFLL
+
+/* Fbus = Fsys / (2 ^ BUS_div) */
+#define CONFIG_SYSCLK_CPU_DIV         0
+#define CONFIG_SYSCLK_PBA_DIV         0
+#define CONFIG_SYSCLK_PBB_DIV         0
+
+/* Fdfll = (Fclk * DFLL_mul) / DFLL_div */
+#define CONFIG_DFLL0_SOURCE           GENCLK_SRC_OSC32K
+#define CONFIG_DFLL0_MUL              (48000000UL / BOARD_OSC32_HZ)
+#define CONFIG_DFLL0_DIV              1
+
+#endif /* CONF_CLOCK_H_INCLUDED */

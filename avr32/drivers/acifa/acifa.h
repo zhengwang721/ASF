@@ -87,6 +87,7 @@
 #define AVR32_ACIFA_AC0B_INSELP_AC0BP1                        3
 #define AVR32_ACIFA_AC0B_INSELP_DAC0_INT                      4
 #define AVR32_ACIFA_AC0B_INSELP_VDDANA_SCALED                 5
+/** @} */
 
 /** \name Negative Inputs Comparator 0 Instance B used by the ACIFA
  * @{
@@ -153,47 +154,35 @@ void acifa_configure(volatile avr32_acifa_t *acifa,
 		uint8_t input_p,
 		uint8_t input_n,
 		uint32_t pb_hz);
-		
 void acifa_configure_window( volatile avr32_acifa_t *acifa,
 		uint8_t input_p,
 		uint8_t input_n,
 		uint8_t common_input,
 		uint32_t pb_hz);
-
 void acifa_start(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel);
-
+void acifa_stop(volatile avr32_acifa_t *acifa,
+		uint8_t comp_sel);
 void acifa_start_window(volatile avr32_acifa_t *acifa);
-
 void acifa_enable_output(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel);
-
 void acifa_configure_hysteresis(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel,
 		uint8_t level);
-
 void acifa_configure_vccscale(volatile avr32_acifa_t *acifa,
 		uint8_t vccscale_sel,
 		uint8_t scale);
-
 bool acifa_is_aca_inp_higher(volatile avr32_acifa_t *acifa);
-
 bool acifa_is_acb_inp_higher(volatile avr32_acifa_t *acifa);
-
 bool acifa_is_ci_inside_window(volatile avr32_acifa_t *acifa);
-
 void acifa_clear_flags(volatile avr32_acifa_t *acifa,
 		uint32_t flag_mask);
-
 void acifa_enable_interrupt_inp_higher(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel);
-
 void acifa_enable_interrupt_inp_lower(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel);
-
 void acifa_enable_interrupt_toggle(volatile avr32_acifa_t *acifa,
 		uint8_t comp_sel);
-
 void acifa_enable_interrupt(volatile avr32_acifa_t *acifa, uint32_t flag_mask);
 
 /** @} */

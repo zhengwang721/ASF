@@ -116,7 +116,7 @@ struct win_window *wtk_radio_button_as_child(struct wtk_radio_button
  * This function returns the window command of the specified radio button, as set
  * when the widget was created.
  *
- * \param button Radio button widget to manage.
+ * \param radio_button Radio button widget to manage.
  *
  * \return Associated window command of the radio button widget.
  */
@@ -157,6 +157,8 @@ void wtk_radio_button_select(struct wtk_radio_button *radio_button)
 /**
  * This function returns true if the radio button is the one currently
  * selected within its radio button group.
+ *
+ * \param radio_button Radio button widget to check.
  *
  * \return True if radio button selected.
  */

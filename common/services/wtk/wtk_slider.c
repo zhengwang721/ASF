@@ -112,7 +112,7 @@ struct win_window *wtk_slider_as_child(struct wtk_slider *slider)
  * This function returns the window command of the specified slider, as set
  * when the widget was created.
  *
- * \param button Slider widget to manage.
+ * \param slider Slider widget to manage.
  *
  * \return Associated window command of the slider widget.
  */

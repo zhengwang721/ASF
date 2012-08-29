@@ -141,21 +141,20 @@ ISR(SENSOR_BOARD_PORT_vect)
 {
 	PORT_t *const port = &(SENSOR_BOARD_PORT);
 
-	/* Call the interrupt handler, if any, then clear the interrupt flag. */
-
+	/* Call the interrupt handler (if any). */
 	if (sensor_pin3_handler && (port->IN & PIN2_bm)) {
 		/* Note: header pin 3 = io port pin 2 */
 		sensor_pin3_handler(sensor_pin3_arg);
-		port->INTFLAGS = PIN2_bm;
 	} else if (sensor_pin4_handler && (port->IN & PIN3_bm)) {
 		/* Note: header pin 4 = io port pin 3 */
 		sensor_pin4_handler(sensor_pin4_arg);
-		port->INTFLAGS = PIN3_bm;
 	} else if (sensor_pin5_handler && (port->IN & PIN4_bm)) {
 		/* Note: header pin 5 = io port pin 4 */
 		sensor_pin5_handler(sensor_pin5_arg);
-		port->INTFLAGS = PIN4_bm;
 	}
+
+	/* Clear the port interrupt flag */
+	port->INTFLAGS = PORT_INT0IF_bm;
 }
 #endif
 

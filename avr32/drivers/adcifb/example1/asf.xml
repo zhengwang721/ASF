@@ -7,8 +7,10 @@
 			<keyword value="Analog Conversion"/>
 		</info>
 		<build type="c-source" value="adcifb_example1.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_adcifb_example1.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 		<device-support value="uc3l"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
 		<require idref="avr32.drivers.adcifb"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>

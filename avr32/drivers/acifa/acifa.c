@@ -128,6 +128,7 @@ void acifa_configure_window( volatile avr32_acifa_t *acifa,
 		= ((input_n <<
 			AVR32_ACIFA_CONFB_INSELN_OFFSET) &
 			AVR32_ACIFA_CONFB_INSELN_MASK);
+
 	/* Startup Time of up to 10us max. */
 	acifa->sut = (pb_hz / 100000);
 }
@@ -210,22 +211,53 @@ void acifa_start(volatile avr32_acifa_t *acifa,
 	if (comp_sel == ACIFA_COMP_SELA) {
 		acifa->en = (AVR32_ACIFA_EN_ACAEN_MASK) |
 				(AVR32_ACIFA_EN_ACACPEN_MASK);
+
 		while (!acifa_is_aca_ready(acifa)) {
+			/* Wait for ACA */
 		}
 	} else if (comp_sel == ACIFA_COMP_SELB) {
 		acifa->en = (AVR32_ACIFA_EN_ACBEN_MASK) |
 				(AVR32_ACIFA_EN_ACBCPEN_MASK);
+
 		while (!acifa_is_acb_ready(acifa)) {
+			/* Wait for ACB */
 		}
 	} else {
 		acifa->en = (AVR32_ACIFA_EN_ACAEN_MASK) |
 				(AVR32_ACIFA_EN_ACACPEN_MASK) |
 				(AVR32_ACIFA_EN_ACBEN_MASK) |
 				(AVR32_ACIFA_EN_ACBCPEN_MASK);
+
 		while (!acifa_is_aca_ready(acifa)) {
+			/* Wait for ACA */
 		}
 		while (!acifa_is_acb_ready(acifa)) {
+			/* Wait for ACB */
 		}
+	}
+}
+
+/** \brief Stops the comparators that are currently started.
+ * \param *acifa        Base address of the ACIFA
+ * \param comp_sel      Comparator Selection
+ */
+void acifa_stop(volatile avr32_acifa_t *acifa,
+		uint8_t comp_sel)
+{
+	Assert( acifa != NULL );
+
+	if (comp_sel == ACIFA_COMP_SELA) {
+		acifa->dis = (AVR32_ACIFA_DIS_ACADIS_MASK) |
+				(AVR32_ACIFA_DIS_ACACPDIS_MASK);
+	} else if (comp_sel == ACIFA_COMP_SELB) {
+		acifa->dis = (AVR32_ACIFA_DIS_ACBDIS_MASK) |
+				(AVR32_ACIFA_DIS_ACBCPDIS_MASK);
+	} else {
+		acifa->dis =
+				(AVR32_ACIFA_DIS_ACADIS_MASK) |
+				(AVR32_ACIFA_DIS_ACACPDIS_MASK) |
+				(AVR32_ACIFA_DIS_ACBDIS_MASK) |
+				(AVR32_ACIFA_DIS_ACBCPDIS_MASK);
 	}
 }
 
@@ -236,6 +268,7 @@ void acifa_start_window(volatile avr32_acifa_t *acifa)
 {
 	acifa->en = (AVR32_ACIFA_EN_WFEN_MASK);
 	while (!acifa_is_wf_ready(acifa)) {
+		/* Wait for AC window ready */
 	}
 }
 
@@ -333,5 +366,6 @@ void acifa_enable_interrupt_toggle(volatile avr32_acifa_t *acifa,
 void acifa_enable_interrupt(volatile avr32_acifa_t *acifa, uint32_t flag_mask)
 {
 	Assert( acifa != NULL );
+
 	acifa->ier = flag_mask;
 }
