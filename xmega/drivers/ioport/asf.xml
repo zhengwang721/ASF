@@ -15,7 +15,7 @@
 		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<device-support value="xmegad"/>
-		<build type="doxygen-entry-point" value="port_driver_group"/>
+		<build type="doxygen-entry-point" value="ioport_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 </asf>

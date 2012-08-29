@@ -288,10 +288,10 @@ bool sensor_board_irq_connect(uint32_t gpio_pin,
 		SENSOR_IRQ_HANDLER handler, void *arg)
 {
 	bool status = false;
-	
+
 #if XMEGA
 	PORT_t *sensor_port;
-#endif	
+#endif
 
 	/* Ensure that the caller has specified a function address. */
 
@@ -323,7 +323,11 @@ bool sensor_board_irq_connect(uint32_t gpio_pin,
 		sensor_port = ioport_pin_to_port(SENSOR_BOARD_PIN3);
 		sensor_port->INTCTRL   = PORT_INT0LVL_LO_gc;
 		sensor_port->INT0MASK |= ioport_pin_to_mask(SENSOR_BOARD_PIN3);
-		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN3, IOPORT_SENSE_RISING);
+		/* Some Xplained kits have limited asynchronous sensing on most
+		 * pins, which requires them to be sensing on both edges.
+		 */
+		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN3,
+				IOPORT_SENSE_BOTHEDGES);
 #endif
 		status = true;
 	} else if (SENSOR_BOARD_PIN4 == gpio_pin) {
@@ -342,7 +346,11 @@ bool sensor_board_irq_connect(uint32_t gpio_pin,
 		sensor_port = ioport_pin_to_port(SENSOR_BOARD_PIN4);
 		sensor_port->INTCTRL   = PORT_INT0LVL_LO_gc;
 		sensor_port->INT0MASK |= ioport_pin_to_mask(SENSOR_BOARD_PIN4);
-		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN4, IOPORT_SENSE_RISING);
+		/* Some Xplained kits have limited asynchronous sensing on most
+		 * pins, which requires them to be sensing on both edges.
+		 */
+		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN4,
+				IOPORT_SENSE_BOTHEDGES);
 #endif
 		status = true;
 	} else if (SENSOR_BOARD_PIN5 == gpio_pin) {
@@ -361,7 +369,11 @@ bool sensor_board_irq_connect(uint32_t gpio_pin,
 		sensor_port = ioport_pin_to_port(SENSOR_BOARD_PIN5);
 		sensor_port->INTCTRL   = PORT_INT0LVL_LO_gc;
 		sensor_port->INT0MASK |= ioport_pin_to_mask(SENSOR_BOARD_PIN5);
-		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN5, IOPORT_SENSE_RISING);
+		/* Some Xplained kits have limited asynchronous sensing on most
+		 * pins, which requires them to be sensing on both edges.
+		 */
+		ioport_set_pin_sense_mode(SENSOR_BOARD_PIN5,
+				IOPORT_SENSE_BOTHEDGES);
 #endif
 		status = true;
 	}

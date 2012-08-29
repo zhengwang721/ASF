@@ -60,10 +60,16 @@
  *
  * \{
  */
- 
+
 /*----------------------------------------------------------------------------
                             nested include files
 ----------------------------------------------------------------------------*/
+#include "parts.h"
+
+#if (MEGA)
+#include "touch_config.h"
+#endif
+
 #if defined (__GNUC__) || defined (__ICCARM__) ||defined (__CC_ARM)
 #include <stdint.h>
 #endif
@@ -71,7 +77,16 @@
 #if !defined (__CC_ARM)
 #include <stdbool.h>
 #endif
+
 #include <stdlib.h>
+
+#if (MEGA)
+#ifndef MAKE_BUILD
+#ifdef _QMATRIX_
+#include "qm_asm_avr.h"
+#endif /* _QMATRIX_ */
+#endif /* MAKE_BUILD */
+#else /* MEGA */
 #ifndef MAKE_BUILD
 #ifdef _QMATRIX_
 #if !(defined(__AVR32__) || defined(__ICCAVR32__))
@@ -81,8 +96,10 @@
 #endif
 #elif defined _QTOUCH_
 #include "touch_qt_config.h"
-#endif
-#endif
+#endif 
+#endif /* MAKE_BUILD*/
+
+#endif /* MEGA */
 
 #ifdef __ICCAVR__
 #include <intrinsics.h>
@@ -141,12 +158,7 @@
   *
   * Example: PORT_YA=A and PORT_YB=F in the case above.
   */
-#if !(defined(__AVR32__) || defined(__ICCAVR32__))
 #define FILL_OUT_Y_LINE_INFO( bit ) { bit, (TOUCH_DATA_T)(1u<<bit) }
-#else
-#define FILL_OUT_YA_LINE_INFO( bit ) { bit, (TOUCH_DATA_T)(1u<<bit) }
-#define FILL_OUT_YB_LINE_INFO( bit ) { bit, (TOUCH_DATA_T)(1u<<bit) }
-#endif
 
 /**
   * Info stored for each ya line.
@@ -159,7 +171,7 @@
   *
   * Example: PORT_YA=A in the case above.
   */
-//FWRAP: #define FILL_OUT_YA_LINE_INFO( bit ) { bit, (uint8_t)(1u<<bit) }
+#define FILL_OUT_YA_LINE_INFO( bit ) { bit, (uint8_t)(1u<<bit) }
 
 /**
   * Info stored for each yb line.
@@ -172,7 +184,9 @@
   *
   * Example: PORT_YB=F in the case above.
   */
-//FWRAP: #define FILL_OUT_YB_LINE_INFO( bit ) { bit, (uint8_t)(1u<<bit) }
+#define FILL_OUT_YB_LINE_INFO( bit ) { bit, (uint8_t)(1u<<bit) }
+
+
 
 
 #ifndef MAKE_BUILD
@@ -227,6 +241,7 @@
 /**
   * Error Checking For the User Configuration Options ends here.
   */
+#if !(MEGA)
 
 /**
   * Total ticks per msec.
@@ -290,6 +305,10 @@
   */
 #define DEF_QT_POS_RECAL_DELAY         3u
 
+/**
+  * WARNING! Do not edit below this line.
+  */
+#endif
 /**
   * WARNING! Do not edit below this line.
   */

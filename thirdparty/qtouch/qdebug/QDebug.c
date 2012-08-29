@@ -15,7 +15,7 @@
  * \author               Atmel Corporation: http://www.atmel.com \n
  *                       Support and FAQ: http://support.atmel.no/
  *
- * Copyright (c) 2010, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010-2012, Atmel Corporation All rights reserved.
  * 
  * \asf_license_start
  *
@@ -52,17 +52,21 @@
  * \asf_license_stop
  *
  ******************************************************************************/
- 
+#include "touch_api.h"
 #ifdef _DEBUG_INTERFACE_
 
 /*============================ INCLUDES ======================================*/
-#include "touch_api.h"
+
 #include "QDebug.h"
 #include "QDebugTransport.h"
 #include "QDebugSettings.h"
 
 #if !(defined(__AVR32__) || defined(__ICCAVR32__) || defined(_TOUCH_ARM_))
+#if (MEGA)
+#include "eeprom_access_mega.h"
+#else
 #include "eeprom_access.h"
+#endif
 #endif
 
 #if defined(QDEBUG_SPI)

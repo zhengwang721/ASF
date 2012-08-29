@@ -1225,7 +1225,7 @@ static inline void dma_channel_set_source_hugemem(
  *
  * In this use case, the DMA is configured for:
  * - Burst length: 2 bytes (one 16-bit result from the ADC peripheral)
- * - Transfer count: 1024
+ * - Transfer count: 1024 (512 16-bit samples)
  * - Source: ADC channel 0 result register
  * - Destination: Buffer located in RAM
  * - Source address reload mode: End of burst
@@ -1252,7 +1252,7 @@ static inline void dma_channel_set_source_hugemem(
  *    #define DMA_CHANNEL     0
  *    #define DMA_BUFFER_SIZE 1024
  *
- *    static uint8_t adc_samples[DMA_BUFFER_SIZE];
+ *    static uint16_t adc_samples[DMA_BUFFER_SIZE / 2];
  *
  *    static void dma_init(void)
  *    {
@@ -1301,8 +1301,9 @@ static inline void dma_channel_set_source_hugemem(
  *    destination buffers located in RAM:
  *   - \code #define DMA_BUFFER_SIZE 1024 \endcode
  * -# Create a global array that will hold the ADC sample result data copied by
- *    the DMA controller channel when it is triggered:
- *   - \code static uint8_t adc_samples[DMA_BUFFER_SIZE]; \endcode
+ *    the DMA controller channel when it is triggered (the buffer size is
+ *    halved as each sample is two bytes long):
+ *   - \code static uint16_t adc_samples[DMA_BUFFER_SIZE / 2]; \endcode
  * -# Create a function \c dma_init() to intialize the DMA:
  *     - \code
  * static void dma_init(void)

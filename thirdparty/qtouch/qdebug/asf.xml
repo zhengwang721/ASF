@@ -106,4 +106,24 @@
 		</select-by-device>
 		</select-by-config>
 	
+	<select-by-config id="config.common.services.qtouch.qdebug.stk600.mega" name="config.common.services.qtouch.qdebug.stk600.mega" caption="STK600 Board QDebug support" default="no">
+			<module type="service" id="config.common.services.qtouch.qdebug.stk600.mega#no" caption="STK600 QDebug disabled">
+				<info type="gui-flag" value="hidden"/>
+				<device-support value="atmega128rfa1"/>
+			</module>
+			<select-by-device id="config.common.services.qtouch.qdebug.stk600.mega#yes" caption="STK600 QDebug enabled">
+				<module type="service" id="config.common.services.qtouch.qdebug.stk600.mega#yes#0" caption="STK600 QDebug enabled">
+					<info type="gui-flag" value="hidden"/>
+					<build type="header-file" value="QDebug.h"/>					
+					<build type="c-source" value="QDebug.c"/>
+					<build type="header-file" value="eeprom_access_mega.h"/>
+					<build type="c-source" value="eeprom_access_mega.c"/>
+					<build type="c-source" value="QDebugTransport.c"/>
+					<build type="header-file" value="QDebugTransport.h"/>			
+					<build type="include-path" value="."/>
+					<device-support value="atmega128rfa1"/>
+				</module>
+
+			</select-by-device>
+		</select-by-config>
 </asf>

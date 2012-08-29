@@ -47,6 +47,9 @@
 	<board id="board.stk600-mega.atmega1284p" vendor="Atmel" caption="STK600" mcu="atmega1284p">
 		<require idref="board.stk600-mega.common"/>
 	</board>
+	<board id="board.stk600-mega.atmega128rfa1" vendor="Atmel" caption="STK600" mcu="atmega128rfa1">
+		<require idref="board.stk600-mega.common"/>
+	</board>
 	<module id="board.stk600-mega.common" type="meta" caption="MEGA STK600">
 		<build type="c-source" value="init.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>

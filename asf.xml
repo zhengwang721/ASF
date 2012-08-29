@@ -48,6 +48,7 @@
 					<mcu name="atmega644a"/>
 					<mcu name="atmega644pa"/>
 					<mcu name="atmega1284p"/>
+					<mcu name="atmega128rfa1"/>
 				</group>
 			</group>
 			<group name="xmega">
