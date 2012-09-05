@@ -101,8 +101,6 @@ extern void vApplicationIdleHook(void);
 extern void vApplicationTickHook(void);
 
 extern void xPortSysTickHandler(void);
-extern void xPortPendSVHandler(void);
-extern void vPortSVCHandler(void);
 
 /**
  * \brief Handler for Sytem Tick interrupt.
@@ -110,22 +108,6 @@ extern void vPortSVCHandler(void);
 void SysTick_Handler(void)
 {
 	xPortSysTickHandler();
-}
-
-/**
- * \brief Handler for Sytem interrupt-driven request.
- */
-void PendSV_Handler(void)
-{
-	xPortPendSVHandler();
-}
-
-/**
- * \brief Handler for Sytem supervisor call.
- */
-void SVC_Handler(void)
-{
-	vPortSVCHandler();
 }
 
 /**

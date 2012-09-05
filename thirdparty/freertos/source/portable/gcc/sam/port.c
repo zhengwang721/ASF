@@ -98,6 +98,8 @@ static void prvSetupTimerInterrupt(void);
 void xPortPendSVHandler(void) __attribute__ ((naked));
 void xPortSysTickHandler(void);
 void vPortSVCHandler(void) __attribute__ ((naked));
+void SVC_Handler( void ) __attribute__ (( alias ("vPortSVCHandler")));
+void PendSV_Handler( void ) __attribute__ (( alias ("xPortPendSVHandler")));
 
 /* Start first task is a separate function so it can be tested in isolation */
 void vPortStartFirstTask(void) __attribute__ ((naked));
@@ -134,7 +136,7 @@ void vPortSVCHandler(void)
 			" ldmia r0!, {r4-r11}   \n"  /* Pop the registers that are not automatically saved on exception entry and the critical nesting count. */
 			" msr psp, r0           \n"  /* Restore the task stack pointer. */
 			" mov r0, #0            \n"
-			" msr	basepri, r0       \n"
+			" msr basepri, r0       \n"
 			" orr r14, #0xd         \n"
 			" bx r14                \n"
 			"                       \n"

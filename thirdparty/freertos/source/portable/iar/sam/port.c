@@ -98,9 +98,27 @@ static void prvSetupTimerInterrupt(void);
 
 /* Exception handlers */
 void xPortSysTickHandler(void);
+extern void xPortPendSVHandler(void);
+extern void vPortSVCHandler(void);
 
 /* Start first task is a separate function so it can be tested in isolation */
 extern void vPortStartFirstTask(void);
+
+/**
+ * \brief Handler for Sytem interrupt-driven request.
+ */
+void PendSV_Handler(void)
+{
+	xPortPendSVHandler();
+}
+
+/**
+ * \brief Handler for Sytem supervisor call.
+ */
+void SVC_Handler(void)
+{
+	vPortSVCHandler();
+}
 
 /*
  * \brief See header file for description.
