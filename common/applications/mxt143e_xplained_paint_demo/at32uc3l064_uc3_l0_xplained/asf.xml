@@ -11,5 +11,9 @@
 		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<require idref="common.applications.mxt143e_xplained_paint_demo"/>
 		<require idref="board.uc3_l0_xplained"/>
+		<generator value="iarew32"/>
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>

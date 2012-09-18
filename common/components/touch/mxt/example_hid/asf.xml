@@ -25,6 +25,7 @@
 		</info>
 		<device-support value="xmegaau"/>
 		<device-support value="uc3a3_a4"/>
+		<device-support value="sam4s"/>
 	</module>
 </asf>
 

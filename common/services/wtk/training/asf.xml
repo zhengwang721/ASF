@@ -25,5 +25,6 @@
 		<require idref="common.components.touch.mxt"/>
 		<require idref="common.services.wtk"/>
 		<require idref="common.services.basic.clock"/>
+		<require idref="common.utils.stdio"/>
 	</module>
 </asf>

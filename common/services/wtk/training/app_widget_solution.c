@@ -126,7 +126,7 @@ const static char *demo_string = "Demonstrating widgets";
  */
 
 /** Pointer to frame for application */
-static struct wtk_basic_frame *frame;
+static struct wtk_basic_frame *main_frame;
 /** Pointer to slider */
 static struct wtk_slider *slider;
 /** Pointer to progress bar */
@@ -223,18 +223,18 @@ void app_widget_launch()
 
 	/*
 	 * Create a basic frame with a specified background and command event
-	 * handler. Check the return value if an error occured while creating
+	 * handler. Check the return value if an error occurred while creating
 	 * the widget.
 	 */
-	frame = wtk_basic_frame_create(win_root, &area,
+	main_frame = wtk_basic_frame_create(win_root, &area,
 			&frame_background, NULL,
 			widget_frame_command_handler, NULL);
-	if (!frame) {
+	if (!main_frame) {
 		goto error_frame;
 	}
 
 	/* Get a pointer to the widget's window for adding sub-widgets. */
-	parent = wtk_basic_frame_as_child(frame);
+	parent = wtk_basic_frame_as_child(main_frame);
 
 	/*
 	 * Draw the frame by showing the frame widget's window. Any
@@ -250,7 +250,7 @@ void app_widget_launch()
 	wtk_label_size_hint(&area.size, demo_string);
 
 	/*
-	 * Create the label and check the return value if an error occured
+	 * Create the label and check the return value if an error occurred
 	 * while creating the label.
 	 */
 	lbl = wtk_label_create(parent, &area, demo_string,
@@ -269,7 +269,7 @@ void app_widget_launch()
 	area.size.y = SLIDER_SIZE_Y;
 
 	/*
-	 * Create the slider and check the return value if an error occured
+	 * Create the slider and check the return value if an error occurred
 	 * while creating the slider.
 	 */
 	slider = wtk_slider_create(parent, &area, SLIDER_MAX_VALUE,
@@ -290,7 +290,7 @@ void app_widget_launch()
 
 	/*
 	 * Create the progress bar and check the return value if an error
-	 * occured while creating the progress bar.
+	 * occurred while creating the progress bar.
 	 */
 	progress_bar = wtk_progress_bar_create(parent, &area, SLIDER_MAX_VALUE,
 			SLIDER_MAX_VALUE / 2, GFX_COLOR(255, 255, 0),
@@ -333,9 +333,9 @@ void app_widget_launch()
 
 error_widget:
 	/* Destroy widget and all sub-widgets. */
-	win_destroy(wtk_basic_frame_as_child(frame));
+	win_destroy(wtk_basic_frame_as_child(main_frame));
 error_frame:
-	/* Wait forever if an error occured during setup. */
+	/* Wait forever if an error occurred during setup. */
 	while (1) {
 	}
 }

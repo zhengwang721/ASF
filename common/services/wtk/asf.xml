@@ -1,8 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="service" id="common.services.wtk" caption="Graphical Widget Library Toolkit">
-		<info type="gui-flag" value="hidden"/>
 		<info type="description" value="summary">
-		Gaphical Widget library toolkit for the creation of interactive GUI
+		Graphical Widget library toolkit (WTK) for the creation of interactive GUI
 		widgets using the high level graphics library service.
 		</info>
 		<info type="keyword" value="technology">

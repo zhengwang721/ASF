@@ -62,6 +62,7 @@
  * - XMEGA-A1 Xplained
  * - XMEGA-B1 Xplained
  * - XMEGA-A3BU Xplained
+ * - SAM4S Xplained
  *
  * Please ensure that the SPI mode switch on the mXT143E Xplained is in the
  * correct position for your evaluation board:
@@ -113,6 +114,7 @@
 static void mxt_init(struct mxt_device *device)
 {
 	enum status_code status;
+	UNUSED(status);
 
 	/* T8 configuration object data */
 	uint8_t t8_object[] = {

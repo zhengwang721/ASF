@@ -3,6 +3,8 @@
  *
  * \brief Configurations for Widget Toolkit library
  *
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ *
  * \asf_license_start
  *
  * \page License
@@ -36,6 +38,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 #ifndef CONF_WTK_H
 #define CONF_WTK_H
@@ -228,7 +231,7 @@ typedef uint8_t wtk_radio_group_size_t;
 #define WTK_SLIDER_BACKGROUND_COLOR     GFX_COLOR(128, 128, 128)
 
 /** Color of the slider knob when normal. */
-#define WTK_SLIDER_KNOB_COLOR_NORMAL    GFX_COLOR(255, 128, 0)
+#define WTK_SLIDER_KNOB_COLOR_NORMAL    GFX_COLOR(128, 0, 0)
 
 /** Color of the slider knob when moving. */
 #define WTK_SLIDER_KNOB_COLOR_MOVING    GFX_COLOR(255, 255, 255)
@@ -255,6 +258,22 @@ typedef uint8_t wtk_icon_group_size_t;
 
 /** Icon button select mark color. */
 #define WTK_ICONBUTTON_SELECT_COLOR  GFX_COLOR(0, 0, 255)
+
+/** @} */
+
+/**
+* \ingroup gfx_wtk_plot
+* @{
+*/
+
+/** Color of the plot's frame border. */
+#define WTK_PLOT_BORDER_COLOR GFX_COLOR(0, 0, 0)
+
+/** Scale factor for fixed-point calculation. */
+#define WTK_PLOT_SCALE_FACTOR 128
+
+/** The length of the tick marker. */
+#define WTK_PLOT_TICK_MARKER_LENGTH 5
 
 /** @} */
 

@@ -11,5 +11,9 @@
 		<config name="config.spi_master_type" value="usart_spi"/>
 		<require idref="common.applications.mxt143e_xplained_calc_demo"/>
 		<require idref="board.xmega_a1_xplained"/>
+		<generator value="iarew"/>
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>
