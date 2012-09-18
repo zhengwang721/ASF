@@ -155,7 +155,7 @@ extern "C" {
 #define uhd_get_sof_number()                         ((UOTGHS->UOTGHS_HSTFNUM & UOTGHS_HSTFNUM_FNUM_Msk) >> UOTGHS_HSTFNUM_FNUM_Pos)
 #define uhd_get_microsof_number()                    ((UOTGHS->UOTGHS_HSTFNUM & \
 		(UOTGHS_HSTFNUM_FNUM_Msk|UOTGHS_HSTFNUM_MFNUM_Msk)) >> UOTGHS_HSTFNUM_FNUM_Pos)
-#define uhd_get_frame_position()                     (Rd_bits(UOTGHS->UOTGHS_HSTFNUM, UOTGHS_HSTFNUM_FLENHIGH_Msk))
+#define uhd_get_frame_position()                     (Rd_bitfield(UOTGHS->UOTGHS_HSTFNUM, UOTGHS_HSTFNUM_FLENHIGH_Msk))
 #define uhd_enable_sof_interrupt()                   (UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTIER_HSOFIES)
 #define uhd_disable_sof_interrupt()                  (UOTGHS->UOTGHS_HSTIDR = UOTGHS_HSTIDR_HSOFIEC)
 #define Is_uhd_sof_interrupt_enabled()               (Tst_bits(UOTGHS->UOTGHS_HSTIMR, UOTGHS_HSTIMR_HSOFIE))

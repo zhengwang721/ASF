@@ -1094,12 +1094,6 @@ static void uhd_interrupt(void)
 	Assert(false); // Interrupt event no managed
 }
 
-#if (defined __GNUC__)
-__attribute__((optimize(0)))
-#elif (defined __ICCARM__)
-_Pragma("optimize=no_cse")
-_Pragma("inline=never")
-#endif
 static void uhd_delayed_suspend(void)
 {
 	if (--uhd_suspend_start == 0) {
@@ -1107,18 +1101,32 @@ static void uhd_delayed_suspend(void)
 		// the current Keep-Alive/SOF can be always on-going
 		// then wait end of SOF generation
 		// to be sure that disable SOF has been accepted
-		while (115 < uhd_get_frame_position()) {
+		uint8_t pos =
+			(uhd_get_speed_mode() == UOTGHS_SR_SPEED_HIGH_SPEED) ?
+				13 : 114;
+		while (pos < uhd_get_frame_position()) {
 			if (Is_uhd_disconnection()) {
 				break;
 			}
 		}
 		uhd_disable_sof();
 
+		// When SOF is disabled, the current transmitted packet may
+		// cause a resume.
+		// Wait for a while to check this resume status and clear it.
+		for (pos = 0; pos < 15; pos ++) {
+			barrier();
+			if (UOTGHS->UOTGHS_HSTISR & (UOTGHS_HSTICR_HWUPIC
+					| UOTGHS_HSTICR_RSMEDIC
+					| UOTGHS_HSTICR_RXRSMIC)) {
+				break;
+			}
+		}
+
 		// Ack previous wakeup and resumes interrupts
 		UOTGHS->UOTGHS_HSTICR = UOTGHS_HSTICR_HWUPIC
 				|UOTGHS_HSTICR_RSMEDIC
 				|UOTGHS_HSTICR_RXRSMIC;
-
 		// Enable wakeup/resumes interrupts
 		UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTIER_HWUPIES
 				|UOTGHS_HSTIER_RSMEDIES
@@ -1128,12 +1136,6 @@ static void uhd_delayed_suspend(void)
 		uhd_sleep_mode(UHD_STATE_SUSPEND);
 	}
 }
-#if (defined __GNUC__)
-__attribute__((optimize(0)))
-#elif (defined __ICCARM__)
-_Pragma("optimize=no_cse")
-_Pragma("inline=never")
-#endif
 static void uhd_delayed_resume(void)
 {
 	if (--uhd_resume_start == 0) {
@@ -1146,12 +1148,6 @@ static void uhd_delayed_resume(void)
 		uhc_notify_resume();
 	}
 }
-#if (defined __GNUC__)
-__attribute__((optimize(0)))
-#elif (defined __ICCARM__)
-_Pragma("optimize=no_cse")
-_Pragma("inline=never")
-#endif
 static void uhd_ctrl_timeout(void)
 {
 	if (uhd_ctrl_request_timeout) {
