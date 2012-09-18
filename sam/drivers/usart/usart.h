@@ -72,10 +72,10 @@ extern "C" {
 #define SPI_CPOL	(1 << 1)
 
 /** SPI mode definition. */
-#define SPI_MODE_0	(SPI_CPHA)
-#define SPI_MODE_1	0
-#define SPI_MODE_2	(SPI_CPOL | SPI_CPHA)
-#define SPI_MODE_3	(SPI_CPOL)
+#define SPI_MODE_0  0
+#define SPI_MODE_1  (SPI_CPHA)
+#define SPI_MODE_2  (SPI_CPOL)
+#define SPI_MODE_3  (SPI_CPOL | SPI_CPHA)
 
 //! Input parameters when initializing RS232 and similar modes.
 typedef struct {

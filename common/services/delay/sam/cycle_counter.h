@@ -94,9 +94,9 @@ void portable_delay_cycles(unsigned long n);
 
 #if (defined __GNUC__)
 #  define cpu_ms_2_cy(ms, f_cpu)  \
-	(((uint64_t)(ms) * (f_cpu) + (uint64_t)(57e2-1ul)) / (uint64_t)57e2)
+	(((uint64_t)(ms) * (f_cpu) + (uint64_t)(14e3-1ul)) / (uint64_t)14e3)
 #  define cpu_us_2_cy(us, f_cpu)  \
-	(((uint64_t)(us) * (f_cpu) + (uint64_t)(57e5-1ul)) / (uint64_t)57e5)
+	(((uint64_t)(us) * (f_cpu) + (uint64_t)(14e6-1ul)) / (uint64_t)14e6)
 #elif (defined __ICCARM__)
 #  define cpu_ms_2_cy(ms, f_cpu)  \
 	(((uint64_t)(ms) * (f_cpu) + (uint64_t)(14e3-1ul)) / (uint64_t)14e3)

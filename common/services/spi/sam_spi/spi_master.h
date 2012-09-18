@@ -3,7 +3,7 @@
  *
  * \brief SPI master common service for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,29 +82,29 @@
 /**
  * \brief Clock phase.
  */
-#define SPI_CPHA	(1 << 0)
+#define SPI_CPHA  (1 << 0)
 
 /**
  * \brief Clock polarity.
  */
-#define SPI_CPOL	(1 << 1)
+#define SPI_CPOL  (1 << 1)
 
 /**
  * \brief SPI mode 0.
  */
-#define SPI_MODE_0	0
+#define SPI_MODE_0  0
 /**
  * \brief SPI mode 1.
  */
-#define SPI_MODE_1	(SPI_CPHA)
+#define SPI_MODE_1  (SPI_CPHA)
 /**
  * \brief SPI mode 2.
  */
-#define SPI_MODE_2	(SPI_CPOL)
+#define SPI_MODE_2  (SPI_CPOL)
 /**
  * \brief SPI mode 3.
  */
-#define SPI_MODE_3	(SPI_CPOL | SPI_CPHA)
+#define SPI_MODE_3  (SPI_CPOL | SPI_CPHA)
 
 #ifndef SPI_TYPE_DEFS
 #define SPI_TYPE_DEFS

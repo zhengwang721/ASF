@@ -75,9 +75,6 @@ extern "C" {
 #define MIN_CD_VALUE_SPI              0x04
 #define MAX_CD_VALUE                  US_BRGR_CD_Msk
 
-/* Define the default time-out value for USART. */
-#define USART_DEFAULT_TIMEOUT         1000
-
 /* The receiver sampling divide of baudrate clock. */
 #define HIGH_FRQ_SAMPLE_DIV           16
 #define LOW_FRQ_SAMPLE_DIV            8
@@ -653,13 +650,13 @@ uint32_t usart_init_spi_master(Usart *p_usart,
 		ul_reg_val |= US_MR_CPOL;
 		break;
 	case SPI_MODE_3:
-		ul_reg_val |= US_MR_CPOL;
 		ul_reg_val &= ~US_MR_CPHA;
+		ul_reg_val |= US_MR_CPOL;
 		break;
 	default:
 		break;
 	}
-	
+
 	p_usart->US_MR |= ul_reg_val;
 
 	return 0;
@@ -1418,12 +1415,7 @@ uint32_t usart_write(Usart *p_usart, uint32_t c)
  */
 uint32_t usart_putchar(Usart *p_usart, uint32_t c)
 {
-	uint32_t timeout = USART_DEFAULT_TIMEOUT;
-
 	while (!(p_usart->US_CSR & US_CSR_TXRDY)) {
-		if (!timeout--) {
-			return 1;
-		}
 	}
 
 	p_usart->US_THR = US_THR_TXCHR(c);
@@ -1479,13 +1471,8 @@ uint32_t usart_read(Usart *p_usart, uint32_t *c)
  */
 uint32_t usart_getchar(Usart *p_usart, uint32_t *c)
 {
-	uint32_t timeout = USART_DEFAULT_TIMEOUT;
-
 	/* If the receiver is empty, wait until it's not empty or timeout has reached. */
 	while (!(p_usart->US_CSR & US_CSR_RXRDY)) {
-		if (!timeout--) {
-			return 1;
-		}
 	}
 
 	/* Read character */
