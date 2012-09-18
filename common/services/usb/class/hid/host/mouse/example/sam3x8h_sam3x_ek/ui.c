@@ -128,7 +128,7 @@ void ui_init(void)
 	LED_Off(LED0_GPIO);
 	LED_Off(LED1_GPIO);
 	LED_Off(LED2_GPIO);
-	LED_On(LED3_GPIO);  /* power off */
+	LED_Off(LED3_GPIO);
 }
 
 void ui_usb_mode_change(bool b_host_mode)
@@ -154,9 +154,9 @@ static int8_t ui_x, ui_y, ui_scroll;
 void ui_usb_vbus_change(bool b_vbus_present)
 {
 	if (b_vbus_present) {
-		LED_Off(LED3_GPIO); /* Pwr ON */
+		LED_On(LED3_GPIO);
 	} else {
-		LED_On(LED3_GPIO);  /* Pwr OFF */
+		LED_Off(LED3_GPIO);
 	}
 }
 
@@ -226,7 +226,6 @@ void ui_usb_sof_event(void)
 				/* Button has been pressed */
 				LED_Off(LED1_GPIO);
 				LED_Off(LED2_GPIO);
-				LED_Off(LED3_GPIO);
 				ui_enable_asynchronous_interrupt();
 				uhc_suspend(true);
 				return;

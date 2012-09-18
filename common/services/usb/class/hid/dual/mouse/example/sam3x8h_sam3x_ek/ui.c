@@ -145,7 +145,7 @@ void ui_init(void)
 	LED_Off(LED0_GPIO);
 	LED_Off(LED1_GPIO);
 	LED_Off(LED2_GPIO);
-	LED_On(LED3_GPIO);  /* power off */
+	LED_Off(LED3_GPIO);
 }
 
 void ui_usb_mode_change(bool b_host_mode)
@@ -153,9 +153,9 @@ void ui_usb_mode_change(bool b_host_mode)
 	ui_init();
 	ui_b_host_mode = b_host_mode;
 	if (b_host_mode) {
-		LED_Off(LED3_GPIO); /* Pwr ON */
+		LED_On(LED3_GPIO);
 	} else {
-		LED_On(LED3_GPIO);  /* Pwr OFF */
+		LED_Off(LED3_GPIO);
 	}
 }
 
