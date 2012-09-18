@@ -137,7 +137,7 @@ void gfx_generic_draw_bitmap_tiled(const struct gfx_bitmap *bmp, gfx_coord_t x1,
 		gfx_coord_t tile_origin_x, gfx_coord_t tile_origin_y);
 
 /*! Generic implementation of gfx_draw_horizontal_line(). */
-__always_inline static inline void gfx_generic_draw_horizontal_line(
+__always_inline static void gfx_generic_draw_horizontal_line(
 		gfx_coord_t x, gfx_coord_t y, gfx_coord_t length,
 		gfx_color_t color)
 {
@@ -145,14 +145,14 @@ __always_inline static inline void gfx_generic_draw_horizontal_line(
 }
 
 /*! Generic implementation of gfx_draw_vertical_line(). */
-__always_inline static inline void gfx_generic_draw_vertical_line(gfx_coord_t x,
+__always_inline static void gfx_generic_draw_vertical_line(gfx_coord_t x,
 		gfx_coord_t y, gfx_coord_t length, gfx_color_t color)
 {
 	gfx_draw_filled_rect(x, y, 1, length, color);
 }
 
 /*! Generic implementation of gfx_draw_rect(). */
-__always_inline static inline void gfx_generic_draw_rect(gfx_coord_t x,
+__always_inline static void gfx_generic_draw_rect(gfx_coord_t x,
 		gfx_coord_t y, gfx_coord_t width, gfx_coord_t height,
 		gfx_color_t color)
 {
@@ -163,7 +163,7 @@ __always_inline static inline void gfx_generic_draw_rect(gfx_coord_t x,
 }
 
 /*! Generic implementation of gfx_draw_bitmap(). */
-__always_inline static inline void gfx_generic_draw_bitmap(
+__always_inline static void gfx_generic_draw_bitmap(
 		const struct gfx_bitmap *bmp, gfx_coord_t x,
 		gfx_coord_t y)
 {
@@ -171,7 +171,7 @@ __always_inline static inline void gfx_generic_draw_bitmap(
 }
 
 /*! Generic implementation of gfx_sync(). */
-__always_inline static inline void gfx_generic_sync(
+__always_inline static void gfx_generic_sync(
 		void)
 {
 	

@@ -117,7 +117,7 @@ typedef uint8_t ioport_pin_t;
 typedef uint8_t ioport_port_t;
 typedef uint8_t ioport_port_mask_t;
 
-__always_inline static inline ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin)
+__always_inline static ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin)
 {
 	return pin >> 3;
 }

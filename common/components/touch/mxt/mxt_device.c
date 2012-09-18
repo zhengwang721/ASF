@@ -692,7 +692,7 @@ void mxt_set_message_handler(struct mxt_device *device,
  * \param *device Pointer to mxt_device instance
  * \return Return /CHG pin status
  */
-uint8_t inline mxt_is_message_pending(struct mxt_device *device)
+uint8_t mxt_is_message_pending(struct mxt_device *device)
 {
 	if (ioport_get_pin_level(device->chgpin) == false) {
 		return true;

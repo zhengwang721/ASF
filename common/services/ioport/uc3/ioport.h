@@ -99,24 +99,24 @@ typedef uint32_t ioport_pin_t;
 typedef uint32_t ioport_port_t;
 typedef uint32_t ioport_port_mask_t;
 
-__always_inline static inline ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin)
+__always_inline static ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin)
 {
 	return pin >> 5;
 }
 
-__always_inline static inline volatile avr32_gpio_port_t *arch_ioport_port_to_base(
+__always_inline static volatile avr32_gpio_port_t *arch_ioport_port_to_base(
 		ioport_port_t port)
 {
 	return (volatile avr32_gpio_port_t *)(AVR32_GPIO_ADDRESS
 	       + port * sizeof(avr32_gpio_port_t));
 }
 
-__always_inline static inline volatile avr32_gpio_port_t *arch_ioport_pin_to_base(ioport_pin_t pin)
+__always_inline static volatile avr32_gpio_port_t *arch_ioport_pin_to_base(ioport_pin_t pin)
 {
 	return arch_ioport_port_to_base(arch_ioport_pin_to_port_id(pin));
 }
 
-__always_inline static inline ioport_port_mask_t arch_ioport_pin_to_mask(ioport_pin_t pin)
+__always_inline static ioport_port_mask_t arch_ioport_pin_to_mask(ioport_pin_t pin)
 {
 	return 1U << (pin & 0x1F);
 }

@@ -195,7 +195,7 @@ extern void spi_deselect_device(SPI_t *spi, struct spi_device *device);
  * \param data The data byte to be loaded
  *
  */
-__always_inline static inline void spi_write_single(SPI_t *spi, uint8_t data)
+__always_inline static void spi_write_single(SPI_t *spi, uint8_t data)
 {
 	spi_put(spi,data);
 }

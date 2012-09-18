@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA USART in SPI mode driver functions.
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -178,7 +178,7 @@ extern void usart_spi_deselect_device(USART_t *usart, struct usart_spi_device *d
  * \param data The data byte to be loaded
  *
  */
-__always_inline static inline void usart_spi_write_single(USART_t *usart, uint8_t data)
+__always_inline static void usart_spi_write_single(USART_t *usart, uint8_t data)
 {
 	usart_putchar(usart,data);
 }
