@@ -16,7 +16,6 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.serial"/>
 			<require idref="common.utils.stdio"/>
-			<info type="gui-flag" value="hidden"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 		</module>
 		<module type="driver" id="common.utils.stdio.stdio_serial#xmega" caption="Standard serial I/O (stdio) - XMEGA implementation">
@@ -35,7 +34,6 @@
 			<require idref="common.services.basic.serial"/>
 			<require idref="common.utils.stdio"/>
 			<require idref="xmega.utils"/>
-			<info type="gui-flag" value="hidden"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="driver" id="common.utils.stdio.stdio_serial#sam" caption="Standard serial I/O (stdio) - SAM implementation">
@@ -53,7 +51,6 @@
 			<require idref="common.utils.stdio"/>
 			<require idref="sam.utils"/>
 			<require idref="sam.utils.syscalls"/>
-			<info type="gui-flag" value="hidden"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 	</select-by-device>
