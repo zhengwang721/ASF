@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,6 +53,8 @@ extern "C" {
 
 /**
  * \defgroup sam_drivers_rtc_group Real-Time Clock (RTC)
+ *
+ * See \ref sam_rtc_quickstart.
  *
  * The RTC provides a full binary-coded decimal (BCD) clock that includes 
  * century (19/20), year (with leap years), month, date, day, hour, minute

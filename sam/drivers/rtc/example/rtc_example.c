@@ -94,6 +94,11 @@
  *     8 - Quit
  *     \endcode
  *
+ * \note The example is using RC oscillator by default. This would generate an accuracy
+ * problem for the RTC if not calibrated. It is recommended to use an external 32KHz
+ * crystal to get high accuracy. How to initialize RTC with external 32KHz crystal can be
+ * referred at \ref sam_rtc_quickstart.
+ *
  * \section Usage
  *
  * -# Build the program and download it into the evaluation board. Please
