@@ -475,6 +475,7 @@ void nvm_eeprom_erase_all(void);
 		AVR8_PART_IS_DEFINED(ATxmega64A4U) | \
 		AVR8_PART_IS_DEFINED(ATxmega64B1)  | \
 		AVR8_PART_IS_DEFINED(ATxmega64B3)  | \
+		AVR8_PART_IS_DEFINED(ATxmega64C3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega64D3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega64D4)
 #    define FLASH_SIZE      (64*1024L)
@@ -485,6 +486,7 @@ void nvm_eeprom_erase_all(void);
 		AVR8_PART_IS_DEFINED(ATxmega128A1U) | \
 		AVR8_PART_IS_DEFINED(ATxmega128A3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega128A3U) | \
+		AVR8_PART_IS_DEFINED(ATxmega128C3) | \
 		AVR8_PART_IS_DEFINED(ATxmega128D3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega128D4)
 #    define FLASH_SIZE      (128*1024L)

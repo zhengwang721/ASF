@@ -8,7 +8,7 @@
  *
  * To use this board, define BOARD=STK600_RC064X.
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -124,24 +124,6 @@
 #define AT45DBX_MASTER_MOSI   IOPORT_CREATE_PIN(PORTC,5)  // MOSI as output
 #define AT45DBX_MASTER_MISO   IOPORT_CREATE_PIN(PORTC,6)  // MISO as input
 #define AT45DBX_SPI_CLK_MASK  SYSCLK_PORT_C
-
-//! @}
-
-/*! \name SPI Connections of the AT25FBX Data Flash Memory. To use these defines,
- * connect :
- * - PC4 to /CS pin on DataFlash connector
- * - PC7 to SCK pin on DataFlash connector
- * - PC6 to SO pin on DataFlash connector
- * - PC5 to SI pin on DataFlash connector
- */
-//! @{
-#define AT25DFX_SPI           &SPIC
-#define AT25DFX_CS            IOPORT_CREATE_PIN(PORTC,4)  // CS as output
-#define AT25DFX_MASTER_SS     IOPORT_CREATE_PIN(PORTC,4)  // SS as output and overlayed with CS
-#define AT25DFX_MASTER_SCK    IOPORT_CREATE_PIN(PORTC,7)  // SCK as output
-#define AT25DFX_MASTER_MOSI   IOPORT_CREATE_PIN(PORTC,5)  // MOSI as output
-#define AT25DFX_MASTER_MISO   IOPORT_CREATE_PIN(PORTC,6)  // MISO as input
-#define AT25DFX_SPI_CLK_MASK  SYSCLK_PORT_C
 
 //! @}
 

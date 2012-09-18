@@ -122,6 +122,8 @@
 					<group name="xmegac3">
 						<mcu name="atxmega384c3"/>
 						<mcu name="atxmega256c3"/>
+						<mcu name="atxmega128c3"/>
+						<mcu name="atxmega64c3"/>
 					</group>
 					<group name="xmegac4">
 						<mcu name="atxmega32c4"/>

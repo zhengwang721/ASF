@@ -135,6 +135,8 @@
 //! \name The range 2F00h to 2FFFh is reserved to official PIDs for AVR bootloaders
 //! Note, !!!! don't use this range for demos or examples !!!!
 //! @{
+#define  USB_PID_ATMEL_DFU_ATXMEGA64C3             0x2FD6
+#define  USB_PID_ATMEL_DFU_ATXMEGA128C3            0x2FD7
 #define  USB_PID_ATMEL_DFU_ATXMEGA16C4             0x2FD8
 #define  USB_PID_ATMEL_DFU_ATXMEGA32C4             0x2FD9
 #define  USB_PID_ATMEL_DFU_ATXMEGA256C3            0x2FDA

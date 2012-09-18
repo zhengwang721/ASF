@@ -1187,6 +1187,8 @@ class IAREW8Project_v610(IAREW8Project_v550):
 		'atxmega64a3',
 		'atxmega384c3',
 		'atxmega256c3',
+		'atxmega128c3',
+		'atxmega64c3',
 		'atxmega32c4',
 		'atxmega16c4',
 		'atxmega384d3',

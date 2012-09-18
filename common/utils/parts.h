@@ -308,7 +308,9 @@
  */
 #define XMEGA_C3 ( \
 		AVR8_PART_IS_DEFINED(ATxmega384C3)  || \
-		AVR8_PART_IS_DEFINED(ATxmega256C3)     \
+		AVR8_PART_IS_DEFINED(ATxmega256C3)  || \
+		AVR8_PART_IS_DEFINED(ATxmega128C3)  || \
+		AVR8_PART_IS_DEFINED(ATxmega64C3)     \
 	)
 
 #define XMEGA_C4 ( \
