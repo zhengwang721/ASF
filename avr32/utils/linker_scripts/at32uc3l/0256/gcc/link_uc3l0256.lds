@@ -11,7 +11,7 @@
 
 /**
  *
- * Copyright (c) 2009 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,7 +87,7 @@ SECTIONS
   /* Read-only sections, merged into text segment: */
   PROVIDE (__executable_start = 0x80000000); . = 0x80000000;
   .interp         : { *(.interp) } >FLASH AT>FLASH :FLASH
-  .reset : {  *(.reset) } >FLASH AT>FLASH :FLASH
+  .reset : {  KEEP (*(.reset)) } >FLASH AT>FLASH :FLASH
   .hash           : { *(.hash) } >FLASH AT>FLASH :FLASH
   .dynsym         : { *(.dynsym) } >FLASH AT>FLASH :FLASH
   .dynstr         : { *(.dynstr) } >FLASH AT>FLASH :FLASH
