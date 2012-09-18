@@ -43,7 +43,7 @@
 
 #include "compiler.h"
 #include "sysclk.h"
-#include "conf_board.h"
+#include "conf_board.h" /* To get on-board memories configurations */
 #include "conf_access.h"
 #include "memories_initialization.h"
 

@@ -43,6 +43,7 @@
  */
 
 #include <asf.h>
+#include "conf_board.h" /* To get on-board memories configurations */
 #include "conf_access.h"
 #include "main.h"
 

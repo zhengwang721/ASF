@@ -41,6 +41,7 @@
  *
  */
 #include <asf.h>
+#include "conf_board.h" /* To get on-board memories configurations */
 #include "memories_initialization.h"
 
 void memories_initialization(void)
