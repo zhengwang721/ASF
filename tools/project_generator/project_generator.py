@@ -401,6 +401,7 @@ if __name__ == "__main__":
 	parser.add_option("-g","--generator", dest="generators", default="all", help="Select generator(s) to run on given projects. If more than one, separate them by comma. Use 'all' to use all available generators. Example of possible generators: iarewarm,iarew32,iarew,armgcc,avr32gcc,avrgcc,as5_arm,as5_32,as5_8,as5_32_template,as5_8_template,doxygen,doxygen-module")
 	parser.add_option("","--document-version", dest="document_version", default=None, help="Set version part of documentation URL in project files. If not specified, current version number will be used")
 	parser.add_option("","--no-as5-zip", action="store_true", dest="no_zip", default=False, help="Do not zip Atmel Studio project source files")
+	parser.add_option("-f","--input-file", dest="input_file", default=None, help="File which contains ID(s) of project(s) to generate. One ID per line. Overrides ID(s) given as argument")
 
 	# Mode options
 	parser.add_option("","--clean", action="store_const", dest="mode", const=Mode.ProjectGeneratorCleanup, help="Clean/remove all generated files from the project generator. It does not clean generated archives.")
@@ -422,6 +423,29 @@ if __name__ == "__main__":
 	basedir = options.basedir
 	if basedir is None:
 		basedir = "../../"
+
+	# (Try to) load input file
+	if options.input_file:
+		try:
+			f = open(options.input_file, "r")
+			lines = f.readlines()
+			f.close()
+		except IOError:
+			print "ERROR: Unable to read content from file: " + options.input_file
+			parser.print_help()
+			sys.exit(ReturnCode.ERROR_INVALID)
+
+		args = []
+		for line in lines:
+			line = line.strip()
+			if len(line) > 0:
+				args.append(line)
+
+	# Remove arguments if one of the args is '*'
+	for arg in args:
+		if arg ==  '*':
+			args = []
+			break
 
 	# Find paths for input files in same folder as this script
 	templatedir = os.path.join(script_path, "templates")

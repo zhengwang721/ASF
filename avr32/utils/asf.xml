@@ -20,6 +20,7 @@
 			Do not perform a jump, trampoline, over the bootloader
 			section in the device.
 			</info>
+			<device-support value="uc3" />
 		</module>
 		<module type="meta" id="config.avr32.utils.trampoline#yes" caption="Append a trampoline to perform a jump over the bootloader section">
 			<info type="description" value="summary">
@@ -30,6 +31,7 @@
 			<build type="asm-source" value="startup/trampoline_uc3.S" toolchain="avr32gcc" />
 			<build type="include-path" value="." />
 			<build type="header-file" value="startup/trampoline_uc3.h" />
+			<device-support value="uc3" />
 		</module>
 	</select-by-config>
 	<module type="driver" id="avr32.utils" caption="Compiler abstraction layer and code utilities">

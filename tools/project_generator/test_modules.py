@@ -800,9 +800,33 @@ if __name__ == "__main__":
 	parser.add_option("", "--no-hidden", action="store_true", dest="test_hidden", default=False, help="Ignore the 'hidden' GUI flag in ASF XML and test/list _all_ modules")
 	parser.add_option("-j", "--junit", action="store_true", dest="write_junit", default=False, help="Write a test report in JUnit-compatible XML")
 	parser.add_option("", "--list-ids", dest="module_list_file", default=None, help="Do a dry run and output to file a plaintext list of module IDs: --list-ids <listfile>")
+	parser.add_option("-f","--input-file", dest="input_file", default=None, help="File which contains ID(s) of module(s) to test. One ID per line. Overrides ID(s) given as argument")
 
 	# Parse command line options and arguments
 	(options, arguments) = parser.parse_args()
+
+	# (Try to) load input file
+	if options.input_file:
+		try:
+			f = open(options.input_file, "r")
+			lines = f.readlines()
+			f.close()
+		except IOError:
+			print "ERROR: Unable to read content from file: " + options.input_file
+			parser.print_help()
+			sys.exit(ReturnCode.ERROR_INVALID)
+
+		arguments = []
+		for line in lines:
+			line = line.strip()
+			if len(line) > 0:
+				arguments.append(line)
+
+	# Remove arguments if one of the arguments is '*'
+	for arg in arguments:
+		if arg ==  '*':
+			arguments = []
+			break
 
 	asf_directory = options.asf_dir
 	if not asf_directory:
