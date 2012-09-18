@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2010-2012222222222222222222222 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,6 +42,8 @@
  */
 #ifndef CHIP_SYSCLK_H_INCLUDED
 #define CHIP_SYSCLK_H_INCLUDED
+
+#include <board.h>
 
 #ifdef __cplusplus
 extern "C" {

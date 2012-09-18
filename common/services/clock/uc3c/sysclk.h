@@ -458,6 +458,8 @@ extern "C" {
 #define SYSCLK_TWIS0            (AVR32_TWIS0_CLK_PBA % 32)
 //! TWI Slave 1
 #define SYSCLK_TWIS1            (AVR32_TWIS1_CLK_PBA % 32)
+//! Inter-IC Sound (I2S) Controller
+#define SYSCLK_IISC             (AVR32_IISC_CLK_PBA % 32)
 //! Pulse Width Modulator
 #define SYSCLK_PWM              (AVR32_PWM_CLK_PBA % 32)
 //! Quadrature Decoder 0
@@ -494,6 +496,8 @@ extern "C" {
 #define SYSCLK_SMC_REGS         (AVR32_SMC_CLK_PBB % 32)
 //! SDRAM Controller registers
 #define SYSCLK_SDRAMC_REGS      (AVR32_SDRAMC_CLK_PBB % 32)
+//! Ethernet MAC registers
+#define SYSCLK_MACB_REGS        (AVR32_MACB_CLK_PBB % 32)
 //@}
 
 //! \name Clocks derived from the PBC clock
@@ -783,6 +787,7 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 	case AVR32_TWIM1_ADDRESS:
 	case AVR32_TWIS0_ADDRESS:
 	case AVR32_TWIS1_ADDRESS:
+	case AVR32_IISC_ADDRESS:
 	case AVR32_PWM_ADDRESS:
 	case AVR32_QDEC0_ADDRESS:
 #if (UC3C0 || UC3C1)
@@ -813,6 +818,7 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 #if defined(AVR32_SDRAMC_ADDRESS)
 	case AVR32_SDRAMC_ADDRESS:
 #endif
+	case AVR32_MACB_ADDRESS:
 		return sysclk_get_pbb_hz();
 
 	case AVR32_PDCA_ADDRESS:
@@ -1008,6 +1014,10 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 		sysclk_enable_pba_module(SYSCLK_TWIS1);
 		break;
 
+	case AVR32_IISC_ADDRESS:
+		sysclk_enable_pba_module(SYSCLK_IISC);
+		break;
+		
 	case AVR32_PWM_ADDRESS:
 		sysclk_enable_pba_module(SYSCLK_PWM);
 		break;
@@ -1081,6 +1091,10 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 		break;
 #endif
 
+	case AVR32_MACB_ADDRESS:
+		sysclk_enable_pbb_module(SYSCLK_MACB_REGS);
+		break;
+		
 	case AVR32_PDCA_ADDRESS:
 		sysclk_enable_hsb_module(SYSCLK_PDCA_HSB);
 		sysclk_enable_pbc_module(SYSCLK_PDCA_PB);
@@ -1204,6 +1218,10 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 		sysclk_disable_pba_module(SYSCLK_TWIS1);
 		break;
 
+	case AVR32_IISC_ADDRESS:
+		sysclk_disable_pba_module(SYSCLK_IISC);
+		break;
+	
 	case AVR32_PWM_ADDRESS:
 		sysclk_disable_pba_module(SYSCLK_PWM);
 		break;
@@ -1277,6 +1295,10 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 		break;
 #endif
 
+	case AVR32_MACB_ADDRESS:
+		sysclk_disable_pbb_module(SYSCLK_MACB_REGS);
+		break;
+		
 	case AVR32_PDCA_ADDRESS:
 		sysclk_disable_hsb_module(SYSCLK_PDCA_HSB);
 		sysclk_disable_pbc_module(SYSCLK_PDCA_PB);

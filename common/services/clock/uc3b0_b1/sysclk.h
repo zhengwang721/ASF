@@ -43,6 +43,8 @@
 #ifndef CHIP_SYSCLK_H_INCLUDED
 #define CHIP_SYSCLK_H_INCLUDED
 
+#include <board.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

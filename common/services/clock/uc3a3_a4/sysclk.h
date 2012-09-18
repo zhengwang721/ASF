@@ -43,6 +43,8 @@
 #ifndef CHIP_SYSCLK_H_INCLUDED
 #define CHIP_SYSCLK_H_INCLUDED
 
+#include <board.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -572,6 +574,9 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 {
 	/* Fallthroughs intended for modules sharing the same peripheral bus. */
 	switch ((uintptr_t)module) {
+	case AVR32_DMACA_ADDRESS:
+		return sysclk_get_hsb_hz();
+	
 	case AVR32_INTC_ADDRESS:
 	case AVR32_GPIO_ADDRESS:
 	case AVR32_PDCA_ADDRESS:
@@ -691,6 +696,10 @@ extern void sysclk_disable_pbb_module(unsigned int index);
 static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 {
 	switch ((uintptr_t)module) {
+	case AVR32_DMACA_ADDRESS:
+		sysclk_enable_hsb_module(SYSCLK_DMACA);
+		break;
+
 	case AVR32_INTC_ADDRESS:
 		sysclk_enable_pba_module(SYSCLK_INTC);
 		break;
@@ -830,6 +839,10 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 {
 	switch ((uintptr_t)module) {
+	case AVR32_DMACA_ADDRESS:
+		sysclk_disable_hsb_module(SYSCLK_DMACA);
+		break;
+
 	case AVR32_INTC_ADDRESS:
 		sysclk_disable_pba_module(SYSCLK_INTC);
 		break;
