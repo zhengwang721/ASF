@@ -184,6 +184,7 @@ void main_vendor_int_in_received(udd_ep_status_t status,
 		iram_size_t nb_transfered, udd_ep_id_t ep)
 {
 	UNUSED(nb_transfered);
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status) {
 		return; // Transfer aborted, then stop loopback
 	}
@@ -198,6 +199,7 @@ void main_vendor_int_in_received(udd_ep_status_t status,
 void main_vendor_int_out_received(udd_ep_status_t status,
 		iram_size_t nb_transfered, udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status) {
 		return; // Transfer aborted, then stop loopback
 	}
@@ -215,6 +217,7 @@ void main_vendor_bulk_in_received(udd_ep_status_t status,
 		iram_size_t nb_transfered, udd_ep_id_t ep)
 {
 	UNUSED(nb_transfered);
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status) {
 		return; // Transfer aborted, then stop loopback
 	}
@@ -229,6 +232,7 @@ void main_vendor_bulk_in_received(udd_ep_status_t status,
 void main_vendor_bulk_out_received(udd_ep_status_t status,
 		iram_size_t nb_transfered, udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status) {
 		return; // Transfer aborted, then stop loopback
 	}
@@ -247,6 +251,7 @@ void main_vendor_iso_in_received(udd_ep_status_t status,
 {
 	UNUSED(status);
 	UNUSED(nb_transfered);
+	UNUSED(ep);
 	ui_loop_back_state(false);
 }
 
@@ -254,6 +259,7 @@ void main_vendor_iso_out_received(udd_ep_status_t status,
 		iram_size_t nb_transfered, udd_ep_id_t ep)
 {
 	uint8_t *buf_ptr;
+	UNUSED(ep);
 
 	if (UDD_EP_TRANSFER_OK != status) {
 		return; // Transfer aborted, then stop loopback

@@ -334,6 +334,7 @@ static bool udi_hid_mouse_send_report(void)
 static void udi_hid_mouse_report_sent(udd_ep_status_t status,
 		iram_size_t nb_sent, udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	UNUSED(status);
 	UNUSED(nb_sent);
 	// Valid report sending

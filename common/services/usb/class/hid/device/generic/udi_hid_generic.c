@@ -275,6 +275,7 @@ static void udi_hid_generic_setfeature_valid(void)
 static void udi_hid_generic_report_out_received(udd_ep_status_t status,
 		iram_size_t nb_received, udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status)
 		return;	// Abort reception
 
@@ -300,6 +301,7 @@ static void udi_hid_generic_report_in_sent(udd_ep_status_t status,
 {
 	UNUSED(status);
 	UNUSED(nb_sent);
+	UNUSED(ep);
 	udi_hid_generic_b_report_in_free = true;
 }
 

@@ -180,10 +180,12 @@ void ui_wakeup(void)
 
 void ui_com_open(uint8_t port)
 {
+	UNUSED(port);
 }
 
 void ui_com_close(uint8_t port)
 {
+	UNUSED(port);
 }
 
 void ui_com_rx_start(void)

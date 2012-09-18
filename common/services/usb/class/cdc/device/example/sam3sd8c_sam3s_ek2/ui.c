@@ -64,11 +64,13 @@ void ui_wakeup(void)
 
 void ui_com_open(uint8_t port)
 {
+	UNUSED(port);
 	LED_On(LED1_GPIO);
 }
 
 void ui_com_close(uint8_t port)
 {
+	UNUSED(port);
 	LED_Off(LED1_GPIO);
 }
 

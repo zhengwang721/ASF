@@ -202,10 +202,6 @@ static void udi_cdc_data_sent(udd_ep_status_t status, iram_size_t n, udd_ep_id_t
  */
 static void udi_cdc_tx_send(uint8_t port);
 
-#if UDI_CDC_PORT_NB == 1
-bool udi_cdc_multi_is_rx_ready(uint8_t port);
-#endif
-
 //@}
 
 //@}
@@ -492,7 +488,7 @@ static void udi_cdc_ctrl_state_change(uint8_t port, bool b_set, le16_t bit_mask)
 	if (b_set) {
 		udi_cdc_state[port] |= bit_mask;
 	} else {
-		udi_cdc_state[port] &= ~bit_mask;
+		udi_cdc_state[port] &= ~(unsigned)bit_mask;
 	}
 	cpu_irq_restore(flags);
 
@@ -528,7 +524,7 @@ static void udi_cdc_ctrl_state_notify(uint8_t port, udd_ep_id_t ep)
 				udd_ep_run(ep,
 				false,
 				(uint8_t *) & uid_cdc_state_msg[port],
-				sizeof(uid_cdc_state_msg),
+				sizeof(uid_cdc_state_msg[0]),
 				udi_cdc_serial_state_msg_sent);
 	}
 }
@@ -537,6 +533,8 @@ static void udi_cdc_ctrl_state_notify(uint8_t port, udd_ep_id_t ep)
 static void udi_cdc_serial_state_msg_sent(udd_ep_status_t status, iram_size_t n, udd_ep_id_t ep)
 {
 	uint8_t port;
+	UNUSED(n);
+	UNUSED(status);
 
 	switch (ep) {
 #define UDI_CDC_GET_PORT_FROM_COMM_EP(iface, unused) \
@@ -661,6 +659,7 @@ static void udi_cdc_data_received(udd_ep_status_t status, iram_size_t n, udd_ep_
 static void udi_cdc_data_sent(udd_ep_status_t status, iram_size_t n, udd_ep_id_t ep)
 {
 	uint8_t port;
+	UNUSED(n);
 
 	switch (ep) {
 #define UDI_CDC_DATA_EP_IN_TO_PORT(index, unused) \

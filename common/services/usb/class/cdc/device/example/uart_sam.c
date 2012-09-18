@@ -96,6 +96,7 @@ ISR(USART_HANDLER)
 
 void uart_rx_notify(uint8_t port)
 {
+	UNUSED(port);
 	// If UART is open
 	if (usart_get_interrupt_mask(USART_BASE)
 		& US_IMR_RXRDY) {
@@ -110,6 +111,7 @@ void uart_config(uint8_t port, usb_cdc_line_coding_t * cfg)
 {
 	uint32_t stopbits, parity, databits;
 	uint32_t imr;
+	UNUSED(port);
 
 	switch (cfg->bCharFormat) {
 	case CDC_STOP_BITS_2:
@@ -172,6 +174,7 @@ void uart_config(uint8_t port, usb_cdc_line_coding_t * cfg)
 
 void uart_open(uint8_t port)
 {
+	UNUSED(port);
 	// IO is initialized in board init
 	// Enable interrupt with priority higher than USB
 	NVIC_SetPriority((IRQn_Type) USART_ID, USART_INT_LEVEL);
@@ -195,6 +198,7 @@ void uart_open(uint8_t port)
 
 void uart_close(uint8_t port)
 {
+	UNUSED(port);
 	// Disable interrupts
 	usart_disable_interrupt(USART_BASE, 0xFFFFFFFF);
 	// Close RS232 communication

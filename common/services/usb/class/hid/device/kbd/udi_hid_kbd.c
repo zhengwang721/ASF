@@ -370,6 +370,7 @@ static void udi_hid_kbd_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
 {
 	UNUSED(status);
 	UNUSED(nb_sent);
+	UNUSED(ep);
 	udi_hid_kbd_b_report_trans_ongoing = false;
 	if (udi_hid_kbd_b_report_valid) {
 		udi_hid_kbd_send_report();
