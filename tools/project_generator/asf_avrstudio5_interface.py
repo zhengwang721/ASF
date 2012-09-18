@@ -28,7 +28,7 @@ class PythonFacade:
 	def __init__(self, db_file, changedir=True):
 		self.configuration = ConfigurationHandler()
 		self.runtime = Runtime(".", self.configuration)
-		self.runtime.setup_log(logging.DEBUG)
+		self.runtime.setup_log(logging.FATAL)
 		self.runtime.set_debug(True)
 		self.log = self.runtime.log
 		if changedir:
