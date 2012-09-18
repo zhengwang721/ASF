@@ -141,7 +141,7 @@ static volatile bool uhc_setup_request_finish_status;
 //! \name Internal functions to manage the USB device enumeration
 //! @{
 static void uhc_enable_timeout_callback(
-		uint16_t timeout,
+		uint8_t timeout,
 		uhc_sof_timeout_callback_t callback);
 static void uhc_enumeration_suspend(void);
 static void uhc_enumeration_reset(uhd_callback_reset_t callback);
@@ -196,7 +196,7 @@ static void uhc_setup_request_callback(
  * \param timeout  value of timeout (ms)
  * \param callback Callback to call at the end of timeout
  */
-static void uhc_enable_timeout_callback(uint16_t timeout,
+static void uhc_enable_timeout_callback(uint8_t timeout,
 		uhc_sof_timeout_callback_t callback)
 {
 	uhc_sof_timeout_callback = callback;
