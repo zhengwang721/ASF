@@ -68,7 +68,7 @@ typedef uint16_t mxt_memory_adr;
  * This component provides low-level read/write access to the configuration and
  * data registers on a maXTouch device. It has only been tested on
  * mxt143E parts, but it should be easy to add support for other maXTouch
- * devices. This is a common API for XMEGA and UC3.
+ * devices. This is a common API for all supported architectures in ASF.
  * 
  * The component is not interrupt driven and the maXTouch device has to be
  * polled to see if there are any pending messages, and the mxt_read_message
@@ -99,7 +99,7 @@ enum mxt_object_type {
  */
 #define MXT_COMMSCONFIG_T18_CHG_MODE_bp       2
 #define MXT_COMMSCONFIG_T18_DISMNTR_bp        7
-/* @} */
+/** @} */
 
 /* Align struct members to bytes for communication objects */
 COMPILER_PACK_SET(1)
@@ -140,7 +140,7 @@ struct mxt_conf_messageprocessor_t5 {
 #define MXT_GEN_COMMANDPROCESSOR_CALIBRATE    2
 #define MXT_GEN_COMMANDPROCESSOR_REPORTALL    3
 #define MXT_GEN_COMMANDPROCESSOR_DIAGNOSTIC   5
-/* @} */
+/** @} */
 
 /** \brief Commandprocessor T6 object */
 struct mxt_gen_commandprocessor_t6 {
@@ -187,7 +187,7 @@ struct mxt_report_id_map {
 };
 
 /**
- * \ brief Forward declaration of the mxt_device struct to avoid warnings
+ * \brief Forward declaration of the mxt_device struct to avoid warnings
  *         in the mxt_message_handler_t typedef
  */
 struct mxt_device;
@@ -248,7 +248,7 @@ status_code_t mxt_close_device(struct mxt_device *device);
 void mxt_set_message_handler(struct mxt_device *device,
 		mxt_message_handler_t handler);
 
-uint8_t mxt_is_message_pending(struct mxt_device *device);
+bool mxt_is_message_pending(struct mxt_device *device);
 
 int8_t mxt_get_message_count(struct mxt_device *device);
 

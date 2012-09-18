@@ -226,7 +226,7 @@ static uint32_t inline mxt_crc_24(uint32_t crc, uint8_t byte1, uint8_t byte2)
  * \brief Calculates the crc checksum of the data in the info block.
  *
  * \param *device Pointer to mxt_device instance
- * \param *crc_pointer Pointer to the crc variable
+ * \param *crc    Pointer to the crc variable
  * \return Operation result status code
  */
 static status_code_t mxt_calculate_infoblock_crc(struct mxt_device *device,
@@ -395,8 +395,7 @@ static uint8_t inline mxt_crc_8(uint8_t crc, uint8_t data)
  * \internal
  * \brief Validates the message received from the maXTouch device.
  *
- * \param *device Pointer to mxt_device instance
- * \param message Message received from the maXTouch device
+ * \param packet  Message received from the maXTouch device
  * \return Operation result status code.
  */
 static inline status_code_t mxt_validate_message(
@@ -436,7 +435,7 @@ static void mxt_info_le_to_cpu(struct mxt_device *device)
 /**
  * \brief Probe for a maXTouch connected to a specific TWI line
  *
- * \param *dev Pointer to TWI register set
+ * \param interface Pointer to TWI register set
  * \param *chip_adr I2C address to maXTouch device
  * \return Operation result status code
  */
@@ -475,6 +474,7 @@ status_code_t mxt_probe_device(twi_master_t interface, uint8_t chip_adr)
  * \param *interface Pointer to TWI register set
  * \param *device Pointer to mxt_device instance
  * \param chip_adr I2C address to maXTouch device
+ * \param chgpin IOPORT pin instance attached to the maXTouch device's /CHG pin
  * \return Operation result status code
  */
 status_code_t mxt_init_device(struct mxt_device *device,
@@ -662,7 +662,7 @@ status_code_t mxt_write_config_reg(struct mxt_device *device,
  * \brief Closes the twi connection and frees memory.
  *
  * \param *device Pointer to mxt_device instance
- * \result Operation result status code
+ * \return Operation result status code
  */
 status_code_t mxt_close_device(struct mxt_device *device)
 {
@@ -677,7 +677,7 @@ status_code_t mxt_close_device(struct mxt_device *device)
 /**
  * \brief Set message handler
  *
- * \param device Pointer to mxt_device instance
+ * \param *device Pointer to mxt_device instance
  * \param handler Message handler function
  */
 void mxt_set_message_handler(struct mxt_device *device,
@@ -692,7 +692,7 @@ void mxt_set_message_handler(struct mxt_device *device,
  * \param *device Pointer to mxt_device instance
  * \return Return /CHG pin status
  */
-uint8_t mxt_is_message_pending(struct mxt_device *device)
+bool mxt_is_message_pending(struct mxt_device *device)
 {
 	if (ioport_get_pin_level(device->chgpin) == false) {
 		return true;
@@ -814,6 +814,7 @@ status_code_t mxt_read_touch_event(struct mxt_device *device,
 /**
  * \brief Get object type from message
  *
+ * \param *device Pointer to mxt_device instance
  * \param *message Message buffer
  * \return Operation
  */
