@@ -7,8 +7,10 @@
 			<keyword value="DMA Controller"/>
 			<keyword value="Memory" />
 		</info>	
+		<build type="include-path" value="."/>
 		<build type="header-file" value="ascii_anim1.h"/>
 		<build type="header-file" value="ascii_anim2.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="c-source" value="pdca_example.c"/>
 		<device-support value="uc3a"/>
 		<device-support value="uc3b"/>
@@ -20,5 +22,7 @@
 		<require idref="avr32.drivers.pdca"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.usart"/>
+		<require idref="common.services.basic.sleepmgr"/>
+		<require idref="common.services.basic.clock"/>
 	</module>
 </asf>

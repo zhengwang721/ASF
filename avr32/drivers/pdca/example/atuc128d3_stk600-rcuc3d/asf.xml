@@ -6,8 +6,11 @@
 		<require idref="avr32.drivers.pdca.example"/>
 		<require idref="board.stk600-rcuc3d"/>
 		<config name="config.board.stk600-rcuc3d.init" value="no"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<build type="include-path" value="."/>
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
 	</project>
 </asf>

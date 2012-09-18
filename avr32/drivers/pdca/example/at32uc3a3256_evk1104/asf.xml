@@ -6,6 +6,9 @@
 		<require idref="avr32.drivers.pdca.example"/>
 		<require idref="board.evk1104"/>
 		<config name="config.board.evk1104.init" value="no"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<build type="include-path" value="."/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc" />
 		<generator value="as5_32" />
