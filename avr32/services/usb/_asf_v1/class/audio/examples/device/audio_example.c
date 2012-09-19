@@ -336,6 +336,7 @@ int _init_startup(void)
 
   // Initialize interrupt handling.
   irq_initialize_vectors();
+  cpu_irq_enable();
 
   init_stdio();
 
@@ -355,6 +356,7 @@ int __low_level_init(void)
 
   // Initialize interrupt handling.
   irq_initialize_vectors();
+  cpu_irq_enable();
 
   init_stdio();
 

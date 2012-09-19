@@ -331,7 +331,8 @@ int _init_startup(void)
   Enable_global_exception();
 
   // Initialize interrupt handling.
-  INTC_init_interrupts();
+  irq_initialize_vectors();
+  cpu_irq_enable();
 
   init_stdio();
 
@@ -350,7 +351,8 @@ int __low_level_init(void)
   Enable_global_exception();
 
   // Initialize interrupt handling.
-  INTC_init_interrupts();
+  irq_initialize_vectors();
+  cpu_irq_enable();
 
   init_stdio();
 
