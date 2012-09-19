@@ -43,9 +43,9 @@
 #ifndef CONF_TEST_H
 #define CONF_TEST_H
 
-//! \note USART0 on PORTC routed through board controller to USB
-#define CONF_TEST_USART      &USARTC0
-//! \note 38400 baud
+//! \note Using USART on PORTE (PE2 & PE3)
+#define CONF_TEST_USART      &USARTE0
+//! \note 38.4kbps
 #define CONF_TEST_BAUDRATE   38400
 //! \note 8-bit character length
 #define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc

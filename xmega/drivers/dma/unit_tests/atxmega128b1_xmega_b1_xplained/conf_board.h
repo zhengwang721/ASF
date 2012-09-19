@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board initialization configuration
+ * \brief Board configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** Enable USART0 on PORTC routed through board controller to USB */
-#define CONF_BOARD_ENABLE_USARTC0
+//! Enable USART0 on PORTE header
+#define CONF_BOARD_ENABLE_USARTE0
 
-#endif /* CONF_BOARD_H */
+#endif /* CONF_BOARD_H_INCLUDED */

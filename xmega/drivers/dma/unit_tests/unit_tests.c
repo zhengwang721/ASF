@@ -693,7 +693,7 @@ static void run_dma_config_interface_test(const struct test_case *test)
 #endif
 
 	/* Loop through all channels, read back config from them, and verify */
-	for (channel_index = 0; channel_index < 4; channel_index++) {
+	for (channel_index = 0; channel_index < DMA_NUMBER_OF_CHANNELS; channel_index++) {
 		dma_channel_write_config(channel_index, &config_params);
 
 		/* Null out the read_config struct */
