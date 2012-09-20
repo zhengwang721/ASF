@@ -106,7 +106,11 @@ enum ioport_sense {
 #elif UC3
 # include "uc3/ioport.h"
 #elif SAM
-# include "sam/ioport.h"
+# if SAM4L
+#  include "sam/ioport_gpio.h"
+# else
+#  include "sam/ioport_pio.h"
+# endif
 #endif
 
 /**

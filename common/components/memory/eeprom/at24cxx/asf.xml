@@ -11,7 +11,8 @@
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="common_components_memory_eeprom_at24cxx_group"/>
 		<require idref="common.services.basic.twi"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 	</module>
 </asf>

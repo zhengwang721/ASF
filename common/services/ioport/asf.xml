@@ -43,10 +43,11 @@
 			<build type="doxygen-entry-point" value="ioport_group"/>
 			<build type="doxygen-quick-start" value="ioport_quickstart"/>
 			<build type="header-file" subtype="api" value="ioport.h"/>
-			<build type="header-file" value="sam/ioport.h"/>
+			<build type="header-file" value="sam/ioport_pio.h"/>
 			<build type="include-path" value="."/>
 			<require idref="common.services.basic.clock"/>
 			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="service" id="common.services.ioport#3" caption="IOPORT - General purpose I/O service">
@@ -59,11 +60,11 @@
 			<build type="doxygen-entry-point" value="ioport_group"/>
 			<build type="doxygen-quick-start" value="ioport_quickstart"/>
 			<build type="header-file" subtype="api" value="ioport.h"/>
-			<build type="header-file" value="sam/ioport.h"/>
+			<build type="header-file" value="sam/ioport_gpio.h"/>
 			<build type="include-path" value="."/>
 			<require idref="common.services.basic.clock"/>
-			<device-support value="sam4"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+			<device-support value="sam4l"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
 		</module>
 	</select-by-device>
 </asf>

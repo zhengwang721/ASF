@@ -22,7 +22,8 @@
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam_drivers_pio_group"/>
 		<build type="doxygen-quick-start" value="sam_pio_quickstart"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<require idref="config.sam.pio.pio_handler"/>
 		<require idref="sam.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>

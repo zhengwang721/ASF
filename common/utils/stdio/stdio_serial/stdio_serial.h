@@ -93,7 +93,7 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 #elif UC3
 	usart_serial_init(usart,(usart_serial_options_t *)opt);
 #elif SAM
-	usart_serial_init((Uart *)usart,(usart_serial_options_t *)opt);
+	usart_serial_init((Usart *)usart,(usart_serial_options_t *)opt);
 #else
 # error Unsupported chip type
 #endif

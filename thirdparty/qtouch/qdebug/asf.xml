@@ -22,6 +22,29 @@
 		</module>
 	</select-by-config>
 	
+	<select-by-config id="config.common.services.qtouch.qdebug.qt600.sam4l" name="config.common.services.qtouch.qdebug.qt600.sam4l" caption="Board QDebug support" default="no">
+		<module type="service" id="config.common.services.qtouch.qdebug.qt600.sam4l#no" caption="QT600 QDebug disabled">
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="sam4l"/>
+
+		</module>
+		<module type="service" id="config.common.services.qtouch.qdebug.qt600.sam4l#yes" caption="QT600 QDebug enabled">
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" value="QDebug_sam4l.h"/>
+			<build type="c-source" value="QDebug_sam4l.c"/>
+			<build type="header-file" value="../devspecific/sam4/sam4l/common/BitBangSPI_Master.h"/>
+			<build type="c-source" value="../devspecific/sam4/sam4l/common/BitBangSPI_Master.c"/>
+			<build type="c-source" value="QDebugTransport.c"/>
+			<build type="header-file" value="QDebugTransport.h"/>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="../devspecific/sam4/sam4l/common"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.ioport"/>
+			<require idref="sam.drivers.usart"/>
+			<device-support value="sam4l"/>
+		</module>
+	</select-by-config>
+	
 	<select-by-config id="config.common.services.qtouch.qdebug.xplained.uc3l0" name="config.common.services.qtouch.qdebug.xplained.uc3l0" caption="Board QDebug support" default="no">
 		<module type="service" id="config.common.services.qtouch.qdebug.xplained.uc3l0#no" caption="Xplained QDebug disabled">
 			<info type="gui-flag" value="hidden"/>

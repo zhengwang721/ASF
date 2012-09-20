@@ -45,22 +45,21 @@
 
 #include <sysclk.h>
 
-#define IOPORT_CREATE_PIN(port, pin) ((IOPORT_ ## port) * 32 + (pin))
-#define IOPORT_BASE_ADDRESS (uintptr_t)PIOA
-#define IOPORT_PIO_OFFSET   ((uintptr_t)PIOB - (uintptr_t)PIOA)
+#define IOPORT_CREATE_PIN(port, pin) ((port) * 32 + (pin))
 
-#define IOPORT_PIOA     0
-#define IOPORT_PIOB     1
-#define IOPORT_PIOC     2
-#define IOPORT_PIOD     3
-#define IOPORT_PIOE     4
-#define IOPORT_PIOF     5
+// Aliases
+#define IOPORT_GPIOA     0
+#define IOPORT_GPIOB     1
+#define IOPORT_GPIOC     2
+#define IOPORT_GPIOD     3
+#define IOPORT_GPIOE     4
+#define IOPORT_GPIOF     5
 
 /**
  * \weakgroup ioport_group
  * \section ioport_modes IOPORT Modes
  *
- * For details on these please see the SAM Manual.
+ * For details on these please see the device datasheet.
  *
  * @{
  */
@@ -69,27 +68,22 @@
 /** @{ */
 #define IOPORT_MODE_MUX_MASK            (7 << 0) /*!< MUX bits mask */
 #define IOPORT_MODE_MUX_BIT0            (1 << 0) /*!< MUX BIT0 mask */
-
-#if SAM3N || SAM3S || SAM4S
 #define IOPORT_MODE_MUX_BIT1            (1 << 1) /*!< MUX BIT1 mask */
-#endif
-
 #define IOPORT_MODE_MUX_A               (0 << 0) /*!< MUX function A */
 #define IOPORT_MODE_MUX_B               (1 << 0) /*!< MUX function B */
-
-#if SAM3N || SAM3S || SAM4S
 #define IOPORT_MODE_MUX_C               (2 << 0) /*!< MUX function C */
 #define IOPORT_MODE_MUX_D               (3 << 0) /*!< MUX function D */
-#endif
+
+#define IOPORT_MODE_MUX_BIT2            (1 << 2) /*!< MUX BIT2 mask */
+#define IOPORT_MODE_MUX_E               (4 << 0) /*!< MUX function E */
+#define IOPORT_MODE_MUX_F               (5 << 0) /*!< MUX function F */
+#define IOPORT_MODE_MUX_G               (6 << 0) /*!< MUX function G */
+#define IOPORT_MODE_MUX_H               (7 << 0) /*!< MUX function H */
 
 #define IOPORT_MODE_PULLUP              (1 << 3) /*!< Pull-up */
-
-#if SAM3N || SAM3S || SAM4S
 #define IOPORT_MODE_PULLDOWN            (1 << 4) /*!< Pull-down */
-#endif
-
-#define IOPORT_MODE_OPEN_DRAIN          (1 << 5) /*!< Open drain */
 #define IOPORT_MODE_GLITCH_FILTER       (1 << 6) /*!< Glitch filter */
+#define IOPORT_MODE_DRIVE_STRENGTH      (1 << 7) /*!< Extra drive strength */
 /** @} */
 
 /** @} */
@@ -104,13 +98,14 @@ __always_inline static ioport_port_t arch_ioport_pin_to_port_id(ioport_pin_t pin
 	return pin >> 5;
 }
 
-__always_inline static Pio *arch_ioport_port_to_base(ioport_port_t port)
+__always_inline static volatile GpioPort *arch_ioport_port_to_base(
+		ioport_port_t port)
 {
-	return (Pio *)((uintptr_t)IOPORT_BASE_ADDRESS +
-	       (IOPORT_PIO_OFFSET * port));
+	return (volatile GpioPort *)(GPIO_ADDR
+		+ port * sizeof(GpioPort));
 }
 
-__always_inline static Pio *arch_ioport_pin_to_base(ioport_pin_t pin)
+__always_inline static volatile GpioPort *arch_ioport_pin_to_base(ioport_pin_t pin)
 {
 	return arch_ioport_port_to_base(arch_ioport_pin_to_port_id(pin));
 }
@@ -122,20 +117,19 @@ __always_inline static ioport_port_mask_t arch_ioport_pin_to_mask(ioport_pin_t p
 
 __always_inline static void arch_ioport_init(void)
 {
-	sysclk_enable_peripheral_clock(ID_PIOA);
-	sysclk_enable_peripheral_clock(ID_PIOB);
+	sysclk_enable_pba_module(SYSCLK_GPIO);
 }
 
 __always_inline static void arch_ioport_enable_port(ioport_port_t port,
 		ioport_port_mask_t mask)
 {
-	arch_ioport_port_to_base(port)->PIO_PER = mask;
+	arch_ioport_port_to_base(port)->GPIO_GPERS = mask;
 }
 
 __always_inline static void arch_ioport_disable_port(ioport_port_t port,
 		ioport_port_mask_t mask)
 {
-	arch_ioport_port_to_base(port)->PIO_PDR = mask;
+	arch_ioport_port_to_base(port)->GPIO_GPERC = mask;
 }
 
 __always_inline static void arch_ioport_enable_pin(ioport_pin_t pin)
@@ -153,54 +147,55 @@ __always_inline static void arch_ioport_disable_pin(ioport_pin_t pin)
 __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 		ioport_port_mask_t mask, ioport_mode_t mode)
 {
-	Pio *base = arch_ioport_port_to_base(port);
+	volatile GpioPort *base = arch_ioport_port_to_base(port);
 
 	if (mode & IOPORT_MODE_PULLUP) {
-		base->PIO_PUER = mask;
+		base->GPIO_PUERS = mask;
 	} else {
-		base->PIO_PUDR = mask;
+		base->GPIO_PUERC = mask;
 	}
 
-	#if defined(IOPORT_MODE_PULLDOWN)
+#ifdef IOPORT_MODE_PULLDOWN
 	if (mode & IOPORT_MODE_PULLDOWN) {
-		base->PIO_PPDER = mask;
+		base->GPIO_PDERS = mask;
 	} else {
-		base->PIO_PPDDR = mask;
+		base->GPIO_PDERC = mask;
 	}
-
-	#endif
-
-	if (mode & IOPORT_MODE_OPEN_DRAIN) {
-		base->PIO_MDER = mask;
-	} else {
-		base->PIO_MDDR = mask;
-	}
+#endif
 
 	if (mode & IOPORT_MODE_GLITCH_FILTER) {
-		base->PIO_IFER = mask;
+		base->GPIO_GFERS = mask;
 	} else {
-		base->PIO_IFDR = mask;
+		base->GPIO_GFERC = mask;
 	}
 
-	#if !defined(IOPORT_MODE_MUX_BIT1)
-	if (mode & IOPORT_MODE_MUX_BIT0) {
-		base->PIO_ABSR |= mask;
+#ifdef IOPORT_MODE_DRIVE_STRENGTH
+	if (mode & IOPORT_MODE_DRIVE_STRENGTH) {
+		base->GPIO_ODCR0S = mask;
 	} else {
-		base->PIO_ABSR &= ~mask;
+		base->GPIO_ODCR0C = mask;
 	}
-	#else
+#endif
+
 	if (mode & IOPORT_MODE_MUX_BIT0) {
-		base->PIO_ABCDSR[0] |= mask;
+		base->GPIO_PMR0S = mask;
 	} else {
-		base->PIO_ABCDSR[0] &= ~mask;
+		base->GPIO_PMR0C = mask;
 	}
 
 	if (mode & IOPORT_MODE_MUX_BIT1) {
-		base->PIO_ABCDSR[1] |= mask;
+		base->GPIO_PMR1S = mask;
 	} else {
-		base->PIO_ABCDSR[1] &= ~mask;
+		base->GPIO_PMR1C = mask;
 	}
-	#endif
+
+#ifdef IOPORT_MODE_MUX_BIT2
+	if (mode & IOPORT_MODE_MUX_BIT2) {
+		base->GPIO_PMR2S = mask;
+	} else {
+		base->GPIO_PMR2C = mask;
+	}
+#endif
 }
 
 __always_inline static void arch_ioport_set_pin_mode(ioport_pin_t pin,
@@ -211,107 +206,90 @@ __always_inline static void arch_ioport_set_pin_mode(ioport_pin_t pin,
 }
 
 __always_inline static void arch_ioport_set_port_dir(ioport_port_t port,
-		ioport_port_mask_t mask, enum ioport_direction group_direction)
+		ioport_port_mask_t mask, unsigned char group_direction)
 {
-	Pio *base = arch_ioport_port_to_base(port);
-
 	if (group_direction == IOPORT_DIR_OUTPUT) {
-		base->PIO_OER = mask;
+		arch_ioport_port_to_base(port)->GPIO_ODERS = mask;
+		// Always disable the Schmitt trigger for output pins.
+		arch_ioport_port_to_base(port)->GPIO_STERC = mask;
 	} else if (group_direction == IOPORT_DIR_INPUT) {
-		base->PIO_ODR = mask;
+		arch_ioport_port_to_base(port)->GPIO_ODERC = mask;
+		// Always enable the Schmitt trigger for input pins.
+		arch_ioport_port_to_base(port)->GPIO_STERS = mask;
 	}
-
-	base->PIO_OWER = mask;
 }
 
 __always_inline static void arch_ioport_set_pin_dir(ioport_pin_t pin,
 		enum ioport_direction dir)
 {
-	Pio *base = arch_ioport_pin_to_base(pin);
-
 	if (dir == IOPORT_DIR_OUTPUT) {
-		base->PIO_OER = arch_ioport_pin_to_mask(pin);
+		arch_ioport_pin_to_base(pin)->GPIO_ODERS = arch_ioport_pin_to_mask(pin);
+		// Always disable the Schmitt trigger for output pins.
+		arch_ioport_pin_to_base(pin)->GPIO_STERC = arch_ioport_pin_to_mask(pin);
 	} else if (dir == IOPORT_DIR_INPUT) {
-		base->PIO_ODR = arch_ioport_pin_to_mask(pin);
+		arch_ioport_pin_to_base(pin)->GPIO_ODERC = arch_ioport_pin_to_mask(pin);
+		// Always enable the Schmitt trigger for input pins.
+		arch_ioport_pin_to_base(pin)->GPIO_STERS = arch_ioport_pin_to_mask(pin);
 	}
-
-	base->PIO_OWER = arch_ioport_pin_to_mask(pin);
 }
 
 __always_inline static void arch_ioport_set_pin_level(ioport_pin_t pin,
 		bool level)
 {
-	Pio *base = arch_ioport_pin_to_base(pin);
-
 	if (level) {
-		base->PIO_SODR = arch_ioport_pin_to_mask(pin);
+		arch_ioport_pin_to_base(pin)->GPIO_OVRS = arch_ioport_pin_to_mask(pin);
 	} else {
-		base->PIO_CODR = arch_ioport_pin_to_mask(pin);
+		arch_ioport_pin_to_base(pin)->GPIO_OVRC = arch_ioport_pin_to_mask(pin);
 	}
 }
 
 __always_inline static void arch_ioport_set_port_level(ioport_port_t port,
 		ioport_port_mask_t mask, ioport_port_mask_t level)
 {
-	Pio *base = arch_ioport_port_to_base(port);
+	volatile GpioPort *base = arch_ioport_port_to_base(port);
 
-	base->PIO_SODR = mask & level;
-	base->PIO_CODR = mask & ~level;
+	base->GPIO_OVRS = mask & level;
+	base->GPIO_OVRC = mask & ~level;
 }
 
 __always_inline static bool arch_ioport_get_pin_level(ioport_pin_t pin)
 {
-	return arch_ioport_pin_to_base(pin)->PIO_PDSR & arch_ioport_pin_to_mask(pin);
+	return arch_ioport_pin_to_base(pin)->GPIO_PVR & arch_ioport_pin_to_mask(pin);
 }
 
 __always_inline static ioport_port_mask_t arch_ioport_get_port_level(
 		ioport_port_t port, ioport_port_mask_t mask)
 {
-	return arch_ioport_port_to_base(port)->PIO_PDSR & mask;
+	return arch_ioport_port_to_base(port)->GPIO_PVR & mask;
 }
 
 __always_inline static void arch_ioport_toggle_pin_level(ioport_pin_t pin)
 {
-	Pio *port = arch_ioport_pin_to_base(pin);
-	ioport_port_mask_t mask = arch_ioport_pin_to_mask(pin);
-
-	if (port->PIO_PDSR & arch_ioport_pin_to_mask(pin)) {
-		port->PIO_CODR = mask;
-	} else {
-		port->PIO_SODR = mask;
-	}
+	arch_ioport_pin_to_base(pin)->GPIO_OVRT = arch_ioport_pin_to_mask(pin);
 }
 
 __always_inline static void arch_ioport_toggle_port_level(ioport_port_t port,
 		ioport_port_mask_t mask)
 {
-	arch_ioport_port_to_base(port)->PIO_ODSR ^= mask;
+	arch_ioport_port_to_base(port)->GPIO_OVRT = mask;
 }
 
 __always_inline static void arch_ioport_set_port_sense_mode(ioport_port_t port,
 		ioport_port_mask_t mask, enum ioport_sense pin_sense)
 {
-	Pio *base = arch_ioport_port_to_base(port);
+	volatile GpioPort *base = arch_ioport_port_to_base(port);
 
 	if (pin_sense & 0x01) {
-		base->PIO_REHLSR = mask;
+		base->GPIO_IMR0S = mask;
 	} else {
-		base->PIO_REHLSR = mask;
+		base->GPIO_IMR0C = mask;
 	}
 
 	if (pin_sense & 0x02) {
-		base->PIO_FELLSR = mask;
+		base->GPIO_IMR1S = mask;
 	} else {
-		base->PIO_FELLSR = mask;
+		base->GPIO_IMR1C = mask;
 	}
-
-	if (pin_sense) {
-		base->PIO_AIMER  = mask;
-	} else {
-		base->PIO_AIMDR  = mask;
-	}
-
-	base->PIO_ESR = mask;
 }
 
 __always_inline static void arch_ioport_set_pin_sense_mode(ioport_pin_t pin,

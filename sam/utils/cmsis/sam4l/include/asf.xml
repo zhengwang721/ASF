@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam.utils.cmsis.sam4l.include" caption="SAM4L part definitions">
+		<info type="description" value="summary">
+		This file defines all structures and symbols for SAM4L 
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="sam4l.h"/>
+		<build type="header-file" value="sam4l_patch_asf.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="sam4l"/>
+	</module>
+</asf>

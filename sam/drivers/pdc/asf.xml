@@ -11,7 +11,8 @@
 		<build type="header-file" subtype="api" value="pdc.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam_drivers_pdc_group"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<require idref="sam.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 	</module>

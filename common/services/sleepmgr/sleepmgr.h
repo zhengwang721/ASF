@@ -53,6 +53,8 @@
 # include "xmega/sleepmgr.h"
 #elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
 # include "uc3/sleepmgr.h"
+#elif SAM4L
+# include "sam4l/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif

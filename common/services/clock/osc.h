@@ -3,7 +3,7 @@
  *
  * \brief Oscillator management
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,6 +56,8 @@
 # include "sam3n/osc.h"
 #elif SAM4S
 # include "sam4s/osc.h"
+#elif SAM4L
+# include "sam4l/osc.h"
 #elif (UC3A0 || UC3A1)
 # include "uc3a0_a1/osc.h"
 #elif UC3A3

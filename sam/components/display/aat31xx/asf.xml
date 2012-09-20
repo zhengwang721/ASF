@@ -6,7 +6,8 @@
 		<build type="c-source" value="aat31xx.c"/>
 		<build type="header-file" subtype="api" value="aat31xx.h"/>
 		<build type="include-path" value="."/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<require idref="common.services.basic.gpio"/>
 		<build type="module-config" subtype="required-header-file" value="conf_aat31xx.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>

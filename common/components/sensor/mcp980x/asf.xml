@@ -9,7 +9,8 @@
 		<build type="doxygen-entry-point" value="common_component_sensors_mcp980x_group"/>
 		<build type="doxygen-quick-start" value="common_component_sensors_mcp980x_quickstart"/>
 		<require idref="common.services.basic.twi"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3u"/>
 	</module>
 </asf>

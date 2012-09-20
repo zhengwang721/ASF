@@ -1,0 +1,213 @@
+/**
+ * \file
+ *
+ * \brief FLASHCALW example for SAM.
+ *
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
+/**
+ * \mainpage
+ * \section intro Introduction
+ * This is the documentation for the data structures, functions, variables,
+ * defines, enums, and typedefs for the FLASHCALW software driver.
+ *
+ * It also comes bundled with an example. This example demonstrates flash read /
+ * write data accesses, using a flash block as an NVRAM, located either in the
+ * flash array or in the User page.
+ *
+ * Operating mode of the example:
+ *   -# After reset, the NVRAM variables are displayed on the USART link.
+ *   -# The NVRAM is cleared (all bytes are set to 0x00).
+ *   -# All NVRAM variables are written with incrementing nibbles, starting from
+ *      0x0.
+ *   -# The user can reset or power-cycle the board to check the
+ *      non-volatileness of the NVRAM.
+ * This is performed once in the flash array and then in the user page.
+ *
+ * \section files Main Files
+ *   - flashcalw.c: FLASHCALW driver;
+ *   - flashcalw.h: FLASHCALW driver header file;
+ *   - flashcalw_example.c: flash access example application.
+ *
+ * \section compilinfo Compilation Information
+ * This software is written for GNU GCC and IAR Embedded Workbench
+ * for Atmel. Other compilers may or may not work.
+ *
+ * \section deviceinfo Device Information
+ * All SAM devices with a FLASHCALW module can be used.
+ *
+ * \section configinfo Configuration Information
+ * This example has been tested with the following configuration:
+ * - SAM4L_EK evaluation kit;
+ * - CPU clock: 12 MHz;
+ * - USART2 (on SAM4L_EK) abstracted with a USB CDC connection to a PC;
+ * - PC terminal settings:
+ *   - 115200 bps,
+ *   - 8 data bits,
+ *   - no parity bit,
+ *   - 1 stop bit,
+ *   - no flow control.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com">Atmel</A>.\n
+ * Support and FAQ: http://support.atmel.no/
+ */
+
+#include <asf.h>
+
+/* NVRAM test page address */
+#define NVRAM_PAGE_ADDRESS (FLASH_ADDR + FLASH_SIZE - FLASH_PAGE_SIZE)
+
+/* NVRAM test user page address. The first 8 bytes in the user page is
+ * reserved as fuse settings and should not be programmed */
+#define USER_PAGE_ADDRESS (FLASH_USER_PAGE_ADDR + 8)
+
+/* Structure type containing variables to store in NVRAM using a specific
+memory map. */
+typedef const struct {
+	uint8_t var8;
+	uint16_t var16;
+	uint8_t var8_3[3];
+	uint32_t var32;
+} nvram_data_t;
+
+/**
+ *  Configure serial console.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_UART_BAUDRATE,
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
+	};
+
+	/* Configure console UART. */
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/*! \brief Prints the variables stored in NVRAM.
+ *
+ * \param nvram_data  Pointer to the NVRAM data structure to print.
+ */
+static void print_nvram_variables(nvram_data_t *nvram_data)
+{
+	printf("var8:\t0x%X", nvram_data->var8);
+
+	printf("\r\nvar16:\t0x%X", nvram_data->var16);
+
+	printf("\r\nvar8_3:\t0x%X%X%X", nvram_data->var8_3[0],
+		nvram_data->var8_3[1], nvram_data->var8_3[2]);
+
+	printf("\r\nvar32:\t0x%lX\r\n", nvram_data->var32);
+}
+
+/*! \brief This is an example demonstrating flash read / write data accesses
+ *         using the FLASHCALW driver.
+ *
+ * \param caption     Caption to print before running the example.
+ * \param nvram_data  Pointer to the NVRAM data structure to use in the example.
+ */
+static void flash_rw_example(const char *caption, nvram_data_t *nvram_data)
+{
+	static const uint8_t write_data[8]
+		= {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
+
+	printf("%s", caption);
+
+	printf("Initial values of NVRAM variables:\r\n");
+	print_nvram_variables(nvram_data);
+
+	printf("\r\nClearing NVRAM variables...");
+
+	/* Clear NVRAM */
+	flashcalw_memset((void *)nvram_data, 0x0, 8, sizeof(*nvram_data),
+			true);
+	printf("\r\nNVRAM variables cleared:\r\n");
+	print_nvram_variables(nvram_data);
+
+	printf("\r\nWriting new values to NVRAM variables...");
+	flashcalw_memcpy((void *)&nvram_data->var8, &write_data,
+			sizeof(nvram_data->var8), true);
+	flashcalw_memcpy((void *)&nvram_data->var16, &write_data,
+			sizeof(nvram_data->var16), true);
+	flashcalw_memcpy((void *)&nvram_data->var8_3, &write_data,
+			sizeof(nvram_data->var8_3), true);
+	flashcalw_memcpy((void *)&nvram_data->var32, &write_data,
+			sizeof(nvram_data->var32), true);
+	printf("\r\nNVRAM variables written:\r\n");
+	print_nvram_variables(nvram_data);
+}
+
+/*!
+ * \brief main function : do init and loop (poll if configured so)
+ */
+int main(void)
+{
+	/* Initialize the SAM system */
+	sysclk_init();
+	board_init();
+
+	/* Initialize the console uart */
+	configure_console();
+
+	/* Output example information */
+	printf("-- FLASHCALW Example --\r\n");
+	printf("-- %s\n\r", BOARD_NAME);
+	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
+
+	/* Apply the example to the flash array. */
+	flash_rw_example(
+		"\x0C=== Using a piece of the flash array as NVRAM ===\r\n",
+		(nvram_data_t *)NVRAM_PAGE_ADDRESS);
+
+	/* Apply the example to the user page. */
+	flash_rw_example(
+		"\r\n\r\n=== Using a piece of the user page as NVRAM ===\r\n",
+		(nvram_data_t *)USER_PAGE_ADDRESS);
+
+	while (true) {
+	}
+}

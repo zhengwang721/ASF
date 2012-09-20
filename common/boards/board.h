@@ -106,6 +106,7 @@ extern "C" {
 #define ATXMEGA128A1_QT600    42  //!< QT600 ATXMEGA128A1 MCU board.
 #define ARDUINO_DUE_X         43  //!< Arduino Due/X board.
 #define STK600_RCUC3L3        44  //!< ATUCL3 STK600 board
+#define SAM4L_EK              45  //!< SAM4L-EK board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -202,6 +203,8 @@ extern "C" {
 #elif BOARD == ARDUINO_DUE_X
 #  include "arduino_due_x/arduino_due_x.h"
 #  include "system_sam3x.h"
+#elif BOARD == SAM4L_EK
+#  include "sam4l_ek/sam4l_ek.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
 #  include "mega1284p_xplained_bc/mega1284p_xplained_bc.h"
 #elif BOARD == UC3_L0_QT600

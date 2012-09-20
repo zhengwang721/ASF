@@ -616,6 +616,29 @@
 /** @} */
 
 /**
+ * \name SAM4L series
+ * @{
+ */
+#define SAM4LS ( \
+		SAM_PART_IS_DEFINED(ATSAM4LS2A) || \
+		SAM_PART_IS_DEFINED(ATSAM4LS2B) || \
+		SAM_PART_IS_DEFINED(ATSAM4LS2C) || \
+		SAM_PART_IS_DEFINED(ATSAM4LS4A) || \
+		SAM_PART_IS_DEFINED(ATSAM4LS4B) || \
+		SAM_PART_IS_DEFINED(ATSAM4LS4C) \
+	)
+
+#define SAM4LC ( \
+		SAM_PART_IS_DEFINED(ATSAM4LC2A) || \
+		SAM_PART_IS_DEFINED(ATSAM4LC2B) || \
+		SAM_PART_IS_DEFINED(ATSAM4LC2C) || \
+		SAM_PART_IS_DEFINED(ATSAM4LC4A) || \
+		SAM_PART_IS_DEFINED(ATSAM4LC4B) || \
+		SAM_PART_IS_DEFINED(ATSAM4LC4C) \
+	)
+/** @} */
+
+/**
  * \name SAM families
  * @{
  */
@@ -633,10 +656,13 @@
 
 /** SAM4S Family */
 #define SAM4S (SAM4S8 || SAM4S16)
+
+/** SAM4L Family */
+#define SAM4L (SAM4LS || SAM4LC)
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L)
 
 /** @} */
 

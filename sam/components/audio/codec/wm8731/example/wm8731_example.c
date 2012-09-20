@@ -560,7 +560,7 @@ int main(void)
 			display_wav_info();
 		} else if (uc_key == 'R') {
 			/* Get a wav file from Hyper terminal using XMODEM protocol */
-			xmodem_receive_file(CONF_UART, (int8_t *)p_wav_file);
+			xmodem_receive_file((usart_if)CONF_UART, (int8_t *)p_wav_file);
 			g_uc_is_wav_available = 1;
 			/* Load WAV file information */
 			if ((p_wav_file->chunk_id != WAV_CHUNKID) ||

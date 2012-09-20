@@ -14,7 +14,8 @@
 		<require idref="common.services.basic.twi"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa3"/>
 	</module>
 </asf>

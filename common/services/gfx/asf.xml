@@ -12,7 +12,8 @@
 		<build type="doxygen-quick-start" value="gfx_quickstart"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		<require idref="common.services.gfx.display"/>
 	</module>
@@ -30,7 +31,8 @@
 		<build type="doxygen-quick-start" value="gfx_quickstart"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 
@@ -57,7 +59,8 @@
 		<require idref="common.services.gfx.generic"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 
@@ -94,7 +97,8 @@
 			<require idref="common.services.gfx.generic"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 	</select-by-config>

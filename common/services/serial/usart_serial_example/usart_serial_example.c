@@ -56,7 +56,7 @@
  * The usart_serial API can be found \ref usart_serial.h "here".
  *
  * \section deviceinfo Device Info
- * All AVR devices can be used. This example has been tested
+ * All devices can be used. This example has been tested
  * with the following setup:
  *   - Evaluation kits with a serial interface (RS232 connection).
  *
@@ -65,28 +65,22 @@
  *   - Performs echo of any received character
  *
  * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * This software was written for the GNU GCC and IAR.
  * Other compilers may or may not work.
  *
  * \section contactinfo Contact Information
  * For further information, visit
- * <A href="http://www.atmel.com/avr">Atmel AVR</A>.\n
+ * <A href="http://www.atmel.com">Atmel</A>.\n
  */
 
-#include "compiler.h"
-#include "preprocessor.h"
-#include "board.h"
-#include "gpio.h"
-#include "sysclk.h"
-#include "serial.h"
-#include "conf_usart_serial.h"
+#include <asf.h>
 
 /*! \brief Main function.
  */
 int main(void)
 {
-	uint8_t tx_len = 22;
-	uint8_t tx_buf[] = "\n\rHello AVR world ! : ";
+	uint8_t tx_len = 24;
+	uint8_t tx_buf[] = "\n\rHello Atmel world ! : ";
 	uint8_t rx_buf[] = "0";
 
 	// USART options.

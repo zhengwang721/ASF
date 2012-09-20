@@ -28,6 +28,20 @@
 			<require idref="common.utils" />
 			<require idref="common.boards" />
 		</module>
+		<module type="application" id="common.services.ioport.example1#2" caption="Common IOPORT service example 1">
+			<info type="description" value="summary">
+				Example using the common API for ioport to perform basic port control.
+			</info>
+			<build type="include-path" value="." />
+			<build type="c-source" value="ioport_example1.c" />
+			<build type="module-config" subtype="required-header-file" value="conf_example.h" />
+			<device-support value="sam" />
+			<require idref="common.services.ioport" />
+			<require idref="common.services.basic.clock" />
+			<require idref="common.services.delay" />
+			<require idref="common.utils" />
+			<require idref="common.boards" />
+		</module>
 	</select-by-device>
 </asf>
 

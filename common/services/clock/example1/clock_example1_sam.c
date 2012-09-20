@@ -130,13 +130,17 @@ int main(void)
 	board_init();	
 
 	/* Setup SysTick Timer for 1 msec interrupts */
-	if (SysTick_Config(SystemCoreClock / 1000)) {
+	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
 		while (1) {		/* Capture error */
 		}
 	}
 
 	while (1) {
+#if (SAM4L)
+		ioport_toggle_pin_level(LED0_GPIO);
+#else
 		gpio_toggle_pin(LED0_GPIO);
+#endif
 		mdelay(500);
 	}
 }

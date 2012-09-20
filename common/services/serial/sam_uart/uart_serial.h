@@ -45,7 +45,9 @@
 
 #include "compiler.h"
 #include "sysclk.h"
+#if (!SAM4L)
 #include "uart.h"
+#endif
 #include "usart.h"
 
 /*! \name Serial Management Configuration
@@ -76,21 +78,23 @@ typedef struct uart_rs232_options {
 
 typedef usart_rs232_options_t usart_serial_options_t;
 
-typedef Uart *usart_if;
+typedef Usart *usart_if;
 
 /*! \brief Initializes the Usart in master mode.
  *
- * \param usart       Base address of the USART instance.
+ * \param p_usart       Base address of the USART instance.
  * \param opt         Options needed to set up RS232 communication (see
  *                    \ref usart_options_t).
  */
-static inline void usart_serial_init(usart_if p_uart,
+static inline void usart_serial_init(usart_if p_usart,
 		usart_serial_options_t *opt)
 {
+#if (!SAM4L)
 	sam_uart_opt_t uart_settings;
 	uart_settings.ul_mck = sysclk_get_peripheral_hz();
 	uart_settings.ul_baudrate = opt->baudrate;
 	uart_settings.ul_mode = opt->paritytype;
+#endif
 
 	sam_usart_opt_t usart_settings;
 	usart_settings.baudrate = opt->baudrate;
@@ -100,93 +104,141 @@ static inline void usart_serial_init(usart_if p_uart,
 	usart_settings.channel_mode= US_MR_CHMODE_NORMAL;
 	
 #ifdef UART
-	if (UART == p_uart) {
+	if (UART == (Uart*)p_usart) {
 		sysclk_enable_peripheral_clock(ID_UART);
 		/* Configure UART */
-		uart_init(p_uart, &uart_settings);
+		uart_init((Uart*)p_usart, &uart_settings);
 	}
 #else
 # ifdef UART0
-	if (UART0 == p_uart) {
+	if (UART0 == (Uart*)p_usart) {
 		sysclk_enable_peripheral_clock(ID_UART0);
 		/* Configure UART */
-		uart_init(p_uart, &uart_settings);
+		uart_init((Uart*)p_usart, &uart_settings);
 	}
 # endif
 # ifdef UART1
-	if (UART1 == p_uart) {
+	if (UART1 == (Uart*)p_usart) {
 		sysclk_enable_peripheral_clock(ID_UART1);
 		/* Configure UART */
-		uart_init(p_uart, &uart_settings);
+		uart_init((Uart*)p_usart, &uart_settings);
 	}
 # endif
 #endif // ifdef UART
 
 
 #ifdef USART
-	if (USART == (Usart*)p_uart) {
+	if (USART == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 #else
 # ifdef USART0
-	if (USART0 == (Usart*)p_uart) {
+	if (USART0 == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART0);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 # endif
 # ifdef USART1
-	if (USART1 == (Usart*)p_uart) {
+	if (USART1 == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART1);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 # endif
 # ifdef USART2
-	if (USART2 == (Usart*)p_uart) {
+	if (USART2 == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART2);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 # endif
 # ifdef USART3
-	if (USART3 == (Usart*)p_uart) {
+	if (USART3 == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART3);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 # endif
 # ifdef USART4
-	if (USART4 == (Usart*)p_uart) {
+	if (USART4 == p_usart) {
+#if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART4);
 		/* Configure USART */
-		usart_init_rs232((Usart*)p_uart, &usart_settings,
+		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());
+#endif
+#if (SAM4L)
+		sysclk_enable_peripheral_clock(p_usart);
+		/* Configure USART */
+		usart_init_rs232(p_usart, &usart_settings,
+				sysclk_get_peripheral_bus_hz(p_usart));
+#endif
 		/* Enable the receiver and transmitter. */
-		usart_enable_tx((Usart*)p_uart);
-		usart_enable_rx((Usart*)p_uart);
+		usart_enable_tx(p_usart);
+		usart_enable_rx(p_usart);
 	}
 # endif
 #endif // ifdef USART
@@ -195,7 +247,7 @@ static inline void usart_serial_init(usart_if p_uart,
 
 /*! \brief Sends a character with the USART.
  *
- * \param usart   Base address of the USART instance.
+ * \param p_usart   Base address of the USART instance.
  * \param c       Character to write.
  *
  * \return Status.
@@ -203,23 +255,23 @@ static inline void usart_serial_init(usart_if p_uart,
  *   \retval 0  The function timed out before the USART transmitter became
  *              ready to send.
  */
-static inline int usart_serial_putchar(usart_if p_uart, const uint8_t c)
+static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
 {
 #ifdef UART
-	if (UART == p_uart) {
-		while (uart_write(p_uart, c)!=0);
+	if (UART == (Uart*)p_usart) {
+		while (uart_write((Uart*)p_usart, c)!=0);
 		return 1;
 	}
 #else
 # ifdef UART0
-	if (UART0 == p_uart) {
-		while (uart_write(p_uart, c)!=0);
+	if (UART0 == (Uart*)p_usart) {
+		while (uart_write((Uart*)p_usart, c)!=0);
 		return 1;
 	}
 # endif
 # ifdef UART1
-	if (UART1 == p_uart) {
-		while (uart_write(p_uart, c)!=0);
+	if (UART1 == (Uart*)p_usart) {
+		while (uart_write((Uart*)p_usart, c)!=0);
 		return 1;
 	}
 # endif
@@ -227,38 +279,38 @@ static inline int usart_serial_putchar(usart_if p_uart, const uint8_t c)
 
 
 #ifdef USART
-	if (USART == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 #else
 # ifdef USART0
-	if (USART0 == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART0 == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 # endif
 # ifdef USART1
-	if (USART1 == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART1 == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 # endif
 # ifdef USART2
-	if (USART2 == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART2 == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 # endif
 # ifdef USART3
-	if (USART3 == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART3 == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 # endif
 # ifdef USART4
-	if (USART4 == (Usart*)p_uart) {
-		while (usart_write((Usart*)p_uart, c)!=0);
+	if (USART4 == p_usart) {
+		while (usart_write(p_usart, c)!=0);
 		return 1;
 	}
 # endif
@@ -268,65 +320,65 @@ static inline int usart_serial_putchar(usart_if p_uart, const uint8_t c)
 }
 /*! \brief Waits until a character is received, and returns it.
  *
- * \param usart   Base address of the USART instance.
+ * \param p_usart   Base address of the USART instance.
  * \param data   Data to read
  *
  */
-static inline void usart_serial_getchar(usart_if p_uart, uint8_t *data)
+static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 {
 	uint32_t val;
 
 #ifdef UART
-	if (UART == p_uart) {
-		while (uart_read(p_uart, data));
+	if (UART == (Uart*)p_usart) {
+		while (uart_read((Uart*)p_usart, data));
 	}
 #else
 # ifdef UART0
-	if (UART0 == p_uart) {
-		while (uart_read(p_uart, data));
+	if (UART0 == (Uart*)p_usart) {
+		while (uart_read((Uart*)p_usart, data));
 	}
 # endif
 # ifdef UART1
-	if (UART1 == p_uart) {
-		while (uart_read(p_uart, data));
+	if (UART1 == (Uart*)p_usart) {
+		while (uart_read((Uart*)p_usart, data));
 	}
 # endif
 #endif // ifdef UART
 
 
 #ifdef USART
-	if (USART == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 #else
 # ifdef USART0
-	if (USART0 == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART0 == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
 # ifdef USART1
-	if (USART1 == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART1 == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
 # ifdef USART2
-	if (USART2 == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART2 == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
 # ifdef USART3
-	if (USART3 == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART3 == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
 # ifdef USART4
-	if (USART4 == (Usart*)p_uart) {
-		while (usart_read((Usart*)p_uart, &val));
+	if (USART4 == p_usart) {
+		while (usart_read(p_usart, &val));
 		*data = (uint8_t)(val & 0xFF);
 	}
 # endif
@@ -337,59 +389,59 @@ static inline void usart_serial_getchar(usart_if p_uart, uint8_t *data)
 /**
  * \brief Check if Received data is ready.
  *
- * \param usart   Base address of the USART instance.
+ * \param p_usart   Base address of the USART instance.
  *
  * \retval 1 One data has been received.
  * \retval 0 No data has been received.
  */
-static inline uint32_t usart_serial_is_rx_ready(usart_if p_uart)
+static inline uint32_t usart_serial_is_rx_ready(usart_if p_usart)
 {
 #ifdef UART
-	if (UART == p_uart) {
-		return uart_is_rx_ready(p_uart);
+	if (UART == (Uart*)p_usart) {
+		return uart_is_rx_ready((Uart*)p_usart);
 	}
 #else
 # ifdef UART0
-	if (UART0 == p_uart) {
-		return uart_is_rx_ready(p_uart);
+	if (UART0 == (Uart*)p_usart) {
+		return uart_is_rx_ready((Uart*)p_usart);
 	}
 # endif
 # ifdef UART1
-	if (UART1 == p_uart) {
-		return uart_is_rx_ready(p_uart);
+	if (UART1 == (Uart*)p_usart) {
+		return uart_is_rx_ready((Uart*)p_usart);
 	}
 # endif
 #endif // ifdef UART
 
 
 #ifdef USART
-	if (USART == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 #else
 # ifdef USART0
-	if (USART0 == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART0 == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 # endif
 # ifdef USART1
-	if (USART1 == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART1 == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 # endif
 # ifdef USART2
-	if (USART2 == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART2 == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 # endif
 # ifdef USART3
-	if (USART3 == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART3 == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 # endif
 # ifdef USART4
-	if (USART4 == (Usart*)p_uart) {
-		return usart_is_rx_ready((Usart*)p_uart);
+	if (USART4 == p_usart) {
+		return usart_is_rx_ready(p_usart);
 	}
 # endif
 #endif // ifdef USART

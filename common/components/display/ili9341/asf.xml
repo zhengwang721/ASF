@@ -9,7 +9,8 @@
 		</info>
 		<device-support value="uc3"/>
 		<device-support value="xmega"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="ili9341_group"/>
 		<build type="doxygen-quick-start" value="common_ili9341_qs"/>

@@ -64,6 +64,8 @@ extern "C"
 #include <parts.h>
 #if UC3L0
 #include "touch_api_at32uc3l.h"
+#elif SAM4L
+# include "touch_api_sam4l.h"
 #else
 #include "touch_api.h"
 #endif
@@ -86,10 +88,13 @@ extern "C"
 #elif DEF_TOUCH_QDEBUG_ENABLE_AT == 1
 #define TX_BUFFER_SIZE (1*4)+10
 #define RX_BUFFER_SIZE (1*4)+10
+#elif (DEF_TOUCH_QDEBUG_ENABLE == 1)
+#define TX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10
+#define RX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10
 #else
 #endif
 
-#if !(UC3L0)
+#if (!(UC3L0)) && (!(SAM4L))
 #ifdef _ROTOR_SLIDER_
 #define TX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10
 #define RX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10

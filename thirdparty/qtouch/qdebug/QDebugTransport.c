@@ -57,6 +57,8 @@
 
 #if UC3L0
 #include "touch_api_at32uc3l.h"
+#elif SAM4L
+#include "touch_api_sam4l.h"
 #else
 #include "touch_api.h"
 #endif
@@ -66,6 +68,8 @@
 
 #if UC3L0
 #  include "QDebug_at32uc3l.h"
+#elif SAM4L
+# include "QDebug_sam4l.h"
 #else
 #  include "QDebug.h"
 #endif

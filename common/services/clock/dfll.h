@@ -3,7 +3,7 @@
  *
  * \brief DFLL management
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,8 @@
 
 #if UC3L
 # include "uc3l/dfll.h"
+#elif SAM4L
+# include "sam4l/dfll.h"
 #else
 # error Unsupported chip type
 #endif

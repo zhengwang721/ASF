@@ -77,6 +77,7 @@
  * - UC3C_EK
  * - UC3L_EK
  * - STK600+RCUC3D
+ * - SAM4L-EK
  *
  * \section description Description of the unit tests
  * See the documentation for the individual unit test functions \ref unit_tests.c
@@ -93,7 +94,7 @@
  *
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://support.atmel.com/
  */
 
 //! \name Unit test configuration
@@ -173,6 +174,24 @@ static void run_osc_test(const struct test_case *test)
 	test_assert_true(test, status, "120M RC oscillator is not stable");
 #endif
 
+#ifdef BOARD_RC1M_HZ
+	osc_enable(OSC_ID_RC1M);
+	status = osc_is_ready(OSC_ID_RC1M);
+	test_assert_true(test, status, "1M RC oscillator is not stable");
+#endif
+
+#ifdef BOARD_RC80M_HZ
+	osc_enable(OSC_ID_RC80M);
+	status = osc_is_ready(OSC_ID_RC80M);
+	test_assert_true(test, status, "80M RC oscillator is not stable");
+#endif
+
+#ifdef BOARD_RCFAST_HZ
+	osc_enable(OSC_ID_RCFAST);
+	status = osc_is_ready(OSC_ID_RCFAST);
+	test_assert_true(test, status, "RCFAST oscillator is not stable");
+#endif
+
 }
 
 /**
@@ -197,6 +216,19 @@ static void cleanup_osc_test(const struct test_case *test)
 #ifdef BOARD_RC120_HZ
 	osc_disable(OSC_ID_RC120M);
 #endif
+
+#ifdef BOARD_RC1M_HZ
+	osc_disable(OSC_ID_RC1M);
+#endif
+
+#ifdef BOARD_RC80M_HZ
+	osc_disable(OSC_ID_RC80M);
+#endif
+
+#ifdef BOARD_RCFAST_HZ
+	osc_disable(OSC_ID_RCFAST);
+#endif
+
 }
 
 /**
@@ -324,8 +356,8 @@ static void cleanup_pll_dfll_test(const struct test_case *test)
  * \brief Test Synchronous clock
  *
  * This test enables source clock for main clock, sets CPU/HSB,
- * PBA,PBB,PBC(if have) division factor, and then check if the chip
- * is set correctly.
+ * PBA,PBB,PBC(if have), PBD(if have) division factor, and then check
+ * if the chip is set correctly.
  *
  * \note It's not easy to measure CPU/HSB,PBA... frequency, even through
  * some chips have freqm module. Using external module may cause some
@@ -364,6 +396,10 @@ static void run_sync_clock_test(const struct test_case *test)
 	test_assert_true(test, status, "PBC clock set fail");
 #endif
 
+#ifdef CONFIG_PBD_HZ
+	status = (CONFIG_PBD_HZ == sysclk_get_pbd_hz());
+	test_assert_true(test, status, "PBD clock set fail");
+#endif
 }
 
 /**
