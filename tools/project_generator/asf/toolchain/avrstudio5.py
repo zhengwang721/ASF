@@ -403,8 +403,8 @@ class AVRStudio5Project(GenericProject):
 		project_e.attrib['TargetFileName'] = avrgccproj_file
 		project_e.attrib['ReplaceParameters'] = 'true'
 
-		# Add the project file list to <Project>
-		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values()
+		# Add asf.h + the project file list to <Project>
+		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
 		self._add_files_to_vstemplate_project(project_e, file_target_list)
 
 		# -- Generate custom parameters
@@ -631,7 +631,7 @@ class AVRStudio5Project(GenericProject):
 		dir_set |= set(os.path.dirname(file_target) for file_target in file_target_list)
 
 		# TODO Find the correct tag and type to use.
-		file_target_list = self.project_distribute_files_dict.values()
+		file_target_list = self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
 		self._add_files_to_avrgccproj_itemgroup(itemgroups_e[0], file_target_list, 'None')
 
 		dir_set |= set(os.path.dirname(file_target) for file_target in file_target_list)
