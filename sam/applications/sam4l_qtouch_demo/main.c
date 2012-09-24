@@ -40,7 +40,49 @@
  * \asf_license_stop
  *
  */
-
+/**
+ * \mainpage Low Power and QTouch Demo for SAM4L
+ *
+ * \section Purpose
+ *
+ * The Low Power and QTouch demo will help new users get familiar with Atmel's
+ * SAM4L microcontrollers. This basic application shows how to initialize
+ * the QTouch library and optimize the SAM4L configuration to target low power
+ * applications.
+ *
+ * \section files Main Files
+ * - main.c demo application,
+ * - app.c manage SAM4L low-level configuration
+ * - gui.c manage QTouch, push button, LCD display and Board Monitor transfers.
+ *
+ * \section Requirements
+ *
+ * This package can be used with SAM4L-EK evaluation kits.
+ *
+ * \section Description
+ *
+ * - At startup the application run in full demo mode (all features on, includes 
+ * QTouch and segment LCD). The applications captures QTouch inputs 
+ * (sliders and CS0 QTouch button): displays the slider value (0..255)  to the 
+ * segment LCD, CS0 will change the SAM4L Power Scaling mode (PS0 or PS1). 
+ * - Once the PB0 push button has been pressed, the application switches in low 
+ * power mode: Stop LCD controller, stop LCD backlight, stop QTouch 
+ * acquisition, switch SAM4L in power scaling PS1 mode. SAM4L is still in RUN mode.
+ * - If PB0 is pressed, the SAM4L will enter one of  the sleep modes 
+ * (from RUN to WAIT to RET to BACKUP, then restart to RUN). For each sleep mode 
+ * transition, the SAM4L is sending the information to the board monitor 
+ * (over the USART). The current SAM4L sleep mode is displayed by the board 
+ * monitor on the OLED display.
+ *
+ * \section Usage
+ *
+ * - Build the program and download it to the evaluation board. Please
+ *  refer to the SAM4L main page documentation http://www.atmel.com/tools/SAM4L-EK.aspx
+ * - Start the application.
+ * - The message "SAM4L-EK DEMO" is scrolling on SAM4L-EK on-board LCD segment.
+ * - Play with QTouch and push button.
+ *
+ */
 #include "asf.h"
 #include "app.h"
 #include "gui.h"
