@@ -1819,27 +1819,128 @@ class ConfigDB(object):
 		""" Return compiled regular expression for validating ids """
 		return re.compile("^[a-z0-9\.\-_#]+$")
 
+
 	def sanity_check(self):
 		self.log.info("-- Database sanity check")
 
+		self.total = 0
+		self.errors = 0
+
+		def run_test(self, func):
+			# Call the test function and keep results.
+			t, e = func
+			self.total = self.total + t
+			self.errors = self.errors + e
+
+		# Need device map and mcu list for some sanity checks
+		device_map = self.lookup_by_id("map.atmel")
+		mcu_list = device_map.get_mcu_list()
+
+		# Run all tests
+		run_test(self, self.sanity_check_doc_arch(device_map, mcu_list))
+		run_test(self, self.sanity_check_duplicate_id())
+		run_test(self, self.sanity_check_device_support_valid(device_map))
+		run_test(self, self.sanity_check_device_support_exists())
+		run_test(self, self.sanity_check_default_mcu(mcu_list))
+		run_test(self, self.sanity_check_doxygen_entry_point())
+		run_test(self, self.sanity_check_selector_matching_parent())
+		run_test(self, self.sanity_check_select_by_configs())
+		# This is the time consuming one (50-ish secs):
+		run_test(self, self.sanity_check_resolve_elements())
+
+		if (self.errors):
+			raise DbError("Database sanity check failed with %d error(s)" % (self.errors))
+
+		self.log.info("-- Check done. Failures: " + str(self.errors) + "/" + str(self.total))
+
+	def sanity_check_duplicate_id(self):
+		# Find all IDs and check for duplicates
+		total = 1
+		errors = 0
+
+		ids = []
+		for element in self.root.findall(".//%s[@%s]" % ("*", 'id')):
+			ids.append(element.attrib['id'])
+
+		id_count = len(ids)
+		id_unique = len(list(set(ids)))
+
+		if id_count != id_unique:
+			errors += 1
+			self.log.critical("Elements with the same ID in the database. You must fix this!")
+
+			# Report which ones have the problem:
+			count_dict = asf.helper.count_duplicates(ids)
+			for id, count in count_dict.items():
+				if count > 1:
+					self.log.critical("Duplicate id %s occurs %d times." % (id, count))
+
+		return total, errors
+
+	def sanity_check_device_support_valid(self, device_map):
+		# Check that "device-support" actually gives support for a device(s)
 		total = 0
 		errors = 0
 
-		# Get the elements of all components to check
-		component_classes_to_check = [
-				Board,
-				Module,
-				Project,
-		]
+		for element in self.root.findall(".//%s" % ("device-support")):
+			total += 1
+			dev_name = element.attrib["value"]
+			if not dev_name or not device_map.get_mcu_list(dev_name, True):
+				errors += 1
+				self.log.critical("%s: `%s' is not a valid MCU or MCU group" % (element.find("..").attrib["id"], dev_name))
 
-		component_elements = []
+		return total, errors
 
-		for component_class in component_classes_to_check:
-			component_elements.extend(self.find_components(component_class))
+	def sanity_check_device_support_exists(self):
+		# Check that all modules except meta-typed define device-support
+		total = 0
+		errors = 0
 
-		# Need the device map for the next sanity checks
-		device_map = self.lookup_by_id("map.atmel")
-		mcu_list = device_map.get_mcu_list()
+		for element in self.root.findall(".//%s" % ("module")):
+			# Skip modules which doesn't require device-support
+			if element.attrib["type"] in Module.types_that_support_all_devices:
+				continue
+			total += 1
+			dev_sup = element.findall(".//device-support")
+			if not dev_sup:
+				errors += 1
+				self.log.error("%s does not specify device-support" % element.attrib["id"])
+
+		return total, errors
+
+	def sanity_check_default_mcu(self, mcu_list):
+		# Check that "default-mcu"-attribute is set for all "doxygen-module" generator tags,
+		# and for absolutely no other generator tags
+		total = 0
+		errors = 0
+
+		for element in self.root.findall(".//%s" % ("generator")):
+			total += 1
+			gen_name = element.attrib["value"]
+
+			try:
+				mcu_name = element.attrib["default-mcu"]
+			except:
+				mcu_name = None
+
+			if gen_name == "doxygen-module":
+				if mcu_name not in mcu_list:
+					errors += 1
+					if mcu_name == None:
+						error_string = 'not set'
+					else:
+						error_string = 'set to invalid MCU `%s\'' % mcu_name
+					self.log.critical("%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string))
+			else:
+				if mcu_name != None:
+					errors += 1
+					self.log.critical("%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (element.find("..").attrib["id"], gen_name))
+
+		return total, errors
+
+	def sanity_check_doc_arch(self, device_map, mcu_list):
+		total = 0
+		errors = 0
 
 		# Check all specific MCUs for doc-arch
 		no_doc_arch_mcus = []
@@ -1886,77 +1987,47 @@ class ConfigDB(object):
 				for arch in [doc_arch] + mismatch_arches:
 					self.log.error("\t\"%s\"" % arch)
 
-		for e in component_elements:
-			id = e.attrib['id']
+		return total, errors
 
-			# Load the component and resolve all references
-			try:
-				total += 1
-				c = self.lookup_by_id(id)
-			except ConfigError as err:
-				errors += 1
-				self.log.error("While resolving "+ id +":")
-				self.log.error("ConfigError: "+ str(err))
-			except NotFoundError as err:
-				errors += 1
-				self.log.error("While resolving "+ id +":")
-				self.log.error("NotFoundError: "+ str(err))
+	def sanity_check_doxygen_entry_point(self):
+		# Make sure the 'doxygen-entry-point' attribute is present for non-hidden modules
 
-			# Check that "default-mcu"-attribute is set for all "doxygen-module" generator tags,
-			# and for absolutely no other generator tags
-			for element in c.get_child_elements("generator"):
-				gen_name = element.get("value")
-				mcu_name = element.get("default-mcu", None)
+		total = 0
+		errors = 0
 
-				if gen_name == "doxygen-module":
-					if mcu_name not in mcu_list:
+		for element in self.root.findall(".//%s" % ("module")):
+			if element.attrib["type"] in ["driver", "component", "service"]:
+				if element.find("./info[@type=\'gui-flag\'][@value=\'hidden\']") is None:
+					# Not hidden
+					total += 1
+					if element.find("./build[@type=\'doxygen-entry-point\']") is None:
+						# No doxygen-entry-point, error.
 						errors += 1
-						if mcu_name == None:
-							error_string = 'not set'
-						else:
-							error_string = 'set to invalid MCU `%s\'' % mcu_name
-						self.log.critical("%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (str(c), error_string))
-				else:
-					if mcu_name != None:
-						errors += 1
-						self.log.critical("%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (str(c), gen_name))
+						self.log.error("Module with id %s is missing doxygen-entry-point attribute" % (element.attrib["id"]))
 
-			dev_sup = c.get_child_elements("device-support")
+		return total, errors
 
-			# Check that "device-support" actually gives support for a device(s)
-			for element in dev_sup:
-				dev_name = element.get("value")
-				if not dev_name or not device_map.get_mcu_list(dev_name, True):
-					errors += 1
-					self.log.critical("%s: `%s' is not a valid MCU or MCU group" % (str(c), dev_name))
-
-			# Check that all modules except meta-typed define device-support
-			if isinstance(c, Module) and c.type not in Module.types_that_support_all_devices:
-				if not dev_sup:
-					errors += 1
-					self.log.error("%s does not specify device-support" % str(c))
-
-			# Make sure the 'doxygen-entry-point' attribute is present for non-hidden modules
-			if isinstance(c, Module) and c.type in ["driver", "component", "service"]:
-				if not 'hidden' in c.get_gui_flag_list():
-					has_doxygen_entry_point = False
-					for element in c.get_child_elements("build"):
-						if element.attrib["type"] == "doxygen-entry-point":
-							has_doxygen_entry_point = True
-							break
-					if not has_doxygen_entry_point:
-						errors += 1
-						self.log.error("Module with id %s is missing doxygen-entry-point attribute" % (id))
-
+	def sanity_check_selector_matching_parent(self):
 		# Verify all select-by-config/device IDs are equal to parent ID
+
+		total = 0
+		errors = 0
+
 		for element in self.root.findall(".//%s" % (SelectByConfig.tag)) + self.root.findall(".//%s" % (SelectByDevice.tag)):
 			parent_id = element.attrib['id']
 			# Find direct child elements with an "id" attribute
 			for child in element.findall("./*[@id]"):
+				total += 1
 				child_id = child.attrib['id']
 				if child_id.rpartition('#')[0] != parent_id:
-					self.log.critical("Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id))
+					errors += 1
+					self.log.error("Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id))
 
+		return total, errors
+
+	def sanity_check_select_by_configs(self):
+		total = 0
+		errors = 0
 
 		# Find all select-by-config names, save all possible valid config names and values
 		select_by_config_names = {}
@@ -1996,26 +2067,38 @@ class ConfigDB(object):
 				# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
 				self.log.critical("    Offending file: %s" % (self.lookup_by_id(project_id).fromfile))
 
-		# Find all IDs and check for duplicates
-		total += 1
-		ids = []
-		for element in self.root.findall(".//%s[@%s]" % ("*", 'id')):
-			ids.append(element.attrib['id'])
+		return total, errors
 
-		id_count = len(ids)
-		id_unique = len(list(set(ids)))
+	def sanity_check_resolve_elements(self):
 
-		if id_count != id_unique:
-			errors += 1
-			self.log.critical("Elements with the same ID in the database. You must fix this!")
+		total = 0
+		errors = 0
 
-			# Report which ones have the problem:
-			count_dict = asf.helper.count_duplicates(ids)
-			for id, count in count_dict.items():
-				if count > 1:
-					self.log.critical("Duplicate id %s occurs %d times." % (id, count))
+		# Get the elements of all components to check
+		component_classes_to_check = [
+				Board,
+				Module,
+				Project,
+		]
 
-		if (errors):
-			raise DbError("Database sanity check failed with %d error(s)" % (errors))
+		component_elements = []
+		for component_class in component_classes_to_check:
+			component_elements.extend(self.find_components(component_class))
 
-		self.log.info("-- Check done. Failures:" + str(errors) + "/" + str(total))
+		for e in component_elements:
+			id = e.attrib['id']
+
+			# Load the component and resolve all references
+			try:
+				total += 1
+				c = self.lookup_by_id(id)
+			except ConfigError as err:
+				errors += 1
+				self.log.error("While resolving "+ id +":")
+				self.log.error("ConfigError: "+ str(err))
+			except NotFoundError as err:
+				errors += 1
+				self.log.error("While resolving "+ id +":")
+				self.log.error("NotFoundError: "+ str(err))
+
+		return total, errors
