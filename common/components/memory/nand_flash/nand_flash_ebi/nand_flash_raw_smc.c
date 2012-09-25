@@ -194,11 +194,24 @@ static void write_data(const struct nand_flash_raw *raw,
 
 	/* Check the data bus width of the NAND Flash */
 	if (nand_flash_model_get_data_bus_width(MODEL(raw)) == 16) {
-		uint16_t *buffer16 = (uint16_t *)buffer;
-		size >>= 1;
-
-		for (i = 0; i < size; i++) {
-			WRITE_DATA16(raw, buffer16[i]);
+		/* Not aligned, get data by byte */
+		if (((uint32_t)buffer & 0x1u) || (size & 0x1u)) {
+			uint16_t tmp16;
+			for (i = 0; i < size;) {
+				tmp16 = buffer[i ++];
+				if (i < size) {
+					tmp16 += buffer[i ++] << 8;
+				} else {
+					tmp16 += 0xFF00; // Write FF if no data
+				}
+				WRITE_DATA16(raw, tmp16);
+			}
+		} else {
+			uint16_t *buffer16 = (uint16_t *)(uint32_t)buffer;
+			size >>= 1;
+			for (i = 0; i < size; i++) {
+				WRITE_DATA16(raw, buffer16[i]);
+			}
 		}
 	} else {
 		for (i = 0; i < size; i++) {
@@ -221,11 +234,26 @@ static void read_data(const struct nand_flash_raw *raw,
 
 	/* Check the chip data bus width */
 	if (nand_flash_model_get_data_bus_width(MODEL(raw)) == 16) {
-		uint16_t *buffer16 = (uint16_t *)buffer;
-		size >>= 1;
+		/* Not aligned: read 16-bit and store by byte */
+		if (((uint32_t)buffer & 0x1u) || (size & 0x1u))  {
+			uint16_t tmp16;
+			for (i = 0; i < size;) {
+				tmp16 = READ_DATA16(raw);
+				buffer[i ++] = tmp16 & 0xFF;
+				if (i < size) {
+					buffer[i ++] = (tmp16 >> 8) & 0xFF;
+				} else {
+					/* No fill on size limit */
+				}
+			}
+		} else {
+			/* Aligned, uses 16b pointer */
+			uint16_t *buffer16 = (uint16_t *)(uint32_t)buffer;
+			size >>= 1;
 
-		for (i = 0; i < size; i++) {
-			buffer16[i] = READ_DATA16(raw);
+			for (i = 0; i < size; i++) {
+				buffer16[i] = READ_DATA16(raw);
+			}
 		}
 	} else {
 		for (i = 0; i < size; i++) {
