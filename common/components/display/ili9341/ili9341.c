@@ -48,7 +48,17 @@
 #include <delay.h>
 
 #if (SAM3S || SAM3N || SAM4S)
-# include <pdc.h>
+#  include <pdc.h>
+#elif UC3
+#  include <pdca.h>
+#endif
+
+#if (SAM3S || SAM3N || SAM4S) && defined(CONF_ILI9341_SPI)
+#  define ILI9341_DMA_ENABLED
+#  define ILI9341_DMA_CHUNK_SIZE   16
+#elif UC3 && defined(CONF_ILI9341_PDCA_CHANNEL)
+#  define ILI9341_DMA_ENABLED
+#  define ILI9341_DMA_CHUNK_SIZE   16
 #endif
 
 /**
@@ -388,14 +398,6 @@ void ili9341_write_gram(ili9341_color_t color)
  */
 void ili9341_copy_pixels_to_screen(const ili9341_color_t *pixels, uint32_t count)
 {
-#if (SAM3S || SAM3N || SAM4S) && defined(CONF_ILI9341_SPI)
-	Pdc *SPI_DMA = spi_get_pdc_base(CONF_ILI9341_SPI);
-	pdc_packet_t spi_pdc_data;
-
-	ili9341_color_t chunk_buf[16];
-	uint32_t chunk_len;
-#endif
-
 	const ili9341_color_t *pixel = pixels;
 
 	/* Sanity check to make sure that the pixel count is not zero */
@@ -403,30 +405,57 @@ void ili9341_copy_pixels_to_screen(const ili9341_color_t *pixels, uint32_t count
 
 	ili9341_send_command(ILI9341_CMD_MEMORY_WRITE);
 
-#if (SAM3S || SAM3N || SAM4S) && defined(CONF_ILI9341_SPI)
-	/* Use peripheral DMA on SAM devices to increase throughput vs. polling */
+#if defined(ILI9341_DMA_ENABLED)
+	ili9341_color_t chunk_buf[ILI9341_DMA_CHUNK_SIZE];
+	uint32_t chunk_len;
+
+#  if SAM
+	Pdc *SPI_DMA = spi_get_pdc_base(CONF_ILI9341_SPI);
+	pdc_packet_t spi_pdc_data;
+
 	pdc_enable_transfer(SPI_DMA, PERIPH_PTCR_TXTEN);
 	spi_pdc_data.ul_addr = (uint32_t)chunk_buf;
+#  elif UC3
+	pdca_set_transfer_size(CONF_ILI9341_PDCA_CHANNEL,
+			PDCA_TRANSFER_SIZE_BYTE);
+	pdca_set_peripheral_select(CONF_ILI9341_PDCA_CHANNEL,
+			CONF_ILI9341_PDCA_PID);
+#  endif
 
 	while (count)
 	{
 		/* We need to copy out the data to send in chunks into RAM, as the PDC
 		 * does not allow FLASH->Peripheral transfers */
-		chunk_len = min(16, count);
+		chunk_len = min(ILI9341_DMA_CHUNK_SIZE, count);
 
 		/* Wait for pending transfer to complete */
 		ili9341_wait_for_send_done();
 
 		for (uint32_t i = 0; i < chunk_len; i++) {
-			chunk_buf[i] = pixel[i];
+			chunk_buf[i] = le16_to_cpu(pixel[i]);
 		}
 
+#  if SAM
 		spi_pdc_data.ul_size = (uint32_t)sizeof(ili9341_color_t) * chunk_len;
 		pdc_tx_init(SPI_DMA, NULL, &spi_pdc_data);
+#  elif UC3
+		pdca_reload_channel(CONF_ILI9341_PDCA_CHANNEL, chunk_buf,
+				(uint32_t)sizeof(ili9341_color_t) * chunk_len);
+		pdca_enable(CONF_ILI9341_PDCA_CHANNEL);
+#  endif
 
 		pixel += chunk_len;
 		count -= chunk_len;
 	}
+
+	ili9341_wait_for_send_done();
+	ili9341_deselect_chip();
+	
+#  if SAM
+	pdc_disable_transfer(SPI_DMA, PERIPH_PTCR_TXTEN);
+#  elif UC3
+	pdca_disable(CONF_ILI9341_PDCA_CHANNEL);
+#  endif
 #else
 	while (count--) {
 		ili9341_send_byte(*pixel);
@@ -434,10 +463,10 @@ void ili9341_copy_pixels_to_screen(const ili9341_color_t *pixels, uint32_t count
 
 		pixel++;
 	}
-#endif
 
 	ili9341_wait_for_send_done();
 	ili9341_deselect_chip();
+#endif
 }
 
 #if XMEGA
@@ -499,47 +528,67 @@ void ili9341_copy_progmem_pixels_to_screen(
  */
 void ili9341_duplicate_pixel(const ili9341_color_t color, uint32_t count)
 {
-#if (SAM3S || SAM3N || SAM4S) && defined(CONF_ILI9341_SPI)
-	Pdc *SPI_DMA = spi_get_pdc_base(CONF_ILI9341_SPI);
-	pdc_packet_t spi_pdc_data;
-
-	ili9341_color_t chunk_buf[16];
-	uint32_t chunk_len;
-#endif
-
 	/* Sanity check to make sure that the pixel count is not zero */
 	Assert(count > 0);
 
 	ili9341_send_command(ILI9341_CMD_MEMORY_WRITE);
 
-#if (SAM3S || SAM3N || SAM4S) && defined(CONF_ILI9341_SPI)
+#if defined(ILI9341_DMA_ENABLED)
+	ili9341_color_t chunk_buf[ILI9341_DMA_CHUNK_SIZE];
+	uint32_t chunk_len;
+
+#  if SAM
+	Pdc *SPI_DMA = spi_get_pdc_base(CONF_ILI9341_SPI);
+	pdc_packet_t spi_pdc_data;
+
 	pdc_enable_transfer(SPI_DMA, PERIPH_PTCR_TXTEN);
 	spi_pdc_data.ul_addr = (uint32_t)chunk_buf;
+#  elif UC3
+	pdca_set_transfer_size(CONF_ILI9341_PDCA_CHANNEL,
+			PDCA_TRANSFER_SIZE_BYTE);
+	pdca_set_peripheral_select(CONF_ILI9341_PDCA_CHANNEL,
+			CONF_ILI9341_PDCA_PID);
+#  endif
 
-	for (uint32_t i = 0; i < 16; i++) {
-		chunk_buf[i] = color;
+	for (uint32_t i = 0; i < ILI9341_DMA_CHUNK_SIZE; i++) {
+		chunk_buf[i] = le16_to_cpu(color);
 	}
 
 	while (count)
 	{
-		chunk_len = min(16, count);
+		chunk_len = min(ILI9341_DMA_CHUNK_SIZE, count);
 
 		ili9341_wait_for_send_done();
 
+#  if SAM
 		spi_pdc_data.ul_size = (uint32_t)sizeof(ili9341_color_t) * chunk_len;
 		pdc_tx_init(SPI_DMA, NULL, &spi_pdc_data);
+#  elif UC3
+		pdca_reload_channel(CONF_ILI9341_PDCA_CHANNEL, chunk_buf,
+				(uint32_t)sizeof(ili9341_color_t) * chunk_len);
+		pdca_enable(CONF_ILI9341_PDCA_CHANNEL);
+#  endif
 
 		count -= chunk_len;
 	}
+
+	ili9341_wait_for_send_done();
+	ili9341_deselect_chip();
+
+#  if SAM
+	pdc_disable_transfer(SPI_DMA, PERIPH_PTCR_TXTEN);
+#  elif UC3
+	pdca_disable(CONF_ILI9341_PDCA_CHANNEL);
+#  endif
 #else
 	while (count--) {
 		ili9341_send_byte(color);
 		ili9341_send_byte(color >> 8);
 	}
-#endif
 
 	ili9341_wait_for_send_done();
 	ili9341_deselect_chip();
+#endif
 }
 
 /**
@@ -600,6 +649,10 @@ static void ili9341_interface_init(void)
 	#error Interface for ILI9341 has not been selected or interface not\
 	supported, please configure component driver using the conf_ili9341.h\
         file!
+#endif
+
+#if UC3 && defined(ILI9341_DMA_ENABLED)
+	sysclk_enable_peripheral_clock(&AVR32_PDCA);
 #endif
 
 #if defined(CONF_ILI9341_USART_SPI)

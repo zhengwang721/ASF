@@ -159,6 +159,7 @@ extern "C" {
 /** \name MXT143E Xplained top module
  * @{
  */
+#define MXT143E_XPLAINED_PDCA_PID      AVR32_PDCA_PID_SPI1_TX
 #define MXT143E_XPLAINED_SPI           &AVR32_SPI1
 #define MXT143E_XPLAINED_TWI           &AVR32_TWIM0
 #define MXT143E_XPLAINED_CS            (AVR32_PIN_PB09)

@@ -80,4 +80,10 @@
 /** \brief Define what MCU pin the ILI9341 reset is connected to */
 #define CONF_ILI9341_RESET_PIN     MXT143E_XPLAINED_LCD_RESET
 
+/** \brief Define what peripheral DMA channel to use for the display */
+#define CONF_ILI9341_PDCA_CHANNEL  0
+
+/** \brief Define what peripheral ID to use for the display output */
+#define CONF_ILI9341_PDCA_PID      MXT143E_XPLAINED_PDCA_PID
+
 #endif /* CONF_ILI9341_H_INCLUDED */

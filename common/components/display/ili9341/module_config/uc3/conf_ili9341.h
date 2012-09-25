@@ -68,11 +68,11 @@
  * interface.
  */
 #if (AVR32_SPI_NUM == 1)
-#  define CONF_ILI9341_SPI           &AVR32_SPI
+#  define CONF_ILI9341_SPI         &AVR32_SPI
 #else
-#  define CONF_ILI9341_SPI           &AVR32_SPI0
+#  define CONF_ILI9341_SPI         &AVR32_SPI0
 #endif
-/* #define CONF_ILI9341_USART_SPI     &AVR32_USART0 */
+/* #define CONF_ILI9341_USART_SPI    &AVR32_USART0 */
 
 /** \brief Define what MCU pin the ILI9341 chip select pin is connected to */
 #define CONF_ILI9341_CS_PIN        AVR32_PIN_PA08
@@ -85,6 +85,16 @@
 
 /** \brief Define what MCU pin the ILI9341 reset is connected to */
 #define CONF_ILI9341_RESET_PIN     AVR32_PIN_PB06
+
+/** \brief Define what peripheral DMA channel to use for the display */
+#define CONF_ILI9341_PDCA_CHANNEL  0
+
+/** \brief Define what peripheral ID to use for the display output */
+#if defined(AVR32_PDCA_PID_SPI0_TX)
+#  define CONF_ILI9341_PDCA_PID    AVR32_PDCA_PID_SPI0_TX
+#else
+#  define CONF_ILI9341_PDCA_PID    AVR32_PDCA_PID_SPI_TX
+#endif
 
 /** @} */
 

@@ -34,7 +34,7 @@
 		<module type="component" id="common.components.display_controller.ili9341.dma#uc3" caption="LCD - ILI9341 Display Controller">
 			<device-support value="uc3"/>
 			<info type="gui-flag" value="hidden"/>
-			<!-- Currently no DMA acceleration for UC3 device -->
+			<require idref="avr32.drivers.pdca"/>
 		</module>
 		<module type="component" id="common.components.display_controller.ili9341.dma#sam" caption="LCD - ILI9341 Display Controller">
 			<device-support value="sam3u"/>
