@@ -1062,7 +1062,7 @@ void ili9225_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 	ili9225_check_box_coordinates(&dwX1, &dwY1, &dwX2, &dwY2);
 
 	/* Determine the refresh window area */
-	ili9225_set_window(dwX1, dwY1, (dwX2 - dwX1), (dwY2 - dwY1));
+	ili9225_set_window(dwX1, dwY1, (dwX2 - dwX1 + 1), (dwY2 - dwY1 + 1));
 
 	/* Set cursor */
 	ili9225_set_cursor_position(dwX1, dwY1);

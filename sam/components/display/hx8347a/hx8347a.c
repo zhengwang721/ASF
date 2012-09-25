@@ -1111,7 +1111,7 @@ void hx8347a_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 	hx8347a_check_box_coordinates(&dwX1, &dwY1, &dwX2, &dwY2);
 
 	/* Determine the refresh window area */
-	hx8347a_set_window(dwX1, dwY1, (dwX2 - dwX1), (dwY2 - dwY1));
+	hx8347a_set_window(dwX1, dwY1, (dwX2 - dwX1 + 1), (dwY2 - dwY1 + 1));
 
 	/* Set cursor */
 	hx8347a_set_cursor_position(dwX1, dwY1);
