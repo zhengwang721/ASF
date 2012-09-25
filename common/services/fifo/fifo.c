@@ -52,8 +52,11 @@
 
 int fifo_init(fifo_desc_t *fifo_desc, void *buffer, uint8_t size)
 {
-	// Check the size parameter. It must be a 2-power.
-	Assert ((size) || !(size & (size - 1)));
+	// Check the size parameter. It must be not null...
+	Assert (size);
+
+	// ... must be a 2-power ...
+	Assert (!(size & (size - 1)));
 
 	// ... and must fit in a uint8_t. Since the read and write indexes are using a
 	// double-index range implementation, the max FIFO size is thus 128 items.
