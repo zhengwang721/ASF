@@ -71,13 +71,20 @@ extern "C" {
 typedef ili9341_color_t gfx_color_t;
 typedef ili9341_coord_t gfx_coord_t;
 
-/* This macro generates a 16-bit native color for the display from a
- * 24-bit RGB value
- */
 #define GFX_COLOR(r, g, b)      ILI9341_COLOR(r, g, b)
 
-#define GFX_COLOR_INVALID       GFX_COLOR(0, 0, 0)
-#define GFX_COLOR_TRANSPARENT   GFX_COLOR(254, 0, 0)
+/**
+ * It is not possible to define a color that is outside the color spectrum for
+ * the ILI9341 driver, hence use a dark color as an invalid color.
+ */
+#define GFX_COLOR_INVALID       GFX_COLOR(5, 5, 5)
+
+/**
+ * It is not possible to define a color that is outside the color spectrum for
+ * the ILI9341 driver, hence use a very uncommon strong magenta color as
+ * transparency mask color.
+ */
+#define GFX_COLOR_TRANSPARENT   GFX_COLOR(240, 0, 240)
 
 /**
  * \brief Initialize the ili9341 display controller

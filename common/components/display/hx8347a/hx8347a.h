@@ -101,13 +101,12 @@ extern "C" {
  *  24-bit RGB value.
  */
 #define HX8347A_COLOR(r, g, b)\
-		((((uint16_t)r) & 0x00f8) |\
-		((((uint16_t)b) << 5) & 0x1f00) |\
-		((((uint16_t)g) >> 5) & 0x0007) |\
-		((((uint16_t)g) << 11) & 0xe000))
+	Swap16((((uint16_t)b >> 3) << 11) |\
+		   (((uint16_t)g >> 2) << 5) |\
+		   (((uint16_t)r >> 3) << 0))
 
-typedef uint16_t gfx_color_t;
-typedef int16_t gfx_coord_t;
+typedef uint16_t hx8347a_color_t;
+typedef int16_t hx8347a_coord_t;
 
 /** Bit mask for flipping X for hx8347a_set_orientation() */
 #define HX8347A_FLIP_X 1
@@ -146,27 +145,27 @@ void hx8347a_set_register(uint8_t address, uint8_t bitmask);
  * \name Controller primitive graphical functions
  * @{
  */
-gfx_color_t hx8347a_read_gram(void);
+hx8347a_color_t hx8347a_read_gram(void);
 
-void hx8347a_write_gram(gfx_color_t color);
+void hx8347a_write_gram(hx8347a_color_t color);
 
-void hx8347a_set_top_left_limit(gfx_coord_t x, gfx_coord_t y);
+void hx8347a_set_top_left_limit(hx8347a_coord_t x, hx8347a_coord_t y);
 
-void hx8347a_set_bottom_right_limit(gfx_coord_t x, gfx_coord_t y);
+void hx8347a_set_bottom_right_limit(hx8347a_coord_t x, hx8347a_coord_t y);
 
-void hx8347a_set_limits(gfx_coord_t start_x, gfx_coord_t start_y,
-		gfx_coord_t end_x, gfx_coord_t end_y);
+void hx8347a_set_limits(hx8347a_coord_t start_x, hx8347a_coord_t start_y,
+		hx8347a_coord_t end_x, hx8347a_coord_t end_y);
 		
 void hx8347a_set_orientation(uint8_t flags);
 
-void hx8347a_copy_pixels_to_screen(const gfx_color_t *pixels, uint32_t count);
+void hx8347a_copy_pixels_to_screen(const hx8347a_color_t *pixels, uint32_t count);
 
 void hx8347a_copy_progmem_pixels_to_screen(
-		gfx_color_t PROGMEM_PTR_T pixels, uint32_t count);
+		hx8347a_color_t PROGMEM_PTR_T pixels, uint32_t count);
 
-void hx8347a_copy_pixels_from_screen(gfx_color_t *pixels, uint32_t count);
+void hx8347a_copy_pixels_from_screen(hx8347a_color_t *pixels, uint32_t count);
 
-void hx8347a_duplicate_pixel(const gfx_color_t color, uint32_t count);
+void hx8347a_duplicate_pixel(const hx8347a_color_t color, uint32_t count);
 
 /** @} */
 

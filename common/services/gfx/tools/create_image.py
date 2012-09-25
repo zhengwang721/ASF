@@ -40,10 +40,11 @@ for y in range(0, height):
 		b = pixel[2]
 		
 		if (display_controller == "hx8347a"):
-			color_val = r & 0x00f8 | (b << 5) & 0x1f00 | (g >> 5) & 0x0007 | (g << 11) & 0xe000
+			color_val = ((b >> 3) << 11) | ((g >> 2) << 5) | ((r >> 3) << 0)
+			color_val = ((color_val << 8) | (color_val >> 8)) & 0xFFFF
 		elif (display_controller == "ili9341"):
-			color_val = ((r >> 3) << 11) | ((b >> 3) << 0) | ((g >> 2) << 5)
-			color_val = ((color_val << 8) | (color_val >> 8)) & 0xFFFF;
+			color_val = ((r >> 3) << 11) | ((g >> 2) << 5) | ((b >> 3) << 0)
+			color_val = ((color_val << 8) | (color_val >> 8)) & 0xFFFF
 		else:
 			print "Unknown display controller \"%s\"" % display_controller
 			sys.exit()

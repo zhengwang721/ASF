@@ -85,7 +85,7 @@
 #include <asf.h>
 
 /** Table of primary and secondary display pixel colors */
-const gfx_color_t color_table[] = {
+const hx8347a_color_t color_table[] = {
 	HX8347A_COLOR(0, 0, 255), HX8347A_COLOR(0, 255, 0),
 	HX8347A_COLOR(255, 0, 0), HX8347A_COLOR(255, 255, 0),
 	HX8347A_COLOR(255, 0, 255), HX8347A_COLOR(0, 255, 255)};
@@ -97,7 +97,7 @@ const gfx_color_t color_table[] = {
 #define TOTAL_PIXELS ((uint32_t)HX8347A_DEFAULT_WIDTH * HX8347A_DEFAULT_HEIGHT)
 
 /* Create an array to hold a 40 x 40 bitmap */
-gfx_color_t bitmap[1600];
+hx8347a_color_t bitmap[1600];
 
 /* Pointer to the location in the array */
 uint16_t bitmap_ptr = 0;

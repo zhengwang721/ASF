@@ -67,21 +67,23 @@ extern "C" {
  * @{
  */
 
-typedef uint16_t gfx_color_t;
-typedef int16_t gfx_coord_t;
+typedef hx8347a_color_t gfx_color_t;
+typedef hx8347a_coord_t gfx_coord_t;
 
-/* This macro generates a 16-bit native color for the display from a
- * 24-bit RGB value
- */
 #define GFX_COLOR(r, g, b)      HX8347A_COLOR(r, g, b)
 
 /**
  * It is not possible to define a color that is outside the color spectrum for
- * the HX8347A driver, hence use a dark color as invalid color.
+ * the HX8347A driver, hence use a dark color as an invalid color.
  */
-#define GFX_COLOR_INVALID       GFX_COLOR(1, 2, 3)
+#define GFX_COLOR_INVALID       GFX_COLOR(5, 5, 5)
 
-#define GFX_COLOR_TRANSPARENT   GFX_COLOR(254, 0, 0)
+/**
+ * It is not possible to define a color that is outside the color spectrum for
+ * the HX8347A driver, hence use a very uncommon strong magenta color as
+ * transparency mask color.
+ */
+#define GFX_COLOR_TRANSPARENT   GFX_COLOR(240, 0, 240)
 
 /**
  * \brief Initialize the hx8347a display controller

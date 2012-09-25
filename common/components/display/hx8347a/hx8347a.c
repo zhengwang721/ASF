@@ -277,9 +277,9 @@ void hx8347a_set_register(uint8_t address, uint8_t bitmask)
  * ...
  * \endcode
  *
- * \retval gfx_color_t the read color pixel
+ * \retval hx8347a_color_t the read color pixel
  */
-gfx_color_t hx8347a_read_gram(void)
+hx8347a_color_t hx8347a_read_gram(void)
 {
 	uint8_t red;
 	uint8_t green;
@@ -316,7 +316,7 @@ gfx_color_t hx8347a_read_gram(void)
  *
  * \param color the color pixel to write to the screen
  */
-void hx8347a_write_gram(gfx_color_t color)
+void hx8347a_write_gram(hx8347a_color_t color)
 {
 	/* Only 16-bit color supported */
 	Assert(sizeof(color) == 2);
@@ -338,7 +338,7 @@ void hx8347a_write_gram(gfx_color_t color)
  * \param x the x coordinate of the top left corner
  * \param y the y coordinate of the top left corner
  */
-void hx8347a_set_top_left_limit(gfx_coord_t x, gfx_coord_t y)
+void hx8347a_set_top_left_limit(hx8347a_coord_t x, hx8347a_coord_t y)
 {
 	hx8347a_write_register(HX8347A_COLSTARTHIGH, (x >> 8));
 	hx8347a_write_register(HX8347A_COLSTARTLOW, (x & 0xff));
@@ -354,7 +354,7 @@ void hx8347a_set_top_left_limit(gfx_coord_t x, gfx_coord_t y)
  * \param x the x coordinate of the bottom right corner
  * \param y the y coordinate of the bottom right corner
  */
-void hx8347a_set_bottom_right_limit(gfx_coord_t x, gfx_coord_t y)
+void hx8347a_set_bottom_right_limit(hx8347a_coord_t x, hx8347a_coord_t y)
 {
 	hx8347a_write_register(HX8347A_COLENDHIGH, (x >> 8));
 	hx8347a_write_register(HX8347A_COLENDLOW, (x & 0xff));
@@ -372,8 +372,8 @@ void hx8347a_set_bottom_right_limit(gfx_coord_t x, gfx_coord_t y)
  * \param end_x the x coordinate of the bottom right corner
  * \param end_y the y coordinate of the bottom right corner
  */
-void hx8347a_set_limits(gfx_coord_t start_x, gfx_coord_t start_y,
-		gfx_coord_t end_x, gfx_coord_t end_y)
+void hx8347a_set_limits(hx8347a_coord_t start_x, hx8347a_coord_t start_y,
+		hx8347a_coord_t end_x, hx8347a_coord_t end_y)
 {
 	hx8347a_set_top_left_limit(start_x, start_y);
 	hx8347a_set_bottom_right_limit(end_x, end_y);
@@ -426,7 +426,7 @@ void hx8347a_set_orientation(uint8_t flags)
  * \param pixels pointer to the pixel data
  * \param count number of pixels to copy to the screen
  */
-void hx8347a_copy_pixels_to_screen(const gfx_color_t *pixels, uint32_t count)
+void hx8347a_copy_pixels_to_screen(const hx8347a_color_t *pixels, uint32_t count)
 {
 	uint32_t byte_count;
 
@@ -438,7 +438,7 @@ void hx8347a_copy_pixels_to_screen(const gfx_color_t *pixels, uint32_t count)
 	hx8347a_send_byte(HX8347A_START_WRITEREG);
 
 	/* Find number of bytes to transfer */
-	byte_count = count * sizeof(gfx_color_t);
+	byte_count = count * sizeof(hx8347a_color_t);
 
 	hx8347a_write_packet((uint8_t *)pixels, byte_count);
 
@@ -461,7 +461,7 @@ void hx8347a_copy_pixels_to_screen(const gfx_color_t *pixels, uint32_t count)
  * \param count number of pixels to write
  */
 void hx8347a_copy_progmem_pixels_to_screen(
-		gfx_color_t PROGMEM_PTR_T pixels, uint32_t count)
+		hx8347a_color_t PROGMEM_PTR_T pixels, uint32_t count)
 {
 	uint32_t byte_count;
 	uint8_t PROGMEM_PTR_T byte_ptr = (uint8_t PROGMEM_PTR_T)pixels;
@@ -474,7 +474,7 @@ void hx8347a_copy_progmem_pixels_to_screen(
 	hx8347a_send_byte(HX8347A_START_WRITEREG);
 
 	/* Find number of bytes to transfer */
-	byte_count = count * sizeof(gfx_color_t);
+	byte_count = count * sizeof(hx8347a_color_t);
 
 	while (byte_count > 0) {
 		hx8347a_send_byte(PROGMEM_READ_BYTE(byte_ptr));
@@ -500,7 +500,7 @@ void hx8347a_copy_progmem_pixels_to_screen(
  * \param color the color to write to the display
  * \param count the number of pixels to write with this color
  */
-void hx8347a_duplicate_pixel(const gfx_color_t color, uint32_t count)
+void hx8347a_duplicate_pixel(const hx8347a_color_t color, uint32_t count)
 {
 	uint32_t transmit_count;
 
@@ -534,7 +534,7 @@ void hx8347a_duplicate_pixel(const gfx_color_t color, uint32_t count)
  * \param pixels pointer to the pixel buffer to read to
  * \param count number of pixels to read
  */
-void hx8347a_copy_pixels_from_screen(gfx_color_t *pixels, uint32_t count)
+void hx8347a_copy_pixels_from_screen(hx8347a_color_t *pixels, uint32_t count)
 {
 	uint8_t red;
 	uint8_t green;
