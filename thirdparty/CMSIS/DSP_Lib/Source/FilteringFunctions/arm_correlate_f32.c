@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------------   
 * Copyright (C) 2010 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        18. Oct 2011  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_correlate_f32.c   
@@ -10,7 +10,10 @@
 * Description:	 Correlation of floating-point sequences.   
 *   
 * Target Processor: Cortex-M4/Cortex-M3/Cortex-M0
-*  
+*
+* Version 1.0.11 2011/10/18 
+*    Bug Fix in conv, correlation, partial convolution. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   
@@ -293,7 +296,7 @@ void arm_correlate_f32(
   py = pIn2;
 
   /* count is index by which the pointer pIn1 to be incremented */
-  count = 1u;
+  count = 0u;
 
   /* -------------------   
    * Stage2 process   
@@ -439,12 +442,12 @@ void arm_correlate_f32(
       *pOut = acc3;
       pOut += inc;
 
-      /* Update the inputA and inputB pointers for next MAC calculation */
-      px = pIn1 + (count * 4u);
-      py = pIn2;
+      /* Increment the pointer pIn1 index, count by 4 */
+      count += 4u;
 
-      /* Increment the pointer pIn1 index, count by 1 */
-      count++;
+     /* Update the inputA and inputB pointers for next MAC calculation */
+      px = pIn1 + count;
+      py = pIn2;	   
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -494,12 +497,12 @@ void arm_correlate_f32(
       /* Destination pointer is updated according to the address modifier, inc */
       pOut += inc;
 
-      /* Update the inputA and inputB pointers for next MAC calculation */
-      px = pIn1 + count;
-      py = pIn2;
-
       /* Increment the pointer pIn1 index, count by 1 */
       count++;
+
+     /* Update the inputA and inputB pointers for next MAC calculation */
+      px = pIn1 + count;
+      py = pIn2;
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -533,12 +536,12 @@ void arm_correlate_f32(
       /* Destination pointer is updated according to the address modifier, inc */
       pOut += inc;
 
+      /* Increment the pointer pIn1 index, count by 1 */
+      count++;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
       px = pIn1 + count;
       py = pIn2;
-
-      /* Increment the pointer pIn1 index, count by 1 */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;

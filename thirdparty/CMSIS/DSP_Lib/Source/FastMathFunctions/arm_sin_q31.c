@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
-* Copyright (C) 2010 ARM Limited. All rights reserved.   
+* Copyright (C) 2012 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        20. January 2012  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_sin_q31.c   
@@ -10,7 +10,10 @@
 * Description:	Fast sine calculation for Q31 values.  
 *   
 * Target Processor: Cortex-M4/Cortex-M3/Cortex-M0
-*  
+* 
+* Version 1.0.11 2012/01/20 
+*    Fixed the wrap around issue. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   
@@ -218,7 +221,7 @@ q31_t arm_sin_q31(
   sinVal = (q31_t) ((((q63_t) sinVal << 32) + ((q63_t) d * wd)) >> 32);
 
   /* convert sinVal in 2.30 format to 1.31 format */
-  return (sinVal << 1u);
+  return (__QADD(sinVal, sinVal));
 
 }
 

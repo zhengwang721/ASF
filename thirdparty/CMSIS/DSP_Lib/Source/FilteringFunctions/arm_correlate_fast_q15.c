@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
 * Copyright (C) 2010 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        18. Oct 2011  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_correlate_fast_q15.c   
@@ -10,7 +10,10 @@
 * Description:	Fast Q15 Correlation.   
 *   
 * Target Processor: Cortex-M4/Cortex-M3
-*  
+*
+* Version 1.0.11 2011/10/18 
+*    Bug Fix in conv, correlation, partial convolution. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   

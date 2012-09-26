@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
 * Copyright (C) 2010 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        18. Oct 2011  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_conv_fast_q15.c   
@@ -10,7 +10,10 @@
 * Description:	Fast Q15 Convolution.   
 *   
 * Target Processor: Cortex-M4/Cortex-M3
-*  
+* 
+* Version 1.0.11 2011/10/18 
+*    Bug Fix in conv, correlation, partial convolution. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   
@@ -80,7 +83,6 @@ void arm_conv_fast_q15(
   q31_t x0, x1, x2, x3, c0;                      /* Temporary variables to hold state and coefficient values */
   uint32_t blockSize1, blockSize2, blockSize3, j, k, count, blkCnt;     /* loop counter */
   q31_t *pb;                                     /* 32 bit pointer for inputB buffer */
-
 
   /* The algorithm implementation is based on the lengths of the inputs. */
   /* srcB is always made to slide across srcA. */
@@ -264,7 +266,7 @@ void arm_conv_fast_q15(
   pb = (q31_t *) (py - 1u);
 
   /* count is the index by which the pointer pIn1 to be incremented */
-  count = 1u;
+  count = 0u;
 
 
   /* --------------------   
@@ -445,13 +447,14 @@ void arm_conv_fast_q15(
       *__SIMD32(pOut)++ = __PKHBT((acc3 >> 15), (acc2 >> 15), 16);
 
 #endif /*      #ifndef  ARM_MATH_BIG_ENDIAN    */
+
+      /* Increment the pointer pIn1 index, count by 4 */
+      count += 4u;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
-      px = pIn1 + (count * 4u);
+      px = pIn1 + count;
       py = pSrc2;
       pb = (q31_t *) (py - 1);
-
-      /* Increment the pointer pIn1 index, count by 1 */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -499,12 +502,12 @@ void arm_conv_fast_q15(
       /* Store the result in the accumulator in the destination buffer. */
       *pOut++ = (q15_t) (sum >> 15);
 
+      /* Increment the pointer pIn1 index, count by 1 */
+      count++;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
       px = pIn1 + count;
       py = pSrc2;
-
-      /* Increment the pointer pIn1 index, count by 1 */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -536,12 +539,12 @@ void arm_conv_fast_q15(
       /* Store the result in the accumulator in the destination buffer. */
       *pOut++ = (q15_t) (sum >> 15);
 
+      /* Increment the MAC count */
+      count++;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
       px = pIn1 + count;
       py = pSrc2;
-
-      /* Increment the MAC count */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;

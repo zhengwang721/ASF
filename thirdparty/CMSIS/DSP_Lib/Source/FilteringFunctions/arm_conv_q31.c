@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
 * Copyright (C) 2010 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        18. Oct 2011  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_conv_q31.c   
@@ -10,6 +10,9 @@
 * Description:	Convolution of Q31 sequences. 
 *   
 * Target Processor: Cortex-M4/Cortex-M3/Cortex-M0
+*
+* Version 1.0.11 2011/10/18 
+*    Bug Fix in conv, correlation, partial convolution. 
 *  
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
@@ -91,7 +94,6 @@ void arm_conv_q31(
   q63_t acc0, acc1, acc2, acc3;                  /* Accumulator */
   q31_t x0, x1, x2, x3, c0;                      /* Temporary variables to hold state and coefficient values */
   uint32_t j, k, count, blkCnt, blockSize1, blockSize2, blockSize3;     /* loop counter */
-
 
   /* The algorithm implementation is based on the lengths of the inputs. */
   /* srcB is always made to slide across srcA. */
@@ -229,7 +231,7 @@ void arm_conv_q31(
   py = pSrc2;
 
   /* count is index by which the pointer pIn1 to be incremented */
-  count = 1u;
+  count = 0u;
 
   /* -------------------   
    * Stage2 process   
@@ -366,12 +368,12 @@ void arm_conv_q31(
       *pOut++ = (q31_t) (acc2 >> 31);
       *pOut++ = (q31_t) (acc3 >> 31);
 
-      /* Update the inputA and inputB pointers for next MAC calculation */
-      px = pIn1 + (count * 4u);
-      py = pSrc2;
+      /* Increment the pointer pIn1 index, count by 4 */
+      count += 4u;
 
-      /* Increment the pointer pIn1 index, count by 1 */
-      count++;
+      /* Update the inputA and inputB pointers for next MAC calculation */
+      px = pIn1 + count;
+      py = pSrc2;
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -419,12 +421,12 @@ void arm_conv_q31(
       /* Store the result in the accumulator in the destination buffer. */
       *pOut++ = (q31_t) (sum >> 31);
 
+      /* Increment the MAC count */
+      count++;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
       px = pIn1 + count;
       py = pSrc2;
-
-      /* Increment the MAC count */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;
@@ -456,12 +458,12 @@ void arm_conv_q31(
       /* Store the result in the accumulator in the destination buffer. */
       *pOut++ = (q31_t) (sum >> 31);
 
+      /* Increment the MAC count */
+      count++;
+
       /* Update the inputA and inputB pointers for next MAC calculation */
       px = pIn1 + count;
       py = pSrc2;
-
-      /* Increment the MAC count */
-      count++;
 
       /* Decrement the loop counter */
       blkCnt--;

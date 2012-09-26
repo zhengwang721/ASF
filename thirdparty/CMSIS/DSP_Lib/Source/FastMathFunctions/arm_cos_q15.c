@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
-* Copyright (C) 2010 ARM Limited. All rights reserved.   
+* Copyright (C) 2012 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        20. January 2012  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_cos_q15.c   
@@ -10,7 +10,10 @@
 * Description:	Fast cosine calculation for Q15 values.  
 *   
 * Target Processor: Cortex-M4/Cortex-M3/Cortex-M0
-*  
+*
+* Version 1.0.11 2012/01/20 
+*    Fixed the wrap around issue. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   
@@ -165,7 +168,7 @@ q15_t arm_cos_q15(
   /* Read third nearest value of output from the cos table */
   c = *tablePtr++;
 
-  /*      cosVal += c*wc */
+  /* cosVal += c*wc */
   cosVal += c * wc;
 
   /* Calculation of wd */
@@ -179,8 +182,11 @@ q15_t arm_cos_q15(
   /* cosVal += d*wd; */
   cosVal += d * wd;
 
+  /* Convert output value in 1.15(q15) format and saturate */
+  cosVal = __SSAT((cosVal >> 15), 16);
+
   /* Return the output value in 1.15(q15) format */
-  return ((q15_t) (cosVal >> 15u));
+  return ((q15_t)cosVal);
 
 }
 

@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------   
 * Copyright (C) 2010 ARM Limited. All rights reserved.   
 *   
-* $Date:        15. July 2011  
-* $Revision: 	V1.0.10  
+* $Date:        18. Oct 2011  
+* $Revision: 	V1.0.11  
 *   
 * Project: 	    CMSIS DSP Library   
 * Title:		arm_conv_partial_q15.c   
@@ -10,7 +10,10 @@
 * Description:	Partial convolution of Q15 sequences.  
 *   
 * Target Processor: Cortex-M4/Cortex-M3/Cortex-M0
-*  
+* 
+* Version 1.0.11 2011/10/18 
+*    Bug Fix in conv, correlation, partial convolution. 
+*
 * Version 1.0.10 2011/7/15 
 *    Big Endian support added and Merged M0 and M3/M4 Source code.  
 *   
@@ -288,7 +291,7 @@ arm_status arm_conv_partial_q15(
     pb = (q31_t *) (py - 1u);
 
     /* count is the index by which the pointer pIn1 to be incremented */
-    count = 1u;
+    count = 0u;
 
 
     /* --------------------   
@@ -474,13 +477,13 @@ arm_status arm_conv_partial_q15(
 
 #endif /*      #ifndef  ARM_MATH_BIG_ENDIAN    */
 
+        /* Increment the pointer pIn1 index, count by 4 */
+        count += 4u;
+
         /* Update the inputA and inputB pointers for next MAC calculation */
-        px = pIn1 + (count * 4u);
+        px = pIn1 + count;
         py = pSrc2;
         pb = (q31_t *) (py - 1);
-
-        /* Increment the pointer pIn1 index, count by 1 */
-        count++;
 
         /* Decrement the loop counter */
         blkCnt--;
@@ -489,7 +492,7 @@ arm_status arm_conv_partial_q15(
       /* If the blockSize2 is not a multiple of 4, compute any remaining output samples here.   
        ** No loop unrolling is used. */
       blkCnt = (uint32_t) blockSize2 % 0x4u;
-
+  	  
       while(blkCnt > 0u)
       {
         /* Accumulator is made zero for every iteration */
@@ -528,12 +531,12 @@ arm_status arm_conv_partial_q15(
         /* Store the result in the accumulator in the destination buffer. */
         *pOut++ = (q15_t) (__SSAT(sum >> 15, 16));
 
+        /* Increment the pointer pIn1 index, count by 1 */
+        count++;
+
         /* Update the inputA and inputB pointers for next MAC calculation */
         px = pIn1 + count;
         py = pSrc2;
-
-        /* Increment the pointer pIn1 index, count by 1 */
-        count++;
 
         /* Decrement the loop counter */
         blkCnt--;
@@ -565,13 +568,13 @@ arm_status arm_conv_partial_q15(
         /* Store the result in the accumulator in the destination buffer. */
         *pOut++ = (q15_t) (__SSAT(sum >> 15, 16));
 
-        /* Update the inputA and inputB pointers for next MAC calculation */
-        px = pIn1 + count;
-        py = pSrc2;
-
         /* Increment the MAC count */
         count++;
 
+        /* Update the inputA and inputB pointers for next MAC calculation */
+        px = pIn1 + count;
+        py = pSrc2;
+  
         /* Decrement the loop counter */
         blkCnt--;
       }

@@ -230,10 +230,6 @@ void arm_split_rfft_f32(
   float32_t *pDst1 = &pDst[2], *pDst2 = &pDst[(4u * fftLen) - 1u];      /* temp pointers for output buffer */
   float32_t *pSrc1 = &pSrc[2], *pSrc2 = &pSrc[(2u * fftLen) - 1u];      /* temp pointers for input buffer */
 
-
-  pSrc[2u * fftLen] = pSrc[0];
-  pSrc[(2u * fftLen) + 1u] = pSrc[1];
-
   /* Init coefficient pointers */
   pCoefA = &pATable[modifier * 2u];
   pCoefB = &pBTable[modifier * 2u];
