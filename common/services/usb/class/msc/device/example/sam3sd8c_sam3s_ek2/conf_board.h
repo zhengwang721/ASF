@@ -44,4 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* Nand flash is used */
+#define CONF_BOARD_NAND
+
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -466,6 +466,7 @@ static void udi_msc_cbw_wait(void)
 static void udi_msc_cbw_received(udd_ep_status_t status,
 		iram_size_t nb_received, udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	// Check status of transfer
 	if (UDD_EP_TRANSFER_OK != status) {
 		// Transfer aborted
@@ -599,6 +600,7 @@ static void udi_msc_data_send(uint8_t * buffer, uint8_t buf_size)
 static void udi_msc_data_sent(udd_ep_status_t status, iram_size_t nb_sent,
 		udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	if (UDD_EP_TRANSFER_OK != status) {
 		// Error protocol
 		// Now wait MSC setup reset to relaunch CBW reception
@@ -649,6 +651,7 @@ void udi_msc_csw_send(void)
 static void udi_msc_csw_sent(udd_ep_status_t status, iram_size_t nb_sent,
 		udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	UNUSED(status);
 	UNUSED(nb_sent);
 	// CSW is sent or not
@@ -1025,6 +1028,7 @@ bool udi_msc_process_trans(void)
 static void udi_msc_trans_ack(udd_ep_status_t status, iram_size_t n,
 		udd_ep_id_t ep)
 {
+	UNUSED(ep);
 	UNUSED(n);
 	// Update variable to signal the end of transfer
 	udi_msc_b_abort_trans = (UDD_EP_TRANSFER_OK != status) ? true : false;

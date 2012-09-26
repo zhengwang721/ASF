@@ -166,7 +166,7 @@ static Ctrl_status virtual_usb_trans(uint32_t addr, uint16_t nb_sector,
 /* USB DMA for XMEGA only works on internal RAM, so use a temporal buffer if
  * it's outside this.
  */
-#if (VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX
+#if defined(VMEM_ADDRESS) && ((VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX)
 	uint8_t       buffer[VMEM_SECTOR_SIZE];
 	hugemem_ptr_t ptr_cram;
 
@@ -275,7 +275,7 @@ Ctrl_status virtual_mem_2_ram(uint32_t addr, void *ram)
 
 	// If overflow (possible with size virtual mem < 8 sectors) then read the last sector
 	addr = min(addr, VMEM_NB_SECTOR - 1);
-#if (VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX
+#if defined(VMEM_ADDRESS) && ((VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX)
 	hugemem_read_block(ram, (hugemem_ptr_t)((uint32_t)vmem_data + addr
 				* VMEM_SECTOR_SIZE), VMEM_SECTOR_SIZE);
 #else
@@ -301,7 +301,7 @@ Ctrl_status virtual_ram_2_mem(uint32_t addr, const void *ram)
 		return CTRL_FAIL;
 	}
 
-#if (VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX
+#if defined(VMEM_ADDRESS) && ((VMEM_ADDRESS + (VMEM_NB_SECTOR * VMEM_SECTOR_SIZE) - 1) > UINTPTR_MAX)
 	hugemem_write_block((hugemem_ptr_t)((uint32_t)vmem_data + addr
 				* VMEM_SECTOR_SIZE), ram, VMEM_SECTOR_SIZE);
 #else

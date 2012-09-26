@@ -44,13 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
-
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
-
-/** Support NAND */
+/* Nand flash is used */
 #define CONF_BOARD_NAND
 
 #endif /* CONF_BOARD_H_INCLUDED */

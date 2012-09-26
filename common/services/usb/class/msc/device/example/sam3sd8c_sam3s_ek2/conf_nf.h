@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief NAND Flash configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,10 +41,26 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_NF_H_INCLUDED
+#define CONF_NF_H_INCLUDED
 
-/* Nand flash is used */
-#define CONF_BOARD_NAND
+/* Number of tries for erasing a block */
+#define CONF_NF_ERASE_NUM_TRY           2
+/* Number of tries for writing a block */
+#define CONF_NF_WRITE_NUM_TRY           2
+/* Number of tries for copying a block */
+#define CONF_NF_COPY_NUM_TRY            2
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/* Maximum size of the data area of one page, in bytes. */
+#define NAND_COMMON_MAX_PAGE_SIZE          2048
+
+/* Maximum size of the spare area of one page, in bytes. */
+#define NAND_COMMON_MAX_PAGE_SPARE_SIZE    128
+
+/* Maximum number of ecc bytes stored in the spare for one single page. */
+#define NAND_COMMON_MAX_SPARE_ECC_BYTES    48
+
+/* Maximum number of extra free bytes inside the spare area of a page. */
+#define NAND_COMMON_MAX_SPARE_EXTRA_BYTES  78
+
+#endif /* CONF_NF_H_INCLUDED */

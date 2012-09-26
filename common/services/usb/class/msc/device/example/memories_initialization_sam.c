@@ -91,6 +91,14 @@ static void ext_sram_init(void)
 }
 #endif
 
+#ifdef CONF_BOARD_NAND
+static void nand_init(void)
+{
+	/* All operations have been done in ftl_lib.
+	   No additional actions to do */
+}
+#endif
+
 void memories_initialization(void)
 {
 #ifdef CONF_BOARD_SMC_PSRAM
@@ -98,5 +106,8 @@ void memories_initialization(void)
 #endif
 #ifdef CONF_BOARD_SRAM
 	ext_sram_init();
+#endif
+#ifdef CONF_BOARD_NAND
+	nand_init();
 #endif
 }

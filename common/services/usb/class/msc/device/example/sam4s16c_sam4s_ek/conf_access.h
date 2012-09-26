@@ -55,7 +55,7 @@
 #define LUN_1                DISABLE   //!< AT45DBX Data Flash.
 #define LUN_2                DISABLE   //!< SD/MMC Card over SPI.
 #define LUN_3                DISABLE   //!< SD/MMC Card over MCI Slot 0.
-#define LUN_4                ENABLE
+#define LUN_4                ENABLE    //!< NAND
 #define LUN_5                DISABLE
 #define LUN_6                DISABLE
 #define LUN_7                DISABLE

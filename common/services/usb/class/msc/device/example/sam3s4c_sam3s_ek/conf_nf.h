@@ -1,10 +1,7 @@
 /**
- *
  * \file
  *
- * \brief Virtual memory configuration file.
- *
- * This file contains the possible external configuration of the Virtual Memory.
+ * \brief NAND Flash configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,11 +41,26 @@
  *
  */
 
+#ifndef CONF_NF_H_INCLUDED
+#define CONF_NF_H_INCLUDED
 
-#ifndef _CONF_VIRTUAL_MEM_H_
-#define _CONF_VIRTUAL_MEM_H_
+/* Number of tries for erasing a block */
+#define CONF_NF_ERASE_NUM_TRY           2
+/* Number of tries for writing a block */
+#define CONF_NF_WRITE_NUM_TRY           2
+/* Number of tries for copying a block */
+#define CONF_NF_COPY_NUM_TRY            2
 
-//! Size of Virtual Memory on internal RAM (unit 512B)
-#define VMEM_NB_SECTOR 48 // Internal RAM 24KB (should > 20KB or PC can not format it)
+/* Maximum size of the data area of one page, in bytes. */
+#define NAND_COMMON_MAX_PAGE_SIZE          2048
 
-#endif // _CONF_VIRTUAL_MEM_H_
+/* Maximum size of the spare area of one page, in bytes. */
+#define NAND_COMMON_MAX_PAGE_SPARE_SIZE    128
+
+/* Maximum number of ecc bytes stored in the spare for one single page. */
+#define NAND_COMMON_MAX_SPARE_ECC_BYTES    48
+
+/* Maximum number of extra free bytes inside the spare area of a page. */
+#define NAND_COMMON_MAX_SPARE_EXTRA_BYTES  78
+
+#endif /* CONF_NF_H_INCLUDED */
