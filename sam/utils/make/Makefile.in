@@ -95,7 +95,7 @@ ifdef OS
   ifeq ($(strip $(OS)), Linux)
     os_type     := Linux
   endif
-	ifeq (Windows,$(findstring Windows,$(OS)))
+  ifeq (Windows,$(findstring Windows,$(OS)))
     os_type     := windows32_64
   endif
 endif
@@ -145,10 +145,10 @@ OBJDUMP         := $(CROSS)objdump
 SIZE            := $(CROSS)size
 GDB             := $(CROSS)gdb
 
-RM              := cs-rm -f
+RM              := rm -f
 ifeq ($(os),Windows)
 #RMDIR           := rmdir /S /Q
-RMDIR           := cs-rm  -rf
+RMDIR           := rm  -rf
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
 endif
