@@ -136,23 +136,22 @@ typedef struct{
 	//! USB device descriptor
 	usb_dev_desc_t dev_desc;
 
-	//! USB current configuration descriptor
-	usb_conf_desc_t *conf_desc;
-
 	// USB address
 	uint8_t address;
 
 	// USB speed
 	uhd_speed_t speed;
 
+	//! USB current configuration descriptor
+	usb_conf_desc_t *conf_desc;
+
 #ifdef USB_HOST_HUB_SUPPORT
 	uhc_device_t *prev;
 	uhc_device_t *next;
 	uhc_device_t *hub;
-	uint8_t hub_port;
-
 	// Power consumption if device or devices connected to a HUB downstream port are NUB powered
 	uint16_t power;
+	uint8_t hub_port;
 #endif
 } uhc_device_t;
 

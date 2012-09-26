@@ -3,7 +3,7 @@
  *
  * \brief Memory access control configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -174,7 +174,7 @@
 /*! \name Specific Options for Access Control
  */
 //! @{
-#define GLOBAL_WR_PROTECT    DISABLED //!< Management of a global write protection.
+#define GLOBAL_WR_PROTECT    false //!< Management of a global write protection.
 //! @}
 
 

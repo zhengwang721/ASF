@@ -371,6 +371,7 @@ static void uhc_enumeration_step6(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
 	if ((status != UHD_TRANS_NOERROR) || (payload_trans < 8)
 			|| (uhc_dev_enum->dev_desc.bDescriptorType != USB_DT_DEVICE)) {
 		uhc_enumeration_error((status == UHD_TRANS_DISCONNECT)?
@@ -468,6 +469,8 @@ static void uhc_enumeration_step10(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
+	UNUSED(payload_trans);
 	if (status != UHD_TRANS_NOERROR) {
 		uhc_enumeration_error((status == UHD_TRANS_DISCONNECT) ?
 				UHC_ENUM_DISCONNECT : UHC_ENUM_FAIL);
@@ -526,6 +529,7 @@ static void uhc_enumeration_step12(
 {
 	usb_setup_req_t req;
 	uint8_t conf_num;
+	UNUSED(add);
 
 	if ((status != UHD_TRANS_NOERROR) || (payload_trans != sizeof(usb_dev_desc_t))
 			|| (uhc_dev_enum->dev_desc.bDescriptorType != USB_DT_DEVICE)) {
@@ -578,6 +582,7 @@ static void uhc_enumeration_step13(
 	uint8_t conf_num, conf_size;
 	uint16_t bus_power = 0;
 	usb_setup_req_t req;
+	UNUSED(add);
 
 	if ((status != UHD_TRANS_NOERROR) || (payload_trans != sizeof(usb_conf_desc_t))
 			|| (uhc_dev_enum->conf_desc->bDescriptorType != USB_DT_CONFIGURATION)) {
@@ -664,6 +669,7 @@ static void uhc_enumeration_step14(
 {
 	usb_setup_req_t req;
 	bool b_conf_supported = false;
+	UNUSED(add);
 
 	if ((status != UHD_TRANS_NOERROR)
 			|| (payload_trans < sizeof(usb_conf_desc_t))
@@ -732,6 +738,7 @@ static void uhc_enumeration_step15(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
 	if ((status!=UHD_TRANS_NOERROR) || (payload_trans!=0)) {
 		for(uint8_t i = 0; i < UHC_NB_UHI; i++) {
 			uhc_uhis[i].uninstall(uhc_dev_enum);
@@ -829,6 +836,8 @@ static void uhc_setup_request_callback(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
+	UNUSED(payload_trans);
 	uhc_setup_request_finish_status = (status == UHD_TRANS_NOERROR);
 	uhc_setup_request_finish = true;
 }
@@ -994,6 +1003,7 @@ char *uhc_dev_get_string(uhc_device_t * dev, uint8_t str_id)
 	usb_str_lgid_desc_t *str_desc;
 	char *string;
 	uint8_t i;
+	UNUSED(dev);
 
 	req.bmRequestType = USB_REQ_RECIP_DEVICE|USB_REQ_TYPE_STANDARD|USB_REQ_DIR_IN;
 	req.bRequest = USB_REQ_GET_DESCRIPTOR;

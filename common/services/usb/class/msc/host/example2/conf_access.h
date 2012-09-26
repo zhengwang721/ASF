@@ -3,7 +3,7 @@
  *
  * \brief Memory access control configuration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,14 +52,14 @@
  */
 //! @{
 #define LUN_0                DISABLE //!< On-Chip Virtual Memory.
-#define LUN_1                ENABLE  //!< AT45DBX Data Flash.
+#define LUN_1                DISABLE //!< AT45DBX Data Flash.
 #define LUN_2                DISABLE //!< SD/MMC Card over SPI.
 #define LUN_3                DISABLE //!< SD/MMC Card over MCI Slot 0.
 #define LUN_4                DISABLE
 #define LUN_5                DISABLE
 #define LUN_6                DISABLE
 #define LUN_7                DISABLE
-#define LUN_USB              DISABLE //!< Host Mass-Storage Memory.
+#define LUN_USB              ENABLE  //!< Host Mass-Storage Memory.
 //! @}
 
 /*! \name LUN 0 Definitions
@@ -135,14 +135,15 @@
 //! @{
 #define MEM_USB                                 LUN_USB
 #define LUN_ID_MEM_USB                          LUN_ID_USB
-#define LUN_USB_INCLUDE                         "host_mem.h"
-#define Lun_usb_test_unit_ready(lun)            host_test_unit_ready(lun)
-#define Lun_usb_read_capacity(lun, nb_sect)     host_read_capacity(lun, nb_sect)
-#define Lun_usb_read_sector_size(lun)           host_read_sector_size(lun)
-#define Lun_usb_wr_protect(lun)                 host_wr_protect(lun)
-#define Lun_usb_removal()                       host_removal()
-#define Lun_usb_mem_2_ram(addr, ram)            host_read_10_ram(addr, ram)
-#define Lun_usb_ram_2_mem(addr, ram)            host_write_10_ram(addr, ram)
+#define LUN_USB_INCLUDE                         "uhi_msc_mem.h"
+#define Lun_usb_get_lun()                       uhi_msc_mem_get_lun()
+#define Lun_usb_test_unit_ready(lun)            uhi_msc_mem_test_unit_ready(lun)
+#define Lun_usb_read_capacity(lun, nb_sect)     uhi_msc_mem_read_capacity(lun, nb_sect)
+#define Lun_usb_read_sector_size(lun)           uhi_msc_mem_read_sector_size(lun)
+#define Lun_usb_wr_protect(lun)                 uhi_msc_mem_wr_protect(lun)
+#define Lun_usb_removal()                       uhi_msc_mem_removal()
+#define Lun_usb_mem_2_ram(addr, ram)            uhi_msc_mem_read_10_ram(addr, ram)
+#define Lun_usb_ram_2_mem(addr, ram)            uhi_msc_mem_write_10_ram(addr, ram)
 #define LUN_USB_NAME                            "\"Host Mass-Storage Memory\""
 //! @}
 
@@ -153,18 +154,21 @@
  * \warning Be careful not to waste time in order not to disturb the functions.
  */
 //! @{
-#define memory_start_read_action(nb_sectors)
-#define memory_stop_read_action()
-#define memory_start_write_action(nb_sectors)
-#define memory_stop_write_action()
-#include "ui.h"
+#define memory_start_read_action(nb_sectors)    ui_start_read()
+#define memory_stop_read_action()               ui_stop_read()
+#define memory_start_write_action(nb_sectors)   ui_start_write()
+#define memory_stop_write_action()              ui_stop_write()
+extern void ui_start_read(void);
+extern void ui_stop_read(void);
+extern void ui_start_write(void);
+extern void ui_stop_write(void);
 //! @}
 
 /*! \name Activation of Interface Features
  */
 //! @{
-#define ACCESS_USB           true  //!< MEM <-> USB interface.
-#define ACCESS_MEM_TO_RAM    false //!< MEM <-> RAM interface.
+#define ACCESS_USB           false //!< MEM <-> USB interface.
+#define ACCESS_MEM_TO_RAM    true  //!< MEM <-> RAM interface.
 #define ACCESS_STREAM        false //!< Streaming MEM <-> MEM interface.
 #define ACCESS_STREAM_RECORD false //!< Streaming MEM <-> MEM interface in record mode.
 #define ACCESS_MEM_TO_MEM    false //!< MEM <-> MEM interface.

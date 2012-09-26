@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common User Interface for USB host MSC application
+ * \brief Declaration of main function used by example
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,68 +41,17 @@
  *
  */
 
-#ifndef _UI_H_
-#define _UI_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-#include "uhc.h"
-
-//! \brief Initializes the user interface
-void ui_init(void);
-
-/*! \brief Notify that the USB mode are switched automatically.
- * This is possible only when ID pin is available.
- *
- * \param b_host_mode true, if the host mode has been selected
- */
-void ui_usb_mode_change(bool b_host_mode);
-
-/*! \brief Notify that a Vbus are changed
- * Available only in USB hardware with Vbus monitoring.
- *
- * \param b_vbus_present true, if Vbus is high.
- */
-void ui_usb_vbus_change(bool b_vbus_present);
-
-/*! \brief Notify that a Vbus error has occurred
- * Available only in USB hardware with Vbus monitoring.
- */
-void ui_usb_vbus_error(void);
+//! \brief Notify that a SOF has been sent (each 1 ms)
+void main_usb_sof_event(void);
 
 /*! \brief Notify that a USB device has been connected or disconnected.
  *
  * \param dev         Pointer on USB device information
  * \param b_present   true, if the device has been connected
  */
-void ui_usb_connection_event(uhc_device_t *dev, bool b_present);
+void main_usb_connection_event(uhc_device_t *dev, bool b_present);
 
-//! \brief Notify that a USB device or the host has wake up the USB line.
-void ui_usb_wakeup_event(void);
-
-//! \brief Notify that a SOF has been sent (each 1 ms)
-void ui_usb_sof_event(void);
-
-//! \brief Resets the status flag of the test
-void ui_test_flag_reset(void);
-
-/*! \brief Displays the result of the test
- *
- * \param b_success   true, if the test is successfull
- */
-void ui_test_finish(bool b_success);
-
-/*! \brief Notify the end of a USB device enumeration
- *
- * \param dev         Pointer on USB device information
- * \param status      Status of the USB enumeration
- */
-void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status);
-
-//! \name Callback to show the MSC read and write accesses
-//! @{
-void ui_start_read(void);
-void ui_stop_read(void);
-void ui_start_write(void);
-void ui_stop_write(void);
-//! @}
-
-#endif // _UI_H_
+#endif // _MAIN_H_

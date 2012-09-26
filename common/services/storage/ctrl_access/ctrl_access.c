@@ -374,6 +374,9 @@ bool mem_wr_protect(U8 lun)
 bool mem_removal(U8 lun)
 {
   bool removal;
+#if MAX_LUN==0
+  UNUSED(lun);
+#endif
 
   if (!Ctrl_access_lock()) return true;
 
@@ -395,6 +398,9 @@ bool mem_removal(U8 lun)
 
 const char *mem_name(U8 lun)
 {
+#if MAX_LUN==0
+  UNUSED(lun);
+#endif
   return
 #if MAX_LUN
        (lun < MAX_LUN) ? lun_desc[lun].name :
@@ -472,6 +478,9 @@ Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector)
 Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram)
 {
   Ctrl_status status;
+#if MAX_LUN==0
+  UNUSED(lun);
+#endif
 
   if (!Ctrl_access_lock()) return CTRL_FAIL;
 
@@ -496,6 +505,9 @@ Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram)
 Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram)
 {
   Ctrl_status status;
+#if MAX_LUN==0
+  UNUSED(lun);
+#endif
 
   if (!Ctrl_access_lock()) return CTRL_FAIL;
 

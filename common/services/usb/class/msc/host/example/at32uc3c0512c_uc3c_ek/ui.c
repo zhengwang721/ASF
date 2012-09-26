@@ -183,7 +183,7 @@ void ui_usb_vbus_error(void)
 {
 }
 
-void ui_usb_connection_event(bool b_present)
+void ui_usb_connection_event(uhc_device_t *dev, bool b_present)
 {
 	if (b_present) {
 		LED_On(LED1);
@@ -195,7 +195,7 @@ void ui_usb_connection_event(bool b_present)
 	LED_Off(LED3);
 }
 
-void ui_usb_enum_event(uhc_device_t * dev, uhc_enum_status_t status)
+void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
 {
 	ui_enum_status = status;
 	switch (dev->speed) {

@@ -377,6 +377,7 @@ static void uhi_msc_enable_step2(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
 	// Compute number of LUN
 	if (status == UHD_TRANS_NOERROR) {
 		if (payload_trans) {
@@ -445,6 +446,7 @@ static void uhi_msc_enable_step4(bool b_success)
  */
 static void uhi_msc_enable_step5(bool b_success)
 {
+	UNUSED(b_success);
 	// Initialize next LUN
 	uhi_msc_enable_step3();
 }
@@ -906,6 +908,9 @@ static void uhi_msc_cbw_sent(
 		iram_size_t nb_transfered)
 {
 	usb_ep_t endp;
+	UNUSED(add);
+	UNUSED(ep);
+	UNUSED(nb_transfered);
 
 	// Checks the result of CBW transfer
 	if (status != UHD_TRANS_NOERROR) {
@@ -952,6 +957,9 @@ static void uhi_msc_data_transfered(
 		iram_size_t nb_transfered)
 {
 	usb_ep_t endp;
+	UNUSED(add);
+	UNUSED(ep);
+	UNUSED(nb_transfered);
 
 	if (status != UHD_TRANS_NOERROR) {
 		if (status == UHD_TRANS_STALL) {
@@ -996,6 +1004,8 @@ static void uhi_msc_csw_received(
 		uhd_trans_status_t status,
 		iram_size_t nb_transfered)
 {
+	UNUSED(add);
+	UNUSED(ep);
 	if (status != UHD_TRANS_NOERROR) {
 		if (status == UHD_TRANS_STALL) {
 			uhi_msc_reset_endpoint(uhi_msc_dev_sel->ep_in,
@@ -1030,6 +1040,9 @@ static void uhi_msc_cbw_rst_stall(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
+	UNUSED(status);
+	UNUSED(payload_trans);
 	uhi_msc_scsi_sub_callback(false);
 }
 
@@ -1045,6 +1058,8 @@ static void uhi_msc_data_csw_rst_stall(
 		uhd_trans_status_t status,
 		uint16_t payload_trans)
 {
+	UNUSED(add);
+	UNUSED(payload_trans);
 	if (status != UHD_TRANS_NOERROR) {
 		uhi_msc_scsi_sub_callback(false);
 		return;

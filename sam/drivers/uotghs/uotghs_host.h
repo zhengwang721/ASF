@@ -383,7 +383,7 @@ static inline uint8_t uhd_get_interrupt_pipe_number(void)
 #define uhd_disable_continuous_in_mode(p)        (Clr_bits(UOTGHS->UOTGHS_HSTPIPINRQ[p], UOTGHS_HSTPIPINRQ_INMODE))
 #define Is_uhd_continuous_in_mode_enabled(p)     (Tst_bits(UOTGHS->UOTGHS_HSTPIPINRQ[p], UOTGHS_HSTPIPINRQ_INMODE))
 
-#define uhd_in_request_number(p, in_num)         (Set_bits(UOTGHS->UOTGHS_HSTPIPINRQ[p], (in_num)-1))
+#define uhd_in_request_number(p, in_num)         (Wr_bits(UOTGHS->UOTGHS_HSTPIPINRQ[p], UOTGHS_HSTPIPINRQ_INRQ_Msk, (in_num)-1))
 #define uhd_get_in_request_number(p)             (((Rd_bits(UOTGHS->UOTGHS_HSTPIPINRQ[p], UOTGHS_HSTPIPINRQ_INRQ_Msk))>>UOTGHS_HSTPIPINRQ_INRQ_Pos)+1)
 //! @}
 

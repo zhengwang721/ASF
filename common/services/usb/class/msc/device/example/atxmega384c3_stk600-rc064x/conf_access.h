@@ -174,7 +174,7 @@
 /*! \name Specific Options for Access Control
  */
 //! @{
-#define GLOBAL_WR_PROTECT    DISABLED  //!< Management of a global write protection.
+#define GLOBAL_WR_PROTECT    false  //!< Management of a global write protection.
 //! @}
 
 
