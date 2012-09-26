@@ -99,7 +99,7 @@
 		<require idref="config.services.network.tcpip.lwip.netif.slipif"/>
 		<require idref="avr32.services.network.tcpip.lwip-port"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam3x"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 	</module>
 	<select-by-config id="config.services.network.tcpip.lwip.ipv" name="config.services.network.tcpip.lwip.ipv" caption="IPv4 versus IPv6 configuration of lwIP" default="4">
@@ -125,7 +125,7 @@
 			<build type="header-file" subtype="api" value="include/ipv4/lwip/ip_frag.h"/>
 			<build type="include-path" value="include/ipv4"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.ipv#6" caption="IPv6 support in lwIP">
 			<info type="description" value="summary">
@@ -141,7 +141,7 @@
 			<build type="header-file" subtype="api" value="include/ipv6/lwip/ip_addr.h"/>
 			<build type="include-path" value="include/ipv6"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.services.network.tcpip.lwip.snmp" name="config.services.network.tcpip.lwip.snmp" caption="lwIP configuration to use SNMP or not" default="no">
@@ -150,7 +150,7 @@
 			Default lwIP configuration without SNMP support.
 			</info>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.snmp#yes" caption="lwIP configuration with SNMP enabled">
 			<info type="description" value="summary">
@@ -164,7 +164,7 @@
 			<build type="c-source" value="core/snmp/msg_out.c"/>
 			<build type="include-path" value="include"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.services.network.tcpip.lwip.netif.ppp" name="config.services.network.tcpip.lwip.netif.ppp" caption="lwIP configuration to use PPP or not" default="no">
@@ -173,7 +173,7 @@
 			Default lwIP configuration without PPP support.
 			</info>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.netif.ppp#yes" caption="lwIP configuration with PPP enabled">
 			<info type="description" value="summary">
@@ -207,7 +207,7 @@
 			<build type="header-file" subtype="api" value="netif/ppp/vj.h"/>
 			<build type="header-file" subtype="api" value="netif/ppp/vjbsdhdr.h"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.services.network.tcpip.lwip.netif.etharp" name="config.services.network.tcpip.lwip.netif.etharp" caption="lwIP configuration to use ARP over Ethernet or not" default="yes">
@@ -216,14 +216,14 @@
 			lwIP configuration without ARP-over-ethernet support.
 			</info>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.netif.etharp#yes" caption="lwIP configuration with ARP enabled">
 			<info type="description" value="summary">
 			Default lwIP configuration with ARP-over-ethernet support.
 			</info>
 			<build type="c-source" value="netif/etharp.c"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 			<device-support value="uc3"/>
 		</module>
 	</select-by-config>
@@ -232,7 +232,7 @@
 			<info type="description" value="summary">
 			Default lwIP configuration without the loopback interface support.
 			</info>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 			<device-support value="uc3"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.netif.loopif#yes" caption="lwIP configuration with loopback interface enabled">
@@ -240,7 +240,7 @@
 			lwIP configuration with the loopback interface support.
 			</info>
 			<build type="c-source" value="netif/loopif.c"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 			<device-support value="uc3"/>
 		</module>
 	</select-by-config>
@@ -250,7 +250,7 @@
 			Default lwIP configuration without support for the SLIP protocol.
 			</info>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 		<module type="meta" id="config.services.network.tcpip.lwip.netif.slipif#yes" caption="lwIP configuration with SLIP enabled">
 			<info type="description" value="summary">
@@ -260,7 +260,7 @@
 			<build type="header-file" subtype="api" value="include/netif/slipif.h"/>
 			<build type="include-path" value="include"/>
 			<device-support value="uc3"/>
-			<device-support value="sam"/>
+			<device-support value="sam3x"/>
 		</module>
 	</select-by-config>
 </asf>
