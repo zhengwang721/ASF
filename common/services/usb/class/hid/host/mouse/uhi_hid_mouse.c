@@ -223,6 +223,7 @@ static void uhi_hid_mouse_report_reception(
 {
 	uint8_t state_prev;
 	uint8_t state_new;
+	UNUSED(ep);
 
 	if ((status != UHD_TRANS_NOERROR) || (nb_transfered < 4)) {
 		return; // HID mouse transfer aborted

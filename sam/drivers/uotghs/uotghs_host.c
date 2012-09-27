@@ -63,6 +63,47 @@
 # define UHD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
 #endif
 
+#define USB_HOST_MAX_EP  9
+#define UHD_PIPE_USED(pipe)      (USB_HOST_MAX_EP >= pipe)
+
+#if (     (UHD_PIPE_USED( 1) && Is_uhd_pipe_dma_supported( 1)) \
+	||(UHD_PIPE_USED( 2) && Is_uhd_pipe_dma_supported( 2)) \
+	||(UHD_PIPE_USED( 3) && Is_uhd_pipe_dma_supported( 3)) \
+	||(UHD_PIPE_USED( 4) && Is_uhd_pipe_dma_supported( 4)) \
+	||(UHD_PIPE_USED( 5) && Is_uhd_pipe_dma_supported( 5)) \
+	||(UHD_PIPE_USED( 6) && Is_uhd_pipe_dma_supported( 6)) \
+	||(UHD_PIPE_USED( 7) && Is_uhd_pipe_dma_supported( 7)) \
+	||(UHD_PIPE_USED( 8) && Is_uhd_pipe_dma_supported( 8)) \
+	||(UHD_PIPE_USED( 9) && Is_uhd_pipe_dma_supported( 9)) \
+	||(UHD_PIPE_USED(10) && Is_uhd_pipe_dma_supported(10)) \
+	||(UHD_PIPE_USED(11) && Is_uhd_pipe_dma_supported(11)) \
+	||(UHD_PIPE_USED(12) && Is_uhd_pipe_dma_supported(12)) \
+	||(UHD_PIPE_USED(13) && Is_uhd_pipe_dma_supported(13)) \
+	||(UHD_PIPE_USED(14) && Is_uhd_pipe_dma_supported(14)) \
+	||(UHD_PIPE_USED(15) && Is_uhd_pipe_dma_supported(15)) \
+	)
+# define UHD_PIPE_DMA_SUPPORTED
+#endif
+
+#if (     (UHD_PIPE_USED( 1) && !Is_uhd_pipe_dma_supported( 1)) \
+	||(UHD_PIPE_USED( 2) && !Is_uhd_pipe_dma_supported( 2)) \
+	||(UHD_PIPE_USED( 3) && !Is_uhd_pipe_dma_supported( 3)) \
+	||(UHD_PIPE_USED( 4) && !Is_uhd_pipe_dma_supported( 4)) \
+	||(UHD_PIPE_USED( 5) && !Is_uhd_pipe_dma_supported( 5)) \
+	||(UHD_PIPE_USED( 6) && !Is_uhd_pipe_dma_supported( 6)) \
+	||(UHD_PIPE_USED( 7) && !Is_uhd_pipe_dma_supported( 7)) \
+	||(UHD_PIPE_USED( 8) && !Is_uhd_pipe_dma_supported( 8)) \
+	||(UHD_PIPE_USED( 9) && !Is_uhd_pipe_dma_supported( 9)) \
+	||(UHD_PIPE_USED(10) && !Is_uhd_pipe_dma_supported(10)) \
+	||(UHD_PIPE_USED(11) && !Is_uhd_pipe_dma_supported(11)) \
+	||(UHD_PIPE_USED(12) && !Is_uhd_pipe_dma_supported(12)) \
+	||(UHD_PIPE_USED(13) && !Is_uhd_pipe_dma_supported(13)) \
+	||(UHD_PIPE_USED(14) && !Is_uhd_pipe_dma_supported(14)) \
+	||(UHD_PIPE_USED(15) && !Is_uhd_pipe_dma_supported(15)) \
+	)
+# define UHD_PIPE_FIFO_SUPPORTED
+#endif
+
 #ifdef UDD_ENABLE
 // Dual (device/host) mode enabled
 extern void udd_interrupt(void);
@@ -317,6 +358,8 @@ typedef struct {
 	uint16_t busy:1;
 	//! A short packet is requested for this job on endpoint IN
 	uint16_t b_shortpacket:1;
+	//! Periodic packet start for this job
+	uint16_t b_periodic_start:1;
 } uhd_pipe_job_t;
 
 //! Array to register a job on bulk/interrupt/isochronous endpoint
@@ -325,7 +368,7 @@ static uhd_pipe_job_t uhd_pipe_job[UOTGHS_EPT_NUM - 1];
 //! Variables to manage the suspend/resume sequence
 static uint8_t uhd_suspend_start;
 static uint8_t uhd_resume_start;
-static uint8_t uhd_pipes_unfreeze;
+static uint16_t uhd_pipes_unfreeze;
 
 //@}
 
@@ -339,11 +382,18 @@ static void uhd_ctrl_phase_zlp_in(void);
 static void uhd_ctrl_phase_data_out(void);
 static void uhd_ctrl_phase_zlp_out(void);
 static void uhd_ctrl_request_end(uhd_trans_status_t status);
-
 static uhd_trans_status_t uhd_pipe_get_error(uint8_t pipe);
 static uint8_t uhd_get_pipe(usb_add_t add, usb_ep_t endp);
+
+#ifdef UHD_PIPE_FIFO_SUPPORTED
+static void uhd_pipe_out_ready(uint8_t pipe);
+static void uhd_pipe_in_received(uint8_t pipe);
+#endif
+#ifdef UHD_PIPE_DMA_SUPPORTED
 static void uhd_pipe_trans_complet(uint8_t pipe);
 static void uhd_pipe_interrupt_dma(uint8_t pipe);
+#endif
+
 static void uhd_pipe_interrupt(uint8_t pipe);
 static void uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status);
 static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
@@ -875,8 +925,7 @@ bool uhd_setup_request(
 	return true;
 }
 
-bool uhd_ep_run(
-		usb_add_t add,
+bool uhd_ep_run(usb_add_t add,
 		usb_ep_t endp,
 		bool b_shortpacket,
 		uint8_t *buf,
@@ -892,6 +941,9 @@ bool uhd_ep_run(
 	if (pipe == UOTGHS_EPT_NUM) {
 		return false; // pipe not found
 	}
+#ifdef UHD_PIPE_FIFO_SUPPORTED
+	bool b_pipe_in = uhd_is_pipe_in(pipe);
+#endif
 
 	// Get job about pipe
 	ptr_job = &uhd_pipe_job[pipe-1];
@@ -909,10 +961,38 @@ bool uhd_ep_run(
 	ptr_job->timeout = timeout;
 	ptr_job->b_shortpacket = b_shortpacket;
 	ptr_job->call_end = callback;
+	if ((Is_uhd_pipe_int(pipe) || Is_uhd_pipe_iso(pipe))
+			&& (Is_uhd_pipe_out(pipe))) {
+		ptr_job->b_periodic_start = true;
+	}
 	cpu_irq_restore(flags);
 
+#ifdef UHD_PIPE_FIFO_SUPPORTED
+	// No DMA support
+	if (!Is_uhd_pipe_dma_supported(pipe)) {
+		flags = cpu_irq_save();
+		uhd_disable_pipe_bank_autoswitch(pipe);
+		uhd_unfreeze_pipe(pipe);
+		if (b_pipe_in) {
+			uhd_enable_continuous_in_mode(pipe);
+			uhd_enable_in_received_interrupt(pipe);
+			if (b_shortpacket) {
+				uhd_enable_short_packet_interrupt(pipe);
+			}
+		} else {
+			uhd_disable_bank_interrupt(pipe);
+			uhd_enable_out_ready_interrupt(pipe);
+		}
+		uhd_enable_pipe_interrupt(pipe);
+		cpu_irq_restore(flags);
+		return true;
+	}
+#endif // UHD_PIPE_FIFO_SUPPORTED
+
+#ifdef UHD_PIPE_DMA_SUPPORTED
 	// Request first transfer
 	uhd_pipe_trans_complet(pipe);
+#endif
 	return true;
 }
 
@@ -987,12 +1067,14 @@ static void uhd_interrupt(void)
 		uhd_pipe_interrupt(pipe_int);
 		return;
 	}
+#ifdef UHD_PIPE_DMA_SUPPORTED
 	pipe_int = uhd_get_pipe_dma_interrupt_number();
 	if (pipe_int != UOTGHS_EPT_NUM) {
 		// Interrupt DMA acked by bulk/interrupt/isochronous endpoint
 		uhd_pipe_interrupt_dma(pipe_int);
 		return;
 	}
+#endif
 	// USB bus reset detection
 	if (Is_uhd_reset_sent()) {
 		uhd_ack_reset_sent();
@@ -1213,6 +1295,10 @@ static void uhd_sof_interrupt(void)
 					// Abort job
 					uhd_ep_abort_pipe(pipe,UHD_TRANS_TIMEOUT);
 				}
+			}
+			if (ptr_job->b_periodic_start) {
+				ptr_job->b_periodic_start = false;
+				uhd_unfreeze_pipe(pipe);
 			}
 		}
 	}
@@ -1616,6 +1702,108 @@ static uint8_t uhd_get_pipe(usb_add_t add, usb_ep_t endp)
 	return pipe;
 }
 
+#ifdef UHD_PIPE_FIFO_SUPPORTED
+/**
+ * \internal
+ */
+static void uhd_pipe_in_received(uint8_t pipe)
+{
+	uhd_pipe_job_t *ptr_job = &uhd_pipe_job[pipe - 1];
+	uint32_t nb_data = 0, i;
+	uint32_t nb_remain = ptr_job->buf_size - ptr_job->nb_trans;
+	uint32_t pkt_size = uhd_get_pipe_size(pipe);
+	uint8_t *ptr_src = (uint8_t *) & uhd_get_pipe_fifo_access(pipe, 8);
+	uint8_t *ptr_dst = &ptr_job->buf[ptr_job->nb_trans];
+	bool b_full = false, b_short = false;
+
+	if (!ptr_job->busy) {
+		return; // No job is running, then ignore it (system error)
+	}
+
+	// Read byte count
+	nb_data = uhd_byte_count(pipe);
+	if (nb_data < pkt_size) {
+		b_short = true;
+	}
+	// Copy data if there is
+	if (nb_data > 0) {
+		if (nb_data >= nb_remain) {
+			nb_data = nb_remain;
+			b_full = true;
+		}
+		// Modify job information
+		ptr_job->nb_trans += nb_data;
+		// Copy FIFO to buffer
+		for (i = 0; i < nb_data; i++) {
+			*ptr_dst++ = *ptr_src++;
+		}
+	}
+	// Clear FIFO Status
+	uhd_ack_fifocon(pipe);
+	// Finish job on error or short packet
+	if (b_full || b_short) {
+		uhd_freeze_pipe(pipe);
+		uhd_disable_short_packet_interrupt(pipe);
+		uhd_disable_in_received_interrupt(pipe);
+		uhd_disable_pipe_interrupt(pipe);
+		uhd_disable_continuous_in_mode(pipe);
+		uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+	}
+}
+
+/**
+ * \internal
+ */
+static void uhd_pipe_out_ready(uint8_t pipe)
+{
+	uhd_pipe_job_t *ptr_job = &uhd_pipe_job[pipe - 1];
+	uint32_t pkt_size = uhd_get_pipe_size(pipe);
+	uint32_t nb_data = 0, i;
+	uint32_t nb_remain;
+	uint8_t *ptr_src;
+	uint8_t *ptr_dst;
+
+	if (!ptr_job->busy) {
+		return; // No job is running, then ignore it (system error)
+	}
+
+	// Transfer data
+	uhd_ack_out_ready(pipe);
+
+	nb_remain = ptr_job->buf_size - ptr_job->nb_trans;
+	nb_data = min(nb_remain, pkt_size);
+
+	// If not ZLP, fill FIFO
+	if (nb_data) {
+		// Fill FIFO
+		ptr_dst = (uint8_t *) & uhd_get_pipe_fifo_access(pipe, 8);
+		ptr_src = &ptr_job->buf[ptr_job->nb_trans];
+		// Modify job information
+		ptr_job->nb_trans += nb_data;
+	
+		// Copy buffer to FIFO
+		for (i = 0; i < nb_data; i++) {
+			*ptr_dst++ = *ptr_src++;
+		}
+	}
+	// Switch to next bank
+	uhd_ack_fifocon(pipe);
+	// ZLP is cleared if last packet is short
+	if (nb_data < pkt_size) {
+		ptr_job->b_shortpacket = false;
+	}
+	// All transfer done, including ZLP, Finish Job
+	if (ptr_job->nb_trans >= ptr_job->buf_size && !ptr_job->b_shortpacket) {
+		// At least one bank there, wait to freeze pipe
+		uhd_disable_out_ready_interrupt(pipe);
+		uhd_enable_bank_interrupt(pipe);
+		return;
+	}
+}
+
+#endif // #ifdef UHD_PIPE_FIFO_SUPPORTED
+
+#ifdef UHD_PIPE_DMA_SUPPORTED
 /**
  * \internal
  * \brief Computes and starts the next transfer on a pipe
@@ -1641,7 +1829,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		// Need to send or receive other data
 		next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 		max_trans = UHD_PIPE_MAX_TRANS;
-		if (uhd_is_pipe_in(pipe)) {
+		if (Is_uhd_pipe_in(pipe)) {
 			// 256 is the maximum of IN requests via UPINRQ
 			if ((256L*uhd_get_pipe_size(pipe))<UHD_PIPE_MAX_TRANS) {
 				max_trans = 256L * uhd_get_pipe_size(pipe);
@@ -1688,13 +1876,23 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		flags = cpu_irq_save();
 		if (!(uhd_pipe_dma_get_status(pipe)
 				& UOTGHS_HSTDMASTATUS_END_TR_ST)) {
-			if (uhd_is_pipe_in(pipe)) {
+			if (Is_uhd_pipe_in(pipe)) {
 				uint32_t pipe_size = uhd_get_pipe_size(pipe);
 				uhd_in_request_number(pipe,
 					(next_trans + pipe_size-1) / pipe_size);
 			}
-			uhd_disable_bank_interrupt(pipe);
-			uhd_unfreeze_pipe(pipe);
+			if (!ptr_job->b_periodic_start) {
+				uhd_disable_bank_interrupt(pipe);
+				uhd_unfreeze_pipe(pipe);
+			} else {
+				// Last bank not sent, just start
+				if (Is_uhd_bank_interrupt_enabled(pipe)) {
+					uhd_disable_bank_interrupt(pipe);
+					uhd_unfreeze_pipe(pipe);
+				} else {
+					// Wait SOF to start
+				}
+			}
 			uhd_pipe_dma_set_control(pipe, uhd_dma_ctrl);
 			ptr_job->nb_trans += next_trans;
 			cpu_irq_restore(flags);
@@ -1758,6 +1956,11 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
 		// Wait that all banks are free to freeze clock of OUT endpoint
 		// and call callback
 		uhd_enable_bank_interrupt(pipe);
+
+		// For ISO out, start another DMA transfer since no ACK needed
+		if (Is_uhd_pipe_iso(pipe)) {
+			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		}
 	} else {
 		if (!Is_uhd_pipe_frozen(pipe)) {
 			// Pipe is not freeze in case of :
@@ -1778,6 +1981,7 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
 		uhd_pipe_trans_complet(pipe);
 	}
 }
+#endif // ifdef UHD_PIPE_DMA_SUPPORTED
 
 /**
  * \internal
@@ -1791,9 +1995,64 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
  */
 static void uhd_pipe_interrupt(uint8_t pipe)
 {
+#ifdef UHD_PIPE_FIFO_SUPPORTED
+	// for none DMA endpoints
+	if (!Is_uhd_pipe_dma_supported(pipe)) {
+		// SHORTPACKETI: Short received
+		if (Is_uhd_short_packet_interrupt_enabled(pipe)
+				&& Is_uhd_short_packet(pipe)) {
+			uhd_ack_short_packet(pipe);
+			uhd_pipe_in_received(pipe);
+			return;
+		}
+		// RXIN: Full packet received
+		if (Is_uhd_in_received_interrupt_enabled(pipe)
+				&& Is_uhd_in_received(pipe)) {
+			uhd_ack_in_received(pipe);
+			uhd_pipe_in_received(pipe);
+			return;
+		}
+		// TXOUT: packet sent
+		if (Is_uhd_out_ready_interrupt_enabled(pipe)
+				&& Is_uhd_out_ready(pipe)) {
+			uhd_pipe_out_ready(pipe);
+			return;
+		}
+		// OUT: all banks sent
+		if (Is_uhd_bank_interrupt_enabled(pipe)
+				&& (0==uhd_nb_busy_bank(pipe))) {
+			uhd_freeze_pipe(pipe);
+			uhd_disable_bank_interrupt(pipe);
+			uhd_disable_pipe_interrupt(pipe);
+			uhd_enable_pipe_bank_autoswitch(pipe);
+			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+			return;
+		}
+		if (Is_uhd_stall(pipe)) {
+			uhd_ack_stall(pipe);
+			uhd_reset_data_toggle(pipe);
+			uhd_ep_abort_pipe(pipe, UHD_TRANS_STALL);
+			return;
+		}
+		if (Is_uhd_pipe_error(pipe)) {
+			// Get and ack error
+			uhd_ep_abort_pipe(pipe, uhd_pipe_get_error(pipe));
+			return;
+		}
+		Assert(false); // Error system
+		return;
+	}
+#endif // UDD_EP_FIFO_SUPPORTED
+
+#ifdef UHD_PIPE_DMA_SUPPORTED
+	// for DMA endpoints
 	if (Is_uhd_bank_interrupt_enabled(pipe) && (0==uhd_nb_busy_bank(pipe))) {
+		uhd_freeze_pipe(pipe);
 		uhd_disable_bank_interrupt(pipe);
-		uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		// For ISO, no ACK, finished when DMA done
+		if (!Is_uhd_pipe_iso(pipe)) {
+			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		}
 		return;
 	}
 	if (Is_uhd_out_ready_interrupt_enabled(pipe) && Is_uhd_out_ready(pipe)) {
@@ -1817,6 +2076,7 @@ static void uhd_pipe_interrupt(uint8_t pipe)
 		return;
 	}
 	Assert(false); // Error system
+#endif // UHD_PIPE_DMA_SUPPORTED
 }
 
 /**
@@ -1835,9 +2095,12 @@ static void uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status)
 	uhd_enable_pipe_bank_autoswitch(pipe);
 	uhd_enable_stall_interrupt(pipe);
 	uhd_enable_pipe_error_interrupt(pipe);
-
 	uhd_disable_out_ready_interrupt(pipe);
-	uhd_pipe_dma_set_control(pipe, 0);
+#ifdef UHD_PIPE_DMA_SUPPORTED
+	if (Is_uhd_pipe_dma_supported(pipe)) {
+		uhd_pipe_dma_set_control(pipe, 0);
+	}
+#endif
 	uhd_pipe_finish_job(pipe, status);
 }
 

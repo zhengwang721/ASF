@@ -428,6 +428,7 @@ void uhi_cdc_sof(bool b_micro)
 {
 	uint8_t port = 0;
 	uhi_cdc_port_t *ptr_port;
+	UNUSED(b_micro);
 
 	if (uhi_cdc_dev.dev == NULL) {
 		return; // No interface to installed
@@ -615,6 +616,7 @@ static void uhi_cdc_rx_received(
 	uhi_cdc_port_t *ptr_port;
 	uhi_cdc_line_t *line;
 	uhi_cdc_buf_t *buf;
+	UNUSED(add);
 
 	if (UHD_TRANS_NOERROR != status) {
 		// Abort transfer
@@ -712,6 +714,7 @@ static void uhi_cdc_tx_send(
 	uhi_cdc_port_t *ptr_port;
 	uhi_cdc_line_t *line;
 	uhi_cdc_buf_t *buf;
+	UNUSED(add);
 
 	if (UHD_TRANS_NOERROR != status) {
 		// Abort transfer

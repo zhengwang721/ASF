@@ -3,7 +3,7 @@
  *
  * \brief AVR UC3 IISC drivers
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,34 +68,36 @@ enum iisc_mode {
 /**
  * \brief IISC configuration struct
  */
-typedef struct
-{
-  //!  Mode I2S-mode \n
-  //!   - \ref IISC_MODE_MASTER Two output channels.\n
-  //!   - \ref IISC_MODE_SLAVE Two output channels sampled with an external
-  //!   clock received from the RX_CLOCK line.\n
-  //!   - \ref IISC_MODE_TDM_MASTER TDM Master Mode.\n
-  //!   - \ref IISC_MODE_TDM_SLAVE TDM Slave Mode.\n
-  enum iisc_mode mode;
-  //!  Option Parameter \n
-  //!   - \ref IISC_DATALENGTH \n
-  //!   - \ref IISC_OVERSAMPLING \n
-  //!   - \ref IISC_TXDMA_MULTIPLE, \ref  IISC_TXDMA_SINGLE, \ref  IISC_RXDMA_MULTIPLE,
-  //!     \ref IISC_TXDMA_SINGLE \n
-  //!   - \ref IISC_FORMAT_TDM_LJ
-  //!   - \ref IISC_FORMAT_LJ
-  unsigned int option;
-  //!  Number of TX Channels \n
-  unsigned int num_tx_channels;
-  //!  Number of RX Channels \n
-  unsigned int num_rx_channels;
+typedef struct {
+	//!  Mode I2S-mode \n
+	//!   - \ref IISC_MODE_MASTER Two output channels.\n
+	//!   - \ref IISC_MODE_SLAVE Two output channels sampled with an external
+	//!   clock received from the RX_CLOCK line.\n
+	//!   - \ref IISC_MODE_TDM_MASTER TDM Master Mode.\n
+	//!   - \ref IISC_MODE_TDM_SLAVE TDM Slave Mode.\n
+	enum iisc_mode mode;
+
+	//!  Option Parameter \n
+	//!   - \ref IISC_DATALENGTH \n
+	//!   - \ref IISC_OVERSAMPLING \n
+	//!   - \ref IISC_TXDMA_MULTIPLE, \ref  IISC_TXDMA_SINGLE, \ref  IISC_RXDMA_MULTIPLE,
+	//!     \ref IISC_TXDMA_SINGLE \n
+	//!   - \ref IISC_FORMAT_TDM_LJ
+	//!   - \ref IISC_FORMAT_LJ
+	unsigned int option;
+
+	//!  Number of TX Channels \n
+	unsigned int num_tx_channels;
+
+	//!  Number of RX Channels \n
+	unsigned int num_rx_channels;
 } iisc_opt_t;
 
 /**
  * ! \brief IISC data length configuration macro
  */
 #define IISC_DATALENGTH(x) (AVR32_IISC_MR_DATALENGTH##x \
-	<< AVR32_IISC_MR_DATALENGTH_OFFSET)
+		<< AVR32_IISC_MR_DATALENGTH_OFFSET)
 //! @{
 //!< Set datalength to 32 bits
 #define IISC_DATALENGTH_32  (IISC_DATALENGTH(_32) )
@@ -120,35 +122,35 @@ typedef struct
 /*! \name IISC oversampling frequency
  */
 #define IISC_OVERSAMPLING(x) (AVR32_IISC_MR_IMCKFS##x \
-	<< AVR32_IISC_MR_IMCKFS_OFFSET)
+		<< AVR32_IISC_MR_IMCKFS_OFFSET)
 //! @{
-#define IISC_OVERSAMPLING_x16   (IISC_OVERSAMPLING(_16)  )	//!< x16
-#define IISC_OVERSAMPLING_x32   (IISC_OVERSAMPLING(_32)  )	//!< x32
-#define IISC_OVERSAMPLING_x64   (IISC_OVERSAMPLING(_64)  )	//!< x64
-#define IISC_OVERSAMPLING_x128  (IISC_OVERSAMPLING(_128) )	//!< x128
-#define IISC_OVERSAMPLING_x256  (IISC_OVERSAMPLING(_256) )	//!< x256
-#define IISC_OVERSAMPLING_x384  (IISC_OVERSAMPLING(_384) )	//!< x384
-#define IISC_OVERSAMPLING_x512  (IISC_OVERSAMPLING(_512) )	//!< x512
-#define IISC_OVERSAMPLING_x768  (IISC_OVERSAMPLING(_768) )	//!< x768
-#define IISC_OVERSAMPLING_x1024 (IISC_OVERSAMPLING(_1024))	//!< x1024
+#define IISC_OVERSAMPLING_x16   (IISC_OVERSAMPLING(_16)  )    //!< x16
+#define IISC_OVERSAMPLING_x32   (IISC_OVERSAMPLING(_32)  )    //!< x32
+#define IISC_OVERSAMPLING_x64   (IISC_OVERSAMPLING(_64)  )    //!< x64
+#define IISC_OVERSAMPLING_x128  (IISC_OVERSAMPLING(_128) )    //!< x128
+#define IISC_OVERSAMPLING_x256  (IISC_OVERSAMPLING(_256) )    //!< x256
+#define IISC_OVERSAMPLING_x384  (IISC_OVERSAMPLING(_384) )    //!< x384
+#define IISC_OVERSAMPLING_x512  (IISC_OVERSAMPLING(_512) )    //!< x512
+#define IISC_OVERSAMPLING_x768  (IISC_OVERSAMPLING(_768) )    //!< x768
+#define IISC_OVERSAMPLING_x1024 (IISC_OVERSAMPLING(_1024))    //!< x1024
 //! @}
 
 /*! \name IISC dma configuration
  */
 #define IISC_TXDMA_MULTIPLE  (AVR32_IISC_MR_TXDMA_MULTIPLE << \
-	AVR32_IISC_MR_TXDMA_OFFSET)
+		AVR32_IISC_MR_TXDMA_OFFSET)
 #define IISC_TXDMA_SINGLE    (AVR32_IISC_MR_TXDMA_SINGLE << \
-	AVR32_IISC_MR_TXDMA_OFFSET)
+		AVR32_IISC_MR_TXDMA_OFFSET)
 #define IISC_RXDMA_MULTIPLE  (AVR32_IISC_MR_RXDMA_MULTIPLE << \
-	AVR32_IISC_MR_RXDMA_OFFSET)
+		AVR32_IISC_MR_RXDMA_OFFSET)
 #define IISC_RXDMA_SINGLE    (AVR32_IISC_MR_RXDMA_SINGLE << \
-	AVR32_IISC_MR_RXDMA_OFFSET)
+		AVR32_IISC_MR_RXDMA_OFFSET)
 //! @}
 
 /*! \name IISC Format Configuration
  */
-#define IISC_FORMAT_LJ		AVR32_IISC_MR_FORMAT_LJ
-#define IISC_FORMAT_TDM_LJ	AVR32_IISC_MR_FORMAT_TDM_LJ
+#define IISC_FORMAT_LJ          AVR32_IISC_MR_FORMAT_LJ
+#define IISC_FORMAT_TDM_LJ      AVR32_IISC_MR_FORMAT_TDM_LJ
 //! @}
 
 /*! \brief Resets the IISC module
@@ -196,20 +198,20 @@ static inline void iisc_disable_reception(volatile avr32_iisc_t *iisc)
 	iisc->cr = AVR32_IISC_CR_RXDIS_MASK;
 }
 
-/*! \brief Enable the IISC module in master mode
+/*! \brief Enable the clocks for the IISC module
  *
  *  \param iisc pointer to the correct volatile avr32_iisc_t struct
  */
-static inline void iisc_enable_master(volatile avr32_iisc_t *iisc)
+static inline void iisc_enable_clocks(volatile avr32_iisc_t *iisc)
 {
 	iisc->cr = AVR32_IISC_CKEN_MASK;
 }
 
-/*! \brief Enable the IISC module in slave mode
+/*! \brief Disable the clocks for the IISC module
  *
  *  \param iisc pointer to the correct volatile avr32_iisc_t struct
  */
-static inline void iisc_enable_slave(volatile avr32_iisc_t *iisc)
+static inline void iisc_disable_clocks(volatile avr32_iisc_t *iisc)
 {
 	iisc->cr = AVR32_IISC_CKDIS_MASK;
 }
@@ -218,8 +220,7 @@ void iisc_enable(volatile avr32_iisc_t *iisc);
 
 void iisc_disable(volatile avr32_iisc_t *iisc);
 
-status_code_t iisc_init(volatile avr32_iisc_t *iisc,
-		iisc_opt_t iisc_opt);
+status_code_t iisc_init(volatile avr32_iisc_t *iisc, iisc_opt_t iisc_opt);
 
 status_code_t iisc_write(volatile avr32_iisc_t *iisc, uint32_t data);
 
