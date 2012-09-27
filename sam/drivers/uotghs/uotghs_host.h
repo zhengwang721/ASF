@@ -65,6 +65,14 @@ extern "C" {
 //! Get maximal number of endpoints
 #define uhd_get_pipe_max_nbr()                (9)
 #define UOTGHS_EPT_NUM                        (uhd_get_pipe_max_nbr()+1)
+  //! Get maximal number of banks of endpoints
+#define uhd_get_pipe_bank_max_nbr(ep)         ((ep == 0) ? 1 : (( ep <= 2) ? 3 : 2))
+  //! Get maximal size of endpoint (3X, 1024/64)
+#define uhd_get_pipe_size_max(ep)             (((ep) == 0) ? 64 : 1024)
+  //! Get DMA support of endpoints
+#define Is_uhd_pipe_dma_supported(ep)         ((((ep) >= 1) && ((ep) <= 6)) ? true : false)
+  //! Get High Band Width support of endpoints
+#define Is_uhd_pipe_high_bw_supported(ep)     (((ep) >= 2) ? true : false)
 //! @}
 
 //! @name Host Vbus line control
@@ -219,10 +227,10 @@ extern "C" {
 #define Is_uhd_pipe_enabled(p) \
 		(Tst_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PEN0 << (p)))
 #define uhd_reset_pipe(p) \
-		(Set_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PEN0 << (p))); \
-		(Clr_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PEN0 << (p)))
+		(Set_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PRST0 << (p))); \
+		(Clr_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PRST0 << (p)))
 #define Is_uhd_resetting_pipe(p) \
-		(Tst_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PEN0 << (p)))
+		(Tst_bits(UOTGHS->UOTGHS_HSTPIP, UOTGHS_HSTPIP_PRST0 << (p)))
 #define uhd_freeze_pipe(p)                       (UOTGHS->UOTGHS_HSTPIPIER[p] = UOTGHS_HSTPIPIER_PFREEZES)
 #define uhd_unfreeze_pipe(p)                     (UOTGHS->UOTGHS_HSTPIPIDR[p] = UOTGHS_HSTPIPIDR_PFREEZEC)
 #define Is_uhd_pipe_frozen(p)                    (Tst_bits(UOTGHS->UOTGHS_HSTPIPIMR[p], UOTGHS_HSTPIPIMR_PFREEZE))
@@ -341,9 +349,9 @@ static inline uint8_t uhd_get_interrupt_pipe_number(void)
 #define uhd_nb_busy_bank(p)                      (Rd_bits(UOTGHS->UOTGHS_HSTPIPISR[p], UOTGHS_HSTPIPISR_NBUSYBK_Msk))
 #define uhd_current_bank(p)                      (Rd_bits(UOTGHS->UOTGHS_HSTPIPISR[p], UOTGHS_HSTPIPISR_CURRBK_Msk))
 
-#define uhd_enable_short_packet_interrupt(p)     (UOTGHS->UOTGHS_HSTPIPIER[p] = UOTGHS_HSTPIPIER_SHORTPACKETES)
+#define uhd_enable_short_packet_interrupt(p)     (UOTGHS->UOTGHS_HSTPIPIER[p] = UOTGHS_HSTPIPIER_SHORTPACKETIES)
 #define uhd_disable_short_packet_interrupt(p)    (UOTGHS->UOTGHS_HSTPIPIDR[p] = UOTGHS_HSTPIPIDR_SHORTPACKETIEC)
-#define Is_uhd_short_packet_interrupt_enabled(p) (Tst_bits(UOTGHS->UOTGHS_HSTPIPIMR[p], UOTGHS_HSTPIPIMR_SHORTPACKETIE)))
+#define Is_uhd_short_packet_interrupt_enabled(p) (Tst_bits(UOTGHS->UOTGHS_HSTPIPIMR[p], UOTGHS_HSTPIPIMR_SHORTPACKETIE))
 #define uhd_ack_short_packet(p)                  (UOTGHS->UOTGHS_HSTPIPICR[p] = UOTGHS_HSTPIPICR_SHORTPACKETIC)
 #define Is_uhd_short_packet(p)                   (Tst_bits(UOTGHS->UOTGHS_HSTPIPISR[p], UOTGHS_HSTPIPISR_SHORTPACKETI))
 #define uhd_byte_count(p)                        (Rd_bitfield(UOTGHS->UOTGHS_HSTPIPISR[p], UOTGHS_HSTPIPISR_PBYCT_Msk))
