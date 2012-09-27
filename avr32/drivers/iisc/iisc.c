@@ -3,7 +3,7 @@
  *
  * \brief AVR UC3 IISC drivers
  *
- * Copyright (c) 2010 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,12 +55,6 @@ bool tx_is_enabled = false;
  */
 bool rx_is_enabled = false;
 
-/**
- * \internal
- * \brief IISC Master Mode Enable
- */
-bool is_master = false;
-
 /*! \brief Sets up registers and initializes IISC for use as I2S.
  *
  *  \param iisc Pointer to the correct volatile avr32_iisc_t struct
@@ -78,10 +72,8 @@ status_code_t iisc_init(volatile avr32_iisc_t *iisc,
 
 	// In case IISC Master or IISC Slave Mode is selected
 	if ((iisc_opt.mode == IISC_MODE_MASTER) ||
-	(iisc_opt.mode == IISC_MODE_SLAVE)) {
-		mr = (AVR32_IISC_MR_IMCKMODE_IMCK <<
-				AVR32_IISC_MR_IMCKMODE_OFFSET)
-				| (AVR32_IISC_MR_TXSAME_SAME <<
+			(iisc_opt.mode == IISC_MODE_SLAVE)) {
+		mr = (AVR32_IISC_MR_TXSAME_SAME <<
 				AVR32_IISC_MR_TXSAME_OFFSET)
 				| (AVR32_IISC_MR_TXDMA_SINGLE <<
 				AVR32_IISC_MR_TXDMA_OFFSET)
@@ -93,39 +85,38 @@ status_code_t iisc_init(volatile avr32_iisc_t *iisc,
 				AVR32_IISC_NBCHAN_OFFSET)
 				| iisc_opt.option;
 		if (iisc_opt.mode == IISC_MODE_MASTER) {
-			is_master = true, mr |=
-					(AVR32_IISC_MR_MODE_MASTER <<
+			mr |= (AVR32_IISC_MR_IMCKMODE_IMCK <<
+					AVR32_IISC_MR_IMCKMODE_OFFSET);
+			mr |= (AVR32_IISC_MR_MODE_MASTER <<
 					AVR32_IISC_MR_MODE_OFFSET);
-		}else {
-			is_master = false;
 		}
 		switch (iisc_opt.num_tx_channels) {
-			case 1:
-				tx_is_enabled = true;
-				mr |= AVR32_IISC_MR_TXMONO_MONO << AVR32_IISC_MR_TXMONO_OFFSET;
-				break;
-			case 2:
-				tx_is_enabled = true;
-				mr &= ~ AVR32_IISC_MR_TXMONO_MASK;
-				mr |= AVR32_IISC_MR_TXMONO_STEREO << AVR32_IISC_MR_TXMONO_OFFSET;
-				break;
-			default:
-				tx_is_enabled = false;
-				break;
+		case 1:
+			tx_is_enabled = true;
+			mr |= AVR32_IISC_MR_TXMONO_MONO << AVR32_IISC_MR_TXMONO_OFFSET;
+			break;
+		case 2:
+			tx_is_enabled = true;
+			mr &= ~ AVR32_IISC_MR_TXMONO_MASK;
+			mr |= AVR32_IISC_MR_TXMONO_STEREO << AVR32_IISC_MR_TXMONO_OFFSET;
+			break;
+		default:
+			tx_is_enabled = false;
+			break;
 		}
 		switch (iisc_opt.num_rx_channels) {
-			case 1:
-				rx_is_enabled = true;
-				mr |= AVR32_IISC_MR_RXMONO_MONO << AVR32_IISC_MR_RXMONO_OFFSET;
-				break;
-			case 2:
-				rx_is_enabled = true;
-				mr &= ~ AVR32_IISC_MR_RXMONO_MASK;
-				mr |= AVR32_IISC_MR_RXMONO_STEREO << AVR32_IISC_MR_RXMONO_OFFSET;
-				break;
-			default:
-				rx_is_enabled = false;
-				break;
+		case 1:
+			rx_is_enabled = true;
+			mr |= AVR32_IISC_MR_RXMONO_MONO << AVR32_IISC_MR_RXMONO_OFFSET;
+			break;
+		case 2:
+			rx_is_enabled = true;
+			mr &= ~ AVR32_IISC_MR_RXMONO_MASK;
+			mr |= AVR32_IISC_MR_RXMONO_STEREO << AVR32_IISC_MR_RXMONO_OFFSET;
+			break;
+		default:
+			rx_is_enabled = false;
+			break;
 		}
 	}
 #if (AVR32_IISC_H_VERSION >= 200)
@@ -157,7 +148,6 @@ status_code_t iisc_init(volatile avr32_iisc_t *iisc,
 		}
 		tx_is_enabled = true;
 		rx_is_enabled = true;
-		is_master = true;
 	}
 #endif // (AVR32_IISC_H_VERSION >= 200)
 	iisc->mr = mr;
@@ -173,15 +163,13 @@ status_code_t iisc_init(volatile avr32_iisc_t *iisc,
  */
 void iisc_enable(volatile avr32_iisc_t *iisc)
 {
-	if (tx_is_enabled == true) {
+	if (tx_is_enabled) {
 		iisc_enable_transmission(iisc);
 	}
-	if (rx_is_enabled == true) {
+	if (rx_is_enabled) {
 		iisc_enable_reception(iisc);
 	}
-	if (is_master == true) {
-		iisc_enable_master(iisc);
-	}
+	iisc_enable_clocks(iisc);
 }
 
 /*! \brief IISC Disable function
@@ -197,9 +185,7 @@ void iisc_disable(volatile avr32_iisc_t *iisc)
 	if (rx_is_enabled == true) {
 		iisc_disable_reception(iisc);
 	}
-	if (is_master == true) {
-		iisc_enable_slave(iisc);
-	}
+	iisc_disable_clocks(iisc);
 }
 
 /*! \brief Write a single message of data
