@@ -250,6 +250,8 @@ extern "C" {
 #define uhd_get_pipe_endpoint_number(p)          (Rd_bitfield(UOTGHS->UOTGHS_HSTPIPCFG[p], (UOTGHS_HSTPIPCFG_PEPNUM_Msk)))
 #define uhd_configure_pipe_type(p, type)         (Wr_bitfield(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_PTYPE_Msk, type))
 #define uhd_get_pipe_type(p)                     (Rd_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_PTYPE_Msk))
+#define Is_uhd_pipe_int(p)  ((UOTGHS->UOTGHS_HSTPIPCFG[p] & UOTGHS_HSTPIPCFG_PTYPE_Msk)==UOTGHS_HSTPIPCFG_PTYPE_INTRPT)
+#define Is_uhd_pipe_iso(p)  ((UOTGHS->UOTGHS_HSTPIPCFG[p] & UOTGHS_HSTPIPCFG_PTYPE_Msk)==UOTGHS_HSTPIPCFG_PTYPE_ISO)
 #define uhd_enable_pipe_bank_autoswitch(p)       (Set_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_AUTOSW))
 #define uhd_disable_pipe_bank_autoswitch(p)      (Clr_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_AUTOSW))
 #define Is_uhd_pipe_bank_autoswitch_enabled(p)   (Tst_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_AUTOSW))
@@ -257,6 +259,8 @@ extern "C" {
 #define uhd_get_pipe_token(p)                    (Rd_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_PTOKEN_Msk))
 #define uhd_is_pipe_in(p)                        (UOTGHS_HSTPIPCFG_PTOKEN_IN==uhd_get_pipe_token(p))
 #define uhd_is_pipe_out(p)                       (UOTGHS_HSTPIPCFG_PTOKEN_OUT==uhd_get_pipe_token(p))
+#define Is_uhd_pipe_in(p)                        (UOTGHS_HSTPIPCFG_PTOKEN_IN==uhd_get_pipe_token(p))
+#define Is_uhd_pipe_out(p)                       (UOTGHS_HSTPIPCFG_PTOKEN_OUT==uhd_get_pipe_token(p))
 //! Bounds given integer size to allowed range and rounds it up to the nearest
 //! available greater size, then applies register format of UOTGHS controller
 //! for pipe size bit-field.

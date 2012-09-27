@@ -1,16 +1,16 @@
 <asf xmlversion="1.0">
-	<select-by-config id="common.services.usb.class.cdc.host.composite" name="config.common.services.usb.class.cdc.host.composite" caption="USB Host CDC (Multiple classes support)" default="disable">
-		<module type="service" id="common.services.usb.class.cdc.host.composite#enable" caption="USB Host CDC (Multiple classes support)">
+	<select-by-config id="common.services.usb.class.vendor.host.composite" name="config.common.services.usb.class.vendor.host.composite" caption="USB Host Vendor (Multiple classes support)" default="disable">
+		<module type="service" id="common.services.usb.class.vendor.host.composite#enable" caption="USB Host Vendor (Multiple classes support)">
 			<info type="description" value="summary">
-			Provides USB CDC interface to run on USB host which support multiple class.
+			Provides USB Vendor Interface to run on USB host which support multiple class.
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<build type="header-file" subtype="api" value="uhi_cdc.h"/>
-			<build type="c-source" value="uhi_cdc.c"/>
+			<build type="header-file" subtype="api" value="uhi_vendor.h"/>
+			<build type="c-source" value="uhi_vendor.c"/>
 			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="uhi_cdc_group"/>
-			<build type="doxygen-quick-start" value="uhi_cdc_quickstart"/>
-			<require idref="common.services.usb.class.cdc.protocol"/>
+			<build type="doxygen-entry-point" value="uhi_vendor_group"/>
+			<build type="doxygen-quick-start" value="uhi_vendor_quickstart"/>
+			<require idref="common.services.usb.class.vendor.protocol"/>
 			<require idref="common.services.usb.class.composite.host"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
@@ -20,7 +20,7 @@
 			<device-support value="sam3a"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
-		<module type="service" id="common.services.usb.class.cdc.host.composite#disable" caption="USB Host CDC disabled">
+		<module type="service" id="common.services.usb.class.vendor.host.composite#disable" caption="USB Host Vendor disabled">
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="avr"/>
 			<device-support value="sam"/>
@@ -28,18 +28,18 @@
 		</module>
 	</select-by-config>
 
-	<module type="service" id="common.services.usb.class.cdc.host" caption="USB Host CDC (Single Class support)">
+	<module type="service" id="common.services.usb.class.vendor.host" caption="USB Host Vendor (Single Class support)">
 		<info type="description" value="summary">
-		Provides USB CDC interface configurated to run on USB host with a single class support.
+		Provides USB Vendor Interface configurated to run on USB host with a single class support.
 		</info>
 		<info type="gui-flag" value="hidden"/>
-		<build type="header-file" subtype="api" value="uhi_cdc.h"/>
-		<build type="c-source" value="uhi_cdc.c"/>
+		<build type="header-file" subtype="api" value="uhi_vendor.h"/>
+		<build type="c-source" value="uhi_vendor.c"/>
 		<build type="include-path" value="."/>
-		<build type="doxygen-entry-point" value="uhi_cdc_group"/>
 		<build type="module-config" subtype="required-header-file" value="conf_usb_host.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
-		<require idref="common.services.usb.class.cdc.protocol"/>
+		<build type="doxygen-entry-point" value="uhi_vendor_group"/>
+		<require idref="common.services.usb.class.vendor.protocol"/>
 		<require idref="common.services.usb.host"/>
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3_a4"/>

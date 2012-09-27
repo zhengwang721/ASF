@@ -152,7 +152,7 @@ static void record_events(void)
 	if (!(main_events & event)) { \
 		main_display_event(); } \
 	test_assert_true(test, main_events & event, msg); \
-	main_events &= ~event;
+	main_events &= (unsigned)~event;
 
 #define CHECK_EVENT_HOST_MODE()             \
 	CHECK_EVENT( MAIN_EVENT_HOST_MODE              ,"Event MAIN_EVENT_HOST_MODE               not received")
@@ -274,12 +274,16 @@ static void run_test_enum_unsupported(const struct test_case *test)
 	CHECK_EVENT_ENUM_UNSUPPORTED();
 	CHECK_EVENT_DISCONNECTION();
 }
+#if !UC3C // USBC have no hardware limit about endpoint size
+# if !SAM3XA // UOTGHS has no hardware limit about ep0
 static void run_test_enum_hardwarelimit(const struct test_case *test)
 {
 	CHECK_EVENT_CONNECTION();
 	CHECK_EVENT_ENUM_HARDWARE_LIMIT();
 	CHECK_EVENT_DISCONNECTION();
 }
+# endif
+#endif
 static void run_test_enum_success_ls(const struct test_case *test)
 {
 	CHECK_EVENT_CONNECTION();
@@ -394,8 +398,12 @@ int main(void)
 		NULL, "13 - Too high power consumption in setup request get configuration 0");
 	DEFINE_TEST_CASE(usb_test_14, NULL, run_test_enum_unsupported,
 		NULL, "14 - No supported interface (interface subclass not possible)");
+#if !UC3C // USBC have no hardware limit about endpoint size
+# if !SAM3XA // UOTGHS has no hardware limit about ep0
 	DEFINE_TEST_CASE(usb_test_15, NULL, run_test_enum_hardwarelimit,
 		NULL, "15 - HID mouse with too large endpoint size (hardware limit)");
+# endif
+#endif
 	DEFINE_TEST_CASE(usb_test_16, NULL, run_test_enum_fail,
 		NULL, "16 - Stall SET CONFIGURATION (Note SELF/300mA is tested)");
 	DEFINE_TEST_CASE(usb_test_17ls, NULL, run_test_enum_success_ls,
@@ -557,6 +565,7 @@ void main_usb_vbus_error(void)
 
 void main_usb_connection_event(uhc_device_t *dev, bool b_present)
 {
+	UNUSED(dev);
 	if (b_present) {
 		if (main_events & MAIN_EVENT_DISCONNECTION) {
 			main_events = 0; // To debounce connection state on line

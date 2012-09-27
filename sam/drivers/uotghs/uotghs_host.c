@@ -358,6 +358,8 @@ typedef struct {
 	uint16_t busy:1;
 	//! A short packet is requested for this job on endpoint IN
 	uint16_t b_shortpacket:1;
+	//! Periodic packet start for this job
+	uint16_t b_periodic_start:1;
 } uhd_pipe_job_t;
 
 //! Array to register a job on bulk/interrupt/isochronous endpoint
@@ -366,7 +368,7 @@ static uhd_pipe_job_t uhd_pipe_job[UOTGHS_EPT_NUM - 1];
 //! Variables to manage the suspend/resume sequence
 static uint8_t uhd_suspend_start;
 static uint8_t uhd_resume_start;
-static uint8_t uhd_pipes_unfreeze;
+static uint16_t uhd_pipes_unfreeze;
 
 //@}
 
@@ -959,6 +961,10 @@ bool uhd_ep_run(usb_add_t add,
 	ptr_job->timeout = timeout;
 	ptr_job->b_shortpacket = b_shortpacket;
 	ptr_job->call_end = callback;
+	if ((Is_uhd_pipe_int(pipe) || Is_uhd_pipe_iso(pipe))
+			&& (Is_uhd_pipe_out(pipe))) {
+		ptr_job->b_periodic_start = true;
+	}
 	cpu_irq_restore(flags);
 
 #ifdef UHD_PIPE_FIFO_SUPPORTED
@@ -1289,6 +1295,10 @@ static void uhd_sof_interrupt(void)
 					// Abort job
 					uhd_ep_abort_pipe(pipe,UHD_TRANS_TIMEOUT);
 				}
+			}
+			if (ptr_job->b_periodic_start) {
+				ptr_job->b_periodic_start = false;
+				uhd_unfreeze_pipe(pipe);
 			}
 		}
 	}
@@ -1819,7 +1829,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		// Need to send or receive other data
 		next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 		max_trans = UHD_PIPE_MAX_TRANS;
-		if (uhd_is_pipe_in(pipe)) {
+		if (Is_uhd_pipe_in(pipe)) {
 			// 256 is the maximum of IN requests via UPINRQ
 			if ((256L*uhd_get_pipe_size(pipe))<UHD_PIPE_MAX_TRANS) {
 				max_trans = 256L * uhd_get_pipe_size(pipe);
@@ -1866,13 +1876,23 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		flags = cpu_irq_save();
 		if (!(uhd_pipe_dma_get_status(pipe)
 				& UOTGHS_HSTDMASTATUS_END_TR_ST)) {
-			if (uhd_is_pipe_in(pipe)) {
+			if (Is_uhd_pipe_in(pipe)) {
 				uint32_t pipe_size = uhd_get_pipe_size(pipe);
 				uhd_in_request_number(pipe,
 					(next_trans + pipe_size-1) / pipe_size);
 			}
-			uhd_disable_bank_interrupt(pipe);
-			uhd_unfreeze_pipe(pipe);
+			if (!ptr_job->b_periodic_start) {
+				uhd_disable_bank_interrupt(pipe);
+				uhd_unfreeze_pipe(pipe);
+			} else {
+				// Last bank not sent, just start
+				if (Is_uhd_bank_interrupt_enabled(pipe)) {
+					uhd_disable_bank_interrupt(pipe);
+					uhd_unfreeze_pipe(pipe);
+				} else {
+					// Wait SOF to start
+				}
+			}
 			uhd_pipe_dma_set_control(pipe, uhd_dma_ctrl);
 			ptr_job->nb_trans += next_trans;
 			cpu_irq_restore(flags);
@@ -1936,6 +1956,11 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
 		// Wait that all banks are free to freeze clock of OUT endpoint
 		// and call callback
 		uhd_enable_bank_interrupt(pipe);
+
+		// For ISO out, start another DMA transfer since no ACK needed
+		if (Is_uhd_pipe_iso(pipe)) {
+			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		}
 	} else {
 		if (!Is_uhd_pipe_frozen(pipe)) {
 			// Pipe is not freeze in case of :
@@ -2022,8 +2047,12 @@ static void uhd_pipe_interrupt(uint8_t pipe)
 #ifdef UHD_PIPE_DMA_SUPPORTED
 	// for DMA endpoints
 	if (Is_uhd_bank_interrupt_enabled(pipe) && (0==uhd_nb_busy_bank(pipe))) {
+		uhd_freeze_pipe(pipe);
 		uhd_disable_bank_interrupt(pipe);
-		uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		// For ISO, no ACK, finished when DMA done
+		if (!Is_uhd_pipe_iso(pipe)) {
+			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
+		}
 		return;
 	}
 	if (Is_uhd_out_ready_interrupt_enabled(pipe) && Is_uhd_out_ready(pipe)) {

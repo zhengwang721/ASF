@@ -347,6 +347,7 @@
 			<require idref="common.services.usb.class.hid.host.composite.mouse"/>
 			<require idref="common.services.usb.class.cdc.host.composite"/>
 			<require idref="common.services.usb.class.msc.host.composite.ctrl_access"/>
+			<require idref="common.services.usb.class.vendor.host.composite"/>
 			<build type="doxygen-entry-point" value="uhi_group"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
@@ -364,6 +365,22 @@
 			<require idref="common.services.usb.class.hid.host.mouse"/>
 			<build type="doxygen-entry-point" value="uhi_hid_mouse_group"/>
 			<build type="doxygen-quick-start" value="uhi_hid_mouse_quickstart"/>
+			<device-support value="uc3a"/>
+			<device-support value="uc3a3_a4"/>
+			<device-support value="uc3b0"/>
+			<device-support value="uc3c"/>
+			<device-support value="sam3x"/>
+			<device-support value="sam3a"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+		</module>
+		<module type="service" id="common.services.usb.class.host#vendor" caption="USB Host Vendor">
+			<info type="keyword" value="technology">
+				<keyword value="USB"/>
+				<keyword value="Communication" />
+			</info>
+			<require idref="common.services.usb.class.vendor.host"/>
+			<build type="doxygen-entry-point" value="uhi_vendor_group"/>
+			<build type="doxygen-quick-start" value="uhi_vendor_quickstart"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
 			<device-support value="uc3b0"/>
