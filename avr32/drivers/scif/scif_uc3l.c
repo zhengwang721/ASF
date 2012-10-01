@@ -358,6 +358,9 @@ long int scif_dfll0_openloop_start(const scif_dfll_openloop_conf_t *pdfllconfig)
 
   // Enable the DFLL0: DFLL0CONF.EN=1
   u_avr32_scif_dfll0conf.DFLL0CONF.en = ENABLE;
+#if (UC3L0128 || UC3L0256 || UC3L3_L4)
+  u_avr32_scif_dfll0conf.DFLL0CONF.ccen = ENABLE;
+#endif
   AVR32_ENTER_CRITICAL_REGION( );
   SCIF_UNLOCK(AVR32_SCIF_DFLL0CONF);
   AVR32_SCIF.dfll0conf = u_avr32_scif_dfll0conf.dfll0conf;
@@ -539,6 +542,9 @@ long int scif_dfll0_closedloop_start(const scif_dfll_closedloop_conf_t *pdfllcon
 
   // Enable the DFLL0: DFLL0CONF.EN=1
   u_avr32_scif_dfll0conf.DFLL0CONF.en = ENABLE;
+#if (UC3L0128 || UC3L0256 || UC3L3_L4)
+  u_avr32_scif_dfll0conf.DFLL0CONF.ccen = ENABLE;
+#endif
   AVR32_ENTER_CRITICAL_REGION( );
   SCIF_UNLOCK(AVR32_SCIF_DFLL0CONF);
   AVR32_SCIF.dfll0conf = u_avr32_scif_dfll0conf.dfll0conf;
