@@ -1,15 +1,13 @@
 /**
  * \file
  *
- * \brief Graphic service settings for the ET024006DHU panel using the HX8347A display controller
+ * \brief Graphic service settings for the ET024006DHU panel using the HX8347A display controller over EBI
  *
- * This files includes the correct header files for the graphics service
+ * This files includes the correct header files for the grapics service
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,55 +41,55 @@
  *
  */
 
-#ifndef GFX_HX8347A_ET024006DH_H_INCLUDED
-#define GFX_HX8347A_ET024006DH_H_INCLUDED
+#ifndef GFX_HX8347A_ET024006DH_EBI_H_INCLUDED
+#define GFX_HX8347A_ET024006DH_EBI_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "hx8347a.h"
+#include "et024006dhu.h"
 
 /**
  * \ingroup gfx_group
- * \defgroup gfx_hx8347a_et024006dhu ET024006DHU display using HX8347A display controller
+ * \defgroup gfx_hx8347a_et024006dhu_ebi ET024006DHU display using HX8347A display controller over EBI
  *
  * This is hardware specific configuration that configures the graphical
- * service for use with the HX8347A display controller and the ET024006DHU
- * display. All the drawing functionality in this configuration is provided
- * by the \ref gfx_generic driver. This configuration includes information
- * about the panel size, data type used for coordinates and color and
- * functionality to convert RGB color to the color format native to the display.
+ * service for use with the ET024006DHU TFT display. All the drawing
+ * functionality in this configuration is provided by the \ref gfx_generic
+ * driver. This configuration includes information about the panel size, data
+ * type used for coordinates and color and functionality to convert RGB color
+ * to the color format native to the display.
  *
  * @{
  */
 
-typedef hx8347a_color_t gfx_color_t;
-typedef hx8347a_coord_t gfx_coord_t;
+/* Panel information */
+#define GFX_PANELWIDTH   ET024006_WIDTH
+#define GFX_PANELHEIGHT  ET024006_HEIGHT
 
-#define GFX_COLOR(r, g, b)      HX8347A_COLOR(r, g, b)
+typedef et024006_color_t gfx_color_t;
+typedef uint16_t         gfx_coord_t;
 
-/**
- * It is not possible to define a color that is outside the color spectrum for
- * the HX8347A driver, hence use a dark color as an invalid color.
+/* This macro generates a 16-bit native color for the display from a
+ * 24-bit RGB value
  */
-#define GFX_COLOR_INVALID       GFX_COLOR(5, 5, 5)
+#define GFX_COLOR(r, g, b) \
+	((((uint16_t)b) >> 3) |\
+	((((uint16_t)g) << 3) & 0x07E0) |\
+	((((uint16_t)r) << 8) & 0xf800))
+
+#define GFX_COLOR_INVALID       GFX_COLOR(0, 0, 0)
+#define GFX_COLOR_TRANSPARENT   GFX_COLOR(254, 0, 0)
 
 /**
- * It is not possible to define a color that is outside the color spectrum for
- * the HX8347A driver, hence use a very uncommon strong magenta color as
- * transparency mask color.
- */
-#define GFX_COLOR_TRANSPARENT   GFX_COLOR(240, 0, 240)
-
-/**
- * \brief Initialize the hx8347a display controller
+ * \brief Initialize the et024006dhu display controller
  *
  * This function will be called when calling \ref gfx_init.
- * It will draw a black background to the display and enable the
+ * It will draw a black bacground to the display and enable the
  * display backlight if available.
  */
-void gfx_hx8347a_init(void);
+void gfx_et024006dhu_init(void);
 
 /**
  * \brief Generate native color value from R/G/B values.
@@ -107,7 +105,7 @@ void gfx_hx8347a_init(void);
  *
  * \return Color value in display native format.
  */
-gfx_color_t gfx_hx8347a_color(uint8_t r, uint8_t g, uint8_t b);
+gfx_color_t gfx_et024006dhu_color(uint8_t r, uint8_t g, uint8_t b);
 
 /**
  * \brief Get the color of a pixel on the display.
@@ -118,7 +116,7 @@ gfx_color_t gfx_hx8347a_color(uint8_t r, uint8_t g, uint8_t b);
  * \return Color value of the pixel at (x, y) in display native format,
  * or #GFX_COLOR_INVALID if outside the clipping region.
  */
-gfx_color_t gfx_hx8347a_get_pixel(gfx_coord_t x, gfx_coord_t y);
+gfx_color_t gfx_et024006dhu_get_pixel(gfx_coord_t x, gfx_coord_t y);
 
 /**
  * \brief Draw a single pixel on the screen
@@ -130,7 +128,7 @@ gfx_color_t gfx_hx8347a_get_pixel(gfx_coord_t x, gfx_coord_t y);
  * \param y Y coordinate of the pixel to be drawn.
  * \param color Color value of the pixel in display native format.
  */
-void gfx_hx8347a_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_color_t color);
+void gfx_et024006dhu_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_color_t color);
 
 /**
  * \brief Draw a single pixel on the screen
@@ -143,7 +141,7 @@ void gfx_hx8347a_draw_pixel(gfx_coord_t x, gfx_coord_t y, gfx_color_t color);
  * \param y Y coordinate of the pixel to be drawn.
  * \param color Color value of the pixel in display native format.
  */
-void gfx_hx8347a_draw_line_pixel(gfx_coord_t x, gfx_coord_t y,
+void gfx_et024006dhu_draw_line_pixel(gfx_coord_t x, gfx_coord_t y,
 		gfx_color_t color);
 
 /**
@@ -153,52 +151,52 @@ void gfx_hx8347a_draw_line_pixel(gfx_coord_t x, gfx_coord_t y,
  *
  * \param flags
  */
-void gfx_hx8347a_set_orientation(uint8_t flags);
+void gfx_et024006dhu_set_orientation(uint8_t flags);
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_horizontal_line
  */
 #define gfx_draw_horizontal_line(x, y, length, color)\
 	gfx_generic_draw_horizontal_line(x, y, length, color)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_vertical_line
  */
 #define gfx_draw_vertical_line(x, y, length, color)\
 	gfx_generic_draw_vertical_line(x, y, length, color)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_line
  */
 #define gfx_draw_line(x1, y1, x2, y2, color)\
 	gfx_generic_draw_line(x1, y1, x2, y2, color)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_rect
  */
 #define gfx_draw_rect(x, y, width, height, color)\
 	gfx_generic_draw_rect(x, y, width, height, color)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_filled_rect
  */
 #define gfx_draw_filled_rect(x, y, width, height, color)\
 	gfx_generic_draw_filled_rect(x, y, width, height, color)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_circle
  */
 #define gfx_draw_circle(x, y, radius, color, octant_mask)\
 	gfx_generic_draw_circle(x, y, radius, color, octant_mask)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_filled_circle
  */
 #define gfx_draw_filled_circle(x, y, radius, color, quadrant_mask)\
@@ -206,7 +204,7 @@ void gfx_hx8347a_set_orientation(uint8_t flags);
 		quadrant_mask)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_get_pixmap
  */
 #define gfx_get_pixmap(pixmap, map_width, map_x, map_y, x, y, width, height)\
@@ -214,7 +212,7 @@ void gfx_hx8347a_set_orientation(uint8_t flags);
 		width, height)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_put_pixmap
  */
 #define gfx_put_pixmap(pixmap, map_width, map_x, map_y, x, y, width, height)\
@@ -222,14 +220,14 @@ void gfx_hx8347a_set_orientation(uint8_t flags);
 		width, height)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_put_bitmap
  */
 #define gfx_put_bitmap(bmp, map_x, map_y, x, y, width, height)\
 	gfx_generic_put_bitmap(bmp, map_x, map_y, x, y, width, height)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_bitmap_tiled
  */
 #define gfx_draw_bitmap_tiled(bmp, x1, y1, x2, y2, tile_origin_x,\
@@ -238,103 +236,106 @@ void gfx_hx8347a_set_orientation(uint8_t flags);
 		tile_origin_x, tile_origin_y)
 
 /**
- * HX8347A display driver uses generic gfx implementation for this function. See
+ * ET024006DHU display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_bitmap
  */
-#define gfx_draw_bitmap(bmp, x, y) gfx_generic_draw_bitmap(bmp, x, y)
+#define gfx_draw_bitmap(bmp, x, y)\
+		gfx_generic_draw_bitmap(bmp, x, y)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_duplicate_pixel
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_DuplicatePixel
  */
-#define gfx_duplicate_pixel(color, count) hx8347a_duplicate_pixel(color, count)
+#define gfx_duplicate_pixel(color, count)\
+		et024006_DuplicatePixel(color, count)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_get_pixel
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_get_pixel
  */
-#define gfx_get_pixel(x, y) gfx_hx8347a_get_pixel(x, y)
+#define gfx_get_pixel(x, y)\
+		gfx_et024006dhu_get_pixel(x, y)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_draw_pixel
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_draw_pixel
  */
-#define gfx_draw_pixel(x, y, color) gfx_hx8347a_draw_pixel(x, y, color)
+#define gfx_draw_pixel(x, y, color)\
+		gfx_et024006dhu_draw_pixel(x, y, color)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_draw_line_pixel
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_draw_line_pixel
  */
-#define gfx_draw_line_pixel(x, y, color) gfx_hx8347a_draw_line_pixel(x, y,\
-		color)
+#define gfx_draw_line_pixel(x, y, color)\
+		gfx_et024006dhu_draw_line_pixel(x, y, color)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_set_top_left_limit
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_SetQuickLimits
  */
-#define gfx_set_top_left_limit(x, y) hx8347a_set_top_left_limit(x, y)
+#define gfx_set_top_left_limit(x, y)\
+		et024006_SetQuickLimits(x, y)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_set_bottom_right_limit
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_SetQuickLimits2
  */
-#define gfx_set_bottom_right_limit(x, y) hx8347a_set_bottom_right_limit(x, y)
+#define gfx_set_bottom_right_limit(x, y)\
+		et024006_SetQuickLimits2(x, y)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_set_limits
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_SetLimits
  */
-#define gfx_set_limits(x1, y1, x2, y2) hx8347a_set_limits(x1, y1, x2, y2)
+#define gfx_set_limits(x1, y1, x2, y2)\
+		et024006_SetLimits(x1, y1, x2, y2)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_copy_pixels_to_screen
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_CopyPixelsToScreen
  */
 #define gfx_copy_pixels_to_screen(pixels, count)\
-	hx8347a_copy_pixels_to_screen(pixels, count)
+		et024006_CopyPixelsToScreen(pixels, count)
 
 /**
- * HX8347A display driver specific function, see
- * \ref hx8347a_copy_pixels_from_screen
+ * ET024006DHU display driver specific function, see
+ * \ref et024006_CopyPixelsFromScreen
  */
 #define gfx_copy_pixels_from_screen(pixels, count)\
-	hx8347a_copy_pixels_from_screen(pixels, count)
+		et024006_CopyPixelsFromScreen(pixels, count)
 
 /**
- * HX8347A display driver specific function available for ATmega and ATXmega
- * devices, see \ref hx8347a_copy_progmem_pixels_to_screen
+ * ET024006DHU display driver specific function available for ATmega and ATXmega
+ * devices, see \ref et024006_CopyPixelsToScreen
  */
 #define gfx_copy_progmem_pixels_to_screen(pixels, count)\
-	hx8347a_copy_progmem_pixels_to_screen(pixels, count)
+		et024006_CopyPixelsToScreen(pixels, count)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_color
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_color
  */
-#define gfx_color(r, g, b) gfx_hx8347a_color(r, g, b)
+#define gfx_color(r, g, b)\
+		gfx_et024006dhu_color(r, g, b)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_set_orientation
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_set_orientation
  */
- #define gfx_set_orientation(flags) gfx_hx8347a_set_orientation(flags)
+ #define gfx_set_orientation(flags)\
+		gfx_et024006dhu_set_orientation(flags)
 
 /**
- * HX8347A display driver specific function, see
- * \ref gfx_hx8347a_init
+ * ET024006DHU display driver specific function, see
+ * \ref gfx_et024006dhu_init()
  */
-#define gfx_init() gfx_hx8347a_init()
+#define gfx_init() gfx_et024006dhu_init()
 
-/**
- * HX8347A display driver uses generic gfx implementation for this function. See
- * \ref gfx_generic_sync
- */
-#define gfx_sync() gfx_generic_sync()
-
-/** @} */
+/*! @} */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* GFX_HX8347A_ET024006DH_H_INCLUDED */
+#endif /* GFX_HX8347A_ET024006DH_EBI_H_INCLUDED */
