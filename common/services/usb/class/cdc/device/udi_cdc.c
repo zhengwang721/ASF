@@ -813,18 +813,16 @@ bool udi_cdc_multi_is_rx_ready(uint8_t port)
 {
 	irqflags_t flags;
 	uint16_t pos;
+	bool ready;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
 #endif
 	flags = cpu_irq_save();
 	pos = udi_cdc_rx_pos[port];
-	if (pos < udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]]) {
-		cpu_irq_restore(flags);
-		return true;
-	}
+	ready = pos < udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]];
 	cpu_irq_restore(flags);
-	return false;
+	return ready;
 }
 
 bool udi_cdc_is_rx_ready(void)
