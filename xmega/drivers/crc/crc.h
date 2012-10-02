@@ -57,7 +57,7 @@ extern "C" {
  *
  * See \ref xmega_crc_quickstart.
  *
- * \brief Low-level driver implementation for the AVR XMEGA AU Cyclic
+ * \brief Low-level driver implementation for the AVR XMEGA AU/B/C Cyclic
  * Redundancy Check (CRC) module.
  *
  * A cyclic redundancy check (CRC) is an error detection technique test
