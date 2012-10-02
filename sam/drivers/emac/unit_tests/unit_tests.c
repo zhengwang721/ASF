@@ -51,7 +51,7 @@
 #include "conf_board.h"
 #include "mini_ip.h"
 #include "rstc.h"
-#include "dm9161a.h"
+#include "ethernet_phy.h"
 
 /**
  * \mainpage

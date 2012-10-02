@@ -46,7 +46,7 @@
 #include "gpio.h"
 #include "ethernet_sam.h"
 #include "emac.h"
-#include "dm9161a.h"
+#include "ethernet_phy.h"
 #include "timer_mgt_sam.h"
 #include "sysclk.h"
 /* lwIP includes */

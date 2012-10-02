@@ -62,7 +62,7 @@
 #include "conf_eth.h"
 
 #include "emac.h"
-#include "dm9161a.h"
+#include "ethernet_phy.h"
 
 #if (HTTP_USED == 1)
 #include "BasicWEB.h"
