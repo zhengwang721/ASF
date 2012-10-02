@@ -135,6 +135,12 @@ void board_init(void)
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 2), IOPORT_DIR_INPUT);
 #endif
 
+#ifdef CONF_BOARD_ENABLE_USARTF0
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTF, 3), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTF, 2), IOPORT_DIR_INPUT);
+#endif
+
 #if defined (SENSORS_XPLAINED_BOARD)
 	/* Configure the Xplained Sensor extension board, if any, after
 	 * the platform Xplained board has configured basic clock settings,
