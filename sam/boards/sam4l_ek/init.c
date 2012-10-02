@@ -92,8 +92,10 @@ void board_init(void)
 
 #ifdef  CONF_BOARD_EIC
 	// Set push button as external interrupt pin
-	ioport_set_pin_peripheral_mode(PIN_PC03B_EIC_EXTINT5,
-			MUX_PC03B_EIC_EXTINT5);
+	ioport_set_pin_peripheral_mode(GPIO_PUSH_BUTTON_EIC_PIN,
+			GPIO_PUSH_BUTTON_EIC_PIN_MUX);
+	ioport_set_pin_peripheral_mode(GPIO_UNIT_TEST_EIC_PIN,
+			GPIO_UNIT_TEST_EIC_PIN_MUX);
 #else
 	// Push button as input: already done, it's the default pin state
 #endif
