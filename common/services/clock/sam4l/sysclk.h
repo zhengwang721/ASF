@@ -792,16 +792,10 @@ extern void sysclk_set_source(uint32_t src);
  * \def USBCLK_STARTUP_TIMEOUT
  * \brief Number of us to wait for USB clock to start
  */
-#if CONFIG_USBCLK_SOURCE == USBCLK_SRC_OSC0
-#   define USBCLK_STARTUP_TIMEOUT    (OSC0_STARTUP_TIMEOUT*(1000000/SCIF_RCOSC_FREQUENCY))
-#elif CONFIG_USBCLK_SOURCE == USBCLK_SRC_PLL0
-#   if CONFIG_PLL0_SOURCE == PLL_SRC_OSC0
-#      define USBCLK_STARTUP_TIMEOUT    (OSC0_STARTUP_TIMEOUT*(1000000/SCIF_RCOSC_FREQUENCY))
-#   else
-#      error Unknown value for CONFIG_PLL0_SOURCE, see conf_clock.h.
-#   endif
+#ifdef CONFIG_USBCLK_STARTUP_TIMEOUT
+#   define USBCLK_STARTUP_TIMEOUT    (CONFIG_USBCLK_STARTUP_TIMEOUT)
 #else
-#   error Unknown value for CONFIG_USBCLK_SOURCE, see conf_clock.h.
+#   define USBCLK_STARTUP_TIMEOUT    (OSC0_STARTUP_TIMEOUT*(1000000/OSC_RCSYS_NOMINAL_HZ))
 #endif
 
 extern void sysclk_enable_usb(void);

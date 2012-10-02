@@ -50,11 +50,11 @@
 //#define CONFIG_SYSCLK_INIT_PBDMASK  (1 << SYSCLK_AST)
 //#define CONFIG_SYSCLK_INIT_HSBMASK  (1 << SYSCLK_PDCA_HSB)
 
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCSYS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCSYS
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_OSC0
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL0
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_DFLL
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC80M
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC80M
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCFAST
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC1M
 
@@ -63,15 +63,12 @@
 //#define CONFIG_RCFAST_FRANGE    1
 //#define CONFIG_RCFAST_FRANGE    2
 
-/* 0: disable PicoCache, 1: enable PicoCache  */
-#define CONFIG_HCACHE_ENABLE          1
-
 /* Fbus = Fsys / (2 ^ BUS_div) */
-#define CONFIG_SYSCLK_CPU_DIV         0
-#define CONFIG_SYSCLK_PBA_DIV         0
-#define CONFIG_SYSCLK_PBB_DIV         0
-#define CONFIG_SYSCLK_PBC_DIV         0
-#define CONFIG_SYSCLK_PBD_DIV         0
+#define CONFIG_SYSCLK_CPU_DIV         2
+#define CONFIG_SYSCLK_PBA_DIV         2
+#define CONFIG_SYSCLK_PBB_DIV         2
+#define CONFIG_SYSCLK_PBC_DIV         2
+#define CONFIG_SYSCLK_PBD_DIV         2
 
 //#define CONFIG_USBCLK_SOURCE          USBCLK_SRC_OSC0
 //#define CONFIG_USBCLK_SOURCE          USBCLK_SRC_PLL0
@@ -91,7 +88,7 @@
 //#define CONFIG_DFLL0_SOURCE         GENCLK_SRC_RC32K
 
 /* Fdfll = (Fclk * DFLL_mul) / DFLL_div */
-//#define CONFIG_DFLL0_FREQ           48000000UL
+#define CONFIG_DFLL0_FREQ           48000000UL
 //#define CONFIG_DFLL0_MUL            (CONFIG_DFLL0_FREQ / BOARD_OSC32_HZ)
 //#define CONFIG_DFLL0_DIV            1
 
