@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA WDT driver example
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,7 @@
  *   - XMEGA A1 Xplained: LED 0 through 3.
  *   - XMEGA A3BU Xplained: red on the status LED indicates that LED2 is on,
  *     while green on the status LED indicates that LED3 is on.
+ *   - XMEGA B1 Xplained: LED 0 through 3.
  *   - STK600/RC044X: requires PORTA to be connected to LEDs. Output will be
  *     shown on LED 0 through 3.
  *   - STK600/RC064X: requires PORTE to be connected to LEDs. Output will be
