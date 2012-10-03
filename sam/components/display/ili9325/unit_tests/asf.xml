@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.components.display.ili9325.unit_tests" caption="Set of unit tests for ILI9325 driver">
+	<module type="application" id="sam.components.display.ili9325.unit_tests" caption="Unit Tests for the SAM ILI9325 Display Driver">
 		<info type="description" value="summary">
 			Unit test application for ILI9325 driver.
 		</info>

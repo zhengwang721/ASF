@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.memory.eeprom.at24cxx.unit_tests" caption="Set of unit tests for AT24Cxx driver">
+	<module type="application" id="common.components.memory.eeprom.at24cxx.unit_tests" caption="Unit Tests for the SAM AT24Cxx Component">
 		<info type="description" value="summary">
 		Unit test application for the at24cxx driver.
 		</info>

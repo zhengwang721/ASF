@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.gfx_mono.unit_tests" caption="Unit tests for graphical primitives">
+	<module type="application" id="common.services.gfx_mono.unit_tests" caption="Unit Tests for the Common Mono Graphics Library (Primitives)">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit tests for graphical drawing primitives

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.services.network.lin.unit_tests" caption="Set of unit tests for LIN service">
+	<module type="application" id="sam.services.network.lin.unit_tests" caption="Unit Tests for the SAM LIN Service">
 		<info type="description" value="summary">
 			Unit test application for LIN service.
 		</info>

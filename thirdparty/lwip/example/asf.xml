@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.network.tcpip.lwip.example" caption="lwIP TCP/IP Stack Stand-alone(no OS) Example">
+	<select-by-device id="common.services.network.tcpip.lwip.example" caption="lwIP TCP/IP Stack Stand-alone (no RTOS) Example">
 	<module type="application" id="common.services.network.tcpip.lwip.example#uc3" caption="lwIP TCP/IP Stack Stand-alone(no OS) Example">
 		<info type="description" value="summary">
 		Basic HTTP web server using the lwIP TCP/IP stack stand-alone UC3 port (i.e. no OS).

@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.sensors.mcp980x.unit_tests">
-		<module type="application" id="common.components.sensors.mcp980x.unit_tests#sam" caption="Set of unit tests for MCP980X">
+		<module type="application" id="common.components.sensors.mcp980x.unit_tests#sam" caption="Unit Tests for the SAM MCP980X Component">
 			<info type="description" value="summary">
 			Unit test application for the temperature sensor (MCP980X).
 			</info>

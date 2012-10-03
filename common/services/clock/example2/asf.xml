@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.basic.clock.example2" caption="Common API for Clocks Control / Example 2">
-		<module type="application" id="common.services.basic.clock.example2#0" caption="Common API for Clocks Control / Example 2">
+	<select-by-device id="common.services.basic.clock.example2" caption="Common API for Clocks Control Example 2">
+		<module type="application" id="common.services.basic.clock.example2#0" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
 			Initialize the clock system and output the CPU clock on a dedicated pin.
 			</info>
@@ -14,7 +14,7 @@
 			<require idref="xmega.drivers.ioport"/>
 			<require idref="xmega.utils"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example2#1" caption="Common API for Clocks Control / Example 2">
+		<module type="application" id="common.services.basic.clock.example2#1" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
 			Initialize the clock system and output the CPU clock on a dedicated pin.
 			</info>
@@ -30,7 +30,7 @@
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example2#2" caption="Common API for Clocks Control / Example 2">
+		<module type="application" id="common.services.basic.clock.example2#2" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
 			Initialize the clock system and output the CPU clock on a dedicated pin.
 			</info>
@@ -44,7 +44,7 @@
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example2#3" caption="Common API for Clocks Control / Example 2">
+		<module type="application" id="common.services.basic.clock.example2#3" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
 			Initialize the clock system and output the CPU clock on a dedicated pin.
 			</info>
@@ -60,7 +60,7 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example2#4" caption="Common API for Clocks Control / Example 2">
+		<module type="application" id="common.services.basic.clock.example2#4" caption="Common API for Clocks Control Example 2">
 			<info type="description" value="summary">
 			Initialize the clock system and output the CPU clock on a dedicated pin.
 			</info>

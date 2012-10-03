@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.components.memory.nand_flash.nand_flash_ebi.example" caption="Nand Flash on EBI Example">
+	<module type="application" id="avr32.components.memory.nand_flash.nand_flash_ebi.example" caption="NAND Flash on EBI Example">
 		<info type="description" value="summary">
 		Read and write data to an external Nand flash memory through the EBI.
 		</info>

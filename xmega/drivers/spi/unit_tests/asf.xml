@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.spi.unit_tests" caption="Set of unit tests for SPI driver">
+	<module type="application" id="xmega.drivers.spi.unit_tests" caption="Unit Tests for the XMEGA SPI Driver">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit test application for the SPI driver.

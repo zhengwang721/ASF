@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.dac.unit_tests" caption="Unit tests for DAC using ADC">
+	<module type="application" id="xmega.drivers.dac.unit_tests" caption="Unit Tests for the XMEGA DAC Driver (Using ADC Module)">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit tests for the XMEGA DAC driver using the built-in ADC.

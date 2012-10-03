@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.nvm.unit_tests" caption="Complete set of unit tests for NVM driver">
+	<module type="application" id="xmega.drivers.nvm.unit_tests" caption="Unit Tests for the XMEGA NVM Driver">
 		<device-support value="xmega"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.twi.unit_tests" caption="Unit tests for TWI">
+	<module type="application" id="xmega.drivers.twi.unit_tests" caption="Unit Tests for the XMEGA TWI Driver">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit tests for the XMEGA TWI.

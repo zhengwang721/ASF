@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.supc.unit_tests" caption="Set of unit tests for SUPC driver">
+	<module type="application" id="sam.drivers.supc.unit_tests" caption="Unit Tests for the SAM SUPC Driver">
 		<info type="description" value="summary">
 			Unit test application for SUPC driver.
 		</info>

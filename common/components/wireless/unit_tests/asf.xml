@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.wireless.unit_tests" caption="AT86RFX Wireless Module Unit Tests">
+	<module type="application" id="common.components.wireless.unit_tests" caption="Unit Tests for the UC3 AT86RFX Wireless Module">
 		<info type="description" value="summary">
 		AT86RFx Wireless Module unit test. Ensure the good functionality of this module by testing one by one the main features of the AT86RFx component.
 		</info>

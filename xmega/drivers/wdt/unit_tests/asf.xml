@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.wdt.unit_tests" caption="Unit test for the XMEGA WDT driver">
+	<module type="application" id="xmega.drivers.wdt.unit_tests" caption="Unit Tests for the XMEGA WDT Driver">
 		<info type="description" value="summary">
 		A unit test to verify the functionality of the XMEGA WDT driver.
 		</info>
