@@ -36,6 +36,7 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.rtc32"/>
+		<require idref="xmega.drivers.tc"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>

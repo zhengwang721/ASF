@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+ 
 /**
  * \mainpage
  *
@@ -68,15 +69,8 @@
  * - timezone.c handle timezones stored in EEPROM and selecting a new one
  * - cdc.c USB CDC class abstraction used for keyboard input
  */
-#include <board.h>
-#include <compiler.h>
-#include <gfx_mono.h>
-#include <gfx_mono_menu.h>
-#include <gpio.h>
-#include <rtc32.h>
-#include <pmic.h>
-#include <sysclk.h>
-#include <sysfont.h>
+ 
+#include <asf.h>
 #include "adc_sensors.h"
 #include "date_time.h"
 #include "lightsensor.h"
