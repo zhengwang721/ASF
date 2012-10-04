@@ -3,7 +3,7 @@
  *
  * \brief Flash Linker script for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@ MEMORY
 }
 
 /* The stack size used by the application. NOTE: you need to adjust  */
-STACK_SIZE = 0x2000;
+__stack_size__ = DEFINED(__stack_size__) ? __stack_size__ : 0x2000;
 
 /* Section Definitions */ 
 SECTIONS 
@@ -149,7 +149,7 @@ SECTIONS
     {
         . = ALIGN(8);
           _sstack = .;
-        . = . + STACK_SIZE;
+        . = . + __stack_size__;
         . = ALIGN(8);
         _estack = .;
     } > sram1
