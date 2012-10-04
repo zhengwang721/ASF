@@ -167,29 +167,29 @@ typedef unsigned char           Bool; //!< Boolean.
 typedef unsigned char           bool; //!< Boolean.
 #endif
 #endif
-typedef signed char             S8 ;  //!< 8-bit signed integer.
-typedef unsigned char           U8 ;  //!< 8-bit unsigned integer.
-typedef signed short int        S16;  //!< 16-bit signed integer.
-typedef unsigned short int      U16;  //!< 16-bit unsigned integer.
-typedef unsigned short int      le16_t;
-typedef unsigned short int      be16_t;
-typedef signed long int         S32;  //!< 32-bit signed integer.
-typedef unsigned long int       U32;  //!< 32-bit unsigned integer.
-typedef uint32_t                le32_t;
-typedef uint32_t                be32_t;
-typedef signed long long int    S64;  //!< 64-bit signed integer.
-typedef unsigned long long int  U64;  //!< 64-bit unsigned integer.
-typedef float                   F32;  //!< 32-bit floating-point number.
-typedef double                  F64;  //!< 64-bit floating-point number.
-typedef uint16_t                iram_size_t;
+typedef int8_t     S8 ;  //!< 8-bit signed integer.
+typedef uint8_t    U8 ;  //!< 8-bit unsigned integer.
+typedef int16_t    S16;  //!< 16-bit signed integer.
+typedef uint16_t   U16;  //!< 16-bit unsigned integer.
+typedef uint16_t   le16_t;
+typedef uint16_t   be16_t;
+typedef int32_t    S32;  //!< 32-bit signed integer.
+typedef uint32_t   U32;  //!< 32-bit unsigned integer.
+typedef uint32_t   le32_t;
+typedef uint32_t   be32_t;
+typedef int64_t    S64;  //!< 64-bit signed integer.
+typedef uint64_t   U64;  //!< 64-bit unsigned integer.
+typedef float      F32;  //!< 32-bit floating-point number.
+typedef double     F64;  //!< 64-bit floating-point number.
+typedef uint16_t   iram_size_t;
 //! @}
 
 
 /*! \name Status Types
  */
 //! @{
-typedef Bool                Status_bool_t;  //!< Boolean status.
-typedef U8                  Status_t;       //!< 8-bit-coded status.
+typedef Bool       Status_bool_t;  //!< Boolean status.
+typedef U8         Status_t;       //!< 8-bit-coded status.
 //! @}
 
 
