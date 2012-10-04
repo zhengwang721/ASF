@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.calendar.unit_tests" caption="Unit tests for Calendar">
+	<module type="application" id="common.services.calendar.unit_tests" caption="Unit Tests for the Common Calendar Service">
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<info type="description" value="summary">

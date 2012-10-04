@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.fs.fatfs.unit_tests" caption="Set of unit tests for FatFS service">
-		<module type="application" id="common.services.fs.fatfs.unit_tests#0" caption="Set of unit tests for FatFS service">
+	<select-by-device id="common.services.fs.fatfs.unit_tests" caption="Unit Tests for the Common FatFS Service">
+		<module type="application" id="common.services.fs.fatfs.unit_tests#0" caption="Unit Tests for the Common FatFS Service">
 			<info type="description" value="summary">
 			Unit test application for FatFS service.
 			</info>
@@ -17,7 +17,7 @@
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.uart"/>
 		</module>
-		<module type="application" id="common.services.fs.fatfs.unit_tests#1" caption="Set of unit tests for FatFS service">
+		<module type="application" id="common.services.fs.fatfs.unit_tests#1" caption="Unit Tests for the Common FatFS Service">
 			<info type="description" value="summary">
 			Unit test application for FatFS service.
 			</info>

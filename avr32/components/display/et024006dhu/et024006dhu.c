@@ -504,16 +504,6 @@ static __inline__ void et024006_SelectRegister( uint8_t address );
 static __inline__ void et024006_WriteRegister( uint8_t address, uint8_t value );
 static __inline__ uint8_t et024006_ReadRegister( uint8_t address );
 static void et024006_SetRegister( uint8_t address, uint8_t bitmask );
-// Not used
-// static void et024006_ClearRegister( uint8_t address, uint8_t bitmask );
-static void et024006_SetLimits( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 );
-static void et024006_SetQuickLimits( uint16_t x, uint16_t y );
-static void et024006_DrawQuickPixel( uint16_t x, uint16_t y, et024006_color_t color );
-
-static void et024006_DuplicatePixel( et024006_color_t color, uint32_t count );
-static void et024006_CopyPixelsToScreen( et024006_color_t const * pixels, uint32_t count );
-static void et024006_CopyPixelsFromScreen( et024006_color_t * pixels, uint32_t count );
-
 
 #if(ET024006_IFACE_MODE == ET024006_IFACE_MODE_SPI)
 static void et024006_InitSPI( void );
@@ -1330,7 +1320,7 @@ static void et024006_ClearRegister( uint8_t address, uint8_t bitmask )
  *  Writing to the display will result in writing to the area specified through
  *  this function.
  */
-static void et024006_SetLimits( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 )
+void et024006_SetLimits( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 )
 {
   et024006_WriteRegister( HIMAX_COL_ADDR_START2, (x1 >> 8) );
   et024006_WriteRegister( HIMAX_COL_ADDR_START1, (x1 & 0xff) );
@@ -1345,7 +1335,7 @@ static void et024006_SetLimits( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t 
 /*! \brief Set the starting point of the next read/write from/to RAM.
  *  This sets only the start point of the RAM window.
  */
-static void et024006_SetQuickLimits( uint16_t x, uint16_t y )
+void et024006_SetQuickLimits( uint16_t x, uint16_t y )
 {
   et024006_WriteRegister( HIMAX_COL_ADDR_START2, (x >> 8) );
   et024006_WriteRegister( HIMAX_COL_ADDR_START1, (x & 0xff) );
@@ -1353,8 +1343,19 @@ static void et024006_SetQuickLimits( uint16_t x, uint16_t y )
   et024006_WriteRegister( HIMAX_ROW_ADDR_START1, (y & 0xff) );
 }
 
+/*! \brief Set the ending point of the next read/write from/to RAM.
+ *  This sets only the end point of the RAM window.
+ */
+void et024006_SetQuickLimits2( uint16_t x, uint16_t y )
+{
+  et024006_WriteRegister( HIMAX_COL_ADDR_END2, (x >> 8) );
+  et024006_WriteRegister( HIMAX_COL_ADDR_END1, (x & 0xff) );
+  et024006_WriteRegister( HIMAX_ROW_ADDR_END2, (y >> 8) );
+  et024006_WriteRegister( HIMAX_ROW_ADDR_END1, (y & 0xff) );
+}
 
-static void et024006_DrawQuickPixel( uint16_t x, uint16_t y, et024006_color_t color )
+
+void et024006_DrawQuickPixel( uint16_t x, uint16_t y, et024006_color_t color )
 {
   // Sanity check on parameters.
   Assert( x < ET024006_WIDTH );
@@ -1380,7 +1381,7 @@ static void et024006_DrawQuickPixel( uint16_t x, uint16_t y, et024006_color_t co
 
 /* --- Pixel block operations --- */
 
-static void et024006_DuplicatePixel( et024006_color_t color, uint32_t count )
+void et024006_DuplicatePixel( et024006_color_t color, uint32_t count )
 {
   Assert( (count >> 24) == 0 );
   Assert( count > 0 );
@@ -1493,10 +1494,12 @@ void et024006_DrawBitmap( const uint16_t data[], U16 columnOffset, U16 rowOffset
 }
 
 
-static void et024006_CopyPixelsToScreen( et024006_color_t const * pixels, uint32_t count )
+void et024006_CopyPixelsToScreen( et024006_color_t const * pixels, uint32_t count )
 {
   Assert( pixels != NULL );
   Assert( count > 0 );
+
+  et024006_SelectRegister( HIMAX_SRAMWRITE );
 
 #if(ET024006_IFACE_MODE == ET024006_IFACE_MODE_EBI)
   while (count >= 8)
@@ -1625,7 +1628,7 @@ static void et024006_CopyPixelsToScreen( et024006_color_t const * pixels, uint32
 }
 
 
-static void et024006_CopyPixelsFromScreen( et024006_color_t * pixels, uint32_t count )
+void et024006_CopyPixelsFromScreen( et024006_color_t * pixels, uint32_t count )
 {
   Assert( pixels != NULL );
 

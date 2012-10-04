@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.calendar.example1" caption="Calendar example1">
+	<module type="application" id="common.services.calendar.example1" caption="Calendar Example 1">
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<info type="description" value="summary">

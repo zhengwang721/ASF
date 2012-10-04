@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.gfx_mono.example1" caption="Monochrome graphic library example">
+	<module type="application" id="common.services.gfx_mono.example1" caption="Monochrome Graphics Library Example">
 		<info type="description" value="summary">
 		Monochrome graphic library graphic primitives example. Draw graphics shapes to a connected LCD display or framebuffer
 		</info>

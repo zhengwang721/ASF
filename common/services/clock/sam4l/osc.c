@@ -97,7 +97,9 @@ void osc_priv_disable_osc32(void)
 	flags = cpu_irq_save();
 	BSCIF->BSCIF_UNLOCK = BSCIF_UNLOCK_KEY(0xAAu)
 		| BSCIF_UNLOCK_ADDR((uint32_t)&BSCIF->BSCIF_OSCCTRL32 - (uint32_t)BSCIF);
-	BSCIF->BSCIF_OSCCTRL32 = 0;
+	BSCIF->BSCIF_OSCCTRL32 &= ~BSCIF_OSCCTRL32_OSC32EN;
+	// Wait until OSC32 RDY flag is cleared.
+	while (BSCIF->BSCIF_PCLKSR & BSCIF_PCLKSR_OSC32RDY);
 	cpu_irq_restore(flags);
 }
 #endif /* BOARD_OSC32_HZ */

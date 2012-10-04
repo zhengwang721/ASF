@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.crypto.sha204.unit_tests" caption="ATSHA204 Unit Tests">
+	<module type="application" id="common.components.crypto.sha204.unit_tests" caption="Unit Tests for the Common ATSHA204 Component">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 			ATSHA204 CryptoAuth unit test. Test TWI communication with the four ATSHA204 components mounted on a Security Xplained extension board.

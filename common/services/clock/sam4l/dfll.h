@@ -97,7 +97,7 @@ static inline void dfll_config_set_max_step(struct dfll_config *cfg,
 			| SCIF_DFLL0STEP_FSTEP(fine));
 }
 
-static inline void dfll_set_frequency_range(struct dfll_config *cfg,
+static inline void dfll_priv_set_frequency_range(struct dfll_config *cfg,
 		uint32_t freq)
 {
 	if (freq < DFLL_MAX_RANGE3){
@@ -112,6 +112,8 @@ static inline void dfll_set_frequency_range(struct dfll_config *cfg,
 	else {
 		cfg->freq_range = DFLL_RANGE0;
 	}
+	cfg->conf &= ~SCIF_DFLL0CONF_RANGE_Msk;
+	cfg->conf |=SCIF_DFLL0CONF_RANGE(cfg->freq_range);
 }
 
 static inline void dfll_config_init_open_loop_mode(struct dfll_config *cfg)
@@ -123,15 +125,18 @@ static inline void dfll_config_init_open_loop_mode(struct dfll_config *cfg)
 	cfg->conf = SCIF->SCIF_DFLL0CONF;
 	// Select Open Loop Mode
 	cfg->conf &= ~SCIF_DFLL0CONF_MODE;
-	// Write DFLL Frequency Range
+	// Clear DFLL Frequency Range
+	cfg->freq_range = 0;
 	cfg->conf &= ~SCIF_DFLL0CONF_RANGE_Msk;
 	cfg->conf |= SCIF_DFLL0CONF_RANGE(cfg->freq_range);
+
 	cfg->mul = 0;
 	cfg->step = 0;
 	cfg->ssg = 0;
 	cfg->val = 0;
 }
 
+#ifdef CONFIG_DFLL0_FREQ
 static inline void dfll_config_init_closed_loop_mode(struct dfll_config *cfg,
 		dfll_refclk_t refclk, uint16_t divide, uint16_t mul)
 {
@@ -150,8 +155,7 @@ static inline void dfll_config_init_closed_loop_mode(struct dfll_config *cfg,
 	// Select Closed Loop Mode
 	cfg->conf |= SCIF_DFLL0CONF_MODE;
 	// Write DFLL Frequency Range
-	cfg->conf &= ~SCIF_DFLL0CONF_RANGE_Msk;
-	cfg->conf |=SCIF_DFLL0CONF_RANGE(cfg->freq_range);
+	dfll_priv_set_frequency_range(cfg, CONFIG_DFLL0_FREQ);
 
 	cfg->mul = mul;
 	cfg->val = 0;
@@ -162,6 +166,7 @@ static inline void dfll_config_init_closed_loop_mode(struct dfll_config *cfg,
 	dfll_config_set_max_step(cfg, 4, 4);
 	cfg->ssg = 0;
 }
+#endif
 
 static inline uint32_t dfll_priv_get_source_hz(dfll_refclk_t src)
 {
@@ -265,6 +270,7 @@ static inline void dfll_config_tune_for_target_hz(struct dfll_config *cfg,
 	fine /= 4;
 
 	dfll_config_set_initial_tuning(cfg, coarse, fine);
+	dfll_priv_set_frequency_range(cfg, target_hz);
 }
 
 static inline void dfll_config_enable_ssg(struct dfll_config *cfg,

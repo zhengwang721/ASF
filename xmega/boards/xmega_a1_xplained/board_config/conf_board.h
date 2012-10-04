@@ -61,6 +61,7 @@
 // Enable UART Communication Port interface (UART)
 #define CONF_BOARD_ENABLE_USARTC0
 #define CONF_BOARD_ENABLE_USARTD0
+#define CONF_BOARD_ENABLE_USARTF0
 
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.usb.host.tests.targets" caption="USB Host Core unit tests">
+	<module type="application" id="common.services.usb.host.tests.targets" caption="Unit Tests for the USB Host Core Driver">
 		<info type="description" value="summary">
 		Provide a USB host core unit tests implementation.
 		</info>

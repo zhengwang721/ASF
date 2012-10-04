@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.usb.host.tests.generator" caption="Specific USB Device generator to test USB host core">
-		<module type="application" id="common.services.usb.host.tests.generator#usbb" caption="Specific USB Device generator to test USB host core">
+	<select-by-device id="common.services.usb.host.tests.generator" caption="USB Device Generator for the USB Host Core Unit Tests">
+		<module type="application" id="common.services.usb.host.tests.generator#usbb" caption="USB Device Generator for the USB Host Core Unit Tests">
 			<info type="description" value="summary">
 			This test application implements several USB error sequences to test the robustness of a USB host core.
 			</info>	
@@ -21,7 +21,7 @@
 			<device-support value="uc3b0" /> 
 			<device-support value="uc3c" /> 
 		</module>
-		<module type="application" id="common.services.usb.host.tests.generator#uotghs" caption="Specific USB Device generator to test USB host core">
+		<module type="application" id="common.services.usb.host.tests.generator#uotghs" caption="USB Device Generator for the USB Host Core Unit Tests">
 			<info type="description" value="summary">
 			This test application implements several USB error sequences to test the robustness of a USB host core.
 			</info>	

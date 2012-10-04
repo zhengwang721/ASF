@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.services.storage.dlmalloc.example2" caption="dlmalloc(dynamic memory allocation functions) Example 2">
+	<module type="application" id="avr32.services.storage.dlmalloc.example2" caption="dlmalloc (Dynamic Memory Allocator) Example 2">
 		<info type="description" value="summary">
 		Using the dlmalloc memory manager service, create a memory space and dynamically allocate memory from this new memory space.
 		</info>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.services.timeout.unit_tests" caption="Unit test for XMEGA timeout service">
+	<module type="application" id="xmega.services.timeout.unit_tests" caption="Unit Tests for the XMEGA Timeout Service">
 		<info type="description" value="summary">
 		Test all functions of XMEGA timeout service
 		</info>

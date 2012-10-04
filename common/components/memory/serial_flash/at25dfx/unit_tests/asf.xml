@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.memory.serial_flash.at25dfx.unit_tests">
-		<module type="application" id="common.components.memory.serial_flash.at25dfx.unit_tests#sam" caption="AT25DFx DataFlash Unit Tests">
+		<module type="application" id="common.components.memory.serial_flash.at25dfx.unit_tests#sam" caption="Unit Tests for the SAM AT25DFx DataFlash Component">
 			<device-support value="sam3n"/>
 			<info type="description" value="summary">
 			AT25DFx DataFlash unit test. Ensure the good functionality of this module by testing one by one the main features of the AT25DFx component.
@@ -12,7 +12,7 @@
 			<require idref="sam.utils.syscalls"/>
 		</module>
 	</select-by-device>
-	<module type="meta" id="common.components.memory.serial_flash.at25dfx.unit_tests.common" caption="AT25DFx DataFlash Unit Tests Common Part">
+	<module type="meta" id="common.components.memory.serial_flash.at25dfx.unit_tests.common" caption="Unit Tests for the SAM AT25DFx DataFlash Common Part">
 		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>

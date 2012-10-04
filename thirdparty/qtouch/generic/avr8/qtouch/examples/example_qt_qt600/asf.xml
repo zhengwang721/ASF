@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600" caption="QTouch method Example Application - ATXMEGA128A1">
+	<module type="application" id="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600" caption="QTouch Method Example Application - ATXMEGA128A1">
 		<info type="description" value="summary">
 		This QTouch Library Example Application demonstrates usage of the QTouch method on QT600-ATXMEGA128A1-MCU board and QT16 Touch panel.
 		</info>

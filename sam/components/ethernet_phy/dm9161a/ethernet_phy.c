@@ -41,7 +41,7 @@
  *
  */
 
-#include "dm9161a.h"
+#include "ethernet_phy.h"
 #include "emac.h"
 #include "mii.h"
 

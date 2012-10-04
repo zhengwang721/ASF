@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.trng.unit_tests" caption="Set of unit tests for TRNG driver">
+	<module type="application" id="sam.drivers.trng.unit_tests" caption="Unit Tests for the SAM TRNG Driver">
 		<info type="description" value="summary">
 		Unit test application for the TRNG driver.
 		</info>

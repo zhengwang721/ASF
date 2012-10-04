@@ -59,7 +59,7 @@
 #include "pmc.h"
 #include "emac.h"
 #include "rstc.h"
-#include "dm9161a.h"
+#include "ethernet_phy.h"
 #include "netif/ethernetif.h"
 #include "sysclk.h"
 #include <string.h>

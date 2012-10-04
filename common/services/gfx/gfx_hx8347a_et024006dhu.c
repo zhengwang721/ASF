@@ -1,8 +1,7 @@
 /**
  * \file
  *
- * \brief Graphic service settings for the ET024006DHU panel using the HX8347A
- * display controller
+ * \brief Graphic service settings for the ET024006DHU panel using the HX8347A display controller
  *
  * This files includes the correct header files for the graphics service
  *

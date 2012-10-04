@@ -828,9 +828,11 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 	case AVR32_CANIF_ADDRESS:
 	case AVR32_TC0_ADDRESS:
 	case AVR32_ADCIFA_ADDRESS:
+#if (UC3C0 || UC3C1)
 	case AVR32_USART4_ADDRESS:
 	case AVR32_TWIM2_ADDRESS:
 	case AVR32_TWIS2_ADDRESS:
+#endif
 		return sysclk_get_pbc_hz();
 
 	default:
@@ -1125,6 +1127,7 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 		sysclk_enable_pbc_module(SYSCLK_ADCIFA);
 		break;
 
+#if (UC3C0 || UC3C1)
 	case AVR32_USART4_ADDRESS:
 		sysclk_enable_pbc_module(SYSCLK_USART4);
 		break;
@@ -1136,6 +1139,7 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 	case AVR32_TWIS2_ADDRESS:
 		sysclk_enable_pbc_module(SYSCLK_TWIS2);
 		break;
+#endif
 
 	default:
 		Assert(false);
@@ -1329,6 +1333,7 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 		sysclk_disable_pbc_module(SYSCLK_ADCIFA);
 		break;
 
+#if (UC3C0 || UC3C1)
 	case AVR32_USART4_ADDRESS:
 		sysclk_disable_pbc_module(SYSCLK_USART4);
 		break;
@@ -1340,7 +1345,8 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 	case AVR32_TWIS2_ADDRESS:
 		sysclk_disable_pbc_module(SYSCLK_TWIS2);
 		break;
-		
+#endif
+
 	default:
 		Assert(false);
 		return;

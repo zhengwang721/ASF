@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.memory.data_flash.at45dbx.unit_tests">
-		<module type="application" id="common.components.memory.data_flash.at45dbx.unit_tests#uc3" caption="AT45DBX DataFlash Unit Tests">
+		<module type="application" id="common.components.memory.data_flash.at45dbx.unit_tests#uc3" caption="Unit Tests for the Common AT45DBX DataFlash Component">
 			<device-support value="uc3"/>
 			<info type="description" value="summary">
 			AT45dbx DataFlash unit test. Ensure the good functionality of this module by testing one by one the main features of the AT45dbx component.
@@ -9,7 +9,7 @@
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="avr32.utils"/>
 		</module>
-		<module type="application" id="common.components.memory.data_flash.at45dbx.unit_tests#xmega" caption="AT45DBX DataFlash Unit Tests">
+		<module type="application" id="common.components.memory.data_flash.at45dbx.unit_tests#xmega" caption="Unit Tests for the Common AT45DBX DataFlash Component">
 			<device-support value="xmega"/>
 			<info type="description" value="summary">
 			AT45dbx DataFlash unit test. Ensure the good functionality of this module by testing one by one the main features of the AT45dbx component.

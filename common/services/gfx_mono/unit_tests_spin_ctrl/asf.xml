@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.gfx_mono.unit_tests_spinctrl" caption="Unit tests for spinner widget">
+	<module type="application" id="common.services.gfx_mono.unit_tests_spinctrl" caption="Unit Tests for the Common Mono Graphics Library (Spinner Widget)">
 		<device-support value="xmega"/>
 		<info type="description" value="summary">
 		Unit tests for spinner widget

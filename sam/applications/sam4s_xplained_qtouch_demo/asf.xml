@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.applications.sam4s_xplained_qtouch_demo" caption="SAM4S-Xplained QTouch and LED demonstration">
+	<module type="application" id="sam.applications.sam4s_xplained_qtouch_demo" caption="SAM4S Xplained QTouch and LED demonstration">
 		<info type="description" value="summary">
 		This demonstration program makes two LEDs on the board blinking depending on the QTouch input.
 		</info>

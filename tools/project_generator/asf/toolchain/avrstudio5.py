@@ -1463,7 +1463,7 @@ class AVRStudio5Project(GenericProject):
 				caption_items.extend((main_app.caption, kit_name))
 
 			# Special case for boards which can support several target devices
-			if kit_name == "STK600" or kit_name == "STK500":
+			if kit_name == "STK600" or kit_name == "STK500" or kit_name == "Simulator":
 				caption_items.append(device_description)
 
 		self.project_caption = " - ".join(caption_items)

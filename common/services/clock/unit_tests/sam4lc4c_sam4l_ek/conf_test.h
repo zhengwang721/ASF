@@ -64,6 +64,6 @@
 /** RCFAST Oscillator */
 #define BOARD_RCFAST_HZ
 /** Dfll max lock sycles */
-#define DFLL_MAX_LOCK_CYCLES 300
+#define DFLL_MAX_LOCK_CYCLES 10000
 
 #endif /* CONF_TEST_INCLUDED */

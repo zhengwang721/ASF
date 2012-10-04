@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.basic.sleepmgr.example" caption="Common API for Sleep Management / Example">
-		<module type="application" id="common.services.basic.sleepmgr.example#0" caption="Common API for Sleep Management / Example">
+	<select-by-device id="common.services.basic.sleepmgr.example" caption="Common API for Sleep Management Example">
+		<module type="application" id="common.services.basic.sleepmgr.example#0" caption="Common API for Sleep Management Example">
 			<info type="description" value="summary">
 			This example shows how to use the Common API for Sleep Management on AVR XMEGA devices.
 			</info>
@@ -15,7 +15,7 @@
 			<require idref="xmega.drivers.ioport"/>
 			<require idref="xmega.drivers.sleep"/>
 		</module>
-		<module type="application" id="common.services.basic.sleepmgr.example#1" caption="Common API for Sleep Management / Example">
+		<module type="application" id="common.services.basic.sleepmgr.example#1" caption="Common API for Sleep Management Example">
 			<info type="description" value="summary">
 			This example shows how to use the Common API for Sleep Management on AVR UC3 A0/A1/A3/A4/B0/B1 devices.
 			</info>
@@ -34,7 +34,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 		</module>
-		<module type="application" id="common.services.basic.sleepmgr.example#2" caption="Common API for Sleep Management / Example">
+		<module type="application" id="common.services.basic.sleepmgr.example#2" caption="Common API for Sleep Management Example">
 			<info type="description" value="summary">
 			This example shows how to use the Common API for Sleep Management on AVR UC3 C/L/D devices.
 			</info>
@@ -53,7 +53,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 		</module>
-		<module type="application" id="common.services.basic.sleepmgr.example#3" caption="Common API for Sleep Management / Example">
+		<module type="application" id="common.services.basic.sleepmgr.example#3" caption="Common API for Sleep Management Example">
 			<info type="description" value="summary">
 			This example shows how to use the Common API for Sleep Management on SAM4L devices.
 			</info>

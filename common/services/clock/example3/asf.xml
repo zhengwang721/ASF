@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.basic.clock.example3" caption="Common API for Clocks Control / Example 3">
-		<module type="application" id="common.services.basic.clock.example3#0" caption="Common API for Clocks Control / Example 3">
+	<select-by-device id="common.services.basic.clock.example3" caption="Common API for Clocks Control Example 3">
+		<module type="application" id="common.services.basic.clock.example3#0" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -15,7 +15,7 @@
 			<require idref="xmega.drivers.ioport"/>
 			<require idref="xmega.utils"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#1" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#1" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -30,7 +30,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#2" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#2" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -44,7 +44,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#3" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#3" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -58,7 +58,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#4" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#4" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -72,7 +72,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#5" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#5" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -85,7 +85,7 @@
 			<require idref="avr32.drivers.gpio"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#6" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#6" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>
@@ -94,12 +94,26 @@
 			</info>
 			<build type="c-source" value="clock_example3_sam.c"/>
 			<device-support value="sam3"/>
-			<device-support value="sam4"/>
+			<device-support value="sam4s"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
+		</module>
+		<module type="application" id="common.services.basic.clock.example3#7" caption="Common API for Clocks Control / Example 3">
+			<info type="description" value="summary">
+			Switch between various system clock sources and prescalers at run time.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="c-source" value="clock_example3_sam4l.c"/>
+			<device-support value="sam4l"/>
+			<require idref="sam.drivers.flashcalw"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.delay"/>
 		</module>
 	</select-by-device>
 </asf>

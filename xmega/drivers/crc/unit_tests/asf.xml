@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.crc.unit_test" caption="Unit tests for XMega CRC module driver">
+	<module type="application" id="xmega.drivers.crc.unit_test" caption="Unit Tests for the XMEGA CRC Driver">
 		<info type="description" value="summary">
 		Test all function of XMega CRC driver.
 		</info>

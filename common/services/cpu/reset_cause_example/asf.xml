@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.services.basic.cpu.example" caption="Common API for Chip Reset Cause Access / Example">
-		<module type="application" id="common.services.basic.cpu.example#xmega" caption="Common API for Chip Reset Cause Access / Example">
+	<select-by-device id="common.services.basic.cpu.example" caption="Common API for Chip Reset Cause Access Example">
+		<module type="application" id="common.services.basic.cpu.example#xmega" caption="Common API for Chip Reset Cause Access Example">
 			<info type="description" value="summary">
 			This example demonstrates how to use the Common API for Chip Reset Cause Access.
 			</info>
@@ -10,7 +10,7 @@
 			<require idref="common.boards"/>
 			<require idref="common.services.basic.cpu"/>
 		</module>
-		<module type="application" id="common.services.basic.cpu.example#uc3" caption="Common API for Chip Reset Cause Access / Example">
+		<module type="application" id="common.services.basic.cpu.example#uc3" caption="Common API for Chip Reset Cause Access Example">
 			<info type="description" value="summary">
 			This example demonstrates how to use the Common API for Chip Reset Cause Access.
 			</info>

@@ -3,7 +3,7 @@
  *
  * \brief CRC example1 for AVR XMEGA
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,8 +54,9 @@
  * - example1.c example application
  *
  * \section device_info Device Info
- * All AVR XMEGA AU devices with a CRC module can be used. This example have been
- * tested with the following setup:
+ * All AVR XMEGA AU/B/C devices with a CRC module can be used. This example has
+ * been tested with the following setup:
+ * - XMEGA-B1 Xplained
  * - XMEGA-A3BU Xplained
  *
  * \section description Description of the example

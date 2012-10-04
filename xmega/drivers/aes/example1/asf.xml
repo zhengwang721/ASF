@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.aes.example1" caption="XMEGA AES driver example1">
+	<module type="application" id="xmega.drivers.aes.example1" caption="XMEGA AES driver example 1">
 		<info type="description" value="summary">
 		Use the XMEGA built-in AES accelerator. A single block is encrypted and decrypted.
 		</info>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.can.unit_tests" caption="Set of unit tests for Controller Area Network driver">
+	<module type="application" id="sam.drivers.can.unit_tests" caption="Unit Tests for the SAM CAN Driver">
 		<info type="description" value="summary">
 		The CAN controller provides all the features required to implement the serial communication protocol CAN defined by Robert Bosch GmbH.
 		</info>

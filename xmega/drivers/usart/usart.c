@@ -139,7 +139,6 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 {
 	usart_enable_module_clock(usart);
 	usart_set_mode(usart, USART_CMODE_MSPI_gc);
-	port_pin_t sck_pin;
 
 	if (opt->spimode == 1 || opt->spimode == 3) {
 		/** \todo Fix when UCPHA_bm is added to header file. */
@@ -151,79 +150,58 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 
 	/* configure Clock polarity using INVEN bit of the correct SCK I/O port **/
 	if (opt->spimode == 2 || opt->spimode == 3) {
+		ioport_pin_t sck_pin;
+		
 #ifdef USARTC0
 		if ((uint16_t)usart == (uint16_t)&USARTC0) {
 			sck_pin = IOPORT_CREATE_PIN(PORTC, 1);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTC1
 		if ((uint16_t)usart == (uint16_t)&USARTC1) {
 			sck_pin = IOPORT_CREATE_PIN(PORTC, 5);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTD0
 		if ((uint16_t)usart == (uint16_t)&USARTD0) {
 			sck_pin = IOPORT_CREATE_PIN(PORTD, 1);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTD1
 		if ((uint16_t)usart == (uint16_t)&USARTD1) {
 			sck_pin = IOPORT_CREATE_PIN(PORTD, 5);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTE0
 		if ((uint16_t)usart == (uint16_t)&USARTE0) {
 			sck_pin = IOPORT_CREATE_PIN(PORTE, 1);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTE1
 		if ((uint16_t)usart == (uint16_t)&USARTE1) {
 			sck_pin = IOPORT_CREATE_PIN(PORTE, 5);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTF0
 		if ((uint16_t)usart == (uint16_t)&USARTF0) {
 			sck_pin = IOPORT_CREATE_PIN(PORTF, 1);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
 #ifdef USARTF1
 		if ((uint16_t)usart == (uint16_t)&USARTF1) {
 			sck_pin = IOPORT_CREATE_PIN(PORTF, 5);
-			ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-					ioport_pin_to_mask(sck_pin),
-					IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH |
-					IOPORT_INV_ENABLED);
 		}
 #endif
-	}
+		else {
+			return;
+		}
+		
+		/* Invert the USART output pin */
+		ioport_set_pin_dir(sck_pin, IOPORT_DIR_OUTPUT);
+		ioport_set_pin_mode(sck_pin,
+				IOPORT_MODE_TOTEM | IOPORT_MODE_INVERT_PIN);
+		ioport_set_pin_level(sck_pin, IOPORT_PIN_LEVEL_HIGH);
+	}	
 
 	usart_spi_set_baudrate(usart, opt->baudrate, sysclk_get_per_hz());
 	usart_tx_enable(usart);
