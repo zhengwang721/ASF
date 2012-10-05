@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>
 		<device-support value="uc3a"/>
+		<device-support value="uc3a3"/>
 		<device-support value="uc3b"/>
 		<device-support value="uc3c"/>
 		<device-support value="uc3d"/>

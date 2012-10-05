@@ -10,6 +10,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegab"/>
 		<require idref="xmega.drivers.dma"/>
 		<require idref="xmega.drivers.tc"/>
 		<require idref="xmega.drivers.pmic"/>
