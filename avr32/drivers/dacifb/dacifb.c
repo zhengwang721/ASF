@@ -47,32 +47,17 @@
 #include <avr32/io.h>
 #include "compiler.h"
 #include "dacifb.h"
-#include "cycle_counter.h"
+#include "delay.h"
 
-/** \brief Waits during at least the specified delay before returning.
+/** \brief Get DACIFB Calibration Data.
  *
- * \param us Number of microseconds to wait.
- * \param hsb_mhz_up Rounded-up HSB frequency in MHz.
- */
-static void dacifb_us_delay(uint32_t us, uint32_t hsb_mhz_up)
-{
-	t_cpu_time timer;
-
-	/* Timeout in 10ms */
-	cpu_set_timeout( cpu_us_2_cy(us, hsb_mhz_up), &timer );
-
-	while (!cpu_is_timeout(&timer)) {
-	}
-
-	cpu_stop_timeout(&timer);
-}
-
-/** \brief Waits during at least the specified delay before returning.
+ * Mandatory to call if factory calibration data are wanted to be used.
+ * If not called, Calibration Data should be set by the application.
  *
- * \param us Number of microseconds to wait.
- * \param hsb_mhz_up Rounded-up HSB frequency in MHz.
+ * \param *dacifb       Base address of the DACIFB
+ * \param *p_dacifb_opt Structure for the DACIFB core configuration
+ * \param instance      DACIFB core instance 0 for DACIFB0 or 1 for DACIFB1
  */
-
 void dacifb_get_calibration_data( volatile avr32_dacifb_t *dacifb,
 		dacifb_opt_t *p_dacifb_opt,
 		uint8_t instance)
@@ -95,7 +80,17 @@ void dacifb_get_calibration_data( volatile avr32_dacifb_t *dacifb,
 	}
 }
 
-uint8_t dacifb_configure(volatile avr32_dacifb_t *dacifb,
+/** \brief Configure DACIFB.
+ *
+ * Mandatory to call. If not called, DACIFB channels will have side effects.
+ *
+ * \param *dacifb        Base address of the DACIFB
+ * \param *p_dacifb_opt  Structure for the DACIFB core configuration
+ * \param pb_hz          Peripheral Bus frequency
+ *
+ * \return Boolean true if the module was configured, false otherwise
+ */
+bool dacifb_configure(volatile avr32_dacifb_t *dacifb,
 		dacifb_opt_t *p_dacifb_opt,
 		uint32_t pb_hz)
 {
@@ -118,7 +113,7 @@ uint8_t dacifb_configure(volatile avr32_dacifb_t *dacifb,
 
 	/* Check PRESC value */
 	if (prescaler > (1 << AVR32_DACIFB_TCR_PRESC_SIZE)) {
-		return DACIFB_CONFIGURATION_REFUSED;
+		return false;
 	}
 
 	/* Update prescaler_clock_hz value */
@@ -129,7 +124,7 @@ uint8_t dacifb_configure(volatile avr32_dacifb_t *dacifb,
 
 	/* Check CHI value */
 	if (counter > (1 << AVR32_DACIFB_TCR_CHI_SIZE)) {
-		return DACIFB_CONFIGURATION_REFUSED;
+		return false;
 	}
 
 	/* Sampling Rate Frequency */
@@ -167,10 +162,24 @@ uint8_t dacifb_configure(volatile avr32_dacifb_t *dacifb,
 	/* Enable DAC */
 	dacifb->cr |= AVR32_DACIFB_CR_EN_MASK;
 
-	return DACIFB_CONFIGURATION_ACCEPTED;
+	return true;
 }
 
-uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
+/** \brief Configure DACIFB specific channel.
+ *
+ * Sets channel Adjustment, Refresh_time and Trigger Mode settings.
+ *
+ * \param  *dacifb                Base address of the ADCIFA
+ * \param  channel                DACIFB_CHANNEL_SELECTION_NONE /
+ *                                DACIFB_CHANNEL_SELECTION_A /
+ *                                DACIFB_CHANNEL_SELECTION_B /
+ *                                DACIFB_CHANNEL_SELECTION_AB
+ * \param  p_dacifb_channel_opt   Structure for the sequencer configuration
+ * \param  prescaler_clock_hz     Prescaler Clock in Hertz (should be >
+ *                                500000Hz)
+ * \return Boolean true if the channel was configured, false otherwise
+ */
+bool dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		dacifb_channel_opt_t *p_dacifb_channel_opt,
 		uint32_t prescaler_clock_hz)
@@ -208,7 +217,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 	/* Check CHRA/CHRB fields */
 	if ((prescaler_min > (1 << AVR32_DACIFB_TCR_CHRA_SIZE)) ||
 			(prescaler_min > (1 << AVR32_DACIFB_TCR_CHRB_SIZE))) {
-		return DACIFB_CONFIGURATION_REFUSED;
+		return false;
 	}
 
 	/* Compute CHRA/CHRB fields  ( max value of 35us) */
@@ -220,7 +229,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 	/* Check CHRA/CHRB fields */
 	if ((prescaler_max > (1 << AVR32_DACIFB_TCR_CHRA_SIZE)) ||
 			(prescaler_max > (1 << AVR32_DACIFB_TCR_CHRB_SIZE))) {
-		return DACIFB_CONFIGURATION_REFUSED;
+		return false;
 	}
 
 	/* Find value for CHRA/CHRB in the range min/max values 25us/35us and
@@ -232,28 +241,28 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 
 	/* If value found is out of range, configuration refused */
 	if ((prescaler << 1) > prescaler_max) {
-		return DACIFB_CONFIGURATION_REFUSED;
+		return false;
 	}
 
 	/* Refresh Time */
 	switch (channel) {
 	case DACIFB_CHANNEL_SELECTION_A:
 		dacifb->tcr
-			|= ((prescaler <<
+			= ((prescaler <<
 				AVR32_DACIFB_TCR_CHRA_OFFSET) &
 				AVR32_DACIFB_TCR_CHRA_MASK);
 		break;
 
 	case DACIFB_CHANNEL_SELECTION_B:
 		dacifb->tcr
-			|= ((prescaler <<
+			= ((prescaler <<
 				AVR32_DACIFB_TCR_CHRB_OFFSET) &
 				AVR32_DACIFB_TCR_CHRB_MASK);
 		break;
 
 	case DACIFB_CHANNEL_SELECTION_AB:
 		dacifb->tcr
-			|= (((prescaler <<
+			= (((prescaler <<
 				AVR32_DACIFB_TCR_CHRA_OFFSET) &
 				AVR32_DACIFB_TCR_CHRA_MASK) |
 				((prescaler <<
@@ -320,7 +329,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 	switch (channel) {
 	case DACIFB_CHANNEL_SELECTION_A:
 		dacifb->drca
-			|= (((p_dacifb_channel_opt->left_adjustment <<
+			= (((p_dacifb_channel_opt->left_adjustment <<
 				AVR32_DACIFB_DRCA_DSD_OFFSET) &
 				AVR32_DACIFB_DRCA_DSD_MASK) |
 				((p_dacifb_channel_opt->data_shift <<
@@ -333,7 +342,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 
 	case DACIFB_CHANNEL_SELECTION_B:
 		dacifb->drcb
-			|= (((p_dacifb_channel_opt->left_adjustment <<
+			= (((p_dacifb_channel_opt->left_adjustment <<
 				AVR32_DACIFB_DRCB_DSD_OFFSET) &
 				AVR32_DACIFB_DRCB_DSD_MASK) |
 				((p_dacifb_channel_opt->data_shift <<
@@ -346,7 +355,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 
 	case DACIFB_CHANNEL_SELECTION_AB:
 		dacifb->drca
-			|= (((p_dacifb_channel_opt->left_adjustment <<
+			= (((p_dacifb_channel_opt->left_adjustment <<
 				AVR32_DACIFB_DRCA_DSD_OFFSET) &
 				AVR32_DACIFB_DRCA_DSD_MASK) |
 				((p_dacifb_channel_opt->data_shift <<
@@ -356,7 +365,7 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 				AVR32_DACIFB_DRCA_DRN_OFFSET) &
 				AVR32_DACIFB_DRCA_DRN_MASK));
 		dacifb->drcb
-			|= (((p_dacifb_channel_opt->left_adjustment <<
+			= (((p_dacifb_channel_opt->left_adjustment <<
 				AVR32_DACIFB_DRCB_DSD_OFFSET) &
 				AVR32_DACIFB_DRCB_DSD_MASK) |
 				((p_dacifb_channel_opt->data_shift <<
@@ -368,9 +377,16 @@ uint8_t dacifb_configure_channel( volatile avr32_dacifb_t *dacifb,
 		break;
 	}
 
-	return DACIFB_CONFIGURATION_ACCEPTED;
+	return true;
 }
 
+/** \brief Start analog to digital conversion
+ * \param *dacifb   Base address of the DACIFB
+ * \param  channel  DACIFB_CHANNEL_SELECTION_NONE /
+ *                  DACIFB_CHANNEL_SELECTION_A / DACIFB_CHANNEL_SELECTION_B /
+ *                  DACIFB_CHANNEL_SELECTION_AB
+ * \param  cpu_hz   CPU Clock frequency
+ */
 void dacifb_start_channel(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		uint32_t cpu_hz)
@@ -378,7 +394,7 @@ void dacifb_start_channel(volatile avr32_dacifb_t *dacifb,
 	Assert( dacifb != NULL );
 
 	/* Wait 2us */
-	dacifb_us_delay(2, cpu_hz);
+	delay_us(2);
 
 	switch (channel) {
 	case DACIFB_CHANNEL_SELECTION_A:
@@ -397,17 +413,28 @@ void dacifb_start_channel(volatile avr32_dacifb_t *dacifb,
 	}
 }
 
+/** \brief Check channel conversion status
+ *
+ * \param *dacifb    Base address of the DACIFB
+ * \param  channel   channel to check (0 to 1)
+ * \return Boolean true if conversion not running,  false if conversion running.
+ */
 bool dacifb_check_eoc(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel)
 {
 	Assert( dacifb != NULL );
 
 	/* Get SR register : EOC bit for channel */
-	return ((((dacifb->sr) & (channel << AVR32_DACIFB_SR_DEA_OFFSET)) ==
-	       (channel << AVR32_DACIFB_SR_DEA_OFFSET)) ?
-	       DACIFB_STATUS_COMPLETED : DACIFB_STATUS_NOT_COMPLETED);
+	return (dacifb->sr & (channel << AVR32_DACIFB_SR_DEA_OFFSET));
 }
 
+/** \brief Set channel value
+ *
+ * \param *dacifb    Base address of the DACIFB
+ * \param  channel   channel to handle (0 to 1)
+ * \param  dual      Dual Mode Selection
+ * \param  value     Value to be converted
+ */
 void dacifb_set_value(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		bool dual,
@@ -437,6 +464,13 @@ void dacifb_set_value(volatile avr32_dacifb_t *dacifb,
 	}
 }
 
+/** \brief Reload Timer for Automatic Trigger on DAC
+ *  \param *dacifb  Base address of the DACIFB
+ *  \param channel  DACIFB_CHANNEL_SELECTION_NONE / DACIFB_CHANNEL_SELECTION_A /
+ *                  DACIFB_CHANNEL_SELECTION_B / DACIFB_CHANNEL_SELECTION_AB
+ * \param  timer_us Timer Value in Microseconds
+ * \param  prescaler_clock_hz   Prescaler Clock in Hertz (should be > 500000Hz)
+ */
 void dacifb_reload_timer(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		uint8_t timer_us,
