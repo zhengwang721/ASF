@@ -53,9 +53,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup c42364a_group SODIMATEL YMCC42364AAANDCL LCD Glass component
+ * \defgroup c42364a_group Atmel YMCC42364AAANDCL LCD Glass component
  *
- * This is a driver for SODIMATEL YMCC42364AAANDCL LCD component.
+ * This is a driver for Atmel YMCC42364AAANDCL LCD component.
  * This component is the custom LCD used for SAM4L-EK.
  * This driver provides functions for initialization and control of the
  * LCD segments.

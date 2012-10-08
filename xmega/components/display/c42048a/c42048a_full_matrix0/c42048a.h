@@ -54,9 +54,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup c42048a_group SODIMATEL YMCC42048AAAYDCL LCD Glass component
+ * \defgroup c42048a_group Atmel YMCC42048AAAYDCL LCD Glass component
  *
- * This is a driver for SODIMATEL YMCC42048AAAYDCL LCD component.
+ * This is a driver for Atmel YMCC42048AAAYDCL LCD component.
  * This component is the custom LCD used for XMEGA-B1 Xplained.
  * This driver provides functions for initialization and control of the
  * LCD segments.
