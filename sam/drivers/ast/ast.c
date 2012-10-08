@@ -634,42 +634,52 @@ static void ast_interrupt_handler(void)
 /**
  * \brief Interrupt handler for AST periodic.
  */
+#ifdef AST_PER_ENABLE
 void AST_PER_Handler(void)
 {
 	ast_interrupt_handler();
 }
+#endif
 
 /**
  * \brief Interrupt handler for AST alarm.
  */
-void AST_ALARM_Handler(void)
+#ifdef AST_ALARM_ENABLE
+ void AST_ALARM_Handler(void)
 {
 	ast_interrupt_handler();
 }
+#endif
 
 /**
  * \brief Interrupt handler for AST periodic.
  */
-void AST_OVF_Handler(void)
+#ifdef AST_OVF_ENABLE
+ void AST_OVF_Handler(void)
 {
 	ast_interrupt_handler();
 }
+#endif
 
 /**
  * \brief Interrupt handler for AST alarm.
  */
+#ifdef AST_READY_ENABLE
 void AST_READY_Handler(void)
 {
 	ast_interrupt_handler();
 }
+#endif
 
 /**
  * \brief Interrupt handler for AST periodic.
  */
+#ifdef AST_CLKREADY_ENABLE
 void AST_CLKREADY_Handler(void)
 {
 	ast_interrupt_handler();
 }
+#endif
 
 /**
  * \brief This function enables the AST Asynchronous wake-up.
