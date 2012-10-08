@@ -137,6 +137,7 @@ uint8_t selected_pallet_color = 0;
 static void mxt_init(struct mxt_device *device)
 {
 	enum status_code status;
+	UNUSED(status);
 
 	/* T8 configuration object data */
 	uint8_t t8_object[] = {

@@ -117,6 +117,7 @@ void pwm_init(struct pwm_config *config, enum pwm_tc_t tc,
 {
 	/* Number of channels for this TC */
 	uint8_t num_chan = 0;
+	UNUSED(num_chan);
 
 	/* Set TC and correct I/O pin to output */
 	switch (tc) {
