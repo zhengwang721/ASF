@@ -9,6 +9,7 @@
 		<require idref="common.services.usb.class.hid.device.mouse.example"/>
 		<require idref="board.stk600-rc044x.atxmega128a4u"/>
 		<config name="config.board.stk600-rc044x.led" value="yes"/>
+		<generator value="iarew"/> 
 		<generator value="avrgcc" />
 		<generator value="as5_8" />
 		<generator value="doxygen"/>
