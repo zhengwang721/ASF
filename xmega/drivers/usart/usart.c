@@ -192,10 +192,7 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 			sck_pin = IOPORT_CREATE_PIN(PORTF, 5);
 		}
 #endif
-		else {
-			return;
-		}
-		
+
 		/* Invert the USART output pin */
 		ioport_set_pin_dir(sck_pin, IOPORT_DIR_OUTPUT);
 		ioport_set_pin_mode(sck_pin,
