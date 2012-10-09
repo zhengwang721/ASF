@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) driver for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,274 +40,15 @@
  * \asf_license_stop
  *
  */
- 
+
 #include "spi.h"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 /**
- * \defgroup sam_drivers_spi_group Serial Peripheral Interface (SPI)
- *
- * The SPI circuit is a synchronous serial data link that provides communication 
- * with external devices in Master or Slave mode. Connection to Peripheral DMA 
- * Controller channel capabilities optimizes data transfers.
- *
- * @{
+ * \addtogroup sam_drivers_spi_group
+ * @ {
  */
 
 #define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY((uint32_t) 0x535049)
-
-/**
- * \brief Reset SPI and set it to Slave mode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_reset(Spi *p_spi)
-{
-	p_spi->SPI_CR = SPI_CR_SWRST;
-}
-
-/**
- * \brief Enable SPI.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_enable(Spi *p_spi)
-{
-	p_spi->SPI_CR = SPI_CR_SPIEN;
-}
-
-/**
- * \brief Disable SPI.
- *
- * \note CS is de-asserted, which indicates that the last data is done, and user 
- * should check TX_EMPTY before disabling SPI.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_disable(Spi *p_spi)
-{
-	p_spi->SPI_CR = SPI_CR_SPIDIS;
-}
-
-/**
- * \brief Issue a LASTXFER command. 
- *  The next transfer is the last transfer and after that CS is de-asserted.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_set_lastxfer(Spi *p_spi)
-{
-	p_spi->SPI_CR = SPI_CR_LASTXFER;
-}
-
-/**
- * \brief Set SPI to Master mode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_set_master_mode(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_MSTR;
-}
-
-/**
- * \brief Set SPI to Slave mode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_set_slave_mode(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_MSTR);
-}
-
-/**
- * \brief Get SPI work mode.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 for master mode, 0 for slave mode.
- */
-uint32_t spi_get_mode(Spi *p_spi)
-{
-	if (p_spi->SPI_MR & SPI_MR_MSTR) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Set Variable Peripheral Select.
- * Peripheral Chip Select can be controlled by SPI_TDR.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_set_variable_peripheral_select(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_PS;
-}
-
-/**
- * \brief Set Fixed Peripheral Select.
- *  Peripheral Chip Select is controlled by SPI_MR.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_set_fixed_peripheral_select(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_PS);
-}
-
-/**
- * \brief Get Peripheral Select mode. 
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 for Variable mode, 0 for fixed mode.
- */
-uint32_t spi_get_peripheral_select_mode(Spi *p_spi)
-{
-	if (p_spi->SPI_MR & SPI_MR_PS) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Enable Peripheral Select Decode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_enable_peripheral_select_decode(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_PCSDEC;
-}
-
-/**
- * \brief Disable Peripheral Select Decode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_disable_peripheral_select_decode(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_PCSDEC);
-}
-
-/**
- * \brief Get Peripheral Select Decode mode.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 for decode mode, 0 for direct mode.
- */
-uint32_t spi_get_peripheral_select_decode_setting(Spi *p_spi)
-{
-	if (p_spi->SPI_MR & SPI_MR_PCSDEC) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Enable Mode Fault Detection.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_enable_mode_fault_detect(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_MODFDIS);
-}
-
-/**
- * \brief Disable Mode Fault Detection.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_disable_mode_fault_detect(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_MODFDIS;
-}
-
-/**
- * \brief Check if mode fault detection is enabled.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 for disabled, 0 for enabled.
- */
-uint32_t spi_get_mode_fault_detect_setting(Spi *p_spi)
-{
-	if (p_spi->SPI_MR & SPI_MR_MODFDIS) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Enable waiting RX_EMPTY before transfer starts.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_enable_tx_on_rx_empty(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_WDRBT;
-}
-
-/**
- * \brief Disable waiting RX_EMPTY before transfer starts.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_disable_tx_on_rx_empty(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_WDRBT);
-}
-
-/**
- * \brief Check if SPI waits RX_EMPTY before transfer starts.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 for SPI waits, 0 for no wait.
- */
-uint32_t spi_get_tx_on_rx_empty_setting(Spi *p_spi)
-{
-	if (p_spi->SPI_MR & SPI_MR_WDRBT) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Enable loopback mode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_enable_loopback(Spi *p_spi)
-{
-	p_spi->SPI_MR |= SPI_MR_LLB;
-}
-
-/**
- * \brief Disable loopback mode.
- *
- * \param p_spi Pointer to an SPI instance.
- */
-void spi_disable_loopback(Spi *p_spi)
-{
-	p_spi->SPI_MR &= (~SPI_MR_LLB);
-}
 
 /**
  * \brief Set Peripheral Chip Select (PCS) value.
@@ -373,7 +114,7 @@ spi_status_t spi_read(Spi *p_spi, uint16_t *us_data, uint8_t *p_pcs)
  * \param us_data The data to transmit.
  * \param uc_pcs Peripheral Chip Select Value while SPI works in peripheral select
  * mode, otherwise it's meaningless.
- * \param uc_last Indicate whether this data is the last one while SPI is working 
+ * \param uc_last Indicate whether this data is the last one while SPI is working
  * in variable peripheral select mode.
  *
  * \retval SPI_OK on Success.
@@ -403,135 +144,6 @@ spi_status_t spi_write(Spi *p_spi, uint16_t us_data,
 	p_spi->SPI_TDR = value;
 
 	return SPI_OK;
-}
-
-/**
- * \brief Read status register.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return SPI status register value.
- */
-uint32_t spi_read_status(Spi *p_spi)
-{
-	return p_spi->SPI_SR;
-}
-
-/**
- * \brief Test if the SPI is enabled.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 if the SPI is enabled, otherwise 0.
- */
-uint32_t spi_is_enabled(Spi *p_spi)
-{
-	if (p_spi->SPI_SR & SPI_SR_SPIENS) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Check if all transmissions are complete.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \retval 1 if transmissions are complete.
- * \retval 0 if transmissions are not complete.
- */
-uint32_t spi_is_tx_empty(Spi *p_spi)
-{
-	if (p_spi->SPI_SR & SPI_SR_TXEMPTY) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Check if all transmissions are ready.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \retval 1 if transmissions are complete.
- * \retval 0 if transmissions are not complete.
- */
-uint32_t spi_is_tx_ready(Spi *p_spi)
-{
-	if (p_spi->SPI_SR & SPI_SR_TDRE) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Check if the SPI contains a received character.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 if the SPI Receive Holding Register is full, otherwise 0.
- */
-uint32_t spi_is_rx_full(Spi *p_spi)
-{
-	if (p_spi->SPI_SR & SPI_SR_RDRF) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Check if all receptions are ready.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return 1 if the SPI Receiver is ready, otherwise 0.
- */
-uint32_t spi_is_rx_ready(Spi *p_spi)
-{
-	if ((p_spi->SPI_SR & (SPI_SR_RDRF | SPI_SR_TXEMPTY))
-			== (SPI_SR_RDRF | SPI_SR_TXEMPTY)) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-/**
- * \brief Enable SPI interrupts.
- *
- * \param p_spi Pointer to an SPI instance.
- * \param ul_sources Interrupts to be enabled.
- */
-void spi_enable_interrupt(Spi *p_spi, uint32_t ul_sources)
-{
-	p_spi->SPI_IER = ul_sources;
-}
-
-/**
- * \brief Disable SPI interrupts.
- *
- * \param p_spi Pointer to an SPI instance.
- * \param ul_sources Interrupts to be disabled.
- */
-void spi_disable_interrupt(Spi *p_spi, uint32_t ul_sources)
-{
-	p_spi->SPI_IDR = ul_sources;
-}
-
-/**
- * \brief Read SPI interrupt mask.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return The interrupt mask value.
- */
-uint32_t spi_read_interrupt_mask(Spi *p_spi)
-{
-	return p_spi->SPI_IMR;
 }
 
 /**
@@ -603,6 +215,28 @@ void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch,
 }
 
 /**
+ * \brief Calculate the baudrate divider.
+ *
+ * \param baudrate Baudrate value.
+ * \param mck      SPI module input clock frequency (MCK clock, Hz).
+ *
+ * \return Divider or error code.
+ *   \retval >=0  Success.
+ *   \retval  <0  Error.
+ */
+int16_t spi_calc_baudrate_div(const uint32_t baudrate, uint32_t mck)
+{
+	int baud_div = div_ceil(mck, baudrate);
+
+	/* The value of baud_div is from 1 to 255 in the SCBR field. */
+	if (baud_div <= 0 || baud_div > 255) {
+		return -1;
+	}
+
+	return baud_div;
+}
+
+/**
  * \brief Set Serial Clock Baud Rate divider value (SCBR).
  *
  * \param p_spi Pointer to an SPI instance.
@@ -632,49 +266,6 @@ void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch,
 			| SPI_CSR_DLYBCT(uc_dlybct);
 }
 
-
-#if (SAM3S || SAM3N || SAM4S)
-/**
- * \brief Get PDC registers base address.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return PDC registers base for PDC driver to access.
- */
-Pdc *spi_get_pdc_base(Spi *p_spi)
-{
-	p_spi = p_spi;	/* Stop warning */
-
-	return PDC_SPI;
-}
-#endif
-
-#if (SAM3U  || SAM3XA)
-/**
- * \brief Get transmit data register address for DMA operation.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return Transmit address for DMA access.
- */
-void *spi_get_tx_access(Spi *p_spi)
-{
-	return (void *)&(p_spi->SPI_TDR);
-}
-
-/**
- * \brief Get receive data register address for DMA operation.
- *
- * \param p_spi Pointer to an SPI instance.
- *
- * \return Receive address for DMA access.
- */
-void *spi_get_rx_access(Spi *p_spi)
-{
-	return (void *)&(p_spi->SPI_RDR);
-}
-#endif
-
 /**
  * \brief Enable or disable write protection of SPI registers.
  *
@@ -702,12 +293,6 @@ uint32_t spi_get_writeprotect_status(Spi *p_spi)
 	return p_spi->SPI_WPSR;
 }
 
-//@}
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
+/**
+ * @}
+ */

@@ -177,7 +177,7 @@ extern void spi_deselect_device(Spi *p_spi, struct spi_device *device);
  */
 static inline void spi_write_single(Spi *p_spi, uint8_t data)
 {
-	spi_write(p_spi, (uint16_t)data, 0, 0);
+	spi_put(p_spi, (uint16_t)data);
 }
 
 /**
@@ -202,10 +202,7 @@ extern status_code_t spi_write_packet(Spi *p_spi,
  */
 static inline void spi_read_single(Spi *p_spi, uint8_t *data)
 {
-	uint16_t us_data;
-
-	spi_read(p_spi, &us_data, 0);
-	*data = us_data;
+	*data = (uint8_t)spi_get(p_spi);
 }
 
 /**
