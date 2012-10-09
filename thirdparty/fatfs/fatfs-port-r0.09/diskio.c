@@ -56,9 +56,18 @@ extern "C" {
 #include <stdio.h>
 #include <assert.h>
 
-#if SAM
+#if (SAM3 || SAM4S)
 # include <rtc.h>
 #endif
+
+/**
+ * \defgroup thirdparty_fatfs_port_group Port of low level driver for FatFS
+ *
+ * Low level driver for FatFS. The driver is based on the ctrl access module
+ * of the specific MCU device.
+ *
+ * @{
+ */
 
 /** Default sector size */
 #define SECTOR_SIZE_DEFAULT 512
@@ -83,7 +92,7 @@ DSTATUS disk_initialize(BYTE drv)
 	int i;
 	Ctrl_status mem_status;
 
-#if SAM
+#if (SAM3 || SAM4S)
 	/* Default RTC configuration, 24-hour mode */
 	rtc_set_hour_mode(RTC, 0);
 #endif
@@ -324,6 +333,8 @@ DRESULT disk_ioctl(BYTE drv, BYTE ctrl, void *buff)
 
 	return res;
 }
+
+//@}
 
 /// @cond 0
 /**INDENT-OFF**/

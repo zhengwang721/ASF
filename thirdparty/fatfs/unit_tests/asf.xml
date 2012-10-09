@@ -9,7 +9,8 @@
 			<build type="header-file" value="memories_initialization.h"/>
 			<build type="include-path" value="."/>
 			<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
-			<device-support value="sam"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
 			<require idref="common.services.fs.fatfs"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.utils.unit_test"/>

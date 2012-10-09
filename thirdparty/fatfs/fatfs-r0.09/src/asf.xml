@@ -3,9 +3,6 @@
 		<info type="description" value="summary">
 		FatFS is a generic FAT file system module for small embedded systems. The FatFS is written in compliance with ANSI C and completely separated from the disk I/O layer. For more information on FatFS, check elm-chan.org/fsw/ff/00index_e.html.
 		</info>
-		<info type="gui-flag" value="hidden"/>
-		<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
-		<build type="module-config" subtype="path" value="module_config/"/>
 		<build type="distribute" subtype="file" value="00readme.txt"/>
 		<build type="distribute" subtype="license" value="../../license.txt"/>
 		<build type="distribute" subtype="file" value="../../ATMEL-disclaimer.txt"/>
@@ -77,51 +74,71 @@
 		<build type="distribute" subtype="file" value="../doc/en/write.html"/>
 		<require idref="config.common.services.fs.fatfs.codepage"/>
 		<require idref="common.services.fs.fatfs-port"/>
-		<device-support value="sam"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4s"/>
 		<device-support value="xmega"/>
+		<build type="doxygen-entry-point" value="thirdparty_fatfs_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 	</module>
-	<select-by-config id="config.common.services.fs.fatfs.codepage" name="config.common.services.fs.fatfs.codepage" caption="FATFS OEM code page to be used on the target system" default="932">
+	<select-by-config id="config.common.services.fs.fatfs.codepage" name="config.common.services.fs.fatfs.codepage" caption="FATFS OEM code page to be used on the target system" default="sbcs">
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#932" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page 932: Japanese Shift-JIS (DBCS, OEM, Windows).
 			</info>
 			<build type="c-source" value="option/cc932.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_932/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#936" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page 936: Simplified Chinese GBK (DBCS, OEM, Windows).
 			</info>
 			<build type="c-source" value="option/cc936.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_936/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#949" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page 949: Korean (DBCS, OEM, Windows).
 			</info>
 			<build type="c-source" value="option/cc949.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_949/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#950" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page 950: Traditional Chinese Big5 (DBCS, OEM, Windows).
 			</info>
 			<build type="c-source" value="option/cc950.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_950/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#sbcs" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page SBCS: SBCS code pages (DBCS, OEM, Windows).
 			</info>
 			<build type="c-source" value="option/ccsbcs.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_sbcs/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 		<module type="meta" id="config.common.services.fs.fatfs.codepage#1" caption="FATFS OEM code page to be used on the target system">
 			<info type="description" value="summary">
 			FATFS OEM code page 1: ASCII only mode. Valid for non LFN cfg, the macro of "_USE_LFN" in the conf_fatfs.h must be set to 0.
 			</info>
+			<build type="module-config" subtype="required-header-file" value="conf_fatfs.h"/>
+			<build type="module-config" subtype="path" value="module_config_1/"/>
 			<device-support value="sam"/>
+			<device-support value="xmega"/>
 		</module>
 	</select-by-config>
 </asf>

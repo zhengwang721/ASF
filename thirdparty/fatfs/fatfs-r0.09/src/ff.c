@@ -95,7 +95,15 @@
 #include "ff.h"			/* FatFs configurations and declarations */
 #include "diskio.h"		/* Declarations of low level disk I/O functions */
 
-
+/**
+ * \defgroup thirdparty_fatfs_group FatFS file system service
+ *
+ * Service of FatFS file system. This service provides a generic FAT file
+ * system module for the ASF systems.
+ *
+ * @{
+ */
+ 
 /*--------------------------------------------------------------------------
 
    Module Private Definitions
@@ -4075,3 +4083,5 @@ int f_printf (
 
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
+
+//@}

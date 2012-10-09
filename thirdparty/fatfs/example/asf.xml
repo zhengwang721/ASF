@@ -8,7 +8,8 @@
 			<build type="c-source" value="fatfs_access_example.c"/>
 			<build type="header-file" value="memories_initialization.h"/>
 			<build type="c-source" value="memories_initialization_sam.c"/>
-			<device-support value="sam"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
 			<require idref="common.services.fs.fatfs"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>

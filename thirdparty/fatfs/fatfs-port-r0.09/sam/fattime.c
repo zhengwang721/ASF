@@ -41,11 +41,9 @@
  *
  */
 #include "compiler.h"
-#include "ff.h"
-#include "diskio.h"
-
 #include "rtc.h"
 
+uint32_t get_fattime(void);
 /**
  * \brief Current time returned is packed into a DWORD value.
  *
@@ -65,7 +63,7 @@
  *
  * \return Current time.
  */
-DWORD get_fattime(void)
+uint32_t get_fattime(void)
 {
 	uint32_t ul_time;
 	uint32_t ul_hour, ul_minute, ul_second;

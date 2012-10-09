@@ -42,16 +42,15 @@
  */
 #include <compiler.h>
 #include <calendar.h>
-#include "ff.h"
-#include "diskio.h"
 #if XMEGA_A3B || XMEGA_A3BU
 # include <rtc32.h>
 #else
 # include <rtc.h>
 #endif
 
+uint32_t get_fattime(void);
 /**
- * \brief Current time returned is packed into a DWORD value.
+ * \brief Current time returned is packed into a uint32_t value.
  *
  * The bit field is as follows:
  *
@@ -69,10 +68,10 @@
  *
  * \return Current time.
  */
-DWORD get_fattime(void)
+uint32_t get_fattime(void)
 {
 	uint32_t timestamp;
-	DWORD fattime;
+	uint32_t fattime;
 	struct calendar_date cal;
 
 	/* Retrieve timestamp and convert to date and time */
