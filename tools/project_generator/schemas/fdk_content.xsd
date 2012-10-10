@@ -22,6 +22,7 @@ Each XML file can be validated with this XML Schema.
          <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element ref="project" minOccurs="0"/>
             <xs:element ref="device-map" minOccurs="0"/>
+            <xs:element ref="device-alias-map" minOccurs="0"/>
             <xs:element ref="board" minOccurs="0"/>
             <xs:element ref="module" minOccurs="0"/>
             <xs:element ref="select-by-device" minOccurs="0"/>
@@ -51,6 +52,12 @@ Each XML file can be validated with this XML Schema.
       </xs:restriction>
     </xs:simpleType>
 
+   <xs:simpleType name="fdkEid">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[a-z0-9\.\-_]+"/>
+      </xs:restriction>
+    </xs:simpleType>
+
    <xs:element name="project">
       <xs:annotation>
          <xs:documentation>
@@ -70,8 +77,11 @@ A project description is the starting point for the project generator, and must 
             <xs:element ref="board-addon" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="build" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="require" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="require-external" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="info" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="config" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config-list" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="generator" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="related-module" minOccurs="0" maxOccurs="unbounded"/>
          </xs:choice>
@@ -131,8 +141,11 @@ A project description is the starting point for the project generator, and must 
          <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element ref="build" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="require" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="require-external" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="info" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="config" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config-list" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="related-module" minOccurs="0" maxOccurs="unbounded"/>
          </xs:choice>
          <xs:attribute name="id" type="asfId" use="required">
@@ -171,8 +184,10 @@ A project description is the starting point for the project generator, and must 
          <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element ref="build" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="require" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="require-external" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="info" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="device-support" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="device-support-alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="generator" minOccurs="0" maxOccurs="unbounded" />
             <xs:element ref="related-module" minOccurs="0" maxOccurs="unbounded"/>
          </xs:choice>
@@ -247,6 +262,26 @@ It can be :
             <xs:annotation>
                <xs:documentation>
                   Unique id of device-map.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="device-alias-map">
+      <xs:annotation>
+         <xs:documentation>
+            Specify a custom group of devices
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="device-support" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+         <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  Unique name of the device alias
                </xs:documentation>
             </xs:annotation>
          </xs:attribute>
@@ -624,6 +659,30 @@ It will try to find a module within the tag that contains the same id, with a ha
       </xs:complexType>
    </xs:element>
 
+   <xs:element name="require-external">
+      <xs:annotation>
+         <xs:documentation>
+            The require-external element is used for specifying what other modules from a different extension is needed by a module.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute name="eidref" type="fdkEid" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The id of the external dependency to get module from. This is defined in the extension description.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="idref" type="asfId" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The id of the required element
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
    <xs:element name="board-addon">
       <xs:annotation>
          <xs:documentation>
@@ -679,6 +738,68 @@ It will try to find a module within the tag that contains the same id, with a ha
       </xs:complexType>
    </xs:element>
 
+   <xs:element name="toolchain-config">
+      <xs:annotation>
+         <xs:documentation>
+            The config element is used to set the value of a toolchain configuration.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The name of the toolchain configuration.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="value" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The value to set for the toolchain configuration.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="toolchain" type="generatorType" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  Toolchain configuration is only valid for the toolchain with the given name
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="toolchain-config-list">
+      <xs:annotation>
+         <xs:documentation>
+            The config element is used to add a value to a toolchain configuration.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The name of the toolchain configuration.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="value" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  The value to add to the toolchain configuration.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="toolchain" type="generatorType" use="required">
+            <xs:annotation>
+               <xs:documentation>
+                  Toolchain configuration is only valid for the toolchain with the given name
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
 
    <xs:element name="device-support">
       <xs:complexType>
@@ -686,6 +807,19 @@ It will try to find a module within the tag that contains the same id, with a ha
             <xs:annotation>
                <xs:documentation>
                   Idenfifier of device that is supported. For example atxmega128a1.
+               </xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
+
+     <xs:element name="device-support-alias">
+      <xs:complexType>
+         <xs:attribute name="value" type="xs:string">
+            <xs:annotation>
+               <xs:documentation>
+                  Idenfifier of device alias that is supported.
                </xs:documentation>
             </xs:annotation>
          </xs:attribute>

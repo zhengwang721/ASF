@@ -6,12 +6,13 @@ import time
 
 from optparse import OptionParser
 
+import asf.exception
 import asf.helper
 
 from asf.configuration import ConfigurationHandler
-from asf.runtime import Runtime
 from asf.database import MCU
-import asf.exception
+from asf.extensionmanager import *
+from asf.runtime import Runtime
 
 
 class ConsoleRuntime(Runtime):
@@ -87,7 +88,7 @@ class ConsoleRuntime(Runtime):
 			print "\nFrom the xml file", c.fromfile
 
 			print "\nRequirements:"
-			c.visualize_requirements(self.output)
+			c.visualize_requirements(self.output, main_ext=self.db.extension)
 
 			print "\nInformation:"
 			c.visualize_info(self.output)
@@ -170,6 +171,9 @@ class ConsoleRuntime(Runtime):
 if __name__ == "__main__":
 
 	start_time = time.clock()
+
+	script_path = sys.path[0]
+
 	parser = OptionParser(usage=
 		"""<options> <args>.
 		The arguments specifies the ids of the projects to generate.
@@ -177,7 +181,11 @@ if __name__ == "__main__":
 		Ex: 'avr32* common*' will match all avr32 and common projects.
 		If no ids are given all projects are generated""")
 	# General otions
-	parser.add_option("-b", "--basedir", dest="basedir", help="Set root directory of ASF installation")
+	# parser.add_option("","--ext-root", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("-b","--basedir", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("","--main-ext-uuid", dest="main_ext_uuid", default="Atmel.ASF", help="Main FDK extension UUID")
+	parser.add_option("","--main-ext-version", dest="main_ext_version", help="Main FDK extension version")
+
 	parser.add_option("-s", "--set-config", action="append", dest="config", help="Set a config value: --set-config <name>=<value>")
 	parser.add_option("-c","--cached", action="store_true", dest="cached", default=False, help="Do not rescan all directories, but use the list of XML files from last run")
 
@@ -189,19 +197,10 @@ if __name__ == "__main__":
 
 	(options, args) = parser.parse_args()
 
-	script_path = sys.path[0]
-
-	basedir = options.basedir
-	if basedir is None:
-		basedir = "../../"
-
 	# Find paths for input files in same folder as this script
 	templatedir = os.path.join(script_path, "templates")
-	cachedir = os.path.join(script_path, "cache")
-	xml_schema_path = os.path.join(script_path, "asf.xsd")
-
-	# Change directory to the ASF root folder
-	os.chdir(basedir)
+	xml_schema_dir = os.path.join(script_path, "schemas")
+	device_map = os.path.join(script_path, "device_maps", "atmel.xml")
 
 	# Read command line configuration
 	try:
@@ -213,11 +212,7 @@ if __name__ == "__main__":
 
 	runtime = ConsoleRuntime(templatedir, configuration)
 
-	runtime.create_and_set_cache_dir(cachedir)
-
 	runtime.set_debug(options.debug)
-	runtime.set_use_file_list_cache(options.cached)
-	runtime.set_xml_schema_path(xml_schema_path)
 	runtime.set_commandline_args(args)
 
 	# If debugging is enabled and not the log level, we set it to debug
@@ -238,18 +233,33 @@ if __name__ == "__main__":
 	runtime.log.debug("Starting")
 
 	try:
-		# Read XML files
-		runtime.load_db()
+		# Create the extension manager
+		ext_manager = FdkExtensionManager(runtime, options.ext_root, use_cache=options.cached)
+
+		# Load prerequisites like XML schemas and device map
+		ext_manager.load_schemas(xml_schema_dir)
+		ext_manager.load_device_map(device_map)
+
+		# Now scan for extensions and load them
+		ext_paths = ext_manager.scan_for_extensions()
+		ext_manager.load_and_register_extensions(ext_paths)
+
+		# Get the database of the main extension
+		main_ext = ext_manager.request_extension(options.main_ext_uuid, options.main_ext_version)
+		main_db = main_ext.get_database()
+
+		# Set the database for the runtime class
+		runtime.set_db(main_db)
 
 		# Sanity check of database
-		version = runtime.db.get_framework_version()
-		runtime.log.info("Finished loading ASF version: " + version)
+		version = main_db.get_framework_version()
+		runtime.log.info("Finished loading extension %s.%s-%s" % (main_ext.org, main_ext.shortname, main_ext.version))
 
 		if options.cached:
 			runtime.log.info("Skipping DB sanity check in cached mode")
 		else:
 			runtime.log.info("Running DB sanity check")
-			runtime.database_sanity_check()
+			main_db.sanity_check()
 
 		runtime.run()
 	except Exception as e:

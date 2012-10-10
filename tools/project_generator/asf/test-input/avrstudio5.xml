@@ -18,6 +18,11 @@
 		<build type="header-file" value="conf_awesome.h"/>
 		<require idref="board.xplain"/>
 		<require idref="xmega.driver.awesome.example1"/>
+		<toolchain-config name="AvrGcc.Project.Only" value="Project" toolchain="avrgcc"/>
+		<toolchain-config name="AvrGcc.Board.And.Project" value="Project" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Project.Only.List" value="Project_1" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Project.Only.List" value="Project_2" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Board.And.Project.List" value="Project" toolchain="avrgcc"/>
 	</project>
 
 	<board id="board.xplain" caption="Xplain" mcu="atxmega128a1">
@@ -25,6 +30,11 @@
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="c-source" value="init.c"/>
 		<build type="header-file" value="xplain.h"/>
+		<toolchain-config name="AvrGcc.Board.Only" value="Board" toolchain="avrgcc"/>
+		<toolchain-config name="AvrGcc.Board.And.Project" value="Board" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Board.Only.List" value="Board" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Board.And.Project.List" value="Board" toolchain="avrgcc"/>
+		<toolchain-config-list name="Avr32Gcc.Board.Only.List" value="Board" toolchain="avr32gcc"/>
 	</board>
 
 	<module type="application" id="xmega.driver.awesome.example1" caption="Awesome driver example 1">

@@ -12,6 +12,7 @@ import asf.helper
 from asf.archiver import Archiver
 from asf.database import *
 from asf.configuration import ConfigurationHandler
+from asf.extensionmanager import *
 from asf.runtime import Runtime
 
 
@@ -235,8 +236,13 @@ class ProjectGeneratorRuntime(Runtime):
 		f.close()
 		self.log.debug("Opened input file '%s' for processing" % (input_filename))
 
-		# Convert slashes to correct format for this script
-		filename_list = [os.path.normpath(x.strip()) for x in filename_list]
+		# Process the file list so that path's correspond to the build items
+		# returned by the extension's database
+		def prepare_file_path(filename):
+			filename = os.path.join(self.db.extension.relative_root_path, filename.strip())
+			return os.path.normpath(filename)
+
+		filename_list = [prepare_file_path(x) for x in filename_list]
 
 		# Find modules that contain the files specified
 		self.log.info("Finding modules for file input")
@@ -313,6 +319,9 @@ if __name__ == "__main__":
 		ERROR_INVALID = 2
 
 	start_time = time.clock()
+
+	script_path = sys.path[0]
+
 	parser = OptionParser(usage=
 		"""<options> input_file_list
 		Finds projects that needs to be recompiled based on the files given by the input_file_list argument.
@@ -325,7 +334,13 @@ if __name__ == "__main__":
 		python find_rebuild_list.py file_with_list_of_changed_files.txt
 		""")
 	# General otions
-	parser.add_option("-b", "--basedir", dest="basedir", help="Set root directory of ASF installation")
+	# parser.add_option("","--ext-root", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("-b","--basedir", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("","--main-ext-uuid", dest="main_ext_uuid", default="Atmel.ASF", help="Main FDK extension UUID")
+	parser.add_option("","--main-ext-version", dest="main_ext_version", help="Main FDK extension version")
+
+	parser.add_option("-c","--cached", action="store_true", dest="cached", default=False, help="Do not rescan all directories, but use the list of XML files from last run")
+
 	parser.add_option("", "--check-device-support", dest="device_support", action="store_true", default=False, help="Check device support and eliminate projects that do not have device support")
 	parser.add_option("", "--show-not-affected", dest="not_affected", action="store_true", default=False, help="Show all projects not affected by the change to debug log (useful for debugging)")
 	default_outfile = "find_rebuild_list_result.txt"
@@ -342,33 +357,20 @@ if __name__ == "__main__":
 	if len(args) < 1:
 		parser.error("Incorrect number of arguments or usage")
 
-	script_path = sys.path[0]
-
-	basedir = options.basedir
-	if basedir is None:
-		basedir = "../../"
-
 	# Find paths for input files in same folder as this script
 	templatedir = os.path.join(script_path, "templates")
-	guidir = os.path.join(script_path, "plugins")
-	cachedir = os.path.join(script_path, "cache")
-	xml_schema_path = os.path.join(script_path, "asf.xsd")
+	xml_schema_dir = os.path.join(script_path, "schemas")
+	device_map = os.path.join(script_path, "device_maps", "atmel.xml")
 
 	# Find absolute paths
 	outfile_path = os.path.abspath(options.outfile)
 	current_folder = os.getcwd()
 
-	# Change directory to the ASF root folder
-	os.chdir(basedir)
-
 	configuration = ConfigurationHandler()
 
 	runtime = ProjectGeneratorRuntime(templatedir, configuration)
 
-	runtime.create_and_set_cache_dir(cachedir)
-
 	runtime.set_debug(options.debug)
-	runtime.set_xml_schema_path(xml_schema_path)
 	runtime.set_commandline_args(args)
 	runtime.set_check_device_support(options.device_support)
 	runtime.set_show_not_affected(options.not_affected)
@@ -397,11 +399,26 @@ if __name__ == "__main__":
 	return_code = ReturnCode.SUCCESS
 
 	try:
-		# Read XML files
-		runtime.load_db()
+		# Create the extension manager
+		ext_manager = FdkExtensionManager(runtime, options.ext_root, use_cache=options.cached)
+
+		# Load prerequisites like XML schemas and device map
+		ext_manager.load_schemas(xml_schema_dir)
+		ext_manager.load_device_map(device_map)
+
+		# Now scan for extensions and load them
+		ext_paths = ext_manager.scan_for_extensions()
+		ext_manager.load_and_register_extensions(ext_paths)
+
+		# Get the database of the main extension
+		main_ext = ext_manager.request_extension(options.main_ext_uuid, options.main_ext_version)
+		main_db = main_ext.get_database()
+
+		# Set the database for the runtime class
+		runtime.set_db(main_db)
 
 		# Load framework version
-		version = runtime.db.get_framework_version()
+		version = main_db.get_framework_version()
 		runtime.log.info("Finished loading ASF version: " + version)
 
 		runtime.run()

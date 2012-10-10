@@ -200,6 +200,30 @@ class GenericElement(object):
 		total_config.update(toolchain_config)
 		return total_config
 
+	def get_toolchain_configuration(self):
+		"""
+		Returns a tuple with two dictionaries, respectively mapping toolchain config
+		names to single values and to lists of values. The toolchain configurations must
+		be set with the toolchain-config or toolchain-config-list elements in the board
+		or the project.
+		
+		The project will override any same-named toolchain-config that is set in the
+		board, while for toolchain-config-list the values are simply added appended to
+		the list.
+		"""
+		# Fetch toolchain configs and config lists from board
+		(configs, list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
+
+		# Update configs with those from project
+		(more_configs, more_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
+		configs.update(more_configs)
+
+		# Add list configs from project to the board's list configs
+		for config_name, config_values in more_list_configs.items():
+			list_configs[config_name] = list_configs.get(config_name, []) + config_values
+
+		return (configs, list_configs)
+
 	def _resolve_child_modules(self, root_module, module_type=None):
 		"""
 		Returns a tuple with two lists of modules which are directly

@@ -30,6 +30,14 @@ class ConfigItem(object):
 			component = db.lookup_by_id(idref)
 			self.prerequisites.append(component)
 
+		for child in element.iterchildren(tag='require-external'):
+			eidref = child.attrib['eidref']
+			idref = child.attrib['idref']
+
+			# db raises exception for erroneous idref
+			component = db.lookup_external_by_id(eidref, idref)
+			self.prerequisites.append(component)
+
 		self._element_configuration = self._get_configuration_from_element()
 
 	@property
@@ -47,6 +55,10 @@ class ConfigItem(object):
 	@property
 	def toolchain(self):
 		return self._get_property('toolchain')
+
+	@property
+	def extension(self):
+		return self.db.extension
 
 	@property
 	def basedir(self):
@@ -521,6 +533,44 @@ class ConfigItem(object):
 
 		return result
 
+	def _get_toolchain_configuration_from_element(self, toolchain):
+		"""
+		Return a tuple with two dictionaries: one which maps toolchain setting names
+		to values, and one which maps toolchain setting names to value lists.
+
+		For example, if an element contains:
+			<toolchain-config name="A" value="B" toolchain="..."/>
+			<toolchain-config-list name="C" value="D" toolchain="..."/>
+			<toolchain-config-list name="C" value="E" toolchain="..."/>
+
+		...this function will return the tuple:
+			({"A" : "B"}, {C : ["D", "E"]})
+		"""
+		config_elements = self.get_child_elements('toolchain-config', ['toolchain'], [toolchain])
+		config_list_elements = self.get_child_elements('toolchain-config-list', ['toolchain'], [toolchain])
+
+		configs = {}
+		config_lists = {}
+
+		# Find single-valued configs
+		for e in config_elements:
+			name = e.get('name')
+			value = e.get('value')
+
+			if configs.get(name):
+				raise ConfigError("ConfigItem `%s' contains multiple toolchain-configs with name `%s'. Multiple definitions not allowed." % (self.id, name))
+
+			configs[name] = value
+
+		# Find list configs
+		for e in config_list_elements:
+			name = e.get('name')
+			value = e.get('value')
+
+			config_lists[name] = config_lists.get(name, []) + [value]
+
+		return (configs, config_lists)
+
 	def get_configuration(self):
 		return self._element_configuration
 
@@ -626,11 +676,15 @@ class ConfigItem(object):
 
 		log_function(output)
 
-	def visualize_requirements(self, log_function, padding=' '):
+	def visualize_requirements(self, log_function, padding=' ', main_ext=None):
+		self_id = self.id
+		if self.extension is not main_ext:
+			self_id = '%s ' % (str(self.extension)) + self_id
+
 		if isinstance(self, ModuleSelector):
-			log_function("%s+-%s [%s] %s" % (padding[:-1], self.id, self.tag, str(self.get_device_support()) ))
+			log_function("%s+-%s [%s] %s" % (padding[:-1], self_id, self.tag, str(self.get_device_support()) ))
 		else:
-			log_function("%s+-%s [%s] %s" % (padding[:-1], self.id, self.tag, str(self.get_device_support())))
+			log_function("%s+-%s [%s] %s" % (padding[:-1], self_id, self.tag, str(self.get_device_support())))
 		padding = padding + ' '
 
 		total = len(self.prerequisites)
@@ -639,9 +693,9 @@ class ConfigItem(object):
 			count += 1
 			log_function(padding + '|')
 			if count == total:
-				p.visualize_requirements(log_function, padding + ' ')
+				p.visualize_requirements(log_function, padding + ' ', main_ext=main_ext)
 			else:
-				p.visualize_requirements(log_function, padding + '|')
+				p.visualize_requirements(log_function, padding + '|', main_ext=main_ext)
 
 	def get_doxygen_entry_point(self):
 		"""
@@ -713,7 +767,10 @@ class ConfigItem(object):
 			# No documentation available for this module
 			return None
 
-		url = self.db.get_documentation_server() + uri
+		(scheme, url) = self.db.get_help_documentation_server()
+
+		# TODO: handle schemes here
+		url = url + uri
 
 		url = url.replace("$VER$", urllib.quote(custom_version))
 		url = url.replace("$MODULE$", urllib.quote(module_dir))
@@ -733,7 +790,10 @@ class ConfigItem(object):
 			# No quick start available for this module
 			return None
 
-		url = self.db.get_documentation_server() + uri
+		(scheme, url) = self.db.get_guide_documentation_server()
+
+		# TODO: handle schemes here
+		url = url + uri
 
 		url = url.replace("$VER$", urllib.quote(custom_version))
 		url = url.replace("$MODULE$", urllib.quote(doc_arch))
@@ -990,6 +1050,15 @@ class DeviceMap(TypelessConfigItem):
 	group_tag = "group"
 	doc_group_attr = "doc-arch"
 	node_tag = "mcu"
+
+	def __init__(self, element):
+		self.element = element
+		self.prerequisites = []
+		self._element_configuration = self._get_configuration_from_element()
+
+	@property
+	def extension(self):
+		return None
 
 	def _get_doc_arch_group_elements(self):
 		"""
@@ -1355,30 +1424,32 @@ class ConfigDB(object):
 	basedir_tag = "basedir"
 	fromfile_tag = "fromfile"
 	show_file_list_in_debug_log = False
-	fw_version_attr = "framework-version"
-	fw_version_attr_name = "name"
-	doc_server_attr = "documentation"
-	doc_server_attr_name = "baseurl"
+	no_version = "NO_VER"
+	device_map = None
+	# device_alias dictionary: { 'alias_name' : ['device_1', 'device_2'] }
+	device_alias = {}
+	extension = None
+	schema = None
+	circular_reference_map = {}
+	doc_url = None
+	doc_scheme = None
+	xml_filename = 'asf.xml'
 
-	def __init__(self, runtime, db_file=None):
+	def __init__(self, runtime, extension, db_file=None):
 		self.version_attribute = "xmlversion"
 		self.current_version = "1.0"
 
-		self.idmap = {}
-		self.circular_reference_map = {}
+		# Start with the global device map in item dictionary
+		dev_map = self.get_device_map()
+		self.idmap = {dev_map.id : dev_map}
 
 		self.runtime = runtime
+		self.extension = extension
 		self.log = runtime.log
 
 		self.fw_version_postfix = ""
 		if runtime.version_postfix:
 			self.fw_version_postfix = "-" + runtime.version_postfix
-
-		xsd_file = runtime.xml_schema_path
-		self.schema = False
-		if xsd_file:
-			xsd = ET.parse(xsd_file)
-			self.schema = ET.XMLSchema(xsd)
 
 		if db_file:
 			# Read file
@@ -1392,23 +1463,92 @@ class ConfigDB(object):
 			# Parse all XML files
 			self.root = ET.Element("asf", attrib={self.version_attribute : self.current_version})
 			self.tree = ET.ElementTree(self.root)
-			self._include_all_subdirs(self.root, '.')
+			self._include_all_subdirs(self.root, self.root_path)
+			self.expand_device_aliases(self.root)
 
-		# Set the default documentation server URL
-		result = self.root.findall(".//%s[@%s]" % (self.doc_server_attr, self.doc_server_attr_name))
-		if len(result) != 1:
-			raise ConfigError("Error getting documentation URL. Found %d but expected 1 element" % (len(result)))
+	@property
+	def root_path(self):
+		try:
+			d = self.extension.root_path
+		except AttributeError:
+			d = '.'
+		return d
 
-		self.doc_url = "/".join((result[0].attrib[self.doc_server_attr_name].rstrip("/"), "$VER$", "$MODULE$", "html")) + "/"
 
-	def validate_xml(self, tree):
+	@staticmethod
+	def load_schema(xsd_file):
+		if xsd_file is not None:
+			xsd = ET.parse(xsd_file)
+			schema = ET.XMLSchema(xsd)
+		else:
+			schema = None
+
+		ConfigDB.schema = schema
+
+	@staticmethod
+	def validate_xml(tree):
 		"""
 		Validate the given ElementTree XML tree using the XML schema that is loaded for the ConfigDB.
 
 		The function raises an ET.DocumentInvalid if the tree does not validate.
 		"""
-		if self.schema:
-			self.schema.assertValid(tree)
+		if ConfigDB.schema is not None:
+			ConfigDB.schema.assertValid(tree)
+
+	@staticmethod
+	def load_device_map(xml_file):
+		"""
+		"""
+		# Load the device map XML and validate it
+		try:
+			tree = ET.parse(xml_file)
+		except IOError:
+			raise Exception("Could not find device map file `%s'" % xml_file)
+
+		try:
+			ConfigDB.validate_xml(tree)
+		except Exception as e:
+			raise DbError("Validation of %s failed: %s" %  (xml_file, str(e)))
+		root = tree.getroot()
+
+		# Look for the device map in XML
+		map_e = root.find('./%s' % DeviceMap.tag)
+		if map_e is None:
+			raise Exception("Could not find `%s' element in `%s'" % (DeviceMap.tag, xml_file))
+
+		# Instantiate the DeviceMap and store it
+		ConfigDB.device_map = DeviceMap(map_e)
+
+	@staticmethod
+	def get_device_map():
+		"""
+		"""
+		if ConfigDB.device_map is None:
+			raise ConfigError("Device map has not been loaded yet!")
+		else:
+			return ConfigDB.device_map
+
+	def expand_device_aliases(self, root_element):
+		# Get all device aliases and their devices
+		for alias in root_element.findall('.//device-alias-map'):
+			devices = []
+			for device in alias.findall('.//device-support'):
+				# Remember devices for this alias
+				devices.append(device.attrib["value"])
+			# Add it all to our alias dictionary
+			self.device_alias[alias.attrib["name"]] = devices
+
+		# Find and expand all device-support-alias
+		for dsa in root_element.findall('.//device-support-alias'):
+			alias = dsa.attrib["value"]
+			parent = dsa.getparent()
+			# Add device-support-tag(s)
+			try:
+				for device in self.device_alias[alias]:
+					ET.SubElement(parent, "device-support", attrib={"value":device} )
+			except:
+				# 'alias' not in 'device_alias' dictionary. The database sanity check will catch this
+				pass
 
 	def write_xml_tree(self, filename):
 		"""
@@ -1420,37 +1560,25 @@ class ConfigDB(object):
 	def _all_subdirs_iter(self, basedir):
 		all_files = []
 
-		if self.runtime.use_file_list_cache:
-			self.log.info("File-list: Loading from cache: %s last modified %s" %
-				(self.runtime.file_list_cache_name, datetime.fromtimestamp(os.path.getatime(self.runtime.file_list_cache_name))))
+		match_file = self.xml_filename
 
-			list = asf.helper.load_from_file(self.runtime.file_list_cache_name)
-			for (dirpath, filename) in list:
+		self.log.info("File-list: Parsing %s for %s files" % (os.path.realpath(basedir), match_file))
+		skip_folders = ('.svn', '.git')
+
+		for dirpath, dirnames, files in os.walk(basedir):
+			# Remove folders that we do not need to walk into
+			for skip_folder in skip_folders:
+				if skip_folder in dirnames:
+					dirnames.remove(skip_folder)
+
+			if match_file in files:
+				filename = os.path.join(dirpath, match_file)
 				if self.show_file_list_in_debug_log:
 					self.log.debug(filename)
-				yield (dirpath, filename)
-		else:
-			match_file = self.runtime.xml_input_filename
 
-			self.log.info("File-list: Parsing %s for %s files" % (os.path.realpath(basedir), match_file))
-			skip_folders = ('.svn', '.git')
-
-			for dirpath, dirnames, files in os.walk(basedir):
-				# Remove folders that we do not need to walk into
-				for skip_folder in skip_folders:
-					if skip_folder in dirnames:
-						dirnames.remove(skip_folder)
-
-				if match_file in files:
-					filename = os.path.join(dirpath, match_file)
-					if self.show_file_list_in_debug_log:
-						self.log.debug(filename)
-
-					pair = (dirpath, filename)
-					all_files.append(pair)
-					yield pair
-
-			asf.helper.dump_to_file(all_files, self.runtime.file_list_cache_name)
+				pair = (dirpath, filename)
+				all_files.append(pair)
+				yield pair
 
 	def _verify_asf_tag(self, element):
 		if not element.tag == "asf":
@@ -1465,6 +1593,8 @@ class ConfigDB(object):
 		"""
 		Read all asf.xml files in the tree and include them under the root_element
 		"""
+		def relpath_from_root(path):
+			return os.path.relpath(path, self.root_path)
 
 		for dirpath, filename in self._all_subdirs_iter(basedir):
 
@@ -1487,20 +1617,39 @@ class ConfigDB(object):
 			except ET.DocumentInvalid as e:
 				raise ConfigError("XML file %s does not validate. Error: %s" % (filename, str(e)))
 
-			element.attrib[self.basedir_tag] = dirpath
-			self._expand_compile_paths(element)
-			element.attrib[self.fromfile_tag] = filename
+			element.attrib[self.basedir_tag] = relpath_from_root(dirpath)
+			self._expand_compile_paths_from_element(element)
+			element.attrib[self.fromfile_tag] = relpath_from_root(filename)
 
 			for e in element.findall("*"):
-				e.attrib[self.basedir_tag] = dirpath
-				e.attrib[self.fromfile_tag] = filename
+				e.attrib[self.basedir_tag] = relpath_from_root(dirpath)
+				e.attrib[self.fromfile_tag] = relpath_from_root(filename)
 				root_element.append(e)
 
-	def _expand_compile_paths(self, element):
+	def _expand_compile_paths_from_element(self, element):
 		"""
 		Expand paths of the "build" elements when including an XML file
 		"""
 		basedir = element.attrib["basedir"]
+		self._expand_compile_paths(element, basedir)
+
+	def _expand_paths_from_root(self, prefix_dir):
+		"""
+		Expand paths of all database items and "build" elements
+		"""
+		# Update all basedir and fromfile paths
+		for e in self.root.findall('.//*[@%s][@%s]' % (self.basedir_tag, self.fromfile_tag)):
+			basedir = e.get(self.basedir_tag)
+			fromfile = e.get(self.fromfile_tag)
+			e.set(self.basedir_tag, os.path.join(prefix_dir, basedir))
+			e.set(self.fromfile_tag, os.path.join(prefix_dir, fromfile))
+
+		# Now update the compile paths
+		self._expand_compile_paths(self.root, prefix_dir)
+
+	def _expand_compile_paths(self, element, prefix_dir):
+		"""
+		"""
 		# Find all build elements
 		for build_entry in element.findall('.//%s' % (BuildType.tag)):
 
@@ -1512,7 +1661,7 @@ class ConfigDB(object):
 
 			# Expand path if build type was found
 			if c is not None:
-				c.expand_compile_paths(build_entry, basedir)
+				c.expand_compile_paths(build_entry, prefix_dir)
 
 	def _tag_to_class(self):
 		tag_to_class = {
@@ -1529,22 +1678,27 @@ class ConfigDB(object):
 		"""
 		Get ASF version from the database
 
-		Return string with version or raise ConfigError if not found.
+		Return string with version from the extension, or raise a ConfigError if no
+		extension is set
 		"""
-
-		result = self.root.findall(".//%s[@%s]" % (self.fw_version_attr, self.fw_version_attr_name))
-		if len(result) != 1:
-			raise ConfigError("Error getting ASF version. Found %d but expected 1 element" % (len(result)))
-
-		return result[0].attrib[self.fw_version_attr_name]
+		try:
+			return self.extension.version
+		except AttributeError:
+			raise ConfigError("No extension set, cannot get version number")
 
 	def get_framework_version(self):
 		"""
 		Get ASF version including the postfix.
 
-		Return string with ASF framework version + postfix.
+		Return string with framework version + postfix. If no version number can be
+		found, the default string for no version is used.
 		"""
-		return self.get_framework_version_number() + self.fw_version_postfix
+		try:
+			ver = self.get_framework_version_number()
+		except ConfigError:
+			ver = self.no_version
+
+		return ver + self.fw_version_postfix
 
 	def set_documentation_server(self, new_doc_url):
 		"""
@@ -1553,18 +1707,53 @@ class ConfigDB(object):
 		Note that this function only appends $MODULE$/html/ to the URL and thus
 		expects that the version is already specified in URL or not required.
 		"""
+		# Assume custom doc server has "asf-docs" scheme
 		self.doc_url = "/".join((new_doc_url.rstrip("/"), "$MODULE$", "html")) + "/"
+		self.doc_scheme = "asf-docs"
 
 	def get_documentation_server(self):
 		"""
 		Get the ASF documentation server base URL from the database.
 
 		Unless a custom URL has been set with set_documentation_server(), this will
-		be the server that is specified with the documentation tag in the root
-		asf.xml file, with some additions:
-		http://asf.atmel.com/docs/ + $VER$/$MODULE$/html/
+		raise a ConfigError.
 		"""
-		return self.doc_url
+		if self.doc_url is None:
+			raise ConfigError("No documentation URL has been set")
+
+		return (self.doc_scheme, self.doc_url)
+
+	def get_help_documentation_server(self):
+		"""
+		Get the scheme and server URL for element-specific help pages
+
+		Tries fetching the custom set URL first, then the URL from the extension.
+		"""
+		try:
+			(scheme, url) = self.get_documentation_server()
+		except ConfigError:
+			try:
+				(scheme, url) = self.extension.online_element_help_scheme_and_url
+			except AttributeError:
+				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+
+		return (scheme, url)
+
+	def get_guide_documentation_server(self):
+		"""
+		Get the scheme and server URL for element-specific guide pages
+
+		Tries fetching the custom set URL first, then the URL from the extension.
+		"""
+		try:
+			(scheme, url) = self.get_documentation_server()
+		except ConfigError:
+			try:
+				(scheme, url) = self.extension.online_element_guide_scheme_and_url
+			except AttributeError:
+				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+
+		return (scheme, url)
 
 	def _resolve_idref(self, root, idref, tag="*"):
 		return root.find(".//%s[@%s='%s']" % (tag, 'id', idref))
@@ -1578,6 +1767,27 @@ class ConfigDB(object):
 		Raises a ConfigError if a circular reference is found
 		"""
 		return self.relative_lookup_by_id(self.root, idref, type)
+
+	def lookup_external_by_id(self, eidref, idref, type=ConfigItem):
+		"""
+		Find a component by eid and id reference from an external database tree.
+
+		Return an object for the component with the given eid and id.
+		Raises a NotFoundError if id could not be found.
+		Raises a DbError if eid cannot be resolved or the external DB cannot be found.
+		Raises a ConfigError if a circular reference is found.
+		"""
+		try:
+			ext_db = self.extension.get_external_database(eidref)
+		except AttributeError:
+			raise DbError("No extension set for DB at `%s', cannot resolve external dependencies" % os.path.abspath(self.root_path))
+
+		try:
+			c = ext_db.lookup_by_id(idref)
+		except NotFoundError as e:
+			raise NotFoundError("%s during lookup initiated by %s" % (str(e), self.extension))
+
+		return c
 
 	def relative_lookup_by_id(self, root, idref, type=ConfigItem):
 		"""
@@ -1595,12 +1805,14 @@ class ConfigDB(object):
 		else:
 			element = self._resolve_idref(root, idref, type.tag)
 			if element is None:
-				raise NotFoundError("%s with ID %s not found in the database" % (type.__name__, idref))
+				raise NotFoundError("%s with ID %s not found in the database of %s" % (type.__name__, idref, self.extension))
 
-			if (idref in self.circular_reference_map):
-				raise ConfigError("Circular reference to %s. Involved references were: %s" % (idref, ' '.join(self.circular_reference_map.keys())))
+			ext_idref = idref + str(self.extension)
+
+			if (ext_idref in ConfigDB.circular_reference_map):
+				raise ConfigError("Circular reference to %s. Involved references were: %s" % (ext_idref, ' '.join(ConfigDB.circular_reference_map.keys())))
 			else:
-				self.circular_reference_map[idref] = idref
+				ConfigDB.circular_reference_map[ext_idref] = ext_idref
 
 			if type == ConfigItem:
 				tag_to_class = self._tag_to_class()
@@ -1609,13 +1821,13 @@ class ConfigDB(object):
 			try:
 				item = type(element, self)
 			except Exception as e:
-				self.circular_reference_map.pop(idref)
+				ConfigDB.circular_reference_map.pop(ext_idref)
 				# Do not handle exception, but reraise it
 				raise
 
 			self.idmap[idref] = item
 
-			self.circular_reference_map.pop(idref)
+			ConfigDB.circular_reference_map.pop(ext_idref)
 
 		assert isinstance(item, type)
 
@@ -1820,43 +2032,55 @@ class ConfigDB(object):
 		return re.compile("^[a-z0-9\.\-_#]+$")
 
 
-	def sanity_check(self):
+	def sanity_check(self, fdk_check = False):
 		self.log.info("-- Database sanity check")
 
 		self.total = 0
 		self.errors = 0
+		self.error_strings = []
+		print_errors = not fdk_check
 
 		def run_test(self, func):
 			# Call the test function and keep results.
-			t, e = func
+			t, e, errors = func
 			self.total = self.total + t
 			self.errors = self.errors + e
+			self.error_strings += errors
 
 		# Need device map and mcu list for some sanity checks
 		device_map = self.lookup_by_id("map.atmel")
 		mcu_list = device_map.get_mcu_list()
 
 		# Run all tests
-		run_test(self, self.sanity_check_doc_arch(device_map, mcu_list))
-		run_test(self, self.sanity_check_duplicate_id())
-		run_test(self, self.sanity_check_device_support_valid(device_map))
-		run_test(self, self.sanity_check_device_support_exists())
-		run_test(self, self.sanity_check_default_mcu(mcu_list))
-		run_test(self, self.sanity_check_doxygen_entry_point())
-		run_test(self, self.sanity_check_selector_matching_parent())
-		run_test(self, self.sanity_check_select_by_configs())
+		run_test(self, self.sanity_check_duplicate_id(output_error=print_errors))
+		run_test(self, self.sanity_check_device_support_valid(device_map, output_error=print_errors))
+		run_test(self, self.sanity_check_device_support_exists(output_error=print_errors))
+		run_test(self, self.sanity_check_selector_matching_parent(output_error=print_errors))
+		run_test(self, self.sanity_check_select_by_configs(output_error=print_errors))
+		run_test(self, self.sanity_check_device_support_alias(device_map, output_error=print_errors))
 		# This is the time consuming one (50-ish secs):
-		run_test(self, self.sanity_check_resolve_elements())
+		run_test(self, self.sanity_check_resolve_elements(output_error=print_errors))
+
+		if not fdk_check:
+			# Don't run this for FDK sanity check
+			run_test(self, self.sanity_check_doc_arch(device_map, mcu_list, output_error=print_errors))
+			run_test(self, self.sanity_check_default_mcu(mcu_list, output_error=print_errors))
+			run_test(self, self.sanity_check_doxygen_entry_point(output_error=print_errors))
 
 		if (self.errors):
-			raise DbError("Database sanity check failed with %d error(s)" % (self.errors))
+			error_string = "Database sanity check failed with %d error(s)" % (self.errors)
+			self.error_strings.append(error_string)
+			if print_errors:
+				raise DbError(error_string)
 
 		self.log.info("-- Check done. Failures: " + str(self.errors) + "/" + str(self.total))
+		return self.error_strings
 
-	def sanity_check_duplicate_id(self):
+	def sanity_check_duplicate_id(self, output_error=True):
 		# Find all IDs and check for duplicates
 		total = 1
 		errors = 0
+		error_strings = []
 
 		ids = []
 		for element in self.root.findall(".//%s[@%s]" % ("*", 'id')):
@@ -1867,34 +2091,45 @@ class ConfigDB(object):
 
 		if id_count != id_unique:
 			errors += 1
-			self.log.critical("Elements with the same ID in the database. You must fix this!")
+			error_string = "Elements with the same ID in the database. You must fix this!"
+			error_strings.append(error_string)
+			if output_error:
+				self.log.critical(error_string)
 
 			# Report which ones have the problem:
 			count_dict = asf.helper.count_duplicates(ids)
 			for id, count in count_dict.items():
 				if count > 1:
-					self.log.critical("Duplicate id %s occurs %d times." % (id, count))
+					error_string = "Duplicate id %s occurs %d times." % (id, count)
+					error_strings.append(error_string)
+					if output_error:
+						self.log.critical(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_device_support_valid(self, device_map):
+	def sanity_check_device_support_valid(self, device_map, output_error=True):
 		# Check that "device-support" actually gives support for a device(s)
 		total = 0
 		errors = 0
+		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("device-support")):
 			total += 1
 			dev_name = element.attrib["value"]
 			if not dev_name or not device_map.get_mcu_list(dev_name, True):
 				errors += 1
-				self.log.critical("%s: `%s' is not a valid MCU or MCU group" % (element.find("..").attrib["id"], dev_name))
+				error_string = "%s: `%s' is not a valid MCU or MCU group" % (element.find("..").attrib["id"], dev_name)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.critical(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_device_support_exists(self):
+	def sanity_check_device_support_exists(self, output_error=True):
 		# Check that all modules except meta-typed define device-support
 		total = 0
 		errors = 0
+		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("module")):
 			# Skip modules which doesn't require device-support
@@ -1904,15 +2139,19 @@ class ConfigDB(object):
 			dev_sup = element.findall(".//device-support")
 			if not dev_sup:
 				errors += 1
-				self.log.error("%s does not specify device-support" % element.attrib["id"])
+				error_string = "%s does not specify device-support" % element.attrib["id"]
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_default_mcu(self, mcu_list):
+	def sanity_check_default_mcu(self, mcu_list, output_error=True):
 		# Check that "default-mcu"-attribute is set for all "doxygen-module" generator tags,
 		# and for absolutely no other generator tags
 		total = 0
 		errors = 0
+		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("generator")):
 			total += 1
@@ -1927,20 +2166,27 @@ class ConfigDB(object):
 				if mcu_name not in mcu_list:
 					errors += 1
 					if mcu_name == None:
-						error_string = 'not set'
+						error_string_part = 'not set'
 					else:
-						error_string = 'set to invalid MCU `%s\'' % mcu_name
-					self.log.critical("%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string))
+						error_string_part = 'set to invalid MCU `%s\'' % mcu_name
+					error_string = "%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string_part)
+					error_strings.append(error_string)
+					if output_error:
+						self.log.critical(error_string)
 			else:
 				if mcu_name != None:
 					errors += 1
-					self.log.critical("%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (element.find("..").attrib["id"], gen_name))
+					error_string = "%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (element.find("..").attrib["id"], gen_name)
+					error_strings.append(error_string)
+					if output_error:
+						self.log.critical(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_doc_arch(self, device_map, mcu_list):
+	def sanity_check_doc_arch(self, device_map, mcu_list, output_error=True):
 		total = 0
 		errors = 0
+		error_strings = []
 
 		# Check all specific MCUs for doc-arch
 		no_doc_arch_mcus = []
@@ -1957,9 +2203,15 @@ class ConfigDB(object):
 
 		# Print errors for any missing doc-arch
 		if no_doc_arch_mcus:
-			self.log.error("%s is missing doc-arch for MCUs:" % str(device_map))
+			error_string = "%s is missing doc-arch for MCUs:" % str(device_map)
+			error_strings.append(error_string)
+			if output_error:
+				self.log.error(error_string)
 			for mcu_name in no_doc_arch_mcus:
-				self.log.error("\t" + mcu_name)
+				error_string = "\t" + mcu_name
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 
 		# Check that doc-arch group does not contain another doc-arch
 		for doc_arch_e in device_map._get_doc_arch_group_elements():
@@ -1969,9 +2221,15 @@ class ConfigDB(object):
 			sub_doc_arch_e = doc_arch_e.findall('.//%s[@%s]' % (DeviceMap.group_tag, DeviceMap.doc_group_attr))
 			if sub_doc_arch_e:
 				errors += 1
-				self.log.error("%s has doc-arch group %s which itself contains doc-arch group(s):" % (str(device_map), doc_arch_e.attrib['name']))
+				error_string = "%s has doc-arch group %s which itself contains doc-arch group(s):" % (str(device_map), doc_arch_e.attrib['name'])
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 				for e in sub_doc_arch_e:
-					self.log.error("\t" + e.attrib['name'])
+					error_string = "\t" + e.attrib['name']
+					error_strings.append(error_string)
+					if output_error:
+						self.log.error(error_string)
 
 		# Check that same-named groups have matching doc-arch
 		doc_arch_dict = device_map.get_doc_arch_dict()
@@ -1983,17 +2241,24 @@ class ConfigDB(object):
 
 			if mismatch_arches:
 				errors += 1
-				self.log.error("%s has multiple, differing doc-arch names for group %s:" % (str(device_map), group))
+				error_string = "%s has multiple, differing doc-arch names for group %s:" % (str(device_map), group)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 				for arch in [doc_arch] + mismatch_arches:
-					self.log.error("\t\"%s\"" % arch)
+					error_string = "\t\"%s\"" % arch
+					error_strings.append(error_string)
+					if output_error:
+						self.log.error(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_doxygen_entry_point(self):
+	def sanity_check_doxygen_entry_point(self, output_error=True):
 		# Make sure the 'doxygen-entry-point' attribute is present for non-hidden modules
 
 		total = 0
 		errors = 0
+		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("module")):
 			if element.attrib["type"] in ["driver", "component", "service"]:
@@ -2003,15 +2268,19 @@ class ConfigDB(object):
 					if element.find("./build[@type=\'doxygen-entry-point\']") is None:
 						# No doxygen-entry-point, error.
 						errors += 1
-						self.log.error("Module with id %s is missing doxygen-entry-point attribute" % (element.attrib["id"]))
+						error_string = "Module with id %s is missing doxygen-entry-point attribute" % (element.attrib["id"])
+						error_strings.append(error_string)
+						if output_error:
+							self.log.error(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_selector_matching_parent(self):
+	def sanity_check_selector_matching_parent(self, output_error=True):
 		# Verify all select-by-config/device IDs are equal to parent ID
 
 		total = 0
 		errors = 0
+		error_strings = []
 
 		for element in self.root.findall(".//%s" % (SelectByConfig.tag)) + self.root.findall(".//%s" % (SelectByDevice.tag)):
 			parent_id = element.attrib['id']
@@ -2021,13 +2290,17 @@ class ConfigDB(object):
 				child_id = child.attrib['id']
 				if child_id.rpartition('#')[0] != parent_id:
 					errors += 1
-					self.log.error("Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id))
+					error_string = "Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id)
+					error_strings.append(error_string)
+					if output_error:
+						self.log.error(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_select_by_configs(self):
+	def sanity_check_select_by_configs(self, output_error=True):
 		total = 0
 		errors = 0
+		error_strings = []
 
 		# Find all select-by-config names, save all possible valid config names and values
 		select_by_config_names = {}
@@ -2057,22 +2330,32 @@ class ConfigDB(object):
 				available_options = select_by_config_names[config_name]["options"]
 				if not config_value in available_options:
 					errors += 1
-					self.log.critical("Config '%s' with value '%s' in '%s' does not match available select-by-config modules '%s'" % (config_name, config_value, project_id, ', '.join(available_options)))
+					error_string = "Config '%s' with value '%s' in '%s' does not match available select-by-config modules '%s'" % (config_name, config_value, project_id, ', '.join(available_options))
+					error_strings.append(error_string)
+					if output_error:
+						self.log.critical(error_string)
 					# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
 					self.log.critical("    Offending file: %s" % (self.lookup_by_id(project_id).fromfile))
 			else:
 				# No matching select-by-config for the current config entry name
 				errors += 1
-				self.log.critical("Config '%s' in '%s' does not have a corresponding select-by-config module" % (config_name, project_id))
+				error_string = "Config '%s' in '%s' does not have a corresponding select-by-config module" % (config_name, project_id)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.critical(error_string)
 				# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
-				self.log.critical("    Offending file: %s" % (self.lookup_by_id(project_id).fromfile))
+				error_string = "    Offending file: %s" % (self.lookup_by_id(project_id).fromfile)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.critical(error_string)
 
-		return total, errors
+		return total, errors, error_strings
 
-	def sanity_check_resolve_elements(self):
+	def sanity_check_resolve_elements(self, output_error=True):
 
 		total = 0
 		errors = 0
+		error_strings = []
 
 		# Get the elements of all components to check
 		component_classes_to_check = [
@@ -2094,11 +2377,61 @@ class ConfigDB(object):
 				c = self.lookup_by_id(id)
 			except ConfigError as err:
 				errors += 1
-				self.log.error("While resolving "+ id +":")
-				self.log.error("ConfigError: "+ str(err))
+				error_string = "While resolving " + id + ": " + "ConfigError: " + str(err)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 			except NotFoundError as err:
 				errors += 1
-				self.log.error("While resolving "+ id +":")
-				self.log.error("NotFoundError: "+ str(err))
+				error_string = "While resolving " + id + ": " + "NotFoundError: " + str(err)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
 
-		return total, errors
+		return total, errors, error_strings
+
+	def sanity_check_device_support_alias(self, device_map, output_error=True):
+
+		total = 0
+		errors = 0
+		error_strings = []
+		alias_names = []
+
+		# Get all device aliases
+		for alias in self.root.findall('.//device-alias-map'):
+			alias_name = alias.attrib["name"]
+			for device in alias.findall('.//device-support'):
+				device_name = device.attrib["value"]
+				total += 1
+				# Make sure device is valid
+				if len(device_map.get_mcu_list(device_name, True)) == 0:
+					errors += 1
+					error_string = "device-support '%s' in device-alias-map '%s' is not a valid device or device family" % (device_name, alias_name)
+					error_strings.append(error_string)
+					if output_error:
+						self.log.error(error_string)
+
+			# Make sure alias name is unique
+			if alias_name in alias_names:
+				errors += 1
+				error_string = "Multiple definitions of alias name '%s'" %(alias_name)
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
+
+			else:
+				alias_names.append(alias_name)
+
+		# Find all device-support-alias
+		for alias in self.root.findall('.//device-support-alias'):
+			alias_name = alias.attrib["value"]
+			total += 1
+			# Make sure it's valid
+			if alias_name not in alias_names:
+				errors += 1
+				error_string = "Unknown device-support-alias '%s' in module '%s'" %(alias_name, alias.getparent().attrib["id"])
+				error_strings.append(error_string)
+				if output_error:
+					self.log.error(error_string)
+
+		return total, errors, error_strings

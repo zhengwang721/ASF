@@ -13,6 +13,7 @@ from optparse import OptionParser
 from asf.configuration import ConfigurationHandler
 from asf.database import *
 from asf.exception import *
+from asf.extensionmanager import *
 from asf.junit_report import *
 from asf.runtime import Runtime
 from asf.toolchain import *
@@ -764,7 +765,8 @@ if __name__ == "__main__":
 
 	home_directory     = sys.path[0]
 	template_directory = os.path.join(home_directory, 'templates')
-	xml_schema_path    = os.path.join(home_directory, 'asf.xsd')
+	xml_schema_dir     = os.path.join(home_directory, "schemas")
+	device_map         = os.path.join(home_directory, "device_maps", "atmel.xml")
 	report_directory   = home_directory
 
 	parser = OptionParser(usage =
@@ -789,7 +791,12 @@ if __name__ == "__main__":
 		--output-dir, --test-board, --not-mcu, --set-config and --junit
 		will have no effect.
 		""")
-	parser.add_option("-b", "--base-dir", dest="asf_dir", help="Set base directory of ASF")
+	# parser.add_option("","--ext-root", dest="ext_root", default=os.path.join(home_directory, '..', '..'), help="FDK extension root directory")
+	parser.add_option("-b","--base-dir", dest="ext_root", default=os.path.join(home_directory, '..', '..'), help="FDK extension root directory")
+	parser.add_option("","--main-ext-uuid", dest="main_ext_uuid", default="Atmel.ASF", help="Main FDK extension UUID")
+	parser.add_option("","--main-ext-version", dest="main_ext_version", help="Main FDK extension version")
+
+	parser.add_option("-c","--cached", action="store_true", dest="cached", default=False, help="Do not rescan all directories, but use the list of XML files from last run")
 	parser.add_option("-o", "--output-dir", dest="out_dir", help="Set output directory for test projects")
 	parser.add_option("-t", "--test-board", action="append", dest="test_boards", help="Set ID of board(s) to test with, as comma-separated list w/ wildcard (*), overriding the default " + str(ModuleTesterRuntime.default_board_ids))
 	parser.add_option("-n", "--not-mcu", action="append", dest="mcu_blacklist", help="Set MCUs _not_ to test with, as comma-separated list")
@@ -828,10 +835,6 @@ if __name__ == "__main__":
 			arguments = []
 			break
 
-	asf_directory = options.asf_dir
-	if not asf_directory:
-		asf_directory = os.path.join(home_directory, '..', '..')
-
 	output_directory = None
 	if options.out_dir:
 		output_directory = os.path.abspath(options.out_dir)
@@ -859,9 +862,6 @@ if __name__ == "__main__":
 	if options.write_junit:
 		junit_filename = os.path.join(report_directory, 'testReport.xml')
 		junit_report = JUnitReport()
-
-	# Go to ASF base directory, then set up and start the runtime according to mode
-	os.chdir(asf_directory)
 
 	mod_list_file_opt = options.module_list_file
 	if mod_list_file_opt:
@@ -894,12 +894,35 @@ if __name__ == "__main__":
 
 	# Set common options
 	runtime.set_commandline_args(arguments)
-	runtime.set_xml_schema_path(xml_schema_path)
 	runtime.set_test_hidden_modules(options.test_hidden)
 	runtime.setup_log(log_level)
 
 	try:
-		runtime.load_db()
+		# Create the extension manager
+		ext_manager = FdkExtensionManager(runtime, options.ext_root, use_cache=options.cached)
+
+		# Load prerequisites like XML schemas and device map
+		ext_manager.load_schemas(xml_schema_dir)
+		ext_manager.load_device_map(device_map)
+
+		# Now scan for extensions and load them
+		ext_paths = ext_manager.scan_for_extensions()
+		ext_manager.load_and_register_extensions(ext_paths)
+
+		# Get the database of the main extension
+		main_ext = ext_manager.request_extension(options.main_ext_uuid, options.main_ext_version)
+		main_db = main_ext.get_database()
+
+		# Sanity check of database?
+		if options.cached:
+			runtime.log.info("Skipping DB sanity check in cached mode")
+		else:
+			runtime.log.info("Running DB sanity check")
+			main_db.sanity_check()
+
+		# Set the database for the runtime class
+		runtime.set_db(main_db)
+
 	except Exception as e:
 		runtime.log.error("Exception during ASF database creation: " + str(e))
 		raise

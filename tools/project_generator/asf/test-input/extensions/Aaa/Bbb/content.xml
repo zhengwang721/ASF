@@ -1,0 +1,8 @@
+<asf xmlversion="1.0">
+	<project id="bbb.project" caption="">
+		<require idref="bbb.board"/>
+		<require-external eidref="ccc" idref="ccc.application"/>
+	</project>
+	<board id="bbb.board" caption="" mcu="atxmega128a1">
+	</board>
+</asf>
