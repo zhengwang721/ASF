@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <asf xmlversion="1.0">
-	<framework-version name="3.4.2"/>
+	<framework-version name="3.5.0"/>
 	<documentation baseurl="http://asf.atmel.com/docs/"/>
 	<device-map id="map.atmel">
 		<group name="avr">
