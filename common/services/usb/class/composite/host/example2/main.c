@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB host mass storage and mouse composite example
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,11 +45,32 @@
 #include "conf_usb_host.h"
 #include "ui.h"
 #include "main.h"
+#include "string.h"
+
+#define MAX_DRIVE      _VOLUMES
+#define TEST_FILE_NAME "0:uhi_msc_test.txt"
+#define MSG_TEST "Test UHI MSC\n"
+
+typedef enum test_state {
+	TEST_NULL,
+	TEST_OK,
+	TEST_NO_PRESENT,
+	TEST_ERROR
+} test_state_t;
 
 static uint16_t main_usb_sof_counter = 0;
-static uint8_t lun_state = 0;
 
-#define MSG_TEST "Test UHI MSC\n"
+static test_state_t lun_states[MAX_DRIVE];
+
+static FATFS fs; // Re-use fs for LUNs to reduce memory footprint
+static FIL file_object;
+
+static char test_file_name[] = {
+	TEST_FILE_NAME
+};
+
+static void main_reset_states(void);
+static int main_count_states(test_state_t state);
 
 /*! \brief Main function. Execution starts here.
  */
@@ -65,9 +86,6 @@ int main(void)
 	board_init();
 	ui_init();
 
-	// Reset File System
-	nav_reset();
-
 	// Start USB host stack
 	uhc_start();
 
@@ -79,58 +97,58 @@ int main(void)
 		sleepmgr_enter_sleep();
 		if (main_usb_sof_counter > 2000) {
 			main_usb_sof_counter = 0;
-			uint8_t lun;
+			volatile uint8_t lun;
+			FRESULT res;
 
-			for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
-				// Mount drive
-				nav_drive_set(lun);
-				if (!nav_partition_mount()) {
-					if (fs_g_status == FS_ERR_HW_NO_PRESENT) {
-						// The test can not be done, if LUN is not present
-						lun_state &= ~(1 << lun); // LUN test reseted
-						continue;
-					}
-					lun_state |= (1 << lun); // LUN test is done.
-					ui_test_finish(false); // Test fail
-					continue;
-				}
-
+			for (lun = LUN_ID_USB;
+				(lun < LUN_ID_USB + uhi_msc_mem_get_lun()) &&
+					(lun < MAX_DRIVE);
+				lun++) {
 				// Check if LUN has been already tested
-				if (lun_state & (1 << lun)) {
+				if (TEST_OK == lun_states[lun] ||
+					TEST_ERROR == lun_states[lun]) {
 					continue;
 				}
-
+				// Mount drive
+				memset(&fs, 0, sizeof(FATFS));
+				res = f_mount(lun, &fs);
+				if (FR_INVALID_DRIVE == res) {
+					// LUN is not present
+					lun_states[lun] = TEST_NO_PRESENT;
+					continue;
+				}
 				// Create a test file on the disk
-				if (!nav_file_create((FS_STRING) "uhi_msc_test.txt")) {
-					if (fs_g_status != FS_ERR_FILE_EXIST) {
-						if (fs_g_status == FS_LUN_WP) {
-							// Test can be done only on no write protected device
-							continue;
-						}
-						lun_state |= (1 << lun); // LUN test is done.
-						ui_test_finish(false); // Test fail
-						continue;
-					}
-				}
-				if (!file_open(FOPEN_MODE_APPEND)) {
-					if (fs_g_status == FS_LUN_WP) {
-						// Test can be done only on no write protected device
-						continue;
-					}
-					lun_state |= (1 << lun); // LUN test is done.
-					ui_test_finish(false); // Test fail
+				test_file_name[0] = lun + '0';
+				res = f_open(&file_object,
+						(char const *)test_file_name,
+						FA_CREATE_ALWAYS | FA_WRITE);
+				if (res == FR_NOT_READY) {
+					// LUN not ready
+					lun_states[lun] = TEST_NO_PRESENT;
+					f_close(&file_object);
+					continue;
+				} if (res != FR_OK) {
+					// LUN test error
+					lun_states[lun] = TEST_ERROR;
+					f_close(&file_object);
 					continue;
 				}
-				if (!file_write_buf((uint8_t*)MSG_TEST, sizeof(MSG_TEST))) {
-					lun_state |= (1 << lun); // LUN test is done.
-					ui_test_finish(false); // Test fail
-					continue;
-				}
-				file_close();
-				lun_state |= (1 << lun); // LUN test is done.
-				ui_test_finish(true); // Test pass
+				// Write to test file
+				f_puts(MSG_TEST, &file_object);
+				// LUN test OK
+				lun_states[lun] = TEST_OK;
+				f_close(&file_object);
 			}
-			if ((lun == 0) || (lun_state == 0)) {
+			if (main_count_states(TEST_NO_PRESENT) == MAX_DRIVE) {
+				ui_test_finish(false); // Test fail
+			} else if (MAX_DRIVE != main_count_states(TEST_NULL)) {
+				if (main_count_states(TEST_ERROR)) {
+					ui_test_finish(false); // Test fail
+				} else if (main_count_states(TEST_OK)) {
+					ui_test_flag_reset();
+					ui_test_finish(true); // Test OK
+				}
+			} else {
 				ui_test_flag_reset();
 			}
 		}
@@ -146,9 +164,28 @@ void main_usb_sof_event(void)
 void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 {
 	if (!b_present) {
-		lun_state = 0; // LUN is unplugged, reset flag
+		main_reset_states(); // LUN is unplugged, reset flags
 	}
 	ui_usb_connection_event(dev, b_present);
+}
+
+static void main_reset_states(void)
+{
+	int i;
+	for (i = 0; i < MAX_DRIVE; i ++) {
+		lun_states[i] = TEST_NULL;
+	}
+}
+
+static int main_count_states(test_state_t state)
+{
+	int i, count = 0;
+	for (i = 0; i < MAX_DRIVE; i ++) {
+		if (lun_states[i] == state) {
+			count ++;
+		}
+	}
+	return count;
 }
 
 /**
@@ -159,7 +196,7 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * and host mouse on Atmel MCU with USB module.
  *
  * \section startup Startup
- * After loading firmware, connect the board (EVKxx,Xplain,...) to a USB device
+ * After loading firmware, connect the board (EVKxx,XPlain,...) to a USB device
  * mouse or a U-disk (FAT/FAT32 are supported). This example creates a file
  * "uhi_msc_test.txt" on all present U-disks.
  *
@@ -175,6 +212,8 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   <br>services/usb/uhc/
  *   <br>services/usb/class/msc/host/
  *   <br>services/usb/class/hid/host/mouse/
+ * - Thirdparty modules:
+ *   <br>thirdparty/fatfs
  * - Specific implementation:
  *    - main.c,
  *      <br>initializes clock
