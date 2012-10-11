@@ -247,8 +247,8 @@ class ConfigItem(object):
 		Return a list of supported devices that is specified for this tag.
 		"""
 		device_list = []
-		for e in self.get_child_elements("device-support"):
-			device_list.append(e.attrib["value"])
+		for e in self.get_child_elements(DeviceMap.support_tag):
+			device_list.append(e.attrib[DeviceMap.support_value_attr])
 
 		return device_list
 
@@ -970,7 +970,7 @@ class SelectByDevice(ModuleSelector):
 		return selection
 
 	def _get_all_device_support_elements(self):
-		return self.element.findall("./%s/%s" % ( Module.tag, "device-support" ))
+		return self.element.findall("./%s/%s" % (Module.tag, DeviceMap.support_tag))
 
 	def get_device_support_mapping(self):
 		"""
@@ -1155,7 +1155,7 @@ class DeviceMap(TypelessConfigItem):
 			# Add device-support-tag(s)
 			try:
 				for device in device_alias[alias]:
-					ET.SubElement(parent, DeviceMap.support_tag, attrib={DeviceMap.support_value_attr:device} )
+					ET.SubElement(parent, DeviceMap.support_tag, attrib={DeviceMap.support_value_attr : device})
 			except:
 				# 'alias' not in 'device_alias' dictionary. The database sanity check will catch this
 				pass
@@ -2122,9 +2122,9 @@ class ConfigDB(object):
 		errors = 0
 		error_strings = []
 
-		for element in self.root.findall(".//%s" % ("device-support")):
+		for element in self.root.findall(".//%s" % (DeviceMap.support_tag)):
 			total += 1
-			dev_name = element.attrib["value"]
+			dev_name = element.attrib[DeviceMap.support_value_attr]
 			if not dev_name or not device_map.get_mcu_list(dev_name, True):
 				errors += 1
 				try:
@@ -2150,7 +2150,7 @@ class ConfigDB(object):
 			if element.attrib["type"] in Module.types_that_support_all_devices:
 				continue
 			total += 1
-			dev_sup = element.findall(".//device-support")
+			dev_sup = element.findall(".//" + DeviceMap.support_tag)
 			if not dev_sup:
 				errors += 1
 				error_string = "%s does not specify device-support" % element.attrib["id"]
@@ -2425,7 +2425,7 @@ class ConfigDB(object):
 				alias_names.append(alias_name)
 
 		# Find all device-support-alias
-		for alias in self.root.findall('.//%s' %DeviceMap.supportalias_tag):
+		for alias in self.root.findall('.//%s' % DeviceMap.supportalias_tag):
 			alias_name = alias.attrib[DeviceMap.support_value_attr]
 			total += 1
 			# Make sure it's valid
