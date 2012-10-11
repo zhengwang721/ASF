@@ -1050,6 +1050,11 @@ class DeviceMap(TypelessConfigItem):
 	group_tag = "group"
 	doc_group_attr = "doc-arch"
 	node_tag = "mcu"
+	aliasmap_tag = "device-alias-map"
+	aliasmap_name_attr = "name"
+	support_tag = "device-support"
+	supportalias_tag = "device-support-alias"
+	support_value_attr = "value"
 
 	def __init__(self, element):
 		self.element = element
@@ -1130,6 +1135,32 @@ class DeviceMap(TypelessConfigItem):
 				mcu_list = [group]
 
 		return mcu_list
+
+	@staticmethod
+	def expand_device_aliases(root_element):
+		device_alias = {}
+		# Get all device aliases and their devices
+		for alias in root_element.findall('.//%s' % DeviceMap.aliasmap_tag):
+			devices = []
+			for device in alias.findall('.//%s' % DeviceMap.support_tag):
+				# Remember devices for this alias
+				devices.append(device.attrib[DeviceMap.support_value_attr])
+			# Add it all to our alias dictionary
+			device_alias[alias.attrib[DeviceMap.aliasmap_name_attr]] = devices
+
+		# Find and expand all device-support-alias
+		for dsa in root_element.findall('.//%s' % DeviceMap.supportalias_tag):
+			alias = dsa.attrib[DeviceMap.support_value_attr]
+			parent = dsa.getparent()
+			# Add device-support-tag(s)
+			try:
+				for device in device_alias[alias]:
+					ET.SubElement(parent, DeviceMap.support_tag, attrib={DeviceMap.support_value_attr:device} )
+			except:
+				# 'alias' not in 'device_alias' dictionary. The database sanity check will catch this
+				pass
+
+		return device_alias
 
 class MCU(object):
 	tag =  DeviceMap.node_tag
@@ -1464,7 +1495,7 @@ class ConfigDB(object):
 			self.root = ET.Element("asf", attrib={self.version_attribute : self.current_version})
 			self.tree = ET.ElementTree(self.root)
 			self._include_all_subdirs(self.root, self.root_path)
-			self.expand_device_aliases(self.root)
+			device_alias = DeviceMap.expand_device_aliases(self.root)
 
 	@property
 	def root_path(self):
@@ -1527,28 +1558,6 @@ class ConfigDB(object):
 			raise ConfigError("Device map has not been loaded yet!")
 		else:
 			return ConfigDB.device_map
-
-	def expand_device_aliases(self, root_element):
-		# Get all device aliases and their devices
-		for alias in root_element.findall('.//device-alias-map'):
-			devices = []
-			for device in alias.findall('.//device-support'):
-				# Remember devices for this alias
-				devices.append(device.attrib["value"])
-			# Add it all to our alias dictionary
-			self.device_alias[alias.attrib["name"]] = devices
-
-		# Find and expand all device-support-alias
-		for dsa in root_element.findall('.//device-support-alias'):
-			alias = dsa.attrib["value"]
-			parent = dsa.getparent()
-			# Add device-support-tag(s)
-			try:
-				for device in self.device_alias[alias]:
-					ET.SubElement(parent, "device-support", attrib={"value":device} )
-			except:
-				# 'alias' not in 'device_alias' dictionary. The database sanity check will catch this
-				pass
 
 	def write_xml_tree(self, filename):
 		"""
@@ -2118,7 +2127,12 @@ class ConfigDB(object):
 			dev_name = element.attrib["value"]
 			if not dev_name or not device_map.get_mcu_list(dev_name, True):
 				errors += 1
-				error_string = "%s: `%s' is not a valid MCU or MCU group" % (element.find("..").attrib["id"], dev_name)
+				try:
+					parent_id = element.find("..").attrib["id"]
+				except:
+					# This is a device-alias-map, we have 'name', not 'id'
+					parent_id = element.find("..").attrib["name"]
+				error_string = "%s: `%s' is not a valid MCU or MCU group" % (parent_id, dev_name)
 				error_strings.append(error_string)
 				if output_error:
 					self.log.critical(error_string)
@@ -2398,19 +2412,8 @@ class ConfigDB(object):
 		alias_names = []
 
 		# Get all device aliases
-		for alias in self.root.findall('.//device-alias-map'):
-			alias_name = alias.attrib["name"]
-			for device in alias.findall('.//device-support'):
-				device_name = device.attrib["value"]
-				total += 1
-				# Make sure device is valid
-				if len(device_map.get_mcu_list(device_name, True)) == 0:
-					errors += 1
-					error_string = "device-support '%s' in device-alias-map '%s' is not a valid device or device family" % (device_name, alias_name)
-					error_strings.append(error_string)
-					if output_error:
-						self.log.error(error_string)
-
+		for alias in self.root.findall('.//%s' % DeviceMap.aliasmap_tag):
+			alias_name = alias.attrib[DeviceMap.aliasmap_name_attr]
 			# Make sure alias name is unique
 			if alias_name in alias_names:
 				errors += 1
@@ -2418,13 +2421,12 @@ class ConfigDB(object):
 				error_strings.append(error_string)
 				if output_error:
 					self.log.error(error_string)
-
 			else:
 				alias_names.append(alias_name)
 
 		# Find all device-support-alias
-		for alias in self.root.findall('.//device-support-alias'):
-			alias_name = alias.attrib["value"]
+		for alias in self.root.findall('.//%s' %DeviceMap.supportalias_tag):
+			alias_name = alias.attrib[DeviceMap.support_value_attr]
 			total += 1
 			# Make sure it's valid
 			if alias_name not in alias_names:
