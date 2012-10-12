@@ -403,7 +403,7 @@ class AVRStudio5Project(GenericProject):
 		project_e.attrib['ReplaceParameters'] = 'true'
 
 		# Add asf.h + the project file list to <Project>
-		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
+		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values() + [[os.path.join(self.app_dir, 'asf.h')]]
 		self._add_files_to_vstemplate_project(project_e, file_target_list)
 
 		# -- Generate custom parameters
@@ -640,7 +640,7 @@ class AVRStudio5Project(GenericProject):
 		dir_set |= set(os.path.dirname(file_target[0]) for file_target in file_target_list)
 
 		# TODO Find the correct tag and type to use.
-		file_target_list = self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
+		file_target_list = self.project_distribute_files_dict.values() + [[os.path.join(self.app_dir, 'asf.h')]]
 		self._add_files_to_avrgccproj_itemgroup(itemgroups_e[0], file_target_list, 'None')
 
 		dir_set |= set(os.path.dirname(file_target[0]) for file_target in file_target_list)
@@ -1761,11 +1761,11 @@ class AVRStudio5Project(GenericProject):
 
 			vstemplate_icon = self._get_vstemplate_icon_path()
 			if vstemplate_icon:
-				extra_files.append((vstemplate_icon, self.icon_name))
+				extra_files.append((vstemplate_icon, [self.icon_name]))
 
 			vstemplate_image = self._get_vstemplate_image_path()
 			if vstemplate_image:
-				extra_files.append((vstemplate_image, self.image_name))
+				extra_files.append((vstemplate_image, [self.image_name]))
 
 		# Set up functions to create ZIP archive or copy/write files
 		# in the output directory, depending on the setting
