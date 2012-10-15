@@ -10,7 +10,6 @@
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<config name="config.spi_master_type" value="usart_spi"/>
-		<require idref="common.components.memory.data_flash.at45dbx"/>
 		<require idref="common.components.memory.data_flash.at45dbx.ctrl_access"/>
 		<config name="config.common.services.usb.class.device" value="mass_storage"/>
 		<require idref="common.services.usb.class.msc.device.example"/>

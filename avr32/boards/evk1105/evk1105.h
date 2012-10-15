@@ -213,10 +213,19 @@
 /*! \name GPIO and SPI Connections of the SD/MMC Connector
  */
 //! @{
-#define SD_MMC_CARD_DETECT_PIN      AVR32_PIN_PA02
-#define SD_MMC_WRITE_PROTECT_PIN    AVR32_PIN_PA18
+#define SD_MMC_SPI_MEM_CNT          1
+#define SD_MMC_0_CD_GPIO            AVR32_PIN_PA02
+#define SD_MMC_0_CD_DETECT_VALUE    1
+#define SD_MMC_0_WP_GPIO            AVR32_PIN_PA18
+#define SD_MMC_0_WP_DETECT_VALUE    0
+#define SD_MMC_SPI_0_CS             1
+
+// Keep it for SD MMC stack ASF V1.7
+#define SD_MMC_CARD_DETECT_PIN      SD_MMC_0_CD_GPIO
+#define SD_MMC_WRITE_PROTECT_PIN    SD_MMC_0_WP_GPIO
+#define SD_MMC_SPI_NPCS             SD_MMC_SPI_0_CS
+
 #define SD_MMC_SPI                  (&AVR32_SPI0)
-#define SD_MMC_SPI_NPCS             1
 #define SD_MMC_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
 #define SD_MMC_SPI_SCK_FUNCTION     AVR32_SPI0_SCK_0_0_FUNCTION
 #define SD_MMC_SPI_MISO_PIN         AVR32_SPI0_MISO_0_0_PIN

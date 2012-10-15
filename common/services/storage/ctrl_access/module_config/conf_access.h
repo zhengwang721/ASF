@@ -7,7 +7,7 @@
  * This file contains the possible external configuration of the memory access
  * control.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,8 +82,14 @@
 #define LUN_3                DISABLE  //!< Disable SD/MMC Card over MCI or MCI.
 #endif
 
-#define LUN_4                DISABLE
+#if SD_MMC_ENABLE
+#define LUN_4                ENABLE   //!< Enable common SD/MMC stack
+#define LUN_5                ENABLE
+#else
+#define LUN_4                DISABLE  //!< Disable common SD/MMC stack
 #define LUN_5                DISABLE
+#endif
+
 #define LUN_6                DISABLE
 #define LUN_7                DISABLE
 
@@ -161,6 +167,40 @@
 #define Lun_3_mem_2_ram                         sd_mmc_mci_mem_2_ram_0
 #define Lun_3_ram_2_mem                         sd_mmc_mci_ram_2_mem_0
 #define LUN_3_NAME                              "\"SD/MMC Card over MCI Slot 0\""
+//! @}
+
+/*! \name LUN 4 Definitions
+ */
+//! @{
+#define SD_MMC_0_MEM                            LUN_4
+#define LUN_ID_SD_MMC_0_MEM                     LUN_ID_4
+#define LUN_4_INCLUDE                           "sd_mmc_mem.h"
+#define Lun_4_test_unit_ready                   sd_mmc_test_unit_ready_0
+#define Lun_4_read_capacity                     sd_mmc_read_capacity_0
+#define Lun_4_wr_protect                        sd_mmc_wr_protect_0
+#define Lun_4_removal                           sd_mmc_removal_0
+#define Lun_4_usb_read_10                       sd_mmc_usb_read_10_0
+#define Lun_4_usb_write_10                      sd_mmc_usb_write_10_0
+#define Lun_4_mem_2_ram                         sd_mmc_mem_2_ram_0
+#define Lun_4_ram_2_mem                         sd_mmc_ram_2_mem_0
+#define LUN_4_NAME                              "\"SD/MMC Card Slot 0\""
+//! @}
+
+/*! \name LUN 5 Definitions
+ */
+//! @{
+#define SD_MMC_1_MEM                            LUN_5
+#define LUN_ID_SD_MMC_1_MEM                     LUN_ID_5
+#define LUN_5_INCLUDE                           "sd_mmc_mem.h"
+#define Lun_5_test_unit_ready                   sd_mmc_test_unit_ready_1
+#define Lun_5_read_capacity                     sd_mmc_read_capacity_1
+#define Lun_5_wr_protect                        sd_mmc_wr_protect_1
+#define Lun_5_removal                           sd_mmc_removal_1
+#define Lun_5_usb_read_10                       sd_mmc_usb_read_10_1
+#define Lun_5_usb_write_10                      sd_mmc_usb_write_10_1
+#define Lun_5_mem_2_ram                         sd_mmc_mem_2_ram_1
+#define Lun_5_ram_2_mem                         sd_mmc_ram_2_mem_1
+#define LUN_5_NAME                              "\"SD/MMC Card Slot 1\""
 //! @}
 
 /*! \name USB LUNs Definitions

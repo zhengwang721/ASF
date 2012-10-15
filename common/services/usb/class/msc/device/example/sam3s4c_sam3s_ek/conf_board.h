@@ -47,4 +47,7 @@
 /* Nand flash is used */
 #define CONF_BOARD_NAND
 
+// Enable SD MMC interface pins through HSMCI
+#define CONF_BOARD_SD_MMC_HSMCI
+
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -51,17 +51,6 @@
 # include "at45dbx.h"
 #endif
 
-#if ((defined SD_MMC_MCI_0_MEM) && (SD_MMC_MCI_0_MEM == ENABLE)) \
-	|| ((defined SD_MMC_MCI_1_MEM) && (SD_MMC_MCI_1_MEM == ENABLE))
-# include "mci.h"
-# include "conf_sd_mmc_mci.h"
-#endif
-
-#if (defined SD_MMC_SPI_MEM) && (SD_MMC_SPI_MEM == ENABLE)
-# include "spi.h"
-# include "conf_sd_mmc_spi.h"
-#endif
-
 void memories_initialization(void)
 {
 	//-- Hmatrix bus configuration
@@ -158,45 +147,12 @@ void memories_initialization(void)
 #endif
 
 #if (defined AT45DBX_MEM) && (AT45DBX_MEM == ENABLE)
-	sysclk_enable_peripheral_clock(AT45DBX_SPI_MODULE);
 	at45dbx_init();
 #endif
 
-#if ((defined SD_MMC_MCI_0_MEM) && (SD_MMC_MCI_0_MEM == ENABLE)) \
-	|| ((defined SD_MMC_MCI_1_MEM) && (SD_MMC_MCI_1_MEM == ENABLE))
-	sysclk_enable_pbb_module(SYSCLK_MCI);
-	sysclk_enable_hsb_module(SYSCLK_DMACA);
-	sd_mmc_mci_init(SD_SLOT_8BITS, sysclk_get_pbb_hz(), sysclk_get_cpu_hz());
+#if ((defined SD_MMC_0_MEM) && (SD_MMC_0_MEM == ENABLE)) \
+	|| ((defined SD_MMC_1_MEM) && (SD_MMC_1_MEM == ENABLE))
+	sd_mmc_init();
 #endif
-
-#if (defined SD_MMC_SPI_MEM) && (SD_MMC_SPI_MEM == ENABLE)
-	// SPI options.
-	spi_options_t spiOptions = {
-		.reg          = SD_MMC_SPI_NPCS,
-		.baudrate     = SD_MMC_SPI_MASTER_SPEED,  // Defined in conf_sd_mmc_spi.h.
-		.bits         = SD_MMC_SPI_BITS,          // Defined in conf_sd_mmc_spi.h.
-		.spck_delay   = 0,
-		.trans_delay  = 0,
-		.stay_act     = 1,
-		.spi_mode     = 0,
-		.modfdis      = 1
-	};
-
-	sysclk_enable_peripheral_clock(SD_MMC_SPI);
-
-	// If the SPI used by the SD/MMC is not enabled.
-	if (!spi_is_enabled(SD_MMC_SPI)) {
-		// Initialize as master.
-		spi_initMaster(SD_MMC_SPI, &spiOptions);
-		// Set selection mode: variable_ps, pcs_decode, delay.
-		spi_selectionMode(SD_MMC_SPI, 0, 0, 0);
-		// Enable SPI.
-		spi_enable(SD_MMC_SPI);
-	}
-
-	// Initialize SD/MMC with SPI PB clock.
-	sd_mmc_spi_init(spiOptions,sysclk_get_pba_hz());
-#endif  // SD_MMC_SPI_MEM == ENABLE
-
 }
 

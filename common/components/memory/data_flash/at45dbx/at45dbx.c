@@ -249,7 +249,9 @@ bool at45dbx_mem_check(void)
 		// Unselect the checked DF memory.
 		at45dbx_chipselect_df(df, false);
 		// Unexpected device density value.
-		if ((status & AT45DBX_MSK_DENSITY) < AT45DBX_DENSITY) return false;
+		if ((status & AT45DBX_MSK_DENSITY) < AT45DBX_DENSITY) {
+			return false;
+		}
 	}
 	return true;
 }

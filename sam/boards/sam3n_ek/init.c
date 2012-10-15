@@ -48,7 +48,7 @@
 
 void board_init(void)
 {
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT 
+#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 	/* Disable the watchdog */
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
@@ -56,11 +56,11 @@ void board_init(void)
 	/* Configure LED pins */
 	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
 	gpio_configure_pin(LED1_GPIO, LED1_FLAGS);
-	
+
 	/* Configure Push Button pins */
 	gpio_configure_pin(GPIO_PUSH_BUTTON_1, GPIO_PUSH_BUTTON_1_FLAGS);
 	gpio_configure_pin(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS);
-	
+
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
 	gpio_configure_group(PINS_UART0_PIO, PINS_UART0, PINS_UART0_FLAGS);
@@ -96,20 +96,22 @@ void board_init(void)
 #endif
 
 	/* Configure SPI pins */
-#ifdef CONF_BOARD_SPI
+#if (defined CONF_BOARD_SPI) || (defined CONF_BOARD_SD_MMC_SPI)
 	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
-	
+
 	/**
 	 * For NPCS 1, 2, and 3, different PINs can be used to access the same NPCS line.
-	 * Depending on the application requirements, the default PIN may not be available. 
-	 * Hence a different PIN should be selected using the CONF_BOARD_SPI_NPCS_GPIO and 
+	 * Depending on the application requirements, the default PIN may not be available.
+	 * Hence a different PIN should be selected using the CONF_BOARD_SPI_NPCS_GPIO and
 	 * CONF_BOARD_SPI_NPCS_FLAGS macros.
 	 */
-	
-	#ifdef CONF_BOARD_SPI_NPCS0
+
+	#ifdef CONF_BOARD_SD_MMC_SPI
 		gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+		/* Configure SD/MMC card detect pin */
+		gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
 	#endif
 
 	#ifdef CONF_BOARD_SPI_NPCS1
@@ -170,7 +172,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_ADM3485_RE
 	/* Configure RS485 transceiver RE pin */
-    gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
+	gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
 	gpio_set_pin_low(PIN_RE_IDX);
 #endif
 

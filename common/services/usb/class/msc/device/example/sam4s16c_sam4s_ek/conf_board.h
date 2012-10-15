@@ -44,7 +44,16 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* Configure UART pins */
+//#define CONF_BOARD_UART_CONSOLE
+
+/* Usart Hw ID used by the console (UART0). */
+//#define CONSOLE_UART_ID          ID_UART0
+
 /* Nand flash is used */
 #define CONF_BOARD_NAND
+
+/* Enable SD MMC interface pins through HSMCI */
+#define CONF_BOARD_SD_MMC_HSMCI
 
 #endif /* CONF_BOARD_H_INCLUDED */

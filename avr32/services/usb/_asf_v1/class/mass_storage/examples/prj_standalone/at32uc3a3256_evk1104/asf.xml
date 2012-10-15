@@ -2,7 +2,6 @@
 	<project caption="USB Dual Role (Device and Host) Mass Storage Class example (from ASF V1) on EVK1104" id="avr32.services.usb.ms.example.evk1104.asfv1">
 		<require idref="avr32.services.usb.ms.example"/>
 		<require idref="avr32.components.memory.sd_mmc.sd_mmc_mci"/>
-		<require idref="avr32.drivers.mci"/>
 		<require idref="avr32.utils.libs.newlib_addons"/>
 		<require idref="board.evk1104"/>
 		<config name="config.board.evk1104.init" value="no"/>

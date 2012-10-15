@@ -53,12 +53,15 @@
 
 void memories_initialization(void)
 {
-
 #if (defined AT45DBX_MEM) && (AT45DBX_MEM == ENABLE)
 	// sysclk_enable_peripheral_clock(AT45DBX_SPI_MODULE);
 	// is already done by XMEGA SPI driver
 	at45dbx_init();
 #endif
 
+#if ((defined SD_MMC_0_MEM) && (SD_MMC_0_MEM == ENABLE)) \
+	|| ((defined SD_MMC_1_MEM) && (SD_MMC_1_MEM == ENABLE))
+	sd_mmc_init();
+#endif
 }
 

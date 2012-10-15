@@ -531,6 +531,9 @@
 /* HSMCI                                                                      */
 /* ------------------------------------------------------------------------ */
 /*! HSMCI pins definition. */
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT        1
+#define SD_MMC_HSMCI_SLOT_0_SIZE    8
 #define PINS_HSMCI\
 	{ PIO_PA20A_MCCDA | PIO_PA19A_MCCK | PIO_PA21A_MCDA0 | PIO_PA22A_MCDA1\
 	| PIO_PA23A_MCDA2 | PIO_PA24A_MCDA3,\
@@ -540,8 +543,45 @@
 	{ PIO_PE20B_MCCDB | PIO_PE22B_MCDB0 | PIO_PE24B_MCDB1 | PIO_PE26B_MCDB2\
 	| PIO_PE27B_MCDB3,\
 	PIOE, ID_PIOE, PIO_PERIPH_B, PIO_PULLUP }
-/*! HSMCI pin Card Detect. */
+
+
+/** HSMCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO            (PIO_PA20_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO             (PIO_PA19_IDX)
+#define PIN_HSMCI_MCCK_FLAGS            (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO            (PIO_PA21_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO            (PIO_PA22_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO            (PIO_PA23_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO            (PIO_PA24_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** HSMCI MCDA4 pin definition. */
+#define PIN_HSMCI_MCDA4_GPIO            (PIO_PD0_IDX)
+#define PIN_HSMCI_MCDA4_FLAGS           (PIO_PERIPH_B | PIO_DEFAULT)
+/** HSMCI MCDA5 pin definition. */
+#define PIN_HSMCI_MCDA5_GPIO            (PIO_PD1_IDX)
+#define PIN_HSMCI_MCDA5_FLAGS           (PIO_PERIPH_B | PIO_DEFAULT)
+/** HSMCI MCDA6 pin definition. */
+#define PIN_HSMCI_MCDA6_GPIO            (PIO_PD2_IDX)
+#define PIN_HSMCI_MCDA6_FLAGS           (PIO_PERIPH_B | PIO_DEFAULT)
+/** HSMCI MCDA7 pin definition. */
+#define PIN_HSMCI_MCDA7_GPIO            (PIO_PD3_IDX)
+#define PIN_HSMCI_MCDA7_FLAGS           (PIO_PERIPH_B | PIO_DEFAULT)
+
+/** SD/MMC card detect pin definition. */
 #define PIN_HSMCI_CD {PIO_PE6, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO            (PIO_PE6_IDX)
+#define SD_MMC_0_CD_PIO_ID          ID_PIOE
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
 
 /**
  * \file
@@ -958,20 +998,6 @@
 /*! EMAC RMII mode */
 #define BOARD_EMAC_MODE_RMII 1
 
-/**
- * \file
- * SD Card
- * - \ref BOARD_SD_PINS
- * - \ref BOARD_SD_PIN_CD
- *
- */
-
-/*! HSMCI pins that shall be configured to access the SD card. */
-#define BOARD_SD_PINS               PINS_HSMCI
-/*! HSMCI Card Detect pin. */
-#define BOARD_SD_PIN_CD             PIN_HSMCI_CD
-/*! Total number of HSMCI interface */
-#define BOARD_NUM_HSMCI               1
 
 /* ------------------------------------------------------------------------ */
 

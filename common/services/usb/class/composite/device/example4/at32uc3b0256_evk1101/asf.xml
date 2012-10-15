@@ -10,7 +10,6 @@
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<require idref="avr32.drivers.usart"/>
-		<require idref="common.components.memory.data_flash.at45dbx"/>
 		<require idref="common.components.memory.data_flash.at45dbx.ctrl_access"/>
 		<require idref="common.services.usb.composite.device.example.cdc_msc"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>
