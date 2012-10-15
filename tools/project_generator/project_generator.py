@@ -79,28 +79,6 @@ class ProjectGeneratorRuntime(Runtime):
 
 		self.project_type_to_find = type_to_find
 
-	def verify_project(self, generator):
-		"""
-		Function for running sanity checks before running generator
-		"""
-		# Make sure we have 1 and only 1 application in our project
-		modules = generator._get_application_modules()
-		application_modules = [m for m in modules if m.type == 'application']
-		nr_of_app_modules = len(application_modules)
-		if nr_of_app_modules > 1:
-			self.log.warning("Expected 1 application module in project %s, found %d." % (generator.project.id, nr_of_app_modules ))
-			for appm in application_modules:
-				self.log.warning("\t%s" %appm.id)
-
-		# Make sure we have 1 and only 1 board defined in our project
-		modules = generator._get_board_modules()
-		board_modules = [m for m in modules if m.type == 'board']
-		nr_of_board_modules = len(board_modules)
-		if nr_of_board_modules != 1:
-			self.log.warning("Expected 1 board module in project %s, found %d." % (generator.project.id, nr_of_board_modules ))
-			for board in board_modules:
-				self.log.warning("\t%s" %board.id)
-
 	def load_project(self, project_id):
 		"""
 		Load a project by the given project id
@@ -183,7 +161,6 @@ class ProjectGeneratorRuntime(Runtime):
 		Return False if generation fails
 		"""
 
-		is_verified = False
 		num_gens = 0
 		ok_gens = 0
 		generator_count = dict()
@@ -208,11 +185,6 @@ class ProjectGeneratorRuntime(Runtime):
 
 			try:
 				generator = the_class(project, self.db, self)
-
-				if not is_verified and isinstance(project, Project):
-					# Let's do some project sanity checking first
-					self.verify_project(generator)
-					is_verified = True
 
 				project.visualize_requirements(self.log.debug, main_ext=self.db.extension)
 

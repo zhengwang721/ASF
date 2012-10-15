@@ -2100,6 +2100,8 @@ class ConfigDB(object):
 		run_test(self, self.sanity_check_project_board_device_support, device_map)
 		# This is the time consuming one (50-ish secs):
 		run_test(self, self.sanity_check_resolve_elements)
+		# Run this test after the resolving has been tested
+		run_test(self, self.sanity_check_project_definitions)
 
 		if not fdk_check:
 			# Don't run this for FDK sanity check
@@ -2466,5 +2468,32 @@ class ConfigDB(object):
 			if alias_name not in alias_names:
 				errors += 1
 				output_obj.error("Unknown device-support-alias '%s' in module '%s'" %(alias_name, alias.getparent().attrib["id"]))
+
+		return total, errors
+
+	def sanity_check_project_definitions(self, output_obj):
+		# Import GenericProject here in order to avoid problems due to circular imports
+		from asf.toolchain.generic import GenericProject
+
+		total = 0
+		errors = 0
+
+		# For each project
+		for project in self.iter_projects():
+			generator = GenericProject(project, self, self.runtime)
+			# Check that it does not:
+			# 1) require more than one board
+			boards = [b for b in generator._get_board_modules() if b.type == Board.tag]
+			num_boards = len(boards)
+			total += 1
+			if num_boards > 1:
+				output_obj.error("Project %s has %s boards, should be no more than 1" % (project.id, num_boards))
+
+			# 2) require more than one application module
+			modules = [m for m in generator._get_application_modules() if m.type == 'application']
+			num_modules = len(modules)
+			total += 1
+			if num_modules > 1:
+				output_obj.error("Project %s has %s application modules, should be no more than 1" % (project.id, num_modules))
 
 		return total, errors
