@@ -11,7 +11,6 @@
 		<build type="include-path" value="."/>
 		<require idref="avr32.drivers.eic"/>
 		<require idref="avr32.components.joystick.skrhabe010"/>
-		<require idref="common.components.memory.data_flash.at45dbx"/>
 		<require idref="common.components.memory.data_flash.at45dbx.ctrl_access"/>
 		<require idref="common.services.usb.class.composite.device.example.hidkbd_msc"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>

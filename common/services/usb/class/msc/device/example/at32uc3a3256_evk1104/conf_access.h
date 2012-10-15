@@ -1,11 +1,7 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
  * \brief Memory access control configuration file.
- *
- * This file contains the possible external configuration of the memory access
- * control.
  *
  * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
  *
@@ -43,8 +39,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
-
+ */
 
 #ifndef _CONF_ACCESS_H_
 #define _CONF_ACCESS_H_
@@ -58,12 +53,12 @@
 //! @{
 #define LUN_0                DISABLE    //!< On-Chip Virtual Memory.
 #define LUN_1                ENABLE     //!< AT45DBX Data Flash.
-#define LUN_2                DISABLE    //!< SD/MMC Card over SPI.
-#define LUN_3                ENABLE     //!< SD/MMC Card over MCI Slot 0.
-#define LUN_4                DISABLE
-#define LUN_5                DISABLE
-#define LUN_6                DISABLE
-#define LUN_7                DISABLE
+#define LUN_2                ENABLE     //!< SD/MMC Card over MCI Slot 0
+#define LUN_3                ENABLE     //!< SD/MMC Card over MCI Slot 1
+#define LUN_4                DISABLE    //!< Spare
+#define LUN_5                DISABLE    //!< Spare
+#define LUN_6                DISABLE    //!< Spare
+#define LUN_7                DISABLE    //!< Spare
 #define LUN_USB              DISABLE    //!< Host Mass-Storage Memory.
 //! @}
 
@@ -104,35 +99,35 @@
 /*! \name LUN 2 Definitions
  */
 //! @{
-#define SD_MMC_SPI_MEM                          LUN_2
-#define LUN_ID_SD_MMC_SPI_MEM                   LUN_ID_2
-#define LUN_2_INCLUDE                           "sd_mmc_spi_mem.h"
-#define Lun_2_test_unit_ready                   sd_mmc_spi_test_unit_ready
-#define Lun_2_read_capacity                     sd_mmc_spi_read_capacity
-#define Lun_2_wr_protect                        sd_mmc_spi_wr_protect
-#define Lun_2_removal                           sd_mmc_spi_removal
-#define Lun_2_usb_read_10                       sd_mmc_spi_usb_read_10
-#define Lun_2_usb_write_10                      sd_mmc_spi_usb_write_10
-#define Lun_2_mem_2_ram                         sd_mmc_spi_mem_2_ram
-#define Lun_2_ram_2_mem                         sd_mmc_spi_ram_2_mem
-#define LUN_2_NAME                              "\"SD/MMC Card over SPI\""
+#define SD_MMC_0_MEM                            LUN_2
+#define LUN_ID_SD_MMC_0_MEM                     LUN_ID_2
+#define LUN_2_INCLUDE                           "sd_mmc_mem.h"
+#define Lun_2_test_unit_ready                   sd_mmc_test_unit_ready_0
+#define Lun_2_read_capacity                     sd_mmc_read_capacity_0
+#define Lun_2_wr_protect                        sd_mmc_wr_protect_0
+#define Lun_2_removal                           sd_mmc_removal_0
+#define Lun_2_usb_read_10                       sd_mmc_usb_read_10_0
+#define Lun_2_usb_write_10                      sd_mmc_usb_write_10_0
+#define Lun_2_mem_2_ram                         sd_mmc_mem_2_ram_0
+#define Lun_2_ram_2_mem                         sd_mmc_ram_2_mem_0
+#define LUN_2_NAME                              "\"SD/MMC Card Slot 0\""
 //! @}
 
 /*! \name LUN 3 Definitions
  */
 //! @{
-#define SD_MMC_MCI_0_MEM                        LUN_3
-#define LUN_ID_SD_MMC_MCI_0_MEM                 LUN_ID_3
-#define LUN_3_INCLUDE                           "sd_mmc_mci_mem.h"
-#define Lun_3_test_unit_ready                   sd_mmc_mci_test_unit_ready_0
-#define Lun_3_read_capacity                     sd_mmc_mci_read_capacity_0
-#define Lun_3_wr_protect                        sd_mmc_mci_wr_protect_0
-#define Lun_3_removal                           sd_mmc_mci_removal_0
-#define Lun_3_usb_read_10                       sd_mmc_mci_usb_read_10_0
-#define Lun_3_usb_write_10                      sd_mmc_mci_usb_write_10_0
-#define Lun_3_mem_2_ram                         sd_mmc_mci_mem_2_ram_0
-#define Lun_3_ram_2_mem                         sd_mmc_mci_ram_2_mem_0
-#define LUN_3_NAME                              "\"SD/MMC Card over MCI Slot 0\""
+#define SD_MMC_1_MEM                            LUN_3
+#define LUN_ID_SD_MMC_1_MEM                     LUN_ID_3
+#define LUN_3_INCLUDE                           "sd_mmc_mem.h"
+#define Lun_3_test_unit_ready                   sd_mmc_test_unit_ready_1
+#define Lun_3_read_capacity                     sd_mmc_read_capacity_1
+#define Lun_3_wr_protect                        sd_mmc_wr_protect_1
+#define Lun_3_removal                           sd_mmc_removal_1
+#define Lun_3_usb_read_10                       sd_mmc_usb_read_10_1
+#define Lun_3_usb_write_10                      sd_mmc_usb_write_10_1
+#define Lun_3_mem_2_ram                         sd_mmc_mem_2_ram_1
+#define Lun_3_ram_2_mem                         sd_mmc_ram_2_mem_1
+#define LUN_3_NAME                              "\"SD/MMC Card Slot 1\""
 //! @}
 
 /*! \name USB LUNs Definitions

@@ -44,13 +44,17 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+// Enable SD MMC interface pins through HSMCI
+#define CONF_BOARD_SD_MMC_HSMCI
+
+// UART pins are used
 #define CONF_BOARD_UART_CONSOLE
 #define CONSOLE_UART_ID          ID_UART
 
 // USB pins are used
 #define CONF_BOARD_USB_PORT
 
-/** Support NAND */
+// Support NAND
 #define CONF_BOARD_NAND
 
 #endif /* CONF_BOARD_H_INCLUDED */

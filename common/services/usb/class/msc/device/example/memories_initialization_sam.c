@@ -45,6 +45,7 @@
 #include <asf.h>
 #include "conf_board.h" /* To get on-board memories configurations */
 #include "conf_access.h"
+#include "conf_board.h"
 #include "main.h"
 
 #ifdef CONF_BOARD_SMC_PSRAM
@@ -109,5 +110,9 @@ void memories_initialization(void)
 #endif
 #ifdef CONF_BOARD_NAND
 	nand_init();
+#endif
+
+#if defined CONF_BOARD_SD_MMC_HSMCI || defined CONF_BOARD_SD_MMC_SPI
+	sd_mmc_init();
 #endif
 }

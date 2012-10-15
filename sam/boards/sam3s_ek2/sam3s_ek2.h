@@ -270,14 +270,42 @@
 #define BOARD_NUM_OF_LED 3
 
 /** HSMCI pins definition. */
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT      1
+#define SD_MMC_HSMCI_SLOT_0_SIZE  4
 #define PINS_HSMCI   {0x3fUL << 26, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_PULLUP}
-/** HSMCI pin Card Detect. */
+/** HSMCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO            (PIO_PA28_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO             (PIO_PA29_IDX)
+#define PIN_HSMCI_MCCK_FLAGS            (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO            (PIO_PA30_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO            (PIO_PA31_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO            (PIO_PA26_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** SD/MMC card detect pin definition. */
 #ifdef BOARD_REV_A
 #define PIN_HSMCI_CD {PIO_PA15, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO            (PIO_PA15_IDX)
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
 #endif
-
 #ifdef BOARD_REV_B
 #define PIN_HSMCI_CD {PIO_PA6, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO            (PIO_PA6_IDX)
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
 #endif
 
 /** Push button #0 definition. Attributes = pull-up + debounce + interrupt on rising edge. */

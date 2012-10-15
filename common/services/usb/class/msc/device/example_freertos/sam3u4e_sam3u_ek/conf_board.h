@@ -46,4 +46,7 @@
 
 #define CONF_BOARD_SMC_PSRAM
 
+// Enable SD MMC interface pins through HSMCI
+#define CONF_BOARD_SD_MMC_HSMCI
+
 #endif /* CONF_BOARD_H_INCLUDED */

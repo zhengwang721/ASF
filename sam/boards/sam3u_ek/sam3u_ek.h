@@ -266,14 +266,50 @@
 #define BOARD_NUM_OF_LED 3
 
 //!// HSMCI pins definition.
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT          1
+#define SD_MMC_HSMCI_SLOT_0_SIZE      8
 #define PINS_HSMCI  {0x1f8, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP}, \
                       {1 << 3, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
-//! HSMCI pin DAT0 (busy)
-#define PIN_HSMCI_DAT0 \
-    {PIO_PA5, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP}
-//! HSMCI pin Card Detect
+
+/** MCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO       (PIO_PA4_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO        (PIO_PA3_IDX)
+#define PIN_HSMCI_MCCK_FLAGS       (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO       (PIO_PA5_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO       (PIO_PA6_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO       (PIO_PA7_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO       (PIO_PA8_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+/** MCI MCDA4 pin definition. */
+#define PIN_HSMCI_MCDA4_GPIO       (PIO_PC28_IDX)
+#define PIN_HSMCI_MCDA4_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+/** MCI MCDA5 pin definition. */
+#define PIN_HSMCI_MCDA5_GPIO       (PIO_PC29_IDX)
+#define PIN_HSMCI_MCDA5_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+/** MCI MCDA6 pin definition. */
+#define PIN_HSMCI_MCDA6_GPIO       (PIO_PC30_IDX)
+#define PIN_HSMCI_MCDA6_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+/** MCI MCDA7 pin definition. */
+#define PIN_HSMCI_MCDA7_GPIO       (PIO_PC31_IDX)
+#define PIN_HSMCI_MCDA7_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+
+//! SD/MMC card detect pin definition.
 #define PIN_HSMCI_CD \
     {PIO_PA25, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO            (PIO_PA25_IDX)
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
 
 //! Push button #0 definition.
 #define PIN_PUSHBUTTON_1    {1 << 18, PIOA, ID_PIOA, PIO_INPUT, PIO_DEGLITCH | PIO_PULLUP}
