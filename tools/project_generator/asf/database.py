@@ -1253,19 +1253,9 @@ class Board(TypelessConfigItem):
 	def __init__(self, element, db):
 		ConfigItem.__init__(self, element, db)
 
-		mcu_name = self._require_property('mcu')
-		self._mcu = MCU(mcu_name, db)
-
-	@property
-	def mcu(self):
-		return self._mcu
-
 	@property
 	def vendor(self):
 		return self._get_property("vendor") or self.default_vendor
-
-	def get_device_support(self):
-		return [self.mcu.name]
 
 
 class Project(ConfigItem):
@@ -1273,6 +1263,7 @@ class Project(ConfigItem):
 
 	type_attrib  = 'type'
 	name_attrib  = 'workspace-name'
+	mcu_attrib   = 'default-mcu'
 	valid_types  = ['normal', 'template', 'unit-test']
 	default_type = valid_types[0]
 
@@ -1289,21 +1280,33 @@ class Project(ConfigItem):
 			if isinstance(prereq, Board):
 				self._board = prereq
 
-		if not self._board:
-			raise DbError("Project %s is missing a board definition" % (self.id))
+		if self._board:
+			self._board_id = self._board.id
+			board_config = self._board.get_configuration()
+		else:
+			self._board_id = None
+			board_config = None
 
 		project_config = self._get_configuration_from_element()
-		board_config = self._board.get_configuration()
 
 		self._project_board_configuration = PrioritizedConfigurationHandler(project_config, board_config)
 
+		# Get project MCU.
+		try:
+			mcu_name = element.attrib[self.mcu_attrib]
+		except KeyError:
+			# No default-mcu, use device-support (this has already been sanity-checked)
+			mcu_name = self.get_device_support()[0]
+
+		self._mcu = MCU(mcu_name, db)
+
 	@property
 	def mcu(self):
-		return self._board.mcu
+		return self._mcu
 
 	@property
 	def board(self):
-		return self._board.id
+		return self._board_id
 
 	@property
 	def basedir(self):
@@ -1325,9 +1328,6 @@ class Project(ConfigItem):
 
 	def get_configuration(self):
 		return self._project_board_configuration
-
-	def get_device_support(self):
-		return self._board.get_device_support()
 
 	def get_project_modules(self):
 		"""
@@ -2097,6 +2097,7 @@ class ConfigDB(object):
 		run_test(self, self.sanity_check_selector_matching_parent)
 		run_test(self, self.sanity_check_select_by_configs)
 		run_test(self, self.sanity_check_device_support_alias, device_map)
+		run_test(self, self.sanity_check_project_board_device_support, device_map)
 		# This is the time consuming one (50-ish secs):
 		run_test(self, self.sanity_check_resolve_elements)
 
@@ -2173,6 +2174,79 @@ class ConfigDB(object):
 			if not dev_sup:
 				errors += 1
 				output_obj.error("%s does not specify device-support" % element.attrib["id"])
+
+		return total, errors
+
+	def sanity_check_project_board_device_support(self, output_obj, device_map):
+		# Check that the projects' device support are not a superset of their
+		# respective boards' device support, and that the default mcu of the
+		# projects are also found among their supported devices
+		total = 0
+		errors = 0
+
+		# Helper function to avoid code duplication
+		def get_all_device_support(element):
+			# Get a list with all the device-support values in the specified element
+			device_support = []
+			for dsup in element.findall(".//%s" % DeviceMap.support_tag):
+				device_support += device_map.get_mcu_list(dsup.attrib[DeviceMap.support_value_attr], True)
+			return device_support
+
+		# Find all boards and remember their device-support
+		boards = {}
+		for board in self.root.findall(".//%s" % Board.tag):
+			boards[board.attrib["id"]] = get_all_device_support(board)
+
+		# Now find all projects and make sure their device-support match their board's (if present)
+		for project in self.root.findall(".//%s" % Project.tag):
+			total += 1
+
+			# Get project's device-support
+			device_support = get_all_device_support(project)
+
+			# Find all requirements of this project, look for boards
+			board_ids = []
+			for req in project.findall(".//require"):
+				req_id = req.attrib["idref"]
+				if req_id in boards.keys():
+					# Yeah, this is a board requirement. Remember ID
+					board_ids.append(req_id)
+
+			# Now to the actual sanity check: make sure all supported devices in the project are supported by all required boards!
+			invalid_mcus = []
+			for device in device_support:
+				for board_id in board_ids:
+					if device not in boards[board_id]:
+						invalid_mcus.append(device)
+
+			if len(invalid_mcus) > 0:
+				errors += 1
+				output_obj.error("Project %s supports the following devices not supported by required board(s): %s" % (project.attrib["id"], invalid_mcus))
+
+			# Check if we have a default-mcu in this project
+			try:
+				default_mcu = project.attrib[Project.mcu_attrib]
+			except KeyError:
+				default_mcu = None
+
+			if default_mcu:
+				# We do. Make sure it's a single MCU, and it fits in device-support
+				dm = device_map.get_mcu_list(default_mcu, True)
+
+				if len(dm) != 1:
+					# Not single MCU
+					errors += 1
+					output_obj.error("Project %s: default-mcu (%s) is not single MCU or unknown MCU" % (project.attrib["id"], default_mcu))
+				else:
+					# Make sure it fits in device-support
+					if default_mcu not in device_support:
+						errors += 1
+						output_obj.error("Project %s: default-mcu (%s) does not fit in device-support (%s)" % (project.attrib["id"], default_mcu, device_support))
+			else:
+				# No default-mcu. Make sure device-support is single MCU
+				if len(device_support) != 1:
+					errors += 1
+					output_obj.error("Project %s: No default-mcu, device-support must be single MCU (%s)" % (project.attrib["id"], device_support))
 
 		return total, errors
 
