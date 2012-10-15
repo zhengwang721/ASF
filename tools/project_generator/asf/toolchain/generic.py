@@ -212,7 +212,11 @@ class GenericElement(object):
 		the list.
 		"""
 		# Fetch toolchain configs and config lists from board
-		(configs, list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
+		if self.project._board:
+			(configs, list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
+		else:
+			configs = {}
+			list_configs = {}
 
 		# Update configs with those from project
 		(more_configs, more_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
@@ -327,9 +331,6 @@ class GenericElement(object):
 		except AttributeError:
 			modules = self._resolve_application_modules()
 			self.application_modules = modules
-
-		if not modules:
-			raise NotFoundError("Project does not contain any application module.")
 
 		return modules
 
@@ -552,8 +553,12 @@ class GenericProject(GenericElement):
 		name = self.project.workspace_name
 
 		if name == None:
-			# Find the first application module
-			module = self._get_application_modules()[0]
+			# Find the first application module. Use project if no application module found.
+			modules = self._get_application_modules()
+			if not modules:
+				module = self.project
+			else:
+				module = modules[0]
 			# Get the ID, remove first hash and all trailing characters
 			module_id = module.id.partition('#')[0]
 
