@@ -340,7 +340,10 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_main_application_module(self, modules):
 		application_modules = [m for m in modules if m.type == 'application']
-		return application_modules[0]
+		if application_modules:
+			return application_modules[0]
+		else:
+			return None
 
 
 	def _get_formatted_description(self, module):
@@ -980,10 +983,11 @@ class AVRStudio5Project(GenericProject):
 			"config"     : "",
 		}
 
-		board_id_e = ET.SubElement(root_element, "board")
-		board_id_e.set("id", self.project.board)
-		board_id_e.set("content-id",self.make_content_id(self.project))
-		board_id_e.attrib.update(default_attribs)
+		if self.project.board:
+			board_id_e = ET.SubElement(root_element, "board")
+			board_id_e.set("id", self.project.board)
+			board_id_e.set("content-id",self.make_content_id(self.project))
+			board_id_e.attrib.update(default_attribs)
 
 		project_id_e = ET.SubElement(root_element, "project")
 		project_id_e.set("id", self.project.id)
@@ -1008,18 +1012,19 @@ class AVRStudio5Project(GenericProject):
 
 			project_board = self.project._board
 			# Add prerequisites from the board definition.
-			board_file = project_board.fromfile
-			board_prereqs = project_board.get_prerequisites(recursive=False)
+			if project_board:
+				board_file = project_board.fromfile
+				board_prereqs = project_board.get_prerequisites(recursive=False)
 
-			# Resolve dependencies recursively -- add only
-			# those which are required from the board's
-			# asf.xml, but are defined elsewhere.
-			for prereq in board_prereqs:
-				if prereq.fromfile != board_file:
-					prerequisites.append(prereq)
-				else:
-					new_board_prereqs = prereq.get_prerequisites(recursive=False)
-					board_prereqs.extend(new_board_prereqs)
+				# Resolve dependencies recursively -- add only
+				# those which are required from the board's
+				# asf.xml, but are defined elsewhere.
+				for prereq in board_prereqs:
+					if prereq.fromfile != board_file:
+						prerequisites.append(prereq)
+					else:
+						new_board_prereqs = prereq.get_prerequisites(recursive=False)
+						board_prereqs.extend(new_board_prereqs)
 
 			# Remove duplicates
 			prerequisites = list(set(prerequisites))
@@ -1090,7 +1095,10 @@ class AVRStudio5Project(GenericProject):
 
 		# Generate list of configurations
 		project_config = self.project._get_configuration_from_element().config
-		board_config = self.project._board.get_configuration().config
+		if self.project._board:
+			board_config = self.project._board.get_configuration().config
+		else:
+			board_config = None
 		for c in self.project._project_board_configuration.config:
 			if c in project_config:
 				# Use project extension
@@ -1495,7 +1503,8 @@ class AVRStudio5Project(GenericProject):
 		if not device_description:
 			device_description = 'Unknown Device'
 
-		main_app = self._get_main_application_module(application_modules)
+		# Find main application, or use project to get meta-data for user
+		main_app = self._get_main_application_module(application_modules) or self.project
 
 		# Build a list of items for the project's caption based on the project type (application or template)
 		caption_items = []
