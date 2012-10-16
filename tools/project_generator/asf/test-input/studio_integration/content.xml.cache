@@ -47,6 +47,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
 		<module type="driver" id="xmega.utils" caption="XMEGA compiler driver" basedir="./xmega/utils" fromfile="./xmega/utils/asf.xml">
@@ -196,7 +197,7 @@
 			<device-support value="xmega"/>
 		</module>
 	</select-by-config>
-	<board id="board.xmega_a1_xplained" vendor="Atmel" caption="XMEGA-A1 Xplained" mcu="atxmega128a1" basedir="./xmega/boards/xmega_a1_xplained" fromfile="./xmega/boards/xmega_a1_xplained/asf.xml">
+	<board id="board.xmega_a1_xplained" vendor="Atmel" caption="XMEGA-A1 Xplained" basedir="./xmega/boards/xmega_a1_xplained" fromfile="./xmega/boards/xmega_a1_xplained/asf.xml">
 		<build type="define" name="BOARD" value="XMEGA_A1_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="header-file" value="xmega/boards/xmega_a1_xplained/xmega_a1_xplained.h"/>
@@ -205,6 +206,7 @@
 		<build type="linker-config" subtype="flags" value="--section-start=.BOOT=0x20000" toolchain="avrgcc"/>
 		<require idref="config.board.xmega_a1_xplained.led"/>
 		<require idref="config.board.xmega_a1_xplained.init"/>
+		<device-support value="atxmega128a1"/>
 	</board>
 
 	<module type="service" id="common.services.basic.gpio" caption="GPIO - General purpose Input/Output" basedir="./common/services/gpio" fromfile="./common/services/gpio/asf.xml">
@@ -271,6 +273,7 @@
 		<require idref="board.stk600"/>
 		<config name="config.spi_master_type" value="usart_spi"/>
 		<generator value="as5_8"/>
+		<device-support value="at32uc3a0128"/>
 	</project>
 
 	<module type="application" id="avr32.drivers.tc.example" caption="Long caption. Please truncate. Or else this test will fail. And that is bad." basedir="./avr32/drivers/tc/example" fromfile="./avr32/drivers/tc/example/asf.xml">
@@ -282,7 +285,8 @@
 		<require idref="avr32.drivers.tc"/>
 	</module>
 
-	<board id="board.stk600" caption="STK600" mcu="at32uc3a0128" >
+	<board id="board.stk600" caption="STK600">
+		<device-support value="at32uc3a0128"/>
 	</board>
 
 </asf>

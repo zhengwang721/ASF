@@ -2,7 +2,9 @@
 	<project id="bbb.project" caption="">
 		<require idref="bbb.board"/>
 		<require-external eidref="ccc" idref="ccc.application"/>
+		<device-support value="atxmega128a1"/>
 	</project>
-	<board id="bbb.board" caption="" mcu="atxmega128a1">
+	<board id="bbb.board" caption="">
+		<device-support value="atxmega128a1"/>
 	</board>
 </asf>

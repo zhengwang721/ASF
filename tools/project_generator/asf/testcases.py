@@ -513,7 +513,6 @@ class ConfigItemTestCase(SetupTestCase):
 		assert board.caption is not None
 		assert board.toolchain is None
 
-		self.assertEquals(board.mcu.name, expected_mcu)
 		self.assertEquals(board.get_device_support(), [expected_mcu])
 
 	def test_project(self):
