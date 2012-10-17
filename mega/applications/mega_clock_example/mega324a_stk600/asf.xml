@@ -3,13 +3,14 @@
 		<info type="description" value="summary">
 		ATmega324A STK600 libc delay demo application
 		</info>
-		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="include-path" value="."/>
-		<require idref="board.stk600-mega.atmega324a"/>
-		<require idref="mega.applications.mega_clock_example"/>
-		<generator value="avrgcc"/>
+		<build type="header-file" value="conf_clock.h" />
+		<build type="header-file" value="conf_board.h" />
+		<build type="include-path" value="." />
+		<require idref="board.stk600-mega.atmega324a" />
+		<require idref="mega.applications.mega_clock_example" />
+		<generator value="avrgcc" />
 		<generator value="as5_8" />
-		<generator value="doxygen"/>
+		<generator value="doxygen" />
+		<device-support value="atmega324a" />
 	</project>
 </asf>

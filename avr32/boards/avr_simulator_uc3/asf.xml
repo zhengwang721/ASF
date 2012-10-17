@@ -1,16 +1,18 @@
 <asf xmlversion="1.0">
-	<board id="board.avr_simulator_uc3.at32uc3a0512" caption="Simulator" mcu="at32uc3a0512">
-		<build type="define" name="BOARD" value="AVR_SIMULATOR_UC3"/>
-		<build type="header-file" value="avr_simulator_uc3.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Simulator" id="board.avr_simulator_uc3.at32uc3a0512">
+		<build name="BOARD" type="define" value="AVR_SIMULATOR_UC3" />
+		<build type="header-file" value="avr_simulator_uc3.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3a0512" />
 	</board>
-	<board id="board.avr_simulator_uc3.at32uc3l064" caption="Simulator" mcu="at32uc3l064">
-		<build type="define" name="BOARD" value="AVR_SIMULATOR_UC3"/>
-		<build type="header-file" value="avr_simulator_uc3.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Simulator" id="board.avr_simulator_uc3.at32uc3l064">
+		<build name="BOARD" type="define" value="AVR_SIMULATOR_UC3" />
+		<build type="header-file" value="avr_simulator_uc3.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3l064" />
 	</board>
 </asf>

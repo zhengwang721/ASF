@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.rz600" caption="RZ600 template project" type="template">
-	<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<require idref="common.applications.user_application"/>
-		<require idref="board.rz600s"/>
-		<generator value="as5_32_template"/>
-		<generator value="doxygen"/>
+	<project caption="RZ600 template project" id="common.applications.user_application.rz600" type="template">
+		<build type="include-path" value="." />
+		<build type="header-file" value="conf_board.h" />
+		<require idref="common.applications.user_application" />
+		<require idref="board.rz600s" />
+		<generator value="as5_32_template" />
+		<generator value="doxygen" />
+		<device-support value="at32uc3a3256s" />
 	</project>
 </asf>

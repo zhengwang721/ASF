@@ -3,13 +3,14 @@
 		<info type="description" value="summary">
 		ATmega16 STK600 GPIO example
 		</info>
-		<build type="header-file" value="conf_example.h"/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="include-path" value="."/>
-		<require idref="board.stk600-mega.atmega16"/>
-		<require idref="mega.applications.mega_gpio_example"/>
-		<generator value="avrgcc"/>
+		<build type="header-file" value="conf_example.h" />
+		<build type="header-file" value="conf_board.h" />
+		<build type="include-path" value="." />
+		<require idref="board.stk600-mega.atmega16" />
+		<require idref="mega.applications.mega_gpio_example" />
+		<generator value="avrgcc" />
 		<generator value="as5_8" />
-		<generator value="doxygen"/>
+		<generator value="doxygen" />
+		<device-support value="atmega16" />
 	</project>
 </asf>

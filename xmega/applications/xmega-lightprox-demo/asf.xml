@@ -6,20 +6,21 @@
 			displays light and proximity data.
 		</info>
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_a1_xplained.led" value="yes"/>
-		<build type="header-file" value="conf/conf_board.h"/>
-		<build type="header-file" value="conf/conf_twim.h"/>
-		<build type="header-file" value="conf/conf_usart_serial.h"/>
-		<build type="include-path" value="./conf"/>
-		<require idref="board.xmega_a1_xplained"/>
-		<require idref="board.sensors_xplained.lightprox_1"/>
-		<require idref="common.utils.stdio.stdio_serial"/>
-		<require idref="sensors.lightprox.demo"/>
-		<build type="define" name="CONF_STDIO_REDIRECT" value=""/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_a1_xplained.led" value="yes" />
+		<build type="header-file" value="conf/conf_board.h" />
+		<build type="header-file" value="conf/conf_twim.h" />
+		<build type="header-file" value="conf/conf_usart_serial.h" />
+		<build type="include-path" value="./conf" />
+		<require idref="board.xmega_a1_xplained" />
+		<require idref="board.sensors_xplained.lightprox_1" />
+		<require idref="common.utils.stdio.stdio_serial" />
+		<require idref="sensors.lightprox.demo" />
+		<build name="CONF_STDIO_REDIRECT" type="define" value="" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega128a1" />
 	</project>
 	<project caption="XMEGA-A3BU Xplained with Xplained Light/Prox Board #1" id="xmega.applications.xmega-a3bu_avrsblp1_demo">
 		<info type="description" value="summary">
@@ -28,21 +29,22 @@
 			displays light and proximity data.
 		</info>
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<build type="header-file" value="conf/conf_board.h"/>
-		<build type="header-file" value="conf/conf_sleepmgr.h"/>
-		<build type="header-file" value="conf/conf_twim.h"/>
-		<build type="header-file" value="conf/conf_usb.h"/>
-		<build type="include-path" value="./conf"/>
-		<require idref="board.xmega_a3bu_xplained"/>
-		<require idref="board.sensors_xplained.lightprox_1"/>
-		<require idref="common.utils.stdio.stdio_usb"/>
-		<require idref="sensors.lightprox.demo"/>
-		<build type="define" name="CONF_STDIO_REDIRECT" value=""/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_a3bu_xplained.led" value="yes" />
+		<build type="header-file" value="conf/conf_board.h" />
+		<build type="header-file" value="conf/conf_sleepmgr.h" />
+		<build type="header-file" value="conf/conf_twim.h" />
+		<build type="header-file" value="conf/conf_usb.h" />
+		<build type="include-path" value="./conf" />
+		<require idref="board.xmega_a3bu_xplained" />
+		<require idref="board.sensors_xplained.lightprox_1" />
+		<require idref="common.utils.stdio.stdio_usb" />
+		<require idref="sensors.lightprox.demo" />
+		<build name="CONF_STDIO_REDIRECT" type="define" value="" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega256a3bu" />
 	</project>
 	<project caption="XMEGA-B1 Xplained with Xplained Light/Prox Board #1" id="xmega.applications.xmega-b1_avrsblp1_demo">
 		<info type="description" value="summary">
@@ -51,20 +53,21 @@
 			displays light and proximity data.
 		</info>
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
-		<build type="header-file" value="conf/conf_board.h"/>
-		<build type="header-file" value="conf/conf_sleepmgr.h"/>
-		<build type="header-file" value="conf/conf_twim.h"/>
-		<build type="header-file" value="conf/conf_usb.h"/>
-		<build type="include-path" value="./conf"/>
-		<require idref="board.xmega_b1_xplained"/>
-		<require idref="board.sensors_xplained.lightprox_1"/>
-		<require idref="common.utils.stdio.stdio_usb"/>
-		<require idref="sensors.lightprox.demo"/>
-		<build type="define" name="CONF_STDIO_REDIRECT" value=""/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_b1_xplained.led" value="yes" />
+		<build type="header-file" value="conf/conf_board.h" />
+		<build type="header-file" value="conf/conf_sleepmgr.h" />
+		<build type="header-file" value="conf/conf_twim.h" />
+		<build type="header-file" value="conf/conf_usb.h" />
+		<build type="include-path" value="./conf" />
+		<require idref="board.xmega_b1_xplained" />
+		<require idref="board.sensors_xplained.lightprox_1" />
+		<require idref="common.utils.stdio.stdio_usb" />
+		<require idref="sensors.lightprox.demo" />
+		<build name="CONF_STDIO_REDIRECT" type="define" value="" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega128b1" />
 	</project>
 </asf>

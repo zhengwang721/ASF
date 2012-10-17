@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.sam4s_xplained" caption="SAM4S Xplained template project" type="template">
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<require idref="common.applications.user_application"/>
-		<require idref="board.sam4s_xplained"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen"/>
+	<project caption="SAM4S Xplained template project" id="common.applications.user_application.sam4s_xplained" type="template">
+		<build type="include-path" value="." />
+		<build type="header-file" value="conf_board.h" />
+		<require idref="common.applications.user_application" />
+		<require idref="board.sam4s_xplained" />
+		<generator value="as5_arm_template" />
+		<generator value="doxygen" />
+		<device-support value="atsam4s16c" />
 	</project>
 </asf>

@@ -1,80 +1,96 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="common.boards.user_board.common" caption="Common build items for user board support templates">
-		<build type="define" name="BOARD" value="USER_BOARD"/>
-		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="user_board.h"/>
-		<build type="c-source" value="init.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
-		<build type="module-config" subtype="path" value="board_config"/>
-		<require idref="common.boards"/>
+	<module caption="Common build items for user board support templates" id="common.boards.user_board.common" type="meta">
+		<build name="BOARD" type="define" value="USER_BOARD" />
+		<build type="include-path" value="." />
+		<build subtype="api" type="header-file" value="user_board.h" />
+		<build type="c-source" value="init.c" />
+		<build subtype="required-header-file" type="module-config" value="conf_board.h" />
+		<build subtype="path" type="module-config" value="board_config" />
+		<require idref="common.boards" />
 	</module>
 
-	<board id="board.user_board.xmegaa" caption="User Board" mcu="unspecified-xmegaa">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.xmegaa">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-xmegaa" />
 	</board>
 
-	<board id="board.user_board.xmegaau" caption="User Board" mcu="unspecified-xmegaau">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.xmegaau">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-xmegaau" />
 	</board>
 
-	<board id="board.user_board.xmegab" caption="User Board" mcu="unspecified-xmegab">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.xmegab">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-xmegab" />
 	</board>
 
-	<board id="board.user_board.xmegac" caption="User Board" mcu="unspecified-xmegac">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.xmegac">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-xmegac" />
 	</board>
 
-	<board id="board.user_board.xmegad" caption="User Board" mcu="unspecified-xmegad">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.xmegad">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-xmegad" />
 	</board>
 
-	<board id="board.user_board.uc3a" caption="User Board" mcu="unspecified-uc3a">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.uc3a">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3a" />
 	</board>
 
-	<board id="board.user_board.uc3a3_a4" caption="User Board" mcu="unspecified-uc3a3_a4">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.uc3a3_a4">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3a3_a4" />
 	</board>
 
-	<board id="board.user_board.uc3b" caption="User Board" mcu="unspecified-uc3b">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.uc3b">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3b" />
 	</board>
 
-	<board id="board.user_board.uc3c" caption="User Board" mcu="unspecified-uc3c">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.uc3c">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3c" />
 	</board>
 
-		<board id="board.user_board.uc3d" caption="User Board" mcu="unspecified-uc3d">
-		<require idref="common.boards.user_board.common"/>
+		<board caption="User Board" id="board.user_board.uc3d">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3d" />
 	</board>
 
-	<board id="board.user_board.uc3l" caption="User Board" mcu="unspecified-uc3l">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.uc3l">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-uc3l" />
 	</board>
 
-	<board id="board.user_board.sam3n" caption="User Board" mcu="unspecified-sam3n">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam3n">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam3n" />
 	</board>
 
-	<board id="board.user_board.sam3s" caption="User Board" mcu="unspecified-sam3s">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam3s">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam3s" />
 	</board>
 
-	<board id="board.user_board.sam3sd" caption="User Board" mcu="unspecified-sam3sd">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam3sd">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam3sd" />
 	</board>
 
-	<board id="board.user_board.sam3u" caption="User Board" mcu="unspecified-sam3u">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam3u">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam3u" />
 	</board>
 
-	<board id="board.user_board.sam3x" caption="User Board" mcu="unspecified-sam3x">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam3x">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam3x" />
 	</board>
 
-	<board id="board.user_board.sam4s" caption="User Board" mcu="unspecified-sam4s">
-		<require idref="common.boards.user_board.common"/>
+	<board caption="User Board" id="board.user_board.sam4s">
+		<require idref="common.boards.user_board.common" />
+		<device-support value="unspecified-sam4s" />
 	</board>
-
 </asf>

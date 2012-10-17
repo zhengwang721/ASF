@@ -1,22 +1,21 @@
 <asf xmlversion="1.0">
 	<project caption="QTouch method Example Application - ATXMEGA128A1" id="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600.xmega128a1_qt600">
-		<require idref="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600"/>
-		<config name="config.common.services.qtouch.qdebug.qt600.atxmega128a1" value="yes"/>
-		<config name="config.common.services.qtouch.generic.avr8.xmega128a1_qt600.method" value="qtouch_method"/>
-		<require idref="board.xmega128a1_qt600"/>
-		
-		<build type="define" name="_QTOUCH_" value =""/>
-		<build type="define" name="_DEBUG_INTERFACE_" value =""/>
-		<build type="define" name="_ROTOR_SLIDER_" value =""/>
-		<build type="define" name="QT_NUM_CHANNELS" value="16"/>
-		<build type="define" name="QT_DELAY_CYCLES" value="1"/>
-		<build type="define" name="SNS1" value="H"/>
-		<build type="define" name="SNSK1" value="F"/>
-		<build type="define" name="SNS2" value="K"/>
-		<build type="define" name="SNSK2" value="J"/>
-		
+		<require idref="xmega.services.qtouch.generic.avr8.qtouch.examples.example_qt_qt600" />
+		<config name="config.common.services.qtouch.qdebug.qt600.atxmega128a1" value="yes" />
+		<config name="config.common.services.qtouch.generic.avr8.xmega128a1_qt600.method" value="qtouch_method" />
+		<require idref="board.xmega128a1_qt600" />
+		<build name="_QTOUCH_" type="define" value="" />
+		<build name="_DEBUG_INTERFACE_" type="define" value="" />
+		<build name="_ROTOR_SLIDER_" type="define" value="" />
+		<build name="QT_NUM_CHANNELS" type="define" value="16" />
+		<build name="QT_DELAY_CYCLES" type="define" value="1" />
+		<build name="SNS1" type="define" value="H" />
+		<build name="SNSK1" type="define" value="F" />
+		<build name="SNS2" type="define" value="K" />
+		<build name="SNSK2" type="define" value="J" />
 		<generator value="avrgcc" />
 		<generator value="as5_8" />
-		<generator value="doxygen"/>
+		<generator value="doxygen" />
+		<device-support value="atxmega128a1" />
 	</project>
 </asf>

@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.xplain" caption="Xplain template project" type="template">
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<require idref="common.applications.user_application"/>
-		<require idref="board.xplain"/>
-		<generator value="as5_8_template"/>
-		<generator value="doxygen"/>
+	<project caption="Xplain template project" id="common.applications.user_application.xplain" type="template">
+		<build type="include-path" value="." />
+		<build type="header-file" value="conf_board.h" />
+		<require idref="common.applications.user_application" />
+		<require idref="board.xplain" />
+		<generator value="as5_8_template" />
+		<generator value="doxygen" />
+		<device-support value="atxmega128a1" />
 	</project>
 </asf>

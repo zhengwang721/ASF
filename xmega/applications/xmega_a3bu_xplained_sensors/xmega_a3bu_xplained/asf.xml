@@ -1,29 +1,29 @@
 <asf xmlversion="1.0">
-
-	<project id="xmega.applications.xmega_a3bu_avrsbin1_display" caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Data Display">
+	<project caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Data Display" id="xmega.applications.xmega_a3bu_avrsbin1_display">
 		<info type="keyword" value="technology">
-			<keyword value="Sensors"/>
+			<keyword value="Sensors" />
 		</info>
 		<info type="description" value="summary">
 			Demo application for XMEGA-A3BU Xplained with Atmel Sensors Xplained
 			Inertial 1 (ATAVRSBIN1) accelerometer, gyroscope, and electronic
 			compass sensor readout on the monchrome display.
 		</info>
-		<config name="config.gfx_mono.display" value="c12832_a1z"/>
-		<config name="config.spi_master_type" value="usart_spi"/>
+		<config name="config.gfx_mono.display" value="c12832_a1z" />
+		<config name="config.spi_master_type" value="usart_spi" />
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<require idref="board.xmega_a3bu_xplained"/>
-		<require idref="xmega.applications.avrsbin1_display"/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_a3bu_xplained.led" value="yes" />
+		<require idref="board.xmega_a3bu_xplained" />
+		<require idref="xmega.applications.avrsbin1_display" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega256a3bu" />
 	</project>
 
-	<project id="xmega.applications.xmega_a3bu_avrsbin1_calibrate" caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Compass Calibration">
+	<project caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Compass Calibration" id="xmega.applications.xmega_a3bu_avrsbin1_calibrate">
 		<info type="keyword" value="technology">
-			<keyword value="Sensors"/>
+			<keyword value="Sensors" />
 		</info>
 		<info type="description" value="summary">
 		Demo application for XMEGA-A3BU Xplained obtains electronic compass data
@@ -31,21 +31,22 @@
 		the monochrome display to prompt the user to make a series of manual
 		steps to calibrate the compass to the local geomagnetic field.
 		</info>
-		<config name="config.gfx_mono.display" value="c12832_a1z"/>
-		<config name="config.spi_master_type" value="usart_spi"/>
+		<config name="config.gfx_mono.display" value="c12832_a1z" />
+		<config name="config.spi_master_type" value="usart_spi" />
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<require idref="board.xmega_a3bu_xplained"/>
-		<require idref="xmega.applications.avrsbin1_calibrate"/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_a3bu_xplained.led" value="yes" />
+		<require idref="board.xmega_a3bu_xplained" />
+		<require idref="xmega.applications.avrsbin1_calibrate" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega256a3bu" />
 	</project>
 
-	<project id="xmega.applications.xmega_a3bu_avrsbin1_drop" caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Drop Detector">
+	<project caption="XMEGA-A3BU Xplained with ATAVRSBIN1 Drop Detector" id="xmega.applications.xmega_a3bu_avrsbin1_drop">
 		<info type="keyword" value="technology">
-			<keyword value="Sensors"/>
+			<keyword value="Sensors" />
 		</info>
 		<info type="description" value="summary">
 		Demo application for XMEGA-A3BU Xplained obtains sensor data from an
@@ -53,15 +54,16 @@
 		accelerometer data points on the monochrome display when the board is
 		dropped from some height.
 		</info>
-		<config name="config.gfx_mono.display" value="c12832_a1z"/>
-		<config name="config.spi_master_type" value="usart_spi"/>
+		<config name="config.gfx_mono.display" value="c12832_a1z" />
+		<config name="config.spi_master_type" value="usart_spi" />
 		<config name="config.common.services.basic.twi.mode" value="master" />
-		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<require idref="board.xmega_a3bu_xplained"/>
-		<require idref="xmega.applications.avrsbin1_drop"/>
-		<generator value="iarew"/>
-		<generator value="avrgcc"/>
-		<generator value="as5_8"/>
-		<generator value="doxygen"/>
+		<config name="config.board.xmega_a3bu_xplained.led" value="yes" />
+		<require idref="board.xmega_a3bu_xplained" />
+		<require idref="xmega.applications.avrsbin1_drop" />
+		<generator value="iarew" />
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen" />
+		<device-support value="atxmega256a3bu" />
 	</project>
 </asf>

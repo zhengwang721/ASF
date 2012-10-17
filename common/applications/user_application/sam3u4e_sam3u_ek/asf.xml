@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.sam3u_ek" caption="SAM3U_EK template project" type="template">
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<require idref="common.applications.user_application"/>
-		<require idref="board.sam3u_ek"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen"/>
+	<project caption="SAM3U_EK template project" id="common.applications.user_application.sam3u_ek" type="template">
+		<build type="include-path" value="." />
+		<build type="header-file" value="conf_board.h" />
+		<require idref="common.applications.user_application" />
+		<require idref="board.sam3u_ek" />
+		<generator value="as5_arm_template" />
+		<generator value="doxygen" />
+		<device-support value="atsam3u4e" />
 	</project>
 </asf>

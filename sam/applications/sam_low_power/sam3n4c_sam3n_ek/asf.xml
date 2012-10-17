@@ -3,21 +3,22 @@
 		<info type="description" value="summary">
 		Low power example for SAM3N_EK.
 		</info>
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="low_power_board.h"/>
-		<build type="c-source" value="low_power_board.c"/>
 		<build type="include-path" value="." />
-		<require idref="sam.drivers.pmc"/>
-		<require idref="sam.drivers.pio"/>
-		<require idref="sam.applications.low_power"/>
-		<require idref="board.sam3n_ek"/>
-		<generator value="iarewarm"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
-		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<generator value="doxygen"/>
+		<build type="header-file" value="conf_board.h" />
+		<build type="header-file" value="conf_clock.h" />
+		<build type="header-file" value="conf_uart_serial.h" />
+		<build type="header-file" value="low_power_board.h" />
+		<build type="c-source" value="low_power_board.c" />
+		<build type="include-path" value="." />
+		<require idref="sam.drivers.pmc" />
+		<require idref="sam.drivers.pio" />
+		<require idref="sam.applications.low_power" />
+		<require idref="board.sam3n_ek" />
+		<generator value="iarewarm" />
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<config name="config.compiler.armgcc.create_aux" value="no" />
+		<generator value="doxygen" />
+		<device-support value="atsam3n4c" />
 	</project>
 </asf>

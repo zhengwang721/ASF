@@ -1,59 +1,67 @@
 <asf xmlversion="1.0">
-	<board id="board.dummy.at32uc3a0512" caption="Unknown Board" mcu="at32uc3a0512">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3a0512">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3a0512" />
 	</board>
-	<board id="board.dummy.at32uc3b1256" caption="Unknown Board" mcu="at32uc3b1256">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3b1256">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3b1256" />
 	</board>
-	<board id="board.dummy.at32uc3c0256c" caption="Unknown Board" mcu="at32uc3c0256c">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3c0256c">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3c0256c" />
 	</board>
-	<board id="board.dummy.at32uc3c0512c" caption="Unknown Board" mcu="at32uc3c0512c">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3c0512c">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3c0512c" />
 	</board>
-	<board id="board.dummy.atuc128d3" caption="Unknown Board" mcu="atuc128d3">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.atuc128d3">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="atuc128d3" />
 	</board>
-	<board id="board.dummy.at32uc3l016" caption="Unknown Board" mcu="at32uc3l016">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3l016">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3l016" />
 	</board>
-	<board id="board.dummy.at32uc3l0128" caption="Unknown Board" mcu="at32uc3l0128">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
+	<board caption="Unknown Board" id="board.dummy.at32uc3l0128">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<device-support value="at32uc3l0128" />
 	</board>
-	<board id="board.dummy.atuc64l4u" caption="Unknown Board" mcu="atuc64l4u">
-		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
-		<build type="header-file" value="dummy_board.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value=".."/>
-		<require idref="common.boards"/>
-		<build type="define" name="__ATUC64L4U__" value="" toolchain="iarew32"/>
+	<board caption="Unknown Board" id="board.dummy.atuc64l4u">
+		<build name="BOARD" type="define" value="DUMMY_BOARD" />
+		<build type="header-file" value="dummy_board.h" />
+		<build type="include-path" value="." />
+		<build type="include-path" value=".." />
+		<require idref="common.boards" />
+		<build name="__ATUC64L4U__" toolchain="iarew32" type="define" value="" />
+		<device-support value="atuc64l4u" />
 	</board>
 </asf>

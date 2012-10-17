@@ -1,60 +1,77 @@
 <asf xmlversion="1.0">
-	<board id="board.stk600-mega.atmega2560" vendor="Atmel" caption="STK600" mcu="atmega2560">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega2560" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega2560" />
 	</board>
-	<board id="board.stk600-mega.atmega48a" vendor="Atmel" caption="STK600" mcu="atmega48a">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega48a" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega48a" />
 	</board>
-	<board id="board.stk600-mega.atmega88a" vendor="Atmel" caption="STK600" mcu="atmega88a">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega88a" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega88a" />
 	</board>
-	<board id="board.stk600-mega.atmega168a" vendor="Atmel" caption="STK600" mcu="atmega168a">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega168a" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega168a" />
 	</board>
-	<board id="board.stk600-mega.atmega328" vendor="Atmel" caption="STK600" mcu="atmega328">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega328" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega328" />
 	</board>
-	<board id="board.stk600-mega.atmega16" vendor="Atmel" caption="STK600" mcu="atmega16">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega16" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega16" />
 	</board>
-	<board id="board.stk600-mega.atmega32" vendor="Atmel" caption="STK600" mcu="atmega32">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega32" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega32" />
 	</board>
-	<board id="board.stk600-mega.atmega169p" vendor="Atmel" caption="STK600" mcu="atmega169p">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega169p" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega169p" />
 	</board>
-	<board id="board.stk600-mega.atmega329p" vendor="Atmel" caption="STK600" mcu="atmega329p">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega329p" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega329p" />
 	</board>
-	<board id="board.stk600-mega.atmega64" vendor="Atmel" caption="STK600" mcu="atmega64">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega64" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega64" />
 	</board>
-	<board id="board.stk600-mega.atmega128" vendor="Atmel" caption="STK600" mcu="atmega128">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega128" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega128" />
 	</board>
-	<board id="board.stk600-mega.atmega640" vendor="Atmel" caption="STK600" mcu="atmega640">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega640" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega640" />
 	</board>
-	<board id="board.stk600-mega.atmega324a" vendor="Atmel" caption="STK600" mcu="atmega324a">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega324a" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega324a" />
 	</board>
-	<board id="board.stk600-mega.atmega324pa" vendor="Atmel" caption="STK600" mcu="atmega324pa">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega324pa" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega324pa" />
 	</board>
-	<board id="board.stk600-mega.atmega644a" vendor="Atmel" caption="STK600" mcu="atmega644a">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega644a" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega644a" />
 	</board>
-	<board id="board.stk600-mega.atmega1284p" vendor="Atmel" caption="STK600" mcu="atmega1284p">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega1284p" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega1284p" />
 	</board>
-	<board id="board.stk600-mega.atmega128rfa1" vendor="Atmel" caption="STK600" mcu="atmega128rfa1">
-		<require idref="board.stk600-mega.common"/>
+	<board caption="STK600" id="board.stk600-mega.atmega128rfa1" vendor="Atmel">
+		<require idref="board.stk600-mega.common" />
+		<device-support value="atmega128rfa1" />
 	</board>
-	<module id="board.stk600-mega.common" type="meta" caption="MEGA STK600">
-		<build type="c-source" value="init.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
-		<build type="module-config" subtype="path" value="board_config"/>
-		<build type="define" name="BOARD" value="STK600_MEGA"/>
-		<require idref="common.boards"/>
+	<module caption="MEGA STK600" id="board.stk600-mega.common" type="meta">
+		<build type="c-source" value="init.c" />
+		<build subtype="required-header-file" type="module-config" value="conf_board.h" />
+		<build subtype="path" type="module-config" value="board_config" />
+		<build name="BOARD" type="define" value="STK600_MEGA" />
+		<require idref="common.boards" />
 	</module>
 </asf>
