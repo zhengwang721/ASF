@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.drivers.pdca.example" caption="PDCA example">
+	<module type="application" id="avr32.drivers.pdca.example" caption="PDCA Example">
 		<info type="description" value="summary">
 		Interrupt-based PDCA transfer of an ASCII animation stored in internal flash to a USART output.
 		</info>

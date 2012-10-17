@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.wtk.example3" caption="Widget library example 3">
+	<module type="application" id="common.services.wtk.example3" caption="WTK (Widget ToolKit) Library Example 3">
 		<info type="description" value="summary">
 		Graphical widget library service example, demonstrating the plot widget, allowing
 		the user to add new plot points to be graphed using a pair of slider and button widgets.

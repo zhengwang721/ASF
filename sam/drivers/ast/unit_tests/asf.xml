@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.ast.unit_tests" caption="Set of unit tests for AST - Asynchronous Timer">
+	<module type="application" id="sam.drivers.ast.unit_tests" caption="Unit Tests for the SAM AST Driver">
 		<info type="description" value="summary">
 		Unit test for the AST (Asynchronous Timer).
 		</info>
