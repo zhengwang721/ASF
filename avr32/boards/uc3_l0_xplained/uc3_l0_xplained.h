@@ -86,11 +86,11 @@ extern "C" {
 //!< Osc32 frequency (Hz.) and startup time (RCOsc periods).
 
 #define FOSC32                  (32768)
-#define OSC32_STARTUP           (AVR32_SCIF_OSCCTRL32_STARTUP_8192_RCOSC)
+#define OSC32_STARTUP           (AVR32_SCIF_OSCCTRL32_STARTUP_131072_RCOSC)
 
 #define BOARD_OSC32_IS_XTAL     true
 #define BOARD_OSC32_HZ          FOSC32
-#define BOARD_OSC32_STARTUP_US  (71000)
+#define BOARD_OSC32_STARTUP_US  (920000)
 #define BOARD_OSC32_PINSEL      (0)
 
 
