@@ -42,6 +42,20 @@
 			<require idref="common.utils" />
 			<require idref="common.boards" />
 		</module>
+		<module type="application" id="common.services.ioport.example2#3" caption="Common IOPORT service example 2">
+			<info type="description" value="summary">
+				Example using the common API for IOPORT in order to do pin control.
+			</info>
+			<build type="include-path" value="." />
+			<build type="c-source" value="ioport_example2.c" />
+			<build type="module-config" subtype="required-header-file" value="conf_example.h" />
+			<device-support value="mega" />
+			<require idref="common.services.ioport" />
+			<require idref="common.services.basic.clock" />
+			<require idref="common.services.delay" />
+			<require idref="common.utils" />
+			<require idref="common.boards" />
+		</module>
 	</select-by-device>
 </asf>
 

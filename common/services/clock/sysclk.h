@@ -72,6 +72,8 @@
 # include "uc3l/sysclk.h"
 #elif XMEGA
 # include "xmega/sysclk.h"
+#elif MEGA
+# include "mega/sysclk.h"
 #else
 # error Unsupported chip type
 #endif

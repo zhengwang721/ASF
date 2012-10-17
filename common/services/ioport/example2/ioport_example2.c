@@ -57,12 +57,13 @@
  * \ref ioport_group section.
  *
  * \section device_info Device Info
- * All Atmel SAM, XMEGA and UC3 devices can be used. This example has been
+ * All Atmel SAM, MEGA, XMEGA and UC3 devices can be used. This example has been
  * tested with the following setup:
  *  - Xplain evaluation kit
  *  - EVK1100 evaluation kit
  *  - SAM4L evaluation kit
  *  - SAM3X evaluation kit
+ *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  *
  * \section example_description Description of the example
  * This example flashes a single LEDs present with flash speed of 1Hz.
