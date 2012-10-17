@@ -2044,37 +2044,67 @@ class ConfigDB(object):
 	def sanity_check(self, fdk_check = False):
 		self.log.info("-- Database sanity check")
 
+		class LogProxy(object):
+			def __init__(self, log):
+				self.log = log
+				self.string_list = []
+
+			def _log_string(self, log_name, string_to_log):
+				try:
+					eval("self.log.%s(\"%s\")" % (log_name, string_to_log))
+				except AttributeError:
+					# If log type was not found, output is not wanted
+					pass
+				finally:
+					self.string_list.append(string_to_log)
+
+			def critical(self, string_to_log):
+				self._log_string("critical", string_to_log)
+
+			def error(self, string_to_log):
+				self._log_string("error", string_to_log)
+
+			def warning(self, string_to_log):
+				self._log_string("warning", string_to_log)
+
 		self.total = 0
 		self.errors = 0
 		self.error_strings = []
 		print_errors = not fdk_check
 
-		def run_test(self, func):
+		def run_test(self, func, *args):
+			# Create log proxy -- don't log anything if this is an FDK check
+			if fdk_check:
+				log_obj = LogProxy(None)
+			else:
+				log_obj = LogProxy(self.log)
+
 			# Call the test function and keep results.
-			t, e, errors = func
-			self.total = self.total + t
-			self.errors = self.errors + e
-			self.error_strings += errors
+			t, e = func(log_obj, *args)
+
+			self.total         += t
+			self.errors        += e
+			self.error_strings += log_obj.string_list
 
 		# Need device map and mcu list for some sanity checks
 		device_map = self.lookup_by_id("map.atmel")
 		mcu_list = device_map.get_mcu_list()
 
 		# Run all tests
-		run_test(self, self.sanity_check_duplicate_id(output_error=print_errors))
-		run_test(self, self.sanity_check_device_support_valid(device_map, output_error=print_errors))
-		run_test(self, self.sanity_check_device_support_exists(output_error=print_errors))
-		run_test(self, self.sanity_check_selector_matching_parent(output_error=print_errors))
-		run_test(self, self.sanity_check_select_by_configs(output_error=print_errors))
-		run_test(self, self.sanity_check_device_support_alias(device_map, output_error=print_errors))
+		run_test(self, self.sanity_check_duplicate_id)
+		run_test(self, self.sanity_check_device_support_valid, device_map)
+		run_test(self, self.sanity_check_device_support_exists)
+		run_test(self, self.sanity_check_selector_matching_parent)
+		run_test(self, self.sanity_check_select_by_configs)
+		run_test(self, self.sanity_check_device_support_alias, device_map)
 		# This is the time consuming one (50-ish secs):
-		run_test(self, self.sanity_check_resolve_elements(output_error=print_errors))
+		run_test(self, self.sanity_check_resolve_elements)
 
 		if not fdk_check:
 			# Don't run this for FDK sanity check
-			run_test(self, self.sanity_check_doc_arch(device_map, mcu_list, output_error=print_errors))
-			run_test(self, self.sanity_check_default_mcu(mcu_list, output_error=print_errors))
-			run_test(self, self.sanity_check_doxygen_entry_point(output_error=print_errors))
+			run_test(self, self.sanity_check_doc_arch, device_map, mcu_list)
+			run_test(self, self.sanity_check_default_mcu, mcu_list)
+			run_test(self, self.sanity_check_doxygen_entry_point)
 
 		if (self.errors):
 			error_string = "Database sanity check failed with %d error(s)" % (self.errors)
@@ -2085,11 +2115,10 @@ class ConfigDB(object):
 		self.log.info("-- Check done. Failures: " + str(self.errors) + "/" + str(self.total))
 		return self.error_strings
 
-	def sanity_check_duplicate_id(self, output_error=True):
+	def sanity_check_duplicate_id(self, output_obj):
 		# Find all IDs and check for duplicates
 		total = 1
 		errors = 0
-		error_strings = []
 
 		ids = []
 		for element in self.root.findall(".//%s[@%s]" % ("*", 'id')):
@@ -2100,27 +2129,20 @@ class ConfigDB(object):
 
 		if id_count != id_unique:
 			errors += 1
-			error_string = "Elements with the same ID in the database. You must fix this!"
-			error_strings.append(error_string)
-			if output_error:
-				self.log.critical(error_string)
+			output_obj.critical("Elements with the same ID in the database. You must fix this!")
 
 			# Report which ones have the problem:
 			count_dict = asf.helper.count_duplicates(ids)
 			for id, count in count_dict.items():
 				if count > 1:
-					error_string = "Duplicate id %s occurs %d times." % (id, count)
-					error_strings.append(error_string)
-					if output_error:
-						self.log.critical(error_string)
+					output_obj.critical("Duplicate id %s occurs %d times." % (id, count))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_device_support_valid(self, device_map, output_error=True):
+	def sanity_check_device_support_valid(self, output_obj, device_map):
 		# Check that "device-support" actually gives support for a device(s)
 		total = 0
 		errors = 0
-		error_strings = []
 
 		for element in self.root.findall(".//%s" % (DeviceMap.support_tag)):
 			total += 1
@@ -2132,18 +2154,15 @@ class ConfigDB(object):
 				except:
 					# This is a device-alias-map, we have 'name', not 'id'
 					parent_id = element.find("..").attrib["name"]
-				error_string = "%s: `%s' is not a valid MCU or MCU group" % (parent_id, dev_name)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.critical(error_string)
 
-		return total, errors, error_strings
+				output_obj.critical("%s: `%s' is not a valid MCU or MCU group" % (parent_id, dev_name))
 
-	def sanity_check_device_support_exists(self, output_error=True):
+		return total, errors
+
+	def sanity_check_device_support_exists(self, output_obj):
 		# Check that all modules except meta-typed define device-support
 		total = 0
 		errors = 0
-		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("module")):
 			# Skip modules which doesn't require device-support
@@ -2153,19 +2172,15 @@ class ConfigDB(object):
 			dev_sup = element.findall(".//" + DeviceMap.support_tag)
 			if not dev_sup:
 				errors += 1
-				error_string = "%s does not specify device-support" % element.attrib["id"]
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("%s does not specify device-support" % element.attrib["id"])
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_default_mcu(self, mcu_list, output_error=True):
+	def sanity_check_default_mcu(self, output_obj, mcu_list):
 		# Check that "default-mcu"-attribute is set for all "doxygen-module" generator tags,
 		# and for absolutely no other generator tags
 		total = 0
 		errors = 0
-		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("generator")):
 			total += 1
@@ -2183,24 +2198,17 @@ class ConfigDB(object):
 						error_string_part = 'not set'
 					else:
 						error_string_part = 'set to invalid MCU `%s\'' % mcu_name
-					error_string = "%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string_part)
-					error_strings.append(error_string)
-					if output_error:
-						self.log.critical(error_string)
+					output_obj.critical("%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string_part))
 			else:
 				if mcu_name != None:
 					errors += 1
-					error_string = "%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (element.find("..").attrib["id"], gen_name)
-					error_strings.append(error_string)
-					if output_error:
-						self.log.critical(error_string)
+					output_obj.critical("%s: attribute `default-mcu' is erroneously set in generator tag for `%s'" % (element.find("..").attrib["id"], gen_name))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_doc_arch(self, device_map, mcu_list, output_error=True):
+	def sanity_check_doc_arch(self, output_obj, device_map, mcu_list):
 		total = 0
 		errors = 0
-		error_strings = []
 
 		# Check all specific MCUs for doc-arch
 		no_doc_arch_mcus = []
@@ -2217,15 +2225,9 @@ class ConfigDB(object):
 
 		# Print errors for any missing doc-arch
 		if no_doc_arch_mcus:
-			error_string = "%s is missing doc-arch for MCUs:" % str(device_map)
-			error_strings.append(error_string)
-			if output_error:
-				self.log.error(error_string)
+			output_obj.error("%s is missing doc-arch for MCUs:" % str(device_map))
 			for mcu_name in no_doc_arch_mcus:
-				error_string = "\t" + mcu_name
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("\t" + mcu_name)
 
 		# Check that doc-arch group does not contain another doc-arch
 		for doc_arch_e in device_map._get_doc_arch_group_elements():
@@ -2235,15 +2237,9 @@ class ConfigDB(object):
 			sub_doc_arch_e = doc_arch_e.findall('.//%s[@%s]' % (DeviceMap.group_tag, DeviceMap.doc_group_attr))
 			if sub_doc_arch_e:
 				errors += 1
-				error_string = "%s has doc-arch group %s which itself contains doc-arch group(s):" % (str(device_map), doc_arch_e.attrib['name'])
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("%s has doc-arch group %s which itself contains doc-arch group(s):" % (str(device_map), doc_arch_e.attrib['name']))
 				for e in sub_doc_arch_e:
-					error_string = "\t" + e.attrib['name']
-					error_strings.append(error_string)
-					if output_error:
-						self.log.error(error_string)
+					output_obj.error("\t" + e.attrib['name'])
 
 		# Check that same-named groups have matching doc-arch
 		doc_arch_dict = device_map.get_doc_arch_dict()
@@ -2255,24 +2251,17 @@ class ConfigDB(object):
 
 			if mismatch_arches:
 				errors += 1
-				error_string = "%s has multiple, differing doc-arch names for group %s:" % (str(device_map), group)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("%s has multiple, differing doc-arch names for group %s:" % (str(device_map), group))
 				for arch in [doc_arch] + mismatch_arches:
-					error_string = "\t\"%s\"" % arch
-					error_strings.append(error_string)
-					if output_error:
-						self.log.error(error_string)
+					output_obj.error("\t\"%s\"" % arch)
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_doxygen_entry_point(self, output_error=True):
+	def sanity_check_doxygen_entry_point(self, output_obj):
 		# Make sure the 'doxygen-entry-point' attribute is present for non-hidden modules
 
 		total = 0
 		errors = 0
-		error_strings = []
 
 		for element in self.root.findall(".//%s" % ("module")):
 			if element.attrib["type"] in ["driver", "component", "service"]:
@@ -2282,19 +2271,15 @@ class ConfigDB(object):
 					if element.find("./build[@type=\'doxygen-entry-point\']") is None:
 						# No doxygen-entry-point, error.
 						errors += 1
-						error_string = "Module with id %s is missing doxygen-entry-point attribute" % (element.attrib["id"])
-						error_strings.append(error_string)
-						if output_error:
-							self.log.error(error_string)
+						output_obj.error("Module with id %s is missing doxygen-entry-point attribute" % (element.attrib["id"]))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_selector_matching_parent(self, output_error=True):
+	def sanity_check_selector_matching_parent(self, output_obj):
 		# Verify all select-by-config/device IDs are equal to parent ID
 
 		total = 0
 		errors = 0
-		error_strings = []
 
 		for element in self.root.findall(".//%s" % (SelectByConfig.tag)) + self.root.findall(".//%s" % (SelectByDevice.tag)):
 			parent_id = element.attrib['id']
@@ -2304,17 +2289,13 @@ class ConfigDB(object):
 				child_id = child.attrib['id']
 				if child_id.rpartition('#')[0] != parent_id:
 					errors += 1
-					error_string = "Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id)
-					error_strings.append(error_string)
-					if output_error:
-						self.log.error(error_string)
+					output_obj.error("Module selector sub ID %s doesn't match parent ID %s" % (child_id, parent_id))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_select_by_configs(self, output_error=True):
+	def sanity_check_select_by_configs(self, output_obj):
 		total = 0
 		errors = 0
-		error_strings = []
 
 		# Find all select-by-config names, save all possible valid config names and values
 		select_by_config_names = {}
@@ -2344,32 +2325,21 @@ class ConfigDB(object):
 				available_options = select_by_config_names[config_name]["options"]
 				if not config_value in available_options:
 					errors += 1
-					error_string = "Config '%s' with value '%s' in '%s' does not match available select-by-config modules '%s'" % (config_name, config_value, project_id, ', '.join(available_options))
-					error_strings.append(error_string)
-					if output_error:
-						self.log.critical(error_string)
-					# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
-					self.log.critical("    Offending file: %s" % (self.lookup_by_id(project_id).fromfile))
+					output_obj.critical("Config '%s' with value '%s' in '%s' does not match available select-by-config modules '%s'" % (config_name, config_value, project_id, ', '.join(available_options)))
+					output_obj.critical("\toffending file: %s" % (self.lookup_by_id(project_id).fromfile))
 			else:
 				# No matching select-by-config for the current config entry name
 				errors += 1
-				error_string = "Config '%s' in '%s' does not have a corresponding select-by-config module" % (config_name, project_id)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.critical(error_string)
+				output_obj.critical("Config '%s' in '%s' does not have a corresponding select-by-config module" % (config_name, project_id))
 				# Try to load module to find originating file, if lookup fails we have already given the user enough feedback to find the error:
-				error_string = "    Offending file: %s" % (self.lookup_by_id(project_id).fromfile)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.critical(error_string)
+				output_obj.critical("\tOffending file: %s" % (self.lookup_by_id(project_id).fromfile))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_resolve_elements(self, output_error=True):
+	def sanity_check_resolve_elements(self, output_obj):
 
 		total = 0
 		errors = 0
-		error_strings = []
 
 		# Get the elements of all components to check
 		component_classes_to_check = [
@@ -2391,24 +2361,17 @@ class ConfigDB(object):
 				c = self.lookup_by_id(id)
 			except ConfigError as err:
 				errors += 1
-				error_string = "While resolving " + id + ": " + "ConfigError: " + str(err)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("While resolving " + id + ": " + "ConfigError: " + str(err))
 			except NotFoundError as err:
 				errors += 1
-				error_string = "While resolving " + id + ": " + "NotFoundError: " + str(err)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("While resolving " + id + ": " + "NotFoundError: " + str(err))
 
-		return total, errors, error_strings
+		return total, errors
 
-	def sanity_check_device_support_alias(self, device_map, output_error=True):
+	def sanity_check_device_support_alias(self, output_obj, device_map):
 
 		total = 0
 		errors = 0
-		error_strings = []
 		alias_names = []
 
 		# Get all device aliases
@@ -2417,10 +2380,7 @@ class ConfigDB(object):
 			# Make sure alias name is unique
 			if alias_name in alias_names:
 				errors += 1
-				error_string = "Multiple definitions of alias name '%s'" %(alias_name)
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("Multiple definitions of alias name '%s'" %(alias_name))
 			else:
 				alias_names.append(alias_name)
 
@@ -2431,9 +2391,6 @@ class ConfigDB(object):
 			# Make sure it's valid
 			if alias_name not in alias_names:
 				errors += 1
-				error_string = "Unknown device-support-alias '%s' in module '%s'" %(alias_name, alias.getparent().attrib["id"])
-				error_strings.append(error_string)
-				if output_error:
-					self.log.error(error_string)
+				output_obj.error("Unknown device-support-alias '%s' in module '%s'" %(alias_name, alias.getparent().attrib["id"]))
 
-		return total, errors, error_strings
+		return total, errors
