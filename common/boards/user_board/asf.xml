@@ -11,86 +11,86 @@
 
 	<board caption="User Board" id="board.user_board.xmegaa">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-xmegaa" />
+		<device-support value="xmegaa" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.xmegaau">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-xmegaau" />
+		<device-support value="xmegaau" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.xmegab">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-xmegab" />
+		<device-support value="xmegab" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.xmegac">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-xmegac" />
+		<device-support value="xmegac" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.xmegad">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-xmegad" />
+		<device-support value="xmegad" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.uc3a">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3a" />
+		<device-support value="uc3a" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.uc3a3_a4">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3a3_a4" />
+		<device-support value="uc3a3_a4" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.uc3b">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3b" />
+		<device-support value="uc3b" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.uc3c">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3c" />
+		<device-support value="uc3c" />
 	</board>
 
 		<board caption="User Board" id="board.user_board.uc3d">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3d" />
+		<device-support value="uc3d" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.uc3l">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-uc3l" />
+		<device-support value="uc3l" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam3n">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam3n" />
+		<device-support value="sam3n" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam3s">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam3s" />
+		<device-support value="sam3s" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam3sd">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam3sd" />
+		<device-support value="sam3sd" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam3u">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam3u" />
+		<device-support value="sam3u" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam3x">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam3x" />
+		<device-support value="sam3x" />
 	</board>
 
 	<board caption="User Board" id="board.user_board.sam4s">
 		<require idref="common.boards.user_board.common" />
-		<device-support value="unspecified-sam4s" />
+		<device-support value="sam4s" />
 	</board>
 </asf>

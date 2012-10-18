@@ -5,7 +5,7 @@
 		<require idref="common.applications.user_application" />
 	</module>
 
-	<project caption="User board project template for XMEGA A" id="common.applications.user_application.user_board.xmegaa" type="template">
+	<project caption="User board project template for XMEGA A" default-mcu="unspecified-xmegaa" id="common.applications.user_application.user_board.xmegaa" type="template">
 		<info type="description" value="summary">
 		User board project template for XMEGA A.
 		</info>
@@ -13,10 +13,10 @@
 		<require idref="common.applications.user_application.user_board.common" />
 		<generator value="as5_8_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-xmegaa" />
+		<device-support value="xmegaa" />
 	</project>
 
-	<project caption="User board project template for XMEGA AU" id="common.applications.user_application.user_board.xmegaau" type="template">
+	<project caption="User board project template for XMEGA AU" default-mcu="unspecified-xmegaau" id="common.applications.user_application.user_board.xmegaau" type="template">
 		<info type="description" value="summary">
 		User board project template for XMEGA AU.
 		</info>
@@ -24,10 +24,10 @@
 		<require idref="common.applications.user_application.user_board.common" />
 		<generator value="as5_8_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-xmegaau" />
+		<device-support value="xmegaau" />
 	</project>
 
-	<project caption="User board project template for XMEGA B" id="common.applications.user_application.user_board.xmegab" type="template">
+	<project caption="User board project template for XMEGA B" default-mcu="unspecified-xmegab" id="common.applications.user_application.user_board.xmegab" type="template">
 		<info type="description" value="summary">
 		User board project template for XMEGA B.
 		</info>
@@ -35,10 +35,10 @@
 		<require idref="common.applications.user_application.user_board.common" />
 		<generator value="as5_8_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-xmegab" />
+		<device-support value="xmegab" />
 	</project>
 
-	<project caption="User board project template for XMEGA C" id="common.applications.user_application.user_board.xmegac" type="template">
+	<project caption="User board project template for XMEGA C" default-mcu="unspecified-xmegac" id="common.applications.user_application.user_board.xmegac" type="template">
 		<info type="description" value="summary">
 		User board project template for XMEGA C.
 		</info>
@@ -46,10 +46,10 @@
 		<require idref="common.applications.user_application.user_board.common" />
 		<generator value="as5_8_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-xmegac" />
+		<device-support value="xmegac" />
 	</project>
 
-	<project caption="User board project template for XMEGA D" id="common.applications.user_application.user_board.xmegad" type="template">
+	<project caption="User board project template for XMEGA D" default-mcu="unspecified-xmegad" id="common.applications.user_application.user_board.xmegad" type="template">
 		<info type="description" value="summary">
 		User board project template for XMEGA D.
 		</info>
@@ -57,10 +57,10 @@
 		<require idref="common.applications.user_application.user_board.common" />
 		<generator value="as5_8_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-xmegad" />
+		<device-support value="xmegad" />
 	</project>
 
-	<project caption="User board project template for UC3A0/A1" id="common.applications.user_application.user_board.uc3a" type="template">
+	<project caption="User board project template for UC3A0/A1" default-mcu="unspecified-uc3a" id="common.applications.user_application.user_board.uc3a" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3A0 and UC3A1.
 		</info>
@@ -68,10 +68,10 @@
 		<require idref="board.user_board.uc3a" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3a" />
+		<device-support value="uc3a" />
 	</project>
 
-	<project caption="User board project template for UC3A3/A4" id="common.applications.user_application.user_board.uc3a3_a4" type="template">
+	<project caption="User board project template for UC3A3/A4" default-mcu="unspecified-uc3a3_a4" id="common.applications.user_application.user_board.uc3a3_a4" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3A3 and UC3A4.
 		</info>
@@ -79,10 +79,10 @@
 		<require idref="board.user_board.uc3a3_a4" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3a3_a4" />
+		<device-support value="uc3a3_a4" />
 	</project>
 
-	<project caption="User board project template for UC3B" id="common.applications.user_application.user_board.uc3b" type="template">
+	<project caption="User board project template for UC3B" default-mcu="unspecified-uc3b" id="common.applications.user_application.user_board.uc3b" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3B.
 		</info>
@@ -90,10 +90,10 @@
 		<require idref="board.user_board.uc3b" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3b" />
+		<device-support value="uc3b" />
 	</project>
 
-	<project caption="User board project template for UC3C" id="common.applications.user_application.user_board.uc3c" type="template">
+	<project caption="User board project template for UC3C" default-mcu="unspecified-uc3c" id="common.applications.user_application.user_board.uc3c" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3C.
 		</info>
@@ -101,10 +101,10 @@
 		<require idref="board.user_board.uc3c" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3c" />
+		<device-support value="uc3c" />
 	</project>
 
-		<project caption="User board project template for UC3D" id="common.applications.user_application.user_board.uc3d" type="template">
+		<project caption="User board project template for UC3D" default-mcu="unspecified-uc3d" id="common.applications.user_application.user_board.uc3d" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3D.
 		</info>
@@ -112,10 +112,10 @@
 		<require idref="board.user_board.uc3d" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3d" />
+		<device-support value="uc3d" />
 	</project>
 
-	<project caption="User board project template for UC3L" id="common.applications.user_application.user_board.uc3l" type="template">
+	<project caption="User board project template for UC3L" default-mcu="unspecified-uc3l" id="common.applications.user_application.user_board.uc3l" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3L.
 		</info>
@@ -123,10 +123,10 @@
 		<require idref="board.user_board.uc3l" />
 		<generator value="as5_32_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-uc3l" />
+		<device-support value="uc3l" />
 	</project>
 
-	<project caption="User board project template for SAM3N" id="common.applications.user_application.user_board.sam3n" type="template">
+	<project caption="User board project template for SAM3N" default-mcu="unspecified-sam3n" id="common.applications.user_application.user_board.sam3n" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM3N.
 		</info>
@@ -134,9 +134,9 @@
 		<require idref="board.user_board.sam3n" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam3n" />
+		<device-support value="sam3n" />
 	</project>
-	<project caption="User board project template for SAM3S" id="common.applications.user_application.user_board.sam3s" type="template">
+	<project caption="User board project template for SAM3S" default-mcu="unspecified-sam3s" id="common.applications.user_application.user_board.sam3s" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM3S.
 		</info>
@@ -144,9 +144,9 @@
 		<require idref="board.user_board.sam3s" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam3s" />
+		<device-support value="sam3s" />
 	</project>
-	<project caption="User board project template for SAM3SD" id="common.applications.user_application.user_board.sam3sd" type="template">
+	<project caption="User board project template for SAM3SD" default-mcu="unspecified-sam3sd" id="common.applications.user_application.user_board.sam3sd" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM3SD.
 		</info>
@@ -154,9 +154,9 @@
 		<require idref="board.user_board.sam3sd" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam3sd" />
+		<device-support value="sam3sd" />
 	</project>
-	<project caption="User board project template for SAM3U" id="common.applications.user_application.user_board.sam3u" type="template">
+	<project caption="User board project template for SAM3U" default-mcu="unspecified-sam3u" id="common.applications.user_application.user_board.sam3u" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM3U.
 		</info>
@@ -164,9 +164,9 @@
 		<require idref="board.user_board.sam3u" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam3u" />
+		<device-support value="sam3u" />
 	</project>
-	<project caption="User board project template for SAM3X" id="common.applications.user_application.user_board.sam3x" type="template">
+	<project caption="User board project template for SAM3X" default-mcu="unspecified-sam3x" id="common.applications.user_application.user_board.sam3x" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM3X.
 		</info>
@@ -174,9 +174,9 @@
 		<require idref="board.user_board.sam3x" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam3x" />
+		<device-support value="sam3x" />
 	</project>
-	<project caption="User board project template for SAM4S" id="common.applications.user_application.user_board.sam4s" type="template">
+	<project caption="User board project template for SAM4S" default-mcu="unspecified-sam4s" id="common.applications.user_application.user_board.sam4s" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM4S.
 		</info>
@@ -184,6 +184,6 @@
 		<require idref="board.user_board.sam4s" />
 		<generator value="as5_arm_template" />
 		<generator value="doxygen" />
-		<device-support value="unspecified-sam4s" />
+		<device-support value="sam4s" />
 	</project>
 </asf>
