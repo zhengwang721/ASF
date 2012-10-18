@@ -151,26 +151,6 @@ class ModuleTesterRuntime(Runtime):
 		]
 
 
-	class TestBoard(Board):
-		"""
-		Test board class -- abstraction just for changing a board's MCU.
-		"""
-		def __init__(self, board):
-			self.board = board
-			super(ModuleTesterRuntime.TestBoard, self).__init__(board.element, board.db)
-
-		@property
-		def mcu(self):
-			return super(ModuleTesterRuntime.TestBoard, self).mcu
-
-		@mcu.setter
-		def mcu(self, mcu):
-			self.board._mcu = mcu
-
-		def _get_config_elements(self, name=None):
-			return self.board._get_config_elements(name)
-
-
 	def __init__(self, template_dir, configuration, board_ids, module_ids, defines):
 		super(ModuleTesterRuntime, self).__init__(template_dir, configuration)
 
@@ -289,11 +269,12 @@ class ModuleTesterRuntime(Runtime):
 		return output_dir
 
 
-	def _get_supported_board_mcus(self, board_module):
+	def _get_supported_project_mcus(self, project):
 		"""
-		Return a list with all MCU objects that the specified board
-		module supports. The list will only contain multiple MCUs
-		if the board has a unspecified MCU, e.g., 'unspecified-xmegaa'.
+		Return a list with all MCU objects that the specified project
+		supports. The list will contain multiple MCUs if the project
+		has an unspecified MCU, e.g., 'unspecified-xmegaa' or its
+		device-support specifies groups.
 		"""
 		def mcu_name_is_specific(mcu_name):
 			if self.unspecified_mcu_regexp.match(mcu_name):
@@ -305,21 +286,15 @@ class ModuleTesterRuntime(Runtime):
 			mcu_group = self.unspecified_mcu_regexp.sub('', mcu_name)
 			return mcu_group
 
-		board_mcu      = board_module.mcu
-		board_mcu_name = board_mcu.name
+		# List the name of specific MCUs from the project's device support list
+		supported_mcu_names = []
+		for dev_supp in project.get_device_support():
+			mcu_names = self.device_map.get_mcu_list(dev_supp, check_group_is_mcu=True)
+			specific_mcu_names = [mcu_name for mcu_name in mcu_names if mcu_name_is_specific(mcu_name)]
+			supported_mcu_names.extend(specific_mcu_names)
 
-		# If board MCU name is specific, only return that one.
-		# If not, get all specific MCU names in the group.
-		if mcu_name_is_specific(board_mcu_name):
-			supported_mcus = [board_mcu]
-		else:
-			mcu_group = get_mcu_group(board_mcu_name)
-			supported_mcu_names = self.device_map.get_mcu_list(mcu_group)
-			# Remove any unspecific MCU names.
-			supported_mcu_names = filter(mcu_name_is_specific, supported_mcu_names)
-
-			# Instantiate MCU objects from the names
-			supported_mcus = [MCU(mcu_name, self.db) for mcu_name in supported_mcu_names]
+		# Instantiate MCU objects from the names
+		supported_mcus = [MCU(mcu_name, self.db) for mcu_name in supported_mcu_names]
 
 		return supported_mcus
 
@@ -330,7 +305,7 @@ class ModuleTesterRuntime(Runtime):
 		list of modules to test, which have support for the specified
 		MCU.
 		"""
-		def iterate_specified_modules():
+		def iterate_modules(module_id_list):
 			for module_id in module_id_list:
 					yield self.db.lookup_by_id(module_id)
 
@@ -339,7 +314,7 @@ class ModuleTesterRuntime(Runtime):
 		hidden_module_ids = []
 
 		# Iterate through all modules in the database
-		for module in iterate_specified_modules():
+		for module in iterate_modules(module_id_list):
 			# Skip to next module if wrong module type
 			if module.type not in self.module_types_to_test:
 				continue
@@ -391,13 +366,13 @@ class ModuleTesterRuntime(Runtime):
 		return None
 
 
-	def _get_project_templates_by_boards(self, board_id_list):
+	def _get_template_projects_for_boards(self, board_id_list):
 		"""
-		Return a dictionary which maps from a board object to a tuple
-		containing a project object and corresponding project generator
-		class.
+		Return a list of tuples with the template projects and their
+		corresponding generator classes for the boards that are in the
+		supplied list of IDs.
 
-		The project is meant to be used as a template, and must be
+		The projects are meant to be used as templates, and must be
 		deep copied.
 		"""
 		def add_define(project_e, define_set):
@@ -406,20 +381,30 @@ class ModuleTesterRuntime(Runtime):
 			build_e.set('name', define_set[0])
 			build_e.set('value', define_set[1])
 
-		board_to_project_and_generator = {}
-
-		remaining_board_ids = board_id_list
+		project_and_generator_tuples = []
 
 		# Find all projects for the test application
 		template_project_ids = self.db.wildcard_find(self.test_application_id, Project)
+
+		added_board_ids = set()
 
 		# Look through the user application template projects for our boards
 		for project_id in template_project_ids:
 			project = self.db.lookup_by_id(project_id)
 
-			# Add the test defines to the project XML
-			for define in self.defines:
-				add_define(project.element, define)
+			# Add the project if it uses any of the specified boards
+			prereq_ids = project.get_prerequisite_ids(recursive=False)
+
+			add_project = False
+			for prereq_id in prereq_ids:
+				if prereq_id in board_id_list:
+					added_board_ids.add(prereq_id)
+					add_project = True
+					break
+
+			# Move on to next project if this one did not require any of the specified boards
+			if not add_project:
+				continue
 
 			# Get the generator class to use
 			project_generator = self._get_generator_class(project)
@@ -427,16 +412,15 @@ class ModuleTesterRuntime(Runtime):
 				self.log.error("Could not determine generator for project template `%s'" % project.id)
 				continue
 
-			prereq_ids = project.get_prerequisite_ids(recursive=False)
+			# Add the test defines to the project XML
+			for define in self.defines:
+				add_define(project.element, define)
 
-			# Add the project if it uses any of the specified boards
-			for prereq_id in prereq_ids:
-				if prereq_id in remaining_board_ids:
-					remaining_board_ids.remove(prereq_id)
-					board = self.db.lookup_by_id(prereq_id)
-					board_to_project_and_generator[board] = (project, project_generator)
-					break
+			# Now add a tuple with the project and generator to the list
+			project_and_generator_tuples.append((project, project_generator))
 
+		# If template projects are missing for any of the specified boards, give a warning
+		remaining_board_ids = set(board_id_list) - added_board_ids
 		if remaining_board_ids:
 			error_log = "Could not find project template for board(s):"
 			for id in remaining_board_ids:
@@ -447,14 +431,14 @@ class ModuleTesterRuntime(Runtime):
 				case_name = '%s' % (project_id)
 				self.junit_suite.add_error_case(self.junit_class, case_name, 0, error_log)
 
-		return board_to_project_and_generator
+		return project_and_generator_tuples
 
 
-	def _make_test_projects(self, board_list, module_id_list):
+	def _make_test_projects(self, project_and_generator_tuples, module_id_list):
 		"""
-		Iterate through the supplied lists of boards and module IDs and
-		write projects for all combinations of modules and supported
-		MCUs.
+		Iterate through the supplied lists of template projects and
+		module IDs, and write projects for all combinations of modules
+		and supported MCUs.
 
 		Return a tuple with the number of projects which were attempted
 		written, and a list with the directories of written projects.
@@ -462,21 +446,22 @@ class ModuleTesterRuntime(Runtime):
 		attempted_projects = 0
 		project_dirs       = []
 
-		# For every board..
-		for board in board_list:
+		# For every template project..
+		for project, generator in project_and_generator_tuples:
 			# Get supported MCUs which are not blacklisted
-			board_mcus = [mcu for mcu in self._get_supported_board_mcus(board) if not mcu.name in self.mcu_blacklist]
+			project_mcus = [mcu for mcu in self._get_supported_project_mcus(project) if not mcu.name in self.mcu_blacklist]
 
-			# For every MCU supported by the board..
-			for mcu in board_mcus:
+			# For every MCU supported by the project..
+			for mcu in project_mcus:
+				# Find all relevant modules supported by it.
 				mcu_modules = self._get_modules_for_mcu(mcu, module_id_list)
 
 				attempted_projects += len(mcu_modules)
 
-				# For every module with support for the MCU..
+				# And for every module..
 				for module in mcu_modules:
 					# Try to write a test project.
-					new_project_dir = self._write_test_project(board, mcu, module)
+					new_project_dir = self._write_test_project(project, generator, mcu, module)
 
 					if new_project_dir:
 						project_dirs.append(new_project_dir)
@@ -486,7 +471,7 @@ class ModuleTesterRuntime(Runtime):
 		return (attempted_projects, project_dirs)
 
 
-	def _write_test_project(self, board, mcu, module):
+	def _write_test_project(self, project_template, generator_class, mcu, module):
 		"""
 		Write the test project for the specified combination of board,
 		MCU and module.
@@ -508,21 +493,22 @@ class ModuleTesterRuntime(Runtime):
 			build_e.set('value', path)
 
 
-		# Get the project template for this board
-		(project_template, project_generator) = self.board_to_project_and_generator[board]
+		board = project_template._board
 
-		mcu_name           = mcu.name
-		template_directory = os.path.dirname(project_template.fromfile)
-		output_directory   = self._get_project_output_directory(board, mcu, module)
-		new_project_e      = copy.deepcopy(project_template.element)
+		# Since the template project can be used multiple times, we must work on a
+		# copy so its element does not accumulate the changes
+		new_project_e = copy.deepcopy(project_template.element)
 
-		# Trick the project generator into outputting to our directory
+		# Find the output directory for this project -- it will be in the module
+		# under test's directory, unless the user specifies a custom directory
+		output_directory = self._get_project_output_directory(board, mcu, module)
+
+		# Trick the project generator into outputting to our directory and to use the
+		# specified MCU
 		new_project_e.set(ConfigDB.basedir_tag, os.path.relpath(output_directory, '.'))
+		new_project_e.set(Project.mcu_attrib, mcu.name)
 
-		test_board     = ModuleTesterRuntime.TestBoard(board)
-		test_board.mcu = mcu
-
-		# Create the project
+		# Instantiate the project
 		project = Project(new_project_e, self.db)
 
 		# Create configuration to use
@@ -565,11 +551,11 @@ class ModuleTesterRuntime(Runtime):
 			if m.fromfile == board.fromfile:
 				continue
 
-			module_config_headers = m.get_build(BuildModuleConfigRequiredHeaderFile, project_generator.toolchain, recursive=False)
+			module_config_headers = m.get_build(BuildModuleConfigRequiredHeaderFile, generator_class.toolchain, recursive=False)
 
 			if module_config_headers:
 				try:
-					module_config_path = m.get_build(BuildModuleConfigPath, project_generator.toolchain, recursive=False).pop()
+					module_config_path = m.get_build(BuildModuleConfigPath, generator_class.toolchain, recursive=False).pop()
 				except IndexError:
 					error_log = "%s with ID `%s' does not provide path(s) to default config header files" % (m.tag, m.id)
 					self.log.error(error_log)
@@ -585,7 +571,7 @@ class ModuleTesterRuntime(Runtime):
 						add_include_path(project.element, module_config_path)
 
 		# Now instantiate the project generator and start it
-		generator = project_generator(project, self.db, self)
+		generator = generator_class(project, self.db, self)
 		try:
 			generator.write()
 		except Exception as e:
@@ -682,7 +668,7 @@ class ModuleTesterRuntime(Runtime):
 			self.junit_suite = self.junit_report.get_new_suite(self.junit_name, self.junit_package)
 
 		# Get device map, as it is used in several functions
-		self.device_map = self.db.lookup_by_id(self.mcu_map_id)
+		self.device_map = self.db.get_device_map()
 
 		# Resolve board and module ids, as they may be incorrect and/or contain wildcards
 		test_board_ids  = self._resolve_ids(self.board_ids, Board)
@@ -695,14 +681,13 @@ class ModuleTesterRuntime(Runtime):
 		for module_id in test_module_ids:
 			self.log.debug('\t' + module_id)
 
-		# Assign project templates to all of the boards, i.e., a project object and project generator object
-		self.board_to_project_and_generator = self._get_project_templates_by_boards(test_board_ids)
-		testable_board_ids = self.board_to_project_and_generator.keys()
+		# For the specified boards, get a list of the template projects and corresponding generator classes
+		project_and_generator_tuples = self._get_template_projects_for_boards(test_board_ids)
 
 		# Iterate through the boards' supported MCUs, and generate
 		# test projects for every module which supports one of them
 		# -- one test project is generated per MCU supported.
-		(attempted_projects, project_dirs) = self._make_test_projects(testable_board_ids, test_module_ids)
+		(attempted_projects, project_dirs) = self._make_test_projects(project_and_generator_tuples, test_module_ids)
 
 		if self.junit_report:
 			self.junit_suite.set_time(time.time() - self.start_time)
