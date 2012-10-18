@@ -6,6 +6,8 @@
 		<group name="avr">
 			<group name="mega" doc-arch="megaAVR">
 				<mcu name="unspecified-mega"/>
+				<mcu name="atmega8"/>
+				<mcu name="atmega8a"/>
 				<mcu name="atmega16"/>
 				<mcu name="atmega16a"/>
 				<mcu name="atmega32"/>
@@ -14,22 +16,40 @@
 				<mcu name="atmega64a"/>
 				<mcu name="atmega128"/>
 				<mcu name="atmega128a"/>
+				<mcu name="atmega162"/>
+				<mcu name="atmega165p"/>
 				<mcu name="atmega169p"/>
 				<mcu name="atmega169pa"/>
 				<mcu name="atmega329p"/>
 				<mcu name="atmega329pa"/>
+				<mcu name="atmega8515"/>
+				<mcu name="atmega8535"/>
+				<!-- There is no definite way to group megaAVR devices so the
+				     rule is to group the devices like the datasheets, i.e.,
+				     devices in the same datasheet are grouped together.
+
+				     Deviations from this rule in the groups below are due to
+				     legacy groupings that we chose not to change.
+				-->
 				<group name="megax8">
 					<mcu name="atmega48"/>
-					<mcu name="atmega48a"/>
-					<mcu name="atmega48pa"/>
 					<mcu name="atmega88"/>
-					<mcu name="atmega88a"/>
-					<mcu name="atmega88pa"/>
 					<mcu name="atmega168"/>
-					<mcu name="atmega168a"/>
-					<mcu name="atmega168pa"/>
-					<mcu name="atmega328"/>
-					<mcu name="atmega328p"/>
+					<group name="megax8a">
+						<mcu name="atmega48a"/>
+						<mcu name="atmega48pa"/>
+						<mcu name="atmega88a"/>
+						<mcu name="atmega88pa"/>
+						<mcu name="atmega168a"/>
+						<mcu name="atmega168pa"/>
+						<mcu name="atmega328"/>
+						<mcu name="atmega328p"/>
+					</group>
+				</group>
+				<group name="megax8p">
+					<mcu name="atmega48p"/>
+					<mcu name="atmega88p"/>
+					<mcu name="atmega168p"/>
 				</group>
 				<group name="megaxx0_1">
 					<mcu name="atmega640"/>
@@ -39,14 +59,42 @@
 					<mcu name="atmega2561"/>
 				</group>
 				<group name="megaxx4a">
+					<mcu name="atmega644"/>
 					<mcu name="atmega164a"/>
 					<mcu name="atmega164pa"/>
 					<mcu name="atmega324a"/>
 					<mcu name="atmega324pa"/>
-					<mcu name="atmega644"/>
 					<mcu name="atmega644a"/>
 					<mcu name="atmega644pa"/>
+					<mcu name="atmega1284"/>
 					<mcu name="atmega1284p"/>
+				</group>
+				<group name="megaxx4p">
+					<mcu name="atmega164p"/>
+					<mcu name="atmega324p"/>
+					<mcu name="atmega644p"/>
+				</group>
+				<group name="megaxx5x">
+					<mcu name="atmega325"/>
+					<mcu name="atmega3250"/>
+					<mcu name="atmega645"/>
+					<mcu name="atmega6450"/>
+				</group>
+				<group name="megaxx5xp">
+					<mcu name="atmega325p"/>
+					<mcu name="atmega3250p"/>
+				</group>
+				<group name="megaxx5xa">
+					<mcu name="atmega165a"/>
+					<mcu name="atmega165pa"/>
+					<mcu name="atmega325a"/>
+					<mcu name="atmega325pa"/>
+					<mcu name="atmega3250a"/>
+					<mcu name="atmega3250pa"/>
+					<mcu name="atmega645a"/>
+					<mcu name="atmega645p"/>
+					<mcu name="atmega6450a"/>
+					<mcu name="atmega6450p"/>
 				</group>
 				<group name="megarf">
 					<mcu name="atmega128rfa1"/>
