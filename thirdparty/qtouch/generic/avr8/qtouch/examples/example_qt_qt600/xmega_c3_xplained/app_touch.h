@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief QTouch Debug Setting
+ * \brief Declaration of functions for touch interfacing
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,60 +41,18 @@
  *
  */
 
-/**
- * \name Constants
- * --- Do not edit ---
- * @{
- */
-/**
- * \name Project Constants
- * Values from 0xF000->0xFFFF are reserved for Atmel Kits.
- * Values from 0x0000->0xEFFF are available for other projects.
- * @{
- */
-#define QT8     0xF001
-#define QT16    0xF002
-#define QM64    0xF003
-#define TOUCH_KIT_ID_XMEGA_C3_XPLAINED 0xF00D
-//! @}
-/*! \name Interface constants.
- */
-//! @{
-#define TWI         1
-#define SPI1W       2
-#define SPI2W       3
-#define UART        4
-#define BitBangSPI  5
-//! @}
-//! @}
+#ifndef _APP_TOUCH_H_
+#define _APP_TOUCH_H_
 
-//---------- Edit Project Info -------------
-
-/*! \name Select the type of interface to use for the debug protocol.
- * \brief Comment out the interface not used.
- * Only one interface should be active.
- * @{
+/*! \brief Configures touch library and measurement setup
+ *
+ * \note Interrupts must be enabled in order to trigger regular measurements
+ * The touch configuration requires a fixed CPU speed to work properly in this
+ * case we need 2 MHz.
  */
-//#define QDEBUG_SPI
-//#define QDEBUG_TWI
-#define QDEBUG_SPI_BB
+void app_touch_init(void);
 
-#if defined(QDEBUG_SPI)
-#define INTERFACE           SPI2W
-#elif defined(QDEBUG_TWI)
-#define INTERFACE           TWI
-#elif defined(QDEBUG_SPI_BB)
-#define INTERFACE           BitBangSPI
-#endif
-//! @}
+//! \brief Checks whether the QTouch key is pressed
+bool app_touch_check_key_pressed(uint8_t button_num);
 
-/*! \name Set up project info.
- * @{
- */
-#if BOARD == ATXMEGA128A1_QT600
-# define PROJECT_ID          QT16
-#elif BOARD == XMEGA_C3_XPLAINED
-# define PROJECT_ID          TOUCH_KIT_ID_XMEGA_C3_XPLAINED
-#endif
-//! @}
-
+#endif // _APP_TOUCH_H_
