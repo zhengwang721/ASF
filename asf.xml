@@ -18,10 +18,6 @@
 				<mcu name="atmega128a"/>
 				<mcu name="atmega162"/>
 				<mcu name="atmega165p"/>
-				<mcu name="atmega169p"/>
-				<mcu name="atmega169pa"/>
-				<mcu name="atmega329p"/>
-				<mcu name="atmega329pa"/>
 				<mcu name="atmega8515"/>
 				<mcu name="atmega8535"/>
 				<!-- There is no definite way to group megaAVR devices so the
@@ -103,6 +99,31 @@
 					<mcu name="atmega256rfa2"/>
 					<mcu name="atmega256rfr2"/>
 					<mcu name="atmega2564rfr2"/>
+				</group>
+				<group name="mega-lcd">
+					<mcu name="atmega169p"/>
+					<group name="megaxx9xa">
+						<mcu name="atmega169a"/>
+						<mcu name="atmega169pa"/>
+						<mcu name="atmega329a"/>
+						<mcu name="atmega329pa"/>
+						<mcu name="atmega3290a"/>
+						<mcu name="atmega3290pa"/>
+						<mcu name="atmega649a"/>
+						<mcu name="atmega649p"/>
+						<mcu name="atmega6490a"/>
+						<mcu name="atmega6490p"/>
+					</group>
+					<group name="megaxx9xp">
+						<mcu name="atmega329p"/>
+						<mcu name="atmega3290p"/>
+					</group>
+					<group name="megaxx9x">
+						<mcu name="atmega329"/>
+						<mcu name="atmega3290"/>
+						<mcu name="atmega649"/>
+						<mcu name="atmega6490"/>
+					</group>
 				</group>
 			</group>
 			<group name="xmega">
