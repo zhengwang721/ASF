@@ -158,6 +158,18 @@
 						<mcu name="at90can128"/>
 					</group>
 				</group>
+				<group name="mega-pwm">
+					<mcu name="at90pwm1"/>
+					<mcu name="at90pwm81"/>
+					<group name="90pwmxb">
+						<mcu name="at90pwm2b"/>
+						<mcu name="at90pwm3b"/>
+					</group>
+					<group name="90pwmx16">
+						<mcu name="at90pwm216"/>
+						<mcu name="at90pwm316"/>
+					</group>
+				</group>
 			</group>
 			<group name="xmega">
 				<mcu name="unspecified-xmega"/>
