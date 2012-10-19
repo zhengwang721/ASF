@@ -125,6 +125,27 @@
 						<mcu name="atmega6490"/>
 					</group>
 				</group>
+				<group name="mega-usb">
+					<group name="90usbxx2">
+						<mcu name="at90usb82"/>
+						<mcu name="at90usb162"/>
+					</group>
+					<group name="90usbxxx6_7">
+						<mcu name="at90usb646"/>
+						<mcu name="at90usb647"/>
+						<mcu name="at90usb1286"/>
+						<mcu name="at90usb1287"/>
+					</group>
+					<group name="megaxxu2">
+						<mcu name="atmega8u2"/>
+						<mcu name="atmega32u2"/>
+						<mcu name="atmega16u2"/>
+					</group>
+					<group name="megaxxu4">
+						<mcu name="atmega16u4"/>
+						<mcu name="atmega32u4"/>
+					</group>
+				</group>
 			</group>
 			<group name="xmega">
 				<mcu name="unspecified-xmega"/>
