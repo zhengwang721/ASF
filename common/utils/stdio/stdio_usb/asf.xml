@@ -5,7 +5,7 @@
 			Standard I/O (stdio) management component that implements a stdio USB CDC interface to run on USB composite device.
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<require idref="common.services.usb.class.cdc.device.composite"/>
+			<require idref="common.services.usb.class.cdc.device.composite#enable"/>
 			<require idref="common.utils.stdio.stdio_usb.common"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
