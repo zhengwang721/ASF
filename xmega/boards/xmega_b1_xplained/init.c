@@ -83,6 +83,8 @@ void board_init(void)
 			IOPORT_INIT_HIGH);
 	ioport_configure_pin(AT45DBX_MASTER_MISO, IOPORT_DIR_INPUT);
 	ioport_configure_pin(AT45DBX_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	// Setting PORT_USART0_bm to one will move the pin location
+	// of USARTC0 (in mode SPI) from Px[3:0] to Px[7:4].
 	PORTC.REMAP |= PORT_USART0_bm;
 #endif
 
@@ -103,6 +105,8 @@ void board_init(void)
 	#endif
 	ioport_configure_pin(MXT143E_XPLAINED_LCD_RESET, IOPORT_DIR_OUTPUT
 			| IOPORT_INIT_LOW);
+	// Setting PORT_USART0_bm to one will move the pin location
+	// of USARTC0 (in mode SPI) from Px[3:0] to Px[7:4].
 	PORTC.REMAP |= PORT_USART0_bm;
 #endif
 
