@@ -912,8 +912,8 @@ static void udd_ctrl_setup_received(void)
 	}
 	// Fill setup request structure
 	if (8 != udd_byte_count(0)) {
-		udd_ctrl_stall_data();
 		udd_ack_setup_received(0);
+		udd_ctrl_stall_data();
 		return; // Error data number doesn't correspond to SETUP packet
 	}
 	for (i = 0; i < 8; i++) {
@@ -928,8 +928,8 @@ static void udd_ctrl_setup_received(void)
 	// Decode setup request
 	if (udc_process_setup() == false) {
 		// Setup request unknown then stall it
-		udd_ctrl_stall_data();
 		udd_ack_setup_received(0);
+		udd_ctrl_stall_data();
 		return;
 	}
 
