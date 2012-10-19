@@ -171,6 +171,66 @@
 					</group>
 				</group>
 			</group>
+			<group name="tiny" doc-arch="tinyAVR">
+				<mcu name="unspecified-tiny"/>
+				<!-- There is no definite way to group tinyAVR devices so the
+				     rule is to group the devices like the datasheets, i.e.,
+				     devices in the same datasheet are grouped together.
+				-->
+				<mcu name="attiny13"/>
+				<mcu name="attiny13a"/>
+				<mcu name="attiny1634"/>
+				<mcu name="attiny20"/>
+				<mcu name="attiny26"/>
+				<mcu name="attiny28"/>
+				<mcu name="attiny2313"/>
+				<mcu name="attiny43u"/>
+				<mcu name="attiny40"/>
+				<mcu name="attiny828"/>
+				<group name="tinyx_10">
+					<mcu name="attiny4"/>
+					<mcu name="attiny5"/>
+					<mcu name="attiny9"/>
+					<mcu name="attiny10"/>
+				</group>
+				<group name="tinyx313a">
+					<mcu name="attiny2313a"/>
+					<mcu name="attiny4313"/>
+				</group>
+				<group name="tinyx4a">
+					<mcu name="attiny24a"/>
+					<mcu name="attiny44a"/>
+					<mcu name="attiny84a"/>
+				</group>
+				<group name="tinyx4">
+					<mcu name="attiny24"/>
+					<mcu name="attiny44"/>
+					<mcu name="attiny84"/>
+				</group>
+				<group name="tinyx5">
+					<mcu name="attiny25"/>
+					<mcu name="attiny45"/>
+					<mcu name="attiny85"/>
+				</group>
+				<group name="tinyx261a">
+					<mcu name="attiny261a"/>
+					<mcu name="attiny461a"/>
+					<mcu name="attiny861a"/>
+				</group>
+				<group name="tinyx261">
+					<mcu name="attiny261"/>
+					<mcu name="attiny461"/>
+					<mcu name="attiny861"/>
+				</group>
+				<group name="tinyx8">
+					<mcu name="attiny48"/>
+					<mcu name="attiny88"/>
+				</group>
+				<group name="tinyxx7">
+					<mcu name="attiny87"/>
+					<mcu name="attiny167"/>
+				</group>
+			</group>
 			<group name="xmega">
 				<mcu name="unspecified-xmega"/>
 				<group name="xmegaa" doc-arch="XMEGA A">
