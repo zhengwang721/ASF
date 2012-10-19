@@ -146,6 +146,18 @@
 						<mcu name="atmega32u4"/>
 					</group>
 				</group>
+				<group name="mega-can">
+					<group name="megaxxm1">
+						<mcu name="atmega16m1"/>
+						<mcu name="atmega32m1"/>
+						<mcu name="atmega64m1"/>
+					</group>
+					<group name="90canxxx">
+						<mcu name="at90can32"/>
+						<mcu name="at90can64"/>
+						<mcu name="at90can128"/>
+					</group>
+				</group>
 			</group>
 			<group name="xmega">
 				<mcu name="unspecified-xmega"/>
