@@ -41,7 +41,6 @@
 				<group name="megaxx4a">
 					<mcu name="atmega164a"/>
 					<mcu name="atmega164pa"/>
-					<mcu name="atmega324"/>
 					<mcu name="atmega324a"/>
 					<mcu name="atmega324pa"/>
 					<mcu name="atmega644"/>
