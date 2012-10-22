@@ -51,86 +51,73 @@
  * Provides functions for configuring and operating the AST in the calendar or
  * timer/counter modes.
  *
- * \{
+ * @{
  */
 
 #include "compiler.h"
 #include <avr32/io.h>
 
-/*! Timeout to prevent code hang in clock initialization */
+/** Timeout to prevent code hang in clock initialization */
 #define AST_POLL_TIMEOUT 1000
 
 /**
  * \name Oscillator Types
+ *
+ * @{
  */
-/*! @{ */
-/*! 1KHz clock from 32KHz oscillator (CLK_1K) */
+
+/** 1KHz clock from 32KHz oscillator (CLK_1K) */
 #define AST_OSC_1KHZ     4
-/*! Generic clock (GCLK) */
+/** Generic clock (GCLK) */
 #define AST_OSC_GCLK     3
-/*! Peripheral Bus Clock */
+/** Peripheral Bus Clock */
 #define AST_OSC_PB       2
-/*! 32KHz oscillator (OSC32K) */
+/** 32KHz oscillator (OSC32K) */
 #define AST_OSC_32KHZ    1
-/*! System RC oscillator (RCSYS) */
+/** System RC oscillator (RCSYS) */
 #define AST_OSC_RC       0
-/*! @} */
+
+/** @} */
 
 /** \name Predefined PSEL Values
+ *
+ * @{
  */
-/*! @{ */
 
-/*
+/**
  * The PSEL value to set the AST source clock (after the prescaler) to 1 Hz,
  * when using an external 32-kHz crystal.
  */
 #define AST_PSEL_32KHZ_1HZ    14
 
-/*
+/**
  * The PSEL value to set the AST source clock (after the prescaler)
  * to 1.76 Hz when using the internal RC oscillator (~ 115 kHz)
  */
 #define AST_PSEL_RC_1_76HZ    15
 
-/*! @} */
+/** @} */
 
 /**
  * \name AST Mode
- */
-/*! @{ */
-/*! AST in Counter Mode */
-#define AST_MODE_COUNTER  0
-/*! AST in Calendar Mode */
-#define AST_MODE_CALENDAR 1
-/*! @} */
+ *
+ * @{ */
 
-/*! Roundup operation for Digital Tuner in AST */
+/** AST in Counter Mode */
+#define AST_MODE_COUNTER  0
+/** AST in Calendar Mode */
+#define AST_MODE_CALENDAR 1
+
+/** @} */
+
+/** Roundup operation for Digital Tuner in AST */
 #define ROUNDUP_DIV(x, y) ((x % y) ? ((x / y) + 1) : (x / y))
 
-/*! Input when initializing AST in calendar mode. */
+/** Input when initializing AST in calendar mode. */
 typedef struct ast_calendar_t {
 	union {
 		uint32_t field;
 		avr32_ast_calv_t FIELD;
-
-		/*
-		 * Description for Calendar Field:
-		 * typedef struct avr32_ast_calv_t {
-		 *          //! Field Year
-		 *          uint32_t year            : 6;
-		 *          //! Field Month
-		 *          uint32_t month           : 4;
-		 *          //! Field Day
-		 *          uint32_t day             : 5;
-		 *          //! Field Hour
-		 *          uint32_t hour            : 5;
-		 *          //! Field Minute
-		 *          uint32_t min             : 6;
-		 *          //! Field Second
-		 *          uint32_t sec             : 6;
-		 *  } avr32_ast_calv_t;
-		 *
-		 */
 	};
 } ast_calendar_t;
 
@@ -140,13 +127,13 @@ void ast_enable(volatile avr32_ast_t *ast);
 
 void ast_disable(volatile avr32_ast_t *ast);
 
-int ast_init_calendar(volatile avr32_ast_t *ast, uint8_t osc_type,
+bool ast_init_calendar(volatile avr32_ast_t *ast, uint8_t osc_type,
 		uint8_t psel, ast_calendar_t ast_calendar);
 
-int ast_init_counter(volatile avr32_ast_t *ast, uint8_t osc_type,
+bool ast_init_counter(volatile avr32_ast_t *ast, uint8_t osc_type,
 		uint8_t psel, uint32_t ast_counter);
 
-int ast_configure_digital_tuner(volatile avr32_ast_t *ast,
+bool ast_configure_digital_tuner(volatile avr32_ast_t *ast,
 		uint32_t input_freq, uint32_t tuned_freq);
 
 void ast_init_digital_tuner(volatile avr32_ast_t *ast, bool add,
@@ -154,7 +141,7 @@ void ast_init_digital_tuner(volatile avr32_ast_t *ast, bool add,
 
 void ast_disable_digital_tuner(volatile avr32_ast_t *ast);
 
-int ast_change_clk_source(volatile avr32_ast_t *ast, uint8_t osc_type,
+bool ast_change_clk_source(volatile avr32_ast_t *ast, uint8_t osc_type,
 		uint8_t psel);
 
 void ast_set_calendar_value(volatile avr32_ast_t *ast,
@@ -271,8 +258,6 @@ void ast_enable_counter_clear_on_alarm(volatile avr32_ast_t *ast,
 
 void ast_clear_prescalar(volatile avr32_ast_t *ast);
 
-/**
- * \}
- */
+/** @} */
 
 #endif  /* _AST_H_ */

@@ -141,7 +141,7 @@ static void print_nvram_variables(nvram_data_t *nvram_data)
 	printf("\r\nvar8_3:\t0x%X%X%X", nvram_data->var8_3[0],
 		nvram_data->var8_3[1], nvram_data->var8_3[2]);
 
-	printf("\r\nvar32:\t0x%lX\r\n", nvram_data->var32);
+	printf("\r\nvar32:\t0x%X\r\n", (unsigned int)nvram_data->var32);
 }
 
 /*! \brief This is an example demonstrating flash read / write data accesses

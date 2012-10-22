@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="avr32.drivers.eic.example2" caption="EIC (External Interrupt Controller) Example 2">
-		<module type="application" id="avr32.drivers.eic.example2#0" caption="EIC Example 2">
+		<module type="application" id="avr32.drivers.eic.example2#0" caption="EIC (External Interrupt Controller) Example 2">
 			<info type="description" value="summary">
 			Use the EIC (External Interrupt Controller) to generate interrupts.
 			</info>

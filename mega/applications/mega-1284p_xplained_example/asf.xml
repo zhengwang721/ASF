@@ -30,7 +30,7 @@
 		<device-support value="atmega1284p" />
 	</module>
 
-	<module caption="Example project" id="mega.applications.mega_1284p_xplained" type="application">
+	<module type="application" id="mega.applications.mega_1284p_xplained" caption="MEGA-1284P Xplained demo application">
 		<info type="description" value="summary">
 		This example application demonstrates some of the basic features of the MEGA-1284P Xplained kit. This includes sleep modes, reading the light sensor and the ntc sensor.
 		</info>

@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief ST7565R display controller driver configuration file.
+ * \brief Board configuration for clock example 1
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,21 +38,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_ST7565R_H_INCLUDED
-#define CONF_ST7565R_H_INCLUDED
 
-// interface selection
-#define ST7565R_SPI_INTERFACE
-#define ST7565R_SPI &AVR32_SPI
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-// minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define ST7565R_CLOCK_SPEED 1000000
-
-#define ST7565R_DISPLAY_CONTRAST_MAX 40
-#define ST7565R_DISPLAY_CONTRAST_MIN 30
-
-#define ST7565R_A0_PIN       0
-#define ST7565R_CS_PIN       1
-#define ST7565R_RESET_PIN    2
-
-#endif /* CONF_ST7565R_H_INCLUDED */
+#endif /* CONF_BOARD_H */

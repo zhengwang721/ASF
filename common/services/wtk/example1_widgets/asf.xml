@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.wtk.example1" caption="Widget library example">
+	<module type="application" id="common.services.wtk.example1" caption="WTK (Widget ToolKit) Library Example">
 		<info type="description" value="summary">
 		Graphical widget library toolkit service example, showing a variety of
 		interactive widgets on a display with can be manipulated via touch.

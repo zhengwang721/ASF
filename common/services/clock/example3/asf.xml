@@ -101,7 +101,7 @@
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
-		<module type="application" id="common.services.basic.clock.example3#7" caption="Common API for Clocks Control / Example 3">
+		<module type="application" id="common.services.basic.clock.example3#7" caption="Common API for Clocks Control Example 3">
 			<info type="description" value="summary">
 			Switch between various system clock sources and prescalers at run time.
 			</info>

@@ -63,10 +63,6 @@
 		<require idref="board.stk600-mega.common" />
 		<device-support value="atmega1284p" />
 	</board>
-	<board caption="STK600" id="board.stk600-mega.atmega128rfa1" vendor="Atmel">
-		<require idref="board.stk600-mega.common" />
-		<device-support value="atmega128rfa1" />
-	</board>
 	<module caption="MEGA STK600" id="board.stk600-mega.common" type="meta">
 		<build type="c-source" value="init.c" />
 		<build subtype="required-header-file" type="module-config" value="conf_board.h" />

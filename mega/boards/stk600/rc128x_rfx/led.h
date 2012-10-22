@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Simple menu system
+ * \brief STK600 + ATmega128RFA1 board LEDs support package.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the STK600 board.
+ *
+ * To use this board, define BOARD=STK600_RC064X_LCDX.
+ *
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,23 +45,34 @@
  * \asf_license_stop
  *
  */
-#ifndef MENU_H
-#define MENU_H
 
-#include "compiler.h"
+#ifndef _LED_H_
+#define _LED_H_
 
-#define MENU_ELEMENTS_PER_SCREEN   3
-#define MENU_RETURN                0xFF
+#include "gpio.h"
 
-//! Menu struct
-struct menu {
-	PROGMEM_STRING_T title;
-	PROGMEM_STRING_T *strings;
-	uint8_t num_elements;
-	uint8_t current_selection;
-	uint8_t current_page;
-};
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-uint8_t menu_handler(struct menu *menu);
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
-#endif // MENU_H
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */

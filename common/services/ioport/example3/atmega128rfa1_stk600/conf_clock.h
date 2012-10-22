@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief Configuration file for the USART in SPI master mode.
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,9 +38,24 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_USART_SPI_H_INCLUDED
-#define CONF_USART_SPI_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#define SPI_MODE_3 3
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-#endif /* CONF_USART_SPI_H_INCLUDED */
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
+
+/* ===== System Clock Bus Division Options */
+
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_8
+
+#endif /* CONF_CLOCK_H_INCLUDED */

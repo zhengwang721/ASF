@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 1
  *
- * Copyright (c) 2010 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,9 +54,9 @@
  * - conf_clock.h: system clock configuration
  *
  * \section deviceinfo Device Info
- * All AVR XMEGA and UC3 devices supported by ASF can be used.
+ * All AVR MEGA, XMEGA and UC3 devices supported by ASF can be used.
  *
- * \section exampledescription Description of the example
+ * \section example description: Description of the example
  * A delay routine is used to time the interval between each toggling of a LED.
  * The duration of the delay routine is computed from the frequency of the
  * configured system clock source.
@@ -69,6 +69,11 @@
  *
  * Refer to the \ref clk_group API documentation for further information on the
  * configuration.
+ *
+ * \section device_info Device Info
+ * This example has been tested with the following setup:
+ *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
+ *    need to connect a 10 Pin cable from PORTB to Led header
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.

@@ -54,6 +54,8 @@ extern "C" {
 /**
  * \defgroup group_sam_drivers_flashcalw FLASHCALW - FLASH Controller Double-Word
  *
+ * See \ref sam_flashcalw_quickstart.
+ *
  * FLASHCALW interfaces a flash block with the 32-bit internal HSB bus.
  *
  * \{
@@ -118,10 +120,10 @@ uint32_t flashcalw_get_page_count_per_region(void)
  *
  * \return The region number of the specified page.
  */
-uint32_t flashcalw_get_page_region(uint32_t page_number)
+uint32_t flashcalw_get_page_region(int32_t page_number)
 {
 	return ((page_number >= 0) ? page_number
-			: flashcalw_get_page_number())
+			: (int32_t)flashcalw_get_page_number())
 			/ flashcalw_get_page_count_per_region();
 }
 
@@ -1662,7 +1664,7 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 	return dst;
 }
 
-/* ! @} */
+/** @} */
 
 /**
  * \}

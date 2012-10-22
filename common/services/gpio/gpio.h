@@ -45,14 +45,15 @@
 
 #include <parts.h>
 
-#if ( SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S )
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
 # include "sam_gpio/sam_gpio.h"
 #elif XMEGA
 # include "xmega_gpio/xmega_gpio.h"
+#elif MEGA || MEGA_RF
+# include "mega_gpio/mega_gpio.h"
 #else
 # error Unsupported chip type
 #endif
-
 
 /**
  * \defgroup gpio_group General Purpose Input/Output
@@ -79,4 +80,4 @@
  *   - gpio_configure_group()
  */
 
-#endif  // _GPIO_H_
+#endif  /* _GPIO_H_ */

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.services.timeout.example1" caption="Timeout example 1">
+	<module type="application" id="xmega.services.timeout.example1" caption="Timeout Service Example 1">
 		<info type="description" value="summary">
 		Timeout service example 1. This example demonstrates how to use the periodic timeout feature to toggle two LED's with different frequency.
 		</info>

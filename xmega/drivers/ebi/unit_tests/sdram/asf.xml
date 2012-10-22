@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.ebi.unit_tests.sdram" caption="Unit tests for EBI driver with SDRAM">
+	<module type="application" id="xmega.drivers.ebi.unit_tests.sdram" caption="Unit Tests for the XMEGA EBI Driver with SDRAM">
 		<device-support value="xmega"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>

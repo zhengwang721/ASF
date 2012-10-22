@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Clock system configuration
+ * \brief Board configuration for flashcalw unit test.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,16 +40,11 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
 
-//#define CONFIG_SYSCLK_SOURCE      SYSCLK_SRC_RCSYS
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_OSC0
-//#define CONFIG_SYSCLK_SOURCE      SYSCLK_SRC_PLL0
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* Fbus = Fsys / (2 ^ BUS_div) */
-#define CONFIG_SYSCLK_CPU_DIV         0
-#define CONFIG_SYSCLK_PBA_DIV         0
-#define CONFIG_SYSCLK_PBB_DIV         0
+/** Enable Com Port */
+#define CONF_BOARD_COM_PORT
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

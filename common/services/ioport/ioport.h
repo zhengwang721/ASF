@@ -57,7 +57,7 @@ extern "C" {
  * See \ref ioport_quickstart.
  *
  * This is common IOPORT service for GPIO pin configuration and control in a
- * standardized manner across the XMEGA, UC3 and ARM devices.
+ * standardized manner across the MEGA, MEGA_RF, XMEGA, UC3 and ARM devices.
  *
  * Port pin control code is optimized for each platform, and should produce
  * both compact and fast execution times when used with constant values.
@@ -91,18 +91,30 @@ enum ioport_value {
 	IOPORT_PIN_LEVEL_HIGH, /*!< IOPORT pin value high */
 };
 
+#if MEGA_RF
 /** \brief IOPORT edge sense modes */
+enum ioport_sense {
+	IOPORT_SENSE_LEVEL,     /*!< IOPORT sense low level  */
+	IOPORT_SENSE_BOTHEDGES, /*!< IOPORT sense both rising and falling edges */
+	IOPORT_SENSE_FALLING,   /*!< IOPORT sense falling edges */
+	IOPORT_SENSE_RISING,    /*!< IOPORT sense rising edges */
+};
+#else
 enum ioport_sense {
 	IOPORT_SENSE_BOTHEDGES, /*!< IOPORT sense both rising and falling edges */
 	IOPORT_SENSE_RISING,    /*!< IOPORT sense rising edges */
 	IOPORT_SENSE_FALLING,   /*!< IOPORT sense falling edges */
 };
+#endif
+
 
 #if XMEGA
 # include "xmega/ioport.h"
 # if defined(IOPORT_XMEGA_COMPAT)
 #  include "xmega/ioport_compat.h"
 # endif
+#elif MEGA
+#  include "mega/ioport.h"
 #elif UC3
 # include "uc3/ioport.h"
 #elif SAM
@@ -407,7 +419,7 @@ static inline ioport_port_mask_t ioport_pin_to_mask(ioport_pin_t pin)
  *     \endcode
  *   - \note The usefulness of the \ref IOPORT_CREATE_PIN macro and port names
  *           differ between architectures:
- *     - XMEGA: Use \ref IOPORT_CREATE_PIN macro with port definitions
+ *     - MEGA, MEGA_RF and XMEGA: Use \ref IOPORT_CREATE_PIN macro with port definitions
  *              PORTA, PORTB ...
  *     - UC3: Most convenient to pick up the device header file pin definition
  *            and us it directly. E.g.: AVR32_PIN_PB06
@@ -474,7 +486,7 @@ static inline ioport_port_mask_t ioport_pin_to_mask(ioport_pin_t pin)
  *     #define OUT_PORT IOPORT_PORTB
  *     \endcode
  *   - \note The port names differ between architectures:
- *     - XMEGA: There are predefined names for ports: IOPORT_PORTA,
+ *     - MEGA_RF, MEGA and XMEGA: There are predefined names for ports: IOPORT_PORTA,
  *              IOPORT_PORTB ...
  *     - UC3: Use the index value of the different IO blocks: 0, 1 ...
  *     - SAM: There are predefined names for ports: IOPORT_PIOA, IOPORT_PIOB
