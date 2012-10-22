@@ -360,6 +360,7 @@ void udc_start(void)
 void udc_stop(void)
 {
 	udd_disable();
+	udc_reset();
 }
 
 /**
