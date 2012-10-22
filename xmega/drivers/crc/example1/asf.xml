@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.crc.example1" caption="Example1 for CRC module">
+	<module type="application" id="xmega.drivers.crc.example1" caption="CRC Example 1">
 		<info type="description" value="summary">
 		An example application using both CRC-16 and CRC-32 using the I/O interface.
 		</info>

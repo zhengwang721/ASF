@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.crc.example2" caption="Example2 for CRC module">
+	<module type="application" id="xmega.drivers.crc.example2" caption="CRC Example 2">
 		<info type="description" value="summary">
 		An example application performing CRC on FLASH memory.
 		</info>

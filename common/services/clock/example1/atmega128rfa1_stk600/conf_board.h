@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief Board configuration for clock example 1
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,9 +38,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-// intentionally left blank
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */

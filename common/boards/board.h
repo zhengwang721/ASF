@@ -107,6 +107,7 @@ extern "C" {
 #define ARDUINO_DUE_X         43  //!< Arduino Due/X board.
 #define STK600_RCUC3L3        44  //!< ATUCL3 STK600 board
 #define SAM4L_EK              45  //!< SAM4L-EK board.
+#define STK600_MEGA_RF        46  //!< STK600 MEGA RF EVK board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -151,6 +152,8 @@ extern "C" {
 #  include "xplain/xplain.h"
 #elif BOARD == STK600_MEGA
   /*No header-file to include*/
+#elif BOARD == STK600_MEGA_RF
+#  include "stk600.h"
 #elif BOARD == STK600_RC044X
 #  include "stk600/rc044x/stk600_rc044x.h"
 #elif BOARD == STK600_RC064X

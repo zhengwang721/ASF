@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example specific SPI Master configuration file
+ * \brief megaRF on STK600 board configuration template
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,9 +38,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_SPI_MASTER_H_INCLUDED
-#define CONF_SPI_MASTER_H_INCLUDED
 
-#endif /* CONF_SPI_MASTER_H_INCLUDED */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
+
+#endif /* CONF_BOARD_H */

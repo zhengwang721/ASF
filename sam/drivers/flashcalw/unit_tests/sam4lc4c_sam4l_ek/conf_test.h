@@ -1,10 +1,9 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
- * \brief USART Serial configuration
+ * \brief Unit test configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +39,31 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
-#ifndef CONF_USART_SERIAL_H_INCLUDED
-#define CONF_USART_SERIAL_H_INCLUDED
+#ifndef CONF_TEST_INCLUDED
+#define CONF_TEST_INCLUDED
 
-#define CONFIG_USART_SERIAL_MODE    USART_NORMAL_CHMODE
+#include "compiler.h"
 
-#endif /* CONF_USART_SERIAL_H_INCLUDED */
+/** USART Interface */
+#define CONF_TEST_USART      USART2
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Character length setting */
+#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_TEST_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
+
+/** 1MHz RC Oscillator */
+#define BOARD_RC1M_HZ
+/** 80MHz RC Oscillator */
+#define BOARD_RC80M_HZ
+/** RCFAST Oscillator */
+#define BOARD_RCFAST_HZ
+/** Dfll max lock sycles */
+#define DFLL_MAX_LOCK_CYCLES 300
+
+#endif /* CONF_TEST_INCLUDED */

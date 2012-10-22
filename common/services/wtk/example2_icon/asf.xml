@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.wtk.example2" caption="Widget library example 2">
+	<module type="application" id="common.services.wtk.example2" caption="WTK (Widget ToolKit) Library Example 2">
 		<info type="description" value="summary">
 		Graphical widget library service example, showing a collection of icon widgets, allowing
 		the user to navigate between the icons and select them using both direct touch and soft

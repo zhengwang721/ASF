@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.gfx_mono.example.spinctrl" caption="Example for GFX Monochrome spinner">
+	<module type="application" id="common.services.gfx_mono.example.spinctrl" caption="GFX Monochrome Spinner Widget Example">
 		<info type="description" value="summary">
 		Example showing how to use spinners.
 		</info>

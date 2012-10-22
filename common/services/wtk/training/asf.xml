@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.wtk.training" caption="Widget ToolKit training">
+	<module type="application" id="common.services.wtk.training" caption="WTK (Widget ToolKit) Library Training">
 		<info type="description" value="summary">
 			Training skeleton code for the application note
 			"AVR1614: Widget ToolKit - Getting Started".

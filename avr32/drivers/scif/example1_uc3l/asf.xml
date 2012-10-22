@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.drivers.scif.example1_uc3l" caption="SCIF Example1 for UC3L">
+	<module type="application" id="avr32.drivers.scif.example1_uc3l" caption="SCIF Example 1 for UC3L">
 		<info type="description" value="summary">
 		Configure a DFLL in closed-loop mode at 22MHz and set-up a generic clock GCLK with the DFLL as input. Output the generic clock on a pin. Switch into the FROZEN sleep mode while still maintaining the generic clock output.
 		</info>

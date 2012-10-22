@@ -110,6 +110,20 @@
 #	define __always_inline   _Pragma("inline=forced")
 #endif
 
+/**
+ * \def __always_optimize
+ * \brief The function should always be optimized.
+ *
+ * This annotation instructs the compiler to ignore global optimization
+ * settings and always compile the function with a high level of
+ * optimization.
+ */
+#if (defined __GNUC__)
+	#define __always_optimize   __attribute__((optimize(3)))
+#elif (defined __ICCAVR__)
+	#define __always_optimize   _Pragma("optimize=high")
+#endif
+
 
 /*! \brief This macro is used to test fatal errors.
  *

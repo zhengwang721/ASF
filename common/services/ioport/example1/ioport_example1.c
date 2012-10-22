@@ -57,17 +57,19 @@
  * \ref ioport_group section.
  *
  * \section device_info Device Info
- * All Atmel SAM, XMEGA and UC3 devices can be used. This example has been
+ * All Atmel SAM, MEGA, XMEGA and UC3 devices can be used. This example has been
  * tested with the following setup:
  *  - Xplain evaluation kit
  *  - EVK1100 evaluation kit
  *  - SAM4L evaluation kit
  *  - SAM3X evaluation kit
+ *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  *
  * \section example_description Description of the example
  * This example flashes a group of LEDs present on a port with flash speed of
  * 1Hz.
- *
+ * For STK600 with STK600-ATMEGA128RFA1, need to connect a 10 Pin cable from
+ * PORTB to Led header
  * Additionally a group of inputs can inspected from a debug session.
  *
  * \section compinfo Compilation Info

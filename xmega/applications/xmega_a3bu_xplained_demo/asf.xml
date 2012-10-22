@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.applications.xmega_a3bu_xplained_demo" caption="Demo application for XMEGA-A3BU Xplained">
+	<module type="application" id="xmega.applications.xmega_a3bu_xplained_demo" caption="XMEGA-A3BU Xplained demo application">
 		<info type="description" value="summary">
 		Demo application for XMEGA-A3BU with monocrome display drivers, temperature and light sensor readout.
 		</info>
