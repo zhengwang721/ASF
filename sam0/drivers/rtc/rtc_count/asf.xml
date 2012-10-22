@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.rtc_count" caption="Generic Clock Driver">
+		<info type="description" value="summary">
+			Driver for the SAM0+ RTC. Provides a unified interface
+			for the configuration and management of the Generic Clock generators
+			and channels within the device, including the enabling, disabling,
+			clock source selection and prescaling of clocks to various modules
+			within the device.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="RTC" />
+		</info>
+		<build type="include-path" value="." />
+		<build type="header-file" subtype="api" value="rtc_count.h"/>
+		<build type="c-source" value="rtc_count.c"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_rtc_count_basic.h"/>
+		<build type="doxygen-entry-point" value="sam0_rtc_count_group"/>
+		<device-support value="sam0"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.sysctrl"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+	</module>
+</asf>

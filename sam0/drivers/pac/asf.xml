@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.pac" caption="PAC - Peripheral Access Controller">
+		<info type="description" value="summary">
+		Some information here
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Security"/>
+		</info>
+		<build type="c-source" value="pac.c"/>
+		<build type="header-file" subtype="api" value="pac.h"/>
+		<build type="header-file" value="pac_header.h"/>
+		<build type="header-file" value="quick_start/qs_pac_basic.h" subtype="example"/>
+		<build type="include-path" value="."/>
+		<build type="doxygen-entry-point" value="pac_group"/>
+		<device-support value="sam0"/>
+		<require idref="sam0.utils"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+	</module>
+</asf>

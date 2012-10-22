@@ -1,0 +1,560 @@
+/**
+ * \file
+ *
+ * \brief SAM0+ RTC Driver for count mode
+ *
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+#include "rtc_count.h"
+
+/**
+ * \internal Internal device structure.
+ */
+struct _rtc_device {
+	/** Operation mode of count. */
+	enum rtc_count_mode mode;
+	/** If count register is continuously updated. */
+	bool continuously_update;
+}
+
+static struct _rtc_device _rtc_dev;
+
+/**
+ * \internal Reset the RTC module.
+ */
+static inline void _rtc_count_reset(void)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Disable module before reset. */
+	rtc_count_disable();
+
+	/* Sync. */
+	_rtc_count_sync();
+
+	/* Initiate software reset. */
+	rtc_module->CTRL |= RTC_SWRST_bm;
+}
+
+/**
+ * \internal Applies the given configuration.
+ *
+ * Set the configurations given from the configuration structure to the
+ * hardware module.
+ * \param[in] config pointer to the configuration structure.
+ *
+ * \return \ref status_code of the configuration procedure.
+ * \retval STATUS_OK RTC configurations where set successfully.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where given.
+ */
+static enum status_code _rtc_count_set_config(
+		const struct rtc_count_conf *const config)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Set mode and clear on match if applicable. */
+	switch (config->mode) {
+		case RTC_COUNT_MODE_32BIT:
+
+			/* Set 32bit mode and clear on match if applicable. */
+			rtc_module->CTRL |= RTC_MODE_32BIT_bm;
+
+			/* Check if clear on compare match should be set. */
+			if (config->clear_on_match) {
+				/* Set clear on match. */
+				rtc_module->CTRL |= RTC_CLEAR_ON_MATCH_bm;
+			}
+
+			break;
+
+		case RTC_COUNT_MODE_16BIT:
+			/* Check if match on clear is set, and return invalid
+			 * argument if set. */
+			if (config->clear_on_match) {
+				Assert(false);
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Set 16 bit mode */
+			rtc_module->CTRL |= RTC_MODE_16BIT_bm;
+
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Check to set continuously clock read update mode. */
+	if (config->continuously_update) {
+		/* Set continuously mode. */
+		rtc_module->READREQ |= RTC_RCONT_bm;
+	}
+
+	/* Set compare values. */
+	/* Sync. */
+	_rtc_count_reset();
+	rtc_count_set_compare(config->compare[0], RTC_COUNT_COMPARE0);
+	/* Sync. */
+	_rtc_count_reset();
+	rtc_count_set_compare(config->compare[1], RTC_COUNT_COMPARE1);
+	/* Sync. */
+	_rtc_count_reset();
+	rtc_count_set_compare(config->compare[2], RTC_COUNT_COMPARE2);
+	/* Sync. */
+	_rtc_count_reset();
+	rtc_count_set_compare(config->compare[3], RTC_COUNT_COMPARE3);
+	/* Check if 16 bit mode. */
+	if (config->mode == RTC_COUNT_MODE_16BIT) {
+		/* Sync. */
+		_rtc_count_reset();
+		rtc_count_set_compare(config->compare[4], RTC_COUNT_COMPARE4);
+		/* Sync. */
+		_rtc_count_reset();
+		rtc_count_set_compare(config->compare[5], RTC_COUNT_COMPARE5);
+	}
+
+	/* Set event source. */
+	rtc_count_enable_events(config->event_source);
+
+	/* Return status OK if everything was configured. */
+	return STATUS_OK;
+}
+
+/**
+ * \brief Initializes the RTC module with given configurations.
+ *
+ * This initializes the module, setting up all given configurations to provide
+ * the desired functionality of the RTC. \note \ref conf_clocks.h should be set
+ * up correctly before using this function.
+ *
+ * \param[in] config Pointer to the configuration structure.
+ *
+ * \return \ref status_code of the initialization procedure.
+ * \retval STATUS_OK If the initialization was run sucesfully.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where given.
+ */
+enum status_code rtc_count_init(const struct rtc_count_conf *const config)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Sanity check. */
+	Assert(config);
+
+	/* Reset module to hardware defaults. */
+	_rtc_count_reset();
+
+	//TODO: Do some magic to set up clock!
+	/* Set the prescaler according to settings in conf_clocks.h */
+#if CONF_CLOCK_RTC_FREQ == CONF_CLOCK_RTC_FREQ_1HZ
+	rtc_module->CTRL = RTC_PRESCALER_DIV1024_bm;
+#else
+	rtc_module->CTRL = RTC_PRESCALER_DIV1_bm;
+#endif
+
+	/* Save conf_struct internally for continued use. */
+	_rtc_dev.mode = config->mode;
+	_rtc_dev.continuously_update = config->continuously_update;
+
+	/* Set config and return status. */
+	return _rtc_count_set_config(config);
+}
+
+/**
+ * \brief Sets the current count value to desired value.
+ *
+ * This will set the value of the count register to the specified count_value.
+ *
+ * \param[in] count_value The value to be set in count register.
+ *
+ * \return status_code of setting the register.
+ * \retval STATUS_OK If everything was OK.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where provided.
+ */
+enum status_code rtc_count_set_count(uint32_t const count_value)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Sync. */
+	_rtc_count_sync();
+
+	/* Set count according to mode */
+	switch(_rtc_dev.mode){
+		case RTC_COUNT_MODE_32BIT:
+
+			/* Write value to register. */
+			rtc_module->COUNT32.COUNT = count_value;
+
+			break;
+
+		case RTC_COUNT_MODE_16BIT:
+
+			/* Check if 16 bit value is provided. */
+			if(count_value > 0xffff){
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Write value to register. */
+			rtc_module->COUNT16.COUNT = (uint32_t)count_value;
+
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Get the current count value.
+ *
+ * Returns the current count value.
+ *
+ * \return the current count value as a 32 bit unsigned integer.
+ */
+uint32_t rtc_count_get_count(void)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Initialize return value. */
+	uint32_t ret_val;
+
+	/* Change of read method based on value of continuously_update value in
+	 * the configuration structure. */
+	if(!(_rtc_dev.continuously_update)){
+		/* Request read on count register. */
+		rtc_module->READREQ = RTC_COUNT_RREQ;
+
+		/* Sync. */
+		_rtc_count_sync();
+	}
+
+	/* Read value based on mode. */
+	switch (_rtc_dev.mode) {
+		case RTC_COUNT_MODE_32BIT:
+			/* Return count value in 32 bit mode. */
+			ret_val = rtc_module->COUNT32.COUNT;
+
+			break;
+
+		case RTC_COUNT_MODE_16BIT:
+			/* Return count value in 16 bit mode. */
+			ret_val = (uint32_t)rtc_module->COUNT16.COUNT;
+
+			break;
+
+		default:
+			Assert(false);
+			/* Counter not initialized. Assume counter value 0.*/
+			ret_val = 0;
+			break;
+	}
+
+	return ret_val;
+}
+
+/**
+ * \brief Set the compare value for the specified compare register.
+ *
+ * This sets the value specified by the implementer to the requested
+ * register.
+ *
+ * \note Compare registers 4 and 5 are only available in 16 bit mode.
+ *
+ * \param[in] comp_value The value to be written to the compare register.
+ * \param[in] comp_index Index of the compare register to set.
+ *
+ * \return status_code indicating if register was successfully written.
+ * \retval STATUS_OK If register was successfully written.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where provided.
+ */
+enum status_code rtc_count_set_compare(uint32_t comp_value,
+		enum rtc_count_compare comp_index)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Sync. */
+	_rtc_count_sync();
+
+	/* Set compare values based on operation mode. */
+	switch (_rtc_dev.mode) {
+		case RTC_COUNT_MODE_32BIT:
+
+			/* Check sanity of comp_index. */
+			if ((uint32_t)comp_index > RTC_COUNT_COMPARE3) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Set compare value for COMP. */
+			rtc_module->COUNT32.COMP[comp_index] = comp_value;
+
+			break;
+
+		case RTC_COUNT_MODE_16BIT:
+			/* Check sanity of comp_index. */
+			if ((uint32_t)comp_index > RTC_COUNT_COMPARE5) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Check that 16 bit value is provided. */
+			if (comp_value > 0xffff) {
+				Assert(false);
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Set compare value for COMP. */
+			rtc_module->COUNT16.COMP[comp_index] = comp_value & 0xffff;
+
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_NOT_INITIALIZED;
+	}
+
+	/* Return status if everything is OK. */
+	return STATUS_OK;
+}
+
+/**
+ * \brief Get the current compare value of specified comp register.
+ *
+ * This will provide the current value of the specified compare register.
+ *
+ * \note Compare registers 4 and 5 are only available in 16 bit mode.
+ *
+ * \param[out] comp_value Pointer to 32 bit integer giving the return value.
+ * \param[in] comp_index Index of compare register to check.
+ *
+ * \return status_code of the reading procedure.
+ * \retval STATUS_OK If the value was read correctly.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ */
+enum status_code rtc_count_get_compare(uint32_t *comp_value,
+		enum rtc_count_compare comp_index)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	switch (_rtc_dev.mode) {
+		case RTC_COUNT_MODE_32BIT:
+			/* Check sanity of comp_index. */
+			if ((uint32_t)comp_index > RTC_COUNT_COMPARE3) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Get compare value for COMP. */
+			*comp_value = rtc_module->COUNT32.COMP[comp_index];
+
+			break;
+
+		case RTC_COUNT_MODE_16BIT:
+			/* Check sanity of comp_index. */
+			if ((uint32_t)comp_index > RTC_COUNT_COMPARE5) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			/* Get compare value for COMP. */
+			*comp_value = (uint32_t)rtc_module->COUNT16.COMP[comp_index];
+
+			break;
+
+		case default:
+			Assert(false);
+			return STATUS_ERR_NOT_INITIALIZED;
+	}
+	/* Return status showing everything is OK. */
+	return STATUS_OK;
+}
+
+/**
+ * \brief Check if RTC compare match has occurred.
+ *
+ * Checks the COMPn flag in the RTC INTFLAG register. The flag for COMPn is set
+ * when there is a compare match between count and COMPn.
+ *
+ * \note Compare registers 4 and 5 are only available in 16 bit mode.
+ *
+ * \param[out] comp_match Pointer to the bool that will provide return value.
+ * \param[in] comp_index Index of compare to check current flag.
+ *
+ * \return status_code indicating if INTFLAG was successfully read.
+ * \retval STATUS_OK If INTFLAG was successfully read.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ */
+//TODO: Fault THIS IS WRONG!
+#warning "DO STUFF HERE!"
+bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Check sanity. */
+	switch (_rtc_dev.mode) {
+		case RTC_MODE_32BIT:
+			/* Check sanity for 32 bit mode. */
+			if (comp_index > RTC_COUNT_COMPARE3) {
+				return false;
+			}
+
+			break;
+
+		case RTC_MODE_16BIT:
+			/* Check sanity for 16 bit mode. */
+			if (comp_index > RTC_COUNT_COMPARE5) {
+				return false;
+			}
+
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_NOT_INITIALIZED;
+	}
+
+	/* Set status of INTFLAG as return argument. */
+	return (rtc_module->INTFLAG & (1 << comp_index));
+}
+
+/**
+ * \brief Clears RTC compare match flag.
+ *
+ * Clears the COMPn flag in the RTC INTFLAG register. The flag for COMPn is set
+ * when there is a compare match between count and COMPn.
+ *
+ * \note Compare registers 4 and 5 are only available in 16 bit mode.
+ *
+ * \param[in] comp_index Index of compare to check current flag.
+ *
+ * \return status_code indicating if INTFLAG was successfully cleared.
+ * \retval STATUS_OK If INTFLAG was successfully cleared.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ */
+enum status_code rtc_count_clear_compare_match(enum rtc_count_compare comp_index)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Check sanity. */
+	switch (_rtc_dev.mode){
+		case RTC_MODE_32BIT:
+			/* Check sanity for 32 bit mode. */
+			if (comp_index > RTC_COUNT_COMPARE3) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			break;
+
+		case RTC_MODE_16BIT:
+			/* Check sanity for 16 bit mode. */
+			if (comp_index > RTC_COUNT_COMPARE5) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_NOT_INITIALIZED;
+	}
+
+	/* Clear INTFLAG. */
+	rtc_module->INTFLAG = (1 << comp_index);
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Calibrate for too-slow or too-fast oscillator.
+ *
+ * When used, the RTC will compensate for a too-fast or too-slow oscillator. The
+ * RTC module will add or subtract cycles from the RTC prescaler to adjust the
+ * frequency in approximately 1 PPM steps. The provided correction value should
+ * be between 0 and 127, allowing for a maximum 127 PPM correction.
+ *
+ * If no correction is needed, set value to zero.
+ *
+ * \note Can only be used when the RTC is operated in 1Hz.
+ *
+ * \param[in] dir The direction of the correction.
+ * \param[in] value Ranging from 0 to 127 used for the correction.
+ *
+ * \return status_code of the calibration procedure.
+ * \retval STATUS_OK If calibration was done correctly.
+ * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ */
+enum status_code rtc_count_freqcorr(enum rtc_count_freqcorr dir, uint8_t value)
+{
+	/* Initialize module pointer. */
+	RTC_t *rtc_module = &RTC;
+
+	/* Check if valid argument. */
+	if (value > 0x7f) {
+		/* Value bigger than allowed, return invalid argument. */
+		return STATUS_ERR_INVALID_ARG;
+	}
+	/* Sync. */
+	_rtc_count_sync();
+
+	/* Set direction. */
+	switch (dir) {
+		case RTC_COUNT_FREQCORR_DIR_SLOWER:
+			/* Set counter to be slower. */
+			rtc_module->FREQCORR = RTC_FREQCORR_SIGN_bm |
+					value << RTC_FREQCORR_VALUE_gp;
+
+			break;
+
+		case RTC_COUNT_FREQCORR_DIR_FASTER:
+			/* Set counter to be faster. */
+			rtc_module->FREQCORR = value << RTC_FREQCORR_VALUE_gp;
+
+			break;
+
+		default:
+			/* Invalid argument is provided. */
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}

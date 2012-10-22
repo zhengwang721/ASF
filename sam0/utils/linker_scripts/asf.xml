@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<select-by-device id="sam0.utils.linker_scripts" caption="Linker scripts for IAR and GCC toolchain">
+		<module type="build-specific" caption="Linker script for SAM0XX" id="sam0.utils.linker_scripts#atsam0xx_test">
+			<info type="description" value="summary">
+			Linker script for the ATSAM0XX_TEST device.
+			</info>
+			<build type="linker-config" subtype="script" value="sam0p/sam0xx/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sam0p/sam0xx/gcc/sram.ld" toolchain="armgcc"/>
+			<device-support value="atsam0xx_test"/>
+		</module>
+	</select-by-device>
+</asf>
