@@ -116,7 +116,7 @@ static inline bool cpu_irq_is_enabled_flags(irqflags_t flags)
 #  else
 	return flags & I_bm;
 #  endif
-#elif MEGA
+#elif MEGA || TINY
 	return flags & (1 << SREG_I);
 #endif
 }
