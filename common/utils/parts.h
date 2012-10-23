@@ -506,7 +506,7 @@
  *  Please do not use this group symbol as it is not intended
  *  to be permanent: the devices should be regrouped.
  */
-#define MEGA_XX_UN3 ( \
+#define MEGA_UNCATEGORIZED ( \
 		AVR8_PART_IS_DEFINED(AT90CAN128)     || \
 		AVR8_PART_IS_DEFINED(AT90CAN32)      || \
 		AVR8_PART_IS_DEFINED(AT90CAN64)      || \
@@ -581,7 +581,7 @@
 
 /** Unspecified group */
 #define MEGA_UNSPECIFIED (MEGA_XX_UN0 || MEGA_XX_UN1 || MEGA_XX_UN2 || \
-	MEGA_XX_UN3)
+	MEGA_UNCATEGORIZED)
 
 /** @} */
 
