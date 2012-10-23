@@ -8,8 +8,8 @@
 		<release-notes caption="Ccc release notes" url="http://ccc.c.com/release-notes/"/>
 		<online-help>
 			<index-page caption="Ccc help" baseurl="http://ccc.c.com/help_index"/>
-			<element-page scheme="asf-docs" baseurl="http://ccc.c.com/element_help"/>
-			<element-guide-page scheme="asf-docs" baseurl="http://ccc.c.com/element_guide"/>
+			<module-help-page scheme="asf-docs" baseurl="http://ccc.c.com/element_help"/>
+			<module-guide-page scheme="asf-docs" baseurl="http://ccc.c.com/element_guide"/>
 		</online-help>
 		<dependencies>
 			<fdk-extension eid="bbb" uuidref="01234567-89ab-cdef-0123-456789abcdef" version="latest"/>
