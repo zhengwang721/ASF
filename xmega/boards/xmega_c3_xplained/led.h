@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief XMEGA B1 Xplained board LEDs support package.
+ * \brief XMEGA-C3 Xplained board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the XMEGA B1 Xplained board.
+ * the XMEGA-C3 Xplained board.
  *
- * To use this board, define BOARD=XMEGA_B1_XPLAINED.
+ * To use this board, define BOARD=XMEGA_C3_XPLAINED.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,23 +51,26 @@
 
 #include "gpio.h"
 
-/*! \brief Turns off the specified LEDs.
+/**
+ * \brief Turns off the specified LEDs.
  *
  * \param led_gpio LED to turn off (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led_gpio)     gpio_set_pin_low(led_gpio)
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-/*! \brief Turns on the specified LEDs.
+/**
+ * \brief Turns on the specified LEDs.
  *
  * \param led_gpio LED to turn on (LEDx_GPIO).
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led_gpio)      gpio_set_pin_high(led_gpio)
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
-/*! \brief Toggles the specified LEDs.
+/**
+ * \brief Toggles the specified LEDs.
  *
  * \param led_gpio LED to toggle (LEDx_GPIO).
  *
@@ -75,4 +78,4 @@
  */
 #define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
 
-#endif  // _LED_H_
+#endif /* _LED_H_ */
