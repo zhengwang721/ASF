@@ -776,35 +776,47 @@ class ConfigItem(object):
 		"""
 		# Try to return hardcoded URL from the module first
 		try:
-			return self.get_build(BuildOnlineModuleHelp, recursive=False).pop(0)
-		except IndexError:
+			return self.get_build(BuildOnlineModuleHelp, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
 			pass
 
-		if not custom_version:
-			# Use framework version if no version provided
-			custom_version = self.db.get_framework_version_number()
-
 		# Construct module help URL according to the scheme
-		(scheme, url) = self.db.get_help_documentation_server()
-
-		if scheme == 'asf-docs':
-			uri = self.get_help_uri()
-			# Do string replacement for asf-docs
-			url = url.replace("$VER$", urllib.quote(custom_version))
-			url = url.replace("$MODULE$", urllib.quote(module_dir))
-		elif scheme == 'append':
-			try:
-				uri = self.get_build(BuildOnlineModuleHelpAppend, recursive=False).pop(0)
-			except IndexError:
-				uri = None
+		try:
+			(scheme, url) = self.db.get_help_documentation_server()
+		# No server found: there is no help.
+		except NotFoundError:
+			url = None
+		# Server found: construct URL based on the scheme
 		else:
-			raise
+			# ASF documentation style
+			if scheme == 'asf-docs':
+				if not custom_version:
+					# Use framework version if no version provided
+					custom_version = self.db.get_framework_version_number()
 
-		# If uri was not found, assume that the documentation is missing
-		if not uri:
-			return None
-		else:
-			return url + uri
+				# Construct the URL
+				url = url.replace("$VER$", urllib.quote(custom_version))
+				url = url.replace("$MODULE$", urllib.quote(module_dir))
+				uri = self.get_help_uri()
+
+				if uri:
+					url += uri
+				else:
+					url = None
+
+			# URL appending
+			elif scheme == 'append':
+				# Try to find URL appendage in module
+				try:
+					uri = self.get_build(BuildOnlineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
+				# No appendage found: there is no help.
+				except IndexError:
+					url = None
+				# Appendage found: construct URL
+				else:
+					url += uri
+
+		return url
 
 	def get_quick_start_url(self, doc_arch, custom_version = None):
 		"""
