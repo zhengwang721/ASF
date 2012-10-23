@@ -8,8 +8,8 @@
 		<release-notes caption="ASF release notes" url="http://www.atmel.com/tools/AVRSOFTWAREFRAMEWORK.aspx"/>
 		<online-help>
 			<index-page caption="ASF help" baseurl="http://asf.atmel.com/docs/"/>
-			<element-page scheme="asf-docs" baseurl="http://asf.atmel.com/docs/"/>
-			<element-guide-page scheme="asf-docs" baseurl="http://asf.atmel.com/docs/"/>
+			<module-help-page scheme="asf-docs" baseurl="http://asf.atmel.com/docs/"/>
+			<module-guide-page scheme="asf-docs" baseurl="http://asf.atmel.com/docs/"/>
 		</online-help>
 		<dependencies/>
 	</extension>
