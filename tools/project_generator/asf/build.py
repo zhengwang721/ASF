@@ -205,3 +205,59 @@ class BuildDoxygenEntryPoint(BuildType):
 
 class BuildDoxygenQuickStart(BuildDoxygenEntryPoint):
 	type = "doxygen-quick-start"
+
+class BuildOnlineHelp(BuildType):
+	type = "online-help"
+
+	@staticmethod
+	def get_build_item_from_element(element):
+		# Return value as it is
+		try:
+			return element.attrib["value"]
+		except KeyError:
+			raise ConfigError("Build define element '%s' is missing value attribute" % (element.tag))
+
+	@staticmethod
+	def expand_compile_paths(element, basedir):
+		# No expansion should be done for online help
+		pass
+
+class BuildOnlineModuleHelp(BuildOnlineHelp):
+	# This type should contain a URL to a module's help page
+	subtype = "module-help"
+
+class BuildOnlineModuleGuide(BuildOnlineModuleHelp):
+	# This type should contain a URL to a module's quick start page
+	subtype = "module-guide"
+
+class BuildOnlineModuleHelpAppend(BuildOnlineHelp):
+	# This type should contain an appendage for the module's extension's help page base URL
+	subtype = "module-help-append"
+
+class BuildOnlineModuleGuideAppend(BuildOnlineModuleHelpAppend):
+	# This type should contain an appendage for the module's extension's quick start page base URL
+	subtype = "module-guide-append"
+
+class BuildOfflineHelp(BuildType):
+	type = "offline-help"
+
+class BuildOfflineModuleHelp(BuildOfflineHelp):
+	# This type should contain a path to the module's help page, relative to the asf.xml
+	subtype = "module-help"
+
+class BuildOfflineModuleGuide(BuildOfflineModuleHelp):
+	# This type should contain a path to the module's quick start page, relative to the asf.xml
+	subtype = "module-guide"
+
+class BuildOfflineModuleHelpAppend(BuildOfflineHelp):
+	# This type should contain an appendage for the module's extension's help page base path
+	subtype = "module-help-append"
+
+	@staticmethod
+	def expand_compile_paths(element, basedir):
+		# No expansion should be done for append-scheme offline help
+		pass
+
+class BuildOfflineModuleGuideAppend(BuildOfflineModuleHelpAppend):
+	# This type should contain an appendage for the module's extension's quick start page base path
+	subtype = "module-guide-append"
