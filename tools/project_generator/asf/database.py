@@ -757,25 +757,54 @@ class ConfigItem(object):
 	def get_help_url(self, module_dir, custom_version = None):
 		"""
 		Return the help URL for this item.
+
+		The procedure for this is:
+		1) try to fetch the online-help / module-help URL from the module,
+		return it if found
+
+		2) try to fetch the online-help / module-help scheme and base URL
+		from the extension, and then:
+
+		3a) if the scheme is "asf-docs", construct the URL via string
+		replacement and return the result
+
+		3b) if the scheme is "append", try to fetch the online-help /
+		module-help-append from the module, append it to the base URL from
+		the extension and return the result
+
+		4) if no documentation location could be determined, return None
 		"""
+		# Try to return hardcoded URL from the module first
+		try:
+			return self.get_build(BuildOnlineModuleHelp, recursive=False).pop(0)
+		except IndexError:
+			pass
+
 		if not custom_version:
 			# Use framework version if no version provided
 			custom_version = self.db.get_framework_version_number()
 
-		uri = self.get_help_uri()
-		if not uri:
-			# No documentation available for this module
-			return None
-
+		# Construct module help URL according to the scheme
 		(scheme, url) = self.db.get_help_documentation_server()
 
-		# TODO: handle schemes here
-		url = url + uri
+		if scheme == 'asf-docs':
+			uri = self.get_help_uri()
+			# Do string replacement for asf-docs
+			url = url.replace("$VER$", urllib.quote(custom_version))
+			url = url.replace("$MODULE$", urllib.quote(module_dir))
+		elif scheme == 'append':
+			try:
+				uri = self.get_build(BuildOnlineModuleHelpAppend, recursive=False).pop(0)
+			except IndexError:
+				uri = None
+		else:
+			raise
 
-		url = url.replace("$VER$", urllib.quote(custom_version))
-		url = url.replace("$MODULE$", urllib.quote(module_dir))
-
-		return url
+		# If uri was not found, assume that the documentation is missing
+		if not uri:
+			return None
+		else:
+			return url + uri
 
 	def get_quick_start_url(self, doc_arch, custom_version = None):
 		"""
