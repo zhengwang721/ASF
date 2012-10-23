@@ -471,7 +471,7 @@ It will try to find a module within the tag that contains the same id, with a ha
    <xs:element name="build">
       <xs:annotation>
          <xs:documentation>
-            The build element is used for specifying what files and defines is needed for a given module.
+            The build element is used for specifying what files, defines and include paths are needed for a given module, or how the documentation can be accessed.
          </xs:documentation>
       </xs:annotation>
       <xs:complexType>
@@ -510,6 +510,10 @@ It will try to find a module within the tag that contains the same id, with a ha
                   <xs:enumeration value="doxygen-entry-point">
                   </xs:enumeration>
                   <xs:enumeration value="doxygen-quick-start">
+                  </xs:enumeration>
+                  <xs:enumeration value="offline-help">
+                  </xs:enumeration>
+                  <xs:enumeration value="online-help">
                   </xs:enumeration>
                </xs:restriction>
             </xs:simpleType>
@@ -553,6 +557,14 @@ It will try to find a module within the tag that contains the same id, with a ha
                   <xs:enumeration value="c++-compiler-flags">
                   </xs:enumeration>
                   <xs:enumeration value="preprocessor-flags">
+                  </xs:enumeration>
+                  <xs:enumeration value="module-guide-page">
+                  </xs:enumeration>
+                  <xs:enumeration value="module-help-page">
+                  </xs:enumeration>
+                  <xs:enumeration value="module-guide-page-append">
+                  </xs:enumeration>
+                  <xs:enumeration value="module-help-page-append">
                   </xs:enumeration>
                </xs:restriction>
             </xs:simpleType>
