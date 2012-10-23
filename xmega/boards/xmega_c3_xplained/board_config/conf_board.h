@@ -1,14 +1,9 @@
 /**
  * \file
  *
- * \brief XMEGA B1 Xplained board LEDs support package.
+ * \brief XMEGA-C3 Xplained board configuration template
  *
- * This file contains definitions and services related to the LED features of
- * the XMEGA B1 Xplained board.
- *
- * To use this board, define BOARD=XMEGA_B1_XPLAINED.
- *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,36 +38,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef _LED_H_
-#define _LED_H_
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#include "gpio.h"
+// Initialize SPI and control pins for UG_2832HSWEG04 OLED controller
+#define CONF_BOARD_OLED_UG_2832HSWEG04
 
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     gpio_set_pin_low(led_gpio)
+// Initialize SPI pins and presence pin for MicroSD card slot
+#define CONF_BOARD_SD_MMC_SPI
 
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      gpio_set_pin_high(led_gpio)
+// Initialize Analog Comparator pin for light sensor
+#define CONF_BOARD_LIGHT_SENSOR
 
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+// Initialize Analog Comparator pin for NTC sensor
+#define CONF_BOARD_TEMPERATURE_SENSOR
 
-#endif  // _LED_H_
+// Initialize Analog Comparator pin and input signal pin
+// for Analog Filter (lowpass RC @ 159 Hz)
+#define CONF_BOARD_ANALOG_FILTER
+
+// Initialize IO pins for use with USART 0 on port C
+#define CONF_BOARD_ENABLE_USARTC0
+
+// Initialize IO pins for use with USART 0 on port D
+#define CONF_BOARD_ENABLE_USARTD0
+
+// Initialize IO pins for use with USART 0 on port E
+#define CONF_BOARD_ENABLE_USARTE0
+
+#endif // CONF_BOARD_H
