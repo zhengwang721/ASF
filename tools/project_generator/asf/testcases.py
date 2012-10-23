@@ -1734,21 +1734,21 @@ class FdkExtensionTestCase(unittest.TestCase):
 
 		expected_online_help_caption = "Bbb help"
 		expected_online_help_index = "http://bbb.aaa.com/help_index"
-		expected_online_element_help = "http://bbb.aaa.com/element_help/$VER$/$MODULE$/html/"
-		expected_online_element_guide = "http://bbb.aaa.com/element_guide/$VER$/$MODULE$/html/"
+		expected_online_module_help = "http://bbb.aaa.com/element_help/$VER$/$MODULE$/html/"
+		expected_online_module_guide = "http://bbb.aaa.com/element_guide/$VER$/$MODULE$/html/"
 
 		self.assertEquals(self.ext.online_help_index_caption_and_url, (expected_online_help_caption, expected_online_help_index))
-		self.assertEquals(self.ext.online_element_help_scheme_and_url, (expected_scheme, expected_online_element_help))
-		self.assertEquals(self.ext.online_element_guide_scheme_and_url, (expected_scheme, expected_online_element_guide))
+		self.assertEquals(self.ext.online_module_help_scheme_and_url, (expected_scheme, expected_online_module_help))
+		self.assertEquals(self.ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
 
 		expected_offline_help_caption = "Bbb help doc"
 		expected_offline_help_index = os.path.normpath("docs/help.pdf")
-		expected_offline_element_help = os.path.normpath("docs/help/$MODULE$/html/")
-		expected_offline_element_guide = os.path.normpath("docs/guides/$MODULE$/html/")
+		expected_offline_module_help = os.path.normpath("docs/help/$MODULE$/html/")
+		expected_offline_module_guide = os.path.normpath("docs/guides/$MODULE$/html/")
 
 		self.assertEquals(self.ext.offline_help_index_caption_and_path, (expected_offline_help_caption, expected_offline_help_index))
-		self.assertEquals(self.ext.offline_element_help_scheme_and_path, (expected_scheme, expected_offline_element_help))
-		self.assertEquals(self.ext.offline_element_guide_scheme_and_path, (expected_scheme, expected_offline_element_guide))
+		self.assertEquals(self.ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
+		self.assertEquals(self.ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
 
 	def test_external_prerequisites(self):
 		expected_prerequisite_ids = ["bbb.board", "ccc.application"]

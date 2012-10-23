@@ -410,17 +410,17 @@ class FdkExtension(object):
 
 
 	@property
-	def online_element_help_scheme_and_url(self):
+	def online_module_help_scheme_and_url(self):
 		"""
 		Return a tuple with the scheme and URL (processed according to
-		the scheme) to the online element-specific help.
+		the scheme) to the online module-specific help.
 
 		For scheme == asf-docs, $VER$/$MODULE$/html/ is appended to the
 		base URL.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, url) = self._get_online_element_doc_scheme_and_url('element-page')
+		(scheme, url) = self._get_online_element_doc_scheme_and_url('module-help-page')
 
 		if url is not None:
 			if scheme == 'asf-docs':
@@ -432,17 +432,17 @@ class FdkExtension(object):
 
 
 	@property
-	def online_element_guide_scheme_and_url(self):
+	def online_module_guide_scheme_and_url(self):
 		"""
 		Return a tuple with the scheme and URL (processed according to
-		the scheme) to the online element-specific guides.
+		the scheme) to the online module-specific guides.
 
 		For scheme == asf-docs, $VER$/$MODULE$/html/ is appended to the
 		base URL.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, url) = self._get_online_element_doc_scheme_and_url('element-guide-page')
+		(scheme, url) = self._get_online_element_doc_scheme_and_url('module-guide-page')
 
 		if url is not None:
 			if scheme == 'asf-docs':
@@ -487,17 +487,17 @@ class FdkExtension(object):
 
 
 	@property
-	def offline_element_help_scheme_and_path(self):
+	def offline_module_help_scheme_and_path(self):
 		"""
 		Return a tuple with the scheme and path (processed according to
-		the scheme) to the offline element-specific help.
+		the scheme) to the offline module-specific help.
 
 		For scheme == asf-docs, $MODULE$\html\ is appended to the
 		path.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, path) = self._get_offline_element_doc_scheme_and_path('element-page')
+		(scheme, path) = self._get_offline_element_doc_scheme_and_path('module-help-page')
 
 		if path is not None:
 			if scheme == 'asf-docs':
@@ -509,17 +509,17 @@ class FdkExtension(object):
 
 
 	@property
-	def offline_element_guide_scheme_and_path(self):
+	def offline_module_guide_scheme_and_path(self):
 		"""
 		Return a tuple with the scheme and path (processed according to
-		the scheme) to the offline element-specific guides.
+		the scheme) to the offline module-specific guides.
 
 		For scheme == asf-docs, $MODULE$\html\ is appended to the
 		path.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, path) = self._get_offline_element_doc_scheme_and_path('element-guide-page')
+		(scheme, path) = self._get_offline_element_doc_scheme_and_path('module-guide-page')
 
 		if path is not None:
 			if scheme == 'asf-docs':
