@@ -224,9 +224,9 @@
 			<xs:sequence>
 				<xs:element name="index-page" type="indexPageUrl">
 				</xs:element>
-				<xs:element name="element-page" type="elementPageUrl" minOccurs="0">
+				<xs:element name="module-help-page" type="elementPageUrl" minOccurs="0">
 				</xs:element>
-				<xs:element name="element-guide-page" type="elementPageUrl" minOccurs="0">
+				<xs:element name="module-guide-page" type="elementPageUrl" minOccurs="0">
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
@@ -242,9 +242,9 @@
 			<xs:sequence>
 				<xs:element name="index-page" type="indexPagePath" minOccurs="0">
 				</xs:element>
-				<xs:element name="element-page" type="elementPagePath" minOccurs="0">
+				<xs:element name="module-help-page" type="elementPagePath" minOccurs="0">
 				</xs:element>
-				<xs:element name="element-guide-page" type="elementPagePath" minOccurs="0">
+				<xs:element name="module-guide-page" type="elementPagePath" minOccurs="0">
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
@@ -463,6 +463,8 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="append">
+			</xs:enumeration>
 			<xs:enumeration value="asf-docs">
 			</xs:enumeration>
 		</xs:restriction>
