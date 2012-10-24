@@ -224,34 +224,34 @@ class BuildOnlineHelp(BuildType):
 
 class BuildOnlineModuleHelp(BuildOnlineHelp):
 	# This type should contain a URL to a module's help page
-	subtype = "module-help"
+	subtype = "module-help-page"
 
 class BuildOnlineModuleGuide(BuildOnlineModuleHelp):
 	# This type should contain a URL to a module's quick start page
-	subtype = "module-guide"
+	subtype = "module-guide-page"
 
 class BuildOnlineModuleHelpAppend(BuildOnlineHelp):
 	# This type should contain an appendage for the module's extension's help page base URL
-	subtype = "module-help-append"
+	subtype = "module-help-page-append"
 
 class BuildOnlineModuleGuideAppend(BuildOnlineModuleHelpAppend):
 	# This type should contain an appendage for the module's extension's quick start page base URL
-	subtype = "module-guide-append"
+	subtype = "module-guide-page-append"
 
 class BuildOfflineHelp(BuildType):
 	type = "offline-help"
 
 class BuildOfflineModuleHelp(BuildOfflineHelp):
 	# This type should contain a path to the module's help page, relative to the asf.xml
-	subtype = "module-help"
+	subtype = "module-help-page"
 
 class BuildOfflineModuleGuide(BuildOfflineModuleHelp):
 	# This type should contain a path to the module's quick start page, relative to the asf.xml
-	subtype = "module-guide"
+	subtype = "module-guide-page"
 
 class BuildOfflineModuleHelpAppend(BuildOfflineHelp):
 	# This type should contain an appendage for the module's extension's help page base path
-	subtype = "module-help-append"
+	subtype = "module-help-page-append"
 
 	@staticmethod
 	def expand_compile_paths(element, basedir):
@@ -260,4 +260,4 @@ class BuildOfflineModuleHelpAppend(BuildOfflineHelp):
 
 class BuildOfflineModuleGuideAppend(BuildOfflineModuleHelpAppend):
 	# This type should contain an appendage for the module's extension's quick start page base path
-	subtype = "module-guide-append"
+	subtype = "module-guide-page-append"
