@@ -1508,7 +1508,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
 	ext_basedir = norm_path_join(sys.path[0], "asf/test-input/extensions/")
 	# Data for two test extensions
-	ext_dirs = [norm_path_join(ext_basedir, d) for d in ["Aaa/Bbb/", "Ccc/"]]
+	ext_dirs = [norm_path_join(ext_basedir, d) for d in ["Aaa/Bbb/", "Ccc/", "Eee/"]]
 	ext_uuids = ["01234567-89ab-cdef-0123-456789abcdef", "00000000-0000-0000-0000-000000000000"]
 
 	def _assertIsInstance(self, test_object, test_class):
@@ -1780,3 +1780,180 @@ class FdkExtensionTestCase(unittest.TestCase):
 		prerequisite_ids = [p.id for p in prerequisites]
 
 		self.assertEquals(prerequisite_ids, expected_prerequisite_ids)
+
+
+class FdkExtensionDocsTestCase(unittest.TestCase):
+	old_dir = os.path.abspath(os.curdir)
+	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
+
+	ext_basedir = norm_path_join(sys.path[0], "asf/test-input/extensions/")
+
+	first_ext_dir = norm_path_join(ext_basedir, "Aaa/Bbb/")
+	second_ext_dir = norm_path_join(ext_basedir, "Ccc/")
+	third_ext_dir = norm_path_join(ext_basedir, "Eee/")
+
+	# asf-docs
+	first_ext_uuid  = "01234567-89ab-cdef-0123-456789abcdef"
+	# append
+	second_ext_uuid = "00000000-0000-0000-0000-000000000000"
+	# no docs
+	third_ext_uuid  = "ffffffff-ffff-ffff-ffff-ffffffffffff"
+
+	device_map = norm_path_join(ext_basedir, "devmap.xml")
+	content_xml = "content.xml"
+
+	def _assertIsInstance(self, test_object, test_class):
+		"""
+		Compatibility for Python 2.6. Remove when 2.6 support is not needed.
+		"""
+		self.assertTrue(isinstance(test_object, test_class))
+
+	def setUp(self):
+		class DummyLog(object):
+			def info(self, log_msg):
+				pass
+
+		class DummyRuntime(object):
+			log = DummyLog()
+			version_postfix = ""
+
+		# Extension manager is needed to test interaction between extensions
+		self.extmgr = FdkExtensionManager(DummyRuntime(), self.ext_basedir)
+
+		# Load XSDs, device map, set content XML filename
+		self.extmgr.load_schemas(self.xml_schema_dir)
+		self.extmgr.load_device_map(self.device_map)
+		ConfigDB.xml_filename = self.content_xml
+
+		# Initialize extension register
+		ext_dirs = self.extmgr.scan_for_extensions()
+		self.extmgr.load_and_register_extensions(ext_dirs)
+
+		# Load the extensions
+		self.first_ext = self.extmgr.request_extension(self.first_ext_uuid)
+		self.second_ext = self.extmgr.request_extension(self.second_ext_uuid)
+		self.third_ext = self.extmgr.request_extension(self.third_ext_uuid)
+
+	def tearDown(self):
+		# The extension manager changes directory, revert here
+		os.chdir(self.old_dir)
+
+
+	# Test extension with "asf-docs" doc scheme
+	def test_online_asf_docs_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		# Figure out the directory of the module
+		expected_help_url = "http://bbb.aaa.com/element_help/0.1.2/some_doc_arch/html/group__bbb__module__help.html"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_online_asf_docs_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		# Figure out the directory of the module
+		expected_guide_url = "http://bbb.aaa.com/element_guide/0.1.2/some_doc_arch/html/bbb_module_guide.html"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_asf_docs_module_help(self):
+		pass
+
+	def test_offline_asf_docs_module_guide(self):
+		pass
+
+
+	# Test extension with "append" doc scheme
+	def test_online_append_module_help(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		# Figure out the directory of the module
+		expected_help_url = "http://ccc.c.com/module-help-pages/driver/ccc_module_help.html"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_online_append_module_guide(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		# Figure out the directory of the module
+		expected_guide_url = "http://ccc.c.com/module-guide-pages/driver/ccc_module_guide.html"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_append_module_help(self):
+		pass
+
+	def test_offline_append_module_guide(self):
+		pass
+
+
+	# Test extensions with defined doc scheme, but URL override in asf.xml
+	def test_fixed_online_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		# Figure out the directory of the module
+		expected_help_url = "http://fixed_module_help_page.com/"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_fixed_online_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		# Figure out the directory of the module
+		expected_guide_url = "http://fixed_module_guide_page.com/"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_fixed_offine_module_help(self):
+		pass
+
+	def test_fixed_offine_module_guide(self):
+		pass
+
+
+	# Test extension with no doc scheme
+	def test_online_missing_module_help_and_guide(self):
+		db = self.third_ext.get_database()
+		no_doc_module = db.lookup_by_id("eee.module_undoc")
+
+		# Figure out the directory of the module
+		expected_help_url = None
+		expected_guide_url = None
+
+		help_url = no_doc_module.get_help_url("some_doc_arch")
+		guide_url = no_doc_module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_online_fixed_module_help_and_guide(self):
+		db = self.third_ext.get_database()
+		doc_module = db.lookup_by_id("eee.module_doc")
+
+		# Figure out the directory of the module
+		expected_help_url = "http://module_help_page.com/"
+		expected_guide_url = "http://module_guide_page.com/"
+
+		help_url = doc_module.get_help_url("some_doc_arch")
+		guide_url = doc_module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_missing_module_help(self):
+		pass
+
+	def test_offline_fixed_module_help(self):
+		pass

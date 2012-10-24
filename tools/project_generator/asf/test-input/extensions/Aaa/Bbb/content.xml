@@ -5,4 +5,16 @@
 	</project>
 	<board id="bbb.board" caption="" mcu="atxmega128a1">
 	</board>
+	<module type="driver" id="bbb.module" caption="">
+		<device-support value="xmega"/>
+		<build type="doxygen-entry-point" value="bbb_module_help"/>
+		<build type="doxygen-quick-start" value="bbb_module_guide"/>
+	</module>
+	<module type="driver" id="bbb.module_fixed_help" caption="">
+		<device-support value="xmega"/>
+		<build type="online-help" subtype="module-help-page" value="http://fixed_module_help_page.com/"/>
+		<build type="online-help" subtype="module-guide-page" value="http://fixed_module_guide_page.com/"/>
+		<build type="offline-help" subtype="module-help-page" value="doc/fixed_module_help.html"/>
+		<build type="offline-help" subtype="module-guide-page" value="doc/fixed_module_guide.html"/>
+	</module>
 </asf>
