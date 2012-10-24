@@ -1865,10 +1865,24 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		self.assertEqual(guide_url, expected_guide_url)
 
 	def test_offline_asf_docs_module_help(self):
-		pass
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		# Figure out the directory of the module
+		expected_help_path = "Aaa\\Bbb\\docs\\help\\some_doc_arch\\html\\group__bbb__module__help.html"
+		help_path = module.get_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
 
 	def test_offline_asf_docs_module_guide(self):
-		pass
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		# Figure out the directory of the module
+		expected_guide_path = "Aaa\\Bbb\\docs\\guides\\some_doc_arch\\html\\bbb_module_guide.html"
+		guide_path = module.get_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
 
 
 	# Test extension with "append" doc scheme
@@ -1893,10 +1907,24 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		self.assertEqual(guide_url, expected_guide_url)
 
 	def test_offline_append_module_help(self):
-		pass
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		# Figure out the directory of the module
+		expected_help_path = "Ccc\\docs\\help-pagesdriver\\ccc_module_help.html"
+		help_path = module.get_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
 
 	def test_offline_append_module_guide(self):
-		pass
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		# Figure out the directory of the module
+		expected_guide_path = "Ccc\\docs\\guide-pagesdriver\\ccc_module_guide.html"
+		guide_path = module.get_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
 
 
 	# Test extensions with defined doc scheme, but URL override in asf.xml
@@ -1921,10 +1949,24 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		self.assertEqual(guide_url, expected_guide_url)
 
 	def test_fixed_offine_module_help(self):
-		pass
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		# Figure out the directory of the module
+		expected_help_path = "Aaa\\Bbb\\doc\\fixed_module_help.html"
+		help_path = module.get_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
 
 	def test_fixed_offine_module_guide(self):
-		pass
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		# Figure out the directory of the module
+		expected_guide_path = "Aaa\\Bbb\\doc\\fixed_module_guide.html"
+		guide_path = module.get_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
 
 
 	# Test extension with no doc scheme
@@ -1957,7 +1999,29 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		self.assertEqual(guide_url, expected_guide_url)
 
 	def test_offline_missing_module_help(self):
-		pass
+		db = self.third_ext.get_database()
+		no_doc_module = db.lookup_by_id("eee.module_undoc")
+
+		# Figure out the directory of the module
+		expected_help_path = None
+		expected_guide_path = None
+
+		help_path = no_doc_module.get_help_path("some_doc_arch")
+		guide_path = no_doc_module.get_quick_start_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+		self.assertEqual(guide_path, expected_guide_path)
 
 	def test_offline_fixed_module_help(self):
-		pass
+		db = self.third_ext.get_database()
+		doc_module = db.lookup_by_id("eee.module_doc")
+
+		# Figure out the directory of the module
+		expected_help_path = "Eee\\docs\\module_help_page.html"
+		expected_guide_path = "Eee\\docs\\module_guide_page.html"
+
+		help_path = doc_module.get_help_path("some_doc_arch")
+		guide_path = doc_module.get_quick_start_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+		self.assertEqual(guide_path, expected_guide_path)
