@@ -465,9 +465,9 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/index-page')
 		if page_e is not None:
 			caption = page_e.get('caption')
-			path = page_e.get('path')
+			path = os.path.normpath(page_e.get('path'))
 
-		return (caption, os.path.normpath(path))
+		return (caption, path)
 
 
 	def _get_offline_element_doc_scheme_and_path(self, tag):
@@ -481,9 +481,9 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/%s' % tag)
 		if page_e is not None:
 			scheme = page_e.get('scheme')
-			path = page_e.get('path')
+			path = os.path.normpath(page_e.get('path'))
 
-		return (scheme, os.path.normpath(path))
+		return (scheme, path)
 
 
 	@property
