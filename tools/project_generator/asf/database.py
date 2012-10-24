@@ -1773,7 +1773,7 @@ class ConfigDB(object):
 			try:
 				(scheme, url) = self.extension.online_module_help_scheme_and_url
 			except AttributeError:
-				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+				raise NotFoundError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
 
 		return (scheme, url)
 
@@ -1789,7 +1789,7 @@ class ConfigDB(object):
 			try:
 				(scheme, url) = self.extension.online_module_guide_scheme_and_url
 			except AttributeError:
-				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+				raise NotFoundError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
 
 		return (scheme, url)
 
