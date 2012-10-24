@@ -1729,7 +1729,7 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEquals(self.ext.author_website, "http://www.aaa.com/")
 		self.assertEquals(self.ext.author_email, "support@aaa.com")
 
-	def test_help_attributes(self):
+	def test_help_attributes_for_asf_docs(self):
 		expected_scheme = "asf-docs"
 
 		expected_online_help_caption = "Bbb help"
@@ -1749,6 +1749,24 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEquals(self.ext.offline_help_index_caption_and_path, (expected_offline_help_caption, expected_offline_help_index))
 		self.assertEquals(self.ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
 		self.assertEquals(self.ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
+
+	def test_help_attributes_for_append(self):
+		alt_ext_db = self.ext.get_external_database(self.alt_ext_eid)
+		alt_ext = alt_ext_db.extension
+
+		expected_scheme = "append"
+
+		expected_online_module_help = "http://ccc.c.com/module-help-pages/"
+		expected_online_module_guide = "http://ccc.c.com/module-guide-pages/"
+
+		self.assertEquals(alt_ext.online_module_help_scheme_and_url, (expected_scheme, expected_online_module_help))
+		self.assertEquals(alt_ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
+
+		expected_offline_module_help = os.path.normpath("docs/help-pages/")
+		expected_offline_module_guide = os.path.normpath("docs/guide-pages/")
+
+		self.assertEquals(alt_ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
+		self.assertEquals(alt_ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
 
 	def test_external_prerequisites(self):
 		expected_prerequisite_ids = ["bbb.board", "ccc.application"]
