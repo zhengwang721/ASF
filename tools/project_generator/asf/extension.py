@@ -20,6 +20,7 @@ class FdkExtension(object):
 
 	expand_to_manager_root_path = False
 
+	doc_schemes = ['asf-docs', 'append']
 	asf_docs_url_postfix = '$VER$/$MODULE$/html/'
 	asf_docs_path_postfix = os.path.normpath('$MODULE$/html/')
 
@@ -424,8 +425,8 @@ class FdkExtension(object):
 		if url is not None:
 			if scheme == 'asf-docs':
 				url =  url.rstrip('/') + '/' + self.asf_docs_url_postfix
-			else:
-				raise DbError("Unknown scheme `%s' for online element help in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module help in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, url)
 
@@ -446,8 +447,8 @@ class FdkExtension(object):
 		if url is not None:
 			if scheme == 'asf-docs':
 				url =  url.rstrip('/') + '/' + self.asf_docs_url_postfix
-			else:
-				raise DbError("Unknown scheme `%s' for online element guide in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module guide in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, url)
 
@@ -501,8 +502,8 @@ class FdkExtension(object):
 		if path is not None:
 			if scheme == 'asf-docs':
 				path = os.path.join(path, self.asf_docs_path_postfix)
-			else:
-				raise DbError("Unknown scheme `%s' for online element help in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module help in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, path)
 
@@ -523,8 +524,8 @@ class FdkExtension(object):
 		if path is not None:
 			if scheme == 'asf-docs':
 				path = os.path.join(path, self.asf_docs_path_postfix)
-			else:
-				raise DbError("Unknown scheme `%s' for online element guide in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module guide in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, path)
 
