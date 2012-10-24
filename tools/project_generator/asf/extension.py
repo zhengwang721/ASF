@@ -196,6 +196,17 @@ class FdkExtension(object):
 		return os.path.relpath(self.root_path, self.manager.root_path)
 
 
+	def _normalize_path(self, path):
+		"""
+		Prefixes the supplied path with extension's relative path from
+		the extension manager's root directory, then normalizes the
+		path.
+		"""
+		if self.expand_to_manager_root_path:
+			path = os.path.join(self.relative_root_path, path)
+		return os.path.normpath(path)
+
+
 	@property
 	def root_xml_path(self):
 		"""
@@ -311,7 +322,7 @@ class FdkExtension(object):
 		Return the path to the icon image.
 		"""
 		e = self.element.find('./icon-image')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -320,7 +331,7 @@ class FdkExtension(object):
 		Return the path to the preview image.
 		"""
 		e = self.element.find('./preview-image')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -342,7 +353,7 @@ class FdkExtension(object):
 		Return the path to the license file.
 		"""
 		e = self.element.find('./license')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -465,7 +476,7 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/index-page')
 		if page_e is not None:
 			caption = page_e.get('caption')
-			path = os.path.normpath(page_e.get('path'))
+			path = self._normalize_path(page_e.get('path'))
 
 		return (caption, path)
 
@@ -481,7 +492,7 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/%s' % tag)
 		if page_e is not None:
 			scheme = page_e.get('scheme')
-			path = os.path.normpath(page_e.get('path'))
+			path = self._normalize_path(page_e.get('path'))
 
 		return (scheme, path)
 
