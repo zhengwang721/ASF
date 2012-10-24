@@ -1708,9 +1708,11 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEqual(self.ext.version, "0.1.2")
 
 	def test_file_attributes(self):
-		self.assertEquals(self.ext.icon_image, os.path.normpath("docs/bbb_icon.png"))
-		self.assertEquals(self.ext.preview_image, os.path.normpath("docs/bbb_preview.jpg"))
-		self.assertEquals(self.ext.license, os.path.normpath("docs/aaa_license.txt"))
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		self.assertEquals(self.ext.icon_image, os.path.normpath("Aaa/Bbb/docs/bbb_icon.png"))
+		self.assertEquals(self.ext.preview_image, os.path.normpath("Aaa/Bbb/docs/bbb_preview.jpg"))
+		self.assertEquals(self.ext.license, os.path.normpath("Aaa/Bbb/docs/aaa_license.txt"))
+
 		self.assertEquals(self.ext.license_caption, "Aaa license")
 		self.assertEquals(self.ext.release_notes, "http://bbb.aaa.com/release-notes/")
 		self.assertEquals(self.ext.release_notes_caption, "Bbb release notes")
@@ -1742,9 +1744,10 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEquals(self.ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
 
 		expected_offline_help_caption = "Bbb help doc"
-		expected_offline_help_index = os.path.normpath("docs/help.pdf")
-		expected_offline_module_help = os.path.normpath("docs/help/$MODULE$/html/")
-		expected_offline_module_guide = os.path.normpath("docs/guides/$MODULE$/html/")
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		expected_offline_help_index = os.path.normpath("Aaa/Bbb/docs/help.pdf")
+		expected_offline_module_help = os.path.normpath("Aaa/Bbb/docs/help/$MODULE$/html/")
+		expected_offline_module_guide = os.path.normpath("Aaa/Bbb/docs/guides/$MODULE$/html/")
 
 		self.assertEquals(self.ext.offline_help_index_caption_and_path, (expected_offline_help_caption, expected_offline_help_index))
 		self.assertEquals(self.ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
@@ -1762,8 +1765,9 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEquals(alt_ext.online_module_help_scheme_and_url, (expected_scheme, expected_online_module_help))
 		self.assertEquals(alt_ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
 
-		expected_offline_module_help = os.path.normpath("docs/help-pages/")
-		expected_offline_module_guide = os.path.normpath("docs/guide-pages/")
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		expected_offline_module_help = os.path.normpath("Ccc/docs/help-pages/")
+		expected_offline_module_guide = os.path.normpath("Ccc/docs/guide-pages/")
 
 		self.assertEquals(alt_ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
 		self.assertEquals(alt_ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
