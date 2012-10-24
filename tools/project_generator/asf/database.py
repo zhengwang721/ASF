@@ -869,6 +869,75 @@ class ConfigItem(object):
 
 		return url
 
+	def get_help_path(self, module_dir):
+		"""
+		"""
+		# Try to return hardcoded path from the module first
+		try:
+			return self.get_build(BuildOfflineModuleHelp, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
+
+		# Get the scheme and path directly from extension
+		(scheme, path) = self.extension.offline_module_help_scheme_and_path
+
+		if scheme == 'asf-docs':
+			uri = self.get_help_uri()
+
+			if not uri:
+				path = None
+			else:
+				path = path.replace("$MODULE$", module_dir)
+				path = os.path.join(path, os.path.normpath(uri))
+
+		elif scheme == 'append':
+			# Try to find path appendage in module
+			try:
+				uri = self.get_build(BuildOnlineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
+			# No appendage found: there is no help.
+			except IndexError:
+				path = None
+			# Appendage found: construct path
+			else:
+				path = os.path.normpath(path + uri)
+
+		return path
+
+	def get_quick_start_path(self, doc_arch):
+		"""
+		"""
+		# Try to return hardcoded path from the module first
+		try:
+			return self.get_build(BuildOfflineModuleGuide, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
+
+		# Get the scheme and path directly from extension
+		(scheme, path) = self.extension.offline_module_guide_scheme_and_path
+
+		if scheme == 'asf-docs':
+			uri = self.get_quick_start_uri()
+
+			if not uri:
+				path = None
+			else:
+				path = path.replace("$MODULE$", doc_arch)
+				path = os.path.join(path, os.path.normpath(uri))
+
+		elif scheme == 'append':
+			# Try to find path appendage in module
+			try:
+				uri = self.get_build(BuildOnlineModuleGuideAppend, toolchain=None, recursive=False).pop(0)
+			# No appendage found: there is no help.
+			except IndexError:
+				path = None
+			# Appendage found: construct path
+			else:
+				path = os.path.normpath(path + uri)
+
+		return path
+
+
 class ModuleSelector(ConfigItem):
 	tag = "*"
 
