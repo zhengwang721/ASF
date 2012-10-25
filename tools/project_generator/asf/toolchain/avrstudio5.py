@@ -946,10 +946,11 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_documentation_help_url(self, project):
 		"""
-		Get the documentation URL given a project object.
+		Get the documentation URL given a project object, if found.
+		If no URL is found, an empty string is returned.
 		"""
 
-		return project.get_help_url(project.id)
+		return project.get_help_url(project.id) or ""
 
 
 	def _generate_framework_config_tree(self):
