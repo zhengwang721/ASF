@@ -368,12 +368,12 @@ void wtk_radio_button_size_hint(struct win_point *size, const char *caption)
 	Assert(caption);
 
 	gfx_get_string_bounding_box(caption, &sysfont, &size->x, &size->y);
-	
+
 	/* Add two pixel padding to ensure the outer radio button circle is not
 	 * overlapped when multiple widgets are placed underneath each other */
 	size->x += WTK_RADIOBUTTON_CAPTION_X + 2;
 	size->y += WTK_RADIOBUTTON_CAPTION_Y + 2;
-	
+
 	/* Clamp Y height to minimum radio button size */
 	if (size->y < (WTK_RADIOBUTTON_BUTTON_Y + WTK_RADIOBUTTON_RADIUS + 2)) {
 		size->y = WTK_RADIOBUTTON_BUTTON_Y + WTK_RADIOBUTTON_RADIUS + 2;
@@ -447,11 +447,13 @@ struct wtk_radio_button *wtk_radio_button_create(struct win_window *parent,
 		goto outofmem_container;
 	}
 
-	/* Add ourselves to the radio group, take over selection if required. */
-	if (selected) {
+	/* Select the radio button in the group if either no radio button is
+	 * currently selected (empty group), or the user has requested it takes
+	 * over the selection */
+	if (selected || (group->selected == NULL)) {
 		wtk_radio_button_select(radio_button);
 	}
-	
+
 	/* Make sure we haven't filled up the group reference count, and
 	 * increment. */
 	Assert(group->num_references < (wtk_radio_group_size_t)-1L);
@@ -479,7 +481,7 @@ outofmem_radio_button:
 struct wtk_radio_button *wtk_radio_group_get_selected(struct wtk_radio_group *group)
 {
 	Assert(group);
-	
+
 	return group->selected;
 }
 
