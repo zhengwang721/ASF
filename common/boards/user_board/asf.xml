@@ -77,4 +77,8 @@
 		<require idref="common.boards.user_board.common"/>
 	</board>
 
+	<board id="board.user_board.sam4l" caption="User Board" mcu="unspecified-sam4l">
+		<require idref="common.boards.user_board.common"/>
+	</board>
+
 </asf>
