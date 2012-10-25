@@ -1848,7 +1848,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		# Figure out the directory of the module
 		expected_help_url = "http://bbb.aaa.com/element_help/0.1.2/some_doc_arch/html/group__bbb__module__help.html"
 		help_url = module.get_help_url("some_doc_arch")
 
@@ -1858,7 +1857,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		# Figure out the directory of the module
 		expected_guide_url = "http://bbb.aaa.com/element_guide/0.1.2/some_doc_arch/html/bbb_module_guide.html"
 		guide_url = module.get_quick_start_url("some_doc_arch")
 
@@ -1868,7 +1866,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		# Figure out the directory of the module
 		expected_help_path = "Aaa\\Bbb\\docs\\help\\some_doc_arch\\html\\group__bbb__module__help.html"
 		help_path = module.get_help_path("some_doc_arch")
 
@@ -1878,7 +1875,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		# Figure out the directory of the module
 		expected_guide_path = "Aaa\\Bbb\\docs\\guides\\some_doc_arch\\html\\bbb_module_guide.html"
 		guide_path = module.get_quick_start_path("some_doc_arch")
 
@@ -1890,7 +1886,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		# Figure out the directory of the module
 		expected_help_url = "http://ccc.c.com/module-help-pages/driver/ccc_module_help.html"
 		help_url = module.get_help_url("some_doc_arch")
 
@@ -1900,7 +1895,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		# Figure out the directory of the module
 		expected_guide_url = "http://ccc.c.com/module-guide-pages/driver/ccc_module_guide.html"
 		guide_url = module.get_quick_start_url("some_doc_arch")
 
@@ -1910,7 +1904,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		# Figure out the directory of the module
 		expected_help_path = "Ccc\\docs\\help-pagesdriver\\ccc_module_help.html"
 		help_path = module.get_help_path("some_doc_arch")
 
@@ -1920,7 +1913,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		# Figure out the directory of the module
 		expected_guide_path = "Ccc\\docs\\guide-pagesdriver\\ccc_module_guide.html"
 		guide_path = module.get_quick_start_path("some_doc_arch")
 
@@ -1932,7 +1924,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		# Figure out the directory of the module
 		expected_help_url = "http://fixed_module_help_page.com/"
 		help_url = module.get_help_url("some_doc_arch")
 
@@ -1942,7 +1933,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		# Figure out the directory of the module
 		expected_guide_url = "http://fixed_module_guide_page.com/"
 		guide_url = module.get_quick_start_url("some_doc_arch")
 
@@ -1952,7 +1942,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		# Figure out the directory of the module
 		expected_help_path = "Aaa\\Bbb\\doc\\fixed_module_help.html"
 		help_path = module.get_help_path("some_doc_arch")
 
@@ -1962,7 +1951,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		# Figure out the directory of the module
 		expected_guide_path = "Aaa\\Bbb\\doc\\fixed_module_guide.html"
 		guide_path = module.get_quick_start_path("some_doc_arch")
 
@@ -1974,7 +1962,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		no_doc_module = db.lookup_by_id("eee.module_undoc")
 
-		# Figure out the directory of the module
 		expected_help_url = None
 		expected_guide_url = None
 
@@ -1988,7 +1975,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		doc_module = db.lookup_by_id("eee.module_doc")
 
-		# Figure out the directory of the module
 		expected_help_url = "http://module_help_page.com/"
 		expected_guide_url = "http://module_guide_page.com/"
 
@@ -2002,7 +1988,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		no_doc_module = db.lookup_by_id("eee.module_undoc")
 
-		# Figure out the directory of the module
 		expected_help_path = None
 		expected_guide_path = None
 
@@ -2016,7 +2001,6 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		doc_module = db.lookup_by_id("eee.module_doc")
 
-		# Figure out the directory of the module
 		expected_help_path = "Eee\\docs\\module_help_page.html"
 		expected_guide_path = "Eee\\docs\\module_guide_page.html"
 
