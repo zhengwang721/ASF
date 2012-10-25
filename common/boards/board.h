@@ -108,6 +108,7 @@ extern "C" {
 #define STK600_RCUC3L3        44  //!< ATUCL3 STK600 board
 #define SAM4L_EK              45  //!< SAM4L-EK board.
 #define STK600_MEGA_RF        46  //!< STK600 MEGA RF EVK board.
+#define XMEGA_C3_XPLAINED     47  //!< ATxmega384C3 Xplained board.	
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -226,6 +227,8 @@ extern "C" {
   #include "stk600/rcuc3l3/stk600_rcuc3l3.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
+#elif BOARD == XMEGA_C3_XPLAINED
+#  include "xmega_c3_xplained/xmega_c3_xplained.h"
 #elif BOARD == AVR_SIMULATOR_UC3
 #  include "avr_simulator_uc3/avr_simulator_uc3.h"
 #elif BOARD == USER_BOARD
