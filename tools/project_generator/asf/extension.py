@@ -20,6 +20,7 @@ class FdkExtension(object):
 
 	expand_to_manager_root_path = False
 
+	doc_schemes = ['asf-docs', 'append']
 	asf_docs_url_postfix = '$VER$/$MODULE$/html/'
 	asf_docs_path_postfix = os.path.normpath('$MODULE$/html/')
 
@@ -195,6 +196,17 @@ class FdkExtension(object):
 		return os.path.relpath(self.root_path, self.manager.root_path)
 
 
+	def _normalize_path(self, path):
+		"""
+		Prefixes the supplied path with extension's relative path from
+		the extension manager's root directory, then normalizes the
+		path.
+		"""
+		if self.expand_to_manager_root_path:
+			path = os.path.join(self.relative_root_path, path)
+		return os.path.normpath(path)
+
+
 	@property
 	def root_xml_path(self):
 		"""
@@ -310,7 +322,7 @@ class FdkExtension(object):
 		Return the path to the icon image.
 		"""
 		e = self.element.find('./icon-image')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -319,7 +331,7 @@ class FdkExtension(object):
 		Return the path to the preview image.
 		"""
 		e = self.element.find('./preview-image')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -341,7 +353,7 @@ class FdkExtension(object):
 		Return the path to the license file.
 		"""
 		e = self.element.find('./license')
-		return os.path.normpath(e.get('path'))
+		return self._normalize_path(e.get('path'))
 
 
 	@property
@@ -409,45 +421,45 @@ class FdkExtension(object):
 
 
 	@property
-	def online_element_help_scheme_and_url(self):
+	def online_module_help_scheme_and_url(self):
 		"""
 		Return a tuple with the scheme and URL (processed according to
-		the scheme) to the online element-specific help.
+		the scheme) to the online module-specific help.
 
 		For scheme == asf-docs, $VER$/$MODULE$/html/ is appended to the
 		base URL.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, url) = self._get_online_element_doc_scheme_and_url('element-page')
+		(scheme, url) = self._get_online_element_doc_scheme_and_url('module-help-page')
 
 		if url is not None:
 			if scheme == 'asf-docs':
 				url =  url.rstrip('/') + '/' + self.asf_docs_url_postfix
-			else:
-				raise DbError("Unknown scheme `%s' for online element help in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module help in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, url)
 
 
 	@property
-	def online_element_guide_scheme_and_url(self):
+	def online_module_guide_scheme_and_url(self):
 		"""
 		Return a tuple with the scheme and URL (processed according to
-		the scheme) to the online element-specific guides.
+		the scheme) to the online module-specific guides.
 
 		For scheme == asf-docs, $VER$/$MODULE$/html/ is appended to the
 		base URL.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, url) = self._get_online_element_doc_scheme_and_url('element-guide-page')
+		(scheme, url) = self._get_online_element_doc_scheme_and_url('module-guide-page')
 
 		if url is not None:
 			if scheme == 'asf-docs':
 				url =  url.rstrip('/') + '/' + self.asf_docs_url_postfix
-			else:
-				raise DbError("Unknown scheme `%s' for online element guide in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module guide in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, url)
 
@@ -464,9 +476,9 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/index-page')
 		if page_e is not None:
 			caption = page_e.get('caption')
-			path = page_e.get('path')
+			path = self._normalize_path(page_e.get('path'))
 
-		return (caption, os.path.normpath(path))
+		return (caption, path)
 
 
 	def _get_offline_element_doc_scheme_and_path(self, tag):
@@ -480,51 +492,51 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/%s' % tag)
 		if page_e is not None:
 			scheme = page_e.get('scheme')
-			path = page_e.get('path')
-
-		return (scheme, os.path.normpath(path))
-
-
-	@property
-	def offline_element_help_scheme_and_path(self):
-		"""
-		Return a tuple with the scheme and path (processed according to
-		the scheme) to the offline element-specific help.
-
-		For scheme == asf-docs, $MODULE$\html\ is appended to the
-		path.
-
-		If the scheme is unknown, a DbError is raised.
-		"""
-		(scheme, path) = self._get_offline_element_doc_scheme_and_path('element-page')
-
-		if path is not None:
-			if scheme == 'asf-docs':
-				path = os.path.join(path, self.asf_docs_path_postfix)
-			else:
-				raise DbError("Unknown scheme `%s' for online element help in %s" % (scheme, self.root_xml_path))
+			path = self._normalize_path(page_e.get('path'))
 
 		return (scheme, path)
 
 
 	@property
-	def offline_element_guide_scheme_and_path(self):
+	def offline_module_help_scheme_and_path(self):
 		"""
 		Return a tuple with the scheme and path (processed according to
-		the scheme) to the offline element-specific guides.
+		the scheme) to the offline module-specific help.
 
 		For scheme == asf-docs, $MODULE$\html\ is appended to the
 		path.
 
 		If the scheme is unknown, a DbError is raised.
 		"""
-		(scheme, path) = self._get_offline_element_doc_scheme_and_path('element-guide-page')
+		(scheme, path) = self._get_offline_element_doc_scheme_and_path('module-help-page')
 
 		if path is not None:
 			if scheme == 'asf-docs':
 				path = os.path.join(path, self.asf_docs_path_postfix)
-			else:
-				raise DbError("Unknown scheme `%s' for online element guide in %s" % (scheme, self.root_xml_path))
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module help in %s" % (scheme, self.root_xml_path))
+
+		return (scheme, path)
+
+
+	@property
+	def offline_module_guide_scheme_and_path(self):
+		"""
+		Return a tuple with the scheme and path (processed according to
+		the scheme) to the offline module-specific guides.
+
+		For scheme == asf-docs, $MODULE$\html\ is appended to the
+		path.
+
+		If the scheme is unknown, a DbError is raised.
+		"""
+		(scheme, path) = self._get_offline_element_doc_scheme_and_path('module-guide-page')
+
+		if path is not None:
+			if scheme == 'asf-docs':
+				path = os.path.join(path, self.asf_docs_path_postfix)
+			elif scheme not in self.doc_schemes:
+				raise DbError("Unknown scheme `%s' for online module guide in %s" % (scheme, self.root_xml_path))
 
 		return (scheme, path)
 

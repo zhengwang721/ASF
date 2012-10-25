@@ -757,48 +757,186 @@ class ConfigItem(object):
 	def get_help_url(self, module_dir, custom_version = None):
 		"""
 		Return the help URL for this item.
+
+		The procedure for this is:
+		1) try to fetch the online-help / module-help URL from the module,
+		return it if found
+
+		2) try to fetch the online-help / module-help scheme and base URL
+		from the extension, and then:
+
+		3a) if the scheme is "asf-docs", construct the URL via string
+		replacement and return the result
+
+		3b) if the scheme is "append", try to fetch the online-help /
+		module-help-append from the module, append it to the base URL from
+		the extension and return the result
+
+		4) if no documentation location could be determined, return None
 		"""
-		if not custom_version:
-			# Use framework version if no version provided
-			custom_version = self.db.get_framework_version_number()
+		# Try to return hardcoded URL from the module first
+		try:
+			return self.get_build(BuildOnlineModuleHelp, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
 
-		uri = self.get_help_uri()
-		if not uri:
-			# No documentation available for this module
-			return None
+		# Construct module help URL according to the scheme
+		try:
+			(scheme, url) = self.db.get_help_documentation_server()
+		# No server found: there is no help.
+		except NotFoundError:
+			url = None
+		# Server found: construct URL based on the scheme
+		else:
+			# ASF documentation style
+			if scheme == 'asf-docs':
+				if not custom_version:
+					# Use framework version if no version provided
+					custom_version = self.db.get_framework_version_number()
 
-		(scheme, url) = self.db.get_help_documentation_server()
+				# Construct the URL
+				url = url.replace("$VER$", urllib.quote(custom_version))
+				url = url.replace("$MODULE$", urllib.quote(module_dir))
+				uri = self.get_help_uri()
 
-		# TODO: handle schemes here
-		url = url + uri
+				if uri:
+					url += uri
+				else:
+					url = None
 
-		url = url.replace("$VER$", urllib.quote(custom_version))
-		url = url.replace("$MODULE$", urllib.quote(module_dir))
+			# URL appending
+			elif scheme == 'append':
+				# Try to find URL appendage in module
+				try:
+					uri = self.get_build(BuildOnlineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
+				# No appendage found: there is no help.
+				except IndexError:
+					url = None
+				# Appendage found: construct URL
+				else:
+					url += uri
 
 		return url
 
 	def get_quick_start_url(self, doc_arch, custom_version = None):
 		"""
 		Return the quick start URL for this item.
+
+		This behaves in the same way as get_help_url, except it operates
+		on different types.
 		"""
-		if not custom_version:
-			# Use framework version if no version provided
-			custom_version = self.db.get_framework_version_number()
+		# Try to return hardcoded URL from the module first
+		try:
+			return self.get_build(BuildOnlineModuleGuide, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
 
-		uri = self.get_quick_start_uri()
-		if not uri:
-			# No quick start available for this module
-			return None
+		# Construct module help URL according to the scheme
+		try:
+			(scheme, url) = self.db.get_guide_documentation_server()
+		# No server found: there is no help.
+		except NotFoundError:
+			url = None
+		# Server found: construct URL based on the scheme
+		else:
+			# ASF documentation style
+			if scheme == 'asf-docs':
+				if not custom_version:
+					# Use framework version if no version provided
+					custom_version = self.db.get_framework_version_number()
 
-		(scheme, url) = self.db.get_guide_documentation_server()
+				# Construct the URL
+				url = url.replace("$VER$", urllib.quote(custom_version))
+				url = url.replace("$MODULE$", urllib.quote(doc_arch))
+				uri = self.get_quick_start_uri()
 
-		# TODO: handle schemes here
-		url = url + uri
+				if uri:
+					url += uri
+				else:
+					url = None
 
-		url = url.replace("$VER$", urllib.quote(custom_version))
-		url = url.replace("$MODULE$", urllib.quote(doc_arch))
+			# URL appending
+			elif scheme == 'append':
+				# Try to find URL appendage in module
+				try:
+					uri = self.get_build(BuildOnlineModuleGuideAppend, toolchain=None, recursive=False).pop(0)
+				# No appendage found: there is no help.
+				except IndexError:
+					url = None
+				# Appendage found: construct URL
+				else:
+					url += uri
 
 		return url
+
+	def get_help_path(self, module_dir):
+		"""
+		"""
+		# Try to return hardcoded path from the module first
+		try:
+			return self.get_build(BuildOfflineModuleHelp, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
+
+		# Get the scheme and path directly from extension
+		(scheme, path) = self.extension.offline_module_help_scheme_and_path
+
+		if scheme == 'asf-docs':
+			uri = self.get_help_uri()
+
+			if not uri:
+				path = None
+			else:
+				path = path.replace("$MODULE$", module_dir)
+				path = os.path.join(path, os.path.normpath(uri))
+
+		elif scheme == 'append':
+			# Try to find path appendage in module
+			try:
+				uri = self.get_build(BuildOnlineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
+			# No appendage found: there is no help.
+			except IndexError:
+				path = None
+			# Appendage found: construct path
+			else:
+				path = os.path.normpath(path + uri)
+
+		return path
+
+	def get_quick_start_path(self, doc_arch):
+		"""
+		"""
+		# Try to return hardcoded path from the module first
+		try:
+			return self.get_build(BuildOfflineModuleGuide, toolchain=None, recursive=False).pop(0)
+		except IndexError as e:
+			pass
+
+		# Get the scheme and path directly from extension
+		(scheme, path) = self.extension.offline_module_guide_scheme_and_path
+
+		if scheme == 'asf-docs':
+			uri = self.get_quick_start_uri()
+
+			if not uri:
+				path = None
+			else:
+				path = path.replace("$MODULE$", doc_arch)
+				path = os.path.join(path, os.path.normpath(uri))
+
+		elif scheme == 'append':
+			# Try to find path appendage in module
+			try:
+				uri = self.get_build(BuildOnlineModuleGuideAppend, toolchain=None, recursive=False).pop(0)
+			# No appendage found: there is no help.
+			except IndexError:
+				path = None
+			# Appendage found: construct path
+			else:
+				path = os.path.normpath(path + uri)
+
+		return path
+
 
 class ModuleSelector(ConfigItem):
 	tag = "*"
@@ -1742,9 +1880,9 @@ class ConfigDB(object):
 			(scheme, url) = self.get_documentation_server()
 		except ConfigError:
 			try:
-				(scheme, url) = self.extension.online_element_help_scheme_and_url
+				(scheme, url) = self.extension.online_module_help_scheme_and_url
 			except AttributeError:
-				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+				raise NotFoundError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
 
 		return (scheme, url)
 
@@ -1758,9 +1896,9 @@ class ConfigDB(object):
 			(scheme, url) = self.get_documentation_server()
 		except ConfigError:
 			try:
-				(scheme, url) = self.extension.online_element_guide_scheme_and_url
+				(scheme, url) = self.extension.online_module_guide_scheme_and_url
 			except AttributeError:
-				raise ConfigError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
+				raise NotFoundError("No custom doc server or extension set for DB at `%s'" % os.path.abspath(self.root_path))
 
 		return (scheme, url)
 
