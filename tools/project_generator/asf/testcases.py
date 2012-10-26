@@ -100,8 +100,6 @@ class SetupTestCase(unittest.TestCase):
 		self.runtime.setup_log(level)
 		self.runtime.log.info("test")
 
-		ConfigDB.load_schema(self.xml_validation)
-
 		self.db = ConfigDB(self.runtime, extension=None)
 
 	def tearDown(self):
