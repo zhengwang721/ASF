@@ -885,7 +885,7 @@ class ConfigItem(object):
 
 		return url
 
-	def get_help_path(self, module_dir):
+	def get_offline_help_path(self, module_dir):
 		"""
 		Return the path to offline help for this item.
 
@@ -926,7 +926,7 @@ class ConfigItem(object):
 		elif scheme == 'append':
 			# Try to find path appendage in module
 			try:
-				uri = self.get_build(BuildOnlineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
+				uri = self.get_build(BuildOfflineModuleHelpAppend, toolchain=None, recursive=False).pop(0)
 			# No appendage found: there is no help.
 			except IndexError:
 				path = None
@@ -936,7 +936,7 @@ class ConfigItem(object):
 
 		return path
 
-	def get_quick_start_path(self, doc_arch):
+	def get_offline_quick_start_path(self, doc_arch):
 		"""
 		Return the path to offline quick start guide for this item.
 
@@ -973,7 +973,7 @@ class ConfigItem(object):
 		elif scheme == 'append':
 			# Try to find path appendage in module
 			try:
-				uri = self.get_build(BuildOnlineModuleGuideAppend, toolchain=None, recursive=False).pop(0)
+				uri = self.get_build(BuildOfflineModuleGuideAppend, toolchain=None, recursive=False).pop(0)
 			# No appendage found: there is no help.
 			except IndexError:
 				path = None
