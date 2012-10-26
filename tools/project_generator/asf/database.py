@@ -759,20 +759,27 @@ class ConfigItem(object):
 		Return the help URL for this item.
 
 		The procedure for this is:
-		1) try to fetch the online-help / module-help URL from the module,
-		return it if found
+		1) try to fetch a hardcoded online-help / module-help-page URL
+		from the module, return it if found
 
-		2) try to fetch the online-help / module-help scheme and base URL
-		from the extension, and then:
+		2) try to fetch the online-help / module-help-page scheme and
+		base URL from the extension, and then:
 
 		3a) if the scheme is "asf-docs", construct the URL via string
 		replacement and return the result
 
 		3b) if the scheme is "append", try to fetch the online-help /
-		module-help-append from the module, append it to the base URL from
-		the extension and return the result
+		module-help-page-append from the module, append it to the base
+		URL from the extension (see extension.xml) and return the result
 
 		4) if no documentation location could be determined, return None
+
+		The relevant build types and database function are:
+		- BuildOnlineModuleHelp : contains hardcoded  URL
+		- ConfigDB.get_help_documentation_server() : for documentation
+		  scheme and base URL
+		- BuildOnlineModuleHelpAppend : contains appendage to base URL
+		  if scheme is "append"
 		"""
 		# Try to return hardcoded URL from the module first
 		try:
@@ -780,7 +787,7 @@ class ConfigItem(object):
 		except IndexError as e:
 			pass
 
-		# Construct module help URL according to the scheme
+		# Try to get documentation scheme and URL from the database
 		try:
 			(scheme, url) = self.db.get_help_documentation_server()
 		# No server found: there is no help.
@@ -822,8 +829,17 @@ class ConfigItem(object):
 		"""
 		Return the quick start URL for this item.
 
-		This behaves in the same way as get_help_url, except it operates
-		on different types.
+		This behaves in the same way as get_help_url except it operates
+		with different documentation descriptors:
+		online-help / module-guide-page
+		online-help / module-guide-page-append
+
+		The relevant build types and database function are:
+		- BuildOnlineModuleGuide : contains hardcoded  URL
+		- ConfigDB.get_guide_documentation_server() : for documentation
+		  scheme and base URL
+		- BuildOnlineModuleGuideAppend : contains appendage to base URL
+		  if scheme is "append"
 		"""
 		# Try to return hardcoded URL from the module first
 		try:
@@ -871,6 +887,23 @@ class ConfigItem(object):
 
 	def get_help_path(self, module_dir):
 		"""
+		Return the path to offline help for this item.
+
+		This function behaves in much the same way as get_help_url(),
+		except it operates with different documentation descriptors:
+		offline-help / module-help-page
+		offline-help / module-help-page-append
+
+		Documentation location can be hardcoded in a module, and will
+		then be relative to the asf.xml file -- just like other files
+		described in the XML.
+
+		The relevant build types and extension properties are:
+		- BuildOfflineModuleHelp : contains hardcoded path
+		- FdkExtension.offline_module_help_scheme_and_path : for
+		  documentation scheme and base path
+		- BuildOfflineModuleHelpAppend : contains appendage to base path
+		  if scheme is "append"
 		"""
 		# Try to return hardcoded path from the module first
 		try:
@@ -905,6 +938,19 @@ class ConfigItem(object):
 
 	def get_quick_start_path(self, doc_arch):
 		"""
+		Return the path to offline quick start guide for this item.
+
+		This function behaves in the same way as get_offline_help_path()
+		except it operates with documentation descriptors:
+		offline-help / module-guide-page
+		offline-help / module-guide-page-append
+
+		The relevant build types and extension properties are:
+		- BuildOfflineModuleGuide : contains hardcoded path
+		- FdkExtension.offline_module_guide_scheme_and_path : for
+		  documentation scheme and base path
+		- BuildOfflineModuleGuideAppend : contains appendage to base path
+		  if scheme is "append"
 		"""
 		# Try to return hardcoded path from the module first
 		try:
