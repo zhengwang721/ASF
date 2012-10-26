@@ -22,7 +22,7 @@ class FdkExtension(object):
 
 	doc_schemes = ['asf-docs', 'append']
 	asf_docs_url_postfix = '$VER$/$MODULE$/html/'
-	asf_docs_path_postfix = os.path.normpath('$MODULE$/html/')
+	asf_docs_path_postfix = '$MODULE$/html/'.replace('/', os.sep)
 
 	xml_filename = 'extension.xml'
 	# Replace with ConfigDB.xml_filename when asf.xml is renamed to content.xml
@@ -199,12 +199,15 @@ class FdkExtension(object):
 	def _normalize_path(self, path):
 		"""
 		Prefixes the supplied path with extension's relative path from
-		the extension manager's root directory, then normalizes the
-		path.
+		the extension manager's root directory, then replaces all
+		backward and forward slashes to the OS' default path separator.
 		"""
 		if self.expand_to_manager_root_path:
 			path = os.path.join(self.relative_root_path, path)
-		return os.path.normpath(path)
+			# Convert all slashes to OS' default path separator
+			path = path.replace('\\', os.sep)
+			path = path.replace('/', os.sep)
+		return path
 
 
 	@property

@@ -12,7 +12,7 @@
 			<module-guide-page scheme="append" baseurl="http://ccc.c.com/module-guide-pages/"/>
 		</online-help>
 		<offline-help>
-			<module-help-page scheme="append" path="docs/help-pages/"/>
+			<module-help-page scheme="append" path="docs\help-pages\"/>
 			<module-guide-page scheme="append" path="docs/guide-pages/"/>
 		</offline-help>
 		<dependencies>
