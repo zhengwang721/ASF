@@ -85,6 +85,12 @@ extern "C" {
 #define PMC_PCK_1               1 /* PCK1 ID */
 #define PMC_PCK_2               2 /* PCK2 ID */
 
+/** Convert startup time from us to MOSCXTST */
+#define pmc_us_to_moscxtst(startup_us, slowck_freq)         \
+	((startup_us * slowck_freq / 8 / 1000000) < 0x100 ? \
+		(startup_us * slowck_freq / 8 / 1000000) :  \
+		0xFF)
+
 /**
  * \name Master clock (MCK) Source and Prescaler configuration
  *

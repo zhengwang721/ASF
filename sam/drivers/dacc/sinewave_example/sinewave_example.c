@@ -181,12 +181,20 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
-	
+
 	/* Configure console UART. */
+#if !SAM4L
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
+#endif
+	stdio_serial_init((Usart *)CONF_UART, &uart_serial_options);
 }
 
 /**
@@ -202,9 +210,7 @@ static uint32_t get_input_value(uint32_t ul_lower_limit,
 	uint8_t uc_key, str_temp[5] = { 0 };
 
 	while (1) {
-
-		while (uart_read(CONSOLE_UART, &uc_key)) {
-		}
+        usart_serial_getchar((Usart *)CONSOLE_UART, &uc_key);
 
 		if (uc_key == '\n' || uc_key == '\r') {
 			puts("\r");
@@ -324,8 +330,12 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* Enable clock for DACC */
-	pmc_enable_periph_clk(DACC_ID);
-	
+#if SAM4L
+	sysclk_enable_peripheral_clock(DACC_BASE);
+#else
+	sysclk_enable_peripheral_clock(DACC_ID);
+#endif
+
 	/* Reset DACC registers */
 	dacc_reset(DACC_BASE);
 
@@ -333,7 +343,7 @@ int main(void)
 	dacc_set_transfer_mode(DACC_BASE, 0);
 
 	/* Initialize timing, amplitude and frequency */
-#if (SAM3N)
+#if (SAM3N) || (SAM4L)
 	/* Timing:
 	 * startup                - 0x10 (17 clocks)
 	 * internal trigger clock - 0x60 (96 clocks)
@@ -374,8 +384,7 @@ int main(void)
 	display_menu();
 
 	while (1) {
-		while (uart_read(CONSOLE_UART, &uc_key)) {
-		}
+		usart_serial_getchar((Usart *)CONSOLE_UART, &uc_key);
 
 		switch (uc_key) {
 		case '0':

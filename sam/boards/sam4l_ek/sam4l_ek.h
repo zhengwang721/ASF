@@ -244,6 +244,16 @@
 #define RS485_USART_CTS_MUX            MUX_PC08E_USART2_CTS
 // @}
 
+//! \name DACC pins
+// @{
+#define DACC_EXT_TRIG0_PIN             PIN_PB04E_DACC_EXT_TRIG0
+#define DACC_EXT_TRIG0_GPIO            GPIO_PB04E_DACC_EXT_TRIG0
+#define DACC_EXT_TRIG0_MUX             MUX_PB04E_DACC_EXT_TRIG0
+#define DACC_VOUT_PIN                  PIN_PA06A_DACC_VOUT
+#define DACC_VOUT_GPIO                 GPIO_PA06A_DACC_VOUT
+#define DACC_VOUT_MUX                  MUX_PA06A_DACC_VOUT
+// @}
+
 /**
  * @}
  */
