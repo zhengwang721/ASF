@@ -100,8 +100,6 @@ class SetupTestCase(unittest.TestCase):
 		self.runtime.setup_log(level)
 		self.runtime.log.info("test")
 
-		ConfigDB.load_schema(self.xml_validation)
-
 		self.db = ConfigDB(self.runtime, extension=None)
 
 	def tearDown(self):
@@ -1188,6 +1186,11 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.main_db = main_db
 		self.main_ext = main_ext
 
+	def tearDown(self):
+		self.facade = None
+		self.main_db = None
+		self.main_ext = None
+
 	def test_PythonFacade_get_all_mcus(self):
 		expected_result = ['atxmega128a1', 'atxmega128b1', 'at32uc3a0128']
 		expected_result.sort()
@@ -1866,7 +1869,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		module = db.lookup_by_id("bbb.module")
 
 		expected_help_path = "Aaa\\Bbb\\docs\\help\\some_doc_arch\\html\\group__bbb__module__help.html"
-		help_path = module.get_help_path("some_doc_arch")
+		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
 
@@ -1875,7 +1878,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		module = db.lookup_by_id("bbb.module")
 
 		expected_guide_path = "Aaa\\Bbb\\docs\\guides\\some_doc_arch\\html\\bbb_module_guide.html"
-		guide_path = module.get_quick_start_path("some_doc_arch")
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
 
@@ -1885,7 +1888,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_help_url = "http://ccc.c.com/module-help-pages/driver/ccc_module_help.html"
+		expected_help_url = "http://ccc.c.com/module-help-pages/driver/ccc_online_module_help.html"
 		help_url = module.get_help_url("some_doc_arch")
 
 		self.assertEqual(help_url, expected_help_url)
@@ -1894,7 +1897,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_guide_url = "http://ccc.c.com/module-guide-pages/driver/ccc_module_guide.html"
+		expected_guide_url = "http://ccc.c.com/module-guide-pages/driver/ccc_online_module_guide.html"
 		guide_url = module.get_quick_start_url("some_doc_arch")
 
 		self.assertEqual(guide_url, expected_guide_url)
@@ -1903,8 +1906,8 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_help_path = "Ccc\\docs\\help-pagesdriver\\ccc_module_help.html"
-		help_path = module.get_help_path("some_doc_arch")
+		expected_help_path = "Ccc\\docs\\help-pagesdriver\\ccc_offline_module_help.html"
+		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
 
@@ -1912,8 +1915,8 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_guide_path = "Ccc\\docs\\guide-pagesdriver\\ccc_module_guide.html"
-		guide_path = module.get_quick_start_path("some_doc_arch")
+		expected_guide_path = "Ccc\\docs\\guide-pagesdriver\\ccc_offline_module_guide.html"
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
 
@@ -1942,7 +1945,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
 		expected_help_path = "Aaa\\Bbb\\doc\\fixed_module_help.html"
-		help_path = module.get_help_path("some_doc_arch")
+		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
 
@@ -1951,7 +1954,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
 		expected_guide_path = "Aaa\\Bbb\\doc\\fixed_module_guide.html"
-		guide_path = module.get_quick_start_path("some_doc_arch")
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
 
@@ -1990,8 +1993,8 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		expected_help_path = None
 		expected_guide_path = None
 
-		help_path = no_doc_module.get_help_path("some_doc_arch")
-		guide_path = no_doc_module.get_quick_start_path("some_doc_arch")
+		help_path = no_doc_module.get_offline_help_path("some_doc_arch")
+		guide_path = no_doc_module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
 		self.assertEqual(guide_path, expected_guide_path)
@@ -2000,11 +2003,11 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		doc_module = db.lookup_by_id("eee.module_doc")
 
-		expected_help_path = "Eee\\docs\\module_help_page.html"
-		expected_guide_path = "Eee\\docs\\module_guide_page.html"
+		expected_help_path = "Eee\\docs\\module_offline_help_page.html"
+		expected_guide_path = "Eee\\docs\\module_offline_guide_page.html"
 
-		help_path = doc_module.get_help_path("some_doc_arch")
-		guide_path = doc_module.get_quick_start_path("some_doc_arch")
+		help_path = doc_module.get_offline_help_path("some_doc_arch")
+		guide_path = doc_module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
 		self.assertEqual(guide_path, expected_guide_path)
