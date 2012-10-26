@@ -1187,6 +1187,11 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.main_db = main_db
 		self.main_ext = main_ext
 
+	def tearDown(self):
+		self.facade = None
+		self.main_db = None
+		self.main_ext = None
+
 	def test_PythonFacade_get_all_mcus(self):
 		expected_result = ['atxmega128a1', 'atxmega128b1', 'at32uc3a0128']
 		expected_result.sort()
