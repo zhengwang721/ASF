@@ -2350,7 +2350,7 @@ class ConfigDB(object):
 				errors += 1
 				try:
 					parent_id = element.find("..").attrib["id"]
-				except:
+				except KeyError:
 					# This is a device-alias-map, we have 'name', not 'id'
 					parent_id = element.find("..").attrib["name"]
 
