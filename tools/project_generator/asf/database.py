@@ -1711,12 +1711,20 @@ class ConfigDB(object):
 	@staticmethod
 	def load_device_map(xml_file):
 		"""
+		Try to load global device map from specified file.
+		Note that loading a new device map will not update the device
+		map in databases that have already been instantiated.
+
+		Raises IOError if file could not be found/opened.
+		Raises DbError if device map file could not be validated.
+		Raises NotFoundError if device map could not be found in the
+		specified file.
 		"""
 		# Load the device map XML and validate it
 		try:
 			tree = ET.parse(xml_file)
 		except IOError:
-			raise Exception("Could not find device map file `%s'" % xml_file)
+			raise IOError("Could not find device map file `%s'" % xml_file)
 
 		try:
 			ConfigDB.validate_xml(tree)
@@ -1727,7 +1735,7 @@ class ConfigDB(object):
 		# Look for the device map in XML
 		map_e = root.find('./%s' % DeviceMap.tag)
 		if map_e is None:
-			raise Exception("Could not find `%s' element in `%s'" % (DeviceMap.tag, xml_file))
+			raise NotFoundError("Could not find `%s' element in `%s'" % (DeviceMap.tag, xml_file))
 
 		# Instantiate the DeviceMap and store it
 		ConfigDB.device_map = DeviceMap(map_e)
@@ -1735,6 +1743,9 @@ class ConfigDB(object):
 	@staticmethod
 	def get_device_map():
 		"""
+		Return the current, global device map.
+
+		Raises ConfigError if no device map has been loaded.
 		"""
 		if ConfigDB.device_map is None:
 			raise ConfigError("Device map has not been loaded yet!")
@@ -1819,14 +1830,17 @@ class ConfigDB(object):
 
 	def _expand_compile_paths_from_element(self, element):
 		"""
-		Expand paths of the "build" elements when including an XML file
+		Expand paths of the "build" elements in the supplied element
+		with its current base directory.
 		"""
 		basedir = element.attrib["basedir"]
 		self._expand_compile_paths(element, basedir)
 
 	def _expand_paths_from_root(self, prefix_dir):
 		"""
-		Expand paths of all database items and "build" elements
+		Set new root path of all database items and "build" elements by
+		prepending the specified prefix directory to all basedir and
+		fromfile attributes, then re-expanding the compile paths.
 		"""
 		# Update all basedir and fromfile paths
 		for e in self.root.findall('.//*[@%s][@%s]' % (self.basedir_tag, self.fromfile_tag)):
@@ -1840,6 +1854,9 @@ class ConfigDB(object):
 
 	def _expand_compile_paths(self, element, prefix_dir):
 		"""
+		Extract all build elements from the specified element and call
+		their respective expand_compile_paths() method with the supplied
+		prefix directory, i.e., to be prepended to their current path.
 		"""
 		# Find all build elements
 		for build_entry in element.findall('.//%s' % (BuildType.tag)):
