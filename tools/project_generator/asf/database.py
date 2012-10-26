@@ -1340,7 +1340,7 @@ class DeviceMap(TypelessConfigItem):
 			try:
 				for device in device_alias[alias]:
 					ET.SubElement(parent, DeviceMap.support_tag, attrib={DeviceMap.support_value_attr : device})
-			except:
+			except KeyError:
 				# 'alias' not in 'device_alias' dictionary. The database sanity check will catch this
 				pass
 
@@ -1641,8 +1641,6 @@ class ConfigDB(object):
 	show_file_list_in_debug_log = False
 	no_version = "NO_VER"
 	device_map = None
-	# device_alias dictionary: { 'alias_name' : ['device_1', 'device_2'] }
-	device_alias = {}
 	extension = None
 	schema = None
 	circular_reference_map = {}
@@ -1679,7 +1677,7 @@ class ConfigDB(object):
 			self.root = ET.Element("asf", attrib={self.version_attribute : self.current_version})
 			self.tree = ET.ElementTree(self.root)
 			self._include_all_subdirs(self.root, self.root_path)
-			device_alias = DeviceMap.expand_device_aliases(self.root)
+			DeviceMap.expand_device_aliases(self.root)
 
 	@property
 	def root_path(self):
