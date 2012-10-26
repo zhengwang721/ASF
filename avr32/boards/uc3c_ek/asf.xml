@@ -1,35 +1,34 @@
 <asf xmlversion="1.0">
-	<select-by-config caption="UC3C-EK LED support" default="yes" id="config.board.uc3c_ek.led" name="config.board.uc3c_ek.led">
-		<module caption="UC3C-EK LED support disabled" id="config.board.uc3c_ek.led#no" type="meta">
+	<select-by-config id="config.board.uc3c_ek.led" name="config.board.uc3c_ek.led" caption="UC3C-EK LED support" default="yes">
+		<module type="meta" id="config.board.uc3c_ek.led#no" caption="UC3C-EK LED support disabled">
 		</module>
-		<module caption="UC3C-EK LED support enabled" id="config.board.uc3c_ek.led#yes" type="meta">
-			<build type="c-source" value="led.c" />
-			<build type="include-path" value="." />
-			<require idref="avr32.drivers.gpio" />
-		</module>
-	</select-by-config>
-
-	<select-by-config caption="UC3C-EK initialization support" default="yes" id="config.board.uc3c_ek.init" name="config.board.uc3c_ek.init">
-		<module caption="UC3C-EK initialization support disabled" id="config.board.uc3c_ek.init#no" type="meta">
-		</module>
-		<module caption="UC3C-EK initialization support enabled" id="config.board.uc3c_ek.init#yes" type="meta">
-			<build subtype="required-header-file" type="module-config" value="conf_board.h" />
-			<build subtype="path" type="module-config" value="board_config" />
-			<build type="c-source" value="init.c" />
-			<require idref="avr32.drivers.gpio" />
+		<module type="meta" id="config.board.uc3c_ek.led#yes" caption="UC3C-EK LED support enabled">
+			<build type="c-source" value="led.c"/>
+			<build type="include-path" value="."/>
+			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board caption="UC3C-EK" id="board.uc3c_ek" vendor="Atmel">
-		<build name="BOARD" type="define" value="UC3C_EK" />
-		<build type="header-file" value="uc3c_ek.h" />
-		<build subtype="api" type="header-file" value="led.h" />
-		<build type="include-path" value="." />
-		<build type="include-path" value=".." />
-		<require idref="common.boards" />
-		<require idref="config.board.uc3c_ek.led" />
-		<require idref="config.board.uc3c_ek.init" />
-		<config name="config.compiler.avr32gcc.programming_clock" value="int" />
-		<device-support value="at32uc3c0512c" />
+	<select-by-config id="config.board.uc3c_ek.init" name="config.board.uc3c_ek.init" caption="UC3C-EK initialization support" default="yes">
+		<module type="meta" id="config.board.uc3c_ek.init#no" caption="UC3C-EK initialization support disabled">
+		</module>
+		<module type="meta" id="config.board.uc3c_ek.init#yes" caption="UC3C-EK initialization support enabled">
+			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="module-config" subtype="path" value="board_config"/>
+			<build type="c-source" value="init.c"/>
+			<require idref="avr32.drivers.gpio"/>
+		</module>
+	</select-by-config>
+
+	<board id="board.uc3c_ek" vendor="Atmel" caption="UC3C-EK" mcu="at32uc3c0512c">
+		<build type="define" name="BOARD" value="UC3C_EK"/>
+		<build type="header-file" value="uc3c_ek.h"/>
+		<build type="header-file" subtype="api" value="led.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="common.boards"/>
+		<require idref="config.board.uc3c_ek.led"/>
+		<require idref="config.board.uc3c_ek.init"/>
+		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
 	</board>
 </asf>

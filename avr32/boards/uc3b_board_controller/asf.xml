@@ -1,34 +1,33 @@
 <asf xmlversion="1.0">
-	<select-by-config caption="UC3B board controller LED support" default="yes" id="config.board.uc3b_board_controller.led" name="config.board.uc3b_board_controller.led">
-		<module caption="UC3B board controller LED support disabled" id="config.board.uc3b_board_controller.led#no" type="meta">
+	<select-by-config id="config.board.uc3b_board_controller.led" name="config.board.uc3b_board_controller.led" caption="UC3B board controller LED support" default="yes">
+		<module type="meta" id="config.board.uc3b_board_controller.led#no" caption="UC3B board controller LED support disabled">
 		</module>
-		<module caption="UC3B board controller LED support enabled" id="config.board.uc3b_board_controller.led#yes" type="meta">
-			<build type="c-source" value="led.c" />
-			<build type="include-path" value="." />
-			<require idref="avr32.drivers.gpio" />
-		</module>
-	</select-by-config>
-
-	<select-by-config caption="UC3B board controller initialization support" default="yes" id="config.board.uc3b_board_controller.init" name="config.board.uc3b_board_controller.init">
-		<module caption="UC3B board controller initialization support disabled" id="config.board.uc3b_board_controller.init#no" type="meta">
-
-		</module>
-		<module caption="UC3B board controller initialization support enabled" id="config.board.uc3b_board_controller.init#yes" type="meta">
-			<build subtype="required-header-file" type="module-config" value="conf_board.h" />
-			<build type="c-source" value="init.c" />
-			<require idref="avr32.drivers.gpio" />
+		<module type="meta" id="config.board.uc3b_board_controller.led#yes" caption="UC3B board controller LED support enabled">
+			<build type="c-source" value="led.c"/>
+			<build type="include-path" value="."/>
+			<require idref="avr32.drivers.gpio"/>
 		</module>
 	</select-by-config>
 
-	<board caption="Board Controller" id="board.uc3b_board_controller">
-		<build name="BOARD" type="define" value="UC3B_BOARD_CONTROLLER" />
-		<build type="header-file" value="uc3b_board_controller.h" />
-		<build subtype="api" type="header-file" value="led.h" />
-		<build type="include-path" value="." />
-		<build type="include-path" value=".." />
-		<require idref="common.boards" />
-		<require idref="config.board.uc3b_board_controller.led" />
-		<require idref="config.board.uc3b_board_controller.init" />
-		<device-support value="at32uc3b1256" />
+	<select-by-config id="config.board.uc3b_board_controller.init" name="config.board.uc3b_board_controller.init" caption="UC3B board controller initialization support" default="yes">
+		<module type="meta" id="config.board.uc3b_board_controller.init#no" caption="UC3B board controller initialization support disabled">
+
+		</module>
+		<module type="meta" id="config.board.uc3b_board_controller.init#yes" caption="UC3B board controller initialization support enabled">
+			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+			<build type="c-source" value="init.c"/>
+			<require idref="avr32.drivers.gpio"/>
+		</module>
+	</select-by-config>
+
+	<board id="board.uc3b_board_controller" caption="Board Controller" mcu="at32uc3b1256">
+		<build type="define" name="BOARD" value="UC3B_BOARD_CONTROLLER"/>
+		<build type="header-file" value="uc3b_board_controller.h"/>
+		<build type="header-file" subtype="api" value="led.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="common.boards"/>
+		<require idref="config.board.uc3b_board_controller.led"/>
+		<require idref="config.board.uc3b_board_controller.init"/>
 	</board>
 </asf>

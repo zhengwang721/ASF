@@ -3,20 +3,19 @@
 		<info type="description" value="summary">
 		This example demonstrates how to configure lcd controller ili9225 to control the LCD on the board.
 		</info>
-		<config name="config.compiler.armgcc.create_aux" value="no" />
-		<build type="include-path" value="." />
-		<build type="header-file" value="conf_clock.h" />
-		<build type="header-file" value="conf_board.h" />
-		<build type="header-file" value="conf_ili9225.h" />
-		<build type="header-file" value="conf_aat31xx.h" />
-		<build type="header-file" value="conf_spi_master.h" />
-		<build type="header-file" value="conf_uart_serial.h" />
-		<require idref="sam.components.display.ili9225.example" />
-		<require idref="board.sam3n_ek" />
-		<generator value="iarewarm" />
-		<generator value="armgcc" />
-		<generator value="as5_arm" />
-		<generator value="doxygen" />
-		<device-support value="atsam3n4c" />
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_ili9225.h"/>
+		<build type="header-file" value="conf_aat31xx.h"/>
+		<build type="header-file" value="conf_spi_master.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<require idref="sam.components.display.ili9225.example"/>
+		<require idref="board.sam3n_ek"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>

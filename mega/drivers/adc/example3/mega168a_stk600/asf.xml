@@ -3,13 +3,12 @@
 		<info type="description" value="summary">
 		ATmega168A ADC example 3
 		</info>
-		<build type="header-file" value="conf_board.h" />
-		<build type="include-path" value="." />
-		<require idref="board.stk600-mega.atmega168a" />
-		<require idref="mega.drivers.adc.example3" />
-		<generator value="avrgcc" />
+		<build type="header-file" value="conf_board.h"/>
+		<build type="include-path" value="."/>
+		<require idref="board.stk600-mega.atmega168a"/>
+		<require idref="mega.drivers.adc.example3"/>
+		<generator value="avrgcc"/>
 		<generator value="as5_8" />
-		<generator value="doxygen" />
-		<device-support value="atmega168a" />
+		<generator value="doxygen"/>
 	</project>
 </asf>

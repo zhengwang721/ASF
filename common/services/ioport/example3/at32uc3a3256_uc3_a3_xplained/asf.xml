@@ -13,6 +13,5 @@
 		<generator value="avr32gcc" />
 		<generator value="as5_32" />
 		<generator value="doxygen" />
-		<device-support value="at32uc3a3256" />
 	</project>
 </asf>

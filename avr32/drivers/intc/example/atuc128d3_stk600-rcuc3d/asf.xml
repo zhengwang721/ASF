@@ -3,14 +3,13 @@
 		<info type="description" value="summary">
 		Interrupt-based USART reception: each character received is echoed back.
 		</info>
-		<build type="header-file" value="conf_example.h" />
-		<build type="include-path" value="." />
-		<require idref="avr32.drivers.intc.example" />
-		<require idref="board.stk600-rcuc3d" />
-		<config name="config.board.stk600-rcuc3d.init" value="no" />
+		<build type="header-file" value="conf_example.h"/>
+		<build type="include-path" value="."/>
+		<require idref="avr32.drivers.intc.example"/>
+		<require idref="board.stk600-rcuc3d"/>
+		<config name="config.board.stk600-rcuc3d.init" value="no"/>
 		<generator value="avr32gcc" />
 		<generator value="as5_32" />
-		<generator value="doxygen" />
-		<device-support value="atuc128d3" />
+		<generator value="doxygen"/>
 	</project>
 </asf>

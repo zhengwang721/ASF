@@ -1,11 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="XMEGA-A1 Xplained template project" id="common.applications.user_application.xmega_a1_xplained" type="template">
-		<build type="include-path" value="." />
-		<build type="header-file" value="conf_board.h" />
-		<require idref="common.applications.user_application" />
-		<require idref="board.xmega_a1_xplained" />
-		<generator value="as5_8_template" />
-		<generator value="doxygen" />
-		<device-support value="atxmega128a1" />
+	<project id="common.applications.user_application.xmega_a1_xplained" caption="XMEGA-A1 Xplained template project" type="template">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<require idref="common.applications.user_application"/>
+		<require idref="board.xmega_a1_xplained"/>
+		<generator value="as5_8_template"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>

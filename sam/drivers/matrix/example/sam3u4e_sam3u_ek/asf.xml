@@ -3,17 +3,16 @@
 		<info type="description" value="summary">
 		Basic example of MATRIX on SAM3U-EK.
 		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="include-path" value="." />
-		<build type="header-file" value="conf_board.h" />
-		<build type="header-file" value="conf_clock.h" />
-		<build type="header-file" value="conf_uart_serial.h" />
-		<build type="include-path" value="." />
-		<require idref="sam.drivers.matrix.example" />
-		<require idref="board.sam3u_ek" />
-		<generator value="iarewarm" />
-		<generator value="armgcc" />
-		<generator value="as5_arm" />
-		<generator value="doxygen" />
-		<device-support value="atsam3u4e" />
+		<require idref="sam.drivers.matrix.example"/>
+		<require idref="board.sam3u_ek"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>

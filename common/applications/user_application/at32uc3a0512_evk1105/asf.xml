@@ -1,11 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="EVK1105 template project" id="common.applications.user_application.evk1105" type="template">
-		<build type="include-path" value="." />
-		<build type="header-file" value="conf_board.h" />
-		<require idref="common.applications.user_application" />
-		<require idref="board.evk1105" />
-		<generator value="as5_32_template" />
-		<generator value="doxygen" />
-		<device-support value="at32uc3a0512" />
+	<project id="common.applications.user_application.evk1105" caption="EVK1105 template project" type="template">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<require idref="common.applications.user_application"/>
+		<require idref="board.evk1105"/>
+		<generator value="as5_32_template"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>

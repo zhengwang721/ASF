@@ -1,11 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="ATmega16 on STK600 template project" id="common.applications.user_application.stk600-mega.atmega16" type="template">
-		<build type="include-path" value="." />
-		<build type="header-file" value="conf_board.h" />
-		<require idref="common.applications.user_application" />
-		<require idref="board.stk600-mega.atmega16" />
-		<generator value="as5_8_template" />
-		<generator value="doxygen" />
-		<device-support value="atmega16" />
+	<project id="common.applications.user_application.stk600-mega.atmega16" caption="ATmega16 on STK600 template project" type="template">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<require idref="common.applications.user_application"/>
+		<require idref="board.stk600-mega.atmega16"/>
+		<generator value="as5_8_template"/>
+		<generator value="doxygen"/>
 	</project>
 </asf>
