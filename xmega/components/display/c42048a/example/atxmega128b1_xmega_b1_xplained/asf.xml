@@ -10,8 +10,9 @@
 		<require idref="xmega.drivers.tc"/>
 		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
 		<generator value="iarew"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 </asf>

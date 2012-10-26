@@ -9,10 +9,10 @@
 		<require idref="common.services.usb.class.hid.device.mouse.example"/>
 		<require idref="board.sam3x_ek"/>
 		<config name="config.board.sam3x_ek.led" value="yes"/>
-
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
-		<generator value="as5_arm" />
+		<generator value="as5_arm"/>
+		<device-support value="atsam3x8h"/>
 	</project>
 </asf>

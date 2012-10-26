@@ -12,5 +12,6 @@
 		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<generator value="doxygen"/>
 		<generator value="as5_32"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 </asf>

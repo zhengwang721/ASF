@@ -14,7 +14,7 @@
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_usart_spi.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<config name="config.common.services.fs.fatfs.codepage" value="1"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<require idref="common.components.memory.data_flash.at45dbx"/>
@@ -24,5 +24,6 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

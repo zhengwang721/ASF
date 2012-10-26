@@ -4,19 +4,18 @@
 		<config name="config.common.services.qtouch.qdebug.qt600.atxmega128a1" value="yes"/>
 		<config name="config.common.services.qtouch.generic.avr8.xmega128a1_qt600.method" value="qtouch_method"/>
 		<require idref="board.xmega128a1_qt600"/>
-		
-		<build type="define" name="_QTOUCH_" value =""/>
-		<build type="define" name="_DEBUG_INTERFACE_" value =""/>
-		<build type="define" name="_ROTOR_SLIDER_" value =""/>
+		<build type="define" name="_QTOUCH_" value=""/>
+		<build type="define" name="_DEBUG_INTERFACE_" value=""/>
+		<build type="define" name="_ROTOR_SLIDER_" value=""/>
 		<build type="define" name="QT_NUM_CHANNELS" value="16"/>
 		<build type="define" name="QT_DELAY_CYCLES" value="1"/>
 		<build type="define" name="SNS1" value="H"/>
 		<build type="define" name="SNSK1" value="F"/>
 		<build type="define" name="SNS2" value="K"/>
 		<build type="define" name="SNSK2" value="J"/>
-		
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

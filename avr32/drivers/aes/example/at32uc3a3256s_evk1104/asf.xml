@@ -7,8 +7,9 @@
 		<generator value="iarew32"/>
 		<config name="config.compiler.iarew32.catch_unimplemented_interrupts" value="no"/>
 		<config name="config.compiler.iarew32.catch_unhandled_cpu_exceptions" value="no"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256s"/>
 	</project>
 </asf>

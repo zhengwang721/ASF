@@ -9,7 +9,8 @@
 		<require idref="board.stk600-mega.atmega1284p"/>
 		<require idref="mega.applications.mega_clock_example"/>
 		<generator value="avrgcc"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega1284p"/>
 	</project>
 </asf>

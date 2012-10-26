@@ -10,8 +10,9 @@
 		<require idref="board.stk600-rc100x.atxmega128b1"/>
 		<config name="config.board.stk600-rc100x.led" value="yes"/>
 		<generator value="iarew"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 </asf>

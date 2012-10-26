@@ -20,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.uc3l_ek" vendor="Atmel" caption="UC3L-EK" mcu="at32uc3l064">
+	<board id="board.uc3l_ek" vendor="Atmel" caption="UC3L-EK">
 		<build type="define" name="BOARD" value="UC3L_EK"/>
 		<build type="header-file" value="uc3l_ek.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -30,5 +30,6 @@
 		<require idref="config.board.uc3l_ek.led"/>
 		<require idref="config.board.uc3l_ek.init"/>
 		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
+		<device-support value="at32uc3l064"/>
 	</board>
 </asf>

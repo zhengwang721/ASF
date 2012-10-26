@@ -21,13 +21,14 @@
 		<build type="define" name="FREERTOS_USED" value=""/>
 		<build type="define" name="HTTP_USED" value="1"/>
 		<build type="define" name="TFTP_USED" value="1"/>
-		<build type="define" name="SMTP_USED" value="0"/>		
+		<build type="define" name="SMTP_USED" value="0"/>
 		<build type="define" name="CONFIG_INTERRUPT_FORCE_INTC" value=""/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<config name="config.compiler.iarew32.sys_stack_size" value="0x1000"/>
 		<config name="config.compiler.iarew32.app_stack_size" value="0x0000"/>
 		<config name="config.compiler.iarew32.heap_size" value="0x9000"/>
+		<device-support value="at32uc3a0512"/>
 	</project>
 </asf>

@@ -9,7 +9,6 @@
 		<build type="include-path" value="."/>
 		<require idref="common.components.memory.virtual_mem"/>
 		<require idref="sam.drivers.usart"/>
-
 		<config name="config.common.services.usb.class.device" value="mass_storage"/>
 		<require idref="common.services.usb.class.msc.device.example"/>
 		<require idref="board.sam4s_xplained"/>
@@ -19,5 +18,6 @@
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<device-support value="atsam4s16c"/>
 	</project>
 </asf>

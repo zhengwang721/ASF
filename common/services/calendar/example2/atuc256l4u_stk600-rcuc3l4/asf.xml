@@ -9,5 +9,6 @@
 		<generator value="as5_32"/>
 		<config name="config.board.stk600-rcuc3l4.led" value="yes"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc256l4u"/>
 	</project>
 </asf>

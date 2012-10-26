@@ -11,5 +11,6 @@
 		<config name="config.board.xplain.led" value="yes"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

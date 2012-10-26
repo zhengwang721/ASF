@@ -7,8 +7,9 @@
 		<require idref="xmega.drivers.ebi.example.sram"/>
 		<require idref="board.stk600-rc100x.atxmega128a1"/>
 		<generator value="iarew"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

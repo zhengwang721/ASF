@@ -10,5 +10,6 @@
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
 		<generator value="iarew32"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 </asf>

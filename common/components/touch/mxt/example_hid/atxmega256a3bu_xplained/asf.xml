@@ -16,9 +16,10 @@
 		<config name="config.compiler.iarew.near_heap_size" value="0x1000"/>
 		<config name="config.gfx.display" value="ili9341_sdt028atft"/>
 		<config name="config.spi_master_type" value="usart_spi"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

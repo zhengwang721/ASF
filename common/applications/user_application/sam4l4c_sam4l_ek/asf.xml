@@ -7,5 +7,6 @@
 		<require idref="board.sam4l_ek"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

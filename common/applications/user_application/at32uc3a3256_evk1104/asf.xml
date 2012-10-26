@@ -6,6 +6,7 @@
 		<require idref="board.evk1104"/>
 		<generator value="as5_32_template"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 	<project id="common.applications.user_application.evk1104s" caption="EVK1104S template project" type="template">
 		<build type="include-path" value="."/>
@@ -14,5 +15,6 @@
 		<require idref="board.evk1104s"/>
 		<generator value="as5_32_template"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256s"/>
 	</project>
 </asf>

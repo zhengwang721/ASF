@@ -5,7 +5,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_sleepmgr.h"/>		
+		<build type="header-file" value="conf_sleepmgr.h"/>
 		<require idref="sam.drivers.sdramc.unit_tests"/>
 		<require idref="board.sam3x_ek"/>
 		<generator value="iarewarm"/>
@@ -13,5 +13,6 @@
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
+		<device-support value="atsam3x8h"/>
 	</project>
 </asf>

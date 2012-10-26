@@ -9,7 +9,7 @@
 		<build type="header-file" subtype="api" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="QDebugSettings.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<require idref="sam.applications.sam4s_xplained_qtouch_demo"/>
 		<require idref="board.sam4s_xplained"/>
 		<build type="header-file" subtype="api" value="QDebugSettings.h"/>
@@ -29,5 +29,6 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam4s16c"/>
 	</project>
 </asf>

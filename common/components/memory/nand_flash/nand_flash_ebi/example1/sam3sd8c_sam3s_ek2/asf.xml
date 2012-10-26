@@ -1,4 +1,4 @@
-<asf xmlversion="1.0">	
+<asf xmlversion="1.0">
 	<project caption="NAND Flash on EBI Example 1 for SAM3SD8" id="common.components.memory.nand_flash.example1.sam3s_ek2">
 		<info type="description" value="summary">
 		Read and write raw data to an external NAND Flash memory through the EBI.
@@ -15,6 +15,7 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<generator value="doxygen"/> 
+		<generator value="doxygen"/>
+		<device-support value="atsam3sd8c"/>
 	</project>
 </asf>

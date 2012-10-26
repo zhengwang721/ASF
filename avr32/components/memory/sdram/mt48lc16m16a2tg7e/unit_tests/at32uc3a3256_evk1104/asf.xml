@@ -9,9 +9,10 @@
 		<require idref="avr32.components.memory.sdram.mt48lc16m16a2tg7e.unit_tests"/>
 		<require idref="board.evk1104"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

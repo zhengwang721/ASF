@@ -21,8 +21,9 @@
 		<config name="config.board.evk1105.led" value="yes"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a0512"/>
 	</project>
 </asf>

@@ -10,9 +10,10 @@
 		<config name="config.gfx_mono.display" value="c12832_a1z"/>
 		<require idref="xmega.drivers.crc.example2"/>
 		<require idref="board.xmega_a3bu_xplained"/>
-		<generator value="iarew"/> 
+		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

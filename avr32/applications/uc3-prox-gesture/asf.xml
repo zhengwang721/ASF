@@ -5,7 +5,7 @@
 			Light/Proximity 1 board (ATAVRSBLP1) using proximity sensor for
 			gesture recognition.   
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
@@ -21,6 +21,7 @@
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 	<!-- XXX Turn off UC3-A3 project for now, pending interrupt debug 
 	<project caption="UC3-A3 Xplained with Xplained Light/Proximity Board #1" id="avr32.applications.uc3-a3_avrsblp1_gesture">

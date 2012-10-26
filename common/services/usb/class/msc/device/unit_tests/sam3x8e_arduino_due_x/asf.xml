@@ -18,5 +18,6 @@
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
+		<device-support value="atsam3x8e"/>
 	</project>
 </asf>

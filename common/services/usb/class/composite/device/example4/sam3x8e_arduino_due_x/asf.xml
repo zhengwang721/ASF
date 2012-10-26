@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
-		<require idref="sam.drivers.usart" />
+		<require idref="sam.drivers.usart"/>
 		<require idref="common.components.memory.virtual_mem"/>
 		<require idref="common.services.usb.composite.device.example.cdc_msc"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>
@@ -20,5 +20,6 @@
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<device-support value="atsam3x8e"/>
 	</project>
 </asf>

@@ -6,7 +6,7 @@
 			prompts the user to make a series of manual steps to calibrate the
 			compass to the local geomagnetic field.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
 		<build type="header-file" value="conf/conf_usart_serial.h"/>
@@ -21,6 +21,7 @@
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 	<!--
 	<project caption="UC3-L0 Xplained with Inertial Board #2 Compass Calibration" id="avr32.applications.uc3-l0_avrsbin2_compass-cal">
@@ -55,7 +56,7 @@
 			compass to the local geomagnetic field.
 		</info>
 		<config name="config.board.uc3_a3_xplained.led" value="yes"/>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -70,6 +71,7 @@
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 	<!--
 	<project caption="UC3-A3 Xplained with Inertial Board #2 Compass Calibration" id="avr32.applications.uc3-a3_avrsbin2_compass-cal">

@@ -14,5 +14,6 @@
 		<generator value="as5_8"/>
 		<generator value="iarew"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

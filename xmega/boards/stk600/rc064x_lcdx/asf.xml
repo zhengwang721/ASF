@@ -20,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rc064x_lcdx.atxmega128b3" vendor="Atmel" caption="STK600" mcu="atxmega128b3">
+	<board id="board.stk600-rc064x_lcdx.atxmega128b3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X_LCDX"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -32,9 +32,10 @@
 		<require idref="config.board.stk600-rc064x_lcdx.led"/>
 		<require idref="config.board.stk600-rc064x_lcdx.init"/>
 		<config name="config.c42048a_type" value="partial_matrix0"/>
+		<device-support value="atxmega128b3"/>
 	</board>
 
-	<board id="board.stk600-rc064x_lcdx.atxmega64b3" vendor="Atmel" caption="STK600" mcu="atxmega64b3">
+	<board id="board.stk600-rc064x_lcdx.atxmega64b3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X_LCDX"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -46,5 +47,6 @@
 		<require idref="config.board.stk600-rc064x_lcdx.led"/>
 		<require idref="config.board.stk600-rc064x_lcdx.init"/>
 		<config name="config.c42048a_type" value="partial_matrix0"/>
+		<device-support value="atxmega64b3"/>
 	</board>
 </asf>

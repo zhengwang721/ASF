@@ -20,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rc064x.atxmega256a3b" vendor="Atmel" caption="STK600" mcu="atxmega256a3b">
+	<board id="board.stk600-rc064x.atxmega256a3b" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -31,9 +31,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega256a3b"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega256a3" vendor="Atmel" caption="STK600" mcu="atxmega256a3">
+	<board id="board.stk600-rc064x.atxmega256a3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -44,23 +45,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega256a3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega256a3bu" vendor="Atmel" caption="STK600" mcu="atxmega256a3bu">
-		<build type="define" name="BOARD" value="STK600_RC064X"/>
-		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
-		<build type="module-config" subtype="path" value="board_config"/>
-		<build type="header-file" value="stk600_rc064x.h"/>
-		<build type="include-path" value="."/>
-		<build type="include-path" value="../.."/>
-		<build type="define" name="CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA" value=""/>
-		<build type="linker-config" subtype="flags" value="--section-start=.BOOT=0x40000" toolchain="avrgcc"/>
-		<require idref="common.boards"/>
-		<require idref="config.board.stk600-rc064x.led"/>
-		<require idref="config.board.stk600-rc064x.init"/>
-	</board>
-
-	<board id="board.stk600-rc064x.atxmega256a3u" vendor="Atmel" caption="STK600" mcu="atxmega256a3u">
+	<board id="board.stk600-rc064x.atxmega256a3bu" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -72,9 +60,25 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega256a3bu"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega192a3u" vendor="Atmel" caption="STK600" mcu="atxmega192a3u">
+	<board id="board.stk600-rc064x.atxmega256a3u" vendor="Atmel" caption="STK600">
+		<build type="define" name="BOARD" value="STK600_RC064X"/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
+		<build type="header-file" value="stk600_rc064x.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value="../.."/>
+		<build type="define" name="CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA" value=""/>
+		<build type="linker-config" subtype="flags" value="--section-start=.BOOT=0x40000" toolchain="avrgcc"/>
+		<require idref="common.boards"/>
+		<require idref="config.board.stk600-rc064x.led"/>
+		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega256a3u"/>
+	</board>
+
+	<board id="board.stk600-rc064x.atxmega192a3u" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -86,9 +90,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega192a3u"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega128a3u" vendor="Atmel" caption="STK600" mcu="atxmega128a3u">
+	<board id="board.stk600-rc064x.atxmega128a3u" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -100,9 +105,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega128a3u"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega64a3" vendor="Atmel" caption="STK600" mcu="atxmega64a3">
+	<board id="board.stk600-rc064x.atxmega64a3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -114,9 +120,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega64a3"/>
 	</board>
 	
-	<board id="board.stk600-rc064x.atxmega64a3u" vendor="Atmel" caption="STK600" mcu="atxmega64a3u">
+	<board id="board.stk600-rc064x.atxmega64a3u" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -128,9 +135,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega64a3u"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega128b3" vendor="Atmel" caption="STK600" mcu="atxmega128b3">
+	<board id="board.stk600-rc064x.atxmega128b3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -141,9 +149,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega128b3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega64b3" vendor="Atmel" caption="STK600" mcu="atxmega64b3">
+	<board id="board.stk600-rc064x.atxmega64b3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -154,9 +163,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega64b3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega192d3" vendor="Atmel" caption="STK600" mcu="atxmega192d3">
+	<board id="board.stk600-rc064x.atxmega192d3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -168,9 +178,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega192d3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega384c3" vendor="Atmel" caption="STK600" mcu="atxmega384c3">
+	<board id="board.stk600-rc064x.atxmega384c3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -181,9 +192,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega384c3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega256c3" vendor="Atmel" caption="STK600" mcu="atxmega256c3">
+	<board id="board.stk600-rc064x.atxmega256c3" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -194,9 +206,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega256c3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega128c3" caption="STK600" mcu="atxmega128c3">
+	<board id="board.stk600-rc064x.atxmega128c3" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="header-file" value="stk600_rc064x.h"/>
@@ -206,9 +219,10 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega128c3"/>
 	</board>
 
-	<board id="board.stk600-rc064x.atxmega64c3" caption="STK600" mcu="atxmega64c3">
+	<board id="board.stk600-rc064x.atxmega64c3" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RC064X"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="header-file" value="stk600_rc064x.h"/>
@@ -218,5 +232,6 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.stk600-rc064x.led"/>
 		<require idref="config.board.stk600-rc064x.init"/>
+		<device-support value="atxmega64c3"/>
 	</board>
 </asf>

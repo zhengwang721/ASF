@@ -20,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xmega_b1_xplained" vendor="Atmel" caption="XMEGA-B1 Xplained" mcu="atxmega128b1">
+	<board id="board.xmega_b1_xplained" vendor="Atmel" caption="XMEGA-B1 Xplained">
 		<build type="define" name="BOARD" value="XMEGA_B1_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
@@ -32,5 +32,6 @@
 		<require idref="config.board.xmega_b1_xplained.init"/>
 		<require idref="config.board.xmega_b1_xplained.led"/>
 		<config name="config.c42048a_type" value="full_matrix0"/>
+		<device-support value="atxmega128b1"/>
 	</board>
 </asf>

@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="c-source" value="ui.c"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<require idref="sam.drivers.bpm.bpm_example"/>
 		<require idref="board.sam4l_ek"/>
 		<config name="config.board.sam4l_ek.bm" value="yes"/>
@@ -19,5 +19,6 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

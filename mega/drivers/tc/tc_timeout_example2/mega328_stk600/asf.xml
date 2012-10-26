@@ -5,8 +5,9 @@
 		<build type="header-file" value="conf_tc_timeout.h"/>
 		<require idref="mega.drivers.tc_timeout.example2"/>
 		<require idref="board.stk600-mega.atmega328"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega328"/>
 	</project>
 </asf>

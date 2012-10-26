@@ -12,5 +12,6 @@
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="doxygen"/>
 		<generator value="as5_8"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

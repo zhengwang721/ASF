@@ -8,7 +8,8 @@
 		<require idref="board.stk600-mega.atmega168a"/>
 		<require idref="mega.drivers.adc.example3"/>
 		<generator value="avrgcc"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega168a"/>
 	</project>
 </asf>

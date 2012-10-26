@@ -9,7 +9,8 @@
 		<require idref="board.stk600-mega.atmega640"/>
 		<require idref="mega.applications.mega_gpio_example"/>
 		<generator value="avrgcc"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega640"/>
 	</project>
 </asf>

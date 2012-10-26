@@ -13,7 +13,7 @@
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_virtual_mem.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<config name="config.common.services.fs.fatfs.codepage" value="1"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<require idref="board.xmega_a1_xplained"/>
@@ -22,5 +22,6 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

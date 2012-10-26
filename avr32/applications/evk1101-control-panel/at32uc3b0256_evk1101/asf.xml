@@ -2,8 +2,8 @@
 	<project caption="EVK1101 Control Panel" id="avr32.applications.evk1101-demo.example">
 		<require idref="avr32.applications.evk1101-demo"/>
 		<require idref="board.evk1101"/>
-		<config  name="config.board.evk1101.init" value="no"/>
-		<config  name="config.board.evk1101.led" value="yes"/>
+		<config name="config.board.evk1101.init" value="no"/>
+		<config name="config.board.evk1101.led" value="yes"/>
 		<config name="config.avr32.drivers.intc.exception" value="no"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<build type="define" name="FREERTOS_USED" value=""/>
@@ -13,8 +13,9 @@
 		<config name="config.compiler.avr32gcc.use_startfiles" value="yes"/>
 		<config name="config.avr32.utils.gccstartup" value="no"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3b0256"/>
 	</project>
 </asf>

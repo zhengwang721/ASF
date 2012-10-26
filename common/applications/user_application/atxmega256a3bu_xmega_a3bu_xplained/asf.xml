@@ -6,5 +6,6 @@
 		<require idref="board.xmega_a3bu_xplained"/>
 		<generator value="as5_8_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

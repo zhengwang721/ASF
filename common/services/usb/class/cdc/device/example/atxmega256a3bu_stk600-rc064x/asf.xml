@@ -10,9 +10,10 @@
 		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<require idref="board.stk600-rc064x.atxmega256a3bu"/>
 		<config name="config.board.stk600-rc064x.led" value="yes"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

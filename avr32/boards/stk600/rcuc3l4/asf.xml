@@ -19,7 +19,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rcuc3l4" vendor="Atmel" caption="STK600" mcu="atuc256l4u">
+	<board id="board.stk600-rcuc3l4" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RCUC3L4"/>
 		<build type="header-file" value="stk600_rcuc3l4.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -30,5 +30,6 @@
 		<require idref="config.board.stk600-rcuc3l4.led"/>
 		<require idref="config.board.stk600-rcuc3l4.init"/>
 		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
+		<device-support value="atuc256l4u"/>
 	</board>
 </asf>

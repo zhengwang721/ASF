@@ -19,5 +19,6 @@
 		<generator value="iarew32"/>
 		<generator value="avr32gcc"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a0512"/>
 	</project>
 </asf>

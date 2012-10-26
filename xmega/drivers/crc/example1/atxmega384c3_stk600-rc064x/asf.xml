@@ -6,9 +6,10 @@
 		<config name="config.board.stk600-rc064x.led" value="yes"/>
 		<require idref="xmega.drivers.crc.example1"/>
 		<require idref="board.stk600-rc064x.atxmega384c3"/>
-		<generator value="iarew"/> 
+		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega384c3"/>
 	</project>
 </asf>

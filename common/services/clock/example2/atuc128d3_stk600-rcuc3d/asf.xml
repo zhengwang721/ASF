@@ -9,8 +9,9 @@
 		<build type="header-file" value="conf_example2.h"/>
 		<require idref="common.services.basic.clock.example2"/>
 		<require idref="board.stk600-rcuc3d"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc128d3"/>
 	</project>
 </asf>

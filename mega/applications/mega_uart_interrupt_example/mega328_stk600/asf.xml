@@ -10,7 +10,8 @@
 		<require idref="board.stk600-mega.atmega328"/>
 		<require idref="mega.applications.mega_uart_interrupt_example"/>
 		<generator value="avrgcc"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega328"/>
 	</project>
 </asf>

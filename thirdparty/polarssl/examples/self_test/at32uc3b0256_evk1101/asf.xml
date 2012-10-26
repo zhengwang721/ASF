@@ -7,9 +7,10 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_stdio_serial.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>
-		<config  name="config.compiler.iarew32.dlib" value="full"/>
+		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
+		<device-support value="at32uc3b0256"/>
 	</project>
 </asf>

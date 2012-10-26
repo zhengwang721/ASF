@@ -24,8 +24,9 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.ast"/>
 		<require idref="avr32.drivers.gpio"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc128d3"/>
 	</project>
 </asf>
