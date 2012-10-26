@@ -26,6 +26,11 @@ class UnitTestConfigItem(ConfigItem):
 class UnitTestDummyClass(object):
 	pass
 
+def turn_slash_to_os_sep(path):
+	path = path.replace('\\', os.sep)
+	path = path.replace('/', os.sep)
+	return path
+
 def norm_path_join(*dirs):
 	norm_dirs = []
 	for dir in dirs:
@@ -1533,7 +1538,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		os.chdir(self.old_dir)
 
 	def test_root_path(self):
-		expected_result = os.path.normpath(os.path.join(sys.path[0], self.ext_basedir))
+		expected_result = turn_slash_to_os_sep(os.path.join(sys.path[0], self.ext_basedir))
 
 		self.assertEqual(self.extmgr.root_path, expected_result)
 
@@ -1712,9 +1717,9 @@ class FdkExtensionTestCase(unittest.TestCase):
 
 	def test_file_attributes(self):
 		# self.expand_to_manager_root_path == True, so extension's directory must be added
-		self.assertEquals(self.ext.icon_image, os.path.normpath("Aaa/Bbb/docs/bbb_icon.png"))
-		self.assertEquals(self.ext.preview_image, os.path.normpath("Aaa/Bbb/docs/bbb_preview.jpg"))
-		self.assertEquals(self.ext.license, os.path.normpath("Aaa/Bbb/docs/aaa_license.txt"))
+		self.assertEquals(self.ext.icon_image, turn_slash_to_os_sep("Aaa/Bbb/docs/bbb_icon.png"))
+		self.assertEquals(self.ext.preview_image, turn_slash_to_os_sep("Aaa/Bbb/docs/bbb_preview.jpg"))
+		self.assertEquals(self.ext.license, turn_slash_to_os_sep("Aaa/Bbb/docs/aaa_license.txt"))
 
 		self.assertEquals(self.ext.license_caption, "Aaa license")
 		self.assertEquals(self.ext.release_notes, "http://bbb.aaa.com/release-notes/")
@@ -1748,9 +1753,9 @@ class FdkExtensionTestCase(unittest.TestCase):
 
 		expected_offline_help_caption = "Bbb help doc"
 		# self.expand_to_manager_root_path == True, so extension's directory must be added
-		expected_offline_help_index = os.path.normpath("Aaa/Bbb/docs/help.pdf")
-		expected_offline_module_help = os.path.normpath("Aaa/Bbb/docs/help/$MODULE$/html/")
-		expected_offline_module_guide = os.path.normpath("Aaa/Bbb/docs/guides/$MODULE$/html/")
+		expected_offline_help_index = turn_slash_to_os_sep("Aaa/Bbb/docs/help.pdf")
+		expected_offline_module_help = turn_slash_to_os_sep("Aaa/Bbb/docs/help/$MODULE$/html/")
+		expected_offline_module_guide = turn_slash_to_os_sep("Aaa/Bbb/docs/guides/$MODULE$/html/")
 
 		self.assertEquals(self.ext.offline_help_index_caption_and_path, (expected_offline_help_caption, expected_offline_help_index))
 		self.assertEquals(self.ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
@@ -1769,8 +1774,8 @@ class FdkExtensionTestCase(unittest.TestCase):
 		self.assertEquals(alt_ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
 
 		# self.expand_to_manager_root_path == True, so extension's directory must be added
-		expected_offline_module_help = os.path.normpath("Ccc/docs/help-pages/")
-		expected_offline_module_guide = os.path.normpath("Ccc/docs/guide-pages/")
+		expected_offline_module_help = turn_slash_to_os_sep("Ccc/docs/help-pages/")
+		expected_offline_module_guide = turn_slash_to_os_sep("Ccc/docs/guide-pages/")
 
 		self.assertEquals(alt_ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
 		self.assertEquals(alt_ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
@@ -1869,7 +1874,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		expected_help_path = os.path.normpath("Aaa\\Bbb\\docs\\help\\some_doc_arch\\html\\group__bbb__module__help.html")
+		expected_help_path = turn_slash_to_os_sep("Aaa/Bbb/docs/help/some_doc_arch/html/group__bbb__module__help.html")
 		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
@@ -1878,7 +1883,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module")
 
-		expected_guide_path = os.path.normpath("Aaa\\Bbb\\docs\\guides\\some_doc_arch\\html\\bbb_module_guide.html")
+		expected_guide_path = turn_slash_to_os_sep("Aaa/Bbb/docs/guides/some_doc_arch/html/bbb_module_guide.html")
 		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
@@ -1907,7 +1912,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_help_path = os.path.normpath("Ccc\\docs\\help-pagesdriver\\ccc_offline_module_help.html")
+		expected_help_path = turn_slash_to_os_sep("Ccc/docs/help-pages/driver/ccc_offline_module_help.html")
 		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
@@ -1916,7 +1921,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.second_ext.get_database()
 		module = db.lookup_by_id("ccc.module_append")
 
-		expected_guide_path = os.path.normpath("Ccc\\docs\\guide-pagesdriver\\ccc_offline_module_guide.html")
+		expected_guide_path = turn_slash_to_os_sep("Ccc/docs/guide-pages/driver/ccc_offline_module_guide.html")
 		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
@@ -1945,7 +1950,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		expected_help_path = os.path.normpath("Aaa\\Bbb\\doc\\fixed_module_help.html")
+		expected_help_path = turn_slash_to_os_sep("Aaa/Bbb/doc/fixed_module_help.html")
 		help_path = module.get_offline_help_path("some_doc_arch")
 
 		self.assertEqual(help_path, expected_help_path)
@@ -1954,7 +1959,7 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.first_ext.get_database()
 		module = db.lookup_by_id("bbb.module_fixed_help")
 
-		expected_guide_path = os.path.normpath("Aaa\\Bbb\\doc\\fixed_module_guide.html")
+		expected_guide_path = turn_slash_to_os_sep("Aaa/Bbb/doc/fixed_module_guide.html")
 		guide_path = module.get_offline_quick_start_path("some_doc_arch")
 
 		self.assertEqual(guide_path, expected_guide_path)
@@ -2004,8 +2009,8 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 		db = self.third_ext.get_database()
 		doc_module = db.lookup_by_id("eee.module_doc")
 
-		expected_help_path = os.path.normpath("Eee\\docs\\module_offline_help_page.html")
-		expected_guide_path = os.path.normpath("Eee\\docs\\module_offline_guide_page.html")
+		expected_help_path = turn_slash_to_os_sep("Eee/docs/module_offline_help_page.html")
+		expected_guide_path = turn_slash_to_os_sep("Eee/docs/module_offline_guide_page.html")
 
 		help_path = doc_module.get_offline_help_path("some_doc_arch")
 		guide_path = doc_module.get_offline_quick_start_path("some_doc_arch")
