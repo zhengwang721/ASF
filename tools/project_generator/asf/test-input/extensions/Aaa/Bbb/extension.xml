@@ -18,9 +18,9 @@
 			<module-guide-page scheme="asf-docs" baseurl="http://bbb.aaa.com/element_guide"/>
 		</online-help>
 		<offline-help>
-			<index-page caption="Bbb help doc" path="docs/help.pdf"/>
+			<index-page caption="Bbb help doc" path="docs\help.pdf"/>
 			<module-help-page scheme="asf-docs" path="docs/help/"/>
-			<module-guide-page scheme="asf-docs" path="docs/guides/"/>
+			<module-guide-page scheme="asf-docs" path="docs\guides\"/>
 		</offline-help>
 		<dependencies>
 			<fdk-extension eid="ccc" uuidref="00000000-0000-0000-0000-000000000000" version="latest"/>

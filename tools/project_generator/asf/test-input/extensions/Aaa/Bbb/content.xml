@@ -17,6 +17,6 @@
 		<build type="online-help" subtype="module-help-page" value="http://fixed_module_help_page.com/"/>
 		<build type="online-help" subtype="module-guide-page" value="http://fixed_module_guide_page.com/"/>
 		<build type="offline-help" subtype="module-help-page" value="doc/fixed_module_help.html"/>
-		<build type="offline-help" subtype="module-guide-page" value="doc/fixed_module_guide.html"/>
+		<build type="offline-help" subtype="module-guide-page" value="doc\fixed_module_guide.html"/>
 	</module>
 </asf>

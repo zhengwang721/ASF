@@ -255,8 +255,9 @@ class BuildOfflineModuleHelpAppend(BuildOfflineHelp):
 
 	@staticmethod
 	def expand_compile_paths(element, basedir):
-		# No expansion should be done for append-scheme offline help
-		pass
+		# Convert backslash into slash
+		value = element.attrib["value"].replace('\\', '/')
+		element.attrib["value"] = value
 
 class BuildOfflineModuleGuideAppend(BuildOfflineModuleHelpAppend):
 	# This type should contain an appendage for the module's extension's quick start page base path
