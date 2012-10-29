@@ -77,8 +77,64 @@
 		<require idref="common.boards.user_board.common"/>
 	</board>
 
-	<board id="board.user_board.sam4l" caption="User Board" mcu="unspecified-sam4l">
+	<board id="board.user_board.sam4lc4a" caption="User Board" mcu="atsam4lc4a">
 		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4lc4b" caption="User Board" mcu="atsam4lc4b">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4lc4c" caption="User Board" mcu="atsam4lc4c">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4ls4a" caption="User Board" mcu="atsam4ls4a">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4ls4b" caption="User Board" mcu="atsam4ls4b">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4ls4c" caption="User Board" mcu="atsam4ls4c">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+	</board>
+
+	<board id="board.user_board.sam4lc2a" caption="User Board" mcu="atsam4lc2a">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+	</board>
+
+	<board id="board.user_board.sam4lc2b" caption="User Board" mcu="atsam4lc2b">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+	</board>
+
+	<board id="board.user_board.sam4lc2c" caption="User Board" mcu="atsam4lc2c">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+	</board>
+
+	<board id="board.user_board.sam4ls2a" caption="User Board" mcu="atsam4ls2a">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+	</board>
+
+	<board id="board.user_board.sam4ls2b" caption="User Board" mcu="atsam4ls2b">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+	</board>
+
+	<board id="board.user_board.sam4ls2c" caption="User Board" mcu="atsam4ls2c">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4l2"/>
 	</board>
 
 </asf>
