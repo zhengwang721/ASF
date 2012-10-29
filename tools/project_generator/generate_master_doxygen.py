@@ -709,16 +709,25 @@ if __name__ == "__main__":
 			output = ":{"
 			if len(node) == 1:
 				node = node[0]
-				for current in node:
-					group_mcu = current.attrib['name']
+
+				# Search child elements for mcu and sub-groups
+				for child_e in node:
+					try:
+						group_mcu = child_e.attrib['name']
+					except KeyError:
+						# If element does not have a name, it is an XML comment
+						continue
+
 					# Skip the unspecified parts
 					if re.match('unspecified.*', group_mcu):
 						continue
+
 					# Add a comma only if the element is not the 1rst
-					if output[-1] != "{":
+					if not output.endswith("{"):
                                                 output += ","
 					output += "'" + group_mcu + "'"
-					# Re-iterate the process for the children
+
+					# Recursive iteration for sub-groups
 					output += print_json_mcu_group_arch_rec(dev_map, group_mcu, path)
 			output += "}"
 			return output

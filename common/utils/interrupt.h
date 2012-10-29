@@ -45,7 +45,7 @@
 
 #include <parts.h>
 
-#if XMEGA || MEGA
+#if XMEGA || MEGA || TINY
 #  include "interrupt/interrupt_avr8.h"
 #elif UC3
 #  include "interrupt/interrupt_avr32.h"
