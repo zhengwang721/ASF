@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="FLASHCALW example for SAM4L_EK" id="sam.drivers.flashcalw.example.sam4l_ek">
+	<project caption="FLASHCALW example2 for SAM4L_EK" id="sam.drivers.flashcalw.example2.sam4l_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.drivers.flashcalw.example"/>
+		<require idref="sam.drivers.flashcalw.example2"/>
 		<require idref="board.sam4l_ek" />
 		<generator value="iarewarm" />
 		<generator value="armgcc" />

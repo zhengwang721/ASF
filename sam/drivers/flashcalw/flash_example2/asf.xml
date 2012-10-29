@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.flashcalw.example" caption="FLASHCALW Example">
+	<module type="application" id="sam.drivers.flashcalw.example2" caption="FLASHCALW Example2">
 		<info type="description" value="summary">
-		Use the FLASHCALW, read and write data to the internal flash, using a flash block as an NVRAM, located either in the flash array or in the user page.
+		Read the unique ID of the device.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory"/>
 		</info>	
-		<build type="c-source" value="flashcalw_example.c"/>
+		<build type="c-source" value="flashcalw_example2.c"/>
 		<device-support value="sam4l"/>
 		<require idref="sam.drivers.flashcalw"/>
 		<require idref="common.services.basic.clock"/>

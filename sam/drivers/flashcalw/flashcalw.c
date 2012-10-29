@@ -42,6 +42,7 @@
  */
 
 #include "flashcalw.h"
+#include "sysclk.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -1662,6 +1663,133 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 	/* Return the initial destination pointer as the standard memcpy
 	 * function does. */
 	return dst;
+}
+
+/** @} */
+
+
+/*! \name PicoCache interfaces
+ */
+//! @{
+
+/**
+ * \brief Enable PicoCache.
+ */
+void flashcalw_picocache_enable(void)
+{
+	sysclk_enable_peripheral_clock(HCACHE);
+	HCACHE->HCACHE_CTRL = HCACHE_CTRL_CEN_YES;
+
+	while (!(flashcalw_picocache_get_status() & HCACHE_SR_CSTS_EN)) {
+	}
+}
+
+/**
+ * \brief Disable PicoCache.
+ */
+void flashcalw_picocache_disable(void)
+{
+	HCACHE->HCACHE_MAINT0 = HCACHE_MAINT0_INVALL_YES;
+	HCACHE->HCACHE_CTRL = HCACHE_CTRL_CEN_NO;
+
+	while (flashcalw_picocache_get_status() != HCACHE_SR_CSTS_DIS) {
+	}
+
+	sysclk_disable_peripheral_clock(HCACHE);
+}
+
+/**
+ * \brief Get PicoCache status.
+ *
+ * \return 1 If PicoCahe is enabled, else disabled.
+ */
+uint32_t flashcalw_picocache_get_status(void)
+{
+	return HCACHE->HCACHE_SR;
+}
+
+/**
+ * \brief Invalid all PicoCache lines.
+ */
+void flashcalw_picocache_invalid_all(void)
+{
+	HCACHE->HCACHE_MAINT0 = HCACHE_MAINT0_INVALL_YES;
+}
+
+/**
+ * \brief Invalid specific cache line.
+ *
+ * \param index Lines to be invalid.
+ */
+void flashcalw_picocache_invalid_line(uint32_t index)
+{
+	/* Disable the cache controller */
+	HCACHE->HCACHE_CTRL = HCACHE_CTRL_CEN_NO;
+
+	/* Wait for disable successfully */
+	while (flashcalw_picocache_get_status() != HCACHE_SR_CSTS_DIS) {
+	}
+
+	/* Invalid the line */
+	HCACHE->HCACHE_MAINT1 = index;
+
+	/* Enable the cache again */
+	HCACHE->HCACHE_CTRL = HCACHE_CTRL_CEN_YES;
+}
+
+/**
+ * \brief Set PicoCache monitor mode.
+ *
+ * \param mode PicoCache mode, 0 for cycle, 1 for instruction hit and 2 for data
+ *hit.
+ */
+void flashcalw_picocache_set_monitor_mode(uint32_t mode)
+{
+	HCACHE->HCACHE_MCFG = mode;
+}
+
+/**
+ * \brief Enable PicoCache monitor.
+ */
+void flashcalw_picocache_enable_monitor(void)
+{
+	HCACHE->HCACHE_MEN = HCACHE_MEN_MENABLE_EN;
+}
+
+/**
+ * \brief Disable PicoCache monitor.
+ */
+void flashcalw_picocache_disable_monitor(void)
+{
+	HCACHE->HCACHE_MEN = HCACHE_MEN_MENABLE_DIS;
+}
+
+/**
+ * \brief Reset PicoCache monitor.
+ */
+void flashcalw_picocache_reset_monitor( void )
+{
+	HCACHE->HCACHE_MCTRL = HCACHE_MCTRL_SWRST_YES;
+}
+
+/**
+ * \brief Get PicoCache monitor count number.
+ *
+ * \return Monitor counter number.
+ */
+uint32_t flashcalw_picocache_get_monitor_cnt( void )
+{
+	return HCACHE->HCACHE_MSR;
+}
+
+/**
+ * \brief Get PicoCache version.
+ *
+ * \return PicoCache version.
+ */
+uint32_t flashcalw_picocache_get_version( void )
+{
+	return HCACHE->HCACHE_VERSION;
 }
 
 /** @} */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief FLASHCALW example for SAM.
+ * \brief FLASHCALW example2 for SAM.
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -47,23 +47,16 @@
  * This is the documentation for the data structures, functions, variables,
  * defines, enums, and typedefs for the FLASHCALW software driver.
  *
- * It also comes bundled with an example. This example demonstrates flash read /
- * write data accesses, using a flash block as an NVRAM, located either in the
- * flash array or in the User page.
+ * The example2 demonstrates how to read the unique ID of a SAM4L device.
  *
  * Operating mode of the example:
- *   -# After reset, the NVRAM variables are displayed on the USART link.
- *   -# The NVRAM is cleared (all bytes are set to 0x00).
- *   -# All NVRAM variables are written with incrementing nibbles, starting from
- *      0x0.
- *   -# The user can reset or power-cycle the board to check the
- *      non-volatileness of the NVRAM.
- * This is performed once in the flash array and then in the user page.
+ *   -# After reset, the system clocks and serial console will be initialized.
+ *   -# Then unique ID will be read and printed through the serial console. 
  *
  * \section files Main Files
  *   - flashcalw.c: FLASHCALW driver;
  *   - flashcalw.h: FLASHCALW driver header file;
- *   - flashcalw_example.c: flash access example application.
+ *   - flashcalw_example2.c: Read unique ID example application.
  *
  * \section compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
@@ -92,21 +85,9 @@
 
 #include <asf.h>
 
-/* NVRAM test page address */
-#define NVRAM_PAGE_ADDRESS (FLASH_ADDR + FLASH_SIZE - FLASH_PAGE_SIZE)
-
-/* NVRAM test user page address. The first 8 bytes in the user page is
- * reserved as fuse settings and should not be programmed */
-#define USER_PAGE_ADDRESS (FLASH_USER_PAGE_ADDR + 8)
-
-/* Structure type containing variables to store in NVRAM using a specific
-memory map. */
-typedef const struct {
-	uint8_t var8;
-	uint16_t var16;
-	uint8_t var8_3[3];
-	uint32_t var32;
-} nvram_data_t;
+/* Each device has a unique 120 bits serial number readable from address
+ * 0x0080020C to 0x0080021A */
+#define UNIQUE_ID_ADDR (0x0080020C)
 
 /**
  *  Configure serial console.
@@ -128,64 +109,15 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-/*! \brief Prints the variables stored in NVRAM.
- *
- * \param nvram_data  Pointer to the NVRAM data structure to print.
- */
-static void print_nvram_variables(nvram_data_t *nvram_data)
-{
-	printf("var8:\t0x%X", nvram_data->var8);
-
-	printf("\r\nvar16:\t0x%X", nvram_data->var16);
-
-	printf("\r\nvar8_3:\t0x%X%X%X", nvram_data->var8_3[0],
-		nvram_data->var8_3[1], nvram_data->var8_3[2]);
-
-	printf("\r\nvar32:\t0x%X\r\n", (unsigned int)nvram_data->var32);
-}
-
-/*! \brief This is an example demonstrating flash read / write data accesses
- *         using the FLASHCALW driver.
- *
- * \param caption     Caption to print before running the example.
- * \param nvram_data  Pointer to the NVRAM data structure to use in the example.
- */
-static void flash_rw_example(const char *caption, nvram_data_t *nvram_data)
-{
-	static const uint8_t write_data[8]
-		= {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-
-	printf("%s", caption);
-
-	printf("Initial values of NVRAM variables:\r\n");
-	print_nvram_variables(nvram_data);
-
-	printf("\r\nClearing NVRAM variables...");
-
-	/* Clear NVRAM */
-	flashcalw_memset((void *)nvram_data, 0x0, 8, sizeof(*nvram_data),
-			true);
-	printf("\r\nNVRAM variables cleared:\r\n");
-	print_nvram_variables(nvram_data);
-
-	printf("\r\nWriting new values to NVRAM variables...");
-	flashcalw_memcpy((void *)&nvram_data->var8, &write_data,
-			sizeof(nvram_data->var8), true);
-	flashcalw_memcpy((void *)&nvram_data->var16, &write_data,
-			sizeof(nvram_data->var16), true);
-	flashcalw_memcpy((void *)&nvram_data->var8_3, &write_data,
-			sizeof(nvram_data->var8_3), true);
-	flashcalw_memcpy((void *)&nvram_data->var32, &write_data,
-			sizeof(nvram_data->var32), true);
-	printf("\r\nNVRAM variables written:\r\n");
-	print_nvram_variables(nvram_data);
-}
-
-/*!
- * \brief main function : do init and loop (poll if configured so)
+/**
+ * \brief main function : do init and print the unique ID through the
+ * serial console.
  */
 int main(void)
 {
+	uint32_t i;
+	volatile uint8_t* unique_id_addr = (volatile uint8_t*) UNIQUE_ID_ADDR;
+
 	/* Initialize the SAM system */
 	sysclk_init();
 	board_init();
@@ -194,19 +126,16 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("-- FLASHCALW Example --\r\n");
+	printf("-- FLASHCALW Example2 --\r\n");
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
-	/* Apply the example to the flash array. */
-	flash_rw_example(
-		"\x0C=== Using a piece of the flash array as NVRAM ===\r\n",
-		(nvram_data_t *)NVRAM_PAGE_ADDRESS);
-
-	/* Apply the example to the user page. */
-	flash_rw_example(
-		"\r\n\r\n=== Using a piece of the user page as NVRAM ===\r\n",
-		(nvram_data_t *)USER_PAGE_ADDRESS);
+	printf("ID: ");
+	
+	/* Read the unique id and print it */
+	for (i=0; i<15; i++) {
+		printf("%02x",*unique_id_addr++);
+	}
 
 	while (true) {
 	}
