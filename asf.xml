@@ -6,6 +6,8 @@
 		<group name="avr">
 			<group name="mega" doc-arch="megaAVR">
 				<mcu name="unspecified-mega"/>
+				<mcu name="atmega8"/>
+				<mcu name="atmega8a"/>
 				<mcu name="atmega16"/>
 				<mcu name="atmega16a"/>
 				<mcu name="atmega32"/>
@@ -14,22 +16,36 @@
 				<mcu name="atmega64a"/>
 				<mcu name="atmega128"/>
 				<mcu name="atmega128a"/>
-				<mcu name="atmega169p"/>
-				<mcu name="atmega169pa"/>
-				<mcu name="atmega329p"/>
-				<mcu name="atmega329pa"/>
+				<mcu name="atmega162"/>
+				<mcu name="atmega165p"/>
+				<mcu name="atmega8515"/>
+				<mcu name="atmega8535"/>
+				<!-- There is no definite way to group megaAVR devices so the
+				     rule is to group the devices like the datasheets, i.e.,
+				     devices in the same datasheet are grouped together.
+
+				     Deviations from this rule in the groups below are due to
+				     legacy groupings that we chose not to change.
+				-->
 				<group name="megax8">
 					<mcu name="atmega48"/>
-					<mcu name="atmega48a"/>
-					<mcu name="atmega48pa"/>
 					<mcu name="atmega88"/>
-					<mcu name="atmega88a"/>
-					<mcu name="atmega88pa"/>
 					<mcu name="atmega168"/>
-					<mcu name="atmega168a"/>
-					<mcu name="atmega168pa"/>
-					<mcu name="atmega328"/>
-					<mcu name="atmega328p"/>
+					<group name="megax8a">
+						<mcu name="atmega48a"/>
+						<mcu name="atmega48pa"/>
+						<mcu name="atmega88a"/>
+						<mcu name="atmega88pa"/>
+						<mcu name="atmega168a"/>
+						<mcu name="atmega168pa"/>
+						<mcu name="atmega328"/>
+						<mcu name="atmega328p"/>
+					</group>
+				</group>
+				<group name="megax8p">
+					<mcu name="atmega48p"/>
+					<mcu name="atmega88p"/>
+					<mcu name="atmega168p"/>
 				</group>
 				<group name="megaxx0_1">
 					<mcu name="atmega640"/>
@@ -39,15 +55,42 @@
 					<mcu name="atmega2561"/>
 				</group>
 				<group name="megaxx4a">
+					<mcu name="atmega644"/>
 					<mcu name="atmega164a"/>
 					<mcu name="atmega164pa"/>
-					<mcu name="atmega324"/>
 					<mcu name="atmega324a"/>
 					<mcu name="atmega324pa"/>
-					<mcu name="atmega644"/>
 					<mcu name="atmega644a"/>
 					<mcu name="atmega644pa"/>
+					<mcu name="atmega1284"/>
 					<mcu name="atmega1284p"/>
+				</group>
+				<group name="megaxx4p">
+					<mcu name="atmega164p"/>
+					<mcu name="atmega324p"/>
+					<mcu name="atmega644p"/>
+				</group>
+				<group name="megaxx5x">
+					<mcu name="atmega325"/>
+					<mcu name="atmega3250"/>
+					<mcu name="atmega645"/>
+					<mcu name="atmega6450"/>
+				</group>
+				<group name="megaxx5xp">
+					<mcu name="atmega325p"/>
+					<mcu name="atmega3250p"/>
+				</group>
+				<group name="megaxx5xa">
+					<mcu name="atmega165a"/>
+					<mcu name="atmega165pa"/>
+					<mcu name="atmega325a"/>
+					<mcu name="atmega325pa"/>
+					<mcu name="atmega3250a"/>
+					<mcu name="atmega3250pa"/>
+					<mcu name="atmega645a"/>
+					<mcu name="atmega645p"/>
+					<mcu name="atmega6450a"/>
+					<mcu name="atmega6450p"/>
 				</group>
 				<group name="megarf">
 					<mcu name="atmega128rfa1"/>
@@ -56,6 +99,135 @@
 					<mcu name="atmega256rfa2"/>
 					<mcu name="atmega256rfr2"/>
 					<mcu name="atmega2564rfr2"/>
+				</group>
+				<group name="mega-lcd">
+					<mcu name="atmega169p"/>
+					<group name="megaxx9xa">
+						<mcu name="atmega169a"/>
+						<mcu name="atmega169pa"/>
+						<mcu name="atmega329a"/>
+						<mcu name="atmega329pa"/>
+						<mcu name="atmega3290a"/>
+						<mcu name="atmega3290pa"/>
+						<mcu name="atmega649a"/>
+						<mcu name="atmega649p"/>
+						<mcu name="atmega6490a"/>
+						<mcu name="atmega6490p"/>
+					</group>
+					<group name="megaxx9xp">
+						<mcu name="atmega329p"/>
+						<mcu name="atmega3290p"/>
+					</group>
+					<group name="megaxx9x">
+						<mcu name="atmega329"/>
+						<mcu name="atmega3290"/>
+						<mcu name="atmega649"/>
+						<mcu name="atmega6490"/>
+					</group>
+				</group>
+				<group name="mega-usb">
+					<group name="90usbxx2">
+						<mcu name="at90usb82"/>
+						<mcu name="at90usb162"/>
+					</group>
+					<group name="90usbxxx6_7">
+						<mcu name="at90usb646"/>
+						<mcu name="at90usb647"/>
+						<mcu name="at90usb1286"/>
+						<mcu name="at90usb1287"/>
+					</group>
+					<group name="megaxxu2">
+						<mcu name="atmega8u2"/>
+						<mcu name="atmega32u2"/>
+						<mcu name="atmega16u2"/>
+					</group>
+					<group name="megaxxu4">
+						<mcu name="atmega16u4"/>
+						<mcu name="atmega32u4"/>
+					</group>
+				</group>
+				<group name="mega-can">
+					<group name="megaxxm1">
+						<mcu name="atmega16m1"/>
+						<mcu name="atmega32m1"/>
+						<mcu name="atmega64m1"/>
+					</group>
+					<group name="90canxxx">
+						<mcu name="at90can32"/>
+						<mcu name="at90can64"/>
+						<mcu name="at90can128"/>
+					</group>
+				</group>
+				<group name="mega-pwm">
+					<mcu name="at90pwm1"/>
+					<mcu name="at90pwm81"/>
+					<group name="90pwmxb">
+						<mcu name="at90pwm2b"/>
+						<mcu name="at90pwm3b"/>
+					</group>
+					<group name="90pwmx16">
+						<mcu name="at90pwm216"/>
+						<mcu name="at90pwm316"/>
+					</group>
+				</group>
+			</group>
+			<group name="tiny" doc-arch="tinyAVR">
+				<mcu name="unspecified-tiny"/>
+				<!-- There is no definite way to group tinyAVR devices so the
+				     rule is to group the devices like the datasheets, i.e.,
+				     devices in the same datasheet are grouped together.
+				-->
+				<mcu name="attiny13"/>
+				<mcu name="attiny13a"/>
+				<mcu name="attiny1634"/>
+				<mcu name="attiny20"/>
+				<mcu name="attiny26"/>
+				<mcu name="attiny2313"/>
+				<mcu name="attiny43u"/>
+				<mcu name="attiny40"/>
+				<mcu name="attiny828"/>
+				<group name="tinyx_10">
+					<mcu name="attiny4"/>
+					<mcu name="attiny5"/>
+					<mcu name="attiny9"/>
+					<mcu name="attiny10"/>
+				</group>
+				<group name="tinyx313a">
+					<mcu name="attiny2313a"/>
+					<mcu name="attiny4313"/>
+				</group>
+				<group name="tinyx4a">
+					<mcu name="attiny24a"/>
+					<mcu name="attiny44a"/>
+					<mcu name="attiny84a"/>
+				</group>
+				<group name="tinyx4">
+					<mcu name="attiny24"/>
+					<mcu name="attiny44"/>
+					<mcu name="attiny84"/>
+				</group>
+				<group name="tinyx5">
+					<mcu name="attiny25"/>
+					<mcu name="attiny45"/>
+					<mcu name="attiny85"/>
+				</group>
+				<group name="tinyx261a">
+					<mcu name="attiny261a"/>
+					<mcu name="attiny461a"/>
+					<mcu name="attiny861a"/>
+				</group>
+				<group name="tinyx261">
+					<mcu name="attiny261"/>
+					<mcu name="attiny461"/>
+					<mcu name="attiny861"/>
+				</group>
+				<group name="tinyx8">
+					<mcu name="attiny48"/>
+					<mcu name="attiny88"/>
+				</group>
+				<group name="tinyxx7">
+					<mcu name="attiny87"/>
+					<mcu name="attiny167"/>
 				</group>
 			</group>
 			<group name="xmega">
