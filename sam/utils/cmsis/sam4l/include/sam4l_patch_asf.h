@@ -82,4 +82,11 @@
 #define USBC_UPCFG0_PBK_Pos                                    2
 #define USBC_UPCFG0_PBK_Msk                     (0x1u << USBC_UPCFG0_PBK_Pos)
 
+// These defines are used to keep compatibility with existing 
+// sam/drivers/tc implementation from SAM3/4 products with SAM4L product. 
+#define	TC_SMMR 	           TC_SMC
+#define	TC_CMR_LDRA_RISING     TC_CMR_LDRA_POS_EDGE_TIOA
+#define	TC_CMR_LDRB_FALLING	   TC_CMR_LDRB_NEG_EDGE_TIOA
+#define	TC_CMR_ETRGEDG_FALLING TC_CMR_ETRGEDG_NEG_EDGE
+
 #endif  // SAM4L_PATCH_ASF_H_INCLUDED
