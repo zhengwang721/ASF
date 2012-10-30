@@ -365,7 +365,6 @@ UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][64];
  *
  * \param ep         endpoint number of job to abort
  */
-volatile bool toto = true;
 static void udd_ep_trans_done(udd_ep_id_t ep);
 
 /**
