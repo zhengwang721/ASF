@@ -44,20 +44,87 @@
 #include "compiler.h"
 #include "bpm.h"
 
-void bpm_configure_power_scaling(Bpm *bpm, uint32_t ps_value, uint32_t pscm)
+RAMFUNC bool bpm_ps_no_halt_exec(Bpm *bpm, uint32_t pmcon);
+/**
+ * \brief Execute Power Scaling No Halt with a delay loop
+ *
+ * \note SysTick is used to check timeout.
+ *
+ * \param bpm BPM register base
+ * \param pmcon BPM_PMCON value to write
+ *
+ * \return PSOK status, true if set.
+ */
+RAMFUNC bool bpm_ps_no_halt_exec(Bpm *bpm, uint32_t pmcon)
+{
+	bool b_psok = false;
+	bool b_timeout = false;
+	BPM_UNLOCK(PMCON);
+	bpm->BPM_PMCON = pmcon;
+	do {
+		b_psok = (BPM->BPM_SR & BPM_SR_PSOK);
+		b_timeout = (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk);
+	} while (!b_psok && !b_timeout);
+	return b_psok;
+}
+
+
+bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
+	uint32_t timeout)
 {
 	uint32_t pmcon = 0;
 
+	/* Read last PM_CON value */
+	pmcon = bpm->BPM_PMCON;
+
+	/* Clear last PS Value & Write new one */
+	pmcon &= ~BPM_PMCON_PS_Msk;
+	pmcon |= BPM_PMCON_PS(ps_value);
+
+	/* Set PSCM Value: PS change no halt */
+	pmcon |= BPM_PMCON_PSCM;
+
+	/* Power Scaling Change Request */
+	pmcon |= BPM_PMCON_PSCREQ;
+
+	/* Execute power scaling no halt in RAM */
+	irqflags_t flags;
+	bool b_psok;
+	uint32_t ctrl, load, val;
+	/* Avoid interrupt while flash halt */
+	flags = cpu_irq_save();
+
+	/* Save SysTick */
+	val = SysTick->VAL;
+	ctrl = SysTick->CTRL;
+	load = SysTick->LOAD;
+	/* Setup SysTick & start counting */
+	SysTick->LOAD = timeout;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
+
+	b_psok = bpm_ps_no_halt_exec(bpm, pmcon);
+
+	/* Restore SysTick */
+	SysTick->CTRL = 0;
+	SysTick->LOAD = load;
+	SysTick->VAL = val;
+	SysTick->CTRL = ctrl;
+
+	cpu_irq_restore(flags);
+	return b_psok;
+}
+
+void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value)
+{
+	uint32_t pmcon = 0;
 	/* Read last PM_CON value */
 	pmcon = bpm->BPM_PMCON;
 	/* Clear last PS Value */
 	pmcon &= ~BPM_PMCON_PS_Msk;
 	/* Write new PS Value */
 	pmcon |= BPM_PMCON_PS(ps_value);
-	/* Clear last PSM Value */
-	pmcon &= ~BPM_PMCON_PSCM;
-	/* Write new PS Value */
-	pmcon |= (pscm ? BPM_PMCON_PSCM : 0);
+	/* PSCM: without CPU halt */
+	pmcon |= BPM_PMCON_PSCM;
 	/* Power Scaling Change Request */
 	pmcon |= BPM_PMCON_PSCREQ;
 	/* Unlock PMCON register */

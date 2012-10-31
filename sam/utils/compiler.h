@@ -184,7 +184,7 @@
 #  define Assert(expr) ((void) 0)
 #endif
 
-/* Define attribute */
+/* Define WEAK attribute */
 #if defined   ( __CC_ARM   ) /* Keil µVision 4 */
 #   define WEAK __attribute__ ((weak))
 #elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
@@ -200,6 +200,15 @@
 #   define NO_INIT __no_init
 #elif defined (  __GNUC__  )
 #   define NO_INIT __attribute__((section(".no_init")))
+#endif
+
+/* Define RAMFUNC attribute */
+#if defined   ( __CC_ARM   ) /* Keil µVision 4 */
+#   define RAMFUNC __attribute__ ((section(".ramfunc")))
+#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+#   define RAMFUNC __ramfunc
+#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
+#   define RAMFUNC __attribute__ ((section(".ramfunc")))
 #endif
 
 #include "interrupt.h"

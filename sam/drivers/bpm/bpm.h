@@ -137,14 +137,55 @@ extern "C" {
  */
 /* @{ */
 
+
+/**
+ * \brief Change Power Scaling mode
+ *
+ * PSOK is not checked while switching PS mode.
+ *
+ * \param bpm  Base address of the BPM instance.
+ * \param ps_value  Power scaling value,
+ *                  see \ref Power scaling mode value.
+ */
+void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
+
+/**
+ * \brief Change Power Scaling mode and check results
+ *
+ * Wait for a while to check if PSOK is ready.
+ *
+ * \param bpm  Base address of the BPM instance.
+ * \param ps_value  Power scaling value,
+ *                  see \ref Power scaling mode value.
+ * \param timeout Timeout, in number of processor clocks, max 0xFFFFFF.
+ * \return true if PSOK is ready.
+ */
+bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
+		uint32_t timeout);
+
 /**
  * \brief Configure power scaling mode.
  *
+ * While checking PSOK in power safe (no halt) mode, timeout is set to
+ * 240000 by default, which takes 20ms when 12MHz clock is used.
+ *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value, see \ref Power scaling mode value.
- * \param pscm      Power scaling change mode, see \ref Power scaling change mode.
+ * \param ps_value  Power scaling value,
+ *                  see \ref Power scaling mode value.
+ * \param no_halt   No halt or Fail safe, see \c bpm_power_scaling_cpu()
+ *                  and bpm_power_scaling_cpu_failsafe()
+ * \return true if no error.
  */
-void bpm_configure_power_scaling(Bpm *bpm, uint32_t ps_value, uint32_t pscm);
+__always_inline static
+bool bpm_configure_power_scaling(Bpm *bpm, uint32_t ps_value, uint32_t no_halt)
+{
+	if (!no_halt) {
+		bpm_power_scaling_cpu(bpm, ps_value);
+		return true;
+	}
+
+	return bpm_power_scaling_cpu_failsafe(bpm, ps_value, 240000);
+}
 
 /**
  * \brief Enable fast wakeup for analog modules.
