@@ -133,7 +133,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		# Only insert Stack size option if user wants to overwrite default value
 		option_set.add_option(
 			DualInsertionOption(
-				'IlinkExtraOptions', '--config_def __ICFEDIT_size_cstack__ =%s', '--config_def __ICFEDIT_size_heap__=%s', 'sys_stack_size','heap_size'
+				'IlinkExtraOptions', '--config_def __ICFEDIT_size_cstack__=%s', '--config_def __ICFEDIT_size_heap__=%s', 'sys_stack_size','heap_size'
 			)
 		)
 		option_set.add_option(
