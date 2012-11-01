@@ -20,8 +20,12 @@ class ProjectGeneratorRuntime(Runtime):
 	require_tag = "require"
 	require_ref = "idref"
 	id_attrib = "id"
+	type_attrib ="type"
 	build_tag = "build"
 	build_value = "value"
+	module_tag = "module"
+	project_tag = "project"
+	module_types_to_add = ["driver", "service", "component", "library"]
 
 	def __init__(self, template_dir, configuration):
 		super(ProjectGeneratorRuntime, self).__init__(template_dir, configuration)
@@ -57,6 +61,21 @@ class ProjectGeneratorRuntime(Runtime):
 		result_modules = set()
 		prefix = "  "*level
 
+		# On first level, check if we should add the id itself
+		if level == 0:
+			# Check if this is a module.
+			element = self.db.tree.find(".//%s[@%s='%s']" % (self.module_tag, self.id_attrib, id))
+			if element is not None:
+				# This is a module, check if it's the right kind and then add it
+				if element.attrib[self.type_attrib] in self.module_types_to_add:
+					result_modules.add(id)
+			else:
+				# No module, is this a project?
+				element = self.db.tree.find(".//%s[@%s='%s']" % (self.project_tag, self.id_attrib, id))
+				if element is not None:
+					# Yes, project. Add to list of projects.
+					result_projects.add(id)
+
 		# Search for parent module if a module selector is selected
 		if id.find("#") > 0:
 			id = id.partition("#")[0]
@@ -71,7 +90,7 @@ class ProjectGeneratorRuntime(Runtime):
 				result_projects.add(rid)
 			else:
 				if type == "module":
-					if rel.attrib["type"] in ["driver", "service", "component", "library"]:
+					if rel.attrib[self.type_attrib] in self.module_types_to_add:
 						result_modules.add(rid)
 
 				# Search for parent module if a module selector is selected
@@ -292,7 +311,6 @@ class ProjectGeneratorRuntime(Runtime):
 		project_id_set = set()
 		module_id_set = set()
 		for id in affected_ids_set:
-			module_id_set.update([id])
 			pids, mids = self.find_projects_and_modules_for_id(id)
 			if self.check_device_support:
 				pids = self.eliminate_unsupported_devices(id, pids)
@@ -320,7 +338,7 @@ class ProjectGeneratorRuntime(Runtime):
 
 			# Report modules that need to be tested
 			for the_id in module_id_set:
-					self.report_line_m(the_id)
+				self.report_line_m(the_id)
 
 		self.outfile_p.close()
 		self.outfile_m.close()
@@ -362,6 +380,7 @@ if __name__ == "__main__":
 	parser.add_option("-l","--level", dest="level", default=False, help="Log output level, from most detailed to least detailed: debug, info, warning or error")
 	parser.add_option("-t","--timestamp", action="store_true", dest="timestamp", default=False, help="Timestamp log")
 	parser.add_option("-v","--verbose", action="store_const", dest="level", const="info", help="Verbose output")
+	parser.add_option("", "--load-cache", dest="cache_file", action="store", default=None, help="Use this given database cache instead of parsing asf.xml")
 
 	(options, args) = parser.parse_args()
 
@@ -372,7 +391,10 @@ if __name__ == "__main__":
 
 	basedir = options.basedir
 	if basedir is None:
-		basedir = "../../"
+		if options.cache_file:
+			basedir = "."
+		else:
+			basedir = "../../"
 
 	# Find paths for input files in same folder as this script
 	templatedir = os.path.join(script_path, "templates")
@@ -425,7 +447,7 @@ if __name__ == "__main__":
 
 	try:
 		# Read XML files
-		runtime.load_db()
+		runtime.load_db(filename=options.cache_file)
 
 		# Load framework version
 		version = runtime.db.get_framework_version()
