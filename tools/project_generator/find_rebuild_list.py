@@ -374,13 +374,13 @@ if __name__ == "__main__":
 	default_outfile_module = "find_rebuild_list_modules.txt"
 	parser.add_option("-o", "--outfile", dest="outfile_projects", action="store", default=default_outfile_project, help="Filename to store projects. Default: " + default_outfile_project)
 	parser.add_option("-m", "--outfile_modules", dest="outfile_modules", action="store", default=default_outfile_module, help="Filename to store modules. Default: " + default_outfile_module)
+	parser.add_option("", "--load-cache", dest="cache_file", action="store", default=None, help="Use this given database cache instead of parsing asf.xml")
 
 	# Debug options
 	parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, help="Enable debugging. Sets 'level' to debug if not otherwise specified.")
 	parser.add_option("-l","--level", dest="level", default=False, help="Log output level, from most detailed to least detailed: debug, info, warning or error")
 	parser.add_option("-t","--timestamp", action="store_true", dest="timestamp", default=False, help="Timestamp log")
 	parser.add_option("-v","--verbose", action="store_const", dest="level", const="info", help="Verbose output")
-	parser.add_option("", "--load-cache", dest="cache_file", action="store", default=None, help="Use this given database cache instead of parsing asf.xml")
 
 	(options, args) = parser.parse_args()
 
