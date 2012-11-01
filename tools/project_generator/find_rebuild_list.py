@@ -37,8 +37,9 @@ class ProjectGeneratorRuntime(Runtime):
 	def set_show_not_affected(self, value):
 		self.show_not_affected = value
 
-	def set_outfile(self, value):
-		self.outfilename = value
+	def set_outfiles(self, ppath, mpath):
+		self.outfilename_p = ppath
+		self.outfilename_m = mpath
 
 	def set_start_folder(self, value):
 		self.start_folder = value
@@ -51,8 +52,9 @@ class ProjectGeneratorRuntime(Runtime):
 			current = current.getparent()
 		return None
 
-	def find_projects_for_id(self, id, level=0):
-		result = set()
+	def find_projects_and_modules_for_id(self, id, level=0):
+		result_projects = set()
+		result_modules = set()
 		prefix = "  "*level
 
 		# Search for parent module if a module selector is selected
@@ -66,23 +68,28 @@ class ProjectGeneratorRuntime(Runtime):
 			type = rel.tag
 			# Do we have a project or do we need to search further?
 			if type == "project":
-				result.add(rid)
+				result_projects.add(rid)
 			else:
+				if type == "module":
+					if rel.attrib["type"] in ["driver", "service", "component", "library"]:
+						result_modules.add(rid)
+
 				# Search for parent module if a module selector is selected
 				if rid.find("#") > 0:
 					rid = rid.partition("#")[0]
 
 				if rid in self._cache:
 					# Cached result
-					pp = self._cache[rid]
+					pp, mm = self._cache[rid]
 				else:
 					# Search modules recursively
-					pp = self.find_projects_for_id(rid, level+1)
-					self._cache[rid] = pp;
+					pp, mm = self.find_projects_and_modules_for_id(rid, level+1)
+					self._cache[rid] = [pp, mm];
 
-				result.update(pp)
+				result_projects.update(pp)
+				result_modules.update(mm)
 
-		return result
+		return result_projects, result_modules
 
 	def find_all_project_ids(self):
 		idset = set()
@@ -199,8 +206,15 @@ class ProjectGeneratorRuntime(Runtime):
 
 		return new_set
 
+	def report_line_p(self, str):
+		self.outfile_p.write(str + "\n")
+
+	def report_line_m(self, str):
+		self.outfile_m.write(str + "\n")
+
 	def report_line(self, str):
-		self.outfile.write(str + "\n")
+		self.report_line_m(str + "\n")
+		self.report_line_p(str + "\n")
 
 	def report_rebuild_none(self):
 		# Return an invalid ID if nothing should be build
@@ -216,7 +230,8 @@ class ProjectGeneratorRuntime(Runtime):
 
 	def run(self):
 		self._cache = dict()
-		self.outfile = open(self.outfilename, "w")
+		self.outfile_p = open(self.outfilename_p, "w")
+		self.outfile_m = open(self.outfilename_m, "w")
 
 		# Files that always require recompilation of everything
 		# Top level asf.xml require everything to be rebuilt:
@@ -275,11 +290,14 @@ class ProjectGeneratorRuntime(Runtime):
 		# Finding projects for the modules that have changed
 		self.log.info("Finding projects for affected modules")
 		project_id_set = set()
+		module_id_set = set()
 		for id in affected_ids_set:
-			pids = self.find_projects_for_id(id)
+			module_id_set.update([id])
+			pids, mids = self.find_projects_and_modules_for_id(id)
 			if self.check_device_support:
 				pids = self.eliminate_unsupported_devices(id, pids)
 			project_id_set.update(pids)
+			module_id_set.update(mids)
 
 		everything_set = self.find_all_project_ids()
 		unmodified_set = everything_set.difference(project_id_set)
@@ -292,17 +310,24 @@ class ProjectGeneratorRuntime(Runtime):
 			# Rebuilding everything, so no need to return id for each module
 			self.report_rebuild_all()
 		else:
-			# Report modules that need to be rebuilt
+			# Report projects that need to be rebuilt
 			for the_id in project_id_set:
-				self.report_line(the_id)
+				self.report_line_p(the_id)
 
 			if self.show_not_affected:
 				for unmodified in unmodified_set:
 					self.log.debug("Not affected: " + unmodified)
 
-		self.outfile.close()
-		self.log.info("Stored result in '%s'" % (self.outfilename))
+			# Report modules that need to be tested
+			for the_id in module_id_set:
+					self.report_line_m(the_id)
+
+		self.outfile_p.close()
+		self.outfile_m.close()
+		self.log.info("Affected projects stored in '%s'" % (self.outfilename_p))
 		self.log.info("%d projects need rebuild. %d projects not affected" % (len(project_id_set), len(unmodified_set)))
+		self.log.info("Affected modules stored in '%s'" % (self.outfilename_m))
+		self.log.info("%d modules affected." % (len(module_id_set)))
 
 
 if __name__ == "__main__":
@@ -315,11 +340,10 @@ if __name__ == "__main__":
 	start_time = time.clock()
 	parser = OptionParser(usage=
 		"""<options> input_file_list
-		Finds projects that needs to be recompiled based on the files given by the input_file_list argument.
+		Finds projects and modules (services, drivers, components, libraries) that needs to be recompiled based on the files given by the input_file_list argument.
 
-		The output is stored to file and contains the affected projects ids, one id for each line in the output.
-		If all projects need to be rebuild the result is an empty string.
-		(consistent with the project_generator.py script which generates all projects if no ids are given)
+		The output is stored in two separate files, one containing the affected projects ids, one containing affected module ids. One id for each line in the output.
+		If all projects need to be rebuild the result is an '*'.
 
 		Example usage:
 		python find_rebuild_list.py file_with_list_of_changed_files.txt
@@ -328,8 +352,10 @@ if __name__ == "__main__":
 	parser.add_option("-b", "--basedir", dest="basedir", help="Set root directory of ASF installation")
 	parser.add_option("", "--check-device-support", dest="device_support", action="store_true", default=False, help="Check device support and eliminate projects that do not have device support")
 	parser.add_option("", "--show-not-affected", dest="not_affected", action="store_true", default=False, help="Show all projects not affected by the change to debug log (useful for debugging)")
-	default_outfile = "find_rebuild_list_result.txt"
-	parser.add_option("-o", "--outfile", dest="outfile", action="store", default=default_outfile, help="Filename to store result. Default: " + default_outfile)
+	default_outfile_project = "find_rebuild_list_result.txt"
+	default_outfile_module = "find_rebuild_list_modules.txt"
+	parser.add_option("-o", "--outfile", dest="outfile_projects", action="store", default=default_outfile_project, help="Filename to store projects. Default: " + default_outfile_project)
+	parser.add_option("-m", "--outfile_modules", dest="outfile_modules", action="store", default=default_outfile_module, help="Filename to store modules. Default: " + default_outfile_module)
 
 	# Debug options
 	parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, help="Enable debugging. Sets 'level' to debug if not otherwise specified.")
@@ -355,7 +381,8 @@ if __name__ == "__main__":
 	xml_schema_path = os.path.join(script_path, "asf.xsd")
 
 	# Find absolute paths
-	outfile_path = os.path.abspath(options.outfile)
+	outfile_project_path = os.path.abspath(options.outfile_projects)
+	outfile_module_path = os.path.abspath(options.outfile_modules)
 	current_folder = os.getcwd()
 
 	# Change directory to the ASF root folder
@@ -372,7 +399,7 @@ if __name__ == "__main__":
 	runtime.set_commandline_args(args)
 	runtime.set_check_device_support(options.device_support)
 	runtime.set_show_not_affected(options.not_affected)
-	runtime.set_outfile(outfile_path)
+	runtime.set_outfiles(outfile_project_path, outfile_module_path)
 	runtime.set_start_folder(current_folder)
 
 	# If debugging is enabled and not the log level, we set it to debug
