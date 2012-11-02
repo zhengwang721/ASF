@@ -15,7 +15,7 @@ from asf.configuration import ConfigurationHandler
 from asf.runtime import Runtime
 
 
-class ProjectGeneratorRuntime(Runtime):
+class FindRebuildRuntime(Runtime):
 
 	require_tag = "require"
 	require_ref = "idref"
@@ -28,7 +28,7 @@ class ProjectGeneratorRuntime(Runtime):
 	module_types_to_add = ["driver", "service", "component", "library"]
 
 	def __init__(self, template_dir, configuration):
-		super(ProjectGeneratorRuntime, self).__init__(template_dir, configuration)
+		super(FindRebuildRuntime, self).__init__(template_dir, configuration)
 		self.check_device_support = False
 		self.show_not_affected = False
 		self.outfilename = "outfile.txt"
@@ -412,7 +412,7 @@ if __name__ == "__main__":
 
 	configuration = ConfigurationHandler()
 
-	runtime = ProjectGeneratorRuntime(templatedir, configuration)
+	runtime = FindRebuildRuntime(templatedir, configuration)
 
 	runtime.create_and_set_cache_dir(cachedir)
 
