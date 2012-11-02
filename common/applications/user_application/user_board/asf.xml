@@ -55,6 +55,16 @@
 		<generator value="doxygen"/>
 	</project>
 
+	<project id="common.applications.user_application.user_board.xmegae" caption="User board project template for XMEGA E" type="template">
+		<info type="description" value="summary">
+		User board project template for XMEGA E.
+		</info>
+		<require idref="board.user_board.xmegae"/>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<generator value="as5_8_template"/>
+		<generator value="doxygen"/>
+	</project>
+
 	<project id="common.applications.user_application.user_board.uc3a" caption="User board project template for UC3A0/A1" type="template">
 		<info type="description" value="summary">
 		User board project template for UC3A0 and UC3A1.

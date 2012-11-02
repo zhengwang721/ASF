@@ -127,6 +127,12 @@ void sysclk_init(void)
 			pll_enable_config_defaults(0);
 			break;
 #endif
+#if XMEGA_E
+		case SYSCLK_SRC_RC8MHZ:
+			osc_enable(OSC_ID_RC8MHZ);
+			osc_wait_ready(OSC_ID_RC8MHZ);
+			break;
+#endif
 		default:
 			//unhandled_case(CONFIG_SYSCLK_SOURCE);
 			return;

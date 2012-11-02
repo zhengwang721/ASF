@@ -1202,6 +1202,9 @@ class IAREW8Project_v610(IAREW8Project_v550):
 		'atxmega64d4',
 		'atxmega32d4',
 		'atxmega16d4',
+		'atxmega32e5',
+		'atxmega16e5',
+		'atxmega8e5',
 	]
 
 	# IAR EW optimization settings

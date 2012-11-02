@@ -338,7 +338,7 @@ void nvm_read_device_serial(struct nvm_device_serial *storage);
  */
 
 #ifndef EEPROM_PAGE_SIZE
-#  if XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D
+#  if XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D || XMEGA_E
 #    define EEPROM_PAGE_SIZE 32
 #  else
 #    error Unknown EEPROM page size
@@ -369,7 +369,9 @@ typedef uint16_t eeprom_addr_t;
  */
 static inline void eeprom_enable_mapping(void)
 {
+#if !XMEGA_E
 	NVM_CTRLB = NVM_CTRLB | NVM_EEMAPEN_bm;
+#endif
 }
 
 
@@ -380,7 +382,9 @@ static inline void eeprom_enable_mapping(void)
  */
 static inline void eeprom_disable_mapping(void)
 {
+#if !XMEGA_E
 	NVM_CTRLB = NVM_CTRLB & ~NVM_EEMAPEN_bm;
+#endif
 }
 
 
@@ -451,11 +455,17 @@ void nvm_eeprom_erase_all(void);
 #  define FLASH_PAGE_SIZE
 #else
 
+// 8K devices
+#  if AVR8_PART_IS_DEFINED(ATxmega8E5)
+#    define FLASH_SIZE      (8*1024L)
+#    define FLASH_PAGE_SIZE (256)
+
 // 16K devices
-#  if AVR8_PART_IS_DEFINED(ATxmega16A4)            | \
+#  elif AVR8_PART_IS_DEFINED(ATxmega16A4)            | \
 		AVR8_PART_IS_DEFINED(ATxmega16A4U) | \
 		AVR8_PART_IS_DEFINED(ATxmega16D4)  | \
-		AVR8_PART_IS_DEFINED(ATxmega16C4)
+		AVR8_PART_IS_DEFINED(ATxmega16C4)  | \
+		AVR8_PART_IS_DEFINED(ATxmega16E5)
 #    define FLASH_SIZE      (16*1024L)
 #    define FLASH_PAGE_SIZE (256)
 
@@ -466,6 +476,10 @@ void nvm_eeprom_erase_all(void);
 		AVR8_PART_IS_DEFINED(ATxmega32C4)
 #    define FLASH_SIZE      (32*1024L)
 #    define FLASH_PAGE_SIZE (256)
+
+#  elif AVR8_PART_IS_DEFINED(ATxmega32E5)
+#    define FLASH_SIZE      (32*1024L)
+#    define FLASH_PAGE_SIZE (128)
 
 // 64K devices
 #  elif AVR8_PART_IS_DEFINED(ATxmega64A1)          | \
@@ -916,8 +930,8 @@ static inline void nvm_lb_lock_bits_write(enum NVM_LB_enum lb_lock)
  *         read_page, EEPROM_PAGE_SIZE);
  *
  * check_if_pages_are_equal(write_page, read_page);
- * \endcode 
- * 
+ * \endcode
+ *
  * \subsection nvm_quickstart_eeprom_case_workflow Workflow
  *
  * -# We define where we would like to store our data, and we arbitrarily
@@ -990,7 +1004,7 @@ static inline void nvm_lb_lock_bits_write(enum NVM_LB_enum lb_lock)
  * \subsection nvm_quickstart_fuse_case_workflow Workflow
  *
  * -# Create a variable to store the fuse contents:
- *     - \code 
+ *     - \code
  *       uint8_t fuse_value;
  *       \endcode
  * -# The fuse value we are interested in, BODLVL, is stored in FUSEBYTE5.
@@ -1012,12 +1026,12 @@ static inline void nvm_lb_lock_bits_write(enum NVM_LB_enum lb_lock)
  * The NVM driver has functions for reading the signature row of the device.
  * Here we will simply read 16 bytes from the user signature row, assuming
  * we need what is stored there.
- * 
+ *
  * \section xmega_nvm_quickstart_signature_row_setup_steps Setup steps
  * There are no setup steps required for this use case.
  *
  * \subsection xmega_nvm_quickstart_signature_row_example_code Example code
- * 
+ *
  * \code
  * #define START_ADDR 0x10
  * #define DATA_LENGTH 16
@@ -1034,7 +1048,7 @@ static inline void nvm_lb_lock_bits_write(enum NVM_LB_enum lb_lock)
  *
  * -# Define starting address and length of data segment, and create
  *    variables needed to store and process the data:
- *     - \code 
+ *     - \code
  *       #define START_ADDR 0x10
  *       #define DATA_LENGTH 16
  *

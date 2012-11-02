@@ -29,6 +29,10 @@
 		<require idref="common.boards.user_board.common"/>
 	</board>
 
+	<board id="board.user_board.xmegae" caption="User Board" mcu="unspecified-xmegae">
+		<require idref="common.boards.user_board.common"/>
+	</board>
+
 	<board id="board.user_board.uc3a" caption="User Board" mcu="unspecified-uc3a">
 		<require idref="common.boards.user_board.common"/>
 	</board>

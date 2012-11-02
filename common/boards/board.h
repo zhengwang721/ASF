@@ -109,6 +109,7 @@ extern "C" {
 #define SAM4L_EK              45  //!< SAM4L-EK board.
 #define STK600_MEGA_RF        46  //!< STK600 MEGA RF EVK board.
 #define XMEGA_C3_XPLAINED     47  //!< ATxmega384C3 Xplained board.	
+#define STK600_RC032X         48  //!< STK600 with RC032X routing card board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -155,6 +156,8 @@ extern "C" {
   /*No header-file to include*/
 #elif BOARD == STK600_MEGA_RF
 #  include "stk600.h"
+#elif BOARD == STK600_RC032X
+#  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X
 #  include "stk600/rc044x/stk600_rc044x.h"
 #elif BOARD == STK600_RC064X

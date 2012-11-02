@@ -99,10 +99,9 @@ void nvm_read_device_serial(struct nvm_device_serial *storage)
  */
 
 /**
- * \brief Read one byte from EEPROM using IO mapping.
+ * \brief Read one byte from EEPROM using mapped access.
  *
- * This function reads one byte from EEPROM using IO-mapped access.
- * If memory mapped EEPROM is enabled, this function will not work.
+ * This function reads one byte from EEPROM using mapped access.
  *
  * \param  addr       EEPROM address, between 0 and EEPROM_SIZE
  *
@@ -110,20 +109,15 @@ void nvm_read_device_serial(struct nvm_device_serial *storage)
  */
 uint8_t nvm_eeprom_read_byte(eeprom_addr_t addr)
 {
+	uint8_t data;
 	Assert(addr <= EEPROM_SIZE);
 
 	/* Wait until NVM is ready */
 	nvm_wait_until_ready();
-
-	/* Set address to read from */
-	NVM.ADDR2 = 0x00;
-	NVM.ADDR1 = (addr >> 8) & 0xFF;
-	NVM.ADDR0 = addr & 0xFF;
-
-	/* Issue EEPROM Read command */
-	nvm_issue_command(NVM_CMD_READ_EEPROM_gc);
-
-	return NVM.DATA0;
+	eeprom_enable_mapping();
+	data = *(uint8_t*)(addr + MAPPED_EEPROM_START),
+	eeprom_disable_mapping();
+	return data;
 }
 
 /**
@@ -146,7 +140,6 @@ void nvm_eeprom_read_buffer(eeprom_addr_t address, void *buf, uint16_t len)
  * \brief Write one byte to EEPROM using IO mapping.
  *
  * This function writes one byte to EEPROM using IO-mapped access.
- * If memory mapped EEPROM is enabled, this function will not work.
  * This function will cancel all ongoing EEPROM page buffer loading
  * operations, if any.
  *
@@ -157,6 +150,7 @@ void nvm_eeprom_write_byte(eeprom_addr_t address, uint8_t value)
 {
 	uint8_t old_cmd;
 
+	Assert(address <= EEPROM_SIZE);
 	/*  Flush buffer to make sure no unintentional data is written and load
 	 *  the "Page Load" command into the command register.
 	 */
@@ -164,18 +158,12 @@ void nvm_eeprom_write_byte(eeprom_addr_t address, uint8_t value)
 	nvm_eeprom_flush_buffer();
 	// Wait until NVM is ready
 	nvm_wait_until_ready();
-
-	NVM.CMD = NVM_CMD_LOAD_EEPROM_BUFFER_gc;
-
-	Assert(address <= EEPROM_SIZE);
+	nvm_eeprom_load_byte_to_buffer(address, value);
 
 	// Set address to write to
 	NVM.ADDR2 = 0x00;
 	NVM.ADDR1 = (address >> 8) & 0xFF;
 	NVM.ADDR0 = address & 0xFF;
-
-	// Load data to write, which triggers the loading of EEPROM page buffer
-	NVM.DATA0 = value;
 
 	/*  Issue EEPROM Atomic Write (Erase&Write) command. Load command, write
 	 *  the protection signature and execute command.
@@ -251,23 +239,12 @@ void nvm_eeprom_flush_buffer(void)
  */
 void nvm_eeprom_load_byte_to_buffer(uint8_t byte_addr, uint8_t value)
 {
-	uint8_t old_cmd;
-	old_cmd = NVM.CMD;
-
 	// Wait until NVM is ready
 	nvm_wait_until_ready();
 
-	NVM.CMD = NVM_CMD_LOAD_EEPROM_BUFFER_gc;
-
-	// Set address
-	NVM.ADDR2 = 0x00;
-	NVM.ADDR1 = 0x00;
-	NVM.ADDR0 = byte_addr & 0xFF;
-
-	// Set data, which triggers loading of EEPROM page buffer
-	NVM.DATA0 = value;
-
-	NVM.CMD = old_cmd;
+	eeprom_enable_mapping();
+	*(uint8_t*)(byte_addr + MAPPED_EEPROM_START) = value;
+	eeprom_disable_mapping();
 }
 
 
@@ -288,28 +265,15 @@ void nvm_eeprom_load_byte_to_buffer(uint8_t byte_addr, uint8_t value)
  */
 void nvm_eeprom_load_page_to_buffer(const uint8_t *values)
 {
-	uint8_t old_cmd;
-	old_cmd = NVM.CMD;
-
 	// Wait until NVM is ready
 	nvm_wait_until_ready();
-
-	NVM.CMD = NVM_CMD_LOAD_EEPROM_BUFFER_gc;
-
-	/*  Set address to zero, as only the lower bits matters. ADDR0 is
-	 *  maintained inside the loop below.
-	 */
-	NVM.ADDR2 = 0x00;
-	NVM.ADDR1 = 0x00;
 
 	// Load multiple bytes into page buffer
 	uint8_t i;
 	for (i = 0; i < EEPROM_PAGE_SIZE; ++i) {
-		NVM.ADDR0 = i;
-		NVM.DATA0 = *values;
+		nvm_eeprom_load_byte_to_buffer(i, *values);
 		++values;
 	}
-	NVM.CMD = old_cmd;
 }
 
 /**
@@ -389,28 +353,14 @@ void nvm_eeprom_split_write_page(uint8_t page_addr)
  */
 void nvm_eeprom_fill_buffer_with_value(uint8_t value)
 {
-	uint8_t old_cmd;
-	old_cmd = NVM.CMD;
-
 	nvm_eeprom_flush_buffer();
 	// Wait until NVM is ready
 	nvm_wait_until_ready();
-
-	NVM.CMD = NVM_CMD_LOAD_EEPROM_BUFFER_gc;
-
-	/*  Set address to zero, as only the lower bits matters. ADDR0 is
-	 *  maintained inside the loop below.
-	 */
-	NVM.ADDR2 = 0x00;
-	NVM.ADDR1 = 0x00;
-
 	// Load multiple bytes into page buffer
 	uint8_t i;
 	for (i = 0; i < EEPROM_PAGE_SIZE; ++i) {
-		NVM.ADDR0 = i;
-		NVM.DATA0 = value;
+		nvm_eeprom_load_byte_to_buffer(i, value);
 	}
-	NVM.CMD = old_cmd;
 }
 
 /**

@@ -95,7 +95,7 @@ extern "C" {
  * @{
  */
 
-#if XMEGA_AU || XMEGA_B
+#if XMEGA_AU || XMEGA_B || XMEGA_E
 #  define XMEGA_DAC_VERSION_2 true
 #else
 #  define XMEGA_DAC_VERSION_1 true

@@ -340,6 +340,18 @@
 /** @} */
 
 /**
+ * \name AVR XMEGA E series
+ * @{
+ */
+#define XMEGA_E5 ( \
+		AVR8_PART_IS_DEFINED(ATxmega8E5)   || \
+		AVR8_PART_IS_DEFINED(ATxmega16E5)  || \
+		AVR8_PART_IS_DEFINED(ATxmega32E5)     \
+	)
+/** @} */
+
+
+/**
  * \name AVR XMEGA families
  * @{
  */
@@ -357,10 +369,14 @@
 
 /** AVR XMEGA D family */
 #define XMEGA_D (XMEGA_D3 || XMEGA_D4)
+
+/** AVR XMEGA E family */
+#define XMEGA_E (XMEGA_E5)
 /** @} */
 
+
 /** AVR XMEGA product line */
-#define XMEGA (XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D)
+#define XMEGA (XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D || XMEGA_E)
 
 /** @} */
 

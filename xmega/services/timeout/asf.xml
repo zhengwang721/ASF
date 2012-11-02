@@ -16,6 +16,7 @@
 			<device-support value="xmegaa4"/>
 			<device-support value="xmegaa4u"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="timeout_group"/>
 			<build type="c-source" value="timeout.c"/>

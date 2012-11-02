@@ -325,6 +325,14 @@
 						<mcu name="atxmega128d4"/>
 					</group>
 				</group>
+				<group name="xmegae" doc-arch="XMEGA E">
+					<mcu name="unspecified-xmegae"/>
+					<group name="xmegae5">
+						<mcu name="atxmega8e5"/>
+						<mcu name="atxmega16e5"/>
+						<mcu name="atxmega32e5"/>
+					</group>
+				</group>
 			</group>
 			<group name="uc3">
 				<mcu name="unspecified-uc3"/>

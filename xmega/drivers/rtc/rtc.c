@@ -87,7 +87,8 @@ struct rtc_data_struct rtc_data;
  * \internal
  * \brief Check if RTC is busy synchronizing
  */
-static __always_inline bool rtc_is_busy(void)
+__always_inline bool rtc_is_busy(void);
+__always_inline bool rtc_is_busy(void)
 {
 	return RTC.STATUS & RTC_SYNCBUSY_bm;
 }
@@ -98,6 +99,7 @@ static __always_inline bool rtc_is_busy(void)
  * \retval true  Alarm have triggered
  * \retval false Alarm is pending
  */
+__always_inline bool rtc_alarm_has_triggered(void);
 __always_inline bool rtc_alarm_has_triggered(void)
 {
 	return !(RTC.INTCTRL & RTC_COMPARE_INT_LEVEL );
@@ -184,6 +186,29 @@ void rtc_set_callback(rtc_callback_t callback)
 {
 	rtc_data.callback = callback;
 }
+
+#if XMEGA_E
+
+/**
+ * \brief Load Error value to RTC Calibration register with sign bit
+ *
+ * \param error_value Error value for correction operation of RTC
+ * \param sign Direction of correction or sign of correction.
+ *        If this bit is LOW then the RTC counter will be slowed
+ *        down by adding clocks.
+ *        If this bit is HIGH, then the RTC counter will be speeded
+ *        up by removing clocks
+ * \note  To set sign bit as HIGH,it is required to set the prescaler
+ *        to minimum setting of DIV2 (RTC clock/2)
+ */
+void rtc_load_calibration(uint8_t error_value, uint8_t sign)
+{
+	/* Error, if sign flag not either 0 or 1*/
+	Assert( sign <= 0x01);
+	RTC.CALIB = sign | error_value;
+}
+
+#endif /* XMEGA_E */
 
 /**
  * \brief Initialize the RTC

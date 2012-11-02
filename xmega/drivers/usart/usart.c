@@ -41,7 +41,6 @@
  *
  */
 #include <stdint.h>
-
 #include "compiler.h"
 #include "usart.h"
 #include "sysclk.h"
@@ -60,58 +59,6 @@
 #endif
 
 /**
- * \brief Enable the system clock to an USART module.
- *
- * This function will enable the system clock to the provided \arg usart
- * module.
- *
- * \brief usart Pointer to an USART module.
- */
-static inline void usart_enable_module_clock(USART_t *usart)
-{
-#ifdef USARTC0
-	if ((uintptr_t)usart == (uintptr_t)&USARTC0) {
-		sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_USART0);
-	}
-#endif
-#ifdef USARTC1
-	if ((uintptr_t)usart == (uintptr_t)&USARTC1) {
-		sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_USART1);
-	}
-#endif
-#ifdef USARTD0
-	if ((uintptr_t)usart == (uintptr_t)&USARTD0) {
-		sysclk_enable_module(SYSCLK_PORT_D, SYSCLK_USART0);
-	}
-#endif
-#ifdef USARTD1
-	if ((uintptr_t)usart == (uintptr_t)&USARTD1) {
-		sysclk_enable_module(SYSCLK_PORT_D, SYSCLK_USART1);
-	}
-#endif
-#ifdef USARTE0
-	if ((uintptr_t)usart == (uintptr_t)&USARTE0) {
-		sysclk_enable_module(SYSCLK_PORT_E, SYSCLK_USART0);
-	}
-#endif
-#ifdef USARTE1
-	if ((uintptr_t)usart == (uintptr_t)&USARTE1) {
-		sysclk_enable_module(SYSCLK_PORT_E, SYSCLK_USART1);
-	}
-#endif
-#ifdef USARTF0
-	if ((uintptr_t)usart == (uintptr_t)&USARTF0) {
-		sysclk_enable_module(SYSCLK_PORT_F, SYSCLK_USART0);
-	}
-#endif
-#ifdef USARTF1
-	if ((uintptr_t)usart == (uintptr_t)&USARTF1) {
-		sysclk_enable_module(SYSCLK_PORT_F, SYSCLK_USART1);
-	}
-#endif
-}
-
-/**
  * \brief Initialize USART in RS232 mode.
  *
  * This function initializes the USART module in RS232 mode using the
@@ -126,7 +73,7 @@ static inline void usart_enable_module_clock(USART_t *usart)
 bool usart_init_rs232(USART_t *usart, const usart_rs232_options_t *opt)
 {
 	bool result;
-	usart_enable_module_clock(usart);
+	sysclk_enable_peripheral_clock(usart);
 	usart_set_mode(usart, USART_CMODE_ASYNCHRONOUS_gc);
 	usart_format_set(usart, opt->charlength, opt->paritytype,
 			opt->stopbits);
@@ -151,7 +98,7 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 	ioport_pin_t sck_pin;
 	bool invert_sck;
 
-	usart_enable_module_clock(usart);
+	sysclk_enable_peripheral_clock(usart);
 
 	usart_rx_disable(usart);
 
