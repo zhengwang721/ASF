@@ -362,7 +362,7 @@
 /*----------------------------------------------------------------------------
                                 type definitions
 ----------------------------------------------------------------------------*/
-#if defined (__ICCAVR__) || defined (__ICCAVR32__)
+#if defined (__ICCAVR32__)
 //! An signed 8-bit value.
 typedef signed char int8_t;
 //! An unsigned 8-bit value.
