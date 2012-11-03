@@ -148,6 +148,7 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_keyboard" caption="USB Device HID keyboard">
@@ -177,6 +178,7 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_mouse" caption="USB Device HID mouse">
@@ -206,6 +208,7 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#mass_storage" caption="USB Device Mass Storage Class">

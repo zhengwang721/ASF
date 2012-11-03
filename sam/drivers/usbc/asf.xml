@@ -1,0 +1,47 @@
+<asf xmlversion="1.0">
+	<select-by-config id="sam.drivers.usbc.device" name="config.sam.drivers.usbc.device.sleepmgr" caption="USB - Universial Serial Bus driver" default="with_sleepmgr">
+		<info type="description" value="summary">
+		USBC driver for the USB device mode. Provides functions for configuring and using the USB device functionality.
+		</info>
+		<module type="driver" id="sam.drivers.usbc.device#with_sleepmgr" caption="USB - Universial Serial Bus driver (with sleep manager)">
+			<info type="description" value="summary">
+			USBC driver for the USB device mode. Provides functions for configuring and using the USB device functionality.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<info type="keyword" value="technology">
+				<keyword value="USB"/>
+				<keyword value="Communication" />
+			</info>
+			<build type="c-source" value="usbc_device.c"/>
+			<build type="header-file" value="usbc_device.h"/>
+			<build type="header-file" value="usbc_otg.h"/>
+			<build type="include-path" value="."/>
+			<device-support value="sam4l"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.basic.sleepmgr"/>
+			<require idref="common.services.ioport"/>
+			<require idref="sam.utils"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
+		</module>
+		<module type="driver" id="sam.drivers.usbc.device#without_sleepmgr" caption="USB - Universial Serial Bus driver (without sleep manager)">
+			<info type="description" value="summary">
+			USBC driver for the USB device mode. Provides functions for configuring and using the USB device functionality.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<info type="keyword" value="technology">
+				<keyword value="USB"/>
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="usbc_device.c"/>
+			<build type="header-file" value="usbc_device.h"/>
+			<build type="header-file" value="usbc_otg.h"/>
+			<build type="include-path" value="."/>
+			<build type="define" name="UDD_NO_SLEEP_MGR" value=""/>
+			<device-support value="sam4l"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.ioport"/>
+			<require idref="sam.utils"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
+		</module>
+	</select-by-config>
+</asf>
