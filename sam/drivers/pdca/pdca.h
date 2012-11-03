@@ -64,13 +64,13 @@ extern "C" {
 #error  'This device does not support PDCA driver'
 #endif
 
-/* PDCA channel number type */
+/** PDCA channel number type */
 typedef uint8_t pdca_channel_num_t;
 
-/* PDCA channel interrupt mask type */
+/** PDCA channel interrupt mask type */
 typedef uint32_t pdca_channel_interrupt_mask_t;
 
-/* brief PDCA channel status */
+/** brief PDCA channel status */
 enum pdca_channel_status {
 	/** PDCA channel is disabled */
 	PDCA_CH_FREE = 0,
@@ -84,23 +84,23 @@ enum pdca_channel_status {
 	PDCA_CH_TRANSFER_ERROR,
 };
 
-/* PDCA channel options */
+/** PDCA channel options */
 typedef struct {
-	/* Memory address */
+	/** Memory address */
 	volatile void *addr;
-	/* Transfer counter */
+	/** Transfer counter */
 	uint32_t size;
-	/* Next memory address */
+	/** Next memory address */
 	volatile void *r_addr;
-	/* Next transfer counter */
+	/** Next transfer counter */
 	uint32_t r_size;
-	/* Select peripheral ID */
+	/** Select peripheral ID */
 	uint32_t pid;
-	/* Select the size of the transfer (byte, half-word or word) */
+	/** Select the size of the transfer (byte, half-word or word) */
 	uint32_t transfer_size;
-	/*  Enable (\c true) or disable (\c false) the transfer upon event trigger. */
+	/**  Enable (\c true) or disable (\c false) the transfer upon event trigger. */
 	bool etrig;
-	/* Ring buffer function */
+	/** Ring buffer function */
 	bool ring;
 } pdca_channel_config_t;
 
@@ -119,6 +119,8 @@ void pdca_channel_write_load(pdca_channel_num_t pdca_ch_number,
 		volatile void *addr, uint32_t size);
 void pdca_channel_write_reload(pdca_channel_num_t pdca_ch_number,
 		volatile void *addr, uint32_t size);
+uint32_t pdca_channel_read_load_size(pdca_channel_num_t pdca_ch_number);
+uint32_t pdca_channel_read_reload_size(pdca_channel_num_t pdca_ch_number);
 bool pdca_channel_is_enabled(pdca_channel_num_t pdca_ch_number);
 enum pdca_channel_status
 		pdca_get_channel_status(pdca_channel_num_t pdca_ch_number);

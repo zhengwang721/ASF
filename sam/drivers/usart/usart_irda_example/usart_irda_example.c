@@ -232,8 +232,8 @@ static void configure_usart(void)
 		BOARD_USART_IRDA_FILTER
 	};
 
-	/* Enable peripheral. */
-	pmc_enable_periph_clk(BOARD_ID_USART);
+	/* Enable peripheral clock. */
+	sysclk_enable_peripheral_clock(BOARD_ID_USART);
 
 	/* Configure USART in IrDA mode. */
 	usart_init_irda(BOARD_USART, &usart_console_settings, sysclk_get_cpu_hz());

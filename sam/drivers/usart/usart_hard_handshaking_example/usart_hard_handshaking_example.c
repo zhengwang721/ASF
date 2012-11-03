@@ -283,8 +283,8 @@ static void configure_usart(void)
 	/* Get system clock. */
 	ul_sysclk = sysclk_get_cpu_hz();
 
-	/* Configure PMC. */
-	pmc_enable_periph_clk(BOARD_ID_USART);
+	/* Enable peripheral clock. */
+	sysclk_enable_peripheral_clock(BOARD_ID_USART);
 
 	/* Configure USART. */
 	usart_init_hw_handshaking(BOARD_USART, &usart_console_settings, ul_sysclk);

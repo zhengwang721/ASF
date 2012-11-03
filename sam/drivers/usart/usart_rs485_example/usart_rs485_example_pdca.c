@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USART RS485 example for SAM.
+ * \brief USART RS485 example with PDCA for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,19 +42,21 @@
  */
 
 /**
- *  \mainpage USART RS485 Example
+ *  \mainpage USART RS485 Example with PDCA
  *
  *  \par Purpose
  *
- *  The USART RS485 Example demonstrates how to use USART in RS485 mode.
+ *  The USART RS485 Example  with PDCA demonstrates how to use USART in RS485
+ *  mode.
  *
  *  \par Requirements
  *
- *  This package can be used with all SAM-EK boards. Before running, make sure to 
- *  connect two boards with RS485 lines. Match each paired pins of two boards 
- *  respectively with A to A, B to B and FGND to FGND.
+ *  This package can be used with SAM4L EK boards. Before running, make sure
+ *  to connect two boards with RS485 lines. Match each paired pins of two
+ *  boards respectively with A to A, B to B and FGND to FGND.
  *
- *  Please refer to the board user guide for the details of RS485 jumper settings.
+ *  Please refer to the board user guide for the details of RS485 jumper
+ *  settings.
  *
  *  \par Description
  *
@@ -106,14 +108,14 @@
  *     \code
  *     -I- Start receiving!
  *     \endcode
- *     -  After successfully receives a frame, the board will output the following
- *     message to indicate that the whole process succeeds.
+ *     -  After successfully receives a frame, the board will output the
+ *     following message to indicate that the whole process succeeds.
  *     \code
  *     -I- Received successfully!
  *     \endcode
  *     -  The later started one will act as transmitter, and if it receives an
- *     acknowledgement character successfully, it will output the following message
- *     and start transmitting:
+ *     acknowledgement character successfully, it will output the following
+ *     message and start transmitting:
  *     \code
  *     -I- Start transmitting!
  *     \endcode
@@ -121,17 +123,21 @@
  */
 
 #include <string.h>
-#include "asf.h"
-#include "stdio_serial.h"
+#include <asf.h>
 #include "conf_board.h"
 #include "conf_clock.h"
 #include "conf_example.h"
 
 /** Size of the receive buffer and transmit buffer. */
-#define BUFFER_SIZE         2000
+#define BUFFER_SIZE         1280
 
-/** Size of the buffer. */
-#define PDC_BUF_SIZE        BUFFER_SIZE
+/** PDCA receive channel setting. */
+#define PDCA_RX_CHANNEL  0
+/** PDCA transfer channel setting. */
+#define PDCA_TX_CHANNEL  1
+/** PDCA channel peripheral setting. */
+#define PDCA_PID_USART0_RX    0
+#define PDCA_PID_USART0_TX    18
 
 /** Acknowledge time out. */
 #define TIMEOUT             (1000)
@@ -191,11 +197,23 @@ uint8_t g_uc_transmit_buffer[BUFFER_SIZE] = "DESCRIPTION of this example: \r\n \
 /** Receive buffer. */
 uint8_t g_uc_receive_buffer[BUFFER_SIZE];
 
-/** PDC data packet. */
-pdc_packet_t g_st_packet;
-
-/** Pointer to PDC register base. */
-Pdc *g_p_pdc;
+/** PDC channel options. */
+pdca_channel_config_t PDCA_RX_OPTIONS = {
+	.addr = (void *)g_uc_receive_buffer, /* memory address */
+	.pid = PDCA_PID_USART0_RX, /* select peripheral - USART0 RX line.*/
+	.size = BUFFER_SIZE, /* transfer counter */
+	.r_addr = NULL, /* next memory address */
+	.r_size = 0, /* next transfer counter */
+	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+};
+pdca_channel_config_t PDCA_TX_OPTIONS = {
+	.addr = (void *)g_uc_transmit_buffer, /* memory address */
+	.pid = PDCA_PID_USART0_TX, /* select peripheral - USART0 TX line.*/
+	.size = BUFFER_SIZE, /* transfer counter */
+	.r_addr = NULL, /* next memory address */
+	.r_size = 0, /* next transfer counter */
+	.transfer_size = PDCA_MR_SIZE_BYTE /* select size of the transfer */
+};
 
 /**
  *  \brief Handler for System Tick interrupt.
@@ -233,27 +251,28 @@ static void wait(volatile uint32_t ul_ms)
 }
 
 /**
- *  \brief Handler for USART interrupt.
- *
+ * \brief Interrupt handler for PDCA interrupt.
  */
-void USART_Handler(void)
+static void PDCA_RX_Handler(enum pdca_channel_status status)
 {
-	uint32_t ul_status;
-
-	/* Read USART status. */
-	ul_status = usart_get_status(BOARD_USART);
-
-	/* Receiving interrupt. */
-	if ((ul_status & US_CSR_ENDRX) && (g_state == RECEIVING)) {
+	/* Check if PDCA transfer complete */
+	if (status == PDCA_CH_TRANSFER_COMPLETED) {
 		/* Indicate receiving finished. */
 		g_state = RECEIVED;
-		usart_disable_interrupt(BOARD_USART, US_IDR_ENDRX);
+		pdca_channel_disable_interrupt(PDCA_RX_CHANNEL, PDCA_IER_TRC);
 	}
-	/* Transmitting interrupt. */
-	else if ((ul_status & US_CSR_ENDTX) && g_state == TRANSMITTING) {
+}
+
+/**
+ * \brief Interrupt handler for PDCA interrupt.
+ */
+static void PDCA_TX_Handler(enum pdca_channel_status status)
+{
+	/* Check if PDCA transfer complete */
+	if (status == PDCA_CH_TRANSFER_COMPLETED) {
 		/* Transmit continuously. */
 		g_state = TRANSMITTED;
-		usart_disable_interrupt(BOARD_USART, US_IDR_ENDTX);
+		pdca_channel_disable_interrupt(PDCA_TX_CHANNEL, PDCA_IER_TRC);
 	}
 }
 
@@ -276,14 +295,15 @@ static void configure_usart(void)
 	};
 
 	/* Enable the peripheral clock in the PMC. */
-	pmc_enable_periph_clk(BOARD_ID_USART);
+	sysclk_enable_peripheral_clock(BOARD_ID_USART);
 
 	/* Configure USART in RS485 mode. */
-	usart_init_rs485(BOARD_USART, &usart_console_settings, sysclk_get_cpu_hz());
+	usart_init_rs485(BOARD_USART, &usart_console_settings,
+			sysclk_get_peripheral_bus_hz(BOARD_USART));
 
 	/* Disable all the interrupts. */
 	usart_disable_interrupt(BOARD_USART, ALL_INTERRUPT_MASK);
-	
+
 	/* Enable TX & RX function. */
 	usart_enable_tx(BOARD_USART);
 	usart_enable_rx(BOARD_USART);
@@ -314,11 +334,16 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
-	
+
 	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -332,9 +357,9 @@ static void configure_console(void)
  */
 int main(void)
 {
-	static uint8_t uc_sync = SYNC_CHAR;
+	uint8_t uc_receive, uc_send = SYNC_CHAR;
 	uint32_t time_elapsed = 0;
-	uint32_t ul_i;
+	uint32_t i;
 
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -346,109 +371,132 @@ int main(void)
 	/* Output example information. */
 	puts(STRING_HEADER);
 
-	/* Configure USART. */
-	configure_usart();
-
-	/* Get board USART PDC base address and enable receiver and transmitter. */
-	g_p_pdc = usart_get_pdc_base(BOARD_USART);
-	pdc_enable_transfer(g_p_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
-
 	/* 1ms tick. */
 	configure_systick();
+
+	/* Configure USART. */
+	configure_usart();
 
 	/* Initialize receiving buffer to distinguish with the sent frame. */
 	memset(g_uc_receive_buffer, 0x0, BUFFER_SIZE);
 
-	/* Enable transmitter here, and disable receiver first, to avoid receiving
-	   characters sent by itself. It's necessary for half duplex RS485. */
+	/*
+	 * Enable transmitter here, and disable receiver first, to avoid receiving
+	 * characters sent by itself. It's necessary for half duplex RS485.
+	 */
 	usart_enable_tx(BOARD_USART);
 	usart_disable_rx(BOARD_USART);
 
+	/* Enable PDCA module clock */
+	pdca_enable(PDCA);
+
+	/* Init PDCA channel with the pdca_options.*/
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
+
 	/* Send a sync character XON (0x11). */
-	g_st_packet.ul_addr = (uint32_t)&uc_sync;
-	g_st_packet.ul_size = 1;
-	pdc_tx_init(g_p_pdc, &g_st_packet, NULL);
+	pdca_channel_write_load(PDCA_TX_CHANNEL, &uc_send, 1);
+	/* Enable transfer PDCA channel */
+	pdca_channel_enable(PDCA_TX_CHANNEL);
 
 	/* Delay until the line is cleared, an estimated time used. */
 	wait(50);
 
-	/* Read the acknowledgement. */
-	g_st_packet.ul_addr = (uint32_t)&uc_sync;
-	g_st_packet.ul_size = 1;
-	pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
-
 	/* Then enable receiver. */
 	usart_enable_rx(BOARD_USART);
 
+	/* Read the acknowledgement. */
+	pdca_channel_write_load(PDCA_RX_CHANNEL, &uc_receive, 1);
+	/* Enable PDCA channel */
+	pdca_channel_enable(PDCA_RX_CHANNEL);
+
+
 	/* Wait until time out or acknowledgement is received. */
 	time_elapsed = get_tick_count();
-	while (!usart_is_rx_buf_end(BOARD_USART)) {
+	while (pdca_get_channel_status(PDCA_RX_CHANNEL) !=
+			PDCA_CH_TRANSFER_COMPLETED) {
 		if (get_tick_count() - time_elapsed > TIMEOUT) {
 			break;
 		}
 	}
 
 	/* If acknowledgement received in a short time. */
-	if (usart_is_rx_buf_end(BOARD_USART)) {
+	if (pdca_get_channel_status(PDCA_RX_CHANNEL) ==
+			PDCA_CH_TRANSFER_COMPLETED) {
 		/* Acknowledgement. */
-		if (uc_sync == ACK_CHAR) {
+		if (uc_receive == ACK_CHAR) {
 			/* Act as transmitter, start transmitting. */
+			puts("-I- Act as transmitter.\r");
+
 			g_state = TRANSMITTING;
 			puts("-I- Start transmitting!\r");
-			g_st_packet.ul_addr = (uint32_t)g_uc_transmit_buffer;
-			g_st_packet.ul_size = PDC_BUF_SIZE;
-			pdc_tx_init(g_p_pdc, &g_st_packet, NULL);
+			pdca_channel_write_load(PDCA_TX_CHANNEL, g_uc_transmit_buffer,
+					BUFFER_SIZE);
 
-			/* Enable transmitting interrupt. */
-			usart_enable_interrupt(BOARD_USART, US_IER_ENDTX);
+			/* Enable PDCA interrupt */
+			pdca_channel_set_callback(PDCA_TX_CHANNEL, PDCA_TX_Handler,
+					PDCA_1_IRQn, 1, PDCA_IER_TRC);
+
+			while (g_state != TRANSMITTED) {
+			}
+			puts("-I- Transmit done!\r");
+
+			while (1) {
+			}
 		}
 	} else {
 		/* Start receiving, act as receiver. */
-		g_st_packet.ul_addr = (uint32_t)&uc_sync;
-		g_st_packet.ul_size = 1;
-		pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
+		puts("-I- Act as receiver.\r");
 		puts("-I- Receiving sync character.\r");
-		while (!usart_is_rx_buf_end(BOARD_USART)) {
+
+		while (pdca_get_channel_status(PDCA_RX_CHANNEL) !=
+			PDCA_CH_TRANSFER_COMPLETED) {
 		}
 
 		/* Sync character is received. */
-		if (uc_sync == SYNC_CHAR) {
+		if (uc_receive == SYNC_CHAR) {
+			puts("-I- Received sync character.\r");
 			/* SEND XOff as acknowledgement. */
-			uc_sync = ACK_CHAR;
+			uc_send = ACK_CHAR;
 
-			/* Delay to prevent the character from being discarded by 
-			   transmitter due to responding too soon. */
+			/*
+			 * Delay to prevent the character from being discarded by
+			 * transmitter due to responding too soon.
+			 */
 			wait(100);
-			pio_set_pin_high(PIN_RE_IDX);
-			g_st_packet.ul_addr = (uint32_t)&uc_sync;
-			g_st_packet.ul_size = 1;
-			pdc_tx_init(g_p_pdc, &g_st_packet, NULL);
+			ioport_set_pin_level(RS485_USART_CTS_PIN, 1);
+			pdca_channel_write_load(PDCA_TX_CHANNEL, &uc_send, 1);
 
 			g_state = RECEIVING;
-			puts("-I- Start receiving!\r");
-			g_st_packet.ul_addr = (uint32_t)g_uc_receive_buffer;
-			g_st_packet.ul_size = PDC_BUF_SIZE;
-			pdc_rx_init(g_p_pdc, &g_st_packet, NULL);
-			pio_set_pin_low(PIN_RE_IDX);
-			/* Enable receiving interrupt. */
-			usart_enable_interrupt(BOARD_USART, US_IER_ENDRX);
+			puts("-I- Start receiving buffer!\r");
+
+			pdca_channel_write_load(PDCA_RX_CHANNEL, g_uc_receive_buffer,
+					BUFFER_SIZE);
+
+			/* Enable PDCA interrupt */
+			pdca_channel_set_callback(PDCA_RX_CHANNEL, PDCA_RX_Handler,
+					PDCA_0_IRQn, 1, PDCA_IER_TRC);
+
+			ioport_set_pin_level(RS485_USART_CTS_PIN, 0);
+
+			while (g_state != RECEIVED) {
+			}
 		}
 	}
-	while (g_state != RECEIVED) {
-	}
 
-	ul_i = 0;
-	/* Print received frame out. */
-	while ((ul_i < BUFFER_SIZE) && (g_uc_receive_buffer[ul_i] != '\0')) {
-		if (g_uc_transmit_buffer[ul_i] != g_uc_receive_buffer[ul_i]) {
+	i = 0;
+	/* Check received frame. */
+	while (i < BUFFER_SIZE) {
+		if (g_uc_transmit_buffer[i] != g_uc_receive_buffer[i]) {
 			puts("-E- Error occurred while receiving!\r");
 			/* Infinite loop here. */
 			while (1) {
 			}
 		}
-		ul_i++;
+
+		i++;
 	}
-	puts("-I- Received successfully!\r");
+	puts("-I- Received buffer successfully!\r");
 
 	while (1) {
 	}

@@ -204,6 +204,38 @@ void pdca_channel_write_reload(pdca_channel_num_t pdca_ch_number,
 }
 
 /**
+ * \brief Read PDCA channel load values from hardware.
+ *
+ * \param pdca_ch_number PDCA channel
+ *
+ * \return size of the data block to load
+ */
+uint32_t pdca_channel_read_load_size(pdca_channel_num_t pdca_ch_number)
+{
+	/* get the correct channel pointer */
+	volatile PdcaChannel *pdca_channel =
+			pdca_channel_get_handler(pdca_ch_number);
+
+	return pdca_channel->PDCA_TCR;
+}
+
+/**
+ * \brief Read PDCA channel reload values from hardware.
+ *
+ * \param pdca_ch_number PDCA channel
+ *
+ * \return size of the data block to reload
+ */
+uint32_t pdca_channel_read_reload_size(pdca_channel_num_t pdca_ch_number)
+{
+	/* get the correct channel pointer */
+	volatile PdcaChannel *pdca_channel =
+			pdca_channel_get_handler(pdca_ch_number);
+
+	return pdca_channel->PDCA_TCRR;
+}
+
+/**
  * \brief Check if PDCA channel is enabled
  *
  * \param pdca_ch_number PDCA channel number to query

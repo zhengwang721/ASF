@@ -49,7 +49,7 @@
  * peripherals.
  *
  * \par Requirements
- *  This package can be used with all SAM-EK. 
+ *  This package can be used with all SAM-EK with UART/USART and PDC.
  *
  * \par Description
  *
@@ -63,8 +63,8 @@
  *
  * \par Usage
  *
- * -# Build the program and download it into the two evaluation boards.
- * -# Connect a serial cable to the UART port for each evaluation kit.
+ * -# Build the program and download it into the evaluation boards.
+ * -# Connect a serial cable to the UART port for the evaluation kit.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -81,10 +81,11 @@
  *     -- -I- Default Transfer with PDC --
  *     -- -I- Press 's' to switch transfer mode
  *    \endcode
- * -# Send a file in text format from the HyperTerminal connected with USART port to
- *    the device. On HyperTerminal, this is done by selecting "Transfer -> Send Text File"
- *    (this does not prevent you from sending binary files). The transfer will start and then
- *    you could read the file in the HyperTerminal.
+ * -# Send a file in text format from the HyperTerminal connected with USART
+ *    port to the device. On HyperTerminal, this is done by selecting
+ *    "Transfer -> Send Text File"(this does not prevent you from sending
+ *    binary files). The transfer will start and then you could read the file
+ *    in the HyperTerminal.
  *
  */
 
@@ -114,7 +115,7 @@
 #define TC_FREQ             1
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "--USART Serial Example --\r\n" \
+#define STRING_HEADER "-- USART Serial Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -149,8 +150,8 @@ Pdc *g_p_pdc;
 static uint8_t g_uc_transend_flag = 0;
 
 /**
- * \brief Interrupt handler for USART. Echo the bytes received and start the next
- *        receive.
+ * \brief Interrupt handler for USART. Echo the bytes received and start the
+ * next receive.
  */
 void USART_Handler(void)
 {
@@ -166,24 +167,28 @@ void USART_Handler(void)
 			tc_stop(TC0, 0);
 
 			/* Echo back buffer. */
-			g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
+			g_st_packet.ul_addr =
+					(uint32_t)gs_puc_buffer[gs_uc_buf_num];
 			g_st_packet.ul_size = gs_ul_size_buffer;
-			g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
+			g_st_nextpacket.ul_addr =
+					(uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
 			g_st_nextpacket.ul_size = gs_ul_size_nextbuffer;
 			pdc_tx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 
-			if(g_uc_transend_flag) {
-			gs_ul_size_buffer = BUFFER_SIZE;
+			if (g_uc_transend_flag) {
+				gs_ul_size_buffer = BUFFER_SIZE;
 				gs_ul_size_nextbuffer = BUFFER_SIZE;
 				g_uc_transend_flag = 0;
 			}
-			
+
 			gs_uc_buf_num = MAX_BUF_NUM - gs_uc_buf_num;
 
 			/* Restart read on buffer. */
-			g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
+			g_st_packet.ul_addr =
+					(uint32_t)gs_puc_buffer[gs_uc_buf_num];
 			g_st_packet.ul_size = BUFFER_SIZE;
-			g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[ gs_uc_buf_num];
+			g_st_nextpacket.ul_addr =
+					(uint32_t)gs_puc_nextbuffer[ gs_uc_buf_num];
 			g_st_nextpacket.ul_size = BUFFER_SIZE;
 			pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 
@@ -217,26 +222,26 @@ void TC0_Handler(void)
 		/* Flush PDC buffer. */
 		ul_byte_total = BUFFER_SIZE - pdc_read_rx_counter(g_p_pdc);
 		if ((ul_byte_total != 0) && (ul_byte_total != BUFFER_SIZE)) {
-		/* Log current size. */
+			/* Log current size. */
 			g_uc_transend_flag = 1;
-			if(pdc_read_rx_next_counter(g_p_pdc) == 0) {
+			if (pdc_read_rx_next_counter(g_p_pdc) == 0) {
 				gs_ul_size_buffer = BUFFER_SIZE;
 				gs_ul_size_nextbuffer = ul_byte_total;
 			} else {
-		gs_ul_size_buffer = ul_byte_total;
+				gs_ul_size_buffer = ul_byte_total;
 				gs_ul_size_nextbuffer = 0;
 			}
-			
+
 			/* Trigger USART Receive Buffer Full Interrupt. */
 			pdc_rx_clear_cnt(g_p_pdc);
-                }
-
+		}
 	}
 }
 
 /**
- * \brief Configure USART in normal (serial rs232) mode, asynchronous, 8 bits, 1 stop
- * bit, no parity, 115200 bauds and enable its transmitter and receiver.
+ * \brief Configure USART in normal (serial rs232) mode, asynchronous,
+ * 8 bits, 1 stop bit, no parity, 115200 bauds and enable its transmitter
+ * and receiver.
  */
 static void configure_usart(void)
 {
@@ -249,12 +254,13 @@ static void configure_usart(void)
 		/* This field is only used in IrDA mode. */
 		0
 	};
-	
+
 	/* Enable the peripheral clock in the PMC. */
-	pmc_enable_periph_clk(BOARD_ID_USART);
+	sysclk_enable_peripheral_clock(BOARD_ID_USART);
 
 	/* Configure USART in serial mode. */
-	usart_init_rs232(BOARD_USART, &usart_console_settings, sysclk_get_cpu_hz());
+	usart_init_rs232(BOARD_USART, &usart_console_settings,
+			sysclk_get_cpu_hz());
 
 	/* Disable all the interrupts. */
 	usart_disable_interrupt(BOARD_USART, ALL_INTERRUPT_MASK);
@@ -289,7 +295,7 @@ static void configure_tc(void)
 	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / TC_FREQ);
 
 	/* Configure and enable interrupt on RC compare. */
-	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
+	NVIC_EnableIRQ((IRQn_Type)ID_TC0);
 	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
 }
 
@@ -302,7 +308,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -362,8 +368,9 @@ int main(void)
 	/* Configure USART. */
 	configure_usart();
 
-	/* Get board USART PDC base address and enable receiver and transmitter. */
+	/* Get board USART PDC base address. */
 	g_p_pdc = usart_get_pdc_base(BOARD_USART);
+	/* Enable receiver and transmitter. */
 	pdc_enable_transfer(g_p_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
 	/* Configure TC. */
@@ -394,15 +401,16 @@ int main(void)
 			case 's':
 			case 'S':
 				if (gs_uc_trans_mode == PDC_TRANSFER) {
+					/* Transfer to no PDC communication mode. */
 					/* Disable PDC controller. */
 					pdc_disable_transfer(g_p_pdc,
 							PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
-					/* Transfer to no PDC communication mode, and disable the RXBUFF interrupt. */
+					/* Disable the RXBUFF interrupt. */
 					usart_disable_interrupt(BOARD_USART, US_IDR_RXBUFF);
 
 					/* Clear USART controller. */
 					usart_clear();
-					
+
 					/* Enable the RXRDY interrupt. */
 					usart_enable_interrupt(BOARD_USART, US_IER_RXRDY);
 					gs_uc_trans_mode = BYTE_TRANSFER;
@@ -420,9 +428,11 @@ int main(void)
 					gs_uc_buf_num = 0;
 
 					/* Start receiving data. */
-					g_st_packet.ul_addr = (uint32_t)gs_puc_buffer[gs_uc_buf_num];
+					g_st_packet.ul_addr =
+							(uint32_t)gs_puc_buffer[gs_uc_buf_num];
 					g_st_packet.ul_size = BUFFER_SIZE;
-					g_st_nextpacket.ul_addr = (uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
+					g_st_nextpacket.ul_addr =
+							(uint32_t)gs_puc_nextbuffer[gs_uc_buf_num];
 					g_st_nextpacket.ul_size = BUFFER_SIZE;
 					pdc_rx_init(g_p_pdc, &g_st_packet, &g_st_nextpacket);
 					
@@ -433,11 +443,14 @@ int main(void)
 					gs_uc_trans_mode = PDC_TRANSFER;
 					puts("-I- Transfer with PDC \r");
 				}
+
 				break;
+
 			case 'm':
 			case 'M':
 				display_main_menu();
 				break;
+
 			default:
 				break;
 			}

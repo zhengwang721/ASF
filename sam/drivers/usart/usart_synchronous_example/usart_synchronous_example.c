@@ -242,7 +242,7 @@ static void configure_usart(uint32_t ul_ismaster, uint32_t ul_baudrate)
 	usart_console_settings.baudrate = ul_baudrate;
 
 	/* Enable the peripheral clock in the PMC. */
-	pmc_enable_periph_clk(BOARD_ID_USART);
+	sysclk_enable_peripheral_clock(BOARD_ID_USART);
 
 	/* Configure USART in SYNC. master or slave mode. */
 	if (ul_ismaster) {
