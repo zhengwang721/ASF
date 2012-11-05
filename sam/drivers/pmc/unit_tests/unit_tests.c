@@ -197,7 +197,7 @@ static void run_switch_slck_as_mck_test(const struct test_case *test)
 	while (!is_serial_output_done());
 
 	/* Switch slow clock as MCK */
-	rc0 = pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
+	rc0 = pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 	/* Enable PCK output */
 	pmc_disable_pck(PMC_PCK_0);
@@ -243,7 +243,8 @@ static void run_switch_mainck_as_mck_test(const struct test_case *test)
 	 */
 
 	/* Switch mainck to external xtal */
-	pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
+	pmc_switch_mainck_to_xtal(0, pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
+			OSC_SLCK_32K_RC_HZ));
 
 	/* Switch main clock as MCK */
 	rc2 = pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
@@ -420,7 +421,9 @@ int main(void)
 	stdio_serial_init(CONF_TEST_UART, &uart_serial_options);
 
 	/* Configure PCK0 */
+#ifdef CONF_TEST_PCK_OUTPUT_ENABLE
 	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
+#endif
 	pmc_disable_pck(PMC_PCK_0);
 	pmc_switch_pck_to_mainck(PMC_PCK_0, PMC_PCK_PRES_CLK_1);
 	pmc_enable_pck(PMC_PCK_0);

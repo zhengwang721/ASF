@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,5 +50,11 @@
 #define CONF_TEST_BAUDRATE   115200
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
+
+/** PCK output to pin PCK0 enable
+ *  (disabled by default since output is for debug only and not measured in
+ *  automatically tests)
+ */
+//#define CONF_TEST_PCK_OUTPUT_ENABLE
 
 #endif /* CONF_TEST_H_INCLUDED */
