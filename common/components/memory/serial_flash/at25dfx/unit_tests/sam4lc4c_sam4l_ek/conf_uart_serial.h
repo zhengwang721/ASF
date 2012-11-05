@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Serial USART service configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,30 +41,9 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
-
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
-
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
-
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
-
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
-
-#endif /* CONF_TEST_H_INCLUDED */
+/* Intentionally empty */
+	
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

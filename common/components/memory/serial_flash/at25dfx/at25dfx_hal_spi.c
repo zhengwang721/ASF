@@ -170,6 +170,7 @@ void at25dfx_spi_init(void)
  */
 void at25dfx_spi_select_device(uint8_t mem_id)
 {
+	UNUSED(mem_id);
 #if defined( AT25DFX_USES_SPI_MASTER_SERVICE)
 #if (AT25DFX_MEM_CNT==1)
 		spi_select_device(AT25DFX_SPI_MODULE, &AT25DFX_DEVICE1);
@@ -235,6 +236,7 @@ void at25dfx_spi_select_device(uint8_t mem_id)
  */
 void at25dfx_spi_deselect_device(uint8_t mem_id)
 {
+	UNUSED(mem_id);
 #if defined( AT25DFX_USES_SPI_MASTER_SERVICE)
 	#if (AT25DFX_MEM_CNT==1)
 	spi_deselect_device(AT25DFX_SPI_MODULE, &AT25DFX_DEVICE1);

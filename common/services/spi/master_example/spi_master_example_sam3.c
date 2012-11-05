@@ -92,13 +92,6 @@ uint16_t status;	// Status value for dataflash.
 #define AT25DF_CMDC_RD_MID_REG         0x9F
 //! @}
 
-/*! \name Bit-Masks and Values for the Status Register
- */
-//! @{
-#define AT25DF_MSK_DENSITY       0x07	//!< Device status bit-mask
-#define AT25DF_DENSITY           0x07	//!< Device default software protect value
-//! @}
-
 #define DATA_BUFFER_SIZE         0x04
 
 //! First Status Command Register - Second Dummy Data
@@ -156,11 +149,20 @@ int main(void)
 	status = spi_at25df_mem_check();
 	while (true) {
 		if (status == false) {
+	#if SAM4L	
+			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
+			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_HIGH);
+		} else {
+			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
+			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_LOW);
+		}	
+	#else
 			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
 			gpio_set_pin_high(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
 		} else {
 			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
 			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
 		}
+	#endif
 	}
 }

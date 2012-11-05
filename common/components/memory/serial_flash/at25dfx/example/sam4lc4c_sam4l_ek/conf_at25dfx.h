@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief AT25DFx configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,30 +41,28 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_AT25DFX_H_INCLUDED
+#define CONF_AT25DFX_H_INCLUDED
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+#include "at25dfx.h"
+#include "board.h"
 
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
+/* Connect AT25DFx driver to SPI master service */
+#define AT25DFX_USES_SPI_MASTER_SERVICE
 
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
+/* Number of AT25DFx components to manage */
+#define AT25DFX_MEM_CNT             1
 
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
+/* Memory ID of AT25DFx components to manage */
+#define AT25DFX_MEM_ID             1
 
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
+/* SPI master speed in Hz */
+#define AT25DFX_SPI_MASTER_SPEED    12000000
 
-#endif /* CONF_TEST_H_INCLUDED */
+/* Number of bits in each SPI transfer */
+#define AT25DFX_SPI_BITS            8
+
+/** AT25DFx device type */
+#define AT25DFX_MEM_TYPE AT25DFX_641A
+
+#endif  /* CONF_AT25DFX_H_INCLUDED */

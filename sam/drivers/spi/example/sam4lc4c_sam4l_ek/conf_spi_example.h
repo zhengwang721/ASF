@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief SPI example configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,30 +41,37 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+/**
+ * \defgroup spi_example_pin_defs
+ *  - <b> SAM4S-Xplained  --  SAM4S-Xplained </b>
+ *  - VCC -- VCC
+ *  - NPCS0(PA11) -- NPCS0(PA11)
+ *  - MISO(PA12)  -- MISO(PA12)
+ *  - MOSI(PA13)  -- MOSI(PA13)
+ *  - SPCK(PA14)  -- SPCK(PA14)
+ *  - GND -- GND
+ */
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+#ifndef CONF_SPI_EXAMPLE_H_INCLUDED
+#define CONF_SPI_EXAMPLE_H_INCLUDED
 
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
+#define SPI_Handler     SPI_Handler
+#define SPI_IRQn        SPI_IRQn
 
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
 
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_SPI_EXAMPLE_H_INCLUDED */

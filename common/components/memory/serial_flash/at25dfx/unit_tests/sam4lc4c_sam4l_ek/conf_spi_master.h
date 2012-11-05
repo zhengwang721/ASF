@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Spi Master configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,31 +40,25 @@
  * \asf_license_stop
  *
  */
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+/* Possibility to change low-level configurations here. */
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+//! Default Configuration of SPI Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
+//! Default Configuration of SPI Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
+//! Default Configuration of SPI Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
 
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
+//! Default Configuration of SPI Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
 
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

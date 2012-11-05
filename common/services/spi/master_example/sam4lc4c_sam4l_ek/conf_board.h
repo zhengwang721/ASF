@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,30 +41,27 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
+/** Usart Hw ID used by the console (UART0). */
+#define CONSOLE_UART_ID          ID_UART0
 
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
 
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS2
 
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
+/** Spi Hw ID . */
+#define SPI_ID          ID_SPI
 
-#endif /* CONF_TEST_H_INCLUDED */
+/** SPI base address for SPI master mode*/
+#define SPI_MASTER_BASE      SPI
+/** SPI base address for SPI slave mode, (on different board) */
+#define SPI_SLAVE_BASE       SPI
+
+#endif /* CONF_BOARD_H_INCLUDED */

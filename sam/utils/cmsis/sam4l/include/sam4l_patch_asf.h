@@ -89,4 +89,13 @@
 #define	TC_CMR_LDRB_FALLING	   TC_CMR_LDRB_NEG_EDGE_TIOA
 #define	TC_CMR_ETRGEDG_FALLING TC_CMR_ETRGEDG_NEG_EDGE
 
+// These defines are used to keep compatibility with existing 
+// sam/drivers/spi implementation from SAM3/4 products with SAM4L product. 
+#define SPI_CSR_BITS_8_BIT     SPI_CSR_BITS_8_BPT
+
+#define SPI_WPSR_WPVS_Pos      SPI_WPSR_SPIWPVS_Pos
+#define SPI_WPSR_WPVS_Msk      SPI_WPSR_SPIWPVS_Msk
+#define SPI_WPSR_WPVSRC_Pos    SPI_WPSR_SPIWPVSRC_Pos
+#define SPI_WPSR_WPVSRC_Msk    SPI_WPSR_SPIWPVSRC_Msk
+
 #endif  // SAM4L_PATCH_ASF_H_INCLUDED

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Spi Master example configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,30 +41,27 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_SPI_MASTER_EXAMPLE_H
+#define CONF_SPI_MASTER_EXAMPLE_H
 
-/** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
-/** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+#include "conf_board.h"
+#include "sysclk.h"
 
-/** Total size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
+/*! \name Configuration
+ */
+//! @{
+#define SPI_EXAMPLE                   SPI
+#define SPI_DEVICE_EXAMPLE_ID         2
+#define SPI_EXAMPLE_BAUDRATE          1000000
+#define SPI_EXAMPLE_LED_PIN_EXAMPLE_1 LED0_GPIO
+#define SPI_EXAMPLE_LED_PIN_EXAMPLE_2 LED0_GPIO
+//! @}
 
-/** Block size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_BLOCK_SIZE   (64*1024)
+/*! \name Bit-Masks and Values for the Status Register
+ */
+//! @{
+#define AT25DF_MSK_DENSITY       0x08  //!< Device status bit-mask
+#define AT25DF_DENSITY           0x08  //!< Device default software protect value
+//! @}
 
-/** Page size of the SerialFlash used in the unit test */
-#define AT25DFX_UNIT_TEST_PAGE_SIZE   (256)
-
-/** Unit test block start address */
-#define AT25DFX_UNIT_TEST_BLOCK_ADDR  (0)
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif  // _CONF_SPI_MASTER_EXAMPLE_H

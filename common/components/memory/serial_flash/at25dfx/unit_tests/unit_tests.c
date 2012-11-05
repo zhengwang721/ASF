@@ -72,9 +72,10 @@
  * - \ref conf_at25dfx.h
  *
  * \section device_info Device Info
- * SAM3N devices can be used.
+ * SAM3N and SAM4L devices can be used.
  * This example has been tested with the following setup:
  * - sam3n4c_sam3n_ek
+ * - sam4lc4c_sam4l_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -243,7 +244,9 @@ int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate = CONF_TEST_BAUDRATE,
-		.paritytype = CONF_TEST_PARITY
+		.charlength = CONF_TEST_CHARLENGTH,
+		.paritytype = CONF_TEST_PARITY,
+		.stopbits   = CONF_TEST_STOPBITS
 	};
 
 	/* Initialize the system clock and board */
@@ -251,7 +254,6 @@ int main(void)
 	board_init();
 
 	/* Enable the debug uart */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	/* Define all the test cases */

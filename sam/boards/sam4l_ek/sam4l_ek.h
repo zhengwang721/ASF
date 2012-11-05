@@ -254,6 +254,12 @@
 #define DACC_VOUT_MUX                  MUX_PA06A_DACC_VOUT
 // @}
 
+/* Select the SPI module that AT25DFx is connected to */
+#define AT25DFX_SPI_MODULE          SPI
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS      2
+
 /**
  * @}
  */

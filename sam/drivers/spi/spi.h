@@ -46,24 +46,18 @@
 
 #include "compiler.h"
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**INDENT-ON**/
+/// @endcond
 
-/**
- * \defgroup sam_drivers_spi_group Serial Peripheral Interface (SPI)
- *
- * The SPI circuit is a synchronous serial data link that provides communication
- * with external devices in Master or Slave mode. Connection to Peripheral DMA
- * Controller channel capabilities optimizes data transfers.
- *
- * @{
- */
-
-//! Time-out value (number of attempts).
+/** Time-out value (number of attempts). */
 #define SPI_TIMEOUT       15000
 
-//! Status codes used by the SPI driver.
+/** Status codes used by the SPI driver. */
 typedef enum
 {
 	SPI_ERROR = -1,
@@ -75,11 +69,14 @@ typedef enum
 	SPI_ERROR_OVERRUN_AND_MODE_FAULT
 } spi_status_t;
 
-//! SPI Chip Select behavior modes while transferring.
+/** SPI Chip Select behavior modes while transferring. */
 typedef enum spi_cs_behavior {
-	SPI_CS_KEEP_LOW = SPI_CSR_CSAAT,    //!< CS does not rise until a new transfer is requested on different chip select.
-	SPI_CS_RISE_NO_TX = 0,              //!< CS rises if there is no more data to transfer.
-	SPI_CS_RISE_FORCED = SPI_CSR_CSNAAT //!< CS is de-asserted systematically during a time DLYBCS.
+	/** CS does not rise until a new transfer is requested on different chip select. */
+	SPI_CS_KEEP_LOW = SPI_CSR_CSAAT,
+	/** CS rises if there is no more data to transfer. */
+	SPI_CS_RISE_NO_TX = 0,
+	/** CS is de-asserted systematically during a time DLYBCS. */
+	SPI_CS_RISE_FORCED = SPI_CSR_CSNAAT
 } spi_cs_behavior_t;
 
 /**
@@ -328,10 +325,13 @@ static inline void spi_disable_loopback(Spi *p_spi)
 	p_spi->SPI_MR &= (~SPI_MR_LLB);
 }
 
+void spi_enable_clock(Spi *p_spi);
+void spi_disable_clock(Spi *p_spi);
 void spi_set_peripheral_chip_select_value(Spi *p_spi, uint32_t ul_value);
 void spi_set_delay_between_chip_select(Spi *p_spi, uint32_t ul_delay);
 spi_status_t spi_read(Spi *p_spi, uint16_t *us_data, uint8_t *p_pcs);
-spi_status_t spi_write(Spi *p_spi, uint16_t us_data, uint8_t uc_pcs, uint8_t uc_last);
+spi_status_t spi_write(Spi *p_spi, uint16_t us_data, uint8_t uc_pcs,
+		uint8_t uc_last);
 
 /**
  * \brief Read status register.
@@ -485,13 +485,17 @@ static inline uint32_t spi_read_interrupt_mask(Spi *p_spi)
 	return p_spi->SPI_IMR;
 }
 
-void spi_set_clock_polarity(Spi *p_spi, uint32_t ul_pcs_ch, uint32_t ul_polarity);
+void spi_set_clock_polarity(Spi *p_spi, uint32_t ul_pcs_ch,
+		uint32_t ul_polarity);
 void spi_set_clock_phase(Spi *p_spi, uint32_t ul_pcs_ch, uint32_t ul_phase);
-void spi_configure_cs_behavior(Spi *p_spi, uint32_t ul_pcs_ch, uint32_t ul_cs_behavior);
+void spi_configure_cs_behavior(Spi *p_spi, uint32_t ul_pcs_ch,
+		uint32_t ul_cs_behavior);
 void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch, uint32_t ul_bits);
 int16_t spi_calc_baudrate_div(const uint32_t baudrate, uint32_t mck);
-void spi_set_baudrate_div(Spi *p_spi, uint32_t ul_pcs_ch, uint8_t uc_baudrate_divider);
-void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch, uint8_t uc_dlybs, uint8_t uc_dlybct);
+void spi_set_baudrate_div(Spi *p_spi, uint32_t ul_pcs_ch,
+		uint8_t uc_baudrate_divider);
+void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch, uint8_t uc_dlybs,
+		uint8_t uc_dlybct);
 
 #if (SAM3S || SAM3N || SAM4S)
 /**
@@ -538,12 +542,77 @@ static inline void *spi_get_rx_access(Spi *p_spi)
 void spi_set_writeprotect(Spi *p_spi, uint32_t ul_enable);
 uint32_t spi_get_writeprotect_status(Spi *p_spi);
 
-/**
- * @ }
- */
-
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
+/**
+ * \page sam_spi_quickstart Quickstart guide for SAM SPI driver
+ *
+ * This is the quickstart guide for the \ref spi_group "SAM SPI driver",
+ * with step-by-step instructions on how to configure and use the driver in a
+ * selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g.the main application function.
+ *
+ * \section spi_basic_use_case Basic use case
+ * In this basic use case, the SPI module are configured for:
+ * - Master mode
+ * - Interrupt-based handling
+ *
+ * \subsection sam_spi_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section spi_basic_use_case_setup Setup steps
+ * \subsection spi_basic_use_case_setup_code Example code
+ * Add to application C-file:
+ * \code
+ *   void spi_master_init(Spi *p_spi)
+ *   {
+ *       spi_enable_clock(p_spi);
+ *       spi_reset(p_spi);
+ *       spi_set_master_mode(p_spi);
+ *       spi_disable_mode_fault_detect(p_spi);
+ *       spi_disable_loopback(p_spi);
+ *       spi_set_peripheral_chip_select_value(p_spi, DEFAULT_CHIP_ID);
+ *       spi_set_fixed_peripheral_select(p_spi);
+ *       spi_disable_peripheral_select_decode(p_spi);
+ *       spi_set_delay_between_chip_select(p_spi, CONFIG_SPI_MASTER_DELAY_BCS);
+ *   }
+ *   void spi_master_setup_device(Spi *p_spi, struct spi_device *device,
+ *       spi_flags_t flags, uint32_t baud_rate, board_spi_select_id_t sel_id)
+ *   {
+ *       spi_set_transfer_delay(p_spi, device->id, CONFIG_SPI_MASTER_DELAY_BS,
+ *                              CONFIG_SPI_MASTER_DELAY_BCT);
+ *
+ *       spi_set_bits_per_transfer(p_spi, device->id, CONFIG_SPI_MASTER_BITS_PER_TRANSFER);
+ *       spi_set_baudrate_div(p_spi, device->id,
+ *                            spi_calc_baudrate_div(baud_rate, sysclk_get_cpu_hz()));
+ *
+ *       spi_configure_cs_behavior(p_spi, device->id, SPI_CS_KEEP_LOW);
+ *
+ *       spi_set_clock_polarity(p_spi, device->id, flags >> 1);
+ *       spi_set_clock_phase(p_spi, device->id, ((flags & 0x1) ^ 0x1));
+ *   }
+ * \endcode
+ *
+ * \subsection spi_basic_use_case_setup_flow Workflow
+ * -# Initialize the SPI in master mode:
+ *   - \code
+ *   void spi_master_init(SPI_EXAMPLE);
+ * \endcode
+ * -# Set up an SPI device:
+ *   - \code void spi_master_setup_device(SPI_EXAMPLE, &SPI_DEVICE_EXAMPLE,
+ *           SPI_MODE_0, SPI_EXAMPLE_BAUDRATE, 0); \endcode
+ *   - \note The returned device descriptor structure must be passed to the driver
+ *      whenever that device should be used as current slave device.
+ * -# Enable SPI module:
+ *   - \code spi_enable(SPI_EXAMPLE); \endcode
+ */
 #endif /* SPI_H_INCLUDED */

@@ -45,15 +45,15 @@
 #define CONF_TEST_H_INCLUDED
 
 /** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
+#define CONF_TEST_USART      USART2
 /** Baudrate setting */
 #define CONF_TEST_BAUDRATE   115200
 /** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
+#define CONF_TEST_CHARLENGTH   US_MR_CHRL_8_BIT
 /** Parity setting */
-#define CONF_TEST_PARITY     UART_MR_PAR_NO
+#define CONF_TEST_PARITY     US_MR_PAR_NONE
 /** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   false
+#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
 
 /** Total size of the SerialFlash used in the unit test */
 #define AT25DFX_UNIT_TEST_TOTAL_SIZE   (4*1024*1024)
