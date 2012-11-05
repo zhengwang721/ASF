@@ -27,8 +27,8 @@ class FindRebuildRuntime(Runtime):
 	project_tag = "project"
 	module_types_to_add = ["driver", "service", "component", "library"]
 
-	def __init__(self, template_dir, configuration):
-		super(FindRebuildRuntime, self).__init__(template_dir, configuration)
+	def __init__(self):
+		super(FindRebuildRuntime, self).__init__("", None)
 		self.check_device_support = False
 		self.show_not_affected = False
 		self.outfilename = "outfile.txt"
@@ -397,7 +397,6 @@ if __name__ == "__main__":
 			basedir = "../../"
 
 	# Find paths for input files in same folder as this script
-	templatedir = os.path.join(script_path, "templates")
 	guidir = os.path.join(script_path, "plugins")
 	cachedir = os.path.join(script_path, "cache")
 	xml_schema_path = os.path.join(script_path, "asf.xsd")
@@ -410,9 +409,7 @@ if __name__ == "__main__":
 	# Change directory to the ASF root folder
 	os.chdir(basedir)
 
-	configuration = ConfigurationHandler()
-
-	runtime = FindRebuildRuntime(templatedir, configuration)
+	runtime = FindRebuildRuntime()
 
 	runtime.create_and_set_cache_dir(cachedir)
 
