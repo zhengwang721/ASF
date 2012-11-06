@@ -1,3 +1,28 @@
+<!--
+
+Dummy asf.xml-cache for FindRebuildTest (see testcases.py)
+
+Dependency-tree:
+
+project.a
+|-> driver.a
+
+project.b
+|-> driver.b
+	|-> driver.c#1
+		|-> meta.a
+	|-> driver.c#2
+		|-> meta.a
+	|-> driver.c#3
+	|-> driver.c#4
+		|-> driver.d
+
+project.c
+|-> driver.b
+|-> driver.c
+
+-->
+
 <asf xmlversion="1.0">
 	<framework-version name="3.5.0"/>
 	<documentation baseurl="http://asf.atmel.com/docs/"/>
@@ -33,6 +58,12 @@
 		<require idref="driver.c"/>
 	</module>
 
+	<module type="driver" id="driver.d" caption="driver d">
+		<build type="c-source" value="dd.c"/>
+		<build type="header-file" value="dd.h"/>
+	</module>
+
+
 	<module type="meta" id="meta.a" caption="meta a">
 		<build type="c-source" value="ma.c"/>
 		<build type="header-file" value="ma.h"/>
@@ -49,6 +80,10 @@
 		</module>
 		<module type="driver" id="driver.c#3" caption="driver c 3">
 			<build type="c-source" value="dc3.c"/>
+		</module>
+		<module type="driver" id="driver.c#4" caption="driver c 4">
+			<build type="c-source" value="dc4.c"/>
+			<require idref="driver.d"/>
 		</module>
 	</select-by-device>
 
