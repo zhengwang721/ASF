@@ -54,7 +54,7 @@
  *
  * In addition, another device will be needed to act as the TWI master. The
  * twi_eeprom_example can be used for that, in which case a second kit
- * supported by that project is needed.
+ * supported by that project is needed (on SAM4S evaluation kits, TWI1 is used).
  * -# Connect TWD0 (SDA) for the 2 boards.
  * -# Connect TWCK0 (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
@@ -107,7 +107,7 @@ extern "C" {
 #define CONSOLE_BAUD_RATE   115200
 
 /** Device address of slave */
-#define SLAVE_ADDRESS       0x51
+#define SLAVE_ADDRESS       0x40
 /** Memory size in bytes */
 #define MEMORY_SIZE         512
 
@@ -209,7 +209,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -226,6 +226,11 @@ int main(void)
 
 	/* Initialize the SAM system */
 	sysclk_init();
+
+#if SAM4S
+	/* Select PB4 and PB5 function */
+	MATRIX->CCFG_SYSIO = CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5;
+#endif
 
 	/* Initialize the board */
 	board_init();

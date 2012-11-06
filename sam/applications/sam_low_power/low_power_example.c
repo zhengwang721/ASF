@@ -393,7 +393,8 @@ static void test_wait_mode(void)
 	/* Configure 4Mhz fast RC oscillator */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
-	pmc_switch_mck_to_mainck(PMC_PCK_PRES_CLK_1);
+    pmc_switch_mck_to_mainck(PMC_PCK_PRES_CLK_1);
+
 	g_ul_current_mck = 4000000; /* 4MHz */
 
 	/* Disable unused clock to save power */

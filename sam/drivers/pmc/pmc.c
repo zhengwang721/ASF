@@ -985,19 +985,82 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
  *
  * \param uc_type 0 for wait for interrupt, 1 for wait for event.
+ * \note For SAM4S series, since only WFI is effective, uc_type = 1 will be
+ * treated as uc_type = 0.
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
+#if !defined(SAM4S)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
+#endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
+#if SAM4S
+	UNUSED(uc_type);
+	__WFI();
+#else
 	if (uc_type == 0) {
 		__WFI();
 	} else {
 		__WFE();
 	}
+#endif
 }
 
+#if SAM4S
+static uint32_t ul_flash_in_wait_mode = PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN;
+/**
+ * \brief Set the embedded flash state in wait mode
+ *
+ * \param ul_flash_state PMC_FSMR_FLPM_FLASH_STANDBY flash in standby mode,
+ * PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN flash in deep power down mode.
+ */
+void pmc_set_flash_in_wait_mode(uint32_t ul_flash_state)
+{
+	ul_flash_in_wait_mode = ul_flash_state;
+}
+
+/**
+ * \brief Enable Wait Mode (Flash in Deep Power Down mode).
+ * Enter condition: WFI + (SLEEPDEEP bit = 0) + (FLPM = 01b)
+ */
+void pmc_enable_waitmode(void)
+{
+	uint32_t i, fmr0_backup;
+
+	PMC->PMC_FSMR |= ul_flash_in_wait_mode; // Flash in Deep Power Down mode
+	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Clear Deep sleep bit
+
+	// Backup FWS setting and set Flash Wait State at 0
+	fmr0_backup = EFC0->EEFC_FMR;
+	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
+#if defined(ID_EFC1)
+	uint32_t fmr1_backup;
+	fmr1_backup = EFC1->EEFC_FMR;
+	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
+#endif
+
+	// Set the WAITMODE bit = 1
+	PMC->CKGR_MOR |= CKGR_MOR_KEY(0x37u) | CKGR_MOR_WAITMODE;
+
+	// Waiting for Master Clock Ready MCKRDY = 1
+	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
+
+	/* Waiting for MOSCRCEN bit cleared is strongly recommended
+	 * to ensure that the core will not execute undesired instructions
+	 */
+	for (i = 0; i < 500; i++) {
+		__NOP();
+	}
+	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
+
+	// Restore EFC FMR setting
+	EFC0->EEFC_FMR = fmr0_backup;
+#if defined(ID_EFC1)
+	EFC1->EEFC_FMR = fmr1_backup;
+#endif
+}
+#else
 /**
  * \brief Enable Wait Mode.
  * Enter condition: WFE + (SLEEPDEEP bit = 0) + (LPM bit = 1)
@@ -1018,15 +1081,20 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 }
+#endif
 
 /**
  * \brief Enable Backup Mode.
- * Enter condition: WFE + (SLEEPDEEP bit = 1)
+ * Enter condition: WFE/(VROFF bit = 1) + (SLEEPDEEP bit = 1)
  */
 void pmc_enable_backupmode(void)
 {
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+#if SAM4S
+	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
+#else
 	__WFE();
+#endif
 }
 
 /**

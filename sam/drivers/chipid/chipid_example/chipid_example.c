@@ -261,7 +261,7 @@ const chipidtype_t chipid_archsize[CHIPID_ARCH_SIZE] = {
 //! ROMs support list
 const chipidtype_t chipid_nvptype[CHIPID_NVPTYPE_SIZE] = {
 
-	// identifier       description
+	/* identifier       description */
 	{0x0,               "ROM"},
 	{0x1,               "ROMless or on-chip Flash"},
 	{0x4,               "SRAM emulating ROM"},
@@ -306,55 +306,49 @@ static void chipid_print(chipid_data_t *p_chipid_data)
 	bool b_found;
 	chipidtype_t cid_type;
 
-	// Version
-	printf("Version                                   0x%lx.\r\n",
-		(unsigned long)p_chipid_data->ul_version);
+	/* Version */
+	printf("Version\t0x%lx.\r\n", (unsigned long)p_chipid_data->ul_version);
 
-	// Find Embedded Processor
+	/* Find Embedded Processor */
 	b_found = chipid_find(chipid_eproc, CHIPID_EPROC_SIZE,
-			      p_chipid_data->ul_eproc, &cid_type);
+			p_chipid_data->ul_eproc, &cid_type);
 	if (b_found) {
-		printf("Embedded Processor                        %s.\r\n",
-			cid_type.p_str);
+		printf("Embedded Processor\t%s.\r\n", cid_type.p_str);
 	}
-	// Find non-volatile program memory size
+	/* Find non-volatile program memory size */
 	b_found = chipid_find(chipid_nvpsize, CHIPID_NVPSIZE_SIZE,
-			      p_chipid_data->ul_nvpsiz, &cid_type);
+			p_chipid_data->ul_nvpsiz, &cid_type);
 	if (b_found) {
-		printf("Nonvolatile program memory size           %s.\r\n",
-			cid_type.p_str);
+		printf("Nonvolatile program memory size\t%s.\r\n", cid_type.p_str);
 	}
-	// Find the second non-volatile program memory size
+	/* Find the second non-volatile program memory size */
 	b_found = chipid_find(chipid_nvpsize2, CHIPID_NVPSIZE2_SIZE,
-			      p_chipid_data->ul_nvpsiz2, &cid_type);
+			p_chipid_data->ul_nvpsiz2, &cid_type);
 	if (b_found) {
-		printf("Second nonvolatile program memory size    %s.\r\n",
+		printf("Second nonvolatile program memory size\t%s.\r\n",
 			cid_type.p_str);
 	}
-	// Find internal SRAM size
+	/* Find internal SRAM size */
 	b_found = chipid_find(chipid_sramsize, CHIPID_SRAMSIZE_SIZE,
-			      p_chipid_data->ul_sramsiz, &cid_type);
+			p_chipid_data->ul_sramsiz, &cid_type);
 	if (b_found) {
-		printf("Internal SRAM size                        %s.\r\n",
-			cid_type.p_str);
+		printf("Internal SRAM size\t%s.\r\n", cid_type.p_str);
 	}
-	// Find architecture identifier
+	/* Find architecture identifier */
 	b_found = chipid_find(chipid_archsize, CHIPID_ARCH_SIZE,
-			      p_chipid_data->ul_arch, &cid_type);
+			p_chipid_data->ul_arch, &cid_type);
 	if (b_found) {
-		printf("Architecture identifier                   %s.\r\n",
-			cid_type.p_str);
+		printf("Architecture identifier\t%s.\r\n", cid_type.p_str);
 	}
-	// Find non-volatile program memory type
+	/* Find non-volatile program memory type */
 	b_found = chipid_find(chipid_nvptype, CHIPID_NVPTYPE_SIZE,
-			      p_chipid_data->ul_nvptyp, &cid_type);
+			p_chipid_data->ul_nvptyp, &cid_type);
 	if (b_found) {
-		printf("Nonvolatile program memory type           %s.\r\n",
-			cid_type.p_str);
+		printf("Nonvolatile program memory type\t%s.\r\n", cid_type.p_str);
 	}
-	// Find extension flag
+	/* Find extension flag */
 	if (p_chipid_data->ul_extflag) {
-		printf("Extended chip ID is                       0x%lx. \r\n",
+		printf("Extended chip ID is\t0x%lx. \r\n",
 			(unsigned long)p_chipid_data->ul_extid);
 	} else {
 		puts("Extended chip ID does not exist. \r");
@@ -384,21 +378,18 @@ static void configure_console(void)
  */
 int main(void)
 {
-	// Disable watchdog
-	WDT->WDT_MR = WDT_MR_WDDIS;
-
-	// Initialize the system
+	/* Initialize the system */
 	sysclk_init();
 	board_init();
 
-	// Initialize the console uart
+	/* Initialize the console uart */
 	configure_console();
 
 	puts(STRING_HEADER);
 	
-	// Read CHIPID
+	/* Read CHIPID */
 	chipid_read(CHIPID, &g_chipid_data);
-	// Dump CHIPID information
+	/* Dump CHIPID information */
 	chipid_print(&g_chipid_data);
 
 	while (1) {

@@ -60,6 +60,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		'atsam3x8h',
 		'atsam4s16c',
 		'atsam4lc4c',
+		'atsam4sd32c',
 	]
 	linker_id = "sam.utils.linker_scripts"
 	compiler_config_group = "config.compiler.sam"

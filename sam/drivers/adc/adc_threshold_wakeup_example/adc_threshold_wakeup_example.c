@@ -54,14 +54,14 @@
  * This example can be used on any SAM3/4 boards.
  *
  * ADVREF must be set to 3300 mv in order to enable full scale measurement
- * of the potentiometer. Please refer to the board schematics for ADVREF 
+ * of the potentiometer. Please refer to the board schematics for ADVREF
  * jumper configuration.
  *
  * \section Description
  * This example uses TIOA0 as external trigger instead of software trigger for
  * ADC conversion. The TIOA0 is a 1ms period square wave. The rising edge
- * during each period would trigger the ADC to start a conversion on the given 
- * channel which is connected to the potentiometer. This example shows a menu as 
+ * during each period would trigger the ADC to start a conversion on the given
+ * channel which is connected to the potentiometer. This example shows a menu as
  * below upon running:
  * \code
  * -- Menu Choices for this example--
@@ -82,7 +82,7 @@
  * - In the comparison window.
  * - Out of the comparison window.
  *
- * If the target gets an 'S' or 's' from user's input, the core falls into 
+ * If the target gets an 'S' or 's' from user's input, the core falls into
  * sleep mode thanks to the __WFI. Turning the potentiometer to enable the ADC input fall into the
  * comparison window will trigger an event. This comparison event
  * will wake the system up.
@@ -182,26 +182,26 @@ void ADC_Handler(void)
 
 		switch (ul_mode) {
 		case 0:
-			printf("-ISR-:Potentiometer voltage %d mv is below the low " 
-				"threshold:%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL, 
+			printf("-ISR-:Potentiometer voltage %d mv is below the low "
+				"threshold:%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL,
 				gs_us_low_threshold * VOLT_REF / MAX_DIGITAL);
 			break;
 
 		case 1:
-			printf("-ISR-:Potentiometer voltage %d mv is above the high " 
-				"threshold:%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL, 
+			printf("-ISR-:Potentiometer voltage %d mv is above the high "
+				"threshold:%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL,
 				gs_us_high_threshold * VOLT_REF / MAX_DIGITAL);
 			break;
 
 		case 2:
-			printf("-ISR-:Potentiometer voltage %d mv is in the comparison " 
-				"window:%d-%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL, 
+			printf("-ISR-:Potentiometer voltage %d mv is in the comparison "
+				"window:%d-%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL,
 				gs_us_low_threshold * VOLT_REF / MAX_DIGITAL, gs_us_high_threshold * VOLT_REF / MAX_DIGITAL);
 			break;
 
 		case 3:
-			printf("-ISR-:Potentiometer voltage %d mv is out of the comparison" 
-				" window:%d-%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL, 
+			printf("-ISR-:Potentiometer voltage %d mv is out of the comparison"
+				" window:%d-%d mv!\n\r", us_adc * VOLT_REF / MAX_DIGITAL,
 				gs_us_low_threshold * VOLT_REF / MAX_DIGITAL, gs_us_high_threshold * VOLT_REF / MAX_DIGITAL);
 			break;
 		}
@@ -209,19 +209,19 @@ void ADC_Handler(void)
 }
 
 /**
- * \brief Configure Timer Counter 0 (TC0) to generate an interrupt every 
- * second. This interrupt will be used to display the number of bytes 
+ * \brief Configure Timer Counter 0 (TC0) to generate an interrupt every
+ * second. This interrupt will be used to display the number of bytes
  * received on the UART.
  */
 static void configure_tc0(void)
 {
 	/* Enable TC0 peripheral clock. */
 	pmc_enable_periph_clk(ID_TC0);
-	
+
 	/* Configure TC for a 1s (= 1Hz) tick. */
 	tc_init(TC0, 0, 0x4 | TC_CMR_ACPC_SET | TC_CMR_WAVE
 			| TC_CMR_ACPA_CLEAR | (0x2 << 13));
-			
+
 	/* 50% duty, 1s frequency */
 	TC0->TC_CHANNEL[0].TC_RA = 16384;
 	TC0->TC_CHANNEL[0].TC_RC = 32768;
@@ -235,7 +235,7 @@ static void display_menu(void)
 	puts(MENU_HEADER);
 }
 
-/** 
+/**
  *  \brief Transform float data type to int.
  */
 static uint32_t  f_to_int(float x)
@@ -260,14 +260,14 @@ static void display_info(void)
 	uint32_t ul_low_threshold = f_to_int(f_low_threshold);
 	uint32_t ul_high_threshold = f_to_int(f_high_threshold);
 
-	printf("-I- Thresholds: %d mv - %d mv.\n\r", ul_low_threshold, ul_high_threshold);
+	printf("-I- Thresholds: %u mv - %u mv.\n\r", ul_low_threshold, ul_high_threshold);
 	printf("-I- Voltage on potentiometer: %u mv.\n\r",
 			(unsigned int)(ul_adc_value * VOLT_REF / MAX_DIGITAL));
 	printf("-I- Comparison mode is %u\n\r.",
 			(unsigned int)(ADC->ADC_EMR & ADC_EMR_CMPMODE_Msk));
 }
 
-/** 
+/**
  * \brief Enter sleep mode using WFI instruction.
  * Enable interrupt first and then disable it after wake up.
  */
@@ -400,7 +400,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -409,7 +409,7 @@ static void configure_console(void)
 /**
  * \brief Example entry point.
  *
- * Initialize ADC to 12-bit, enable channel "ADC_CHANNEL_POTENTIOMETER", then 
+ * Initialize ADC to 12-bit, enable channel "ADC_CHANNEL_POTENTIOMETER", then
  * enable hardware trigger with TIOA0 every second. Finally, start conversion.
  *
  * \return Unused (ANSI-C compatibility).
@@ -426,7 +426,7 @@ int main(void)
 
 
 	configure_console();
-	
+
 	/* Output example information. */
 	puts(STRING_HEADER);
 
@@ -484,7 +484,7 @@ int main(void)
 		case '0':
 			s_adc_value = adc_get_channel_value(ADC,
 					ADC_CHANNEL_POTENTIOMETER);
-			printf("-I- Current voltage is %d mv, %d%% of ADVREF\n\r", 
+			printf("-I- Current voltage is %d mv, %d%% of ADVREF\n\r",
 			(s_adc_value * VOLT_REF / MAX_DIGITAL), (s_adc_value * 100 / MAX_DIGITAL));
 			break;
 
@@ -502,7 +502,7 @@ int main(void)
 				gs_us_low_threshold = s_adc_value;
 				float f_low_threshold = (float)gs_us_low_threshold * VOLT_REF / MAX_DIGITAL;
 				uint32_t ul_low_threshold = f_to_int(f_low_threshold);
-				printf("Setting low threshold to %d mv (reg value to 0x%x ~%d%%)\n\r",
+				printf("Setting low threshold to %u mv (reg value to 0x%x ~%d%%)\n\r",
 						ul_low_threshold,
 						gs_us_low_threshold,
 						gs_us_low_threshold * 100 / MAX_DIGITAL);
@@ -523,9 +523,9 @@ int main(void)
 				gs_us_high_threshold = s_adc_value;
 				float f_high_threshold = (float)gs_us_high_threshold * VOLT_REF / MAX_DIGITAL;
 				uint32_t ul_high_threshold = f_to_int(f_high_threshold);
-				printf("Setting high threshold to %d mv (reg value to 0x%x ~%d%%)\n\r",
-						ul_high_threshold, 
-						gs_us_high_threshold, 
+				printf("Setting high threshold to %u mv (reg value to 0x%x ~%d%%)\n\r",
+						ul_high_threshold,
+						gs_us_high_threshold,
 						gs_us_high_threshold * 100 / MAX_DIGITAL);
 			}
 			break;

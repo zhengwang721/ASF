@@ -51,11 +51,17 @@
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
+#define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
+#define IFLASH_NB_OF_PAGES   IFLASH0_NB_OF_PAGES
+
+/* Flash start address */
+#define IFLASH_ADDR IFLASH0_ADDR
+
 /* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE/4 - IFLASH_PAGE_SIZE)
+#define LAST_PAGE_ADDRESS    (IFLASH_ADDR + IFLASH_SIZE / 4 - IFLASH_PAGE_SIZE)
 
 /* default page count number */
-#define DEFAULT_PAGE_COUNT (IFLASH_SIZE/IFLASH_PAGE_SIZE)
+#define DEFAULT_PAGE_COUNT   (IFLASH_SIZE / IFLASH_PAGE_SIZE)
 
 /* Default region count number */
 #define DEFAULT_REGION_COUNT 1

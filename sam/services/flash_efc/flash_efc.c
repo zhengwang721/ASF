@@ -62,7 +62,20 @@ extern "C" {
  * @{
  */
 
-#if (SAM3XA || SAM3U4)
+#if SAM4S
+/* Internal Flash Controller 0. */
+# define EFC     EFC0
+/* User signature size */
+# define FLASH_USER_SIG_SIZE   (512)
+/* Internal Flash 0 base address. */
+# define IFLASH_ADDR     IFLASH0_ADDR
+/* Internal flash page size. */
+# define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
+/* Internal flash lock region size. */
+# define IFLASH_LOCK_REGION_SIZE     IFLASH0_LOCK_REGION_SIZE
+#endif
+
+#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
 /* The max GPNVM number. */
@@ -98,10 +111,6 @@ extern "C" {
 # define GPNVM_NUM_MAX        2
 #endif
 
-#if SAM4S
-/* User signature size */
-# define FLASH_USER_SIG_SIZE   (512)
-#endif
 
 /* Flash page buffer for alignment */
 static uint32_t gs_ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
@@ -122,7 +131,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	uint16_t us_page;
 	uint16_t us_offset;
 
-#if (SAM3XA || SAM3U4)
+#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
 	if (ul_addr >= IFLASH1_ADDR) {
 		p_efc = EFC1;
 		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
@@ -230,6 +239,7 @@ static void compute_lock_range(uint32_t ul_start, uint32_t ul_end,
 uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws)
 {
 	efc_init(EFC, ul_mode, ul_fws);
+
 #ifdef EFC1
 	efc_init(EFC1, ul_mode, ul_fws);
 #endif
@@ -237,9 +247,9 @@ uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws)
 	return FLASH_RC_OK;
 }
 
-/** 
+/**
  * \brief Set flash wait state.
- * 
+ *
  * \param ul_address Flash bank start address.
  * \param ul_fws The number of wait states in cycle (no shift).
  *
@@ -255,9 +265,9 @@ uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws)
 	return FLASH_RC_OK;
 }
 
-/** 
+/**
  * \brief Set flash wait state.
- * 
+ *
  * \param ul_address Flash bank start address.
  * \param ul_fws The number of wait states in cycle (no shift).
  *
@@ -292,7 +302,7 @@ uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
 	return FLASH_RC_OK;
 }
 
-/** 
+/**
  * \brief Get flash wait state.
  *
  * \param ul_address Flash bank start address.
@@ -468,7 +478,7 @@ uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_erase_plane(uint32_t ul_address)
+uint32_t flash_erase_sector(uint32_t ul_address)
 {
 	Efc *p_efc;
 	uint16_t us_page;
@@ -539,7 +549,7 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
 				us_padding);
 
 		/* Write page.
-		 * Writing 8-bit and 16-bit data is not allowed and may lead to 
+		 * Writing 8-bit and 16-bit data is not allowed and may lead to
 		 * unpredictable data corruption.
 		 */
 		p_aligned_dest = (uint32_t *) ul_page_addr;
@@ -613,7 +623,7 @@ uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end,
 	/* Lock all pages */
 	while (us_start_page < us_end_page) {
 		ul_error = efc_perform_command(p_efc, EFC_FCMD_SLB, us_start_page);
-		
+
 		if (ul_error) {
 			return ul_error;
 		}
@@ -624,7 +634,7 @@ uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end,
 }
 
 /**
- * \brief Unlock all the regions in the given address range. The actual unlock 
+ * \brief Unlock all the regions in the given address range. The actual unlock
  * range is reported through two output parameters.
  *
  * \param ul_start Start address of unlock range.
@@ -716,7 +726,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 
 	/* Check status of each involved region */
 	ul_bit = uc_start_region - ul_count;
-	
+
 	/* Number of region to check (must be > 0) */
 	ul_count = uc_end_region - uc_start_region + 1;
 
@@ -724,7 +734,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 		if (ul_status & (1 << (ul_bit))) {
 			ul_num_locked_regions++;
 		}
-		
+
 		ul_count -= 1;
 		ul_bit += 1;
 		if (ul_bit == 32) {
@@ -824,7 +834,7 @@ uint32_t flash_enable_security_bit(void)
 
 /**
  * \brief Check if the security bit is set or not.
- * 
+ *
  * \retval 1 If the security bit is currently set.
  * \retval 0 If the security bit is currently cleared.
  */
@@ -891,7 +901,7 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 /**
  * \brief Write the flash user signature.
  *
- * \param ul_address Write address. 
+ * \param ul_address Write address.
  * \param p_data Pointer to a data buffer to store 512 bytes of user signature.
  * \param ul_size Data buffer size.
  *

@@ -47,8 +47,8 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure TWI0 pins */
-#define CONF_BOARD_TWI0
+/** Configure TWI1 pins */
+#define CONF_BOARD_TWI1
 
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0

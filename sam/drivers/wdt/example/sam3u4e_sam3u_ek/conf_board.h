@@ -47,6 +47,9 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
+/** Don't change WDT mode register in init.c */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
 /** Usart Hw ID used by the console (UART). */
 #define CONSOLE_UART_ID          ID_UART
 

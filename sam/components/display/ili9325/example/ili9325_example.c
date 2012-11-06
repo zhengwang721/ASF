@@ -125,10 +125,14 @@ int main(void)
 			| SMC_PULSE_NCS_RD_PULSE(10));
 	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
 			| SMC_CYCLE_NRD_CYCLE(22));
+#if !defined(SAM4S)
 	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
 			| SMC_MODE_WRITE_MODE
 			| SMC_MODE_DBW_8_BIT);
-
+#else
+	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
+			| SMC_MODE_WRITE_MODE);
+#endif
 	/* Initialize display parameter */
 	g_ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
 	g_ili9325_display_opt.ul_height = ILI9325_LCD_HEIGHT;

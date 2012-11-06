@@ -42,7 +42,19 @@
 #ifndef _SAM4S_
 #define _SAM4S_
 
-#if defined __SAM4S8B__
+#if defined __SAM4SA16B__
+  #include "sam4sa16b.h"
+#elif defined __SAM4SA16C__
+  #include "sam4sa16c.h"
+#elif defined __SAM4SD16B__
+  #include "sam4sd16b.h"
+#elif defined __SAM4SD16C__
+  #include "sam4sd16c.h"
+#elif defined __SAM4SD32B__
+  #include "sam4sd32b.h"
+#elif defined __SAM4SD32C__
+  #include "sam4sd32c.h"
+#elif defined __SAM4S8B__
   #include "sam4s8b.h"
 #elif defined __SAM4S8C__
   #include "sam4s8c.h"

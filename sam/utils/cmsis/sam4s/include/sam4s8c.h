@@ -92,7 +92,7 @@ typedef enum IRQn
   RTT_IRQn             =  3, /**<  3 SAM4S8C Real Time Timer (RTT) */
   WDT_IRQn             =  4, /**<  4 SAM4S8C Watchdog Timer (WDT) */
   PMC_IRQn             =  5, /**<  5 SAM4S8C Power Management Controller (PMC) */
-  EFC_IRQn             =  6, /**<  6 SAM4S8C Enhanced Embedded Flash Controller (EFC) */
+  EFC0_IRQn            =  6, /**<  6 SAM4S8C Enhanced Embedded Flash Controller 0 (EFC0) */
   UART0_IRQn           =  8, /**<  8 SAM4S8C UART 0 (UART0) */
   UART1_IRQn           =  9, /**<  9 SAM4S8C UART 1 (UART1) */
   SMC_IRQn             = 10, /**< 10 SAM4S8C Static Memory Controller (SMC) */
@@ -117,7 +117,9 @@ typedef enum IRQn
   PWM_IRQn             = 31, /**< 31 SAM4S8C Pulse Width Modulation (PWM) */
   CRCCU_IRQn           = 32, /**< 32 SAM4S8C CRC Calculation Unit (CRCCU) */
   ACC_IRQn             = 33, /**< 33 SAM4S8C Analog Comparator (ACC) */
-  UDP_IRQn             = 34  /**< 34 SAM4S8C USB Device Port (UDP) */
+  UDP_IRQn             = 34, /**< 34 SAM4S8C USB Device Port (UDP) */
+
+  PERIPH_COUNT_IRQn    = 35  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -149,7 +151,7 @@ typedef struct _DeviceVectors
   void* pfnRTT_Handler;    /*  3 Real Time Timer */
   void* pfnWDT_Handler;    /*  4 Watchdog Timer */
   void* pfnPMC_Handler;    /*  5 Power Management Controller */
-  void* pfnEFC_Handler;    /*  6 Enhanced Embedded Flash Controller */
+  void* pfnEFC0_Handler;   /*  6 Enhanced Embedded Flash Controller 0 */
   void* pvReserved7;
   void* pfnUART0_Handler;  /*  8 UART 0 */
   void* pfnUART1_Handler;  /*  9 UART 1 */
@@ -197,7 +199,7 @@ void ACC_Handler        ( void );
 void ADC_Handler        ( void );
 void CRCCU_Handler      ( void );
 void DACC_Handler       ( void );
-void EFC_Handler        ( void );
+void EFC0_Handler       ( void );
 void HSMCI_Handler      ( void );
 void PIOA_Handler       ( void );
 void PIOB_Handler       ( void );
@@ -308,7 +310,7 @@ void WDT_Handler        ( void );
 #include "instance/instance_uart0.h"
 #include "instance/instance_chipid.h"
 #include "instance/instance_uart1.h"
-#include "instance/instance_efc.h"
+#include "instance/instance_efc0.h"
 #include "instance/instance_pioa.h"
 #include "instance/instance_piob.h"
 #include "instance/instance_pioc.h"
@@ -332,7 +334,7 @@ void WDT_Handler        ( void );
 #define ID_RTT    ( 3) /**< \brief Real Time Timer (RTT) */
 #define ID_WDT    ( 4) /**< \brief Watchdog Timer (WDT) */
 #define ID_PMC    ( 5) /**< \brief Power Management Controller (PMC) */
-#define ID_EFC    ( 6) /**< \brief Enhanced Embedded Flash Controller (EFC) */
+#define ID_EFC0   ( 6) /**< \brief Enhanced Embedded Flash Controller 0 (EFC0) */
 #define ID_UART0  ( 8) /**< \brief UART 0 (UART0) */
 #define ID_UART1  ( 9) /**< \brief UART 1 (UART1) */
 #define ID_SMC    (10) /**< \brief Static Memory Controller (SMC) */
@@ -358,6 +360,8 @@ void WDT_Handler        ( void );
 #define ID_CRCCU  (32) /**< \brief CRC Calculation Unit (CRCCU) */
 #define ID_ACC    (33) /**< \brief Analog Comparator (ACC) */
 #define ID_UDP    (34) /**< \brief USB Device Port (UDP) */
+
+#define ID_PERIPH_COUNT (35) /**< \brief Number of peripheral IDs */
 /*@}*/
 
 /* ************************************************************************** */
@@ -400,7 +404,7 @@ void WDT_Handler        ( void );
 #define CHIPID     (0x400E0740U) /**< \brief (CHIPID    ) Base Address */
 #define UART1      (0x400E0800U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  (0x400E0900U) /**< \brief (PDC_UART1 ) Base Address */
-#define EFC        (0x400E0A00U) /**< \brief (EFC       ) Base Address */
+#define EFC0       (0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       (0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PDC_PIOA   (0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       (0x400E1000U) /**< \brief (PIOB      ) Base Address */
@@ -445,7 +449,7 @@ void WDT_Handler        ( void );
 #define CHIPID     ((Chipid *)0x400E0740U) /**< \brief (CHIPID    ) Base Address */
 #define UART1      ((Uart   *)0x400E0800U) /**< \brief (UART1     ) Base Address */
 #define PDC_UART1  ((Pdc    *)0x400E0900U) /**< \brief (PDC_UART1 ) Base Address */
-#define EFC        ((Efc    *)0x400E0A00U) /**< \brief (EFC       ) Base Address */
+#define EFC0       ((Efc    *)0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       ((Pio    *)0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PDC_PIOA   ((Pdc    *)0x400E0F68U) /**< \brief (PDC_PIOA  ) Base Address */
 #define PIOB       ((Pio    *)0x400E1000U) /**< \brief (PIOB      ) Base Address */
@@ -472,20 +476,29 @@ void WDT_Handler        ( void );
 /*   MEMORY MAPPING DEFINITIONS FOR SAM4S8C */
 /* ************************************************************************** */
 
-#define IFLASH_SIZE             (0x80000u)
-#define IFLASH_PAGE_SIZE        (512u)
-#define IFLASH_LOCK_REGION_SIZE (8192u)
-#define IFLASH_NB_OF_PAGES      (1024u)
-#define IFLASH_NB_OF_LOCK_BITS  (64u)
-#define IRAM_SIZE               (0x20000u)
+#define IFLASH0_SIZE             (0x80000u)
+#define IFLASH0_PAGE_SIZE        (512u)
+#define IFLASH0_LOCK_REGION_SIZE (8192u)
+#define IFLASH0_NB_OF_PAGES      (1024u)
+#define IFLASH0_NB_OF_LOCK_BITS  (64u)
+#define IRAM_SIZE                (0x20000u)
+#define IFLASH_SIZE              (IFLASH0_SIZE)
 
-#define IFLASH_ADDR  (0x00400000u) /**< Internal Flash base address */
+#define IFLASH0_ADDR (0x00400000u) /**< Internal Flash 0 base address */
 #define IROM_ADDR    (0x00800000u) /**< Internal ROM base address */
 #define IRAM_ADDR    (0x20000000u) /**< Internal RAM base address */
 #define EBI_CS0_ADDR (0x60000000u) /**< EBI Chip Select 0 base address */
 #define EBI_CS1_ADDR (0x61000000u) /**< EBI Chip Select 1 base address */
 #define EBI_CS2_ADDR (0x62000000u) /**< EBI Chip Select 2 base address */
 #define EBI_CS3_ADDR (0x63000000u) /**< EBI Chip Select 3 base address */
+
+/* ************************************************************************** */
+/*   MISCELLANEOUS DEFINITIONS FOR SAM4S8C */
+/* ************************************************************************** */
+
+#define CHIP_JTAGID (0x05B3203FUL)
+#define CHIP_CIDR (0x28AC0AE0UL)
+#define CHIP_EXID (0x0UL)
 
 /* ************************************************************************** */
 /*   ELECTRICAL DEFINITIONS FOR SAM4S8C */
@@ -505,7 +518,7 @@ void WDT_Handler        ( void );
 /* Embedded Flash Write Wait State */
 #define CHIP_FLASH_WRITE_WAIT_STATE     (6U)
 
-/* Embedded Flash Read Wait State (VDDCORE set at 1.65V) */
+/* Embedded Flash Read Wait State (VDDCORE set at 1.20V) */
 #define CHIP_FREQ_FWS_0                 (20000000UL) /**< \brief Maximum operating frequency when FWS is 0 */
 #define CHIP_FREQ_FWS_1                 (40000000UL) /**< \brief Maximum operating frequency when FWS is 1 */
 #define CHIP_FREQ_FWS_2                 (60000000UL) /**< \brief Maximum operating frequency when FWS is 2 */

@@ -9,9 +9,11 @@
 		<build type="header-file" value="instance_acc.h"/>
 		<build type="header-file" value="instance_adc.h"/>
 		<build type="header-file" value="instance_chipid.h"/>
+		<build type="header-file" value="instance_cmcc.h"/>
 		<build type="header-file" value="instance_crccu.h"/>
 		<build type="header-file" value="instance_dacc.h"/>
-		<build type="header-file" value="instance_efc.h"/>
+		<build type="header-file" value="instance_efc0.h"/>
+		<build type="header-file" value="instance_efc1.h"/>
 		<build type="header-file" value="instance_gpbr.h"/>
 		<build type="header-file" value="instance_hsmci.h"/>
 		<build type="header-file" value="instance_matrix.h"/>

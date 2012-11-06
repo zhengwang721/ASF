@@ -47,12 +47,12 @@
 #define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
 
 /** Definition of TWI interrupt ID on board. */
-#define BOARD_TWI_IRQn          TWI0_IRQn
-#define BOARD_TWI_Handler       TWI0_Handler
+#define BOARD_TWI_IRQn          TWI1_IRQn
+#define BOARD_TWI_Handler       TWI1_Handler
 
 /** TWI ID for SLAVE application to use */
-#define BOARD_ID_TWI_SLAVE          ID_TWI0
+#define BOARD_ID_TWI_SLAVE          ID_TWI1
 /** TWI Base for TWI SLAVE application to use */
-#define BOARD_BASE_TWI_SLAVE        TWI0
+#define BOARD_BASE_TWI_SLAVE        TWI1
 
 #endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

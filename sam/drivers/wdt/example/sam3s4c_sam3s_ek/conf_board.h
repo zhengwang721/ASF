@@ -50,6 +50,9 @@
 /** Usart Hw ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0
 
+/** Don't change WDT mode register in init.c */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
 /** Push button definition */
 #define PUSHBUTTON_STRING	"USRPB1"
 #define PUSHBUTTON_IRQn		PIOB_IRQn

@@ -81,6 +81,8 @@
  * - sam3sd8c_sam3s_ek2
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
+ * - sam4s16c_sam4s_ek
+ * - sam3sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -106,6 +108,10 @@
  * \brief Parity mode of UART
  */
 //@}
+
+#if !defined(PMC_PCK_PRES_CLK_1)
+#define PMC_PCK_PRES_CLK_1   PMC_PCK_PRES(0)
+#endif
 
 /* Flag for wake-up from sleep mode */
 volatile uint32_t g_ul_sleep_wake_up = 0;

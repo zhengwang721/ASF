@@ -282,14 +282,16 @@ static void set_interrupt_priority(uint8_t int1Prior, uint8_t int2Prior)
 static void configure_buttons(void)
 {
 	/* Adjust PIO debouncing filter patameters, using 10 Hz filter. */
-	pio_set_debounce_filter(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK,
-			10);
-	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK,
-			10);
+	pio_set_debounce_filter(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK, 10);
+	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK, 10);
 
 	/* Initialize PIOs interrupt handlers (see PIO definition in board.h). */
-	pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID, PIN_PUSHBUTTON_1_MASK, PIN_PUSHBUTTON_1_ATTR, Int1Handler);	/* Interrupt on rising edge.  */
-	pio_handler_set(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID, PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR, Int2Handler);	/* Interrupt on falling edge. */
+	/* Interrupt on rising edge.  */
+	pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID, 
+			PIN_PUSHBUTTON_1_MASK, PIN_PUSHBUTTON_1_ATTR, Int1Handler);
+	/* Interrupt on falling edge. */
+	pio_handler_set(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID, 
+			PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR, Int2Handler);
 
 	/* Enable PIO controller IRQs. */
 	NVIC_EnableIRQ((IRQn_Type) PIN_PUSHBUTTON_1_ID);

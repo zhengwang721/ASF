@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="ADC Temperature Sensor example for Arduino Due/X" id="sam.drivers.adc.adc_temp_sensor_example.arduino_due_x">
 		<info type="description" value="summary">
-		Switch between various system clock sources and prescalers at run time.
+		This example demonstrates how to configure the temperature sensor feature inside the microcontroller.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

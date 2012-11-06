@@ -70,6 +70,10 @@
 #define CONF_NF_CYCLE_TIMING 0
 #endif
 
+#if SAM4S /* For compatible */
+#define SMC_MODE_DBW_8_BIT  0
+#endif
+
 #define ENABLE_CE(raw)        gpio_set_pin_low(PIN_NF_CE_IDX)
 #define DISABLE_CE(raw)       gpio_set_pin_high(PIN_NF_CE_IDX)
 
@@ -476,10 +480,12 @@ uint32_t nand_flash_raw_initialize(struct nand_flash_raw *raw,
 		smc_set_mode(SMC, BOARD_NAND_CS, SMC_MODE_READ_MODE
 				| SMC_MODE_WRITE_MODE | SMC_MODE_DBW_8_BIT);
 	}
+#if !defined(SAM4S)
 	if (CONF_NF_BUSWIDTH == 16) {
 		smc_set_mode(SMC, BOARD_NAND_CS, SMC_MODE_READ_MODE
 				| SMC_MODE_WRITE_MODE | SMC_MODE_DBW_16_BIT);
 	}
+#endif
 #else
 	static const gpio_map_t SMC_NF_EBI_GPIO_MAP = {
 		{ATPASTE2(AVR32_EBI_NANDOE_0, _PIN),ATPASTE2(AVR32_EBI_NANDOE_0, _FUNCTION)},
