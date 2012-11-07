@@ -1555,7 +1555,10 @@ class AVRStudio5Project(GenericProject):
 
 	@property
 	def project_board_vendor(self):
-		return self.project._board.vendor
+		if self.project._board:
+			return self.project._board.vendor
+		else:
+			return ''
 
 	@property
 	def project_board_addons(self):
