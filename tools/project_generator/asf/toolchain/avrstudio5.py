@@ -1468,9 +1468,9 @@ class AVRStudio5Project(GenericProject):
 		for preq in [self.project] + self.project.get_prerequisites(recursive=True):
 			for include in preq.get_build(BuildInclude, self.toolchain, recursive=False):
 				if isinstance(preq.extension, asf.extension.StudioFdkExtension):
-					include_paths.append(os.path.relpath(include, preq.extension.root_path))
-				else:
 					include_paths.append(include)
+				else:
+					include_paths.append(os.path.relpath(include, preq.extension.root_path))
 
 		include_paths = list(set(include_paths))
 
