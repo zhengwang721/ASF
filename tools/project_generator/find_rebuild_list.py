@@ -80,7 +80,7 @@ if __name__ == "__main__":
 	runtime.set_show_not_affected(options.not_affected)
 	runtime.set_outfiles(outfile_project_path, outfile_module_path)
 	runtime.set_start_folder(current_folder)
-	runtime.set_input_file(self.args[0])
+	runtime.set_input_file(args[0])
 
 	# If debugging is enabled and not the log level, we set it to debug
 	if options.debug and not options.level:
