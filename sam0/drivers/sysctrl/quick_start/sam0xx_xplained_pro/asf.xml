@@ -1,9 +1,0 @@
-<asf xmlversion="1.0">
-	<project caption="" id="sam0.drivers.sysctrl.quick_start.sam0xx_xplained_pro">
-		<build type="include-path" value="."/>
-		<require idref="board.sam0xx_xplained_pro"/>
-		<require idref="sam0.drivers.sysctrl.quick_start"/>
-		<generator value="armgcc"/>
-		<generator value="doxygen"/>
-	</project>
-</asf>
