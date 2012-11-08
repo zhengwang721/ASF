@@ -1,0 +1,10 @@
+# Compiled python objects
+*.py[cod]
+
+# ASF XML Cache
+*content.xml.cache
+tools/project_generator/cache
+
+# Unit test coverage
+tools/project_generator/.coverage
+
