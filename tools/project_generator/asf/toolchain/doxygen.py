@@ -15,6 +15,7 @@ class DoxygenProject(GenericProject):
 	doxyfile_dir = ""
 	ASF = {}
 	recursive = True
+	template_filename = "doxyfile.doxygen"
 
 	def __init__(self, project, db, runtime):
 		GenericProject.__init__(self, project, db, runtime)
@@ -77,6 +78,7 @@ class DoxygenProject(GenericProject):
 			'$ASF_HEADERS$'      : BuildHeader,
 			'$ASF_INCLUDE_PATH$' : BuildInclude,
 			'$ASF_IMAGE_PATH$'   : BuildDoxygenImagePath,
+			'$ASF_EXAMPLE_PATH$' : BuildExampleHeader
 		}
 
 		for declaration, filetype in type_mapping.items():
@@ -109,6 +111,8 @@ class DoxygenProject(GenericProject):
 		# If no mainpage tag has been found for this documentation, throw an error message
 		if not has_mainpage:
 			self.log.error("Project `%s' is missing a doxygen mainpage tag" % (self.project.id))
+
+		self.ASF["$ASF_EXAMPLE_PATH$"] = os.path.dirname(self.ASF["$ASF_EXAMPLE_PATH$"])
 
 		# Add header files to INPUT (along with c-files)
 		self.ASF["$ASF_INPUT$"] += " " + self.ASF["$ASF_HEADERS$"]
@@ -145,7 +149,7 @@ class DoxygenProject(GenericProject):
 
 	def write_doxygen(self):
 		# Create doxyfile.doxygen
-		doxyfile_path = os.path.join(self.templatedir, "doxyfile.doxygen" )
+		doxyfile_path = os.path.join(self.templatedir, self.template_filename )
 		doxyfile = self._read_file(doxyfile_path)
 		doxyfile = self._replace_strings(doxyfile, self.ASF)
 		if not os.path.exists(self.doxyfile_dir):

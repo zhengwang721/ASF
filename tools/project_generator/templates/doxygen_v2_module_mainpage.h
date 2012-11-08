@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +39,15 @@
  *
  * \section intro Introduction
  *  This documentation has been automatically generated, and documents the source
- *  code found in the Atmel Software Framework (ASF). <p>
- *  Use the above menu to navigate in the documentation, or use the links below: <br>
- *  <ul>
- *    <li> <a href="globals_func.html">Functions</a> </li>
- *    <li> <a href="annotated.html">Data structures</a> </li>
- *    <li> <a href="globals_type.html">Defines</a> </li>
- *  </ul>
+ *  code found in the Atmel Software Framework (ASF).
  *
- *  \section main_licence License
- *  <ul>
+ *  To see a list of modules this documentation covers, 
+ *  <a href="modules.html">click here</a>.
+ *
+ * \section main_licence License
+ * <ul>
  *   <li>\ref License</li>
- *  </ul>
+ * </ul>
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
  *

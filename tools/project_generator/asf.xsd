@@ -394,6 +394,10 @@ It will try to find a module within the tag that contains the same id, with a ha
         </xs:enumeration>
         <xs:enumeration value="doxygen-module">
         </xs:enumeration>
+        <xs:enumeration value="doxygen-v2">
+        </xs:enumeration>
+        <xs:enumeration value="doxygen-module-v2">
+        </xs:enumeration>
         <xs:enumeration value="as5_8">
         </xs:enumeration>
         <xs:enumeration value="as5_32">
@@ -426,7 +430,7 @@ It will try to find a module within the tag that contains the same id, with a ha
          <xs:attribute name="default-mcu" type="xs:string" use="optional">
             <xs:annotation>
                <xs:documentation>
-                  Only allowed when value="doxygen-module".
+                  Only allowed when value="doxygen-module" or value="doxygen-module-v2".
                </xs:documentation>
             </xs:annotation>
          </xs:attribute>
@@ -488,6 +492,8 @@ It will try to find a module within the tag that contains the same id, with a ha
             <xs:simpleType>
                <xs:restriction base="xs:string">
                   <xs:enumeration value="api">
+                  </xs:enumeration>
+                  <xs:enumeration value="example">
                   </xs:enumeration>
                   <xs:enumeration value="path">
                   </xs:enumeration>
