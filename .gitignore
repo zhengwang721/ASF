@@ -8,3 +8,16 @@ tools/project_generator/cache
 # Unit test coverage
 tools/project_generator/.coverage
 
+# Subversion directories
+*.svn
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
