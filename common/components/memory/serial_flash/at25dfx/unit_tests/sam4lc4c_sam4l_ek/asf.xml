@@ -10,7 +10,7 @@
 		<build type="header-file" value="conf_at25dfx.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<require idref="common.components.memory.serial_flash.at25dfx.unit_tests"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="iarewarm"/>
@@ -20,5 +20,6 @@
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

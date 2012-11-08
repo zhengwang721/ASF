@@ -6,9 +6,10 @@
 		<build type="header-file" value="conf_example.h"/>
 		<require idref="common.applications.led_chaser"/>
 		<require idref="board.stk600-rc032x.atxmega32e5"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega32e5"/>
 	</project>
 </asf>
