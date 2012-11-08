@@ -7,7 +7,7 @@
  * \note The values defined in this file are device-specific. See the device
  *       datasheet for further information.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -110,6 +110,9 @@ void et024006_PrintString(char *lcd_string, const unsigned char *font_style,
                           uint16_t fcolor,
                           int bcolor);
 
+void et024006_DuplicatePixel( et024006_color_t color, uint32_t count );
+
+
 void et024006_Init( unsigned long cpu_hz, unsigned long hsb_hz );
 
 /*! \brief Tests if a valid display is attached.
@@ -148,6 +151,8 @@ et024006_color_t et024006_Color( uint8_t r, uint8_t g, uint8_t b );
 
 void et024006_DrawPixel( uint16_t x, uint16_t y, et024006_color_t color );
 
+void et024006_DrawQuickPixel( uint16_t x, uint16_t y, et024006_color_t color );
+
 et024006_color_t et024006_GetPixel( uint16_t x, uint16_t y );
 
 void et024006_DrawHorizLine( uint16_t x, uint16_t y, uint16_t length, et024006_color_t color );
@@ -157,6 +162,14 @@ void et024006_DrawVertLine( uint16_t x, uint16_t y, uint16_t length, et024006_co
 void et024006_DrawLine( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, et024006_color_t color );
 
 void et024006_DrawFilledRect( uint16_t x, uint16_t y, uint16_t width, uint16_t height, et024006_color_t color );
+
+void et024006_SetLimits( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 );
+
+void et024006_SetQuickLimits( uint16_t x, uint16_t y );
+void et024006_SetQuickLimits2( uint16_t x, uint16_t y );
+
+void et024006_CopyPixelsToScreen( et024006_color_t const * pixels, uint32_t count );
+void et024006_CopyPixelsFromScreen( et024006_color_t * pixels, uint32_t count );
 
 /*!
  * This function draws a filled circle, or parts of it.

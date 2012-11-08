@@ -118,6 +118,7 @@
 static void mxt_init(struct mxt_device *device)
 {
 	enum status_code status;
+	UNUSED(status);
 
 	/* T8 configuration object data */
 	uint8_t t8_object[] = {
@@ -221,22 +222,21 @@ static void show_out_of_memory_error(void)
 {
 	const char memory_string[] = "OUT OF MEMORY";
 	gfx_coord_t disp_width, disp_height;
-	gfx_coord_t str_x, str_y;
 
 	/* Get the display width and height */
-	disp_width = gfx_get_width();
+	disp_width  = gfx_get_width();
 	disp_height = gfx_get_height();
 
-	/* Determine the X,Y coordinates of the error string when centered */
-	gfx_get_string_bounding_box(memory_string, &sysfont, &str_x, &str_y);
-	str_x = (disp_width / 2) - (str_x / 2);
-	str_y = (disp_height / 2) - (str_y / 2);
-
-	/* Blank display, show out of memory error text */
+	/* Blank display */
 	gfx_set_clipping(0, 0, disp_width, disp_height);
 	gfx_draw_filled_rect(0, 0, disp_width, disp_height, GFX_COLOR_BLACK);
-	gfx_draw_string(memory_string, str_x, str_y, &sysfont,
-			GFX_COLOR_TRANSPARENT, GFX_COLOR_RED);
+
+	/* Show centered out of memory error text */
+	gfx_draw_string_aligned(memory_string,
+		disp_width / 2, disp_height / 2,
+		&sysfont,
+		GFX_COLOR_TRANSPARENT, GFX_COLOR_RED,
+		TEXT_POS_CENTER, TEXT_ALIGN_CENTER);
 }
 
 

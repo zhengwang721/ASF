@@ -3,7 +3,7 @@
  *
  * \brief Common Delay Service
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,17 +47,17 @@
 extern "C" {
 #endif
 
-
 #include <sysclk.h>
 
 #if UC3
 #   include <cycle_counter.h>
 #elif XMEGA
 #   include "xmega/cycle_counter.h"
+#elif MEGA
+#   include "mega/cycle_counter.h"
 #elif SAM
 #   include "sam/cycle_counter.h"
 #endif
-
 
 /**
  * @defgroup group_common_services_delay Busy-Wait Delay Routines
@@ -84,7 +84,7 @@ extern "C" {
  * MCU clock frequency.
  */
 #ifndef F_CPU
-#	define F_CPU sysclk_get_cpu_hz()
+#       define F_CPU sysclk_get_cpu_hz()
 #endif
 
 /**
@@ -124,7 +124,6 @@ extern "C" {
  * @param delay Delay in microseconds
  */
 #define delay_us(delay)     cpu_delay_us(delay, F_CPU)
-
 
 #ifdef __cplusplus
 }

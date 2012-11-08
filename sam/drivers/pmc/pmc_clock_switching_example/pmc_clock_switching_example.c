@@ -122,6 +122,16 @@ extern "C" {
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
+#if !defined(PMC_PCK_PRES_CLK_1)
+#define PMC_PCK_PRES_CLK_1   PMC_PCK_PRES(0)
+#define PMC_PCK_PRES_CLK_2   PMC_PCK_PRES(1)
+#define PMC_PCK_PRES_CLK_4   PMC_PCK_PRES(2)
+#define PMC_PCK_PRES_CLK_8   PMC_PCK_PRES(3)
+#define PMC_PCK_PRES_CLK_16  PMC_PCK_PRES(4)
+#define PMC_PCK_PRES_CLK_32  PMC_PCK_PRES(5)
+#define PMC_PCK_PRES_CLK_64  PMC_PCK_PRES(6)
+#endif
+
 /**
  *  \brief Handler for Button 1 rising edge interrupt.
  *
@@ -280,6 +290,7 @@ int main(void)
 	
 	puts("\n\r-I- Switch 8Mhz fast RC oscillator to be the source of the main clock \n\r"
 			"-I- The master clock is main clock divided by 2\n\r"
+			"-I- From now on, the UART baud rate is 2400bps. So please change the terminial setting before the next clock switch\r\n"
 			"-I- Press Button "BUTTON_NAME" to switch next clock configuration... \r");
 	delay_ticks(20000);
 

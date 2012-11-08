@@ -82,7 +82,7 @@ uint32_t flashcalw_get_page_count(void);
 
 uint32_t flashcalw_get_page_count_per_region(void);
 
-uint32_t flashcalw_get_page_region(uint32_t page_number);
+uint32_t flashcalw_get_page_region(int32_t page_number);
 
 uint32_t flashcalw_get_region_first_page_number(uint32_t region);
 
@@ -104,7 +104,7 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
  *
  * \param cpu_f_hz The CPU frequency
  * \param ps_value (boolean), Power Scaling mode
- * \param fwu_value (boolean), Fast wakeup mode
+ * \param is_fwu_enabled (boolean), Fast wakeup mode
  */
 #define flash_set_bus_freq(cpu_f_hz, ps_value, is_fwu_enabled) \
 	flashcalw_set_flash_waitstate_and_readmode(cpu_f_hz, ps_value, is_fwu_enabled)
@@ -295,4 +295,102 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 
 //! @}
 
+/*! \name PicoCache interfaces.
+ */
+//! @{
+
+void flashcalw_picocache_enable(void);
+
+void flashcalw_picocache_disable(void);
+
+uint32_t flashcalw_picocache_get_status(void);
+
+void flashcalw_picocache_invalid_all(void);
+
+void flashcalw_picocache_invalid_line(uint32_t index);
+
+void flashcalw_picocache_set_monitor_mode(uint32_t mode);
+
+void flashcalw_picocache_enable_monitor(void);
+
+void flashcalw_picocache_disable_monitor(void);
+
+void flashcalw_picocache_reset_monitor( void );
+
+uint32_t flashcalw_picocache_get_monitor_cnt( void );
+
+uint32_t flashcalw_picocache_get_version( void );
+
+//! @}
+
+/**
+ * \page sam_flashcalw_quickstart Quickstart guide for SAM FLASHCALW driver
+ *
+ * This is the quickstart guide for the \ref group_sam_drivers_flashcalw
+ * "SAM FLASHCALW driver", with step-by-step instructions on how to
+ * configure and use the driver in a selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section flashcalw_basic_use_case Basic use case
+ * In this basic use case, the last page page and the user page will be written
+ * with a specific magic number.
+ *
+ * \subsection sam_flashcalw_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section flashcalw_basic_use_case_setup Setup steps
+ *  \note The CLK_FLASHCALW_AHB, CLK_FLASHCALW_APB are enabled
+ * by default.
+ * \subsection flashcalw_basic_use_case_setup_code Example code
+ * Enable the following macro in the conf_clock.h:
+ * \code
+ *  #define CONFIG_SYSCLK_SOURCE   SYSCLK_SRC_RCFAST
+ *  #define CONFIG_RCFAST_FRANGE    2
+ * \endcode
+ *
+ * Add the following code in the application C-file:
+ * \code
+ *  sysclk_init();
+ * \endcode
+ *
+ * \subsection flashcalw_basic_use_case_setup_flow Workflow
+ * -# Set system clock source as fast RC oscillator:
+ *   - \code #define CONFIG_SYSCLK_SOURCE SYSCLK_SRC_RCFAST \endcode
+ * -# Set fast RC oscillator as 12MHz:
+ *   - \code #define CONFIG_RCFAST_FRANGE    2 \endcode
+ * -# Initialize the system clock.
+ *   - \code sysclk_init(); \endcode
+ *
+ * \section flashcalw_basic_use_case_usage Usage steps
+ * \subsection flashcalw_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *    #define MAGIC_NUM 0x4c4d5441
+ *    #define PAGE_ADDRESS (FLASH_ADDR + FLASH_SIZE - FLASH_PAGE_SIZE)
+ *    #define USER_PAGE_ADDRESS (FLASH_USER_PAGE_ADDR + 8)
+ *    static const uint32_t write_data = MAGIC_NUM;
+ *
+ *    flashcalw_memcpy((void *)PAGE_ADDRESS, &write_data, 4, true);
+ *    flashcalw_memcpy((void *)USER_PAGE_ADDRESS, &write_data, 4, true);
+ * \endcode
+ *
+ * \subsection flashcalw_basic_use_case_usage_flow Workflow
+ * -# Define the written locations and magic number:
+ *   - \code #define MAGIC_NUM 0x4c4d5441 \endcode
+ *   - \code #define PAGE_ADDRESS (FLASH_ADDR + FLASH_SIZE - FLASH_PAGE_SIZE)
+ * \endcode
+ *   - \code USER_PAGE_ADDRESS (FLASH_USER_PAGE_ADDR + 8) \endcode
+ *   - \note The storage location must not at the beginning of the user page as the first 2
+ * words of the user page is reserved.
+ *   - \code static const uint32_t write_data = MAGIC_NUM; \endcode
+ * -# Write the magic number to the flash array:
+ *   - \code flashcalw_memcpy((void *)PAGE_ADDRESS, &write_data, 4, true); \endcode
+ * -# Write the magic number to the user page:
+ *   - \code flashcalw_memcpy((void *)USER_PAGE_ADDRESS, &write_data, 4, true);
+ * \endcode
+ *
+ */
 #endif  /* FLASHCALW_H_INCLUDED */

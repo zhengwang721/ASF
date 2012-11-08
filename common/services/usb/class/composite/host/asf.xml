@@ -11,6 +11,8 @@
 		<device-support value="uc3a3_a4"/>
 		<device-support value="uc3b0"/>
 		<device-support value="uc3c"/>
+		<device-support value="sam3x"/>
+		<device-support value="sam3a"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 </asf>

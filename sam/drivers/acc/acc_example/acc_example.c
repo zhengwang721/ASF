@@ -51,9 +51,11 @@
  *
  * \section Requirements
  *
- * This example can be used with any SAM3/4 MCU featuring Analog Comparator 
- * Controller. The DAC0 uses 3.3v as reference voltage so that make sure to 
- * close JP2 on ADVREF and 3V3 on the board.
+ * This example can be used on the following boards:<br>
+ * - SAM3S-EK<br>
+ * - SAM3S-EK2<br>
+ * - SAM4S-EK<br>
+ * - SAM4S-EK2<br>
  *
  * \section Description
  *

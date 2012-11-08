@@ -1136,6 +1136,7 @@ class AVRStudio5Project(GenericProject):
 				'xmega_a1_xplained'   : 'XMEGA-A1-Xplained.jpg',
 				'xmega_a3bu_xplained' : 'XMEGA-A3BU-Xplained.jpg',
 				'xmega_b1_xplained'   : 'XMEGA-B1-Xplained.jpg',
+				'xmega_c3_xplained'   : 'XMEGA-C3-Xplained.jpg',
 				'xplain'              : 'Xplain.jpg',
 			}
 
@@ -1463,7 +1464,7 @@ class AVRStudio5Project(GenericProject):
 				caption_items.extend((main_app.caption, kit_name))
 
 			# Special case for boards which can support several target devices
-			if kit_name == "STK600" or kit_name == "STK500":
+			if kit_name == "STK600" or kit_name == "STK500" or kit_name == "Simulator":
 				caption_items.append(device_description)
 
 		self.project_caption = " - ".join(caption_items)

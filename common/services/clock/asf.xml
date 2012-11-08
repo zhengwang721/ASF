@@ -194,7 +194,7 @@
 			<device-support value="uc3d"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3d"/>
 		</module>
-		<module type="service" id="common.services.basic.clock#8" caption="System Clock Control - XMEGA A1/A3/A3B/A4/D implementation">
+		<module type="service" id="common.services.basic.clock#8" caption="System Clock Control - XMEGA A1/A3/A3B/A4/D/E implementation">
 			<info type="description" value="summary">
 			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API .
 			</info>
@@ -219,10 +219,11 @@
 			<device-support value="xmegaa4"/>
 			<device-support value="xmegaa3b"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<require idref="xmega.drivers.cpu"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
-		<module type="service" id="common.services.basic.clock#9" caption="System Clock Control - XMEGA A1U/A3U/A3BU/A4U implementation">
+		<module type="service" id="common.services.basic.clock#9" caption="System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation">
 			<info type="description" value="summary">
 			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API.
 			</info>
@@ -433,6 +434,25 @@
 			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
 			<require idref="sam.drivers.flashcalw"/>
 			<require idref="sam.drivers.bpm"/>
+		</module>		
+		<module type="service" id="common.services.basic.clock#17" caption="System Clock Control - MEGA RF A1 implementation">
+			<info type="description" value="summary">
+			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="header-file" subtype="api" value="sysclk.h"/>
+			<build type="c-source" value="mega/sysclk.c"/>
+			<build type="header-file" value="mega/sysclk.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
+			<build type="module-config" subtype="path" value="mega/module_config"/>
+			<build type="doxygen-entry-point" value="clk_group"/>
+			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
+			<device-support value="mega"/>
+			<require idref="mega.drivers.cpu"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
 		</module>
 	</select-by-device>
 </asf>

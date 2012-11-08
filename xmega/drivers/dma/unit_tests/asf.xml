@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.dma.unit_tests" caption="Unit tests for DMA module">
+	<module type="application" id="xmega.drivers.dma.unit_tests" caption="Unit Tests for the XMEGA DMA Driver">
 		<info type="description" value="summary">
 			Perform a range of test on the DMA module.
 		</info>
@@ -10,6 +10,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegab"/>
 		<require idref="xmega.drivers.dma"/>
 		<require idref="xmega.drivers.tc"/>
 		<require idref="xmega.drivers.pmic"/>

@@ -3,7 +3,7 @@
  *
  * \brief Flash Program example configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,9 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
+#define IFLASH_PAGE_SIZE  IFLASH0_PAGE_SIZE
+
 /* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE- IFLASH_PAGE_SIZE*4)
+#define LAST_PAGE_ADDRESS (IFLASH0_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
 
 #endif /* CONF_EXAMPLE_H */

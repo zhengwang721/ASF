@@ -62,7 +62,7 @@ extern "C" {
  * \par Usage
  *
  * -# DACC clock should be enabled before using it.
- *    - \ref pmc_enable_periph_clk() can be used to enable the clock.
+ *    - \ref sysclk_enable_peripheral_clock() can be used to enable the clock.
  * -# Reset DACC with \ref dacc_reset().
  * -# If DACC can be enabled/disabled, uses \ref dacc_enable() and
  *    \ref dacc_disable().
@@ -95,7 +95,7 @@ extern "C" {
  */
 
 //! Max channel number
-#if (SAM3N)
+#if (SAM3N) || (SAM4L)
 # define MAX_CH_NB        0
 #else
 # define MAX_CH_NB        1
@@ -125,7 +125,7 @@ void dacc_reset(Dacc *p_dacc)
 uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger)
 {
 	uint32_t mr = p_dacc->DACC_MR & (~(DACC_MR_TRGSEL_Msk));
-#if (SAM3N)
+#if (SAM3N) || (SAM4L)
 	p_dacc->DACC_MR = mr
 		| DACC_MR_TRGEN
 		| ((ul_trigger << DACC_MR_TRGSEL_Pos) & DACC_MR_TRGSEL_Msk);
@@ -156,13 +156,13 @@ void dacc_disable_trigger(Dacc *p_dacc)
 uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 {
 	if (ul_mode) {
-#if (SAM3N)
+#if (SAM3N) || (SAM4L)
 		p_dacc->DACC_MR |= DACC_MR_WORD;
 #else
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #endif
 	} else {
-#if (SAM3N)
+#if (SAM3N) || (SAM4L)
 		p_dacc->DACC_MR &= (~DACC_MR_WORD);
 #else
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
@@ -267,6 +267,7 @@ uint32_t dacc_get_writeprotect_status(Dacc *p_dacc)
 	return p_dacc->DACC_WPSR;
 }
 
+#if !SAM4L
 /**
  * \brief Get PDC registers base address.
  *
@@ -279,8 +280,9 @@ Pdc *dacc_get_pdc_base(Dacc *p_dacc)
 	p_dacc = p_dacc;
 	return PDC_DACC;
 }
+#endif
 
-#if (SAM3N) || defined(__DOXYGEN__)
+#if (SAM3N) || (SAM4L) || defined(__DOXYGEN__)
 /**
  * \brief Enable DACC.
  *
@@ -321,7 +323,7 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 		| DACC_MR_CLKDIV(ul_clock_divider);
 	return DACC_RC_OK;
 }
-#endif /* #if (SAM3N) */
+#endif /* #if (SAM3N) || (SAM4L) */
 
 #if (SAM3S) || (SAM3XA) || (SAM4S) || defined(__DOXYGEN__)
 /**

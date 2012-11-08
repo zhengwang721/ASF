@@ -333,4 +333,21 @@ void board_init(void)
 #ifdef CONF_BOARD_PCK0
 	gpio_configure_pin(PIN_PCK0, PIN_PCK0_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_SD_MMC_HSMCI
+	/* Configure HSMCI pins */
+	gpio_configure_pin(PIN_HSMCI_MCCDA_GPIO, PIN_HSMCI_MCCDA_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCCK_GPIO, PIN_HSMCI_MCCK_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA0_GPIO, PIN_HSMCI_MCDA0_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA4_GPIO, PIN_HSMCI_MCDA4_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA5_GPIO, PIN_HSMCI_MCDA5_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA6_GPIO, PIN_HSMCI_MCDA6_FLAGS);
+	gpio_configure_pin(PIN_HSMCI_MCDA7_GPIO, PIN_HSMCI_MCDA7_FLAGS);
+
+	/* Configure SD/MMC card detect pin */
+	gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
 }

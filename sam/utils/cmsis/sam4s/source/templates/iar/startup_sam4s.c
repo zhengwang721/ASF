@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM4S.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -84,8 +84,12 @@ const intvec_elem __vector_table[] = {
 	{RTT_Handler},      /* 3  Real Time Timer */
 	{WDT_Handler},      /* 4  Watchdog Timer */
 	{PMC_Handler},      /* 5  PMC */
-	{EFC_Handler},      /* 6  EFC */
+	{EFC0_Handler},     /* 6  EFC0 */
+#if defined(ID_EFC1)
+	{EFC1_Handler},     /* 7  EFC1 */
+#else
 	{Dummy_Handler},    /* 7  Reserved */
+#endif
 	{UART0_Handler},    /* 8  UART0 */
 	{UART1_Handler},    /* 9  UART1 */
 #ifdef ID_SMC

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="service" id="xmega.drivers.ebi.unit_tests.common" caption="Common test functions for EBI driver">
+	<module type="service" id="xmega.drivers.ebi.unit_tests.common" caption="Unit Tests for the XMEGA EBI Driver">
 		<device-support value="xmega"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="common_tests.c"/>

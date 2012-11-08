@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.memory.nand_flash.unit_tests" caption="Set of unit tests for NAND Flash component">
-		<module type="application" id="common.components.memory.nand_flash.unit_tests#0" caption="Set of unit tests for NAND Flash component">
+	<select-by-device id="common.components.memory.nand_flash.unit_tests" caption="Unit Tests for the SAM NAND Flash Component">
+		<module type="application" id="common.components.memory.nand_flash.unit_tests#0" caption="Unit Tests for the SAM NAND Flash Component">
 			<info type="description" value="summary">
 			Unit test application for the NAND Flash component.
 			</info>
@@ -16,7 +16,7 @@
 			<require idref="common.utils.unit_test"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 		</module>
-		<module type="application" id="common.components.memory.nand_flash.unit_tests#1" caption="Set of unit tests for NAND Flash component">
+		<module type="application" id="common.components.memory.nand_flash.unit_tests#1" caption="Unit Tests for the SAM NAND Flash Component">
 			<info type="description" value="summary">
 			Unit test application for the NAND Flash component.
 			</info>

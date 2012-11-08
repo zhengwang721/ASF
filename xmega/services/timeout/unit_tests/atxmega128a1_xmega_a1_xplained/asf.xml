@@ -12,6 +12,7 @@
 		<require idref="board.xmega_a1_xplained"/>
 		<generator value="avrgcc"/>
 		<generator value="iarew"/>
+		<generator value="as5_8"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="doxygen"/>
 	</project>

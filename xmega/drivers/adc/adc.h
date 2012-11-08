@@ -359,20 +359,17 @@ __always_inline ADC_CH_tmpfix_t *adc_get_channel(ADC_t *adc, uint8_t ch_mask)
 		index += 4;
 		ch_mask >>= 4;
 	}
-
 #endif
 #if ADC_NR_OF_CHANNELS > 2
 	if (!(ch_mask & 0x03)) {
 		index += 2;
 		ch_mask >>= 2;
 	}
-
 #endif
 #if ADC_NR_OF_CHANNELS > 1
 	if (!(ch_mask & 0x01)) {
 		index++;
 	}
-
 #endif
 
 	return (ADC_CH_tmpfix_t *)(&adc->CH0 + index);
@@ -752,9 +749,9 @@ static inline void adc_set_clock_rate(struct adc_config *conf, uint32_t clk_adc)
 	Assert(clk_adc);
 #if XMEGA_A || XMEGA_AU
 	Assert(clk_adc <= 2000000UL);
-#elif XMEGA_B || XMEGA_D
+#elif XMEGA_D
 	Assert(clk_adc <= 1400000UL);
-#elif XMEGA_C
+#elif XMEGA_B || XMEGA_C
 	Assert(clk_adc <= 1800000UL);
 #endif
 
@@ -862,7 +859,6 @@ static inline void adc_set_conversion_trigger(struct adc_config *conf,
 				(base_ev_ch << ADC_EVSEL_gp) |
 				ADC_EVACT_SWEEP_gc;
 		break;
-
 #endif
 #if XMEGA_A || (CONFIG_ADC_VERSION == 2)
 	case ADC_TRIG_EVENT_SYNCSWEEP:
@@ -1230,7 +1226,6 @@ static inline uint8_t adcch_get_gain_setting(uint8_t gain)
 #if (CONFIG_ADC_VERSION == 2) || XMEGA_D
 	case 0:
 		return ADC_CH_GAIN_DIV2_tmpfix_gc;
-
 #endif
 	case 1:
 		return ADC_CH_GAIN_1X_gc;
@@ -1971,7 +1966,7 @@ static inline void adcch_disable_interrupt(struct adc_channel_config *ch_conf)
  * -# Set unsigned, 12-bit conversions with internal VCC/1.6 voltage reference:
  *     - \code
  * adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12,
- *ADC_REF_VCC);
+ * ADC_REF_VCC);
  *     \endcode
  * -# Set event system triggered conversions on the first two ADC channels,
  *    with conversions triggered by event system channel 3:

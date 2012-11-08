@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.applications.mxt143e_xplained_multi-touch_demo" caption="mXT143E Xplained multi-touch demo">
+	<module type="application" id="common.applications.mxt143e_xplained_multi-touch_demo" caption="mXT143E Xplained Multi-touch Demo">
 		<info type="description" value="summary">
 		Reads input from maXTouch and gives touch indication on display.
 		</info>

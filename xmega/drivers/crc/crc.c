@@ -3,7 +3,7 @@
  *
  * \brief Cyclic Redundancy Check module driver
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -332,7 +332,7 @@ void crc_set_initial_value(uint32_t value)
  *
  * \note The DMA channel must be set up separately
  *
- * \param dma_channel DMA channel to use (0-3)
+ * \param dma_channel DMA channel to use (0 to N-1)
  * \param crc_16_32   enum to indicate whether CRC-32 or CRC-16 shall be used
  */
 void crc_dma_checksum_start(uint8_t dma_channel, enum crc_16_32_t crc_16_32)
@@ -353,12 +353,16 @@ void crc_dma_checksum_start(uint8_t dma_channel, enum crc_16_32_t crc_16_32)
 	case 1:
 		crc_set_source(CRC_SOURCE_DMAC1_gc);
 		break;
+	#if defined(CRC_SOURCE_DMAC2_gc)
 	case 2:
 		crc_set_source(CRC_SOURCE_DMAC2_gc);
 		break;
+	#endif
+	#if defined(CRC_SOURCE_DMAC3_gc)
 	case 3:
 		crc_set_source(CRC_SOURCE_DMAC3_gc);
 		break;
+	#endif
 	default:
 		// Nonexisting DMA channel - do nothing
 		break;

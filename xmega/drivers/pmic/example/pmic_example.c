@@ -3,7 +3,7 @@
  *
  * \brief PMIC example for AVR XMEGA
  *
- * Copyright (C) 2010 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,69 +40,76 @@
  * \asf_license_stop
  *
  */
-#include <conf_example.h>
 #include <asf.h>
+#include "conf_example.h"
 
 int main(void)
 {
 	board_init();
 	sysclk_init();
 
-#if (BOARD == XMEGA_A3BU_XPLAINED)
-	/* We use the status LED to show the interrupt on the
-	 * A3BU Xplained, so we turn off the status LED which
-	 * is on by default. */
-	ioport_set_pin_high(LED3_GPIO);
-#endif
+	/* Turn off LEDs to start with */
+	LED_Off(LED0_GPIO);
+	LED_Off(LED1_GPIO);
+	LED_Off(LED2_GPIO);
+	LED_Off(LED3_GPIO);
 
 	/* Enable all three interrupt levels of the PMIC.
 	 * Alternatively, use pmic_init() to achieve the same.
 	 */
 	pmic_enable_level(PMIC_LVL_LOW | PMIC_LVL_MEDIUM | PMIC_LVL_HIGH);
 
-	// Enable the timer/counter's clock.
+	/* Enable the timer/counter's clock. */
 	sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_TC0);
 
-	// Initialize count, period and compare registers of the timer/counter.
+	/* Initialize count, period and compare registers of the timer/counter. */
 	TCC0.CNT = 0x0000;
 	TCC0.PER = 0xffff;
 	TCC0.CCA = 0x5555;
 	TCC0.CCB = 0xaaaa;
 
-	// Set up timer/counter in normal mode with two compare channels.
+	/* Set up timer/counter in normal mode with two compare channels. */
 	TCC0.CTRLB = TC0_CCAEN_bm | TC0_CCBEN_bm | TC_WGMODE_NORMAL_gc;
 
-	// Set levels for overflow and compare channel interrupts.
+	/* Set levels for overflow and compare channel interrupts. */
 	TCC0.INTCTRLA = TC_OVFINTLVL_HI_gc;
 	TCC0.INTCTRLB = TC_CCAINTLVL_LO_gc | TC_CCBINTLVL_MED_gc;
 
-	// Start the timer/counter and enable interrupts.
+	/* Start the timer/counter and enable interrupts. */
 	TCC0.CTRLA = TC_CLKSEL_DIV64_gc;
 	cpu_irq_enable();
 
-	do {
-		// NOP to allow for debug pauses.
-		asm("nop");
-	} while (1);
+	while (1) {
+		/* Do nothing - LED toggling is managed by interrupts. */
+	}
 }
 
-// Definitions of Interrupt Service Routines
+/* Definitions of Interrupt Service Routines */
 ISR(TCC0_CCA_vect)
 {
-	gpio_toggle_pin(LED_PIN_0);
-	do { } while (gpio_pin_is_low(BUTTON_PIN_0));
+	LED_Toggle(LED0_GPIO);
+
+	while (ioport_get_pin_level(BUTTON_PIN_0) == false) {
+		/* Block while button 0 is being held */
+	}
 }
 
 ISR(TCC0_CCB_vect)
 {
-	gpio_toggle_pin(LED_PIN_1);
-	do { } while (gpio_pin_is_low(BUTTON_PIN_1));
+	LED_Toggle(LED1_GPIO);
+
+	while (ioport_get_pin_level(BUTTON_PIN_1) == false) {
+		/* Block while button 0 is being held */
+	}
 }
 
 ISR(TCC0_OVF_vect)
 {
-	gpio_toggle_pin(LED_PIN_2);
-	do { } while (gpio_pin_is_low(BUTTON_PIN_2));
+	LED_Toggle(LED2_GPIO);
+
+	while (ioport_get_pin_level(BUTTON_PIN_2) == false) {
+		/* Block while button 0 is being held */
+	}
 }
 
 /**

@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Digital to Analog Converter Driver Example 2
  *
- * Copyright (C) 2010 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -98,8 +98,13 @@
 
 __always_inline static void wait_for_timer(void)
 {
+#if !XMEGA_E
 	do { } while (!(TCC0.INTFLAGS & TC0_OVFIF_bm));
 	TCC0.INTFLAGS = TC0_OVFIF_bm;
+#else
+	do { } while (!(TCC4.INTFLAGS & TC4_OVFIF_bm));
+	TCC4.INTFLAGS = TC4_OVFIF_bm;
+#endif
 }
 
 int main(void)
@@ -122,9 +127,10 @@ int main(void)
 	dac_set_conversion_parameters(&conf, DAC_REF_AVCC, DAC_ADJ_RIGHT);
 	dac_set_active_channel(&conf, DAC_CH0 | DAC_CH1, 0);
 	dac_set_conversion_trigger(&conf, 0, 0);
+#if XMEGA_DAC_VERSION_1
 	dac_set_conversion_interval(&conf, 10);
 	dac_set_refresh_interval(&conf, 20);
-
+#endif
 	dac_write_configuration(&OUTPUT_DAC, &conf);
 	dac_enable(&OUTPUT_DAC);
 
@@ -133,6 +139,7 @@ int main(void)
 	dac_set_channel_value(&OUTPUT_DAC, DAC_CH1, 0);
 	dac_wait_for_channel_ready(&OUTPUT_DAC, DAC_CH0 | DAC_CH1);
 
+#if !XMEGA_E
 	// Configure timer/counter to generate events at conversion rate.
 	sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_TC0);
 	TCC0.PER = (sysclk_get_per_hz() / RATE_OF_CONVERSION) - 1;
@@ -143,7 +150,19 @@ int main(void)
 
 	// Start the timer/counter.
 	TCC0.CTRLA = TC_CLKSEL_DIV1_gc;
+#else
+	// Configure timer/counter to generate events at conversion rate.
+	sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_TC4);
+	TCC4.PER = (sysclk_get_per_hz() / RATE_OF_CONVERSION) - 1;
 
+	// Configure event channel 0 to generate events upon T/C overflow.
+	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_EVSYS);
+	EVSYS.CH0MUX = EVSYS_CHMUX_TCC4_OVF_gc;
+
+	// Start the timer/counter.
+	TCC4.CTRLA = TC45_CLKSEL_DIV1_gc;
+	
+#endif
 	/* Write samples to the DAC channel every time it is ready.
 	 * Conversions are triggered by the timer/counter.
 	 */

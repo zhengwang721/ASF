@@ -192,6 +192,7 @@ static void get_finger_display_coordinates(const struct mxt_touch_event *touch_e
 static void mxt_init(struct mxt_device *device)
 {
 	enum status_code status;
+	UNUSED(status);
 
 	/* T8 configuration object data */
 	uint8_t t8_object[] = {

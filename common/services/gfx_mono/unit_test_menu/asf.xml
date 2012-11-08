@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.gfx_mono.unit_test_menu" caption="Complete set of unit tests for the gfx_mono menu system">
+	<module type="application" id="common.services.gfx_mono.unit_test_menu" caption="Unit Tests for the Common Mono Graphics Library (Menu System)">
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>

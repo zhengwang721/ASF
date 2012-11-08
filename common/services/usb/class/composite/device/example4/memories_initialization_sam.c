@@ -82,8 +82,11 @@ static void ext_sram_init(void)
 	smc_set_cycle_timing(SMC, 0, SMC_CYCLE_NWE_CYCLE(7)
 			| SMC_CYCLE_NRD_CYCLE(7));
 	smc_set_mode(SMC, 0,
-			SMC_MODE_READ_MODE | SMC_MODE_WRITE_MODE |
-			SMC_MODE_DBW_8_BIT);
+			SMC_MODE_READ_MODE | SMC_MODE_WRITE_MODE 
+#if !defined(SAM4S)
+			| SMC_MODE_DBW_8_BIT
+#endif
+			);
 	/* Configure LB, enable SRAM access */
 	pio_configure_pin(PIN_EBI_NLB, PIN_EBI_NLB_FLAGS);
 	/* Pull down LB, enable sram access */

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="DSPlib Application for evk1105" id="avr32.applications.uc3.dsplib.demo.evk1105">
+	<project caption="DSPLIB Application for evk1105" id="avr32.applications.uc3.dsplib.demo.evk1105">
 		<require idref="avr32.applications.uc3.dsplib.demo"/>
 		<require idref="board.evk1105"/>
 		<config  name="config.board.evk1105.init" value="no"/>

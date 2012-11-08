@@ -68,54 +68,31 @@ extern "C" {
 	#error No SPI service selected
 #endif
 
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
- 	#include "spi_master.h"
-	// Create as many spi_device as required...
-	#if (AT45DBX_MEM_CNT>0)
-		struct spi_device AT45DBX_DEVICE1 = {
-			.id = AT45DBX_CS
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>1)
-		struct spi_device AT45DBX_DEVICE2 = {
-			.id = AT45DBX_CS2
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>2)
-		struct spi_device AT45DBX_DEVICE3 = {
-			.id = AT45DBX_CS3
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>3)
-		struct spi_device AT45DBX_DEVICE4 = {
-			.id = AT45DBX_CS4
-		};
-	#endif
-
+#if defined(AT45DBX_USES_SPI_MASTER_SERVICE)
+#  include "spi_master.h"
+#  define driver  spi
+#  define spi_setup_device  spi_master_setup_device
 #elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-	#include "usart_spi.h"
-	// Create as many usart_spi_device as required...
-	#if (AT45DBX_MEM_CNT>0)
-		struct usart_spi_device AT45DBX_DEVICE1 = {
-			.id = AT45DBX_CS
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>1)
-		struct usart_spi_device AT45DBX_DEVICE2 = {
-			.id = AT45DBX_CS2
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>2)
-		struct usart_spi_device AT45DBX_DEVICE3 = {
-			.id = AT45DBX_CS3
-		};
-	#endif
-	#if (AT45DBX_MEM_CNT>3)
-		struct usart_spi_device AT45DBX_DEVICE4 = {
-			.id = AT45DBX_CS4
-		};
-	#endif
+#  include "usart_spi.h"
+#  define driver  usart_spi
 #endif
+
+// Link common functions to the driver used (spi or usart_spi)
+#define at45dbx_drv_device  ATPASTE2(driver, _device)
+#define at45dbx_drv_setup_device  ATPASTE2(driver, _setup_device)
+#define at45dbx_drv_select_device  ATPASTE2(driver, _select_device)
+#define at45dbx_drv_deselect_device  ATPASTE2(driver, _deselect_device)
+#define at45dbx_drv_write_packet  ATPASTE2(driver, _write_packet)
+#define at45dbx_drv_read_packet  ATPASTE2(driver, _read_packet)
+
+// Create as many usart_spi_device as required...
+#define AT45DBX_CS0    AT45DBX_CS  // To keep compliance
+static struct at45dbx_drv_device at45dbx_devices[] = {
+# define AT45DBX_CS_ID(slot, unused) \
+		{ .id = AT45DBX_CS##slot},
+		MREPEAT(AT45DBX_MEM_CNT, AT45DBX_CS_ID, ~)
+# undef AT45DBX_CS_ID
+};
 
 /*! \brief Initialize SPI external resource for AT45dbx DataFlash driver.
  *
@@ -131,37 +108,14 @@ extern "C" {
  */
 inline void at45dbx_spi_init(void)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
+#if defined(AT45DBX_USES_SPI_MASTER_SERVICE)
+	if (spi_is_enabled(AT45DBX_SPI_MODULE)) {
+		return;
+	}
 	spi_master_init(AT45DBX_SPI_MODULE);
-	#if (AT45DBX_MEM_CNT==1)
-		spi_master_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE1,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>1)
-		spi_master_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE2,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>2)
-		spi_master_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE3,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>3)
-		spi_master_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE4,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
 	spi_enable(AT45DBX_SPI_MODULE);
-
-// Implementation with USART in SPI mode service
 #elif defined(AT45DBX_USES_USART_SPI_SERVICE)
 	usart_spi_init(AT45DBX_SPI_MODULE);
-	#if (AT45DBX_MEM_CNT==1)
-		usart_spi_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE1,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>1)
-		usart_spi_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE2,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>2)
-		usart_spi_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE3,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
-	#if (AT45DBX_MEM_CNT>3)
-		usart_spi_setup_device(AT45DBX_SPI_MODULE,&AT45DBX_DEVICE4,SPI_MODE_0,AT45DBX_SPI_MASTER_SPEED,0);
-	#endif
 #endif
 }
 
@@ -171,64 +125,19 @@ inline void at45dbx_spi_init(void)
  */
 inline void at45dbx_spi_select_device(uint8_t mem_id)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-# if (AT45DBX_MEM_CNT==1)
-	UNUSED(mem_id);
-	spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-# else
 	switch(mem_id) {
-	case 1:
-		spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
+#define AT45DBX_SELECT(slot, unused) \
+	case slot:\
+		at45dbx_drv_setup_device(AT45DBX_SPI_MODULE, &at45dbx_devices[slot],\
+		SPI_MODE_0, AT45DBX_SPI_MASTER_SPEED, 0);\
+		at45dbx_drv_select_device(AT45DBX_SPI_MODULE, &at45dbx_devices[slot]); \
 		break;
-
-	case 2:
-		spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE2);
-		break;
-
-	case 3:
-		spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE3);
-		break;
-
-	case 4:
-		spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE4);
-		break;
-
+		MREPEAT(AT45DBX_MEM_CNT, AT45DBX_SELECT, ~)
+#undef AT45DBX_SELECT
 	default:
 		/* unhandled_case(id); */
 		return;
 	}
-#  endif
-
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-#  if (AT45DBX_MEM_CNT==1)
-	UNUSED(mem_id);
-	usart_spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-#  else
-	switch(mem_id) {
-	case 1:
-		usart_spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-		break;
-
-	case 2:
-		usart_spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE2);
-		break;
-
-	case 3:
-		usart_spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE3);
-		break;
-
-	case 4:
-		usart_spi_select_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE4);
-		break;
-
-	default:
-		/* unhandled_case(id); */
-		return;
-	}
-#  endif
-
-#endif
 }
 
 /*! \brief Unselect one external DataFlash component
@@ -237,63 +146,17 @@ inline void at45dbx_spi_select_device(uint8_t mem_id)
  */
 inline void at45dbx_spi_deselect_device(uint8_t mem_id)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-#  if (AT45DBX_MEM_CNT==1)
-	UNUSED(mem_id);
-	spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-#  else
 	switch(mem_id) {
-	case 1:
-		spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
+#define AT45DBX_DESELECT(slot, unused) \
+	case slot:\
+		at45dbx_drv_deselect_device(AT45DBX_SPI_MODULE, &at45dbx_devices[slot]); \
 		break;
-
-	case 2:
-		spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE2);
-		break;
-
-	case 3:
-		spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE3);
-		break;
-
-	case 4:
-		spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE4);
-		break;
-
+		MREPEAT(AT45DBX_MEM_CNT, AT45DBX_DESELECT, ~)
+#undef AT45DBX_DESELECT
 	default:
 		/* unhandled_case(id); */
 		return;
 	}
-#  endif
-
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-#  if (AT45DBX_MEM_CNT==1)
-	UNUSED(mem_id);
-	usart_spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-#  else
-	switch(mem_id) {
-	case 1:
-		usart_spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE1);
-		break;
-
-	case 2:
-		usart_spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE2);
-		break;
-
-	case 3:
-		usart_spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE3);
-		break;
-
-	case 4:
-		usart_spi_deselect_device(AT45DBX_SPI_MODULE, &AT45DBX_DEVICE4);
-		break;
-
-	default:
-		/* unhandled_case(id); */
-		return;
-	}
-#  endif
-#endif
 }
 
 /*! \brief Send one byte to the DataFlash.
@@ -303,12 +166,7 @@ inline void at45dbx_spi_deselect_device(uint8_t mem_id)
  */
 inline void at45dbx_spi_write_byte(uint8_t data)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-	spi_write_packet(AT45DBX_SPI_MODULE, &data, 1);
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-	usart_spi_write_packet(AT45DBX_SPI_MODULE, &data, 1);
-#endif
+	at45dbx_drv_write_packet(AT45DBX_SPI_MODULE, &data, 1);
 }
 
 /*! \brief Get one byte (read) from the DataFlash.
@@ -318,13 +176,7 @@ inline void at45dbx_spi_write_byte(uint8_t data)
  */
 inline void at45dbx_spi_read_byte(uint8_t *data)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-	spi_read_packet(AT45DBX_SPI_MODULE, data, 1);
-
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-	usart_spi_read_packet(AT45DBX_SPI_MODULE, data, 1);
-#endif
+	at45dbx_drv_read_packet(AT45DBX_SPI_MODULE, data, 1);
 }
 
 
@@ -338,13 +190,7 @@ inline void at45dbx_spi_read_byte(uint8_t *data)
  */
 inline void at45dbx_spi_read_packet(void const *data, size_t len)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-	spi_read_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
-
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-	usart_spi_read_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
-#endif
+	at45dbx_drv_read_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
 }
 
 /**
@@ -358,13 +204,7 @@ inline void at45dbx_spi_read_packet(void const *data, size_t len)
  */
 inline void at45dbx_spi_write_packet(void const *data, size_t len)
 {
-#if defined( AT45DBX_USES_SPI_MASTER_SERVICE)
-	spi_write_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
-
-// Implementation with USART in SPI mode service
-#elif defined(AT45DBX_USES_USART_SPI_SERVICE)
-	usart_spi_write_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
-#endif
+	at45dbx_drv_write_packet(AT45DBX_SPI_MODULE, (uint8_t*)data, len);
 }
 
 //! @}

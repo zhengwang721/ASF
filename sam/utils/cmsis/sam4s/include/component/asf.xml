@@ -9,6 +9,7 @@
 		<build type="header-file" value="component_acc.h"/>
 		<build type="header-file" value="component_adc.h"/>
 		<build type="header-file" value="component_chipid.h"/>
+		<build type="header-file" value="component_cmcc.h"/>
 		<build type="header-file" value="component_crccu.h"/>
 		<build type="header-file" value="component_dacc.h"/>
 		<build type="header-file" value="component_efc.h"/>

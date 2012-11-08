@@ -6,7 +6,7 @@
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,6 +85,14 @@ void board_init(void)
 	// Assign I/Os to SPI.
 	gpio_enable_module(SD_MMC_SPI_GPIO_MAP,
 			sizeof(SD_MMC_SPI_GPIO_MAP) / sizeof(SD_MMC_SPI_GPIO_MAP[0]));
+
+	// Configure SD/MMC card detect and write protect pins
+#  define SD_MMC_CONFIGURE_CD_WP_PIN(slot, unused) \
+	gpio_configure_pin(SD_MMC_##slot##_CD_GPIO,GPIO_DIR_INPUT); \
+	gpio_configure_pin(SD_MMC_##slot##_WP_GPIO,GPIO_DIR_INPUT);
+	MREPEAT(SD_MMC_SPI_MEM_CNT, SD_MMC_CONFIGURE_CD_WP_PIN, ~)
+#  undef SD_MMC_CONFIGURE_CD_WP_PIN
+	
 #endif
 	// Configure the pins connected to LEDs as output and set their default
 	// initial state to high (LEDs off).

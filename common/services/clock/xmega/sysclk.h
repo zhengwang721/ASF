@@ -324,6 +324,10 @@ extern "C" {
 #define SYSCLK_SRC_XOSC      CLK_SCLKSEL_XOSC_gc
 //! Phase-Locked Loop
 #define SYSCLK_SRC_PLL       CLK_SCLKSEL_PLL_gc
+#if XMEGA_E
+//! Internal 8 MHz RC oscillator
+# define SYSCLK_SRC_RC8MHZ   CLK_SCLKSEL_RC8M_gc
+#endif
 //@}
 
 //! \name Prescaler A Setting (relative to CLKsys)
@@ -338,6 +342,14 @@ extern "C" {
 #define SYSCLK_PSADIV_128    CLK_PSADIV_128_gc    //!< Prescale CLKper4 by 128
 #define SYSCLK_PSADIV_256    CLK_PSADIV_256_gc    //!< Prescale CLKper4 by 256
 #define SYSCLK_PSADIV_512    CLK_PSADIV_512_gc    //!< Prescale CLKper4 by 512
+
+#if XMEGA_E
+# define SYSCLK_PSADIV_6      CLK_PSADIV_6_gc      //!< Prescale CLKper4 by 6
+# define SYSCLK_PSADIV_10     CLK_PSADIV_10_gc     //!< Prescale CLKper4 by 10
+# define SYSCLK_PSADIV_12     CLK_PSADIV_12_gc     //!< Prescale CLKper4 by 12
+# define SYSCLK_PSADIV_24     CLK_PSADIV_24_gc     //!< Prescale CLKper4 by 24
+# define SYSCLK_PSADIV_48     CLK_PSADIV_48_gc     //!< Prescale CLKper4 by 48
+#endif
 //@}
 
 //! \name Prescaler B and C Setting (relative to CLKper4)
@@ -369,11 +381,13 @@ enum sysclk_port_id {
  */
 //@{
 #define SYSCLK_DMA        PR_DMA_bm     //!< DMA Controller
+#define SYSCLK_EDMA       PR_EDMA_bm    //!< EDMA Controller
 #define SYSCLK_EVSYS      PR_EVSYS_bm   //!< Event System
 #define SYSCLK_RTC        PR_RTC_bm     //!< Real-Time Counter
 #define SYSCLK_EBI        PR_EBI_bm     //!< Ext Bus Interface
 #define SYSCLK_AES        PR_AES_bm     //!< AES Module
 #define SYSCLK_USB        PR_USB_bm     //!< USB Module
+#define SYSCLK_XCL        PR_XCL_bm     //!< USB Module
 //@}
 
 /*! \name Clocks on PORTA and PORTB
@@ -393,6 +407,8 @@ enum sysclk_port_id {
 //@{
 #define SYSCLK_TC0        PR_TC0_bm      //!< Timer/Counter 0
 #define SYSCLK_TC1        PR_TC1_bm      //!< Timer/Counter 1
+#define SYSCLK_TC4        PR_TC4_bm      //!< Timer/Counter 0
+#define SYSCLK_TC5        PR_TC5_bm      //!< Timer/Counter 1
 #define SYSCLK_HIRES      PR_HIRES_bm    //!< Hi-Res Extension
 #define SYSCLK_SPI        PR_SPI_bm      //!< SPI controller
 #define SYSCLK_USART0     PR_USART0_bm   //!< USART 0
@@ -471,7 +487,10 @@ static inline uint32_t sysclk_get_main_hz(void)
 	switch (CONFIG_SYSCLK_SOURCE) {
 	case SYSCLK_SRC_RC2MHZ:
 		return 2000000UL;
-
+#if XMEGA_E
+	case SYSCLK_SRC_RC8MHZ:
+		return 8000000UL;
+#endif
 	case SYSCLK_SRC_RC32MHZ:
 #ifdef CONFIG_OSC_RC32_CAL
 		return CONFIG_OSC_RC32_CAL;
@@ -509,6 +528,25 @@ static inline uint32_t sysclk_get_per4_hz(void)
 {
 	uint8_t shift = 0;
 
+#if XMEGA_E
+	if (CONFIG_SYSCLK_PSADIV > SYSCLK_PSADIV_512) {
+		switch (CONFIG_SYSCLK_PSADIV) {
+			case SYSCLK_PSADIV_6:
+				return sysclk_get_main_hz() / 6;
+			case SYSCLK_PSADIV_10:
+				return sysclk_get_main_hz() / 10;
+			case SYSCLK_PSADIV_12:
+				return sysclk_get_main_hz() / 12;
+			case SYSCLK_PSADIV_24:
+				return sysclk_get_main_hz() / 24;
+			case SYSCLK_PSADIV_48:
+				return sysclk_get_main_hz() / 48;
+			default:
+				//unhandled_case;
+				return 0;
+		}
+	}
+#endif
 	if (CONFIG_SYSCLK_PSADIV & (1U << CLK_PSADIV_gp)) {
 		shift = (CONFIG_SYSCLK_PSADIV >> (1 + CLK_PSADIV_gp)) + 1;
 	}
@@ -607,6 +645,11 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 		return sysclk_get_per_hz();
 	}
 #endif
+#ifdef EDMA
+	else if (module == &EDMA) {
+		return sysclk_get_per_hz();
+	}
+#endif
 #ifdef ACA
 	else if (module == &ACA) {
 		return sysclk_get_per_hz();
@@ -640,6 +683,16 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 	}
 #endif
 #endif // Workaround end
+#ifdef FAULTC0
+	else if (module == &FAULTC0) {
+		return sysclk_get_per_hz();
+	}
+#endif
+#ifdef FAULTC1
+	else if (module == &FAULTC1) {
+		return sysclk_get_per_hz();
+	}
+#endif
 #ifdef TCC0
 	else if (module == &TCC0) {
 		return sysclk_get_per_hz();
@@ -677,6 +730,26 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 #endif
 #ifdef TCF1
 	else if (module == &TCF1) {
+		return sysclk_get_per_hz();
+	}
+#endif
+#ifdef TCC4
+	else if (module == &TCC4) {
+		return sysclk_get_per_hz();
+	}
+#endif
+#ifdef TCC5
+	else if (module == &TCC5) {
+		return sysclk_get_per_hz();
+	}
+#endif
+#ifdef TCD4
+	else if (module == &TCD4) {
+		return sysclk_get_per_hz();
+	}
+#endif
+#ifdef TCD5
+	else if (module == &TCD5) {
 		return sysclk_get_per_hz();
 	}
 #endif
@@ -780,6 +853,11 @@ static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
 		return sysclk_get_per_hz();
 	}
 #endif
+#ifdef XCL
+	else if (module == &XCL) {
+		return sysclk_get_per_hz();
+	}
+#endif
 	else {
 		Assert(false);
 		return 0;
@@ -845,6 +923,11 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 #ifdef DMA
 	else if (module == &DMA) {
 		sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_DMA);
+	}
+#endif
+#ifdef EDMA
+	else if (module == &EDMA) {
+		sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_EDMA);
 	}
 #endif
 #ifdef ACA
@@ -918,6 +1001,26 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 #ifdef TCF1
 	else if (module == &TCF1) {
 		sysclk_enable_module(SYSCLK_PORT_F, SYSCLK_TC1);
+	}
+#endif
+#ifdef TCC4
+	else if (module == &TCC4) {
+		sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_TC4);
+	}
+#endif
+#ifdef TCC5
+	else if (module == &TCC5) {
+		sysclk_enable_module(SYSCLK_PORT_C, SYSCLK_TC5);
+	}
+#endif
+#ifdef TCD4
+	else if (module == &TCD4) {
+		sysclk_enable_module(SYSCLK_PORT_D, SYSCLK_TC4);
+	}
+#endif
+#ifdef TCD5
+	else if (module == &TCD5) {
+		sysclk_enable_module(SYSCLK_PORT_D, SYSCLK_TC5);
 	}
 #endif
 #ifdef HIRESC
@@ -1020,6 +1123,11 @@ static inline void sysclk_enable_peripheral_clock(const volatile void *module)
 		sysclk_enable_module(SYSCLK_PORT_F, SYSCLK_TWI);
 	}
 #endif
+#ifdef XCL
+	else if (module == &XCL) {
+		sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_XCL);
+	}
+#endif
 	else {
 		Assert(false);
 	}
@@ -1061,6 +1169,11 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 #ifdef DMA
 	else if (module == &DMA) {
 		sysclk_disable_module(SYSCLK_PORT_GEN, SYSCLK_DMA);
+	}
+#endif
+#ifdef EDMA
+	else if (module == &EDMA) {
+		sysclk_disable_module(SYSCLK_PORT_GEN, SYSCLK_EDMA);
 	}
 #endif
 #ifdef ACA
@@ -1134,6 +1247,26 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 #ifdef TCF1
 	else if (module == &TCF1) {
 		sysclk_disable_module(SYSCLK_PORT_F, SYSCLK_TC1);
+	}
+#endif
+#ifdef TCC4
+	else if (module == &TCC4) {
+		sysclk_disable_module(SYSCLK_PORT_C, SYSCLK_TC4);
+	}
+#endif
+#ifdef TCC5
+	else if (module == &TCC5) {
+		sysclk_disable_module(SYSCLK_PORT_C, SYSCLK_TC5);
+	}
+#endif
+#ifdef TCD4
+	else if (module == &TCD4) {
+		sysclk_disable_module(SYSCLK_PORT_D, SYSCLK_TC4);
+	}
+#endif
+#ifdef TCD5
+	else if (module == &TCD5) {
+		sysclk_disable_module(SYSCLK_PORT_D, SYSCLK_TC5);
 	}
 #endif
 #ifdef HIRESC
@@ -1234,6 +1367,11 @@ static inline void sysclk_disable_peripheral_clock(const volatile void *module)
 #ifdef TWIF
 	else if (module == &TWIF) {
 		sysclk_disable_module(SYSCLK_PORT_F, SYSCLK_TWI);
+	}
+#endif
+#ifdef XCL
+	else if (module == &XCL) {
+		sysclk_disable_module(SYSCLK_PORT_GEN, SYSCLK_XCL);
 	}
 #endif
 	else {

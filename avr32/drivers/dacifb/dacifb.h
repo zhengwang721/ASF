@@ -85,14 +85,6 @@
 #define  DACIFB_TRIGGER_MODE_EVENT         0x2
 /** @} */
 
-/** \name Return Status Values */
-/** @{ */
-#define  DACIFB_CONFIGURATION_REFUSED      0x0
-#define  DACIFB_CONFIGURATION_ACCEPTED     0x1
-#define  DACIFB_STATUS_COMPLETED           0x2
-#define  DACIFB_STATUS_NOT_COMPLETED       0x3
-/** @} */
-
 /** CHI Min Value of 2us */
 #define  DACIFB_CHI_MIN_VALUE              500000
 
@@ -144,90 +136,31 @@ typedef struct {
 	bool data_round_enable;
 } dacifb_channel_opt_t;
 
-/** \brief Get DACIFB Calibration Data.
- *
- * Mandatory to call if factory calibration data are wanted to be used.
- * If not called, Calibration Data should be set by the application.
- *
- * \param *dacifb       Base address of the DACIFB
- * \param *p_dacifb_opt Structure for the DACIFB core configuration
- * \param instance      DACIFB core instance 0 for DACIFB0 or 1 for DACIFB1
- */
 void dacifb_get_calibration_data(volatile avr32_dacifb_t *dacifb,
 		dacifb_opt_t *p_dacifb_opt,
 		uint8_t instance);
 
-/** \brief Configure DACIFB.
- *
- * Mandatory to call. If not called, DACIFB channels will have side effects.
- *
- * \param *dacifb        Base address of the DACIFB
- * \param *p_dacifb_opt  Structure for the DACIFB core configuration
- * \param pb_hz          Peripheral Bus frequency
- * \return DACIFB_CONFIGURATION_REFUSED or DACIFB_CONFIGURATION_ACCEPTED
- */
-uint8_t dacifb_configure(volatile avr32_dacifb_t *dacifb,
+bool dacifb_configure(volatile avr32_dacifb_t *dacifb,
 		dacifb_opt_t *p_dacifb_opt,
 		uint32_t pb_hz);
 
-/** \brief Configure DACIFB specific channel.
- *
- * Sets channel Adjustment, Refresh_time and Trigger Mode settings.
- *
- * \param  *dacifb                Base address of the ADCIFA
- * \param  channel                DACIFB_CHANNEL_SELECTION_NONE /
- *                                DACIFB_CHANNEL_SELECTION_A /
- *                                DACIFB_CHANNEL_SELECTION_B /
- *                                DACIFB_CHANNEL_SELECTION_AB
- * \param  p_dacifb_channel_opt   Structure for the sequencer configuration
- * \param  prescaler_clock_hz     Prescaler Clock in Hertz (should be >
- *                                500000Hz)
- * \return DACIFB_CONFIGURATION_REFUSED or DACIFB_CONFIGURATION_ACCEPTED
- */
-uint8_t dacifb_configure_channel(volatile avr32_dacifb_t *dacifb,
+bool dacifb_configure_channel(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		dacifb_channel_opt_t *p_dacifb_channel_opt,
 		uint32_t prescaler_clock_hz);
 
-/** \brief Start analog to digital conversion
- * \param *dacifb   Base address of the DACIFB
- * \param  channel  DACIFB_CHANNEL_SELECTION_NONE /
- *                  DACIFB_CHANNEL_SELECTION_A / DACIFB_CHANNEL_SELECTION_B /
- *                  DACIFB_CHANNEL_SELECTION_AB
- * \param  cpu_hz   CPU Clock frequency
- */
 void dacifb_start_channel(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		uint32_t cpu_hz);
 
-/** \brief Check channel conversion status
- *
- * \param *dacifb    Base address of the DACIFB
- * \param  channel   channel to check (0 to 1)
- * \return Boolean true if conversion not running,  false if conversion running.
- */
 bool dacifb_check_eoc(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel);
 
-/** \brief Set channel value
- *
- * \param *dacifb    Base address of the DACIFB
- * \param  channel   channel to handle (0 to 1)
- * \param  dual      Dual Mode Selection
- * \param  value     Value to be converted
- */
 void dacifb_set_value(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		bool dual,
 		uint32_t value);
 
-/** \brief Reload Timer for Automatic Trigger on DAC
- *  \param *dacifb  Base address of the DACIFB
- *  \param channel  DACIFB_CHANNEL_SELECTION_NONE / DACIFB_CHANNEL_SELECTION_A /
- *                  DACIFB_CHANNEL_SELECTION_B / DACIFB_CHANNEL_SELECTION_AB
- * \param  timer_us Timer Value in Microseconds
- * \param  prescaler_clock_hz   Prescaler Clock in Hertz (should be > 500000Hz)
- */
 void dacifb_reload_timer(volatile avr32_dacifb_t *dacifb,
 		uint8_t channel,
 		uint8_t timer_us,

@@ -158,7 +158,6 @@ void dfll_enable_config_defaults(uint32_t dfll_id)
 #ifdef CONFIG_DFLL0_SOURCE
 	case 0:
 		dfll_enable_source(CONFIG_DFLL0_SOURCE);
-		dfll_set_frequency_range(&dfllcfg, CONFIG_DFLL0_FREQ);
 		dfll_config_init_closed_loop_mode(&dfllcfg,
 			CONFIG_DFLL0_SOURCE,
 			CONFIG_DFLL0_DIV,

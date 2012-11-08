@@ -23,6 +23,7 @@
 		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<device-support value="xmegad"/>
+		<device-support value="xmegae"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="xmega.utils"/>

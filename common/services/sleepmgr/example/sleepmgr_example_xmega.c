@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager example for AVR XMEGA
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,8 +78,14 @@ int main(void)
 			IOPORT_FALLING);
 
 	port = ioport_pin_to_port(BUTTON_PIN);
+#if XMEGA_E
+	port->INTMASK = PIN2_bm;
+	port->INTCTRL = PORT_INTLVL_LO_gc;
+#else
 	port->INT0MASK = PIN2_bm;
 	port->INTCTRL = PORT_INT0LVL_LO_gc;
+#endif
+
 
 	// Enable RTC with ULP as clock source.
 	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_RTC);

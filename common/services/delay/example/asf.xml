@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.delay.example" caption="Common delay service example">
+	<module type="application" id="common.services.delay.example" caption="Common Delay Service Example">
 		<info type="description" value="summary">
 		Initialize the system clock and blink a LED at a constant 1Hz frequency.
 		</info>

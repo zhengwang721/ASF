@@ -3,7 +3,7 @@
  *
  * \brief EVK1104 board init.
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-20121 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,11 +87,18 @@ void board_init(void)
 		{SD_SLOT_8BITS_DATA5_PIN, SD_SLOT_8BITS_DATA5_FUNCTION},
 		{SD_SLOT_8BITS_DATA6_PIN, SD_SLOT_8BITS_DATA6_FUNCTION},
 		{SD_SLOT_8BITS_DATA7_PIN, SD_SLOT_8BITS_DATA7_FUNCTION},
+		{SD_SLOT_4BITS_CMD_PIN, SD_SLOT_4BITS_CMD_FUNCTION},
+		{SD_SLOT_4BITS_DATA0_PIN, SD_SLOT_4BITS_DATA0_FUNCTION},
+		{SD_SLOT_4BITS_DATA1_PIN, SD_SLOT_4BITS_DATA1_FUNCTION},
+		{SD_SLOT_4BITS_DATA2_PIN, SD_SLOT_4BITS_DATA2_FUNCTION},
+		{SD_SLOT_4BITS_DATA3_PIN, SD_SLOT_4BITS_DATA3_FUNCTION},
 	};
 	gpio_enable_module(SD_MMC_MCI_GPIO_MAP,
 			sizeof(SD_MMC_MCI_GPIO_MAP) / sizeof(SD_MMC_MCI_GPIO_MAP[0]));
-	gpio_enable_pin_pull_up(SD_SLOT_8BITS_CARD_DETECT);
-	gpio_enable_pin_pull_up(SD_SLOT_8BITS_WRITE_PROTECT);
+	gpio_enable_pin_pull_up(SD_MMC_0_CD_GPIO);
+	gpio_enable_pin_pull_up(SD_MMC_0_WP_GPIO);
+	gpio_enable_pin_pull_up(SD_MMC_1_CD_GPIO);
+	gpio_enable_pin_pull_up(SD_MMC_1_WP_GPIO);
 #endif
 
 #if defined (CONF_BOARD_TWI)

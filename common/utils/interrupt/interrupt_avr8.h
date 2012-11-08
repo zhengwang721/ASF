@@ -3,7 +3,7 @@
  *
  * \brief Global interrupt management for 8-bit AVR
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,6 +52,10 @@
  * @{
  */
 
+#ifdef ISR_CUSTOM_H
+#  include ISR_CUSTOM_H
+#else
+
 /**
  * \def ISR
  * \brief Define service routine for specified interrupt vector
@@ -74,6 +78,7 @@
 #  define __ISR(x) _Pragma(#x)
 #  define ISR(vect) __ISR(vector=vect) __interrupt void handler_##vect(void)
 #endif
+#endif // ISR_CUSTOM_H
 
 #if XMEGA
 /**
@@ -116,7 +121,7 @@ static inline bool cpu_irq_is_enabled_flags(irqflags_t flags)
 #  else
 	return flags & I_bm;
 #  endif
-#elif MEGA
+#elif MEGA || TINY
 	return flags & (1 << SREG_I);
 #endif
 }

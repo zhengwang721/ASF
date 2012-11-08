@@ -97,7 +97,7 @@
  *    \code
  *     -- CRCCU Example --
  *     -- SAMXX-EK
- *     -- Compiled: Oct 27 2011 13:33:38 --
+ *     -- Compiled: xxx xx 20xx xx:xx:xx --
  *     ...
  *    \endcode
  *
@@ -196,12 +196,10 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 	if (ul_polynomial_type == CRCCU_MR_PTYPE_CCITT16) {
 		/* 16-bits CRC */
 		ul_crc &= 0xFFFF;
-		printf("  CRC of the buffer is 0x%04lu\n\r",
-				(unsigned long)ul_crc);
+		printf("  CRC of the buffer is 0x%04lu\n\r", (unsigned long)ul_crc);
 	} else {
 		/* 32-bits CRC */
-		printf("  CRC of the buffer is 0x%08lu\n\r",
-				(unsigned long)ul_crc);
+		printf("  CRC of the buffer is 0x%08lu\n\r", (unsigned long)ul_crc);
 	}
 
 	return ul_crc;
@@ -210,10 +208,10 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 /**
  * \brief Compute CRC of a buffer and compare it with the reference CRC.
  *
- * \param p_Buffer         The buffer holding the data.
- * \param ul_length          The buffer length.
+ * \param p_Buffer  The buffer holding the data.
+ * \param ul_length  The buffer length.
  * \param ul_type  The polynomial type(CRCCU_MR_PTYPE_XXX).
- * \param ul_ref_crc          Reference CRC for the buffer.
+ * \param ul_ref_crc  Reference CRC for the buffer.
  *
  * \return CRC of the buffer.
  */

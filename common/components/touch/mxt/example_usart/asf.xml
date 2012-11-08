@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.touch.mxt.example_usart" caption="maXTouch example with USART data delivery">
+	<module type="application" id="common.components.touch.mxt.example_usart" caption="maXTouch USART Streaming Data Example">
 		<info type="description" value="summary">
 		This example will read the status of the maXTouch device and send it on USART
 		</info>

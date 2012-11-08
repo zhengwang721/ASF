@@ -376,7 +376,9 @@ static inline uint32_t sysclk_get_cpu_hz(void)
 {
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
-	return sysclk_get_main_hz() / ((CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos) + 1);
+	return sysclk_get_main_hz() /
+		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
+			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
 }
 
 /**
@@ -388,7 +390,9 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 {
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
-	return sysclk_get_main_hz() / ((CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos) + 1);
+	return sysclk_get_main_hz() /
+		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
+			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
 }
 
 //@}

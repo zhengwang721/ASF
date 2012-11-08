@@ -52,13 +52,16 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#define TC_WPMR_WPKEY_VALUE TC_WPMR_WPKEY((uint32_t)0x54494D)
+
 /**
  * \defgroup sam_drivers_tc_group Timer Counter (TC)
  *
- * The Timer Counter (TC) includes three identical 32-bit Timer Counter channels.
- * Each channel can be independently programmed to perform a wide range of functions
- * including frequency measurement, event counting, interval measurement, pulse
- * generation, delay timing and pulse width modulation.
+ * The Timer Counter (TC) includes three identical 32-bit Timer Counter
+ * channels. Each channel can be independently programmed to perform a wide
+ * range of functions including frequency measurement, event counting,
+ * interval measurement, pulse generation, delay timing and pulse width
+ * modulation.
  *
  * @{
  */
@@ -78,7 +81,7 @@ extern "C" {
  * external event trigger has not been enabled with \c TC_CMR_ENETRG, and
  * thus prevents normal operation of TIOB.
  */
-void tc_init(Tc * p_tc, uint32_t ul_channel, uint32_t ul_mode)
+void tc_init(Tc *p_tc, uint32_t ul_channel, uint32_t ul_mode)
 {
 	TcChannel *tc_channel;
 
@@ -100,21 +103,32 @@ void tc_init(Tc * p_tc, uint32_t ul_channel, uint32_t ul_mode)
 }
 
 /**
- * \brief Configure TC for Quadrature Decoder Logic.
+ * \brief Asserts a SYNC signal to generate a software trigger to
+ * all channels.
+ *
+ * \param p_tc Pointer to a TC instance.
+ *
+ */
+void tc_sync_trigger(Tc *p_tc)
+{
+  p_tc->TC_BCR = TC_BCR_SYNC;
+}
+
+/**
+ * \brief Configure TC Block mode.
  * \note tc_init() must be called first.
  *
  * \param p_tc Pointer to a TC instance.
  * \param ul_blockmode Block mode register value to set.
  *
- * \return 0 for OK.
  */
-uint32_t tc_init_quad_dec(Tc * p_tc, uint32_t ul_blockmode)
+void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode)
 {
 	p_tc->TC_BMR = ul_blockmode;
-	return 0;
 }
 
-#if (SAM3S || SAM3N || SAM3XA || SAM4S)
+#if (!SAM3U)
+
 /**
  * \brief Configure TC for 2-bit Gray Counter for Stepper Motor.
  * \note tc_init() must be called first.
@@ -125,7 +139,7 @@ uint32_t tc_init_quad_dec(Tc * p_tc, uint32_t ul_blockmode)
  *
  * \return 0 for OK.
  */
-uint32_t tc_init_2bit_gray(Tc * p_tc, uint32_t ul_channel,
+uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_steppermode)
 {
 	assert(ul_channel <
@@ -134,14 +148,16 @@ uint32_t tc_init_2bit_gray(Tc * p_tc, uint32_t ul_channel,
 	p_tc->TC_CHANNEL[ul_channel].TC_SMMR = ul_steppermode;
 	return 0;
 }
+
 #endif
+
 /**
  * \brief Start TC clock counter on the selected channel.
  *
  * \param p_tc Pointer to a TC instance.
  * \param ul_channel Channel to configure.
  */
-void tc_start(Tc * p_tc, uint32_t ul_channel)
+void tc_start(Tc *p_tc, uint32_t ul_channel)
 {
 	assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -155,7 +171,7 @@ void tc_start(Tc * p_tc, uint32_t ul_channel)
  * \param p_tc Pointer to a TC instance.
  * \param ul_channel Channel to configure.
  */
-void tc_stop(Tc * p_tc, uint32_t ul_channel)
+void tc_stop(Tc *p_tc, uint32_t ul_channel)
 {
 	assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -171,7 +187,7 @@ void tc_stop(Tc * p_tc, uint32_t ul_channel)
  *
  * \return RA value.
  */
-int tc_read_ra(Tc * p_tc, uint32_t ul_channel)
+int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
 {
 	assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -187,7 +203,7 @@ int tc_read_ra(Tc * p_tc, uint32_t ul_channel)
  *
  * \return RB value.
  */
-int tc_read_rb(Tc * p_tc, uint32_t ul_channel)
+int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
 {
 	assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -203,7 +219,7 @@ int tc_read_rb(Tc * p_tc, uint32_t ul_channel)
  *
  * \return RC value.
  */
-int tc_read_rc(Tc * p_tc, uint32_t ul_channel)
+int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
 {
 	assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -218,7 +234,7 @@ int tc_read_rc(Tc * p_tc, uint32_t ul_channel)
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_ra(Tc * p_tc, uint32_t ul_channel,
+void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
 	assert(ul_channel <
@@ -234,7 +250,7 @@ void tc_write_ra(Tc * p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_rb(Tc * p_tc, uint32_t ul_channel,
+void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
 	assert(ul_channel <
@@ -250,7 +266,7 @@ void tc_write_rb(Tc * p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_rc(Tc * p_tc, uint32_t ul_channel,
+void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value)
 {
 	assert(ul_channel <
@@ -266,7 +282,7 @@ void tc_write_rc(Tc * p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_sources Interrupt sources bit map.
  */
-void tc_enable_interrupt(Tc * p_tc, uint32_t ul_channel,
+void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_sources)
 {
 	TcChannel *tc_channel;
@@ -284,7 +300,7 @@ void tc_enable_interrupt(Tc * p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_sources Interrupt sources bit map.
  */
-void tc_disable_interrupt(Tc * p_tc, uint32_t ul_channel,
+void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_sources)
 {
 	TcChannel *tc_channel;
@@ -303,7 +319,7 @@ void tc_disable_interrupt(Tc * p_tc, uint32_t ul_channel,
  *
  * \return The interrupt mask value.
  */
-uint32_t tc_get_interrupt_mask(Tc * p_tc, uint32_t ul_channel)
+uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel)
 {
 	TcChannel *tc_channel;
 
@@ -321,7 +337,7 @@ uint32_t tc_get_interrupt_mask(Tc * p_tc, uint32_t ul_channel)
  *
  * \return The current TC status.
  */
-uint32_t tc_get_status(Tc * p_tc, uint32_t ul_channel)
+uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel)
 {
 	TcChannel *tc_channel;
 
@@ -331,10 +347,14 @@ uint32_t tc_get_status(Tc * p_tc, uint32_t ul_channel)
 	return tc_channel->TC_SR;
 }
 
+/* TC divisor used to find the lowest acceptable timer frequency */
+#define TC_DIV_FACTOR 65536
+
+#if (!SAM4L)
+
 #ifndef FREQ_SLOW_CLOCK_EXT
 #define FREQ_SLOW_CLOCK_EXT 32768 /* External slow clock frequency (hz) */
 #endif
-#define TC_DIV_FACTOR 65536 /* TC divisor used to find the lowest acceptable timer frequency */
 
 /**
  * \brief Find the best MCK divisor.
@@ -356,7 +376,7 @@ uint32_t tc_get_status(Tc * p_tc, uint32_t ul_channel)
  * \return 1 if a proper divisor has been found, otherwise 0.
  */
 uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
-		uint32_t * p_uldiv, uint32_t * p_ultcclks, uint32_t ul_boardmck)
+		uint32_t *p_uldiv, uint32_t *p_ultcclks, uint32_t ul_boardmck)
 {
 	const uint32_t divisors[5] = { 2, 8, 32, 128,
 			ul_boardmck / FREQ_SLOW_CLOCK_EXT };
@@ -366,7 +386,7 @@ uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
 	/*  Satisfy frequency bound. */
 	for (ul_index = 0;
 			ul_index < (sizeof(divisors) / sizeof(divisors[0]));
-			ul_index ++) {
+			ul_index++) {
 		ul_high = ul_mck / divisors[ul_index];
 		ul_low  = ul_high / TC_DIV_FACTOR;
 		if (ul_freq > ul_high) {
@@ -383,6 +403,7 @@ uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
 	if (p_uldiv) {
 		*p_uldiv = divisors[ul_index];
 	}
+
 	if (p_ultcclks) {
 		*p_ultcclks = ul_index;
 	}
@@ -390,13 +411,76 @@ uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
 	return 1;
 }
 
+#endif
+
+#if (SAM4L)
+/**
+ * \brief Find the best PBA clock divisor.
+ *
+ * Finds the best divisor given the timer frequency and PBA clock. The result
+ * is guaranteed to satisfy the following equation:
+ * \code
+ *   (ul_pbaclk / (2* DIV * 65536)) <= freq <= (ul_pbaclk / (2* DIV))
+ * \endcode
+ * with DIV being the lowest possible value,
+ * to maximize timing adjust resolution.
+ *
+ * \param ul_freq  Desired timer frequency.
+ * \param ul_mck  PBA clock frequency.
+ * \param p_uldiv  Divisor value.
+ * \param p_ultcclks  TCCLKS field value for divisor.
+ * \param ul_boardmck  useless here.
+ *
+ * \return 1 if a proper divisor has been found, otherwise 0.
+ */
+uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
+		uint32_t *p_uldiv, uint32_t *p_ultcclks, uint32_t ul_boardmck)
+{
+	const uint32_t divisors[5] = { 0, 2, 8, 32, 128};
+	uint32_t ul_index;
+	uint32_t ul_high, ul_low;
+
+	UNUSED(ul_boardmck);
+
+	/*  Satisfy frequency bound. */
+	for (ul_index = 1;
+			ul_index < (sizeof(divisors) / sizeof(divisors[0]));
+			ul_index++) {
+		ul_high = ul_mck / divisors[ul_index];
+		ul_low  = ul_high / TC_DIV_FACTOR;
+		if (ul_freq > ul_high) {
+			return 0;
+		} else if (ul_freq >= ul_low) {
+			break;
+		}
+	}
+	if (ul_index >= (sizeof(divisors) / sizeof(divisors[0]))) {
+		return 0;
+	}
+
+	/*  Store results. */
+	if (p_uldiv) {
+		*p_uldiv = divisors[ul_index];
+	}
+
+	if (p_ultcclks) {
+		*p_ultcclks = ul_index;
+	}
+
+	return 1;
+}
+
+#endif
+
+#if (!SAM4L)
+
 /**
  * \brief Enable TC QDEC interrupts.
  *
  * \param p_tc Pointer to a TC instance.
  * \param ul_sources Interrupts to be enabled.
  */
-void tc_enable_qdec_interrupt(Tc * p_tc, uint32_t ul_sources)
+void tc_enable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
 {
 	p_tc->TC_QIER = ul_sources;
 }
@@ -407,7 +491,7 @@ void tc_enable_qdec_interrupt(Tc * p_tc, uint32_t ul_sources)
  * \param p_tc Pointer to a TC instance.
  * \param ul_sources Interrupts to be disabled.
  */
-void tc_disable_qdec_interrupt(Tc * p_tc, uint32_t ul_sources)
+void tc_disable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
 {
 	p_tc->TC_QIDR = ul_sources;
 }
@@ -419,7 +503,7 @@ void tc_disable_qdec_interrupt(Tc * p_tc, uint32_t ul_sources)
  *
  * \return The interrupt mask value.
  */
-uint32_t tc_get_qdec_interrupt_mask(Tc * p_tc)
+uint32_t tc_get_qdec_interrupt_mask(Tc *p_tc)
 {
 	return p_tc->TC_QIMR;
 }
@@ -431,22 +515,58 @@ uint32_t tc_get_qdec_interrupt_mask(Tc * p_tc)
  *
  * \return The current TC status.
  */
-uint32_t tc_get_qdec_interrupt_status(Tc * p_tc)
+uint32_t tc_get_qdec_interrupt_status(Tc *p_tc)
 {
 	return p_tc->TC_QISR;
 }
 
-#if (SAM3S || SAM3N || SAM3XA || SAM4S)
+#endif
+
+#if (!SAM3U)
+
 /**
  * \brief Enable or disable write protection of TC registers.
  *
  * \param p_tc Pointer to a TC instance.
  * \param ul_enable 1 to enable, 0 to disable.
  */
-void tc_set_writeprotect(Tc * p_tc, uint32_t ul_enable)
+void tc_set_writeprotect(Tc *p_tc, uint32_t ul_enable)
 {
-	p_tc->TC_WPMR |= ul_enable;
+	if (ul_enable) {
+		p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE | TC_WPMR_WPEN;
+	} else {
+		p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE;
+	}
 }
+
+#endif
+
+#if SAM4L
+
+/**
+ * \brief Indicate features.
+ *
+ * \param p_tc Pointer to a TC instance.
+ *
+ * \return TC_FEATURES value.
+ */
+uint32_t tc_get_feature(Tc *p_tc)
+{
+	return p_tc->TC_FEATURES;
+}
+
+/**
+ * \brief Indicate version.
+ *
+ * \param p_tc Pointer to a TC instance.
+ *
+ * \return TC_VERSION value.
+ */
+uint32_t tc_get_version(Tc *p_tc)
+{
+	return p_tc->TC_VERSION;
+}
+
 #endif
 
 //@}

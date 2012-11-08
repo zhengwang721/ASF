@@ -101,5 +101,24 @@
 			<device-support value="sam4s"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
+		<module type="service" id="common.services.gfx.display#hx8347a_et024006dhu_ebi" caption="GFX - ET024006DHU LCD panel (EBI)">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Graphic library configured for the ET024006DHU LCD panel using the HX8347-A display controller connected via EBI.
+			Used on the EVK1104, EVK1105 and UC3C-EK kits.
+			</info>
+			<build type="define" name="CONF_GFX_HX8347A_ET024006DHU_EBI" value="1"/>
+			<build type="define" name="GFX_INITIALIZED" value="1"/>
+			<build type="header-file" value="gfx_hx8347a_et024006dhu_ebi.h"/>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="gfx_hx8347a_et024006dhu_ebi.c"/>
+			<build type="doxygen-entry-point" value="gfx_hx8347a_et024006dhu_ebi_group"/>
+			<require idref="avr32.components.display.et024006dhu"/>
+			<require idref="common.services.gfx.generic"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.ioport"/>
+			<device-support value="uc3"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+		</module>
 	</select-by-config>
 </asf>

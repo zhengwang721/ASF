@@ -195,7 +195,7 @@ static bool wtk_icon_button_handler(struct win_window *win,
 
 		/* There should not be other windows in this widget. */
 		Assert(win == icon_button->container);
-		
+
 		/* Draw icon button select marker if selected. */
 		if (icon_button->group->selected == icon_button) {
 			gfx_draw_rect(clip->origin.x, clip->origin.y,
@@ -396,8 +396,13 @@ struct wtk_icon_button *wtk_icon_button_create(struct win_window *parent,
 		goto outofmem_container;
 	}
 
-	/* Add ourselves to the icon group, take over selection if required. */
-	wtk_icon_button_select(icon_button);
+	/* Select the icon button in the group if either no icon button is
+	 * currently selected (empty group), or the user has requested it takes
+	 * over the selection */
+	if (selected || (group->selected == NULL)) {
+		/* Add ourselves to the icon group, take over selection if required. */
+		wtk_icon_button_select(icon_button);
+	}
 
 	/* Make sure we haven't filled up the group reference count, and
 	 * increment. */
@@ -423,7 +428,7 @@ outofmem_icon_button:
 struct wtk_icon_button *wtk_icon_group_get_selected(struct wtk_icon_group *group)
 {
 	Assert(group);
-	
+
 	return group->selected;
 }
 

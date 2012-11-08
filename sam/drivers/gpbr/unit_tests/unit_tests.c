@@ -79,6 +79,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -98,7 +99,7 @@
 //@}
 
 /** RTT wait time */
-#define RTT_WAIT_TIME  (2)
+#define RTT_WAIT_TIME  2
 
 /** Flash wait state number. */
 #define FLASH_WAIT_STATE_NBR   6
@@ -182,33 +183,24 @@ static void run_gpbr_test(const struct test_case *test)
 
 #if SAM4S
 		/* Erase flag page */
-		flash_erase_page(ul_last_page_addr,
-			IFLASH_ERASE_PAGES_4);
+		flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_4);
 
 		/* Clear backup mode flag */
-		if (flash_write(ul_last_page_addr,
-						(uint8_t *) &
-						ul_normal_mode_flag,
-						sizeof(uint32_t),
-						0) != FLASH_RC_OK) {
+		if (flash_write(ul_last_page_addr, (uint8_t *)&ul_normal_mode_flag,
+				sizeof(uint32_t), 0) != FLASH_RC_OK) {
 			uc_write_success_flag = 0;
 		}
 #else
 		/* Clear backup mode flag */
-		if (flash_write(ul_last_page_addr,
-						(uint8_t *) &
-						ul_normal_mode_flag,
-						sizeof(uint32_t),
-						1) != FLASH_RC_OK) {
+		if (flash_write(ul_last_page_addr, (uint8_t *)&ul_normal_mode_flag,
+				sizeof(uint32_t), 1) != FLASH_RC_OK) {
 			uc_write_success_flag = 0;
 		}
 #endif
 
 		/* Return test result */
-		test_assert_true(test,
-				(ul_read_value == GPBR_UNIT_TEST_CONST_DATA)
-				&& uc_write_success_flag,
-				"Test GPBR: GPBR write error!");
+		test_assert_true(test, (ul_read_value == GPBR_UNIT_TEST_CONST_DATA)
+				&& uc_write_success_flag, "Test GPBR: GPBR write error!");
 
 		/* Clear GPBR 0 */
 		gpbr_write(GPBR0, 0);
@@ -219,7 +211,7 @@ static void run_gpbr_test(const struct test_case *test)
 	/* Write the data to the backup register 0 */
 	gpbr_write(GPBR0, GPBR_UNIT_TEST_CONST_DATA);
 
-	/* Enable force wake up */
+	/* Enable RTT wake up */
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_RTTEN);
 
 	/* Configure RTT */
@@ -230,8 +222,8 @@ static void run_gpbr_test(const struct test_case *test)
 
 #if SAM4S
 	/* Erase flag page */
-	flash_erase_page(ul_last_page_addr,
-			IFLASH_ERASE_PAGES_4);
+	if(flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_4) != FLASH_RC_OK)
+		printf("erase page failed!\r\n");
 
 	/* Write backup mode flag */
 	if (flash_write(ul_last_page_addr, (uint8_t *) & ul_backup_mode_flag,
@@ -250,7 +242,9 @@ static void run_gpbr_test(const struct test_case *test)
 
 	/* Enter backup mode */
 	pmc_enable_backupmode();
+#if !defined(SAM4S)
 	supc_enable_backup_mode(SUPC);
+#endif
 
 	/* We should never reach here */
 	test_assert_true(test, 0, "Test GPBR: GPBR write error!");

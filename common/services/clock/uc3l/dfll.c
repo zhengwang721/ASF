@@ -82,7 +82,11 @@ void dfll_enable_open_loop(const struct dfll_config *cfg,
 			AVR32_SCIF_DFLL0CONF;
 	AVR32_SCIF.dfll0conf = 1U << AVR32_SCIF_DFLL0CONF_EN;
 	cpu_irq_restore(flags);
-	dfll_write_reg(DFLL0CONF, cfg->conf | (1U << AVR32_SCIF_DFLL0CONF_EN));
+	dfll_write_reg(DFLL0CONF, cfg->conf | (1U << AVR32_SCIF_DFLL0CONF_EN)
+#if (UC3L0128 || UC3L0256 || UC3L3_L4)
+		| (1U << AVR32_SCIF_DFLL0CONF_CCEN)
+#endif
+		);
 	dfll_write_reg(DFLL0SSG, cfg->ssg);
 }
 
@@ -126,7 +130,11 @@ void dfll_enable_closed_loop(const struct dfll_config *cfg,
 	dfll_write_reg(DFLL0MUL, cfg->mul);
 #endif
 	dfll_write_reg(DFLL0SSG, cfg->ssg);
-	dfll_write_reg(DFLL0CONF, cfg->conf | (1U << AVR32_SCIF_DFLL0CONF_EN));
+	dfll_write_reg(DFLL0CONF, cfg->conf | (1U << AVR32_SCIF_DFLL0CONF_EN)
+#if (UC3L0128 || UC3L0256 || UC3L3_L4)
+		| (1U << AVR32_SCIF_DFLL0CONF_CCEN)
+#endif
+		);
 }
 
 void dfll_disable_closed_loop(unsigned int dfll_id)

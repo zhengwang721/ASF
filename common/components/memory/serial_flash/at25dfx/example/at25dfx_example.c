@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM3N evaluation kits.
+ * This package can be used with SAM3N and SAM4L evaluation kits.
  *
  * \section Description
  *
@@ -61,8 +61,9 @@
  *   - Read back the status of the SerialFlash.
  *   - Write two sectors to the SerialFlash.
  *   - Read back these sectors and check correct content.
- *   - If all operations are correct, \ref DATA_FLASH_LED_EXAMPLE_0 is 'on' and \ref DATA_FLASH_LED_EXAMPLE_1 is 'on'.
- *     The states of other LEDs mean that the SerialFlash access fails somewhere.
+ *   - If all operations are correct, \ref DATA_FLASH_LED_EXAMPLE_0 is 'on' and
+ *     \ref DATA_FLASH_LED_EXAMPLE_1 is 'on'(If have).
+ *     The other states of  LEDs mean that the SerialFlash access fails somewhere.
  *
  * \section Usage
  *

@@ -12,6 +12,7 @@
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
 		<device-support value="xmegad"/>
+		<device-support value="xmegae"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
 		<require idref="xmega.drivers.pmic"/>

@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,5 +63,7 @@
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 /** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART */
 #define CONF_TEST_STOPBITS   false
+
+#define SPI_WPSR_WPVS_Msk SPI_WPSR_WPVSRC_Msk
 
 #endif /* CONF_TEST_H_INCLUDED */

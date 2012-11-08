@@ -1,5 +1,4 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
  * \brief XMEGA B1 Xplained board LEDs support package.
@@ -9,9 +8,6 @@
  *
  * To use this board, define BOARD=XMEGA_B1_XPLAINED.
  *
- ******************************************************************************/
-
-/**
  * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start

@@ -3,7 +3,7 @@
  *
  * \brief Digital-to-Analog Converter Controller (DACC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,7 +60,7 @@ typedef enum dacc_rc {
 	DACC_RC_INVALID_PARAM  //!< Invalid parameter
 } dacc_rc_t;
 
-#if SAM3N
+#if (SAM3N) || (SAM4L)
 //! DACC resolution in number of data bits
 # define DACC_RESOLUTION     10
 #else
@@ -81,14 +81,16 @@ uint32_t dacc_get_interrupt_status(Dacc *p_dacc);
 void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data);
 void dacc_set_writeprotect(Dacc *p_dacc, uint32_t ul_enable);
 uint32_t dacc_get_writeprotect_status(Dacc *p_dacc);
+#if (!SAM4L)
 Pdc *dacc_get_pdc_base(Dacc *p_dacc);
+#endif
 
-#if (SAM3N) || defined(__DOXYGEN__)
+#if (SAM3N) || (SAM4L) || defined(__DOXYGEN__)
 void dacc_enable(Dacc *p_dacc);
 void dacc_disable(Dacc *p_dacc);
 uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 		uint32_t ul_clock_divider);
-#endif /* (SAM3N) */
+#endif
 
 #if (SAM3S) || (SAM3XA) || (SAM4S) || defined(__DOXYGEN__)
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel);
@@ -103,7 +105,7 @@ uint32_t dacc_disable_channel(Dacc *p_dacc, uint32_t ul_channel);
 uint32_t dacc_get_channel_status(Dacc *p_dacc);
 uint32_t dacc_set_analog_control(Dacc *p_dacc, uint32_t ul_analog_control);
 uint32_t dacc_get_analog_control(Dacc *p_dacc);
-#endif /* (SAM3S) || (SAM3XA) */
+#endif
 
 /// @cond 0
 /**INDENT-OFF**/

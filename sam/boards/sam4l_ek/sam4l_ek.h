@@ -144,6 +144,13 @@
 #define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC03B_EIC_EXTINT5
 #define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC03B_EIC_EXTINT5
 #define GPIO_PUSH_BUTTON_EIC_LINE       5
+
+#define GPIO_UNIT_TEST_EIC_PIN              PIN_PA06C_EIC_EXTINT1
+#define GPIO_UNIT_TEST_EIC_PIN_MASK   GPIO_PA06C_EIC_EXTINT1
+#define GPIO_UNIT_TEST_EIC_PIN_MUX    MUX_PA06C_EIC_EXTINT1
+#define GPIO_UNIT_TEST_EIC_LINE       1
+
+#define GPIO_EIC_TRIG_PIN       PIN_PB05
 //! @}
 
 
@@ -236,6 +243,22 @@
 #define RS485_USART_CTS_GPIO           GPIO_PC08E_USART2_CTS
 #define RS485_USART_CTS_MUX            MUX_PC08E_USART2_CTS
 // @}
+
+//! \name DACC pins
+// @{
+#define DACC_EXT_TRIG0_PIN             PIN_PB04E_DACC_EXT_TRIG0
+#define DACC_EXT_TRIG0_GPIO            GPIO_PB04E_DACC_EXT_TRIG0
+#define DACC_EXT_TRIG0_MUX             MUX_PB04E_DACC_EXT_TRIG0
+#define DACC_VOUT_PIN                  PIN_PA06A_DACC_VOUT
+#define DACC_VOUT_GPIO                 GPIO_PA06A_DACC_VOUT
+#define DACC_VOUT_MUX                  MUX_PA06A_DACC_VOUT
+// @}
+
+/* Select the SPI module that AT25DFx is connected to */
+#define AT25DFX_SPI_MODULE          SPI
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS      2
 
 /**
  * @}

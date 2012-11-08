@@ -87,6 +87,9 @@ typedef uint8_t port_id_t;
 #define IOPORT_RISING             (1 << 8) /*!< Sense Rising Edge */
 #define IOPORT_FALLING            (2 << 8) /*!< Sense Falling Edge */
 #define IOPORT_LEVEL              (3 << 8) /*!< Sense Low Level */
+#if XMEGA_E
+#  define IOPORT_FORCE_ENABLE     (6 << 8) /*!< Sense Force Input Enable Low Level */
+#endif
 #define IOPORT_INPUT_DISABLE      (7 << 8) /*!< Input Buffer Disabled */
 /** @} */
 

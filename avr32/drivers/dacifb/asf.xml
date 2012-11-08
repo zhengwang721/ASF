@@ -11,7 +11,7 @@
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="group_avr32_drivers_dacifb"/>
 		<device-support value="uc3c"/>
-		<require idref="avr32.drivers.cpu.cycle_counter"/>
+		<require idref="common.services.delay"/>
 		<require idref="avr32.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3c"/>
 	</module>

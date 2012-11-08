@@ -238,6 +238,32 @@ inline static void spi_read_single(SPI_t *spi, uint8_t *data)
  */
 extern status_code_t spi_read_packet(SPI_t *spi, uint8_t *data, size_t len);
 
+/*! \brief Checks if all transmissions are complete.
+ *
+ * \param spi Base address of the SPI instance.
+ *
+ * \return Status.
+ *   \retval 1  All transmissions complete.
+ *   \retval 0  Transmissions not complete.
+ */
+inline static bool spi_is_tx_empty(SPI_t *spi)
+{
+	return spi_is_tx_ok(spi);
+}
+
+/*! \brief Checks if all transmissions is ready.
+ *
+ * \param spi Base address of the SPI instance.
+ *
+ * \return Status.
+ *   \retval 1  All transmissions complete.
+ *   \retval 0  Transmissions not complete.
+ */
+inline static bool spi_is_tx_ready(SPI_t *spi)
+{
+	return spi_is_tx_ok(spi);
+}
+
 /*! \brief Tests if the SPI contains a received character.
  *
  * \param spi Base address of the SPI instance.
@@ -245,6 +271,17 @@ extern status_code_t spi_read_packet(SPI_t *spi, uint8_t *data, size_t len);
  * \return \c 1 if the SPI Receive Holding Register is full, otherwise \c 0.
  */
 inline static bool spi_is_rx_full(SPI_t *spi)
+{
+	return spi_is_tx_ok(spi);
+}
+
+/*! \brief Checks if all reception is ready.
+ *
+ * \param spi Base address of the SPI instance.
+ *
+ * \return \c 1 if the SPI Receiver is ready, otherwise \c 0.
+ */
+inline static bool spi_is_rx_ready(SPI_t *spi)
 {
 	return spi_is_tx_ok(spi);
 }

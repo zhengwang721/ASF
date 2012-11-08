@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Timer Counter (TC) driver
  *
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef TC_H
-#define TC_H
+#ifndef _TC_H_
+#define _TC_H_
 
 #include <compiler.h>
 #include <parts.h>
@@ -1354,13 +1354,13 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * \section xmega_tc_qs_ovf Timer/counter overflow (interrupt based)
  *
- * This use case will prepare a timer to trigger a interrupt when the timer
- * overflows. The interrupt is handled by a cutomisable call back function.
+ * This use case will prepare a timer to trigger an interrupt when the timer
+ * overflows. The interrupt is handled by a cutomisable callback function.
  *
  * We will setup the timer in this mode:
  * - Normal WGM mode (incrementing timer)
  * - Use the system clock as clock source
- * - No prescaling (DIV = 1)
+ * - No prescaling (clock divider set to 1)
  * - Overflow interrupt after 1000 counts. This will be done by setting the top
  *   value to 1000.
  *
@@ -1371,8 +1371,8 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * For the setup code of this use case to work, the following must
  * be added to the project:
- * - \ref interrupt_group
- * - \ref clk_group
+ * - \ref interrupt_group "Global Interrupt Management"
+ * - \ref clk_group "Clock Management"
  *
  * \subsection xmega_tc_qs_ovf_setup_code Example code
  *
@@ -1381,7 +1381,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  * \code
  * static void my_callback(void)
  * {
- * ...Add your code here. This code will be executed when the overflow occur...
+ *     // User code to execute when the overflow occurs here
  * }
  * \endcode
  * Add to, e.g., the main loop in the application C-file:
@@ -1405,18 +1405,18 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *  - \code sysclk_init(); \endcode
  * -#  Enable timer/counter TCC0
  *  - \code tc_enable(&TCC0); \endcode
- *  - \note This will enable the clock system for the module
+ *    \note This will enable the clock system for the module
  * -# Set the callback function for overflow interrupt
  *  - \code tc_set_overflow_interrupt_callback(&TCC0, my_callback); \endcode
- *  - \warning This function requires that the my_callback function is defined
+ *    \warning This function requires that the my_callback function is defined
  * -# Set the desired waveform mode
  *  - \code tc_set_wgm(&TCC0, TC_WG_NORMAL); \endcode
- *  - \note In this case, we use normal mode where the timer increments it
+ *    \note In this case, we use normal mode where the timer increments it
             count value until the TOP value is reached. The timer then reset
             its count value to 0.
  * -# Set the period 
  *  - \code tc_write_period(&TCC0, 1000); \endcode
- *  - \note This will specify the TOP value of the counter. The timer will
+ *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
  * -# Set the overflow interrupt level 
  *   - \code tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO); \endcode
@@ -1424,7 +1424,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *  - \code cpu_irq_enable(); \endcode
  * -# Set the clock source
  *  - \code tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1_gc); \endcode
- *  - \warning When the clock source is set, the timer will start counting
+ *    \warning When the clock source is set, the timer will start counting
  *
  * \section xmega_tc_qs_ovf_usage Usage steps
  *
@@ -1442,11 +1442,11 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  * We will setup the timer in this mode:
  * - Normal WGM mode - incrementing timer
  * - Use the system clock as clock source
- * - No prescaling (DIV = 1)
+ * - No prescaling (divider set to 1)
  * - Period of timer 10000 counts
  * - Compare match A interrupt trigger after 100 counts
  * - Compare match B interrupt trigger after 1000 counts
- * - If compare A and compare B match occur simultaneously, compare B
+ * - If compare A and compare B match occurs simultaneously, compare B
  *   should have higher priority
  *
  *
@@ -1455,8 +1455,8 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  * \subsection xmega_tc_qs_cc_usage_prereq Prequisites
  * For the setup code of this use case to work, the following must
  * be added to the project:
- * - \ref interrupt_group
- * - \ref clk_group
+ * - \ref interrupt_group "Global Interrupt Management"
+ * - \ref clk_group "Clock Management"
  *
  * \subsection xmega_tc_qs_cc_setup_code Example code
  *
@@ -1465,13 +1465,11 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  * \code
  * static void my_cca_callback(void)
  * {
- * ...Add your code here. This code will be executed when a compare match 
- * occur on channel A...
+ *    // User code here to execute when a channel A compare match occurs
  * }
  * static void my_ccb_callback(void)
  * {
- * ...Add your code here. This code will be executed when a compare match 
- * occur on channel B...
+ *    // User code here to execute when a channel B compare match occurs
  * }
  * \endcode
  * Add to, e.g., the main loop in the application C-file:
@@ -1502,21 +1500,21 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *  - \code cpu_irq_enable(); \endcode
  * -#  Enable timer/counter TCC0
  *  - \code tc_enable(&TCC0); \endcode
- *  - \note This will enable the clock system for the module
+ *    \note This will enable the clock system for the module
  * -# Set call back function for CCA interrupt
  *  - \code tc_set_cca_interrupt_callback(&TCC0, my_cca_callback); \endcode
- *  - \warning This function requires that the call back function is defined
+ *    \warning This function requires that the call back function is defined
  * -# Set call back function for CCB interrupt
  *  - \code tc_set_ccb_interrupt_callback(&TCC0, my_ccb_callback); \endcode
- *  - \warning This function requires that the call back function is defined
+ *    \warning This function requires that the call back function is defined
  * -# Set the desired waveform mode
  *  - \code tc_set_wgm(&TCC0, TC_WG_NORMAL); \endcode
- *  - \note In this case, we use normal mode where the timer increments it
+ *    \note In this case, we use normal mode where the timer increments it
             count value until the TOP value is reached. The timer then reset
             its count value to 0.
  * -# Set the period 
  *  - \code tc_write_period(&TCC0, 10000); \endcode
- *  - \note This will specify the TOP value of the counter. The timer will
+ *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
  * -# Set compare match value on CCA
  *   - \code tc_write_cc(&TCC0, TC_CCA, 100); \endcode
@@ -1530,7 +1528,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *   - \code tc_set_ccb_interrupt_level(&TCC0, TC_INT_LVL_MED); \endcode
  * -# Set the clock source
  *  - \code tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1_gc); \endcode
- *  - \warning When the clock source is set, the timer will start counting
+ *    \warning When the clock source is set, the timer will start counting
  *
  * \section xmega_tc_qs_cc_usage Usage steps
  *
@@ -1555,7 +1553,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  * \subsection xmega_tc_qs_pwm_usage_prereq Prequisites
  * For the setup code of this use case to work, the following must
  * be added to the project:
- * - \ref clk_group
+ * - \ref clk_group "Clock Management"
  *
  * \subsection xmega_tc_qs_pwm_setup_code Example code
  *
@@ -1575,25 +1573,25 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * -# Ensure that PWM I/O pin is configured as output
  *  - \code board_init(); \endcode
- *  \note The board_init(); function configures the I/O pins. If this function
- *        is not executed, the I/O pin must be configured as output manually
+ *    \note The board_init(); function configures the I/O pins. If this function
+ *          is not executed, the I/O pin must be configured as output manually
  * -# Enable the clock system:
  *  - \code sysclk_init(); \endcode
  * -#  Enable timer/counter TCE0
  *  - \code tc_enable(&TCE0); \endcode
- *  - \note This will enable the clock system for the module
+ *    \note This will enable the clock system for the module
  * -# Set the desired waveform mode
  *  - \code tc_set_wgm(&TCE0, TC_WG_NORMAL); \endcode
- *  - \note In this case, we use normal mode where the timer increments it
+ *    \note In this case, we use normal mode where the timer increments it
  *          count value until the TOP value is reached. The timer then reset
   *         its count value to 0.
  * -# Set the period 
  *  - \code tc_write_period(&TCE0, 1950); \endcode
- *  - \note This will specify the TOP value of the counter. The timer will
+ *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
  * -# Set compare match value on CCA
  *   - \code tc_write_cc(&TCC0, TC_CCA, 195); \endcode
- *   - \note The PWM duty cycle will be the ratio between PER and CCA, which
+ *     \note The PWM duty cycle will be the ratio between PER and CCA, which
  *           is set by the tc_write_period() and tc_write_cc() functions. Use
  *           tc_write_cc() to change duty cycle run time (e.g to dim a LED).
  *           When CCA = 0, the duty cycle will be 0%. When CCA = PER (top value)
@@ -1602,11 +1600,11 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *  -\code tc_enable_cc_channels(&TCE0,TC_CCAEN); \endcode
  * -# Set the clock source
  *  - \code tc_write_clock_source(&TCE0, TC_CLKSEL_DIV1024_gc); \endcode
- *  - \warning When the clock source is set, the timer will start counting
+ *    \warning When the clock source is set, the timer will start counting
  *
  * \section xmega_tc_qs_pwm_usage Usage steps
  *  - Use tc_write_cc() to change the duty cycle of the PWM signal
  *  - Use tc_write_period() to change the PWM frequency
  */
 
-#endif /* TC_H */
+#endif /* _TC_H_ */

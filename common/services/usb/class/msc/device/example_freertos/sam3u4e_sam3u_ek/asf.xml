@@ -5,12 +5,15 @@
 		<build type="header-file" value="FreeRTOSConfig.h"/>
 		<build type="header-file" value="conf_access.h"/>
 		<build type="header-file" value="conf_virtual_mem.h"/>
+		<build type="header-file" value="conf_sd_mmc.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<require idref="common.components.memory.virtual_mem"/>
+		<require idref="common.components.memory.sd_mmc.ctrl_access"/>
+		<config name="config.common.components.memory.sd_mmc" value="mci"/>
 		<config name="config.common.services.usb.class.device" value="mass_storage"/>
 		<require idref="common.services.usb.class.msc.device.example.freertos"/>
 		<require idref="board.sam3u_ek"/>

@@ -148,7 +148,7 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
 	if (!b_present) {
 		lun_state = 0; // LUN is unplugged, reset flag
 	}
-	ui_usb_connection_event(b_present);
+	ui_usb_connection_event(dev, b_present);
 }
 
 /**

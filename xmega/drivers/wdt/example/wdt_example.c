@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA WDT driver example
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,7 @@
  *   - XMEGA A1 Xplained: LED 0 through 3.
  *   - XMEGA A3BU Xplained: red on the status LED indicates that LED2 is on,
  *     while green on the status LED indicates that LED3 is on.
+ *   - XMEGA B1 Xplained: LED 0 through 3.
  *   - STK600/RC044X: requires PORTA to be connected to LEDs. Output will be
  *     shown on LED 0 through 3.
  *   - STK600/RC064X: requires PORTE to be connected to LEDs. Output will be
@@ -87,31 +88,6 @@
 #include <asf.h>
 
 /**
- * \brief Delay for \a ms milliseconds
- *
- * \param ms number of milliseconds to busy wait
- */
-static void mdelay(uint16_t ms)
-{
-	uint32_t count;
-
-	// Approximate the number of loop iterations needed.
-	count = sysclk_get_cpu_hz() / 1000;
-	count *= ms;
-#if defined(__GNUC__)
-	count /= 6;
-#elif defined(__ICCAVR__)
-	count /= 12;
-#else
-#error Unsupported compiler.
-#endif
-
-	do {
-		asm("");
-	} while (--count);
-}
-
-/**
  * \brief LED display value
  *
  * \param led_val LED display value
@@ -123,16 +99,19 @@ static void led_display(uint8_t led_val)
 	} else {
 		LED_Off(LED0_GPIO);
 	}
+
 	if (led_val & 0x02) {
 		LED_On(LED1_GPIO);
 	} else {
 		LED_Off(LED1_GPIO);
 	}
+
 	if (led_val & 0x04) {
 		LED_On(LED2_GPIO);
 	} else {
 		LED_Off(LED2_GPIO);
 	}
+
 	if (led_val & 0x08) {
 		LED_On(LED3_GPIO);
 	} else {
@@ -140,76 +119,67 @@ static void led_display(uint8_t led_val)
 	}
 }
 
-/*! brief States of the example.
- */
+/** brief States of the example. */
 enum wdt_example_state_t {
-	//! Writing tests in WDT
-	START_OF_PROG = (0x01),
-	//! MCU reset using WDT
-	WDT_MCU_RESET = (0x02),
-	//! WDT in normal mode, 8x wdt_reset() before TIMEOUT (TO)
-	REFRESH_NO_WIN = (0x03),
-	//! WDT in window mode, 4x wdt_reset() when window is opened & before TO
-	REFRESH_WINDOW = (0x04),
-	//! WDT in normal mode, no wdt_reset(), reaching the TO
-	WDT_RST_NO_WIN = (0x05),
-	//! WDT in window mode, no wdt_reset(), reaching the TO
-	WDT_RST_WINDOW = (0x06),
-	//! WDT in window mode, wdt_reset() when window is closed
-	WDT_RST_RFSH_W = (0x07),
-	//! MCU software Reset and the program restarts
-	END_OF_PROG = (0x08),
-	//! WDT error (loop without end)
-	ERROR_STATE = (0x0F),
+	/** Writing tests in WDT */
+	START_OF_PROG  = 1,
+	/** MCU reset using WDT */
+	WDT_MCU_RESET  = 2,
+	/** WDT in normal mode, 8x wdt_reset() before TIMEOUT (TO) */
+	REFRESH_NO_WIN = 3,
+	/** WDT in window mode, 4x wdt_reset() when window is opened & before TO */
+	REFRESH_WINDOW = 4,
+	/** WDT in normal mode, no wdt_reset(), reaching the TO */
+	WDT_RST_NO_WIN = 5,
+	/** WDT in window mode, no wdt_reset(), reaching the TO */
+	WDT_RST_WINDOW = 6,
+	/** WDT in window mode, wdt_reset() when window is closed */
+	WDT_RST_RFSH_W = 7,
+	/** MCU software Reset and the program restarts */
+	END_OF_PROG    = 8,
+	/** WDT error (loop without end) */
+	ERROR_STATE    = 9,
 };
 
-/*! \brief Global variables not initialized.
- */
+/** \brief Global variables not initialized. */
 #if defined (__GNUC__)
 volatile enum wdt_example_state_t state_flag
 		__attribute__ ((section(".noinit")));
 #elif defined(__ICCAVR__)
-__no_init
-	volatile enum wdt_example_state_t state_flag;
+__no_init volatile enum wdt_example_state_t state_flag;
 #else
-#error Unsupported compiler.
+#  error Unsupported compiler.
 #endif
 
-
-/*! \brief Main function.
- */
+/** \brief Main function. */
 int main(void)
 {
-	int8_t ii;
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
+	uint8_t i;
+	
+	/* Initialize the board hardware and system clocks. */
 	board_init();
-
+	sysclk_init();
 
 	/* Detection of all RESET excepted WDT RESET. */
-	if ((reset_cause_get_causes() & CHIP_RESET_CAUSE_WDT)
-			!= CHIP_RESET_CAUSE_WDT) {
+	if (reset_cause_get_causes() & ~CHIP_RESET_CAUSE_WDT) {
 		/* Wait for 2 s. */
-		mdelay(2000);
+		delay_ms(2000);
 		state_flag = START_OF_PROG;
-		reset_cause_clear_causes(CHIP_RESET_CAUSE_POR |
+		reset_cause_clear_causes(
+				CHIP_RESET_CAUSE_POR |
 				CHIP_RESET_CAUSE_EXTRST |
 				CHIP_RESET_CAUSE_BOD_CPU |
 				CHIP_RESET_CAUSE_OCD |
-				CHIP_RESET_CAUSE_SOFT | CHIP_RESET_CAUSE_SPIKE);
+				CHIP_RESET_CAUSE_SOFT |
+				CHIP_RESET_CAUSE_SPIKE);
 	} else {
 		reset_cause_clear_causes(CHIP_RESET_CAUSE_WDT);
 	}
-
 
 	while (true) {
 		led_display(state_flag);
 
 		switch (state_flag) {
-
 		case START_OF_PROG:
 			/* Writing test. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_8CLK);
@@ -217,19 +187,21 @@ int main(void)
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_250CLK);
 			if (wdt_get_timeout_period() != WDT_TIMEOUT_PERIOD_250CLK) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			/* Wait for 2 s. */
-			mdelay(2000);
+			delay_ms(2000);
 			state_flag = WDT_MCU_RESET;
 			break;
 
 		case WDT_MCU_RESET:
 			/* Wait for 2 s. */
-			mdelay(2000);
+			delay_ms(2000);
 			state_flag = REFRESH_NO_WIN;
 			wdt_reset_mcu();
 			break;
@@ -238,9 +210,9 @@ int main(void)
 			/* Enable WDT 500 ms. */
 			wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_500CLK);
 			wdt_enable();
-			for (ii = 0; ii < 8; ii++) {
+			for (i = 0; i < 8; i++) {
 				/* Wait for 8x 250 ms = 2 s. */
-				mdelay(250);
+				delay_ms(250);
 				wdt_reset();
 			}
 			wdt_disable();
@@ -256,13 +228,15 @@ int main(void)
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			if (!(wdt_enable_window_mode())) {
 				state_flag = ERROR_STATE;
 				break;
 			}
-			for (ii = 0; ii < 4; ii++) {
+
+			for (i = 0; i < 4; i++) {
 				/* Wait for 500 ms. */
-				mdelay(500);
+				delay_ms(500);
 				wdt_reset();
 			}
 			wdt_disable();
@@ -277,7 +251,7 @@ int main(void)
 			while (true) {
 				/* Wait for Watchdog reset. */
 			}
-			// No break is needed
+			break;
 
 		case WDT_RST_WINDOW:
 			state_flag = WDT_RST_RFSH_W;
@@ -288,14 +262,17 @@ int main(void)
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			if (!(wdt_enable_window_mode())) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			while (true) {
 				/* Wait for Watchdog reset. */
 			}
-			// No break is needed
+
+			break;
 
 		case WDT_RST_RFSH_W:
 			state_flag = END_OF_PROG;
@@ -306,34 +283,38 @@ int main(void)
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			if (!(wdt_enable_window_mode())) {
 				state_flag = ERROR_STATE;
 				break;
 			}
+
 			/* Wait for 2 s. */
-			mdelay(2000);
+			delay_ms(2000);
 			wdt_reset();
 			while (true) {
 				/* Wait for Watchdog reset. */
 			}
-			// No break is needed
+
+			break;
 
 		case ERROR_STATE:
 			while (true) {
 				led_display(ERROR_STATE);
 				/* Wait for 500 ms. */
-				mdelay(500);
+				delay_ms(500);
 				/* Blinking. */
 				led_display(~ERROR_STATE);
 				/* Wait for 500 ms. */
-				mdelay(500);
+				delay_ms(500);
 			}
-			// No break is needed
+		
+			break;
 
 		case END_OF_PROG:
 		default:
 			/* Wait for 2 s. */
-			mdelay(2000);
+			delay_ms(2000);
 			reset_do_soft_reset();
 			break;
 		}

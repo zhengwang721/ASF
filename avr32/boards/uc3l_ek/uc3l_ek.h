@@ -9,7 +9,7 @@
  *
  * To use this board, define BOARD=UC3L_EK.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,7 +63,7 @@
 //! @{
 
 #define FOSC32          32768                                   //!< Osc32 frequency: Hz.
-#define OSC32_STARTUP   AVR32_SCIF_OSCCTRL32_STARTUP_8192_RCOSC //!< Osc32 startup time: RCOsc periods.
+#define OSC32_STARTUP   AVR32_SCIF_OSCCTRL32_STARTUP_131072_RCOSC //!< Osc32 startup time: RCOsc periods.
 
 // No Osc0 crystal the AT32UC3L-EK
 #define FOSC0           ((int)"NONE")                                //!< Osc0 frequency: Hz.
@@ -72,7 +72,7 @@
 //! @}
 
 #define BOARD_OSC32_HZ          32768
-#define BOARD_OSC32_STARTUP_US  71000
+#define BOARD_OSC32_STARTUP_US  920000
 #define BOARD_OSC32_IS_XTAL     true
 #define BOARD_OSC32_PINSEL      1
 

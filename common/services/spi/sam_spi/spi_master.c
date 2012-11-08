@@ -70,18 +70,7 @@
  */
 void spi_master_init(Spi *p_spi)
 {
-#if (SAM4S || SAM3S || SAM3N || SAM3U)
-	sysclk_enable_peripheral_clock(ID_SPI);
-#elif (SAM3XA)
-	if (p_spi == SPI0) {
-		sysclk_enable_peripheral_clock(ID_SPI0);
-	} 
-	#ifdef SPI1
-	else if (p_spi == SPI1) {
-		sysclk_enable_peripheral_clock(ID_SPI1);
-	}
-	#endif
-#endif
+	spi_enable_clock(p_spi);
 	spi_reset(p_spi);
 	spi_set_master_mode(p_spi);
 	spi_disable_mode_fault_detect(p_spi);
@@ -115,7 +104,8 @@ void spi_master_setup_device(Spi *p_spi, struct spi_device *device,
 			CONFIG_SPI_MASTER_DELAY_BCT);
 	spi_set_bits_per_transfer(p_spi, device->id,
 			CONFIG_SPI_MASTER_BITS_PER_TRANSFER);
-	spi_set_baudrate_div(p_spi, device->id, sysclk_get_cpu_hz() / baud_rate);
+	spi_set_baudrate_div(p_spi, device->id,
+			spi_calc_baudrate_div(baud_rate, sysclk_get_cpu_hz()));
 	spi_configure_cs_behavior(p_spi, device->id, SPI_CS_KEEP_LOW);
 	spi_set_clock_polarity(p_spi, device->id, flags >> 1);
 	spi_set_clock_phase(p_spi, device->id, ((flags & 0x1) ^ 0x1));

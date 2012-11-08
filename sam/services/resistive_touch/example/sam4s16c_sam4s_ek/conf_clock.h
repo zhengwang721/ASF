@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM3S clock configuration.
+ * \brief SAM4S clock configuration.
  *
  * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *

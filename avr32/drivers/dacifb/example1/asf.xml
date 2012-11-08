@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>
-		</info>					
+		</info>
 		<build type="c-source" value="dacifb_example1.c"/>
 		<build type="c-source" value="sinus.c"/>
 		<build type="header-file" value="sinus.h"/>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.usb.class.cdc.device.unit_tests" caption="USB Device CDC unit tests">
+	<module type="application" id="common.services.usb.class.cdc.device.unit_tests" caption="Unit Tests for the USB Device CDC Class">
 		<info type="description" value="summary">
 		Provide an unit test of USB Device CDC implementation.
 		</info>

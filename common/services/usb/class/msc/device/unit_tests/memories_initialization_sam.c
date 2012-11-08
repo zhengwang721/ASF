@@ -99,4 +99,7 @@ void memories_initialization(void)
 #ifdef CONF_BOARD_SRAM
 	ext_sram_init();
 #endif
+#if defined CONF_BOARD_SD_MMC_HSMCI || defined CONF_BOARD_SD_MMC_SPI
+	sd_mmc_init();
+#endif
 }

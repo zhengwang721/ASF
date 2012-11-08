@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.pmc.unit_tests" caption="Set of unit tests for PMC driver">
+	<module type="application" id="sam.drivers.pmc.unit_tests" caption="Unit Tests for the SAM PMC Driver">
 		<info type="description" value="summary">
 		Unit test application for the PMC driver.
 		</info>

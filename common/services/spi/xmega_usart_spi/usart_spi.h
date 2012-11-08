@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA USART in SPI mode driver functions.
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -67,29 +67,29 @@ extern "C" {
 /**
  * \brief Clock phase
  */
-#define SPI_CPHA	(1 << 0)
+#define SPI_CPHA   (1 << 0)
 
 /**
  * \brief Clock polarity
  */
-#define SPI_CPOL	(1 << 1)
+#define SPI_CPOL   (1 << 1)
 
 /**
  * \brief SPI mode 0
  */
-#define SPI_MODE_0	0
+#define SPI_MODE_0  0
 /**
  * \brief SPI mode 1
  */
-#define SPI_MODE_1	(SPI_CPHA)
+#define SPI_MODE_1  (SPI_CPHA)
 /**
  * \brief SPI mode 2
  */
-#define SPI_MODE_2	(SPI_CPOL)
+#define SPI_MODE_2  (SPI_CPOL)
 /**
  * \brief SPI mode 3
  */
-#define SPI_MODE_3	(SPI_CPOL | SPI_CPHA)
+#define SPI_MODE_3  (SPI_CPOL | SPI_CPHA)
 
 typedef uint8_t spi_flags_t;
 typedef uint32_t board_spi_select_id_t;
@@ -97,7 +97,7 @@ typedef uint32_t board_spi_select_id_t;
 //! \brief Polled SPI device definition
 struct usart_spi_device {
 	//! Board specific select id
-	port_pin_t	id;
+	port_pin_t id;
 };
 
 /*! \brief Initializes the USART in SPI master mode.
@@ -122,8 +122,8 @@ extern void usart_spi_init(USART_t *usart);
  * \param sel_id    Board specific select id
  */
 extern void usart_spi_setup_device(USART_t *usart, struct usart_spi_device *device,
-     spi_flags_t flags, unsigned long baud_rate,
-     board_spi_select_id_t sel_id);
+		spi_flags_t flags, unsigned long baud_rate,
+		board_spi_select_id_t sel_id);
 
 /*! \brief Enables the USART for the specified USART in SPI mode.
  *
@@ -168,7 +168,7 @@ extern void usart_spi_select_device(USART_t *usart, struct usart_spi_device *dev
  * \param usart Base address of the USART instance.
  * \param device SPI device
  *
- * \pre SPI device must be selected with spi_select_device() first
+ * \pre SPI device must be selected with usart_spi_select_device() first
  */
 extern void usart_spi_deselect_device(USART_t *usart, struct usart_spi_device *device);
 
@@ -180,7 +180,7 @@ extern void usart_spi_deselect_device(USART_t *usart, struct usart_spi_device *d
  */
 __always_inline static void usart_spi_write_single(USART_t *usart, uint8_t data)
 {
-	usart_putchar(usart,data);
+	usart_spi_transmit(usart, data);
 }
 
 /**
@@ -192,7 +192,7 @@ __always_inline static void usart_spi_write_single(USART_t *usart, uint8_t data)
  * \param data  Data buffer to write
  * \param len   Length of data
  *
- * \pre usart device must be selected with spi_select_device() first
+ * \pre usart device must be selected with usart_spi_select_device() first
  */
 extern status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, size_t len);
 
@@ -205,7 +205,7 @@ extern status_code_t usart_spi_write_packet(USART_t *usart,const uint8_t *data, 
  */
 inline static void usart_spi_read_single(USART_t *usart, uint8_t *data)
 {
-	*data = usart_getchar(usart);
+	*data = usart_spi_transmit(usart, CONFIG_USART_SPI_DUMMY);
 }
 
 /**
@@ -217,9 +217,46 @@ inline static void usart_spi_read_single(USART_t *usart, uint8_t *data)
  * \param data   data buffer to read
  * \param len    Length of data
  *
- * \pre usart device must be selected with spi_select_device() first
+ * \pre usart device must be selected with usart_spi_select_device() first
  */
 extern status_code_t usart_spi_read_packet(USART_t *usart, uint8_t *data, size_t len);
+
+/*! \brief Check whether there are data in Transmit Holding Register or
+ *         Transmit Shift Register in SPI master mode.
+ *
+ * \param usart Base address of the USART instance.
+ *
+ * \retval 1      The two registers are empty.
+ * \retval 0      One of the two registers contains data.
+ */
+inline static bool usart_spi_is_tx_empty(USART_t *usart)
+{
+	return usart_data_register_is_empty(usart);
+}
+
+/*! \brief Check whether the USART in SPI master mode contains a received character.
+ *
+ * \param usart Base address of the USART instance.
+ *
+ * \retval 1      Some data have been received.
+ * \retval 0      No data has been received.
+ */
+inline static bool usart_spi_is_rx_ready(USART_t *usart)
+{
+	return usart_rx_is_complete(usart);
+}
+
+/*! \brief Check if the USART Transmit Register is empty.
+ *
+ * \param usart Base address of the USART instance.
+ *
+ * \retval 1      There is no data in the Transmit Holding Register.
+ * \retval 0      There are data in the Transmit Holding Register.
+ */
+inline static bool usart_spi_is_tx_ready(USART_t *usart)
+{
+	return usart_data_register_is_empty(usart);
+}
 
 /*! \brief Tests if the USART in SPI mode contains a received character.
  *

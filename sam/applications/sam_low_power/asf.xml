@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.applications.low_power" caption="Low Power">
+	<module type="application" id="sam.applications.low_power" caption="Low Power Demo for SAM kits">
 		<info type="description" value="summary">
 		The example shows all the different low power modes with several types of wake-up sources.
 		</info>

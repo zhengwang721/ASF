@@ -54,7 +54,7 @@
 //! \note No extra stopbit, i.e., use 1
 #define CONF_TEST_STOPBITS   false
 
-#define CONF_TEST_ACCEPT_DELTA_12BIT 250
+#define CONF_TEST_ACCEPT_DELTA_12BIT 260
 #define CONF_TEST_ACCEPT_DELTA_8BIT 20
 
 #endif

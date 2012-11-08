@@ -185,7 +185,7 @@ void ui_usb_vbus_error(void)
 {
 }
 
-void ui_usb_connection_event(bool b_present)
+void ui_usb_connection_event(uhc_device_t *dev, bool b_present)
 {
 	LED_Off(LED1);
 	LED_Off(LED2);

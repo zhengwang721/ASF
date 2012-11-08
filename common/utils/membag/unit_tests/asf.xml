@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.utils.membag.unit_tests" caption="Unit tests for MEMBAG utility">
+	<module type="application" id="common.utils.membag.unit_tests" caption="Unit Tests for the MEMBAG Memory Allocator">
 		<info type="description" value="summary">
 			Perform a range of unit tests on the MEMBAG utility to ensure correct operation.
 		</info>

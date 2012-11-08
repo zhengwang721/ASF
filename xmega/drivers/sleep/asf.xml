@@ -15,6 +15,7 @@
 		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<device-support value="xmegad"/>
+		<device-support value="xmegae"/>
 		<require idref="xmega.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>

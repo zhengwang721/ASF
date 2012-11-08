@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.components.memory.sdmmc.spi.unit_tests" caption="Unit Tests for the SD/MMC component using SPI">
+	<module type="application" id="avr32.components.memory.sdmmc.spi.unit_tests" caption="Unit Tests for the UC3 SD/MMC Component (Using SPI)">
 		<info type="description" value="summary">
 		This is the unit tests of the SD/MMC card using the SPI Interface.
 		</info>

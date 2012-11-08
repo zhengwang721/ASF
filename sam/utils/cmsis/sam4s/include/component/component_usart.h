@@ -103,12 +103,12 @@ typedef struct {
 #define US_CR_DTREN (0x1u << 16) /**< \brief (US_CR) Data Terminal Ready Enable */
 #define US_CR_DTRDIS (0x1u << 17) /**< \brief (US_CR) Data Terminal Ready Disable */
 #define US_CR_RTSEN (0x1u << 18) /**< \brief (US_CR) Request to Send Enable */
-#define US_CR_FCS (0x1u << 18) /**< \brief (US_CR) Force SPI Chip Select */
 #define US_CR_RTSDIS (0x1u << 19) /**< \brief (US_CR) Request to Send Disable */
+#define US_CR_FCS (0x1u << 18) /**< \brief (US_CR) Force SPI Chip Select */
 #define US_CR_RCS (0x1u << 19) /**< \brief (US_CR) Release SPI Chip Select */
 /* -------- US_MR : (USART Offset: 0x0004) Mode Register -------- */
 #define US_MR_USART_MODE_Pos 0
-#define US_MR_USART_MODE_Msk (0xfu << US_MR_USART_MODE_Pos) /**< \brief (US_MR)  */
+#define US_MR_USART_MODE_Msk (0xfu << US_MR_USART_MODE_Pos) /**< \brief (US_MR) USART Mode of Operation */
 #define   US_MR_USART_MODE_NORMAL (0x0u << 0) /**< \brief (US_MR) Normal mode */
 #define   US_MR_USART_MODE_RS485 (0x1u << 0) /**< \brief (US_MR) RS485 */
 #define   US_MR_USART_MODE_HW_HANDSHAKING (0x2u << 0) /**< \brief (US_MR) Hardware Handshaking */
@@ -130,7 +130,6 @@ typedef struct {
 #define   US_MR_CHRL_7_BIT (0x2u << 6) /**< \brief (US_MR) Character length is 7 bits */
 #define   US_MR_CHRL_8_BIT (0x3u << 6) /**< \brief (US_MR) Character length is 8 bits */
 #define US_MR_SYNC (0x1u << 8) /**< \brief (US_MR) Synchronous Mode Select */
-#define US_MR_CPHA (0x1u << 8) /**< \brief (US_MR) SPI Clock Phase */
 #define US_MR_PAR_Pos 9
 #define US_MR_PAR_Msk (0x7u << US_MR_PAR_Pos) /**< \brief (US_MR) Parity Type */
 #define   US_MR_PAR_EVEN (0x0u << 9) /**< \brief (US_MR) Even parity */
@@ -151,7 +150,6 @@ typedef struct {
 #define   US_MR_CHMODE_LOCAL_LOOPBACK (0x2u << 14) /**< \brief (US_MR) Local Loopback. Transmitter output is connected to the Receiver Input. */
 #define   US_MR_CHMODE_REMOTE_LOOPBACK (0x3u << 14) /**< \brief (US_MR) Remote Loopback. RXD pin is internally connected to the TXD pin. */
 #define US_MR_MSBF (0x1u << 16) /**< \brief (US_MR) Bit Order */
-#define US_MR_CPOL (0x1u << 16) /**< \brief (US_MR) SPI Clock Polarity */
 #define US_MR_MODE9 (0x1u << 17) /**< \brief (US_MR) 9-bit Character Length */
 #define US_MR_CLKO (0x1u << 18) /**< \brief (US_MR) Clock Output Select */
 #define US_MR_OVER (0x1u << 19) /**< \brief (US_MR) Oversampling Mode */
@@ -160,75 +158,78 @@ typedef struct {
 #define US_MR_VAR_SYNC (0x1u << 22) /**< \brief (US_MR) Variable Synchronization of Command/Data Sync Start Frame Delimiter */
 #define US_MR_INVDATA (0x1u << 23) /**< \brief (US_MR) INverted Data */
 #define US_MR_MAX_ITERATION_Pos 24
-#define US_MR_MAX_ITERATION_Msk (0x7u << US_MR_MAX_ITERATION_Pos) /**< \brief (US_MR)  */
+#define US_MR_MAX_ITERATION_Msk (0x7u << US_MR_MAX_ITERATION_Pos) /**< \brief (US_MR) Maximum Number of Automatic Iteration */
 #define US_MR_MAX_ITERATION(value) ((US_MR_MAX_ITERATION_Msk & ((value) << US_MR_MAX_ITERATION_Pos)))
 #define US_MR_FILTER (0x1u << 28) /**< \brief (US_MR) Infrared Receive Line Filter */
 #define US_MR_MAN (0x1u << 29) /**< \brief (US_MR) Manchester Encoder/Decoder Enable */
 #define US_MR_MODSYNC (0x1u << 30) /**< \brief (US_MR) Manchester Synchronization Mode */
 #define US_MR_ONEBIT (0x1u << 31) /**< \brief (US_MR) Start Frame Delimiter Selector */
+#define US_MR_CPHA (0x1u << 8) /**< \brief (US_MR) SPI Clock Phase */
+#define US_MR_CPOL (0x1u << 16) /**< \brief (US_MR) SPI Clock Polarity */
+#define US_MR_WRDBT (0x1u << 20) /**< \brief (US_MR) Wait Read Data Before Transfer */
 /* -------- US_IER : (USART Offset: 0x0008) Interrupt Enable Register -------- */
 #define US_IER_RXRDY (0x1u << 0) /**< \brief (US_IER) RXRDY Interrupt Enable */
 #define US_IER_TXRDY (0x1u << 1) /**< \brief (US_IER) TXRDY Interrupt Enable */
 #define US_IER_RXBRK (0x1u << 2) /**< \brief (US_IER) Receiver Break Interrupt Enable */
-#define US_IER_ENDRX (0x1u << 3) /**< \brief (US_IER) End of Receive Transfer Interrupt Enable */
-#define US_IER_ENDTX (0x1u << 4) /**< \brief (US_IER) End of Transmit Interrupt Enable */
+#define US_IER_ENDRX (0x1u << 3) /**< \brief (US_IER) End of Receive Transfer Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_ENDTX (0x1u << 4) /**< \brief (US_IER) End of Transmit Interrupt Enable (available in all USART modes of operation) */
 #define US_IER_OVRE (0x1u << 5) /**< \brief (US_IER) Overrun Error Interrupt Enable */
 #define US_IER_FRAME (0x1u << 6) /**< \brief (US_IER) Framing Error Interrupt Enable */
 #define US_IER_PARE (0x1u << 7) /**< \brief (US_IER) Parity Error Interrupt Enable */
 #define US_IER_TIMEOUT (0x1u << 8) /**< \brief (US_IER) Time-out Interrupt Enable */
 #define US_IER_TXEMPTY (0x1u << 9) /**< \brief (US_IER) TXEMPTY Interrupt Enable */
-#define US_IER_ITER (0x1u << 10) /**< \brief (US_IER) Max number of Repetitions Reached */
-#define US_IER_UNRE (0x1u << 10) /**< \brief (US_IER) SPI Underrun Error */
-#define US_IER_TXBUFE (0x1u << 11) /**< \brief (US_IER) Buffer Empty Interrupt Enable */
-#define US_IER_RXBUFF (0x1u << 12) /**< \brief (US_IER) Buffer Full Interrupt Enable */
+#define US_IER_ITER (0x1u << 10) /**< \brief (US_IER) Max number of Repetitions Reached Interrupt Enable */
+#define US_IER_TXBUFE (0x1u << 11) /**< \brief (US_IER) Buffer Empty Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_RXBUFF (0x1u << 12) /**< \brief (US_IER) Buffer Full Interrupt Enable (available in all USART modes of operation) */
 #define US_IER_NACK (0x1u << 13) /**< \brief (US_IER) Non AcknowledgeInterrupt Enable */
 #define US_IER_RIIC (0x1u << 16) /**< \brief (US_IER) Ring Indicator Input Change Enable */
 #define US_IER_DSRIC (0x1u << 17) /**< \brief (US_IER) Data Set Ready Input Change Enable */
 #define US_IER_DCDIC (0x1u << 18) /**< \brief (US_IER) Data Carrier Detect Input Change Interrupt Enable */
 #define US_IER_CTSIC (0x1u << 19) /**< \brief (US_IER) Clear to Send Input Change Interrupt Enable */
 #define US_IER_MANE (0x1u << 24) /**< \brief (US_IER) Manchester Error Interrupt Enable */
+#define US_IER_UNRE (0x1u << 10) /**< \brief (US_IER) SPI Underrun Error Interrupt Enable */
 /* -------- US_IDR : (USART Offset: 0x000C) Interrupt Disable Register -------- */
 #define US_IDR_RXRDY (0x1u << 0) /**< \brief (US_IDR) RXRDY Interrupt Disable */
 #define US_IDR_TXRDY (0x1u << 1) /**< \brief (US_IDR) TXRDY Interrupt Disable */
 #define US_IDR_RXBRK (0x1u << 2) /**< \brief (US_IDR) Receiver Break Interrupt Disable */
-#define US_IDR_ENDRX (0x1u << 3) /**< \brief (US_IDR) End of Receive Transfer Interrupt Disable */
-#define US_IDR_ENDTX (0x1u << 4) /**< \brief (US_IDR) End of Transmit Interrupt Disable */
-#define US_IDR_OVRE (0x1u << 5) /**< \brief (US_IDR) Overrun Error Interrupt Disable */
+#define US_IDR_ENDRX (0x1u << 3) /**< \brief (US_IDR) End of Receive Transfer Interrupt Disable (available in all USART modes of operation) */
+#define US_IDR_ENDTX (0x1u << 4) /**< \brief (US_IDR) End of Transmit Interrupt Disable (available in all USART modes of operation) */
+#define US_IDR_OVRE (0x1u << 5) /**< \brief (US_IDR) Overrun Error Interrupt Enable */
 #define US_IDR_FRAME (0x1u << 6) /**< \brief (US_IDR) Framing Error Interrupt Disable */
 #define US_IDR_PARE (0x1u << 7) /**< \brief (US_IDR) Parity Error Interrupt Disable */
 #define US_IDR_TIMEOUT (0x1u << 8) /**< \brief (US_IDR) Time-out Interrupt Disable */
 #define US_IDR_TXEMPTY (0x1u << 9) /**< \brief (US_IDR) TXEMPTY Interrupt Disable */
-#define US_IDR_ITER (0x1u << 10) /**< \brief (US_IDR) Max number of Repetitions Reached Disable */
-#define US_IDR_UNRE (0x1u << 10) /**< \brief (US_IDR) SPI Underrun Error Disable */
-#define US_IDR_TXBUFE (0x1u << 11) /**< \brief (US_IDR) Buffer Empty Interrupt Disable */
-#define US_IDR_RXBUFF (0x1u << 12) /**< \brief (US_IDR) Buffer Full Interrupt Disable */
+#define US_IDR_ITER (0x1u << 10) /**< \brief (US_IDR) Max number of Repetitions Reached Interrupt Disable */
+#define US_IDR_TXBUFE (0x1u << 11) /**< \brief (US_IDR) Buffer Empty Interrupt Disable (available in all USART modes of operation) */
+#define US_IDR_RXBUFF (0x1u << 12) /**< \brief (US_IDR) Buffer Full Interrupt Disable (available in all USART modes of operation) */
 #define US_IDR_NACK (0x1u << 13) /**< \brief (US_IDR) Non AcknowledgeInterrupt Disable */
 #define US_IDR_RIIC (0x1u << 16) /**< \brief (US_IDR) Ring Indicator Input Change Disable */
 #define US_IDR_DSRIC (0x1u << 17) /**< \brief (US_IDR) Data Set Ready Input Change Disable */
 #define US_IDR_DCDIC (0x1u << 18) /**< \brief (US_IDR) Data Carrier Detect Input Change Interrupt Disable */
 #define US_IDR_CTSIC (0x1u << 19) /**< \brief (US_IDR) Clear to Send Input Change Interrupt Disable */
 #define US_IDR_MANE (0x1u << 24) /**< \brief (US_IDR) Manchester Error Interrupt Disable */
+#define US_IDR_UNRE (0x1u << 10) /**< \brief (US_IDR) SPI Underrun Error Interrupt Disable */
 /* -------- US_IMR : (USART Offset: 0x0010) Interrupt Mask Register -------- */
 #define US_IMR_RXRDY (0x1u << 0) /**< \brief (US_IMR) RXRDY Interrupt Mask */
 #define US_IMR_TXRDY (0x1u << 1) /**< \brief (US_IMR) TXRDY Interrupt Mask */
 #define US_IMR_RXBRK (0x1u << 2) /**< \brief (US_IMR) Receiver Break Interrupt Mask */
-#define US_IMR_ENDRX (0x1u << 3) /**< \brief (US_IMR) End of Receive Transfer Interrupt Mask */
-#define US_IMR_ENDTX (0x1u << 4) /**< \brief (US_IMR) End of Transmit Interrupt Mask */
+#define US_IMR_ENDRX (0x1u << 3) /**< \brief (US_IMR) End of Receive Transfer Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_ENDTX (0x1u << 4) /**< \brief (US_IMR) End of Transmit Interrupt Mask (available in all USART modes of operation) */
 #define US_IMR_OVRE (0x1u << 5) /**< \brief (US_IMR) Overrun Error Interrupt Mask */
 #define US_IMR_FRAME (0x1u << 6) /**< \brief (US_IMR) Framing Error Interrupt Mask */
 #define US_IMR_PARE (0x1u << 7) /**< \brief (US_IMR) Parity Error Interrupt Mask */
 #define US_IMR_TIMEOUT (0x1u << 8) /**< \brief (US_IMR) Time-out Interrupt Mask */
 #define US_IMR_TXEMPTY (0x1u << 9) /**< \brief (US_IMR) TXEMPTY Interrupt Mask */
-#define US_IMR_ITER (0x1u << 10) /**< \brief (US_IMR) Max number of Repetitions Reached Mask */
-#define US_IMR_UNRE (0x1u << 10) /**< \brief (US_IMR) SPI Underrun Error Mask */
-#define US_IMR_TXBUFE (0x1u << 11) /**< \brief (US_IMR) Buffer Empty Interrupt Mask */
-#define US_IMR_RXBUFF (0x1u << 12) /**< \brief (US_IMR) Buffer Full Interrupt Mask */
+#define US_IMR_ITER (0x1u << 10) /**< \brief (US_IMR) Max number of Repetitions Reached Interrupt Mask */
+#define US_IMR_TXBUFE (0x1u << 11) /**< \brief (US_IMR) Buffer Empty Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_RXBUFF (0x1u << 12) /**< \brief (US_IMR) Buffer Full Interrupt Mask (available in all USART modes of operation) */
 #define US_IMR_NACK (0x1u << 13) /**< \brief (US_IMR) Non AcknowledgeInterrupt Mask */
 #define US_IMR_RIIC (0x1u << 16) /**< \brief (US_IMR) Ring Indicator Input Change Mask */
 #define US_IMR_DSRIC (0x1u << 17) /**< \brief (US_IMR) Data Set Ready Input Change Mask */
 #define US_IMR_DCDIC (0x1u << 18) /**< \brief (US_IMR) Data Carrier Detect Input Change Interrupt Mask */
 #define US_IMR_CTSIC (0x1u << 19) /**< \brief (US_IMR) Clear to Send Input Change Interrupt Mask */
 #define US_IMR_MANE (0x1u << 24) /**< \brief (US_IMR) Manchester Error Interrupt Mask */
+#define US_IMR_UNRE (0x1u << 10) /**< \brief (US_IMR) SPI Underrun Error Interrupt Mask */
 /* -------- US_CSR : (USART Offset: 0x0014) Channel Status Register -------- */
 #define US_CSR_RXRDY (0x1u << 0) /**< \brief (US_CSR) Receiver Ready */
 #define US_CSR_TXRDY (0x1u << 1) /**< \brief (US_CSR) Transmitter Ready */
@@ -241,7 +242,6 @@ typedef struct {
 #define US_CSR_TIMEOUT (0x1u << 8) /**< \brief (US_CSR) Receiver Time-out */
 #define US_CSR_TXEMPTY (0x1u << 9) /**< \brief (US_CSR) Transmitter Empty */
 #define US_CSR_ITER (0x1u << 10) /**< \brief (US_CSR) Max number of Repetitions Reached */
-#define US_CSR_UNRE (0x1u << 10) /**< \brief (US_CSR) SPI Underrun Error */
 #define US_CSR_TXBUFE (0x1u << 11) /**< \brief (US_CSR) Transmission Buffer Empty */
 #define US_CSR_RXBUFF (0x1u << 12) /**< \brief (US_CSR) Reception Buffer Full */
 #define US_CSR_NACK (0x1u << 13) /**< \brief (US_CSR) Non AcknowledgeInterrupt */
@@ -254,6 +254,7 @@ typedef struct {
 #define US_CSR_DCD (0x1u << 22) /**< \brief (US_CSR) Image of DCD Input */
 #define US_CSR_CTS (0x1u << 23) /**< \brief (US_CSR) Image of CTS Input */
 #define US_CSR_MANERR (0x1u << 24) /**< \brief (US_CSR) Manchester Error */
+#define US_CSR_UNRE (0x1u << 10) /**< \brief (US_CSR) Underrun Error */
 /* -------- US_RHR : (USART Offset: 0x0018) Receiver Holding Register -------- */
 #define US_RHR_RXCHR_Pos 0
 #define US_RHR_RXCHR_Msk (0x1ffu << US_RHR_RXCHR_Pos) /**< \brief (US_RHR) Received Character */
@@ -310,7 +311,7 @@ typedef struct {
 #define   US_MAN_RX_PP_ZERO_ONE (0x2u << 24) /**< \brief (US_MAN) The preamble is composed of '01's */
 #define   US_MAN_RX_PP_ONE_ZERO (0x3u << 24) /**< \brief (US_MAN) The preamble is composed of '10's */
 #define US_MAN_RX_MPOL (0x1u << 28) /**< \brief (US_MAN) Receiver Manchester Polarity */
-#define US_MAN_STUCKTO1 (0x1u << 29) /**< \brief (US_MAN)  */
+#define US_MAN_ONE (0x1u << 29) /**< \brief (US_MAN) Must Be Set to 1 */
 #define US_MAN_DRIFT (0x1u << 30) /**< \brief (US_MAN) Drift compensation */
 /* -------- US_WPMR : (USART Offset: 0xE4) Write Protect Mode Register -------- */
 #define US_WPMR_WPEN (0x1u << 0) /**< \brief (US_WPMR) Write Protect Enable */
@@ -323,9 +324,9 @@ typedef struct {
 #define US_WPSR_WPVSRC_Msk (0xffffu << US_WPSR_WPVSRC_Pos) /**< \brief (US_WPSR) Write Protect Violation Source */
 /* -------- US_VERSION : (USART Offset: 0xFC) Version Register -------- */
 #define US_VERSION_VERSION_Pos 0
-#define US_VERSION_VERSION_Msk (0xfffu << US_VERSION_VERSION_Pos) /**< \brief (US_VERSION)  */
+#define US_VERSION_VERSION_Msk (0xfffu << US_VERSION_VERSION_Pos) /**< \brief (US_VERSION) Harware Module Version */
 #define US_VERSION_MFN_Pos 16
-#define US_VERSION_MFN_Msk (0x7u << US_VERSION_MFN_Pos) /**< \brief (US_VERSION)  */
+#define US_VERSION_MFN_Msk (0x7u << US_VERSION_MFN_Pos) /**< \brief (US_VERSION) Metal Fix Number */
 /* -------- US_RPR : (USART Offset: 0x100) Receive Pointer Register -------- */
 #define US_RPR_RXPTR_Pos 0
 #define US_RPR_RXPTR_Msk (0xffffffffu << US_RPR_RXPTR_Pos) /**< \brief (US_RPR) Receive Pointer Register */

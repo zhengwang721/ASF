@@ -60,6 +60,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		'atsam3x8h',
 		'atsam4s16c',
 		'atsam4lc4c',
+		'atsam4sd32c',
 	]
 	linker_id = "sam.utils.linker_scripts"
 	compiler_config_group = "config.compiler.sam"
@@ -133,7 +134,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		# Only insert Stack size option if user wants to overwrite default value
 		option_set.add_option(
 			DualInsertionOption(
-				'IlinkExtraOptions', '--config_def __ICFEDIT_size_cstack__ =%s', '--config_def __ICFEDIT_size_heap__=%s', 'sys_stack_size','heap_size'
+				'IlinkExtraOptions', '--config_def __ICFEDIT_size_cstack__=%s', '--config_def __ICFEDIT_size_heap__=%s', 'sys_stack_size','heap_size'
 			)
 		)
 		option_set.add_option(

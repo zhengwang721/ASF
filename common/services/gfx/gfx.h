@@ -70,6 +70,10 @@ extern "C" {
 # include "gfx_ili9341_sdt028atft.h"
 # include "gfx_generic.h"
 # define CONF_GFX_USE_CLIPPING
+#elif defined(CONF_GFX_HX8347A_ET024006DHU_EBI)
+# include "gfx_hx8347a_et024006dhu_ebi.h"
+# include "gfx_generic.h"
+# define CONF_GFX_USE_CLIPPING
 #else
 #  error "Configuration for display controller/panel not selected"
 #endif

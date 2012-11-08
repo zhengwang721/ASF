@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.services.flash.unit_tests" caption="Set of unit tests for Flash service">
+	<module type="application" id="sam.services.flash.unit_tests" caption="Unit Tests for the SAM Flash Service">
 		<info type="description" value="summary">
 			Unit test application for the Flash service.
 		</info>
