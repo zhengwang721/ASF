@@ -36,7 +36,7 @@
 		</module>
 		
 		<!-- SAM3SD8 //-->
-		<module type="driver" id="sam.utils#1" caption="SAM3SD88 compiler driver">
+		<module type="driver" id="sam.utils#1" caption="SAM3SD8 compiler driver">
 			<info type="description" value="summary">
 			Compiler abstraction layer and code utilities for SAM3SD8 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 			</info>

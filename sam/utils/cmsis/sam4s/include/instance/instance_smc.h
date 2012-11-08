@@ -60,10 +60,6 @@
 #define REG_SMC_PULSE3          (0x400E0034U) /**< \brief (SMC) SMC Pulse Register (CS_number = 3) */
 #define REG_SMC_CYCLE3          (0x400E0038U) /**< \brief (SMC) SMC Cycle Register (CS_number = 3) */
 #define REG_SMC_MODE3           (0x400E003CU) /**< \brief (SMC) SMC Mode Register (CS_number = 3) */
-#define REG_SMC_SETUP4          (0x400E0040U) /**< \brief (SMC) SMC Setup Register (CS_number = 4) */
-#define REG_SMC_PULSE4          (0x400E0044U) /**< \brief (SMC) SMC Pulse Register (CS_number = 4) */
-#define REG_SMC_CYCLE4          (0x400E0048U) /**< \brief (SMC) SMC Cycle Register (CS_number = 4) */
-#define REG_SMC_MODE4           (0x400E004CU) /**< \brief (SMC) SMC Mode Register (CS_number = 4) */
 #define REG_SMC_OCMS            (0x400E0080U) /**< \brief (SMC) SMC OCMS MODE Register */
 #define REG_SMC_KEY1            (0x400E0084U) /**< \brief (SMC) SMC OCMS KEY1 Register */
 #define REG_SMC_KEY2            (0x400E0088U) /**< \brief (SMC) SMC OCMS KEY2 Register */
@@ -86,10 +82,6 @@
 #define REG_SMC_PULSE3 (*(RwReg*)0x400E0034U) /**< \brief (SMC) SMC Pulse Register (CS_number = 3) */
 #define REG_SMC_CYCLE3 (*(RwReg*)0x400E0038U) /**< \brief (SMC) SMC Cycle Register (CS_number = 3) */
 #define REG_SMC_MODE3  (*(RwReg*)0x400E003CU) /**< \brief (SMC) SMC Mode Register (CS_number = 3) */
-#define REG_SMC_SETUP4 (*(RwReg*)0x400E0040U) /**< \brief (SMC) SMC Setup Register (CS_number = 4) */
-#define REG_SMC_PULSE4 (*(RwReg*)0x400E0044U) /**< \brief (SMC) SMC Pulse Register (CS_number = 4) */
-#define REG_SMC_CYCLE4 (*(RwReg*)0x400E0048U) /**< \brief (SMC) SMC Cycle Register (CS_number = 4) */
-#define REG_SMC_MODE4  (*(RwReg*)0x400E004CU) /**< \brief (SMC) SMC Mode Register (CS_number = 4) */
 #define REG_SMC_OCMS   (*(RwReg*)0x400E0080U) /**< \brief (SMC) SMC OCMS MODE Register */
 #define REG_SMC_KEY1   (*(WoReg*)0x400E0084U) /**< \brief (SMC) SMC OCMS KEY1 Register */
 #define REG_SMC_KEY2   (*(WoReg*)0x400E0088U) /**< \brief (SMC) SMC OCMS KEY2 Register */

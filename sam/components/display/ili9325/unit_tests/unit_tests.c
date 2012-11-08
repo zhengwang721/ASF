@@ -66,6 +66,8 @@
  * This example has been tested with the following setup:
  * - sam3s4c_sam3s_ek
  * - sam3sd8c_sam3s_ek2
+ * - sam4s16c_sam4s_ek
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -280,10 +282,14 @@ int main(void)
 			| SMC_PULSE_NCS_RD_PULSE(10));
 	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
 			| SMC_CYCLE_NRD_CYCLE(22));
+#if !defined(SAM4S)
 	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
 			| SMC_MODE_WRITE_MODE
 			| SMC_MODE_DBW_8_BIT);
-
+#else
+	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
+			| SMC_MODE_WRITE_MODE);
+#endif
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(ili9325_test_init, NULL, run_test_init, NULL,
 			"ili9325 initialization test");

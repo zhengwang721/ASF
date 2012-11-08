@@ -57,10 +57,10 @@ typedef struct {
   RwReg         SMC_MODE;         /**< \brief (SmcCs_number Offset: 0xC) SMC Mode Register */
 } SmcCs_number;
 /** \brief Smc hardware registers */
-#define SMCCS_NUMBER_NUMBER 5
+#define SMCCS_NUMBER_NUMBER 4
 typedef struct {
-  SmcCs_number  SMC_CS_NUMBER[SMCCS_NUMBER_NUMBER]; /**< \brief (Smc Offset: 0x0) CS_number = 0 .. 4 */
-  RoReg         Reserved1[12];
+  SmcCs_number  SMC_CS_NUMBER[SMCCS_NUMBER_NUMBER]; /**< \brief (Smc Offset: 0x0) CS_number = 0 .. 3 */
+  RoReg         Reserved1[16];
   RwReg         SMC_OCMS;         /**< \brief (Smc Offset: 0x80) SMC OCMS MODE Register */
   WoReg         SMC_KEY1;         /**< \brief (Smc Offset: 0x84) SMC OCMS KEY1 Register */
   WoReg         SMC_KEY2;         /**< \brief (Smc Offset: 0x88) SMC OCMS KEY2 Register */
@@ -110,11 +110,6 @@ typedef struct {
 #define   SMC_MODE_EXNW_MODE_DISABLED (0x0u << 4) /**< \brief (SMC_MODE) Disabled */
 #define   SMC_MODE_EXNW_MODE_FROZEN (0x2u << 4) /**< \brief (SMC_MODE) Frozen Mode */
 #define   SMC_MODE_EXNW_MODE_READY (0x3u << 4) /**< \brief (SMC_MODE) Ready Mode */
-#define SMC_MODE_DBW_Pos 12
-#define SMC_MODE_DBW_Msk (0x3u << SMC_MODE_DBW_Pos) /**< \brief (SMC_MODE) Data Bus Width */
-#define   SMC_MODE_DBW_8_BIT (0x0u << 12) /**< \brief (SMC_MODE) 8-bit bus */
-#define   SMC_MODE_DBW_16_BIT (0x1u << 12) /**< \brief (SMC_MODE) 16-bit bus */
-#define   SMC_MODE_DBW_32_BIT (0x2u << 12) /**< \brief (SMC_MODE) 32-bit bus */
 #define SMC_MODE_TDF_CYCLES_Pos 16
 #define SMC_MODE_TDF_CYCLES_Msk (0xfu << SMC_MODE_TDF_CYCLES_Pos) /**< \brief (SMC_MODE) Data Float Time */
 #define SMC_MODE_TDF_CYCLES(value) ((SMC_MODE_TDF_CYCLES_Msk & ((value) << SMC_MODE_TDF_CYCLES_Pos)))

@@ -3,7 +3,7 @@
  *
  * \brief CRCCU example configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,12 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#define FLASH_BUFFER_SIZE	IFLASH_PAGE_SIZE
+#define IFLASH_ADDR             IFLASH0_ADDR
+#define FLASH_BUFFER_SIZE       IFLASH_PAGE_SIZE
+#define IFLASH_PAGE_SIZE        IFLASH0_PAGE_SIZE
+#define IFLASH_LOCK_REGION_SIZE IFLASH0_LOCK_REGION_SIZE
+#define IFLASH_NB_OF_PAGES      IFLASH0_NB_OF_PAGES
+#define IFLASH_NB_OF_LOCK_BITS  IFLASH0_NB_OF_LOCK_BITS
 
 /// @cond 0
 /**INDENT-OFF**/

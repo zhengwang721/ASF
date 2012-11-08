@@ -63,34 +63,6 @@
 
 /**
  * \internal
- * \brief Helper function to wait for the last send operation to complete
- */
-__always_inline static void ili9341_wait_for_send_done(void)
-{
-#if defined(CONF_ILI9341_USART_SPI)
-	/* Wait for TX to complete */
-	while (!usart_tx_is_complete(CONF_ILI9341_USART_SPI)) {
-		/* Do nothing */
-	}
-	/* Clear the TX complete flag */
-	usart_clear_tx_complete(CONF_ILI9341_USART_SPI);
-#elif defined(CONF_ILI9341_SPI)
-#  if XMEGA
-	/* Wait for TX to complete */
-	while (!spi_is_tx_ok(CONF_ILI9341_SPI)) {
-		/* Do nothing */
-	}
-#  else
-	/* Wait for TX to complete */
-	while (!spi_is_tx_empty(CONF_ILI9341_SPI)) {
-		/* Do nothing */
-	}
-#  endif
-#endif
-}
-
-/**
- * \internal
  * \brief Helper function to select the CS of the controller on the bus
  */
 __always_inline static void ili9341_select_chip(void)
@@ -127,6 +99,31 @@ __always_inline static void ili9341_select_data_mode(void)
 
 /**
  * \internal
+ * \brief Helper function to wait for the last send operation to complete
+ */
+__always_inline static void ili9341_wait_for_send_done(void)
+{
+#if defined(CONF_ILI9341_USART_SPI)
+#  if XMEGA
+	while (!usart_tx_is_complete(CONF_ILI9341_USART_SPI)) {
+		/* Do nothing */
+	}
+#  else
+	/* Wait for TX to complete */
+	while (!usart_spi_is_tx_empty(CONF_ILI9341_USART_SPI)) {
+		/* Do nothing */
+	}
+#  endif
+#elif defined(CONF_ILI9341_SPI)
+	/* Wait for TX to complete */
+	while (!spi_is_tx_empty(CONF_ILI9341_SPI)) {
+		/* Do nothing */
+	}
+#endif
+}
+
+/**
+ * \internal
  * \brief Helper function to send a byte over an arbitrary interface
  *
  * This function is used to hide what interface is used by the component
@@ -139,25 +136,16 @@ __always_inline static void ili9341_send_byte(uint8_t data)
 {
 #if defined(CONF_ILI9341_USART_SPI)
 #  if XMEGA
-	irqflags_t flags;
-
-	/* Wait for data register to be empty if send is in progress */
 	while (!usart_data_register_is_empty(CONF_ILI9341_USART_SPI)) {
 		/* Do nothing */
 	}
 
-	/* Disable interrupts to avoid too much time between sending new byte
-	 * and clearing TX complete flag.
-	 */
-	flags = cpu_irq_save();
-	usart_spi_write_single(CONF_ILI9341_USART_SPI, data);
-	/* Clear the TX complete flag */
+	irqflags_t flags = cpu_irq_save();
 	usart_clear_tx_complete(CONF_ILI9341_USART_SPI);
+	usart_put(CONF_ILI9341_USART_SPI, data);
 	cpu_irq_restore(flags);
 #  else
-	/* This function could also be used for XMEGA but results in a very slow
-	 * framerate, hence a workaround has been implemented for the XMEGA */
-	usart_spi_write_packet(CONF_ILI9341_USART_SPI, &data, 1);
+	usart_spi_write_single(CONF_ILI9341_USART_SPI, data);
 #  endif
 #elif defined(CONF_ILI9341_SPI)
 	/* Wait for any previously running send data */
@@ -180,25 +168,22 @@ __always_inline static void ili9341_send_byte(uint8_t data)
 __always_inline static uint8_t ili9341_read_byte(void)
 {
 	uint8_t data;
+
 #if defined(CONF_ILI9341_USART_SPI)
 #  if XMEGA
 	/* Workaround for clearing the RXCIF for XMEGA */
 	usart_rx_enable(CONF_ILI9341_USART_SPI);
 
-	usart_spi_write_single(CONF_ILI9341_USART_SPI, 0xFF);
-
-	/* Wait for RX to complete */
+	usart_put(CONF_ILI9341_USART_SPI, 0xFF);
 	while (!usart_rx_is_complete(CONF_ILI9341_USART_SPI)) {
 		/* Do nothing */
 	}
-	usart_spi_read_single(CONF_ILI9341_USART_SPI, &data);
+	data = usart_get(CONF_ILI9341_USART_SPI);
 
 	/* Workaround for clearing the RXCIF for XMEGA */
 	usart_rx_disable(CONF_ILI9341_USART_SPI);
 #  else
-	/* This function could also be used for XMEGA but results in a very slow
-	 * framerate, hence a workaround has been implemented for the XMEGA */
-	usart_spi_read_packet(CONF_ILI9341_USART_SPI, &data, 1);
+	usart_spi_read_single(CONF_ILI9341_USART_SPI, &data);
 #  endif
 #elif defined(CONF_ILI9341_SPI)
 	spi_write_single(CONF_ILI9341_SPI, 0xFF);
@@ -212,6 +197,7 @@ __always_inline static uint8_t ili9341_read_byte(void)
 
 	spi_read_single(CONF_ILI9341_SPI, &data);
 #endif
+
 	return data;
 }
 
@@ -246,7 +232,7 @@ static ili9341_coord_t limit_end_x, limit_end_y;
  *
  * \param send_end_limits  True to also send the lower-right drawing limits
  */
-static inline void ili9341_send_draw_limits(const bool send_end_limits)
+static void ili9341_send_draw_limits(const bool send_end_limits)
 {
 	ili9341_send_command(ILI9341_CMD_COLUMN_ADDRESS_SET);
 	ili9341_send_byte(limit_start_x >> 8);
@@ -450,7 +436,7 @@ void ili9341_copy_pixels_to_screen(const ili9341_color_t *pixels, uint32_t count
 
 	ili9341_wait_for_send_done();
 	ili9341_deselect_chip();
-	
+
 #  if SAM
 	pdc_disable_transfer(SPI_DMA, PERIPH_PTCR_TXTEN);
 #  elif UC3
@@ -642,38 +628,41 @@ void ili9341_copy_pixels_from_screen(ili9341_color_t *pixels, uint32_t count)
  */
 static void ili9341_interface_init(void)
 {
-#if defined(CONF_ILI9341_USART_SPI) | defined(CONF_ILI9341_SPI)
+#if defined(CONF_ILI9341_USART_SPI) || defined(CONF_ILI9341_SPI)
 	spi_flags_t spi_flags = SPI_MODE_0;
 	board_spi_select_id_t spi_select_id = 0;
 #else
 	#error Interface for ILI9341 has not been selected or interface not\
 	supported, please configure component driver using the conf_ili9341.h\
-        file!
-#endif
-
-#if UC3 && defined(ILI9341_DMA_ENABLED)
-	sysclk_enable_peripheral_clock(&AVR32_PDCA);
+	file!
 #endif
 
 #if defined(CONF_ILI9341_USART_SPI)
 	struct usart_spi_device device = {
 		.id = 0,
 	};
+
 	usart_spi_init(CONF_ILI9341_USART_SPI);
 	usart_spi_setup_device(CONF_ILI9341_USART_SPI, &device, spi_flags,
 			CONF_ILI9341_CLOCK_SPEED, spi_select_id);
+
 #elif defined(CONF_ILI9341_SPI)
 	struct spi_device device = {
 		.id = 0,
 	};
+
 	spi_master_init(CONF_ILI9341_SPI);
 	spi_master_setup_device(CONF_ILI9341_SPI, &device, spi_flags,
 			CONF_ILI9341_CLOCK_SPEED, spi_select_id);
 	spi_enable(CONF_ILI9341_SPI);
 
-#if UC3
+#  if UC3
 	spi_set_chipselect(CONF_ILI9341_SPI, ~(1 << 0));
-#endif
+
+#    if defined(ILI9341_DMA_ENABLED)
+	sysclk_enable_peripheral_clock(&AVR32_PDCA);
+#    endif
+#  endif
 
 	/* Send one dummy byte for the spi_is_tx_ok() to work as expected */
 	spi_write_single(CONF_ILI9341_SPI, 0);

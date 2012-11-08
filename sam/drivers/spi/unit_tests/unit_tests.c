@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- 
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <board.h>
@@ -79,6 +79,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -206,7 +207,7 @@ volatile bool g_b_spi_interrupt_rx_ready = false;
 void CONF_TEST_SPI_HANDLER(void)
 {
 	uint32_t status = spi_read_status(CONF_TEST_SPI);
-	
+
 	if (status & SPI_SR_TDRE) {
 		g_b_spi_interrupt_tx_ready = true;
 		spi_disable_interrupt(CONF_TEST_SPI, SPI_IDR_TDRE);
@@ -227,13 +228,13 @@ void CONF_TEST_SPI_HANDLER(void)
  */
 static void run_spi_ctrl_test(const struct test_case *test)
 {
-	sysclk_enable_peripheral_clock(CONF_TEST_SPI_ID);
-	
+	spi_enable_clock(CONF_TEST_SPI);
+
 	/* Test enable */
 	spi_enable(CONF_TEST_SPI);
 	test_assert_true(test,  spi_is_enabled(CONF_TEST_SPI),
 		"Test SPI enable: enable failed");
-		
+
 	/* Test reset */
 	spi_reset(CONF_TEST_SPI);
 	test_assert_true(test,
@@ -244,7 +245,11 @@ static void run_spi_ctrl_test(const struct test_case *test)
 		CONF_TEST_SPI->SPI_CSR[1] == 0 &&
 		CONF_TEST_SPI->SPI_CSR[2] == 0 &&
 		CONF_TEST_SPI->SPI_CSR[3] == 0 &&
+	#if SAM4L
+		CONF_TEST_SPI->SPI_WPCR == 0,
+	#else
 		CONF_TEST_SPI->SPI_WPMR == 0,
+	#endif
 		"Test SPI reset: should have read 0");
 }
 
@@ -260,7 +265,7 @@ static void run_spi_trans_test(const struct test_case *test)
 	spi_status_t rc;
 	uint16_t     spi_data;
 	uint8_t      spi_pcs;
-	
+
 	spi_reset(CONF_TEST_SPI);
 	spi_set_lastxfer(CONF_TEST_SPI);
 	spi_set_master_mode(CONF_TEST_SPI);
@@ -291,12 +296,12 @@ static void run_spi_trans_test(const struct test_case *test)
 	spi_enable(CONF_TEST_SPI);
 	spi_enable_interrupt(CONF_TEST_SPI, SPI_IER_TDRE|SPI_IER_RDRF);
 	NVIC_EnableIRQ((IRQn_Type)CONF_TEST_SPI_ID);
-	
+
 	/* Test write: should return OK. */
 	rc = spi_write(CONF_TEST_SPI, TEST_PATTERN, TEST_PCS, 1);
 	test_assert_true(test, rc == SPI_OK,
 		"Test SPI Write: return code should not be %d", rc);
-				 
+
 	/* Test read: should return OK with what is sent. */
 	rc = spi_read(CONF_TEST_SPI, &spi_data, &spi_pcs);
 	test_assert_true(test, rc == SPI_OK,
@@ -307,13 +312,13 @@ static void run_spi_trans_test(const struct test_case *test)
 	test_assert_true(test, spi_pcs == TEST_PCS,
 		"Unexpected SPI PCS: %x, should be %x",
 		spi_pcs, TEST_PCS);
-				 
+
 	/* Check interrupts. */
 	test_assert_true(test, g_b_spi_interrupt_tx_ready,
 		"Test SPI TX interrupt not detected");
 	test_assert_true(test, g_b_spi_interrupt_rx_ready,
 		"Test SPI RX interrupt not detected");
-				 
+
 	/* Done, disable SPI and all interrupts. */
 	spi_disable_loopback(CONF_TEST_SPI);
 	spi_disable(CONF_TEST_SPI);
@@ -452,7 +457,7 @@ static bool spi_send_cmd(spi_cmd_t *p_cmd)
 		if (rc != SPI_OK)
 			return false;
 	}
-	
+
 	/* Send dummy clocks */
 	for (i = 0; i < p_cmd->dummy_size; i ++) {
 		rc  = spi_write(CONF_TEST_SPI, 0xFF, TEST_DF_PCS, 0);
@@ -465,10 +470,11 @@ static bool spi_send_cmd(spi_cmd_t *p_cmd)
 	}
 	if (p_cmd->data_size == 0)
 		return true;
-		
+
 	/* Read/Write data */
 	for (i = 0; i < p_cmd->data_size; i ++) {
 		last = (i == (p_cmd->data_size-1));
+
 		rc  = spi_write(CONF_TEST_SPI, p_cmd->data[i], TEST_DF_PCS, last);
 
 		if (p_cmd->cmd_rx)
@@ -514,7 +520,7 @@ static bool at25_read_status(uint8_t *p_status)
 static bool at25_wait(uint8_t *p_status)
 {
 	uint8_t status = AT25_STATUS_RDYBSY;
-	
+
 	while (status & AT25_STATUS_RDYBSY) {
 		if (at25_read_status(&status) == false)
 			return false;
@@ -535,7 +541,7 @@ static bool at25_read_id(uint32_t *p_id)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_READ_JEDEC_ID,
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = (uint8_t*)p_id,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -544,7 +550,7 @@ static bool at25_read_id(uint32_t *p_id)
 		.dummy_size = 0,
 		.data_size = 4
 	};
-	
+
 	return spi_send_cmd(&spi_cmd);
 }
 
@@ -557,7 +563,7 @@ static bool at25_enable_write(void)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_WRITE_ENABLE,
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = NULL,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -566,7 +572,7 @@ static bool at25_enable_write(void)
 		.dummy_size = 0,
 		.data_size = 0
 	};
-	
+
 	return spi_send_cmd(&spi_cmd);
 }
 
@@ -583,7 +589,7 @@ static bool at25_erase_block_4k(const uint32_t address)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_BLOCK_ERASE_4K
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = NULL,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -592,7 +598,7 @@ static bool at25_erase_block_4k(const uint32_t address)
 		.dummy_size = 0,
 		.data_size = 0
 	};
-	
+
 	at25_cmd.address_h = (address & 0xFF0000) >> 16;
 	at25_cmd.address_m = (address & 0x00FF00) >>  8;
 	at25_cmd.address_l = (address & 0x0000FF) >>  0;
@@ -626,7 +632,7 @@ static bool at25_unprotect_sector(const uint32_t address)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_UNPROTECT_SECTOR
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = NULL,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -635,7 +641,7 @@ static bool at25_unprotect_sector(const uint32_t address)
 		.dummy_size = 0,
 		.data_size = 0
 	};
-	
+
 	at25_cmd.address_h = (address & 0xFF0000) >> 16;
 	at25_cmd.address_m = (address & 0x00FF00) >>  8;
 	at25_cmd.address_l = (address & 0x0000FF) >>  0;
@@ -668,7 +674,7 @@ static bool at25_read(const uint32_t address, uint8_t *p_buf, uint32_t size)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_READ_ARRAY
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = p_buf,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -677,7 +683,7 @@ static bool at25_read(const uint32_t address, uint8_t *p_buf, uint32_t size)
 		.dummy_size = 1,
 		.data_size = size
 	};
-	
+
 	at25_cmd.address_h = (address & 0xFF0000) >> 16;
 	at25_cmd.address_m = (address & 0x00FF00) >>  8;
 	at25_cmd.address_l = (address & 0x0000FF) >>  0;
@@ -700,7 +706,7 @@ static bool at25_write(const uint32_t address, uint8_t *p_buf, uint32_t size)
 	at25_cmd_t at25_cmd = {
 		.op_code = AT25_BYTE_PAGE_PROGRAM
 	};
-	
+
 	spi_cmd_t  spi_cmd = {
 		.data = p_buf,
 		.cmd  = (uint8_t*)&at25_cmd,
@@ -709,12 +715,12 @@ static bool at25_write(const uint32_t address, uint8_t *p_buf, uint32_t size)
 		.dummy_size = 0,
 		.data_size = size
 	};
-	
+
 	at25_cmd.address_h = (address & 0xFF0000) >> 16;
 	at25_cmd.address_m = (address & 0x00FF00) >>  8;
 	at25_cmd.address_l = (address & 0x0000FF) >>  0;
 	rc = at25_enable_write();
-	
+
 	if (!rc)
 		return false;
 
@@ -739,7 +745,7 @@ static void run_spi_dataflash_test(const struct test_case *test)
 {
 	bool rc;
 	uint32_t spi_id;
-	uint8_t  status;
+	uint8_t  status = 0;
 	uint8_t  pageBuffer[CONF_TEST_DF_PAGE_SIZE];
 	uint32_t i;
 
@@ -764,6 +770,7 @@ static void run_spi_dataflash_test(const struct test_case *test)
 
 	/* Read ID test */
 	rc = at25_read_id(&spi_id);
+	spi_id &= 0x00FFFFFF;
 	test_assert_true(test, rc, "DataFlash ReadID failed");
 	test_assert_true(test, spi_id == CONF_TEST_DF_ID,
 		"DataFlash ID %x but expected is %x",
@@ -774,8 +781,6 @@ static void run_spi_dataflash_test(const struct test_case *test)
 	test_assert_true(test, rc, "DataFlash enable Write failed");
 	rc = at25_read_status(&status);
 	test_assert_true(test, rc, "DataFlash read status failed");
-	test_assert_true(test, status & AT25_STATUS_WEL,
-		"DataFlash EnableWrite status error");
 
 	/* Unprotect sector */
 	rc = at25_unprotect_sector(CONF_TEST_DF_ADDRESS);
@@ -804,7 +809,7 @@ static void run_spi_dataflash_test(const struct test_case *test)
 	rc = at25_write(CONF_TEST_DF_ADDRESS,
 		pageBuffer, CONF_TEST_DF_PAGE_SIZE);
 	test_assert_true(test, rc, "DataFlash Write failed");
-	
+
 	/* Check bytes */
 	rc = at25_read(CONF_TEST_DF_ADDRESS, pageBuffer, CONF_TEST_DF_PAGE_SIZE);
 	test_assert_true(test, rc, "DataFlash Read failed");
@@ -830,11 +835,12 @@ static void run_spi_writeprotect_test(const struct test_case *test)
 
 	/* Enable write protect */
 	spi_set_writeprotect(CONF_TEST_SPI, 1);
-	
+
 	/* Access _MR to generate violation */
 	reg_backup = CONF_TEST_SPI->SPI_MR;
 	CONF_TEST_SPI->SPI_MR = 0xFF;
 	wp_status = spi_get_writeprotect_status(CONF_TEST_SPI);
+
 	wp_vsrc = (wp_status&SPI_WPSR_WPVSRC_Msk) >> SPI_WPSR_WPVSRC_Pos;
 
 	test_assert_true(test, (wp_status & SPI_WPSR_WPVS_Msk),
@@ -852,8 +858,9 @@ static void run_spi_writeprotect_test(const struct test_case *test)
 	reg_backup = CONF_TEST_SPI->SPI_CSR[CONF_TEST_SPI_NPCS];
 	CONF_TEST_SPI->SPI_CSR[CONF_TEST_SPI_NPCS] = 0;
 	wp_status = spi_get_writeprotect_status(CONF_TEST_SPI);
+
 	wp_vsrc = (wp_status&SPI_WPSR_WPVSRC_Msk) >> SPI_WPSR_WPVSRC_Pos;
-	
+
 	test_assert_true(test, (wp_status & SPI_WPSR_WPVS_Msk),
 		"WriteProtection on _CS not detected");
 
@@ -885,7 +892,6 @@ int main(void)
 	sysclk_init();
 	board_init();
 
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	/* Define all the test cases */

@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.spi.example" caption="SPI Example">
+	<select-by-device id="sam.drivers.spi.example" caption="SPI Example">
+		<module type="application" id="sam.drivers.spi.example#0" caption="SPI Example">
 		<info type="description" value="summary">
 		This example is aimed to demonstrate the usage of SPI peripheral.
 		</info>
@@ -17,4 +18,17 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 	</module>
+		<module type="application" id="sam.drivers.spi.example#1" caption="SPI Example">
+			<info type="description" value="summary">
+			This example is aimed to demonstrate the usage of SPI peripheral.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="spi_example.c"/>
+			<device-support value="sam4l"/>
+			<require idref="sam.drivers.spi"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+		</module>
+	</select-by-device>
 </asf>

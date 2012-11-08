@@ -3,7 +3,7 @@
  *
  * \brief Timer Counter (TC) driver for SAM.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,43 +54,52 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-void tc_init(Tc * p_tc, uint32_t ul_Channel, uint32_t ul_Mode);
-uint32_t tc_init_quad_dec(Tc * p_tc, uint32_t ul_blockmode);
+void tc_init(Tc *p_tc, uint32_t ul_Channel, uint32_t ul_Mode);
+void tc_sync_trigger(Tc *p_tc);
+void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode);
 
-#if (SAM3S || SAM3N || SAM3XA || SAM4S)
-uint32_t tc_init_2bit_gray(Tc * p_tc, uint32_t ul_channel,
+#if (!SAM3U)
+uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_steppermode);
 #endif
 
-void tc_start(Tc * tc, uint32_t ul_channel);
-void tc_stop(Tc * tc, uint32_t ul_channel);
+void tc_start(Tc *p_tc, uint32_t ul_channel);
+void tc_stop(Tc *p_tc, uint32_t ul_channel);
 
-int tc_read_ra(Tc * p_tc, uint32_t ul_channel);
-int tc_read_rb(Tc * p_tc, uint32_t ul_channel);
-int tc_read_rc(Tc * p_tc, uint32_t ul_channel);
+int tc_read_ra(Tc *p_tc, uint32_t ul_channel);
+int tc_read_rb(Tc *p_tc, uint32_t ul_channel);
+int tc_read_rc(Tc *p_tc, uint32_t ul_channel);
 
-void tc_write_ra(Tc * p_tc, uint32_t ul_channel,
+void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);
-void tc_write_rb(Tc * p_tc, uint32_t ul_channel,
+void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);
-void tc_write_rc(Tc * p_tc, uint32_t ul_channel,
+void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);
 
 uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
-		uint32_t * p_uldiv, uint32_t * ul_tcclks, uint32_t ul_boardmck);
-void tc_enable_interrupt(Tc * tc, uint32_t ul_channel,
+		uint32_t *p_uldiv, uint32_t *ul_tcclks, uint32_t ul_boardmck);
+void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_sources);
-void tc_disable_interrupt(Tc * tc, uint32_t ul_channel,
+void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_sources);
-uint32_t tc_get_interrupt_mask(Tc * tc, uint32_t ul_channel);
-uint32_t tc_get_status(Tc * tc, uint32_t ul_channel);
-void tc_enable_qdec_interrupt(Tc * tc, uint32_t ul_sources);
-void tc_disable_qdec_interrupt(Tc * tc, uint32_t ul_sources);
-uint32_t tc_get_qdec_interrupt_mask(Tc * tc);
-uint32_t tc_get_qdec_interrupt_status(Tc * tc);
+uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel);
+uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel);
+#if (!SAM4L)
+void tc_enable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources);
+void tc_disable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources);
+uint32_t tc_get_qdec_interrupt_mask(Tc *p_tc);
+uint32_t tc_get_qdec_interrupt_status(Tc *p_tc);
+#endif
 
-#if (SAM3S || SAM3N || SAM3XA || SAM4S)
-void tc_set_writeprotect(Tc * tc, uint32_t ul_enable);
+#if (!SAM3U)
+void tc_set_writeprotect(Tc *p_tc, uint32_t ul_enable);
+#endif
+
+#if SAM4L
+uint32_t tc_get_feature(Tc *p_tc);
+uint32_t tc_get_version(Tc *p_tc);
+
 #endif
 
 /// @cond 0

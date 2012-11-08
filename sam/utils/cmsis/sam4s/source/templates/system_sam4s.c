@@ -73,7 +73,10 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 void SystemInit(void)
 {
 	/* Set FWS according to SYS_BOARD_MCKR configuration */
-	EFC->EEFC_FMR = EEFC_FMR_FWS(4);
+	EFC0->EEFC_FMR = EEFC_FMR_FWS(5);
+#if defined(ID_EFC1)
+	EFC1->EEFC_FMR = EEFC_FMR_FWS(5);
+#endif
 
 	/* Initialize main oscillator */
 	if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL)) {
@@ -192,17 +195,41 @@ void SystemCoreClockUpdate(void)
 void system_init_flash(uint32_t ul_clk)
 {
 	/* Set FWS for embedded Flash access according to operating frequency */
+#if !defined(ID_EFC1)
 	if (ul_clk < CHIP_FREQ_FWS_0) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(0);
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(0);
 	} else if (ul_clk < CHIP_FREQ_FWS_1) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(1);
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(1);
 	} else if (ul_clk < CHIP_FREQ_FWS_2) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(2);
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(2);
 	} else if (ul_clk < CHIP_FREQ_FWS_3) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(3);
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(3);
+	} else if (ul_clk < CHIP_FREQ_FWS_4) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(4);
 	} else {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(4);
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(5);
 	}
+#else
+	if (ul_clk < CHIP_FREQ_FWS_0) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(0);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(0);
+	} else if (ul_clk < CHIP_FREQ_FWS_1) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(1);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(1);
+	} else if (ul_clk < CHIP_FREQ_FWS_2) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(2);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(2);
+	} else if (ul_clk < CHIP_FREQ_FWS_3) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(3);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(3);
+	} else if (ul_clk < CHIP_FREQ_FWS_4) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(4);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(4);
+	} else {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(5);
+		EFC1->EEFC_FMR = EEFC_FMR_FWS(5);
+	}
+#endif
 }
 
 /* @cond 0 */

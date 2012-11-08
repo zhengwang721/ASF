@@ -3,7 +3,7 @@
  *
  * \brief This file contains the interface for default exception handlers.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

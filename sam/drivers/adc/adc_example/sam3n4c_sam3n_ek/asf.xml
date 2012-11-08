@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="ADC example for SAM3N_EK" id="sam.drivers.adc.adc_example.sam3n_ek">
 		<info type="description" value="summary">
-		Switch between various system clock sources and prescalers at run time.
+		This example will demonstrates how to configure ADC peripheral with several modes.
 		</info>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<build type="include-path" value="."/>

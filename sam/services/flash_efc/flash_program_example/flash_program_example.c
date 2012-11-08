@@ -47,7 +47,7 @@
  * \section Purpose
  *
  * This basic example shows how to use the Flash service available on the Atmel SAM
- * microcontrollers. It details steps required to program the internal flash, and manage secure 
+ * microcontrollers. It details steps required to program the internal flash, and manage secure
  * and lock bits.
  *
  * \section Requirements
@@ -110,7 +110,7 @@
  *     -I- Setting security bit
  *     -I- All tests done
  * \endcode
- * 
+ *
  */
 
 #include "asf.h"
@@ -133,7 +133,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -171,7 +171,7 @@ int main(void)
 	}
 
 	/* Unlock page */
-	printf("-I- Unlocking last page\n\r");
+	printf("-I- Unlocking last page: 0x%08x\r\n", ul_last_page_addr);
 	ul_rc = flash_unlock(ul_last_page_addr,
 			ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
 	if (ul_rc != FLASH_RC_OK) {
@@ -186,9 +186,9 @@ int main(void)
 	}
 
 #if SAM4S
-	/* For SAM4S, the EWP command is not supported, the pages requires
-	   erased first. */
-	ul_rc = flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_4);
+	/* For SAM4S, the EWP command is not supported, so an erase command is
+       requried before any write operation. */
+	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
 		printf("-F- Flash programming error %lu\n\r", (UL)ul_rc);
 		return 0;

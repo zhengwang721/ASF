@@ -83,6 +83,7 @@ extern "C" {
 /* (SCR) Sleep deep bit */
 #define SCR_SLEEPDEEP   (0x1 <<  2)
 
+
 /**
  * Save clock settings and shutdown PLLs
  */
@@ -178,6 +179,12 @@ static inline void pmc_sleep(int sleep_mode)
 	switch (sleep_mode) {
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
+#if SAM4S
+		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
+		cpu_irq_enable();
+		__WFI();
+		break;
+#else
 		PMC->PMC_FSMR &= (uint32_t)~PMC_FSMR_LPM;
 		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
 		cpu_irq_enable();
@@ -186,15 +193,14 @@ static inline void pmc_sleep(int sleep_mode)
 		else
 			__WFE();
 		break;
-
+#endif
 	case SAM_PM_SMODE_WAIT: {
 		uint32_t mor, pllr0, pllr1, mckr;
 		pmc_save_clock_settings(&mor, &pllr0, &pllr1, &mckr);
 
-		PMC->PMC_FSMR |= PMC_FSMR_LPM;
-		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP ;
+		// Enter wait mode
 		cpu_irq_enable();
-		__WFE();
+		pmc_enable_waitmode();
 
 		cpu_irq_disable();
 		pmc_restore_clock_setting(mor, pllr0, pllr1, mckr);
@@ -203,9 +209,15 @@ static inline void pmc_sleep(int sleep_mode)
 	}
 
 	case SAM_PM_SMODE_BACKUP:
-		SCB->SCR |= SCR_SLEEPDEEP ;
+		SCB->SCR |= SCR_SLEEPDEEP;
+#if SAM4S
+		SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
+		cpu_irq_enable();
+		__WFI() ;
+#else
 		cpu_irq_enable();
 		__WFE() ;
+#endif
 		break;
 	}
 }

@@ -48,7 +48,7 @@
 #include "compiler.h"
 
 /**
- * \defgroup usart_group Universal Synchronous Asynchronous Receiver
+ * \defgroup group_sam_drivers_usart Universal Synchronous Asynchronous Receiver
  * Transmitter (USART).
  *
  * See \ref sam_usart_quickstart.
@@ -323,9 +323,9 @@ uint32_t usart_get_version(Usart *p_usart);
 /**
  * \page sam_usart_quickstart Quick start guide for the SAM USART module
  *
- * This is the quick start guide for the \ref usart_group "USART module", with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is the quick start guide for the \ref group_sam_drivers_usart
+ * "USART module", with step-by-step instructions on how to configure and
+ * use the driver in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
@@ -355,15 +355,14 @@ uint32_t usart_get_version(Usart *p_usart);
  *
  * \subsection usart_basic_use_case_setup_prereq Prerequisites
  * -# \ref sysclk_group "System Clock Management (sysclock)"
- * -# \ref pio_group "Parallel Input/Output Controller (pio)"
- * -# \ref pmc_group "Power Management Controller (pmc)"
+ * -# \ref ioport_group "Common IOPORT API (ioport)"
  *
  * \subsection usart_basic_use_case_setup_code Example code
  * The following configuration must be added to the project (typically to a
  * conf_usart.h file, but it can also be added to your main application file.)
  * \code
  *    #define USART_SERIAL                 USART0
- *    #define USART_SERIAL_ID              ID_USART0
+ *    #define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
  *    #define USART_SERIAL_PIO             PINS_USART_PIO
  *    #define USART_SERIAL_TYPE            PINS_USART_TYPE
  *    #define USART_SERIAL_PINS            PINS_USART_PINS
@@ -378,8 +377,7 @@ uint32_t usart_get_version(Usart *p_usart);
  * \code
  *    sysclk_init();
  *
- *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
- *            USART_SERIAL_MASK, USART_SERIAL_ATTR);
+ *    board_init();
  *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
@@ -389,7 +387,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *        US_MR_CHMODE_NORMAL
  *    };
  *
- *    pmc_enable_periph_clk(USART_SERIAL_ID);
+ *    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
  *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings,
  *            sysclk_get_main_hz());
@@ -402,11 +400,11 @@ uint32_t usart_get_version(Usart *p_usart);
  *   \code
  *   sysclk_init();
  *   \endcode
- * -# Configure the USART Tx and Rx pins as Outputs and Inputs respectively:
+ * -# Configure the USART Tx and Rx pins by call the board init function:
  *   \code
- *   pio_configure(PINS_UART_PIO, PINS_UART_TYPE, PINS_UART_MASK,
- *                 PINS_UART_ATTR);
+ *    board_init();
  *   \endcode
+ * \note Set the define in conf_board.h file.
  * -# Create USART options struct:
  *   \code
  *   const sam_usart_opt_t usart_console_settings = {
@@ -419,7 +417,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *   \endcode
  * -# Enable the clock to the USART module:
  *   \code
- *   pmc_enable_periph_clk(USART_SERIAL_ID);
+ *   sysclk_enable_peripheral_clock(USART_SERIAL_ID);
  *   \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
@@ -463,15 +461,14 @@ uint32_t usart_get_version(Usart *p_usart);
  *
  * \subsection usart_use_case_1_setup_prereq Prerequisites
  * -# \ref sysclk_group "System Clock Management (sysclock)"
- * -# \ref pio_group "Parallel Input/Output Controller (pio)"
- * -# \ref pmc_group "Power Management Controller (pmc)"
+ * -# \ref ioport_group "Common IOPORT API (ioport)"
  *
  * \subsection usart_use_case_1_setup_code Example code
  * The following configuration must be added to the project (typically to a
  * conf_usart.h file, but it can also be added to your main application file.):
  * \code
  *    #define USART_SERIAL                 USART0
- *    #define USART_SERIAL_ID              ID_USART0
+ *    #define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
  *    #define USART_SERIAL_PIO             PINS_USART_PIO
  *    #define USART_SERIAL_TYPE            PINS_USART_TYPE
  *    #define USART_SERIAL_PINS            PINS_USART_PINS
@@ -491,8 +488,7 @@ uint32_t usart_get_version(Usart *p_usart);
  * \code
  *    sysclk_init();
  *
- *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
- *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
+ *    board_init();
  *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
@@ -502,7 +498,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *        US_MR_CHMODE_NORMAL
  *    };
  *
- *    pmc_enable_periph_clk(USART_SERIAL_ID);
+ *    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
  *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings,
  *            sysclk_get_main_hz());
@@ -515,11 +511,11 @@ uint32_t usart_get_version(Usart *p_usart);
  *   \code
  *   sysclk_init();
  *   \endcode
- * -# Configure the USART Tx and Rx pins as Outputs and Inputs respectively:
+ * -# Configure the USART Tx and Rx pins  by call the board init function:
  *   \code
- *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
- *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
+ *    board_init();
  *   \endcode
+ * \note Set the define in conf_board.h file.
  * -# Create USART options struct:
  *   \code
  *   const sam_usart_opt_t usart_console_settings = {
@@ -531,7 +527,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *   };
  *   \endcode
  * -# Enable the clock to the USART module:
- *   \code pmc_enable_periph_clk(USART_SERIAL_ID); \endcode
+ *   \code sysclk_enable_peripheral_clock(USART_SERIAL_ID); \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
  *   usart_init_rs232(USART_SERIAL, &usart_console_settings,
@@ -587,7 +583,7 @@ uint32_t usart_get_version(Usart *p_usart);
  * conf_usart.h file, but it can also be added to your main application file.):
  * \code
  *    #define USART_SERIAL                 USART0
- *    #define USART_SERIAL_ID              ID_USART0
+ *    #define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
  *    #define USART_SERIAL_ISR_HANDLER     USART0_Handler
  *    #define USART_SERIAL_PIO             PINS_USART_PIO
  *    #define USART_SERIAL_TYPE            PINS_USART_TYPE
@@ -608,8 +604,7 @@ uint32_t usart_get_version(Usart *p_usart);
  * \code
  *    sysclk_init();
  *
- *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
- *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
+ *    board_init();
  *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
@@ -619,7 +614,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *        US_MR_CHMODE_NORMAL
  *    };
  *
- *    pmc_enable_periph_clk(USART_SERIAL_ID);
+ *    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
  *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings,
  *            sysclk_get_main_hz());
@@ -635,11 +630,11 @@ uint32_t usart_get_version(Usart *p_usart);
  *   \code
  *   sysclk_init();
  *   \endcode
- * -# Configure the USART Tx and Rx pins as Outputs and Inputs respectively:
+ * -# Configure the USART Tx and Rx pins  by call the board init function:
  *   \code
- *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
- *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
+ *    board_init();
  *   \endcode
+ * \note Set the define in conf_board.h file.
  * -# Create USART options struct:
  *   \code
  *   const sam_usart_opt_t usart_console_settings = {
@@ -651,7 +646,7 @@ uint32_t usart_get_version(Usart *p_usart);
  *   };
  *   \endcode
  * -# Enable the clock to the USART module:
- *   \code pmc_enable_periph_clk(USART_SERIAL_ID); \endcode
+ *   \code sysclk_enable_peripheral_clock(USART_SERIAL_ID); \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
  *   usart_init_rs232(USART_SERIAL, &usart_console_settings,

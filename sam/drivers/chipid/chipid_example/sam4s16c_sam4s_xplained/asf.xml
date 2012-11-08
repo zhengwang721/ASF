@@ -6,7 +6,6 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_chipid_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="sam.drivers.chipid.example"/>
 		<require idref="board.sam4s_xplained"/>

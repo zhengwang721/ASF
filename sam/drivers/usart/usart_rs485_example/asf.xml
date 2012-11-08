@@ -1,22 +1,37 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.usart.usart_rs485_example" caption="USART RS485 Example">
-		<info type="description" value="summary">
-		This example uses USART driver to demonstrates the RS485 mode.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Communication"/>
-		</info>
-		<build type="c-source" value="usart_rs485_example.c"/>
-		<build type="include-path" value="."/>
-		<device-support value="sam3"/>
-		<device-support value="sam4s"/>
-		<require idref="sam.drivers.pmc"/>
-		<require idref="sam.drivers.pio"/>
-		<require idref="sam.drivers.usart"/>
-		<require idref="sam.drivers.tc"/>
-		<require idref="sam.drivers.pdc"/>
-		<require idref="common.services.basic.gpio"/>
-		<require idref="common.services.basic.clock"/>
-		<require idref="common.utils.stdio.stdio_serial"/>
-	</module>
+	<select-by-device id="sam.drivers.usart.usart_rs485_example" caption="USART RS485 Example">
+		<module type="application" id="sam.drivers.usart.usart_rs485_example#0" caption="USART RS485 Example">
+			<info type="description" value="summary">
+			This example uses USART driver to demonstrates the RS485 mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="usart_rs485_example_pdc.c"/>
+			<build type="include-path" value="."/>
+			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
+			<require idref="sam.drivers.usart"/>
+			<require idref="sam.drivers.pdc"/>
+			<require idref="common.services.basic.gpio"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+		</module>
+		<module type="application" id="sam.drivers.usart.usart_rs485_example#1" caption="USART RS485 Example">
+			<info type="description" value="summary">
+			This example uses USART driver to demonstrates the RS485 mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="usart_rs485_example_pdca.c"/>
+			<build type="include-path" value="."/>
+			<device-support value="sam4l"/>
+			<require idref="sam.drivers.usart"/>
+			<require idref="sam.drivers.pdca"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+		</module>
+	</select-by-device>
 </asf>

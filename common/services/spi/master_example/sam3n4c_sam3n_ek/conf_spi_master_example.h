@@ -3,7 +3,7 @@
  *
  * \brief Spi Master example configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,13 @@
 #define SPI_EXAMPLE_BAUDRATE          1000000
 #define SPI_EXAMPLE_LED_PIN_EXAMPLE_1 LED0_GPIO
 #define SPI_EXAMPLE_LED_PIN_EXAMPLE_2 LED1_GPIO
+//! @}
+
+/*! \name Bit-Masks and Values for the Status Register
+ */
+//! @{
+#define AT25DF_MSK_DENSITY       0x07  //!< Device status bit-mask
+#define AT25DF_DENSITY           0x07  //!< Device default software protect value
 //! @}
 
 #endif  // _CONF_SPI_MASTER_EXAMPLE_H

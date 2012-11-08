@@ -106,7 +106,7 @@ uint32_t flash_erase_plane(uint32_t ul_address);
 
 #if SAM4S
 uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num);
-uint32_t flash_erase_plane(uint32_t ul_address);
+uint32_t flash_erase_sector(uint32_t ul_address);
 #endif
 
 uint32_t flash_write(uint32_t ul_address, const void *p_buffer,

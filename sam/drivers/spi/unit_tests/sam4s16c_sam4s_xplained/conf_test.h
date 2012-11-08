@@ -64,4 +64,6 @@
 /** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART */
 #define CONF_TEST_STOPBITS   false
 
+#define SPI_WPSR_WPVS_Msk SPI_WPSR_WPVSRC_Msk
+
 #endif /* CONF_TEST_H_INCLUDED */

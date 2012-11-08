@@ -80,7 +80,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
- * - sam4s16c_sam4s_xplained
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -237,7 +237,7 @@ static void run_flash_erase_test(const struct test_case *test)
 	/* Unlock the whole flash */
 	flash_unlock(IFLASH1_ADDR, LAST_PAGE_ADDRESS + IFLASH_PAGE_SIZE - 1, 0, 0);
 
-	/* Erase the second plane */	
+	/* Erase the second plane */
 	flash_erase_plane(IFLASH1_ADDR);
 
 	/* The data will all be 0xff after erasing all operation */
@@ -279,8 +279,7 @@ static void run_flash_write_test(const struct test_case *test)
 
 #if SAM4S
 	/* Write the last page */
-	flash_erase_page(ul_last_page_addr,
-			IFLASH_ERASE_PAGES_4);
+	flash_erase_sector(ul_last_page_addr);
 
 	flash_write(ul_last_page_addr,
 			(void *)ul_page_buffer,
@@ -399,7 +398,7 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 
 		/* Validate the gpnvm set interface */
 		test_assert_true(test, ul_rc == FLASH_RC_YES, "Test flash GPNVM: flash GPNVM set error!");
-	}	
+	}
 }
 
 
@@ -449,12 +448,12 @@ int main(void)
 		&flash_device_id_test,
 		&flash_configure_test,
 		&flash_information_test,
-		&flash_write_test,		
+		&flash_write_test,
 		&flash_lock_test,
 		&flash_gpnvm_test,
 #if SAM3SD8
 		&flash_erase_test,
-#endif		
+#endif
 	};
 
 	/* Define the test suite */

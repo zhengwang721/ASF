@@ -17,6 +17,7 @@
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="service" id="common.services.basic.gpio#1" caption="GPIO - General purpose Input/Output">

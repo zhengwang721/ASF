@@ -3,7 +3,7 @@
  *
  * \brief Global interrupt management for 8-bit AVR
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -121,7 +121,7 @@ static inline bool cpu_irq_is_enabled_flags(irqflags_t flags)
 #  else
 	return flags & I_bm;
 #  endif
-#elif MEGA
+#elif MEGA || TINY
 	return flags & (1 << SREG_I);
 #endif
 }

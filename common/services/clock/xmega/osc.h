@@ -65,6 +65,11 @@
 #define OSC_ID_RC32KHZ        OSC_RC32KEN_bm
 //! External Oscillator
 #define OSC_ID_XOSC           OSC_XOSCEN_bm
+#if XMEGA_E
+//! 8 MHz Internal RC Oscillator
+# define OSC_ID_RC8MHZ        OSC_RC8MEN_bm
+#endif
+
 /**
  * \brief Reference from USB Start Of Frame
  * \note This cannot be enabled or disabled, but can be used as a reference for
@@ -75,9 +80,9 @@
 
 //! \name External oscillator types
 //@{
-#define XOSC_TYPE_EXTERNAL    0   //!< External clock signal
-#define XOSC_TYPE_32KHZ       2   //!< 32.768 kHz resonator on TOSC
-#define XOSC_TYPE_XTAL        3   //!< 0.4 to 16 MHz resonator on XTAL
+#define XOSC_TYPE_EXTERNAL        0      //!< External clock signal
+#define XOSC_TYPE_32KHZ           2      //!< 32.768 kHz resonator on TOSC
+#define XOSC_TYPE_XTAL            3      //!< 0.4 to 16 MHz resonator on XTAL
 //@}
 
 /**
@@ -212,6 +217,11 @@ static inline void osc_enable_internal(uint8_t id)
 
 	flags = cpu_irq_save();
 	OSC.CTRL |= id;
+#if (XMEGA_E && CONFIG_SYSCLK_RC8MHZ_LPM)
+	if(id == OSC_ID_RC8MHZ) {
+		OSC.CTRL |= OSC_RC8MLPM_bm;
+	}
+#endif
 	cpu_irq_restore(flags);
 }
 
@@ -232,8 +242,12 @@ static inline void osc_enable_external(uint8_t id)
 	Assert(id == OSC_ID_XOSC);
 
 #ifndef CONFIG_XOSC_32KHZ_LPM
+#  if (XMEGA_E && (BOARD_XOSC_TYPE == XOSC_TYPE_EXTERNAL) && defined(CONFIG_XOSC_EXTERNAL_PC4))
+	OSC.XOSCCTRL = OSC_XOSCSEL4_bm;
+#  else 
 	OSC.XOSCCTRL = BOARD_XOSC_TYPE | (CONFIG_XOSC_STARTUP << 2) |
 			CONFIG_XOSC_RANGE;
+#  endif
 #else
 	OSC.XOSCCTRL = BOARD_XOSC_TYPE | (CONFIG_XOSC_STARTUP << 2) |
 			CONFIG_XOSC_RANGE | OSC_X32KLPM_bm;
@@ -312,8 +326,8 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 	flags = cpu_irq_save();
 	switch (id) {
 	case OSC_ID_RC2MHZ:
+#if !XMEGA_E
 		Assert((ref_id == OSC_ID_RC32KHZ) || (ref_id == OSC_ID_XOSC));
-
 		if (ref_id == OSC_ID_XOSC) {
 			osc_enable(OSC_ID_RC32KHZ);
 			OSC.DFLLCTRL |= OSC_RC2MCREF_bm;
@@ -321,10 +335,11 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 			OSC.DFLLCTRL &= ~(OSC_RC2MCREF_bm);
 		}
 		DFLLRC2M.CTRL |= DFLL_ENABLE_bm;
+#endif
 		break;
 
 	case OSC_ID_RC32MHZ:
-#if XMEGA_AU || XMEGA_B || XMEGA_C
+#if XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_E
 		Assert((ref_id == OSC_ID_RC32KHZ)
 				|| (ref_id == OSC_ID_XOSC)
 				|| (ref_id == OSC_ID_USBSOF));
@@ -338,6 +353,7 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 		else if (ref_id == OSC_ID_RC32KHZ) {
 			OSC.DFLLCTRL |= OSC_RC32MCREF_RC32K_gc;
 		}
+# if !XMEGA_E
 		else if (ref_id == OSC_ID_USBSOF) {
 			/*
 			 * Calibrate 32MRC at 48MHz using USB SOF
@@ -347,6 +363,7 @@ static inline void osc_enable_autocalibration(uint8_t id, uint8_t ref_id)
 			DFLLRC32M.COMP2 = 0xBB;
 			OSC.DFLLCTRL |= OSC_RC32MCREF_USBSOF_gc;
 		}
+# endif
 #else
 		Assert((ref_id == OSC_ID_RC32KHZ) ||
 				(ref_id == OSC_ID_XOSC));
@@ -383,7 +400,9 @@ static inline void osc_disable_autocalibration(uint8_t id)
 {
 	switch (id) {
 	case OSC_ID_RC2MHZ:
+#if !XMEGA_E
 		DFLLRC2M.CTRL = 0;
+#endif
 		break;
 
 	case OSC_ID_RC32MHZ:
@@ -409,14 +428,22 @@ static inline void osc_user_calibration(uint8_t id, uint16_t calib)
 {
 	switch (id) {
 	case OSC_ID_RC2MHZ:
+#if !XMEGA_E
 		DFLLRC2M.CALA=LSB(calib);
 		DFLLRC2M.CALB=MSB(calib);
+#endif
 		break;
 
 	case OSC_ID_RC32MHZ:
 		DFLLRC32M.CALA=LSB(calib);
 		DFLLRC32M.CALB=MSB(calib);
 		break;
+
+#if XMEGA_E
+	case OSC_ID_RC8MHZ:
+		OSC.RC8MCAL=LSB(calib);
+		break;
+#endif
 
 	default:
 		Assert(false);

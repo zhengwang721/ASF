@@ -42,13 +42,67 @@
  */
 
 #include "spi.h"
+#include "sysclk.h"
 
 /**
- * \addtogroup sam_drivers_spi_group
- * @ {
+ * \defgroup sam_drivers_spi_group Serial Peripheral Interface (SPI)
+ *
+ * See \ref sam_spi_quickstart.
+ *
+ * The SPI circuit is a synchronous serial data link that provides communication
+ * with external devices in Master or Slave mode. Connection to Peripheral DMA
+ * Controller channel capabilities optimizes data transfers.
+ *
+ * @{
  */
 
 #define SPI_WPMR_WPKEY_VALUE SPI_WPMR_WPKEY((uint32_t) 0x535049)
+
+/**
+ * \brief Enable SPI clock.
+ *
+ * \param p_spi Pointer to an SPI instance.
+ */
+void spi_enable_clock(Spi *p_spi)
+{
+#if (SAM4S || SAM3S || SAM3N || SAM3U)
+	sysclk_enable_peripheral_clock(ID_SPI);
+#elif (SAM3XA)
+	if (p_spi == SPI0) {
+		sysclk_enable_peripheral_clock(ID_SPI0);
+	}
+	#ifdef SPI1
+	else if (p_spi == SPI1) {
+		sysclk_enable_peripheral_clock(ID_SPI1);
+	}
+	#endif
+#elif SAM4L
+	sysclk_enable_peripheral_clock(p_spi);
+#endif
+}
+
+/**
+ * \brief Disable SPI clock.
+ *
+ * \param p_spi Pointer to an SPI instance.
+ */
+void spi_disable_clock(Spi *p_spi)
+{
+#if (SAM4S || SAM3S || SAM3N || SAM3U)
+	sysclk_disable_peripheral_clock(ID_SPI);
+#elif (SAM3XA)
+	if (p_spi == SPI0) {
+		sysclk_disable_peripheral_clock(ID_SPI0);
+	}
+	#ifdef SPI1
+	else if (p_spi == SPI1) {
+		sysclk_disable_peripheral_clock(ID_SPI1);
+	}
+	#endif
+#elif SAM4L
+	sysclk_disable_peripheral_clock(p_spi);
+#endif
+}
 
 /**
  * \brief Set Peripheral Chip Select (PCS) value.
@@ -184,7 +238,7 @@ void spi_set_clock_phase(Spi *p_spi, uint32_t ul_pcs_ch, uint32_t ul_phase)
  *
  * \param p_spi Pointer to an SPI instance.
  * \param ul_pcs_ch Peripheral Chip Select channel (0~3).
- * \param ul_cs_behavior Behavior of the Chip Select after transfer (\ref spi_cs_behavior_t).
+ * \param ul_cs_behavior Behavior of the Chip Select after transfer.
  */
 void spi_configure_cs_behavior(Spi *p_spi, uint32_t ul_pcs_ch,
 		uint32_t ul_cs_behavior)
@@ -205,7 +259,8 @@ void spi_configure_cs_behavior(Spi *p_spi, uint32_t ul_pcs_ch,
  *
  * \param p_spi Pointer to an SPI instance.
  * \param ul_pcs_ch Peripheral Chip Select channel (0~3).
- * \param ul_bits Number of bits (8~16), use the pattern defined in the device header file.
+ * \param ul_bits Number of bits (8~16), use the pattern defined 
+ *        in the device header file.
  */
 void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch,
 		uint32_t ul_bits)
@@ -266,6 +321,7 @@ void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch,
 			| SPI_CSR_DLYBCT(uc_dlybct);
 }
 
+
 /**
  * \brief Enable or disable write protection of SPI registers.
  *
@@ -274,11 +330,19 @@ void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch,
  */
 void spi_set_writeprotect(Spi *p_spi, uint32_t ul_enable)
 {
+#if SAM4L
+	if (ul_enable) {
+		p_spi->SPI_WPCR = SPI_WPCR_SPIWPKEY_VALUE | SPI_WPCR_SPIWPEN;
+	} else {
+		p_spi->SPI_WPCR = SPI_WPCR_SPIWPKEY_VALUE;
+	}
+#else
 	if (ul_enable) {
 		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_VALUE | SPI_WPMR_WPEN;
 	} else {
 		p_spi->SPI_WPMR = SPI_WPMR_WPKEY_VALUE;
 	}
+#endif
 }
 
 /**

@@ -257,8 +257,8 @@ int main(void)
 	/* Configure IT on Smart Card. */
 	puts("-I- Smartcard detection not supported.\r\n");
 
-	/* Configure PMC. */
-	pmc_enable_periph_clk(ISO7816_USART_ID);
+	/* Enable peripheral clock. */
+	sysclk_enable_peripheral_clock(ISO7816_USART_ID);
 
 	/* Configure ISO7816 driver. */
 	iso7816_init(&conf_iso7816_t, sysclk_get_cpu_hz(), PIN_ISO7816_RST_IDX);

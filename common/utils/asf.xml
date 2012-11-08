@@ -32,16 +32,18 @@
 			<require idref="xmega.utils"/>
 			<build type="doxygen-entry-point" value="group_xmega_utils"/>
 		</module>
-		<module type="driver" id="common.utils#mega" caption="Compiler abstraction and code utilities - megaAVR implementation">
+		<module type="driver" id="common.utils#mega" caption="Compiler abstraction and code utilities - megaAVR and tinyAVR implementation">
 			<info type="gui-flag" value="hidden"/>
 			<info type="description" value="summary">
-			Compiler abstraction layer and code utilities for megaAVR.
+			Compiler abstraction layer and code utilities for megaAVR
+			and tinyAVR.
 			This module provides various abstraction layers
 			and utilities to make code compatible between different
 			compilers. It also contains utilities typically used
 			while pre-processing code.
 			</info>
 			<device-support value="mega"/>
+			<device-support value="tiny"/>
 			<require idref="mega.utils"/>
 			<build type="doxygen-entry-point" value="group_mega_utils"/>
 		</module>
@@ -92,7 +94,7 @@
 			<build type="header-file" value="interrupt/interrupt_avr8.h" />
 			<build type="doxygen-entry-point" value="interrupt_group"/>
 		</module>
-		<module type="driver" id="common.utils.interrupt#mega" caption="Interrupt management - megaAVR implementation">
+		<module type="driver" id="common.utils.interrupt#mega" caption="Interrupt management - megaAVR and tinyAVR implementation">
 			<info type="description" value="summary">
 			Driver for global enabling and disabling of interrupts.
 			</info>
@@ -100,6 +102,7 @@
 				<keyword value="Interrupt"/>
 			</info>
 			<device-support value="mega" />
+			<device-support value="tiny" />
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="interrupt.h" />
 			<build type="header-file" value="interrupt/interrupt_avr8.h" />
@@ -222,6 +225,7 @@
 		<build type="header-file" subtype="api" value="parts.h"/>
 		<build type="doxygen-entry-point" value="part_macros_group"/>
 		<device-support value="mega"/>
+		<device-support value="tiny"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>

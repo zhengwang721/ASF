@@ -246,7 +246,7 @@ static void display_menu(void)
  * \brief Set SPI slave transfer.
  *
  * \param p_buf Pointer to buffer to transfer.
- * \param size Size of the buffer. 
+ * \param size Size of the buffer.
  */
 static void spi_slave_transfer(void *p_buf, uint32_t size)
 {
@@ -355,7 +355,7 @@ void SPI_Handler(void)
 			spi_write(SPI_SLAVE_BASE,
 					gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
 		}
-		
+
 		if (!gs_ul_transfer_length) {
 			spi_slave_command_process();
 			new_cmd = 1;
@@ -390,7 +390,7 @@ static void spi_slave_initialize(void)
 
 	puts("-I- Initialize SPI as slave \r");
 	/* Configure an SPI peripheral. */
-	pmc_enable_periph_clk(SPI_ID);
+	spi_enable_clock(SPI_SLAVE_BASE);
 	spi_disable(SPI_SLAVE_BASE);
 	spi_reset(SPI_SLAVE_BASE);
 	spi_set_slave_mode(SPI_SLAVE_BASE);
@@ -414,7 +414,7 @@ static void spi_master_initialize(void)
 	puts("-I- Initialize SPI as master\r");
 
 	/* Configure an SPI peripheral. */
-	pmc_enable_periph_clk(SPI_ID);
+	spi_enable_clock(SPI_MASTER_BASE);
 	spi_disable(SPI_MASTER_BASE);
 	spi_reset(SPI_MASTER_BASE);
 	spi_set_lastxfer(SPI_MASTER_BASE);
@@ -445,7 +445,7 @@ static void spi_set_clock_configuration(uint8_t configuration)
  * \brief Perform SPI master transfer.
  *
  * \param pbuf Pointer to buffer to transfer.
- * \param size Size of the buffer. 
+ * \param size Size of the buffer.
  */
 static void spi_master_transfer(void *p_buf, uint32_t size)
 {
@@ -474,7 +474,7 @@ static void spi_master_go(void)
 	uint32_t cmd;
 	uint32_t block;
 	uint32_t i;
-	
+
 	/* Configure SPI as master, set up SPI clock. */
 	spi_master_initialize();
 
@@ -572,11 +572,16 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
-	
+
 	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -612,7 +617,7 @@ int main(void)
 	display_menu();
 
 	while (1) {
-		while (uart_read(CONSOLE_UART, &uc_key));
+		scanf("%c", (char *)&uc_key);
 
 		switch (uc_key) {
 		case 'h':

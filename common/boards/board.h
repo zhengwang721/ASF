@@ -109,6 +109,8 @@ extern "C" {
 #define SAM4L_EK              45  //!< SAM4L-EK board.
 #define STK600_MEGA_RF        46  //!< STK600 MEGA RF EVK board.
 #define XMEGA_C3_XPLAINED     47  //!< ATxmega384C3 Xplained board.	
+#define STK600_RC032X         48  //!< STK600 with RC032X routing card board.
+#define SAM4S_EK2             49  //!< SAM4S-EK2 board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -155,6 +157,8 @@ extern "C" {
   /*No header-file to include*/
 #elif BOARD == STK600_MEGA_RF
 #  include "stk600.h"
+#elif BOARD == STK600_RC032X
+#  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X
 #  include "stk600/rc044x/stk600_rc044x.h"
 #elif BOARD == STK600_RC064X
@@ -202,6 +206,9 @@ extern "C" {
 #elif BOARD == SAM4S_XPLAINED
 #  include "sam4s_xplained/sam4s_xplained.h"
 #  include "system_sam4s.h"
+#elif BOARD == SAM4S_EK2
+#  include "sam4s_ek2/sam4s_ek2.h"
+#  include "system_sam4s.h"
 #elif BOARD == MEGA_1284P_XPLAINED
   /*No header-file to include*/
 #elif BOARD == ARDUINO_DUE_X
@@ -237,7 +244,7 @@ extern "C" {
 #elif BOARD == DUMMY_BOARD
 #  include "dummy/dummy_board.h"
 #else
-#  error No known AVR board defined
+#  error No known Atmel board defined
 #endif
 
 #if (defined EXT_BOARD)

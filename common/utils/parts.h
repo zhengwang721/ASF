@@ -340,6 +340,18 @@
 /** @} */
 
 /**
+ * \name AVR XMEGA E series
+ * @{
+ */
+#define XMEGA_E5 ( \
+		AVR8_PART_IS_DEFINED(ATxmega8E5)   || \
+		AVR8_PART_IS_DEFINED(ATxmega16E5)  || \
+		AVR8_PART_IS_DEFINED(ATxmega32E5)     \
+	)
+/** @} */
+
+
+/**
  * \name AVR XMEGA families
  * @{
  */
@@ -357,10 +369,14 @@
 
 /** AVR XMEGA D family */
 #define XMEGA_D (XMEGA_D3 || XMEGA_D4)
+
+/** AVR XMEGA E family */
+#define XMEGA_E (XMEGA_E5)
 /** @} */
 
+
 /** AVR XMEGA product line */
-#define XMEGA (XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D)
+#define XMEGA (XMEGA_A || XMEGA_AU || XMEGA_B || XMEGA_C || XMEGA_D || XMEGA_E)
 
 /** @} */
 
@@ -401,7 +417,6 @@
 #define MEGA_XX4 ( \
 		AVR8_PART_IS_DEFINED(ATmega164A)  || \
 		AVR8_PART_IS_DEFINED(ATmega164PA) || \
-		AVR8_PART_IS_DEFINED(ATmega324)   || \
 		AVR8_PART_IS_DEFINED(ATmega324A)  || \
 		AVR8_PART_IS_DEFINED(ATmega324PA) || \
 		AVR8_PART_IS_DEFINED(ATmega644)   || \
@@ -503,14 +518,151 @@
 		AVR8_PART_IS_DEFINED(ATmega329PA) \
 		)
 
+/** Devices added to complete megaAVR offering.
+ *  Please do not use this group symbol as it is not intended
+ *  to be permanent: the devices should be regrouped.
+ */
+#define MEGA_UNCATEGORIZED ( \
+		AVR8_PART_IS_DEFINED(AT90CAN128)     || \
+		AVR8_PART_IS_DEFINED(AT90CAN32)      || \
+		AVR8_PART_IS_DEFINED(AT90CAN64)      || \
+		AVR8_PART_IS_DEFINED(AT90PWM1)       || \
+		AVR8_PART_IS_DEFINED(AT90PWM216)     || \
+		AVR8_PART_IS_DEFINED(AT90PWM2B)      || \
+		AVR8_PART_IS_DEFINED(AT90PWM316)     || \
+		AVR8_PART_IS_DEFINED(AT90PWM3B)      || \
+		AVR8_PART_IS_DEFINED(AT90PWM81)      || \
+		AVR8_PART_IS_DEFINED(AT90USB1286)    || \
+		AVR8_PART_IS_DEFINED(AT90USB1287)    || \
+		AVR8_PART_IS_DEFINED(AT90USB162)     || \
+		AVR8_PART_IS_DEFINED(AT90USB646)     || \
+		AVR8_PART_IS_DEFINED(AT90USB647)     || \
+		AVR8_PART_IS_DEFINED(AT90USB82)      || \
+		AVR8_PART_IS_DEFINED(ATmega1284)     || \
+		AVR8_PART_IS_DEFINED(ATmega162)      || \
+		AVR8_PART_IS_DEFINED(ATmega164P)     || \
+		AVR8_PART_IS_DEFINED(ATmega165A)     || \
+		AVR8_PART_IS_DEFINED(ATmega165P)     || \
+		AVR8_PART_IS_DEFINED(ATmega165PA)    || \
+		AVR8_PART_IS_DEFINED(ATmega168P)     || \
+		AVR8_PART_IS_DEFINED(ATmega169A)     || \
+		AVR8_PART_IS_DEFINED(ATmega16M1)     || \
+		AVR8_PART_IS_DEFINED(ATmega16U2)     || \
+		AVR8_PART_IS_DEFINED(ATmega16U4)     || \
+		AVR8_PART_IS_DEFINED(ATmega2564RFR2) || \
+		AVR8_PART_IS_DEFINED(ATmega256RFA2)  || \
+		AVR8_PART_IS_DEFINED(ATmega256RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega324P)     || \
+		AVR8_PART_IS_DEFINED(ATmega325)      || \
+		AVR8_PART_IS_DEFINED(ATmega3250)     || \
+		AVR8_PART_IS_DEFINED(ATmega3250A)    || \
+		AVR8_PART_IS_DEFINED(ATmega3250P)    || \
+		AVR8_PART_IS_DEFINED(ATmega3250PA)   || \
+		AVR8_PART_IS_DEFINED(ATmega325A)     || \
+		AVR8_PART_IS_DEFINED(ATmega325P)     || \
+		AVR8_PART_IS_DEFINED(ATmega325PA)    || \
+		AVR8_PART_IS_DEFINED(ATmega329)      || \
+		AVR8_PART_IS_DEFINED(ATmega3290)     || \
+		AVR8_PART_IS_DEFINED(ATmega3290A)    || \
+		AVR8_PART_IS_DEFINED(ATmega3290P)    || \
+		AVR8_PART_IS_DEFINED(ATmega3290PA)   || \
+		AVR8_PART_IS_DEFINED(ATmega329A)     || \
+		AVR8_PART_IS_DEFINED(ATmega32M1)     || \
+		AVR8_PART_IS_DEFINED(ATmega32U2)     || \
+		AVR8_PART_IS_DEFINED(ATmega32U4)     || \
+		AVR8_PART_IS_DEFINED(ATmega48P)      || \
+		AVR8_PART_IS_DEFINED(ATmega644P)     || \
+		AVR8_PART_IS_DEFINED(ATmega645)      || \
+		AVR8_PART_IS_DEFINED(ATmega6450)     || \
+		AVR8_PART_IS_DEFINED(ATmega6450A)    || \
+		AVR8_PART_IS_DEFINED(ATmega6450P)    || \
+		AVR8_PART_IS_DEFINED(ATmega645A)     || \
+		AVR8_PART_IS_DEFINED(ATmega645P)     || \
+		AVR8_PART_IS_DEFINED(ATmega649)      || \
+		AVR8_PART_IS_DEFINED(ATmega6490)     || \
+		AVR8_PART_IS_DEFINED(ATmega6490A)    || \
+		AVR8_PART_IS_DEFINED(ATmega6490P)    || \
+		AVR8_PART_IS_DEFINED(ATmega649A)     || \
+		AVR8_PART_IS_DEFINED(ATmega649P)     || \
+		AVR8_PART_IS_DEFINED(ATmega64M1)     || \
+		AVR8_PART_IS_DEFINED(ATmega64RFA2)   || \
+		AVR8_PART_IS_DEFINED(ATmega64RFR2)   || \
+		AVR8_PART_IS_DEFINED(ATmega8)        || \
+		AVR8_PART_IS_DEFINED(ATmega8515)     || \
+		AVR8_PART_IS_DEFINED(ATmega8535)     || \
+		AVR8_PART_IS_DEFINED(ATmega88P)      || \
+		AVR8_PART_IS_DEFINED(ATmega8A)       || \
+		AVR8_PART_IS_DEFINED(ATmega8U2)         \
+	)
+
 /** Unspecified group */
-#define MEGA_UNSPECIFIED (MEGA_XX_UN0 || MEGA_XX_UN1 || MEGA_XX_UN2)
+#define MEGA_UNSPECIFIED (MEGA_XX_UN0 || MEGA_XX_UN1 || MEGA_XX_UN2 || \
+	MEGA_UNCATEGORIZED)
 
 /** @} */
 
 /** megaAVR product line */
 #define MEGA (MEGA_XX0_1 || MEGA_XX4 || MEGA_XX8 || MEGA_XX || MEGA_RF || \
 	MEGA_UNSPECIFIED)
+
+/** @} */
+
+/**
+ * \defgroup tiny_part_macros_group tinyAVR parts
+ *
+ * @{
+ */
+
+/**
+ * \name tinyAVR groups
+ * @{
+ */
+
+/** Devices added to complete tinyAVR offering.
+ *  Please do not use this group symbol as it is not intended
+ *  to be permanent: the devices should be regrouped.
+ */
+#define TINY_UNCATEGORIZED ( \
+		AVR8_PART_IS_DEFINED(ATtiny10)    || \
+		AVR8_PART_IS_DEFINED(ATtiny13)    || \
+		AVR8_PART_IS_DEFINED(ATtiny13A)   || \
+		AVR8_PART_IS_DEFINED(ATtiny1634)  || \
+		AVR8_PART_IS_DEFINED(ATtiny167)   || \
+		AVR8_PART_IS_DEFINED(ATtiny20)    || \
+		AVR8_PART_IS_DEFINED(ATtiny2313)  || \
+		AVR8_PART_IS_DEFINED(ATtiny2313A) || \
+		AVR8_PART_IS_DEFINED(ATtiny24)    || \
+		AVR8_PART_IS_DEFINED(ATtiny24A)   || \
+		AVR8_PART_IS_DEFINED(ATtiny25)    || \
+		AVR8_PART_IS_DEFINED(ATtiny26)    || \
+		AVR8_PART_IS_DEFINED(ATtiny261)   || \
+		AVR8_PART_IS_DEFINED(ATtiny261A)  || \
+		AVR8_PART_IS_DEFINED(ATtiny4)     || \
+		AVR8_PART_IS_DEFINED(ATtiny40)    || \
+		AVR8_PART_IS_DEFINED(ATtiny4313)  || \
+		AVR8_PART_IS_DEFINED(ATtiny43U)   || \
+		AVR8_PART_IS_DEFINED(ATtiny44)    || \
+		AVR8_PART_IS_DEFINED(ATtiny44A)   || \
+		AVR8_PART_IS_DEFINED(ATtiny45)    || \
+		AVR8_PART_IS_DEFINED(ATtiny461)   || \
+		AVR8_PART_IS_DEFINED(ATtiny461A)  || \
+		AVR8_PART_IS_DEFINED(ATtiny48)    || \
+		AVR8_PART_IS_DEFINED(ATtiny5)     || \
+		AVR8_PART_IS_DEFINED(ATtiny828)   || \
+		AVR8_PART_IS_DEFINED(ATtiny84)    || \
+		AVR8_PART_IS_DEFINED(ATtiny84A)   || \
+		AVR8_PART_IS_DEFINED(ATtiny85)    || \
+		AVR8_PART_IS_DEFINED(ATtiny861)   || \
+		AVR8_PART_IS_DEFINED(ATtiny861A)  || \
+		AVR8_PART_IS_DEFINED(ATtiny87)    || \
+		AVR8_PART_IS_DEFINED(ATtiny88)    || \
+		AVR8_PART_IS_DEFINED(ATtiny9)        \
+	)
+
+/** @} */
+
+/** tinyAVR product line */
+#define TINY (TINY_UNCATEGORIZED)
 
 /** @} */
 
@@ -637,6 +789,21 @@
 		SAM_PART_IS_DEFINED(SAM4S16B) || \
 		SAM_PART_IS_DEFINED(SAM4S16C) \
 		)
+
+#define SAM4SA16 ( \
+		SAM_PART_IS_DEFINED(SAM4SA16B) || \
+		SAM_PART_IS_DEFINED(SAM4SA16C)    \
+	)
+
+#define SAM4SD16 ( \
+		SAM_PART_IS_DEFINED(SAM4SD16B) || \
+		SAM_PART_IS_DEFINED(SAM4SD16C)    \
+	)
+
+#define SAM4SD32 ( \
+		SAM_PART_IS_DEFINED(SAM4SD32B) || \
+		SAM_PART_IS_DEFINED(SAM4SD32C)    \
+	)
 /** @} */
 
 /**
@@ -679,7 +846,7 @@
 #define SAM3XA (SAM3X4 || SAM3X8 || SAM3A4 || SAM3A8)
 
 /** SAM4S Family */
-#define SAM4S (SAM4S8 || SAM4S16)
+#define SAM4S (SAM4S8 || SAM4S16 || SAM4SA16 || SAM4SD16 || SAM4SD32)
 
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)

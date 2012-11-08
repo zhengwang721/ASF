@@ -295,6 +295,34 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 
 //! @}
 
+/*! \name PicoCache interfaces.
+ */
+//! @{
+
+void flashcalw_picocache_enable(void);
+
+void flashcalw_picocache_disable(void);
+
+uint32_t flashcalw_picocache_get_status(void);
+
+void flashcalw_picocache_invalid_all(void);
+
+void flashcalw_picocache_invalid_line(uint32_t index);
+
+void flashcalw_picocache_set_monitor_mode(uint32_t mode);
+
+void flashcalw_picocache_enable_monitor(void);
+
+void flashcalw_picocache_disable_monitor(void);
+
+void flashcalw_picocache_reset_monitor( void );
+
+uint32_t flashcalw_picocache_get_monitor_cnt( void );
+
+uint32_t flashcalw_picocache_get_version( void );
+
+//! @}
+
 /**
  * \page sam_flashcalw_quickstart Quickstart guide for SAM FLASHCALW driver
  *

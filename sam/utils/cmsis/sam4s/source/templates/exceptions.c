@@ -3,7 +3,7 @@
  *
  * \brief This file contains the default exception handlers.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,7 +79,10 @@ void ACC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void ADC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void CRCCU_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 void DACC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
-void EFC_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+void EFC0_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#if defined(ID_EFC1)
+void EFC1_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 #ifdef ID_HSMCI
 void HSMCI_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #endif
@@ -141,7 +144,10 @@ void WDT_Handler(void) __attribute__ ((weak, alias("Dummy_Handler")));
 #pragma weak ADC_Handler=Dummy_Handler
 #pragma weak CRCCU_Handler=Dummy_Handler
 #pragma weak DACC_Handler=Dummy_Handler
-#pragma weak EFC_Handler=Dummy_Handler
+#pragma weak EFC0_Handler=Dummy_Handler
+#if defined(ID_EFC1)
+#pragma weak EFC1_Handler=Dummy_Handler
+#endif
 #ifdef ID_HSMCI
 #pragma weak HSMCI_Handler=Dummy_Handler
 #endif

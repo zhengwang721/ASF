@@ -31,6 +31,7 @@
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<build type="include-path" value="../fatfs-r0.09/src"/>
 			<build type="header-file" subtype="api" value="../fatfs-r0.09/src/diskio.h"/>
 			<require idref="common.services.calendar"/>

@@ -132,7 +132,7 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega64b3"/>
 	</board>
-		<board id="board.dummy.atxmega384c3" caption="Dummy board support / ATXmega384C3">
+	<board id="board.dummy.atxmega384c3" caption="Dummy board support / ATXmega384C3">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -140,7 +140,7 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega384c3"/>
 	</board>
-		<board id="board.dummy.atxmega256c3" caption="Dummy board support / ATXmega256C3">
+	<board id="board.dummy.atxmega256c3" caption="Dummy board support / ATXmega256C3">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -148,7 +148,7 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega256c3"/>
 	</board>
-		<board id="board.dummy.atxmega128c3" caption="Dummy board support / ATXmega128C3">
+	<board id="board.dummy.atxmega128c3" caption="Dummy board support / ATXmega128C3">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -156,7 +156,7 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega128c3"/>
 	</board>
-		<board id="board.dummy.atxmega64c3" caption="Dummy board support / ATXmega64C3">
+	<board id="board.dummy.atxmega64c3" caption="Dummy board support / ATXmega64C3">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -164,7 +164,7 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega64c3"/>
 	</board>
-		<board id="board.dummy.atxmega32c4" caption="Dummy board support / ATXmega32C4">
+	<board id="board.dummy.atxmega32c4" caption="Dummy board support / ATXmega32C4">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -172,12 +172,36 @@
 		<require idref="common.boards"/>
 		<device-support value="atxmega32c4"/>
 	</board>
-		<board id="board.dummy.atxmega16c4" caption="Dummy board support / ATXmega16C4">
+	<board id="board.dummy.atxmega16c4" caption="Dummy board support / ATXmega16C4">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<require idref="common.boards"/>
 		<device-support value="atxmega16c4"/>
+	</board>
+	<board id="board.dummy.atxmega8e5" caption="Dummy board support / ATXmega8E5">
+		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
+		<build type="header-file" value="dummy_board.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="common.boards"/>
+		<device-support value="atxmega8e5"/>
+	</board>
+	<board id="board.dummy.atxmega16e5" caption="Dummy board support / ATXmega16E5">
+		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
+		<build type="header-file" value="dummy_board.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="common.boards"/>
+		<device-support value="atxmega16e5"/>
+	</board>
+	<board id="board.dummy.atxmega32e5" caption="Dummy board support / ATXmega32E5">
+		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
+		<build type="header-file" value="dummy_board.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="common.boards"/>
+		<device-support value="atxmega32e5"/>
 	</board>
 </asf>

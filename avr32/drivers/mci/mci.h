@@ -202,7 +202,7 @@ bool mci_wait_end_of_write_blocks(void);
 /* ! @} */
 
 #ifdef __cplusplus
-}
+  }
 #endif
 
 #endif /* MCI_H_INCLUDED */

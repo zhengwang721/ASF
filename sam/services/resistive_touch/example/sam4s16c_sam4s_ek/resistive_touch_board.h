@@ -76,8 +76,7 @@ static void lcd_init(void)
 			| SMC_PULSE_NCS_RD_PULSE(10));
 	smc_set_cycle_timing(SMC, 1, SMC_CYCLE_NWE_CYCLE(10)
 			| SMC_CYCLE_NRD_CYCLE(22));
-	smc_set_mode(SMC, 1, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE | SMC_MODE_DBW_8_BIT);
+	smc_set_mode(SMC, 1, SMC_MODE_READ_MODE | SMC_MODE_WRITE_MODE);
 	
 	g_display_opt.ul_width = LCD_WIDTH;
 	g_display_opt.ul_height = LCD_HEIGHT;

@@ -189,8 +189,6 @@ typedef struct {
 #define SPI_WPMR_WPKEY(value) ((SPI_WPMR_WPKEY_Msk & ((value) << SPI_WPMR_WPKEY_Pos)))
 /* -------- SPI_WPSR : (SPI Offset: 0xE8) Write Protection Status Register -------- */
 #define SPI_WPSR_WPVS (0x1u << 0) /**< \brief (SPI_WPSR) Write Protection Violation Status */
-#define SPI_WPSR_WPVS_Pos 0
-#define SPI_WPSR_WPVS_Msk (0x1u << SPI_WPSR_WPVS_Pos) /**< \brief (SPI_WPSR) Write Protection Violation Status */
 #define SPI_WPSR_WPVSRC_Pos 8
 #define SPI_WPSR_WPVSRC_Msk (0xffu << SPI_WPSR_WPVSRC_Pos) /**< \brief (SPI_WPSR) Write Protection Violation Source */
 /* -------- SPI_RPR : (SPI Offset: 0x100) Receive Pointer Register -------- */

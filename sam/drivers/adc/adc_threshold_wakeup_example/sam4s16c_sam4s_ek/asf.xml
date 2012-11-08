@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="ADC threshold wake-up example for SAM4S_EK" id="sam.drivers.adc.adc_threshold_wakeup_example.sam4s_ek">
 		<info type="description" value="summary">
-		Switch between various system clock sources and prescalers at run time.
+		This example demonstrates how to configue ADC with threshold wakeup.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

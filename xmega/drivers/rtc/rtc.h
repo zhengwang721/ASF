@@ -119,6 +119,31 @@ uint32_t rtc_get_time(void);
 void rtc_set_alarm(uint32_t time);
 bool rtc_alarm_has_triggered(void);
 
+#if XMEGA_E
+
+void rtc_load_calibration(uint8_t error_value, uint8_t sign);
+
+/**
+ * \brief Enable correction of RTC clock
+ *
+ * \note The RTC-CALIB register should be loaded with proper error and
+ *       sign value before calling this function.
+ */
+static inline void rtc_enable_correction(void)
+{
+	RTC.CTRL |= RTC_CORREN_bm;
+}
+
+/**
+ * \brief Disable correction of RTC clock
+ */
+static inline void rtc_disable_correction(void)
+{
+	RTC.CTRL &= ~RTC_CORREN_bm;
+}
+
+#endif
+
 /**
  * \brief Set alarm relative to current time
  *

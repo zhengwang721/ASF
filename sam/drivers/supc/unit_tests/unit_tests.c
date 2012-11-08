@@ -76,6 +76,7 @@
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
+ * - sam4sd32c_sam4s_ek2
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -126,7 +127,6 @@ static void run_supc_test(const struct test_case *test)
 		status = supc_get_status(SUPC);
 		if (status & SUPC_SR_OSCSEL_CRYST) break;
 	} while (timeout++ < SLOW_CLK_TIMEOUT);
-	printf("PASS: 0x%08x\r\n", (unsigned)status);
 	test_assert_true(test, (status & SUPC_SR_OSCSEL_CRYST) == SUPC_SR_OSCSEL_CRYST, "Test: switching slow clock source failed!");
 }
 

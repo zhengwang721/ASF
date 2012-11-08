@@ -26,6 +26,7 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam4s"/>
+		<device-support value="sam4l"/>
 	</module>
 
 	<select-by-device id="common.drivers.usb.device" caption="USB Device">
@@ -100,6 +101,16 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
+		</module>
+		<module type="driver" id="common.drivers.usb.device#6" caption="USB Device - SAM USBC implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			USB Device driver. Provides functions for configuring and using the USB Device functionality. SAM USBC implementation of common API.
+			</info>
+			<build type="define" name="UDD_ENABLE" value=""/>
+			<require idref="sam.drivers.usbc.device"/>
+			<device-support value="sam4l"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
 		</module>
 	</select-by-device>
 

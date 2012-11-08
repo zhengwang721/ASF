@@ -213,7 +213,7 @@ static void configure_buttons(void)
 	NVIC_EnableIRQ((IRQn_Type) PIN_PUSHBUTTON_2_ID);
 	pio_handler_set_priority(PIN_PUSHBUTTON_2_PIO, (IRQn_Type) PIN_PUSHBUTTON_2_ID, IRQ_PRIOR_PIO);
 	pio_enable_interrupt(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK);
-#endif	
+#endif
 }
 
 /**
@@ -222,13 +222,12 @@ static void configure_buttons(void)
 void TC0_Handler(void)
 {
 	volatile uint32_t ul_dummy;
-	
+
 	/* Clear status bit to acknowledge interrupt */
 	ul_dummy = tc_get_status(TC0, 0);
-	
+
 	/* Avoid compiler warning */
-	if (ul_dummy)
-		;
+	UNUSED(ul_dummy);
 
 	/** Toggle LED state. */
 	gpio_toggle_pin(LED1_GPIO);
@@ -271,7 +270,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -296,10 +295,10 @@ static void mdelay(uint32_t ul_dly_ticks)
  *  \return Unused (ANSI-C compatibility).
  */
 int main(void)
-{	
+{
 	/* Initialize the SAM system */
 	sysclk_init();
-	board_init();	
+	board_init();
 
 	/* Initialize the console uart */
 	configure_console();

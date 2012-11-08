@@ -196,8 +196,8 @@ static void mci_reset(void)
  */
 static void mci_set_speed(uint32_t speed, uint32_t pbb_hz)
 {
-	uint32_t clkdiv;
-	uint32_t rest;
+  uint32_t clkdiv;
+  uint32_t rest;
 
 	/* Speed = PBB clock / (2 * (CLKDIV + 1)) */
 	if (speed > 0) {
@@ -207,14 +207,14 @@ static void mci_set_speed(uint32_t speed, uint32_t pbb_hz)
 			/* Ensure that the card speed not be higher
 			 * than expected. */
 			clkdiv++;
-		}
+    }
 
 		if (clkdiv > 0) {
-			clkdiv -= 1;
-		}
+      clkdiv -= 1;
+    }
 	} else {
-		clkdiv = 0;
-	}
+    clkdiv = 0;
+  }
 
 	AVR32_MCI.mr &= ~AVR32_MCI_MR_CLKDIV_MASK;
 	AVR32_MCI.mr |= clkdiv << AVR32_MCI_MR_CLKDIV_OFFSET;
@@ -425,7 +425,7 @@ void mci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
 		AVR32_MCI.cfg |= AVR32_MCI_CFG_HSMODE_MASK;
 	} else {
 		AVR32_MCI.cfg &= ~AVR32_MCI_CFG_HSMODE_MASK;
-	}
+}
 
 	mci_set_speed(clock, sysclk_get_pbb_hz());
 
@@ -499,12 +499,12 @@ bool mci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg)
 }
 
 uint32_t mci_get_response(void)
-{
+  {
 	return AVR32_MCI.rspr0;
 }
 
 void mci_get_response_128(uint8_t *response)
-{
+    {
 	uint32_t response_32;
 
 	for (uint8_t i = 4; i > 0; i--) {
@@ -576,7 +576,7 @@ bool mci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
 		} else {
 			Assert(false); /* Incorrect flags */
 		}
-	}
+    }
 
 	mci_transfert_pos = 0;
 	mci_block_size = block_size;
@@ -586,7 +586,7 @@ bool mci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
 }
 
 bool mci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg)
-{
+    {
 	if (!mci_send_cmd_execute(AVR32_MCI_CMDR_TRCMD_STOP_TRANS, cmd, arg)) {
 		return false;
 	}
@@ -594,7 +594,7 @@ bool mci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg)
 	/* Workaround on AT32UC3A3 <= Rev. D
 	 * See Datasheet 32072G section errata §38.3.8 MCI */
 	return mci_wait_busy_on_line();
-}
+    }
 
 bool mci_read_word(uint32_t *value)
 {
@@ -613,7 +613,7 @@ bool mci_read_word(uint32_t *value)
 					__func__, sr);
 			mci_reset();
 			return false;
-		}
+  }
 
 		if ((mci_block_size * mci_nb_block) > mci_transfert_pos) {
 			/* It is not the end of all transfers */
@@ -767,7 +767,7 @@ bool mci_wait_end_of_read_blocks(void)
 			AVR32_DMACA.chenreg = 2 << AVR32_DMACA_CHENREG_CH_EN_WE_OFFSET;
 			mci_reset();
 			return false;
-		}
+}
 
 		if ((mci_block_size * mci_nb_block) > mci_transfert_pos) {
 			/* It is not the end of all the transfers,
@@ -898,7 +898,7 @@ bool mci_wait_end_of_write_blocks(void)
 			if (!(AVR32_DMACA.chenreg & (2 << AVR32_DMACA_CHENREG_CH_EN_OFFSET))) {
 				return true;
 			}
-		}
+}
 	} while (!(sr & AVR32_MCI_SR_NOTBUSY_MASK)
 			&& !(sr & AVR32_MCI_SR_XFRDONE_MASK));
 	Assert(AVR32_MCI.sr & AVR32_MCI_SR_FIFOEMPTY_MASK);

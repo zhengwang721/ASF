@@ -19,6 +19,7 @@
 		<build type="define" name="QT_NUM_CHANNELS" value="32"/>
 		<build type="define" name="QT_DELAY_CYCLES" value="3"/>
 		<build type="define" name="_DEBUG_INTERFACE_" value=""/>
+		<build type="define" name="_QTOUCH_" value=""/>
 		<build type="define" name="SNS1" value="A"/>
 		<build type="define" name="SNSK1" value="A"/>
 		<build type="define" name="_SNS1_SNSK1_SAME_PORT_" value=""/>
