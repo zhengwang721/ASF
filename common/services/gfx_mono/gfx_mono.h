@@ -108,8 +108,10 @@ enum gfx_mono_bitmap_type {
 # include "gfx_mono_sdl.h"
 #elif defined(GFX_MONO_C12832_A1Z)
 # include "gfx_mono_c12832_a1z.h"
-/* NULL driver by default */
+#elif defined(GFX_MONO_UG_2832HSWEG04)
+# include "gfx_mono_ug_2832hsweg04.h"
 #else
+/* NULL driver by default */
 # include "gfx_mono_null.h"
 #endif
 #include "gfx_mono_generic.h"

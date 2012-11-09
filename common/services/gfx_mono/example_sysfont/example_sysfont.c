@@ -53,7 +53,7 @@
  * - \ref example_sysfont.c
  * - \ref conf_board.h
  * - \ref conf_clock.h
- * - \ref conf_st7565r.h
+ * - \ref conf_st7565r.h or conf_ssd1306.h
  * - \ref conf_sysfont.h
  * - \ref conf_usart_spi.h
  *
@@ -61,10 +61,11 @@
  * All AVR devices can be used.
  * This example has been tested with the following setup:
  * - XMEGA-A3BU Xplained
+ * - XMEGA-C3 Xplained
  *
  * \section description Description of the example application
  * The example application will upon power up display two text strings on the
- * display; "My name is XMEGA-A3BU Xplained!" "And I'm board...".
+ * display; "My name is XXXXXXXX!" "And I'm board...".
  *
  * \section dependencies Dependencies
  * Relevant module dependencies for this application are:
@@ -98,7 +99,15 @@ int main(void)
 	 * Use the system font sysfont. Afterwards the system busy waits
 	 * forever in a while true loop.
 	 */
-	gfx_mono_draw_string("My name is\r\nXMEGA-A3BU Xplained!\r\nAnd I'm board...", 0, 0, &sysfont);
+#if BOARD == XMEGA_A3BU_XPLAINED
+	gfx_mono_draw_string("My name is\r\nXMEGA-A3BU Xplained!\r\nAnd I'm board...",
+			0, 0, &sysfont);
+#elif BOARD == XMEGA_C3_XPLAINED
+	gfx_mono_draw_string("My name is\r\nXMEGA-C3 Xplained!\r\nAnd I'm board...",
+			0, 0, &sysfont);
+#else
+#  error Unknow board.
+#endif
 
 	while (true) {
 		/* Intentionally left empty. */
