@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="sam0.utils.linker_scripts" caption="Linker scripts for IAR and GCC toolchain">
-		<module type="build-specific" caption="Linker script for SAM0D" id="sam0.utils.linker_scripts#atsam0d4">
+		<module type="build-specific" caption="Linker script for SAM0D4" id="sam0.utils.linker_scripts#atsam0d4">
 			<info type="description" value="summary">
 			Linker script for the ATSAM0D4 device.
 			</info>

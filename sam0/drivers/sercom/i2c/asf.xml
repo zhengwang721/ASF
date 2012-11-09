@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.sercom.i2c_master" caption=
+		"I2C Master Mode">
+		<info type="description" value="summary">
+			Driver for the SAM0+ I2C Master. Provides a unified
+			interface for the configuration and management of the
+			RTC module.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I2C Master" />
+		</info>
+		<build type="include-path" value="." />
+		<build type="header-file" subtype="api" value="i2c_master.h"/>
+		<build type="c-source" value="i2c_master.c"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_i2c_master_basic_use.h"/>
+		<build type="doxygen-entry-point" value="sam0_i2c_master_group"/>
+		<device-support value="sam0"/>
+		<require idref="sam0.utils"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+	</module>
+</asf>
