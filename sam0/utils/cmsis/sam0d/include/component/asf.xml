@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.utils.cmsis.sam0d.include.component" caption="SAM0D component definitions">
+		<info type="description" value="summary">
+		This file defines all structures and symbols for SAM0D peripherals
+		</info>
+		<build type="header-file" value="component_wdt.h"/>
+		<build type="header-file" value="component_gclk.h"/>
+		<build type="header-file" value="component_sysctrl.h"/>
+		<build type="header-file" value="component_pm.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="sam0d"/>
+	</module>
+</asf>
