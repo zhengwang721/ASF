@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.wdt" caption="WDT - Watchdog Timer">
+		<info type="description" value="summary">
+			Driver for the SAM0+ Watchdog. Provides a unified interface for the
+			configuration and management of the Watchdog module, including
+			timeout period, window period and early warning indications.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Timers" />
+		</info>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="wdt.c"/>
+		<build type="header-file" subtype="api" value="wdt.h"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_wdt_basic.h"/>
+		<build type="doxygen-entry-point" value="sam0_wdt_group"/>
+		<device-support value="sam0d"/>
+		<require idref="sam0.utils"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+	</module>
+</asf>
