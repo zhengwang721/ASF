@@ -43,14 +43,14 @@
  *  code found in the Atmel Software Framework (ASF). <p>
  *  Use the above menu to navigate in the documentation, or use the links below: <br>
  *  <ul>
- *  <li> <a href="globals_func.html">Functions</a>
- *  <li> <a href="annotated.html">Data structures</a>
- *  <li> <a href="globals_type.html">Defines</a>
+ *    <li> <a href="globals_func.html">Functions</a> </li>
+ *    <li> <a href="annotated.html">Data structures</a> </li>
+ *    <li> <a href="globals_type.html">Defines</a> </li>
  *  </ul>
  *
  *  \section main_licence License
  *  <ul>
- *  <li>\ref License
+ *   <li>\ref License</li>
  *  </ul>
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n

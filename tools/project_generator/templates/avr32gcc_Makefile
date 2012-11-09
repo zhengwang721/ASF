@@ -62,4 +62,4 @@
 
 # Include the common Makefile, which will also include the project specific
 # config.mk file.
-include $ASF_ROOT$/avr32/utils/make/Makefile.in
+include $ASF_ROOT$/$ASF_ARCH_DIRECTORY$/utils/make/Makefile.in

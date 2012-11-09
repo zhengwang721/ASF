@@ -109,7 +109,7 @@ class GenericElement(object):
 		aux_linker_script = self._get_build_from_project_or_selector(BuildAuxLinkerScript, linker_id)
 
 		if len(aux_linker_script) != 1:
-			raise ConfigError("Found %s linker scripts for device `%s' and toolchain `%s', expected 1" % (len(aux_linker_script), self.project.mcu.name, self.toolchain))
+			raise ConfigError("Found %s aux linker scripts for device `%s' and toolchain `%s', expected 1" % (len(aux_linker_script), self.project.mcu.name, self.toolchain))
 
 		return aux_linker_script[0]
 

@@ -1923,14 +1923,14 @@ class ConfigDB(object):
 			except:
 				mcu_name = None
 
-			if gen_name == "doxygen-module":
+			if gen_name == "doxygen-module" or gen_name == "doxygen-module-v2":
 				if mcu_name not in mcu_list:
 					errors += 1
 					if mcu_name == None:
 						error_string = 'not set'
 					else:
 						error_string = 'set to invalid MCU `%s\'' % mcu_name
-					self.log.critical("%s: attribute `default-mcu' is %s in generator tag for `doxygen-module'" % (element.find("..").attrib["id"], error_string))
+					self.log.critical("%s: attribute `default-mcu' is %s in generator tag for `%s'" % (element.find("..").attrib["id"], error_string, gen_name))
 			else:
 				if mcu_name != None:
 					errors += 1

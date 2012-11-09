@@ -1,6 +1,6 @@
 from asf.helper import using_ironpython
 
-all_modules = ['doxygen', 'avrgcc', 'armgcc', 'generic', 'iarew', 'iarewarm', 'verbose', 'avrstudio5']
+all_modules = ['doxygen', 'doxygen_v2', 'avrgcc', 'armgcc', 'generic', 'iarew', 'iarewarm', 'verbose', 'avrstudio5']
 
 # Workaround is needed for IronPython imports
 if using_ironpython():

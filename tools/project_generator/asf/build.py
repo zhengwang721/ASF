@@ -81,6 +81,9 @@ class BuildHeader(BuildType):
 class BuildApiHeader(BuildHeader):
 	subtype = "api"
 
+class BuildExampleHeader(BuildHeader):
+	subtype = "example"
+	
 class BuildDistribute(BuildType):
 	type = "distribute"
 

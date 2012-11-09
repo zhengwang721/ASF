@@ -219,6 +219,7 @@ class AVRGCCProject(GenericProject):
 
 class AVR32GCCProject(AVRGCCProject):
 	toolchain = "avr32gcc"
+	arch_directory = "avr32"
 	linker_id = "avr32.utils.linker_scripts"
 	arch_prefix = "ucr"
 	config_stack = "avr32gcc.stack_size"
@@ -316,6 +317,9 @@ class AVR32GCCProject(AVRGCCProject):
 		if ASF["$ASF_ARCH$"] is None:
 			raise ConfigError("Could not determine architecture of device `%s' from map `%s'" % (ASF["$ASF_MCU$"], self.map_id))
 
+		# Handle architecture top level arch directory name
+		ASF["$ASF_ARCH_DIRECTORY$"] = self.arch_directory
+
 		# Handle linker configuration
 		startlibs_flags = self._generate_startlibs_config(config)
 		startuplabel_flags = self._generate_startup_label(config)
@@ -334,6 +338,6 @@ class AVR32GCCProject(AVRGCCProject):
 
 		ASF['$ASF_LDFLAGS$'] += asf_ldflags.strip()
 
-		self.project.filelist.add("avr32/utils/make/Makefile.in")
-		self.project.filelist.add("avr32/utils/make/Makefile.avr32program.in")
-		self.project.filelist.add("avr32/utils/make/Makefile.batchisp.in")
+		self.project.filelist.add("%s/utils/make/Makefile.in" % self.arch_directory)
+		self.project.filelist.add("%s/utils/make/Makefile.avr32program.in" % self.arch_directory)
+		self.project.filelist.add("%s/utils/make/Makefile.batchisp.in" % self.arch_directory)

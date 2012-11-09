@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.utils.cmsis.sam0d.include" caption="SAM0D part definitions">
+		<info type="description" value="summary">
+		This file defines all structures and symbols for SAM0D
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="sam0d.h"/>
+		<build type="header-file" value="sam0d4.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="sam0d"/>
+	</module>
+</asf>

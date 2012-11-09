@@ -830,6 +830,15 @@
 /** @} */
 
 /**
+ * \name SAM0D series
+ * @{
+ */
+#define SAM0D4 ( \
+		SAM_PART_IS_DEFINED(SAM0D4) \
+	)
+/** @} */
+
+/**
  * \name SAM families
  * @{
  */
@@ -850,10 +859,13 @@
 
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)
+
+/** SAM0+ Family */
+#define SAM0D (SAM0D4)
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM0D)
 
 /** @} */
 
