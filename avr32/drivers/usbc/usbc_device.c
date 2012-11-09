@@ -51,22 +51,22 @@
 #include <string.h>
 
 #ifndef UDD_NO_SLEEP_MGR
-#  include "sleepmgr.h"
+#   include "sleepmgr.h"
 #endif
 
 #ifndef UDD_USB_INT_LEVEL
-#  define UDD_USB_INT_LEVEL 0 // By default USB interrupt have low priority
+#   define UDD_USB_INT_LEVEL 0 // By default USB interrupt have low priority
 #endif
 
 //  These defines are missing from or wrong in the toolchain header file
 #ifndef AVR32_PM_AWEN_USBCWEN_MASK
 // Optional #undef AVR32_PM_AWEN_USBCWEN_MASK if the define value is wrong.
-#  if UC3L3_L4
-#    define AVR32_PM_AWEN_USBCWEN_MASK  0x80
-#  elif UC3C || UC3D
-#    define AVR32_PM_AWEN_USBCWEN_MASK  0x01
-#  else
-#    error 'Missing definition for AVR32_PM_AWEN_USBCWEN_MASK mask value'
+#   if UC3L3_L4
+#      define AVR32_PM_AWEN_USBCWEN_MASK  0x80
+#   elif UC3C || UC3D
+#      define AVR32_PM_AWEN_USBCWEN_MASK  0x01
+#   else
+#      error 'Missing definition for AVR32_PM_AWEN_USBCWEN_MASK mask value'
 #  endif
 #endif
 
@@ -129,18 +129,18 @@
 
 // Check USB Device configuration
 #ifndef USB_DEVICE_EP_CTRL_SIZE
-#  error USB_DEVICE_EP_CTRL_SIZE not defined
+#   error USB_DEVICE_EP_CTRL_SIZE not defined
 #endif
 #ifndef USB_DEVICE_MAX_EP
-#  error USB_DEVICE_MAX_EP not defined
+#   error USB_DEVICE_MAX_EP not defined
 #endif
 #if USB_DEVICE_MAX_EP >= AVR32_USBC_EPT_NUM
-#  error USB_DEVICE_MAX_EP is too high and not supported by this part
+#   error USB_DEVICE_MAX_EP is too high and not supported by this part
 #endif
 #if (UC3C)
-#  ifdef USB_DEVICE_HS_SUPPORT
-#    error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
-#  endif
+#   ifdef USB_DEVICE_HS_SUPPORT
+#      error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
+#   endif
 #endif
 
 
@@ -184,7 +184,9 @@ static void udd_sleep_mode(bool b_idle)
 }
 #else
 
-static void udd_sleep_mode(bool b_idle) {
+static void udd_sleep_mode(bool b_idle)
+{
+	UNUSED(b_idle);
 }
 #endif  // UDD_NO_SLEEP_MGR
 
@@ -395,13 +397,13 @@ static bool udd_ep_interrupt(void);
 void udd_interrupt(void); // To avoid GCC warning
 void udd_interrupt(void)
 #else
-#  ifdef FREERTOS_USED
-#    include "FreeRTOS.h"
-#    include "task.h"
+#   ifdef FREERTOS_USED
+#      include "FreeRTOS.h"
+#      include "task.h"
 ISR_FREERTOS(udd_interrupt, AVR32_USBC_IRQ_GROUP, UDD_USB_INT_LEVEL)
-#  else
+#   else
 ISR(udd_interrupt, AVR32_USBC_IRQ_GROUP, UDD_USB_INT_LEVEL)
-#  endif
+#   endif
 #endif
 {
 	if (Is_udd_sof()) {
@@ -449,7 +451,7 @@ ISR(udd_interrupt, AVR32_USBC_IRQ_GROUP, UDD_USB_INT_LEVEL)
 
 	if (Is_udd_suspend_interrupt_enabled() && Is_udd_suspend()) {
 		otg_unfreeze_clock();
-		// The suspend interrupt is automatic acked when a wakeup occur
+		// The suspend interrupt is automatically acked when a wakeup occur
 		udd_disable_suspend_interrupt();
 		udd_enable_wake_up_interrupt();
 		otg_freeze_clock(); // Mandatory to exit of sleep mode after a wakeup event
@@ -467,7 +469,7 @@ ISR(udd_interrupt, AVR32_USBC_IRQ_GROUP, UDD_USB_INT_LEVEL)
 		// Check USB clock ready after suspend and eventually sleep USB clock
 		while( !Is_otg_clock_usable() );
 
-		// The wakeup interrupt is automatic acked when a suspend occur
+		// The wakeup interrupt is automatically acked when a suspend occur
 		udd_disable_wake_up_interrupt();
 		udd_enable_suspend_interrupt();
 		udd_sleep_mode(true); // Enter in IDLE mode
@@ -526,28 +528,29 @@ void udd_enable(void)
 	//* SINGLE DEVICE MODE INITIALIZATION
 	sysclk_enable_usb();
 
-	// Here, only the device mode is possible, then link USBC interrupt to UDD interrupt
+	// Here, only the device mode is possible,
+	// USBC interrupt is linked to UDD interrupt
 	irq_register_handler(
-#ifdef FREERTOS_USED
+#   ifdef FREERTOS_USED
 			(__int_handler)
-#endif
+#   endif
 			udd_interrupt, AVR32_USBC_IRQ, UDD_USB_INT_LEVEL);
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	pm_asyn_wake_up_enable(AVR32_PM_AWEN_USBCWEN_MASK);
 #endif
 
-# if (defined USB_ID) && (defined UHD_ENABLE)
+#if (defined USB_ID) && (defined UHD_ENABLE)
 	// Check that the device mode is selected by ID pin
 	if (!Is_otg_id_device()) {
 		cpu_irq_restore(flags);
 		return; // Device is not the current mode
 	}
-# else
+#else
 	// ID pin not used then force device mode
 	otg_disable_id_pin();
 	otg_force_device_mode();
-# endif
+#endif
 
 	// Enable USB hardware
 	otg_enable_pad();
@@ -573,11 +576,11 @@ void udd_enable(void)
 	udd_low_speed_enable();
 #else
 	udd_low_speed_disable();
-#  ifdef USB_DEVICE_HS_SUPPORT
+#   ifdef USB_DEVICE_HS_SUPPORT
 	udd_high_speed_enable();
-#  else
+#   else
 	udd_high_speed_disable();
-#  endif
+#   endif
 #endif
 	otg_ack_vbus_transition();
 	// Force Vbus interrupt in case of Vbus always with a high level
@@ -601,18 +604,20 @@ void udd_enable(void)
 void udd_disable(void)
 {
 	irqflags_t flags;
-	flags = cpu_irq_save();
 
 #ifdef UHD_ENABLE
-# ifdef USB_ID
-	if (Is_otg_id_host())
+#   ifdef USB_ID
+	if (Is_otg_id_host()) {
 		return; // Host mode running, ignore UDD disable
-# else
-	if (Is_otg_host_mode_forced())
+	}
+#   else
+	if (Is_otg_host_mode_forced()) {
 		return; // Host mode running, ignore UDD disable
-# endif
+	}
+#   endif
 #endif
 
+	flags = cpu_irq_save();
 	otg_unfreeze_clock();
 	udd_detach();
 #ifndef UDD_NO_SLEEP_MGR
@@ -638,7 +643,7 @@ void udd_attach(void)
 	// therefore the state is considered IDLE to not miss any USB event
 	udd_sleep_mode(true);
 	otg_unfreeze_clock();
-	while( !Is_otg_clock_usable() );
+	while (!Is_otg_clock_usable());
 
 	// Authorize attach if Vbus is present
 	udd_attach_device();
@@ -751,8 +756,8 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 			|| ((bmAttributes & USB_EP_TYPE_MASK) == USB_EP_TYPE_INTERRUPT));
 
 	udd_configure_endpoint(ep_addr, bmAttributes,
-			((ep & USB_EP_DIR_IN) ? 1 : 0), MaxEndpointSize,
-			AVR32_USBC_UECFG0_EPBK_SINGLE);
+			((ep & USB_EP_DIR_IN) ? 1 : 0),
+			MaxEndpointSize, AVR32_USBC_UECFG0_EPBK_SINGLE);
 
 	udd_enable_busy_bank0(ep_addr);
 	udd_enable_endpoint(ep_addr);
@@ -788,14 +793,14 @@ bool udd_ep_is_halted(udd_ep_id_t ep)
 
 bool udd_ep_set_halt(udd_ep_id_t ep)
 {
-	uint8_t index = ep & USB_EP_ADDR_MASK;
+	uint8_t ep_index = ep & USB_EP_ADDR_MASK;
 
-	if (USB_DEVICE_MAX_EP < index) {
+	if (USB_DEVICE_MAX_EP < ep_index) {
 		return false;
 	}
 
 	// Stall endpoint
-	udd_enable_stall_handshake(index);
+	udd_enable_stall_handshake(ep_index);
 	udd_ep_abort(ep);
 	return true;
 }
@@ -806,8 +811,9 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 	udd_ep_job_t *ptr_job;
 
 	ep &= USB_EP_ADDR_MASK;
-	if (USB_DEVICE_MAX_EP < ep)
+	if (USB_DEVICE_MAX_EP < ep) {
 		return false;
+	}
 	ptr_job = &udd_ep_job[ep - 1];
 
 	if (Is_udd_endpoint_stall_requested(ep)) {
@@ -815,7 +821,7 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 		udd_disable_stall_handshake(ep);
 		if (Is_udd_stall(ep)) {
 			udd_ack_stall(ep);
-			// The Stall has occurred, then reset data toggle
+			// A packet has been stalled, then reset data toggle
 			udd_reset_data_toggle(ep);
 		}
 
@@ -890,7 +896,7 @@ void udd_ep_abort(udd_ep_id_t ep)
 {
 	irqflags_t flags;
 	udd_ep_job_t *ptr_job;
-	
+
 	ep &= USB_EP_ADDR_MASK;
 
 	// Disable interrupt of endpoint
@@ -1239,8 +1245,7 @@ static void udd_ctrl_out_received(void)
 
 	if ((USB_DEVICE_EP_CTRL_SIZE != nb_data) ||
 			(udd_g_ctrlreq.req.wLength <=
-			(udd_ctrl_prev_payload_nb_trans + udd_ctrl_payload_nb_trans)))
-	{
+			(udd_ctrl_prev_payload_nb_trans + udd_ctrl_payload_nb_trans))) {
 		// End of reception because it is a short packet
 		// Before send ZLP, call intermediate callback
 		// in case of data receive generate a stall
@@ -1465,7 +1470,6 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 
 		// Ack interrupt
 		udd_ack_in_send(ep_num);
-		udd_ack_fifocon(ep_num);
 
 		if (0 == nb_trans) {
 			if (0 == udd_nb_busy_bank(ep_num)) {
@@ -1496,9 +1500,11 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 			udd_udesc_rst_buf0_size(ep_num);
 
 			// Link the user buffer directly on USB hardware DMA
-			udd_udesc_set_buf0_addr(ep_num, &ptr_job->buf[ptr_job->nb_trans]);
+			udd_udesc_set_buf0_addr(ep_num,
+					&ptr_job->buf[ptr_job->nb_trans]);
 
 			// Start transfer
+			udd_ack_fifocon(ep_num);
 			udd_disable_busy_bank0(ep_num);
 
 			// Enable interrupt
@@ -1508,9 +1514,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 			cpu_irq_restore(flags);
 			return;
 		}
-	}
-	else
-	{
+	} else {
 		// Transfer complete on OUT
 		nb_trans = udd_udesc_get_buf0_ctn(ep_num);
 
@@ -1575,10 +1579,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 	// Job complete then call callback
 	ptr_job->busy = false;
 	if (NULL != ptr_job->call_trans) {
-		if (Is_udd_endpoint_in(ep_num)) {
-			ep_num |= USB_EP_DIR_IN;
-		}
-		ptr_job->call_trans(UDD_EP_TRANSFER_OK, ptr_job->nb_trans, ep_num);
+		ptr_job->call_trans(UDD_EP_TRANSFER_OK, ptr_job->nb_trans, ep);
 	}
 	return;
 }
@@ -1586,14 +1587,16 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 
 static bool udd_ep_interrupt(void)
 {
-	udd_ep_id_t ep;
+	udd_ep_id_t ep, ep_addr;
 
 	// For each endpoint different of control endpoint (0)
 	for (ep = 1; ep <= USB_DEVICE_MAX_EP; ep++) {
-		if (!Is_udd_endpoint_interrupt_enabled(ep) || !Is_udd_endpoint_interrupt(ep)) {
+		if (!Is_udd_endpoint_interrupt_enabled(ep)
+				|| !Is_udd_endpoint_interrupt(ep)) {
 			continue;
 		}
-		udd_ep_trans_done(ep);
+		ep_addr = Is_udd_endpoint_in(ep) ? (ep | USB_EP_DIR_IN) : ep;
+		udd_ep_trans_done(ep_addr);
 		return true;
 	}
 	return false;
