@@ -47,18 +47,32 @@
 			<require idref="mega.utils"/>
 			<build type="doxygen-entry-point" value="group_mega_utils"/>
 		</module>
-		<module type="driver" id="common.utils#sam" caption="Compiler abstraction and code utilities - SAM implementation">
+		<module type="driver" id="common.utils#sam" caption="Compiler abstraction and code utilities - SAM3/SAM4 implementation">
 			<info type="gui-flag" value="hidden"/>
 			<info type="description" value="summary">
-			Compiler abstraction layer and code utilities for SAM products.
+			Compiler abstraction layer and code utilities for SAM3/SAM4 products.
 			This module provides various abstraction layers
 			and utilities to make code compatible between different
 			compilers. It also contains utilities typically used
 			while pre-processing code.
 			</info>
-			<device-support value="sam"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4"/>
 			<require idref="sam.utils"/>
 			<build type="doxygen-entry-point" value="group_sam_utils"/>
+		</module>
+		<module type="driver" id="common.utils#sam0" caption="Compiler abstraction and code utilities - SAM0+ implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAM0+ products.
+			This module provides various abstraction layers
+			and utilities to make code compatible between different
+			compilers. It also contains utilities typically used
+			while pre-processing code.
+			</info>
+			<device-support value="sam0"/>
+			<require idref="sam0.utils"/>
+			<build type="doxygen-entry-point" value="group_sam0_utils"/>
 		</module>
 	</select-by-device>
 
@@ -72,7 +86,7 @@
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Interrupt"/>
-			</info>	
+			</info>
 			<device-support value="uc3" />
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="interrupt.h" />
@@ -108,12 +122,12 @@
 			<build type="header-file" value="interrupt/interrupt_avr8.h" />
 			<build type="doxygen-entry-point" value="interrupt_group"/>
 		</module>
-		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM3 implementation">
+		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM implementation">
 			<info type="description" value="summary">
 			Driver for global enabling and disabling of interrupts.
 			</info>
-			<device-support value="sam3" />
-			<device-support value="sam4" />
+			<device-support value="sam" />
+			<device-support value="sam0" />
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="interrupt.h" />
 			<build type="header-file" value="interrupt/interrupt_sam_nvic.h" />
@@ -229,5 +243,6 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
+		<device-support value="sam0"/>
 	</module>
 </asf>

@@ -141,4 +141,9 @@
 		<require idref="sam.utils.linker_scripts#atsam4l2"/>
 	</board>
 
+	<board id="board.user_board.sam0d4" caption="User Board" mcu="atsam0d4">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts#atsam0d4"/>
+	</board>
+
 </asf>
