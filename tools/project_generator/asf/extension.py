@@ -401,7 +401,7 @@ class FdkExtension(object):
 		if page_e is not None:
 			caption = page_e.get('caption')
 			# Set version by force here?
-			url = page_e.get('baseurl')
+			url = page_e.get('url')
 
 		return (caption, url)
 
@@ -495,7 +495,7 @@ class FdkExtension(object):
 		page_e = self.element.find('./offline-help/%s' % tag)
 		if page_e is not None:
 			scheme = page_e.get('scheme')
-			path = self._normalize_path(page_e.get('path'))
+			path = self._normalize_path(page_e.get('basepath'))
 
 		return (scheme, path)
 

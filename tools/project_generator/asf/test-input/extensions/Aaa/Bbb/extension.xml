@@ -13,14 +13,14 @@
 		<license caption="Aaa license" path="docs/aaa_license.txt"/>
 		<release-notes caption="Bbb release notes" url="http://bbb.aaa.com/release-notes/"/>
 		<online-help>
-			<index-page caption="Bbb help" baseurl="http://bbb.aaa.com/help_index"/>
+			<index-page caption="Bbb help" url="http://bbb.aaa.com/help_index"/>
 			<module-help-page scheme="asf-docs" baseurl="http://bbb.aaa.com/element_help"/>
 			<module-guide-page scheme="asf-docs" baseurl="http://bbb.aaa.com/element_guide"/>
 		</online-help>
 		<offline-help>
 			<index-page caption="Bbb help doc" path="docs\help.pdf"/>
-			<module-help-page scheme="asf-docs" path="docs/help/"/>
-			<module-guide-page scheme="asf-docs" path="docs\guides\"/>
+			<module-help-page scheme="asf-docs" basepath="docs/help/"/>
+			<module-guide-page scheme="asf-docs" basepath="docs\guides\"/>
 		</offline-help>
 		<dependencies>
 			<fdk-extension eid="ccc" uuidref="00000000-0000-0000-0000-000000000000" version="latest"/>

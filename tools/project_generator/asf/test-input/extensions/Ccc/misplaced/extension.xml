@@ -7,7 +7,7 @@
 		<license caption="Ddd license" path="ddd_license.txt"/>
 		<release-notes caption="Ddd release notes" url="http://ddd.d.com/release-notes/"/>
 		<online-help>
-			<index-page caption="Ddd help" baseurl="http://ddd.d.com/help_index"/>
+			<index-page caption="Ddd help" url="http://ddd.d.com/help_index"/>
 			<element-page scheme="asf-docs" baseurl="http://ddd.d.com/element_help"/>
 			<element-guide-page scheme="asf-docs" baseurl="http://ddd.d.com/element_guide"/>
 		</online-help>

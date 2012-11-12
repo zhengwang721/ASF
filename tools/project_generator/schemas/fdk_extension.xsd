@@ -287,7 +287,7 @@
 	<xs:complexType name="indexPageUrl">
 		<xs:complexContent>
 			<xs:extension base="indexPage">
-				<xs:attribute name="baseurl" type="xs:anyURI" use="required">
+				<xs:attribute name="url" type="xs:anyURI" use="required">
 					<xs:annotation>
 						<xs:documentation>
 							The base URL for the help index page
@@ -301,7 +301,6 @@
 	<xs:complexType name="indexPagePath">
 		<xs:complexContent>
 			<xs:extension base="indexPage">
-				<!-- Ideally, we would extend with filePath here -->
 				<xs:attribute name="path" type="filePathAttr" use="required">
 					<xs:annotation>
 						<xs:documentation>
@@ -345,8 +344,7 @@
 	<xs:complexType name="elementPagePath">
 		<xs:complexContent>
 			<xs:extension base="elementPage">
-				<!-- Ideally, we would extend with filePath here -->
-				<xs:attribute name="path" type="filePathAttr" use="required">
+				<xs:attribute name="basepath" type="filePathAttr" use="required">
 					<xs:annotation>
 						<xs:documentation>
 							The base path for the element help page
