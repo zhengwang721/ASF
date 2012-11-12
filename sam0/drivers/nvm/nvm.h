@@ -348,9 +348,8 @@
  * @{
  */
 
-//#include <compiler.h>
+#include <compiler.h>
 #include <status_codes.h>
-#include <nvm_header.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -791,7 +790,7 @@ static inline enum nvm_errors nvm_get_error(void)
  *  </tr>
  * </table>
  */
- 
+
 /**
  * \page nvm_quickstart Quick Start Guides for the NVM module
  *

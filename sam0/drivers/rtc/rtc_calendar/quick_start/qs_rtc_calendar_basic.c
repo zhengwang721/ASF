@@ -34,19 +34,16 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
-*
+ *
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#define USE_FRAMEWORK
-
-#if defined(USE_FRAMEWORK)
-# include "../rtc_calendar.h"
-#endif
+void config_rtc_calendar(void);
 
 //! [initiate]
-void init_rtc_calendar(void)
+void config_rtc_calendar(void)
 {
 	/* Initialize RTC in calendar mode. */
 //! [set_conf]
@@ -94,7 +91,7 @@ int main(void)
 
 	//system_init();
 
-	init_rtc_calendar();
+	config_rtc_calendar();
 
 	/* Set current time. */
 	rtc_calendar_set_time(&time);

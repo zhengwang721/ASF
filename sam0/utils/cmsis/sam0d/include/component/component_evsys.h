@@ -36,7 +36,7 @@
  * \asf_license_stop
  *
  */
- 
+
 #ifndef __SAM0XX_COMPONENT_EVSYS__
 #define __SAM0XX_COMPONENT_EVSYS__
 
@@ -57,25 +57,91 @@ typedef volatile struct {
 } EVSYS_t;
 
 /* EVSYS Register CTRL definitions */
-#define EVSYS_CTRL_SWRST_bp         0
-#define EVSYS_CTRL_SWRST_bm         (1UL << EVSYS_CTRL_SWRST_bp)
+#define EVSYS_SWRST_bp         0
+#define EVSYS_SWRST_bm         (1UL << EVSYS_SWRST_bp)
 
 /* EVSYS Register CHCTRL definitions */
-#define EVSYS_CHCTRL_CHSEL_gp      0
-#define EVSYS_CHCTRL_CHSEL_gm      (0xFFUL << EVSYS_CHCTRL_CHSEL_gp)
-#define EVSYS_CHCTRL_STROBE_bp      8
-#define EVSYS_CHCTRL_STROBE_bm      (1UL << EVSYS_CHCTRL_STROBE_bp)
-#define EVSYS_CHCTRL_EVGSEL_gp     16
-#define EVSYS_CHCTRL_EVGSEL_gm     (0xFFUL << EVSYS_CHCTRL_EVGSEL_gp)
-#define EVSYS_CHCTRL_PATH_gp       24
-#define EVSYS_CHCTRL_PATH_gm       (0x3UL << EVSYS_CHCTRL_PATH_gp)
-#define EVSYS_CHCTRL_EDGESEL_gp    26
-#define EVSYS_CHCTRL_EDGESEL_gm    (0x3UL << EVSYS_CHCTRL_EDGESEL_gp)
+#define EVSYS_CHSEL_gp         0
+#define EVSYS_CHSEL_gm         (0xFFUL << EVSYS_CHSEL_gp)
+#define EVSYS_STROBE_bp        8
+#define EVSYS_STROBE_bm        (1UL << EVSYS_STROBE_bp)
+#define EVSYS_EVGSEL_gp        16
+#define EVSYS_EVGSEL_gm        (0xFFUL << EVSYS_EVGSEL_gp)
+#define EVSYS_PATH_gp          24
+#define EVSYS_PATH_gm          (0x3UL << EVSYS_PATH_gp)
+#define EVSYS_EDGESEL_gp       26
+#define EVSYS_EDGESEL_gm       (0x3UL << EVSYS_EDGESEL_gp)
 
 /* EVSYS Register USERMUX definitions */
-#define EVSYS_USERMUX_UMUXSEL_gp    0
-#define EVSYS_USERMUX_UMUXSEL_gm    (0xFFUL << EVSYS_USERMUX_UMUXSEL_gp)
-#define EVSYS_USERMUX_CHANNELEVENT_gp  0
-#define EVSYS_USERMUX_CHANNELEVENT_gm  (0xFFUL << EVSYS_USERMUX_CHANNELEVENT_gp)
+#define EVSYS_UMUXSEL_gp       0
+#define EVSYS_UMUXSEL_gm       (0xFFUL << EVSYS_UMUXSEL_gp)
+#define EVSYS_CHANNELEVENT_gp  0
+#define EVSYS_CHANNELEVENT_gm  (0xFFUL << EVSYS_CHANNELEVENT_gp)
+
+/* EVSYS Register CHSTATUS definitions */
+#define EVSYS_USRREADY0_bp     0
+#define EVSYS_USRREADY0_bm     (1UL << EVSYS_USRREADY0_bp)
+#define EVSYS_USRREADY1_bp     1
+#define EVSYS_USRREADY1_bm     (1UL << EVSYS_USRREADY1_bp)
+#define EVSYS_USRREADY2_bp     2
+#define EVSYS_USRREADY2_bm     (1UL << EVSYS_USRREADY2_bp)
+#define EVSYS_USRREADY3_bp     3
+#define EVSYS_USRREADY3_bm     (1UL << EVSYS_USRREADY3_bp)
+#define EVSYS_USRREADY4_bp     4
+#define EVSYS_USRREADY4_bm     (1UL << EVSYS_USRREADY4_bp)
+#define EVSYS_USRREADY5_bp     5
+#define EVSYS_USRREADY5_bm     (1UL << EVSYS_USRREADY5_bp)
+#define EVSYS_USRREADY6_bp     6
+#define EVSYS_USRREADY6_bm     (1UL << EVSYS_USRREADY6_bp)
+#define EVSYS_USRREADY7_bp     7
+#define EVSYS_USRREADY7_bm     (1UL << EVSYS_USRREADY7_bp)
+#define EVSYS_CHBUSY0_bp       8
+#define EVSYS_CHBUSY0_bm       (1UL << EVSYS_CHBUSY0_bp)
+#define EVSYS_CHBUSY1_bp       9
+#define EVSYS_CHBUSY1_bm       (1UL << EVSYS_CHBUSY1_bp)
+#define EVSYS_CHBUSY2_bp       10
+#define EVSYS_CHBUSY2_bm       (1UL << EVSYS_CHBUSY2_bp)
+#define EVSYS_CHBUSY3_bp       11
+#define EVSYS_CHBUSY3_bm       (1UL << EVSYS_CHBUSY3_bp)
+#define EVSYS_CHBUSY4_bp       12
+#define EVSYS_CHBUSY4_bm       (1UL << EVSYS_CHBUSY4_bp)
+#define EVSYS_CHBUSY5_bp       13
+#define EVSYS_CHBUSY5_bm       (1UL << EVSYS_CHBUSY5_bp)
+#define EVSYS_CHBUSY6_bp       14
+#define EVSYS_CHBUSY6_bm       (1UL << EVSYS_CHBUSY6_bp)
+#define EVSYS_CHBUSY7_bp       15
+#define EVSYS_CHBUSY7_bm       (1UL << EVSYS_CHBUSY7_bp)
+#define EVSYS_USRREADY8_bp     16
+#define EVSYS_USRREADY8_bm     (1UL << EVSYS_USRREADY8_bp)
+#define EVSYS_USRREADY9_bp     17
+#define EVSYS_USRREADY9_bm     (1UL << EVSYS_USRREADY9_bp)
+#define EVSYS_USRREADY10_bp    18
+#define EVSYS_USRREADY10_bm    (1UL << EVSYS_USRREADY10_bp)
+#define EVSYS_USRREADY11_bp    19
+#define EVSYS_USRREADY11_bm    (1UL << EVSYS_USRREADY11_bp)
+#define EVSYS_USRREADY12_bp    20
+#define EVSYS_USRREADY12_bm    (1UL << EVSYS_USRREADY12_bp)
+#define EVSYS_USRREADY13_bp    21
+#define EVSYS_USRREADY13_bm    (1UL << EVSYS_USRREADY13_bp)
+#define EVSYS_USRREADY14_bp    22
+#define EVSYS_USRREADY14_bm    (1UL << EVSYS_USRREADY14_bp)
+#define EVSYS_USRREADY15_bp    23
+#define EVSYS_USRREADY15_bm    (1UL << EVSYS_USRREADY15_bp)
+#define EVSYS_CHBUSY8_bp       24
+#define EVSYS_CHBUSY8_bm       (1UL << EVSYS_CHBUSY8_bp)
+#define EVSYS_CHBUSY9_bp       25
+#define EVSYS_CHBUSY9_bm       (1UL << EVSYS_CHBUSY9_bp)
+#define EVSYS_CHBUSY10_bp      26
+#define EVSYS_CHBUSY10_bm      (1UL << EVSYS_CHBUSY10_bp)
+#define EVSYS_CHBUSY11_bp      27
+#define EVSYS_CHBUSY11_bm      (1UL << EVSYS_CHBUSY11_bp)
+#define EVSYS_CHBUSY12_bp      28
+#define EVSYS_CHBUSY12_bm      (1UL << EVSYS_CHBUSY12_bp)
+#define EVSYS_CHBUSY13_bp      29
+#define EVSYS_CHBUSY13_bm      (1UL << EVSYS_CHBUSY13_bp)
+#define EVSYS_CHBUSY14_bp      30
+#define EVSYS_CHBUSY14_bm      (1UL << EVSYS_CHBUSY14_bp)
+#define EVSYS_CHBUSY15_bp      31
+#define EVSYS_CHBUSY15_bm      (1UL << EVSYS_CHBUSY15_bp)
 
 #endif /* __SAM0XX_COMPONENT_EVSYS_ */

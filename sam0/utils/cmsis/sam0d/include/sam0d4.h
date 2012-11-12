@@ -49,13 +49,13 @@ typedef volatile       uint32_t RwReg; /**< Read-Write 32-bit register (volatile
 typedef enum IRQn
 {
   NonMaskableInt_IRQn   = -14, /**<  2 Non Maskable Interrupt                */
-  MemoryManagement_IRQn = -12, /**<  4 Cortex-M3 Memory Management Interrupt */
-  BusFault_IRQn         = -11, /**<  5 Cortex-M3 Bus Fault Interrupt         */
-  UsageFault_IRQn       = -10, /**<  6 Cortex-M3 Usage Fault Interrupt       */
-  SVCall_IRQn           = -5,  /**< 11 Cortex-M3 SV Call Interrupt           */
-  DebugMonitor_IRQn     = -4,  /**< 12 Cortex-M3 Debug Monitor Interrupt     */
-  PendSV_IRQn           = -2,  /**< 14 Cortex-M3 Pend SV Interrupt           */
-  SysTick_IRQn          = -1,  /**< 15 Cortex-M3 System Tick Interrupt       */
+  MemoryManagement_IRQn = -12, /**<  4 Cortex-M0 Memory Management Interrupt */
+  BusFault_IRQn         = -11, /**<  5 Cortex-M0 Bus Fault Interrupt         */
+  UsageFault_IRQn       = -10, /**<  6 Cortex-M0 Usage Fault Interrupt       */
+  SVCall_IRQn           = -5,  /**< 11 Cortex-M0 SV Call Interrupt           */
+  DebugMonitor_IRQn     = -4,  /**< 12 Cortex-M0 Debug Monitor Interrupt     */
+  PendSV_IRQn           = -2,  /**< 14 Cortex-M0 Pend SV Interrupt           */
+  SysTick_IRQn          = -1,  /**< 15 Cortex-M0 System Tick Interrupt       */
 } IRQn_Type;
 
 #define __CM0_REV              0x0100
@@ -69,10 +69,27 @@ typedef enum IRQn
 #include <component/component_evsys.h>
 #include <component/component_sysctrl.h>
 #include <component/component_pm.h>
+#include <component/component_sercom.h>
+#include <component/component_port.h>
+#include <component/component_eic.h>
+#include <component/component_rtc.h>
+#include <component/component_pac.h>
+#include <component/component_nvm.h>
+#include <component/component_ac.h>
+#include <component/component_dac.h>
+
 #include <instance/instance_wdt.h>
 #include <instance/instance_gclk.h>
 #include <instance/instance_evsys.h>
 #include <instance/instance_sysctrl.h>
 #include <instance/instance_pm.h>
+#include <instance/instance_sercom.h>
+#include <instance/instance_port.h>
+#include <instance/instance_eic.h>
+#include <instance/instance_rtc.h>
+#include <instance/instance_pac.h>
+#include <instance/instance_nvm.h>
+#include <instance/instance_ac.h>
+#include <instance/instance_dac.h>
 
 #endif /* _SAM0D4_ */

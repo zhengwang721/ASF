@@ -411,8 +411,8 @@ static inline bool events_ch_is_ready(
 	uint8_t status_bitindex = channel % 8;
 
 	/* Determine if the specified channel is currently busy */
-	if (EVSYS->CHSTATUS_UINT16_T[status_halfword] &
-			(EVSYS_CHSTATUS_CHBUSY0_bp << status_bitindex)) {
+	if (EVSYS.CHSTATUS_UINT16_T[status_halfword] &
+			(EVSYS_CHBUSY0_bp << status_bitindex)) {
 		return false;
 	}
 
@@ -442,8 +442,8 @@ static inline bool events_user_is_ready(
 	uint8_t status_bitindex = channel % 8;
 
 	/* Determine if the specified channel users(s) are currently ready */
-	if (EVSYS->CHSTATUS_UINT16_T[status_halfword] &
-			(EVSYS_CHSTATUS_USRREADY0_bp << status_bitindex)) {
+	if (EVSYS.CHSTATUS_UINT16_T[status_halfword] &
+			(EVSYS_USRREADY0_bp << status_bitindex)) {
 		return true;
 	}
 
@@ -464,7 +464,7 @@ static inline void events_ch_software_trigger(
 {
 	/* Trigger the appropriate event channel - must be performed as a single
 	 * 8-bit write as mandated in the datasheet for the event system module */
-	EVSYS->CHCTRL = (channel << EVSYS_CHCTRL_CHSEL_gp) | EVSYS_CHCTRL_STROBE_bm;
+	EVSYS.CHCTRL = (channel << EVSYS_CHSEL_gp) | EVSYS_STROBE_bm;
 }
 
 /** @} */

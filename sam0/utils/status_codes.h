@@ -54,7 +54,7 @@
  *
  * @{
  */
- 
+
 /** Mask to retrieve the error category of a status code. */
 #define STATUS_CATEGORY_MASK  0xF0
 
@@ -105,5 +105,5 @@ enum status_code {
 };
 
 /** @} */
- 
+
 #endif /* STATUS_CODES_H_INCLUDED */

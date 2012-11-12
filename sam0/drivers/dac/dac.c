@@ -209,7 +209,7 @@ void dac_enable(
  * Enables the selected DAC channel.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
- * \param[in] ch       Channel to enable
+ * \param[in] channel  Channel to enable
  *
  */
 void dac_ch_enable(
@@ -267,7 +267,7 @@ void dac_ch_disable(
  *
  * Enables the output buffer and drives the DAC output to the VOUT pin.
  *
- * \param dev_inst[in] Pointer to the DAC software instance struct
+ * \param[in] dev_inst Pointer to the DAC software instance struct
  *
  */
 void dac_enable_output_buffer(
@@ -291,7 +291,7 @@ void dac_enable_output_buffer(
  * \note Should be done when the output buffer is not needed, as it will draw
  * current even if the system is in sleep mode.
  *
- * \param dev_inst[in] Pointer to the DAC software instance struct
+ * \param[in] dev_inst Pointer to the DAC software instance struct
  *
  */
 void dac_disable_output_buffer(
@@ -321,7 +321,7 @@ void dac_disable_output_buffer(
  * enabled in the configuration.
  *
  * \param[in] dev_inst Pointer to the DAC software device struct
- * \param[in] ch       DAC channel to write to
+ * \param[in] channel  DAC channel to write to
  * \param[in] data     Conversion data
  * \param[in] event_triggered Boolean value to determine whether the conversion
  *        should be triggered immediately or by an incoming event.

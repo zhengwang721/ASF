@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.sercom.i2c_master.quick_start" caption="SERCOM I2C Master Mode quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the SERCOM I2C interface module in master mode demonstrating module configuration.
+		</info>
+		<build type="c-source" value="qs_i2c_master_basic_use.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.sercom.i2c_master"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>

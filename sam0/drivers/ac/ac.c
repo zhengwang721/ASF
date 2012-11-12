@@ -49,7 +49,7 @@ static void _ac_wait_for_sync(
 
 	AC_t *const ac_module = dev_inst->hw_dev;
 
-	while (ac_module->hw_dev->STATUSB & AC_SYNCBUSY_bm) {
+	while (ac_module->STATUSB & AC_SYNCBUSY_bm) {
 		/* Do nothing */
 	}
 }
@@ -193,14 +193,8 @@ void ac_disable(
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Mask of one or more events to enable
- *
- *  \return Status of the event enable procedure.
- *
- *  \retval STATUS_OK      The requested events were enabled successfully
- *  \retval STATUS_ERR_IO  The comparator channel was already enabled when the
- *                         change was requested
  */
-enum status_codes ac_enable_events(
+void ac_enable_events(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t events)
 {
@@ -210,14 +204,7 @@ enum status_codes ac_enable_events(
 
 	AC_t *const ac_module = dev_inst->hw_dev;
 
-	/* Events can not be enabled if the module is currently enabled */
-	if (ac_module->COMPCTRL[channel] & AC_CH_ENABLE_bm) {
-		return STATUS_ERR_IO;
-	}
-
 	ac_module->EVCTRL |= events;
-
-	return STATUS_OK;
 }
 
 /** \brief Disables an Analog Comparator event input or output.
@@ -229,14 +216,8 @@ enum status_codes ac_enable_events(
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Mask of one or more events to disable
- *
- *  \return Status of the event disable procedure.
- *
- *  \retval STATUS_OK      The requested events were disabled successfully
- *  \retval STATUS_ERR_IO  The comparator channel was already enabled when the
- *                         change was requested
  */
-enum status_codes ac_disable_events(
+void ac_disable_events(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t events)
 {
@@ -246,14 +227,7 @@ enum status_codes ac_disable_events(
 
 	AC_t *const ac_module = dev_inst->hw_dev;
 
-	/* Events can not be enabled if the module is currently enabled */
-	if (ac_module->COMPCTRL[channel] & AC_CH_ENABLE_bm) {
-		return STATUS_ERR_IO;
-	}
-
 	ac_module->EVCTRL &= ~events;
-
-	return STATUS_OK;
 }
 
 /** \brief Writes an Analog Comparator channel configuration to the hardware module.
@@ -330,48 +304,30 @@ void ac_win_set_config(
 
 	uint32_t win_ctrl_mask = 0;
 
+	switch (config->window_detection)
+	{
+		case AC_WIN_DETECT_ABOVE:
+			win_ctrl_mask = AC_WINTSEL_ABOVE_gc;
+			break;
+		case AC_WIN_DETECT_BELOW:
+			win_ctrl_mask = AC_WINTSEL_BELOW_gc;
+			break;
+		case AC_WIN_DETECT_INSIDE:
+			win_ctrl_mask = AC_WINTSEL_INSIDE_gc;
+			break;
+		case AC_WIN_DETECT_OUTSIDE:
+			win_ctrl_mask = AC_WINTSEL_OUTSIDE_gc;
+			break;
+		default:
+			break;
+	}
+
 	if (win_channel == 0) {
-		switch (config->window_detection)
-		{
-			case AC_WIN_DETECT_ABOVE:
-				win_ctrl_mask = AC_WINTSEL0_ABOVE_gc;
-				break;
-			case AC_WIN_DETECT_BELOW:
-				win_ctrl_mask = AC_WINTSEL0_BELOW_gc;
-				break;
-			case AC_WIN_DETECT_INSIDE:
-				win_ctrl_mask = AC_WINTSEL0_INSIDE_gc;
-				break;
-			case AC_WIN_DETECT_OUTSIDE:
-				win_ctrl_mask = AC_WINTSEL0_OUTSIDE_gc;
-				break;
-			default:
-				break;
-		}
-
 		ac_module->WINCTRL = (ac_module->WINCTRL & ~AC_WINTSEL0_gm) |
-				win_ctrl_mask;
+				(win_ctrl_mask << AC_WINTSEL0_gp);
 	} else {
-		switch (config->window_detection)
-		{
-			case AC_WIN_DETECT_ABOVE:
-				win_ctrl_mask = AC_WINTSEL1_ABOVE_gc;
-				break;
-			case AC_WIN_DETECT_BELOW:
-				win_ctrl_mask = AC_WINTSEL1_BELOW_gc;
-				break;
-			case AC_WIN_DETECT_INSIDE:
-				win_ctrl_mask = AC_WINTSEL1_INSIDE_gc;
-				break;
-			case AC_WIN_DETECT_OUTSIDE:
-				win_ctrl_mask = AC_WINTSEL1_OUTSIDE_gc;
-				break;
-			default:
-				break;
-		}
-
 		ac_module->WINCTRL = (ac_module->WINCTRL & ~AC_WINTSEL1_gm) |
-				win_ctrl_mask;
+				(win_ctrl_mask << AC_WINTSEL1_gp);
 	}
 }
 
@@ -397,7 +353,7 @@ void ac_win_set_config(
  *  \retval STATUS_ERR_BAD_FORMAT  The comparator channels in the window pair
  *                                 were not configured correctly
  */
-enum status_codes ac_win_enable(
+enum status_code ac_win_enable(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t win_channel)
 {
@@ -428,9 +384,9 @@ enum status_codes ac_win_enable(
 
 	/* Enable the requested window comparator */
 	if (win_channel == 0) {
-		ac_module->WINCTRL |= AC_WINEN0_bp;
+		ac_module->WINCTRL |= AC_WEN0_bp;
 	} else {
-		ac_module->WINCTRL |= AC_WINEN1_bp;
+		ac_module->WINCTRL |= AC_WEN1_bp;
 	}
 
 	return STATUS_OK;
@@ -458,9 +414,9 @@ void ac_win_disable(
 
 	/* Disable the requested window comparator */
 	if (win_channel == 0) {
-		ac_module->WINCTRL &= ~AC_WINEN0_bp;
+		ac_module->WINCTRL &= ~AC_WEN0_bp;
 	} else {
-		ac_module->WINCTRL &= ~AC_WINEN1_bp;
+		ac_module->WINCTRL &= ~AC_WEN1_bp;
 	}
 }
 
@@ -489,30 +445,25 @@ enum ac_win_state ac_win_get_state(
 		return AC_WIN_STATE_UNKNOWN;
 	}
 
-	/* Map hardware window comparison states to logical window states */
+	uint32_t win_state = 0;
+
+	/* Extract window comparison state bits */
 	if (win_channel == 0) {
-		switch (ac_module->STATUSA & AC_WSTATE0_gm)
-		{
-			case AC_WINSTATE0_ABOVE_gc:
-				return AC_WIN_STATE_ABOVE;
-			case AC_WINSTATE0_BELOW_gc:
-				return AC_WIN_STATE_BELOW;
-			case AC_WINSTATE0_INSIDE:
-				return AC_WIN_STATE_INSIDE;
-			default:
-				return AC_WIN_STATE_UNKNOWN;
-		}
+		win_state = (ac_module->STATUSA & AC_WSTATE0_gm) >> AC_WSTATE0_gp;
 	} else {
-		switch (ac_module->STATUSA & AC_WSTATE1_gm)
-		{
-			case AC_WINSTATE1_ABOVE_gc:
-				return AC_WIN_STATE_ABOVE;
-			case AC_WINSTATE1_BELOW_gc:
-				return AC_WIN_STATE_BELOW;
-			case AC_WINSTATE1_INSIDE:
-				return AC_WIN_STATE_INSIDE;
-			default:
-				return AC_WIN_STATE_UNKNOWN;
-		}
+		win_state = (ac_module->STATUSA & AC_WSTATE1_gm) >> AC_WSTATE1_gp;
+	}
+
+	/* Map hardware comparison states to logical window states */
+	switch (win_state)
+	{
+		case AC_WSTATE_ABOVE_gc:
+			return AC_WIN_STATE_ABOVE;
+		case AC_WSTATE_BELOW_gc:
+			return AC_WIN_STATE_BELOW;
+		case AC_WSTATE_INSIDE_gc:
+			return AC_WIN_STATE_INSIDE;
+		default:
+			return AC_WIN_STATE_UNKNOWN;
 	}
 }

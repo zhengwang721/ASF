@@ -1,0 +1,10 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM0+ GCLK driver" id="sam0.drivers.gclk.quick_start.dummy.atsam0d4">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<require idref="board.dummy.atsam0d4"/>
+		<require idref="sam0.drivers.gclk.quick_start"/>
+		<generator value="armgcc"/>
+		<generator value="doxygen-v2"/>
+	</project>
+</asf>

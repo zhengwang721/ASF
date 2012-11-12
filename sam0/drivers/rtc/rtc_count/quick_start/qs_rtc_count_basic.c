@@ -34,20 +34,16 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
-*
+ *
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#define USE_FRAMEWORK
-
-#if defined(USE_FRAMEWORK)
-  #include "../rtc_count.h"
-  #include <stdbool.h>
-#endif
+void config_rtc_count(void);
 
 //! [initiate]
-void init_rtc_count(void)
+void config_rtc_count(void)
 {
 	/* Initialize RTC in 16 bit count mode. */
 //! [set_conf]
@@ -61,7 +57,7 @@ void init_rtc_count(void)
 //! [set_config]
 	config.mode = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
-	config.compare[0] = 2000;
+	config.compare_values[0] = 2000;
 //! [set_config]
 
 //! [init_rtc]
@@ -79,7 +75,7 @@ int main(void)
 	/* Initialize system. Must configure conf_clocks.h first. */
 	//system_init();
 //! [add_main]
-	init_rtc_count();
+	config_rtc_count();
 
 	rtc_count_set_count(1000);
 //! [add_main]

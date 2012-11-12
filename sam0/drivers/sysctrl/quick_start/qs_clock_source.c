@@ -37,24 +37,9 @@
  *
  * \asf_license_stop
  */
+#include <asf.h>
 
-/**
- * \page clock_clock_source_basic_use_case Clock basic use case
- *
- * In this case we apply the following configuration:
- * - RC8MHz (internal 8MHz RC oscillator)
- *  - Divide by 4, giving a frequency of 2MHz
- * - DFLL (Digital frequency locked loop)
- *  - Open loop mode
- *  - 48MHz frequency
- * - XOSC (External oscillator)
- *  - External crystal
- * - CPU clock
- *  - Use the DFLL, configured to xx MHz
- */
-
-
-#include <clock.h>
+void configure_clock_sources(void);
 
 void configure_clock_sources(void)
 {
@@ -77,7 +62,6 @@ void configure_clock_sources(void)
 
 	clock_source_set_config(&cs_conf, CLOCK_SOURCE_DFLL);
 }
-
 
 int main(void)
 {
