@@ -22,8 +22,8 @@ The schemas and corresponding documentation, in PDF format, for both extension a
 Technical Requirements
 ----------------------
 
-Python 2.6 or later. Python 3.x not supported. ( http://python.org/ )
-lxml 2.3 or later ( http://pypi.python.org/pypi/lxml/2.3 )
+- Python 2.6 or later. Python 3.x not supported. ( http://python.org/ )
+- lxml 2.3 or later ( http://pypi.python.org/pypi/lxml/2.3 )
 
 
 Project Generator
