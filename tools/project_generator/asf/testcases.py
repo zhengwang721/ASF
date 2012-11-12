@@ -755,9 +755,9 @@ class DeviceAliasMapTestCase(SetupTestCase):
 		expected_device_support_2 = ['atxmega128a1', 'uc3']
 		expected_device_support_3 = expected_device_support_1 + expected_device_support_2
 
-		module_1 = self.db.lookup_by_id("driver_1") 
-		module_2 = self.db.lookup_by_id("driver_2") 
-		module_3 = self.db.lookup_by_id("driver_3") 
+		module_1 = self.db.lookup_by_id("driver_1")
+		module_2 = self.db.lookup_by_id("driver_2")
+		module_3 = self.db.lookup_by_id("driver_3")
 
 		device_support_1 = module_1.get_device_support()
 		device_support_2 = module_2.get_device_support()
@@ -1467,7 +1467,7 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.assertEqual(['libc.a'], gen.get_build_from_export(BuildCompilerLibrary))
 		self.assertEqual([("a.file",['src/ASF/a.file', driver, 'a.file'])], fix_separators(gen.get_build_from_export(BuildDistributeFile)))
 		self.assertEqual([('avr32/drivers/tc/tc.h', ['src/ASF/avr32/drivers/tc/tc.h', driver, 'avr32/drivers/tc/tc.h'])], fix_separators(gen.get_build_from_export(BuildHeader)))
-		self.assertEqual(['src/asf/../../../avr32/drivers/tc', 'src', 'src/config'], separator_replace_list(gen.get_build_from_export(BuildInclude)))
+		self.assertEqual(['src/asf/avr32/drivers/tc', 'src', 'src/config'], separator_replace_list(gen.get_build_from_export(BuildInclude)))
 		self.assertEqual([('avr32/drivers/tc/tc_asm.s', ['src/ASF/avr32/drivers/tc/tc_asm.s', driver, 'avr32/drivers/tc/tc_asm.s'])],
 			fix_separators(gen.get_build_from_export(BuildAssembly)))
 		self.assertEqual([('avr32/drivers/tc/tc.c', ['src/ASF/avr32/drivers/tc/tc.c', driver, 'avr32/drivers/tc/tc.c'])], fix_separators(gen.get_build_from_export(BuildC)))
