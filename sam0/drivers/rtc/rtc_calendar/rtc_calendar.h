@@ -434,7 +434,7 @@ enum rtc_calendar_events {
  * Time structure containing the time given by or set to the RTC calendar.
  * The structure uses seven values to give second, minute, hour, pm/am, day,
  * month and year. It should be initiated with the
- * \ref rtc_calendar_get_time_default.
+ * \ref rtc_calendar_get_time_defaults().
  *
  *
  */
@@ -511,8 +511,8 @@ static inline void rtc_calendar_get_time_defaults(
 {
 	time->second = 0;
 	time->minute = 0;
-	time->hour 	 = 0;
-	time->pm 	 = 0;
+	time->hour   = 0;
+	time->pm     = 0;
 	time->day 	 = 1;
 	time->month  = 1;
 	time->year   = 2000;
@@ -718,7 +718,7 @@ enum status_code rtc_calendar_frequency_correction(int8_t value);
  *
  * This will enable the given event so it can be used by the event system.
  *
- * \param[in] event Bitmask containing events to enable.
+ * \param[in] events Bitmask containing events to enable.
  */
 static inline void rtc_calendar_enable_events(uint16_t events)
 {
@@ -734,7 +734,7 @@ static inline void rtc_calendar_enable_events(uint16_t events)
  *
  * This will disable the given event so it cannot be used by the event system.
  *
- * \param[in] event Bitmask to the events to disable.
+ * \param[in] events Bitmask to the events to disable.
  */
 static inline void rtc_calendar_disable_events(uint16_t events)
 {
@@ -798,7 +798,7 @@ static inline void rtc_calendar_disable_events(uint16_t events)
  */
 
 /**
- * \page quickstart Quick Start Guide for the RTC calendar
+ * \page rtc_cal_quickstart Quick Start Guide for the RTC calendar
  *
  * This is the quick start guide for the \ref sam0_rtc_cal_group module, with
  * step-by-step instructions on how to implement the module.

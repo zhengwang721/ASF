@@ -38,8 +38,9 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <nvm.h>
+void configure_nvm(void);
 
 //! [nvm_basic_setup]
 /* Buffer with same size of a page */
@@ -49,7 +50,7 @@
 //! [nvm_basic_def]
 
 /* Configuration function */
-void configure_nvm (void)
+void configure_nvm(void)
 {
 	/* Variable for the function */
 	//! [nvm_basic_var1]

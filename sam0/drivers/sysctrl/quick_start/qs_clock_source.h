@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Basic Usage Example
+ * \brief SAM0+ GPIO Port Driver Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -36,71 +36,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#include <asf.h>
 
-void config_rtc_calendar(void);
-
-//! [initiate]
-void config_rtc_calendar(void)
-{
-	/* Initialize RTC in calendar mode. */
-//! [set_conf]
-	struct rtc_calendar_conf config;
-//! [set_conf]
-//! [get_default]
-	rtc_calendar_get_config_defaults(&config);
-//! [get_default]
-
-//! [time_struct]
-	struct rtc_calendar_time alarm;
-	rtc_calendar_get_time_defaults(&alarm);
-	alarm.year      = 2013;
-	alarm.month     = 1;
-	alarm.day       = 1;
-	alarm.hour      = 0;
-	alarm.minute    = 0;
-//! [time_struct]
-
-//! [set_config]
-	config.clock_24h = true;
-	config.alarm[0] = alarm;
-//! [set_config]
-
-//! [init_rtc]
-	rtc_calendar_init(&config);
-//! [init_rtc]
-
-//! [enable]
-	rtc_calendar_enable();
-//! [enable]
-}
-//! [initiate]
-
-int main(void)
-{
-//! [add_main]
-
-	struct rtc_calendar_time time;
-	time.year      = 2012;
-	time.month     = 12;
-	time.day       = 12;
-	time.hour      = 13;
-	time.minute    = 37;
-
-	//system_init();
-
-	config_rtc_calendar();
-
-	/* Set current time. */
-	rtc_calendar_set_time(&time);
-
-	rtc_calendar_swap_time_mode();
-//! [add_main]
-	while(1){
-		/* Inf loop. */
-	}
-
-	return 0;
-}
+/**
+ * \page clock_clock_source_basic_use_case Clock basic use case
+ *
+ * In this case we apply the following configuration:
+ * - RC8MHz (internal 8MHz RC oscillator)
+ *  - Divide by 4, giving a frequency of 2MHz
+ * - DFLL (Digital frequency locked loop)
+ *  - Open loop mode
+ *  - 48MHz frequency
+ * - XOSC (External oscillator)
+ *  - External crystal
+ * - CPU clock
+ *  - Use the DFLL, configured to xx MHz
+ */

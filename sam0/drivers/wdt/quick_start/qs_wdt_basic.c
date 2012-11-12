@@ -38,8 +38,9 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <wdt.h>
+void configure_wdt(void);
 
 //! [setup]
 void configure_wdt(void)

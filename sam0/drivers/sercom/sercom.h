@@ -61,7 +61,7 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * The SERCOM driver has the following dependencies:
- * \li \b
+ * \li \ref clock_group "\b Clock" (System Clock Management)
  *
  * \section special_cons Special Considerations
  *

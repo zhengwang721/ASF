@@ -38,8 +38,10 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <events.h>
+void configure_event_channel(void);
+void configure_event_user(void);
 
 //! [setup]
 #define EXAMPLE_EVENT_GENERATOR    0
@@ -87,7 +89,7 @@ int main(void)
 {
 	//! [setup_init]
 	events_init();
-	
+
 	configure_event_channel();
 	configure_event_user();
 	//! [setup_init]

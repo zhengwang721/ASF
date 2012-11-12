@@ -38,8 +38,10 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <ac.h>
+void configure_ac(void);
+void configure_ac_channel(void);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
