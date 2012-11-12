@@ -7,7 +7,7 @@
 		<license caption="Eee license" path="eee_license.txt"/>
 		<release-notes caption="Eee release notes" url="http://eee.e.com/release-notes/"/>
 		<online-help>
-			<index-page caption="Eee help" baseurl="http://eee.c.com/help_index"/>
+			<index-page caption="Eee help" url="http://eee.c.com/help_index"/>
 		</online-help>
 		<dependencies/>
 	</extension>
