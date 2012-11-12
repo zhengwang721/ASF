@@ -48,11 +48,8 @@
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-//TODO: Not part of status_codes.h should it be?. Marte: use enum status_code.
-//typedef enum status_code status_code_t; have replaced all occurrences of status_code_t
-
 //Marte: bad name on enum. I'm not certain what to change it to.
-enum tc_ccn_reg_index {
+enum tc_compare_capture_chanle_index {//TODO: change to tc_compare_capture_index
 	TC_CC0                    = 0,
 	TC_CC1                    = 1,
 	TC_CC2                    = 2,
@@ -60,6 +57,7 @@ enum tc_ccn_reg_index {
 };
 
 //TODO: Name does not explain so much perhaps tc_counter_reload_options or restart_options
+//TODO: send mail to ic dev
 enum tc_sync_action {
 	/* The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock
@@ -75,8 +73,7 @@ enum tc_sync_action {
 	TC_PRESCSYNC_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
 };
 
-//TODO: could change this to tc_clock_prescaler?
-enum tc_prescaler {
+enum tc_clock_prescaler {
 	TC_PRESCALER_DIV1         = TC_PRESCALER_DIV1_bm,
 	TC_PRESCALER_DIV2         = TC_PRESCALER_DIV2_bm,
 	TC_PRESCALER_DIV4         = TC_PRESCALER_DIV4_bm,
@@ -89,7 +86,7 @@ enum tc_prescaler {
 
 /** Wave generation on output pin */
 //Marte: Bad/none descriptive name. Changed name to tc_wavegen_mode. Better?
-enum tc_wavegen_mode {
+enum tc_wavegen_mode {//TODO: tc_wave_generation 
 	/** TOP is MAX, except in 8 bit mode where it is the PER register*/
 	TC_WAVEGEN_NORMAL_FREQ         = TC_WAVEGEN_NFRQ_bm,
 	/** TOP is CC0, expert in 8 bit mode where it is the PER register*/
@@ -101,14 +98,14 @@ enum tc_wavegen_mode {
 };
 
 /** Software commands for the TC module */
+//TODO: chreate seperat functions for this. And delete.
 enum tc_command {
-	TC_COMMAND_NONE           = TC_COMMAND_NONE_bm, //not certain why you would want to have this? Not necessary to expose this to users?
 	TC_COMMAND_START          = TC_COMMAND_START_bm,
 	TC_COMMAND_STOP           = TC_COMMAND_STOP_bm,
 };
 
 /** Specifies which direction for the TC module to count */
-enum tc_count_direction {
+enum tc_count_direction {//TODO: change to up, down. Add direction to name.
 	TC_COUNT_INCREMENTING        = TC_DIR_COUNT_UP_bm,
 	TC_COUNT_DECREMENTING        = TC_DIR_COUNT_DOWN_bm,
 };
@@ -116,18 +113,12 @@ enum tc_count_direction {
 /** Running the TC with oneshot enabled will stop it from counting
  *  after reaching TOP the first time
  */
-//TODO: can't be bit maps as these bitmaps would be the same as this is in a set and a clear register.
+//TODO: remove.
 enum tc_oneshot {
 	TC_ONESHOT_ENABLED        = TC_ONESHOT_ENABLED_bm,
 	TC_ONESHOT_DISABLED       = TC_ONESHOT_DISABLED_bm,
 };
 
-//Can use this enum to also set the interrupt_enable bits
-//for these channels in that register for cc0-cc3 and also
-//the OVFEO flag. this way the user don't have to look at 
-//registers or enum relating to interrupts in the polled driver.
-//Need to set interrupts enabled on these channels to be able to 
-//read the flag when a capture has occurred.
 enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_NONE           = 0,
 	TC_CAPTURE_ENABLE_CC0            = TC_CPTEN_CC0_bm,
@@ -137,8 +128,10 @@ enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_ALL            = (0xf << TC_CPTEN_CC0_bp),
 };
 
+//TODO look into ccn->channel
 
 //change name on this, possibly to tc_event_action?
+//TODO: change names
 enum tc_event_action {
 	TC_EVACT_OFF              = TC_EVACT_OFF_bm,
 	TC_EVACT_RETRIGGER        = TC_EVACT_RETRIGGER_bm,
@@ -147,13 +140,12 @@ enum tc_event_action {
 	TC_EVACT_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
 };
 
-enum tc_waveform_invert_ch_mask {
+enum tc_waveform_invert_ch {//TODO use #define?
 	TC_WAVEFORM_INVERT_NONE             = 0,
 	TC_WAVEFORM_INVERT_CC0              = TC_INVEN_CC0_bm,
 	TC_WAVEFORM_INVERT_CC1              = TC_INVEN_CC1_bm,
 	TC_WAVEFORM_INVERT_CC2              = TC_INVEN_CC2_bm,
 	TC_WAVEFORM_INVERT_CC3              = TC_INVEN_CC3_bm,
-	TC_WAVEFORM_INVERT_ALL              = (0xf << TC_INVEN_CC0_bp),
 };
 
 /** Enable generation of events from the TC module
@@ -161,7 +153,7 @@ enum tc_waveform_invert_ch_mask {
  *  The content of this enum is to be used by the event_generation_mask in the
  *  tc_config struct
  */
-enum tc_evgen_enable {
+enum tc_evgen_enable {//TODO: change to tc_event_generation_enable. Use #define?
 	/** No generation of events */
 	TC_EVGEN_NONE             = TC_EVGEN_NONE_gc,
 	/** Generate event for compare/capture on channel 0 */
@@ -179,12 +171,13 @@ enum tc_evgen_enable {
 };
 
 
-enum tc_mode {
+enum tc_resolution {//TODO: change names
+	TC_MODE_COUNT8            = TC_MODE_COUNT8_bm,
 	TC_MODE_COUNT16           = TC_MODE_COUNT16_bm,
 	TC_MODE_COUNT32           = TC_MODE_COUNT32_bm,
-	TC_MODE_COUNT8            = TC_MODE_COUNT8_bm,
 };
 
+//TODO: cange names cc to capture compare. Change names countx_mode_vaues tc_8bit_config
 struct tc_count8_mode_values {
 	uint8_t count;
 	uint8_t period;
@@ -197,7 +190,7 @@ struct tc_count8_mode_values {
 struct tc_count16_mode_values {
 	uint16_t count;
 	uint16_t period;
-	uint16_t cc0;
+	uint16_t cc0;//remove
 	uint16_t cc1;
 	uint16_t cc2;
 	uint16_t cc3;
@@ -206,11 +199,12 @@ struct tc_count16_mode_values {
 struct tc_count32_mode_values {
 	uint32_t count;
 	uint32_t period;
-	uint32_t cc0;
+	uint32_t cc0;//remove
 	uint32_t cc1;
 };
 
 struct tc_config {
+	//TODO set clock param
 	/** Specifies either 8, 16 or 32 bit counter mode  */
 	enum tc_mode mode;
 	/** Specifies the prescaler value for GCLK_TC */
@@ -227,7 +221,7 @@ struct tc_config {
 	enum tc_sync_action sync_action;
 	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
 	 *  or overflow/underflow */
-	enum oneshot;
+	enum oneshot;//TODO: bool
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
 	/** Specifies which channel (s) to enable channel capture operation 
