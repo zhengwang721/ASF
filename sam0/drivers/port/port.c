@@ -72,7 +72,7 @@ static inline void _port_pin_set_eic_config(
 	/* Determine the channel's new edge detection configuration */
 	eic_new_config =
 			(config->mode << EIC_CONFIG_DETECTMODE0_gp);
-	
+
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
 		eic_new_config |= EIC_CONFIG_FILTEN0_bm;
@@ -99,7 +99,7 @@ static inline void _port_pin_set_eic_config(
  *  \retval STATUS_OK     If the channel was configured correctly
  *  \retval STATUS_ERR_INVALID_ARG   If invalid argument(s) were supplied
  */
-status_t port_pin_set_config(
+enum status_code port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_conf *const config)
 {

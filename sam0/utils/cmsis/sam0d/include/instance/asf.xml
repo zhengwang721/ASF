@@ -7,6 +7,12 @@
 		<build type="header-file" value="instance_gclk.h"/>
 		<build type="header-file" value="instance_sysctrl.h"/>
 		<build type="header-file" value="instance_pm.h"/>
+		<build type="header-file" value="instance_sercom.h"/>
+		<build type="header-file" value="instance_port.h"/>
+		<build type="header-file" value="instance_eic.h"/>
+		<build type="header-file" value="instance_rtc.h"/>
+		<build type="header-file" value="instance_nvm.h"/>
+		<build type="header-file" value="instance_ac.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0d"/>
 	</module>

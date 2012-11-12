@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.gclk.quick_start" caption="GCLK quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the Generic Clock module demonstrating clock configuration.
+		</info>
+		<build type="c-source" value="qs_gclk_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.gclk"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>

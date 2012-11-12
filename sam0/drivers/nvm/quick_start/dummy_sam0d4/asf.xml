@@ -1,0 +1,8 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM0+ NVM driver" id="sam0.drivers.nvm.quick_start.dummy.atsam0d4">
+		<require idref="board.dummy.atsam0d4"/>
+		<require idref="sam0.drivers.nvm.quick_start"/>
+		<generator value="armgcc"/>
+		<generator value="doxygen-v2"/>
+	</project>
+</asf>

@@ -69,10 +69,25 @@ typedef enum IRQn
 #include <component/component_evsys.h>
 #include <component/component_sysctrl.h>
 #include <component/component_pm.h>
+#include <component/component_sercom.h>
+#include <component/component_port.h>
+#include <component/component_eic.h>
+#include <component/component_rtc.h>
+#include <component/component_pac.h>
+#include <component/component_nvm.h>
+#include <component/component_ac.h>
+
 #include <instance/instance_wdt.h>
 #include <instance/instance_gclk.h>
 #include <instance/instance_evsys.h>
 #include <instance/instance_sysctrl.h>
 #include <instance/instance_pm.h>
+#include <instance/instance_sercom.h>
+#include <instance/instance_port.h>
+#include <instance/instance_eic.h>
+#include <instance/instance_rtc.h>
+#include <instance/instance_pac.h>
+#include <instance/instance_nvm.h>
+#include <instance/instance_ac.h>
 
 #endif /* _SAM0D4_ */

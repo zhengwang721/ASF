@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM0+ SYSCTRL driver" id="sam0.drivers.sysctrl.quick_start.dummy.atsam0d4">
+	<project caption="Quick Start for the SAM0+ RTC Callendar driver" id="sam0.drivers.rtc_calendar.quick_start.dummy.atsam0d4">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.atsam0d4"/>
-		<require idref="sam0.drivers.sysctrl.quick_start"/>
+		<require idref="sam0.drivers.rtc_calendar.quick_start"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen-v2"/>
 	</project>

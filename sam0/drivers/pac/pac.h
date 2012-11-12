@@ -100,7 +100,7 @@
  * unlocked again. Attempting to unlock and already unlocked peripheral, or
  * attempting to lock a peripheral that is currently locked will generate and
  * non-maskable interrupt (NMI). This implies that the implementer must keep
- * strict control over the peripheral's lock-state before modifying them. With 
+ * strict control over the peripheral's lock-state before modifying them. With
  * this added safety, the probability of stopping code run-away increases as
  * the program pointer can be caught inside the exception handler, and necessary
  * countermeasures can be initiated. The implementer should also consider using
@@ -602,7 +602,8 @@
  * @{
  */
 
-#include "pac_header.h"
+#include <io.h>
+#include <compiler.h>
 
 #ifdef __cplusplus
 extern "C" {

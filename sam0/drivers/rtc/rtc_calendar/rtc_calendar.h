@@ -42,7 +42,7 @@
 #ifndef RTC_CALENDAR_H_INCLUDED
 #define RTC_CALENDAR_H_INCLUDED
 
-#include "./config/conf_clocks.h"
+#include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 # error "The GCLK_RTC must be set to use a 32kHz source with a prescaler of 32."

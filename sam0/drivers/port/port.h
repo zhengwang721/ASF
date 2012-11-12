@@ -340,93 +340,6 @@ struct port_pin_conf {
 	} output; /**< Pin output driver configuration. */
 };
 
-/** \name Configuration and initialization
- * @{
- */
-
-/** \brief Initializes a Port pin configuration structure to defaults.
- *
- *  Initializes a given Port pin configuration structure to a set of
- *  known default values. This function should be called on all new
- *  instances of these configuration structures before being modified by the
- *  user application.
- *
- *  The default configuration is as follows:
- *   \li Non peripheral (i.e. GPIO) controlled
- *   \li Input mode with internal pullup enabled, output mode disabled
- *   \li Edge detection disabled
- *   \li On-demand input sampling
- *
- *  \param[out] config  Configuration structure to initialize to default values
- */
-static inline void port_pin_get_config_defaults(
-		struct port_pin_conf *const config)
-{
-	/* Sanity check arguments */
-	Assert(config);
-
-	/* Default configuration values */
-	config->type = PORT_PIN_TYPE_GPIO;
-	config->input.enabled = true;
-	config->input.pull = PORT_PIN_PULL_UP;
-	config->input.sampling_mode = PORT_PIN_SAMPLING_ONDEMAND;
-	config->input.edge_detection.wake_if_sleeping = false;
-	config->input.edge_detection.filter_input_signal = false;
-	config->input.edge_detection.mode = PORT_EDGE_DETECT_NONE;
-	config->output.enabled = false;
-	config->output.drive_strength = PORT_PIN_STRENGTH_NORMAL;
-	config->output.slew_rate = PORT_PIN_SLEW_RATE_NORMAL;
-	config->output.drive = PORT_PIN_DRIVE_TOTEM;
-}
-
-status_t port_pin_set_config(
-		const uint8_t gpio_pin,
-		const struct port_pin_conf *const config);
-
-/** @} */
-
-
-/** \name Edge detection
- * @{
- */
-
-/** \brief Retrieves the edge detection state of a configured port pin.
- *
- *  Reads the current state of a configured port pin, and determines if
- *  if the detection criteria of the channel has been met.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin to check
- *
- *  \return Status of the requested pin's edge detection state.
- */
-static inline bool port_pin_is_edge_detected(
-		const uint8_t gpio_pin)
-{
-	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
-	uint32_t eic_mask = (1UL << (gpio_pin % 32));
-
-	return (eic_base->INTFLAG & eic_mask);
-}
-
-/** \brief Clears the edge detection state of a configured port pin.
- *
- *  Clears the current state of a configured port pin, readying it for
- *  the next level or edge detection.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin edge detection state to clear
- */
-static inline void port_pin_clear_edge_detected(
-		const uint8_t gpio_pin)
-{
-	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
-	uint32_t eic_mask = (1UL << (gpio_pin % 32));
-
-	eic_base->INTFLAG = eic_mask;
-}
-
-/** @} */
-
-
 /** \name State reading/writing (physical module orientated)
  * @{
  */
@@ -530,6 +443,92 @@ static inline void port_toggle_output_levels(
 	Assert(port);
 
 	port->OUTTGL = pin_mask;
+}
+
+/** @} */
+
+/** \name Configuration and initialization
+ * @{
+ */
+
+/** \brief Initializes a Port pin configuration structure to defaults.
+ *
+ *  Initializes a given Port pin configuration structure to a set of
+ *  known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li Non peripheral (i.e. GPIO) controlled
+ *   \li Input mode with internal pullup enabled, output mode disabled
+ *   \li Edge detection disabled
+ *   \li On-demand input sampling
+ *
+ *  \param[out] config  Configuration structure to initialize to default values
+ */
+static inline void port_pin_get_config_defaults(
+		struct port_pin_conf *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->type = PORT_PIN_TYPE_GPIO;
+	config->input.enabled = true;
+	config->input.pull = PORT_PIN_PULL_UP;
+	config->input.sampling_mode = PORT_PIN_SAMPLING_ONDEMAND;
+	config->input.edge_detection.wake_if_sleeping = false;
+	config->input.edge_detection.filter_input_signal = false;
+	config->input.edge_detection.mode = PORT_EDGE_DETECT_NONE;
+	config->output.enabled = false;
+	config->output.drive_strength = PORT_PIN_STRENGTH_NORMAL;
+	config->output.slew_rate = PORT_PIN_SLEW_RATE_NORMAL;
+	config->output.drive = PORT_PIN_DRIVE_TOTEM;
+}
+
+enum status_code port_pin_set_config(
+		const uint8_t gpio_pin,
+		const struct port_pin_conf *const config);
+
+/** @} */
+
+
+/** \name Edge detection
+ * @{
+ */
+
+/** \brief Retrieves the edge detection state of a configured port pin.
+ *
+ *  Reads the current state of a configured port pin, and determines if
+ *  if the detection criteria of the channel has been met.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin to check
+ *
+ *  \return Status of the requested pin's edge detection state.
+ */
+static inline bool port_pin_is_edge_detected(
+		const uint8_t gpio_pin)
+{
+	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	uint32_t eic_mask = (1UL << (gpio_pin % 32));
+
+	return (eic_base->INTFLAG & eic_mask);
+}
+
+/** \brief Clears the edge detection state of a configured port pin.
+ *
+ *  Clears the current state of a configured port pin, readying it for
+ *  the next level or edge detection.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin edge detection state to clear
+ */
+static inline void port_pin_clear_edge_detected(
+		const uint8_t gpio_pin)
+{
+	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	uint32_t eic_mask = (1UL << (gpio_pin % 32));
+
+	eic_base->INTFLAG = eic_mask;
 }
 
 /** @} */
