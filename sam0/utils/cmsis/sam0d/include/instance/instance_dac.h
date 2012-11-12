@@ -1,11 +1,11 @@
 /**
  * \file
  *
- * \brief SAM0+ Generic Clock Driver Quick Start
- *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,68 +39,9 @@
  *
  */
 
-#include <gclk.h>
-#include <port.h>
+#ifndef __SAM0XX_INSTANCE_DAC__
+#define __SAM0XX_INSTANCE_DAC__
 
-//! [setup]
-#define EXAMPLE_GCLOCK_GENERATOR    0
-#define EXAMPLE_GCLOCK_CHANNEL      0
+#define DAC0              (*(DAC_t*) 0x2000)
 
-void configure_gclock_generator(void)
-{
-//! [setup_1]
-	struct clock_gclk_gen_conf gclock_gen_conf;
-//! [setup_1]
-//! [setup_2]
-	clock_gclk_gen_get_config_defaults(&gclock_gen_conf);
-//! [setup_2]
-
-//! [setup_3]
-	gclock_gen_conf.source_clock    = 0;
-	gclock_gen_conf.division_factor = 128;
-//! [setup_3]
-//! [setup_4]
-	clock_gclk_gen_set_config(EXAMPLE_GCLOCK_GENERATOR, &gclock_gen_conf);
-//! [setup_4]
-
-//! [setup_5]
-	clock_gclk_gen_enable(EXAMPLE_GCLOCK_GENERATOR);
-//! [setup_5]
-}
-
-void configure_gclock_channel(void)
-{
-//! [setup_6]
-	struct clock_gclk_ch_conf gclock_ch_conf;
-//! [setup_6]
-//! [setup_7]
-	clock_gclk_ch_get_config_defaults(&gclock_ch_conf);
-//! [setup_7]
-
-//! [setup_8]
-	gclock_ch_conf.source_generator    = EXAMPLE_GCLOCK_GENERATOR;
-	gclock_ch_conf.enable_during_sleep = false;
-//! [setup_8]
-//! [setup_9]
-	clock_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);
-//! [setup_9]
-
-//! [setup_10]
-	clock_gclk_ch_enable(EXAMPLE_GCLOCK_CHANNEL);
-//! [setup_10]
-}
-//! [setup]
-
-int main(void)
-{
-	//! [setup_init]
-	configure_gclock_generator();
-	configure_gclock_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		/* Nothing to do */
-	}
-	//! [main]
-}
+#endif /* __SAM0XX_INSTANCE_DAC__ */

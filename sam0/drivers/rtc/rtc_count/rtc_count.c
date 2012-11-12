@@ -48,7 +48,7 @@ struct _rtc_device {
 	enum rtc_count_mode mode;
 	/** Set if counter value should be continuously updated. */
 	bool continuously_update;
-}
+};
 
 static struct _rtc_device _rtc_dev;
 
@@ -64,7 +64,7 @@ static inline void _rtc_count_reset(void)
 	rtc_count_disable();
 
 	/* Sync. */
-	_rtc_count_sync();
+	_rtc_count_wait_for_sync();
 
 	/* Initiate software reset. */
 	rtc_module->CTRL |= RTC_SWRST_bm;
@@ -93,7 +93,7 @@ static enum status_code _rtc_count_set_config(
 		case RTC_COUNT_MODE_32BIT:
 
 			/* Set 32bit mode and clear on match if applicable. */
-			rtc_module->CTRL |= RTC_MODE_32BIT_bm;
+			rtc_module->CTRL |= RTC_COUNT_MODE_32BIT_bm;
 
 			/* Check if clear on compare match should be set. */
 			if (config->clear_on_match) {
@@ -130,24 +130,25 @@ static enum status_code _rtc_count_set_config(
 	/* Set compare values. */
 	/* Sync. */
 	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare[0], RTC_COUNT_COMPARE0);
+	rtc_count_set_compare(config->compare_values[0], RTC_COUNT_COMPARE0);
 	/* Sync. */
 	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare[1], RTC_COUNT_COMPARE1);
+	rtc_count_set_compare(config->compare_values[1], RTC_COUNT_COMPARE1);
 	/* Sync. */
 	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare[2], RTC_COUNT_COMPARE2);
+	rtc_count_set_compare(config->compare_values[2], RTC_COUNT_COMPARE2);
 	/* Sync. */
 	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare[3], RTC_COUNT_COMPARE3);
+	rtc_count_set_compare(config->compare_values[3], RTC_COUNT_COMPARE3);
+
 	/* Check if 16 bit mode. */
 	if (config->mode == RTC_COUNT_MODE_16BIT) {
 		/* Sync. */
 		_rtc_count_wait_for_sync();
-		rtc_count_set_compare(config->compare[4], RTC_COUNT_COMPARE4);
+		rtc_count_set_compare(config->compare_values[4], RTC_COUNT_COMPARE4);
 		/* Sync. */
 		_rtc_count_wait_for_sync();
-		rtc_count_set_compare(config->compare[5], RTC_COUNT_COMPARE5);
+		rtc_count_set_compare(config->compare_values[5], RTC_COUNT_COMPARE5);
 	}
 
 	/* Set event source. */
@@ -214,7 +215,7 @@ enum status_code rtc_count_set_count(uint32_t count_value)
 	RTC_t *rtc_module = &RTC;
 
 	/* Sync. */
-	_rtc_count_sync();
+	_rtc_count_wait_for_sync();
 
 	/* Set count according to mode */
 	switch(_rtc_dev.mode){
@@ -266,7 +267,7 @@ uint32_t rtc_count_get_count(void)
 		rtc_module->READREQ = RTC_COUNT_RREQ;
 
 		/* Sync. */
-		_rtc_count_sync();
+		_rtc_count_wait_for_sync();
 	}
 
 	/* Read value based on mode. */
@@ -307,6 +308,7 @@ uint32_t rtc_count_get_count(void)
  * \return Status indicating if compare was successfully set.
  * \retval STATUS_OK If compare was successfully set.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
  */
 enum status_code rtc_count_set_compare(uint32_t comp_value,
 		enum rtc_count_compare comp_index)
@@ -315,7 +317,7 @@ enum status_code rtc_count_set_compare(uint32_t comp_value,
 	RTC_t *rtc_module = &RTC;
 
 	/* Sync. */
-	_rtc_count_sync();
+	_rtc_count_wait_for_sync();
 
 	/* Set compare values based on operation mode. */
 	switch (_rtc_dev.mode) {
@@ -371,6 +373,7 @@ enum status_code rtc_count_set_compare(uint32_t comp_value,
  * \return Status of the reading procedure.
  * \retval STATUS_OK If the value was read correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
  */
 enum status_code rtc_count_get_compare(uint32_t *const comp_value,
 		enum rtc_count_compare comp_index)
@@ -403,7 +406,7 @@ enum status_code rtc_count_get_compare(uint32_t *const comp_value,
 
 		case default:
 			Assert(false);
-			return STATUS_ERR_NOT_INITIALIZED;
+			return STATUS_ERR_BAD_FORMAT;
 	}
 	/* Return status showing everything is OK. */
 	return STATUS_OK;
@@ -508,7 +511,7 @@ bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
 
 		default:
 			Assert(false);
-			return STATUS_ERR_NOT_INITIALIZED;
+			return false;
 	}
 
 	/* Set status of INTFLAG as return argument. */
@@ -601,7 +604,7 @@ enum status_code rtc_count_frequency_correction(int8_t value)
 	}
 
 	/* Sync. */
-	_rtc_calendar_wait_for_sync();
+	_rtc_count_wait_for_sync();
 
 	/* Set direction. */
 	if (slower) {

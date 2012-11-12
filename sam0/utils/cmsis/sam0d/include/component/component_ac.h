@@ -58,8 +58,8 @@ typedef volatile struct {
 	__REG8(WINCTRL, __IO);
 	__REG8(reserved_0x03, __I);
 	__REG16(reserved_0x04, __I);
-	__REG32_ARRAY(COMPCTRL0, 4, __IO);
-	__REG8_ARRAY(SCALAR, 4, __IO);
+	__REG32_ARRAY(COMPCTRL, 4, __IO);
+	__REG8_ARRAY(SCALER, 4, __IO);
 } AC_t;
 
 /* AC Register CTRLA definitions */
@@ -128,9 +128,9 @@ typedef volatile struct {
 #define AC_STATE3_bp        3
 #define AC_STATE3_bm        (1UL << AC_STATE3_bp)
 #define AC_WSTATE0_gp       4
-#define AC_WSTATE0_gm       (0x2 << AC_WSTATE0_bp)
+#define AC_WSTATE0_gm       (0x2 << AC_WSTATE0_gp)
 #define AC_WSTATE1_gp       6
-#define AC_WSTATE1_gm       (0x2 << AC_WSTATE1_bp)
+#define AC_WSTATE1_gm       (0x2 << AC_WSTATE1_gp)
 
 /* AC Register STATUSB definitions */
 #define AC_READY0_bp        0
@@ -179,5 +179,35 @@ typedef volatile struct {
 /* AC Register SCALARx definitions */
 #define AC_VALUE_gp         0
 #define AC_VALUE_gm         (0x3 << AC_VALUE_gp)
+
+#define AC_MUXPOS_PIN0_gc     0
+#define AC_MUXPOS_PIN1_gc     1
+#define AC_MUXPOS_PIN2_gc     2
+#define AC_MUXPOS_PIN3_gc     3
+#define AC_MUXNEG_PIN0_gc     0
+#define AC_MUXNEG_PIN1_gc     1
+#define AC_MUXNEG_PIN2_gc     2
+#define AC_MUXNEG_PIN3_gc     3
+#define AC_MUXNEG_GND_gc      4
+#define AC_MUXNEG_VSCALE_gc   5
+#define AC_MUXNEG_BANDGAP_gc  6
+#define AC_MUXNEG_DAC_gc      7
+
+#define AC_FLEN_OFF_gc        0
+#define AC_FLEN_MAJ3_gc       1
+#define AC_FLEN_MAJ5_gc       2
+
+#define AC_OUT_OFF_gc         0
+#define AC_OUT_ASYNC_gc       1
+#define AC_OUT_SYNC_gc        2
+
+#define AC_WINTSEL_ABOVE_gc   0
+#define AC_WINTSEL_INSIDE_gc  1
+#define AC_WINTSEL_BELOW_gc   2
+#define AC_WINTSEL_OUTSIDE_gc 3
+
+#define AC_WSTATE_ABOVE_gc    0
+#define AC_WSTATE_INSIDE_gc   1
+#define AC_WSTATE_BELOW_gc    2
 
 #endif /* __SAM0XX_COMPONENT_AC__ */

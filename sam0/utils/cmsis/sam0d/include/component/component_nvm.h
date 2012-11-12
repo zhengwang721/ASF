@@ -102,7 +102,8 @@ typedef struct {
 #define NVM_NVMP_gp             0
 #define NVM_INTFLAG_READY_bm    0x0001
 
-#define NVM_COMMAND_KEY 0xA5
-#define NVM_ERRORS_gp   2
+#define NVM_COMMAND_KEY         0xA5
+#define NVM_ERRORS_gp           2
+#define NVM_ERRORS_gm           (0x3 << NVM_ERRORS_gp)
 
 #endif /* __SAM0XX_COMPONENT_NVM__ */

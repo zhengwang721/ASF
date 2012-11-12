@@ -42,7 +42,7 @@
 #ifndef RTC_COUNT_H_INCLUDED
 #define RTC_COUNT_H_INCLUDED
 
-#include "./config/conf_clocks.h"
+#include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 # error "conf_clocks.h must be set up for the RTC."

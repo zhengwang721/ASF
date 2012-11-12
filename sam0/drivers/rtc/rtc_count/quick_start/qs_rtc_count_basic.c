@@ -61,7 +61,7 @@ void init_rtc_count(void)
 //! [set_config]
 	config.mode = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
-	config.compare[0] = 2000;
+	config.compare_values[0] = 2000;
 //! [set_config]
 
 //! [init_rtc]

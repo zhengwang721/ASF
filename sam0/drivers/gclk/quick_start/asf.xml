@@ -6,6 +6,7 @@
 		<build type="c-source" value="qs_gclk_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.gclk"/>
+		<require idref="sam0.drivers.port"/>
 		<device-support value="atsam0d4"/>
 	</module>
 </asf>

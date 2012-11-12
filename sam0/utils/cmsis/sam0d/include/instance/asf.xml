@@ -13,6 +13,7 @@
 		<build type="header-file" value="instance_rtc.h"/>
 		<build type="header-file" value="instance_nvm.h"/>
 		<build type="header-file" value="instance_ac.h"/>
+		<build type="header-file" value="instance_dac.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0d"/>
 	</module>

@@ -128,14 +128,14 @@ enum ac_ch_pos_mux {
 };
 
 enum ac_ch_neg_mux {
-	AC_CH_NEG_MUX_PIN0       = AC_MUXNED_PIN0_gc,
-	AC_CH_NEG_MUX_PIN1       = AC_MUXNED_PIN1_gc,
-	AC_CH_NEG_MUX_PIN2       = AC_MUXNED_PIN2_gc,
-	AC_CH_NEG_MUX_PIN3       = AC_MUXNED_PIN3_gc,
-	AC_CH_NEG_MUX_GND        = AC_MUXNED_GND_gc,
-	AC_CH_NEG_MUX_SCALED_VCC = AC_MUXNED_VSCALE_gc,
-	AC_CH_NEG_MUX_BANDGAP    = AC_MUXNED_BANDGAP_gc,
-	AC_CH_NEG_MUX_DAC        = AC_MUXNED_DAC_gc,
+	AC_CH_NEG_MUX_PIN0       = AC_MUXNEG_PIN0_gc,
+	AC_CH_NEG_MUX_PIN1       = AC_MUXNEG_PIN1_gc,
+	AC_CH_NEG_MUX_PIN2       = AC_MUXNEG_PIN2_gc,
+	AC_CH_NEG_MUX_PIN3       = AC_MUXNEG_PIN3_gc,
+	AC_CH_NEG_MUX_GND        = AC_MUXNEG_GND_gc,
+	AC_CH_NEG_MUX_SCALED_VCC = AC_MUXNEG_VSCALE_gc,
+	AC_CH_NEG_MUX_BANDGAP    = AC_MUXNEG_BANDGAP_gc,
+	AC_CH_NEG_MUX_DAC        = AC_MUXNEG_DAC_gc,
 };
 
 enum ac_ch_filter {
@@ -280,11 +280,11 @@ void ac_enable(
 void ac_disable(
 		struct ac_dev_inst *const dev_inst);
 
-enum status_codes ac_enable_events(
+void ac_enable_events(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t events);
 
-enum status_codes ac_disable_events(
+void ac_disable_events(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t events);
 
@@ -484,7 +484,7 @@ static inline enum ac_ch_state ac_ch_get_state(
  *                      default values
  */
 static inline void ac_win_get_config_defaults(
-		struct ac_ch_conf *const config)
+		struct ac_win_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -498,7 +498,7 @@ void ac_win_set_config(
 		const uint8_t win_channel,
 		struct ac_win_conf *const config);
 
-enum status_codes ac_win_enable(
+enum status_code ac_win_enable(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t win_channel);
 
@@ -530,8 +530,6 @@ static inline bool ac_win_is_ready(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
 
 	/* Check if the two comparators used in the window are ready */
 	bool win_pair_comp0_ready = ac_ch_is_ready(dev_inst, (win_channel / 2));

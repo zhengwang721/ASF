@@ -499,22 +499,23 @@ static inline void _rtc_calendar_wait_for_sync(void)
 #endif
 
 /**
- * \brief Initialize time structure.
+ * \brief Initialize a \c time structure.
  *
  * This will initialize a given time structure to the time 00:00:00 (hh:mm:ss)
  * and date 2000-01-01 (YYYY-MM-DD).
  *
  * \param[out] time Time structure to initialize.
  */
-static void rtc_calendar_get_time_defaults(struct rtc_calendar_time *const time)
+static inline void rtc_calendar_get_time_defaults(
+		struct rtc_calendar_time *const time)
 {
-	time->second 	= 0;
-	time->minute 	= 0;
-	time->hour 	= 0;
-	time->pm 	= 0;
-	time->day 	= 1;
-	time->month 	= 1;
-	time->year 	= 2000;
+	time->second = 0;
+	time->minute = 0;
+	time->hour 	 = 0;
+	time->pm 	 = 0;
+	time->day 	 = 1;
+	time->month  = 1;
+	time->year   = 2000;
 }
 
 /**
@@ -542,7 +543,7 @@ static inline void rtc_calendar_get_config_defaults(
 
 	/* Initialize and set time structure to default. */
 	struct rtc_calendar_time time;
-	rtc_calendar_get_time_default(&time);
+	rtc_calendar_get_time_defaults(&time);
 
 	/* Set default into configuration structure */
 	config->clear_on_match = false;
@@ -658,7 +659,7 @@ static inline void rtc_calendar_clear_overflow(void)
  * \param[in] alarm_index Index of the alarm to check.
  */
 static inline bool rtc_calendar_is_alarm_match(
-		num rtc_calendar_alarm alarm_index)
+		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	RTC_t *rtc_module = &RTC;
