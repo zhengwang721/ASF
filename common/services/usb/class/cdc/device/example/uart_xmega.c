@@ -50,6 +50,7 @@
 void uart_config(uint8_t port, usb_cdc_line_coding_t * cfg)
 {
 	uint8_t reg_ctrlc;
+	uint16_t bsel;
 
 	reg_ctrlc = USART_CMODE_ASYNCHRONOUS_gc;
 
@@ -99,8 +100,10 @@ void uart_config(uint8_t port, usb_cdc_line_coding_t * cfg)
 	// Set configuration
 	USART.CTRLC = reg_ctrlc;
 	// Update baudrate
-	USART.BAUDCTRLA = (uint16_t) (((((((uint32_t) sysclk_get_cpu_hz()) << 1)
-			/ ((uint32_t) le32_to_cpu(cfg->dwDTERate) * 8)) + 1) >> 1) - 1);
+	bsel = (uint16_t) (((((((uint32_t) sysclk_get_cpu_hz()) << 1) / ((uint32_t)
+		le32_to_cpu(cfg->dwDTERate) * 8)) + 1) >> 1) - 1);
+	USART.BAUDCTRLA = bsel & 0xFF;
+	USART.BAUDCTRLB = bsel >> 8;
 }
 
 void uart_open(uint8_t port)
