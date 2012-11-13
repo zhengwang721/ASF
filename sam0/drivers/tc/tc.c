@@ -1,5 +1,4 @@
 /**
- 
  * \file
  *
  * \brief SAM0+ TC Driver
@@ -52,35 +51,6 @@
 #include "tc.h"
 
 /**
- * \brief Reset the TC module
- *
- * Resets the TC module
- *
- * \param dev_inst    pointer to the device struct
- */
-static inline void _tc_reset(struct tc_dev_inst *dev_inst)
-{
-
-	/* Sanity check arguments  */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the module hardware instance */
-	TC_t *const tc_module = dev_inst->hw_dev;
-
-	/* Synchronize */
-	tc_sync(tc_module);
-
-	/* Enable TC module, based on the module tc mode  */
-	tc_module->CTRLA = TC_RESET_bm;
-}
-
-/*TODO: replace by sysctrl++. EB is this nessesary.*/
-void sysclk_init(void) {
-	/*  */
-}
-
-/**
  * \brief Initializes the TC
  *
  * Enables the clock and initializes the TC module,
@@ -103,9 +73,6 @@ enum status_code tc_init(TC_t *const module,
 
 	/*Reset the TC module to ensure it is re-initialized correctly */
 	tc_reset(dev_inst);
-
-	/* Initialize the system clock*/
-	sysclk_init();
 
 	/* Set the new configuration of the module based on the config struct
 	 * and return with the status
@@ -319,32 +286,6 @@ enum status_code tc_get_count(
 }
 
 /**
- * \brief Sends a command to the TC module
- *
- * Sends a command which can start, restart or stop the TC module
- *
- * \param dev_inst    pointer to the device struct
- * \param command     command to write to TC module
- * \return enum status_code STATUS_OK
- */
-enum status_code tc_execute_command(struct tc_dev_inst *const dev_inst,
-		enum tc_command command)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_ptr);
-
-	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
-
-	/* Synchronize */
-	tc_sync(tc_module);
-
-	/* Write command to execute */
-	tc_module->CTRLBSET |= command;
-}
-
-/**
  * \brief Get value from TC compare/capture
  *
  * Get TC module compare/capture register with given index
@@ -368,7 +309,7 @@ enum status_code tc_get_capture(
 
 	/* Get a pointer to the module's hardware instance*/
 	TC_t *const tc_module = dev_inst->hw_dev;
-	
+
 	/* Synchronize */
 	tc_sync(tc_module);//this is probably not enough may be necessary to set RREQ or RCONT and ADDR bits, before checking SYNCBUSY.
 

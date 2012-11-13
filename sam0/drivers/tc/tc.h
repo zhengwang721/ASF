@@ -48,8 +48,7 @@
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-//Marte: bad name on enum. I'm not certain what to change it to.
-enum tc_compare_capture_chanle_index {//TODO: change to tc_compare_capture_index
+enum tc_compare_capture_chanle_index {
 	TC_CC0                    = 0,
 	TC_CC1                    = 1,
 	TC_CC2                    = 2,
@@ -57,7 +56,7 @@ enum tc_compare_capture_chanle_index {//TODO: change to tc_compare_capture_index
 };
 
 //TODO: Name does not explain so much perhaps tc_counter_reload_options or restart_options
-//TODO: send mail to ic dev
+//TODO: send mail to ic dev. may remove compleetly
 enum tc_sync_action {
 	/* The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock
@@ -74,49 +73,31 @@ enum tc_sync_action {
 };
 
 enum tc_clock_prescaler {
-	TC_PRESCALER_DIV1         = TC_PRESCALER_DIV1_bm,
-	TC_PRESCALER_DIV2         = TC_PRESCALER_DIV2_bm,
-	TC_PRESCALER_DIV4         = TC_PRESCALER_DIV4_bm,
-	TC_PRESCALER_DIV8         = TC_PRESCALER_DIV8_bm,
-	TC_PRESCALER_DIV16        = TC_PRESCALER_DIV16_bm,
-	TC_PRESCALER_DIV64        = TC_PRESCALER_DIV64_bm,
-	TC_PRESCALER_DIV256       = TC_PRESCALER_DIV256_bm,
-	TC_PRESCALER_DIV1024      = TC_PRESCALER_DIV1024_bm,
+	TC_CLOCK_PRESCALER_DIV1         = TC_PRESCALER_DIV1_bm,
+	TC_CLOCK_PRESCALER_DIV2         = TC_PRESCALER_DIV2_bm,
+	TC_CLOCK_PRESCALER_DIV4         = TC_PRESCALER_DIV4_bm,
+	TC_CLOCK_PRESCALER_DIV8         = TC_PRESCALER_DIV8_bm,
+	TC_CLOCK_PRESCALER_DIV16        = TC_PRESCALER_DIV16_bm,
+	TC_CLOCK_PRESCALER_DIV64        = TC_PRESCALER_DIV64_bm,
+	TC_CLOCK_PRESCALER_DIV256       = TC_PRESCALER_DIV256_bm,
+	TC_CLOCK_PRESCALER_DIV1024      = TC_PRESCALER_DIV1024_bm,
 };
 
-/** Wave generation on output pin */
-//Marte: Bad/none descriptive name. Changed name to tc_wavegen_mode. Better?
-enum tc_wavegen_mode {//TODO: tc_wave_generation 
+enum tc_wave_generation {
 	/** TOP is MAX, except in 8 bit mode where it is the PER register*/
-	TC_WAVEGEN_NORMAL_FREQ         = TC_WAVEGEN_NFRQ_bm,
+	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_WAVEGEN_NFRQ_bm,
 	/** TOP is CC0, expert in 8 bit mode where it is the PER register*/
-	TC_WAVEGEN_MATCH_FREQ          = TC_WAVEGEN_MFRQ_bm,
+	TC_WAVE_GENERATION_MATCH_FREQ          = TC_WAVEGEN_MFRQ_bm,
 	/** TOP is MAX, except in 8 bit mode where it is the PER register*/
-	TC_WAVEGEN_NORMAL_PWM          = TC_WAVEGEN_NPWM_bm,
+	TC_WAVE_GENERATION_NORMAL_PWM          = TC_WAVEGEN_NPWM_bm,
 	/** TOP is CC0, except in 8 bit mode where it is the PER register*/
-	TC_WAVEGEN_MATCH_PWM           = TC_WAVEGEN_MPWM_bm,
-};
-
-/** Software commands for the TC module */
-//TODO: chreate seperat functions for this. And delete.
-enum tc_command {
-	TC_COMMAND_START          = TC_COMMAND_START_bm,
-	TC_COMMAND_STOP           = TC_COMMAND_STOP_bm,
+	TC_WAVE_GENERATION_MATCH_PWM           = TC_WAVEGEN_MPWM_bm,
 };
 
 /** Specifies which direction for the TC module to count */
-enum tc_count_direction {//TODO: change to up, down. Add direction to name.
-	TC_COUNT_INCREMENTING        = TC_DIR_COUNT_UP_bm,
-	TC_COUNT_DECREMENTING        = TC_DIR_COUNT_DOWN_bm,
-};
-
-/** Running the TC with oneshot enabled will stop it from counting
- *  after reaching TOP the first time
- */
-//TODO: remove.
-enum tc_oneshot {
-	TC_ONESHOT_ENABLED        = TC_ONESHOT_ENABLED_bm,
-	TC_ONESHOT_DISABLED       = TC_ONESHOT_DISABLED_bm,
+enum tc_count_direction {
+	TC_COUNT_UP        = UP,
+	TC_COUNT_DOWN      = DOWN,
 };
 
 enum tc_capture_enable {
@@ -130,14 +111,12 @@ enum tc_capture_enable {
 
 //TODO look into ccn->channel
 
-//change name on this, possibly to tc_event_action?
-//TODO: change names
 enum tc_event_action {
-	TC_EVACT_OFF              = TC_EVACT_OFF_bm,
-	TC_EVACT_RETRIGGER        = TC_EVACT_RETRIGGER_bm,
-	TC_EVACT_COUNT            = TC_EVACT_COUNT_bm,
-	TC_EVACT_FREQ_PULSE_WIDTH = TC_EVACT_PPW_bm,
-	TC_EVACT_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
+	TC_EVENT_ACTION_OFF              = TC_EVACT_OFF_bm,
+	TC_EVENT_ACTION_RETRIGGER        = TC_EVACT_RETRIGGER_bm,
+	TC_EVENT_ACTION_COUNT            = TC_EVACT_COUNT_bm,
+	TC_EVENT_ACTION_FREQ_PULSE_WIDTH = TC_EVACT_PPW_bm,
+	TC_EVENT_ACTION_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
 };
 
 enum tc_waveform_invert_ch {//TODO use #define?
@@ -153,66 +132,63 @@ enum tc_waveform_invert_ch {//TODO use #define?
  *  The content of this enum is to be used by the event_generation_mask in the
  *  tc_config struct
  */
-enum tc_evgen_enable {//TODO: change to tc_event_generation_enable. Use #define?
+//TODO: Use #define?
+enum tc_event_generation_enable {
 	/** No generation of events */
-	TC_EVGEN_NONE             = TC_EVGEN_NONE_gc,
+	TC_EVENT_GENERATION_NONE             = TC_EVGEN_NONE_gc,
 	/** Generate event for compare/capture on channel 0 */
-	TC_EVGEN_CC0              = TC_EVGEN_CC0_gc,
+	TC_EVENT_GENERATION_CC0              = TC_EVGEN_CC0_gc,
 	/** Generate event for compare/capture on channel 1 */
-	TC_EVGEN_CC1              = TC_EVGEN_CC1_gc,
+	TC_EVENT_GENERATION_CC1              = TC_EVGEN_CC1_gc,
 	/** Generate event for compare/capture on channel 2 */
-	TC_EVGEN_CC2              = TC_EVGEN_CC2_gc,
+	TC_EVENT_GENERATION_CC2              = TC_EVGEN_CC2_gc,
 	/** Generate event for compare/capture on channel 3 */
-	TC_EVGEN_CC3              = TC_EVGEN_CC3_gc,
+	TC_EVENT_GENERATION_CC3              = TC_EVGEN_CC3_gc,
 	/** Generate event for overflow/underflow */
-	TC_EVGEN_OVF            = TC_EVGEN_OVF_gc,
-	/** Generate events for all the above*/
-	TC_EVGEN_ALL              = (0xf << TC_EVGEN_CCEO_bp),
+	TC_EVENT_GENERATION_OVF              = TC_EVGEN_OVF_gc,
 };
 
 
-enum tc_resolution {//TODO: change names
-	TC_MODE_COUNT8            = TC_MODE_COUNT8_bm,
-	TC_MODE_COUNT16           = TC_MODE_COUNT16_bm,
-	TC_MODE_COUNT32           = TC_MODE_COUNT32_bm,
+enum tc_resolution {
+	TC_RESOLUTION_8BIT        = TC_MODE_COUNT8_bm,
+	TC_RESOLUTION_16BIT       = TC_MODE_COUNT16_bm,
+	TC_RESOLUTION_32BIT       = TC_MODE_COUNT32_bm,
 };
 
-//TODO: cange names cc to capture compare. Change names countx_mode_vaues tc_8bit_config
-struct tc_count8_mode_values {
+//TODO: Use only 32bits and do cast
+struct tc_8bit_config {
 	uint8_t count;
 	uint8_t period;
-	uint8_t cc0;
-	uint8_t cc1;
-	uint8_t cc2;
-	uint8_t cc3;
+	uint8_t capture_compare_channel_0;
+	uint8_t capture_compare_channel_1;
+	uint8_t capture_compare_channel_2;
+	uint8_t capture_compare_channel_3;
 };
 
-struct tc_count16_mode_values {
+struct tc_16_bit_config {
 	uint16_t count;
 	uint16_t period;
-	uint16_t cc0;//remove
-	uint16_t cc1;
-	uint16_t cc2;
-	uint16_t cc3;
+	uint16_t capture_compare_channel_1;
+	uint16_t capture_compare_channel_2;
+	uint16_t capture_compare_channel_3;
 };
 
-struct tc_count32_mode_values {
+struct tc_32bit_config {
 	uint32_t count;
 	uint32_t period;
-	uint32_t cc0;//remove
-	uint32_t cc1;
+	uint32_t capture_compare_channel_1;
 };
 
 struct tc_config {
 	//TODO set clock param
 	/** Specifies either 8, 16 or 32 bit counter mode  */
-	enum tc_mode mode;
+	enum tc_resolution resolution;
 	/** Specifies the prescaler value for GCLK_TC */
-	enum tc_prescaler prescaler;
+	enum tc_clock_prescaler prescaler;
 
 
 	/** Specifies which waveform to be generated on the output */
-	enum tc_wavegen_mode wavegen;
+	enum tc_wave_generation wave_generation;
 	/** Specifies which channel(s) to invert the waveform on */
 	uint16_t waveform_invert_ch_mask;
 
@@ -221,13 +197,13 @@ struct tc_config {
 	enum tc_sync_action sync_action;
 	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
 	 *  or overflow/underflow */
-	enum oneshot;//TODO: bool
+	bool oneshot;
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
-	/** Specifies which channel (s) to enable channel capture operation 
-	 *  on. Since all capture channels use the same event line, 
+	/** Specifies which channel (s) to enable channel capture operation
+	 *  on. Since all capture channels use the same event line,
 	 *  only one capture channel must be enabled at a time,
-	 *  when used for event capture. When pwm capture is used this 
+	 *  when used for event capture. When pwm capture is used this
 	 *  is not the case as it does not use the event line.
 	 */
 	uint16_t capture_enable_ch_mask;
@@ -241,24 +217,25 @@ struct tc_config {
 	/** Specifies which channel(s) to generate event on when a
 	 *  compare/capture occurs */
 	uint16_t event_generation_mask;
+
 	union {
-		struct tc_count8_mode_values  tc_count8_mode_values;
-		struct tc_count16_mode_values tc_count16_mode_values;
-		struct tc_count32_mode_values tc_count32_mode_values;
+		struct tc_8bit_config tc_8bit_config;
+		struct tc_16bit_config tc_16bit_config;
+		struct tc_32bit_config tc_32bit_config;
 	};
 };
 
 struct tc_dev_inst {
 	TC_t *hw_dev;
-	enum tc_mode mode;
+	enum tc_resolution resolution;
 };
 
 
 /**
- * \brief Synchronization between clock domains 
+ * \brief Synchronization between clock domains
  *
  * Makes sure GCLK_TC is synchronized with sysclock,
- * Must be called before assessing certain registers in the TC. 
+ * Must be called before assessing certain registers in the TC.
  * Blocks while waiting
  *
  * \param hw_dev pointer to module
@@ -273,8 +250,6 @@ static inline void _tc_sync(TC_t  *const hw_dev)
 		/* Wait for sync */
 	}
 }
-
-//TODO: Expose reset function?
 
 /**
  * \brief Initializes config with predefined default values
@@ -292,23 +267,23 @@ static inline enum status_code tc_get_config_defaults(
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->mode                          = TC_MODE_COUNT8;
-	config->prescaler                     = TC_PRESCALER_DIV1;
-	config->sync_action                   = TC_PRESCSYNC_GCLK;
-	config->wavegen                       = TC_WAVEGEN_NORMAL_FREQ;
-	config->waveform_invert_ch_mask       = TC_WAVEFORM_INVERT_NONE;
-	config->count_direction               = TC_COUNT_INCREMENTING;
-	config->oneshot                       = false;
-	config->capture_enable_ch_mask        = TC_CAPTURE_ENABLE_NONE;
-	config->event_action                  = TC_EVACT_OFF;
-	config->invert_event_input            = false;
-	config->event_generation_mask         = TC_EVGEN_NONE;
-	config->tc_count8_mode_values.count   = 0x00;
-	config->tc_count8_mode_values.period  = 0xFF;
-	config->tc_count8_mode_values.cc0     = 0x00;
-	config->tc_count8_mode_values.cc1     = 0x00;
-	config->tc_count8_mode_values.cc2     = 0x00;
-	config->tc_count8_mode_values.cc3     = 0x00;
+	config->resolution                                    = TC_16BIT_RESOLUTION;
+	config->prescaler                                     = TC_PRESCALER_DIV1;
+	config->sync_action                                   = TC_PRESCSYNC_GCLK;
+	config->wave_generation                               = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->waveform_invert_ch_mask                       = TC_WAVEFORM_INVERT_NONE;
+	config->count_direction                               = TC_COUNT_UP;
+	config->oneshot                                       = false;
+	config->capture_enable_ch_mask                        = TC_CAPTURE_ENABLE_NONE;
+	config->event_action                                  = TC_EVENT_ACTION_OFF;
+	config->invert_event_input                            = false;
+	config->event_generation_mask                         = TC_EVENT_GENERATION_NONE;
+	config->tc_16bit_config.count                         = 0x00;
+	config->tc_16bit_config.period                        = 0xFF;
+	config->tc_16bit_config.capture_compare_channel_0     = 0x00;
+	config->tc_16bit_config.capture_compare_channel_1     = 0x00;
+	config->tc_16bit_config.capture_compare_channel_2     = 0x00;
+	config->tc_16bit_config.capture_compare_channel_3     = 0x00;
 
 	return STATUS_OK;
 }
@@ -327,15 +302,31 @@ enum status_code tc_init(TC_t *const module,
 		struct tc_dev_inst *const dev_inst,
 		struct tc_config *const config);
 
-/*
- * A comment in the tc_all.c file says to use only tc_init
- * for setting config values.  This makes changing config
- * values somewhat strange if you need to use tc_init for 
- * that every time.
+/**
+ * \brief Reset the TC module
+ *
+ * Resets the TC module
+ *
+ * \param dev_inst    pointer to the device struct
  */
+static inline void tc_reset(struct tc_dev_inst *dev_inst)
+{
 
-enum status_code tc_set_config(struct tc_dev_inst *const dev_inst,
-		struct tc_config *const config)
+	/* Sanity check arguments  */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Get a pointer to the module hardware instance */
+	TC_t *const tc_module = dev_inst->hw_dev;
+
+	/* Synchronize */
+	tc_sync(tc_module);
+
+	/* Enable TC module, based on the module tc mode  */
+	tc_module->CTRLA = TC_RESET_bm;
+}
+
+//removed tc_set_config();
 
 /**
  * \brief Enable the TC module
@@ -418,6 +409,7 @@ enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
  * \param dev_inst    pointer to the device struct
  * \return bool       returns true is the module is enabled
  */
+//not certain that there are many use cases where this is needed.
 static inline bool tc_is_enabled(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
@@ -434,20 +426,38 @@ static inline bool tc_is_enabled(struct tc_dev_inst *const dev_inst)
 	return tc_module->CTRLA & TC_ENABLE_bm;
 }
 
-/**
- * \brief Sends a command to the TC module
- *
- * Sends a command which can start, restart or stop the TC module
- *
- * \param dev_inst    pointer to the device struct
- * \param command     command to write to TC module
- * \return enum status_code STATUS_OK
- */
+static inline enum status_code tc_start_counter(struct tc_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_ptr);
 
-//this could be split into start and stop functions. It is possible to also have a no command command but why you would want that I don't know.
+	/* Get a pointer to the module's hardware instance*/
+	TC_t *const tc_module = dev_inst->hw_dev;
 
-enum status_code tc_execute_command(struct tc_dev_inst *const dev_inst,
-				 enum tc_command command);
+	/* Synchronize */
+	tc_sync(tc_module);
+
+	/* Write command to execute */
+	tc_module->CTRLBSET |= TC_COMMAND_START_bm;
+}
+
+
+static inline enum status_code tc_stop_counter(struct tc_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_ptr);
+
+	/* Get a pointer to the module's hardware instance*/
+	TC_t *const tc_module = dev_inst->hw_dev;
+
+	/* Synchronize */
+	tc_sync(tc_module);
+
+	/* Write command to execute */
+	tc_module->CTRLBSET |= TC_COMMAND_STOP_bm;
+}
 
 
 /**
@@ -476,12 +486,11 @@ static inline enum status_code tc_set_count_direction(
 
 	/* Set count direction */
 	switch(count_direction) {
-		case TC_COUNT_DECREMENTING:
+		case TC_COUNT_UP:
 			tc_module->CTRLBSET = TC_COUNT_DIRECTION_bp;
 
-		case TC_COUNT_INCREMENTING:
+		case TC_COUNT_DOWN:
 			tc_module->CTRLBCLR = TC_COUNT_DIRECTION_bp;
-		
 		default:
 			Assert(false);
 	}
@@ -535,9 +544,9 @@ enum status_code tc_set_compare(
 
 /*
  * This should make it easy to set top value as this is
- * different between 8 and the 16 and 32 bit modes. 
- * This hides that difference away from the user. 
- * He must be made aware that cc0 can not be used for pulse with though. 
+ * different between 8 and the 16 and 32 bit modes.
+ * This hides that difference away from the user.
+ * He must be made aware that cc0 can not be used for pulse with though.
  * Not necessarily right to have all this in the .h file.
  */
 
@@ -547,37 +556,37 @@ static enum status_code tc_set_top(struct tc_dev_inst *dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	Assert(compare);
-	
+
 	TC_t * const tc_module = dev_inst->hw_dev;
 
 	tc_sync(tc_module);
 
-	switch(dev_inst->mode) {
-	case TC_MODE_COUNT8:
+	switch(dev_inst->resolution) {
+	case TC_RESOLUTION_8BIT:
 		tc_module->TC_COUNT8.PER = (uint8_t) top_value;
 		return STATUS_OK;
-	case TC_MODE_COUNT16:
-		tc_module->TC_COUNT16.CC0 = (uint16_t) top_value;
+	case TC_RESOLUTION_16BIT:
+		tc_module->TC_COUNT16.capture_compare_channel_0 = (uint16_t) top_value;
 		return STATUS_OK;
-	case TC_MODE_COUNT32:
-		tc_module->TC_COUNT32.CC0 = top_value;
+	case TC_RESOLUTION_32BIT:
+		tc_module->TC_COUNT32.capture_compare_channel_0 = top_value;
 		return STATUS_OK;
 	default:
 		Assert(false);//not certain of this line. Will the return statement happen?
 		return STATUS_ERR_INVALID_ARG;
-	}	
+	}
 }
 
-// The period will either be stored in cc0 or cc1 this is 
-//also the case for period. What is used depends on PWP 
-//and/or PPW settings. should be more economical in therms 
+// The period will either be stored in cc0 or cc1 this is
+//also the case for period. What is used depends on PWP
+//and/or PPW settings. should be more economical in therms
 //of cycles compared to two tc_get_captures.
-//Have to setup interrupts and then check and clear interrupt flags to 
+//Have to setup interrupts and then check and clear interrupt flags to
 //see if new information is available or check for overflow err.
 //could also write a function to check these flags for you
-enum status_code tc_get_pwm_capture(struct tc_dev_inst *dev_inst, 
-				 uint32_t *period, 
-				 uint32_t *pulse_width, 
+enum status_code tc_get_pwm_capture(struct tc_dev_inst *dev_inst,
+				 uint32_t *period,
+				 uint32_t *pulse_width,
 				 uint8_t PWP_or_PPW);
 
 #endif /* TC_ALL_HEADER */
