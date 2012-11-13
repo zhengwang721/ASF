@@ -3,7 +3,7 @@
  *
  * \brief ST7565R display controller driver example.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,7 +60,7 @@
  * \ref st7565r_lcd_controller_group "here".
  *
  * \section deviceinfo Device Info
- * All AVR devices with a SPI (USART SPI) can be used.
+ * All devices with a SPI (USART SPI) can be used.
  * \note Parallel interface is also possible, but not currently supported by the
  * driver.
  *
@@ -89,8 +89,6 @@ int main(void)
 	uint8_t column_address;
 	//! store the LCD controller start draw line
 	uint8_t start_line_address = 0;
-	//! value used for delay, needs to be volatile due to compiler optimization
-	volatile uint16_t delay = 10000;
 
 	board_init();
 	sysclk_init();
@@ -116,10 +114,6 @@ int main(void)
 	// scroll the display using hardware support in the LCD controller
 	while (true) {
 		st7565r_set_display_start_line_address(start_line_address++);
-		while (delay--) {
-			// intentionally empty
-		}
-		// set delay to 10000, 10000 gives a nice speed for LCD scrolling
-		delay = 10000;
+		delay_ms(250);
 	}
 }

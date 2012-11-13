@@ -80,6 +80,10 @@
 	<board id="board.user_board.sam4s" caption="User Board" mcu="unspecified-sam4s">
 		<require idref="common.boards.user_board.common"/>
 	</board>
+	
+	<board id="board.user_board.megarf" caption="User Board" mcu="atmega128rfa1">
+		<require idref="common.boards.user_board.common"/>
+	</board>
 
 	<board id="board.user_board.sam4lc4a" caption="User Board" mcu="atsam4lc4a">
 		<require idref="common.boards.user_board.common"/>
