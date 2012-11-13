@@ -1106,7 +1106,7 @@ class AVRStudio5Project(GenericProject):
 				content_id = self.make_content_id(self.project)
 			elif c in board_config:
 				# Use board extension
-				content_id = self.make_content_id(self.db.lookup_by_id(self.project.board))
+				content_id = self.make_content_id(self.project._board)
 			else:
 				# Default: use project extension
 				content_id = self.make_content_id(self.project)
@@ -1180,18 +1180,20 @@ class AVRStudio5Project(GenericProject):
 				'xplain'              : 'Xplain.jpg',
 			}
 
-			# Strip the common board. prefix from board ID to get its name
-			board_name = self.project.board[len('board.'):]
 			# Start with empty image_path - returned if no image found
 			image_path = None
 
-			# Look for a regexp match
-			for regexp, image in board_regexp_to_image.items():
-				if re.match(regexp, board_name):
-					image_name = image
-					image_dir = os.path.join(self.templatedir, self.image_dir, 'kits')
-					image_path = os.path.join(image_dir, image_name)
-					break
+			if self.project._board:
+				# Strip the common board. prefix from board ID to get its name
+				board_name = self.project.board[len('board.'):]
+
+				# Look for a regexp match
+				for regexp, image in board_regexp_to_image.items():
+					if re.match(regexp, board_name):
+						image_name = image
+						image_dir = os.path.join(self.templatedir, self.image_dir, 'kits')
+						image_path = os.path.join(image_dir, image_name)
+						break
 
 			self.vstemplate_image_path = image_path
 
@@ -1725,9 +1727,8 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_kit_name(self):
 		try:
-			project_board = self.db.lookup_by_id(self.project.board)
-			return project_board.caption
-		except:
+			return self.project._board.caption
+		except AttributeError:
 			return None
 
 
