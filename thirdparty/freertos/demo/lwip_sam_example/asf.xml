@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="thirdparty.freertos.sam_lwip_dhcp_example" caption="FreeRTOS with lwIP Example">
+	<module type="application" id="common.services.freertos.sam_lwip_dhcp_example" caption="FreeRTOS with lwIP Example">
 		<info type="description" value="summary">
 		Basic web server and basic TFTP server applicaitons with DHCP enabled through the lwIP TCP/IP stack and FreeRTOS of SAM port.
 		</info>
