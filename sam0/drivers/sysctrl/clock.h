@@ -132,7 +132,7 @@
  * To simplify the use of the clocks on the SAM0+ there is a configuration file
  * conf_clocks.h that will set up the clock generators and GCLK generators by calling
  * the clocks_init() function. In many applications there is no need for any other
- * configuration than conf_clocks.h. 
+ * configuration than conf_clocks.h.
  *
  * \section extra_info Extra Information
  * For extra information see \ref clock_extra_info
@@ -302,7 +302,7 @@ enum clock_source {
  * \brief Selectable speeds for the RTC to run at.
  */
 enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC. \note Must be used for calender 
+	/** 1Hz counter speed for the RTC. \note Must be used for calender
 	 * function. */
 	CONF_CLOCK_RTC_FREQ_1HZ = 32,
 	/** 1kHz counter speed for the RTC. */
@@ -451,12 +451,12 @@ static inline void clock_dfll_wait_for_sync(void)
 	/* TODO: Datasheet text and regmap disagreement; figure out which one is correct */
 
 	/* According to text in datasheet */
-	while (!SYSCTRL.PCLKSR & SYSCTRL_DFLLRDY_bm) {
+	while (!(SYSCTRL.PCLKSR & SYSCTRL_DFLLRDY_bm)) {
 		/* Wait for DFLL sync */
 	}
 
 	/* Make more sense, according to regmap */
-	while (!SYSCTRL.DFLLSYNC & SYSCTRL_SYNC_bm) {
+	while (!(SYSCTRL.DFLLSYNC & SYSCTRL_SYNC_bm)) {
 		/* Wait for DFLL sync */
 	}
 }
@@ -467,7 +467,7 @@ static inline void clock_dfll_wait_for_sync(void)
  */
 static inline void clock_osc32k_wait_for_sync(void)
 {
-	while(!SYSCTRL.PCLKSR & SYSCTRL_OSC32KRDY_bm) {
+	while(!(SYSCTRL.PCLKSR & SYSCTRL_OSC32KRDY_bm)) {
 		/* Wait for OSC32K sync */
 	}
 }
