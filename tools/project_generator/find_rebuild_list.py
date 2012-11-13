@@ -28,12 +28,12 @@ if __name__ == "__main__":
 		""")
 	# General otions
 	parser.add_option("-b", "--basedir", dest="basedir", help="Set root directory of ASF installation")
-	parser.add_option("", "--check-device-support", dest="device_support", action="store_true", default=False, help="Check device support and eliminate projects that do not have device support")
+	parser.add_option("", "--check-device-support", dest="device_support", action="store_true", default=False, help="Check device support and eliminate projects that do not have device support. Currently not supported for modules.")
 	parser.add_option("", "--show-not-affected", dest="not_affected", action="store_true", default=False, help="Show all projects not affected by the change to debug log (useful for debugging)")
 	default_outfile_project = "find_rebuild_list_result.txt"
 	default_outfile_module = "find_rebuild_list_modules.txt"
 	parser.add_option("-o", "--outfile", dest="outfile_projects", action="store", default=default_outfile_project, help="Filename to store projects. Default: " + default_outfile_project)
-	parser.add_option("-m", "--outfile_modules", dest="outfile_modules", action="store", default=default_outfile_module, help="Filename to store modules. Default: " + default_outfile_module)
+	parser.add_option("-m", "--outfile-modules", dest="outfile_modules", action="store", default=default_outfile_module, help="Filename to store modules. Default: " + default_outfile_module)
 	parser.add_option("", "--load-cache", dest="cache_file", action="store", default=None, help="Use this given database cache instead of parsing asf.xml")
 
 	# Debug options
