@@ -48,18 +48,18 @@
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-enum tc_compare_capture_chanle_index {
-	TC_CC0                    = 0,
-	TC_CC1                    = 1,
-	TC_CC2                    = 2,
-	TC_CC3                    = 3,
+enum tc_compare_capture_channel_index {
+	TC_COMPARE_CAPTURE_CHANLE_0                    = 0,
+	TC_COMPARE_CAPTURE_CHANLE_1                    = 1,
+	TC_COMPARE_CAPTURE_CHANLE_2                    = 2,
+	TC_COMPARE_CAPTURE_CHANLE_3                    = 3,
 };
 
 //TODO: Name does not explain so much perhaps tc_counter_reload_options or restart_options
 //TODO: send mail to ic dev. may remove compleetly
 enum tc_sync_action {
 	/* The counter is reloaded/reset on the next GCLK and starts
-	 * counting on the prescaler clock
+	 * counting on the prescaler clock.
 	 */
 	TC_PRESCSYNC_GCLK           = TC_PRESCSYNC_GCLK_bm,
 
@@ -67,7 +67,7 @@ enum tc_sync_action {
 	TC_PRESCSYNC_PRESC          = TC_PRESCSYNC_PRESC_bm,
 
 	/* The counter is reloaded/reset on the next GCLK, and the prescaler is
-	 * reset as well
+	 * reset as well. This may be usefull when an event retriggers the clock
 	 */
 	TC_PRESCSYNC_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
 };
@@ -101,12 +101,12 @@ enum tc_count_direction {
 };
 
 enum tc_capture_enable {
-	TC_CAPTURE_ENABLE_NONE           = 0,
-	TC_CAPTURE_ENABLE_CC0            = TC_CPTEN_CC0_bm,
-	TC_CAPTURE_ENABLE_CC1            = TC_CPTEN_CC1_bm,
-	TC_CAPTURE_ENABLE_CC2            = TC_CPTEN_CC2_bm,
-	TC_CAPTURE_ENABLE_CC3            = TC_CPTEN_CC3_bm,
-	TC_CAPTURE_ENABLE_ALL            = (0xf << TC_CPTEN_CC0_bp),
+	TC_CAPTURE_ENABLE_NONE                 = 0,
+	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
+	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CPTEN_CC1_bm,
+	TC_CAPTURE_ENABLE_CHANNEL_2            = TC_CPTEN_CC2_bm,
+	TC_CAPTURE_ENABLE_CHANNEL_3            = TC_CPTEN_CC3_bm,
+	TC_CAPTURE_ENABLE_ALL                  = (0xf << TC_CPTEN_CC0_bp),
 };
 
 //TODO look into ccn->channel
