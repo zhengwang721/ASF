@@ -48,28 +48,30 @@
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
+//TODO look into ccn->channel_n or cc_channel_n
 enum tc_compare_capture_channel_index {
-	TC_COMPARE_CAPTURE_CHANLE_0                    = 0,
-	TC_COMPARE_CAPTURE_CHANLE_1                    = 1,
-	TC_COMPARE_CAPTURE_CHANLE_2                    = 2,
-	TC_COMPARE_CAPTURE_CHANLE_3                    = 3,
+	TC_COMPARE_CAPTURE_CHANNEL_0                    = 0,
+	TC_COMPARE_CAPTURE_CHANNEL_1                    = 1,
+	TC_COMPARE_CAPTURE_CHANNEL_2                    = 2,
+	TC_COMPARE_CAPTURE_CHANNEL_3                    = 3,
 };
 
 //TODO: Name does not explain so much perhaps tc_counter_reload_options or restart_options
+// could use tc_reload_action
 //TODO: send mail to ic dev. may remove compleetly
-enum tc_sync_action {
+enum tc_reload_action {
 	/* The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
-	TC_PRESCSYNC_GCLK           = TC_PRESCSYNC_GCLK_bm,
+	TC_RELOAD_ACTION_GCLK      = TC_PRESCSYNC_GCLK_bm,
 
 	/* The counter is reloaded/reset on the next prescaler clock */
-	TC_PRESCSYNC_PRESC          = TC_PRESCSYNC_PRESC_bm,
+	TC_RELOAD_ACTION_PRESC          = TC_PRESCSYNC_PRESC_bm,
 
 	/* The counter is reloaded/reset on the next GCLK, and the prescaler is
 	 * reset as well. This may be usefull when an event retriggers the clock
 	 */
-	TC_PRESCSYNC_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
+	TC_RELOAD_ACTION_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
 };
 
 enum tc_clock_prescaler {
@@ -100,16 +102,15 @@ enum tc_count_direction {
 	TC_COUNT_DOWN      = DOWN,
 };
 
+//TODO: Use #define?
 enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_NONE                 = 0,
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CPTEN_CC1_bm,
-	TC_CAPTURE_ENABLE_CHANNEL_2            = TC_CPTEN_CC2_bm,
-	TC_CAPTURE_ENABLE_CHANNEL_3            = TC_CPTEN_CC3_bm,
+	TC_CAPTURE_ENABLE_CC_CHANNEL_0            = TC_CPTEN_CC0_bm,
+	TC_CAPTURE_ENABLE_CC_CHANNEL_1            = TC_CPTEN_CC1_bm,
+	TC_CAPTURE_ENABLE_CC_CHANNEL_2            = TC_CPTEN_CC2_bm,
+	TC_CAPTURE_ENABLE_CC_CHANNEL_3            = TC_CPTEN_CC3_bm,
 	TC_CAPTURE_ENABLE_ALL                  = (0xf << TC_CPTEN_CC0_bp),
 };
-
-//TODO look into ccn->channel
 
 enum tc_event_action {
 	TC_EVENT_ACTION_OFF              = TC_EVACT_OFF_bm,
@@ -119,12 +120,13 @@ enum tc_event_action {
 	TC_EVENT_ACTION_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
 };
 
-enum tc_waveform_invert_ch {//TODO use #define?
-	TC_WAVEFORM_INVERT_NONE             = 0,
-	TC_WAVEFORM_INVERT_CC0              = TC_INVEN_CC0_bm,
-	TC_WAVEFORM_INVERT_CC1              = TC_INVEN_CC1_bm,
-	TC_WAVEFORM_INVERT_CC2              = TC_INVEN_CC2_bm,
-	TC_WAVEFORM_INVERT_CC3              = TC_INVEN_CC3_bm,
+//TODO use #define?
+enum tc_waveform_invert_ch {
+	TC_WAVEFORM_INVERT_NONE                            = 0,
+	TC_WAVEFORM_INVERT_COMPARE_CAPTURE_CHANNEL_0       = TC_INVEN_CC0_bm,
+	TC_WAVEFORM_INVERT_COMPARE_CAPTURE_CHANNEL_1       = TC_INVEN_CC1_bm,
+	TC_WAVEFORM_INVERT_COMPARE_CAPTURE_CHANNEL_2       = TC_INVEN_CC2_bm,
+	TC_WAVEFORM_INVERT_COMPARE_CAPTURE_CHANNEL_3       = TC_INVEN_CC3_bm,
 };
 
 /** Enable generation of events from the TC module
@@ -194,7 +196,7 @@ struct tc_config {
 
 	/** Specifies the reload or reset time of the counter and prescaler
 	 *  resynchronization on a retrigger event for timer/counter */
-	enum tc_sync_action sync_action;
+	enum tc_reload_action reload_action;
 	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
 	 *  or overflow/underflow */
 	bool oneshot;
@@ -267,23 +269,23 @@ static inline enum status_code tc_get_config_defaults(
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->resolution                                    = TC_16BIT_RESOLUTION;
-	config->prescaler                                     = TC_PRESCALER_DIV1;
-	config->sync_action                                   = TC_PRESCSYNC_GCLK;
-	config->wave_generation                               = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->waveform_invert_ch_mask                       = TC_WAVEFORM_INVERT_NONE;
-	config->count_direction                               = TC_COUNT_UP;
-	config->oneshot                                       = false;
-	config->capture_enable_ch_mask                        = TC_CAPTURE_ENABLE_NONE;
-	config->event_action                                  = TC_EVENT_ACTION_OFF;
-	config->invert_event_input                            = false;
-	config->event_generation_mask                         = TC_EVENT_GENERATION_NONE;
-	config->tc_16bit_config.count                         = 0x00;
-	config->tc_16bit_config.period                        = 0xFF;
-	config->tc_16bit_config.capture_compare_channel_0     = 0x00;
-	config->tc_16bit_config.capture_compare_channel_1     = 0x00;
-	config->tc_16bit_config.capture_compare_channel_2     = 0x00;
-	config->tc_16bit_config.capture_compare_channel_3     = 0x00;
+	config->resolution                                  = TC_16BIT_RESOLUTION;
+	config->prescaler                                   = TC_PRESCALER_DIV1;
+	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
+	config->wave_generation                             = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->waveform_invert_ch_mask                     = TC_WAVEFORM_INVERT_NONE;
+	config->count_direction                             = TC_COUNT_UP;
+	config->oneshot                                     = false;
+	config->capture_enable_ch_mask                      = TC_CAPTURE_ENABLE_NONE;
+	config->event_action                                = TC_EVENT_ACTION_OFF;
+	config->invert_event_input                          = false;
+	config->event_generation_mask                       = TC_EVENT_GENERATION_NONE;
+	config->tc_16bit_config.count                       = 0x00;
+	config->tc_16bit_config.period                      = 0xFF;
+	config->tc_16bit_config.capture_compare_channel_0   = 0x00;
+	config->tc_16bit_config.capture_compare_channel_1   = 0x00;
+	config->tc_16bit_config.capture_compare_channel_2   = 0x00;
+	config->tc_16bit_config.capture_compare_channel_3   = 0x00;
 
 	return STATUS_OK;
 }
@@ -506,10 +508,10 @@ static inline enum status_code tc_set_count_direction(
  * \comp_reg_index    index of the compare register to read from
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
-//Have to setup interrupts and then check and clear interrupt flags to 
+//Have to check and clear interrupt flags to
 //see if new information is available or check for overflow err.
-//can either do this in this function and return nothing if no updates 
-//have occurred or can use one or more functions to check these flags before 
+//can either do this in this function and return nothing if no updates
+//have occurred or can use one or more functions to check these flags before
 //the user uses this function.
 enum status_code tc_get_capture(
 		struct tc_dev_inst *dev_inst,
