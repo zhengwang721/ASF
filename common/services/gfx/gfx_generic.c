@@ -45,6 +45,9 @@
 #include "gfx.h"
 #include "compiler.h"
 
+/** External bitmap draw interface handler */
+static gfx_ext_draw_handler_t gfx_ext_draw_func;
+
 /* This function is documented in gfx.h */
 void gfx_set_clipping(gfx_coord_t min_x, gfx_coord_t min_y,
 		gfx_coord_t max_x, gfx_coord_t max_y)
@@ -643,6 +646,7 @@ void gfx_generic_put_bitmap(const struct gfx_bitmap *bmp,
 		map_y += gfx_min_y - y;
 		y = gfx_min_y;
 	}
+
 #endif
 
 	/* Compute bottom right point. */
@@ -666,6 +670,13 @@ void gfx_generic_put_bitmap(const struct gfx_bitmap *bmp,
 	switch (bmp->type) {
 	case GFX_BITMAP_SOLID:
 		gfx_draw_filled_rect(x, y, x2 - x, y2 - y, bmp->data.color);
+		break;
+
+	case GFX_BITMAP_EXT:
+		/* Draw bitmap through external interface */
+		if (gfx_ext_draw_func != NULL) {
+			gfx_ext_draw_func(bmp, x, y, x2 - x, y2 - y);
+		}
 		break;
 
 	case GFX_BITMAP_RAM:
@@ -749,4 +760,9 @@ void gfx_generic_put_bitmap(const struct gfx_bitmap *bmp,
 		break;
 #endif
 	}
+}
+
+void gfx_generic_set_ext_handler(gfx_ext_draw_handler_t gfx_ext_draw)
+{
+	gfx_ext_draw_func = gfx_ext_draw;
 }

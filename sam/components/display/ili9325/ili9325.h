@@ -56,6 +56,35 @@
 /**INDENT-ON**/
 /// @endcond
 
+/** Type define for an integer type large enough to store a pixel color. */
+typedef uint32_t ili9325_color_t;
+
+/** Type define for an integer type large enough to store a pixel coordinate.
+ */
+typedef int16_t ili9325_coord_t;
+
+
+/** This macro generates a 16-bit native color for the display from a
+ *  24-bit RGB value.
+ */
+#define ILI9325_COLOR(r, g, b) ((r<<16) | (g << 8) | b)
+
+typedef ili9325_color_t gfx_color_t;
+typedef int16_t gfx_coord_t;
+
+/** Bit mask for flipping X for ili9325_set_orientation() */
+#define ILI9325_FLIP_X 1
+/** Bit mask for flipping Y for ili9325_set_orientation() */
+#define ILI9325_FLIP_Y 2
+/** Bit mask for swapping X and Y for ili9325_set_orientation() */
+#define ILI9325_SWITCH_XY 4
+
+/** Height of display using swapped X/Y orientation */
+#define ILI9325_SWITCH_XY_HEIGHT 240
+
+/** Width of display using swapped X/Y orientation */
+#define ILI9325_SWITCH_XY_WIDTH  320
+
 /* ILI9325 screen size */
 #define ILI9325_LCD_WIDTH  240
 #define ILI9325_LCD_HEIGHT 320
@@ -519,11 +548,6 @@
 #define COLOR_YELLOW         (0xFFFF00u)
 
 /**
- * Data type for ili9325 color (RGB888)
- */
-typedef uint32_t ili9325_color_t;
-
-/**
  * Input parameters when initializing ili9325 driver.
  */
 struct ili9325_opt_t{
@@ -593,6 +617,17 @@ uint32_t ili9325_draw_filled_circle(uint32_t ul_x, uint32_t ul_y, uint32_t ul_r)
 void ili9325_draw_string(uint32_t ul_x, uint32_t ul_y, const uint8_t *p_str);
 void ili9325_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height, const ili9325_color_t *p_ul_pixmap);
+void ili9325_set_top_left_limit(ili9325_coord_t x, ili9325_coord_t y);
+void ili9325_set_bottom_right_limit(ili9325_coord_t x, ili9325_coord_t y);
+void ili9325_set_limits(ili9325_coord_t start_x, ili9325_coord_t start_y,
+		ili9325_coord_t end_x, ili9325_coord_t end_y);
+ili9325_color_t ili9325_read_gram(void);
+void ili9325_write_gram(ili9325_color_t color);
+void ili9325_copy_pixels_to_screen(const ili9325_color_t *pixels, uint32_t count);
+void ili9325_copy_raw_pixel_24bits_to_screen(const uint8_t *raw_pixels, uint32_t count);
+void ili9325_duplicate_pixel(const ili9325_color_t color, uint32_t count);
+void ili9325_copy_pixels_from_screen(ili9325_color_t *pixels, uint32_t count);
+void ili9325_set_orientation(uint8_t flags);
 
 /// @cond 0
 /**INDENT-OFF**/
