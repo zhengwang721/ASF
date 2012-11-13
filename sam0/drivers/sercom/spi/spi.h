@@ -66,7 +66,7 @@ extern "C" {
  * SPI supports both full and half duplex communication.
  * \n\n
  * A device connected to the bus must act as a Master or a Slave. The Master
- * initiates and controls all data transactions. 
+ * initiates and controls all data transactions.
  * The SPI Master initiates a communication cycle by pulling low the Slave
  * Select (SS) pin of the desired Slave. The Slave Select pin is active low.
  *  Master and Slave prepare data to be sent in their respective Shift
@@ -460,7 +460,7 @@ enum spi_signal_mux_setting {
  *
  */
 enum spi_addr_mode {
-	/** 
+	/**
 	 * addrmask in the \ref spi_conf struct is used as a mask to the register.
 	 */
 	SPI_ADDR_MODE_MASK = 0,
@@ -654,8 +654,6 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	/* Sanity check arguments */
 	Assert(config);
 
-	memset(config, 0, sizeof(config));
-
 	/* Default configuration values */
 	config->mode = SPI_MODE_MASTER;
 	config->data_order = SPI_DATA_ORDER_MSB;
@@ -664,7 +662,7 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	config->chsize = SPI_CHARACTER_SIZE_8BIT;
 	config->sleep_enable = false;
 	config->receiver_enable = true;
-	
+
 	/* Master config defaults */
 	config->master.baudrate = 9600;
 
@@ -896,7 +894,7 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  * This function will return the last SPI character shifted into the receive
  * register.
  * The \ref spi_is_ready_to_read function should
- * be called before calling this funtion. 
+ * be called before calling this funtion.
  *
  * \note Receiver must be enabled in the configuration
  *
@@ -1164,7 +1162,7 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * \section spi_use_cases SPI driver use cases
  * - \subpage spi_basic_use_case
  */
- 
+
  /**
  * \page mux_settings Mux Settings
  * The different options for functionality of the SERCOM pins.
@@ -1351,7 +1349,7 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  *      <td> x </td>
  *      <td>  </td>
  *      <td>  </td>
- 
+
  *   </tr>
  *   <tr>
  *      <th> SLAVE_SS </th>

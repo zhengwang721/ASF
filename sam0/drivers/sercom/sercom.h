@@ -42,7 +42,7 @@
 #ifndef __SERCOM_H_INCLUDED
 #define __SERCOM_H_INCLUDED
 
-//#include "asf.h"
+#include <compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
