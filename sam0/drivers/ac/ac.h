@@ -532,8 +532,8 @@ static inline bool ac_win_is_ready(
 	Assert(dev_inst->hw_dev);
 
 	/* Check if the two comparators used in the window are ready */
-	bool win_pair_comp0_ready = ac_ch_is_ready(dev_inst, (win_channel / 2));
-	bool win_pair_comp1_ready = ac_ch_is_ready(dev_inst, (win_channel / 2) + 1);
+	bool win_pair_comp0_ready = ac_ch_is_ready(dev_inst, (win_channel * 2));
+	bool win_pair_comp1_ready = ac_ch_is_ready(dev_inst, (win_channel * 2) + 1);
 
 	/* If one or both window comparators not ready, return failure */
 	if ((win_pair_comp0_ready == false) || (win_pair_comp1_ready == false)) {
