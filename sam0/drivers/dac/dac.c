@@ -42,11 +42,13 @@
 
 
 /**
- * \internal Reset the DAC module
+ * \brief Resets the DAC module
+ *
+ * This function will reset the DAC module.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
  */
-static void _dac_reset(
+void dac_reset(
 		struct dac_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
@@ -168,9 +170,6 @@ void dac_init(
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
-
-	/* Reset the module */
-	_dac_reset(dev_inst);
 
 	/* Write configuration to module */
 	_dac_set_config(dev_inst, config);
