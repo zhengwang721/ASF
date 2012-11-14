@@ -15,15 +15,15 @@ extern "C" {
  */
 enum adc_reference {
 	/** 1.0V voltage reference */
-	ADC_REF_INT1V   = ADC_REF_INT1V_bm,
+	ADC_REFERENCE_INT1V   = ADC_REF_INT1V_bm,
 	/** 1/1.48 VCC reference */
-	ADC_REF_INTVCC0 = ADC_REF_INTVCC0_bm,
+	ADC_REFERENCE_INTVCC0 = ADC_REF_INTVCC0_bm,
 	/** 1/2 VCC (only for internal Vcc > 2.1v) */
-	ADC_REF_INTVCC1 = ADC_REF_INTVCC1_bm,
+	ADC_REFERENCE_INTVCC1 = ADC_REF_INTVCC1_bm,
 	/** External reference */
-	ADC_REF_AREFA   = ADC_REF_AREFA_bm,
+	ADC_REFERENCE_AREFA   = ADC_REF_AREFA_bm,
 	/** External reference */
-	ADC_REF_AREFB   = ADC_REF_AREFB_bm,
+	ADC_REFERENCE_AREFB   = ADC_REF_AREFB_bm,
 }
 
 /**
@@ -34,21 +34,21 @@ enum adc_reference {
  */
 enum adc_clock_prescaler {
 	/** ADC clock division factor 4 */
-	ADC_PRESCALER_DIV4   = ADC_PRESCALER_DIV4_bm,
+	ADC_CLOCK_PRESCALER_DIV4   = ADC_PRESCALER_DIV4_bm,
 	/** ADC clock division factor 8 */
-	ADC_PRESCALER_DIV8   = ADC_PRESCALER_DIV8_bm,
+	ADC_CLOCK_PRESCALER_DIV8   = ADC_PRESCALER_DIV8_bm,
 	/** ADC clock division factor 16 */
-	ADC_PRESCALER_DIV16  = ADC_PRESCALER_DIV16_bm,
+	ADC_CLOCK_PRESCALER_DIV16  = ADC_PRESCALER_DIV16_bm,
 	/** ADC clock division factor 32 */
-	ADC_PRESCALER_DIV32  = ADC_PRESCALER_DIV32_bm,
+	ADC_CLOCK_PRESCALER_DIV32  = ADC_PRESCALER_DIV32_bm,
 	/** ADC clock division factor 64 */
-	ADC_PRESCALER_DIV64  = ADC_PRESCALER_DIV64_bm,
+	ADC_CLOCK_PRESCALER_DIV64  = ADC_PRESCALER_DIV64_bm,
 	/** ADC clock division factor 128 */
-	ADC_PRESCALER_DIV128 = ADC_PRESCALER_DIV128_bm,
+	ADC_CLOCK_PRESCALER_DIV128 = ADC_PRESCALER_DIV128_bm,
 	/** ADC clock division factor 256 */
-	ADC_PRESCALER_DIV256 = ADC_PRESCALER_DIV256_bm,
+	ADC_CLOCK_PRESCALER_DIV256 = ADC_PRESCALER_DIV256_bm,
 	/** ADC clock division factor 512 */
-	ADC_PRESCALER_DIV512 = ADC_PRESCALER_DIV512_bm,
+	ADC_CLOCK_PRESCALER_DIV512 = ADC_PRESCALER_DIV512_bm,
 }
 
 /**
@@ -248,27 +248,27 @@ enum adc_negative_input {
  */
 enum adc_average_samples {
 	/** No averaging */
-	ADC_AVG_DISABLE      = ADC_SAMPLENUM1_bm,
+	ADC_AVERAGE_NONE         = ADC_SAMPLENUM1_bm,
 	/** Average 2 samples */
-	ADC_AVG_SAMPLES_2    = ADC_SAMPLENUM2_bm,
+	ADC_AVERAGE_SAMPLES_2    = ADC_SAMPLENUM2_bm,
 	/** Average 4 samples */
-	ADC_AVG_SAMPLES_4    = ADC_SAMPLENUM4_bm,
+	ADC_AVERAGE_SAMPLES_4    = ADC_SAMPLENUM4_bm,
 	/** Average 8 samples */
-	ADC_AVG_SAMPLES_8    = ADC_SAMPLENUM8_bm,
+	ADC_AVERAGE_SAMPLES_8    = ADC_SAMPLENUM8_bm,
 	/** Average 16 samples */
-	ADC_AVG_SAMPLES_16   = ADC_SAMPLENUM16_bm,
+	ADC_AVERAGE_SAMPLES_16   = ADC_SAMPLENUM16_bm,
 	/** Average 32 samples */
-	ADC_AVG_SAMPLES_32   = ADC_SAMPLENUM32_bm,
+	ADC_AVERAGE_SAMPLES_32   = ADC_SAMPLENUM32_bm,
 	/** Average 64 samples */
-	ADC_AVG_SAMPLES_64   = ADC_SAMPLENUM64_bm,
+	ADC_AVERAGE_SAMPLES_64   = ADC_SAMPLENUM64_bm,
 	/** Average 128 samples */
-	ADC_AVG_SAMPLES_128  = ADC_SAMPLENUM128_bm,
+	ADC_AVERAGE_SAMPLES_128  = ADC_SAMPLENUM128_bm,
 	/** Average 265 samples */
-	ADC_AVG_SAMPLES_265  = ADC_SAMPLENUM265_bm,
+	ADC_AVERAGE_SAMPLES_265  = ADC_SAMPLENUM265_bm,
 	/** Average 512 samples */
-	ADC_AVG_SAMPLES_512  = ADC_SAMPLENUM512_bm,
+	ADC_AVERAGE_SAMPLES_512  = ADC_SAMPLENUM512_bm,
 	/** Average 1024 samples */
-	ADC_AVG_SAMPLES_1024 = ADC_SAMPLENUM1024_bm,
+	ADC_AVERAGE_SAMPLES_1024 = ADC_SAMPLENUM1024_bm,
 }
 
 
@@ -423,12 +423,12 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
 
-	config->reference = ADC_REF_INT1V;
-	config->clock_prescaler = ADC_PRESCALER_DIV4;
+	config->reference = ADC_REFERENCE_INT1V;
+	config->clock_prescaler = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution = ADC_RESOLUTION_12BIT;
 	config->window_mode = ADC_WINDOW_DISABLE;
 	config->adc_gain_factor = ADC_GAIN_FACTOR_1;
-	config->average_samples = ADC_AVG_DISABLE;
+	config->average_samples = ADC_AVERAGE_DISABLE;
 	config->window_lower_value = 0;
 	config->window_upper_value = 0;
 	config->left_adjusted = false;
