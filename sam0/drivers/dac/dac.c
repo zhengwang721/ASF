@@ -44,7 +44,8 @@
 /**
  * \brief Resets the DAC module
  *
- * This function will reset the DAC module.
+ * This function will reset the DAC module to its power on default values and
+ * disable it.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
  */

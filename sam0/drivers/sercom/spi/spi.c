@@ -43,7 +43,8 @@
 /**
  * \brief Resets the SPI module
  *
- * This function resets the SPI module.
+ * This function will reset the SPI module to its power on default values and
+ * disable it.
  *
  * \param dev_inst Pointer to the software instance struct
  */
