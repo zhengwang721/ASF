@@ -779,6 +779,8 @@ static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 	spi_module->SPI.CTRLA &= ~SPI_ENABLE_bm;
 }
 
+void spi_reset(struct spi_dev_inst *const dev_inst);
+
 /** @} */
 
 /**

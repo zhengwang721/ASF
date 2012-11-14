@@ -41,11 +41,13 @@
 #include "spi.h"
 
 /**
- * \internal Resets the SERCOM SPI module
+ * \brief Resets the SPI module
+ *
+ * This function resets the SPI module.
  *
  * \param dev_inst Pointer to the software instance struct
  */
-void _spi_reset(struct spi_dev_inst *const dev_inst)
+void spi_reset(struct spi_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -188,8 +190,6 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, SERCOM_t *module,
 	dev_inst->hw_dev = module;
 
 	SERCOM_t *const spi_module = dev_inst->hw_dev;
-	/* Reset the module */
-	_spi_reset(dev_inst);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->SPI.CTRLA |= SERCOM_MODE_SPI_gc << SERCOM_MODE_gp;
