@@ -1,5 +1,5 @@
 <fdk xml-version="2.0">
-	<extension uuid="11111111-1111-1111-1111-111111111111" org="D" shortname="Ddd" version="1.0.1" fullname="Ddd test extension">
+	<extension uuid="Atmel.ASF" org="D" shortname="Ddd" version="1.0.1" fullname="Ddd test extension">
 		<author name="D" website="http://www.d.com/" email="support@d.com"/>
 		<description/>
 		<icon-image path="ddd_icon.png"/>
@@ -8,8 +8,6 @@
 		<release-notes caption="Ddd release notes" url="http://ddd.d.com/release-notes/"/>
 		<online-help>
 			<index-page caption="Ddd help" url="http://ddd.d.com/help_index"/>
-			<element-page scheme="asf-docs" baseurl="http://ddd.d.com/element_help"/>
-			<element-guide-page scheme="asf-docs" baseurl="http://ddd.d.com/element_guide"/>
 		</online-help>
 		<dependencies/>
 	</extension>

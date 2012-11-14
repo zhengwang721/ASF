@@ -12,4 +12,8 @@
 		<build type="offline-help" subtype="module-help-page-append" value="driver\ccc_offline_module_help.html"/>
 		<build type="offline-help" subtype="module-guide-page-append" value="driver/ccc_offline_module_guide.html"/>
 	</module>
+	<project id="ccc.project" caption="" default-mcu="atxmega64a1">
+		<device-support value="xmega"/>
+		<build type="define" name="THIS" value="EXISTS"/>
+	</project>
 </asf>

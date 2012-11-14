@@ -24,6 +24,7 @@
 		</offline-help>
 		<dependencies>
 			<fdk-extension eid="ccc" uuidref="00000000-0000-0000-0000-000000000000" version="latest"/>
+			<fdk-extension eid="asf" uuidref="Atmel.ASF" version="latest"/>
 		</dependencies>
 	</extension>
 </fdk>
