@@ -510,6 +510,9 @@ void dac_write(
 		const uint16_t data,
 		bool event_triggered);
 
+void dac_reset(
+		struct dac_dev_inst *const dev_inst);
+
 /** @} */
 
 #ifdef __cplusplus
