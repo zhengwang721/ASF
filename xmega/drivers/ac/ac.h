@@ -406,7 +406,7 @@ static inline void ac_set_low_power_mode(struct ac_config *config)
  * \code
  * #define VOLTAGE_SCALED_VALUE 32
  *
- * void ac_setup()
+ * void ac_init()
  * {
  *     struct ac_config aca_config;
  *
@@ -428,6 +428,11 @@ static inline void ac_set_low_power_mode(struct ac_config *config)
  *
  *     cpu_irq_enable();
  * }
+ * \endcode
+ *
+ * Add to \c main():
+ * \code
+ * ac_init();
  * \endcode
  *
  * \subsection xmega_ac_quickstart_setup_workflow Workflow
@@ -456,7 +461,7 @@ static inline void ac_set_low_power_mode(struct ac_config *config)
  *
  * We set the reference voltage to VCC/2 (scaler 32/64):
  * \code
- * ac_set_voltage_scaler(&aca_config, VOLTAGE_SCALED_VALUE);
+ * ac_set_voltage_scaler(&aca_config, VOLTAGE_SCALED_VALUE-1);
  * \endcode
  *
  * We enable hysteresis, to avoid flickering due to disturbances:

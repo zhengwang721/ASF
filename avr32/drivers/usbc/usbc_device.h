@@ -75,17 +75,17 @@
 #define  Is_udd_low_speed_enable()           USBC_TST_BITS(UDCON,LS)
 
 #ifdef AVR32_USBC_UDCON_SPDCONF
-  //! Enable high speed mode
-#  define   udd_high_speed_enable()          USBC_WR_BITFIELD(UDCON,SPDCONF,0)
-  //! Disable high speed mode
-#  define   udd_high_speed_disable()         USBC_WR_BITFIELD(UDCON,SPDCONF,3)
-  //! Test if controller is in full speed mode
-#  define   Is_udd_full_speed_mode() \
+    //! Enable high speed mode
+#   define  udd_high_speed_enable()          USBC_WR_BITFIELD(UDCON,SPDCONF,0)
+    //! Disable high speed mode
+#   define  udd_high_speed_disable()         USBC_WR_BITFIELD(UDCON,SPDCONF,3)
+    //! Test if controller is in full speed mode
+#   define  Is_udd_full_speed_mode() \
 		(USBC_RD_BITFIELD(USBSTA,SPEED) == AVR32_USBC_USBSTA_SPEED_FULL)
 #else
-#  define   udd_high_speed_enable()          do { } while (0)
-#  define   udd_high_speed_disable()         do { } while (0)
-#  define   Is_udd_full_speed_mode()         true
+#   define   udd_high_speed_enable()          do { } while (0)
+#   define   udd_high_speed_disable()         do { } while (0)
+#   define   Is_udd_full_speed_mode()         true
 #endif
 //! @}
 
@@ -93,10 +93,10 @@
 //! @{
 #ifdef AVR32_USBC_UDCON_SPDCONF
   //! Enable high speed test mode
-#  define   udd_enable_hs_test_mode()        USBC_WR_BITFIELD(UDCON,SPDCONF,2)
-#  define   udd_enable_hs_test_mode_j()      USBC_SET_BITS(UDCON,TSTJ)
-#  define   udd_enable_hs_test_mode_k()      USBC_SET_BITS(UDCON,TSTK)
-#  define   udd_enable_hs_test_mode_packet() USBC_SET_BITS(UDCON,TSTPCKT)
+#   define   udd_enable_hs_test_mode()        USBC_WR_BITFIELD(UDCON,SPDCONF,2)
+#   define   udd_enable_hs_test_mode_j()      USBC_SET_BITS(UDCON,TSTJ)
+#   define   udd_enable_hs_test_mode_k()      USBC_SET_BITS(UDCON,TSTK)
+#   define   udd_enable_hs_test_mode_packet() USBC_SET_BITS(UDCON,TSTPCKT)
 #endif
 //! @}
 
@@ -465,61 +465,61 @@
 //! @name USB Device endpoints descriptor table management
 //! @{
 #define udd_udesc_set_buf0_addr(ep,buf)                \
-   udd_g_ep_table[ep*2].endpoint_pipe_address = buf
+	udd_g_ep_table[ep*2].endpoint_pipe_address = buf
 #define udd_udesc_rst_buf0_size(ep)                    \
-   udd_g_ep_table[ep*2].SIZES.multi_packet_size = 0
+	udd_g_ep_table[ep*2].SIZES.multi_packet_size = 0
 #define udd_udesc_get_buf0_size(ep)                    \
-   udd_g_ep_table[ep*2].SIZES.multi_packet_size
+	udd_g_ep_table[ep*2].SIZES.multi_packet_size
 #define udd_udesc_set_buf0_size(ep,size)               \
-   udd_g_ep_table[ep*2].SIZES.multi_packet_size = size
+	udd_g_ep_table[ep*2].SIZES.multi_packet_size = size
 #define udd_udesc_rst_buf0_ctn(ep)                     \
-   udd_g_ep_table[ep*2].SIZES.byte_count = 0
+	udd_g_ep_table[ep*2].SIZES.byte_count = 0
 #define udd_udesc_get_buf0_ctn(ep)                     \
-   udd_g_ep_table[ep*2].SIZES.byte_count
+	udd_g_ep_table[ep*2].SIZES.byte_count
 #define udd_udesc_set_buf0_ctn(ep,size)                \
-   udd_g_ep_table[ep*2].SIZES.byte_count = size
+	udd_g_ep_table[ep*2].SIZES.byte_count = size
 #define udd_udesc_set_buf0_autozlp(ep,val)             \
-   udd_g_ep_table[ep*2].SIZES.auto_zlp = val
+	udd_g_ep_table[ep*2].SIZES.auto_zlp = val
 
 // Maximum size of a transfer in multipacket mode
 #define UDD_ENDPOINT_MAX_TRANS ((32*1024)-1)
 
 struct avr32_usbc_udesc_sizes_t {
-	unsigned int auto_zlp:1;
-	unsigned int multi_packet_size:15;
-	unsigned int res:1;
-	unsigned int byte_count:15;
+	uint32_t auto_zlp:1;
+	uint32_t multi_packet_size:15;
+	uint32_t res:1;
+	uint32_t byte_count:15;
 };
 
 struct avr32_usbc_udesc_bk_ctrl_stat_t {
-	unsigned int res:13;
-	unsigned int underfi:1;
-	unsigned int overfi:1;
-	unsigned int crc:1;
-	unsigned int res2:16;
+	uint32_t res:13;
+	uint32_t underfi:1;
+	uint32_t overfi:1;
+	uint32_t crc:1;
+	uint32_t res2:16;
 };
 
 struct avr32_usbc_udesc_ep_ctrl_stat_t {
-	unsigned int res:8;
-	unsigned int pipe_error_status:8;
-	unsigned int pipe_error_number_max:4;
-	unsigned int pep_num:4;
-	unsigned int res2:1;
-	unsigned int uhaddr:7;
+	uint32_t res:8;
+	uint32_t pipe_error_status:8;
+	uint32_t pipe_error_number_max:4;
+	uint32_t pep_num:4;
+	uint32_t res2:1;
+	uint32_t uhaddr:7;
 };
 
 typedef struct {
 	uint8_t *endpoint_pipe_address;
 	union {
-		unsigned long sizes;
+		uint32_t sizes;
 		struct avr32_usbc_udesc_sizes_t SIZES;
 	};
 	union {
-		unsigned long bk_ctrl_stat;
+		uint32_t bk_ctrl_stat;
 		struct avr32_usbc_udesc_bk_ctrl_stat_t BK_CTRL_STAT;
 	};
 	union {
-		unsigned long ep_ctrl_stat;
+		uint32_t ep_ctrl_stat;
 		struct avr32_usbc_udesc_ep_ctrl_stat_t EP_CTRL_STAT;
 	};
 } usb_desc_table_t;

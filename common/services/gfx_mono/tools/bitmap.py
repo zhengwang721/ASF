@@ -44,6 +44,8 @@ width, height = im.size
 
 for y in range(0, height) :
 	for x in range(0, width) :
+		if 0 < new_im[x, y]:
+			new_im[x, y] = 1
 		sys.stdout.write(str(new_im[x, y]))
 	sys.stdout.write("\n")
 

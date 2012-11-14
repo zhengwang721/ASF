@@ -3,7 +3,7 @@
  *
  * \brief ST7565R display controller driver.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,8 +45,9 @@
 
 #include <compiler.h>
 #include <sysclk.h>
-#include <gpio.h>
+#include <ioport.h>
 #include <status_codes.h>
+#include <delay.h>
 
 // controller and LCD configuration file
 #include "conf_st7565r.h"
@@ -98,7 +99,7 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * This driver depends on the following modules:
- * - \ref gpio_group for IO port control.
+ * - \ref ioport_group for IO port control.
  * - \ref sysclk_group for getting system clock speeds for init functions.
  * - \ref usart_spi_group or \ref spi_group for communication with the LCD
  * controller
@@ -193,14 +194,19 @@ extern "C" {
  */
 static inline void st7565r_write_command(uint8_t command)
 {
-	gpio_set_pin_low(ST7565R_CS_PIN);
-	gpio_set_pin_low(ST7565R_A0_PIN);
 #if defined(ST7565R_USART_SPI_INTERFACE)
+	struct usart_spi_device device = {.id = ST7565R_CS_PIN};
+	usart_spi_select_device(ST7565R_USART_SPI, &device);
+	ioport_set_pin_low(ST7565R_A0_PIN);
 	usart_spi_transmit(ST7565R_USART_SPI, command);
+	usart_spi_deselect_device(ST7565R_USART_SPI, &device);
 #elif defined(ST7565R_SPI_INTERFACE)
+	struct spi_device device = {.id = ST7565R_CS_PIN};
+	spi_select_device(ST7565R_SPI, &device);
+	ioport_set_pin_low(ST7565R_A0_PIN);
 	spi_write_single(ST7565R_SPI, command);
+	spi_deselect_device(ST7565R_SPI, &device);
 #endif
-	gpio_set_pin_high(ST7565R_CS_PIN);
 }
 
 /**
@@ -213,15 +219,21 @@ static inline void st7565r_write_command(uint8_t command)
  */
 static inline void st7565r_write_data(uint8_t data)
 {
-	gpio_set_pin_low(ST7565R_CS_PIN);
-	gpio_set_pin_high(ST7565R_A0_PIN);
 #if defined(ST7565R_USART_SPI_INTERFACE)
+	struct usart_spi_device device = {.id = ST7565R_CS_PIN};
+	usart_spi_select_device(ST7565R_USART_SPI, &device);
+	ioport_set_pin_high(ST7565R_A0_PIN);
 	usart_spi_transmit(ST7565R_USART_SPI, data);
+	ioport_set_pin_low(ST7565R_A0_PIN);
+	usart_spi_deselect_device(ST7565R_USART_SPI, &device);
 #elif defined(ST7565R_SPI_INTERFACE)
+	struct spi_device device = {.id = ST7565R_CS_PIN};
+	spi_select_device(ST7565R_SPI, &device);
+	ioport_set_pin_high(ST7565R_A0_PIN);
 	spi_write_single(ST7565R_SPI, data);
+	ioport_set_pin_low(ST7565R_A0_PIN);
+	spi_deselect_device(ST7565R_SPI, &device);
 #endif
-	gpio_set_pin_low(ST7565R_A0_PIN);
-	gpio_set_pin_high(ST7565R_CS_PIN);
 }
 
 /**
@@ -272,18 +284,10 @@ static inline void st7565r_soft_reset(void)
  */
 static inline void st7565r_hard_reset(void)
 {
-	// us delay is given by cpu_cykl = CPU_Mhz * us_delay / while_loop_cycles
-	uint8_t delay_start = (sysclk_get_cpu_hz() / 1000000) * 10 / 10;
-	volatile uint8_t delay = delay_start;
-	gpio_set_pin_low(ST7565R_RESET_PIN);
-	while (delay--) {
-		// Intentionally left blank
-	}
-	delay = delay_start;
-	gpio_set_pin_high(ST7565R_RESET_PIN);
-	while (delay--) {
-		// Intentionally left blank
-	}
+	ioport_set_pin_low(ST7565R_RESET_PIN);
+	delay_us(10);
+	ioport_set_pin_high(ST7565R_RESET_PIN);
+	delay_us(10);
 }
 //@}
 

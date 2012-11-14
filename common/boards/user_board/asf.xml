@@ -98,6 +98,11 @@
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="sam4s"/>
 	</board>
+	
+	<board id="board.user_board.megarf" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<device-support value="atmega128rfa1"/>
+	</board>
 
 	<board id="board.user_board.sam4lc4a" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
