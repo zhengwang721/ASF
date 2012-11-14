@@ -115,8 +115,10 @@
 	<select-by-config id="common.services.gfx_mono.display" default="null" name="config.gfx_mono.display" caption="GFX Monochrome - Display driver">
 		<info type="description" value="summary">
 		Display driver for monochrome LCD displays.
-
-		Supports either C12832-A1Z LCD panel and the ST7565R LCD controller available on the XMEGA-A3BU Xplained board or NULL driver for boards without a display.
+		Supports:
+		- C12832-A1Z LCD panel with ST7565R LCD controller (Available on the XMEGA-A3BU Xplained board)
+		- UG-2832HSWEG04 OLED panel with SSD1306 OLED controller (Available on the XMEGA-C3 Xplained board)
+		- NULL driver for boards without a display.
 		</info>
 		<module type="service" id="common.services.gfx_mono.display#c12832_a1z" caption="GFX Monochrome - C12832_A1Z LCD panel support">
 			<info type="gui-flag" value="hidden"/>
@@ -135,6 +137,24 @@
 			<require idref="common.services.gfx_mono.framebuffer"/>
 			<device-support value="xmega"/>
 			<generator value="doxygen-module" default-mcu="atxmega256a3bu"/>
+		</module>
+		<module type="service" id="common.services.gfx_mono.display#ug_2832hsweg04" caption="GFX Monochrome - UG-2832HSWEG04 OLED panel support">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Configure the monochrome graphic library for use with the UG-2832HSWEG04 OLED panel and the SSD1306 OLED controller.
+			Display and driver are present on the XMEGA-C3 Xplained board.
+			</info>
+			<build type="define" name="GFX_MONO_UG_2832HSWEG04" value="1"/>
+			<build type="header-file" value="gfx_mono_ug_2832hsweg04.h"/>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="gfx_mono_ug_2832hsweg04.c"/>
+			<build type="doxygen-entry-point" value="gfx_mono_ug_2832hsweg04_group"/>
+			<require idref="common.services.gfx_mono.tools"/>
+			<require idref="common.components.display.ssd1306"/>
+			<require idref="common.services.gfx_mono.generic"/>
+			<require idref="common.services.gfx_mono.framebuffer"/>
+			<device-support value="xmega"/>
+			<generator value="doxygen-module" default-mcu="atxmega256c3"/>
 		</module>
 		<module type="service" id="common.services.gfx_mono.display#null" caption="GFX Monochrome - NULL display driver">
 			<info type="gui-flag" value="hidden"/>

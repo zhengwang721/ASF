@@ -51,13 +51,14 @@
  * \section files Main Files
  * - \ref conf_board.h
  * - \ref conf_clock.h
- * - \ref conf_st7565r.h
+ * - \ref conf_st7565r.h or conf_ssd1306.h
  * - \ref conf_usart_spi.h
  *
  * \section device_info Device Info
  * All AVR devices can be used.
  * This example has been tested with the following setup:
  * - XMEGA-A3BU Xplained
+ * - XMEGA-C3 Xplained
  *
  * \section dependencies Dependencies
  * Relevant module dependencies for this application are:
@@ -94,7 +95,7 @@ int main(void){
 	board_init();
 	sysclk_init();
 
-	/* Initialize GFX lib. Will configure the ST7565R display controller and
+	/* Initialize GFX lib. Will configure the display controller and
 	 * create a framebuffer in RAM if the controller lack two-way communication
 	 */
 	gfx_mono_init();

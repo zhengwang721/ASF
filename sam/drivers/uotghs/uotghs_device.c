@@ -705,7 +705,6 @@ void udd_enable(void)
 void udd_disable(void)
 {
 	irqflags_t flags;
-	flags = cpu_irq_save();
 
 #ifdef UHD_ENABLE
 # ifdef USB_ID_GPIO
@@ -719,6 +718,7 @@ void udd_disable(void)
 # endif
 #endif
 
+	flags = cpu_irq_save();
 	otg_unfreeze_clock();
 	udd_detach();
 #ifndef UDD_NO_SLEEP_MGR
