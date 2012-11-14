@@ -321,13 +321,13 @@ struct adc_config {
 	/** Free running mode */
 	bool freerunning;
 	/** Enable event input to trigger conversion start */
-	bool event_input_start_conversion;
+	bool start_conversion_on_event;
 	/** Enable event input to trigger flush ADC module */
-	bool event_input_flush_adc;
+	bool flush_adc_on_event;
 	/** Enable event generation on conversion done */
-	bool event_generate_conversion_done;
+	bool generate_event_on_conversion_done;
 	/** Enable event generation on window monitor */
-	bool event_generate_window_monitor;
+	bool generate_event_on_window_monitor;
 };
 
 
@@ -434,10 +434,10 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->left_adjusted = false;
 	config->differential_mode = false;
 	config->freerunning = false;
-	config->event_input_start_conversion = false;
-	config->event_input_flush_adc = false;
-	config->event_generate_conversion_done = false;
-	config->event_generate_window_monitor = false;
+	config->start_conversion_on_event = false;
+	config->flush_adc_on_event = false;
+	config->generate_event_on_conversion_done = false;
+	config->generate_event_on_window_monitor = false;
 }
 
 /**
