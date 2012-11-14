@@ -1691,6 +1691,20 @@ class FdkExtensionTestCase(unittest.TestCase):
 		ext_db = self.ext.get_database()
 		self._assertIsInstance(ext_db, ConfigDB)
 
+	def test_get_dependency_by(self):
+		expected_eid  = "ccc"
+		expected_uuid = "00000000-0000-0000-0000-000000000000"
+		expected_ver  = "latest"
+
+		expected_eid_result = tuple([expected_uuid, expected_ver])
+		expected_uuid_result = tuple([expected_eid, expected_ver])
+
+		eid_result  = self.ext.get_dependency_by_eid("ccc")
+		uuid_result = self.ext.get_dependency_by_uuid("00000000-0000-0000-0000-000000000000")
+
+		self.assertEqual(eid_result, expected_eid_result)
+		self.assertEqual(uuid_result, expected_uuid_result)
+
 	def test_get_external_database(self):
 		# Get an existing database
 		alt_ext_db = self.ext.get_external_database(self.alt_ext_eid)
