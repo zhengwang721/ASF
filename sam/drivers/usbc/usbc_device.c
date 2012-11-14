@@ -616,6 +616,11 @@ void udd_enable(void)
 	sleepmgr_lock_mode(USBC_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#ifndef USBC_USBSTA_VBUSTI
+#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#  endif	
+#endif	
 	cpu_irq_restore(flags);
 }
 
