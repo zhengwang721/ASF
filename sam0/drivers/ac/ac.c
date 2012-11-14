@@ -187,7 +187,8 @@ void ac_disable(
 /** \brief Enables an Analog Comparator event input or output.
  *
  *  Enables one or more input or output events to or from the Analog Comparator
- *  module.
+ *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -210,7 +211,8 @@ void ac_enable_events(
 /** \brief Disables an Analog Comparator event input or output.
  *
  *  Disables one or more input or output events to or from the Analog Comparator
- *  module.
+ *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *

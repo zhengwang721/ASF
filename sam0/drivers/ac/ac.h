@@ -115,74 +115,180 @@
 extern "C" {
 #endif
 
+/** \brief AC channel input sampling mode configuration enum.
+ *
+ * Enum for the possible channel sampling modes of an Analog Comparator channel.
+ */
 enum ac_ch_sample_mode {
+	/** Continuous sampling mode; when the channel is enabled the comparator
+	 *  output is available for reading at any time. */
 	AC_CH_MODE_CONTINUOUS    = 0,
+	/** Single shot mode; when used the comparator channel must be triggered to
+	 *  perform a comparison before reading the result. */
 	AC_CH_MODE_SINGLE_SHOT   = AC_SINGLE_bm,
 };
 
+/** \brief AC channel positive comparator pin input configuration enum.
+ *
+ * Enum for the possible channel positive pin input of an Analog Comparator
+ * channel.
+ */
 enum ac_ch_pos_mux {
+	/** Positive comparator input is connected to physical AC input pin 0. */
 	AC_CH_POS_MUX_PIN0       = AC_MUXPOS_PIN0_gc,
+	/** Positive comparator input is connected to physical AC input pin 1. */
 	AC_CH_POS_MUX_PIN1       = AC_MUXPOS_PIN1_gc,
+	/** Positive comparator input is connected to physical AC input pin 2. */
 	AC_CH_POS_MUX_PIN2       = AC_MUXPOS_PIN2_gc,
+	/** Positive comparator input is connected to physical AC input pin 3. */
 	AC_CH_POS_MUX_PIN3       = AC_MUXPOS_PIN3_gc,
 };
 
+/** \brief AC channel negative comparator pin input configuration enum.
+ *
+ * Enum for the possible channel negative pin input of an Analog Comparator
+ * channel.
+ */
 enum ac_ch_neg_mux {
+	/** Negative comparator input is connected to physical AC input pin 0. */
 	AC_CH_NEG_MUX_PIN0       = AC_MUXNEG_PIN0_gc,
+	/** Negative comparator input is connected to physical AC input pin 1. */
 	AC_CH_NEG_MUX_PIN1       = AC_MUXNEG_PIN1_gc,
+	/** Negative comparator input is connected to physical AC input pin 2. */
 	AC_CH_NEG_MUX_PIN2       = AC_MUXNEG_PIN2_gc,
+	/** Negative comparator input is connected to physical AC input pin 3. */
 	AC_CH_NEG_MUX_PIN3       = AC_MUXNEG_PIN3_gc,
+	/** Negative comparator input is connected to the internal ground plane. */
 	AC_CH_NEG_MUX_GND        = AC_MUXNEG_GND_gc,
+	/** Negative comparator input is connected to the channel's internal VCC
+	 *  plane voltage scalar. */
 	AC_CH_NEG_MUX_SCALED_VCC = AC_MUXNEG_VSCALE_gc,
+	/** Negative comparator input is connected to the internal band gap voltage
+	 *  reference. */
 	AC_CH_NEG_MUX_BANDGAP    = AC_MUXNEG_BANDGAP_gc,
-	AC_CH_NEG_MUX_DAC        = AC_MUXNEG_DAC_gc,
+	/** Negative comparator input is connected to the channel's internal DAC
+	 *  channel 0 output. */
+	AC_CH_NEG_MUX_DAC0       = AC_MUXNEG_DAC_gc,
 };
 
+/** \brief AC channel output filtering configuration enum.
+ *
+ * Enum for the possible channel output filtering configurations of an Analog
+ * Comparator channel.
+ */
 enum ac_ch_filter {
+	/** No output filtering is performed on the comparator channel. */
 	AC_CH_FILTER_NONE        = AC_FLEN_OFF_gc,
+	/** Comparator channel output is passed through a Majority-of-Three
+	 *  filter. */
 	AC_CH_FILTER_MAJORITY_3  = AC_FLEN_MAJ3_gc,
+	/** Comparator channel output is passed through a Majority-of-Five
+	 *  filter. */
 	AC_CH_FILTER_MAJORITY_5  = AC_FLEN_MAJ5_gc,
 };
 
+/** \brief AC channel GPIO output routing configuration enum.
+ *
+ * Enum for the possible channel GPIO output routing configurations of an Analog
+ * Comparator channel.
+ */
 enum ac_ch_output {
+	/** Comparator channel output is not routed to a physical GPIO pin, and is
+	 *  used internally only. */
 	AC_CH_OUTPUT_INTERNAL    = AC_OUT_OFF_gc,
+	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	 *  via an asynchronous path. */
 	AC_CH_OUTPUT_ASYNCRONOUS = AC_OUT_ASYNC_gc,
+	/** Comparator channel output is routed to it's matching physical GPIO pin,
+	 *  via a synchronous path. */
 	AC_CH_OUTPUT_SYNCHRONOUS = AC_OUT_SYNC_gc,
 };
 
+/** \brief AC channel output state enum.
+ *
+ * Enum for the possible output states of an Analog Comparator channel.
+ */
 enum ac_ch_state {
+	/** Unknown output state; the comparator channel was not ready. */
 	AC_CH_STATE_UNKNOWN,
+	/** Comparator's negative input pin is higher in voltage than the positive
+	 *  input pin. */
 	AC_CH_STATE_NEG_ABOVE_POS,
+	/** Comparator's positive input pin is higher in voltage than the negative
+	 *  input pin. */
 	AC_CH_STATE_POS_ABOVE_NEG,
 };
 
+/** \brief AC window channel detection mode configuration enum.
+ *
+ * Enum for the possible detection modes of an Analog Comparator window channel.
+ */
 enum ac_win_detect {
+	/** Window Comparator should detect an input above the upper threshold. */
 	AC_WIN_DETECT_ABOVE,
+	/** Window Comparator should detect an input between the lower and upper
+	 *  thresholds. */
 	AC_WIN_DETECT_INSIDE,
+	/** Window Comparator should detect an input below the lower threshold. */
 	AC_WIN_DETECT_BELOW,
+	/** Window Comparator should detect an input above the upper threshold or
+	 *  below the lower threshold. */
 	AC_WIN_DETECT_OUTSIDE,
 };
 
+/** \brief AC window channel output state enum.
+ *
+ * Enum for the possible output states of an Analog Comparator window channel.
+ */
 enum ac_win_state {
+	/** Unknown output state; the comparator window channel was not ready. */
 	AC_WIN_STATE_UNKNOWN,
+	/** Window Comparator's input voltage is above the upper window
+	 *  threshold. */
 	AC_WIN_STATE_ABOVE,
+	/** Window Comparator's input voltage is between the lower and upper window
+	 *  thresholds. */
 	AC_WIN_STATE_INSIDE,
+	/** Window Comparator's input voltage is below the lower window
+	 *  threshold. */
 	AC_WIN_STATE_BELOW,
 };
 
-enum ac_events {
-	AC_EVENT_COMPARATOR0_INPUT   = AC_COMPEI0_bm,
-	AC_EVENT_COMPARATOR1_INPUT   = AC_COMPEI1_bm,
-	AC_EVENT_COMPARATOR2_INPUT   = AC_COMPEI2_bm,
-	AC_EVENT_COMPARATOR3_INPUT   = AC_COMPEI3_bm,
-	AC_EVENT_COMPARATOR0_OUTPUT  = AC_COMPEO0_bm,
-	AC_EVENT_COMPARATOR1_OUTPUT  = AC_COMPEO1_bm,
-	AC_EVENT_COMPARATOR2_OUTPUT  = AC_COMPEO2_bm,
-	AC_EVENT_COMPARATOR3_OUTPUT  = AC_COMPEO3_bm,
-	AC_EVENT_WINDOW0_OUTPUT      = AC_WINEO0_bm,
-	AC_EVENT_WINDOW1_OUTPUT      = AC_WINEO1_bm,
-};
+/** \name Analog Comparator Event Masks
+ *  \anchor ac_event_masks
+ *
+ * Masks for the various Analog Comparator module event input and outputs, which
+ * can be controlled via \ref ac_enable_events() and \ref ac_disable_events().
+ *
+ * @{
+ */
+/** AC input event to trigger a conversion on comparator channel 0. */
+#define AC_EVENT_COMPARATOR0_INPUT     AC_COMPEI0_bm
+/** AC input event to trigger a conversion on comparator channel 1. */
+#define AC_EVENT_COMPARATOR1_INPUT     AC_COMPEI1_bm
+/** AC input event to trigger a conversion on comparator channel 2. */
+#define AC_EVENT_COMPARATOR2_INPUT     AC_COMPEI2_bm
+/** AC input event to trigger a conversion on comparator channel 3. */
+#define AC_EVENT_COMPARATOR3_INPUT     AC_COMPEI3_bm
+/** AC output event, triggered by comparator channel 0. */
+#define AC_EVENT_COMPARATOR0_OUTPUT    AC_COMPEO0_bm
+/** AC output event, triggered by comparator channel 1. */
+#define AC_EVENT_COMPARATOR1_OUTPUT    AC_COMPEO1_bm
+/** AC output event, triggered by comparator channel 2. */
+#define AC_EVENT_COMPARATOR2_OUTPUT    AC_COMPEO2_bm
+/** AC output event, triggered by comparator channel 3. */
+#define AC_EVENT_COMPARATOR3_OUTPUT    AC_COMPEO3_bm
+/** AC output event, triggered by comparator window channel 0. */
+#define AC_EVENT_WINDOW0_OUTPUT        AC_WINEO0_bm
+/** AC output event, triggered by comparator window channel 1. */
+#define AC_EVENT_WINDOW1_OUTPUT        AC_WINEO1_bm
+/** @} */
 
+/** \brief AC device instance structure.
+ *
+ * AC software instance structure, used to retain software state information
+ * of an associated hardware module instance.
+ */
 struct ac_dev_inst {
 	/** Hardware module point of the associated Analog Comparator peripheral. */
 	AC_t *hw_dev;
