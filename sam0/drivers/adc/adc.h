@@ -6,7 +6,6 @@
 extern "C" {
 #endif
 
-
 /**
  * \brief ADC reference voltage enum.
  *
@@ -87,7 +86,6 @@ enum adc_window_mode {
 	ADC_WINDOW_MODE_4 = ADC_WINMODE4_bm,
 }
 
-
 /**
  * \brief ADC gain factor selection enum.
  *
@@ -108,7 +106,6 @@ enum adc_gain_factor {
 	/** 1/2x gain */
 	ADC_GAIN_FACTOR_DIV2 = ADC_GAIN_DIV2_bm,
 }
-
 
 /**
  * \brief ADC positive MUX input selection enum.
@@ -177,7 +174,6 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_AUX           = ADC_POSPIN_AUX_bm,
 };
 
-
 /**
  * \brief ADC negative MUX input selection enum.
  *
@@ -239,7 +235,6 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_IOGND                       = ADC_NEGPIN_IOGND_bm,
 };
 
-
 /**
  * \brief ADC averaging selection enum.
  *
@@ -271,7 +266,6 @@ enum adc_average_samples {
 	ADC_AVERAGE_SAMPLES_1024 = ADC_SAMPLENUM1024_bm,
 }
 
-
 /**
  * \brief ADC oversamling and decimation enum.
  *
@@ -280,9 +274,13 @@ enum adc_average_samples {
  *
  */
 enum adc_oversampling_and_decimation {
+	/** 1 bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_1BIT,
+	/** 2 bits resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_2BIT,
+	/** 3 bits resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_3BIT,
+	/** 4 bits resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_4BIT
 }
 
@@ -330,7 +328,6 @@ struct adc_config {
 	bool generate_event_on_window_monitor;
 };
 
-
 /**
  * \brief ADC device instance structure.
  * ADC software instance structure.
@@ -340,7 +337,6 @@ struct adc_dev_inst {
 	/** ADC hardware module */
 	ADC_t *dev_ptr;
 };
-
 
 /**
  * \brief Wait for synchronization to finish
@@ -367,17 +363,6 @@ status_code_t adc_init(struct adc_dev_inst *const dev_inst, ADC_t *hw_dev,
 		struct adc_config *config);
 
 /**
- * \brief Configures the ADC module
- *
- * Configures the ADC module based on a config struct.
- *
- * \param dev_inst    pointer to the device struct
- * \param config pointer to the config struct
- */
-status_code_t adc_set_config(struct adc_dev_inst *const dev_inst,
-		struct adc_config *config);
-
-/**
  * \brief Reset the ADC module
  *
  * \param[in] dev_inst Pointer to the ADC software instance struct
@@ -394,7 +379,6 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 
 	/* Software reset the module */
 	adc_module->CTRLA |= ADC_SWRST_bm;
-
 }
 
 /**
@@ -533,7 +517,6 @@ static inline bool adc_is_result_ready(struct adc_dev_inst *const dev_inst)
 	return module->INTFLAG & ADC_RESRDY_bm;
 }
 
-
 /**
  * \brief Check if window monitor flag is set in ADC
  *
@@ -551,7 +534,6 @@ static inline bool adc_is_window_flag_set(struct adc_dev_inst *const dev_inst)
 	return module->INTFLAG & ADC_WINMON_bm;
 }
 
-
 /**
  * \brief Reset the ADC window monitor flag
  *
@@ -566,7 +548,6 @@ static inline void adc_reset_window_flag(struct adc_dev_inst *const dev_inst)
 
 	module->INTFLAG = ADC_WINMON_bm;
 }
-
 
 #ifdef __cplusplus
 }
