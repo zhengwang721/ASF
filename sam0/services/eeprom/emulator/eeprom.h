@@ -109,7 +109,7 @@ enum status_code eeprom_read_page(uint16_t page, uint8_t *data);
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_flush_page_buffer();
+enum status_code eeprom_flush_page_buffer() 
 
 /**
  * \brief This function will initalize the EEPROM memory bank i flash
