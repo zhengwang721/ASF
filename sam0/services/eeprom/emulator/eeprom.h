@@ -48,29 +48,21 @@
 extern "C" {
 #endif
 
-#define EEPROM_EMUALTOR_START_ADDRESS  ????
-
 /**
  * \brief Initializes the eeprom emualtor service driver
  *
  * This function will check the EEPROM emualtor space, if there is already 
  * initialized eeprom data in the EEPROM space it will
  *
- * \li Re-fresh all used row to initial state
+ * \li Setup the virtual eeprom module
+ * \li Configure the NVM module to correct state
  * \li Re-map data
+ * \li Check if the EEPROM block is valid
  *
- * If the EEPROM space is unused it will:
- *
- * \li Re-fresh all rows to make sure the row state is known
- * \li Initialize the EEPROM space 
- *
- * \return This function return a status code
+ * \return This function returns a status code
  *
  */
 enum status_code eeprom_emulator_init(void);
-
-enum status_code eeprom_emulator_enable();
-enum status_code eeprom_emulator_disable();
 
 /**
  * \brief Writes a data buffer to the flash page buffer
@@ -84,7 +76,7 @@ enum status_code eeprom_emulator_disable();
  * \return This function return a status code
  *
  */
-enum status_code eeprom_write_page(uint16_t page, uint8_t *data);
+enum status_code eeprom_write_page(uint8_t lpage, uint8_t *data);
 
 /**
  * \brief Reads a page sized data buffer from EEPROM emulator flash space
@@ -95,7 +87,7 @@ enum status_code eeprom_write_page(uint16_t page, uint8_t *data);
  * \param[in] page The number of the page in eeprom emualtor space to be written
  * \param[out] *data Data buffer of page size that will contain the data read from memory
  */
-enum status_code eeprom_read_page(uint16_t page, uint8_t *data);
+enum status_code eeprom_read_page(uint8_t lpage, uint8_t *data);
 
 /**
  * \brief Flushes the page buffer to flash memory
@@ -109,7 +101,7 @@ enum status_code eeprom_read_page(uint16_t page, uint8_t *data);
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_flush_page_buffer() 
+enum status_code eeprom_flush_page_buffer(void) 
 
 /**
  * \brief This function will initalize the EEPROM memory bank i flash
@@ -121,7 +113,7 @@ enum status_code eeprom_flush_page_buffer()
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_erase_memory():
+void eeprom_erase_memory(void):
 
 #ifdef __cplusplus
 }
