@@ -484,3 +484,51 @@ enum status_code eeprom_flush_page_buffer()
 	return err;
 }
 
+enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t length)
+{
+	uint8_t current_page = offset / EEPROM_PAGE_SIZE;
+	uint16_t c;
+	uint8_t buffer[EEPROM_PAGE_SIZE];
+
+	if(offsett%EEPROM_PAGE_SIZE) {
+		eeprom_emulator_read_page(current_page, buffer);
+	}
+
+	for (c=offset;c<(length+offset);++c) {
+
+		if(!(c%EEPROM_PAGE_SIZE)) {
+
+			eeprom_emulator_write_page(current_page, buffer);
+
+			current_page = c / EEPROM_PAGE_SIZE;
+			eeprom_emulator_read_page(current_page, buffer);
+
+		}
+
+		buffer[c%EEPROM_PAGE_SIZE] = data[c-offset];
+	}
+}
+
+enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t length)
+{
+	uint8_t current_page = offset / EEPROM_PAGE_SIZE;
+	uint16_t c;
+	uint8_t buffer[EEPROM_PAGE_SIZE];
+	enum status_code err
+
+	if(offset%EEPROM_PAGE_SIZE) {
+		err = eeprom_emulator_read_page(current_page, buffer);
+	}
+
+	for (c=offset;c<(length+offset);++c) {
+
+		if(!(c%EEPROM_PAGE_SIZE)) {
+			current_page = c / EEPROM_PAGE_SIZE;
+			eeprom_emulator_read_page(current_page, buffer);
+		}
+
+		data[c-offset] = buffer[c%EEPROM_PAGE_SIZE];
+	}
+
+	return STATUS_OK;
+}

@@ -58,7 +58,6 @@
  */
 #define CONF_CLOCK_CONFIGURE_CLOCK_SOURCES true
 
-
  /* CLOCK_SOURCE_RC8MHZ configuration */
 
 #define CONF_CLOCK_RC8MHZ_PRESCALER 8

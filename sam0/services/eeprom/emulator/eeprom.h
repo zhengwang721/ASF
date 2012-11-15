@@ -115,6 +115,27 @@ enum status_code eeprom_flush_page_buffer(void)
  */
 void eeprom_erase_memory(void):
 
+/**
+ * \brief This function writes a buffer to the eeprom emulator
+ *
+ * This function writes a buffer of data to the eeprom emualtor. This buffer can be
+ * bigger than the page baoundery. 
+ *
+ * \return This function may return some status code of unknown value
+ */
+enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t lenght);
+
+/**
+ * \brief This function reads a buffer from the eeprom emulator
+ *
+ * This function reads a buffer of data from the eeprom emualtor. This function is not 
+ * limited by the page baoundery
+ *
+ * \return This function may return some status code of unknown value
+ */
+enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t length);
+
+
 #ifdef __cplusplus
 }
 #endif
