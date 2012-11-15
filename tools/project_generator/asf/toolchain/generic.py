@@ -71,17 +71,62 @@ class GenericElement(object):
 		return content
 
 	def _get_build_from_project_or_selector(self, build_type, selector_id):
+		"""
+		Gets a list of build items of the specified type from the project,
+		alternatively from a specifiable selector that can reside in either
+		the project's home database or in ASF.
+
+		Assuming the project does not contain any build items of the
+		specified type and the ID of a selector has been specified, the
+		function will first try to look up that selector in the project's
+		home database.
+		If this fails, the function will try to find ASF via the dependency
+		list of the project's home extension, then look up the selector in
+		the ASF database.
+		If a selector is found in either of the databases, its build items
+		of the specified type are returned.
+
+
+		Returns an empty list if project does not contain specified build
+		type and no selector has been specified.
+
+		Raises DbError if project does not contain the specified build type,
+		a selector was specified, but could not be found in the project's
+		home database, and a dependency on ASF is missing or ASF cannot be
+		loaded.
+
+		Raises NotFoundError if project does not contain the specified build
+		type, and a selector was specified, but could not be found in the
+		project's home database nor in ASF.
+
+		Raises NoSelectionError if the found selector cannot make a selection
+		for the current MCU and configuration.
+		"""
+		asf_uuid = "Atmel.ASF"
 		# Check for custom build items
 		build_items = self.project.get_build(build_type, self.toolchain)
 
 		# If no build item was found and a selector is defined for toolchain, use it
 		if not build_items:
 			if selector_id:
-				build_selector = self.db.lookup_by_id(selector_id)
+				# Try to find selector in the project's home database, or in ASF
+				try:
+					build_selector = self.db.lookup_by_id(selector_id)
+				except NotFoundError:
+					# Re-raise exception if this actually was the ASF database
+					if self.db.extension.uuid == asf_uuid:
+						raise
+
+					# Otherwise, try looking up in ASF database via extension dependencies
+					req_eid, req_ver = self.db.extension.get_dependency_by_uuid(asf_uuid)
+					if req_eid is not None:
+						# This raises NotFoundError if selector is not found
+						build_selector = self.db.lookup_external_by_id(req_eid, selector_id)
+					else:
+						raise DbError("Could not find selector `%s' in database. Either add build type/subtype `%s/%s' to the project or a dependency on ASF to the extension." % (selector_id, build_type.type, build_type.subtype))
+
 				build_selector.resolve_all_selections(self.configuration, self.project.mcu)
 				build_items = build_selector.get_build(build_type, self.toolchain)
-			else:
-				return None
 
 		return build_items
 

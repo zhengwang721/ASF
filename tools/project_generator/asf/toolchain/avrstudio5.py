@@ -1708,10 +1708,7 @@ class AVRStudio5Project(GenericProject):
 		Get the filename of the linker script, if any is specified/available.
 		"""
 		mcu_family_to_selector_id = {
-			'xmegaa' : 'xmega.utils.linker_scripts',
-			'xmegaau' : 'xmega.utils.linker_scripts',
-			'xmegab' : 'xmega.utils.linker_scripts',
-			'xmegad' : 'xmega.utils.linker_scripts',
+			'xmega' : 'xmega.utils.linker_scripts',
 		}
 
 		mcu_family = self.project.mcu.get_group_map()[-2]

@@ -1525,8 +1525,22 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		self.assertTrue(isinstance(test_object, test_class))
 
 	def setUp(self):
+		class DummyLog(object):
+			def debug(self, text):
+				pass
+			def info(self, text):
+				pass
+			def warning(self, text):
+				pass
+			def error(self, text):
+				pass
+			def critical(self, text):
+				pass
 		class DummyRuntime(object):
-			pass
+			log = DummyLog()
+			version_postfix = ""
+			template_dir = ""
+			configuration = ConfigurationHandler()
 
 		rel_ext_basedir = os.path.relpath(self.ext_basedir)
 		self.extmgr = FdkExtensionManager(DummyRuntime(), rel_ext_basedir)
@@ -1640,6 +1654,74 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		# Check exception for non-existent version newer than 1.1.20
 		self.assertRaises(NoSelectionError, self.extmgr.resolve_version_selection, vers, '(1.1.20, )')
 
+	def test_GenericProject_get_build_from_project_or_selector(self):
+		# Dummy build type to ensure no items are found
+		class BuildMissing(BuildType):
+			type = "this_must_be_missing"
+
+		# Load the test extensions
+		self.extmgr.load_and_register_extensions(self.ext_dirs)
+
+		# Load test project from Bbb and instantiate GenericProject
+		bbb_ext = self.extmgr.request_extension(self.ext_uuids[0])
+		bbb_db = bbb_ext.get_database()
+		bbb_proj = bbb_db.lookup_by_id("bbb.project")
+		bbb_gen = GenericProject(bbb_proj, bbb_db, bbb_db.runtime)
+
+		# Load test project from Ccc and instantiate GenericProject
+		ccc_ext = self.extmgr.request_extension(self.ext_uuids[1])
+		ccc_db = ccc_ext.get_database()
+		ccc_proj = ccc_db.lookup_by_id("ccc.project")
+		ccc_gen = GenericProject(ccc_proj, ccc_db, ccc_db.runtime)
+
+
+	# The following tests are run on extension ccc
+
+		# If no selector is specified, function will succeed both if:
+		# 1) no build items are found
+		found_items = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
+		self.assertEquals(found_items, [])
+
+		# and 2) build items are found
+		found_items = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
+		self.assertEquals(found_items, [("THIS", "EXISTS")])
+
+		# If a selector is specified and no build item is found in project,
+		# the function will fail if:
+		# 1) selector is not found in project's database and ASF is not added
+		#    as dependency
+		self.assertRaises(DbError, ccc_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+	# The following tests are run on extension bbb
+	# ASF is not registered with extmgr at this point so requests for it will fail
+
+		# 2) selector is not found in project's database and ASF cannot be
+		#    loaded
+		self.assertRaises(DbError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+	# Load and register ASF with extmgr so requests for it will succeed
+		asf_ext = self.extmgr.load_extension(os.path.join(self.ext_basedir, 'Ccc', 'misplaced_ASF'))
+		self.extmgr.register_extension(asf_ext)
+
+		# 3) selector is not found in project's database or ASF
+		self.assertRaises(NotFoundError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+		# 4) selector cannot make a selection for the current config or MCU
+		self.assertRaises(NoSelectionError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="failing_selector")
+		self.assertRaises(NoSelectionError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="failing_asf_selector")
+
+
+		# If a selector is specified and no build item is found in project,
+		# the function will succeed if:
+		# 1) selector is found in project's database
+		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
+		self.assertEquals(found_items, [("FROM", "BBB")])
+
+		# 2) selector is not found in project's database, but ASF is added
+		#    as a dependency and contains the selector
+		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
+		self.assertEquals(found_items, [("FROM", "ASF")])
+
 
 class FdkExtensionTestCase(unittest.TestCase):
 	old_dir = os.path.abspath(os.curdir)
@@ -1690,6 +1772,20 @@ class FdkExtensionTestCase(unittest.TestCase):
 	def test_get_database(self):
 		ext_db = self.ext.get_database()
 		self._assertIsInstance(ext_db, ConfigDB)
+
+	def test_get_dependency_by(self):
+		expected_eid  = "ccc"
+		expected_uuid = "00000000-0000-0000-0000-000000000000"
+		expected_ver  = "latest"
+
+		expected_eid_result = tuple([expected_uuid, expected_ver])
+		expected_uuid_result = tuple([expected_eid, expected_ver])
+
+		eid_result  = self.ext.get_dependency_by_eid("ccc")
+		uuid_result = self.ext.get_dependency_by_uuid("00000000-0000-0000-0000-000000000000")
+
+		self.assertEqual(eid_result, expected_eid_result)
+		self.assertEqual(uuid_result, expected_uuid_result)
 
 	def test_get_external_database(self):
 		# Get an existing database

@@ -73,6 +73,48 @@ class FdkExtension(object):
 		return '[%s %s %s]' % (self.org, self.shortname, self.version)
 
 
+	def _get_dependency_element_by_attribute(self, attr_name, attr_value):
+		return self.element.find("./dependencies/fdk-extension[@%s='%s']" % (attr_name, attr_value))
+
+
+	def get_dependency_by_eid(self, req_eid):
+		"""
+		Gets a tuple with the UUID and version of the extension dependency
+		with the requested eid.
+
+		If the eid cannot be resolved to a dependency, the tuple elements
+		will be None.
+		"""
+		req_uuid = None
+		req_ver = None
+
+		dep_e = self._get_dependency_element_by_attribute('eid', req_eid)
+		if dep_e is not None:
+			req_uuid = dep_e.get('uuidref')
+			req_ver = dep_e.get('version')
+
+		return tuple([req_uuid, req_ver])
+
+
+	def get_dependency_by_uuid(self, req_uuid):
+		"""
+		Gets a tuple with the eid and version of the extension dependency
+		with the requested UUID.
+
+		If the UUID cannot be resolved to a dependency, the tuple elements
+		will be None.
+		"""
+		req_eid = None
+		req_ver = None
+
+		dep_e = self._get_dependency_element_by_attribute('uuidref', req_uuid)
+		if dep_e is not None:
+			req_eid = dep_e.get('eid')
+			req_ver = dep_e.get('version')
+
+		return tuple([req_eid, req_ver])
+
+
 	def get_external_database(self, eid):
 		"""
 		Get the database of a different extension, specified with the
@@ -90,16 +132,13 @@ class FdkExtension(object):
 
 		if fdk_ext is None:
 			# Resolve extension data from the eid
-			dep_e = self.element.find("./dependencies/fdk-extension[@eid='%s']" % eid)
+			req_uuid, req_ver = self.get_dependency_by_eid(eid)
 
-			if dep_e is None:
+			if req_uuid is None:
 				raise DbError("Could not find FDK extension dependency with eid=`%s'" % eid)
 
-			ext_uuid = dep_e.get('uuidref')
-			ext_version = dep_e.get('version')
-
 			# Request the extension from manager and return it
-			fdk_ext = self.manager.request_extension(ext_uuid, ext_version)
+			fdk_ext = self.manager.request_extension(req_uuid, req_ver)
 
 			self.eid_to_fdk_ext[eid] = fdk_ext
 

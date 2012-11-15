@@ -2301,6 +2301,7 @@ class ConfigDB(object):
 		run_test(self, self.sanity_check_resolve_elements)
 		# Run this test after the resolving has been tested
 		run_test(self, self.sanity_check_project_definitions)
+		run_test(self, self.sanity_check_project_extension_dependencies)
 
 		if not fdk_check:
 			# Don't run this for FDK sanity check
@@ -2694,5 +2695,46 @@ class ConfigDB(object):
 			total += 1
 			if num_modules > 1:
 				output_obj.error("Project %s has %s application modules, should be no more than 1" % (project.id, num_modules))
+
+		return total, errors
+
+	def sanity_check_project_extension_dependencies(self, output_obj):
+		# Import GenericProject here in order to avoid problems due to circular imports
+		from asf.toolchain.generic import GenericProject
+
+		total = 0
+		errors = 0
+
+		# For each project
+		for project in self.iter_projects():
+			total += 1
+			generator = GenericProject(project, self, self.runtime)
+
+			# Find all extensions and versions from the project's modules
+			uuid_to_exts = {}
+			for m in [project] + project.get_prerequisites(recursive=True):
+				new_ext = m.extension
+				new_uuid = new_ext.uuid
+
+				uuid_exts = uuid_to_exts.get(new_uuid, set())
+				uuid_exts.add(new_ext)
+				uuid_to_exts[new_uuid] = uuid_exts
+
+			# Check if multiple versions are added for any extensions
+			for uuid, exts in uuid_to_exts.items():
+				# Remove if length of version list is 1
+				if len(exts) == 1:
+					del(uuid_to_exts[uuid])
+
+			num_of_conflicts = len(uuid_to_exts)
+			if num_of_conflicts > 0:
+				errors += 1
+				output_obj.error("Project `%s' depends on multiple versions of %s extension(s):" % (project.id, num_of_conflicts))
+
+				for uuid, exts in uuid_to_exts.items():
+					output_obj.error("\t%s:" % uuid)
+
+					for ext in exts:
+						output_obj.error("\t\t" + str(ext))
 
 		return total, errors

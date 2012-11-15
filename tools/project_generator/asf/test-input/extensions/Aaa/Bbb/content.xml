@@ -19,4 +19,15 @@
 		<build type="offline-help" subtype="module-help-page" value="doc/fixed_module_help.html"/>
 		<build type="offline-help" subtype="module-guide-page" value="doc\fixed_module_guide.html"/>
 	</module>
+	<select-by-device id="failing_selector" caption="">
+		<module type="driver" id="failing_selector#0" caption="">
+			<device-support value="sam"/>
+		</module>
+	</select-by-device>
+	<select-by-device id="working_selector" caption="">
+		<module type="driver" id="working_selector#0" caption="">
+			<build type="define" name="FROM" value="BBB"/>
+			<device-support value="xmega"/>
+		</module>
+	</select-by-device>
 </asf>
