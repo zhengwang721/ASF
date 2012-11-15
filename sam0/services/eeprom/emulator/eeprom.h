@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 /**
- * \brief Initializes the eeprom emualtor service driver
+ * \brief Initializes the eeprom emulator service driver
  *
  * This function will check the EEPROM emualtor space, if there is already 
  * initialized eeprom data in the EEPROM space it will
