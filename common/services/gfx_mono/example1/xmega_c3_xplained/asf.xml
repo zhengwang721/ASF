@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Monochrome graphic library example for XMEGA C3-Xplained" id="common.services.gfx_mono.example1.xmega_c3_xplained">
+	<project caption="Monochrome graphic library example for XMEGA C3-Xplained" id="common.services.gfx_mono.example1.xmega_c3_xplained" >
 		<build type="header-file" value="conf_ssd1306.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -13,6 +13,5 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
-		<device-support value="atxmega384c3"/>
 	</project>
 </asf>

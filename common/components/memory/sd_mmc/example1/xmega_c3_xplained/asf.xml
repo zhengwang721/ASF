@@ -1,5 +1,6 @@
 <asf xmlversion="1.0">
 	<project caption="Basic SD/MMC/SDIO card example for XMEGA-C3 Xplained" id="common.components.memory.sd_mmc.example1.xmega_c3_xplained">
+
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_sd_mmc.h"/>
 		<build type="header-file" value="conf_board.h"/>
@@ -16,6 +17,5 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
-		<device-support value="atxmega384c3"/>
 	</project>
 </asf>
