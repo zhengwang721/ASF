@@ -301,9 +301,9 @@ struct adc_config {
 	/** Selected window mode */
 	enum adc_window_mode     window_mode;
 	/** Lower window value */
-	uint16_t                 window_lower_value;
+	int16_t                  window_lower_value;
 	/** Upper window value */
-	uint16_t                 window_upper_value;
+	int16_t                  window_upper_value;
 	/** Gain factor */
 	enum adc_gain_factor     gain_factor;
 	/** Positive MUX input */
@@ -326,6 +326,34 @@ struct adc_config {
 	bool generate_event_on_conversion_done;
 	/** Enable event generation on window monitor */
 	bool generate_event_on_window_monitor;
+	/** ADC enabled in sleep mode */
+	bool sleep_enable;
+	/**
+	Reference buffer offset compensation enable.
+	Set this to true to ebable the reference buffer compensation to
+	increase the accuracy of the gain stage. But decrease the input
+	impedance; therefore increase the startup time of the reference.
+	*/
+	bool reference_compenstation_enable;
+	/**
+	Correct for gain and offset based on values of gain_correction amd
+	offset_correction.
+	*/
+	bool correction_enable;
+	/**
+	If correction_enable is set to true, this value define how the ADC
+	conversion result is compensated for gain error before written to
+	the result register. This is a fractional value, 1-bit integer +
+	11-bits fraction, therefore 1/2 <= gain_correction < 2.
+	gain_correction values ranges from 0.10000000000 to 1.11111111111.
+	*/
+	uint16_t gain_correction;
+	/**
+	If correction_enable is set to true, these bits define how the ADC
+	conversion result is compensated for offset error before written to
+	the result register. This value is in two’s complement format.
+	*/
+	uint16_t offset_correction;
 };
 
 /**
@@ -375,9 +403,11 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 
 	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
+	/* Always disable before reset */
+	adc_disable(dev_inst);
 
 	/* Software reset the module */
+	_adc_wait_for_sync(module);
 	adc_module->CTRLA |= ADC_SWRST_bm;
 }
 
@@ -400,6 +430,9 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li Single-ended mode
  *   \li Free running disabled
  *   \li All events (input and generation) disabled
+ *   \li Sleep operation disabled
+ *   \li No reference compensation
+ *   \li No gain/offset correction
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -422,6 +455,11 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->flush_adc_on_event = false;
 	config->generate_event_on_conversion_done = false;
 	config->generate_event_on_window_monitor = false;
+	config->sleep_enable = false;
+	config->reference_compenstation_enable = false;
+	config->correction_enable = false;
+	config->gain_correction = 0;
+	config->offset_correction = 0;
 }
 
 /**
