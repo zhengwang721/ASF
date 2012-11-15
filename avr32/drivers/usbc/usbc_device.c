@@ -604,6 +604,12 @@ void udd_enable(void)
 	sleepmgr_lock_mode(USBC_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#if UC3L3_L4
+#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#  endif	
+#endif	
+
 	cpu_irq_restore(flags);
 }
 
