@@ -354,6 +354,14 @@ struct adc_config {
 	the result register. This value is in two’s complement format.
 	*/
 	uint16_t offset_correction;
+	/**
+	This value (0-63) control the ADC sampling time in number of half ADC
+	prescaled clock cycles (depends of ADC_PRESCALER value), thus
+	controlling the ADC input impedance.
+	Sampling time is set according to the formula:
+	Sample time = (sample_length+1) * (ADCclk / 2)
+	*/
+	uint8_t sample_length;
 };
 
 /**
@@ -433,6 +441,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li Sleep operation disabled
  *   \li No reference compensation
  *   \li No gain/offset correction
+ *   \li No added sampling time
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -460,6 +469,7 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->correction_enable = false;
 	config->gain_correction = 0;
 	config->offset_correction = 0;
+	config->sample_length = 0;
 }
 
 /**
@@ -534,7 +544,9 @@ static inline void adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t 
 	ADC_t *const module = dev_inst->dev_ptr;
 
 	_adc_wait_for_sync(module);
+	/* Get ADC result */
 	*result = module->RESULT;
+	/* Reset ready flag */
 	module->INTFLAG = ADC_RESRDY_bm;
 }
 
