@@ -1137,6 +1137,7 @@ class AVRStudio5Project(GenericProject):
 				'xmega_a3bu_xplained' : 'XMEGA-A3BU-Xplained.jpg',
 				'xmega_b1_xplained'   : 'XMEGA-B1-Xplained.jpg',
 				'xmega_c3_xplained'   : 'XMEGA-C3-Xplained.jpg',
+				'xmega_e5_xplained'   : 'XMEGA-E5-Xplained.jpg',
 				'xplain'              : 'Xplain.jpg',
 			}
 
