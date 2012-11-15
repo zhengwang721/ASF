@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.board.sam4l_ek.led" name="config.board.sam4l_ek.led" caption="SAM4L-EK LED support" default="no">
+	<select-by-config id="config.board.sam4l_ek.led" name="config.board.sam4l_ek.led" caption="SAM4L-EK LED support" default="yes">
 		<module type="meta" id="config.board.sam4l_ek.led#no" caption="SAM4L-EK LED support disabled">
 		</module>
 		<module type="meta" id="config.board.sam4l_ek.led#yes" caption="SAM4L-EK LED support enabled">
@@ -18,7 +18,7 @@
 		</module>
 	</select-by-config>
 
-	<select-by-config id="config.board.sam4l_ek.bm" name="config.board.sam4l_ek.bm" caption="SAM4L-EK Board Monitor support" default="no">
+	<select-by-config id="config.board.sam4l_ek.bm" name="config.board.sam4l_ek.bm" caption="SAM4L-EK Board Monitor support" default="yes">
 		<module type="meta" id="config.board.sam4l_ek.bm#no" caption="SAM4L-EK Board Monitor support disabled">
 		</module>
 		<module type="meta" id="config.board.sam4l_ek.bm#yes" caption="SAM4L-EK Board Monitor support enabled">
@@ -26,6 +26,7 @@
 			<build type="header-file" value="board_monitor.h"/>
 			<build type="include-path" value="."/>
 			<require idref="sam.drivers.usart"/>
+			<require idref="common.services.basic.clock"/>
 		</module>
 	</select-by-config>
 
