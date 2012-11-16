@@ -190,7 +190,7 @@ static void run_test_init(const struct test_case *test)
 			"R2BH initialization setting failed!");
 	register_value = ili9325_read_register(ILI9325_ENTRY_MODE);
 	test_assert_true(test, register_value == (ILI9325_ENTRY_MODE_TRI |
-					ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_ID(0x03) |
+					ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_ID(0x01) |
 					ILI9325_ENTRY_MODE_BGR),
 			"R03H initialization setting failed!");
 	register_value = ili9325_read_register(ILI9325_DRIVER_OUTPUT_CTRL2);
