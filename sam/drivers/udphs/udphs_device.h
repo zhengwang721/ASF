@@ -89,7 +89,7 @@ extern "C" {
 //! @{
 #ifdef USB_DEVICE_HS_SUPPORT
   //! Enable high speed test mode
-#  define   udd_enable_hs_test_mode()        (Wr_bitfield(UDPHS->UDPHS_TST, UDPHS_TST_SPEED_CFG_Msk, 3))
+#  define   udd_enable_hs_test_mode()        (Wr_bitfield(UDPHS->UDPHS_TST, UDPHS_TST_SPEED_CFG_Msk, 2))
 #  define   udd_enable_hs_test_mode_j()      (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_J))
 #  define   udd_enable_hs_test_mode_k()      (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_K))
 #  define   udd_enable_hs_test_mode_packet() (Set_bits(UDPHS->UDPHS_TST, UDPHS_TST_TST_PKT))
