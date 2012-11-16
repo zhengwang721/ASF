@@ -1,4 +1,4 @@
-/**
+ /**
  * \file
  *
  * \brief SAM0+ TC Driver
@@ -84,37 +84,42 @@ extern "C" {
  * @{
  */
 
+
 /**
+ * \brief Index of the compare capture channels
  *
+ * These values are used in certain functions to spesify what capture/compare
+ * channle to do operations on.
  */
 enum tc_compare_capture_channel_index {
-	TC_COMPARE_CAPTURE_CHANNEL_0                    = 0,
-	TC_COMPARE_CAPTURE_CHANNEL_1                    = 1,
-	TC_COMPARE_CAPTURE_CHANNEL_2                    = 2,
-	TC_COMPARE_CAPTURE_CHANNEL_3                    = 3,
+	TC_COMPARE_CAPTURE_CHANNEL_0,
+	TC_COMPARE_CAPTURE_CHANNEL_1,
+	TC_COMPARE_CAPTURE_CHANNEL_2,
+	TC_COMPARE_CAPTURE_CHANNEL_3,
 };
 
-//TODO: Name does not explain so much perhaps tc_counter_reload_options or restart_options
-// could use tc_reload_action
-//TODO: send mail to ic dev.
 
+//TODO: Must be better documented. Posibly using dot diagrams.
 /**
- * \brief 
+ * \brief Counter reload action
  *
- * 
+ * These enums spesify how the clock should reload.
  */
 enum tc_reload_action {
-	/* The counter is reloaded/reset on the next GCLK and starts
+	/**
+	 * The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
-	TC_RELOAD_ACTION_GCLK          = TC_PRESCSYNC_GCLK_bm,
-	/* The counter is reloaded/reset on the next prescaler clock */
+	TC_RELOAD_ACTION_GCLK           = TC_PRESCSYNC_GCLK_bm,
+	/** The counter is reloaded/reset on the next prescaler clock */
 	TC_RELOAD_ACTION_PRESC          = TC_PRESCSYNC_PRESC_bm,
-	/* The counter is reloaded/reset on the next GCLK, and the prescaler is
+	/**
+	 * The counter is reloaded/reset on the next GCLK, and the prescaler is
 	 * reset as well. This may be usefull when an event retriggers the clock
 	 */
 	TC_RELOAD_ACTION_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
 };
+
 
 /**
  * \brief 
@@ -132,6 +137,7 @@ enum tc_clock_prescaler {
 	TC_CLOCK_PRESCALER_DIV1024      = TC_PRESCALER_DIV1024_bm,
 };
 
+
 /**
  * \brief 
  *
@@ -148,6 +154,7 @@ enum tc_wave_generation {
 	TC_WAVE_GENERATION_MATCH_PWM           = TC_WAVEGEN_MPWM_bm,
 };
 
+
 /** Specifies which direction for the TC module to count 
  * \brief 
  *
@@ -158,6 +165,7 @@ enum tc_count_direction {
 	TC_COUNT_DIRECTION_DOWN,
 };
 
+
 //TODO: Use #define?
 enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_NONE                 = 0,
@@ -166,6 +174,7 @@ enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_CHANNEL_2            = TC_CPTEN_CC2_bm,
 	TC_CAPTURE_ENABLE_CHANNEL_3            = TC_CPTEN_CC3_bm,
 };
+
 
 /**
  * \brief 
@@ -180,6 +189,7 @@ enum tc_event_action {
 	TC_EVENT_ACTION_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
 };
 
+
 //TODO use #define?
 enum tc_waveform_invert_output {
 	TC_WAVEFORM_INVERT_OUTPUT_NONE            = 0,
@@ -188,6 +198,7 @@ enum tc_waveform_invert_output {
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2       = TC_INVEN_CC2_bm,
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3       = TC_INVEN_CC3_bm,
 };
+
 
 /** Enable generation of events from the TC module
  *
@@ -210,6 +221,7 @@ enum tc_event_generation_enable {
 	TC_EVENT_GENERATION_OVF                    = TC_EVGEN_OVF_gc,
 };
 
+
 /**
  * \brief 
  *
@@ -220,6 +232,7 @@ enum tc_resolution {
 	TC_RESOLUTION_16BIT       = TC_MODE_COUNT16_bm,
 	TC_RESOLUTION_32BIT       = TC_MODE_COUNT32_bm,
 };
+
 
 /**
  * \brief 
@@ -234,19 +247,28 @@ struct tc_8bit_config {
 	uint8_t capture_compare_channel_2;
 	uint8_t capture_compare_channel_3;
 };
-
+	/*
+	Have removed the period uint from the 16
+	and 32 bit struct. You only have cc0 be the
+	period when you are not in PWM normal mode.
+	It may be that you only get to use two compare
+	channels fro pwm too. That is dependent on
+	IC dep. As this is now this reflects how the
+	register is in the prelim TC doc.
+	*/
 /**
  * \brief 
  *
- *
+ * 
  */
 struct tc_16bit_config {
 	uint16_t count;
-	uint16_t period;
+	uint16_t capture_compare_channel_0;
 	uint16_t capture_compare_channel_1;
 	uint16_t capture_compare_channel_2;
 	uint16_t capture_compare_channel_3;
 };
+
 
 /**
  * \brief 
@@ -255,9 +277,10 @@ struct tc_16bit_config {
  */
 struct tc_32bit_config {
 	uint32_t count;
-	uint32_t period;
+	uint32_t capture_compare_channel_0;
 	uint32_t capture_compare_channel_1;
 };
+
 
 /**
  * \brief 
@@ -266,32 +289,34 @@ struct tc_32bit_config {
  */
 struct tc_config {
 	//TODO set clock param
+	//TODO look into sleepen bit
+
 	/** Specifies either 8, 16 or 32 bit counter mode  */
 	enum tc_resolution resolution;
 	/** Specifies the prescaler value for GCLK_TC */
 	enum tc_clock_prescaler clock_prescaler;
-
-
 	/** Specifies which waveform to be generated on the output */
 	enum tc_wave_generation wave_generation;
-	/** Specifies which channel(s) to invert the waveform on */
-	uint16_t waveform_invert_ch_mask;
-
 	/** Specifies the reload or reset time of the counter and prescaler
 	 *  resynchronization on a retrigger event for timer/counter */
 	enum tc_reload_action reload_action;
-	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
-	 *  or overflow/underflow */
-	bool oneshot;
-	/** Specifies the direction for the TC to count */
-	enum tc_count_direction count_direction;
+
+	/** Specifies which channel(s) to invert the waveform on */
+	uint16_t waveform_invert_channel_mask;
 	/** Specifies which channel (s) to enable channel capture operation
 	 *  on. Since all capture channels use the same event line,
 	 *  only one capture channel must be enabled at a time,
 	 *  when used for event capture. When pwm capture is used this
 	 *  is not the case as it does not use the event line.
 	 */
-	uint16_t capture_enable_ch_mask;
+	uint16_t capture_enable_channel_mask;
+
+	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
+	 *  or overflow/underflow */
+	bool oneshot;
+	/** Specifies the direction for the TC to count */
+	enum tc_count_direction count_direction;
+
 	/** Specifies which event to trigger if an event is triggered */
 	enum tc_event_action event_action;
 	/** Specifies if the input event source is inverted, when used in PWP,
@@ -309,6 +334,7 @@ struct tc_config {
 		struct tc_32bit_config tc_32bit_config;
 	};
 };
+
 
 /**
  * \brief 
@@ -341,6 +367,7 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
 	}
 }
 
+
 /**
  * \brief Initializes config with predefined default values
  *
@@ -351,7 +378,7 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
  * \param config pointer to the config struct
  */
 static inline void tc_get_config_defaults(
-		struct tc_config *const config)
+					  struct tc_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -362,18 +389,19 @@ static inline void tc_get_config_defaults(
 	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
 	config->wave_generation                             = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config->waveform_invert_ch_mask                     = TC_WAVEFORM_INVERT_NONE;
-	config->count_direction                             = TC_COUNT_UP;
+	config->count_direction                             = TC_COUNT_DIRECTION_UP;
 	config->oneshot                                     = false;
 	config->capture_enable_ch_mask                      = TC_CAPTURE_ENABLE_NONE;
 	config->event_action                                = TC_EVENT_ACTION_OFF;
 	config->invert_event_input                          = false;
 	config->event_generation_mask                       = TC_EVENT_GENERATION_NONE;
 	config->tc_16bit_config.count                       = 0x0000;
-	config->tc_16bit_config.period                      = 0xFFFF;
+	config->tc_16bit_config.capture_compare_channel_0   = 0xFFFF;
 	config->tc_16bit_config.capture_compare_channel_1   = 0x0000;
 	config->tc_16bit_config.capture_compare_channel_2   = 0x0000;
 	config->tc_16bit_config.capture_compare_channel_3   = 0x0000;
 }
+
 
 /**
  * \brief Initializes the TC
@@ -385,9 +413,10 @@ static inline void tc_get_config_defaults(
  * \param config pointer to the config struct
  * \return enum status_code STATUS_OK,
  */
-enum status_code tc_init(TC_t *const module,
+enum status_code tc_init(TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
 		struct tc_config *const config);
+
 
 /**
  * \brief Reset the TC module
@@ -398,7 +427,6 @@ enum status_code tc_init(TC_t *const module,
  */
 static inline void tc_reset(struct tc_dev_inst *dev_inst)
 {
-
 	/* Sanity check arguments  */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -412,6 +440,7 @@ static inline void tc_reset(struct tc_dev_inst *dev_inst)
 	/* Enable TC module, based on the module tc mode  */
 	tc_module->CTRLA = TC_RESET_bm;
 }
+
 
 /**
  * \brief Enable the TC module
@@ -435,6 +464,7 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 	/* Enable TC module */
 	tc_module->CTRLA |= TC_ENABLE_bm;
 }
+
 
 /**
  * \brief Disables the TC module
@@ -470,6 +500,7 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
  */
 uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
 
+
 /**
  * \brief Sets the count value
  *
@@ -480,6 +511,7 @@ uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
  */
 enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
 		uint32_t count);
+
 
 /**
  * \brief Starts or restarts counter.
@@ -504,7 +536,7 @@ static inline enum status_code tc_start_counter(struct tc_dev_inst *const dev_in
 	tc_module->CTRLBSET |= TC_COMMAND_START_bm;
 }
 
-
+//TODO: send mail to ic dev. Ask about stop command.
 /**
  * \brief Stops the counter.
  *
@@ -528,21 +560,36 @@ static inline enum status_code tc_stop_counter(struct tc_dev_inst *const dev_ins
 	tc_module->CTRLBSET |= TC_COMMAND_STOP_bm;
 }
 
+
 /**
- * \brief Gets the compare value
+ * \brief Gets the capture value
  *
  * Reads the capture value stored in a given compare/capture register into a
  * buffer.
  *
  * \param dev_inst        pointer to the device struct
- * \param buffer          pointer to a buffer
+ * \param *capture_value  pointer to a buffer
  * \param comp_reg_index  index of the compare register to read from
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_get_capture_value(
-		struct tc_dev_inst *dev_inst,
-		uint32_t *capture_value,
-		enum tc_ccn_reg_index comp_reg_index);
+enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
+				      uint32_t *capture_value,
+				      enum tc_compare_capture_channel_index channel_index);
+
+
+/**
+ * \brief Gets the period value
+ *
+ * Reads the period value stored in the period register into a buffer.
+ *
+ * \param dev_inst        pointer to the device struct
+ * \param period_value    pointer to a buffer
+ * \param comp_reg_index  index of the compare register to read from
+ * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
+ */
+enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
+				      uint32_t *period_value);
+
 
 /**
  * \brief Sets a compare value
@@ -554,10 +601,9 @@ enum status_code tc_get_capture_value(
  * \comp_reg_index    index of the compare register to write to
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_set_compare_value(
-		struct tc_dev_inst *dev_inst,
-		uint32_t compare_value,
-		enum tc_ccn_reg_index comp_reg_index);
+enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
+				      uint32_t compare_value,
+				      enum tc_ccn_reg_index comp_reg_index);
 
 
 /**
@@ -570,7 +616,7 @@ enum status_code tc_set_compare_value(
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
 static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
-				uint32_t top_value)
+					 uint32_t top_value)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -595,14 +641,24 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
 		return STATUS_OK;
 
 	default:
-		Assert(false);//not certain of this line. Will the return statement happen?
+		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
 }
 
-//TODO: Add functions to check interupt flags
 
-//TODO: Add functions to get period.
+//TODO: Add functions to check interupt flags
+enum status_codes tc_is_channel_updated (struct tc_dev_inst *dev_inst, 
+					 enum tc_compare_capture_channel_index channel_index)
+{
+	
+}
+
+enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst, 
+					       enum tc_compare_capture_channel_index channel_index)
+{
+	
+}
 
 /** @} */
 
