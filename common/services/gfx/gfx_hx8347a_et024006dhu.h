@@ -244,6 +244,13 @@ void gfx_hx8347a_set_orientation(uint8_t flags);
 #define gfx_draw_bitmap(bmp, x, y) gfx_generic_draw_bitmap(bmp, x, y)
 
 /**
+ * HX8347A display driver uses generic gfx implementation for this function. See
+ * \ref gfx_generic_set_ext_handler
+ */
+#define gfx_set_ext_handler(ext_draw_handler)\
+	gfx_generic_set_ext_handler(ext_draw_handler)
+
+/**
  * HX8347A display driver specific function, see
  * \ref hx8347a_duplicate_pixel
  */

@@ -38,8 +38,8 @@
 		<build type="include-path" value="./enum/device/"/>
 		<build type="include-path" value="./ushell/"/>
 		<build type="include-path" value="./virtual_mem/"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
-		<build type="c-source"  value="../../../../../../../thirdparty/freertos/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
+		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/read.c" toolchain="iarew32"/>
+		<build type="c-source"  value="../../../../../../../thirdparty/freertos/freertos-7.0.0/source/portable/iar/avr32_uc3/write.c" toolchain="iarew32"/>
 		<build type="doxygen-image-path" value="docsrc"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.drivers.flashc"/>
