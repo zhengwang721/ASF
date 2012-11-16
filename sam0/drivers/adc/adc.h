@@ -274,6 +274,8 @@ enum adc_average_samples {
  *
  */
 enum adc_oversampling_and_decimation {
+	/** Don't use oversampling and decimation mode */
+	ADC_OVERSAMPLING_AND_DECIMATION_DISABLE = 0,
 	/** 1 bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_1BIT,
 	/** 2 bits resolution increase */
@@ -312,6 +314,8 @@ struct adc_config {
 	enum adc_negative_input  negative_input;
 	/** Average sampling mode */
 	enum adc_average_samples average_samples;
+	/** Oversampling and decimation mode */
+	enum adc_oversampling_and_decimation oversampling_and_decimation;
 	/** Left adjusted result */
 	bool left_adjust;
 	/** Differential mode */
@@ -434,6 +438,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li Window monitor disabled
  *   \li No gain
  *   \li Averaging disabled
+ *   \li Oversampling disabled
  *   \li Right adjust data
  *   \li Single-ended mode
  *   \li Free running disabled
@@ -455,6 +460,8 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->window_mode = ADC_WINDOW_DISABLE;
 	config->adc_gain_factor = ADC_GAIN_FACTOR_1;
 	config->average_samples = ADC_AVERAGE_DISABLE;
+	config->oversampling_and_decimation =
+			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
 	config->window_lower_value = 0;
 	config->window_upper_value = 0;
 	config->left_adjusted = false;
@@ -535,11 +542,16 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
  * \param dev_inst       pointer to device struct
  * \param result         pointer to store result
  */
-static inline void adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t *result)
+static inline status_code_t adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t *result)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->dev_ptr);
 	Assert(result);
+
+	if (!adc_is_result_ready(dev_inst)) {
+		/* Result not ready. Abort. */
+		return STATUS_ERR_BUSY;
+	}
 
 	ADC_t *const module = dev_inst->dev_ptr;
 
@@ -548,6 +560,8 @@ static inline void adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t 
 	*result = module->RESULT;
 	/* Reset ready flag */
 	module->INTFLAG = ADC_RESRDY_bm;
+
+	return STATUS_OK;
 }
 
 /**
