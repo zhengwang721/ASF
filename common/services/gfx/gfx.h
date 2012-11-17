@@ -74,6 +74,9 @@ extern "C" {
 # include "gfx_hx8347a_et024006dhu_ebi.h"
 # include "gfx_generic.h"
 # define CONF_GFX_USE_CLIPPING
+#elif defined(CONF_GFX_ILI9325_FTM280C34D)
+# include "gfx_ili9325_ftm280c34d.h"
+# include "gfx_generic.h"
 #else
 #  error "Configuration for display controller/panel not selected"
 #endif
@@ -601,6 +604,17 @@ void gfx_copy_progmem_pixels_to_screen(gfx_color_t PROGMEM_PTR_T pixels,
  * \param count Number of pixels to copy into the array.
  */
 void gfx_copy_pixels_from_screen(gfx_color_t *pixels, uint32_t count);
+
+/**
+ * \brief Set bitmap draw function with custom interface.
+ *
+ * Set bitmap draw function with customer interface. This allows to use the extended
+ * draw functions defined by the application. For example, do the draw bitmap function
+ * though a filesystem.
+ *
+ * \param gfx_ext_draw_handler Pointer to custom bitmap draw handler.
+ */
+void gfx_set_ext_handler(gfx_ext_draw_handler_t gfx_ext_draw_handler);
 
 /** @} */
 

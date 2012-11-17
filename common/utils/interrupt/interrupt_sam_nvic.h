@@ -131,7 +131,7 @@
 	} while (0)
 
 typedef uint32_t irqflags_t;
-extern bool g_interrupt_enabled;
+extern volatile bool g_interrupt_enabled;
 
 static inline irqflags_t cpu_irq_save(void)
 {
