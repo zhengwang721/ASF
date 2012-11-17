@@ -363,7 +363,7 @@ void ac_init(
  *  application.
  *
  *  The default configuration is as follows:
- *   \li All comparator pairs enabled during sleep mode
+ *   \li All comparator pairs disabled during sleep mode
  *   \li No events enabled by default
  *
  *  \param[out] config  Configuration structure to initialize to default values
@@ -375,8 +375,8 @@ static inline void ac_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->enable_pair_during_sleep[0] = true;
-	config->enable_pair_during_sleep[1] = true;
+	config->enable_pair_during_sleep[0] = false;
+	config->enable_pair_during_sleep[1] = false;
 	config->enabled_events              = 0;
 }
 
