@@ -186,7 +186,7 @@
         <xsl:text>&#10;</xsl:text>
         <xsl:text>&#9;</xsl:text>
         <xsl:text>&#9;</xsl:text>
-        <xsl:value-of select="argsstring"/>
+        <xsl:apply-templates select="argsstring"/>
       </programlisting>
       <xsl:apply-templates select="detaileddescription"/>
     </section>
@@ -565,5 +565,16 @@
       <xsl:value-of select="."/>
     </latex>
     </equation>
+  </xsl:template>
+
+  <xsl:template name="splitargs" match="argsstring">
+    <xsl:param name="text" select="."/>
+    <xsl:value-of select="substring-before(concat($text,','),',')" />
+    <xsl:if test="contains($text,',')">
+      <xsl:text>,&#xA;&#09; </xsl:text>
+        <xsl:call-template name="splitargs">
+          <xsl:with-param name="text" select="substring-after($text,',')" />
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
