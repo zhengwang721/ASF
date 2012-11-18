@@ -124,10 +124,30 @@
  * inputs cross one-another beyond the hysteresis gap introduces by this mode.
  *
  * \subsection one_shot_cont_sampling One Shot and Continuous Sampling Modes
- * TODO
+ * Comparators can be configured to run in either One Shot or Continuous
+ * sampling modes; when in One Shot mode, the comparator will only perform a
+ * comparison (and any resulting filtering, see \ref output_filtering) when
+ * triggered via a software or event trigger. This mode improves the power
+ * efficiency of the system by only performing comparisons when actually
+ * required by the application.
+ *
+ * For systems requiring a lower latency or more frequent comparisons,
+ * continuous mode will place the comparator into continuous sampling mode,
+ * which increases the module power consumption but decreases the latency
+ * between each comparison result by automatically performing a comparison on
+ * every cycle of the module's clock.
  *
  * \subsection input_output_comp_events Input and Output Events
- * TODO
+ * Each comparator unit is capable of being triggered by a both software and
+ * hardware triggers. Hardware input events allow for other peripherals to
+ * automatically trigger a comparison on demand - for example, a timer output
+ * event could be used to trigger comparisons at a desired regular interval.
+ *
+ * The module's output events can similarly be used to trigger other hardware
+ * modules each time a new comparison result is available. This scheme allows
+ * for reduced levels of CPU usage in an application and lowers the overall
+ * system response latency by directly triggering hardware peripherals from one
+ * another without requiring software intervention.
  *
  * \section module_dependencies Dependencies
  * The Analog Comparator driver has the following dependencies.
