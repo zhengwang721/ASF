@@ -63,28 +63,70 @@
  *
  * \section module_introduction Introduction
  *
- * \par Overview of the Analog Comparator
+ * \subsection module_overview Overview of the Analog Comparator
+ * The Analog Comparator module compares a pair of analog input voltages, to
+ * determine which one of the two is higher. This module can be used in
+ * applications where a binary output indicating a higher/lower input voltage is
+ * required. The comparison result can be used internally in the user
+ * application, output to a GPIO pin of the device, or both.
+ *
+ * Each comparator requires two analog input voltages, a positive and negative
+ * channel input. The result of the comparison is a binary \c true if the
+ * comparator's positive channel input is higher than the comparator's negative
+ * input channel, and \c false if otherwise.
+ *
+ * \subsection pairs_and_window_comps Comparator Pairs and Window Comparators
+ * Each comparator module contains one or more comparator pairs, a set of two
+ * distinct comparators which can be used independently or linked together for
+ * Window Comparator mode. In this latter mode, the two comparator units in a
+ * comparator pair are linked together to allow the module to detect if an input
+ * voltage is below, inside, above or outside a window set by the upper and
+ * lower threshold voltages set by the two comparators. If not required, window
+ * comparison mode can be turned off and the two comparator units can be
+ * configured and used separately.
+ *
+ * \subsection pos_neg_comp_mux Positive and Negative Input MUXs
+ * Each comparator unit requires two input voltages, a positive and negative
+ * channel (note that thse names refer to the logical operation that the unit
+ * performs, and both voltages should be above GND) which are then compared with
+ * one another. Both the positive and negative channel inputs are connected to
+ * a MUX, which allows one of several possible inputs to be selected for each
+ * comparator channel.
+ *
+ * The exact channels available for each comparator differ for the positive and
+ * negative inputs, but the same MUX choices are available for all comparator
+ * units (i.e. all positive MUXes are identical, all negative MUXes are
+ * identical). This allows the user application to select which voltages are
+ * compared to one-another.
+ *
+ * When used in window mode, both comparators in the window pair should have
+ * their positive channel input MUXs configured to the same input channel, with
+ * the negative channel input MUXs used to set the lower and upper window
+ * bounds.
+ *
+ * \subsection output_filtering Output Filtering
+ * The output of each comparator unit can either be used directly with no
+ * filtering (giving a lower latency signal, with potentially more noise around
+ * the comparison threshold) or it can be passed through a multiple stage
+ * digital majority filter. Several filter lengths are available, with the
+ * longer stages producing a more stable result, at the expense of a higher
+ * latency.
+ *
+ * When used in single shot mode, a single trigger of the comparator will
+ * automatically perform the required number of samples to produce a correctly
+ * filtered result.
+ *
+ * \subsection input_hysteresis Input Hysteresis
+ * To prevent unwanted noise around the threshold where the comparator unit's
+ * positive and negative input channels are close in voltage to one another, an
+ * optional hysteresis can be used to widen the point at which the output result
+ * flips. This mode will prevent a change in the comparison output unless the
+ * inputs cross one-another beyond the hysteresis gap introduces by this mode.
+ *
+ * \subsection one_shot_cont_sampling One Shot and Continuous Sampling Modes
  * TODO
  *
- * \par Comparator Pairs
- * TODO
- *
- * \par Positive and Negative Input MUXs
- * TODO
- *
- * \par Window Comparators
- * TODO
- *
- * \par Output Filtering
- * TODO
- *
- * \par Input Hysteresis
- * TODO
- *
- * \par One Shot and Continuous Sampling Modes
- * TODO
- *
- * \par Input and Output Events
+ * \subsection input_output_comp_events Input and Output Events
  * TODO
  *
  * \section module_dependencies Dependencies
@@ -95,8 +137,8 @@
  * \section special_considerations Special Considerations
  *
  * The number of comparator pairs (and, thus, window comparators) within a
- * single hardware instance of the Analog Comparator module is device-specific;
- * some devices will contain a single comparator pair, while others may have two
+ * single hardware instance of the Analog Comparator module is device-specific.
+ * Some devices will contain a single comparator pair, while others may have two
  * pairs; refer to your device specific datasheet for details.
  *
  * \section module_extra_info Extra Information
