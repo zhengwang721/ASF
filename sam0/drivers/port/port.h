@@ -77,8 +77,11 @@
  * \enddot
  *
  * \section module_introduction Introduction
+ * The SAM0+ devices contain a number of General Purpose I/O pins, used to
+ * interface the user application logic and internal hardware peripherals to
+ * an external system.
  *
- * \par Physical and Logical GPIO Pins
+ * \subsection physical_logical_pins Physical and Logical GPIO Pins
  * SAM0+ devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
@@ -87,14 +90,14 @@
  * counterparts, for simplicity the design of this driver uses the logical GPIO
  * numbers instead.
  *
- * \par Peripheral Muxltiplexing
+ * \subsection peripheral_muxing Peripheral Muxltiplexing
  * SAM0+ devices contain a peripheral MUX, which is individually controllable
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
  * several peripheral modules (such as a I2C module).
  *
- * \par Edge Detection
+ * \subsection edge_detection Edge Detection
  * In each SAM0+ device pin there is a connection to an External Interrupt
  * Controller module, used to detect external pin edge and level events, and
  * notify the user application via a flag or interrupt. Each pin can be
@@ -103,19 +106,22 @@
  * an external activity (e.g. a user button press) occurs, to achieve maximum
  * power savings.
  *
- * \par Special Pad Characteristics
+ * \subsection pad_characteristics Special Pad Characteristics
  * There are several special modes that can be selected on one or more I/O pins
  * of the device, which alter the input and output characteristics of the pad:
- * \n\n
- * <b>Drive Strength</b> configures the strength of the output driver on the
- *  pad. Normally, there is a fixed current limit that each I/O pin can safely
- *  drive, however some I/O pads offer a higher drive mode which increases this
- *  limit for that I/O pin at the expense of an increased power consumption.
- * \n\n
- * <b>Slew Rate</b> configures the slew rate of the output driver, limiting the
+ *
+ * \subsubsection drive_strength Drive Strength
+ * The Drive Strength configures the strength of the output driver on the
+ * pad. Normally, there is a fixed current limit that each I/O pin can safely
+ * drive, however some I/O pads offer a higher drive mode which increases this
+ * limit for that I/O pin at the expense of an increased power consumption.
+ *
+ * \subsubsection slew_rate Slew Rate
+ * The Slew Rate configures the slew rate of the output driver, limiting the
  * rate at which the pad output voltage can change with time.
- * \n\n
- * <b>Input Sample Mode</b> configures the input sampler buffer of the pad. By
+ *
+ * \subsubsection input_sample_mode Input Sample Mode
+ * The Input Sample Mode configures the input sampler buffer of the pad. By
  * default, the input buffer is only sampled "on-demand", i.e. when the user
  * application attempts to read from the input buffer. This mode is the most
  * power efficient, but increases the latency of the input sample by two clock
