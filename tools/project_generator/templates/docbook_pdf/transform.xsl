@@ -231,10 +231,10 @@
 
   <xsl:template match="memberdef[@kind = 'define']">
     <section id="{@id}" xreflabel="{name}">
-      <table tabstyle="striped">
-        <title>
-          <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
-        </title>
+      <title>
+        <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
+      </title>
+      <informaltable tabstyle="striped">
         <tgroup cols="2">
           <thead>
             <row>
@@ -257,7 +257,7 @@
             </row>
           </tbody>
         </tgroup>
-      </table>
+      </informaltable>
     </section>
   </xsl:template>
 
@@ -379,7 +379,7 @@
         <xsl:value-of select="title"/>
       </title>
 
-      <!-- Show all varibale information -->
+      <!-- Show all variable information -->
       <xsl:if test="count(../../sectiondef[@kind='var'])>0">
         <section>
           <title>Variables</title>
@@ -405,7 +405,6 @@
             <title>
               <xsl:value-of select="header"/>
             </title>
-              <xsl:value-of select="description"/>
             <xsl:apply-templates select="."/>
           </section>
         </xsl:for-each>
