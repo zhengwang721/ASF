@@ -57,7 +57,56 @@
  *
  * \dot
  * digraph overview {
- * TODO->TODO2;
+ *  rankdir = LR;
+ *  splines = false;
+ *
+ *  pos_src1_1 [label="GPIO Pins", shape=none, height=0];
+ *  neg_src1_1 [label="GPIO Pins", shape=none, height=0];
+ *  neg_src1_2 [label="Internal DAC", shape=none, height=0];
+ *  neg_src1_3 [label="Internal Refs", shape=none, height=0];
+ *  pos_src2_1 [label="GPIO Pins", shape=none, height=0];
+ *  neg_src2_1 [label="GPIO Pins", shape=none, height=0];
+ *  neg_src2_2 [label="Internal DAC", shape=none, height=0];
+ *  neg_src2_3 [label="Internal Refs", shape=none, height=0];
+ *  res_out1 [label="", style=invisible];
+ *  res_out2 [label="", style=invisible];
+ *  res_window [label="", style=invisible];
+ *
+ *  mux_pos1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *  mux_neg1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *  mux_neg2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *  mux_pos2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *  ac1 [label="AC 1", shape=triangle, orientation=-90, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ *  ac2 [label="AC 2", shape=triangle, orientation=-90, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ *
+ *  window_comp [label="Window\nLogic", shape=rectangle style=filled fillcolor=lightgray];
+ *
+ *  edge [dir="forward"];
+ *
+ *  pos_src1_1:e -> mux_pos1:w;
+ *  mux_pos1:e -> ac1:nw [label="+"];
+ *  neg_src1_1:e -> mux_neg1:nw;
+ *  neg_src1_2:e -> mux_neg1:w;
+ *  neg_src1_3:e -> mux_neg1:sw;
+ *  mux_neg1:e -> ac1:sw [label="-"];
+ *  ac1:e -> res_out1 [label="Comparator 1 Result"];
+ *
+ *  pos_src2_1:e -> mux_pos2:w;
+ *  mux_pos2:e -> ac2:sw [label="+"];
+ *  neg_src2_1:e -> mux_neg2:nw;
+ *  neg_src2_2:e -> mux_neg2:w;
+ *  neg_src2_3:e -> mux_neg2:sw;
+ *  mux_neg2:e -> ac2:nw [label="-"];
+ *  ac2:e -> res_out2 [label="Comparator 2 Result"];
+ *
+ *  ac1:e -> window_comp:nw;
+ *  ac2:e -> window_comp:sw;
+ *  window_comp:e -> res_window:w [label="Window Result"];
+ *
+ *  {rank=same; pos_src1_1 neg_src1_1 neg_src1_2 neg_src1_3 pos_src2_1 neg_src2_1 neg_src2_2 neg_src2_3 }
+ *  {rank=same; mux_pos1 mux_neg1 mux_pos2 mux_neg2 }
+ *  {rank=same; ac1 ac2 }
+ *  {rank=same; res_out1 res_out2 res_window }
  * }
  * \enddot
  *
@@ -87,7 +136,7 @@
  *
  * \subsection pos_neg_comp_mux Positive and Negative Input MUXs
  * Each comparator unit requires two input voltages, a positive and negative
- * channel (note that thse names refer to the logical operation that the unit
+ * channel (note that these names refer to the logical operation that the unit
  * performs, and both voltages should be above GND) which are then compared with
  * one another. Both the positive and negative channel inputs are connected to
  * a MUX, which allows one of several possible inputs to be selected for each
