@@ -378,28 +378,27 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
  *
  * \param config pointer to the config struct
  */
-static inline void tc_get_config_defaults(
-					  struct tc_config *const config)
+static inline void tc_get_config_defaults(struct tc_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->resolution                               = TC_16BIT_RESOLUTION;
-	config->prescaler                                = TC_PRESCALER_DIV1;
-	config->wave_generation                          = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->reload_action                            = TC_RELOAD_ACTION_GCLK;
+	config->resolution                   = TC_16BIT_RESOLUTION;
+	config->prescaler                    = TC_PRESCALER_DIV1;
+	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->reload_action                = TC_RELOAD_ACTION_GCLK;
 
-	config->waveform_invert_output                   = TC_WAVEFORM_INVERT_OUTPUT_NONE;
-	config->capture_enable                           = TC_CAPTURE_ENABLE_NONE;
+	config->waveform_invert_output       = TC_WAVEFORM_INVERT_OUTPUT_NONE;
+	config->capture_enable               = TC_CAPTURE_ENABLE_NONE;
 
-	config->count_direction                          = TC_COUNT_DIRECTION_UP;
-	config->oneshot                                  = false;
+	config->count_direction              = TC_COUNT_DIRECTION_UP;
+	config->oneshot                      = false;
 
-	config->enable_event_input                       = false;
-	config->invert_event_input                       = false;
-	config->event_action                             = TC_EVENT_ACTION_OFF;
-	config->event_generation_enable                  = TC_EVENT_GENERATION_ENABLE_NONE;
+	config->enable_event_input           = false;
+	config->invert_event_input           = false;
+	config->event_action                 = TC_EVENT_ACTION_OFF;
+	config->event_generation_enable      = TC_EVENT_GENERATION_ENABLE_NONE;
 
 	config->16bit_config.count                       = 0x0000;
 	config->16bit_config.compare_capture_channel_0   = 0xFFFF;
@@ -526,7 +525,8 @@ enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline enum status_code tc_start_counter(struct tc_dev_inst *const dev_inst)
+static inline enum status_code tc_start_counter(
+		struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -550,7 +550,8 @@ static inline enum status_code tc_start_counter(struct tc_dev_inst *const dev_in
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline enum status_code tc_stop_counter(struct tc_dev_inst *const dev_inst)
+static inline enum status_code tc_stop_counter(
+		struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -566,23 +567,6 @@ static inline enum status_code tc_stop_counter(struct tc_dev_inst *const dev_ins
 	tc_module->CTRLBSET |= TC_COMMAND_STOP_bm;
 }
 
-
-/**
- * \brief Gets the capture value
- *
- * Reads the capture value stored in a given compare/capture register into a
- * buffer.
- *
- * \param dev_inst        pointer to the device struct
- * \param *capture_value  pointer to a buffer
- * \param comp_reg_index  index of the compare register to read from
- * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
- */
-enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
-				      uint32_t *capture_value,
-				      enum tc_compare_capture_channel_index channel_index);
-
-
 /**
  * \brief Gets the period value
  *
@@ -594,7 +578,7 @@ enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
-				      uint32_t *period_value);
+		uint32_t *period_value);
 
 
 /**
@@ -608,8 +592,8 @@ enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
-				      uint32_t compare_value,
-				      enum tc_ccn_reg_index comp_reg_index);
+		uint32_t compare_value,
+		enum tc_ccn_reg_index comp_reg_index);
 
 
 /**
@@ -622,7 +606,7 @@ enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
 static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
-					 uint32_t top_value)
+		uint32_t top_value)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -634,34 +618,54 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
 
 	switch(dev_inst->resolution) {
 
-	case TC_RESOLUTION_8BIT:
-		tc_module->TC_COUNT8.PER = (uint8_t) top_value;
-		return STATUS_OK;
+		case TC_RESOLUTION_8BIT:
+			tc_module->TC_COUNT8.PER = (uint8_t) top_value;
+			return STATUS_OK;
 
-	case TC_RESOLUTION_16BIT:
-		tc_module->TC_COUNT16.compare_capture_channel_0 = (uint16_t) top_value;
-		return STATUS_OK;
+		case TC_RESOLUTION_16BIT:
+			tc_module->TC_COUNT16.compare_capture_channel_0 =
+				(uint16_t) top_value;
+			return STATUS_OK;
 
-	case TC_RESOLUTION_32BIT:
-		tc_module->TC_COUNT32.compare_capture_channel_0 = top_value;
-		return STATUS_OK;
+		case TC_RESOLUTION_32BIT:
+			tc_module->TC_COUNT32.compare_capture_channel_0 =
+				top_value;
+			return STATUS_OK;
 
-	default:
-		Assert(false);
-		return STATUS_ERR_INVALID_ARG;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
 	}
 }
 
 
-//TODO: Add functions to check interupt flags
-enum status_codes tc_is_channel_updated (struct tc_dev_inst *dev_inst, 
-					 enum tc_compare_capture_channel_index channel_index)
+/**
+ * \brief Cheks if there are new capture value on channel
+ *
+ * Checks for new data on the spsified channel or if the counter has over run,
+ * in wich case it returns an error.
+ *
+ * \param *dev_inst pointer to the devise instance.
+ * \param channel_index value used to select either channel 0, 1, 2 or 3.
+ * \return enum status_code:
+ */
+enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
+		enum tc_compare_capture_channel_index channel_index)
 {
 	
 }
 
-enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst, 
-					       enum tc_compare_capture_channel_index channel_index)
+
+/**
+ * \brief Cheks if there are new mach has ocured on the channel
+ *
+ * 
+ * \param *dev_inst pointer to the devise instance.
+ * \param channel_index value used to select either channel 0, 1, 2 or 3.
+ * \return enum status_code:
+ */
+enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
+		enum tc_compare_capture_channel_index channel_index)
 {
 	
 }

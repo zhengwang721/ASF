@@ -56,8 +56,8 @@
  *                          STATUS_OK          : When init has compleeted sucsesfuly.
  */
 enum status_code tc_init(TC_t *const tc_module,
-			 struct tc_dev_inst *const dev_inst,
-			 struct tc_config *const config)
+		struct tc_dev_inst *const dev_inst,
+		struct tc_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(tc_module);
