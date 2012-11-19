@@ -75,9 +75,6 @@ enum status_code tc_init(TC_t *const tc_module,
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
-	/* Synchronize */
-	tc_wait_for_sync(tc_module);
-
 	if (tc_module->STATUS && TC_SLAVE_bm) {
 		return STATUS_ERR_BUSY;
 	}
@@ -109,6 +106,17 @@ enum status_code tc_init(TC_t *const tc_module,
 	tc_wait_for_sync(tc_module);
 	tc_module->CTRLC = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
+
+	uint8_t evctrl_bm = 0;
+	if(config->enable_event_input)
+		evctrl_bm |= (1 << 5);//found no #define for this in the tc_header.h file.
+
+	if(config->invert_event_input)
+		evctrl_bm |= (1 << 4);//found no #define for this in the tc_header.h file.
+
+	tc_wait_for_sync(tc_module);
+	tc_module-EVCTRL = evctrl_bm | config->event_action
+		        | config->event_generation_enable;
 
 	/* Switch for TC mode  */
 	switch(dev_inst->resolution) {

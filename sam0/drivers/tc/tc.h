@@ -317,13 +317,13 @@ struct tc_config {
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
 
-	/** Specifies which event to trigger if an event is triggered */
-	enum tc_event_action event_action;
 	/** Specifies if the input event source is inverted, when used in PWP,
 	 *  PPW event action */
 	bool invert_event_input;
 	/**Must be set to true to enable event actions */
 	bool enable_event_input;
+	/** Specifies which event to trigger if an event is triggered */
+	enum tc_event_action event_action;
 	/** Specifies which channel(s) to generate event on when a
 	 *  compare/capture occurs */
 	uint16_t event_generation_enable;
