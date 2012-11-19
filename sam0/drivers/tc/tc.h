@@ -46,7 +46,7 @@ extern "C" {
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-#include "status_codes.h" //may need to add path info but the name is correct
+#include "status_codes.h"
 #include "tc_header.h"
 #include <stdint.h>
 #include <stdbool.h>
@@ -242,10 +242,10 @@ enum tc_resolution {
 struct tc_8bit_config {
 	uint8_t count;
 	uint8_t period;
-	uint8_t capture_compare_channel_0;
-	uint8_t capture_compare_channel_1;
-	uint8_t capture_compare_channel_2;
-	uint8_t capture_compare_channel_3;
+	uint8_t compare_capture_channel_0;
+	uint8_t compare_capture_channel_1;
+	uint8_t compare_capture_channel_2;
+	uint8_t compare_capture_channel_3;
 };
 	/*
 	Have removed the period uint from the 16
@@ -263,10 +263,10 @@ struct tc_8bit_config {
  */
 struct tc_16bit_config {
 	uint16_t count;
-	uint16_t capture_compare_channel_0;
-	uint16_t capture_compare_channel_1;
-	uint16_t capture_compare_channel_2;
-	uint16_t capture_compare_channel_3;
+	uint16_t compare_capture_channel_0;
+	uint16_t compare_capture_channel_1;
+	uint16_t compare_capture_channel_2;
+	uint16_t compare_capture_channel_3;
 };
 
 
@@ -277,8 +277,8 @@ struct tc_16bit_config {
  */
 struct tc_32bit_config {
 	uint32_t count;
-	uint32_t capture_compare_channel_0;
-	uint32_t capture_compare_channel_1;
+	uint32_t compare_capture_channel_0;
+	uint32_t compare_capture_channel_1;
 };
 
 
@@ -322,6 +322,7 @@ struct tc_config {
 	bool invert_event_input;
 	/**Must be set to true to enable event actions */
 	bool enable_event_input;
+
 	/** Specifies which event to trigger if an event is triggered */
 	enum tc_event_action event_action;
 	/** Specifies which channel(s) to generate event on when a
@@ -329,9 +330,9 @@ struct tc_config {
 	uint16_t event_generation_enable;
 
 	union {
-		struct tc_8bit_config tc_8bit_config;
-		struct tc_16bit_config tc_16bit_config;
-		struct tc_32bit_config tc_32bit_config;
+		struct tc_8bit_config 8bit_config;
+		struct tc_16bit_config 16bit_config;
+		struct tc_32bit_config 32bit_config;
 	};
 };
 
@@ -384,27 +385,27 @@ static inline void tc_get_config_defaults(
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->resolution                                  = TC_16BIT_RESOLUTION;
-	config->prescaler                                   = TC_PRESCALER_DIV1;
-	config->wave_generation                             = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
+	config->resolution                               = TC_16BIT_RESOLUTION;
+	config->prescaler                                = TC_PRESCALER_DIV1;
+	config->wave_generation                          = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->reload_action                            = TC_RELOAD_ACTION_GCLK;
 
-	config->waveform_invert_output                      = TC_WAVEFORM_INVERT_OUTPUT_NONE;
-	config->capture_enable                              = TC_CAPTURE_ENABLE_NONE;
+	config->waveform_invert_output                   = TC_WAVEFORM_INVERT_OUTPUT_NONE;
+	config->capture_enable                           = TC_CAPTURE_ENABLE_NONE;
 
-	config->count_direction                             = TC_COUNT_DIRECTION_UP;
-	config->oneshot                                     = false;
+	config->count_direction                          = TC_COUNT_DIRECTION_UP;
+	config->oneshot                                  = false;
 
-	config->enable_event_input                          = false;
-	config->invert_event_input                          = false;
-	config->event_action                                = TC_EVENT_ACTION_OFF;
-	config->event_generation_enable                     = TC_EVENT_GENERATION_ENABLE_NONE;
+	config->enable_event_input                       = false;
+	config->invert_event_input                       = false;
+	config->event_action                             = TC_EVENT_ACTION_OFF;
+	config->event_generation_enable                  = TC_EVENT_GENERATION_ENABLE_NONE;
 
-	config->tc_16bit_config.count                       = 0x0000;
-	config->tc_16bit_config.capture_compare_channel_0   = 0xFFFF;
-	config->tc_16bit_config.capture_compare_channel_1   = 0x0000;
-	config->tc_16bit_config.capture_compare_channel_2   = 0x0000;
-	config->tc_16bit_config.capture_compare_channel_3   = 0x0000;
+	config->16bit_config.count                       = 0x0000;
+	config->16bit_config.compare_capture_channel_0   = 0xFFFF;
+	config->16bit_config.compare_capture_channel_1   = 0x0000;
+	config->16bit_config.compare_capture_channel_2   = 0x0000;
+	config->16bit_config.compare_capture_channel_3   = 0x0000;
 }
 
 
@@ -638,11 +639,11 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
-		tc_module->TC_COUNT16.capture_compare_channel_0 = (uint16_t) top_value;
+		tc_module->TC_COUNT16.compare_capture_channel_0 = (uint16_t) top_value;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
-		tc_module->TC_COUNT32.capture_compare_channel_0 = top_value;
+		tc_module->TC_COUNT32.compare_capture_channel_0 = top_value;
 		return STATUS_OK;
 
 	default:
