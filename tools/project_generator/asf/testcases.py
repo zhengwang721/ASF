@@ -11,6 +11,7 @@ from asf.runtime import Runtime
 from asf.toolchain.avrstudio5 import AVRStudio5Project, AVRStudio5Project32
 from asf.toolchain.generic import GenericProject
 from asf_avrstudio5_interface import PythonFacade
+from asf.findrebuild import *
 
 
 class UnitTestProject(GenericProject):
@@ -1509,7 +1510,6 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		# Check that generated map is as expected
 		self.assertEquals(doc_arch_dict, expected_doc_arch_dict)
 
-
 class FdkExtensionManagerTestCase(unittest.TestCase):
 	old_dir = os.path.abspath(os.curdir)
 	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
@@ -2112,3 +2112,105 @@ class FdkExtensionDocsTestCase(unittest.TestCase):
 
 		self.assertEqual(help_path, expected_help_path)
 		self.assertEqual(guide_path, expected_guide_path)
+
+
+class FindRebuildTest(unittest.TestCase):
+	files_basedir = os.path.normcase("asf/test-input")
+	xml_filename = "rebuild_test.xml"
+	# If desired, specify a XML file to load the device map from
+	# devmap_xml_filename = xml_filename # Can use same xml as is test input
+	xml_validation = os.path.join("schemas", "fdk_content.xsd")
+
+	def setUp(self):
+		script_path = sys.path[0]
+
+		# Load XML validation scheme
+		ConfigDB.load_schema(self.xml_validation)
+		# Set filename for test content XML
+		ConfigDB.xml_filename = self.xml_filename
+
+		# Load device map if one was specified
+		try:
+			devmap_xml_filepath = os.path.join(self.files_basedir, self.devmap_xml_filename)
+		except AttributeError:
+			pass
+		else:
+			ConfigDB.load_device_map(devmap_xml_filepath)
+
+		self.runtime = FindRebuildRuntime()
+
+		self.module_out = os.path.join(self.files_basedir, "tmp_mod.txt.delete_me")
+		self.project_out = os.path.join(self.files_basedir, "tmp_prj.txt.delete_me")
+		self.test_in = os.path.join(self.files_basedir, "tmp_test_input.txt.delete_me")
+
+		self.runtime.set_outfiles(self.project_out, self.module_out)
+		self.runtime.set_input_file(self.test_in)
+
+		class DummyExtension(object):
+			# Simulate extension with root path in self.files_basedir
+			# giving empty relative root path 
+			root_path = self.files_basedir
+			relative_root_path = "."
+
+		self.db = ConfigDB(self.runtime, extension=DummyExtension())
+		self.runtime.set_db(self.db)
+
+	def tearDown(self):
+		self.runtime = None
+		self.db = None
+
+	def remove_temp_files(self):
+		os.remove(self.project_out)
+		os.remove(self.module_out)
+		os.remove(self.test_in)
+
+	def read_file(self, filename):
+		f = open(filename, 'r')
+		result = f.read()
+		result = [res.strip() for res in result.splitlines()]
+		f.close()
+		return result
+
+	def run_test(self, input_data, expected_p, expected_m):
+		# Create new input file
+		f = open(self.test_in, 'w')
+		for line in input_data:
+				f.write("%s\r\n" % line)
+		f.close()
+		self.runtime.run()
+		result_m = filter(None, self.read_file(self.module_out))
+		result_p = filter(None, self.read_file(self.project_out))
+		self.remove_temp_files()
+		self.assertEqual(expected_m, result_m)
+		self.assertEqual(expected_p, result_p)
+
+	def test_run_1(self):
+		input_data = ["ma.c"]
+		expected_result_m = ["driver.b", "driver.c#1", "driver.c#2"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+
+	def test_run_2(self):
+		input_data = ["db.c"]
+		expected_result_m = ["driver.b"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_3(self):
+		input_data = ["da.c"]
+		expected_result_m = ["driver.a"]
+		expected_result_p = ["project.a"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["project-c.h"]
+		expected_result_m = []
+		expected_result_p = ["project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["da.c", "db.c"]
+		expected_result_m = ['*']
+		expected_result_p = ['*']
+		self.run_test(input_data, expected_result_p, expected_result_m)

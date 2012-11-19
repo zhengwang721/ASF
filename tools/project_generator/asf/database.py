@@ -1846,8 +1846,8 @@ class ConfigDB(object):
 		for e in self.root.findall('.//*[@%s][@%s]' % (self.basedir_tag, self.fromfile_tag)):
 			basedir = e.get(self.basedir_tag)
 			fromfile = e.get(self.fromfile_tag)
-			e.set(self.basedir_tag, os.path.join(prefix_dir, basedir))
-			e.set(self.fromfile_tag, os.path.join(prefix_dir, fromfile))
+			e.set(self.basedir_tag, os.path.normpath(os.path.join(prefix_dir, basedir)))
+			e.set(self.fromfile_tag, os.path.normpath(os.path.join(prefix_dir, fromfile)))
 
 		# Now update the compile paths
 		self._expand_compile_paths(self.root, prefix_dir)
