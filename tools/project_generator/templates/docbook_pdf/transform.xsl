@@ -11,7 +11,7 @@
       <subtitle>
         <xsl:text>ASF PROGRAMMERS MANUAL</xsl:text>
       </subtitle>
-      <preface>
+      <preface id="{compounddef[@kind ='group'][1]/@id}">
         <title>
           <xsl:value-of select="compounddef/title"/>
         </title>
@@ -37,9 +37,9 @@
   </xsl:template>
 
   <xsl:template match="compounddef[@kind ='group'][1]">
-      <xsl:for-each select="detaileddescription">
-        <xsl:call-template name="detaileddescription_special"/>
-      </xsl:for-each>
+    <xsl:for-each select="detaileddescription">
+      <xsl:call-template name="detaileddescription_special"/>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="detaileddescription_special">
@@ -147,6 +147,9 @@
   </xsl:template>
 
   <xsl:template match="sectiondef">
+    <para>
+      <xsl:value-of select="description"/>
+    </para>
     <xsl:for-each select="memberdef">
       <xsl:apply-templates select="."/>
     </xsl:for-each>
