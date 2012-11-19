@@ -208,17 +208,17 @@ enum tc_waveform_invert_output {
 //TODO: Use #define?
 enum tc_event_generation_enable {
 	/** No generation of events */
-	TC_EVENT_GENERATION_NONE                   = TC_EVGEN_NONE_gc,
+	TC_EVENT_GENERATION_ENABLE_NONE                   = TC_EVGEN_NONE_gc,
 	/** Generate event for compare/capture on channel 0 */
-	TC_EVENT_GENERATION_CHANNEL_0              = TC_EVGEN_CC0_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_0              = TC_EVGEN_CC0_gc,
 	/** Generate event for compare/capture on channel 1 */
-	TC_EVENT_GENERATION_CHANNEL_1              = TC_EVGEN_CC1_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_1              = TC_EVGEN_CC1_gc,
 	/** Generate event for compare/capture on channel 2 */
-	TC_EVENT_GENERATION_CHANNEL_2              = TC_EVGEN_CC2_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_2              = TC_EVGEN_CC2_gc,
 	/** Generate event for compare/capture on channel 3 */
-	TC_EVENT_GENERATION_CHANNEL_3              = TC_EVGEN_CC3_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_3              = TC_EVGEN_CC3_gc,
 	/** Generate event for overflow/underflow */
-	TC_EVENT_GENERATION_OVF                    = TC_EVGEN_OVF_gc,
+	TC_EVENT_GENERATION_ENABLE_OVF                    = TC_EVGEN_OVF_gc,
 };
 
 
@@ -302,14 +302,14 @@ struct tc_config {
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on */
-	uint16_t waveform_invert_channel_mask;
+	uint16_t waveform_invert_output;
 	/** Specifies which channel (s) to enable channel capture operation
 	 *  on. Since all capture channels use the same event line,
 	 *  only one capture channel must be enabled at a time,
 	 *  when used for event capture. When pwm capture is used this
 	 *  is not the case as it does not use the event line.
 	 */
-	uint16_t capture_enable_channel_mask;
+	uint16_t capture_enable;
 
 	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
 	 *  or overflow/underflow */
@@ -326,7 +326,7 @@ struct tc_config {
 	bool enable_event_input;
 	/** Specifies which channel(s) to generate event on when a
 	 *  compare/capture occurs */
-	uint16_t event_generation_mask;
+	uint16_t event_generation_enable;
 
 	union {
 		struct tc_8bit_config tc_8bit_config;
@@ -388,13 +388,13 @@ static inline void tc_get_config_defaults(
 	config->prescaler                                   = TC_PRESCALER_DIV1;
 	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
 	config->wave_generation                             = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->waveform_invert_ch_mask                     = TC_WAVEFORM_INVERT_NONE;
+	config->waveform_invert_output                      = TC_WAVEFORM_INVERT_OUTPUT_NONE;
 	config->count_direction                             = TC_COUNT_DIRECTION_UP;
 	config->oneshot                                     = false;
-	config->capture_enable_ch_mask                      = TC_CAPTURE_ENABLE_NONE;
+	config->capture_enable                              = TC_CAPTURE_ENABLE_NONE;
 	config->event_action                                = TC_EVENT_ACTION_OFF;
 	config->invert_event_input                          = false;
-	config->event_generation_mask                       = TC_EVENT_GENERATION_NONE;
+	config->event_generation_enable                     = TC_EVENT_GENERATION_ENABLE_NONE;
 	config->tc_16bit_config.count                       = 0x0000;
 	config->tc_16bit_config.capture_compare_channel_0   = 0xFFFF;
 	config->tc_16bit_config.capture_compare_channel_1   = 0x0000;
