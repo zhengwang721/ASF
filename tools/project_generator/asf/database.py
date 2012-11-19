@@ -1480,7 +1480,10 @@ class Project(ConfigItem):
 			mcu_name = element.attrib[self.mcu_attrib]
 		except KeyError:
 			# No default-mcu, use device-support (this has already been sanity-checked)
-			mcu_name = self.get_device_support()[0]
+			try:
+				mcu_name = self.get_device_support()[0]
+			except IndexError:
+				raise NotFoundError("No device-support added for project `%s'" % self.id)
 
 		self._mcu = MCU(mcu_name, db)
 
