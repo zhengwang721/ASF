@@ -1,4 +1,5 @@
 /**
+/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -100,7 +101,7 @@ static void _dac_set_config(
 
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->standby_sleep_enable) {
-		dac_module->CTRLB |= DAC_SLEEPEN_bm;
+		dac_module->CTRLA |= DAC_SLEEPEN_bm;
 	}
 }
 

@@ -98,7 +98,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Used for making struct look nice in the documentaiton -->
+  <!-- Used for making struct look nice in the documentation -->
   <xsl:template match="//compounddef[@kind ='struct']">
     <section id="{@id}" xreflabel="{compoundname}">
       <title> struct <xsl:value-of select="compoundname"/>
@@ -186,7 +186,7 @@
         <xsl:text>&#10;</xsl:text>
         <xsl:text>&#9;</xsl:text>
         <xsl:text>&#9;</xsl:text>
-        <xsl:value-of select="argsstring"/>
+        <xsl:apply-templates select="argsstring"/>
       </programlisting>
       <xsl:apply-templates select="detaileddescription"/>
     </section>
@@ -226,6 +226,38 @@
           </tbody>
         </tgroup>
       </table>
+    </section>
+  </xsl:template>
+
+  <xsl:template match="memberdef[@kind = 'define']">
+    <section id="{@id}" xreflabel="{name}">
+      <title>
+        <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
+      </title>
+      <informaltable tabstyle="striped">
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Initializer</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                <para>
+                  <xsl:value-of select="initializer"/>
+                </para>
+              </entry>
+              <entry>
+                <para>
+                  <xsl:value-of select="detaileddescription"/>
+                </para>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
     </section>
   </xsl:template>
 
@@ -347,7 +379,7 @@
         <xsl:value-of select="title"/>
       </title>
 
-      <!-- Show all varibale information -->
+      <!-- Show all variable information -->
       <xsl:if test="count(../../sectiondef[@kind='var'])>0">
         <section>
           <title>Variables</title>
@@ -365,10 +397,23 @@
         </section>
       </xsl:if>
 
-      <!-- Show all the fucntion information -->
+      <!-- Show all the macro information -->
+      <section>
+        <title>Macro definitions</title>
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='define' or @kind='define']">
+          <section>
+            <title>
+              <xsl:value-of select="header"/>
+            </title>
+            <xsl:apply-templates select="."/>
+          </section>
+        </xsl:for-each>
+      </section>
+
+      <!-- Show all the function information -->
       <section>
         <title>Function calls</title>
-        <xsl:for-each select="../../sectiondef[@kind ='user-defined' or @kind ='func']">
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
           <section>
             <title>
               <xsl:value-of select="header"/>
@@ -565,5 +610,16 @@
       <xsl:value-of select="."/>
     </latex>
     </equation>
+  </xsl:template>
+
+  <xsl:template name="splitargs" match="argsstring">
+    <xsl:param name="text" select="."/>
+    <xsl:value-of select="substring-before(concat($text,','),',')" />
+    <xsl:if test="contains($text,',')">
+      <xsl:text>,&#xA;&#09; </xsl:text>
+        <xsl:call-template name="splitargs">
+          <xsl:with-param name="text" select="substring-after($text,',')" />
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
