@@ -98,7 +98,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Used for making struct look nice in the documentaiton -->
+  <!-- Used for making struct look nice in the documentation -->
   <xsl:template match="//compounddef[@kind ='struct']">
     <section id="{@id}" xreflabel="{compoundname}">
       <title> struct <xsl:value-of select="compoundname"/>
@@ -229,6 +229,38 @@
     </section>
   </xsl:template>
 
+  <xsl:template match="memberdef[@kind = 'define']">
+    <section id="{@id}" xreflabel="{name}">
+      <title>
+        <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
+      </title>
+      <informaltable tabstyle="striped">
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Initializer</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                <para>
+                  <xsl:value-of select="initializer"/>
+                </para>
+              </entry>
+              <entry>
+                <para>
+                  <xsl:value-of select="detaileddescription"/>
+                </para>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+  </xsl:template>
+
   <xsl:template match="simplesect">
     <note>
       <xsl:choose>
@@ -347,7 +379,7 @@
         <xsl:value-of select="title"/>
       </title>
 
-      <!-- Show all varibale information -->
+      <!-- Show all variable information -->
       <xsl:if test="count(../../sectiondef[@kind='var'])>0">
         <section>
           <title>Variables</title>
@@ -365,10 +397,23 @@
         </section>
       </xsl:if>
 
-      <!-- Show all the fucntion information -->
+      <!-- Show all the macro information -->
+      <section>
+        <title>Macro definitions</title>
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='define' or @kind='define']">
+          <section>
+            <title>
+              <xsl:value-of select="header"/>
+            </title>
+            <xsl:apply-templates select="."/>
+          </section>
+        </xsl:for-each>
+      </section>
+
+      <!-- Show all the function information -->
       <section>
         <title>Function calls</title>
-        <xsl:for-each select="../../sectiondef[@kind ='user-defined' or @kind ='func']">
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
           <section>
             <title>
               <xsl:value-of select="header"/>
