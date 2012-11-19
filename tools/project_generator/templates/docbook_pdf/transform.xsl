@@ -174,13 +174,11 @@
   <xsl:template match="memberdef[@kind ='function']">
     <section id="{@id}" xreflabel="{name}">
       <title>
-        <xsl:value-of select="briefdescription"/>
+        <xsl:value-of select="name"/><xsl:text>()</xsl:text>
       </title>
-      <!--      <para>
-        <emphasis role="bold">
-          <xsl:value-of select="briefdescription"/>
-        </emphasis>
-      </para>-->
+      <emphasis role="italic">
+        <xsl:value-of select="briefdescription"/>
+      </emphasis>
       <programlisting language="c">
         <xsl:value-of select="definition"/>
         <xsl:text>&#10;</xsl:text>
