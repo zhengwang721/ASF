@@ -139,8 +139,8 @@
  * channel (note that these names refer to the logical operation that the unit
  * performs, and both voltages should be above GND) which are then compared with
  * one another. Both the positive and negative channel inputs are connected to
- * a MUX, which allows one of several possible inputs to be selected for each
- * comparator channel.
+ * a pair of MUXs, which allows one of several possible inputs to be selected
+ * for each comparator channel.
  *
  * The exact channels available for each comparator differ for the positive and
  * negative inputs, but the same MUX choices are available for all comparator
@@ -832,6 +832,10 @@ static inline void ac_win_clear_detected(
  *	<tr>
  *		<td>AC</td>
  *		<td>Analog Comparator</td>
+ *	</tr>
+ *	<tr>
+ *		<td>DAC</td>
+ *		<td>Digital to Analog Converter</td>
  *	</tr>
  *	<tr>
  *		<td>MUX</td>
