@@ -17,7 +17,6 @@
         </title>
           <xsl:apply-templates select="compounddef[@kind ='group'][1]/detaileddescription/para"/>
       </preface>
-      <!--<xsl:apply-templates select="compounddef[@kind ='group'][1]/detaileddescription"/>-->
       <xsl:for-each select="compounddef[@kind ='group']">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
@@ -98,7 +97,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Used for making struct look nice in the documentaiton -->
+  <!-- Used for making struct look nice in the documentation -->
   <xsl:template match="//compounddef[@kind ='struct']">
     <section id="{@id}" xreflabel="{compoundname}">
       <title> struct <xsl:value-of select="compoundname"/>
@@ -216,7 +215,6 @@
                 <entry>
                   <para>
                     <xsl:apply-templates select="detaileddescription"/>
-                    <!--<xsl:value-of select="detaileddescription"/>-->
                   </para>
                 </entry>
               </row>
@@ -322,7 +320,6 @@
       </para>
     </entry>
     <entry>
-      <!--      <para><xsl:value-of select="parameterdescription"/></para>-->
       <xsl:for-each select="parameterdescription">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
@@ -345,7 +342,7 @@
         <xsl:value-of select="title"/>
       </title>
 
-      <!-- Show all varibale information -->
+      <!-- Show all variable information -->
       <xsl:if test="count(../../sectiondef[@kind='var'])>0">
         <section>
           <title>Variables</title>
@@ -363,7 +360,7 @@
         </section>
       </xsl:if>
 
-      <!-- Show all the fucntion information -->
+      <!-- Show all the function information -->
       <section>
         <title>Function calls</title>
         <xsl:for-each select="../../sectiondef[@kind ='user-defined' or @kind ='func']">
@@ -417,7 +414,6 @@
       </title>
       <xsl:for-each select="para">
         <xsl:apply-templates select="."/>
-        <!--<para><xsl:value-of select="current()"/></para>-->
       </xsl:for-each>
       <xsl:for-each select="sect3">
         <xsl:apply-templates select="."/>
@@ -466,7 +462,6 @@
 
   <xsl:template match="table">
     <informaltable tabstyle="striped">
-      <!--      <title>Deafult table</title>-->
       <tgroup cols="{@cols}">
         <thead>
           <xsl:for-each select="row[1]">
@@ -516,7 +511,6 @@
 
   <xsl:template match="programlisting">
     <programlisting language="c">
-<!--      <xsl:text>&#10;</xsl:text>-->
     <xsl:for-each select="codeline">
       <xsl:apply-templates select="."/>
       <xsl:text>&#10;</xsl:text>
@@ -545,8 +539,6 @@
   </xsl:template>
 
   <xsl:template match="ref">
-    <!--    <xref linkend="{@refid}"/>-->
-
     <xref linkend="{@refid}" xrefstyle="nopage"/>
   </xsl:template>
 
@@ -569,7 +561,7 @@
     <xsl:param name="text" select="."/>
     <xsl:value-of select="substring-before(concat($text,','),',')" />
     <xsl:if test="contains($text,',')">
-      <xsl:text>,&#xA;&#09; </xsl:text>
+      <xsl:text>,&#10;&#09; </xsl:text>
         <xsl:call-template name="splitargs">
           <xsl:with-param name="text" select="substring-after($text,',')" />
       </xsl:call-template>
