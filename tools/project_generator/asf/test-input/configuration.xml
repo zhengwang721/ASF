@@ -28,9 +28,11 @@
 	<config name="compiler.conf3" value="val3" />
 	<config name="single1" value="singleval1" />
 	<require idref="board1" />
+	<device-support value="atxmega128a1"/>
 </project>
 
-<board id="board1" mcu="atxmega128a1" caption="my board">
+<board id="board1" caption="my board">
+	<device-support value="atxmega128a1"/>
 </board>
 
 <project id="project2" caption="my project">
@@ -41,7 +43,8 @@
 	<require idref="board2" />
 </project>
 
-<board id="board2" mcu="atxmega128a1" caption="my board">
+<board id="board2" caption="my board">
+	<device-support value="atxmega128a1"/>
 </board>
 
 <project id="project3" caption="my project">
@@ -50,13 +53,15 @@
 	<config name="conf1" value="val_project1" />
 	<require idref="board3" />
 	<require idref="driver" />
+	<device-support value="atxmega128a1"/>
 </project>
 
-<board id="board3" mcu="atxmega128a1" caption="my board">
+<board id="board3" caption="my board">
 	<config name="conf1" value="val_board1" />
 	<config name="conf2" value="val_board2" />
 	<config name="compiler.conf2" value="board2" />
 	<config name="compiler.conf3" value="board3" />
+	<device-support value="atxmega128a1"/>
 </board>
 
 <module type="meta" id="driver" caption="mydriver">

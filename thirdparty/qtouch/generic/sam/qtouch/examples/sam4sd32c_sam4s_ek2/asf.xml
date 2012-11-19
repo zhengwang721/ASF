@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="QTouch Method Example Application on SAM4S-EK2" id="common.services.qtouch.generic.sam.qtouch.example.sam4s_ek2">
 		<info type="keyword" value="technology">
-		<keyword value="Touch"/>
+			<keyword value="Touch"/>
 		</info>	
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="conf_clock.h"/>
@@ -25,10 +25,11 @@
 		<build type="define" name="SNS2" value="A"/>
 		<build type="define" name="SNSK2" value="A"/>
 		<build type="define" name="_SNS1_SNSK1_SAME_PORT_" value=""/>
-		<build type="define" name="_SNS2_SNSK2_SAME_PORT_" value=""/>		
-		<generator value="armgcc" />
-		<generator value="as5_arm" />
+		<build type="define" name="_SNS2_SNSK2_SAME_PORT_" value=""/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<generator value="iarewarm"/>
+		<device-support value="atsam4sd32c"/>
 	</project>
 </asf>

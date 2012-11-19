@@ -22,7 +22,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.sam4s_xplained" vendor="Atmel" caption="SAM4S Xplained" mcu="atsam4s16c">
+	<board id="board.sam4s_xplained" vendor="Atmel" caption="SAM4S Xplained">
 		<build type="define" name="BOARD" value="SAM4S_XPLAINED"/>
 		<build type="define" name="__SAM4S16C__" value=""/>
 		<build type="header-file" value="sam4s_xplained.h"/>
@@ -38,5 +38,6 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.sam4s_xplained.init"/>
 		<require idref="config.board.sam4s_xplained.led"/>
+		<device-support value="atsam4s16c"/>
 	</board>
 </asf>

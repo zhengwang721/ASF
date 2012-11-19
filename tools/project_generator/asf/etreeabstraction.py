@@ -10,9 +10,13 @@ except:
 	clr.AddReference("System.Xml")
 	from System.Linq import Enumerable
 	from System.Xml import XmlNodeType
+	from System.Xml import XmlReader
 	from System.Xml.Linq import *
 	from System.Xml.XPath import Extensions
+	from System.Xml.Schema import XmlSchemaSet
+	from System.Xml.Schema import Extensions as SchemaExtensions
 	from System.IO import StringWriter
+	from System.IO import StringReader
 	from System.Xml import NameTable
 	from System.Xml import XmlNamespaceManager
 	use_clr = True
@@ -69,6 +73,9 @@ if use_clr:
 					self.node.SetAttributeValue(key, value)
 			self.attributes = Attributes(self.node)
 
+		def clear(self):
+			self.node.RemoveAll()
+
 		@staticmethod
 		def _get_node_name(tag):
 			"""
@@ -115,6 +122,10 @@ if use_clr:
 		@property
 		def attrib(self):
 			return self.attributes
+
+		@property
+		def document(self):
+			return self.node.Document
 
 		def getfirsttextnode(self, collection):
 			for element in collection:
@@ -238,10 +249,22 @@ if use_clr:
 
 	class XMLSchema(object):
 		def __init__(self, schema):
+			self.schemaset = XmlSchemaSet()
+			xml = schema.getroot().node.ToString()
+			sr = StringReader(xml)
+			self.schemaset.Add("", XmlReader.Create(sr))
+			self.error=''
 			pass
 
 		def assertValid(self, tree):
-			return True
+			self.error = None
+			SchemaExtensions.Validate(tree.document,self.schemaset,self._handle_error)			
+			if self.error is not None:
+				raise DocumentInvalid(self.error)			
+
+		def _handle_error(self,obj,validationEventArgs):
+			self.error= validationEventArgs.Message
+			
 
 
 	def parse(source, parser=None):
@@ -266,4 +289,7 @@ if use_clr:
 
 
 	class DocumentInvalid(Exception):
-		pass
+		def __init__(self, value):
+			self.value = value
+		def __str__(self):
+			return repr(self.value)
