@@ -9,6 +9,7 @@ from asf.runtime import Runtime
 from asf.toolchain.avrstudio5 import AVRStudio5Project, AVRStudio5Project32
 from asf.toolchain.generic import GenericProject
 from asf_avrstudio5_interface import PythonFacade
+from asf.findrebuild import *
 
 
 class UnitTestProject(GenericProject):
@@ -1459,3 +1460,81 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 		# Check that generated map is as expected
 		self.assertEquals(doc_arch_dict, expected_doc_arch_dict)
+
+class FindRebuildTest(unittest.TestCase):
+
+	xml_schema_path = "asf.xsd"
+
+	files_basedir = os.path.normcase("asf/test-input")
+	xml_test_input_name = "rebuild_test.xml"
+	m_out_name = "tmp_mod.txt.delete_me"
+	p_out_name = "tmp_prj.txt.delete_me"
+	in_file_name = "tmp_test_input.txt.delete_me"
+
+	asf_input = os.path.join(files_basedir, xml_test_input_name)
+	module_out = os.path.join(files_basedir, m_out_name)
+	project_out = os.path.join(files_basedir, p_out_name)
+	test_in = os.path.join(files_basedir, in_file_name)
+
+	runtime = FindRebuildRuntime()
+	runtime.set_xml_schema_path(xml_schema_path)
+	runtime.set_outfiles(project_out, module_out)
+	runtime.set_input_file(test_in)
+
+	runtime.load_db(filename=asf_input)
+
+	def remove_temp_files(self):
+		os.remove(self.project_out)
+		os.remove(self.module_out)
+		os.remove(self.test_in)
+
+	def read_file(self, filename):
+		f = open(filename, 'r')
+		result = f.read()
+		result = [res.strip() for res in result.splitlines()]
+		f.close()
+		return result
+
+	def run_test(self, input_data, expected_p, expected_m):
+		# Create new input file
+		f = open(self.test_in, 'w')
+		for line in input_data:
+				f.write("%s\r\n" % line)
+		f.close()
+		self.runtime.run()
+		result_m = filter(None, self.read_file(self.module_out))
+		result_p = filter(None, self.read_file(self.project_out))
+		self.remove_temp_files()
+		self.assertEqual(expected_m, result_m)
+		self.assertEqual(expected_p, result_p)
+
+	def test_run_1(self):
+		input_data = ["ma.c"]
+		expected_result_m = ["driver.b", "driver.c#1", "driver.c#2"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+
+	def test_run_2(self):
+		input_data = ["db.c"]
+		expected_result_m = ["driver.b"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_3(self):
+		input_data = ["da.c"]
+		expected_result_m = ["driver.a"]
+		expected_result_p = ["project.a"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["project-c.h"]
+		expected_result_m = []
+		expected_result_p = ["project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["da.c", "db.c"]
+		expected_result_m = ['*']
+		expected_result_p = ['*']
+		self.run_test(input_data, expected_result_p, expected_result_m)
