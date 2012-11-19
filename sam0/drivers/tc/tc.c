@@ -38,14 +38,6 @@
  * \asf_license_stop
  *
  */
-/*TODO: General stuff
- *       - Add asserts with comments to default-section of switch mode, keep the
- *       returns.
- *       - Use asserts with comments?
- *       - Move return to end of function for switch-case and add break
- *       - Have enum status_code where applicable, void/bool elsewhere
- */
-
 
 #include "tc.h"
 
@@ -123,65 +115,65 @@ enum status_code tc_init(TC_t *const tc_module,
 		case TC_MODE_COUNT8:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.COUNT =
-				config->tc_8bit_config.count;
+				config->8bit_config.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.PER   =
-				config->tc_8bit_config.period;
+				config->8bit_config.period;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC0   =
-				config->tc_8bit_config.capture_compare_channel_0;
+				config->8bit_config.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC1   =
-				config->tc_8bit_config.capture_compare_channel_1;
+				config->8bit_config.capture_compare_channel_1;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC2   =
-				config->tc_8bit_config.capture_compare_channel_2;
+				config->8bit_config.capture_compare_channel_2;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC3   =
-				config->tc_8bit_config.capture_compare_channel_3;
+				config->8bit_config.capture_compare_channel_3;
 
 			break;
 
 		case TC_MODE_COUNT16:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.COUNT =
-					config->tc_16bit_config.count;
+				config->16bit_config.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC0   =
-				config->tc_16bit_config.capture_compare_channel_0;
+				config->16bit_config.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC1   =
-				config->tc_16bit_config.capture_compare_channel_1;
+				config->16bit_config.capture_compare_channel_1;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC2   =
-				config->tc_16bit_config.capture_compare_channel_2;
+				config->16bit_config.capture_compare_channel_2;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC3   =
-				config->tc_16bit_config.capture_compare_channel_3;
+				config->16bit_config.capture_compare_channel_3;
 
 			break;
 
 		case TC_MODE_COUNT32:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.COUNT =
-				config->tc_32bit_config.count;
+				config->32bit_config.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.CC1 =
-				config->tc_32bit_config.capture_compare_channel_0;
+				config->32bit_config.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.CC1 =
-				config->tc_32bit_config.capture_compare_channel_1;
+				config->32bit_config.capture_compare_channel_1;
 
 			break;
 
@@ -194,13 +186,16 @@ enum status_code tc_init(TC_t *const tc_module,
 }
 
 /**
- * \brief Set TC module count register
+ * \brief Set TC module count value
  *
  * Set count value of the TC module
- * This function can be used if to update value after init.
+ * This function can be used to update value after init.
+ * It can be used while the counter is running, there is no need
+ * to disable the counter module.
  *
  * \param dev_inst      pointer to the device struct
  * \param count         value to write to the count register
+ * \return enum status_code: STATUS_OK if
  */
 enum status_code tc_set_count(
 		struct tc_dev_inst *const dev_inst,
@@ -218,7 +213,7 @@ enum status_code tc_set_count(
 	tc_wait_for_sync(tc_module);
 
 	/* Write to based on the TC mode */
-	switch(dev_inst->mode) {
+	switch(dev_inst->resoultion) {
 		case TC_MODE_COUNT8:
 			tc_module->TC_COUNT8.COUNT = (uint8_t) count;
 			return STATUS_OK;
@@ -257,7 +252,7 @@ enum status_code tc_get_count(
 	/* Get a pointer to the module's hardware instance*/
 	TC_t *const tc_module = dev_inst->hw_dev;
 
-	//TODO: set RREQ or RCONT and ADDR field before doing the sync test.
+	//TODO: set RREQ or RCONT and ADDR field before doing the sync test. It may be that this is not nesesary in the polled driver.
 
 	/* Synchronize */
 	tc_wait_for_sync(tc_module);
@@ -311,19 +306,19 @@ enum status_code tc_get_capture(
 		case TC_MODE_COUNT8:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT8.CC0;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					*compare = tc_module->TC_COUNT8.CC1;
 					return STATUS_OK;
 
-				case TC_CC2:
+				case TC_COMPARE_CAPTURE_CHANNEL_2:
 					*compare = tc_module->TC_COUNT8.CC2;
 					return STATUS_OK;
 
-				case TC_CC3:
+				case TC_COMPARE_CAPTURE_CHANNEL_3:
 					*compare = tc_module->TC_COUNT8.CC3;
 					return STATUS_OK;
 
@@ -334,12 +329,20 @@ enum status_code tc_get_capture(
 		case TC_MODE_COUNT16:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT16.CC0;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					*compare = tc_module->TC_COUNT16.CC1;
+					return STATUS_OK;
+
+				case TC_COMPARE_CAPTURE_CHANNEL_2:
+					*compare = tc_module->TC_COUNT16.CC2;
+					return STATUS_OK;
+
+				case TC_COMPARE_CAPTURE_CHANNEL_3:
+					*compare = tc_module->TC_COUNT16.CC3;
 					return STATUS_OK;
 
 				default:
@@ -349,11 +352,11 @@ enum status_code tc_get_capture(
 		case TC_MODE_COUNT32:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT32.CC0;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					*compare = tc_module->TC_COUNT32.CC1;
 					return STATUS_OK;
 
@@ -372,8 +375,6 @@ enum status_code tc_get_capture(
  * \param dev_inst      pointer to the device struct
  * \param value    pointer to value to write to the CC0-register
  */
-//TODO: will have to be changed if arrays are used for ccn regs.
-//TODO: must ad cc2 and cc3 in 16 bit mode.
 enum status_code tc_set_compare(
 		struct tc_dev_inst *dev_inst,
 		uint32_t compare,
@@ -395,22 +396,22 @@ enum status_code tc_set_compare(
 		case TC_MODE_COUNT8:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT8.CC0
 						= (uint8_t) compare;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					tc_module->TC_COUNT8.CC1
 						= (uint8_t) compare;
 					return STATUS_OK;
 
-				case TC_CC2:
+				case TC_COMPARE_CAPTURE_CHANNEL_2:
 					tc_module->TC_COUNT8.CC2
 						= (uint8_t) compare;
 					return STATUS_OK;
 
-				case TC_CC3:
+				case TC_COMPARE_CAPTURE_CHANNEL_3:
 					tc_module->TC_COUNT8.CC3
 						= (uint8_t) compare;
 					return STATUS_OK;
@@ -422,13 +423,23 @@ enum status_code tc_set_compare(
 		case TC_MODE_COUNT16:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT16.CC0
 						= (uint16_t) compare;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					tc_module->TC_COUNT16.CC1
+						= (uint16_t) compare;
+					return STATUS_OK;
+
+				case TC_COMPARE_CAPTURE_CHANNEL_2:
+					tc_module->TC_COUNT16.CC2
+						= (uint16_t) compare;
+					return STATUS_OK;
+
+				case TC_COMPARE_CAPTURE_CHANNEL_3:
+					tc_module->TC_COUNT16.CC3
 						= (uint16_t) compare;
 					return STATUS_OK;
 
@@ -439,11 +450,11 @@ enum status_code tc_set_compare(
 		case TC_MODE_COUNT32:
 			/* Read out based on compare register */
 			switch(comp_reg_index) {
-				case TC_CC0:
+				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT32.CC0 = compare;
 					return STATUS_OK;
 
-				case TC_CC1:
+				case TC_COMPARE_CAPTURE_CHANNEL_1:
 					tc_module->TC_COUNT32.CC1 = compare;
 					return STATUS_OK;
 
