@@ -386,15 +386,20 @@ static inline void tc_get_config_defaults(
 	/* Write default config to config struct */
 	config->resolution                                  = TC_16BIT_RESOLUTION;
 	config->prescaler                                   = TC_PRESCALER_DIV1;
-	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
 	config->wave_generation                             = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->reload_action                               = TC_RELOAD_ACTION_GCLK;
+
 	config->waveform_invert_output                      = TC_WAVEFORM_INVERT_OUTPUT_NONE;
+	config->capture_enable                              = TC_CAPTURE_ENABLE_NONE;
+
 	config->count_direction                             = TC_COUNT_DIRECTION_UP;
 	config->oneshot                                     = false;
-	config->capture_enable                              = TC_CAPTURE_ENABLE_NONE;
-	config->event_action                                = TC_EVENT_ACTION_OFF;
+
+	config->enable_event_input                          = false;
 	config->invert_event_input                          = false;
+	config->event_action                                = TC_EVENT_ACTION_OFF;
 	config->event_generation_enable                     = TC_EVENT_GENERATION_ENABLE_NONE;
+
 	config->tc_16bit_config.count                       = 0x0000;
 	config->tc_16bit_config.capture_compare_channel_0   = 0xFFFF;
 	config->tc_16bit_config.capture_compare_channel_1   = 0x0000;
