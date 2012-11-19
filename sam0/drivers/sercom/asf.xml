@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.sercom" caption="SERCOM">
 		<info type="description" value="summary">
-		Driver for the SAM0+ SPI.
+		Driver for the SAM0+ SERCOM.
 		</info>
 		<build type="include-path" value="." />
 		<build type="c-source" value="sercom.c"/>
