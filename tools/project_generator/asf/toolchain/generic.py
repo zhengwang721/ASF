@@ -245,30 +245,57 @@ class GenericElement(object):
 		total_config.update(toolchain_config)
 		return total_config
 
-	def get_toolchain_configuration(self):
+	def get_toolchain_configuration(self, default_config_id=None):
 		"""
 		Returns a tuple with two dictionaries, respectively mapping toolchain config
 		names to single values and to lists of values. The toolchain configurations must
-		be set with the toolchain-config or toolchain-config-list elements in the board
-		or the project.
+		be set with the toolchain-config or toolchain-config-list elements in the board,
+		project or the optional default config supplier.
 		
 		The project will override any same-named toolchain-config that is set in the
 		board, while for toolchain-config-list the values are simply added appended to
 		the list.
 		"""
+		# Check for custom build items
+		configs = {}
+		list_configs = {}
+
+		# If a ID to fetch default configs from is specified, try to look it up in
+		# the project's home database
+		if default_config_id:
+			# Catch the case where the default config supplier does not exist
+			try:
+				default_config_m = self.db.lookup_by_id(default_config_id)
+			except NotFoundError:
+				raise DbError("Could not find id `%s' in database for default toolchain config" % default_config_id)
+
+			# It may be a selector, try to resolve and get first module of type "build-specific"
+			default_config_m.resolve_all_selections(self.configuration, self.project.mcu)
+			for m in [default_config_m] + default_config_m.get_prerequisites(recursive=True):
+				if m.type == "build-specific":
+					(def_configs, def_list_configs) = m._get_toolchain_configuration_from_element(self.toolchain)
+					break
+
+			# Catch the case where we could not find a relevant module
+			try:
+				configs = def_configs
+				list_configs = def_list_configs
+			except NameError:
+				raise DbError("Could not find module of type `build-specific' in the dependency tree of id `%s'" % default_config_id)
+
 		# Fetch toolchain configs and config lists from board
 		if self.project._board:
-			(configs, list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
-		else:
-			configs = {}
-			list_configs = {}
+			(board_configs, board_list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
 
 		# Update configs with those from project
-		(more_configs, more_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
-		configs.update(more_configs)
+		(project_configs, project_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
 
-		# Add list configs from project to the board's list configs
-		for config_name, config_values in more_list_configs.items():
+		# Update the configs: board overrides default, project overrides board and default
+		configs.update(board_configs)
+		configs.update(project_configs)
+
+		# Add list configs from project and board to the default list configs
+		for config_name, config_values in board_list_configs.items() + project_list_configs.items():
 			list_configs[config_name] = list_configs.get(config_name, []) + config_values
 
 		return (configs, list_configs)
