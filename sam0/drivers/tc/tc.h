@@ -657,9 +657,11 @@ enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
 
 
 /**
- * \brief Cheks if there are new mach has ocured on the channel
+ * \brief Cheks if there are new match has ocured on the channel
  *
- * 
+ * Checs if a new match has ocured returns STATUS_... if it has and 
+ * STATUS_... if no new match has ocured. 
+ *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
  * \return enum status_code:
@@ -667,6 +669,7 @@ enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
 enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
+
 	
 }
 
