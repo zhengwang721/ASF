@@ -13,5 +13,6 @@
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam3n4c"/>
 	</project>
 </asf>

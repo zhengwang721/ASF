@@ -7,8 +7,9 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example_usart.h"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc256l4u"/>
 	</project>
 </asf>

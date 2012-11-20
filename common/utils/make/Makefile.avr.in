@@ -347,7 +347,7 @@ rebuild: clean all
 objfiles: $(obj-y)
 
 # Create object files from C source files.
-$(build-dir)%.o: %.c $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk
+$(build-dir)%.o: %.c $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
 	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
@@ -358,7 +358,7 @@ endif
 	$(Q)$(CC) $(c_flags) -c $< -o $@
 
 # Create object files from C++ source files.
-$(build-dir)%.o: %.cpp $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk
+$(build-dir)%.o: %.cpp $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
 	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
@@ -369,7 +369,7 @@ endif
 	$(Q)$(CXX) $(cxx_flags) -c $< -o $@
 
 # Preprocess and assemble: create object files from assembler source files.
-$(build-dir)%.o: %.s $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk
+$(build-dir)%.o: %.s $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
 	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
@@ -380,7 +380,7 @@ endif
 	$(Q)$(CC) $(a_flags) -c $< -o $@
 
 # Preprocess and assemble: create object files from assembler source files.
-$(build-dir)%.o: %.S $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk
+$(build-dir)%.o: %.S $(MAKEFILE_PATH) config.mk
 	$(Q)test -d $(dir $@) || echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
 	$(Q)test -d $(dir $@) || mkdir $(subst /,\,$(dir $@))
@@ -395,7 +395,7 @@ include $(dep-files)
 
 ifeq ($(target_type),lib)
 # Archive object files into an archive
-$(target): $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk $(obj-y)
+$(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_ARCHIVING)
 	$(Q)$(AR) $(ar_flags) $@ $(obj-y)
 	@echo $(MSG_SIZE)
@@ -404,7 +404,7 @@ else
 ifeq ($(target_type),elf)
 # Link the object files into an ELF file. Also make sure the target is rebuilt
 # if the common Makefile.avr.in or project config.mk is changed.
-$(target): $(PRJ_PATH)/common/utils/make/Makefile.avr.in config.mk $(obj-y)
+$(target): $(MAKEFILE_PATH) config.mk $(obj-y)
 	@echo $(MSG_LINKING)
 	$(Q)$(CC) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
