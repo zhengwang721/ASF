@@ -11,7 +11,7 @@
       <subtitle>
         <xsl:text>ASF PROGRAMMERS MANUAL</xsl:text>
       </subtitle>
-      <preface>
+      <preface id="{compounddef[@kind ='group'][1]/@id}">
         <title>
           <xsl:value-of select="compounddef/title"/>
         </title>
@@ -36,9 +36,9 @@
   </xsl:template>
 
   <xsl:template match="compounddef[@kind ='group'][1]">
-      <xsl:for-each select="detaileddescription">
-        <xsl:call-template name="detaileddescription_special"/>
-      </xsl:for-each>
+    <xsl:for-each select="detaileddescription">
+      <xsl:call-template name="detaileddescription_special"/>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="detaileddescription_special">
@@ -146,6 +146,9 @@
   </xsl:template>
 
   <xsl:template match="sectiondef">
+    <para>
+      <xsl:value-of select="description"/>
+    </para>
     <xsl:for-each select="memberdef">
       <xsl:apply-templates select="."/>
     </xsl:for-each>
@@ -222,6 +225,38 @@
           </tbody>
         </tgroup>
       </table>
+    </section>
+  </xsl:template>
+
+  <xsl:template match="memberdef[@kind = 'define']">
+    <section id="{@id}" xreflabel="{name}">
+      <title>
+        <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
+      </title>
+      <informaltable tabstyle="striped">
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Initializer</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                <para>
+                  <xsl:value-of select="initializer"/>
+                </para>
+              </entry>
+              <entry>
+                <para>
+                  <xsl:value-of select="detaileddescription"/>
+                </para>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
     </section>
   </xsl:template>
 
@@ -360,10 +395,23 @@
         </section>
       </xsl:if>
 
+      <!-- Show all the macro information -->
+      <section>
+        <title>Macro definitions</title>
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='define' or @kind='define']">
+          <section>
+            <title>
+              <xsl:value-of select="header"/>
+            </title>
+            <xsl:apply-templates select="."/>
+          </section>
+        </xsl:for-each>
+      </section>
+
       <!-- Show all the function information -->
       <section>
         <title>Function calls</title>
-        <xsl:for-each select="../../sectiondef[@kind ='user-defined' or @kind ='func']">
+        <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
           <section>
             <title>
               <xsl:value-of select="header"/>
