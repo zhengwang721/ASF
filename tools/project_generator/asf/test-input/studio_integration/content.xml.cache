@@ -1,4 +1,57 @@
 <asf xmlversion="1.0">
+	<select-by-device id="common.utils.toolchain_config" caption="Toolchain configuration defaults">
+		<info type="description" value="summary">
+		This module contains default toolchain configurations for the
+		various device families.
+		</info>
+
+		<module type="build-specific" id="common.utils.toolchain_config#avr" caption="Toolchain configuration defaults for 8-bit AVR">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Default toolchain settings for 8-bit AVR, i.e., megaAVR, tinyAVR and AVR XMEGA.
+			</info>
+			<device-support value="mega"/>
+			<device-support value="tiny"/>
+			<device-support value="xmega"/>
+
+			<!-- AVRGCC -->
+			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
+			<toolchain-config name="avrgcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.compiler.warnings.AllWarnings" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.optimization.RelaxBranches" value="True" toolchain="avrgcc"/>
+			<!-- Linker flags are added to this config -->
+			<toolchain-config name="avrgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avrgcc"/>
+			<!-- Compiler flags are added to this config-->
+			<toolchain-config name="avrgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax" toolchain="avrgcc"/>
+		</module>
+
+		<module type="build-specific" id="common.utils.toolchain_config#uc3" caption="Toolchain configuration defaults for 32-bit AVR">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Default toolchain settings for 32-bit AVR, i.e., AVR UC3.
+			</info>
+			<device-support value="uc3"/>
+
+			<!-- AVR32GCC -->
+			<toolchain-config name="avr32gcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.optimization.DebugLevel" value="None" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.compiler.warnings.AllWarnings" value="True" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="avr32gcc"/>
+			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
+			<toolchain-config name="avr32gcc.preprocessingassembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
+			<!-- Linker flags, trampoline/startup label and stack/heap size settings are added to this config -->
+			<toolchain-config name="avr32gcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avr32gcc"/>
+			<!-- Compiler flags are added to this config -->
+			<toolchain-config name="avr32gcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload" toolchain="avr32gcc"/>
+		</module>
+	</select-by-device>
 	<module type="driver" id="xmega.drivers.nvm" caption="NVM - Non Volatile Memory" basedir="./xmega/drivers/nvm" fromfile="./xmega/drivers/nvm/asf.xml">
 		<info type="description" value="summary">
 		Driver for the Non Volatile Memories (NVM).

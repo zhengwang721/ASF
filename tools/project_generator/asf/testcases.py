@@ -1247,6 +1247,8 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 	def test_PythonFacade_get_all_modules_and_selectors(self):
 		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
 				self.main_db.lookup_by_id("avr32.drivers.tc.example"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config#uc3"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
@@ -1257,6 +1259,8 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 	def test_PythonFacade_get_all_modules_and_selectors_filtered(self):
 		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config#uc3"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
