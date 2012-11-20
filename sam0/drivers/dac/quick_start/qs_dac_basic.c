@@ -39,8 +39,7 @@
  * \asf_license_stop
  *
  */
-
-#include "dac.h"
+#include <asf.h>
 
 int main(void)
 {

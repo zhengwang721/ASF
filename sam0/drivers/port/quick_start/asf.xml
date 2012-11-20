@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.port.quick_start" caption="PORT quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the PORT driver demonstrating configuration and initialization.
+		</info>
+		<build type="c-source" value="qs_port_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.port"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>

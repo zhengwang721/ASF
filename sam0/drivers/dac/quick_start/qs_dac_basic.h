@@ -5,7 +5,6 @@
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +38,7 @@
  * \asf_license_stop
  *
  */
- 
+
 /**
  * \page dac_basic_use_case Quick Start Guide for the DAC module - Basic Use Case
  *
@@ -80,7 +79,7 @@
  * -# Write and convert a value.
  *  - \snippet qs_dac_basic.c write
  * -# Disable the DAC
- *  - \snippet qs_dac_basic.c disable 
+ *  - \snippet qs_dac_basic.c disable
  * -# Start infinite loop.
  *  - \snippet qs_dac_basic.c inf_loop
  */

@@ -38,12 +38,12 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include "../pac.h"
-#include "../../port/port.h"
+void config_port_pins(void);
 
 //! [pin_setup]
-void configure_pins(void)
+void config_port_pins(void)
 {
 	struct port_pin_conf pin_conf;
 	port_pin_get_config_defaults(&pin_conf);
@@ -68,7 +68,7 @@ int main (void)
 {
 //! [main]
 //! [init]
-	configure_pins();
+	config_port_pins();
 //! [init]
 //! [init_lock]
 	system_peripheral_lock(SYSTEM_PERIPHERAL_PORT, ~SYSTEM_PERIPHERAL_PORT);

@@ -1,4 +1,5 @@
 /**
+/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -42,11 +43,14 @@
 
 
 /**
- * \internal Reset the DAC module
+ * \brief Resets the DAC module
+ *
+ * This function will reset the DAC module to its power on default values and
+ * disable it.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
  */
-static void _dac_reset(
+void dac_reset(
 		struct dac_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
@@ -97,7 +101,7 @@ static void _dac_set_config(
 
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->standby_sleep_enable) {
-		dac_module->CTRLB |= DAC_SLEEPEN_bm;
+		dac_module->CTRLA |= DAC_SLEEPEN_bm;
 	}
 }
 
@@ -169,9 +173,6 @@ void dac_init(
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	/* Reset the module */
-	_dac_reset(dev_inst);
-
 	/* Write configuration to module */
 	_dac_set_config(dev_inst, config);
 }
@@ -209,7 +210,7 @@ void dac_enable(
  * Enables the selected DAC channel.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
- * \param[in] ch       Channel to enable
+ * \param[in] channel  Channel to enable
  *
  */
 void dac_ch_enable(
@@ -267,7 +268,7 @@ void dac_ch_disable(
  *
  * Enables the output buffer and drives the DAC output to the VOUT pin.
  *
- * \param dev_inst[in] Pointer to the DAC software instance struct
+ * \param[in] dev_inst Pointer to the DAC software instance struct
  *
  */
 void dac_enable_output_buffer(
@@ -291,7 +292,7 @@ void dac_enable_output_buffer(
  * \note Should be done when the output buffer is not needed, as it will draw
  * current even if the system is in sleep mode.
  *
- * \param dev_inst[in] Pointer to the DAC software instance struct
+ * \param[in] dev_inst Pointer to the DAC software instance struct
  *
  */
 void dac_disable_output_buffer(
@@ -321,7 +322,7 @@ void dac_disable_output_buffer(
  * enabled in the configuration.
  *
  * \param[in] dev_inst Pointer to the DAC software device struct
- * \param[in] ch       DAC channel to write to
+ * \param[in] channel  DAC channel to write to
  * \param[in] data     Conversion data
  * \param[in] event_triggered Boolean value to determine whether the conversion
  *        should be triggered immediately or by an incoming event.

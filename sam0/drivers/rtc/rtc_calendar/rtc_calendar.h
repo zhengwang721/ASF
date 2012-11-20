@@ -42,7 +42,7 @@
 #ifndef RTC_CALENDAR_H_INCLUDED
 #define RTC_CALENDAR_H_INCLUDED
 
-#include "./config/conf_clocks.h"
+#include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 # error "The GCLK_RTC must be set to use a 32kHz source with a prescaler of 32."
@@ -434,7 +434,7 @@ enum rtc_calendar_events {
  * Time structure containing the time given by or set to the RTC calendar.
  * The structure uses seven values to give second, minute, hour, pm/am, day,
  * month and year. It should be initiated with the
- * \ref rtc_calendar_get_time_default.
+ * \ref rtc_calendar_get_time_defaults().
  *
  *
  */
@@ -499,22 +499,23 @@ static inline void _rtc_calendar_wait_for_sync(void)
 #endif
 
 /**
- * \brief Initialize time structure.
+ * \brief Initialize a \c time structure.
  *
  * This will initialize a given time structure to the time 00:00:00 (hh:mm:ss)
  * and date 2000-01-01 (YYYY-MM-DD).
  *
  * \param[out] time Time structure to initialize.
  */
-static void rtc_calendar_get_time_defaults(struct rtc_calendar_time *const time)
+static inline void rtc_calendar_get_time_defaults(
+		struct rtc_calendar_time *const time)
 {
-	time->second 	= 0;
-	time->minute 	= 0;
-	time->hour 	= 0;
-	time->pm 	= 0;
-	time->day 	= 1;
-	time->month 	= 1;
-	time->year 	= 2000;
+	time->second = 0;
+	time->minute = 0;
+	time->hour   = 0;
+	time->pm     = 0;
+	time->day 	 = 1;
+	time->month  = 1;
+	time->year   = 2000;
 }
 
 /**
@@ -542,7 +543,7 @@ static inline void rtc_calendar_get_config_defaults(
 
 	/* Initialize and set time structure to default. */
 	struct rtc_calendar_time time;
-	rtc_calendar_get_time_default(&time);
+	rtc_calendar_get_time_defaults(&time);
 
 	/* Set default into configuration structure */
 	config->clear_on_match = false;
@@ -658,7 +659,7 @@ static inline void rtc_calendar_clear_overflow(void)
  * \param[in] alarm_index Index of the alarm to check.
  */
 static inline bool rtc_calendar_is_alarm_match(
-		num rtc_calendar_alarm alarm_index)
+		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	RTC_t *rtc_module = &RTC;
@@ -717,7 +718,7 @@ enum status_code rtc_calendar_frequency_correction(int8_t value);
  *
  * This will enable the given event so it can be used by the event system.
  *
- * \param[in] event Bitmask containing events to enable.
+ * \param[in] events Bitmask containing events to enable.
  */
 static inline void rtc_calendar_enable_events(uint16_t events)
 {
@@ -733,7 +734,7 @@ static inline void rtc_calendar_enable_events(uint16_t events)
  *
  * This will disable the given event so it cannot be used by the event system.
  *
- * \param[in] event Bitmask to the events to disable.
+ * \param[in] events Bitmask to the events to disable.
  */
 static inline void rtc_calendar_disable_events(uint16_t events)
 {
@@ -797,7 +798,7 @@ static inline void rtc_calendar_disable_events(uint16_t events)
  */
 
 /**
- * \page quickstart Quick Start Guide for the RTC calendar
+ * \page rtc_cal_quickstart Quick Start Guide for the RTC calendar
  *
  * This is the quick start guide for the \ref sam0_rtc_cal_group module, with
  * step-by-step instructions on how to implement the module.

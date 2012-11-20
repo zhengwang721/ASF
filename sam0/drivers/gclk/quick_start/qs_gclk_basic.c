@@ -38,14 +38,16 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <port.h>
+void config_gclock_generator(void);
+void config_gclock_channel(void);
 
 //! [setup]
 #define EXAMPLE_GCLOCK_GENERATOR    0
 #define EXAMPLE_GCLOCK_CHANNEL      0
 
-void configure_gclock_generator(void)
+void config_gclock_generator(void)
 {
 //! [setup_1]
 	struct clock_gclk_gen_conf gclock_gen_conf;
@@ -55,7 +57,7 @@ void configure_gclock_generator(void)
 //! [setup_2]
 
 //! [setup_3]
-	gclock_gen_conf.source_channel  = 0;
+	gclock_gen_conf.source_clock    = 0;
 	gclock_gen_conf.division_factor = 128;
 //! [setup_3]
 //! [setup_4]
@@ -67,7 +69,7 @@ void configure_gclock_generator(void)
 //! [setup_5]
 }
 
-void configure_gclock_channel(void)
+void config_gclock_channel(void)
 {
 //! [setup_6]
 	struct clock_gclk_ch_conf gclock_ch_conf;
@@ -93,8 +95,8 @@ void configure_gclock_channel(void)
 int main(void)
 {
 	//! [setup_init]
-	configure_gclock_generator();
-	configure_gclock_channel();
+	config_gclock_generator();
+	config_gclock_channel();
 	//! [setup_init]
 
 	//! [main]

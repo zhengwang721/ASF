@@ -42,7 +42,7 @@
  */
 #ifndef CLOCK_GCLK_H_INCLUDED
 #define CLOCK_GCLK_H_INCLUDED
-#include <compiler.h>
+
 /**
  * \defgroup sam0_gclk_group SAM0+ Generic Clock Driver (GCLK)
  *

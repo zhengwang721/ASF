@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.nvm.quick_start" caption="NVM quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the NVM module demonstrating basic reading and writing of Non-Volatile memories.
+		</info>
+		<build type="c-source" value="qs_nvm_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.nvm"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>

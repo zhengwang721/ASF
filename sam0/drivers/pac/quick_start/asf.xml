@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.pac.quick_start" caption="PAC quickstart">
+		<info type="description" value="summary">
+	Quick start guide for the PAC module demonstrating clock source configuration.
+		</info>
+		<build type="c-source" value="qs_pac_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.pac"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>

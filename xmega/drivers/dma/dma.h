@@ -172,8 +172,8 @@ static inline void dma_set_priority_mode(DMA_PRIMODE_t primode)
 #endif
 
 	iflags = cpu_irq_save();
-	
-#if XMEGA_A || XMEGA_AU	
+
+#if XMEGA_A || XMEGA_AU
 	DMA.CTRL = (DMA.CTRL & ~DMA_PRIMODE_gm) | primode;
 #else
 	DMA.CTRL = (DMA.CTRL & ~DMA_PRIMODE_bm) | primode;
@@ -197,15 +197,15 @@ static inline void dma_set_double_buffer_mode(DMA_DBUFMODE_t dbufmode)
 {
 	irqflags_t iflags;
 
-#if XMEGA_A || XMEGA_AU	
+#if XMEGA_A || XMEGA_AU
 	Assert(!(dbufmode & ~DMA_DBUFMODE_gm));
 #else
 	Assert(!(dbufmode & ~DMA_DBUFMODE_bm));
 #endif
 
 	iflags = cpu_irq_save();
-	
-#if XMEGA_A || XMEGA_AU	
+
+#if XMEGA_A || XMEGA_AU
 	DMA.CTRL = (DMA.CTRL & ~DMA_DBUFMODE_gm) | dbufmode;
 #else
 	DMA.CTRL = (DMA.CTRL & ~DMA_DBUFMODE_bm) | dbufmode;
@@ -288,7 +288,7 @@ static inline bool dma_channel_is_enabled(dma_channel_num_t num)
 {
 	DMA_CH_t *channel = dma_get_channel_address_from_num(num);
 	bool channel_enabled;
-	
+
 #if XMEGA_A || XMEGA_AU
 	channel_enabled = (channel->CTRLA & DMA_CH_ENABLE_bm);
 #else
@@ -393,7 +393,7 @@ static inline void dma_channel_reset(dma_channel_num_t num)
 	irqflags_t iflags = cpu_irq_save();
 	DMA_CH_t *channel = dma_get_channel_address_from_num(num);
 
-#if XMEGA_A || XMEGA_AU	
+#if XMEGA_A || XMEGA_AU
 	channel->CTRLA  |= DMA_CH_RESET_bm;
 #else
 	channel->CTRLA  |= DMA_CH_CHRST_bm;
@@ -1107,7 +1107,7 @@ static inline void dma_channel_set_source_hugemem(
  *        dma_enable();
  *
  *        dma_set_callback(DMA_CHANNEL, dma_transfer_done);
- *        dma_channel_set_interrupt_level(&config, DMA_INT_LVL_LO);
+ *        dma_channel_set_interrupt_level(&dmach_conf, DMA_INT_LVL_LO);
  *
  *        dma_channel_write_config(DMA_CHANNEL, &dmach_conf);
  *        dma_channel_enable(DMA_CHANNEL);
@@ -1182,7 +1182,7 @@ static inline void dma_channel_set_source_hugemem(
  *    link it to the user created \c dma_transfer_done() function:
  *      - \code
  * dma_set_callback(DMA_CHANNEL, dma_transfer_done);
- * dma_channel_set_interrupt_level(&config, DMA_INT_LVL_LO);
+ * dma_channel_set_interrupt_level(&dmach_conf, DMA_INT_LVL_LO);
  *        \endcode
  * -# Write the DMA channel configuration to the DMA and enable it so that
  *    it can be triggered to start the transfer:
@@ -1281,7 +1281,7 @@ static inline void dma_channel_set_source_hugemem(
  *        dma_enable();
  *
  *        dma_set_callback(DMA_CHANNEL, dma_transfer_done);
- *        dma_channel_set_interrupt_level(&config, DMA_INT_LVL_LO);
+ *        dma_channel_set_interrupt_level(&dmach_conf, DMA_INT_LVL_LO);
  *
  *        dma_channel_write_config(DMA_CHANNEL, &dmach_conf);
  *        dma_channel_enable(DMA_CHANNEL);
@@ -1360,7 +1360,7 @@ static inline void dma_channel_set_source_hugemem(
  *    link it to the user created \c dma_transfer_done() function:
  *      - \code
  * dma_set_callback(DMA_CHANNEL, dma_transfer_done);
- * dma_channel_set_interrupt_level(&config, DMA_INT_LVL_LO);
+ * dma_channel_set_interrupt_level(&dmach_conf, DMA_INT_LVL_LO);
  *        \endcode
  * -# Write the DMA channel configuration to the DMA and enable it so that
  *    it can be triggered to start the transfer:

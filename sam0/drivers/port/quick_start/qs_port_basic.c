@@ -38,11 +38,12 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 
-#include <port.h>
+void config_port_pins(void);
 
 //! [setup]
-void configure_pins(void)
+void config_port_pins(void)
 {
 //! [setup_1]
 	struct port_pin_conf pin_conf;
@@ -58,7 +59,7 @@ void configure_pins(void)
 //! [setup_4]
 	port_pin_set_config(10, &pin_conf);
 //! [setup_4]
-	
+
 //! [setup_5]
 	pin_conf.input.enabled  = false;
 	pin_conf.output.enabled = true;
@@ -72,7 +73,7 @@ void configure_pins(void)
 int main(void)
 {
 	//! [setup_init]
-	configure_pins();
+	config_port_pins();
 	//! [setup_init]
 
 	//! [main]
@@ -80,7 +81,7 @@ int main(void)
 		//! [main_1]
 		bool pin_state = port_pin_get_input_level(10);
 		//! [main_1]
-		
+
 		//! [main_2]
 		port_pin_set_output_level(11, !pin_state);
 		//! [main_2]

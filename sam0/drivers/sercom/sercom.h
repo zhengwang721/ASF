@@ -42,7 +42,7 @@
 #ifndef __SERCOM_H_INCLUDED
 #define __SERCOM_H_INCLUDED
 
-//#include "asf.h"
+#include <compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,7 +61,7 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * The SERCOM driver has the following dependencies:
- * \li \b
+ * \li \ref clock_group "\b Clock" (System Clock Management)
  *
  * \section special_cons Special Considerations
  *

@@ -61,9 +61,9 @@
 				GCLK_MUX_GROUPMASK(mask_prefix)); \
 	} \
 	while (0)
-	
+
 /** \endcond */
- 
+
 /** \brief Initializes the GCLK driver.
  *
  *  Initializes the Generic Clock module, disabling and resetting all active
@@ -128,7 +128,7 @@ void clock_gclk_gen_set_config(
 		/* Check if division is a power of two */
 		if ((config->division_factor & (config->division_factor - 1)) == 0) {
 			/* Determine the index of the highest bit set to get the
-			 * division factor that must be loaded into the division 
+			 * division factor that must be loaded into the division
 			 * register */
 			uint32_t div2_count = 0;
 			uint32_t mask = (1 << 0);
@@ -208,20 +208,20 @@ uint32_t clock_gclk_gen_get_hz(const uint8_t generator)
 {
 	/* Select the appropriate generator */
 	GCLK_MUX_SELECT(GCLK.GENCTRL, GCLK_GENCTRL_GENID, generator);
-	
+
 	uint32_t source_clock_index =
 			(GCLK.CLKCTRL & GCLK_CLKCTRL_GENID_gm) >> GCLK_CLKCTRL_GENID_gp;
 
 	/* Get the frequency of the source connected to the GCLK generator */
 	uint32_t gen_input_hz = clock_source_get_hz(source_clock_index);
-	
+
 	/* Check if the divider is enabled for the generator */
 	if (GCLK.GENCTRL & GCLK_GENCTRL_DIVEN_bm) {
 		GCLK_MUX_SELECT(GCLK.GENDIV, GCLK_GENDIV_GENID, generator);
-		
+
 		/* Get the generator divider setting (can be fractional or binary) */
 		uint32_t divider = (GCLK.GENDIV & GCLK_GENDIV_DIV_gm);
-		
+
 		/* Check if the generator is using fractional or binary division */
 		if (GCLK.GENCTRL & GCLK_GENCTRL_DIVFN_bm) {
 			gen_input_hz /= divider;
@@ -230,7 +230,7 @@ uint32_t clock_gclk_gen_get_hz(const uint8_t generator)
 			gen_input_hz >>= (divider + 1);
 		}
 	}
-	
+
 	return gen_input_hz;
 }
 
@@ -321,7 +321,7 @@ uint32_t clock_gclk_ch_get_hz(const uint8_t channel)
 {
 	/* Select the requested generic clock channel */
 	GCLK_MUX_SELECT(GCLK.CLKCTRL, GCLK_CLKCTRL_CLKID, channel);
-	
+
 	/* Return the clock speed of the associated GCLK generator */
 	return clock_gclk_gen_get_hz(GCLK.CLKCTRL & GCLK_CLKCTRL_GENID_gm);
 }

@@ -3,7 +3,7 @@
  *
  * \brief ST7565R display controller driver.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,7 +89,7 @@ void st7565r_init(void)
 	st7565r_interface_init();
 
 	// Set the A0 pin to the default state (command)
-	gpio_set_pin_low(ST7565R_A0_PIN);
+	ioport_set_pin_low(ST7565R_A0_PIN);
 
 	// The column address is set to increasing
 	st7565r_write_command(ST7565R_CMD_ADC_NORMAL);

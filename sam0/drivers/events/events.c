@@ -51,8 +51,8 @@
 void events_init(void)
 {
 	/* Software reset the module to ensure it is re-initialized correctly */
-	EVSYS->CTRL = EVSYS_CTRL_SWRST_bm;
-	while (EVSYS->CTRL & EVSYS_CTRL_SWRST_bm) {
+	EVSYS.CTRL = EVSYS_SWRST_bm;
+	while (EVSYS.CTRL & EVSYS_SWRST_bm) {
 	}
 }
 
@@ -73,11 +73,11 @@ void events_ch_set_config(
 
 	/* Select and configure the event channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS->CHCTRL
-		= (channel << EVSYS_CHCTRL_CHSEL_gp) |
-			(config->generator_id << EVSYS_CHCTRL_EVGSEL_gp) |
-			(config->edge_detection << EVSYS_CHCTRL_EDGESEL_gp) |
-			(config->path << EVSYS_CHCTRL_PATH_gp);
+	EVSYS.CHCTRL
+		= (channel << EVSYS_CHSEL_gp) |
+			(config->generator_id << EVSYS_EVGSEL_gp) |
+			(config->edge_detection << EVSYS_EDGESEL_gp) |
+			(config->path << EVSYS_PATH_gp);
 }
 
 /** \brief Writes an Event System user MUX configuration to the hardware module.
@@ -97,7 +97,7 @@ void events_user_set_config(
 
 	/* Select and configure the user MUX channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS->USERMUX
-		= (channel << EVSYS_USERMUX_UMUXSEL_gp) |
-			(config->event_channel_id << EVSYS_USERMUX_CHANNELEVENT_gp);
+	EVSYS.USERMUX
+		= (user << EVSYS_UMUXSEL_gp) |
+			(config->event_channel_id << EVSYS_CHANNELEVENT_gp);
 }

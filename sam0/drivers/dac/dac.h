@@ -46,6 +46,8 @@
 extern "C" {
 #endif
 
+#include <compiler.h>
+
 /**
  * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
  *
@@ -507,6 +509,9 @@ void dac_write(
 		enum dac_channel channel,
 		const uint16_t data,
 		bool event_triggered);
+
+void dac_reset(
+		struct dac_dev_inst *const dev_inst);
 
 /** @} */
 

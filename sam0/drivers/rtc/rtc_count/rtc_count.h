@@ -42,7 +42,7 @@
 #ifndef RTC_COUNT_H_INCLUDED
 #define RTC_COUNT_H_INCLUDED
 
-#include "./config/conf_clocks.h"
+#include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 # error "conf_clocks.h must be set up for the RTC."
@@ -649,7 +649,7 @@ static inline void rtc_count_enable_events(uint16_t events)
  *
  * This will disable the given event so it cannot be used by the event system.
  *
- * \param[in] event Bitmask to the events to disable. See \ref rtc_count_events
+ * \param[in] events Bitmask to the events to disable. See \ref rtc_count_events
  */
 static inline void rtc_count_disable_events(uint16_t events)
 {
@@ -713,7 +713,7 @@ static inline void rtc_count_disable_events(uint16_t events)
  */
 
 /**
- * \page quickstart Quick Start Guide for the RTC count
+ * \page rtc_count_quickstart Quick Start Guide for the RTC count
  *
  * This is the quick start guide for the \ref sam0_rtc_count_group module, with
  * step-by-step instructions on how to implement the module.
