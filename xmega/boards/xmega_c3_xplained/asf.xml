@@ -20,9 +20,10 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xmega_c3_xplained" vendor="Atmel" caption="XMEGA-C3 Xplained" mcu="atxmega384c3">
+	<board id="board.xmega_c3_xplained" vendor="Atmel" caption="XMEGA-C3 Xplained">
 		<build type="define" name="BOARD" value="XMEGA_C3_XPLAINED"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="xmega_c3_xplained.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
@@ -31,5 +32,6 @@
 		<require idref="config.board.xmega_c3_xplained.led"/>
 		<require idref="config.board.xmega_c3_xplained.init"/>
 		<config name="config.spi_master_type" value="usart_and_standard_spi"/>
+		<device-support value="atxmega384c3"/>
 	</board>
 </asf>

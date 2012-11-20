@@ -6,7 +6,7 @@
 			board (ATAVRSBPR1) then prints the scaled and formatted values to an
 			attached serial terminal using the C-library standard I/O functions.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_a1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
@@ -21,6 +21,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 	<project caption="XMEGA-B1 Xplained with Xplained Pressure Board #1" id="xmega.applications.xmega-b1_avrsbpr1_demo">
 		<info type="description" value="summary">
@@ -29,7 +30,7 @@
 			board (ATAVRSBPR1) then prints the scaled and formatted values to an
 			attached serial terminal using the C-library standard I/O functions.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -45,6 +46,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 	<project caption="XMEGA-A3BU Xplained with Xplained Pressure Board #1" id="xmega.applications.xmega-a3bu_avrsbpr1_demo">
 		<info type="description" value="summary">
@@ -53,7 +55,7 @@
 			board (ATAVRSBPR1) then prints the scaled and formatted values to an
 			attached serial terminal using the C-library standard I/O functions.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -69,5 +71,6 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

@@ -222,7 +222,7 @@ uint32_t rtouch_compute_calibration(rtouch_calibration_point_t *points)
 {
 	int32_t slope1, slope2;
 	bool xOk, yOk;
-	int32_t xDiff, yDiff;
+	static int32_t xDiff, yDiff;
 	rtouch_point_t calibrated_point;
 
 	/**

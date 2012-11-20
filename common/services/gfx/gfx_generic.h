@@ -70,7 +70,9 @@ enum gfx_bitmap_type {
 	/*! Bitmap stored in SRAM */
 	GFX_BITMAP_RAM,
 	/*! Bitmap stored in progmem */
-	GFX_BITMAP_PROGMEM
+	GFX_BITMAP_PROGMEM,
+	/*! Draw bitmap through extended interface */
+	GFX_BITMAP_EXT,
 };
 
 /**
@@ -90,8 +92,24 @@ struct gfx_bitmap {
 		gfx_color_t *pixmap;
 		/*! Pointer to pixels for bitmap stored in progmem */
 		gfx_color_t PROGMEM_PTR_T progmem;
+		/*! External interface custom data */
+		void* custom;
 	} data;
 };
+
+/**
+ * \brief Function pointer type for external bitmap draw handlers.
+ *
+ * \param bmp Pointer to the bitmap.
+ * \param map_x Start pos x.
+ * \param map_y Start pos y.
+ * \param x Width length.
+ * \param y Height length.
+ */
+typedef void (*gfx_ext_draw_handler_t)(
+	struct gfx_bitmap const *bmp,
+	gfx_coord_t map_x, gfx_coord_t map_y,
+	gfx_coord_t x, gfx_coord_t y);
 
 /*! Generic implementation of gfx_draw_line(). */
 void gfx_generic_draw_line(gfx_coord_t x1, gfx_coord_t y1,
@@ -135,6 +153,9 @@ void gfx_generic_put_bitmap(const struct gfx_bitmap *bmp,
 void gfx_generic_draw_bitmap_tiled(const struct gfx_bitmap *bmp, gfx_coord_t x1,
 		gfx_coord_t y1, gfx_coord_t x2, gfx_coord_t y2,
 		gfx_coord_t tile_origin_x, gfx_coord_t tile_origin_y);
+
+/*! Generic implementation of setting external bitmap draw interface. */
+void gfx_generic_set_ext_handler(gfx_ext_draw_handler_t gfx_ext_draw);
 
 /*! Generic implementation of gfx_draw_horizontal_line(). */
 __always_inline static void gfx_generic_draw_horizontal_line(

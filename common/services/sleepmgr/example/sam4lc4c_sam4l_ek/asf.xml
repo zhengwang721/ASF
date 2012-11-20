@@ -8,13 +8,14 @@
 		<build type="header-file" value="ast.h"/>
 		<build type="c-source" value="ast.c"/>
 		<require idref="common.services.basic.sleepmgr.example"/>
-		<require idref="board.sam4l_ek" />
-		<generator value="iarewarm" />
-		<generator value="armgcc" />
-		<generator value="doxygen" />
+		<require idref="board.sam4l_ek"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

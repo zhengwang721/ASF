@@ -21,7 +21,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.evk1101" vendor="Atmel" caption="EVK1101" mcu="at32uc3b0256">
+	<board id="board.evk1101" vendor="Atmel" caption="EVK1101">
 		<build type="define" name="BOARD" value="EVK1101"/>
 		<build type="header-file" value="evk1101.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -30,5 +30,6 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.evk1101.led"/>
 		<require idref="config.board.evk1101.init"/>
+		<device-support value="at32uc3b0256"/>
 	</board>
 </asf>

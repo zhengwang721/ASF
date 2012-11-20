@@ -85,6 +85,12 @@ extern "C" {
 #define PMC_PCK_1               1 /* PCK1 ID */
 #define PMC_PCK_2               2 /* PCK2 ID */
 
+#if SAM4S
+/** Flash state in Wait Mode */
+#define PMC_WAIT_MODE_FLASH_STANDBY         PMC_FSMR_FLPM_FLASH_STANDBY
+#define PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN  PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN
+#define PMC_WAIT_MODE_FLASH_IDLE            PMC_FSMR_FLPM_FLASH_IDLE
+#endif
 /** Convert startup time from us to MOSCXTST */
 #define pmc_us_to_moscxtst(startup_us, slowck_freq)         \
 	((startup_us * slowck_freq / 8 / 1000000) < 0x100 ? \

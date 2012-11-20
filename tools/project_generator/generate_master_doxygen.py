@@ -7,6 +7,7 @@ import sys
 from optparse import OptionParser
 
 from asf.database import *
+from asf.extensionmanager import *
 from asf.runtime import Runtime
 from asf.toolchain.generic import *
 from asf.junit_report import *
@@ -640,10 +641,21 @@ def generate_doxygen(arch, suite):
 	return documentation_modules
 
 if __name__ == "__main__":
+	# Set up paths
+	script_path = sys.path[0]
+	templatedir = os.path.join(script_path, "templates")
+	xml_schema_dir = os.path.join(script_path, "schemas")
+	device_map = os.path.join(script_path, "device_maps", "atmel.xml")
+
+	# Create the command line parser
 	parser = OptionParser(usage = """
 	<options>
 	""")
+	parser.add_option("","--ext-root", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("","--main-ext-uuid", dest="main_ext_uuid", default="Atmel.ASF", help="Main FDK extension UUID")
+	parser.add_option("","--main-ext-version", dest="main_ext_version", help="Main FDK extension version")
 
+	parser.add_option("-c","--cached", action="store_true", dest="cached", default=False, help="Do not rescan all directories, but use the list of XML files from last run")
 	parser.add_option("-o", "--output-dir", dest="output_dir", default="./master_doxygen", help="Set output base directory")
 	parser.add_option("-d", "--use-dot", action="store_true", dest="use_dot", default=False, help="Use DOT, i.e., generate images in documentation")
 	parser.add_option("-b", "--blacklist-path", action="append", dest="path_blacklist", help="Add path element to avoid processing of")
@@ -668,19 +680,34 @@ if __name__ == "__main__":
 
 	path_blacklist = options.path_blacklist
 
-	# Set everything up. Paths, runtime, database and so on
-	script_path = sys.path[0]
-	xml_schema_path = os.path.join(script_path, "asf.xsd")
-	templatedir = os.path.join(script_path, "templates")
-
+	# Set up the runtime and extension manager
 	runtime = Runtime(templatedir, ConfigurationHandler())
 	runtime.setup_log(logging.WARNING)
-	runtime.set_xml_schema_path(xml_schema_path)
 
-	os.chdir(script_path + "/../..")
+	# Create the extension manager
+	ext_manager = FdkExtensionManager(runtime, options.ext_root, use_cache=options.cached)
 
-	db = ConfigDB(runtime)
-	db.sanity_check()
+	# Load prerequisites like XML schemas and device map
+	ext_manager.load_schemas(xml_schema_dir)
+	ext_manager.load_device_map(device_map)
+
+	# Now scan for extensions and load them
+	ext_paths = ext_manager.scan_for_extensions()
+	ext_manager.load_and_register_extensions(ext_paths)
+
+	# Get the database of the main extension
+	main_ext = ext_manager.request_extension(options.main_ext_uuid, options.main_ext_version)
+	db = main_ext.get_database()
+
+	# Set the database for the runtime class
+	runtime.set_db(db)
+
+	# Sanity check of database
+	if options.cached:
+		runtime.log.info("Skipping DB sanity check in cached mode")
+	else:
+		runtime.log.info("Running DB sanity check")
+		db.sanity_check()
 
 	# Architecture list to generate help for
 	arch_list = options.arch_list
