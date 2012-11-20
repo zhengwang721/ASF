@@ -1149,15 +1149,68 @@ class AVRStudio5TestCase(SetupTestCase):
 		expected_configs = {
 			'AvrGcc.Project.Only'      : 'Project',
 			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
 			'AvrGcc.Board.Only'        : 'Board',
 		}
 		expected_list_configs = {
 			'AvrGcc.Board.Only.List'        : ['Board'],
 			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Board', 'Project'],
 			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
 		}
 
 		(configs, list_configs) = generator.get_toolchain_configuration()
+
+		self.assertEquals(configs, expected_configs)
+		self.assertEquals(list_configs, expected_list_configs)
+
+
+	def test_get_toolchain_configuration_from_module_id(self):
+		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
+		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+		id_for_configs = "toolchain_config_module"
+
+		expected_configs = {
+			'AvrGcc.Module.Only'       : 'Module',
+			'AvrGcc.Project.Only'      : 'Project',
+			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
+			'AvrGcc.Board.Only'        : 'Board',
+		}
+		expected_list_configs = {
+			'AvrGcc.Module.Only.List'       : ['Module'],
+			'AvrGcc.Board.Only.List'        : ['Board'],
+			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Module', 'Board', 'Project'],
+			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
+		}
+
+		(configs, list_configs) = generator.get_toolchain_configuration(id_for_configs)
+
+		self.assertEquals(configs, expected_configs)
+		self.assertEquals(list_configs, expected_list_configs)
+
+
+	def test_get_toolchain_configuration_from_selector_id(self):
+		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
+		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+		id_for_configs = "toolchain_config_selector"
+
+		expected_configs = {
+			'AvrGcc.Module.Only'       : 'Module',
+			'AvrGcc.Project.Only'      : 'Project',
+			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
+			'AvrGcc.Board.Only'        : 'Board',
+		}
+		expected_list_configs = {
+			'AvrGcc.Board.Only.List'        : ['Board'],
+			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Module', 'Board', 'Project'],
+			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
+		}
+
+		(configs, list_configs) = generator.get_toolchain_configuration(id_for_configs)
 
 		self.assertEquals(configs, expected_configs)
 		self.assertEquals(list_configs, expected_list_configs)
