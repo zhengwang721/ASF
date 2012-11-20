@@ -110,11 +110,8 @@ class FindRebuildRuntime(Runtime):
 			idset.add(id.attrib[self.id_attrib])
 		return idset
 
-	def search_modules_from_asf_xml(self, filename):
-		self.log.debug("  Finding module for asf.xml file '%s'" %(filename))
-
-		# Format filename the same way as the XML:
-		xml_filename = os.path.join(".",filename)
+	def search_modules_from_asf_xml(self, xml_filename):
+		self.log.debug("  Finding module for asf.xml file '%s'" %(xml_filename))
 
 		# Find all elements that have fromfile attribute set to this xml file
 		fromfile_elements = self.db.tree.findall(".//%s[@%s='%s']" % ("*", ConfigDB.fromfile_tag, xml_filename))
@@ -242,6 +239,12 @@ class FindRebuildRuntime(Runtime):
 
 
 	def run(self):
+		# Process the file list so that path's correspond to the build items
+		# returned by the extension's database
+		def prepare_file_path(filename):
+			filename = os.path.join(self.db.extension.relative_root_path, filename.strip())
+			return os.path.normpath(filename)
+
 		self._cache = dict()
 		self.outfile_p = open(self.outfilename_p, "w")
 		self.outfile_m = open(self.outfilename_m, "w")
@@ -249,6 +252,7 @@ class FindRebuildRuntime(Runtime):
 		# Files that always require recompilation of everything
 		# Top level asf.xml require everything to be rebuilt:
 		always_build_list = ["asf.xml"]
+		always_build_list = [prepare_file_path(x) for x in always_build_list]
 
 		# Find what files to check
 		input_filename = os.path.join(self.start_folder, self.input_file)
@@ -263,8 +267,7 @@ class FindRebuildRuntime(Runtime):
 		f.close()
 		self.log.debug("Opened input file '%s' for processing" % (input_filename))
 
-		# Convert slashes to correct format for this script
-		filename_list = [os.path.normpath(x.strip()) for x in filename_list]
+		filename_list = [prepare_file_path(x) for x in filename_list]
 
 		# Find modules that contain the files specified
 		self.log.info("Finding modules for file input")

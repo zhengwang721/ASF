@@ -8,8 +8,9 @@
 		<require idref="avr32.drivers.intc.example"/>
 		<require idref="board.stk600-rcuc3d"/>
 		<config name="config.board.stk600-rcuc3d.init" value="no"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc128d3"/>
 	</project>
 </asf>

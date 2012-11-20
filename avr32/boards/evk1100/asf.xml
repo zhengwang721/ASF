@@ -2,7 +2,6 @@
 	<select-by-config id="config.board.evk1100.led" name="config.board.evk1100.led" caption="EVK1100 LED support" default="yes">
 		<module type="meta" id="config.board.evk1100.led#no" caption="EVK1100 LED support disabled">
 		</module>
-
 		<module type="meta" id="config.board.evk1100.led#yes" caption="EVK1100 LED support enabled">
 			<build type="c-source" value="led.c"/>
 			<build type="include-path" value="."/>
@@ -13,7 +12,6 @@
 	<select-by-config id="config.board.evk1100.init" name="config.board.evk1100.init" caption="EVK1100 initialization support" default="yes">
 		<module type="meta" id="config.board.evk1100.init#no" caption="EVK1100 initialization support disabled">
 		</module>
-
 		<module type="meta" id="config.board.evk1100.init#yes" caption="EVK1100 initialization support enabled">
 			<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 			<build type="module-config" subtype="path" value="board_config"/>
@@ -22,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.evk1100" vendor="Atmel" caption="EVK1100" mcu="at32uc3a0512">
+	<board id="board.evk1100" vendor="Atmel" caption="EVK1100">
 		<build type="define" name="BOARD" value="EVK1100"/>
 		<build type="header-file" value="evk1100.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -31,5 +29,6 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.evk1100.led"/>
 		<require idref="config.board.evk1100.init"/>
+		<device-support value="at32uc3a0512"/>
 	</board>
 </asf>

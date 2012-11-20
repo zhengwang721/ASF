@@ -60,5 +60,6 @@
 		<generator value="doxygen"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x8000"/>
+		<device-support value="atsam4s16c"/>
 	</project>
 </asf>

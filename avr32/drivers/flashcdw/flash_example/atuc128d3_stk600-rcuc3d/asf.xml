@@ -5,8 +5,9 @@
 		<config name="config.board.stk600-rcuc3d.init" value="no"/>
 		<build type="linker-config" subtype="script" value="link_uc128dx.lds" toolchain="avr32gcc"/>
 		<build type="linker-config" subtype="script" value="link_uc128dx.xcl" toolchain="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc128d3"/>
 	</project>
 </asf>
