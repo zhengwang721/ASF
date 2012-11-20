@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Spi on USART configuration
+ * \brief SPI on USART configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *

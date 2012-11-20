@@ -95,7 +95,7 @@ int main(void)
 
 /**
  * \brief Shows on display an explanation of how to use the demonstration
- * SW1 pressed will skip this explanation.
+ * SW1 pressed skips this explanation.
  */
 static void main_introduction(void)
 {
@@ -158,7 +158,7 @@ static void main_introduction(void)
  */
 static void main_introduction_delay(uint16_t delay_ms)
 {
-	/* Initialization TC to manage a delay between each slides */
+	/* Initialization TC to manage a delay between each slide */
 	tc_enable(&TCC1);
 	tc_write_clock_source(&TCC1, TC_CLKSEL_DIV1024_gc); /* 24MHz / 1024 */
 	tc_set_direction(&TCC1, TC_UP);
@@ -203,20 +203,23 @@ static bool main_introduction_is_exist(void)
  * sensors connected on ADC and sent the values through OLED display, USB or
  * microSD card. The demo is controlled through mechanical switches and touch
  * buttons.
- * The application note associated is the AVR1940.
- * Application Note AVR1925 describes the XMEGA-C3 Xplained hardware in detail.
+ * The associated application note is the AVR1940.
+ * The AVR1925 application note describes the XMEGA-C3 Xplained hardware in
+ * details.
  *
  * \section desc Description
  * At power up, demo shows introduction screens, with explanation how to use
- * the buttons. Then, the application starts with continuous sensors
- * acquisition task scheduled with the real time counter (RTC). Sensor values
- * are displayed on the OLED. Depending on user choice on mechanical buttons,
- * these values can be either sent to the USB device Virtual COM port or stored
- * on the microSD card.
+ * the buttons. Then, the application starts with continuous temperature and
+ * light sensors acquisition task scheduled with the real time counter (RTC).
+ * Sensor values are displayed on the OLED. Depending on user choice on
+ * mechanical buttons, these values can be either sent to the USB device
+ * Virtual COM port or stored on the microSD card.
  *
- * The application benefits of the Low Power XMEGA architecture, and the CPU
- * enters in sleep mode whenever possible. Thus, a task running in parallel to
- * display CPU load which is the CPU time in active mode.
+ * The application benefits of the Low Power XMEGA architecture and the CPU
+ * enters in sleep mode whenever possible. Thus, a task runs in parallel of
+ * the others, to display CPU load. This CPU load actually corresponds to the
+ * CPU time spent in active mode.
+ *
  * The software includes 5 tasks:
  * - \ref sampling_task_group, managing the acquisition of the temperature and
  * light sensors

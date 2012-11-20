@@ -155,7 +155,7 @@
 /**
  * USB CDC low level configuration
  * In standalone these configurations are defined by the CDC module.
- * For composite device, these configuration must be defined here
+ * For composite device, these configurations must be defined here
  * @{
  */
 //! Endpoint numbers definition
@@ -187,7 +187,7 @@
 /**
  * USB MSC low level configuration
  * In standalone these configurations are defined by the MSC module.
- * For composite device, these configuration must be defined here
+ * For composite device, these configurations must be defined here
  * @{
  */
 //! Endpoint numbers definition
