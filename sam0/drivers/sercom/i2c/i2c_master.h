@@ -78,10 +78,14 @@ enum i2c_master_interrupt_flag {
 
 /** Enum for the possible I2C master mode SDA internal hold times. */
 enum i2c_master_sda_hold_time {
-	I2C_MASTER_SDA_HOLD_DISABLED, /**< Internal SDA hold time disabled. */
-	I2C_MASTER_SDA_HOLD_50ns_100ns, /**< Internal SDA hold time 50ns-100ns. */
-	I2C_MASTER_SDA_HOLD_300ns_600ns, /**< Internal SDA hold time 300ns-600ns. */
-	I2C_MASTER_SDA_HOLD_400ns_800ns, /**< Internal SDA hold time 400ns-800ns. */
+	/** Internal SDA hold time disabled. */
+	I2C_MASTER_SDA_HOLD_DISABLED = 0,
+	/** Internal SDA hold time 50ns-100ns. */
+	I2C_MASTER_SDA_HOLD_50NS_100NS = I2C_MASTER_SDA_HOLD_50NS_100NS_bm,
+	/** Internal SDA hold time 300ns-600ns. */
+	I2C_MASTER_SDA_HOLD_300NS_600NS = I2C_MASTER_SDA_HOLD_300NS_600NS_bm,
+	/** Internal SDA hold time 400ns-800ns. */
+	I2C_MASTER_SDA_HOLD_400NS_800NS = I2C_MASTER_SDA_HOLD_400NS_800NS_bm,
 };
 
 enum i2c_master_inactive_timeout {
@@ -91,6 +95,22 @@ enum i2c_master_inactive_timeout {
 	I2C_MASTER_INACTIVE_TIMEOUT_200US_210US,
 };
 
+/**
+ * Values for standard I2C speeds.
+ */
+enum i2c_master_baud_rate {
+	/** Baud rate at 100kHz. */
+	I2C_MASTER_BAUD_RATE_100KHZ = 0,
+	/** Baud rate at 400kHz. */
+	I2C_MASTER_BAYD_RATE_400KHZ = 1,
+};
+
+enum i2c_master_polled_mode {
+	/** Non-blocking */
+	I2C_MASTER_POLLED_NON_BLOCKING = 0,
+	/** Blocking */
+	I2C_MASTER_POLLED_BLOCKING = 1,
+};
 
 /**
  * \brief Configuration structure for the I2C device.
@@ -101,23 +121,24 @@ enum i2c_master_inactive_timeout {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_conf {
+	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
+	/** Set to keep module active in sleep modes. */
 	bool active_in_sleep;
-	bool hold_line_timeout;
+	/** Timeout for master to set bus to idle. */
 	enum i2c_master_inactive_timeout inactive_timeout;
+	/** Bus hold time after start signal. */
 	enum i2c_master_sda_hold_time sda_hold_time;
-	/** If true, external will be used that supports tri-stating. 4 wires
-	  * will be used. */
+	/** If true, 4 wire mode with external tri-stating is enabled. */
 	bool external_reciever;
+	/** Polled operation mode. */
+	enum i2c_master_polled_mode polled_mode;
 };
 
 /**
  * \name Configuration and Initialization
  * @{
  */
-
-typedef (*i2c_master_callback_t)(
-		const struct i2c_master_dev_inst *const dev_inst);
 
 #if !defined(__DOXYGEN__)
 /**
@@ -304,6 +325,18 @@ enum status_code i2c_master_disable_callback(
 */
 
 /**
+ * \brief Check if the module is ready for next read.
+ *
+ * Checks if the module is ready for next read if non-blocking configuration is
+ * used.
+ *
+ * \param[in]  dev_inst Pointer to device instance struct.
+ */
+bool i2c_master_is_ready_to_read(
+		const struct i2c_master_dev_inst *const dev_inst);
+
+
+/**
  * \brief Read data packet from slave.
  *
  * Reads a data packet from the specified slave address on the I2C bus.
@@ -315,6 +348,17 @@ enum status_code i2c_master_disable_callback(
 enum status_code i2c_master_read_packet(
 		const struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
+
+/**
+ * \brief Check if the module is ready for next write.
+ *
+ * Checks if the module is ready for next write if non-blocking configuration is
+ * used.
+ *
+ * \param[in]  dev_inst Pointer to device instance struct.
+ */
+bool i2c_master_is_ready_to_write(
+		const struct i2c_master_dev_inst *const dev_inst);
 
 /**
  * \brief Write data packet to slave.
