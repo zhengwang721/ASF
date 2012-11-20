@@ -277,7 +277,6 @@
 
 			<!-- AVR32GCC -->
 			<toolchain-config name="avr32gcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
-			<toolchain-config name="avr32gcc.compiler.optimization.DebugLevel" value="None" toolchain="avr32gcc"/>
 			<toolchain-config name="avr32gcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="avr32gcc"/>
 			<toolchain-config name="avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection" value="True" toolchain="avr32gcc"/>
 			<toolchain-config name="avr32gcc.compiler.warnings.AllWarnings" value="True" toolchain="avr32gcc"/>
