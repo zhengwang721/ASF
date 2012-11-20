@@ -84,6 +84,7 @@ extern "C" {
  * @{
  */
 
+#define TC_INTFLAG_ERR_bm (0x01 << 1)
 
 /**
  * \brief Index of the compare capture channels
@@ -110,14 +111,14 @@ enum tc_reload_action {
 	 * The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
-	TC_RELOAD_ACTION_GCLK           = TC_PRESCSYNC_GCLK_bm,
+	TC_RELOAD_ACTION_GCLK                 = TC_PRESCSYNC_GCLK_bm,
 	/** The counter is reloaded/reset on the next prescaler clock */
-	TC_RELOAD_ACTION_PRESC          = TC_PRESCSYNC_PRESC_bm,
+	TC_RELOAD_ACTION_PRESC                = TC_PRESCSYNC_PRESC_bm,
 	/**
 	 * The counter is reloaded/reset on the next GCLK, and the prescaler is
 	 * reset as well. This may be usefull when an event retriggers the clock
 	 */
-	TC_RELOAD_ACTION_RESYNC         = TC_PRESCSYNC_RESYNC_bm,
+	TC_RELOAD_ACTION_RESYNC               = TC_PRESCSYNC_RESYNC_bm,
 };
 
 
@@ -127,14 +128,14 @@ enum tc_reload_action {
  * 
  */
 enum tc_clock_prescaler {
-	TC_CLOCK_PRESCALER_DIV1         = TC_PRESCALER_DIV1_bm,
-	TC_CLOCK_PRESCALER_DIV2         = TC_PRESCALER_DIV2_bm,
-	TC_CLOCK_PRESCALER_DIV4         = TC_PRESCALER_DIV4_bm,
-	TC_CLOCK_PRESCALER_DIV8         = TC_PRESCALER_DIV8_bm,
-	TC_CLOCK_PRESCALER_DIV16        = TC_PRESCALER_DIV16_bm,
-	TC_CLOCK_PRESCALER_DIV64        = TC_PRESCALER_DIV64_bm,
-	TC_CLOCK_PRESCALER_DIV256       = TC_PRESCALER_DIV256_bm,
-	TC_CLOCK_PRESCALER_DIV1024      = TC_PRESCALER_DIV1024_bm,
+	TC_CLOCK_PRESCALER_DIV1               = TC_PRESCALER_DIV1_bm,
+	TC_CLOCK_PRESCALER_DIV2               = TC_PRESCALER_DIV2_bm,
+	TC_CLOCK_PRESCALER_DIV4               = TC_PRESCALER_DIV4_bm,
+	TC_CLOCK_PRESCALER_DIV8               = TC_PRESCALER_DIV8_bm,
+	TC_CLOCK_PRESCALER_DIV16              = TC_PRESCALER_DIV16_bm,
+	TC_CLOCK_PRESCALER_DIV64              = TC_PRESCALER_DIV64_bm,
+	TC_CLOCK_PRESCALER_DIV256             = TC_PRESCALER_DIV256_bm,
+	TC_CLOCK_PRESCALER_DIV1024            = TC_PRESCALER_DIV1024_bm,
 };
 
 
@@ -182,21 +183,21 @@ enum tc_capture_enable {
  * 
  */
 enum tc_event_action {
-	TC_EVENT_ACTION_OFF              = TC_EVACT_OFF_bm,
-	TC_EVENT_ACTION_RETRIGGER        = TC_EVACT_RETRIGGER_bm,
-	TC_EVENT_ACTION_COUNT            = TC_EVACT_COUNT_bm,
-	TC_EVENT_ACTION_FREQ_PULSE_WIDTH = TC_EVACT_PPW_bm,//TODO: look into this
-	TC_EVENT_ACTION_PULSE_WIDTH_FREQ = TC_EVACT_PWP_bm,
+	TC_EVENT_ACTION_OFF                    = TC_EVACT_OFF_bm,
+	TC_EVENT_ACTION_RETRIGGER              = TC_EVACT_RETRIGGER_bm,
+	TC_EVENT_ACTION_COUNT                  = TC_EVACT_COUNT_bm,
+	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm,
+	TC_EVENT_ACTION_PULSE_WIDTH_FREQ       = TC_EVACT_PWP_bm,
 };
 
 
 //TODO use #define?
 enum tc_waveform_invert_output {
-	TC_WAVEFORM_INVERT_OUTPUT_NONE            = 0,
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0       = TC_INVEN_CC0_bm,
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1       = TC_INVEN_CC1_bm,
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2       = TC_INVEN_CC2_bm,
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3       = TC_INVEN_CC3_bm,
+	TC_WAVEFORM_INVERT_OUTPUT_NONE         = 0,
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_INVEN_CC0_bm,
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_INVEN_CC1_bm,
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2    = TC_INVEN_CC2_bm,
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3    = TC_INVEN_CC3_bm,
 };
 
 
@@ -208,17 +209,17 @@ enum tc_waveform_invert_output {
 //TODO: Use #define?
 enum tc_event_generation_enable {
 	/** No generation of events */
-	TC_EVENT_GENERATION_ENABLE_NONE                   = TC_EVGEN_NONE_gc,
+	TC_EVENT_GENERATION_ENABLE_NONE       = TC_EVGEN_NONE_gc,
 	/** Generate event for compare/capture on channel 0 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_0              = TC_EVGEN_CC0_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_0  = TC_EVGEN_CC0_gc,
 	/** Generate event for compare/capture on channel 1 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_1              = TC_EVGEN_CC1_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_1  = TC_EVGEN_CC1_gc,
 	/** Generate event for compare/capture on channel 2 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_2              = TC_EVGEN_CC2_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_2  = TC_EVGEN_CC2_gc,
 	/** Generate event for compare/capture on channel 3 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_3              = TC_EVGEN_CC3_gc,
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_3  = TC_EVGEN_CC3_gc,
 	/** Generate event for overflow/underflow */
-	TC_EVENT_GENERATION_ENABLE_OVF                    = TC_EVGEN_OVF_gc,
+	TC_EVENT_GENERATION_ENABLE_OVF        = TC_EVGEN_OVF_gc,
 };
 
 
@@ -228,12 +229,21 @@ enum tc_event_generation_enable {
  * 
  */
 enum tc_resolution {
-	TC_RESOLUTION_8BIT        = TC_MODE_COUNT8_bm,
-	TC_RESOLUTION_16BIT       = TC_MODE_COUNT16_bm,
-	TC_RESOLUTION_32BIT       = TC_MODE_COUNT32_bm,
+	TC_RESOLUTION_8BIT                    = TC_MODE_COUNT8_bm,
+	TC_RESOLUTION_16BIT                   = TC_MODE_COUNT16_bm,
+	TC_RESOLUTION_32BIT                   = TC_MODE_COUNT32_bm,
 };
 
 
+	/*
+	Have removed the period uint from the 16
+	and 32 bit struct. You only have cc0 be the
+	period when you are not in PWM normal mode.
+	It may be that you only get to use two compare
+	channels fro pwm too. That is dependent on
+	IC dep. As this is now this reflects how the
+	register is in the prelim TC doc.
+	*/
 /**
  * \brief 
  *
@@ -247,15 +257,6 @@ struct tc_8bit_config {
 	uint8_t compare_capture_channel_2;
 	uint8_t compare_capture_channel_3;
 };
-	/*
-	Have removed the period uint from the 16
-	and 32 bit struct. You only have cc0 be the
-	period when you are not in PWM normal mode.
-	It may be that you only get to use two compare
-	channels fro pwm too. That is dependent on
-	IC dep. As this is now this reflects how the
-	register is in the prelim TC doc.
-	*/
 /**
  * \brief 
  *
@@ -542,7 +543,7 @@ static inline enum status_code tc_start_counter(
 	tc_module->CTRLBSET |= TC_COMMAND_START_bm;
 }
 
-//TODO: send mail to ic dev. Ask about stop command.
+
 /**
  * \brief Stops the counter.
  *
@@ -647,30 +648,57 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
- * \return enum status_code:
+ * \return enum status_code: STATUS_VALID_DATA, STATUS_NO_CHANGE, STATUS_ERR_BAD_DATA
  */
 enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
-	
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(channel_index);
+
+	TC_t * const tc_module = dev_inst->hw_dev;
+
+	if(tc_module->INTFLAG & TC_INTFLAG_ERR_bm) {
+			tc_module->INTFLAG |= TC_INTFLAG_ERR_bm;
+			return STATUS_ERR_BAD_DATA;
+		}
+	if(tc_module->INTFLAG & (0x01 << (channel_index + 4))) {
+		tc_module->INTFLAG |= (0x01 << (channel_index + 4));
+		return STATUS_VALID_DATA;
+	}
+	else {
+		return STATUS_NO_CHANGE;
+	}
 }
 
 
 /**
- * \brief Cheks if there are new match has ocured on the channel
+ * \brief Cheks if a new match has ocured on the channel
  *
- * Checs if a new match has ocured returns STATUS_... if it has and 
- * STATUS_... if no new match has ocured. 
+ * Cheks if a new match has ocured returns STATUS_VALID_DATA if it has and
+ * STATUS_NO_CHANGE if no new match has ocured.
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
- * \return enum status_code:
+ * \return enum status_code:STATUS_VALID_DATA, STATUS_NO_CHANGE
  */
 enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(channel_index);
 
-	
+	TC_t * const tc_module = dev_inst->hw_dev;
+
+	if(tc_module->INTFLAG & (0x01 << (channel_index + 4))) {
+		tc_module->INTFLAG |= (0x01 << (channel_index + 4));
+		return STATUS_VALID_DATA;
+	}
+	else {
+		return STATUS_NO_CHANGE;
+	}
 }
 
 /** @} */
