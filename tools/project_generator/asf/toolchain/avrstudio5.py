@@ -1985,7 +1985,6 @@ class AVRStudio5Project32(AVRStudio5Project):
 		tags = [".".join([self.toolchain, x]) for x in [
 				"assembler.general.AssemblerFlags",
 				"compiler.optimization.DebugLevel",
-				"compiler.optimization.DebugLevel",
 				"compiler.optimization.OtherFlags",
 				"compiler.optimization.PrepareFunctionsForGarbageCollection",
 				"compiler.optimization.level",
