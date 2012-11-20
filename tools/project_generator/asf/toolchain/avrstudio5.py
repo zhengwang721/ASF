@@ -2125,6 +2125,42 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 
 		return tags
 
+
+	def _get_toolchain_config_tags_to_append(self):
+		"""
+		Return a list of tags that should just be appended to whatever the default
+		config module, board and project contained.
+
+		For example, the compiler, linker and assembler flags can be appended.
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"compiler.miscellaneous.OtherFlags",
+				"linker.libraries.Libraries",
+				"linker.libraries.LibrarySearchPaths",
+				"linker.miscellaneous.LinkerFlags",
+				"preprocessingassembler.general.AssemblerFlags",
+			]
+		]
+		return tags
+
+
+	def _get_toolchain_config_tags_to_default(self):
+		"""
+		Return a list of tags that the system should default to
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"assembler.general.AssemblerFlags",
+				"compiler.optimization.DebugLevel",
+				"compiler.optimization.OtherFlags",
+				"compiler.optimization.PrepareFunctionsForGarbageCollection",
+				"compiler.optimization.level",
+				"compiler.warnings.AllWarnings",
+				"linker.optimization.GarbageCollectUnusedSections",
+			]
+		]
+		return tags
+
+
 	def _get_avrgccproj_compiler_flags(self, config):
 		"""
 		Get a dictionary which maps from the other compiler flags tag to
