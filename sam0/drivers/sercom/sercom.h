@@ -103,7 +103,7 @@ struct i2c_master_dev_inst {
 	/** Holder for enabled callbacks. */
 	uint8_t enabled_callback;
 	/** Data buffer for packet write and read. */
-	uint8_t **buffer_ptr;
+	uint8_t *buffer_ptr;
 	/** Counter used for bytes left to send in write and to count number of
 	  * obtained bytes in read. */
 	uint16_t buffer_length;
@@ -115,6 +115,11 @@ enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
 
+
+typedef union {
+	/** I2C master device instance. */
+	i2c_master_dev_inst i2c_master;
+} SERCOM_DEV_INST_t;
 
 /** @} */
 
