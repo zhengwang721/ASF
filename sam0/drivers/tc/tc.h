@@ -55,9 +55,8 @@ extern "C" {
  * \defgroup sam0_TC_group SAM0+ Timer Counter Driver (TC)
  *
  * Driver for the SAM0+ architecture devices. This driver provides an
- * interface for configuration and management of the TC module. This driver
- * encompasses the following module
- * within the SAM0+ devices:
+ * interface for configuration and management of the TC module. This
+ * driver encompasses the following module within the SAM0+ devices:
  * \li \b TC \b (Timer Counter)
  *
  * \section module_introduction Introduction
@@ -89,8 +88,8 @@ extern "C" {
 /**
  * \brief Index of the compare capture channels
  *
- * These values are used in certain functions to spesify what capture/compare
- * channle to do operations on.
+ * These values are used in certain functions to spesify what
+ * capture/compare channle to do operations on.
  */
 enum tc_compare_capture_channel_index {
 	TC_COMPARE_CAPTURE_CHANNEL_0,
@@ -112,62 +111,102 @@ enum tc_reload_action {
 	 * counting on the prescaler clock.
 	 */
 	TC_RELOAD_ACTION_GCLK                 = TC_PRESCSYNC_GCLK_bm,
-	/** The counter is reloaded/reset on the next prescaler clock */
+	/** 
+	 *The counter is reloaded/reset on the next prescaler clock
+	 */
 	TC_RELOAD_ACTION_PRESC                = TC_PRESCSYNC_PRESC_bm,
 	/**
-	 * The counter is reloaded/reset on the next GCLK, and the prescaler is
-	 * reset as well. This may be usefull when an event retriggers the clock
+	 * The counter is reloaded/reset on the next GCLK, and the
+	 * prescaler is reset as well. This may be usefull when an
+	 * event retriggers the clock
 	 */
 	TC_RELOAD_ACTION_RESYNC               = TC_PRESCSYNC_RESYNC_bm,
 };
 
 
 /**
- * \brief 
+ * \brief TC clock prescaler values
  *
- * 
+ * These values are used to chose the clock prescaler configuration
+ * you want. The prescaler diviedes the clock frequensy of the tc
+ * module to make the counter count slower.
  */
 enum tc_clock_prescaler {
+	/**Divide clock by 1*/
 	TC_CLOCK_PRESCALER_DIV1               = TC_PRESCALER_DIV1_bm,
+	/**Divide clock by 2*/
 	TC_CLOCK_PRESCALER_DIV2               = TC_PRESCALER_DIV2_bm,
+	/**Divide clock by 4*/
 	TC_CLOCK_PRESCALER_DIV4               = TC_PRESCALER_DIV4_bm,
+	/**Divide clock by 8*/
 	TC_CLOCK_PRESCALER_DIV8               = TC_PRESCALER_DIV8_bm,
+	/**Divide clock by 16*/
 	TC_CLOCK_PRESCALER_DIV16              = TC_PRESCALER_DIV16_bm,
+	/**Divide clock by 64*/
 	TC_CLOCK_PRESCALER_DIV64              = TC_PRESCALER_DIV64_bm,
+	/**Divide clock by 256*/
 	TC_CLOCK_PRESCALER_DIV256             = TC_PRESCALER_DIV256_bm,
+	/**Divide clock by 1024*/
 	TC_CLOCK_PRESCALER_DIV1024            = TC_PRESCALER_DIV1024_bm,
 };
 
 
 /**
- * \brief 
+ * \brief Wave generation modes
  *
- * 
+ * These values are used to select what mode to run the wave
+ * generation in. You can chose to use frequensy generation or pulse
+ * witdth modulation (PWM) In these modes you can either run them in
+ * normal mode or in match mode.  In normal mode the TOP value is set
+ * to the maximum alowable value, depending on what resolution is
+ * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF.  In normal mode you
+ * don't use any registers to store these values.
+ *
+ * In match mode you can configure what the top value should be and
+ * thus you get a range between the minimum value wich is betwen 3 up
+ * to the MAX value.  This mode does however limit the number of
+ * compare capture channels available, as one is used to store the TOP
+ * value.
  */
 enum tc_wave_generation {
-	/** TOP is MAX, except in 8 bit mode where it is the PER register*/
+	/**
+	 * TOP is MAX, except in 8 bit mode where it is the PER
+	 * register
+	 */
 	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_WAVEGEN_NFRQ_bm,
-	/** TOP is CC0, expert in 8 bit mode where it is the PER register*/
+	/**
+	 * TOP is CC0, expert in 8 bit mode where it is the PER
+	 * register
+	 */
 	TC_WAVE_GENERATION_MATCH_FREQ          = TC_WAVEGEN_MFRQ_bm,
-	/** TOP is MAX, except in 8 bit mode where it is the PER register*/
+	/**
+	 * TOP is MAX, except in 8 bit mode where it is the PER
+	 * register
+	 */
 	TC_WAVE_GENERATION_NORMAL_PWM          = TC_WAVEGEN_NPWM_bm,
-	/** TOP is CC0, except in 8 bit mode where it is the PER register*/
+	/**
+	 * TOP is CC0, except in 8 bit mode where it is the PER
+	 * register
+	 */
 	TC_WAVE_GENERATION_MATCH_PWM           = TC_WAVEGEN_MPWM_bm,
 };
 
 
-/** Specifies which direction for the TC module to count 
- * \brief 
+/**
+ * \brief Specifies which direction the TC module is to count
  *
- * 
+ * The counter can be set to either count up or down these values are
+ * used to controle this.
  */
 enum tc_count_direction {
+	/**Makes the counter count up from zero*/
 	TC_COUNT_DIRECTION_UP,
+	/**Makes the counter cunt down from MAX or a spesified value*/
 	TC_COUNT_DIRECTION_DOWN,
 };
 
 
-//TODO: Use #define?
+//TODO: Use #define to solve bit map problems?
 enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
@@ -178,15 +217,22 @@ enum tc_capture_enable {
 
 
 /**
- * \brief 
+ * \brief Spesifies what event to take
  *
- * 
+ * Spesifies what event to take when the even channel is active
  */
 enum tc_event_action {
+	/**No event is performed*/
 	TC_EVENT_ACTION_OFF                    = TC_EVACT_OFF_bm,
+	/**The counter starts at the initial value*/
 	TC_EVENT_ACTION_RETRIGGER              = TC_EVACT_RETRIGGER_bm,
+	/**The counter is incremented*/
 	TC_EVENT_ACTION_COUNT                  = TC_EVACT_COUNT_bm,
-	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm,
+	/***/
+	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm, 
+//TODO: Need to find out if there are more difrences between this and
+//PWP
+	/***/
 	TC_EVENT_ACTION_PULSE_WIDTH_FREQ       = TC_EVACT_PWP_bm,
 };
 
@@ -224,31 +270,49 @@ enum tc_event_generation_enable {
 
 
 /**
- * \brief 
+ * \brief Spesifies if the counter is 8, 16 or 32 bits.
  *
- * 
+ * This spesifies the maximum value you can count to. What resolution
+ * you use will impose limitations in other areas.  The 32 bit counter
+ * uses two 16 bit counters in cascade to realise the 32 bit
+ * counter. When using 16 and 32 bit resolution you no longer get a
+ * dedicated period register. In cases when you van t to change the
+ * top value you will have to use one of the registers used in the
+ * capture compare chanles. Thus you get fewer capture compare
+ * channels.
  */
 enum tc_resolution {
+	/**
+	 * The counters max value is 0xFF, the period register is
+	 * avaiilable to be used as TOP value
+	 */
 	TC_RESOLUTION_8BIT                    = TC_MODE_COUNT8_bm,
+	/**
+	 * The counters MAX value is 0xFFFF. There is no seperat
+	 * period register, to modify top one of the capture compare
+	 * registers has to be used. This limits the amount of
+	 * available channels.
+	 */
 	TC_RESOLUTION_16BIT                   = TC_MODE_COUNT16_bm,
+	/**
+	 * The counters MAX value is 0xFFFFFFFF. There is no seperate
+	 * period register, to modify top one of the capture compare
+	 * registers has to be used. This limits the amount of
+	 * availalbel channels.
+	 */
 	TC_RESOLUTION_32BIT                   = TC_MODE_COUNT32_bm,
 };
 
 
-	/*
-	Have removed the period uint from the 16
-	and 32 bit struct. You only have cc0 be the
-	period when you are not in PWM normal mode.
-	It may be that you only get to use two compare
-	channels fro pwm too. That is dependent on
-	IC dep. As this is now this reflects how the
-	register is in the prelim TC doc.
-	*/
-/**
- * \brief 
- *
- * 
+/*
+ * Have removed the period uint from the 16 and 32 bit struct. You
+ * only have cc0 be the period when you are not in PWM normal mode.
+ * It may be that you only get to use two compare channels fro pwm
+ * too. That is dependent on IC dep. As this is now this reflects how
+ * the register is in the prelim TC doc.
  */
+
+
 struct tc_8bit_config {
 	uint8_t count;
 	uint8_t period;
@@ -257,11 +321,8 @@ struct tc_8bit_config {
 	uint8_t compare_capture_channel_2;
 	uint8_t compare_capture_channel_3;
 };
-/**
- * \brief 
- *
- * 
- */
+
+
 struct tc_16bit_config {
 	uint16_t count;
 	uint16_t compare_capture_channel_0;
@@ -271,11 +332,6 @@ struct tc_16bit_config {
 };
 
 
-/**
- * \brief 
- *
- * 
- */
 struct tc_32bit_config {
 	uint32_t count;
 	uint32_t compare_capture_channel_0;
@@ -283,11 +339,6 @@ struct tc_32bit_config {
 };
 
 
-/**
- * \brief 
- *
- * 
- */
 struct tc_config {
 	//TODO set clock param
 	//TODO look into sleepen bit
@@ -338,11 +389,6 @@ struct tc_config {
 };
 
 
-/**
- * \brief 
- *
- * 
- */
 struct tc_dev_inst {
 	TC_t *hw_dev;
 	enum tc_resolution resolution;
