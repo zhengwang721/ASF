@@ -341,6 +341,9 @@ static void run_flash_lock_test(const struct test_case *test)
 	ul_locked_region_num = flash_is_locked(ul_last_page_addr, ul_last_page_addr + IFLASH_PAGE_SIZE - 1);
 #endif
 
+	/* Unlock the last page region */
+	flash_unlock(IFLASH_ADDR, ul_last_page_addr + IFLASH_PAGE_SIZE - 1, 0, 0);
+
 	/* Validate the lock function */
 	test_assert_true(test, ul_locked_region_num == 1, "Test flash lock: flash lock error!");
 }

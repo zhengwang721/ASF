@@ -8,8 +8,9 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example_usart.h"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

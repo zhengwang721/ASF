@@ -1,5 +1,4 @@
 <asf xmlversion="1.0">
-
 	<module type="driver" id="mega.mega_1284p_xplained.driver.init" caption="MEGA-1284P Xplained board support - init">
 		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="init.c"/>
@@ -36,7 +35,7 @@
 		This example application demonstrates some of the basic features of the MEGA-1284P Xplained kit. This includes sleep modes, reading the light sensor and the ntc sensor.
 		</info>
 		<build type="header-file" value="avr_compiler.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<device-support value="atmega1284p"/>
 		<require idref="mega.mega_1284p_xplained.driver.qt"/>
 		<require idref="mega.mega_1284p_xplained.driver.init"/>
@@ -50,13 +49,13 @@
 		<build type="c-source" value="mega_1284p_xplained_example.c"/>
 		<build type="header-file" value="mega_1284p_xplained_example.h"/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="doxygen-image-path" value="docsrc" />
+		<build type="doxygen-image-path" value="docsrc"/>
 		<build type="distribute" subtype="directory" value="./docsrc"/>
 		<require idref="mega.applications.mega_1284p_xplained"/>
 		<require idref="board.mega_1284p_xplained"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega1284p"/>
 	</project>
-
 </asf>

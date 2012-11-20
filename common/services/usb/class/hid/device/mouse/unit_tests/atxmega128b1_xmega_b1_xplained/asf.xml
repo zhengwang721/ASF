@@ -10,10 +10,11 @@
 		<require idref="common.services.usb.class.hid.device.mouse.unit_tests"/>
 		<require idref="board.xmega_b1_xplained"/>
 		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 </asf>

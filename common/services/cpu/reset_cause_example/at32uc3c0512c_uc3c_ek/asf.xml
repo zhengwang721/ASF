@@ -9,8 +9,9 @@
 		<require idref="common.services.basic.cpu.example"/>
 		<require idref="board.uc3c_ek"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3c0512c"/>
 	</project>
 </asf>

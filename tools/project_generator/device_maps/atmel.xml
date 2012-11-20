@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <asf xmlversion="1.0">
-	<framework-version name="3.5.1"/>
-	<documentation baseurl="http://asf.atmel.com/docs/"/>
 	<device-map id="map.atmel">
 		<group name="avr">
 			<group name="mega" doc-arch="megaAVR">
@@ -286,7 +284,7 @@
 					</group>
 				</group>
 				<group name="xmegab" doc-arch="XMEGA B">
-				<mcu name="unspecified-xmegab"/>
+					<mcu name="unspecified-xmegab"/>
 					<group name="xmegab1">
 						<mcu name="atxmega128b1"/>
 						<mcu name="atxmega64b1"/>
@@ -297,7 +295,7 @@
 					</group>
 				</group>
 				<group name="xmegac" doc-arch="XMEGA C">
-				<mcu name="unspecified-xmegac"/>
+					<mcu name="unspecified-xmegac"/>
 					<group name="xmegac3">
 						<mcu name="atxmega384c3"/>
 						<mcu name="atxmega256c3"/>
@@ -386,7 +384,7 @@
 							<mcu name="at32uc3a4256"/>
 						</group>
 						<group name="uc3a3s_a4s">
-						    <mcu name="unspecified-uc3a3s_a4s"/>
+							<mcu name="unspecified-uc3a3s_a4s"/>
 							<group name="uc3a3s">
 								<mcu name="at32uc3a364s"/>
 								<mcu name="at32uc3a3128s"/>
@@ -425,7 +423,7 @@
 				</group>
 				<group name="ucr3">
 					<group name="uc3d" doc-arch="UC3 D3/D4">
-					<mcu name="unspecified-uc3d"/>
+						<mcu name="unspecified-uc3d"/>
 						<group name="uc3d3">
 							<mcu name="atuc64d3"/>
 							<mcu name="atuc128d3"/>
@@ -558,7 +556,7 @@
 			<group name="cortex-m4">
 				<group name="sam4">
 					<group name="sam4s" doc-arch="SAM4S">
-					<mcu name="unspecified-sam4s"/>
+						<mcu name="unspecified-sam4s"/>
 						<group name="sam4s8">
 							<mcu name="atsam4s8b"/>
 							<mcu name="atsam4s8c"/>
@@ -581,7 +579,7 @@
 						</group>
 					</group>
 					<group name="sam4l"  doc-arch="SAM4L">
-					<mcu name="unspecified-sam4l"/>
+						<mcu name="unspecified-sam4l"/>
 						<group name="sam4lc">
 							<mcu name="atsam4lc2a"/>
 							<mcu name="atsam4lc2b"/>

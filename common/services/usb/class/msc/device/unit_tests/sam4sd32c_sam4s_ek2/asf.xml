@@ -1,6 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Device Mass Storage unit tests for SAM4S-EK2" id="common.services.usb.class.msc.device.unit_tests.sam4s_ek2"
-		 type="unit-test">
+	<project caption="USB Device Mass Storage unit tests for SAM4S-EK2" id="common.services.usb.class.msc.device.unit_tests.sam4s_ek2" type="unit-test">
 		<build type="header-file" value="conf_access.h"/>
 		<build type="header-file" value="conf_nf.h"/>
 		<build type="header-file" value="conf_sd_mmc.h"/>
@@ -23,5 +22,6 @@
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam4sd32c"/>
 	</project>
 </asf>

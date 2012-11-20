@@ -14,10 +14,11 @@
 		<require idref="common.services.usb.class.msc.device.example"/>
 		<require idref="board.stk600-rc044x.atxmega32a4u"/>
 		<config name="config.board.stk600-rc044x.led" value="yes"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega32a4u"/>
 	</project>
 </asf>
