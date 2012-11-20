@@ -6,5 +6,6 @@
 		<require idref="board.arduino_due_x"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam3x8e"/>
 	</project>
 </asf>

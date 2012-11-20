@@ -5,12 +5,13 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.services.flash.program_example" />
+		<require idref="sam.services.flash.program_example"/>
 		<require idref="sam.utils.cmsis.sam3x.source.template"/>
-		<require idref="board.sam3x_ek" />
-		<generator value="iarewarm" />
-		<generator value="armgcc" />
-		<generator value="doxygen" />
+		<require idref="board.sam3x_ek"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<device-support value="atsam3x8h"/>
 	</project>
 </asf>

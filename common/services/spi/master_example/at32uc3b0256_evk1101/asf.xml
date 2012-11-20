@@ -8,8 +8,9 @@
 		<require idref="common.services.basic.spi.master_example"/>
 		<require idref="board.evk1101"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3b0256"/>
 	</project>
 </asf>

@@ -4,8 +4,9 @@
 		<require idref="board.stk600-rcuc3l0256"/>
 		<config name="config.board.stk600-rcuc3l0.init" value="no"/>
 		<config name="config.compiler.iarew32.optimization" value="high"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l0256"/>
 	</project>
 </asf>

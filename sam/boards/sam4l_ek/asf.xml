@@ -29,7 +29,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.sam4l_ek" caption="SAM4L-EK" mcu="atsam4lc4c">
+	<board id="board.sam4l_ek" caption="SAM4L-EK">
 		<build type="define" name="BOARD" value="SAM4L_EK"/>
 		<build type="define" name="__ATSAM4LC4C__" value=""/>
 		<build type="header-file" value="sam4l_ek.h"/>
@@ -43,5 +43,6 @@
 		<require idref="config.board.sam4l_ek.init"/>
 		<require idref="config.board.sam4l_ek.led"/>
 		<require idref="config.board.sam4l_ek.bm"/>
+		<device-support value="atsam4lc4c"/>
 	</board>
 </asf>

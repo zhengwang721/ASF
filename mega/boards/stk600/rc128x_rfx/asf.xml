@@ -1,14 +1,15 @@
 <asf xmlversion="1.0">
-	<board id="board.stk600-mega.atmega128rfa1" vendor="Atmel" caption="STK600" mcu="atmega128rfa1">
+	<board id="board.stk600-mega.atmega128rfa1" vendor="Atmel" caption="STK600">
 		<build type="header-file" value="stk600.h"/>
 		<build type="header-file" value="led.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<build type="c-source" value="init.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
-		<build type="module-config" subtype="path" value="board_config"/>
-		<build type="define" name="BOARD" value="STK600_MEGA_RF"/>
-		<require idref="common.services.basic.gpio" />
+		<build subtype="required-header-file" type="module-config" value="conf_board.h"/>
+		<build subtype="path" type="module-config" value="board_config"/>
+		<build name="BOARD" type="define" value="STK600_MEGA_RF"/>
+		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards"/>
+		<device-support value="atmega128rfa1"/>
 	</board>
 </asf>

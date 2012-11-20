@@ -5,8 +5,8 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_sleepmgr.h" />
-		<build type="header-file" value="conf_eic.h" />
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_eic.h"/>
 		<require idref="sam.drivers.eic.unit_tests"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="iarewarm"/>
@@ -16,5 +16,6 @@
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

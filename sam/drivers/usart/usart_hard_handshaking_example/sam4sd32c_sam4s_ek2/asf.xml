@@ -5,12 +5,13 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.drivers.usart.usart_hard_handshaking_example" />
-		<require idref="board.sam4s_ek2" />
-		<generator value="iarewarm" />
-		<generator value="armgcc" />
+		<require idref="sam.drivers.usart.usart_hard_handshaking_example"/>
+		<require idref="board.sam4s_ek2"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<generator value="doxygen" />
+		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<device-support value="atsam4sd32c"/>
 	</project>
 </asf>
