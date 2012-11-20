@@ -401,30 +401,34 @@
       </xsl:if>
 
       <!-- Show all the macro information -->
-      <section>
-        <title>Macro definitions</title>
-        <xsl:for-each select="../../sectiondef[memberdef/@kind='define' or @kind='define']">
-          <section>
-            <title>
-              <xsl:value-of select="header"/>
-            </title>
-            <xsl:apply-templates select="."/>
-          </section>
-        </xsl:for-each>
-      </section>
+      <xsl:if test="count(../../sectiondef[memberdef/@kind='define' or @kind='define'])>0">
+        <section>
+          <title>Macro definitions</title>
+          <xsl:for-each select="../../sectiondef[memberdef/@kind='define' or @kind='define']">
+            <section>
+              <title>
+                <xsl:value-of select="header"/>
+                </title>
+              <xsl:apply-templates select="."/>
+            </section>
+          </xsl:for-each>
+        </section>
+      </xsl:if>
 
       <!-- Show all the function information -->
-      <section>
-        <title>Function calls</title>
-        <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
-          <section>
-            <title>
-              <xsl:value-of select="header"/>
-            </title>
-            <xsl:apply-templates select="."/>
-          </section>
-        </xsl:for-each>
-      </section>
+      <xsl:if test="count(../../sectiondef[memberdef/@kind='function' or @kind='func'])>0">
+        <section>
+          <title>Function calls</title>
+          <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
+            <section>
+              <title>
+                <xsl:value-of select="header"/>
+              </title>
+              <xsl:apply-templates select="."/>
+            </section>
+          </xsl:for-each>
+        </section>
+      </xsl:if>
 
       <!-- Show all the enum information -->
       <xsl:if test="count(../../sectiondef[@kind ='enum'])>0">
