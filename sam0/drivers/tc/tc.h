@@ -88,8 +88,8 @@ extern "C" {
 /**
  * \brief Index of the compare capture channels
  *
- * These values are used in certain functions to spesify what
- * capture/compare channle to do operations on.
+ * These values are used in certain functions to specify what
+ * capture/compare channel to do operations on.
  */
 enum tc_compare_capture_channel_index {
 	TC_COMPARE_CAPTURE_CHANNEL_0,
@@ -99,11 +99,11 @@ enum tc_compare_capture_channel_index {
 };
 
 
-//TODO: Must be better documented. Posibly using dot diagrams.
+//TODO: Must be better documented. Possibly using dot diagrams.
 /**
  * \brief Counter reload action
  *
- * These enums spesify how the clock should reload.
+ * These enums specify how the clock should reload.
  */
 enum tc_reload_action {
 	/**
@@ -117,8 +117,8 @@ enum tc_reload_action {
 	TC_RELOAD_ACTION_PRESC                = TC_PRESCSYNC_PRESC_bm,
 	/**
 	 * The counter is reloaded/reset on the next GCLK, and the
-	 * prescaler is reset as well. This may be usefull when an
-	 * event retriggers the clock
+	 * prescaler is reset as well. This may be useful when an
+	 * event retrigger the clock
 	 */
 	TC_RELOAD_ACTION_RESYNC               = TC_PRESCSYNC_RESYNC_bm,
 };
@@ -128,7 +128,7 @@ enum tc_reload_action {
  * \brief TC clock prescaler values
  *
  * These values are used to chose the clock prescaler configuration
- * you want. The prescaler diviedes the clock frequensy of the tc
+ * you want. The prescaler divides the clock frequency of the tc
  * module to make the counter count slower.
  */
 enum tc_clock_prescaler {
@@ -155,15 +155,15 @@ enum tc_clock_prescaler {
  * \brief Wave generation modes
  *
  * These values are used to select what mode to run the wave
- * generation in. You can chose to use frequensy generation or pulse
- * witdth modulation (PWM) In these modes you can either run them in
+ * generation in. You can chose to use frequency generation or pulse
+ * width modulation (PWM) In these modes you can either run them in
  * normal mode or in match mode.  In normal mode the TOP value is set
- * to the maximum alowable value, depending on what resolution is
+ * to the maximum allowable value, depending on what resolution is
  * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF.  In normal mode you
  * don't use any registers to store these values.
  *
  * In match mode you can configure what the top value should be and
- * thus you get a range between the minimum value wich is betwen 3 up
+ * thus you get a range between the minimum value which is between 3 up
  * to the MAX value.  This mode does however limit the number of
  * compare capture channels available, as one is used to store the TOP
  * value.
@@ -196,12 +196,12 @@ enum tc_wave_generation {
  * \brief Specifies which direction the TC module is to count
  *
  * The counter can be set to either count up or down these values are
- * used to controle this.
+ * used to control this.
  */
 enum tc_count_direction {
 	/**Makes the counter count up from zero*/
 	TC_COUNT_DIRECTION_UP,
-	/**Makes the counter cunt down from MAX or a spesified value*/
+	/**Makes the counter cunt down from MAX or a specified value*/
 	TC_COUNT_DIRECTION_DOWN,
 };
 
@@ -217,9 +217,9 @@ enum tc_capture_enable {
 
 
 /**
- * \brief Spesifies what event to take
+ * \brief Specifies what event to take
  *
- * Spesifies what event to take when the even channel is active
+ * Specifies what event to take when the even channel is active
  */
 enum tc_event_action {
 	/**No event is performed*/
@@ -230,7 +230,7 @@ enum tc_event_action {
 	TC_EVENT_ACTION_COUNT                  = TC_EVACT_COUNT_bm,
 	/***/
 	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm, 
-//TODO: Need to find out if there are more difrences between this and
+//TODO: Need to find out if there are more differences between this and
 //PWP
 	/***/
 	TC_EVENT_ACTION_PULSE_WIDTH_FREQ       = TC_EVACT_PWP_bm,
@@ -270,35 +270,35 @@ enum tc_event_generation_enable {
 
 
 /**
- * \brief Spesifies if the counter is 8, 16 or 32 bits.
+ * \brief Specifies if the counter is 8, 16 or 32 bits.
  *
- * This spesifies the maximum value you can count to. What resolution
+ * This specifies the maximum value you can count to. What resolution
  * you use will impose limitations in other areas.  The 32 bit counter
- * uses two 16 bit counters in cascade to realise the 32 bit
+ * uses two 16 bit counters in cascade to realize the 32 bit
  * counter. When using 16 and 32 bit resolution you no longer get a
  * dedicated period register. In cases when you van t to change the
  * top value you will have to use one of the registers used in the
- * capture compare chanles. Thus you get fewer capture compare
+ * capture compare channels. Thus you get fewer capture compare
  * channels.
  */
 enum tc_resolution {
 	/**
 	 * The counters max value is 0xFF, the period register is
-	 * avaiilable to be used as TOP value
+	 * available to be used as TOP value
 	 */
 	TC_RESOLUTION_8BIT                    = TC_MODE_COUNT8_bm,
 	/**
-	 * The counters MAX value is 0xFFFF. There is no seperat
+	 * The counters MAX value is 0xFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
 	TC_RESOLUTION_16BIT                   = TC_MODE_COUNT16_bm,
 	/**
-	 * The counters MAX value is 0xFFFFFFFF. There is no seperate
+	 * The counters MAX value is 0xFFFFFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
-	 * availalbel channels.
+	 * available channels.
 	 */
 	TC_RESOLUTION_32BIT                   = TC_MODE_COUNT32_bm,
 };
@@ -624,7 +624,7 @@ static inline enum status_code tc_stop_counter(
  * \param comp_reg_index  index of the compare register to read from
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_get_capture_value(setruct tc_dev_inst *dev_inst,
+enum status_code tc_get_capture_value(struct tc_dev_inst *dev_inst,
 		uint32_t *period_value);
 
 
@@ -687,10 +687,10 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
 
 
 /**
- * \brief Cheks if there are new capture value on channel
+ * \brief Checks if there are new capture value on channel
  *
- * Checks for new data on the spsified channel or if the counter has over run,
- * in wich case it returns an error.
+ * Checks for new data on the specified channel or if the counter has over run,
+ * in which case it returns an error.
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
@@ -720,10 +720,10 @@ enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
 
 
 /**
- * \brief Cheks if a new match has ocured on the channel
+ * \brief Checks if a new match has occurred on the channel
  *
- * Cheks if a new match has ocured returns STATUS_VALID_DATA if it has and
- * STATUS_NO_CHANGE if no new match has ocured.
+ * Checks if a new match has occurred returns STATUS_VALID_DATA if it has and
+ * STATUS_NO_CHANGE if no new match has occurred.
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
