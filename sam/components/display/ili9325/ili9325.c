@@ -68,6 +68,9 @@
 #define LCD_DATA_CACHE_SIZE ILI9325_LCD_WIDTH
 static ili9325_color_t g_ul_pixel_cache[LCD_DATA_CACHE_SIZE];
 
+static volatile ili9325_coord_t limit_start_x, limit_start_y;
+static volatile ili9325_coord_t limit_end_x, limit_end_y;
+
 /* Global variable describing the font size used by the driver */
 const struct ili9325_font gfont = {10, 14};
 /**
@@ -557,7 +560,7 @@ uint32_t ili9325_init(struct ili9325_opt_t *p_opt)
 	/* DFM Set the mode of transferring data to the internal RAM when TRI = 1. */
 	/* I/D[1:0] = 11 Horizontal : increment Vertical : increment, AM=0:Horizontal */
 	ili9325_write_register(ILI9325_ENTRY_MODE, ILI9325_ENTRY_MODE_TRI |
-			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_ID(0x03) |ILI9325_ENTRY_MODE_BGR);
+			ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_ID(0x01) |ILI9325_ENTRY_MODE_BGR);
 	/* Sets the number of lines to drive the LCD at an interval of 8 lines. */
 	/* The scan direction is from G320 to G1 */
 	ili9325_write_register(ILI9325_DRIVER_OUTPUT_CTRL2, ILI9325_DRIVER_OUTPUT_CTRL2_GS |
@@ -1116,6 +1119,300 @@ void ili9325_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 	/* Reset the refresh window area */
 	ili9325_set_window(0, 0, ILI9325_LCD_WIDTH, ILI9325_LCD_HEIGHT);
 }
+
+/**
+ * \internal
+ * \brief Helper function to send the drawing limits (boundaries) to the display
+ *
+ * This function is used to send the currently set upper-left and lower-right
+ * drawing limits to the display, as set through the various limit functions.
+ *
+ * \param send_end_limits  True to also send the lower-right drawing limits
+ */
+static inline void ili9325_send_draw_limits(const bool send_end_limits)
+{
+	/* Set Horizontal Address Start Position */
+	ili9325_write_register(ILI9325_HORIZONTAL_ADDR_START, (uint16_t)limit_start_x);
+
+	if (send_end_limits) {
+		/* Set Horizontal Address End Position */
+		ili9325_write_register(ILI9325_HORIZONTAL_ADDR_END, 
+			(uint16_t)(limit_end_x));
+	}
+	
+	/* Set Vertical Address Start Position */
+	ili9325_write_register(ILI9325_VERTICAL_ADDR_START, (uint16_t)limit_start_y);
+	if (send_end_limits) {
+		/* Set Vertical Address End Position */
+		ili9325_write_register(ILI9325_VERTICAL_ADDR_END, 
+			(uint16_t)(limit_end_y));	
+	}
+
+	/* GRAM Horizontal/Vertical Address Set (R20h, R21h) */
+	ili9325_write_register(ILI9325_HORIZONTAL_GRAM_ADDR_SET, limit_start_x); /* column */
+	ili9325_write_register(ILI9325_VERTICAL_GRAM_ADDR_SET, limit_start_y); /* row */	
+}
+
+/**
+ * \brief Set the display top left drawing limit
+ *
+ * Use this function to set the top left limit of the drawing limit box.
+ *
+ * \param x The x coordinate of the top left corner
+ * \param y The y coordinate of the top left corner
+ */
+void ili9325_set_top_left_limit(ili9325_coord_t x, ili9325_coord_t y)
+{
+	limit_start_x = x;
+	limit_start_y = y;
+
+	ili9325_send_draw_limits(false);
+}
+
+/**
+ * \brief Set the display bottom right drawing limit
+ *
+ * Use this function to set the bottom right corner of the drawing limit box.
+ *
+ * \param x The x coordinate of the bottom right corner
+ * \param y The y coordinate of the bottom right corner
+ */
+void ili9325_set_bottom_right_limit(ili9325_coord_t x, ili9325_coord_t y)
+{
+	limit_end_x = x;
+	limit_end_y = y;
+
+	ili9325_send_draw_limits(true);
+}
+
+/**
+ * \brief Set the full display drawing limits
+ *
+ * Use this function to set the full drawing limit box.
+ *
+ * \param start_x The x coordinate of the top left corner
+ * \param start_y The y coordinate of the top left corner
+ * \param end_x The x coordinate of the bottom right corner
+ * \param end_y The y coordinate of the bottom right corner
+ */
+void ili9325_set_limits(ili9325_coord_t start_x, ili9325_coord_t start_y,
+		ili9325_coord_t end_x, ili9325_coord_t end_y)
+{
+	limit_start_x = start_x;
+	limit_start_y = start_y;
+	limit_end_x = end_x;
+	limit_end_y = end_y;
+
+	ili9325_send_draw_limits(true);
+}
+
+/**
+ * \brief Read a single color from the graphical memory
+ *
+ * Use this function to read a color from the graphical memory of the
+ * controller.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \retval ili9325_color_t The read color pixel
+ */
+ili9325_color_t ili9325_read_gram(void)
+{
+	uint8_t value[2];
+	ili9325_color_t color;
+
+	LCD_IR(0);
+	LCD_IR(ILI9325_GRAM_DATA_REG); /* Write Data to GRAM (R22h) */
+
+	value[0] = LCD_RD();       /* dummy read */
+	value[1] = LCD_RD();       /* dummy read */
+	value[0] = LCD_RD();       /* data upper byte */
+	value[1] = LCD_RD();       /* data lower byte */
+
+	/* Convert RGB565 to RGB888 */
+	/* For BGR format */
+	color = ((value[0] & 0xF8)) |  /* R */
+			((value[0] & 0x07) << 13) | ((value[1] & 0xE0) << 5) |  /* G */
+			((value[1] & 0x1F) << 19);  /* B */
+
+	return color;
+}
+
+/**
+ * \brief Write the graphical memory with a single color pixel
+ *
+ * Use this function to write a single color pixel to the controller memory.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \param color The color pixel to write to the screen
+ */
+void ili9325_write_gram(ili9325_color_t color)
+{
+	/* Only 16-bit color supported */
+	Assert(sizeof(color) == 2);
+
+	LCD_IR(0);
+	LCD_IR(ILI9325_GRAM_DATA_REG); /* Write Data to GRAM (R22h) */
+
+	LCD_WD((color >> 16) & 0xFF);
+	LCD_WD((color >> 8) & 0xFF);
+	LCD_WD(color & 0xFF);
+}
+
+/**
+ * \brief Copy pixels from SRAM to the screen
+ *
+ * Used to copy a large quantitative of data to the screen in one go.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \param pixels Pointer to the pixel data
+ * \param count Number of pixels to copy to the screen
+ */
+void ili9325_copy_pixels_to_screen(const ili9325_color_t *pixels, uint32_t count)
+{
+	/* Sanity check to make sure that the pixel count is not zero */
+	Assert(count > 0);
+
+	LCD_IR(0);
+	LCD_IR(ILI9325_GRAM_DATA_REG); /* Write Data to GRAM (R22h) */
+
+	while (count--) {
+		LCD_WD((*pixels >> 16) & 0xFF);
+		LCD_WD((*pixels >> 8) & 0xFF);		
+		LCD_WD(*pixels & 0xFF);
+
+		pixels++;
+	}
+}
+
+/**
+ * \brief Copy pixels from SRAM to the screen
+ *
+ * Used to copy a large quantitative of data to the screen in one go.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \param pixels Pointer to the pixel data
+ * \param count Number of pixels to copy to the screen
+ */
+void ili9325_copy_raw_pixel_24bits_to_screen(const uint8_t *raw_pixels, uint32_t count)
+{
+	ili9325_color_t pixels;
+
+	/* Sanity check to make sure that the pixel count is not zero */
+	Assert(count > 0);
+
+	LCD_IR(0);
+	LCD_IR(ILI9325_GRAM_DATA_REG); /* Write Data to GRAM (R22h) */
+
+	while (count--) {
+		pixels = (*raw_pixels)  | (*(raw_pixels+1)) << 8 | *(raw_pixels+2)<<16;
+		LCD_WD((pixels >> 16) & 0xFF);
+		LCD_WD((pixels >> 8) & 0xFF);		
+		LCD_WD(pixels & 0xFF);
+
+		raw_pixels +=3;
+	}
+}
+
+
+/**
+ * \brief Set a given number of pixels to the same color
+ *
+ * Use this function to write a certain number of pixels to the same color
+ * within a set limit.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \param color The color to write to the display
+ * \param count The number of pixels to write with this color
+ */
+void ili9325_duplicate_pixel(const ili9325_color_t color, uint32_t count)
+{
+	/* Sanity check to make sure that the pixel count is not zero */
+	Assert(count > 0);
+
+	LCD_IR(0);
+	LCD_IR(ILI9325_GRAM_DATA_REG); /* Write Data to GRAM (R22h) */
+
+	while (count--) {
+		LCD_WD((color >> 16) & 0xFF);
+		LCD_WD((color >> 8) & 0xFF);
+		LCD_WD(color & 0xFF);
+
+	}
+}
+
+/**
+ * \brief Copy pixels from the screen to a pixel buffer
+ *
+ * Use this function to copy pixels from the display to an internal SRAM buffer.
+ *
+ * Limits have to be set prior to calling this function, e.g.:
+ * \code
+ * ili9325_set_top_left_limit(0, 0);
+ * ili9325_set_bottom_right_limit(320, 240);
+ * ...
+ * \endcode
+ *
+ * \param pixels Pointer to the pixel buffer to read to
+ * \param count Number of pixels to read
+ */
+void ili9325_copy_pixels_from_screen(ili9325_color_t *pixels, uint32_t count)
+{
+	/* Remove warnings */
+	UNUSED(pixels);
+	UNUSED(count);
+}
+
+/**
+ * \brief Sets the orientation of the display data
+ *
+ * Configures the display for a given orientation, including mirroring and/or
+ * screen rotation.
+ *
+ * \param flags Orientation flags to use, see \ref ILI9325_FLIP_X, \ref ILI9325_FLIP_Y
+ *        and \ref ILI9325_SWITCH_XY.
+ */
+void ili9325_set_orientation(uint8_t flags)
+{
+	uint16_t setting = 0;
+
+	setting |= (flags & ILI9325_FLIP_X ? ILI9325_ENTRY_MODE_ID(0x01) : 0);
+	setting |= (flags & ILI9325_FLIP_Y ? ILI9325_ENTRY_MODE_ID(0x10) : 0);
+	setting |= (flags & ILI9325_SWITCH_XY ? ILI9325_ENTRY_MODE_AM : 0);
+
+	ili9325_write_register(ILI9325_ENTRY_MODE, ILI9325_ENTRY_MODE_TRI |
+			ILI9325_ENTRY_MODE_DFM |setting |ILI9325_ENTRY_MODE_BGR);
+}
+
 
 /// @cond 0
 /**INDENT-OFF**/
