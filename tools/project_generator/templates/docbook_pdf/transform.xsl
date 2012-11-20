@@ -104,7 +104,7 @@
       </title>
       <xsl:apply-templates select="detaileddescription"/>
       <xsl:for-each select="sectiondef[@kind='public-attrib']">
-        <table tabstyle="striped">
+        <informaltable tabstyle="striped">
           <title>
             <xsl:value-of select="../compoundname"/>
           </title>
@@ -130,7 +130,7 @@
               </xsl:for-each>
             </tbody>
           </tgroup>
-        </table>
+        </informaltable>
       </xsl:for-each>
     </section>
   </xsl:template>
@@ -196,7 +196,7 @@
     <section id="{@id}" xreflabel="{name}">
       <title>enum <xsl:value-of select="name"/></title>
       <xsl:apply-templates select="detaileddescription"/>
-      <table tabstyle="striped">
+      <informaltable tabstyle="striped">
         <title>
           <xsl:text>enum </xsl:text><xsl:value-of select="name"/>
         </title>
@@ -224,7 +224,7 @@
             </xsl:for-each>
           </tbody>
         </tgroup>
-      </table>
+      </informaltable>
     </section>
   </xsl:template>
 
