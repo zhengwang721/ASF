@@ -569,6 +569,9 @@ class AVRStudio5Project(GenericProject):
 			if append_value is None:
 				continue
 
+			# Remove the tag, so we can later find unhandled tags
+			del(non_explicit_config[tag])
+
 			value_type = type(append_value)
 			value = total_config.get(tag, value_type())
 
@@ -578,20 +581,27 @@ class AVRStudio5Project(GenericProject):
 			elif value_type == list:
 				new_value = value + append_value
 			else:
-				raise ConfigError("Unknown type for config `%s' in project `%s'" % (tag, self.project.id))
+				raise GeneratorError("Unhandled type `%s' for config: %s" % (value_type.__name__, tag))
 
 			total_config[tag] = new_value
 
 		# Now handle tags to default to
 		for tag in self._get_toolchain_config_tags_to_default():
-			# Is tag already set?
-			value = total_config.get(tag, None)
-			if value is not None:
-				continue
-
+			# Does a value exist in non-explicit config?
 			new_value = non_explicit_config.get(tag, None)
 			if new_value is not None:
-				total_config[tag] = new_value
+				# Remove the tag, so we can later find unhandled tags
+				del(non_explicit_config[tag])
+
+				# Is tag already set?
+				value = total_config.get(tag, None)
+				if value is None:
+					total_config[tag] = new_value
+
+		# Any unhandled, non-explicit tags?
+		unhandled_tags = non_explicit_config.keys()
+		if unhandled_tags:
+			raise GeneratorError("Unhandled config tags for toolchain `%s': %s" % (self.toolchain, ", ".join(unhandled_tags)))
 
 		return total_config
 
