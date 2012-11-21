@@ -68,7 +68,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="compounddef[@kind ='page']">
+  <xsl:template match="compounddef[@kind ='page' and count(//innerpage[@refid = current()/@id])=0]">
     <xsl:choose>
       <xsl:when test="@id='indexpage'">
         <!-- Discard index page -->
@@ -90,6 +90,15 @@
 
         <!-- Add all the other documentation -->
         <xsl:apply-templates select="detaileddescription"/>
+
+        <xsl:for-each select="innerpage">
+          <section>
+            <title>
+              <xsl:value-of select="//compounddef[@id = current()/@refid]/title"/>
+            </title>
+            <xsl:apply-templates select="//compounddef[@id = current()/@refid]/detaileddescription"/>
+          </section>
+        </xsl:for-each>
       </chapter>
     </xsl:otherwise>
     </xsl:choose>
