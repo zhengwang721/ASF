@@ -657,29 +657,33 @@ class StudioFdkExtension(FdkExtension):
 		# No valid generator was found for the project
 		return None
 
-	def _get_license_to_captions(self, generator):
+	def _get_license_tree(self, generator):
 		"""
-		Return dictionary which maps a license file to the captions of
-		whichever modules have specified it as their license.
+		Return a list of xml elements describing the license files requires
+		in the project.
 		"""
 		license_to_mods = generator._get_license_to_modules()
-		license_to_captions = {}
+		elements = []
 
 		for license, mods in license_to_mods.items():
-			caption_list = []
+			e = ET.Element("ProjectLicense")
+			license_t = ET.SubElement(e, "LicenseFile")
+			license_t.text = license
+			uuid_t = ET.SubElement(e, "LicenseUuid")
+			uuid_t.text = mods[0].extension.uuid
 
 			for module in mods:
 				caption = module.caption
 
 				if caption:
-					caption_list.append(caption)
+					caption_t = ET.SubElement(e, "LicensedCaption")
+					caption_t.text = caption
 				else:
 					self.runtime.log.error("Module `%s' has empty caption" % module.id)
 
-			caption_list.sort()
-			license_to_captions[license] = caption_list
+			elements.append(e)
 
-		return license_to_captions
+		return elements
 
 	def get_project_data(self, project_id):
 		"""
@@ -705,7 +709,7 @@ class StudioFdkExtension(FdkExtension):
 				'description'   : generator.project_description,
 				'help_url'      : generator.project_help_url,
 				'keywords'      : generator.project_keywords,
-				'licenses'      : self._get_license_to_captions(generator),
+				'licenses'      : self._get_license_tree(generator),
 			}
 
 			return project_data
@@ -768,7 +772,6 @@ class StudioFdkExtension(FdkExtension):
 		project_data_key_to_dict_tag_maps = {
 			# These are for dicts which map to a list, where each entry should have the same tag
 			'keywords'      : ('ProjectKeywords', 'Category', 'Keyword'),
-			'licenses'      : ('ProjectLicense', 'LicenseFile', 'LicensedCaption'),
 			# These are for dicts which map to another dict, where each key-value pair has its own tag
 			'board_addons'  : ('ProjectBoardAddon', 'Caption', [('vendor', 'Vendor'), ('position', 'Position')]),
 		}
@@ -810,6 +813,10 @@ class StudioFdkExtension(FdkExtension):
 							for data_obj_key, data_tag in data_tag_map:
 								data_tag_e = ET.SubElement(top_tag_e, data_tag)
 								data_tag_e.text = data_obj.get(data_obj_key)
+
+				# Add license stuff
+				for license_element in project_data['licenses']:
+					project_e.append(license_element)
 
 		# Now write to file
 		etree = ET.ElementTree(asf_projects_e)
