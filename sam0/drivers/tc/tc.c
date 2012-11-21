@@ -50,10 +50,11 @@
  * \param dev_inst    pointer to the device struct
  * \param config pointer to the config struct
  *
- * \return enum status_code STATUS_ERR_BUSY    : When module is configured in 32 bit slave mode.
- *                                                The module will be left un althered in such a case.
- *                          STATUS_INVALID_ARG : When there is invalid data in the config struct.
- *                          STATUS_OK          : When init has compleeted sucsesfuly.
+ * \return
+ * \retval STATUS_ERR_BUSY    When module is configured in 32 bit slave mode.
+ *                            The module will be left un althered in such a case.
+ * \retval STATUS_INVALID_ARG When there is invalid data in the config struct.
+ * \retval STATUS_OK          When init has compleeted sucsesfuly.
  */
 enum status_code tc_init(TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
@@ -115,65 +116,65 @@ enum status_code tc_init(TC_t *const tc_module,
 		case TC_MODE_COUNT8:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.COUNT =
-				config->8bit_config.count;
+				config->8bit_conf.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.PER   =
-				config->8bit_config.period;
+				config->8bit_conf.period;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC0   =
-				config->8bit_config.capture_compare_channel_0;
+				config->8bit_conf.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC1   =
-				config->8bit_config.capture_compare_channel_1;
+				config->8bit_conf.capture_compare_channel_1;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC2   =
-				config->8bit_config.capture_compare_channel_2;
+				config->8bit_conf.capture_compare_channel_2;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT8.CC3   =
-				config->8bit_config.capture_compare_channel_3;
+				config->8bit_conf.capture_compare_channel_3;
 
 			break;
 
 		case TC_MODE_COUNT16:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.COUNT =
-				config->16bit_config.count;
+				config->16bit_conf.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC0   =
-				config->16bit_config.capture_compare_channel_0;
+				config->16bit_conf.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC1   =
-				config->16bit_config.capture_compare_channel_1;
+				config->16bit_conf.capture_compare_channel_1;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC2   =
-				config->16bit_config.capture_compare_channel_2;
+				config->16bit_conf.capture_compare_channel_2;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT16.CC3   =
-				config->16bit_config.capture_compare_channel_3;
+				config->16bit_conf.capture_compare_channel_3;
 
 			break;
 
 		case TC_MODE_COUNT32:
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.COUNT =
-				config->32bit_config.count;
+				config->32bit_conf.count;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.CC1 =
-				config->32bit_config.capture_compare_channel_0;
+				config->32bit_conf.capture_compare_channel_0;
 
 			tc_wait_for_sync(tc_module);
 			tc_module->TC_COUNT32.CC1 =
-				config->32bit_config.capture_compare_channel_1;
+				config->32bit_conf.capture_compare_channel_1;
 
 			break;
 
@@ -185,20 +186,22 @@ enum status_code tc_init(TC_t *const tc_module,
 	return STATUS_OK;
 }
 
+
 /**
  * \brief Set TC module count value
  *
- * Set count value of the TC module
- * This function can be used to update value after init.
- * It can be used while the counter is running, there is no need
- * to disable the counter module.
+ * Set count value of the TC module This function can be used to
+ * update value after init.  It can be used while the counter is
+ * running, there is no need to disable the counter module.
  *
  * \param dev_inst      pointer to the device struct
  * \param count         value to write to the count register
- * \return enum status_code: STATUS_OK if
+ *
+ * \return 
+ * \retval STATUS_OK                
+ * \retval STATUS_ERR_INVALID_ARG   
  */
-enum status_code tc_set_count(
-		struct tc_dev_inst *const dev_inst,
+enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
 		uint32_t count)
 {
 	/* Sanity check arguments */
@@ -240,8 +243,7 @@ enum status_code tc_set_count(
  * \param dev_inst      pointer to the device struct
  * \param count         pointer to the where the value is put
  */
-enum status_code tc_get_count(
-		struct tc_dev_inst *const dev_inst,
+enum status_code tc_get_count(struct tc_dev_inst *const dev_inst,
 		uint32_t *count)
 {
 	/* Sanity check arguments */
@@ -277,18 +279,24 @@ enum status_code tc_get_count(
 	} /* Switch TC mode  */
 }
 
+
 /**
- * \brief Get value from TC compare/capture
+ * \brief Gets the capture value
  *
- * Get TC module compare/capture register with given index
+ * 
  *
- * \param dev_inst      pointer to the device struct
- * \param value    pointer to store the value from the CC-register
+ * \param[in] dev_inst         pointer to the device struct
+ * \param[out] compare         pointer to a buffer
+ * \param[in] comp_reg_index   index of the compare register to read from
+ *
+ * \return
+ * \retval STATUS_OK
+ * \retval STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_get_capture(
 		struct tc_dev_inst *dev_inst,
 		uint32_t *compare,
-		enum tc_compare_reg_index comp_reg_index)
+		enum tc_compare_capture_channel_index ccc_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -366,19 +374,23 @@ enum status_code tc_get_capture(
 	} /* Switch TC mode  */
 }
 
+
 /**
- * \brief Set TC module compare/capture register 0
+ * \brief Sets a compare value
  *
- * Set TC module compare/capture register 0
- * This function can be used if to update value after init.
+ * Writes a compare value to the given compare/capture channel register
  *
- * \param dev_inst      pointer to the device struct
- * \param value    pointer to value to write to the CC0-register
+ * \param dev_inst    pointer to the device struct
+ * \param buffer      pointer to a buffer
+ * \comp_reg_index    index of the compare register to write to
+ *
+ * \return
+ * \retval  STATUS_OK
+ * \retval  STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_set_compare(
-		struct tc_dev_inst *dev_inst,
+enum status_code tc_set_compare(struct tc_dev_inst *dev_inst,
 		uint32_t compare,
-		enum tc_compare_reg_index comp_reg_index)
+		enum tc_compare_capture_channel_index ccc_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);

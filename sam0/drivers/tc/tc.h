@@ -57,9 +57,9 @@ extern "C" {
  * Driver for the SAM0+ architecture devices. This driver provides an
  * interface for configuration and management of the TC module. This
  * driver encompasses the following module within the SAM0+ devices:
+ *
  * \li \b TC \b (Timer Counter)
  *
- * \section module_introduction Introduction
  *
  * \subsection module_overview TC Overview
  *
@@ -87,21 +87,24 @@ extern "C" {
 
 /**
  * \brief Index of the compare capture channels
- *
+ * 
  * These values are used in certain functions to specify what
  * capture/compare channel to do operations on.
  */
 enum tc_compare_capture_channel_index {
+	/**  */
 	TC_COMPARE_CAPTURE_CHANNEL_0,
+	/**  */
 	TC_COMPARE_CAPTURE_CHANNEL_1,
+	/**  */
 	TC_COMPARE_CAPTURE_CHANNEL_2,
+	/**  */
 	TC_COMPARE_CAPTURE_CHANNEL_3,
 };
 
 
-//TODO: Must be better documented. Possibly using dot diagrams.
 /**
- * \brief Counter reload action
+ * \brief TC Counter reload action enum
  *
  * These enums specify how the clock should reload.
  */
@@ -111,8 +114,8 @@ enum tc_reload_action {
 	 * counting on the prescaler clock.
 	 */
 	TC_RELOAD_ACTION_GCLK                 = TC_PRESCSYNC_GCLK_bm,
-	/** 
-	 *The counter is reloaded/reset on the next prescaler clock
+	/**
+	 * The counter is reloaded/reset on the next prescaler clock
 	 */
 	TC_RELOAD_ACTION_PRESC                = TC_PRESCSYNC_PRESC_bm,
 	/**
@@ -127,32 +130,32 @@ enum tc_reload_action {
 /**
  * \brief TC clock prescaler values
  *
- * These values are used to chose the clock prescaler configuration
- * you want. The prescaler divides the clock frequency of the tc
+ * These values are used to chose the clock prescaler
+ * configuration. The prescaler divides the clock frequency of the tc
  * module to make the counter count slower.
  */
 enum tc_clock_prescaler {
-	/**Divide clock by 1*/
+	/** Divide clock by 1 */
 	TC_CLOCK_PRESCALER_DIV1               = TC_PRESCALER_DIV1_bm,
-	/**Divide clock by 2*/
+	/** Divide clock by 2 */
 	TC_CLOCK_PRESCALER_DIV2               = TC_PRESCALER_DIV2_bm,
-	/**Divide clock by 4*/
+	/** Divide clock by 4 */
 	TC_CLOCK_PRESCALER_DIV4               = TC_PRESCALER_DIV4_bm,
-	/**Divide clock by 8*/
+	/** Divide clock by 8 */
 	TC_CLOCK_PRESCALER_DIV8               = TC_PRESCALER_DIV8_bm,
-	/**Divide clock by 16*/
+	/** Divide clock by 16 */
 	TC_CLOCK_PRESCALER_DIV16              = TC_PRESCALER_DIV16_bm,
-	/**Divide clock by 64*/
+	/** Divide clock by 64 */
 	TC_CLOCK_PRESCALER_DIV64              = TC_PRESCALER_DIV64_bm,
-	/**Divide clock by 256*/
+	/** Divide clock by 256 */
 	TC_CLOCK_PRESCALER_DIV256             = TC_PRESCALER_DIV256_bm,
-	/**Divide clock by 1024*/
+	/** Divide clock by 1024 */
 	TC_CLOCK_PRESCALER_DIV1024            = TC_PRESCALER_DIV1024_bm,
 };
 
 
 /**
- * \brief Wave generation modes
+ * \brief TC wave generation mode enum
  *
  * These values are used to select what mode to run the wave
  * generation in. You can chose to use frequency generation or pulse
@@ -163,8 +166,8 @@ enum tc_clock_prescaler {
  * don't use any registers to store these values.
  *
  * In match mode you can configure what the top value should be and
- * thus you get a range between the minimum value which is between 3 up
- * to the MAX value.  This mode does however limit the number of
+ * thus you get a range between the minimum value which is between 3
+ * up to the MAX value.  This mode does however limit the number of
  * compare capture channels available, as one is used to store the TOP
  * value.
  */
@@ -199,60 +202,74 @@ enum tc_wave_generation {
  * used to control this.
  */
 enum tc_count_direction {
-	/**Makes the counter count up from zero*/
+	/** Makes the counter count up from zero */
 	TC_COUNT_DIRECTION_UP,
-	/**Makes the counter cunt down from MAX or a specified value*/
+	/** Makes the counter cunt down from MAX or a specified value */
 	TC_COUNT_DIRECTION_DOWN,
 };
 
 
-//TODO: Use #define to solve bit map problems?
+/**
+ * \brief TC channel capture enable enum
+ */
 enum tc_capture_enable {
+	/** Enables no channels for capture */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
+	/** Enables channel 0 for capture */
 	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
+	/** Enables channel 1 for capture */
 	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CPTEN_CC1_bm,
+	/** Enables channel 2 for capture when channel is available */
 	TC_CAPTURE_ENABLE_CHANNEL_2            = TC_CPTEN_CC2_bm,
+	/** Enables channel 3 for capture when channel i available */
 	TC_CAPTURE_ENABLE_CHANNEL_3            = TC_CPTEN_CC3_bm,
 };
 
 
 /**
- * \brief Specifies what event to take
+ * \brief TC event action enum
  *
  * Specifies what event to take when the even channel is active
  */
 enum tc_event_action {
-	/**No event is performed*/
+	/** No event is performed */
 	TC_EVENT_ACTION_OFF                    = TC_EVACT_OFF_bm,
-	/**The counter starts at the initial value*/
+	/** The counter starts at the initial value */
 	TC_EVENT_ACTION_RETRIGGER              = TC_EVACT_RETRIGGER_bm,
-	/**The counter is incremented*/
+	/** The counter is incremented */
 	TC_EVENT_ACTION_COUNT                  = TC_EVACT_COUNT_bm,
-	/***/
-	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm, 
+	/**  */
+	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm,  
 //TODO: Need to find out if there are more differences between this and
 //PWP
-	/***/
+	/**  */
 	TC_EVENT_ACTION_PULSE_WIDTH_FREQ       = TC_EVACT_PWP_bm,
 };
 
 
-//TODO use #define?
+/**
+ * \brief TC waveform invert on channel enum
+ */
 enum tc_waveform_invert_output {
+	/**  */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE         = 0,
+	/**  */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_INVEN_CC0_bm,
+	/**  */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_INVEN_CC1_bm,
+	/**  */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2    = TC_INVEN_CC2_bm,
+	/**  */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3    = TC_INVEN_CC3_bm,
 };
 
 
-/** Enable generation of events from the TC module
+/**
+ * \brief Enable generation of events from the TC module
  *
- *  The content of this enum is to be used by the event_generation_mask in the
- *  tc_config struct
+ *  The content of this enum is to be used by the
+ *  event_generation_mask in the tc_conf struct
  */
-//TODO: Use #define?
 enum tc_event_generation_enable {
 	/** No generation of events */
 	TC_EVENT_GENERATION_ENABLE_NONE       = TC_EVGEN_NONE_gc,
@@ -313,33 +330,68 @@ enum tc_resolution {
  */
 
 
-struct tc_8bit_config {
+/**
+ * \brief 
+ *
+ * 
+ */
+struct tc_8bit_conf {
+	/**  */
 	uint8_t count;
+	/**  */
 	uint8_t period;
+	/**  */
 	uint8_t compare_capture_channel_0;
+	/**  */
 	uint8_t compare_capture_channel_1;
+	/**  */
 	uint8_t compare_capture_channel_2;
+	/**  */
 	uint8_t compare_capture_channel_3;
 };
 
 
-struct tc_16bit_config {
+/**
+ * \brief 
+ *
+ * 
+ */
+struct tc_16bit_conf {
+	/**  */
 	uint16_t count;
+	/**  */
 	uint16_t compare_capture_channel_0;
+	/**  */
 	uint16_t compare_capture_channel_1;
+	/**  */
 	uint16_t compare_capture_channel_2;
+	/**  */
 	uint16_t compare_capture_channel_3;
 };
 
 
-struct tc_32bit_config {
+/**
+ * \brief 
+ *
+ * 
+ */
+struct tc_32bit_conf {
+	/**  */
 	uint32_t count;
+	/**  */
 	uint32_t compare_capture_channel_0;
+	/**  */
 	uint32_t compare_capture_channel_1;
 };
 
-
-struct tc_config {
+/**
+ * \brief TC configuration structure
+ *
+ * Configuration structure for a TC instance. This structure should be
+ * initialized by the \ref spi_get_config_defaults function before being
+ * modified by the user application.
+ */
+struct tc_conf {
 	//TODO set clock param
 	//TODO look into sleepen bit
 
@@ -349,46 +401,62 @@ struct tc_config {
 	enum tc_clock_prescaler clock_prescaler;
 	/** Specifies which waveform to be generated on the output */
 	enum tc_wave_generation wave_generation;
-	/** Specifies the reload or reset time of the counter and prescaler
-	 *  resynchronization on a retrigger event for timer/counter */
+	/**
+	 *  Specifies the reload or reset time of the counter and
+	 *  prescaler resynchronization on a retrigger event for
+	 *  timer/counter
+	 */
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on */
 	uint16_t waveform_invert_output;
-	/** Specifies which channel (s) to enable channel capture operation
-	 *  on. Since all capture channels use the same event line,
-	 *  only one capture channel must be enabled at a time,
-	 *  when used for event capture. When pwm capture is used this
-	 *  is not the case as it does not use the event line.
+	/**
+	 *  Specifies which channel (s) to enable channel capture
+	 *  operation on. Since all capture channels use the same
+	 *  event line, only one capture channel must be enabled at a
+	 *  time, when used for event capture. When pwm capture is
+	 *  used this is not the case as it does not use the event
+	 *  line.
 	 */
 	uint16_t capture_enable;
 
-	/** Oneshot enabled will stop the TC on next HW/SW retrigger event
-	 *  or overflow/underflow */
+	/**
+	 *  Oneshot enabled will stop the TC on next HW/SW retrigger
+	 *  event or overflow/underflow
+	 */
 	bool oneshot;
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
 
-	/** Specifies if the input event source is inverted, when used in PWP,
-	 *  PPW event action */
+	/**
+	 *  Specifies if the input event source is inverted, when used
+	 *  in PWP, PPW event action
+	 */
 	bool invert_event_input;
 	/**Must be set to true to enable event actions */
 	bool enable_event_input;
 
 	/** Specifies which event to trigger if an event is triggered */
 	enum tc_event_action event_action;
-	/** Specifies which channel(s) to generate event on when a
-	 *  compare/capture occurs */
+	/**
+	 *  Specifies which channel(s) to generate event on when a
+	 *  compare/capture occurs
+	 */
 	uint16_t event_generation_enable;
 
 	union {
-		struct tc_8bit_config 8bit_config;
-		struct tc_16bit_config 16bit_config;
-		struct tc_32bit_config 32bit_config;
+		struct tc_8bit_conf 8bit_conf;
+		struct tc_16bit_conf 16bit_conf;
+		struct tc_32bit_conf 32bit_conf;
 	};
 };
 
 
+/**
+ * \brief 
+ *
+ * 
+ */
 struct tc_dev_inst {
 	TC_t *hw_dev;
 	enum tc_resolution resolution;
@@ -419,13 +487,18 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
 /**
  * \brief Initializes config with predefined default values
  *
- * The config struct is loaded with predefined values to allow quick startup.
- * The predefined values sets up all four channels separately, with no filtering
- * and low power operation.
+ * This function will initialize a given TC configuration structure to
+ * a set of known default values. This function should be called on
+ * any new instance of the configuration structures before being
+ * modified by the user application.
  *
- * \param config pointer to the config struct
+ * The default configuration is as follows:
+ *  \li 16 bit resolution on the counter
+ *  \li ...
+ *
+ * \param[out] config pointer to the config struct
  */
-static inline void tc_get_config_defaults(struct tc_config *const config)
+static inline void tc_get_config_defaults(struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -447,27 +520,17 @@ static inline void tc_get_config_defaults(struct tc_config *const config)
 	config->event_action                 = TC_EVENT_ACTION_OFF;
 	config->event_generation_enable      = TC_EVENT_GENERATION_ENABLE_NONE;
 
-	config->16bit_config.count                       = 0x0000;
-	config->16bit_config.compare_capture_channel_0   = 0xFFFF;
-	config->16bit_config.compare_capture_channel_1   = 0x0000;
-	config->16bit_config.compare_capture_channel_2   = 0x0000;
-	config->16bit_config.compare_capture_channel_3   = 0x0000;
+	config->16bit_conf.count                       = 0x0000;
+	config->16bit_conf.compare_capture_channel_0   = 0xFFFF;
+	config->16bit_conf.compare_capture_channel_1   = 0x0000;
+	config->16bit_conf.compare_capture_channel_2   = 0x0000;
+	config->16bit_conf.compare_capture_channel_3   = 0x0000;
 }
 
 
-/**
- * \brief Initializes the TC
- *
- * Enables the clock and initializes the TC module,
- * based on the values of the config struct
- *
- * \param dev_inst    pointer to the device struct
- * \param config pointer to the config struct
- * \return enum status_code STATUS_OK,
- */
 enum status_code tc_init(TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
-		struct tc_config *const config);
+		struct tc_conf *const config);
 
 
 /**
@@ -542,14 +605,6 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 }
 
 
-/**
- * \brief Gets the count value
- *
- * Gets the count value of the TC module
- *
- * \param dev_inst    pointer to the device struct
- * \return returns the value of the counter.
- */
 uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
 
 
@@ -561,19 +616,17 @@ uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
  * \param dev_inst    pointer to the device struct
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
+
 enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
 		uint32_t count);
 
 
 /**
- * \brief Starts or restarts counter.
+ * \brief 
  *
- *
- *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst      
  */
-static inline enum status_code tc_start_counter(
-		struct tc_dev_inst *const dev_inst)
+static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -614,33 +667,15 @@ static inline enum status_code tc_stop_counter(
 	tc_module->CTRLBSET |= TC_COMMAND_STOP_bm;
 }
 
-/**
- * \brief Gets the period value
- *
- * Reads the period value stored in the period register into a buffer.
- *
- * \param dev_inst        pointer to the device struct
- * \param period_value    pointer to a buffer
- * \param comp_reg_index  index of the compare register to read from
- * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
- */
+
 enum status_code tc_get_capture_value(struct tc_dev_inst *dev_inst,
-		uint32_t *period_value);
+		uint32_t *period_value
+		enum tc_compare_capture_channel_index ccc_index);
 
 
-/**
- * \brief Sets a compare value
- *
- * Writes a compare value from a buffer to a given compare/capture register
- *
- * \param dev_inst    pointer to the device struct
- * \param buffer      pointer to a buffer
- * \comp_reg_index    index of the compare register to write to
- * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
- */
 enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
 		uint32_t compare_value,
-		enum tc_ccn_reg_index comp_reg_index);
+		enum tc_compare_capture_channel_index ccc_index);
 
 
 /**
@@ -722,12 +757,15 @@ enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
 /**
  * \brief Checks if a new match has occurred on the channel
  *
- * Checks if a new match has occurred returns STATUS_VALID_DATA if it has and
- * STATUS_NO_CHANGE if no new match has occurred.
+ * Checks if a new match has occurred returns STATUS_VALID_DATA if it
+ * has and STATUS_NO_CHANGE if no new match has occurred.
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
- * \return enum status_code:STATUS_VALID_DATA, STATUS_NO_CHANGE
+ *
+ * \return A status telling whether a match has ocured
+ * \retval STATUS_VALID_DATA   If a match has ocured since last check
+ * \retval STATUS_NO_CHANGE    If no new match ha ocured since last check
  */
 enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
@@ -746,6 +784,7 @@ enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
 		return STATUS_NO_CHANGE;
 	}
 }
+
 
 /** @} */
 
