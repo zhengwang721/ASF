@@ -48,7 +48,8 @@
 //TODO: Add support for RX started interrupt.
 #ifdef USART_ASYNC
 enum usart_callback_type {
-	USART_CALLBACK_TYPE_BUFFER_EMPTY,
+//TODO:remove
+//	USART_CALLBACK_TYPE_BUFFER_EMPTY,
 	USART_CALLBACK_TYPE_BUFFER_TRANSMITTED,
 	USART_CALLBACK_TYPE_BUFFER_RECEIVED,
 	USART_CALLBACK_N,
@@ -72,7 +73,7 @@ enum usart_com_mode {
 // 	USART_FRAME_FORMAT_FULL_DUPLEX_PARITY         = SERCOM_USART_FORM_2_gc,
 // 	USART_FRAME_FORMAT_FULL_DUPLEX_ADDRESS        = SERCOM_USART_FORM_3_gc,
 // 	USART_FRAME_FORMAT_FULL_DUPLEX_ADDRESS_PARITY = SERCOM_USART_FORM_4_gc,
-// 	USART_FRAME_FORMAT_HALF_DUPLEX               = SERCOM_USART_FORM_5_gc,
+// 	USART_FRAME_FORMAT_HALF_DUPLEX               =  SERCOM_USART_FORM_5_gc,
 // 	USART_FRAME_FORMAT_HALF_DUPLEX_PARITY         = SERCOM_USART_FORM_6_gc,
 // 	USART_FRAME_FORMAT_HALF_DUPLEX_ADDRESS        = SERCOM_USART_FORM_7_gc,
 // 	USART_FRAME_FORMAT_HALF_DUPLEX_ADDRESS_PARITY = SERCOM_USART_FORM_8_gc,
@@ -159,12 +160,13 @@ struct usart_dev_inst {
 	SERCOM_MODE_t sercom_mode;
 #endif
 	SERCOM_t *hw_dev;
+	enum usart_char_size char_size;
 #ifdef USART_ASYNC
 	usart_async_callback_t callback[USART_CALLBACK_N];
 	uint8_t *rx_buffer_ptr;
 	uint8_t *tx_buffer_ptr;
-	uint16_t remaining_rx_buffer_length;
-	uint16_t remaining_tx_buffer_length;
+	volatile uint16_t remaining_rx_buffer_length;
+	volatile uint16_t remaining_tx_buffer_length;
 	uint8_t callback_reg_mask;
 	uint8_t callback_enable_mask;
 #endif
@@ -247,11 +249,11 @@ static inline void usart_disable(const struct usart_dev_inst *const dev_inst)
  * \name Writing and reading
  * {@
  */
-enum status_code usart_write(const struct usart_dev_inst *const dev_inst,
+enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data);
 
-enum status_code usart_read(const struct usart_dev_inst *const dev_inst,
-		const uint16_t *rx_data);
+enum status_code usart_read(struct usart_dev_inst *const dev_inst,
+		uint16_t *const rx_data);
 
 enum status_code usart_write_buffer(const struct usart_dev_inst *const dev_inst,
 		const uint16_t *tx_data, uint16_t length);
@@ -278,7 +280,21 @@ enum status_code usart_read_buffer(const struct usart_dev_inst *const dev_inst,
  */
 static inline bool usart_is_data_received(struct usart_dev_inst *dev_inst)
 {
-	return dev_inst->hw_dev->USART.INTFLAGS & SERCOM_USART_RXCIF_bm;
+	/* Sanity check arguments */
+	Assert(dev_inst);
+
+	uint8_t rxcif;
+
+	/* Get a pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+
+	/* Read out Transmit Complete Interrupt Flag */
+	rxcif = usart_module->INTFLAGS & SERCOM_USART_RXCIF_bm;
+
+#ifdef USART_ASYNC
+	return rxcif && !(dev_inst->remaining_rx_buffer_length);
+#endif
+	return rxcif;
 }
 
 /**
@@ -307,14 +323,18 @@ static inline bool usart_is_data_transmitted(struct usart_dev_inst *dev_inst)
 	/* Sanity check arguments */
 	Assert(dev_inst);
 
-	/* Pointer to the hardware module instance */
+	uint8_t txcif;
+
+	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
+	/* Read out Transmit Complete Interrupt Flag */
+	txcif = usart_module->INTFLAGS & SERCOM_USART_TXCIF_bm;
+
 #ifdef USART_ASYNC
-	return dev_inst->remaining_tx_buffer_length &&
-			usart_module->INTFLAGS & SERCOM_USART_TXCIF_bm;
+		return txcif && !(dev_inst->remaining_tx_buffer_length);
 #endif
-	return usart_module->INTFLAGS & SERCOM_USART_TXCIF_bm;
+		return txcif;
 }
 
 /**
@@ -338,7 +358,6 @@ static inline bool usart_is_data_buffer_empty(struct usart_dev_inst *dev_inst)
 #endif
 	return usart_module->INTFLAGS & SERCOM_USART_DREIF_bm;
 }
-
 
 /**
  * \name Enabling/Disabling RX and TX
@@ -406,4 +425,3 @@ static inline void usart_enable_tx(struct usart_dev_inst *dev_inst)
  */
 
 #endif //__USART_H__
-
