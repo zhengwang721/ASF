@@ -2183,7 +2183,7 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 		for flag in self.project.get_build(BuildCCompilerFlags, self.toolchain):
 			flags += ' ' + flag.strip()
 
-		return {tag : flags}
+		return {tag : self.sort_flags(flags)}
 
 	def _get_avrgccproj_define_tags(self):
 		tags = [
