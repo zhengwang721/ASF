@@ -58,28 +58,6 @@ void usart_async_cancel_reception(struct usart_dev_inst
  * @}
  */
 
-/**
- * \brief Check if the whole buffer has been transmitted
- * \ref usart_write_buffer()\ \ref usart_read_buffer()
- */
-static inline bool usart_async_is_buffer_transmitted(struct usart_dev_inst *dev_inst)
-{
-#ifdef USART_ASYNC
-//		return flag & !(dev_inst->remaining_tx_buffer_length);
-#endif	
-//		return flag;
-}
 
-/**
- * \brief Check if the whole buffer has been received
- * \ref usart_write_buffer()\ \ref usart_read_buffer()
- */
-static inline bool usart_async_is_buffer_received(struct usart_dev_inst *dev_inst)
-{	
-#ifdef USART_ASYNC 
-//	return !(dev_inst->remaining_rx_buffer_length);
-#endif
-//	return flag;
-}
 
 #endif /* __USART_ASYNC_H__ */
