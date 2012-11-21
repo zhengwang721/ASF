@@ -159,10 +159,6 @@ enum status_code usart_async_enable_callback(struct usart_dev_inst *const dev_in
 
 	/* Enable the interrupt flag */
 	switch (callback_type){
-		//TODO:
-		//case USART_CALLBACK_TYPE_BUFFER_EMPTY:
-		//	usart_module->INTENSET = SERCOM_USART_DREIF_bm;
-		//	break;
 
 		case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
 			usart_module->INTENSET = SERCOM_USART_TXCIF_bm;
@@ -206,10 +202,6 @@ enum status_code usart_async_disable_callback(struct usart_dev_inst *const dev_i
 
 	/* Disable the interrupt flag */
 	switch (callback_type){
-		//TODO: remove
-		//case USART_CALLBACK_TYPE_BUFFER_EMPTY:
-		//	usart_module->INTENCLR = SERCOM_USART_DREIF_bm;
-		//	break;
 
 		case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
 			usart_module->INTENCLR = SERCOM_USART_TXCIF_bm;

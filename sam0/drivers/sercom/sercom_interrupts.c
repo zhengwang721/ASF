@@ -51,6 +51,7 @@ uint8_t _sercom_get_current_irq_index(void)
 void SERCOM_Handler(void)
 {
 	uint8_t instance = _sercom_get_current_irq_index();
+	uint16_t interrupt_status;
 	uint16_t callback_status;
 
 	/* Sercom mode is contained in the first byte of dev_inst */
@@ -76,50 +77,48 @@ void SERCOM_Handler(void)
 					&(dev_inst->hw_dev->USART);
 
 			/* Read and mask interrupt flag register */
-			callback_status =  usart_module->INTFLAGS
+			interrupt_status = usart_module->INTFLAGS;
+			callback_status = interrupt_status
 					&dev_inst->callback_reg_mask
 					&dev_inst->callback_enable_mask;
 
 			/* Check if a DATA READY interrupt has occurred,
-			 * and if the callback is enabled */
-			if (callback_status & SERCOM_USART_DREIF_bm){
-				//TODO: && dev_inst->remaining_tx_buffer) {
-				/* Check if the transmission buffer has data
-				 * to transfer */
-				//TODO:remove if-else.
-				if (dev_inst->remaining_tx_buffer_length) {
-					/* Write current packet from transmission buffer,
-					 * increment buffer pointer and decrement buffer length */
+			 * and if there if there is more to transfer */
+			if (interrupt_status & SERCOM_USART_DREIF_bm
+				&& dev_inst->remaining_tx_buffer_length) {
 
-					if (dev_inst->char_size == USART_CHARACTER_SIZE_9BIT) {
-						usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
-								& SERCOM_USART_DATA_gm;
-						(dev_inst->tx_buffer_ptr)+2;
-					} else {
-						usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
-								& SERCOM_USART_DATA_gm;
-						(dev_inst->tx_buffer_ptr)++;
-					}
-
-					(dev_inst->remaining_tx_buffer_length)--;
-
-				} else {
-					/* If the transmission buffer is empty,
-					 * run callback*/
-					//dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_EMPTY](dev_inst);
-					//TODO: Not
+				/* Check if there is only one more transmission
+				 * to make */
+				if (dev_inst->remaining_tx_buffer_length == 1) {
+					/* Disable the Data Register Empty
+					 * Interrupt Flag (DREIF) */
+					usart_module->INTENCLR =
+							SERCOM_USART_DREIF_bm;
 				}
 
-				/* Clear the interrupt flag */
-				usart_module->INTFLAGS &= ~SERCOM_USART_DREIF_bm;
+				/* Write current packet from transmission buffer
+				 * and increment buffer pointer */
+				//TODO: casting
+				if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+					usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
+							& SERCOM_USART_DATA_gm;
+					(dev_inst->tx_buffer_ptr)+2;
+
+				} else {
+					usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
+							& SERCOM_USART_DATA_gm;
+					(dev_inst->tx_buffer_ptr)++;
+
+				}
+
+				/* Decrement buffer length */
+				(dev_inst->remaining_tx_buffer_length)--;
 			}
 
 			if ((callback_status & SERCOM_USART_TXCIF_bm) &&
 					!dev_inst->remaining_tx_buffer_length){
 				dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED](dev_inst);
 
-				/* Clear the interrupt flag */
-				usart_module->INTFLAGS &= ~SERCOM_USART_TXCIF_bm;
 			}
 
 			if ((callback_status & SERCOM_USART_RXCIF_bm) &&
@@ -130,7 +129,7 @@ void SERCOM_Handler(void)
 				if (dev_inst->remaining_rx_buffer_length) {
 					/* Read current packet from DATA register,
 					 * increment buffer pointer and decrement buffer length */
-					if(dev_inst->char_size == USART_CHARACTER_SIZE_9BIT) {
+					if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 						/* Read out from DATA and increment 8bit ptr by two */
 						*(dev_inst->rx_buffer_ptr) =
 								(usart_module->DATA & SERCOM_USART_DATA_gm);
@@ -151,8 +150,6 @@ void SERCOM_Handler(void)
 					dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED](dev_inst);
 				}
 
-				/* Clear the interrupt flag */
-				usart_module->INTFLAGS &= ~SERCOM_USART_RXCIF_bm;
 			}
 		break;
 
