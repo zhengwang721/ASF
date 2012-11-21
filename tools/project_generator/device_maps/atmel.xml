@@ -532,13 +532,9 @@
 							<mcu name="atsam3x4c"/>
 							<mcu name="atsam3x4e"/>
 						</group>
-						<group name="sam3x8c">
+						<group name="sam3x8">
 							<mcu name="atsam3x8c"/>
-						</group>
-						<group name="sam3x8e">
 							<mcu name="atsam3x8e"/>
-						</group>
-						<group name="sam3x8h">
 							<mcu name="atsam3x8h"/>
 						</group>
 					</group>
@@ -580,18 +576,22 @@
 					</group>
 					<group name="sam4l"  doc-arch="SAM4L">
 						<mcu name="unspecified-sam4l"/>
-						<group name="sam4lc">
+						<group name="sam4lc2">
 							<mcu name="atsam4lc2a"/>
 							<mcu name="atsam4lc2b"/>
 							<mcu name="atsam4lc2c"/>
+						</group>
+						<group name="sam4lc4">
 							<mcu name="atsam4lc4a"/>
 							<mcu name="atsam4lc4b"/>
 							<mcu name="atsam4lc4c"/>
 						</group>
-						<group name="sam4ls">
+						<group name="sam4ls2">
 							<mcu name="atsam4ls2a"/>
 							<mcu name="atsam4ls2b"/>
 							<mcu name="atsam4ls2c"/>
+						</group>
+						<group name="sam4ls4">
 							<mcu name="atsam4ls4a"/>
 							<mcu name="atsam4ls4b"/>
 							<mcu name="atsam4ls4c"/>
