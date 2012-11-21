@@ -1664,7 +1664,7 @@ class AVRStudio5Project(GenericProject):
 
 		# Get the licenses from all modules
 		for module in [self.project] + self.project.get_prerequisites(recursive=True):
-			licenses = module.get_build(BuildDistributeLicense, self.toolchain)
+			licenses = module.get_build(BuildDistributeLicense, self.toolchain, recursive=False)
 
 			for license in licenses:
 				mods = license_to_mods.get(license, [])
