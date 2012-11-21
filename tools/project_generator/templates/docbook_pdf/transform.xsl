@@ -68,13 +68,11 @@
     </xsl:choose>
   </xsl:template>
 
-
   <xsl:template match="compounddef[@kind ='page']">
     <xsl:choose>
       <xsl:when test="@id='indexpage'">
+        <!-- Discard index page -->
       </xsl:when>
-      <!--<xsl:when test="@id='quickstart'">
-      </xsl:when>-->
       <xsl:otherwise>
       <chapter id="{@id}" xreflabel="{title}">
         <xsl:choose>
@@ -154,25 +152,6 @@
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template match="//sectiondef[@kind='var']">
-    <informaltable tabstyle="striped">
-      <tgroup cols="2">
-        <tbody>
-          <xsl:for-each select="memberdef">
-            <row>
-              <entry align="right">
-                <xsl:apply-templates select="type"/>
-              </entry>
-              <entry>
-                <xsl:value-of select="name"/>
-              </entry>
-            </row>
-          </xsl:for-each>
-        </tbody>
-      </tgroup>
-    </informaltable>
-  </xsl:template>
-
   <xsl:template match="memberdef[@kind ='function']">
     <section id="{@id}" xreflabel="{name}">
       <title>
@@ -233,30 +212,36 @@
       <title>
         <xsl:text>Macro </xsl:text><xsl:value-of select="name"/>
       </title>
-      <informaltable tabstyle="striped">
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Initializer</entry>
-              <entry>Description</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry>
-                <para>
-                  <xsl:value-of select="initializer"/>
-                </para>
-              </entry>
-              <entry>
-                <para>
-                  <xsl:value-of select="detaileddescription"/>
-                </para>
-              </entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
+      <programlisting language="c">
+        <xsl:text>#define </xsl:text>
+        <xsl:value-of select="name"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="initializer"/>
+      </programlisting>
+      <xsl:apply-templates select="detaileddescription"/>
+    </section>
+  </xsl:template>
+
+  <xsl:template match="memberdef[@kind = 'variable' or @kind='typedef']">
+    <section id="{@id}" xreflabel="{name}">
+      <title>
+        <!-- Doxygen gets confused and thinks function pointer type definitions
+             are variables, so we need to map them to this common section and
+             check the definition to see which of the two it is. -->
+        <xsl:choose>
+          <xsl:when test="contains(definition,'typedef')">
+            <xsl:text>Type </xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>Variable </xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:value-of select="name"/>
+      </title>
+      <programlisting language="c">
+        <xsl:value-of select="definition"/>
+      </programlisting>
+      <xsl:apply-templates select="detaileddescription"/>
     </section>
   </xsl:template>
 
@@ -378,10 +363,17 @@
       </title>
 
       <!-- Show all variable information -->
-      <xsl:if test="count(../../sectiondef[@kind='var'])>0">
+      <xsl:if test="count(../../sectiondef[memberdef/@kind='variable' or memberdef/@kind='typedef'])>0">
         <section>
-          <title>Variables</title>
-          <xsl:apply-templates select="//sectiondef[@kind='var']"/>
+          <title>Variables and Types</title>
+          <xsl:for-each select="../../sectiondef[memberdef/@kind='variable' or memberdef/@kind='typedef']">
+            <section>
+              <title>
+                <xsl:value-of select="header"/>
+              </title>
+              <xsl:apply-templates select="memberdef[@kind='variable' or @kind='typedef']"/>
+            </section>
+          </xsl:for-each>
         </section>
       </xsl:if>
 
@@ -404,22 +396,22 @@
               <title>
                 <xsl:value-of select="header"/>
                 </title>
-              <xsl:apply-templates select="."/>
+              <xsl:apply-templates select="memberdef[@kind='define']"/>
             </section>
           </xsl:for-each>
         </section>
       </xsl:if>
 
       <!-- Show all the function information -->
-      <xsl:if test="count(../../sectiondef[memberdef/@kind='function' or @kind='func'])>0">
+      <xsl:if test="count(../../sectiondef[memberdef/@kind='function'])>0">
         <section>
           <title>Function calls</title>
-          <xsl:for-each select="../../sectiondef[memberdef/@kind='function' or @kind='func']">
+          <xsl:for-each select="../../sectiondef[memberdef/@kind='function']">
             <section>
               <title>
                 <xsl:value-of select="header"/>
               </title>
-              <xsl:apply-templates select="."/>
+              <xsl:apply-templates select="memberdef[@kind='function']"/>
             </section>
           </xsl:for-each>
         </section>
