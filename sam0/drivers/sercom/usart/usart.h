@@ -149,7 +149,7 @@ struct usart_dev_inst {
 	SERCOM_t *hw_dev;
 	enum usart_char_size char_size;
 #ifdef USART_ASYNC
-	usart_async_callback_t callback[USART_CALLBACK_N];
+	usart_async_callback_t *callback[USART_CALLBACK_N];
 	uint8_t *rx_buffer_ptr;
 	uint8_t *tx_buffer_ptr;
 	volatile uint16_t remaining_rx_buffer_length;

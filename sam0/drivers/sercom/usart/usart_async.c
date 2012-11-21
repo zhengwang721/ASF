@@ -278,7 +278,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Call internal read buffer function with length 1 */
-	_usart_async_read_buffer(dev_inst, rx_data, 1);
+	_usart_async_read_buffer(dev_inst, (uint8_t *)rx_data, 1);
 
 	return STATUS_OK;
 }

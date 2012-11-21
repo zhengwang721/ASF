@@ -117,7 +117,7 @@ void SERCOM_Handler(void)
 
 			if ((callback_status & SERCOM_USART_TXCIF_bm) &&
 					!dev_inst->remaining_tx_buffer_length){
-				dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED](dev_inst);
+				(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED]))(dev_inst);
 
 			}
 
@@ -147,7 +147,7 @@ void SERCOM_Handler(void)
 				} else {
 					/* If the transmission buffer is empty,
 					 * run callback*/
-					dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED](dev_inst);
+					(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED]))(dev_inst);
 				}
 
 			}
