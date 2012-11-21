@@ -45,21 +45,44 @@ uint8_t _sercom_get_current_irq_index(void)
 	/* Find in some core register */
 }
 
+enum status_code _sercom_register_dev_inst_ptr(SERCOM_DEV_INST_t *const dev_inst)
+{
+	/* Check arugment sanity. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
-/*
-void SERCOM0_Handler(void) {
-	sercom_handler(0);
+	/* Save device instance structure pointer. */
+	uint32_t sercom_module = (uint32_t)dev_inst->hw_dev;
+
+	/* Variable for array index. */
+	uint8_t instance_index;
+
+	switch(sercom_module) {
+		case ((uint32_t)&SERCOM0):
+			instance_index = 0;
+			break;
+
+		case ((uint32_t)&SERCOM1):
+			instance_index = 1;
+			break;
+
+		case ((uint32_t)&SERCOM2):
+			instance_index = 2;
+			break;
+
+		case ((uint32_t)&SERCOM3):
+			instance_index = 3;
+			break;
+
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Save device instance pointer. */
+	_sercom_instances[instance_index] = dev_inst;
+
+	return STATUS_OK;
 }
-void SERCOM1_Handler(void) {
-	sercom_handler(1);
-}
-void SERCOM2_Handler(void) {
-	sercom_handler(2);
-}
-void SERCOM3_Handler(void) {
-	sercom_handler(3);
-}
-*/
 
 
 /* Interrupt Service Routine */
@@ -69,9 +92,9 @@ void SERCOM_Handler(void)
 	uint16_t callback_status;
 
 	/* Sercom mode is contained in the first byte of dev_inst */
-	uint8_t mode = *(uint8_t *)_sercom_instances[instance];
+	SERCOM_DEV_INST_t sercom_dev_inst = *_sercom_instances[instance];
 
-	switch(mode) {
+	switch(sercom_dev_inst.mode) {
 		case SERCOM_MODE_SPI:
 		{
 			/* Device instance */
@@ -82,7 +105,7 @@ void SERCOM_Handler(void)
 		}
 		case SERCOM_MODE_USART:
 		{
-			struct usart_dev_inst *dev_inst = (struct usart_dev_inst *)_sercom_instances[instance];
+			struct usart_dev_inst *dev_inst = sercom_dev_inst.usart;
 
 			/* Read and mask interrupt flag register */
 			callback_status =  dev_inst->hw_dev->USART.INTFLAGS

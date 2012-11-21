@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for calendar mode
+ * \brief SAM0+ I2C Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -48,21 +48,33 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 
 }
 
-enum status_code i2c_master_enable(
+void i2c_master_enable(
 		const struct i2c_master_dev_inst *const dev_inst)
 {
+	/* Sanity check of arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
+	SERCOM_t *i2c_module = dev_inst->hw_dev;
+
+	i2c_module->I2C_MASTER.CTRLA |= (1 << I2C_MASTER_ENABLE_bp);
 }
 
 enum status_code i2c_master_disable(
 		const struct i2c_master_dev_inst *const dev_inst)
 {
+	/* Sanity check of arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
+	SERCOM_t *i2c_module = dev_inst->hw_dev;
+
+	i2c_module->I2C_MASTER.CTRLA &= ~(1 << I2C_MASTER_ENABLE_bp);
 }
 
 enum status_code i2c_master_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		void (*callback)(struct i2c_master_dev_inst *dev_inst),
+		i2c_master_callback_t callback,
 		enum i2c_master_callback_type)
 {
 
@@ -70,7 +82,7 @@ enum status_code i2c_master_register_callback(
 
 enum status_code i2c_master_unregister_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		void (*callback)(struct i2c_master_dev_inst *dev_inst),
+		i2c_master_callback_t callback,
 		enum i2c_master_callback_type)
 {
 

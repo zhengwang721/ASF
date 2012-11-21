@@ -44,22 +44,21 @@
 #define SERCOM_INSTANCES 4
 #include <usart.h>
 #include <sercom.h>
+#include <ic2_master.h>
 
 
-/*
-struct _sercom_dev_inst {
-	union {
-		//struct spi_dev_inst spi;
-		struct usart_dev_inst usart;
-		//struct i2c_dev_inst i2c;
-	};
-};
-
-
-
+typedef union {
+	/* Operation mode of SERCOM module. */
+	uint8_t mode;
+	/*
+	/** I2C master device instance. */
+	i2c_master_dev_inst i2c_master;
+} SERCOM_DEV_INST_t;
 
 /* Lookup table containing sercom instances which have registered callback functions */
-uint32_t _sercom_instances[SERCOM_INSTANCES];
+SERCOM_DEV_INST_t *_sercom_instances[SERCOM_INSTANCES];
+
+void _sercom_register_dev_inst_ptr(SERCOM_DEV_INST_t *const dev_inst);
 
 void SERCOM_Handler(void);
 
