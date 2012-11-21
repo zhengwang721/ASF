@@ -4,11 +4,14 @@
 #include <ccp.h>
 #include <xmega_reset_cause.h>
 
-// From module: Clock Control - XMEGA A1U/A3U/A3BU/A4U implementation
+// From module: Clock Control - XMEGA A1/A3/A3B/A4/D implementation
 #include <sysclk.h>
 
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
+
+// From module: IOPORT - Input/Output Port Controller
+#include <ioport.h>
 
 // From module: NVM - Non Volatile Memory
 #include <nvm.h>
@@ -17,3 +20,6 @@
 #include <compiler.h>
 #include <parts.h>
 #include <status_codes.h>
+
+// From module: XMEGA-A1 Xplained LED support enabled
+#include <led.h>

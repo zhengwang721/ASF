@@ -21,12 +21,14 @@
 		</group>
 	</device-map>
 
-	<project id="xmega.driver.example1.xplain" caption="Awesome driver example 1 for Xplain">
+	<project id="xmega.driver.example1.xplain" caption="Awesome driver example 1 for Xplain" default-mcu="atxmega128a1">
 		<require idref="board.xplain"/>
 		<require idref="xmega.driver.example1"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
-	<board id="board.xplain" caption="Xplain board support" mcu="atxmega128a1">
+	<board id="board.xplain" caption="Xplain board support">
+		<device-support value="atxmega128a1"/>
 	</board>
 
 	<module type="application" id="xmega.driver.example1" caption="Awesome driver example 1">

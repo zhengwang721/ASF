@@ -6,5 +6,6 @@
 		<require idref="board.uc3l_ek"/>
 		<generator value="as5_32_template"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 </asf>

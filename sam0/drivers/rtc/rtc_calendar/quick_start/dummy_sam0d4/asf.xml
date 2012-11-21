@@ -7,5 +7,6 @@
 		<require idref="sam0.drivers.rtc_calendar.quick_start"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen-v2"/>
+		<device-support value="atsam0d4"/>
 	</project>
 </asf>

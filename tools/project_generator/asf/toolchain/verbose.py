@@ -12,7 +12,7 @@ class VerboseProject(GenericProject):
 		self.log.info("Board = %s MCU = %s" % (self.project.board, self.project.mcu))
 
 		self.log.debug("Requirements after resolving module-selectors:")
-		self.project.visualize_requirements(self.log.debug)
+		self.project.visualize_requirements(self.log.debug, main_ext=self.db.extension)
 
 		type_mapping = {
 			'C files'           : BuildC,

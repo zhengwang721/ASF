@@ -6,5 +6,6 @@
 		<require idref="board.xmega_e5_xplained"/>
 		<generator value="as5_8_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega32e5"/>
 	</project>
 </asf>

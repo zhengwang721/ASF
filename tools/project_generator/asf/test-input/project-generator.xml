@@ -16,29 +16,35 @@
 	<project id="project" caption="project">
 		<require idref="testapp" />
 		<require idref="board" />
+		<device-support value="atxmega128a1"/>
 	</project>
 
 	<project id="my_name_project" caption="My name project" workspace-name="my_name">
 		<require idref="avr.drivers.some.module.example"/>
 		<require idref="board"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
 	<project id="gen_name_project_1" caption="Generator name project nr.1">
 		<require idref="avr.drivers.some.module.example"/>
 		<require idref="board"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
 	<project id="gen_name_project_2" caption="Generator name project nr.2">
 		<require idref="avr.applications.some.awesome.example"/>
 		<require idref="board"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
 	<project id="fail_name_project" caption="Failing generator name project">
 		<require idref="fail.application"/>
 		<require idref="board"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 
-	<board id="board" mcu="atxmega128a1" caption="board">
+	<board id="board" caption="board">
+		<device-support value="atxmega128a1"/>
 	</board>
 
 	<module type="meta" id="appmeta1" caption="meta 1">

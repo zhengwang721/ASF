@@ -13,5 +13,6 @@
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<device-support value="atsam3sd8c"/>
 	</project>
 </asf>

@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="common.applications.user_application" caption="User application template">
 		<device-support value="avr"/>
+		<device-support value="sam"/>
 		<build type="c-source" value="main.c"/>
 		<require idref="common.boards"/>
 		<info type="description" value="summary">

@@ -20,9 +20,9 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.stk600-rcuc3d" vendor="Atmel" caption="STK600" mcu="atuc128d3">
+	<board id="board.stk600-rcuc3d" vendor="Atmel" caption="STK600">
 		<build type="define" name="BOARD" value="STK600_RCUC3D"/>
-		<build type="define" name="__ATUC128D3__" value="" toolchain="iarew32" />
+		<build type="define" name="__ATUC128D3__" value="" toolchain="iarew32"/>
 		<build type="header-file" value="stk600_rcuc3d.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
 		<build type="include-path" value="."/>
@@ -31,5 +31,6 @@
 		<require idref="config.board.stk600-rcuc3d.led"/>
 		<require idref="config.board.stk600-rcuc3d.init"/>
 		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
+		<device-support value="atuc128d3"/>
 	</board>
 </asf>

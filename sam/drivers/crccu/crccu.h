@@ -74,7 +74,7 @@ extern "C" {
 typedef struct crccu_dscr_type {
 	uint32_t ul_tr_addr;	/* TR_ADDR */
 	uint32_t ul_tr_ctrl;	/* TR_CTRL */
-#if (SAM3SD8	|| SAM4S)
+#if (SAM3SD8 || SAM4S || SAM4L)
 	uint32_t ul_reserved[2];	/* Reserved register */
 #elif SAM3S
 	uint32_t ul_reserved[52];	/* TR_CRC begins at offset 0xE0 */
@@ -84,8 +84,8 @@ typedef struct crccu_dscr_type {
 
 void crccu_configure_descriptor(Crccu *p_crccu, uint32_t ul_crc_dscr_addr);
 void crccu_configure_mode(Crccu *p_crccu, uint32_t ul_mode);
-void crccu_enable(Crccu *p_crccu);
-void crccu_disable(Crccu *p_crccu);
+void crccu_enable_dma(Crccu *p_crccu);
+void crccu_disable_dma(Crccu *p_crccu);
 void crccu_reset(Crccu *p_crccu);
 uint32_t crccu_get_dma_status(Crccu *p_crccu);
 void crccu_enable_dma_interrupt(Crccu *p_crccu);
