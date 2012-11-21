@@ -74,33 +74,35 @@
         <!-- Discard index page -->
       </xsl:when>
       <xsl:otherwise>
-      <chapter id="{@id}" xreflabel="{title}">
-        <xsl:choose>
-          <xsl:when test="@id='_license'">
-            <title>
-              <xsl:value-of select="compoundname"/>
-            </title>
-          </xsl:when>
-          <xsl:otherwise>
-            <title>
-              <xsl:value-of select="title"/>
-            </title>
-          </xsl:otherwise>
-        </xsl:choose>
+        <chapter id="{@id}" xreflabel="{title}">
+          <xsl:choose>
+            <xsl:when test="@id='_license'">
+              <title>
+                <xsl:value-of select="compoundname"/>
+              </title>
+            </xsl:when>
+            <xsl:otherwise>
+              <title>
+                <xsl:value-of select="title"/>
+              </title>
+            </xsl:otherwise>
+          </xsl:choose>
 
-        <!-- Add all the other documentation -->
-        <xsl:apply-templates select="detaileddescription"/>
+          <!-- Add all the other documentation -->
+          <xsl:apply-templates select="detaileddescription"/>
 
-        <xsl:for-each select="innerpage">
-          <section>
-            <title>
-              <xsl:value-of select="//compounddef[@id = current()/@refid]/title"/>
-            </title>
-            <xsl:apply-templates select="//compounddef[@id = current()/@refid]/detaileddescription"/>
-          </section>
-        </xsl:for-each>
-      </chapter>
-    </xsl:otherwise>
+          <!-- Add documentation for sub-pages -->
+          <xsl:for-each select="innerpage">
+            <section>
+              <title>
+                <xsl:value-of select="//compounddef[@id = current()/@refid]/title"/>
+              </title>
+              <xsl:apply-templates select="//compounddef[@id = current()/@refid]/detaileddescription"/>
+            </section>
+          </xsl:for-each>
+
+        </chapter>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -580,9 +582,6 @@
       <title>
         <xsl:value-of select="../../title"/>
       </title>
-      <!--      <graphic>
-        <xsl:attribute name="fileref">html/dot_inline_dotgraph_<xsl:number format="1" level="any" count="dot"/>.svg</xsl:attribute>
-      </graphic>-->
       <mediaobject>
         <imageobject>
           <imagedata scalefit="1" width="100%" contentdepth="100%">
