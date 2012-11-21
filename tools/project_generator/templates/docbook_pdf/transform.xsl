@@ -96,9 +96,12 @@
   </xsl:template>
 
   <!-- Used for making struct look nice in the documentation -->
-  <xsl:template match="//compounddef[@kind ='struct']">
+  <xsl:template match="//compounddef[@kind ='struct' or @kind ='union']">
     <section id="{@id}" xreflabel="{compoundname}">
-      <title> struct <xsl:value-of select="compoundname"/>
+      <title>
+        <xsl:value-of select="@kind"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="compoundname"/>
       </title>
       <xsl:apply-templates select="detaileddescription"/>
       <xsl:for-each select="sectiondef[@kind='public-attrib']">
