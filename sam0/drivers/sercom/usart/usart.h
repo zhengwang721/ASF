@@ -41,6 +41,7 @@
  */
 #ifndef __USART_H__
 #define __USART_H__
+
 #include <stdint.h>
 #include <sercom.h>
 #include <stdbool.h>
@@ -66,19 +67,7 @@ enum usart_com_mode {
 	USART_COM_MODE_SYNC_CLOCK_EXTERNAL,
 };
 
-// enum usart_frame_format {
-// 	USART_FRAME_FORMAT_FULL_DUPLEX                = SERCOM_USART_FORM_1_gc,
-// 	USART_FRAME_FORMAT_FULL_DUPLEX_PARITY         = SERCOM_USART_FORM_2_gc,
-// 	USART_FRAME_FORMAT_FULL_DUPLEX_ADDRESS        = SERCOM_USART_FORM_3_gc,
-// 	USART_FRAME_FORMAT_FULL_DUPLEX_ADDRESS_PARITY = SERCOM_USART_FORM_4_gc,
-// 	USART_FRAME_FORMAT_HALF_DUPLEX               =  SERCOM_USART_FORM_5_gc,
-// 	USART_FRAME_FORMAT_HALF_DUPLEX_PARITY         = SERCOM_USART_FORM_6_gc,
-// 	USART_FRAME_FORMAT_HALF_DUPLEX_ADDRESS        = SERCOM_USART_FORM_7_gc,
-// 	USART_FRAME_FORMAT_HALF_DUPLEX_ADDRESS_PARITY = SERCOM_USART_FORM_8_gc,
-// };
-
-
-//TODO: change name?
+//TODO: remove as there will be no half duplex for now..?
 enum usart_frame_format {
 	USART_FRAME_FORMAT_FULL_DUPLEX   = SERCOM_USART_FORM_1_gc,
 	USART_FRAME_FORMAT_HALF_DUPLEX   = SERCOM_USART_FORM_5_gc,
@@ -86,7 +75,7 @@ enum usart_frame_format {
 
 enum usart_parity {
 	USART_PARITY_ODD  = SERCOM_USART_PMODE_bm,
-	USART_PARITY_EVEN = 0,	
+	USART_PARITY_EVEN = 0,
 	USART_PARITY_NONE = 0xFF,
 };
 
@@ -111,7 +100,7 @@ enum usart_char_size {
 	USART_CHAR_SIZE_6BIT = SERCOM_USART_CHSIZE_6BIT_gc,
 	USART_CHAR_SIZE_7BIT = SERCOM_USART_CHSIZE_7BIT_gc,
 	USART_CHAR_SIZE_8BIT = SERCOM_USART_CHSIZE_8BIT_gc,
-	USART_CHAR_SIZE_9BIT = SERCOM_USART_CHSIZE_9BIT_gc,	
+	USART_CHAR_SIZE_9BIT = SERCOM_USART_CHSIZE_9BIT_gc,
 };
 
 /**
@@ -192,8 +181,8 @@ enum status_code usart_init(struct usart_dev_inst *dev_inst, SERCOM_t *hw_dev,
  * - 1 stop bit
  * - 115200 baud
  *
- *	Both the device and the config struct will be updated with the predefined
- *	settings.
+ * Both the device and the config struct will be updated with the predefined
+ * settings.
  *
  * \param config Pointer to the configuration struct
  */
