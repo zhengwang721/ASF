@@ -28,8 +28,9 @@
     </group>
   </device-map>
 
-  <board id="avr32.boards.evk1100" caption="Board support" mcu="at32uc3a0512">
+  <board id="avr32.boards.evk1100" caption="Board support">
     <info type="gui-flag" value="visible"/>
+    <device-support value="at32uc3a0512"/>
   </board>
 
   <module type="driver" id="avr32.driver.test" caption="Test driver">
@@ -45,6 +46,7 @@
     <require idref="avr32.driver.test"/>
     <require idref="avr32.boards.evk1100"/>
     <info type="gui-flag" value="hidden"/>
+    <device-support value="at32uc3a0512"/>
   </project>
 
 </asf>

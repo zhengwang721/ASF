@@ -3,7 +3,7 @@
  *
  * \brief Cyclic Redundancy Check Calculation Unit (CRCCU) example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@
  *
  * \par Requirements
  *
- * This package can be used with SAM3S,SAM3S-EK2 and SAM4S evaluation kits
+ * This package can be used with SAM4L evaluation kits
  *
  * \par Description
  *
@@ -97,44 +97,34 @@
  *    \code
  *     -- CRCCU Example --
  *     -- SAMXX-EK
- *     -- Compiled: xxx xx 20xx xx:xx:xx --
+ *     -- Compiled: XXXXXXXX --
  *     ...
  *    \endcode
  *
  */
 
+#include <asf.h>
 #include <string.h>
-#include "asf.h"
-#include "stdio_serial.h"
-#include "conf_board.h"
 #include "conf_crccu_example.h"
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 /** Flash buffer address */
-#define FLASH_BUFFER_ADDRESS	(IFLASH_ADDR + IFLASH_SIZE/2 - FLASH_BUFFER_SIZE)
+#define FLASH_BUFFER_ADDRESS   (FLASH_ADDR + FLASH_SIZE/2 - FLASH_BUFFER_SIZE)
 
 /** CRC data buffer size (in byte) */
-#define BUFFER_LENGTH	64
+#define BUFFER_LENGTH   64
 #if (BUFFER_LENGTH > FLASH_BUFFER_SIZE)
 #error "Flash buffer size is too small."
 #endif
 
 /** CRCCU operation time out value */
-#define CRCCU_TIMEOUT	0xFFFFFFFF
+#define CRCCU_TIMEOUT   0xFFFFFFFF
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- CRCCU Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#ifdef __ICCARM__	/* IAR */
+#ifdef __ICCARM__   /* IAR */
 #pragma data_alignment=512
 #define __attribute__(...)
 #endif
@@ -144,9 +134,6 @@ crccu_dscr_type_t crc_dscr;
 
 /** CRC data buffer */
 uint8_t g_uc_data_buf[BUFFER_LENGTH];
-
-/** Flash wait state number. */
-#define FLASH_WAIT_STATE_NBR   6
 
 /**
  * \brief Compute CRC of a buffer.
@@ -182,7 +169,7 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 	crccu_configure_mode(CRCCU, CRCCU_MR_ENABLE | ul_polynomial_type);
 
 	/* Start the CRC calculation */
-	crccu_enable(CRCCU);
+	crccu_enable_dma(CRCCU);
 
 	/* Wait for calculation ready */
 	while ((crccu_get_dma_status(CRCCU) == CRCCU_DMA_SR_DMASR) &&
@@ -196,10 +183,10 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 	if (ul_polynomial_type == CRCCU_MR_PTYPE_CCITT16) {
 		/* 16-bits CRC */
 		ul_crc &= 0xFFFF;
-		printf("  CRC of the buffer is 0x%04lu\n\r", (unsigned long)ul_crc);
+		printf("  CRC of the buffer is 0x%04x\n\r", ul_crc);
 	} else {
 		/* 32-bits CRC */
-		printf("  CRC of the buffer is 0x%08lu\n\r", (unsigned long)ul_crc);
+		printf("  CRC of the buffer is 0x%08x\n\r", ul_crc);
 	}
 
 	return ul_crc;
@@ -208,10 +195,10 @@ static uint32_t compute_crc(uint8_t *p_buffer, uint32_t ul_length,
 /**
  * \brief Compute CRC of a buffer and compare it with the reference CRC.
  *
- * \param p_Buffer  The buffer holding the data.
- * \param ul_length  The buffer length.
+ * \param p_Buffer         The buffer holding the data.
+ * \param ul_length          The buffer length.
  * \param ul_type  The polynomial type(CRCCU_MR_PTYPE_XXX).
- * \param ul_ref_crc  Reference CRC for the buffer.
+ * \param ul_ref_crc          Reference CRC for the buffer.
  *
  * \return CRC of the buffer.
  */
@@ -234,17 +221,22 @@ static uint32_t compute_crc_and_compare(uint8_t *p_buffer, uint32_t ul_length,
 }
 
 /**
- *  \brief Configure the Console Uart
+ *  Configure serial console.
  */
 static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
-	
-	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+
+	/* Configure console. */
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -268,33 +260,16 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* Enable CRCCU peripheral clock */
-	pmc_enable_periph_clk(ID_CRCCU);
-
-	/* Initialize flash: 6 wait states for flash writing. */
-	flash_init(FLASH_ACCESS_MODE_128, FLASH_WAIT_STATE_NBR);
-
-	/* Unlock flash page. */
-	flash_unlock(FLASH_BUFFER_ADDRESS,
-			FLASH_BUFFER_ADDRESS + IFLASH_PAGE_SIZE - 1, NULL, NULL);
+	sysclk_enable_peripheral_clock(CRCCU);
 
 	/* Fill data buffer in SRAM (The data may be random data) */
 	for (ul_counter = 0; ul_counter < BUFFER_LENGTH; ul_counter++) {
 		g_uc_data_buf[ul_counter] = ul_counter;
 	}
 
-#if SAM4S
 	/* Fill data buffer in Flash, the data is same as in SRAM */
-	flash_erase_page(FLASH_BUFFER_ADDRESS,
-			IFLASH_ERASE_PAGES_4);
-
-	flash_write(FLASH_BUFFER_ADDRESS,
-			(void *)g_uc_data_buf,
-			BUFFER_LENGTH, 0);
-#else
-	flash_write(FLASH_BUFFER_ADDRESS,
-			(void *)g_uc_data_buf,
-			BUFFER_LENGTH, 1);
-#endif
+	flashcalw_memcpy((void *)FLASH_BUFFER_ADDRESS, g_uc_data_buf,
+				sizeof(g_uc_data_buf), true);
 
 	/* Test CRC with CCITT-16 polynomial */
 	puts("\n\r====Test CRC with CCITT 16 (0x1021) ====\r");
@@ -337,10 +312,3 @@ int main(void)
 	}
 }
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond

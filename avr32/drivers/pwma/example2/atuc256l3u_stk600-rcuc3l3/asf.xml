@@ -7,8 +7,9 @@
 		<require idref="avr32.drivers.pwma.example2"/>
 		<require idref="board.stk600-rcuc3l3"/>
 		<config name="config.board.stk600-rcuc3l3.init" value="no"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="atuc256l3u"/>
 	</project>
 </asf>

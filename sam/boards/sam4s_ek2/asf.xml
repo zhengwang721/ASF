@@ -19,7 +19,7 @@
 			<require idref="sam.drivers.pio"/>
 		</module>
 	</select-by-config>
-	<board id="board.sam4s_ek2" vendor="Atmel" caption="SAM4S-EK2" mcu="atsam4sd32c">
+	<board id="board.sam4s_ek2" vendor="Atmel" caption="SAM4S-EK2">
 		<build type="define" name="BOARD" value="SAM4S_EK2"/>
 		<build type="define" name="__SAM4SD32C__" value=""/>
 		<build type="header-file" value="sam4s_ek2.h"/>
@@ -39,5 +39,6 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.sam4s_ek2.init"/>
 		<require idref="config.board.sam4s_ek2.led"/>
+		<device-support value="atsam4sd32c"/>
 	</board>
 </asf>

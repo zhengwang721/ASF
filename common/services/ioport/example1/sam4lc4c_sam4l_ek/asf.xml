@@ -3,11 +3,11 @@
 		<info type="description" value="summary">
 			Toggles output port pin controlling LED0
 		</info>
-		<build type="include-path" value="." />
-		<build type="header-file" value="conf_board.h" />
-		<build type="header-file" value="conf_clock.h" />
-		<build type="header-file" value="conf_example.h" />
-		<require idref="common.services.ioport.example1" />
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<require idref="common.services.ioport.example1"/>
 		<require idref="board.sam4l_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
@@ -16,5 +16,6 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

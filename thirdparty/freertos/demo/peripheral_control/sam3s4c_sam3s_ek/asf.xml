@@ -18,5 +18,6 @@
 		<config name="config.common.services.freertos.peripheral_control.spi" value="no"/>
 		<config name="config.common.services.freertos.peripheral_control.twi" value="no"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam3s4c"/>
 	</project>
 </asf>

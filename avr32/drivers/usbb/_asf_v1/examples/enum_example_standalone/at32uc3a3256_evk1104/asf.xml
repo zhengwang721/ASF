@@ -8,8 +8,9 @@
 		<config name="config.compiler.iarew32.app_stack_size" value="0x0000"/>
 		<config name="config.compiler.iarew32.heap_size" value="0x6000"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

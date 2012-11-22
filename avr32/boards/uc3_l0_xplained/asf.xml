@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <asf xmlversion="1.0">
 	<select-by-config id="config.board.uc3_l0_xplained.led" name="config.board.uc3_l0_xplained.led" caption="UC3-L0 Xplained LED support" default="yes">
 		<module type="meta" id="config.board.uc3_l0_xplained.led#no" caption="UC3-L0 Xplained LED support disabled">
@@ -21,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.uc3_l0_xplained" vendor="Atmel" caption="UC3-L0 Xplained" mcu="at32uc3l064">
+	<board id="board.uc3_l0_xplained" vendor="Atmel" caption="UC3-L0 Xplained">
 		<build type="define" name="BOARD" value="UC3_L0_XPLAINED"/>
 		<build type="header-file" value="uc3_l0_xplained.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>
@@ -31,5 +30,6 @@
 		<require idref="config.board.uc3_l0_xplained.led"/>
 		<require idref="config.board.uc3_l0_xplained.init"/>
 		<config name="config.compiler.avr32gcc.programming_clock" value="int"/>
+		<device-support value="at32uc3l064"/>
 	</board>
 </asf>

@@ -50,11 +50,11 @@ void config_port_pins(void)
 
 	pin_conf.input.enabled = true;
 	pin_conf.output.enabled = false;
-	pin_conf.input.port_pin_pull = PORT_PIN_PULL_UP;
-	pin_conf.input.port_pin_sampling_mode = PORT_PIN_SAMPLING_CONTINUOUS;
-	pin_conf.input.port_pin_edge_conf.wake_if_sleeping = false;
-	pin_conf.input.port_pin_edge_conf.filter_input_signal = true;
-	pin_conf.input.port_pin_edge_conf.port_edge_detect
+	pin_conf.input.pull = PORT_PIN_PULL_UP;
+	pin_conf.input.sampling_mode = PORT_PIN_SAMPLING_CONTINUOUS;
+	pin_conf.input.edge_detection.wake_if_sleeping = false;
+	pin_conf.input.edge_detection.filter_input_signal = true;
+	pin_conf.input.edge_detection.mode
 		= PORT_EDGE_DETECT_FALLING;
 	port_pin_set_config(10, &pin_conf);
 
@@ -79,7 +79,7 @@ int main (void)
 //! [set_sanity]
 
 //! [sei]
-	sei();
+	//sei();
 //! [sei]
 
 //! [button_press]
@@ -87,7 +87,7 @@ int main (void)
 //! [button_press]
 
 //! [disable_interrupts]
-	cli();
+	//cli();
 //! [disable_interrupts]
 
 //! [unlock_perph]
@@ -116,7 +116,7 @@ int main (void)
 //! [clear_sanity]
 
 //! [enable_interrupts]
-	sei();
+	//sei();
 //! [enable_interrupts]
 
 //! [inf_loop]

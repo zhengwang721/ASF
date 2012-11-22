@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_at25dfx.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<require idref="common.components.memory.serial_flash.at25dfx.at25dfx_example"/>
 		<require idref="board.sam4l_ek"/>
 		<config name="config.board.sam4l_ek.init" value="yes"/>
@@ -19,5 +19,6 @@
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>
