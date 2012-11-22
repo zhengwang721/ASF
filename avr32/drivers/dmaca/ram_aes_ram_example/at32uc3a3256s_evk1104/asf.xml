@@ -5,8 +5,9 @@
 		<config name="config.board.evk1104.init" value="no"/>
 		<build type="define" name="DMACA_AES_EVAL_CPU_FREQ" value="12000000"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256s"/>
 	</project>
 </asf>

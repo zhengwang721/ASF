@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<board id="board.dummy.atsam0d4" caption="Dummy board support / ATSAM0D4" mcu="atsam0d4">
+	<board id="board.dummy.atsam0d4" vendor="Atmel" caption="Dummy board support / ATSAM0D4">
 		<build type="define" name="BOARD" value="DUMMY_BOARD"/>
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
@@ -11,5 +11,6 @@
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/dummy_sram.mac" toolchain="iarewarm"/>
 		<require idref="sam0.utils.cmsis.sam0d.source.template"/>
 		<require idref="common.boards"/>
+		<device-support value="atsam0d4"/>
 	</board>
 </asf>

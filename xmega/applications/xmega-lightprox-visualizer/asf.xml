@@ -7,7 +7,7 @@
 			then formatted and transferred to a remote host for display using
 			the Atmel Data Visualizer tool.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_a1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
@@ -22,6 +22,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 	<project caption="XMEGA-A3BU Xplained with Xplained Light/Proximity Board #1" id="xmega.applications.xmega-a3bu_avrsblp1_visualizer">
 		<info type="description" value="summary">
@@ -31,7 +32,7 @@
 			then formatted and transferred to a remote host for display using
 			the Atmel Data Visualizer tool.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -47,6 +48,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 	<project caption="XMEGA-B1 Xplained with Xplained Light/Prox Board #1" id="xmega.applications.xmega-b1_avrsblp1_visualizer">
 		<info type="description" value="summary">
@@ -56,7 +58,7 @@
 			then formatted and transferred to a remote host for display using
 			the Atmel Data Visualizer tool.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -72,5 +74,6 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 </asf>

@@ -70,19 +70,18 @@
  * \enddot
  *
  * \section module_introduction Introduction
- *
- * \par Overview of the Watchdog
  * The Watchdog module in the SAM0+ devices is designed to give an added level
  * of safety in critical systems, to ensure a system reset is triggered in the
  * case of a deadlock or other software malfunction.
- * \n\n
+ *
+ * \subsection module_overview Overview of the Watchdog
  * At a basic level, the Watchdog is a system timer with a fixed period; once
  * enabled, it will continue to count ticks of its asynchronous clock until
  * it is periodically reset, or the timeout period is reached. In the event of a
  * Watchdog timeout, the module will trigger a system reset identical to a pulse
  * of the device's reset pin, resetting all peripherals to their power-on
  * default states and restarting the application software from the reset vector.
- * \n\n
+ *
  * In many systems, there is an obvious upper bound to the amount of time each
  * iteration of the main application loop can be expected to run, before a
  * malfunction can be assumed (either due to a deadlock waiting on hardware or
@@ -90,18 +89,18 @@
  * timeout period equal to this upper bound, a malfunction in the system will
  * force a full system reset to allow for a graceful recovery.
  *
- * \par Locked Mode
+ * \subsection locked_mode Locked Mode
  * The Watchdog configuration can be set in the device fuses and locked in
  * hardware, so that no software changes can be made to the Watchdog
  * configuration. Additionally, the Watchdog can be locked on in software if it
  * is not already locked, so that the module configuration cannot be modified
  * until a power on reset of the device.
- * \n\n
+ *
  * The locked configuration can be used to ensure that faulty software does not
  * cause the Watchdog configuration to be changed, preserving the level of
  * safety given by the module.
  *
- * \par Window Mode
+ * \subsection window_mode Window Mode
  * Just as there is a reasonable upper bound to the time the main program loop
  * should take for each iteration, there is also in many applications a lower
  * bound, i.e. a \a minimum time for which each loop iteration should run for
@@ -112,7 +111,7 @@
  * If the Watchdog is not reset \a after the window opens but not \a before the
  * Watchdog expires, the system will reset.
  *
- * \par Early Warning
+ * \subsection early_warning Early Warning
  * In some cases it is desirable to receive an early warning that the Watchdog is
  * about to expire, so that some system action (such as saving any system
  * configuration data for failure analysis purposes) can be performed before the

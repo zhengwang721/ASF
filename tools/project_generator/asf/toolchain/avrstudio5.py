@@ -33,7 +33,6 @@ else:
 
 class AVRStudio5Project(GenericProject):
 	generator_tag = 'as5_8'
-	framework_content_id = 'Atmel.ASF'
 	toolchain = 'avrgcc'
 	toolchain_tag = 'AvrGcc'
 	toolchain_name = 'com.Atmel.AVRGCC8'
@@ -125,6 +124,9 @@ class AVRStudio5Project(GenericProject):
 
 		return do_make
 
+	def make_content_id(self, module):
+		return module.extension.org + "." + module.extension.shortname
+
 	def _get_build_file_dict_from_modules(self, modules):
 		"""
 		Returns a dictionary containing all the build files for the
@@ -151,20 +153,19 @@ class AVRStudio5Project(GenericProject):
 		]
 
 		for type_class in file_build_type_classes:
-			file_list = []
+			files[type_class] = {}
 
 			for module in modules:
 				module_files = module.get_build(type_class, self.toolchain, recursive=False)
-				file_list.extend(module_files)
+				files[type_class].update([(f, [None, module, None]) for f in module_files])
 
-			files[type_class] = dict([(f, None) for f in file_list])
 
 		# Add the files contained in the distribute-dirs as files of
 		# type distribute-file. Note that the individual files
 		# specified with build type distribute-file were added above.
-		distribute_file_list = []
 
 		for module in modules:
+			distribute_file_list = []
 			module_distribute_dirs = module.get_build(BuildDistributeDirectory, self.toolchain, recursive=False)
 
 			for directory in module_distribute_dirs:
@@ -174,7 +175,7 @@ class AVRStudio5Project(GenericProject):
 
 					distribute_file_list.extend([os.path.join(root_dir, f) for f in dir_files])
 
-		files[BuildDistributeFile].update(dict([(f, None) for f in distribute_file_list]))
+			files[BuildDistributeFile].update(dict([(f, [None, module, None]) for f in distribute_file_list]))
 
 		return files
 
@@ -199,7 +200,7 @@ class AVRStudio5Project(GenericProject):
 		file_list.sort()
 		for f in file_list:
 			content_e = ET.SubElement(itemgroup_e, agp_ns(maintype))
-			content_e.attrib['Include'] = f.replace(os.sep, '\\')
+			content_e.attrib['Include'] = f[0].replace(os.sep, '\\')
 
 			if subtype:
 				subtype_e = ET.SubElement(content_e, agp_ns('SubType'))
@@ -250,7 +251,7 @@ class AVRStudio5Project(GenericProject):
 
 		# Add the individual files in their respective <Folder>
 		for f in file_list:
-			(f_dir, f_name) = os.path.split(f)
+			(f_dir, f_name) = os.path.split(f[0])
 
 			# Make a list of the directory structure
 			f_dir_list = []
@@ -277,7 +278,7 @@ class AVRStudio5Project(GenericProject):
 			file_e.attrib['ReplaceParameters'] = repl_param_value
 
 
-	def _add_files_to_framework_config_files(self, files_e, file_list, framework_name, framework_version, changed=False):
+	def _add_files_to_framework_config_files(self, files_e, file_list, changed=False):
 		"""
 		Adds the items in a file list to the supplied root XML element,
 		as XML elements with the specified framework name and version,
@@ -297,14 +298,12 @@ class AVRStudio5Project(GenericProject):
 			return path.replace(os.sep, '/')
 
 		file_list.sort()
-		for (f_source, f_target) in file_list:
+		for (dummy, f_target, module, f_source) in file_list:
 			e = ET.SubElement(files_e, "file")
-			e.set("framework", framework_name)
-			e.set("version", framework_version)
 			e.set("path", fix_path_sep(f_target))
 			e.set("source", fix_path_sep(f_source))
 			e.set("changed", str(changed))
-			e.set("content-id", self.framework_content_id)
+			e.set("content-id", self.make_content_id(module))
 
 
 	def _get_selected_device(self):
@@ -341,7 +340,10 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_main_application_module(self, modules):
 		application_modules = [m for m in modules if m.type == 'application']
-		return application_modules[0]
+		if application_modules:
+			return application_modules[0]
+		else:
+			return None
 
 
 	def _get_formatted_description(self, module):
@@ -404,7 +406,7 @@ class AVRStudio5Project(GenericProject):
 		project_e.attrib['ReplaceParameters'] = 'true'
 
 		# Add asf.h + the project file list to <Project>
-		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
+		file_target_list = self.project_compiler_files_dict.values() + self.project_distribute_files_dict.values() + [[os.path.join(self.app_dir, 'asf.h')]]
 		self._add_files_to_vstemplate_project(project_e, file_target_list)
 
 		# -- Generate custom parameters
@@ -506,8 +508,6 @@ class AVRStudio5Project(GenericProject):
 
 		# Get the total configuration
 		total_config = self.get_total_config()
-		if configuration.lower() == 'debug':
-			total_config['optimization'] = self.optlevel_default_for_debug
 
 		# Get {tag : content} dictionaries for toolchain configuration
 		# of both the release and the debug target
@@ -530,8 +530,20 @@ class AVRStudio5Project(GenericProject):
 			settings[key] = self.sort_flags(old_asm_flags + asm_flags)
 	# --- End temporary workaround
 
-		return self._prepend_toolchain_to_dict_keys(settings)
+		settings = self._prepend_toolchain_to_dict_keys(settings)
 
+		# Override with the new toolchain-config elements
+		(new_settings, new_list_settings) = self.get_toolchain_configuration()
+		settings.update(new_settings)
+		settings.update(new_list_settings)
+
+		# But enforce the default optimization level for Debug
+		if configuration.lower() == 'debug':
+			debug_opt_setting = self._get_avrgccproj_optimization_level({'optimization' : self.optlevel_default_for_debug})
+			debug_opt_setting = self._prepend_toolchain_to_dict_keys(debug_opt_setting)
+			settings.update(debug_opt_setting)
+
+		return settings
 
 	# --- Start temporary workaround for AVR Studio bug 14500. TODO: Remove
 	def _get_toolchain_assembler_flag_key(self):
@@ -628,13 +640,13 @@ class AVRStudio5Project(GenericProject):
 		file_target_list = self.project_compiler_files_dict.values()
 		self._add_files_to_avrgccproj_itemgroup(itemgroups_e[0], file_target_list, 'Compile', 'compile')
 
-		dir_set |= set(os.path.dirname(file_target) for file_target in file_target_list)
+		dir_set |= set(os.path.dirname(file_target[0]) for file_target in file_target_list)
 
 		# TODO Find the correct tag and type to use.
-		file_target_list = self.project_distribute_files_dict.values() + [os.path.join(self.app_dir, 'asf.h')]
+		file_target_list = self.project_distribute_files_dict.values() + [[os.path.join(self.app_dir, 'asf.h')]]
 		self._add_files_to_avrgccproj_itemgroup(itemgroups_e[0], file_target_list, 'None')
 
-		dir_set |= set(os.path.dirname(file_target) for file_target in file_target_list)
+		dir_set |= set(os.path.dirname(file_target[0]) for file_target in file_target_list)
 
 		# Add all parent directories to the set: "a\b\c" -> "a", "a\b", "a\b\c"
 		parent_dir_set = set()
@@ -772,7 +784,7 @@ class AVRStudio5Project(GenericProject):
 		linker_script = self.project_build_items.get(BuildLinkerScript, None)
 		if linker_script:
 			target_file = linker_script.values()
-			text += ' -T%s' % os.path.join('..', target_file[0]).replace(os.sep, '/')
+			text += ' -T%s' % os.path.join('..', target_file[0][0]).replace(os.sep, '/')
 
 		# Add any linker flags that have been set in the project
 		linker_flags = self.project_build_items[BuildLinkerFlags]
@@ -841,7 +853,7 @@ class AVRStudio5Project(GenericProject):
 		libpaths = []
 
 		for lib_source, lib_target in self.project_build_items[BuildUserLibrary].items():
-			(libpath, libfile) = os.path.split(lib_target)
+			(libpath, libfile) = os.path.split(lib_target[0])
 			# Library name must be on the form 'libNN.a'
 			libs.append(libfile[len('lib'):libfile.rfind('.')])
 			libpath = os.path.join('..', libpath)
@@ -937,10 +949,11 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_documentation_help_url(self, project):
 		"""
-		Get the documentation URL given a project object.
+		Get the documentation URL given a project object, if found.
+		If no URL is found, an empty string is returned.
 		"""
 
-		return project.get_help_url(project.id)
+		return project.get_help_url(project.id) or ""
 
 
 	def _generate_framework_config_tree(self):
@@ -953,6 +966,7 @@ class AVRStudio5Project(GenericProject):
 			<options/>
 			<configurations/>
 			<files/>
+			<dependencies/>
 		</framework-data>
 		"""
 		xml_tree = ET.fromstring(framework_config_template).getroottree()
@@ -962,20 +976,23 @@ class AVRStudio5Project(GenericProject):
 		options_e = root_element.find('options')
 		configs_e = root_element.find('configurations')
 		files_e = root_element.find('files')
+		dependencies_e = root_element.find('dependencies')
 
 		# Add board and project identifiers to framework-data
 		default_attribs = {
 			"value"      : "Add",
 			"config"     : "",
-			"content-id" : self.framework_content_id,
 		}
 
-		board_id_e = ET.SubElement(root_element, "board")
-		board_id_e.set("id", self.project.board)
-		board_id_e.attrib.update(default_attribs)
+		if self.project.board:
+			board_id_e = ET.SubElement(root_element, "board")
+			board_id_e.set("id", self.project.board)
+			board_id_e.set("content-id",self.make_content_id(self.project))
+			board_id_e.attrib.update(default_attribs)
 
 		project_id_e = ET.SubElement(root_element, "project")
 		project_id_e.set("id", self.project.id)
+		project_id_e.set("content-id",self.make_content_id(self.project))
 		project_id_e.attrib.update(default_attribs)
 
 		arch = self._get_selected_device_series()
@@ -983,6 +1000,7 @@ class AVRStudio5Project(GenericProject):
 		remote_id_to_selectbyconfig_id = {}
 		remote_id_to_last_prereq_id = {}
 		remote_id_to_value = {}
+		content_id = {}
 
 		# Generate the list of selected ASF prerequisites, i.e., options
 		if not arch:
@@ -993,11 +1011,9 @@ class AVRStudio5Project(GenericProject):
 			for module in [self.project] + self.application_modules:
 					prerequisites.extend(module.get_prerequisites(recursive=False))
 
-			project_board = self.db.lookup_by_id(self.project.board)
-			if not project_board:
-				self.log.warning("Project %s does not require a board definition" % self.project.id)
+			project_board = self.project._board
 			# Add prerequisites from the board definition.
-			else:
+			if project_board:
 				board_file = project_board.fromfile
 				board_prereqs = project_board.get_prerequisites(recursive=False)
 
@@ -1020,6 +1036,7 @@ class AVRStudio5Project(GenericProject):
 					continue
 
 				remote_id = prereq.id
+				content_id[remote_id] = self.make_content_id(prereq)
 
 				# The value for the option depends on whether it is a check box or combo list,
 				# i.e., a Module or SelectByConfig. For the latter class, allow the previously
@@ -1063,29 +1080,52 @@ class AVRStudio5Project(GenericProject):
 				e.set("id", remote_id)
 				e.set("value", "Add")
 				e.set("config", value)
-				e.set("content-id", self.framework_content_id)
+				e.set("content-id", content_id[remote_id])
 
 		# Add URL to Doxygen generated documentation for application
 		documentation_help_url = self._get_documentation_help_url(self.project)
 		documentation_e = ET.SubElement(root_element, "documentation")
 		documentation_e.set("help", documentation_help_url)
 
-		framework_version = self.db.get_framework_version_number()
-
 		# Generate the list of added files
 		files_to_add = []
-		for file_source, file_target in self.project_compiler_files_dict.items() + self.project_distribute_files_dict.items():
-			files_to_add.append((file_source, file_target))
+		for file_source, file_info in self.project_compiler_files_dict.items() + self.project_distribute_files_dict.items():
+			files_to_add.append((file_source, file_info[0], file_info[1], file_info[2]))
 
-		self._add_files_to_framework_config_files(files_e, files_to_add, "", framework_version)
+		self._add_files_to_framework_config_files(files_e, files_to_add)
 
 		# Generate list of configurations
-		for key, value in self.project._project_board_configuration.config.items():
+		project_config = self.project._get_configuration_from_element().config
+		if self.project._board:
+			board_config = self.project._board.get_configuration().config
+		else:
+			board_config = None
+		for c in self.project._project_board_configuration.config:
+			if c in project_config:
+				# Use project extension
+				content_id = self.make_content_id(self.project)
+			elif c in board_config:
+				# Use board extension
+				content_id = self.make_content_id(self.project._board)
+			else:
+				# Default: use project extension
+				content_id = self.make_content_id(self.project)
 			e = ET.SubElement(configs_e, "configuration")
-			e.set("key", key)
-			e.set("value", value)
-			e.set("default", value)
-			e.set("content-id", self.framework_content_id)
+			e.set("key", c)
+			e.set("value", self.project._project_board_configuration.config[c])
+			e.set("default", self.project._project_board_configuration.config[c])
+			e.set("content-id", content_id)
+
+		# Generate list of extensions used
+		extensions = []
+		for (f_source, f_target, module, fixed_source) in files_to_add:
+			if module.extension not in extensions:
+				extensions.append(module.extension)
+		for extension in extensions:
+			e = ET.SubElement(dependencies_e, "fdk-extension")
+			e.set("eid", extension.org + "." + extension.shortname)
+			e.set("uuidref", extension.uuid)
+			e.set("version", extension.version)
 
 		# Fix indentation before returning
 		asf.helper.indent_xml(root_element)
@@ -1141,18 +1181,20 @@ class AVRStudio5Project(GenericProject):
 				'xplain'              : 'Xplain.jpg',
 			}
 
-			# Strip the common board. prefix from board ID to get its name
-			board_name = self.project.board[len('board.'):]
 			# Start with empty image_path - returned if no image found
 			image_path = None
 
-			# Look for a regexp match
-			for regexp, image in board_regexp_to_image.items():
-				if re.match(regexp, board_name):
-					image_name = image
-					image_dir = os.path.join(self.templatedir, self.image_dir, 'kits')
-					image_path = os.path.join(image_dir, image_name)
-					break
+			if self.project._board:
+				# Strip the common board. prefix from board ID to get its name
+				board_name = self.project.board[len('board.'):]
+
+				# Look for a regexp match
+				for regexp, image in board_regexp_to_image.items():
+					if re.match(regexp, board_name):
+						image_name = image
+						image_dir = os.path.join(self.templatedir, self.image_dir, 'kits')
+						image_path = os.path.join(image_dir, image_name)
+						break
 
 			self.vstemplate_image_path = image_path
 
@@ -1291,6 +1333,11 @@ class AVRStudio5Project(GenericProject):
 		as well, i.e., they are moved to the root of source_dir.
 		"""
 		for file_source in file_dict:
+			extension_prefix = os.path.join(self.src_root_dir, file_dict[file_source][1].extension.shortname)
+			if isinstance(file_dict[file_source][1].extension, asf.extension.StudioFdkExtension):
+				correct_source = file_source
+			else:
+				correct_source = os.path.relpath(file_source, file_dict[file_source][1].extension.root_path)
 			file_basename = os.path.basename(file_source)
 
 			if root_to_source_dir:
@@ -1306,9 +1353,11 @@ class AVRStudio5Project(GenericProject):
 				file_target = os.path.join(config_dir, file_basename)
 
 			else:
-				file_target = os.path.join(source_dir, file_basename_to_move)
+				file_target = os.path.join(extension_prefix, correct_source)
 
-			file_dict[file_source] = file_target
+			file_dict[file_source][0] = file_target
+			file_dict[file_source][2] = correct_source
+
 
 
 	def _get_project_data(self):
@@ -1352,10 +1401,12 @@ class AVRStudio5Project(GenericProject):
 		# Look for linker script unless project has unspecified device
 		if not re.match('unspecified.*', self.project.mcu.name):
 			# Add linker script, if any is found -- this is architecture-specific since it might not be required by the toolchain
-			linker_script = self._get_linker_script()
+			try:
+				linker_script = self._get_linker_script()
+			except:
+				linker_script = None
 			if linker_script:
-				other_project_files[BuildLinkerScript] = {linker_script : None}
-
+				other_project_files[BuildLinkerScript] = {linker_script : [None, self.project, None]}
 
 		# Move the files:
 		# - distribute files should be placed in asf_dir
@@ -1401,7 +1452,9 @@ class AVRStudio5Project(GenericProject):
 
 		# Check for duplicate file targets, i.e., whether any files are
 		# overwritten. Output a list of the affected files, if any.
-		file_target_list = project_compiler_files_dict.values() + project_distribute_files_dict.values()
+		file_target_list = []
+		for target in project_compiler_files_dict.values() + project_distribute_files_dict.values():
+			file_target_list.append(target[0])
 		file_target_set = set(file_target_list)
 
 		if len(file_target_set) < len(file_target_list):
@@ -1414,7 +1467,12 @@ class AVRStudio5Project(GenericProject):
 		# -- Add include paths --
 
 		# Get the include paths of the entire project
-		include_paths = self.project.get_build(BuildInclude, self.toolchain, recursive=True)
+		include_paths = []
+		for preq in [self.project] + self.project.get_prerequisites(recursive=True):
+			for include in preq.get_build(BuildInclude, self.toolchain, recursive=False):
+				include_paths.append(include)
+
+		include_paths = list(set(include_paths))
 
 		# Move them to asf_dir, add the application and config dirs
 		include_paths = [os.path.join(self.asf_dir, path) for path in include_paths]
@@ -1451,7 +1509,8 @@ class AVRStudio5Project(GenericProject):
 		if not device_description:
 			device_description = 'Unknown Device'
 
-		main_app = self._get_main_application_module(application_modules)
+		# Find main application, or use project to get meta-data for user
+		main_app = self._get_main_application_module(application_modules) or self.project
 
 		# Build a list of items for the project's caption based on the project type (application or template)
 		caption_items = []
@@ -1496,7 +1555,10 @@ class AVRStudio5Project(GenericProject):
 
 	@property
 	def project_board_vendor(self):
-		return self.project._board.vendor
+		if self.project._board:
+			return self.project._board.vendor
+		else:
+			return ''
 
 	@property
 	def project_board_addons(self):
@@ -1593,23 +1655,23 @@ class AVRStudio5Project(GenericProject):
 		return self.project_build_items.get(build_type, [])
 
 
-	def _get_license_to_ids(self):
+	def _get_license_to_modules(self):
 		"""
-		Return dictionary which maps a license file to the IDs of
-		whichever modules have specified it as their license.
+		Return dictionary which maps a license file to the modules
+		which have specified it as their license.
 		"""
-		license_to_ids = {}
+		license_to_mods = {}
 
 		# Get the licenses from all modules
 		for module in [self.project] + self.project.get_prerequisites(recursive=True):
 			licenses = module.get_build(BuildDistributeLicense, self.toolchain)
 
 			for license in licenses:
-				ids = license_to_ids.get(license, [])
-				ids.append(module.id)
-				license_to_ids[license] = ids
+				mods = license_to_mods.get(license, [])
+				mods.append(module)
+				license_to_mods[license] = mods
 
-		return license_to_ids
+		return license_to_mods
 
 
 	def get_compile_files(self):
@@ -1647,10 +1709,7 @@ class AVRStudio5Project(GenericProject):
 		Get the filename of the linker script, if any is specified/available.
 		"""
 		mcu_family_to_selector_id = {
-			'xmegaa' : 'xmega.utils.linker_scripts',
-			'xmegaau' : 'xmega.utils.linker_scripts',
-			'xmegab' : 'xmega.utils.linker_scripts',
-			'xmegad' : 'xmega.utils.linker_scripts',
+			'xmega' : 'xmega.utils.linker_scripts',
 		}
 
 		mcu_family = self.project.mcu.get_group_map()[-2]
@@ -1666,9 +1725,8 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_kit_name(self):
 		try:
-			project_board = self.db.lookup_by_id(self.project.board)
-			return project_board.caption
-		except:
+			return self.project._board.caption
+		except AttributeError:
 			return None
 
 
@@ -1717,11 +1775,11 @@ class AVRStudio5Project(GenericProject):
 
 			vstemplate_icon = self._get_vstemplate_icon_path()
 			if vstemplate_icon:
-				extra_files.append((vstemplate_icon, self.icon_name))
+				extra_files.append((vstemplate_icon, [self.icon_name]))
 
 			vstemplate_image = self._get_vstemplate_image_path()
 			if vstemplate_image:
-				extra_files.append((vstemplate_image, self.image_name))
+				extra_files.append((vstemplate_image, [self.image_name]))
 
 		# Set up functions to create ZIP archive or copy/write files
 		# in the output directory, depending on the setting
@@ -1759,7 +1817,7 @@ class AVRStudio5Project(GenericProject):
 
 		# Copy all the project's files
 		for file_source, file_target in self.project_compiler_files_dict.items() + self.project_distribute_files_dict.items() + extra_files:
-			copy_project_file(file_source, file_target)
+			copy_project_file(file_source, file_target[0])
 
 		# Output the generated files
 		for file_content, file_target in extra_content:
@@ -1820,7 +1878,11 @@ class AVRStudio5Project32(AVRStudio5Project):
 
 	def _get_linker_script(self):
 		selector_id = 'avr32.utils.linker_scripts'
-		return GenericProject._get_linker_script(self, selector_id)
+		try:
+			linker_script = GenericProject._get_linker_script(self, selector_id)
+		except:
+			linker_script = None
+		return linker_script
 
 
 	def _get_selected_device(self):
@@ -1964,7 +2026,11 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 
 	def _get_linker_script(self):
 		selector_id = self._get_product_line()+'.utils.linker_scripts'
-		return GenericProject._get_linker_script(self, selector_id)
+		try:
+			linker_script = GenericProject._get_linker_script(self, selector_id)
+		except:
+			linker_script = None
+		return linker_script
 
 	def _get_product_line(self):
 		# Last element in the device map is the family name ("sam", "sam0" etc.)

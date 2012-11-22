@@ -12,5 +12,6 @@
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<config name="config.sam.pio.pio_handler" value="no"/>
+		<device-support value="atsam4sd32c"/>
 	</project>
 </asf>

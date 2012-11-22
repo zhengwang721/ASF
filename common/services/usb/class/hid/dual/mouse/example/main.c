@@ -71,17 +71,6 @@ int main(void)
 	}
 }
 
-void main_usb_device_vbus_action(bool b_high)
-{
-	if (b_high) {
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
-	}
-}
-
 /**
  * \mainpage ASF USB host and device HID mouse
  *

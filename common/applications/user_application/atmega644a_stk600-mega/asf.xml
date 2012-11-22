@@ -6,5 +6,6 @@
 		<require idref="board.stk600-mega.atmega644a"/>
 		<generator value="as5_8_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega644a"/>
 	</project>
 </asf>
