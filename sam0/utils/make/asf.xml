@@ -7,7 +7,7 @@
 		linking. There is also two makefiles which contains device
 		program targets.
 		</info>
-		<build type="distribute" subtype="file" value="Makefile.in" toolchain="armgcc"/>
+		<build type="distribute" subtype="file" value="Makefile.sam.in" toolchain="armgcc"/>
 		<require idref="thirdparty.cmsis"/>
 		<device-support value="sam0+"/>
 	</module>

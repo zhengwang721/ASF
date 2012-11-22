@@ -4,11 +4,14 @@ import unittest
 
 from asf.configuration import ConfigurationHandler
 from asf.database import *
+from asf.extension import *
+from asf.extensionmanager import *
 from asf.helper import *
 from asf.runtime import Runtime
 from asf.toolchain.avrstudio5 import AVRStudio5Project, AVRStudio5Project32
 from asf.toolchain.generic import GenericProject
 from asf_avrstudio5_interface import PythonFacade
+from asf.findrebuild import *
 
 
 class UnitTestProject(GenericProject):
@@ -24,21 +27,17 @@ class UnitTestConfigItem(ConfigItem):
 class UnitTestDummyClass(object):
 	pass
 
-already_loaded = "nonexisting-filename"
+def turn_slash_to_os_sep(path):
+	path = path.replace('\\', os.sep)
+	path = path.replace('/', os.sep)
+	return path
 
-def use_filelist_cache(filename):
-	"""
-	This function is used to determine if a file-list can be loaded from disk and hence speed up the execution.
-	The first time this function is run with a given filename it returns False,
-	for subsequent runs for that filename it returns True
-	"""
-	global already_loaded
+def norm_path_join(*dirs):
+	norm_dirs = []
+	for dir in dirs:
+		norm_dirs.append(os.path.normpath(dir))
 
-	if filename == already_loaded:
-		return True
-
-	already_loaded = filename
-	return False
+	return os.path.join(*tuple(norm_dirs))
 
 def get_elementtree_as_string(root_element):
 	"""
@@ -78,29 +77,36 @@ def remove_newlines(input_string):
 	"""
 	return input_string.replace('\r','').replace('\n','');
 
+
 class SetupTestCase(unittest.TestCase):
 	xml_basedir = os.path.normcase("asf/test-input")
 	xml_filename = "default.xml"
-	xml_validation = "asf.xsd"
+	# If desired, specify a XML file to load the device map from
+	# devmap_xml_filename = xml_filename # Can use same xml as is test input
+	xml_validation = os.path.join("schemas", "fdk_content.xsd")
 
 	def setUp(self):
+		script_path = sys.path[0]
+
+		# Load XML validation scheme
+		ConfigDB.load_schema(self.xml_validation)
+		# Set filename for test content XML
+		ConfigDB.xml_filename = self.xml_filename
+
+		# Load device map if one was specified
+		try:
+			devmap_xml_filepath = os.path.join(self.xml_basedir, self.devmap_xml_filename)
+		except AttributeError:
+			pass
+		else:
+			ConfigDB.load_device_map(devmap_xml_filepath)
+
 		self.runtime = Runtime("", ConfigurationHandler())
 		level = self.runtime.get_log_level_from_text("critical")
 		self.runtime.setup_log(level)
 		self.runtime.log.info("test")
 
-		self.runtime.set_xml_input_filename(self.xml_filename)
-		self.runtime.set_xml_schema_path(self.xml_validation)
-
-		script_path = sys.path[0]
-		cache_dir = os.path.join(script_path, "cache")
-		self.runtime.create_and_set_cache_dir(cache_dir)
-
-		# Load filelist the first time, the use the cache
-		if use_filelist_cache(self.xml_filename):
-			self.runtime.set_use_file_list_cache(True)
-
-		self.db = ConfigDB(self.runtime)
+		self.db = ConfigDB(self.runtime, extension=None)
 
 	def tearDown(self):
 		self.runtime = None
@@ -260,6 +266,7 @@ class BuildTypeTestCase(SetupTestCase):
 
 class InfoTestCase(SetupTestCase):
 	xml_filename = "info.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_gui_flags(self):
 		project = self.db.lookup_by_id("project")
@@ -291,6 +298,8 @@ class CircularTestCase(SetupTestCase):
 
 
 class ConfigDBTestCase(SetupTestCase):
+	devmap_xml_filename = SetupTestCase.xml_filename
+
 	expected_modules = 8
 	expected_boards = 2
 	expected_projects = 5
@@ -403,58 +412,10 @@ class ConfigDBTestCase(SetupTestCase):
 		expect.update(expected_module)
 		self.assertEquals(expect, ids)
 
-class AppBuilderTestCase(SetupTestCase):
-	xml_filename = "appbuilder.xml"
-
-	def test_find_modules_for_mcu_xmega(self):
-		expected = ["xmega.driver.1", "xmega.driver.3"]
-		mcu = MCU("atxmega128a1", self.db)
-
-		result = [x.id for x in self.db.find_modules_for_mcu(mcu, types=["driver", "service", "component"])]
-
-		self.assertEquals(result, expected)
-
-	def test_find_modules_for_mcu_uc3(self):
-		expected = ["uc3.driver.1", "uc3.driver.2", "uc3.driver.3"]
-
-		mcu = MCU("at32uc3l0256", self.db)
-		result = [x.id for x in self.db.find_modules_for_mcu(mcu, types=["driver", "service", "component"])]
-
-		self.assertEquals(result, expected)
-
-	def test_hidden(self):
-		expected = "xmega.driver.hidden"
-		mcu = MCU("atxmega128a1", self.db)
-
-		not_hidden = [x.id for x in self.db.find_modules_for_mcu(mcu, types=["driver", "service", "component"])]
-		all = [x.id for x in self.db.find_modules_for_mcu(mcu, types=["driver", "service", "component"], check_hidden=False)]
-
-		# Find the hidden modules:
-		hidden = set(all).difference(set(not_hidden)).pop()
-
-		self.assertEquals(hidden, expected)
-
-	def test_types(self):
-		expected_dict = {
-				"driver" : ["xmega.driver.1"],
-				"service" : ["xmega.driver.3"],
-				}
-		mcu = MCU("atxmega128a1", self.db)
-
-		for types, expected in expected_dict.items():
-			result = [x.id for x in self.db.find_modules_for_mcu(mcu, types=types)]
-			self.assertEquals(result, expected)
-
-	def test_no_type(self):
-		expected = ["xmega.driver.example1", "xmega.driver.1", "xmega.driver.3"]
-		mcu = MCU("atxmega128a1", self.db)
-
-		result = [x.id for x in self.db.find_modules_for_mcu(mcu)]
-		self.assertEquals(result, expected)
-
 
 class AppBuilderTestCase(SetupTestCase):
 	xml_filename = "appbuilder.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_find_modules_for_mcu_xmega(self):
 		expected = ["xmega.driver.1", "xmega.driver.3"]
@@ -504,6 +465,7 @@ class AppBuilderTestCase(SetupTestCase):
 
 
 class ConfigItemTestCase(SetupTestCase):
+	devmap_xml_filename = SetupTestCase.xml_filename
 
 	def test_module(self):
 		module_to_test = "avr32.driver.test"
@@ -555,7 +517,6 @@ class ConfigItemTestCase(SetupTestCase):
 		assert board.caption is not None
 		assert board.toolchain is None
 
-		self.assertEquals(board.mcu.name, expected_mcu)
 		self.assertEquals(board.get_device_support(), [expected_mcu])
 
 	def test_project(self):
@@ -671,6 +632,7 @@ class ConfigItemTestCase(SetupTestCase):
 
 class DeviceMapTestCase(SetupTestCase):
 	xml_filename = "devicemap.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_mcu_list(self):
 		device_map = self.db.lookup_by_id("map.atmel")
@@ -785,8 +747,31 @@ class DeviceMapTestCase(SetupTestCase):
 		self.assertEquals(doc_arch_dict, expected_doc_arch_dict)
 
 
+class DeviceAliasMapTestCase(SetupTestCase):
+	xml_filename = "devicealiasmap.xml"
+	devmap_xml_filename = xml_filename
+
+	def test_device_support(self):
+		expected_device_support_1 = ['xmegaa1', 'xmegaa3']
+		expected_device_support_2 = ['atxmega128a1', 'uc3']
+		expected_device_support_3 = expected_device_support_1 + expected_device_support_2
+
+		module_1 = self.db.lookup_by_id("driver_1")
+		module_2 = self.db.lookup_by_id("driver_2")
+		module_3 = self.db.lookup_by_id("driver_3")
+
+		device_support_1 = module_1.get_device_support()
+		device_support_2 = module_2.get_device_support()
+		device_support_3 = module_3.get_device_support()
+
+		self.assertEquals(device_support_1, expected_device_support_1)
+		self.assertEquals(device_support_2, expected_device_support_2)
+		self.assertEquals(device_support_3, expected_device_support_3)
+
+
 class ProjectGeneratorTestCase(SetupTestCase):
 	xml_filename = "project-generator.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_get_application_modules(self):
 		project = self.db.lookup_by_id("project")
@@ -858,6 +843,7 @@ class ProjectGeneratorTestCase(SetupTestCase):
 
 class ModuleSelectorTestCase(SetupTestCase):
 	xml_filename = "module-selector.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_select_by_device(self):
 		project = self.db.lookup_by_id("project")
@@ -1004,6 +990,7 @@ class ModuleSelectorTestCase(SetupTestCase):
 
 class ProjectConfigTestCase(SetupTestCase):
 	xml_filename = "configuration.xml"
+	devmap_xml_filename = xml_filename
 
 	def test_config_simple(self):
 		project = self.db.lookup_by_id("project1")
@@ -1076,25 +1063,26 @@ class ProjectConfigTestCase(SetupTestCase):
 
 class AVRStudio5TestCase(SetupTestCase):
 	xml_filename = "avrstudio5.xml"
+	devmap_xml_filename = xml_filename
 
 
 	def test_get_build_file_dict_from_modules(self):
 		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
-		prereq_to_test = [self.db.lookup_by_id("xmega.driver.awesome.example1")]
+		prereq_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1")
 
 		expected_base_file = os.path.join(self.xml_basedir, 'example1')
 		expected_file_dict = {
-			BuildC        : {expected_base_file + '.c' : None},
-			BuildAssembly : {expected_base_file + '.s' : None},
-			BuildHeader   : {expected_base_file + '.h' : None},
-			BuildUserLibrary  : {expected_base_file + '.a' : None},
-			BuildDistributeFile  : {expected_base_file + '.d' : None},
-			BuildDistributeUserFile  : {expected_base_file + '.u' : None},
-			BuildDistributeLicense : {expected_base_file + '.l' : None},
+			BuildC        : {expected_base_file + '.c' : [None, prereq_to_test , None]},
+			BuildAssembly : {expected_base_file + '.s' : [None, prereq_to_test , None]},
+			BuildHeader   : {expected_base_file + '.h' : [None, prereq_to_test , None]},
+			BuildUserLibrary  : {expected_base_file + '.a' : [None, prereq_to_test , None]},
+			BuildDistributeFile  : {expected_base_file + '.d' : [None, prereq_to_test , None]},
+			BuildDistributeUserFile  : {expected_base_file + '.u' : [None, prereq_to_test , None]},
+			BuildDistributeLicense : {expected_base_file + '.l' : [None, prereq_to_test , None]},
 		}
 
 		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
-		file_dict = generator._get_build_file_dict_from_modules(prereq_to_test)
+		file_dict = generator._get_build_file_dict_from_modules([prereq_to_test])
 
 		self.assertEqual(file_dict, expected_file_dict)
 
@@ -1113,13 +1101,13 @@ class AVRStudio5TestCase(SetupTestCase):
 		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
 
 		file_list = [
-			os.path.join('dir1', 'sub1'),
-			os.path.join('dir2', 'dir3', 'subsub1'),
-			'root',
-			os.path.join('dir2', 'sub2'),
-			os.path.join('dir2', 'dir4', 'subsub2'),
-			os.path.join('dir2', 'dir4', 'subsub3'),
-			os.path.join('dir2', 'sub2'),
+			[os.path.join('dir1', 'sub1')],
+			[os.path.join('dir2', 'dir3', 'subsub1')],
+			['root'],
+			[os.path.join('dir2', 'sub2')],
+			[os.path.join('dir2', 'dir4', 'subsub2')],
+			[os.path.join('dir2', 'dir4', 'subsub3')],
+			[os.path.join('dir2', 'sub2')],
 		]
 
 		root_e = ET.Element('Project')
@@ -1131,6 +1119,13 @@ class AVRStudio5TestCase(SetupTestCase):
 
 
 	def test_get_project_data(self):
+		# Extension dummy class needed to generate project data
+		class DummyExtension(object):
+			org = 'Atmel'
+			shortname = 'ASF'
+			version = '1.2.3'
+			root_path = '.'
+
 		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
 
 		expected_name = 'AWESOME_EXAMPLE1'
@@ -1139,11 +1134,33 @@ class AVRStudio5TestCase(SetupTestCase):
 		expected_description = 'This is awesome. And this works just fine. [%s]' % (expected_caption_detailed)
 
 		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+		self.db.extension = DummyExtension()
 		generator._get_project_data()
 
 		self.assertEqual(generator.project_name, expected_name)
 		self.assertEqual(generator.project_caption, expected_caption)
 		self.assertEqual(generator.project_description, expected_description)
+
+
+	def test_get_toolchain_configuration(self):
+		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
+		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+
+		expected_configs = {
+			'AvrGcc.Project.Only'      : 'Project',
+			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Board.Only'        : 'Board',
+		}
+		expected_list_configs = {
+			'AvrGcc.Board.Only.List'        : ['Board'],
+			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
+		}
+
+		(configs, list_configs) = generator.get_toolchain_configuration()
+
+		self.assertEquals(configs, expected_configs)
+		self.assertEquals(list_configs, expected_list_configs)
 
 
 	def test_generate_vstemplate_tree(self):
@@ -1158,11 +1175,27 @@ class TruncStringTestCase(unittest.TestCase):
 		self.assertEqual(trunc_string(None,5), None)
 
 class AtmelStudioIntegrationTestCase(unittest.TestCase):
-	xml_basedir = os.path.normcase("asf/test-input")
-	xml_filename = "atmelstudio.xml"
-	facade = PythonFacade(os.path.join(xml_basedir, xml_filename), changedir=False)
-	level = facade.runtime.get_log_level_from_text("critical")
-	facade.runtime.setup_log(level)
+	xml_basedir = os.path.normcase("asf/test-input/studio_integration/")
+	device_map_file = os.path.join(xml_basedir, "devicemap.xml")
+	facade = None
+
+	def setUp(self):
+		# Instantiate facade object with test extension and device map
+		facade = PythonFacade([self.xml_basedir], self.device_map_file)
+		level = facade.runtime.get_log_level_from_text("critical")
+		facade.runtime.setup_log(level)
+
+		main_db = facade.get_database("Atmel.ASF")
+		main_ext = main_db.extension
+
+		self.facade = facade
+		self.main_db = main_db
+		self.main_ext = main_ext
+
+	def tearDown(self):
+		self.facade = None
+		self.main_db = None
+		self.main_ext = None
 
 	def test_PythonFacade_get_all_mcus(self):
 		expected_result = ['atxmega128a1', 'atxmega128b1', 'at32uc3a0128']
@@ -1173,12 +1206,10 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 	def test_PythonFacade_get_asf_h_content(self):
 		# Find all modules for our project
-		project = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
+		project = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
+		# Resolve all selections before fetching prerequisites
+		project.resolve_all_selections(self.facade.configuration, project.mcu)
 		modules = project.get_prerequisites(recursive=True)
-		projects = []
-		# Convert objects to IDs
-		for module in modules:
-			projects.append(module.id)
 
 		# Read expected output
 		asf_h_template = os.path.join(self.xml_basedir, "asf_h.template")
@@ -1190,50 +1221,57 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		expected_result = remove_newlines(expected_result)
 
 		# Generate our asf.h
-		result = self.facade.get_asf_h_content("as5_8", projects, asf_h_template)
+		result = self.main_ext.get_asf_h_content("as5_8", modules, asf_h_template)
 		# Remove line ending characters
 		result = remove_newlines(result)
 		# Compare
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_items_for_mcu(self):
-		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
-				self.facade.db.lookup_by_id("avr32.drivers.tc.example")]
+		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
+				self.main_db.lookup_by_id("avr32.drivers.tc.example")]
 		expected_result.sort()
-		result = self.facade.get_items_for_mcu(MCU("at32uc3a0128", self.facade.db))
+
+		result = self.main_ext.get_items_for_mcu(MCU("at32uc3a0128", self.main_db))
 		result.sort()
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_items_for_mcu_filtered(self):
-		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc")]
+		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc")]
 		expected_result.sort()
-		result = self.facade.get_items_for_mcu(MCU("at32uc3a0128", self.facade.db), mod_types_to_get=["driver"])
+
+		result = self.main_ext.get_items_for_mcu(MCU("at32uc3a0128", self.main_db), mod_types_to_get=["driver"])
 		result.sort()
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_all_modules_and_selectors(self):
-		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
-				self.facade.db.lookup_by_id("avr32.drivers.tc.example"),
-				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init"),
-				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led")]
+		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
+				self.main_db.lookup_by_id("avr32.drivers.tc.example"),
+				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
+				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
-		result = self.facade.get_all_modules_and_selectors("at32uc3a0128")
+
+		result = self.main_ext.get_all_modules_and_selectors("at32uc3a0128")
 		result.sort()
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_all_modules_and_selectors_filtered(self):
-		expected_result = [self.facade.db.lookup_by_id("avr32.drivers.tc"),
-				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init"),
-				self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led")]
+		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
+				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
+				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
-		result = self.facade.get_all_modules_and_selectors("at32uc3a0128", mod_types_to_ignore=["application"])
+
+		result = self.main_ext.get_all_modules_and_selectors("at32uc3a0128", mod_types_to_ignore=["application"])
 		result.sort()
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_all_project_ids(self):
 		expected_result = ['avr32.drivers.tc.example.a', 'xmega.drivers.nvm.example1.xmega_a1_xplained']
-		result = self.facade.get_all_project_ids()
+		expected_result.sort()
+
+		result = self.main_ext.get_all_project_ids()
 		result.sort()
+
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_write_project_data_to_xml_file(self):
@@ -1247,9 +1285,9 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 		# Write xml file
 		output_file_name = os.path.join(self.xml_basedir, "delete.me")
-		projects = self.facade.get_all_project_ids()
+		projects = self.main_ext.get_all_project_ids()
 		projects.sort()
-		self.facade.write_project_data_to_xml_file(projects, output_file_name)
+		self.main_ext.write_project_data_to_xml_file(projects, output_file_name)
 
 		# Read back xml file
 		expected_tree = ET.parse(output_file_name)
@@ -1265,17 +1303,18 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.assertEqual(expected_result, result)
 
 	def test_PythonFacade_get_mcu(self):
-		my_mcu = MCU("atxmega128a1", self.facade.db)
-		mcu = self.facade.get_mcu("atxmega128a1")
+		my_mcu = MCU("atxmega128a1", self.main_db)
+		mcu = self.main_ext.get_mcu("atxmega128a1")
 		# Compare each data member in Mcu
 		bool_res = (my_mcu.mcu_name == mcu.mcu_name and my_mcu.db == mcu.db
 			and my_mcu.map_id == mcu.map_id)
 		self.assertEqual(bool_res, True)
 
 	def test_PythonFacade_get_generator_from_project_id(self):
-		project = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
-		expected_result = AVRStudio5Project(project, self.facade.db, self.facade.runtime)
-		result = self.facade.get_generator_from_project_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
+		project = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
+		expected_result = AVRStudio5Project(project, self.main_db, self.facade.runtime)
+
+		result = self.main_ext.get_generator_from_project_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
 		self.assertEqual(expected_result.generator_tag, result.generator_tag)
 
 	def test_MCU_get_group_map(self):
@@ -1295,7 +1334,7 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		mcus_to_test = expected_doc_arch.keys()
 
 		# Generate map from MCU name to doc-arch
-		doc_arch_list = [MCU(mcu_name, self.facade.db).get_doc_arch_group() for mcu_name in mcus_to_test]
+		doc_arch_list = [MCU(mcu_name, self.main_db).get_doc_arch_group() for mcu_name in mcus_to_test]
 		doc_arch = dict(zip(mcus_to_test, doc_arch_list))
 
 		# Check that generated map is as expected
@@ -1312,14 +1351,14 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		mcus_to_test = expected_doc_arch.keys()
 
 		# Generate map from MCU name to doc-arch
-		doc_arch_list = [MCU(mcu_name, self.facade.db).get_doc_arch_name() for mcu_name in mcus_to_test]
+		doc_arch_list = [MCU(mcu_name, self.main_db).get_doc_arch_name() for mcu_name in mcus_to_test]
 		doc_arch = dict(zip(mcus_to_test, doc_arch_list))
 
 		# Check that generated map is as expected
 		self.assertEquals(doc_arch, expected_doc_arch)
 
 	def test_ConfigItem_id_caption_type(self):
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")
 		expected_result = "xmega.drivers.nvm.example1.xmega_a1_xplained"
 		self.assertEqual(expected_result, result.id)
 		expected_result = "Drivers NVM Example 1 for XMEGA-A1 Xplained"
@@ -1329,52 +1368,52 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 	def test_ConfigItem_get_description_summary_text(self):
 		expected_result = "Use the XMEGA NVM to read the device and the production signatures and output them on LEDs."
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1").get_description_summary_text()
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1").get_description_summary_text()
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_get_help_url(self):
 		expected_result = "http://asf.atmel.com/docs/6.6.6/test/html/index.html"
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_help_url("test", "6.6.6")
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_help_url("test", "6.6.6")
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_get_quick_start_url(self):
 		expected_result = "http://asf.atmel.com/docs/6.6.6/xmegaa/html/xmega_nvm_quickstart.html"
-		mcu = MCU("atxmega128a1", self.facade.db)
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm").get_quick_start_url(mcu.get_doc_arch_group(), "6.6.6")
+		mcu = MCU("atxmega128a1", self.main_db)
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm").get_quick_start_url(mcu.get_doc_arch_group(), "6.6.6")
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_get_sub_elements(self):
-		elems = self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led#no").get_sub_elements()
+		elems = self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led#no").get_sub_elements()
 		self.assertEqual(len(elems), 1)
 		self.assertEqual(elems[0].attrib, {'value': 'xmega'})
 		self.assertEqual(elems[0].tag, "device-support")
 
 	def test_ConfigItem_get_configuration(self):
 		expected_result = {'config.board.xmega_a1_xplained.led': 'no', 'config.board.xmega_a1_xplained.init': 'yes'}
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_configuration().config
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_configuration().config
 		self.assertEqual(expected_result, result)
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")._get_configuration_from_element().config
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained")._get_configuration_from_element().config
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_get_prerequisite_ids(self):
 		expected_result = ['board.xmega_a1_xplained', 'xmega.drivers.nvm.example1']
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_prerequisite_ids(recursive=False)
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").get_prerequisite_ids(recursive=False)
 		result.sort()
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_has_subids(self):
-		result = self.facade.db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").has_subids()
+		result = self.main_db.lookup_by_id("xmega.drivers.nvm.example1.xmega_a1_xplained").has_subids()
 		self.assertEqual(False, result)
-		result = self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.led").has_subids()
+		result = self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led").has_subids()
 		self.assertEqual(True, result)
 
 	def test_ConfigItem__get_property(self):
 		expected_result = "yes"
-		result = self.facade.db.lookup_by_id("config.board.xmega_a1_xplained.init")._get_property('default')
+		result = self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init")._get_property('default')
 		self.assertEqual(expected_result, result)
 
 	def test_ConfigItem_get_build(self):
-		module = self.facade.db.lookup_by_id("avr32.drivers.tc")
+		module = self.main_db.lookup_by_id("avr32.drivers.tc")
 		self.assertEqual(['avr32/drivers/tc'], separator_replace_list(module.get_build(BuildInclude, "as5_8")))
 		self.assertEqual(['avr32/drivers/tc/tc.c'], separator_replace_list(module.get_build(BuildC, "as5_8")))
 		self.assertEqual(['avr32/drivers/tc/tc_asm.s'], separator_replace_list(module.get_build(BuildAssembly, "as5_8")))
@@ -1390,24 +1429,35 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.assertEqual(['a.file'], module.get_build(BuildDistributeFile, "as5_8"))
 
 	def test_ConfigItem_resolve_all_selections(self):
-		module = self.facade.db.lookup_by_id("common.services.basic.clock")
+		module = self.main_db.lookup_by_id("common.services.basic.clock")
 		config = ConfigurationHandler()
 
-		mcu = MCU("atxmega128a1", self.facade.db)
+		mcu = MCU("atxmega128a1", self.main_db)
 		module.resolve_all_selections(config, mcu)
 		expected_result = ['common/services/clock/xmega/sysclk1.c']
 		result = separator_replace_list(module.get_build(BuildC, "as5_8"))
 		self.assertEqual(expected_result, result)
 
-		mcu = MCU("atxmega128b1", self.facade.db)
+		mcu = MCU("atxmega128b1", self.main_db)
 		module.resolve_all_selections(config, mcu)
 		expected_result = ['common/services/clock/xmega/sysclk2.c']
 		result = separator_replace_list(module.get_build(BuildC, "as5_8"))
 		self.assertEqual(expected_result, result)
 
 	def test_AVRStudio5Project32(self):
-		project = self.facade.db.lookup_by_id("avr32.drivers.tc.example.a")
-		gen = AVRStudio5Project32(project, self.facade.db, self.facade.runtime)
+		def fix_separators(dic_to_fix):
+			"""
+			Fix path separators in dictionary (both keys and values)
+			and returns a sorted list.
+			"""
+			new_dic = {}
+			for key, value in dic_to_fix.items():
+				new_dic[key.replace("\\",'/')] = [value[0].replace("\\",'/'), value[1], value[2].replace("\\",'/')];
+			return sorted(new_dic.items())
+
+		project = self.main_db.lookup_by_id("avr32.drivers.tc.example.a")
+		driver = self.main_db.lookup_by_id("avr32.drivers.tc")
+		gen = AVRStudio5Project32(project, self.main_db, self.facade.runtime)
 
 		# Test _get_project_data()
 		gen._get_project_data()
@@ -1416,25 +1466,25 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 		# Test get_build_from_export for misc build types
 		self.assertEqual(['libc.a'], gen.get_build_from_export(BuildCompilerLibrary))
-		self.assertEqual([('a.file', 'src/asf/a.file')], separator_replace_dic(gen.get_build_from_export(BuildDistributeFile)))
-		self.assertEqual([('avr32/drivers/tc/tc.h', 'src/asf/avr32/drivers/tc/tc.h')], separator_replace_dic(gen.get_build_from_export(BuildHeader)))
+		self.assertEqual([("a.file",['src/ASF/a.file', driver, 'a.file'])], fix_separators(gen.get_build_from_export(BuildDistributeFile)))
+		self.assertEqual([('avr32/drivers/tc/tc.h', ['src/ASF/avr32/drivers/tc/tc.h', driver, 'avr32/drivers/tc/tc.h'])], fix_separators(gen.get_build_from_export(BuildHeader)))
 		self.assertEqual(['src/asf/avr32/drivers/tc', 'src', 'src/config'], separator_replace_list(gen.get_build_from_export(BuildInclude)))
-		self.assertEqual([('avr32/drivers/tc/tc_asm.s', 'src/asf/avr32/drivers/tc/tc_asm.s')],
-			separator_replace_dic(gen.get_build_from_export(BuildAssembly)))
-		self.assertEqual([('avr32/drivers/tc/tc.c', 'src/asf/avr32/drivers/tc/tc.c')], separator_replace_dic(gen.get_build_from_export(BuildC)))
+		self.assertEqual([('avr32/drivers/tc/tc_asm.s', ['src/ASF/avr32/drivers/tc/tc_asm.s', driver, 'avr32/drivers/tc/tc_asm.s'])],
+			fix_separators(gen.get_build_from_export(BuildAssembly)))
+		self.assertEqual([('avr32/drivers/tc/tc.c', ['src/ASF/avr32/drivers/tc/tc.c', driver, 'avr32/drivers/tc/tc.c'])], fix_separators(gen.get_build_from_export(BuildC)))
 		self.assertEqual([('FOO', 'BAR')], gen.get_build_from_export(BuildDefine))
-		self.assertEqual([('libavr51g1-4qt-k-0rs.a', 'src/asf/libavr51g1-4qt-k-0rs.a')], separator_replace_dic(gen.get_build_from_export(BuildUserLibrary)))
+		self.assertEqual([('libavr51g1-4qt-k-0rs.a', ['src/ASF/libavr51g1-4qt-k-0rs.a', driver, 'libavr51g1-4qt-k-0rs.a'])], fix_separators(gen.get_build_from_export(BuildUserLibrary)))
 
 		# Test get_compile_files()
-		self.assertEqual([('avr32/drivers/tc/tc.c', 'src/asf/avr32/drivers/tc/tc.c'),
-			('avr32/drivers/tc/tc_asm.s', 'src/asf/avr32/drivers/tc/tc_asm.s')], separator_replace_dic(gen.get_compile_files()))
+		self.assertEqual([('avr32/drivers/tc/tc.c', ['src/ASF/avr32/drivers/tc/tc.c', driver, 'avr32/drivers/tc/tc.c']),
+			('avr32/drivers/tc/tc_asm.s', ['src/ASF/avr32/drivers/tc/tc_asm.s', driver, 'avr32/drivers/tc/tc_asm.s'])], fix_separators(gen.get_compile_files()))
 
 		# Test project_toolchain_settings
 		self.assertEqual(True, 'avr51g1-4qt-k-0rs' in gen.project_toolchain_settings['Release']['avr32gcc.linker.libraries.Libraries'])
 
 		# Test get_framework_config()
 		# Read expected data
-		input_file = os.path.join(self.xml_basedir, "frameworkconfig.xml")
+		input_file = os.path.join(self.xml_basedir, "../frameworkconfig.xml")
 		expected_tree = ET.parse(input_file)
 		expected_root = expected_tree.getroot()
 		expected_result = get_elementtree_as_string(expected_root)
@@ -1446,7 +1496,7 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 		self.assertEqual(expected_result, result)
 
 	def test_DeviceMap_get_doc_arch_dict(self):
-		device_map = self.facade.db.lookup_by_id("map.atmel")
+		device_map = self.main_db.lookup_by_id("map.atmel")
 
 		# Expected map between group and doc-arch name
 		expected_doc_arch_dict = {
@@ -1459,3 +1509,708 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 		# Check that generated map is as expected
 		self.assertEquals(doc_arch_dict, expected_doc_arch_dict)
+
+class FdkExtensionManagerTestCase(unittest.TestCase):
+	old_dir = os.path.abspath(os.curdir)
+	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
+	ext_basedir = norm_path_join(sys.path[0], "asf/test-input/extensions/")
+	# Data for two test extensions
+	ext_dirs = [norm_path_join(ext_basedir, d) for d in ["Aaa/Bbb/", "Ccc/", "Eee/"]]
+	ext_uuids = ["01234567-89ab-cdef-0123-456789abcdef", "00000000-0000-0000-0000-000000000000"]
+
+	def _assertIsInstance(self, test_object, test_class):
+		"""
+		Compatibility for Python 2.6. Remove when 2.6 support is not needed.
+		"""
+		self.assertTrue(isinstance(test_object, test_class))
+
+	def setUp(self):
+		class DummyLog(object):
+			def debug(self, text):
+				pass
+			def info(self, text):
+				pass
+			def warning(self, text):
+				pass
+			def error(self, text):
+				pass
+			def critical(self, text):
+				pass
+		class DummyRuntime(object):
+			log = DummyLog()
+			version_postfix = ""
+			template_dir = ""
+			configuration = ConfigurationHandler()
+
+		rel_ext_basedir = os.path.relpath(self.ext_basedir)
+		self.extmgr = FdkExtensionManager(DummyRuntime(), rel_ext_basedir)
+		self.extmgr.load_schemas(self.xml_schema_dir)
+
+	def tearDown(self):
+		# The extension manager changes directory, revert here
+		os.chdir(self.old_dir)
+
+	def test_root_path(self):
+		expected_result = turn_slash_to_os_sep(os.path.join(sys.path[0], self.ext_basedir))
+
+		self.assertEqual(self.extmgr.root_path, expected_result)
+
+	def test_scan_for_extensions(self):
+		expected_result = self.ext_dirs
+
+		result = self.extmgr.scan_for_extensions()
+
+		self.assertEqual(sorted(result), sorted(expected_result))
+
+	def test_load_extension(self):
+		# Bogus directory
+		self.assertRaises(ConfigError, self.extmgr.load_extension, 'this_should_fail')
+		# Directory missing extension.xml
+		self.assertRaises(DbError, self.extmgr.load_extension, self.ext_basedir)
+
+		# Extension register should be empty
+		self.assertEqual(self.extmgr.fdk_ext_dict, {})
+
+		new_ext = self.extmgr.load_extension(self.ext_dirs[0])
+		self._assertIsInstance(new_ext, FdkExtension)
+
+		# Extension register should still be empty
+		self.assertEqual(self.extmgr.fdk_ext_dict, {})
+
+	def test_register_extension_and_clear_extension_register(self):
+		new_ext = self.extmgr.load_extension(self.ext_dirs[0])
+
+		# We should start with an empty extension register
+		self.assertEqual(self.extmgr.fdk_ext_dict, {})
+
+		# Registering twice should fail
+		self.extmgr.register_extension(new_ext)
+		self.assertRaises(DbError, self.extmgr.register_extension, new_ext)
+
+		# Check the extension register layout
+		self.assertEqual(self.extmgr.fdk_ext_dict, {new_ext.uuid : {new_ext.version : new_ext}})
+
+		# Check that the extension register is cleared
+		self.extmgr.clear_extension_register()
+		self.assertEqual(self.extmgr.fdk_ext_dict, {})
+
+	def test_load_and_register_then_request_extensions(self):
+		# Extension register should be empty
+		self.assertEqual(self.extmgr.fdk_ext_dict, {})
+
+		# Load the test extensions
+		self.extmgr.load_and_register_extensions(self.ext_dirs)
+
+		# Request the extensions
+		ext_0 = self.extmgr.request_extension(self.ext_uuids[0])
+		ext_1 = self.extmgr.request_extension(self.ext_uuids[1], 'latest')
+
+		# Check that they are indeed FDK extension objects
+		self._assertIsInstance(ext_0, FdkExtension)
+		self._assertIsInstance(ext_1, FdkExtension)
+
+		# Request non-existing version of extension
+		self.assertRaises(DbError, self.extmgr.request_extension, self.ext_uuids[1], '0.0.0')
+		# Request non-existing extension
+		self.assertRaises(DbError, self.extmgr.request_extension, self.ext_uuids[1].replace('0', '1'))
+
+		# Clear the extension register before returning
+		self.extmgr.clear_extension_register()
+
+	def test_resolve_version_selection(self):
+		vers = ["1.0.0", "1.0.10", "1.0.3", "1.1.20", "1.1.2"]
+
+		# Check for very latest version
+		selected_ver = self.extmgr.resolve_version_selection(vers, 'latest')
+		self.assertEqual(selected_ver, "1.1.20")
+
+		# Check for very latest version using limit notation
+		selected_ver = self.extmgr.resolve_version_selection(vers, '(, )')
+		self.assertEqual(selected_ver, "1.1.20")
+
+		# Check for latest version in 1.0 range
+		selected_ver = self.extmgr.resolve_version_selection(vers, '1.0.+')
+		self.assertEqual(selected_ver, "1.0.10")
+
+		# Check for latest version before 1.1.20
+		selected_ver = self.extmgr.resolve_version_selection(vers, '(, 1.1.20)')
+		self.assertEqual(selected_ver, "1.1.2")
+
+		# Check for latest version not after 1.1.2
+		selected_ver = self.extmgr.resolve_version_selection(vers, '(, 1.1.2]')
+		self.assertEqual(selected_ver, "1.1.2")
+
+		# Check for latest version between 1.0.3 and 1.1.2
+		selected_ver = self.extmgr.resolve_version_selection(vers, '(1.0.3, 1.1.2)')
+		self.assertEqual(selected_ver, "1.0.10")
+
+		# Check for latest version equal or larger than 1.0.10, and smaller than 1.1.2
+		selected_ver = self.extmgr.resolve_version_selection(vers, '[1.0.10, 1.1.2)')
+		self.assertEqual(selected_ver, "1.0.10")
+
+		# Check exception for non-existent version between 1.0.10 and 1.1.2
+		self.assertRaises(NoSelectionError, self.extmgr.resolve_version_selection, vers, '(1.0.10, 1.1.2)')
+
+		# Check exception for non-existent version newer than 1.1.20
+		self.assertRaises(NoSelectionError, self.extmgr.resolve_version_selection, vers, '(1.1.20, )')
+
+	def test_GenericProject_get_build_from_project_or_selector(self):
+		# Dummy build type to ensure no items are found
+		class BuildMissing(BuildType):
+			type = "this_must_be_missing"
+
+		# Load the test extensions
+		self.extmgr.load_and_register_extensions(self.ext_dirs)
+
+		# Load test project from Bbb and instantiate GenericProject
+		bbb_ext = self.extmgr.request_extension(self.ext_uuids[0])
+		bbb_db = bbb_ext.get_database()
+		bbb_proj = bbb_db.lookup_by_id("bbb.project")
+		bbb_gen = GenericProject(bbb_proj, bbb_db, bbb_db.runtime)
+
+		# Load test project from Ccc and instantiate GenericProject
+		ccc_ext = self.extmgr.request_extension(self.ext_uuids[1])
+		ccc_db = ccc_ext.get_database()
+		ccc_proj = ccc_db.lookup_by_id("ccc.project")
+		ccc_gen = GenericProject(ccc_proj, ccc_db, ccc_db.runtime)
+
+
+	# The following tests are run on extension ccc
+
+		# If no selector is specified, function will succeed both if:
+		# 1) no build items are found
+		found_items = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
+		self.assertEquals(found_items, [])
+
+		# and 2) build items are found
+		found_items = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
+		self.assertEquals(found_items, [("THIS", "EXISTS")])
+
+		# If a selector is specified and no build item is found in project,
+		# the function will fail if:
+		# 1) selector is not found in project's database and ASF is not added
+		#    as dependency
+		self.assertRaises(DbError, ccc_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+	# The following tests are run on extension bbb
+	# ASF is not registered with extmgr at this point so requests for it will fail
+
+		# 2) selector is not found in project's database and ASF cannot be
+		#    loaded
+		self.assertRaises(DbError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+	# Load and register ASF with extmgr so requests for it will succeed
+		asf_ext = self.extmgr.load_extension(os.path.join(self.ext_basedir, 'Ccc', 'misplaced_ASF'))
+		self.extmgr.register_extension(asf_ext)
+
+		# 3) selector is not found in project's database or ASF
+		self.assertRaises(NotFoundError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
+
+		# 4) selector cannot make a selection for the current config or MCU
+		self.assertRaises(NoSelectionError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="failing_selector")
+		self.assertRaises(NoSelectionError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="failing_asf_selector")
+
+
+		# If a selector is specified and no build item is found in project,
+		# the function will succeed if:
+		# 1) selector is found in project's database
+		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
+		self.assertEquals(found_items, [("FROM", "BBB")])
+
+		# 2) selector is not found in project's database, but ASF is added
+		#    as a dependency and contains the selector
+		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
+		self.assertEquals(found_items, [("FROM", "ASF")])
+
+
+class FdkExtensionTestCase(unittest.TestCase):
+	old_dir = os.path.abspath(os.curdir)
+	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
+
+	ext_basedir = norm_path_join(sys.path[0], "asf/test-input/extensions/")
+	main_ext_dir = norm_path_join(ext_basedir, "Aaa/Bbb/")
+	main_ext_uuid = "01234567-89ab-cdef-0123-456789abcdef"
+	alt_ext_eid = "ccc"
+
+	device_map = norm_path_join(ext_basedir, "devmap.xml")
+	content_xml = "content.xml"
+
+	def _assertIsInstance(self, test_object, test_class):
+		"""
+		Compatibility for Python 2.6. Remove when 2.6 support is not needed.
+		"""
+		self.assertTrue(isinstance(test_object, test_class))
+
+	def setUp(self):
+		class DummyLog(object):
+			def info(self, log_msg):
+				pass
+
+		class DummyRuntime(object):
+			log = DummyLog()
+			version_postfix = ""
+
+		# Extension manager is needed to test interaction between extensions
+		self.extmgr = FdkExtensionManager(DummyRuntime(), self.ext_basedir)
+
+		# Load XSDs, device map, set content XML filename
+		self.extmgr.load_schemas(self.xml_schema_dir)
+		self.extmgr.load_device_map(self.device_map)
+		ConfigDB.xml_filename = self.content_xml
+
+		# Initialize extension register
+		ext_dirs = self.extmgr.scan_for_extensions()
+		self.extmgr.load_and_register_extensions(ext_dirs)
+
+		# Load the main extension
+		self.ext = self.extmgr.request_extension(self.main_ext_uuid)
+
+	def tearDown(self):
+		# The extension manager changes directory, revert here
+		os.chdir(self.old_dir)
+
+	def test_get_database(self):
+		ext_db = self.ext.get_database()
+		self._assertIsInstance(ext_db, ConfigDB)
+
+	def test_get_dependency_by(self):
+		expected_eid  = "ccc"
+		expected_uuid = "00000000-0000-0000-0000-000000000000"
+		expected_ver  = "latest"
+
+		expected_eid_result = tuple([expected_uuid, expected_ver])
+		expected_uuid_result = tuple([expected_eid, expected_ver])
+
+		eid_result  = self.ext.get_dependency_by_eid("ccc")
+		uuid_result = self.ext.get_dependency_by_uuid("00000000-0000-0000-0000-000000000000")
+
+		self.assertEqual(eid_result, expected_eid_result)
+		self.assertEqual(uuid_result, expected_uuid_result)
+
+	def test_get_external_database(self):
+		# Get an existing database
+		alt_ext_db = self.ext.get_external_database(self.alt_ext_eid)
+		self._assertIsInstance(alt_ext_db, ConfigDB)
+
+		# Try to dereference a bogus extension ID
+		self.assertRaises(DbError, self.ext.get_external_database, "bogus_eid")
+
+	def test_path_attributes(self):
+		expected_rel_root_path = os.path.relpath(self.main_ext_dir, self.ext_basedir)
+
+		self.assertEqual(self.ext.root_path, self.main_ext_dir)
+		self.assertEqual(self.ext.relative_root_path, expected_rel_root_path)
+		self.assertEqual(self.ext.root_xml_path, norm_path_join(self.main_ext_dir, "extension.xml"))
+		self.assertEqual(self.ext.xml_cache_path, norm_path_join(self.main_ext_dir, "content.xml.cache"))
+
+	def test_extension_attributes(self):
+		self.assertEqual(self.ext.uuid, self.main_ext_uuid)
+		self.assertEqual(self.ext.org, "Aaa")
+		self.assertEqual(self.ext.shortname, "Bbb")
+		self.assertEqual(self.ext.fullname, "Bbb test extension")
+		self.assertEqual(self.ext.version, "0.1.2")
+
+	def test_file_attributes(self):
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		self.assertEquals(self.ext.icon_image, turn_slash_to_os_sep("Aaa/Bbb/docs/bbb_icon.png"))
+		self.assertEquals(self.ext.preview_image, turn_slash_to_os_sep("Aaa/Bbb/docs/bbb_preview.jpg"))
+		self.assertEquals(self.ext.license, turn_slash_to_os_sep("Aaa/Bbb/docs/aaa_license.txt"))
+
+		self.assertEquals(self.ext.license_caption, "Aaa license")
+		self.assertEquals(self.ext.release_notes, "http://bbb.aaa.com/release-notes/")
+		self.assertEquals(self.ext.release_notes_caption, "Bbb release notes")
+
+	def test_meta_info_attributes(self):
+		expected_description = """
+		This is a test extension for unit testing of the FdkExtension class.
+		"""
+		expected_search_terms = ["first", "second"]
+
+		self.assertEquals(self.ext.description, expected_description)
+		self.assertEquals(self.ext.search_terms, expected_search_terms)
+
+	def test_author_info_attributes(self):
+		self.assertEquals(self.ext.author_name, "Aaa")
+		self.assertEquals(self.ext.author_website, "http://www.aaa.com/")
+		self.assertEquals(self.ext.author_email, "support@aaa.com")
+
+	def test_help_attributes_for_asf_docs(self):
+		expected_scheme = "asf-docs"
+
+		expected_online_help_caption = "Bbb help"
+		expected_online_help_index = "http://bbb.aaa.com/help_index"
+		expected_online_module_help = "http://bbb.aaa.com/element_help/$VER$/$MODULE$/html/"
+		expected_online_module_guide = "http://bbb.aaa.com/element_guide/$VER$/$MODULE$/html/"
+
+		self.assertEquals(self.ext.online_help_index_caption_and_url, (expected_online_help_caption, expected_online_help_index))
+		self.assertEquals(self.ext.online_module_help_scheme_and_url, (expected_scheme, expected_online_module_help))
+		self.assertEquals(self.ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
+
+		expected_offline_help_caption = "Bbb help doc"
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		expected_offline_help_index = turn_slash_to_os_sep("Aaa/Bbb/docs/help.pdf")
+		expected_offline_module_help = turn_slash_to_os_sep("Aaa/Bbb/docs/help/$MODULE$/html/")
+		expected_offline_module_guide = turn_slash_to_os_sep("Aaa/Bbb/docs/guides/$MODULE$/html/")
+
+		self.assertEquals(self.ext.offline_help_index_caption_and_path, (expected_offline_help_caption, expected_offline_help_index))
+		self.assertEquals(self.ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
+		self.assertEquals(self.ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
+
+	def test_help_attributes_for_append(self):
+		alt_ext_db = self.ext.get_external_database(self.alt_ext_eid)
+		alt_ext = alt_ext_db.extension
+
+		expected_scheme = "append"
+
+		expected_online_module_help = "http://ccc.c.com/module-help-pages/"
+		expected_online_module_guide = "http://ccc.c.com/module-guide-pages/"
+
+		self.assertEquals(alt_ext.online_module_help_scheme_and_url, (expected_scheme, expected_online_module_help))
+		self.assertEquals(alt_ext.online_module_guide_scheme_and_url, (expected_scheme, expected_online_module_guide))
+
+		# self.expand_to_manager_root_path == True, so extension's directory must be added
+		expected_offline_module_help = turn_slash_to_os_sep("Ccc/docs/help-pages/")
+		expected_offline_module_guide = turn_slash_to_os_sep("Ccc/docs/guide-pages/")
+
+		self.assertEquals(alt_ext.offline_module_help_scheme_and_path, (expected_scheme, expected_offline_module_help))
+		self.assertEquals(alt_ext.offline_module_guide_scheme_and_path, (expected_scheme, expected_offline_module_guide))
+
+	def test_external_prerequisites(self):
+		expected_prerequisite_ids = ["bbb.board", "ccc.application"]
+
+		# Load the test project from main extension database
+		db = self.ext.get_database()
+		project = db.lookup_by_id("bbb.project")
+
+		# Check the prerequisites IDs
+		prerequisites = project.get_prerequisites(recursive=True)
+		prerequisite_ids = [p.id for p in prerequisites]
+
+		self.assertEquals(prerequisite_ids, expected_prerequisite_ids)
+
+
+class FdkExtensionDocsTestCase(unittest.TestCase):
+	old_dir = os.path.abspath(os.curdir)
+	xml_schema_dir = norm_path_join(sys.path[0], "schemas/")
+
+	ext_basedir = norm_path_join(sys.path[0], "asf/test-input/extensions/")
+
+	first_ext_dir = norm_path_join(ext_basedir, "Aaa/Bbb/")
+	second_ext_dir = norm_path_join(ext_basedir, "Ccc/")
+	third_ext_dir = norm_path_join(ext_basedir, "Eee/")
+
+	# asf-docs
+	first_ext_uuid  = "01234567-89ab-cdef-0123-456789abcdef"
+	# append
+	second_ext_uuid = "00000000-0000-0000-0000-000000000000"
+	# no docs
+	third_ext_uuid  = "ffffffff-ffff-ffff-ffff-ffffffffffff"
+
+	device_map = norm_path_join(ext_basedir, "devmap.xml")
+	content_xml = "content.xml"
+
+	def _assertIsInstance(self, test_object, test_class):
+		"""
+		Compatibility for Python 2.6. Remove when 2.6 support is not needed.
+		"""
+		self.assertTrue(isinstance(test_object, test_class))
+
+	def setUp(self):
+		class DummyLog(object):
+			def info(self, log_msg):
+				pass
+
+		class DummyRuntime(object):
+			log = DummyLog()
+			version_postfix = ""
+
+		# Extension manager is needed to test interaction between extensions
+		self.extmgr = FdkExtensionManager(DummyRuntime(), self.ext_basedir)
+
+		# Load XSDs, device map, set content XML filename
+		self.extmgr.load_schemas(self.xml_schema_dir)
+		self.extmgr.load_device_map(self.device_map)
+		ConfigDB.xml_filename = self.content_xml
+
+		# Initialize extension register
+		ext_dirs = self.extmgr.scan_for_extensions()
+		self.extmgr.load_and_register_extensions(ext_dirs)
+
+		# Load the extensions
+		self.first_ext = self.extmgr.request_extension(self.first_ext_uuid)
+		self.second_ext = self.extmgr.request_extension(self.second_ext_uuid)
+		self.third_ext = self.extmgr.request_extension(self.third_ext_uuid)
+
+	def tearDown(self):
+		# The extension manager changes directory, revert here
+		os.chdir(self.old_dir)
+
+
+	# Test extension with "asf-docs" doc scheme
+	def test_online_asf_docs_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		expected_help_url = "http://bbb.aaa.com/element_help/0.1.2/some_doc_arch/html/group__bbb__module__help.html"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_online_asf_docs_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		expected_guide_url = "http://bbb.aaa.com/element_guide/0.1.2/some_doc_arch/html/bbb_module_guide.html"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_asf_docs_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		expected_help_path = turn_slash_to_os_sep("Aaa/Bbb/docs/help/some_doc_arch/html/group__bbb__module__help.html")
+		help_path = module.get_offline_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+
+	def test_offline_asf_docs_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module")
+
+		expected_guide_path = turn_slash_to_os_sep("Aaa/Bbb/docs/guides/some_doc_arch/html/bbb_module_guide.html")
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
+
+
+	# Test extension with "append" doc scheme
+	def test_online_append_module_help(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		expected_help_url = "http://ccc.c.com/module-help-pages/driver/ccc_online_module_help.html"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_online_append_module_guide(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		expected_guide_url = "http://ccc.c.com/module-guide-pages/driver/ccc_online_module_guide.html"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_append_module_help(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		expected_help_path = turn_slash_to_os_sep("Ccc/docs/help-pages/driver/ccc_offline_module_help.html")
+		help_path = module.get_offline_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+
+	def test_offline_append_module_guide(self):
+		db = self.second_ext.get_database()
+		module = db.lookup_by_id("ccc.module_append")
+
+		expected_guide_path = turn_slash_to_os_sep("Ccc/docs/guide-pages/driver/ccc_offline_module_guide.html")
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
+
+
+	# Test extensions with defined doc scheme, but URL override in asf.xml
+	def test_fixed_online_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		expected_help_url = "http://fixed_module_help_page.com/"
+		help_url = module.get_help_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+
+	def test_fixed_online_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		expected_guide_url = "http://fixed_module_guide_page.com/"
+		guide_url = module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_fixed_offine_module_help(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		expected_help_path = turn_slash_to_os_sep("Aaa/Bbb/doc/fixed_module_help.html")
+		help_path = module.get_offline_help_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+
+	def test_fixed_offline_module_guide(self):
+		db = self.first_ext.get_database()
+		module = db.lookup_by_id("bbb.module_fixed_help")
+
+		expected_guide_path = turn_slash_to_os_sep("Aaa/Bbb/doc/fixed_module_guide.html")
+		guide_path = module.get_offline_quick_start_path("some_doc_arch")
+
+		self.assertEqual(guide_path, expected_guide_path)
+
+
+	# Test extension with no doc scheme
+	def test_online_missing_module_help_and_guide(self):
+		db = self.third_ext.get_database()
+		no_doc_module = db.lookup_by_id("eee.module_undoc")
+
+		expected_help_url = None
+		expected_guide_url = None
+
+		help_url = no_doc_module.get_help_url("some_doc_arch")
+		guide_url = no_doc_module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_online_fixed_module_help_and_guide(self):
+		db = self.third_ext.get_database()
+		doc_module = db.lookup_by_id("eee.module_doc")
+
+		expected_help_url = "http://module_help_page.com/"
+		expected_guide_url = "http://module_guide_page.com/"
+
+		help_url = doc_module.get_help_url("some_doc_arch")
+		guide_url = doc_module.get_quick_start_url("some_doc_arch")
+
+		self.assertEqual(help_url, expected_help_url)
+		self.assertEqual(guide_url, expected_guide_url)
+
+	def test_offline_missing_module_help(self):
+		db = self.third_ext.get_database()
+		no_doc_module = db.lookup_by_id("eee.module_undoc")
+
+		expected_help_path = None
+		expected_guide_path = None
+
+		help_path = no_doc_module.get_offline_help_path("some_doc_arch")
+		guide_path = no_doc_module.get_offline_quick_start_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+		self.assertEqual(guide_path, expected_guide_path)
+
+	def test_offline_fixed_module_help(self):
+		db = self.third_ext.get_database()
+		doc_module = db.lookup_by_id("eee.module_doc")
+
+		expected_help_path = turn_slash_to_os_sep("Eee/docs/module_offline_help_page.html")
+		expected_guide_path = turn_slash_to_os_sep("Eee/docs/module_offline_guide_page.html")
+
+		help_path = doc_module.get_offline_help_path("some_doc_arch")
+		guide_path = doc_module.get_offline_quick_start_path("some_doc_arch")
+
+		self.assertEqual(help_path, expected_help_path)
+		self.assertEqual(guide_path, expected_guide_path)
+
+
+class FindRebuildTest(unittest.TestCase):
+	files_basedir = os.path.normcase("asf/test-input")
+	xml_filename = "rebuild_test.xml"
+	# If desired, specify a XML file to load the device map from
+	# devmap_xml_filename = xml_filename # Can use same xml as is test input
+	xml_validation = os.path.join("schemas", "fdk_content.xsd")
+
+	def setUp(self):
+		script_path = sys.path[0]
+
+		# Load XML validation scheme
+		ConfigDB.load_schema(self.xml_validation)
+		# Set filename for test content XML
+		ConfigDB.xml_filename = self.xml_filename
+
+		# Load device map if one was specified
+		try:
+			devmap_xml_filepath = os.path.join(self.files_basedir, self.devmap_xml_filename)
+		except AttributeError:
+			pass
+		else:
+			ConfigDB.load_device_map(devmap_xml_filepath)
+
+		self.runtime = FindRebuildRuntime()
+
+		self.module_out = os.path.join(self.files_basedir, "tmp_mod.txt.delete_me")
+		self.project_out = os.path.join(self.files_basedir, "tmp_prj.txt.delete_me")
+		self.test_in = os.path.join(self.files_basedir, "tmp_test_input.txt.delete_me")
+
+		self.runtime.set_outfiles(self.project_out, self.module_out)
+		self.runtime.set_input_file(self.test_in)
+
+		class DummyExtension(object):
+			# Simulate extension with root path in self.files_basedir
+			# giving empty relative root path 
+			root_path = self.files_basedir
+			relative_root_path = "."
+
+		self.db = ConfigDB(self.runtime, extension=DummyExtension())
+		self.runtime.set_db(self.db)
+
+	def tearDown(self):
+		self.runtime = None
+		self.db = None
+
+	def remove_temp_files(self):
+		os.remove(self.project_out)
+		os.remove(self.module_out)
+		os.remove(self.test_in)
+
+	def read_file(self, filename):
+		f = open(filename, 'r')
+		result = f.read()
+		result = [res.strip() for res in result.splitlines()]
+		f.close()
+		return result
+
+	def run_test(self, input_data, expected_p, expected_m):
+		# Create new input file
+		f = open(self.test_in, 'w')
+		for line in input_data:
+				f.write("%s\r\n" % line)
+		f.close()
+		self.runtime.run()
+		result_m = filter(None, self.read_file(self.module_out))
+		result_p = filter(None, self.read_file(self.project_out))
+		self.remove_temp_files()
+		self.assertEqual(expected_m, result_m)
+		self.assertEqual(expected_p, result_p)
+
+	def test_run_1(self):
+		input_data = ["ma.c"]
+		expected_result_m = ["driver.b", "driver.c#1", "driver.c#2"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+
+	def test_run_2(self):
+		input_data = ["db.c"]
+		expected_result_m = ["driver.b"]
+		expected_result_p = ["project.b", "project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_3(self):
+		input_data = ["da.c"]
+		expected_result_m = ["driver.a"]
+		expected_result_p = ["project.a"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["project-c.h"]
+		expected_result_m = []
+		expected_result_p = ["project.c"]
+		self.run_test(input_data, expected_result_p, expected_result_m)
+
+	def test_run_4(self):
+		input_data = ["da.c", "db.c"]
+		expected_result_m = ['*']
+		expected_result_p = ['*']
+		self.run_test(input_data, expected_result_p, expected_result_m)
