@@ -515,6 +515,28 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
 	module->CTRLA &= ~ADC_ENABLE_bm;
 }
 
+/**
+ * \brief Flush the ADC pipeline
+ *
+ * Restart the ADC clock on the next peripheral clock edge.
+ * All conversions in progress will be lost.
+ * When flush is complete, the module will resume where it left off.
+ *
+ * \param dev_inst    pointer to the device struct
+ */
+static inline void adc_flush(struct adc_dev_inst *const dev_inst)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->dev_ptr);
+
+	ADC_t *const module = dev_inst->dev_ptr;
+
+	_adc_wait_for_sync(module);
+	module->SWTRIG |= ADC_FLUSH_bm;
+
+	/* Wait for flush to complete */
+	while (module->SWTRIG & ADC_FLUSH_bm);
+}
 
 /**
  * \brief Start ADC conversion
@@ -531,7 +553,7 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 	ADC_t *const module = dev_inst->dev_ptr;
 
 	_adc_wait_for_sync(module);
-	module->CTRLB |= ADC_START_bm;
+	module->SWTRIG |= ADC_START_bm;
 }
 
 /**
@@ -612,6 +634,36 @@ static inline void adc_reset_window_flag(struct adc_dev_inst *const dev_inst)
 
 	module->INTFLAG = ADC_WINMON_bm;
 }
+
+/**
+ * \brief Change ADC window mode
+ *
+ * Initializes the ADC module, based on the values of the config struct
+ *
+ * \param dev_inst           pointer to the device struct
+ * \param adc_window_mode    window monitor mode to set
+ * \param window_lower_value lower window monitor threshold value
+ * \param window_upper_value upper window monitor threshold value
+  */
+static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
+		enum adc_window_mode window_moe,
+		int16_t              window_lower_value,
+		int16_t              window_upper_value)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(hw_dev);
+	hw_dev->WINCTRL = window_mode        << ADC_WINMODE_bp;
+	_adc_wait_for_sync(hw_dev);
+	hw_dev->WINLT   = window_lower_value << ADC_WINLT_bp;
+	_adc_wait_for_sync(hw_dev);
+	hw_dev->WINUT   = window_upper_value << ADC_WINUT_bp;
+}
+
 
 #ifdef __cplusplus
 }
