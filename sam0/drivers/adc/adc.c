@@ -76,7 +76,9 @@ status_code_t adc_init(struct adc_dev_inst *const dev_inst, ADC_t *hw_dev,
 	/* Configure WINCTRL/WINLT/WINUT */
 	_adc_wait_for_sync(hw_dev);
 	hw_dev->WINCTRL = config->window_mode        << ADC_WINMODE_bp;
+	_adc_wait_for_sync(hw_dev);
 	hw_dev->WINLT   = config->window_lower_value << ADC_WINLT_bp;
+	_adc_wait_for_sync(hw_dev);
 	hw_dev->WINUT   = config->window_upper_value << ADC_WINUT_bp;
 
 	/* Configure INPUTCTRL */
