@@ -74,7 +74,9 @@ class GenericElement(object):
 		"""
 		Gets a list of build items of the specified type from the project,
 		alternatively from a specifiable selector that can reside in either
-		the project's home database or in ASF.
+		the project's home database or in ASF. Also returns the originating
+		database element for the build, i.e., either the project or the
+		selector which was found.
 
 		Assuming the project does not contain any build items of the
 		specified type and the ID of a selector has been specified, the
@@ -107,6 +109,7 @@ class GenericElement(object):
 		build_items = self.project.get_build(build_type, self.toolchain)
 
 		# If no build item was found and a selector is defined for toolchain, use it
+		build_selector = None
 		if not build_items:
 			if selector_id:
 				# Try to find selector in the project's home database, or in ASF
@@ -128,63 +131,71 @@ class GenericElement(object):
 				build_selector.resolve_all_selections(self.configuration, self.project.mcu)
 				build_items = build_selector.get_build(build_type, self.toolchain)
 
-		return build_items
+		return (build_items, build_selector or self.project)
 
 	def _get_linker_script(self, linker_id=None):
 		"""
-		Function which returns the linker script for the project. If no
-		custom script is found, the function will return None unless a
-		linker script selector was specified. In this case, the
-		selector is used to get the linker script.
+		Function which returns the linker script for the project, along
+		with its originating database element.
+
+		If no custom script is found in the project, the function will
+		try to look up the optional selector (linker_id) and request the
+		linker script from it.
+		If the optional selector is not found in the project's originating
+		database, the function will try to look up the selector in ASF
+		via the extension dependencies.
+		See _get_build_from_project_or_selector() for more details.
+
+		Raises ConfigError if the number of found linker scripts is not 1.
 		"""
-		linker_script = self._get_build_from_project_or_selector(BuildLinkerScript, linker_id)
+		(linker_script, module) = self._get_build_from_project_or_selector(BuildLinkerScript, linker_id)
 
 		if len(linker_script) != 1:
 			raise ConfigError("Found %s linker scripts for device `%s' and toolchain `%s', expected 1" % (len(linker_script), self.project.mcu.name, self.toolchain))
 
-		return linker_script[0]
+		return (linker_script[0], module)
 
 	def _get_aux_linker_script(self, linker_id=None):
 		"""
-		Function which returns the auxiliary linker script for the project. If no
-		custom script is found, the function will return None unless a
-		linker script selector was specified. In this case, the
-		selector is used to get the auxiliary linker script.
+		Function which returns the auxiliary linker script for the project,
+		along with its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		aux_linker_script = self._get_build_from_project_or_selector(BuildAuxLinkerScript, linker_id)
+		(aux_linker_script, module) = self._get_build_from_project_or_selector(BuildAuxLinkerScript, linker_id)
 
 		if len(aux_linker_script) != 1:
 			raise ConfigError("Found %s linker scripts for device `%s' and toolchain `%s', expected 1" % (len(aux_linker_script), self.project.mcu.name, self.toolchain))
 
-		return aux_linker_script[0]
+		return (aux_linker_script[0], module)
 
 	def _get_macro_file(self, macro_id=None):
 		"""
-		Function which returns the macro file for the project. If no
-		custom script is found, the function will return None unless a
-		macro file selector was specified. In this case, the
-		selector is used to get the macro file.
+		Function which returns the macro file for the project, along with
+		its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		macro_file = self._get_build_from_project_or_selector(BuildMacroFile, macro_id)
+		(macro_file, module) = self._get_build_from_project_or_selector(BuildMacroFile, macro_id)
 
 		if len(macro_file) != 1:
 			raise ConfigError("Found %s macro file for device `%s' and toolchain `%s', expected 1" % (len(macro_file), self.project.mcu.name, self.toolchain))
 
-		return macro_file[0]
+		return (macro_file[0], module)
 
 	def _get_aux_macro_file(self, macro_id=None):
 		"""
-		Function which returns the auxiliary macro file for the project. If no
-		custom script is found, the function will return None unless a
-		macro file selector was specified. In this case, the
-		selector is used to get the auxiliary macro file.
+		Function which returns the auxiliary macro file for the project, along
+		with its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		aux_macro_file = self._get_build_from_project_or_selector(BuildAuxMacroFile, macro_id)
+		(aux_macro_file, module) = self._get_build_from_project_or_selector(BuildAuxMacroFile, macro_id)
 
 		if len(aux_macro_file) != 1:
 			raise ConfigError("Found %s macro file  for device `%s' and toolchain `%s', expected 1" % (len(aux_macro_file), self.project.mcu.name, self.toolchain))
 
-		return aux_macro_file[0]
+		return (aux_macro_file[0], module)
 
 	def get_config(self, name):
 		"""
