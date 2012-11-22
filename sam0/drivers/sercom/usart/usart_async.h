@@ -1,5 +1,5 @@
-#ifndef __USART_ASYNC_H__
-#define __USART_ASYNC_H__
+#ifndef USART_ASYNC_H_INCLUDED
+#define USART_ASYNC_H_INCLUDED
 
 
 #include <stdlib.h>
@@ -60,4 +60,4 @@ void usart_async_cancel_reception(struct usart_dev_inst
 
 
 
-#endif /* __USART_ASYNC_H__ */
+#endif /* USART_ASYNC_H_INCLUDED */

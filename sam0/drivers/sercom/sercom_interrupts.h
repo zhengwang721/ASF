@@ -38,8 +38,8 @@
  * \asf_license_stop
  *
  */
-#ifndef __SERCOM_INTERRUPTS__
-#define __SERCOM_INTERRUPTS__
+#ifndef SERCOM_INTERRUPTS_H_INCLUDED
+#define SERCOM_INTERRUPTS_H_INCLUDED
 
 #define SERCOM_INSTANCES 4
 #include <usart.h>
@@ -51,4 +51,4 @@ uint32_t _sercom_instances[SERCOM_INSTANCES];
 void SERCOM_Handler(void);
 
 
-#endif /* __SERCOM_INTERRUPTS__ */
+#endif /* SERCOM_INTERRUPTS_H_INCLUDED */

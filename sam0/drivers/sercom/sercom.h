@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef __SERCOM_H_INCLUDED
-#define __SERCOM_H_INCLUDED
+#ifndef SERCOM_H_INCLUDED
+#define SERCOM_H_INCLUDED
 
 #include <compiler.h>
 

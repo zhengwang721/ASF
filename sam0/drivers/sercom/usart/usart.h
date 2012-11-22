@@ -39,8 +39,8 @@
  * \asf_license_stop
  *
  */
-#ifndef __USART_H__
-#define __USART_H__
+#ifndef USART_H_INCLUDED
+#define USART_H_INCLUDED
 
 #include <stdint.h>
 #include <sercom.h>
@@ -411,4 +411,4 @@ static inline void usart_enable_tx(struct usart_dev_inst *dev_inst)
  * @}
  */
 
-#endif //__USART_H__
+#endif /* USART_H_INCLUDED */
