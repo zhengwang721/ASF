@@ -66,12 +66,6 @@ int main(void)
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
-	if (!udc_include_vbus_monitoring()) {
-		// VBUS monitoring is not available on this product
-		// thereby VBUS has to be considered as present
-		main_vbus_action(true);
-	}
-
 	// The main loop manages only the power mode
 	// because the USB management is done by interrupt
 	while (true) {
@@ -90,17 +84,6 @@ int main(void)
 #else
 		sleepmgr_enter_sleep();
 #endif
-	}
-}
-
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
 	}
 }
 

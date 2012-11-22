@@ -564,6 +564,13 @@ ISR(udd_interrupt, AVR32_USBB_IRQ_GROUP, UDD_USB_INT_LEVEL)
 		otg_unfreeze_clock();
 		otg_ack_vbus_transition();
 		otg_freeze_clock();
+#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+		if (Is_otg_vbus_high()) {
+			udd_attach();
+		} else {
+			udd_detach();
+		}
+#endif
 #ifdef UDC_VBUS_EVENT
 		UDC_VBUS_EVENT(Is_otg_vbus_high());
 #endif
