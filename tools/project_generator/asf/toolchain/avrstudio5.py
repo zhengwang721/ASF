@@ -1462,11 +1462,11 @@ class AVRStudio5Project(GenericProject):
 		if not re.match('unspecified.*', self.project.mcu.name):
 			# Add linker script, if any is found -- this is architecture-specific since it might not be required by the toolchain
 			try:
-				linker_script = self._get_linker_script()
+				(linker_script, linker_script_origin) = self._get_linker_script()
 			except:
 				linker_script = None
 			if linker_script:
-				other_project_files[BuildLinkerScript] = {linker_script : [None, self.project, None]}
+				other_project_files[BuildLinkerScript] = {linker_script : [None, linker_script_origin, None]}
 
 		# Move the files:
 		# - distribute files should be placed in asf_dir
@@ -1766,7 +1766,8 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_linker_script(self):
 		"""
-		Get the filename of the linker script, if any is specified/available.
+		Get the filename of the linker script, if any is specified/available,
+		along with its originating module.
 		"""
 		mcu_family_to_selector_id = {
 			'xmega' : 'xmega.utils.linker_scripts',
@@ -1776,11 +1777,12 @@ class AVRStudio5Project(GenericProject):
 
 		try:
 			selector_id = mcu_family_to_selector_id[mcu_family]
-			filepath = GenericProject._get_linker_script(self, selector_id)
+			(filepath, file_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			filepath = None
+			file_origin = None
 
-		return filepath
+		return (filepath, file_origin)
 
 
 	def _get_kit_name(self):
@@ -1939,10 +1941,11 @@ class AVRStudio5Project32(AVRStudio5Project):
 	def _get_linker_script(self):
 		selector_id = 'avr32.utils.linker_scripts'
 		try:
-			linker_script = GenericProject._get_linker_script(self, selector_id)
+			(linker_script, script_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			linker_script = None
-		return linker_script
+			script_origin = None
+		return (linker_script, script_origin)
 
 
 	def _get_selected_device(self):
@@ -2106,10 +2109,11 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 	def _get_linker_script(self):
 		selector_id = 'sam.utils.linker_scripts'
 		try:
-			linker_script = GenericProject._get_linker_script(self, selector_id)
+			(linker_script, script_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			linker_script = None
-		return linker_script
+			script_origin = None
+		return (linker_script, script_origin)
 
 
 	def _get_product_line(self):
