@@ -72,11 +72,15 @@ class GenericElement(object):
 
 	def _get_build_from_project_or_selector(self, build_type, selector_id):
 		"""
-		Gets a list of build items of the specified type from the project,
-		alternatively from a specifiable selector that can reside in either
-		the project's home database or in ASF. Also returns the originating
-		database element for the build, i.e., either the project or the
-		selector which was found.
+		Gets a list of build items of the specified type from a single
+		module in the project, alternatively from a single module found via
+		an optional selector/module ID. The ID can refer to a selector/module
+		in either the project's home database or in ASF.
+		The originating selector/module is returned along with the list of
+		build items returned, if any.
+
+		If no build items are found, this function returns the tuple
+		([], None)
 
 		Assuming the project does not contain any build items of the
 		specified type and the ID of a selector has been specified, the
@@ -105,16 +109,23 @@ class GenericElement(object):
 		for the current MCU and configuration.
 		"""
 		asf_uuid = "Atmel.ASF"
-		# Check for custom build items
-		build_items = self.project.get_build(build_type, self.toolchain)
+
+		def search_dependency_tree_for_build_and_module(home_root):
+			for build_home in [home_root] + home_root.get_prerequisites(recursive=True):
+				build_items = build_home.get_build(build_type, self.toolchain, recursive=False)
+				if build_items:
+					return (build_items, build_home)
+			return ([], None)
+
+		# Check dependency tree for custom build items
+		build_items, build_home =  search_dependency_tree_for_build_and_module(self.project)
 
 		# If no build item was found and a selector is defined for toolchain, use it
-		build_selector = None
 		if not build_items:
 			if selector_id:
 				# Try to find selector in the project's home database, or in ASF
 				try:
-					build_selector = self.db.lookup_by_id(selector_id)
+					build_home_root = self.db.lookup_by_id(selector_id)
 				except NotFoundError:
 					# Re-raise exception if this actually was the ASF database
 					if self.db.extension.uuid == asf_uuid:
@@ -124,14 +135,14 @@ class GenericElement(object):
 					req_eid, req_ver = self.db.extension.get_dependency_by_uuid(asf_uuid)
 					if req_eid is not None:
 						# This raises NotFoundError if selector is not found
-						build_selector = self.db.lookup_external_by_id(req_eid, selector_id)
+						build_home_root = self.db.lookup_external_by_id(req_eid, selector_id)
 					else:
 						raise DbError("Could not find selector `%s' in database. Either add build type/subtype `%s/%s' to the project or a dependency on ASF to the extension." % (selector_id, build_type.type, build_type.subtype))
 
-				build_selector.resolve_all_selections(self.configuration, self.project.mcu)
-				build_items = build_selector.get_build(build_type, self.toolchain)
+				build_home_root.resolve_all_selections(self.configuration, self.project.mcu)
+				(build_items, build_home) = search_dependency_tree_for_build_and_module(build_home_root)
 
-		return (build_items, build_selector or self.project)
+		return (build_items, build_home)
 
 	def _get_linker_script(self, linker_id=None):
 		"""

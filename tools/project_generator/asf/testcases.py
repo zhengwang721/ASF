@@ -1723,7 +1723,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		bbb_ext = self.extmgr.request_extension(self.ext_uuids[0])
 		bbb_db = bbb_ext.get_database()
 		bbb_proj = bbb_db.lookup_by_id("bbb.project")
-		bbb_sel = bbb_db.lookup_by_id("working_selector")
+		bbb_sel = bbb_db.lookup_by_id("working_selector#0")
 		bbb_gen = GenericProject(bbb_proj, bbb_db, bbb_db.runtime)
 
 		# Load test project from Ccc and instantiate GenericProject
@@ -1739,7 +1739,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		# 1) no build items are found
 		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
 		self.assertEquals(found_items, [])
-		self.assertEquals(item_origin, ccc_proj)
+		self.assertEquals(item_origin, None)
 
 		# and 2) build items are found
 		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
@@ -1763,7 +1763,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		asf_ext = self.extmgr.load_extension(os.path.join(self.ext_basedir, 'Ccc', 'misplaced_ASF'))
 		self.extmgr.register_extension(asf_ext)
 		asf_db = asf_ext.get_database()
-		asf_sel = asf_db.lookup_by_id('working_asf_selector')
+		asf_sel = asf_db.lookup_by_id('working_asf_selector#0')
 
 		# 3) selector is not found in project's database or ASF
 		self.assertRaises(NotFoundError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
