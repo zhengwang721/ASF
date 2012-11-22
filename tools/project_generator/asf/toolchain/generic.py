@@ -294,9 +294,12 @@ class GenericElement(object):
 			except NameError:
 				raise DbError("Could not find module of type `build-specific' in the dependency tree of id `%s'" % default_config_id)
 
-		# Fetch toolchain configs and config lists from board
+		# Fetch toolchain configs and config lists from board, if one exists
 		if self.project._board:
 			(board_configs, board_list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
+		else:
+			board_configs = {}
+			board_list_configs = {}
 
 		# Update configs with those from project
 		(project_configs, project_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
