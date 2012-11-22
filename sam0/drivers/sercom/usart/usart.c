@@ -38,73 +38,226 @@
  * \asf_license_stop
  *
  */
-
 #include <usart.h>
 
 
-enum status_code usart_init(struct usart_dev_inst *dev_inst, SERCOM_t *hw_dev, struct usart_config *config)
-{
-	
-	
-}
+
 
 
 
 /**
- * \brief Transfer a buffer of \ref length length bytes via USART
+ * \brief Initializes the device
  *
- * This function will transfer a block of \ref length length bytes via the USART
+ * Initializes the USART device based on the setting specified in the
+ * configuration struct. This will leave the device in an enabled state
+ * after initialization.
  *
- * \param inst pointer to the device struct
- * \param data pointer to the buffer to transmit
- * \param length number of bytes to transfer
+ * \param dev_inst Pointer to USART device
+ * \param config Pointer to configuration struct
  */
-enum status_code usart_write_buffer(const struct usart_dev_inst *const dev_inst,
-		const uint16_t *tx_data, uint16_t length)
+enum status_code usart_init(const struct usart_dev_inst *dev_inst,
+		SERCOM_t *hw_dev, struct usart_conf *config)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(hw_dev);
+	Assert(config);
 
-	if (length == 0) {
-		return STATUS_ERR_INVALID_ARG;
-	}
-
-	do {
-		usart_write(dev_inst, *(tx_data++));
-	} while (--length);
-
-	return STATUS_OK;
-
+	//TODO:
 }
 
 /**
-* \brief Read a block of data from the USART
-*
-* This function will read a block of \ref length bytes from the USART
-* and block during the transfer.
-*
-* \param dev_inst pointer to the device struct
-* \param rx_data pointer to the buffer where to store the received data
-* \param length number of bytes to receive
-*/
-enum status_code usart_read_buffer(const struct usart_dev_inst *const dev_inst,
-		const uint16_t *rx_data, uint16_t length)
+ * \brief Transmit a character via the USART
+ *
+ * This non-blocking function will receive a character via the
+ * USART.
+ *
+ * \note Using this function in combination with the asynchronous functions is
+ *       not recommended as it has no functionality to check if there is an
+ *       ongoing asynchronous operation running or not.
+ *
+ * param[in]   dev_inst Pointer to the software instance struct 
+ * param[out]  tx_data  Data to transfer 
+ *
+ * \return     Status of the operation
+ * \retval     STATUS_OK           If the operation was completed
+ * \retval     STATUS_ERR_BUSY     If the operation was not completed,
+ *                                 due to the USART module being busy.
+ */
+enum status_code usart_write(struct usart_dev_inst *const dev_inst,
+		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
+	/* Check if USART is ready for new data */
+	if(!usart_is_data_buffer_empty(dev_inst)) {
+		/* Return error code */
+		return STATUS_ERR_BUSY;
+	}
+
+	/* Get a pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+
+	/* Wait until synchronization is complete */
+	_usart_wait_for_sync(dev_inst);
+
+	/* Write data to USART module */
+	usart_module->DATA = tx_data;
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Receive a character via the USART
+ *
+ * This non-blocking function will receive a character via the
+ * USART.
+ *
+ * \note Using this function in combination with the asynchronous functions is
+ *       not recommended as it has no functionality to check if there is an
+ *       ongoing asynchronous operation running or not.
+ *
+ * param[in]   dev_inst Pointer to the software instance struct 
+ * param[out]  rx_data  Pointer to received data
+ *
+ * \return     Status of the operation
+ * \retval     STATUS_OK           If the operation was completed
+ * \retval     STATUS_ERR_BUSY     If the operation was not completed,
+ *                                 due to the USART module being busy.
+ */
+enum status_code usart_read(struct usart_dev_inst *const dev_inst,
+		uint16_t *const rx_data)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Check if USART has new data */
+	if(!usart_is_data_received(dev_inst)) {
+		/* Return error code */
+		return STATUS_ERR_BUSY;
+	}
+
+	/* Get a pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+
+	/* Wait until synchronization is complete */
+	_usart_wait_for_sync(dev_inst);
+
+	/* Read data from USART module */
+	*rx_data = usart_module->DATA;
+}
+
+/**
+ * \brief Transmit a buffer of \ref length length characters via USART
+ *
+ * This blocking function will transmit a block of \ref length length characters
+ * via the USART
+ *
+ * \note Using this function in combination with the asynchronous functions is
+ *       not recommended as it has no functionality to check if there is an
+ *       ongoing asynchronous operation running or not.
+ *
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[out]    tx_data  Pointer to data to transmit
+ * \param[length] number   Number of characters to transmit
+ *
+ * \return        Status of the operation
+ * \retval        STATUS_OK                If operation was completed
+ * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed,
+ *                                         due to invalid arguments
+ * \retval        STATUS_ERR_BUSY          If operation was not completed,
+ *                                         due to USART module being busy
+ */
+enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
+		const uint8_t *tx_data, uint16_t length)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Check if the buffer length is valid */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	do {
-		usart_read(dev_inst, rx_data++);
-	} while (--length);
-	
+	/* Get a pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+
+	/* Wait until synchronization is complete */
+	_usart_wait_for_sync(dev_inst);
+
+	/* Blocks while buffer is being transferred */
+	while(length--){
+
+		/* Wait for USART to become ready for new data */
+		while(!usart_is_data_buffer_empty(dev_inst)) {
+			/* Intentionally left empty */
+		}
+
+		/* Needs increment data pointer by 2 for characters
+		 * longer than 8 bits */
+		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			usart_write(dev_inst, (uint16_t)*(tx_data+2));
+		} else {
+			usart_write(dev_inst, (uint16_t)*(tx_data++));
+		}
+	}
+
 	return STATUS_OK;
 }
 
+/**
+ * \brief Receive a buffer of \ref length length characters via USART
+ *
+ * This blocking function will receive a block of \ref length length characters
+ * via the USART.
+ *
+ * \note Using this function in combination with the asynchronous functions is
+ *       not recommended as it has no functionality to check if there is an
+ *       ongoing asynchronous operation running or not.
+ *
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[out]    tx_data  Pointer to data to transmit
+ * \param[length] number   Number of characters to transmit
+ *
+ * \return        Status of the operation
+ * \retval        STATUS_OK                If operation was completed
+ * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed, due
+ *                                         to invalid arguments
+ * \retval        STATUS_ERR_BUSY          If operation was not completed, due
+ *                                         to USART module being busy
+ */
+enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
+		const uint8_t *rx_data, uint16_t length)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
+	/* Check if the buffer length is valid */
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
 
+	/* Blocks while buffer is being received */
+	while(length--) {
+
+		/* Wait for USART to have new data */
+		while(!usart_is_data_received(dev_inst)) {
+			/* Intentionally left empty */
+		}
+		/* Needs increment data pointer by 2 for characters
+		 * longer than 8 bits */
+		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			usart_write(dev_inst, (uint16_t)*(rx_data+2));
+		} else {
+			usart_write(dev_inst, (uint16_t)*(rx_data++));
+		}
+
+	}
+
+	return STATUS_OK;
+}

@@ -239,7 +239,7 @@ enum status_code usart_async_disable_callback(struct usart_dev_inst *const dev_i
  * returns 
  * retval  
  */
-enum status_code usart_write(struct usart_dev_inst *const dev_inst,
+enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -270,7 +270,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  * retval  
  */
 //TODO: differ on number of bits for char_size??
-enum status_code usart_read(struct usart_dev_inst *const dev_inst,
+enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */

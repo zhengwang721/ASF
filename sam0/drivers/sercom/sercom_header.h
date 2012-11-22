@@ -184,11 +184,10 @@ typedef enum {
 #define SERCOM_USART_FERR_bm   (1 << 1)
 #define SERCOM_USART_BUFOVF_bm (1 << 2)
 
-#define SERCOM_USART_ERROR_gm  0x0007
-
 
 #define SERCOM_USART_DATA_gm  (0x1FF << 1)
-
+#define SERCOM_USART_SYNCBUSY_bp 7
+#define SERCOM_USART_SYNCBUSY_bm (1 << SERCOM_USART_SYNCBUSY_bp)
 
 
 /*TODO: Replace with correct values */
