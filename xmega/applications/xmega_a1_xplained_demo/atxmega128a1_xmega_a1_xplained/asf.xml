@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <asf xmlversion="1.0">
 	<project id="xmega.applications.xmega_a1_xplained_demo.atxmega128a1_xmega_a1_xplained" caption="XMEGA-A1 Xplained demo application">
 		<build type="include-path" value="."/>
@@ -11,6 +10,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="iarew"/>
-		<generator value="doxygen" />
+		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

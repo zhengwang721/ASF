@@ -601,8 +601,6 @@
  * \section api_overview API Overview
  * @{
  */
-
-#include <io.h>
 #include <compiler.h>
 
 #ifdef __cplusplus
@@ -631,14 +629,15 @@ enum system_peripheral_flag {
 	/*! AC0 lock/unlock flag */
 	SYSTEM_PERIPHERAL_AC0		= 47,
 };
+
 /** \name Peripheral lock and unlock
  * @{
  */
-__no_inline enum status_code system_peripheral_lock(
+enum status_code system_peripheral_lock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key);
 
-__no_inline enum status_code system_peripheral_unlock(
+enum status_code system_peripheral_unlock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key);
 /** @}  */

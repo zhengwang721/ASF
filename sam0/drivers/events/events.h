@@ -78,7 +78,7 @@
  *
  * \section module_introduction Introduction
  *
- * \par Event System Overview
+ * \subsection module_overview Event System Overview
  * Peripherals within the SAM0 devices are capable of generating two types of
  * actions in response to given stimulus; they can set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or they can
@@ -88,7 +88,7 @@
  * without CPU intervention. This can lower the overall power consumption of the
  * system if the CPU is able to remain in sleep modes for longer periods, and
  * lowers the latency of the system response.
- * \n\n
+ *
  * The event system is comprised of a number of freely configurable Event
  * Channels, plus a number of fixed Event Users. Each Event Channel can be
  * configured to select the input peripheral that will generate the events on
@@ -115,32 +115,31 @@
  * }
  * \enddot
  *
- * \par ""
  * There are many different events that can be routed in the device, which can
  * then trigger many different actions. For example, an Analog Comparator module
  * could be configured to generate an event when the input signal rises about
  * the compare threshold, which then triggers a Timer module to capture the
  * current count value for later use.
  *
- * \par Event Channels
+ * \subsection event_channels Event Channels
  * The Event module in each device consists of several channels, which can be
  * freely linked to an event generator (i.e. a peripheral within the device
  * that is capable of generating events). Each channel can be individually
  * configured to select the generator peripheral, signal path and edge detection
  * applied to the input event signal, before being passed to any event user(s).
- * \n\n
+ *
  * Event channels can support multiple users within the device in a standardized
  * manner; when an Event User is linked to an Event Channel, the channel will
  * automatically handshake with all attached users to ensure that all modules
  * correctly receive and acknowledge the event.
  *
- * \par Event Users
+ * \subsection event_users Event Users
  * Event Users are able to subscribe to an Event Channel, once it has been
  * configured. Each Event User consists of a fixed connection to one of the
  * peripherals within the device (for example, an ADC module or Timer module)
  * and is capable of being connected to a single Event Channel.
  *
- * \par Edge Detection
+ * \subsection edge_detection Edge Detection
  * For asynchronous events, edge detection on the event input is not possible,
  * and the event signal must be passed directly between the event generator and
  * event user. For synchronous and re-synchronous events, the input signal from
@@ -148,11 +147,11 @@
  * the rising, falling or both edges of the event signal triggers an action in
  * the event user.
  *
- * \par Path Selection
+ * \subsection path_selection Path Selection
  * The event system in the SAM0 devices supports three signal path types from
  * the event generator to event users: asynchronous, synchronous and
  * re-synchronous events.
- * \n\n
+ *
  * <b>Asynchronous event</b> paths allow for an asynchronous connection between
  * the event generator and event user(s), when the source and destination
  * peripherals share the same \ref sam0_gclk_group "generic clock" channel. In
@@ -173,7 +172,6 @@
  * }
  * \enddot
  *
- * \par ""
  * <b>Synchronous event</b> paths can be used when the source and destination
  * peripherals, as well as the generic clock to the event system itself, use
  * different \ref sam0_gclk_group "generic clock" channels. This case introduces
@@ -195,7 +193,6 @@
  * }
  * \enddot
  *
- * \par ""
  * <b>Re-synchronous event</b> paths are a special form of synchronous events,
  * where the event users share the same \ref sam0_gclk_group "generic clock"
  * channel as the event system module itself, but the event generator does not.

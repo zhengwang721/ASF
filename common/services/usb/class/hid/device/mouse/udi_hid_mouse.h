@@ -306,7 +306,6 @@ bool udi_hid_mouse_btnleft(bool b_state);
  * - \subpage udc_use_case_1
  * - \subpage udc_use_case_2
  * - \subpage udc_use_case_3
- * - \subpage udc_use_case_4
  * - \subpage udc_use_case_5
  * - \subpage udc_use_case_6
  */

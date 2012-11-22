@@ -606,6 +606,10 @@ void udd_enable(void)
 	sleepmgr_lock_mode(UDPHS_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#endif
+
 	cpu_irq_restore(flags);
 }
 
@@ -1096,7 +1100,6 @@ void udd_test_mode_packet(void)
 	uint8_t i;
 	uint8_t *ptr_dest;
 	const uint8_t *ptr_src;
-	irqflags_t flags;
 
 	const uint8_t test_packet[] = {
 		// 00000000 * 9
@@ -1134,11 +1137,9 @@ void udd_test_mode_packet(void)
 	for (i = 0; i < sizeof(test_packet); i++) {
 		*ptr_dest++ = *ptr_src++;
 	}
-	flags = cpu_irq_save();
-	udd_enable_in_send_interrupt(0);
-	cpu_irq_restore(flags);
-
+	// Validate and send the data available in the control endpoint buffer
 	udd_ack_in_send(0);
+	udd_raise_tx_pkt_ready(0);
 }
 #endif // USB_DEVICE_HS_SUPPORT
 

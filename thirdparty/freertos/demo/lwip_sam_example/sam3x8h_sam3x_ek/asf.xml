@@ -22,5 +22,6 @@
 		<config name="config.compiler.iarewarm.stack_size" value="0x4000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam3x8h"/>
 	</project>
 </asf>

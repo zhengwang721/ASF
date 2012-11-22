@@ -53,6 +53,7 @@
 		<build type="doxygen-entry-point" value="group_avr32_utils"/>
 		<build type="header-file" value="header_files/uc3d_defines_fix.h" />
 		<build type="header-file" value="header_files/uc3l3_l4_defines_fix.h" />
+		<require idref="avr32.utils.makefile" />
 		<require idref="config.avr32.utils.trampoline"/>
 		<require idref="config.avr32.utils.gccstartup"/>
 		<require idref="common.utils.part_macros" />

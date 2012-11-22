@@ -188,92 +188,89 @@
  *   </tr>
  *  </table>
  *
- * The tables below shows how many rows that are available for both the EEPROM
- * and the bootloader. The sizes for both must be configured via the nvm_config
- * struct.
+ * The table below shows the number of NVM memory rows that are reserved for
+ * use by the bootloader. The size must be configured via the \ref nvm_config
+ * structure instance.
  *
- * <table cellpadding="20" border="0" align="center">
+ * <table>
  *  <tr>
- *   <td>
- *    <table>
- *     <tr>
- *      <th> BOOTPROT[2:0] </th>
- *      <th> Rows Protected by BOOTPROT </th>
- *     </tr>
- *     <tr>
- *      <td align="center"> 7 </td>
- *      <td align="center"> None </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 6 </td>
- *      <td align="center"> 2 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 5 </td>
- *      <td align="center"> 4 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 4 </td>
- *      <td align="center"> 8 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 3 </td>
- *      <td align="center"> 16 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 2 </td>
- *      <td align="center"> 32 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 1 </td>
- *      <td align="center"> 64 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 0 </td>
- *      <td align="center"> 128 </td>
- *     </tr>
- *    </table>
- *   </td>
- *   <td border="0">
- *    <table>
- *     <tr>
- *      <th> EEPROM[2:0] </th>
- *      <th> Rows Allocated by EEPROM </th>
- *     </tr>
- *     <tr>
- *      <td align="center"> 7 </td>
- *      <td align="center"> None </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 6 </td>
- *      <td align="center"> 1 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 5 </td>
- *      <td align="center"> 2 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 4 </td>
- *      <td align="center"> 4 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 3 </td>
- *      <td align="center"> 8 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 2 </td>
- *      <td align="center"> 16 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 1 </td>
- *      <td align="center"> 32 </td>
- *     </tr>
- *     <tr>
- *      <td align="center"> 0 </td>
- *      <td align="center"> 64 </td>
- *     </tr>
- *    </table>
- *   </td>
+ *   <th> BOOTPROT[2:0] </th>
+ *   <th> Rows Protected by BOOTPROT </th>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 7 </td>
+ *   <td align="center"> None </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 6 </td>
+ *   <td align="center"> 2 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 5 </td>
+ *   <td align="center"> 4 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 4 </td>
+ *   <td align="center"> 8 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 3 </td>
+ *   <td align="center"> 16 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 2 </td>
+ *   <td align="center"> 32 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 1 </td>
+ *   <td align="center"> 64 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 0 </td>
+ *   <td align="center"> 128 </td>
+ *  </tr>
+ * </table>
+ *
+ * The table below shows the number of NVM memory rows that are reserved for
+ * use by the emulated EEPROM. The size must be configured via the
+ * \ref nvm_config structure instance.
+ *
+ * <table>
+ *  <tr>
+ *   <th> EEPROM[2:0] </th>
+ *   <th> Rows Allocated by EEPROM </th>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 7 </td>
+ *   <td align="center"> None </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 6 </td>
+ *   <td align="center"> 1 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 5 </td>
+ *   <td align="center"> 2 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 4 </td>
+ *   <td align="center"> 4 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 3 </td>
+ *   <td align="center"> 8 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 2 </td>
+ *   <td align="center"> 16 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 1 </td>
+ *   <td align="center"> 32 </td>
+ *  </tr>
+ *  <tr>
+ *   <td align="center"> 0 </td>
+ *   <td align="center"> 64 </td>
  *  </tr>
  * </table>
  *

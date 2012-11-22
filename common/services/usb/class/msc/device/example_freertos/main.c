@@ -77,11 +77,6 @@ int main(void)
 	
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
-	if (!udc_include_vbus_monitoring()) {
-		// VBUS monitoring is not available on this product
-		// thereby VBUS has to be considered as present
-		main_vbus_action(true);
-	}
 	
 	// Create a task to process data transfer
 	xTaskCreate(main_memories_trans_task,
@@ -130,17 +125,6 @@ void main_msc_notify_trans(void)
 	// One transfer is requested 
 	// It is now time for main_memories_trans_task() to run
 	xSemaphoreGiveFromISR( main_trans_semphr, &xHigherPriorityTaskWoken );
-}
-
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
-	}
 }
 
 void main_suspend_action(void)

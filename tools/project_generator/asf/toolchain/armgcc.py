@@ -29,6 +29,8 @@ class ARMGCCProject(AVR32GCCProject):
 	config_startuplabel = "armgcc.startup_label"
 	create_aux_default = GenericProject.config_enabled
 	optlevel_default = 'low'
+	# Name of the arch-specific makefile to look for
+	makefile_name = 'Makefile.sam.in'
 
 	def __init__(self, project, db, runtime):
 		if type(self) == ARMGCCProject:
@@ -155,7 +157,7 @@ class ARMGCCProject(AVR32GCCProject):
 
 		ASF['$ASF_LDFLAGS$'] += asf_ldflags.strip()
 
-		self.project.filelist.add("%s/utils/make/Makefile.in" % self.arch_directory)
+		# self.project.filelist.add("sam/utils/make/Makefile.in")
 
 class ARM34GCCProject(ARMGCCProject):
 	supported_mcus = [

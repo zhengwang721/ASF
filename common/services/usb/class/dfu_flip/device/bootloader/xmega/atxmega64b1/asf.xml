@@ -12,5 +12,6 @@
 		<require idref="common.services.usb.class.dfu_atmel.device.bootloader.xmega.small"/>
 		<require idref="board.dummy.atxmega64b1"/>
 		<generator value="iarew"/>
+		<device-support value="atxmega64b1"/>
 	</project>
 </asf>

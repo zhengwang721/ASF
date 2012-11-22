@@ -12,8 +12,9 @@
 		<require idref="common.services.gfx.example1"/>
 		<require idref="board.evk1104"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

@@ -21,5 +21,6 @@
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam3s4c"/>
 	</project>
 </asf>

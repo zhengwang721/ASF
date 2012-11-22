@@ -3,6 +3,7 @@ import os
 import sys
 
 from asf.database import ConfigDB
+from asf.exception import *
 from asf.toolchain import *
 
 
@@ -13,11 +14,8 @@ class Runtime(object):
 	def __init__(self, template_dir, configuration):
 		self.debug = False
 		self.configuration = configuration
-		self.use_file_list_cache = False
-		self.file_list_cache_name = "asf_filelist.cache"
 		self.template_dir = template_dir
 		self.xml_schema_path = None
-		self.xml_input_filename = "asf.xml"
 		self.args = list()
 		self.archiver = None
 		self.version_postfix = None
@@ -115,26 +113,6 @@ class Runtime(object):
 		"""
 		return self.configuration.get_config_group(group)
 
-	def create_and_set_cache_dir(self, dir):
-		# Create folder
-		try:
-			os.mkdir(dir)
-		except OSError:
-			# Folder exists
-			pass
-
-		# Set all cache files to the correct path
-		self.file_list_cache_name = os.path.join(dir, "asf_filelist.cache")
-
-	def set_use_file_list_cache(self, value = True):
-		self.use_file_list_cache = value
-
-	def set_xml_schema_path(self, filepath):
-		self.xml_schema_path = filepath
-
-	def set_xml_input_filename(self, filename):
-		self.xml_input_filename = filename
-
 	def set_version_postfix(self, postfix):
 		self.version_postfix = postfix
 
@@ -159,11 +137,8 @@ class Runtime(object):
 
 		return self.document_version
 
-	def load_db(self, filename=None):
-		# Parse all XML files or load from given filename
-		self.db = ConfigDB(self, filename)
-		if self.document_version == None:
-			self.document_version = self.db.get_framework_version_number()
+	def set_db(self, new_db):
+		self.db = new_db
 
 	def visualize_xml(self):
 		visualize_xml(self.db.root)
