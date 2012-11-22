@@ -80,9 +80,9 @@ enum status_categories {
  * at the same time.
  */
 enum status_code {
-	STATUS_OK                         = STATUS_CATEGORY_NONE   | 0x00,
-	STATUS_VALID_DATA                 = STATUS_CATEGORY_NONE   | 0x01,
-	STATUS_NO_CHANGE                  = STATUS_CATEGORY_NONE   | 0x02,
+	STATUS_OK                         = STATUS_CATEGORY_OK     | 0x00,
+	STATUS_VALID_DATA                 = STATUS_CATEGORY_OK     | 0x01,
+	STATUS_NO_CHANGE                  = STATUS_CATEGORY_OK     | 0x02,
 
 	STATUS_ERR_IO                     = STATUS_CATEGORY_COMMON | 0x00,
 	STATUS_ERR_REQ_FLUSHED            = STATUS_CATEGORY_COMMON | 0x01,
