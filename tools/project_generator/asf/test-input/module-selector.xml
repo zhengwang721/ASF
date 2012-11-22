@@ -25,9 +25,11 @@
 <project id="project" caption="my project">
 	<require idref="testdev" />
 	<require idref="board" />
+	<device-support value="atxmega128a1"/>
 </project>
 
-<board id="board" mcu="atxmega128a1" caption="my board">
+<board id="board" caption="my board">
+	<device-support value="atxmega128a1"/>
 </board>
 
 <!--- Select by device -->
@@ -85,6 +87,7 @@
 <project id="project_confdevselect1" caption="my project">
 	<require idref="confdevselect1" />
 	<require idref="board" />
+	<device-support value="atxmega128a1"/>
 </project>
 
 <module type="meta" id="testconfdev" caption="meta">
@@ -150,6 +153,7 @@
 	<config name="mydefault" value="expected" />
 	<require idref="confdef1" />
 	<require idref="board" />
+	<device-support value="atxmega128a1"/>
 </project>
 
 <select-by-config id="confdef1" name="mydefault" default="default" caption="Config selector">

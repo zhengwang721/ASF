@@ -5,7 +5,7 @@
 			Atmel Sensors Xplained Inertial 1 board (ATAVRSBIN1) then
 			displays accelerometer, gyroscope, and electronic compass data.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_a1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
@@ -20,6 +20,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 	<project caption="XMEGA-B1 Xplained with Xplained Inertial Board #1" id="xmega.applications.xmega-b1_avrsbin1-demo">
 		<info type="description" value="summary">
@@ -27,7 +28,7 @@
 			Atmel Sensors Xplained Inertial 1 board (ATAVRSBIN1) then
 			displays accelerometer, gyroscope, and electronic compass data.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.xmega_b1_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -43,6 +44,7 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 	<!--
 	<project caption="XMEGA-A1 Xplained with Xplained Breadboard" id="xmega.applications.xmega-a1_avrbbin-demo">

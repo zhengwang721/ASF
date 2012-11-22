@@ -13,8 +13,9 @@
 		<require idref="common.components.touch.mxt.example_usart"/>
 		<require idref="board.xmega_a1_xplained"/>
 		<generator value="iarew"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

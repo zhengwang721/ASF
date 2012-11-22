@@ -3,6 +3,6 @@
 		<require idref="board.dummy.atsam0d4"/>
 		<require idref="sam0.drivers.sercom.i2c_master.quick_start"/>
 		<generator value="armgcc"/>
-		<generator value="doxygen-v2"/>
+		<device-support value="atsam0d4"/>
 	</project>
 </asf>

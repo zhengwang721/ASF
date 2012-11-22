@@ -13,8 +13,9 @@
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<config name="config.spi_master_type" value="usart_spi"/>
 		<generator value="iarew"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega128b1"/>
 	</project>
 </asf>

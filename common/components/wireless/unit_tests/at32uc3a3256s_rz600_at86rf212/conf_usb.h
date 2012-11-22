@@ -85,7 +85,7 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)      stdio_usb_vbus_event(b_vbus_high)
+#define  UDC_VBUS_EVENT(b_vbus_high)
 #define  UDC_SOF_EVENT()
 #define  UDC_SUSPEND_EVENT()
 #define  UDC_RESUME_EVENT()

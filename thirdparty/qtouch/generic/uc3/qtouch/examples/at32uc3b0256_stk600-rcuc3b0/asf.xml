@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="QTouch Method Example Application on STK600-RCUC3B0" id="avr32.services.qtouch.generic.uc3.qtouch.example1.stk600-rcuc3b0">
 		<info type="keyword" value="technology">
-		<keyword value="Touch"/>
+			<keyword value="Touch"/>
 		</info>	
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
@@ -21,8 +21,9 @@
 		<build type="define" name="SNS" value="A"/>
 		<build type="define" name="QT_DELAY_CYCLES" value="5"/>
 		<build type="define" name="_DEBUG_INTERFACE_" value=""/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3b0256"/>
 	</project>
 </asf>
