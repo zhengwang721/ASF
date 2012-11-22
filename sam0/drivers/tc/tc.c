@@ -56,7 +56,8 @@
  * \retval STATUS_INVALID_ARG When there is invalid data in the config struct.
  * \retval STATUS_OK          When init has compleeted sucsesfuly.
  */
-enum status_code tc_init(TC_t *const tc_module,
+enum status_code tc_init(
+		TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
 		struct tc_config *const config)
 {
@@ -68,7 +69,7 @@ enum status_code tc_init(TC_t *const tc_module,
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
-	if (tc_module->STATUS && TC_SLAVE_bm) {
+	if(tc_module->STATUS && TC_SLAVE_bm) {
 		return STATUS_ERR_BUSY;
 	}
 	/* Disable TC module */
@@ -102,10 +103,10 @@ enum status_code tc_init(TC_t *const tc_module,
 
 	uint8_t evctrl_bm = 0;
 	if(config->enable_event_input)
-		evctrl_bm |= (1 << 5);//found no #define for this in the tc_header.h file.
+		evctrl_bm |= TC_EVCTRL_TCEI_bm;
 
 	if(config->invert_event_input)
-		evctrl_bm |= (1 << 4);//found no #define for this in the tc_header.h file.
+		evctrl_bm |= TC_EVCTRL_TCINV_bm;
 
 	tc_wait_for_sync(tc_module);
 	tc_module-EVCTRL = evctrl_bm | config->event_action
@@ -201,7 +202,8 @@ enum status_code tc_init(TC_t *const tc_module,
  * \retval STATUS_OK                
  * \retval STATUS_ERR_INVALID_ARG   
  */
-enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
+enum status_code tc_set_count(
+		struct tc_dev_inst *const dev_inst,
 		uint32_t count)
 {
 	/* Sanity check arguments */
@@ -243,7 +245,8 @@ enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
  * \param dev_inst      pointer to the device struct
  * \param count         pointer to the where the value is put
  */
-enum status_code tc_get_count(struct tc_dev_inst *const dev_inst,
+enum status_code tc_get_count(
+		struct tc_dev_inst *const dev_inst,
 		uint32_t *count)
 {
 	/* Sanity check arguments */
@@ -253,8 +256,6 @@ enum status_code tc_get_count(struct tc_dev_inst *const dev_inst,
 
 	/* Get a pointer to the module's hardware instance*/
 	TC_t *const tc_module = dev_inst->hw_dev;
-
-	//TODO: set RREQ or RCONT and ADDR field before doing the sync test. It may be that this is not nesesary in the polled driver.
 
 	/* Synchronize */
 	tc_wait_for_sync(tc_module);
@@ -287,7 +288,7 @@ enum status_code tc_get_count(struct tc_dev_inst *const dev_inst,
  *
  * \param[in] dev_inst         pointer to the device struct
  * \param[out] compare         pointer to a buffer
- * \param[in] comp_reg_index   index of the compare register to read from
+ * \param[in] ccc_index        index of the compare register to read from
  *
  * \return
  * \retval STATUS_OK
@@ -307,13 +308,13 @@ enum status_code tc_get_capture(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);//this is probably not enough may be necessary to set RREQ or RCONT and ADDR bits, before checking SYNCBUSY.
+	tc_wait_for_sync(tc_module);
 
 	/* Read out based on the TC mode */
 	switch(dev_inst->mode) {
 		case TC_MODE_COUNT8:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT8.CC0;
 					return STATUS_OK;
@@ -336,7 +337,7 @@ enum status_code tc_get_capture(
 
 		case TC_MODE_COUNT16:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT16.CC0;
 					return STATUS_OK;
@@ -359,7 +360,7 @@ enum status_code tc_get_capture(
 
 		case TC_MODE_COUNT32:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					*compare = tc_module->TC_COUNT32.CC0;
 					return STATUS_OK;
@@ -382,13 +383,14 @@ enum status_code tc_get_capture(
  *
  * \param dev_inst    pointer to the device struct
  * \param buffer      pointer to a buffer
- * \comp_reg_index    index of the compare register to write to
+ * \ccc_index         index of the compare register to write to
  *
  * \return
  * \retval  STATUS_OK
  * \retval  STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_set_compare(struct tc_dev_inst *dev_inst,
+enum status_code tc_set_compare(
+		struct tc_dev_inst *dev_inst,
 		uint32_t compare,
 		enum tc_compare_capture_channel_index ccc_index)
 {
@@ -407,7 +409,7 @@ enum status_code tc_set_compare(struct tc_dev_inst *dev_inst,
 	switch(dev_inst->mode) {
 		case TC_MODE_COUNT8:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT8.CC0
 						= (uint8_t) compare;
@@ -434,7 +436,7 @@ enum status_code tc_set_compare(struct tc_dev_inst *dev_inst,
 
 		case TC_MODE_COUNT16:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT16.CC0
 						= (uint16_t) compare;
@@ -461,7 +463,7 @@ enum status_code tc_set_compare(struct tc_dev_inst *dev_inst,
 
 		case TC_MODE_COUNT32:
 			/* Read out based on compare register */
-			switch(comp_reg_index) {
+			switch(ccc_index) {
 				case TC_COMPARE_CAPTURE_CHANNEL_0:
 					tc_module->TC_COUNT32.CC0 = compare;
 					return STATUS_OK;

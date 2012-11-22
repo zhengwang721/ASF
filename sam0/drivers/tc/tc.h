@@ -60,7 +60,6 @@ extern "C" {
  *
  * \li \b TC \b (Timer Counter)
  *
- *
  * \subsection module_overview TC Overview
  *
  * \subsection sleep_modes Operation in Sleep Modes
@@ -83,7 +82,16 @@ extern "C" {
  * @{
  */
 
+//folowing 9 lines can be removed if this is done in tc_header.h
+#ifndef TC_INTFLAG_ERR_bm
 #define TC_INTFLAG_ERR_bm (0x01 << 1)
+#endif
+#ifndef TC_EVCTRL_TCEI_bm
+#define TC_EVCTRL_TCEI_bm (0x0001 << 5)
+#endif
+#ifndef TC_EVCTRL_TCINV_bm
+#define TC_EVCTRL_TCINV_bm (0x0001 << 4)
+#endif
 
 /**
  * \brief Index of the compare capture channels
@@ -392,14 +400,18 @@ struct tc_32bit_conf {
  * modified by the user application.
  */
 struct tc_conf {
+	/** Select clock sourse for the TC clock */
 	//TODO set clock param
-	//TODO look into sleepen bit
-
-	/** Specifies either 8, 16 or 32 bit counter mode  */
+	/**
+	 * sleep_enable: When true the module is enabled during sleep
+	 * mode
+	 */
+	bool sleep_enable; //TODO: sleepen may be renamed to RUNSTDBY
+	/** Specifies either 8, 16 or 32 bit counter resolution */
 	enum tc_resolution resolution;
 	/** Specifies the prescaler value for GCLK_TC */
 	enum tc_clock_prescaler clock_prescaler;
-	/** Specifies which waveform to be generated on the output */
+	/** Specifies which waveform generation mode to use*/
 	enum tc_wave_generation wave_generation;
 	/**
 	 *  Specifies the reload or reset time of the counter and
@@ -472,13 +484,14 @@ struct tc_dev_inst {
  *
  * \param hw_dev pointer to module
  */
-static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
+static inline void _tc_wait_for_sync(
+		TC_t  *const hw_dev)
 {
 	/* Sanity check arguments  */
 	Assert(hw_dev);
 
 	/* Synchronize  */
-	while (hw_dev->STATUS & TC_SYNCBUSY_bm){
+	while(hw_dev->STATUS & TC_SYNCBUSY_bm) {
 		/* Wait for sync */
 	}
 }
@@ -498,7 +511,8 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
  *
  * \param[out] config pointer to the config struct
  */
-static inline void tc_get_config_defaults(struct tc_conf *const config)
+static inline void tc_get_config_defaults(
+		struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -540,7 +554,8 @@ enum status_code tc_init(TC_t *const tc_module,
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_reset(struct tc_dev_inst *dev_inst)
+static inline void tc_reset(
+		struct tc_dev_inst *dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
@@ -564,7 +579,8 @@ static inline void tc_reset(struct tc_dev_inst *dev_inst)
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_enable(struct tc_dev_inst *const dev_inst)
+static inline void tc_enable(
+		struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -588,7 +604,8 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_disable(struct tc_dev_inst *const dev_inst)
+static inline void tc_disable(
+		struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -617,7 +634,8 @@ uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
  * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
  */
 
-enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
+enum status_code tc_set_count(
+		struct tc_dev_inst *const dev_inst,
 		uint32_t count);
 
 
@@ -626,7 +644,8 @@ enum status_code tc_set_count(struct tc_dev_inst *const dev_inst,
  *
  * \param dev_inst      
  */
-static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
+static inline void tc_start_counter(
+		struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -650,8 +669,7 @@ static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline enum status_code tc_stop_counter(
-		struct tc_dev_inst *const dev_inst)
+static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -668,12 +686,14 @@ static inline enum status_code tc_stop_counter(
 }
 
 
-enum status_code tc_get_capture_value(struct tc_dev_inst *dev_inst,
+enum status_code tc_get_capture_value(
+		struct tc_dev_inst *dev_inst,
 		uint32_t *period_value
 		enum tc_compare_capture_channel_index ccc_index);
 
 
-enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
+enum status_code tc_set_compare_value(
+		struct tc_dev_inst *dev_inst,
 		uint32_t compare_value,
 		enum tc_compare_capture_channel_index ccc_index);
 
@@ -685,9 +705,13 @@ enum status_code tc_set_compare_value(struct tc_dev_inst *dev_inst,
  *
  * \param dev_inst    pointer to the device struct
  * \param top_value   value to be used as top in the counter
- * \return enum status_code STATUS_OK, STATUS_ERR_INVALID_ARG
+ *
+ * \return
+ * \retval STATUS_OK
+ * \retval STATUS_ERR_INVALID_ARG
  */
-static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
+static enum status_code tc_set_top_value(
+		struct tc_dev_inst *dev_inst,
 		uint32_t top_value)
 {
 	Assert(dev_inst);
@@ -729,9 +753,14 @@ static enum status_code tc_set_top_value(struct tc_dev_inst *dev_inst,
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
- * \return enum status_code: STATUS_VALID_DATA, STATUS_NO_CHANGE, STATUS_ERR_BAD_DATA
+ * 
+ * \return
+ * \retval STATUS_VALID_DATA
+ * \retval STATUS_NO_CHANGE
+ * \retval STATUS_ERR_BAD_DATA
  */
-enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
+enum status_codes tc_is_new_capture_on_channel(
+		struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
 	Assert(dev_inst);
@@ -767,7 +796,8 @@ enum status_codes tc_is_new_capture_on_channel (struct tc_dev_inst *dev_inst,
  * \retval STATUS_VALID_DATA   If a match has ocured since last check
  * \retval STATUS_NO_CHANGE    If no new match ha ocured since last check
  */
-enum status_codes tc_is_there_match_on_channel(struct tc_dev_inst *dev_inst,
+enum status_codes tc_is_there_match_on_channel(
+		struct tc_dev_inst *dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
 	Assert(dev_inst);
