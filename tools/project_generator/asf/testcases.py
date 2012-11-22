@@ -1723,6 +1723,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		bbb_ext = self.extmgr.request_extension(self.ext_uuids[0])
 		bbb_db = bbb_ext.get_database()
 		bbb_proj = bbb_db.lookup_by_id("bbb.project")
+		bbb_sel = bbb_db.lookup_by_id("working_selector")
 		bbb_gen = GenericProject(bbb_proj, bbb_db, bbb_db.runtime)
 
 		# Load test project from Ccc and instantiate GenericProject
@@ -1736,12 +1737,14 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 
 		# If no selector is specified, function will succeed both if:
 		# 1) no build items are found
-		found_items = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
+		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
 		self.assertEquals(found_items, [])
+		self.assertEquals(item_origin, ccc_proj)
 
 		# and 2) build items are found
-		found_items = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
+		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
 		self.assertEquals(found_items, [("THIS", "EXISTS")])
+		self.assertEquals(item_origin, ccc_proj)
 
 		# If a selector is specified and no build item is found in project,
 		# the function will fail if:
@@ -1759,6 +1762,8 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 	# Load and register ASF with extmgr so requests for it will succeed
 		asf_ext = self.extmgr.load_extension(os.path.join(self.ext_basedir, 'Ccc', 'misplaced_ASF'))
 		self.extmgr.register_extension(asf_ext)
+		asf_db = asf_ext.get_database()
+		asf_sel = asf_db.lookup_by_id('working_asf_selector')
 
 		# 3) selector is not found in project's database or ASF
 		self.assertRaises(NotFoundError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
@@ -1771,13 +1776,15 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		# If a selector is specified and no build item is found in project,
 		# the function will succeed if:
 		# 1) selector is found in project's database
-		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
+		(found_items, item_origin) = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
 		self.assertEquals(found_items, [("FROM", "BBB")])
+		self.assertEquals(item_origin, bbb_sel)
 
 		# 2) selector is not found in project's database, but ASF is added
 		#    as a dependency and contains the selector
-		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
+		(found_items, item_origin) = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
 		self.assertEquals(found_items, [("FROM", "ASF")])
+		self.assertEquals(item_origin, asf_sel)
 
 
 class FdkExtensionTestCase(unittest.TestCase):
