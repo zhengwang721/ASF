@@ -12,6 +12,7 @@ import asf.helper
 
 from asf.configuration import ConfigurationHandler
 from asf.database import Module, Project
+from asf.extensionmanager import *
 from asf.junit_report import *
 from asf.runtime import Runtime
 from asf.toolchain.doxygen import DoxygenProject
@@ -331,11 +332,18 @@ if __name__ == "__main__":
 		ERROR_INVALID = 2
 
 
+	script_path = sys.path[0]
+
 	parser = OptionParser(usage=
 		"""<options>
 		""")
 
-	parser.add_option("-b", "--base-dir", dest="asf_basedir", default=None, help="Specify the base directory of ASF")
+	# parser.add_option("","--ext-root", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("-b","--base-dir", dest="ext_root", default=os.path.join(script_path, '..', '..'), help="FDK extension root directory")
+	parser.add_option("","--main-ext-uuid", dest="main_ext_uuid", default="Atmel.ASF", help="Main FDK extension UUID")
+	parser.add_option("","--main-ext-version", dest="main_ext_version", help="Main FDK extension version")
+
+	parser.add_option("-c","--cached", action="store_true", dest="cached", default=False, help="Do not rescan all directories, but use the list of XML files from last run")
 	parser.add_option("-u", "--base-url", dest="asf_baseurl", default=None, help="Specify the base URL for the online documentation: http://test.com/asf_docs/")
 	parser.add_option("-p", "--proxy-server", dest="proxy_server", default=None, help="Specify the URL for proxy server to use: http://user:password@myproxy.com:123")
 	parser.add_option("-j", "--junit-file", dest="junit_file", default=None, help="Specify the file to which the J-Unit report shall be saved")
@@ -343,20 +351,15 @@ if __name__ == "__main__":
 
 	(options, args) = parser.parse_args()
 
-
-	script_path = sys.path[0]
-
 	# Get paths that runtime needs to know
 	template_dir = os.path.join(script_path, "templates")
-	xml_schema_path = os.path.join(script_path, "asf.xsd")
+	xml_schema_dir = os.path.join(script_path, "schemas")
+	device_map = os.path.join(script_path, "device_maps", "atmel.xml")
+
 	if options.junit_file:
 		junit_filename = os.path.abspath(options.junit_file)
 	else:
 		junit_filename = os.path.join(script_path, 'testReport.xml')
-
-	# Switch to the base directory of ASF before continuing
-	asf_basedir = options.asf_basedir or os.path.join(script_path, '..', '..')
-	os.chdir(asf_basedir)
 
 	# Instantiate required classes and options
 	configuration = ConfigurationHandler()
@@ -366,7 +369,6 @@ if __name__ == "__main__":
 	# Set up the runtime
 	runtime.setup_log()
 	runtime.set_junit_report(junit_report)
-	runtime.set_xml_schema_path(xml_schema_path)
 	runtime.set_commandline_args(args)
 	runtime.set_base_url(options.asf_baseurl)
 	runtime.set_proxy_url(options.proxy_server)
@@ -376,8 +378,27 @@ if __name__ == "__main__":
 
 	try:
 		# Load DB and check its links
-		runtime.load_db()
-		runtime.database_sanity_check()
+		# Create the extension manager
+		ext_manager = FdkExtensionManager(runtime, options.ext_root, use_cache=options.cached)
+
+		# Load prerequisites like XML schemas and device map
+		ext_manager.load_schemas(xml_schema_dir)
+		ext_manager.load_device_map(device_map)
+
+		# Now scan for extensions and load them
+		ext_paths = ext_manager.scan_for_extensions()
+		ext_manager.load_and_register_extensions(ext_paths)
+
+		# Get the database of the main extension
+		main_ext = ext_manager.request_extension(options.main_ext_uuid, options.main_ext_version)
+		main_db = main_ext.get_database()
+
+		# Do a sanity check unless in cached mode
+		if not options.cached:
+			main_db.sanity_check()
+
+		# Set the database for the runtime and let the testing commence
+		runtime.set_db(main_db)
 		runtime.run()
 
 	except Exception as e:

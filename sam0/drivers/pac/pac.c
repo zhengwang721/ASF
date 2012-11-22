@@ -43,9 +43,11 @@
 
 #warning "Will need to be updated!"
 /*! Infinite loop if CPU exception is detected */
-void HardFault_Handler(void)
+void pac_hard_fault_handler(void)
 {
-	while(1){}
+	while(1) {
+		/* Loop here on access error */
+	}
 }
 
 /**
@@ -62,7 +64,7 @@ void HardFault_Handler(void)
  * \retval STATUS_OK If the peripheral was successfully locked.
  * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
  */
-__no_inline enum status_code system_peripheral_lock(
+enum status_code system_peripheral_lock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key)
 {
@@ -75,7 +77,7 @@ __no_inline enum status_code system_peripheral_lock(
 	/* Check if key is correct. */
 	if (~peripheral != key){
 		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+		pac_hard_fault_handler();
 	}
 
 #warning "Mock-up only!"
@@ -116,7 +118,7 @@ __no_inline enum status_code system_peripheral_lock(
  * \retval STATUS_OK If the peripheral was successfully unlocked.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were supplied.
  */
-__no_inline enum status_code system_peripheral_unlock(
+enum status_code system_peripheral_unlock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key)
 {
@@ -129,7 +131,7 @@ __no_inline enum status_code system_peripheral_unlock(
 	/* Check if key is correct. */
 	if (~peripheral != key){
 		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+		pac_hard_fault_handler();
 	}
 
 #warning "Mock-up only!"

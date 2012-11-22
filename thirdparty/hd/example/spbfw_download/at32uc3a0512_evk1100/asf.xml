@@ -4,7 +4,8 @@
 		<require idref="board.evk1100"/>
 		<config name="config.board.evk1100.init" value="no"/>
 		<config name="config.board.evk1100.led" value="yes"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
+		<device-support value="at32uc3a0512"/>
 	</project>
 </asf>

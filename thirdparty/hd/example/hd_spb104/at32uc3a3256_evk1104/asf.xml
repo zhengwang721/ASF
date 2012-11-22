@@ -16,12 +16,13 @@
 		<require idref="avr32.components.display.et024006dhu"/>
 		<require idref="avr32.components.touch.qt60168"/>
 		<build type="include-path" value="../../ports/avr32/conf/"/>
-		<build type="header-file"  value="../../ports/avr32/conf/conf_et024006dhu.h"/>
-		<build type="header-file"  value="../../ports/avr32/conf/conf_ebi.h"/>
-		<build type="header-file"  value="../../ports/avr32/conf/conf_qt60168.h"/>
+		<build type="header-file" value="../../ports/avr32/conf/conf_et024006dhu.h"/>
+		<build type="header-file" value="../../ports/avr32/conf/conf_ebi.h"/>
+		<build type="header-file" value="../../ports/avr32/conf/conf_qt60168.h"/>
 		<build type="define" name="_ASSERT_ENABLE_" value=""/>
-		<build type="define" name="EXT_BOARD"       value="SPB104"/>		
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<build type="define" name="EXT_BOARD" value="SPB104"/>
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

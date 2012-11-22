@@ -9,10 +9,11 @@
 		<config name="config.common.services.usb.class.device" value="hid_generic"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<require idref="config.common.services.qtouch.generic.avr8.xmega_a3bu_xplained.method"/>		
+		<require idref="config.common.services.qtouch.generic.avr8.xmega_a3bu_xplained.method"/>
 		<config name="config.common.services.qtouch.generic.avr8.xmega_a3bu_xplained.method" value="qtouch_method"/>
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

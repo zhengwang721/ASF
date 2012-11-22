@@ -6,8 +6,9 @@
 		<build type="linker-config" subtype="script" value="../linker_scripts/iar/lnkuc3b1256_bootselector.xcl" toolchain="iarew32"/>
 		<config name="config.avr32.utils.trampoline" value="no"/>
 		<generator value="iarew32"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3b1256"/>
 	</project>
 </asf>

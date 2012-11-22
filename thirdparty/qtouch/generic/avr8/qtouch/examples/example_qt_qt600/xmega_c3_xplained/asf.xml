@@ -13,9 +13,9 @@
 		<build type="c-source" value="app_touch.c"/>
 		<build type="header-file" value="app_touch.h"/>
 		<build type="include-path" value="."/>
-
-		<generator value="avrgcc" />
-		<generator value="as5_8" />
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega384c3"/>
 	</project>
 </asf>

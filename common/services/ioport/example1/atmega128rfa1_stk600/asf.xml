@@ -9,9 +9,10 @@
 		<build type="header-file" value="conf_example.h" />
 		<require idref="common.services.ioport.example1" />
 		<require idref="board.stk600-mega.atmega128rfa1" />
-		<generator value="iarew"/>
+		<generator value="iarew" />
 		<generator value="avrgcc" />
 		<generator value="as5_8" />
 		<generator value="doxygen" />
+		<device-support value="atmega128rfa1" />
 	</project>
 </asf>

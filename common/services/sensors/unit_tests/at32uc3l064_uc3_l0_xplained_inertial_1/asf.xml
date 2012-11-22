@@ -9,11 +9,12 @@
 		<require idref="common.services.sensors.unit_tests"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="board.uc3_l0_xplained"/>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 </asf>

@@ -28,20 +28,22 @@
     </group>
   </device-map>
 
-  <board id="avr32.boards.evk1100" caption="EVK1100 board support" mcu="at32uc3a0512">
+  <board id="avr32.boards.evk1100" caption="EVK1100 board support">
     <build type="include-path" value="."/>
     <build type="c-source" value="init.c"/>
     <build type="c-source" value="led.c"/>
     <build type="define" name="BOARD" value="EVK1100"/>
     <build type="header-file" value="evk1100.h"/>
+    <device-support value="at32uc3a0512"/>
   </board>
 
-  <board id="avr32.boards.evkxxyy" caption="EVKxxyy board support" mcu="at32uc3a0512">
+  <board id="avr32.boards.evkxxyy" caption="EVKxxyy board support">
     <build type="include-path" value="."/>
     <build type="c-source" value="init.c"/>
     <build type="c-source" value="led.c"/>
     <build type="define" name="BOARD" value="EVK1100"/>
     <build type="header-file" value="evk1100.h"/>
+    <device-support value="at32uc3a0512"/>
   </board>
 
   <module type="driver" id="avr32.driver.test" caption="Test driver">
@@ -80,26 +82,31 @@
     <require idref="avr32.driver.test"/>
     <require idref="avr32.boards.evk1100"/>
     <config name="cookiemonster" value="C is for cookie" />
+    <device-support value="at32uc3a0512"/>
   </project>
 
   <project id="statusproj1" type="unit-test" caption="status project 1">
     <require idref="basic"/>
     <require idref="avr32.boards.evk1100"/>
+    <device-support value="at32uc3a0512"/>
   </project>
 
   <project id="statusproj2" type="normal"  caption="status project 2">
     <require idref="avr32.driver.test"/>
     <require idref="avr32.boards.evkxxyy"/>
+    <device-support value="at32uc3a0512"/>
   </project>
 
   <project id="gen_name_proj" caption="Generator name project">
     <require idref="avr32.boards.evk1100"/>
     <require idref="name_app"/>
+    <device-support value="at32uc3a0512"/>
   </project>
 
   <project id="my_name_proj" caption="My name project" workspace-name="my_name">
     <require idref="avr32.boards.evk1100"/>
     <require idref="name_app"/>
+    <device-support value="at32uc3a0512"/>
   </project>
 
   <module type="application" id="name_app" caption="Project name app">
