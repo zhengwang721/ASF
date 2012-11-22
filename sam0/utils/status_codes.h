@@ -63,7 +63,7 @@
 
 /** Status code error categories. */
 enum status_categories {
-	STATUS_CATEGORY_NONE              = 0x00,
+	STATUS_CATEGORY_OK                = 0x00,
 	STATUS_CATEGORY_COMMON            = 0x10,
 	STATUS_CATEGORY_ANALOG            = 0x30,
 	STATUS_CATEGORY_COM               = 0x40,
