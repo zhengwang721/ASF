@@ -75,15 +75,15 @@ enum adc_resolution {
  */
 enum adc_window_mode {
 	/** No window mode */
-	ADC_WINDOW_DISABLE = ADC_WINMODE_DISABLE_bm,
-	/** Mode 1: RESULT > WINLT */
-	ADC_WINDOW_MODE_1 = ADC_WINMODE1_bm,
-	/** Mode 2: RESULT < WINUT */
-	ADC_WINDOW_MODE_2 = ADC_WINMODE2_bm,
-	/** Mode 3: WINLT < RESULT < WINUT */
-	ADC_WINDOW_MODE_3 = ADC_WINMODE3_bm,
-	/** Mode 4: !( WINLT < RESULT < WINUT ) */
-	ADC_WINDOW_MODE_4 = ADC_WINMODE4_bm,
+	ADC_WINDOW_MODE_DISABLE          = ADC_WINMODE_DISABLE_bm,
+	/** RESULT > WINLT */
+	ADC_WINDOW_MODE_ABOVE_LOWER      = ADC_WINMODE1_bm,
+	/** RESULT < WINUT */
+	ADC_WINDOW_MODE_BELOW_UPPER      = ADC_WINMODE2_bm,
+	/** WINLT < RESULT < WINUT */
+	ADC_WINDOW_MODE_BETWEEN          = ADC_WINMODE3_bm,
+	/** !( WINLT < RESULT < WINUT ) */
+	ADC_WINDOW_MODE_BETWEEN_INVERTED = ADC_WINMODE4_bm,
 }
 
 /**
@@ -94,17 +94,17 @@ enum adc_window_mode {
  */
 enum adc_gain_factor {
 	/** 1x gain */
-	ADC_GAIN_FACTOR_1 = ADC_GAIN_1X_bm,
+	ADC_GAIN_1X   = ADC_GAIN_1X_bm,
 	/** 2x gain */
-	ADC_GAIN_FACTOR_2 = ADC_GAIN_2X_bm,
+	ADC_GAIN_2X   = ADC_GAIN_2X_bm,
 	/** 4x gain */
-	ADC_GAIN_FACTOR_4 = ADC_GAIN_4X_bm,
+	ADC_GAIN_4X   = ADC_GAIN_4X_bm,
 	/** 8x gain */
-	ADC_GAIN_FACTOR_8 = ADC_GAIN_8X_bm,
+	ADC_GAIN_8X   = ADC_GAIN_8X_bm,
 	/** 16x gain */
-	ADC_GAIN_FACTOR_16 = ADC_GAIN_16X_bm,
+	ADC_GAIN_16X  = ADC_GAIN_16X_bm,
 	/** 1/2x gain */
-	ADC_GAIN_FACTOR_DIV2 = ADC_GAIN_DIV2_bm,
+	ADC_GAIN_DIV2 = ADC_GAIN_DIV2_bm,
 }
 
 /**
@@ -182,57 +182,57 @@ enum adc_positive_input {
  */
 enum adc_negative_input {
 	/** ADC0 pin */
-	ADC_NEGATIVE_INPUT_PIN0                        = ADC_NEGPIN0_bm,
+	ADC_NEGATIVE_INPUT_PIN0          = ADC_NEGPIN0_bm,
 	/** ADC1 pin */
-	ADC_NEGATIVE_INPUT_PIN1                        = ADC_NEGPIN1_bm,
+	ADC_NEGATIVE_INPUT_PIN1          = ADC_NEGPIN1_bm,
 	/** ADC2 pin */
-	ADC_NEGATIVE_INPUT_PIN2                        = ADC_NEGPIN2_bm,
+	ADC_NEGATIVE_INPUT_PIN2          = ADC_NEGPIN2_bm,
 	/** ADC3 pin */
-	ADC_NEGATIVE_INPUT_PIN3                        = ADC_NEGPIN3_bm,
+	ADC_NEGATIVE_INPUT_PIN3          = ADC_NEGPIN3_bm,
 	/** ADC4 pin */
-	ADC_NEGATIVE_INPUT_PIN4                        = ADC_NEGPIN4_bm,
+	ADC_NEGATIVE_INPUT_PIN4          = ADC_NEGPIN4_bm,
 	/** ADC5 pin */
-	ADC_NEGATIVE_INPUT_PIN5                        = ADC_NEGPIN5_bm,
+	ADC_NEGATIVE_INPUT_PIN5          = ADC_NEGPIN5_bm,
 	/** ADC6 pin */
-	ADC_NEGATIVE_INPUT_PIN6                        = ADC_NEGPIN6_bm,
+	ADC_NEGATIVE_INPUT_PIN6          = ADC_NEGPIN6_bm,
 	/** ADC7 pin */
-	ADC_NEGATIVE_INPUT_PIN7                        = ADC_NEGPIN7_bm,
+	ADC_NEGATIVE_INPUT_PIN7          = ADC_NEGPIN7_bm,
 	/** ADC8 pin */
-	ADC_NEGATIVE_INPUT_PIN8                        = ADC_NEGPIN8_bm,
+	ADC_NEGATIVE_INPUT_PIN8          = ADC_NEGPIN8_bm,
 	/** ADC9 pin */
-	ADC_NEGATIVE_INPUT_PIN9                        = ADC_NEGPIN9_bm,
+	ADC_NEGATIVE_INPUT_PIN9          = ADC_NEGPIN9_bm,
 	/** ADC10 pin */
-	ADC_NEGATIVE_INPUT_PIN10                       = ADC_NEGPIN10_bm,
+	ADC_NEGATIVE_INPUT_PIN10         = ADC_NEGPIN10_bm,
 	/** ADC11 pin */
-	ADC_NEGATIVE_INPUT_PIN11                       = ADC_NEGPIN11_bm,
+	ADC_NEGATIVE_INPUT_PIN11         = ADC_NEGPIN11_bm,
 	/** ADC12 pin */
-	ADC_NEGATIVE_INPUT_PIN12                       = ADC_NEGPIN12_bm,
+	ADC_NEGATIVE_INPUT_PIN12         = ADC_NEGPIN12_bm,
 	/** ADC13 pin */
-	ADC_NEGATIVE_INPUT_PIN13                       = ADC_NEGPIN13_bm,
+	ADC_NEGATIVE_INPUT_PIN13         = ADC_NEGPIN13_bm,
 	/** ADC14 pin */
-	ADC_NEGATIVE_INPUT_PIN14                       = ADC_NEGPIN14_bm,
+	ADC_NEGATIVE_INPUT_PIN14         = ADC_NEGPIN14_bm,
 	/** ADC15 pin */
-	ADC_NEGATIVE_INPUT_PIN15                       = ADC_NEGPIN15_bm,
+	ADC_NEGATIVE_INPUT_PIN15         = ADC_NEGPIN15_bm,
 	/** ADC16 pin */
-	ADC_NEGATIVE_INPUT_PIN16                       = ADC_NEGPIN16_bm,
+	ADC_NEGATIVE_INPUT_PIN16         = ADC_NEGPIN16_bm,
 	/** ADC17 pin */
-	ADC_NEGATIVE_INPUT_PIN17                       = ADC_NEGPIN17_bm,
+	ADC_NEGATIVE_INPUT_PIN17         = ADC_NEGPIN17_bm,
 	/** ADC18 pin */
-	ADC_NEGATIVE_INPUT_PIN18                       = ADC_NEGPIN18_bm,
+	ADC_NEGATIVE_INPUT_PIN18         = ADC_NEGPIN18_bm,
 	/** ADC19 pin */
-	ADC_NEGATIVE_INPUT_PIN19                       = ADC_NEGPIN19_bm,
+	ADC_NEGATIVE_INPUT_PIN19         = ADC_NEGPIN19_bm,
 	/** ADC20 pin */
-	ADC_NEGATIVE_INPUT_PIN20                       = ADC_NEGPIN20_bm,
+	ADC_NEGATIVE_INPUT_PIN20         = ADC_NEGPIN20_bm,
 	/** ADC21 pin */
-	ADC_NEGATIVE_INPUT_PIN21                       = ADC_NEGPIN21_bm,
+	ADC_NEGATIVE_INPUT_PIN21         = ADC_NEGPIN21_bm,
 	/** ADC22 pin */
-	ADC_NEGATIVE_INPUT_PIN22                       = ADC_NEGPIN22_bm,
+	ADC_NEGATIVE_INPUT_PIN22         = ADC_NEGPIN22_bm,
 	/** ADC23 pin */
-	ADC_NEGATIVE_INPUT_PIN23                       = ADC_NEGPIN23_bm,
+	ADC_NEGATIVE_INPUT_PIN23         = ADC_NEGPIN23_bm,
 	/** Internal ground */
-	ADC_NEGATIVE_INPUT_GND                         = ADC_NEGPIN_GND_bm,
+	ADC_NEGATIVE_INPUT_GND           = ADC_NEGPIN_GND_bm,
 	/** I/O ground */
-	ADC_NEGATIVE_INPUT_IOGND                       = ADC_NEGPIN_IOGND_bm,
+	ADC_NEGATIVE_INPUT_IOGND         = ADC_NEGPIN_IOGND_bm,
 };
 
 /**
@@ -294,6 +294,8 @@ enum adc_oversampling_and_decimation {
  * function before being modified by the user application.
  */
 struct adc_config {
+	/** Check glock driver for this! */
+	enum glock_source        clock_source;
 	/** Voltage reference */
 	enum adc_reference       reference;
 	/** Clock prescaler */
@@ -303,9 +305,9 @@ struct adc_config {
 	/** Selected window mode */
 	enum adc_window_mode     window_mode;
 	/** Lower window value */
-	int16_t                  window_lower_value;
+	int32_t                  window_lower_value;
 	/** Upper window value */
-	int16_t                  window_upper_value;
+	int32_t                  window_upper_value;
 	/** Gain factor */
 	enum adc_gain_factor     gain_factor;
 	/** Positive MUX input */
@@ -338,7 +340,7 @@ struct adc_config {
 	increase the accuracy of the gain stage. But decrease the input
 	impedance; therefore increase the startup time of the reference.
 	*/
-	bool reference_compenstation_enable;
+	bool reference_compensation_enable;
 	/**
 	Correct for gain and offset based on values of gain_correction amd
 	offset_correction.
@@ -375,7 +377,7 @@ struct adc_config {
  */
 struct adc_dev_inst {
 	/** ADC hardware module */
-	ADC_t *dev_ptr;
+	ADC_t *hw_dev;
 };
 
 /**
@@ -589,7 +591,7 @@ static inline status_code_t adc_get_result(struct adc_dev_inst *const dev_inst, 
 /**
  * \brief Check if result is ready in ADC
  *
- * Check wether a new result is ready in result register
+ * Check whether a new result is ready in result register
  *
  * \param dev_inst       pointer to device struct
  */
