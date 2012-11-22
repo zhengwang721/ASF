@@ -564,6 +564,13 @@ ISR(udd_interrupt, AVR32_USBB_IRQ_GROUP, UDD_USB_INT_LEVEL)
 		otg_unfreeze_clock();
 		otg_ack_vbus_transition();
 		otg_freeze_clock();
+#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+		if (Is_otg_vbus_high()) {
+			udd_attach();
+		} else {
+			udd_detach();
+		}
+#endif
 #ifdef UDC_VBUS_EVENT
 		UDC_VBUS_EVENT(Is_otg_vbus_high());
 #endif
@@ -1129,7 +1136,6 @@ void udd_test_mode_packet(void)
 	uint8_t i;
 	uint8_t *ptr_dest;
 	const uint8_t *ptr_src;
-	irqflags_t flags;
 
 	const uint8_t test_packet[] = {
 		// 00000000 * 9
@@ -1164,11 +1170,7 @@ void udd_test_mode_packet(void)
 	for (i = 0; i < sizeof(test_packet); i++) {
 		*ptr_dest++ = *ptr_src++;
 	}
-	flags = cpu_irq_save();
-	udd_enable_in_send_interrupt(0);
-	cpu_irq_restore(flags);
-
-	udd_ack_in_send(0);
+	udd_ack_fifocon(0);
 }
 #endif // USB_DEVICE_HS_SUPPORT
 
