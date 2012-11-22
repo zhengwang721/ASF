@@ -105,7 +105,7 @@ void configure_ac_channel(void)
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
 	//! [setup_13]
-	ac_ch_set_config(&ac_dev, &ac_ch_conf, AC_COMPARATOR_CHANNEL);
+	ac_ch_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_ch_conf);
 	//! [setup_13]
 	//! [setup_14]
 	ac_ch_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
