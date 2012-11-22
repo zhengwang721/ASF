@@ -219,11 +219,6 @@ void main_vbus_action(bool b_high)
 {
 	if (b_high) {
 		main_b_vbus_event = true;
-		// Attach USB Device
-		udc_attach();
-	} else {
-		// VBUS not present
-		udc_detach();
 	}
 }
 
