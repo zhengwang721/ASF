@@ -93,29 +93,31 @@ extern "C" {
 #define TC_EVCTRL_TCINV_bm (0x0001 << 4)
 #endif
 #ifndef TC_CTRLA_SLEEPEN_bp
-#define TC_CTRLA_SLEEPEN_bp
+#define TC_CTRLA_SLEEPEN_bp 11
 #endif
 
 
 
 /**
  * \brief Index of the compare capture channels
- * 
+ *
  * These values are used in certain functions to specify what
  * capture/compare channel to do operations on.
  */
 enum tc_compare_capture_channel_index {
-	/**  */
+	/** Index of compare capture channel 0 */
 	TC_COMPARE_CAPTURE_CHANNEL_0,
-	/**  */
+	/** Index of compare capture channel 1 */
 	TC_COMPARE_CAPTURE_CHANNEL_1,
-	/**  */
+	/** Index of compare capture channel 2 */
 	TC_COMPARE_CAPTURE_CHANNEL_2,
-	/**  */
+	/** Index of compare capture channel 3 */
 	TC_COMPARE_CAPTURE_CHANNEL_3,
 };
 
 
+//TODO: document better may have to make this part of the whole
+//documentation, and then refer to that here
 /**
  * \brief TC Counter reload action enum
  *
@@ -408,10 +410,10 @@ struct tc_conf {
 	/** Select clock sourse for the TC clock */
 	//TODO set clock param
 	/**
-	 * run_while_standby: When true the module is enabled during
+	 * run_in_standby: When true the module is enabled during
 	 * standby
 	 */
-	bool run_while_standby; //TODO: sleepen may be renamed to RUNSTDBY
+	bool run_in_standby;
 	/** Specifies either 8, 16 or 32 bit counter resolution */
 	enum tc_resolution resolution;
 	/** Specifies the prescaler value for GCLK_TC */
@@ -525,7 +527,7 @@ static inline void tc_get_config_defaults(struct tc_conf *const config)
 	config->prescaler                    = TC_PRESCALER_DIV1;
 	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config->reload_action                = TC_RELOAD_ACTION_GCLK;
-	config->sleep_enable                 = false;
+	config->run_in_standby               = false;
 
 	config->waveform_invert_output       = TC_WAVEFORM_INVERT_OUTPUT_NONE;
 	config->capture_enable               = TC_CAPTURE_ENABLE_NONE;
@@ -569,7 +571,7 @@ static inline void tc_reset(struct tc_dev_inst *dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Enable TC module, based on the module tc mode  */
 	tc_module->CTRLA = TC_RESET_bm;
@@ -593,7 +595,7 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Enable TC module */
 	tc_module->CTRLA |= TC_ENABLE_bm;
@@ -617,7 +619,7 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Disable TC module */
 	tc_module->CTRLA  &= ~TC_ENABLE_bm;
@@ -656,7 +658,7 @@ static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Write command to execute */
 	tc_module->CTRLBSET |= TC_COMMAND_START_bm;
@@ -680,7 +682,7 @@ static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Write command to execute */
 	tc_module->CTRLBSET |= TC_COMMAND_STOP_bm;
@@ -721,27 +723,27 @@ static enum status_code tc_set_top_value(
 
 	TC_t * const tc_module = dev_inst->hw_dev;
 
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	switch(dev_inst->resolution) {
 
-		case TC_RESOLUTION_8BIT:
-			tc_module->TC_COUNT8.PER = (uint8_t) top_value;
-			return STATUS_OK;
+	case TC_RESOLUTION_8BIT:
+		tc_module->TC_COUNT8.PER = (uint8_t) top_value;
+		return STATUS_OK;
 
-		case TC_RESOLUTION_16BIT:
-			tc_module->TC_COUNT16.compare_capture_channel_0 =
-				(uint16_t) top_value;
-			return STATUS_OK;
+	case TC_RESOLUTION_16BIT:
+		tc_module->TC_COUNT16.compare_capture_channel_0 =
+			(uint16_t) top_value;
+		return STATUS_OK;
 
-		case TC_RESOLUTION_32BIT:
-			tc_module->TC_COUNT32.compare_capture_channel_0 =
-				top_value;
-			return STATUS_OK;
+	case TC_RESOLUTION_32BIT:
+		tc_module->TC_COUNT32.compare_capture_channel_0 =
+			top_value;
+		return STATUS_OK;
 
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 }
 

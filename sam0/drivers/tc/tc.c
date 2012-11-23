@@ -86,116 +86,120 @@ enum status_code tc_init(
 		return STATUS_ERR_DENIED;
 	}
 
-	uint16_t run_while_standby_bm = 0;
+	uint16_t run_in_standby_bm = 0;
 
 	if (config->sleep_enable) {
 		run_while_standby_bm = (0x0001 << TC_CTRLA_SLEEPEN_bp);
 	}
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Set configuration to registers common for all 3 modes */
 	tc_module->CTRLA |= config->resolution | config->wave_generation
-			| config->reload_action | config->clock_prescaler;
+		| config->reload_action | config->clock_prescaler
+		| run_in_standby_bm;
 
-	uint8_t temp_ctrlbset_bm = 0;
-	if(config->oneshot)
-		temp_ctrlbset_bm = TC_ONESHOT_ENABLED_bm;
+	uint8_t temp_ctrlbset_gm = 0;
+	if (config->oneshot)
+		temp_ctrlbset_gm = TC_ONESHOT_ENABLED_bm;
 
-	if(config->count_direction)
-		temp_ctrlbset_bm = ctrlbset_bm | TC_COUNT_DIRECTION_DOWN;
+	if (config->count_direction)
+		temp_ctrlbset_gm |= TC_COUNT_DIRECTION_DOWN;
 
-	if(temp_ctrlbset_bm) {//check if we actualy need to go into a wait state.
-		tc_wait_for_sync(tc_module);
-		tc_module->CTRLBSET = temp_ctrlbset_bm;
+	if (temp_ctrlbset_bm) {//check if we actualy need to go into a wait state.
+		_tc_wait_for_sync(tc_module);
+		tc_module->CTRLBSET |= temp_ctrlbset_gm;
 	}
 
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 	tc_module->CTRLC = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
 
-	uint8_t evctrl_bm = 0;
-	if(config->enable_event_input)
-		evctrl_bm |= TC_EVCTRL_TCEI_bm;
+	uint8_t temp_evctrl_gm = 0;
+	if (config->enable_event_input) {
+		temp_evctrl_gm |= TC_EVCTRL_TCEI_bm;
+	}
 
-	if(config->invert_event_input)
-		evctrl_bm |= TC_EVCTRL_TCINV_bm;
+	if (config->invert_event_input) {
+		temp_evctrl_gm |= TC_EVCTRL_TCINV_bm;
+	}
 
-	tc_wait_for_sync(tc_module);
-	tc_module-EVCTRL = evctrl_bm | config->event_action
-		        | config->event_generation_enable;
+	_tc_wait_for_sync(tc_module);
+	tc_module-EVCTRL = temp_evctrl_gm | config->event_action
+		| config->event_generation_enable;
 
 	/* Switch for TC mode  */
-	switch(dev_inst->resolution) {
-		case TC_MODE_COUNT8:
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.COUNT =
-				config->8bit_conf.count;
+	switch (dev_inst->resolution) {
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.PER   =
-				config->8bit_conf.period;
+	case TC_MODE_COUNT8:
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.COUNT =
+			config->8bit_conf.count;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.CC0   =
-				config->8bit_conf.capture_compare_channel_0;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.PER   =
+			config->8bit_conf.period;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.CC1   =
-				config->8bit_conf.capture_compare_channel_1;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.CC0   =
+			config->8bit_conf.capture_compare_channel_0;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.CC2   =
-				config->8bit_conf.capture_compare_channel_2;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.CC1   =
+			config->8bit_conf.capture_compare_channel_1;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT8.CC3   =
-				config->8bit_conf.capture_compare_channel_3;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.CC2   =
+			config->8bit_conf.capture_compare_channel_2;
 
-			break;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT8.CC3   =
+			config->8bit_conf.capture_compare_channel_3;
 
-		case TC_MODE_COUNT16:
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT16.COUNT =
-				config->16bit_conf.count;
+		break;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT16.CC0   =
-				config->16bit_conf.capture_compare_channel_0;
+	case TC_MODE_COUNT16:
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT16.COUNT =
+			config->16bit_conf.count;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT16.CC1   =
-				config->16bit_conf.capture_compare_channel_1;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT16.CC0   =
+			config->16bit_conf.capture_compare_channel_0;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT16.CC2   =
-				config->16bit_conf.capture_compare_channel_2;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT16.CC1   =
+			config->16bit_conf.capture_compare_channel_1;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT16.CC3   =
-				config->16bit_conf.capture_compare_channel_3;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT16.CC2   =
+			config->16bit_conf.capture_compare_channel_2;
 
-			break;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT16.CC3   =
+			config->16bit_conf.capture_compare_channel_3;
 
-		case TC_MODE_COUNT32:
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT32.COUNT =
-				config->32bit_conf.count;
+		break;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT32.CC1 =
-				config->32bit_conf.capture_compare_channel_0;
+	case TC_MODE_COUNT32:
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT32.COUNT =
+			config->32bit_conf.count;
 
-			tc_wait_for_sync(tc_module);
-			tc_module->TC_COUNT32.CC1 =
-				config->32bit_conf.capture_compare_channel_1;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT32.CC1 =
+			config->32bit_conf.capture_compare_channel_0;
 
-			break;
+		_tc_wait_for_sync(tc_module);
+		tc_module->TC_COUNT32.CC1 =
+			config->32bit_conf.capture_compare_channel_1;
 
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+		break;
+
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	return STATUS_OK;
@@ -229,24 +233,24 @@ enum status_code tc_set_count(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Write to based on the TC mode */
-	switch(dev_inst->resoultion) {
-		case TC_MODE_COUNT8:
-			tc_module->TC_COUNT8.COUNT = (uint8_t) count;
-			return STATUS_OK;
+	switch (dev_inst->resolution) {
+	case TC_MODE_COUNT8:
+		tc_module->TC_COUNT8.COUNT = (uint8_t) count;
+		return STATUS_OK;
 
-		case TC_MODE_COUNT16:
-			tc_module->TC_COUNT16.COUNT = (uint16_t) count;
-			return STATUS_OK;
+	case TC_MODE_COUNT16:
+		tc_module->TC_COUNT16.COUNT = (uint16_t) count;
+		return STATUS_OK;
 
-		case TC_MODE_COUNT32:
-			tc_module->TC_COUNT32.COUNT = count;
-			return STATUS_OK;
+	case TC_MODE_COUNT32:
+		tc_module->TC_COUNT32.COUNT = count;
+		return STATUS_OK;
 
-		default:
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC mode  */
 }
@@ -272,24 +276,25 @@ enum status_code tc_get_count(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Read from based on the TC mode */
-	switch(dev_inst->resolution) {
-		case TC_RESOLUTION_8BIT:
-			*count = tc_module->TC_COUNT8.COUNT;
-			return STATUS_OK;
+	switch (dev_inst->resolution) {
 
-		case TC_RESOLUTION_16BIT:
-			*count = tc_module->TC_COUNT16.COUNT;
-			return STATUS_OK;
+	case TC_RESOLUTION_8BIT:
+		*count = tc_module->TC_COUNT8.COUNT;
+		return STATUS_OK;
 
-		case TC_RESOLUTION_32BIT:
-			*count = tc_module->TC_COUNT32.COUNT;
-			return STATUS_OK;
+	case TC_RESOLUTION_16BIT:
+		*count = tc_module->TC_COUNT16.COUNT;
+		return STATUS_OK;
 
-		default:
-			return STATUS_ERR_INVALID_ARG;
+	case TC_RESOLUTION_32BIT:
+		*count = tc_module->TC_COUNT32.COUNT;
+		return STATUS_OK;
+
+	default:
+		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC mode  */
 }
@@ -322,70 +327,74 @@ enum status_code tc_get_capture(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Read out based on the TC mode */
-	switch(dev_inst->mode) {
-		case TC_MODE_COUNT8:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					*compare = tc_module->TC_COUNT8.CC0;
-					return STATUS_OK;
+	switch (dev_inst->mode) {
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					*compare = tc_module->TC_COUNT8.CC1;
-					return STATUS_OK;
+	case TC_MODE_COUNT8:
+		/* Read out based on compare register */
+		switch (ccc_index) {
 
-				case TC_COMPARE_CAPTURE_CHANNEL_2:
-					*compare = tc_module->TC_COUNT8.CC2;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			*compare = tc_module->TC_COUNT8.CC0;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_3:
-					*compare = tc_module->TC_COUNT8.CC3;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			*compare = tc_module->TC_COUNT8.CC1;
+			return STATUS_OK;
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+		case TC_COMPARE_CAPTURE_CHANNEL_2:
+			*compare = tc_module->TC_COUNT8.CC2;
+			return STATUS_OK;
 
-		case TC_MODE_COUNT16:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					*compare = tc_module->TC_COUNT16.CC0;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_3:
+			*compare = tc_module->TC_COUNT8.CC3;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					*compare = tc_module->TC_COUNT16.CC1;
-					return STATUS_OK;
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
 
-				case TC_COMPARE_CAPTURE_CHANNEL_2:
-					*compare = tc_module->TC_COUNT16.CC2;
-					return STATUS_OK;
+	case TC_MODE_COUNT16:
+		/* Read out based on compare register */
+		switch (ccc_index) {
 
-				case TC_COMPARE_CAPTURE_CHANNEL_3:
-					*compare = tc_module->TC_COUNT16.CC3;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			*compare = tc_module->TC_COUNT16.CC0;
+			return STATUS_OK;
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			*compare = tc_module->TC_COUNT16.CC1;
+			return STATUS_OK;
 
-		case TC_MODE_COUNT32:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					*compare = tc_module->TC_COUNT32.CC0;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_2:
+			*compare = tc_module->TC_COUNT16.CC2;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					*compare = tc_module->TC_COUNT32.CC1;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_3:
+			*compare = tc_module->TC_COUNT16.CC3;
+			return STATUS_OK;
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
+
+	case TC_MODE_COUNT32:
+		/* Read out based on compare register */
+		switch (ccc_index) {
+
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			*compare = tc_module->TC_COUNT32.CC0;
+			return STATUS_OK;
+
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			*compare = tc_module->TC_COUNT32.CC1;
+			return STATUS_OK;
+
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
 	} /* Switch TC mode  */
 }
 
@@ -417,78 +426,81 @@ enum status_code tc_set_compare(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(tc_module);
 
 	/* Read out based on the TC mode */
 	switch(dev_inst->mode) {
-		case TC_MODE_COUNT8:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					tc_module->TC_COUNT8.CC0
-						= (uint8_t) compare;
-					return STATUS_OK;
+	case TC_MODE_COUNT8:
+		/* Read out based on compare register */
+		switch (ccc_index) {
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					tc_module->TC_COUNT8.CC1
-						= (uint8_t) compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			tc_module->TC_COUNT8.CC0
+				= (uint8_t) compare;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_2:
-					tc_module->TC_COUNT8.CC2
-						= (uint8_t) compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			tc_module->TC_COUNT8.CC1
+				= (uint8_t) compare;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_3:
-					tc_module->TC_COUNT8.CC3
-						= (uint8_t) compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_2:
+			tc_module->TC_COUNT8.CC2
+				= (uint8_t) compare;
+			return STATUS_OK;
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+		case TC_COMPARE_CAPTURE_CHANNEL_3:
+			tc_module->TC_COUNT8.CC3
+				= (uint8_t) compare;
+			return STATUS_OK;
 
-		case TC_MODE_COUNT16:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					tc_module->TC_COUNT16.CC0
-						= (uint16_t) compare;
-					return STATUS_OK;
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					tc_module->TC_COUNT16.CC1
-						= (uint16_t) compare;
-					return STATUS_OK;
+	case TC_MODE_COUNT16:
+		/* Read out based on compare register */
+		switch (ccc_index) {
 
-				case TC_COMPARE_CAPTURE_CHANNEL_2:
-					tc_module->TC_COUNT16.CC2
-						= (uint16_t) compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			tc_module->TC_COUNT16.CC0
+				= (uint16_t) compare;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_3:
-					tc_module->TC_COUNT16.CC3
-						= (uint16_t) compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			tc_module->TC_COUNT16.CC1
+				= (uint16_t) compare;
+			return STATUS_OK;
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+		case TC_COMPARE_CAPTURE_CHANNEL_2:
+			tc_module->TC_COUNT16.CC2
+				= (uint16_t) compare;
+			return STATUS_OK;
 
-		case TC_MODE_COUNT32:
-			/* Read out based on compare register */
-			switch(ccc_index) {
-				case TC_COMPARE_CAPTURE_CHANNEL_0:
-					tc_module->TC_COUNT32.CC0 = compare;
-					return STATUS_OK;
+		case TC_COMPARE_CAPTURE_CHANNEL_3:
+			tc_module->TC_COUNT16.CC3
+				= (uint16_t) compare;
+			return STATUS_OK;
 
-				case TC_COMPARE_CAPTURE_CHANNEL_1:
-					tc_module->TC_COUNT32.CC1 = compare;
-					return STATUS_OK;
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
 
-				default:
-					return STATUS_ERR_INVALID_ARG;
-			}
+	case TC_MODE_COUNT32:
+		/* Read out based on compare register */
+		switch (ccc_index) {
+
+		case TC_COMPARE_CAPTURE_CHANNEL_0:
+			tc_module->TC_COUNT32.CC0 = compare;
+			return STATUS_OK;
+
+		case TC_COMPARE_CAPTURE_CHANNEL_1:
+			tc_module->TC_COUNT32.CC1 = compare;
+			return STATUS_OK;
+
+		default:
+			return STATUS_ERR_INVALID_ARG;
+		}
 
 	} /* Switch TC mode  */
 }
