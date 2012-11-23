@@ -143,6 +143,48 @@
 /* TODO: Where to put this ? */
  #define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
 
+
+/**
+ * Available GCLK generators. This enum is used in the peripheral device
+ * drivers to select the GCLK generator to be used for its operation.
+ * The amount of GCLK generators is device dependent.
+ */
+enum gclk_generator {
+	GCLK_GENERATOR_0
+#if GCLK_GEN_NUM_MSB > 0
+	GCLK_GENERATOR_1
+#if GCLK_GEN_NUM_MSB > 1
+	GCLK_GENERATOR_2
+#if GCLK_GEN_NUM_MSB > 2
+	GCLK_GENERATOR_3
+#if GCLK_GEN_NUM_MSB > 3
+	GCLK_GENERATOR_4
+#if GCLK_GEN_NUM_MSB > 4
+	GCLK_GENERATOR_5
+#if GCLK_GEN_NUM_MSB > 5
+	GCLK_GENERATOR_6
+#if GCLK_GEN_NUM_MSB > 6
+	GCLK_GENERATOR_7
+#if GCLK_GEN_NUM_MSB > 7
+	GCLK_GENERATOR_8
+#if GCLK_GEN_NUM_MSB > 8
+	GCLK_GENERATOR_9
+#if GCLK_GEN_NUM_MSB > 9
+	GCLK_GENERATOR_10
+#if GCLK_GEN_NUM_MSB > 10
+	GCLK_GENERATOR_11
+#if GCLK_GEN_NUM_MSB > 11
+	GCLK_GENERATOR_12
+#if GCLK_GEN_NUM_MSB > 12
+	GCLK_GENERATOR_13
+#if GCLK_GEN_NUM_MSB > 13
+	GCLK_GENERATOR_14
+#if GCLK_GEN_NUM_MSB > 14
+	GCLK_GENERATOR_15
+#if GCLK_GEN_NUM_MSB > 15
+	GCLK_GENERATOR_16
+};
+
 /**
  * Available start up times for the external oscillators
  */
