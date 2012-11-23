@@ -161,9 +161,9 @@
 #  else
 #    undef TEST_SUITE_DEFINE_ASSERT_MACRO
 #    define Assert(expr) \
-     	{\
-     		if (!(expr)) while (true);\
-     	}
+        {\
+                asm("BKPT #0");\
+        }
 #  endif
 #else
 #  define Assert(expr) ((void) 0)
