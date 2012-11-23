@@ -41,7 +41,6 @@
  */
 #include "dac.h"
 
-
 /**
  * \brief Resets the DAC module
  *
@@ -93,12 +92,16 @@ static void _dac_set_config(
 
 	/* Configure GCLK channel and enable clock */
 	gclk_ch_conf.source_clock = config->clock_source;
+
 	#if defined (REVB)
+	/* Set the GCLK channel run in standby mode */
 	gclk_ch_conf.run_in_standby = config->standb_sleep_enable;
 	#else
+	/* Set the GCLK channel sleep enable mode */
 	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
 	#endif
 
+	/* Apply configuration and enable the GCLK channel */
 	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
 	clock_gclk_ch_enable(DAC_GCLK_ID);
 

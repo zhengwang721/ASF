@@ -48,6 +48,7 @@ extern "C" {
 
 #include <compiler.h>
 #include <gclk.h>
+
 /**
  * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
  *
