@@ -671,6 +671,8 @@ class StudioFdkExtension(FdkExtension):
 			license_t.text = license
 			uuid_t = ET.SubElement(e, "LicenseUuid")
 			uuid_t.text = mods[0].extension.uuid
+			uuid_t = ET.SubElement(e, "LicenseVersion")
+			uuid_t.text = mods[0].extension.version
 
 			for module in mods:
 				caption = module.caption
