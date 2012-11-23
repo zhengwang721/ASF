@@ -43,9 +43,11 @@
 
 #warning "Will need to be updated!"
 /*! Infinite loop if CPU exception is detected */
-void HardFault_Handler(void)
+void pac_hard_fault_handler(void)
 {
-	while(1){}
+	while(1) {
+		/* Loop here on access error */
+	}
 }
 
 /**
@@ -75,7 +77,7 @@ __no_inline enum status_code system_peripheral_lock(
 	/* Check if key is correct. */
 	if (~peripheral != key){
 		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+		pac_hard_fault_handler();
 	}
 
 #warning "Mock-up only!"
@@ -129,7 +131,7 @@ __no_inline enum status_code system_peripheral_unlock(
 	/* Check if key is correct. */
 	if (~peripheral != key){
 		/* If key is not correct, do hard fault. */
-		HardFault_Handler();
+		pac_hard_fault_handler();
 	}
 
 #warning "Mock-up only!"

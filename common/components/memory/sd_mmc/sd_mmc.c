@@ -1214,13 +1214,10 @@ static bool sdio_cmd53(uint8_t rw_flag, uint8_t func_nb, uint32_t reg_addr,
 	Assert(size != 0);
 	Assert(size <= 512);
 
-	if (size == 512) {
-		size = 0; // 0 = 512B on SDIO command
-	}
 	return driver_adtc_start((rw_flag == SDIO_CMD53_READ_FLAG)?
 			SDIO_CMD53_IO_R_BYTE_EXTENDED :
 			SDIO_CMD53_IO_W_BYTE_EXTENDED,
-			(size << SDIO_CMD53_COUNT)
+			((size % 512) << SDIO_CMD53_COUNT)
 			| ((uint32_t)reg_addr << SDIO_CMD53_REG_ADDR)
 			| ((uint32_t)inc_addr << SDIO_CMD53_OP_CODE)
 			| ((uint32_t)0 << SDIO_CMD53_BLOCK_MODE)

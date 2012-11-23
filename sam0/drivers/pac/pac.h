@@ -601,8 +601,6 @@
  * \section api_overview API Overview
  * @{
  */
-
-#include <io.h>
 #include <compiler.h>
 
 #ifdef __cplusplus
@@ -631,6 +629,7 @@ enum system_peripheral_flag {
 	/*! AC0 lock/unlock flag */
 	SYSTEM_PERIPHERAL_AC0		= 47,
 };
+
 /** \name Peripheral lock and unlock
  * @{
  */

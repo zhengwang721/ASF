@@ -6,5 +6,6 @@
 		<require idref="board.mega_1284p_xplained"/>
 		<generator value="as5_8_template"/>
 		<generator value="doxygen"/>
+		<device-support value="atmega1284p"/>
 	</project>
 </asf>

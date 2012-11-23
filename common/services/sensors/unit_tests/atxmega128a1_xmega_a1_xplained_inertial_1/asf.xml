@@ -13,5 +13,6 @@
 		<generator value="avrgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_8"/>
+		<device-support value="atxmega128a1"/>
 	</project>
 </asf>

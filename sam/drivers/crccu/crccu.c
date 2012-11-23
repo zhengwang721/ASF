@@ -94,7 +94,7 @@ void crccu_configure_mode(Crccu *p_crccu, uint32_t ul_mode)
  *
  * \param p_crccu Pointer to a CRCCU instance.
  */
-void crccu_enable(Crccu *p_crccu)
+void crccu_enable_dma(Crccu *p_crccu)
 {
 	/* Start CRC calculation */
 	p_crccu->CRCCU_DMA_EN = CRCCU_DMA_EN_DMAEN;
@@ -105,7 +105,7 @@ void crccu_enable(Crccu *p_crccu)
  *
  * \param p_crccu Pointer to a CRCCU instance.
  */
-void crccu_disable(Crccu *p_crccu)
+void crccu_disable_dma(Crccu *p_crccu)
 {
 	p_crccu->CRCCU_DMA_DIS = CRCCU_DMA_DIS_DMADIS;
 }

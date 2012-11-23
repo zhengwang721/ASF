@@ -76,13 +76,13 @@
  *
  * \section module_introduction Introduction
  *
- * \par Overview of the Generic Clock chain
+ * \subsection Overview of the Generic Clock chain
  * Within the SAM0+ devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
- * input clock to a Genric Clock Generator, which can prescale down the input
+ * input clock to a Generic Clock Generator, which can prescale down the input
  * frequency to a slower rate for use in a peripheral.
- * \n\n
+ *
  * Additionally, a number of individually selectable Generic Clock Channels are
  * provided, which multiplex and gate the various generator outputs for one or
  * more peripherals within the device. This setup allows for a single common
@@ -107,7 +107,6 @@
  * }
  * \enddot
  *
- * \par ""
  * An example setup of a complete clock chain within the device is shown below.
  *
  * \dot
@@ -137,14 +136,14 @@
  * }
  * \enddot
  *
- * \par Source Clocks
+ * \subsection source_clocks Source Clocks
  * A number of master clock sources are provided within the chip; these are
  * based on a number of internal and external clock systems, such as
  * R/C Oscillators, external crystals, PLL modules and DFLL modules. These clock
  * sources can each be individually selected as the input for a Generic Clock
  * Generator unit.
  *
- * \par Generic Clock Generators
+ * \subsection gen_clock_generators Generic Clock Generators
  * Each Generic Clock generator within the device can source its input clock
  * from one of the provided Source Clocks, and prescale the output for one or
  * more Generic Clock Channels in a one-to-many relationship. The generators
@@ -152,7 +151,7 @@
  * power usages and accuracies, which can be turned on and off individually to
  * disable the clocks to multiple peripherals as a group.
  *
- * \par Generic Clock Channels
+ * \subsection gen_clock_channels Generic Clock Channels
  * To connect a Generic Clock Generator to a peripheral module within the
  * device, a Generic Clock Channel module must be used. Each peripheral or
  * peripheral group has an associated Generic Clock Channel, which serves as the
@@ -201,6 +200,10 @@ struct clock_gclk_gen_conf {
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
 	uint32_t division_factor;
+	#if defined (REVB)
+	/** If \c true the clock is kept enabled during device standby mode */
+	bool run_in_standby;
+	#endif
 };
 
 /** \brief Generic Clock configuration structure.
@@ -212,8 +215,10 @@ struct clock_gclk_gen_conf {
 struct clock_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
-	/** If \c true, the clock is kept enabled during device sleep. */
+	#if !defined (REVB)
+	/** If \c true, the clock is kept enabled during device standby mode. */
 	bool enable_during_sleep;
+	#endif
 };
 
 
@@ -254,6 +259,9 @@ static inline void clock_gclk_gen_get_config_defaults(
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
 	config->source_clock       = 0;
+	#if defined (REVB)
+	config->run_in_standby     = false;
+	#endif
 }
 
 void clock_gclk_gen_set_config(
@@ -294,7 +302,10 @@ static inline void clock_gclk_ch_get_config_defaults(
 
 	/* Default configuration values */
 	config->source_generator = 0;
+
+	#if !defined (REVB)
 	config->enable_during_sleep = false;
+	#endif
 }
 
 void clock_gclk_ch_set_config(

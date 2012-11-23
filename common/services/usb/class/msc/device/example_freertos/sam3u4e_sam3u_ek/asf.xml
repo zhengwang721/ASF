@@ -27,5 +27,6 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x2000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
+		<device-support value="atsam3u4e"/>
 	</project>
 </asf>

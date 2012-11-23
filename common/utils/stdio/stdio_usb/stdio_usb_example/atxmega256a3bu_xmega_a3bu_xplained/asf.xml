@@ -8,9 +8,10 @@
 		<config name="config.common.services.usb.class.device" value="cdc_stdio"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<config name="config.board.xmega_a3bu_xplained.led" value="yes"/>
-		<generator value="avrgcc" />
+		<generator value="avrgcc"/>
 		<generator value="iarew"/>
-		<generator value="as5_8" />
+		<generator value="as5_8"/>
 		<generator value="doxygen"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>
