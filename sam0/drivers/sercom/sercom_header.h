@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SERCOM_INST 6
+#define SERCOM_INSTS_NUM 6
 
 //TODO: remove
 enum status_code {

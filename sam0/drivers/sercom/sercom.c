@@ -38,7 +38,9 @@
  * \asf_license_stop
  *
  */
-#include "sercom.h"
+#include <sercom.h>
+
+#define SHIFT 1
 
 /**
  * \brief Calculate synchronous baudrate value (SPI/UART)
@@ -59,6 +61,7 @@ enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 	} else {
 		return ret;
 	}
+	return ret;
 }
 
 /**
@@ -85,4 +88,3 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 
 	return STATUS_OK;
 }
-

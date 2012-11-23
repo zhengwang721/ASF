@@ -43,6 +43,11 @@
 #define SERCOM_H_INCLUDED
 
 //#include <compiler.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,46 +80,13 @@ extern "C" {
  * @{
  */
 #include "sercom_header.h"
-//#include "sercom_interrupts.h"
-
-
-struct i2c_master_dev_inst;
-
-typedef (*i2c_master_callback_t)(
-		const struct i2c_master_dev_inst *const dev_inst);
-
-/**
- * \brief SERCOM I2C Master driver hardware instance.
- *
- * Device instance structure for SERCOM I2C Master instance. This structure
- * is used throughout the driver, and should be initiated using the
- * /ref i2c_master_init() function to associate the struct with a particular
- * hardware instance and configurations.
- */
-struct i2c_master_dev_inst {
-	/** Save sercom mode to use in interrupt handler. */
-	SERCOM_MODE_t sercom_mode;
-	/** Hardware instance initialized for the struct. */
-	SERCOM_t *hw_dev;
-	/** Holder for callback functions. */
-	i2c_master_callback_t callback[3];
-	/** Holder for registered callbacks. */
-	uint8_t registered_callback;
-	/** Holder for enabled callbacks. */
-	uint8_t enabled_callback;
-	/** Data buffer for packet write and read. */
-	uint8_t **buffer_ptr;
-	/** Counter used for bytes left to send in write and to count number of
-	  * obtained bytes in read. */
-	uint16_t buffer_length;
-};
+#include <sercom_interrupts.h>
 
 enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);
 
 enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
-
 
 /** @} */
 

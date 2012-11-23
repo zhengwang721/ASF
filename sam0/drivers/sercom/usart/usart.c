@@ -45,7 +45,6 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		const struct usart_conf const *config) {
 	/* */
 	uint8_t i;
-	
 
 #ifdef USART_ASYNC
 	/* Initialize parameters */
@@ -58,7 +57,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	dev_inst->callback_reg_mask    = 0x00;
 	dev_inst->callback_enable_mask = 0x00;
 
-	_sercom_set_handler();
+	//_sercom_set_handler();
 #endif
 
 }

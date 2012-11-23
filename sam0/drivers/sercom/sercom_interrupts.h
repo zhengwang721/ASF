@@ -44,13 +44,13 @@
 #define SERCOM_INSTANCES 4
 
 #include <sercom.h>
+#include <asf.h>
 
-/* Prototype for the SERCOM union */
-union _sercom_dev_inst;
+/* Look-up table for device instances. */
+static void *_sercom_instances[SERCOM_INSTS_NUM];
 
-/* Lookup table containing SERCOM instances which have registered
- * callback functions */
-//union _sercom_dev_inst *_sercom_instances[SERCOM_INSTANCES];
+void _sercom_set_handler(uint8_t instance,
+		void (*interrupt_handler) (uint8_t instance));
 
 void SERCOM_Handler(void);
 

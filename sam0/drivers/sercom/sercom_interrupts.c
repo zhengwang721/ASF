@@ -38,36 +38,14 @@
  * \asf_license_stop
  *
  */
+#include <asf.h>
 #include <sercom_interrupts.h>
 
-#ifdef USART_ASYNC
-#include <usart.h>
-#else
-struct usart_dev_inst;
-#endif
-#ifdef SPI_ASYNC
-#include <spi.h>
-#else
-struct spi_dev_inst{};
-#endif
+/** Save status of initialized handlers. */
+static bool _handler_table_initialized = false;
 
-static uint8_t handler_table_initialized = 0;
-
-static void *_sercom_instances[SERCOM_INST];
-
-static void (*_sercom_handlers[SERCOM_INST])(uint8_t instance);
-
-/* */
-union _sercom_dev_inst {
-	/** Mode of the SERCOM hardware instance */
-	uint8_t mode;
-	/** Pointer to the SERCOM hardware instance*/
-	SERCOM_t *hw_dev;
-	/** Device struct for the USART mode */
-	struct usart_dev_inst usart;
-	/** Device struct for the SPI mode */
-	struct spi_dev_inst spi;
-};
+/** Void pointers for saving device instance structures. */
+static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
 
 uint8_t _sercom_get_current_irq_index(void)
 {
@@ -85,16 +63,13 @@ uint8_t _sercom_get_current_irq_index(void)
  * retval  
  */
 //TODO: move to sercom
-
-enum status_code _sercom_register_dev_inst_ptr(union _sercom_dev_inst *const dev_inst)
+enum status_code _sercom_get_instance_index(SERCOM_t *hw_dev)
 {
 	/* Variable for array index */
 	uint8_t instance_index;
 
 	/* Save device instance structure pointer. */
-	uint32_t sercom_module = (uint32_t)dev_inst->hw_dev;
-
-	/**/
+	uint32_t sercom_module = *(uint32_t *)hw_dev;
 
 	switch(sercom_module){
 		//TODO: fix casting
@@ -120,39 +95,42 @@ enum status_code _sercom_register_dev_inst_ptr(union _sercom_dev_inst *const dev
 			return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* Save device instance pointer */
-	_sercom_instances[instance_index] = dev_inst;
-
-	return STATUS_OK;
+	instance_index;
 }
 
+/**
+ * \internal Default interrupt handler
+ * \param instance Sercom instance used.
+ */
+void _sercom_default_handler(uint8_t instance)
+{
+	Assert(false);
+}
 
+/**
+ */
+void _sercom_set_handler(uint8_t instance,
+		void (*interrupt_handler) (uint8_t instance))
+{
+	uint8_t i;
+	/* Initialize handlers with default handler. */
+	if(_handler_table_initialized == false) {
+		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
+			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
+		}
+		_handler_table_initialized = true;
+	}
 
+	/* Save interrupt handler. */
+	_sercom_interrupt_handlers[instance] = interrupt_handler;
+}
 
 /* Interrupt Service Routine */
 void SERCOM_Handler(void)
 {
+	/* Something something. */
 	uint8_t instance = _sercom_get_current_irq_index();
-	uint16_t interrupt_status;
-	uint16_t callback_status;
 
-	/* Sercom mode is contained in the first byte of *Æ*dev_inst */
-	uint8_t mode = *(uint8_t *)_sercom_instances[instance];
-
-	switch(mode) {
-		case SERCOM_MODE_SPI:
-		{
-			/* TODO: Implementation for the SPI async driver */
-			break;
-		}
-		case SERCOM_MODE_I2C:
-		{
-			/* TODO: Implementation for the I2C async driver */
-			break;
-		}
-		default:
-		{
-			Assert(false);
-		}
-	}
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[instance] (instance);
 }
