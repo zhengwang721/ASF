@@ -40,6 +40,9 @@
  */
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
+
+ #include <asf.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

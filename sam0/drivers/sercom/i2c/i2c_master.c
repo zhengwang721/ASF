@@ -39,75 +39,50 @@
  *
  */
 
-#include "i2c_master.h"
+#include <i2c_master.h>
+
+#define I2C_MASTER_SWRST_Pos 0
 
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
-		const SERCOM_t *const module,
+		SERCOM_t *const module,
 		const struct i2c_master_conf *const config)
 {
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(config);
 
+
+	_sercom_set_dev_inst(instance, (void*) dev_inst);
+	_sercom_set_handler(instance, (void*)(i2c_master_callback_handler)(instance));
 }
 
-void i2c_master_enable(
-		const struct i2c_master_dev_inst *const dev_inst)
+void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 {
-	/* Sanity check of arguments. */
+	/* Sanity check arguments. */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *i2c_module = dev_inst->hw_dev;
+	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
 
-	i2c_module->I2C_MASTER.CTRLA |= (1 << I2C_MASTER_ENABLE_bp);
+	/* Wait for sync. */
+	_i2c_master_wait_for_sync(dev_inst);
+
+	/* Reset module. */
+	i2c_module.CTRLA = ( 1 << I2C_MASTER_SWRST_Pos );
 }
 
-enum status_code i2c_master_disable(
-		const struct i2c_master_dev_inst *const dev_inst)
+enum status_code i2c_master_read_packet(
+		const struct i2c_master_dev_inst *const dev_inst,
+		i2c_packet_t *const packet)
 {
-	/* Sanity check of arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	SERCOM_t *i2c_module = dev_inst->hw_dev;
-
-	i2c_module->I2C_MASTER.CTRLA &= ~(1 << I2C_MASTER_ENABLE_bp);
+	;
 }
 
-enum status_code i2c_master_register_callback(
+enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t callback,
-		enum i2c_master_callback_type)
+		i2c_packet_t *const packet)
 {
-
-}
-
-enum status_code i2c_master_unregister_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t callback,
-		enum i2c_master_callback_type)
-{
-
-}
-
-enum status_code i2c_master_enable_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type)
-{
-
-}
-
-enum status_code i2c_master_disable_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type)
-{
-
-}
-
-enum status_code i2c_master_read_buffer()
-{
-
-}
-
-enum status_code i2c_master_write_buffer()
-{
-
+	;
 }

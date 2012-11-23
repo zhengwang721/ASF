@@ -80,7 +80,10 @@ typedef struct _DeviceVectors
 } DeviceVectors;
 
 void Reset_Handler(void);
+
+/** \cond DOXYGEN_SHOULD_SKIP_THIS */
 int main(void);
+/** \endcond */
 
 __attribute__((section(".vectors")))
 const DeviceVectors exception_table = {

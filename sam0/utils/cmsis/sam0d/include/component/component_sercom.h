@@ -90,7 +90,7 @@ typedef struct {
 	__REG8(INTENCLR, __O);
 	__REG8(INTENSET, __IO);
 	__REG16(INTFLAGS, __IO);
-	__REG16(STATUS, __I);
+	__REG16(STATUS, __IO);
 	__I uint16_t reserved_0x16;
 	__REG16(DATA, __IO);
 	__I uint16_t reserved_0x1A;
@@ -111,7 +111,7 @@ typedef struct {
 	__REG8(INTENCLR, __O);
 	__REG8(INTENSET, __IO);
 	__REG16(INTFLAGS, __IO);
-	__REG16(STATUS, __I);
+	__REG16(STATUS, __IO);
 	__I uint16_t reserved_0x16;
 	__REG16(DATA, __IO);
 	__I uint16_t reserved_0x1A;
@@ -215,6 +215,8 @@ typedef enum {
 
 #define SPI_ADDR_gp         0
 #define SPI_ADDRMASK_gp     16
+
+#define SERCOM_INSTS_NUM 6
 
 enum RXPO_group {
 	SERCOM_USART_RXPO_0_gc = (0 << 18),

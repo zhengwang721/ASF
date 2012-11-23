@@ -38,3 +38,6 @@
  * \asf_license_stop
  *
  */
+
+#include <asf.h>
+

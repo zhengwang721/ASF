@@ -38,3 +38,12 @@
  * \asf_license_stop
  *
  */
+
+#include "qs_i2c_master_basic_use.h"
+
+int main(void)
+{
+	while (1) {
+		/* Inf loop. */
+	}
+}

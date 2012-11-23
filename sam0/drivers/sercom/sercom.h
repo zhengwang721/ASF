@@ -74,8 +74,7 @@ extern "C" {
  * \section api_overview API Overview
  * @{
  */
-#include "sercom_header.h"
-#include "sercom_interrupts.h"
+#include <sercom_interrupts.h>
 
 enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);

@@ -143,11 +143,12 @@ OBJDUMP         := $(CROSS)objdump
 SIZE            := $(CROSS)size
 GDB             := $(CROSS)gdb
 
-RM              := cs-rm -f
 ifeq ($(os),Windows)
 #RMDIR           := rmdir /S /Q
+RM              := cs-rm -f
 RMDIR           := cs-rm  -rf
 else
+RM 		:= rm -f
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
 endif
 
