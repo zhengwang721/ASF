@@ -6,6 +6,19 @@
 extern "C" {
 #endif
 
+
+/**
+ * \brief ADC status flags.
+ *
+ * Enum for the possible status flags
+ *
+ */
+enum adc_interrupt_flag {
+	ADC_INTERRUPT_RESULT_READY = ADC_READY_bm,
+	ADC_INTERRUPT_WINDOW       = ADC_WINMON_bm,
+	ADC_INTERRUPT_OVERRUN      = ADC_OVERRUN_bm,
+}
+
 /**
  * \brief ADC reference voltage enum.
  *
@@ -332,8 +345,8 @@ struct adc_config {
 	bool generate_event_on_conversion_done;
 	/** Enable event generation on window monitor */
 	bool generate_event_on_window_monitor;
-	/** ADC enabled in sleep mode */
-	bool sleep_enable;
+	/** ADC enabled in standby */
+	bool run_in_standby;
 	/**
 	Reference buffer offset compensation enable.
 	Set this to true to ebable the reference buffer compensation to
@@ -368,6 +381,16 @@ struct adc_config {
 	Sample time = (sample_length+1) * (ADCclk / 2)
 	*/
 	uint8_t sample_length;
+	/**
+	Offset (relative to selected (positive) input) of first input pin to be
+	used in pin scan mode.
+	*/
+	uint8_t offset_start_scan;
+	/**
+	Number of input pins to scan in pin scan mode.
+	Set to 0 do disable pin scan mode.
+	*/
+	uint8_t inputs_to_scan;
 };
 
 /**
@@ -421,7 +444,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 	adc_disable(dev_inst);
 
 	/* Software reset the module */
-	_adc_wait_for_sync(module);
+	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA |= ADC_SWRST_bm;
 }
 
@@ -449,6 +472,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li No reference compensation
  *   \li No gain/offset correction
  *   \li No added sampling time
+ *   \li Pin scan mode disabled
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -473,12 +497,15 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->flush_adc_on_event = false;
 	config->generate_event_on_conversion_done = false;
 	config->generate_event_on_window_monitor = false;
-	config->sleep_enable = false;
+	config->run_in_standby = false;
 	config->reference_compenstation_enable = false;
 	config->correction_enable = false;
 	config->gain_correction = 0;
 	config->offset_correction = 0;
 	config->sample_length = 0;
+	config->offset_start_scan = 0;
+	config->inputs_to_scan = 0;
+
 }
 
 /**
@@ -491,12 +518,12 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 static inline void adc_enable(struct adc_dev_inst *const dev_inst)
 {
 	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
+	Assert(dev_inst->hw_dev);
 
-	ADC_t *const module = dev_inst->dev_ptr;
+	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
-	module->CTRLA |= ADC_ENABLE_bm;
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA |= ADC_ENABLE_bm;
 }
 
 /**
@@ -509,12 +536,12 @@ static inline void adc_enable(struct adc_dev_inst *const dev_inst)
 static inline void adc_disable(struct adc_dev_inst *const dev_inst)
 {
 	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
+	Assert(dev_inst->hw_dev);
 
-	ADC_t *const module = dev_inst->dev_ptr;
+	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
-	module->CTRLA &= ~ADC_ENABLE_bm;
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA &= ~ADC_ENABLE_bm;
 }
 
 /**
@@ -529,15 +556,12 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
 static inline void adc_flush(struct adc_dev_inst *const dev_inst)
 {
 	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
+	Assert(dev_inst->hw_dev);
 
-	ADC_t *const module = dev_inst->dev_ptr;
+	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
-	module->SWTRIG |= ADC_FLUSH_bm;
-
-	/* Wait for flush to complete */
-	while (module->SWTRIG & ADC_FLUSH_bm);
+	_adc_wait_for_sync(adc_module);
+	adc_module->SWTRIG |= ADC_FLUSH_bm;
 }
 
 /**
@@ -550,12 +574,12 @@ static inline void adc_flush(struct adc_dev_inst *const dev_inst)
 static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 {
 	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
+	Assert(dev_inst->hw_dev);
 
-	ADC_t *const module = dev_inst->dev_ptr;
+	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
-	module->SWTRIG |= ADC_START_bm;
+	_adc_wait_for_sync(adc_module);
+	adc_module->SWTRIG |= ADC_START_bm;
 }
 
 /**
@@ -569,72 +593,23 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 static inline status_code_t adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t *result)
 {
 	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
+	Assert(dev_inst->hw_dev);
 	Assert(result);
 
-	if (!adc_is_result_ready(dev_inst)) {
+	if (!adc_is_interrupt_flag_set(dev_inst, ADC_INTERRUPT_RESULT_READY)) {
 		/* Result not ready. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	ADC_t *const module = dev_inst->dev_ptr;
+	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(module);
+	_adc_wait_for_sync(adc_module);
 	/* Get ADC result */
-	*result = module->RESULT;
+	*result = adc_module->RESULT;
 	/* Reset ready flag */
-	module->INTFLAG = ADC_RESRDY_bm;
+	adc_clear_interrupt_flag(dev_inst, ADC_INTERRUPT_RESULT_READY);
 
 	return STATUS_OK;
-}
-
-/**
- * \brief Check if result is ready in ADC
- *
- * Check whether a new result is ready in result register
- *
- * \param dev_inst       pointer to device struct
- */
-static inline bool adc_is_result_ready(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
-
-	ADC_t *const module = dev_inst->dev_ptr;
-
-	return module->INTFLAG & ADC_RESRDY_bm;
-}
-
-/**
- * \brief Check if window monitor flag is set in ADC
- *
- * Check wether the window monitor interrupt flag is set.
- *
- * \param dev_inst       pointer to device struct
- */
-static inline bool adc_is_window_flag_set(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
-
-	ADC_t *const module = dev_inst->dev_ptr;
-
-	return module->INTFLAG & ADC_WINMON_bm;
-}
-
-/**
- * \brief Reset the ADC window monitor flag
- *
-  * \param dev_inst       pointer to device struct
- */
-static inline void adc_reset_window_flag(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->dev_ptr);
-
-	ADC_t *const module = dev_inst->dev_ptr;
-
-	module->INTFLAG = ADC_WINMON_bm;
 }
 
 /**
@@ -658,14 +633,145 @@ static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
 
 	ADC_t *const adc_module = dev_inst->hw_dev;
 
-	_adc_wait_for_sync(hw_dev);
-	hw_dev->WINCTRL = window_mode        << ADC_WINMODE_bp;
-	_adc_wait_for_sync(hw_dev);
-	hw_dev->WINLT   = window_lower_value << ADC_WINLT_bp;
-	_adc_wait_for_sync(hw_dev);
-	hw_dev->WINUT   = window_upper_value << ADC_WINUT_bp;
+	_adc_wait_for_sync(adc_module);
+	adc_module->WINCTRL = window_mode        << ADC_WINMODE_bp;
+	_adc_wait_for_sync(adc_module);
+	adc_module->WINLT   = window_lower_value << ADC_WINLT_bp;
+	_adc_wait_for_sync(adc_module);
+	adc_module->WINUT   = window_upper_value << ADC_WINUT_bp;
 }
 
+
+/**
+ * \brief Change ADC gain factor
+ *
+ * \param dev_inst           pointer to the device struct
+ * \param gain_factor        gain factor value to set
+ */
+static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
+		enum adc_gain_factor gain_factor)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+	_adc_wait_for_sync(adc_module);
+	adc_module->INPUTCTRL |= (gain_factor << ADC_GAIN_bp);
+}
+
+
+/**
+ * \brief Check if a given interrupt flag is set
+ *
+ * \param dev_inst           pointer to the device struct
+ * \param interrupt_flag     interrupt flag to check
+ */
+static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+		enum adc_status_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+	return adc_module->INTFLAG & interrupt_flag;
+}
+
+
+/**
+ * \brief Clear a given interrupt flag
+ *
+ * \param dev_inst           pointer to the device struct
+ * \param interrupt_flag     interrupt flag to clear
+ */
+static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+		enum adc_status_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+	adc_module->INTFLAG = interrupt_flag;
+}
+
+
+/**
+ * \brief Set up pin scan mode
+ *
+ * In pin scan mode, the first conversion will start at the configured
+ * positive input + start_offset. When conversion is done, it will skip to
+ * next input until inputs_to_scan conversions are made.
+ *
+ * \param dev_inst           pointer to the device struct
+ * \param inputs_to_scan     numbers of input pins to do ADC on
+ * \param start_offset       offset of first pin to scan (relative to
+ *                           configured positive input)
+ */
+static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+		uint8_t inputs_to_scan, uint8_t start_offset)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->INPUTCTRL |=
+			(start_offset   << ADC_INPUTOFFSET_bp) |
+			(inputs_to_scan << ADC_INPUTSCAN_bp);
+}
+
+
+/**
+ * \brief Disable pin scan mode
+ *
+  * \param dev_inst           pointer to the device struct
+ */
+static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst)
+{
+	adc_set_scan_mode(dev_inst, 0, 0);
+}
+
+
+/**
+ * \brief Set positive ADC input pin
+ *
+ * \param positive_input     positive input pin
+ */
+static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
+		enum adc_positive_input positive_input)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->INPUTCTRL |= (positive_input << ADC_MUXPOS_bp);
+}
+
+
+/**
+ * \brief Set negative ADC input pin for differential mode
+ *
+ * \param negative_input     negative input pin
+ */
+static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
+		enum adc_negative_input negative_input)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	ADC_t *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->INPUTCTRL |= (negative_input << ADC_MUXNEG_bp);
+}
 
 #ifdef __cplusplus
 }
