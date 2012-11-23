@@ -96,21 +96,30 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  *
  */
 void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
-		const usart_async_callback_t *const callback_func,
+		usart_async_callback_t *callback_func,
 		enum usart_callback_type callback_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(callback_func);
 
+	/* Variable to store the status */
+	enum status_code status;
+	status = STATUS_OK;
+
 	/* Register callback function */
 	dev_inst->callback[callback_type] = callback_func;
-	//TODO: fix casting
-	_sercom_instances[_sercom_get_module_irq_index(dev_inst)] =
-			*(uint32_t *)dev_inst;
+
+	/* Store pointer to device instance in a look-up table */
+	status = _sercom_register_dev_inst_ptr((union _sercom_dev_inst *)dev_inst);
+
+	//_sercom_instances[_sercom_get_module_irq_index(dev_inst)] =
+	//*(uint32_t *)dev_inst;
 
 	/* Set the bit corresponding to the callback_type */
 	dev_inst->callback_reg_mask |= (1 << callback_type);
+
+	return status;
 }
 
 /**
@@ -150,7 +159,8 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  * returns 
  * retval  
  */
-enum status_code usart_async_enable_callback(struct usart_dev_inst *const dev_inst,
+enum status_code usart_async_enable_callback(
+		struct usart_dev_inst *const dev_inst,
 		enum usart_callback_type callback_type)
 {
 	/* Sanity check arguments */
@@ -193,7 +203,8 @@ enum status_code usart_async_enable_callback(struct usart_dev_inst *const dev_in
  * returns 
  * retval  
  */
-enum status_code usart_async_disable_callback(struct usart_dev_inst *const dev_inst,
+enum status_code usart_async_disable_callback(
+		struct usart_dev_inst *const dev_inst,
 		enum usart_callback_type callback_type)
 {
 	/* Sanity check arguments */
@@ -356,8 +367,7 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  * returns 
  * retval  
  */
-void usart_async_cancel_transmission(struct usart_dev_inst
-		*const dev_inst)
+void usart_async_cancel_transmission(struct usart_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -385,8 +395,7 @@ void usart_async_cancel_transmission(struct usart_dev_inst
  * returns 
  * retval  
  */
-void usart_async_cancel_reception(struct usart_dev_inst
-		*const dev_inst)
+void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -403,4 +412,94 @@ void usart_async_cancel_reception(struct usart_dev_inst
 	dev_inst->remaining_rx_buffer_length = 0;
 }
 
+/* Interrupt Handler for USART */
+usart_handler(uint8_t instance) {
 
+	uint16_t interrupt_status;
+	uint16_t callback_status;
+
+	/* Get device instance from the look-up table */
+	struct usart_dev_inst *dev_inst = (struct usart_dev_inst *)_sercom_instances[instance];
+
+	/* Sanity check content from the look-up table */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module =
+			&(dev_inst->hw_dev->USART);
+
+	/* Read and mask interrupt flag register */
+	interrupt_status = usart_module->INTFLAGS;
+	callback_status = interrupt_status
+			&dev_inst->callback_reg_mask
+			&dev_inst->callback_enable_mask;
+
+	/* Check if a DATA READY interrupt has occurred,
+	 * and if there if there is more to transfer */
+	if (interrupt_status & SERCOM_USART_DREIF_bm
+		&& dev_inst->remaining_tx_buffer_length) {
+
+		/* Check if there is only one more transmission
+		 * to make */
+		if (dev_inst->remaining_tx_buffer_length == 1) {
+			/* Disable the Data Register Empty
+			 * Interrupt Flag (DREIF) */
+			usart_module->INTENCLR =
+					SERCOM_USART_DREIF_bm;
+		}
+
+		/* Write current packet from transmission buffer
+		 * and increment buffer pointer */
+		//TODO: casting
+		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
+					& SERCOM_USART_DATA_gm;
+			(dev_inst->tx_buffer_ptr)+2;
+
+		} else {
+			usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
+					& SERCOM_USART_DATA_gm;
+			(dev_inst->tx_buffer_ptr)++;
+
+		}
+
+		/* Decrement buffer length */
+		(dev_inst->remaining_tx_buffer_length)--;
+	}
+
+	if ((callback_status & SERCOM_USART_TXCIF_bm) &&
+			!dev_inst->remaining_tx_buffer_length){
+		(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED]))(dev_inst);
+
+	}
+
+	if ((callback_status & SERCOM_USART_RXCIF_bm) &&
+			!dev_inst->remaining_rx_buffer_length){
+
+		/* Check if the reception buffer has data
+		 * to receive */
+		if (dev_inst->remaining_rx_buffer_length) {
+			/* Read current packet from DATA register,
+			 * increment buffer pointer and decrement buffer length */
+			if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+				/* Read out from DATA and increment 8bit ptr by two */
+	*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
+				dev_inst->tx_buffer_ptr+2;
+			} else {
+				/* Read out from DATA and increment 8bit ptr by one */
+	*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
+				dev_inst->tx_buffer_ptr++;
+			}
+
+			/* Decrement length of the remaining buffer */
+			(dev_inst->remaining_rx_buffer_length)--;
+
+		} else {
+			/* If the transmission buffer is empty,
+			 * run callback*/
+			(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED]))(dev_inst);
+		}
+
+	}
+}

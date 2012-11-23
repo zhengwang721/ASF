@@ -41,6 +41,27 @@
 #include <usart.h>
 
 
+enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
+		const struct usart_conf const *config) {
+	/* */
+	uint8_t i;
+	
+
+#ifdef USART_ASYNC
+	/* Initialize parameters */
+	dev_inst->sercom_mode          = SERCOM_MODE_USART;
+	for(i; i < USART_CALLBACK_N; i++) {
+		dev_inst->callback[i]  = NULL;
+	}
+	dev_inst->tx_buffer_ptr        = NULL;
+	dev_inst->rx_buffer_ptr        = NULL;
+	dev_inst->callback_reg_mask    = 0x00;
+	dev_inst->callback_enable_mask = 0x00;
+
+	_sercom_set_handler();
+#endif
+
+}
 
 
 
@@ -55,7 +76,7 @@
  * \param dev_inst Pointer to USART device
  * \param config Pointer to configuration struct
  */
-enum status_code usart_init(const struct usart_dev_inst *dev_inst,
+enum status_code usart_init(struct usart_dev_inst *dev_inst,
 		SERCOM_t *hw_dev, struct usart_conf *config)
 {
 	/* Sanity check arguments */
@@ -63,7 +84,29 @@ enum status_code usart_init(const struct usart_dev_inst *dev_inst,
 	Assert(hw_dev);
 	Assert(config);
 
+	/* Assign module pointer to software instance struct */
+	dev_inst->hw_dev = hw_dev;
+
+	/* Get a pointer to the hardware module instance */
+	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+
+
+
 	//TODO:
+	if(usart_module->CTRLA & SERCOM_USART_RESET_bm) {
+		/* Reset is ongoing. Abort. */
+	}
+
+	_usart_wait_for_sync(dev_inst);
+	if(usart_module->CTRLA & SERCOM_USART_ENABLE_bm) {
+		/* Module have to be disabled before initialization. Abort. */
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Set up GCLK_SERCOM using sysclk driver */
+	//TODO
+
+	_usart_set_config(dev_inst, config);
 }
 
 /**
@@ -168,8 +211,8 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
  * \retval        STATUS_OK                If operation was completed
  * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed,
  *                                         due to invalid arguments
- * \retval        STATUS_ERR_BUSY          If operation was not completed,
- *                                         due to USART module being busy
+ * \retval        STATUS_ERR_TIMEOUT       If operation was not completed,
+ *                                         due to USART module timing out
  */
 enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 		const uint8_t *tx_data, uint16_t length)
@@ -177,6 +220,15 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
+
+	/* Timeout variables */
+	uint16_t i = 0;
+	uint16_t timeout;
+#ifdef USART_CUSTOM_TIMEOUT
+	timeout = USART_CUSTOM_TIMEOUT;
+#else
+	timeout = USART_DEFAULT_TIMEOUT;
+#endif
 
 	/* Check if the buffer length is valid */
 	if (length == 0) {
@@ -192,16 +244,22 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Blocks while buffer is being transferred */
 	while(length--){
 
-		/* Wait for USART to become ready for new data */
-		while(!usart_is_data_buffer_empty(dev_inst)) {
-			/* Intentionally left empty */
+		/* Wait for the USART to be ready for new data and abort
+		 * operation if it doesn't get ready within the timeout*/
+		for(i=0;i < timeout; i++) {
+			if(usart_is_data_received(dev_inst)) {
+				break;
+			} else if(i == timeout) {
+				return STATUS_ERR_TIMEOUT;
+			}
 		}
 
-		/* Needs increment data pointer by 2 for characters
-		 * longer than 8 bits */
+		/* Check if the character size exceeds 8 bit */
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			/* Increment 8 bit pointer by two */
 			usart_write(dev_inst, (uint16_t)*(tx_data+2));
 		} else {
+			/* Increment 8 bit pointer by one */
 			usart_write(dev_inst, (uint16_t)*(tx_data++));
 		}
 	}
@@ -227,8 +285,8 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
  * \retval        STATUS_OK                If operation was completed
  * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed, due
  *                                         to invalid arguments
- * \retval        STATUS_ERR_BUSY          If operation was not completed, due
- *                                         to USART module being busy
+ * \retval        STATUS_ERR_TIMEOUT       If operation was not completed, due
+ *                                         to USART module timing out
  */
 enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		const uint8_t *rx_data, uint16_t length)
@@ -237,6 +295,14 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
+	/* Timeout variables */
+	uint16_t i = 0;
+	uint16_t timeout;
+#ifdef USART_CUSTOM_TIMEOUT
+	timeout = USART_CUSTOM_TIMEOUT;
+#else
+	timeout = USART_DEFAULT_TIMEOUT;
+#endif
 	/* Check if the buffer length is valid */
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
@@ -245,18 +311,24 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 	/* Blocks while buffer is being received */
 	while(length--) {
 
-		/* Wait for USART to have new data */
-		while(!usart_is_data_received(dev_inst)) {
-			/* Intentionally left empty */
-		}
-		/* Needs increment data pointer by 2 for characters
-		 * longer than 8 bits */
-		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
-			usart_write(dev_inst, (uint16_t)*(rx_data+2));
-		} else {
-			usart_write(dev_inst, (uint16_t)*(rx_data++));
+		/* Wait for the USART to have new data and abort operation if it
+		 * doesn't get ready within the timeout*/
+		for(i=0;i < timeout; i++) {
+			if(usart_is_data_received(dev_inst)) {
+				break;
+			} else if(i == timeout) {
+				return STATUS_ERR_TIMEOUT;
+			}
 		}
 
+		/* Check if the character size exceeds 8 bit */
+		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			/* Increment the 8 bit data pointer by two */
+			usart_read(dev_inst, (uint16_t *)(rx_data+2));
+		} else {
+			/* Increment the 8 bit data pointer by one */
+			usart_read(dev_inst, (uint16_t *)(rx_data++));
+		}
 	}
 
 	return STATUS_OK;

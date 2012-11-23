@@ -38,17 +38,12 @@
  * \asf_license_stop
  *
  */
-
 #ifndef USART_ASYNC_H_INCLUDED
 #define USART_ASYNC_H_INCLUDED
 
-
-#include <stdlib.h>
 #include <usart.h>
 
-
 uint8_t _sercom_get_module_irq_index(struct usart_dev_inst *const dev_inst);
-
 
 /**
  * \name Callback Management
