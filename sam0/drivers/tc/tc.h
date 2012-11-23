@@ -82,7 +82,7 @@ extern "C" {
  * @{
  */
 
-//folowing 9 lines can be removed if this is done in tc_header.h
+//following 12 lines can be removed if defines are done in tc_header.h
 #ifndef TC_INTFLAG_ERR_bm
 #define TC_INTFLAG_ERR_bm (0x01 << 1)
 #endif
@@ -92,6 +92,11 @@ extern "C" {
 #ifndef TC_EVCTRL_TCINV_bm
 #define TC_EVCTRL_TCINV_bm (0x0001 << 4)
 #endif
+#ifndef TC_CTRLA_SLEEPEN_bp
+#define TC_CTRLA_SLEEPEN_bp
+#endif
+
+
 
 /**
  * \brief Index of the compare capture channels
@@ -403,10 +408,10 @@ struct tc_conf {
 	/** Select clock sourse for the TC clock */
 	//TODO set clock param
 	/**
-	 * sleep_enable: When true the module is enabled during sleep
-	 * mode
+	 * run_while_standby: When true the module is enabled during
+	 * standby
 	 */
-	bool sleep_enable; //TODO: sleepen may be renamed to RUNSTDBY
+	bool run_while_standby; //TODO: sleepen may be renamed to RUNSTDBY
 	/** Specifies either 8, 16 or 32 bit counter resolution */
 	enum tc_resolution resolution;
 	/** Specifies the prescaler value for GCLK_TC */
@@ -484,8 +489,7 @@ struct tc_dev_inst {
  *
  * \param hw_dev pointer to module
  */
-static inline void _tc_wait_for_sync(
-		TC_t  *const hw_dev)
+static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
 {
 	/* Sanity check arguments  */
 	Assert(hw_dev);
@@ -511,8 +515,7 @@ static inline void _tc_wait_for_sync(
  *
  * \param[out] config pointer to the config struct
  */
-static inline void tc_get_config_defaults(
-		struct tc_conf *const config)
+static inline void tc_get_config_defaults(struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -522,6 +525,7 @@ static inline void tc_get_config_defaults(
 	config->prescaler                    = TC_PRESCALER_DIV1;
 	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config->reload_action                = TC_RELOAD_ACTION_GCLK;
+	config->sleep_enable                 = false;
 
 	config->waveform_invert_output       = TC_WAVEFORM_INVERT_OUTPUT_NONE;
 	config->capture_enable               = TC_CAPTURE_ENABLE_NONE;
@@ -542,7 +546,8 @@ static inline void tc_get_config_defaults(
 }
 
 
-enum status_code tc_init(TC_t *const tc_module,
+enum status_code tc_init(
+		TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
 		struct tc_conf *const config);
 
@@ -554,8 +559,7 @@ enum status_code tc_init(TC_t *const tc_module,
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_reset(
-		struct tc_dev_inst *dev_inst)
+static inline void tc_reset(struct tc_dev_inst *dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
@@ -579,8 +583,7 @@ static inline void tc_reset(
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_enable(
-		struct tc_dev_inst *const dev_inst)
+static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -604,8 +607,7 @@ static inline void tc_enable(
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_disable(
-		struct tc_dev_inst *const dev_inst)
+static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -644,8 +646,7 @@ enum status_code tc_set_count(
  *
  * \param dev_inst      
  */
-static inline void tc_start_counter(
-		struct tc_dev_inst *const dev_inst)
+static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);

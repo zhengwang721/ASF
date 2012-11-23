@@ -53,8 +53,10 @@
  * \return
  * \retval STATUS_ERR_BUSY    When module is configured in 32 bit slave mode.
  *                            The module will be left un althered in such a case.
+ *                            Also when a reset has been initiated.
  * \retval STATUS_INVALID_ARG When there is invalid data in the config struct.
  * \retval STATUS_OK          When init has compleeted sucsesfuly.
+ * \retval STATUS_ERR_DENIED  When module is enabled.
  */
 enum status_code tc_init(
 		TC_t *const tc_module,
@@ -69,14 +71,26 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
-	if(tc_module->STATUS && TC_SLAVE_bm) {
+	if (tc_module->CTRLA & TC_RESET_bm) {
+		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
 	}
-	/* Disable TC module */
-	tc_disable(dev_inst);
 
-	/*Reset the TC module to ensure it is re-initialized correctly */
-	tc_reset(dev_inst);
+	if (tc_module->STATUS && TC_SLAVE_bm) {
+		/* module is used as a slave*/
+		return STATUS_ERR_BUSY;
+	}
+
+	if (tc_module->CTRLA TC_ENABLE_bm) {
+		/* Module must be disabled before initialization. Abort. */
+		return STATUS_ERR_DENIED;
+	}
+
+	uint16_t run_while_standby_bm = 0;
+
+	if (config->sleep_enable) {
+		run_while_standby_bm = (0x0001 << TC_CTRLA_SLEEPEN_bp);
+	}
 
 	/* Synchronize */
 	tc_wait_for_sync(tc_module);
@@ -85,16 +99,16 @@ enum status_code tc_init(
 	tc_module->CTRLA |= config->resolution | config->wave_generation
 			| config->reload_action | config->clock_prescaler;
 
-	uint8_t ctrlbset_bm = 0;
+	uint8_t temp_ctrlbset_bm = 0;
 	if(config->oneshot)
-		ctrlbset_bm = TC_ONESHOT_ENABLED_bm;
+		temp_ctrlbset_bm = TC_ONESHOT_ENABLED_bm;
 
 	if(config->count_direction)
-		ctrlbset_bm = ctrlbset_bm | TC_COUNT_DIRECTION_DOWN;
+		temp_ctrlbset_bm = ctrlbset_bm | TC_COUNT_DIRECTION_DOWN;
 
-	if(ctrlbset_bm) {//check if we actualy need to go into a wait state.
+	if(temp_ctrlbset_bm) {//check if we actualy need to go into a wait state.
 		tc_wait_for_sync(tc_module);
-		tc_module->CTRLBSET = ctrlbset_bm;
+		tc_module->CTRLBSET = temp_ctrlbset_bm;
 	}
 
 	tc_wait_for_sync(tc_module);
