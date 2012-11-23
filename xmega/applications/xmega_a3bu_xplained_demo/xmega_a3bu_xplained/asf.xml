@@ -20,13 +20,14 @@
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
-		<build type="define" name="_QTOUCH_" value =""/>
+		<build type="define" name="_QTOUCH_" value=""/>
 		<build type="define" name="QT_NUM_CHANNELS" value="4"/>
 		<build type="define" name="QT_DELAY_CYCLES" value="1"/>
 		<build type="define" name="_SNS1_SNSK1_SAME_PORT_" value=""/>
-		<build type="define" name="QTOUCH_STUDIO_MASKS" value="1" />
+		<build type="define" name="QTOUCH_STUDIO_MASKS" value="1"/>
 		<build type="define" name="NUMBER_OF_PORTS" value="1"/>
 		<build type="define" name="SNS" value="F"/>
 		<build type="define" name="SNSK" value="F"/>
+		<device-support value="atxmega256a3bu"/>
 	</project>
 </asf>

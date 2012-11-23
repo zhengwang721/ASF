@@ -108,7 +108,15 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 
 #ifdef USARTC0
 	if ((uint16_t)usart == (uint16_t)&USARTC0) {
+#  ifdef PORT_USART0_bm
+		if (PORTC.REMAP & PORT_USART0_bm) {
+			sck_pin = IOPORT_CREATE_PIN(PORTC, 5);
+		} else {
+			sck_pin = IOPORT_CREATE_PIN(PORTC, 1);
+		}
+#  else
 		sck_pin = IOPORT_CREATE_PIN(PORTC, 1);
+#  endif
 	}
 #endif
 #ifdef USARTC1
@@ -118,7 +126,15 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 #endif
 #ifdef USARTD0
 	if ((uint16_t)usart == (uint16_t)&USARTD0) {
+#  ifdef PORT_USART0_bm
+		if (PORTD.REMAP & PORT_USART0_bm) {
+			sck_pin = IOPORT_CREATE_PIN(PORTD, 5);
+		} else {
+			sck_pin = IOPORT_CREATE_PIN(PORTD, 1);
+		}
+#  else
 		sck_pin = IOPORT_CREATE_PIN(PORTD, 1);
+#  endif
 	}
 #endif
 #ifdef USARTD1
@@ -128,7 +144,15 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 #endif
 #ifdef USARTE0
 	if ((uint16_t)usart == (uint16_t)&USARTE0) {
+#  ifdef PORT_USART0_bm
+		if(PORTE.REMAP & PORT_USART0_bm) {
+			sck_pin = IOPORT_CREATE_PIN(PORTE, 5);
+		} else {
+			sck_pin = IOPORT_CREATE_PIN(PORTE, 1);
+		}
+#  else
 		sck_pin = IOPORT_CREATE_PIN(PORTE, 1);
+#  endif
 	}
 #endif
 #ifdef USARTE1
@@ -138,7 +162,15 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 #endif
 #ifdef USARTF0
 	if ((uint16_t)usart == (uint16_t)&USARTF0) {
+#  ifdef PORT_USART0_bm
+		if(PORTF.REMAP & PORT_USART0_bm) {
+			sck_pin = IOPORT_CREATE_PIN(PORTF, 5);
+		} else {
+			sck_pin = IOPORT_CREATE_PIN(PORTF, 1);
+		}
+#  else
 		sck_pin = IOPORT_CREATE_PIN(PORTF, 1);
+# endif
 	}
 #endif
 #ifdef USARTF1

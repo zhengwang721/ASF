@@ -11,7 +11,7 @@
 		<build type="header-file" value="conf_fatfs.h"/>
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
 		<require idref="common.services.fs.fatfs.unit_tests"/>
 		<require idref="common.components.memory.nand_flash"/>
@@ -22,5 +22,6 @@
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.dlib" value="full"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsam4sd32c"/>
 	</project>
 </asf>

@@ -9,7 +9,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="low_power_board.h"/>
 		<build type="c-source" value="low_power_board.c"/>
-		<build type="include-path" value="." />
+		<build type="include-path" value="."/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.adc"/>
@@ -19,5 +19,6 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<device-support value="atsam3u4e"/>
 	</project>
 </asf>

@@ -6,7 +6,7 @@
 			The data is then formatted and transferred to a remote host for 
 			display using the Atmel Data Visualizer tool.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_twim.h"/>
 		<build type="header-file" value="conf/conf_usart_serial.h"/>
@@ -21,6 +21,7 @@
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3l064"/>
 	</project>
 	<project caption="UC3-A3 Xplained with Xplained Light/Proximity Board #1" id="avr32.applications.uc3-a3_avrsblp1_visualizer">
 		<info type="description" value="summary">
@@ -29,7 +30,7 @@
 			The data is then formatted and transferred to a remote host for 
 			display using the Atmel Data Visualizer tool.
 		</info>
-		<config name="config.common.services.basic.twi.mode" value="master" />
+		<config name="config.common.services.basic.twi.mode" value="master"/>
 		<config name="config.board.uc3_a3_xplained.led" value="yes"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_sleepmgr.h"/>
@@ -45,5 +46,6 @@
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
 	</project>
 </asf>

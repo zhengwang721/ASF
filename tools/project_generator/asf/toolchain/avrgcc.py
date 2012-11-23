@@ -7,6 +7,8 @@ class AVRGCCProject(GenericProject):
 	indent = 10
 	just = 50
 	create_aux_default = GenericProject.config_disabled
+	# Name of the arch-specific makefile to look for
+	makefile_name = 'Makefile.avr.in'
 
 	optlevel_to_setting = {
 			'none'   : '-O0',
@@ -166,9 +168,22 @@ class AVRGCCProject(GenericProject):
 			asf_libs += self._add_list_entry(lib[len("lib"):])
 
 		# Add files for distribution to filelist
+		asf_makefile_path = None
 		for f in self.project.get_build(BuildDistributeFile, self.toolchain) + \
 				self.project.get_build(BuildDistributeUserFile, self.toolchain):
 			self.project.filelist.add(f)
+
+			# Look for the arch-specific makefile in distribute files
+			if os.path.basename(f) == self.makefile_name:
+				# Give an error if multiple makefiles are found
+				if asf_makefile_path:
+					raise ConfigError("Found multiple makefiles: %s, %s" % (asf_makefile_path, f))
+				else:
+					asf_makefile_path = f
+
+		if asf_makefile_path is None:
+			raise ConfigError("Could not find makefile for project `%s'" % self.project.id)
+
 		for d in self.project.get_build(BuildDistributeDirectory, self.toolchain):
 			self._add_dir_to_filelist(d)
 
@@ -176,6 +191,7 @@ class AVRGCCProject(GenericProject):
 		ASF["$ASF_PROJECT$"] = asf_project
 		ASF["$ASF_MCU$"] = asf_mcu
 		ASF["$ASF_ROOT$"] = self.convert_path_for_root(asf_root)
+		ASF["$ASF_MAKEFILE_PATH$"] = self.convert_path_for_root(asf_makefile_path)
 		ASF["$ASF_LIBS$"] = asf_libs
 		ASF["$ASF_LIB_PATH$"] = asf_libpaths
 
@@ -231,6 +247,8 @@ class AVR32GCCProject(AVRGCCProject):
 	config_startfiles = "avr32gcc.use_startfiles"
 	config_startuplabel = "avr32gcc.startup_label"
 	config_trampoline = "config.avr32.utils.trampoline"
+	# Name of the arch-specific makefile to look for
+	makefile_name = 'Makefile.avr32.in'
 
 	def convert_path_for_makefile(self, path):
 		return path.replace(os.sep, "/")
@@ -338,6 +356,7 @@ class AVR32GCCProject(AVRGCCProject):
 
 		ASF['$ASF_LDFLAGS$'] += asf_ldflags.strip()
 
-		self.project.filelist.add("%s/utils/make/Makefile.in" % self.arch_directory)
-		self.project.filelist.add("%s/utils/make/Makefile.avr32program.in" % self.arch_directory)
-		self.project.filelist.add("%s/utils/make/Makefile.batchisp.in" % self.arch_directory)
+		# These should be added as distribution files by the project itself
+		#self.project.filelist.add("avr32/utils/make/Makefile.in")
+		#self.project.filelist.add("avr32/utils/make/Makefile.avr32program.in")
+		#self.project.filelist.add("avr32/utils/make/Makefile.batchisp.in")

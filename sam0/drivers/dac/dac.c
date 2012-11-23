@@ -1,4 +1,5 @@
 /**
+/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -40,13 +41,15 @@
  */
 #include "dac.h"
 
-
 /**
- * \internal Reset the DAC module
+ * \brief Resets the DAC module
+ *
+ * This function will reset the DAC module to its power on default values and
+ * disable it.
  *
  * \param[in] dev_inst Pointer to the DAC software instance struct
  */
-static void _dac_reset(
+void dac_reset(
 		struct dac_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
@@ -77,12 +80,31 @@ static void _dac_set_config(
 		struct dac_dev_inst *const dev_inst,
 		struct dac_conf *const config)
 {
+	struct clock_gclk_ch_conf gclk_ch_conf;
+
+
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
 	DAC_t *const dac_module = dev_inst->hw_dev;
+
+	/* Configure GCLK channel and enable clock */
+	gclk_ch_conf.source_clock = config->clock_source;
+
+	#if defined (REVB)
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->standb_sleep_enable;
+	#else
+	/* Set the GCLK channel sleep enable mode */
+	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
+	#endif
+
+	/* Apply configuration and enable the GCLK channel */
+	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	clock_gclk_ch_enable(DAC_GCLK_ID);
+
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	dev_inst->output = config->output;
@@ -97,7 +119,7 @@ static void _dac_set_config(
 
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->standby_sleep_enable) {
-		dac_module->CTRLB |= DAC_SLEEPEN_bm;
+		dac_module->CTRLA |= DAC_SLEEPEN_bm;
 	}
 }
 
@@ -168,9 +190,6 @@ void dac_init(
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
-
-	/* Reset the module */
-	_dac_reset(dev_inst);
 
 	/* Write configuration to module */
 	_dac_set_config(dev_inst, config);

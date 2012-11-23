@@ -246,6 +246,13 @@ void gfx_ili9341_set_orientation(uint8_t flags);
 #define gfx_draw_bitmap(bmp, x, y) gfx_generic_draw_bitmap(bmp, x, y)
 
 /**
+ * ILI9341 display driver uses generic gfx implementation for this function. See
+ * \ref gfx_generic_set_ext_handler
+ */
+#define gfx_set_ext_handler(ext_draw_handler)\
+	gfx_generic_set_ext_handler(ext_draw_handler)
+
+/**
  * ILI9341 display driver specific function, see
  * \ref ili9341_duplicate_pixel
  */

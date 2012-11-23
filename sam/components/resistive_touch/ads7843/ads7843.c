@@ -94,6 +94,7 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	uint32_t uResult = 0;
 	volatile uint32_t i;
 	uint8_t data;
+	uint32_t timeout = SPI_TIMEOUT;
 
 	/* (volatile declaration needed for code optimisation by compiler) */
 	volatile uint8_t bufferRX[ADS7843_BUFSIZE];
@@ -108,9 +109,21 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 	bufferTX[2] = 0;
 
 	for(i = 0; i < ADS7843_BUFSIZE; i++){
+		timeout = SPI_TIMEOUT;
+		while (!spi_is_tx_ready(BOARD_ADS7843_SPI_BASE)) {
+			if (!timeout--) {
+				return SPI_ERROR_TIMEOUT;
+			}
+		}
 		spi_write_single(BOARD_ADS7843_SPI_BASE, bufferTX[i]);
 	}
 	for(i = 0; i < ADS7843_BUFSIZE; i++){
+		timeout = SPI_TIMEOUT;
+		while (!spi_is_rx_full(BOARD_ADS7843_SPI_BASE)) {
+			if (!timeout--) {
+				return SPI_ERROR_TIMEOUT;
+			}
+		}
 		spi_read_single(BOARD_ADS7843_SPI_BASE, &data);
 		bufferRX[i] = data;
 	}

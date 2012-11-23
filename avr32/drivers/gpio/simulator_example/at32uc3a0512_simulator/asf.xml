@@ -7,8 +7,9 @@
 		<require idref="avr32.drivers.gpio.simulator_example"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="board.avr_simulator_uc3.at32uc3a0512"/>
-		<generator value="avr32gcc" />
-		<generator value="as5_32" />
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
 		<generator value="doxygen"/>
+		<device-support value="at32uc3a0512"/>
 	</project>
 </asf>

@@ -5,9 +5,11 @@
 		<build type="include-path" value="."/>
 		<require idref="common.services.usb.host.tests.generator"/>
 		<require idref="board.sam3x_ek"/>
-		<require idref="sam.drivers.uart" /> 
+		<require idref="sam.drivers.uart"/>
 		<require idref="sam.utils"/>
 		<generator value="iarewarm"/>
-		<generator value="armgcc" />
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsam3x8h"/>
 	</project>
 </asf>
