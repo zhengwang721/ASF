@@ -2212,7 +2212,7 @@ class FindRebuildTest(unittest.TestCase):
 
 		class DummyExtension(object):
 			# Simulate extension with root path in self.files_basedir
-			# giving empty relative root path 
+			# giving empty relative root path
 			root_path = self.files_basedir
 			relative_root_path = "."
 
