@@ -272,6 +272,7 @@ enum clock_dfll_quick_lock {
 };
 
 
+#ifndef WORKAROUND_REVB
 /**
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
  */
@@ -287,6 +288,8 @@ enum clock_main_clock {
 	/** GCLK channel x */
 	CLOCK_MAIN_GCLK, /* GCLK0 ?*/
 };
+#endif
+
 
 /**
  * Available divide ratios for the CPU and bus clocks
@@ -762,6 +765,7 @@ static inline void clock_main_set_failure_detect(bool enable)
 
 }
 
+#ifndef WORKAROUND_REVB
 /**
  *\brief Set the main clock
  *
@@ -775,6 +779,7 @@ static inline void clock_main_set_source(enum clock_main_clock clock)
 {
 	PM.CTRL = (PM.CTRL & ~PM_MCSEL_gm) | (clock & PM_MCSEL_gm) << PM_MCSEL_gp;
 }
+#endif
 
 /**
  * \brief set CPU clock divider
