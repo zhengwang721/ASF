@@ -272,7 +272,7 @@ enum clock_dfll_quick_lock {
 };
 
 
-#ifndef WORKAROUND_REVB
+#if !defined (REVB)
 /**
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
  */
@@ -765,7 +765,7 @@ static inline void clock_main_set_failure_detect(bool enable)
 
 }
 
-#ifndef WORKAROUND_REVB
+#if !defined (REVB)
 /**
  *\brief Set the main clock
  *
