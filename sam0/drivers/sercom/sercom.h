@@ -42,7 +42,7 @@
 #ifndef SERCOM_H_INCLUDED
 #define SERCOM_H_INCLUDED
 
-#include <compiler.h>
+//#include <compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,7 +75,7 @@ extern "C" {
  * @{
  */
 #include "sercom_header.h"
-#include "sercom_interrupts.h"
+//#include "sercom_interrupts.h"
 
 
 struct i2c_master_dev_inst;

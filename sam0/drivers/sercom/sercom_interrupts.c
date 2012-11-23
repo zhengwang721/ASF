@@ -40,12 +40,94 @@
  */
 #include <sercom_interrupts.h>
 
+#ifdef USART_ASYNC
+#include <usart.h>
+#else
+struct usart_dev_inst;
+#endif
+#ifdef SPI_ASYNC
+#include <spi.h>
+#else
+struct spi_dev_inst{};
+#endif
+
+static uint8_t handler_table_initialized = 0;
+
+static void *_sercom_instances[SERCOM_INST];
+
+static void (*_sercom_handlers[SERCOM_INST])(uint8_t instance);
+
+/* */
+union _sercom_dev_inst {
+	/** Mode of the SERCOM hardware instance */
+	uint8_t mode;
+	/** Pointer to the SERCOM hardware instance*/
+	SERCOM_t *hw_dev;
+	/** Device struct for the USART mode */
+	struct usart_dev_inst usart;
+	/** Device struct for the SPI mode */
+	struct spi_dev_inst spi;
+};
 
 uint8_t _sercom_get_current_irq_index(void)
 {
 	/* Find in some core register */
 	//TODO!
 }
+
+/**
+ * \internal 
+ *
+ *
+ * param[]
+ *
+ * returns 
+ * retval  
+ */
+//TODO: move to sercom
+
+enum status_code _sercom_register_dev_inst_ptr(union _sercom_dev_inst *const dev_inst)
+{
+	/* Variable for array index */
+	uint8_t instance_index;
+
+	/* Save device instance structure pointer. */
+	uint32_t sercom_module = (uint32_t)dev_inst->hw_dev;
+
+	/**/
+
+	switch(sercom_module){
+		//TODO: fix casting
+
+		case (uint32_t)&SERCOM0:
+			instance_index = 0;
+			break;
+
+		case (uint32_t)&SERCOM1:
+			instance_index = 1;
+			break;
+
+		case (uint32_t)&SERCOM2:
+			instance_index = 2;
+			break;
+
+		case (uint32_t)&SERCOM3:
+			instance_index = 3;
+			break;
+
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Save device instance pointer */
+	_sercom_instances[instance_index] = dev_inst;
+
+	return STATUS_OK;
+}
+
+
+
 
 /* Interrupt Service Routine */
 void SERCOM_Handler(void)
@@ -54,7 +136,7 @@ void SERCOM_Handler(void)
 	uint16_t interrupt_status;
 	uint16_t callback_status;
 
-	/* Sercom mode is contained in the first byte of dev_inst */
+	/* Sercom mode is contained in the first byte of *Æ*dev_inst */
 	uint8_t mode = *(uint8_t *)_sercom_instances[instance];
 
 	switch(mode) {
@@ -62,97 +144,6 @@ void SERCOM_Handler(void)
 		{
 			/* TODO: Implementation for the SPI async driver */
 			break;
-		}
-		case SERCOM_MODE_USART:
-		{
-			/* Get device instance from the look-up table */
-			struct usart_dev_inst *dev_inst = (struct usart_dev_inst *)_sercom_instances[instance];
-
-			/* Sanity check content from the look-up table */
-			Assert(dev_inst);
-			Assert(dev_inst->hw_dev);
-
-			/* Pointer to the hardware module instance */
-			SERCOM_USART_t *const usart_module =
-					&(dev_inst->hw_dev->USART);
-
-			/* Read and mask interrupt flag register */
-			interrupt_status = usart_module->INTFLAGS;
-			callback_status = interrupt_status
-					&dev_inst->callback_reg_mask
-					&dev_inst->callback_enable_mask;
-
-			/* Check if a DATA READY interrupt has occurred,
-			 * and if there if there is more to transfer */
-			if (interrupt_status & SERCOM_USART_DREIF_bm
-				&& dev_inst->remaining_tx_buffer_length) {
-
-				/* Check if there is only one more transmission
-				 * to make */
-				if (dev_inst->remaining_tx_buffer_length == 1) {
-					/* Disable the Data Register Empty
-					 * Interrupt Flag (DREIF) */
-					usart_module->INTENCLR =
-							SERCOM_USART_DREIF_bm;
-				}
-
-				/* Write current packet from transmission buffer
-				 * and increment buffer pointer */
-				//TODO: casting
-				if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
-					usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
-							& SERCOM_USART_DATA_gm;
-					(dev_inst->tx_buffer_ptr)+2;
-
-				} else {
-					usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
-							& SERCOM_USART_DATA_gm;
-					(dev_inst->tx_buffer_ptr)++;
-
-				}
-
-				/* Decrement buffer length */
-				(dev_inst->remaining_tx_buffer_length)--;
-			}
-
-			if ((callback_status & SERCOM_USART_TXCIF_bm) &&
-					!dev_inst->remaining_tx_buffer_length){
-				(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED]))(dev_inst);
-
-			}
-
-			if ((callback_status & SERCOM_USART_RXCIF_bm) &&
-					!dev_inst->remaining_rx_buffer_length){
-
-				/* Check if the reception buffer has data
-				 * to receive */
-				if (dev_inst->remaining_rx_buffer_length) {
-					/* Read current packet from DATA register,
-					 * increment buffer pointer and decrement buffer length */
-					if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
-						/* Read out from DATA and increment 8bit ptr by two */
-						*(dev_inst->rx_buffer_ptr) =
-								(usart_module->DATA & SERCOM_USART_DATA_gm);
-						dev_inst->tx_buffer_ptr+2;
-					} else {
-						/* Read out from DATA and increment 8bit ptr by one */
-						*(dev_inst->rx_buffer_ptr) =
-								(usart_module->DATA & SERCOM_USART_DATA_gm);
-						dev_inst->tx_buffer_ptr++;
-					}
-
-					/* Decrement length of the remaining buffer */
-					(dev_inst->remaining_rx_buffer_length)--;
-
-				} else {
-					/* If the transmission buffer is empty,
-					 * run callback*/
-					(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED]))(dev_inst);
-				}
-
-			}
-		break;
-
 		}
 		case SERCOM_MODE_I2C:
 		{

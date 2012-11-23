@@ -1,12 +1,12 @@
-#define USART_ASYNC
-
 #ifdef USART_ASYNC
-#include <usart_async.h>
+#  include <usart_async.h>
+#else
+#  include <usart.h>
 #endif
 int main (void) 
 {
 	struct usart_dev_inst dev_inst;
-	struct usart_config config_struct;
+	struct usart_conf config_struct;
 
 	usart_async_callback_t *callback_function;
 

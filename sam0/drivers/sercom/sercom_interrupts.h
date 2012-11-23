@@ -42,11 +42,15 @@
 #define SERCOM_INTERRUPTS_H_INCLUDED
 
 #define SERCOM_INSTANCES 4
-#include <usart.h>
+
 #include <sercom.h>
 
-/* Lookup table containing sercom instances which have registered callback functions */
-uint32_t _sercom_instances[SERCOM_INSTANCES];
+/* Prototype for the SERCOM union */
+union _sercom_dev_inst;
+
+/* Lookup table containing SERCOM instances which have registered
+ * callback functions */
+//union _sercom_dev_inst *_sercom_instances[SERCOM_INSTANCES];
 
 void SERCOM_Handler(void);
 

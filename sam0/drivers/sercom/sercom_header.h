@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#define SERCOM_INST 6
 
 //TODO: remove
 enum status_code {
@@ -12,6 +13,7 @@ enum status_code {
 	STATUS_ERR_IO,
 	STATUS_ERR_TIMEOUT,
 	STATUS_ERR_UNSUPPORTED_DEV,
+	STATUS_ERR_DENIED,
 };
 #define Assert(expr) \
 {\
@@ -165,6 +167,7 @@ typedef enum {
 
 
 #define SERCOM_USART_ENABLE_bm 0x00000002
+#define SERCOM_USART_RESET_bm  0x00000001
 #define SERCOM_USART_CSRC_bm (1 << 31)
 #define SERCOM_USART_DORD_bm (1 << 30)
 #define SERCOM_USART_CPOL_bm (1 << 29)
