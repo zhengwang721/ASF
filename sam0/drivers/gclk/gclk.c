@@ -139,7 +139,7 @@ void clock_gclk_gen_set_config(
 			/* Set binary divider power of 2 division factor */
 			GCLK.GENDIV |= (div2_count << GCLK_GENDIV_DIV_gp);
 
-			#ifndef WORKAROUND_REVB
+			#if !defined (REVB)
 			/* Enable binary division */
 			GCLK.GENCTRL |= GCLK_GENCTRL_DIVEN_bm;
 			GCLK.GENCTRL &= ~(GCLK_GENCTRL_IDC_bm | GCLK_GENCTRL_DIVFN_bm);
@@ -153,7 +153,7 @@ void clock_gclk_gen_set_config(
 			GCLK.GENDIV
 				|= (config->division_factor <<
 					GCLK_GENDIV_DIV_gp);
-			#ifdef WORKAROUND_REVB
+			#if defined (REVB)
 			/* Enable non-binary division with increased duty cycle accuracy */
 			GCLK.GENCTRL |= GCLK_GENCTRL_IDC_bm | GCLK_GENCTRL_DIVSEL_bm;
 			#else
@@ -166,7 +166,7 @@ void clock_gclk_gen_set_config(
 
 		}
 	} else {
-		#ifdef WORKAROUND_REVB
+		#if defined (REVB)
 		/* Disable clock division, divide by 1 */
 		GCLK.GENCTRL &= GCLK_GENCTRL |= GCLK_GENCTRL_DIVSEL_bm;
 		GCLK.GENDIV = 1;
@@ -175,7 +175,7 @@ void clock_gclk_gen_set_config(
 		GCLK.GENCTRL &= ~GCLK_GENCTRL_DIVEN_bm;
 		#endif
 	}
-	#ifdef WORKAROUND_REVB
+	#if defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->run_in_standby) {
 		GCLK.GENCTRL |= GCLK_GENCTRL_RUNSTDBY_bm;
@@ -290,7 +290,7 @@ void clock_gclk_ch_set_config(
 	GCLK_MUX_SELECT(GCLK.CLKCTRL, GCLK_CLKCTRL_GENID,
 			config->source_generator);
 
-	#ifndef WORKAROUND_REVB
+	#if !defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->enable_during_sleep) {
 		GCLK.CLKCTRL |= GCLK_CLKCTRL_SLPMASK_bm;
