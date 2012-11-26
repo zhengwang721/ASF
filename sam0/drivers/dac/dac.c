@@ -93,8 +93,8 @@ static void _dac_set_config(
 	gclk_ch_conf.source_generator = config->clock_source;
 
 	#if defined (REVB)
-	/* Set the GCLK channel run in standby mode */
-	gclk_ch_conf.run_in_standby = config->standb_sleep_enable;
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->standby_sleep_enable;
 	#else
 	/* Set the GCLK channel sleep enable mode */
 	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
