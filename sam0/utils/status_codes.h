@@ -63,7 +63,7 @@
 
 /** Status code error categories. */
 enum status_categories {
-	STATUS_CATEGORY_NONE              = 0x00,
+	STATUS_CATEGORY_OK                = 0x00,
 	STATUS_CATEGORY_COMMON            = 0x10,
 	STATUS_CATEGORY_ANALOG            = 0x30,
 	STATUS_CATEGORY_COM               = 0x40,
@@ -80,7 +80,9 @@ enum status_categories {
  * at the same time.
  */
 enum status_code {
-	STATUS_OK                         = STATUS_CATEGORY_NONE   | 0x00,
+	STATUS_OK                         = STATUS_CATEGORY_OK     | 0x00,
+	STATUS_VALID_DATA                 = STATUS_CATEGORY_OK     | 0x01,
+	STATUS_NO_CHANGE                  = STATUS_CATEGORY_OK     | 0x02,
 
 	STATUS_ERR_IO                     = STATUS_CATEGORY_COMMON | 0x00,
 	STATUS_ERR_REQ_FLUSHED            = STATUS_CATEGORY_COMMON | 0x01,
@@ -93,6 +95,8 @@ enum status_code {
 	STATUS_ERR_BUSY                   = STATUS_CATEGORY_COMMON | 0x09,
 	STATUS_ERR_BAD_FORMAT             = STATUS_CATEGORY_COMMON | 0x0A,
 	STATUS_ERR_BAD_FRQ                = STATUS_CATEGORY_COMMON | 0x0B,
+	STATUS_ERR_DENIED                 = STATUS_CATEGORY_COMMON | 0x0c,
+	STATUS_ERR_ALREADY_INITIALIZED    = STATUS_CATEGORY_COMMON | 0x0d,
 
 	STATUS_ERR_SAMPLERATE_UNAVAILABLE = STATUS_CATEGORY_ANALOG | 0x00,
 	STATUS_ERR_RESOLUTION_UNAVAILABLE = STATUS_CATEGORY_ANALOG | 0x01,

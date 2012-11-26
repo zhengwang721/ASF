@@ -47,6 +47,8 @@ extern "C" {
 #endif
 
 #include <compiler.h>
+#include <clock.h>
+#include <gclk.h>
 
 /**
  * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
@@ -384,6 +386,8 @@ struct dac_conf {
 	enum dac_output output;
 	/** Left adjusted data */
 	bool left_adjust;
+	/** GCLK generator used to clock the peripheral */
+	enum gclk_generator clock_source;
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
@@ -432,6 +436,7 @@ void dac_init(
  *   \li 1V from internal bandgap reference
  *   \li Drive the DAC output to the VOUT pin
  *   \li Right adjust data
+ *   \li GCLK generator 0 (GCLK main) clock source
  *   \li The output buffer is disabled when the chip enters STANDBY sleep
  *       mode
  *
@@ -447,6 +452,7 @@ static inline void dac_get_config_defaults(
 	config->reference =            DAC_REF_INT1V;
 	config->output =               DAC_OUTPUT_EXTERNAL;
 	config->left_adjust =          false;
+	config->clock_source =         GCLK_GENERATOR_0;
 	config->standby_sleep_enable = false;
 };
 

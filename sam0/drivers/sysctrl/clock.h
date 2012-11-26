@@ -143,6 +143,64 @@
 /* TODO: Where to put this ? */
  #define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
 
+
+/**
+ * Available GCLK generators. This enum is used in the peripheral device
+ * drivers to select the GCLK generator to be used for its operation.
+ * The amount of GCLK generators is device dependent.
+ */
+enum gclk_generator {
+	GCLK_GENERATOR_0
+#if GCLK_GEN_NUM_MSB > 0
+	GCLK_GENERATOR_1
+#endif
+#if GCLK_GEN_NUM_MSB > 1
+	GCLK_GENERATOR_2
+#endif
+#if GCLK_GEN_NUM_MSB > 2
+	GCLK_GENERATOR_3
+#endif
+#if GCLK_GEN_NUM_MSB > 3
+	GCLK_GENERATOR_4
+#endif
+#if GCLK_GEN_NUM_MSB > 4
+	GCLK_GENERATOR_5
+#endif
+#if GCLK_GEN_NUM_MSB > 5
+	GCLK_GENERATOR_6
+#endif
+#if GCLK_GEN_NUM_MSB > 6
+	GCLK_GENERATOR_7
+#endif
+#if GCLK_GEN_NUM_MSB > 7
+	GCLK_GENERATOR_8
+#endif
+#if GCLK_GEN_NUM_MSB > 8
+	GCLK_GENERATOR_9
+#endif
+#if GCLK_GEN_NUM_MSB > 9
+	GCLK_GENERATOR_10
+#endif
+#if GCLK_GEN_NUM_MSB > 10
+	GCLK_GENERATOR_11
+#endif
+#if GCLK_GEN_NUM_MSB > 11
+	GCLK_GENERATOR_12
+#endif
+#if GCLK_GEN_NUM_MSB > 12
+	GCLK_GENERATOR_13
+#endif
+#if GCLK_GEN_NUM_MSB > 13
+	GCLK_GENERATOR_14
+#endif
+#if GCLK_GEN_NUM_MSB > 14
+	GCLK_GENERATOR_15
+#endif
+#if GCLK_GEN_NUM_MSB > 15
+	GCLK_GENERATOR_16
+#endif
+};
+
 /**
  * Available start up times for the external oscillators
  */
@@ -230,6 +288,7 @@ enum clock_dfll_quick_lock {
 };
 
 
+#if !defined (REVB)
 /**
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
  */
@@ -245,6 +304,8 @@ enum clock_main_clock {
 	/** GCLK channel x */
 	CLOCK_MAIN_GCLK, /* GCLK0 ?*/
 };
+#endif
+
 
 /**
  * Available divide ratios for the CPU and bus clocks
@@ -720,6 +781,7 @@ static inline void clock_main_set_failure_detect(bool enable)
 
 }
 
+#if !defined (REVB)
 /**
  *\brief Set the main clock
  *
@@ -733,6 +795,7 @@ static inline void clock_main_set_source(enum clock_main_clock clock)
 {
 	PM.CTRL = (PM.CTRL & ~PM_MCSEL_gm) | (clock & PM_MCSEL_gm) << PM_MCSEL_gp;
 }
+#endif
 
 /**
  * \brief set CPU clock divider
