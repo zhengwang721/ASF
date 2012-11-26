@@ -1,5 +1,4 @@
 /**
-/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -91,7 +90,7 @@ static void _dac_set_config(
 	DAC_t *const dac_module = dev_inst->hw_dev;
 
 	/* Configure GCLK channel and enable clock */
-	gclk_ch_conf.source_clock = config->clock_source;
+	gclk_ch_conf.source_generator = config->clock_source;
 
 	#if defined (REVB)
 	/* Set the GCLK channel to run in standby mode */
