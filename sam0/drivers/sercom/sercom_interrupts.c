@@ -55,6 +55,30 @@ void _sercom_default_handler(uint8_t instance)
 	Assert(false);
 }
 
+/* Find sercom instance. */
+uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance)
+{
+	/* Variable used for iteration. */
+	uint8_t i;
+
+	/* Save address of sercom instance. */
+	uint32_t hw_dev = (uint32_t)sercom_instance;
+
+	/* Array of sercom instances. */
+	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = SERCOM_INSTS;
+
+	/* Fine index for sercom instance. */
+	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
+		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
+			return i;
+		}
+	}
+
+	/* Unvalid data given. */
+	Assert(false);
+	return 0;
+}
+
 /**
  */
 void _sercom_set_handler(uint8_t instance,
@@ -77,7 +101,7 @@ void _sercom_set_handler(uint8_t instance,
 void SERCOM_Handler(void)
 {
 	/* Something something. */
-	uint8_t instance = get_irq();
+	uint8_t instance = 1;
 
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[instance] (instance);

@@ -38,16 +38,19 @@
  * \asf_license_stop
  *
  */
-#ifndef __SERCOM_INTERRUPTS__
-#define __SERCOM_INTERRUPTS__
-
-#define SERCOM_INSTANCES 4
+#ifndef SERCOM_INTERRUPTS_H_INCLUDED
+#define SERCOM_INTERRUPTS_H_INCLUDED
 
 #include <sercom.h>
 #include <asf.h>
 
+#define SERCOM_INSTS_NUM 6
+#define SERCOM_INSTS     { 0, 0, 0, 0, 0, 0 }
+
 /* Look-up table for device instances. */
 static void *_sercom_instances[SERCOM_INSTS_NUM];
+
+uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance);
 
 void _sercom_set_handler(uint8_t instance,
 		void (*interrupt_handler) (uint8_t instance));

@@ -42,7 +42,76 @@
 #include <i2c_master.h>
 
 #define I2C_MASTER_SWRST_Pos 0
+#define SERCOM_MODE_I2C 0
+#define SERCOM_I2C_MASTER 0
+#define SERCOM_I2C_MODE 0
+#define I2C_MASTER_RUNINSTDBY_Pos 0
 
+/**
+ * \breif blabla
+ * \param  dev_inst [description]
+ * \param  config   [description]
+ * \return          [description]
+ */
+enum status_code _i2c_master_set_config(
+		struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_conf *const config)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(config);
+
+	/* Temporary variables. */
+	uint32_t tmp_config = 0;
+	enum status_code tmp_status_code = STATUS_OK;
+
+	/* Configuration structure for the gclk channel. */
+	struct clock_gclk_ch_conf gclk_ch_conf;
+
+	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+
+	/* Save timeout on unknown bus state in device instance. */
+	dev_inst->unkown_bus_state_timeout = config->unkown_bus_state_timeout;
+	/* Save timeout on buffer write. */
+	dev_inst->buffer_timeout = config->buffer_timeout;
+
+	/* Check and set if module should run in standby. */
+	if (config->run_in_standby) {
+		tmp_config = (1 << I2C_MASTER_RUNINSTDBY_Pos);
+	}
+
+	/* Check and set start data hold timeout. */
+	if (config->start_hold_time != I2C_MASTER_START_HOLD_TIME_DISABLED) {
+		tmp_config |= config->start_hold_time;
+	}
+
+	/* Write config to register CTRLA. */
+	i2c_module.CTRLA |= tmp_config;
+
+
+	/* Configure GCLK channel and enable clock */
+	gclk_ch_conf.source_clock = config->clock_source;
+#if defined (REVB)
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->run_in_standby;
+#else
+	/* Set the GCLK channel sleep enable mode */
+	gclk_ch_conf.enable_during_sleep = config->run_in_standby;
+#endif
+	/* Apply configuration and enable the GCLK channel */
+	clock_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+	clock_gclk_ch_enable(SERCOM_GCLK_ID);
+
+}
+
+/**
+ * \brief blalbalba
+ * \param  dev_inst [description]
+ * \param  module   [description]
+ * \param  config   [description]
+ * \return          [description]
+ */
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		SERCOM_t *const module,
 		const struct i2c_master_conf *const config)
@@ -53,11 +122,46 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	Assert(module);
 	Assert(config);
 
+	uint8_t sercom_instance;
 
-	_sercom_set_dev_inst(instance, (void*) dev_inst);
-	_sercom_set_handler(instance, (void*)(i2c_master_callback_handler)(instance));
+	/* Initialize device instance */
+	dev_inst->hw_dev = module;
+
+	SERCOM_I2C_MASTER_t i2c_module = module->I2C_MASTER;
+
+	/* Check if module is enabled. */
+	if(i2c_module.CTRLA & (1 << I2C_MASTER_ENABLE_Pos)) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if reset is in progress. */
+	if (i2c_module.CTRLA & ( 1 << I2C_MASTER_SWRST_Pos)){
+		return STATUS_ERR_BUSY;
+	}
+
+#ifdef I2C_MASTER_ASYNC
+	/* Get sercom instance index. */
+	sercom_instance = _sercom_get_sercom_instance(module);
+
+	/* Save device instance in interrupt handler. */
+	_sercom_set_handler(instance, (void*)(&_i2c_master_callback_handler));
+
+	/* Save device instance. */
+	_sercom_instances[sercom_instance] = (void) dev_inst;
+#endif
+
+	/* Set sercom module to operate in I2C master mode. */
+	i2c_module.CTRLA = SERCOM_I2C_MODE |
+			SERCOM_I2C_MASTER;
+
+	/* Set config and return status. */
+	return _i2c_master_set_config(dev_inst, config);
 }
 
+/**
+ * \breif blablabla
+ * \param dev_inst [description]
+ */
 void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments. */
