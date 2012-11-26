@@ -108,4 +108,7 @@ typedef struct {
 #define DAC_REF_AVCC_bm   (1UL << 6)
 #define DAC_REF_AREF_bm   (1UL << 7)
 
+#define DAC_GCLK_ID       26
+
+
 #endif /* __SAM0XX_COMPONENT_DAC__ */
