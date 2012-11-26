@@ -41,13 +41,6 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_NONE,
 }
 
-enum system_interrupt_status_flag {
-	SYSTEM_INTERRUPT_STATUS_PENDING_NMI,
-	SYSTEM_CPU_STATUS_PENDING_SV,
-	SYSTEM_CPU_STATUS_PENDING_ST,
-	SYSTEM_INTERRUPT_STATUS_PENDING_ISR,
-};
-
 enum system_interrupt_priotity {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1,
@@ -55,17 +48,15 @@ enum system_interrupt_priotity {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
 }
 
-
+enum system_interrupt_status_flag {
+	SYSTEM_INTERRUPT_STATUS_PENDING_NMI,
+	SYSTEM_INTERRUPT_STATUS_PENDING_SYSTICK,
+}
 
 struct system_interrupt_critical_section {
 	volatile bool lock;
 	volatile uint32_t context;
 }
-
-
-
-
-bool system_interrupt_get_status_flag(enum system_interrupt_status_flag status_flag);
 
 
 /**
@@ -81,7 +72,7 @@ enum status_code system_interrupt_end_critical_section(struct system_interrupt_c
 /**
  * \brief Check if interrupt vector is enabled or not
  */
-bool system_interrupt_is_interupt_enabled(enum system_interrupt_vector vector);
+bool system_interrupt_is_enabled(enum system_interrupt_vector vector);
 
 /**
  * \brief Enable interrupt vector
@@ -96,12 +87,12 @@ enum status_code system_interrupt_disable(enum system_interrupt_vector vector);
 /**
  * \brief Get active interrupt if any
  */
-enum system_interrupt_vector  system_interrupt_get_active(void);
+enum system_interrupt_vector system_interrupt_get_active(void);
 
 /**
  * \brief Check if a interrupt line is pending
  */
-uint32_t system_interrupt_is_interrupt_pending(void);
+bool system_interrupt_is_pending(enum system_interrupt_vector vector);
 
 /**
  * \brief Set a interrupt vector as pending
@@ -124,7 +115,20 @@ void system_interrupt_set_priority(enum system_interrupt_vector vector,
  */
 enum system_interrupt_priority system_interrupt_get_priority(enum system_interrupt_vector vector);
 
-void system_interrupt_
 
+/**
+ * \brief Set interrupt control status flag
+ */
+void system_interrupt_set_status_flag(enum system_interrupt_status_flag status_flag);
+
+/**
+ * \brief Check if interrupt control status flag is set
+ */
+bool system_interrupt_is_status_flag_set(enum system_interrupt_status_flag status_flag);
+
+/**
+ * \brief Clear interrupt control status flag
+ */
+void system_interrupt_clear_status_flag(enum system_interrupt_status_flag status_flag);
 
 #endif
