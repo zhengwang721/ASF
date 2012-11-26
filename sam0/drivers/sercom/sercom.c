@@ -41,6 +41,20 @@
 #include <sercom.h>
 
 #define SHIFT 1
+#define SERCOM_GCLK_ID 0
+/**
+ * \internal Configuration structure to save current gclk status.
+ */
+struct _sercom_gclk_conf {
+	/* Status of gclk generator initialization. */
+	bool generator_is_set;
+	/* Sercom gclk generator used. */
+	enum gclk_generator generator_source;
+	/* Will generator be operational in standby. */
+	bool run_in_standby;
+};
+
+static struct _sercom_gclk_conf *sercom_gclk_config;
 
 /**
  * \brief Calculate synchronous baudrate value (SPI/UART)
@@ -87,4 +101,51 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 	*baudval = retval;
 
 	return STATUS_OK;
+}
+
+enum status_code sercom_set_gclk_generator(
+		enum gclk_generator generator_source,
+		bool run_in_standby,
+		bool force_change)
+{
+	/* Configuration structure for the gclk channel. */
+	struct clock_gclk_ch_conf gclk_ch_conf;
+
+	/* Return argument. */
+	enum status_code ret_val;
+
+	/* Check if valid option. */
+	if(!sercom_gclk_config->generator_is_set || force_change) {
+		sercom_gclk_config->generator_is_set = true;
+
+		/* Configure GCLK channel and enable clock */
+		gclk_ch_conf.source_generator = generator_source;
+#if defined (REVB)
+		/* Set the GCLK channel to run in standby mode */
+		gclk_ch_conf.run_in_standby = run_in_standby;
+#else
+		/* Set the GCLK channel sleep enable mode */
+		gclk_ch_conf.enable_during_sleep = run_in_standby;
+#endif
+		/* Apply configuration and enable the GCLK channel */
+		clock_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+		clock_gclk_ch_enable(SERCOM_GCLK_ID);
+
+		/* Save config. */
+		sercom_gclk_config->generator_source = generator_source;
+		sercom_gclk_config->run_in_standby = run_in_standby;
+
+		ret_val = STATUS_OK;
+
+	} else if (generator_source == sercom_gclk_config->generator_source &&
+			run_in_standby == sercom_gclk_config->run_in_standby) {
+		/* Return status OK if same config. */
+		ret_val = STATUS_OK;
+
+	} else {
+		/* Return invalid config to already initialized gclk. */
+		ret_val = STATUS_ERR_ALREADY_INITIALIZED;
+	}
+
+	return ret_val;
 }

@@ -42,7 +42,8 @@
 #ifndef __SERCOM_H_INCLUDED
 #define __SERCOM_H_INCLUDED
 
-#include <compiler.h>
+#include <asf.h>
+#include <clock.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,6 +76,11 @@ extern "C" {
  * @{
  */
 #include <sercom_interrupts.h>
+
+enum status_code sercom_set_gclk_generator(
+		enum gclk_generator generator_source,
+		bool run_in_standby,
+		bool force_change);
 
 enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);

@@ -46,6 +46,7 @@
 #define SERCOM_I2C_MASTER 0
 #define SERCOM_I2C_MODE 0
 #define I2C_MASTER_RUNINSTDBY_Pos 0
+#define SERCOM_GCLK_ID 0
 
 /**
  * \breif blabla
@@ -64,10 +65,8 @@ enum status_code _i2c_master_set_config(
 
 	/* Temporary variables. */
 	uint32_t tmp_config = 0;
+	uint8_t tmp_baud;
 	enum status_code tmp_status_code = STATUS_OK;
-
-	/* Configuration structure for the gclk channel. */
-	struct clock_gclk_ch_conf gclk_ch_conf;
 
 	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
 
@@ -89,20 +88,22 @@ enum status_code _i2c_master_set_config(
 	/* Write config to register CTRLA. */
 	i2c_module.CTRLA |= tmp_config;
 
+	/* Set sercom gclk generator according to config. */
+	tmp_status_code = sercom_set_gclk_generator(
+		config->generator_source,
+		config->run_in_standby,
+		false);
+	/* Return status code if not OK. */
+	if (tmp_status_code != STATUS_OK) {
+		return tmp_status_code;
+	}
 
-	/* Configure GCLK channel and enable clock */
-	gclk_ch_conf.source_clock = config->clock_source;
-#if defined (REVB)
-	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->run_in_standby;
-#else
-	/* Set the GCLK channel sleep enable mode */
-	gclk_ch_conf.enable_during_sleep = config->run_in_standby;
-#endif
-	/* Apply configuration and enable the GCLK channel */
-	clock_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	clock_gclk_ch_enable(SERCOM_GCLK_ID);
+	/* Find and set baudrate. */
+	tmp_baud = (uint8_t)(clock_gclk_ch_get_hz(SERCOM_GCLK_ID)
+			 / (2*config->baud_rate)-5);
+	i2c_module.BAUD = tmp_baud;
 
+	return tmp_status_code;
 }
 
 /**

@@ -43,6 +43,7 @@
 #define I2C_MASTER_H_INCLUDED
 
 #include <asf.h>
+#include <clock.h>
 
 #ifdef I2C_MASTER_ASYNC
 # include <i2c_master_async.h>
@@ -93,9 +94,9 @@ enum i2c_master_start_hold_time {
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz. */
-	I2C_MASTER_BAUD_RATE_100KHZ = 0,
+	I2C_MASTER_BAUD_RATE_100KHZ = 100,
 	/** Baud rate at 400kHz. */
-	I2C_MASTER_BAUD_RATE_400KHZ = 1,
+	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
 /**
@@ -141,7 +142,7 @@ struct i2c_master_conf {
 	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
 	/** GCLK generator to use as clock source. */
-	enum gclk_generator clock_source;
+	enum gclk_generator generator_source;
 	/** Bus hold time after start signal on data line. */
 	enum i2c_master_start_hold_time start_hold_time;
 	/** Unknown bus state timeout. */
@@ -195,7 +196,7 @@ static inline void i2c_master_get_config_defaults(
 	/*Sanity check argument. */
 	Assert(config);
 	config->baud_rate = I2C_MASTER_BAUD_RATE_100KHZ;
-	config->clock_source = GCLK_GENERATOR_0;
+	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
 	config->buffer_timeout = 1000;
