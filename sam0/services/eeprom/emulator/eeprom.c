@@ -12,9 +12,9 @@
 			err = #function; \
 		} while (err == STATUS_ERR_BUSY);
 
-/* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to check as uint32_t values  
-   than a string compare. But this numbers will show up as the string in studio memory view, 
-   which makes the data easy to identify */
+/* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to
+   check as uint32_t values than a string compare. But this numbers will show
+   up as the string in studio memory view, which makes the data easy to identify */
 #define EEPROM_MAGIC_KEY_0                 0x41744545
 #define EEPROM_MAGIC_KEY_1                 0x50524f4d
 #define EEPROM_MAGIC_KEY_2                 0x456d752e
@@ -72,7 +72,7 @@ struct _eeprom_master_page {
 	uint8_t  major_version;
 	uint8_t  minor_version;
 	uint8_t  revision;
-	uint8_t  
+	uint8_t  emualtor_id; 
 
 	/* Unused bytes in the page */
 	uint8_t  reserved[45];
@@ -100,8 +100,8 @@ struct _eeprom_emulator_device_struct {
 };
 
 struct _eeprom_emulator_device_struct _eemprom_emulator_device = {
-									.initialized = false,
-								}
+		.initialized = false,
+		}
 /**
  * \brief Function to initialize memory to initial state
  *
@@ -116,7 +116,7 @@ static void _eeprom_emulator_create_memory(void)
 	for (ppage = 0; ppage < (_eeprom_emulator_device.physical_pages  - 4); ++ppage) {
 		/* Is this a new row? */
 		if (ppage%4 == 0) {
-			nvm_erase_row(ppage / 4);	
+			nvm_erase_row(ppage / 4);
 		}
 
 		/* Is this the first or second page of a row? */
@@ -124,7 +124,7 @@ static void _eeprom_emulator_create_memory(void)
 			data.header[EEPROM_STATUS_BYTE] = 0x40;
 			data.header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
-			wait_for_function(nvm_write_page(_eeprom_emulator_device. 
+			wait_for_function(nvm_write_page(_eeprom_emulator_device.
 					flash_page_ofset+ ppage, (uint32_t*)&data));
 
 			lpage++;
@@ -244,7 +244,9 @@ static void _eeprom_emulator_scan_row(uint8_t row, struct _eeprom_page_translate
 {
 	struct _eeprom_data *row_data =
 			(struct _eeprom_data*)&_eeprom_emulation_device.flash[row * FLASH_ROW_SIZE];
-	uint8_t c, c2=0, c3=0;
+	uint8_t c;
+	uint8_t c2=0;
+	uint8_t c3=0;
 
 	/* We assume that there are some content on the first tow pages */
 	page_trans[0].lpage = row_data[0].header[EEPROM_PAGE_NUMBER_BYTE];
@@ -349,6 +351,7 @@ static void _eeprom_emulator_create_master_page(void)
 	master_page.major_version = EEPROM_MAJOR_VERSION;
 	master_page.minor_version = EEPROM_MINOR_VERSION;
 	master_page.revision      = EEPROM_REVISION;
+	master_page.emualtor_id   = EEPROM_EMULATOR_ID;
 
 	eeprom_emulator_write_page(EEPROM_MASTER_PAGE_NUMBER, (uint32_t*)&master_page);
 }
@@ -395,6 +398,9 @@ enum status_code eeprom_emulator_init(void)
 		}
 
 	}
+
+	if(master_page.emulator_id != EEPROM_EMULATOR_ID)
+		return STATUS_ERR_BAD_FORMAT;
 
 	_eeprom_emulator_clean_memory();
 
