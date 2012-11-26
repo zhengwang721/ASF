@@ -47,6 +47,7 @@ extern "C" {
 #endif
 
 #include <compiler.h>
+#include <clock.h>
 #include <gclk.h>
 
 /**
@@ -386,7 +387,7 @@ struct dac_conf {
 	/** Left adjusted data */
 	bool left_adjust;
 	/** GCLK generator used to clock the peripheral */
-	enum gclk_generator clock_source
+	enum gclk_generator clock_source;
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
