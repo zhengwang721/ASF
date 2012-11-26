@@ -64,7 +64,7 @@ void pac_hard_fault_handler(void)
  * \retval STATUS_OK If the peripheral was successfully locked.
  * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
  */
-enum status_code system_peripheral_lock(
+__no_inline enum status_code system_peripheral_lock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key)
 {
@@ -118,7 +118,7 @@ enum status_code system_peripheral_lock(
  * \retval STATUS_OK If the peripheral was successfully unlocked.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were supplied.
  */
-enum status_code system_peripheral_unlock(
+__no_inline enum status_code system_peripheral_unlock(
 		enum system_peripheral_flag peripheral,
 		uint32_t key)
 {

@@ -200,7 +200,7 @@ struct clock_gclk_gen_conf {
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
 	uint32_t division_factor;
-	#ifdef WORKAROUND_REVB
+	#if defined (REVB)
 	/** If \c true the clock is kept enabled during device standby mode */
 	bool run_in_standby;
 	#endif
@@ -215,7 +215,7 @@ struct clock_gclk_gen_conf {
 struct clock_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
-	#ifndef WORKAROUND_REVB
+	#if !defined (REVB)
 	/** If \c true, the clock is kept enabled during device standby mode. */
 	bool enable_during_sleep;
 	#endif
@@ -259,7 +259,7 @@ static inline void clock_gclk_gen_get_config_defaults(
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
 	config->source_clock       = 0;
-	#ifdef WORKAROUND_REVB
+	#if defined (REVB)
 	config->run_in_standby     = false;
 	#endif
 }
@@ -303,7 +303,7 @@ static inline void clock_gclk_ch_get_config_defaults(
 	/* Default configuration values */
 	config->source_generator = 0;
 
-	#ifndef WORKAROUND_REVB
+	#if !defined (REVB)
 	config->enable_during_sleep = false;
 	#endif
 }

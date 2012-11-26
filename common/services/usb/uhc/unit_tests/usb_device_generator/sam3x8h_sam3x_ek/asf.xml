@@ -9,6 +9,7 @@
 		<require idref="sam.utils"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
 		<device-support value="atsam3x8h"/>
 	</project>
 </asf>
