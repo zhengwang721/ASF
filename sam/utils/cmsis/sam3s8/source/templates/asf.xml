@@ -9,6 +9,6 @@
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../../include"/>
 		<info type="gui-flag" value="hidden"/>
-		<device-support value="sam3sd8"/>
+		<device-support value="sam3sd"/>
 	</module>
 </asf>
