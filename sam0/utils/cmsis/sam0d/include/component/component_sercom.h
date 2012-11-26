@@ -218,6 +218,26 @@ typedef enum {
 
 #define SERCOM_INSTS_NUM 6
 
+
+#define I2C_MASTER_SWRST_Pos 0
+#define SERCOM_MODE_I2C 0
+#define SERCOM_I2C_MASTER 0
+#define SERCOM_I2C_MODE 0
+#define I2C_MASTER_RUNINSTDBY_Pos 0
+#define SERCOM_GCLK_ID 0
+#define I2C_MASTER_BUSSTATE_IDLE 0
+#define I2C_MASTER_BUSSTATE_UNKNOWN 0
+#define I2C_MASTER_SMEN_Msk 0
+#define I2C_MASTER_ARBLOST_Pos 0
+#define SERCOM_I2C_MASTER_CMD(value) value << 4
+#define I2C_MASTER_WIF 0
+#define I2C_MASTER_RIF 0
+#define I2C_MASTER_BUSSERROR_Pos 0
+#define I2C_MASTER_RXACK_Pos 0
+#define SERCOM_I2C_MASTER_NACK 0
+#define I2C_SYNC_BUSY_Msk 0
+#define I2C_MASTER_ENABLE_Pos 1
+
 enum RXPO_group {
 	SERCOM_USART_RXPO_0_gc = (0 << 18),
 	SERCOM_USART_RXPO_1_gc = (1 << 18),

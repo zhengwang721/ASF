@@ -41,12 +41,6 @@
 
 #include <i2c_master.h>
 
-#define I2C_MASTER_SWRST_Pos 0
-#define SERCOM_MODE_I2C 0
-#define SERCOM_I2C_MASTER 0
-#define SERCOM_I2C_MODE 0
-#define I2C_MASTER_RUNINSTDBY_Pos 0
-#define SERCOM_GCLK_ID 0
 
 /**
  * \breif blabla
@@ -88,11 +82,14 @@ enum status_code _i2c_master_set_config(
 	/* Write config to register CTRLA. */
 	i2c_module.CTRLA |= tmp_config;
 
+	/* Set configurations in CTRLB. */
+	i2c_module.CTRLB = I2C_MASTER_SMEN_Msk;
+
 	/* Set sercom gclk generator according to config. */
 	tmp_status_code = sercom_set_gclk_generator(
-		config->generator_source,
-		config->run_in_standby,
-		false);
+			config->generator_source,
+			config->run_in_standby,
+			false);
 	/* Return status code if not OK. */
 	if (tmp_status_code != STATUS_OK) {
 		return tmp_status_code;
@@ -152,8 +149,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 #endif
 
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module.CTRLA = SERCOM_I2C_MODE |
-			SERCOM_I2C_MASTER;
+	i2c_module.CTRLA = SERCOM_I2C_MODE | SERCOM_I2C_MASTER;
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(dev_inst, config);
@@ -179,15 +175,173 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 }
 
 enum status_code i2c_master_read_packet(
-		const struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
 {
-	;
+	/* Sanity check */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(packet);
+
+	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+
+	uint16_t timeout_counter = 0;
+
+	/* Start timeout if bus state is unknown. */
+	while (i2c_module.STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
+		if(++timeout_counter >= dev_inst->unkown_bus_state_timeout) {
+			/* Timeout, force bus state to idle. */
+			i2c_module.STATUS = I2C_MASTER_BUSSTATE_IDLE;
+		}
+	}
+
+	/* Set address and direction bit. Will send start command on bus. */
+	i2c_module.ADDR = packet->address << 1 | 0x01;
+
+	/* Wait for reply. */
+	timeout_counter = 0;
+	while (!(i2c_module.INTFLAGS & I2C_MASTER_WIF) ||
+			!(i2c_module.INTFLAGS & I2C_MASTER_RIF)) {
+		/* Check timeout condition. */
+		if (++timeout_counter >= dev_inst->buffer_timeout) {
+			return STATUS_ERR_TIMEOUT;
+		}
+	}
+
+	/* Check for error. */
+	if (i2c_module.INTFLAGS & I2C_MASTER_WIF) {
+		/* Clear write interrupt flag. */
+		i2c_module.INTENCLR = I2C_MASTER_WIF;
+		/* Check for busserror. */
+		if (i2c_module.STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
+			/* Return denied. */
+			return STATUS_ERR_DENIED;
+		/* Check arbitration. */
+		} else if (i2c_module.STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
+			/* Return busy. */
+			return STATUS_ERR_BUSY;
+		}
+	}
+
+	/* Check that slave sent ACK. */
+	if (i2c_module.STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
+		/* Init data length. */
+		dev_inst->buffer_length = 0;
+		/* Read data buffer. */
+		while (dev_inst->buffer_length < packet->data_length) {
+			packet->data[dev_inst->buffer_length++] =
+					i2c_module.DATA;
+
+			/* Wait for more data. */
+			timeout_counter = 0;
+			while (!(i2c_module.INTFLAGS & I2C_MASTER_RIF)) {
+				/* Check timeout condition. */
+				if (++timeout_counter >=
+						dev_inst->buffer_timeout) {
+					return STATUS_ERR_TIMEOUT;
+				}
+			}
+		}
+		/* Send nack and stop command. */
+		i2c_module.CTRLB |= SERCOM_I2C_MASTER_NACK |
+				SERCOM_I2C_MASTER_CMD(3);
+
+		return STATUS_OK;
+
+	} else {
+		/* Slave busy. Issue ack and stop command. */
+		i2c_module.CTRLB |= SERCOM_I2C_MASTER_NACK |
+				SERCOM_I2C_MASTER_CMD(3);
+		/* Return bad address value. */
+		return STATUS_ERR_BAD_ADDRESS;
+	}
+
 }
 
 enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
 {
-	;
+	/* Sanity check */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(packet);
+
+	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+
+	uint16_t timeout_counter = 0;
+
+	/* Start timeout if bus state is unknown. */
+	while (i2c_module.STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
+		if(++timeout_counter >= dev_inst->unkown_bus_state_timeout) {
+			/* Timeout, force bus state to idle. */
+			i2c_module.STATUS = I2C_MASTER_BUSSTATE_IDLE;
+		}
+	}
+
+	/* Set address and direction bit. Will send start command on bus. */
+	i2c_module.ADDR = packet->address << 1 | 0x00;
+
+	/* Wait for reply. */
+	timeout_counter = 0;
+	while (!(i2c_module.INTFLAGS & I2C_MASTER_WIF) ||
+			!(i2c_module.INTFLAGS & I2C_MASTER_RIF)) {
+		/* Check timeout condition. */
+		if (++timeout_counter >= dev_inst->buffer_timeout) {
+			return STATUS_ERR_TIMEOUT;
+		}
+	}
+
+	/* Check for error. */
+	if (i2c_module.INTFLAGS & I2C_MASTER_WIF) {
+		/* Clear write interrupt flag. */
+		i2c_module.INTENCLR = I2C_MASTER_WIF;
+		/* Check for busserror. */
+		if (i2c_module.STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
+			/* Return denied. */
+			return STATUS_ERR_PROTOCOL;
+		/* Check arbitration. */
+		} else if (i2c_module.STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
+			/* Return busy. */
+			return STATUS_ERR_PACKET_COLLISION;
+		}
+	}
+
+	/* Check that slave sent ACK. */
+	if (i2c_module.STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
+		/* Init buffer counter. */
+		dev_inst->buffer_length = 0;
+		/* Write data buffer. */
+		while (dev_inst->buffer_length < packet->data_length) {
+			/* Write byte to slave. */
+			i2c_module.DATA = packet->data[dev_inst->buffer_length++];
+
+			/* Wait for ack. */
+			timeout_counter = 0;
+			while (!(i2c_module.INTFLAGS & I2C_MASTER_RIF)) {
+				/* Check timeout condition. */
+				if (++timeout_counter >=
+						dev_inst->buffer_timeout) {
+					return STATUS_ERR_TIMEOUT;
+				}
+			}
+
+			/* Check for ack from slave. */
+			if (!(i2c_module.STATUS & (1 << I2C_MASTER_RXACK_Pos)))
+			{
+				i2c_module.CTRLB |= SERCOM_I2C_MASTER_NACK |
+						SERCOM_I2C_MASTER_CMD(3);
+				/* Return bad address value. */
+				return STATUS_ERR_BAD_DATA;
+			}
+		}
+		return STATUS_OK;
+
+	} else {
+		/* Slave busy. Issue ack and stop command. */
+		i2c_module.CTRLB |= SERCOM_I2C_MASTER_NACK |
+				SERCOM_I2C_MASTER_CMD(3);
+		/* Return bad address value. */
+		return STATUS_ERR_BAD_ADDRESS;
+	}
 }

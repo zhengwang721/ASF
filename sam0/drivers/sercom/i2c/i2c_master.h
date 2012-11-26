@@ -65,9 +65,6 @@ extern "C" {
  * @{
  */
 
-#define I2C_SYNC_BUSY_Msk 0
-#define I2C_MASTER_ENABLE_Pos 1
-
 enum i2c_master_interrupt_flag {
 	I2C_MASTER_INTERRUPT_WRITE = 0,
 	I2C_MASTER_INTERRUPT_READ  = 1,
@@ -111,7 +108,7 @@ struct i2c_master_dev_inst {
 	/** Hardware instance initialized for the struct. */
 	SERCOM_t *hw_dev;
 	/** Data buffer for packet write and read. */
-	uint8_t *buffer_ptr;
+	uint8_t *buffer;
 	/** Counter used for bytes left to send in write and to count number of
 	  * obtained bytes in read. */
 	uint16_t buffer_length;
@@ -379,7 +376,7 @@ static inline void i2c_master_clear_interrupt_flag(
  * \return          [description]
  */
 enum status_code i2c_master_read_packet(
-		const struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
 /**
