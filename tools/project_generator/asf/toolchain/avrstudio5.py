@@ -1868,7 +1868,7 @@ class AVRStudio5Project32(AVRStudio5Project):
 		flags that are set in the project.
 		"""
 		tag = 'compiler.miscellaneous.OtherFlags'
-		flags = '-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload'
+		flags = '-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload'
 
 		for flag in self.project.get_build(BuildCCompilerFlags, self.toolchain):
 			flags += ' ' + flag.strip()
