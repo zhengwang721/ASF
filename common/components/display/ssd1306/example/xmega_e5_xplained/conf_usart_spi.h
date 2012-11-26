@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SSD1306 display controller driver configuration file.
+ * \brief Configuration file for the USART in SPI master mode.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,60 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SSD1306_H_INCLUDED
-#define CONF_SSD1306_H_INCLUDED
+#ifndef CONF_USART_SPI_H_INCLUDED
+#define CONF_USART_SPI_H_INCLUDED
 
-#include <board.h>
+// this file is intentionally empty
 
-#if (BOARD == XMEGA_C3_XPLAINED) || (BOARD == XMEGA_E5_XPLAINED)
-// Interface configuration for XMEGA-C3 Xplained
-
-#  define SSD1306_USART_SPI_INTERFACE
-#  define SSD1306_USART_SPI    UG_2832HSWEG04_SPI
-
-#  define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD
-#  define SSD1306_RES_PIN      UG_2832HSWEG04_RESET
-#  define SSD1306_CS_PIN       UG_2832HSWEG04_SS
-
-#else
-// Interface configuration for other boards
-#  warning SSD1306 driver must be configured. Please see conf_ssd1306.h.
-
-// Interface possibilities:
-// 1) Regular SPI interface
-// #define SSD1306_SPI_INTERFACE
-// #define SSD1306_SPI &SPID
-
-// 2) USART SPI interface
-// #define SSD1306_USART_SPI_INTERFACE
-// #define SSD1306_USART_SPI &USARTD0
-
-// Pin mapping:
-// - Register select
-// #define SSD1306_DC_PIN       0
-// - Chip select
-// #define SSD1306_CS_PIN       1
-// - Reset
-// #define SSD1306_RES_PIN      2
-
-
-// Placeholder setup
-
-#  define SSD1306_SPI_INTERFACE
-#  define SSD1306_SPI          0
-
-#  define SSD1306_DC_PIN       0
-#  define SSD1306_CS_PIN       1
-#  define SSD1306_RES_PIN      2
-
-#  define UG_2832HSWEG04_BAUDRATE  12000000
-#endif // BOARD
-
-// Board independent configuration
-
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
-#define SSD1306_DISPLAY_CONTRAST_MAX 40
-#define SSD1306_DISPLAY_CONTRAST_MIN 30
-
-#endif /* CONF_SSD1306_H_INCLUDED */
+#endif /* CONF_USART_SPI_H_INCLUDED */
