@@ -11,7 +11,7 @@
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam_drivers_sdramc_group"/>
 		<build type="doxygen-quick-start" value="sam_sdramc_quickstart"/>
-		<device-support value="sam3x8h"/>
+		<device-support value="atsam3x8h"/>
 		<require idref="sam.utils"/>
 		<require idref="common.services.basic.sleepmgr"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
