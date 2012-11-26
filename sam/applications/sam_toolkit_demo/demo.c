@@ -95,6 +95,7 @@
 #include "conf_board.h"
 #include "demo.h"
 #include <asf.h>
+#include "bitmaps.h"
 #include "task.h"
 #include "string.h"
 #include "rtouch_calibrate.h"

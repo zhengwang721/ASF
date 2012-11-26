@@ -42,6 +42,7 @@
  */
  
 #include "app.h"
+#include "gui.h"
 
 // By default, the Full Demo Mode is on, used in main.c
 volatile bool lowpower_mode = false;
