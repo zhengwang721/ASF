@@ -834,7 +834,8 @@
  * @{
  */
 #define SAM0D4 ( \
-		SAM_PART_IS_DEFINED(SAM0D4) \
+		SAM_PART_IS_DEFINED(SAM0D4) || \
+		SAM_PART_IS_DEFINED(SAM0D4_REVA) \
 	)
 /** @} */
 

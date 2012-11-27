@@ -4,13 +4,25 @@
 		<build type="header-file" value="dummy_board.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
-		<build type="define" name="__SAM0D4__" value=""/>
 		<build type="macro-config" subtype="script" value="debug_scripts/gcc/dummy_flash.gdb" toolchain="armgcc"/>
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/dummy_sram.gdb" toolchain="armgcc"/>
 		<build type="macro-config" subtype="script" value="debug_scripts/iar/dummy_flash.mac" toolchain="iarewarm"/>
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/dummy_sram.mac" toolchain="iarewarm"/>
+		<require idref="board.dummy.atsam0d4.revision_select"/>
 		<require idref="sam0.utils.cmsis.sam0d.source.template"/>
 		<require idref="common.boards"/>
 		<device-support value="atsam0d4"/>
+		<device-support value="atsam0d4_reva"/>
 	</board>
+
+	<select-by-device id="board.dummy.atsam0d4.revision_select" caption="Part revision selector for SAM0D4 dummy board">
+		<module type="build-specific" caption="Revision A silicon definition" id="board.dummy.atsam0d4.revision_select#reva">
+			<build type="define" name="__SAM0D4_REVA__" value=""/>
+			<device-support value="atsam0d4_reva"/>
+		</module>
+		<module type="build-specific" caption="Revision A silicon definition" id="board.dummy.atsam0d4.revision_select#non_reva">
+			<build type="define" name="__SAM0D4__" value=""/>
+			<device-support value="atsam0d4"/>
+		</module>
+	</select-by-device>
 </asf>
