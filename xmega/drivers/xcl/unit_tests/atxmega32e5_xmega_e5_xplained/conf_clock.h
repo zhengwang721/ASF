@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit test configuration
+ * \brief Example specific clock configuration file
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,19 +40,12 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TEST_H
-#define CONF_TEST_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
+#define CONFIG_SYSCLK_RC8MHZ_LPM true
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC8MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
 
-//! \note USART0 on PORTC (RX on PC2, TX on PC3)
-#define CONF_TEST_USART      &USARTC0
-//! \note 38.4 kbaud
-#define CONF_TEST_BAUDRATE   38400
-//! \note 8-bit character length
-#define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc
-//! \note No parity check
-#define CONF_TEST_PARITY     USART_PMODE_DISABLED_gc
-//! \note No extra stopbit, i.e., use 1
-#define CONF_TEST_STOPBITS   false
-
-#endif
+#endif /* CONF_CLOCK_H_INCLUDED */

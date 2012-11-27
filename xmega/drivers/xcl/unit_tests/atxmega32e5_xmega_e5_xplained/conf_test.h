@@ -44,8 +44,8 @@
 #define CONF_TEST_H
 
 
-//! \note USART0 on PORTC (RX on PC2, TX on PC3)
-#define CONF_TEST_USART      &USARTC0
+//! \note USART0 on PORTD (RX on PD6, TX on PD7)
+#define CONF_TEST_USART      &USARTD0
 //! \note 38.4 kbaud
 #define CONF_TEST_BAUDRATE   38400
 //! \note 8-bit character length
