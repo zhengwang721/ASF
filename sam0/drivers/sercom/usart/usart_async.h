@@ -94,5 +94,16 @@ void usart_async_cancel_reception(struct usart_dev_inst
  */
 
 
+/**
+ * \name Writing and reading
+ * {@
+ */
+
+void usart_handler(uint8_t instance);
+
+/**
+ * @}
+ */
+
 
 #endif /* USART_ASYNC_H_INCLUDED */

@@ -51,6 +51,7 @@ uint8_t _sercom_get_current_irq_index(void)
 {
 	/* Find in some core register */
 	//TODO!
+	return 0;
 }
 
 /**
@@ -63,7 +64,7 @@ uint8_t _sercom_get_current_irq_index(void)
  * retval  
  */
 //TODO: move to sercom
-enum status_code _sercom_get_instance_index(SERCOM_t *hw_dev)
+uint8_t _sercom_get_instance_index(SERCOM_t *hw_dev)
 {
 	/* Variable for array index */
 	uint8_t instance_index;
@@ -95,7 +96,7 @@ enum status_code _sercom_get_instance_index(SERCOM_t *hw_dev)
 			return STATUS_ERR_INVALID_ARG;
 	}
 
-	instance_index;
+	return instance_index;
 }
 
 /**
@@ -105,6 +106,16 @@ enum status_code _sercom_get_instance_index(SERCOM_t *hw_dev)
 void _sercom_default_handler(uint8_t instance)
 {
 	Assert(false);
+}
+
+/* Interrupt Service Routine */
+void SERCOM_Handler(void)
+{
+	/* Something something. */
+	uint8_t instance = _sercom_get_current_irq_index();
+
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[instance] (instance);
 }
 
 /**
@@ -125,12 +136,14 @@ void _sercom_set_handler(uint8_t instance,
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
 }
 
-/* Interrupt Service Routine */
-void SERCOM_Handler(void)
+/** 
+ * \internal 
+ *
+ **/
+void _sercom_register_instance(uint8_t instance_index, void *const dev_inst)
 {
-	/* Something something. */
-	uint8_t instance = _sercom_get_current_irq_index();
-
-	/* Call appropriate interrupt handler. */
-	_sercom_interrupt_handlers[instance] (instance);
+	/* Register software device struct in look-up table. */
+	_sercom_instances[instance_index] = dev_inst;	
 }
+
+

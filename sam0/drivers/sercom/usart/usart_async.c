@@ -41,16 +41,14 @@
 
 #include <usart_async.h>
 
-
-
+#if !defined (__DOXYGEN__)
 /**
- * \internal 
+ * \internal      Asynchronous write of a buffer with a given length
  *
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     tx_data  Pointer to data to be transmitted
+ * \param[in]     length   Length of data buffer
  *
- * param[]
- *
- * returns 
- * retval  
  */
 void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint16_t length)
@@ -68,12 +66,11 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \internal 
+ * \internal      Asynchronous read of a buffer with a given length
  *
- *
- * param[]
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     rx_data  Pointer to data to be received
+ * \param[in]     length   Length of data buffer
  *
  */
 void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
@@ -82,17 +79,22 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
 	dev_inst->remaining_rx_buffer_length = length;
-	dev_inst->rx_buffer_ptr;
+	dev_inst->rx_buffer_ptr = rx_data;
 }
-
+#endif
 
 /**
- * \brief 
+ * \brief Registers a callback
  *
+ * Registers a callback function which is implemented by the user.
  *
- * param[]
- * param[]
- * param[]
+ * \note The callback must be enabled by \ref usart_async_register_callback,
+ * in order for the interrupt handler to call it when the conditions for the
+ * callback type is met.
+ *
+ * \param[in]     dev_inst      Pointer to USART software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
  *
  */
 void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
@@ -103,35 +105,22 @@ void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(callback_func);
 
-	/* Variable to store the status */
-	enum status_code status;
-	status = STATUS_OK;
-
 	/* Register callback function */
 	dev_inst->callback[callback_type] = callback_func;
 
-	/* Store pointer to device instance in a look-up table */
-	status = _sercom_register_dev_inst_ptr((union _sercom_dev_inst *)dev_inst);
-
-	//_sercom_instances[_sercom_get_module_irq_index(dev_inst)] =
-	//*(uint32_t *)dev_inst;
-
 	/* Set the bit corresponding to the callback_type */
 	dev_inst->callback_reg_mask |= (1 << callback_type);
-
-	return status;
 }
 
 /**
- * \brief 
+ * \brief Unregisters a callback
  *
+ * Unregisters a callback function which is implemented by the user.
  *
- * param[]
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     callback_func Pointer to callback function
+ * \param[in]     callback_type Callback type given by an enum
  *
- * returns 
- * retval  
  */
 void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
 		enum usart_callback_type callback_type)
@@ -147,17 +136,21 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
 	dev_inst->callback_reg_mask |= (0 << callback_type);
 }
 
-
-
 /**
- * \brief 
+ * \brief Enables callback
  *
+ * Enables the callback function registered by the \ref
+ * usart_async_register_callback. The callback function will be called from the
+ * interrupt handler when the conditions for the callback type are met.
  *
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     callback_type Callback type given by an enum
  *
- * returns 
- * retval  
+ * \returns    Status of the operation 
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid callback_type
+ *
  */
 enum status_code usart_async_enable_callback(
 		struct usart_dev_inst *const dev_inst,
@@ -175,17 +168,17 @@ enum status_code usart_async_enable_callback(
 	/* Enable the interrupt flag */
 	switch (callback_type){
 
-		case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
-			usart_module->INTENSET = SERCOM_USART_TXCIF_bm;
-			break;
+	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
+		usart_module->INTENSET = SERCOM_USART_TXCIF_bm;
+		break;
 
-		case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
-			usart_module->INTENSET = SERCOM_USART_RXCIF_bm;
-			break;
+	case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
+		usart_module->INTENSET = SERCOM_USART_RXCIF_bm;
+		break;
 
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 
 	}
 
@@ -194,14 +187,20 @@ enum status_code usart_async_enable_callback(
 }
 
 /**
- * \brief 
+ * \brief Disable callback
  *
+ * Disables the callback function registered by the \ref
+ * usart_async_register_callback, and the callback will be neglected
+ * by the interrupt routine.
  *
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     callback_type Callback type given by an enum
  *
- * returns 
- * retval  
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid callback_type
+ *
  */
 enum status_code usart_async_disable_callback(
 		struct usart_dev_inst *const dev_inst,
@@ -219,17 +218,17 @@ enum status_code usart_async_disable_callback(
 	/* Disable the interrupt flag */
 	switch (callback_type){
 
-		case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
-			usart_module->INTENCLR = SERCOM_USART_TXCIF_bm;
-			break;
+	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
+		usart_module->INTENCLR = SERCOM_USART_TXCIF_bm;
+		break;
 
-		case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
-			usart_module->INTENCLR = SERCOM_USART_RXCIF_bm;
-			break;
+	case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
+		usart_module->INTENCLR = SERCOM_USART_RXCIF_bm;
+		break;
 
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
+	default:
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
 
 	}
 
@@ -241,14 +240,17 @@ enum status_code usart_async_disable_callback(
 /**
  * \brief 
  *
- * \note Namespace
  *
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
  * param[]
  * param[]
  *
- * returns 
- * retval  
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ *                                    due to the USART module being busy.
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid callback_type
  */
 enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data)
@@ -262,7 +264,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Call internal write buffer function with length 1 */
-	_usart_async_write(dev_inst, (uint8_t *)&tx_data, 1);
+	_usart_async_write_buffer(dev_inst, (uint8_t *)&tx_data, 1);
 
 	return STATUS_OK;
 }
@@ -271,22 +273,23 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 /**
  * \brief 
  *
- * \note Namespace
  *
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
  * param[]
  * param[]
  *
- * returns 
- * retval  
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ *                                    due to the USART module being busy.
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid buffer length
  */
-//TODO: differ on number of bits for char_size??
 enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
 
 	/* Check if the USART receiver is busy */
 	if (dev_inst->remaining_rx_buffer_length > 0) {
@@ -303,18 +306,26 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
  * \brief 
  *
  *
+ * \param[in]     dev_inst Pointer to USART software instance struct
  * param[]
  * param[]
  * param[]
  *
- * returns 
- * retval  
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ *                                    due to the USART module being busy.
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid buffer length
  */
 enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
+	if(length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
 
 	/* Check if the USART transmitter is busy */
 	if (dev_inst->remaining_tx_buffer_length) {
@@ -322,7 +333,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Issue internal asynchronous write */
-	_usart_async_write(dev_inst, tx_data, length);
+	_usart_async_write_buffer(dev_inst, tx_data, length);
 
 	return STATUS_OK;
 }
@@ -331,18 +342,23 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
  * \brief 
  *
  *
- * param[]
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[out]    rx_data  Pointer to data buffer to receive
+ * \param[in]     length   Data buffer length
  *
- * returns 
- * retval  
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed.
+ * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ *                                    due to the USART module being busy.
  */
 enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
+	if(length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
 
 	/* Check if the USART receiver is busy */
 	if (dev_inst->remaining_rx_buffer_length) {
@@ -350,22 +366,21 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Issue internal asynchronous read */
-	_usart_async_read(dev_inst, rx_data, length);
+	_usart_async_read_buffer(dev_inst, rx_data, length);
 
 	return STATUS_OK;
 
 }
 
 /**
- * \brief 
+ * \brief Cancels ongoing write operation
+ *
+ * Cancels the ongoing write operation modifying parameters in the
+ * USART software struct.
  *
  *
- * param[]
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
  *
- * returns 
- * retval  
  */
 void usart_async_cancel_transmission(struct usart_dev_inst *const dev_inst)
 {
@@ -385,15 +400,13 @@ void usart_async_cancel_transmission(struct usart_dev_inst *const dev_inst)
 }
 
 /**
- * \brief 
+ * \brief Cancels ongoing read operation
  *
+ * Cancels the ongoing read operation modifying parameters in the
+ * USART software struct.
  *
- * param[]
- * param[]
- * param[]
+ * \param[in]     dev_inst Pointer to USART software instance struct
  *
- * returns 
- * retval  
  */
 void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
 {
@@ -413,13 +426,14 @@ void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
 }
 
 /* Interrupt Handler for USART */
-usart_handler(uint8_t instance) {
+void usart_handler(uint8_t instance) {
 
 	uint16_t interrupt_status;
 	uint16_t callback_status;
 
 	/* Get device instance from the look-up table */
-	struct usart_dev_inst *dev_inst = (struct usart_dev_inst *)_sercom_instances[instance];
+	struct usart_dev_inst *dev_inst =
+			(struct usart_dev_inst *)_sercom_instances[instance];
 
 	/* Sanity check content from the look-up table */
 	Assert(dev_inst);
@@ -458,8 +472,8 @@ usart_handler(uint8_t instance) {
 			(dev_inst->tx_buffer_ptr)+2;
 
 		} else {
-			usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
-					& SERCOM_USART_DATA_gm;
+			usart_module->DATA |= (*(dev_inst->tx_buffer_ptr)
+					& SERCOM_USART_DATA_gm);
 			(dev_inst->tx_buffer_ptr)++;
 
 		}
@@ -484,11 +498,11 @@ usart_handler(uint8_t instance) {
 			 * increment buffer pointer and decrement buffer length */
 			if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 				/* Read out from DATA and increment 8bit ptr by two */
-	*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
+				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
 				dev_inst->tx_buffer_ptr+2;
 			} else {
 				/* Read out from DATA and increment 8bit ptr by one */
-	*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
+				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
 				dev_inst->tx_buffer_ptr++;
 			}
 
