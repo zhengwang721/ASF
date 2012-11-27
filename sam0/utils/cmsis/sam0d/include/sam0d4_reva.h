@@ -397,7 +397,7 @@ void PTC_WCOMP_Handler  ( void );
  * \brief CMSIS includes
  */
 
-#include <core_cm0.h>
+#include <core_cm0plus.h>
 
 /*@}*/
 
