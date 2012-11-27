@@ -42,8 +42,9 @@
 #ifndef __SERCOM_H_INCLUDED
 #define __SERCOM_H_INCLUDED
 
-#include <asf.h>
+#include <compiler.h>
 #include <clock.h>
+#include <gclk.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,7 +76,6 @@ extern "C" {
  * \section api_overview API Overview
  * @{
  */
-#include <sercom_interrupts.h>
 
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,

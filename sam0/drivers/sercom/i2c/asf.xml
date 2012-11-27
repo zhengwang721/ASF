@@ -20,7 +20,6 @@
 		<device-support value="sam0"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
-		<require idref="sam0.drivers.gclk"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>
 </asf>

@@ -41,10 +41,7 @@
 #ifndef SERCOM_INTERRUPTS_H_INCLUDED
 #define SERCOM_INTERRUPTS_H_INCLUDED
 
-#include <asf.h>
-
-#define SERCOM_INSTS_NUM 6
-#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
+#include <sercom.h>
 
 /* Look-up table for device instances. */
 static void *_sercom_instances[SERCOM_INSTS_NUM];

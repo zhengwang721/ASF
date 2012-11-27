@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#include <sercom_interrupts.h>
 
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;
@@ -89,6 +89,7 @@ void _sercom_set_handler(uint8_t instance,
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
+			_sercom_instances[i] = 0;
 		}
 		_handler_table_initialized = true;
 	}
@@ -101,7 +102,7 @@ void _sercom_set_handler(uint8_t instance,
 void SERCOM_Handler(void)
 {
 	/* Something something. */
-	uint8_t instance = 1;
+	uint8_t instance = 1; // (uint8_t)system_interrupt_get_active()-7;
 
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[instance] (instance);

@@ -148,7 +148,10 @@ typedef enum {
 #define SWRST_bm 0x00000001
 
 
-
+#define SERCOM_INSTS_NUM 6
+#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
+#define SHIFT 1
+#define SERCOM_GCLK_ID 0
 
 #define SERCOM_USART_ENABLE_bm 0x00000002
 #define SERCOM_USART_CSRC_bm (1 << 31)

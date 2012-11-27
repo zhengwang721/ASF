@@ -278,7 +278,7 @@ cxxflags-gnu-y  += -ffunction-sections -fdata-sections
 # Various cflags.
 cflags-gnu-y += -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int
 cflags-gnu-y += -Wmain -Wparentheses
-cflags-gnu-y += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused
+cflags-gnu-y += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs #-Wunused
 cflags-gnu-y += -Wuninitialized -Wunknown-pragmas -Wfloat-equal
 # -Wundef
 cflags-gnu-y += -Wshadow -Wbad-function-cast -Wwrite-strings
