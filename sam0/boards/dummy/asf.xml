@@ -20,7 +20,7 @@
 			<build type="define" name="__SAM0D4_REVA__" value=""/>
 			<device-support value="atsam0d4_reva"/>
 		</module>
-		<module type="build-specific" caption="Revision A silicon definition" id="board.dummy.atsam0d4.revision_select#non_reva">
+		<module type="build-specific" caption="Revision B or newer silicon definition" id="board.dummy.atsam0d4.revision_select#non_reva">
 			<build type="define" name="__SAM0D4__" value=""/>
 			<device-support value="atsam0d4"/>
 		</module>
