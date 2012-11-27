@@ -54,7 +54,8 @@ typedef volatile struct {
 	__REG32(OUTTGL, __IO);
 	__REG32(IN, __I);
 	__REG32(CTRL, __IO);
-	__REG32(MPCCTRL, __O);
+	__REG32(WRCONFIG, __O);
+	__REG32(reserved_0x2c, __I);
 	__REG32_ARRAY(PMUX, 16, __IO);
 	__REG32_ARRAY(PINCFG, 16, __IO);
 } PORT_t;
@@ -63,19 +64,19 @@ typedef volatile struct {
 #define PORT_CTRL_SAMPLING_gp    0
 #define PORT_CTRL_SAMPLING_bm    (0xFFFFUL << PORT_CTRL_SAMPLING_gp)
 
-/* PORT Register MPCCTRL definitions */
-#define PORT_MPCCTRL_PINMASK_gp  0
-#define PORT_MPCCTRL_PINMASK_gm  (0xFFFFUL << PORT_MPCCTRL_PINMASK_gp)
-#define PORT_MPCCTRL_CONFIG_gp   16
-#define PORT_MPCCTRL_CONFIG_gm   (0xFFUL << PORT_MPCCTRL_CONFIG_gp)
-#define PORT_MPCCTRL_PMUX_gp     24
-#define PORT_MPCCTRL_PMUX_gm     (0xFUL << PORT_MPCCTRL_PMUX_gp)
-#define PORT_MPCCTRL_WRPMUX_bp   28
-#define PORT_MPCCTRL_WRPMUX_bm   (1UL << PORT_MPCCTRL_WRPMUX_bp)
-#define PORT_MPCCTRL_WRPINCFG_bp 30
-#define PORT_MPCCTRL_WRPINCFG_bm (1UL << PORT_MPCCTRL_WRPINCFG_bp)
-#define PORT_MPCCTRL_HWSEL_bp    31
-#define PORT_MPCCTRL_HWSEL_bm    (1UL << PORT_MPCCTRL_HWSEL_bp)
+/* PORT Register WRCONFIG definitions */
+#define PORT_WRCONFIG_PINMASK_gp  0
+#define PORT_WRCONFIG_PINMASK_gm  (0xFFFFUL << PORT_WRCONFIG_PINMASK_gp)
+#define PORT_WRCONFIG_CONFIG_gp   16
+#define PORT_WRCONFIG_CONFIG_gm   (0xFFUL << PORT_WRCONFIG_CONFIG_gp)
+#define PORT_WRCONFIG_PMUX_gp     24
+#define PORT_WRCONFIG_PMUX_gm     (0xFUL << PORT_WRCONFIG_PMUX_gp)
+#define PORT_WRCONFIG_WRPMUX_bp   28
+#define PORT_WRCONFIG_WRPMUX_bm   (1UL << PORT_WRCONFIG_WRPMUX_bp)
+#define PORT_WRCONFIG_WRPINCFG_bp 30
+#define PORT_WRCONFIG_WRPINCFG_bm (1UL << PORT_WRCONFIG_WRPINCFG_bp)
+#define PORT_WRCONFIG_HWSEL_bp    31
+#define PORT_WRCONFIG_HWSEL_bm    (1UL << PORT_WRCONFIG_HWSEL_bp)
 
 /* PORT Register PMUX definitions */
 #define PORT_PMUX_PMUXE_gp       0
