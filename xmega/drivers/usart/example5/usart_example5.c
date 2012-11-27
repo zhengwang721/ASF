@@ -157,11 +157,11 @@ int main(void)
 	xcl_lut_in1(LUT_IN_XCL);
 	xcl_lut0_output(LUT0_OUT_DISABLE);
 	xcl_lut_config_delay(DLY11, LUT_DLY_DISABLE, LUT_DLY_DISABLE);
-	xcl_lut0_truth(NOT);
+	xcl_lut0_truth(NOT_IN0);
 
 	xcl_lut_in3(LUT_IN_XCL);
 	xcl_lut_in2(LUT_IN_XCL);
-	xcl_lut1_truth(NOT);
+	xcl_lut1_truth(NOT_IN3);
 
 	/* Send "message header" */
 	for (i = 0; i < sizeof(encoded_message); i++) {
