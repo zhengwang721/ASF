@@ -12,6 +12,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="system.h"/>
 		<build type="c-source" value="sys_service/bod_init.c"/>
+		<build type="header-file" value="sys_service/bod_init.h"/>
 		<build type="c-source" value="system.c"/>
 		<info type="gui-flag" value="hidden"/>
 	</module>
