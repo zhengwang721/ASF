@@ -280,6 +280,10 @@ void tc45_disable(volatile void *tc);
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_overflow_interrupt_level() for interrupts to be generated
+ *       each time the timer overflow event occurs.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -292,6 +296,10 @@ void tc45_set_overflow_interrupt_callback(volatile void *tc,
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
+ *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_error_interrupt_level() for interrupts to be
+ *       generated each time a timer error occurs.
  *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
@@ -306,6 +314,10 @@ void tc45_set_error_interrupt_callback(volatile void *tc,
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_cca_interrupt_level() for interrupts to be generated
+ *       each time the timer channel A compare matches the current timer count.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -318,6 +330,10 @@ void tc45_set_cca_interrupt_callback(volatile void *tc,
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
+ *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_ccb_interrupt_level() for interrupts to be generated
+ *       each time the timer channel B compare matches the current timer count.
  *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
@@ -332,6 +348,10 @@ void tc45_set_ccb_interrupt_callback(volatile void *tc,
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_ccc_interrupt_level() for interrupts to be generated
+ *       each time the timer channel C compare matches the current timer count.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -344,6 +364,10 @@ void tc45_set_ccc_interrupt_callback(volatile void *tc,
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
+ *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc45_set_ccd_interrupt_level() for interrupts to be generated
+ *       each time the timer channel D compare matches the current timer count.
  *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
