@@ -1,5 +1,4 @@
 /**
-/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -41,7 +40,6 @@
  */
 #include "dac.h"
 
-
 /**
  * \brief Resets the DAC module
  *
@@ -81,12 +79,31 @@ static void _dac_set_config(
 		struct dac_dev_inst *const dev_inst,
 		struct dac_conf *const config)
 {
+	struct clock_gclk_ch_conf gclk_ch_conf;
+
+
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
 	DAC_t *const dac_module = dev_inst->hw_dev;
+
+	/* Configure GCLK channel and enable clock */
+	gclk_ch_conf.source_generator = config->clock_source;
+
+	#if defined (REVB)
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->standby_sleep_enable;
+	#else
+	/* Set the GCLK channel sleep enable mode */
+	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
+	#endif
+
+	/* Apply configuration and enable the GCLK channel */
+	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	clock_gclk_ch_enable(DAC_GCLK_ID);
+
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	dev_inst->output = config->output;
