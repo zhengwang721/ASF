@@ -121,6 +121,7 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_ENABLE_USARTC0_ONEWIRE_REMAP
+	PORTC.REMAP |= PORT_USART0_bm;
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 6), IOPORT_DIR_INPUT);
 #endif
 
@@ -129,6 +130,7 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_ENABLE_USARTD0_ONEWIRE_REMAP
+	PORTD.REMAP |= PORT_USART0_bm;
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 6), IOPORT_DIR_INPUT);
 #endif
 
