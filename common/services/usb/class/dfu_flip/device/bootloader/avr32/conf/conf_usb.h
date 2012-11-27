@@ -115,7 +115,7 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)      main_vbus_action(b_vbus_high)
+#define  UDC_VBUS_EVENT(b_vbus_high)
 //@}
 
 //@}

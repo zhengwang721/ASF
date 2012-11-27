@@ -56,10 +56,6 @@ bool main_cdc_enable(void);
  */
 void main_cdc_disable(void);
 
-/*! \brief Called when Vbus line state changes
- */
-void main_vbus_action(bool b_high);
-
 /**
  * \brief Callback that is called once a byte is received from USB
  */
