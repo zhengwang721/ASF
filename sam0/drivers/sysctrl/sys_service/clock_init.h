@@ -41,37 +41,4 @@
  *
  */
 
-#include <compiler.h>
-#include <system.h>
-#include <conf_bod.h>
-#include "bod_init.h"
-
-/**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
- *
- */
-void system_bod_init(void)
-{
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct sysctrl_bod_config conf;
-
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
-
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
-
-	#endif
-}
+void clocks_init(void);

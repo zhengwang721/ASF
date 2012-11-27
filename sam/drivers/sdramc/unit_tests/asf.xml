@@ -7,7 +7,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="../components/memory/sdram/mt48lc16m16a2"/>
-		<device-support value="sam3x8h"/>
+		<device-support value="atsam3x8h"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.sdramc"/>
