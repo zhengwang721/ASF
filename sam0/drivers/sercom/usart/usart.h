@@ -42,11 +42,7 @@
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
-#include <stdint.h>
 #include <sercom.h>
-#include <stdbool.h>
-#include <stdlib.h>
-
 
 #ifdef USART_ASYNC
 #include <sercom_interrupts.h>
@@ -81,23 +77,19 @@ enum usart_dataorder {
 };
 
 /**
- * \brief USART Com mode enum
+ * \brief USART Sample mode enum
  *
  * TODO: joda
  *
  */
-enum usart_com_mode {
-	USART_COM_MODE_ASYNC_CLOCK_INTERNAL,
-	USART_COM_MODE_ASYNC_CLOCK_EXTERNAL,
-	USART_COM_MODE_SYNC_CLOCK_INTERNAL,
-	USART_COM_MODE_SYNC_CLOCK_EXTERNAL,
-};
-
-
-//TODO: remove as there will be no half duplex for now..?
-enum usart_frame_format {
-	USART_FRAME_FORMAT_FULL_DUPLEX   = SERCOM_USART_FORM_1_gc,
-	USART_FRAME_FORMAT_HALF_DUPLEX   = SERCOM_USART_FORM_5_gc,
+enum usart_sample_mode {
+	USART_SAMPLE_MODE_SYNC_MASTER = (SERCOM_USART_CSRC_bm | SERCOM_USART_CMODE_bm),
+	USART_SAMPLE_MODE_SYNC_SLAVE = (SERCOM_USART_CMODE_bm),
+	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CSRC_bm),
+	/* USART module clocked by an external
+	 * clock source applied to the XCK pin
+	 */
+	USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK = 0,
 };
 
 /**
@@ -150,8 +142,8 @@ enum usart_signal_mux_settings {
  *
  */
 enum usart_stopbits {
-	USART_STOPBITS_1 = 0,
-	USART_STOPBITS_2 = SERCOM_USART_BMODE_bm,
+	USART_STOPBITS_1 = SERCOM_USART_SBMODE_1_bm,
+	USART_STOPBITS_2 = SERCOM_USART_SBMODE_2_bm,
 };
 
 /**
@@ -201,26 +193,32 @@ struct usart_conf {
 	/** USART bit order (MSB or LSB first) */
 	enum usart_dataorder data_order;
 	/** USART in asynchronous or synchronous mode */
-	//TODO: fix
-	enum usart_com_mode com_mode;
-	/** Address match */
-	bool address_match;
-	/*! USART parity */
+	enum usart_sample_mode sample_mode;
+	/** USART parity */
 	enum usart_parity parity;
-	/*! Number of stop bits */
+	/** Number of stop bits */
 	enum usart_stopbits stopbits;
-	/*! USART character size */
+	/** USART character size */
 	enum usart_char_size char_size;
-	/*! USART pin out */
+	/** USART pin out */
 	enum usart_signal_mux_settings mux_settings;
-	/** USART frame format */
-	enum usart_frame_format frame_format;
-	/*! USART baud rate */
+	/** USART baud rate */
 	uint32_t baudrate;
-	/*! External clock frequency in synchronous mode */
-	/* TODO: this should refer to the GCLK somehow, transparent to user */
+	/** USART Clock Polarity
+	 * If true, data changes on falling XCK edge and
+	 * is sampled at rising edge
+	 * If false, data changes on rising XCK edge and
+	 * is sampled at falling edge
+	 * */
+	bool clock_polarity_inverted;
+	/** External clock frequency in synchronous mode.
+	 * Must be given if clock source (XCK) is set to external.
+	 */
 	uint32_t ext_clock_freq;
 	//TODO: clock_setup, config_struct?;
+	enum gclk_generator generator_source;
+	/*  */
+	bool run_in_standby;
 };
 
 /* Prototype for the device instance */
@@ -261,11 +259,9 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until the synchronization is complete */
-	usart_module->STATUS & SERCOM_USART_SYNCBUSY_bm;
+	while(usart_module->STATUS & SERCOM_USART_SYNCBUSY_bm);
 }
 #endif
-
-
 
 /**
  * \brief Initializes the device to predefined defaults
@@ -288,18 +284,17 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	//TODO: look through defaults
 	Assert(config);
 	config->data_order = USART_DATAORDER_MSB;
-	config->com_mode = USART_COM_MODE_ASYNC_CLOCK_INTERNAL;
+	config->sample_mode = USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK;
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
 	config->char_size = USART_CHAR_SIZE_8BIT;
-	config->frame_format = USART_FRAME_FORMAT_FULL_DUPLEX;
+	//config->frame_format = USART_FRAME_FORMAT_FULL_DUPLEX;
 	config->baudrate = 9600;
 	config->mux_settings = USART_RX_1_TX_2_XCK_3;
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 		SERCOM_t *hw_dev,struct usart_conf *config);
-
 
 /**
  * \brief Enable the module
@@ -356,7 +351,7 @@ static inline void usart_disable(const struct usart_dev_inst *const dev_inst)
  * \param[in] dev_inst Pointer to the USART software instance struct
  *
  */
-static inline usart_reset(const struct usart_dev_inst *const dev_inst)
+static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);

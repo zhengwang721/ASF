@@ -42,10 +42,9 @@
 #ifndef SERCOM_H_INCLUDED
 #define SERCOM_H_INCLUDED
 
-//#include <compiler.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <compiler.h>
+#include <gclk.h>
+#include <clock.h>
 
 
 
@@ -79,7 +78,44 @@ extern "C" {
  * \section api_overview API Overview
  * @{
  */
-#include "sercom_header.h"
+
+//#include <component_sercom.h>
+
+/* TODO: Move to component_sercom.h */
+/*--\/--\/--\/--\/--\/--\/--*/
+#define SERCOM_USART_SYNCBUSY_bp 7
+#define SERCOM_USART_SYNCBUSY_bm (1 << SERCOM_USART_SYNCBUSY_bp)
+//#define SERCOM0 (*(SERCOM_t * ) 0x2000)
+#define SERCOM_USART_RESET_bm  0x00000001
+
+#define SERCOM_INSTS_NUM 6
+#define SERCOM_USART_SBMODE_1_bm 0x00000000
+#define SERCOM_USART_SBMODE_2_bm 0x00000001
+#define USART_FRAME_FORMAT_WITHOUT_PARITY_gm  0x00000000
+#define USART_FRAME_FORMAT_WITH_PARITY_gm  0x00000004
+
+//TODO: set valid values
+#define SERCOM_USART_CPOL_bp 0
+#define SERCOM_USART_ 0
+//#define USART_FRAME_FORMAT_WITH_PARITY_gm 0 
+//#define USART_FRAME_FORMAT_WITHOUT_PARITY_gm 0
+
+#define SERCOM_USART_DATA_gm  (0x1FF << 1)
+
+/*
+enum status_code {
+	STATUS_OK,
+	STATUS_ERR_INVALID_ARG,
+	STATUS_ERR_BUSY,
+	STATUS_ERR_IO,
+	STATUS_ERR_TIMEOUT,
+	STATUS_ERR_UNSUPPORTED_DEV,
+	STATUS_ERR_DENIED,
+};
+*/
+/*--/\--/\--/\--/\--/\--/\--*/
+
+//#include "sercom_header.h"
 #include <sercom_interrupts.h>
 
 enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
@@ -88,6 +124,9 @@ enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
 
+enum status_code sercom_set_gclk_generator(enum gclk_generator generator_source,
+		bool run_in_standby,
+		bool force_change);
 /** @} */
 
 
