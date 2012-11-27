@@ -50,11 +50,11 @@
 /*! \name Configuration
  */
 //! @{
-#define USART_SERIAL_EXAMPLE            &USARTC0
-#define USART_SERIAL_EXAMPLE_BAUDRATE   9600
-#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
-#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
-#define USART_SERIAL_STOP_BIT           false
+#define USART_SERIAL_EXAMPLE               &USARTD0
+#define USART_SERIAL_EXAMPLE_BAUDRATE      9600
+#define USART_SERIAL_CHAR_LENGTH           USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY                USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT              false
 //! @}
 
 #endif // _CONF_USART_EXAMPLE_H

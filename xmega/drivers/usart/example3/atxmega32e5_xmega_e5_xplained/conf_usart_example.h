@@ -50,11 +50,15 @@
 /*! \name Configuration
  */
 //! @{
-#define USART_SERIAL_EXAMPLE            &USARTC0
-#define USART_SERIAL_EXAMPLE_BAUDRATE   9600
-#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
-#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
-#define USART_SERIAL_STOP_BIT           false
+#define USART1_SERIAL_EXAMPLE            &USARTD0
+#define USART1_RX_Vect                   USARTD0_RXC_vect
+#define USART2_SERIAL_EXAMPLE            &USARTC0
+#define USART2_RX_Vect                   USARTC0_RXC_vect
+
+#define USART_SERIAL_EXAMPLE_BAUDRATE    115200
+#define USART_SERIAL_CHAR_LENGTH         USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY              USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT            false
 //! @}
 
 #endif // _CONF_USART_EXAMPLE_H

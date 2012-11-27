@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example configuration file
+ * \brief Example specific board configuration file
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,21 +40,12 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#ifndef _CONF_USART_EXAMPLE_H
-#define _CONF_USART_EXAMPLE_H
+#define CONF_BOARD_ENABLE_USARTC0_ONEWIRE
+#define CONF_BOARD_ENABLE_USARTD0_ONEWIRE
+#define CONF_BOARD_XCL_OUT0_PC4
+#define CONF_BOARD_XCL_IN0_PC2
 
-#include "conf_board.h"
-#include "sysclk.h"
-
-/*! \name Configuration
- */
-//! @{
-#define USART_SERIAL_EXAMPLE            &USARTC0
-#define USART_SERIAL_EXAMPLE_BAUDRATE   9600
-#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
-#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
-#define USART_SERIAL_STOP_BIT           false
-//! @}
-
-#endif // _CONF_USART_EXAMPLE_H
+#endif // CONF_BOARD_H
