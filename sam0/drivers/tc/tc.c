@@ -47,20 +47,21 @@
  * Enables the clock and initializes the TC module,
  * based on the values of the config struct
  *
- * \param dev_inst    pointer to the device struct
- * \param config pointer to the config struct
+ * \param dev_inst  pointer to the device struct
+ * \param tc_module pointer to the tc module
+ * \param config    pointer to the config struct
  *
- * \return
- * \retval STATUS_ERR_BUSY    When module is configured in 32 bit slave mode.
- *                            The module will be left un althered in such a case.
- *                            Also when a reset has been initiated.
+ * \return Status of the procedure.
+ * \retval STATUS_OK          When init has completed sucsesfuly.
+ * \retval STATUS_ERR_BUSY    Also when a reset has been initiated.
  * \retval STATUS_INVALID_ARG When there is invalid data in the config struct.
- * \retval STATUS_OK          When init has compleeted sucsesfuly.
- * \retval STATUS_ERR_DENIED  When module is enabled.
+ * \retval STATUS_ERR_DENIED  When module is enabled, and When module is
+ *                            configured in 32 bit slave mode. module will be
+ *                            left un althered in these cases.
  */
 enum status_code tc_init(
-		TC_t *const tc_module,
 		struct tc_dev_inst *const dev_inst,
+		TC_t *const tc_module,
 		struct tc_config *const config)
 {
 	/* Sanity check arguments */
@@ -68,48 +69,57 @@ enum status_code tc_init(
 	Assert(dev_inst);
 	Assert(config);
 
+	//TODO: Add clock config
+
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
+	/*
+	 * make the resolution varable in the dev_inst struct reflect
+	 * the resolution in the module
+	 */
+	dev_inst->resolution = config->resolution;
+
+	//TODO: This might not work.
 	if (tc_module->CTRLA & TC_RESET_bm) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	if (tc_module->STATUS && TC_SLAVE_bm) {
+	if (tc_module->STATUS & TC_SLAVE_bm) {
 		/* module is used as a slave*/
-		return STATUS_ERR_BUSY;
+		return STATUS_ERR_DENIED;
 	}
 
-	if (tc_module->CTRLA TC_ENABLE_bm) {
+	if (tc_module->CTRLA & TC_ENABLE_bm) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
 
-	uint16_t run_in_standby_bm = 0;
+	uint16_t temp_run_in_standby = 0;
 
-	if (config->sleep_enable) {
-		run_while_standby_bm = (0x0001 << TC_CTRLA_SLEEPEN_bp);
+	if (config->run_in_standby) {
+		temp_run_while_standby = (0x0001 << TC_CTRLA_SLEEPEN_bp);
 	}
 
 	/* Synchronize */
 	_tc_wait_for_sync(tc_module);
 
 	/* Set configuration to registers common for all 3 modes */
-	tc_module->CTRLA |= config->resolution | config->wave_generation
+	tc_module->CTRLA = config->resolution | config->wave_generation
 		| config->reload_action | config->clock_prescaler
-		| run_in_standby_bm;
+		| temp_run_in_standby;
 
-	uint8_t temp_ctrlbset_gm = 0;
+	uint8_t temp_ctrlbset = 0;
 	if (config->oneshot)
-		temp_ctrlbset_gm = TC_ONESHOT_ENABLED_bm;
+		temp_ctrlbset = TC_ONESHOT_ENABLED_bm;
 
 	if (config->count_direction)
-		temp_ctrlbset_gm |= TC_COUNT_DIRECTION_DOWN;
+		temp_ctrlbset |= TC_COUNT_DIRECTION_DOWN;
 
 	if (temp_ctrlbset_bm) {//check if we actualy need to go into a wait state.
 		_tc_wait_for_sync(tc_module);
-		tc_module->CTRLBSET |= temp_ctrlbset_gm;
+		tc_module->CTRLBSET = temp_ctrlbset;
 	}
 
 	_tc_wait_for_sync(tc_module);
@@ -129,10 +139,10 @@ enum status_code tc_init(
 	tc_module-EVCTRL = temp_evctrl_gm | config->event_action
 		| config->event_generation_enable;
 
-	/* Switch for TC mode  */
+	/* Switch for TC resolution  */
 	switch (dev_inst->resolution) {
 
-	case TC_MODE_COUNT8:
+	case TC_RESOLUTION_8BIT:
 		_tc_wait_for_sync(tc_module);
 		tc_module->TC_COUNT8.COUNT =
 			config->8bit_conf.count;
@@ -159,7 +169,7 @@ enum status_code tc_init(
 
 		break;
 
-	case TC_MODE_COUNT16:
+	case TC_RESOLUTION_16BIT:
 		_tc_wait_for_sync(tc_module);
 		tc_module->TC_COUNT16.COUNT =
 			config->16bit_conf.count;
@@ -182,7 +192,7 @@ enum status_code tc_init(
 
 		break;
 
-	case TC_MODE_COUNT32:
+	case TC_RESOLUTION_32BIT:
 		_tc_wait_for_sync(tc_module);
 		tc_module->TC_COUNT32.COUNT =
 			config->32bit_conf.count;
@@ -210,15 +220,17 @@ enum status_code tc_init(
  * \brief Set TC module count value
  *
  * Set count value of the TC module This function can be used to
- * update value after init.  It can be used while the counter is
+ * update value after init. It can be used while the counter is
  * running, there is no need to disable the counter module.
  *
  * \param dev_inst      pointer to the device struct
  * \param count         value to write to the count register
  *
- * \return 
- * \retval STATUS_OK                
- * \retval STATUS_ERR_INVALID_ARG   
+ * \return Status of the prosedure
+ * \retval STATUS_OK              The prosedure has gone well and the count
+ *                                walue has been set.
+ * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
+ *                                is out of bounds.
  */
 enum status_code tc_set_count(
 		struct tc_dev_inst *const dev_inst,
@@ -235,33 +247,40 @@ enum status_code tc_set_count(
 	/* Synchronize */
 	_tc_wait_for_sync(tc_module);
 
-	/* Write to based on the TC mode */
+	/* Write to based on the TC resolution */
 	switch (dev_inst->resolution) {
-	case TC_MODE_COUNT8:
+	case TC_RESOLUTION_8BIT:
 		tc_module->TC_COUNT8.COUNT = (uint8_t) count;
 		return STATUS_OK;
 
-	case TC_MODE_COUNT16:
+	case TC_RESOLUTION_16BIT:
 		tc_module->TC_COUNT16.COUNT = (uint16_t) count;
 		return STATUS_OK;
 
-	case TC_MODE_COUNT32:
+	case TC_RESOLUTION_32BIT:
 		tc_module->TC_COUNT32.COUNT = count;
 		return STATUS_OK;
 
 	default:
 		return STATUS_ERR_INVALID_ARG;
 
-	} /* Switch TC mode  */
+	} /* Switch TC resolution end  */
 }
 
 /**
  * \brief Get TC module count register
  *
- * Get the count value of the TC module
+ * Get the count value of the TC module. It can be used while the
+ * counter is running, there is no need to disable the counter module.
  *
  * \param dev_inst      pointer to the device struct
  * \param count         pointer to the where the value is put
+ *
+ * \return status of the prosedure
+ * \retval STATUS_OK              The prosedure has gone well and the count
+ *                                walue is availabel trough the count pointer.
+ * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
+ *                                is out of bounds.
  */
 enum status_code tc_get_count(
 		struct tc_dev_inst *const dev_inst,
@@ -278,7 +297,7 @@ enum status_code tc_get_count(
 	/* Synchronize */
 	_tc_wait_for_sync(tc_module);
 
-	/* Read from based on the TC mode */
+	/* Read from based on the TC resolution */
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
@@ -296,7 +315,7 @@ enum status_code tc_get_count(
 	default:
 		return STATUS_ERR_INVALID_ARG;
 
-	} /* Switch TC mode  */
+	} /* Switch TC resolution end  */
 }
 
 
@@ -314,7 +333,7 @@ enum status_code tc_get_count(
  * \retval STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_get_capture(
-		struct tc_dev_inst *dev_inst,
+		struct tc_dev_inst *const dev_inst,
 		uint32_t *compare,
 		enum tc_compare_capture_channel_index ccc_index)
 {
@@ -329,10 +348,10 @@ enum status_code tc_get_capture(
 	/* Synchronize */
 	_tc_wait_for_sync(tc_module);
 
-	/* Read out based on the TC mode */
-	switch (dev_inst->mode) {
+	/* Read out based on the TC resolution */
+	switch (dev_inst->resolution) {
 
-	case TC_MODE_COUNT8:
+	case TC_RESOLUTION_8BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -356,7 +375,7 @@ enum status_code tc_get_capture(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-	case TC_MODE_COUNT16:
+	case TC_RESOLUTION_16BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -380,7 +399,7 @@ enum status_code tc_get_capture(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-	case TC_MODE_COUNT32:
+	case TC_RESOLUTION_32BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -395,7 +414,7 @@ enum status_code tc_get_capture(
 		default:
 			return STATUS_ERR_INVALID_ARG;
 		}
-	} /* Switch TC mode  */
+	} /* Switch TC resolution end  */
 }
 
 
@@ -413,7 +432,7 @@ enum status_code tc_get_capture(
  * \retval  STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_set_compare(
-		struct tc_dev_inst *dev_inst,
+		struct tc_dev_inst *const dev_inst,
 		uint32_t compare,
 		enum tc_compare_capture_channel_index ccc_index)
 {
@@ -428,9 +447,9 @@ enum status_code tc_set_compare(
 	/* Synchronize */
 	_tc_wait_for_sync(tc_module);
 
-	/* Read out based on the TC mode */
-	switch(dev_inst->mode) {
-	case TC_MODE_COUNT8:
+	/* Read out based on the TC resolution */
+	switch(dev_inst->resolution) {
+	case TC_RESOLUTION_8BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -458,7 +477,7 @@ enum status_code tc_set_compare(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-	case TC_MODE_COUNT16:
+	case TC_RESOLUTION_16BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -486,7 +505,7 @@ enum status_code tc_set_compare(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-	case TC_MODE_COUNT32:
+	case TC_RESOLUTION_32BIT:
 		/* Read out based on compare register */
 		switch (ccc_index) {
 
@@ -502,5 +521,5 @@ enum status_code tc_set_compare(
 			return STATUS_ERR_INVALID_ARG;
 		}
 
-	} /* Switch TC mode  */
+	} /* Switch TC resolution  */
 }
