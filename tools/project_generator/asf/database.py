@@ -2699,6 +2699,17 @@ class ConfigDB(object):
 			if num_modules > 1:
 				output_obj.error("Project %s has %s application modules, should be no more than 1" % (project.id, num_modules))
 
+			# 3) there are no subtype="api" elements in the application module(s)
+			total += 1
+			for m in modules:
+				for api_file in generator._get_api_header_files(m, recursive=False):
+					output_obj.critical("Application module %s has API subtype header %s, which is not allowed" % (m.id, api_file))
+
+			# 4) or in the project itself
+			total += 1
+			for api_file in generator._get_api_header_files(project, recursive=False):
+				output_obj.critical("Project %s has API subtype header %s, which is not allowed" % (project.id, api_file))
+
 		return total, errors
 
 	def sanity_check_project_extension_dependencies(self, output_obj):
