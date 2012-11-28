@@ -310,7 +310,7 @@ enum system_main_clock {
 /**
  * Available divide ratios for the CPU and bus clocks
  */
-enum clock_main_div {
+enum system_main_clock_div {
 	/** Divide Main clock by 1 */
 	SYSTEM_MAIN_CLOCK_DIV_1,
 	/** Divide Main clock by 2 */
@@ -605,7 +605,7 @@ static inline void system_main_clock_set_source(enum system_main_clock clock)
  * \param[in] divider CPU clock divider
  *
  */
-static inline void system_cpu_clock_set_divider(enum clock_main_div divider)
+static inline void system_cpu_clock_set_divider(enum system_main_clock_div divider)
 {
 	PM.CPUSEL = divider;
 }
@@ -635,7 +635,7 @@ static inline void system_cpu_clock_set_divider(enum clock_main_div divider)
  * \retval STATUS_ERR_INVALID_ARG Invalid bus given
  * \retval STATUS_OK The APBx clock was set successfully
  */
-static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus bus, enum clock_main_div divider)
+static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus bus, enum system_main_clock_div divider)
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
