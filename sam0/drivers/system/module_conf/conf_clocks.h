@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#include <clock.h>
 
 #ifndef CONF_CLOCKS_H
 #  define CONF_CLOCKS_H

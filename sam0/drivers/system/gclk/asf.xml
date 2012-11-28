@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.gclk" caption="Generic Clock Driver">
+	<module type="driver" id="sam0.drivers.system.gclk" caption="Generic Clock Driver">
 		<info type="description" value="summary">
 			Driver for the SAM0+ generic clocks. Provides a unified interface
 			for the configuration and management of the Generic Clock generators
@@ -17,7 +17,7 @@
 		<build type="doxygen-entry-point" value="sam0_gclk_group"/>
 		<device-support value="sam0d"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.sysctrl.clock"/>
+		<require idref="sam0.drivers.system.core"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>
 </asf>
