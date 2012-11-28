@@ -117,14 +117,14 @@
  * \section gclk_gen GCLK Generators
  * A GCLK generator is connected to a clock source, and can if needed also prescale
  * the clock source before being used by a GCLK channel. The number of GCLK generators
- * are device dependent. To configure the GCLK generator you use the clock_gclk_gen_set_config(),
- * passing a configuration struct of type clock_gclk_gen_conf. Note that the generator
+ * are device dependent. To configure the GCLK generator you use the system_gclk_gen_set_config(),
+ * passing a configuration struct of type system_gclk_gen_conf. Note that the generator
  * also needs to be enabled before it can be used by running the gclk_gen_enable()
  * function.
  *
  * \section gclk_chan GCLK Channels
  * A GCLK channel is connected to one or more peripherals and provide clocking
- * to that module. To configure a specific GCLK channel you must use clock_gclk_ch_set_config().
+ * to that module. To configure a specific GCLK channel you must use system_gclk_ch_set_config().
  * This needs a struct of type clock_gclock_ch_conf providing all configuration options
  * for the channel.
  *

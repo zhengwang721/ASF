@@ -190,10 +190,10 @@ extern "C" {
  *
  *  Configuration structure for a Generic Clock Generator channel. This
  *  structure should be initialized by the
- *  \ref clock_gclk_gen_get_config_defaults() function before being modified by
+ *  \ref system_gclk_gen_get_config_defaults() function before being modified by
  *  the user application.
  */
-struct clock_gclk_gen_conf {
+struct system_gclk_gen_conf {
 	/** Source clock input channel index. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
@@ -209,10 +209,10 @@ struct clock_gclk_gen_conf {
 /** \brief Generic Clock configuration structure.
  *
  *  Configuration structure for a Generic Clock channel. This structure
- *  should be initialized by the \ref clock_gclk_ch_get_config_defaults()
+ *  should be initialized by the \ref system_gclk_ch_get_config_defaults()
  *  function before being modified by the user application.
  */
-struct clock_gclk_ch_conf {
+struct system_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
 	#if !defined (REVB)
@@ -226,7 +226,7 @@ struct clock_gclk_ch_conf {
  * @{
  */
 
-void clock_gclk_init(void);
+void system_gclk_init(void);
 
 /** @} */
 
@@ -249,8 +249,8 @@ void clock_gclk_init(void);
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
-static inline void clock_gclk_gen_get_config_defaults(
-		struct clock_gclk_gen_conf *const config)
+static inline void system_gclk_gen_get_config_defaults(
+		struct system_gclk_gen_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -264,14 +264,14 @@ static inline void clock_gclk_gen_get_config_defaults(
 	#endif
 }
 
-void clock_gclk_gen_set_config(
+void system_gclk_gen_set_config(
 		const uint8_t generator,
-		struct clock_gclk_gen_conf *const config);
+		struct system_gclk_gen_conf *const config);
 
-void clock_gclk_gen_enable(
+void system_gclk_gen_enable(
 		const uint8_t generator);
 
-void clock_gclk_gen_disable(
+void system_gclk_gen_disable(
 		const uint8_t generator);
 
 /** @} */
@@ -294,8 +294,8 @@ void clock_gclk_gen_disable(
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
-static inline void clock_gclk_ch_get_config_defaults(
-		struct clock_gclk_ch_conf *const config)
+static inline void system_gclk_ch_get_config_defaults(
+		struct system_gclk_ch_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -308,14 +308,14 @@ static inline void clock_gclk_ch_get_config_defaults(
 	#endif
 }
 
-void clock_gclk_ch_set_config(
+void system_gclk_ch_set_config(
 		const uint8_t channel,
-		struct clock_gclk_ch_conf *const config);
+		struct system_gclk_ch_conf *const config);
 
-void clock_gclk_ch_enable(
+void system_gclk_ch_enable(
 		const uint8_t channel);
 
-void clock_gclk_ch_disable(
+void system_gclk_ch_disable(
 		const uint8_t channel);
 
 /** @} */
@@ -325,10 +325,10 @@ void clock_gclk_ch_disable(
  * @{
  */
 
-uint32_t clock_gclk_gen_get_hz(
+uint32_t system_gclk_gen_get_hz(
 		const uint8_t generator);
 
-uint32_t clock_gclk_ch_get_hz(
+uint32_t system_gclk_ch_get_hz(
 		const uint8_t channel);
 
 /** @} */

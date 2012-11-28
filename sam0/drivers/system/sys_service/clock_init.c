@@ -57,7 +57,7 @@
 void clocks_init(void)
 {
 	struct clock_source_config conf;
-	struct clock_gclk_gen_conf gclk_generator_conf;
+	struct system_gclk_gen_conf gclk_generator_conf;
 
 	/* Initialize config struct to defaults */
 	clock_source_get_default_config(&conf);
@@ -138,57 +138,57 @@ void clocks_init(void)
 	#if CONF_CLOCK_GCLK_0_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
-	clock_gclk_gen_set_config(0, &gclk_generator_conf);
-	clock_gclk_gen_enable(0);
+	system_gclk_gen_set_config(0, &gclk_generator_conf);
+	system_gclk_gen_enable(0);
 	#endif
 
 	#if CONF_CLOCK_GCLK_1_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_1_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_1_PRESCALER;
-	clock_gclk_gen_set_config(1, &gclk_generator_conf);
-	clock_gclk_gen_enable(1);
+	system_gclk_gen_set_config(1, &gclk_generator_conf);
+	system_gclk_gen_enable(1);
 	#endif
 
 	#if CONF_CLOCK_GCLK_2_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_2_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_2_PRESCALER;
-	clock_gclk_gen_set_config(2, &gclk_generator_conf);
-	clock_gclk_gen_enable(2);
+	system_gclk_gen_set_config(2, &gclk_generator_conf);
+	system_gclk_gen_enable(2);
 	#endif
 
 	#if CONF_CLOCK_GCLK_3_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_3_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_3_PRESCALER;
-	clock_gclk_gen_set_config(3, &gclk_generator_conf);
-	clock_gclk_gen_enable(3);
+	system_gclk_gen_set_config(3, &gclk_generator_conf);
+	system_gclk_gen_enable(3);
 	#endif
 
 	#if CONF_CLOCK_GCLK_4_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_4_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_4_PRESCALER;
-	clock_gclk_gen_set_config(4, &gclk_generator_conf);
-	clock_gclk_gen_enable(4);
+	system_gclk_gen_set_config(4, &gclk_generator_conf);
+	system_gclk_gen_enable(4);
 	#endif
 
 	#if CONF_CLOCK_GCLK_5_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_5_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_5_PRESCALER;
-	clock_gclk_gen_set_config(5, &gclk_generator_conf);
-	clock_gclk_gen_enable(5);
+	system_gclk_gen_set_config(5, &gclk_generator_conf);
+	system_gclk_gen_enable(5);
 	#endif
 
 	#if CONF_CLOCK_GCLK_6_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_6_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_6_PRESCALER;
-	clock_gclk_gen_set_config(6, &gclk_generator_conf);
-	clock_gclk_gen_enable(6);
+	system_gclk_gen_set_config(6, &gclk_generator_conf);
+	system_gclk_gen_enable(6);
 	#endif
 
 	#if CONF_CLOCK_GCLK_7_ENABLE == true
 	gclk_generator_conf.source_clock = CONF_CLOCK_GCLK_7_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_7_PRESCALER;
-	clock_gclk_gen_set_config(7, &gclk_generator_conf);
-	clock_gclk_gen_enable(7);
+	system_gclk_gen_set_config(7, &gclk_generator_conf);
+	system_gclk_gen_enable(7);
 	#endif
 
 	#endif /* Configure GCLK */

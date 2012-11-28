@@ -50,10 +50,10 @@ void config_gclock_channel(void);
 void config_gclock_generator(void)
 {
 //! [setup_1]
-	struct clock_gclk_gen_conf gclock_gen_conf;
+	struct system_gclk_gen_conf gclock_gen_conf;
 //! [setup_1]
 //! [setup_2]
-	clock_gclk_gen_get_config_defaults(&gclock_gen_conf);
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
 //! [setup_2]
 
 //! [setup_3]
@@ -61,21 +61,21 @@ void config_gclock_generator(void)
 	gclock_gen_conf.division_factor = 128;
 //! [setup_3]
 //! [setup_4]
-	clock_gclk_gen_set_config(EXAMPLE_GCLOCK_GENERATOR, &gclock_gen_conf);
+	system_gclk_gen_set_config(EXAMPLE_GCLOCK_GENERATOR, &gclock_gen_conf);
 //! [setup_4]
 
 //! [setup_5]
-	clock_gclk_gen_enable(EXAMPLE_GCLOCK_GENERATOR);
+	system_gclk_gen_enable(EXAMPLE_GCLOCK_GENERATOR);
 //! [setup_5]
 }
 
 void config_gclock_channel(void)
 {
 //! [setup_6]
-	struct clock_gclk_ch_conf gclock_ch_conf;
+	struct system_gclk_ch_conf gclock_ch_conf;
 //! [setup_6]
 //! [setup_7]
-	clock_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
 //! [setup_7]
 
 //! [setup_8]
@@ -83,11 +83,11 @@ void config_gclock_channel(void)
 	gclock_ch_conf.enable_during_sleep = false;
 //! [setup_8]
 //! [setup_9]
-	clock_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);
+	system_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);
 //! [setup_9]
 
 //! [setup_10]
-	clock_gclk_ch_enable(EXAMPLE_GCLOCK_CHANNEL);
+	system_gclk_ch_enable(EXAMPLE_GCLOCK_CHANNEL);
 //! [setup_10]
 }
 //! [setup]
