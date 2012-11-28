@@ -41,7 +41,7 @@
 #ifndef SERCOM_INTERRUPTS_H_INCLUDED
 #define SERCOM_INTERRUPTS_H_INCLUDED
 
-#include <asf.h>
+#include <sercom.h>
 
 #define SERCOM_INSTS_NUM 6
 #define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }

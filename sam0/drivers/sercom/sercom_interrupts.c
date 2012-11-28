@@ -38,7 +38,6 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 #include <sercom_interrupts.h>
 
 /** Save status of initialized handlers. */
