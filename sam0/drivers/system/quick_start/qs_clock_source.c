@@ -71,7 +71,7 @@ int main(void)
 
 
 	/** [main1] */
-	system_main_clock_set_source SYSTEM_CLOCK_MAIN_DFLL);
+	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
 	/** [main1] */
 
 }

@@ -91,12 +91,12 @@
  * The CPU and APH/APBx buses are clocked by the same clock source (main clock),
  * but can have different prescalers, giving different speeds. To set the
  * The source of this clock can be any of the clock sources in the device
- * or a GCLK. The system clock source is set by the clock_main_clock_set_clocksource().
+ * or a GCLK. The system clock source is set by the system_main_clock_set_clocksource().
  * You can then set the prescalers for the CPU and/or the buses on the device
  * by using system_cpu_clock_set_divider(), clock_apbx_set_divider and clock_ahb_set_divider().
  * It is also possible to enable a main clock failure detector that will switch
  * the main clock to a safe clock if for any reason the clock source fails. This
- * can be enabled by using the clock_main_clock_set_failure_detect() function.
+ * can be enabled by using the system_main_clock_set_failure_detect() function.
  *
  * \section clock_masking Clock Masking
  * To disable clocking to a peripheral module you can set the clock masks
@@ -228,7 +228,7 @@ enum clock_startup {
  * or an external clock delivering a logic level clock signal to the oscillator
  * pin
  */
-enum clock_external_clock {
+enum system_external_clock {
 	/** The external clock source is a crystal oscillator */
 	SYSTEM_CLOCK_EXTERNAL_CRYSTAL,
 	/** The connected clock source is an external logic level clock signal */
@@ -238,7 +238,7 @@ enum clock_external_clock {
 /**
  * DFLL operating mode
  */
-enum clock_dfll_mode {
+enum system_dfll_mode {
 	/** The DFLL is operating in open loop mode with no feedback */
 	SYSTEM_CLOCK_DFLL_OPEN_LOOP,
 	/** The DFLL is operating in closed loop mode with frequency feedback from a
@@ -250,7 +250,7 @@ enum clock_dfll_mode {
 /**
  * DFLL lock behaviour on wakeup from sleep
  */
-enum clock_dfll_wakeup_lock {
+enum system_dfll_wakeup_lock {
 	/** Keep DFLL lock when the device wakes from sleep */
 	SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE,
 	/** Lose DFLL lock when the devices wakes from sleep */
@@ -260,7 +260,7 @@ enum clock_dfll_wakeup_lock {
 /**
  * DFLL fine tracking behaviour after an acquired lock
  */
-enum clock_dfll_stable_tracking {
+enum system_dfll_stable_tracking {
 	/** Keep tracking after the DFLL has gotten a fine lock */
 	SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK,
 	/** Stop tracking after the DFLL has gotten a fine lock */
@@ -270,7 +270,7 @@ enum clock_dfll_stable_tracking {
 /** If the difference between the DFLL source clock and output frequency is
  * small, inserting a chill cycle might prevent instability in the DFLL.
  * */
-enum clock_dfll_chill_cycle {
+enum system_dfll_chill_cycle {
 	/** Enable a chill cycle, where the DFLL output frequency is not measured */
 	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE,
 	/** Disable a chill cycle, where the DFLL output frequency is not measured */
@@ -280,7 +280,7 @@ enum clock_dfll_chill_cycle {
 /**
  * DFLL QuickLock settings
  */
-enum clock_dfll_quick_lock {
+enum system_dfll_quick_lock {
 	/** Enable the QuickLock feature for less strict lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
@@ -292,17 +292,17 @@ enum clock_dfll_quick_lock {
 /**
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
  */
-enum clock_main_clock {
+enum system_main_clock {
 	/** Internal 32kHz oscillator */
-	SYSTEM_CLOCK_MAIN_RCSYS,
+	SYSTEM_MAIN_CLOCK_RCSYS,
 	/** External oscillator */
-	SYSTEM_CLOCK_MAIN_OSC0,
+	SYSTEM_MAIN_CLOCK_OSC0,
 	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_CLOCK_MAIN_DFLL,
+	SYSTEM_MAIN_CLOCK_DFLL,
 	/** Internal 8MHz RC oscillator */
-	SYSTEM_CLOCK_MAIN_RC8,
+	SYSTEM_MAIN_CLOCK_RC8,
 	/** GCLK channel x */
-	SYSTEM_CLOCK_MAIN_GCLK, /* GCLK0 ?*/
+	SYSTEM_MAIN_CLOCK_GCLK, /* GCLK0 ?*/
 };
 #endif
 
@@ -312,21 +312,21 @@ enum clock_main_clock {
  */
 enum clock_main_div {
 	/** Divide Main clock by 1 */
-	SYSTEM_CLOCK_MAIN_DIV_1,
+	SYSTEM_MAIN_CLOCK_DIV_1,
 	/** Divide Main clock by 2 */
-	SYSTEM_CLOCK_MAIN_DIV_2,
+	SYSTEM_MAIN_CLOCK_DIV_2,
 	/** Divide Main clock by 4 */
-	SYSTEM_CLOCK_MAIN_DIV_4,
+	SYSTEM_MAIN_CLOCK_DIV_4,
 	/** Divide Main clock by 8 */
-	SYSTEM_CLOCK_MAIN_DIV_8,
+	SYSTEM_MAIN_CLOCK_DIV_8,
 	/** Divide Main clock by 16 */
-	SYSTEM_CLOCK_MAIN_DIV_16,
+	SYSTEM_MAIN_CLOCK_DIV_16,
 	/** Divide Main clock by 32 */
-	SYSTEM_CLOCK_MAIN_DIV_32,
+	SYSTEM_MAIN_CLOCK_DIV_32,
 	/** Divide Main clock by 64 */
-	SYSTEM_CLOCK_MAIN_DIV_64,
+	SYSTEM_MAIN_CLOCK_DIV_64,
 	/** Divide Main clock by 128 */
-	SYSTEM_CLOCK_MAIN_DIV_128,
+	SYSTEM_MAIN_CLOCK_DIV_128,
 };
 
 enum clock_apb_bus {
@@ -385,7 +385,7 @@ struct system_clock_source_config {
 	/** External oscillator/Crystal (XOSC) */
 	struct {
 		/** External crystal or clock*/
-		enum clock_external_clock external_clock;
+		enum system_external_clock external_clock;
 		/** Crystal oscillator start-up time */
 		enum clock_startup startup_time;
 		/** Enable automatic amplitude gain control */
@@ -408,15 +408,15 @@ struct system_clock_source_config {
 	/** DFLL (Digital frequency locked loop) */
 	struct {
 		/** Loop mode */
-		enum clock_dfll_mode loop;
+		enum system_dfll_mode loop;
 		/** Enable Quick Lock */
-		enum clock_dfll_quick_lock quick_lock;
+		enum system_dfll_quick_lock quick_lock;
 		/** Enable Chill Cycle */
-		enum clock_dfll_chill_cycle chill_cycle;
+		enum system_dfll_chill_cycle chill_cycle;
 		/** DFLL lock state on wakeup */
-		enum clock_dfll_wakeup_lock wakeup_lock;
+		enum system_dfll_wakeup_lock wakeup_lock;
 		/** DFLL tracking after fine lock */
-		enum clock_dfll_stable_tracking stable_tracking;
+		enum system_dfll_stable_tracking stable_tracking;
 		/** Coarse calibration value (Open loop mode) */
 		uint8_t coarse_value;
 		/** Fine calibration value (Open loop mode) */
@@ -591,7 +591,7 @@ static inline void system_main_clock_set_failure_detect(bool enable)
  * \param[in] clock CPU clock source
  *
  */
-static inline void system_main_clock_set_source(enum clock_main_clock clock)
+static inline void system_main_clock_set_source(enum system_main_clock clock)
 {
 	PM.CTRL = (PM.CTRL & ~PM_MCSEL_gm) | (clock & PM_MCSEL_gm) << PM_MCSEL_gp;
 }
