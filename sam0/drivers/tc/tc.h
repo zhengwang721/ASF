@@ -65,8 +65,12 @@ extern "C" {
  * The Timer counter (TC) enables you to chreate PWM signals, do
  * waveform generation, keep time, generate time lables for events, do
  * rudimentary counting, performe input capture, pulse width capture,
- * frequensy capture, and more.\n
- * \n
+ * frequensy capture, and more.
+ * \n\n
+ *
+ * A TC is basicaly a counter however if it is suplied with an acurate
+ * frequensy to count, the module becomes capable of performing timer
+ * operations.
  *
  * This driver is chreated and ment to be used as a polled driver, as
  * such this documetation will not go into the use of interupts with
@@ -82,9 +86,69 @@ extern "C" {
  * registers oneshot, eventsystem conection. Waveform generation and
  * pinouts. period register. count direction. count sourses. capture.
  *
+ * The TC module in SAM0+ can be configured with 4 timer/counters in 8
+ * bit resolution, or 4 timers/counters in 16 bit resolution, or 2
+ * timers/counters in 32 bit resolution.
+ * \n\n
  *
- * \subsection counter_resolution Counter Resolution
+ * Independent of what resolution the timer runs on it can basicaly be
+ * set up in two difrent modes, althoug to some extent one TC instance
+ * can be configured in both modes. These modes are capture and
+ * compare.
+ * \n\n
  *
+ * In compare mode you will be compareing the counter value with one
+ * or more other values. When the counter coensides with the value you
+ * are comaring it to this can generate an action. The capture mode is
+ * offten used for generating output signals such as waveform
+ * generation, frequensy generation and PWM generation. In adition you
+ * can use compare mode for timer applications where the value used in
+ * comparison with the counter value siginfies a time for when you
+ * want some subroutine or even to start. In a similar fashion you can
+ * use it to count certain events and when this reaches a certain
+ * value an action is taken.
+ * \n\n
+ *
+ * In capture mode the counter value is stored upon some configurable
+ * event. This can be used to generate time stamps or you can use it
+ * for frequensy capture, event capture and pulse with capture.
+ *
+ *
+ * \subsection counter_resolution Timer Counter Resolution
+ *
+ * When talking about resolution with respect to the timer counter
+ * what is ment is the bit presision you can get with the counter. The
+ * timer counter in the SAM0+ can achive 8, 16 and 32 bit presison or
+ * resolution. This naturaly effects how far the counter is capable of
+ * counting. For the difrent modes you can see in table ... for easy
+ * refrence what the MAX value is using diferent resolution.
+ *
+ * <table>
+ *  <tr>
+ *    <th> <\th>
+ *    <th> colspan="2" MAX <\th>
+ *  <\tr>
+ *  <tr>
+ *    <th> Resolution <\th>
+ *    <th> Hexadecimal <\th>
+ *    <th> Decimal <\th>
+ *  <\tr>
+ *  <tr>
+ *    <th> 8 bit <\th>
+ *    <td> 0xFF <\td>
+ *    <td> 256 <\td>
+ *  <tr>
+ *  <tr>
+ *    <th> 16 bit <\th>
+ *    <td> 0xFFFF <\td>
+ *    <td> 65536 <\td>
+ *  <tr>
+ *  <tr>
+ *    <th> 8 bit <\th>
+ *    <td> 0xFFFFFFFF <\td>
+ *    <td> 4294967296 <\td>
+ *  <tr>
+ * </table>
  *
  * \subsection clock_and_prescaler Clock selection, prescaler and reload action
  *

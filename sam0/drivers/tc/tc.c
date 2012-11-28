@@ -1,4 +1,4 @@
-/**
+q/**
  * \file
  *
  * \brief SAM0+ TC Driver
@@ -52,12 +52,12 @@
  * \param config    pointer to the config struct
  *
  * \return Status of the procedure.
- * \retval STATUS_OK          When init has completed sucsesfuly.
+ * \retval STATUS_OK          When init has completed successfully.
  * \retval STATUS_ERR_BUSY    Also when a reset has been initiated.
  * \retval STATUS_INVALID_ARG When there is invalid data in the config struct.
  * \retval STATUS_ERR_DENIED  When module is enabled, and When module is
  *                            configured in 32 bit slave mode. module will be
- *                            left un althered in these cases.
+ *                            left unaltered in these cases.
  */
 enum status_code tc_init(
 		struct tc_dev_inst *const dev_inst,
@@ -75,7 +75,7 @@ enum status_code tc_init(
 	dev_inst->hw_dev = tc_module;
 
 	/*
-	 * make the resolution varable in the dev_inst struct reflect
+	 * make the resolution variable in the dev_inst struct reflect
 	 * the resolution in the module
 	 */
 	dev_inst->resolution = config->resolution;
@@ -117,7 +117,7 @@ enum status_code tc_init(
 	if (config->count_direction)
 		temp_ctrlbset |= TC_COUNT_DIRECTION_DOWN;
 
-	if (temp_ctrlbset_bm) {//check if we actualy need to go into a wait state.
+	if (temp_ctrlbset_bm) {//check if we actually need to go into a wait state.
 		_tc_wait_for_sync(tc_module);
 		tc_module->CTRLBSET = temp_ctrlbset;
 	}
@@ -226,9 +226,9 @@ enum status_code tc_init(
  * \param dev_inst      pointer to the device struct
  * \param count         value to write to the count register
  *
- * \return Status of the prosedure
- * \retval STATUS_OK              The prosedure has gone well and the count
- *                                walue has been set.
+ * \return Status of the procedure
+ * \retval STATUS_OK              The procedure has gone well and the count
+ *                                value has been set.
  * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
  *                                is out of bounds.
  */
@@ -276,9 +276,9 @@ enum status_code tc_set_count(
  * \param dev_inst      pointer to the device struct
  * \param count         pointer to the where the value is put
  *
- * \return status of the prosedure
- * \retval STATUS_OK              The prosedure has gone well and the count
- *                                walue is availabel trough the count pointer.
+ * \return status of the procedure
+ * \retval STATUS_OK              The procedure has gone well and the count
+ *                                value is available trough the count pointer.
  * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
  *                                is out of bounds.
  */
@@ -326,7 +326,7 @@ enum status_code tc_get_count(
  *
  * \param[in] dev_inst         pointer to the device struct
  * \param[out] compare         pointer to a buffer
- * \param[in] ccc_index        index of the compare register to read from
+ * \param[in] channel_index        index of the compare register to read from
  *
  * \return
  * \retval STATUS_OK
@@ -335,7 +335,7 @@ enum status_code tc_get_count(
 enum status_code tc_get_capture(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t *compare,
-		enum tc_compare_capture_channel_index ccc_index)
+		enum tc_compare_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -353,7 +353,7 @@ enum status_code tc_get_capture(
 
 	case TC_RESOLUTION_8BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			*compare = tc_module->TC_COUNT8.CC0;
@@ -377,7 +377,7 @@ enum status_code tc_get_capture(
 
 	case TC_RESOLUTION_16BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			*compare = tc_module->TC_COUNT16.CC0;
@@ -401,7 +401,7 @@ enum status_code tc_get_capture(
 
 	case TC_RESOLUTION_32BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			*compare = tc_module->TC_COUNT32.CC0;
@@ -425,7 +425,7 @@ enum status_code tc_get_capture(
  *
  * \param dev_inst    pointer to the device struct
  * \param buffer      pointer to a buffer
- * \ccc_index         index of the compare register to write to
+ * \channel_index         index of the compare register to write to
  *
  * \return
  * \retval  STATUS_OK
@@ -434,7 +434,7 @@ enum status_code tc_get_capture(
 enum status_code tc_set_compare(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t compare,
-		enum tc_compare_capture_channel_index ccc_index)
+		enum tc_compare_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -451,7 +451,7 @@ enum status_code tc_set_compare(
 	switch(dev_inst->resolution) {
 	case TC_RESOLUTION_8BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			tc_module->TC_COUNT8.CC0
@@ -479,7 +479,7 @@ enum status_code tc_set_compare(
 
 	case TC_RESOLUTION_16BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			tc_module->TC_COUNT16.CC0
@@ -507,7 +507,7 @@ enum status_code tc_set_compare(
 
 	case TC_RESOLUTION_32BIT:
 		/* Read out based on compare register */
-		switch (ccc_index) {
+		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
 			tc_module->TC_COUNT32.CC0 = compare;
