@@ -66,6 +66,9 @@ typedef (*i2c_master_callback_t)(
  * \name Callbacks
  * @{
  */
+
+void _i2c_master_callback_handler(uint8_t instance);
+
 /**
  * \brief Register callback for the specified callback type.
  *

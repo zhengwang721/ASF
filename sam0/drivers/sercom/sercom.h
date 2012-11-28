@@ -46,8 +46,6 @@
 #include <gclk.h>
 #include <clock.h>
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -117,6 +115,11 @@ enum status_code {
 
 //#include "sercom_header.h"
 #include <sercom_interrupts.h>
+
+enum status_code sercom_set_gclk_generator(
+		enum gclk_generator generator_source,
+		bool run_in_standby,
+		bool force_change);
 
 enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);

@@ -38,3 +38,12 @@
  * \asf_license_stop
  *
  */
+#include <i2c_master_async.h>
+
+void _i2c_master_callback_handler(uint8_t instance)
+{
+	/* Get device instance for callback handling. */
+	struct i2c_master_dev_inst *dev_inst =
+			(struct i2c_master_dev_inst*)_sercom_instances[instance];
+
+}

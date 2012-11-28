@@ -40,4 +40,5 @@
  */
 
 #include <asf.h>
+#include <conf_clocks.h>
 

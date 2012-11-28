@@ -43,6 +43,7 @@
 #define I2C_MASTER_H_INCLUDED
 
 #include <asf.h>
+#include <clock.h>
 
 #ifdef I2C_MASTER_ASYNC
 # include <i2c_master_async.h>
@@ -63,9 +64,6 @@ extern "C" {
  * \section i2c_master_api_overview API Overview
  * @{
  */
-
-#define I2C_SYNC_BUSY_Msk 0
-#define I2C_MASTER_ENABLE_Pos 1
 
 enum i2c_master_interrupt_flag {
 	I2C_MASTER_INTERRUPT_WRITE = 0,
@@ -93,9 +91,9 @@ enum i2c_master_start_hold_time {
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz. */
-	I2C_MASTER_BAUD_RATE_100KHZ = 0,
+	I2C_MASTER_BAUD_RATE_100KHZ = 100,
 	/** Baud rate at 400kHz. */
-	I2C_MASTER_BAUD_RATE_400KHZ = 1,
+	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
 /**
@@ -110,10 +108,14 @@ struct i2c_master_dev_inst {
 	/** Hardware instance initialized for the struct. */
 	SERCOM_t *hw_dev;
 	/** Data buffer for packet write and read. */
-	uint8_t *buffer_ptr;
+	uint8_t *buffer;
 	/** Counter used for bytes left to send in write and to count number of
 	  * obtained bytes in read. */
 	uint16_t buffer_length;
+	/** Unknown bus state timeout. */
+	uint16_t unkown_bus_state_timeout;
+	/* Buffer write timeout value. */
+	uint16_t buffer_timeout;
 #ifdef I2C_MASTER_ASYNC
 	/** Holder for callback functions. */
 	i2c_master_callback_t callback[_I2C_MASTER_CALLBACK_N];
@@ -136,16 +138,16 @@ struct i2c_master_dev_inst {
 struct i2c_master_conf {
 	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
-	/** Bus hold time after start signal. */
+	/** GCLK generator to use as clock source. */
+	enum gclk_generator generator_source;
+	/** Bus hold time after start signal on data line. */
 	enum i2c_master_start_hold_time start_hold_time;
+	/** Unknown bus state timeout. */
+	uint16_t unkown_bus_state_timeout;
 	/** Timeout for packet write to wait for slave. */
 	uint16_t buffer_timeout;
-	/** If true, 4 wire mode with external tri-stating is enabled. */
-	bool external_reciever;
 	/** Set to keep module active in sleep modes. */
 	bool run_in_standby;
-	/** Smart mode. Automatic acknowledge response. */
-	bool smart_mode;
 };
 
 /**
@@ -191,9 +193,9 @@ static inline void i2c_master_get_config_defaults(
 	/*Sanity check argument. */
 	Assert(config);
 	config->baud_rate = I2C_MASTER_BAUD_RATE_100KHZ;
+	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
-	config->external_reciever = false;
 	config->buffer_timeout = 1000;
 }
 
@@ -232,7 +234,7 @@ static inline void i2c_master_enable(
 	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
 
 	/* Wait for module to sync. */
-	_i2c_wait_for_sync(dev_inst);
+	_i2c_master_wait_for_sync(dev_inst);
 
 	/* Enable module. */
 	i2c_module.CTRLA |= ( 1 << I2C_MASTER_ENABLE_Pos );
@@ -257,7 +259,7 @@ static inline void i2c_master_disable(
 	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
 
 	/* Wait for module to sync. */
-	_i2c_wait_for_sync(dev_inst);
+	_i2c_master_wait_for_sync(dev_inst);
 
 	/* Disable module. */
 	i2c_module.CTRLA &= ~(1 << I2C_MASTER_ENABLE_Pos);
@@ -374,7 +376,7 @@ static inline void i2c_master_clear_interrupt_flag(
  * \return          [description]
  */
 enum status_code i2c_master_read_packet(
-		const struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
 /**
