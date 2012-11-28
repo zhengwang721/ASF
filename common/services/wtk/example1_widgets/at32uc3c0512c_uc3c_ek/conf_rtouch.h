@@ -60,49 +60,5 @@
 /** Interrupt priority for the resistive touch driver. */
 #define RTOUCH_ADC_INT_LEVEL         AVR32_INTC_INTLEVEL_INT0
 
-#if !defined(RTOUCH_ADC_IRQ)         || \
-    !defined(RTOUCH_XH_PIN)          || \
-    !defined(RTOUCH_XH_PIN_FUNCTION) || \
-    !defined(RTOUCH_ADC_XH_CHANNEL)  || \
-    !defined(RTOUCH_YH_PIN)          || \
-    !defined(RTOUCH_YH_PIN_FUNCTION) || \
-    !defined(RTOUCH_ADC_YH_CHANNEL)  || \
-    !defined(RTOUCH_XL_PIN)          || \
-    !defined(RTOUCH_XL_PIN_FUNCTION) || \
-    !defined(RTOUCH_ADC_XL_CHANNEL)  || \
-    !defined(RTOUCH_YL_PIN)          || \
-    !defined(RTOUCH_YL_PIN_FUNCTION) || \
-    !defined(RTOUCH_ADC_YL_CHANNEL)  || \
-    !defined(RTOUCH_ADC)
-
-# define RTOUCH_ADC_IRQ              AVR32_ADC_IRQ
-
-/** IO pin used for XL line. */
-# define RTOUCH_XH_PIN               AVR32_ADC_AD_4_PIN /* PA25 */
-# define RTOUCH_XH_PIN_FUNCTION      AVR32_ADC_AD_4_FUNCTION
-
-/** ADC channel number for XL */
-# define RTOUCH_ADC_XH_CHANNEL      (1 << 4)
-
-/** IO pin used for XH line. */
-# define RTOUCH_XL_PIN              AVR32_ADC_AD_6_PIN /* PA27 */
-# define RTOUCH_XL_PIN_FUNCTION     AVR32_ADC_AD_6_FUNCTION
-# define RTOUCH_ADC_XL_CHANNEL      (1 << 6)
-
-/** IO pin used for YL line. */
-# define RTOUCH_YL_PIN              AVR32_ADC_AD_5_PIN /* PA26 */
-# define RTOUCH_YL_PIN_FUNCTION     AVR32_ADC_AD_5_FUNCTION
-# define RTOUCH_ADC_YL_CHANNEL      (1 << 5)
-
-/** IO pin used for YH line. */
-# define RTOUCH_YH_PIN              AVR32_ADC_AD_7_PIN /* PA28 */
-# define RTOUCH_YH_PIN_FUNCTION     AVR32_ADC_AD_7_FUNCTION
-# define RTOUCH_ADC_YH_CHANNEL      (1 << 7)
-
-/** AVR32 ADC module used for touch panel sampling. */
-# define RTOUCH_ADC                 AVR32_ADC
-
-# warning "Using a default resistive touch define value. Edit the conf_rtouch.h file to modify that define value according to the current board."
 #endif
-
-#endif
+/* EOF */
