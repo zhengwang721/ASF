@@ -15,6 +15,7 @@
 		<build type="header-file" value="component_nvm.h"/>
 		<build type="header-file" value="component_ac.h"/>
 		<build type="header-file" value="component_dac.h"/>
+		<build type="header-file" value="component_tc.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0d"/>
 	</module>

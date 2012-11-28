@@ -77,6 +77,7 @@ typedef enum IRQn
 #include <component/component_nvm.h>
 #include <component/component_ac.h>
 #include <component/component_dac.h>
+#include <component/component_tc.h>
 
 #include <instance/instance_wdt.h>
 #include <instance/instance_gclk.h>
@@ -91,5 +92,6 @@ typedef enum IRQn
 #include <instance/instance_nvm.h>
 #include <instance/instance_ac.h>
 #include <instance/instance_dac.h>
+#include <instance/instance_tc.h>
 
 #endif /* _SAM0D4_ */
