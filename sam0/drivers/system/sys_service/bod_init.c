@@ -53,7 +53,7 @@
 void system_bod_init(void)
 {
 	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct sysctrl_bod_config conf;
+	struct system_bod_config conf;
 
 	#if BOD33_ENABLED == true
 	conf.action = BOD33_ACTION;

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.drivers.system.quick_start" caption="Clock source quickstart">
 		<info type="description" value="summary">
-	Quick start guide for the SYSCTRL service demonstrating clock source configuration.
+	Quick start guide demonstrating clock source configuration.
 		</info>
 		<build type="c-source" value="qs_clock_source.c"/>
 		<build type="include-path" value="."/>
