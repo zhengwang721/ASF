@@ -93,7 +93,7 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 	uint64_t retval = 0;
 
 	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
-	scale = (1ull << SHIFT) - ratio;
+	scale = ((uint64_t)1 << SHIFT) - ratio;
 	retval = (65536 * scale) >> SHIFT;
 
 	*baudval = retval;

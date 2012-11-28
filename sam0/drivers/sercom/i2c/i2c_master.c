@@ -51,7 +51,7 @@
  * \param  config   [description]
  * \return          [description]
  */
-enum status_code _i2c_master_set_config(
+static enum status_code _i2c_master_set_config(
 		struct i2c_master_dev_inst *const dev_inst,
 		const struct i2c_master_conf *const config)
 {
@@ -62,7 +62,7 @@ enum status_code _i2c_master_set_config(
 
 	/* Temporary variables. */
 	uint32_t tmp_config = 0;
-	uint16_t tmp_baud;
+	int32_t tmp_baud;
 	enum status_code tmp_status_code = STATUS_OK;
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
@@ -99,12 +99,14 @@ enum status_code _i2c_master_set_config(
 	}
 
 	/* Find and set baudrate. */
-	tmp_baud = (uint16_t)(clock_gclk_ch_get_hz(SERCOM_GCLK_ID)
+	tmp_baud = (int32_t)(clock_gclk_ch_get_hz(SERCOM_GCLK_ID)
 			/ (2*config->baud_rate)-5);
+
 	/* Check that baud rate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
 		/* Baud rate not supported. */
 		tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
+
 	} else {
 		/* Baud rate acceptable. */
 		i2c_module->BAUD = (uint8_t)tmp_baud;
@@ -213,14 +215,6 @@ enum status_code i2c_master_read_packet(
 
 	uint16_t timeout_counter = 0;
 
-	/* Start timeout if bus state is unknown. */
-	while (i2c_module->STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
-		if(++timeout_counter >= dev_inst->unkown_bus_state_timeout) {
-			/* Timeout, force bus state to idle. */
-			i2c_module->STATUS = I2C_MASTER_BUSSTATE_IDLE;
-		}
-	}
-
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | 0x01;
 
@@ -305,14 +299,6 @@ enum status_code i2c_master_write_packet(
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	uint16_t timeout_counter = 0;
-
-	/* Start timeout if bus state is unknown. */
-	while (i2c_module->STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
-		if(++timeout_counter >= dev_inst->unkown_bus_state_timeout) {
-			/* Timeout, force bus state to idle. */
-			i2c_module->STATUS = I2C_MASTER_BUSSTATE_IDLE;
-		}
-	}
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | 0x00;

@@ -40,6 +40,47 @@
  */
 #include <i2c_master_async.h>
 
+static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
+{
+
+}
+
+static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
+{
+
+}
+
+static void _i2c_master_async_address_response(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Check for error. */
+	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
+		/* Clear write interrupt flag. */
+		i2c_module->INTENCLR = I2C_MASTER_WIF;
+		/* Check for busserror. */
+		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
+			/* Return denied. */
+			dev_inst->status = STATUS_ERR_DENIED;
+			return;
+			dev_inst->callbacks[I2C_MASTER_CALLBACK_ERROR](dev_inst);
+		/* Check arbitration. */
+		} else if (i2c_module->STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
+			/* Return busy. */
+			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
+			return;
+		}
+	}
+
+	/* Call next operation. */
+	if (dev_inst->transfer_direction) {
+		_i2c_master_async_read(dev_inst);
+	} else {
+		_i2c_master_async_write(dev_inst);
+	}
+}
+
 void _i2c_master_async_callback_handler(uint8_t instance)
 {
 	/* Get device instance for callback handling. */
@@ -47,11 +88,13 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
 
 	dev_inst->hw_dev = 0;
+
+	_i2c_master_async_address_response(dev_inst);
 }
 
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t *callback,
+		i2c_master_callback_t callback,
 		enum i2c_master_callback_type callback_type)
 {
 	/* Sanity check. */
@@ -89,8 +132,8 @@ void i2c_master_async_enable_callback(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	/* Check if interrupt has previously been enabled in module. */
-	if (dev_inst->registered_callback != 0) {
+	/* Check if interrupts has previously been enabled in module. */
+	if (dev_inst->enabled_callback == 0) {
 		SERCOM_I2C_MASTER_t *i2c_module =
 				&(dev_inst->hw_dev->I2C_MASTER);
 
@@ -113,12 +156,59 @@ void i2c_master_async_disable_callback(
 	/* Mark callback as enabled. */
 	dev_inst->enabled_callback &= ~(1 << callback_type);
 
-	/* Check if interrupt should be disabled in module. */
-	if (dev_inst->registered_callback == 0) {
-		SERCOM_I2C_MASTER_t *i2c_module =
+	/* Check if interrupts should be disabled in module. */
+	if (dev_inst->enabled_callback == 0) {
+		SERCOM_I2C_MASTER_t *const i2c_module =
 				&(dev_inst->hw_dev->I2C_MASTER);
+
 
 		/* Enable interrupt in module. */
 		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
 	}
+}
+
+enum status_code i2c_master_async_read_packet_async(
+		struct i2c_master_dev_inst *const dev_inst,
+		i2c_packet_t *const packet)
+{
+	/* Sanity check */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(packet);
+
+	/* Check if the USART transmitter is busy */
+	if (dev_inst->buffer_length > 0) {
+		return STATUS_ERR_BUSY;
+	}
+
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Save packet to device instance. */
+	dev_inst->buffer = packet->data;
+	dev_inst->buffer_length = packet->data_length;
+	dev_inst->transfer_direction = 1;
+
+	/* Set address and direction bit. Will send start command on bus. */
+	i2c_module->ADDR = packet->address << 1 | 0x01;
+
+	return STATUS_OK;
+}
+
+enum status_code i2c_master_async_write_packet_async(
+		struct i2c_master_dev_inst *const dev_inst,
+		i2c_packet_t *const packet)
+{
+	return STATUS_OK;
+}
+
+enum status_code i2c_master_async_cancel_operation(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	return STATUS_OK;
+}
+
+enum status_code i2c_master_async_is_transfer_done(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	return STATUS_OK;
 }

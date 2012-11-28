@@ -149,7 +149,7 @@ typedef enum {
 
 
 #define SERCOM_INSTS_NUM 6
-#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
+#define SERCOM_INSTS      {SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5}
 #define SHIFT 1
 #define SERCOM_GCLK_ID 0
 

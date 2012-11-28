@@ -138,11 +138,15 @@ struct i2c_master_dev_inst {
 	uint16_t buffer_timeout;
 #ifdef I2C_MASTER_ASYNC
 	/** Holder for callback functions. */
-	i2c_master_callback_t *callbacks[_I2C_MASTER_CALLBACK_N];
+	i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Holder for registered callbacks. */
 	uint8_t registered_callback;
 	/** Holder for enabled callbacks. */
 	uint8_t enabled_callback;
+	/** Save direction of async request. 1 = read, 0 = write. */
+	bool transfer_direction;
+	/** Status for status read back in error callback. */
+	enum status_code status;
 #endif
 };
 
@@ -254,11 +258,22 @@ static inline void i2c_master_enable(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
+	/* Timeout counter used to force bus state. */
+	uint16_t timeout_counter = 0;
+
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
 
 	/* Enable module. */
 	i2c_module->CTRLA |= ( 1 << I2C_MASTER_ENABLE_Pos );
+
+	/* Start timeout if bus state is unknown. */
+	while (i2c_module->STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
+		if(++timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
+			/* Timeout, force bus state to idle. */
+			i2c_module->STATUS = I2C_MASTER_BUSSTATE_IDLE;
+		}
+	}
 }
 
 /**

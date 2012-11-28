@@ -69,7 +69,7 @@ void _i2c_master_async_callback_handler(uint8_t instance);
  */
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t *callback,
+		i2c_master_callback_t callback,
 		enum i2c_master_callback_type callback_type);
 
 /**
@@ -126,7 +126,7 @@ void i2c_master_async_disable_callback(
  * \return          [description]
  */
 enum status_code i2c_master_async_read_packet_async(
-		const struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
 /**
@@ -162,6 +162,22 @@ enum status_code i2c_master_async_cancel_operation(
  */
 enum status_code i2c_master_async_is_transfer_done(
 		struct i2c_master_dev_inst *const dev_inst);
+
+static inline enum status_code i2c_master_async_get_last_error(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	/* Check sanity. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Save current status code. */
+	enum status_code tmp_status = dev_inst->status;
+
+	/* Set current status to OK. */
+	dev_inst->status = STATUS_OK;
+
+	return tmp_status;
+}
 
 /** @} */
 

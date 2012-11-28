@@ -44,7 +44,7 @@
 #include <sercom.h>
 
 /* Look-up table for device instances. */
-static void *_sercom_instances[SERCOM_INSTS_NUM];
+void *_sercom_instances[SERCOM_INSTS_NUM];
 
 uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance);
 
@@ -53,5 +53,4 @@ void _sercom_set_handler(uint8_t instance,
 
 void SERCOM_Handler(void);
 
-
-#endif /* __SERCOM_INTERRUPTS__ */
+#endif /* SERCOM_INTERRUPTS_H_INCLUDED */

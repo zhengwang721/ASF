@@ -50,7 +50,7 @@ static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
  * \internal Default interrupt handler
  * \param instance Sercom instance used.
  */
-void _sercom_default_handler(uint8_t instance)
+static void _sercom_default_handler(uint8_t instance)
 {
 	Assert(false);
 }
@@ -65,7 +65,7 @@ uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
 	/* Array of sercom instances. */
-	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = {SERCOM_INSTS};
+	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = SERCOM_INSTS;
 
 	/* Fine index for sercom instance. */
 	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
@@ -85,11 +85,11 @@ void _sercom_set_handler(uint8_t instance,
 		void (*interrupt_handler) (uint8_t instance))
 {
 	uint8_t i;
-	/* Initialize handlers with default handler. */
+	/* Initialize handlers with default handler and device instances with 0.
+	 */
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
-			_sercom_instances[i] = 0;
 		}
 		_handler_table_initialized = true;
 	}
