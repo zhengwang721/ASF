@@ -93,7 +93,7 @@
  * The source of this clock can be any of the clock sources in the device
  * or a GCLK. The system clock source is set by the clock_main_clock_set_clocksource().
  * You can then set the prescalers for the CPU and/or the buses on the device
- * by using clock_cpu_set_divider(), clock_apbx_set_divider and clock_ahb_set_divider().
+ * by using system_cpu_clock_set_divider(), clock_apbx_set_divider and clock_ahb_set_divider().
  * It is also possible to enable a main clock failure detector that will switch
  * the main clock to a safe clock if for any reason the clock source fails. This
  * can be enabled by using the clock_main_clock_set_failure_detect() function.
@@ -516,7 +516,7 @@ static inline void system_clock_source_get_default_config(
  * \internal
  * \brief Wait for sync to the DFLL control registers
  */
-static inline void clock_dfll_wait_for_sync(void)
+static inline void _system_dfll_wait_for_sync(void)
 {
 	/* TODO: Datasheet text and regmap disagreement; figure out which one is correct */
 
@@ -535,19 +535,12 @@ static inline void clock_dfll_wait_for_sync(void)
  * \internal
  * \brief Wait for sync to the OSC32K control registers
  */
-static inline void clock_osc32k_wait_for_sync(void)
+static inline void _system_osc32k_wait_for_sync(void)
 {
 	while(!(SYSCTRL.PCLKSR & SYSCTRL_OSC32KRDY_bm)) {
 		/* Wait for OSC32K sync */
 	}
 }
-
-
-
-
-
-
-
 
 /**
  * @}
@@ -578,7 +571,7 @@ static inline void clock_osc32k_wait_for_sync(void)
  * \param[in] enable true to enable, false to disable
  *
  */
-static inline void clock_main_set_failure_detect(bool enable)
+static inline void system_main_clock_set_failure_detect(bool enable)
 {
 	if (enable) {
 		PM.CTRL |= PM_CFDEN_bm;
@@ -598,7 +591,7 @@ static inline void clock_main_set_failure_detect(bool enable)
  * \param[in] clock CPU clock source
  *
  */
-static inline void clock_main_set_source(enum clock_main_clock clock)
+static inline void system_main_clock_set_source(enum clock_main_clock clock)
 {
 	PM.CTRL = (PM.CTRL & ~PM_MCSEL_gm) | (clock & PM_MCSEL_gm) << PM_MCSEL_gp;
 }
@@ -612,7 +605,7 @@ static inline void clock_main_set_source(enum clock_main_clock clock)
  * \param[in] divider CPU clock divider
  *
  */
-static inline void clock_cpu_set_divider(enum clock_main_div divider)
+static inline void system_cpu_clock_set_divider(enum clock_main_div divider)
 {
 	PM.CPUSEL = divider;
 }
@@ -642,7 +635,7 @@ static inline void clock_cpu_set_divider(enum clock_main_div divider)
  * \retval STATUS_ERR_INVALID_ARG Invalid bus given
  * \retval STATUS_OK The APBx clock was set successfully
  */
-static inline enum status_code clock_apb_set_divider(enum clock_apb_bus bus, enum clock_main_div divider)
+static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus bus, enum clock_main_div divider)
 {
 	switch (bus) {
 		case CLOCK_APB_APBA:
@@ -679,7 +672,7 @@ static inline enum status_code clock_apb_set_divider(enum clock_apb_bus bus, enu
  * \param[in] ahb_mask AHB clock mask
  *
  */
-static inline void clock_ahb_set_clock_mask(uint32_t mask)
+static inline void system_ahb_clock_set_mask(uint32_t mask)
 {
 	PM.AHBMASK |= mask;
 }
@@ -694,7 +687,7 @@ static inline void clock_ahb_set_clock_mask(uint32_t mask)
  * \param[in] ahb_mask AHB clock mask
  *
  */
-static inline void clock_ahb_clear_clock_mask(uint32_t mask)
+static inline void system_ahb_clock_clear_mask(uint32_t mask)
 {
 	PM.AHBMASK &= ~mask;
 }
@@ -713,7 +706,7 @@ static inline void clock_ahb_clear_clock_mask(uint32_t mask)
  * \retval STATUS_ERR_INVALID_ARG Invalid bus given
  * \retval STATUS_OK The clock mask was set successfully
  */
-static inline enum status_code clock_apb_set_clock_mask(enum clock_apb_bus bus, uint32_t mask)
+static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus, uint32_t mask)
 {
 	switch (bus) {
 		case CLOCK_APB_APBA:
@@ -746,7 +739,7 @@ static inline enum status_code clock_apb_set_clock_mask(enum clock_apb_bus bus, 
  * \retval STATUS_ERR_INVALID_ARG Invalid bus given
  * \retval STATUS_OK The clock mask was set successfully
  */
-static inline enum status_code clock_apb_clear_clock_mask(enum clock_apb_bus bus, uint32_t mask)
+static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bus, uint32_t mask)
 {
 	switch (bus) {
 		case CLOCK_APB_APBA:

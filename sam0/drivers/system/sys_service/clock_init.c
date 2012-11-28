@@ -195,16 +195,16 @@ void clocks_init(void)
 
 
 	/* CPU and BUS clocks */
-	clock_main_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
-	clock_cpu_set_divider(CONF_CLOCK_CPU_DIVIDER);
+	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
+	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
 	#if CONF_CLOCK_ENABLE_CPU_CLOCK_FAILURE_DETECT == true
-	clock_main_set_failure_detect(true);
+	system_main_clock_set_failure_detect(true);
 	#else
-	clock_main_set_failure_detect(false);
+	system_main_clock_set_failure_detect(false);
 	#endif
 
-	clock_apb_set_divider(CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
-	clock_apb_set_divider(CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
+	system_apb_clock_set_divider(CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
+	system_apb_clock_set_divider(CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
 
 }
