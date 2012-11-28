@@ -41,7 +41,6 @@
 
 #include <i2c_master.h>
 
-
 #ifdef I2C_MASTER_ASYNC
 # include <i2c_master_async.h>
 #endif
@@ -150,14 +149,18 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 
 #ifdef I2C_MASTER_ASYNC
 	/* Get sercom instance index. */
-	sercom_instance = _sercom_get_sercom_inst(module);
+	sercom_instance = _sercom_get_sercom_inst_index(module);
 
 	/* Save device instance in interrupt handler. */
 	_sercom_set_handler(sercom_instance,
-			(void*)(&_i2c_master_callback_handler));
+			(void*)(&_i2c_master_async_callback_handler));
 
 	/* Save device instance. */
 	_sercom_instances[sercom_instance] = (void*) dev_inst;
+
+	/* Initialize values in dev_inst. */
+	dev_inst->registered_callback = 0;
+	dev_inst->enabled_callback = 0;
 #endif
 
 	//dev_inst->callback[0] = 0;

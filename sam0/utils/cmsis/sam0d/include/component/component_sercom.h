@@ -240,6 +240,9 @@ typedef enum {
 #define SERCOM_I2C_MASTER_NACK 0
 #define I2C_SYNC_BUSY_Msk 0
 #define I2C_MASTER_ENABLE_Pos 1
+#define I2C_MASTER_RIF_Msk 0
+#define I2C_MASTER_WIF_Msk 0
+
 
 enum RXPO_group {
 	SERCOM_USART_RXPO_0_gc = (0 << 18),

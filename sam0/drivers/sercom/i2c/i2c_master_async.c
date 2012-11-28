@@ -40,11 +40,85 @@
  */
 #include <i2c_master_async.h>
 
-void _i2c_master_callback_handler(uint8_t instance)
+void _i2c_master_async_callback_handler(uint8_t instance)
 {
 	/* Get device instance for callback handling. */
 	struct i2c_master_dev_inst *dev_inst =
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
 
 	dev_inst->hw_dev = 0;
+}
+
+void i2c_master_async_register_callback(
+		struct i2c_master_dev_inst *const dev_inst,
+		i2c_master_callback_t *callback,
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(callback);
+
+	/* Register callback. */
+	dev_inst->callbacks[callback_type] = callback;
+
+	/* Set corresponding bit to set callback as initiated. */
+	dev_inst->registered_callback |= (1 << callback_type);
+}
+
+void i2c_master_async_unregister_callback(
+		struct i2c_master_dev_inst *const dev_inst,
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Register callback. */
+	dev_inst->callbacks[callback_type] = 0;
+
+	/* Set corresponding bit to set callback as initiated. */
+	dev_inst->registered_callback &= ~(1 << callback_type);
+}
+
+void i2c_master_async_enable_callback(
+		struct i2c_master_dev_inst *const dev_inst,
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Check if interrupt has previously been enabled in module. */
+	if (dev_inst->registered_callback != 0) {
+		SERCOM_I2C_MASTER_t *i2c_module =
+				&(dev_inst->hw_dev->I2C_MASTER);
+
+		/* Enable interrupt in module. */
+		i2c_module->INTENSET = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+	}
+
+	/* Mark callback as enabled. */
+	dev_inst->enabled_callback = (1 << callback_type);
+}
+
+void i2c_master_async_disable_callback(
+		struct i2c_master_dev_inst *const dev_inst,
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Mark callback as enabled. */
+	dev_inst->enabled_callback &= ~(1 << callback_type);
+
+	/* Check if interrupt should be disabled in module. */
+	if (dev_inst->registered_callback == 0) {
+		SERCOM_I2C_MASTER_t *i2c_module =
+				&(dev_inst->hw_dev->I2C_MASTER);
+
+		/* Enable interrupt in module. */
+		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+	}
 }

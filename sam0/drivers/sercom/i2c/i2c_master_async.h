@@ -53,7 +53,7 @@ extern "C" {
  * @{
  */
 
-void _i2c_master_callback_handler(uint8_t instance);
+void _i2c_master_async_callback_handler(uint8_t instance);
 
 /**
  * \brief Register callback for the specified callback type.
@@ -67,8 +67,9 @@ void _i2c_master_callback_handler(uint8_t instance);
  * \param[in]  callback_type Specifies the callback type to register.
  * \return          [description]
  */
-enum status_code i2c_master_register_callback(
+void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
+		i2c_master_callback_t *callback,
 		enum i2c_master_callback_type callback_type);
 
 /**
@@ -81,7 +82,7 @@ enum status_code i2c_master_register_callback(
  * \param[in]      callback_type Specifies the callback type to unregister.
  * \return          [description]
  */
-enum status_code i2c_master_unregister_callback(
+void i2c_master_async_unregister_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_callback_type callback_type);
 
@@ -92,7 +93,7 @@ enum status_code i2c_master_unregister_callback(
  * \param[in]      callback_type Callback type to enable.
  * \return               [description]
  */
-enum status_code i2c_master_enable_callback(
+void i2c_master_async_enable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_callback_type callback_type);
 
@@ -103,7 +104,7 @@ enum status_code i2c_master_enable_callback(
  * \param[in]      callback_type Callback type to disable.
  * \return               [description]
  */
-enum status_code i2c_master_disable_callback(
+void i2c_master_async_disable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_callback_type callback_type);
 
@@ -124,7 +125,7 @@ enum status_code i2c_master_disable_callback(
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  * \return          [description]
  */
-enum status_code i2c_master_read_packet_async(
+enum status_code i2c_master_async_read_packet_async(
 		const struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
@@ -138,7 +139,7 @@ enum status_code i2c_master_read_packet_async(
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  * \return          [description]
  */
-enum status_code i2c_master_write_packet_async(
+enum status_code i2c_master_async_write_packet_async(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
@@ -149,7 +150,7 @@ enum status_code i2c_master_write_packet_async(
  * \param  dev_inst Pointer to device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_cancel_operation(
+enum status_code i2c_master_async_cancel_operation(
 		struct i2c_master_dev_inst *const dev_inst);
 
 /**
@@ -159,7 +160,7 @@ enum status_code i2c_master_cancel_operation(
  * \param  dev_inst Pointer to the device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_is_transfer_done(
+enum status_code i2c_master_async_is_transfer_done(
 		struct i2c_master_dev_inst *const dev_inst);
 
 /** @} */
