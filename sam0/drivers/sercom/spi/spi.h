@@ -380,6 +380,9 @@ extern "C" {
  * @{
  */
 
+// TODO: Move this to a spi_conf.h
+#define SPI_TIMEOUT 10000
+
 /**
  * \brief SPI transfer modes enum
  *
