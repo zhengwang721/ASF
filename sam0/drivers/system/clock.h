@@ -346,17 +346,17 @@ enum clock_apb_bus {
  */
 enum system_clock_source {
 	/** Internal 8MHz RC oscillator */
-	CLOCK_SOURCE_RC8MHZ,
+	SYSTEM_CLOCK_SOURCE_RC8MHZ,
 	/** Internal 32kHz RC oscillator */
-	CLOCK_SOURCE_RC32KHZ,
+	SYSTEM_CLOCK_SOURCE_RC32KHZ,
 	/** External oscillator */
-	CLOCK_SOURCE_XOSC,
+	SYSTEM_CLOCK_SOURCE_XOSC,
 	/** External 32kHz oscillator */
-	CLOCK_SOURCE_XOSC32K,
+	SYSTEM_CLOCK_SOURCE_XOSC32K,
 	/** Digital Frequency Locked Loop (DFLL) */
-	CLOCK_SOURCE_DFLL,
+	SYSTEM_CLOCK_SOURCE_DFLL,
 	/** Internal Ultra Low Power 32kHz oscillator */
-	CLOCK_SOURCE_ULP32KHZ,
+	SYSTEM_CLOCK_SOURCE_ULP32KHZ,
 };
 
 /**

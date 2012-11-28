@@ -65,10 +65,10 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 	uint32_t prescaler = 0;
 	switch (clk_source) {
 
-		case CLOCK_SOURCE_XOSC:
+		case SYSTEM_CLOCK_SOURCE_XOSC:
 			return xosc_frequency;
 
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			prescaler = (SYSCTRL.OSC8M & SYSCTRL_PRESC_gm) >> SYSCTRL_PRESC_gp;
 			if (prescaler) {
 				return 8000000 / prescaler;
@@ -76,14 +76,14 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 				return 8000000;
 			}
 
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 			/* Fall trough */
-		case CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Fall trough */
-		case CLOCK_SOURCE_XOSC32K:
+		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			return 32000000UL;
 
-		case CLOCK_SOURCE_DFLL:
+		case SYSTEM_CLOCK_SOURCE_DFLL:
 			/* get_generator_hz * dfll_multiply_factor */
 			return 48000000;
 
@@ -127,17 +127,17 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 	system_clock_source_disable(clk_source);
 
 	switch (clk_source) {
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			SYSCTRL.OSC8M = conf->rc8mhz.prescaler << SYSCTRL_PRESC_gp;
 			break;
 
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 			/* Need to enable before we can configure */
-			system_clock_source_enable(CLOCK_SOURCE_RC32KHZ, true);
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_RC32KHZ, true);
 			/* TODO: verify that this is always enabled */
 			break;
 
-		case CLOCK_SOURCE_XOSC:
+		case SYSTEM_CLOCK_SOURCE_XOSC:
 			temp_register = conf->ext.startup_time;
 			if (conf->ext.external_clock) {
 				temp_register |= SYSCTRL_XTALEN_bm;
@@ -149,7 +149,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 			SYSCTRL.XOSC = temp_register;
 			break;
 
-		case CLOCK_SOURCE_XOSC32K:
+		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			temp_register = conf->ext.startup_time;
 
 			if (conf->ext.external_clock) {
@@ -171,7 +171,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 			SYSCTRL.XOSC32K = temp_register;
 			break;
 
-		case CLOCK_SOURCE_DFLL:
+		case SYSTEM_CLOCK_SOURCE_DFLL:
 			temp_register |= conf->dfll.loop | conf->dfll.wakeup_lock |
 					conf->dfll.stable_tracking | conf->dfll.quick_lock |
 					conf->dfll.chill_cycle;
@@ -223,7 +223,7 @@ enum status_code system_clock_source_write_calibration(
 {
 
 	switch (clock_src) {
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 
 			if (calibration_value > 255 || freq_range > 4) {
 				return STATUS_ERR_INVALID_ARG;
@@ -233,7 +233,7 @@ enum status_code system_clock_source_write_calibration(
 					freq_range << SYSCTRL_FRANGE_gp;
 			break;
 
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 
 			if (calibration_value > 128) {
 				return STATUS_ERR_INVALID_ARG;
@@ -243,7 +243,7 @@ enum status_code system_clock_source_write_calibration(
 			SYSCTRL.OSC32K |= calibration_value;
 			break;
 
-		case CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 
 			if (calibration_value > 32) {
 				return STATUS_ERR_INVALID_ARG;
@@ -281,31 +281,31 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 
 	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
 	switch (clock_src) {
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			SYSCTRL.OSC8M |= SYSCTRL_RC8MHZ_ENABLE_bm;
 			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 			SYSCTRL.OSC32K |= SYSCTRL_OSC32K_ENABLE_bm;
 			waitmask = SYSCTRL_OSC32KRDY_bm;
 			break;
 
-		case CLOCK_SOURCE_XOSC:
+		case SYSTEM_CLOCK_SOURCE_XOSC:
 			SYSCTRL.XOSC |= SYSCTRL_XOSC_ENABLE_bm;
 			waitmask = SYSCTRL_XOSCRDY_bm;
 			break;
 
-		case CLOCK_SOURCE_XOSC32K:
+		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			SYSCTRL.XOSC32K |= SYSCTRL_XOSC32K_ENABLE_bm;
 			waitmask = SYSCTRL_XOSC32KRDY_bm;
 			break;
 
-		case CLOCK_SOURCE_DFLL:
+		case SYSTEM_CLOCK_SOURCE_DFLL:
 			SYSCTRL.DFLLCTRL |= SYSCTRL_DFLL_ENABLE_bm;
 			waitmask = SYSCTRL_DFLLRDY_bm;
 			break;
-		case CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Always enabled */
 			return STATUS_OK;
 		default:
@@ -340,22 +340,22 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 enum status_code system_clock_source_disable(enum system_clock_source clk_source)
 {
 	switch (clk_source) {
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			SYSCTRL.OSC8M &= ~SYSCTRL_RC8MHZ_ENABLE_bm;
 			break;
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 			SYSCTRL.OSC32K &= ~SYSCTRL_OSC32K_ENABLE_bm;
 			break;
-		case CLOCK_SOURCE_XOSC:
+		case SYSTEM_CLOCK_SOURCE_XOSC:
 			SYSCTRL.XOSC &= ~SYSCTRL_XOSC_ENABLE_bm;
 			break;
-		case CLOCK_SOURCE_XOSC32K:
+		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			SYSCTRL.XOSC32K &= ~SYSCTRL_XOSC32K_ENABLE_bm;
 			break;
-		case CLOCK_SOURCE_DFLL:
+		case SYSTEM_CLOCK_SOURCE_DFLL:
 			SYSCTRL.DFLLCTRL &= ~SYSCTRL_DFLL_ENABLE_bm;
 			break;
-		case CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Not possible to disable */
 		default:
 			return STATUS_ERR_INVALID_ARG;
@@ -377,22 +377,22 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 {
 	uint32_t mask;
 	switch (clk_source) {
-		case CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			/* TODO: verify that this cannot be disabled */
 			return true;
-		case CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
 			mask = SYSCTRL_OSC32KRDY_bm;
 			break;
-		case CLOCK_SOURCE_XOSC:
+		case SYSTEM_CLOCK_SOURCE_XOSC:
 			mask = SYSCTRL_XOSCRDY_bm;
 			break;
-		case CLOCK_SOURCE_XOSC32K:
+		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			mask = SYSCTRL_XOSC32KRDY_bm;
 			break;
-		case CLOCK_SOURCE_DFLL:
+		case SYSTEM_CLOCK_SOURCE_DFLL:
 			mask = SYSCTRL_DFLLRDY_bm;
 			break;
-		case CLOCK_SOURCE_ULP32KHZ:
+		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Not possible to disable */
 		default:
 			return false;

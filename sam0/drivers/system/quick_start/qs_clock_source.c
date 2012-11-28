@@ -49,18 +49,18 @@ void configure_system_clock_sources(void)
 	/* 8MHz RC oscillator */
 	cs_conf.rc8mhz.prescaler = 4;
 
-	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_RC8MHZ);
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_RC8MHZ);
 
 	/* XOSC */
 	cs_conf.ext.external_clock = CLOCK_EXTERNAL_CRYSTAL;
 
-	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_XOSC);
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_XOSC);
 
 	/* DFLL */
 	cs_conf.dfll.coarse_value = 42;
 	cs_conf.dfll.fine_value = 42;
 
-	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_DFLL);
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_DFLL);
 }
 
 int main(void)
