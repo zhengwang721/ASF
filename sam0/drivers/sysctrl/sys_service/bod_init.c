@@ -44,7 +44,7 @@
 #include <compiler.h>
 #include <system.h>
 #include <conf_bod.h>
-#include "bod_init.h"
+#include <bod_init.h>
 
 /**
  * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
