@@ -348,7 +348,7 @@ enum system_clock_source {
 	/** Internal 8MHz RC oscillator */
 	SYSTEM_CLOCK_SOURCE_RC8MHZ,
 	/** Internal 32kHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_RC32KHZ,
+	SYSTEM_CLOCK_SOURCE_OSC32K,
 	/** External oscillator */
 	SYSTEM_CLOCK_SOURCE_XOSC,
 	/** External 32kHz oscillator */
