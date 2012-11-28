@@ -39,34 +39,34 @@
  */
 #include <asf.h>
 
-void configure_clock_sources(void);
+void configure_system_clock_sources(void);
 
-void configure_clock_sources(void)
+void configure_system_clock_sources(void)
 {
-	struct clock_source_config cs_conf;
-	clock_source_get_default_config(&cs_conf);
+	struct system_clock_source_config cs_conf;
+	system_clock_source_get_default_config(&cs_conf);
 
 	/* 8MHz RC oscillator */
 	cs_conf.rc8mhz.prescaler = 4;
 
-	clock_source_set_config(&cs_conf, CLOCK_SOURCE_RC8MHZ);
+	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_RC8MHZ);
 
 	/* XOSC */
 	cs_conf.ext.external_clock = CLOCK_EXTERNAL_CRYSTAL;
 
-	clock_source_set_config(&cs_conf, CLOCK_SOURCE_XOSC);
+	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_XOSC);
 
 	/* DFLL */
 	cs_conf.dfll.coarse_value = 42;
 	cs_conf.dfll.fine_value = 42;
 
-	clock_source_set_config(&cs_conf, CLOCK_SOURCE_DFLL);
+	system_clock_source_set_config(&cs_conf, CLOCK_SOURCE_DFLL);
 }
 
 int main(void)
 {
 	/** [setup_init] */
-	configure_clock_sources();
+	configure_system_clock_sources();
 	/** [setup_init] */
 
 

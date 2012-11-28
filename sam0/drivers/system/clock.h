@@ -75,17 +75,17 @@
  * The SAM0+ devices has multiple clock sources, among them internal
  * RC oscillators, internal DFLL as well as the possibility of external
  * crystal oscillators. The clock sources are configured using the functions
- * prefixed with clock_source. To apply a configuration to a clock source you
- * must run clock_source_set_config(...) passing a configuration struct of type
- * clock_source_config. To fill this struct with the default settings you can
- * use the function clock_source_get_default_config(). This function will populate
+ * prefixed with system_clock_source. To apply a configuration to a clock source you
+ * must run system_clock_source_set_config(...) passing a configuration struct of type
+ * system_clock_source_config. To fill this struct with the default settings you can
+ * use the function system_clock_source_get_default_config(). This function will populate
  * the configuration struct with the default settings documented
- * \ref clock_source_get_default_config "here". As the configuration struct
+ * \ref system_clock_source_get_default_config "here". As the configuration struct
  * contains the possible configuration fields for all clock sources on the
  * device you can apply the same configuration struct to all clock sources,
  * and the struct can be reused for all clock source. All configuration options
  * that are not relevant to that clock source disregarded in the
- * clock_source_set_config() function.
+ * system_clock_source_set_config() function.
  *
  * \section cpu_clock CPU / Bus Clocks
  * The CPU and APH/APBx buses are clocked by the same clock source (main clock),
@@ -344,7 +344,7 @@ enum clock_apb_bus {
 /**
  * Clock sources available to the GCLK generators
  */
-enum clock_source {
+enum system_clock_source {
 	/** Internal 8MHz RC oscillator */
 	CLOCK_SOURCE_RC8MHZ,
 	/** Internal 32kHz RC oscillator */
@@ -377,11 +377,11 @@ enum conf_clock_rtc_freq {
  *
  * This configuration struct contains all the settings that are needed
  * to configure any of the clock sources on the device. To populate this
- * structure with default values you must use clock_source_get_default_config.
+ * structure with default values you must use system_clock_source_get_default_config.
  * To apply the configuration to a specific clock source you need to use the
- * clock_source_set_config function.
+ * system_clock_source_set_config function.
  */
-struct clock_source_config {
+struct system_clock_source_config {
 	/** External oscillator/Crystal (XOSC) */
 	struct {
 		/** External crystal or clock*/
@@ -434,20 +434,20 @@ struct clock_source_config {
  * \name Clock source configuration
  * @{
  */
-enum status_code clock_source_set_config(struct clock_source_config
-		*conf, enum clock_source clk_source);
+enum status_code system_clock_source_set_config(struct system_clock_source_config
+		*conf, enum system_clock_source clk_source);
 
-enum status_code clock_source_write_calibration(
-		enum clock_source clock_source,
+enum status_code system_clock_source_write_calibration(
+		enum system_clock_source system_clock_source,
 		uint16_t calibration_value, uint8_t freq_range);
 
-enum status_code clock_source_enable(enum clock_source clock_source, bool block_until_ready);
+enum status_code system_clock_source_enable(enum system_clock_source system_clock_source, bool block_until_ready);
 
-enum status_code clock_source_disable(enum clock_source clk_source);
+enum status_code system_clock_source_disable(enum system_clock_source clk_source);
 
-bool clock_source_is_ready(enum clock_source clk_source);
+bool system_clock_source_is_ready(enum system_clock_source clk_source);
 
-uint32_t clock_source_get_hz(enum clock_source clk_source);
+uint32_t system_clock_source_get_hz(enum system_clock_source clk_source);
 
 /**
  * \brief Get clock source default configuration
@@ -475,8 +475,8 @@ uint32_t clock_source_get_hz(enum clock_source clk_source);
  *
  * \param[out] conf Clock source configuration struct to set to defaults
  */
-static inline void clock_source_get_default_config(
-		struct clock_source_config *conf)
+static inline void system_clock_source_get_default_config(
+		struct system_clock_source_config *conf)
 {
 	Assert(conf);
 

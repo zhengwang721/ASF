@@ -56,11 +56,11 @@
  */
 void clocks_init(void)
 {
-	struct clock_source_config conf;
+	struct system_clock_source_config conf;
 	struct system_gclk_gen_conf gclk_generator_conf;
 
 	/* Initialize config struct to defaults */
-	clock_source_get_default_config(&conf);
+	system_clock_source_get_default_config(&conf);
 
 	/* XOSC */
 	#if CONF_CLOCK_XOSC_ENABLE == true
@@ -68,7 +68,7 @@ void clocks_init(void)
 	conf.ext.startup_time = CONF_CLOCK_XOSC_STARTUP_TIME;
 	conf.ext.auto_gain_control = CONF_CLOCK_XOSC_AUTO_GAIN_CONTROL;
 
-	clock_source_set_config(&conf,CLOCK_SOURCE_XOSC);
+	system_clock_source_set_config(&conf,CLOCK_SOURCE_XOSC);
 	#endif /* CONF_CLOCK_XOSC_ENABLE */
 
 	/* XOSC32K */
@@ -79,7 +79,7 @@ void clocks_init(void)
 	conf.osc32k.enable_1khz_output = CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT;
 	conf.osc32k.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
 
-	clock_source_set_config(&conf, CLOCK_SOURCE_XOSC32K);
+	system_clock_source_set_config(&conf, CLOCK_SOURCE_XOSC32K);
 	#endif /* CONF_CLOCK_XOSC32K_ENABLE */
 
 	/* OSC32K */
@@ -87,7 +87,7 @@ void clocks_init(void)
 	conf.osc32k.enable_1khz_output = CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT;
 	conf.osc32k.enable_32khz_output = CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT;
 
-	clock_source_set_config(&conf, CLOCK_SOURCE_OSC32K);
+	system_clock_source_set_config(&conf, CLOCK_SOURCE_OSC32K);
 	#endif /* CONF_CLOCK_OSC32K_ENABLE */
 
 	/* DFLL */
@@ -125,11 +125,11 @@ void clocks_init(void)
 	conf.dfll.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	conf.dfll.fine_max_step = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
-	clock_source_set_config(&conf, CLOCK_SOURCE_DFLL);
+	system_clock_source_set_config(&conf, CLOCK_SOURCE_DFLL);
 	#endif /* CONF_CLOCK_DFLL_ENABLE */
 
 	conf.rc8mhz.prescaler = CONF_CLOCK_RC8MHZ_PRESCALER;
-	clock_source_set_config(&conf, CLOCK_SOURCE_RC8MHZ);
+	system_clock_source_set_config(&conf, CLOCK_SOURCE_RC8MHZ);
 
 
 	#if CONF_CLOCK_CONFIGURE_GCLK == true

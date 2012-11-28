@@ -39,7 +39,7 @@
  */
 
 /**
- * \page clock_clock_source_basic_use_case Clock basic use case
+ * \page clock_system_clock_source_basic_use_case Clock basic use case
  *
  * In this case we apply the following configuration:
  * - RC8MHz (internal 8MHz RC oscillator)

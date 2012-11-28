@@ -60,7 +60,7 @@
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="Clock\nSources" shape=square] clock_sources;
+ *   node [label="Clock\nSources" shape=square] system_clock_sources;
  *
  *   subgraph driver {
  *     node [label="<f0> GCLK | <f1> Generic Clock Generators" shape=record] gclk_gen;
@@ -68,7 +68,7 @@
  *     node [label="Peripherals" shape=ellipse style=filled fillcolor=lightgray] peripherals;
  *   }
  *
- *   clock_sources -> gclk_gen:f1 [label="Source\nMUXs"];
+ *   system_clock_sources -> gclk_gen:f1 [label="Source\nMUXs"];
  *   gclk_gen:f1   -> gclk_chan:f1 [label="Generator\nMUXs"];
  *   gclk_chan:f1  -> peripherals;
  * }
@@ -92,14 +92,14 @@
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="Clock\nSource a" shape=square] clock_source;
+ *   node [label="Clock\nSource a" shape=square] system_clock_source;
  *   node [label="Generator b" shape=square] clock_gen;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
  *   node [label="Peripheral y" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
  *
- *   clock_source -> clock_gen;
+ *   system_clock_source -> clock_gen;
  *   clock_gen   -> clock_chan0;
  *   clock_chan0 -> peripheral0;
  *   clock_gen   -> clock_chan1;
@@ -112,23 +112,23 @@
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="External\nOscillator" shape=square] clock_source0;
+ *   node [label="External\nOscillator" shape=square] system_clock_source0;
  *   node [label="Generator a" shape=square] clock_gen0;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Core CPU" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
  *
- *   clock_source0 -> clock_gen0;
+ *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
  *   clock_chan0   -> peripheral0;
  *
- *   node [label="8MHz R/C\nOscillator" shape=square style=outline] clock_source1;
+ *   node [label="8MHz R/C\nOscillator" shape=square style=outline] system_clock_source1;
  *   node [label="Generator b" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Channel z" shape=square] clock_chan2;
  *   node [label="SERCOM\nModule" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
  *   node [label="Timer\nModule" shape=ellipse  style=filled fillcolor=lightgray] peripheral2;
  *
- *   clock_source1 -> clock_gen1;
+ *   system_clock_source1 -> clock_gen1;
  *   clock_gen1    -> clock_chan1;
  *   clock_gen1    -> clock_chan2;
  *   clock_chan1   -> peripheral1;

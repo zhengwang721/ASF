@@ -60,7 +60,7 @@ static uint32_t xosc_frequency = 0;
  *
  * \returns Frequency of the given clock source
  */
-uint32_t clock_source_get_hz(enum clock_source clk_source)
+uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 {
 	uint32_t prescaler = 0;
 	switch (clk_source) {
@@ -106,7 +106,7 @@ uint32_t clock_source_get_hz(enum clock_source clk_source)
  * clock source selected. Only fields that are relevant to the selected
  * clock source will be modified, and unrelated settings in the config
  * struct will be ignored. This function will not enable the clock source,
- * this must be done by the \ref clock_source_enable function.
+ * this must be done by the \ref system_clock_source_enable function.
  *
  * This function will disable the clock source before applying the configuration
  *
@@ -116,15 +116,15 @@ uint32_t clock_source_get_hz(enum clock_source clk_source)
  * \retval STATUS_OK The operation completed successfully
  * \retval STATUS_ERR_UNAVAILABLE The selected clock source is not available
  */
-enum status_code clock_source_set_config(struct clock_source_config
-		*conf, enum clock_source clk_source)
+enum status_code system_clock_source_set_config(struct system_clock_source_config
+		*conf, enum system_clock_source clk_source)
 {
 	Assert(conf);
 
 	uint16_t temp_register = 0;
 
 	/* Disable the clock source if running */
-	clock_source_disable(clk_source);
+	system_clock_source_disable(clk_source);
 
 	switch (clk_source) {
 		case CLOCK_SOURCE_RC8MHZ:
@@ -133,7 +133,7 @@ enum status_code clock_source_set_config(struct clock_source_config
 
 		case CLOCK_SOURCE_RC32KHZ:
 			/* Need to enable before we can configure */
-			clock_source_enable(CLOCK_SOURCE_RC32KHZ, true);
+			system_clock_source_enable(CLOCK_SOURCE_RC32KHZ, true);
 			/* TODO: verify that this is always enabled */
 			break;
 
@@ -337,7 +337,7 @@ enum status_code clock_source_enable(enum clock_source clock_source, bool block_
  *  \retval STATUS_OK Clock source was disabled successfully
  *  \retval STATUS_ERR_INVALID_ARG the clock source is not available on this device
  */
-enum status_code clock_source_disable(enum clock_source clk_source)
+enum status_code system_clock_source_disable(enum system_clock_source clk_source)
 {
 	switch (clk_source) {
 		case CLOCK_SOURCE_RC8MHZ:
@@ -373,7 +373,7 @@ enum status_code clock_source_disable(enum clock_source clk_source)
  *  \retval true Clock source is enabled and ready
  *  \retval false Clock source is either disabled or not yet ready
  */
-bool clock_source_is_ready(enum clock_source clk_source)
+bool system_clock_source_is_ready(enum system_clock_source clk_source)
 {
 	uint32_t mask;
 	switch (clk_source) {
