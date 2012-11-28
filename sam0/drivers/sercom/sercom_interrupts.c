@@ -47,51 +47,6 @@ static bool _handler_table_initialized = false;
 static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
 
 /**
- * \internal 
- *
- *
- * param[]
- *
- * returns 
- * retval  
- */
-//TODO: move to sercom
-uint8_t _sercom_get_instance_index(SERCOM_t *hw_dev)
-{
-	/* Variable for array index */
-	uint8_t instance_index;
-
-	/* Save device instance structure pointer. */
-	uint32_t sercom_module = *(uint32_t *)hw_dev;
-
-	switch(sercom_module){
-		//TODO: fix casting
-
-		case (uint32_t)&SERCOM0:
-			instance_index = 0;
-			break;
-
-		case (uint32_t)&SERCOM1:
-			instance_index = 1;
-			break;
-
-		case (uint32_t)&SERCOM2:
-			instance_index = 2;
-			break;
-
-		case (uint32_t)&SERCOM3:
-			instance_index = 3;
-			break;
-
-		default:
-			Assert(false);
-			return STATUS_ERR_INVALID_ARG;
-	}
-
-	return instance_index;
-}
-
-/**
  * \internal Default interrupt handler
  * \param instance Sercom instance used.
  */
@@ -141,16 +96,6 @@ void _sercom_set_handler(uint8_t instance,
 
 	/* Save interrupt handler. */
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
-}
-
-/** 
- * \internal 
- *
- **/
-void _sercom_register_instance(uint8_t instance_index, void *const dev_inst)
-{
-	/* Register software device struct in look-up table. */
-	_sercom_instances[instance_index] = dev_inst;	
 }
 
 /* Interrupt Service Routine */

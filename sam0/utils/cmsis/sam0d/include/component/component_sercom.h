@@ -171,7 +171,9 @@ typedef enum {
 /*TODO: Replace with correct values */
 #define SERCOM_USART_FORM_1_gc 0
 #define SERCOM_USART_FORM_5_gc 0
-
+#define SERCOM_USART_CPOL_bp 0
+#define SERCOM_USART_ 0
+#define SERCOM_USART_DATA_gm  (0x1FF << 1)
 
 #define SERCOM_USART_CHSIZE_5BIT_gc 0
 #define SERCOM_USART_CHSIZE_6BIT_gc 0
@@ -181,6 +183,17 @@ typedef enum {
 
 #define SERCOM_USART_PMODE_bm  0
 #define SERCOM_USART_BMODE_bm  0
+#define SERCOM_USART_SYNCBUSY_bp 7
+#define SERCOM_USART_SYNCBUSY_bm (1 << SERCOM_USART_SYNCBUSY_bp)
+#define SERCOM_USART_RESET_bm  0x00000001
+
+#define SERCOM_USART_SBMODE_1_bm 0x00000000
+#define SERCOM_USART_SBMODE_2_bm 0x00000001
+#define USART_FRAME_FORMAT_WITHOUT_PARITY_gm  0x00000000
+#define USART_FRAME_FORMAT_WITH_PARITY_gm  0x00000004
+
+//TODO: set valid values
+
 
 
 /* SPI defines */

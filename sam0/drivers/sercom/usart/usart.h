@@ -56,7 +56,7 @@
  * Callbacks for the Asynchronous USART driver
  *
  */
-//TODO: Add support for RX started interrupt.
+/* TODO: Add support for RX started interrupt. */
 #ifdef USART_ASYNC
 enum usart_callback_type {
 	USART_CALLBACK_TYPE_BUFFER_TRANSMITTED,
@@ -115,7 +115,7 @@ enum usart_parity {
  * settings must be chosen according to the rest of the configuration.
  *
  */
-//TODO: rename to mux
+//TODO: rename to mux_settings_a-h
 enum usart_signal_mux_settings {
 	/** See \ref mux_setting_a */
 	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_RXPO_0_gc | SERCOM_USART_TXPO_0_gc),
@@ -212,8 +212,7 @@ struct usart_conf {
 	 * */
 	bool clock_polarity_inverted;
 	/** External clock frequency in synchronous mode.
-	 * Must be given if clock source (XCK) is set to external.
-	 */
+	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
 	//TODO: clock_setup, config_struct?;
 	enum gclk_generator generator_source;
@@ -221,11 +220,13 @@ struct usart_conf {
 	bool run_in_standby;
 };
 
+#ifdef USART_ASYNC
 /* Prototype for the device instance */
 struct usart_dev_inst;
 
 /* Type of the callback functions */
 typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const dev_inst);
+#endif
 
 /**
  * \name USART device struct
@@ -288,7 +289,6 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
 	config->char_size = USART_CHAR_SIZE_8BIT;
-	//config->frame_format = USART_FRAME_FORMAT_FULL_DUPLEX;
 	config->baudrate = 9600;
 	config->mux_settings = USART_RX_1_TX_2_XCK_3;
 }
@@ -624,7 +624,6 @@ static inline bool usart_is_status_flag_set(
 
 	return (usart_module->STATUS & (1 << status_flag));
 }
-
 
 static inline void usart_clear_status_flag(
 		const struct usart_dev_inst *const dev_inst,

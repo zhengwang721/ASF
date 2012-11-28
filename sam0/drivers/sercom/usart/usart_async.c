@@ -465,11 +465,10 @@ void usart_handler(uint8_t instance) {
 
 		/* Write current packet from transmission buffer
 		 * and increment buffer pointer */
-		//TODO: casting
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
 					& SERCOM_USART_DATA_gm;
-			(dev_inst->tx_buffer_ptr)+2;
+			dev_inst->tx_buffer_ptr+=2;
 
 		} else {
 			usart_module->DATA |= (*(dev_inst->tx_buffer_ptr)
@@ -482,15 +481,17 @@ void usart_handler(uint8_t instance) {
 		(dev_inst->remaining_tx_buffer_length)--;
 	}
 
+	/* Check if the Transmission Complete interrupt has occurred and
+	 * that the transmit buffer is empty */
 	if ((callback_status & SERCOM_USART_TXCIF_bm) &&
 			!dev_inst->remaining_tx_buffer_length){
 		(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED]))(dev_inst);
 
 	}
 
-	if ((callback_status & SERCOM_USART_RXCIF_bm) &&
-			!dev_inst->remaining_rx_buffer_length){
-
+	/* Check if the Receive Complete interrupt has occurred, and that
+	 * the callback is enabled */
+	if ((callback_status & SERCOM_USART_RXCIF_bm)){
 		/* Check if the reception buffer has data
 		 * to receive */
 		if (dev_inst->remaining_rx_buffer_length) {
@@ -499,7 +500,7 @@ void usart_handler(uint8_t instance) {
 			if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 				/* Read out from DATA and increment 8bit ptr by two */
 				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
-				dev_inst->tx_buffer_ptr+2;
+				dev_inst->tx_buffer_ptr+=2;
 			} else {
 				/* Read out from DATA and increment 8bit ptr by one */
 				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);

@@ -177,9 +177,9 @@ enum status_code usart_init(struct usart_dev_inst *dev_inst,
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
-	instance_index = _sercom_get_instance_index(dev_inst->hw_dev);
+	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 	_sercom_set_handler(instance_index, (void *)&usart_handler);
-	_sercom_register_instance(instance_index, (void *)dev_inst);
+	_sercom_instances[instance_index] = dev_inst;
 #endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(dev_inst, config);
@@ -315,9 +315,6 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
-
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
@@ -337,7 +334,8 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 		/* Check if the character size exceeds 8 bit */
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment 8 bit pointer by two */
-			usart_write(dev_inst, (uint16_t)*(tx_data+2));
+			usart_write(dev_inst, (uint16_t)*(tx_data));
+			tx_data += 2;
 		} else {
 			/* Increment 8 bit pointer by one */
 			usart_write(dev_inst, (uint16_t)*(tx_data++));
@@ -404,7 +402,8 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Check if the character size exceeds 8 bit */
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
-			usart_read(dev_inst, (uint16_t *)(rx_data+2));
+			usart_read(dev_inst, (uint16_t *)(rx_data));
+			rx_data+=2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
 			usart_read(dev_inst, (uint16_t *)(rx_data++));
