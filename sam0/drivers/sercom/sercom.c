@@ -40,6 +40,8 @@
  */
 #include <sercom.h>
 
+
+/* TODO: move? */
 #define SHIFT 1
 
 /**
@@ -88,3 +90,4 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 
 	return STATUS_OK;
 }
+

@@ -5,6 +5,7 @@
 
 #define SERCOM_INSTS_NUM 6
 
+/*
 //TODO: remove
 enum status_code {
 	STATUS_OK,
@@ -19,8 +20,9 @@ enum status_code {
 {\
 	if (!(expr)) while (true);\
 }
-
 #define SHIFT 0
+
+*/
 
 #define __I  volatile const
 #define __O  volatile
@@ -270,11 +272,12 @@ enum DOPO_group {
 };
 
 
-
+/*
 #define SERCOM0 (*(SERCOM_t * ) 0x2000)
 #define SERCOM1 (*(SERCOM_t * ) 0x3000)
 #define SERCOM2 (*(SERCOM_t * ) 0x4000)
 #define SERCOM3 (*(SERCOM_t * ) 0x5000)
+*/
 /* #define SAM0P_SERCOM0 (*(SAM0P_SERCOM_Typedef * ) 0x2000) */
 
 //#define SERCOM1 (*(SERCOM_Typedef * ) 0x2200)
