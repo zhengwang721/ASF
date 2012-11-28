@@ -45,7 +45,7 @@
 #include <clock.h>
 #include <conf_clocks.h>
 #include <gclk.h>
-#include "clock_init.h"
+#include <clock_init.h>
 
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
