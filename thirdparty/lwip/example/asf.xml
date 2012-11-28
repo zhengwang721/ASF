@@ -31,7 +31,7 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.tc"/>
 	</module>
-	<module type="application" id="common.services.network.tcpip.lwip.example#sam" caption="lwIP TCP/IP Stack Standalone(no OS) Example">
+	<module type="application" id="common.services.network.tcpip.lwip.example#sam" caption="lwIP TCP/IP Stack Standalone (no RTOS) Example">
 		<info type="description" value="summary">
 		Basic HTTP web server using the lwIP TCP/IP stack standalone SAM port (i.e. no OS).
 		</info>
@@ -44,7 +44,7 @@
 		<build type="c-source"    value="network/ethernet_sam.c"/>
 		<build type="header-file" value="network/ethernet_sam.h"/>
 		<build type="c-source"    value="network/timer_mgt_sam.c"/>
-		<build type="header-file" value="network/timer_mgt_sam.h"/>	
+		<build type="header-file" value="network/timer_mgt_sam.h"/>
 		<build type="c-source"    value="network/httpserver_raw/fs.c"/>
 		<build type="header-file" value="network/httpserver_raw/fs.h"/>
 		<build type="c-source"    value="network/httpserver_raw/fsdata.c"/>
