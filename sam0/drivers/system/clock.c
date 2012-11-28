@@ -77,7 +77,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 				return 8000000;
 			}
 
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			/* Fall trough */
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Fall trough */
@@ -132,9 +132,9 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 			SYSCTRL.OSC8M = conf->rc8mhz.prescaler << SYSCTRL_PRESC_gp;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			/* Need to enable before we can configure */
-			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_RC32KHZ, true);
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
 			/* TODO: verify that this is always enabled */
 			break;
 
@@ -234,7 +234,7 @@ enum status_code system_clock_source_write_calibration(
 					freq_range << SYSCTRL_FRANGE_gp;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 
 			if (calibration_value > 128) {
 				return STATUS_ERR_INVALID_ARG;
@@ -287,7 +287,7 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			SYSCTRL.OSC32K |= SYSCTRL_OSC32K_ENABLE_bm;
 			waitmask = SYSCTRL_OSC32KRDY_bm;
 			break;
@@ -344,7 +344,7 @@ enum status_code system_clock_source_disable(enum system_clock_source clk_source
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			SYSCTRL.OSC8M &= ~SYSCTRL_RC8MHZ_ENABLE_bm;
 			break;
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			SYSCTRL.OSC32K &= ~SYSCTRL_OSC32K_ENABLE_bm;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC:
@@ -381,7 +381,7 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			/* TODO: verify that this cannot be disabled */
 			return true;
-		case SYSTEM_CLOCK_SOURCE_RC32KHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			mask = SYSCTRL_OSC32KRDY_bm;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC:
