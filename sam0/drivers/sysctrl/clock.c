@@ -40,7 +40,9 @@
  * \asf_license_stop
  *
  */
-#include "clock.h"
+
+#include <clock.h>
+
 /* \ingroup clock_group
  * @{
  */

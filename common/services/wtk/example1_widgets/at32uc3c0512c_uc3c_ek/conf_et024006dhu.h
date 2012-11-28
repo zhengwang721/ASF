@@ -1,9 +1,10 @@
-/**
+/*****************************************************************************
+ *
  * \file
  *
- * \brief SAM0+ System related functionality
+ * \brief Configuration for the ET024006DHU display.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,62 +40,23 @@
  *
  * \asf_license_stop
  *
- */
-
-#include <system.h>
-
-/**
- * \brief configure BOD
- *
- * This function will configure the BOD33 or BOD12 module based on the
- * configuration in the configuration struct. The BOD will be enabled when this
- * function returns.
- *
- * \param[in] conf pointer to the struct containing configuration
- * \param[in] bod which BOD module to configure
- *
- * \retval STATUS_ERR_INVALID_ARG Invalid BOD
- * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
- * \retval STATUS_OK Operation completed successfully
- */
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod)
-{
-	Assert(conf);
-
-	uint16_t temp;
-
-	temp = conf->action << SYSCTRL_BOD33CTRL_ACTION_gp |
-			conf->mode << SYSCTRL_BOD33CTRL_MODE_bp;
-
-	if (conf->mode) {
-	/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33CTRL_CEN_bm;
-	}
-	if (conf->hysteresis) {
-		temp |= SYSCTRL_BOD33CTRL_HYST_bm;
-	}
-
-	temp |= SYSCTRL_BOD33CTRL_ENABLE_bm;
-	switch (bod) {
-		case SYSTEM_BOD33:
-			if (conf->level > 0x3F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-			SYSCTRL.BOD33LEVEL = conf->level; // 6 bits
-			SYSCTRL.BOD33CTRL = temp;
-			break;
-		case SYSTEM_BOD12:
-			if (conf->level > 0x1F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-			SYSCTRL.BOD12LEVEL = conf->level; // 5 bits
-			SYSCTRL.BOD12CTRL = temp;
-			break;
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
-	return STATUS_OK;
-}
+ ******************************************************************************/
 
 
+ //! Configuration of the et024006dhu LCD display driver
+
+#ifndef _CONF_ET024006DHU_H_
+#define _CONF_ET024006DHU_H_
+
+// The following list of required defines is already set in the board used for 
+// this example:
+// ET024006_IFACE_MODE
+// ET024006_CMD_ADDR
+// ET024006_PARAM_ADDR
+// ET024006DHU_TE_PIN
+// ET024006DHU_BL_PIN
+// ET024006DHU_BL_FUNCTION
+// ET024006DHU_RESET_PIN
+
+
+#endif // _CONF_ET024006DHU_H_
