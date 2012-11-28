@@ -94,32 +94,32 @@ void clocks_init(void)
 	#if CONF_CLOCK_DFLL_ENABLE == true
 	conf.dfll.loop = CONF_CLOCK_DFLL_LOOP_MODE;
 
-	#if (CONF_CLOCK_DFLL_MODE == CLOCK_DFLL_OPEN_LOOP)
+	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP)
 		// TODO: Add 48MHz calibration value here
 	#endif
 
 		#if CONF_CLOCK_DFLL_QUICK_LOCK == true
-		conf.dfll.quick_lock = CLOCK_DFLL_QUICK_LOCK_ENABLE;
+		conf.dfll.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
 		#else
-		conf.dfll.quick_lock = CLOCK_DFLL_QUICK_LOCK_DISABLE;
+		conf.dfll.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE;
 		#endif
 
 		#if CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK == true
-		conf.dfll.stable_tracking = CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+		conf.dfll.stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
 		#else
-		conf.dfll.stable_tracking = CLOCK_DFLL_FIX_AFTER_FINE_LOCK;
+		conf.dfll.stable_tracking = SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK;
 		#endif
 
 		#if CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP == true
-		conf.dfll.wakeup_lock = CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+		conf.dfll.wakeup_lock = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
 		#else
-		conf.dfll_wakeup_lock = CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
+		conf.dfll_wakeup_lock = SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
 		#endif
 
 		#if CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE == true
-		conf.dfll.chill_cycle = CLOCK_DFLL_CHILL_CYCLE_ENABLE;
+		conf.dfll.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
 		#else
-		conf.dfll.chill_cycle = CLOCK_DFLL_CHILL_CYCLE_DISABLE;
+		conf.dfll.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
 		#endif
 
 	conf.dfll.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
@@ -203,8 +203,8 @@ void clocks_init(void)
 	system_main_clock_set_failure_detect(false);
 	#endif
 
-	system_apb_clock_set_divider(CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
-	system_apb_clock_set_divider(CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
+	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
+	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
 
 }

@@ -41,8 +41,8 @@
  *
  */
 #include <compiler.h>
-#ifndef CLOCK_H
-# define CLOCK_H
+#ifndef SYSTEM_CLOCK_H
+# define SYSTEM_CLOCK_H
 /* TODO: Replace with compiler.h */
 /**
  * \defgroup clock_group Clock control
@@ -206,21 +206,21 @@ enum gclk_generator {
  */
 enum clock_startup {
 	/** Wait 0 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_0,
+	SYSTEM_CLOCK_STARTUP_0,
 	/** Wait 32 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_32,
+	SYSTEM_CLOCK_STARTUP_32,
 	/** Wait 2048 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_2048,
+	SYSTEM_CLOCK_STARTUP_2048,
 	/** Wait 4096 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_4096,
+	SYSTEM_CLOCK_STARTUP_4096,
 	/** Wait 16384 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_16384,
+	SYSTEM_CLOCK_STARTUP_16384,
 	/** Wait 32768 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_32768,
+	SYSTEM_CLOCK_STARTUP_32768,
 	/** Wait 65536 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_65536,
+	SYSTEM_CLOCK_STARTUP_65536,
 	/** Wait 131072 clock cycles until the clock source is considered stable */
-	CLOCK_STARTUP_131072,
+	SYSTEM_CLOCK_STARTUP_131072,
 };
 
 /**
@@ -230,9 +230,9 @@ enum clock_startup {
  */
 enum clock_external_clock {
 	/** The external clock source is a crystal oscillator */
-	CLOCK_EXTERNAL_CRYSTAL,
+	SYSTEM_CLOCK_EXTERNAL_CRYSTAL,
 	/** The connected clock source is an external logic level clock signal */
-	CLOCK_EXTERNAL_CLOCK,
+	SYSTEM_CLOCK_EXTERNAL_CLOCK,
 };
 
 /**
@@ -240,11 +240,11 @@ enum clock_external_clock {
  */
 enum clock_dfll_mode {
 	/** The DFLL is operating in open loop mode with no feedback */
-	CLOCK_DFLL_OPEN_LOOP,
+	SYSTEM_CLOCK_DFLL_OPEN_LOOP,
 	/** The DFLL is operating in closed loop mode with frequency feedback from a
      * low frequency reference clock
      */
-	CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_MODE_bm,
+	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_MODE_bm,
 };
 
 /**
@@ -252,9 +252,9 @@ enum clock_dfll_mode {
  */
 enum clock_dfll_wakeup_lock {
 	/** Keep DFLL lock when the device wakes from sleep */
-	CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE,
+	SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE,
 	/** Lose DFLL lock when the devices wakes from sleep */
-	CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE = SYSCTRL_LLAW_bm,
+	SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE = SYSCTRL_LLAW_bm,
 };
 
 /**
@@ -262,9 +262,9 @@ enum clock_dfll_wakeup_lock {
  */
 enum clock_dfll_stable_tracking {
 	/** Keep tracking after the DFLL has gotten a fine lock */
-	CLOCK_DFLL_TRACK_AFTER_FINE_LOCK,
+	SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK,
 	/** Stop tracking after the DFLL has gotten a fine lock */
-	CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_FINE_bm,
+	SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_FINE_bm,
 };
 
 /** If the difference between the DFLL source clock and output frequency is
@@ -272,9 +272,9 @@ enum clock_dfll_stable_tracking {
  * */
 enum clock_dfll_chill_cycle {
 	/** Enable a chill cycle, where the DFLL output frequency is not measured */
-	CLOCK_DFLL_CHILL_CYCLE_ENABLE,
+	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE,
 	/** Disable a chill cycle, where the DFLL output frequency is not measured */
-	CLOCK_DFLL_CHILL_CYCLE_DISABLE = SYSCTRL_CCDIS_bm,
+	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE = SYSCTRL_CCDIS_bm,
 };
 
 /**
@@ -282,9 +282,9 @@ enum clock_dfll_chill_cycle {
  */
 enum clock_dfll_quick_lock {
 	/** Enable the QuickLock feature for less strict lock requirements on the DFLL */
-	CLOCK_DFLL_QUICK_LOCK_ENABLE,
+	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
-	CLOCK_DFLL_QUICK_LOCK_DISABLE,
+	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE,
 };
 
 
@@ -294,15 +294,15 @@ enum clock_dfll_quick_lock {
  */
 enum clock_main_clock {
 	/** Internal 32kHz oscillator */
-	CLOCK_MAIN_RCSYS,
+	SYSTEM_CLOCK_MAIN_RCSYS,
 	/** External oscillator */
-	CLOCK_MAIN_OSC0,
+	SYSTEM_CLOCK_MAIN_OSC0,
 	/** Digital Frequency Locked Loop (DFLL) */
-	CLOCK_MAIN_DFLL,
+	SYSTEM_CLOCK_MAIN_DFLL,
 	/** Internal 8MHz RC oscillator */
-	CLOCK_MAIN_RC8,
+	SYSTEM_CLOCK_MAIN_RC8,
 	/** GCLK channel x */
-	CLOCK_MAIN_GCLK, /* GCLK0 ?*/
+	SYSTEM_CLOCK_MAIN_GCLK, /* GCLK0 ?*/
 };
 #endif
 
@@ -312,27 +312,27 @@ enum clock_main_clock {
  */
 enum clock_main_div {
 	/** Divide Main clock by 1 */
-	CLOCK_MAIN_DIV_1,
+	SYSTEM_CLOCK_MAIN_DIV_1,
 	/** Divide Main clock by 2 */
-	CLOCK_MAIN_DIV_2,
+	SYSTEM_CLOCK_MAIN_DIV_2,
 	/** Divide Main clock by 4 */
-	CLOCK_MAIN_DIV_4,
+	SYSTEM_CLOCK_MAIN_DIV_4,
 	/** Divide Main clock by 8 */
-	CLOCK_MAIN_DIV_8,
+	SYSTEM_CLOCK_MAIN_DIV_8,
 	/** Divide Main clock by 16 */
-	CLOCK_MAIN_DIV_16,
+	SYSTEM_CLOCK_MAIN_DIV_16,
 	/** Divide Main clock by 32 */
-	CLOCK_MAIN_DIV_32,
+	SYSTEM_CLOCK_MAIN_DIV_32,
 	/** Divide Main clock by 64 */
-	CLOCK_MAIN_DIV_64,
+	SYSTEM_CLOCK_MAIN_DIV_64,
 	/** Divide Main clock by 128 */
-	CLOCK_MAIN_DIV_128,
+	SYSTEM_CLOCK_MAIN_DIV_128,
 };
 
 enum clock_apb_bus {
-	CLOCK_APB_APBA,
-	CLOCK_APB_APBB,
-	CLOCK_APB_APBC,
+	SYSTEM_CLOCK_APB_APBA,
+	SYSTEM_CLOCK_APB_APBB,
+	SYSTEM_CLOCK_APB_APBC,
 };
 
 
@@ -481,8 +481,8 @@ static inline void system_clock_source_get_default_config(
 	Assert(conf);
 
 	/* XOSC/XOSC32 driver settings */
-	conf->ext.external_clock =       CLOCK_EXTERNAL_CRYSTAL;
-	conf->ext.startup_time =         CLOCK_STARTUP_16384;
+	conf->ext.external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	conf->ext.startup_time =         SYSTEM_CLOCK_STARTUP_16384;
 	conf->ext.auto_gain_control =    true;
 	conf->ext.frequency =            16000000UL;
 
@@ -494,11 +494,11 @@ static inline void system_clock_source_get_default_config(
 	conf->rc8mhz.prescaler =     8;
 
 	/* DFLL config */
-	conf->dfll.loop =                 CLOCK_DFLL_OPEN_LOOP;
-	conf->dfll.quick_lock =           CLOCK_DFLL_QUICK_LOCK_ENABLE;
-	conf->dfll.chill_cycle =          CLOCK_DFLL_CHILL_CYCLE_ENABLE;
-	conf->dfll.wakeup_lock =          CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
-	conf->dfll.stable_tracking =      CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	conf->dfll.loop =                 SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	conf->dfll.quick_lock =           SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
+	conf->dfll.chill_cycle =          SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
+	conf->dfll.wakeup_lock =          SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	conf->dfll.stable_tracking =      SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
 
 	/* TODO: Need to update these values when we know what they mean */
 	conf->dfll.coarse_value =          1;
@@ -638,13 +638,13 @@ static inline void system_cpu_clock_set_divider(enum clock_main_div divider)
 static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus bus, enum clock_main_div divider)
 {
 	switch (bus) {
-		case CLOCK_APB_APBA:
+		case SYSTEM_CLOCK_APB_APBA:
 			PM.APBASEL = divider;
 			break;
-		case CLOCK_APB_APBB:
+		case SYSTEM_CLOCK_APB_APBB:
 			PM.APBBSEL = divider;
 			break;
-		case CLOCK_APB_APBC:
+		case SYSTEM_CLOCK_APB_APBC:
 			PM.APBCSEL = divider;
 			break;
 		default:
@@ -709,13 +709,13 @@ static inline void system_ahb_clock_clear_mask(uint32_t mask)
 static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus, uint32_t mask)
 {
 	switch (bus) {
-		case CLOCK_APB_APBA:
+		case SYSTEM_CLOCK_APB_APBA:
 			PM.APBAMASK |= mask;
 			break;
-		case CLOCK_APB_APBB:
+		case SYSTEM_CLOCK_APB_APBB:
 			PM.APBBMASK |= mask;
 			break;
-		case CLOCK_APB_APBC:
+		case SYSTEM_CLOCK_APB_APBC:
 			PM.APBCMASK |= mask;
 			break;
 		default:
@@ -742,13 +742,13 @@ static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus,
 static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bus, uint32_t mask)
 {
 	switch (bus) {
-		case CLOCK_APB_APBA:
+		case SYSTEM_CLOCK_APB_APBA:
 			PM.APBAMASK &= ~mask;
 			break;
-		case CLOCK_APB_APBB:
+		case SYSTEM_CLOCK_APB_APBB:
 			PM.APBBMASK &= ~mask;
 			break;
-		case CLOCK_APB_APBC:
+		case SYSTEM_CLOCK_APB_APBC:
 			PM.APBCMASK &= ~mask;
 			break;
 		default:
@@ -787,4 +787,4 @@ static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bu
  * No errata workarounds in driver
  *
  */
-#endif /* CLOCK_H */
+#endif /* SYSTEM_CLOCK_H */

@@ -52,7 +52,7 @@ void configure_system_clock_sources(void)
 	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_RC8MHZ);
 
 	/* XOSC */
-	cs_conf.ext.external_clock = CLOCK_EXTERNAL_CRYSTAL;
+	cs_conf.ext.external_clock = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 
 	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_XOSC);
 
@@ -71,7 +71,7 @@ int main(void)
 
 
 	/** [main1] */
-	system_main_clock_set_source(CLOCK_MAIN_DFLL);
+	system_main_clock_set_source SYSTEM_CLOCK_MAIN_DFLL);
 	/** [main1] */
 
 }

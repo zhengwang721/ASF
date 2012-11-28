@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CLOCK_GCLK_H_INCLUDED
-#define CLOCK_GCLK_H_INCLUDED
+#ifndef SYSTEM_CLOCK_GCLK_H_INCLUDED
+#define SYSTEM_CLOCK_GCLK_H_INCLUDED
 
 /**
  * \defgroup sam0_gclk_group SAM0+ Generic Clock Driver (GCLK)
