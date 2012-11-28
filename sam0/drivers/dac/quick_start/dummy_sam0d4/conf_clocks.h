@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#include <clock.h>
 
 #ifndef CONF_CLOCKS_H
 #  define CONF_CLOCKS_H
@@ -119,12 +119,12 @@
 /* Configure GCLK generator 0 (8MHZ div 8 at startup (CPU CLOCK)) */
 
 #define CONF_CLOCK_GCLK_0_ENABLE true
-#define CONF_CLOCK_GCLK_0_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
-#define CONF_CLOCK_GCLK_0_PRESCALER 1
+#define CONF_CLOCK_GCLK_0_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_RC8MHZ
+#define CONF_CLOCK_GCLK_0_PRESCALER 8
 
 /* Configure GCLK generator 1 */
 
-#define CONF_CLOCK_GCLK_1_ENABLE true
+#define CONF_CLOCK_GCLK_1_ENABLE false
 #define CONF_CLOCK_GCLK_1_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_1_PRESCALER 1
 
@@ -137,38 +137,38 @@
 #else
 /* Configure these settings when GCLK 2 is not used for RTC or manual settings
  * are preferred. */
-# define CONF_CLOCK_GCLK_2_ENABLE true
+# define CONF_CLOCK_GCLK_2_ENABLE false
 # define CONF_CLOCK_GCLK_2_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 # define CONF_CLOCK_GCLK_2_PRESCALER 1
 #endif
 
 /* Configure GCLK generator 3*/
 
-#define CONF_CLOCK_GCLK_3_ENABLE true
+#define CONF_CLOCK_GCLK_3_ENABLE false
 #define CONF_CLOCK_GCLK_3_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_3_PRESCALER 1
 
 /* Configure GCLK generator 4 */
 
-#define CONF_CLOCK_GCLK_4_ENABLE true
+#define CONF_CLOCK_GCLK_4_ENABLE false
 #define CONF_CLOCK_GCLK_4_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_4_PRESCALER 1
 
 /* Configure GCLK generator 5*/
 
-#define CONF_CLOCK_GCLK_5_ENABLE true
+#define CONF_CLOCK_GCLK_5_ENABLE false
 #define CONF_CLOCK_GCLK_5_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_5_PRESCALER 1
 
 /* Configure GCLK generator 6*/
 
-#define CONF_CLOCK_GCLK_6_ENABLE true
+#define CONF_CLOCK_GCLK_6_ENABLE false
 #define CONF_CLOCK_GCLK_6_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_6_PRESCALER 1
 
 /* Configure GCLK generator 7*/
 
-#define CONF_CLOCK_GCLK_7_ENABLE true
+#define CONF_CLOCK_GCLK_7_ENABLE false
 #define CONF_CLOCK_GCLK_7_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC
 #define CONF_CLOCK_GCLK_7_PRESCALER 1
 
