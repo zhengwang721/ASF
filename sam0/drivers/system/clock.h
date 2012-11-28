@@ -71,7 +71,7 @@
 
  * \enddot
  *
- * \section clock_sources Clock Sources
+ * \section system_clock_sources Clock Sources
  * The SAM0+ devices has multiple clock sources, among them internal
  * RC oscillators, internal DFLL as well as the possibility of external
  * crystal oscillators. The clock sources are configured using the functions

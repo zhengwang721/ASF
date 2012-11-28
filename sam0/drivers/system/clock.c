@@ -211,18 +211,18 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
  * \note Frequency range only applies when configuring the 8MHz oscillator
  * and will be ignored for the other oscillators.
  *
- * \param[in] clock_source Clock source to calibrate
+ * \param[in] clock_src Clock source to calibrate
  * \param[in] calibration_value Calibration value to write
  * \param[in] freq_range Frequency range (Only applicable to the 8MHz oscillator)
  *
  * \retval STATUS_ERR_INVALID_ARG The selected clock source is not available
  */
-enum status_code clock_source_write_calibration(
-		enum clock_source clock_source,
+enum status_code system_clock_source_write_calibration(
+		enum system_clock_source clock_src,
 		uint16_t calibration_value, uint8_t freq_range)
 {
 
-	switch (clock_source) {
+	switch (clock_src) {
 		case CLOCK_SOURCE_RC8MHZ:
 
 			if (calibration_value > 255 || freq_range > 4) {
@@ -266,21 +266,21 @@ enum status_code clock_source_write_calibration(
  * This function will enable the selected clock source
  *
  *  \param[in] block_until_ready block until the clock source has been enabled.
- *  \param[in] clock_source Clock source to enable
+ *  \param[in] clock_src Clock source to enable
  *
  *  \retval STATUS_OK Clock source was enabled successfully and is ready
  *  \retval STATUS_ERR_INVALID_ARG The clock source is not available on this device
  *  \retval STATUS_TIMEOUT The clock source did not start (timeout)
  */
 
-enum status_code clock_source_enable(enum clock_source clock_source, bool block_until_ready)
+enum status_code system_clock_source_enable(enum system_clock_source clock_src, bool block_until_ready)
 {
 	/* Default value is 0xFFFFFFFF for timeout*/
 	uint32_t timeout;
 	uint32_t waitmask;
 
 	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
-	switch (clock_source) {
+	switch (clock_src) {
 		case CLOCK_SOURCE_RC8MHZ:
 			SYSCTRL.OSC8M |= SYSCTRL_RC8MHZ_ENABLE_bm;
 			/* Not possible to wait for ready, so we return */
