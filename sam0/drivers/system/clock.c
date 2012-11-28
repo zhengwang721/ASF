@@ -42,7 +42,7 @@
  */
 
 #include <clock.h>
-#include <conf_clock.h>
+#include <conf_clocks.h>
 
 /* \ingroup clock_group
  * @{

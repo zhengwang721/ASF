@@ -40,7 +40,10 @@
  * \asf_license_stop
  *
  */
+
 #include <compiler.h>
+#include <gclk.h>
+
 #ifndef SYSTEM_CLOCK_H
 # define SYSTEM_CLOCK_H
 /* TODO: Replace with compiler.h */
