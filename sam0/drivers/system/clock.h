@@ -763,6 +763,9 @@ static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bu
 
 /*@}*/
 
+void system_clock_init(void);
+
+
 /**
  * \page clock_extra_info Extra Information (Clock)
  *
