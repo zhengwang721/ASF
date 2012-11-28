@@ -40,7 +40,10 @@
  * \asf_license_stop
  *
  */
+
 #include <compiler.h>
+#include <gclk.h>
+
 #ifndef SYSTEM_CLOCK_H
 # define SYSTEM_CLOCK_H
 /* TODO: Replace with compiler.h */
@@ -762,6 +765,9 @@ static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bu
 
 
 /*@}*/
+
+void system_clock_init(void);
+
 
 /**
  * \page clock_extra_info Extra Information (Clock)

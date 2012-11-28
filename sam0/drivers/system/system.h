@@ -430,6 +430,9 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  */
 
 /* @} */
+
+void system_bod_init(void);
+
 #endif /* SYSTEM_H */
 
 /**
