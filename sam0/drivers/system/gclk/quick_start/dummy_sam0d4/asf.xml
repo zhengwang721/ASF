@@ -3,7 +3,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<require idref="board.dummy.atsam0d4"/>
-		<require idref="sam0.drivers.gclk.quick_start"/>
+		<require idref="sam0.drivers.system.gclk.quick_start"/>
 		<generator value="armgcc"/>
 		<device-support value="atsam0d4"/>
 	</project>
