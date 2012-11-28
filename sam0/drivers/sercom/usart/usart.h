@@ -79,15 +79,17 @@ enum usart_dataorder {
 /**
  * \brief USART Sample mode enum
  *
- * TODO: joda
  *
  */
 enum usart_sample_mode {
+	/* Sampling is synchronized with the internal clock */
 	USART_SAMPLE_MODE_SYNC_MASTER = (SERCOM_USART_CSRC_bm | SERCOM_USART_CMODE_bm),
+	/* Sampling is synchronized with the  external clock */
 	USART_SAMPLE_MODE_SYNC_SLAVE = (SERCOM_USART_CMODE_bm),
+	/* Sampling is asynchronous and USART is clocked by the internal clock */
 	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CSRC_bm),
-	/* USART module clocked by an external
-	 * clock source applied to the XCK pin
+	/* Sampling is asynchronous and USART is clocked by an external clock.
+	 * The clock source is applied to the XCK pin
 	 */
 	USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK = 0,
 };
@@ -250,6 +252,7 @@ struct usart_dev_inst {
 };
 
 #if !defined (__DOXYGEN__)
+
 /**
  * \internal Wait until synchronization is complete
  */
@@ -260,8 +263,11 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until the synchronization is complete */
-	while(usart_module->STATUS & SERCOM_USART_SYNCBUSY_bm);
+	while (usart_module->STATUS & SERCOM_USART_SYNCBUSY_bm) {
+		/* Intentionally left empty */
+	}
 }
+
 #endif
 
 /**
@@ -281,8 +287,6 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
  */
 static inline void usart_get_config_defaults(struct usart_conf *const config)
 {
-
-	//TODO: look through defaults
 	Assert(config);
 	config->data_order = USART_DATAORDER_MSB;
 	config->sample_mode = USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK;
@@ -467,9 +471,9 @@ static inline bool usart_is_data_transmitted(const struct usart_dev_inst
 	txcif = usart_module->INTFLAGS & SERCOM_USART_TXCIF_bm;
 
 #ifdef USART_ASYNC
-		return txcif && !(dev_inst->remaining_tx_buffer_length);
+	return txcif && !(dev_inst->remaining_tx_buffer_length);
 #endif
-		return txcif;
+	return txcif;
 }
 
 /**
@@ -668,7 +672,6 @@ static inline void usart_clear_interrupt_flag(
 	/* Clear requested status flag */
 	usart_module->INTFLAGS |= (1 << interrupt_flag);
 }
-
 
 /**
  * @}

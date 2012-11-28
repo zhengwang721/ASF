@@ -70,7 +70,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		| (config->clock_polarity_inverted << SERCOM_USART_CPOL_bp);
 
 	/* Get baud value from mode and clock */
-	switch(config->sample_mode) {
+	switch (config->sample_mode) {
 	case USART_SAMPLE_MODE_SYNC_MASTER:
 		/* Calculate baud value */
 		//usart_freq = clock_gclk_ch_get_hz(SERCOM_GCLK_ID);
@@ -198,7 +198,7 @@ enum status_code usart_init(struct usart_dev_inst *dev_inst,
  *       ongoing asynchronous operation running or not.
  *
  * param[in]   dev_inst Pointer to the software instance struct
- * param[out]  tx_data  Data to transfer 
+ * param[out]  tx_data  Data to transfer
  *
  * \return     Status of the operation
  * \retval     STATUS_OK           If the operation was completed
@@ -320,7 +320,6 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 
 	/* Blocks while buffer is being transferred */
 	while (length--) {
-
 		/* Wait for the USART to be ready for new data and abort
 		 * operation if it doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
@@ -388,10 +387,9 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 
 	/* Blocks while buffer is being received */
 	while (length--) {
-
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (i=0;i < timeout; i++) {
+		for (i = 0; i < timeout; i++) {
 			if (usart_is_data_received(dev_inst)) {
 				break;
 			} else if (i == timeout) {
@@ -403,7 +401,7 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
 			usart_read(dev_inst, (uint16_t *)(rx_data));
-			rx_data+=2;
+			rx_data += 2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
 			usart_read(dev_inst, (uint16_t *)(rx_data++));

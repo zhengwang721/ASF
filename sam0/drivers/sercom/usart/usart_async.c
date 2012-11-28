@@ -42,6 +42,7 @@
 #include <usart_async.h>
 
 #if !defined (__DOXYGEN__)
+
 /**
  * \internal      Asynchronous write of a buffer with a given length
  *
@@ -53,7 +54,6 @@
 void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint16_t length)
 {
-
 	/* Write parameters to the device instance */
 	dev_inst->remaining_tx_buffer_length = length;
 	dev_inst->tx_buffer_ptr = tx_data;
@@ -81,6 +81,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	dev_inst->remaining_rx_buffer_length = length;
 	dev_inst->rx_buffer_ptr = rx_data;
 }
+
 #endif
 
 /**
@@ -146,7 +147,7 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  * \param[in]     dev_inst Pointer to USART software instance struct
  * \param[in]     callback_type Callback type given by an enum
  *
- * \returns    Status of the operation 
+ * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_INVALID     If operation was not completed,
  *                                    due to invalid callback_type
@@ -160,14 +161,13 @@ enum status_code usart_async_enable_callback(
 	Assert(dev_inst);
 
 	/* Enable callback */
-	dev_inst->callback_enable_mask |= (0 << callback_type);
+	dev_inst->callback_enable_mask |= (1 << callback_type);
 
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Enable the interrupt flag */
-	switch (callback_type){
-
+	switch (callback_type) {
 	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
 		usart_module->INTENSET = SERCOM_USART_TXCIF_bm;
 		break;
@@ -179,11 +179,9 @@ enum status_code usart_async_enable_callback(
 	default:
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
-
 	}
 
 	return STATUS_OK;
-
 }
 
 /**
@@ -210,14 +208,13 @@ enum status_code usart_async_disable_callback(
 	Assert(dev_inst);
 
 	/* Disable callback */
-	dev_inst->callback_enable_mask |= (1 << callback_type);
+	dev_inst->callback_enable_mask |= (0 << callback_type);
 
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Disable the interrupt flag */
-	switch (callback_type){
-
+	switch (callback_type) {
 	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
 		usart_module->INTENCLR = SERCOM_USART_TXCIF_bm;
 		break;
@@ -229,16 +226,13 @@ enum status_code usart_async_disable_callback(
 	default:
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
-
 	}
 
 	return STATUS_OK;
 }
 
-
-
 /**
- * \brief 
+ * \brief TODO
  *
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
@@ -269,9 +263,8 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 	return STATUS_OK;
 }
 
-
 /**
- * \brief 
+ * \brief TODO
  *
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
@@ -303,7 +296,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief 
+ * \brief TODO
  *
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
@@ -323,7 +316,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	if(length == 0) {
+	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -339,7 +332,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief 
+ * \brief TODO
  *
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
@@ -356,7 +349,7 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	if(length == 0) {
+	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -369,7 +362,6 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	_usart_async_read_buffer(dev_inst, rx_data, length);
 
 	return STATUS_OK;
-
 }
 
 /**
@@ -426,41 +418,42 @@ void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
 }
 
 /* Interrupt Handler for USART */
-void usart_handler(uint8_t instance) {
+void usart_handler(uint8_t instance)
+{
 
 	uint16_t interrupt_status;
 	uint16_t callback_status;
 
 	/* Get device instance from the look-up table */
-	struct usart_dev_inst *dev_inst =
-			(struct usart_dev_inst *)_sercom_instances[instance];
+	struct usart_dev_inst *dev_inst
+		= (struct usart_dev_inst *)_sercom_instances[instance];
 
 	/* Sanity check content from the look-up table */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
 	/* Pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module =
-			&(dev_inst->hw_dev->USART);
+	SERCOM_USART_t *const usart_module
+		= &(dev_inst->hw_dev->USART);
 
 	/* Read and mask interrupt flag register */
 	interrupt_status = usart_module->INTFLAGS;
 	callback_status = interrupt_status
-			&dev_inst->callback_reg_mask
-			&dev_inst->callback_enable_mask;
+		&dev_inst->callback_reg_mask
+		&dev_inst->callback_enable_mask;
 
 	/* Check if a DATA READY interrupt has occurred,
 	 * and if there if there is more to transfer */
-	if (interrupt_status & SERCOM_USART_DREIF_bm
-		&& dev_inst->remaining_tx_buffer_length) {
+	if (interrupt_status & SERCOM_USART_DREIF_bm &&
+		dev_inst->remaining_tx_buffer_length) {
 
 		/* Check if there is only one more transmission
 		 * to make */
 		if (dev_inst->remaining_tx_buffer_length == 1) {
 			/* Disable the Data Register Empty
 			 * Interrupt Flag (DREIF) */
-			usart_module->INTENCLR =
-					SERCOM_USART_DREIF_bm;
+			usart_module->INTENCLR
+				= SERCOM_USART_DREIF_bm;
 		}
 
 		/* Write current packet from transmission buffer
@@ -468,7 +461,7 @@ void usart_handler(uint8_t instance) {
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			usart_module->DATA |= *(dev_inst->tx_buffer_ptr)
 					& SERCOM_USART_DATA_gm;
-			dev_inst->tx_buffer_ptr+=2;
+			dev_inst->tx_buffer_ptr += 2;
 
 		} else {
 			usart_module->DATA |= (*(dev_inst->tx_buffer_ptr)
@@ -500,7 +493,7 @@ void usart_handler(uint8_t instance) {
 			if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 				/* Read out from DATA and increment 8bit ptr by two */
 				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
-				dev_inst->tx_buffer_ptr+=2;
+				dev_inst->tx_buffer_ptr += 2;
 			} else {
 				/* Read out from DATA and increment 8bit ptr by one */
 				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA & SERCOM_USART_DATA_gm);
