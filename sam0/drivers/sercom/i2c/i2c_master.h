@@ -42,11 +42,11 @@
 #ifndef I2C_MASTER_H_INCLUDED
 #define I2C_MASTER_H_INCLUDED
 
-#include <asf.h>
-#include <clock.h>
+#include <sercom.h>
+#include <i2c_common.h>
 
 #ifdef I2C_MASTER_ASYNC
-# include <i2c_master_async.h>
+# include <sercom_interrupts.h>
 #endif
 
 #ifdef __cplusplus
@@ -74,7 +74,8 @@ enum i2c_master_status_flag {
 	I2C_MASTER_STATUS_ = 0,
 };
 
-/** Enum for the possible I2C master mode SDA internal hold times. */
+/** Enum for the possible I2C master mode SDA internal hold times after start
+ * bit has been sent. */
 enum i2c_master_start_hold_time {
 	/** Internal SDA hold time disabled. */
 	I2C_MASTER_START_HOLD_TIME_DISABLED = 0,
@@ -95,6 +96,26 @@ enum i2c_master_baud_rate {
 	/** Baud rate at 400kHz. */
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
+
+#ifdef I2C_MASTER_ASYNC
+/**
+ * \brief Callback types.
+ * The available callback types for the I2C master module.
+ */
+enum i2c_master_callback_type {
+	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
+	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
+	I2C_MASTER_CALLBACK_ERROR          = 2,
+	_I2C_MASTER_CALLBACK_N             = 3,
+};
+
+
+struct i2c_master_dev_inst;
+
+
+typedef void (*i2c_master_callback_t)(
+		const struct i2c_master_dev_inst *const dev_inst);
+#endif
 
 /**
  * \brief SERCOM I2C Master driver hardware instance.
@@ -168,9 +189,9 @@ static void _i2c_master_wait_for_sync(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	while(i2c_module.STATUS & I2C_SYNC_BUSY_Msk) {
+	while(i2c_module->STATUS & I2C_SYNC_BUSY_Msk) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -197,6 +218,7 @@ static inline void i2c_master_get_config_defaults(
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
 	config->buffer_timeout = 1000;
+	config->unkown_bus_state_timeout = 1000;
 }
 
 /**
@@ -231,13 +253,13 @@ static inline void i2c_master_enable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
 
 	/* Enable module. */
-	i2c_module.CTRLA |= ( 1 << I2C_MASTER_ENABLE_Pos );
+	i2c_module->CTRLA |= ( 1 << I2C_MASTER_ENABLE_Pos );
 }
 
 /**
@@ -256,13 +278,13 @@ static inline void i2c_master_disable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
 
 	/* Disable module. */
-	i2c_module.CTRLA &= ~(1 << I2C_MASTER_ENABLE_Pos);
+	i2c_module->CTRLA &= ~(1 << I2C_MASTER_ENABLE_Pos);
 }
 
 void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
@@ -289,10 +311,10 @@ static inline bool i2c_master_is_status_flag_set(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Check requested status flag. */
-	return (i2c_module.STATUS & (1 << status_flag));
+	return (i2c_module->STATUS & (1 << status_flag));
 }
 
 /**
@@ -310,10 +332,10 @@ static inline void i2c_master_clear_status_flag(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Clear requested status flag. */
-	i2c_module.STATUS = (1 << status_flag);
+	i2c_module->STATUS = (1 << status_flag);
 }
 
 /**
@@ -334,9 +356,9 @@ static inline bool i2c_master_is_interrupt_flag_set(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	return (i2c_module.INTFLAGS & (1 << interrupt_flag));
+	return (i2c_module->INTFLAGS & (1 << interrupt_flag));
 }
 
 /**
@@ -355,9 +377,9 @@ static inline void i2c_master_clear_interrupt_flag(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_I2C_MASTER_t i2c_module = dev_inst->hw_dev->I2C_MASTER;
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	i2c_module.INTFLAGS = (1 << interrupt_flag);
+	i2c_module->INTFLAGS = (1 << interrupt_flag);
 }
 /** @} */
 
@@ -366,28 +388,10 @@ static inline void i2c_master_clear_interrupt_flag(
 * @{
 */
 
-/**
- * \brief Read data packet from slave.
- *
- * Reads a data packet from the specified slave address on the I2C bus.
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
-/**
- * \brief Write data packet to slave.
- *
- * Writes a data packet to the specified slave address on the I2C bus.
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);

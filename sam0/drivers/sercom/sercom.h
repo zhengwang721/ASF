@@ -43,8 +43,8 @@
 #define SERCOM_H_INCLUDED
 
 #include <compiler.h>
-#include <gclk.h>
 #include <clock.h>
+#include <gclk.h>
 
 #ifdef __cplusplus
 extern "C" {

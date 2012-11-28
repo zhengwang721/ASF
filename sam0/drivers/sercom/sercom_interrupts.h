@@ -43,18 +43,10 @@
 
 #include <sercom.h>
 
-#define SERCOM_INSTS_NUM 6
-#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
-
 /* Look-up table for device instances. */
 static void *_sercom_instances[SERCOM_INSTS_NUM];
 
-uint8_t _sercom_get_instance_index(SERCOM_t *sercom_instance);
-
-void _sercom_register_instance(uint8_t instance_index, void *const dev_inst);
-
-//TODO:rename
-uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance);
+uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance);
 
 void _sercom_set_handler(uint8_t instance,
 		void (*interrupt_handler) (uint8_t instance));

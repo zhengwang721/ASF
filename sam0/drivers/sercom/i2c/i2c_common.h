@@ -41,7 +41,7 @@
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
 
-#include <asf.h>
+#include <sercom.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -148,7 +148,6 @@ ifeq ($(os),Windows)
 #RMDIR           := rmdir /S /Q
 RMDIR           := rm  -rf
 else
-RM 		:= rm -f
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
 endif
 

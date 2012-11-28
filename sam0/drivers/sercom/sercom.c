@@ -40,10 +40,6 @@
  */
 #include <sercom.h>
 
-
-/* TODO: move? */
-#define SHIFT 1
-#define SERCOM_GCLK_ID 0
 /**
  * \internal Configuration structure to save current gclk status.
  */

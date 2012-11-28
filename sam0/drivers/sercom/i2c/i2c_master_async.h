@@ -42,25 +42,11 @@
 #ifndef I2C_MASTER_ASYNC_H_INCLUDED
 #define I2C_MASTER_ASYNC_H_INCLUDED
 
-#include <sercom_interrupts.h>
 #include <i2c_master.h>
-#include <asf.h>
 
-/**
- * \brief Callback types.
- * The available callback types for the I2C master module.
- */
-enum i2c_master_callback_type {
-	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
-	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
-	I2C_MASTER_CALLBACK_ERROR          = 2,
-	_I2C_MASTER_CALLBACK_N             = 3,
-};
-
-struct i2c_master_dev_inst;
-
-typedef (*i2c_master_callback_t)(
-		const struct i2c_master_dev_inst *const dev_inst);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * \name Callbacks
@@ -177,5 +163,9 @@ enum status_code i2c_master_is_transfer_done(
 		struct i2c_master_dev_inst *const dev_inst);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* I2C_MASTER_ASYNC_H_INCLUDED */

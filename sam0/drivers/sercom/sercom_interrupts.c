@@ -46,13 +46,6 @@ static bool _handler_table_initialized = false;
 /** Void pointers for saving device instance structures. */
 static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
 
-uint8_t _sercom_get_current_irq_index(void)
-{
-	/* Find in some core register */
-	//TODO!
-	return 0;
-}
-
 /**
  * \internal 
  *
@@ -108,7 +101,7 @@ void _sercom_default_handler(uint8_t instance)
 }
 
 /* Find sercom instance. */
-uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance)
+uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
@@ -117,7 +110,7 @@ uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance)
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
 	/* Array of sercom instances. */
-	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = SERCOM_INSTS;
+	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = {SERCOM_INSTS};
 
 	/* Fine index for sercom instance. */
 	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
@@ -126,7 +119,7 @@ uint8_t _sercom_get_sercom_inst(SERCOM_t *sercom_instance)
 		}
 	}
 
-	/* Unvalid data given. */
+	/* Invalid data given. */
 	Assert(false);
 	return 0;
 }
@@ -141,6 +134,7 @@ void _sercom_set_handler(uint8_t instance,
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
+			_sercom_instances[i] = 0;
 		}
 		_handler_table_initialized = true;
 	}
@@ -163,7 +157,7 @@ void _sercom_register_instance(uint8_t instance_index, void *const dev_inst)
 void SERCOM_Handler(void)
 {
 	/* Something something. */
-	uint8_t instance = _sercom_get_current_irq_index();
+	uint8_t instance = 1; // (uint8_t)system_interrupt_get_active()-7;
 
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[instance] (instance);
