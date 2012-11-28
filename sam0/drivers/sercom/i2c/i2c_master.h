@@ -131,7 +131,7 @@ struct i2c_master_dev_inst {
 	uint8_t *buffer;
 	/** Counter used for bytes left to send in write and to count number of
 	  * obtained bytes in read. */
-	uint16_t buffer_length;
+	uint16_t buffer_remaining;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
@@ -143,8 +143,10 @@ struct i2c_master_dev_inst {
 	uint8_t registered_callback;
 	/** Holder for enabled callbacks. */
 	uint8_t enabled_callback;
+	/** The total number of bytes to transfer. */
+	uint16_t buffer_length;
 	/** Save direction of async request. 1 = read, 0 = write. */
-	bool transfer_direction;
+	uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
 	enum status_code status;
 #endif

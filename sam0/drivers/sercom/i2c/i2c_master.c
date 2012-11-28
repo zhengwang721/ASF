@@ -163,6 +163,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	/* Initialize values in dev_inst. */
 	dev_inst->registered_callback = 0;
 	dev_inst->enabled_callback = 0;
+	dev_inst->buffer_length = 0;
 #endif
 
 	//dev_inst->callback[0] = 0;
@@ -213,6 +214,11 @@ enum status_code i2c_master_read_packet(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
+	/* Check if the I2C module is busy */
+	if (i2c_module->INTENSET > 0) {
+		return STATUS_ERR_BUSY;
+	}
+
 	uint16_t timeout_counter = 0;
 
 	/* Set address and direction bit. Will send start command on bus. */
@@ -246,10 +252,10 @@ enum status_code i2c_master_read_packet(
 	/* Check that slave sent ACK. */
 	if (i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
 		/* Init data length. */
-		dev_inst->buffer_length = 0;
+		dev_inst->buffer_remaining = 0;
 		/* Read data buffer. */
 		while (packet->data_length--) {
-			packet->data[dev_inst->buffer_length++] =
+			packet->data[dev_inst->buffer_remaining++] =
 					i2c_module->DATA;
 
 			/* Wait for more data. */
@@ -298,6 +304,11 @@ enum status_code i2c_master_write_packet(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
+	/* Check if the I2C module is busy */
+	if (i2c_module->INTENSET > 0) {
+		return STATUS_ERR_BUSY;
+	}
+
 	uint16_t timeout_counter = 0;
 
 	/* Set address and direction bit. Will send start command on bus. */
@@ -331,11 +342,11 @@ enum status_code i2c_master_write_packet(
 	/* Check that slave sent ACK. */
 	if (i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
 		/* Init buffer counter. */
-		dev_inst->buffer_length = 0;
+		dev_inst->buffer_remaining = 0;
 		/* Write data buffer. */
 		while (packet->data_length--) {
 			/* Write byte to slave. */
-			i2c_module->DATA = packet->data[dev_inst->buffer_length++];
+			i2c_module->DATA = packet->data[dev_inst->buffer_remaining++];
 
 			/* Wait for ack. */
 			timeout_counter = 0;

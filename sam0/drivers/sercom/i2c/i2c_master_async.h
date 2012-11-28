@@ -55,33 +55,11 @@ extern "C" {
 
 void _i2c_master_async_callback_handler(uint8_t instance);
 
-/**
- * \brief Register callback for the specified callback type.
- *
- * When called, the given callback function will be associated with the
- * specified callback type.
- *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]  callback      Pointer to the function desired for the specified
- *                       callback.
- * \param[in]  callback_type Specifies the callback type to register.
- * \return          [description]
- */
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_master_callback_t callback,
 		enum i2c_master_callback_type callback_type);
 
-/**
- * \brief Unregister callback for the specified callback type.
- *
- * When called, the currently registered callback for the given callback type
- * will be removed.
- *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]      callback_type Specifies the callback type to unregister.
- * \return          [description]
- */
 void i2c_master_async_unregister_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_callback_type callback_type);
@@ -93,9 +71,18 @@ void i2c_master_async_unregister_callback(
  * \param[in]      callback_type Callback type to enable.
  * \return               [description]
  */
-void i2c_master_async_enable_callback(
+static inline void i2c_master_async_enable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Mark callback as enabled. */
+	dev_inst->enabled_callback = (1 << callback_type);
+}
+
 
 /**
  * \brief Disable callback.
@@ -104,9 +91,17 @@ void i2c_master_async_enable_callback(
  * \param[in]      callback_type Callback type to disable.
  * \return               [description]
  */
-void i2c_master_async_disable_callback(
+static inline void i2c_master_async_disable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
+		enum i2c_master_callback_type callback_type)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Mark callback as enabled. */
+	dev_inst->enabled_callback &= ~(1 << callback_type);
+}
 
 /** @} */
 
@@ -115,30 +110,10 @@ void i2c_master_async_disable_callback(
 * @{
 */
 
-/**
- * \brief Read data packet from slave asynchronous.
- *
- * Reads a data packet from the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_read .
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_async_read_packet_async(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
-/**
- * \brief Write data packet to slave asynchronous.
- *
- * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write .
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_async_write_packet_async(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
@@ -150,8 +125,16 @@ enum status_code i2c_master_async_write_packet_async(
  * \param  dev_inst Pointer to device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_async_cancel_operation(
-		struct i2c_master_dev_inst *const dev_inst);
+static inline void i2c_master_async_cancel_transfer(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Set buffer to 0. */
+	dev_inst->buffer_length = 0;
+}
 
 /**
  * \brief Check if a started transfer is done.
@@ -160,9 +143,22 @@ enum status_code i2c_master_async_cancel_operation(
  * \param  dev_inst Pointer to the device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_async_is_transfer_done(
-		struct i2c_master_dev_inst *const dev_inst);
+static inline bool i2c_master_async_is_transfer_done(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
+	/* Set buffer to 0. */
+	return (dev_inst->buffer_length & 0xffff);
+}
+
+/**
+ * \brief Get last error from asynchronous operation.
+ * \param  dev_inst Pointer to device instance structure.
+ * \return          Last status code from transfer operation.
+ */
 static inline enum status_code i2c_master_async_get_last_error(
 		struct i2c_master_dev_inst *const dev_inst)
 {
