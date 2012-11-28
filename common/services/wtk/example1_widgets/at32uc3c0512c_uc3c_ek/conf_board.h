@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM0+ GCLK configuration
+ * \brief Board configuration for the ST7565R example
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,38 +38,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include <compiler.h>
-#include <system.h>
-#include <conf_bod.h>
-#include <bod_init.h>
+/* Enable the maXTouch mXT143E Xplained top module */
+#define CONF_BOARD_ENABLE_MXT143E_XPLAINED
 
-/**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
- *
- */
-void system_bod_init(void)
-{
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct sysctrl_bod_config conf;
-
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
-
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
-
-	#endif
-}
+#endif /* CONF_BOARD_H_INCLUDED */

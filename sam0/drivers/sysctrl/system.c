@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ GCLK configuration
+ * \brief SAM0+ System related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,37 +41,60 @@
  *
  */
 
-#include <compiler.h>
 #include <system.h>
-#include <conf_bod.h>
-#include <bod_init.h>
 
 /**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
+ * \brief configure BOD
  *
+ * This function will configure the BOD33 or BOD12 module based on the
+ * configuration in the configuration struct. The BOD will be enabled when this
+ * function returns.
+ *
+ * \param[in] conf pointer to the struct containing configuration
+ * \param[in] bod which BOD module to configure
+ *
+ * \retval STATUS_ERR_INVALID_ARG Invalid BOD
+ * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
+ * \retval STATUS_OK Operation completed successfully
  */
-void system_bod_init(void)
+enum status_code system_bod_set_config(struct system_bod_config *conf,
+		enum system_bod bod)
 {
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct sysctrl_bod_config conf;
+	Assert(conf);
 
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
+	uint16_t temp;
 
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
+	temp = conf->action << SYSCTRL_BOD33CTRL_ACTION_gp |
+			conf->mode << SYSCTRL_BOD33CTRL_MODE_bp;
 
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
+	if (conf->mode) {
+	/* Enable sampling clock if sampled mode */
+		temp |= SYSCTRL_BOD33CTRL_CEN_bm;
+	}
+	if (conf->hysteresis) {
+		temp |= SYSCTRL_BOD33CTRL_HYST_bm;
+	}
 
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
-
-	#endif
+	temp |= SYSCTRL_BOD33CTRL_ENABLE_bm;
+	switch (bod) {
+		case SYSTEM_BOD33:
+			if (conf->level > 0x3F) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+			SYSCTRL.BOD33LEVEL = conf->level; // 6 bits
+			SYSCTRL.BOD33CTRL = temp;
+			break;
+		case SYSTEM_BOD12:
+			if (conf->level > 0x1F) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+			SYSCTRL.BOD12LEVEL = conf->level; // 5 bits
+			SYSCTRL.BOD12CTRL = temp;
+			break;
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
 }
+
+

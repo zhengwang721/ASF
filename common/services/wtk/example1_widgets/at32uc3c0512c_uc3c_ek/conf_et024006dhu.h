@@ -1,9 +1,10 @@
-/**
+/*****************************************************************************
+ *
  * \file
  *
- * \brief SAM0+ GCLK configuration
+ * \brief Configuration for the ET024006DHU display.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,39 +40,23 @@
  *
  * \asf_license_stop
  *
- */
+ ******************************************************************************/
 
-#include <compiler.h>
-#include <system.h>
-#include <conf_bod.h>
-#include <bod_init.h>
 
-/**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
- *
- */
-void system_bod_init(void)
-{
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct sysctrl_bod_config conf;
+ //! Configuration of the et024006dhu LCD display driver
 
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
+#ifndef _CONF_ET024006DHU_H_
+#define _CONF_ET024006DHU_H_
 
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
+// The following list of required defines is already set in the board used for 
+// this example:
+// ET024006_IFACE_MODE
+// ET024006_CMD_ADDR
+// ET024006_PARAM_ADDR
+// ET024006DHU_TE_PIN
+// ET024006DHU_BL_PIN
+// ET024006DHU_BL_FUNCTION
+// ET024006DHU_RESET_PIN
 
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
 
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
-
-	#endif
-}
+#endif // _CONF_ET024006DHU_H_

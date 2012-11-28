@@ -40,7 +40,9 @@
  * \asf_license_stop
  *
  */
-#include "clock.h"
+
+#include <clock.h>
+
 /* \ingroup clock_group
  * @{
  */
@@ -194,5 +196,213 @@ enum status_code clock_source_set_config(struct clock_source_config
 	return STATUS_OK;
 }
 
+/**
+ * \brief Write oscillator calibration value
+ *
+ * This function will write an oscillator calibration value to the oscillator
+ * control register. The ranges are:
+ * - OSC32K
+ *  - 7 bits (max value 128)
+ * - OSC8MHZ
+ *  - 8 bits (Max value 255)
+ * - OSCULP
+ *  - 5 bits (Max value 32)
+ *
+ * \note Frequency range only applies when configuring the 8MHz oscillator
+ * and will be ignored for the other oscillators.
+ *
+ * \param[in] clock_source Clock source to calibrate
+ * \param[in] calibration_value Calibration value to write
+ * \param[in] freq_range Frequency range (Only applicable to the 8MHz oscillator)
+ *
+ * \retval STATUS_ERR_INVALID_ARG The selected clock source is not available
+ */
+enum status_code clock_source_write_calibration(
+		enum clock_source clock_source,
+		uint16_t calibration_value, uint8_t freq_range)
+{
+
+	switch (clock_source) {
+		case CLOCK_SOURCE_RC8MHZ:
+
+			if (calibration_value > 255 || freq_range > 4) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			SYSCTRL.OSC8M |= calibration_value << SYSCTRL_CALIB_gp |
+					freq_range << SYSCTRL_FRANGE_gp;
+			break;
+
+		case CLOCK_SOURCE_RC32KHZ:
+
+			if (calibration_value > 128) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			clock_osc32k_wait_for_sync();
+			SYSCTRL.OSC32K |= calibration_value;
+			break;
+
+		case CLOCK_SOURCE_ULP32KHZ:
+
+			if (calibration_value > 32) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+			SYSCTRL.OSCULP32K |= calibration_value;
+			break;
+
+		default:
+			Assert(!"Invalid clock source provided");
+			return STATUS_ERR_INVALID_ARG;
+			break;
+	}
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Enable a clock source
+ *
+ * This function will enable the selected clock source
+ *
+ *  \param[in] block_until_ready block until the clock source has been enabled.
+ *  \param[in] clock_source Clock source to enable
+ *
+ *  \retval STATUS_OK Clock source was enabled successfully and is ready
+ *  \retval STATUS_ERR_INVALID_ARG The clock source is not available on this device
+ *  \retval STATUS_TIMEOUT The clock source did not start (timeout)
+ */
+
+enum status_code clock_source_enable(enum clock_source clock_source, bool block_until_ready)
+{
+	/* Default value is 0xFFFFFFFF for timeout*/
+	uint32_t timeout;
+	uint32_t waitmask;
+
+	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
+	switch (clock_source) {
+		case CLOCK_SOURCE_RC8MHZ:
+			SYSCTRL.OSC8M |= SYSCTRL_RC8MHZ_ENABLE_bm;
+			/* Not possible to wait for ready, so we return */
+			return STATUS_OK;
+
+		case CLOCK_SOURCE_RC32KHZ:
+			SYSCTRL.OSC32K |= SYSCTRL_OSC32K_ENABLE_bm;
+			waitmask = SYSCTRL_OSC32KRDY_bm;
+			break;
+
+		case CLOCK_SOURCE_XOSC:
+			SYSCTRL.XOSC |= SYSCTRL_XOSC_ENABLE_bm;
+			waitmask = SYSCTRL_XOSCRDY_bm;
+			break;
+
+		case CLOCK_SOURCE_XOSC32K:
+			SYSCTRL.XOSC32K |= SYSCTRL_XOSC32K_ENABLE_bm;
+			waitmask = SYSCTRL_XOSC32KRDY_bm;
+			break;
+
+		case CLOCK_SOURCE_DFLL:
+			SYSCTRL.DFLLCTRL |= SYSCTRL_DFLL_ENABLE_bm;
+			waitmask = SYSCTRL_DFLLRDY_bm;
+			break;
+		case CLOCK_SOURCE_ULP32KHZ:
+			/* Always enabled */
+			return STATUS_OK;
+		default:
+			Assert(!"Invalid clock source supplied");
+			return STATUS_ERR_INVALID_ARG;
+	}
+
+	if (block_until_ready == true) {
+		/* Wait for the clock source to be ready or timeout */
+		for (timeout = 0; timeout < CONF_CLOCK_TIMEOUT; timeout++) {
+			if(SYSCTRL.PCLKSR & waitmask) {
+				return STATUS_OK;
+			}
+		}
+		return STATUS_ERR_TIMEOUT;
+
+	} else {
+		return STATUS_OK;
+	}
+}
+
+/**
+ * \brief Disable a clock source
+ *
+ * This function will disable the selected clock source
+ *
+ *  \param[in] clk_source clock source to disable
+ *
+ *  \retval STATUS_OK Clock source was disabled successfully
+ *  \retval STATUS_ERR_INVALID_ARG the clock source is not available on this device
+ */
+enum status_code clock_source_disable(enum clock_source clk_source)
+{
+	switch (clk_source) {
+		case CLOCK_SOURCE_RC8MHZ:
+			SYSCTRL.OSC8M &= ~SYSCTRL_RC8MHZ_ENABLE_bm;
+			break;
+		case CLOCK_SOURCE_RC32KHZ:
+			SYSCTRL.OSC32K &= ~SYSCTRL_OSC32K_ENABLE_bm;
+			break;
+		case CLOCK_SOURCE_XOSC:
+			SYSCTRL.XOSC &= ~SYSCTRL_XOSC_ENABLE_bm;
+			break;
+		case CLOCK_SOURCE_XOSC32K:
+			SYSCTRL.XOSC32K &= ~SYSCTRL_XOSC32K_ENABLE_bm;
+			break;
+		case CLOCK_SOURCE_DFLL:
+			SYSCTRL.DFLLCTRL &= ~SYSCTRL_DFLL_ENABLE_bm;
+			break;
+		case CLOCK_SOURCE_ULP32KHZ:
+			/* Not possible to disable */
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Check if a clock source is ready
+ *
+ * This function will return if the selected clock source is ready to use.
+ *
+ *	\param[in] clk_source Clock source to check if ready
+ *
+ *  \retval true Clock source is enabled and ready
+ *  \retval false Clock source is either disabled or not yet ready
+ */
+bool clock_source_is_ready(enum clock_source clk_source)
+{
+	uint32_t mask;
+	switch (clk_source) {
+		case CLOCK_SOURCE_RC8MHZ:
+			/* TODO: verify that this cannot be disabled */
+			return true;
+		case CLOCK_SOURCE_RC32KHZ:
+			mask = SYSCTRL_OSC32KRDY_bm;
+			break;
+		case CLOCK_SOURCE_XOSC:
+			mask = SYSCTRL_XOSCRDY_bm;
+			break;
+		case CLOCK_SOURCE_XOSC32K:
+			mask = SYSCTRL_XOSC32KRDY_bm;
+			break;
+		case CLOCK_SOURCE_DFLL:
+			mask = SYSCTRL_DFLLRDY_bm;
+			break;
+		case CLOCK_SOURCE_ULP32KHZ:
+			/* Not possible to disable */
+		default:
+			return false;
+		}
+
+	if(SYSCTRL.PCLKSR & mask) {
+		return true;
+	} else {
+		return false;
+	}
+}
 /* @} */
 
