@@ -176,15 +176,15 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 					conf->dfll.stable_tracking | conf->dfll.quick_lock |
 					conf->dfll.chill_cycle;
 
-			system_dfll_wait_for_sync();
+			_system_dfll_wait_for_sync();
 			SYSCTRL.DFLLCTRL = temp_register;
 
-			system_dfll_wait_for_sync();
+			_system_dfll_wait_for_sync();
 			SYSCTRL.DFLLVAL = conf->dfll.coarse_value |
 					(conf->dfll.fine_value << SYSCTRL_FIN_gp);
 
 			if (conf->dfll.loop == SYSCTRL_DFLL_CLOSED_LOOP) {
-				system_dfll_wait_for_sync();
+				_system_dfll_wait_for_sync();
 				SYSCTRL.DFLLSTEP = conf->dfll.coarse_max_step |
 						(conf->dfll.fine_max_step << SYSCTRL_FSTEP_gp);
 			}
@@ -239,7 +239,7 @@ enum status_code system_clock_source_write_calibration(
 				return STATUS_ERR_INVALID_ARG;
 			}
 
-			clock_osc32k_wait_for_sync();
+			_system_osc32k_wait_for_sync();
 			SYSCTRL.OSC32K |= calibration_value;
 			break;
 
