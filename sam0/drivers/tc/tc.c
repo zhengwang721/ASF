@@ -323,25 +323,28 @@ enum status_code tc_get_count(
 /**
  * \brief Gets the capture value
  *
- * 
+ * This prosedure stores the capture value in the suplied buffer
+ * pointed to by capture. This method can be used in 32, 16 and 8 bit
+ * resolution. perform a cast o the buffer after th emethod has
+ * returned.
  *
  * \param[in] dev_inst         pointer to the device struct
- * \param[out] compare         pointer to a buffer
- * \param[in] channel_index        index of the compare register to read from
+ * \param[out] capture         pointer to a buffer
+ * \param[in] channel_index    index of the compare register to read from
  *
- * \return
+ * \return Status of the prosedure
  * \retval STATUS_OK
  * \retval STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_get_capture(
 		struct tc_dev_inst *const dev_inst,
-		uint32_t *compare,
-		enum tc_compare_capture_channel_index channel_index)
+		uint32_t *capture,
+		enum tc_capture_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(compare);
+	Assert(capture);
 
 	/* Get a pointer to the module's hardware instance*/
 	TC_t *const tc_module = dev_inst->hw_dev;
@@ -353,23 +356,23 @@ enum status_code tc_get_capture(
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		/* Read out based on compare register */
+		/* Read out based on capture register */
 		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*compare = tc_module->TC_COUNT8.CC0;
+			*capture = tc_module->TC_COUNT8.CC0;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*compare = tc_module->TC_COUNT8.CC1;
+			*capture = tc_module->TC_COUNT8.CC1;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			*compare = tc_module->TC_COUNT8.CC2;
+			*capture = tc_module->TC_COUNT8.CC2;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			*compare = tc_module->TC_COUNT8.CC3;
+			*capture = tc_module->TC_COUNT8.CC3;
 			return STATUS_OK;
 
 		default:
@@ -377,23 +380,23 @@ enum status_code tc_get_capture(
 		}
 
 	case TC_RESOLUTION_16BIT:
-		/* Read out based on compare register */
+		/* Read out based on capture register */
 		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*compare = tc_module->TC_COUNT16.CC0;
+			*capture = tc_module->TC_COUNT16.CC0;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*compare = tc_module->TC_COUNT16.CC1;
+			*capture = tc_module->TC_COUNT16.CC1;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			*compare = tc_module->TC_COUNT16.CC2;
+			*capture = tc_module->TC_COUNT16.CC2;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			*compare = tc_module->TC_COUNT16.CC3;
+			*capture = tc_module->TC_COUNT16.CC3;
 			return STATUS_OK;
 
 		default:
@@ -401,15 +404,15 @@ enum status_code tc_get_capture(
 		}
 
 	case TC_RESOLUTION_32BIT:
-		/* Read out based on compare register */
+		/* Read out based on capture register */
 		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*compare = tc_module->TC_COUNT32.CC0;
+			*capture = tc_module->TC_COUNT32.CC0;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*compare = tc_module->TC_COUNT32.CC1;
+			*capture = tc_module->TC_COUNT32.CC1;
 			return STATUS_OK;
 
 		default:
