@@ -126,8 +126,8 @@ enum status_code sercom_set_gclk_generator(
 		gclk_ch_conf.enable_during_sleep = run_in_standby;
 #endif
 		/* Apply configuration and enable the GCLK channel */
-		clock_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-		clock_gclk_ch_enable(SERCOM_GCLK_ID);
+		system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+		system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
 		sercom_gclk_config->generator_source = generator_source;
