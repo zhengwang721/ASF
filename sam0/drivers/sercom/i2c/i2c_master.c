@@ -46,10 +46,17 @@
 #endif
 
 /**
- * \breif blabla
- * \param  dev_inst [description]
- * \param  config   [description]
- * \return          [description]
+ * \internal Set configurations to module.
+ *
+ * \param[out] dev_inst Pointer to device instance structure.
+ * \param[in]  config Configuration structure with configurations to set.
+ *
+ * \return              Status of setting config.
+ * \retval STATUS_OK If module was configured correctly.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
+ *                                        previously set.
+ * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
+ *                                        with set gclk frequency.
  */
 static enum status_code _i2c_master_set_config(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -116,11 +123,26 @@ static enum status_code _i2c_master_set_config(
 }
 
 /**
- * \brief blalbalba
- * \param  dev_inst [description]
- * \param  module   [description]
- * \param  config   [description]
- * \return          [description]
+ * \brief Initializes the requested I2C Hardware module.
+ *
+ * Initializes the SERCOM I2C Master device requested and sets the provided
+ * device instance struct. This will also reset the hardware module, all
+ * current settings will be lost. Run this function before any further use of
+ * the driver.
+ *
+ * \param[out] dev_inst Pointer to device instance struct.
+ * \param[in]  module   Pointer to the hardware instance.
+ * \param[in]  config   Pointer to the configuration struct.
+ *
+ * \return              Status of initialization.
+ * \retval STATUS_OK Module initiated correctly.
+ * \retval STATUS_ERR_DENIED If module is enabled.
+ * \retval STATUS_ERR_BUSY If module is busy resetting.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
+ *                                        previously set.
+ * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
+ *                                        with set gclk frequency.
+ *
  */
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		SERCOM_t *const module,
@@ -131,8 +153,6 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 	Assert(module);
 	Assert(config);
-
-	uint8_t sercom_instance;
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
@@ -151,7 +171,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 
 #ifdef I2C_MASTER_ASYNC
 	/* Get sercom instance index. */
-	sercom_instance = _sercom_get_sercom_inst_index(module);
+	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module);
 
 	/* Save device instance in interrupt handler. */
 	_sercom_set_handler(sercom_instance,
@@ -176,8 +196,11 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 }
 
 /**
- * \breif blablabla
- * \param dev_inst [description]
+ * \breif Reset module
+ *
+ * This will reset the module to hardware defaults.
+ *
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 {
@@ -194,6 +217,20 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 	i2c_module->CTRLA = ( 1 << I2C_MASTER_SWRST_Pos );
 }
 
+/**
+ * \internal Address respond.
+ *
+ * Called when address is answered or timed out.
+ *
+ * \param[in,out] dev_inst Pointer to device instance structure.
+ *
+ * \return Status of address response.
+ * \retval STATUS_OK No error has occurred.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ */
 static enum status_code _i2c_master_address_response(
 		struct i2c_master_dev_inst *const dev_inst)
 {
@@ -227,6 +264,16 @@ static enum status_code _i2c_master_address_response(
 	return STATUS_OK;
 }
 
+/**
+ * \internal Wait for answer on bus.
+ *
+ * \param[in,out] dev_inst Pointer to device instance structure.
+ *
+ * \return Status of bus.
+ * \retval STATUS_OK If given response from slave device.
+ * \retval STATUS_ERR_TIMEOUT If no response was given within specified timeout
+ *                            period.
+ */
 static enum status_code _i2c_master_wait_for_bus(
 		struct i2c_master_dev_inst *const dev_inst)
 {
@@ -251,7 +298,14 @@ static enum status_code _i2c_master_wait_for_bus(
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          [description]
+ * \return          Status describing progress of reading packet.
+ * \retval STATUS_OK If packet was read.
+ * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
  */
 enum status_code i2c_master_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -324,7 +378,16 @@ enum status_code i2c_master_read_packet(
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          [description]
+ * \return          Status describing progress of reading packet.
+ * \retval STATUS_OK If packet was read.
+ * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \retval STATUS_ERR_BAD_DATA If slave did not acknowledge last sent data,
+ *                             indicating that slave do not want more data.
  */
 enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,

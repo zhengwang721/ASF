@@ -69,7 +69,6 @@ void i2c_master_async_unregister_callback(
  * Enables the callback specified the callback_value.
  * \param[in,out]  dev_inst      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to enable.
- * \return               [description]
  */
 static inline void i2c_master_async_enable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -89,7 +88,6 @@ static inline void i2c_master_async_enable_callback(
  * Disables the callback specified by the callback_type.
  * \param[in,out]  dev_inst      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to disable.
- * \return               [description]
  */
 static inline void i2c_master_async_disable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -123,7 +121,6 @@ enum status_code i2c_master_async_write_packet(
  * This will terminate the running write or read transfer.
  *
  * \param  dev_inst Pointer to device instance struct.
- * \return          [description]
  */
 static inline void i2c_master_async_cancel_transfer(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -141,7 +138,6 @@ static inline void i2c_master_async_cancel_transfer(
  * This will return the current status of the read/write transfer.
  *
  * \param  dev_inst Pointer to the device instance struct.
- * \return          [description]
  */
 static inline bool i2c_master_async_is_transfer_done(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -156,8 +152,21 @@ static inline bool i2c_master_async_is_transfer_done(
 
 /**
  * \brief Get last error from asynchronous operation.
+ *
+ * Will return the last error that occurred in asynchronous transfer operation.
+ *
  * \param  dev_inst Pointer to device instance structure.
+ *
  * \return          Last status code from transfer operation.
+ * \retval STATUS_OK No error has occurred.
+ * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \retval STATUS_ERR_BAD_DATA If slave did not acknowledge last sent data,
+ *                             indicating that slave do not want more data.
  */
 static inline enum status_code i2c_master_async_get_last_error(
 		struct i2c_master_dev_inst *const dev_inst)

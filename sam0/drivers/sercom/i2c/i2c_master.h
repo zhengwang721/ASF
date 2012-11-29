@@ -65,16 +65,45 @@ extern "C" {
  * @{
  */
 
+/**
+ * \brief Interrupt flags.
+ *
+ * Flags used when reading or setting interrupt flags.
+ */
 enum i2c_master_interrupt_flag {
+	/** Interrupt flag used for write. */
 	I2C_MASTER_INTERRUPT_WRITE = 0,
+	/** Interrupt flag used for read. */
 	I2C_MASTER_INTERRUPT_READ  = 1,
 };
 
+/**
+ * \breif Status flags.
+ *
+ * Flags used to check current status in module.
+ */
 enum i2c_master_status_flag {
-	I2C_MASTER_STATUS_ = 0,
+	/** Check if data line is hold low. */
+	I2C_MASTER_STATUS_CLOCK_HOLD = I2C_MASTER_STATUS_CLKHOLD_Msk,
+	/** Check if bus state is unknown. */
+	I2C_MASTER_STATUS_BUSSTATE_UNKOWN = I2C_MASTER_STATUS_BUSSTATE_UNKOWN_Msk,
+	/** Check if bus state is idle. */
+	I2C_MASTER_STATUS_BUSSTATE_IDLE = I2C_MASTER_STATUS_BUSSTATE_IDLE_Msk,
+	/** Check if bus state is owner. */
+	I2C_MASTER_STATUS_BUSSTATE_OWNER = I2C_MASTER_STATUS_BUSSTATE_OWNER_Msk,
+	/** Check if bus state is busy. */
+	I2C_MASTER_STATUS_BUSSTATE_BUSY = I2C_MASTER_STATUS_BUSSTATE_BUSY_Msk,
+	/** Check if last slave transfer was acknowledged. */
+	I2C_MASTER_STATUS_ACKNOWLEDGE = I2C_MASTER_STATUS_RXACK_Msk,
+	/** Check if arbitration was lost. */
+	I2C_MASTER_STATUS_LOST_ARBITRATION = I2C_MASTER_STATUS_ARBLOST_Msk,
+	/* Check if bus error occurred. */
+	I2C_MASTER_STATUS_BUS_ERROR = I2C_MASTER_STATUS_BUSERR_Msk,
 };
 
-/** Enum for the possible I2C master mode SDA internal hold times after start
+/**
+ * \brief Values for hold time after start bit.
+ * Values for the possible I2C master mode SDA internal hold times after start
  * bit has been sent. */
 enum i2c_master_start_hold_time {
 	/** Internal SDA hold time disabled. */
@@ -88,7 +117,11 @@ enum i2c_master_start_hold_time {
 };
 
 /**
- * Values for standard I2C speeds.
+ * /brief I2C protocol frequencies.
+ *
+ * Values for standard I2C speeds supported by the module.
+ *
+ * \note Max speed is given by gclk-frequency divided by 10.
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz. */
@@ -103,17 +136,24 @@ enum i2c_master_baud_rate {
  * The available callback types for the I2C master module.
  */
 enum i2c_master_callback_type {
+	/** Callback for packet write complete. */
 	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
+	/** Callback for packet read complete. */
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
+	/** Callback for error. */
 	I2C_MASTER_CALLBACK_ERROR          = 2,
+#if !defined(__DOXYGEN__)
+	/* Total number of callbacks. */
 	_I2C_MASTER_CALLBACK_N             = 3,
+#endif
 };
 
-
+/* Prototype for device instance. */
 struct i2c_master_dev_inst;
 
 typedef void (*i2c_master_callback_t)(
 		const struct i2c_master_dev_inst *const dev_inst);
+
 #endif
 
 /**
@@ -186,7 +226,6 @@ struct i2c_master_conf {
  * \internal Wait for hardware module to sync.
  * \param[in]  dev_inst Pointer to device instance structure.
  */
-
 static void _i2c_master_wait_for_sync(
 		const struct i2c_master_dev_inst *const dev_inst)
 {
@@ -209,7 +248,12 @@ static void _i2c_master_wait_for_sync(
  * function should be called at the start of any I2C initiation.
  *
  * The default configuration is as follows:
- * - Blabla!
+ * - Baudrate 100kHz
+ * - GCLK generator 0
+ * - Do not run in standby
+ * - Start bit hold time 50ns-100ns
+ * - Buffer timeout = 1000
+ * - Unknown bus status timeout 65535
  *
  * \param[out] config Pointer to configuration structure to be initiated.
  */
@@ -223,22 +267,9 @@ static inline void i2c_master_get_config_defaults(
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
 	config->buffer_timeout = 1000;
-	config->unkown_bus_state_timeout = 1000;
+	config->unkown_bus_state_timeout = 65535;
 }
 
-/**
- * \brief Initializes the requested I2C Hardware module.
- *
- * Initializes the SERCOM I2C Master device requested and sets the provided
- * device instance struct. This will also reset the hardware module, all
- * current settings will be lost. Run this function before any further use of
- * the driver.
- *
- * \param[out] dev_inst Pointer to device instance struct.
- * \param[in]  module   Pointer to the hardware instance.
- * \param[in]  config   Pointer to the configuration struct.
- * \return                 [description]
- */
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		SERCOM_t *const module,
 		const struct i2c_master_conf *const config);
@@ -249,7 +280,6 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
  * This will enable the requested I2C module.
  *
  * \param[in]  dev_inst Pointer to the device instance struct.
- * \return          [description]
  */
 static inline void i2c_master_enable(
 		const struct i2c_master_dev_inst *const dev_inst)
@@ -285,7 +315,6 @@ static inline void i2c_master_enable(
  * structure.
  *
  * \param[in]  dev_inst Pointer to the device instance struct.
- * \return          [description]
  */
 static inline void i2c_master_disable(
 		const struct i2c_master_dev_inst *const dev_inst)
@@ -316,6 +345,7 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
  * \brief Check given status flag.
  *
  * This will return the status of the requested status flag.
+ *
  * \param  dev_inst    Pointer to device instance structure.
  * \param  status_flag Status flag to check.
  */
@@ -330,28 +360,7 @@ static inline bool i2c_master_is_status_flag_set(
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Check requested status flag. */
-	return (i2c_module->STATUS & (1 << status_flag));
-}
-
-/**
- * \brief Clear given status flag.
- *
- * This will clear the status flag specified.
- * \param dev_inst    Pointer to device instance structure.
- * \param status_flag Status flag to clear.
- */
-static inline void i2c_master_clear_status_flag(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_status_flag status_flag)
-{
-	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
-
-	/* Clear requested status flag. */
-	i2c_module->STATUS = (1 << status_flag);
+	return (i2c_module->STATUS & status_flag);
 }
 
 /**
@@ -361,8 +370,6 @@ static inline void i2c_master_clear_status_flag(
  *
  * \param[in]  dev_inst       Pointer to device instance struct.
  * \param[in]  interrupt_flag Value of interrupt flag to check.
- *
- * \return Status of the requested interrupt flag.
  */
 static inline bool i2c_master_is_interrupt_flag_set(
 		const struct i2c_master_dev_inst *const dev_inst,

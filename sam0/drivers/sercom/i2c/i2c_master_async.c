@@ -40,6 +40,13 @@
  */
 #include <i2c_master_async.h>
 
+/**
+ * \internal Read next data.
+ *
+ * Used by interrupt handler to get next data byte from slave.
+ *
+ * \param dev_inst Pointer to device instance structure.
+ */
 static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 {
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
@@ -52,6 +59,13 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 	dev_inst->buffer[buffer_index] = i2c_module->DATA;
 }
 
+/**
+ * \internal Write next data.
+ *
+ * Used by interrupt handler to send next data byte to slave.
+ *
+ * \param dev_inst Pointer to device instance structure.
+ */
 static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 {
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
@@ -74,6 +88,13 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 	i2c_module->DATA = dev_inst->buffer[buffer_index];
 }
 
+/**
+ * \internal Act on slave address response.
+ *
+ * Check for errors concerning master->slave handshake.
+ *
+ * \param dev_inst Pointer to device instance structure.
+ */
 static void _i2c_master_async_address_response(
 		struct i2c_master_dev_inst *const dev_inst)
 {
@@ -126,7 +147,6 @@ static void _i2c_master_async_address_response(
  * \param[in]  callback      Pointer to the function desired for the specified
  *                       callback.
  * \param[in]  callback_type Specifies the callback type to register.
- * \return          [description]
  */
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -153,7 +173,6 @@ void i2c_master_async_register_callback(
  *
  * \param[in,out]  dev_inst      Pointer to the device instance struct.
  * \param[in]      callback_type Specifies the callback type to unregister.
- * \return          [description]
  */
 void i2c_master_async_unregister_callback(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -178,7 +197,10 @@ void i2c_master_async_unregister_callback(
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
+ *
+ * \return          Status of starting asynchronously reading I2C packet.
+ * \retval STATUS_OK If reading was started successfully.
+ * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -217,8 +239,11 @@ enum status_code i2c_master_async_read_packet(
  * is the non-blocking equivalent of \ref i2c_master_write .
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
+ * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ *
+ * \return          Status of starting asynchronously writing I2C packet.
+ * \retval STATUS_OK If writing was started successfully.
+ * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -252,7 +277,8 @@ enum status_code i2c_master_async_write_packet(
 
 /**
  * \internal Interrupt handler for I2C master
- * \param instance Sercom instance that triggered interrupt.
+ *
+ * \param[in] instance Sercom instance that triggered interrupt.
  */
 void _i2c_master_async_callback_handler(uint8_t instance)
 {
