@@ -46,10 +46,8 @@ extern "C" {
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-#include "status_codes.h"
-#include "tc_header.h"
-#include <stdint.h>
-#include <stdbool.h>
+#include <compiler.h>
+
 
 /**
  * \defgroup sam0_TC_group SAM0+ Timer Counter Driver (TC)
@@ -62,66 +60,65 @@ extern "C" {
  * \section module_introduction Introduction
  *
  * \subsection module_overview TC Overview
- * The Timer counter (TC) enables you to chreate PWM signals, do
- * waveform generation, keep time, generate time lables for events, do
- * rudimentary counting, performe input capture, pulse width capture,
- * frequensy capture, and more.
+ * The Timer counter (TC) enables the user to create PWM signals, do
+ * waveform generation, keep time, generate time labels for events, do
+ * rudimentary counting, perform input capture, pulse width capture,
+ * frequency capture, and more.
  * \n\n
  *
- * A TC is basicaly a counter however if it is suplied with an acurate
- * frequensy to count, the module becomes capable of performing timer
+ * A TC is basically a counter however if it is supplied with an accurate
+ * frequency to count, the module becomes capable of performing timer
  * operations.
  *
- * This driver is chreated and ment to be used as a polled driver, as
- * such this documetation will not go into the use of interupts with
+ * This driver is cheated and meant to be used as a polled driver, as
+ * such this documentation will not go into the use of interrupts with
  * regards to the TC module. It should also be noted that this is not
- * compleet documentation for the TC module but for the functionality
+ * complete documentation for the TC module but for the functionality
  * this driver can deliver.
  *
  *
- * \subsection functional_description Functionsal Description
+ * \subsection functional_description Functional Description
  *
- * describe in some more detail the diferent posible configurations
- * you can get from the module. The amout of counters capture/compare
- * registers oneshot, eventsystem conection. Waveform generation and
- * pinouts. period register. count direction. count sourses. capture.
+ * describe in some more detail the different possible configurations
+ * the user can get from the module. The amount of counters capture/compare
+ * registers oneshot, event system connection. Waveform generation and
+ * pin outs. period register. count direction. count sources. capture.
  *
  * The TC module in SAM0+ can be configured with 4 timer/counters in 8
  * bit resolution, or 4 timers/counters in 16 bit resolution, or 2
  * timers/counters in 32 bit resolution.
  * \n\n
  *
- * Independent of what resolution the timer runs on it can basicaly be
- * set up in two difrent modes, althoug to some extent one TC instance
+ * Independent of what resolution the timer runs on it can basically be
+ * set up in two different modes, although to some extent one TC instance
  * can be configured in both modes. These modes are capture and
  * compare.
  * \n\n
  *
- * In compare mode you will be compareing the counter value with one
- * or more other values. When the counter coensides with the value you
- * are comaring it to this can generate an action. The capture mode is
- * offten used for generating output signals such as waveform
- * generation, frequensy generation and PWM generation. In adition you
- * can use compare mode for timer applications where the value used in
- * comparison with the counter value siginfies a time for when you
- * want some subroutine or even to start. In a similar fashion you can
- * use it to count certain events and when this reaches a certain
- * value an action is taken.
- * \n\n
+ * In compare mode the counter value is compared with one or more of
+ * the compare values. When the counter coincides with the compare
+ * value, this can generate an action. The capture mode is often used
+ * for generating output signals such as waveform generation,
+ * frequency generation and PWM generation. In addition the user can
+ * use compare mode for timer applications where the value used in
+ * comparison with the counter value signifies a time for when a
+ * subroutine or an even should start. In a similar fashion it can be
+ * used to count certain events and when this reaches a certain value
+ * an action is taken.  \n\n
  *
  * In capture mode the counter value is stored upon some configurable
- * event. This can be used to generate time stamps or you can use it
- * for frequensy capture, event capture and pulse with capture.
+ * event. This can be used to generate time stamps or it can be used
+ * for frequency capture, event capture and pulse width capture.
  *
  *
  * \subsection counter_resolution Timer Counter Resolution
  *
  * When talking about resolution with respect to the timer counter
- * what is ment is the bit presision you can get with the counter. The
- * timer counter in the SAM0+ can achive 8, 16 and 32 bit presison or
- * resolution. This naturaly effects how far the counter is capable of
- * counting. For the difrent modes you can see in table ... for easy
- * refrence what the MAX value is using diferent resolution.
+ * what is meant is the bit precision the user can get with the counter. The
+ * timer counter in the SAM0+ can achieve 8, 16 and 32 bit precision or
+ * resolution. This naturally effects how far the counter is capable of
+ * counting. For easy reference the different modes and their Max value
+ * can be seen in the table below
  *
  * <table>
  *  <tr>
@@ -150,33 +147,145 @@ extern "C" {
  *  <tr>
  * </table>
  *
- * \subsection clock_and_prescaler Clock selection, prescaler and reload action
+ * It should be noted that when running the counter in 16 and 13 bit
+ * resolution, compare capture register 0 is used to store the period
+ * value, when this is in use (when running in pwm generation match
+ * mode).  \n\n
+
+//TODO: may have to update this when the pwm module is complete
+
  *
- * Describe the clock sleection, the prescaler and the reload action
- * with image.
+ * When using 32 bit resolution two 16 bit counters are used together
+ * in cascade to realize this feature. This means that it is only
+ * posible to utilize two 32 bit counters or one 32 bit counters and
+ * ether one 16 and one 8 bit counter or two 8 or 16 bit counters.
+ *
+ * \subsection clock_and_prescaler Clock Selection, Prescaler and Reload Action
+ *
+ * To be able to use the counter the module has to have a clock
+ * this has to be configured in the config struct... .  \n\n
+ *
+ * In addition to the prescaler that can be used on the g-clock
+ * frequency supplied to the module, the module has its own prescaler
+ * This prescaler only works to prescale the clock used to provide
+ * clock pulses to the counter. This means that while the counter is
+ * running on the g-clock frequency the counter value only changes on
+ * the prescaled frequency.  \n\n
+ *
+ * One thing to consider here is that the TC module will have to
+ * synchronize when updating certain registers with the system
+ * clock. This synchronization can be time consuming espesialy if the
+ * g-clock frequensy is much lower thatn the system clock. For this
+ * reason it can be better to use the modules prescaler to reduse the
+ * clock frequensy to the counter. In this way synchronizationshould
+ * be faster. \n\n
+ *
+ * In addition to configuring what clock source the tc module should
+ * use and if the prescaler is needed on the clock to the counter. The
+ * user have to consider what reload action to use. The reload action
+ * is performed when a retrigger event ocure. Examples of this can be
+ * when the counter reches the MAX value when counting up, or when an
+ * event from the event system tels the counter to retrigger. The user
+ * can then chose between 3 different reload actions:
+ *
+ * <table>
+ *  <tr>
+ *   <th> Description <\th>
+ *   <th> code reference<\th>
+ *  <\tr>
+ *  <tr>
+ *   <th> Reload on next G-clock cyckle leave prescaler as it is <\th>
+ *   <td>  <\td>
+ *  <\tr>
+ *  <tr>
+ *   <th> Relad on next prescaler clock <\th>
+ *   <td> <\td>
+ *  <\tr>
+ *  <tr>
+ *   <th> Reload on next G-clock cyckle  reset prescaler <\th>
+ *   <td> <\td>
+ *  <\tr>
+ * <table>
+ *
+ * To better understand thes options it helps to have a rudementary
+ * understanding of what the presclaer does. Thankfully this is not so
+ * dificult to understand. The presclaer is after all only a counter
+ * it self. When the prescaler is used it counts the clock cycles of
+ * the modules g-clock. When the counter in the prescaler ratches the
+ * chosen division factor the output from the prescaler togles.  \n\n
+ *
+ * The question then arises what do we want to happen when a reload
+ * action gets trigered. In difernt secarios and aplications the
+ * corect reload option will differ. One exsample is when an external
+ * triger for a reload ocures. If the TC uses the prescaler the
+ * counter in the prescaler should not have a value between zero and
+ * the division factor. The TC counter and the counter in the
+ * prescaler should both start at zero. When the counter is set to
+ * retrigger when it reatches the MAX value on the other hand this is
+ * not nesesearily the right option to use. In such a case it would
+ * probably be better if th eprescaler is left un althered when the
+ * retriger happens and then let the counter reset on the next g-clock
+ * cyckle.
+ *
+
+//TODO: may have to be updated after having done teh doc review
+
+ *
+ * \subsection compare_match Compare Match Operations
+ *
+ * In compare match operation Capture Compare Channel registers are
+ * used in comparison with the counter value. Upn match some action
+ * can be taken.
+ *
+ *
+ * \subsubsection timer Timer
+ *
+ * In many ways the simplest aplication wher compare match operations
+ * is used, is a timer. Here the TC module is configured as a clock,
+ * wher one or more values in the modules compare channels are used to
+ * spesify the time when an action shold be taken by the
+ * microcontroler.
+ *
+ * \subsubsection waveform_generation Waveform Generation
+ *
+ * 
+ *
+ * \subsubsection frequency_generation Frequency Generation
+ *
+ * 
+ *
+ * \subsubsection pwm Pulse Width modulation (PWM)
+ *
+ * 
  *
  *
  * \subsection capture_operations Capture Operations
  *
+ * In capture operations some action causes the clock value to be
+ * stored and some action can then be performed depending on how the
+ * module is configured.
+ *
  * \subsubsection event_capture Event Capture
  *
- * \subsubsection frequensy_capture Frequensy Capture
+ * 
+ *
+ * \subsubsection frequency_capture Frequency Capture
+ *
+ * 
  *
  * \subsubsection pwc Pulse width capture
  *
- *
- * \subsection compare_match Compare Match Operations
- *
- * \subsubsection waveform_generation Waveform Generation
- *
- * \subsubsection frequensy_generation Frequensy Generation
- *
- * \subsubsection pwm Pulse Width modulatio (PWM)
+ * 
  *
  *
  * \subsection events Events
  *
+ * 
+ *
+ *
  * \subsection sleep_modes Operation in Sleep Modes
+ *
+ * 
  *
  *
  * \section dependencies Dependencies
@@ -286,18 +395,17 @@ enum tc_clock_prescaler {
  * \brief TC wave generation mode enum
  *
  * These values are used to select what mode to run the wave
- * generation in. You can chose to use frequency generation or pulse
- * width modulation (PWM) In these modes you can either run them in
+ * generation in. The user can chose to use frequency generation or
+ * pulse width modulation (PWM) In these modes it will either run in
  * normal mode or in match mode.  In normal mode the TOP value is set
  * to the maximum allowable value, depending on what resolution is
- * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF.  In normal mode you
- * don't use any registers to store these values.
+ * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF. In normal mode no
+ * registers are used to store these values.
  *
- * In match mode you can configure what the top value should be and
- * thus you get a range between the minimum value which is between 3
- * up to the MAX value.  This mode does however limit the number of
- * compare capture channels available, as one is used to store the TOP
- * value.
+ * In match mode the user can configure what the top value should
+ * be. The range will be between the minimum value which is 3, up to
+ * the MAX value.  This mode does however limit the number of compare
+ * capture channels available, as one is used to store the TOP value.
  */
 enum tc_wave_generation {
 	/**
@@ -419,14 +527,14 @@ enum tc_event_generation_enable {
 /**
  * \brief Specifies if the counter is 8, 16 or 32 bits.
  *
- * This specifies the maximum value you can count to. What resolution
- * you use will impose limitations in other areas.  The 32 bit counter
- * uses two 16 bit counters in cascade to realize the 32 bit
- * counter. When using 16 and 32 bit resolution you no longer get a
- * dedicated period register. In cases when you van t to change the
- * top value you will have to use one of the registers used in the
- * capture compare channels. Thus you get fewer capture compare
- * channels.
+ * This specifies the maximum value it is posible to count to. What
+ * resolution used, will impose limitations in other areas.  The 32
+ * bit counter uses two 16 bit counters in cascade to realize the 32
+ * bit counter. When using 16 and 32 bit resolution there is no
+ * dedicated period register. In cases when it is nesesary to change
+ * the top value, match mode must be used (see
+ * tc_wave_generation). One of the compare registers are used for the
+ * period in this mode.
  */
 enum tc_resolution {
 	/**
@@ -451,15 +559,6 @@ enum tc_resolution {
 };
 
 
-/*
- * Have removed the period uint from the 16 and 32 bit struct. You
- * only have cc0 be the period when you are not in PWM normal mode.
- * It may be that you only get to use two compare channels fro pwm
- * too. That is dependent on IC dep. As this is now this reflects how
- * the register is in the prelim TC doc.
- */
-
-
 /**
  * \brief Config struct for 8 bit resolution
  *
@@ -469,7 +568,7 @@ struct tc_8bit_conf {
 	/** Initial count value */
 	uint8_t count;
 	/**
-	 * Wher to count to or from depending on the direction on the
+	 * Where to count to or from depending on the direction on the
 	 * counter
 	 */
 	uint8_t period;
@@ -525,7 +624,7 @@ struct tc_32bit_conf {
  * modified by the user application.
  */
 struct tc_conf {
-	/** Select clock sourse for the TC clock */
+	/** Select clock source for the TC clock */
 	//TODO set clock param
 	/**
 	 * run_in_standby: When true the module is enabled during
@@ -595,7 +694,7 @@ struct tc_conf {
  * TC software device instance structure
  */
 struct tc_dev_inst {
-	/** Pointer to the TC Hardwar module */
+	/** Pointer to the TC Hardware module */
 	TC_t *hw_dev;
 	/**
 	 * Witch resolution the counter should use. This value is set
@@ -642,10 +741,10 @@ static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
  *  \li Normal frequency wave generation
  *  \li GCLK reload action
  *  \li Don't run in standby
- *  \li No inversion of wavefomr output
+ *  \li No inversion of waveform output
  *  \li No capture enabled
- *  \li Count upwards
- *  \li Don't perform oneshot opperations
+ *  \li Count upward
+ *  \li Don't perform oneshot operations
  *  \li No event input enabled
  *  \li no event Action
  *  \li No event generation enabled
@@ -698,8 +797,8 @@ enum status_code tc_init(
  * \brief Reset the TC module
  *
  * Resets the TC module. Will block while waiting for sync between
- * clock domains before performiing the reset. The TC module will not
- * be accesible while the reset is being performed.
+ * clock domains before performing the reset. The TC module will not
+ * be accessible while the reset is being performed.
  *
  * \param dev_inst    pointer to the device struct
  */
@@ -723,8 +822,8 @@ static inline void tc_reset(struct tc_dev_inst *const dev_inst)
 /**
  * \brief Enable the TC module
  *
- * Enables the TC module. Exsept when the counter is enabled for
- * retriger on even the counter will start when the counter i enabled.
+ * Enables the TC module. Except when the counter is enabled for
+ * retrigger on even the counter will start when the counter i enabled.
  *
  * \param dev_inst    pointer to the device struct
  */
@@ -748,13 +847,13 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 /**
  * \brief Disables the TC module
  *
- * Disables the TC module. Stops the counter. This must be done if you
- * want to change change certain setings. The setings effected by this
- * are listed below.
+ * Disables the TC module. Stops the counter. This is reqired for
+ * changeing certain settings. The settings effected by this are
+ * listed below.
  *
  * \li Run in standby
  * \li Prescaler values
- * \li Wavegeneration
+ * \li Wave generation
  * \li Resync action
  * \li counter resolution
  * \li Capture enable
@@ -791,7 +890,7 @@ enum status_code tc_set_count(
 /**
  * \brief Stops the counter
  *
- * This function will stop the counter. When the counter is stoped the
+ * This function will stop the counter. When the counter is stopped the
  * value in the count register is set to 0, if the counter was
  * counting up or MAX, if the counter was counting down when stopped.
  *
@@ -818,7 +917,7 @@ static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
  * \brief Starts the counter
  *
  * This function can be used to start the counter. It will also
- * restart the counter after a stop action hass been performed.
+ * restart the counter after a stop action has been performed.
  *
  * \param dev_inst     Pointer to the devise struct.
  */
@@ -855,17 +954,17 @@ enum status_code tc_set_compare_value(
  * \brief Sets the top/period value
  *
  * Writes the top value or period for the counter associated with the
- * dev_inst struct. In the case of a counter runnign in 8 bit
+ * dev_inst struct. In the case of a counter running in 8 bit
  * resolution a dedicated register is used for the period. For 16 and
  * 32 bit resolution there is no dedicated register for the period/Top
- * value. In these cases capture comapre register 0 is used, and can
+ * value. In these cases capture compare register 0 is used, and can
  * not be used for anything else.
  *
  * \param dev_inst    Pointer to the device struct.
  * \param top_value   Value to be used as top in the counter.
  *
- * \return status of the prosedure
- * \retval STATUS_OK              The operation hass been sucsesfull.
+ * \return status of the procedure
+ * \retval STATUS_OK              The operation has been successful.
  * \retval STATUS_ERR_INVALID_ARG The resolution in the dev_inst is
  *                                out of bounds.
  */
@@ -945,15 +1044,15 @@ enum status_codes tc_is_new_capture_on_channel(
 /**
  * \brief Checks if a new match has occurred on the channel
  *
- * Checks if a new match has occurred on the channel spesified in
+ * Checks if a new match has occurred on the channel specified in
  * channel_index.
  *
  * \param *dev_inst pointer to the devise instance.
  * \param channel_index value used to select either channel 0, 1, 2 or 3.
  *
- * \return A status telling whether a match has ocured
- * \retval STATUS_VALID_DATA   If a match has ocured since last check
- * \retval STATUS_NO_CHANGE    If no new match ha ocured since last check
+ * \return A status telling whether a match has occurred
+ * \retval STATUS_VALID_DATA   If a match has occurred since last check
+ * \retval STATUS_NO_CHANGE    If no new match ha occurred since last check
  */
 enum status_codes tc_is_there_match_on_channel(
 		struct tc_dev_inst *const dev_inst,
