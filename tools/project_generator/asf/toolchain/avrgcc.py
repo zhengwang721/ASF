@@ -323,7 +323,8 @@ class AVR32GCCProject(AVRGCCProject):
 		else:
 			raise ConfigError("Project `%s' has unknown compile target type `%s' for toolchain `%s'" % (self.project.id, target_type, self.toolchain))
 
-		linker_script = self.convert_path_for_root(self._get_linker_script(self.linker_id))
+		(linker_script_path, linker_script_origin) = self._get_linker_script(self.linker_id)
+		linker_script = self.convert_path_for_root(linker_script_path)
 		self.project.filelist.add(linker_script)
 		#linker_script = self.convert_path_for_makefile(linker_script)
 		ASF["$ASF_LINKER_SCRIPT$"] = linker_script

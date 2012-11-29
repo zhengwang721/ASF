@@ -72,9 +72,15 @@ class GenericElement(object):
 
 	def _get_build_from_project_or_selector(self, build_type, selector_id):
 		"""
-		Gets a list of build items of the specified type from the project,
-		alternatively from a specifiable selector that can reside in either
-		the project's home database or in ASF.
+		Gets a list of build items of the specified type from a single
+		module in the project, alternatively from a single module found via
+		an optional selector/module ID. The ID can refer to a selector/module
+		in either the project's home database or in ASF.
+		The originating selector/module is returned along with the list of
+		build items returned, if any.
+
+		If no build items are found, this function returns the tuple
+		([], None)
 
 		Assuming the project does not contain any build items of the
 		specified type and the ID of a selector has been specified, the
@@ -103,15 +109,23 @@ class GenericElement(object):
 		for the current MCU and configuration.
 		"""
 		asf_uuid = "Atmel.ASF"
-		# Check for custom build items
-		build_items = self.project.get_build(build_type, self.toolchain)
+
+		def search_dependency_tree_for_build_and_module(home_root):
+			for build_home in [home_root] + home_root.get_prerequisites(recursive=True):
+				build_items = build_home.get_build(build_type, self.toolchain, recursive=False)
+				if build_items:
+					return (build_items, build_home)
+			return ([], None)
+
+		# Check dependency tree for custom build items
+		build_items, build_home =  search_dependency_tree_for_build_and_module(self.project)
 
 		# If no build item was found and a selector is defined for toolchain, use it
 		if not build_items:
 			if selector_id:
 				# Try to find selector in the project's home database, or in ASF
 				try:
-					build_selector = self.db.lookup_by_id(selector_id)
+					build_home_root = self.db.lookup_by_id(selector_id)
 				except NotFoundError:
 					# Re-raise exception if this actually was the ASF database
 					if self.db.extension.uuid == asf_uuid:
@@ -121,70 +135,78 @@ class GenericElement(object):
 					req_eid, req_ver = self.db.extension.get_dependency_by_uuid(asf_uuid)
 					if req_eid is not None:
 						# This raises NotFoundError if selector is not found
-						build_selector = self.db.lookup_external_by_id(req_eid, selector_id)
+						build_home_root = self.db.lookup_external_by_id(req_eid, selector_id)
 					else:
 						raise DbError("Could not find selector `%s' in database. Either add build type/subtype `%s/%s' to the project or a dependency on ASF to the extension." % (selector_id, build_type.type, build_type.subtype))
 
-				build_selector.resolve_all_selections(self.configuration, self.project.mcu)
-				build_items = build_selector.get_build(build_type, self.toolchain)
+				build_home_root.resolve_all_selections(self.configuration, self.project.mcu)
+				(build_items, build_home) = search_dependency_tree_for_build_and_module(build_home_root)
 
-		return build_items
+		return (build_items, build_home)
 
 	def _get_linker_script(self, linker_id=None):
 		"""
-		Function which returns the linker script for the project. If no
-		custom script is found, the function will return None unless a
-		linker script selector was specified. In this case, the
-		selector is used to get the linker script.
+		Function which returns the linker script for the project, along
+		with its originating database element.
+
+		If no custom script is found in the project, the function will
+		try to look up the optional selector (linker_id) and request the
+		linker script from it.
+		If the optional selector is not found in the project's originating
+		database, the function will try to look up the selector in ASF
+		via the extension dependencies.
+		See _get_build_from_project_or_selector() for more details.
+
+		Raises ConfigError if the number of found linker scripts is not 1.
 		"""
-		linker_script = self._get_build_from_project_or_selector(BuildLinkerScript, linker_id)
+		(linker_script, module) = self._get_build_from_project_or_selector(BuildLinkerScript, linker_id)
 
 		if len(linker_script) != 1:
 			raise ConfigError("Found %s linker scripts for device `%s' and toolchain `%s', expected 1" % (len(linker_script), self.project.mcu.name, self.toolchain))
 
-		return linker_script[0]
+		return (linker_script[0], module)
 
 	def _get_aux_linker_script(self, linker_id=None):
 		"""
-		Function which returns the auxiliary linker script for the project. If no
-		custom script is found, the function will return None unless a
-		linker script selector was specified. In this case, the
-		selector is used to get the auxiliary linker script.
+		Function which returns the auxiliary linker script for the project,
+		along with its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		aux_linker_script = self._get_build_from_project_or_selector(BuildAuxLinkerScript, linker_id)
+		(aux_linker_script, module) = self._get_build_from_project_or_selector(BuildAuxLinkerScript, linker_id)
 
 		if len(aux_linker_script) != 1:
 			raise ConfigError("Found %s linker scripts for device `%s' and toolchain `%s', expected 1" % (len(aux_linker_script), self.project.mcu.name, self.toolchain))
 
-		return aux_linker_script[0]
+		return (aux_linker_script[0], module)
 
 	def _get_macro_file(self, macro_id=None):
 		"""
-		Function which returns the macro file for the project. If no
-		custom script is found, the function will return None unless a
-		macro file selector was specified. In this case, the
-		selector is used to get the macro file.
+		Function which returns the macro file for the project, along with
+		its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		macro_file = self._get_build_from_project_or_selector(BuildMacroFile, macro_id)
+		(macro_file, module) = self._get_build_from_project_or_selector(BuildMacroFile, macro_id)
 
 		if len(macro_file) != 1:
 			raise ConfigError("Found %s macro file for device `%s' and toolchain `%s', expected 1" % (len(macro_file), self.project.mcu.name, self.toolchain))
 
-		return macro_file[0]
+		return (macro_file[0], module)
 
 	def _get_aux_macro_file(self, macro_id=None):
 		"""
-		Function which returns the auxiliary macro file for the project. If no
-		custom script is found, the function will return None unless a
-		macro file selector was specified. In this case, the
-		selector is used to get the auxiliary macro file.
+		Function which returns the auxiliary macro file for the project, along
+		with its originating database element.
+
+		See _get_linker_script() for a description of its behavior.
 		"""
-		aux_macro_file = self._get_build_from_project_or_selector(BuildAuxMacroFile, macro_id)
+		(aux_macro_file, module) = self._get_build_from_project_or_selector(BuildAuxMacroFile, macro_id)
 
 		if len(aux_macro_file) != 1:
 			raise ConfigError("Found %s macro file  for device `%s' and toolchain `%s', expected 1" % (len(aux_macro_file), self.project.mcu.name, self.toolchain))
 
-		return aux_macro_file[0]
+		return (aux_macro_file[0], module)
 
 	def get_config(self, name):
 		"""
@@ -245,30 +267,60 @@ class GenericElement(object):
 		total_config.update(toolchain_config)
 		return total_config
 
-	def get_toolchain_configuration(self):
+	def get_toolchain_configuration(self, default_config_id=None):
 		"""
 		Returns a tuple with two dictionaries, respectively mapping toolchain config
 		names to single values and to lists of values. The toolchain configurations must
-		be set with the toolchain-config or toolchain-config-list elements in the board
-		or the project.
+		be set with the toolchain-config or toolchain-config-list elements in the board,
+		project or the optional default config supplier.
 		
 		The project will override any same-named toolchain-config that is set in the
 		board, while for toolchain-config-list the values are simply added appended to
 		the list.
 		"""
-		# Fetch toolchain configs and config lists from board
+		# Check for custom build items
+		configs = {}
+		list_configs = {}
+
+		# If a ID to fetch default configs from is specified, try to look it up in
+		# the project's home database
+		if default_config_id:
+			# Catch the case where the default config supplier does not exist
+			try:
+				default_config_m = self.db.lookup_by_id(default_config_id)
+			except NotFoundError:
+				raise DbError("Could not find id `%s' in database for default toolchain config" % default_config_id)
+
+			# It may be a selector, try to resolve and get first module of type "build-specific"
+			default_config_m.resolve_all_selections(self.configuration, self.project.mcu)
+			for m in [default_config_m] + default_config_m.get_prerequisites(recursive=True):
+				if m.type == "build-specific":
+					(def_configs, def_list_configs) = m._get_toolchain_configuration_from_element(self.toolchain)
+					break
+
+			# Catch the case where we could not find a relevant module
+			try:
+				configs = def_configs
+				list_configs = def_list_configs
+			except NameError:
+				raise DbError("Could not find module of type `build-specific' in the dependency tree of id `%s'" % default_config_id)
+
+		# Fetch toolchain configs and config lists from board, if one exists
 		if self.project._board:
-			(configs, list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
+			(board_configs, board_list_configs) = self.project._board._get_toolchain_configuration_from_element(self.toolchain)
 		else:
-			configs = {}
-			list_configs = {}
+			board_configs = {}
+			board_list_configs = {}
 
 		# Update configs with those from project
-		(more_configs, more_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
-		configs.update(more_configs)
+		(project_configs, project_list_configs) = self.project._get_toolchain_configuration_from_element(self.toolchain)
 
-		# Add list configs from project to the board's list configs
-		for config_name, config_values in more_list_configs.items():
+		# Update the configs: board overrides default, project overrides board and default
+		configs.update(board_configs)
+		configs.update(project_configs)
+
+		# Add list configs from project and board to the default list configs
+		for config_name, config_values in board_list_configs.items() + project_list_configs.items():
 			list_configs[config_name] = list_configs.get(config_name, []) + config_values
 
 		return (configs, list_configs)
