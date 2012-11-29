@@ -107,7 +107,7 @@ enum status_code sercom_set_gclk_generator(
 		bool force_change)
 {
 	/* Configuration structure for the gclk channel. */
-	struct clock_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_ch_conf gclk_ch_conf;
 
 	/* Return argument. */
 	enum status_code ret_val;
