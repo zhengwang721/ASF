@@ -68,6 +68,9 @@ static void configure_i2c(void)
 
 int main(void)
 {
+	/* Init system. */
+	//system_init();
+
 	/* Configure device and enable. */
 	configure_i2c();
 
@@ -75,7 +78,7 @@ int main(void)
 	i2c_packet_t packet = {
 		.address     = SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
-		.data        = &buffer[0]
+		.data        = buffer
 	};
 
 	/* Write buffer to slave. */
