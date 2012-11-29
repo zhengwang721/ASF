@@ -71,6 +71,10 @@ enum status_code tc_init(
 
 	//TODO: Add clock config
 
+	uint16_t temp_run_in_standby = 0;
+	uint8_t temp_ctrlbset = 0;
+	uint8_t temp_evctrl_gm = 0;
+
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
@@ -96,8 +100,6 @@ enum status_code tc_init(
 		return STATUS_ERR_DENIED;
 	}
 
-	uint16_t temp_run_in_standby = 0;
-
 	if (config->run_in_standby) {
 		temp_run_while_standby = (0x0001 << TC_CTRLA_SLEEPEN_bp);
 	}
@@ -110,7 +112,6 @@ enum status_code tc_init(
 		| config->reload_action | config->clock_prescaler
 		| temp_run_in_standby;
 
-	uint8_t temp_ctrlbset = 0;
 	if (config->oneshot)
 		temp_ctrlbset = TC_ONESHOT_ENABLED_bm;
 
@@ -126,7 +127,7 @@ enum status_code tc_init(
 	tc_module->CTRLC = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
 
-	uint8_t temp_evctrl_gm = 0;
+
 	if (config->enable_event_input) {
 		temp_evctrl_gm |= TC_EVCTRL_TCEI_bm;
 	}
