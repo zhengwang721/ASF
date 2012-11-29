@@ -489,15 +489,15 @@ enum tc_event_action {
  * \brief TC waveform invert on channel enum
  */
 enum tc_waveform_invert_output {
-	/**  */
+	/** Dont invert output on anny channels */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE         = 0,
-	/**  */
+	/** Invert output on channel 0 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_INVEN_CC0_bm,
-	/**  */
+	/** Invert output on channel 1 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_INVEN_CC1_bm,
-	/**  */
+	/** Invert output on channel 2 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2    = TC_INVEN_CC2_bm,
-	/**  */
+	/** Invert output on channel 3 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3    = TC_INVEN_CC3_bm,
 };
 
