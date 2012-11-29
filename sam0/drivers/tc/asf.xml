@@ -4,7 +4,7 @@
 			Driver for the SAM0+ Timer counter...
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Clocks" />
+			<keyword value="Timers" />
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="tc.h"/>
