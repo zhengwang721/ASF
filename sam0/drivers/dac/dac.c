@@ -79,7 +79,7 @@ static void _dac_set_config(
 		struct dac_dev_inst *const dev_inst,
 		struct dac_conf *const config)
 {
-	struct clock_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_ch_conf gclk_ch_conf;
 
 
 	/* Sanity check arguments */
@@ -101,8 +101,8 @@ static void _dac_set_config(
 	#endif
 
 	/* Apply configuration and enable the GCLK channel */
-	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
-	clock_gclk_ch_enable(DAC_GCLK_ID);
+	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(DAC_GCLK_ID);
 
 
 	/* Set selected DAC output to be enabled when enabling the module */

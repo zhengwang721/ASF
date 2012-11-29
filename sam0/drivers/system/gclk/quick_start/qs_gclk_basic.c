@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM0+ BOD configuration
+ * \brief SAM0+ Generic Clock Driver Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,40 +38,70 @@
  * \asf_license_stop
  *
  */
-#ifndef BOD_CONFIG_H
-#  define BOD_CONFIG_H
+#include <asf.h>
 
-/* BOD33 Configuration
- * ------------------------------------------------------*/
+void config_gclock_generator(void);
+void config_gclock_channel(void);
 
-/* Enable BOD33 */
-#define CONF_BOD33_ENABLE false
+//! [setup]
+#define EXAMPLE_GCLOCK_GENERATOR    0
+#define EXAMPLE_GCLOCK_CHANNEL      0
 
-#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
-//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+void config_gclock_generator(void)
+{
+//! [setup_1]
+	struct system_gclk_gen_conf gclock_gen_conf;
+//! [setup_1]
+//! [setup_2]
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
+//! [setup_2]
 
-#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
+//! [setup_3]
+	gclock_gen_conf.source_clock    = 0;
+	gclock_gen_conf.division_factor = 128;
+//! [setup_3]
+//! [setup_4]
+	system_gclk_gen_set_config(EXAMPLE_GCLOCK_GENERATOR, &gclock_gen_conf);
+//! [setup_4]
 
-#define CONF_BOD33_LEVEL 10
-#define CONF_BOD33_HYSTERESIS true
+//! [setup_5]
+	system_gclk_gen_enable(EXAMPLE_GCLOCK_GENERATOR);
+//! [setup_5]
+}
 
+void config_gclock_channel(void)
+{
+//! [setup_6]
+	struct system_gclk_ch_conf gclock_ch_conf;
+//! [setup_6]
+//! [setup_7]
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+//! [setup_7]
 
-/* BOD12 Configuration
- * ------------------------------------------------------*/
+//! [setup_8]
+	gclock_ch_conf.source_generator    = EXAMPLE_GCLOCK_GENERATOR;
+	gclock_ch_conf.enable_during_sleep = false;
+//! [setup_8]
+//! [setup_9]
+	system_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);
+//! [setup_9]
 
-/* Enable BOD12 */
-#define CONF_BOD12_ENABLE false
+//! [setup_10]
+	system_gclk_ch_enable(EXAMPLE_GCLOCK_CHANNEL);
+//! [setup_10]
+}
+//! [setup]
 
-/* Action on bod timeout; reset or interrupt */
-#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
-//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+int main(void)
+{
+	//! [setup_init]
+	config_gclock_generator();
+	config_gclock_channel();
+	//! [setup_init]
 
-/* Sampled or continious monitoring */
-#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
-
-#define CONF_BOD12_HYSTERESIS true
-
-
-#endif /* BOD_CONFIG_H */
+	//! [main]
+	while (true) {
+		/* Nothing to do */
+	}
+	//! [main]
+}
