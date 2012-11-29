@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _SPI_H_INCLUDED_
-#define _SPI_H_INCLUDED_
+#ifndef SPI_H_INCLUDED
+#define SPI_H_INCLUDED
 
 #include "asf.h"
 
@@ -1558,4 +1558,4 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * Back to \ref spi_signal_mux_setting.
  */
 
-#endif /* _SPI_H_INCLUDED_ */
+#endif /* SPI_H_INCLUDED */
