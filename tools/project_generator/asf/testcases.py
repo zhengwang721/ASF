@@ -1149,15 +1149,68 @@ class AVRStudio5TestCase(SetupTestCase):
 		expected_configs = {
 			'AvrGcc.Project.Only'      : 'Project',
 			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
 			'AvrGcc.Board.Only'        : 'Board',
 		}
 		expected_list_configs = {
 			'AvrGcc.Board.Only.List'        : ['Board'],
 			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Board', 'Project'],
 			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
 		}
 
 		(configs, list_configs) = generator.get_toolchain_configuration()
+
+		self.assertEquals(configs, expected_configs)
+		self.assertEquals(list_configs, expected_list_configs)
+
+
+	def test_get_toolchain_configuration_from_module_id(self):
+		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
+		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+		id_for_configs = "toolchain_config_module"
+
+		expected_configs = {
+			'AvrGcc.Module.Only'       : 'Module',
+			'AvrGcc.Project.Only'      : 'Project',
+			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
+			'AvrGcc.Board.Only'        : 'Board',
+		}
+		expected_list_configs = {
+			'AvrGcc.Module.Only.List'       : ['Module'],
+			'AvrGcc.Board.Only.List'        : ['Board'],
+			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Module', 'Board', 'Project'],
+			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
+		}
+
+		(configs, list_configs) = generator.get_toolchain_configuration(id_for_configs)
+
+		self.assertEquals(configs, expected_configs)
+		self.assertEquals(list_configs, expected_list_configs)
+
+
+	def test_get_toolchain_configuration_from_selector_id(self):
+		project_to_test = self.db.lookup_by_id("xmega.driver.awesome.example1.xplain")
+		generator = AVRStudio5Project(project_to_test, self.db, self.runtime)
+		id_for_configs = "toolchain_config_selector"
+
+		expected_configs = {
+			'AvrGcc.Module.Only'       : 'Module',
+			'AvrGcc.Project.Only'      : 'Project',
+			'AvrGcc.Board.And.Project' : 'Project',
+			'AvrGcc.Module.Board.And.Project' : 'Project',
+			'AvrGcc.Board.Only'        : 'Board',
+		}
+		expected_list_configs = {
+			'AvrGcc.Board.Only.List'        : ['Board'],
+			'AvrGcc.Board.And.Project.List' : ['Board', 'Project'],
+			'AvrGcc.Module.Board.And.Project.List' : ['Module', 'Board', 'Project'],
+			'AvrGcc.Project.Only.List'      : ['Project_1', 'Project_2']
+		}
+
+		(configs, list_configs) = generator.get_toolchain_configuration(id_for_configs)
 
 		self.assertEquals(configs, expected_configs)
 		self.assertEquals(list_configs, expected_list_configs)
@@ -1247,6 +1300,8 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 	def test_PythonFacade_get_all_modules_and_selectors(self):
 		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
 				self.main_db.lookup_by_id("avr32.drivers.tc.example"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config#uc3"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
@@ -1257,6 +1312,8 @@ class AtmelStudioIntegrationTestCase(unittest.TestCase):
 
 	def test_PythonFacade_get_all_modules_and_selectors_filtered(self):
 		expected_result = [self.main_db.lookup_by_id("avr32.drivers.tc"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config"),
+				self.main_db.lookup_by_id("common.utils.toolchain_config#uc3"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.init"),
 				self.main_db.lookup_by_id("config.board.xmega_a1_xplained.led")]
 		expected_result.sort()
@@ -1666,6 +1723,7 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		bbb_ext = self.extmgr.request_extension(self.ext_uuids[0])
 		bbb_db = bbb_ext.get_database()
 		bbb_proj = bbb_db.lookup_by_id("bbb.project")
+		bbb_sel = bbb_db.lookup_by_id("working_selector#0")
 		bbb_gen = GenericProject(bbb_proj, bbb_db, bbb_db.runtime)
 
 		# Load test project from Ccc and instantiate GenericProject
@@ -1679,12 +1737,14 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 
 		# If no selector is specified, function will succeed both if:
 		# 1) no build items are found
-		found_items = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
+		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildMissing, selector_id=None)
 		self.assertEquals(found_items, [])
+		self.assertEquals(item_origin, None)
 
 		# and 2) build items are found
-		found_items = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
+		(found_items, item_origin) = ccc_gen._get_build_from_project_or_selector(BuildDefine, selector_id=None)
 		self.assertEquals(found_items, [("THIS", "EXISTS")])
+		self.assertEquals(item_origin, ccc_proj)
 
 		# If a selector is specified and no build item is found in project,
 		# the function will fail if:
@@ -1702,6 +1762,8 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 	# Load and register ASF with extmgr so requests for it will succeed
 		asf_ext = self.extmgr.load_extension(os.path.join(self.ext_basedir, 'Ccc', 'misplaced_ASF'))
 		self.extmgr.register_extension(asf_ext)
+		asf_db = asf_ext.get_database()
+		asf_sel = asf_db.lookup_by_id('working_asf_selector#0')
 
 		# 3) selector is not found in project's database or ASF
 		self.assertRaises(NotFoundError, bbb_gen._get_build_from_project_or_selector, BuildMissing, selector_id="missing_selector")
@@ -1714,13 +1776,15 @@ class FdkExtensionManagerTestCase(unittest.TestCase):
 		# If a selector is specified and no build item is found in project,
 		# the function will succeed if:
 		# 1) selector is found in project's database
-		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
+		(found_items, item_origin) = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_selector')
 		self.assertEquals(found_items, [("FROM", "BBB")])
+		self.assertEquals(item_origin, bbb_sel)
 
 		# 2) selector is not found in project's database, but ASF is added
 		#    as a dependency and contains the selector
-		found_items = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
+		(found_items, item_origin) = bbb_gen._get_build_from_project_or_selector(BuildDefine, selector_id='working_asf_selector')
 		self.assertEquals(found_items, [("FROM", "ASF")])
+		self.assertEquals(item_origin, asf_sel)
 
 
 class FdkExtensionTestCase(unittest.TestCase):
@@ -2148,7 +2212,7 @@ class FindRebuildTest(unittest.TestCase):
 
 		class DummyExtension(object):
 			# Simulate extension with root path in self.files_basedir
-			# giving empty relative root path 
+			# giving empty relative root path
 			root_path = self.files_basedir
 			relative_root_path = "."
 

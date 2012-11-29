@@ -23,6 +23,8 @@
 		<toolchain-config-list name="AvrGcc.Project.Only.List" value="Project_1" toolchain="avrgcc"/>
 		<toolchain-config-list name="AvrGcc.Project.Only.List" value="Project_2" toolchain="avrgcc"/>
 		<toolchain-config-list name="AvrGcc.Board.And.Project.List" value="Project" toolchain="avrgcc"/>
+		<toolchain-config name="AvrGcc.Module.Board.And.Project" value="Project" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Module.Board.And.Project.List" value="Project" toolchain="avrgcc"/>
 		<device-support value="atxmega128a1"/>
 	</project>
 
@@ -35,6 +37,8 @@
 		<toolchain-config name="AvrGcc.Board.And.Project" value="Board" toolchain="avrgcc"/>
 		<toolchain-config-list name="AvrGcc.Board.Only.List" value="Board" toolchain="avrgcc"/>
 		<toolchain-config-list name="AvrGcc.Board.And.Project.List" value="Board" toolchain="avrgcc"/>
+		<toolchain-config name="AvrGcc.Module.Board.And.Project" value="Board" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Module.Board.And.Project.List" value="Board" toolchain="avrgcc"/>
 		<toolchain-config-list name="Avr32Gcc.Board.Only.List" value="Board" toolchain="avr32gcc"/>
 		<device-support value="atxmega128a1"/>
 	</board>
@@ -63,4 +67,20 @@
 		<build type="module-config" subtype="required-header-file" value="conf_awesome.h"/>
 		<build type="header-file" value="awesome.h"/>
 	</module>
+
+	<module type="build-specific" id="toolchain_config_module" caption="">
+		<device-support value="xmega"/>
+		<toolchain-config name="AvrGcc.Module.Only" value="Module" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Module.Only.List" value="Module" toolchain="avrgcc"/>
+		<toolchain-config name="AvrGcc.Module.Board.And.Project" value="Module" toolchain="avrgcc"/>
+		<toolchain-config-list name="AvrGcc.Module.Board.And.Project.List" value="Module" toolchain="avrgcc"/>
+	</module>
+
+	<select-by-device id="toolchain_config_selector" caption="">
+		<module type="build-specific" id="toolchain_config_selector#0" caption="">
+			<device-support value="xmega"/>
+			<toolchain-config name="AvrGcc.Module.Only" value="Module" toolchain="avrgcc"/>
+			<toolchain-config-list name="AvrGcc.Module.Board.And.Project.List" value="Module" toolchain="avrgcc"/>
+		</module>
+	</select-by-device>
 </asf>
