@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM0+ BOD configuration
+ * \brief SAM0+ GPIO Port Driver Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,42 +36,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef BOD_CONFIG_H
-#  define BOD_CONFIG_H
+#include <asf.h>
 
-/* BOD33 Configuration
- * ------------------------------------------------------*/
+void configure_system_clock_sources(void);
 
-/* Enable BOD33 */
-#define CONF_BOD33_ENABLE false
+void configure_system_clock_sources(void)
+{
+	struct system_clock_source_config cs_conf;
+	system_clock_source_get_default_config(&cs_conf);
 
-#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
-//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+	/* 8MHz RC oscillator */
+	cs_conf.rc8mhz.prescaler = 4;
 
-#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_RC8MHZ);
 
-#define CONF_BOD33_LEVEL 10
-#define CONF_BOD33_HYSTERESIS true
+	/* XOSC */
+	cs_conf.ext.external_clock = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_XOSC);
 
-/* BOD12 Configuration
- * ------------------------------------------------------*/
+	/* DFLL */
+	cs_conf.dfll.coarse_value = 42;
+	cs_conf.dfll.fine_value = 42;
 
-/* Enable BOD12 */
-#define CONF_BOD12_ENABLE false
+	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_DFLL);
+}
 
-/* Action on bod timeout; reset or interrupt */
-#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
-//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
-
-/* Sampled or continious monitoring */
-#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
-
-#define CONF_BOD12_HYSTERESIS true
+int main(void)
+{
+	/** [setup_init] */
+	configure_system_clock_sources();
+	/** [setup_init] */
 
 
-#endif /* BOD_CONFIG_H */
+	/** [main1] */
+	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
+	/** [main1] */
+
+}
