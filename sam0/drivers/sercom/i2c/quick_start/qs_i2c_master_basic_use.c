@@ -39,10 +39,48 @@
  *
  */
 
-#include "qs_i2c_master_basic_use.h"
+#include <asf.h>
+
+#define DATA_LENGTH 10
+static uint8_t buffer[DATA_LENGTH] = {
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+};
+
+#define SLAVE_ADDRESS 0x01
+
+/* Init device instance. */
+struct i2c_master_dev_inst dev_inst;
+
+static void configure_i2c(void)
+{
+	/* Initialize config structure and device instance. */
+	struct i2c_master_conf conf;
+	i2c_master_get_config_defaults(&conf);
+
+	/* Change buffer timeout to something longer. */
+	conf.buffer_timeout = 10000;
+
+	/* Initialize and enable device with config. */
+	i2c_master_init(&dev_inst, &SERCOM0, &conf);
+
+	i2c_master_enable(&dev_inst);
+}
 
 int main(void)
 {
+	/* Configure device and enable. */
+	configure_i2c();
+
+	/* Init i2c packet. */
+	i2c_packet_t packet = {
+		.address     = SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = &buffer[0]
+	};
+
+	/* Write buffer to slave. */
+	i2c_master_write_packet(&dev_inst, &packet);
+
 	while (1) {
 		/* Inf loop. */
 	}
