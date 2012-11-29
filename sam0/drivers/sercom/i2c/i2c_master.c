@@ -99,7 +99,7 @@ static enum status_code _i2c_master_set_config(
 	}
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)(clock_gclk_ch_get_hz(SERCOM_GCLK_ID)
+	tmp_baud = (int32_t)(system_gclk_ch_get_hz(SERCOM_GCLK_ID)
 			/ (2*config->baud_rate)-5);
 
 	/* Check that baud rate is supported at current speed. */
@@ -194,6 +194,56 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 	i2c_module->CTRLA = ( 1 << I2C_MASTER_SWRST_Pos );
 }
 
+static enum status_code _i2c_master_address_response(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Check for error. */
+	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
+		/* Clear write interrupt flag. */
+		i2c_module->INTENCLR = I2C_MASTER_WIF;
+
+		/* Check for busserror. */
+		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
+			/* Return denied. */
+			return STATUS_ERR_DENIED;
+
+		/* Check arbitration. */
+		} else if (i2c_module->STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
+			/* Return packet collision. */
+			return STATUS_ERR_PACKET_COLLISION;
+		}
+	/* Check that slave responded with ack. */
+	} else if ( i2c_module->STATUS & (0 << I2C_MASTER_RXACK_Pos) ) {
+		/* Slave busy. Issue ack and stop command. */
+		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
+				SERCOM_I2C_MASTER_CMD(3);
+
+		/* Return bad address value. */
+		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	return STATUS_OK;
+}
+
+static enum status_code _i2c_master_wait_for_bus(
+		struct i2c_master_dev_inst *const dev_inst)
+{
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Wait for reply. */
+	uint16_t timeout_counter = 0;
+	while (!(i2c_module->INTFLAGS & I2C_MASTER_WIF) ||
+			!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
+		/* Check timeout condition. */
+		if (++timeout_counter >= dev_inst->buffer_timeout) {
+			return STATUS_ERR_TIMEOUT;
+		}
+	}
+	return STATUS_OK;
+}
+
 /**
  * \brief Read data packet from slave.
  *
@@ -219,68 +269,51 @@ enum status_code i2c_master_read_packet(
 		return STATUS_ERR_BUSY;
 	}
 
-	uint16_t timeout_counter = 0;
+	/* Return value. */
+	enum status_code tmp_status = STATUS_OK;
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | 0x01;
 
-	/* Wait for reply. */
-	timeout_counter = 0;
-	while (!(i2c_module->INTFLAGS & I2C_MASTER_WIF) ||
-			!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
-		/* Check timeout condition. */
-		if (++timeout_counter >= dev_inst->buffer_timeout) {
-			return STATUS_ERR_TIMEOUT;
-		}
+	/* Wait for response on bus. */
+	tmp_status = _i2c_master_wait_for_bus(dev_inst);
+
+	/* Check for address response error unless previous error is
+	 * detected. */
+	if (tmp_status == STATUS_OK) {
+		tmp_status = _i2c_master_address_response(dev_inst);
 	}
 
-	/* Check for error. */
-	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
-		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF;
-		/* Check for busserror. */
-		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
-			/* Return denied. */
-			return STATUS_ERR_DENIED;
-		/* Check arbitration. */
-		} else if (i2c_module->STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
-			/* Return busy. */
-			return STATUS_ERR_BUSY;
-		}
-	}
-
-	/* Check that slave sent ACK. */
-	if (i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
+	/* Check that no error has occurred. */
+	if (tmp_status == STATUS_OK) {
 		/* Init data length. */
-		dev_inst->buffer_remaining = 0;
+		uint16_t buffer_counter = 0;
+
 		/* Read data buffer. */
 		while (packet->data_length--) {
-			packet->data[dev_inst->buffer_remaining++] =
-					i2c_module->DATA;
+			/* Check that bus ownership is not lost. */
+			if (!(i2c_module->STATUS & I2C_MASTER_BUSSTATE_OWNER_Msk)) {
+				return STATUS_ERR_PACKET_COLLISION;
+			}
 
-			/* Wait for more data. */
-			timeout_counter = 0;
-			while (!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
-				/* Check timeout condition. */
-				if (++timeout_counter >=
-						dev_inst->buffer_timeout) {
-					return STATUS_ERR_TIMEOUT;
-				}
+			/* Save data to buffer. */
+			packet->data[buffer_counter++] = i2c_module->DATA;
+
+			/* Wait for response. */
+			tmp_status = _i2c_master_wait_for_bus(dev_inst);
+
+			/* Check for error. */
+			if (tmp_status != STATUS_OK) {
+				break;
 			}
 		}
-		/* Send nack and stop command. */
+		/* Send nack and stop command unless arbitration is lost. */
 		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
 				SERCOM_I2C_MASTER_CMD(3);
 
-		return STATUS_OK;
-
-	} else {
-		/* Slave busy. Issue ack and stop command. */
-		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
-				SERCOM_I2C_MASTER_CMD(3);
-		/* Return bad address value. */
-		return STATUS_ERR_BAD_ADDRESS;
 	}
+
+	return tmp_status;
 
 }
 
@@ -309,53 +342,43 @@ enum status_code i2c_master_write_packet(
 		return STATUS_ERR_BUSY;
 	}
 
-	uint16_t timeout_counter = 0;
+	/* Return value. */
+	enum status_code tmp_status = STATUS_OK;
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | 0x00;
 
-	/* Wait for reply. */
-	timeout_counter = 0;
-	while (!(i2c_module->INTFLAGS & I2C_MASTER_WIF) ||
-			!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
-		/* Check timeout condition. */
-		if (++timeout_counter >= dev_inst->buffer_timeout) {
-			return STATUS_ERR_TIMEOUT;
-		}
+	/* Wait for response on bus. */
+	tmp_status = _i2c_master_wait_for_bus(dev_inst);
+
+	/* Check for address response error unless previous error is
+	 * detected. */
+	if (tmp_status == STATUS_OK) {
+		tmp_status = _i2c_master_address_response(dev_inst);
 	}
 
-	/* Check for error. */
-	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
-		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF;
-		/* Check for busserror. */
-		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
-			/* Return denied. */
-			return STATUS_ERR_PROTOCOL;
-		/* Check arbitration. */
-		} else if (i2c_module->STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
-			/* Return busy. */
-			return STATUS_ERR_PACKET_COLLISION;
-		}
-	}
 
-	/* Check that slave sent ACK. */
-	if (i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)) {
-		/* Init buffer counter. */
-		dev_inst->buffer_remaining = 0;
+	/* Check that no error has occurred. */
+	if (tmp_status == STATUS_OK) {
+		/* Buffer counter. */
+		uint16_t buffer_counter = 0;
+
 		/* Write data buffer. */
 		while (packet->data_length--) {
-			/* Write byte to slave. */
-			i2c_module->DATA = packet->data[dev_inst->buffer_remaining++];
+			/* Check that bus ownership is not lost. */
+			if (!(i2c_module->STATUS & I2C_MASTER_BUSSTATE_OWNER_Msk)) {
+				return STATUS_ERR_PACKET_COLLISION;
+			}
 
-			/* Wait for ack. */
-			timeout_counter = 0;
-			while (!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
-				/* Check timeout condition. */
-				if (++timeout_counter >=
-						dev_inst->buffer_timeout) {
-					return STATUS_ERR_TIMEOUT;
-				}
+			/* Write byte to slave. */
+			i2c_module->DATA = packet->data[buffer_counter++];
+
+			/* Wait for response. */
+			tmp_status = _i2c_master_wait_for_bus(dev_inst);
+
+			/* Check for error. */
+			if (tmp_status != STATUS_OK) {
+				break;
 			}
 
 			/* Check for ack from slave. */
@@ -364,16 +387,15 @@ enum status_code i2c_master_write_packet(
 				i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
 						SERCOM_I2C_MASTER_CMD(3);
 				/* Return bad data value. */
-				return STATUS_ERR_BAD_DATA;
+				tmp_status = STATUS_ERR_BAD_DATA;
+				break;
 			}
 		}
-		return STATUS_OK;
 
-	} else {
-		/* Slave busy. Issue ack and stop command. */
+		/* Send nack and stop command. */
 		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
 				SERCOM_I2C_MASTER_CMD(3);
-		/* Return bad address value. */
-		return STATUS_ERR_BAD_ADDRESS;
 	}
+
+	return tmp_status;
 }

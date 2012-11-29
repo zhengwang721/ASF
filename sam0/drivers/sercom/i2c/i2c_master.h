@@ -127,11 +127,6 @@ typedef void (*i2c_master_callback_t)(
 struct i2c_master_dev_inst {
 	/** Hardware instance initialized for the struct. */
 	SERCOM_t *hw_dev;
-	/** Data buffer for packet write and read. */
-	uint8_t *buffer;
-	/** Counter used for bytes left to send in write and to count number of
-	  * obtained bytes in read. */
-	uint16_t buffer_remaining;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
@@ -145,6 +140,11 @@ struct i2c_master_dev_inst {
 	uint8_t enabled_callback;
 	/** The total number of bytes to transfer. */
 	uint16_t buffer_length;
+	/** Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read. */
+	uint16_t buffer_remaining;
+	/** Data buffer for packet write and read. */
+	uint8_t *buffer;
 	/** Save direction of async request. 1 = read, 0 = write. */
 	uint8_t transfer_direction;
 	/** Status for status read back in error callback. */

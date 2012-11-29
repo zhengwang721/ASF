@@ -110,11 +110,11 @@ static inline void i2c_master_async_disable_callback(
 * @{
 */
 
-enum status_code i2c_master_async_read_packet_async(
+enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
-enum status_code i2c_master_async_write_packet_async(
+enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 

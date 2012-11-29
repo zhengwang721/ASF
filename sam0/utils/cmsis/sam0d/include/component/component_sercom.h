@@ -242,6 +242,9 @@ typedef enum {
 #define I2C_MASTER_ENABLE_Pos 1
 #define I2C_MASTER_RIF_Msk 0
 #define I2C_MASTER_WIF_Msk 0
+#define I2C_MASTER_BUSSTATE_OWNER_Msk 0
+#define I2C_MASTER_READ_CMD_Msk 1
+#define I2C_MASTER_WRITE_CMD_Msk 0
 
 
 enum RXPO_group {

@@ -88,13 +88,11 @@ static void _i2c_master_async_address_response(
 		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
 			/* Return denied. */
 			dev_inst->status = STATUS_ERR_DENIED;
-			return;
 
 		/* Check arbitration. */
 		} else if (i2c_module->STATUS & (1 << I2C_MASTER_ARBLOST_Pos)) {
 			/* Return busy. */
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
-			return;
 		}
 	} else if ( i2c_module->STATUS & (0 << I2C_MASTER_RXACK_Pos) ) {
 		/* Slave busy. Issue ack and stop command. */
@@ -103,10 +101,19 @@ static void _i2c_master_async_address_response(
 
 		/* Return bad address value. */
 		dev_inst->status = STATUS_ERR_BAD_ADDRESS;
-		return;
 	}
 
 	dev_inst->buffer_length = dev_inst->buffer_remaining;
+
+	/* Check for status OK. */
+	if (dev_inst->status == STATUS_OK) {
+		/* Call function based on transfer direction. */
+		if (dev_inst->transfer_direction == 0) {
+			_i2c_master_async_write(dev_inst);
+		} else {
+			_i2c_master_async_read(dev_inst);
+		}
+	}
 }
 
 /**
@@ -173,7 +180,7 @@ void i2c_master_async_unregister_callback(
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  * \return          [description]
  */
-enum status_code i2c_master_async_read_packet_async(
+enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
 {
@@ -198,7 +205,7 @@ enum status_code i2c_master_async_read_packet_async(
 	i2c_module->INTENSET = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | 0x01;
+	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_READ_CMD_Msk;
 
 	return STATUS_OK;
 }
@@ -213,7 +220,7 @@ enum status_code i2c_master_async_read_packet_async(
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  * \return          [description]
  */
-enum status_code i2c_master_async_write_packet_async(
+enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
 {
@@ -238,7 +245,7 @@ enum status_code i2c_master_async_write_packet_async(
 	i2c_module->INTENSET = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | 0x00;
+	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_WRITE_CMD_Msk;
 
 	return STATUS_OK;
 }
@@ -255,22 +262,8 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	/* Check for error. */
-	if ( dev_inst->status != STATUS_OK ) {
-		/* Stop packet operation. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
-		dev_inst->buffer_length = 0;
-		dev_inst->buffer_remaining = 0;
-
-		/* Call error callback if enabled and registered. */
-		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
-				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_ERROR)) {
-
-			dev_inst->callbacks[I2C_MASTER_CALLBACK_ERROR](dev_inst);
-
-		}
-	/* Check if address response. */
-	} else if (dev_inst->buffer_length <= 0 && dev_inst->buffer_remaining > 0) {
+	/* Check if the module should response to address ack. */
+	if (dev_inst->buffer_length <= 0 && dev_inst->buffer_remaining > 0) {
 		/* Call function for address response. */
 		_i2c_master_async_address_response(dev_inst);
 
@@ -294,15 +287,33 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](dev_inst);
 		}
-	}
 
 	/* Continue buffer write/read. */
-	if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining > 0){
-		if (dev_inst->transfer_direction == 0) {
-			_i2c_master_async_write(dev_inst);
+	} else if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining > 0){
+		/* Check that bus ownership is not lost. */
+		if (!(i2c_module->STATUS & I2C_MASTER_BUSSTATE_OWNER_Msk)) {
+			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 
+		/* Call function based on transfer direction. */
+		} else if (dev_inst->transfer_direction <= 0) {
+			_i2c_master_async_write(dev_inst);
 		} else {
 			_i2c_master_async_read(dev_inst);
+		}
+	}
+
+	/* Check for error. */
+	if ( dev_inst->status != STATUS_OK ) {
+		/* Stop packet operation. */
+		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+		dev_inst->buffer_length = 0;
+
+		/* Call error callback if enabled and registered. */
+		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
+				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_ERROR)) {
+
+			dev_inst->callbacks[I2C_MASTER_CALLBACK_ERROR](dev_inst);
+
 		}
 	}
 }
