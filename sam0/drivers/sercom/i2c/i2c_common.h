@@ -48,7 +48,9 @@ extern "C" {
 #endif
 
 /**
- * Structure to be used when sending I2C packets. Used both for master and
+ * \brief I2C packet for read/write
+ *
+ * Structure to be used when transferring I2C packets. Used both for master and
  * slave.
  */
 typedef struct {

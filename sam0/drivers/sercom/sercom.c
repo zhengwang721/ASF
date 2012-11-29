@@ -43,7 +43,7 @@
 /**
  * \internal Configuration structure to save current gclk status.
  */
-struct _sercom_gclk_conf {
+struct _sercom_conf {
 	/* Status of gclk generator initialization. */
 	bool generator_is_set;
 	/* Sercom gclk generator used. */
@@ -52,7 +52,7 @@ struct _sercom_gclk_conf {
 	bool run_in_standby;
 };
 
-static struct _sercom_gclk_conf *sercom_gclk_config;
+static struct _sercom_conf _sercom_config;
 
 /**
  * \brief Calculate synchronous baudrate value (SPI/UART)
@@ -101,6 +101,25 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 	return STATUS_OK;
 }
 
+/**
+ * \brief Set GCLK channel to generator.
+ *
+ * This will set the appropriate GCLK channel to the requested GCLK generator.
+ * This will set the generator for all sercom instances, and the user will thus
+ * only be able to set the same generator that has previously been set, if any.
+ *
+ * After the generator has been set the first time, the generator can be changed
+ * using the force_change flag.
+ *
+ * \param[in]  generator_source The generator to use for SERCOM.
+ * \param[in]  run_in_standby   If the generator should stay on in standby.
+ * \param[in]  force_change     Force change the generator.
+ *
+ * \return                  status_code of changing generator.
+ * \retval STATUS_OK If changes has been set, or same setting where set before.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If new configuration was given without
+ *                                        force flag.
+ */
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
@@ -109,12 +128,15 @@ enum status_code sercom_set_gclk_generator(
 	/* Configuration structure for the gclk channel. */
 	struct system_gclk_ch_conf gclk_ch_conf;
 
+	/* Pointer to internal sercom configuration. */
+	struct _sercom_conf *sercom_config_ptr = &_sercom_config;
+
 	/* Return argument. */
 	enum status_code ret_val;
 
 	/* Check if valid option. */
-	if(!sercom_gclk_config->generator_is_set || force_change) {
-		sercom_gclk_config->generator_is_set = true;
+	if(!sercom_config_ptr->generator_is_set || force_change) {
+		sercom_config_ptr->generator_is_set = true;
 
 		/* Configure GCLK channel and enable clock */
 		gclk_ch_conf.source_generator = generator_source;
@@ -130,13 +152,13 @@ enum status_code sercom_set_gclk_generator(
 		system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
-		sercom_gclk_config->generator_source = generator_source;
-		sercom_gclk_config->run_in_standby = run_in_standby;
+		sercom_config_ptr->generator_source = generator_source;
+		sercom_config_ptr->run_in_standby = run_in_standby;
 
 		ret_val = STATUS_OK;
 
-	} else if (generator_source == sercom_gclk_config->generator_source &&
-			run_in_standby == sercom_gclk_config->run_in_standby) {
+	} else if (generator_source == sercom_config_ptr->generator_source &&
+			run_in_standby == sercom_config_ptr->run_in_standby) {
 		/* Return status OK if same config. */
 		ret_val = STATUS_OK;
 
