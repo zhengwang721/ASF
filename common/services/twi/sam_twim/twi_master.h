@@ -1,9 +1,13 @@
-/**
+/*****************************************************************************
+ *
  * \file
  *
- * \brief Board configuration.
+ * \brief TWI Master driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * This file defines a useful set of functions for the TWIM interface on SAM
+ * devices.
+ *
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,22 +43,23 @@
  *
  * \asf_license_stop
  *
- */
+ ******************************************************************************/
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#ifndef _TWI_MASTER_H_
+#define _TWI_MASTER_H_
 
-/** Configure TWI1 pins */
-#define CONF_BOARD_TWI1
+#include "compiler.h"
+#include "sysclk.h"
+#include "status_codes.h"
+#include "twim.h"
 
-/* Configure USART pins */
-#define CONF_BOARD_USART_RXD
-#define CONF_BOARD_USART_TXD
+typedef twi_options_t twi_master_options_t;
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+static inline uint32_t twi_master_setup(Twim *twi, twi_master_options_t *opt)
+{
+	opt->twim_clk = sysclk_get_cpu_hz();
+	return twi_master_init(twi, (twi_master_options_t *)opt);
+}
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif  // _TWI_MASTER_H_

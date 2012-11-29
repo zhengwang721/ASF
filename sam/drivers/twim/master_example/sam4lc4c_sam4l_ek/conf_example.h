@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Example configuration header file.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,20 +41,31 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/**
+ * \defgroup twim_master_example_pin_defs
+ *   - <b> Board  --  EEPROM</b>
+ *   - TWIMS1 TWD(PB00)  --  SDA
+ *   - TWIMS1 TWD(PB01)  --  SCL
+ *   - VCC  --  VCC
+ *   - GND  --  GND
+ */
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-/** Configure TWI1 pins */
-#define CONF_BOARD_TWI1
+//! TWIM Interrupt Number
+#define EXAMPLE_TWIM_IRQn    TWIM1_IRQn
+//! TWIM Module Used
+#define EXAMPLE_TWIM         TWIM1
+//! Target's TWI address
+#define TARGET_ADDRESS       0x50
+//! Internal Address length
+#define TARGET_ADDR_LGT      2
+//! Internal Address
+#define VIRTUALMEM_ADDR      0x0
+//! Speed of TWI
+#define TWIM_MASTER_SPEED    TWI_STD_MODE_SPEED
+//! TWIM Interrupt Handler
+#define EXAMPLE_TWIM_Handler TWIM1_Handler
 
-/* Configure USART pins */
-#define CONF_BOARD_USART_RXD
-#define CONF_BOARD_USART_TXD
-
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

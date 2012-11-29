@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,16 +45,9 @@
 #define CONF_BOARD_H_INCLUDED
 
 /** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#define CONF_BOARD_COM_PORT
 
-/** Configure TWI1 pins */
-#define CONF_BOARD_TWI1
-
-/* Configure USART pins */
-#define CONF_BOARD_USART_RXD
-#define CONF_BOARD_USART_TXD
-
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+/** Enable TWIM1 pins. */
+#define CONF_BOARD_TWIMS1
 
 #endif /* CONF_BOARD_H_INCLUDED */

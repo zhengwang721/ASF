@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,20 +41,14 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/** Configure TWI1 pins */
-#define CONF_BOARD_TWI1
-
-/* Configure USART pins */
-#define CONF_BOARD_USART_RXD
-#define CONF_BOARD_USART_TXD
-
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
