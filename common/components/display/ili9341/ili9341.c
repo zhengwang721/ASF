@@ -108,6 +108,7 @@ __always_inline static void ili9341_wait_for_send_done(void)
 	while (!usart_tx_is_complete(CONF_ILI9341_USART_SPI)) {
 		/* Do nothing */
 	}
+	usart_clear_tx_complete(CONF_ILI9341_USART_SPI);
 #  else
 	/* Wait for TX to complete */
 	while (!usart_spi_is_tx_empty(CONF_ILI9341_USART_SPI)) {

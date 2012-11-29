@@ -51,11 +51,7 @@
  * Currently supported interfaces are the SPI interface and the USART Master SPI
  * interface.
  */
-#if defined(MXT143E_XPLAINED_SPI)
-#	define CONF_ILI9341_SPI           MXT143E_XPLAINED_SPI
-#elif defined(MXT143E_XPLAINED_USART_SPI)
-#	define CONF_ILI9341_USART_SPI     MXT143E_XPLAINED_USART_SPI
-#endif
+#define CONF_ILI9341_USART_SPI     MXT143E_XPLAINED_USART_SPI
 
 /**
  * \brief Select a SPI clock speed

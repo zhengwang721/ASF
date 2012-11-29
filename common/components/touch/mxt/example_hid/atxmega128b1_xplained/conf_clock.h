@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9341 display controller configuration
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,44 +40,48 @@
  * \asf_license_stop
  *
  */
-#include <board.h>
-
-#ifndef CONF_ILI9341_H_INCLUDED
-#define CONF_ILI9341_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
 /**
- * \brief Select the correct hardware interface
- *
- * Currently supported interfaces are the SPI interface and the USART Master SPI
- * interface.
+ * \name Configuration using On-Chip RC oscillator at 48MHz
+ * \brief
+ *  The RC oscillator is calibrated via USB Start Of Frame <br>
+ *  Clk USB     = 48MHz (used by USB)                      <br>
+ *  Clk sys     = 48MHz                                    <br>
+ *  Clk cpu/per = 12MHz
+ * @{
  */
-#if defined(MXT143E_XPLAINED_SPI)
-#	define CONF_ILI9341_SPI           MXT143E_XPLAINED_SPI
-#elif defined(MXT143E_XPLAINED_USART_SPI)
-#	define CONF_ILI9341_USART_SPI     MXT143E_XPLAINED_USART_SPI
-#endif
+#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_RCOSC
+#define CONFIG_OSC_RC32_CAL      48000000UL
+
+#define CONFIG_OSC_AUTOCAL          OSC_ID_RC32MHZ
+#define CONFIG_OSC_AUTOCAL_REF_OSC  OSC_ID_USBSOF
+
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
+/* @} */
 
 /**
- * \brief Select a SPI clock speed
- *
- * This selects the clock speed for the SPI clock used to communicate with the
- * display controller. Higher clock speeds allow for higher frame rates.
- * \note That the clock speed may be limited by the speed of the microcontroller
- * a normal limitation would be CPUclk/2. For more details please refer to the
- * device datasheet.
+ * \name Use external board OSC (8MHz)
+ * \brief
+ *  Clk pll     = 48MHz (used by USB) <br>
+ *  Clk sys     = 48MHz               <br>
+ *  Clk cpu/per = 12MHz
+ * @{
  */
-#define CONF_ILI9341_CLOCK_SPEED   8000000UL
+ /*
+#define CONFIG_PLL0_SOURCE       PLL_SRC_XOSC
+#define CONFIG_PLL0_MUL          6
+#define CONFIG_PLL0_DIV          1
 
-/** \brief Define what MCU pin the ILI9341 chip select pin is connected to */
-#define CONF_ILI9341_CS_PIN        MXT143E_XPLAINED_CS
+#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_PLL
 
-/** \brief Define what MCU pin the ILI9341 DC pin is connected to */
-#define CONF_ILI9341_DC_PIN        MXT143E_XPLAINED_DC
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_PLL
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
+*/
+/* @} */
 
-/** \brief Define what MCU pin the ILI9341 back light pin is connected to */
-#define CONF_ILI9341_BACKLIGHT_PIN MXT143E_XPLAINED_BACKLIGHT
-
-/** \brief Define what MCU pin the ILI9341 reset is connected to */
-#define CONF_ILI9341_RESET_PIN     MXT143E_XPLAINED_LCD_RESET
-
-#endif /* CONF_ILI9341_H_INCLUDED */
+#endif /* CONF_CLOCK_H_INCLUDED */

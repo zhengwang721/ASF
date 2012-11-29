@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9341 display controller configuration
+ * \brief maXTouch component configuration.
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,44 +40,12 @@
  * \asf_license_stop
  *
  */
-#include <board.h>
+#ifndef CONF_MXT_H_
+#define CONF_MXT_H_
 
-#ifndef CONF_ILI9341_H_INCLUDED
-#define CONF_ILI9341_H_INCLUDED
+#define MXT_TWI_SPEED          400000
 
-/**
- * \brief Select the correct hardware interface
- *
- * Currently supported interfaces are the SPI interface and the USART Master SPI
- * interface.
- */
-#if defined(MXT143E_XPLAINED_SPI)
-#	define CONF_ILI9341_SPI           MXT143E_XPLAINED_SPI
-#elif defined(MXT143E_XPLAINED_USART_SPI)
-#	define CONF_ILI9341_USART_SPI     MXT143E_XPLAINED_USART_SPI
-#endif
+/* Uncomment to enable validation of message data */
+/*#define CONF_VALIDATE_MESSAGES*/
 
-/**
- * \brief Select a SPI clock speed
- *
- * This selects the clock speed for the SPI clock used to communicate with the
- * display controller. Higher clock speeds allow for higher frame rates.
- * \note That the clock speed may be limited by the speed of the microcontroller
- * a normal limitation would be CPUclk/2. For more details please refer to the
- * device datasheet.
- */
-#define CONF_ILI9341_CLOCK_SPEED   8000000UL
-
-/** \brief Define what MCU pin the ILI9341 chip select pin is connected to */
-#define CONF_ILI9341_CS_PIN        MXT143E_XPLAINED_CS
-
-/** \brief Define what MCU pin the ILI9341 DC pin is connected to */
-#define CONF_ILI9341_DC_PIN        MXT143E_XPLAINED_DC
-
-/** \brief Define what MCU pin the ILI9341 back light pin is connected to */
-#define CONF_ILI9341_BACKLIGHT_PIN MXT143E_XPLAINED_BACKLIGHT
-
-/** \brief Define what MCU pin the ILI9341 reset is connected to */
-#define CONF_ILI9341_RESET_PIN     MXT143E_XPLAINED_LCD_RESET
-
-#endif /* CONF_ILI9341_H_INCLUDED */
+#endif /* CONF_MXT_H_ */
