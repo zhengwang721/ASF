@@ -47,9 +47,9 @@ q/**
  * Enables the clock and initializes the TC module,
  * based on the values of the config struct
  *
- * \param dev_inst  pointer to the device struct
- * \param tc_module pointer to the tc module
- * \param config    pointer to the config struct
+ * \param dev_inst  Pointer to the device struct
+ * \param tc_module Pointer to the tc module
+ * \param config    Pointer to the config struct
  *
  * \return Status of the procedure.
  * \retval STATUS_OK          When init has completed successfully.
@@ -71,9 +71,9 @@ enum status_code tc_init(
 
 	//TODO: Add clock config
 
-	uint16_t temp_run_in_standby = 0;
-	uint8_t temp_ctrlbset = 0;
-	uint8_t temp_evctrl_gm = 0;
+	uint16_t ctrla_temp = 0;
+	uint8_t ctrlbset_temp = 0;
+	uint8_t evctrl_temp = 0;
 
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
@@ -84,7 +84,6 @@ enum status_code tc_init(
 	 */
 	dev_inst->resolution = config->resolution;
 
-	//TODO: This might not work.
 	if (tc_module->CTRLA & TC_RESET_bm) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
@@ -101,43 +100,47 @@ enum status_code tc_init(
 	}
 
 	if (config->run_in_standby) {
-		temp_run_while_standby = (0x0001 << TC_CTRLA_SLEEPEN_bp);
+		ctrla_temp |= (0x0001 << TC_CTRLA_SLEEPEN_bp);//TODO: change to bit map
 	}
+
+	ctrla_temp = config->resolution | config->wave_generation
+			| config->reload_action | config->clock_prescaler
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
 	/* Set configuration to registers common for all 3 modes */
-	tc_module->CTRLA = config->resolution | config->wave_generation
-			| config->reload_action | config->clock_prescaler
-			| temp_run_in_standby;
+	tc_module->CTRLA = ctrla_temp;
 
-	if (config->oneshot)
-		temp_ctrlbset = TC_ONESHOT_ENABLED_bm;
+	/* Set ctrlb register */
+	if (config->oneshot) {
+		ctrlbset_temp = TC_ONESHOT_ENABLED_bm;
+	}
 
-	if (config->count_direction)
-		temp_ctrlbset |= TC_COUNT_DIRECTION_DOWN;
+	if (config->count_direction) {
+		ctrlbset_temp |= TC_COUNT_DIRECTION_DOWN;
+	}
 
-	if (temp_ctrlbset_bm) {//check if we actually need to go into a wait state.
+	if (ctrlbset_temp) {//check if we actually need to go into a wait state.
 		_tc_wait_for_sync(dev_inst);
-		tc_module->CTRLBSET = temp_ctrlbset;
+		tc_module->CTRLBSET = ctrlbset_temp;
 	}
 
 	_tc_wait_for_sync(dev_inst);
 	tc_module->CTRLC = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
 
-
+	/* Set event register */
 	if (config->enable_event_input) {
-		temp_evctrl_gm |= TC_EVCTRL_TCEI_bm;
+		evctrl_temp |= TC_EVCTRL_TCEI_bm;
 	}
 
 	if (config->invert_event_input) {
-		temp_evctrl_gm |= TC_EVCTRL_TCINV_bm;
+		evctrl_temp |= TC_EVCTRL_TCINV_bm;
 	}
 
 	_tc_wait_for_sync(dev_inst);
-	tc_module-EVCTRL = temp_evctrl_gm | config->event_action
+	tc_module-EVCTRL = evctrl_temp | config->event_action
 			| config->event_generation_enable;
 
 	/* Switch for TC resolution  */
@@ -145,22 +148,20 @@ enum status_code tc_init(
 
 	case TC_RESOLUTION_8BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.COUNT =
-				config->8bit_conf.count;
+		tc_module->TC_COUNT8.COUNT = config->8bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.PER   =
-				config->8bit_conf.period;
+		tc_module->TC_COUNT8.PER   = config->8bit_conf.period;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC0   =
+		tc_module->TC_COUNT8.CC0   = 
 				config->8bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC1   =
 				config->8bit_conf.capture_compare_channel_1;
 
-		break;
+		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
 		_tc_wait_for_sync(dev_inst);
@@ -175,7 +176,7 @@ enum status_code tc_init(
 		tc_module->TC_COUNT16.CC1   =
 				config->16bit_conf.capture_compare_channel_1;
 
-		break;
+		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
 		_tc_wait_for_sync(dev_inst);
@@ -190,14 +191,14 @@ enum status_code tc_init(
 		tc_module->TC_COUNT32.CC1 =
 				config->32bit_conf.capture_compare_channel_1;
 
-		break;
+		return STATUS_OK;
 
 	default:
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
-
-	return STATUS_OK;
+	Assert(false);
+	return STATUS_ERR_PROTOCOL;
 }
 
 
@@ -250,6 +251,8 @@ enum status_code tc_set_count_value(
 		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC resolution end  */
+	Assert(false);
+	return STATUS_ERR_PROTOCOL;
 }
 
 /**
@@ -301,6 +304,8 @@ enum status_code tc_get_count_value(
 		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC resolution end  */
+	Assert(false);
+	return STATUS_ERR_PROTOCOL;
 }
 
 
@@ -386,7 +391,11 @@ enum status_code tc_get_capture_value(
 		default:
 			return STATUS_ERR_INVALID_ARG;
 		}
+	default:
+		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC resolution end  */
+	Assert(false);
+	return STATUS_ERR_PROTOCOL;
 }
 
 
@@ -468,6 +477,9 @@ enum status_code tc_set_compare_value(
 		default:
 			return STATUS_ERR_INVALID_ARG;
 		}
-
+	default:
+		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC resolution  */
+	Assert(false);
+	return STATUS_ERR_PROTOCOL;
 }
