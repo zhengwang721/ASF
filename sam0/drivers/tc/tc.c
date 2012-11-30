@@ -105,7 +105,7 @@ enum status_code tc_init(
 	}
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Set configuration to registers common for all 3 modes */
 	tc_module->CTRLA = config->resolution | config->wave_generation
@@ -119,11 +119,11 @@ enum status_code tc_init(
 		temp_ctrlbset |= TC_COUNT_DIRECTION_DOWN;
 
 	if (temp_ctrlbset_bm) {//check if we actually need to go into a wait state.
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->CTRLBSET = temp_ctrlbset;
 	}
 
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 	tc_module->CTRLC = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
 
@@ -136,7 +136,7 @@ enum status_code tc_init(
 		temp_evctrl_gm |= TC_EVCTRL_TCINV_bm;
 	}
 
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 	tc_module-EVCTRL = temp_evctrl_gm | config->event_action
 		| config->event_generation_enable;
 
@@ -144,65 +144,65 @@ enum status_code tc_init(
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.COUNT =
 			config->8bit_conf.count;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.PER   =
 			config->8bit_conf.period;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC0   =
 			config->8bit_conf.capture_compare_channel_0;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC1   =
 			config->8bit_conf.capture_compare_channel_1;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC2   =
 			config->8bit_conf.capture_compare_channel_2;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC3   =
 			config->8bit_conf.capture_compare_channel_3;
 
 		break;
 
 	case TC_RESOLUTION_16BIT:
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.COUNT =
 			config->16bit_conf.count;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC0   =
 			config->16bit_conf.capture_compare_channel_0;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC1   =
 			config->16bit_conf.capture_compare_channel_1;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC2   =
 			config->16bit_conf.capture_compare_channel_2;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC3   =
 			config->16bit_conf.capture_compare_channel_3;
 
 		break;
 
 	case TC_RESOLUTION_32BIT:
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.COUNT =
 			config->32bit_conf.count;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.CC1 =
 			config->32bit_conf.capture_compare_channel_0;
 
-		_tc_wait_for_sync(tc_module);
+		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.CC1 =
 			config->32bit_conf.capture_compare_channel_1;
 
@@ -233,7 +233,7 @@ enum status_code tc_init(
  * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
  *                                is out of bounds.
  */
-enum status_code tc_set_count(
+enum status_code tc_set_count_value(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t count)
 {
@@ -246,7 +246,7 @@ enum status_code tc_set_count(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Write to based on the TC resolution */
 	switch (dev_inst->resolution) {
@@ -283,7 +283,7 @@ enum status_code tc_set_count(
  * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
  *                                is out of bounds.
  */
-enum status_code tc_get_count(
+enum status_code tc_get_count_value(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t *count)
 {
@@ -296,7 +296,7 @@ enum status_code tc_get_count(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Read from based on the TC resolution */
 	switch (dev_inst->resolution) {
@@ -336,7 +336,7 @@ enum status_code tc_get_count(
  * \retval STATUS_OK
  * \retval STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_get_capture(
+enum status_code tc_get_capture_value(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t *capture,
 		enum tc_capture_capture_channel_index channel_index)
@@ -350,7 +350,7 @@ enum status_code tc_get_capture(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Read out based on the TC resolution */
 	switch (dev_inst->resolution) {
@@ -435,7 +435,7 @@ enum status_code tc_get_capture(
  * \retval  STATUS_OK
  * \retval  STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_set_compare(
+enum status_code tc_set_compare_value(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t compare,
 		enum tc_compare_capture_channel_index channel_index)
@@ -449,7 +449,7 @@ enum status_code tc_set_compare(
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Read out based on the TC resolution */
 	switch(dev_inst->resolution) {

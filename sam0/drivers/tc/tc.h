@@ -248,7 +248,9 @@ extern "C" {
  *
  * \subsubsection waveform_generation Waveform Generation
  *
- * 
+ * Wave form generation enable the TC module, in combination with a
+ * pasive filter to produce analogue wave formes, in adition to square
+ * waves.
  *
  * \subsubsection frequency_generation Frequency Generation
  *
@@ -338,8 +340,6 @@ enum tc_compare_capture_channel_index {
 };
 
 
-//TODO: document better may have to make this part of the whole
-//documentation, and then refer to that here
 /**
  * \brief TC Counter reload action enum
  *
@@ -715,13 +715,15 @@ struct tc_dev_inst {
  *
  * \param hw_dev pointer to module
  */
-static inline void _tc_wait_for_sync(TC_t  *const hw_dev)
+static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 {
 	/* Sanity check arguments  */
-	Assert(hw_dev);
+	Assert(dev_inst);
+
+	TC_t tc_module = dev_inst->hw_dev;
 
 	/* Synchronize  */
-	while(hw_dev->STATUS & TC_SYNCBUSY_bm) {
+	while(tc_module->STATUS & TC_SYNCBUSY_bm) {
 		/* Wait for sync */
 	}
 }
@@ -879,10 +881,10 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 }
 
 
-uint32_t tc_get_count(struct tc_dev_inst *const dev_inst);
+uint32_t tc_get_count_value(struct tc_dev_inst *const dev_inst);
 
 
-enum status_code tc_set_count(
+enum status_code tc_set_count_value(
 		struct tc_dev_inst *const dev_inst,
 		uint32_t count);
 
