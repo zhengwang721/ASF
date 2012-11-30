@@ -85,23 +85,23 @@ enum status_code tc_init(
 	 */
 	dev_inst->resolution = config->resolution;
 
-	if (tc_module->CTRLA & TC_RESET_bm) {
+	if (tc_module->CTRLA & TC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	if (tc_module->STATUS & TC_SLAVE_bm) {
+	if (tc_module->STATUS & TC_STATUS_SLAVE) {
 		/* module is used as a slave*/
 		return STATUS_ERR_DENIED;
 	}
 
-	if (tc_module->CTRLA & TC_ENABLE_bm) {
+	if (tc_module->CTRLA & TC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
 
 	if (config->run_in_standby) {
-		ctrla_temp |= (0x0001 << TC_CTRLA_SLEEPEN_bp);//TODO: change to bit map
+		ctrla_temp |= TC_CTRLA_RUNSTDBY;
 	}
 
 	ctrla_temp = config->resolution | config->wave_generation
@@ -115,11 +115,11 @@ enum status_code tc_init(
 
 	/* Set ctrlb register */
 	if (config->oneshot) {
-		ctrlbset_temp = TC_ONESHOT_ENABLED_bm;
+		ctrlbset_temp = TC_CTRLBSET_ONESHOT;
 	}
 
 	if (config->count_direction) {
-		ctrlbset_temp |= TC_COUNT_DIRECTION_DOWN;
+		ctrlbset_temp |= TC_CTRLBSET_DIR;
 	}
 
 	if (ctrlbset_temp) {//check if we actually need to go into a wait state.
@@ -136,11 +136,11 @@ enum status_code tc_init(
 
 	/* Set event register */
 	if (config->enable_event_input) {
-		evctrl_temp |= TC_EVCTRL_TCEI_bm;
+		evctrl_temp |= TC_EVCTRL_TCEI;
 	}
 
 	if (config->invert_event_input) {
-		evctrl_temp |= TC_EVCTRL_TCINV_bm;
+		evctrl_temp |= TC_EVCTRL_TCINV;
 	}
 
 	_tc_wait_for_sync(dev_inst);
@@ -158,7 +158,7 @@ enum status_code tc_init(
 		tc_module->TC_COUNT8.PER   = config->8bit_conf.period;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC0   = 
+		tc_module->TC_COUNT8.CC0   =
 				config->8bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);

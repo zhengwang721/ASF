@@ -306,21 +306,6 @@ extern "C" {
  * @{
  */
 
-//following 12 lines can be removed if defines are done in tc_header.h
-#ifndef TC_INTFLAG_ERR_bm
-#define TC_INTFLAG_ERR_bm (0x01 << 1)
-#endif
-#ifndef TC_EVCTRL_TCEI_bm
-#define TC_EVCTRL_TCEI_bm (0x0001 << 5)
-#endif
-#ifndef TC_EVCTRL_TCINV_bm
-#define TC_EVCTRL_TCINV_bm (0x0001 << 4)
-#endif
-#ifndef TC_CTRLA_SLEEPEN_bp
-#define TC_CTRLA_SLEEPEN_bp 11
-#endif
-
-
 
 /**
  * \brief Index of the compare capture channels
@@ -346,17 +331,17 @@ enum tc_reload_action {
 	 * The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
-	TC_RELOAD_ACTION_GCLK                 = TC_PRESCSYNC_GCLK_bm,
+	TC_RELOAD_ACTION_GCLK                 = TC_CTRLA_PRESCSYNC_GCLK,
 	/**
 	 * The counter is reloaded/reset on the next prescaler clock
 	 */
-	TC_RELOAD_ACTION_PRESC                = TC_PRESCSYNC_PRESC_bm,
+	TC_RELOAD_ACTION_PRESC                = TC__CTRLA_PRESCSYNC_PRESC,
 	/**
 	 * The counter is reloaded/reset on the next GCLK, and the
 	 * prescaler is reset as well. This may be useful when an
 	 * event retrigger the clock
 	 */
-	TC_RELOAD_ACTION_RESYNC               = TC_PRESCSYNC_RESYNC_bm,
+	TC_RELOAD_ACTION_RESYNC               = TC_CTRLA_PRESCSYNC_RESYNC,
 };
 
 
@@ -369,21 +354,21 @@ enum tc_reload_action {
  */
 enum tc_clock_prescaler {
 	/** Divide clock by 1 */
-	TC_CLOCK_PRESCALER_DIV1               = TC_PRESCALER_DIV1_bm,
+	TC_CLOCK_PRESCALER_DIV1               = TC_CTRLA_PRESCALER(0),
 	/** Divide clock by 2 */
-	TC_CLOCK_PRESCALER_DIV2               = TC_PRESCALER_DIV2_bm,
+	TC_CLOCK_PRESCALER_DIV2               = TC_CTRLA_PRESCALER(1),
 	/** Divide clock by 4 */
-	TC_CLOCK_PRESCALER_DIV4               = TC_PRESCALER_DIV4_bm,
+	TC_CLOCK_PRESCALER_DIV4               = TC_CTRLA_PRESCALER(2),
 	/** Divide clock by 8 */
-	TC_CLOCK_PRESCALER_DIV8               = TC_PRESCALER_DIV8_bm,
+	TC_CLOCK_PRESCALER_DIV8               = TC_CTRLA_PRESCALER(3),
 	/** Divide clock by 16 */
-	TC_CLOCK_PRESCALER_DIV16              = TC_PRESCALER_DIV16_bm,
+	TC_CLOCK_PRESCALER_DIV16              = TC_CTRLA_PRESCALER(4),
 	/** Divide clock by 64 */
-	TC_CLOCK_PRESCALER_DIV64              = TC_PRESCALER_DIV64_bm,
+	TC_CLOCK_PRESCALER_DIV64              = TC_CTRLA_PRESCALER(5),
 	/** Divide clock by 256 */
-	TC_CLOCK_PRESCALER_DIV256             = TC_PRESCALER_DIV256_bm,
+	TC_CLOCK_PRESCALER_DIV256             = TC_CTRLA_PRESCALER(6),
 	/** Divide clock by 1024 */
-	TC_CLOCK_PRESCALER_DIV1024            = TC_PRESCALER_DIV1024_bm,
+	TC_CLOCK_PRESCALER_DIV1024            = TC_CTRLA_PRESCALER(7),
 };
 
 
@@ -408,22 +393,22 @@ enum tc_wave_generation {
 	 * TOP is MAX, except in 8 bit resolution where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_WAVEGEN_NFRQ_bm,
+	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
 	/**
 	 * TOP is CC0, expert in 8 bit resolution where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_MATCH_FREQ          = TC_WAVEGEN_MFRQ_bm,
+	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
 	/**
 	 * TOP is MAX, except in 8 bit resolution where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_NORMAL_PWM          = TC_WAVEGEN_NPWM_bm,
+	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
 	/**
 	 * TOP is CC0, except in 8 bit resolution where it is the PER
 	 * register
 	 */
-	TC_WAVE_GENERATION_MATCH_PWM           = TC_WAVEGEN_MPWM_bm,
+	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
 };
 
 
@@ -450,11 +435,9 @@ enum tc_capture_enable {
 	/** Enables no channels for capture */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	/** Enables channel 0 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
+	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(2),
 	/** Enables channel 1 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CPTEN_CC1_bm,
-	/** Generate event for overflow/underflow */
-	TC_EVENT_GENERATION_ENABLE_OVF        = TC_EVGEN_OVF_gc,
+	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(1),
 };
 
 
@@ -475,21 +458,21 @@ enum tc_resolution {
 	 * The counters max value is 0xFF, the period register is
 	 * available to be used as TOP value
 	 */
-	TC_RESOLUTION_8BIT                    = TC_MODE_COUNT8_bm,
+	TC_RESOLUTION_8BIT                    = TC_MODE_COUNT8,
 	/**
 	 * The counters MAX value is 0xFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
-	TC_RESOLUTION_16BIT                   = TC_MODE_COUNT16_bm,
+	TC_RESOLUTION_16BIT                   = TC_MODE_COUNT16,
 	/**
 	 * The counters MAX value is 0xFFFFFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
-	TC_RESOLUTION_32BIT                   = TC_MODE_COUNT32_bm,
+	TC_RESOLUTION_32BIT                   = TC_MODE_COUNT32,
 };
 
 
@@ -649,7 +632,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 	TC_t tc_module = dev_inst->hw_dev;
 
 	/* Synchronize  */
-	while(tc_module->STATUS & TC_SYNCBUSY_bm) {
+	while(tc_module->STATUS & TC_SYNCBUSY) {
 		/* Wait for sync */
 	}
 }
@@ -743,7 +726,7 @@ static inline void tc_reset(struct tc_dev_inst *const dev_inst)
 	_tc_wait_for_sync(dev_inst);
 
 	/* Enable TC module, based on the module tc mode  */
-	tc_module->CTRLA = TC_RESET_bm;
+	tc_module->CTRLA = TC_CTRLA_SWRST;
 }
 
 
@@ -768,7 +751,7 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 	_tc_wait_for_sync(dev_inst);
 
 	/* Enable TC module */
-	tc_module->CTRLA |= TC_ENABLE_bm;
+	tc_module->CTRLA |= TC_CTRLA_ENABLE;
 }
 
 
@@ -803,7 +786,7 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 	_tc_wait_for_sync(dev_inst);
 
 	/* Disable TC module */
-	tc_module->CTRLA  &= ~TC_ENABLE_bm;
+	tc_module->CTRLA  &= ~TC_CTRLA_ENABLE;
 }
 
 
@@ -837,7 +820,7 @@ static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
 	_tc_wait_for_sync(dev_inst);
 
 	/* Write command to execute */
-	tc_module->CTRLBSET = TC_COMMAND_STOP_bm;
+	tc_module->CTRLBSET = TC_COMMAND_STOP;//TODO: have to look into this
 }
 
 
@@ -862,7 +845,7 @@ static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
 	_tc_wait_for_sync(dev_inst);
 
 	/* Write command to execute */
-	tc_module->CTRLBSET = TC_COMMAND_START_bm;
+	tc_module->CTRLBSET = TC_COMMAND_START;
 }
 
 
@@ -928,6 +911,9 @@ static enum status_code tc_set_top_value(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
+
+	Assert(false);//This should never happen
+	return STATUS_ERR_PROTOCOL
 }
 
 
@@ -955,8 +941,8 @@ enum status_codes tc_is_new_capture_on_channel(
 
 	TC_t * const tc_module = dev_inst->hw_dev;
 
-	if(tc_module->INTFLAG & TC_INTFLAG_ERR_bm) {
-			tc_module->INTFLAG |= TC_INTFLAG_ERR_bm;
+	if(tc_module->INTFLAG & TC_INTFLAG_ERR) {
+			tc_module->INTFLAG |= TC_INTFLAG_ERR;
 			return STATUS_ERR_BAD_DATA;
 		}
 	if(tc_module->INTFLAG & (0x01 << (channel_index + 4))) {
