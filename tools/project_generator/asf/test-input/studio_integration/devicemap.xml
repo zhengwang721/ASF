@@ -13,10 +13,12 @@
 					</group>
 				</group>
 			</group>
-			<group name="ucr2">
-				<group name="uc3a" doc-arch="UC3A">
-					<group name="uc3a0">
-						<mcu name="at32uc3a0128"/>
+			<group name="uc3">
+				<group name="ucr2">
+					<group name="uc3a" doc-arch="UC3A">
+						<group name="uc3a0">
+							<mcu name="at32uc3a0128"/>
+						</group>
 					</group>
 				</group>
 			</group>

@@ -498,6 +498,13 @@ ISR(UDD_USB_INT_FUN)
 		otg_unfreeze_clock();
 		otg_ack_vbus_transition();
 		otg_freeze_clock();
+#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+		if (Is_otg_vbus_high()) {
+			udd_attach();
+		} else {
+			udd_detach();
+		}
+#endif
 #ifdef UDC_VBUS_EVENT
 		UDC_VBUS_EVENT(Is_otg_vbus_high());
 #endif
@@ -609,6 +616,11 @@ void udd_enable(void)
 	sleepmgr_lock_mode(USBC_SLEEP_MODE_USB_SUSPEND);
 #endif
 
+#ifndef USBC_USBSTA_VBUSTI
+#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	udd_attach();
+#  endif	
+#endif	
 	cpu_irq_restore(flags);
 }
 

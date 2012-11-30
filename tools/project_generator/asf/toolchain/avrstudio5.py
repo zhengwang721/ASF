@@ -451,25 +451,6 @@ class AVRStudio5Project(GenericProject):
 		Returns the default toolchain settings for the specified project configuration, i.e.,
 		Release or Debug.
 		"""
-		common_defaults = {
-				'assembler.general.AssemblerFlags' :
-					'-mrelax',
-				'compiler.general.ChangeDefaultBitFieldUnsigned' :
-					'False',
-				'compiler.general.ChangeDefaultCharTypeUnsigned' :
-					'False',
-				'compiler.optimization.OtherFlags' :
-					'-fdata-sections',
-				'compiler.optimization.PrepareFunctionsForGarbageCollection' :
-					'True',
-				'compiler.warnings.AllWarnings' :
-					'True',
-				'linker.optimization.GarbageCollectUnusedSections' :
-					'True',
-				'linker.optimization.RelaxBranches' :
-					'True',
-		}
-
 		release_defaults = {
 			'compiler.optimization.DebugLevel' :
 				'None',
@@ -481,7 +462,7 @@ class AVRStudio5Project(GenericProject):
 		}
 
 		# Build the default dictionary according to the specific project config
-		defaults = common_defaults
+		defaults = {}
 		if configuration.lower() == 'release':
 			defaults.update(release_defaults)
 		elif configuration.lower() == 'debug':
@@ -491,6 +472,42 @@ class AVRStudio5Project(GenericProject):
 
 		return defaults
 
+	def _get_default_toolchain_config_id(self):
+		"""
+		Return the id of module of type "build-specific" or a selector for it, from
+		which to get the default toolchain configurations.
+
+		Alternatively, return None if there are no defaults to use.
+		"""
+		return "common.utils.toolchain_config"
+
+	def _get_toolchain_config_tags_to_append(self):
+		"""
+		Return a list of tags that should just be appended to whatever the default
+		config module, board and project contained.
+
+		For example, the compiler, linker and assembler flags can be appended.
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				'assembler.general.AssemblerFlags',
+				'compiler.miscellaneous.OtherFlags',
+				'linker.libraries.Libraries',
+				'linker.libraries.LibrarySearchPaths',
+				'linker.miscellaneous.LinkerFlags',
+			]
+		]
+		return tags
+
+	def _get_toolchain_config_tags_to_default(self):
+		"""
+		Return a list of tags that the system should default to
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				'compiler.optimization.DebugLevel',
+				'compiler.optimization.level',
+			]
+		]
+		return tags
 
 	def _get_avrgccproj_toolchain_settings(self, configuration):
 		"""
@@ -504,18 +521,19 @@ class AVRStudio5Project(GenericProject):
 				...
 			</ListValues>
 		"""
-		settings = self._get_avrgccproj_default_toolchain_settings(configuration)
+		# Start with explicit toolchain configs from ASF XML
+		(config, list_config) = self.get_toolchain_configuration(self._get_default_toolchain_config_id())
 
-		# Get the total configuration
-		total_config = self.get_total_config()
+		# Now get the settings from build and config elements
+		non_explicit_config = self._get_avrgccproj_default_toolchain_settings(configuration)
+
+		# Get the total configuration from config elements
+		total_asf_config = self.get_total_config()
 
 		# Get {tag : content} dictionaries for toolchain configuration
 		# of both the release and the debug target
-		text_settings = self._get_avrgccproj_toolchain_text_content(total_config)
-		listvalues_settings = self._get_avrgccproj_toolchain_listvalues_content(total_config)
-
-		settings.update(text_settings)
-		settings.update(listvalues_settings)
+		non_explicit_config.update(self._get_avrgccproj_toolchain_text_content(total_asf_config))
+		non_explicit_config.update(self._get_avrgccproj_toolchain_listvalues_content(total_asf_config))
 
 	# --- Start temporary workaround for AVR Studio bug 14500. TODO: Remove
 		asm_flags = ""
@@ -526,24 +544,66 @@ class AVRStudio5Project(GenericProject):
 				asm_flags += " -D%s=%s" % (symbol, value)
 
 		for key in self._get_toolchain_assembler_flag_key():
-			old_asm_flags = settings.get(key, "")
-			settings[key] = self.sort_flags(old_asm_flags + asm_flags)
+			old_asm_flags = non_explicit_config.get(key, "")
+			non_explicit_config[key] = self.sort_flags(old_asm_flags + asm_flags)
 	# --- End temporary workaround
 
-		settings = self._prepend_toolchain_to_dict_keys(settings)
-
-		# Override with the new toolchain-config elements
-		(new_settings, new_list_settings) = self.get_toolchain_configuration()
-		settings.update(new_settings)
-		settings.update(new_list_settings)
+		non_explicit_config = self._prepend_toolchain_to_dict_keys(non_explicit_config)
 
 		# But enforce the default optimization level for Debug
 		if configuration.lower() == 'debug':
 			debug_opt_setting = self._get_avrgccproj_optimization_level({'optimization' : self.optlevel_default_for_debug})
 			debug_opt_setting = self._prepend_toolchain_to_dict_keys(debug_opt_setting)
-			settings.update(debug_opt_setting)
+			non_explicit_config.update(debug_opt_setting)
 
-		return settings
+		# Update the configuration with the non-explicit ones -- some settings should be
+		# appended to the explicit ones, while others are to be be used as defaults if
+		# no value was explicitly set
+		total_config = config
+		total_config.update(list_config)
+
+		# Handle tags to append first
+		for tag in self._get_toolchain_config_tags_to_append():
+			# Any value to append?
+			append_value = non_explicit_config.get(tag, None)
+			if append_value is None:
+				continue
+
+			# Remove the tag, so we can later find unhandled tags
+			del(non_explicit_config[tag])
+
+			value_type = type(append_value)
+			value = total_config.get(tag, value_type())
+
+			# Append string or list?
+			if value_type == str:
+				new_value = " ".join([value, append_value]).strip()
+			elif value_type == list:
+				new_value = value + append_value
+			else:
+				raise GeneratorError("Unhandled type `%s' for config: %s" % (value_type.__name__, tag))
+
+			total_config[tag] = new_value
+
+		# Now handle tags to default to
+		for tag in self._get_toolchain_config_tags_to_default():
+			# Does a value exist in non-explicit config?
+			new_value = non_explicit_config.get(tag, None)
+			if new_value is not None:
+				# Remove the tag, so we can later find unhandled tags
+				del(non_explicit_config[tag])
+
+				# Is tag already set?
+				value = total_config.get(tag, None)
+				if value is None:
+					total_config[tag] = new_value
+
+		# Any unhandled, non-explicit tags?
+		unhandled_tags = non_explicit_config.keys()
+		if unhandled_tags:
+			raise GeneratorError("Unhandled config tags for toolchain `%s': %s" % (self.toolchain, ", ".join(unhandled_tags)))
+
+		return total_config
 
 	# --- Start temporary workaround for AVR Studio bug 14500. TODO: Remove
 	def _get_toolchain_assembler_flag_key(self):
@@ -763,7 +823,7 @@ class AVRStudio5Project(GenericProject):
 		flags that are set in the project.
 		"""
 		tag = 'compiler.miscellaneous.OtherFlags'
-		flags = '-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax'
+		flags = ''
 
 		for flag in self.project.get_build(BuildCCompilerFlags, self.toolchain):
 			flags += ' ' + flag.strip()
@@ -820,7 +880,7 @@ class AVRStudio5Project(GenericProject):
 		"""
 		Return a string with architecture-specific linker flags.
 		"""
-		return ' -Wl,--relax'
+		return ''
 
 
 	def _get_avrgccproj_toolchain_text_content(self, config):
@@ -1402,11 +1462,11 @@ class AVRStudio5Project(GenericProject):
 		if not re.match('unspecified.*', self.project.mcu.name):
 			# Add linker script, if any is found -- this is architecture-specific since it might not be required by the toolchain
 			try:
-				linker_script = self._get_linker_script()
+				(linker_script, linker_script_origin) = self._get_linker_script()
 			except:
 				linker_script = None
 			if linker_script:
-				other_project_files[BuildLinkerScript] = {linker_script : [None, self.project, None]}
+				other_project_files[BuildLinkerScript] = {linker_script : [None, linker_script_origin, None]}
 
 		# Move the files:
 		# - distribute files should be placed in asf_dir
@@ -1664,7 +1724,7 @@ class AVRStudio5Project(GenericProject):
 
 		# Get the licenses from all modules
 		for module in [self.project] + self.project.get_prerequisites(recursive=True):
-			licenses = module.get_build(BuildDistributeLicense, self.toolchain)
+			licenses = module.get_build(BuildDistributeLicense, self.toolchain, recursive=False)
 
 			for license in licenses:
 				mods = license_to_mods.get(license, [])
@@ -1706,7 +1766,8 @@ class AVRStudio5Project(GenericProject):
 
 	def _get_linker_script(self):
 		"""
-		Get the filename of the linker script, if any is specified/available.
+		Get the filename of the linker script, if any is specified/available,
+		along with its originating module.
 		"""
 		mcu_family_to_selector_id = {
 			'xmega' : 'xmega.utils.linker_scripts',
@@ -1716,11 +1777,12 @@ class AVRStudio5Project(GenericProject):
 
 		try:
 			selector_id = mcu_family_to_selector_id[mcu_family]
-			filepath = GenericProject._get_linker_script(self, selector_id)
+			(filepath, file_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			filepath = None
+			file_origin = None
 
-		return filepath
+		return (filepath, file_origin)
 
 
 	def _get_kit_name(self):
@@ -1868,7 +1930,7 @@ class AVRStudio5Project32(AVRStudio5Project):
 		flags that are set in the project.
 		"""
 		tag = 'compiler.miscellaneous.OtherFlags'
-		flags = '-std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload'
+		flags = ''
 
 		for flag in self.project.get_build(BuildCCompilerFlags, self.toolchain):
 			flags += ' ' + flag.strip()
@@ -1879,10 +1941,11 @@ class AVRStudio5Project32(AVRStudio5Project):
 	def _get_linker_script(self):
 		selector_id = 'avr32.utils.linker_scripts'
 		try:
-			linker_script = GenericProject._get_linker_script(self, selector_id)
+			(linker_script, script_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			linker_script = None
-		return linker_script
+			script_origin = None
+		return (linker_script, script_origin)
 
 
 	def _get_selected_device(self):
@@ -1911,25 +1974,44 @@ class AVRStudio5Project32(AVRStudio5Project):
 
 		return tags
 
+	def _get_toolchain_config_tags_to_append(self):
+		"""
+		Return a list of tags that should just be appended to whatever the default
+		config module, board and project contained.
+
+		For example, the compiler, linker and assembler flags can be appended.
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"compiler.miscellaneous.OtherFlags",
+				"linker.libraries.Libraries",
+				"linker.libraries.LibrarySearchPaths",
+				"linker.miscellaneous.LinkerFlags",
+				"preprocessingassembler.general.AssemblerFlags",
+			]
+		]
+		return tags
+
+	def _get_toolchain_config_tags_to_default(self):
+		"""
+		Return a list of tags that the system should default to
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"assembler.general.AssemblerFlags",
+				"compiler.optimization.DebugLevel",
+				"compiler.optimization.OtherFlags",
+				"compiler.optimization.PrepareFunctionsForGarbageCollection",
+				"compiler.optimization.level",
+				"compiler.warnings.AllWarnings",
+				"linker.general.DoNotUseDefaultLibraries",
+				"linker.general.DoNotUseStandardStartFiles",
+				"linker.general.NoStartupOrDefaultLibs",
+				"linker.optimization.GarbageCollectUnusedSections",
+			]
+		]
+		return tags
+
 
 	def _get_avrgccproj_default_toolchain_settings(self, configuration):
-		common_defaults = {
-			'assembler.general.AssemblerFlags' :
-				'-mrelax',
-			'compiler.optimization.DebugLevel' :
-				'None',
-			'compiler.optimization.OtherFlags' :
-				'-fdata-sections',
-			'compiler.optimization.PrepareFunctionsForGarbageCollection' :
-				'True',
-			'compiler.warnings.AllWarnings' :
-				'True',
-			'linker.optimization.GarbageCollectUnusedSections' :
-				'True',
-			'preprocessingassembler.general.AssemblerFlags' :
-				'-mrelax',
-		}
-
 		debug_defaults = {
 			'compiler.optimization.DebugLevel' :
 				'Maximum (-g3)',
@@ -1941,7 +2023,7 @@ class AVRStudio5Project32(AVRStudio5Project):
 		}
 
 		# Build the default dictionary according to the specific project config
-		defaults = common_defaults
+		defaults = {}
 		if configuration.lower() == 'release':
 			defaults.update(release_defaults)
 		elif configuration.lower() == 'debug':
@@ -1977,7 +2059,7 @@ class AVRStudio5Project32(AVRStudio5Project):
 
 
 	def _get_avrgccproj_arch_specific_linker_flags(self, config):
-		text = ' -Wl,--relax'
+		text = ''
 
 		# Get configuration affecting the startup-label
 		startup_label = config.get(self.config_startuplabel, None)
@@ -2027,10 +2109,11 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 	def _get_linker_script(self):
 		selector_id = 'sam.utils.linker_scripts'
 		try:
-			linker_script = GenericProject._get_linker_script(self, selector_id)
+			(linker_script, script_origin) = GenericProject._get_linker_script(self, selector_id)
 		except:
 			linker_script = None
-		return linker_script
+			script_origin = None
+		return (linker_script, script_origin)
 
 
 	def _get_product_line(self):
@@ -2056,6 +2139,42 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 
 		return tags
 
+
+	def _get_toolchain_config_tags_to_append(self):
+		"""
+		Return a list of tags that should just be appended to whatever the default
+		config module, board and project contained.
+
+		For example, the compiler, linker and assembler flags can be appended.
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"compiler.miscellaneous.OtherFlags",
+				"linker.libraries.Libraries",
+				"linker.libraries.LibrarySearchPaths",
+				"linker.miscellaneous.LinkerFlags",
+				"preprocessingassembler.general.AssemblerFlags",
+			]
+		]
+		return tags
+
+
+	def _get_toolchain_config_tags_to_default(self):
+		"""
+		Return a list of tags that the system should default to
+		"""
+		tags = [".".join([self.toolchain, x]) for x in [
+				"assembler.general.AssemblerFlags",
+				"compiler.optimization.DebugLevel",
+				"compiler.optimization.OtherFlags",
+				"compiler.optimization.PrepareFunctionsForGarbageCollection",
+				"compiler.optimization.level",
+				"compiler.warnings.AllWarnings",
+				"linker.optimization.GarbageCollectUnusedSections",
+			]
+		]
+		return tags
+
+
 	def _get_avrgccproj_compiler_flags(self, config):
 		"""
 		Get a dictionary which maps from the other compiler flags tag to
@@ -2063,12 +2182,12 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 		flags that are set in the project.
 		"""
 		tag = 'compiler.miscellaneous.OtherFlags'
-		flags = '-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf'
+		flags = ''
 
 		for flag in self.project.get_build(BuildCCompilerFlags, self.toolchain):
 			flags += ' ' + flag.strip()
 
-		return {tag : flags}
+		return {tag : self.sort_flags(flags)}
 
 	def _get_avrgccproj_define_tags(self):
 		tags = [
@@ -2079,21 +2198,6 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 
 
 	def _get_avrgccproj_default_toolchain_settings(self, configuration):
-		common_defaults = {
-			'compiler.optimization.DebugLevel' :
-				'None',
-			'compiler.optimization.OtherFlags' :
-				'-fdata-sections',
-			'compiler.optimization.PrepareFunctionsForGarbageCollection' :
-				'True',
-			'compiler.warnings.AllWarnings' :
-				'True',
-			'linker.optimization.GarbageCollectUnusedSections' :
-				'True',
-			'preprocessingassembler.general.AssemblerFlags' :
-				'',
-		}
-
 		debug_defaults = {
 			'compiler.optimization.DebugLevel' :
 				'Maximum (-g3)',
@@ -2105,7 +2209,7 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 		}
 
 		# Build the default dictionary according to the specific project config
-		defaults = common_defaults
+		defaults = {}
 		if configuration.lower() == 'release':
 			defaults.update(release_defaults)
 		elif configuration.lower() == 'debug':
@@ -2116,7 +2220,7 @@ class AVRStudio5ProjectARM(AVRStudio5Project):
 		return defaults
 
 	def _get_avrgccproj_arch_specific_linker_flags(self, config):
-		text = ' -Wl,--entry=Reset_Handler -Wl,--cref -mthumb '
+		text = ''
 
 		# Get configuration affecting the startup-label
 		startup_label = config.get(self.config_startuplabel, None)

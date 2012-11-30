@@ -39,16 +39,16 @@
 				<avrgcc.linker.general.DoNotUseDefaultLibraries/>
 				<avrgcc.linker.general.NoStartupOrDefaultLibs/>
 				<!-- Fixed options, according to ASF 2 MEGA/XMEGA Makefile -->
-				<avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-				<avrgcc.compiler.optimization.DebugLevel>None</avrgcc.compiler.optimization.DebugLevel>
-				<avrgcc.linker.optimization.RelaxBranches>True</avrgcc.linker.optimization.RelaxBranches>
-				<avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>False</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-				<avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>False</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-				<avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-				<avrgcc.linker.optimization.GarbageCollectUnusedSections>True</avrgcc.linker.optimization.GarbageCollectUnusedSections>
-				<avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
-				<avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avrgcc.compiler.miscellaneous.OtherFlags>
-				<avrgcc.assembler.general.AssemblerFlags>-mrelax</avrgcc.assembler.general.AssemblerFlags>
+				<avrgcc.compiler.warnings.AllWarnings/>
+				<avrgcc.compiler.optimization.DebugLevel/>
+				<avrgcc.linker.optimization.RelaxBranches/>
+				<avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned/>
+				<avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned/>
+				<avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection/>
+				<avrgcc.linker.optimization.GarbageCollectUnusedSections/>
+				<avrgcc.compiler.optimization.OtherFlags/>
+				<avrgcc.compiler.miscellaneous.OtherFlags/>
+				<avrgcc.assembler.general.AssemblerFlags/>
 			</AvrGcc>
 		</ToolchainSettings>
 		<MemorySettings/>
@@ -73,16 +73,16 @@
 				<avrgcc.linker.general.DoNotUseDefaultLibraries/>
 				<avrgcc.linker.general.NoStartupOrDefaultLibs/>
 				<!-- Fixed options, according to ASF 2 MEGA/XMEGA Makefile -->
-				<avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-				<avrgcc.compiler.optimization.DebugLevel>Maximum (-g3)</avrgcc.compiler.optimization.DebugLevel>
-				<avrgcc.linker.optimization.RelaxBranches>True</avrgcc.linker.optimization.RelaxBranches>
-				<avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>False</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-				<avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>False</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-				<avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-				<avrgcc.linker.optimization.GarbageCollectUnusedSections>True</avrgcc.linker.optimization.GarbageCollectUnusedSections>
-				<avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
-				<avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avrgcc.compiler.miscellaneous.OtherFlags>
-				<avrgcc.assembler.general.AssemblerFlags>-mrelax</avrgcc.assembler.general.AssemblerFlags>
+				<avrgcc.compiler.warnings.AllWarnings/>
+				<avrgcc.compiler.optimization.DebugLevel/>
+				<avrgcc.linker.optimization.RelaxBranches/>
+				<avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned/>
+				<avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned/>
+				<avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection/>
+				<avrgcc.linker.optimization.GarbageCollectUnusedSections/>
+				<avrgcc.compiler.optimization.OtherFlags/>
+				<avrgcc.compiler.miscellaneous.OtherFlags/>
+				<avrgcc.assembler.general.AssemblerFlags/>
 			</AvrGcc>
 		</ToolchainSettings>
 		<MemorySettings/>

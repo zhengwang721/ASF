@@ -589,7 +589,7 @@ class IAREWProject(GenericProject):
 
 		# Get linker script
 		try:
-			file = self._get_linker_script(self.linker_id)
+			(file, file_origin) = self._get_linker_script(self.linker_id)
 			self.project.filelist.add(file)
 			file = os.path.relpath(file, projectfile_dir)
 			self.linker_script = self._add_proj_dir(file)
@@ -682,7 +682,7 @@ class IAREWProject(GenericProject):
 		if self._aux_project_is_enabled():
 			# Get auxiliary linker script
 			try:
-				file = self._get_aux_linker_script(self.linker_id)
+				(file, file_origin) = self._get_aux_linker_script(self.linker_id)
 				self.project.filelist.add(file)
 				file = os.path.relpath(file, projectfile_dir)
 				self.aux_linker_script = self._add_proj_dir(file)

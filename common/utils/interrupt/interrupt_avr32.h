@@ -219,15 +219,12 @@ static inline bool cpu_irq_is_enabled_flags(irqflags_t flags)
 static inline void cpu_irq_restore(irqflags_t flags)
 {
 	barrier();
-#if defined(__ICCAVR32__)
-   // Barrier " __asm__ __volatile__ ("")"
-   // Don't work with sysreg_write(AVR32_SR, flags)
-   if( cpu_irq_is_enabled_flags(flags) ) {
+
+   /* Restore the global IRQ mask status flag if it was previously set */
+   if ( cpu_irq_is_enabled_flags(flags) ) {
       cpu_irq_enable();
    }
-#else
-	sysreg_write(AVR32_SR, flags);
-#endif
+
 	barrier();
 }
 

@@ -3,7 +3,7 @@
  *
  * \brief AT32UC3B board controller for Atmel boards header file.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,7 +55,7 @@
  */
 //! @{
 #define BOARD_OSC0_HZ           12000000
-#define BOARD_OSC0_STARTUP_US   1100
+#define BOARD_OSC0_STARTUP_US   17000
 #define BOARD_OSC0_IS_XTAL      true
 //! @}
 
