@@ -45,7 +45,9 @@
 
 #include <compiler.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
+#if (SAM4L)
+# include "sam_twim/twi_master.h"
+#elif (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
 # include "sam_twi/twi_master.h"
 #elif XMEGA
 # include "xmega_twi/twi_master.h"

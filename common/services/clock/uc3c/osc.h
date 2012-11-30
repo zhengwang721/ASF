@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific oscillator management functions
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifndef AVR32_SCIF_OSCCTRL1
+#define AVR32_SCIF_OSCCTRL1                                0x00000028
+#else
+#warning "Duplicate define(s) to remove from the ASF"
+#endif  //end AVR32_SCIF_OSCCTRL1
 
 // Bugzilla #11803
 #ifdef AVR32_SCIF_OSCCTRL32_MODE_CRYSTAL_AGC
