@@ -160,14 +160,6 @@ enum status_code tc_init(
 		tc_module->TC_COUNT8.CC1   =
 				config->8bit_conf.capture_compare_channel_1;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC2   =
-				config->8bit_conf.capture_compare_channel_2;
-
-		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC3   =
-				config->8bit_conf.capture_compare_channel_3;
-
 		break;
 
 	case TC_RESOLUTION_16BIT:
@@ -182,14 +174,6 @@ enum status_code tc_init(
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC1   =
 				config->16bit_conf.capture_compare_channel_1;
-
-		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT16.CC2   =
-				config->16bit_conf.capture_compare_channel_2;
-
-		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT16.CC3   =
-				config->16bit_conf.capture_compare_channel_3;
 
 		break;
 
@@ -367,14 +351,6 @@ enum status_code tc_get_capture_value(
 			*capture = tc_module->TC_COUNT8.CC1;
 			return STATUS_OK;
 
-		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			*capture = tc_module->TC_COUNT8.CC2;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			*capture = tc_module->TC_COUNT8.CC3;
-			return STATUS_OK;
-
 		default:
 			return STATUS_ERR_INVALID_ARG;
 		}
@@ -389,14 +365,6 @@ enum status_code tc_get_capture_value(
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
 			*capture = tc_module->TC_COUNT16.CC1;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			*capture = tc_module->TC_COUNT16.CC2;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			*capture = tc_module->TC_COUNT16.CC3;
 			return STATUS_OK;
 
 		default:
@@ -458,23 +426,11 @@ enum status_code tc_set_compare_value(
 		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			tc_module->TC_COUNT8.CC0
-				= (uint8_t) compare;
+			tc_module->TC_COUNT8.CC0 = (uint8_t) compare;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			tc_module->TC_COUNT8.CC1
-				= (uint8_t) compare;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			tc_module->TC_COUNT8.CC2
-				= (uint8_t) compare;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			tc_module->TC_COUNT8.CC3
-				= (uint8_t) compare;
+			tc_module->TC_COUNT8.CC1 = (uint8_t) compare;
 			return STATUS_OK;
 
 		default:
@@ -486,23 +442,11 @@ enum status_code tc_set_compare_value(
 		switch (channel_index) {
 
 		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			tc_module->TC_COUNT16.CC0
-				= (uint16_t) compare;
+			tc_module->TC_COUNT16.CC0 = (uint16_t) compare;
 			return STATUS_OK;
 
 		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			tc_module->TC_COUNT16.CC1
-				= (uint16_t) compare;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_2:
-			tc_module->TC_COUNT16.CC2
-				= (uint16_t) compare;
-			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_3:
-			tc_module->TC_COUNT16.CC3
-				= (uint16_t) compare;
+			tc_module->TC_COUNT16.CC1 = (uint16_t) compare;
 			return STATUS_OK;
 
 		default:

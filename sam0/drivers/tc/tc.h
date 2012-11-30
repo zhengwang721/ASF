@@ -333,10 +333,6 @@ enum tc_compare_capture_channel_index {
 	TC_COMPARE_CAPTURE_CHANNEL_0,
 	/** Index of compare capture channel 1 */
 	TC_COMPARE_CAPTURE_CHANNEL_1,
-	/** Index of compare capture channel 2 */
-	TC_COMPARE_CAPTURE_CHANNEL_2,
-	/** Index of compare capture channel 3 */
-	TC_COMPARE_CAPTURE_CHANNEL_3,
 };
 
 
@@ -457,68 +453,6 @@ enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CPTEN_CC0_bm,
 	/** Enables channel 1 for capture */
 	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CPTEN_CC1_bm,
-	/** Enables channel 2 for capture when channel is available */
-	TC_CAPTURE_ENABLE_CHANNEL_2            = TC_CPTEN_CC2_bm,
-	/** Enables channel 3 for capture when channel i available */
-	TC_CAPTURE_ENABLE_CHANNEL_3            = TC_CPTEN_CC3_bm,
-};
-
-
-/**
- * \brief TC event action enum
- *
- * Specifies what event to take when the even channel is active
- */
-enum tc_event_action {
-	/** No event is performed */
-	TC_EVENT_ACTION_OFF                    = TC_EVACT_OFF_bm,
-	/** The counter starts at the initial value */
-	TC_EVENT_ACTION_RETRIGGER              = TC_EVACT_RETRIGGER_bm,
-	/** The counter is incremented */
-	TC_EVENT_ACTION_COUNT                  = TC_EVACT_COUNT_bm,
-	/**  */
-	TC_EVENT_ACTION_FREQ_PULSE_WIDTH       = TC_EVACT_PPW_bm,
-//TODO: Need to find out if there are more differences between this and
-//PWP
-	/**  */
-	TC_EVENT_ACTION_PULSE_WIDTH_FREQ       = TC_EVACT_PWP_bm,
-};
-
-
-/**
- * \brief TC waveform invert on channel enum
- */
-enum tc_waveform_invert_output {
-	/** Dont invert output on anny channels */
-	TC_WAVEFORM_INVERT_OUTPUT_NONE         = 0,
-	/** Invert output on channel 0 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_INVEN_CC0_bm,
-	/** Invert output on channel 1 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_INVEN_CC1_bm,
-	/** Invert output on channel 2 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_2    = TC_INVEN_CC2_bm,
-	/** Invert output on channel 3 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_3    = TC_INVEN_CC3_bm,
-};
-
-
-/**
- * \brief Enable generation of events from the TC module
- *
- *  The content of this enum is to be used by the
- *  event_generation_mask in the tc_conf struct
- */
-enum tc_event_generation_enable {
-	/** No generation of events */
-	TC_EVENT_GENERATION_ENABLE_NONE       = TC_EVGEN_NONE_gc,
-	/** Generate event for compare/capture on channel 0 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_0  = TC_EVGEN_CC0_gc,
-	/** Generate event for compare/capture on channel 1 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_1  = TC_EVGEN_CC1_gc,
-	/** Generate event for compare/capture on channel 2 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_2  = TC_EVGEN_CC2_gc,
-	/** Generate event for compare/capture on channel 3 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_3  = TC_EVGEN_CC3_gc,
 	/** Generate event for overflow/underflow */
 	TC_EVENT_GENERATION_ENABLE_OVF        = TC_EVGEN_OVF_gc,
 };
@@ -576,10 +510,6 @@ struct tc_8bit_conf {
 	uint8_t compare_capture_channel_0;
 	/** Value to be used for compare match on channel 1 */
 	uint8_t compare_capture_channel_1;
-	/** Value to be used for compare match on channel 2 */
-	uint8_t compare_capture_channel_2;
-	/** Value to be used for compare match on channel 3 */
-	uint8_t compare_capture_channel_3;
 };
 
 
@@ -595,10 +525,6 @@ struct tc_16bit_conf {
 	uint16_t compare_capture_channel_0;
 	/** Value to be used for compare match on channel 1 */
 	uint16_t compare_capture_channel_1;
-	/** Value to be used for compare match on channel 2 */
-	uint16_t compare_capture_channel_2;
-	/** Value to be used for compare match on channel 3 */
-	uint16_t compare_capture_channel_3;
 };
 
 
