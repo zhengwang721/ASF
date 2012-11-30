@@ -47,6 +47,10 @@
 /** Usart Hw ID used by the console (UART). */
 #define CONSOLE_UART_ID          ID_UART
 
+/* Configure USART pins */
+#define CONF_BOARD_USART_RXD
+#define CONF_BOARD_USART_TXD
+
 /** Configure TWI0 pins */
 #define CONF_BOARD_TWI0
 
