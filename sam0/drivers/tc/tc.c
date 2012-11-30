@@ -74,6 +74,7 @@ enum status_code tc_init(
 	uint16_t ctrla_temp = 0;
 	uint8_t ctrlbset_temp = 0;
 	uint8_t evctrl_temp = 0;
+	uint8_t ctrlc_temp = 0;
 
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
@@ -126,9 +127,12 @@ enum status_code tc_init(
 		tc_module->CTRLBSET = ctrlbset_temp;
 	}
 
-	_tc_wait_for_sync(dev_inst);
-	tc_module->CTRLC = config->waveform_invert_channel_mask
+	ctrlc_temp = config->waveform_invert_channel_mask
 			| config->capture_enable_ch_mask;
+
+
+	_tc_wait_for_sync(dev_inst);
+	tc_module->CTRLC = ctrlc_temp;
 
 	/* Set event register */
 	if (config->enable_event_input) {
