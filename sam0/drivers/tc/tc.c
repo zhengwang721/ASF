@@ -109,8 +109,8 @@ enum status_code tc_init(
 
 	/* Set configuration to registers common for all 3 modes */
 	tc_module->CTRLA = config->resolution | config->wave_generation
-		| config->reload_action | config->clock_prescaler
-		| temp_run_in_standby;
+			| config->reload_action | config->clock_prescaler
+			| temp_run_in_standby;
 
 	if (config->oneshot)
 		temp_ctrlbset = TC_ONESHOT_ENABLED_bm;
@@ -138,7 +138,7 @@ enum status_code tc_init(
 
 	_tc_wait_for_sync(dev_inst);
 	tc_module-EVCTRL = temp_evctrl_gm | config->event_action
-		| config->event_generation_enable;
+			| config->event_generation_enable;
 
 	/* Switch for TC resolution  */
 	switch (dev_inst->resolution) {
@@ -146,65 +146,65 @@ enum status_code tc_init(
 	case TC_RESOLUTION_8BIT:
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.COUNT =
-			config->8bit_conf.count;
+				config->8bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.PER   =
-			config->8bit_conf.period;
+				config->8bit_conf.period;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC0   =
-			config->8bit_conf.capture_compare_channel_0;
+				config->8bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC1   =
-			config->8bit_conf.capture_compare_channel_1;
+				config->8bit_conf.capture_compare_channel_1;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC2   =
-			config->8bit_conf.capture_compare_channel_2;
+				config->8bit_conf.capture_compare_channel_2;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT8.CC3   =
-			config->8bit_conf.capture_compare_channel_3;
+				config->8bit_conf.capture_compare_channel_3;
 
 		break;
 
 	case TC_RESOLUTION_16BIT:
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.COUNT =
-			config->16bit_conf.count;
+				config->16bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC0   =
-			config->16bit_conf.capture_compare_channel_0;
+				config->16bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC1   =
-			config->16bit_conf.capture_compare_channel_1;
+				config->16bit_conf.capture_compare_channel_1;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC2   =
-			config->16bit_conf.capture_compare_channel_2;
+				config->16bit_conf.capture_compare_channel_2;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT16.CC3   =
-			config->16bit_conf.capture_compare_channel_3;
+				config->16bit_conf.capture_compare_channel_3;
 
 		break;
 
 	case TC_RESOLUTION_32BIT:
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.COUNT =
-			config->32bit_conf.count;
+				config->32bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.CC1 =
-			config->32bit_conf.capture_compare_channel_0;
+				config->32bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
 		tc_module->TC_COUNT32.CC1 =
-			config->32bit_conf.capture_compare_channel_1;
+				config->32bit_conf.capture_compare_channel_1;
 
 		break;
 

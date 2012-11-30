@@ -713,7 +713,7 @@ struct tc_dev_inst {
  * Must be called before assessing certain registers in the TC.
  * Blocks while waiting
  *
- * \param hw_dev pointer to module
+ * \param dev_inst pointer to device instace
  */
 static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 {
@@ -814,7 +814,7 @@ static inline void tc_reset(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Enable TC module, based on the module tc mode  */
 	tc_module->CTRLA = TC_RESET_bm;
@@ -839,7 +839,7 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Enable TC module */
 	tc_module->CTRLA |= TC_ENABLE_bm;
@@ -874,7 +874,7 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Disable TC module */
 	tc_module->CTRLA  &= ~TC_ENABLE_bm;
@@ -908,7 +908,7 @@ static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Write command to execute */
 	tc_module->CTRLBSET = TC_COMMAND_STOP_bm;
@@ -933,7 +933,7 @@ static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
 	TC_t *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	/* Write command to execute */
 	tc_module->CTRLBSET = TC_COMMAND_START_bm;
@@ -980,7 +980,7 @@ static enum status_code tc_set_top_value(
 
 	TC_t * const tc_module = dev_inst->hw_dev;
 
-	_tc_wait_for_sync(tc_module);
+	_tc_wait_for_sync(dev_inst);
 
 	switch(dev_inst->resolution) {
 
@@ -990,12 +990,12 @@ static enum status_code tc_set_top_value(
 
 	case TC_RESOLUTION_16BIT:
 		tc_module->TC_COUNT16.compare_capture_channel_0 =
-			(uint16_t) top_value;
+				(uint16_t) top_value;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
 		tc_module->TC_COUNT32.compare_capture_channel_0 =
-			top_value;
+				top_value;
 		return STATUS_OK;
 
 	default:
