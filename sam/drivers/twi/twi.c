@@ -250,7 +250,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 {
 	uint32_t status, cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
-
+	
 	/* Check argument */
 	if (cnt == 0) {
 		return TWI_INVALID_ARGUMENT;
@@ -470,6 +470,18 @@ void twi_slave_init(Twi *p_twi, uint32_t ul_device_addr)
 
 	/* Enable slave mode */
 	twi_enable_slave_mode(p_twi);
+}
+
+/**
+ * \brief Set TWI slave address.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param ul_device_addr Device address of the SAM slave device on the I2C bus.
+ */
+void twi_set_slave_addr(Twi *p_twi, uint32_t ul_device_addr)
+{
+	/* Set slave address */
+	p_twi->TWI_SMR = TWI_SMR_SADR(ul_device_addr);
 }
 
 /**
