@@ -39,7 +39,7 @@
  *
  */
 
-#include <usart_async.h>
+#include "usart_async.h"
 
 #if !defined (__DOXYGEN__)
 
@@ -61,7 +61,7 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
-	/* Enable the Data Register Empty Interrupt Flag (DREIF) */
+	/* Enable the Data Register Empty Interrupt */
 	usart_module->INTENSET = SERCOM_USART_DREIF_bm;
 }
 
@@ -450,8 +450,7 @@ void usart_handler(uint8_t instance)
 		/* Check if there is only one more transmission
 		 * to make */
 		if (dev_inst->remaining_tx_buffer_length == 1) {
-			/* Disable the Data Register Empty
-			 * Interrupt Flag (DREIF) */
+			/* Disable the Data Register Empty Interrupt */
 			usart_module->INTENCLR
 				= SERCOM_USART_DREIF_bm;
 		}
