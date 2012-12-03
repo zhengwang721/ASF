@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef SAM0+D_H
-#define SAM0+D_H
+#ifndef SAMD20_REVA_H_INCLUDED
+#define SAMD20_REVA_H_INCLUDED
 
 /** \addtogroup SAM0+D_definitions SAM0+D definitions
   This file defines all structures and symbols for SAM0+D:
@@ -376,7 +376,7 @@ void PTC_WCOMP_Handler  ( void );
  * \brief Configuration of the Cortex-M0+ CPU and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1        
+#define LITTLE_ENDIAN          1
 #define __CM0P_REV             0x0000    /*!< Core revision r0p0 */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
 #define __NVIC_PRIO_BITS       2         /*!< Number of bits used for Priority Levels */
@@ -387,7 +387,7 @@ void PTC_WCOMP_Handler  ( void );
  * \brief CMSIS includes
  */
 
-#include <core_cm0p.h>
+#include <core_cm0plus.h>
 
 /*@}*/
 
@@ -2559,7 +2559,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR HMATRIXB */
 /* ========================================================================== */
-/** \addtogroup SAM0+D_HMATRIXB HSB Matrix */
+/** \addtogroup SAMD20_REVA_H_INCLUDEDMATRIXB HSB Matrix */
 /*@{*/
 
 #define REV_HMATRIXB   0x130
@@ -7861,121 +7861,121 @@ typedef struct {
 /*@{*/
 
 #define AC_ADDR           (0x42004400U)                  /**< \brief (AC) APB Base Address */
-#define AC                CAST(Ac,        AC_ADDR)      
+#define AC                CAST(Ac,        AC_ADDR)
 #define AC_INST_NUM       1                              /**< \brief (AC) Number of instances */
 #define AC_INSTS          { AC }                         /**< \brief (AC) Instances List */
 
 #define ADC_ADDR          (0x42004000U)                  /**< \brief (ADC) APB Base Address */
-#define ADC               CAST(Adc,       ADC_ADDR)     
+#define ADC               CAST(Adc,       ADC_ADDR)
 #define ADC_INST_NUM      1                              /**< \brief (ADC) Number of instances */
 #define ADC_INSTS         { ADC }                        /**< \brief (ADC) Instances List */
 
 #define DAC_ADDR          (0x42004800U)                  /**< \brief (DAC) APB Base Address */
-#define DAC               CAST(Dac,       DAC_ADDR)     
+#define DAC               CAST(Dac,       DAC_ADDR)
 #define DAC_INST_NUM      1                              /**< \brief (DAC) Number of instances */
 #define DAC_INSTS         { DAC }                        /**< \brief (DAC) Instances List */
 
 #define DSU_ADDR          (0x41002000U)                  /**< \brief (DSU) APB Base Address */
-#define DSU               CAST(Dsu,       DSU_ADDR)     
+#define DSU               CAST(Dsu,       DSU_ADDR)
 #define DSU_INST_NUM      1                              /**< \brief (DSU) Number of instances */
 #define DSU_INSTS         { DSU }                        /**< \brief (DSU) Instances List */
 
 #define EIC_ADDR          (0x40001800U)                  /**< \brief (EIC) APB Base Address */
-#define EIC               CAST(Eic,       EIC_ADDR)     
+#define EIC               CAST(Eic,       EIC_ADDR)
 #define EIC_INST_NUM      1                              /**< \brief (EIC) Number of instances */
 #define EIC_INSTS         { EIC }                        /**< \brief (EIC) Instances List */
 
 #define EVSYS_ADDR        (0x42000400U)                  /**< \brief (EVSYS) APB Base Address */
-#define EVSYS             CAST(Evsys,     EVSYS_ADDR)   
+#define EVSYS             CAST(Evsys,     EVSYS_ADDR)
 #define EVSYS_INST_NUM    1                              /**< \brief (EVSYS) Number of instances */
 #define EVSYS_INSTS       { EVSYS }                      /**< \brief (EVSYS) Instances List */
 
 #define GCLK_ADDR         (0x40000C00U)                  /**< \brief (GCLK) APB Base Address */
-#define GCLK              CAST(Gclk,      GCLK_ADDR)    
+#define GCLK              CAST(Gclk,      GCLK_ADDR)
 #define GCLK_INST_NUM     1                              /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                       /**< \brief (GCLK) Instances List */
 
 #define HMATRIX_ADDR      (0x41004800U)                  /**< \brief (HMATRIX) APB Base Address */
-#define HMATRIX           CAST(Hmatrixb,  HMATRIX_ADDR) 
+#define HMATRIX           CAST(Hmatrixb,  HMATRIX_ADDR)
 #define HMATRIXB_INST_NUM 1                              /**< \brief (HMATRIXB) Number of instances */
 #define HMATRIXB_INSTS    { HMATRIX }                    /**< \brief (HMATRIXB) Instances List */
 
 #define NVMCTRL_ADDR      (0x41004000U)                  /**< \brief (NVMCTRL) APB Base Address */
-#define NVMCTRL           CAST(Nvmctrl,   NVMCTRL_ADDR) 
+#define NVMCTRL           CAST(Nvmctrl,   NVMCTRL_ADDR)
 #define NVMCTRL_INST_NUM  1                              /**< \brief (NVMCTRL) Number of instances */
 #define NVMCTRL_INSTS     { NVMCTRL }                    /**< \brief (NVMCTRL) Instances List */
 
 #define PAC0_ADDR         (0x40000000U)                  /**< \brief (PAC0) APB Base Address */
-#define PAC0              CAST(Pac,       PAC0_ADDR)    
+#define PAC0              CAST(Pac,       PAC0_ADDR)
 #define PAC1_ADDR         (0x41000000U)                  /**< \brief (PAC1) APB Base Address */
-#define PAC1              CAST(Pac,       PAC1_ADDR)    
+#define PAC1              CAST(Pac,       PAC1_ADDR)
 #define PAC2_ADDR         (0x42000000U)                  /**< \brief (PAC2) APB Base Address */
-#define PAC2              CAST(Pac,       PAC2_ADDR)    
+#define PAC2              CAST(Pac,       PAC2_ADDR)
 #define PAC_INST_NUM      3                              /**< \brief (PAC) Number of instances */
 #define PAC_INSTS         { PAC0, PAC1, PAC2 }           /**< \brief (PAC) Instances List */
 
 #define PM_ADDR           (0x40000400U)                  /**< \brief (PM) APB Base Address */
-#define PM                CAST(Pm,        PM_ADDR)      
+#define PM                CAST(Pm,        PM_ADDR)
 #define PM_INST_NUM       1                              /**< \brief (PM) Number of instances */
 #define PM_INSTS          { PM }                         /**< \brief (PM) Instances List */
 
 #define PORT_ADDR         (0x41004400U)                  /**< \brief (PORT) APB Base Address */
-#define PORT              CAST(Port,      PORT_ADDR)    
+#define PORT              CAST(Port,      PORT_ADDR)
 #define PORT_IOBUS_ADDR   (0x60000000U)                  /**< \brief (PORT) IOBUS Base Address */
 #define PORT_INST_NUM     1                              /**< \brief (PORT) Number of instances */
 #define PORT_INSTS        { PORT }                       /**< \brief (PORT) Instances List */
 
 #define PTC_ADDR          (0x42004C00U)                  /**< \brief (PTC) APB Base Address */
-#define PTC               CAST(Ptc,       PTC_ADDR)     
+#define PTC               CAST(Ptc,       PTC_ADDR)
 #define PTC_INST_NUM      1                              /**< \brief (PTC) Number of instances */
 #define PTC_INSTS         { PTC }                        /**< \brief (PTC) Instances List */
 
 #define RTC_ADDR          (0x40001400U)                  /**< \brief (RTC) APB Base Address */
-#define RTC               CAST(Rtc,       RTC_ADDR)     
+#define RTC               CAST(Rtc,       RTC_ADDR)
 #define RTC_INST_NUM      1                              /**< \brief (RTC) Number of instances */
 #define RTC_INSTS         { RTC }                        /**< \brief (RTC) Instances List */
 
 #define SERCOM0_ADDR      (0x42000800U)                  /**< \brief (SERCOM0) APB Base Address */
-#define SERCOM0           CAST(Sercom,    SERCOM0_ADDR) 
+#define SERCOM0           CAST(Sercom,    SERCOM0_ADDR)
 #define SERCOM1_ADDR      (0x42000C00U)                  /**< \brief (SERCOM1) APB Base Address */
-#define SERCOM1           CAST(Sercom,    SERCOM1_ADDR) 
+#define SERCOM1           CAST(Sercom,    SERCOM1_ADDR)
 #define SERCOM2_ADDR      (0x42001000U)                  /**< \brief (SERCOM2) APB Base Address */
-#define SERCOM2           CAST(Sercom,    SERCOM2_ADDR) 
+#define SERCOM2           CAST(Sercom,    SERCOM2_ADDR)
 #define SERCOM3_ADDR      (0x42001400U)                  /**< \brief (SERCOM3) APB Base Address */
-#define SERCOM3           CAST(Sercom,    SERCOM3_ADDR) 
+#define SERCOM3           CAST(Sercom,    SERCOM3_ADDR)
 #define SERCOM4_ADDR      (0x42001800U)                  /**< \brief (SERCOM4) APB Base Address */
-#define SERCOM4           CAST(Sercom,    SERCOM4_ADDR) 
+#define SERCOM4           CAST(Sercom,    SERCOM4_ADDR)
 #define SERCOM5_ADDR      (0x42001C00U)                  /**< \brief (SERCOM5) APB Base Address */
-#define SERCOM5           CAST(Sercom,    SERCOM5_ADDR) 
+#define SERCOM5           CAST(Sercom,    SERCOM5_ADDR)
 #define SERCOM_INST_NUM   6                              /**< \brief (SERCOM) Number of instances */
 #define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5 } /**< \brief (SERCOM) Instances List */
 
 #define SYSCTRL_ADDR      (0x40000800U)                  /**< \brief (SYSCTRL) APB Base Address */
-#define SYSCTRL           CAST(Sysctrl,   SYSCTRL_ADDR) 
+#define SYSCTRL           CAST(Sysctrl,   SYSCTRL_ADDR)
 #define SYSCTRL_INST_NUM  1                              /**< \brief (SYSCTRL) Number of instances */
 #define SYSCTRL_INSTS     { SYSCTRL }                    /**< \brief (SYSCTRL) Instances List */
 
 #define TC0_ADDR          (0x42002000U)                  /**< \brief (TC0) APB Base Address */
-#define TC0               CAST(Tc,        TC0_ADDR)     
+#define TC0               CAST(Tc,        TC0_ADDR)
 #define TC1_ADDR          (0x42002400U)                  /**< \brief (TC1) APB Base Address */
-#define TC1               CAST(Tc,        TC1_ADDR)     
+#define TC1               CAST(Tc,        TC1_ADDR)
 #define TC2_ADDR          (0x42002800U)                  /**< \brief (TC2) APB Base Address */
-#define TC2               CAST(Tc,        TC2_ADDR)     
+#define TC2               CAST(Tc,        TC2_ADDR)
 #define TC3_ADDR          (0x42002C00U)                  /**< \brief (TC3) APB Base Address */
-#define TC3               CAST(Tc,        TC3_ADDR)     
+#define TC3               CAST(Tc,        TC3_ADDR)
 #define TC4_ADDR          (0x42003000U)                  /**< \brief (TC4) APB Base Address */
-#define TC4               CAST(Tc,        TC4_ADDR)     
+#define TC4               CAST(Tc,        TC4_ADDR)
 #define TC5_ADDR          (0x42003400U)                  /**< \brief (TC5) APB Base Address */
-#define TC5               CAST(Tc,        TC5_ADDR)     
+#define TC5               CAST(Tc,        TC5_ADDR)
 #define TC6_ADDR          (0x42003800U)                  /**< \brief (TC6) APB Base Address */
-#define TC6               CAST(Tc,        TC6_ADDR)     
+#define TC6               CAST(Tc,        TC6_ADDR)
 #define TC7_ADDR          (0x42003C00U)                  /**< \brief (TC7) APB Base Address */
-#define TC7               CAST(Tc,        TC7_ADDR)     
+#define TC7               CAST(Tc,        TC7_ADDR)
 #define TC_INST_NUM       8                              /**< \brief (TC) Number of instances */
 #define TC_INSTS          { TC0, TC1, TC2, TC3, TC4, TC5, TC6, TC7 } /**< \brief (TC) Instances List */
 
 #define WDT_ADDR          (0x40001000U)                  /**< \brief (WDT) APB Base Address */
-#define WDT               CAST(Wdt,       WDT_ADDR)     
+#define WDT               CAST(Wdt,       WDT_ADDR)
 #define WDT_INST_NUM      1                              /**< \brief (WDT) Number of instances */
 #define WDT_INSTS         { WDT }                        /**< \brief (WDT) Instances List */
 
@@ -8157,7 +8157,7 @@ typedef struct {
 #define PM_CTRL_MCSEL_XOSC          1
 #define PM_PM_CLK_AHB_PEVC          0
 #define PM_PM_CLK_APB_NUM           2
-#define PM_                         
+#define PM_
 /* ========== Instance parameters for PORT peripheral ========== */
 #define PORT_BITS                   60
 #define PORT_DIR_DEFAULT_VAL        { 0x00000000, 0x00000000 }
@@ -9168,4 +9168,4 @@ typedef struct {
 
 /*@}*/
 
-#endif /* SAM0+D_H */
+#endif /* SAMD20_REVA_H_INCLUDED */
