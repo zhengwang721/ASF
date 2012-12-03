@@ -39,11 +39,11 @@
  *
  */
 
-#ifndef _SAM0D4_REVA_
-#define _SAM0D4_REVA_
+#ifndef SAM0+D_H
+#define SAM0+D_H
 
-/** \addtogroup sam0d4_reva_definitions SAM0D4_REVA definitions
-  This file defines all structures and symbols for SAM0D4_REVA:
+/** \addtogroup SAM0+D_definitions SAM0+D definitions
+  This file defines all structures and symbols for SAM0+D:
     - registers and bitfields
     - peripheral base address
     - peripheral ID
@@ -80,9 +80,9 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 #endif
 
 /* ************************************************************************** */
-/**  CMSIS DEFINITIONS FOR SAM0D4_REVA */
+/**  CMSIS DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_cmsis CMSIS Definitions */
+/** \addtogroup SAM0+D_cmsis CMSIS Definitions */
 /*@{*/
 
 
@@ -92,163 +92,153 @@ typedef enum IRQn
   /******  Cortex-M0+ Processor Exceptions Numbers ****************************/
   NonMaskableInt_IRQn   = -14, /**<  2 Non Maskable Interrupt                 */
   HardFault_IRQn        = -13, /**<  3 Cortex-M0+ Hard Fault Interrupt        */
-  MemoryManagement_IRQn = -12, /**<  4 Cortex-M0+ Memory Management Interrupt */
-  BusFault_IRQn         = -11, /**<  5 Cortex-M0+ Bus Fault Interrupt         */
-  UsageFault_IRQn       = -10, /**<  6 Cortex-M0+ Usage Fault Interrupt       */
   SVCall_IRQn           = -5,  /**< 11 Cortex-M0+ SV Call Interrupt           */
-  DebugMonitor_IRQn     = -4,  /**< 12 Cortex-M0+ Debug Monitor Interrupt     */
   PendSV_IRQn           = -2,  /**< 14 Cortex-M0+ Pend SV Interrupt           */
   SysTick_IRQn          = -1,  /**< 15 Cortex-M0+ System Tick Interrupt       */
-  /******  SAM0D4_REVA-specific Interrupt Numbers ***********************/
-  PM_CFD_IRQn           =  0, /**<  0 SAM0D4_REVA Power Manager (PM) */
-  PM_CKRDY_IRQn         =  0, /**<  0 SAM0D4_REVA Power Manager (PM) */
-  SYSCTRL_BOD12DET_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_BOD12RDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_BOD12SYNRDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_BOD33DET_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_BOD33RDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_BOD33SYNRDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_DFLLLOCKC_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_DFLLLOCKF_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_DFLLOOB_IRQn  =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_DFLLRCS_IRQn  =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_DFLLRDY_IRQn  =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_OSC32KRDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_XOSCRDY_IRQn  =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  SYSCTRL_XOSC32RDY_IRQn =  1, /**<  1 SAM0D4_REVA System Control (SYSCTRL) */
-  WDT_EW_IRQn           =  2, /**<  2 SAM0D4_REVA Watchdog Timer (WDT) */
-  RTC_CMP_0_IRQn        =  3, /**<  3 SAM0D4_REVA Real-Time Counter (RTC) */
-  RTC_CMP_1_IRQn        =  3, /**<  3 SAM0D4_REVA Real-Time Counter (RTC) */
-  RTC_OVF_IRQn          =  3, /**<  3 SAM0D4_REVA Real-Time Counter (RTC) */
-  RTC_READY_IRQn        =  3, /**<  3 SAM0D4_REVA Real-Time Counter (RTC) */
-  EIC_EXTINT_0_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_1_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_2_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_3_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_4_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_5_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_6_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_7_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_8_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_9_IRQn     =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_10_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_11_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_12_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_13_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_14_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  EIC_EXTINT_15_IRQn    =  4, /**<  4 SAM0D4_REVA External Interrupt Controller (EIC) */
-  NVMCTRL_0_IRQn        =  5, /**<  5 SAM0D4_REVA NVM Controller (NVMCTRL) */
-  NVMCTRL_1_IRQn        =  5, /**<  5 SAM0D4_REVA NVM Controller (NVMCTRL) */
-  EVSYS_EVD_0_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_1_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_2_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_3_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_4_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_5_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_6_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_EVD_7_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_0_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_1_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_2_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_3_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_4_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_5_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_6_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  EVSYS_OVR_7_IRQn      =  6, /**<  6 SAM0D4_REVA Event System Interface (EVSYS) */
-  SERCOM0_0_IRQn        =  7, /**<  7 SAM0D4_REVA Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_1_IRQn        =  7, /**<  7 SAM0D4_REVA Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_2_IRQn        =  7, /**<  7 SAM0D4_REVA Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_3_IRQn        =  7, /**<  7 SAM0D4_REVA Serial Communication Interface 0 (SERCOM0) */
-  SERCOM1_0_IRQn        =  8, /**<  8 SAM0D4_REVA Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_1_IRQn        =  8, /**<  8 SAM0D4_REVA Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_2_IRQn        =  8, /**<  8 SAM0D4_REVA Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_3_IRQn        =  8, /**<  8 SAM0D4_REVA Serial Communication Interface 1 (SERCOM1) */
-  SERCOM2_0_IRQn        =  9, /**<  9 SAM0D4_REVA Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_1_IRQn        =  9, /**<  9 SAM0D4_REVA Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_2_IRQn        =  9, /**<  9 SAM0D4_REVA Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_3_IRQn        =  9, /**<  9 SAM0D4_REVA Serial Communication Interface 2 (SERCOM2) */
-  SERCOM3_0_IRQn        = 10, /**< 10 SAM0D4_REVA Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_1_IRQn        = 10, /**< 10 SAM0D4_REVA Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_2_IRQn        = 10, /**< 10 SAM0D4_REVA Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_3_IRQn        = 10, /**< 10 SAM0D4_REVA Serial Communication Interface 3 (SERCOM3) */
-  SERCOM4_0_IRQn        = 11, /**< 11 SAM0D4_REVA Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_1_IRQn        = 11, /**< 11 SAM0D4_REVA Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_2_IRQn        = 11, /**< 11 SAM0D4_REVA Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_3_IRQn        = 11, /**< 11 SAM0D4_REVA Serial Communication Interface 4 (SERCOM4) */
-  SERCOM5_0_IRQn        = 12, /**< 12 SAM0D4_REVA Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_1_IRQn        = 12, /**< 12 SAM0D4_REVA Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_2_IRQn        = 12, /**< 12 SAM0D4_REVA Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_3_IRQn        = 12, /**< 12 SAM0D4_REVA Serial Communication Interface 5 (SERCOM5) */
-  TC0_ERR_IRQn          = 13, /**< 13 SAM0D4_REVA Basic Timer Counter 0 (TC0) */
-  TC0_MC_0_IRQn         = 13, /**< 13 SAM0D4_REVA Basic Timer Counter 0 (TC0) */
-  TC0_MC_1_IRQn         = 13, /**< 13 SAM0D4_REVA Basic Timer Counter 0 (TC0) */
-  TC0_OVF_IRQn          = 13, /**< 13 SAM0D4_REVA Basic Timer Counter 0 (TC0) */
-  TC0_READY_IRQn        = 13, /**< 13 SAM0D4_REVA Basic Timer Counter 0 (TC0) */
-  TC1_ERR_IRQn          = 14, /**< 14 SAM0D4_REVA Basic Timer Counter 1 (TC1) */
-  TC1_MC_0_IRQn         = 14, /**< 14 SAM0D4_REVA Basic Timer Counter 1 (TC1) */
-  TC1_MC_1_IRQn         = 14, /**< 14 SAM0D4_REVA Basic Timer Counter 1 (TC1) */
-  TC1_OVF_IRQn          = 14, /**< 14 SAM0D4_REVA Basic Timer Counter 1 (TC1) */
-  TC1_READY_IRQn        = 14, /**< 14 SAM0D4_REVA Basic Timer Counter 1 (TC1) */
-  TC2_ERR_IRQn          = 15, /**< 15 SAM0D4_REVA Basic Timer Counter 2 (TC2) */
-  TC2_MC_0_IRQn         = 15, /**< 15 SAM0D4_REVA Basic Timer Counter 2 (TC2) */
-  TC2_MC_1_IRQn         = 15, /**< 15 SAM0D4_REVA Basic Timer Counter 2 (TC2) */
-  TC2_OVF_IRQn          = 15, /**< 15 SAM0D4_REVA Basic Timer Counter 2 (TC2) */
-  TC2_READY_IRQn        = 15, /**< 15 SAM0D4_REVA Basic Timer Counter 2 (TC2) */
-  TC3_ERR_IRQn          = 16, /**< 16 SAM0D4_REVA Basic Timer Counter 3 (TC3) */
-  TC3_MC_0_IRQn         = 16, /**< 16 SAM0D4_REVA Basic Timer Counter 3 (TC3) */
-  TC3_MC_1_IRQn         = 16, /**< 16 SAM0D4_REVA Basic Timer Counter 3 (TC3) */
-  TC3_OVF_IRQn          = 16, /**< 16 SAM0D4_REVA Basic Timer Counter 3 (TC3) */
-  TC3_READY_IRQn        = 16, /**< 16 SAM0D4_REVA Basic Timer Counter 3 (TC3) */
-  TC4_ERR_IRQn          = 17, /**< 17 SAM0D4_REVA Basic Timer Counter 4 (TC4) */
-  TC4_MC_0_IRQn         = 17, /**< 17 SAM0D4_REVA Basic Timer Counter 4 (TC4) */
-  TC4_MC_1_IRQn         = 17, /**< 17 SAM0D4_REVA Basic Timer Counter 4 (TC4) */
-  TC4_OVF_IRQn          = 17, /**< 17 SAM0D4_REVA Basic Timer Counter 4 (TC4) */
-  TC4_READY_IRQn        = 17, /**< 17 SAM0D4_REVA Basic Timer Counter 4 (TC4) */
-  TC5_ERR_IRQn          = 18, /**< 18 SAM0D4_REVA Basic Timer Counter 5 (TC5) */
-  TC5_MC_0_IRQn         = 18, /**< 18 SAM0D4_REVA Basic Timer Counter 5 (TC5) */
-  TC5_MC_1_IRQn         = 18, /**< 18 SAM0D4_REVA Basic Timer Counter 5 (TC5) */
-  TC5_OVF_IRQn          = 18, /**< 18 SAM0D4_REVA Basic Timer Counter 5 (TC5) */
-  TC5_READY_IRQn        = 18, /**< 18 SAM0D4_REVA Basic Timer Counter 5 (TC5) */
-  TC6_ERR_IRQn          = 19, /**< 19 SAM0D4_REVA Basic Timer Counter 6 (TC6) */
-  TC6_MC_0_IRQn         = 19, /**< 19 SAM0D4_REVA Basic Timer Counter 6 (TC6) */
-  TC6_MC_1_IRQn         = 19, /**< 19 SAM0D4_REVA Basic Timer Counter 6 (TC6) */
-  TC6_OVF_IRQn          = 19, /**< 19 SAM0D4_REVA Basic Timer Counter 6 (TC6) */
-  TC6_READY_IRQn        = 19, /**< 19 SAM0D4_REVA Basic Timer Counter 6 (TC6) */
-  TC7_ERR_IRQn          = 20, /**< 20 SAM0D4_REVA Basic Timer Counter 7 (TC7) */
-  TC7_MC_0_IRQn         = 20, /**< 20 SAM0D4_REVA Basic Timer Counter 7 (TC7) */
-  TC7_MC_1_IRQn         = 20, /**< 20 SAM0D4_REVA Basic Timer Counter 7 (TC7) */
-  TC7_OVF_IRQn          = 20, /**< 20 SAM0D4_REVA Basic Timer Counter 7 (TC7) */
-  TC7_READY_IRQn        = 20, /**< 20 SAM0D4_REVA Basic Timer Counter 7 (TC7) */
-  ADC_OVERRUN_IRQn      = 21, /**< 21 SAM0D4_REVA Analog Digital Converter (ADC) */
-  ADC_READY_IRQn        = 21, /**< 21 SAM0D4_REVA Analog Digital Converter (ADC) */
-  ADC_RESRDY_IRQn       = 21, /**< 21 SAM0D4_REVA Analog Digital Converter (ADC) */
-  ADC_WINMON_IRQn       = 21, /**< 21 SAM0D4_REVA Analog Digital Converter (ADC) */
-  AC_COMP_0_IRQn        = 22, /**< 22 SAM0D4_REVA Analog Comparators (AC) */
-  AC_COMP_1_IRQn        = 22, /**< 22 SAM0D4_REVA Analog Comparators (AC) */
-  AC_WIN_0_IRQn         = 22, /**< 22 SAM0D4_REVA Analog Comparators (AC) */
-  DAC_EMPTY_IRQn        = 23, /**< 23 SAM0D4_REVA Digital Analog Converter (DAC) */
-  DAC_READY_IRQn        = 23, /**< 23 SAM0D4_REVA Digital Analog Converter (DAC) */
-  DAC_UNDERRUN_IRQn     = 23, /**< 23 SAM0D4_REVA Digital Analog Converter (DAC) */
-  PTC_EOC_IRQn          = 24, /**< 24 SAM0D4_REVA Peripheral Touch Controller (PTC) */
-  PTC_READY_IRQn        = 24, /**< 24 SAM0D4_REVA Peripheral Touch Controller (PTC) */
-  PTC_WCOMP_IRQn        = 24  /**< 24 SAM0D4_REVA Peripheral Touch Controller (PTC) */
+  /******  SAM0+D-specific Interrupt Numbers ***********************/
+  PM_CFD_IRQn           =  0, /**<  0 SAM0+D Power Manager (PM) */
+  PM_CKRDY_IRQn         =  0, /**<  0 SAM0+D Power Manager (PM) */
+  SYSCTRL_BOD12DET_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_BOD12RDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_BOD12SYNRDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_BOD33DET_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_BOD33RDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_BOD33SYNRDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_DFLLLOCKC_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_DFLLLOCKF_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_DFLLOOB_IRQn  =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_DFLLRCS_IRQn  =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_DFLLRDY_IRQn  =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_OSC32KRDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_XOSCRDY_IRQn  =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  SYSCTRL_XOSC32RDY_IRQn =  1, /**<  1 SAM0+D System Control (SYSCTRL) */
+  WDT_EW_IRQn           =  2, /**<  2 SAM0+D Watchdog Timer (WDT) */
+  RTC_CMP_0_IRQn        =  3, /**<  3 SAM0+D Real-Time Counter (RTC) */
+  RTC_CMP_1_IRQn        =  3, /**<  3 SAM0+D Real-Time Counter (RTC) */
+  RTC_OVF_IRQn          =  3, /**<  3 SAM0+D Real-Time Counter (RTC) */
+  RTC_READY_IRQn        =  3, /**<  3 SAM0+D Real-Time Counter (RTC) */
+  EIC_EXTINT_0_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_1_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_2_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_3_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_4_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_5_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_6_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_7_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_8_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_9_IRQn     =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_10_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_11_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_12_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_13_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_14_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  EIC_EXTINT_15_IRQn    =  4, /**<  4 SAM0+D External Interrupt Controller (EIC) */
+  NVMCTRL_0_IRQn        =  5, /**<  5 SAM0+D Non-Volatile Memory Controller (NVMCTRL) */
+  NVMCTRL_1_IRQn        =  5, /**<  5 SAM0+D Non-Volatile Memory Controller (NVMCTRL) */
+  EVSYS_EVD_0_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_1_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_2_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_3_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_4_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_5_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_6_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_EVD_7_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_0_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_1_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_2_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_3_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_4_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_5_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_6_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  EVSYS_OVR_7_IRQn      =  6, /**<  6 SAM0+D Event System Interface (EVSYS) */
+  SERCOM0_0_IRQn        =  7, /**<  7 SAM0+D Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_1_IRQn        =  7, /**<  7 SAM0+D Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_2_IRQn        =  7, /**<  7 SAM0+D Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_3_IRQn        =  7, /**<  7 SAM0+D Serial Communication Interface 0 (SERCOM0) */
+  SERCOM1_0_IRQn        =  8, /**<  8 SAM0+D Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_1_IRQn        =  8, /**<  8 SAM0+D Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_2_IRQn        =  8, /**<  8 SAM0+D Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_3_IRQn        =  8, /**<  8 SAM0+D Serial Communication Interface 1 (SERCOM1) */
+  SERCOM2_0_IRQn        =  9, /**<  9 SAM0+D Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_1_IRQn        =  9, /**<  9 SAM0+D Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_2_IRQn        =  9, /**<  9 SAM0+D Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_3_IRQn        =  9, /**<  9 SAM0+D Serial Communication Interface 2 (SERCOM2) */
+  SERCOM3_0_IRQn        = 10, /**< 10 SAM0+D Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_1_IRQn        = 10, /**< 10 SAM0+D Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_2_IRQn        = 10, /**< 10 SAM0+D Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_3_IRQn        = 10, /**< 10 SAM0+D Serial Communication Interface 3 (SERCOM3) */
+  SERCOM4_0_IRQn        = 11, /**< 11 SAM0+D Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_1_IRQn        = 11, /**< 11 SAM0+D Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_2_IRQn        = 11, /**< 11 SAM0+D Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_3_IRQn        = 11, /**< 11 SAM0+D Serial Communication Interface 4 (SERCOM4) */
+  SERCOM5_0_IRQn        = 12, /**< 12 SAM0+D Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_1_IRQn        = 12, /**< 12 SAM0+D Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_2_IRQn        = 12, /**< 12 SAM0+D Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_3_IRQn        = 12, /**< 12 SAM0+D Serial Communication Interface 5 (SERCOM5) */
+  TC0_ERR_IRQn          = 13, /**< 13 SAM0+D Basic Timer Counter 0 (TC0) */
+  TC0_MC_0_IRQn         = 13, /**< 13 SAM0+D Basic Timer Counter 0 (TC0) */
+  TC0_MC_1_IRQn         = 13, /**< 13 SAM0+D Basic Timer Counter 0 (TC0) */
+  TC0_OVF_IRQn          = 13, /**< 13 SAM0+D Basic Timer Counter 0 (TC0) */
+  TC0_READY_IRQn        = 13, /**< 13 SAM0+D Basic Timer Counter 0 (TC0) */
+  TC1_ERR_IRQn          = 14, /**< 14 SAM0+D Basic Timer Counter 1 (TC1) */
+  TC1_MC_0_IRQn         = 14, /**< 14 SAM0+D Basic Timer Counter 1 (TC1) */
+  TC1_MC_1_IRQn         = 14, /**< 14 SAM0+D Basic Timer Counter 1 (TC1) */
+  TC1_OVF_IRQn          = 14, /**< 14 SAM0+D Basic Timer Counter 1 (TC1) */
+  TC1_READY_IRQn        = 14, /**< 14 SAM0+D Basic Timer Counter 1 (TC1) */
+  TC2_ERR_IRQn          = 15, /**< 15 SAM0+D Basic Timer Counter 2 (TC2) */
+  TC2_MC_0_IRQn         = 15, /**< 15 SAM0+D Basic Timer Counter 2 (TC2) */
+  TC2_MC_1_IRQn         = 15, /**< 15 SAM0+D Basic Timer Counter 2 (TC2) */
+  TC2_OVF_IRQn          = 15, /**< 15 SAM0+D Basic Timer Counter 2 (TC2) */
+  TC2_READY_IRQn        = 15, /**< 15 SAM0+D Basic Timer Counter 2 (TC2) */
+  TC3_ERR_IRQn          = 16, /**< 16 SAM0+D Basic Timer Counter 3 (TC3) */
+  TC3_MC_0_IRQn         = 16, /**< 16 SAM0+D Basic Timer Counter 3 (TC3) */
+  TC3_MC_1_IRQn         = 16, /**< 16 SAM0+D Basic Timer Counter 3 (TC3) */
+  TC3_OVF_IRQn          = 16, /**< 16 SAM0+D Basic Timer Counter 3 (TC3) */
+  TC3_READY_IRQn        = 16, /**< 16 SAM0+D Basic Timer Counter 3 (TC3) */
+  TC4_ERR_IRQn          = 17, /**< 17 SAM0+D Basic Timer Counter 4 (TC4) */
+  TC4_MC_0_IRQn         = 17, /**< 17 SAM0+D Basic Timer Counter 4 (TC4) */
+  TC4_MC_1_IRQn         = 17, /**< 17 SAM0+D Basic Timer Counter 4 (TC4) */
+  TC4_OVF_IRQn          = 17, /**< 17 SAM0+D Basic Timer Counter 4 (TC4) */
+  TC4_READY_IRQn        = 17, /**< 17 SAM0+D Basic Timer Counter 4 (TC4) */
+  TC5_ERR_IRQn          = 18, /**< 18 SAM0+D Basic Timer Counter 5 (TC5) */
+  TC5_MC_0_IRQn         = 18, /**< 18 SAM0+D Basic Timer Counter 5 (TC5) */
+  TC5_MC_1_IRQn         = 18, /**< 18 SAM0+D Basic Timer Counter 5 (TC5) */
+  TC5_OVF_IRQn          = 18, /**< 18 SAM0+D Basic Timer Counter 5 (TC5) */
+  TC5_READY_IRQn        = 18, /**< 18 SAM0+D Basic Timer Counter 5 (TC5) */
+  TC6_ERR_IRQn          = 19, /**< 19 SAM0+D Basic Timer Counter 6 (TC6) */
+  TC6_MC_0_IRQn         = 19, /**< 19 SAM0+D Basic Timer Counter 6 (TC6) */
+  TC6_MC_1_IRQn         = 19, /**< 19 SAM0+D Basic Timer Counter 6 (TC6) */
+  TC6_OVF_IRQn          = 19, /**< 19 SAM0+D Basic Timer Counter 6 (TC6) */
+  TC6_READY_IRQn        = 19, /**< 19 SAM0+D Basic Timer Counter 6 (TC6) */
+  TC7_ERR_IRQn          = 20, /**< 20 SAM0+D Basic Timer Counter 7 (TC7) */
+  TC7_MC_0_IRQn         = 20, /**< 20 SAM0+D Basic Timer Counter 7 (TC7) */
+  TC7_MC_1_IRQn         = 20, /**< 20 SAM0+D Basic Timer Counter 7 (TC7) */
+  TC7_OVF_IRQn          = 20, /**< 20 SAM0+D Basic Timer Counter 7 (TC7) */
+  TC7_READY_IRQn        = 20, /**< 20 SAM0+D Basic Timer Counter 7 (TC7) */
+  ADC_OVERRUN_IRQn      = 21, /**< 21 SAM0+D Analog Digital Converter (ADC) */
+  ADC_READY_IRQn        = 21, /**< 21 SAM0+D Analog Digital Converter (ADC) */
+  ADC_RESRDY_IRQn       = 21, /**< 21 SAM0+D Analog Digital Converter (ADC) */
+  ADC_WINMON_IRQn       = 21, /**< 21 SAM0+D Analog Digital Converter (ADC) */
+  AC_COMP_0_IRQn        = 22, /**< 22 SAM0+D Analog Comparators (AC) */
+  AC_COMP_1_IRQn        = 22, /**< 22 SAM0+D Analog Comparators (AC) */
+  AC_WIN_0_IRQn         = 22, /**< 22 SAM0+D Analog Comparators (AC) */
+  DAC_EMPTY_IRQn        = 23, /**< 23 SAM0+D Digital Analog Converter (DAC) */
+  DAC_READY_IRQn        = 23, /**< 23 SAM0+D Digital Analog Converter (DAC) */
+  DAC_UNDERRUN_IRQn     = 23, /**< 23 SAM0+D Digital Analog Converter (DAC) */
+  PTC_EOC_IRQn          = 24, /**< 24 SAM0+D Peripheral Touch Controller (PTC) */
+  PTC_READY_IRQn        = 24, /**< 24 SAM0+D Peripheral Touch Controller (PTC) */
+  PTC_WCOMP_IRQn        = 24  /**< 24 SAM0+D Peripheral Touch Controller (PTC) */
 } IRQn_Type;
 
-
-/* Cortex-M4 core handlers */
-void Reset_Handler      ( void );
-void NMI_Handler        ( void );
-void HardFault_Handler  ( void );
-void MemManage_Handler  ( void );
-void BusFault_Handler   ( void );
-void UsageFault_Handler ( void );
-void SVC_Handler        ( void );
-void DebugMon_Handler   ( void );
-void PendSV_Handler     ( void );
-void SysTick_Handler    ( void );
+/* Cortex-M0+ processor handlers */
+void Reset_Handler            ( void );
+void NMI_Handler              ( void );
+void HardFault_Handler        ( void );
+void SVCall_Handler           ( void );
+void PendSV_Handler           ( void );
+void SysTick_Handler          ( void );
 
 /* Peripherals handlers */
-
 void PM_CFD_Handler     ( void );
 void PM_CKRDY_Handler   ( void );
 void SYSCTRL_BOD12DET_Handler ( void );
@@ -386,7 +376,7 @@ void PTC_WCOMP_Handler  ( void );
  * \brief Configuration of the Cortex-M0+ CPU and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1
+#define LITTLE_ENDIAN          1        
 #define __CM0P_REV             0x0000    /*!< Core revision r0p0 */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
 #define __NVIC_PRIO_BITS       2         /*!< Number of bits used for Priority Levels */
@@ -397,20 +387,20 @@ void PTC_WCOMP_Handler  ( void );
  * \brief CMSIS includes
  */
 
-#include <core_cm0plus.h>
+#include <core_cm0p.h>
 
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAM0D4_REVA */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_api Peripheral Software API */
+/** \addtogroup SAM0+D_api Peripheral Software API */
 /*@{*/
 
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR AC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_AC Analog Comparators */
+/** \addtogroup SAM0+D_AC Analog Comparators */
 /*@{*/
 
 #define REV_AC         0x100
@@ -424,178 +414,178 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  SLEEPEN:1;        /*!< bit:      2  Sleep Enable                       */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_CTRLA_Type;
 
-#define AC_CTRLA_OFFSET             0x00         /**< \brief (AC offset) Control A Register */
-#define AC_CTRLA_RESETVALUE         0x0          /**< \brief (AC reset_value) Control A Register */
+#define AC_CTRLA_OFFSET             0x00         /**< \brief (AC_CTRLA offset) Control A Register */
+#define AC_CTRLA_RESETVALUE         0x0          /**< \brief (AC_CTRLA reset_value) Control A Register */
 
 #define AC_CTRLA_SWRST              (0x1u <<  0) /**< \brief (AC_CTRLA) Software Reset */
 #define AC_CTRLA_ENABLE             (0x1u <<  1) /**< \brief (AC_CTRLA) Enable */
-#define AC_CTRLA_SLEEPEN            (0x1u <<  2) /**< \brief (AC_CTRLA) Sleep Enable */
+#define AC_CTRLA_RUNSTDBY           (0x1u <<  2) /**< \brief (AC_CTRLA) Run during Standby */
 #define AC_CTRLA_MASK               0x7u /**< \brief (AC_CTRLA) MASK Register */
 
 /* -------- AC_CTRLB : (AC Offset: 0x01) ( /W  8) Control B Register -------- */
 typedef union {
   struct {
-    uint8_t  START0:1;         /*!< bit:      0                                     */
-    uint8_t  START1:1;         /*!< bit:      1                                     */
-    uint8_t  START2:1;         /*!< bit:      2                                     */
-    uint8_t  START3:1;         /*!< bit:      3                                     */
+    uint8_t  START0:1;         /*!< bit:      0  Comparator 0 Start Comparison      */
+    uint8_t  START1:1;         /*!< bit:      1  Comparator 1 Start Comparison      */
+    uint8_t  START2:1;         /*!< bit:      2  Comparator 2 Start Comparison      */
+    uint8_t  START3:1;         /*!< bit:      3  Comparator 3 Start Comparison      */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_CTRLB_Type;
 
-#define AC_CTRLB_OFFSET             0x01         /**< \brief (AC offset) Control B Register */
-#define AC_CTRLB_RESETVALUE         0x0          /**< \brief (AC reset_value) Control B Register */
+#define AC_CTRLB_OFFSET             0x01         /**< \brief (AC_CTRLB offset) Control B Register */
+#define AC_CTRLB_RESETVALUE         0x0          /**< \brief (AC_CTRLB reset_value) Control B Register */
 
-#define AC_CTRLB_START0             (0x1u <<  0) /**< \brief (AC_CTRLB)  */
-#define AC_CTRLB_START1             (0x1u <<  1) /**< \brief (AC_CTRLB)  */
-#define AC_CTRLB_START2             (0x1u <<  2) /**< \brief (AC_CTRLB)  */
-#define AC_CTRLB_START3             (0x1u <<  3) /**< \brief (AC_CTRLB)  */
+#define AC_CTRLB_START0             (0x1u <<  0) /**< \brief (AC_CTRLB) Comparator 0 Start Comparison */
+#define AC_CTRLB_START1             (0x1u <<  1) /**< \brief (AC_CTRLB) Comparator 1 Start Comparison */
+#define AC_CTRLB_START2             (0x1u <<  2) /**< \brief (AC_CTRLB) Comparator 2 Start Comparison */
+#define AC_CTRLB_START3             (0x1u <<  3) /**< \brief (AC_CTRLB) Comparator 3 Start Comparison */
 #define AC_CTRLB_MASK               0xFu /**< \brief (AC_CTRLB) MASK Register */
 
 /* -------- AC_EVCTRL : (AC Offset: 0x02) (R/W 16) Event Control Register -------- */
 typedef union {
   struct {
-    uint16_t COMPEO0:1;        /*!< bit:      0                                     */
-    uint16_t COMPEO1:1;        /*!< bit:      1                                     */
-    uint16_t COMPEO2:1;        /*!< bit:      2                                     */
-    uint16_t COMPEO3:1;        /*!< bit:      3                                     */
-    uint16_t WINEO0:1;         /*!< bit:      4                                     */
-    uint16_t WINEO1:1;         /*!< bit:      5                                     */
+    uint16_t COMPEO0:1;        /*!< bit:      0  Comparator 0 Event Output Enable   */
+    uint16_t COMPEO1:1;        /*!< bit:      1  Comparator 1 Event Output Enable   */
+    uint16_t COMPEO2:1;        /*!< bit:      2  Comparator 2 Event Output Enable   */
+    uint16_t COMPEO3:1;        /*!< bit:      3  Comparator 3 Event Output Enable   */
+    uint16_t WINEO0:1;         /*!< bit:      4  Window 0 Event Output Enable       */
+    uint16_t WINEO1:1;         /*!< bit:      5  Window 1 Event Output Enable       */
     uint16_t _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint16_t COMPEI0:1;        /*!< bit:      8                                     */
-    uint16_t COMPEI1:1;        /*!< bit:      9                                     */
-    uint16_t COMPEI2:1;        /*!< bit:     10                                     */
-    uint16_t COMPEI3:1;        /*!< bit:     11                                     */
+    uint16_t COMPEI0:1;        /*!< bit:      8  Comparator 0 Event Input Enable    */
+    uint16_t COMPEI1:1;        /*!< bit:      9  Comparator 1 Event Input Enable    */
+    uint16_t COMPEI2:1;        /*!< bit:     10  Comparator 2 Event Input Enable    */
+    uint16_t COMPEI3:1;        /*!< bit:     11  Comparator 3 Event Input Enable    */
     uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } AC_EVCTRL_Type;
 
-#define AC_EVCTRL_OFFSET            0x02         /**< \brief (AC offset) Event Control Register */
-#define AC_EVCTRL_RESETVALUE        0x0          /**< \brief (AC reset_value) Event Control Register */
+#define AC_EVCTRL_OFFSET            0x02         /**< \brief (AC_EVCTRL offset) Event Control Register */
+#define AC_EVCTRL_RESETVALUE        0x0          /**< \brief (AC_EVCTRL reset_value) Event Control Register */
 
-#define AC_EVCTRL_COMPEO0           (0x1u <<  0) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEO1           (0x1u <<  1) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEO2           (0x1u <<  2) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEO3           (0x1u <<  3) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_WINEO0            (0x1u <<  4) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_WINEO1            (0x1u <<  5) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEI0           (0x1u <<  8) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEI1           (0x1u <<  9) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEI2           (0x1u << 10) /**< \brief (AC_EVCTRL)  */
-#define AC_EVCTRL_COMPEI3           (0x1u << 11) /**< \brief (AC_EVCTRL)  */
+#define AC_EVCTRL_COMPEO0           (0x1u <<  0) /**< \brief (AC_EVCTRL) Comparator 0 Event Output Enable */
+#define AC_EVCTRL_COMPEO1           (0x1u <<  1) /**< \brief (AC_EVCTRL) Comparator 1 Event Output Enable */
+#define AC_EVCTRL_COMPEO2           (0x1u <<  2) /**< \brief (AC_EVCTRL) Comparator 2 Event Output Enable */
+#define AC_EVCTRL_COMPEO3           (0x1u <<  3) /**< \brief (AC_EVCTRL) Comparator 3 Event Output Enable */
+#define AC_EVCTRL_WINEO0            (0x1u <<  4) /**< \brief (AC_EVCTRL) Window 0 Event Output Enable */
+#define AC_EVCTRL_WINEO1            (0x1u <<  5) /**< \brief (AC_EVCTRL) Window 1 Event Output Enable */
+#define AC_EVCTRL_COMPEI0           (0x1u <<  8) /**< \brief (AC_EVCTRL) Comparator 0 Event Input Enable */
+#define AC_EVCTRL_COMPEI1           (0x1u <<  9) /**< \brief (AC_EVCTRL) Comparator 1 Event Input Enable */
+#define AC_EVCTRL_COMPEI2           (0x1u << 10) /**< \brief (AC_EVCTRL) Comparator 2 Event Input Enable */
+#define AC_EVCTRL_COMPEI3           (0x1u << 11) /**< \brief (AC_EVCTRL) Comparator 3 Event Input Enable */
 #define AC_EVCTRL_MASK              0xF3Fu /**< \brief (AC_EVCTRL) MASK Register */
 
 /* -------- AC_INTENCLR : (AC Offset: 0x04) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  COMP0:1;          /*!< bit:      0                                     */
-    uint8_t  COMP1:1;          /*!< bit:      1                                     */
-    uint8_t  COMP2:1;          /*!< bit:      2                                     */
-    uint8_t  COMP3:1;          /*!< bit:      3                                     */
-    uint8_t  WIN0:1;           /*!< bit:      4                                     */
-    uint8_t  WIN1:1;           /*!< bit:      5                                     */
+    uint8_t  COMP0:1;          /*!< bit:      0  Comparator 0 Interrupt Disable     */
+    uint8_t  COMP1:1;          /*!< bit:      1  Comparator 1 Interrupt Disable     */
+    uint8_t  COMP2:1;          /*!< bit:      2  Comparator 2 Interrupt Disable     */
+    uint8_t  COMP3:1;          /*!< bit:      3  Comparator 3 Interrupt Disable     */
+    uint8_t  WIN0:1;           /*!< bit:      4  Window 0 Interrupt Disable         */
+    uint8_t  WIN1:1;           /*!< bit:      5  Window 1 Interrupt Disable         */
     uint8_t  _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_INTENCLR_Type;
 
-#define AC_INTENCLR_OFFSET          0x04         /**< \brief (AC offset) Interrupt Enable Clear Register */
-#define AC_INTENCLR_RESETVALUE      0x0          /**< \brief (AC reset_value) Interrupt Enable Clear Register */
+#define AC_INTENCLR_OFFSET          0x04         /**< \brief (AC_INTENCLR offset) Interrupt Enable Clear Register */
+#define AC_INTENCLR_RESETVALUE      0x0          /**< \brief (AC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define AC_INTENCLR_COMP0           (0x1u <<  0) /**< \brief (AC_INTENCLR)  */
-#define AC_INTENCLR_COMP1           (0x1u <<  1) /**< \brief (AC_INTENCLR)  */
-#define AC_INTENCLR_COMP2           (0x1u <<  2) /**< \brief (AC_INTENCLR)  */
-#define AC_INTENCLR_COMP3           (0x1u <<  3) /**< \brief (AC_INTENCLR)  */
-#define AC_INTENCLR_WIN0            (0x1u <<  4) /**< \brief (AC_INTENCLR)  */
-#define AC_INTENCLR_WIN1            (0x1u <<  5) /**< \brief (AC_INTENCLR)  */
+#define AC_INTENCLR_COMP0           (0x1u <<  0) /**< \brief (AC_INTENCLR) Comparator 0 Interrupt Disable */
+#define AC_INTENCLR_COMP1           (0x1u <<  1) /**< \brief (AC_INTENCLR) Comparator 1 Interrupt Disable */
+#define AC_INTENCLR_COMP2           (0x1u <<  2) /**< \brief (AC_INTENCLR) Comparator 2 Interrupt Disable */
+#define AC_INTENCLR_COMP3           (0x1u <<  3) /**< \brief (AC_INTENCLR) Comparator 3 Interrupt Disable */
+#define AC_INTENCLR_WIN0            (0x1u <<  4) /**< \brief (AC_INTENCLR) Window 0 Interrupt Disable */
+#define AC_INTENCLR_WIN1            (0x1u <<  5) /**< \brief (AC_INTENCLR) Window 1 Interrupt Disable */
 #define AC_INTENCLR_MASK            0x3Fu /**< \brief (AC_INTENCLR) MASK Register */
 
-/* -------- AC_INTENSET : (AC Offset: 0x05) (R/W  8) Interupt Enable Set Register -------- */
+/* -------- AC_INTENSET : (AC Offset: 0x05) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint8_t  COMP0:1;          /*!< bit:      0                                     */
-    uint8_t  COMP1:1;          /*!< bit:      1                                     */
-    uint8_t  COMP2:1;          /*!< bit:      2                                     */
-    uint8_t  COMP3:1;          /*!< bit:      3                                     */
-    uint8_t  WIN0:1;           /*!< bit:      4                                     */
-    uint8_t  WIN1:1;           /*!< bit:      5                                     */
+    uint8_t  COMP0:1;          /*!< bit:      0  Comparator 0 Interrupt Enable      */
+    uint8_t  COMP1:1;          /*!< bit:      1  Comparator 1 Interrupt Enable      */
+    uint8_t  COMP2:1;          /*!< bit:      2  Comparator 2 Interrupt Enable      */
+    uint8_t  COMP3:1;          /*!< bit:      3  Comparator 3 Interrupt Enable      */
+    uint8_t  WIN0:1;           /*!< bit:      4  Window 0 Interrupt Enable          */
+    uint8_t  WIN1:1;           /*!< bit:      5  Window 1 Interrupt Enable          */
     uint8_t  _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_INTENSET_Type;
 
-#define AC_INTENSET_OFFSET          0x05         /**< \brief (AC offset) Interupt Enable Set Register */
-#define AC_INTENSET_RESETVALUE      0x0          /**< \brief (AC reset_value) Interupt Enable Set Register */
+#define AC_INTENSET_OFFSET          0x05         /**< \brief (AC_INTENSET offset) Interrupt Enable Set Register */
+#define AC_INTENSET_RESETVALUE      0x0          /**< \brief (AC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define AC_INTENSET_COMP0           (0x1u <<  0) /**< \brief (AC_INTENSET)  */
-#define AC_INTENSET_COMP1           (0x1u <<  1) /**< \brief (AC_INTENSET)  */
-#define AC_INTENSET_COMP2           (0x1u <<  2) /**< \brief (AC_INTENSET)  */
-#define AC_INTENSET_COMP3           (0x1u <<  3) /**< \brief (AC_INTENSET)  */
-#define AC_INTENSET_WIN0            (0x1u <<  4) /**< \brief (AC_INTENSET)  */
-#define AC_INTENSET_WIN1            (0x1u <<  5) /**< \brief (AC_INTENSET)  */
+#define AC_INTENSET_COMP0           (0x1u <<  0) /**< \brief (AC_INTENSET) Comparator 0 Interrupt Enable */
+#define AC_INTENSET_COMP1           (0x1u <<  1) /**< \brief (AC_INTENSET) Comparator 1 Interrupt Enable */
+#define AC_INTENSET_COMP2           (0x1u <<  2) /**< \brief (AC_INTENSET) Comparator 2 Interrupt Enable */
+#define AC_INTENSET_COMP3           (0x1u <<  3) /**< \brief (AC_INTENSET) Comparator 3 Interrupt Enable */
+#define AC_INTENSET_WIN0            (0x1u <<  4) /**< \brief (AC_INTENSET) Window 0 Interrupt Enable */
+#define AC_INTENSET_WIN1            (0x1u <<  5) /**< \brief (AC_INTENSET) Window 1 Interrupt Enable */
 #define AC_INTENSET_MASK            0x3Fu /**< \brief (AC_INTENSET) MASK Register */
 
-/* -------- AC_INTFLAG : (AC Offset: 0x06) (R/W  8) Interrupt Flag Register -------- */
+/* -------- AC_INTFLAG : (AC Offset: 0x06) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  COMP0:1;          /*!< bit:      0                                     */
-    uint8_t  COMP1:1;          /*!< bit:      1                                     */
-    uint8_t  COMP2:1;          /*!< bit:      2                                     */
-    uint8_t  COMP3:1;          /*!< bit:      3                                     */
-    uint8_t  WIN0:1;           /*!< bit:      4                                     */
-    uint8_t  WIN1:1;           /*!< bit:      5                                     */
+    uint8_t  COMP0:1;          /*!< bit:      0  Comparator 0 Interrupt Flag        */
+    uint8_t  COMP1:1;          /*!< bit:      1  Comparator 1 Interrupt Flag        */
+    uint8_t  COMP2:1;          /*!< bit:      2  Comparator 2 Interrupt Flag        */
+    uint8_t  COMP3:1;          /*!< bit:      3  Comparator 3 Interrupt Flag        */
+    uint8_t  WIN0:1;           /*!< bit:      4  Window 0 Interrupt Flag            */
+    uint8_t  WIN1:1;           /*!< bit:      5  Window 1 Interrupt Flag            */
     uint8_t  _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_INTFLAG_Type;
 
-#define AC_INTFLAG_OFFSET           0x06         /**< \brief (AC offset) Interrupt Flag Register */
-#define AC_INTFLAG_RESETVALUE       0x0          /**< \brief (AC reset_value) Interrupt Flag Register */
+#define AC_INTFLAG_OFFSET           0x06         /**< \brief (AC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define AC_INTFLAG_RESETVALUE       0x0          /**< \brief (AC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define AC_INTFLAG_COMP0            (0x1u <<  0) /**< \brief (AC_INTFLAG)  */
-#define AC_INTFLAG_COMP1            (0x1u <<  1) /**< \brief (AC_INTFLAG)  */
-#define AC_INTFLAG_COMP2            (0x1u <<  2) /**< \brief (AC_INTFLAG)  */
-#define AC_INTFLAG_COMP3            (0x1u <<  3) /**< \brief (AC_INTFLAG)  */
-#define AC_INTFLAG_WIN0             (0x1u <<  4) /**< \brief (AC_INTFLAG)  */
-#define AC_INTFLAG_WIN1             (0x1u <<  5) /**< \brief (AC_INTFLAG)  */
+#define AC_INTFLAG_COMP0            (0x1u <<  0) /**< \brief (AC_INTFLAG) Comparator 0 Interrupt Flag */
+#define AC_INTFLAG_COMP1            (0x1u <<  1) /**< \brief (AC_INTFLAG) Comparator 1 Interrupt Flag */
+#define AC_INTFLAG_COMP2            (0x1u <<  2) /**< \brief (AC_INTFLAG) Comparator 2 Interrupt Flag */
+#define AC_INTFLAG_COMP3            (0x1u <<  3) /**< \brief (AC_INTFLAG) Comparator 3 Interrupt Flag */
+#define AC_INTFLAG_WIN0             (0x1u <<  4) /**< \brief (AC_INTFLAG) Window 0 Interrupt Flag */
+#define AC_INTFLAG_WIN1             (0x1u <<  5) /**< \brief (AC_INTFLAG) Window 1 Interrupt Flag */
 #define AC_INTFLAG_MASK             0x3Fu /**< \brief (AC_INTFLAG) MASK Register */
 
 /* -------- AC_STATUSA : (AC Offset: 0x08) (R/   8) Status A Register -------- */
 typedef union {
   struct {
-    uint8_t  STATE0:1;         /*!< bit:      0                                     */
-    uint8_t  STATE1:1;         /*!< bit:      1                                     */
-    uint8_t  STATE2:1;         /*!< bit:      2                                     */
-    uint8_t  STATE3:1;         /*!< bit:      3                                     */
-    uint8_t  WSTATE0:2;        /*!< bit:  4.. 5                                     */
-    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7                                     */
+    uint8_t  STATE0:1;         /*!< bit:      0  Comparator 0 Current State         */
+    uint8_t  STATE1:1;         /*!< bit:      1  Comparator 1 Current State         */
+    uint8_t  STATE2:1;         /*!< bit:      2  Comparator 2 Current State         */
+    uint8_t  STATE3:1;         /*!< bit:      3  Comparator 3 Current State         */
+    uint8_t  WSTATE0:2;        /*!< bit:  4.. 5  Window 0 Current State             */
+    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7  Window 1 Current State             */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_STATUSA_Type;
 
-#define AC_STATUSA_OFFSET           0x08         /**< \brief (AC offset) Status A Register */
-#define AC_STATUSA_RESETVALUE       0x0          /**< \brief (AC reset_value) Status A Register */
+#define AC_STATUSA_OFFSET           0x08         /**< \brief (AC_STATUSA offset) Status A Register */
+#define AC_STATUSA_RESETVALUE       0x0          /**< \brief (AC_STATUSA reset_value) Status A Register */
 
-#define AC_STATUSA_STATE0           (0x1u <<  0) /**< \brief (AC_STATUSA)  */
-#define AC_STATUSA_STATE1           (0x1u <<  1) /**< \brief (AC_STATUSA)  */
-#define AC_STATUSA_STATE2           (0x1u <<  2) /**< \brief (AC_STATUSA)  */
-#define AC_STATUSA_STATE3           (0x1u <<  3) /**< \brief (AC_STATUSA)  */
+#define AC_STATUSA_STATE0           (0x1u <<  0) /**< \brief (AC_STATUSA) Comparator 0 Current State */
+#define AC_STATUSA_STATE1           (0x1u <<  1) /**< \brief (AC_STATUSA) Comparator 1 Current State */
+#define AC_STATUSA_STATE2           (0x1u <<  2) /**< \brief (AC_STATUSA) Comparator 2 Current State */
+#define AC_STATUSA_STATE3           (0x1u <<  3) /**< \brief (AC_STATUSA) Comparator 3 Current State */
 #define AC_STATUSA_WSTATE0_Pos      4
-#define AC_STATUSA_WSTATE0_Msk      (0x3u << AC_STATUSA_WSTATE0_Pos) /**< \brief (AC_STATUSA)  */
+#define AC_STATUSA_WSTATE0_Msk      (0x3u << AC_STATUSA_WSTATE0_Pos) /**< \brief (AC_STATUSA) Window 0 Current State */
 #define AC_STATUSA_WSTATE0(value)   ((AC_STATUSA_WSTATE0_Msk & ((value) << AC_STATUSA_WSTATE0_Pos)))
 #define   AC_STATUSA_WSTATE0_ABOVE  (0x0u <<  4) /**< \brief (AC_STATUSA)  */
 #define   AC_STATUSA_WSTATE0_INSIDE (0x1u <<  4) /**< \brief (AC_STATUSA)  */
 #define   AC_STATUSA_WSTATE0_BELOW  (0x2u <<  4) /**< \brief (AC_STATUSA)  */
 #define AC_STATUSA_WSTATE1_Pos      6
-#define AC_STATUSA_WSTATE1_Msk      (0x3u << AC_STATUSA_WSTATE1_Pos) /**< \brief (AC_STATUSA)  */
+#define AC_STATUSA_WSTATE1_Msk      (0x3u << AC_STATUSA_WSTATE1_Pos) /**< \brief (AC_STATUSA) Window 1 Current State */
 #define AC_STATUSA_WSTATE1(value)   ((AC_STATUSA_WSTATE1_Msk & ((value) << AC_STATUSA_WSTATE1_Pos)))
 #define   AC_STATUSA_WSTATE1_ABOVE  (0x0u <<  6) /**< \brief (AC_STATUSA)  */
 #define   AC_STATUSA_WSTATE1_INSIDE (0x1u <<  6) /**< \brief (AC_STATUSA)  */
@@ -605,54 +595,54 @@ typedef union {
 /* -------- AC_STATUSB : (AC Offset: 0x09) (R/   8) Status B Register -------- */
 typedef union {
   struct {
-    uint8_t  READY0:1;         /*!< bit:      0                                     */
-    uint8_t  READY1:1;         /*!< bit:      1                                     */
-    uint8_t  READY2:1;         /*!< bit:      2                                     */
-    uint8_t  READY3:1;         /*!< bit:      3                                     */
+    uint8_t  READY0:1;         /*!< bit:      0  Comparator 0 Ready                 */
+    uint8_t  READY1:1;         /*!< bit:      1  Comparator 1 Ready                 */
+    uint8_t  READY2:1;         /*!< bit:      2  Comparator 2 Ready                 */
+    uint8_t  READY3:1;         /*!< bit:      3  Comparator 3 Ready                 */
     uint8_t  _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7                                     */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_STATUSB_Type;
 
-#define AC_STATUSB_OFFSET           0x09         /**< \brief (AC offset) Status B Register */
-#define AC_STATUSB_RESETVALUE       0x0          /**< \brief (AC reset_value) Status B Register */
+#define AC_STATUSB_OFFSET           0x09         /**< \brief (AC_STATUSB offset) Status B Register */
+#define AC_STATUSB_RESETVALUE       0x0          /**< \brief (AC_STATUSB reset_value) Status B Register */
 
-#define AC_STATUSB_READY0           (0x1u <<  0) /**< \brief (AC_STATUSB)  */
-#define AC_STATUSB_READY1           (0x1u <<  1) /**< \brief (AC_STATUSB)  */
-#define AC_STATUSB_READY2           (0x1u <<  2) /**< \brief (AC_STATUSB)  */
-#define AC_STATUSB_READY3           (0x1u <<  3) /**< \brief (AC_STATUSB)  */
-#define AC_STATUSB_SYNCBUSY         (0x1u <<  7) /**< \brief (AC_STATUSB)  */
+#define AC_STATUSB_READY0           (0x1u <<  0) /**< \brief (AC_STATUSB) Comparator 0 Ready */
+#define AC_STATUSB_READY1           (0x1u <<  1) /**< \brief (AC_STATUSB) Comparator 1 Ready */
+#define AC_STATUSB_READY2           (0x1u <<  2) /**< \brief (AC_STATUSB) Comparator 2 Ready */
+#define AC_STATUSB_READY3           (0x1u <<  3) /**< \brief (AC_STATUSB) Comparator 3 Ready */
+#define AC_STATUSB_SYNCBUSY         (0x1u <<  7) /**< \brief (AC_STATUSB) Synchronization Busy */
 #define AC_STATUSB_MASK             0x8Fu /**< \brief (AC_STATUSB) MASK Register */
 
 /* -------- AC_STATUSC : (AC Offset: 0x0A) (R/   8) Status C Register -------- */
 typedef union {
   struct {
-    uint8_t  STATE0:1;         /*!< bit:      0                                     */
-    uint8_t  STATE1:1;         /*!< bit:      1                                     */
-    uint8_t  STATE2:1;         /*!< bit:      2                                     */
-    uint8_t  STATE3:1;         /*!< bit:      3                                     */
-    uint8_t  WSTATE0:2;        /*!< bit:  4.. 5                                     */
-    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7                                     */
+    uint8_t  STATE0:1;         /*!< bit:      0  Comparator 0 Current State         */
+    uint8_t  STATE1:1;         /*!< bit:      1  Comparator 1 Current State         */
+    uint8_t  STATE2:1;         /*!< bit:      2  Comparator 2 Current State         */
+    uint8_t  STATE3:1;         /*!< bit:      3  Comparator 3 Current State         */
+    uint8_t  WSTATE0:2;        /*!< bit:  4.. 5  Window 0 Current State             */
+    uint8_t  WSTATE1:2;        /*!< bit:  6.. 7  Window 1 Current State             */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_STATUSC_Type;
 
-#define AC_STATUSC_OFFSET           0x0A         /**< \brief (AC offset) Status C Register */
-#define AC_STATUSC_RESETVALUE       0x0          /**< \brief (AC reset_value) Status C Register */
+#define AC_STATUSC_OFFSET           0x0A         /**< \brief (AC_STATUSC offset) Status C Register */
+#define AC_STATUSC_RESETVALUE       0x0          /**< \brief (AC_STATUSC reset_value) Status C Register */
 
-#define AC_STATUSC_STATE0           (0x1u <<  0) /**< \brief (AC_STATUSC)  */
-#define AC_STATUSC_STATE1           (0x1u <<  1) /**< \brief (AC_STATUSC)  */
-#define AC_STATUSC_STATE2           (0x1u <<  2) /**< \brief (AC_STATUSC)  */
-#define AC_STATUSC_STATE3           (0x1u <<  3) /**< \brief (AC_STATUSC)  */
+#define AC_STATUSC_STATE0           (0x1u <<  0) /**< \brief (AC_STATUSC) Comparator 0 Current State */
+#define AC_STATUSC_STATE1           (0x1u <<  1) /**< \brief (AC_STATUSC) Comparator 1 Current State */
+#define AC_STATUSC_STATE2           (0x1u <<  2) /**< \brief (AC_STATUSC) Comparator 2 Current State */
+#define AC_STATUSC_STATE3           (0x1u <<  3) /**< \brief (AC_STATUSC) Comparator 3 Current State */
 #define AC_STATUSC_WSTATE0_Pos      4
-#define AC_STATUSC_WSTATE0_Msk      (0x3u << AC_STATUSC_WSTATE0_Pos) /**< \brief (AC_STATUSC)  */
+#define AC_STATUSC_WSTATE0_Msk      (0x3u << AC_STATUSC_WSTATE0_Pos) /**< \brief (AC_STATUSC) Window 0 Current State */
 #define AC_STATUSC_WSTATE0(value)   ((AC_STATUSC_WSTATE0_Msk & ((value) << AC_STATUSC_WSTATE0_Pos)))
 #define   AC_STATUSC_WSTATE0_ABOVE  (0x0u <<  4) /**< \brief (AC_STATUSC)  */
 #define   AC_STATUSC_WSTATE0_INSIDE (0x1u <<  4) /**< \brief (AC_STATUSC)  */
 #define   AC_STATUSC_WSTATE0_BELOW  (0x2u <<  4) /**< \brief (AC_STATUSC)  */
 #define AC_STATUSC_WSTATE1_Pos      6
-#define AC_STATUSC_WSTATE1_Msk      (0x3u << AC_STATUSC_WSTATE1_Pos) /**< \brief (AC_STATUSC)  */
+#define AC_STATUSC_WSTATE1_Msk      (0x3u << AC_STATUSC_WSTATE1_Pos) /**< \brief (AC_STATUSC) Window 1 Current State */
 #define AC_STATUSC_WSTATE1(value)   ((AC_STATUSC_WSTATE1_Msk & ((value) << AC_STATUSC_WSTATE1_Pos)))
 #define   AC_STATUSC_WSTATE1_ABOVE  (0x0u <<  6) /**< \brief (AC_STATUSC)  */
 #define   AC_STATUSC_WSTATE1_INSIDE (0x1u <<  6) /**< \brief (AC_STATUSC)  */
@@ -662,30 +652,30 @@ typedef union {
 /* -------- AC_WINCTRL : (AC Offset: 0x0C) (R/W  8) Window Control Register -------- */
 typedef union {
   struct {
-    uint8_t  WEN0:1;           /*!< bit:      0                                     */
-    uint8_t  WINTSEL0:2;       /*!< bit:  1.. 2                                     */
+    uint8_t  WEN0:1;           /*!< bit:      0  Window 0 Mode Enable               */
+    uint8_t  WINTSEL0:2;       /*!< bit:  1.. 2  Window 0 Interrupt Selection       */
     uint8_t  _reserved0:1;     /*!< bit:      3  Reserved                           */
-    uint8_t  WEN1:1;           /*!< bit:      4                                     */
-    uint8_t  WINTSEL1:2;       /*!< bit:  5.. 6                                     */
+    uint8_t  WEN1:1;           /*!< bit:      4  Window 1 Mode Enable               */
+    uint8_t  WINTSEL1:2;       /*!< bit:  5.. 6  Window 1 Interrupt Selection       */
     uint8_t  _reserved1:1;     /*!< bit:      7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_WINCTRL_Type;
 
-#define AC_WINCTRL_OFFSET           0x0C         /**< \brief (AC offset) Window Control Register */
-#define AC_WINCTRL_RESETVALUE       0x0          /**< \brief (AC reset_value) Window Control Register */
+#define AC_WINCTRL_OFFSET           0x0C         /**< \brief (AC_WINCTRL offset) Window Control Register */
+#define AC_WINCTRL_RESETVALUE       0x0          /**< \brief (AC_WINCTRL reset_value) Window Control Register */
 
-#define AC_WINCTRL_WEN0             (0x1u <<  0) /**< \brief (AC_WINCTRL)  */
+#define AC_WINCTRL_WEN0             (0x1u <<  0) /**< \brief (AC_WINCTRL) Window 0 Mode Enable */
 #define AC_WINCTRL_WINTSEL0_Pos     1
-#define AC_WINCTRL_WINTSEL0_Msk     (0x3u << AC_WINCTRL_WINTSEL0_Pos) /**< \brief (AC_WINCTRL)  */
+#define AC_WINCTRL_WINTSEL0_Msk     (0x3u << AC_WINCTRL_WINTSEL0_Pos) /**< \brief (AC_WINCTRL) Window 0 Interrupt Selection */
 #define AC_WINCTRL_WINTSEL0(value)  ((AC_WINCTRL_WINTSEL0_Msk & ((value) << AC_WINCTRL_WINTSEL0_Pos)))
 #define   AC_WINCTRL_WINTSEL0_ABOVE (0x0u <<  1) /**< \brief (AC_WINCTRL)  */
 #define   AC_WINCTRL_WINTSEL0_INSIDE (0x1u <<  1) /**< \brief (AC_WINCTRL)  */
 #define   AC_WINCTRL_WINTSEL0_BELOW (0x2u <<  1) /**< \brief (AC_WINCTRL)  */
 #define   AC_WINCTRL_WINTSEL0_OUTSIDE (0x3u <<  1) /**< \brief (AC_WINCTRL)  */
-#define AC_WINCTRL_WEN1             (0x1u <<  4) /**< \brief (AC_WINCTRL)  */
+#define AC_WINCTRL_WEN1             (0x1u <<  4) /**< \brief (AC_WINCTRL) Window 1 Mode Enable */
 #define AC_WINCTRL_WINTSEL1_Pos     5
-#define AC_WINCTRL_WINTSEL1_Msk     (0x3u << AC_WINCTRL_WINTSEL1_Pos) /**< \brief (AC_WINCTRL)  */
+#define AC_WINCTRL_WINTSEL1_Msk     (0x3u << AC_WINCTRL_WINTSEL1_Pos) /**< \brief (AC_WINCTRL) Window 1 Interrupt Selection */
 #define AC_WINCTRL_WINTSEL1(value)  ((AC_WINCTRL_WINTSEL1_Msk & ((value) << AC_WINCTRL_WINTSEL1_Pos)))
 #define   AC_WINCTRL_WINTSEL1_ABOVE (0x0u <<  5) /**< \brief (AC_WINCTRL)  */
 #define   AC_WINCTRL_WINTSEL1_INSIDE (0x1u <<  5) /**< \brief (AC_WINCTRL)  */
@@ -693,49 +683,49 @@ typedef union {
 #define   AC_WINCTRL_WINTSEL1_OUTSIDE (0x3u <<  5) /**< \brief (AC_WINCTRL)  */
 #define AC_WINCTRL_MASK             0x77u /**< \brief (AC_WINCTRL) MASK Register */
 
-/* -------- AC_COMPCTRL : (AC Offset: 0x10) (R/W 32) Comp Comparator Control Register -------- */
+/* -------- AC_COMPCTRL : (AC Offset: 0x10) (R/W 32) Comparator Control Register -------- */
 typedef union {
   struct {
-    uint32_t ENABLE:1;         /*!< bit:      0                                     */
-    uint32_t SINGLE:1;         /*!< bit:      1                                     */
-    uint32_t SPEED:2;          /*!< bit:  2.. 3                                     */
+    uint32_t ENABLE:1;         /*!< bit:      0  Enable                             */
+    uint32_t SINGLE:1;         /*!< bit:      1  Single-Shot Mode                   */
+    uint32_t SPEED:2;          /*!< bit:  2.. 3  Speed Selection                    */
     uint32_t _reserved0:1;     /*!< bit:      4  Reserved                           */
-    uint32_t INTSEL:2;         /*!< bit:  5.. 6                                     */
+    uint32_t INTSEL:2;         /*!< bit:  5.. 6  Interrupt Selection                */
     uint32_t _reserved1:1;     /*!< bit:      7  Reserved                           */
-    uint32_t MUXNEG:3;         /*!< bit:  8..10                                     */
+    uint32_t MUXNEG:3;         /*!< bit:  8..10  Negative Input Mux Selection       */
     uint32_t _reserved2:1;     /*!< bit:     11  Reserved                           */
-    uint32_t MUXPOS:2;         /*!< bit: 12..13                                     */
+    uint32_t MUXPOS:2;         /*!< bit: 12..13  Positive Input Mux Selection       */
     uint32_t _reserved3:1;     /*!< bit:     14  Reserved                           */
-    uint32_t SWAP:1;           /*!< bit:     15                                     */
-    uint32_t OUT:2;            /*!< bit: 16..17                                     */
+    uint32_t SWAP:1;           /*!< bit:     15  Swap Inputs and Invert             */
+    uint32_t OUT:2;            /*!< bit: 16..17  Output Mode                        */
     uint32_t _reserved4:1;     /*!< bit:     18  Reserved                           */
-    uint32_t HYST:1;           /*!< bit:     19                                     */
+    uint32_t HYST:1;           /*!< bit:     19  Hysteresis Enable                  */
     uint32_t _reserved5:4;     /*!< bit: 20..23  Reserved                           */
-    uint32_t FLEN:3;           /*!< bit: 24..26                                     */
+    uint32_t FLEN:3;           /*!< bit: 24..26  Filter Length                      */
     uint32_t _reserved6:5;     /*!< bit: 27..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } AC_COMPCTRL_Type;
 
-#define AC_COMPCTRL_OFFSET          0x10         /**< \brief (AC offset) Comparator Control Register */
-#define AC_COMPCTRL_RESETVALUE      0x0          /**< \brief (AC reset_value) Comparator Control Register */
+#define AC_COMPCTRL_OFFSET          0x10         /**< \brief (AC_COMPCTRL offset) Comparator Control Register */
+#define AC_COMPCTRL_RESETVALUE      0x0          /**< \brief (AC_COMPCTRL reset_value) Comparator Control Register */
 
-#define AC_COMPCTRL_ENABLE          (0x1u <<  0) /**< \brief (AC_COMPCTRL)  */
-#define AC_COMPCTRL_SINGLE          (0x1u <<  1) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_ENABLE          (0x1u <<  0) /**< \brief (AC_COMPCTRL) Enable */
+#define AC_COMPCTRL_SINGLE          (0x1u <<  1) /**< \brief (AC_COMPCTRL) Single-Shot Mode */
 #define AC_COMPCTRL_SPEED_Pos       2
-#define AC_COMPCTRL_SPEED_Msk       (0x3u << AC_COMPCTRL_SPEED_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_SPEED_Msk       (0x3u << AC_COMPCTRL_SPEED_Pos) /**< \brief (AC_COMPCTRL) Speed Selection */
 #define AC_COMPCTRL_SPEED(value)    ((AC_COMPCTRL_SPEED_Msk & ((value) << AC_COMPCTRL_SPEED_Pos)))
 #define   AC_COMPCTRL_SPEED_LOWPOWER (0x0u <<  2) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_SPEED_FAST    (0x1u <<  2) /**< \brief (AC_COMPCTRL)  */
 #define AC_COMPCTRL_INTSEL_Pos      5
-#define AC_COMPCTRL_INTSEL_Msk      (0x3u << AC_COMPCTRL_INTSEL_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_INTSEL_Msk      (0x3u << AC_COMPCTRL_INTSEL_Pos) /**< \brief (AC_COMPCTRL) Interrupt Selection */
 #define AC_COMPCTRL_INTSEL(value)   ((AC_COMPCTRL_INTSEL_Msk & ((value) << AC_COMPCTRL_INTSEL_Pos)))
 #define   AC_COMPCTRL_INTSEL_TOGGLE (0x0u <<  5) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_INTSEL_RISING (0x1u <<  5) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_INTSEL_FALLING (0x2u <<  5) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_INTSEL_EOC    (0x3u <<  5) /**< \brief (AC_COMPCTRL)  */
 #define AC_COMPCTRL_MUXNEG_Pos      8
-#define AC_COMPCTRL_MUXNEG_Msk      (0x7u << AC_COMPCTRL_MUXNEG_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_MUXNEG_Msk      (0x7u << AC_COMPCTRL_MUXNEG_Pos) /**< \brief (AC_COMPCTRL) Negative Input Mux Selection */
 #define AC_COMPCTRL_MUXNEG(value)   ((AC_COMPCTRL_MUXNEG_Msk & ((value) << AC_COMPCTRL_MUXNEG_Pos)))
 #define   AC_COMPCTRL_MUXNEG_PIN0   (0x0u <<  8) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_MUXNEG_PIN1   (0x1u <<  8) /**< \brief (AC_COMPCTRL)  */
@@ -746,36 +736,44 @@ typedef union {
 #define   AC_COMPCTRL_MUXNEG_BANDGAP (0x6u <<  8) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_MUXNEG_DAC    (0x7u <<  8) /**< \brief (AC_COMPCTRL)  */
 #define AC_COMPCTRL_MUXPOS_Pos      12
-#define AC_COMPCTRL_MUXPOS_Msk      (0x3u << AC_COMPCTRL_MUXPOS_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_MUXPOS_Msk      (0x3u << AC_COMPCTRL_MUXPOS_Pos) /**< \brief (AC_COMPCTRL) Positive Input Mux Selection */
 #define AC_COMPCTRL_MUXPOS(value)   ((AC_COMPCTRL_MUXPOS_Msk & ((value) << AC_COMPCTRL_MUXPOS_Pos)))
 #define   AC_COMPCTRL_MUXPOS_PIN0   (0x0u << 12) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_MUXPOS_PIN1   (0x1u << 12) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_MUXPOS_PIN2   (0x2u << 12) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_MUXPOS_PIN3   (0x3u << 12) /**< \brief (AC_COMPCTRL)  */
-#define AC_COMPCTRL_SWAP            (0x1u << 15) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_SWAP            (0x1u << 15) /**< \brief (AC_COMPCTRL) Swap Inputs and Invert */
 #define AC_COMPCTRL_OUT_Pos         16
-#define AC_COMPCTRL_OUT_Msk         (0x3u << AC_COMPCTRL_OUT_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_OUT_Msk         (0x3u << AC_COMPCTRL_OUT_Pos) /**< \brief (AC_COMPCTRL) Output Mode */
 #define AC_COMPCTRL_OUT(value)      ((AC_COMPCTRL_OUT_Msk & ((value) << AC_COMPCTRL_OUT_Pos)))
 #define   AC_COMPCTRL_OUT_OFF       (0x0u << 16) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_OUT_ASYNC     (0x1u << 16) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_OUT_SYNC      (0x2u << 16) /**< \brief (AC_COMPCTRL)  */
-#define AC_COMPCTRL_HYST            (0x1u << 19) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_HYST            (0x1u << 19) /**< \brief (AC_COMPCTRL) Hysteresis Enable */
 #define AC_COMPCTRL_FLEN_Pos        24
-#define AC_COMPCTRL_FLEN_Msk        (0x7u << AC_COMPCTRL_FLEN_Pos) /**< \brief (AC_COMPCTRL)  */
+#define AC_COMPCTRL_FLEN_Msk        (0x7u << AC_COMPCTRL_FLEN_Pos) /**< \brief (AC_COMPCTRL) Filter Length */
 #define AC_COMPCTRL_FLEN(value)     ((AC_COMPCTRL_FLEN_Msk & ((value) << AC_COMPCTRL_FLEN_Pos)))
 #define   AC_COMPCTRL_FLEN_OFF      (0x0u << 24) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_FLEN_MAJ3     (0x1u << 24) /**< \brief (AC_COMPCTRL)  */
 #define   AC_COMPCTRL_FLEN_MAJ5     (0x2u << 24) /**< \brief (AC_COMPCTRL)  */
 #define AC_COMPCTRL_MASK            0x70BB76Fu /**< \brief (AC_COMPCTRL) MASK Register */
 
-/* -------- AC_SCALER : (AC Offset: 0x20) (R/W  8) Scaler Scaler Register -------- */
+/* -------- AC_SCALER : (AC Offset: 0x20) (R/W  8) Scaler Register -------- */
 typedef union {
+  struct {
+    uint8_t  VALUE:6;          /*!< bit:  0.. 5  Scaler Value                       */
+    uint8_t  _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } AC_SCALER_Type;
 
-#define AC_SCALER_OFFSET            0x20         /**< \brief (AC offset) Scaler Register */
-#define AC_SCALER_RESETVALUE        0x0          /**< \brief (AC reset_value) Scaler Register */
-#define AC_SCALER_MASK              0xFFu        /**< \brief (AC_SCALER) MASK Register */
+#define AC_SCALER_OFFSET            0x20         /**< \brief (AC_SCALER offset) Scaler Register */
+#define AC_SCALER_RESETVALUE        0x0          /**< \brief (AC_SCALER reset_value) Scaler Register */
+
+#define AC_SCALER_VALUE_Pos         0
+#define AC_SCALER_VALUE_Msk         (0x3Fu << AC_SCALER_VALUE_Pos) /**< \brief (AC_SCALER) Scaler Value */
+#define AC_SCALER_VALUE(value)      ((AC_SCALER_VALUE_Msk & ((value) << AC_SCALER_VALUE_Pos)))
+#define AC_SCALER_MASK              0x3Fu /**< \brief (AC_SCALER) MASK Register */
 
 #define AC_NUM_CMP                  2
 
@@ -785,8 +783,8 @@ typedef struct {
   __O  AC_CTRLB_Type             CTRLB;       /**< \brief Offset: 0x01 ( /W  8) Control B Register */
   __IO AC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x02 (R/W 16) Event Control Register */
   __IO AC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x04 (R/W  8) Interrupt Enable Clear Register */
-  __IO AC_INTENSET_Type          INTENSET;    /**< \brief Offset: 0x05 (R/W  8) Interupt Enable Set Register */
-  __IO AC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x06 (R/W  8) Interrupt Flag Register */
+  __IO AC_INTENSET_Type          INTENSET;    /**< \brief Offset: 0x05 (R/W  8) Interrupt Enable Set Register */
+  __IO AC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x06 (R/W  8) Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved1[0x1];
   __I  AC_STATUSA_Type           STATUSA;     /**< \brief Offset: 0x08 (R/   8) Status A Register */
   __I  AC_STATUSB_Type           STATUSB;     /**< \brief Offset: 0x09 (R/   8) Status B Register */
@@ -808,7 +806,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR ADC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_ADC Analog Digital Converter */
+/** \addtogroup SAM0+D_ADC Analog Digital Converter */
 /*@{*/
 
 #define REV_ADC        0x100
@@ -817,26 +815,26 @@ typedef struct {
 
 #ifndef __EXCLUDE_ADC_FROM_CMSIS__
 
-/* -------- ADC_CTRLA : (ADC Offset: 0x00) (R/W  8) Control register A -------- */
+/* -------- ADC_CTRLA : (ADC Offset: 0x00) (R/W  8) Control Register A -------- */
 typedef union {
   struct {
-    uint8_t  SWRST:1;          /*!< bit:      0  Software reset                     */
-    uint8_t  ENABLE:1;         /*!< bit:      1  Enable module                      */
-    uint8_t  SLEEPEN:1;        /*!< bit:      2  Sleep enable                       */
+    uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
+    uint8_t  ENABLE:1;         /*!< bit:      1  Enable Module                      */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_CTRLA_Type;
 
-#define ADC_CTRLA_OFFSET            0x00         /**< \brief (ADC offset) Control register A */
-#define ADC_CTRLA_RESETVALUE        0x0          /**< \brief (ADC reset_value) Control register A */
+#define ADC_CTRLA_OFFSET            0x00         /**< \brief (ADC_CTRLA offset) Control Register A */
+#define ADC_CTRLA_RESETVALUE        0x0          /**< \brief (ADC_CTRLA reset_value) Control Register A */
 
-#define ADC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (ADC_CTRLA) Software reset */
-#define ADC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (ADC_CTRLA) Enable module */
-#define ADC_CTRLA_SLEEPEN           (0x1u <<  2) /**< \brief (ADC_CTRLA) Sleep enable */
+#define ADC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (ADC_CTRLA) Software Reset */
+#define ADC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (ADC_CTRLA) Enable Module */
+#define ADC_CTRLA_RUNSTDBY          (0x1u <<  2) /**< \brief (ADC_CTRLA) Run during Standby */
 #define ADC_CTRLA_MASK              0x7u /**< \brief (ADC_CTRLA) MASK Register */
 
-/* -------- ADC_REFCTRL : (ADC Offset: 0x01) (R/W  8) Reference control register -------- */
+/* -------- ADC_REFCTRL : (ADC Offset: 0x01) (R/W  8) Reference Control Register -------- */
 typedef union {
   struct {
     uint8_t  REFSEL:4;         /*!< bit:  0.. 3  Reference Selection                */
@@ -846,8 +844,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_REFCTRL_Type;
 
-#define ADC_REFCTRL_OFFSET          0x01         /**< \brief (ADC offset) Reference control register */
-#define ADC_REFCTRL_RESETVALUE      0x0          /**< \brief (ADC reset_value) Reference control register */
+#define ADC_REFCTRL_OFFSET          0x01         /**< \brief (ADC_REFCTRL offset) Reference Control Register */
+#define ADC_REFCTRL_RESETVALUE      0x0          /**< \brief (ADC_REFCTRL reset_value) Reference Control Register */
 
 #define ADC_REFCTRL_REFSEL_Pos      0
 #define ADC_REFCTRL_REFSEL_Msk      (0xFu << ADC_REFCTRL_REFSEL_Pos) /**< \brief (ADC_REFCTRL) Reference Selection */
@@ -855,28 +853,28 @@ typedef union {
 #define ADC_REFCTRL_REFCOMP         (0x1u <<  7) /**< \brief (ADC_REFCTRL) Reference Buffer Offset Compensation Enable */
 #define ADC_REFCTRL_MASK            0x8Fu /**< \brief (ADC_REFCTRL) MASK Register */
 
-/* -------- ADC_AVGCTRL : (ADC Offset: 0x02) (R/W  8) Average Control register -------- */
+/* -------- ADC_AVGCTRL : (ADC Offset: 0x02) (R/W  8) Average Control Register -------- */
 typedef union {
   struct {
-    uint8_t  SAMPLENUM:4;      /*!< bit:  0.. 3  Number of samples to be collected  */
+    uint8_t  SAMPLENUM:4;      /*!< bit:  0.. 3  Number of Samples to be Collected  */
     uint8_t  ADJRES:3;         /*!< bit:  4.. 6  Adjusting Result / Division Coefficient */
     uint8_t  _reserved0:1;     /*!< bit:      7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_AVGCTRL_Type;
 
-#define ADC_AVGCTRL_OFFSET          0x02         /**< \brief (ADC offset) Average Control register */
-#define ADC_AVGCTRL_RESETVALUE      0x0          /**< \brief (ADC reset_value) Average Control register */
+#define ADC_AVGCTRL_OFFSET          0x02         /**< \brief (ADC_AVGCTRL offset) Average Control Register */
+#define ADC_AVGCTRL_RESETVALUE      0x0          /**< \brief (ADC_AVGCTRL reset_value) Average Control Register */
 
 #define ADC_AVGCTRL_SAMPLENUM_Pos    0
-#define ADC_AVGCTRL_SAMPLENUM_Msk    (0xFu << ADC_AVGCTRL_SAMPLENUM_Pos) /**< \brief (ADC_AVGCTRL) Number of samples to be collected */
+#define ADC_AVGCTRL_SAMPLENUM_Msk    (0xFu << ADC_AVGCTRL_SAMPLENUM_Pos) /**< \brief (ADC_AVGCTRL) Number of Samples to be Collected */
 #define ADC_AVGCTRL_SAMPLENUM(value) ((ADC_AVGCTRL_SAMPLENUM_Msk & ((value) << ADC_AVGCTRL_SAMPLENUM_Pos)))
 #define ADC_AVGCTRL_ADJRES_Pos      4
 #define ADC_AVGCTRL_ADJRES_Msk      (0x7u << ADC_AVGCTRL_ADJRES_Pos) /**< \brief (ADC_AVGCTRL) Adjusting Result / Division Coefficient */
 #define ADC_AVGCTRL_ADJRES(value)   ((ADC_AVGCTRL_ADJRES_Msk & ((value) << ADC_AVGCTRL_ADJRES_Pos)))
 #define ADC_AVGCTRL_MASK            0x7Fu /**< \brief (ADC_AVGCTRL) MASK Register */
 
-/* -------- ADC_SAMPCTRL : (ADC Offset: 0x03) (R/W  8) Sample Time Control register -------- */
+/* -------- ADC_SAMPCTRL : (ADC Offset: 0x03) (R/W  8) Sample Time Control Register -------- */
 typedef union {
   struct {
     uint8_t  SAMPLEN:6;        /*!< bit:  0.. 5  Sampling Time Length               */
@@ -885,8 +883,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_SAMPCTRL_Type;
 
-#define ADC_SAMPCTRL_OFFSET         0x03         /**< \brief (ADC offset) Sample Time Control register */
-#define ADC_SAMPCTRL_RESETVALUE     0x0          /**< \brief (ADC reset_value) Sample Time Control register */
+#define ADC_SAMPCTRL_OFFSET         0x03         /**< \brief (ADC_SAMPCTRL offset) Sample Time Control Register */
+#define ADC_SAMPCTRL_RESETVALUE     0x0          /**< \brief (ADC_SAMPCTRL reset_value) Sample Time Control Register */
 
 #define ADC_SAMPCTRL_SAMPLEN_Pos    0
 #define ADC_SAMPCTRL_SAMPLEN_Msk    (0x3Fu << ADC_SAMPCTRL_SAMPLEN_Pos) /**< \brief (ADC_SAMPCTRL) Sampling Time Length */
@@ -896,34 +894,34 @@ typedef union {
 /* -------- ADC_CTRLB : (ADC Offset: 0x04) (R/W 16) Control Register B -------- */
 typedef union {
   struct {
-    uint16_t DIFFMODE:1;       /*!< bit:      0  Differential mode                  */
-    uint16_t LEFTADJ:1;        /*!< bit:      1  Lefts adjusted result              */
+    uint16_t DIFFMODE:1;       /*!< bit:      0  Differential Mode                  */
+    uint16_t LEFTADJ:1;        /*!< bit:      1  Left-Adjusted Result               */
     uint16_t FREERUN:1;        /*!< bit:      2  Free Running Mode                  */
-    uint16_t CORREN:1;         /*!< bit:      3  Digital Correction logic enable    */
+    uint16_t CORREN:1;         /*!< bit:      3  Digital Correction Logic Enable    */
     uint16_t RESSEL:2;         /*!< bit:  4.. 5  Conversion Result Resolution       */
     uint16_t _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint16_t PRESCALER:3;      /*!< bit:  8..10  Prescaler configuration            */
+    uint16_t PRESCALER:3;      /*!< bit:  8..10  Prescaler Configuration            */
     uint16_t _reserved1:5;     /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_CTRLB_Type;
 
-#define ADC_CTRLB_OFFSET            0x04         /**< \brief (ADC offset) Control Register B */
-#define ADC_CTRLB_RESETVALUE        0x0          /**< \brief (ADC reset_value) Control Register B */
+#define ADC_CTRLB_OFFSET            0x04         /**< \brief (ADC_CTRLB offset) Control Register B */
+#define ADC_CTRLB_RESETVALUE        0x0          /**< \brief (ADC_CTRLB reset_value) Control Register B */
 
-#define ADC_CTRLB_DIFFMODE          (0x1u <<  0) /**< \brief (ADC_CTRLB) Differential mode */
-#define ADC_CTRLB_LEFTADJ           (0x1u <<  1) /**< \brief (ADC_CTRLB) Lefts adjusted result */
+#define ADC_CTRLB_DIFFMODE          (0x1u <<  0) /**< \brief (ADC_CTRLB) Differential Mode */
+#define ADC_CTRLB_LEFTADJ           (0x1u <<  1) /**< \brief (ADC_CTRLB) Left-Adjusted Result */
 #define ADC_CTRLB_FREERUN           (0x1u <<  2) /**< \brief (ADC_CTRLB) Free Running Mode */
-#define ADC_CTRLB_CORREN            (0x1u <<  3) /**< \brief (ADC_CTRLB) Digital Correction logic enable */
+#define ADC_CTRLB_CORREN            (0x1u <<  3) /**< \brief (ADC_CTRLB) Digital Correction Logic Enable */
 #define ADC_CTRLB_RESSEL_Pos        4
 #define ADC_CTRLB_RESSEL_Msk        (0x3u << ADC_CTRLB_RESSEL_Pos) /**< \brief (ADC_CTRLB) Conversion Result Resolution */
 #define ADC_CTRLB_RESSEL(value)     ((ADC_CTRLB_RESSEL_Msk & ((value) << ADC_CTRLB_RESSEL_Pos)))
 #define ADC_CTRLB_PRESCALER_Pos     8
-#define ADC_CTRLB_PRESCALER_Msk     (0x7u << ADC_CTRLB_PRESCALER_Pos) /**< \brief (ADC_CTRLB) Prescaler configuration */
+#define ADC_CTRLB_PRESCALER_Msk     (0x7u << ADC_CTRLB_PRESCALER_Pos) /**< \brief (ADC_CTRLB) Prescaler Configuration */
 #define ADC_CTRLB_PRESCALER(value)  ((ADC_CTRLB_PRESCALER_Msk & ((value) << ADC_CTRLB_PRESCALER_Pos)))
 #define ADC_CTRLB_MASK              0x73Fu /**< \brief (ADC_CTRLB) MASK Register */
 
-/* -------- ADC_WINCTRL : (ADC Offset: 0x08) (R/W  8) Window Monitor control register -------- */
+/* -------- ADC_WINCTRL : (ADC Offset: 0x08) (R/W  8) Window Monitor Control Register -------- */
 typedef union {
   struct {
     uint8_t  WINMODE:3;        /*!< bit:  0.. 2  Window Monitor Mode                */
@@ -932,15 +930,15 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_WINCTRL_Type;
 
-#define ADC_WINCTRL_OFFSET          0x08         /**< \brief (ADC offset) Window Monitor control register */
-#define ADC_WINCTRL_RESETVALUE      0x0          /**< \brief (ADC reset_value) Window Monitor control register */
+#define ADC_WINCTRL_OFFSET          0x08         /**< \brief (ADC_WINCTRL offset) Window Monitor Control Register */
+#define ADC_WINCTRL_RESETVALUE      0x0          /**< \brief (ADC_WINCTRL reset_value) Window Monitor Control Register */
 
 #define ADC_WINCTRL_WINMODE_Pos     0
 #define ADC_WINCTRL_WINMODE_Msk     (0x7u << ADC_WINCTRL_WINMODE_Pos) /**< \brief (ADC_WINCTRL) Window Monitor Mode */
 #define ADC_WINCTRL_WINMODE(value)  ((ADC_WINCTRL_WINMODE_Msk & ((value) << ADC_WINCTRL_WINMODE_Pos)))
 #define ADC_WINCTRL_MASK            0x7u /**< \brief (ADC_WINCTRL) MASK Register */
 
-/* -------- ADC_SWTRIG : (ADC Offset: 0x0C) (R/W  8) Control register B -------- */
+/* -------- ADC_SWTRIG : (ADC Offset: 0x0C) (R/W  8) Control Register B -------- */
 typedef union {
   struct {
     uint8_t  FLUSH:1;          /*!< bit:      0  ADC Flush                          */
@@ -950,49 +948,49 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_SWTRIG_Type;
 
-#define ADC_SWTRIG_OFFSET           0x0C         /**< \brief (ADC offset) Control register B */
-#define ADC_SWTRIG_RESETVALUE       0x0          /**< \brief (ADC reset_value) Control register B */
+#define ADC_SWTRIG_OFFSET           0x0C         /**< \brief (ADC_SWTRIG offset) Control Register B */
+#define ADC_SWTRIG_RESETVALUE       0x0          /**< \brief (ADC_SWTRIG reset_value) Control Register B */
 
 #define ADC_SWTRIG_FLUSH            (0x1u <<  0) /**< \brief (ADC_SWTRIG) ADC Flush */
 #define ADC_SWTRIG_START            (0x1u <<  1) /**< \brief (ADC_SWTRIG) Start ADC Conversion */
 #define ADC_SWTRIG_MASK             0x3u /**< \brief (ADC_SWTRIG) MASK Register */
 
-/* -------- ADC_INPUTCTRL : (ADC Offset: 0x10) (R/W 32) Input controlregister -------- */
+/* -------- ADC_INPUTCTRL : (ADC Offset: 0x10) (R/W 32) Input Control Register -------- */
 typedef union {
   struct {
-    uint32_t MUXPOS:5;         /*!< bit:  0.. 4  Positive Mux Input selection       */
+    uint32_t MUXPOS:5;         /*!< bit:  0.. 4  Positive Mux Input Selection       */
     uint32_t _reserved0:3;     /*!< bit:  5.. 7  Reserved                           */
-    uint32_t MUXNEG:5;         /*!< bit:  8..12  Negative Mux Input selection       */
+    uint32_t MUXNEG:5;         /*!< bit:  8..12  Negative Mux Input Selection       */
     uint32_t _reserved1:3;     /*!< bit: 13..15  Reserved                           */
-    uint32_t INPUTSCAN:4;      /*!< bit: 16..19  Number of input channels included in scan */
+    uint32_t INPUTSCAN:4;      /*!< bit: 16..19  Number of Input Channels Included in Scan */
     uint32_t INPUTOFFSET:4;    /*!< bit: 20..23  Positive Mux Setting Offset        */
-    uint32_t GAIN:4;           /*!< bit: 24..27  Gain control register              */
+    uint32_t GAIN:4;           /*!< bit: 24..27  Gain Value                         */
     uint32_t _reserved2:4;     /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } ADC_INPUTCTRL_Type;
 
-#define ADC_INPUTCTRL_OFFSET        0x10         /**< \brief (ADC offset) Input controlregister */
-#define ADC_INPUTCTRL_RESETVALUE    0x0          /**< \brief (ADC reset_value) Input controlregister */
+#define ADC_INPUTCTRL_OFFSET        0x10         /**< \brief (ADC_INPUTCTRL offset) Input Control Register */
+#define ADC_INPUTCTRL_RESETVALUE    0x0          /**< \brief (ADC_INPUTCTRL reset_value) Input Control Register */
 
 #define ADC_INPUTCTRL_MUXPOS_Pos    0
-#define ADC_INPUTCTRL_MUXPOS_Msk    (0x1Fu << ADC_INPUTCTRL_MUXPOS_Pos) /**< \brief (ADC_INPUTCTRL) Positive Mux Input selection */
+#define ADC_INPUTCTRL_MUXPOS_Msk    (0x1Fu << ADC_INPUTCTRL_MUXPOS_Pos) /**< \brief (ADC_INPUTCTRL) Positive Mux Input Selection */
 #define ADC_INPUTCTRL_MUXPOS(value) ((ADC_INPUTCTRL_MUXPOS_Msk & ((value) << ADC_INPUTCTRL_MUXPOS_Pos)))
 #define ADC_INPUTCTRL_MUXNEG_Pos    8
-#define ADC_INPUTCTRL_MUXNEG_Msk    (0x1Fu << ADC_INPUTCTRL_MUXNEG_Pos) /**< \brief (ADC_INPUTCTRL) Negative Mux Input selection */
+#define ADC_INPUTCTRL_MUXNEG_Msk    (0x1Fu << ADC_INPUTCTRL_MUXNEG_Pos) /**< \brief (ADC_INPUTCTRL) Negative Mux Input Selection */
 #define ADC_INPUTCTRL_MUXNEG(value) ((ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos)))
 #define ADC_INPUTCTRL_INPUTSCAN_Pos    16
-#define ADC_INPUTCTRL_INPUTSCAN_Msk    (0xFu << ADC_INPUTCTRL_INPUTSCAN_Pos) /**< \brief (ADC_INPUTCTRL) Number of input channels included in scan */
+#define ADC_INPUTCTRL_INPUTSCAN_Msk    (0xFu << ADC_INPUTCTRL_INPUTSCAN_Pos) /**< \brief (ADC_INPUTCTRL) Number of Input Channels Included in Scan */
 #define ADC_INPUTCTRL_INPUTSCAN(value) ((ADC_INPUTCTRL_INPUTSCAN_Msk & ((value) << ADC_INPUTCTRL_INPUTSCAN_Pos)))
 #define ADC_INPUTCTRL_INPUTOFFSET_Pos    20
 #define ADC_INPUTCTRL_INPUTOFFSET_Msk    (0xFu << ADC_INPUTCTRL_INPUTOFFSET_Pos) /**< \brief (ADC_INPUTCTRL) Positive Mux Setting Offset */
 #define ADC_INPUTCTRL_INPUTOFFSET(value) ((ADC_INPUTCTRL_INPUTOFFSET_Msk & ((value) << ADC_INPUTCTRL_INPUTOFFSET_Pos)))
 #define ADC_INPUTCTRL_GAIN_Pos      24
-#define ADC_INPUTCTRL_GAIN_Msk      (0xFu << ADC_INPUTCTRL_GAIN_Pos) /**< \brief (ADC_INPUTCTRL) Gain control register */
+#define ADC_INPUTCTRL_GAIN_Msk      (0xFu << ADC_INPUTCTRL_GAIN_Pos) /**< \brief (ADC_INPUTCTRL) Gain Value */
 #define ADC_INPUTCTRL_GAIN(value)   ((ADC_INPUTCTRL_GAIN_Msk & ((value) << ADC_INPUTCTRL_GAIN_Pos)))
 #define ADC_INPUTCTRL_MASK          0xFFF1F1Fu /**< \brief (ADC_INPUTCTRL) MASK Register */
 
-/* -------- ADC_EVCTRL : (ADC Offset: 0x14) (R/W  8) Event control register -------- */
+/* -------- ADC_EVCTRL : (ADC Offset: 0x14) (R/W  8) Event Control Register -------- */
 typedef union {
   struct {
     uint8_t  STARTEI:1;        /*!< bit:      0  Start Conversion Event In          */
@@ -1005,8 +1003,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_EVCTRL_Type;
 
-#define ADC_EVCTRL_OFFSET           0x14         /**< \brief (ADC offset) Event control register */
-#define ADC_EVCTRL_RESETVALUE       0x0          /**< \brief (ADC reset_value) Event control register */
+#define ADC_EVCTRL_OFFSET           0x14         /**< \brief (ADC_EVCTRL offset) Event Control Register */
+#define ADC_EVCTRL_RESETVALUE       0x0          /**< \brief (ADC_EVCTRL reset_value) Event Control Register */
 
 #define ADC_EVCTRL_STARTEI          (0x1u <<  0) /**< \brief (ADC_EVCTRL) Start Conversion Event In */
 #define ADC_EVCTRL_SYNCEI           (0x1u <<  1) /**< \brief (ADC_EVCTRL) Sync Event In */
@@ -1014,70 +1012,70 @@ typedef union {
 #define ADC_EVCTRL_WINMONEO         (0x1u <<  5) /**< \brief (ADC_EVCTRL) Window Monitor Event Out */
 #define ADC_EVCTRL_MASK             0x33u /**< \brief (ADC_EVCTRL) MASK Register */
 
-/* -------- ADC_INTENCLR : (ADC Offset: 0x16) (R/W  8) Interrupt Enable Clear register -------- */
+/* -------- ADC_INTENCLR : (ADC Offset: 0x16) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Disable     */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Disable          */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window monitor Disable             */
+    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Disable   */
     uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Disable            */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_INTENCLR_Type;
 
-#define ADC_INTENCLR_OFFSET         0x16         /**< \brief (ADC offset) Interrupt Enable Clear register */
-#define ADC_INTENCLR_RESETVALUE     0x0          /**< \brief (ADC reset_value) Interrupt Enable Clear register */
+#define ADC_INTENCLR_OFFSET         0x16         /**< \brief (ADC_INTENCLR offset) Interrupt Enable Clear Register */
+#define ADC_INTENCLR_RESETVALUE     0x0          /**< \brief (ADC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
 #define ADC_INTENCLR_RESRDY         (0x1u <<  0) /**< \brief (ADC_INTENCLR) Result Ready Interrupt Disable */
 #define ADC_INTENCLR_OVERRUN        (0x1u <<  1) /**< \brief (ADC_INTENCLR) Overrun Interrupt Disable */
-#define ADC_INTENCLR_WINMON         (0x1u <<  2) /**< \brief (ADC_INTENCLR) Window monitor Disable */
+#define ADC_INTENCLR_WINMON         (0x1u <<  2) /**< \brief (ADC_INTENCLR) Window Monitor Interrupt Disable */
 #define ADC_INTENCLR_READY          (0x1u <<  3) /**< \brief (ADC_INTENCLR) Ready Interrupt Disable */
 #define ADC_INTENCLR_MASK           0xFu /**< \brief (ADC_INTENCLR) MASK Register */
 
-/* -------- ADC_INTENSET : (ADC Offset: 0x17) (R/W  8) Interrupt Enable Set register -------- */
+/* -------- ADC_INTENSET : (ADC Offset: 0x17) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Enable      */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Enable           */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Enable              */
+    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Enable    */
     uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Enable             */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_INTENSET_Type;
 
-#define ADC_INTENSET_OFFSET         0x17         /**< \brief (ADC offset) Interrupt Enable Set register */
-#define ADC_INTENSET_RESETVALUE     0x0          /**< \brief (ADC reset_value) Interrupt Enable Set register */
+#define ADC_INTENSET_OFFSET         0x17         /**< \brief (ADC_INTENSET offset) Interrupt Enable Set Register */
+#define ADC_INTENSET_RESETVALUE     0x0          /**< \brief (ADC_INTENSET reset_value) Interrupt Enable Set Register */
 
 #define ADC_INTENSET_RESRDY         (0x1u <<  0) /**< \brief (ADC_INTENSET) Result Ready Interrupt Enable */
 #define ADC_INTENSET_OVERRUN        (0x1u <<  1) /**< \brief (ADC_INTENSET) Overrun Interrupt Enable */
-#define ADC_INTENSET_WINMON         (0x1u <<  2) /**< \brief (ADC_INTENSET) Window Monitor Enable */
+#define ADC_INTENSET_WINMON         (0x1u <<  2) /**< \brief (ADC_INTENSET) Window Monitor Interrupt Enable */
 #define ADC_INTENSET_READY          (0x1u <<  3) /**< \brief (ADC_INTENSET) Ready Interrupt Enable */
 #define ADC_INTENSET_MASK           0xFu /**< \brief (ADC_INTENSET) MASK Register */
 
-/* -------- ADC_INTFLAG : (ADC Offset: 0x18) (R/W  8) Interrupt Flag Status and Claer register -------- */
+/* -------- ADC_INTFLAG : (ADC Offset: 0x18) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt             */
-    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt                  */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt           */
-    uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt flag               */
+    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Flag        */
+    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Flag             */
+    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Flag      */
+    uint8_t  READY:1;          /*!< bit:      3  Ready Interrupt Flag               */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_INTFLAG_Type;
 
-#define ADC_INTFLAG_OFFSET          0x18         /**< \brief (ADC offset) Interrupt Flag Status and Claer register */
-#define ADC_INTFLAG_RESETVALUE      0x0          /**< \brief (ADC reset_value) Interrupt Flag Status and Claer register */
+#define ADC_INTFLAG_OFFSET          0x18         /**< \brief (ADC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define ADC_INTFLAG_RESETVALUE      0x0          /**< \brief (ADC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define ADC_INTFLAG_RESRDY          (0x1u <<  0) /**< \brief (ADC_INTFLAG) Result Ready Interrupt */
-#define ADC_INTFLAG_OVERRUN         (0x1u <<  1) /**< \brief (ADC_INTFLAG) Overrun Interrupt */
-#define ADC_INTFLAG_WINMON          (0x1u <<  2) /**< \brief (ADC_INTFLAG) Window Monitor Interrupt */
-#define ADC_INTFLAG_READY           (0x1u <<  3) /**< \brief (ADC_INTFLAG) Ready Interrupt flag */
+#define ADC_INTFLAG_RESRDY          (0x1u <<  0) /**< \brief (ADC_INTFLAG) Result Ready Interrupt Flag */
+#define ADC_INTFLAG_OVERRUN         (0x1u <<  1) /**< \brief (ADC_INTFLAG) Overrun Interrupt Flag */
+#define ADC_INTFLAG_WINMON          (0x1u <<  2) /**< \brief (ADC_INTFLAG) Window Monitor Interrupt Flag */
+#define ADC_INTFLAG_READY           (0x1u <<  3) /**< \brief (ADC_INTFLAG) Ready Interrupt Flag */
 #define ADC_INTFLAG_MASK            0xFu /**< \brief (ADC_INTFLAG) MASK Register */
 
-/* -------- ADC_STATUS : (ADC Offset: 0x19) (R/   8) Status register -------- */
+/* -------- ADC_STATUS : (ADC Offset: 0x19) (R/   8) Status Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:7;     /*!< bit:  0.. 6  Reserved                           */
@@ -1086,29 +1084,29 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_STATUS_Type;
 
-#define ADC_STATUS_OFFSET           0x19         /**< \brief (ADC offset) Status register */
-#define ADC_STATUS_RESETVALUE       0x0          /**< \brief (ADC reset_value) Status register */
+#define ADC_STATUS_OFFSET           0x19         /**< \brief (ADC_STATUS offset) Status Register */
+#define ADC_STATUS_RESETVALUE       0x0          /**< \brief (ADC_STATUS reset_value) Status Register */
 
 #define ADC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (ADC_STATUS) Synchronisation Busy Status */
 #define ADC_STATUS_MASK             0x80u /**< \brief (ADC_STATUS) MASK Register */
 
-/* -------- ADC_RESULT : (ADC Offset: 0x1A) (R/  16) Result register -------- */
+/* -------- ADC_RESULT : (ADC Offset: 0x1A) (R/  16) Result Register -------- */
 typedef union {
   struct {
-    uint16_t RESULT:16;        /*!< bit:  0..15  Result value                       */
+    uint16_t RESULT:16;        /*!< bit:  0..15  Result Value                       */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_RESULT_Type;
 
-#define ADC_RESULT_OFFSET           0x1A         /**< \brief (ADC offset) Result register */
-#define ADC_RESULT_RESETVALUE       0x0          /**< \brief (ADC reset_value) Result register */
+#define ADC_RESULT_OFFSET           0x1A         /**< \brief (ADC_RESULT offset) Result Register */
+#define ADC_RESULT_RESETVALUE       0x0          /**< \brief (ADC_RESULT reset_value) Result Register */
 
 #define ADC_RESULT_RESULT_Pos       0
-#define ADC_RESULT_RESULT_Msk       (0xFFFFu << ADC_RESULT_RESULT_Pos) /**< \brief (ADC_RESULT) Result value */
+#define ADC_RESULT_RESULT_Msk       (0xFFFFu << ADC_RESULT_RESULT_Pos) /**< \brief (ADC_RESULT) Result Value */
 #define ADC_RESULT_RESULT(value)    ((ADC_RESULT_RESULT_Msk & ((value) << ADC_RESULT_RESULT_Pos)))
 #define ADC_RESULT_MASK             0xFFFFu /**< \brief (ADC_RESULT) MASK Register */
 
-/* -------- ADC_WINLT : (ADC Offset: 0x1C) (R/W 16) Window Monitor Lower Threshold register -------- */
+/* -------- ADC_WINLT : (ADC Offset: 0x1C) (R/W 16) Window Monitor Lower Threshold Register -------- */
 typedef union {
   struct {
     uint16_t WINLT:16;         /*!< bit:  0..15  Window Lower Threshold             */
@@ -1116,15 +1114,15 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_WINLT_Type;
 
-#define ADC_WINLT_OFFSET            0x1C         /**< \brief (ADC offset) Window Monitor Lower Threshold register */
-#define ADC_WINLT_RESETVALUE        0x0          /**< \brief (ADC reset_value) Window Monitor Lower Threshold register */
+#define ADC_WINLT_OFFSET            0x1C         /**< \brief (ADC_WINLT offset) Window Monitor Lower Threshold Register */
+#define ADC_WINLT_RESETVALUE        0x0          /**< \brief (ADC_WINLT reset_value) Window Monitor Lower Threshold Register */
 
 #define ADC_WINLT_WINLT_Pos         0
 #define ADC_WINLT_WINLT_Msk         (0xFFFFu << ADC_WINLT_WINLT_Pos) /**< \brief (ADC_WINLT) Window Lower Threshold */
 #define ADC_WINLT_WINLT(value)      ((ADC_WINLT_WINLT_Msk & ((value) << ADC_WINLT_WINLT_Pos)))
 #define ADC_WINLT_MASK              0xFFFFu /**< \brief (ADC_WINLT) MASK Register */
 
-/* -------- ADC_WINUT : (ADC Offset: 0x20) (R/W 16) Window Monitor Upper threshold register -------- */
+/* -------- ADC_WINUT : (ADC Offset: 0x20) (R/W 16) Window Monitor Upper Threshold Register -------- */
 typedef union {
   struct {
     uint16_t WINUT:16;         /*!< bit:  0..15  Window Upper Threshold             */
@@ -1132,70 +1130,70 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_WINUT_Type;
 
-#define ADC_WINUT_OFFSET            0x20         /**< \brief (ADC offset) Window Monitor Upper threshold register */
-#define ADC_WINUT_RESETVALUE        0x0          /**< \brief (ADC reset_value) Window Monitor Upper threshold register */
+#define ADC_WINUT_OFFSET            0x20         /**< \brief (ADC_WINUT offset) Window Monitor Upper Threshold Register */
+#define ADC_WINUT_RESETVALUE        0x0          /**< \brief (ADC_WINUT reset_value) Window Monitor Upper Threshold Register */
 
 #define ADC_WINUT_WINUT_Pos         0
 #define ADC_WINUT_WINUT_Msk         (0xFFFFu << ADC_WINUT_WINUT_Pos) /**< \brief (ADC_WINUT) Window Upper Threshold */
 #define ADC_WINUT_WINUT(value)      ((ADC_WINUT_WINUT_Msk & ((value) << ADC_WINUT_WINUT_Pos)))
 #define ADC_WINUT_MASK              0xFFFFu /**< \brief (ADC_WINUT) MASK Register */
 
-/* -------- ADC_GAINCORR : (ADC Offset: 0x24) (R/W 16) Gain Correction register -------- */
+/* -------- ADC_GAINCORR : (ADC Offset: 0x24) (R/W 16) Gain Correction Register -------- */
 typedef union {
   struct {
-    uint16_t GAINCORR:12;      /*!< bit:  0..11  Gain Correction value              */
+    uint16_t GAINCORR:12;      /*!< bit:  0..11  Gain Correction Value              */
     uint16_t _reserved0:4;     /*!< bit: 12..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_GAINCORR_Type;
 
-#define ADC_GAINCORR_OFFSET         0x24         /**< \brief (ADC offset) Gain Correction register */
-#define ADC_GAINCORR_RESETVALUE     0x0          /**< \brief (ADC reset_value) Gain Correction register */
+#define ADC_GAINCORR_OFFSET         0x24         /**< \brief (ADC_GAINCORR offset) Gain Correction Register */
+#define ADC_GAINCORR_RESETVALUE     0x0          /**< \brief (ADC_GAINCORR reset_value) Gain Correction Register */
 
 #define ADC_GAINCORR_GAINCORR_Pos    0
-#define ADC_GAINCORR_GAINCORR_Msk    (0xFFFu << ADC_GAINCORR_GAINCORR_Pos) /**< \brief (ADC_GAINCORR) Gain Correction value */
+#define ADC_GAINCORR_GAINCORR_Msk    (0xFFFu << ADC_GAINCORR_GAINCORR_Pos) /**< \brief (ADC_GAINCORR) Gain Correction Value */
 #define ADC_GAINCORR_GAINCORR(value) ((ADC_GAINCORR_GAINCORR_Msk & ((value) << ADC_GAINCORR_GAINCORR_Pos)))
 #define ADC_GAINCORR_MASK           0xFFFu /**< \brief (ADC_GAINCORR) MASK Register */
 
-/* -------- ADC_OFFSETCORR : (ADC Offset: 0x26) (R/W 16) Offset Correction register -------- */
+/* -------- ADC_OFFSETCORR : (ADC Offset: 0x26) (R/W 16) Offset Correction Register -------- */
 typedef union {
   struct {
-    uint16_t OFFSETCORR:12;    /*!< bit:  0..11  Offset Correction value            */
+    uint16_t OFFSETCORR:12;    /*!< bit:  0..11  Offset Correction Value            */
     uint16_t _reserved0:4;     /*!< bit: 12..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_OFFSETCORR_Type;
 
-#define ADC_OFFSETCORR_OFFSET       0x26         /**< \brief (ADC offset) Offset Correction register */
-#define ADC_OFFSETCORR_RESETVALUE   0x0          /**< \brief (ADC reset_value) Offset Correction register */
+#define ADC_OFFSETCORR_OFFSET       0x26         /**< \brief (ADC_OFFSETCORR offset) Offset Correction Register */
+#define ADC_OFFSETCORR_RESETVALUE   0x0          /**< \brief (ADC_OFFSETCORR reset_value) Offset Correction Register */
 
 #define ADC_OFFSETCORR_OFFSETCORR_Pos    0
-#define ADC_OFFSETCORR_OFFSETCORR_Msk    (0xFFFu << ADC_OFFSETCORR_OFFSETCORR_Pos) /**< \brief (ADC_OFFSETCORR) Offset Correction value */
+#define ADC_OFFSETCORR_OFFSETCORR_Msk    (0xFFFu << ADC_OFFSETCORR_OFFSETCORR_Pos) /**< \brief (ADC_OFFSETCORR) Offset Correction Value */
 #define ADC_OFFSETCORR_OFFSETCORR(value) ((ADC_OFFSETCORR_OFFSETCORR_Msk & ((value) << ADC_OFFSETCORR_OFFSETCORR_Pos)))
 #define ADC_OFFSETCORR_MASK         0xFFFu /**< \brief (ADC_OFFSETCORR) MASK Register */
 
-/* -------- ADC_CALIB : (ADC Offset: 0x28) (R/W 16) Calibration register -------- */
+/* -------- ADC_CALIB : (ADC Offset: 0x28) (R/W 16) Calibration Register -------- */
 typedef union {
   struct {
-    uint16_t LINEARITY_CAL:8;  /*!< bit:  0.. 7  Linearity calibration              */
+    uint16_t LINEARITY_CAL:8;  /*!< bit:  0.. 7  Linearity Calibration              */
     uint16_t BIAS_CAL:3;       /*!< bit:  8..10  Bias  Configuration                */
     uint16_t _reserved0:5;     /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_CALIB_Type;
 
-#define ADC_CALIB_OFFSET            0x28         /**< \brief (ADC offset) Calibration register */
-#define ADC_CALIB_RESETVALUE        0x0          /**< \brief (ADC reset_value) Calibration register */
+#define ADC_CALIB_OFFSET            0x28         /**< \brief (ADC_CALIB offset) Calibration Register */
+#define ADC_CALIB_RESETVALUE        0x0          /**< \brief (ADC_CALIB reset_value) Calibration Register */
 
 #define ADC_CALIB_LINEARITY_CAL_Pos    0
-#define ADC_CALIB_LINEARITY_CAL_Msk    (0xFFu << ADC_CALIB_LINEARITY_CAL_Pos) /**< \brief (ADC_CALIB) Linearity calibration */
+#define ADC_CALIB_LINEARITY_CAL_Msk    (0xFFu << ADC_CALIB_LINEARITY_CAL_Pos) /**< \brief (ADC_CALIB) Linearity Calibration */
 #define ADC_CALIB_LINEARITY_CAL(value) ((ADC_CALIB_LINEARITY_CAL_Msk & ((value) << ADC_CALIB_LINEARITY_CAL_Pos)))
 #define ADC_CALIB_BIAS_CAL_Pos      8
 #define ADC_CALIB_BIAS_CAL_Msk      (0x7u << ADC_CALIB_BIAS_CAL_Pos) /**< \brief (ADC_CALIB) Bias  Configuration */
 #define ADC_CALIB_BIAS_CAL(value)   ((ADC_CALIB_BIAS_CAL_Msk & ((value) << ADC_CALIB_BIAS_CAL_Pos)))
 #define ADC_CALIB_MASK              0x7FFu /**< \brief (ADC_CALIB) MASK Register */
 
-/* -------- ADC_DEBUG : (ADC Offset: 0x2A) (R/W  8) Debug register -------- */
+/* -------- ADC_DEBUG : (ADC Offset: 0x2A) (R/W  8) Debug Register -------- */
 typedef union {
   struct {
     uint8_t  DBGRUN:1;         /*!< bit:      0  Debug Run                          */
@@ -1204,100 +1202,100 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_DEBUG_Type;
 
-#define ADC_DEBUG_OFFSET            0x2A         /**< \brief (ADC offset) Debug register */
-#define ADC_DEBUG_RESETVALUE        0x0          /**< \brief (ADC reset_value) Debug register */
+#define ADC_DEBUG_OFFSET            0x2A         /**< \brief (ADC_DEBUG offset) Debug Register */
+#define ADC_DEBUG_RESETVALUE        0x0          /**< \brief (ADC_DEBUG reset_value) Debug Register */
 
 #define ADC_DEBUG_DBGRUN            (0x1u <<  0) /**< \brief (ADC_DEBUG) Debug Run */
 #define ADC_DEBUG_MASK              0x1u /**< \brief (ADC_DEBUG) MASK Register */
 
-/* -------- ADC_TEST : (ADC Offset: 0x2B) (R/W  8) Test modes register -------- */
+/* -------- ADC_TEST : (ADC Offset: 0x2B) (R/W  8) Test Modes Register -------- */
 typedef union {
   struct {
-    uint8_t  TEST_EN:1;        /*!< bit:      0  Enable Test mode                   */
+    uint8_t  TEST_EN:1;        /*!< bit:      0  Enable Test Mode                   */
     uint8_t  REFPAD_EN:1;      /*!< bit:      1  Connect Vrefp/n to aio33testp/n    */
-    uint8_t  REFINT_DIS:1;     /*!< bit:      2  Disable internal Reference         */
+    uint8_t  REFINT_DIS:1;     /*!< bit:      2  Disable Internal Reference         */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_TEST_Type;
 
-#define ADC_TEST_OFFSET             0x2B         /**< \brief (ADC offset) Test modes register */
-#define ADC_TEST_RESETVALUE         0x0          /**< \brief (ADC reset_value) Test modes register */
+#define ADC_TEST_OFFSET             0x2B         /**< \brief (ADC_TEST offset) Test Modes Register */
+#define ADC_TEST_RESETVALUE         0x0          /**< \brief (ADC_TEST reset_value) Test Modes Register */
 
-#define ADC_TEST_TEST_EN            (0x1u <<  0) /**< \brief (ADC_TEST) Enable Test mode */
+#define ADC_TEST_TEST_EN            (0x1u <<  0) /**< \brief (ADC_TEST) Enable Test Mode */
 #define ADC_TEST_REFPAD_EN          (0x1u <<  1) /**< \brief (ADC_TEST) Connect Vrefp/n to aio33testp/n */
-#define ADC_TEST_REFINT_DIS         (0x1u <<  2) /**< \brief (ADC_TEST) Disable internal Reference */
+#define ADC_TEST_REFINT_DIS         (0x1u <<  2) /**< \brief (ADC_TEST) Disable Internal Reference */
 #define ADC_TEST_MASK               0x7u /**< \brief (ADC_TEST) MASK Register */
 
-/* -------- ADC_TESTRESULT : (ADC Offset: 0x2C) (R/W 32) Test Result register -------- */
+/* -------- ADC_TESTRESULT : (ADC Offset: 0x2C) (R/W 32) Test Result Register -------- */
 typedef union {
   struct {
-    uint32_t TESTRESULT:24;    /*!< bit:  0..23  Result directly from ADC hard block */
+    uint32_t TESTRESULT:24;    /*!< bit:  0..23  Result Directly from ADC Hard Block */
     uint32_t _reserved0:8;     /*!< bit: 24..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } ADC_TESTRESULT_Type;
 
-#define ADC_TESTRESULT_OFFSET       0x2C         /**< \brief (ADC offset) Test Result register */
-#define ADC_TESTRESULT_RESETVALUE   0x0          /**< \brief (ADC reset_value) Test Result register */
+#define ADC_TESTRESULT_OFFSET       0x2C         /**< \brief (ADC_TESTRESULT offset) Test Result Register */
+#define ADC_TESTRESULT_RESETVALUE   0x0          /**< \brief (ADC_TESTRESULT reset_value) Test Result Register */
 
 #define ADC_TESTRESULT_TESTRESULT_Pos    0
-#define ADC_TESTRESULT_TESTRESULT_Msk    (0xFFFFFFu << ADC_TESTRESULT_TESTRESULT_Pos) /**< \brief (ADC_TESTRESULT) Result directly from ADC hard block */
+#define ADC_TESTRESULT_TESTRESULT_Msk    (0xFFFFFFu << ADC_TESTRESULT_TESTRESULT_Pos) /**< \brief (ADC_TESTRESULT) Result Directly from ADC Hard Block */
 #define ADC_TESTRESULT_TESTRESULT(value) ((ADC_TESTRESULT_TESTRESULT_Msk & ((value) << ADC_TESTRESULT_TESTRESULT_Pos)))
 #define ADC_TESTRESULT_MASK         0xFFFFFFu /**< \brief (ADC_TESTRESULT) MASK Register */
 
-/* -------- ADC_DCFG : (ADC Offset: 0x30) (R/W  8) Device configuration -------- */
+/* -------- ADC_DCFG : (ADC Offset: 0x30) (R/W  8) Device Configuration -------- */
 typedef union {
   struct {
     uint8_t  CMPDELAY:1;       /*!< bit:      0  Comparator Delay Control           */
-    uint8_t  BOOSTEN:1;        /*!< bit:      1  Enable the SR bosster in the opamp */
-    uint8_t  VCMPULSE:1;       /*!< bit:      2  Enable VCM pulse                   */
-    uint8_t  BIAS_OPA:1;       /*!< bit:      3  Select PTAT biasing for OPA        */
+    uint8_t  BOOSTEN:1;        /*!< bit:      1  Enable the SR Booster in the Op Amp */
+    uint8_t  VCMPULSE:1;       /*!< bit:      2  Enable VCM Pulse                   */
+    uint8_t  BIAS_OPA:1;       /*!< bit:      3  Select PTAT Biasing for OPA        */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_DCFG_Type;
 
-#define ADC_DCFG_OFFSET             0x30         /**< \brief (ADC offset) Device configuration */
-#define ADC_DCFG_RESETVALUE         0x0          /**< \brief (ADC reset_value) Device configuration */
+#define ADC_DCFG_OFFSET             0x30         /**< \brief (ADC_DCFG offset) Device Configuration */
+#define ADC_DCFG_RESETVALUE         0x0          /**< \brief (ADC_DCFG reset_value) Device Configuration */
 
 #define ADC_DCFG_CMPDELAY           (0x1u <<  0) /**< \brief (ADC_DCFG) Comparator Delay Control */
-#define ADC_DCFG_BOOSTEN            (0x1u <<  1) /**< \brief (ADC_DCFG) Enable the SR bosster in the opamp */
-#define ADC_DCFG_VCMPULSE           (0x1u <<  2) /**< \brief (ADC_DCFG) Enable VCM pulse */
-#define ADC_DCFG_BIAS_OPA           (0x1u <<  3) /**< \brief (ADC_DCFG) Select PTAT biasing for OPA */
+#define ADC_DCFG_BOOSTEN            (0x1u <<  1) /**< \brief (ADC_DCFG) Enable the SR Booster in the Op Amp */
+#define ADC_DCFG_VCMPULSE           (0x1u <<  2) /**< \brief (ADC_DCFG) Enable VCM Pulse */
+#define ADC_DCFG_BIAS_OPA           (0x1u <<  3) /**< \brief (ADC_DCFG) Select PTAT Biasing for OPA */
 #define ADC_DCFG_MASK               0xFu /**< \brief (ADC_DCFG) MASK Register */
 
 /** \brief ADC hardware registers */
 typedef struct {
-  __IO ADC_CTRLA_Type            CTRLA;       /**< \brief Offset: 0x00 (R/W  8) Control register A */
-  __IO ADC_REFCTRL_Type          REFCTRL;     /**< \brief Offset: 0x01 (R/W  8) Reference control register */
-  __IO ADC_AVGCTRL_Type          AVGCTRL;     /**< \brief Offset: 0x02 (R/W  8) Average Control register */
-  __IO ADC_SAMPCTRL_Type         SAMPCTRL;    /**< \brief Offset: 0x03 (R/W  8) Sample Time Control register */
+  __IO ADC_CTRLA_Type            CTRLA;       /**< \brief Offset: 0x00 (R/W  8) Control Register A */
+  __IO ADC_REFCTRL_Type          REFCTRL;     /**< \brief Offset: 0x01 (R/W  8) Reference Control Register */
+  __IO ADC_AVGCTRL_Type          AVGCTRL;     /**< \brief Offset: 0x02 (R/W  8) Average Control Register */
+  __IO ADC_SAMPCTRL_Type         SAMPCTRL;    /**< \brief Offset: 0x03 (R/W  8) Sample Time Control Register */
   __IO ADC_CTRLB_Type            CTRLB;       /**< \brief Offset: 0x04 (R/W 16) Control Register B */
        RoReg8                    Reserved1[0x2];
-  __IO ADC_WINCTRL_Type          WINCTRL;     /**< \brief Offset: 0x08 (R/W  8) Window Monitor control register */
+  __IO ADC_WINCTRL_Type          WINCTRL;     /**< \brief Offset: 0x08 (R/W  8) Window Monitor Control Register */
        RoReg8                    Reserved2[0x3];
-  __IO ADC_SWTRIG_Type           SWTRIG;      /**< \brief Offset: 0x0C (R/W  8) Control register B */
+  __IO ADC_SWTRIG_Type           SWTRIG;      /**< \brief Offset: 0x0C (R/W  8) Control Register B */
        RoReg8                    Reserved3[0x3];
-  __IO ADC_INPUTCTRL_Type        INPUTCTRL;   /**< \brief Offset: 0x10 (R/W 32) Input controlregister */
-  __IO ADC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x14 (R/W  8) Event control register */
+  __IO ADC_INPUTCTRL_Type        INPUTCTRL;   /**< \brief Offset: 0x10 (R/W 32) Input Control Register */
+  __IO ADC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x14 (R/W  8) Event Control Register */
        RoReg8                    Reserved4[0x1];
-  __IO ADC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x16 (R/W  8) Interrupt Enable Clear register */
-  __IO ADC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x17 (R/W  8) Interrupt Enable Set register */
-  __IO ADC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x18 (R/W  8) Interrupt Flag Status and Claer register */
-  __I  ADC_STATUS_Type           STATUS;      /**< \brief Offset: 0x19 (R/   8) Status register */
-  __I  ADC_RESULT_Type           RESULT;      /**< \brief Offset: 0x1A (R/  16) Result register */
-  __IO ADC_WINLT_Type            WINLT;       /**< \brief Offset: 0x1C (R/W 16) Window Monitor Lower Threshold register */
+  __IO ADC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x16 (R/W  8) Interrupt Enable Clear Register */
+  __IO ADC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x17 (R/W  8) Interrupt Enable Set Register */
+  __IO ADC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x18 (R/W  8) Interrupt Flag Status and Clear Register */
+  __I  ADC_STATUS_Type           STATUS;      /**< \brief Offset: 0x19 (R/   8) Status Register */
+  __I  ADC_RESULT_Type           RESULT;      /**< \brief Offset: 0x1A (R/  16) Result Register */
+  __IO ADC_WINLT_Type            WINLT;       /**< \brief Offset: 0x1C (R/W 16) Window Monitor Lower Threshold Register */
        RoReg8                    Reserved5[0x2];
-  __IO ADC_WINUT_Type            WINUT;       /**< \brief Offset: 0x20 (R/W 16) Window Monitor Upper threshold register */
+  __IO ADC_WINUT_Type            WINUT;       /**< \brief Offset: 0x20 (R/W 16) Window Monitor Upper Threshold Register */
        RoReg8                    Reserved6[0x2];
-  __IO ADC_GAINCORR_Type         GAINCORR;    /**< \brief Offset: 0x24 (R/W 16) Gain Correction register */
-  __IO ADC_OFFSETCORR_Type       OFFSETCORR;  /**< \brief Offset: 0x26 (R/W 16) Offset Correction register */
-  __IO ADC_CALIB_Type            CALIB;       /**< \brief Offset: 0x28 (R/W 16) Calibration register */
-  __IO ADC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x2A (R/W  8) Debug register */
-  __IO ADC_TEST_Type             TEST;        /**< \brief Offset: 0x2B (R/W  8) Test modes register */
-  __IO ADC_TESTRESULT_Type       TESTRESULT;  /**< \brief Offset: 0x2C (R/W 32) Test Result register */
-  __IO ADC_DCFG_Type             DCFG;        /**< \brief Offset: 0x30 (R/W  8) Device configuration */
+  __IO ADC_GAINCORR_Type         GAINCORR;    /**< \brief Offset: 0x24 (R/W 16) Gain Correction Register */
+  __IO ADC_OFFSETCORR_Type       OFFSETCORR;  /**< \brief Offset: 0x26 (R/W 16) Offset Correction Register */
+  __IO ADC_CALIB_Type            CALIB;       /**< \brief Offset: 0x28 (R/W 16) Calibration Register */
+  __IO ADC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x2A (R/W  8) Debug Register */
+  __IO ADC_TEST_Type             TEST;        /**< \brief Offset: 0x2B (R/W  8) Test Modes Register */
+  __IO ADC_TESTRESULT_Type       TESTRESULT;  /**< \brief Offset: 0x2C (R/W 32) Test Result Register */
+  __IO ADC_DCFG_Type             DCFG;        /**< \brief Offset: 0x30 (R/W  8) Device Configuration */
 } Adc;
 
 #endif /*  __EXCLUDE_ADC_FROM_CMSIS__ */
@@ -1305,40 +1303,12 @@ typedef struct {
 
 /*@}*/
 
-/* ========================================================================== */
-/**  SOFTWARE API DEFINITION FOR ATW */
-/* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_ATW Analog Test Wire Controller */
-/*@{*/
-
-#define REV_ATW        0x100
-
-#ifndef __ASSEMBLY__
-
-#ifndef __EXCLUDE_ATW_FROM_CMSIS__
-// ### Null start_register AtwGroup, group_end=PWIREEN
-// ### Null start_register AtwSpacer, group_end=PWIREEN
-
-#define ATW_SPACERS                 2
-#define ATW_GROUPS                  2
-
-/** \brief AtwGroup hardware registers */
-typedef struct {
-} AtwGroup;
-
-/** \brief ATW hardware registers */
-typedef struct {
-} Atw;
-
-#endif /*  __EXCLUDE_ATW_FROM_CMSIS__ */
-#endif /* __ASSEMBLY__ */
-
 /*@}*/
 
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR DAC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_DAC Digital Analog Converter */
+/** \addtogroup SAM0+D_DAC Digital Analog Converter */
 /*@{*/
 
 #define REV_DAC        0x100
@@ -1352,81 +1322,81 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  SLEEPEN:1;        /*!< bit:      2  Sleep Enable                       */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_CTRLA_Type;
 
-#define DAC_CTRLA_OFFSET            0x0          /**< \brief (DAC offset) Control Register A */
-#define DAC_CTRLA_RESETVALUE        0x0          /**< \brief (DAC reset_value) Control Register A */
+#define DAC_CTRLA_OFFSET            0x0          /**< \brief (DAC_CTRLA offset) Control Register A */
+#define DAC_CTRLA_RESETVALUE        0x0          /**< \brief (DAC_CTRLA reset_value) Control Register A */
 
 #define DAC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (DAC_CTRLA) Software Reset */
 #define DAC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (DAC_CTRLA) Enable */
-#define DAC_CTRLA_SLEEPEN           (0x1u <<  2) /**< \brief (DAC_CTRLA) Sleep Enable */
+#define DAC_CTRLA_RUNSTDBY          (0x1u <<  2) /**< \brief (DAC_CTRLA) Run during Standby */
 #define DAC_CTRLA_MASK              0x7u /**< \brief (DAC_CTRLA) MASK Register */
 
 /* -------- DAC_CTRLB : (DAC Offset: 0x1) (R/W  8) Control Register B -------- */
 typedef union {
   struct {
-    uint8_t  EOEN:1;           /*!< bit:      0  EOEN                               */
-    uint8_t  IOEN:1;           /*!< bit:      1  IOEN                               */
-    uint8_t  LEFTADJ:1;        /*!< bit:      2  LEFTADJ                            */
-    uint8_t  VPD:1;            /*!< bit:      3  VPD                                */
+    uint8_t  EOEN:1;           /*!< bit:      0  Output Buffer Enable               */
+    uint8_t  IOEN:1;           /*!< bit:      1  Internal DAC Output Channel Enabled for AC or ADC */
+    uint8_t  LEFTADJ:1;        /*!< bit:      2  Left-Adjusted Value                */
+    uint8_t  VPD:1;            /*!< bit:      3  Voltage Pump Disable               */
     uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
-    uint8_t  REFSEL:2;         /*!< bit:  6.. 7  REFSEL                             */
+    uint8_t  REFSEL:2;         /*!< bit:  6.. 7  Voltage Reference Select for DAC   */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_CTRLB_Type;
 
-#define DAC_CTRLB_OFFSET            0x1          /**< \brief (DAC offset) Control Register B */
-#define DAC_CTRLB_RESETVALUE        0x0          /**< \brief (DAC reset_value) Control Register B */
+#define DAC_CTRLB_OFFSET            0x1          /**< \brief (DAC_CTRLB offset) Control Register B */
+#define DAC_CTRLB_RESETVALUE        0x0          /**< \brief (DAC_CTRLB reset_value) Control Register B */
 
-#define DAC_CTRLB_EOEN              (0x1u <<  0) /**< \brief (DAC_CTRLB) EOEN */
-#define DAC_CTRLB_IOEN              (0x1u <<  1) /**< \brief (DAC_CTRLB) IOEN */
-#define DAC_CTRLB_LEFTADJ           (0x1u <<  2) /**< \brief (DAC_CTRLB) LEFTADJ */
-#define DAC_CTRLB_VPD               (0x1u <<  3) /**< \brief (DAC_CTRLB) VPD */
+#define DAC_CTRLB_EOEN              (0x1u <<  0) /**< \brief (DAC_CTRLB) Output Buffer Enable */
+#define DAC_CTRLB_IOEN              (0x1u <<  1) /**< \brief (DAC_CTRLB) Internal DAC Output Channel Enabled for AC or ADC */
+#define DAC_CTRLB_LEFTADJ           (0x1u <<  2) /**< \brief (DAC_CTRLB) Left-Adjusted Value */
+#define DAC_CTRLB_VPD               (0x1u <<  3) /**< \brief (DAC_CTRLB) Voltage Pump Disable */
 #define DAC_CTRLB_REFSEL_Pos        6
-#define DAC_CTRLB_REFSEL_Msk        (0x3u << DAC_CTRLB_REFSEL_Pos) /**< \brief (DAC_CTRLB) REFSEL */
+#define DAC_CTRLB_REFSEL_Msk        (0x3u << DAC_CTRLB_REFSEL_Pos) /**< \brief (DAC_CTRLB) Voltage Reference Select for DAC */
 #define DAC_CTRLB_REFSEL(value)     ((DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos)))
 #define DAC_CTRLB_MASK              0xCFu /**< \brief (DAC_CTRLB) MASK Register */
 
 /* -------- DAC_EVCTRL : (DAC Offset: 0x2) (R/W  8) Event Control Register -------- */
 typedef union {
   struct {
-    uint8_t  STARTEI:1;        /*!< bit:      0  Start conversion event input       */
-    uint8_t  EMPTYEO:1;        /*!< bit:      1  Data buffer empty event output     */
+    uint8_t  STARTEI:1;        /*!< bit:      0  Start Conversion Event Input       */
+    uint8_t  EMPTYEO:1;        /*!< bit:      1  Data Buffer Empty Event Output     */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_EVCTRL_Type;
 
-#define DAC_EVCTRL_OFFSET           0x2          /**< \brief (DAC offset) Event Control Register */
-#define DAC_EVCTRL_RESETVALUE       0x0          /**< \brief (DAC reset_value) Event Control Register */
+#define DAC_EVCTRL_OFFSET           0x2          /**< \brief (DAC_EVCTRL offset) Event Control Register */
+#define DAC_EVCTRL_RESETVALUE       0x0          /**< \brief (DAC_EVCTRL reset_value) Event Control Register */
 
-#define DAC_EVCTRL_STARTEI          (0x1u <<  0) /**< \brief (DAC_EVCTRL) Start conversion event input */
-#define DAC_EVCTRL_EMPTYEO          (0x1u <<  1) /**< \brief (DAC_EVCTRL) Data buffer empty event output */
+#define DAC_EVCTRL_STARTEI          (0x1u <<  0) /**< \brief (DAC_EVCTRL) Start Conversion Event Input */
+#define DAC_EVCTRL_EMPTYEO          (0x1u <<  1) /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output */
 #define DAC_EVCTRL_MASK             0x3u /**< \brief (DAC_EVCTRL) MASK Register */
 
 /* -------- DAC_TEST : (DAC Offset: 0x3) (R/W  8) Test Register -------- */
 typedef union {
   struct {
-    uint8_t  TESTEN:1;         /*!< bit:      0  TESTEN                             */
+    uint8_t  TESTEN:1;         /*!< bit:      0  Test Enable                        */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_TEST_Type;
 
-#define DAC_TEST_OFFSET             0x3          /**< \brief (DAC offset) Test Register */
-#define DAC_TEST_RESETVALUE         0x0          /**< \brief (DAC reset_value) Test Register */
+#define DAC_TEST_OFFSET             0x3          /**< \brief (DAC_TEST offset) Test Register */
+#define DAC_TEST_RESETVALUE         0x0          /**< \brief (DAC_TEST reset_value) Test Register */
 
-#define DAC_TEST_TESTEN             (0x1u <<  0) /**< \brief (DAC_TEST) TESTEN */
+#define DAC_TEST_TESTEN             (0x1u <<  0) /**< \brief (DAC_TEST) Test Enable */
 #define DAC_TEST_MASK               0x1u /**< \brief (DAC_TEST) MASK Register */
 
-/* -------- DAC_INTENCLR : (DAC Offset: 0x4) (R/W  8) Interrupt Enable Clear Regiser -------- */
+/* -------- DAC_INTENCLR : (DAC Offset: 0x4) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun interrupt disable         */
+    uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun Interrupt Disable         */
     uint8_t  EMPTY:1;          /*!< bit:      1  Empty Interrupt Disable            */
     uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Disable            */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
@@ -1434,10 +1404,10 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_INTENCLR_Type;
 
-#define DAC_INTENCLR_OFFSET         0x4          /**< \brief (DAC offset) Interrupt Enable Clear Regiser */
-#define DAC_INTENCLR_RESETVALUE     0x0          /**< \brief (DAC reset_value) Interrupt Enable Clear Regiser */
+#define DAC_INTENCLR_OFFSET         0x4          /**< \brief (DAC_INTENCLR offset) Interrupt Enable Clear Register */
+#define DAC_INTENCLR_RESETVALUE     0x0          /**< \brief (DAC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define DAC_INTENCLR_UNDERRUN       (0x1u <<  0) /**< \brief (DAC_INTENCLR) Underrun interrupt disable */
+#define DAC_INTENCLR_UNDERRUN       (0x1u <<  0) /**< \brief (DAC_INTENCLR) Underrun Interrupt Disable */
 #define DAC_INTENCLR_EMPTY          (0x1u <<  1) /**< \brief (DAC_INTENCLR) Empty Interrupt Disable */
 #define DAC_INTENCLR_READY          (0x1u <<  2) /**< \brief (DAC_INTENCLR) Ready Interrupt Disable */
 #define DAC_INTENCLR_MASK           0x7u /**< \brief (DAC_INTENCLR) MASK Register */
@@ -1453,8 +1423,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_INTENSET_Type;
 
-#define DAC_INTENSET_OFFSET         0x5          /**< \brief (DAC offset) Interrupt Enable Set Register */
-#define DAC_INTENSET_RESETVALUE     0x0          /**< \brief (DAC reset_value) Interrupt Enable Set Register */
+#define DAC_INTENSET_OFFSET         0x5          /**< \brief (DAC_INTENSET offset) Interrupt Enable Set Register */
+#define DAC_INTENSET_RESETVALUE     0x0          /**< \brief (DAC_INTENSET reset_value) Interrupt Enable Set Register */
 
 #define DAC_INTENSET_UNDERRUN       (0x1u <<  0) /**< \brief (DAC_INTENSET) Underrun Interrupt Enable */
 #define DAC_INTENSET_EMPTY          (0x1u <<  1) /**< \brief (DAC_INTENSET) Empty Interrupt Enable */
@@ -1464,20 +1434,20 @@ typedef union {
 /* -------- DAC_INTFLAG : (DAC Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun flag status and clear     */
-    uint8_t  EMPTY:1;          /*!< bit:      1  Empty flag status and clear        */
-    uint8_t  READY:1;          /*!< bit:      2  Ready flag status and clear        */
+    uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun Interrupt Flag            */
+    uint8_t  EMPTY:1;          /*!< bit:      1  Empty Interrupt Flag               */
+    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Flag               */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_INTFLAG_Type;
 
-#define DAC_INTFLAG_OFFSET          0x6          /**< \brief (DAC offset) Interrupt Flag Status and Clear Register */
-#define DAC_INTFLAG_RESETVALUE      0x0          /**< \brief (DAC reset_value) Interrupt Flag Status and Clear Register */
+#define DAC_INTFLAG_OFFSET          0x6          /**< \brief (DAC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define DAC_INTFLAG_RESETVALUE      0x0          /**< \brief (DAC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define DAC_INTFLAG_UNDERRUN        (0x1u <<  0) /**< \brief (DAC_INTFLAG) Underrun flag status and clear */
-#define DAC_INTFLAG_EMPTY           (0x1u <<  1) /**< \brief (DAC_INTFLAG) Empty flag status and clear */
-#define DAC_INTFLAG_READY           (0x1u <<  2) /**< \brief (DAC_INTFLAG) Ready flag status and clear */
+#define DAC_INTFLAG_UNDERRUN        (0x1u <<  0) /**< \brief (DAC_INTFLAG) Underrun Interrupt Flag */
+#define DAC_INTFLAG_EMPTY           (0x1u <<  1) /**< \brief (DAC_INTFLAG) Empty Interrupt Flag */
+#define DAC_INTFLAG_READY           (0x1u <<  2) /**< \brief (DAC_INTFLAG) Ready Interrupt Flag */
 #define DAC_INTFLAG_MASK            0x7u /**< \brief (DAC_INTFLAG) MASK Register */
 
 /* -------- DAC_STATUS : (DAC Offset: 0x7) (R/   8) Status Register -------- */
@@ -1491,8 +1461,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_STATUS_Type;
 
-#define DAC_STATUS_OFFSET           0x7          /**< \brief (DAC offset) Status Register */
-#define DAC_STATUS_RESETVALUE       0x0          /**< \brief (DAC reset_value) Status Register */
+#define DAC_STATUS_OFFSET           0x7          /**< \brief (DAC_STATUS offset) Status Register */
+#define DAC_STATUS_RESETVALUE       0x0          /**< \brief (DAC_STATUS reset_value) Status Register */
 
 #define DAC_STATUS_SWRST            (0x1u <<  0) /**< \brief (DAC_STATUS) Software Reset Status */
 #define DAC_STATUS_ENABLE           (0x1u <<  1) /**< \brief (DAC_STATUS) Enable Status */
@@ -1502,16 +1472,16 @@ typedef union {
 /* -------- DAC_DATA : (DAC Offset: 0x8) (R/W 16) Data Register -------- */
 typedef union {
   struct {
-    uint16_t DATA:16;          /*!< bit:  0..15  DATA register                      */
+    uint16_t DATA:16;          /*!< bit:  0..15  Data to be Converted               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } DAC_DATA_Type;
 
-#define DAC_DATA_OFFSET             0x8          /**< \brief (DAC offset) Data Register */
-#define DAC_DATA_RESETVALUE         0x0          /**< \brief (DAC reset_value) Data Register */
+#define DAC_DATA_OFFSET             0x8          /**< \brief (DAC_DATA offset) Data Register */
+#define DAC_DATA_RESETVALUE         0x0          /**< \brief (DAC_DATA reset_value) Data Register */
 
 #define DAC_DATA_DATA_Pos           0
-#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos) /**< \brief (DAC_DATA) DATA register */
+#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos) /**< \brief (DAC_DATA) Data to be Converted */
 #define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
 #define DAC_DATA_MASK               0xFFFFu /**< \brief (DAC_DATA) MASK Register */
 
@@ -1523,8 +1493,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } DAC_DATABUF_Type;
 
-#define DAC_DATABUF_OFFSET          0xC          /**< \brief (DAC offset) Data Buffer Register */
-#define DAC_DATABUF_RESETVALUE      0x0          /**< \brief (DAC reset_value) Data Buffer Register */
+#define DAC_DATABUF_OFFSET          0xC          /**< \brief (DAC_DATABUF offset) Data Buffer Register */
+#define DAC_DATABUF_RESETVALUE      0x0          /**< \brief (DAC_DATABUF reset_value) Data Buffer Register */
 
 #define DAC_DATABUF_DATABUF_Pos     0
 #define DAC_DATABUF_DATABUF_Msk     (0xFFFFu << DAC_DATABUF_DATABUF_Pos) /**< \brief (DAC_DATABUF) Data Buffer */
@@ -1537,7 +1507,7 @@ typedef struct {
   __IO DAC_CTRLB_Type            CTRLB;       /**< \brief Offset: 0x1 (R/W  8) Control Register B */
   __IO DAC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x2 (R/W  8) Event Control Register */
   __IO DAC_TEST_Type             TEST;        /**< \brief Offset: 0x3 (R/W  8) Test Register */
-  __IO DAC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x4 (R/W  8) Interrupt Enable Clear Regiser */
+  __IO DAC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x4 (R/W  8) Interrupt Enable Clear Register */
   __IO DAC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x5 (R/W  8) Interrupt Enable Set Register */
   __IO DAC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x6 (R/W  8) Interrupt Flag Status and Clear Register */
   __I  DAC_STATUS_Type           STATUS;      /**< \brief Offset: 0x7 (R/   8) Status Register */
@@ -1554,7 +1524,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR DSU */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_DSU Device Service Unit */
+/** \addtogroup SAM0+D_DSU Device Service Unit */
 /*@{*/
 
 #define REV_DSU        0x100
@@ -1566,104 +1536,107 @@ typedef struct {
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control Register -------- */
 typedef union {
   struct {
-    uint8_t  SWRST:1;          /*!< bit:      0                                     */
+    uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  _reserved0:1;     /*!< bit:      1  Reserved                           */
-    uint8_t  CRC:1;            /*!< bit:      2                                     */
-    uint8_t  MBIST:1;          /*!< bit:      3                                     */
-    uint8_t  CE:1;             /*!< bit:      4                                     */
+    uint8_t  CRC:1;            /*!< bit:      2  Cyclic Redundancy Check            */
+    uint8_t  MBIST:1;          /*!< bit:      3  Memory BIST                        */
+    uint8_t  CE:1;             /*!< bit:      4  Chip Erase                         */
     uint8_t  _reserved1:1;     /*!< bit:      5  Reserved                           */
-    uint8_t  ARR:1;            /*!< bit:      6                                     */
-    uint8_t  SMSA:1;           /*!< bit:      7                                     */
+    uint8_t  ARR:1;            /*!< bit:      6  Auxiliary Row Read                 */
+    uint8_t  SMSA:1;           /*!< bit:      7  Start Memory Stream Access         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DSU_CTRL_Type;
 
-#define DSU_CTRL_OFFSET             0x0000       /**< \brief (DSU offset) Control Register */
+#define DSU_CTRL_OFFSET             0x0000       /**< \brief (DSU_CTRL offset) Control Register */
 
-#define DSU_CTRL_SWRST              (0x1u <<  0) /**< \brief (DSU_CTRL)  */
-#define DSU_CTRL_CRC                (0x1u <<  2) /**< \brief (DSU_CTRL)  */
-#define DSU_CTRL_MBIST              (0x1u <<  3) /**< \brief (DSU_CTRL)  */
-#define DSU_CTRL_CE                 (0x1u <<  4) /**< \brief (DSU_CTRL)  */
-#define DSU_CTRL_ARR                (0x1u <<  6) /**< \brief (DSU_CTRL)  */
-#define DSU_CTRL_SMSA               (0x1u <<  7) /**< \brief (DSU_CTRL)  */
+#define DSU_CTRL_SWRST              (0x1u <<  0) /**< \brief (DSU_CTRL) Software Reset */
+#define DSU_CTRL_CRC                (0x1u <<  2) /**< \brief (DSU_CTRL) Cyclic Redundancy Check */
+#define DSU_CTRL_MBIST              (0x1u <<  3) /**< \brief (DSU_CTRL) Memory BIST */
+#define DSU_CTRL_CE                 (0x1u <<  4) /**< \brief (DSU_CTRL) Chip Erase */
+#define DSU_CTRL_ARR                (0x1u <<  6) /**< \brief (DSU_CTRL) Auxiliary Row Read */
+#define DSU_CTRL_SMSA               (0x1u <<  7) /**< \brief (DSU_CTRL) Start Memory Stream Access */
 #define DSU_CTRL_MASK               0xDDu /**< \brief (DSU_CTRL) MASK Register */
 
 /* -------- DSU_STATUSA : (DSU Offset: 0x0001) (R/W  8) Status Register A -------- */
 typedef union {
   struct {
-    uint8_t  DONE:1;           /*!< bit:      0                                     */
-    uint8_t  CRSTEXT:1;        /*!< bit:      1                                     */
-    uint8_t  BERR:1;           /*!< bit:      2                                     */
-    uint8_t  FAIL:1;           /*!< bit:      3                                     */
-    uint8_t  PERR:1;           /*!< bit:      4                                     */
+    uint8_t  DONE:1;           /*!< bit:      0  Done                               */
+    uint8_t  CRSTEXT:1;        /*!< bit:      1  CPU Reset Phase Extension          */
+    uint8_t  BERR:1;           /*!< bit:      2  Bus Error                          */
+    uint8_t  FAIL:1;           /*!< bit:      3  Failure                            */
+    uint8_t  PERR:1;           /*!< bit:      4  Protection Error                   */
     uint8_t  _reserved0:3;     /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DSU_STATUSA_Type;
 
-#define DSU_STATUSA_OFFSET          0x0001       /**< \brief (DSU offset) Status Register A */
+#define DSU_STATUSA_OFFSET          0x0001       /**< \brief (DSU_STATUSA offset) Status Register A */
 
-#define DSU_STATUSA_DONE            (0x1u <<  0) /**< \brief (DSU_STATUSA)  */
-#define DSU_STATUSA_CRSTEXT         (0x1u <<  1) /**< \brief (DSU_STATUSA)  */
-#define DSU_STATUSA_BERR            (0x1u <<  2) /**< \brief (DSU_STATUSA)  */
-#define DSU_STATUSA_FAIL            (0x1u <<  3) /**< \brief (DSU_STATUSA)  */
-#define DSU_STATUSA_PERR            (0x1u <<  4) /**< \brief (DSU_STATUSA)  */
+#define DSU_STATUSA_DONE            (0x1u <<  0) /**< \brief (DSU_STATUSA) Done */
+#define DSU_STATUSA_CRSTEXT         (0x1u <<  1) /**< \brief (DSU_STATUSA) CPU Reset Phase Extension */
+#define DSU_STATUSA_BERR            (0x1u <<  2) /**< \brief (DSU_STATUSA) Bus Error */
+#define DSU_STATUSA_FAIL            (0x1u <<  3) /**< \brief (DSU_STATUSA) Failure */
+#define DSU_STATUSA_PERR            (0x1u <<  4) /**< \brief (DSU_STATUSA) Protection Error */
 #define DSU_STATUSA_MASK            0x1Fu /**< \brief (DSU_STATUSA) MASK Register */
 
 /* -------- DSU_STATUSB : (DSU Offset: 0x0002) (R/   8) Status Register B -------- */
 typedef union {
   struct {
-    uint8_t  PROT:1;           /*!< bit:      0                                     */
-    uint8_t  DBGPRES:1;        /*!< bit:      1                                     */
-    uint8_t  DCC0D:1;          /*!< bit:      2                                     */
-    uint8_t  DCC1D:1;          /*!< bit:      3                                     */
-    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
+    uint8_t  PROT:1;           /*!< bit:      0  Protected                          */
+    uint8_t  DBGPRES:1;        /*!< bit:      1  Debugger Present                   */
+    uint8_t  DCCD:2;           /*!< bit:  2.. 3  Debug Communication Channel Dirty  */
+    uint8_t  HPE:1;            /*!< bit:      4  Hot-Plugging Enable                */
+    uint8_t  _reserved0:3;     /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DSU_STATUSB_Type;
 
-#define DSU_STATUSB_OFFSET          0x0002       /**< \brief (DSU offset) Status Register B */
+#define DSU_STATUSB_OFFSET          0x0002       /**< \brief (DSU_STATUSB offset) Status Register B */
+#define DSU_STATUSB_RESETVALUE      0x0          /**< \brief (DSU_STATUSB reset_value) Status Register B */
 
-#define DSU_STATUSB_PROT            (0x1u <<  0) /**< \brief (DSU_STATUSB)  */
-#define DSU_STATUSB_DBGPRES         (0x1u <<  1) /**< \brief (DSU_STATUSB)  */
-#define DSU_STATUSB_DCC0D           (0x1u <<  2) /**< \brief (DSU_STATUSB)  */
-#define DSU_STATUSB_DCC1D           (0x1u <<  3) /**< \brief (DSU_STATUSB)  */
-#define DSU_STATUSB_MASK            0xFu /**< \brief (DSU_STATUSB) MASK Register */
+#define DSU_STATUSB_PROT            (0x1u <<  0) /**< \brief (DSU_STATUSB) Protected */
+#define DSU_STATUSB_DBGPRES         (0x1u <<  1) /**< \brief (DSU_STATUSB) Debugger Present */
+#define DSU_STATUSB_DCCD_Pos        2
+#define DSU_STATUSB_DCCD_Msk        (0x3u << DSU_STATUSB_DCCD_Pos) /**< \brief (DSU_STATUSB) Debug Communication Channel Dirty */
+#define DSU_STATUSB_DCCD(value)     ((DSU_STATUSB_DCCD_Msk & ((value) << DSU_STATUSB_DCCD_Pos)))
+#define DSU_STATUSB_HPE             (0x1u <<  4) /**< \brief (DSU_STATUSB) Hot-Plugging Enable */
+#define DSU_STATUSB_MASK            0x1Fu /**< \brief (DSU_STATUSB) MASK Register */
 
 /* -------- DSU_STATUSC : (DSU Offset: 0x0003) (R/   8) Status Register C -------- */
 typedef union {
   struct {
-    uint8_t  STATE:3;          /*!< bit:  0.. 2                                     */
+    uint8_t  STATE:3;          /*!< bit:  0.. 2  State                              */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DSU_STATUSC_Type;
 
-#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU offset) Status Register C */
-#define DSU_STATUSC_RESETVALUE      0x0          /**< \brief (DSU reset_value) Status Register C */
+#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU_STATUSC offset) Status Register C */
+#define DSU_STATUSC_RESETVALUE      0x0          /**< \brief (DSU_STATUSC reset_value) Status Register C */
 
 #define DSU_STATUSC_STATE_Pos       0
-#define DSU_STATUSC_STATE_Msk       (0x7u << DSU_STATUSC_STATE_Pos) /**< \brief (DSU_STATUSC)  */
+#define DSU_STATUSC_STATE_Msk       (0x7u << DSU_STATUSC_STATE_Pos) /**< \brief (DSU_STATUSC) State */
 #define DSU_STATUSC_STATE(value)    ((DSU_STATUSC_STATE_Msk & ((value) << DSU_STATUSC_STATE_Pos)))
 #define DSU_STATUSC_MASK            0x7u /**< \brief (DSU_STATUSC) MASK Register */
 
 /* -------- DSU_ADDR : (DSU Offset: 0x0004) (R/W 32) Address Register -------- */
 typedef union {
   struct {
-    uint32_t AMOD:2;           /*!< bit:  0.. 1                                     */
-    uint32_t ADDR:30;          /*!< bit:  2..31                                     */
+    uint32_t AMOD:2;           /*!< bit:  0.. 1  Access Mode                        */
+    uint32_t ADDR:30;          /*!< bit:  2..31  Address                            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_ADDR_Type;
 
-#define DSU_ADDR_OFFSET             0x0004       /**< \brief (DSU offset) Address Register */
-#define DSU_ADDR_RESETVALUE         0x0          /**< \brief (DSU reset_value) Address Register */
+#define DSU_ADDR_OFFSET             0x0004       /**< \brief (DSU_ADDR offset) Address Register */
+#define DSU_ADDR_RESETVALUE         0x0          /**< \brief (DSU_ADDR reset_value) Address Register */
 
 #define DSU_ADDR_AMOD_Pos           0
-#define DSU_ADDR_AMOD_Msk           (0x3u << DSU_ADDR_AMOD_Pos) /**< \brief (DSU_ADDR)  */
+#define DSU_ADDR_AMOD_Msk           (0x3u << DSU_ADDR_AMOD_Pos) /**< \brief (DSU_ADDR) Access Mode */
 #define DSU_ADDR_AMOD(value)        ((DSU_ADDR_AMOD_Msk & ((value) << DSU_ADDR_AMOD_Pos)))
 #define DSU_ADDR_ADDR_Pos           2
-#define DSU_ADDR_ADDR_Msk           (0x3FFFFFFFu << DSU_ADDR_ADDR_Pos) /**< \brief (DSU_ADDR)  */
+#define DSU_ADDR_ADDR_Msk           (0x3FFFFFFFu << DSU_ADDR_ADDR_Pos) /**< \brief (DSU_ADDR) Address */
 #define DSU_ADDR_ADDR(value)        ((DSU_ADDR_ADDR_Msk & ((value) << DSU_ADDR_ADDR_Pos)))
 #define DSU_ADDR_MASK               0xFFFFFFFFu /**< \brief (DSU_ADDR) MASK Register */
 
@@ -1671,146 +1644,135 @@ typedef union {
 typedef union {
   struct {
     uint32_t _reserved0:2;     /*!< bit:  0.. 1  Reserved                           */
-    uint32_t LENGTH:30;        /*!< bit:  2..31                                     */
+    uint32_t LENGTH:30;        /*!< bit:  2..31  Length                             */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_LENGTH_Type;
 
-#define DSU_LENGTH_OFFSET           0x0008       /**< \brief (DSU offset) Length Register */
-#define DSU_LENGTH_RESETVALUE       0x0          /**< \brief (DSU reset_value) Length Register */
+#define DSU_LENGTH_OFFSET           0x0008       /**< \brief (DSU_LENGTH offset) Length Register */
+#define DSU_LENGTH_RESETVALUE       0x0          /**< \brief (DSU_LENGTH reset_value) Length Register */
 
 #define DSU_LENGTH_LENGTH_Pos       2
-#define DSU_LENGTH_LENGTH_Msk       (0x3FFFFFFFu << DSU_LENGTH_LENGTH_Pos) /**< \brief (DSU_LENGTH)  */
+#define DSU_LENGTH_LENGTH_Msk       (0x3FFFFFFFu << DSU_LENGTH_LENGTH_Pos) /**< \brief (DSU_LENGTH) Length */
 #define DSU_LENGTH_LENGTH(value)    ((DSU_LENGTH_LENGTH_Msk & ((value) << DSU_LENGTH_LENGTH_Pos)))
 #define DSU_LENGTH_MASK             0xFFFFFFFCu /**< \brief (DSU_LENGTH) MASK Register */
 
 /* -------- DSU_DATA : (DSU Offset: 0x000C) (R/W 32) Data Register -------- */
 typedef union {
   struct {
-    uint32_t DATA:32;          /*!< bit:  0..31                                     */
+    uint32_t DATA:32;          /*!< bit:  0..31  Data                               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_DATA_Type;
 
-#define DSU_DATA_OFFSET             0x000C       /**< \brief (DSU offset) Data Register */
+#define DSU_DATA_OFFSET             0x000C       /**< \brief (DSU_DATA offset) Data Register */
 
 #define DSU_DATA_DATA_Pos           0
-#define DSU_DATA_DATA_Msk           (0xFFFFFFFFu << DSU_DATA_DATA_Pos) /**< \brief (DSU_DATA)  */
+#define DSU_DATA_DATA_Msk           (0xFFFFFFFFu << DSU_DATA_DATA_Pos) /**< \brief (DSU_DATA) Data */
 #define DSU_DATA_DATA(value)        ((DSU_DATA_DATA_Msk & ((value) << DSU_DATA_DATA_Pos)))
 #define DSU_DATA_MASK               0xFFFFFFFFu /**< \brief (DSU_DATA) MASK Register */
 
-/* -------- DSU_DCC0 : (DSU Offset: 0x0010) (R/W 32) Debug Communication Channel 0 Register -------- */
+/* -------- DSU_DCC : (DSU Offset: 0x0010) (R/W 32) Debug Communication Channel Register -------- */
 typedef union {
   struct {
-    uint32_t DCC0:32;          /*!< bit:  0..31                                     */
+    uint32_t DATA:32;          /*!< bit:  0..31  Data                               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} DSU_DCC0_Type;
+} DSU_DCC_Type;
 
-#define DSU_DCC0_OFFSET             0x0010       /**< \brief (DSU offset) Debug Communication Channel 0 Register */
-#define DSU_DCC0_RESETVALUE         0x0          /**< \brief (DSU reset_value) Debug Communication Channel 0 Register */
+#define DSU_DCC_OFFSET              0x0010       /**< \brief (DSU_DCC offset) Debug Communication Channel Register */
+#define DSU_DCC_RESETVALUE          0x0          /**< \brief (DSU_DCC reset_value) Debug Communication Channel Register */
 
-#define DSU_DCC0_DCC0_Pos           0
-#define DSU_DCC0_DCC0_Msk           (0xFFFFFFFFu << DSU_DCC0_DCC0_Pos) /**< \brief (DSU_DCC0)  */
-#define DSU_DCC0_DCC0(value)        ((DSU_DCC0_DCC0_Msk & ((value) << DSU_DCC0_DCC0_Pos)))
-#define DSU_DCC0_MASK               0xFFFFFFFFu /**< \brief (DSU_DCC0) MASK Register */
-
-/* -------- DSU_DCC1 : (DSU Offset: 0x0014) (R/W 32) Debug Communication Channel 1 Register -------- */
-typedef union {
-  struct {
-    uint32_t DCC1:32;          /*!< bit:  0..31                                     */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} DSU_DCC1_Type;
-
-#define DSU_DCC1_OFFSET             0x0014       /**< \brief (DSU offset) Debug Communication Channel 1 Register */
-#define DSU_DCC1_RESETVALUE         0x0          /**< \brief (DSU reset_value) Debug Communication Channel 1 Register */
-
-#define DSU_DCC1_DCC1_Pos           0
-#define DSU_DCC1_DCC1_Msk           (0xFFFFFFFFu << DSU_DCC1_DCC1_Pos) /**< \brief (DSU_DCC1)  */
-#define DSU_DCC1_DCC1(value)        ((DSU_DCC1_DCC1_Msk & ((value) << DSU_DCC1_DCC1_Pos)))
-#define DSU_DCC1_MASK               0xFFFFFFFFu /**< \brief (DSU_DCC1) MASK Register */
+#define DSU_DCC_DATA_Pos            0
+#define DSU_DCC_DATA_Msk            (0xFFFFFFFFu << DSU_DCC_DATA_Pos) /**< \brief (DSU_DCC) Data */
+#define DSU_DCC_DATA(value)         ((DSU_DCC_DATA_Msk & ((value) << DSU_DCC_DATA_Pos)))
+#define DSU_DCC_MASK                0xFFFFFFFFu /**< \brief (DSU_DCC) MASK Register */
 
 /* -------- DSU_DID : (DSU Offset: 0x0018) (R/  32) Device Identification Register -------- */
 typedef union {
   struct {
-    uint32_t DEVSEL:8;         /*!< bit:  0.. 7                                     */
-    uint32_t REVISION:4;       /*!< bit:  8..11                                     */
-    uint32_t DIE:4;            /*!< bit: 12..15                                     */
-    uint32_t SUBFAMILY:8;      /*!< bit: 16..23                                     */
-    uint32_t FAMILY:4;         /*!< bit: 24..27                                     */
-    uint32_t PROCESSOR:4;      /*!< bit: 28..31                                     */
+    uint32_t DEVSEL:8;         /*!< bit:  0.. 7  Device Select                      */
+    uint32_t REVISION:4;       /*!< bit:  8..11  Revision Number                    */
+    uint32_t DIE:4;            /*!< bit: 12..15  Die Number                         */
+    uint32_t SUBFAMILY:8;      /*!< bit: 16..23  Sub-Family                         */
+    uint32_t FAMILY:4;         /*!< bit: 24..27  Family                             */
+    uint32_t PROCESSOR:4;      /*!< bit: 28..31  Processor                          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_DID_Type;
 
-#define DSU_DID_OFFSET              0x0018       /**< \brief (DSU offset) Device Identification Register */
-#define DSU_DID_RESETVALUE          0x0          /**< \brief (DSU reset_value) Device Identification Register */
+#define DSU_DID_OFFSET              0x0018       /**< \brief (DSU_DID offset) Device Identification Register */
+#define DSU_DID_RESETVALUE          0x0          /**< \brief (DSU_DID reset_value) Device Identification Register */
 
 #define DSU_DID_DEVSEL_Pos          0
-#define DSU_DID_DEVSEL_Msk          (0xFFu << DSU_DID_DEVSEL_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_DEVSEL_Msk          (0xFFu << DSU_DID_DEVSEL_Pos) /**< \brief (DSU_DID) Device Select */
 #define DSU_DID_DEVSEL(value)       ((DSU_DID_DEVSEL_Msk & ((value) << DSU_DID_DEVSEL_Pos)))
 #define DSU_DID_REVISION_Pos        8
-#define DSU_DID_REVISION_Msk        (0xFu << DSU_DID_REVISION_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_REVISION_Msk        (0xFu << DSU_DID_REVISION_Pos) /**< \brief (DSU_DID) Revision Number */
 #define DSU_DID_REVISION(value)     ((DSU_DID_REVISION_Msk & ((value) << DSU_DID_REVISION_Pos)))
 #define DSU_DID_DIE_Pos             12
-#define DSU_DID_DIE_Msk             (0xFu << DSU_DID_DIE_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_DIE_Msk             (0xFu << DSU_DID_DIE_Pos) /**< \brief (DSU_DID) Die Number */
 #define DSU_DID_DIE(value)          ((DSU_DID_DIE_Msk & ((value) << DSU_DID_DIE_Pos)))
 #define DSU_DID_SUBFAMILY_Pos       16
-#define DSU_DID_SUBFAMILY_Msk       (0xFFu << DSU_DID_SUBFAMILY_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_SUBFAMILY_Msk       (0xFFu << DSU_DID_SUBFAMILY_Pos) /**< \brief (DSU_DID) Sub-Family */
 #define DSU_DID_SUBFAMILY(value)    ((DSU_DID_SUBFAMILY_Msk & ((value) << DSU_DID_SUBFAMILY_Pos)))
 #define DSU_DID_FAMILY_Pos          24
-#define DSU_DID_FAMILY_Msk          (0xFu << DSU_DID_FAMILY_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_FAMILY_Msk          (0xFu << DSU_DID_FAMILY_Pos) /**< \brief (DSU_DID) Family */
 #define DSU_DID_FAMILY(value)       ((DSU_DID_FAMILY_Msk & ((value) << DSU_DID_FAMILY_Pos)))
 #define DSU_DID_PROCESSOR_Pos       28
-#define DSU_DID_PROCESSOR_Msk       (0xFu << DSU_DID_PROCESSOR_Pos) /**< \brief (DSU_DID)  */
+#define DSU_DID_PROCESSOR_Msk       (0xFu << DSU_DID_PROCESSOR_Pos) /**< \brief (DSU_DID) Processor */
 #define DSU_DID_PROCESSOR(value)    ((DSU_DID_PROCESSOR_Msk & ((value) << DSU_DID_PROCESSOR_Pos)))
 #define DSU_DID_MASK                0xFFFFFFFFu /**< \brief (DSU_DID) MASK Register */
 
-/* -------- DSU_DCFG0 : (DSU Offset: 0x00F0) (R/W 32) Device Configuration Register 0 -------- */
+/* -------- DSU_DCFG : (DSU Offset: 0x00F0) (R/W 32) Device Configuration Register -------- */
 typedef union {
+  struct {
+    uint32_t DCFG:32;          /*!< bit:  0..31  Device Configuration               */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} DSU_DCFG0_Type;
+} DSU_DCFG_Type;
 
-#define DSU_DCFG0_OFFSET            0x00F0       /**< \brief (DSU offset) Device Configuration Register 0 */
-#define DSU_DCFG0_RESETVALUE        0x0          /**< \brief (DSU reset_value) Device Configuration Register 0 */
-#define DSU_DCFG0_MASK              0xFFFFFFFFu  /**< \brief (DSU_DCFG0) MASK Register */
+#define DSU_DCFG_OFFSET             0x00F0       /**< \brief (DSU_DCFG offset) Device Configuration Register */
+#define DSU_DCFG_RESETVALUE         0x0          /**< \brief (DSU_DCFG reset_value) Device Configuration Register */
 
-/* -------- DSU_DCFG1 : (DSU Offset: 0x00F4) (R/  32) Device Configuration Register 1 -------- */
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} DSU_DCFG1_Type;
-
-#define DSU_DCFG1_OFFSET            0x00F4       /**< \brief (DSU offset) Device Configuration Register 1 */
-#define DSU_DCFG1_RESETVALUE        0x0          /**< \brief (DSU reset_value) Device Configuration Register 1 */
-#define DSU_DCFG1_MASK              0xFFFFFFFFu  /**< \brief (DSU_DCFG1) MASK Register */
+#define DSU_DCFG_DCFG_Pos           0
+#define DSU_DCFG_DCFG_Msk           (0xFFFFFFFFu << DSU_DCFG_DCFG_Pos) /**< \brief (DSU_DCFG) Device Configuration */
+#define DSU_DCFG_DCFG(value)        ((DSU_DCFG_DCFG_Msk & ((value) << DSU_DCFG_DCFG_Pos)))
+#define DSU_DCFG_MASK               0xFFFFFFFFu /**< \brief (DSU_DCFG) MASK Register */
 
 /* -------- DSU_UPTM : (DSU Offset: 0x00F8) (R/W 32) UnProtected Test Mode Register -------- */
 typedef union {
+  struct {
+    uint32_t UPTM:32;          /*!< bit:  0..31  Un-Protected Test Mode             */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_UPTM_Type;
 
-#define DSU_UPTM_OFFSET             0x00F8       /**< \brief (DSU offset) UnProtected Test Mode Register */
-#define DSU_UPTM_RESETVALUE         0x0          /**< \brief (DSU reset_value) UnProtected Test Mode Register */
-#define DSU_UPTM_MASK               0xFFFFFFFFu  /**< \brief (DSU_UPTM) MASK Register */
+#define DSU_UPTM_OFFSET             0x00F8       /**< \brief (DSU_UPTM offset) UnProtected Test Mode Register */
+#define DSU_UPTM_RESETVALUE         0x0          /**< \brief (DSU_UPTM reset_value) UnProtected Test Mode Register */
+
+#define DSU_UPTM_UPTM_Pos           0
+#define DSU_UPTM_UPTM_Msk           (0xFFFFFFFFu << DSU_UPTM_UPTM_Pos) /**< \brief (DSU_UPTM) Un-Protected Test Mode */
+#define DSU_UPTM_UPTM(value)        ((DSU_UPTM_UPTM_Msk & ((value) << DSU_UPTM_UPTM_Pos)))
+#define DSU_UPTM_MASK               0xFFFFFFFFu /**< \brief (DSU_UPTM) MASK Register */
 
 /* -------- DSU_TESTMODE : (DSU Offset: 0x00FC) (R/W 32) Test Mode Register -------- */
 typedef union {
   struct {
-    uint32_t TESTMODE:32;      /*!< bit:  0..31                                     */
+    uint32_t TESTMODE:32;      /*!< bit:  0..31  Test Mode                          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_TESTMODE_Type;
 
-#define DSU_TESTMODE_OFFSET         0x00FC       /**< \brief (DSU offset) Test Mode Register */
-#define DSU_TESTMODE_RESETVALUE     0x0          /**< \brief (DSU reset_value) Test Mode Register */
+#define DSU_TESTMODE_OFFSET         0x00FC       /**< \brief (DSU_TESTMODE offset) Test Mode Register */
+#define DSU_TESTMODE_RESETVALUE     0x0          /**< \brief (DSU_TESTMODE reset_value) Test Mode Register */
 
 #define DSU_TESTMODE_TESTMODE_Pos    0
-#define DSU_TESTMODE_TESTMODE_Msk    (0xFFFFFFFFu << DSU_TESTMODE_TESTMODE_Pos) /**< \brief (DSU_TESTMODE)  */
+#define DSU_TESTMODE_TESTMODE_Msk    (0xFFFFFFFFu << DSU_TESTMODE_TESTMODE_Pos) /**< \brief (DSU_TESTMODE) Test Mode */
 #define DSU_TESTMODE_TESTMODE(value) ((DSU_TESTMODE_TESTMODE_Msk & ((value) << DSU_TESTMODE_TESTMODE_Pos)))
 #define DSU_TESTMODE_MASK           0xFFFFFFFFu /**< \brief (DSU_TESTMODE) MASK Register */
 
-/* -------- DSU_ENTRY0 : (DSU Offset: 0x1000) (R/  32) Coresight ROM Table Entry 0 Register -------- */
+/* -------- DSU_ENTRY : (DSU Offset: 0x1000) (R/  32) CoreSight ROM Table Entry Register -------- */
 typedef union {
   struct {
     uint32_t PRES:1;           /*!< bit:      0                                     */
@@ -1819,77 +1781,64 @@ typedef union {
     uint32_t ADDOFF:20;        /*!< bit: 12..31                                     */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} DSU_ENTRY0_Type;
+} DSU_ENTRY_Type;
 
-#define DSU_ENTRY0_OFFSET           0x1000       /**< \brief (DSU offset) Coresight ROM Table Entry 0 Register */
+#define DSU_ENTRY_OFFSET            0x1000       /**< \brief (DSU_ENTRY offset) CoreSight ROM Table Entry Register */
 
-#define DSU_ENTRY0_PRES             (0x1u <<  0) /**< \brief (DSU_ENTRY0)  */
-#define DSU_ENTRY0_FMT              (0x1u <<  1) /**< \brief (DSU_ENTRY0)  */
-#define DSU_ENTRY0_ADDOFF_Pos       12
-#define DSU_ENTRY0_ADDOFF_Msk       (0xFFFFFu << DSU_ENTRY0_ADDOFF_Pos) /**< \brief (DSU_ENTRY0)  */
-#define DSU_ENTRY0_ADDOFF(value)    ((DSU_ENTRY0_ADDOFF_Msk & ((value) << DSU_ENTRY0_ADDOFF_Pos)))
-#define DSU_ENTRY0_MASK             0xFFFFF003u /**< \brief (DSU_ENTRY0) MASK Register */
+#define DSU_ENTRY_PRES              (0x1u <<  0) /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_FMT               (0x1u <<  1) /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_ADDOFF_Pos        12
+#define DSU_ENTRY_ADDOFF_Msk        (0xFFFFFu << DSU_ENTRY_ADDOFF_Pos) /**< \brief (DSU_ENTRY)  */
+#define DSU_ENTRY_ADDOFF(value)     ((DSU_ENTRY_ADDOFF_Msk & ((value) << DSU_ENTRY_ADDOFF_Pos)))
+#define DSU_ENTRY_MASK              0xFFFFF003u /**< \brief (DSU_ENTRY) MASK Register */
 
-/* -------- DSU_ENTRY1 : (DSU Offset: 0x1004) (R/  32) Coresight ROM Table Entry 1 Register -------- */
+/* -------- DSU_END : (DSU Offset: 0x1008) (R/  32) CoreSight ROM Table End Register -------- */
 typedef union {
   struct {
-    uint32_t PRES:1;           /*!< bit:      0                                     */
-    uint32_t FMT:1;            /*!< bit:      1                                     */
-    uint32_t _reserved0:10;    /*!< bit:  2..11  Reserved                           */
-    uint32_t ADDOFF:20;        /*!< bit: 12..31                                     */
+    uint32_t END:32;           /*!< bit:  0..31  End Marker                         */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} DSU_ENTRY1_Type;
-
-#define DSU_ENTRY1_OFFSET           0x1004       /**< \brief (DSU offset) Coresight ROM Table Entry 1 Register */
-
-#define DSU_ENTRY1_PRES             (0x1u <<  0) /**< \brief (DSU_ENTRY1)  */
-#define DSU_ENTRY1_FMT              (0x1u <<  1) /**< \brief (DSU_ENTRY1)  */
-#define DSU_ENTRY1_ADDOFF_Pos       12
-#define DSU_ENTRY1_ADDOFF_Msk       (0xFFFFFu << DSU_ENTRY1_ADDOFF_Pos) /**< \brief (DSU_ENTRY1)  */
-#define DSU_ENTRY1_ADDOFF(value)    ((DSU_ENTRY1_ADDOFF_Msk & ((value) << DSU_ENTRY1_ADDOFF_Pos)))
-#define DSU_ENTRY1_MASK             0xFFFFF003u /**< \brief (DSU_ENTRY1) MASK Register */
-
-/* -------- DSU_END : (DSU Offset: 0x1008) (R/  32) Coresight ROM Table End Register -------- */
-typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_END_Type;
 
-#define DSU_END_OFFSET              0x1008       /**< \brief (DSU offset) Coresight ROM Table End Register */
-#define DSU_END_RESETVALUE          0x0          /**< \brief (DSU reset_value) Coresight ROM Table End Register */
-#define DSU_END_MASK                0x0u /**< \brief (DSU_END) MASK Register */
+#define DSU_END_OFFSET              0x1008       /**< \brief (DSU_END offset) CoreSight ROM Table End Register */
+#define DSU_END_RESETVALUE          0x0          /**< \brief (DSU_END reset_value) CoreSight ROM Table End Register */
 
-/* -------- DSU_MEMTYPE : (DSU Offset: 0x1FCC) (R/  32) Coresight ROM Table Memory Type Register -------- */
+#define DSU_END_END_Pos             0
+#define DSU_END_END_Msk             (0xFFFFFFFFu << DSU_END_END_Pos) /**< \brief (DSU_END) End Marker */
+#define DSU_END_END(value)          ((DSU_END_END_Msk & ((value) << DSU_END_END_Pos)))
+#define DSU_END_MASK                0xFFFFFFFFu /**< \brief (DSU_END) MASK Register */
+
+/* -------- DSU_MEMTYPE : (DSU Offset: 0x1FCC) (R/  32) CoreSight ROM Table Memory Type Register -------- */
 typedef union {
   struct {
-    uint32_t SMEMP:1;          /*!< bit:      0                                     */
+    uint32_t SMEMP:1;          /*!< bit:      0  System Memory Present              */
     uint32_t _reserved0:31;    /*!< bit:  1..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_MEMTYPE_Type;
 
-#define DSU_MEMTYPE_OFFSET          0x1FCC       /**< \brief (DSU offset) Coresight ROM Table Memory Type Register */
+#define DSU_MEMTYPE_OFFSET          0x1FCC       /**< \brief (DSU_MEMTYPE offset) CoreSight ROM Table Memory Type Register */
 
-#define DSU_MEMTYPE_SMEMP           (0x1u <<  0) /**< \brief (DSU_MEMTYPE)  */
+#define DSU_MEMTYPE_SMEMP           (0x1u <<  0) /**< \brief (DSU_MEMTYPE) System Memory Present */
 #define DSU_MEMTYPE_MASK            0x1u /**< \brief (DSU_MEMTYPE) MASK Register */
 
 /* -------- DSU_PID4 : (DSU Offset: 0x1FD0) (R/  32) Peripheral Identification Register 4 -------- */
 typedef union {
   struct {
-    uint32_t JEPCC:4;          /*!< bit:  0.. 3                                     */
-    uint32_t FKBC:4;           /*!< bit:  4.. 7                                     */
+    uint32_t JEPCC:4;          /*!< bit:  0.. 3  JEP-106 Continuation Code          */
+    uint32_t FKBC:4;           /*!< bit:  4.. 7  4kB Count                          */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID4_Type;
 
-#define DSU_PID4_OFFSET             0x1FD0       /**< \brief (DSU offset) Peripheral Identification Register 4 */
+#define DSU_PID4_OFFSET             0x1FD0       /**< \brief (DSU_PID4 offset) Peripheral Identification Register 4 */
 
 #define DSU_PID4_JEPCC_Pos          0
-#define DSU_PID4_JEPCC_Msk          (0xFu << DSU_PID4_JEPCC_Pos) /**< \brief (DSU_PID4)  */
+#define DSU_PID4_JEPCC_Msk          (0xFu << DSU_PID4_JEPCC_Pos) /**< \brief (DSU_PID4) JEP-106 Continuation Code */
 #define DSU_PID4_JEPCC(value)       ((DSU_PID4_JEPCC_Msk & ((value) << DSU_PID4_JEPCC_Pos)))
 #define DSU_PID4_FKBC_Pos           4
-#define DSU_PID4_FKBC_Msk           (0xFu << DSU_PID4_FKBC_Pos) /**< \brief (DSU_PID4)  */
+#define DSU_PID4_FKBC_Msk           (0xFu << DSU_PID4_FKBC_Pos) /**< \brief (DSU_PID4) 4kB Count */
 #define DSU_PID4_FKBC(value)        ((DSU_PID4_FKBC_Msk & ((value) << DSU_PID4_FKBC_Pos)))
 #define DSU_PID4_MASK               0xFFu /**< \brief (DSU_PID4) MASK Register */
 
@@ -1898,7 +1847,7 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID5_Type;
 
-#define DSU_PID5_OFFSET             0x1FD4       /**< \brief (DSU offset) Peripheral Identification Register 5 */
+#define DSU_PID5_OFFSET             0x1FD4       /**< \brief (DSU_PID5 offset) Peripheral Identification Register 5 */
 #define DSU_PID5_MASK               0x0u /**< \brief (DSU_PID5) MASK Register */
 
 /* -------- DSU_PID6 : (DSU Offset: 0x1FD8) (R/  32) Peripheral Identification Register 6 -------- */
@@ -1906,7 +1855,7 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID6_Type;
 
-#define DSU_PID6_OFFSET             0x1FD8       /**< \brief (DSU offset) Peripheral Identification Register 6 */
+#define DSU_PID6_OFFSET             0x1FD8       /**< \brief (DSU_PID6 offset) Peripheral Identification Register 6 */
 #define DSU_PID6_MASK               0x0u /**< \brief (DSU_PID6) MASK Register */
 
 /* -------- DSU_PID7 : (DSU Offset: 0x1FDC) (R/  32) Peripheral Identification Register 7 -------- */
@@ -1914,156 +1863,156 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID7_Type;
 
-#define DSU_PID7_OFFSET             0x1FDC       /**< \brief (DSU offset) Peripheral Identification Register 7 */
+#define DSU_PID7_OFFSET             0x1FDC       /**< \brief (DSU_PID7 offset) Peripheral Identification Register 7 */
 #define DSU_PID7_MASK               0x0u /**< \brief (DSU_PID7) MASK Register */
 
 /* -------- DSU_PID0 : (DSU Offset: 0x1FE0) (R/  32) Peripheral Identification Register 0 -------- */
 typedef union {
   struct {
-    uint32_t PARTNBL:8;        /*!< bit:  0.. 7                                     */
+    uint32_t PARTNBL:8;        /*!< bit:  0.. 7  Part Number Low                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID0_Type;
 
-#define DSU_PID0_OFFSET             0x1FE0       /**< \brief (DSU offset) Peripheral Identification Register 0 */
+#define DSU_PID0_OFFSET             0x1FE0       /**< \brief (DSU_PID0 offset) Peripheral Identification Register 0 */
 
 #define DSU_PID0_PARTNBL_Pos        0
-#define DSU_PID0_PARTNBL_Msk        (0xFFu << DSU_PID0_PARTNBL_Pos) /**< \brief (DSU_PID0)  */
+#define DSU_PID0_PARTNBL_Msk        (0xFFu << DSU_PID0_PARTNBL_Pos) /**< \brief (DSU_PID0) Part Number Low */
 #define DSU_PID0_PARTNBL(value)     ((DSU_PID0_PARTNBL_Msk & ((value) << DSU_PID0_PARTNBL_Pos)))
 #define DSU_PID0_MASK               0xFFu /**< \brief (DSU_PID0) MASK Register */
 
 /* -------- DSU_PID1 : (DSU Offset: 0x1FE4) (R/  32) Peripheral Identification Register 1 -------- */
 typedef union {
   struct {
-    uint32_t PARTNBH:4;        /*!< bit:  0.. 3                                     */
-    uint32_t JEPIDCL:4;        /*!< bit:  4.. 7                                     */
+    uint32_t PARTNBH:4;        /*!< bit:  0.. 3  Part Number High                   */
+    uint32_t JEPIDCL:4;        /*!< bit:  4.. 7  JEP-106 Identity Code Low          */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID1_Type;
 
-#define DSU_PID1_OFFSET             0x1FE4       /**< \brief (DSU offset) Peripheral Identification Register 1 */
+#define DSU_PID1_OFFSET             0x1FE4       /**< \brief (DSU_PID1 offset) Peripheral Identification Register 1 */
 
 #define DSU_PID1_PARTNBH_Pos        0
-#define DSU_PID1_PARTNBH_Msk        (0xFu << DSU_PID1_PARTNBH_Pos) /**< \brief (DSU_PID1)  */
+#define DSU_PID1_PARTNBH_Msk        (0xFu << DSU_PID1_PARTNBH_Pos) /**< \brief (DSU_PID1) Part Number High */
 #define DSU_PID1_PARTNBH(value)     ((DSU_PID1_PARTNBH_Msk & ((value) << DSU_PID1_PARTNBH_Pos)))
 #define DSU_PID1_JEPIDCL_Pos        4
-#define DSU_PID1_JEPIDCL_Msk        (0xFu << DSU_PID1_JEPIDCL_Pos) /**< \brief (DSU_PID1)  */
+#define DSU_PID1_JEPIDCL_Msk        (0xFu << DSU_PID1_JEPIDCL_Pos) /**< \brief (DSU_PID1) JEP-106 Identity Code Low */
 #define DSU_PID1_JEPIDCL(value)     ((DSU_PID1_JEPIDCL_Msk & ((value) << DSU_PID1_JEPIDCL_Pos)))
 #define DSU_PID1_MASK               0xFFu /**< \brief (DSU_PID1) MASK Register */
 
 /* -------- DSU_PID2 : (DSU Offset: 0x1FE8) (R/  32) Peripheral Identification Register 2 -------- */
 typedef union {
   struct {
-    uint32_t JEPIDCH:3;        /*!< bit:  0.. 2                                     */
-    uint32_t JEPU:1;           /*!< bit:      3                                     */
-    uint32_t REVISION:4;       /*!< bit:  4.. 7                                     */
+    uint32_t JEPIDCH:3;        /*!< bit:  0.. 2  JEP-106 Identity Code High         */
+    uint32_t JEPU:1;           /*!< bit:      3  JEP-106 Identity Code is Used      */
+    uint32_t REVISION:4;       /*!< bit:  4.. 7  Revision Number                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID2_Type;
 
-#define DSU_PID2_OFFSET             0x1FE8       /**< \brief (DSU offset) Peripheral Identification Register 2 */
+#define DSU_PID2_OFFSET             0x1FE8       /**< \brief (DSU_PID2 offset) Peripheral Identification Register 2 */
 
 #define DSU_PID2_JEPIDCH_Pos        0
-#define DSU_PID2_JEPIDCH_Msk        (0x7u << DSU_PID2_JEPIDCH_Pos) /**< \brief (DSU_PID2)  */
+#define DSU_PID2_JEPIDCH_Msk        (0x7u << DSU_PID2_JEPIDCH_Pos) /**< \brief (DSU_PID2) JEP-106 Identity Code High */
 #define DSU_PID2_JEPIDCH(value)     ((DSU_PID2_JEPIDCH_Msk & ((value) << DSU_PID2_JEPIDCH_Pos)))
-#define DSU_PID2_JEPU               (0x1u <<  3) /**< \brief (DSU_PID2)  */
+#define DSU_PID2_JEPU               (0x1u <<  3) /**< \brief (DSU_PID2) JEP-106 Identity Code is Used */
 #define DSU_PID2_REVISION_Pos       4
-#define DSU_PID2_REVISION_Msk       (0xFu << DSU_PID2_REVISION_Pos) /**< \brief (DSU_PID2)  */
+#define DSU_PID2_REVISION_Msk       (0xFu << DSU_PID2_REVISION_Pos) /**< \brief (DSU_PID2) Revision Number */
 #define DSU_PID2_REVISION(value)    ((DSU_PID2_REVISION_Msk & ((value) << DSU_PID2_REVISION_Pos)))
 #define DSU_PID2_MASK               0xFFu /**< \brief (DSU_PID2) MASK Register */
 
 /* -------- DSU_PID3 : (DSU Offset: 0x1FEC) (R/  32) Peripheral Identification Register 3 -------- */
 typedef union {
   struct {
-    uint32_t CUSMOD:4;         /*!< bit:  0.. 3                                     */
-    uint32_t REVAND:4;         /*!< bit:  4.. 7                                     */
+    uint32_t CUSMOD:4;         /*!< bit:  0.. 3  Customer Mode                      */
+    uint32_t REVAND:4;         /*!< bit:  4.. 7  Revision Number                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_PID3_Type;
 
-#define DSU_PID3_OFFSET             0x1FEC       /**< \brief (DSU offset) Peripheral Identification Register 3 */
+#define DSU_PID3_OFFSET             0x1FEC       /**< \brief (DSU_PID3 offset) Peripheral Identification Register 3 */
 
 #define DSU_PID3_CUSMOD_Pos         0
-#define DSU_PID3_CUSMOD_Msk         (0xFu << DSU_PID3_CUSMOD_Pos) /**< \brief (DSU_PID3)  */
+#define DSU_PID3_CUSMOD_Msk         (0xFu << DSU_PID3_CUSMOD_Pos) /**< \brief (DSU_PID3) Customer Mode */
 #define DSU_PID3_CUSMOD(value)      ((DSU_PID3_CUSMOD_Msk & ((value) << DSU_PID3_CUSMOD_Pos)))
 #define DSU_PID3_REVAND_Pos         4
-#define DSU_PID3_REVAND_Msk         (0xFu << DSU_PID3_REVAND_Pos) /**< \brief (DSU_PID3)  */
+#define DSU_PID3_REVAND_Msk         (0xFu << DSU_PID3_REVAND_Pos) /**< \brief (DSU_PID3) Revision Number */
 #define DSU_PID3_REVAND(value)      ((DSU_PID3_REVAND_Msk & ((value) << DSU_PID3_REVAND_Pos)))
 #define DSU_PID3_MASK               0xFFu /**< \brief (DSU_PID3) MASK Register */
 
 /* -------- DSU_CID0 : (DSU Offset: 0x1FF0) (R/  32) Component Identification Register 0 -------- */
 typedef union {
   struct {
-    uint32_t PREAMBLEB0:8;     /*!< bit:  0.. 7                                     */
+    uint32_t PREAMBLEB0:8;     /*!< bit:  0.. 7  Preamble Byte 0                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_CID0_Type;
 
-#define DSU_CID0_OFFSET             0x1FF0       /**< \brief (DSU offset) Component Identification Register 0 */
-#define DSU_CID0_RESETVALUE         0x0          /**< \brief (DSU reset_value) Component Identification Register 0 */
+#define DSU_CID0_OFFSET             0x1FF0       /**< \brief (DSU_CID0 offset) Component Identification Register 0 */
+#define DSU_CID0_RESETVALUE         0x0          /**< \brief (DSU_CID0 reset_value) Component Identification Register 0 */
 
 #define DSU_CID0_PREAMBLEB0_Pos     0
-#define DSU_CID0_PREAMBLEB0_Msk     (0xFFu << DSU_CID0_PREAMBLEB0_Pos) /**< \brief (DSU_CID0)  */
+#define DSU_CID0_PREAMBLEB0_Msk     (0xFFu << DSU_CID0_PREAMBLEB0_Pos) /**< \brief (DSU_CID0) Preamble Byte 0 */
 #define DSU_CID0_PREAMBLEB0(value)  ((DSU_CID0_PREAMBLEB0_Msk & ((value) << DSU_CID0_PREAMBLEB0_Pos)))
 #define DSU_CID0_MASK               0xFFu /**< \brief (DSU_CID0) MASK Register */
 
 /* -------- DSU_CID1 : (DSU Offset: 0x1FF4) (R/  32) Component Identification Register 1 -------- */
 typedef union {
   struct {
-    uint32_t PREAMBLE:4;       /*!< bit:  0.. 3                                     */
-    uint32_t CCLASS:4;         /*!< bit:  4.. 7                                     */
+    uint32_t PREAMBLE:4;       /*!< bit:  0.. 3  Preamble Byte 1                    */
+    uint32_t CCLASS:4;         /*!< bit:  4.. 7  Component Class                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_CID1_Type;
 
-#define DSU_CID1_OFFSET             0x1FF4       /**< \brief (DSU offset) Component Identification Register 1 */
-#define DSU_CID1_RESETVALUE         0x0          /**< \brief (DSU reset_value) Component Identification Register 1 */
+#define DSU_CID1_OFFSET             0x1FF4       /**< \brief (DSU_CID1 offset) Component Identification Register 1 */
+#define DSU_CID1_RESETVALUE         0x0          /**< \brief (DSU_CID1 reset_value) Component Identification Register 1 */
 
 #define DSU_CID1_PREAMBLE_Pos       0
-#define DSU_CID1_PREAMBLE_Msk       (0xFu << DSU_CID1_PREAMBLE_Pos) /**< \brief (DSU_CID1)  */
+#define DSU_CID1_PREAMBLE_Msk       (0xFu << DSU_CID1_PREAMBLE_Pos) /**< \brief (DSU_CID1) Preamble Byte 1 */
 #define DSU_CID1_PREAMBLE(value)    ((DSU_CID1_PREAMBLE_Msk & ((value) << DSU_CID1_PREAMBLE_Pos)))
 #define DSU_CID1_CCLASS_Pos         4
-#define DSU_CID1_CCLASS_Msk         (0xFu << DSU_CID1_CCLASS_Pos) /**< \brief (DSU_CID1)  */
+#define DSU_CID1_CCLASS_Msk         (0xFu << DSU_CID1_CCLASS_Pos) /**< \brief (DSU_CID1) Component Class */
 #define DSU_CID1_CCLASS(value)      ((DSU_CID1_CCLASS_Msk & ((value) << DSU_CID1_CCLASS_Pos)))
 #define DSU_CID1_MASK               0xFFu /**< \brief (DSU_CID1) MASK Register */
 
 /* -------- DSU_CID2 : (DSU Offset: 0x1FF8) (R/  32) Component Identification Register 2 -------- */
 typedef union {
   struct {
-    uint32_t PREAMBLEB2:8;     /*!< bit:  0.. 7                                     */
+    uint32_t PREAMBLEB2:8;     /*!< bit:  0.. 7  Preamble Byte 2                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_CID2_Type;
 
-#define DSU_CID2_OFFSET             0x1FF8       /**< \brief (DSU offset) Component Identification Register 2 */
-#define DSU_CID2_RESETVALUE         0x0          /**< \brief (DSU reset_value) Component Identification Register 2 */
+#define DSU_CID2_OFFSET             0x1FF8       /**< \brief (DSU_CID2 offset) Component Identification Register 2 */
+#define DSU_CID2_RESETVALUE         0x0          /**< \brief (DSU_CID2 reset_value) Component Identification Register 2 */
 
 #define DSU_CID2_PREAMBLEB2_Pos     0
-#define DSU_CID2_PREAMBLEB2_Msk     (0xFFu << DSU_CID2_PREAMBLEB2_Pos) /**< \brief (DSU_CID2)  */
+#define DSU_CID2_PREAMBLEB2_Msk     (0xFFu << DSU_CID2_PREAMBLEB2_Pos) /**< \brief (DSU_CID2) Preamble Byte 2 */
 #define DSU_CID2_PREAMBLEB2(value)  ((DSU_CID2_PREAMBLEB2_Msk & ((value) << DSU_CID2_PREAMBLEB2_Pos)))
 #define DSU_CID2_MASK               0xFFu /**< \brief (DSU_CID2) MASK Register */
 
 /* -------- DSU_CID3 : (DSU Offset: 0x1FFC) (R/  32) Component Identification Register 3 -------- */
 typedef union {
   struct {
-    uint32_t PREAMBLEB3:8;     /*!< bit:  0.. 7                                     */
+    uint32_t PREAMBLEB3:8;     /*!< bit:  0.. 7  Preamble Byte 3                    */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DSU_CID3_Type;
 
-#define DSU_CID3_OFFSET             0x1FFC       /**< \brief (DSU offset) Component Identification Register 3 */
-#define DSU_CID3_RESETVALUE         0x0          /**< \brief (DSU reset_value) Component Identification Register 3 */
+#define DSU_CID3_OFFSET             0x1FFC       /**< \brief (DSU_CID3 offset) Component Identification Register 3 */
+#define DSU_CID3_RESETVALUE         0x0          /**< \brief (DSU_CID3 reset_value) Component Identification Register 3 */
 
 #define DSU_CID3_PREAMBLEB3_Pos     0
-#define DSU_CID3_PREAMBLEB3_Msk     (0xFFu << DSU_CID3_PREAMBLEB3_Pos) /**< \brief (DSU_CID3)  */
+#define DSU_CID3_PREAMBLEB3_Msk     (0xFFu << DSU_CID3_PREAMBLEB3_Pos) /**< \brief (DSU_CID3) Preamble Byte 3 */
 #define DSU_CID3_PREAMBLEB3(value)  ((DSU_CID3_PREAMBLEB3_Msk & ((value) << DSU_CID3_PREAMBLEB3_Pos)))
 #define DSU_CID3_MASK               0xFFu /**< \brief (DSU_CID3) MASK Register */
 
@@ -2076,20 +2025,17 @@ typedef struct {
   __IO DSU_ADDR_Type             ADDR;        /**< \brief Offset: 0x0004 (R/W 32) Address Register */
   __IO DSU_LENGTH_Type           LENGTH;      /**< \brief Offset: 0x0008 (R/W 32) Length Register */
   __IO DSU_DATA_Type             DATA;        /**< \brief Offset: 0x000C (R/W 32) Data Register */
-  __IO DSU_DCC0_Type             DCC0;        /**< \brief Offset: 0x0010 (R/W 32) Debug Communication Channel 0 Register */
-  __IO DSU_DCC1_Type             DCC1;        /**< \brief Offset: 0x0014 (R/W 32) Debug Communication Channel 1 Register */
+  __IO DSU_DCC_Type              DCC[2];      /**< \brief Offset: 0x0010 (R/W 32) Debug Communication Channel Register */
   __I  DSU_DID_Type              DID;         /**< \brief Offset: 0x0018 (R/  32) Device Identification Register */
        RoReg8                    Reserved1[0xD4];
-  __IO DSU_DCFG0_Type            DCFG0;       /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration Register 0 */
-  __I  DSU_DCFG1_Type            DCFG1;       /**< \brief Offset: 0x00F4 (R/  32) Device Configuration Register 1 */
+  __IO DSU_DCFG_Type             DCFG[2];     /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration Register */
   __IO DSU_UPTM_Type             UPTM;        /**< \brief Offset: 0x00F8 (R/W 32) UnProtected Test Mode Register */
   __IO DSU_TESTMODE_Type         TESTMODE;    /**< \brief Offset: 0x00FC (R/W 32) Test Mode Register */
        RoReg8                    Reserved2[0xF00];
-  __I  DSU_ENTRY0_Type           ENTRY0;      /**< \brief Offset: 0x1000 (R/  32) Coresight ROM Table Entry 0 Register */
-  __I  DSU_ENTRY1_Type           ENTRY1;      /**< \brief Offset: 0x1004 (R/  32) Coresight ROM Table Entry 1 Register */
-  __I  DSU_END_Type              END;         /**< \brief Offset: 0x1008 (R/  32) Coresight ROM Table End Register */
+  __I  DSU_ENTRY_Type            ENTRY[2];    /**< \brief Offset: 0x1000 (R/  32) CoreSight ROM Table Entry Register */
+  __I  DSU_END_Type              END;         /**< \brief Offset: 0x1008 (R/  32) CoreSight ROM Table End Register */
        RoReg8                    Reserved3[0xFC0];
-  __I  DSU_MEMTYPE_Type          MEMTYPE;     /**< \brief Offset: 0x1FCC (R/  32) Coresight ROM Table Memory Type Register */
+  __I  DSU_MEMTYPE_Type          MEMTYPE;     /**< \brief Offset: 0x1FCC (R/  32) CoreSight ROM Table Memory Type Register */
   __I  DSU_PID4_Type             PID4;        /**< \brief Offset: 0x1FD0 (R/  32) Peripheral Identification Register 4 */
   __I  DSU_PID5_Type             PID5;        /**< \brief Offset: 0x1FD4 (R/  32) Peripheral Identification Register 5 */
   __I  DSU_PID6_Type             PID6;        /**< \brief Offset: 0x1FD8 (R/  32) Peripheral Identification Register 6 */
@@ -2112,7 +2058,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR EIC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_EIC External Interrupt Controller */
+/** \addtogroup SAM0+D_EIC External Interrupt Controller */
 /*@{*/
 
 #define REV_EIC        0x100
@@ -2131,8 +2077,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } EIC_CTRL_Type;
 
-#define EIC_CTRL_OFFSET             0x00         /**< \brief (EIC offset) Control Register */
-#define EIC_CTRL_RESETVALUE         0x0          /**< \brief (EIC reset_value) Control Register */
+#define EIC_CTRL_OFFSET             0x00         /**< \brief (EIC_CTRL offset) Control Register */
+#define EIC_CTRL_RESETVALUE         0x0          /**< \brief (EIC_CTRL reset_value) Control Register */
 
 #define EIC_CTRL_SWRST              (0x1u <<  0) /**< \brief (EIC_CTRL) Software Reset */
 #define EIC_CTRL_ENABLE             (0x1u <<  1) /**< \brief (EIC_CTRL) Enable */
@@ -2142,34 +2088,34 @@ typedef union {
 typedef union {
   struct {
     uint8_t  _reserved0:7;     /*!< bit:  0.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7  SYNCBUSY                           */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Sync Busy                          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } EIC_STATUS_Type;
 
-#define EIC_STATUS_OFFSET           0x01         /**< \brief (EIC offset) Status Register */
-#define EIC_STATUS_RESETVALUE       0x0          /**< \brief (EIC reset_value) Status Register */
+#define EIC_STATUS_OFFSET           0x01         /**< \brief (EIC_STATUS offset) Status Register */
+#define EIC_STATUS_RESETVALUE       0x0          /**< \brief (EIC_STATUS reset_value) Status Register */
 
-#define EIC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (EIC_STATUS) SYNCBUSY */
+#define EIC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (EIC_STATUS) Sync Busy */
 #define EIC_STATUS_MASK             0x80u /**< \brief (EIC_STATUS) MASK Register */
 
 /* -------- EIC_NMICTRL : (EIC Offset: 0x02) (R/W  8) NMI Control Register -------- */
 typedef union {
   struct {
-    uint8_t  NMISENSE:3;       /*!< bit:  0.. 2  NMISENSE                           */
-    uint8_t  NMIFILTEN:1;      /*!< bit:      3  NMIFILTEN                          */
+    uint8_t  NMISENSE:3;       /*!< bit:  0.. 2  NMI Input Sense Configuration      */
+    uint8_t  NMIFILTEN:1;      /*!< bit:      3  NMI Filter Enable                  */
     uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } EIC_NMICTRL_Type;
 
-#define EIC_NMICTRL_OFFSET          0x02         /**< \brief (EIC offset) NMI Control Register */
-#define EIC_NMICTRL_RESETVALUE      0x0          /**< \brief (EIC reset_value) NMI Control Register */
+#define EIC_NMICTRL_OFFSET          0x02         /**< \brief (EIC_NMICTRL offset) NMI Control Register */
+#define EIC_NMICTRL_RESETVALUE      0x0          /**< \brief (EIC_NMICTRL reset_value) NMI Control Register */
 
 #define EIC_NMICTRL_NMISENSE_Pos    0
-#define EIC_NMICTRL_NMISENSE_Msk    (0x7u << EIC_NMICTRL_NMISENSE_Pos) /**< \brief (EIC_NMICTRL) NMISENSE */
+#define EIC_NMICTRL_NMISENSE_Msk    (0x7u << EIC_NMICTRL_NMISENSE_Pos) /**< \brief (EIC_NMICTRL) NMI Input Sense Configuration */
 #define EIC_NMICTRL_NMISENSE(value) ((EIC_NMICTRL_NMISENSE_Msk & ((value) << EIC_NMICTRL_NMISENSE_Pos)))
-#define EIC_NMICTRL_NMIFILTEN       (0x1u <<  3) /**< \brief (EIC_NMICTRL) NMIFILTEN */
+#define EIC_NMICTRL_NMIFILTEN       (0x1u <<  3) /**< \brief (EIC_NMICTRL) NMI Filter Enable */
 #define EIC_NMICTRL_MASK            0xFu /**< \brief (EIC_NMICTRL) MASK Register */
 
 /* -------- EIC_NMIFLAG : (EIC Offset: 0x03) (R/W  8) NMI Interrupt Flag Register -------- */
@@ -2181,8 +2127,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } EIC_NMIFLAG_Type;
 
-#define EIC_NMIFLAG_OFFSET          0x03         /**< \brief (EIC offset) NMI Interrupt Flag Register */
-#define EIC_NMIFLAG_RESETVALUE      0x0          /**< \brief (EIC reset_value) NMI Interrupt Flag Register */
+#define EIC_NMIFLAG_OFFSET          0x03         /**< \brief (EIC_NMIFLAG offset) NMI Interrupt Flag Register */
+#define EIC_NMIFLAG_RESETVALUE      0x0          /**< \brief (EIC_NMIFLAG reset_value) NMI Interrupt Flag Register */
 
 #define EIC_NMIFLAG_NMI             (0x1u <<  0) /**< \brief (EIC_NMIFLAG) NMI Interrupt Flag */
 #define EIC_NMIFLAG_MASK            0x1u /**< \brief (EIC_NMIFLAG) MASK Register */
@@ -2192,8 +2138,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_EVCTRL_Type;
 
-#define EIC_EVCTRL_OFFSET           0x04         /**< \brief (EIC offset) Event Control Register */
-#define EIC_EVCTRL_RESETVALUE       0x0          /**< \brief (EIC reset_value) Event Control Register */
+#define EIC_EVCTRL_OFFSET           0x04         /**< \brief (EIC_EVCTRL offset) Event Control Register */
+#define EIC_EVCTRL_RESETVALUE       0x0          /**< \brief (EIC_EVCTRL reset_value) Event Control Register */
 #define EIC_EVCTRL_MASK             0xFFFFFFFFu  /**< \brief (EIC_EVCTRL) MASK Register */
 
 /* -------- EIC_INTENCLR : (EIC Offset: 0x08) (R/W 32) Interrupt Enable Clear Register -------- */
@@ -2201,8 +2147,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTENCLR_Type;
 
-#define EIC_INTENCLR_OFFSET         0x08         /**< \brief (EIC offset) Interrupt Enable Clear Register */
-#define EIC_INTENCLR_RESETVALUE     0x0          /**< \brief (EIC reset_value) Interrupt Enable Clear Register */
+#define EIC_INTENCLR_OFFSET         0x08         /**< \brief (EIC_INTENCLR offset) Interrupt Enable Clear Register */
+#define EIC_INTENCLR_RESETVALUE     0x0          /**< \brief (EIC_INTENCLR reset_value) Interrupt Enable Clear Register */
 #define EIC_INTENCLR_MASK           0xFFFFFFFFu  /**< \brief (EIC_INTENCLR) MASK Register */
 
 /* -------- EIC_INTENSET : (EIC Offset: 0x0C) (R/W 32) Interrupt Enable Set Register -------- */
@@ -2210,17 +2156,17 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTENSET_Type;
 
-#define EIC_INTENSET_OFFSET         0x0C         /**< \brief (EIC offset) Interrupt Enable Set Register */
-#define EIC_INTENSET_RESETVALUE     0x0          /**< \brief (EIC reset_value) Interrupt Enable Set Register */
+#define EIC_INTENSET_OFFSET         0x0C         /**< \brief (EIC_INTENSET offset) Interrupt Enable Set Register */
+#define EIC_INTENSET_RESETVALUE     0x0          /**< \brief (EIC_INTENSET reset_value) Interrupt Enable Set Register */
 #define EIC_INTENSET_MASK           0xFFFFFFFFu  /**< \brief (EIC_INTENSET) MASK Register */
 
-/* -------- EIC_INTFLAG : (EIC Offset: 0x10) (R/W 32) Interrupt Flag Register -------- */
+/* -------- EIC_INTFLAG : (EIC Offset: 0x10) (R/W 32) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTFLAG_Type;
 
-#define EIC_INTFLAG_OFFSET          0x10         /**< \brief (EIC offset) Interrupt Flag Register */
-#define EIC_INTFLAG_RESETVALUE      0x0          /**< \brief (EIC reset_value) Interrupt Flag Register */
+#define EIC_INTFLAG_OFFSET          0x10         /**< \brief (EIC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define EIC_INTFLAG_RESETVALUE      0x0          /**< \brief (EIC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 #define EIC_INTFLAG_MASK            0xFFFFFFFFu  /**< \brief (EIC_INTFLAG) MASK Register */
 
 /* -------- EIC_WAKEUP : (EIC Offset: 0x14) (R/W 32) Wake-up Enable Register -------- */
@@ -2228,17 +2174,17 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_WAKEUP_Type;
 
-#define EIC_WAKEUP_OFFSET           0x14         /**< \brief (EIC offset) Wake-up Enable Register */
-#define EIC_WAKEUP_RESETVALUE       0x0          /**< \brief (EIC reset_value) Wake-up Enable Register */
+#define EIC_WAKEUP_OFFSET           0x14         /**< \brief (EIC_WAKEUP offset) Wake-up Enable Register */
+#define EIC_WAKEUP_RESETVALUE       0x0          /**< \brief (EIC_WAKEUP reset_value) Wake-up Enable Register */
 #define EIC_WAKEUP_MASK             0xFFFFFFFFu  /**< \brief (EIC_WAKEUP) MASK Register */
 
-/* -------- EIC_CONFIG : (EIC Offset: 0x18) (R/W 32) Config Config Register -------- */
+/* -------- EIC_CONFIG : (EIC Offset: 0x18) (R/W 32) Config Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_CONFIG_Type;
 
-#define EIC_CONFIG_OFFSET           0x18         /**< \brief (EIC offset) Config Register */
-#define EIC_CONFIG_RESETVALUE       0x0          /**< \brief (EIC reset_value) Config Register */
+#define EIC_CONFIG_OFFSET           0x18         /**< \brief (EIC_CONFIG offset) Config Register */
+#define EIC_CONFIG_RESETVALUE       0x0          /**< \brief (EIC_CONFIG reset_value) Config Register */
 #define EIC_CONFIG_MASK             0xFFFFFFFFu  /**< \brief (EIC_CONFIG) MASK Register */
 
 #define EIC_NUMBER_OF_CONFIG_REGS   2
@@ -2252,7 +2198,7 @@ typedef struct {
   __IO EIC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x04 (R/W 32) Event Control Register */
   __IO EIC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x08 (R/W 32) Interrupt Enable Clear Register */
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Set Register */
-  __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Register */
+  __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Status and Clear Register */
   __IO EIC_WAKEUP_Type           WAKEUP;      /**< \brief Offset: 0x14 (R/W 32) Wake-up Enable Register */
   __IO EIC_CONFIG_Type           CONFIG[EIC_NUMBER_OF_CONFIG_REGS]; /**< \brief Offset: 0x18 (R/W 32) Config Register */
        EIC_CONFIG_Type           Reserved1[4 - EIC_NUMBER_OF_CONFIG_REGS];
@@ -2266,7 +2212,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR EVSYS */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_EVSYS Event System Interface */
+/** \addtogroup SAM0+D_EVSYS Event System Interface */
 /*@{*/
 
 #define REV_EVSYS      0x100
@@ -2278,19 +2224,19 @@ typedef struct {
 /* -------- EVSYS_CTRL : (EVSYS Offset: 0x00) ( /W  8) Control Register -------- */
 typedef union {
   struct {
-    uint8_t  SWRST:1;          /*!< bit:      0                                     */
+    uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  _reserved0:3;     /*!< bit:  1.. 3  Reserved                           */
-    uint8_t  GCLKREQ:1;        /*!< bit:      4                                     */
+    uint8_t  GCLKREQ:1;        /*!< bit:      4  Generic Clock Request              */
     uint8_t  _reserved1:3;     /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } EVSYS_CTRL_Type;
 
-#define EVSYS_CTRL_OFFSET           0x00         /**< \brief (EVSYS offset) Control Register */
-#define EVSYS_CTRL_RESETVALUE       0x0          /**< \brief (EVSYS reset_value) Control Register */
+#define EVSYS_CTRL_OFFSET           0x00         /**< \brief (EVSYS_CTRL offset) Control Register */
+#define EVSYS_CTRL_RESETVALUE       0x0          /**< \brief (EVSYS_CTRL reset_value) Control Register */
 
-#define EVSYS_CTRL_SWRST            (0x1u <<  0) /**< \brief (EVSYS_CTRL)  */
-#define EVSYS_CTRL_GCLKREQ          (0x1u <<  4) /**< \brief (EVSYS_CTRL)  */
+#define EVSYS_CTRL_SWRST            (0x1u <<  0) /**< \brief (EVSYS_CTRL) Software Reset */
+#define EVSYS_CTRL_GCLKREQ          (0x1u <<  4) /**< \brief (EVSYS_CTRL) Generic Clock Request */
 #define EVSYS_CTRL_MASK             0x11u /**< \brief (EVSYS_CTRL) MASK Register */
 
 /* -------- EVSYS_CHANNEL : (EVSYS Offset: 0x04) (R/W 32) Channel Register -------- */
@@ -2307,8 +2253,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_CHANNEL_Type;
 
-#define EVSYS_CHANNEL_OFFSET        0x04         /**< \brief (EVSYS offset) Channel Register */
-#define EVSYS_CHANNEL_RESETVALUE    0x0          /**< \brief (EVSYS reset_value) Channel Register */
+#define EVSYS_CHANNEL_OFFSET        0x04         /**< \brief (EVSYS_CHANNEL offset) Channel Register */
+#define EVSYS_CHANNEL_RESETVALUE    0x0          /**< \brief (EVSYS_CHANNEL reset_value) Channel Register */
 
 #define EVSYS_CHANNEL_CHANNEL_Pos    0
 #define EVSYS_CHANNEL_CHANNEL_Msk    (0xFFu << EVSYS_CHANNEL_CHANNEL_Pos) /**< \brief (EVSYS_CHANNEL) Channel Selection */
@@ -2334,8 +2280,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } EVSYS_USERMUX_Type;
 
-#define EVSYS_USERMUX_OFFSET        0x08         /**< \brief (EVSYS offset) User Mux Register */
-#define EVSYS_USERMUX_RESETVALUE    0x0          /**< \brief (EVSYS reset_value) User Mux Register */
+#define EVSYS_USERMUX_OFFSET        0x08         /**< \brief (EVSYS_USERMUX offset) User Mux Register */
+#define EVSYS_USERMUX_RESETVALUE    0x0          /**< \brief (EVSYS_USERMUX reset_value) User Mux Register */
 
 #define EVSYS_USERMUX_UMUXSEL_Pos    0
 #define EVSYS_USERMUX_UMUXSEL_Msk    (0xFFu << EVSYS_USERMUX_UMUXSEL_Pos) /**< \brief (EVSYS_USERMUX) User Mux Selection */
@@ -2348,112 +2294,112 @@ typedef union {
 /* -------- EVSYS_CHSTATUS : (EVSYS Offset: 0x0C) (R/  32) Channel Status Register -------- */
 typedef union {
   struct {
-    uint32_t USRREADY0:8;      /*!< bit:  0.. 7  User Ready for Channel 0 to 7(modulo 16) */
-    uint32_t CHBUSY0:8;        /*!< bit:  8..15  Channel Busy 0 to 7(modulo 16)     */
-    uint32_t USRREADY1:8;      /*!< bit: 16..23  User Ready for Channel 8 to 15(modulo 16) */
-    uint32_t CHBUSY1:8;        /*!< bit: 24..31  Channel Busy 8 to 15(modulo 16)    */
+    uint32_t USRREADY0:8;      /*!< bit:  0.. 7  User Ready for Channels 0 to 7 (modulo 16) */
+    uint32_t CHBUSY0:8;        /*!< bit:  8..15  Channels Busy 0 to 7 (modulo 16)   */
+    uint32_t USRREADY1:8;      /*!< bit: 16..23  User Ready for Channels 8 to 15 (modulo 16) */
+    uint32_t CHBUSY1:8;        /*!< bit: 24..31  Channels Busy 8 to 15 (modulo 16)  */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_CHSTATUS_Type;
 
-#define EVSYS_CHSTATUS_OFFSET       0x0C         /**< \brief (EVSYS offset) Channel Status Register */
-#define EVSYS_CHSTATUS_RESETVALUE   0x0          /**< \brief (EVSYS reset_value) Channel Status Register */
+#define EVSYS_CHSTATUS_OFFSET       0x0C         /**< \brief (EVSYS_CHSTATUS offset) Channel Status Register */
+#define EVSYS_CHSTATUS_RESETVALUE   0x0          /**< \brief (EVSYS_CHSTATUS reset_value) Channel Status Register */
 
 #define EVSYS_CHSTATUS_USRREADY0_Pos    0
-#define EVSYS_CHSTATUS_USRREADY0_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY0_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channel 0 to 7(modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY0_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY0_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 0 to 7 (modulo 16) */
 #define EVSYS_CHSTATUS_USRREADY0(value) ((EVSYS_CHSTATUS_USRREADY0_Msk & ((value) << EVSYS_CHSTATUS_USRREADY0_Pos)))
 #define EVSYS_CHSTATUS_CHBUSY0_Pos    8
-#define EVSYS_CHSTATUS_CHBUSY0_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY0_Pos) /**< \brief (EVSYS_CHSTATUS) Channel Busy 0 to 7(modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY0_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY0_Pos) /**< \brief (EVSYS_CHSTATUS) Channels Busy 0 to 7 (modulo 16) */
 #define EVSYS_CHSTATUS_CHBUSY0(value) ((EVSYS_CHSTATUS_CHBUSY0_Msk & ((value) << EVSYS_CHSTATUS_CHBUSY0_Pos)))
 #define EVSYS_CHSTATUS_USRREADY1_Pos    16
-#define EVSYS_CHSTATUS_USRREADY1_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY1_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channel 8 to 15(modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY1_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY1_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 8 to 15 (modulo 16) */
 #define EVSYS_CHSTATUS_USRREADY1(value) ((EVSYS_CHSTATUS_USRREADY1_Msk & ((value) << EVSYS_CHSTATUS_USRREADY1_Pos)))
 #define EVSYS_CHSTATUS_CHBUSY1_Pos    24
-#define EVSYS_CHSTATUS_CHBUSY1_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY1_Pos) /**< \brief (EVSYS_CHSTATUS) Channel Busy 8 to 15(modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY1_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY1_Pos) /**< \brief (EVSYS_CHSTATUS) Channels Busy 8 to 15 (modulo 16) */
 #define EVSYS_CHSTATUS_CHBUSY1(value) ((EVSYS_CHSTATUS_CHBUSY1_Msk & ((value) << EVSYS_CHSTATUS_CHBUSY1_Pos)))
 #define EVSYS_CHSTATUS_MASK         0xFFFFFFFFu /**< \brief (EVSYS_CHSTATUS) MASK Register */
 
-/* -------- EVSYS_IENCLR : (EVSYS Offset: 0x10) (R/W 32) Interrupt Enable Clear register -------- */
+/* -------- EVSYS_INTENCLR : (EVSYS Offset: 0x10) (R/W 32) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun for Channel 0 to 7(modulo 16) */
-    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection for Channel 0 to 7(modulo 16) */
-    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun for Channel 8 to 15(modulo 16) */
-    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection for Channel 8 to 15(modulo 16) */
+    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun Interrupt Disable for Channels 0 to 7 (modulo 16) */
+    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection Interrupt Disable for Channels 0 to 7 (modulo 16) */
+    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun Interrupt Disable for Channels 8 to 15 (modulo 16) */
+    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection Interrupt Disable for Channels 8 to 15 (modulo 16) */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} EVSYS_IENCLR_Type;
+} EVSYS_INTENCLR_Type;
 
-#define EVSYS_IENCLR_OFFSET         0x10         /**< \brief (EVSYS offset) Interrupt Enable Clear register */
-#define EVSYS_IENCLR_RESETVALUE     0x0          /**< \brief (EVSYS reset_value) Interrupt Enable Clear register */
+#define EVSYS_INTENCLR_OFFSET       0x10         /**< \brief (EVSYS_INTENCLR offset) Interrupt Enable Clear Register */
+#define EVSYS_INTENCLR_RESETVALUE   0x0          /**< \brief (EVSYS_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define EVSYS_IENCLR_OVR0_Pos       0
-#define EVSYS_IENCLR_OVR0_Msk       (0xFFu << EVSYS_IENCLR_OVR0_Pos) /**< \brief (EVSYS_IENCLR) Overrun for Channel 0 to 7(modulo 16) */
-#define EVSYS_IENCLR_OVR0(value)    ((EVSYS_IENCLR_OVR0_Msk & ((value) << EVSYS_IENCLR_OVR0_Pos)))
-#define EVSYS_IENCLR_EVD0_Pos       8
-#define EVSYS_IENCLR_EVD0_Msk       (0xFFu << EVSYS_IENCLR_EVD0_Pos) /**< \brief (EVSYS_IENCLR) Event Detection for Channel 0 to 7(modulo 16) */
-#define EVSYS_IENCLR_EVD0(value)    ((EVSYS_IENCLR_EVD0_Msk & ((value) << EVSYS_IENCLR_EVD0_Pos)))
-#define EVSYS_IENCLR_OVR1_Pos       16
-#define EVSYS_IENCLR_OVR1_Msk       (0xFFu << EVSYS_IENCLR_OVR1_Pos) /**< \brief (EVSYS_IENCLR) Overrun for Channel 8 to 15(modulo 16) */
-#define EVSYS_IENCLR_OVR1(value)    ((EVSYS_IENCLR_OVR1_Msk & ((value) << EVSYS_IENCLR_OVR1_Pos)))
-#define EVSYS_IENCLR_EVD1_Pos       24
-#define EVSYS_IENCLR_EVD1_Msk       (0xFFu << EVSYS_IENCLR_EVD1_Pos) /**< \brief (EVSYS_IENCLR) Event Detection for Channel 8 to 15(modulo 16) */
-#define EVSYS_IENCLR_EVD1(value)    ((EVSYS_IENCLR_EVD1_Msk & ((value) << EVSYS_IENCLR_EVD1_Pos)))
-#define EVSYS_IENCLR_MASK           0xFFFFFFFFu /**< \brief (EVSYS_IENCLR) MASK Register */
+#define EVSYS_INTENCLR_OVR0_Pos     0
+#define EVSYS_INTENCLR_OVR0_Msk     (0xFFu << EVSYS_INTENCLR_OVR0_Pos) /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_OVR0(value)  ((EVSYS_INTENCLR_OVR0_Msk & ((value) << EVSYS_INTENCLR_OVR0_Pos)))
+#define EVSYS_INTENCLR_EVD0_Pos     8
+#define EVSYS_INTENCLR_EVD0_Msk     (0xFFu << EVSYS_INTENCLR_EVD0_Pos) /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_EVD0(value)  ((EVSYS_INTENCLR_EVD0_Msk & ((value) << EVSYS_INTENCLR_EVD0_Pos)))
+#define EVSYS_INTENCLR_OVR1_Pos     16
+#define EVSYS_INTENCLR_OVR1_Msk     (0xFFu << EVSYS_INTENCLR_OVR1_Pos) /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_OVR1(value)  ((EVSYS_INTENCLR_OVR1_Msk & ((value) << EVSYS_INTENCLR_OVR1_Pos)))
+#define EVSYS_INTENCLR_EVD1_Pos     24
+#define EVSYS_INTENCLR_EVD1_Msk     (0xFFu << EVSYS_INTENCLR_EVD1_Pos) /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_EVD1(value)  ((EVSYS_INTENCLR_EVD1_Msk & ((value) << EVSYS_INTENCLR_EVD1_Pos)))
+#define EVSYS_INTENCLR_MASK         0xFFFFFFFFu /**< \brief (EVSYS_INTENCLR) MASK Register */
 
-/* -------- EVSYS_IENSET : (EVSYS Offset: 0x14) (R/W 32) Interrupt Enable Set Register -------- */
+/* -------- EVSYS_INTENSET : (EVSYS Offset: 0x14) (R/W 32) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun for Channel 0 to 7(modulo 16) */
-    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection for Channel 0 to 7(modulo 16) */
-    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun for Channel 8 to 15(modulo 16) */
-    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection for Channel 8 to 15(modulo 16) */
+    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun Interrupt Enable for Channels 0 to 7 (modulo 16) */
+    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection Interrupt Enable for Channels 0 to 7 (modulo 16) */
+    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun Interrupt Enable for Channels 8 to 15 (modulo 16) */
+    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection Interrupt Enable for Channels 8 to 15 (modulo 16) */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} EVSYS_IENSET_Type;
+} EVSYS_INTENSET_Type;
 
-#define EVSYS_IENSET_OFFSET         0x14         /**< \brief (EVSYS offset) Interrupt Enable Set Register */
-#define EVSYS_IENSET_RESETVALUE     0x0          /**< \brief (EVSYS reset_value) Interrupt Enable Set Register */
+#define EVSYS_INTENSET_OFFSET       0x14         /**< \brief (EVSYS_INTENSET offset) Interrupt Enable Set Register */
+#define EVSYS_INTENSET_RESETVALUE   0x0          /**< \brief (EVSYS_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define EVSYS_IENSET_OVR0_Pos       0
-#define EVSYS_IENSET_OVR0_Msk       (0xFFu << EVSYS_IENSET_OVR0_Pos) /**< \brief (EVSYS_IENSET) Overrun for Channel 0 to 7(modulo 16) */
-#define EVSYS_IENSET_OVR0(value)    ((EVSYS_IENSET_OVR0_Msk & ((value) << EVSYS_IENSET_OVR0_Pos)))
-#define EVSYS_IENSET_EVD0_Pos       8
-#define EVSYS_IENSET_EVD0_Msk       (0xFFu << EVSYS_IENSET_EVD0_Pos) /**< \brief (EVSYS_IENSET) Event Detection for Channel 0 to 7(modulo 16) */
-#define EVSYS_IENSET_EVD0(value)    ((EVSYS_IENSET_EVD0_Msk & ((value) << EVSYS_IENSET_EVD0_Pos)))
-#define EVSYS_IENSET_OVR1_Pos       16
-#define EVSYS_IENSET_OVR1_Msk       (0xFFu << EVSYS_IENSET_OVR1_Pos) /**< \brief (EVSYS_IENSET) Overrun for Channel 8 to 15(modulo 16) */
-#define EVSYS_IENSET_OVR1(value)    ((EVSYS_IENSET_OVR1_Msk & ((value) << EVSYS_IENSET_OVR1_Pos)))
-#define EVSYS_IENSET_EVD1_Pos       24
-#define EVSYS_IENSET_EVD1_Msk       (0xFFu << EVSYS_IENSET_EVD1_Pos) /**< \brief (EVSYS_IENSET) Event Detection for Channel 8 to 15(modulo 16) */
-#define EVSYS_IENSET_EVD1(value)    ((EVSYS_IENSET_EVD1_Msk & ((value) << EVSYS_IENSET_EVD1_Pos)))
-#define EVSYS_IENSET_MASK           0xFFFFFFFFu /**< \brief (EVSYS_IENSET) MASK Register */
+#define EVSYS_INTENSET_OVR0_Pos     0
+#define EVSYS_INTENSET_OVR0_Msk     (0xFFu << EVSYS_INTENSET_OVR0_Pos) /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_OVR0(value)  ((EVSYS_INTENSET_OVR0_Msk & ((value) << EVSYS_INTENSET_OVR0_Pos)))
+#define EVSYS_INTENSET_EVD0_Pos     8
+#define EVSYS_INTENSET_EVD0_Msk     (0xFFu << EVSYS_INTENSET_EVD0_Pos) /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_EVD0(value)  ((EVSYS_INTENSET_EVD0_Msk & ((value) << EVSYS_INTENSET_EVD0_Pos)))
+#define EVSYS_INTENSET_OVR1_Pos     16
+#define EVSYS_INTENSET_OVR1_Msk     (0xFFu << EVSYS_INTENSET_OVR1_Pos) /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_OVR1(value)  ((EVSYS_INTENSET_OVR1_Msk & ((value) << EVSYS_INTENSET_OVR1_Pos)))
+#define EVSYS_INTENSET_EVD1_Pos     24
+#define EVSYS_INTENSET_EVD1_Msk     (0xFFu << EVSYS_INTENSET_EVD1_Pos) /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_EVD1(value)  ((EVSYS_INTENSET_EVD1_Msk & ((value) << EVSYS_INTENSET_EVD1_Pos)))
+#define EVSYS_INTENSET_MASK         0xFFFFFFFFu /**< \brief (EVSYS_INTENSET) MASK Register */
 
-/* -------- EVSYS_INTFLAG : (EVSYS Offset: 0x18) (R/W 32) Interrupt Flag Register -------- */
+/* -------- EVSYS_INTFLAG : (EVSYS Offset: 0x18) (R/W 32) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun for Channel 0 to 7(modulo 16) */
-    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection for Channel 0 to 7(modulo 16) */
-    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun for Channel 8 to 15(modulo 16) */
-    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection for Channel 8 to 15(modulo 16) */
+    uint32_t OVR0:8;           /*!< bit:  0.. 7  Overrun Interrupt Flag for Channels 0 to 7 (modulo 16) */
+    uint32_t EVD0:8;           /*!< bit:  8..15  Event Detection Interrupt Flag for Channels 0 to 7 (modulo 16) */
+    uint32_t OVR1:8;           /*!< bit: 16..23  Overrun Interrupt Flag for Channels 8 to 15 (modulo 16) */
+    uint32_t EVD1:8;           /*!< bit: 24..31  Event Detection Interrupt Flag for Channels 8 to 15 (modulo 16) */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_INTFLAG_Type;
 
-#define EVSYS_INTFLAG_OFFSET        0x18         /**< \brief (EVSYS offset) Interrupt Flag Register */
-#define EVSYS_INTFLAG_RESETVALUE    0x0          /**< \brief (EVSYS reset_value) Interrupt Flag Register */
+#define EVSYS_INTFLAG_OFFSET        0x18         /**< \brief (EVSYS_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define EVSYS_INTFLAG_RESETVALUE    0x0          /**< \brief (EVSYS_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
 #define EVSYS_INTFLAG_OVR0_Pos      0
-#define EVSYS_INTFLAG_OVR0_Msk      (0xFFu << EVSYS_INTFLAG_OVR0_Pos) /**< \brief (EVSYS_INTFLAG) Overrun for Channel 0 to 7(modulo 16) */
+#define EVSYS_INTFLAG_OVR0_Msk      (0xFFu << EVSYS_INTFLAG_OVR0_Pos) /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 0 to 7 (modulo 16) */
 #define EVSYS_INTFLAG_OVR0(value)   ((EVSYS_INTFLAG_OVR0_Msk & ((value) << EVSYS_INTFLAG_OVR0_Pos)))
 #define EVSYS_INTFLAG_EVD0_Pos      8
-#define EVSYS_INTFLAG_EVD0_Msk      (0xFFu << EVSYS_INTFLAG_EVD0_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection for Channel 0 to 7(modulo 16) */
+#define EVSYS_INTFLAG_EVD0_Msk      (0xFFu << EVSYS_INTFLAG_EVD0_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 0 to 7 (modulo 16) */
 #define EVSYS_INTFLAG_EVD0(value)   ((EVSYS_INTFLAG_EVD0_Msk & ((value) << EVSYS_INTFLAG_EVD0_Pos)))
 #define EVSYS_INTFLAG_OVR1_Pos      16
-#define EVSYS_INTFLAG_OVR1_Msk      (0xFFu << EVSYS_INTFLAG_OVR1_Pos) /**< \brief (EVSYS_INTFLAG) Overrun for Channel 8 to 15(modulo 16) */
+#define EVSYS_INTFLAG_OVR1_Msk      (0xFFu << EVSYS_INTFLAG_OVR1_Pos) /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 8 to 15 (modulo 16) */
 #define EVSYS_INTFLAG_OVR1(value)   ((EVSYS_INTFLAG_OVR1_Msk & ((value) << EVSYS_INTFLAG_OVR1_Pos)))
 #define EVSYS_INTFLAG_EVD1_Pos      24
-#define EVSYS_INTFLAG_EVD1_Msk      (0xFFu << EVSYS_INTFLAG_EVD1_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection for Channel 8 to 15(modulo 16) */
+#define EVSYS_INTFLAG_EVD1_Msk      (0xFFu << EVSYS_INTFLAG_EVD1_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 8 to 15 (modulo 16) */
 #define EVSYS_INTFLAG_EVD1(value)   ((EVSYS_INTFLAG_EVD1_Msk & ((value) << EVSYS_INTFLAG_EVD1_Pos)))
 #define EVSYS_INTFLAG_MASK          0xFFFFFFFFu /**< \brief (EVSYS_INTFLAG) MASK Register */
 
@@ -2465,9 +2411,9 @@ typedef struct {
   __IO EVSYS_USERMUX_Type        USERMUX;     /**< \brief Offset: 0x08 (R/W 16) User Mux Register */
        RoReg8                    Reserved2[0x2];
   __I  EVSYS_CHSTATUS_Type       CHSTATUS;    /**< \brief Offset: 0x0C (R/  32) Channel Status Register */
-  __IO EVSYS_IENCLR_Type         IENCLR;      /**< \brief Offset: 0x10 (R/W 32) Interrupt Enable Clear register */
-  __IO EVSYS_IENSET_Type         IENSET;      /**< \brief Offset: 0x14 (R/W 32) Interrupt Enable Set Register */
-  __IO EVSYS_INTFLAG_Type        INTFLAG;     /**< \brief Offset: 0x18 (R/W 32) Interrupt Flag Register */
+  __IO EVSYS_INTENCLR_Type       INTENCLR;    /**< \brief Offset: 0x10 (R/W 32) Interrupt Enable Clear Register */
+  __IO EVSYS_INTENSET_Type       INTENSET;    /**< \brief Offset: 0x14 (R/W 32) Interrupt Enable Set Register */
+  __IO EVSYS_INTFLAG_Type        INTFLAG;     /**< \brief Offset: 0x18 (R/W 32) Interrupt Flag Status and Clear Register */
 } Evsys;
 
 #endif /*  __EXCLUDE_EVSYS_FROM_CMSIS__ */
@@ -2478,7 +2424,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR GCLK */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_GCLK Generic Clock Generator */
+/** \addtogroup SAM0+D_GCLK Generic Clock Generator */
 /*@{*/
 
 #define REV_GCLK       0x100
@@ -2490,109 +2436,109 @@ typedef struct {
 /* -------- GCLK_CTRL : (GCLK Offset: 0x0) (R/W  8) Control Register -------- */
 typedef union {
   struct {
-    uint8_t  SWRST:1;          /*!< bit:      0                                     */
+    uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } GCLK_CTRL_Type;
 
-#define GCLK_CTRL_OFFSET            0x0          /**< \brief (GCLK offset) Control Register */
-#define GCLK_CTRL_RESETVALUE        0x0          /**< \brief (GCLK reset_value) Control Register */
+#define GCLK_CTRL_OFFSET            0x0          /**< \brief (GCLK_CTRL offset) Control Register */
+#define GCLK_CTRL_RESETVALUE        0x0          /**< \brief (GCLK_CTRL reset_value) Control Register */
 
-#define GCLK_CTRL_SWRST             (0x1u <<  0) /**< \brief (GCLK_CTRL)  */
+#define GCLK_CTRL_SWRST             (0x1u <<  0) /**< \brief (GCLK_CTRL) Software Reset */
 #define GCLK_CTRL_MASK              0x1u /**< \brief (GCLK_CTRL) MASK Register */
 
 /* -------- GCLK_STATUS : (GCLK Offset: 0x1) (R/W  8) Status Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:7;     /*!< bit:  0.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7                                     */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } GCLK_STATUS_Type;
 
-#define GCLK_STATUS_OFFSET          0x1          /**< \brief (GCLK offset) Status Register */
+#define GCLK_STATUS_OFFSET          0x1          /**< \brief (GCLK_STATUS offset) Status Register */
 
-#define GCLK_STATUS_SYNCBUSY        (0x1u <<  7) /**< \brief (GCLK_STATUS)  */
+#define GCLK_STATUS_SYNCBUSY        (0x1u <<  7) /**< \brief (GCLK_STATUS) Synchronization Busy */
 #define GCLK_STATUS_MASK            0x80u /**< \brief (GCLK_STATUS) MASK Register */
 
 /* -------- GCLK_CLKCTRL : (GCLK Offset: 0x2) (R/W 16) Generic Clock Control Register -------- */
 typedef union {
   struct {
-    uint16_t ID:6;             /*!< bit:  0.. 5                                     */
+    uint16_t ID:6;             /*!< bit:  0.. 5  Generic Clock Selection            */
     uint16_t _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint16_t GEN:4;            /*!< bit:  8..11                                     */
+    uint16_t GEN:4;            /*!< bit:  8..11  Generic Clock Generator Select     */
     uint16_t _reserved1:2;     /*!< bit: 12..13  Reserved                           */
-    uint16_t CLKEN:1;          /*!< bit:     14                                     */
-    uint16_t SLEEPEN:1;        /*!< bit:     15                                     */
+    uint16_t CLKEN:1;          /*!< bit:     14  Clock Enable                       */
+    uint16_t RUNSTDBY:1;       /*!< bit:     15  Run during Standby                 */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } GCLK_CLKCTRL_Type;
 
-#define GCLK_CLKCTRL_OFFSET         0x2          /**< \brief (GCLK offset) Generic Clock Control Register */
-#define GCLK_CLKCTRL_RESETVALUE     0x0          /**< \brief (GCLK reset_value) Generic Clock Control Register */
+#define GCLK_CLKCTRL_OFFSET         0x2          /**< \brief (GCLK_CLKCTRL offset) Generic Clock Control Register */
+#define GCLK_CLKCTRL_RESETVALUE     0x0          /**< \brief (GCLK_CLKCTRL reset_value) Generic Clock Control Register */
 
 #define GCLK_CLKCTRL_ID_Pos         0
-#define GCLK_CLKCTRL_ID_Msk         (0x3Fu << GCLK_CLKCTRL_ID_Pos) /**< \brief (GCLK_CLKCTRL)  */
+#define GCLK_CLKCTRL_ID_Msk         (0x3Fu << GCLK_CLKCTRL_ID_Pos) /**< \brief (GCLK_CLKCTRL) Generic Clock Selection */
 #define GCLK_CLKCTRL_ID(value)      ((GCLK_CLKCTRL_ID_Msk & ((value) << GCLK_CLKCTRL_ID_Pos)))
 #define GCLK_CLKCTRL_GEN_Pos        8
-#define GCLK_CLKCTRL_GEN_Msk        (0xFu << GCLK_CLKCTRL_GEN_Pos) /**< \brief (GCLK_CLKCTRL)  */
+#define GCLK_CLKCTRL_GEN_Msk        (0xFu << GCLK_CLKCTRL_GEN_Pos) /**< \brief (GCLK_CLKCTRL) Generic Clock Generator Select */
 #define GCLK_CLKCTRL_GEN(value)     ((GCLK_CLKCTRL_GEN_Msk & ((value) << GCLK_CLKCTRL_GEN_Pos)))
-#define GCLK_CLKCTRL_CLKEN          (0x1u << 14) /**< \brief (GCLK_CLKCTRL)  */
-#define GCLK_CLKCTRL_SLEEPEN        (0x1u << 15) /**< \brief (GCLK_CLKCTRL)  */
+#define GCLK_CLKCTRL_CLKEN          (0x1u << 14) /**< \brief (GCLK_CLKCTRL) Clock Enable */
+#define GCLK_CLKCTRL_RUNSTDBY       (0x1u << 15) /**< \brief (GCLK_CLKCTRL) Run during Standby */
 #define GCLK_CLKCTRL_MASK           0xCF3Fu /**< \brief (GCLK_CLKCTRL) MASK Register */
 
 /* -------- GCLK_GENCTRL : (GCLK Offset: 0x4) (R/W 32) Generic Clock Generator Control Register -------- */
 typedef union {
   struct {
-    uint32_t ID:4;             /*!< bit:  0.. 3                                     */
+    uint32_t ID:4;             /*!< bit:  0.. 3  Generic Clock Generator Selection  */
     uint32_t _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-    uint32_t SRC:5;            /*!< bit:  8..12                                     */
+    uint32_t SRC:5;            /*!< bit:  8..12  Clock Source Select                */
     uint32_t _reserved1:3;     /*!< bit: 13..15  Reserved                           */
-    uint32_t GENEN:1;          /*!< bit:     16                                     */
-    uint32_t IDC:1;            /*!< bit:     17                                     */
-    uint32_t OOV:1;            /*!< bit:     18                                     */
-    uint32_t OE:1;             /*!< bit:     19                                     */
-    uint32_t DIVSEL:1;         /*!< bit:     20                                     */
+    uint32_t GENEN:1;          /*!< bit:     16  Generic Clock Generator Enable     */
+    uint32_t IDC:1;            /*!< bit:     17  Improve Duty Cycle                 */
+    uint32_t OOV:1;            /*!< bit:     18  Output Off Value                   */
+    uint32_t OE:1;             /*!< bit:     19  Output Enable                      */
+    uint32_t DIVSEL:1;         /*!< bit:     20  Divide Selection                   */
     uint32_t _reserved2:11;    /*!< bit: 21..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } GCLK_GENCTRL_Type;
 
-#define GCLK_GENCTRL_OFFSET         0x4          /**< \brief (GCLK offset) Generic Clock Generator Control Register */
-#define GCLK_GENCTRL_RESETVALUE     0x0          /**< \brief (GCLK reset_value) Generic Clock Generator Control Register */
+#define GCLK_GENCTRL_OFFSET         0x4          /**< \brief (GCLK_GENCTRL offset) Generic Clock Generator Control Register */
+#define GCLK_GENCTRL_RESETVALUE     0x0          /**< \brief (GCLK_GENCTRL reset_value) Generic Clock Generator Control Register */
 
 #define GCLK_GENCTRL_ID_Pos         0
-#define GCLK_GENCTRL_ID_Msk         (0xFu << GCLK_GENCTRL_ID_Pos) /**< \brief (GCLK_GENCTRL)  */
+#define GCLK_GENCTRL_ID_Msk         (0xFu << GCLK_GENCTRL_ID_Pos) /**< \brief (GCLK_GENCTRL) Generic Clock Generator Selection */
 #define GCLK_GENCTRL_ID(value)      ((GCLK_GENCTRL_ID_Msk & ((value) << GCLK_GENCTRL_ID_Pos)))
 #define GCLK_GENCTRL_SRC_Pos        8
-#define GCLK_GENCTRL_SRC_Msk        (0x1Fu << GCLK_GENCTRL_SRC_Pos) /**< \brief (GCLK_GENCTRL)  */
+#define GCLK_GENCTRL_SRC_Msk        (0x1Fu << GCLK_GENCTRL_SRC_Pos) /**< \brief (GCLK_GENCTRL) Clock Source Select */
 #define GCLK_GENCTRL_SRC(value)     ((GCLK_GENCTRL_SRC_Msk & ((value) << GCLK_GENCTRL_SRC_Pos)))
-#define GCLK_GENCTRL_GENEN          (0x1u << 16) /**< \brief (GCLK_GENCTRL)  */
-#define GCLK_GENCTRL_IDC            (0x1u << 17) /**< \brief (GCLK_GENCTRL)  */
-#define GCLK_GENCTRL_OOV            (0x1u << 18) /**< \brief (GCLK_GENCTRL)  */
-#define GCLK_GENCTRL_OE             (0x1u << 19) /**< \brief (GCLK_GENCTRL)  */
-#define GCLK_GENCTRL_DIVSEL         (0x1u << 20) /**< \brief (GCLK_GENCTRL)  */
+#define GCLK_GENCTRL_GENEN          (0x1u << 16) /**< \brief (GCLK_GENCTRL) Generic Clock Generator Enable */
+#define GCLK_GENCTRL_IDC            (0x1u << 17) /**< \brief (GCLK_GENCTRL) Improve Duty Cycle */
+#define GCLK_GENCTRL_OOV            (0x1u << 18) /**< \brief (GCLK_GENCTRL) Output Off Value */
+#define GCLK_GENCTRL_OE             (0x1u << 19) /**< \brief (GCLK_GENCTRL) Output Enable */
+#define GCLK_GENCTRL_DIVSEL         (0x1u << 20) /**< \brief (GCLK_GENCTRL) Divide Selection */
 #define GCLK_GENCTRL_MASK           0x1F1F0Fu /**< \brief (GCLK_GENCTRL) MASK Register */
 
 /* -------- GCLK_GENDIV : (GCLK Offset: 0x8) (R/W 32) Generic Clock Generator Division Register -------- */
 typedef union {
   struct {
-    uint32_t ID:4;             /*!< bit:  0.. 3                                     */
+    uint32_t ID:4;             /*!< bit:  0.. 3  Generic Clock Generator Selection  */
     uint32_t _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-    uint32_t DIV:24;           /*!< bit:  8..31                                     */
+    uint32_t DIV:24;           /*!< bit:  8..31  Division Factor                    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } GCLK_GENDIV_Type;
 
-#define GCLK_GENDIV_OFFSET          0x8          /**< \brief (GCLK offset) Generic Clock Generator Division Register */
-#define GCLK_GENDIV_RESETVALUE      0x0          /**< \brief (GCLK reset_value) Generic Clock Generator Division Register */
+#define GCLK_GENDIV_OFFSET          0x8          /**< \brief (GCLK_GENDIV offset) Generic Clock Generator Division Register */
+#define GCLK_GENDIV_RESETVALUE      0x0          /**< \brief (GCLK_GENDIV reset_value) Generic Clock Generator Division Register */
 
 #define GCLK_GENDIV_ID_Pos          0
-#define GCLK_GENDIV_ID_Msk          (0xFu << GCLK_GENDIV_ID_Pos) /**< \brief (GCLK_GENDIV)  */
+#define GCLK_GENDIV_ID_Msk          (0xFu << GCLK_GENDIV_ID_Pos) /**< \brief (GCLK_GENDIV) Generic Clock Generator Selection */
 #define GCLK_GENDIV_ID(value)       ((GCLK_GENDIV_ID_Msk & ((value) << GCLK_GENDIV_ID_Pos)))
 #define GCLK_GENDIV_DIV_Pos         8
-#define GCLK_GENDIV_DIV_Msk         (0xFFFFFFu << GCLK_GENDIV_DIV_Pos) /**< \brief (GCLK_GENDIV)  */
+#define GCLK_GENDIV_DIV_Msk         (0xFFFFFFu << GCLK_GENDIV_DIV_Pos) /**< \brief (GCLK_GENDIV) Division Factor */
 #define GCLK_GENDIV_DIV(value)      ((GCLK_GENDIV_DIV_Msk & ((value) << GCLK_GENDIV_DIV_Pos)))
 #define GCLK_GENDIV_MASK            0xFFFFFF0Fu /**< \brief (GCLK_GENDIV) MASK Register */
 
@@ -2613,7 +2559,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR HMATRIXB */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_HMATRIXB HSB Matrix */
+/** \addtogroup SAM0+D_HMATRIXB HSB Matrix */
 /*@{*/
 
 #define REV_HMATRIXB   0x130
@@ -2622,7 +2568,7 @@ typedef struct {
 
 #ifndef __EXCLUDE_HMATRIXB_FROM_CMSIS__
 
-/* -------- HMATRIXB_MCFG : (HMATRIXB Offset: 0x000) (R/W 32) Mcfg Master Configuration Register 0 -------- */
+/* -------- HMATRIXB_MCFG : (HMATRIXB Offset: 0x000) (R/W 32) Master Configuration Register -------- */
 typedef union {
   struct {
     uint32_t ULBT:3;           /*!< bit:  0.. 2  Undefined Length Burst Type        */
@@ -2631,8 +2577,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_MCFG_Type;
 
-#define HMATRIXB_MCFG_OFFSET        0x000        /**< \brief (HMATRIXB offset) Master Configuration Register 0 */
-#define HMATRIXB_MCFG_RESETVALUE    0x2          /**< \brief (HMATRIXB reset_value) Master Configuration Register 0 */
+#define HMATRIXB_MCFG_OFFSET        0x000        /**< \brief (HMATRIXB_MCFG offset) Master Configuration Register */
+#define HMATRIXB_MCFG_RESETVALUE    0x2          /**< \brief (HMATRIXB_MCFG reset_value) Master Configuration Register */
 
 #define HMATRIXB_MCFG_ULBT_Pos      0
 #define HMATRIXB_MCFG_ULBT_Msk      (0x7u << HMATRIXB_MCFG_ULBT_Pos) /**< \brief (HMATRIXB_MCFG) Undefined Length Burst Type */
@@ -2644,7 +2590,7 @@ typedef union {
 #define   HMATRIXB_MCFG_ULBT_SIXTEEN_BEAT (0x4u <<  0) /**< \brief (HMATRIXB_MCFG) Sixteen Beat Burst */
 #define HMATRIXB_MCFG_MASK          0x7u /**< \brief (HMATRIXB_MCFG) MASK Register */
 
-/* -------- HMATRIXB_SCFG : (HMATRIXB Offset: 0x040) (R/W 32) Scfg Slave Configuration Register 0 -------- */
+/* -------- HMATRIXB_SCFG : (HMATRIXB Offset: 0x040) (R/W 32) Slave Configuration Register -------- */
 typedef union {
   struct {
     uint32_t SLOT_CYCLE:8;     /*!< bit:  0.. 7  Maximum Number of Allowed Cycles for a Burst */
@@ -2658,8 +2604,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_SCFG_Type;
 
-#define HMATRIXB_SCFG_OFFSET        0x040        /**< \brief (HMATRIXB offset) Slave Configuration Register 0 */
-#define HMATRIXB_SCFG_RESETVALUE    0x10         /**< \brief (HMATRIXB reset_value) Slave Configuration Register 0 */
+#define HMATRIXB_SCFG_OFFSET        0x040        /**< \brief (HMATRIXB_SCFG offset) Slave Configuration Register */
+#define HMATRIXB_SCFG_RESETVALUE    0x10         /**< \brief (HMATRIXB_SCFG reset_value) Slave Configuration Register */
 
 #define HMATRIXB_SCFG_SLOT_CYCLE_Pos    0
 #define HMATRIXB_SCFG_SLOT_CYCLE_Msk    (0xFFu << HMATRIXB_SCFG_SLOT_CYCLE_Pos) /**< \brief (HMATRIXB_SCFG) Maximum Number of Allowed Cycles for a Burst */
@@ -2678,7 +2624,7 @@ typedef union {
 #define   HMATRIXB_SCFG_ARBT_FIXED_PRIORITY (0x1u << 24) /**< \brief (HMATRIXB_SCFG) Fixed Priority Arbitration */
 #define HMATRIXB_SCFG_MASK          0x13F00FFu /**< \brief (HMATRIXB_SCFG) MASK Register */
 
-/* -------- HMATRIXB_PRAS : (HMATRIXB Offset: 0x080) (R/W 32) Prs Priority Register A for Slave 0 -------- */
+/* -------- HMATRIXB_PRAS : (HMATRIXB Offset: 0x080) (R/W 32) PRS Priority Register A for Slave -------- */
 typedef union {
   struct {
     uint32_t M0PR:4;           /*!< bit:  0.. 3  Master 0 Priority                  */
@@ -2693,8 +2639,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_PRAS_Type;
 
-#define HMATRIXB_PRAS_OFFSET        0x080        /**< \brief (HMATRIXB offset) Priority Register A for Slave 0 */
-#define HMATRIXB_PRAS_RESETVALUE    0x0          /**< \brief (HMATRIXB reset_value) Priority Register A for Slave 0 */
+#define HMATRIXB_PRAS_OFFSET        0x080        /**< \brief (HMATRIXB_PRAS offset) Priority Register A for Slave */
+#define HMATRIXB_PRAS_RESETVALUE    0x0          /**< \brief (HMATRIXB_PRAS reset_value) Priority Register A for Slave */
 
 #define HMATRIXB_PRAS_M0PR_Pos      0
 #define HMATRIXB_PRAS_M0PR_Msk      (0xFu << HMATRIXB_PRAS_M0PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 0 Priority */
@@ -2722,7 +2668,7 @@ typedef union {
 #define HMATRIXB_PRAS_M7PR(value)   ((HMATRIXB_PRAS_M7PR_Msk & ((value) << HMATRIXB_PRAS_M7PR_Pos)))
 #define HMATRIXB_PRAS_MASK          0xFFFFFFFFu /**< \brief (HMATRIXB_PRAS) MASK Register */
 
-/* -------- HMATRIXB_PRBS : (HMATRIXB Offset: 0x084) (R/W 32) Prs Priority Register B for Slave 0 -------- */
+/* -------- HMATRIXB_PRBS : (HMATRIXB Offset: 0x084) (R/W 32) PRS Priority Register B for Slave -------- */
 typedef union {
   struct {
     uint32_t M8PR:4;           /*!< bit:  0.. 3  Master 8 Priority                  */
@@ -2737,8 +2683,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_PRBS_Type;
 
-#define HMATRIXB_PRBS_OFFSET        0x084        /**< \brief (HMATRIXB offset) Priority Register B for Slave 0 */
-#define HMATRIXB_PRBS_RESETVALUE    0x0          /**< \brief (HMATRIXB reset_value) Priority Register B for Slave 0 */
+#define HMATRIXB_PRBS_OFFSET        0x084        /**< \brief (HMATRIXB_PRBS offset) Priority Register B for Slave */
+#define HMATRIXB_PRBS_RESETVALUE    0x0          /**< \brief (HMATRIXB_PRBS reset_value) Priority Register B for Slave */
 
 #define HMATRIXB_PRBS_M8PR_Pos      0
 #define HMATRIXB_PRBS_M8PR_Msk      (0xFu << HMATRIXB_PRBS_M8PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 8 Priority */
@@ -2769,81 +2715,81 @@ typedef union {
 /* -------- HMATRIXB_MRCR : (HMATRIXB Offset: 0x100) (R/W 32) Master Remap Control Register -------- */
 typedef union {
   struct {
-    uint32_t RCB0:1;           /*!< bit:      0  Remap Command bit for Master 0     */
-    uint32_t RCB1:1;           /*!< bit:      1  Remap Command bit for Master 1     */
-    uint32_t RCB2:1;           /*!< bit:      2  Remap Command bit for Master 2     */
-    uint32_t RCB3:1;           /*!< bit:      3  Remap Command bit for Master 3     */
-    uint32_t RCB4:1;           /*!< bit:      4  Remap Command bit for Master 4     */
-    uint32_t RCB5:1;           /*!< bit:      5  Remap Command bit for Master 5     */
-    uint32_t RCB6:1;           /*!< bit:      6  Remap Command bit for Master 6     */
-    uint32_t RCB7:1;           /*!< bit:      7  Remap Command bit for Master 7     */
-    uint32_t RCB8:1;           /*!< bit:      8  Remap Command bit for Master 8     */
-    uint32_t RCB9:1;           /*!< bit:      9  Remap Command bit for Master 9     */
-    uint32_t RCB10:1;          /*!< bit:     10  Remap Command bit for Master 10    */
-    uint32_t RCB11:1;          /*!< bit:     11  Remap Command bit for Master 11    */
-    uint32_t RCB12:1;          /*!< bit:     12  Remap Command bit for Master 12    */
-    uint32_t RCB13:1;          /*!< bit:     13  Remap Command bit for Master 13    */
-    uint32_t RCB14:1;          /*!< bit:     14  Remap Command bit for Master 14    */
-    uint32_t RCB15:1;          /*!< bit:     15  Remap Command bit for Master 15    */
+    uint32_t RCB0:1;           /*!< bit:      0  Remap Command Bit for Master 0     */
+    uint32_t RCB1:1;           /*!< bit:      1  Remap Command Bit for Master 1     */
+    uint32_t RCB2:1;           /*!< bit:      2  Remap Command Bit for Master 2     */
+    uint32_t RCB3:1;           /*!< bit:      3  Remap Command Bit for Master 3     */
+    uint32_t RCB4:1;           /*!< bit:      4  Remap Command Bit for Master 4     */
+    uint32_t RCB5:1;           /*!< bit:      5  Remap Command Bit for Master 5     */
+    uint32_t RCB6:1;           /*!< bit:      6  Remap Command Bit for Master 6     */
+    uint32_t RCB7:1;           /*!< bit:      7  Remap Command Bit for Master 7     */
+    uint32_t RCB8:1;           /*!< bit:      8  Remap Command Bit for Master 8     */
+    uint32_t RCB9:1;           /*!< bit:      9  Remap Command Bit for Master 9     */
+    uint32_t RCB10:1;          /*!< bit:     10  Remap Command Bit for Master 10    */
+    uint32_t RCB11:1;          /*!< bit:     11  Remap Command Bit for Master 11    */
+    uint32_t RCB12:1;          /*!< bit:     12  Remap Command Bit for Master 12    */
+    uint32_t RCB13:1;          /*!< bit:     13  Remap Command Bit for Master 13    */
+    uint32_t RCB14:1;          /*!< bit:     14  Remap Command Bit for Master 14    */
+    uint32_t RCB15:1;          /*!< bit:     15  Remap Command Bit for Master 15    */
     uint32_t _reserved0:16;    /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_MRCR_Type;
 
-#define HMATRIXB_MRCR_OFFSET        0x100        /**< \brief (HMATRIXB offset) Master Remap Control Register */
-#define HMATRIXB_MRCR_RESETVALUE    0x0          /**< \brief (HMATRIXB reset_value) Master Remap Control Register */
+#define HMATRIXB_MRCR_OFFSET        0x100        /**< \brief (HMATRIXB_MRCR offset) Master Remap Control Register */
+#define HMATRIXB_MRCR_RESETVALUE    0x0          /**< \brief (HMATRIXB_MRCR reset_value) Master Remap Control Register */
 
-#define HMATRIXB_MRCR_RCB0          (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 0 */
+#define HMATRIXB_MRCR_RCB0          (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 0 */
 #define   HMATRIXB_MRCR_RCB0_0      (0x0u <<  0) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB0_1      (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB1          (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 1 */
+#define HMATRIXB_MRCR_RCB1          (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 1 */
 #define   HMATRIXB_MRCR_RCB1_0      (0x0u <<  1) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB1_1      (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB2          (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 2 */
+#define HMATRIXB_MRCR_RCB2          (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 2 */
 #define   HMATRIXB_MRCR_RCB2_0      (0x0u <<  2) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB2_1      (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB3          (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 3 */
+#define HMATRIXB_MRCR_RCB3          (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 3 */
 #define   HMATRIXB_MRCR_RCB3_0      (0x0u <<  3) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB3_1      (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB4          (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 4 */
+#define HMATRIXB_MRCR_RCB4          (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 4 */
 #define   HMATRIXB_MRCR_RCB4_0      (0x0u <<  4) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB4_1      (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB5          (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 5 */
+#define HMATRIXB_MRCR_RCB5          (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 5 */
 #define   HMATRIXB_MRCR_RCB5_0      (0x0u <<  5) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB5_1      (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB6          (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 6 */
+#define HMATRIXB_MRCR_RCB6          (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 6 */
 #define   HMATRIXB_MRCR_RCB6_0      (0x0u <<  6) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB6_1      (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB7          (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 7 */
+#define HMATRIXB_MRCR_RCB7          (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 7 */
 #define   HMATRIXB_MRCR_RCB7_0      (0x0u <<  7) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB7_1      (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB8          (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 8 */
+#define HMATRIXB_MRCR_RCB8          (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 8 */
 #define   HMATRIXB_MRCR_RCB8_0      (0x0u <<  8) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB8_1      (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB9          (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 9 */
+#define HMATRIXB_MRCR_RCB9          (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 9 */
 #define   HMATRIXB_MRCR_RCB9_0      (0x0u <<  9) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB9_1      (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB10         (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 10 */
+#define HMATRIXB_MRCR_RCB10         (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 10 */
 #define   HMATRIXB_MRCR_RCB10_0     (0x0u << 10) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB10_1     (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB11         (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 11 */
+#define HMATRIXB_MRCR_RCB11         (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 11 */
 #define   HMATRIXB_MRCR_RCB11_0     (0x0u << 11) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB11_1     (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB12         (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 12 */
+#define HMATRIXB_MRCR_RCB12         (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 12 */
 #define   HMATRIXB_MRCR_RCB12_0     (0x0u << 12) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB12_1     (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB13         (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 13 */
+#define HMATRIXB_MRCR_RCB13         (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 13 */
 #define   HMATRIXB_MRCR_RCB13_0     (0x0u << 13) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB13_1     (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB14         (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 14 */
+#define HMATRIXB_MRCR_RCB14         (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 14 */
 #define   HMATRIXB_MRCR_RCB14_0     (0x0u << 14) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB14_1     (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB15         (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Remap Command bit for Master 15 */
+#define HMATRIXB_MRCR_RCB15         (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 15 */
 #define   HMATRIXB_MRCR_RCB15_0     (0x0u << 15) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
 #define   HMATRIXB_MRCR_RCB15_1     (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
 #define HMATRIXB_MRCR_MASK          0xFFFFu /**< \brief (HMATRIXB_MRCR) MASK Register */
 
-/* -------- HMATRIXB_SFR : (HMATRIXB Offset: 0x110) (R/W 32) Sfr Special Function Register 0 -------- */
+/* -------- HMATRIXB_SFR : (HMATRIXB Offset: 0x110) (R/W 32) Special Function Register -------- */
 typedef union {
   struct {
     uint32_t SFR:32;           /*!< bit:  0..31  Special Function Register          */
@@ -2851,8 +2797,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } HMATRIXB_SFR_Type;
 
-#define HMATRIXB_SFR_OFFSET         0x110        /**< \brief (HMATRIXB offset) Special Function Register 0 */
-#define HMATRIXB_SFR_RESETVALUE     0x0          /**< \brief (HMATRIXB reset_value) Special Function Register 0 */
+#define HMATRIXB_SFR_OFFSET         0x110        /**< \brief (HMATRIXB_SFR offset) Special Function Register */
+#define HMATRIXB_SFR_RESETVALUE     0x0          /**< \brief (HMATRIXB_SFR reset_value) Special Function Register */
 
 #define HMATRIXB_SFR_SFR_Pos        0
 #define HMATRIXB_SFR_SFR_Msk        (0xFFFFFFFFu << HMATRIXB_SFR_SFR_Pos) /**< \brief (HMATRIXB_SFR) Special Function Register */
@@ -2861,18 +2807,18 @@ typedef union {
 
 /** \brief HmatrixbPrs hardware registers */
 typedef struct {
-  __IO HMATRIXB_PRAS_Type        PRAS;        /**< \brief Offset: 0x000 (R/W 32) Priority Register A for Slave 0 */
-  __IO HMATRIXB_PRBS_Type        PRBS;        /**< \brief Offset: 0x004 (R/W 32) Priority Register B for Slave 0 */
+  __IO HMATRIXB_PRAS_Type        PRAS;        /**< \brief Offset: 0x000 (R/W 32) Priority Register A for Slave */
+  __IO HMATRIXB_PRBS_Type        PRBS;        /**< \brief Offset: 0x004 (R/W 32) Priority Register B for Slave */
 } HmatrixbPrs;
 
 /** \brief HMATRIXB hardware registers */
 typedef struct {
-  __IO HMATRIXB_MCFG_Type        MCFG[16];    /**< \brief Offset: 0x000 (R/W 32) Master Configuration Register 0 */
-  __IO HMATRIXB_SCFG_Type        SCFG[16];    /**< \brief Offset: 0x040 (R/W 32) Slave Configuration Register 0 */
+  __IO HMATRIXB_MCFG_Type        MCFG[16];    /**< \brief Offset: 0x000 (R/W 32) Master Configuration Register */
+  __IO HMATRIXB_SCFG_Type        SCFG[16];    /**< \brief Offset: 0x040 (R/W 32) Slave Configuration Register */
        HmatrixbPrs               Prs[16];     /**< \brief Offset: 0x080 HmatrixbPrs groups */
   __IO HMATRIXB_MRCR_Type        MRCR;        /**< \brief Offset: 0x100 (R/W 32) Master Remap Control Register */
        RoReg8                    Reserved1[0xC];
-  __IO HMATRIXB_SFR_Type         SFR[16];     /**< \brief Offset: 0x110 (R/W 32) Special Function Register 0 */
+  __IO HMATRIXB_SFR_Type         SFR[16];     /**< \brief Offset: 0x110 (R/W 32) Special Function Register */
 } Hmatrixb;
 
 #endif /*  __EXCLUDE_HMATRIXB_FROM_CMSIS__ */
@@ -2883,7 +2829,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR NVMCTRL */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_NVMCTRL NVM Controller */
+/** \addtogroup SAM0+D_NVMCTRL Non-Volatile Memory Controller */
 /*@{*/
 
 #define REV_NVMCTRL    0x100
@@ -2892,22 +2838,22 @@ typedef struct {
 
 #ifndef __EXCLUDE_NVMCTRL_FROM_CMSIS__
 
-/* -------- NVMCTRL_CTRLA : (NVMCTRL Offset: 0x00) (R/W 32) NVM Control A Register -------- */
+/* -------- NVMCTRL_CTRLA : (NVMCTRL Offset: 0x00) (R/W 32) NVM Control Register A -------- */
 typedef union {
   struct {
-    uint32_t CMD:7;            /*!< bit:  0.. 6                                     */
+    uint32_t CMD:7;            /*!< bit:  0.. 6  Command                            */
     uint32_t _reserved0:1;     /*!< bit:      7  Reserved                           */
-    uint32_t CMDEX:8;          /*!< bit:  8..15                                     */
+    uint32_t CMDEX:8;          /*!< bit:  8..15  Command Execution                  */
     uint32_t _reserved1:16;    /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_CTRLA_Type;
 
-#define NVMCTRL_CTRLA_OFFSET        0x00         /**< \brief (NVMCTRL offset) NVM Control A Register */
-#define NVMCTRL_CTRLA_RESETVALUE    0x0          /**< \brief (NVMCTRL reset_value) NVM Control A Register */
+#define NVMCTRL_CTRLA_OFFSET        0x00         /**< \brief (NVMCTRL_CTRLA offset) NVM Control Register A */
+#define NVMCTRL_CTRLA_RESETVALUE    0x0          /**< \brief (NVMCTRL_CTRLA reset_value) NVM Control Register A */
 
 #define NVMCTRL_CTRLA_CMD_Pos       0
-#define NVMCTRL_CTRLA_CMD_Msk       (0x7Fu << NVMCTRL_CTRLA_CMD_Pos) /**< \brief (NVMCTRL_CTRLA)  */
+#define NVMCTRL_CTRLA_CMD_Msk       (0x7Fu << NVMCTRL_CTRLA_CMD_Pos) /**< \brief (NVMCTRL_CTRLA) Command */
 #define NVMCTRL_CTRLA_CMD(value)    ((NVMCTRL_CTRLA_CMD_Msk & ((value) << NVMCTRL_CTRLA_CMD_Pos)))
 #define   NVMCTRL_CTRLA_CMD_ER      (0x2u <<  0) /**< \brief (NVMCTRL_CTRLA) Erase Row */
 #define   NVMCTRL_CTRLA_CMD_WP      (0x4u <<  0) /**< \brief (NVMCTRL_CTRLA) Write Page */
@@ -2923,186 +2869,185 @@ typedef union {
 #define   NVMCTRL_CTRLA_CMD_SSB     (0x45u <<  0) /**< \brief (NVMCTRL_CTRLA) Set Security Bit */
 #define   NVMCTRL_CTRLA_CMD_SMR     (0x54u <<  0) /**< \brief (NVMCTRL_CTRLA) State Machine Reset */
 #define NVMCTRL_CTRLA_CMDEX_Pos     8
-#define NVMCTRL_CTRLA_CMDEX_Msk     (0xFFu << NVMCTRL_CTRLA_CMDEX_Pos) /**< \brief (NVMCTRL_CTRLA)  */
+#define NVMCTRL_CTRLA_CMDEX_Msk     (0xFFu << NVMCTRL_CTRLA_CMDEX_Pos) /**< \brief (NVMCTRL_CTRLA) Command Execution */
 #define NVMCTRL_CTRLA_CMDEX(value)  ((NVMCTRL_CTRLA_CMDEX_Msk & ((value) << NVMCTRL_CTRLA_CMDEX_Pos)))
 #define NVMCTRL_CTRLA_MASK          0xFF7Fu /**< \brief (NVMCTRL_CTRLA) MASK Register */
 
-/* -------- NVMCTRL_CTRLB : (NVMCTRL Offset: 0x04) (R/W 32) NVM Control B Register -------- */
+/* -------- NVMCTRL_CTRLB : (NVMCTRL Offset: 0x04) (R/W 32) NVM Control Register B -------- */
 typedef union {
   struct {
-    uint32_t AUTOWS:1;         /*!< bit:      0                                     */
-    uint32_t RWS:4;            /*!< bit:  1.. 4                                     */
-    uint32_t _reserved0:2;     /*!< bit:  5.. 6  Reserved                           */
-    uint32_t MANW:1;           /*!< bit:      7                                     */
-    uint32_t SLEEPPRM:2;       /*!< bit:  8.. 9                                     */
-    uint32_t _reserved1:6;     /*!< bit: 10..15  Reserved                           */
-    uint32_t READMODE:2;       /*!< bit: 16..17                                     */
-    uint32_t _reserved2:14;    /*!< bit: 18..31  Reserved                           */
+    uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
+    uint32_t RWS:4;            /*!< bit:  1.. 4  NVM Read Wait States               */
+    uint32_t _reserved1:2;     /*!< bit:  5.. 6  Reserved                           */
+    uint32_t MANW:1;           /*!< bit:      7  Manual Write                       */
+    uint32_t SLEEPPRM:2;       /*!< bit:  8.. 9  Power Reduction Mode during Sleep  */
+    uint32_t _reserved2:6;     /*!< bit: 10..15  Reserved                           */
+    uint32_t READMODE:2;       /*!< bit: 16..17  NVMCTRL Read Mode                  */
+    uint32_t _reserved3:14;    /*!< bit: 18..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_CTRLB_Type;
 
-#define NVMCTRL_CTRLB_OFFSET        0x04         /**< \brief (NVMCTRL offset) NVM Control B Register */
-#define NVMCTRL_CTRLB_RESETVALUE    0x0          /**< \brief (NVMCTRL reset_value) NVM Control B Register */
+#define NVMCTRL_CTRLB_OFFSET        0x04         /**< \brief (NVMCTRL_CTRLB offset) NVM Control Register B */
+#define NVMCTRL_CTRLB_RESETVALUE    0x0          /**< \brief (NVMCTRL_CTRLB reset_value) NVM Control Register B */
 
-#define NVMCTRL_CTRLB_AUTOWS        (0x1u <<  0) /**< \brief (NVMCTRL_CTRLB)  */
 #define NVMCTRL_CTRLB_RWS_Pos       1
-#define NVMCTRL_CTRLB_RWS_Msk       (0xFu << NVMCTRL_CTRLB_RWS_Pos) /**< \brief (NVMCTRL_CTRLB)  */
+#define NVMCTRL_CTRLB_RWS_Msk       (0xFu << NVMCTRL_CTRLB_RWS_Pos) /**< \brief (NVMCTRL_CTRLB) NVM Read Wait States */
 #define NVMCTRL_CTRLB_RWS(value)    ((NVMCTRL_CTRLB_RWS_Msk & ((value) << NVMCTRL_CTRLB_RWS_Pos)))
-#define NVMCTRL_CTRLB_MANW          (0x1u <<  7) /**< \brief (NVMCTRL_CTRLB)  */
+#define NVMCTRL_CTRLB_MANW          (0x1u <<  7) /**< \brief (NVMCTRL_CTRLB) Manual Write */
 #define NVMCTRL_CTRLB_SLEEPPRM_Pos    8
-#define NVMCTRL_CTRLB_SLEEPPRM_Msk    (0x3u << NVMCTRL_CTRLB_SLEEPPRM_Pos) /**< \brief (NVMCTRL_CTRLB)  */
+#define NVMCTRL_CTRLB_SLEEPPRM_Msk    (0x3u << NVMCTRL_CTRLB_SLEEPPRM_Pos) /**< \brief (NVMCTRL_CTRLB) Power Reduction Mode during Sleep */
 #define NVMCTRL_CTRLB_SLEEPPRM(value) ((NVMCTRL_CTRLB_SLEEPPRM_Msk & ((value) << NVMCTRL_CTRLB_SLEEPPRM_Pos)))
 #define   NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS (0x0u <<  8) /**< \brief (NVMCTRL_CTRLB) Wake on first access. */
 #define   NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT (0x1u <<  8) /**< \brief (NVMCTRL_CTRLB) Wake on sleep exit. */
 #define   NVMCTRL_CTRLB_SLEEPPRM_DISABLED (0x3u <<  8) /**< \brief (NVMCTRL_CTRLB) Auto power reduction disabled. */
 #define NVMCTRL_CTRLB_READMODE_Pos    16
-#define NVMCTRL_CTRLB_READMODE_Msk    (0x3u << NVMCTRL_CTRLB_READMODE_Pos) /**< \brief (NVMCTRL_CTRLB)  */
+#define NVMCTRL_CTRLB_READMODE_Msk    (0x3u << NVMCTRL_CTRLB_READMODE_Pos) /**< \brief (NVMCTRL_CTRLB) NVMCTRL Read Mode */
 #define NVMCTRL_CTRLB_READMODE(value) ((NVMCTRL_CTRLB_READMODE_Msk & ((value) << NVMCTRL_CTRLB_READMODE_Pos)))
-#define NVMCTRL_CTRLB_MASK          0x3039Fu /**< \brief (NVMCTRL_CTRLB) MASK Register */
+#define NVMCTRL_CTRLB_MASK          0x3039Eu /**< \brief (NVMCTRL_CTRLB) MASK Register */
 
 /* -------- NVMCTRL_PARAM : (NVMCTRL Offset: 0x08) (R/W 32) Parameter Register -------- */
 typedef union {
   struct {
-    uint32_t NVMP:16;          /*!< bit:  0..15                                     */
-    uint32_t PSZ:3;            /*!< bit: 16..18                                     */
+    uint32_t NVMP:16;          /*!< bit:  0..15  NVM Pages                          */
+    uint32_t PSZ:3;            /*!< bit: 16..18  Page Size                          */
     uint32_t _reserved0:13;    /*!< bit: 19..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_PARAM_Type;
 
-#define NVMCTRL_PARAM_OFFSET        0x08         /**< \brief (NVMCTRL offset) Parameter Register */
-#define NVMCTRL_PARAM_RESETVALUE    0x0          /**< \brief (NVMCTRL reset_value) Parameter Register */
+#define NVMCTRL_PARAM_OFFSET        0x08         /**< \brief (NVMCTRL_PARAM offset) Parameter Register */
+#define NVMCTRL_PARAM_RESETVALUE    0x0          /**< \brief (NVMCTRL_PARAM reset_value) Parameter Register */
 
 #define NVMCTRL_PARAM_NVMP_Pos      0
-#define NVMCTRL_PARAM_NVMP_Msk      (0xFFFFu << NVMCTRL_PARAM_NVMP_Pos) /**< \brief (NVMCTRL_PARAM)  */
+#define NVMCTRL_PARAM_NVMP_Msk      (0xFFFFu << NVMCTRL_PARAM_NVMP_Pos) /**< \brief (NVMCTRL_PARAM) NVM Pages */
 #define NVMCTRL_PARAM_NVMP(value)   ((NVMCTRL_PARAM_NVMP_Msk & ((value) << NVMCTRL_PARAM_NVMP_Pos)))
 #define NVMCTRL_PARAM_PSZ_Pos       16
-#define NVMCTRL_PARAM_PSZ_Msk       (0x7u << NVMCTRL_PARAM_PSZ_Pos) /**< \brief (NVMCTRL_PARAM)  */
+#define NVMCTRL_PARAM_PSZ_Msk       (0x7u << NVMCTRL_PARAM_PSZ_Pos) /**< \brief (NVMCTRL_PARAM) Page Size */
 #define NVMCTRL_PARAM_PSZ(value)    ((NVMCTRL_PARAM_PSZ_Msk & ((value) << NVMCTRL_PARAM_PSZ_Pos)))
 #define NVMCTRL_PARAM_MASK          0x7FFFFu /**< \brief (NVMCTRL_PARAM) MASK Register */
 
 /* -------- NVMCTRL_INTENCLR : (NVMCTRL Offset: 0x0C) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  READY:1;          /*!< bit:      0                                     */
-    uint8_t  ERROR:1;          /*!< bit:      1                                     */
+    uint8_t  READY:1;          /*!< bit:      0  NVM Ready Interrupt Disable        */
+    uint8_t  ERROR:1;          /*!< bit:      1  Error Interrupt Disable            */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } NVMCTRL_INTENCLR_Type;
 
-#define NVMCTRL_INTENCLR_OFFSET     0x0C         /**< \brief (NVMCTRL offset) Interrupt Enable Clear Register */
-#define NVMCTRL_INTENCLR_RESETVALUE 0x0          /**< \brief (NVMCTRL reset_value) Interrupt Enable Clear Register */
+#define NVMCTRL_INTENCLR_OFFSET     0x0C         /**< \brief (NVMCTRL_INTENCLR offset) Interrupt Enable Clear Register */
+#define NVMCTRL_INTENCLR_RESETVALUE 0x0          /**< \brief (NVMCTRL_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define NVMCTRL_INTENCLR_READY      (0x1u <<  0) /**< \brief (NVMCTRL_INTENCLR)  */
-#define NVMCTRL_INTENCLR_ERROR      (0x1u <<  1) /**< \brief (NVMCTRL_INTENCLR)  */
+#define NVMCTRL_INTENCLR_READY      (0x1u <<  0) /**< \brief (NVMCTRL_INTENCLR) NVM Ready Interrupt Disable */
+#define NVMCTRL_INTENCLR_ERROR      (0x1u <<  1) /**< \brief (NVMCTRL_INTENCLR) Error Interrupt Disable */
 #define NVMCTRL_INTENCLR_MASK       0x3u /**< \brief (NVMCTRL_INTENCLR) MASK Register */
 
 /* -------- NVMCTRL_INTENSET : (NVMCTRL Offset: 0x10) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint8_t  READY:1;          /*!< bit:      0                                     */
-    uint8_t  ERROR:1;          /*!< bit:      1                                     */
+    uint8_t  READY:1;          /*!< bit:      0  NVM Ready Interrupt Enable         */
+    uint8_t  ERROR:1;          /*!< bit:      1  Error Interrupt Enable             */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } NVMCTRL_INTENSET_Type;
 
-#define NVMCTRL_INTENSET_OFFSET     0x10         /**< \brief (NVMCTRL offset) Interrupt Enable Set Register */
-#define NVMCTRL_INTENSET_RESETVALUE 0x0          /**< \brief (NVMCTRL reset_value) Interrupt Enable Set Register */
+#define NVMCTRL_INTENSET_OFFSET     0x10         /**< \brief (NVMCTRL_INTENSET offset) Interrupt Enable Set Register */
+#define NVMCTRL_INTENSET_RESETVALUE 0x0          /**< \brief (NVMCTRL_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define NVMCTRL_INTENSET_READY      (0x1u <<  0) /**< \brief (NVMCTRL_INTENSET)  */
-#define NVMCTRL_INTENSET_ERROR      (0x1u <<  1) /**< \brief (NVMCTRL_INTENSET)  */
+#define NVMCTRL_INTENSET_READY      (0x1u <<  0) /**< \brief (NVMCTRL_INTENSET) NVM Ready Interrupt Enable */
+#define NVMCTRL_INTENSET_ERROR      (0x1u <<  1) /**< \brief (NVMCTRL_INTENSET) Error Interrupt Enable */
 #define NVMCTRL_INTENSET_MASK       0x3u /**< \brief (NVMCTRL_INTENSET) MASK Register */
 
-/* -------- NVMCTRL_INTFLAG : (NVMCTRL Offset: 0x14) (R/W  8) Interrupt Register -------- */
+/* -------- NVMCTRL_INTFLAG : (NVMCTRL Offset: 0x14) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  READY:1;          /*!< bit:      0                                     */
-    uint8_t  ERROR:1;          /*!< bit:      1                                     */
+    uint8_t  READY:1;          /*!< bit:      0  NVM Ready Interrupt Flag           */
+    uint8_t  ERROR:1;          /*!< bit:      1  Error Interrupt Flag               */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } NVMCTRL_INTFLAG_Type;
 
-#define NVMCTRL_INTFLAG_OFFSET      0x14         /**< \brief (NVMCTRL offset) Interrupt Register */
-#define NVMCTRL_INTFLAG_RESETVALUE  0x0          /**< \brief (NVMCTRL reset_value) Interrupt Register */
+#define NVMCTRL_INTFLAG_OFFSET      0x14         /**< \brief (NVMCTRL_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define NVMCTRL_INTFLAG_RESETVALUE  0x0          /**< \brief (NVMCTRL_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define NVMCTRL_INTFLAG_READY       (0x1u <<  0) /**< \brief (NVMCTRL_INTFLAG)  */
-#define NVMCTRL_INTFLAG_ERROR       (0x1u <<  1) /**< \brief (NVMCTRL_INTFLAG)  */
+#define NVMCTRL_INTFLAG_READY       (0x1u <<  0) /**< \brief (NVMCTRL_INTFLAG) NVM Ready Interrupt Flag */
+#define NVMCTRL_INTFLAG_ERROR       (0x1u <<  1) /**< \brief (NVMCTRL_INTFLAG) Error Interrupt Flag */
 #define NVMCTRL_INTFLAG_MASK        0x3u /**< \brief (NVMCTRL_INTFLAG) MASK Register */
 
 /* -------- NVMCTRL_STATUS : (NVMCTRL Offset: 0x18) (R/W 32) Status Register -------- */
 typedef union {
   struct {
-    uint32_t PRM:1;            /*!< bit:      0                                     */
-    uint32_t LOAD:1;           /*!< bit:      1                                     */
-    uint32_t PROGE:1;          /*!< bit:      2                                     */
-    uint32_t LOCKE:1;          /*!< bit:      3                                     */
-    uint32_t NVME:1;           /*!< bit:      4                                     */
+    uint32_t PRM:1;            /*!< bit:      0  Power Reduction Mode               */
+    uint32_t LOAD:1;           /*!< bit:      1  NVM Page Buffer Active Loading     */
+    uint32_t PROGE:1;          /*!< bit:      2  Programming Error Status           */
+    uint32_t LOCKE:1;          /*!< bit:      3  Lock Error Status                  */
+    uint32_t NVME:1;           /*!< bit:      4  NVM Error                          */
     uint32_t _reserved0:3;     /*!< bit:  5.. 7  Reserved                           */
-    uint32_t SB:1;             /*!< bit:      8                                     */
+    uint32_t SB:1;             /*!< bit:      8  Security Bit Status                */
     uint32_t _reserved1:23;    /*!< bit:  9..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_STATUS_Type;
 
-#define NVMCTRL_STATUS_OFFSET       0x18         /**< \brief (NVMCTRL offset) Status Register */
-#define NVMCTRL_STATUS_RESETVALUE   0x0          /**< \brief (NVMCTRL reset_value) Status Register */
+#define NVMCTRL_STATUS_OFFSET       0x18         /**< \brief (NVMCTRL_STATUS offset) Status Register */
+#define NVMCTRL_STATUS_RESETVALUE   0x0          /**< \brief (NVMCTRL_STATUS reset_value) Status Register */
 
-#define NVMCTRL_STATUS_PRM          (0x1u <<  0) /**< \brief (NVMCTRL_STATUS)  */
-#define NVMCTRL_STATUS_LOAD         (0x1u <<  1) /**< \brief (NVMCTRL_STATUS)  */
-#define NVMCTRL_STATUS_PROGE        (0x1u <<  2) /**< \brief (NVMCTRL_STATUS)  */
-#define NVMCTRL_STATUS_LOCKE        (0x1u <<  3) /**< \brief (NVMCTRL_STATUS)  */
-#define NVMCTRL_STATUS_NVME         (0x1u <<  4) /**< \brief (NVMCTRL_STATUS)  */
-#define NVMCTRL_STATUS_SB           (0x1u <<  8) /**< \brief (NVMCTRL_STATUS)  */
+#define NVMCTRL_STATUS_PRM          (0x1u <<  0) /**< \brief (NVMCTRL_STATUS) Power Reduction Mode */
+#define NVMCTRL_STATUS_LOAD         (0x1u <<  1) /**< \brief (NVMCTRL_STATUS) NVM Page Buffer Active Loading */
+#define NVMCTRL_STATUS_PROGE        (0x1u <<  2) /**< \brief (NVMCTRL_STATUS) Programming Error Status */
+#define NVMCTRL_STATUS_LOCKE        (0x1u <<  3) /**< \brief (NVMCTRL_STATUS) Lock Error Status */
+#define NVMCTRL_STATUS_NVME         (0x1u <<  4) /**< \brief (NVMCTRL_STATUS) NVM Error */
+#define NVMCTRL_STATUS_SB           (0x1u <<  8) /**< \brief (NVMCTRL_STATUS) Security Bit Status */
 #define NVMCTRL_STATUS_MASK         0x11Fu /**< \brief (NVMCTRL_STATUS) MASK Register */
 
 /* -------- NVMCTRL_ADDR : (NVMCTRL Offset: 0x1C) (R/W 32) Address Register -------- */
 typedef union {
   struct {
-    uint32_t ADDR:22;          /*!< bit:  0..21                                     */
+    uint32_t ADDR:22;          /*!< bit:  0..21  NVM Address                        */
     uint32_t _reserved0:10;    /*!< bit: 22..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_ADDR_Type;
 
-#define NVMCTRL_ADDR_OFFSET         0x1C         /**< \brief (NVMCTRL offset) Address Register */
-#define NVMCTRL_ADDR_RESETVALUE     0x0          /**< \brief (NVMCTRL reset_value) Address Register */
+#define NVMCTRL_ADDR_OFFSET         0x1C         /**< \brief (NVMCTRL_ADDR offset) Address Register */
+#define NVMCTRL_ADDR_RESETVALUE     0x0          /**< \brief (NVMCTRL_ADDR reset_value) Address Register */
 
 #define NVMCTRL_ADDR_ADDR_Pos       0
-#define NVMCTRL_ADDR_ADDR_Msk       (0x3FFFFFu << NVMCTRL_ADDR_ADDR_Pos) /**< \brief (NVMCTRL_ADDR)  */
+#define NVMCTRL_ADDR_ADDR_Msk       (0x3FFFFFu << NVMCTRL_ADDR_ADDR_Pos) /**< \brief (NVMCTRL_ADDR) NVM Address */
 #define NVMCTRL_ADDR_ADDR(value)    ((NVMCTRL_ADDR_ADDR_Msk & ((value) << NVMCTRL_ADDR_ADDR_Pos)))
 #define NVMCTRL_ADDR_MASK           0x3FFFFFu /**< \brief (NVMCTRL_ADDR) MASK Register */
 
 /* -------- NVMCTRL_LOCK : (NVMCTRL Offset: 0x20) (R/W 32) Lock Register -------- */
 typedef union {
   struct {
-    uint32_t LOCK:16;          /*!< bit:  0..15                                     */
+    uint32_t LOCK:16;          /*!< bit:  0..15  Region Lock Bits                   */
     uint32_t _reserved0:16;    /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_LOCK_Type;
 
-#define NVMCTRL_LOCK_OFFSET         0x20         /**< \brief (NVMCTRL offset) Lock Register */
-#define NVMCTRL_LOCK_RESETVALUE     0x0          /**< \brief (NVMCTRL reset_value) Lock Register */
+#define NVMCTRL_LOCK_OFFSET         0x20         /**< \brief (NVMCTRL_LOCK offset) Lock Register */
+#define NVMCTRL_LOCK_RESETVALUE     0x0          /**< \brief (NVMCTRL_LOCK reset_value) Lock Register */
 
 #define NVMCTRL_LOCK_LOCK_Pos       0
-#define NVMCTRL_LOCK_LOCK_Msk       (0xFFFFu << NVMCTRL_LOCK_LOCK_Pos) /**< \brief (NVMCTRL_LOCK)  */
+#define NVMCTRL_LOCK_LOCK_Msk       (0xFFFFu << NVMCTRL_LOCK_LOCK_Pos) /**< \brief (NVMCTRL_LOCK) Region Lock Bits */
 #define NVMCTRL_LOCK_LOCK(value)    ((NVMCTRL_LOCK_LOCK_Msk & ((value) << NVMCTRL_LOCK_LOCK_Pos)))
 #define NVMCTRL_LOCK_MASK           0xFFFFu /**< \brief (NVMCTRL_LOCK) MASK Register */
 
 /** \brief NVMCTRL hardware registers */
 typedef struct {
-  __IO NVMCTRL_CTRLA_Type        CTRLA;       /**< \brief Offset: 0x00 (R/W 32) NVM Control A Register */
-  __IO NVMCTRL_CTRLB_Type        CTRLB;       /**< \brief Offset: 0x04 (R/W 32) NVM Control B Register */
+  __IO NVMCTRL_CTRLA_Type        CTRLA;       /**< \brief Offset: 0x00 (R/W 32) NVM Control Register A */
+  __IO NVMCTRL_CTRLB_Type        CTRLB;       /**< \brief Offset: 0x04 (R/W 32) NVM Control Register B */
   __IO NVMCTRL_PARAM_Type        PARAM;       /**< \brief Offset: 0x08 (R/W 32) Parameter Register */
   __IO NVMCTRL_INTENCLR_Type     INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
        RoReg8                    Reserved1[0x3];
   __IO NVMCTRL_INTENSET_Type     INTENSET;    /**< \brief Offset: 0x10 (R/W  8) Interrupt Enable Set Register */
        RoReg8                    Reserved2[0x3];
-  __IO NVMCTRL_INTFLAG_Type      INTFLAG;     /**< \brief Offset: 0x14 (R/W  8) Interrupt Register */
+  __IO NVMCTRL_INTFLAG_Type      INTFLAG;     /**< \brief Offset: 0x14 (R/W  8) Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved3[0x3];
   __IO NVMCTRL_STATUS_Type       STATUS;      /**< \brief Offset: 0x18 (R/W 32) Status Register */
   __IO NVMCTRL_ADDR_Type         ADDR;        /**< \brief Offset: 0x1C (R/W 32) Address Register */
@@ -3117,7 +3062,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR PAC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_PAC Peripheral Access Controller */
+/** \addtogroup SAM0+D_PAC Peripheral Access Controller */
 /*@{*/
 
 #define REV_PAC        0x100
@@ -3126,28 +3071,28 @@ typedef struct {
 
 #ifndef __EXCLUDE_PAC_FROM_CMSIS__
 
-/* -------- PAC_WPCLR : (PAC Offset: 0x0) (R/W 32) Write Protection Clear -------- */
+/* -------- PAC_WPCLR : (PAC Offset: 0x0) (R/W 32) Write Protection Clear Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_WPCLR_Type;
 
-#define PAC_WPCLR_OFFSET            0x0          /**< \brief (PAC offset) Write Protection Clear */
-#define PAC_WPCLR_RESETVALUE        0x0          /**< \brief (PAC reset_value) Write Protection Clear */
+#define PAC_WPCLR_OFFSET            0x0          /**< \brief (PAC_WPCLR offset) Write Protection Clear Register */
+#define PAC_WPCLR_RESETVALUE        0x0          /**< \brief (PAC_WPCLR reset_value) Write Protection Clear Register */
 #define PAC_WPCLR_MASK              0xFFFFFFFFu  /**< \brief (PAC_WPCLR) MASK Register */
 
-/* -------- PAC_WPSET : (PAC Offset: 0x4) (R/W 32) Write Protection Set -------- */
+/* -------- PAC_WPSET : (PAC Offset: 0x4) (R/W 32) Write Protection Set Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_WPSET_Type;
 
-#define PAC_WPSET_OFFSET            0x4          /**< \brief (PAC offset) Write Protection Set */
-#define PAC_WPSET_RESETVALUE        0x0          /**< \brief (PAC reset_value) Write Protection Set */
+#define PAC_WPSET_OFFSET            0x4          /**< \brief (PAC_WPSET offset) Write Protection Set Register */
+#define PAC_WPSET_RESETVALUE        0x0          /**< \brief (PAC_WPSET reset_value) Write Protection Set Register */
 #define PAC_WPSET_MASK              0xFFFFFFFFu  /**< \brief (PAC_WPSET) MASK Register */
 
 /** \brief PAC hardware registers */
 typedef struct {
-  __IO PAC_WPCLR_Type            WPCLR;       /**< \brief Offset: 0x0 (R/W 32) Write Protection Clear */
-  __IO PAC_WPSET_Type            WPSET;       /**< \brief Offset: 0x4 (R/W 32) Write Protection Set */
+  __IO PAC_WPCLR_Type            WPCLR;       /**< \brief Offset: 0x0 (R/W 32) Write Protection Clear Register */
+  __IO PAC_WPSET_Type            WPSET;       /**< \brief Offset: 0x4 (R/W 32) Write Protection Set Register */
 } Pac;
 
 #endif /*  __EXCLUDE_PAC_FROM_CMSIS__ */
@@ -3158,7 +3103,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR PM */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_PM Power Manager */
+/** \addtogroup SAM0+D_PM Power Manager */
 /*@{*/
 
 #define REV_PM         0x100
@@ -3179,8 +3124,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_CTRL_Type;
 
-#define PM_CTRL_OFFSET              0x00         /**< \brief (PM offset) Control Register */
-#define PM_CTRL_RESETVALUE          0x0          /**< \brief (PM reset_value) Control Register */
+#define PM_CTRL_OFFSET              0x00         /**< \brief (PM_CTRL offset) Control Register */
+#define PM_CTRL_RESETVALUE          0x0          /**< \brief (PM_CTRL reset_value) Control Register */
 
 #define PM_CTRL_CFDEN               (0x1u <<  2) /**< \brief (PM_CTRL) Clock Failure Detector Enable */
 #define PM_CTRL_MCSEL_Pos           4
@@ -3191,17 +3136,17 @@ typedef union {
 /* -------- PM_SLEEP : (PM Offset: 0x01) (R/W  8) Sleep Register -------- */
 typedef union {
   struct {
-    uint8_t  IDLE:2;           /*!< bit:  0.. 1  Idle level                         */
+    uint8_t  IDLE:2;           /*!< bit:  0.. 1  Idle Level                         */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_SLEEP_Type;
 
-#define PM_SLEEP_OFFSET             0x01         /**< \brief (PM offset) Sleep Register */
-#define PM_SLEEP_RESETVALUE         0x0          /**< \brief (PM reset_value) Sleep Register */
+#define PM_SLEEP_OFFSET             0x01         /**< \brief (PM_SLEEP offset) Sleep Register */
+#define PM_SLEEP_RESETVALUE         0x0          /**< \brief (PM_SLEEP reset_value) Sleep Register */
 
 #define PM_SLEEP_IDLE_Pos           0
-#define PM_SLEEP_IDLE_Msk           (0x3u << PM_SLEEP_IDLE_Pos) /**< \brief (PM_SLEEP) Idle level */
+#define PM_SLEEP_IDLE_Msk           (0x3u << PM_SLEEP_IDLE_Pos) /**< \brief (PM_SLEEP) Idle Level */
 #define PM_SLEEP_IDLE(value)        ((PM_SLEEP_IDLE_Msk & ((value) << PM_SLEEP_IDLE_Pos)))
 #define PM_SLEEP_MASK               0x3u /**< \brief (PM_SLEEP) MASK Register */
 
@@ -3214,8 +3159,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_CPUSEL_Type;
 
-#define PM_CPUSEL_OFFSET            0x08         /**< \brief (PM offset) CPU Clock Select */
-#define PM_CPUSEL_RESETVALUE        0x0          /**< \brief (PM reset_value) CPU Clock Select */
+#define PM_CPUSEL_OFFSET            0x08         /**< \brief (PM_CPUSEL offset) CPU Clock Select */
+#define PM_CPUSEL_RESETVALUE        0x0          /**< \brief (PM_CPUSEL reset_value) CPU Clock Select */
 
 #define PM_CPUSEL_CPUDIV_Pos        0
 #define PM_CPUSEL_CPUDIV_Msk        (0x7u << PM_CPUSEL_CPUDIV_Pos) /**< \brief (PM_CPUSEL) CPU Clock Select */
@@ -3231,8 +3176,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_APBASEL_Type;
 
-#define PM_APBASEL_OFFSET           0x09         /**< \brief (PM offset) APBA Clock Select */
-#define PM_APBASEL_RESETVALUE       0x0          /**< \brief (PM reset_value) APBA Clock Select */
+#define PM_APBASEL_OFFSET           0x09         /**< \brief (PM_APBASEL offset) APBA Clock Select */
+#define PM_APBASEL_RESETVALUE       0x0          /**< \brief (PM_APBASEL reset_value) APBA Clock Select */
 
 #define PM_APBASEL_APBADIV_Pos      0
 #define PM_APBASEL_APBADIV_Msk      (0x7u << PM_APBASEL_APBADIV_Pos) /**< \brief (PM_APBASEL) APBA Clock Select */
@@ -3248,8 +3193,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_APBBSEL_Type;
 
-#define PM_APBBSEL_OFFSET           0x0A         /**< \brief (PM offset) APBB Clock Select */
-#define PM_APBBSEL_RESETVALUE       0x0          /**< \brief (PM reset_value) APBB Clock Select */
+#define PM_APBBSEL_OFFSET           0x0A         /**< \brief (PM_APBBSEL offset) APBB Clock Select */
+#define PM_APBBSEL_RESETVALUE       0x0          /**< \brief (PM_APBBSEL reset_value) APBB Clock Select */
 
 #define PM_APBBSEL_APBBDIV_Pos      0
 #define PM_APBBSEL_APBBDIV_Msk      (0x7u << PM_APBBSEL_APBBDIV_Pos) /**< \brief (PM_APBBSEL) PB Clock Select */
@@ -3265,8 +3210,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_APBCSEL_Type;
 
-#define PM_APBCSEL_OFFSET           0x0B         /**< \brief (PM offset) APBC Clock Select */
-#define PM_APBCSEL_RESETVALUE       0x0          /**< \brief (PM reset_value) APBC Clock Select */
+#define PM_APBCSEL_OFFSET           0x0B         /**< \brief (PM_APBCSEL offset) APBC Clock Select */
+#define PM_APBCSEL_RESETVALUE       0x0          /**< \brief (PM_APBCSEL reset_value) APBC Clock Select */
 
 #define PM_APBCSEL_APBCDIV_Pos      0
 #define PM_APBCSEL_APBCDIV_Msk      (0x7u << PM_APBCSEL_APBCDIV_Pos) /**< \brief (PM_APBCSEL) APBC Clock Select */
@@ -3286,8 +3231,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_AHBMASK_Type;
 
-#define PM_AHBMASK_OFFSET           0x14         /**< \brief (PM offset) AHB Mask */
-#define PM_AHBMASK_RESETVALUE       0x1F         /**< \brief (PM reset_value) AHB Mask */
+#define PM_AHBMASK_OFFSET           0x14         /**< \brief (PM_AHBMASK offset) AHB Mask */
+#define PM_AHBMASK_RESETVALUE       0x1F         /**< \brief (PM_AHBMASK reset_value) AHB Mask */
 
 #define PM_AHBMASK_HPB0             (0x1u <<  0) /**< \brief (PM_AHBMASK) HPB0 AHB Clock Mask */
 #define PM_AHBMASK_HPB1             (0x1u <<  1) /**< \brief (PM_AHBMASK) HPB1 AHB Clock Mask */
@@ -3311,8 +3256,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBAMASK_Type;
 
-#define PM_APBAMASK_OFFSET          0x18         /**< \brief (PM offset) APBA Mask */
-#define PM_APBAMASK_RESETVALUE      0x7F         /**< \brief (PM reset_value) APBA Mask */
+#define PM_APBAMASK_OFFSET          0x18         /**< \brief (PM_APBAMASK offset) APBA Mask */
+#define PM_APBAMASK_RESETVALUE      0x7F         /**< \brief (PM_APBAMASK reset_value) APBA Mask */
 
 #define PM_APBAMASK_PAC0            (0x1u <<  0) /**< \brief (PM_APBAMASK) PAC0 APB Clock Mask */
 #define PM_APBAMASK_PM              (0x1u <<  1) /**< \brief (PM_APBAMASK) PM APB Clock Mask */
@@ -3336,8 +3281,8 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBBMASK_Type;
 
-#define PM_APBBMASK_OFFSET          0x1C         /**< \brief (PM offset) APBB Mask */
-#define PM_APBBMASK_RESETVALUE      0x1F         /**< \brief (PM reset_value) APBB Mask */
+#define PM_APBBMASK_OFFSET          0x1C         /**< \brief (PM_APBBMASK offset) APBB Mask */
+#define PM_APBBMASK_RESETVALUE      0x1F         /**< \brief (PM_APBBMASK reset_value) APBB Mask */
 
 #define PM_APBBMASK_PAC1            (0x1u <<  0) /**< \brief (PM_APBBMASK) PAC1 APB Clock Mask */
 #define PM_APBBMASK_DSU             (0x1u <<  1) /**< \brief (PM_APBBMASK) DSU APB Clock Mask */
@@ -3369,14 +3314,13 @@ typedef union {
     uint32_t AC:1;             /*!< bit:     17  AC APB Clock Mask                  */
     uint32_t DAC:1;            /*!< bit:     18  DAC APB Clock Mask                 */
     uint32_t PTC:1;            /*!< bit:     19  PTC APB Clock Mask                 */
-    uint32_t ATW:1;            /*!< bit:     20  ATW APB Clock Mask                 */
-    uint32_t _reserved0:11;    /*!< bit: 21..31  Reserved                           */
+    uint32_t _reserved0:12;    /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBCMASK_Type;
 
-#define PM_APBCMASK_OFFSET          0x20         /**< \brief (PM offset) APBC Mask */
-#define PM_APBCMASK_RESETVALUE      0x10000      /**< \brief (PM reset_value) APBC Mask */
+#define PM_APBCMASK_OFFSET          0x20         /**< \brief (PM_APBCMASK offset) APBC Mask */
+#define PM_APBCMASK_RESETVALUE      0x10000      /**< \brief (PM_APBCMASK reset_value) APBC Mask */
 
 #define PM_APBCMASK_PAC2            (0x1u <<  0) /**< \brief (PM_APBCMASK) PAC2 APB Clock Mask */
 #define PM_APBCMASK_EVSYS           (0x1u <<  1) /**< \brief (PM_APBCMASK) EVSYS APB Clock Mask */
@@ -3398,8 +3342,7 @@ typedef union {
 #define PM_APBCMASK_AC              (0x1u << 17) /**< \brief (PM_APBCMASK) AC APB Clock Mask */
 #define PM_APBCMASK_DAC             (0x1u << 18) /**< \brief (PM_APBCMASK) DAC APB Clock Mask */
 #define PM_APBCMASK_PTC             (0x1u << 19) /**< \brief (PM_APBCMASK) PTC APB Clock Mask */
-#define PM_APBCMASK_ATW             (0x1u << 20) /**< \brief (PM_APBCMASK) ATW APB Clock Mask */
-#define PM_APBCMASK_MASK            0x1FFFFFu /**< \brief (PM_APBCMASK) MASK Register */
+#define PM_APBCMASK_MASK            0xFFFFFu /**< \brief (PM_APBCMASK) MASK Register */
 
 /* -------- PM_INTENCLR : (PM Offset: 0x34) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
@@ -3411,8 +3354,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_INTENCLR_Type;
 
-#define PM_INTENCLR_OFFSET          0x34         /**< \brief (PM offset) Interrupt Enable Clear Register */
-#define PM_INTENCLR_RESETVALUE      0x0          /**< \brief (PM reset_value) Interrupt Enable Clear Register */
+#define PM_INTENCLR_OFFSET          0x34         /**< \brief (PM_INTENCLR offset) Interrupt Enable Clear Register */
+#define PM_INTENCLR_RESETVALUE      0x0          /**< \brief (PM_INTENCLR reset_value) Interrupt Enable Clear Register */
 
 #define PM_INTENCLR_CKRDY           (0x1u <<  0) /**< \brief (PM_INTENCLR) Clock Ready Interrupt Enable Clear */
 #define PM_INTENCLR_CFD             (0x1u <<  1) /**< \brief (PM_INTENCLR) Clock Failure Detector Enable Clear */
@@ -3428,8 +3371,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_INTENSET_Type;
 
-#define PM_INTENSET_OFFSET          0x35         /**< \brief (PM offset) Interrupt Enable Set Register */
-#define PM_INTENSET_RESETVALUE      0x0          /**< \brief (PM reset_value) Interrupt Enable Set Register */
+#define PM_INTENSET_OFFSET          0x35         /**< \brief (PM_INTENSET offset) Interrupt Enable Set Register */
+#define PM_INTENSET_RESETVALUE      0x0          /**< \brief (PM_INTENSET reset_value) Interrupt Enable Set Register */
 
 #define PM_INTENSET_CKRDY           (0x1u <<  0) /**< \brief (PM_INTENSET) Clock Ready Interrupt Enable Set */
 #define PM_INTENSET_CFD             (0x1u <<  1) /**< \brief (PM_INTENSET) Clock Failure Detector Enable Set */
@@ -3445,8 +3388,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_INTFLAG_Type;
 
-#define PM_INTFLAG_OFFSET           0x36         /**< \brief (PM offset) Interrupt Flag Status and Clear Register */
-#define PM_INTFLAG_RESETVALUE       0x0          /**< \brief (PM reset_value) Interrupt Flag Status and Clear Register */
+#define PM_INTFLAG_OFFSET           0x36         /**< \brief (PM_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define PM_INTFLAG_RESETVALUE       0x0          /**< \brief (PM_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
 #define PM_INTFLAG_CKRDY            (0x1u <<  0) /**< \brief (PM_INTFLAG) Clock Ready Interrupt */
 #define PM_INTFLAG_CFD              (0x1u <<  1) /**< \brief (PM_INTFLAG) Clock Failure Detectore Interrupt */
@@ -3467,8 +3410,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PM_RCAUSE_Type;
 
-#define PM_RCAUSE_OFFSET            0x38         /**< \brief (PM offset) Reset Cause Register */
-#define PM_RCAUSE_RESETVALUE        0x1          /**< \brief (PM reset_value) Reset Cause Register */
+#define PM_RCAUSE_OFFSET            0x38         /**< \brief (PM_RCAUSE offset) Reset Cause Register */
+#define PM_RCAUSE_RESETVALUE        0x1          /**< \brief (PM_RCAUSE reset_value) Reset Cause Register */
 
 #define PM_RCAUSE_POR               (0x1u <<  0) /**< \brief (PM_RCAUSE) Power-on Reset */
 #define PM_RCAUSE_BOD12             (0x1u <<  1) /**< \brief (PM_RCAUSE) Brown-out 1.2V Reset */
@@ -3508,7 +3451,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR PORT */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_PORT Port Module */
+/** \addtogroup SAM0+D_PORT Port Module */
 /*@{*/
 
 #define REV_PORT       0x100
@@ -3517,104 +3460,104 @@ typedef struct {
 
 #ifndef __EXCLUDE_PORT_FROM_CMSIS__
 
-/* -------- PORT_GROUP_DIR : (PORT Offset: 0x00) (R/W 32) Group Data Direction Register -------- */
+/* -------- PORT_DIR : (PORT Offset: 0x00) (R/W 32) GROUP Data Direction Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_DIR_Type;
+} PORT_DIR_Type;
 
-#define PORT_GROUP_DIR_OFFSET       0x00         /**< \brief (PORT offset) Data Direction Register */
-#define PORT_GROUP_DIR_RESETVALUE   0x0          /**< \brief (PORT reset_value) Data Direction Register */
-#define PORT_GROUP_DIR_MASK         0xFFFFFFFFu  /**< \brief (PORT_GROUP_DIR) MASK Register */
+#define PORT_DIR_OFFSET             0x00         /**< \brief (PORT_DIR offset) Data Direction Register */
+#define PORT_DIR_RESETVALUE         0x0          /**< \brief (PORT_DIR reset_value) Data Direction Register */
+#define PORT_DIR_MASK               0xFFFFFFFFu  /**< \brief (PORT_DIR) MASK Register */
 
-/* -------- PORT_GROUP_DIRCLR : (PORT Offset: 0x04) (R/W 32) Group Data Direction Clear Register -------- */
+/* -------- PORT_DIRCLR : (PORT Offset: 0x04) (R/W 32) GROUP Data Direction Clear Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_DIRCLR_Type;
+} PORT_DIRCLR_Type;
 
-#define PORT_GROUP_DIRCLR_OFFSET    0x04         /**< \brief (PORT offset) Data Direction Clear Register */
-#define PORT_GROUP_DIRCLR_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Direction Clear Register */
-#define PORT_GROUP_DIRCLR_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_DIRCLR) MASK Register */
+#define PORT_DIRCLR_OFFSET          0x04         /**< \brief (PORT_DIRCLR offset) Data Direction Clear Register */
+#define PORT_DIRCLR_RESETVALUE      0x0          /**< \brief (PORT_DIRCLR reset_value) Data Direction Clear Register */
+#define PORT_DIRCLR_MASK            0xFFFFFFFFu  /**< \brief (PORT_DIRCLR) MASK Register */
 
-/* -------- PORT_GROUP_DIRSET : (PORT Offset: 0x08) (R/W 32) Group Data Direction Set Register -------- */
+/* -------- PORT_DIRSET : (PORT Offset: 0x08) (R/W 32) GROUP Data Direction Set Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_DIRSET_Type;
+} PORT_DIRSET_Type;
 
-#define PORT_GROUP_DIRSET_OFFSET    0x08         /**< \brief (PORT offset) Data Direction Set Register */
-#define PORT_GROUP_DIRSET_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Direction Set Register */
-#define PORT_GROUP_DIRSET_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_DIRSET) MASK Register */
+#define PORT_DIRSET_OFFSET          0x08         /**< \brief (PORT_DIRSET offset) Data Direction Set Register */
+#define PORT_DIRSET_RESETVALUE      0x0          /**< \brief (PORT_DIRSET reset_value) Data Direction Set Register */
+#define PORT_DIRSET_MASK            0xFFFFFFFFu  /**< \brief (PORT_DIRSET) MASK Register */
 
-/* -------- PORT_GROUP_DIRTGL : (PORT Offset: 0x0C) (R/W 32) Group Data Direction Toggle Register -------- */
+/* -------- PORT_DIRTGL : (PORT Offset: 0x0C) (R/W 32) GROUP Data Direction Toggle Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_DIRTGL_Type;
+} PORT_DIRTGL_Type;
 
-#define PORT_GROUP_DIRTGL_OFFSET    0x0C         /**< \brief (PORT offset) Data Direction Toggle Register */
-#define PORT_GROUP_DIRTGL_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Direction Toggle Register */
-#define PORT_GROUP_DIRTGL_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_DIRTGL) MASK Register */
+#define PORT_DIRTGL_OFFSET          0x0C         /**< \brief (PORT_DIRTGL offset) Data Direction Toggle Register */
+#define PORT_DIRTGL_RESETVALUE      0x0          /**< \brief (PORT_DIRTGL reset_value) Data Direction Toggle Register */
+#define PORT_DIRTGL_MASK            0xFFFFFFFFu  /**< \brief (PORT_DIRTGL) MASK Register */
 
-/* -------- PORT_GROUP_OUT : (PORT Offset: 0x10) (R/W 32) Group Data Output Value Register -------- */
+/* -------- PORT_OUT : (PORT Offset: 0x10) (R/W 32) GROUP Data Output Value Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_OUT_Type;
+} PORT_OUT_Type;
 
-#define PORT_GROUP_OUT_OFFSET       0x10         /**< \brief (PORT offset) Data Output Value Register */
-#define PORT_GROUP_OUT_RESETVALUE   0x0          /**< \brief (PORT reset_value) Data Output Value Register */
-#define PORT_GROUP_OUT_MASK         0xFFFFFFFFu  /**< \brief (PORT_GROUP_OUT) MASK Register */
+#define PORT_OUT_OFFSET             0x10         /**< \brief (PORT_OUT offset) Data Output Value Register */
+#define PORT_OUT_RESETVALUE         0x0          /**< \brief (PORT_OUT reset_value) Data Output Value Register */
+#define PORT_OUT_MASK               0xFFFFFFFFu  /**< \brief (PORT_OUT) MASK Register */
 
-/* -------- PORT_GROUP_OUTCLR : (PORT Offset: 0x14) (R/W 32) Group Data Output Value Clear Register -------- */
+/* -------- PORT_OUTCLR : (PORT Offset: 0x14) (R/W 32) GROUP Data Output Value Clear Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_OUTCLR_Type;
+} PORT_OUTCLR_Type;
 
-#define PORT_GROUP_OUTCLR_OFFSET    0x14         /**< \brief (PORT offset) Data Output Value Clear Register */
-#define PORT_GROUP_OUTCLR_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Output Value Clear Register */
-#define PORT_GROUP_OUTCLR_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_OUTCLR) MASK Register */
+#define PORT_OUTCLR_OFFSET          0x14         /**< \brief (PORT_OUTCLR offset) Data Output Value Clear Register */
+#define PORT_OUTCLR_RESETVALUE      0x0          /**< \brief (PORT_OUTCLR reset_value) Data Output Value Clear Register */
+#define PORT_OUTCLR_MASK            0xFFFFFFFFu  /**< \brief (PORT_OUTCLR) MASK Register */
 
-/* -------- PORT_GROUP_OUTSET : (PORT Offset: 0x18) (R/W 32) Group Data Output Value Set Register -------- */
+/* -------- PORT_OUTSET : (PORT Offset: 0x18) (R/W 32) GROUP Data Output Value Set Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_OUTSET_Type;
+} PORT_OUTSET_Type;
 
-#define PORT_GROUP_OUTSET_OFFSET    0x18         /**< \brief (PORT offset) Data Output Value Set Register */
-#define PORT_GROUP_OUTSET_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Output Value Set Register */
-#define PORT_GROUP_OUTSET_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_OUTSET) MASK Register */
+#define PORT_OUTSET_OFFSET          0x18         /**< \brief (PORT_OUTSET offset) Data Output Value Set Register */
+#define PORT_OUTSET_RESETVALUE      0x0          /**< \brief (PORT_OUTSET reset_value) Data Output Value Set Register */
+#define PORT_OUTSET_MASK            0xFFFFFFFFu  /**< \brief (PORT_OUTSET) MASK Register */
 
-/* -------- PORT_GROUP_OUTTGL : (PORT Offset: 0x1C) (R/W 32) Group Data Output Value Toggle Register -------- */
+/* -------- PORT_OUTTGL : (PORT Offset: 0x1C) (R/W 32) GROUP Data Output Value Toggle Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_OUTTGL_Type;
+} PORT_OUTTGL_Type;
 
-#define PORT_GROUP_OUTTGL_OFFSET    0x1C         /**< \brief (PORT offset) Data Output Value Toggle Register */
-#define PORT_GROUP_OUTTGL_RESETVALUE 0x0          /**< \brief (PORT reset_value) Data Output Value Toggle Register */
-#define PORT_GROUP_OUTTGL_MASK      0xFFFFFFFFu  /**< \brief (PORT_GROUP_OUTTGL) MASK Register */
+#define PORT_OUTTGL_OFFSET          0x1C         /**< \brief (PORT_OUTTGL offset) Data Output Value Toggle Register */
+#define PORT_OUTTGL_RESETVALUE      0x0          /**< \brief (PORT_OUTTGL reset_value) Data Output Value Toggle Register */
+#define PORT_OUTTGL_MASK            0xFFFFFFFFu  /**< \brief (PORT_OUTTGL) MASK Register */
 
-/* -------- PORT_GROUP_IN : (PORT Offset: 0x20) (R/  32) Group Data Input Value Register -------- */
+/* -------- PORT_IN : (PORT Offset: 0x20) (R/  32) GROUP Data Input Value Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_IN_Type;
+} PORT_IN_Type;
 
-#define PORT_GROUP_IN_OFFSET        0x20         /**< \brief (PORT offset) Data Input Value Register */
-#define PORT_GROUP_IN_RESETVALUE    0x0          /**< \brief (PORT reset_value) Data Input Value Register */
-#define PORT_GROUP_IN_MASK          0xFFFFFFFFu  /**< \brief (PORT_GROUP_IN) MASK Register */
+#define PORT_IN_OFFSET              0x20         /**< \brief (PORT_IN offset) Data Input Value Register */
+#define PORT_IN_RESETVALUE          0x0          /**< \brief (PORT_IN reset_value) Data Input Value Register */
+#define PORT_IN_MASK                0xFFFFFFFFu  /**< \brief (PORT_IN) MASK Register */
 
-/* -------- PORT_GROUP_CTRL : (PORT Offset: 0x24) (R/W 32) Group Control Register -------- */
+/* -------- PORT_CTRL : (PORT Offset: 0x24) (R/W 32) GROUP Control Register -------- */
 typedef union {
   struct {
     uint32_t SAMPLING:32;      /*!< bit:  0..31  Input Sampling Mode                */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_CTRL_Type;
+} PORT_CTRL_Type;
 
-#define PORT_GROUP_CTRL_OFFSET      0x24         /**< \brief (PORT offset) Control Register */
-#define PORT_GROUP_CTRL_RESETVALUE  0x0          /**< \brief (PORT reset_value) Control Register */
+#define PORT_CTRL_OFFSET            0x24         /**< \brief (PORT_CTRL offset) Control Register */
+#define PORT_CTRL_RESETVALUE        0x0          /**< \brief (PORT_CTRL reset_value) Control Register */
 
-#define PORT_GROUP_CTRL_SAMPLING_Pos    0
-#define PORT_GROUP_CTRL_SAMPLING_Msk    (0xFFFFFFFFu << PORT_GROUP_CTRL_SAMPLING_Pos) /**< \brief (PORT_GROUP_CTRL) Input Sampling Mode */
-#define PORT_GROUP_CTRL_SAMPLING(value) ((PORT_GROUP_CTRL_SAMPLING_Msk & ((value) << PORT_GROUP_CTRL_SAMPLING_Pos)))
-#define PORT_GROUP_CTRL_MASK        0xFFFFFFFFu /**< \brief (PORT_GROUP_CTRL) MASK Register */
+#define PORT_CTRL_SAMPLING_Pos      0
+#define PORT_CTRL_SAMPLING_Msk      (0xFFFFFFFFu << PORT_CTRL_SAMPLING_Pos) /**< \brief (PORT_CTRL) Input Sampling Mode */
+#define PORT_CTRL_SAMPLING(value)   ((PORT_CTRL_SAMPLING_Msk & ((value) << PORT_CTRL_SAMPLING_Pos)))
+#define PORT_CTRL_MASK              0xFFFFFFFFu /**< \brief (PORT_CTRL) MASK Register */
 
-/* -------- PORT_GROUP_WRCONFIG : (PORT Offset: 0x28) ( /W 32) Group Write Configuration Register -------- */
+/* -------- PORT_WRCONFIG : (PORT Offset: 0x28) ( /W 32) GROUP Write Configuration Register -------- */
 typedef union {
   struct {
     uint32_t PINMASK:16;       /*!< bit:  0..15  Pin Mask for Multiple Pin Configuration */
@@ -3633,49 +3576,49 @@ typedef union {
     uint32_t HWSEL:1;          /*!< bit:     31  Half-Word Select                   */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} PORT_GROUP_WRCONFIG_Type;
+} PORT_WRCONFIG_Type;
 
-#define PORT_GROUP_WRCONFIG_OFFSET  0x28         /**< \brief (PORT offset) Write Configuration Register */
-#define PORT_GROUP_WRCONFIG_RESETVALUE 0x0          /**< \brief (PORT reset_value) Write Configuration Register */
+#define PORT_WRCONFIG_OFFSET        0x28         /**< \brief (PORT_WRCONFIG offset) Write Configuration Register */
+#define PORT_WRCONFIG_RESETVALUE    0x0          /**< \brief (PORT_WRCONFIG reset_value) Write Configuration Register */
 
-#define PORT_GROUP_WRCONFIG_PINMASK_Pos    0
-#define PORT_GROUP_WRCONFIG_PINMASK_Msk    (0xFFFFu << PORT_GROUP_WRCONFIG_PINMASK_Pos) /**< \brief (PORT_GROUP_WRCONFIG) Pin Mask for Multiple Pin Configuration */
-#define PORT_GROUP_WRCONFIG_PINMASK(value) ((PORT_GROUP_WRCONFIG_PINMASK_Msk & ((value) << PORT_GROUP_WRCONFIG_PINMASK_Pos)))
-#define PORT_GROUP_WRCONFIG_PMUXEN  (0x1u << 16) /**< \brief (PORT_GROUP_WRCONFIG) Select Peripheral Multiplexer */
-#define PORT_GROUP_WRCONFIG_INEN    (0x1u << 17) /**< \brief (PORT_GROUP_WRCONFIG) Input Enable */
-#define PORT_GROUP_WRCONFIG_PULLEN  (0x1u << 18) /**< \brief (PORT_GROUP_WRCONFIG) Pull Enable */
-#define PORT_GROUP_WRCONFIG_ODRAIN  (0x1u << 19) /**< \brief (PORT_GROUP_WRCONFIG) Open Drain Output */
-#define PORT_GROUP_WRCONFIG_SLEWLIM (0x1u << 20) /**< \brief (PORT_GROUP_WRCONFIG) Output Driver Slew Rate Limit Enable */
-#define PORT_GROUP_WRCONFIG_DRVSTR  (0x1u << 22) /**< \brief (PORT_GROUP_WRCONFIG) Output Driver Strength Selection */
-#define PORT_GROUP_WRCONFIG_PMUX_Pos    24
-#define PORT_GROUP_WRCONFIG_PMUX_Msk    (0xFu << PORT_GROUP_WRCONFIG_PMUX_Pos) /**< \brief (PORT_GROUP_WRCONFIG) Peripheral Multiplexing Template */
-#define PORT_GROUP_WRCONFIG_PMUX(value) ((PORT_GROUP_WRCONFIG_PMUX_Msk & ((value) << PORT_GROUP_WRCONFIG_PMUX_Pos)))
-#define PORT_GROUP_WRCONFIG_WRPMUX  (0x1u << 28) /**< \brief (PORT_GROUP_WRCONFIG) Write PMUX Registers */
-#define PORT_GROUP_WRCONFIG_WRPINCFG (0x1u << 30) /**< \brief (PORT_GROUP_WRCONFIG) Write PINCFG Registers */
-#define PORT_GROUP_WRCONFIG_HWSEL   (0x1u << 31) /**< \brief (PORT_GROUP_WRCONFIG) Half-Word Select */
-#define PORT_GROUP_WRCONFIG_MASK    0xDF5FFFFFu /**< \brief (PORT_GROUP_WRCONFIG) MASK Register */
+#define PORT_WRCONFIG_PINMASK_Pos    0
+#define PORT_WRCONFIG_PINMASK_Msk    (0xFFFFu << PORT_WRCONFIG_PINMASK_Pos) /**< \brief (PORT_WRCONFIG) Pin Mask for Multiple Pin Configuration */
+#define PORT_WRCONFIG_PINMASK(value) ((PORT_WRCONFIG_PINMASK_Msk & ((value) << PORT_WRCONFIG_PINMASK_Pos)))
+#define PORT_WRCONFIG_PMUXEN        (0x1u << 16) /**< \brief (PORT_WRCONFIG) Select Peripheral Multiplexer */
+#define PORT_WRCONFIG_INEN          (0x1u << 17) /**< \brief (PORT_WRCONFIG) Input Enable */
+#define PORT_WRCONFIG_PULLEN        (0x1u << 18) /**< \brief (PORT_WRCONFIG) Pull Enable */
+#define PORT_WRCONFIG_ODRAIN        (0x1u << 19) /**< \brief (PORT_WRCONFIG) Open Drain Output */
+#define PORT_WRCONFIG_SLEWLIM       (0x1u << 20) /**< \brief (PORT_WRCONFIG) Output Driver Slew Rate Limit Enable */
+#define PORT_WRCONFIG_DRVSTR        (0x1u << 22) /**< \brief (PORT_WRCONFIG) Output Driver Strength Selection */
+#define PORT_WRCONFIG_PMUX_Pos      24
+#define PORT_WRCONFIG_PMUX_Msk      (0xFu << PORT_WRCONFIG_PMUX_Pos) /**< \brief (PORT_WRCONFIG) Peripheral Multiplexing Template */
+#define PORT_WRCONFIG_PMUX(value)   ((PORT_WRCONFIG_PMUX_Msk & ((value) << PORT_WRCONFIG_PMUX_Pos)))
+#define PORT_WRCONFIG_WRPMUX        (0x1u << 28) /**< \brief (PORT_WRCONFIG) Write PMUX Registers */
+#define PORT_WRCONFIG_WRPINCFG      (0x1u << 30) /**< \brief (PORT_WRCONFIG) Write PINCFG Registers */
+#define PORT_WRCONFIG_HWSEL         (0x1u << 31) /**< \brief (PORT_WRCONFIG) Half-Word Select */
+#define PORT_WRCONFIG_MASK          0xDF5FFFFFu /**< \brief (PORT_WRCONFIG) MASK Register */
 
-/* -------- PORT_GROUP_PMUX : (PORT Offset: 0x30) (R/W  8) Group_pmux Peripheral Multiplexing Register 0 -------- */
+/* -------- PORT_PMUX : (PORT Offset: 0x30) (R/W  8) GROUP Peripheral Multiplexing Register -------- */
 typedef union {
   struct {
-    uint8_t  PMUXE:4;          /*!< bit:  0.. 3  Peripheral Multiplexing for even-numbered Pin */
-    uint8_t  PMUXO:4;          /*!< bit:  4.. 7  Peripheral Multiplexing for odd-numbered Pin */
+    uint8_t  PMUXE:4;          /*!< bit:  0.. 3  Peripheral Multiplexing for Even-Numbered Pin */
+    uint8_t  PMUXO:4;          /*!< bit:  4.. 7  Peripheral Multiplexing for Odd-Numbered Pin */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} PORT_GROUP_PMUX_Type;
+} PORT_PMUX_Type;
 
-#define PORT_GROUP_PMUX_OFFSET      0x30         /**< \brief (PORT offset) Peripheral Multiplexing Register 0 */
-#define PORT_GROUP_PMUX_RESETVALUE  0x0          /**< \brief (PORT reset_value) Peripheral Multiplexing Register 0 */
+#define PORT_PMUX_OFFSET            0x30         /**< \brief (PORT_PMUX offset) Peripheral Multiplexing Register */
+#define PORT_PMUX_RESETVALUE        0x0          /**< \brief (PORT_PMUX reset_value) Peripheral Multiplexing Register */
 
-#define PORT_GROUP_PMUX_PMUXE_Pos    0
-#define PORT_GROUP_PMUX_PMUXE_Msk    (0xFu << PORT_GROUP_PMUX_PMUXE_Pos) /**< \brief (PORT_GROUP_PMUX) Peripheral Multiplexing for even-numbered Pin */
-#define PORT_GROUP_PMUX_PMUXE(value) ((PORT_GROUP_PMUX_PMUXE_Msk & ((value) << PORT_GROUP_PMUX_PMUXE_Pos)))
-#define PORT_GROUP_PMUX_PMUXO_Pos    4
-#define PORT_GROUP_PMUX_PMUXO_Msk    (0xFu << PORT_GROUP_PMUX_PMUXO_Pos) /**< \brief (PORT_GROUP_PMUX) Peripheral Multiplexing for odd-numbered Pin */
-#define PORT_GROUP_PMUX_PMUXO(value) ((PORT_GROUP_PMUX_PMUXO_Msk & ((value) << PORT_GROUP_PMUX_PMUXO_Pos)))
-#define PORT_GROUP_PMUX_MASK        0xFFu /**< \brief (PORT_GROUP_PMUX) MASK Register */
+#define PORT_PMUX_PMUXE_Pos         0
+#define PORT_PMUX_PMUXE_Msk         (0xFu << PORT_PMUX_PMUXE_Pos) /**< \brief (PORT_PMUX) Peripheral Multiplexing for Even-Numbered Pin */
+#define PORT_PMUX_PMUXE(value)      ((PORT_PMUX_PMUXE_Msk & ((value) << PORT_PMUX_PMUXE_Pos)))
+#define PORT_PMUX_PMUXO_Pos         4
+#define PORT_PMUX_PMUXO_Msk         (0xFu << PORT_PMUX_PMUXO_Pos) /**< \brief (PORT_PMUX) Peripheral Multiplexing for Odd-Numbered Pin */
+#define PORT_PMUX_PMUXO(value)      ((PORT_PMUX_PMUXO_Msk & ((value) << PORT_PMUX_PMUXO_Pos)))
+#define PORT_PMUX_MASK              0xFFu /**< \brief (PORT_PMUX) MASK Register */
 
-/* -------- PORT_GROUP_PINCFG : (PORT Offset: 0x40) (R/W  8) Group_pincfg Pin Configuration Register 0 -------- */
+/* -------- PORT_PINCFG : (PORT Offset: 0x40) (R/W  8) GROUP Pin Configuration Register -------- */
 typedef union {
   struct {
     uint8_t  PMUXEN:1;         /*!< bit:      0  Select Peripheral Multiplexer      */
@@ -3688,37 +3631,37 @@ typedef union {
     uint8_t  _reserved1:1;     /*!< bit:      7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} PORT_GROUP_PINCFG_Type;
+} PORT_PINCFG_Type;
 
-#define PORT_GROUP_PINCFG_OFFSET    0x40         /**< \brief (PORT offset) Pin Configuration Register 0 */
-#define PORT_GROUP_PINCFG_RESETVALUE 0x0          /**< \brief (PORT reset_value) Pin Configuration Register 0 */
+#define PORT_PINCFG_OFFSET          0x40         /**< \brief (PORT_PINCFG offset) Pin Configuration Register */
+#define PORT_PINCFG_RESETVALUE      0x0          /**< \brief (PORT_PINCFG reset_value) Pin Configuration Register */
 
-#define PORT_GROUP_PINCFG_PMUXEN    (0x1u <<  0) /**< \brief (PORT_GROUP_PINCFG) Select Peripheral Multiplexer */
-#define PORT_GROUP_PINCFG_INEN      (0x1u <<  1) /**< \brief (PORT_GROUP_PINCFG) Input Enable */
-#define PORT_GROUP_PINCFG_PULLEN    (0x1u <<  2) /**< \brief (PORT_GROUP_PINCFG) Pull Enable */
-#define PORT_GROUP_PINCFG_ODRAIN    (0x1u <<  3) /**< \brief (PORT_GROUP_PINCFG) Open Drain Output */
-#define PORT_GROUP_PINCFG_SLEWLIM   (0x1u <<  4) /**< \brief (PORT_GROUP_PINCFG) Output Driver Slew Rate Limit Enable */
-#define PORT_GROUP_PINCFG_DRVSTR    (0x1u <<  6) /**< \brief (PORT_GROUP_PINCFG) Output Driver Strength Selection */
-#define PORT_GROUP_PINCFG_MASK      0x5Fu /**< \brief (PORT_GROUP_PINCFG) MASK Register */
+#define PORT_PINCFG_PMUXEN          (0x1u <<  0) /**< \brief (PORT_PINCFG) Select Peripheral Multiplexer */
+#define PORT_PINCFG_INEN            (0x1u <<  1) /**< \brief (PORT_PINCFG) Input Enable */
+#define PORT_PINCFG_PULLEN          (0x1u <<  2) /**< \brief (PORT_PINCFG) Pull Enable */
+#define PORT_PINCFG_ODRAIN          (0x1u <<  3) /**< \brief (PORT_PINCFG) Open Drain Output */
+#define PORT_PINCFG_SLEWLIM         (0x1u <<  4) /**< \brief (PORT_PINCFG) Output Driver Slew Rate Limit Enable */
+#define PORT_PINCFG_DRVSTR          (0x1u <<  6) /**< \brief (PORT_PINCFG) Output Driver Strength Selection */
+#define PORT_PINCFG_MASK            0x5Fu /**< \brief (PORT_PINCFG) MASK Register */
 
 #define PORT_GROUPS                 2
 
 /** \brief PortGroup hardware registers */
 typedef struct {
-  __IO PORT_GROUP_DIR_Type       DIR;         /**< \brief Offset: 0x00 (R/W 32) Data Direction Register */
-  __IO PORT_GROUP_DIRCLR_Type    DIRCLR;      /**< \brief Offset: 0x04 (R/W 32) Data Direction Clear Register */
-  __IO PORT_GROUP_DIRSET_Type    DIRSET;      /**< \brief Offset: 0x08 (R/W 32) Data Direction Set Register */
-  __IO PORT_GROUP_DIRTGL_Type    DIRTGL;      /**< \brief Offset: 0x0C (R/W 32) Data Direction Toggle Register */
-  __IO PORT_GROUP_OUT_Type       OUT;         /**< \brief Offset: 0x10 (R/W 32) Data Output Value Register */
-  __IO PORT_GROUP_OUTCLR_Type    OUTCLR;      /**< \brief Offset: 0x14 (R/W 32) Data Output Value Clear Register */
-  __IO PORT_GROUP_OUTSET_Type    OUTSET;      /**< \brief Offset: 0x18 (R/W 32) Data Output Value Set Register */
-  __IO PORT_GROUP_OUTTGL_Type    OUTTGL;      /**< \brief Offset: 0x1C (R/W 32) Data Output Value Toggle Register */
-  __I  PORT_GROUP_IN_Type        IN;          /**< \brief Offset: 0x20 (R/  32) Data Input Value Register */
-  __IO PORT_GROUP_CTRL_Type      CTRL;        /**< \brief Offset: 0x24 (R/W 32) Control Register */
-  __O  PORT_GROUP_WRCONFIG_Type  WRCONFIG;    /**< \brief Offset: 0x28 ( /W 32) Write Configuration Register */
+  __IO PORT_DIR_Type             DIR;         /**< \brief Offset: 0x00 (R/W 32) Data Direction Register */
+  __IO PORT_DIRCLR_Type          DIRCLR;      /**< \brief Offset: 0x04 (R/W 32) Data Direction Clear Register */
+  __IO PORT_DIRSET_Type          DIRSET;      /**< \brief Offset: 0x08 (R/W 32) Data Direction Set Register */
+  __IO PORT_DIRTGL_Type          DIRTGL;      /**< \brief Offset: 0x0C (R/W 32) Data Direction Toggle Register */
+  __IO PORT_OUT_Type             OUT;         /**< \brief Offset: 0x10 (R/W 32) Data Output Value Register */
+  __IO PORT_OUTCLR_Type          OUTCLR;      /**< \brief Offset: 0x14 (R/W 32) Data Output Value Clear Register */
+  __IO PORT_OUTSET_Type          OUTSET;      /**< \brief Offset: 0x18 (R/W 32) Data Output Value Set Register */
+  __IO PORT_OUTTGL_Type          OUTTGL;      /**< \brief Offset: 0x1C (R/W 32) Data Output Value Toggle Register */
+  __I  PORT_IN_Type              IN;          /**< \brief Offset: 0x20 (R/  32) Data Input Value Register */
+  __IO PORT_CTRL_Type            CTRL;        /**< \brief Offset: 0x24 (R/W 32) Control Register */
+  __O  PORT_WRCONFIG_Type        WRCONFIG;    /**< \brief Offset: 0x28 ( /W 32) Write Configuration Register */
        RoReg8                    Reserved1[0x4];
-  __IO PORT_GROUP_PMUX_Type      PMUX[16];    /**< \brief Offset: 0x30 (R/W  8) Peripheral Multiplexing Register 0 */
-  __IO PORT_GROUP_PINCFG_Type    PINCFG[32];  /**< \brief Offset: 0x40 (R/W  8) Pin Configuration Register 0 */
+  __IO PORT_PMUX_Type            PMUX[16];    /**< \brief Offset: 0x30 (R/W  8) Peripheral Multiplexing Register */
+  __IO PORT_PINCFG_Type          PINCFG[32];  /**< \brief Offset: 0x40 (R/W  8) Pin Configuration Register */
        RoReg8                    Reserved2[0x20];
 } PortGroup;
 
@@ -3736,7 +3679,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR PTC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_PTC Peripheral Touch Controller */
+/** \addtogroup SAM0+D_PTC Peripheral Touch Controller */
 /*@{*/
 
 #define REV_PTC        0x100
@@ -3750,18 +3693,18 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  SLEEPEN:1;        /*!< bit:      2  Sleep Enable                       */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTRLA_Type;
 
-#define PTC_CTRLA_OFFSET            0x00         /**< \brief (PTC offset) Control Register A */
-#define PTC_CTRLA_RESETVALUE        0x0          /**< \brief (PTC reset_value) Control Register A */
+#define PTC_CTRLA_OFFSET            0x00         /**< \brief (PTC_CTRLA offset) Control Register A */
+#define PTC_CTRLA_RESETVALUE        0x0          /**< \brief (PTC_CTRLA reset_value) Control Register A */
 
 #define PTC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (PTC_CTRLA) Software Reset */
 #define PTC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (PTC_CTRLA) Enable */
-#define PTC_CTRLA_SLEEPEN           (0x1u <<  2) /**< \brief (PTC_CTRLA) Sleep Enable */
+#define PTC_CTRLA_RUNSTDBY          (0x1u <<  2) /**< \brief (PTC_CTRLA) Run during Standby */
 #define PTC_CTRLA_MASK              0x7u /**< \brief (PTC_CTRLA) MASK Register */
 
 /* -------- PTC_STATUS : (PTC Offset: 0x01) (R/   8) Status Register -------- */
@@ -3777,8 +3720,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_STATUS_Type;
 
-#define PTC_STATUS_OFFSET           0x01         /**< \brief (PTC offset) Status Register */
-#define PTC_STATUS_RESETVALUE       0x0          /**< \brief (PTC reset_value) Status Register */
+#define PTC_STATUS_OFFSET           0x01         /**< \brief (PTC_STATUS offset) Status Register */
+#define PTC_STATUS_RESETVALUE       0x0          /**< \brief (PTC_STATUS reset_value) Status Register */
 
 #define PTC_STATUS_SWRST            (0x1u <<  0) /**< \brief (PTC_STATUS) Software Reset Status */
 #define PTC_STATUS_ENABLE           (0x1u <<  1) /**< \brief (PTC_STATUS) Enable Status */
@@ -3797,8 +3740,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTRLB_Type;
 
-#define PTC_CTRLB_OFFSET            0x04         /**< \brief (PTC offset) Control Register B */
-#define PTC_CTRLB_RESETVALUE        0x0          /**< \brief (PTC reset_value) Control Register B */
+#define PTC_CTRLB_OFFSET            0x04         /**< \brief (PTC_CTRLB offset) Control Register B */
+#define PTC_CTRLB_RESETVALUE        0x0          /**< \brief (PTC_CTRLB reset_value) Control Register B */
 
 #define PTC_CTRLB_PRSC_Pos          0
 #define PTC_CTRLB_PRSC_Msk          (0x3u << PTC_CTRLB_PRSC_Pos) /**< \brief (PTC_CTRLB) Clock Prescaler */
@@ -3818,69 +3761,69 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_EVCTRL_Type;
 
-#define PTC_EVCTRL_OFFSET           0x05         /**< \brief (PTC offset) Event Control Register */
-#define PTC_EVCTRL_RESETVALUE       0x0          /**< \brief (PTC reset_value) Event Control Register */
+#define PTC_EVCTRL_OFFSET           0x05         /**< \brief (PTC_EVCTRL offset) Event Control Register */
+#define PTC_EVCTRL_RESETVALUE       0x0          /**< \brief (PTC_EVCTRL reset_value) Event Control Register */
 
 #define PTC_EVCTRL_STCONVEI         (0x1u <<  0) /**< \brief (PTC_EVCTRL) Start Conversion Event Input */
 #define PTC_EVCTRL_EOCEO            (0x1u <<  1) /**< \brief (PTC_EVCTRL) End of Conversion Event Output */
 #define PTC_EVCTRL_WCOMPEO          (0x1u <<  2) /**< \brief (PTC_EVCTRL) Window Comparator Event Output */
 #define PTC_EVCTRL_MASK             0x7u /**< \brief (PTC_EVCTRL) MASK Register */
 
-/* -------- PTC_INTENCLR : (PTC Offset: 0x08) (R/W  8) Interrupt Enable Clear -------- */
+/* -------- PTC_INTENCLR : (PTC Offset: 0x08) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  EOC:1;            /*!< bit:      0  Clear EOC Interrupt Enable         */
-    uint8_t  WCOMP:1;          /*!< bit:      1  Clear WCOMP Interrupt Enable       */
-    uint8_t  READY:1;          /*!< bit:      2  Clear Ready Interrupt Enable       */
+    uint8_t  EOC:1;            /*!< bit:      0  End of Conversion Interrupt Disable */
+    uint8_t  WCOMP:1;          /*!< bit:      1  Window Compare Interrupt Disable   */
+    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Disable            */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_INTENCLR_Type;
 
-#define PTC_INTENCLR_OFFSET         0x08         /**< \brief (PTC offset) Interrupt Enable Clear */
-#define PTC_INTENCLR_RESETVALUE     0x0          /**< \brief (PTC reset_value) Interrupt Enable Clear */
+#define PTC_INTENCLR_OFFSET         0x08         /**< \brief (PTC_INTENCLR offset) Interrupt Enable Clear Register */
+#define PTC_INTENCLR_RESETVALUE     0x0          /**< \brief (PTC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define PTC_INTENCLR_EOC            (0x1u <<  0) /**< \brief (PTC_INTENCLR) Clear EOC Interrupt Enable */
-#define PTC_INTENCLR_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENCLR) Clear WCOMP Interrupt Enable */
-#define PTC_INTENCLR_READY          (0x1u <<  2) /**< \brief (PTC_INTENCLR) Clear Ready Interrupt Enable */
+#define PTC_INTENCLR_EOC            (0x1u <<  0) /**< \brief (PTC_INTENCLR) End of Conversion Interrupt Disable */
+#define PTC_INTENCLR_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENCLR) Window Compare Interrupt Disable */
+#define PTC_INTENCLR_READY          (0x1u <<  2) /**< \brief (PTC_INTENCLR) Ready Interrupt Disable */
 #define PTC_INTENCLR_MASK           0x7u /**< \brief (PTC_INTENCLR) MASK Register */
 
-/* -------- PTC_INTENSET : (PTC Offset: 0x09) (R/W  8) Interrupt Enable Set -------- */
+/* -------- PTC_INTENSET : (PTC Offset: 0x09) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint8_t  EOC:1;            /*!< bit:      0  Set EOC Interrupt Enable           */
-    uint8_t  WCOMP:1;          /*!< bit:      1  Set WCOMP Interrupt Enable         */
-    uint8_t  READY:1;          /*!< bit:      2  Set READY Interrupt Enable         */
+    uint8_t  EOC:1;            /*!< bit:      0  End of Conversion Interrupt Enable */
+    uint8_t  WCOMP:1;          /*!< bit:      1  Window Compare Interrupt Enable    */
+    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Enable             */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_INTENSET_Type;
 
-#define PTC_INTENSET_OFFSET         0x09         /**< \brief (PTC offset) Interrupt Enable Set */
-#define PTC_INTENSET_RESETVALUE     0x0          /**< \brief (PTC reset_value) Interrupt Enable Set */
+#define PTC_INTENSET_OFFSET         0x09         /**< \brief (PTC_INTENSET offset) Interrupt Enable Set Register */
+#define PTC_INTENSET_RESETVALUE     0x0          /**< \brief (PTC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define PTC_INTENSET_EOC            (0x1u <<  0) /**< \brief (PTC_INTENSET) Set EOC Interrupt Enable */
-#define PTC_INTENSET_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENSET) Set WCOMP Interrupt Enable */
-#define PTC_INTENSET_READY          (0x1u <<  2) /**< \brief (PTC_INTENSET) Set READY Interrupt Enable */
+#define PTC_INTENSET_EOC            (0x1u <<  0) /**< \brief (PTC_INTENSET) End of Conversion Interrupt Enable */
+#define PTC_INTENSET_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENSET) Window Compare Interrupt Enable */
+#define PTC_INTENSET_READY          (0x1u <<  2) /**< \brief (PTC_INTENSET) Ready Interrupt Enable */
 #define PTC_INTENSET_MASK           0x7u /**< \brief (PTC_INTENSET) MASK Register */
 
-/* -------- PTC_INTFLAG : (PTC Offset: 0x0A) (R/W  8) Interrupt Flag -------- */
+/* -------- PTC_INTFLAG : (PTC Offset: 0x0A) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  EOC:1;            /*!< bit:      0  EOC Interrupt Flag                 */
-    uint8_t  WCOMP:1;          /*!< bit:      1  WCOMP Interrupt Flag               */
-    uint8_t  READY:1;          /*!< bit:      2  READY Interrupt Flag               */
+    uint8_t  EOC:1;            /*!< bit:      0  End of Conversion Interrupt Flag   */
+    uint8_t  WCOMP:1;          /*!< bit:      1  Window Compare Interrupt Flag      */
+    uint8_t  READY:1;          /*!< bit:      2  Ready Interrupt Flag               */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_INTFLAG_Type;
 
-#define PTC_INTFLAG_OFFSET          0x0A         /**< \brief (PTC offset) Interrupt Flag */
-#define PTC_INTFLAG_RESETVALUE      0x0          /**< \brief (PTC reset_value) Interrupt Flag */
+#define PTC_INTFLAG_OFFSET          0x0A         /**< \brief (PTC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define PTC_INTFLAG_RESETVALUE      0x0          /**< \brief (PTC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define PTC_INTFLAG_EOC             (0x1u <<  0) /**< \brief (PTC_INTFLAG) EOC Interrupt Flag */
-#define PTC_INTFLAG_WCOMP           (0x1u <<  1) /**< \brief (PTC_INTFLAG) WCOMP Interrupt Flag */
-#define PTC_INTFLAG_READY           (0x1u <<  2) /**< \brief (PTC_INTFLAG) READY Interrupt Flag */
+#define PTC_INTFLAG_EOC             (0x1u <<  0) /**< \brief (PTC_INTFLAG) End of Conversion Interrupt Flag */
+#define PTC_INTFLAG_WCOMP           (0x1u <<  1) /**< \brief (PTC_INTFLAG) Window Compare Interrupt Flag */
+#define PTC_INTFLAG_READY           (0x1u <<  2) /**< \brief (PTC_INTFLAG) Ready Interrupt Flag */
 #define PTC_INTFLAG_MASK            0x7u /**< \brief (PTC_INTFLAG) MASK Register */
 
 /* -------- PTC_CTSCTRLA : (PTC Offset: 0x0C) (R/W  8) CTS Control Register A -------- */
@@ -3894,8 +3837,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTSCTRLA_Type;
 
-#define PTC_CTSCTRLA_OFFSET         0x0C         /**< \brief (PTC offset) CTS Control Register A */
-#define PTC_CTSCTRLA_RESETVALUE     0x0          /**< \brief (PTC reset_value) CTS Control Register A */
+#define PTC_CTSCTRLA_OFFSET         0x0C         /**< \brief (PTC_CTSCTRLA offset) CTS Control Register A */
+#define PTC_CTSCTRLA_RESETVALUE     0x0          /**< \brief (PTC_CTSCTRLA reset_value) CTS Control Register A */
 
 #define PTC_CTSCTRLA_SDS_Pos        0
 #define PTC_CTSCTRLA_SDS_Msk        (0xFu << PTC_CTSCTRLA_SDS_Pos) /**< \brief (PTC_CTSCTRLA) Sampling Delay Selection */
@@ -3916,8 +3859,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTSCTRLC_Type;
 
-#define PTC_CTSCTRLC_OFFSET         0x0D         /**< \brief (PTC offset) CTS Control Register C */
-#define PTC_CTSCTRLC_RESETVALUE     0x0          /**< \brief (PTC reset_value) CTS Control Register C */
+#define PTC_CTSCTRLC_OFFSET         0x0D         /**< \brief (PTC_CTSCTRLC offset) CTS Control Register C */
+#define PTC_CTSCTRLC_RESETVALUE     0x0          /**< \brief (PTC_CTSCTRLC reset_value) CTS Control Register C */
 
 #define PTC_CTSCTRLC_ADAS_Pos       0
 #define PTC_CTSCTRLC_ADAS_Msk       (0x7u << PTC_CTSCTRLC_ADAS_Pos) /**< \brief (PTC_CTSCTRLC) ADC Accumulation Number Select */
@@ -3925,7 +3868,7 @@ typedef union {
 #define PTC_CTSCTRLC_STCONV         (0x1u <<  7) /**< \brief (PTC_CTSCTRLC) Start Conversion */
 #define PTC_CTSCTRLC_MASK           0x87u /**< \brief (PTC_CTSCTRLC) MASK Register */
 
-/* -------- PTC_YSEL : (PTC Offset: 0x10) (R/W 16) Y Line Select -------- */
+/* -------- PTC_YSEL : (PTC Offset: 0x10) (R/W 16) Y Line Select Register -------- */
 typedef union {
   struct {
     uint16_t YSEL:16;          /*!< bit:  0..15  Y Line Selection                   */
@@ -3933,15 +3876,15 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_YSEL_Type;
 
-#define PTC_YSEL_OFFSET             0x10         /**< \brief (PTC offset) Y Line Select */
-#define PTC_YSEL_RESETVALUE         0x0          /**< \brief (PTC reset_value) Y Line Select */
+#define PTC_YSEL_OFFSET             0x10         /**< \brief (PTC_YSEL offset) Y Line Select Register */
+#define PTC_YSEL_RESETVALUE         0x0          /**< \brief (PTC_YSEL reset_value) Y Line Select Register */
 
 #define PTC_YSEL_YSEL_Pos           0
 #define PTC_YSEL_YSEL_Msk           (0xFFFFu << PTC_YSEL_YSEL_Pos) /**< \brief (PTC_YSEL) Y Line Selection */
 #define PTC_YSEL_YSEL(value)        ((PTC_YSEL_YSEL_Msk & ((value) << PTC_YSEL_YSEL_Pos)))
 #define PTC_YSEL_MASK               0xFFFFu /**< \brief (PTC_YSEL) MASK Register */
 
-/* -------- PTC_XSEL : (PTC Offset: 0x12) (R/W 16) X Line Select -------- */
+/* -------- PTC_XSEL : (PTC Offset: 0x12) (R/W 16) X Line Select Register -------- */
 typedef union {
   struct {
     uint16_t XSEL:16;          /*!< bit:  0..15  X Line Selection                   */
@@ -3949,15 +3892,15 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_XSEL_Type;
 
-#define PTC_XSEL_OFFSET             0x12         /**< \brief (PTC offset) X Line Select */
-#define PTC_XSEL_RESETVALUE         0x0          /**< \brief (PTC reset_value) X Line Select */
+#define PTC_XSEL_OFFSET             0x12         /**< \brief (PTC_XSEL offset) X Line Select Register */
+#define PTC_XSEL_RESETVALUE         0x0          /**< \brief (PTC_XSEL reset_value) X Line Select Register */
 
 #define PTC_XSEL_XSEL_Pos           0
 #define PTC_XSEL_XSEL_Msk           (0xFFFFu << PTC_XSEL_XSEL_Pos) /**< \brief (PTC_XSEL) X Line Selection */
 #define PTC_XSEL_XSEL(value)        ((PTC_XSEL_XSEL_Msk & ((value) << PTC_XSEL_XSEL_Pos)))
 #define PTC_XSEL_MASK               0xFFFFu /**< \brief (PTC_XSEL) MASK Register */
 
-/* -------- PTC_YEN : (PTC Offset: 0x14) (R/W 16) Y Line Enable -------- */
+/* -------- PTC_YEN : (PTC Offset: 0x14) (R/W 16) Y Line Enable Register -------- */
 typedef union {
   struct {
     uint16_t YEN:16;           /*!< bit:  0..15  Y Line Enable                      */
@@ -3965,15 +3908,15 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_YEN_Type;
 
-#define PTC_YEN_OFFSET              0x14         /**< \brief (PTC offset) Y Line Enable */
-#define PTC_YEN_RESETVALUE          0x0          /**< \brief (PTC reset_value) Y Line Enable */
+#define PTC_YEN_OFFSET              0x14         /**< \brief (PTC_YEN offset) Y Line Enable Register */
+#define PTC_YEN_RESETVALUE          0x0          /**< \brief (PTC_YEN reset_value) Y Line Enable Register */
 
 #define PTC_YEN_YEN_Pos             0
 #define PTC_YEN_YEN_Msk             (0xFFFFu << PTC_YEN_YEN_Pos) /**< \brief (PTC_YEN) Y Line Enable */
 #define PTC_YEN_YEN(value)          ((PTC_YEN_YEN_Msk & ((value) << PTC_YEN_YEN_Pos)))
 #define PTC_YEN_MASK                0xFFFFu /**< \brief (PTC_YEN) MASK Register */
 
-/* -------- PTC_XEN : (PTC Offset: 0x16) (R/W 16) X Line Enable -------- */
+/* -------- PTC_XEN : (PTC Offset: 0x16) (R/W 16) X Line Enable Register -------- */
 typedef union {
   struct {
     uint16_t XEN:16;           /*!< bit:  0..15  X Line Enable                      */
@@ -3981,8 +3924,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_XEN_Type;
 
-#define PTC_XEN_OFFSET              0x16         /**< \brief (PTC offset) X Line Enable */
-#define PTC_XEN_RESETVALUE          0x0          /**< \brief (PTC reset_value) X Line Enable */
+#define PTC_XEN_OFFSET              0x16         /**< \brief (PTC_XEN offset) X Line Enable Register */
+#define PTC_XEN_RESETVALUE          0x0          /**< \brief (PTC_XEN reset_value) X Line Enable Register */
 
 #define PTC_XEN_XEN_Pos             0
 #define PTC_XEN_XEN_Msk             (0xFFFFu << PTC_XEN_XEN_Pos) /**< \brief (PTC_XEN) X Line Enable */
@@ -4001,8 +3944,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_CCCAL_Type;
 
-#define PTC_CCCAL_OFFSET            0x18         /**< \brief (PTC offset) CTS Compensation Capacitor Calibration Register */
-#define PTC_CCCAL_RESETVALUE        0x0          /**< \brief (PTC reset_value) CTS Compensation Capacitor Calibration Register */
+#define PTC_CCCAL_OFFSET            0x18         /**< \brief (PTC_CCCAL offset) CTS Compensation Capacitor Calibration Register */
+#define PTC_CCCAL_RESETVALUE        0x0          /**< \brief (PTC_CCCAL reset_value) CTS Compensation Capacitor Calibration Register */
 
 #define PTC_CCCAL_CCA_Pos           0
 #define PTC_CCCAL_CCA_Msk           (0xFu << PTC_CCCAL_CCA_Pos) /**< \brief (PTC_CCCAL) Compensation Capacitor Accurate Value */
@@ -4028,8 +3971,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CICAL_Type;
 
-#define PTC_CICAL_OFFSET            0x1A         /**< \brief (PTC offset) CTS Integrator Capacitor Calibration Register */
-#define PTC_CICAL_RESETVALUE        0x0          /**< \brief (PTC reset_value) CTS Integrator Capacitor Calibration Register */
+#define PTC_CICAL_OFFSET            0x1A         /**< \brief (PTC_CICAL offset) CTS Integrator Capacitor Calibration Register */
+#define PTC_CICAL_RESETVALUE        0x0          /**< \brief (PTC_CICAL reset_value) CTS Integrator Capacitor Calibration Register */
 
 #define PTC_CICAL_CIF_Pos           0
 #define PTC_CICAL_CIF_Msk           (0xFu << PTC_CICAL_CIF_Pos) /**< \brief (PTC_CICAL) Integration Capacitor Fine Value */
@@ -4048,8 +3991,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTSRS_Type;
 
-#define PTC_CTSRS_OFFSET            0x1B         /**< \brief (PTC offset) CTS Resistor Selection Register */
-#define PTC_CTSRS_RESETVALUE        0x0          /**< \brief (PTC reset_value) CTS Resistor Selection Register */
+#define PTC_CTSRS_OFFSET            0x1B         /**< \brief (PTC_CTSRS offset) CTS Resistor Selection Register */
+#define PTC_CTSRS_RESETVALUE        0x0          /**< \brief (PTC_CTSRS reset_value) CTS Resistor Selection Register */
 
 #define PTC_CTSRS_RSEL_Pos          0
 #define PTC_CTSRS_RSEL_Msk          (0x3u << PTC_CTSRS_RSEL_Pos) /**< \brief (PTC_CTSRS) Resistor Select */
@@ -4064,8 +4007,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_RESULT_Type;
 
-#define PTC_RESULT_OFFSET           0x1C         /**< \brief (PTC offset) Conversion Result Register */
-#define PTC_RESULT_RESETVALUE       0x0          /**< \brief (PTC reset_value) Conversion Result Register */
+#define PTC_RESULT_OFFSET           0x1C         /**< \brief (PTC_RESULT offset) Conversion Result Register */
+#define PTC_RESULT_RESETVALUE       0x0          /**< \brief (PTC_RESULT reset_value) Conversion Result Register */
 
 #define PTC_RESULT_RES_Pos          0
 #define PTC_RESULT_RES_Msk          (0xFFFFu << PTC_RESULT_RES_Pos) /**< \brief (PTC_RESULT) Result */
@@ -4083,8 +4026,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_CTSCTRLB_Type;
 
-#define PTC_CTSCTRLB_OFFSET         0x20         /**< \brief (PTC offset) CTS Control Register B */
-#define PTC_CTSCTRLB_RESETVALUE     0x0          /**< \brief (PTC reset_value) CTS Control Register B */
+#define PTC_CTSCTRLB_OFFSET         0x20         /**< \brief (PTC_CTSCTRLB offset) CTS Control Register B */
+#define PTC_CTSCTRLB_RESETVALUE     0x0          /**< \brief (PTC_CTSCTRLB reset_value) CTS Control Register B */
 
 #define PTC_CTSCTRLB_CTSLP          (0x1u <<  2) /**< \brief (PTC_CTSCTRLB) CTS Low Power Mode */
 #define PTC_CTSCTRLB_CTSM_Pos       4
@@ -4101,8 +4044,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } PTC_WINCCTRL_Type;
 
-#define PTC_WINCCTRL_OFFSET         0x21         /**< \brief (PTC offset) Window Comparator Control Register */
-#define PTC_WINCCTRL_RESETVALUE     0x0          /**< \brief (PTC reset_value) Window Comparator Control Register */
+#define PTC_WINCCTRL_OFFSET         0x21         /**< \brief (PTC_WINCCTRL offset) Window Comparator Control Register */
+#define PTC_WINCCTRL_RESETVALUE     0x0          /**< \brief (PTC_WINCCTRL reset_value) Window Comparator Control Register */
 
 #define PTC_WINCCTRL_WINCM_Pos      0
 #define PTC_WINCCTRL_WINCM_Msk      (0x7u << PTC_WINCCTRL_WINCM_Pos) /**< \brief (PTC_WINCCTRL) Window Comparator Mode */
@@ -4117,8 +4060,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_WCHT_Type;
 
-#define PTC_WCHT_OFFSET             0x24         /**< \brief (PTC offset) Window Comparator High Threshold Register */
-#define PTC_WCHT_RESETVALUE         0x0          /**< \brief (PTC reset_value) Window Comparator High Threshold Register */
+#define PTC_WCHT_OFFSET             0x24         /**< \brief (PTC_WCHT offset) Window Comparator High Threshold Register */
+#define PTC_WCHT_RESETVALUE         0x0          /**< \brief (PTC_WCHT reset_value) Window Comparator High Threshold Register */
 
 #define PTC_WCHT_WCHT_Pos           0
 #define PTC_WCHT_WCHT_Msk           (0xFFFFu << PTC_WCHT_WCHT_Pos) /**< \brief (PTC_WCHT) Window Comparator High Threshold */
@@ -4133,8 +4076,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } PTC_WCLT_Type;
 
-#define PTC_WCLT_OFFSET             0x26         /**< \brief (PTC offset) Window Comparator Low Threshold Register */
-#define PTC_WCLT_RESETVALUE         0x0          /**< \brief (PTC reset_value) Window Comparator Low Threshold Register */
+#define PTC_WCLT_OFFSET             0x26         /**< \brief (PTC_WCLT offset) Window Comparator Low Threshold Register */
+#define PTC_WCLT_RESETVALUE         0x0          /**< \brief (PTC_WCLT reset_value) Window Comparator Low Threshold Register */
 
 #define PTC_WCLT_WCLT_Pos           0
 #define PTC_WCLT_WCLT_Msk           (0xFFFFu << PTC_WCLT_WCLT_Pos) /**< \brief (PTC_WCLT) Window Comparator Low Threshold */
@@ -4149,17 +4092,17 @@ typedef struct {
   __IO PTC_CTRLB_Type            CTRLB;       /**< \brief Offset: 0x04 (R/W  8) Control Register B */
   __IO PTC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x05 (R/W  8) Event Control Register */
        RoReg8                    Reserved2[0x2];
-  __IO PTC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x08 (R/W  8) Interrupt Enable Clear */
-  __IO PTC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x09 (R/W  8) Interrupt Enable Set */
-  __IO PTC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x0A (R/W  8) Interrupt Flag */
+  __IO PTC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x08 (R/W  8) Interrupt Enable Clear Register */
+  __IO PTC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x09 (R/W  8) Interrupt Enable Set Register */
+  __IO PTC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x0A (R/W  8) Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved3[0x1];
   __IO PTC_CTSCTRLA_Type         CTSCTRLA;    /**< \brief Offset: 0x0C (R/W  8) CTS Control Register A */
   __IO PTC_CTSCTRLC_Type         CTSCTRLC;    /**< \brief Offset: 0x0D (R/W  8) CTS Control Register C */
        RoReg8                    Reserved4[0x2];
-  __IO PTC_YSEL_Type             YSEL;        /**< \brief Offset: 0x10 (R/W 16) Y Line Select */
-  __IO PTC_XSEL_Type             XSEL;        /**< \brief Offset: 0x12 (R/W 16) X Line Select */
-  __IO PTC_YEN_Type              YEN;         /**< \brief Offset: 0x14 (R/W 16) Y Line Enable */
-  __IO PTC_XEN_Type              XEN;         /**< \brief Offset: 0x16 (R/W 16) X Line Enable */
+  __IO PTC_YSEL_Type             YSEL;        /**< \brief Offset: 0x10 (R/W 16) Y Line Select Register */
+  __IO PTC_XSEL_Type             XSEL;        /**< \brief Offset: 0x12 (R/W 16) X Line Select Register */
+  __IO PTC_YEN_Type              YEN;         /**< \brief Offset: 0x14 (R/W 16) Y Line Enable Register */
+  __IO PTC_XEN_Type              XEN;         /**< \brief Offset: 0x16 (R/W 16) X Line Enable Register */
   __IO PTC_CCCAL_Type            CCCAL;       /**< \brief Offset: 0x18 (R/W 16) CTS Compensation Capacitor Calibration Register */
   __IO PTC_CICAL_Type            CICAL;       /**< \brief Offset: 0x1A (R/W  8) CTS Integrator Capacitor Calibration Register */
   __IO PTC_CTSRS_Type            CTSRS;       /**< \brief Offset: 0x1B (R/W  8) CTS Resistor Selection Register */
@@ -4180,7 +4123,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR RTC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_RTC Real-Time Counter */
+/** \addtogroup SAM0+D_RTC Real-Time Counter */
 /*@{*/
 
 #define REV_RTC        0x100
@@ -4189,9 +4132,69 @@ typedef struct {
 
 #ifndef __EXCLUDE_RTC_FROM_CMSIS__
 
-/* -------- RTC_CTRL : (RTC Offset: 0x00) (R/W 16) Control Register -------- */
+/* -------- RTC_MODE0_CTRL : (RTC Offset: 0x00) (R/W 16) MODE0 Control Register -------- */
 typedef union {
-  struct { // CLOCK mode
+  struct {
+    uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
+    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint16_t MODE:2;           /*!< bit:  2.. 3  Mode                               */
+    uint16_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
+    uint16_t MATCHCLR:1;       /*!< bit:      7  Match Clears Counter               */
+    uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
+    uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint16_t reg;                /*!< Type      used for register access              */
+} RTC_MODE0_CTRL_Type;
+
+#define RTC_MODE0_CTRL_OFFSET       0x00         /**< \brief (RTC_MODE0_CTRL offset) Control Register */
+#define RTC_MODE0_CTRL_RESETVALUE   0x0          /**< \brief (RTC_MODE0_CTRL reset_value) Control Register */
+
+#define RTC_MODE0_CTRL_SWRST        (0x1u <<  0) /**< \brief (RTC_MODE0_CTRL) Software Reset */
+#define RTC_MODE0_CTRL_ENABLE       (0x1u <<  1) /**< \brief (RTC_MODE0_CTRL) Enable */
+#define RTC_MODE0_CTRL_MODE_Pos     2
+#define RTC_MODE0_CTRL_MODE_Msk     (0x3u << RTC_MODE0_CTRL_MODE_Pos) /**< \brief (RTC_MODE0_CTRL) Mode */
+#define RTC_MODE0_CTRL_MODE(value)  ((RTC_MODE0_CTRL_MODE_Msk & ((value) << RTC_MODE0_CTRL_MODE_Pos)))
+#define   RTC_MODE0_CTRL_MODE_COUNT32 (0x0u <<  2) /**< \brief (RTC_MODE0_CTRL) Mode 0 */
+#define   RTC_MODE0_CTRL_MODE_COUNT16 (0x1u <<  2) /**< \brief (RTC_MODE0_CTRL) Mode 1 */
+#define   RTC_MODE0_CTRL_MODE_CLOCK (0x2u <<  2) /**< \brief (RTC_MODE0_CTRL) Mode 2 */
+#define RTC_MODE0_CTRL_MATCHCLR     (0x1u <<  7) /**< \brief (RTC_MODE0_CTRL) Match Clears Counter */
+#define RTC_MODE0_CTRL_PRESCALER_Pos    8
+#define RTC_MODE0_CTRL_PRESCALER_Msk    (0xFu << RTC_MODE0_CTRL_PRESCALER_Pos) /**< \brief (RTC_MODE0_CTRL) Prescaler */
+#define RTC_MODE0_CTRL_PRESCALER(value) ((RTC_MODE0_CTRL_PRESCALER_Msk & ((value) << RTC_MODE0_CTRL_PRESCALER_Pos)))
+#define RTC_MODE0_CTRL_MASK         0xF8Fu /**< \brief (RTC_MODE0_CTRL) MASK Register */
+
+/* -------- RTC_MODE1_CTRL : (RTC Offset: 0x00) (R/W 16) MODE1 Control Register -------- */
+typedef union {
+  struct {
+    uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
+    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint16_t MODE:2;           /*!< bit:  2.. 3  Mode                               */
+    uint16_t _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
+    uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
+    uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint16_t reg;                /*!< Type      used for register access              */
+} RTC_MODE1_CTRL_Type;
+
+#define RTC_MODE1_CTRL_OFFSET       0x00         /**< \brief (RTC_MODE1_CTRL offset) Control Register */
+#define RTC_MODE1_CTRL_RESETVALUE   0x0          /**< \brief (RTC_MODE1_CTRL reset_value) Control Register */
+
+#define RTC_MODE1_CTRL_SWRST        (0x1u <<  0) /**< \brief (RTC_MODE1_CTRL) Software Reset */
+#define RTC_MODE1_CTRL_ENABLE       (0x1u <<  1) /**< \brief (RTC_MODE1_CTRL) Enable */
+#define RTC_MODE1_CTRL_MODE_Pos     2
+#define RTC_MODE1_CTRL_MODE_Msk     (0x3u << RTC_MODE1_CTRL_MODE_Pos) /**< \brief (RTC_MODE1_CTRL) Mode */
+#define RTC_MODE1_CTRL_MODE(value)  ((RTC_MODE1_CTRL_MODE_Msk & ((value) << RTC_MODE1_CTRL_MODE_Pos)))
+#define   RTC_MODE1_CTRL_MODE_COUNT32 (0x0u <<  2) /**< \brief (RTC_MODE1_CTRL) Mode 0 */
+#define   RTC_MODE1_CTRL_MODE_COUNT16 (0x1u <<  2) /**< \brief (RTC_MODE1_CTRL) Mode 1 */
+#define   RTC_MODE1_CTRL_MODE_CLOCK (0x2u <<  2) /**< \brief (RTC_MODE1_CTRL) Mode 2 */
+#define RTC_MODE1_CTRL_PRESCALER_Pos    8
+#define RTC_MODE1_CTRL_PRESCALER_Msk    (0xFu << RTC_MODE1_CTRL_PRESCALER_Pos) /**< \brief (RTC_MODE1_CTRL) Prescaler */
+#define RTC_MODE1_CTRL_PRESCALER(value) ((RTC_MODE1_CTRL_PRESCALER_Msk & ((value) << RTC_MODE1_CTRL_PRESCALER_Pos)))
+#define RTC_MODE1_CTRL_MASK         0xF0Fu /**< \brief (RTC_MODE1_CTRL) MASK Register */
+
+/* -------- RTC_MODE2_CTRL : (RTC Offset: 0x00) (R/W 16) MODE2 Control Register -------- */
+typedef union {
+  struct {
     uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint16_t MODE:2;           /*!< bit:  2.. 3  Mode                               */
@@ -4200,79 +4203,38 @@ typedef union {
     uint16_t MATCHCLR:1;       /*!< bit:      7  Match Clears Counter               */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
     uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
-  } CLOCK;                     /*!< Structure used for CLOCK                        */
-  struct { // COUNT16 mode
-    uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
-    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint16_t MODE:2;           /*!< bit:  2.. 3  Mode                               */
-    uint16_t _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-    uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
-  } COUNT16;                   /*!< Structure used for COUNT16                      */
-  struct { // COUNT32 mode
-    uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
-    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint16_t MODE:2;           /*!< bit:  2.. 3  Mode                               */
-    uint16_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint16_t MATCHCLR:1;       /*!< bit:      7  Match Clears Counter               */
-    uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t _reserved1:4;     /*!< bit: 12..15  Reserved                           */
-  } COUNT32;                   /*!< Structure used for COUNT32                      */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
-} RTC_CTRL_Type;
+} RTC_MODE2_CTRL_Type;
 
-#define RTC_CTRL_OFFSET             0x00         /**< \brief (RTC offset) Control Register */
-#define RTC_CTRL_RESETVALUE         0x0          /**< \brief (RTC reset_value) Control Register */
+#define RTC_MODE2_CTRL_OFFSET       0x00         /**< \brief (RTC_MODE2_CTRL offset) Control Register */
+#define RTC_MODE2_CTRL_RESETVALUE   0x0          /**< \brief (RTC_MODE2_CTRL reset_value) Control Register */
 
-// CLOCK mode
-#define RTC_CTRL_CLOCK_SWRST        (0x1u <<  0) /**< \brief (RTC_CTRL_CLOCK) Software Reset */
-#define RTC_CTRL_CLOCK_ENABLE       (0x1u <<  1) /**< \brief (RTC_CTRL_CLOCK) Enable */
-#define RTC_CTRL_CLOCK_MODE_Pos     2
-#define RTC_CTRL_CLOCK_MODE_Msk     (0x3u << RTC_CTRL_CLOCK_MODE_Pos) /**< \brief (RTC_CTRL_CLOCK) Mode */
-#define RTC_CTRL_CLOCK_MODE(value)  ((RTC_CTRL_CLOCK_MODE_Msk & ((value) << RTC_CTRL_CLOCK_MODE_Pos)))
-#define   RTC_CTRL_CLOCK_MODE_COUNT32 (0x0u <<  2) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_MODE_COUNT16 (0x1u <<  2) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_MODE_CLOCK (0x2u <<  2) /**< \brief (RTC_CTRL_CLOCK)  */
-#define RTC_CTRL_CLOCK_CLKREP       (0x1u <<  6) /**< \brief (RTC_CTRL_CLOCK) Clock Representation */
-#define RTC_CTRL_CLOCK_MATCHCLR     (0x1u <<  7) /**< \brief (RTC_CTRL_CLOCK) Match Clears Counter */
-#define RTC_CTRL_CLOCK_PRESCALER_Pos    8
-#define RTC_CTRL_CLOCK_PRESCALER_Msk    (0xFu << RTC_CTRL_CLOCK_PRESCALER_Pos) /**< \brief (RTC_CTRL_CLOCK) Prescaler */
-#define RTC_CTRL_CLOCK_PRESCALER(value) ((RTC_CTRL_CLOCK_PRESCALER_Msk & ((value) << RTC_CTRL_CLOCK_PRESCALER_Pos)))
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV1 (0x0u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV2 (0x1u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV4 (0x2u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV8 (0x3u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV16 (0x4u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV32 (0x5u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV64 (0x6u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV128 (0x7u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV256 (0x8u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV512 (0x9u <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define   RTC_CTRL_CLOCK_PRESCALER_DIV1024 (0xAu <<  8) /**< \brief (RTC_CTRL_CLOCK)  */
-#define RTC_CTRL_CLOCK_MASK         0xFCFu /**< \brief (RTC_CTRL_CLOCK) MASK Register */
-
-// COUNT16 mode
-#define RTC_CTRL_COUNT16_SWRST      (0x1u <<  0) /**< \brief (RTC_CTRL_COUNT16) Software Reset */
-#define RTC_CTRL_COUNT16_ENABLE     (0x1u <<  1) /**< \brief (RTC_CTRL_COUNT16) Enable */
-#define RTC_CTRL_COUNT16_MODE_Pos    2
-#define RTC_CTRL_COUNT16_MODE_Msk    (0x3u << RTC_CTRL_COUNT16_MODE_Pos) /**< \brief (RTC_CTRL_COUNT16) Mode */
-#define RTC_CTRL_COUNT16_MODE(value) ((RTC_CTRL_COUNT16_MODE_Msk & ((value) << RTC_CTRL_COUNT16_MODE_Pos)))
-#define RTC_CTRL_COUNT16_PRESCALER_Pos    8
-#define RTC_CTRL_COUNT16_PRESCALER_Msk    (0xFu << RTC_CTRL_COUNT16_PRESCALER_Pos) /**< \brief (RTC_CTRL_COUNT16) Prescaler */
-#define RTC_CTRL_COUNT16_PRESCALER(value) ((RTC_CTRL_COUNT16_PRESCALER_Msk & ((value) << RTC_CTRL_COUNT16_PRESCALER_Pos)))
-#define RTC_CTRL_COUNT16_MASK       0xF0Fu /**< \brief (RTC_CTRL_COUNT16) MASK Register */
-
-// COUNT32 mode
-#define RTC_CTRL_COUNT32_SWRST      (0x1u <<  0) /**< \brief (RTC_CTRL_COUNT32) Software Reset */
-#define RTC_CTRL_COUNT32_ENABLE     (0x1u <<  1) /**< \brief (RTC_CTRL_COUNT32) Enable */
-#define RTC_CTRL_COUNT32_MODE_Pos    2
-#define RTC_CTRL_COUNT32_MODE_Msk    (0x3u << RTC_CTRL_COUNT32_MODE_Pos) /**< \brief (RTC_CTRL_COUNT32) Mode */
-#define RTC_CTRL_COUNT32_MODE(value) ((RTC_CTRL_COUNT32_MODE_Msk & ((value) << RTC_CTRL_COUNT32_MODE_Pos)))
-#define RTC_CTRL_COUNT32_MATCHCLR   (0x1u <<  7) /**< \brief (RTC_CTRL_COUNT32) Match Clears Counter */
-#define RTC_CTRL_COUNT32_PRESCALER_Pos    8
-#define RTC_CTRL_COUNT32_PRESCALER_Msk    (0xFu << RTC_CTRL_COUNT32_PRESCALER_Pos) /**< \brief (RTC_CTRL_COUNT32) Prescaler */
-#define RTC_CTRL_COUNT32_PRESCALER(value) ((RTC_CTRL_COUNT32_PRESCALER_Msk & ((value) << RTC_CTRL_COUNT32_PRESCALER_Pos)))
-#define RTC_CTRL_COUNT32_MASK       0xF8Fu /**< \brief (RTC_CTRL_COUNT32) MASK Register */
+#define RTC_MODE2_CTRL_SWRST        (0x1u <<  0) /**< \brief (RTC_MODE2_CTRL) Software Reset */
+#define RTC_MODE2_CTRL_ENABLE       (0x1u <<  1) /**< \brief (RTC_MODE2_CTRL) Enable */
+#define RTC_MODE2_CTRL_MODE_Pos     2
+#define RTC_MODE2_CTRL_MODE_Msk     (0x3u << RTC_MODE2_CTRL_MODE_Pos) /**< \brief (RTC_MODE2_CTRL) Mode */
+#define RTC_MODE2_CTRL_MODE(value)  ((RTC_MODE2_CTRL_MODE_Msk & ((value) << RTC_MODE2_CTRL_MODE_Pos)))
+#define   RTC_MODE2_CTRL_MODE_COUNT32 (0x0u <<  2) /**< \brief (RTC_MODE2_CTRL) Mode 0 */
+#define   RTC_MODE2_CTRL_MODE_COUNT16 (0x1u <<  2) /**< \brief (RTC_MODE2_CTRL) Mode 1 */
+#define   RTC_MODE2_CTRL_MODE_CLOCK (0x2u <<  2) /**< \brief (RTC_MODE2_CTRL) Mode 2 */
+#define RTC_MODE2_CTRL_CLKREP       (0x1u <<  6) /**< \brief (RTC_MODE2_CTRL) Clock Representation */
+#define RTC_MODE2_CTRL_MATCHCLR     (0x1u <<  7) /**< \brief (RTC_MODE2_CTRL) Match Clears Counter */
+#define RTC_MODE2_CTRL_PRESCALER_Pos    8
+#define RTC_MODE2_CTRL_PRESCALER_Msk    (0xFu << RTC_MODE2_CTRL_PRESCALER_Pos) /**< \brief (RTC_MODE2_CTRL) Prescaler */
+#define RTC_MODE2_CTRL_PRESCALER(value) ((RTC_MODE2_CTRL_PRESCALER_Msk & ((value) << RTC_MODE2_CTRL_PRESCALER_Pos)))
+#define   RTC_MODE2_CTRL_PRESCALER_DIV1 (0x0u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV2 (0x1u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV4 (0x2u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV8 (0x3u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV16 (0x4u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV32 (0x5u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV64 (0x6u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV128 (0x7u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV256 (0x8u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV512 (0x9u <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define   RTC_MODE2_CTRL_PRESCALER_DIV1024 (0xAu <<  8) /**< \brief (RTC_MODE2_CTRL)  */
+#define RTC_MODE2_CTRL_MASK         0xFCFu /**< \brief (RTC_MODE2_CTRL) MASK Register */
 
 /* -------- RTC_READREQ : (RTC Offset: 0x02) (R/W 16) Read Request Register -------- */
 typedef union {
@@ -4285,8 +4247,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_READREQ_Type;
 
-#define RTC_READREQ_OFFSET          0x02         /**< \brief (RTC offset) Read Request Register */
-#define RTC_READREQ_RESETVALUE      0x10         /**< \brief (RTC reset_value) Read Request Register */
+#define RTC_READREQ_OFFSET          0x02         /**< \brief (RTC_READREQ offset) Read Request Register */
+#define RTC_READREQ_RESETVALUE      0x10         /**< \brief (RTC_READREQ reset_value) Read Request Register */
 
 #define RTC_READREQ_ADDR_Pos        0
 #define RTC_READREQ_ADDR_Msk        (0x3Fu << RTC_READREQ_ADDR_Pos) /**< \brief (RTC_READREQ) Read Address */
@@ -4295,409 +4257,560 @@ typedef union {
 #define RTC_READREQ_RREQ            (0x1u << 15) /**< \brief (RTC_READREQ) Read Request */
 #define RTC_READREQ_MASK            0xC03Fu /**< \brief (RTC_READREQ) MASK Register */
 
-/* -------- RTC_EVCTRL : (RTC Offset: 0x04) (R/W 16) Event Control Register -------- */
+/* -------- RTC_MODE0_EVCTRL : (RTC Offset: 0x04) (R/W 16) MODE0 Event Control Register -------- */
 typedef union {
   struct {
-    uint16_t PER0EO:1;         /*!< bit:      0                                     */
-    uint16_t PER1EO:1;         /*!< bit:      1                                     */
-    uint16_t PER2EO:1;         /*!< bit:      2                                     */
-    uint16_t PER3EO:1;         /*!< bit:      3                                     */
-    uint16_t PER4EO:1;         /*!< bit:      4                                     */
-    uint16_t PER5EO:1;         /*!< bit:      5                                     */
-    uint16_t PER6EO:1;         /*!< bit:      6                                     */
-    uint16_t PER7EO:1;         /*!< bit:      7                                     */
-    uint16_t CMP0EO:1;         /*!< bit:      8                                     */
-    uint16_t CMP1EO:1;         /*!< bit:      9                                     */
-    uint16_t CMP2EO:1;         /*!< bit:     10                                     */
-    uint16_t CMP3EO:1;         /*!< bit:     11                                     */
-    uint16_t CMP4EO:1;         /*!< bit:     12                                     */
-    uint16_t CMP5EO:1;         /*!< bit:     13                                     */
-    uint16_t _reserved0:1;     /*!< bit:     14  Reserved                           */
-    uint16_t OVFEO:1;          /*!< bit:     15                                     */
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
+    uint16_t CMPEO:4;          /*!< bit:  8..11  Compare Event Output Enables       */
+    uint16_t _reserved0:3;     /*!< bit: 12..14  Reserved                           */
+    uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
-} RTC_EVCTRL_Type;
+} RTC_MODE0_EVCTRL_Type;
 
-#define RTC_EVCTRL_OFFSET           0x04         /**< \brief (RTC offset) Event Control Register */
-#define RTC_EVCTRL_RESETVALUE       0x0          /**< \brief (RTC reset_value) Event Control Register */
+#define RTC_MODE0_EVCTRL_OFFSET     0x04         /**< \brief (RTC_MODE0_EVCTRL offset) Event Control Register */
+#define RTC_MODE0_EVCTRL_RESETVALUE 0x0          /**< \brief (RTC_MODE0_EVCTRL reset_value) Event Control Register */
 
-#define RTC_EVCTRL_PER0EO           (0x1u <<  0) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER1EO           (0x1u <<  1) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER2EO           (0x1u <<  2) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER3EO           (0x1u <<  3) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER4EO           (0x1u <<  4) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER5EO           (0x1u <<  5) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER6EO           (0x1u <<  6) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_PER7EO           (0x1u <<  7) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP0EO           (0x1u <<  8) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP1EO           (0x1u <<  9) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP2EO           (0x1u << 10) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP3EO           (0x1u << 11) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP4EO           (0x1u << 12) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_CMP5EO           (0x1u << 13) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_OVFEO            (0x1u << 15) /**< \brief (RTC_EVCTRL)  */
-#define RTC_EVCTRL_MASK             0xBFFFu /**< \brief (RTC_EVCTRL) MASK Register */
+#define RTC_MODE0_EVCTRL_PEREO_Pos    0
+#define RTC_MODE0_EVCTRL_PEREO_Msk    (0xFFu << RTC_MODE0_EVCTRL_PEREO_Pos) /**< \brief (RTC_MODE0_EVCTRL) Periodic Interval Event Output Enables */
+#define RTC_MODE0_EVCTRL_PEREO(value) ((RTC_MODE0_EVCTRL_PEREO_Msk & ((value) << RTC_MODE0_EVCTRL_PEREO_Pos)))
+#define RTC_MODE0_EVCTRL_CMPEO_Pos    8
+#define RTC_MODE0_EVCTRL_CMPEO_Msk    (0xFu << RTC_MODE0_EVCTRL_CMPEO_Pos) /**< \brief (RTC_MODE0_EVCTRL) Compare Event Output Enables */
+#define RTC_MODE0_EVCTRL_CMPEO(value) ((RTC_MODE0_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE0_EVCTRL_CMPEO_Pos)))
+#define RTC_MODE0_EVCTRL_OVFEO      (0x1u << 15) /**< \brief (RTC_MODE0_EVCTRL) Overflow Event Output Enable */
+#define RTC_MODE0_EVCTRL_MASK       0x8FFFu /**< \brief (RTC_MODE0_EVCTRL) MASK Register */
 
-/* -------- RTC_INTENCLR : (RTC Offset: 0x06) (R/W  8) Interrupt Enable Clear Register -------- */
+/* -------- RTC_MODE1_EVCTRL : (RTC Offset: 0x04) (R/W 16) MODE1 Event Control Register -------- */
 typedef union {
   struct {
-    uint8_t  CMP0:1;           /*!< bit:      0                                     */
-    uint8_t  CMP1:1;           /*!< bit:      1                                     */
-    uint8_t  CMP2:1;           /*!< bit:      2                                     */
-    uint8_t  CMP3:1;           /*!< bit:      3                                     */
-    uint8_t  CMP4:1;           /*!< bit:      4                                     */
-    uint8_t  CMP5:1;           /*!< bit:      5                                     */
-    uint8_t  READY:1;          /*!< bit:      6                                     */
-    uint8_t  OVF:1;            /*!< bit:      7                                     */
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
+    uint16_t CMP0EO:6;         /*!< bit:  8..13  Compare Event Output Enables       */
+    uint16_t _reserved0:1;     /*!< bit:     14  Reserved                           */
+    uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} RTC_INTENCLR_Type;
+  uint16_t reg;                /*!< Type      used for register access              */
+} RTC_MODE1_EVCTRL_Type;
 
-#define RTC_INTENCLR_OFFSET         0x06         /**< \brief (RTC offset) Interrupt Enable Clear Register */
-#define RTC_INTENCLR_RESETVALUE     0x0          /**< \brief (RTC reset_value) Interrupt Enable Clear Register */
+#define RTC_MODE1_EVCTRL_OFFSET     0x04         /**< \brief (RTC_MODE1_EVCTRL offset) Event Control Register */
+#define RTC_MODE1_EVCTRL_RESETVALUE 0x0          /**< \brief (RTC_MODE1_EVCTRL reset_value) Event Control Register */
 
-#define RTC_INTENCLR_CMP0           (0x1u <<  0) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_CMP1           (0x1u <<  1) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_CMP2           (0x1u <<  2) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_CMP3           (0x1u <<  3) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_CMP4           (0x1u <<  4) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_CMP5           (0x1u <<  5) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_READY          (0x1u <<  6) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_OVF            (0x1u <<  7) /**< \brief (RTC_INTENCLR)  */
-#define RTC_INTENCLR_MASK           0xFFu /**< \brief (RTC_INTENCLR) MASK Register */
+#define RTC_MODE1_EVCTRL_PEREO_Pos    0
+#define RTC_MODE1_EVCTRL_PEREO_Msk    (0xFFu << RTC_MODE1_EVCTRL_PEREO_Pos) /**< \brief (RTC_MODE1_EVCTRL) Periodic Interval Event Output Enables */
+#define RTC_MODE1_EVCTRL_PEREO(value) ((RTC_MODE1_EVCTRL_PEREO_Msk & ((value) << RTC_MODE1_EVCTRL_PEREO_Pos)))
+#define RTC_MODE1_EVCTRL_CMP0EO_Pos    8
+#define RTC_MODE1_EVCTRL_CMP0EO_Msk    (0x3Fu << RTC_MODE1_EVCTRL_CMP0EO_Pos) /**< \brief (RTC_MODE1_EVCTRL) Compare Event Output Enables */
+#define RTC_MODE1_EVCTRL_CMP0EO(value) ((RTC_MODE1_EVCTRL_CMP0EO_Msk & ((value) << RTC_MODE1_EVCTRL_CMP0EO_Pos)))
+#define RTC_MODE1_EVCTRL_OVFEO      (0x1u << 15) /**< \brief (RTC_MODE1_EVCTRL) Overflow Event Output Enable */
+#define RTC_MODE1_EVCTRL_MASK       0xBFFFu /**< \brief (RTC_MODE1_EVCTRL) MASK Register */
 
-/* -------- RTC_INTENSET : (RTC Offset: 0x07) (R/W  8) Interrupt Enable Set Register -------- */
+/* -------- RTC_MODE2_EVCTRL : (RTC Offset: 0x04) (R/W 16) MODE2 Event Control Register -------- */
 typedef union {
   struct {
-    uint8_t  CMP0:1;           /*!< bit:      0                                     */
-    uint8_t  CMP1:1;           /*!< bit:      1                                     */
-    uint8_t  CMP2:1;           /*!< bit:      2                                     */
-    uint8_t  CMP3:1;           /*!< bit:      3                                     */
-    uint8_t  CMP4:1;           /*!< bit:      4                                     */
-    uint8_t  CMP5:1;           /*!< bit:      5                                     */
-    uint8_t  READY:1;          /*!< bit:      6                                     */
-    uint8_t  OVF:1;            /*!< bit:      7                                     */
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
+    uint16_t ALARMEO:4;        /*!< bit:  8..11  Alarm 0Event Output Enables        */
+    uint16_t _reserved0:3;     /*!< bit: 12..14  Reserved                           */
+    uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} RTC_INTENSET_Type;
+  uint16_t reg;                /*!< Type      used for register access              */
+} RTC_MODE2_EVCTRL_Type;
 
-#define RTC_INTENSET_OFFSET         0x07         /**< \brief (RTC offset) Interrupt Enable Set Register */
-#define RTC_INTENSET_RESETVALUE     0x0          /**< \brief (RTC reset_value) Interrupt Enable Set Register */
+#define RTC_MODE2_EVCTRL_OFFSET     0x04         /**< \brief (RTC_MODE2_EVCTRL offset) Event Control Register */
+#define RTC_MODE2_EVCTRL_RESETVALUE 0x0          /**< \brief (RTC_MODE2_EVCTRL reset_value) Event Control Register */
 
-#define RTC_INTENSET_CMP0           (0x1u <<  0) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_CMP1           (0x1u <<  1) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_CMP2           (0x1u <<  2) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_CMP3           (0x1u <<  3) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_CMP4           (0x1u <<  4) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_CMP5           (0x1u <<  5) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_READY          (0x1u <<  6) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_OVF            (0x1u <<  7) /**< \brief (RTC_INTENSET)  */
-#define RTC_INTENSET_MASK           0xFFu /**< \brief (RTC_INTENSET) MASK Register */
+#define RTC_MODE2_EVCTRL_PEREO_Pos    0
+#define RTC_MODE2_EVCTRL_PEREO_Msk    (0xFFu << RTC_MODE2_EVCTRL_PEREO_Pos) /**< \brief (RTC_MODE2_EVCTRL) Periodic Interval Event Output Enables */
+#define RTC_MODE2_EVCTRL_PEREO(value) ((RTC_MODE2_EVCTRL_PEREO_Msk & ((value) << RTC_MODE2_EVCTRL_PEREO_Pos)))
+#define RTC_MODE2_EVCTRL_ALARMEO_Pos    8
+#define RTC_MODE2_EVCTRL_ALARMEO_Msk    (0xFu << RTC_MODE2_EVCTRL_ALARMEO_Pos) /**< \brief (RTC_MODE2_EVCTRL) Alarm 0Event Output Enables */
+#define RTC_MODE2_EVCTRL_ALARMEO(value) ((RTC_MODE2_EVCTRL_ALARMEO_Msk & ((value) << RTC_MODE2_EVCTRL_ALARMEO_Pos)))
+#define RTC_MODE2_EVCTRL_OVFEO      (0x1u << 15) /**< \brief (RTC_MODE2_EVCTRL) Overflow Event Output Enable */
+#define RTC_MODE2_EVCTRL_MASK       0x8FFFu /**< \brief (RTC_MODE2_EVCTRL) MASK Register */
 
-/* -------- RTC_INTFLAG : (RTC Offset: 0x08) (R/W  8) Interrupt Flag Register -------- */
+/* -------- RTC_MODE0_INTENCLR : (RTC Offset: 0x06) (R/W  8) MODE0 Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  CMP0:1;           /*!< bit:      0                                     */
-    uint8_t  CMP1:1;           /*!< bit:      1                                     */
-    uint8_t  CMP2:1;           /*!< bit:      2                                     */
-    uint8_t  CMP3:1;           /*!< bit:      3                                     */
-    uint8_t  CMP4:1;           /*!< bit:      4                                     */
-    uint8_t  CMP5:1;           /*!< bit:      5                                     */
-    uint8_t  READY:1;          /*!< bit:      6                                     */
-    uint8_t  OVF:1;            /*!< bit:      7                                     */
+    uint8_t  CMP:4;            /*!< bit:  0.. 3  Comparator Interrupt Disables      */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} RTC_INTFLAG_Type;
+} RTC_MODE0_INTENCLR_Type;
 
-#define RTC_INTFLAG_OFFSET          0x08         /**< \brief (RTC offset) Interrupt Flag Register */
-#define RTC_INTFLAG_RESETVALUE      0x0          /**< \brief (RTC reset_value) Interrupt Flag Register */
+#define RTC_MODE0_INTENCLR_OFFSET   0x06         /**< \brief (RTC_MODE0_INTENCLR offset) Interrupt Enable Clear Register */
+#define RTC_MODE0_INTENCLR_RESETVALUE 0x0          /**< \brief (RTC_MODE0_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define RTC_INTFLAG_CMP0            (0x1u <<  0) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_CMP1            (0x1u <<  1) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_CMP2            (0x1u <<  2) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_CMP3            (0x1u <<  3) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_CMP4            (0x1u <<  4) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_CMP5            (0x1u <<  5) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_READY           (0x1u <<  6) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_OVF             (0x1u <<  7) /**< \brief (RTC_INTFLAG)  */
-#define RTC_INTFLAG_MASK            0xFFu /**< \brief (RTC_INTFLAG) MASK Register */
+#define RTC_MODE0_INTENCLR_CMP_Pos    0
+#define RTC_MODE0_INTENCLR_CMP_Msk    (0xFu << RTC_MODE0_INTENCLR_CMP_Pos) /**< \brief (RTC_MODE0_INTENCLR) Comparator Interrupt Disables */
+#define RTC_MODE0_INTENCLR_CMP(value) ((RTC_MODE0_INTENCLR_CMP_Msk & ((value) << RTC_MODE0_INTENCLR_CMP_Pos)))
+#define RTC_MODE0_INTENCLR_READY    (0x1u <<  6) /**< \brief (RTC_MODE0_INTENCLR) Ready Interrupt Disable */
+#define RTC_MODE0_INTENCLR_OVF      (0x1u <<  7) /**< \brief (RTC_MODE0_INTENCLR) Overflow Interrupt Disable */
+#define RTC_MODE0_INTENCLR_MASK     0xCFu /**< \brief (RTC_MODE0_INTENCLR) MASK Register */
+
+/* -------- RTC_MODE1_INTENCLR : (RTC Offset: 0x06) (R/W  8) MODE1 Interrupt Enable Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  CMP:6;            /*!< bit:  0.. 5  Comparator Interrupt Disables      */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE1_INTENCLR_Type;
+
+#define RTC_MODE1_INTENCLR_OFFSET   0x06         /**< \brief (RTC_MODE1_INTENCLR offset) Interrupt Enable Clear Register */
+#define RTC_MODE1_INTENCLR_RESETVALUE 0x0          /**< \brief (RTC_MODE1_INTENCLR reset_value) Interrupt Enable Clear Register */
+
+#define RTC_MODE1_INTENCLR_CMP_Pos    0
+#define RTC_MODE1_INTENCLR_CMP_Msk    (0x3Fu << RTC_MODE1_INTENCLR_CMP_Pos) /**< \brief (RTC_MODE1_INTENCLR) Comparator Interrupt Disables */
+#define RTC_MODE1_INTENCLR_CMP(value) ((RTC_MODE1_INTENCLR_CMP_Msk & ((value) << RTC_MODE1_INTENCLR_CMP_Pos)))
+#define RTC_MODE1_INTENCLR_READY    (0x1u <<  6) /**< \brief (RTC_MODE1_INTENCLR) Ready Interrupt Disable */
+#define RTC_MODE1_INTENCLR_OVF      (0x1u <<  7) /**< \brief (RTC_MODE1_INTENCLR) Overflow Interrupt Disable */
+#define RTC_MODE1_INTENCLR_MASK     0xFFu /**< \brief (RTC_MODE1_INTENCLR) MASK Register */
+
+/* -------- RTC_MODE2_INTENCLR : (RTC Offset: 0x06) (R/W  8) MODE2 Interrupt Enable Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  ALARM:4;          /*!< bit:  0.. 3  Alarm Interrupt Disables           */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE2_INTENCLR_Type;
+
+#define RTC_MODE2_INTENCLR_OFFSET   0x06         /**< \brief (RTC_MODE2_INTENCLR offset) Interrupt Enable Clear Register */
+#define RTC_MODE2_INTENCLR_RESETVALUE 0x0          /**< \brief (RTC_MODE2_INTENCLR reset_value) Interrupt Enable Clear Register */
+
+#define RTC_MODE2_INTENCLR_ALARM_Pos    0
+#define RTC_MODE2_INTENCLR_ALARM_Msk    (0xFu << RTC_MODE2_INTENCLR_ALARM_Pos) /**< \brief (RTC_MODE2_INTENCLR) Alarm Interrupt Disables */
+#define RTC_MODE2_INTENCLR_ALARM(value) ((RTC_MODE2_INTENCLR_ALARM_Msk & ((value) << RTC_MODE2_INTENCLR_ALARM_Pos)))
+#define RTC_MODE2_INTENCLR_READY    (0x1u <<  6) /**< \brief (RTC_MODE2_INTENCLR) Ready Interrupt Disable */
+#define RTC_MODE2_INTENCLR_OVF      (0x1u <<  7) /**< \brief (RTC_MODE2_INTENCLR) Overflow Interrupt Disable */
+#define RTC_MODE2_INTENCLR_MASK     0xCFu /**< \brief (RTC_MODE2_INTENCLR) MASK Register */
+
+/* -------- RTC_MODE0_INTENSET : (RTC Offset: 0x07) (R/W  8) MODE0 Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  CMP:4;            /*!< bit:  0.. 3  Comparator Interrupt Enables       */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE0_INTENSET_Type;
+
+#define RTC_MODE0_INTENSET_OFFSET   0x07         /**< \brief (RTC_MODE0_INTENSET offset) Interrupt Enable Set Register */
+#define RTC_MODE0_INTENSET_RESETVALUE 0x0          /**< \brief (RTC_MODE0_INTENSET reset_value) Interrupt Enable Set Register */
+
+#define RTC_MODE0_INTENSET_CMP_Pos    0
+#define RTC_MODE0_INTENSET_CMP_Msk    (0xFu << RTC_MODE0_INTENSET_CMP_Pos) /**< \brief (RTC_MODE0_INTENSET) Comparator Interrupt Enables */
+#define RTC_MODE0_INTENSET_CMP(value) ((RTC_MODE0_INTENSET_CMP_Msk & ((value) << RTC_MODE0_INTENSET_CMP_Pos)))
+#define RTC_MODE0_INTENSET_READY    (0x1u <<  6) /**< \brief (RTC_MODE0_INTENSET) Ready Interrupt Enable */
+#define RTC_MODE0_INTENSET_OVF      (0x1u <<  7) /**< \brief (RTC_MODE0_INTENSET) Overflow Interrupt Enable */
+#define RTC_MODE0_INTENSET_MASK     0xCFu /**< \brief (RTC_MODE0_INTENSET) MASK Register */
+
+/* -------- RTC_MODE1_INTENSET : (RTC Offset: 0x07) (R/W  8) MODE1 Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  CMP:6;            /*!< bit:  0.. 5  Comparator Interrupt Enables       */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE1_INTENSET_Type;
+
+#define RTC_MODE1_INTENSET_OFFSET   0x07         /**< \brief (RTC_MODE1_INTENSET offset) Interrupt Enable Set Register */
+#define RTC_MODE1_INTENSET_RESETVALUE 0x0          /**< \brief (RTC_MODE1_INTENSET reset_value) Interrupt Enable Set Register */
+
+#define RTC_MODE1_INTENSET_CMP_Pos    0
+#define RTC_MODE1_INTENSET_CMP_Msk    (0x3Fu << RTC_MODE1_INTENSET_CMP_Pos) /**< \brief (RTC_MODE1_INTENSET) Comparator Interrupt Enables */
+#define RTC_MODE1_INTENSET_CMP(value) ((RTC_MODE1_INTENSET_CMP_Msk & ((value) << RTC_MODE1_INTENSET_CMP_Pos)))
+#define RTC_MODE1_INTENSET_READY    (0x1u <<  6) /**< \brief (RTC_MODE1_INTENSET) Ready Interrupt Enable */
+#define RTC_MODE1_INTENSET_OVF      (0x1u <<  7) /**< \brief (RTC_MODE1_INTENSET) Overflow Interrupt Enable */
+#define RTC_MODE1_INTENSET_MASK     0xFFu /**< \brief (RTC_MODE1_INTENSET) MASK Register */
+
+/* -------- RTC_MODE2_INTENSET : (RTC Offset: 0x07) (R/W  8) MODE2 Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  ALARM:4;          /*!< bit:  0.. 3  Alarm Interrupt Enables            */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE2_INTENSET_Type;
+
+#define RTC_MODE2_INTENSET_OFFSET   0x07         /**< \brief (RTC_MODE2_INTENSET offset) Interrupt Enable Set Register */
+#define RTC_MODE2_INTENSET_RESETVALUE 0x0          /**< \brief (RTC_MODE2_INTENSET reset_value) Interrupt Enable Set Register */
+
+#define RTC_MODE2_INTENSET_ALARM_Pos    0
+#define RTC_MODE2_INTENSET_ALARM_Msk    (0xFu << RTC_MODE2_INTENSET_ALARM_Pos) /**< \brief (RTC_MODE2_INTENSET) Alarm Interrupt Enables */
+#define RTC_MODE2_INTENSET_ALARM(value) ((RTC_MODE2_INTENSET_ALARM_Msk & ((value) << RTC_MODE2_INTENSET_ALARM_Pos)))
+#define RTC_MODE2_INTENSET_READY    (0x1u <<  6) /**< \brief (RTC_MODE2_INTENSET) Ready Interrupt Enable */
+#define RTC_MODE2_INTENSET_OVF      (0x1u <<  7) /**< \brief (RTC_MODE2_INTENSET) Overflow Interrupt Enable */
+#define RTC_MODE2_INTENSET_MASK     0xCFu /**< \brief (RTC_MODE2_INTENSET) MASK Register */
+
+/* -------- RTC_MODE0_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE0 Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  CMP:4;            /*!< bit:  0.. 3  Comparator Interrupt Flags         */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE0_INTFLAG_Type;
+
+#define RTC_MODE0_INTFLAG_OFFSET    0x08         /**< \brief (RTC_MODE0_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define RTC_MODE0_INTFLAG_RESETVALUE 0x0          /**< \brief (RTC_MODE0_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
+
+#define RTC_MODE0_INTFLAG_CMP_Pos    0
+#define RTC_MODE0_INTFLAG_CMP_Msk    (0xFu << RTC_MODE0_INTFLAG_CMP_Pos) /**< \brief (RTC_MODE0_INTFLAG) Comparator Interrupt Flags */
+#define RTC_MODE0_INTFLAG_CMP(value) ((RTC_MODE0_INTFLAG_CMP_Msk & ((value) << RTC_MODE0_INTFLAG_CMP_Pos)))
+#define RTC_MODE0_INTFLAG_READY     (0x1u <<  6) /**< \brief (RTC_MODE0_INTFLAG) Ready Interrupt Flag */
+#define RTC_MODE0_INTFLAG_OVF       (0x1u <<  7) /**< \brief (RTC_MODE0_INTFLAG) Overflow Interrupt Flag */
+#define RTC_MODE0_INTFLAG_MASK      0xCFu /**< \brief (RTC_MODE0_INTFLAG) MASK Register */
+
+/* -------- RTC_MODE1_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE1 Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  CMP:6;            /*!< bit:  0.. 5  Comparator Interrupt Flags         */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE1_INTFLAG_Type;
+
+#define RTC_MODE1_INTFLAG_OFFSET    0x08         /**< \brief (RTC_MODE1_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define RTC_MODE1_INTFLAG_RESETVALUE 0x0          /**< \brief (RTC_MODE1_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
+
+#define RTC_MODE1_INTFLAG_CMP_Pos    0
+#define RTC_MODE1_INTFLAG_CMP_Msk    (0x3Fu << RTC_MODE1_INTFLAG_CMP_Pos) /**< \brief (RTC_MODE1_INTFLAG) Comparator Interrupt Flags */
+#define RTC_MODE1_INTFLAG_CMP(value) ((RTC_MODE1_INTFLAG_CMP_Msk & ((value) << RTC_MODE1_INTFLAG_CMP_Pos)))
+#define RTC_MODE1_INTFLAG_READY     (0x1u <<  6) /**< \brief (RTC_MODE1_INTFLAG) Ready Interrupt Flag */
+#define RTC_MODE1_INTFLAG_OVF       (0x1u <<  7) /**< \brief (RTC_MODE1_INTFLAG) Overflow Interrupt Flag */
+#define RTC_MODE1_INTFLAG_MASK      0xFFu /**< \brief (RTC_MODE1_INTFLAG) MASK Register */
+
+/* -------- RTC_MODE2_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE2 Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  ALARM:4;          /*!< bit:  0.. 3  Alarm Interrupt Flags              */
+    uint8_t  _reserved0:2;     /*!< bit:  4.. 5  Reserved                           */
+    uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
+    uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} RTC_MODE2_INTFLAG_Type;
+
+#define RTC_MODE2_INTFLAG_OFFSET    0x08         /**< \brief (RTC_MODE2_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define RTC_MODE2_INTFLAG_RESETVALUE 0x0          /**< \brief (RTC_MODE2_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
+
+#define RTC_MODE2_INTFLAG_ALARM_Pos    0
+#define RTC_MODE2_INTFLAG_ALARM_Msk    (0xFu << RTC_MODE2_INTFLAG_ALARM_Pos) /**< \brief (RTC_MODE2_INTFLAG) Alarm Interrupt Flags */
+#define RTC_MODE2_INTFLAG_ALARM(value) ((RTC_MODE2_INTFLAG_ALARM_Msk & ((value) << RTC_MODE2_INTFLAG_ALARM_Pos)))
+#define RTC_MODE2_INTFLAG_READY     (0x1u <<  6) /**< \brief (RTC_MODE2_INTFLAG) Ready Interrupt Flag */
+#define RTC_MODE2_INTFLAG_OVF       (0x1u <<  7) /**< \brief (RTC_MODE2_INTFLAG) Overflow Interrupt Flag */
+#define RTC_MODE2_INTFLAG_MASK      0xCFu /**< \brief (RTC_MODE2_INTFLAG) MASK Register */
 
 /* -------- RTC_STATUS : (RTC Offset: 0x0A) (R/W  8) Status Register -------- */
 typedef union {
   struct {
-    uint8_t  RESET:1;          /*!< bit:      0                                     */
+    uint8_t  RESET:1;          /*!< bit:      0  Reset Status                       */
     uint8_t  _reserved0:6;     /*!< bit:  1.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7                                     */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy Status        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_STATUS_Type;
 
-#define RTC_STATUS_OFFSET           0x0A         /**< \brief (RTC offset) Status Register */
-#define RTC_STATUS_RESETVALUE       0x0          /**< \brief (RTC reset_value) Status Register */
+#define RTC_STATUS_OFFSET           0x0A         /**< \brief (RTC_STATUS offset) Status Register */
+#define RTC_STATUS_RESETVALUE       0x0          /**< \brief (RTC_STATUS reset_value) Status Register */
 
-#define RTC_STATUS_RESET            (0x1u <<  0) /**< \brief (RTC_STATUS)  */
-#define RTC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (RTC_STATUS)  */
+#define RTC_STATUS_RESET            (0x1u <<  0) /**< \brief (RTC_STATUS) Reset Status */
+#define RTC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (RTC_STATUS) Synchronization Busy Status */
 #define RTC_STATUS_MASK             0x81u /**< \brief (RTC_STATUS) MASK Register */
 
 /* -------- RTC_DEBUG : (RTC Offset: 0x0B) (R/W  8) Debug Register -------- */
 typedef union {
   struct {
-    uint8_t  DBGRUN:1;         /*!< bit:      0                                     */
+    uint8_t  DBGRUN:1;         /*!< bit:      0  Run During Debug                   */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_DEBUG_Type;
 
-#define RTC_DEBUG_OFFSET            0x0B         /**< \brief (RTC offset) Debug Register */
-#define RTC_DEBUG_RESETVALUE        0x0          /**< \brief (RTC reset_value) Debug Register */
+#define RTC_DEBUG_OFFSET            0x0B         /**< \brief (RTC_DEBUG offset) Debug Register */
+#define RTC_DEBUG_RESETVALUE        0x0          /**< \brief (RTC_DEBUG reset_value) Debug Register */
 
-#define RTC_DEBUG_DBGRUN            (0x1u <<  0) /**< \brief (RTC_DEBUG)  */
+#define RTC_DEBUG_DBGRUN            (0x1u <<  0) /**< \brief (RTC_DEBUG) Run During Debug */
 #define RTC_DEBUG_MASK              0x1u /**< \brief (RTC_DEBUG) MASK Register */
 
 /* -------- RTC_FREQCORR : (RTC Offset: 0x0C) (R/W  8) Frequency Correction Register -------- */
 typedef union {
   struct {
-    uint8_t  VALUE:7;          /*!< bit:  0.. 6                                     */
-    uint8_t  SIGN:1;           /*!< bit:      7                                     */
+    uint8_t  VALUE:7;          /*!< bit:  0.. 6  Correction Value                   */
+    uint8_t  SIGN:1;           /*!< bit:      7  Correction Sign                    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_FREQCORR_Type;
 
-#define RTC_FREQCORR_OFFSET         0x0C         /**< \brief (RTC offset) Frequency Correction Register */
-#define RTC_FREQCORR_RESETVALUE     0x0          /**< \brief (RTC reset_value) Frequency Correction Register */
+#define RTC_FREQCORR_OFFSET         0x0C         /**< \brief (RTC_FREQCORR offset) Frequency Correction Register */
+#define RTC_FREQCORR_RESETVALUE     0x0          /**< \brief (RTC_FREQCORR reset_value) Frequency Correction Register */
 
 #define RTC_FREQCORR_VALUE_Pos      0
-#define RTC_FREQCORR_VALUE_Msk      (0x7Fu << RTC_FREQCORR_VALUE_Pos) /**< \brief (RTC_FREQCORR)  */
+#define RTC_FREQCORR_VALUE_Msk      (0x7Fu << RTC_FREQCORR_VALUE_Pos) /**< \brief (RTC_FREQCORR) Correction Value */
 #define RTC_FREQCORR_VALUE(value)   ((RTC_FREQCORR_VALUE_Msk & ((value) << RTC_FREQCORR_VALUE_Pos)))
-#define RTC_FREQCORR_SIGN           (0x1u <<  7) /**< \brief (RTC_FREQCORR)  */
+#define RTC_FREQCORR_SIGN           (0x1u <<  7) /**< \brief (RTC_FREQCORR) Correction Sign */
 #define RTC_FREQCORR_MASK           0xFFu /**< \brief (RTC_FREQCORR) MASK Register */
 
-/* -------- RTC_MODE0_COUNT : (RTC Offset: 0x10) (R/W 32) Mode0 Count Register -------- */
+/* -------- RTC_MODE0_COUNT : (RTC Offset: 0x10) (R/W 32) MODE0 Count Register -------- */
 typedef union {
   struct {
-    uint32_t COUNT:32;         /*!< bit:  0..31                                     */
+    uint32_t COUNT:32;         /*!< bit:  0..31  Counter Value                      */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_COUNT_Type;
 
-#define RTC_MODE0_COUNT_OFFSET      0x10         /**< \brief (RTC offset) Count Register */
-#define RTC_MODE0_COUNT_RESETVALUE  0x0          /**< \brief (RTC reset_value) Count Register */
+#define RTC_MODE0_COUNT_OFFSET      0x10         /**< \brief (RTC_MODE0_COUNT offset) Count Register */
+#define RTC_MODE0_COUNT_RESETVALUE  0x0          /**< \brief (RTC_MODE0_COUNT reset_value) Count Register */
 
 #define RTC_MODE0_COUNT_COUNT_Pos    0
-#define RTC_MODE0_COUNT_COUNT_Msk    (0xFFFFFFFFu << RTC_MODE0_COUNT_COUNT_Pos) /**< \brief (RTC_MODE0_COUNT)  */
+#define RTC_MODE0_COUNT_COUNT_Msk    (0xFFFFFFFFu << RTC_MODE0_COUNT_COUNT_Pos) /**< \brief (RTC_MODE0_COUNT) Counter Value */
 #define RTC_MODE0_COUNT_COUNT(value) ((RTC_MODE0_COUNT_COUNT_Msk & ((value) << RTC_MODE0_COUNT_COUNT_Pos)))
 #define RTC_MODE0_COUNT_MASK        0xFFFFFFFFu /**< \brief (RTC_MODE0_COUNT) MASK Register */
 
-/* -------- RTC_MODE1_COUNT : (RTC Offset: 0x10) (R/W 16) Mode1 Count Register -------- */
+/* -------- RTC_MODE1_COUNT : (RTC Offset: 0x10) (R/W 16) MODE1 Count Register -------- */
 typedef union {
   struct {
-    uint16_t COUNT:16;         /*!< bit:  0..15                                     */
+    uint16_t COUNT:16;         /*!< bit:  0..15  Counter Value                      */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_COUNT_Type;
 
-#define RTC_MODE1_COUNT_OFFSET      0x10         /**< \brief (RTC offset) Count Register */
-#define RTC_MODE1_COUNT_RESETVALUE  0x0          /**< \brief (RTC reset_value) Count Register */
+#define RTC_MODE1_COUNT_OFFSET      0x10         /**< \brief (RTC_MODE1_COUNT offset) Count Register */
+#define RTC_MODE1_COUNT_RESETVALUE  0x0          /**< \brief (RTC_MODE1_COUNT reset_value) Count Register */
 
 #define RTC_MODE1_COUNT_COUNT_Pos    0
-#define RTC_MODE1_COUNT_COUNT_Msk    (0xFFFFu << RTC_MODE1_COUNT_COUNT_Pos) /**< \brief (RTC_MODE1_COUNT)  */
+#define RTC_MODE1_COUNT_COUNT_Msk    (0xFFFFu << RTC_MODE1_COUNT_COUNT_Pos) /**< \brief (RTC_MODE1_COUNT) Counter Value */
 #define RTC_MODE1_COUNT_COUNT(value) ((RTC_MODE1_COUNT_COUNT_Msk & ((value) << RTC_MODE1_COUNT_COUNT_Pos)))
 #define RTC_MODE1_COUNT_MASK        0xFFFFu /**< \brief (RTC_MODE1_COUNT) MASK Register */
 
-/* -------- RTC_MODE2_CLOCK : (RTC Offset: 0x10) (R/W 32) Mode2 Clock Register -------- */
+/* -------- RTC_MODE2_CLOCK : (RTC Offset: 0x10) (R/W 32) MODE2 Clock Register -------- */
 typedef union {
   struct {
-    uint32_t SECOND:6;         /*!< bit:  0.. 5                                     */
-    uint32_t MINUTE:6;         /*!< bit:  6..11                                     */
-    uint32_t HOUR:5;           /*!< bit: 12..16                                     */
-    uint32_t DAY:5;            /*!< bit: 17..21                                     */
-    uint32_t MONTH:4;          /*!< bit: 22..25                                     */
-    uint32_t YEAR:6;           /*!< bit: 26..31                                     */
+    uint32_t SECOND:6;         /*!< bit:  0.. 5  Current Second                     */
+    uint32_t MINUTE:6;         /*!< bit:  6..11  Current Minute                     */
+    uint32_t HOUR:5;           /*!< bit: 12..16  Current Hour                       */
+    uint32_t DAY:5;            /*!< bit: 17..21  Current Day                        */
+    uint32_t MONTH:4;          /*!< bit: 22..25  Current Month                      */
+    uint32_t YEAR:6;           /*!< bit: 26..31  Current Year                       */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_CLOCK_Type;
 
-#define RTC_MODE2_CLOCK_OFFSET      0x10         /**< \brief (RTC offset) Clock Register */
-#define RTC_MODE2_CLOCK_RESETVALUE  0x0          /**< \brief (RTC reset_value) Clock Register */
+#define RTC_MODE2_CLOCK_OFFSET      0x10         /**< \brief (RTC_MODE2_CLOCK offset) Clock Register */
+#define RTC_MODE2_CLOCK_RESETVALUE  0x0          /**< \brief (RTC_MODE2_CLOCK reset_value) Clock Register */
 
 #define RTC_MODE2_CLOCK_SECOND_Pos    0
-#define RTC_MODE2_CLOCK_SECOND_Msk    (0x3Fu << RTC_MODE2_CLOCK_SECOND_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_SECOND_Msk    (0x3Fu << RTC_MODE2_CLOCK_SECOND_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Second */
 #define RTC_MODE2_CLOCK_SECOND(value) ((RTC_MODE2_CLOCK_SECOND_Msk & ((value) << RTC_MODE2_CLOCK_SECOND_Pos)))
 #define RTC_MODE2_CLOCK_MINUTE_Pos    6
-#define RTC_MODE2_CLOCK_MINUTE_Msk    (0x3Fu << RTC_MODE2_CLOCK_MINUTE_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_MINUTE_Msk    (0x3Fu << RTC_MODE2_CLOCK_MINUTE_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Minute */
 #define RTC_MODE2_CLOCK_MINUTE(value) ((RTC_MODE2_CLOCK_MINUTE_Msk & ((value) << RTC_MODE2_CLOCK_MINUTE_Pos)))
 #define RTC_MODE2_CLOCK_HOUR_Pos    12
-#define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Hour */
 #define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
 #define RTC_MODE2_CLOCK_DAY_Pos     17
-#define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Day */
 #define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))
 #define RTC_MODE2_CLOCK_MONTH_Pos    22
-#define RTC_MODE2_CLOCK_MONTH_Msk    (0xFu << RTC_MODE2_CLOCK_MONTH_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_MONTH_Msk    (0xFu << RTC_MODE2_CLOCK_MONTH_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Month */
 #define RTC_MODE2_CLOCK_MONTH(value) ((RTC_MODE2_CLOCK_MONTH_Msk & ((value) << RTC_MODE2_CLOCK_MONTH_Pos)))
 #define RTC_MODE2_CLOCK_YEAR_Pos    26
-#define RTC_MODE2_CLOCK_YEAR_Msk    (0x3Fu << RTC_MODE2_CLOCK_YEAR_Pos) /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_YEAR_Msk    (0x3Fu << RTC_MODE2_CLOCK_YEAR_Pos) /**< \brief (RTC_MODE2_CLOCK) Current Year */
 #define RTC_MODE2_CLOCK_YEAR(value) ((RTC_MODE2_CLOCK_YEAR_Msk & ((value) << RTC_MODE2_CLOCK_YEAR_Pos)))
 #define RTC_MODE2_CLOCK_MASK        0xFFFFFFFFu /**< \brief (RTC_MODE2_CLOCK) MASK Register */
 
-/* -------- RTC_MODE1_PER : (RTC Offset: 0x14) (R/W 16) Mode1 Period Register -------- */
+/* -------- RTC_MODE1_PER : (RTC Offset: 0x14) (R/W 16) MODE1 Period Register -------- */
 typedef union {
   struct {
-    uint16_t PER:16;           /*!< bit:  0..15                                     */
+    uint16_t PER:16;           /*!< bit:  0..15  Counter Period                     */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_PER_Type;
 
-#define RTC_MODE1_PER_OFFSET        0x14         /**< \brief (RTC offset) Period Register */
-#define RTC_MODE1_PER_RESETVALUE    0x0          /**< \brief (RTC reset_value) Period Register */
+#define RTC_MODE1_PER_OFFSET        0x14         /**< \brief (RTC_MODE1_PER offset) Period Register */
+#define RTC_MODE1_PER_RESETVALUE    0x0          /**< \brief (RTC_MODE1_PER reset_value) Period Register */
 
 #define RTC_MODE1_PER_PER_Pos       0
-#define RTC_MODE1_PER_PER_Msk       (0xFFFFu << RTC_MODE1_PER_PER_Pos) /**< \brief (RTC_MODE1_PER)  */
+#define RTC_MODE1_PER_PER_Msk       (0xFFFFu << RTC_MODE1_PER_PER_Pos) /**< \brief (RTC_MODE1_PER) Counter Period */
 #define RTC_MODE1_PER_PER(value)    ((RTC_MODE1_PER_PER_Msk & ((value) << RTC_MODE1_PER_PER_Pos)))
 #define RTC_MODE1_PER_MASK          0xFFFFu /**< \brief (RTC_MODE1_PER) MASK Register */
 
-/* -------- RTC_MODE0_COMP : (RTC Offset: 0x18) (R/W 32) Mode0_comp Compare Register -------- */
+/* -------- RTC_MODE0_COMP : (RTC Offset: 0x18) (R/W 32) MODE0 Compare Register -------- */
 typedef union {
   struct {
-    uint32_t COMP:32;          /*!< bit:  0..31                                     */
+    uint32_t COMP:32;          /*!< bit:  0..31  Compare Value                      */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_COMP_Type;
 
-#define RTC_MODE0_COMP_OFFSET       0x18         /**< \brief (RTC offset) Compare Register */
-#define RTC_MODE0_COMP_RESETVALUE   0x0          /**< \brief (RTC reset_value) Compare Register */
+#define RTC_MODE0_COMP_OFFSET       0x18         /**< \brief (RTC_MODE0_COMP offset) Compare Register */
+#define RTC_MODE0_COMP_RESETVALUE   0x0          /**< \brief (RTC_MODE0_COMP reset_value) Compare Register */
 
 #define RTC_MODE0_COMP_COMP_Pos     0
-#define RTC_MODE0_COMP_COMP_Msk     (0xFFFFFFFFu << RTC_MODE0_COMP_COMP_Pos) /**< \brief (RTC_MODE0_COMP)  */
+#define RTC_MODE0_COMP_COMP_Msk     (0xFFFFFFFFu << RTC_MODE0_COMP_COMP_Pos) /**< \brief (RTC_MODE0_COMP) Compare Value */
 #define RTC_MODE0_COMP_COMP(value)  ((RTC_MODE0_COMP_COMP_Msk & ((value) << RTC_MODE0_COMP_COMP_Pos)))
 #define RTC_MODE0_COMP_MASK         0xFFFFFFFFu /**< \brief (RTC_MODE0_COMP) MASK Register */
 
-/* -------- RTC_MODE1_COMP : (RTC Offset: 0x18) (R/W 16) Mode1_comp Compare Register -------- */
+/* -------- RTC_MODE1_COMP : (RTC Offset: 0x18) (R/W 16) MODE1 Compare Register -------- */
 typedef union {
   struct {
-    uint16_t COMP:16;          /*!< bit:  0..15                                     */
+    uint16_t COMP:16;          /*!< bit:  0..15  Compare Value                      */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_COMP_Type;
 
-#define RTC_MODE1_COMP_OFFSET       0x18         /**< \brief (RTC offset) Compare Register */
-#define RTC_MODE1_COMP_RESETVALUE   0x0          /**< \brief (RTC reset_value) Compare Register */
+#define RTC_MODE1_COMP_OFFSET       0x18         /**< \brief (RTC_MODE1_COMP offset) Compare Register */
+#define RTC_MODE1_COMP_RESETVALUE   0x0          /**< \brief (RTC_MODE1_COMP reset_value) Compare Register */
 
 #define RTC_MODE1_COMP_COMP_Pos     0
-#define RTC_MODE1_COMP_COMP_Msk     (0xFFFFu << RTC_MODE1_COMP_COMP_Pos) /**< \brief (RTC_MODE1_COMP)  */
+#define RTC_MODE1_COMP_COMP_Msk     (0xFFFFu << RTC_MODE1_COMP_COMP_Pos) /**< \brief (RTC_MODE1_COMP) Compare Value */
 #define RTC_MODE1_COMP_COMP(value)  ((RTC_MODE1_COMP_COMP_Msk & ((value) << RTC_MODE1_COMP_COMP_Pos)))
 #define RTC_MODE1_COMP_MASK         0xFFFFu /**< \brief (RTC_MODE1_COMP) MASK Register */
 
-/* -------- RTC_MODE2_ALARM : (RTC Offset: 0x18) (R/W 32) Mode2_alarm Alarm Register -------- */
+/* -------- RTC_MODE2_ALARM : (RTC Offset: 0x18) (R/W 32) MODE2 Alarm Register -------- */
 typedef union {
   struct {
-    uint32_t SECOND:6;         /*!< bit:  0.. 5                                     */
-    uint32_t MINUTE:6;         /*!< bit:  6..11                                     */
-    uint32_t HOUR:5;           /*!< bit: 12..16                                     */
-    uint32_t DAY:5;            /*!< bit: 17..21                                     */
-    uint32_t MONTH:4;          /*!< bit: 22..25                                     */
-    uint32_t YEAR:6;           /*!< bit: 26..31                                     */
+    uint32_t SECOND:6;         /*!< bit:  0.. 5  Alarm Second                       */
+    uint32_t MINUTE:6;         /*!< bit:  6..11  Alarm Minute                       */
+    uint32_t HOUR:5;           /*!< bit: 12..16  Alarm Hour                         */
+    uint32_t DAY:5;            /*!< bit: 17..21  Alarm Day                          */
+    uint32_t MONTH:4;          /*!< bit: 22..25  Alarm Month                        */
+    uint32_t YEAR:6;           /*!< bit: 26..31  Alarm Year                         */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_ALARM_Type;
 
-#define RTC_MODE2_ALARM_OFFSET      0x18         /**< \brief (RTC offset) Alarm Register */
-#define RTC_MODE2_ALARM_RESETVALUE  0x0          /**< \brief (RTC reset_value) Alarm Register */
+#define RTC_MODE2_ALARM_OFFSET      0x18         /**< \brief (RTC_MODE2_ALARM offset) Alarm Register */
+#define RTC_MODE2_ALARM_RESETVALUE  0x0          /**< \brief (RTC_MODE2_ALARM reset_value) Alarm Register */
 
 #define RTC_MODE2_ALARM_SECOND_Pos    0
-#define RTC_MODE2_ALARM_SECOND_Msk    (0x3Fu << RTC_MODE2_ALARM_SECOND_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_SECOND_Msk    (0x3Fu << RTC_MODE2_ALARM_SECOND_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Second */
 #define RTC_MODE2_ALARM_SECOND(value) ((RTC_MODE2_ALARM_SECOND_Msk & ((value) << RTC_MODE2_ALARM_SECOND_Pos)))
 #define RTC_MODE2_ALARM_MINUTE_Pos    6
-#define RTC_MODE2_ALARM_MINUTE_Msk    (0x3Fu << RTC_MODE2_ALARM_MINUTE_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_MINUTE_Msk    (0x3Fu << RTC_MODE2_ALARM_MINUTE_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Minute */
 #define RTC_MODE2_ALARM_MINUTE(value) ((RTC_MODE2_ALARM_MINUTE_Msk & ((value) << RTC_MODE2_ALARM_MINUTE_Pos)))
 #define RTC_MODE2_ALARM_HOUR_Pos    12
-#define RTC_MODE2_ALARM_HOUR_Msk    (0x1Fu << RTC_MODE2_ALARM_HOUR_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_HOUR_Msk    (0x1Fu << RTC_MODE2_ALARM_HOUR_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Hour */
 #define RTC_MODE2_ALARM_HOUR(value) ((RTC_MODE2_ALARM_HOUR_Msk & ((value) << RTC_MODE2_ALARM_HOUR_Pos)))
 #define RTC_MODE2_ALARM_DAY_Pos     17
-#define RTC_MODE2_ALARM_DAY_Msk     (0x1Fu << RTC_MODE2_ALARM_DAY_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_DAY_Msk     (0x1Fu << RTC_MODE2_ALARM_DAY_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Day */
 #define RTC_MODE2_ALARM_DAY(value)  ((RTC_MODE2_ALARM_DAY_Msk & ((value) << RTC_MODE2_ALARM_DAY_Pos)))
 #define RTC_MODE2_ALARM_MONTH_Pos    22
-#define RTC_MODE2_ALARM_MONTH_Msk    (0xFu << RTC_MODE2_ALARM_MONTH_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_MONTH_Msk    (0xFu << RTC_MODE2_ALARM_MONTH_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Month */
 #define RTC_MODE2_ALARM_MONTH(value) ((RTC_MODE2_ALARM_MONTH_Msk & ((value) << RTC_MODE2_ALARM_MONTH_Pos)))
 #define RTC_MODE2_ALARM_YEAR_Pos    26
-#define RTC_MODE2_ALARM_YEAR_Msk    (0x3Fu << RTC_MODE2_ALARM_YEAR_Pos) /**< \brief (RTC_MODE2_ALARM)  */
+#define RTC_MODE2_ALARM_YEAR_Msk    (0x3Fu << RTC_MODE2_ALARM_YEAR_Pos) /**< \brief (RTC_MODE2_ALARM) Alarm Year */
 #define RTC_MODE2_ALARM_YEAR(value) ((RTC_MODE2_ALARM_YEAR_Msk & ((value) << RTC_MODE2_ALARM_YEAR_Pos)))
 #define RTC_MODE2_ALARM_MASK        0xFFFFFFFFu /**< \brief (RTC_MODE2_ALARM) MASK Register */
 
-/* -------- RTC_MODE2_ALARM_MASK : (RTC Offset: 0x1C) (R/W  8) Mode2_alarm Alarm Mask Register -------- */
+/* -------- RTC_MODE2_MASK : (RTC Offset: 0x1C) (R/W  8) MODE2 Alarm Mask Register -------- */
 typedef union {
   struct {
-    uint8_t  SEL:3;            /*!< bit:  0.. 2                                     */
+    uint8_t  SEL:3;            /*!< bit:  0.. 2  Alarm Mask Selection               */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} RTC_MODE2_ALARM_MASK_Type;
+} RTC_MODE2_MASK_Type;
 
-#define RTC_MODE2_ALARM_MASK_OFFSET 0x1C         /**< \brief (RTC offset) Alarm Mask Register */
-#define RTC_MODE2_ALARM_MASK_RESETVALUE 0x0          /**< \brief (RTC reset_value) Alarm Mask Register */
+#define RTC_MODE2_MASK_OFFSET       0x1C         /**< \brief (RTC_MODE2_MASK offset) Alarm Mask Register */
+#define RTC_MODE2_MASK_RESETVALUE   0x0          /**< \brief (RTC_MODE2_MASK reset_value) Alarm Mask Register */
 
-#define RTC_MODE2_ALARM_MASK_SEL_Pos    0
-#define RTC_MODE2_ALARM_MASK_SEL_Msk    (0x7u << RTC_MODE2_ALARM_MASK_SEL_Pos) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define RTC_MODE2_ALARM_MASK_SEL(value) ((RTC_MODE2_ALARM_MASK_SEL_Msk & ((value) << RTC_MODE2_ALARM_MASK_SEL_Pos)))
-#define   RTC_MODE2_ALARM_MASK_SEL_OFF (0x0u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_SS (0x1u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_MMSS (0x2u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_HHMMSS (0x3u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_DDHHMMSS (0x4u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_MMDDHHMMSS (0x5u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define   RTC_MODE2_ALARM_MASK_SEL_YYMMDDHHMMSS (0x6u <<  0) /**< \brief (RTC_MODE2_ALARM_MASK)  */
-#define RTC_MODE2_ALARM_MASK_MASK   0x7u /**< \brief (RTC_MODE2_ALARM_MASK) MASK Register */
+#define RTC_MODE2_MASK_SEL_Pos      0
+#define RTC_MODE2_MASK_SEL_Msk      (0x7u << RTC_MODE2_MASK_SEL_Pos) /**< \brief (RTC_MODE2_MASK) Alarm Mask Selection */
+#define RTC_MODE2_MASK_SEL(value)   ((RTC_MODE2_MASK_SEL_Msk & ((value) << RTC_MODE2_MASK_SEL_Pos)))
+#define   RTC_MODE2_MASK_SEL_OFF    (0x0u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_SS     (0x1u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_MMSS   (0x2u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_HHMMSS (0x3u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_DDHHMMSS (0x4u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_MMDDHHMMSS (0x5u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define   RTC_MODE2_MASK_SEL_YYMMDDHHMMSS (0x6u <<  0) /**< \brief (RTC_MODE2_MASK)  */
+#define RTC_MODE2_MASK_MASK         0x7u /**< \brief (RTC_MODE2_MASK) MASK Register */
+
+#define RTC_NUM_OF_COMP16           2
+#define RTC_NUM_OF_ALARMS           1
 
 /** \brief RtcMode2Alarm hardware registers */
 typedef struct {
   __IO RTC_MODE2_ALARM_Type      ALARM;       /**< \brief Offset: 0x00 (R/W 32) Alarm Register */
-  __IO RTC_MODE2_ALARM_MASK_Type MASK;        /**< \brief Offset: 0x04 (R/W  8) Alarm Mask Register */
+  __IO RTC_MODE2_MASK_Type       MASK;        /**< \brief Offset: 0x04 (R/W  8) Alarm Mask Register */
        RoReg8                    Reserved1[0x3];
 } RtcMode2Alarm;
 
-/** \brief RtcMode0 hardware registers */
-typedef struct {
-  __IO RTC_MODE0_COUNT_Type      COUNT;       /**< \brief Offset: 0x00 (R/W 32) Count Register */
-       RoReg8                    Reserved1[0x4];
-  __IO RTC_MODE0_COMP_Type       COMP[4];     /**< \brief Offset: 0x08 (R/W 32) Compare Register */
-       RoReg8                    Reserved2[0x10];
-} RtcMode0;
-
-/** \brief RtcMode1 hardware registers */
-typedef struct {
-  __IO RTC_MODE1_COUNT_Type      COUNT;       /**< \brief Offset: 0x00 (R/W 16) Count Register */
-       RoReg8                    Reserved1[0x2];
-  __IO RTC_MODE1_PER_Type        PER;         /**< \brief Offset: 0x04 (R/W 16) Period Register */
-       RoReg8                    Reserved2[0x2];
-  __IO RTC_MODE1_COMP_Type       COMP[6];     /**< \brief Offset: 0x08 (R/W 16) Compare Register */
-       RoReg8                    Reserved3[0x14];
-} RtcMode1;
-
-/** \brief RtcMode2 hardware registers */
-typedef struct {
-  __IO RTC_MODE2_CLOCK_Type      CLOCK;       /**< \brief Offset: 0x00 (R/W 32) Clock Register */
-       RoReg8                    Reserved1[0x4];
-       RtcMode2Alarm             Alarm[4];    /**< \brief Offset: 0x18 RtcMode2Alarm groups */
-} RtcMode2;
-
-/** \brief RTC hardware registers */
-typedef struct {
-  __IO RTC_CTRL_Type             CTRL;        /**< \brief Offset: 0x00 (R/W 16) Control Register */
+/** \brief RTC_MODE0 hardware registers */
+typedef struct { /* 32-bit Counter with Single 32-bit Compare */
+  __IO RTC_MODE0_CTRL_Type       CTRL;        /**< \brief Offset: 0x00 (R/W 16) Control Register */
   __IO RTC_READREQ_Type          READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
-  __IO RTC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x04 (R/W 16) Event Control Register */
-  __IO RTC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x06 (R/W  8) Interrupt Enable Clear Register */
-  __IO RTC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x07 (R/W  8) Interrupt Enable Set Register */
-  __IO RTC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) Interrupt Flag Register */
+  __IO RTC_MODE0_EVCTRL_Type     EVCTRL;      /**< \brief Offset: 0x04 (R/W 16) Event Control Register */
+  __IO RTC_MODE0_INTENCLR_Type   INTENCLR;    /**< \brief Offset: 0x06 (R/W  8) Interrupt Enable Clear Register */
+  __IO RTC_MODE0_INTENSET_Type   INTENSET;    /**< \brief Offset: 0x07 (R/W  8) Interrupt Enable Set Register */
+  __IO RTC_MODE0_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved1[0x1];
   __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
   __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
   __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
        RoReg8                    Reserved2[0x3];
- union { // Overlapping sections
-       RtcMode0                  Mode0;       /**< \brief Offset: 0x10 RtcMode0 groups */
-       RtcMode1                  Mode1;       /**< \brief Offset: 0x10 RtcMode1 groups */
-       RtcMode2                  Mode2;       /**< \brief Offset: 0x10 RtcMode2 groups */
- };
+  __IO RTC_MODE0_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W 32) Count Register */
+       RoReg8                    Reserved3[0x4];
+  __IO RTC_MODE0_COMP_Type       COMP[RTC_NUM_OF_ALARMS]; /**< \brief Offset: 0x18 (R/W 32) Compare Register */
+       RTC_MODE0_COMP_Type       Reserved4[4 - RTC_NUM_OF_ALARMS];
+} RtcMode0;
+
+/** \brief RTC_MODE1 hardware registers */
+typedef struct { /* 16-bit Counter with Two 16-bit Compares */
+  __IO RTC_MODE1_CTRL_Type       CTRL;        /**< \brief Offset: 0x00 (R/W 16) Control Register */
+  __IO RTC_READREQ_Type          READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
+  __IO RTC_MODE1_EVCTRL_Type     EVCTRL;      /**< \brief Offset: 0x04 (R/W 16) Event Control Register */
+  __IO RTC_MODE1_INTENCLR_Type   INTENCLR;    /**< \brief Offset: 0x06 (R/W  8) Interrupt Enable Clear Register */
+  __IO RTC_MODE1_INTENSET_Type   INTENSET;    /**< \brief Offset: 0x07 (R/W  8) Interrupt Enable Set Register */
+  __IO RTC_MODE1_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) Interrupt Flag Status and Clear Register */
+       RoReg8                    Reserved1[0x1];
+  __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
+  __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
+  __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
+       RoReg8                    Reserved2[0x3];
+  __IO RTC_MODE1_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W 16) Count Register */
+       RoReg8                    Reserved3[0x2];
+  __IO RTC_MODE1_PER_Type        PER;         /**< \brief Offset: 0x14 (R/W 16) Period Register */
+       RoReg8                    Reserved4[0x2];
+  __IO RTC_MODE1_COMP_Type       COMP[RTC_NUM_OF_COMP16]; /**< \brief Offset: 0x18 (R/W 16) Compare Register */
+       RTC_MODE1_COMP_Type       Reserved5[6 - RTC_NUM_OF_COMP16];
+} RtcMode1;
+
+/** \brief RTC_MODE2 hardware registers */
+typedef struct { /* Clock/Calendar with Alarm */
+  __IO RTC_MODE2_CTRL_Type       CTRL;        /**< \brief Offset: 0x00 (R/W 16) Control Register */
+  __IO RTC_READREQ_Type          READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
+  __IO RTC_MODE2_EVCTRL_Type     EVCTRL;      /**< \brief Offset: 0x04 (R/W 16) Event Control Register */
+  __IO RTC_MODE2_INTENCLR_Type   INTENCLR;    /**< \brief Offset: 0x06 (R/W  8) Interrupt Enable Clear Register */
+  __IO RTC_MODE2_INTENSET_Type   INTENSET;    /**< \brief Offset: 0x07 (R/W  8) Interrupt Enable Set Register */
+  __IO RTC_MODE2_INTFLAG_Type    INTFLAG;     /**< \brief Offset: 0x08 (R/W  8) Interrupt Flag Status and Clear Register */
+       RoReg8                    Reserved1[0x1];
+  __IO RTC_STATUS_Type           STATUS;      /**< \brief Offset: 0x0A (R/W  8) Status Register */
+  __IO RTC_DEBUG_Type            DEBUG;       /**< \brief Offset: 0x0B (R/W  8) Debug Register */
+  __IO RTC_FREQCORR_Type         FREQCORR;    /**< \brief Offset: 0x0C (R/W  8) Frequency Correction Register */
+       RoReg8                    Reserved2[0x3];
+  __IO RTC_MODE2_CLOCK_Type      CLOCK;       /**< \brief Offset: 0x10 (R/W 32) Clock Register */
+       RoReg8                    Reserved3[0x4];
+       RtcMode2Alarm             Mode2Alarm[RTC_NUM_OF_ALARMS]; /**< \brief Offset: 0x18 RtcMode2Alarm groups */
+       RtcMode2Alarm             Reserved4[4 - RTC_NUM_OF_ALARMS];
+} RtcMode2;
+
+typedef union {
+       RtcMode0                  MODE0;       /**< \brief Offset: 0x00 32-bit Counter with Single 32-bit Compare */
+       RtcMode1                  MODE1;       /**< \brief Offset: 0x00 16-bit Counter with Two 16-bit Compares */
+       RtcMode2                  MODE2;       /**< \brief Offset: 0x00 Clock/Calendar with Alarm */
 } Rtc;
 
 #endif /*  __EXCLUDE_RTC_FROM_CMSIS__ */
@@ -4708,7 +4821,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR SERCOM */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_SERCOM Serial Communication Interface */
+/** \addtogroup SAM0+D_SERCOM Serial Communication Interface */
 /*@{*/
 
 #define REV_SERCOM     0x100
@@ -4717,680 +4830,920 @@ typedef struct {
 
 #ifndef __EXCLUDE_SERCOM_FROM_CMSIS__
 
-/* -------- SERCOM_CTRLA : (SERCOM Offset: 0x00) (R/W 32) Control Register A -------- */
+/* -------- SERCOM_I2CM_CTRLA : (SERCOM Offset: 0x00) (R/W 32) I2CM Control Register A -------- */
 typedef union {
-  struct { // SPI mode
-    uint32_t SWRST:1;          /*!< bit:      0                                     */
-    uint32_t ENABLE:1;         /*!< bit:      1                                     */
-    uint32_t MODE:2;           /*!< bit:  2.. 3                                     */
-    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint32_t SLEEPEN:1;        /*!< bit:      7                                     */
-    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
-    uint32_t DOPO:1;           /*!< bit:     16                                     */
-    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
-    uint32_t DIPO:2;           /*!< bit: 20..21                                     */
-    uint32_t _reserved3:2;     /*!< bit: 22..23  Reserved                           */
-    uint32_t FORM:4;           /*!< bit: 24..27                                     */
-    uint32_t CPHA:1;           /*!< bit:     28                                     */
-    uint32_t CPOL:1;           /*!< bit:     29                                     */
-    uint32_t DORD:1;           /*!< bit:     30                                     */
-    uint32_t MASTER:1;         /*!< bit:     31                                     */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint32_t SWRST:1;          /*!< bit:      0                                     */
-    uint32_t ENABLE:1;         /*!< bit:      1                                     */
-    uint32_t MODE:2;           /*!< bit:  2.. 3                                     */
-    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint32_t SLEEPEN:1;        /*!< bit:      7                                     */
-    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
-    uint32_t PINOUT:1;         /*!< bit:     16                                     */
-    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
-    uint32_t SDAHOLD:2;        /*!< bit: 20..21                                     */
-    uint32_t _reserved3:6;     /*!< bit: 22..27  Reserved                           */
-    uint32_t INACTOUT:2;       /*!< bit: 28..29                                     */
-    uint32_t LOWTOUTEN:1;      /*!< bit:     30                                     */
-    uint32_t MASTER:1;         /*!< bit:     31                                     */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint32_t SWRST:1;          /*!< bit:      0                                     */
-    uint32_t ENABLE:1;         /*!< bit:      1                                     */
-    uint32_t MODE:2;           /*!< bit:  2.. 3                                     */
-    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint32_t SLEEPEN:1;        /*!< bit:      7                                     */
-    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
-    uint32_t PINOUT:1;         /*!< bit:     16                                     */
-    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
-    uint32_t SDAHOLD:2;        /*!< bit: 20..21                                     */
-    uint32_t _reserved3:8;     /*!< bit: 22..29  Reserved                           */
-    uint32_t LOWTOUT:1;        /*!< bit:     30                                     */
-    uint32_t MASTER:1;         /*!< bit:     31                                     */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
+  struct {
     uint32_t SWRST:1;          /*!< bit:      0  Software Reset                     */
-    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint32_t MODE:2;           /*!< bit:  2.. 3                                     */
+    uint32_t ENABLE:1;         /*!< bit:      1  SERCOM Enable                      */
+    uint32_t MODE:2;           /*!< bit:  2.. 3  SERCOM Mode Register               */
     uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
-    uint32_t SLEEPEN:1;        /*!< bit:      7                                     */
+    uint32_t RUNSTDBY:1;       /*!< bit:      7  Run during Standby                 */
     uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
-    uint32_t TXPO:1;           /*!< bit:     16                                     */
+    uint32_t PINOUT:1;         /*!< bit:     16  Pin Usage                          */
     uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
-    uint32_t RXPO:2;           /*!< bit: 20..21                                     */
+    uint32_t SDAHOLD:2;        /*!< bit: 20..21  SDA Hold Time                      */
+    uint32_t _reserved3:6;     /*!< bit: 22..27  Reserved                           */
+    uint32_t INACTOUT:2;       /*!< bit: 28..29  Inactive Bus Timeout               */
+    uint32_t LOWTOUTEN:1;      /*!< bit:     30  SCL Low Timeout Enable             */
+    uint32_t MASTER:1;         /*!< bit:     31  Master Mode                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CM_CTRLA_Type;
+
+#define SERCOM_I2CM_CTRLA_OFFSET    0x00         /**< \brief (SERCOM_I2CM_CTRLA offset) Control Register A */
+#define SERCOM_I2CM_CTRLA_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_CTRLA reset_value) Control Register A */
+
+#define SERCOM_I2CM_CTRLA_SWRST     (0x1u <<  0) /**< \brief (SERCOM_I2CM_CTRLA) Software Reset */
+#define SERCOM_I2CM_CTRLA_ENABLE    (0x1u <<  1) /**< \brief (SERCOM_I2CM_CTRLA) SERCOM Enable */
+#define SERCOM_I2CM_CTRLA_MODE_Pos    2
+#define SERCOM_I2CM_CTRLA_MODE_Msk    (0x3u << SERCOM_I2CM_CTRLA_MODE_Pos) /**< \brief (SERCOM_I2CM_CTRLA) SERCOM Mode Register */
+#define SERCOM_I2CM_CTRLA_MODE(value) ((SERCOM_I2CM_CTRLA_MODE_Msk & ((value) << SERCOM_I2CM_CTRLA_MODE_Pos)))
+#define SERCOM_I2CM_CTRLA_RUNSTDBY  (0x1u <<  7) /**< \brief (SERCOM_I2CM_CTRLA) Run during Standby */
+#define SERCOM_I2CM_CTRLA_PINOUT    (0x1u << 16) /**< \brief (SERCOM_I2CM_CTRLA) Pin Usage */
+#define SERCOM_I2CM_CTRLA_SDAHOLD_Pos    20
+#define SERCOM_I2CM_CTRLA_SDAHOLD_Msk    (0x3u << SERCOM_I2CM_CTRLA_SDAHOLD_Pos) /**< \brief (SERCOM_I2CM_CTRLA) SDA Hold Time */
+#define SERCOM_I2CM_CTRLA_SDAHOLD(value) ((SERCOM_I2CM_CTRLA_SDAHOLD_Msk & ((value) << SERCOM_I2CM_CTRLA_SDAHOLD_Pos)))
+#define SERCOM_I2CM_CTRLA_INACTOUT_Pos    28
+#define SERCOM_I2CM_CTRLA_INACTOUT_Msk    (0x3u << SERCOM_I2CM_CTRLA_INACTOUT_Pos) /**< \brief (SERCOM_I2CM_CTRLA) Inactive Bus Timeout */
+#define SERCOM_I2CM_CTRLA_INACTOUT(value) ((SERCOM_I2CM_CTRLA_INACTOUT_Msk & ((value) << SERCOM_I2CM_CTRLA_INACTOUT_Pos)))
+#define SERCOM_I2CM_CTRLA_LOWTOUTEN (0x1u << 30) /**< \brief (SERCOM_I2CM_CTRLA) SCL Low Timeout Enable */
+#define SERCOM_I2CM_CTRLA_MASTER    (0x1u << 31) /**< \brief (SERCOM_I2CM_CTRLA) Master Mode */
+#define SERCOM_I2CM_CTRLA_MASK      0xF031008Fu /**< \brief (SERCOM_I2CM_CTRLA) MASK Register */
+
+/* -------- SERCOM_I2CS_CTRLA : (SERCOM Offset: 0x00) (R/W 32) I2CS Control Register A -------- */
+typedef union {
+  struct {
+    uint32_t SWRST:1;          /*!< bit:      0  SERCOM Reset                       */
+    uint32_t ENABLE:1;         /*!< bit:      1  SERCOM Enable                      */
+    uint32_t MODE:2;           /*!< bit:  2.. 3  SERCOM Mode Register               */
+    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
+    uint32_t RUNSTDBY:1;       /*!< bit:      7  Run during Standby                 */
+    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
+    uint32_t PINOUT:1;         /*!< bit:     16  Pin Usage                          */
+    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
+    uint32_t SDAHOLD:2;        /*!< bit: 20..21  SDA Hold Time                      */
+    uint32_t _reserved3:8;     /*!< bit: 22..29  Reserved                           */
+    uint32_t LOWTOUT:1;        /*!< bit:     30  SCL Low Timeout                    */
+    uint32_t MASTER:1;         /*!< bit:     31  Master Mode                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CS_CTRLA_Type;
+
+#define SERCOM_I2CS_CTRLA_OFFSET    0x00         /**< \brief (SERCOM_I2CS_CTRLA offset) Control Register A */
+#define SERCOM_I2CS_CTRLA_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_CTRLA reset_value) Control Register A */
+
+#define SERCOM_I2CS_CTRLA_SWRST     (0x1u <<  0) /**< \brief (SERCOM_I2CS_CTRLA) SERCOM Reset */
+#define SERCOM_I2CS_CTRLA_ENABLE    (0x1u <<  1) /**< \brief (SERCOM_I2CS_CTRLA) SERCOM Enable */
+#define SERCOM_I2CS_CTRLA_MODE_Pos    2
+#define SERCOM_I2CS_CTRLA_MODE_Msk    (0x3u << SERCOM_I2CS_CTRLA_MODE_Pos) /**< \brief (SERCOM_I2CS_CTRLA) SERCOM Mode Register */
+#define SERCOM_I2CS_CTRLA_MODE(value) ((SERCOM_I2CS_CTRLA_MODE_Msk & ((value) << SERCOM_I2CS_CTRLA_MODE_Pos)))
+#define SERCOM_I2CS_CTRLA_RUNSTDBY  (0x1u <<  7) /**< \brief (SERCOM_I2CS_CTRLA) Run during Standby */
+#define SERCOM_I2CS_CTRLA_PINOUT    (0x1u << 16) /**< \brief (SERCOM_I2CS_CTRLA) Pin Usage */
+#define SERCOM_I2CS_CTRLA_SDAHOLD_Pos    20
+#define SERCOM_I2CS_CTRLA_SDAHOLD_Msk    (0x3u << SERCOM_I2CS_CTRLA_SDAHOLD_Pos) /**< \brief (SERCOM_I2CS_CTRLA) SDA Hold Time */
+#define SERCOM_I2CS_CTRLA_SDAHOLD(value) ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((value) << SERCOM_I2CS_CTRLA_SDAHOLD_Pos)))
+#define SERCOM_I2CS_CTRLA_LOWTOUT   (0x1u << 30) /**< \brief (SERCOM_I2CS_CTRLA) SCL Low Timeout */
+#define SERCOM_I2CS_CTRLA_MASTER    (0x1u << 31) /**< \brief (SERCOM_I2CS_CTRLA) Master Mode */
+#define SERCOM_I2CS_CTRLA_MASK      0xC031008Fu /**< \brief (SERCOM_I2CS_CTRLA) MASK Register */
+
+/* -------- SERCOM_SPI_CTRLA : (SERCOM Offset: 0x00) (R/W 32) SPI SPI Control Register A -------- */
+typedef union {
+  struct {
+    uint32_t SWRST:1;          /*!< bit:      0  SERCOM Reset                       */
+    uint32_t ENABLE:1;         /*!< bit:      1  SERCOM Enable                      */
+    uint32_t MODE:2;           /*!< bit:  2.. 3  SERCOM Mode Register               */
+    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
+    uint32_t RUNSTDBY:1;       /*!< bit:      7  Run during Standby                 */
+    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
+    uint32_t DOPO:1;           /*!< bit:     16  Data Out Pinout                    */
+    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
+    uint32_t DIPO:2;           /*!< bit: 20..21  Data In Pinout                     */
     uint32_t _reserved3:2;     /*!< bit: 22..23  Reserved                           */
-    uint32_t FORM:2;           /*!< bit: 24..25                                     */
+    uint32_t FORM:4;           /*!< bit: 24..27  Frame Format                       */
+    uint32_t CPHA:1;           /*!< bit:     28  Clock Phase                        */
+    uint32_t CPOL:1;           /*!< bit:     29  Clock Polarity                     */
+    uint32_t DORD:1;           /*!< bit:     30  Data Order                         */
+    uint32_t MASTER:1;         /*!< bit:     31  Master Mode                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_SPI_CTRLA_Type;
+
+#define SERCOM_SPI_CTRLA_OFFSET     0x00         /**< \brief (SERCOM_SPI_CTRLA offset) SPI Control Register A */
+#define SERCOM_SPI_CTRLA_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_CTRLA reset_value) SPI Control Register A */
+
+#define SERCOM_SPI_CTRLA_SWRST      (0x1u <<  0) /**< \brief (SERCOM_SPI_CTRLA) SERCOM Reset */
+#define SERCOM_SPI_CTRLA_ENABLE     (0x1u <<  1) /**< \brief (SERCOM_SPI_CTRLA) SERCOM Enable */
+#define SERCOM_SPI_CTRLA_MODE_Pos    2
+#define SERCOM_SPI_CTRLA_MODE_Msk    (0x3u << SERCOM_SPI_CTRLA_MODE_Pos) /**< \brief (SERCOM_SPI_CTRLA) SERCOM Mode Register */
+#define SERCOM_SPI_CTRLA_MODE(value) ((SERCOM_SPI_CTRLA_MODE_Msk & ((value) << SERCOM_SPI_CTRLA_MODE_Pos)))
+#define SERCOM_SPI_CTRLA_RUNSTDBY   (0x1u <<  7) /**< \brief (SERCOM_SPI_CTRLA) Run during Standby */
+#define SERCOM_SPI_CTRLA_DOPO       (0x1u << 16) /**< \brief (SERCOM_SPI_CTRLA) Data Out Pinout */
+#define SERCOM_SPI_CTRLA_DIPO_Pos    20
+#define SERCOM_SPI_CTRLA_DIPO_Msk    (0x3u << SERCOM_SPI_CTRLA_DIPO_Pos) /**< \brief (SERCOM_SPI_CTRLA) Data In Pinout */
+#define SERCOM_SPI_CTRLA_DIPO(value) ((SERCOM_SPI_CTRLA_DIPO_Msk & ((value) << SERCOM_SPI_CTRLA_DIPO_Pos)))
+#define SERCOM_SPI_CTRLA_FORM_Pos    24
+#define SERCOM_SPI_CTRLA_FORM_Msk    (0xFu << SERCOM_SPI_CTRLA_FORM_Pos) /**< \brief (SERCOM_SPI_CTRLA) Frame Format */
+#define SERCOM_SPI_CTRLA_FORM(value) ((SERCOM_SPI_CTRLA_FORM_Msk & ((value) << SERCOM_SPI_CTRLA_FORM_Pos)))
+#define SERCOM_SPI_CTRLA_CPHA       (0x1u << 28) /**< \brief (SERCOM_SPI_CTRLA) Clock Phase */
+#define SERCOM_SPI_CTRLA_CPOL       (0x1u << 29) /**< \brief (SERCOM_SPI_CTRLA) Clock Polarity */
+#define SERCOM_SPI_CTRLA_DORD       (0x1u << 30) /**< \brief (SERCOM_SPI_CTRLA) Data Order */
+#define SERCOM_SPI_CTRLA_MASTER     (0x1u << 31) /**< \brief (SERCOM_SPI_CTRLA) Master Mode */
+#define SERCOM_SPI_CTRLA_MASK       0xFF31008Fu /**< \brief (SERCOM_SPI_CTRLA) MASK Register */
+
+/* -------- SERCOM_USART_CTRLA : (SERCOM Offset: 0x00) (R/W 32) USART USART Control Register A -------- */
+typedef union {
+  struct {
+    uint32_t SWRST:1;          /*!< bit:      0  SERCOM Reset                       */
+    uint32_t ENABLE:1;         /*!< bit:      1  SERCOM Enable                      */
+    uint32_t MODE:2;           /*!< bit:  2.. 3  SERCOM Mode Register               */
+    uint32_t _reserved0:3;     /*!< bit:  4.. 6  Reserved                           */
+    uint32_t RUNSTDBY:1;       /*!< bit:      7  Run during Standby                 */
+    uint32_t _reserved1:8;     /*!< bit:  8..15  Reserved                           */
+    uint32_t TXPO:1;           /*!< bit:     16  Transmit Data Pinout               */
+    uint32_t _reserved2:3;     /*!< bit: 17..19  Reserved                           */
+    uint32_t RXPO:2;           /*!< bit: 20..21  Receive Data Pinout                */
+    uint32_t _reserved3:2;     /*!< bit: 22..23  Reserved                           */
+    uint32_t FORM:2;           /*!< bit: 24..25  Frame Format                       */
     uint32_t _reserved4:2;     /*!< bit: 26..27  Reserved                           */
-    uint32_t CMODE:1;          /*!< bit:     28                                     */
-    uint32_t CPOL:1;           /*!< bit:     29                                     */
-    uint32_t DORD:1;           /*!< bit:     30                                     */
-    uint32_t CSRC:1;           /*!< bit:     31                                     */
-  } USART;                     /*!< Structure used for USART                        */
+    uint32_t CMODE:1;          /*!< bit:     28  Communication Mode                 */
+    uint32_t CPOL:1;           /*!< bit:     29  Clock Polarity                     */
+    uint32_t DORD:1;           /*!< bit:     30  Data Order                         */
+    uint32_t CSRC:1;           /*!< bit:     31  Clock Source                       */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SERCOM_CTRLA_Type;
+} SERCOM_USART_CTRLA_Type;
 
-#define SERCOM_CTRLA_OFFSET         0x00         /**< \brief (SERCOM offset) Control Register A */
-#define SERCOM_CTRLA_RESETVALUE     0x0          /**< \brief (SERCOM reset_value) Control Register A */
+#define SERCOM_USART_CTRLA_OFFSET   0x00         /**< \brief (SERCOM_USART_CTRLA offset) USART Control Register A */
+#define SERCOM_USART_CTRLA_RESETVALUE 0x0          /**< \brief (SERCOM_USART_CTRLA reset_value) USART Control Register A */
 
-// SPI mode
-#define SERCOM_CTRLA_SPI_SWRST      (0x1u <<  0) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_ENABLE     (0x1u <<  1) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_MODE_Pos    2
-#define SERCOM_CTRLA_SPI_MODE_Msk    (0x3u << SERCOM_CTRLA_SPI_MODE_Pos) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_MODE(value) ((SERCOM_CTRLA_SPI_MODE_Msk & ((value) << SERCOM_CTRLA_SPI_MODE_Pos)))
-#define SERCOM_CTRLA_SPI_SLEEPEN    (0x1u <<  7) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_DOPO       (0x1u << 16) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_DIPO_Pos    20
-#define SERCOM_CTRLA_SPI_DIPO_Msk    (0x3u << SERCOM_CTRLA_SPI_DIPO_Pos) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_DIPO(value) ((SERCOM_CTRLA_SPI_DIPO_Msk & ((value) << SERCOM_CTRLA_SPI_DIPO_Pos)))
-#define SERCOM_CTRLA_SPI_FORM_Pos    24
-#define SERCOM_CTRLA_SPI_FORM_Msk    (0xFu << SERCOM_CTRLA_SPI_FORM_Pos) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_FORM(value) ((SERCOM_CTRLA_SPI_FORM_Msk & ((value) << SERCOM_CTRLA_SPI_FORM_Pos)))
-#define SERCOM_CTRLA_SPI_CPHA       (0x1u << 28) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_CPOL       (0x1u << 29) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_DORD       (0x1u << 30) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_MASTER     (0x1u << 31) /**< \brief (SERCOM_CTRLA_SPI)  */
-#define SERCOM_CTRLA_SPI_MASK       0xFF31008Fu /**< \brief (SERCOM_CTRLA_SPI) MASK Register */
+#define SERCOM_USART_CTRLA_SWRST    (0x1u <<  0) /**< \brief (SERCOM_USART_CTRLA) SERCOM Reset */
+#define SERCOM_USART_CTRLA_ENABLE   (0x1u <<  1) /**< \brief (SERCOM_USART_CTRLA) SERCOM Enable */
+#define SERCOM_USART_CTRLA_MODE_Pos    2
+#define SERCOM_USART_CTRLA_MODE_Msk    (0x3u << SERCOM_USART_CTRLA_MODE_Pos) /**< \brief (SERCOM_USART_CTRLA) SERCOM Mode Register */
+#define SERCOM_USART_CTRLA_MODE(value) ((SERCOM_USART_CTRLA_MODE_Msk & ((value) << SERCOM_USART_CTRLA_MODE_Pos)))
+#define SERCOM_USART_CTRLA_RUNSTDBY (0x1u <<  7) /**< \brief (SERCOM_USART_CTRLA) Run during Standby */
+#define SERCOM_USART_CTRLA_TXPO     (0x1u << 16) /**< \brief (SERCOM_USART_CTRLA) Transmit Data Pinout */
+#define SERCOM_USART_CTRLA_RXPO_Pos    20
+#define SERCOM_USART_CTRLA_RXPO_Msk    (0x3u << SERCOM_USART_CTRLA_RXPO_Pos) /**< \brief (SERCOM_USART_CTRLA) Receive Data Pinout */
+#define SERCOM_USART_CTRLA_RXPO(value) ((SERCOM_USART_CTRLA_RXPO_Msk & ((value) << SERCOM_USART_CTRLA_RXPO_Pos)))
+#define SERCOM_USART_CTRLA_FORM_Pos    24
+#define SERCOM_USART_CTRLA_FORM_Msk    (0x3u << SERCOM_USART_CTRLA_FORM_Pos) /**< \brief (SERCOM_USART_CTRLA) Frame Format */
+#define SERCOM_USART_CTRLA_FORM(value) ((SERCOM_USART_CTRLA_FORM_Msk & ((value) << SERCOM_USART_CTRLA_FORM_Pos)))
+#define SERCOM_USART_CTRLA_CMODE    (0x1u << 28) /**< \brief (SERCOM_USART_CTRLA) Communication Mode */
+#define SERCOM_USART_CTRLA_CPOL     (0x1u << 29) /**< \brief (SERCOM_USART_CTRLA) Clock Polarity */
+#define SERCOM_USART_CTRLA_DORD     (0x1u << 30) /**< \brief (SERCOM_USART_CTRLA) Data Order */
+#define SERCOM_USART_CTRLA_CSRC     (0x1u << 31) /**< \brief (SERCOM_USART_CTRLA) Clock Source */
+#define SERCOM_USART_CTRLA_MASK     0xF331008Fu /**< \brief (SERCOM_USART_CTRLA) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_CTRLA_TWI_MASTER_SWRST (0x1u <<  0) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_ENABLE (0x1u <<  1) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_MODE_Pos    2
-#define SERCOM_CTRLA_TWI_MASTER_MODE_Msk    (0x3u << SERCOM_CTRLA_TWI_MASTER_MODE_Pos) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_MODE(value) ((SERCOM_CTRLA_TWI_MASTER_MODE_Msk & ((value) << SERCOM_CTRLA_TWI_MASTER_MODE_Pos)))
-#define SERCOM_CTRLA_TWI_MASTER_SLEEPEN (0x1u <<  7) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_PINOUT (0x1u << 16) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_SDAHOLD_Pos    20
-#define SERCOM_CTRLA_TWI_MASTER_SDAHOLD_Msk    (0x3u << SERCOM_CTRLA_TWI_MASTER_SDAHOLD_Pos) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_SDAHOLD(value) ((SERCOM_CTRLA_TWI_MASTER_SDAHOLD_Msk & ((value) << SERCOM_CTRLA_TWI_MASTER_SDAHOLD_Pos)))
-#define SERCOM_CTRLA_TWI_MASTER_INACTOUT_Pos    28
-#define SERCOM_CTRLA_TWI_MASTER_INACTOUT_Msk    (0x3u << SERCOM_CTRLA_TWI_MASTER_INACTOUT_Pos) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_INACTOUT(value) ((SERCOM_CTRLA_TWI_MASTER_INACTOUT_Msk & ((value) << SERCOM_CTRLA_TWI_MASTER_INACTOUT_Pos)))
-#define SERCOM_CTRLA_TWI_MASTER_LOWTOUTEN (0x1u << 30) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_MASTER (0x1u << 31) /**< \brief (SERCOM_CTRLA_TWI_MASTER)  */
-#define SERCOM_CTRLA_TWI_MASTER_MASK 0xF031008Fu /**< \brief (SERCOM_CTRLA_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_CTRLA_TWI_SLAVE_SWRST (0x1u <<  0) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_ENABLE (0x1u <<  1) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_MODE_Pos    2
-#define SERCOM_CTRLA_TWI_SLAVE_MODE_Msk    (0x3u << SERCOM_CTRLA_TWI_SLAVE_MODE_Pos) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_MODE(value) ((SERCOM_CTRLA_TWI_SLAVE_MODE_Msk & ((value) << SERCOM_CTRLA_TWI_SLAVE_MODE_Pos)))
-#define SERCOM_CTRLA_TWI_SLAVE_SLEEPEN (0x1u <<  7) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_PINOUT (0x1u << 16) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_SDAHOLD_Pos    20
-#define SERCOM_CTRLA_TWI_SLAVE_SDAHOLD_Msk    (0x3u << SERCOM_CTRLA_TWI_SLAVE_SDAHOLD_Pos) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_SDAHOLD(value) ((SERCOM_CTRLA_TWI_SLAVE_SDAHOLD_Msk & ((value) << SERCOM_CTRLA_TWI_SLAVE_SDAHOLD_Pos)))
-#define SERCOM_CTRLA_TWI_SLAVE_LOWTOUT (0x1u << 30) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_MASTER (0x1u << 31) /**< \brief (SERCOM_CTRLA_TWI_SLAVE)  */
-#define SERCOM_CTRLA_TWI_SLAVE_MASK 0xC031008Fu /**< \brief (SERCOM_CTRLA_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_CTRLA_USART_SWRST    (0x1u <<  0) /**< \brief (SERCOM_CTRLA_USART) Software Reset */
-#define SERCOM_CTRLA_USART_ENABLE   (0x1u <<  1) /**< \brief (SERCOM_CTRLA_USART) Enable */
-#define SERCOM_CTRLA_USART_MODE_Pos    2
-#define SERCOM_CTRLA_USART_MODE_Msk    (0x3u << SERCOM_CTRLA_USART_MODE_Pos) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_MODE(value) ((SERCOM_CTRLA_USART_MODE_Msk & ((value) << SERCOM_CTRLA_USART_MODE_Pos)))
-#define SERCOM_CTRLA_USART_SLEEPEN  (0x1u <<  7) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_TXPO     (0x1u << 16) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_RXPO_Pos    20
-#define SERCOM_CTRLA_USART_RXPO_Msk    (0x3u << SERCOM_CTRLA_USART_RXPO_Pos) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_RXPO(value) ((SERCOM_CTRLA_USART_RXPO_Msk & ((value) << SERCOM_CTRLA_USART_RXPO_Pos)))
-#define SERCOM_CTRLA_USART_FORM_Pos    24
-#define SERCOM_CTRLA_USART_FORM_Msk    (0x3u << SERCOM_CTRLA_USART_FORM_Pos) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_FORM(value) ((SERCOM_CTRLA_USART_FORM_Msk & ((value) << SERCOM_CTRLA_USART_FORM_Pos)))
-#define SERCOM_CTRLA_USART_CMODE    (0x1u << 28) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_CPOL     (0x1u << 29) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_DORD     (0x1u << 30) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_CSRC     (0x1u << 31) /**< \brief (SERCOM_CTRLA_USART)  */
-#define SERCOM_CTRLA_USART_MASK     0xF331008Fu /**< \brief (SERCOM_CTRLA_USART) MASK Register */
-
-/* -------- SERCOM_CTRLB : (SERCOM Offset: 0x04) (R/W 32) Control Register B -------- */
+/* -------- SERCOM_I2CM_CTRLB : (SERCOM Offset: 0x04) (R/W 32) I2CM Control Register B -------- */
 typedef union {
-  struct { // SPI mode
-    uint32_t CHSIZE:1;         /*!< bit:      0                                     */
-    uint32_t _reserved0:5;     /*!< bit:  1.. 5  Reserved                           */
-    uint32_t PLOADEN:1;        /*!< bit:      6                                     */
-    uint32_t _reserved1:7;     /*!< bit:  7..13  Reserved                           */
-    uint32_t AMODE:2;          /*!< bit: 14..15                                     */
-    uint32_t _reserved2:1;     /*!< bit:     16  Reserved                           */
-    uint32_t RXEN:1;           /*!< bit:     17                                     */
-    uint32_t _reserved3:14;    /*!< bit: 18..31  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
+  struct {
     uint32_t _reserved0:8;     /*!< bit:  0.. 7  Reserved                           */
-    uint32_t SMEN:1;           /*!< bit:      8                                     */
-    uint32_t QCEN:1;           /*!< bit:      9                                     */
+    uint32_t SMEN:1;           /*!< bit:      8  Smart Mode Enable                  */
+    uint32_t QCEN:1;           /*!< bit:      9  Quick Command Enable               */
     uint32_t _reserved1:6;     /*!< bit: 10..15  Reserved                           */
-    uint32_t CMD:2;            /*!< bit: 16..17                                     */
-    uint32_t ACKACT:1;         /*!< bit:     18                                     */
+    uint32_t CMD:2;            /*!< bit: 16..17  Command                            */
+    uint32_t ACKACT:1;         /*!< bit:     18  Acknowledge Action                 */
     uint32_t _reserved2:13;    /*!< bit: 19..31  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CM_CTRLB_Type;
+
+#define SERCOM_I2CM_CTRLB_OFFSET    0x04         /**< \brief (SERCOM_I2CM_CTRLB offset) Control Register B */
+#define SERCOM_I2CM_CTRLB_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_CTRLB reset_value) Control Register B */
+
+#define SERCOM_I2CM_CTRLB_SMEN      (0x1u <<  8) /**< \brief (SERCOM_I2CM_CTRLB) Smart Mode Enable */
+#define SERCOM_I2CM_CTRLB_QCEN      (0x1u <<  9) /**< \brief (SERCOM_I2CM_CTRLB) Quick Command Enable */
+#define SERCOM_I2CM_CTRLB_CMD_Pos    16
+#define SERCOM_I2CM_CTRLB_CMD_Msk    (0x3u << SERCOM_I2CM_CTRLB_CMD_Pos) /**< \brief (SERCOM_I2CM_CTRLB) Command */
+#define SERCOM_I2CM_CTRLB_CMD(value) ((SERCOM_I2CM_CTRLB_CMD_Msk & ((value) << SERCOM_I2CM_CTRLB_CMD_Pos)))
+#define SERCOM_I2CM_CTRLB_ACKACT    (0x1u << 18) /**< \brief (SERCOM_I2CM_CTRLB) Acknowledge Action */
+#define SERCOM_I2CM_CTRLB_MASK      0x70300u /**< \brief (SERCOM_I2CM_CTRLB) MASK Register */
+
+/* -------- SERCOM_I2CS_CTRLB : (SERCOM Offset: 0x04) (R/W 32) I2CS Control Register B -------- */
+typedef union {
+  struct {
     uint32_t _reserved0:8;     /*!< bit:  0.. 7  Reserved                           */
-    uint32_t SMEN:1;           /*!< bit:      8                                     */
+    uint32_t SMEN:1;           /*!< bit:      8  Smart Mode Enable                  */
     uint32_t _reserved1:5;     /*!< bit:  9..13  Reserved                           */
-    uint32_t AMODE:2;          /*!< bit: 14..15                                     */
-    uint32_t CMD:2;            /*!< bit: 16..17                                     */
-    uint32_t ACKACT:1;         /*!< bit:     18                                     */
+    uint32_t AMODE:2;          /*!< bit: 14..15  Address Mode                       */
+    uint32_t CMD:2;            /*!< bit: 16..17  Command                            */
+    uint32_t ACKACT:1;         /*!< bit:     18  Acknowledge Action                 */
     uint32_t _reserved2:13;    /*!< bit: 19..31  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint32_t CHSIZE:3;         /*!< bit:  0.. 2                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CS_CTRLB_Type;
+
+#define SERCOM_I2CS_CTRLB_OFFSET    0x04         /**< \brief (SERCOM_I2CS_CTRLB offset) Control Register B */
+#define SERCOM_I2CS_CTRLB_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_CTRLB reset_value) Control Register B */
+
+#define SERCOM_I2CS_CTRLB_SMEN      (0x1u <<  8) /**< \brief (SERCOM_I2CS_CTRLB) Smart Mode Enable */
+#define SERCOM_I2CS_CTRLB_AMODE_Pos    14
+#define SERCOM_I2CS_CTRLB_AMODE_Msk    (0x3u << SERCOM_I2CS_CTRLB_AMODE_Pos) /**< \brief (SERCOM_I2CS_CTRLB) Address Mode */
+#define SERCOM_I2CS_CTRLB_AMODE(value) ((SERCOM_I2CS_CTRLB_AMODE_Msk & ((value) << SERCOM_I2CS_CTRLB_AMODE_Pos)))
+#define SERCOM_I2CS_CTRLB_CMD_Pos    16
+#define SERCOM_I2CS_CTRLB_CMD_Msk    (0x3u << SERCOM_I2CS_CTRLB_CMD_Pos) /**< \brief (SERCOM_I2CS_CTRLB) Command */
+#define SERCOM_I2CS_CTRLB_CMD(value) ((SERCOM_I2CS_CTRLB_CMD_Msk & ((value) << SERCOM_I2CS_CTRLB_CMD_Pos)))
+#define SERCOM_I2CS_CTRLB_ACKACT    (0x1u << 18) /**< \brief (SERCOM_I2CS_CTRLB) Acknowledge Action */
+#define SERCOM_I2CS_CTRLB_MASK      0x7C100u /**< \brief (SERCOM_I2CS_CTRLB) MASK Register */
+
+/* -------- SERCOM_SPI_CTRLB : (SERCOM Offset: 0x04) (R/W 32) SPI SPI Control Register B -------- */
+typedef union {
+  struct {
+    uint32_t CHSIZE:1;         /*!< bit:      0  Character Size                     */
+    uint32_t _reserved0:5;     /*!< bit:  1.. 5  Reserved                           */
+    uint32_t PLOADEN:1;        /*!< bit:      6  Data Preload Enable                */
+    uint32_t _reserved1:7;     /*!< bit:  7..13  Reserved                           */
+    uint32_t AMODE:2;          /*!< bit: 14..15  Address Mode                       */
+    uint32_t _reserved2:1;     /*!< bit:     16  Reserved                           */
+    uint32_t RXEN:1;           /*!< bit:     17  Receiver Enable                    */
+    uint32_t _reserved3:14;    /*!< bit: 18..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_SPI_CTRLB_Type;
+
+#define SERCOM_SPI_CTRLB_OFFSET     0x04         /**< \brief (SERCOM_SPI_CTRLB offset) SPI Control Register B */
+#define SERCOM_SPI_CTRLB_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_CTRLB reset_value) SPI Control Register B */
+
+#define SERCOM_SPI_CTRLB_CHSIZE     (0x1u <<  0) /**< \brief (SERCOM_SPI_CTRLB) Character Size */
+#define SERCOM_SPI_CTRLB_PLOADEN    (0x1u <<  6) /**< \brief (SERCOM_SPI_CTRLB) Data Preload Enable */
+#define SERCOM_SPI_CTRLB_AMODE_Pos    14
+#define SERCOM_SPI_CTRLB_AMODE_Msk    (0x3u << SERCOM_SPI_CTRLB_AMODE_Pos) /**< \brief (SERCOM_SPI_CTRLB) Address Mode */
+#define SERCOM_SPI_CTRLB_AMODE(value) ((SERCOM_SPI_CTRLB_AMODE_Msk & ((value) << SERCOM_SPI_CTRLB_AMODE_Pos)))
+#define SERCOM_SPI_CTRLB_RXEN       (0x1u << 17) /**< \brief (SERCOM_SPI_CTRLB) Receiver Enable */
+#define SERCOM_SPI_CTRLB_MASK       0x2C041u /**< \brief (SERCOM_SPI_CTRLB) MASK Register */
+
+/* -------- SERCOM_USART_CTRLB : (SERCOM Offset: 0x04) (R/W 32) USART USART Control Register B -------- */
+typedef union {
+  struct {
+    uint32_t CHSIZE:3;         /*!< bit:  0.. 2  Character Size                     */
     uint32_t _reserved0:3;     /*!< bit:  3.. 5  Reserved                           */
-    uint32_t SBMODE:1;         /*!< bit:      6                                     */
+    uint32_t SBMODE:1;         /*!< bit:      6  Stop Bit Mode                      */
     uint32_t _reserved1:2;     /*!< bit:  7.. 8  Reserved                           */
-    uint32_t SFDE:1;           /*!< bit:      9                                     */
+    uint32_t SFDE:1;           /*!< bit:      9  Start of Frame Detection Enable    */
     uint32_t _reserved2:3;     /*!< bit: 10..12  Reserved                           */
-    uint32_t PMODE:1;          /*!< bit:     13                                     */
+    uint32_t PMODE:1;          /*!< bit:     13  Parity Mode                        */
     uint32_t _reserved3:2;     /*!< bit: 14..15  Reserved                           */
-    uint32_t TXEN:1;           /*!< bit:     16                                     */
-    uint32_t RXEN:1;           /*!< bit:     17                                     */
+    uint32_t TXEN:1;           /*!< bit:     16  Transmitter Enable                 */
+    uint32_t RXEN:1;           /*!< bit:     17  Receiver Enable                    */
     uint32_t _reserved4:14;    /*!< bit: 18..31  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SERCOM_CTRLB_Type;
+} SERCOM_USART_CTRLB_Type;
 
-#define SERCOM_CTRLB_OFFSET         0x04         /**< \brief (SERCOM offset) Control Register B */
-#define SERCOM_CTRLB_RESETVALUE     0x0          /**< \brief (SERCOM reset_value) Control Register B */
+#define SERCOM_USART_CTRLB_OFFSET   0x04         /**< \brief (SERCOM_USART_CTRLB offset) USART Control Register B */
+#define SERCOM_USART_CTRLB_RESETVALUE 0x0          /**< \brief (SERCOM_USART_CTRLB reset_value) USART Control Register B */
 
-// SPI mode
-#define SERCOM_CTRLB_SPI_CHSIZE     (0x1u <<  0) /**< \brief (SERCOM_CTRLB_SPI)  */
-#define SERCOM_CTRLB_SPI_PLOADEN    (0x1u <<  6) /**< \brief (SERCOM_CTRLB_SPI)  */
-#define SERCOM_CTRLB_SPI_AMODE_Pos    14
-#define SERCOM_CTRLB_SPI_AMODE_Msk    (0x3u << SERCOM_CTRLB_SPI_AMODE_Pos) /**< \brief (SERCOM_CTRLB_SPI)  */
-#define SERCOM_CTRLB_SPI_AMODE(value) ((SERCOM_CTRLB_SPI_AMODE_Msk & ((value) << SERCOM_CTRLB_SPI_AMODE_Pos)))
-#define SERCOM_CTRLB_SPI_RXEN       (0x1u << 17) /**< \brief (SERCOM_CTRLB_SPI)  */
-#define SERCOM_CTRLB_SPI_MASK       0x2C041u /**< \brief (SERCOM_CTRLB_SPI) MASK Register */
+#define SERCOM_USART_CTRLB_CHSIZE_Pos    0
+#define SERCOM_USART_CTRLB_CHSIZE_Msk    (0x7u << SERCOM_USART_CTRLB_CHSIZE_Pos) /**< \brief (SERCOM_USART_CTRLB) Character Size */
+#define SERCOM_USART_CTRLB_CHSIZE(value) ((SERCOM_USART_CTRLB_CHSIZE_Msk & ((value) << SERCOM_USART_CTRLB_CHSIZE_Pos)))
+#define SERCOM_USART_CTRLB_SBMODE   (0x1u <<  6) /**< \brief (SERCOM_USART_CTRLB) Stop Bit Mode */
+#define SERCOM_USART_CTRLB_SFDE     (0x1u <<  9) /**< \brief (SERCOM_USART_CTRLB) Start of Frame Detection Enable */
+#define SERCOM_USART_CTRLB_PMODE    (0x1u << 13) /**< \brief (SERCOM_USART_CTRLB) Parity Mode */
+#define SERCOM_USART_CTRLB_TXEN     (0x1u << 16) /**< \brief (SERCOM_USART_CTRLB) Transmitter Enable */
+#define SERCOM_USART_CTRLB_RXEN     (0x1u << 17) /**< \brief (SERCOM_USART_CTRLB) Receiver Enable */
+#define SERCOM_USART_CTRLB_MASK     0x32247u /**< \brief (SERCOM_USART_CTRLB) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_CTRLB_TWI_MASTER_SMEN (0x1u <<  8) /**< \brief (SERCOM_CTRLB_TWI_MASTER)  */
-#define SERCOM_CTRLB_TWI_MASTER_QCEN (0x1u <<  9) /**< \brief (SERCOM_CTRLB_TWI_MASTER)  */
-#define SERCOM_CTRLB_TWI_MASTER_CMD_Pos    16
-#define SERCOM_CTRLB_TWI_MASTER_CMD_Msk    (0x3u << SERCOM_CTRLB_TWI_MASTER_CMD_Pos) /**< \brief (SERCOM_CTRLB_TWI_MASTER)  */
-#define SERCOM_CTRLB_TWI_MASTER_CMD(value) ((SERCOM_CTRLB_TWI_MASTER_CMD_Msk & ((value) << SERCOM_CTRLB_TWI_MASTER_CMD_Pos)))
-#define SERCOM_CTRLB_TWI_MASTER_ACKACT (0x1u << 18) /**< \brief (SERCOM_CTRLB_TWI_MASTER)  */
-#define SERCOM_CTRLB_TWI_MASTER_MASK 0x70300u /**< \brief (SERCOM_CTRLB_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_CTRLB_TWI_SLAVE_SMEN (0x1u <<  8) /**< \brief (SERCOM_CTRLB_TWI_SLAVE)  */
-#define SERCOM_CTRLB_TWI_SLAVE_AMODE_Pos    14
-#define SERCOM_CTRLB_TWI_SLAVE_AMODE_Msk    (0x3u << SERCOM_CTRLB_TWI_SLAVE_AMODE_Pos) /**< \brief (SERCOM_CTRLB_TWI_SLAVE)  */
-#define SERCOM_CTRLB_TWI_SLAVE_AMODE(value) ((SERCOM_CTRLB_TWI_SLAVE_AMODE_Msk & ((value) << SERCOM_CTRLB_TWI_SLAVE_AMODE_Pos)))
-#define SERCOM_CTRLB_TWI_SLAVE_CMD_Pos    16
-#define SERCOM_CTRLB_TWI_SLAVE_CMD_Msk    (0x3u << SERCOM_CTRLB_TWI_SLAVE_CMD_Pos) /**< \brief (SERCOM_CTRLB_TWI_SLAVE)  */
-#define SERCOM_CTRLB_TWI_SLAVE_CMD(value) ((SERCOM_CTRLB_TWI_SLAVE_CMD_Msk & ((value) << SERCOM_CTRLB_TWI_SLAVE_CMD_Pos)))
-#define SERCOM_CTRLB_TWI_SLAVE_ACKACT (0x1u << 18) /**< \brief (SERCOM_CTRLB_TWI_SLAVE)  */
-#define SERCOM_CTRLB_TWI_SLAVE_MASK 0x7C100u /**< \brief (SERCOM_CTRLB_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_CTRLB_USART_CHSIZE_Pos    0
-#define SERCOM_CTRLB_USART_CHSIZE_Msk    (0x7u << SERCOM_CTRLB_USART_CHSIZE_Pos) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_CHSIZE(value) ((SERCOM_CTRLB_USART_CHSIZE_Msk & ((value) << SERCOM_CTRLB_USART_CHSIZE_Pos)))
-#define SERCOM_CTRLB_USART_SBMODE   (0x1u <<  6) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_SFDE     (0x1u <<  9) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_PMODE    (0x1u << 13) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_TXEN     (0x1u << 16) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_RXEN     (0x1u << 17) /**< \brief (SERCOM_CTRLB_USART)  */
-#define SERCOM_CTRLB_USART_MASK     0x32247u /**< \brief (SERCOM_CTRLB_USART) MASK Register */
-
-/* -------- SERCOM_DEBUG : (SERCOM Offset: 0x08) (R/W  8) Debug Register -------- */
+/* -------- SERCOM_I2CM_DEBUG : (SERCOM Offset: 0x08) (R/W  8) I2CM Debug Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint8_t  DBGSTOP:1;        /*!< bit:      0                                     */
+  struct {
+    uint8_t  DBGSTOP:1;        /*!< bit:      0  Debug Mode                         */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint8_t  DBGSTOP:1;        /*!< bit:      0                                     */
-    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint8_t  DBGSTOP:1;        /*!< bit:      0                                     */
-    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint8_t  DBGSTOP:1;        /*!< bit:      0                                     */
-    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_DEBUG_Type;
+} SERCOM_I2CM_DEBUG_Type;
 
-#define SERCOM_DEBUG_OFFSET         0x08         /**< \brief (SERCOM offset) Debug Register */
-#define SERCOM_DEBUG_RESETVALUE     0x0          /**< \brief (SERCOM reset_value) Debug Register */
+#define SERCOM_I2CM_DEBUG_OFFSET    0x08         /**< \brief (SERCOM_I2CM_DEBUG offset) Debug Register */
+#define SERCOM_I2CM_DEBUG_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_DEBUG reset_value) Debug Register */
 
-// SPI mode
-#define SERCOM_DEBUG_SPI_DBGSTOP    (0x1u <<  0) /**< \brief (SERCOM_DEBUG_SPI)  */
-#define SERCOM_DEBUG_SPI_MASK       0x1u /**< \brief (SERCOM_DEBUG_SPI) MASK Register */
+#define SERCOM_I2CM_DEBUG_DBGSTOP   (0x1u <<  0) /**< \brief (SERCOM_I2CM_DEBUG) Debug Mode */
+#define SERCOM_I2CM_DEBUG_MASK      0x1u /**< \brief (SERCOM_I2CM_DEBUG) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_DEBUG_TWI_MASTER_DBGSTOP (0x1u <<  0) /**< \brief (SERCOM_DEBUG_TWI_MASTER)  */
-#define SERCOM_DEBUG_TWI_MASTER_MASK 0x1u /**< \brief (SERCOM_DEBUG_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_DEBUG_TWI_SLAVE_DBGSTOP (0x1u <<  0) /**< \brief (SERCOM_DEBUG_TWI_SLAVE)  */
-#define SERCOM_DEBUG_TWI_SLAVE_MASK 0x1u /**< \brief (SERCOM_DEBUG_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_DEBUG_USART_DBGSTOP  (0x1u <<  0) /**< \brief (SERCOM_DEBUG_USART)  */
-#define SERCOM_DEBUG_USART_MASK     0x1u /**< \brief (SERCOM_DEBUG_USART) MASK Register */
-
-/* -------- SERCOM_BAUD : (SERCOM Offset: 0x0A) (R/W 16) Baud Rate Register -------- */
+/* -------- SERCOM_I2CS_DEBUG : (SERCOM Offset: 0x08) (R/W  8) I2CS Debug Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint16_t BAUD:8;           /*!< bit:  0.. 7                                     */
+  struct {
+    uint8_t  DBGSTOP:1;        /*!< bit:      0  Debug Mode                         */
+    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_I2CS_DEBUG_Type;
+
+#define SERCOM_I2CS_DEBUG_OFFSET    0x08         /**< \brief (SERCOM_I2CS_DEBUG offset) Debug Register */
+#define SERCOM_I2CS_DEBUG_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_DEBUG reset_value) Debug Register */
+
+#define SERCOM_I2CS_DEBUG_DBGSTOP   (0x1u <<  0) /**< \brief (SERCOM_I2CS_DEBUG) Debug Mode */
+#define SERCOM_I2CS_DEBUG_MASK      0x1u /**< \brief (SERCOM_I2CS_DEBUG) MASK Register */
+
+/* -------- SERCOM_SPI_DEBUG : (SERCOM Offset: 0x08) (R/W  8) SPI SPI Debug Register -------- */
+typedef union {
+  struct {
+    uint8_t  DBGSTOP:1;        /*!< bit:      0  Debug Mode                         */
+    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_SPI_DEBUG_Type;
+
+#define SERCOM_SPI_DEBUG_OFFSET     0x08         /**< \brief (SERCOM_SPI_DEBUG offset) SPI Debug Register */
+#define SERCOM_SPI_DEBUG_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_DEBUG reset_value) SPI Debug Register */
+
+#define SERCOM_SPI_DEBUG_DBGSTOP    (0x1u <<  0) /**< \brief (SERCOM_SPI_DEBUG) Debug Mode */
+#define SERCOM_SPI_DEBUG_MASK       0x1u /**< \brief (SERCOM_SPI_DEBUG) MASK Register */
+
+/* -------- SERCOM_USART_DEBUG : (SERCOM Offset: 0x08) (R/W  8) USART USART Debug Register -------- */
+typedef union {
+  struct {
+    uint8_t  DBGSTOP:1;        /*!< bit:      0  Debug Mode                         */
+    uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_USART_DEBUG_Type;
+
+#define SERCOM_USART_DEBUG_OFFSET   0x08         /**< \brief (SERCOM_USART_DEBUG offset) USART Debug Register */
+#define SERCOM_USART_DEBUG_RESETVALUE 0x0          /**< \brief (SERCOM_USART_DEBUG reset_value) USART Debug Register */
+
+#define SERCOM_USART_DEBUG_DBGSTOP  (0x1u <<  0) /**< \brief (SERCOM_USART_DEBUG) Debug Mode */
+#define SERCOM_USART_DEBUG_MASK     0x1u /**< \brief (SERCOM_USART_DEBUG) MASK Register */
+
+/* -------- SERCOM_I2CM_BAUD : (SERCOM Offset: 0x0A) (R/W 16) I2CM Baud Rate Register -------- */
+typedef union {
+  struct {
+    uint16_t BAUD:8;           /*!< bit:  0.. 7  Baud Rate Register                 */
     uint16_t _reserved0:8;     /*!< bit:  8..15  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint16_t BAUD:8;           /*!< bit:  0.. 7                                     */
-    uint16_t _reserved0:8;     /*!< bit:  8..15  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // USART mode
-    uint16_t BAUD:16;          /*!< bit:  0..15                                     */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
-} SERCOM_BAUD_Type;
+} SERCOM_I2CM_BAUD_Type;
 
-#define SERCOM_BAUD_OFFSET          0x0A         /**< \brief (SERCOM offset) Baud Rate Register */
-#define SERCOM_BAUD_RESETVALUE      0x0          /**< \brief (SERCOM reset_value) Baud Rate Register */
+#define SERCOM_I2CM_BAUD_OFFSET     0x0A         /**< \brief (SERCOM_I2CM_BAUD offset) Baud Rate Register */
+#define SERCOM_I2CM_BAUD_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_BAUD reset_value) Baud Rate Register */
 
-// SPI mode
-#define SERCOM_BAUD_SPI_BAUD_Pos    0
-#define SERCOM_BAUD_SPI_BAUD_Msk    (0xFFu << SERCOM_BAUD_SPI_BAUD_Pos) /**< \brief (SERCOM_BAUD_SPI)  */
-#define SERCOM_BAUD_SPI_BAUD(value) ((SERCOM_BAUD_SPI_BAUD_Msk & ((value) << SERCOM_BAUD_SPI_BAUD_Pos)))
-#define SERCOM_BAUD_SPI_MASK        0xFFu /**< \brief (SERCOM_BAUD_SPI) MASK Register */
+#define SERCOM_I2CM_BAUD_BAUD_Pos    0
+#define SERCOM_I2CM_BAUD_BAUD_Msk    (0xFFu << SERCOM_I2CM_BAUD_BAUD_Pos) /**< \brief (SERCOM_I2CM_BAUD) Baud Rate Register */
+#define SERCOM_I2CM_BAUD_BAUD(value) ((SERCOM_I2CM_BAUD_BAUD_Msk & ((value) << SERCOM_I2CM_BAUD_BAUD_Pos)))
+#define SERCOM_I2CM_BAUD_MASK       0xFFu /**< \brief (SERCOM_I2CM_BAUD) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_BAUD_TWI_MASTER_BAUD_Pos    0
-#define SERCOM_BAUD_TWI_MASTER_BAUD_Msk    (0xFFu << SERCOM_BAUD_TWI_MASTER_BAUD_Pos) /**< \brief (SERCOM_BAUD_TWI_MASTER)  */
-#define SERCOM_BAUD_TWI_MASTER_BAUD(value) ((SERCOM_BAUD_TWI_MASTER_BAUD_Msk & ((value) << SERCOM_BAUD_TWI_MASTER_BAUD_Pos)))
-#define SERCOM_BAUD_TWI_MASTER_MASK 0xFFu /**< \brief (SERCOM_BAUD_TWI_MASTER) MASK Register */
-
-// USART mode
-#define SERCOM_BAUD_USART_BAUD_Pos    0
-#define SERCOM_BAUD_USART_BAUD_Msk    (0xFFFFu << SERCOM_BAUD_USART_BAUD_Pos) /**< \brief (SERCOM_BAUD_USART)  */
-#define SERCOM_BAUD_USART_BAUD(value) ((SERCOM_BAUD_USART_BAUD_Msk & ((value) << SERCOM_BAUD_USART_BAUD_Pos)))
-#define SERCOM_BAUD_USART_MASK      0xFFFFu /**< \brief (SERCOM_BAUD_USART) MASK Register */
-
-/* -------- SERCOM_INTENCLR : (SERCOM Offset: 0x0C) (R/W  8) Interrupt Enable Clear Register -------- */
+/* -------- SERCOM_SPI_BAUD : (SERCOM Offset: 0x0A) (R/W 16) SPI SPI Baud Rate Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint8_t  DREIEN:1;         /*!< bit:      0                                     */
-    uint8_t  TXCIEN:1;         /*!< bit:      1                                     */
-    uint8_t  RXCIEN:1;         /*!< bit:      2                                     */
-    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint8_t  WIEN:1;           /*!< bit:      0                                     */
-    uint8_t  RIEN:1;           /*!< bit:      1                                     */
+  struct {
+    uint16_t BAUD:8;           /*!< bit:  0.. 7  Baud Rate Register                 */
+    uint16_t _reserved0:8;     /*!< bit:  8..15  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint16_t reg;                /*!< Type      used for register access              */
+} SERCOM_SPI_BAUD_Type;
+
+#define SERCOM_SPI_BAUD_OFFSET      0x0A         /**< \brief (SERCOM_SPI_BAUD offset) SPI Baud Rate Register */
+#define SERCOM_SPI_BAUD_RESETVALUE  0x0          /**< \brief (SERCOM_SPI_BAUD reset_value) SPI Baud Rate Register */
+
+#define SERCOM_SPI_BAUD_BAUD_Pos    0
+#define SERCOM_SPI_BAUD_BAUD_Msk    (0xFFu << SERCOM_SPI_BAUD_BAUD_Pos) /**< \brief (SERCOM_SPI_BAUD) Baud Rate Register */
+#define SERCOM_SPI_BAUD_BAUD(value) ((SERCOM_SPI_BAUD_BAUD_Msk & ((value) << SERCOM_SPI_BAUD_BAUD_Pos)))
+#define SERCOM_SPI_BAUD_MASK        0xFFu /**< \brief (SERCOM_SPI_BAUD) MASK Register */
+
+/* -------- SERCOM_USART_BAUD : (SERCOM Offset: 0x0A) (R/W 16) USART USART Baud Rate Register -------- */
+typedef union {
+  struct {
+    uint16_t BAUD:16;          /*!< bit:  0..15  Baud Rate Register                 */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint16_t reg;                /*!< Type      used for register access              */
+} SERCOM_USART_BAUD_Type;
+
+#define SERCOM_USART_BAUD_OFFSET    0x0A         /**< \brief (SERCOM_USART_BAUD offset) USART Baud Rate Register */
+#define SERCOM_USART_BAUD_RESETVALUE 0x0          /**< \brief (SERCOM_USART_BAUD reset_value) USART Baud Rate Register */
+
+#define SERCOM_USART_BAUD_BAUD_Pos    0
+#define SERCOM_USART_BAUD_BAUD_Msk    (0xFFFFu << SERCOM_USART_BAUD_BAUD_Pos) /**< \brief (SERCOM_USART_BAUD) Baud Rate Register */
+#define SERCOM_USART_BAUD_BAUD(value) ((SERCOM_USART_BAUD_BAUD_Msk & ((value) << SERCOM_USART_BAUD_BAUD_Pos)))
+#define SERCOM_USART_BAUD_MASK      0xFFFFu /**< \brief (SERCOM_USART_BAUD) MASK Register */
+
+/* -------- SERCOM_I2CM_INTENCLR : (SERCOM Offset: 0x0C) (R/W  8) I2CM Interrupt Enable Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  WIEN:1;           /*!< bit:      0  Write Interrupt Disable            */
+    uint8_t  RIEN:1;           /*!< bit:      1  Read Interrupt Disable             */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint8_t  PIEN:1;           /*!< bit:      0                                     */
-    uint8_t  AIEN:1;           /*!< bit:      1                                     */
-    uint8_t  DIEN:1;           /*!< bit:      2                                     */
-    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint8_t  DREIEN:1;         /*!< bit:      0                                     */
-    uint8_t  TXCIEN:1;         /*!< bit:      1                                     */
-    uint8_t  RXCIEN:1;         /*!< bit:      2                                     */
-    uint8_t  RXSIEN:1;         /*!< bit:      3                                     */
-    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_INTENCLR_Type;
+} SERCOM_I2CM_INTENCLR_Type;
 
-#define SERCOM_INTENCLR_OFFSET      0x0C         /**< \brief (SERCOM offset) Interrupt Enable Clear Register */
-#define SERCOM_INTENCLR_RESETVALUE  0x0          /**< \brief (SERCOM reset_value) Interrupt Enable Clear Register */
+#define SERCOM_I2CM_INTENCLR_OFFSET 0x0C         /**< \brief (SERCOM_I2CM_INTENCLR offset) Interrupt Enable Clear Register */
+#define SERCOM_I2CM_INTENCLR_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-// SPI mode
-#define SERCOM_INTENCLR_SPI_DREIEN  (0x1u <<  0) /**< \brief (SERCOM_INTENCLR_SPI)  */
-#define SERCOM_INTENCLR_SPI_TXCIEN  (0x1u <<  1) /**< \brief (SERCOM_INTENCLR_SPI)  */
-#define SERCOM_INTENCLR_SPI_RXCIEN  (0x1u <<  2) /**< \brief (SERCOM_INTENCLR_SPI)  */
-#define SERCOM_INTENCLR_SPI_MASK    0x7u /**< \brief (SERCOM_INTENCLR_SPI) MASK Register */
+#define SERCOM_I2CM_INTENCLR_WIEN   (0x1u <<  0) /**< \brief (SERCOM_I2CM_INTENCLR) Write Interrupt Disable */
+#define SERCOM_I2CM_INTENCLR_RIEN   (0x1u <<  1) /**< \brief (SERCOM_I2CM_INTENCLR) Read Interrupt Disable */
+#define SERCOM_I2CM_INTENCLR_MASK   0x3u /**< \brief (SERCOM_I2CM_INTENCLR) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_INTENCLR_TWI_MASTER_WIEN (0x1u <<  0) /**< \brief (SERCOM_INTENCLR_TWI_MASTER)  */
-#define SERCOM_INTENCLR_TWI_MASTER_RIEN (0x1u <<  1) /**< \brief (SERCOM_INTENCLR_TWI_MASTER)  */
-#define SERCOM_INTENCLR_TWI_MASTER_MASK 0x3u /**< \brief (SERCOM_INTENCLR_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_INTENCLR_TWI_SLAVE_PIEN (0x1u <<  0) /**< \brief (SERCOM_INTENCLR_TWI_SLAVE)  */
-#define SERCOM_INTENCLR_TWI_SLAVE_AIEN (0x1u <<  1) /**< \brief (SERCOM_INTENCLR_TWI_SLAVE)  */
-#define SERCOM_INTENCLR_TWI_SLAVE_DIEN (0x1u <<  2) /**< \brief (SERCOM_INTENCLR_TWI_SLAVE)  */
-#define SERCOM_INTENCLR_TWI_SLAVE_MASK 0x7u /**< \brief (SERCOM_INTENCLR_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_INTENCLR_USART_DREIEN (0x1u <<  0) /**< \brief (SERCOM_INTENCLR_USART)  */
-#define SERCOM_INTENCLR_USART_TXCIEN (0x1u <<  1) /**< \brief (SERCOM_INTENCLR_USART)  */
-#define SERCOM_INTENCLR_USART_RXCIEN (0x1u <<  2) /**< \brief (SERCOM_INTENCLR_USART)  */
-#define SERCOM_INTENCLR_USART_RXSIEN (0x1u <<  3) /**< \brief (SERCOM_INTENCLR_USART)  */
-#define SERCOM_INTENCLR_USART_MASK  0xFu /**< \brief (SERCOM_INTENCLR_USART) MASK Register */
-
-/* -------- SERCOM_INTENSET : (SERCOM Offset: 0x0D) (R/W  8) Interrupt Enable Set Register -------- */
+/* -------- SERCOM_I2CS_INTENCLR : (SERCOM Offset: 0x0C) (R/W  8) I2CS Interrupt Enable Clear Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint8_t  DREIEN:1;         /*!< bit:      0                                     */
-    uint8_t  TXCIEN:1;         /*!< bit:      1                                     */
-    uint8_t  RXCIEN:1;         /*!< bit:      2                                     */
+  struct {
+    uint8_t  PIEN:1;           /*!< bit:      0  Stop Interrupt Disable             */
+    uint8_t  AIEN:1;           /*!< bit:      1  Address Interrupt Disable          */
+    uint8_t  DIEN:1;           /*!< bit:      2  Data Interrupt Disable             */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint8_t  WIEN:1;           /*!< bit:      0                                     */
-    uint8_t  RIEN:1;           /*!< bit:      1                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_I2CS_INTENCLR_Type;
+
+#define SERCOM_I2CS_INTENCLR_OFFSET 0x0C         /**< \brief (SERCOM_I2CS_INTENCLR offset) Interrupt Enable Clear Register */
+#define SERCOM_I2CS_INTENCLR_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_INTENCLR reset_value) Interrupt Enable Clear Register */
+
+#define SERCOM_I2CS_INTENCLR_PIEN   (0x1u <<  0) /**< \brief (SERCOM_I2CS_INTENCLR) Stop Interrupt Disable */
+#define SERCOM_I2CS_INTENCLR_AIEN   (0x1u <<  1) /**< \brief (SERCOM_I2CS_INTENCLR) Address Interrupt Disable */
+#define SERCOM_I2CS_INTENCLR_DIEN   (0x1u <<  2) /**< \brief (SERCOM_I2CS_INTENCLR) Data Interrupt Disable */
+#define SERCOM_I2CS_INTENCLR_MASK   0x7u /**< \brief (SERCOM_I2CS_INTENCLR) MASK Register */
+
+/* -------- SERCOM_SPI_INTENCLR : (SERCOM Offset: 0x0C) (R/W  8) SPI SPI Interrupt Enable Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIEN:1;         /*!< bit:      0  Data Register Empty Interrupt Disable */
+    uint8_t  TXCIEN:1;         /*!< bit:      1  Transmit Complete Interrupt Disable */
+    uint8_t  RXCIEN:1;         /*!< bit:      2  Receive Complete Interrupt Disable */
+    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_SPI_INTENCLR_Type;
+
+#define SERCOM_SPI_INTENCLR_OFFSET  0x0C         /**< \brief (SERCOM_SPI_INTENCLR offset) SPI Interrupt Enable Clear Register */
+#define SERCOM_SPI_INTENCLR_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_INTENCLR reset_value) SPI Interrupt Enable Clear Register */
+
+#define SERCOM_SPI_INTENCLR_DREIEN  (0x1u <<  0) /**< \brief (SERCOM_SPI_INTENCLR) Data Register Empty Interrupt Disable */
+#define SERCOM_SPI_INTENCLR_TXCIEN  (0x1u <<  1) /**< \brief (SERCOM_SPI_INTENCLR) Transmit Complete Interrupt Disable */
+#define SERCOM_SPI_INTENCLR_RXCIEN  (0x1u <<  2) /**< \brief (SERCOM_SPI_INTENCLR) Receive Complete Interrupt Disable */
+#define SERCOM_SPI_INTENCLR_MASK    0x7u /**< \brief (SERCOM_SPI_INTENCLR) MASK Register */
+
+/* -------- SERCOM_USART_INTENCLR : (SERCOM Offset: 0x0C) (R/W  8) USART USART Interrupt Enable Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIEN:1;         /*!< bit:      0  Data Register Empty Interrupt Disable */
+    uint8_t  TXCIEN:1;         /*!< bit:      1  Transmit Complete Interrupt Disable */
+    uint8_t  RXCIEN:1;         /*!< bit:      2  Receive Complete Interrupt Disable */
+    uint8_t  RXSIEN:1;         /*!< bit:      3  Receive Start Interrupt Disable    */
+    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_USART_INTENCLR_Type;
+
+#define SERCOM_USART_INTENCLR_OFFSET 0x0C         /**< \brief (SERCOM_USART_INTENCLR offset) USART Interrupt Enable Clear Register */
+#define SERCOM_USART_INTENCLR_RESETVALUE 0x0          /**< \brief (SERCOM_USART_INTENCLR reset_value) USART Interrupt Enable Clear Register */
+
+#define SERCOM_USART_INTENCLR_DREIEN (0x1u <<  0) /**< \brief (SERCOM_USART_INTENCLR) Data Register Empty Interrupt Disable */
+#define SERCOM_USART_INTENCLR_TXCIEN (0x1u <<  1) /**< \brief (SERCOM_USART_INTENCLR) Transmit Complete Interrupt Disable */
+#define SERCOM_USART_INTENCLR_RXCIEN (0x1u <<  2) /**< \brief (SERCOM_USART_INTENCLR) Receive Complete Interrupt Disable */
+#define SERCOM_USART_INTENCLR_RXSIEN (0x1u <<  3) /**< \brief (SERCOM_USART_INTENCLR) Receive Start Interrupt Disable */
+#define SERCOM_USART_INTENCLR_MASK  0xFu /**< \brief (SERCOM_USART_INTENCLR) MASK Register */
+
+/* -------- SERCOM_I2CM_INTENSET : (SERCOM Offset: 0x0D) (R/W  8) I2CM Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  WIEN:1;           /*!< bit:      0  Write Interrupt Enable             */
+    uint8_t  RIEN:1;           /*!< bit:      1  Read Interrupt Enable              */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint8_t  PIEN:1;           /*!< bit:      0                                     */
-    uint8_t  AIEN:1;           /*!< bit:      1                                     */
-    uint8_t  DIEN:1;           /*!< bit:      2                                     */
-    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint8_t  DREIEN:1;         /*!< bit:      0                                     */
-    uint8_t  TXCIEN:1;         /*!< bit:      1                                     */
-    uint8_t  RXCIEN:1;         /*!< bit:      2                                     */
-    uint8_t  RXSIEN:1;         /*!< bit:      3                                     */
-    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_INTENSET_Type;
+} SERCOM_I2CM_INTENSET_Type;
 
-#define SERCOM_INTENSET_OFFSET      0x0D         /**< \brief (SERCOM offset) Interrupt Enable Set Register */
-#define SERCOM_INTENSET_RESETVALUE  0x0          /**< \brief (SERCOM reset_value) Interrupt Enable Set Register */
+#define SERCOM_I2CM_INTENSET_OFFSET 0x0D         /**< \brief (SERCOM_I2CM_INTENSET offset) Interrupt Enable Set Register */
+#define SERCOM_I2CM_INTENSET_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_INTENSET reset_value) Interrupt Enable Set Register */
 
-// SPI mode
-#define SERCOM_INTENSET_SPI_DREIEN  (0x1u <<  0) /**< \brief (SERCOM_INTENSET_SPI)  */
-#define SERCOM_INTENSET_SPI_TXCIEN  (0x1u <<  1) /**< \brief (SERCOM_INTENSET_SPI)  */
-#define SERCOM_INTENSET_SPI_RXCIEN  (0x1u <<  2) /**< \brief (SERCOM_INTENSET_SPI)  */
-#define SERCOM_INTENSET_SPI_MASK    0x7u /**< \brief (SERCOM_INTENSET_SPI) MASK Register */
+#define SERCOM_I2CM_INTENSET_WIEN   (0x1u <<  0) /**< \brief (SERCOM_I2CM_INTENSET) Write Interrupt Enable */
+#define SERCOM_I2CM_INTENSET_RIEN   (0x1u <<  1) /**< \brief (SERCOM_I2CM_INTENSET) Read Interrupt Enable */
+#define SERCOM_I2CM_INTENSET_MASK   0x3u /**< \brief (SERCOM_I2CM_INTENSET) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_INTENSET_TWI_MASTER_WIEN (0x1u <<  0) /**< \brief (SERCOM_INTENSET_TWI_MASTER)  */
-#define SERCOM_INTENSET_TWI_MASTER_RIEN (0x1u <<  1) /**< \brief (SERCOM_INTENSET_TWI_MASTER)  */
-#define SERCOM_INTENSET_TWI_MASTER_MASK 0x3u /**< \brief (SERCOM_INTENSET_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_INTENSET_TWI_SLAVE_PIEN (0x1u <<  0) /**< \brief (SERCOM_INTENSET_TWI_SLAVE)  */
-#define SERCOM_INTENSET_TWI_SLAVE_AIEN (0x1u <<  1) /**< \brief (SERCOM_INTENSET_TWI_SLAVE)  */
-#define SERCOM_INTENSET_TWI_SLAVE_DIEN (0x1u <<  2) /**< \brief (SERCOM_INTENSET_TWI_SLAVE)  */
-#define SERCOM_INTENSET_TWI_SLAVE_MASK 0x7u /**< \brief (SERCOM_INTENSET_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_INTENSET_USART_DREIEN (0x1u <<  0) /**< \brief (SERCOM_INTENSET_USART)  */
-#define SERCOM_INTENSET_USART_TXCIEN (0x1u <<  1) /**< \brief (SERCOM_INTENSET_USART)  */
-#define SERCOM_INTENSET_USART_RXCIEN (0x1u <<  2) /**< \brief (SERCOM_INTENSET_USART)  */
-#define SERCOM_INTENSET_USART_RXSIEN (0x1u <<  3) /**< \brief (SERCOM_INTENSET_USART)  */
-#define SERCOM_INTENSET_USART_MASK  0xFu /**< \brief (SERCOM_INTENSET_USART) MASK Register */
-
-/* -------- SERCOM_INTFLAG : (SERCOM Offset: 0x0E) (R/W  8) Interrupt Flag Register -------- */
+/* -------- SERCOM_I2CS_INTENSET : (SERCOM Offset: 0x0D) (R/W  8) I2CS Interrupt Enable Set Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint8_t  DREIF:1;          /*!< bit:      0                                     */
-    uint8_t  TXCIF:1;          /*!< bit:      1                                     */
-    uint8_t  RXCIF:1;          /*!< bit:      2                                     */
+  struct {
+    uint8_t  PIEN:1;           /*!< bit:      0  Stop Interrupt Enable              */
+    uint8_t  AIEN:1;           /*!< bit:      1  Address Interrupt Enable           */
+    uint8_t  DIEN:1;           /*!< bit:      2  Data Interrupt Enable              */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint8_t  WIF:1;            /*!< bit:      0                                     */
-    uint8_t  RIF:1;            /*!< bit:      1                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_I2CS_INTENSET_Type;
+
+#define SERCOM_I2CS_INTENSET_OFFSET 0x0D         /**< \brief (SERCOM_I2CS_INTENSET offset) Interrupt Enable Set Register */
+#define SERCOM_I2CS_INTENSET_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_INTENSET reset_value) Interrupt Enable Set Register */
+
+#define SERCOM_I2CS_INTENSET_PIEN   (0x1u <<  0) /**< \brief (SERCOM_I2CS_INTENSET) Stop Interrupt Enable */
+#define SERCOM_I2CS_INTENSET_AIEN   (0x1u <<  1) /**< \brief (SERCOM_I2CS_INTENSET) Address Interrupt Enable */
+#define SERCOM_I2CS_INTENSET_DIEN   (0x1u <<  2) /**< \brief (SERCOM_I2CS_INTENSET) Data Interrupt Enable */
+#define SERCOM_I2CS_INTENSET_MASK   0x7u /**< \brief (SERCOM_I2CS_INTENSET) MASK Register */
+
+/* -------- SERCOM_SPI_INTENSET : (SERCOM Offset: 0x0D) (R/W  8) SPI SPI Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIEN:1;         /*!< bit:      0  Data Register Empty Interrupt Enable */
+    uint8_t  TXCIEN:1;         /*!< bit:      1  Transmit Complete Interrupt Enable */
+    uint8_t  RXCIEN:1;         /*!< bit:      2  Receive Complete Interrupt Enable  */
+    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_SPI_INTENSET_Type;
+
+#define SERCOM_SPI_INTENSET_OFFSET  0x0D         /**< \brief (SERCOM_SPI_INTENSET offset) SPI Interrupt Enable Set Register */
+#define SERCOM_SPI_INTENSET_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_INTENSET reset_value) SPI Interrupt Enable Set Register */
+
+#define SERCOM_SPI_INTENSET_DREIEN  (0x1u <<  0) /**< \brief (SERCOM_SPI_INTENSET) Data Register Empty Interrupt Enable */
+#define SERCOM_SPI_INTENSET_TXCIEN  (0x1u <<  1) /**< \brief (SERCOM_SPI_INTENSET) Transmit Complete Interrupt Enable */
+#define SERCOM_SPI_INTENSET_RXCIEN  (0x1u <<  2) /**< \brief (SERCOM_SPI_INTENSET) Receive Complete Interrupt Enable */
+#define SERCOM_SPI_INTENSET_MASK    0x7u /**< \brief (SERCOM_SPI_INTENSET) MASK Register */
+
+/* -------- SERCOM_USART_INTENSET : (SERCOM Offset: 0x0D) (R/W  8) USART USART Interrupt Enable Set Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIEN:1;         /*!< bit:      0  Data Register Empty Interrupt Enable */
+    uint8_t  TXCIEN:1;         /*!< bit:      1  Transmit Complete Interrupt Enable */
+    uint8_t  RXCIEN:1;         /*!< bit:      2  Receive Complete Interrupt Enable  */
+    uint8_t  RXSIEN:1;         /*!< bit:      3  Receive Start Interrupt Enable     */
+    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_USART_INTENSET_Type;
+
+#define SERCOM_USART_INTENSET_OFFSET 0x0D         /**< \brief (SERCOM_USART_INTENSET offset) USART Interrupt Enable Set Register */
+#define SERCOM_USART_INTENSET_RESETVALUE 0x0          /**< \brief (SERCOM_USART_INTENSET reset_value) USART Interrupt Enable Set Register */
+
+#define SERCOM_USART_INTENSET_DREIEN (0x1u <<  0) /**< \brief (SERCOM_USART_INTENSET) Data Register Empty Interrupt Enable */
+#define SERCOM_USART_INTENSET_TXCIEN (0x1u <<  1) /**< \brief (SERCOM_USART_INTENSET) Transmit Complete Interrupt Enable */
+#define SERCOM_USART_INTENSET_RXCIEN (0x1u <<  2) /**< \brief (SERCOM_USART_INTENSET) Receive Complete Interrupt Enable */
+#define SERCOM_USART_INTENSET_RXSIEN (0x1u <<  3) /**< \brief (SERCOM_USART_INTENSET) Receive Start Interrupt Enable */
+#define SERCOM_USART_INTENSET_MASK  0xFu /**< \brief (SERCOM_USART_INTENSET) MASK Register */
+
+/* -------- SERCOM_I2CM_INTFLAG : (SERCOM Offset: 0x0E) (R/W  8) I2CM Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  WIF:1;            /*!< bit:      0  Write Interrupt                    */
+    uint8_t  RIF:1;            /*!< bit:      1  Read Interrupt                     */
     uint8_t  _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint8_t  PIF:1;            /*!< bit:      0                                     */
-    uint8_t  AIF:1;            /*!< bit:      1                                     */
-    uint8_t  DIF:1;            /*!< bit:      2                                     */
-    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint8_t  DREIF:1;          /*!< bit:      0                                     */
-    uint8_t  TXCIF:1;          /*!< bit:      1                                     */
-    uint8_t  RXCIF:1;          /*!< bit:      2                                     */
-    uint8_t  RXSIF:1;          /*!< bit:      3                                     */
-    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SERCOM_INTFLAG_Type;
+} SERCOM_I2CM_INTFLAG_Type;
 
-#define SERCOM_INTFLAG_OFFSET       0x0E         /**< \brief (SERCOM offset) Interrupt Flag Register */
-#define SERCOM_INTFLAG_RESETVALUE   0x0          /**< \brief (SERCOM reset_value) Interrupt Flag Register */
+#define SERCOM_I2CM_INTFLAG_OFFSET  0x0E         /**< \brief (SERCOM_I2CM_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define SERCOM_I2CM_INTFLAG_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-// SPI mode
-#define SERCOM_INTFLAG_SPI_DREIF    (0x1u <<  0) /**< \brief (SERCOM_INTFLAG_SPI)  */
-#define SERCOM_INTFLAG_SPI_TXCIF    (0x1u <<  1) /**< \brief (SERCOM_INTFLAG_SPI)  */
-#define SERCOM_INTFLAG_SPI_RXCIF    (0x1u <<  2) /**< \brief (SERCOM_INTFLAG_SPI)  */
-#define SERCOM_INTFLAG_SPI_MASK     0x7u /**< \brief (SERCOM_INTFLAG_SPI) MASK Register */
+#define SERCOM_I2CM_INTFLAG_WIF     (0x1u <<  0) /**< \brief (SERCOM_I2CM_INTFLAG) Write Interrupt */
+#define SERCOM_I2CM_INTFLAG_RIF     (0x1u <<  1) /**< \brief (SERCOM_I2CM_INTFLAG) Read Interrupt */
+#define SERCOM_I2CM_INTFLAG_MASK    0x3u /**< \brief (SERCOM_I2CM_INTFLAG) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_INTFLAG_TWI_MASTER_WIF (0x1u <<  0) /**< \brief (SERCOM_INTFLAG_TWI_MASTER)  */
-#define SERCOM_INTFLAG_TWI_MASTER_RIF (0x1u <<  1) /**< \brief (SERCOM_INTFLAG_TWI_MASTER)  */
-#define SERCOM_INTFLAG_TWI_MASTER_MASK 0x3u /**< \brief (SERCOM_INTFLAG_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_INTFLAG_TWI_SLAVE_PIF (0x1u <<  0) /**< \brief (SERCOM_INTFLAG_TWI_SLAVE)  */
-#define SERCOM_INTFLAG_TWI_SLAVE_AIF (0x1u <<  1) /**< \brief (SERCOM_INTFLAG_TWI_SLAVE)  */
-#define SERCOM_INTFLAG_TWI_SLAVE_DIF (0x1u <<  2) /**< \brief (SERCOM_INTFLAG_TWI_SLAVE)  */
-#define SERCOM_INTFLAG_TWI_SLAVE_MASK 0x7u /**< \brief (SERCOM_INTFLAG_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_INTFLAG_USART_DREIF  (0x1u <<  0) /**< \brief (SERCOM_INTFLAG_USART)  */
-#define SERCOM_INTFLAG_USART_TXCIF  (0x1u <<  1) /**< \brief (SERCOM_INTFLAG_USART)  */
-#define SERCOM_INTFLAG_USART_RXCIF  (0x1u <<  2) /**< \brief (SERCOM_INTFLAG_USART)  */
-#define SERCOM_INTFLAG_USART_RXSIF  (0x1u <<  3) /**< \brief (SERCOM_INTFLAG_USART)  */
-#define SERCOM_INTFLAG_USART_MASK   0xFu /**< \brief (SERCOM_INTFLAG_USART) MASK Register */
-
-/* -------- SERCOM_STATUS : (SERCOM Offset: 0x10) (R/W 32) Status Register -------- */
+/* -------- SERCOM_I2CS_INTFLAG : (SERCOM Offset: 0x0E) (R/W  8) I2CS Interrupt Flag Status and Clear Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint32_t _reserved0:2;     /*!< bit:  0.. 1  Reserved                           */
-    uint32_t BUFOVF:1;         /*!< bit:      2                                     */
-    uint32_t _reserved1:12;    /*!< bit:  3..14  Reserved                           */
-    uint32_t SYNCBUSY:1;       /*!< bit:     15                                     */
-    uint32_t _reserved2:16;    /*!< bit: 16..31  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint32_t BUSERR:1;         /*!< bit:      0                                     */
-    uint32_t ARBLOST:1;        /*!< bit:      1                                     */
-    uint32_t RXACK:1;          /*!< bit:      2                                     */
+  struct {
+    uint8_t  PIF:1;            /*!< bit:      0  Stop Interrupt                     */
+    uint8_t  AIF:1;            /*!< bit:      1  Address Interrupt                  */
+    uint8_t  DIF:1;            /*!< bit:      2  Data Interrupt                     */
+    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_I2CS_INTFLAG_Type;
+
+#define SERCOM_I2CS_INTFLAG_OFFSET  0x0E         /**< \brief (SERCOM_I2CS_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define SERCOM_I2CS_INTFLAG_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
+
+#define SERCOM_I2CS_INTFLAG_PIF     (0x1u <<  0) /**< \brief (SERCOM_I2CS_INTFLAG) Stop Interrupt */
+#define SERCOM_I2CS_INTFLAG_AIF     (0x1u <<  1) /**< \brief (SERCOM_I2CS_INTFLAG) Address Interrupt */
+#define SERCOM_I2CS_INTFLAG_DIF     (0x1u <<  2) /**< \brief (SERCOM_I2CS_INTFLAG) Data Interrupt */
+#define SERCOM_I2CS_INTFLAG_MASK    0x7u /**< \brief (SERCOM_I2CS_INTFLAG) MASK Register */
+
+/* -------- SERCOM_SPI_INTFLAG : (SERCOM Offset: 0x0E) (R/W  8) SPI SPI Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIF:1;          /*!< bit:      0  Data Register Empty Interrupt      */
+    uint8_t  TXCIF:1;          /*!< bit:      1  Transmit Complete Interrupt        */
+    uint8_t  RXCIF:1;          /*!< bit:      2  Receive Complete Interrupt         */
+    uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_SPI_INTFLAG_Type;
+
+#define SERCOM_SPI_INTFLAG_OFFSET   0x0E         /**< \brief (SERCOM_SPI_INTFLAG offset) SPI Interrupt Flag Status and Clear Register */
+#define SERCOM_SPI_INTFLAG_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_INTFLAG reset_value) SPI Interrupt Flag Status and Clear Register */
+
+#define SERCOM_SPI_INTFLAG_DREIF    (0x1u <<  0) /**< \brief (SERCOM_SPI_INTFLAG) Data Register Empty Interrupt */
+#define SERCOM_SPI_INTFLAG_TXCIF    (0x1u <<  1) /**< \brief (SERCOM_SPI_INTFLAG) Transmit Complete Interrupt */
+#define SERCOM_SPI_INTFLAG_RXCIF    (0x1u <<  2) /**< \brief (SERCOM_SPI_INTFLAG) Receive Complete Interrupt */
+#define SERCOM_SPI_INTFLAG_MASK     0x7u /**< \brief (SERCOM_SPI_INTFLAG) MASK Register */
+
+/* -------- SERCOM_USART_INTFLAG : (SERCOM Offset: 0x0E) (R/W  8) USART USART Interrupt Flag Status and Clear Register -------- */
+typedef union {
+  struct {
+    uint8_t  DREIF:1;          /*!< bit:      0  Data Register Empty Interrupt      */
+    uint8_t  TXCIF:1;          /*!< bit:      1  Transmit Complete Interrupt        */
+    uint8_t  RXCIF:1;          /*!< bit:      2  Receive Complete Interrupt         */
+    uint8_t  RXSIF:1;          /*!< bit:      3  Receive Start Interrupt            */
+    uint8_t  _reserved0:4;     /*!< bit:  4.. 7  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint8_t reg;                 /*!< Type      used for register access              */
+} SERCOM_USART_INTFLAG_Type;
+
+#define SERCOM_USART_INTFLAG_OFFSET 0x0E         /**< \brief (SERCOM_USART_INTFLAG offset) USART Interrupt Flag Status and Clear Register */
+#define SERCOM_USART_INTFLAG_RESETVALUE 0x0          /**< \brief (SERCOM_USART_INTFLAG reset_value) USART Interrupt Flag Status and Clear Register */
+
+#define SERCOM_USART_INTFLAG_DREIF  (0x1u <<  0) /**< \brief (SERCOM_USART_INTFLAG) Data Register Empty Interrupt */
+#define SERCOM_USART_INTFLAG_TXCIF  (0x1u <<  1) /**< \brief (SERCOM_USART_INTFLAG) Transmit Complete Interrupt */
+#define SERCOM_USART_INTFLAG_RXCIF  (0x1u <<  2) /**< \brief (SERCOM_USART_INTFLAG) Receive Complete Interrupt */
+#define SERCOM_USART_INTFLAG_RXSIF  (0x1u <<  3) /**< \brief (SERCOM_USART_INTFLAG) Receive Start Interrupt */
+#define SERCOM_USART_INTFLAG_MASK   0xFu /**< \brief (SERCOM_USART_INTFLAG) MASK Register */
+
+/* -------- SERCOM_I2CM_STATUS : (SERCOM Offset: 0x10) (R/W 32) I2CM Status Register -------- */
+typedef union {
+  struct {
+    uint32_t BUSERR:1;         /*!< bit:      0  Bus Error                          */
+    uint32_t ARBLOST:1;        /*!< bit:      1  Arbitration Lost                   */
+    uint32_t RXACK:1;          /*!< bit:      2  Received Acknowledge               */
     uint32_t _reserved0:1;     /*!< bit:      3  Reserved                           */
-    uint32_t BUSSTATE:2;       /*!< bit:  4.. 5                                     */
-    uint32_t LOWTOUT:1;        /*!< bit:      6                                     */
-    uint32_t CLKHOLD:1;        /*!< bit:      7                                     */
+    uint32_t BUSSTATE:2;       /*!< bit:  4.. 5  Bus State                          */
+    uint32_t LOWTOUT:1;        /*!< bit:      6  SCL Low Timeout                    */
+    uint32_t CLKHOLD:1;        /*!< bit:      7  Clock Hold                         */
     uint32_t _reserved1:7;     /*!< bit:  8..14  Reserved                           */
-    uint32_t SYNCBUSY:1;       /*!< bit:     15                                     */
+    uint32_t SYNCBUSY:1;       /*!< bit:     15  Synchronization Busy               */
     uint32_t _reserved2:16;    /*!< bit: 16..31  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint32_t BUSERR:1;         /*!< bit:      0                                     */
-    uint32_t COLL:1;           /*!< bit:      1                                     */
-    uint32_t RXACK:1;          /*!< bit:      2                                     */
-    uint32_t DIR:1;            /*!< bit:      3                                     */
-    uint32_t SR:1;             /*!< bit:      4                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CM_STATUS_Type;
+
+#define SERCOM_I2CM_STATUS_OFFSET   0x10         /**< \brief (SERCOM_I2CM_STATUS offset) Status Register */
+#define SERCOM_I2CM_STATUS_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_STATUS reset_value) Status Register */
+
+#define SERCOM_I2CM_STATUS_BUSERR   (0x1u <<  0) /**< \brief (SERCOM_I2CM_STATUS) Bus Error */
+#define SERCOM_I2CM_STATUS_ARBLOST  (0x1u <<  1) /**< \brief (SERCOM_I2CM_STATUS) Arbitration Lost */
+#define SERCOM_I2CM_STATUS_RXACK    (0x1u <<  2) /**< \brief (SERCOM_I2CM_STATUS) Received Acknowledge */
+#define SERCOM_I2CM_STATUS_BUSSTATE_Pos    4
+#define SERCOM_I2CM_STATUS_BUSSTATE_Msk    (0x3u << SERCOM_I2CM_STATUS_BUSSTATE_Pos) /**< \brief (SERCOM_I2CM_STATUS) Bus State */
+#define SERCOM_I2CM_STATUS_BUSSTATE(value) ((SERCOM_I2CM_STATUS_BUSSTATE_Msk & ((value) << SERCOM_I2CM_STATUS_BUSSTATE_Pos)))
+#define SERCOM_I2CM_STATUS_LOWTOUT  (0x1u <<  6) /**< \brief (SERCOM_I2CM_STATUS) SCL Low Timeout */
+#define SERCOM_I2CM_STATUS_CLKHOLD  (0x1u <<  7) /**< \brief (SERCOM_I2CM_STATUS) Clock Hold */
+#define SERCOM_I2CM_STATUS_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_I2CM_STATUS) Synchronization Busy */
+#define SERCOM_I2CM_STATUS_MASK     0x80F7u /**< \brief (SERCOM_I2CM_STATUS) MASK Register */
+
+/* -------- SERCOM_I2CS_STATUS : (SERCOM Offset: 0x10) (R/W 32) I2CS Status Register -------- */
+typedef union {
+  struct {
+    uint32_t BUSERR:1;         /*!< bit:      0  Bus Error                          */
+    uint32_t COLL:1;           /*!< bit:      1  Transmit Collision                 */
+    uint32_t RXACK:1;          /*!< bit:      2  Receive Acknowledge                */
+    uint32_t DIR:1;            /*!< bit:      3  Read/Write Direction               */
+    uint32_t SR:1;             /*!< bit:      4  Repeated Start                     */
     uint32_t _reserved0:1;     /*!< bit:      5  Reserved                           */
-    uint32_t LOWTOUT:1;        /*!< bit:      6                                     */
-    uint32_t CLKHOLD:1;        /*!< bit:      7                                     */
+    uint32_t LOWTOUT:1;        /*!< bit:      6  SCL Low Timeout                    */
+    uint32_t CLKHOLD:1;        /*!< bit:      7  Clock Hold                         */
     uint32_t _reserved1:7;     /*!< bit:  8..14  Reserved                           */
-    uint32_t SYNCBUSY:1;       /*!< bit:     15                                     */
+    uint32_t SYNCBUSY:1;       /*!< bit:     15  Synchronization Busy               */
     uint32_t _reserved2:16;    /*!< bit: 16..31  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint32_t PERR:1;           /*!< bit:      0                                     */
-    uint32_t FERR:1;           /*!< bit:      1                                     */
-    uint32_t BUFOVF:1;         /*!< bit:      2                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CS_STATUS_Type;
+
+#define SERCOM_I2CS_STATUS_OFFSET   0x10         /**< \brief (SERCOM_I2CS_STATUS offset) Status Register */
+#define SERCOM_I2CS_STATUS_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_STATUS reset_value) Status Register */
+
+#define SERCOM_I2CS_STATUS_BUSERR   (0x1u <<  0) /**< \brief (SERCOM_I2CS_STATUS) Bus Error */
+#define SERCOM_I2CS_STATUS_COLL     (0x1u <<  1) /**< \brief (SERCOM_I2CS_STATUS) Transmit Collision */
+#define SERCOM_I2CS_STATUS_RXACK    (0x1u <<  2) /**< \brief (SERCOM_I2CS_STATUS) Receive Acknowledge */
+#define SERCOM_I2CS_STATUS_DIR      (0x1u <<  3) /**< \brief (SERCOM_I2CS_STATUS) Read/Write Direction */
+#define SERCOM_I2CS_STATUS_SR       (0x1u <<  4) /**< \brief (SERCOM_I2CS_STATUS) Repeated Start */
+#define SERCOM_I2CS_STATUS_LOWTOUT  (0x1u <<  6) /**< \brief (SERCOM_I2CS_STATUS) SCL Low Timeout */
+#define SERCOM_I2CS_STATUS_CLKHOLD  (0x1u <<  7) /**< \brief (SERCOM_I2CS_STATUS) Clock Hold */
+#define SERCOM_I2CS_STATUS_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_I2CS_STATUS) Synchronization Busy */
+#define SERCOM_I2CS_STATUS_MASK     0x80DFu /**< \brief (SERCOM_I2CS_STATUS) MASK Register */
+
+/* -------- SERCOM_SPI_STATUS : (SERCOM Offset: 0x10) (R/W 32) SPI SPI Status Register -------- */
+typedef union {
+  struct {
+    uint32_t _reserved0:2;     /*!< bit:  0.. 1  Reserved                           */
+    uint32_t BUFOVF:1;         /*!< bit:      2  Buffer Overflow                    */
+    uint32_t _reserved1:12;    /*!< bit:  3..14  Reserved                           */
+    uint32_t SYNCBUSY:1;       /*!< bit:     15  Synchronization Busy               */
+    uint32_t _reserved2:16;    /*!< bit: 16..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_SPI_STATUS_Type;
+
+#define SERCOM_SPI_STATUS_OFFSET    0x10         /**< \brief (SERCOM_SPI_STATUS offset) SPI Status Register */
+#define SERCOM_SPI_STATUS_RESETVALUE 0x0          /**< \brief (SERCOM_SPI_STATUS reset_value) SPI Status Register */
+
+#define SERCOM_SPI_STATUS_BUFOVF    (0x1u <<  2) /**< \brief (SERCOM_SPI_STATUS) Buffer Overflow */
+#define SERCOM_SPI_STATUS_SYNCBUSY  (0x1u << 15) /**< \brief (SERCOM_SPI_STATUS) Synchronization Busy */
+#define SERCOM_SPI_STATUS_MASK      0x8004u /**< \brief (SERCOM_SPI_STATUS) MASK Register */
+
+/* -------- SERCOM_USART_STATUS : (SERCOM Offset: 0x10) (R/W 32) USART USART Status Register -------- */
+typedef union {
+  struct {
+    uint32_t PERR:1;           /*!< bit:      0  Parity Error                       */
+    uint32_t FERR:1;           /*!< bit:      1  Frame Error                        */
+    uint32_t BUFOVF:1;         /*!< bit:      2  Buffer Overflow                    */
     uint32_t _reserved0:12;    /*!< bit:  3..14  Reserved                           */
-    uint32_t SYNCBUSY:1;       /*!< bit:     15                                     */
+    uint32_t SYNCBUSY:1;       /*!< bit:     15  Synchronization Busy               */
     uint32_t _reserved1:16;    /*!< bit: 16..31  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SERCOM_STATUS_Type;
+} SERCOM_USART_STATUS_Type;
 
-#define SERCOM_STATUS_OFFSET        0x10         /**< \brief (SERCOM offset) Status Register */
-#define SERCOM_STATUS_RESETVALUE    0x0          /**< \brief (SERCOM reset_value) Status Register */
+#define SERCOM_USART_STATUS_OFFSET  0x10         /**< \brief (SERCOM_USART_STATUS offset) USART Status Register */
+#define SERCOM_USART_STATUS_RESETVALUE 0x0          /**< \brief (SERCOM_USART_STATUS reset_value) USART Status Register */
 
-// SPI mode
-#define SERCOM_STATUS_SPI_BUFOVF    (0x1u <<  2) /**< \brief (SERCOM_STATUS_SPI)  */
-#define SERCOM_STATUS_SPI_SYNCBUSY  (0x1u << 15) /**< \brief (SERCOM_STATUS_SPI)  */
-#define SERCOM_STATUS_SPI_MASK      0x8004u /**< \brief (SERCOM_STATUS_SPI) MASK Register */
+#define SERCOM_USART_STATUS_PERR    (0x1u <<  0) /**< \brief (SERCOM_USART_STATUS) Parity Error */
+#define SERCOM_USART_STATUS_FERR    (0x1u <<  1) /**< \brief (SERCOM_USART_STATUS) Frame Error */
+#define SERCOM_USART_STATUS_BUFOVF  (0x1u <<  2) /**< \brief (SERCOM_USART_STATUS) Buffer Overflow */
+#define SERCOM_USART_STATUS_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_USART_STATUS) Synchronization Busy */
+#define SERCOM_USART_STATUS_MASK    0x8007u /**< \brief (SERCOM_USART_STATUS) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_STATUS_TWI_MASTER_BUSERR (0x1u <<  0) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_ARBLOST (0x1u <<  1) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_RXACK (0x1u <<  2) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_BUSSTATE_Pos    4
-#define SERCOM_STATUS_TWI_MASTER_BUSSTATE_Msk    (0x3u << SERCOM_STATUS_TWI_MASTER_BUSSTATE_Pos) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_BUSSTATE(value) ((SERCOM_STATUS_TWI_MASTER_BUSSTATE_Msk & ((value) << SERCOM_STATUS_TWI_MASTER_BUSSTATE_Pos)))
-#define SERCOM_STATUS_TWI_MASTER_LOWTOUT (0x1u <<  6) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_CLKHOLD (0x1u <<  7) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_STATUS_TWI_MASTER)  */
-#define SERCOM_STATUS_TWI_MASTER_MASK 0x80F7u /**< \brief (SERCOM_STATUS_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_STATUS_TWI_SLAVE_BUSERR (0x1u <<  0) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_COLL (0x1u <<  1) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_RXACK (0x1u <<  2) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_DIR (0x1u <<  3) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_SR  (0x1u <<  4) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_LOWTOUT (0x1u <<  6) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_CLKHOLD (0x1u <<  7) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_STATUS_TWI_SLAVE)  */
-#define SERCOM_STATUS_TWI_SLAVE_MASK 0x80DFu /**< \brief (SERCOM_STATUS_TWI_SLAVE) MASK Register */
-
-// USART mode
-#define SERCOM_STATUS_USART_PERR    (0x1u <<  0) /**< \brief (SERCOM_STATUS_USART)  */
-#define SERCOM_STATUS_USART_FERR    (0x1u <<  1) /**< \brief (SERCOM_STATUS_USART)  */
-#define SERCOM_STATUS_USART_BUFOVF  (0x1u <<  2) /**< \brief (SERCOM_STATUS_USART)  */
-#define SERCOM_STATUS_USART_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_STATUS_USART)  */
-#define SERCOM_STATUS_USART_MASK    0x8007u /**< \brief (SERCOM_STATUS_USART) MASK Register */
-
-/* -------- SERCOM_ADDR : (SERCOM Offset: 0x14) (R/W 32) Address Register -------- */
+/* -------- SERCOM_I2CM_ADDR : (SERCOM Offset: 0x14) (R/W 32) I2CM Address Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint32_t ADDR:8;           /*!< bit:  0.. 7                                     */
-    uint32_t _reserved0:8;     /*!< bit:  8..15  Reserved                           */
-    uint32_t ADDRMASK:8;       /*!< bit: 16..23                                     */
-    uint32_t _reserved1:8;     /*!< bit: 24..31  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint32_t ADDR:8;           /*!< bit:  0.. 7                                     */
+  struct {
+    uint32_t ADDR:8;           /*!< bit:  0.. 7  Address Register                   */
     uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint32_t GENCEN:1;         /*!< bit:      0                                     */
-    uint32_t ADDR:7;           /*!< bit:  1.. 7                                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CM_ADDR_Type;
+
+#define SERCOM_I2CM_ADDR_OFFSET     0x14         /**< \brief (SERCOM_I2CM_ADDR offset) Address Register */
+#define SERCOM_I2CM_ADDR_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_ADDR reset_value) Address Register */
+
+#define SERCOM_I2CM_ADDR_ADDR_Pos    0
+#define SERCOM_I2CM_ADDR_ADDR_Msk    (0xFFu << SERCOM_I2CM_ADDR_ADDR_Pos) /**< \brief (SERCOM_I2CM_ADDR) Address Register */
+#define SERCOM_I2CM_ADDR_ADDR(value) ((SERCOM_I2CM_ADDR_ADDR_Msk & ((value) << SERCOM_I2CM_ADDR_ADDR_Pos)))
+#define SERCOM_I2CM_ADDR_MASK       0xFFu /**< \brief (SERCOM_I2CM_ADDR) MASK Register */
+
+/* -------- SERCOM_I2CS_ADDR : (SERCOM Offset: 0x14) (R/W 32) I2CS Address Register -------- */
+typedef union {
+  struct {
+    uint32_t GENCEN:1;         /*!< bit:      0  General Call Address Enable        */
+    uint32_t ADDR:7;           /*!< bit:  1.. 7  Address Register                   */
     uint32_t _reserved0:9;     /*!< bit:  8..16  Reserved                           */
-    uint32_t ADDRMASK:7;       /*!< bit: 17..23                                     */
+    uint32_t ADDRMASK:7;       /*!< bit: 17..23  Address Mask Register              */
     uint32_t _reserved1:8;     /*!< bit: 24..31  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SERCOM_ADDR_Type;
+} SERCOM_I2CS_ADDR_Type;
 
-#define SERCOM_ADDR_OFFSET          0x14         /**< \brief (SERCOM offset) Address Register */
-#define SERCOM_ADDR_RESETVALUE      0x0          /**< \brief (SERCOM reset_value) Address Register */
+#define SERCOM_I2CS_ADDR_OFFSET     0x14         /**< \brief (SERCOM_I2CS_ADDR offset) Address Register */
+#define SERCOM_I2CS_ADDR_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_ADDR reset_value) Address Register */
 
-// SPI mode
-#define SERCOM_ADDR_SPI_ADDR_Pos    0
-#define SERCOM_ADDR_SPI_ADDR_Msk    (0xFFu << SERCOM_ADDR_SPI_ADDR_Pos) /**< \brief (SERCOM_ADDR_SPI)  */
-#define SERCOM_ADDR_SPI_ADDR(value) ((SERCOM_ADDR_SPI_ADDR_Msk & ((value) << SERCOM_ADDR_SPI_ADDR_Pos)))
-#define SERCOM_ADDR_SPI_ADDRMASK_Pos    16
-#define SERCOM_ADDR_SPI_ADDRMASK_Msk    (0xFFu << SERCOM_ADDR_SPI_ADDRMASK_Pos) /**< \brief (SERCOM_ADDR_SPI)  */
-#define SERCOM_ADDR_SPI_ADDRMASK(value) ((SERCOM_ADDR_SPI_ADDRMASK_Msk & ((value) << SERCOM_ADDR_SPI_ADDRMASK_Pos)))
-#define SERCOM_ADDR_SPI_MASK        0xFF00FFu /**< \brief (SERCOM_ADDR_SPI) MASK Register */
+#define SERCOM_I2CS_ADDR_GENCEN     (0x1u <<  0) /**< \brief (SERCOM_I2CS_ADDR) General Call Address Enable */
+#define SERCOM_I2CS_ADDR_ADDR_Pos    1
+#define SERCOM_I2CS_ADDR_ADDR_Msk    (0x7Fu << SERCOM_I2CS_ADDR_ADDR_Pos) /**< \brief (SERCOM_I2CS_ADDR) Address Register */
+#define SERCOM_I2CS_ADDR_ADDR(value) ((SERCOM_I2CS_ADDR_ADDR_Msk & ((value) << SERCOM_I2CS_ADDR_ADDR_Pos)))
+#define SERCOM_I2CS_ADDR_ADDRMASK_Pos    17
+#define SERCOM_I2CS_ADDR_ADDRMASK_Msk    (0x7Fu << SERCOM_I2CS_ADDR_ADDRMASK_Pos) /**< \brief (SERCOM_I2CS_ADDR) Address Mask Register */
+#define SERCOM_I2CS_ADDR_ADDRMASK(value) ((SERCOM_I2CS_ADDR_ADDRMASK_Msk & ((value) << SERCOM_I2CS_ADDR_ADDRMASK_Pos)))
+#define SERCOM_I2CS_ADDR_MASK       0xFE00FFu /**< \brief (SERCOM_I2CS_ADDR) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_ADDR_TWI_MASTER_ADDR_Pos    0
-#define SERCOM_ADDR_TWI_MASTER_ADDR_Msk    (0xFFu << SERCOM_ADDR_TWI_MASTER_ADDR_Pos) /**< \brief (SERCOM_ADDR_TWI_MASTER)  */
-#define SERCOM_ADDR_TWI_MASTER_ADDR(value) ((SERCOM_ADDR_TWI_MASTER_ADDR_Msk & ((value) << SERCOM_ADDR_TWI_MASTER_ADDR_Pos)))
-#define SERCOM_ADDR_TWI_MASTER_MASK 0xFFu /**< \brief (SERCOM_ADDR_TWI_MASTER) MASK Register */
-
-// TWI_SLAVE mode
-#define SERCOM_ADDR_TWI_SLAVE_GENCEN (0x1u <<  0) /**< \brief (SERCOM_ADDR_TWI_SLAVE)  */
-#define SERCOM_ADDR_TWI_SLAVE_ADDR_Pos    1
-#define SERCOM_ADDR_TWI_SLAVE_ADDR_Msk    (0x7Fu << SERCOM_ADDR_TWI_SLAVE_ADDR_Pos) /**< \brief (SERCOM_ADDR_TWI_SLAVE)  */
-#define SERCOM_ADDR_TWI_SLAVE_ADDR(value) ((SERCOM_ADDR_TWI_SLAVE_ADDR_Msk & ((value) << SERCOM_ADDR_TWI_SLAVE_ADDR_Pos)))
-#define SERCOM_ADDR_TWI_SLAVE_ADDRMASK_Pos    17
-#define SERCOM_ADDR_TWI_SLAVE_ADDRMASK_Msk    (0x7Fu << SERCOM_ADDR_TWI_SLAVE_ADDRMASK_Pos) /**< \brief (SERCOM_ADDR_TWI_SLAVE)  */
-#define SERCOM_ADDR_TWI_SLAVE_ADDRMASK(value) ((SERCOM_ADDR_TWI_SLAVE_ADDRMASK_Msk & ((value) << SERCOM_ADDR_TWI_SLAVE_ADDRMASK_Pos)))
-#define SERCOM_ADDR_TWI_SLAVE_MASK  0xFE00FFu /**< \brief (SERCOM_ADDR_TWI_SLAVE) MASK Register */
-
-/* -------- SERCOM_DATA : (SERCOM Offset: 0x18) (R/W 32) Data Register -------- */
+/* -------- SERCOM_SPI_ADDR : (SERCOM Offset: 0x14) (R/W 32) SPI SPI Address Register -------- */
 typedef union {
-  struct { // SPI mode
-    uint32_t DATA:9;           /*!< bit:  0.. 8                                     */
-    uint32_t _reserved0:23;    /*!< bit:  9..31  Reserved                           */
-  } SPI;                       /*!< Structure used for SPI                          */
-  struct { // TWI_MASTER mode
-    uint32_t DATA:8;           /*!< bit:  0.. 7                                     */
-    uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
-  } TWI_MASTER;                /*!< Structure used for TWI_MASTER                   */
-  struct { // TWI_SLAVE mode
-    uint32_t DATA:8;           /*!< bit:  0.. 7                                     */
-    uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
-  } TWI_SLAVE;                 /*!< Structure used for TWI_SLAVE                    */
-  struct { // USART mode
-    uint32_t DATA:9;           /*!< bit:  0.. 8                                     */
-    uint32_t _reserved0:23;    /*!< bit:  9..31  Reserved                           */
-  } USART;                     /*!< Structure used for USART                        */
+  struct {
+    uint32_t ADDR:8;           /*!< bit:  0.. 7  Address Register                   */
+    uint32_t _reserved0:8;     /*!< bit:  8..15  Reserved                           */
+    uint32_t ADDRMASK:8;       /*!< bit: 16..23  Address Mask Register              */
+    uint32_t _reserved1:8;     /*!< bit: 24..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SERCOM_DATA_Type;
+} SERCOM_SPI_ADDR_Type;
 
-#define SERCOM_DATA_OFFSET          0x18         /**< \brief (SERCOM offset) Data Register */
-#define SERCOM_DATA_RESETVALUE      0x0          /**< \brief (SERCOM reset_value) Data Register */
+#define SERCOM_SPI_ADDR_OFFSET      0x14         /**< \brief (SERCOM_SPI_ADDR offset) SPI Address Register */
+#define SERCOM_SPI_ADDR_RESETVALUE  0x0          /**< \brief (SERCOM_SPI_ADDR reset_value) SPI Address Register */
 
-// SPI mode
-#define SERCOM_DATA_SPI_DATA_Pos    0
-#define SERCOM_DATA_SPI_DATA_Msk    (0x1FFu << SERCOM_DATA_SPI_DATA_Pos) /**< \brief (SERCOM_DATA_SPI)  */
-#define SERCOM_DATA_SPI_DATA(value) ((SERCOM_DATA_SPI_DATA_Msk & ((value) << SERCOM_DATA_SPI_DATA_Pos)))
-#define SERCOM_DATA_SPI_MASK        0x1FFu /**< \brief (SERCOM_DATA_SPI) MASK Register */
+#define SERCOM_SPI_ADDR_ADDR_Pos    0
+#define SERCOM_SPI_ADDR_ADDR_Msk    (0xFFu << SERCOM_SPI_ADDR_ADDR_Pos) /**< \brief (SERCOM_SPI_ADDR) Address Register */
+#define SERCOM_SPI_ADDR_ADDR(value) ((SERCOM_SPI_ADDR_ADDR_Msk & ((value) << SERCOM_SPI_ADDR_ADDR_Pos)))
+#define SERCOM_SPI_ADDR_ADDRMASK_Pos    16
+#define SERCOM_SPI_ADDR_ADDRMASK_Msk    (0xFFu << SERCOM_SPI_ADDR_ADDRMASK_Pos) /**< \brief (SERCOM_SPI_ADDR) Address Mask Register */
+#define SERCOM_SPI_ADDR_ADDRMASK(value) ((SERCOM_SPI_ADDR_ADDRMASK_Msk & ((value) << SERCOM_SPI_ADDR_ADDRMASK_Pos)))
+#define SERCOM_SPI_ADDR_MASK        0xFF00FFu /**< \brief (SERCOM_SPI_ADDR) MASK Register */
 
-// TWI_MASTER mode
-#define SERCOM_DATA_TWI_MASTER_DATA_Pos    0
-#define SERCOM_DATA_TWI_MASTER_DATA_Msk    (0xFFu << SERCOM_DATA_TWI_MASTER_DATA_Pos) /**< \brief (SERCOM_DATA_TWI_MASTER)  */
-#define SERCOM_DATA_TWI_MASTER_DATA(value) ((SERCOM_DATA_TWI_MASTER_DATA_Msk & ((value) << SERCOM_DATA_TWI_MASTER_DATA_Pos)))
-#define SERCOM_DATA_TWI_MASTER_MASK 0xFFu /**< \brief (SERCOM_DATA_TWI_MASTER) MASK Register */
+/* -------- SERCOM_I2CM_DATA : (SERCOM Offset: 0x18) (R/W 32) I2CM Data Register -------- */
+typedef union {
+  struct {
+    uint32_t DATA:8;           /*!< bit:  0.. 7  Data Register                      */
+    uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CM_DATA_Type;
 
-// TWI_SLAVE mode
-#define SERCOM_DATA_TWI_SLAVE_DATA_Pos    0
-#define SERCOM_DATA_TWI_SLAVE_DATA_Msk    (0xFFu << SERCOM_DATA_TWI_SLAVE_DATA_Pos) /**< \brief (SERCOM_DATA_TWI_SLAVE)  */
-#define SERCOM_DATA_TWI_SLAVE_DATA(value) ((SERCOM_DATA_TWI_SLAVE_DATA_Msk & ((value) << SERCOM_DATA_TWI_SLAVE_DATA_Pos)))
-#define SERCOM_DATA_TWI_SLAVE_MASK  0xFFu /**< \brief (SERCOM_DATA_TWI_SLAVE) MASK Register */
+#define SERCOM_I2CM_DATA_OFFSET     0x18         /**< \brief (SERCOM_I2CM_DATA offset) Data Register */
+#define SERCOM_I2CM_DATA_RESETVALUE 0x0          /**< \brief (SERCOM_I2CM_DATA reset_value) Data Register */
 
-// USART mode
-#define SERCOM_DATA_USART_DATA_Pos    0
-#define SERCOM_DATA_USART_DATA_Msk    (0x1FFu << SERCOM_DATA_USART_DATA_Pos) /**< \brief (SERCOM_DATA_USART)  */
-#define SERCOM_DATA_USART_DATA(value) ((SERCOM_DATA_USART_DATA_Msk & ((value) << SERCOM_DATA_USART_DATA_Pos)))
-#define SERCOM_DATA_USART_MASK      0x1FFu /**< \brief (SERCOM_DATA_USART) MASK Register */
+#define SERCOM_I2CM_DATA_DATA_Pos    0
+#define SERCOM_I2CM_DATA_DATA_Msk    (0xFFu << SERCOM_I2CM_DATA_DATA_Pos) /**< \brief (SERCOM_I2CM_DATA) Data Register */
+#define SERCOM_I2CM_DATA_DATA(value) ((SERCOM_I2CM_DATA_DATA_Msk & ((value) << SERCOM_I2CM_DATA_DATA_Pos)))
+#define SERCOM_I2CM_DATA_MASK       0xFFu /**< \brief (SERCOM_I2CM_DATA) MASK Register */
 
-/** \brief SERCOM hardware registers */
-typedef struct {
-  __IO SERCOM_CTRLA_Type         CTRLA;       /**< \brief Offset: 0x00 (R/W 32) Control Register A */
-  __IO SERCOM_CTRLB_Type         CTRLB;       /**< \brief Offset: 0x04 (R/W 32) Control Register B */
-  __IO SERCOM_DEBUG_Type         DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+/* -------- SERCOM_I2CS_DATA : (SERCOM Offset: 0x18) (R/W 32) I2CS Data Register -------- */
+typedef union {
+  struct {
+    uint32_t DATA:8;           /*!< bit:  0.. 7  Data Register                      */
+    uint32_t _reserved0:24;    /*!< bit:  8..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_I2CS_DATA_Type;
+
+#define SERCOM_I2CS_DATA_OFFSET     0x18         /**< \brief (SERCOM_I2CS_DATA offset) Data Register */
+#define SERCOM_I2CS_DATA_RESETVALUE 0x0          /**< \brief (SERCOM_I2CS_DATA reset_value) Data Register */
+
+#define SERCOM_I2CS_DATA_DATA_Pos    0
+#define SERCOM_I2CS_DATA_DATA_Msk    (0xFFu << SERCOM_I2CS_DATA_DATA_Pos) /**< \brief (SERCOM_I2CS_DATA) Data Register */
+#define SERCOM_I2CS_DATA_DATA(value) ((SERCOM_I2CS_DATA_DATA_Msk & ((value) << SERCOM_I2CS_DATA_DATA_Pos)))
+#define SERCOM_I2CS_DATA_MASK       0xFFu /**< \brief (SERCOM_I2CS_DATA) MASK Register */
+
+/* -------- SERCOM_SPI_DATA : (SERCOM Offset: 0x18) (R/W 32) SPI SPI Data Register -------- */
+typedef union {
+  struct {
+    uint32_t DATA:9;           /*!< bit:  0.. 8  Data Register                      */
+    uint32_t _reserved0:23;    /*!< bit:  9..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_SPI_DATA_Type;
+
+#define SERCOM_SPI_DATA_OFFSET      0x18         /**< \brief (SERCOM_SPI_DATA offset) SPI Data Register */
+#define SERCOM_SPI_DATA_RESETVALUE  0x0          /**< \brief (SERCOM_SPI_DATA reset_value) SPI Data Register */
+
+#define SERCOM_SPI_DATA_DATA_Pos    0
+#define SERCOM_SPI_DATA_DATA_Msk    (0x1FFu << SERCOM_SPI_DATA_DATA_Pos) /**< \brief (SERCOM_SPI_DATA) Data Register */
+#define SERCOM_SPI_DATA_DATA(value) ((SERCOM_SPI_DATA_DATA_Msk & ((value) << SERCOM_SPI_DATA_DATA_Pos)))
+#define SERCOM_SPI_DATA_MASK        0x1FFu /**< \brief (SERCOM_SPI_DATA) MASK Register */
+
+/* -------- SERCOM_USART_DATA : (SERCOM Offset: 0x18) (R/W 32) USART USART Data Register -------- */
+typedef union {
+  struct {
+    uint32_t DATA:9;           /*!< bit:  0.. 8  Data Register                      */
+    uint32_t _reserved0:23;    /*!< bit:  9..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} SERCOM_USART_DATA_Type;
+
+#define SERCOM_USART_DATA_OFFSET    0x18         /**< \brief (SERCOM_USART_DATA offset) USART Data Register */
+#define SERCOM_USART_DATA_RESETVALUE 0x0          /**< \brief (SERCOM_USART_DATA reset_value) USART Data Register */
+
+#define SERCOM_USART_DATA_DATA_Pos    0
+#define SERCOM_USART_DATA_DATA_Msk    (0x1FFu << SERCOM_USART_DATA_DATA_Pos) /**< \brief (SERCOM_USART_DATA) Data Register */
+#define SERCOM_USART_DATA_DATA(value) ((SERCOM_USART_DATA_DATA_Msk & ((value) << SERCOM_USART_DATA_DATA_Pos)))
+#define SERCOM_USART_DATA_MASK      0x1FFu /**< \brief (SERCOM_USART_DATA) MASK Register */
+
+/** \brief SERCOM_I2CM hardware registers */
+typedef struct { /* I2C Master Mode */
+  __IO SERCOM_I2CM_CTRLA_Type    CTRLA;       /**< \brief Offset: 0x00 (R/W 32) Control Register A */
+  __IO SERCOM_I2CM_CTRLB_Type    CTRLB;       /**< \brief Offset: 0x04 (R/W 32) Control Register B */
+  __IO SERCOM_I2CM_DEBUG_Type    DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
        RoReg8                    Reserved1[0x1];
-  __IO SERCOM_BAUD_Type          BAUD;        /**< \brief Offset: 0x0A (R/W 16) Baud Rate Register */
-  __IO SERCOM_INTENCLR_Type      INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
-  __IO SERCOM_INTENSET_Type      INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
-  __IO SERCOM_INTFLAG_Type       INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Register */
+  __IO SERCOM_I2CM_BAUD_Type     BAUD;        /**< \brief Offset: 0x0A (R/W 16) Baud Rate Register */
+  __IO SERCOM_I2CM_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
+  __IO SERCOM_I2CM_INTENSET_Type INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
+  __IO SERCOM_I2CM_INTFLAG_Type  INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear Register */
        RoReg8                    Reserved2[0x1];
-  __IO SERCOM_STATUS_Type        STATUS;      /**< \brief Offset: 0x10 (R/W 32) Status Register */
-  __IO SERCOM_ADDR_Type          ADDR;        /**< \brief Offset: 0x14 (R/W 32) Address Register */
-  __IO SERCOM_DATA_Type          DATA;        /**< \brief Offset: 0x18 (R/W 32) Data Register */
+  __IO SERCOM_I2CM_STATUS_Type   STATUS;      /**< \brief Offset: 0x10 (R/W 32) Status Register */
+  __IO SERCOM_I2CM_ADDR_Type     ADDR;        /**< \brief Offset: 0x14 (R/W 32) Address Register */
+  __IO SERCOM_I2CM_DATA_Type     DATA;        /**< \brief Offset: 0x18 (R/W 32) Data Register */
+} SercomI2cm;
+
+/** \brief SERCOM_I2CS hardware registers */
+typedef struct { /* I2C Slave Mode */
+  __IO SERCOM_I2CS_CTRLA_Type    CTRLA;       /**< \brief Offset: 0x00 (R/W 32) Control Register A */
+  __IO SERCOM_I2CS_CTRLB_Type    CTRLB;       /**< \brief Offset: 0x04 (R/W 32) Control Register B */
+  __IO SERCOM_I2CS_DEBUG_Type    DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+       RoReg8                    Reserved1[0x3];
+  __IO SERCOM_I2CS_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
+  __IO SERCOM_I2CS_INTENSET_Type INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
+  __IO SERCOM_I2CS_INTFLAG_Type  INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear Register */
+       RoReg8                    Reserved2[0x1];
+  __IO SERCOM_I2CS_STATUS_Type   STATUS;      /**< \brief Offset: 0x10 (R/W 32) Status Register */
+  __IO SERCOM_I2CS_ADDR_Type     ADDR;        /**< \brief Offset: 0x14 (R/W 32) Address Register */
+  __IO SERCOM_I2CS_DATA_Type     DATA;        /**< \brief Offset: 0x18 (R/W 32) Data Register */
+} SercomI2cs;
+
+/** \brief SERCOM_SPI hardware registers */
+typedef struct { /* SPI Mode */
+  __IO SERCOM_SPI_CTRLA_Type     CTRLA;       /**< \brief Offset: 0x00 (R/W 32) SPI Control Register A */
+  __IO SERCOM_SPI_CTRLB_Type     CTRLB;       /**< \brief Offset: 0x04 (R/W 32) SPI Control Register B */
+  __IO SERCOM_SPI_DEBUG_Type     DEBUG;       /**< \brief Offset: 0x08 (R/W  8) SPI Debug Register */
+       RoReg8                    Reserved1[0x1];
+  __IO SERCOM_SPI_BAUD_Type      BAUD;        /**< \brief Offset: 0x0A (R/W 16) SPI Baud Rate Register */
+  __IO SERCOM_SPI_INTENCLR_Type  INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) SPI Interrupt Enable Clear Register */
+  __IO SERCOM_SPI_INTENSET_Type  INTENSET;    /**< \brief Offset: 0x0D (R/W  8) SPI Interrupt Enable Set Register */
+  __IO SERCOM_SPI_INTFLAG_Type   INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) SPI Interrupt Flag Status and Clear Register */
+       RoReg8                    Reserved2[0x1];
+  __IO SERCOM_SPI_STATUS_Type    STATUS;      /**< \brief Offset: 0x10 (R/W 32) SPI Status Register */
+  __IO SERCOM_SPI_ADDR_Type      ADDR;        /**< \brief Offset: 0x14 (R/W 32) SPI Address Register */
+  __IO SERCOM_SPI_DATA_Type      DATA;        /**< \brief Offset: 0x18 (R/W 32) SPI Data Register */
+} SercomSpi;
+
+/** \brief SERCOM_USART hardware registers */
+typedef struct { /* USART Mode */
+  __IO SERCOM_USART_CTRLA_Type   CTRLA;       /**< \brief Offset: 0x00 (R/W 32) USART Control Register A */
+  __IO SERCOM_USART_CTRLB_Type   CTRLB;       /**< \brief Offset: 0x04 (R/W 32) USART Control Register B */
+  __IO SERCOM_USART_DEBUG_Type   DEBUG;       /**< \brief Offset: 0x08 (R/W  8) USART Debug Register */
+       RoReg8                    Reserved1[0x1];
+  __IO SERCOM_USART_BAUD_Type    BAUD;        /**< \brief Offset: 0x0A (R/W 16) USART Baud Rate Register */
+  __IO SERCOM_USART_INTENCLR_Type INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) USART Interrupt Enable Clear Register */
+  __IO SERCOM_USART_INTENSET_Type INTENSET;    /**< \brief Offset: 0x0D (R/W  8) USART Interrupt Enable Set Register */
+  __IO SERCOM_USART_INTFLAG_Type INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) USART Interrupt Flag Status and Clear Register */
+       RoReg8                    Reserved2[0x1];
+  __IO SERCOM_USART_STATUS_Type  STATUS;      /**< \brief Offset: 0x10 (R/W 32) USART Status Register */
+       RoReg8                    Reserved3[0x4];
+  __IO SERCOM_USART_DATA_Type    DATA;        /**< \brief Offset: 0x18 (R/W 32) USART Data Register */
+} SercomUsart;
+
+typedef union {
+       SercomI2cm                I2CM;        /**< \brief Offset: 0x00 I2C Master Mode */
+       SercomI2cs                I2CS;        /**< \brief Offset: 0x00 I2C Slave Mode */
+       SercomSpi                 SPI;         /**< \brief Offset: 0x00 SPI Mode */
+       SercomUsart               USART;       /**< \brief Offset: 0x00 USART Mode */
 } Sercom;
 
 #endif /*  __EXCLUDE_SERCOM_FROM_CMSIS__ */
@@ -5401,7 +5754,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR SYSCTRL */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_SYSCTRL System Control */
+/** \addtogroup SAM0+D_SYSCTRL System Control */
 /*@{*/
 
 #define REV_SYSCTRL    0x100
@@ -5410,194 +5763,194 @@ typedef struct {
 
 #ifndef __EXCLUDE_SYSCTRL_FROM_CMSIS__
 
-/* -------- SYSCTRL_INTENCLR : (SYSCTRL Offset: 0x00) (R/W 32) Interrupt Enable Register -------- */
+/* -------- SYSCTRL_INTENCLR : (SYSCTRL Offset: 0x00) (R/W 32) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC ready                         */
-    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K ready                      */
-    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 ready                        */
-    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 detection                    */
-    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 detection                    */
-    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 synchronization busy         */
-    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 synchronization busy         */
-    uint32_t DFLL48RDY:1;      /*!< bit:      8  DFLL ready                         */
-    uint32_t DFLL48OOB:1;      /*!< bit:      9  DFLL out of boundaries             */
-    uint32_t DFLL48LOCKF:1;    /*!< bit:     10  DFLL lock fine                     */
-    uint32_t DFLL48LOCKC:1;    /*!< bit:     11  DFLL lock coarse                   */
-    uint32_t DFLL48RCS:1;      /*!< bit:     12  DFLL reference clock stopped       */
-    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K ready                       */
+    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
+    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
+    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 Ready                        */
+    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
+    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 Detection                    */
+    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 Detection                    */
+    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 Synchronization Busy         */
+    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 Synchronization Busy         */
+    uint32_t DFLLRDY:1;        /*!< bit:      8  DFLL Ready                         */
+    uint32_t DFLLOOB:1;        /*!< bit:      9  DFLL Out Of Bounds                 */
+    uint32_t DFLLLCKF:1;       /*!< bit:     10  DFLL Lock Fine                     */
+    uint32_t DFLLLCKC:1;       /*!< bit:     11  DFLL Lock Coarse                   */
+    uint32_t DFLLRCS:1;        /*!< bit:     12  DFLL Reference Clock Stopped       */
+    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K Ready                       */
     uint32_t _reserved0:18;    /*!< bit: 14..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_INTENCLR_Type;
 
-#define SYSCTRL_INTENCLR_OFFSET     0x00         /**< \brief (SYSCTRL offset) Interrupt Enable Register */
-#define SYSCTRL_INTENCLR_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) Interrupt Enable Register */
+#define SYSCTRL_INTENCLR_OFFSET     0x00         /**< \brief (SYSCTRL_INTENCLR offset) Interrupt Enable Clear Register */
+#define SYSCTRL_INTENCLR_RESETVALUE 0x0          /**< \brief (SYSCTRL_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define SYSCTRL_INTENCLR_XOSCRDY    (0x1u <<  0) /**< \brief (SYSCTRL_INTENCLR) XOSC ready */
-#define SYSCTRL_INTENCLR_XOSC32KRDY (0x1u <<  1) /**< \brief (SYSCTRL_INTENCLR) XOSC32K ready */
-#define SYSCTRL_INTENCLR_BOD33RDY   (0x1u <<  2) /**< \brief (SYSCTRL_INTENCLR) BOD33 ready */
-#define SYSCTRL_INTENCLR_BOD12RDY   (0x1u <<  3) /**< \brief (SYSCTRL_INTENCLR) BOD12 ready */
-#define SYSCTRL_INTENCLR_BOD33DET   (0x1u <<  4) /**< \brief (SYSCTRL_INTENCLR) BOD33 detection */
-#define SYSCTRL_INTENCLR_BOD12DET   (0x1u <<  5) /**< \brief (SYSCTRL_INTENCLR) BOD12 detection */
-#define SYSCTRL_INTENCLR_BOD33BSY   (0x1u <<  6) /**< \brief (SYSCTRL_INTENCLR) BOD33 synchronization busy */
-#define SYSCTRL_INTENCLR_BOD12BSY   (0x1u <<  7) /**< \brief (SYSCTRL_INTENCLR) BOD12 synchronization busy */
-#define SYSCTRL_INTENCLR_DFLL48RDY  (0x1u <<  8) /**< \brief (SYSCTRL_INTENCLR) DFLL ready */
-#define SYSCTRL_INTENCLR_DFLL48OOB  (0x1u <<  9) /**< \brief (SYSCTRL_INTENCLR) DFLL out of boundaries */
-#define SYSCTRL_INTENCLR_DFLL48LOCKF (0x1u << 10) /**< \brief (SYSCTRL_INTENCLR) DFLL lock fine */
-#define SYSCTRL_INTENCLR_DFLL48LOCKC (0x1u << 11) /**< \brief (SYSCTRL_INTENCLR) DFLL lock coarse */
-#define SYSCTRL_INTENCLR_DFLL48RCS  (0x1u << 12) /**< \brief (SYSCTRL_INTENCLR) DFLL reference clock stopped */
-#define SYSCTRL_INTENCLR_OSC32KRDY  (0x1u << 13) /**< \brief (SYSCTRL_INTENCLR) OSC32K ready */
+#define SYSCTRL_INTENCLR_XOSCRDY    (0x1u <<  0) /**< \brief (SYSCTRL_INTENCLR) XOSC Ready */
+#define SYSCTRL_INTENCLR_XOSC32KRDY (0x1u <<  1) /**< \brief (SYSCTRL_INTENCLR) XOSC32K Ready */
+#define SYSCTRL_INTENCLR_BOD33RDY   (0x1u <<  2) /**< \brief (SYSCTRL_INTENCLR) BOD33 Ready */
+#define SYSCTRL_INTENCLR_BOD12RDY   (0x1u <<  3) /**< \brief (SYSCTRL_INTENCLR) BOD12 Ready */
+#define SYSCTRL_INTENCLR_BOD33DET   (0x1u <<  4) /**< \brief (SYSCTRL_INTENCLR) BOD33 Detection */
+#define SYSCTRL_INTENCLR_BOD12DET   (0x1u <<  5) /**< \brief (SYSCTRL_INTENCLR) BOD12 Detection */
+#define SYSCTRL_INTENCLR_BOD33BSY   (0x1u <<  6) /**< \brief (SYSCTRL_INTENCLR) BOD33 Synchronization Busy */
+#define SYSCTRL_INTENCLR_BOD12BSY   (0x1u <<  7) /**< \brief (SYSCTRL_INTENCLR) BOD12 Synchronization Busy */
+#define SYSCTRL_INTENCLR_DFLLRDY    (0x1u <<  8) /**< \brief (SYSCTRL_INTENCLR) DFLL Ready */
+#define SYSCTRL_INTENCLR_DFLLOOB    (0x1u <<  9) /**< \brief (SYSCTRL_INTENCLR) DFLL Out Of Bounds */
+#define SYSCTRL_INTENCLR_DFLLLCKF   (0x1u << 10) /**< \brief (SYSCTRL_INTENCLR) DFLL Lock Fine */
+#define SYSCTRL_INTENCLR_DFLLLCKC   (0x1u << 11) /**< \brief (SYSCTRL_INTENCLR) DFLL Lock Coarse */
+#define SYSCTRL_INTENCLR_DFLLRCS    (0x1u << 12) /**< \brief (SYSCTRL_INTENCLR) DFLL Reference Clock Stopped */
+#define SYSCTRL_INTENCLR_OSC32KRDY  (0x1u << 13) /**< \brief (SYSCTRL_INTENCLR) OSC32K Ready */
 #define SYSCTRL_INTENCLR_MASK       0x3FFFu /**< \brief (SYSCTRL_INTENCLR) MASK Register */
 
-/* -------- SYSCTRL_INTENSET : (SYSCTRL Offset: 0x04) (R/W 32) Interrupt Clear Register -------- */
+/* -------- SYSCTRL_INTENSET : (SYSCTRL Offset: 0x04) (R/W 32) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC ready                         */
-    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K ready                      */
-    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 ready                        */
-    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 detection                    */
-    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 detection                    */
-    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 synchronization busy         */
-    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 synchronization busy         */
-    uint32_t DFLL48RDY:1;      /*!< bit:      8  DFLL ready                         */
-    uint32_t DFLL48OOB:1;      /*!< bit:      9  DFLL out of boundaries             */
-    uint32_t DFLL48LOCKF:1;    /*!< bit:     10  DFLL lock fine                     */
-    uint32_t DFLL48LOCKC:1;    /*!< bit:     11  DFLL lock coarse                   */
-    uint32_t DFLL48RCS:1;      /*!< bit:     12  DFLL reference clock stopped       */
-    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K ready                       */
+    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
+    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
+    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 Ready                        */
+    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
+    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 Detection                    */
+    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 Detection                    */
+    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 Synchronization Busy         */
+    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 Synchronization Busy         */
+    uint32_t DFLLRDY:1;        /*!< bit:      8  DFLL Ready                         */
+    uint32_t DFLLOOB:1;        /*!< bit:      9  DFLL Out Of Bounds                 */
+    uint32_t DFLLLCKF:1;       /*!< bit:     10  DFLL Lock Fine                     */
+    uint32_t DFLLLCKC:1;       /*!< bit:     11  DFLL Lock Coarse                   */
+    uint32_t DFLLRCS:1;        /*!< bit:     12  DFLL Reference Clock Stopped       */
+    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K Ready                       */
     uint32_t _reserved0:18;    /*!< bit: 14..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_INTENSET_Type;
 
-#define SYSCTRL_INTENSET_OFFSET     0x04         /**< \brief (SYSCTRL offset) Interrupt Clear Register */
-#define SYSCTRL_INTENSET_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) Interrupt Clear Register */
+#define SYSCTRL_INTENSET_OFFSET     0x04         /**< \brief (SYSCTRL_INTENSET offset) Interrupt Enable Set Register */
+#define SYSCTRL_INTENSET_RESETVALUE 0x0          /**< \brief (SYSCTRL_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define SYSCTRL_INTENSET_XOSCRDY    (0x1u <<  0) /**< \brief (SYSCTRL_INTENSET) XOSC ready */
-#define SYSCTRL_INTENSET_XOSC32KRDY (0x1u <<  1) /**< \brief (SYSCTRL_INTENSET) XOSC32K ready */
-#define SYSCTRL_INTENSET_BOD33RDY   (0x1u <<  2) /**< \brief (SYSCTRL_INTENSET) BOD33 ready */
-#define SYSCTRL_INTENSET_BOD12RDY   (0x1u <<  3) /**< \brief (SYSCTRL_INTENSET) BOD12 ready */
-#define SYSCTRL_INTENSET_BOD33DET   (0x1u <<  4) /**< \brief (SYSCTRL_INTENSET) BOD33 detection */
-#define SYSCTRL_INTENSET_BOD12DET   (0x1u <<  5) /**< \brief (SYSCTRL_INTENSET) BOD12 detection */
-#define SYSCTRL_INTENSET_BOD33BSY   (0x1u <<  6) /**< \brief (SYSCTRL_INTENSET) BOD33 synchronization busy */
-#define SYSCTRL_INTENSET_BOD12BSY   (0x1u <<  7) /**< \brief (SYSCTRL_INTENSET) BOD12 synchronization busy */
-#define SYSCTRL_INTENSET_DFLL48RDY  (0x1u <<  8) /**< \brief (SYSCTRL_INTENSET) DFLL ready */
-#define SYSCTRL_INTENSET_DFLL48OOB  (0x1u <<  9) /**< \brief (SYSCTRL_INTENSET) DFLL out of boundaries */
-#define SYSCTRL_INTENSET_DFLL48LOCKF (0x1u << 10) /**< \brief (SYSCTRL_INTENSET) DFLL lock fine */
-#define SYSCTRL_INTENSET_DFLL48LOCKC (0x1u << 11) /**< \brief (SYSCTRL_INTENSET) DFLL lock coarse */
-#define SYSCTRL_INTENSET_DFLL48RCS  (0x1u << 12) /**< \brief (SYSCTRL_INTENSET) DFLL reference clock stopped */
-#define SYSCTRL_INTENSET_OSC32KRDY  (0x1u << 13) /**< \brief (SYSCTRL_INTENSET) OSC32K ready */
+#define SYSCTRL_INTENSET_XOSCRDY    (0x1u <<  0) /**< \brief (SYSCTRL_INTENSET) XOSC Ready */
+#define SYSCTRL_INTENSET_XOSC32KRDY (0x1u <<  1) /**< \brief (SYSCTRL_INTENSET) XOSC32K Ready */
+#define SYSCTRL_INTENSET_BOD33RDY   (0x1u <<  2) /**< \brief (SYSCTRL_INTENSET) BOD33 Ready */
+#define SYSCTRL_INTENSET_BOD12RDY   (0x1u <<  3) /**< \brief (SYSCTRL_INTENSET) BOD12 Ready */
+#define SYSCTRL_INTENSET_BOD33DET   (0x1u <<  4) /**< \brief (SYSCTRL_INTENSET) BOD33 Detection */
+#define SYSCTRL_INTENSET_BOD12DET   (0x1u <<  5) /**< \brief (SYSCTRL_INTENSET) BOD12 Detection */
+#define SYSCTRL_INTENSET_BOD33BSY   (0x1u <<  6) /**< \brief (SYSCTRL_INTENSET) BOD33 Synchronization Busy */
+#define SYSCTRL_INTENSET_BOD12BSY   (0x1u <<  7) /**< \brief (SYSCTRL_INTENSET) BOD12 Synchronization Busy */
+#define SYSCTRL_INTENSET_DFLLRDY    (0x1u <<  8) /**< \brief (SYSCTRL_INTENSET) DFLL Ready */
+#define SYSCTRL_INTENSET_DFLLOOB    (0x1u <<  9) /**< \brief (SYSCTRL_INTENSET) DFLL Out Of Bounds */
+#define SYSCTRL_INTENSET_DFLLLCKF   (0x1u << 10) /**< \brief (SYSCTRL_INTENSET) DFLL Lock Fine */
+#define SYSCTRL_INTENSET_DFLLLCKC   (0x1u << 11) /**< \brief (SYSCTRL_INTENSET) DFLL Lock Coarse */
+#define SYSCTRL_INTENSET_DFLLRCS    (0x1u << 12) /**< \brief (SYSCTRL_INTENSET) DFLL Reference Clock Stopped */
+#define SYSCTRL_INTENSET_OSC32KRDY  (0x1u << 13) /**< \brief (SYSCTRL_INTENSET) OSC32K Ready */
 #define SYSCTRL_INTENSET_MASK       0x3FFFu /**< \brief (SYSCTRL_INTENSET) MASK Register */
 
-/* -------- SYSCTRL_INTFLAG : (SYSCTRL Offset: 0x08) (R/W 32) Interrupt Flag Register -------- */
+/* -------- SYSCTRL_INTFLAG : (SYSCTRL Offset: 0x08) (R/W 32) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC ready                         */
-    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K ready                      */
-    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 ready                        */
-    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 detection                    */
-    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 detection                    */
-    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 synchronization busy         */
-    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 synchronization busy         */
-    uint32_t DFLL48RDY:1;      /*!< bit:      8  DFLL ready                         */
-    uint32_t DFLL48OOB:1;      /*!< bit:      9  DFLL out of boundaries             */
-    uint32_t DFLL48LOCKF:1;    /*!< bit:     10  DFLL lock fine                     */
-    uint32_t DFLL48LOCKC:1;    /*!< bit:     11  DFLL lock coarse                   */
-    uint32_t DFLL48RCS:1;      /*!< bit:     12  DFLL reference clock stopped       */
-    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K ready                       */
+    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
+    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
+    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 Ready                        */
+    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
+    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 Detection                    */
+    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 Detection                    */
+    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 Synchronization Busy         */
+    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 Synchronization Busy         */
+    uint32_t DFLLRDY:1;        /*!< bit:      8  DFLL Ready                         */
+    uint32_t DFLLOOB:1;        /*!< bit:      9  DFLL Out Of Bounds                 */
+    uint32_t DFLLLCKF:1;       /*!< bit:     10  DFLL Lock Fine                     */
+    uint32_t DFLLLCKC:1;       /*!< bit:     11  DFLL Lock Coarse                   */
+    uint32_t DFLLRCS:1;        /*!< bit:     12  DFLL Reference Clock Stopped       */
+    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K Ready                       */
     uint32_t _reserved0:18;    /*!< bit: 14..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_INTFLAG_Type;
 
-#define SYSCTRL_INTFLAG_OFFSET      0x08         /**< \brief (SYSCTRL offset) Interrupt Flag Register */
-#define SYSCTRL_INTFLAG_RESETVALUE  0x0          /**< \brief (SYSCTRL reset_value) Interrupt Flag Register */
+#define SYSCTRL_INTFLAG_OFFSET      0x08         /**< \brief (SYSCTRL_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define SYSCTRL_INTFLAG_RESETVALUE  0x0          /**< \brief (SYSCTRL_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define SYSCTRL_INTFLAG_XOSCRDY     (0x1u <<  0) /**< \brief (SYSCTRL_INTFLAG) XOSC ready */
-#define SYSCTRL_INTFLAG_XOSC32KRDY  (0x1u <<  1) /**< \brief (SYSCTRL_INTFLAG) XOSC32K ready */
-#define SYSCTRL_INTFLAG_BOD33RDY    (0x1u <<  2) /**< \brief (SYSCTRL_INTFLAG) BOD33 ready */
-#define SYSCTRL_INTFLAG_BOD12RDY    (0x1u <<  3) /**< \brief (SYSCTRL_INTFLAG) BOD12 ready */
-#define SYSCTRL_INTFLAG_BOD33DET    (0x1u <<  4) /**< \brief (SYSCTRL_INTFLAG) BOD33 detection */
-#define SYSCTRL_INTFLAG_BOD12DET    (0x1u <<  5) /**< \brief (SYSCTRL_INTFLAG) BOD12 detection */
-#define SYSCTRL_INTFLAG_BOD33BSY    (0x1u <<  6) /**< \brief (SYSCTRL_INTFLAG) BOD33 synchronization busy */
-#define SYSCTRL_INTFLAG_BOD12BSY    (0x1u <<  7) /**< \brief (SYSCTRL_INTFLAG) BOD12 synchronization busy */
-#define SYSCTRL_INTFLAG_DFLL48RDY   (0x1u <<  8) /**< \brief (SYSCTRL_INTFLAG) DFLL ready */
-#define SYSCTRL_INTFLAG_DFLL48OOB   (0x1u <<  9) /**< \brief (SYSCTRL_INTFLAG) DFLL out of boundaries */
-#define SYSCTRL_INTFLAG_DFLL48LOCKF (0x1u << 10) /**< \brief (SYSCTRL_INTFLAG) DFLL lock fine */
-#define SYSCTRL_INTFLAG_DFLL48LOCKC (0x1u << 11) /**< \brief (SYSCTRL_INTFLAG) DFLL lock coarse */
-#define SYSCTRL_INTFLAG_DFLL48RCS   (0x1u << 12) /**< \brief (SYSCTRL_INTFLAG) DFLL reference clock stopped */
-#define SYSCTRL_INTFLAG_OSC32KRDY   (0x1u << 13) /**< \brief (SYSCTRL_INTFLAG) OSC32K ready */
+#define SYSCTRL_INTFLAG_XOSCRDY     (0x1u <<  0) /**< \brief (SYSCTRL_INTFLAG) XOSC Ready */
+#define SYSCTRL_INTFLAG_XOSC32KRDY  (0x1u <<  1) /**< \brief (SYSCTRL_INTFLAG) XOSC32K Ready */
+#define SYSCTRL_INTFLAG_BOD33RDY    (0x1u <<  2) /**< \brief (SYSCTRL_INTFLAG) BOD33 Ready */
+#define SYSCTRL_INTFLAG_BOD12RDY    (0x1u <<  3) /**< \brief (SYSCTRL_INTFLAG) BOD12 Ready */
+#define SYSCTRL_INTFLAG_BOD33DET    (0x1u <<  4) /**< \brief (SYSCTRL_INTFLAG) BOD33 Detection */
+#define SYSCTRL_INTFLAG_BOD12DET    (0x1u <<  5) /**< \brief (SYSCTRL_INTFLAG) BOD12 Detection */
+#define SYSCTRL_INTFLAG_BOD33BSY    (0x1u <<  6) /**< \brief (SYSCTRL_INTFLAG) BOD33 Synchronization Busy */
+#define SYSCTRL_INTFLAG_BOD12BSY    (0x1u <<  7) /**< \brief (SYSCTRL_INTFLAG) BOD12 Synchronization Busy */
+#define SYSCTRL_INTFLAG_DFLLRDY     (0x1u <<  8) /**< \brief (SYSCTRL_INTFLAG) DFLL Ready */
+#define SYSCTRL_INTFLAG_DFLLOOB     (0x1u <<  9) /**< \brief (SYSCTRL_INTFLAG) DFLL Out Of Bounds */
+#define SYSCTRL_INTFLAG_DFLLLCKF    (0x1u << 10) /**< \brief (SYSCTRL_INTFLAG) DFLL Lock Fine */
+#define SYSCTRL_INTFLAG_DFLLLCKC    (0x1u << 11) /**< \brief (SYSCTRL_INTFLAG) DFLL Lock Coarse */
+#define SYSCTRL_INTFLAG_DFLLRCS     (0x1u << 12) /**< \brief (SYSCTRL_INTFLAG) DFLL Reference Clock Stopped */
+#define SYSCTRL_INTFLAG_OSC32KRDY   (0x1u << 13) /**< \brief (SYSCTRL_INTFLAG) OSC32K Ready */
 #define SYSCTRL_INTFLAG_MASK        0x3FFFu /**< \brief (SYSCTRL_INTFLAG) MASK Register */
 
 /* -------- SYSCTRL_PCLKSR : (SYSCTRL Offset: 0x0C) (R/  32) Power and Clocks Status Register -------- */
 typedef union {
   struct {
-    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC ready                         */
-    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K ready                      */
-    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 ready                        */
-    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 detection                    */
-    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 detection                    */
-    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 synchronization busy         */
-    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 synchronization busy         */
-    uint32_t DFLL48RDY:1;      /*!< bit:      8  DFLL ready                         */
-    uint32_t DFLL48OOB:1;      /*!< bit:      9  DFLL out of boundaries             */
-    uint32_t DFLL48LOCKF:1;    /*!< bit:     10  DFLL lock fine                     */
-    uint32_t DFLL48LOCKC:1;    /*!< bit:     11  DFLL lock coarse                   */
-    uint32_t DFLL48RCS:1;      /*!< bit:     12  DFLL reference clock stopped       */
-    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32KRDY                          */
+    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
+    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
+    uint32_t BOD33RDY:1;       /*!< bit:      2  BOD33 Ready                        */
+    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
+    uint32_t BOD33DET:1;       /*!< bit:      4  BOD33 Detection                    */
+    uint32_t BOD12DET:1;       /*!< bit:      5  BOD12 Detection                    */
+    uint32_t BOD33BSY:1;       /*!< bit:      6  BOD33 Synchronization Busy         */
+    uint32_t BOD12BSY:1;       /*!< bit:      7  BOD12 Synchronization Busy         */
+    uint32_t DFLLRDY:1;        /*!< bit:      8  DFLL Ready                         */
+    uint32_t DFLLOOB:1;        /*!< bit:      9  DFLL Out Of Bounds                 */
+    uint32_t DFLLLCKF:1;       /*!< bit:     10  DFLL Lock Fine                     */
+    uint32_t DFLLLCKC:1;       /*!< bit:     11  DFLL Lock Coarse                   */
+    uint32_t DFLLRCS:1;        /*!< bit:     12  DFLL Reference Clock Stopped       */
+    uint32_t OSC32KRDY:1;      /*!< bit:     13  OSC32K Ready                       */
     uint32_t _reserved0:18;    /*!< bit: 14..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_PCLKSR_Type;
 
-#define SYSCTRL_PCLKSR_OFFSET       0x0C         /**< \brief (SYSCTRL offset) Power and Clocks Status Register */
-#define SYSCTRL_PCLKSR_RESETVALUE   0x0          /**< \brief (SYSCTRL reset_value) Power and Clocks Status Register */
+#define SYSCTRL_PCLKSR_OFFSET       0x0C         /**< \brief (SYSCTRL_PCLKSR offset) Power and Clocks Status Register */
+#define SYSCTRL_PCLKSR_RESETVALUE   0x0          /**< \brief (SYSCTRL_PCLKSR reset_value) Power and Clocks Status Register */
 
-#define SYSCTRL_PCLKSR_XOSCRDY      (0x1u <<  0) /**< \brief (SYSCTRL_PCLKSR) XOSC ready */
-#define SYSCTRL_PCLKSR_XOSC32KRDY   (0x1u <<  1) /**< \brief (SYSCTRL_PCLKSR) XOSC32K ready */
-#define SYSCTRL_PCLKSR_BOD33RDY     (0x1u <<  2) /**< \brief (SYSCTRL_PCLKSR) BOD33 ready */
-#define SYSCTRL_PCLKSR_BOD12RDY     (0x1u <<  3) /**< \brief (SYSCTRL_PCLKSR) BOD12 ready */
-#define SYSCTRL_PCLKSR_BOD33DET     (0x1u <<  4) /**< \brief (SYSCTRL_PCLKSR) BOD33 detection */
-#define SYSCTRL_PCLKSR_BOD12DET     (0x1u <<  5) /**< \brief (SYSCTRL_PCLKSR) BOD12 detection */
-#define SYSCTRL_PCLKSR_BOD33BSY     (0x1u <<  6) /**< \brief (SYSCTRL_PCLKSR) BOD33 synchronization busy */
-#define SYSCTRL_PCLKSR_BOD12BSY     (0x1u <<  7) /**< \brief (SYSCTRL_PCLKSR) BOD12 synchronization busy */
-#define SYSCTRL_PCLKSR_DFLL48RDY    (0x1u <<  8) /**< \brief (SYSCTRL_PCLKSR) DFLL ready */
-#define SYSCTRL_PCLKSR_DFLL48OOB    (0x1u <<  9) /**< \brief (SYSCTRL_PCLKSR) DFLL out of boundaries */
-#define SYSCTRL_PCLKSR_DFLL48LOCKF  (0x1u << 10) /**< \brief (SYSCTRL_PCLKSR) DFLL lock fine */
-#define SYSCTRL_PCLKSR_DFLL48LOCKC  (0x1u << 11) /**< \brief (SYSCTRL_PCLKSR) DFLL lock coarse */
-#define SYSCTRL_PCLKSR_DFLL48RCS    (0x1u << 12) /**< \brief (SYSCTRL_PCLKSR) DFLL reference clock stopped */
-#define SYSCTRL_PCLKSR_OSC32KRDY    (0x1u << 13) /**< \brief (SYSCTRL_PCLKSR) OSC32KRDY */
+#define SYSCTRL_PCLKSR_XOSCRDY      (0x1u <<  0) /**< \brief (SYSCTRL_PCLKSR) XOSC Ready */
+#define SYSCTRL_PCLKSR_XOSC32KRDY   (0x1u <<  1) /**< \brief (SYSCTRL_PCLKSR) XOSC32K Ready */
+#define SYSCTRL_PCLKSR_BOD33RDY     (0x1u <<  2) /**< \brief (SYSCTRL_PCLKSR) BOD33 Ready */
+#define SYSCTRL_PCLKSR_BOD12RDY     (0x1u <<  3) /**< \brief (SYSCTRL_PCLKSR) BOD12 Ready */
+#define SYSCTRL_PCLKSR_BOD33DET     (0x1u <<  4) /**< \brief (SYSCTRL_PCLKSR) BOD33 Detection */
+#define SYSCTRL_PCLKSR_BOD12DET     (0x1u <<  5) /**< \brief (SYSCTRL_PCLKSR) BOD12 Detection */
+#define SYSCTRL_PCLKSR_BOD33BSY     (0x1u <<  6) /**< \brief (SYSCTRL_PCLKSR) BOD33 Synchronization Busy */
+#define SYSCTRL_PCLKSR_BOD12BSY     (0x1u <<  7) /**< \brief (SYSCTRL_PCLKSR) BOD12 Synchronization Busy */
+#define SYSCTRL_PCLKSR_DFLLRDY      (0x1u <<  8) /**< \brief (SYSCTRL_PCLKSR) DFLL Ready */
+#define SYSCTRL_PCLKSR_DFLLOOB      (0x1u <<  9) /**< \brief (SYSCTRL_PCLKSR) DFLL Out Of Bounds */
+#define SYSCTRL_PCLKSR_DFLLLCKF     (0x1u << 10) /**< \brief (SYSCTRL_PCLKSR) DFLL Lock Fine */
+#define SYSCTRL_PCLKSR_DFLLLCKC     (0x1u << 11) /**< \brief (SYSCTRL_PCLKSR) DFLL Lock Coarse */
+#define SYSCTRL_PCLKSR_DFLLRCS      (0x1u << 12) /**< \brief (SYSCTRL_PCLKSR) DFLL Reference Clock Stopped */
+#define SYSCTRL_PCLKSR_OSC32KRDY    (0x1u << 13) /**< \brief (SYSCTRL_PCLKSR) OSC32K Ready */
 #define SYSCTRL_PCLKSR_MASK         0x3FFFu /**< \brief (SYSCTRL_PCLKSR) MASK Register */
 
 /* -------- SYSCTRL_XOSC : (SYSCTRL Offset: 0x10) (R/W 16) XOSC Control Register -------- */
 typedef union {
   struct {
     uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t ENABLE:1;         /*!< bit:      1                                     */
-    uint16_t XTALEN:1;         /*!< bit:      2                                     */
+    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint16_t XTALEN:1;         /*!< bit:      2  Crystal Oscillator Enable          */
     uint16_t _reserved1:5;     /*!< bit:  3.. 7  Reserved                           */
-    uint16_t GAIN:3;           /*!< bit:  8..10                                     */
-    uint16_t AMPGC:1;          /*!< bit:     11                                     */
-    uint16_t STARTUP:4;        /*!< bit: 12..15                                     */
+    uint16_t GAIN:3;           /*!< bit:  8..10  Gain Value                         */
+    uint16_t AMPGC:1;          /*!< bit:     11  Automatic Amplitude Gain Control   */
+    uint16_t STARTUP:4;        /*!< bit: 12..15  Startup-Time                       */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_XOSC_Type;
 
-#define SYSCTRL_XOSC_OFFSET         0x10         /**< \brief (SYSCTRL offset) XOSC Control Register */
+#define SYSCTRL_XOSC_OFFSET         0x10         /**< \brief (SYSCTRL_XOSC offset) XOSC Control Register */
 
-#define SYSCTRL_XOSC_ENABLE         (0x1u <<  1) /**< \brief (SYSCTRL_XOSC)  */
-#define SYSCTRL_XOSC_XTALEN         (0x1u <<  2) /**< \brief (SYSCTRL_XOSC)  */
+#define SYSCTRL_XOSC_ENABLE         (0x1u <<  1) /**< \brief (SYSCTRL_XOSC) Enable */
+#define SYSCTRL_XOSC_XTALEN         (0x1u <<  2) /**< \brief (SYSCTRL_XOSC) Crystal Oscillator Enable */
 #define SYSCTRL_XOSC_GAIN_Pos       8
-#define SYSCTRL_XOSC_GAIN_Msk       (0x7u << SYSCTRL_XOSC_GAIN_Pos) /**< \brief (SYSCTRL_XOSC)  */
+#define SYSCTRL_XOSC_GAIN_Msk       (0x7u << SYSCTRL_XOSC_GAIN_Pos) /**< \brief (SYSCTRL_XOSC) Gain Value */
 #define SYSCTRL_XOSC_GAIN(value)    ((SYSCTRL_XOSC_GAIN_Msk & ((value) << SYSCTRL_XOSC_GAIN_Pos)))
-#define SYSCTRL_XOSC_AMPGC          (0x1u << 11) /**< \brief (SYSCTRL_XOSC)  */
+#define SYSCTRL_XOSC_AMPGC          (0x1u << 11) /**< \brief (SYSCTRL_XOSC) Automatic Amplitude Gain Control */
 #define SYSCTRL_XOSC_STARTUP_Pos    12
-#define SYSCTRL_XOSC_STARTUP_Msk    (0xFu << SYSCTRL_XOSC_STARTUP_Pos) /**< \brief (SYSCTRL_XOSC)  */
+#define SYSCTRL_XOSC_STARTUP_Msk    (0xFu << SYSCTRL_XOSC_STARTUP_Pos) /**< \brief (SYSCTRL_XOSC) Startup-Time */
 #define SYSCTRL_XOSC_STARTUP(value) ((SYSCTRL_XOSC_STARTUP_Msk & ((value) << SYSCTRL_XOSC_STARTUP_Pos)))
 #define SYSCTRL_XOSC_MASK           0xFF06u /**< \brief (SYSCTRL_XOSC) MASK Register */
 
@@ -5605,57 +5958,57 @@ typedef union {
 typedef union {
   struct {
     uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t ENABLE:1;         /*!< bit:      1                                     */
-    uint16_t XTALEN:1;         /*!< bit:      2                                     */
-    uint16_t EN32K:1;          /*!< bit:      3                                     */
-    uint16_t EN1K:1;           /*!< bit:      4                                     */
-    uint16_t AAMPEN:1;         /*!< bit:      5                                     */
+    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint16_t XTALEN:1;         /*!< bit:      2  Crystal Oscillator Enable          */
+    uint16_t EN32K:1;          /*!< bit:      3  32kHz Output Enable                */
+    uint16_t EN1K:1;           /*!< bit:      4  1kHz Output Enable                 */
+    uint16_t AAMPEN:1;         /*!< bit:      5  Automatic Amplitude Control Enable */
     uint16_t _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint16_t STARTUP:3;        /*!< bit:  8..10                                     */
+    uint16_t STARTUP:3;        /*!< bit:  8..10  Start-Up Time                      */
     uint16_t _reserved2:5;     /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_XOSC32K_Type;
 
-#define SYSCTRL_XOSC32K_OFFSET      0x14         /**< \brief (SYSCTRL offset) XOSC32K Control Register */
-#define SYSCTRL_XOSC32K_RESETVALUE  0x0          /**< \brief (SYSCTRL reset_value) XOSC32K Control Register */
+#define SYSCTRL_XOSC32K_OFFSET      0x14         /**< \brief (SYSCTRL_XOSC32K offset) XOSC32K Control Register */
+#define SYSCTRL_XOSC32K_RESETVALUE  0x0          /**< \brief (SYSCTRL_XOSC32K reset_value) XOSC32K Control Register */
 
-#define SYSCTRL_XOSC32K_ENABLE      (0x1u <<  1) /**< \brief (SYSCTRL_XOSC32K)  */
-#define SYSCTRL_XOSC32K_XTALEN      (0x1u <<  2) /**< \brief (SYSCTRL_XOSC32K)  */
-#define SYSCTRL_XOSC32K_EN32K       (0x1u <<  3) /**< \brief (SYSCTRL_XOSC32K)  */
-#define SYSCTRL_XOSC32K_EN1K        (0x1u <<  4) /**< \brief (SYSCTRL_XOSC32K)  */
-#define SYSCTRL_XOSC32K_AAMPEN      (0x1u <<  5) /**< \brief (SYSCTRL_XOSC32K)  */
+#define SYSCTRL_XOSC32K_ENABLE      (0x1u <<  1) /**< \brief (SYSCTRL_XOSC32K) Enable */
+#define SYSCTRL_XOSC32K_XTALEN      (0x1u <<  2) /**< \brief (SYSCTRL_XOSC32K) Crystal Oscillator Enable */
+#define SYSCTRL_XOSC32K_EN32K       (0x1u <<  3) /**< \brief (SYSCTRL_XOSC32K) 32kHz Output Enable */
+#define SYSCTRL_XOSC32K_EN1K        (0x1u <<  4) /**< \brief (SYSCTRL_XOSC32K) 1kHz Output Enable */
+#define SYSCTRL_XOSC32K_AAMPEN      (0x1u <<  5) /**< \brief (SYSCTRL_XOSC32K) Automatic Amplitude Control Enable */
 #define SYSCTRL_XOSC32K_STARTUP_Pos    8
-#define SYSCTRL_XOSC32K_STARTUP_Msk    (0x7u << SYSCTRL_XOSC32K_STARTUP_Pos) /**< \brief (SYSCTRL_XOSC32K)  */
+#define SYSCTRL_XOSC32K_STARTUP_Msk    (0x7u << SYSCTRL_XOSC32K_STARTUP_Pos) /**< \brief (SYSCTRL_XOSC32K) Start-Up Time */
 #define SYSCTRL_XOSC32K_STARTUP(value) ((SYSCTRL_XOSC32K_STARTUP_Msk & ((value) << SYSCTRL_XOSC32K_STARTUP_Pos)))
 #define SYSCTRL_XOSC32K_MASK        0x73Eu /**< \brief (SYSCTRL_XOSC32K) MASK Register */
 
 /* -------- SYSCTRL_XOSC32KTEST : (SYSCTRL Offset: 0x16) (R/W  8) XOSC32K Test Register -------- */
 typedef union {
   struct {
-    uint8_t  MCALIBEN:1;       /*!< bit:      0                                     */
-    uint8_t  MCALIB:6;         /*!< bit:  1.. 6                                     */
+    uint8_t  MCALIBEN:1;       /*!< bit:      0  Manual Amplitude Calibration Enable */
+    uint8_t  MCALIB:6;         /*!< bit:  1.. 6  Manual Amplitude Calibration Value */
     uint8_t  _reserved0:1;     /*!< bit:      7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } SYSCTRL_XOSC32KTEST_Type;
 
-#define SYSCTRL_XOSC32KTEST_OFFSET  0x16         /**< \brief (SYSCTRL offset) XOSC32K Test Register */
-#define SYSCTRL_XOSC32KTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) XOSC32K Test Register */
+#define SYSCTRL_XOSC32KTEST_OFFSET  0x16         /**< \brief (SYSCTRL_XOSC32KTEST offset) XOSC32K Test Register */
+#define SYSCTRL_XOSC32KTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL_XOSC32KTEST reset_value) XOSC32K Test Register */
 
-#define SYSCTRL_XOSC32KTEST_MCALIBEN (0x1u <<  0) /**< \brief (SYSCTRL_XOSC32KTEST)  */
+#define SYSCTRL_XOSC32KTEST_MCALIBEN (0x1u <<  0) /**< \brief (SYSCTRL_XOSC32KTEST) Manual Amplitude Calibration Enable */
 #define SYSCTRL_XOSC32KTEST_MCALIB_Pos    1
-#define SYSCTRL_XOSC32KTEST_MCALIB_Msk    (0x3Fu << SYSCTRL_XOSC32KTEST_MCALIB_Pos) /**< \brief (SYSCTRL_XOSC32KTEST)  */
+#define SYSCTRL_XOSC32KTEST_MCALIB_Msk    (0x3Fu << SYSCTRL_XOSC32KTEST_MCALIB_Pos) /**< \brief (SYSCTRL_XOSC32KTEST) Manual Amplitude Calibration Value */
 #define SYSCTRL_XOSC32KTEST_MCALIB(value) ((SYSCTRL_XOSC32KTEST_MCALIB_Msk & ((value) << SYSCTRL_XOSC32KTEST_MCALIB_Pos)))
 #define SYSCTRL_XOSC32KTEST_MASK    0x7Fu /**< \brief (SYSCTRL_XOSC32KTEST) MASK Register */
 
-/* -------- SYSCTRL_DFLL48CTRL : (SYSCTRL Offset: 0x18) (R/W 32) DFLL  Config Register -------- */
+/* -------- SYSCTRL_DFLLCTRL : (SYSCTRL Offset: 0x18) (R/W 32) DFLL  Config Register -------- */
 typedef union {
   struct {
     uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
     uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint32_t MODE:1;           /*!< bit:      2  Mode Selection                     */
-    uint32_t STABLE:1;         /*!< bit:      3  Stable DFLL Frequency              */
+    uint32_t STABLE:1;         /*!< bit:      3  Stable Frequency                   */
     uint32_t LLAW:1;           /*!< bit:      4  Lose Lock After Wake               */
     uint32_t USBCRM:1;         /*!< bit:      5  USB Clock Recovery Mode            */
     uint32_t CCDIS:1;          /*!< bit:      6  Chill Cycle Disable                */
@@ -5663,456 +6016,421 @@ typedef union {
     uint32_t _reserved1:24;    /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_DFLL48CTRL_Type;
+} SYSCTRL_DFLLCTRL_Type;
 
-#define SYSCTRL_DFLL48CTRL_OFFSET   0x18         /**< \brief (SYSCTRL offset) DFLL  Config Register */
-#define SYSCTRL_DFLL48CTRL_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) DFLL  Config Register */
+#define SYSCTRL_DFLLCTRL_OFFSET     0x18         /**< \brief (SYSCTRL_DFLLCTRL offset) DFLL  Config Register */
+#define SYSCTRL_DFLLCTRL_RESETVALUE 0x0          /**< \brief (SYSCTRL_DFLLCTRL reset_value) DFLL  Config Register */
 
-#define SYSCTRL_DFLL48CTRL_ENABLE   (0x1u <<  1) /**< \brief (SYSCTRL_DFLL48CTRL) Enable */
-#define SYSCTRL_DFLL48CTRL_MODE     (0x1u <<  2) /**< \brief (SYSCTRL_DFLL48CTRL) Mode Selection */
-#define SYSCTRL_DFLL48CTRL_STABLE   (0x1u <<  3) /**< \brief (SYSCTRL_DFLL48CTRL) Stable DFLL Frequency */
-#define SYSCTRL_DFLL48CTRL_LLAW     (0x1u <<  4) /**< \brief (SYSCTRL_DFLL48CTRL) Lose Lock After Wake */
-#define SYSCTRL_DFLL48CTRL_USBCRM   (0x1u <<  5) /**< \brief (SYSCTRL_DFLL48CTRL) USB Clock Recovery Mode */
-#define SYSCTRL_DFLL48CTRL_CCDIS    (0x1u <<  6) /**< \brief (SYSCTRL_DFLL48CTRL) Chill Cycle Disable */
-#define SYSCTRL_DFLL48CTRL_QLDIS    (0x1u <<  7) /**< \brief (SYSCTRL_DFLL48CTRL) Quick Lock Disable */
-#define SYSCTRL_DFLL48CTRL_MASK     0xFEu /**< \brief (SYSCTRL_DFLL48CTRL) MASK Register */
+#define SYSCTRL_DFLLCTRL_ENABLE     (0x1u <<  1) /**< \brief (SYSCTRL_DFLLCTRL) Enable */
+#define SYSCTRL_DFLLCTRL_MODE       (0x1u <<  2) /**< \brief (SYSCTRL_DFLLCTRL) Mode Selection */
+#define SYSCTRL_DFLLCTRL_STABLE     (0x1u <<  3) /**< \brief (SYSCTRL_DFLLCTRL) Stable Frequency */
+#define SYSCTRL_DFLLCTRL_LLAW       (0x1u <<  4) /**< \brief (SYSCTRL_DFLLCTRL) Lose Lock After Wake */
+#define SYSCTRL_DFLLCTRL_USBCRM     (0x1u <<  5) /**< \brief (SYSCTRL_DFLLCTRL) USB Clock Recovery Mode */
+#define SYSCTRL_DFLLCTRL_CCDIS      (0x1u <<  6) /**< \brief (SYSCTRL_DFLLCTRL) Chill Cycle Disable */
+#define SYSCTRL_DFLLCTRL_QLDIS      (0x1u <<  7) /**< \brief (SYSCTRL_DFLLCTRL) Quick Lock Disable */
+#define SYSCTRL_DFLLCTRL_MASK       0xFEu /**< \brief (SYSCTRL_DFLLCTRL) MASK Register */
 
-/* -------- SYSCTRL_DFLL48VALDIFF : (SYSCTRL Offset: 0x1C) (R/W 32) DFLL Calibration Value Register -------- */
+/* -------- SYSCTRL_DFLLVAL : (SYSCTRL Offset: 0x1C) (R/W 32) DFLL Calibration Value Register -------- */
 typedef union {
   struct {
-    uint32_t FINE:8;           /*!< bit:  0.. 7  DFLL Fine Calibration Value        */
-    uint32_t COARSE:5;         /*!< bit:  8..12  DFLL Coarse Calibration Value      */
+    uint32_t FINE:8;           /*!< bit:  0.. 7  Fine Calibration Value             */
+    uint32_t COARSE:5;         /*!< bit:  8..12  Coarse Calibration Value           */
     uint32_t _reserved0:3;     /*!< bit: 13..15  Reserved                           */
-    uint32_t DIFF:16;          /*!< bit: 16..31                                     */
+    uint32_t DIFF:16;          /*!< bit: 16..31  Multiplication Ratio Difference    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_DFLL48VALDIFF_Type;
+} SYSCTRL_DFLLVAL_Type;
 
-#define SYSCTRL_DFLL48VALDIFF_OFFSET 0x1C         /**< \brief (SYSCTRL offset) DFLL Calibration Value Register */
-#define SYSCTRL_DFLL48VALDIFF_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) DFLL Calibration Value Register */
+#define SYSCTRL_DFLLVAL_OFFSET      0x1C         /**< \brief (SYSCTRL_DFLLVAL offset) DFLL Calibration Value Register */
+#define SYSCTRL_DFLLVAL_RESETVALUE  0x0          /**< \brief (SYSCTRL_DFLLVAL reset_value) DFLL Calibration Value Register */
 
-#define SYSCTRL_DFLL48VALDIFF_FINE_Pos    0
-#define SYSCTRL_DFLL48VALDIFF_FINE_Msk    (0xFFu << SYSCTRL_DFLL48VALDIFF_FINE_Pos) /**< \brief (SYSCTRL_DFLL48VALDIFF) DFLL Fine Calibration Value */
-#define SYSCTRL_DFLL48VALDIFF_FINE(value) ((SYSCTRL_DFLL48VALDIFF_FINE_Msk & ((value) << SYSCTRL_DFLL48VALDIFF_FINE_Pos)))
-#define SYSCTRL_DFLL48VALDIFF_COARSE_Pos    8
-#define SYSCTRL_DFLL48VALDIFF_COARSE_Msk    (0x1Fu << SYSCTRL_DFLL48VALDIFF_COARSE_Pos) /**< \brief (SYSCTRL_DFLL48VALDIFF) DFLL Coarse Calibration Value */
-#define SYSCTRL_DFLL48VALDIFF_COARSE(value) ((SYSCTRL_DFLL48VALDIFF_COARSE_Msk & ((value) << SYSCTRL_DFLL48VALDIFF_COARSE_Pos)))
-#define SYSCTRL_DFLL48VALDIFF_DIFF_Pos    16
-#define SYSCTRL_DFLL48VALDIFF_DIFF_Msk    (0xFFFFu << SYSCTRL_DFLL48VALDIFF_DIFF_Pos) /**< \brief (SYSCTRL_DFLL48VALDIFF)  */
-#define SYSCTRL_DFLL48VALDIFF_DIFF(value) ((SYSCTRL_DFLL48VALDIFF_DIFF_Msk & ((value) << SYSCTRL_DFLL48VALDIFF_DIFF_Pos)))
-#define SYSCTRL_DFLL48VALDIFF_MASK  0xFFFF1FFFu /**< \brief (SYSCTRL_DFLL48VALDIFF) MASK Register */
+#define SYSCTRL_DFLLVAL_FINE_Pos    0
+#define SYSCTRL_DFLLVAL_FINE_Msk    (0xFFu << SYSCTRL_DFLLVAL_FINE_Pos) /**< \brief (SYSCTRL_DFLLVAL) Fine Calibration Value */
+#define SYSCTRL_DFLLVAL_FINE(value) ((SYSCTRL_DFLLVAL_FINE_Msk & ((value) << SYSCTRL_DFLLVAL_FINE_Pos)))
+#define SYSCTRL_DFLLVAL_COARSE_Pos    8
+#define SYSCTRL_DFLLVAL_COARSE_Msk    (0x1Fu << SYSCTRL_DFLLVAL_COARSE_Pos) /**< \brief (SYSCTRL_DFLLVAL) Coarse Calibration Value */
+#define SYSCTRL_DFLLVAL_COARSE(value) ((SYSCTRL_DFLLVAL_COARSE_Msk & ((value) << SYSCTRL_DFLLVAL_COARSE_Pos)))
+#define SYSCTRL_DFLLVAL_DIFF_Pos    16
+#define SYSCTRL_DFLLVAL_DIFF_Msk    (0xFFFFu << SYSCTRL_DFLLVAL_DIFF_Pos) /**< \brief (SYSCTRL_DFLLVAL) Multiplication Ratio Difference */
+#define SYSCTRL_DFLLVAL_DIFF(value) ((SYSCTRL_DFLLVAL_DIFF_Msk & ((value) << SYSCTRL_DFLLVAL_DIFF_Pos)))
+#define SYSCTRL_DFLLVAL_MASK        0xFFFF1FFFu /**< \brief (SYSCTRL_DFLLVAL) MASK Register */
 
-/* -------- SYSCTRL_DFLL48MULSTEP : (SYSCTRL Offset: 0x20) (R/W 32) DFLL Multiplier Register -------- */
+/* -------- SYSCTRL_DFLLMUL : (SYSCTRL Offset: 0x20) (R/W 32) DFLL Multiplier Register -------- */
 typedef union {
   struct {
-    uint32_t MUL:16;           /*!< bit:  0..15  DFLL Multiplitation Value          */
-    uint32_t FSTEP:8;          /*!< bit: 16..23                                     */
-    uint32_t CSTEP:5;          /*!< bit: 24..28                                     */
+    uint32_t MUL:16;           /*!< bit:  0..15  Multiplication Value               */
+    uint32_t FSTEP:8;          /*!< bit: 16..23  Maximum Fine Step Size             */
+    uint32_t CSTEP:5;          /*!< bit: 24..28  Maximum Coarse Step Size           */
     uint32_t _reserved0:3;     /*!< bit: 29..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_DFLL48MULSTEP_Type;
+} SYSCTRL_DFLLMUL_Type;
 
-#define SYSCTRL_DFLL48MULSTEP_OFFSET 0x20         /**< \brief (SYSCTRL offset) DFLL Multiplier Register */
-#define SYSCTRL_DFLL48MULSTEP_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) DFLL Multiplier Register */
+#define SYSCTRL_DFLLMUL_OFFSET      0x20         /**< \brief (SYSCTRL_DFLLMUL offset) DFLL Multiplier Register */
+#define SYSCTRL_DFLLMUL_RESETVALUE  0x0          /**< \brief (SYSCTRL_DFLLMUL reset_value) DFLL Multiplier Register */
 
-#define SYSCTRL_DFLL48MULSTEP_MUL_Pos    0
-#define SYSCTRL_DFLL48MULSTEP_MUL_Msk    (0xFFFFu << SYSCTRL_DFLL48MULSTEP_MUL_Pos) /**< \brief (SYSCTRL_DFLL48MULSTEP) DFLL Multiplitation Value */
-#define SYSCTRL_DFLL48MULSTEP_MUL(value) ((SYSCTRL_DFLL48MULSTEP_MUL_Msk & ((value) << SYSCTRL_DFLL48MULSTEP_MUL_Pos)))
-#define SYSCTRL_DFLL48MULSTEP_FSTEP_Pos    16
-#define SYSCTRL_DFLL48MULSTEP_FSTEP_Msk    (0xFFu << SYSCTRL_DFLL48MULSTEP_FSTEP_Pos) /**< \brief (SYSCTRL_DFLL48MULSTEP)  */
-#define SYSCTRL_DFLL48MULSTEP_FSTEP(value) ((SYSCTRL_DFLL48MULSTEP_FSTEP_Msk & ((value) << SYSCTRL_DFLL48MULSTEP_FSTEP_Pos)))
-#define SYSCTRL_DFLL48MULSTEP_CSTEP_Pos    24
-#define SYSCTRL_DFLL48MULSTEP_CSTEP_Msk    (0x1Fu << SYSCTRL_DFLL48MULSTEP_CSTEP_Pos) /**< \brief (SYSCTRL_DFLL48MULSTEP)  */
-#define SYSCTRL_DFLL48MULSTEP_CSTEP(value) ((SYSCTRL_DFLL48MULSTEP_CSTEP_Msk & ((value) << SYSCTRL_DFLL48MULSTEP_CSTEP_Pos)))
-#define SYSCTRL_DFLL48MULSTEP_MASK  0x1FFFFFFFu /**< \brief (SYSCTRL_DFLL48MULSTEP) MASK Register */
+#define SYSCTRL_DFLLMUL_MUL_Pos     0
+#define SYSCTRL_DFLLMUL_MUL_Msk     (0xFFFFu << SYSCTRL_DFLLMUL_MUL_Pos) /**< \brief (SYSCTRL_DFLLMUL) Multiplication Value */
+#define SYSCTRL_DFLLMUL_MUL(value)  ((SYSCTRL_DFLLMUL_MUL_Msk & ((value) << SYSCTRL_DFLLMUL_MUL_Pos)))
+#define SYSCTRL_DFLLMUL_FSTEP_Pos    16
+#define SYSCTRL_DFLLMUL_FSTEP_Msk    (0xFFu << SYSCTRL_DFLLMUL_FSTEP_Pos) /**< \brief (SYSCTRL_DFLLMUL) Maximum Fine Step Size */
+#define SYSCTRL_DFLLMUL_FSTEP(value) ((SYSCTRL_DFLLMUL_FSTEP_Msk & ((value) << SYSCTRL_DFLLMUL_FSTEP_Pos)))
+#define SYSCTRL_DFLLMUL_CSTEP_Pos    24
+#define SYSCTRL_DFLLMUL_CSTEP_Msk    (0x1Fu << SYSCTRL_DFLLMUL_CSTEP_Pos) /**< \brief (SYSCTRL_DFLLMUL) Maximum Coarse Step Size */
+#define SYSCTRL_DFLLMUL_CSTEP(value) ((SYSCTRL_DFLLMUL_CSTEP_Msk & ((value) << SYSCTRL_DFLLMUL_CSTEP_Pos)))
+#define SYSCTRL_DFLLMUL_MASK        0x1FFFFFFFu /**< \brief (SYSCTRL_DFLLMUL) MASK Register */
 
-/* -------- SYSCTRL_DFLL48SYNC : (SYSCTRL Offset: 0x24) (R/W  8) DFLL Synchronization Register -------- */
+/* -------- SYSCTRL_DFLLSYNC : (SYSCTRL Offset: 0x24) (R/W  8) DFLL Synchronization Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:7;     /*!< bit:  0.. 6  Reserved                           */
-    uint8_t  READREQ:1;        /*!< bit:      7  Readreq                            */
+    uint8_t  READREQ:1;        /*!< bit:      7  Read Request Synchronization       */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
-} SYSCTRL_DFLL48SYNC_Type;
+} SYSCTRL_DFLLSYNC_Type;
 
-#define SYSCTRL_DFLL48SYNC_OFFSET   0x24         /**< \brief (SYSCTRL offset) DFLL Synchronization Register */
-#define SYSCTRL_DFLL48SYNC_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) DFLL Synchronization Register */
+#define SYSCTRL_DFLLSYNC_OFFSET     0x24         /**< \brief (SYSCTRL_DFLLSYNC offset) DFLL Synchronization Register */
+#define SYSCTRL_DFLLSYNC_RESETVALUE 0x0          /**< \brief (SYSCTRL_DFLLSYNC reset_value) DFLL Synchronization Register */
 
-#define SYSCTRL_DFLL48SYNC_READREQ  (0x1u <<  7) /**< \brief (SYSCTRL_DFLL48SYNC) Readreq */
-#define SYSCTRL_DFLL48SYNC_MASK     0x80u /**< \brief (SYSCTRL_DFLL48SYNC) MASK Register */
+#define SYSCTRL_DFLLSYNC_READREQ    (0x1u <<  7) /**< \brief (SYSCTRL_DFLLSYNC) Read Request Synchronization */
+#define SYSCTRL_DFLLSYNC_MASK       0x80u /**< \brief (SYSCTRL_DFLLSYNC) MASK Register */
 
-/* -------- SYSCTRL_BOD33CTRL : (SYSCTRL Offset: 0x28) (R/W 16) BOD33 Control Register -------- */
+/* -------- SYSCTRL_BOD33 : (SYSCTRL Offset: 0x28) (R/W 32) BOD33 Control Register -------- */
 typedef union {
   struct {
-    uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t ENABLE:1;         /*!< bit:      1                                     */
-    uint16_t HYST:1;           /*!< bit:      2                                     */
-    uint16_t ACTION:2;         /*!< bit:  3.. 4                                     */
-    uint16_t _reserved1:3;     /*!< bit:  5.. 7  Reserved                           */
-    uint16_t MODE:1;           /*!< bit:      8                                     */
-    uint16_t CEN:1;            /*!< bit:      9                                     */
-    uint16_t _reserved2:2;     /*!< bit: 10..11  Reserved                           */
-    uint16_t PSEL:4;           /*!< bit: 12..15                                     */
+    uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
+    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint32_t HYST:1;           /*!< bit:      2  Hysteresis Enable                  */
+    uint32_t ACTION:2;         /*!< bit:  3.. 4  Action when Threshold Crossed      */
+    uint32_t _reserved1:3;     /*!< bit:  5.. 7  Reserved                           */
+    uint32_t MODE:1;           /*!< bit:      8  Operation Modes                    */
+    uint32_t CEN:1;            /*!< bit:      9  Clock Enable                       */
+    uint32_t _reserved2:2;     /*!< bit: 10..11  Reserved                           */
+    uint32_t PSEL:4;           /*!< bit: 12..15  Prescaler Select                   */
+    uint32_t LEVEL:6;          /*!< bit: 16..21  Threshold Level                    */
+    uint32_t _reserved3:10;    /*!< bit: 22..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_BOD33CTRL_Type;
+  uint32_t reg;                /*!< Type      used for register access              */
+} SYSCTRL_BOD33_Type;
 
-#define SYSCTRL_BOD33CTRL_OFFSET    0x28         /**< \brief (SYSCTRL offset) BOD33 Control Register */
+#define SYSCTRL_BOD33_OFFSET        0x28         /**< \brief (SYSCTRL_BOD33 offset) BOD33 Control Register */
 
-#define SYSCTRL_BOD33CTRL_ENABLE    (0x1u <<  1) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_HYST      (0x1u <<  2) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_ACTION_Pos    3
-#define SYSCTRL_BOD33CTRL_ACTION_Msk    (0x3u << SYSCTRL_BOD33CTRL_ACTION_Pos) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_ACTION(value) ((SYSCTRL_BOD33CTRL_ACTION_Msk & ((value) << SYSCTRL_BOD33CTRL_ACTION_Pos)))
-#define SYSCTRL_BOD33CTRL_MODE      (0x1u <<  8) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_CEN       (0x1u <<  9) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_PSEL_Pos    12
-#define SYSCTRL_BOD33CTRL_PSEL_Msk    (0xFu << SYSCTRL_BOD33CTRL_PSEL_Pos) /**< \brief (SYSCTRL_BOD33CTRL)  */
-#define SYSCTRL_BOD33CTRL_PSEL(value) ((SYSCTRL_BOD33CTRL_PSEL_Msk & ((value) << SYSCTRL_BOD33CTRL_PSEL_Pos)))
-#define SYSCTRL_BOD33CTRL_MASK      0xF31Eu /**< \brief (SYSCTRL_BOD33CTRL) MASK Register */
+#define SYSCTRL_BOD33_ENABLE        (0x1u <<  1) /**< \brief (SYSCTRL_BOD33) Enable */
+#define SYSCTRL_BOD33_HYST          (0x1u <<  2) /**< \brief (SYSCTRL_BOD33) Hysteresis Enable */
+#define SYSCTRL_BOD33_ACTION_Pos    3
+#define SYSCTRL_BOD33_ACTION_Msk    (0x3u << SYSCTRL_BOD33_ACTION_Pos) /**< \brief (SYSCTRL_BOD33) Action when Threshold Crossed */
+#define SYSCTRL_BOD33_ACTION(value) ((SYSCTRL_BOD33_ACTION_Msk & ((value) << SYSCTRL_BOD33_ACTION_Pos)))
+#define SYSCTRL_BOD33_MODE          (0x1u <<  8) /**< \brief (SYSCTRL_BOD33) Operation Modes */
+#define SYSCTRL_BOD33_CEN           (0x1u <<  9) /**< \brief (SYSCTRL_BOD33) Clock Enable */
+#define SYSCTRL_BOD33_PSEL_Pos      12
+#define SYSCTRL_BOD33_PSEL_Msk      (0xFu << SYSCTRL_BOD33_PSEL_Pos) /**< \brief (SYSCTRL_BOD33) Prescaler Select */
+#define SYSCTRL_BOD33_PSEL(value)   ((SYSCTRL_BOD33_PSEL_Msk & ((value) << SYSCTRL_BOD33_PSEL_Pos)))
+#define SYSCTRL_BOD33_LEVEL_Pos     16
+#define SYSCTRL_BOD33_LEVEL_Msk     (0x3Fu << SYSCTRL_BOD33_LEVEL_Pos) /**< \brief (SYSCTRL_BOD33) Threshold Level */
+#define SYSCTRL_BOD33_LEVEL(value)  ((SYSCTRL_BOD33_LEVEL_Msk & ((value) << SYSCTRL_BOD33_LEVEL_Pos)))
+#define SYSCTRL_BOD33_MASK          0x3FF31Eu /**< \brief (SYSCTRL_BOD33) MASK Register */
 
-/* -------- SYSCTRL_BOD33LEVEL : (SYSCTRL Offset: 0x2A) (R/W 16) BOD33 Level Register -------- */
+/* -------- SYSCTRL_BOD12 : (SYSCTRL Offset: 0x2C) (R/W 32) BOD12 Control Register -------- */
 typedef union {
   struct {
-    uint16_t LEVEL:6;          /*!< bit:  0.. 5                                     */
-    uint16_t _reserved0:10;    /*!< bit:  6..15  Reserved                           */
+    uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
+    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint32_t HYST:1;           /*!< bit:      2  Hysteresis Enable                  */
+    uint32_t ACTION:2;         /*!< bit:  3.. 4  Action when Threshold Crossed      */
+    uint32_t _reserved1:3;     /*!< bit:  5.. 7  Reserved                           */
+    uint32_t MODE:1;           /*!< bit:      8  Operation Modes                    */
+    uint32_t CEN:1;            /*!< bit:      9  Clock Enable                       */
+    uint32_t _reserved2:2;     /*!< bit: 10..11  Reserved                           */
+    uint32_t PSEL:4;           /*!< bit: 12..15  Prescaler Select                   */
+    uint32_t LEVEL:5;          /*!< bit: 16..20  Threshold Level                    */
+    uint32_t _reserved3:11;    /*!< bit: 21..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_BOD33LEVEL_Type;
+  uint32_t reg;                /*!< Type      used for register access              */
+} SYSCTRL_BOD12_Type;
 
-#define SYSCTRL_BOD33LEVEL_OFFSET   0x2A         /**< \brief (SYSCTRL offset) BOD33 Level Register */
-#define SYSCTRL_BOD33LEVEL_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) BOD33 Level Register */
+#define SYSCTRL_BOD12_OFFSET        0x2C         /**< \brief (SYSCTRL_BOD12 offset) BOD12 Control Register */
 
-#define SYSCTRL_BOD33LEVEL_LEVEL_Pos    0
-#define SYSCTRL_BOD33LEVEL_LEVEL_Msk    (0x3Fu << SYSCTRL_BOD33LEVEL_LEVEL_Pos) /**< \brief (SYSCTRL_BOD33LEVEL)  */
-#define SYSCTRL_BOD33LEVEL_LEVEL(value) ((SYSCTRL_BOD33LEVEL_LEVEL_Msk & ((value) << SYSCTRL_BOD33LEVEL_LEVEL_Pos)))
-#define SYSCTRL_BOD33LEVEL_MASK     0x3Fu /**< \brief (SYSCTRL_BOD33LEVEL) MASK Register */
-
-/* -------- SYSCTRL_BOD12CTRL : (SYSCTRL Offset: 0x2C) (R/W 16) BOD12 Control Register -------- */
-typedef union {
-  struct {
-    uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t ENABLE:1;         /*!< bit:      1                                     */
-    uint16_t HYST:1;           /*!< bit:      2                                     */
-    uint16_t ACTION:2;         /*!< bit:  3.. 4                                     */
-    uint16_t _reserved1:3;     /*!< bit:  5.. 7  Reserved                           */
-    uint16_t MODE:1;           /*!< bit:      8                                     */
-    uint16_t CEN:1;            /*!< bit:      9                                     */
-    uint16_t _reserved2:2;     /*!< bit: 10..11  Reserved                           */
-    uint16_t PSEL:4;           /*!< bit: 12..15                                     */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_BOD12CTRL_Type;
-
-#define SYSCTRL_BOD12CTRL_OFFSET    0x2C         /**< \brief (SYSCTRL offset) BOD12 Control Register */
-
-#define SYSCTRL_BOD12CTRL_ENABLE    (0x1u <<  1) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_HYST      (0x1u <<  2) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_ACTION_Pos    3
-#define SYSCTRL_BOD12CTRL_ACTION_Msk    (0x3u << SYSCTRL_BOD12CTRL_ACTION_Pos) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_ACTION(value) ((SYSCTRL_BOD12CTRL_ACTION_Msk & ((value) << SYSCTRL_BOD12CTRL_ACTION_Pos)))
-#define SYSCTRL_BOD12CTRL_MODE      (0x1u <<  8) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_CEN       (0x1u <<  9) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_PSEL_Pos    12
-#define SYSCTRL_BOD12CTRL_PSEL_Msk    (0xFu << SYSCTRL_BOD12CTRL_PSEL_Pos) /**< \brief (SYSCTRL_BOD12CTRL)  */
-#define SYSCTRL_BOD12CTRL_PSEL(value) ((SYSCTRL_BOD12CTRL_PSEL_Msk & ((value) << SYSCTRL_BOD12CTRL_PSEL_Pos)))
-#define SYSCTRL_BOD12CTRL_MASK      0xF31Eu /**< \brief (SYSCTRL_BOD12CTRL) MASK Register */
-
-/* -------- SYSCTRL_BOD12LEVEL : (SYSCTRL Offset: 0x2E) (R/W 16) BOD12 Control Register -------- */
-typedef union {
-  struct {
-    uint16_t LEVEL:5;          /*!< bit:  0.. 4                                     */
-    uint16_t _reserved0:11;    /*!< bit:  5..15  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_BOD12LEVEL_Type;
-
-#define SYSCTRL_BOD12LEVEL_OFFSET   0x2E         /**< \brief (SYSCTRL offset) BOD12 Control Register */
-#define SYSCTRL_BOD12LEVEL_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) BOD12 Control Register */
-
-#define SYSCTRL_BOD12LEVEL_LEVEL_Pos    0
-#define SYSCTRL_BOD12LEVEL_LEVEL_Msk    (0x1Fu << SYSCTRL_BOD12LEVEL_LEVEL_Pos) /**< \brief (SYSCTRL_BOD12LEVEL)  */
-#define SYSCTRL_BOD12LEVEL_LEVEL(value) ((SYSCTRL_BOD12LEVEL_LEVEL_Msk & ((value) << SYSCTRL_BOD12LEVEL_LEVEL_Pos)))
-#define SYSCTRL_BOD12LEVEL_MASK     0x1Fu /**< \brief (SYSCTRL_BOD12LEVEL) MASK Register */
+#define SYSCTRL_BOD12_ENABLE        (0x1u <<  1) /**< \brief (SYSCTRL_BOD12) Enable */
+#define SYSCTRL_BOD12_HYST          (0x1u <<  2) /**< \brief (SYSCTRL_BOD12) Hysteresis Enable */
+#define SYSCTRL_BOD12_ACTION_Pos    3
+#define SYSCTRL_BOD12_ACTION_Msk    (0x3u << SYSCTRL_BOD12_ACTION_Pos) /**< \brief (SYSCTRL_BOD12) Action when Threshold Crossed */
+#define SYSCTRL_BOD12_ACTION(value) ((SYSCTRL_BOD12_ACTION_Msk & ((value) << SYSCTRL_BOD12_ACTION_Pos)))
+#define SYSCTRL_BOD12_MODE          (0x1u <<  8) /**< \brief (SYSCTRL_BOD12) Operation Modes */
+#define SYSCTRL_BOD12_CEN           (0x1u <<  9) /**< \brief (SYSCTRL_BOD12) Clock Enable */
+#define SYSCTRL_BOD12_PSEL_Pos      12
+#define SYSCTRL_BOD12_PSEL_Msk      (0xFu << SYSCTRL_BOD12_PSEL_Pos) /**< \brief (SYSCTRL_BOD12) Prescaler Select */
+#define SYSCTRL_BOD12_PSEL(value)   ((SYSCTRL_BOD12_PSEL_Msk & ((value) << SYSCTRL_BOD12_PSEL_Pos)))
+#define SYSCTRL_BOD12_LEVEL_Pos     16
+#define SYSCTRL_BOD12_LEVEL_Msk     (0x1Fu << SYSCTRL_BOD12_LEVEL_Pos) /**< \brief (SYSCTRL_BOD12) Threshold Level */
+#define SYSCTRL_BOD12_LEVEL(value)  ((SYSCTRL_BOD12_LEVEL_Msk & ((value) << SYSCTRL_BOD12_LEVEL_Pos)))
+#define SYSCTRL_BOD12_MASK          0x1FF31Eu /**< \brief (SYSCTRL_BOD12) MASK Register */
 
 /* -------- SYSCTRL_OSC32K : (SYSCTRL Offset: 0x30) (R/W 32) OSC32K Control Register -------- */
 typedef union {
   struct {
     uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint32_t ENABLE:1;         /*!< bit:      1  OSC32K Enable                      */
-    uint32_t EN32K:1;          /*!< bit:      2  OSC32K 32K enable                  */
-    uint32_t EN1K:1;           /*!< bit:      3  OSC32K 1K enable                   */
+    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
+    uint32_t EN32K:1;          /*!< bit:      2  32kHz Output Enable                */
+    uint32_t EN1K:1;           /*!< bit:      3  1kHz Output Enable                 */
     uint32_t _reserved1:4;     /*!< bit:  4.. 7  Reserved                           */
-    uint32_t STARTUP:3;        /*!< bit:  8..10  OSC32K startup                     */
+    uint32_t STARTUP:3;        /*!< bit:  8..10  Start-Up Time                      */
     uint32_t _reserved2:5;     /*!< bit: 11..15  Reserved                           */
-    uint32_t CALIB:7;          /*!< bit: 16..22                                     */
+    uint32_t CALIB:7;          /*!< bit: 16..22  Calibration Value                  */
     uint32_t _reserved3:9;     /*!< bit: 23..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_OSC32K_Type;
 
-#define SYSCTRL_OSC32K_OFFSET       0x30         /**< \brief (SYSCTRL offset) OSC32K Control Register */
-#define SYSCTRL_OSC32K_RESETVALUE   0x0          /**< \brief (SYSCTRL reset_value) OSC32K Control Register */
+#define SYSCTRL_OSC32K_OFFSET       0x30         /**< \brief (SYSCTRL_OSC32K offset) OSC32K Control Register */
+#define SYSCTRL_OSC32K_RESETVALUE   0x0          /**< \brief (SYSCTRL_OSC32K reset_value) OSC32K Control Register */
 
-#define SYSCTRL_OSC32K_ENABLE       (0x1u <<  1) /**< \brief (SYSCTRL_OSC32K) OSC32K Enable */
-#define SYSCTRL_OSC32K_EN32K        (0x1u <<  2) /**< \brief (SYSCTRL_OSC32K) OSC32K 32K enable */
-#define SYSCTRL_OSC32K_EN1K         (0x1u <<  3) /**< \brief (SYSCTRL_OSC32K) OSC32K 1K enable */
+#define SYSCTRL_OSC32K_ENABLE       (0x1u <<  1) /**< \brief (SYSCTRL_OSC32K) Enable */
+#define SYSCTRL_OSC32K_EN32K        (0x1u <<  2) /**< \brief (SYSCTRL_OSC32K) 32kHz Output Enable */
+#define SYSCTRL_OSC32K_EN1K         (0x1u <<  3) /**< \brief (SYSCTRL_OSC32K) 1kHz Output Enable */
 #define SYSCTRL_OSC32K_STARTUP_Pos    8
-#define SYSCTRL_OSC32K_STARTUP_Msk    (0x7u << SYSCTRL_OSC32K_STARTUP_Pos) /**< \brief (SYSCTRL_OSC32K) OSC32K startup */
+#define SYSCTRL_OSC32K_STARTUP_Msk    (0x7u << SYSCTRL_OSC32K_STARTUP_Pos) /**< \brief (SYSCTRL_OSC32K) Start-Up Time */
 #define SYSCTRL_OSC32K_STARTUP(value) ((SYSCTRL_OSC32K_STARTUP_Msk & ((value) << SYSCTRL_OSC32K_STARTUP_Pos)))
 #define SYSCTRL_OSC32K_CALIB_Pos    16
-#define SYSCTRL_OSC32K_CALIB_Msk    (0x7Fu << SYSCTRL_OSC32K_CALIB_Pos) /**< \brief (SYSCTRL_OSC32K)  */
+#define SYSCTRL_OSC32K_CALIB_Msk    (0x7Fu << SYSCTRL_OSC32K_CALIB_Pos) /**< \brief (SYSCTRL_OSC32K) Calibration Value */
 #define SYSCTRL_OSC32K_CALIB(value) ((SYSCTRL_OSC32K_CALIB_Msk & ((value) << SYSCTRL_OSC32K_CALIB_Pos)))
 #define SYSCTRL_OSC32K_MASK         0x7F070Eu /**< \brief (SYSCTRL_OSC32K) MASK Register */
 
 /* -------- SYSCTRL_OSCULP32K : (SYSCTRL Offset: 0x34) (R/W 32) OSCULP32K Control Register -------- */
 typedef union {
   struct {
-    uint32_t CALIB:5;          /*!< bit:  0.. 4                                     */
+    uint32_t CALIB:5;          /*!< bit:  0.. 4  Calibration Value                  */
     uint32_t _reserved0:27;    /*!< bit:  5..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_OSCULP32K_Type;
 
-#define SYSCTRL_OSCULP32K_OFFSET    0x34         /**< \brief (SYSCTRL offset) OSCULP32K Control Register */
-#define SYSCTRL_OSCULP32K_RESETVALUE 0xF0002      /**< \brief (SYSCTRL reset_value) OSCULP32K Control Register */
+#define SYSCTRL_OSCULP32K_OFFSET    0x34         /**< \brief (SYSCTRL_OSCULP32K offset) OSCULP32K Control Register */
+#define SYSCTRL_OSCULP32K_RESETVALUE 0xF0002      /**< \brief (SYSCTRL_OSCULP32K reset_value) OSCULP32K Control Register */
 
 #define SYSCTRL_OSCULP32K_CALIB_Pos    0
-#define SYSCTRL_OSCULP32K_CALIB_Msk    (0x1Fu << SYSCTRL_OSCULP32K_CALIB_Pos) /**< \brief (SYSCTRL_OSCULP32K)  */
+#define SYSCTRL_OSCULP32K_CALIB_Msk    (0x1Fu << SYSCTRL_OSCULP32K_CALIB_Pos) /**< \brief (SYSCTRL_OSCULP32K) Calibration Value */
 #define SYSCTRL_OSCULP32K_CALIB(value) ((SYSCTRL_OSCULP32K_CALIB_Msk & ((value) << SYSCTRL_OSCULP32K_CALIB_Pos)))
 #define SYSCTRL_OSCULP32K_MASK      0x1Fu /**< \brief (SYSCTRL_OSCULP32K) MASK Register */
 
 /* -------- SYSCTRL_OSCULP32KTEST : (SYSCTRL Offset: 0x38) (R/W  8) OSCULP32K Test Register -------- */
 typedef union {
   struct {
-    uint8_t  DISABLE:1;        /*!< bit:      0                                     */
-    uint8_t  BIASOUTEN:1;      /*!< bit:      1                                     */
-    uint8_t  CONTREF:1;        /*!< bit:      2                                     */
+    uint8_t  DISABLE:1;        /*!< bit:      0  Disable Test Mode                  */
+    uint8_t  BIASOUTEN:1;      /*!< bit:      1  Bias Output Enable                 */
+    uint8_t  CONTREF:1;        /*!< bit:      2  Reference Forced to Continuous Mode */
     uint8_t  _reserved0:5;     /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } SYSCTRL_OSCULP32KTEST_Type;
 
-#define SYSCTRL_OSCULP32KTEST_OFFSET 0x38         /**< \brief (SYSCTRL offset) OSCULP32K Test Register */
-#define SYSCTRL_OSCULP32KTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) OSCULP32K Test Register */
+#define SYSCTRL_OSCULP32KTEST_OFFSET 0x38         /**< \brief (SYSCTRL_OSCULP32KTEST offset) OSCULP32K Test Register */
+#define SYSCTRL_OSCULP32KTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL_OSCULP32KTEST reset_value) OSCULP32K Test Register */
 
-#define SYSCTRL_OSCULP32KTEST_DISABLE (0x1u <<  0) /**< \brief (SYSCTRL_OSCULP32KTEST)  */
-#define SYSCTRL_OSCULP32KTEST_BIASOUTEN (0x1u <<  1) /**< \brief (SYSCTRL_OSCULP32KTEST)  */
-#define SYSCTRL_OSCULP32KTEST_CONTREF (0x1u <<  2) /**< \brief (SYSCTRL_OSCULP32KTEST)  */
+#define SYSCTRL_OSCULP32KTEST_DISABLE (0x1u <<  0) /**< \brief (SYSCTRL_OSCULP32KTEST) Disable Test Mode */
+#define SYSCTRL_OSCULP32KTEST_BIASOUTEN (0x1u <<  1) /**< \brief (SYSCTRL_OSCULP32KTEST) Bias Output Enable */
+#define SYSCTRL_OSCULP32KTEST_CONTREF (0x1u <<  2) /**< \brief (SYSCTRL_OSCULP32KTEST) Reference Forced to Continuous Mode */
 #define SYSCTRL_OSCULP32KTEST_MASK  0x7u /**< \brief (SYSCTRL_OSCULP32KTEST) MASK Register */
 
 /* -------- SYSCTRL_OSC8M : (SYSCTRL Offset: 0x3C) (R/W 32) OSC8M Control Register A -------- */
 typedef union {
   struct {
     uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint32_t ENABLE:1;         /*!< bit:      1                                     */
+    uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint32_t _reserved1:6;     /*!< bit:  2.. 7  Reserved                           */
-    uint32_t PRESC:2;          /*!< bit:  8.. 9                                     */
+    uint32_t PRESC:2;          /*!< bit:  8.. 9  Prescaler Select                   */
     uint32_t _reserved2:6;     /*!< bit: 10..15  Reserved                           */
-    uint32_t CALIB:12;         /*!< bit: 16..27                                     */
+    uint32_t CALIB:12;         /*!< bit: 16..27  Calibration Value                  */
     uint32_t _reserved3:2;     /*!< bit: 28..29  Reserved                           */
-    uint32_t FRANGE:2;         /*!< bit: 30..31                                     */
+    uint32_t FRANGE:2;         /*!< bit: 30..31  Frequency Range                    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_OSC8M_Type;
 
-#define SYSCTRL_OSC8M_OFFSET        0x3C         /**< \brief (SYSCTRL offset) OSC8M Control Register A */
-#define SYSCTRL_OSC8M_RESETVALUE    0x80         /**< \brief (SYSCTRL reset_value) OSC8M Control Register A */
+#define SYSCTRL_OSC8M_OFFSET        0x3C         /**< \brief (SYSCTRL_OSC8M offset) OSC8M Control Register A */
+#define SYSCTRL_OSC8M_RESETVALUE    0x80         /**< \brief (SYSCTRL_OSC8M reset_value) OSC8M Control Register A */
 
-#define SYSCTRL_OSC8M_ENABLE        (0x1u <<  1) /**< \brief (SYSCTRL_OSC8M)  */
+#define SYSCTRL_OSC8M_ENABLE        (0x1u <<  1) /**< \brief (SYSCTRL_OSC8M) Enable */
 #define SYSCTRL_OSC8M_PRESC_Pos     8
-#define SYSCTRL_OSC8M_PRESC_Msk     (0x3u << SYSCTRL_OSC8M_PRESC_Pos) /**< \brief (SYSCTRL_OSC8M)  */
+#define SYSCTRL_OSC8M_PRESC_Msk     (0x3u << SYSCTRL_OSC8M_PRESC_Pos) /**< \brief (SYSCTRL_OSC8M) Prescaler Select */
 #define SYSCTRL_OSC8M_PRESC(value)  ((SYSCTRL_OSC8M_PRESC_Msk & ((value) << SYSCTRL_OSC8M_PRESC_Pos)))
 #define SYSCTRL_OSC8M_CALIB_Pos     16
-#define SYSCTRL_OSC8M_CALIB_Msk     (0xFFFu << SYSCTRL_OSC8M_CALIB_Pos) /**< \brief (SYSCTRL_OSC8M)  */
+#define SYSCTRL_OSC8M_CALIB_Msk     (0xFFFu << SYSCTRL_OSC8M_CALIB_Pos) /**< \brief (SYSCTRL_OSC8M) Calibration Value */
 #define SYSCTRL_OSC8M_CALIB(value)  ((SYSCTRL_OSC8M_CALIB_Msk & ((value) << SYSCTRL_OSC8M_CALIB_Pos)))
 #define SYSCTRL_OSC8M_FRANGE_Pos    30
-#define SYSCTRL_OSC8M_FRANGE_Msk    (0x3u << SYSCTRL_OSC8M_FRANGE_Pos) /**< \brief (SYSCTRL_OSC8M)  */
+#define SYSCTRL_OSC8M_FRANGE_Msk    (0x3u << SYSCTRL_OSC8M_FRANGE_Pos) /**< \brief (SYSCTRL_OSC8M) Frequency Range */
 #define SYSCTRL_OSC8M_FRANGE(value) ((SYSCTRL_OSC8M_FRANGE_Msk & ((value) << SYSCTRL_OSC8M_FRANGE_Pos)))
 #define SYSCTRL_OSC8M_MASK          0xCFFF0302u /**< \brief (SYSCTRL_OSC8M) MASK Register */
 
-/* -------- SYSCTRL_VREGCTRL : (SYSCTRL Offset: 0x40) (R/W 16) VREG Control Register -------- */
+/* -------- SYSCTRL_VREG : (SYSCTRL Offset: 0x40) (R/W 16) VREG Control Register -------- */
 typedef union {
   struct {
     uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t ENABLE:1;         /*!< bit:      1                                     */
+    uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint16_t _reserved1:6;     /*!< bit:  2.. 7  Reserved                           */
-    uint16_t LEVEL:3;          /*!< bit:  8..10                                     */
+    uint16_t LEVEL:3;          /*!< bit:  8..10  Output Voltage Level               */
     uint16_t _reserved2:1;     /*!< bit:     11  Reserved                           */
-    uint16_t CALIB:4;          /*!< bit: 12..15                                     */
+    uint16_t CALIB:4;          /*!< bit: 12..15  Calibration Value                  */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREGCTRL_Type;
+} SYSCTRL_VREG_Type;
 
-#define SYSCTRL_VREGCTRL_OFFSET     0x40         /**< \brief (SYSCTRL offset) VREG Control Register */
+#define SYSCTRL_VREG_OFFSET         0x40         /**< \brief (SYSCTRL_VREG offset) VREG Control Register */
+#define SYSCTRL_VREG_RESETVALUE     0x0          /**< \brief (SYSCTRL_VREG reset_value) VREG Control Register */
 
-#define SYSCTRL_VREGCTRL_ENABLE     (0x1u <<  1) /**< \brief (SYSCTRL_VREGCTRL)  */
-#define SYSCTRL_VREGCTRL_LEVEL_Pos    8
-#define SYSCTRL_VREGCTRL_LEVEL_Msk    (0x7u << SYSCTRL_VREGCTRL_LEVEL_Pos) /**< \brief (SYSCTRL_VREGCTRL)  */
-#define SYSCTRL_VREGCTRL_LEVEL(value) ((SYSCTRL_VREGCTRL_LEVEL_Msk & ((value) << SYSCTRL_VREGCTRL_LEVEL_Pos)))
-#define SYSCTRL_VREGCTRL_CALIB_Pos    12
-#define SYSCTRL_VREGCTRL_CALIB_Msk    (0xFu << SYSCTRL_VREGCTRL_CALIB_Pos) /**< \brief (SYSCTRL_VREGCTRL)  */
-#define SYSCTRL_VREGCTRL_CALIB(value) ((SYSCTRL_VREGCTRL_CALIB_Msk & ((value) << SYSCTRL_VREGCTRL_CALIB_Pos)))
-#define SYSCTRL_VREGCTRL_MASK       0xF702u /**< \brief (SYSCTRL_VREGCTRL) MASK Register */
+#define SYSCTRL_VREG_ENABLE         (0x1u <<  1) /**< \brief (SYSCTRL_VREG) Enable */
+#define SYSCTRL_VREG_LEVEL_Pos      8
+#define SYSCTRL_VREG_LEVEL_Msk      (0x7u << SYSCTRL_VREG_LEVEL_Pos) /**< \brief (SYSCTRL_VREG) Output Voltage Level */
+#define SYSCTRL_VREG_LEVEL(value)   ((SYSCTRL_VREG_LEVEL_Msk & ((value) << SYSCTRL_VREG_LEVEL_Pos)))
+#define SYSCTRL_VREG_CALIB_Pos      12
+#define SYSCTRL_VREG_CALIB_Msk      (0xFu << SYSCTRL_VREG_CALIB_Pos) /**< \brief (SYSCTRL_VREG) Calibration Value */
+#define SYSCTRL_VREG_CALIB(value)   ((SYSCTRL_VREG_CALIB_Msk & ((value) << SYSCTRL_VREG_CALIB_Pos)))
+#define SYSCTRL_VREG_MASK           0xF702u /**< \brief (SYSCTRL_VREG) MASK Register */
 
 /* -------- SYSCTRL_VREGTEST : (SYSCTRL Offset: 0x44) (R/W 32) VREG Test Register -------- */
 typedef union {
   struct {
-    uint32_t ULPENABLE:1;      /*!< bit:      0                                     */
-    uint32_t BODIENABLE:1;     /*!< bit:      1                                     */
-    uint32_t BODIIENABLE:1;    /*!< bit:      2                                     */
-    uint32_t OSCENABLE:1;      /*!< bit:      3                                     */
-    uint32_t LDOENABLE:1;      /*!< bit:      4                                     */
-    uint32_t REFSEL:1;         /*!< bit:      5                                     */
+    uint32_t ULPENABLE:1;      /*!< bit:      0  Force ULP VREG Enable              */
+    uint32_t BODIENABLE:1;     /*!< bit:      1  ULP VREG BOD I Enable              */
+    uint32_t BODIIENABLE:1;    /*!< bit:      2  ULP VREG BOD II Enable             */
+    uint32_t OSCENABLE:1;      /*!< bit:      3  ULP VREG Oscillator Enable         */
+    uint32_t LDOENABLE:1;      /*!< bit:      4  ULP VREG LDO Enable                */
+    uint32_t REFSEL:1;         /*!< bit:      5  Voltage Reference Select           */
     uint32_t _reserved0:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint32_t FORCEGAIN:2;      /*!< bit:  8.. 9                                     */
-    uint32_t RAMREFSEL:3;      /*!< bit: 10..12                                     */
+    uint32_t FORCEGAIN:2;      /*!< bit:  8.. 9  ULP VREG External Gain Mode        */
+    uint32_t RAMREFSEL:3;      /*!< bit: 10..12  RAM Reference Voltage Select       */
     uint32_t _reserved1:3;     /*!< bit: 13..15  Reserved                           */
-    uint32_t REQBIAS:1;        /*!< bit:     16                                     */
-    uint32_t REQHELPI:1;       /*!< bit:     17                                     */
-    uint32_t REQHELPII:1;      /*!< bit:     18                                     */
+    uint32_t REQBIAS:1;        /*!< bit:     16  Force ULP VREG Bias Generator      */
+    uint32_t REQHELPI:1;       /*!< bit:     17  ULP VREG BOD I Output              */
+    uint32_t REQHELPII:1;      /*!< bit:     18  ULP VREG BOD II Output             */
     uint32_t _reserved2:12;    /*!< bit: 19..30  Reserved                           */
-    uint32_t TESTEN:1;         /*!< bit:     31                                     */
+    uint32_t TESTEN:1;         /*!< bit:     31  Test Enable                        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_VREGTEST_Type;
 
-#define SYSCTRL_VREGTEST_OFFSET     0x44         /**< \brief (SYSCTRL offset) VREG Test Register */
-#define SYSCTRL_VREGTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) VREG Test Register */
+#define SYSCTRL_VREGTEST_OFFSET     0x44         /**< \brief (SYSCTRL_VREGTEST offset) VREG Test Register */
+#define SYSCTRL_VREGTEST_RESETVALUE 0x0          /**< \brief (SYSCTRL_VREGTEST reset_value) VREG Test Register */
 
-#define SYSCTRL_VREGTEST_ULPENABLE  (0x1u <<  0) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_BODIENABLE (0x1u <<  1) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_BODIIENABLE (0x1u <<  2) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_OSCENABLE  (0x1u <<  3) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_LDOENABLE  (0x1u <<  4) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_REFSEL     (0x1u <<  5) /**< \brief (SYSCTRL_VREGTEST)  */
+#define SYSCTRL_VREGTEST_ULPENABLE  (0x1u <<  0) /**< \brief (SYSCTRL_VREGTEST) Force ULP VREG Enable */
+#define SYSCTRL_VREGTEST_BODIENABLE (0x1u <<  1) /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD I Enable */
+#define SYSCTRL_VREGTEST_BODIIENABLE (0x1u <<  2) /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD II Enable */
+#define SYSCTRL_VREGTEST_OSCENABLE  (0x1u <<  3) /**< \brief (SYSCTRL_VREGTEST) ULP VREG Oscillator Enable */
+#define SYSCTRL_VREGTEST_LDOENABLE  (0x1u <<  4) /**< \brief (SYSCTRL_VREGTEST) ULP VREG LDO Enable */
+#define SYSCTRL_VREGTEST_REFSEL     (0x1u <<  5) /**< \brief (SYSCTRL_VREGTEST) Voltage Reference Select */
 #define SYSCTRL_VREGTEST_FORCEGAIN_Pos    8
-#define SYSCTRL_VREGTEST_FORCEGAIN_Msk    (0x3u << SYSCTRL_VREGTEST_FORCEGAIN_Pos) /**< \brief (SYSCTRL_VREGTEST)  */
+#define SYSCTRL_VREGTEST_FORCEGAIN_Msk    (0x3u << SYSCTRL_VREGTEST_FORCEGAIN_Pos) /**< \brief (SYSCTRL_VREGTEST) ULP VREG External Gain Mode */
 #define SYSCTRL_VREGTEST_FORCEGAIN(value) ((SYSCTRL_VREGTEST_FORCEGAIN_Msk & ((value) << SYSCTRL_VREGTEST_FORCEGAIN_Pos)))
 #define SYSCTRL_VREGTEST_RAMREFSEL_Pos    10
-#define SYSCTRL_VREGTEST_RAMREFSEL_Msk    (0x7u << SYSCTRL_VREGTEST_RAMREFSEL_Pos) /**< \brief (SYSCTRL_VREGTEST)  */
+#define SYSCTRL_VREGTEST_RAMREFSEL_Msk    (0x7u << SYSCTRL_VREGTEST_RAMREFSEL_Pos) /**< \brief (SYSCTRL_VREGTEST) RAM Reference Voltage Select */
 #define SYSCTRL_VREGTEST_RAMREFSEL(value) ((SYSCTRL_VREGTEST_RAMREFSEL_Msk & ((value) << SYSCTRL_VREGTEST_RAMREFSEL_Pos)))
-#define SYSCTRL_VREGTEST_REQBIAS    (0x1u << 16) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_REQHELPI   (0x1u << 17) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_REQHELPII  (0x1u << 18) /**< \brief (SYSCTRL_VREGTEST)  */
-#define SYSCTRL_VREGTEST_TESTEN     (0x1u << 31) /**< \brief (SYSCTRL_VREGTEST)  */
+#define SYSCTRL_VREGTEST_REQBIAS    (0x1u << 16) /**< \brief (SYSCTRL_VREGTEST) Force ULP VREG Bias Generator */
+#define SYSCTRL_VREGTEST_REQHELPI   (0x1u << 17) /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD I Output */
+#define SYSCTRL_VREGTEST_REQHELPII  (0x1u << 18) /**< \brief (SYSCTRL_VREGTEST) ULP VREG BOD II Output */
+#define SYSCTRL_VREGTEST_TESTEN     (0x1u << 31) /**< \brief (SYSCTRL_VREGTEST) Test Enable */
 #define SYSCTRL_VREGTEST_MASK       0x80071F3Fu /**< \brief (SYSCTRL_VREGTEST) MASK Register */
 
-/* -------- SYSCTRL_VREFCTRLA : (SYSCTRL Offset: 0x48) (R/W 16) VREF Control Register A -------- */
+/* -------- SYSCTRL_VREF : (SYSCTRL Offset: 0x48) (R/W 32) VREF Control Register A -------- */
 typedef union {
   struct {
-    uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint16_t TSEN:1;           /*!< bit:      1                                     */
-    uint16_t BGOUTEN:1;        /*!< bit:      2                                     */
-    uint16_t _reserved1:13;    /*!< bit:  3..15  Reserved                           */
+    uint32_t _reserved0:1;     /*!< bit:      0  Reserved                           */
+    uint32_t TSEN:1;           /*!< bit:      1  Temperature Sensor Output Enable   */
+    uint32_t BGOUTEN:1;        /*!< bit:      2  Bandgap Output Enable              */
+    uint32_t _reserved1:13;    /*!< bit:  3..15  Reserved                           */
+    uint32_t CALIB:11;         /*!< bit: 16..26  Voltage Reference Calibration Value */
+    uint32_t _reserved2:5;     /*!< bit: 27..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREFCTRLA_Type;
+  uint32_t reg;                /*!< Type      used for register access              */
+} SYSCTRL_VREF_Type;
 
-#define SYSCTRL_VREFCTRLA_OFFSET    0x48         /**< \brief (SYSCTRL offset) VREF Control Register A */
-#define SYSCTRL_VREFCTRLA_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) VREF Control Register A */
+#define SYSCTRL_VREF_OFFSET         0x48         /**< \brief (SYSCTRL_VREF offset) VREF Control Register A */
+#define SYSCTRL_VREF_RESETVALUE     0x0          /**< \brief (SYSCTRL_VREF reset_value) VREF Control Register A */
 
-#define SYSCTRL_VREFCTRLA_TSEN      (0x1u <<  1) /**< \brief (SYSCTRL_VREFCTRLA)  */
-#define SYSCTRL_VREFCTRLA_BGOUTEN   (0x1u <<  2) /**< \brief (SYSCTRL_VREFCTRLA)  */
-#define SYSCTRL_VREFCTRLA_MASK      0x6u /**< \brief (SYSCTRL_VREFCTRLA) MASK Register */
+#define SYSCTRL_VREF_TSEN           (0x1u <<  1) /**< \brief (SYSCTRL_VREF) Temperature Sensor Output Enable */
+#define SYSCTRL_VREF_BGOUTEN        (0x1u <<  2) /**< \brief (SYSCTRL_VREF) Bandgap Output Enable */
+#define SYSCTRL_VREF_CALIB_Pos      16
+#define SYSCTRL_VREF_CALIB_Msk      (0x7FFu << SYSCTRL_VREF_CALIB_Pos) /**< \brief (SYSCTRL_VREF) Voltage Reference Calibration Value */
+#define SYSCTRL_VREF_CALIB(value)   ((SYSCTRL_VREF_CALIB_Msk & ((value) << SYSCTRL_VREF_CALIB_Pos)))
+#define SYSCTRL_VREF_MASK           0x7FF0006u /**< \brief (SYSCTRL_VREF) MASK Register */
 
-/* -------- SYSCTRL_VREFCTRLB : (SYSCTRL Offset: 0x4A) (R/W 16) VREF Control Register B -------- */
+/* -------- SYSCTRL_VREFTESTA : (SYSCTRL Offset: 0x4C) (R/W 32) VREF Test Register A -------- */
 typedef union {
   struct {
-    uint16_t CALIB:11;         /*!< bit:  0..10                                     */
-    uint16_t _reserved0:5;     /*!< bit: 11..15  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} SYSCTRL_VREFCTRLB_Type;
-
-#define SYSCTRL_VREFCTRLB_OFFSET    0x4A         /**< \brief (SYSCTRL offset) VREF Control Register B */
-#define SYSCTRL_VREFCTRLB_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) VREF Control Register B */
-
-#define SYSCTRL_VREFCTRLB_CALIB_Pos    0
-#define SYSCTRL_VREFCTRLB_CALIB_Msk    (0x7FFu << SYSCTRL_VREFCTRLB_CALIB_Pos) /**< \brief (SYSCTRL_VREFCTRLB)  */
-#define SYSCTRL_VREFCTRLB_CALIB(value) ((SYSCTRL_VREFCTRLB_CALIB_Msk & ((value) << SYSCTRL_VREFCTRLB_CALIB_Pos)))
-#define SYSCTRL_VREFCTRLB_MASK      0x7FFu /**< \brief (SYSCTRL_VREFCTRLB) MASK Register */
-
-/* -------- SYSCTRL_VREFTESTA : (SYSCTRL Offset: 0x4C) (R/W 32) VREF Test Register -------- */
-typedef union {
-  struct {
-    uint32_t BIASEN:1;         /*!< bit:      0                                     */
-    uint32_t BGEN:1;           /*!< bit:      1                                     */
+    uint32_t BIASEN:1;         /*!< bit:      0  Bias Current Generator Enable      */
+    uint32_t BGEN:1;           /*!< bit:      1  Bandgap Voltage Reference Enable   */
     uint32_t _reserved0:6;     /*!< bit:  2.. 7  Reserved                           */
-    uint32_t BGBUFEN:8;        /*!< bit:  8..15                                     */
-    uint32_t BGRDY:1;          /*!< bit:     16                                     */
-    uint32_t BIASRDY:1;        /*!< bit:     17                                     */
-    uint32_t ACBUFRDY:1;       /*!< bit:     18                                     */
-    uint32_t ADCBUFRDY:1;      /*!< bit:     19                                     */
-    uint32_t DACBUFRDY:1;      /*!< bit:     20                                     */
-    uint32_t VDOUBBUFRDY:1;    /*!< bit:     21                                     */
-    uint32_t BUFRRRDY:1;       /*!< bit:     22                                     */
-    uint32_t DIV2BUFRDY:1;     /*!< bit:     23                                     */
-    uint32_t BUFRRSEL:2;       /*!< bit: 24..25                                     */
+    uint32_t BGBUFEN:8;        /*!< bit:  8..15  Bandgap Buffers Enable             */
+    uint32_t BGRDY:1;          /*!< bit:     16  Bandgap Voltage Reference Ready    */
+    uint32_t BIASRDY:1;        /*!< bit:     17  PTAT Bias Ready                    */
+    uint32_t ACBUFRDY:1;       /*!< bit:     18  AC Bandgap Buffer Ready            */
+    uint32_t ADCBUFRDY:1;      /*!< bit:     19  ADC Bandgap Buffer Ready           */
+    uint32_t DACBUFRDY:1;      /*!< bit:     20  DAC Bandgap Buffer Ready           */
+    uint32_t VDOUBBUFRDY:1;    /*!< bit:     21  Voltage Doubler Bandgap Buffer Ready */
+    uint32_t BUFRRRDY:1;       /*!< bit:     22  Rail-to-Rail Buffer Ready          */
+    uint32_t DIV2BUFRDY:1;     /*!< bit:     23  Divide-by-2 Buffer Ready           */
+    uint32_t BUFRRSEL:2;       /*!< bit: 24..25  Rail-to-Rail Buffer Input Select   */
     uint32_t _reserved1:5;     /*!< bit: 26..30  Reserved                           */
-    uint32_t TESTEN:1;         /*!< bit:     31                                     */
+    uint32_t TESTEN:1;         /*!< bit:     31  Test Enable                        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_VREFTESTA_Type;
 
-#define SYSCTRL_VREFTESTA_OFFSET    0x4C         /**< \brief (SYSCTRL offset) VREF Test Register */
-#define SYSCTRL_VREFTESTA_RESETVALUE 0x0          /**< \brief (SYSCTRL reset_value) VREF Test Register */
+#define SYSCTRL_VREFTESTA_OFFSET    0x4C         /**< \brief (SYSCTRL_VREFTESTA offset) VREF Test Register A */
+#define SYSCTRL_VREFTESTA_RESETVALUE 0x0          /**< \brief (SYSCTRL_VREFTESTA reset_value) VREF Test Register A */
 
-#define SYSCTRL_VREFTESTA_BIASEN    (0x1u <<  0) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_BGEN      (0x1u <<  1) /**< \brief (SYSCTRL_VREFTESTA)  */
+#define SYSCTRL_VREFTESTA_BIASEN    (0x1u <<  0) /**< \brief (SYSCTRL_VREFTESTA) Bias Current Generator Enable */
+#define SYSCTRL_VREFTESTA_BGEN      (0x1u <<  1) /**< \brief (SYSCTRL_VREFTESTA) Bandgap Voltage Reference Enable */
 #define SYSCTRL_VREFTESTA_BGBUFEN_Pos    8
-#define SYSCTRL_VREFTESTA_BGBUFEN_Msk    (0xFFu << SYSCTRL_VREFTESTA_BGBUFEN_Pos) /**< \brief (SYSCTRL_VREFTESTA)  */
+#define SYSCTRL_VREFTESTA_BGBUFEN_Msk    (0xFFu << SYSCTRL_VREFTESTA_BGBUFEN_Pos) /**< \brief (SYSCTRL_VREFTESTA) Bandgap Buffers Enable */
 #define SYSCTRL_VREFTESTA_BGBUFEN(value) ((SYSCTRL_VREFTESTA_BGBUFEN_Msk & ((value) << SYSCTRL_VREFTESTA_BGBUFEN_Pos)))
-#define SYSCTRL_VREFTESTA_BGRDY     (0x1u << 16) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_BIASRDY   (0x1u << 17) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_ACBUFRDY  (0x1u << 18) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_ADCBUFRDY (0x1u << 19) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_DACBUFRDY (0x1u << 20) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_VDOUBBUFRDY (0x1u << 21) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_BUFRRRDY  (0x1u << 22) /**< \brief (SYSCTRL_VREFTESTA)  */
-#define SYSCTRL_VREFTESTA_DIV2BUFRDY (0x1u << 23) /**< \brief (SYSCTRL_VREFTESTA)  */
+#define SYSCTRL_VREFTESTA_BGRDY     (0x1u << 16) /**< \brief (SYSCTRL_VREFTESTA) Bandgap Voltage Reference Ready */
+#define SYSCTRL_VREFTESTA_BIASRDY   (0x1u << 17) /**< \brief (SYSCTRL_VREFTESTA) PTAT Bias Ready */
+#define SYSCTRL_VREFTESTA_ACBUFRDY  (0x1u << 18) /**< \brief (SYSCTRL_VREFTESTA) AC Bandgap Buffer Ready */
+#define SYSCTRL_VREFTESTA_ADCBUFRDY (0x1u << 19) /**< \brief (SYSCTRL_VREFTESTA) ADC Bandgap Buffer Ready */
+#define SYSCTRL_VREFTESTA_DACBUFRDY (0x1u << 20) /**< \brief (SYSCTRL_VREFTESTA) DAC Bandgap Buffer Ready */
+#define SYSCTRL_VREFTESTA_VDOUBBUFRDY (0x1u << 21) /**< \brief (SYSCTRL_VREFTESTA) Voltage Doubler Bandgap Buffer Ready */
+#define SYSCTRL_VREFTESTA_BUFRRRDY  (0x1u << 22) /**< \brief (SYSCTRL_VREFTESTA) Rail-to-Rail Buffer Ready */
+#define SYSCTRL_VREFTESTA_DIV2BUFRDY (0x1u << 23) /**< \brief (SYSCTRL_VREFTESTA) Divide-by-2 Buffer Ready */
 #define SYSCTRL_VREFTESTA_BUFRRSEL_Pos    24
-#define SYSCTRL_VREFTESTA_BUFRRSEL_Msk    (0x3u << SYSCTRL_VREFTESTA_BUFRRSEL_Pos) /**< \brief (SYSCTRL_VREFTESTA)  */
+#define SYSCTRL_VREFTESTA_BUFRRSEL_Msk    (0x3u << SYSCTRL_VREFTESTA_BUFRRSEL_Pos) /**< \brief (SYSCTRL_VREFTESTA) Rail-to-Rail Buffer Input Select */
 #define SYSCTRL_VREFTESTA_BUFRRSEL(value) ((SYSCTRL_VREFTESTA_BUFRRSEL_Msk & ((value) << SYSCTRL_VREFTESTA_BUFRRSEL_Pos)))
-#define SYSCTRL_VREFTESTA_TESTEN    (0x1u << 31) /**< \brief (SYSCTRL_VREFTESTA)  */
+#define SYSCTRL_VREFTESTA_TESTEN    (0x1u << 31) /**< \brief (SYSCTRL_VREFTESTA) Test Enable */
 #define SYSCTRL_VREFTESTA_MASK      0x83FFFF03u /**< \brief (SYSCTRL_VREFTESTA) MASK Register */
 
-/* -------- SYSCTRL_VREFTESTB : (SYSCTRL Offset: 0x50) (R/W 16)  -------- */
+/* -------- SYSCTRL_VREFTESTB : (SYSCTRL Offset: 0x50) (R/W 16) VREF Test Register B -------- */
 typedef union {
   struct {
-    uint16_t SAMPLECLK:2;      /*!< bit:  0.. 1                                     */
-    uint16_t DIVLEV0:3;        /*!< bit:  2.. 4                                     */
-    uint16_t DIVLEV1:3;        /*!< bit:  5.. 7                                     */
-    uint16_t DIVLEV2:3;        /*!< bit:  8..10                                     */
-    uint16_t DIVLEV3:3;        /*!< bit: 11..13                                     */
+    uint16_t SAMPLECLK:2;      /*!< bit:  0.. 1  Sample Clock Division Factor       */
+    uint16_t DIVLEV0:3;        /*!< bit:  2.. 4  ULP VREG Reference Division Level  */
+    uint16_t DIVLEV1:3;        /*!< bit:  5.. 7  ULP VREG Gain Reference Division Level */
+    uint16_t DIVLEV2:3;        /*!< bit:  8..10  XOSC Reference Division Level      */
+    uint16_t DIVLEV3:3;        /*!< bit: 11..13  VREG Reference Division Level      */
     uint16_t _reserved0:1;     /*!< bit:     14  Reserved                           */
-    uint16_t TESTEN:1;         /*!< bit:     15                                     */
+    uint16_t TESTEN:1;         /*!< bit:     15  Test Enable                        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_VREFTESTB_Type;
 
-#define SYSCTRL_VREFTESTB_OFFSET    0x50         /**< \brief (SYSCTRL offset)  */
+#define SYSCTRL_VREFTESTB_OFFSET    0x50         /**< \brief (SYSCTRL_VREFTESTB offset) VREF Test Register B */
 
 #define SYSCTRL_VREFTESTB_SAMPLECLK_Pos    0
-#define SYSCTRL_VREFTESTB_SAMPLECLK_Msk    (0x3u << SYSCTRL_VREFTESTB_SAMPLECLK_Pos) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_SAMPLECLK_Msk    (0x3u << SYSCTRL_VREFTESTB_SAMPLECLK_Pos) /**< \brief (SYSCTRL_VREFTESTB) Sample Clock Division Factor */
 #define SYSCTRL_VREFTESTB_SAMPLECLK(value) ((SYSCTRL_VREFTESTB_SAMPLECLK_Msk & ((value) << SYSCTRL_VREFTESTB_SAMPLECLK_Pos)))
 #define SYSCTRL_VREFTESTB_DIVLEV0_Pos    2
-#define SYSCTRL_VREFTESTB_DIVLEV0_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV0_Pos) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_DIVLEV0_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV0_Pos) /**< \brief (SYSCTRL_VREFTESTB) ULP VREG Reference Division Level */
 #define SYSCTRL_VREFTESTB_DIVLEV0(value) ((SYSCTRL_VREFTESTB_DIVLEV0_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV0_Pos)))
 #define SYSCTRL_VREFTESTB_DIVLEV1_Pos    5
-#define SYSCTRL_VREFTESTB_DIVLEV1_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV1_Pos) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_DIVLEV1_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV1_Pos) /**< \brief (SYSCTRL_VREFTESTB) ULP VREG Gain Reference Division Level */
 #define SYSCTRL_VREFTESTB_DIVLEV1(value) ((SYSCTRL_VREFTESTB_DIVLEV1_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV1_Pos)))
 #define SYSCTRL_VREFTESTB_DIVLEV2_Pos    8
-#define SYSCTRL_VREFTESTB_DIVLEV2_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV2_Pos) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_DIVLEV2_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV2_Pos) /**< \brief (SYSCTRL_VREFTESTB) XOSC Reference Division Level */
 #define SYSCTRL_VREFTESTB_DIVLEV2(value) ((SYSCTRL_VREFTESTB_DIVLEV2_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV2_Pos)))
 #define SYSCTRL_VREFTESTB_DIVLEV3_Pos    11
-#define SYSCTRL_VREFTESTB_DIVLEV3_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV3_Pos) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_DIVLEV3_Msk    (0x7u << SYSCTRL_VREFTESTB_DIVLEV3_Pos) /**< \brief (SYSCTRL_VREFTESTB) VREG Reference Division Level */
 #define SYSCTRL_VREFTESTB_DIVLEV3(value) ((SYSCTRL_VREFTESTB_DIVLEV3_Msk & ((value) << SYSCTRL_VREFTESTB_DIVLEV3_Pos)))
-#define SYSCTRL_VREFTESTB_TESTEN    (0x1u << 15) /**< \brief (SYSCTRL_VREFTESTB)  */
+#define SYSCTRL_VREFTESTB_TESTEN    (0x1u << 15) /**< \brief (SYSCTRL_VREFTESTB) Test Enable */
 #define SYSCTRL_VREFTESTB_MASK      0xBFFFu /**< \brief (SYSCTRL_VREFTESTB) MASK Register */
 
-/* -------- SYSCTRL_FORCECLKON : (SYSCTRL Offset: 0x54) (R/W 32)  -------- */
+/* -------- SYSCTRL_FORCECLKON : (SYSCTRL Offset: 0x54) (R/W 32) Force Clock On Register -------- */
 typedef union {
   struct {
     uint32_t XOSCON:1;         /*!< bit:      0                                     */
@@ -6125,7 +6443,7 @@ typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_FORCECLKON_Type;
 
-#define SYSCTRL_FORCECLKON_OFFSET   0x54         /**< \brief (SYSCTRL offset)  */
+#define SYSCTRL_FORCECLKON_OFFSET   0x54         /**< \brief (SYSCTRL_FORCECLKON offset) Force Clock On Register */
 
 #define SYSCTRL_FORCECLKON_XOSCON   (0x1u <<  0) /**< \brief (SYSCTRL_FORCECLKON)  */
 #define SYSCTRL_FORCECLKON_XOSC32KON (0x1u <<  1) /**< \brief (SYSCTRL_FORCECLKON)  */
@@ -6134,77 +6452,74 @@ typedef union {
 #define SYSCTRL_FORCECLKON_OSC8MON  (0x1u <<  4) /**< \brief (SYSCTRL_FORCECLKON)  */
 #define SYSCTRL_FORCECLKON_MASK     0x1Fu /**< \brief (SYSCTRL_FORCECLKON) MASK Register */
 
-/* -------- SYSCTRL_TESTMODE : (SYSCTRL Offset: 0x58) (R/W 32)  -------- */
+/* -------- SYSCTRL_TESTMODE : (SYSCTRL Offset: 0x58) (R/W 32) Test Mode Register -------- */
 typedef union {
   struct {
-    uint32_t XOSC_TESTMODE:1;  /*!< bit:      0                                     */
-    uint32_t XOSC32_TESTMODE:1; /*!< bit:      1                                     */
-    uint32_t DFLL_TESTMODE:1;  /*!< bit:      2                                     */
-    uint32_t BOD33_TESTMODE:1; /*!< bit:      3                                     */
-    uint32_t BOD12_TESTMODE:1; /*!< bit:      4                                     */
-    uint32_t OSC32K_TESTMODE:1; /*!< bit:      5                                     */
-    uint32_t OSCULP32K_TESTMODE:1; /*!< bit:      6                                     */
-    uint32_t OSC8M_TESTMODE:1; /*!< bit:      7                                     */
-    uint32_t VREG_TESTMODE:1;  /*!< bit:      8                                     */
-    uint32_t VREF_TESTMODE:1;  /*!< bit:      9                                     */
-    uint32_t ALLCLK_TESTMODE:1; /*!< bit:     10                                     */
-    uint32_t POR33_TESTMODE:1; /*!< bit:     11                                     */
+    uint32_t XOSC:1;           /*!< bit:      0  XOSC Test Mode Enable              */
+    uint32_t XOSC32:1;         /*!< bit:      1  XOSC32 Test Mode Enable            */
+    uint32_t DFLL:1;           /*!< bit:      2  DFLL Test Mode Enable              */
+    uint32_t BOD33:1;          /*!< bit:      3  BOD33 Test Mode Enable             */
+    uint32_t BOD12:1;          /*!< bit:      4  BOD12 Test Mode Enable             */
+    uint32_t OSC32K:1;         /*!< bit:      5  OSC32K Test Mode Enable            */
+    uint32_t OSCULP32K:1;      /*!< bit:      6  OSCULP32K Test Mode Enable         */
+    uint32_t OSC8M:1;          /*!< bit:      7  OSC8M Test Mode Enable             */
+    uint32_t VREG:1;           /*!< bit:      8  VREG Test Mode Enable              */
+    uint32_t VREF:1;           /*!< bit:      9  VREF Test Mode Enable              */
+    uint32_t ALLCLK:1;         /*!< bit:     10  All Clocks Test Mode Enable        */
+    uint32_t POR33:1;          /*!< bit:     11  POR33 Test Mode Enable             */
     uint32_t _reserved0:20;    /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_TESTMODE_Type;
 
-#define SYSCTRL_TESTMODE_OFFSET     0x58         /**< \brief (SYSCTRL offset)  */
+#define SYSCTRL_TESTMODE_OFFSET     0x58         /**< \brief (SYSCTRL_TESTMODE offset) Test Mode Register */
 
-#define SYSCTRL_TESTMODE_XOSC_TESTMODE (0x1u <<  0) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_XOSC32_TESTMODE (0x1u <<  1) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_DFLL_TESTMODE (0x1u <<  2) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_BOD33_TESTMODE (0x1u <<  3) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_BOD12_TESTMODE (0x1u <<  4) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_OSC32K_TESTMODE (0x1u <<  5) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_OSCULP32K_TESTMODE (0x1u <<  6) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_OSC8M_TESTMODE (0x1u <<  7) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_VREG_TESTMODE (0x1u <<  8) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_VREF_TESTMODE (0x1u <<  9) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_ALLCLK_TESTMODE (0x1u << 10) /**< \brief (SYSCTRL_TESTMODE)  */
-#define SYSCTRL_TESTMODE_POR33_TESTMODE (0x1u << 11) /**< \brief (SYSCTRL_TESTMODE)  */
+#define SYSCTRL_TESTMODE_XOSC       (0x1u <<  0) /**< \brief (SYSCTRL_TESTMODE) XOSC Test Mode Enable */
+#define SYSCTRL_TESTMODE_XOSC32     (0x1u <<  1) /**< \brief (SYSCTRL_TESTMODE) XOSC32 Test Mode Enable */
+#define SYSCTRL_TESTMODE_DFLL       (0x1u <<  2) /**< \brief (SYSCTRL_TESTMODE) DFLL Test Mode Enable */
+#define SYSCTRL_TESTMODE_BOD33      (0x1u <<  3) /**< \brief (SYSCTRL_TESTMODE) BOD33 Test Mode Enable */
+#define SYSCTRL_TESTMODE_BOD12      (0x1u <<  4) /**< \brief (SYSCTRL_TESTMODE) BOD12 Test Mode Enable */
+#define SYSCTRL_TESTMODE_OSC32K     (0x1u <<  5) /**< \brief (SYSCTRL_TESTMODE) OSC32K Test Mode Enable */
+#define SYSCTRL_TESTMODE_OSCULP32K  (0x1u <<  6) /**< \brief (SYSCTRL_TESTMODE) OSCULP32K Test Mode Enable */
+#define SYSCTRL_TESTMODE_OSC8M      (0x1u <<  7) /**< \brief (SYSCTRL_TESTMODE) OSC8M Test Mode Enable */
+#define SYSCTRL_TESTMODE_VREG       (0x1u <<  8) /**< \brief (SYSCTRL_TESTMODE) VREG Test Mode Enable */
+#define SYSCTRL_TESTMODE_VREF       (0x1u <<  9) /**< \brief (SYSCTRL_TESTMODE) VREF Test Mode Enable */
+#define SYSCTRL_TESTMODE_ALLCLK     (0x1u << 10) /**< \brief (SYSCTRL_TESTMODE) All Clocks Test Mode Enable */
+#define SYSCTRL_TESTMODE_POR33      (0x1u << 11) /**< \brief (SYSCTRL_TESTMODE) POR33 Test Mode Enable */
 #define SYSCTRL_TESTMODE_MASK       0xFFFu /**< \brief (SYSCTRL_TESTMODE) MASK Register */
 
 /** \brief SYSCTRL hardware registers */
 typedef struct {
-  __IO SYSCTRL_INTENCLR_Type     INTENCLR;    /**< \brief Offset: 0x00 (R/W 32) Interrupt Enable Register */
-  __IO SYSCTRL_INTENSET_Type     INTENSET;    /**< \brief Offset: 0x04 (R/W 32) Interrupt Clear Register */
-  __IO SYSCTRL_INTFLAG_Type      INTFLAG;     /**< \brief Offset: 0x08 (R/W 32) Interrupt Flag Register */
+  __IO SYSCTRL_INTENCLR_Type     INTENCLR;    /**< \brief Offset: 0x00 (R/W 32) Interrupt Enable Clear Register */
+  __IO SYSCTRL_INTENSET_Type     INTENSET;    /**< \brief Offset: 0x04 (R/W 32) Interrupt Enable Set Register */
+  __IO SYSCTRL_INTFLAG_Type      INTFLAG;     /**< \brief Offset: 0x08 (R/W 32) Interrupt Flag Status and Clear Register */
   __I  SYSCTRL_PCLKSR_Type       PCLKSR;      /**< \brief Offset: 0x0C (R/  32) Power and Clocks Status Register */
   __IO SYSCTRL_XOSC_Type         XOSC;        /**< \brief Offset: 0x10 (R/W 16) XOSC Control Register */
        RoReg8                    Reserved1[0x2];
   __IO SYSCTRL_XOSC32K_Type      XOSC32K;     /**< \brief Offset: 0x14 (R/W 16) XOSC32K Control Register */
   __IO SYSCTRL_XOSC32KTEST_Type  XOSC32KTEST; /**< \brief Offset: 0x16 (R/W  8) XOSC32K Test Register */
        RoReg8                    Reserved2[0x1];
-  __IO SYSCTRL_DFLL48CTRL_Type   DFLL48CTRL;  /**< \brief Offset: 0x18 (R/W 32) DFLL  Config Register */
-  __IO SYSCTRL_DFLL48VALDIFF_Type DFLL48VALDIFF; /**< \brief Offset: 0x1C (R/W 32) DFLL Calibration Value Register */
-  __IO SYSCTRL_DFLL48MULSTEP_Type DFLL48MULSTEP; /**< \brief Offset: 0x20 (R/W 32) DFLL Multiplier Register */
-  __IO SYSCTRL_DFLL48SYNC_Type   DFLL48SYNC;  /**< \brief Offset: 0x24 (R/W  8) DFLL Synchronization Register */
+  __IO SYSCTRL_DFLLCTRL_Type     DFLLCTRL;    /**< \brief Offset: 0x18 (R/W 32) DFLL  Config Register */
+  __IO SYSCTRL_DFLLVAL_Type      DFLLVAL;     /**< \brief Offset: 0x1C (R/W 32) DFLL Calibration Value Register */
+  __IO SYSCTRL_DFLLMUL_Type      DFLLMUL;     /**< \brief Offset: 0x20 (R/W 32) DFLL Multiplier Register */
+  __IO SYSCTRL_DFLLSYNC_Type     DFLLSYNC;    /**< \brief Offset: 0x24 (R/W  8) DFLL Synchronization Register */
        RoReg8                    Reserved3[0x3];
-  __IO SYSCTRL_BOD33CTRL_Type    BOD33CTRL;   /**< \brief Offset: 0x28 (R/W 16) BOD33 Control Register */
-  __IO SYSCTRL_BOD33LEVEL_Type   BOD33LEVEL;  /**< \brief Offset: 0x2A (R/W 16) BOD33 Level Register */
-  __IO SYSCTRL_BOD12CTRL_Type    BOD12CTRL;   /**< \brief Offset: 0x2C (R/W 16) BOD12 Control Register */
-  __IO SYSCTRL_BOD12LEVEL_Type   BOD12LEVEL;  /**< \brief Offset: 0x2E (R/W 16) BOD12 Control Register */
+  __IO SYSCTRL_BOD33_Type        BOD33;       /**< \brief Offset: 0x28 (R/W 32) BOD33 Control Register */
+  __IO SYSCTRL_BOD12_Type        BOD12;       /**< \brief Offset: 0x2C (R/W 32) BOD12 Control Register */
   __IO SYSCTRL_OSC32K_Type       OSC32K;      /**< \brief Offset: 0x30 (R/W 32) OSC32K Control Register */
   __IO SYSCTRL_OSCULP32K_Type    OSCULP32K;   /**< \brief Offset: 0x34 (R/W 32) OSCULP32K Control Register */
   __IO SYSCTRL_OSCULP32KTEST_Type OSCULP32KTEST; /**< \brief Offset: 0x38 (R/W  8) OSCULP32K Test Register */
        RoReg8                    Reserved4[0x3];
   __IO SYSCTRL_OSC8M_Type        OSC8M;       /**< \brief Offset: 0x3C (R/W 32) OSC8M Control Register A */
-  __IO SYSCTRL_VREGCTRL_Type     VREGCTRL;    /**< \brief Offset: 0x40 (R/W 16) VREG Control Register */
+  __IO SYSCTRL_VREG_Type         VREG;        /**< \brief Offset: 0x40 (R/W 16) VREG Control Register */
        RoReg8                    Reserved5[0x2];
   __IO SYSCTRL_VREGTEST_Type     VREGTEST;    /**< \brief Offset: 0x44 (R/W 32) VREG Test Register */
-  __IO SYSCTRL_VREFCTRLA_Type    VREFCTRLA;   /**< \brief Offset: 0x48 (R/W 16) VREF Control Register A */
-  __IO SYSCTRL_VREFCTRLB_Type    VREFCTRLB;   /**< \brief Offset: 0x4A (R/W 16) VREF Control Register B */
-  __IO SYSCTRL_VREFTESTA_Type    VREFTESTA;   /**< \brief Offset: 0x4C (R/W 32) VREF Test Register */
-  __IO SYSCTRL_VREFTESTB_Type    VREFTESTB;   /**< \brief Offset: 0x50 (R/W 16)  */
+  __IO SYSCTRL_VREF_Type         VREF;        /**< \brief Offset: 0x48 (R/W 32) VREF Control Register A */
+  __IO SYSCTRL_VREFTESTA_Type    VREFTESTA;   /**< \brief Offset: 0x4C (R/W 32) VREF Test Register A */
+  __IO SYSCTRL_VREFTESTB_Type    VREFTESTB;   /**< \brief Offset: 0x50 (R/W 16) VREF Test Register B */
        RoReg8                    Reserved6[0x2];
-  __IO SYSCTRL_FORCECLKON_Type   FORCECLKON;  /**< \brief Offset: 0x54 (R/W 32)  */
-  __IO SYSCTRL_TESTMODE_Type     TESTMODE;    /**< \brief Offset: 0x58 (R/W 32)  */
+  __IO SYSCTRL_FORCECLKON_Type   FORCECLKON;  /**< \brief Offset: 0x54 (R/W 32) Force Clock On Register */
+  __IO SYSCTRL_TESTMODE_Type     TESTMODE;    /**< \brief Offset: 0x58 (R/W 32) Test Mode Register */
 } Sysctrl;
 
 #endif /*  __EXCLUDE_SYSCTRL_FROM_CMSIS__ */
@@ -6215,7 +6530,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR TC */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_TC Basic Timer Counter */
+/** \addtogroup SAM0+D_TC Basic Timer Counter */
 /*@{*/
 
 #define REV_TC         0x100
@@ -6224,35 +6539,36 @@ typedef struct {
 
 #ifndef __EXCLUDE_TC_FROM_CMSIS__
 
-/* -------- TC_CTRLA : (TC Offset: 0x00) (R/W 16) Control Register A -------- */
+/* -------- TC_CTRLA : (TC Offset: 0x00) (R/W 16) Control A Register -------- */
 typedef union {
   struct {
-    uint16_t _reserved0:1;     /*!< bit:      0  Reserved                           */
+    uint16_t SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint16_t ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint16_t MODE:2;           /*!< bit:  2.. 3  Timer Counter mode                 */
-    uint16_t _reserved1:1;     /*!< bit:      4  Reserved                           */
-    uint16_t WAVEGEN:2;        /*!< bit:  5.. 6  Waveform Generation operation      */
-    uint16_t _reserved2:1;     /*!< bit:      7  Reserved                           */
+    uint16_t MODE:2;           /*!< bit:  2.. 3  Timer Counter Mode                 */
+    uint16_t _reserved0:1;     /*!< bit:      4  Reserved                           */
+    uint16_t WAVEGEN:2;        /*!< bit:  5.. 6  Waveform Generation Operation      */
+    uint16_t _reserved1:1;     /*!< bit:      7  Reserved                           */
     uint16_t PRESCALER:3;      /*!< bit:  8..10  Prescaler                          */
-    uint16_t SLEEPEN:1;        /*!< bit:     11  Run during Sleep mode              */
-    uint16_t PRESCSYNC:2;      /*!< bit: 12..13  Prescaler and counter Synchronization */
-    uint16_t _reserved3:2;     /*!< bit: 14..15  Reserved                           */
+    uint16_t RUNSTDBY:1;       /*!< bit:     11  Run during Standby                 */
+    uint16_t PRESCSYNC:2;      /*!< bit: 12..13  Prescaler and Counter Synchronization */
+    uint16_t _reserved2:2;     /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_CTRLA_Type;
 
-#define TC_CTRLA_OFFSET             0x00         /**< \brief (TC offset) Control Register A */
-#define TC_CTRLA_RESETVALUE         0x0          /**< \brief (TC reset_value) Control Register A */
+#define TC_CTRLA_OFFSET             0x00         /**< \brief (TC_CTRLA offset) Control A Register */
+#define TC_CTRLA_RESETVALUE         0x0          /**< \brief (TC_CTRLA reset_value) Control A Register */
 
+#define TC_CTRLA_SWRST              (0x1u <<  0) /**< \brief (TC_CTRLA) Software Reset */
 #define TC_CTRLA_ENABLE             (0x1u <<  1) /**< \brief (TC_CTRLA) Enable */
 #define TC_CTRLA_MODE_Pos           2
-#define TC_CTRLA_MODE_Msk           (0x3u << TC_CTRLA_MODE_Pos) /**< \brief (TC_CTRLA) Timer Counter mode */
+#define TC_CTRLA_MODE_Msk           (0x3u << TC_CTRLA_MODE_Pos) /**< \brief (TC_CTRLA) Timer Counter Mode */
 #define TC_CTRLA_MODE(value)        ((TC_CTRLA_MODE_Msk & ((value) << TC_CTRLA_MODE_Pos)))
 #define   TC_CTRLA_MODE_COUNT16     (0x0u <<  2) /**< \brief (TC_CTRLA)  */
 #define   TC_CTRLA_MODE_COUNT8      (0x1u <<  2) /**< \brief (TC_CTRLA)  */
 #define   TC_CTRLA_MODE_COUNT32     (0x2u <<  2) /**< \brief (TC_CTRLA)  */
 #define TC_CTRLA_WAVEGEN_Pos        5
-#define TC_CTRLA_WAVEGEN_Msk        (0x3u << TC_CTRLA_WAVEGEN_Pos) /**< \brief (TC_CTRLA) Waveform Generation operation */
+#define TC_CTRLA_WAVEGEN_Msk        (0x3u << TC_CTRLA_WAVEGEN_Pos) /**< \brief (TC_CTRLA) Waveform Generation Operation */
 #define TC_CTRLA_WAVEGEN(value)     ((TC_CTRLA_WAVEGEN_Msk & ((value) << TC_CTRLA_WAVEGEN_Pos)))
 #define   TC_CTRLA_WAVEGEN_NFRQ     (0x0u <<  5) /**< \brief (TC_CTRLA)  */
 #define   TC_CTRLA_WAVEGEN_MFRQ     (0x1u <<  5) /**< \brief (TC_CTRLA)  */
@@ -6261,14 +6577,14 @@ typedef union {
 #define TC_CTRLA_PRESCALER_Pos      8
 #define TC_CTRLA_PRESCALER_Msk      (0x7u << TC_CTRLA_PRESCALER_Pos) /**< \brief (TC_CTRLA) Prescaler */
 #define TC_CTRLA_PRESCALER(value)   ((TC_CTRLA_PRESCALER_Msk & ((value) << TC_CTRLA_PRESCALER_Pos)))
-#define TC_CTRLA_SLEEPEN            (0x1u << 11) /**< \brief (TC_CTRLA) Run during Sleep mode */
+#define TC_CTRLA_RUNSTDBY           (0x1u << 11) /**< \brief (TC_CTRLA) Run during Standby */
 #define TC_CTRLA_PRESCSYNC_Pos      12
-#define TC_CTRLA_PRESCSYNC_Msk      (0x3u << TC_CTRLA_PRESCSYNC_Pos) /**< \brief (TC_CTRLA) Prescaler and counter Synchronization */
+#define TC_CTRLA_PRESCSYNC_Msk      (0x3u << TC_CTRLA_PRESCSYNC_Pos) /**< \brief (TC_CTRLA) Prescaler and Counter Synchronization */
 #define TC_CTRLA_PRESCSYNC(value)   ((TC_CTRLA_PRESCSYNC_Msk & ((value) << TC_CTRLA_PRESCSYNC_Pos)))
 #define   TC_CTRLA_PRESCSYNC_GCLK   (0x0u << 12) /**< \brief (TC_CTRLA)  */
 #define   TC_CTRLA_PRESCSYNC_PRESC  (0x1u << 12) /**< \brief (TC_CTRLA)  */
 #define   TC_CTRLA_PRESCSYNC_RESYNC (0x2u << 12) /**< \brief (TC_CTRLA)  */
-#define TC_CTRLA_MASK               0x3F6Eu /**< \brief (TC_CTRLA) MASK Register */
+#define TC_CTRLA_MASK               0x3F6Fu /**< \brief (TC_CTRLA) MASK Register */
 
 /* -------- TC_READREQ : (TC Offset: 0x02) (R/W 16) Read Request Register -------- */
 typedef union {
@@ -6281,8 +6597,8 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_READREQ_Type;
 
-#define TC_READREQ_OFFSET           0x02         /**< \brief (TC offset) Read Request Register */
-#define TC_READREQ_RESETVALUE       0x0          /**< \brief (TC reset_value) Read Request Register */
+#define TC_READREQ_OFFSET           0x02         /**< \brief (TC_READREQ offset) Read Request Register */
+#define TC_READREQ_RESETVALUE       0x0          /**< \brief (TC_READREQ reset_value) Read Request Register */
 
 #define TC_READREQ_ADDR_Pos         0
 #define TC_READREQ_ADDR_Msk         (0x1Fu << TC_READREQ_ADDR_Pos) /**< \brief (TC_READREQ) Address */
@@ -6291,23 +6607,23 @@ typedef union {
 #define TC_READREQ_RREQ             (0x1u << 15) /**< \brief (TC_READREQ) Read Request */
 #define TC_READREQ_MASK             0xC01Fu /**< \brief (TC_READREQ) MASK Register */
 
-/* -------- TC_CTRLBCLR : (TC Offset: 0x04) (R/W  8) Control Clear Register B -------- */
+/* -------- TC_CTRLBCLR : (TC Offset: 0x04) (R/W  8) Control B Clear Register -------- */
 typedef union {
   struct {
     uint8_t  DIR:1;            /*!< bit:      0  Counter Direction                  */
     uint8_t  _reserved0:1;     /*!< bit:      1  Reserved                           */
-    uint8_t  ONESHOT:1;        /*!< bit:      2  Oneshot on counter                 */
+    uint8_t  ONESHOT:1;        /*!< bit:      2  One-Shot on Counter                */
     uint8_t  _reserved1:3;     /*!< bit:  3.. 5  Reserved                           */
     uint8_t  CMD:2;            /*!< bit:  6.. 7  Command                            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_CTRLBCLR_Type;
 
-#define TC_CTRLBCLR_OFFSET          0x04         /**< \brief (TC offset) Control Clear Register B */
-#define TC_CTRLBCLR_RESETVALUE      0x0          /**< \brief (TC reset_value) Control Clear Register B */
+#define TC_CTRLBCLR_OFFSET          0x04         /**< \brief (TC_CTRLBCLR offset) Control B Clear Register */
+#define TC_CTRLBCLR_RESETVALUE      0x0          /**< \brief (TC_CTRLBCLR reset_value) Control B Clear Register */
 
 #define TC_CTRLBCLR_DIR             (0x1u <<  0) /**< \brief (TC_CTRLBCLR) Counter Direction */
-#define TC_CTRLBCLR_ONESHOT         (0x1u <<  2) /**< \brief (TC_CTRLBCLR) Oneshot on counter */
+#define TC_CTRLBCLR_ONESHOT         (0x1u <<  2) /**< \brief (TC_CTRLBCLR) One-Shot on Counter */
 #define TC_CTRLBCLR_CMD_Pos         6
 #define TC_CTRLBCLR_CMD_Msk         (0x3u << TC_CTRLBCLR_CMD_Pos) /**< \brief (TC_CTRLBCLR) Command */
 #define TC_CTRLBCLR_CMD(value)      ((TC_CTRLBCLR_CMD_Msk & ((value) << TC_CTRLBCLR_CMD_Pos)))
@@ -6316,29 +6632,29 @@ typedef union {
 #define   TC_CTRLBCLR_CMD_STOP      (0x2u <<  6) /**< \brief (TC_CTRLBCLR)  */
 #define TC_CTRLBCLR_MASK            0xC5u /**< \brief (TC_CTRLBCLR) MASK Register */
 
-/* -------- TC_CTRLBSET : (TC Offset: 0x05) (R/W  8) Control Set Register B -------- */
+/* -------- TC_CTRLBSET : (TC Offset: 0x05) (R/W  8) Control B Set Register -------- */
 typedef union {
   struct {
     uint8_t  DIR:1;            /*!< bit:      0  Counter Direction                  */
     uint8_t  _reserved0:1;     /*!< bit:      1  Reserved                           */
-    uint8_t  ONESHOT:1;        /*!< bit:      2  Oneshot on counter                 */
+    uint8_t  ONESHOT:1;        /*!< bit:      2  One-Shot on Counter                */
     uint8_t  _reserved1:3;     /*!< bit:  3.. 5  Reserved                           */
     uint8_t  CMD:2;            /*!< bit:  6.. 7  Command                            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_CTRLBSET_Type;
 
-#define TC_CTRLBSET_OFFSET          0x05         /**< \brief (TC offset) Control Set Register B */
-#define TC_CTRLBSET_RESETVALUE      0x0          /**< \brief (TC reset_value) Control Set Register B */
+#define TC_CTRLBSET_OFFSET          0x05         /**< \brief (TC_CTRLBSET offset) Control B Set Register */
+#define TC_CTRLBSET_RESETVALUE      0x0          /**< \brief (TC_CTRLBSET reset_value) Control B Set Register */
 
 #define TC_CTRLBSET_DIR             (0x1u <<  0) /**< \brief (TC_CTRLBSET) Counter Direction */
-#define TC_CTRLBSET_ONESHOT         (0x1u <<  2) /**< \brief (TC_CTRLBSET) Oneshot on counter */
+#define TC_CTRLBSET_ONESHOT         (0x1u <<  2) /**< \brief (TC_CTRLBSET) One-Shot on Counter */
 #define TC_CTRLBSET_CMD_Pos         6
 #define TC_CTRLBSET_CMD_Msk         (0x3u << TC_CTRLBSET_CMD_Pos) /**< \brief (TC_CTRLBSET) Command */
 #define TC_CTRLBSET_CMD(value)      ((TC_CTRLBSET_CMD_Msk & ((value) << TC_CTRLBSET_CMD_Pos)))
 #define TC_CTRLBSET_MASK            0xC5u /**< \brief (TC_CTRLBSET) MASK Register */
 
-/* -------- TC_CTRLC : (TC Offset: 0x06) (R/W  8) Control Register C -------- */
+/* -------- TC_CTRLC : (TC Offset: 0x06) (R/W  8) Control C Register -------- */
 typedef union {
   struct {
     uint8_t  INVEN:2;          /*!< bit:  0.. 1  Output Waveform Invert Enable      */
@@ -6349,8 +6665,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_CTRLC_Type;
 
-#define TC_CTRLC_OFFSET             0x06         /**< \brief (TC offset) Control Register C */
-#define TC_CTRLC_RESETVALUE         0x0          /**< \brief (TC reset_value) Control Register C */
+#define TC_CTRLC_OFFSET             0x06         /**< \brief (TC_CTRLC offset) Control C Register */
+#define TC_CTRLC_RESETVALUE         0x0          /**< \brief (TC_CTRLC reset_value) Control C Register */
 
 #define TC_CTRLC_INVEN_Pos          0
 #define TC_CTRLC_INVEN_Msk          (0x3u << TC_CTRLC_INVEN_Pos) /**< \brief (TC_CTRLC) Output Waveform Invert Enable */
@@ -6360,7 +6676,7 @@ typedef union {
 #define TC_CTRLC_CPTEN(value)       ((TC_CTRLC_CPTEN_Msk & ((value) << TC_CTRLC_CPTEN_Pos)))
 #define TC_CTRLC_MASK               0x33u /**< \brief (TC_CTRLC) MASK Register */
 
-/* -------- TC_DEBUG : (TC Offset: 0x08) (R/W  8) Control Register C -------- */
+/* -------- TC_DEBUG : (TC Offset: 0x08) (R/W  8) Debug Register -------- */
 typedef union {
   struct {
     uint8_t  DBGRUN:1;         /*!< bit:      0  Run During Debug                   */
@@ -6369,8 +6685,8 @@ typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_DEBUG_Type;
 
-#define TC_DEBUG_OFFSET             0x08         /**< \brief (TC offset) Control Register C */
-#define TC_DEBUG_RESETVALUE         0x0          /**< \brief (TC reset_value) Control Register C */
+#define TC_DEBUG_OFFSET             0x08         /**< \brief (TC_DEBUG offset) Debug Register */
+#define TC_DEBUG_RESETVALUE         0x0          /**< \brief (TC_DEBUG reset_value) Debug Register */
 
 #define TC_DEBUG_DBGRUN             (0x1u <<  0) /**< \brief (TC_DEBUG) Run During Debug */
 #define TC_DEBUG_MASK               0x1u /**< \brief (TC_DEBUG) MASK Register */
@@ -6380,19 +6696,19 @@ typedef union {
   struct {
     uint16_t EVACT:3;          /*!< bit:  0.. 2  Event Action                       */
     uint16_t _reserved0:1;     /*!< bit:      3  Reserved                           */
-    uint16_t TCINV:1;          /*!< bit:      4  TC event input polarity            */
-    uint16_t TCEI:1;           /*!< bit:      5  TC event enable                    */
+    uint16_t TCINV:1;          /*!< bit:      4  TC Event Input Polarity            */
+    uint16_t TCEI:1;           /*!< bit:      5  TC Event Enable                    */
     uint16_t _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
-    uint16_t OVFEO:1;          /*!< bit:      8  Event output enable                */
+    uint16_t OVFEO:1;          /*!< bit:      8  Event Output Enable                */
     uint16_t _reserved2:3;     /*!< bit:  9..11  Reserved                           */
-    uint16_t MCEO:2;           /*!< bit: 12..13  MC Event output enable             */
+    uint16_t MCEO:2;           /*!< bit: 12..13  MC Event Output Enable             */
     uint16_t _reserved3:2;     /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_EVCTRL_Type;
 
-#define TC_EVCTRL_OFFSET            0x0A         /**< \brief (TC offset) Event Control Register */
-#define TC_EVCTRL_RESETVALUE        0x0          /**< \brief (TC reset_value) Event Control Register */
+#define TC_EVCTRL_OFFSET            0x0A         /**< \brief (TC_EVCTRL offset) Event Control Register */
+#define TC_EVCTRL_RESETVALUE        0x0          /**< \brief (TC_EVCTRL reset_value) Event Control Register */
 
 #define TC_EVCTRL_EVACT_Pos         0
 #define TC_EVCTRL_EVACT_Msk         (0x7u << TC_EVCTRL_EVACT_Pos) /**< \brief (TC_EVCTRL) Event Action */
@@ -6403,214 +6719,242 @@ typedef union {
 #define   TC_EVCTRL_EVACT_START     (0x3u <<  0) /**< \brief (TC_EVCTRL)  */
 #define   TC_EVCTRL_EVACT_PPW       (0x5u <<  0) /**< \brief (TC_EVCTRL)  */
 #define   TC_EVCTRL_EVACT_PWP       (0x6u <<  0) /**< \brief (TC_EVCTRL)  */
-#define TC_EVCTRL_TCINV             (0x1u <<  4) /**< \brief (TC_EVCTRL) TC event input polarity */
-#define TC_EVCTRL_TCEI              (0x1u <<  5) /**< \brief (TC_EVCTRL) TC event enable */
-#define TC_EVCTRL_OVFEO             (0x1u <<  8) /**< \brief (TC_EVCTRL) Event output enable */
+#define TC_EVCTRL_TCINV             (0x1u <<  4) /**< \brief (TC_EVCTRL) TC Event Input Polarity */
+#define TC_EVCTRL_TCEI              (0x1u <<  5) /**< \brief (TC_EVCTRL) TC Event Enable */
+#define TC_EVCTRL_OVFEO             (0x1u <<  8) /**< \brief (TC_EVCTRL) Event Output Enable */
 #define TC_EVCTRL_MCEO_Pos          12
-#define TC_EVCTRL_MCEO_Msk          (0x3u << TC_EVCTRL_MCEO_Pos) /**< \brief (TC_EVCTRL) MC Event output enable */
+#define TC_EVCTRL_MCEO_Msk          (0x3u << TC_EVCTRL_MCEO_Pos) /**< \brief (TC_EVCTRL) MC Event Output Enable */
 #define TC_EVCTRL_MCEO(value)       ((TC_EVCTRL_MCEO_Msk & ((value) << TC_EVCTRL_MCEO_Pos)))
 #define TC_EVCTRL_MASK              0x3137u /**< \brief (TC_EVCTRL) MASK Register */
 
 /* -------- TC_INTENCLR : (TC Offset: 0x0C) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  OVF:1;            /*!< bit:      0  OVF interrupt Falg Enable          */
-    uint8_t  ERR:1;            /*!< bit:      1  ERR interrupt Falg Enable          */
+    uint8_t  OVF:1;            /*!< bit:      0  OVF Interrupt Disable              */
+    uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Disable              */
     uint8_t  _reserved0:1;     /*!< bit:      2  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      3  READY interrupt Falg Enable        */
-    uint8_t  MC:2;             /*!< bit:  4.. 5  MC interrupt Falg Enable           */
+    uint8_t  READY:1;          /*!< bit:      3  READY Interrupt Disable            */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Disable               */
     uint8_t  _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTENCLR_Type;
 
-#define TC_INTENCLR_OFFSET          0x0C         /**< \brief (TC offset) Interrupt Enable Clear Register */
-#define TC_INTENCLR_RESETVALUE      0x0          /**< \brief (TC reset_value) Interrupt Enable Clear Register */
+#define TC_INTENCLR_OFFSET          0x0C         /**< \brief (TC_INTENCLR offset) Interrupt Enable Clear Register */
+#define TC_INTENCLR_RESETVALUE      0x0          /**< \brief (TC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define TC_INTENCLR_OVF             (0x1u <<  0) /**< \brief (TC_INTENCLR) OVF interrupt Falg Enable */
-#define TC_INTENCLR_ERR             (0x1u <<  1) /**< \brief (TC_INTENCLR) ERR interrupt Falg Enable */
-#define TC_INTENCLR_READY           (0x1u <<  3) /**< \brief (TC_INTENCLR) READY interrupt Falg Enable */
+#define TC_INTENCLR_OVF             (0x1u <<  0) /**< \brief (TC_INTENCLR) OVF Interrupt Disable */
+#define TC_INTENCLR_ERR             (0x1u <<  1) /**< \brief (TC_INTENCLR) ERR Interrupt Disable */
+#define TC_INTENCLR_READY           (0x1u <<  3) /**< \brief (TC_INTENCLR) READY Interrupt Disable */
 #define TC_INTENCLR_MC_Pos          4
-#define TC_INTENCLR_MC_Msk          (0x3u << TC_INTENCLR_MC_Pos) /**< \brief (TC_INTENCLR) MC interrupt Falg Enable */
+#define TC_INTENCLR_MC_Msk          (0x3u << TC_INTENCLR_MC_Pos) /**< \brief (TC_INTENCLR) MC Interrupt Disable */
 #define TC_INTENCLR_MC(value)       ((TC_INTENCLR_MC_Msk & ((value) << TC_INTENCLR_MC_Pos)))
 #define TC_INTENCLR_MASK            0x3Bu /**< \brief (TC_INTENCLR) MASK Register */
 
 /* -------- TC_INTENSET : (TC Offset: 0x0D) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint8_t  OVF:1;            /*!< bit:      0  OVF interrupt Falg Enable          */
-    uint8_t  ERR:1;            /*!< bit:      1  ERR interrupt Falg Enable          */
+    uint8_t  OVF:1;            /*!< bit:      0  OVF Interrupt Enable               */
+    uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Enable               */
     uint8_t  _reserved0:1;     /*!< bit:      2  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      3  READY interrupt Falg Enable        */
-    uint8_t  MC:2;             /*!< bit:  4.. 5  MC interrupt Falg Enable           */
+    uint8_t  READY:1;          /*!< bit:      3  READY Interrupt Enable             */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Enable                */
     uint8_t  _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTENSET_Type;
 
-#define TC_INTENSET_OFFSET          0x0D         /**< \brief (TC offset) Interrupt Enable Set Register */
-#define TC_INTENSET_RESETVALUE      0x0          /**< \brief (TC reset_value) Interrupt Enable Set Register */
+#define TC_INTENSET_OFFSET          0x0D         /**< \brief (TC_INTENSET offset) Interrupt Enable Set Register */
+#define TC_INTENSET_RESETVALUE      0x0          /**< \brief (TC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define TC_INTENSET_OVF             (0x1u <<  0) /**< \brief (TC_INTENSET) OVF interrupt Falg Enable */
-#define TC_INTENSET_ERR             (0x1u <<  1) /**< \brief (TC_INTENSET) ERR interrupt Falg Enable */
-#define TC_INTENSET_READY           (0x1u <<  3) /**< \brief (TC_INTENSET) READY interrupt Falg Enable */
+#define TC_INTENSET_OVF             (0x1u <<  0) /**< \brief (TC_INTENSET) OVF Interrupt Enable */
+#define TC_INTENSET_ERR             (0x1u <<  1) /**< \brief (TC_INTENSET) ERR Interrupt Enable */
+#define TC_INTENSET_READY           (0x1u <<  3) /**< \brief (TC_INTENSET) READY Interrupt Enable */
 #define TC_INTENSET_MC_Pos          4
-#define TC_INTENSET_MC_Msk          (0x3u << TC_INTENSET_MC_Pos) /**< \brief (TC_INTENSET) MC interrupt Falg Enable */
+#define TC_INTENSET_MC_Msk          (0x3u << TC_INTENSET_MC_Pos) /**< \brief (TC_INTENSET) MC Interrupt Enable */
 #define TC_INTENSET_MC(value)       ((TC_INTENSET_MC_Msk & ((value) << TC_INTENSET_MC_Pos)))
 #define TC_INTENSET_MASK            0x3Bu /**< \brief (TC_INTENSET) MASK Register */
 
-/* -------- TC_INTFLAG : (TC Offset: 0x0E) (R/W  8) Interrupt Flag Register -------- */
+/* -------- TC_INTFLAG : (TC Offset: 0x0E) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  OVF:1;            /*!< bit:      0                                     */
-    uint8_t  ERR:1;            /*!< bit:      1                                     */
+    uint8_t  OVF:1;            /*!< bit:      0  OVF Interrupt Flag                 */
+    uint8_t  ERR:1;            /*!< bit:      1  ERR Interrupt Flag                 */
     uint8_t  _reserved0:1;     /*!< bit:      2  Reserved                           */
-    uint8_t  READY:1;          /*!< bit:      3                                     */
-    uint8_t  MC:2;             /*!< bit:  4.. 5                                     */
+    uint8_t  READY:1;          /*!< bit:      3  READY Interrupt Flag               */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  MC Interrupt Flag                  */
     uint8_t  _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTFLAG_Type;
 
-#define TC_INTFLAG_OFFSET           0x0E         /**< \brief (TC offset) Interrupt Flag Register */
-#define TC_INTFLAG_RESETVALUE       0x0          /**< \brief (TC reset_value) Interrupt Flag Register */
+#define TC_INTFLAG_OFFSET           0x0E         /**< \brief (TC_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define TC_INTFLAG_RESETVALUE       0x0          /**< \brief (TC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define TC_INTFLAG_OVF              (0x1u <<  0) /**< \brief (TC_INTFLAG)  */
-#define TC_INTFLAG_ERR              (0x1u <<  1) /**< \brief (TC_INTFLAG)  */
-#define TC_INTFLAG_READY            (0x1u <<  3) /**< \brief (TC_INTFLAG)  */
+#define TC_INTFLAG_OVF              (0x1u <<  0) /**< \brief (TC_INTFLAG) OVF Interrupt Flag */
+#define TC_INTFLAG_ERR              (0x1u <<  1) /**< \brief (TC_INTFLAG) ERR Interrupt Flag */
+#define TC_INTFLAG_READY            (0x1u <<  3) /**< \brief (TC_INTFLAG) READY Interrupt Flag */
 #define TC_INTFLAG_MC_Pos           4
-#define TC_INTFLAG_MC_Msk           (0x3u << TC_INTFLAG_MC_Pos) /**< \brief (TC_INTFLAG)  */
+#define TC_INTFLAG_MC_Msk           (0x3u << TC_INTFLAG_MC_Pos) /**< \brief (TC_INTFLAG) MC Interrupt Flag */
 #define TC_INTFLAG_MC(value)        ((TC_INTFLAG_MC_Msk & ((value) << TC_INTFLAG_MC_Pos)))
 #define TC_INTFLAG_MASK             0x3Bu /**< \brief (TC_INTFLAG) MASK Register */
 
-/* -------- TC_STATUS : (TC Offset: 0x0F) (R/W  8) Status Register -------- */
+/* -------- TC_STATUS : (TC Offset: 0x0F) (R/   8) Status Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:3;     /*!< bit:  0.. 2  Reserved                           */
-    uint8_t  STOP:1;           /*!< bit:      3  Stop Status flag                   */
-    uint8_t  SLAVE:1;          /*!< bit:      4  Slave Status flag                  */
+    uint8_t  STOP:1;           /*!< bit:      3  Stop Status Flag                   */
+    uint8_t  SLAVE:1;          /*!< bit:      4  Slave Status Flag                  */
     uint8_t  _reserved1:2;     /*!< bit:  5.. 6  Reserved                           */
     uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy Status        */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_STATUS_Type;
 
-#define TC_STATUS_OFFSET            0x0F         /**< \brief (TC offset) Status Register */
-#define TC_STATUS_RESETVALUE        0x8          /**< \brief (TC reset_value) Status Register */
+#define TC_STATUS_OFFSET            0x0F         /**< \brief (TC_STATUS offset) Status Register */
+#define TC_STATUS_RESETVALUE        0x8          /**< \brief (TC_STATUS reset_value) Status Register */
 
-#define TC_STATUS_STOP              (0x1u <<  3) /**< \brief (TC_STATUS) Stop Status flag */
-#define TC_STATUS_SLAVE             (0x1u <<  4) /**< \brief (TC_STATUS) Slave Status flag */
+#define TC_STATUS_STOP              (0x1u <<  3) /**< \brief (TC_STATUS) Stop Status Flag */
+#define TC_STATUS_SLAVE             (0x1u <<  4) /**< \brief (TC_STATUS) Slave Status Flag */
 #define TC_STATUS_SYNCBUSY          (0x1u <<  7) /**< \brief (TC_STATUS) Synchronization Busy Status */
 #define TC_STATUS_MASK              0x98u /**< \brief (TC_STATUS) MASK Register */
 
-/* -------- TC_COUNT16_COUNT : (TC Offset: 0x10) (R/W 16) Count16 Count Register 0 -------- */
+/* -------- TC_COUNT16_COUNT : (TC Offset: 0x10) (R/W 16) COUNT16 Count Register -------- */
 typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_COUNT16_COUNT_Type;
 
-#define TC_COUNT16_COUNT_OFFSET     0x10         /**< \brief (TC offset) Count Register 0 */
-#define TC_COUNT16_COUNT_RESETVALUE 0x0          /**< \brief (TC reset_value) Count Register 0 */
+#define TC_COUNT16_COUNT_OFFSET     0x10         /**< \brief (TC_COUNT16_COUNT offset) Count Register */
+#define TC_COUNT16_COUNT_RESETVALUE 0x0          /**< \brief (TC_COUNT16_COUNT reset_value) Count Register */
 #define TC_COUNT16_COUNT_MASK       0xFFFFu      /**< \brief (TC_COUNT16_COUNT) MASK Register */
 
-/* -------- TC_COUNT32_COUNT : (TC Offset: 0x10) (R/W 32) Count32 Count Register 0 -------- */
+/* -------- TC_COUNT32_COUNT : (TC Offset: 0x10) (R/W 32) COUNT32 Count Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } TC_COUNT32_COUNT_Type;
 
-#define TC_COUNT32_COUNT_OFFSET     0x10         /**< \brief (TC offset) Count Register 0 */
-#define TC_COUNT32_COUNT_RESETVALUE 0x0          /**< \brief (TC reset_value) Count Register 0 */
+#define TC_COUNT32_COUNT_OFFSET     0x10         /**< \brief (TC_COUNT32_COUNT offset) Count Register */
+#define TC_COUNT32_COUNT_RESETVALUE 0x0          /**< \brief (TC_COUNT32_COUNT reset_value) Count Register */
 #define TC_COUNT32_COUNT_MASK       0xFFFFFFFFu  /**< \brief (TC_COUNT32_COUNT) MASK Register */
 
-/* -------- TC_COUNT8_COUNT : (TC Offset: 0x10) (R/W  8) Count8 Count Register 0 -------- */
+/* -------- TC_COUNT8_COUNT : (TC Offset: 0x10) (R/W  8) COUNT8 Count Register -------- */
 typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_COUNT8_COUNT_Type;
 
-#define TC_COUNT8_COUNT_OFFSET      0x10         /**< \brief (TC offset) Count Register 0 */
-#define TC_COUNT8_COUNT_RESETVALUE  0x0          /**< \brief (TC reset_value) Count Register 0 */
+#define TC_COUNT8_COUNT_OFFSET      0x10         /**< \brief (TC_COUNT8_COUNT offset) Count Register */
+#define TC_COUNT8_COUNT_RESETVALUE  0x0          /**< \brief (TC_COUNT8_COUNT reset_value) Count Register */
 #define TC_COUNT8_COUNT_MASK        0xFFu        /**< \brief (TC_COUNT8_COUNT) MASK Register */
 
-/* -------- TC_COUNT8_PER : (TC Offset: 0x14) (R/W  8) Count8 Period Register -------- */
+/* -------- TC_COUNT8_PER : (TC Offset: 0x14) (R/W  8) COUNT8 Period Register -------- */
 typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_COUNT8_PER_Type;
 
-#define TC_COUNT8_PER_OFFSET        0x14         /**< \brief (TC offset) Period Register */
-#define TC_COUNT8_PER_RESETVALUE    0x0          /**< \brief (TC reset_value) Period Register */
+#define TC_COUNT8_PER_OFFSET        0x14         /**< \brief (TC_COUNT8_PER offset) Period Register */
+#define TC_COUNT8_PER_RESETVALUE    0x0          /**< \brief (TC_COUNT8_PER reset_value) Period Register */
 #define TC_COUNT8_PER_MASK          0xFFu        /**< \brief (TC_COUNT8_PER) MASK Register */
 
-/* -------- TC_COUNT16_CC : (TC Offset: 0x18) (R/W 16) Count16_cc Compare and Capture Register -------- */
+/* -------- TC_COUNT16_CC : (TC Offset: 0x18) (R/W 16) COUNT16 Compare and Capture Register -------- */
 typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_COUNT16_CC_Type;
 
-#define TC_COUNT16_CC_OFFSET        0x18         /**< \brief (TC offset) Compare and Capture Register */
-#define TC_COUNT16_CC_RESETVALUE    0x0          /**< \brief (TC reset_value) Compare and Capture Register */
+#define TC_COUNT16_CC_OFFSET        0x18         /**< \brief (TC_COUNT16_CC offset) Compare and Capture Register */
+#define TC_COUNT16_CC_RESETVALUE    0x0          /**< \brief (TC_COUNT16_CC reset_value) Compare and Capture Register */
 #define TC_COUNT16_CC_MASK          0xFFFFu      /**< \brief (TC_COUNT16_CC) MASK Register */
 
-/* -------- TC_COUNT32_CC : (TC Offset: 0x18) (R/W 32) Count32_cc Compare and Capture Register -------- */
+/* -------- TC_COUNT32_CC : (TC Offset: 0x18) (R/W 32) COUNT32 Compare and Capture Register -------- */
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
 } TC_COUNT32_CC_Type;
 
-#define TC_COUNT32_CC_OFFSET        0x18         /**< \brief (TC offset) Compare and Capture Register */
-#define TC_COUNT32_CC_RESETVALUE    0x0          /**< \brief (TC reset_value) Compare and Capture Register */
+#define TC_COUNT32_CC_OFFSET        0x18         /**< \brief (TC_COUNT32_CC offset) Compare and Capture Register */
+#define TC_COUNT32_CC_RESETVALUE    0x0          /**< \brief (TC_COUNT32_CC reset_value) Compare and Capture Register */
 #define TC_COUNT32_CC_MASK          0xFFFFFFFFu  /**< \brief (TC_COUNT32_CC) MASK Register */
 
-/* -------- TC_COUNT8_CC : (TC Offset: 0x18) (R/W  8) Count8_cc Compare and Capture Register -------- */
+/* -------- TC_COUNT8_CC : (TC Offset: 0x18) (R/W  8) COUNT8 Compare and Capture Register -------- */
 typedef union {
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_COUNT8_CC_Type;
 
-#define TC_COUNT8_CC_OFFSET         0x18         /**< \brief (TC offset) Compare and Capture Register */
-#define TC_COUNT8_CC_RESETVALUE     0x0          /**< \brief (TC reset_value) Compare and Capture Register */
+#define TC_COUNT8_CC_OFFSET         0x18         /**< \brief (TC_COUNT8_CC offset) Compare and Capture Register */
+#define TC_COUNT8_CC_RESETVALUE     0x0          /**< \brief (TC_COUNT8_CC reset_value) Compare and Capture Register */
 #define TC_COUNT8_CC_MASK           0xFFu        /**< \brief (TC_COUNT8_CC) MASK Register */
 
-/** \brief TcCount16 hardware registers */
-typedef struct {
-  __IO TC_COUNT16_COUNT_Type     COUNT;       /**< \brief Offset: 0x00 (R/W 16) Count Register 0 */
-       RoReg8                    Reserved1[0x6];
-  __IO TC_COUNT16_CC_Type        CC[2];       /**< \brief Offset: 0x08 (R/W 16) Compare and Capture Register */
-       RoReg8                    Reserved2[0x4];
-} TcCount16;
+#define TC_CC32_NUM                 2
+#define TC_CC8_NUM                  2
+#define TC_CC16_NUM                 2
 
-/** \brief TcCount32 hardware registers */
-typedef struct {
-  __IO TC_COUNT32_COUNT_Type     COUNT;       /**< \brief Offset: 0x00 (R/W 32) Count Register 0 */
-       RoReg8                    Reserved1[0x4];
-  __IO TC_COUNT32_CC_Type        CC[2];       /**< \brief Offset: 0x08 (R/W 32) Compare and Capture Register */
-} TcCount32;
-
-/** \brief TcCount8 hardware registers */
-typedef struct {
-  __IO TC_COUNT8_COUNT_Type      COUNT;       /**< \brief Offset: 0x00 (R/W  8) Count Register 0 */
-       RoReg8                    Reserved1[0x3];
-  __IO TC_COUNT8_PER_Type        PER;         /**< \brief Offset: 0x04 (R/W  8) Period Register */
-       RoReg8                    Reserved2[0x3];
-  __IO TC_COUNT8_CC_Type         CC[2];       /**< \brief Offset: 0x08 (R/W  8) Compare and Capture Register */
-       RoReg8                    Reserved3[0x6];
-} TcCount8;
-
-/** \brief TC hardware registers */
-typedef struct {
-  __IO TC_CTRLA_Type             CTRLA;       /**< \brief Offset: 0x00 (R/W 16) Control Register A */
+/** \brief TC_COUNT8 hardware registers */
+typedef struct { /* 8-bit Counter Mode */
+  __IO TC_CTRLA_Type             CTRLA;       /**< \brief Offset: 0x00 (R/W 16) Control A Register */
   __IO TC_READREQ_Type           READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
-  __IO TC_CTRLBCLR_Type          CTRLBCLR;    /**< \brief Offset: 0x04 (R/W  8) Control Clear Register B */
-  __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control Set Register B */
-  __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control Register C */
+  __IO TC_CTRLBCLR_Type          CTRLBCLR;    /**< \brief Offset: 0x04 (R/W  8) Control B Clear Register */
+  __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
+  __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
        RoReg8                    Reserved1[0x1];
-  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Control Register C */
+  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
        RoReg8                    Reserved2[0x1];
   __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
   __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
   __IO TC_INTENSET_Type          INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
-  __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Register */
-  __IO TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/W  8) Status Register */
- union { // Overlapping sections
-       TcCount16                 Count16;     /**< \brief Offset: 0x10 TcCount16 groups */
-       TcCount32                 Count32;     /**< \brief Offset: 0x10 TcCount32 groups */
-       TcCount8                  Count8;      /**< \brief Offset: 0x10 TcCount8 groups */
- };
+  __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear Register */
+  __I  TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/   8) Status Register */
+  __IO TC_COUNT8_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W  8) Count Register */
+       RoReg8                    Reserved3[0x3];
+  __IO TC_COUNT8_PER_Type        PER;         /**< \brief Offset: 0x14 (R/W  8) Period Register */
+       RoReg8                    Reserved4[0x3];
+  __IO TC_COUNT8_CC_Type         CC[TC_CC8_NUM]; /**< \brief Offset: 0x18 (R/W  8) Compare and Capture Register */
+       TC_COUNT8_CC_Type         Reserved5[4 - TC_CC8_NUM];
+} TcCount8;
+
+/** \brief TC_COUNT16 hardware registers */
+typedef struct { /* 16-bit Counter Mode */
+  __IO TC_CTRLA_Type             CTRLA;       /**< \brief Offset: 0x00 (R/W 16) Control A Register */
+  __IO TC_READREQ_Type           READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
+  __IO TC_CTRLBCLR_Type          CTRLBCLR;    /**< \brief Offset: 0x04 (R/W  8) Control B Clear Register */
+  __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
+  __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
+       RoReg8                    Reserved1[0x1];
+  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+       RoReg8                    Reserved2[0x1];
+  __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
+  __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
+  __IO TC_INTENSET_Type          INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
+  __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear Register */
+  __I  TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/   8) Status Register */
+  __IO TC_COUNT16_COUNT_Type     COUNT;       /**< \brief Offset: 0x10 (R/W 16) Count Register */
+       RoReg8                    Reserved3[0x6];
+  __IO TC_COUNT16_CC_Type        CC[TC_CC16_NUM]; /**< \brief Offset: 0x18 (R/W 16) Compare and Capture Register */
+       TC_COUNT16_CC_Type        Reserved4[4 - TC_CC16_NUM];
+} TcCount16;
+
+/** \brief TC_COUNT32 hardware registers */
+typedef struct { /* 32-bit Counter Mode */
+  __IO TC_CTRLA_Type             CTRLA;       /**< \brief Offset: 0x00 (R/W 16) Control A Register */
+  __IO TC_READREQ_Type           READREQ;     /**< \brief Offset: 0x02 (R/W 16) Read Request Register */
+  __IO TC_CTRLBCLR_Type          CTRLBCLR;    /**< \brief Offset: 0x04 (R/W  8) Control B Clear Register */
+  __IO TC_CTRLBSET_Type          CTRLBSET;    /**< \brief Offset: 0x05 (R/W  8) Control B Set Register */
+  __IO TC_CTRLC_Type             CTRLC;       /**< \brief Offset: 0x06 (R/W  8) Control C Register */
+       RoReg8                    Reserved1[0x1];
+  __IO TC_DEBUG_Type             DEBUG;       /**< \brief Offset: 0x08 (R/W  8) Debug Register */
+       RoReg8                    Reserved2[0x1];
+  __IO TC_EVCTRL_Type            EVCTRL;      /**< \brief Offset: 0x0A (R/W 16) Event Control Register */
+  __IO TC_INTENCLR_Type          INTENCLR;    /**< \brief Offset: 0x0C (R/W  8) Interrupt Enable Clear Register */
+  __IO TC_INTENSET_Type          INTENSET;    /**< \brief Offset: 0x0D (R/W  8) Interrupt Enable Set Register */
+  __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear Register */
+  __I  TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/   8) Status Register */
+  __IO TC_COUNT32_COUNT_Type     COUNT;       /**< \brief Offset: 0x10 (R/W 32) Count Register */
+       RoReg8                    Reserved3[0x4];
+  __IO TC_COUNT32_CC_Type        CC[TC_CC32_NUM]; /**< \brief Offset: 0x18 (R/W 32) Compare and Capture Register */
+       TC_COUNT32_CC_Type        Reserved4[2 - TC_CC32_NUM];
+} TcCount32;
+
+typedef union {
+       TcCount8                  COUNT8;      /**< \brief Offset: 0x00 8-bit Counter Mode */
+       TcCount16                 COUNT16;     /**< \brief Offset: 0x00 16-bit Counter Mode */
+       TcCount32                 COUNT32;     /**< \brief Offset: 0x00 32-bit Counter Mode */
 } Tc;
 
 #endif /*  __EXCLUDE_TC_FROM_CMSIS__ */
@@ -6621,7 +6965,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR WDT */
 /* ========================================================================== */
-/** \addtogroup SAM0D4_REVA_WDT Watchdog Timer */
+/** \addtogroup SAM0+D_WDT Watchdog Timer */
 /*@{*/
 
 #define REV_WDT        0x100
@@ -6634,41 +6978,41 @@ typedef struct {
 typedef union {
   struct {
     uint8_t  _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  PER:4;            /*!< bit:  2.. 5  Per[3:0]                           */
+    uint8_t  ENABLE:1;         /*!< bit:      1  Watchdog Timer Enable              */
+    uint8_t  PER:4;            /*!< bit:  2.. 5  Timeout Period                     */
     uint8_t  _reserved1:1;     /*!< bit:      6  Reserved                           */
-    uint8_t  ALWAYSON:1;       /*!< bit:      7  Always On                          */
+    uint8_t  ALWAYSON:1;       /*!< bit:      7  Watchdog Timer Always-On Enable    */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_CTRL_Type;
 
-#define WDT_CTRL_OFFSET             0x0          /**< \brief (WDT offset) Control Register */
-#define WDT_CTRL_RESETVALUE         0x2C         /**< \brief (WDT reset_value) Control Register */
+#define WDT_CTRL_OFFSET             0x0          /**< \brief (WDT_CTRL offset) Control Register */
+#define WDT_CTRL_RESETVALUE         0x2C         /**< \brief (WDT_CTRL reset_value) Control Register */
 
-#define WDT_CTRL_ENABLE             (0x1u <<  1) /**< \brief (WDT_CTRL) Enable */
+#define WDT_CTRL_ENABLE             (0x1u <<  1) /**< \brief (WDT_CTRL) Watchdog Timer Enable */
 #define WDT_CTRL_PER_Pos            2
-#define WDT_CTRL_PER_Msk            (0xFu << WDT_CTRL_PER_Pos) /**< \brief (WDT_CTRL) Per[3:0] */
+#define WDT_CTRL_PER_Msk            (0xFu << WDT_CTRL_PER_Pos) /**< \brief (WDT_CTRL) Timeout Period */
 #define WDT_CTRL_PER(value)         ((WDT_CTRL_PER_Msk & ((value) << WDT_CTRL_PER_Pos)))
-#define WDT_CTRL_ALWAYSON           (0x1u <<  7) /**< \brief (WDT_CTRL) Always On */
+#define WDT_CTRL_ALWAYSON           (0x1u <<  7) /**< \brief (WDT_CTRL) Watchdog Timer Always-On Enable */
 #define WDT_CTRL_MASK               0xBEu /**< \brief (WDT_CTRL) MASK Register */
 
 /* -------- WDT_WINCTRL : (WDT Offset: 0x1) (R/W  8) Window Control Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:1;     /*!< bit:      0  Reserved                           */
-    uint8_t  WEN:1;            /*!< bit:      1  WEN                                */
-    uint8_t  WINDOW:4;         /*!< bit:  2.. 5  WINDOW[3:0]                        */
+    uint8_t  WEN:1;            /*!< bit:      1  Watchdog Timer Window Mode Enable  */
+    uint8_t  WINDOW:4;         /*!< bit:  2.. 5  Watchdow Timer Window Timeout Period */
     uint8_t  _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_WINCTRL_Type;
 
-#define WDT_WINCTRL_OFFSET          0x1          /**< \brief (WDT offset) Window Control Register */
-#define WDT_WINCTRL_RESETVALUE      0x2C         /**< \brief (WDT reset_value) Window Control Register */
+#define WDT_WINCTRL_OFFSET          0x1          /**< \brief (WDT_WINCTRL offset) Window Control Register */
+#define WDT_WINCTRL_RESETVALUE      0x2C         /**< \brief (WDT_WINCTRL reset_value) Window Control Register */
 
-#define WDT_WINCTRL_WEN             (0x1u <<  1) /**< \brief (WDT_WINCTRL) WEN */
+#define WDT_WINCTRL_WEN             (0x1u <<  1) /**< \brief (WDT_WINCTRL) Watchdog Timer Window Mode Enable */
 #define WDT_WINCTRL_WINDOW_Pos      2
-#define WDT_WINCTRL_WINDOW_Msk      (0xFu << WDT_WINCTRL_WINDOW_Pos) /**< \brief (WDT_WINCTRL) WINDOW[3:0] */
+#define WDT_WINCTRL_WINDOW_Msk      (0xFu << WDT_WINCTRL_WINDOW_Pos) /**< \brief (WDT_WINCTRL) Watchdow Timer Window Timeout Period */
 #define WDT_WINCTRL_WINDOW(value)   ((WDT_WINCTRL_WINDOW_Msk & ((value) << WDT_WINCTRL_WINDOW_Pos)))
 #define WDT_WINCTRL_MASK            0x3Eu /**< \brief (WDT_WINCTRL) MASK Register */
 
@@ -6676,93 +7020,93 @@ typedef union {
 typedef union {
   struct {
     uint8_t  _reserved0:2;     /*!< bit:  0.. 1  Reserved                           */
-    uint8_t  EWOFFSET:4;       /*!< bit:  2.. 5  EWOFFSET[3:0]                      */
+    uint8_t  EWOFFSET:4;       /*!< bit:  2.. 5  Early Warning Interrupt Time Offset */
     uint8_t  _reserved1:2;     /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_EWCTRL_Type;
 
-#define WDT_EWCTRL_OFFSET           0x2          /**< \brief (WDT offset) Early Warning Control Register */
-#define WDT_EWCTRL_RESETVALUE       0x0          /**< \brief (WDT reset_value) Early Warning Control Register */
+#define WDT_EWCTRL_OFFSET           0x2          /**< \brief (WDT_EWCTRL offset) Early Warning Control Register */
+#define WDT_EWCTRL_RESETVALUE       0x0          /**< \brief (WDT_EWCTRL reset_value) Early Warning Control Register */
 
 #define WDT_EWCTRL_EWOFFSET_Pos     2
-#define WDT_EWCTRL_EWOFFSET_Msk     (0xFu << WDT_EWCTRL_EWOFFSET_Pos) /**< \brief (WDT_EWCTRL) EWOFFSET[3:0] */
+#define WDT_EWCTRL_EWOFFSET_Msk     (0xFu << WDT_EWCTRL_EWOFFSET_Pos) /**< \brief (WDT_EWCTRL) Early Warning Interrupt Time Offset */
 #define WDT_EWCTRL_EWOFFSET(value)  ((WDT_EWCTRL_EWOFFSET_Msk & ((value) << WDT_EWCTRL_EWOFFSET_Pos)))
 #define WDT_EWCTRL_MASK             0x3Cu /**< \brief (WDT_EWCTRL) MASK Register */
 
 /* -------- WDT_INTENCLR : (WDT Offset: 0x4) (R/W  8) Interrupt Enable Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  EW:1;             /*!< bit:      0  EW                                 */
+    uint8_t  EW:1;             /*!< bit:      0  Early Warning Interrupt Disable    */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_INTENCLR_Type;
 
-#define WDT_INTENCLR_OFFSET         0x4          /**< \brief (WDT offset) Interrupt Enable Clear Register */
-#define WDT_INTENCLR_RESETVALUE     0x0          /**< \brief (WDT reset_value) Interrupt Enable Clear Register */
+#define WDT_INTENCLR_OFFSET         0x4          /**< \brief (WDT_INTENCLR offset) Interrupt Enable Clear Register */
+#define WDT_INTENCLR_RESETVALUE     0x0          /**< \brief (WDT_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define WDT_INTENCLR_EW             (0x1u <<  0) /**< \brief (WDT_INTENCLR) EW */
+#define WDT_INTENCLR_EW             (0x1u <<  0) /**< \brief (WDT_INTENCLR) Early Warning Interrupt Disable */
 #define WDT_INTENCLR_MASK           0x1u /**< \brief (WDT_INTENCLR) MASK Register */
 
 /* -------- WDT_INTENSET : (WDT Offset: 0x5) (R/W  8) Interrupt Enable Set Register -------- */
 typedef union {
   struct {
-    uint8_t  EW:1;             /*!< bit:      0  EW                                 */
+    uint8_t  EW:1;             /*!< bit:      0  Early Warning Interrupt Enable     */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_INTENSET_Type;
 
-#define WDT_INTENSET_OFFSET         0x5          /**< \brief (WDT offset) Interrupt Enable Set Register */
-#define WDT_INTENSET_RESETVALUE     0x0          /**< \brief (WDT reset_value) Interrupt Enable Set Register */
+#define WDT_INTENSET_OFFSET         0x5          /**< \brief (WDT_INTENSET offset) Interrupt Enable Set Register */
+#define WDT_INTENSET_RESETVALUE     0x0          /**< \brief (WDT_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define WDT_INTENSET_EW             (0x1u <<  0) /**< \brief (WDT_INTENSET) EW */
+#define WDT_INTENSET_EW             (0x1u <<  0) /**< \brief (WDT_INTENSET) Early Warning Interrupt Enable */
 #define WDT_INTENSET_MASK           0x1u /**< \brief (WDT_INTENSET) MASK Register */
 
-/* -------- WDT_INTFLAG : (WDT Offset: 0x6) (R/W  8) Interrupt Flag Register -------- */
+/* -------- WDT_INTFLAG : (WDT Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  EW:1;             /*!< bit:      0  EW                                 */
+    uint8_t  EW:1;             /*!< bit:      0  Early Warning Interrupt Flag       */
     uint8_t  _reserved0:7;     /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_INTFLAG_Type;
 
-#define WDT_INTFLAG_OFFSET          0x6          /**< \brief (WDT offset) Interrupt Flag Register */
-#define WDT_INTFLAG_RESETVALUE      0x0          /**< \brief (WDT reset_value) Interrupt Flag Register */
+#define WDT_INTFLAG_OFFSET          0x6          /**< \brief (WDT_INTFLAG offset) Interrupt Flag Status and Clear Register */
+#define WDT_INTFLAG_RESETVALUE      0x0          /**< \brief (WDT_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define WDT_INTFLAG_EW              (0x1u <<  0) /**< \brief (WDT_INTFLAG) EW */
+#define WDT_INTFLAG_EW              (0x1u <<  0) /**< \brief (WDT_INTFLAG) Early Warning Interrupt Flag */
 #define WDT_INTFLAG_MASK            0x1u /**< \brief (WDT_INTFLAG) MASK Register */
 
 /* -------- WDT_STATUS : (WDT Offset: 0x7) (R/   8) Status Register -------- */
 typedef union {
   struct {
     uint8_t  _reserved0:7;     /*!< bit:  0.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7  SYNCBUSY                           */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_STATUS_Type;
 
-#define WDT_STATUS_OFFSET           0x7          /**< \brief (WDT offset) Status Register */
-#define WDT_STATUS_RESETVALUE       0x0          /**< \brief (WDT reset_value) Status Register */
+#define WDT_STATUS_OFFSET           0x7          /**< \brief (WDT_STATUS offset) Status Register */
+#define WDT_STATUS_RESETVALUE       0x0          /**< \brief (WDT_STATUS reset_value) Status Register */
 
-#define WDT_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (WDT_STATUS) SYNCBUSY */
+#define WDT_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (WDT_STATUS) Synchronization Busy */
 #define WDT_STATUS_MASK             0x80u /**< \brief (WDT_STATUS) MASK Register */
 
 /* -------- WDT_CLEAR : (WDT Offset: 0x8) ( /W  8) Clear Register -------- */
 typedef union {
   struct {
-    uint8_t  CLEAR:8;          /*!< bit:  0.. 7  Clear                              */
+    uint8_t  CLEAR:8;          /*!< bit:  0.. 7  Watchdog Timer Clears Command Register */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_CLEAR_Type;
 
-#define WDT_CLEAR_OFFSET            0x8          /**< \brief (WDT offset) Clear Register */
-#define WDT_CLEAR_RESETVALUE        0x0          /**< \brief (WDT reset_value) Clear Register */
+#define WDT_CLEAR_OFFSET            0x8          /**< \brief (WDT_CLEAR offset) Clear Register */
+#define WDT_CLEAR_RESETVALUE        0x0          /**< \brief (WDT_CLEAR reset_value) Clear Register */
 
 #define WDT_CLEAR_CLEAR_Pos         0
-#define WDT_CLEAR_CLEAR_Msk         (0xFFu << WDT_CLEAR_CLEAR_Pos) /**< \brief (WDT_CLEAR) Clear */
+#define WDT_CLEAR_CLEAR_Msk         (0xFFu << WDT_CLEAR_CLEAR_Pos) /**< \brief (WDT_CLEAR) Watchdog Timer Clears Command Register */
 #define WDT_CLEAR_CLEAR(value)      ((WDT_CLEAR_CLEAR_Msk & ((value) << WDT_CLEAR_CLEAR_Pos)))
 #define WDT_CLEAR_MASK              0xFFu /**< \brief (WDT_CLEAR) MASK Register */
 
@@ -6774,7 +7118,7 @@ typedef struct {
        RoReg8                    Reserved1[0x1];
   __IO WDT_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x4 (R/W  8) Interrupt Enable Clear Register */
   __IO WDT_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x5 (R/W  8) Interrupt Enable Set Register */
-  __IO WDT_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x6 (R/W  8) Interrupt Flag Register */
+  __IO WDT_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x6 (R/W  8) Interrupt Flag Status and Clear Register */
   __I  WDT_STATUS_Type           STATUS;      /**< \brief Offset: 0x7 (R/   8) Status Register */
   __O  WDT_CLEAR_Type            CLEAR;       /**< \brief Offset: 0x8 ( /W  8) Clear Register */
 } Wdt;
@@ -6787,14 +7131,14 @@ typedef struct {
 /*@}*/
 
 /* ************************************************************************** */
-/**  REGISTER ACCESS DEFINITIONS FOR SAM0D4_REVA */
+/**  REGISTER ACCESS DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_reg Registers Access Definitions */
+/** \addtogroup SAM0+D_reg Registers Access Definitions */
 /*@{*/
 
 /* ========== Register definition for PAC0 peripheral ========== */
-#define REG_PAC0_WPCLR            REG_ACCESS(RwReg  , 0x40000000U) /**< \brief (PAC0) Write Protection Clear */
-#define REG_PAC0_WPSET            REG_ACCESS(RwReg  , 0x40000004U) /**< \brief (PAC0) Write Protection Set */
+#define REG_PAC0_WPCLR            REG_ACCESS(RwReg  , 0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
+#define REG_PAC0_WPSET            REG_ACCESS(RwReg  , 0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
 /* ========== Register definition for PM peripheral ========== */
 #define REG_PM_CTRL               REG_ACCESS(RwReg8 , 0x40000400U) /**< \brief (PM) Control Register */
 #define REG_PM_SLEEP              REG_ACCESS(RwReg8 , 0x40000401U) /**< \brief (PM) Sleep Register */
@@ -6811,33 +7155,30 @@ typedef struct {
 #define REG_PM_INTFLAG            REG_ACCESS(RwReg8 , 0x40000436U) /**< \brief (PM) Interrupt Flag Status and Clear Register */
 #define REG_PM_RCAUSE             REG_ACCESS(RoReg8 , 0x40000438U) /**< \brief (PM) Reset Cause Register */
 /* ========== Register definition for SYSCTRL peripheral ========== */
-#define REG_SYSCTRL_INTENCLR      REG_ACCESS(RwReg  , 0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Register */
-#define REG_SYSCTRL_INTENSET      REG_ACCESS(RwReg  , 0x40000804U) /**< \brief (SYSCTRL) Interrupt Clear Register */
-#define REG_SYSCTRL_INTFLAG       REG_ACCESS(RwReg  , 0x40000808U) /**< \brief (SYSCTRL) Interrupt Flag Register */
+#define REG_SYSCTRL_INTENCLR      REG_ACCESS(RwReg  , 0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Clear Register */
+#define REG_SYSCTRL_INTENSET      REG_ACCESS(RwReg  , 0x40000804U) /**< \brief (SYSCTRL) Interrupt Enable Set Register */
+#define REG_SYSCTRL_INTFLAG       REG_ACCESS(RwReg  , 0x40000808U) /**< \brief (SYSCTRL) Interrupt Flag Status and Clear Register */
 #define REG_SYSCTRL_PCLKSR        REG_ACCESS(RoReg  , 0x4000080CU) /**< \brief (SYSCTRL) Power and Clocks Status Register */
 #define REG_SYSCTRL_XOSC          REG_ACCESS(RwReg16, 0x40000810U) /**< \brief (SYSCTRL) XOSC Control Register */
 #define REG_SYSCTRL_XOSC32K       REG_ACCESS(RwReg16, 0x40000814U) /**< \brief (SYSCTRL) XOSC32K Control Register */
 #define REG_SYSCTRL_XOSC32KTEST   REG_ACCESS(RwReg8 , 0x40000816U) /**< \brief (SYSCTRL) XOSC32K Test Register */
-#define REG_SYSCTRL_DFLL48CTRL    REG_ACCESS(RwReg  , 0x40000818U) /**< \brief (SYSCTRL) DFLL  Config Register */
-#define REG_SYSCTRL_DFLL48VALDIFF REG_ACCESS(RwReg  , 0x4000081CU) /**< \brief (SYSCTRL) DFLL Calibration Value Register */
-#define REG_SYSCTRL_DFLL48MULSTEP REG_ACCESS(RwReg  , 0x40000820U) /**< \brief (SYSCTRL) DFLL Multiplier Register */
-#define REG_SYSCTRL_DFLL48SYNC    REG_ACCESS(RwReg8 , 0x40000824U) /**< \brief (SYSCTRL) DFLL Synchronization Register */
-#define REG_SYSCTRL_BOD33CTRL     REG_ACCESS(RwReg16, 0x40000828U) /**< \brief (SYSCTRL) BOD33 Control Register */
-#define REG_SYSCTRL_BOD33LEVEL    REG_ACCESS(RwReg16, 0x4000082AU) /**< \brief (SYSCTRL) BOD33 Level Register */
-#define REG_SYSCTRL_BOD12CTRL     REG_ACCESS(RwReg16, 0x4000082CU) /**< \brief (SYSCTRL) BOD12 Control Register */
-#define REG_SYSCTRL_BOD12LEVEL    REG_ACCESS(RwReg16, 0x4000082EU) /**< \brief (SYSCTRL) BOD12 Control Register */
+#define REG_SYSCTRL_DFLLCTRL      REG_ACCESS(RwReg  , 0x40000818U) /**< \brief (SYSCTRL) DFLL  Config Register */
+#define REG_SYSCTRL_DFLLVAL       REG_ACCESS(RwReg  , 0x4000081CU) /**< \brief (SYSCTRL) DFLL Calibration Value Register */
+#define REG_SYSCTRL_DFLLMUL       REG_ACCESS(RwReg  , 0x40000820U) /**< \brief (SYSCTRL) DFLL Multiplier Register */
+#define REG_SYSCTRL_DFLLSYNC      REG_ACCESS(RwReg8 , 0x40000824U) /**< \brief (SYSCTRL) DFLL Synchronization Register */
+#define REG_SYSCTRL_BOD33         REG_ACCESS(RwReg  , 0x40000828U) /**< \brief (SYSCTRL) BOD33 Control Register */
+#define REG_SYSCTRL_BOD12         REG_ACCESS(RwReg  , 0x4000082CU) /**< \brief (SYSCTRL) BOD12 Control Register */
 #define REG_SYSCTRL_OSC32K        REG_ACCESS(RwReg  , 0x40000830U) /**< \brief (SYSCTRL) OSC32K Control Register */
 #define REG_SYSCTRL_OSCULP32K     REG_ACCESS(RwReg  , 0x40000834U) /**< \brief (SYSCTRL) OSCULP32K Control Register */
 #define REG_SYSCTRL_OSCULP32KTEST REG_ACCESS(RwReg8 , 0x40000838U) /**< \brief (SYSCTRL) OSCULP32K Test Register */
 #define REG_SYSCTRL_OSC8M         REG_ACCESS(RwReg  , 0x4000083CU) /**< \brief (SYSCTRL) OSC8M Control Register A */
-#define REG_SYSCTRL_VREGCTRL      REG_ACCESS(RwReg16, 0x40000840U) /**< \brief (SYSCTRL) VREG Control Register */
+#define REG_SYSCTRL_VREG          REG_ACCESS(RwReg16, 0x40000840U) /**< \brief (SYSCTRL) VREG Control Register */
 #define REG_SYSCTRL_VREGTEST      REG_ACCESS(RwReg  , 0x40000844U) /**< \brief (SYSCTRL) VREG Test Register */
-#define REG_SYSCTRL_VREFCTRLA     REG_ACCESS(RwReg16, 0x40000848U) /**< \brief (SYSCTRL) VREF Control Register A */
-#define REG_SYSCTRL_VREFCTRLB     REG_ACCESS(RwReg16, 0x4000084AU) /**< \brief (SYSCTRL) VREF Control Register B */
-#define REG_SYSCTRL_VREFTESTA     REG_ACCESS(RwReg  , 0x4000084CU) /**< \brief (SYSCTRL) VREF Test Register */
-#define REG_SYSCTRL_VREFTESTB     REG_ACCESS(RwReg16, 0x40000850U) /**< \brief (SYSCTRL)  */
-#define REG_SYSCTRL_FORCECLKON    REG_ACCESS(RwReg  , 0x40000854U) /**< \brief (SYSCTRL)  */
-#define REG_SYSCTRL_TESTMODE      REG_ACCESS(RwReg  , 0x40000858U) /**< \brief (SYSCTRL)  */
+#define REG_SYSCTRL_VREF          REG_ACCESS(RwReg  , 0x40000848U) /**< \brief (SYSCTRL) VREF Control Register A */
+#define REG_SYSCTRL_VREFTESTA     REG_ACCESS(RwReg  , 0x4000084CU) /**< \brief (SYSCTRL) VREF Test Register A */
+#define REG_SYSCTRL_VREFTESTB     REG_ACCESS(RwReg16, 0x40000850U) /**< \brief (SYSCTRL) VREF Test Register B */
+#define REG_SYSCTRL_FORCECLKON    REG_ACCESS(RwReg  , 0x40000854U) /**< \brief (SYSCTRL) Force Clock On Register */
+#define REG_SYSCTRL_TESTMODE      REG_ACCESS(RwReg  , 0x40000858U) /**< \brief (SYSCTRL) Test Mode Register */
 /* ========== Register definition for GCLK peripheral ========== */
 #define REG_GCLK_CTRL             REG_ACCESS(RwReg8 , 0x40000C00U) /**< \brief (GCLK) Control Register */
 #define REG_GCLK_STATUS           REG_ACCESS(RwReg8 , 0x40000C01U) /**< \brief (GCLK) Status Register */
@@ -6850,16 +7191,26 @@ typedef struct {
 #define REG_WDT_EWCTRL            REG_ACCESS(RwReg8 , 0x40001002U) /**< \brief (WDT) Early Warning Control Register */
 #define REG_WDT_INTENCLR          REG_ACCESS(RwReg8 , 0x40001004U) /**< \brief (WDT) Interrupt Enable Clear Register */
 #define REG_WDT_INTENSET          REG_ACCESS(RwReg8 , 0x40001005U) /**< \brief (WDT) Interrupt Enable Set Register */
-#define REG_WDT_INTFLAG           REG_ACCESS(RwReg8 , 0x40001006U) /**< \brief (WDT) Interrupt Flag Register */
+#define REG_WDT_INTFLAG           REG_ACCESS(RwReg8 , 0x40001006U) /**< \brief (WDT) Interrupt Flag Status and Clear Register */
 #define REG_WDT_STATUS            REG_ACCESS(RoReg8 , 0x40001007U) /**< \brief (WDT) Status Register */
 #define REG_WDT_CLEAR             REG_ACCESS(WoReg8 , 0x40001008U) /**< \brief (WDT) Clear Register */
 /* ========== Register definition for RTC peripheral ========== */
-#define REG_RTC_CTRL              REG_ACCESS(RwReg16, 0x40001400U) /**< \brief (RTC) Control Register */
+#define REG_RTC_MODE0_CTRL        REG_ACCESS(RwReg16, 0x40001400U) /**< \brief (RTC) Mode0 Control Register */
+#define REG_RTC_MODE1_CTRL        REG_ACCESS(RwReg16, 0x40001400U) /**< \brief (RTC) Mode1 Control Register */
+#define REG_RTC_MODE2_CTRL        REG_ACCESS(RwReg16, 0x40001400U) /**< \brief (RTC) Mode2 Control Register */
 #define REG_RTC_READREQ           REG_ACCESS(RwReg16, 0x40001402U) /**< \brief (RTC) Read Request Register */
-#define REG_RTC_EVCTRL            REG_ACCESS(RwReg16, 0x40001404U) /**< \brief (RTC) Event Control Register */
-#define REG_RTC_INTENCLR          REG_ACCESS(RwReg8 , 0x40001406U) /**< \brief (RTC) Interrupt Enable Clear Register */
-#define REG_RTC_INTENSET          REG_ACCESS(RwReg8 , 0x40001407U) /**< \brief (RTC) Interrupt Enable Set Register */
-#define REG_RTC_INTFLAG           REG_ACCESS(RwReg8 , 0x40001408U) /**< \brief (RTC) Interrupt Flag Register */
+#define REG_RTC_MODE0_EVCTRL      REG_ACCESS(RwReg16, 0x40001404U) /**< \brief (RTC) Mode0 Event Control Register */
+#define REG_RTC_MODE1_EVCTRL      REG_ACCESS(RwReg16, 0x40001404U) /**< \brief (RTC) Mode1 Event Control Register */
+#define REG_RTC_MODE2_EVCTRL      REG_ACCESS(RwReg16, 0x40001404U) /**< \brief (RTC) Mode2 Event Control Register */
+#define REG_RTC_MODE0_INTENCLR    REG_ACCESS(RwReg8 , 0x40001406U) /**< \brief (RTC) Mode0 Interrupt Enable Clear Register */
+#define REG_RTC_MODE1_INTENCLR    REG_ACCESS(RwReg8 , 0x40001406U) /**< \brief (RTC) Mode1 Interrupt Enable Clear Register */
+#define REG_RTC_MODE2_INTENCLR    REG_ACCESS(RwReg8 , 0x40001406U) /**< \brief (RTC) Mode2 Interrupt Enable Clear Register */
+#define REG_RTC_MODE0_INTENSET    REG_ACCESS(RwReg8 , 0x40001407U) /**< \brief (RTC) Mode0 Interrupt Enable Set Register */
+#define REG_RTC_MODE1_INTENSET    REG_ACCESS(RwReg8 , 0x40001407U) /**< \brief (RTC) Mode1 Interrupt Enable Set Register */
+#define REG_RTC_MODE2_INTENSET    REG_ACCESS(RwReg8 , 0x40001407U) /**< \brief (RTC) Mode2 Interrupt Enable Set Register */
+#define REG_RTC_MODE0_INTFLAG     REG_ACCESS(RwReg8 , 0x40001408U) /**< \brief (RTC) Mode0 Interrupt Flag Status and Clear Register */
+#define REG_RTC_MODE1_INTFLAG     REG_ACCESS(RwReg8 , 0x40001408U) /**< \brief (RTC) Mode1 Interrupt Flag Status and Clear Register */
+#define REG_RTC_MODE2_INTFLAG     REG_ACCESS(RwReg8 , 0x40001408U) /**< \brief (RTC) Mode2 Interrupt Flag Status and Clear Register */
 #define REG_RTC_STATUS            REG_ACCESS(RwReg8 , 0x4000140AU) /**< \brief (RTC) Status Register */
 #define REG_RTC_DEBUG             REG_ACCESS(RwReg8 , 0x4000140BU) /**< \brief (RTC) Debug Register */
 #define REG_RTC_FREQCORR          REG_ACCESS(RwReg8 , 0x4000140CU) /**< \brief (RTC) Frequency Correction Register */
@@ -6867,8 +7218,8 @@ typedef struct {
 #define REG_RTC_MODE1_COUNT       REG_ACCESS(RwReg16, 0x40001410U) /**< \brief (RTC) Mode1 Count Register */
 #define REG_RTC_MODE2_CLOCK       REG_ACCESS(RwReg  , 0x40001410U) /**< \brief (RTC) Mode2 Clock Register */
 #define REG_RTC_MODE1_PER         REG_ACCESS(RwReg16, 0x40001414U) /**< \brief (RTC) Mode1 Period Register */
-#define REG_RTC_MODE0_COMP_COMP   REG_ACCESS(RwReg  , 0x40001418U) /**< \brief (RTC) Mode0Comp Compare Register */
-#define REG_RTC_MODE1_COMP_COMP   REG_ACCESS(RwReg16, 0x40001418U) /**< \brief (RTC) Mode1Comp Compare Register */
+#define REG_RTC_MODE0_COMP        REG_ACCESS(RwReg  , 0x40001418U) /**< \brief (RTC) Mode0 Compare Register */
+#define REG_RTC_MODE1_COMP        REG_ACCESS(RwReg16, 0x40001418U) /**< \brief (RTC) Mode1 Compare Register */
 #define REG_RTC_MODE2_ALARM_ALARM REG_ACCESS(RwReg  , 0x40001418U) /**< \brief (RTC) Mode2Alarm Alarm Register */
 #define REG_RTC_MODE2_ALARM_MASK  REG_ACCESS(RwReg8 , 0x4000141CU) /**< \brief (RTC) Mode2Alarm Alarm Mask Register */
 /* ========== Register definition for EIC peripheral ========== */
@@ -6879,13 +7230,12 @@ typedef struct {
 #define REG_EIC_EVCTRL            REG_ACCESS(RwReg  , 0x40001804U) /**< \brief (EIC) Event Control Register */
 #define REG_EIC_INTENCLR          REG_ACCESS(RwReg  , 0x40001808U) /**< \brief (EIC) Interrupt Enable Clear Register */
 #define REG_EIC_INTENSET          REG_ACCESS(RwReg  , 0x4000180CU) /**< \brief (EIC) Interrupt Enable Set Register */
-#define REG_EIC_INTFLAG           REG_ACCESS(RwReg  , 0x40001810U) /**< \brief (EIC) Interrupt Flag Register */
+#define REG_EIC_INTFLAG           REG_ACCESS(RwReg  , 0x40001810U) /**< \brief (EIC) Interrupt Flag Status and Clear Register */
 #define REG_EIC_WAKEUP            REG_ACCESS(RwReg  , 0x40001814U) /**< \brief (EIC) Wake-up Enable Register */
-#define REG_EIC_CONFIG0           REG_ACCESS(RwReg  , 0x40001818U) /**< \brief (EIC) Config Register 0 */
-#define REG_EIC_CONFIG1           REG_ACCESS(RwReg  , 0x4000181CU) /**< \brief (EIC) Config Register 1 */
+#define REG_EIC_CONFIG            REG_ACCESS(RwReg  , 0x40001818U) /**< \brief (EIC) Config Register */
 /* ========== Register definition for PAC1 peripheral ========== */
-#define REG_PAC1_WPCLR            REG_ACCESS(RwReg  , 0x41000000U) /**< \brief (PAC1) Write Protection Clear */
-#define REG_PAC1_WPSET            REG_ACCESS(RwReg  , 0x41000004U) /**< \brief (PAC1) Write Protection Set */
+#define REG_PAC1_WPCLR            REG_ACCESS(RwReg  , 0x41000000U) /**< \brief (PAC1) Write Protection Clear Register */
+#define REG_PAC1_WPSET            REG_ACCESS(RwReg  , 0x41000004U) /**< \brief (PAC1) Write Protection Set Register */
 /* ========== Register definition for DSU peripheral ========== */
 #define REG_DSU_CTRL              REG_ACCESS(WoReg8 , 0x41002000U) /**< \brief (DSU) Control Register */
 #define REG_DSU_STATUSA           REG_ACCESS(RwReg8 , 0x41002001U) /**< \brief (DSU) Status Register A */
@@ -6894,17 +7244,14 @@ typedef struct {
 #define REG_DSU_ADDR              REG_ACCESS(RwReg  , 0x41002004U) /**< \brief (DSU) Address Register */
 #define REG_DSU_LENGTH            REG_ACCESS(RwReg  , 0x41002008U) /**< \brief (DSU) Length Register */
 #define REG_DSU_DATA              REG_ACCESS(RwReg  , 0x4100200CU) /**< \brief (DSU) Data Register */
-#define REG_DSU_DCC0              REG_ACCESS(RwReg  , 0x41002010U) /**< \brief (DSU) Debug Communication Channel 0 Register */
-#define REG_DSU_DCC1              REG_ACCESS(RwReg  , 0x41002014U) /**< \brief (DSU) Debug Communication Channel 1 Register */
+#define REG_DSU_DCC               REG_ACCESS(RwReg  , 0x41002010U) /**< \brief (DSU) Debug Communication Channel Register */
 #define REG_DSU_DID               REG_ACCESS(RoReg  , 0x41002018U) /**< \brief (DSU) Device Identification Register */
-#define REG_DSU_DCFG0             REG_ACCESS(RwReg  , 0x410020F0U) /**< \brief (DSU) Device Configuration Register 0 */
-#define REG_DSU_DCFG1             REG_ACCESS(RoReg  , 0x410020F4U) /**< \brief (DSU) Device Configuration Register 1 */
+#define REG_DSU_DCFG              REG_ACCESS(RwReg  , 0x410020F0U) /**< \brief (DSU) Device Configuration Register */
 #define REG_DSU_UPTM              REG_ACCESS(RwReg  , 0x410020F8U) /**< \brief (DSU) UnProtected Test Mode Register */
 #define REG_DSU_TESTMODE          REG_ACCESS(RwReg  , 0x410020FCU) /**< \brief (DSU) Test Mode Register */
-#define REG_DSU_ENTRY0            REG_ACCESS(RoReg  , 0x41003000U) /**< \brief (DSU) Coresight ROM Table Entry 0 Register */
-#define REG_DSU_ENTRY1            REG_ACCESS(RoReg  , 0x41003004U) /**< \brief (DSU) Coresight ROM Table Entry 1 Register */
-#define REG_DSU_END               REG_ACCESS(RoReg  , 0x41003008U) /**< \brief (DSU) Coresight ROM Table End Register */
-#define REG_DSU_MEMTYPE           REG_ACCESS(RoReg  , 0x41003FCCU) /**< \brief (DSU) Coresight ROM Table Memory Type Register */
+#define REG_DSU_ENTRY             REG_ACCESS(RoReg  , 0x41003000U) /**< \brief (DSU) CoreSight ROM Table Entry Register */
+#define REG_DSU_END               REG_ACCESS(RoReg  , 0x41003008U) /**< \brief (DSU) CoreSight ROM Table End Register */
+#define REG_DSU_MEMTYPE           REG_ACCESS(RoReg  , 0x41003FCCU) /**< \brief (DSU) CoreSight ROM Table Memory Type Register */
 #define REG_DSU_PID4              REG_ACCESS(RoReg  , 0x41003FD0U) /**< \brief (DSU) Peripheral Identification Register 4 */
 #define REG_DSU_PID5              REG_ACCESS(RoReg  , 0x41003FD4U) /**< \brief (DSU) Peripheral Identification Register 5 */
 #define REG_DSU_PID6              REG_ACCESS(RoReg  , 0x41003FD8U) /**< \brief (DSU) Peripheral Identification Register 6 */
@@ -6918,385 +7265,519 @@ typedef struct {
 #define REG_DSU_CID2              REG_ACCESS(RoReg  , 0x41003FF8U) /**< \brief (DSU) Component Identification Register 2 */
 #define REG_DSU_CID3              REG_ACCESS(RoReg  , 0x41003FFCU) /**< \brief (DSU) Component Identification Register 3 */
 /* ========== Register definition for NVMCTRL peripheral ========== */
-#define REG_NVMCTRL_CTRLA         REG_ACCESS(RwReg  , 0x41004000U) /**< \brief (NVMCTRL) NVM Control A Register */
-#define REG_NVMCTRL_CTRLB         REG_ACCESS(RwReg  , 0x41004004U) /**< \brief (NVMCTRL) NVM Control B Register */
+#define REG_NVMCTRL_CTRLA         REG_ACCESS(RwReg  , 0x41004000U) /**< \brief (NVMCTRL) NVM Control Register A */
+#define REG_NVMCTRL_CTRLB         REG_ACCESS(RwReg  , 0x41004004U) /**< \brief (NVMCTRL) NVM Control Register B */
 #define REG_NVMCTRL_PARAM         REG_ACCESS(RwReg  , 0x41004008U) /**< \brief (NVMCTRL) Parameter Register */
 #define REG_NVMCTRL_INTENCLR      REG_ACCESS(RwReg8 , 0x4100400CU) /**< \brief (NVMCTRL) Interrupt Enable Clear Register */
 #define REG_NVMCTRL_INTENSET      REG_ACCESS(RwReg8 , 0x41004010U) /**< \brief (NVMCTRL) Interrupt Enable Set Register */
-#define REG_NVMCTRL_INTFLAG       REG_ACCESS(RwReg8 , 0x41004014U) /**< \brief (NVMCTRL) Interrupt Register */
+#define REG_NVMCTRL_INTFLAG       REG_ACCESS(RwReg8 , 0x41004014U) /**< \brief (NVMCTRL) Interrupt Flag Status and Clear Register */
 #define REG_NVMCTRL_STATUS        REG_ACCESS(RwReg  , 0x41004018U) /**< \brief (NVMCTRL) Status Register */
 #define REG_NVMCTRL_ADDR          REG_ACCESS(RwReg  , 0x4100401CU) /**< \brief (NVMCTRL) Address Register */
 #define REG_NVMCTRL_LOCK          REG_ACCESS(RwReg  , 0x41004020U) /**< \brief (NVMCTRL) Lock Register */
 /* ========== Register definition for PORT peripheral ========== */
-#define REG_PORT_GROUP_DIR        REG_ACCESS(RwReg  , 0x41004400U) /**< \brief (PORT) Group Data Direction Register */
-#define REG_PORT_GROUP_DIRCLR     REG_ACCESS(RwReg  , 0x41004404U) /**< \brief (PORT) Group Data Direction Clear Register */
-#define REG_PORT_GROUP_DIRSET     REG_ACCESS(RwReg  , 0x41004408U) /**< \brief (PORT) Group Data Direction Set Register */
-#define REG_PORT_GROUP_DIRTGL     REG_ACCESS(RwReg  , 0x4100440CU) /**< \brief (PORT) Group Data Direction Toggle Register */
-#define REG_PORT_GROUP_OUT        REG_ACCESS(RwReg  , 0x41004410U) /**< \brief (PORT) Group Data Output Value Register */
-#define REG_PORT_GROUP_OUTCLR     REG_ACCESS(RwReg  , 0x41004414U) /**< \brief (PORT) Group Data Output Value Clear Register */
-#define REG_PORT_GROUP_OUTSET     REG_ACCESS(RwReg  , 0x41004418U) /**< \brief (PORT) Group Data Output Value Set Register */
-#define REG_PORT_GROUP_OUTTGL     REG_ACCESS(RwReg  , 0x4100441CU) /**< \brief (PORT) Group Data Output Value Toggle Register */
-#define REG_PORT_GROUP_IN         REG_ACCESS(RoReg  , 0x41004420U) /**< \brief (PORT) Group Data Input Value Register */
-#define REG_PORT_GROUP_CTRL       REG_ACCESS(RwReg  , 0x41004424U) /**< \brief (PORT) Group Control Register */
-#define REG_PORT_GROUP_WRCONFIG   REG_ACCESS(WoReg  , 0x41004428U) /**< \brief (PORT) Group Write Configuration Register */
-#define REG_PORT_GROUP_PMUX_PMUX  REG_ACCESS(RwReg8 , 0x41004430U) /**< \brief (PORT) GroupPmux Peripheral Multiplexing Register 0 */
-#define REG_PORT_GROUP_PINCFG_PINCFG REG_ACCESS(RwReg8 , 0x41004440U) /**< \brief (PORT) GroupPincfg Pin Configuration Register 0 */
+#define REG_PORT_DIR0             REG_ACCESS(RwReg  , 0x41004400U) /**< \brief (PORT) Data Direction Register 0 */
+#define REG_PORT_DIRCLR0          REG_ACCESS(RwReg  , 0x41004404U) /**< \brief (PORT) Data Direction Clear Register 0 */
+#define REG_PORT_DIRSET0          REG_ACCESS(RwReg  , 0x41004408U) /**< \brief (PORT) Data Direction Set Register 0 */
+#define REG_PORT_DIRTGL0          REG_ACCESS(RwReg  , 0x4100440CU) /**< \brief (PORT) Data Direction Toggle Register 0 */
+#define REG_PORT_OUT0             REG_ACCESS(RwReg  , 0x41004410U) /**< \brief (PORT) Data Output Value Register 0 */
+#define REG_PORT_OUTCLR0          REG_ACCESS(RwReg  , 0x41004414U) /**< \brief (PORT) Data Output Value Clear Register 0 */
+#define REG_PORT_OUTSET0          REG_ACCESS(RwReg  , 0x41004418U) /**< \brief (PORT) Data Output Value Set Register 0 */
+#define REG_PORT_OUTTGL0          REG_ACCESS(RwReg  , 0x4100441CU) /**< \brief (PORT) Data Output Value Toggle Register 0 */
+#define REG_PORT_IN0              REG_ACCESS(RoReg  , 0x41004420U) /**< \brief (PORT) Data Input Value Register 0 */
+#define REG_PORT_CTRL0            REG_ACCESS(RwReg  , 0x41004424U) /**< \brief (PORT) Control Register 0 */
+#define REG_PORT_WRCONFIG0        REG_ACCESS(WoReg  , 0x41004428U) /**< \brief (PORT) Write Configuration Register 0 */
+#define REG_PORT_PMUX0            REG_ACCESS(RwReg  , 0x41004430U) /**< \brief (PORT) Peripheral Multiplexing Register 0 */
+#define REG_PORT_PINCFG0          REG_ACCESS(RwReg  , 0x41004440U) /**< \brief (PORT) Pin Configuration Register 0 */
+#define REG_PORT_DIR1             REG_ACCESS(RwReg  , 0x41004480U) /**< \brief (PORT) Data Direction Register 1 */
+#define REG_PORT_DIRCLR1          REG_ACCESS(RwReg  , 0x41004484U) /**< \brief (PORT) Data Direction Clear Register 1 */
+#define REG_PORT_DIRSET1          REG_ACCESS(RwReg  , 0x41004488U) /**< \brief (PORT) Data Direction Set Register 1 */
+#define REG_PORT_DIRTGL1          REG_ACCESS(RwReg  , 0x4100448CU) /**< \brief (PORT) Data Direction Toggle Register 1 */
+#define REG_PORT_OUT1             REG_ACCESS(RwReg  , 0x41004490U) /**< \brief (PORT) Data Output Value Register 1 */
+#define REG_PORT_OUTCLR1          REG_ACCESS(RwReg  , 0x41004494U) /**< \brief (PORT) Data Output Value Clear Register 1 */
+#define REG_PORT_OUTSET1          REG_ACCESS(RwReg  , 0x41004498U) /**< \brief (PORT) Data Output Value Set Register 1 */
+#define REG_PORT_OUTTGL1          REG_ACCESS(RwReg  , 0x4100449CU) /**< \brief (PORT) Data Output Value Toggle Register 1 */
+#define REG_PORT_IN1              REG_ACCESS(RoReg  , 0x410044A0U) /**< \brief (PORT) Data Input Value Register 1 */
+#define REG_PORT_CTRL1            REG_ACCESS(RwReg  , 0x410044A4U) /**< \brief (PORT) Control Register 1 */
+#define REG_PORT_WRCONFIG1        REG_ACCESS(WoReg  , 0x410044A8U) /**< \brief (PORT) Write Configuration Register 1 */
+#define REG_PORT_PMUX1            REG_ACCESS(RwReg  , 0x410044B0U) /**< \brief (PORT) Peripheral Multiplexing Register 1 */
+#define REG_PORT_PINCFG1          REG_ACCESS(RwReg  , 0x410044C0U) /**< \brief (PORT) Pin Configuration Register 1 */
 /* ========== Register definition for HMATRIX peripheral ========== */
-#define REG_HMATRIX_MCFG0         REG_ACCESS(RwReg  , 0x41004800U) /**< \brief (HMATRIX) Master Configuration Register 0 0 */
-#define REG_HMATRIX_MCFG1         REG_ACCESS(RwReg  , 0x41004804U) /**< \brief (HMATRIX) Master Configuration Register 0 1 */
-#define REG_HMATRIX_MCFG2         REG_ACCESS(RwReg  , 0x41004808U) /**< \brief (HMATRIX) Master Configuration Register 0 2 */
-#define REG_HMATRIX_MCFG3         REG_ACCESS(RwReg  , 0x4100480CU) /**< \brief (HMATRIX) Master Configuration Register 0 3 */
-#define REG_HMATRIX_MCFG4         REG_ACCESS(RwReg  , 0x41004810U) /**< \brief (HMATRIX) Master Configuration Register 0 4 */
-#define REG_HMATRIX_MCFG5         REG_ACCESS(RwReg  , 0x41004814U) /**< \brief (HMATRIX) Master Configuration Register 0 5 */
-#define REG_HMATRIX_MCFG6         REG_ACCESS(RwReg  , 0x41004818U) /**< \brief (HMATRIX) Master Configuration Register 0 6 */
-#define REG_HMATRIX_MCFG7         REG_ACCESS(RwReg  , 0x4100481CU) /**< \brief (HMATRIX) Master Configuration Register 0 7 */
-#define REG_HMATRIX_MCFG8         REG_ACCESS(RwReg  , 0x41004820U) /**< \brief (HMATRIX) Master Configuration Register 0 8 */
-#define REG_HMATRIX_MCFG9         REG_ACCESS(RwReg  , 0x41004824U) /**< \brief (HMATRIX) Master Configuration Register 0 9 */
-#define REG_HMATRIX_MCFG10        REG_ACCESS(RwReg  , 0x41004828U) /**< \brief (HMATRIX) Master Configuration Register 0 10 */
-#define REG_HMATRIX_MCFG11        REG_ACCESS(RwReg  , 0x4100482CU) /**< \brief (HMATRIX) Master Configuration Register 0 11 */
-#define REG_HMATRIX_MCFG12        REG_ACCESS(RwReg  , 0x41004830U) /**< \brief (HMATRIX) Master Configuration Register 0 12 */
-#define REG_HMATRIX_MCFG13        REG_ACCESS(RwReg  , 0x41004834U) /**< \brief (HMATRIX) Master Configuration Register 0 13 */
-#define REG_HMATRIX_MCFG14        REG_ACCESS(RwReg  , 0x41004838U) /**< \brief (HMATRIX) Master Configuration Register 0 14 */
-#define REG_HMATRIX_MCFG15        REG_ACCESS(RwReg  , 0x4100483CU) /**< \brief (HMATRIX) Master Configuration Register 0 15 */
-#define REG_HMATRIX_SCFG0         REG_ACCESS(RwReg  , 0x41004840U) /**< \brief (HMATRIX) Slave Configuration Register 0 0 */
-#define REG_HMATRIX_SCFG1         REG_ACCESS(RwReg  , 0x41004844U) /**< \brief (HMATRIX) Slave Configuration Register 0 1 */
-#define REG_HMATRIX_SCFG2         REG_ACCESS(RwReg  , 0x41004848U) /**< \brief (HMATRIX) Slave Configuration Register 0 2 */
-#define REG_HMATRIX_SCFG3         REG_ACCESS(RwReg  , 0x4100484CU) /**< \brief (HMATRIX) Slave Configuration Register 0 3 */
-#define REG_HMATRIX_SCFG4         REG_ACCESS(RwReg  , 0x41004850U) /**< \brief (HMATRIX) Slave Configuration Register 0 4 */
-#define REG_HMATRIX_SCFG5         REG_ACCESS(RwReg  , 0x41004854U) /**< \brief (HMATRIX) Slave Configuration Register 0 5 */
-#define REG_HMATRIX_SCFG6         REG_ACCESS(RwReg  , 0x41004858U) /**< \brief (HMATRIX) Slave Configuration Register 0 6 */
-#define REG_HMATRIX_SCFG7         REG_ACCESS(RwReg  , 0x4100485CU) /**< \brief (HMATRIX) Slave Configuration Register 0 7 */
-#define REG_HMATRIX_SCFG8         REG_ACCESS(RwReg  , 0x41004860U) /**< \brief (HMATRIX) Slave Configuration Register 0 8 */
-#define REG_HMATRIX_SCFG9         REG_ACCESS(RwReg  , 0x41004864U) /**< \brief (HMATRIX) Slave Configuration Register 0 9 */
-#define REG_HMATRIX_SCFG10        REG_ACCESS(RwReg  , 0x41004868U) /**< \brief (HMATRIX) Slave Configuration Register 0 10 */
-#define REG_HMATRIX_SCFG11        REG_ACCESS(RwReg  , 0x4100486CU) /**< \brief (HMATRIX) Slave Configuration Register 0 11 */
-#define REG_HMATRIX_SCFG12        REG_ACCESS(RwReg  , 0x41004870U) /**< \brief (HMATRIX) Slave Configuration Register 0 12 */
-#define REG_HMATRIX_SCFG13        REG_ACCESS(RwReg  , 0x41004874U) /**< \brief (HMATRIX) Slave Configuration Register 0 13 */
-#define REG_HMATRIX_SCFG14        REG_ACCESS(RwReg  , 0x41004878U) /**< \brief (HMATRIX) Slave Configuration Register 0 14 */
-#define REG_HMATRIX_SCFG15        REG_ACCESS(RwReg  , 0x4100487CU) /**< \brief (HMATRIX) Slave Configuration Register 0 15 */
-#define REG_HMATRIX_PRAS0         REG_ACCESS(RwReg  , 0x41004880U) /**< \brief (HMATRIX) Priority Register A for Slave 0 0 */
-#define REG_HMATRIX_PRBS0         REG_ACCESS(RwReg  , 0x41004884U) /**< \brief (HMATRIX) Priority Register B for Slave 0 0 */
-#define REG_HMATRIX_PRAS1         REG_ACCESS(RwReg  , 0x41004888U) /**< \brief (HMATRIX) Priority Register A for Slave 0 1 */
-#define REG_HMATRIX_PRBS1         REG_ACCESS(RwReg  , 0x4100488CU) /**< \brief (HMATRIX) Priority Register B for Slave 0 1 */
-#define REG_HMATRIX_PRAS2         REG_ACCESS(RwReg  , 0x41004890U) /**< \brief (HMATRIX) Priority Register A for Slave 0 2 */
-#define REG_HMATRIX_PRBS2         REG_ACCESS(RwReg  , 0x41004894U) /**< \brief (HMATRIX) Priority Register B for Slave 0 2 */
-#define REG_HMATRIX_PRAS3         REG_ACCESS(RwReg  , 0x41004898U) /**< \brief (HMATRIX) Priority Register A for Slave 0 3 */
-#define REG_HMATRIX_PRBS3         REG_ACCESS(RwReg  , 0x4100489CU) /**< \brief (HMATRIX) Priority Register B for Slave 0 3 */
-#define REG_HMATRIX_PRAS4         REG_ACCESS(RwReg  , 0x410048A0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 4 */
-#define REG_HMATRIX_PRBS4         REG_ACCESS(RwReg  , 0x410048A4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 4 */
-#define REG_HMATRIX_PRAS5         REG_ACCESS(RwReg  , 0x410048A8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 5 */
-#define REG_HMATRIX_PRBS5         REG_ACCESS(RwReg  , 0x410048ACU) /**< \brief (HMATRIX) Priority Register B for Slave 0 5 */
-#define REG_HMATRIX_PRAS6         REG_ACCESS(RwReg  , 0x410048B0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 6 */
-#define REG_HMATRIX_PRBS6         REG_ACCESS(RwReg  , 0x410048B4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 6 */
-#define REG_HMATRIX_PRAS7         REG_ACCESS(RwReg  , 0x410048B8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 7 */
-#define REG_HMATRIX_PRBS7         REG_ACCESS(RwReg  , 0x410048BCU) /**< \brief (HMATRIX) Priority Register B for Slave 0 7 */
-#define REG_HMATRIX_PRAS8         REG_ACCESS(RwReg  , 0x410048C0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 8 */
-#define REG_HMATRIX_PRBS8         REG_ACCESS(RwReg  , 0x410048C4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 8 */
-#define REG_HMATRIX_PRAS9         REG_ACCESS(RwReg  , 0x410048C8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 9 */
-#define REG_HMATRIX_PRBS9         REG_ACCESS(RwReg  , 0x410048CCU) /**< \brief (HMATRIX) Priority Register B for Slave 0 9 */
-#define REG_HMATRIX_PRAS10        REG_ACCESS(RwReg  , 0x410048D0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 10 */
-#define REG_HMATRIX_PRBS10        REG_ACCESS(RwReg  , 0x410048D4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 10 */
-#define REG_HMATRIX_PRAS11        REG_ACCESS(RwReg  , 0x410048D8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 11 */
-#define REG_HMATRIX_PRBS11        REG_ACCESS(RwReg  , 0x410048DCU) /**< \brief (HMATRIX) Priority Register B for Slave 0 11 */
-#define REG_HMATRIX_PRAS12        REG_ACCESS(RwReg  , 0x410048E0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 12 */
-#define REG_HMATRIX_PRBS12        REG_ACCESS(RwReg  , 0x410048E4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 12 */
-#define REG_HMATRIX_PRAS13        REG_ACCESS(RwReg  , 0x410048E8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 13 */
-#define REG_HMATRIX_PRBS13        REG_ACCESS(RwReg  , 0x410048ECU) /**< \brief (HMATRIX) Priority Register B for Slave 0 13 */
-#define REG_HMATRIX_PRAS14        REG_ACCESS(RwReg  , 0x410048F0U) /**< \brief (HMATRIX) Priority Register A for Slave 0 14 */
-#define REG_HMATRIX_PRBS14        REG_ACCESS(RwReg  , 0x410048F4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 14 */
-#define REG_HMATRIX_PRAS15        REG_ACCESS(RwReg  , 0x410048F8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 15 */
-#define REG_HMATRIX_PRBS15        REG_ACCESS(RwReg  , 0x410048FCU) /**< \brief (HMATRIX) Priority Register B for Slave 0 15 */
+#define REG_HMATRIX_MCFG          REG_ACCESS(RwReg  , 0x41004800U) /**< \brief (HMATRIX) Master Configuration Register */
+#define REG_HMATRIX_SCFG          REG_ACCESS(RwReg  , 0x41004840U) /**< \brief (HMATRIX) Slave Configuration Register */
+#define REG_HMATRIX_PRAS0         REG_ACCESS(RwReg  , 0x41004880U) /**< \brief (HMATRIX) Priority Register A for Slave 0 */
+#define REG_HMATRIX_PRBS0         REG_ACCESS(RwReg  , 0x41004884U) /**< \brief (HMATRIX) Priority Register B for Slave 0 */
+#define REG_HMATRIX_PRAS1         REG_ACCESS(RwReg  , 0x41004888U) /**< \brief (HMATRIX) Priority Register A for Slave 1 */
+#define REG_HMATRIX_PRBS1         REG_ACCESS(RwReg  , 0x4100488CU) /**< \brief (HMATRIX) Priority Register B for Slave 1 */
+#define REG_HMATRIX_PRAS2         REG_ACCESS(RwReg  , 0x41004890U) /**< \brief (HMATRIX) Priority Register A for Slave 2 */
+#define REG_HMATRIX_PRBS2         REG_ACCESS(RwReg  , 0x41004894U) /**< \brief (HMATRIX) Priority Register B for Slave 2 */
+#define REG_HMATRIX_PRAS3         REG_ACCESS(RwReg  , 0x41004898U) /**< \brief (HMATRIX) Priority Register A for Slave 3 */
+#define REG_HMATRIX_PRBS3         REG_ACCESS(RwReg  , 0x4100489CU) /**< \brief (HMATRIX) Priority Register B for Slave 3 */
+#define REG_HMATRIX_PRAS4         REG_ACCESS(RwReg  , 0x410048A0U) /**< \brief (HMATRIX) Priority Register A for Slave 4 */
+#define REG_HMATRIX_PRBS4         REG_ACCESS(RwReg  , 0x410048A4U) /**< \brief (HMATRIX) Priority Register B for Slave 4 */
+#define REG_HMATRIX_PRAS5         REG_ACCESS(RwReg  , 0x410048A8U) /**< \brief (HMATRIX) Priority Register A for Slave 5 */
+#define REG_HMATRIX_PRBS5         REG_ACCESS(RwReg  , 0x410048ACU) /**< \brief (HMATRIX) Priority Register B for Slave 5 */
+#define REG_HMATRIX_PRAS6         REG_ACCESS(RwReg  , 0x410048B0U) /**< \brief (HMATRIX) Priority Register A for Slave 6 */
+#define REG_HMATRIX_PRBS6         REG_ACCESS(RwReg  , 0x410048B4U) /**< \brief (HMATRIX) Priority Register B for Slave 6 */
+#define REG_HMATRIX_PRAS7         REG_ACCESS(RwReg  , 0x410048B8U) /**< \brief (HMATRIX) Priority Register A for Slave 7 */
+#define REG_HMATRIX_PRBS7         REG_ACCESS(RwReg  , 0x410048BCU) /**< \brief (HMATRIX) Priority Register B for Slave 7 */
+#define REG_HMATRIX_PRAS8         REG_ACCESS(RwReg  , 0x410048C0U) /**< \brief (HMATRIX) Priority Register A for Slave 8 */
+#define REG_HMATRIX_PRBS8         REG_ACCESS(RwReg  , 0x410048C4U) /**< \brief (HMATRIX) Priority Register B for Slave 8 */
+#define REG_HMATRIX_PRAS9         REG_ACCESS(RwReg  , 0x410048C8U) /**< \brief (HMATRIX) Priority Register A for Slave 9 */
+#define REG_HMATRIX_PRBS9         REG_ACCESS(RwReg  , 0x410048CCU) /**< \brief (HMATRIX) Priority Register B for Slave 9 */
+#define REG_HMATRIX_PRAS10        REG_ACCESS(RwReg  , 0x410048D0U) /**< \brief (HMATRIX) Priority Register A for Slave 10 */
+#define REG_HMATRIX_PRBS10        REG_ACCESS(RwReg  , 0x410048D4U) /**< \brief (HMATRIX) Priority Register B for Slave 10 */
+#define REG_HMATRIX_PRAS11        REG_ACCESS(RwReg  , 0x410048D8U) /**< \brief (HMATRIX) Priority Register A for Slave 11 */
+#define REG_HMATRIX_PRBS11        REG_ACCESS(RwReg  , 0x410048DCU) /**< \brief (HMATRIX) Priority Register B for Slave 11 */
+#define REG_HMATRIX_PRAS12        REG_ACCESS(RwReg  , 0x410048E0U) /**< \brief (HMATRIX) Priority Register A for Slave 12 */
+#define REG_HMATRIX_PRBS12        REG_ACCESS(RwReg  , 0x410048E4U) /**< \brief (HMATRIX) Priority Register B for Slave 12 */
+#define REG_HMATRIX_PRAS13        REG_ACCESS(RwReg  , 0x410048E8U) /**< \brief (HMATRIX) Priority Register A for Slave 13 */
+#define REG_HMATRIX_PRBS13        REG_ACCESS(RwReg  , 0x410048ECU) /**< \brief (HMATRIX) Priority Register B for Slave 13 */
+#define REG_HMATRIX_PRAS14        REG_ACCESS(RwReg  , 0x410048F0U) /**< \brief (HMATRIX) Priority Register A for Slave 14 */
+#define REG_HMATRIX_PRBS14        REG_ACCESS(RwReg  , 0x410048F4U) /**< \brief (HMATRIX) Priority Register B for Slave 14 */
+#define REG_HMATRIX_PRAS15        REG_ACCESS(RwReg  , 0x410048F8U) /**< \brief (HMATRIX) Priority Register A for Slave 15 */
+#define REG_HMATRIX_PRBS15        REG_ACCESS(RwReg  , 0x410048FCU) /**< \brief (HMATRIX) Priority Register B for Slave 15 */
 #define REG_HMATRIX_MRCR          REG_ACCESS(RwReg  , 0x41004900U) /**< \brief (HMATRIX) Master Remap Control Register */
-#define REG_HMATRIX_SFR0          REG_ACCESS(RwReg  , 0x41004910U) /**< \brief (HMATRIX) Special Function Register 0 0 */
-#define REG_HMATRIX_SFR1          REG_ACCESS(RwReg  , 0x41004914U) /**< \brief (HMATRIX) Special Function Register 0 1 */
-#define REG_HMATRIX_SFR2          REG_ACCESS(RwReg  , 0x41004918U) /**< \brief (HMATRIX) Special Function Register 0 2 */
-#define REG_HMATRIX_SFR3          REG_ACCESS(RwReg  , 0x4100491CU) /**< \brief (HMATRIX) Special Function Register 0 3 */
-#define REG_HMATRIX_SFR4          REG_ACCESS(RwReg  , 0x41004920U) /**< \brief (HMATRIX) Special Function Register 0 4 */
-#define REG_HMATRIX_SFR5          REG_ACCESS(RwReg  , 0x41004924U) /**< \brief (HMATRIX) Special Function Register 0 5 */
-#define REG_HMATRIX_SFR6          REG_ACCESS(RwReg  , 0x41004928U) /**< \brief (HMATRIX) Special Function Register 0 6 */
-#define REG_HMATRIX_SFR7          REG_ACCESS(RwReg  , 0x4100492CU) /**< \brief (HMATRIX) Special Function Register 0 7 */
-#define REG_HMATRIX_SFR8          REG_ACCESS(RwReg  , 0x41004930U) /**< \brief (HMATRIX) Special Function Register 0 8 */
-#define REG_HMATRIX_SFR9          REG_ACCESS(RwReg  , 0x41004934U) /**< \brief (HMATRIX) Special Function Register 0 9 */
-#define REG_HMATRIX_SFR10         REG_ACCESS(RwReg  , 0x41004938U) /**< \brief (HMATRIX) Special Function Register 0 10 */
-#define REG_HMATRIX_SFR11         REG_ACCESS(RwReg  , 0x4100493CU) /**< \brief (HMATRIX) Special Function Register 0 11 */
-#define REG_HMATRIX_SFR12         REG_ACCESS(RwReg  , 0x41004940U) /**< \brief (HMATRIX) Special Function Register 0 12 */
-#define REG_HMATRIX_SFR13         REG_ACCESS(RwReg  , 0x41004944U) /**< \brief (HMATRIX) Special Function Register 0 13 */
-#define REG_HMATRIX_SFR14         REG_ACCESS(RwReg  , 0x41004948U) /**< \brief (HMATRIX) Special Function Register 0 14 */
-#define REG_HMATRIX_SFR15         REG_ACCESS(RwReg  , 0x4100494CU) /**< \brief (HMATRIX) Special Function Register 0 15 */
+#define REG_HMATRIX_SFR           REG_ACCESS(RwReg  , 0x41004910U) /**< \brief (HMATRIX) Special Function Register */
 /* ========== Register definition for PAC2 peripheral ========== */
-#define REG_PAC2_WPCLR            REG_ACCESS(RwReg  , 0x42000000U) /**< \brief (PAC2) Write Protection Clear */
-#define REG_PAC2_WPSET            REG_ACCESS(RwReg  , 0x42000004U) /**< \brief (PAC2) Write Protection Set */
+#define REG_PAC2_WPCLR            REG_ACCESS(RwReg  , 0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
+#define REG_PAC2_WPSET            REG_ACCESS(RwReg  , 0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
 /* ========== Register definition for EVSYS peripheral ========== */
 #define REG_EVSYS_CTRL            REG_ACCESS(WoReg8 , 0x42000400U) /**< \brief (EVSYS) Control Register */
 #define REG_EVSYS_CHANNEL         REG_ACCESS(RwReg  , 0x42000404U) /**< \brief (EVSYS) Channel Register */
 #define REG_EVSYS_USERMUX         REG_ACCESS(RwReg16, 0x42000408U) /**< \brief (EVSYS) User Mux Register */
 #define REG_EVSYS_CHSTATUS        REG_ACCESS(RoReg  , 0x4200040CU) /**< \brief (EVSYS) Channel Status Register */
-#define REG_EVSYS_IENCLR          REG_ACCESS(RwReg  , 0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear register */
-#define REG_EVSYS_IENSET          REG_ACCESS(RwReg  , 0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
-#define REG_EVSYS_INTFLAG         REG_ACCESS(RwReg  , 0x42000418U) /**< \brief (EVSYS) Interrupt Flag Register */
+#define REG_EVSYS_INTENCLR        REG_ACCESS(RwReg  , 0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
+#define REG_EVSYS_INTENSET        REG_ACCESS(RwReg  , 0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
+#define REG_EVSYS_INTFLAG         REG_ACCESS(RwReg  , 0x42000418U) /**< \brief (EVSYS) Interrupt Flag Status and Clear Register */
 /* ========== Register definition for SERCOM0 peripheral ========== */
-#define REG_SERCOM0_CTRLA         REG_ACCESS(RwReg  , 0x42000800U) /**< \brief (SERCOM0) Control Register A */
-#define REG_SERCOM0_CTRLB         REG_ACCESS(RwReg  , 0x42000804U) /**< \brief (SERCOM0) Control Register B */
-#define REG_SERCOM0_DEBUG         REG_ACCESS(RwReg8 , 0x42000808U) /**< \brief (SERCOM0) Debug Register */
-#define REG_SERCOM0_BAUD          REG_ACCESS(RwReg16, 0x4200080AU) /**< \brief (SERCOM0) Baud Rate Register */
-#define REG_SERCOM0_INTENCLR      REG_ACCESS(RwReg8 , 0x4200080CU) /**< \brief (SERCOM0) Interrupt Enable Clear Register */
-#define REG_SERCOM0_INTENSET      REG_ACCESS(RwReg8 , 0x4200080DU) /**< \brief (SERCOM0) Interrupt Enable Set Register */
-#define REG_SERCOM0_INTFLAG       REG_ACCESS(RwReg8 , 0x4200080EU) /**< \brief (SERCOM0) Interrupt Flag Register */
-#define REG_SERCOM0_STATUS        REG_ACCESS(RwReg  , 0x42000810U) /**< \brief (SERCOM0) Status Register */
-#define REG_SERCOM0_ADDR          REG_ACCESS(RwReg  , 0x42000814U) /**< \brief (SERCOM0) Address Register */
-#define REG_SERCOM0_DATA          REG_ACCESS(RwReg  , 0x42000818U) /**< \brief (SERCOM0) Data Register */
+#define REG_SERCOM0_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42000800U) /**< \brief (SERCOM0) I2cm Control Register A */
+#define REG_SERCOM0_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42000800U) /**< \brief (SERCOM0) I2cs Control Register A */
+#define REG_SERCOM0_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42000800U) /**< \brief (SERCOM0) Spi SPI Control Register A */
+#define REG_SERCOM0_USART_CTRLA   REG_ACCESS(RwReg  , 0x42000800U) /**< \brief (SERCOM0) Usart USART Control Register A */
+#define REG_SERCOM0_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42000804U) /**< \brief (SERCOM0) I2cm Control Register B */
+#define REG_SERCOM0_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42000804U) /**< \brief (SERCOM0) I2cs Control Register B */
+#define REG_SERCOM0_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42000804U) /**< \brief (SERCOM0) Spi SPI Control Register B */
+#define REG_SERCOM0_USART_CTRLB   REG_ACCESS(RwReg  , 0x42000804U) /**< \brief (SERCOM0) Usart USART Control Register B */
+#define REG_SERCOM0_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42000808U) /**< \brief (SERCOM0) I2cm Debug Register */
+#define REG_SERCOM0_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42000808U) /**< \brief (SERCOM0) I2cs Debug Register */
+#define REG_SERCOM0_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42000808U) /**< \brief (SERCOM0) Spi SPI Debug Register */
+#define REG_SERCOM0_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42000808U) /**< \brief (SERCOM0) Usart USART Debug Register */
+#define REG_SERCOM0_I2CM_BAUD     REG_ACCESS(RwReg16, 0x4200080AU) /**< \brief (SERCOM0) I2cm Baud Rate Register */
+#define REG_SERCOM0_SPI_BAUD      REG_ACCESS(RwReg16, 0x4200080AU) /**< \brief (SERCOM0) Spi SPI Baud Rate Register */
+#define REG_SERCOM0_USART_BAUD    REG_ACCESS(RwReg16, 0x4200080AU) /**< \brief (SERCOM0) Usart USART Baud Rate Register */
+#define REG_SERCOM0_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x4200080CU) /**< \brief (SERCOM0) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM0_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x4200080CU) /**< \brief (SERCOM0) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM0_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x4200080CU) /**< \brief (SERCOM0) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM0_USART_INTENCLR REG_ACCESS(RwReg8 , 0x4200080CU) /**< \brief (SERCOM0) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM0_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x4200080DU) /**< \brief (SERCOM0) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM0_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x4200080DU) /**< \brief (SERCOM0) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM0_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x4200080DU) /**< \brief (SERCOM0) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM0_USART_INTENSET REG_ACCESS(RwReg8 , 0x4200080DU) /**< \brief (SERCOM0) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM0_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x4200080EU) /**< \brief (SERCOM0) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM0_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x4200080EU) /**< \brief (SERCOM0) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM0_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x4200080EU) /**< \brief (SERCOM0) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM0_USART_INTFLAG REG_ACCESS(RwReg8 , 0x4200080EU) /**< \brief (SERCOM0) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM0_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42000810U) /**< \brief (SERCOM0) I2cm Status Register */
+#define REG_SERCOM0_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42000810U) /**< \brief (SERCOM0) I2cs Status Register */
+#define REG_SERCOM0_SPI_STATUS    REG_ACCESS(RwReg  , 0x42000810U) /**< \brief (SERCOM0) Spi SPI Status Register */
+#define REG_SERCOM0_USART_STATUS  REG_ACCESS(RwReg  , 0x42000810U) /**< \brief (SERCOM0) Usart USART Status Register */
+#define REG_SERCOM0_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42000814U) /**< \brief (SERCOM0) I2cm Address Register */
+#define REG_SERCOM0_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42000814U) /**< \brief (SERCOM0) I2cs Address Register */
+#define REG_SERCOM0_SPI_ADDR      REG_ACCESS(RwReg  , 0x42000814U) /**< \brief (SERCOM0) Spi SPI Address Register */
+#define REG_SERCOM0_I2CM_DATA     REG_ACCESS(RwReg  , 0x42000818U) /**< \brief (SERCOM0) I2cm Data Register */
+#define REG_SERCOM0_I2CS_DATA     REG_ACCESS(RwReg  , 0x42000818U) /**< \brief (SERCOM0) I2cs Data Register */
+#define REG_SERCOM0_SPI_DATA      REG_ACCESS(RwReg  , 0x42000818U) /**< \brief (SERCOM0) Spi SPI Data Register */
+#define REG_SERCOM0_USART_DATA    REG_ACCESS(RwReg  , 0x42000818U) /**< \brief (SERCOM0) Usart USART Data Register */
 /* ========== Register definition for SERCOM1 peripheral ========== */
-#define REG_SERCOM1_CTRLA         REG_ACCESS(RwReg  , 0x42000C00U) /**< \brief (SERCOM1) Control Register A */
-#define REG_SERCOM1_CTRLB         REG_ACCESS(RwReg  , 0x42000C04U) /**< \brief (SERCOM1) Control Register B */
-#define REG_SERCOM1_DEBUG         REG_ACCESS(RwReg8 , 0x42000C08U) /**< \brief (SERCOM1) Debug Register */
-#define REG_SERCOM1_BAUD          REG_ACCESS(RwReg16, 0x42000C0AU) /**< \brief (SERCOM1) Baud Rate Register */
-#define REG_SERCOM1_INTENCLR      REG_ACCESS(RwReg8 , 0x42000C0CU) /**< \brief (SERCOM1) Interrupt Enable Clear Register */
-#define REG_SERCOM1_INTENSET      REG_ACCESS(RwReg8 , 0x42000C0DU) /**< \brief (SERCOM1) Interrupt Enable Set Register */
-#define REG_SERCOM1_INTFLAG       REG_ACCESS(RwReg8 , 0x42000C0EU) /**< \brief (SERCOM1) Interrupt Flag Register */
-#define REG_SERCOM1_STATUS        REG_ACCESS(RwReg  , 0x42000C10U) /**< \brief (SERCOM1) Status Register */
-#define REG_SERCOM1_ADDR          REG_ACCESS(RwReg  , 0x42000C14U) /**< \brief (SERCOM1) Address Register */
-#define REG_SERCOM1_DATA          REG_ACCESS(RwReg  , 0x42000C18U) /**< \brief (SERCOM1) Data Register */
+#define REG_SERCOM1_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42000C00U) /**< \brief (SERCOM1) I2cm Control Register A */
+#define REG_SERCOM1_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42000C00U) /**< \brief (SERCOM1) I2cs Control Register A */
+#define REG_SERCOM1_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42000C00U) /**< \brief (SERCOM1) Spi SPI Control Register A */
+#define REG_SERCOM1_USART_CTRLA   REG_ACCESS(RwReg  , 0x42000C00U) /**< \brief (SERCOM1) Usart USART Control Register A */
+#define REG_SERCOM1_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42000C04U) /**< \brief (SERCOM1) I2cm Control Register B */
+#define REG_SERCOM1_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42000C04U) /**< \brief (SERCOM1) I2cs Control Register B */
+#define REG_SERCOM1_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42000C04U) /**< \brief (SERCOM1) Spi SPI Control Register B */
+#define REG_SERCOM1_USART_CTRLB   REG_ACCESS(RwReg  , 0x42000C04U) /**< \brief (SERCOM1) Usart USART Control Register B */
+#define REG_SERCOM1_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42000C08U) /**< \brief (SERCOM1) I2cm Debug Register */
+#define REG_SERCOM1_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42000C08U) /**< \brief (SERCOM1) I2cs Debug Register */
+#define REG_SERCOM1_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42000C08U) /**< \brief (SERCOM1) Spi SPI Debug Register */
+#define REG_SERCOM1_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42000C08U) /**< \brief (SERCOM1) Usart USART Debug Register */
+#define REG_SERCOM1_I2CM_BAUD     REG_ACCESS(RwReg16, 0x42000C0AU) /**< \brief (SERCOM1) I2cm Baud Rate Register */
+#define REG_SERCOM1_SPI_BAUD      REG_ACCESS(RwReg16, 0x42000C0AU) /**< \brief (SERCOM1) Spi SPI Baud Rate Register */
+#define REG_SERCOM1_USART_BAUD    REG_ACCESS(RwReg16, 0x42000C0AU) /**< \brief (SERCOM1) Usart USART Baud Rate Register */
+#define REG_SERCOM1_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x42000C0CU) /**< \brief (SERCOM1) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM1_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x42000C0CU) /**< \brief (SERCOM1) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM1_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x42000C0CU) /**< \brief (SERCOM1) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM1_USART_INTENCLR REG_ACCESS(RwReg8 , 0x42000C0CU) /**< \brief (SERCOM1) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM1_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x42000C0DU) /**< \brief (SERCOM1) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM1_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x42000C0DU) /**< \brief (SERCOM1) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM1_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x42000C0DU) /**< \brief (SERCOM1) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM1_USART_INTENSET REG_ACCESS(RwReg8 , 0x42000C0DU) /**< \brief (SERCOM1) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM1_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x42000C0EU) /**< \brief (SERCOM1) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM1_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x42000C0EU) /**< \brief (SERCOM1) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM1_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x42000C0EU) /**< \brief (SERCOM1) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM1_USART_INTFLAG REG_ACCESS(RwReg8 , 0x42000C0EU) /**< \brief (SERCOM1) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM1_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42000C10U) /**< \brief (SERCOM1) I2cm Status Register */
+#define REG_SERCOM1_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42000C10U) /**< \brief (SERCOM1) I2cs Status Register */
+#define REG_SERCOM1_SPI_STATUS    REG_ACCESS(RwReg  , 0x42000C10U) /**< \brief (SERCOM1) Spi SPI Status Register */
+#define REG_SERCOM1_USART_STATUS  REG_ACCESS(RwReg  , 0x42000C10U) /**< \brief (SERCOM1) Usart USART Status Register */
+#define REG_SERCOM1_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42000C14U) /**< \brief (SERCOM1) I2cm Address Register */
+#define REG_SERCOM1_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42000C14U) /**< \brief (SERCOM1) I2cs Address Register */
+#define REG_SERCOM1_SPI_ADDR      REG_ACCESS(RwReg  , 0x42000C14U) /**< \brief (SERCOM1) Spi SPI Address Register */
+#define REG_SERCOM1_I2CM_DATA     REG_ACCESS(RwReg  , 0x42000C18U) /**< \brief (SERCOM1) I2cm Data Register */
+#define REG_SERCOM1_I2CS_DATA     REG_ACCESS(RwReg  , 0x42000C18U) /**< \brief (SERCOM1) I2cs Data Register */
+#define REG_SERCOM1_SPI_DATA      REG_ACCESS(RwReg  , 0x42000C18U) /**< \brief (SERCOM1) Spi SPI Data Register */
+#define REG_SERCOM1_USART_DATA    REG_ACCESS(RwReg  , 0x42000C18U) /**< \brief (SERCOM1) Usart USART Data Register */
 /* ========== Register definition for SERCOM2 peripheral ========== */
-#define REG_SERCOM2_CTRLA         REG_ACCESS(RwReg  , 0x42001000U) /**< \brief (SERCOM2) Control Register A */
-#define REG_SERCOM2_CTRLB         REG_ACCESS(RwReg  , 0x42001004U) /**< \brief (SERCOM2) Control Register B */
-#define REG_SERCOM2_DEBUG         REG_ACCESS(RwReg8 , 0x42001008U) /**< \brief (SERCOM2) Debug Register */
-#define REG_SERCOM2_BAUD          REG_ACCESS(RwReg16, 0x4200100AU) /**< \brief (SERCOM2) Baud Rate Register */
-#define REG_SERCOM2_INTENCLR      REG_ACCESS(RwReg8 , 0x4200100CU) /**< \brief (SERCOM2) Interrupt Enable Clear Register */
-#define REG_SERCOM2_INTENSET      REG_ACCESS(RwReg8 , 0x4200100DU) /**< \brief (SERCOM2) Interrupt Enable Set Register */
-#define REG_SERCOM2_INTFLAG       REG_ACCESS(RwReg8 , 0x4200100EU) /**< \brief (SERCOM2) Interrupt Flag Register */
-#define REG_SERCOM2_STATUS        REG_ACCESS(RwReg  , 0x42001010U) /**< \brief (SERCOM2) Status Register */
-#define REG_SERCOM2_ADDR          REG_ACCESS(RwReg  , 0x42001014U) /**< \brief (SERCOM2) Address Register */
-#define REG_SERCOM2_DATA          REG_ACCESS(RwReg  , 0x42001018U) /**< \brief (SERCOM2) Data Register */
+#define REG_SERCOM2_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42001000U) /**< \brief (SERCOM2) I2cm Control Register A */
+#define REG_SERCOM2_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42001000U) /**< \brief (SERCOM2) I2cs Control Register A */
+#define REG_SERCOM2_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42001000U) /**< \brief (SERCOM2) Spi SPI Control Register A */
+#define REG_SERCOM2_USART_CTRLA   REG_ACCESS(RwReg  , 0x42001000U) /**< \brief (SERCOM2) Usart USART Control Register A */
+#define REG_SERCOM2_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42001004U) /**< \brief (SERCOM2) I2cm Control Register B */
+#define REG_SERCOM2_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42001004U) /**< \brief (SERCOM2) I2cs Control Register B */
+#define REG_SERCOM2_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42001004U) /**< \brief (SERCOM2) Spi SPI Control Register B */
+#define REG_SERCOM2_USART_CTRLB   REG_ACCESS(RwReg  , 0x42001004U) /**< \brief (SERCOM2) Usart USART Control Register B */
+#define REG_SERCOM2_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42001008U) /**< \brief (SERCOM2) I2cm Debug Register */
+#define REG_SERCOM2_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42001008U) /**< \brief (SERCOM2) I2cs Debug Register */
+#define REG_SERCOM2_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42001008U) /**< \brief (SERCOM2) Spi SPI Debug Register */
+#define REG_SERCOM2_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42001008U) /**< \brief (SERCOM2) Usart USART Debug Register */
+#define REG_SERCOM2_I2CM_BAUD     REG_ACCESS(RwReg16, 0x4200100AU) /**< \brief (SERCOM2) I2cm Baud Rate Register */
+#define REG_SERCOM2_SPI_BAUD      REG_ACCESS(RwReg16, 0x4200100AU) /**< \brief (SERCOM2) Spi SPI Baud Rate Register */
+#define REG_SERCOM2_USART_BAUD    REG_ACCESS(RwReg16, 0x4200100AU) /**< \brief (SERCOM2) Usart USART Baud Rate Register */
+#define REG_SERCOM2_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x4200100CU) /**< \brief (SERCOM2) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM2_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x4200100CU) /**< \brief (SERCOM2) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM2_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x4200100CU) /**< \brief (SERCOM2) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM2_USART_INTENCLR REG_ACCESS(RwReg8 , 0x4200100CU) /**< \brief (SERCOM2) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM2_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x4200100DU) /**< \brief (SERCOM2) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM2_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x4200100DU) /**< \brief (SERCOM2) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM2_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x4200100DU) /**< \brief (SERCOM2) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM2_USART_INTENSET REG_ACCESS(RwReg8 , 0x4200100DU) /**< \brief (SERCOM2) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM2_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x4200100EU) /**< \brief (SERCOM2) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM2_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x4200100EU) /**< \brief (SERCOM2) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM2_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x4200100EU) /**< \brief (SERCOM2) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM2_USART_INTFLAG REG_ACCESS(RwReg8 , 0x4200100EU) /**< \brief (SERCOM2) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM2_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42001010U) /**< \brief (SERCOM2) I2cm Status Register */
+#define REG_SERCOM2_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42001010U) /**< \brief (SERCOM2) I2cs Status Register */
+#define REG_SERCOM2_SPI_STATUS    REG_ACCESS(RwReg  , 0x42001010U) /**< \brief (SERCOM2) Spi SPI Status Register */
+#define REG_SERCOM2_USART_STATUS  REG_ACCESS(RwReg  , 0x42001010U) /**< \brief (SERCOM2) Usart USART Status Register */
+#define REG_SERCOM2_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42001014U) /**< \brief (SERCOM2) I2cm Address Register */
+#define REG_SERCOM2_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42001014U) /**< \brief (SERCOM2) I2cs Address Register */
+#define REG_SERCOM2_SPI_ADDR      REG_ACCESS(RwReg  , 0x42001014U) /**< \brief (SERCOM2) Spi SPI Address Register */
+#define REG_SERCOM2_I2CM_DATA     REG_ACCESS(RwReg  , 0x42001018U) /**< \brief (SERCOM2) I2cm Data Register */
+#define REG_SERCOM2_I2CS_DATA     REG_ACCESS(RwReg  , 0x42001018U) /**< \brief (SERCOM2) I2cs Data Register */
+#define REG_SERCOM2_SPI_DATA      REG_ACCESS(RwReg  , 0x42001018U) /**< \brief (SERCOM2) Spi SPI Data Register */
+#define REG_SERCOM2_USART_DATA    REG_ACCESS(RwReg  , 0x42001018U) /**< \brief (SERCOM2) Usart USART Data Register */
 /* ========== Register definition for SERCOM3 peripheral ========== */
-#define REG_SERCOM3_CTRLA         REG_ACCESS(RwReg  , 0x42001400U) /**< \brief (SERCOM3) Control Register A */
-#define REG_SERCOM3_CTRLB         REG_ACCESS(RwReg  , 0x42001404U) /**< \brief (SERCOM3) Control Register B */
-#define REG_SERCOM3_DEBUG         REG_ACCESS(RwReg8 , 0x42001408U) /**< \brief (SERCOM3) Debug Register */
-#define REG_SERCOM3_BAUD          REG_ACCESS(RwReg16, 0x4200140AU) /**< \brief (SERCOM3) Baud Rate Register */
-#define REG_SERCOM3_INTENCLR      REG_ACCESS(RwReg8 , 0x4200140CU) /**< \brief (SERCOM3) Interrupt Enable Clear Register */
-#define REG_SERCOM3_INTENSET      REG_ACCESS(RwReg8 , 0x4200140DU) /**< \brief (SERCOM3) Interrupt Enable Set Register */
-#define REG_SERCOM3_INTFLAG       REG_ACCESS(RwReg8 , 0x4200140EU) /**< \brief (SERCOM3) Interrupt Flag Register */
-#define REG_SERCOM3_STATUS        REG_ACCESS(RwReg  , 0x42001410U) /**< \brief (SERCOM3) Status Register */
-#define REG_SERCOM3_ADDR          REG_ACCESS(RwReg  , 0x42001414U) /**< \brief (SERCOM3) Address Register */
-#define REG_SERCOM3_DATA          REG_ACCESS(RwReg  , 0x42001418U) /**< \brief (SERCOM3) Data Register */
+#define REG_SERCOM3_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42001400U) /**< \brief (SERCOM3) I2cm Control Register A */
+#define REG_SERCOM3_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42001400U) /**< \brief (SERCOM3) I2cs Control Register A */
+#define REG_SERCOM3_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42001400U) /**< \brief (SERCOM3) Spi SPI Control Register A */
+#define REG_SERCOM3_USART_CTRLA   REG_ACCESS(RwReg  , 0x42001400U) /**< \brief (SERCOM3) Usart USART Control Register A */
+#define REG_SERCOM3_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42001404U) /**< \brief (SERCOM3) I2cm Control Register B */
+#define REG_SERCOM3_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42001404U) /**< \brief (SERCOM3) I2cs Control Register B */
+#define REG_SERCOM3_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42001404U) /**< \brief (SERCOM3) Spi SPI Control Register B */
+#define REG_SERCOM3_USART_CTRLB   REG_ACCESS(RwReg  , 0x42001404U) /**< \brief (SERCOM3) Usart USART Control Register B */
+#define REG_SERCOM3_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42001408U) /**< \brief (SERCOM3) I2cm Debug Register */
+#define REG_SERCOM3_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42001408U) /**< \brief (SERCOM3) I2cs Debug Register */
+#define REG_SERCOM3_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42001408U) /**< \brief (SERCOM3) Spi SPI Debug Register */
+#define REG_SERCOM3_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42001408U) /**< \brief (SERCOM3) Usart USART Debug Register */
+#define REG_SERCOM3_I2CM_BAUD     REG_ACCESS(RwReg16, 0x4200140AU) /**< \brief (SERCOM3) I2cm Baud Rate Register */
+#define REG_SERCOM3_SPI_BAUD      REG_ACCESS(RwReg16, 0x4200140AU) /**< \brief (SERCOM3) Spi SPI Baud Rate Register */
+#define REG_SERCOM3_USART_BAUD    REG_ACCESS(RwReg16, 0x4200140AU) /**< \brief (SERCOM3) Usart USART Baud Rate Register */
+#define REG_SERCOM3_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x4200140CU) /**< \brief (SERCOM3) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM3_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x4200140CU) /**< \brief (SERCOM3) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM3_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x4200140CU) /**< \brief (SERCOM3) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM3_USART_INTENCLR REG_ACCESS(RwReg8 , 0x4200140CU) /**< \brief (SERCOM3) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM3_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x4200140DU) /**< \brief (SERCOM3) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM3_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x4200140DU) /**< \brief (SERCOM3) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM3_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x4200140DU) /**< \brief (SERCOM3) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM3_USART_INTENSET REG_ACCESS(RwReg8 , 0x4200140DU) /**< \brief (SERCOM3) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM3_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x4200140EU) /**< \brief (SERCOM3) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM3_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x4200140EU) /**< \brief (SERCOM3) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM3_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x4200140EU) /**< \brief (SERCOM3) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM3_USART_INTFLAG REG_ACCESS(RwReg8 , 0x4200140EU) /**< \brief (SERCOM3) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM3_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42001410U) /**< \brief (SERCOM3) I2cm Status Register */
+#define REG_SERCOM3_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42001410U) /**< \brief (SERCOM3) I2cs Status Register */
+#define REG_SERCOM3_SPI_STATUS    REG_ACCESS(RwReg  , 0x42001410U) /**< \brief (SERCOM3) Spi SPI Status Register */
+#define REG_SERCOM3_USART_STATUS  REG_ACCESS(RwReg  , 0x42001410U) /**< \brief (SERCOM3) Usart USART Status Register */
+#define REG_SERCOM3_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42001414U) /**< \brief (SERCOM3) I2cm Address Register */
+#define REG_SERCOM3_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42001414U) /**< \brief (SERCOM3) I2cs Address Register */
+#define REG_SERCOM3_SPI_ADDR      REG_ACCESS(RwReg  , 0x42001414U) /**< \brief (SERCOM3) Spi SPI Address Register */
+#define REG_SERCOM3_I2CM_DATA     REG_ACCESS(RwReg  , 0x42001418U) /**< \brief (SERCOM3) I2cm Data Register */
+#define REG_SERCOM3_I2CS_DATA     REG_ACCESS(RwReg  , 0x42001418U) /**< \brief (SERCOM3) I2cs Data Register */
+#define REG_SERCOM3_SPI_DATA      REG_ACCESS(RwReg  , 0x42001418U) /**< \brief (SERCOM3) Spi SPI Data Register */
+#define REG_SERCOM3_USART_DATA    REG_ACCESS(RwReg  , 0x42001418U) /**< \brief (SERCOM3) Usart USART Data Register */
 /* ========== Register definition for SERCOM4 peripheral ========== */
-#define REG_SERCOM4_CTRLA         REG_ACCESS(RwReg  , 0x42001800U) /**< \brief (SERCOM4) Control Register A */
-#define REG_SERCOM4_CTRLB         REG_ACCESS(RwReg  , 0x42001804U) /**< \brief (SERCOM4) Control Register B */
-#define REG_SERCOM4_DEBUG         REG_ACCESS(RwReg8 , 0x42001808U) /**< \brief (SERCOM4) Debug Register */
-#define REG_SERCOM4_BAUD          REG_ACCESS(RwReg16, 0x4200180AU) /**< \brief (SERCOM4) Baud Rate Register */
-#define REG_SERCOM4_INTENCLR      REG_ACCESS(RwReg8 , 0x4200180CU) /**< \brief (SERCOM4) Interrupt Enable Clear Register */
-#define REG_SERCOM4_INTENSET      REG_ACCESS(RwReg8 , 0x4200180DU) /**< \brief (SERCOM4) Interrupt Enable Set Register */
-#define REG_SERCOM4_INTFLAG       REG_ACCESS(RwReg8 , 0x4200180EU) /**< \brief (SERCOM4) Interrupt Flag Register */
-#define REG_SERCOM4_STATUS        REG_ACCESS(RwReg  , 0x42001810U) /**< \brief (SERCOM4) Status Register */
-#define REG_SERCOM4_ADDR          REG_ACCESS(RwReg  , 0x42001814U) /**< \brief (SERCOM4) Address Register */
-#define REG_SERCOM4_DATA          REG_ACCESS(RwReg  , 0x42001818U) /**< \brief (SERCOM4) Data Register */
+#define REG_SERCOM4_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42001800U) /**< \brief (SERCOM4) I2cm Control Register A */
+#define REG_SERCOM4_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42001800U) /**< \brief (SERCOM4) I2cs Control Register A */
+#define REG_SERCOM4_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42001800U) /**< \brief (SERCOM4) Spi SPI Control Register A */
+#define REG_SERCOM4_USART_CTRLA   REG_ACCESS(RwReg  , 0x42001800U) /**< \brief (SERCOM4) Usart USART Control Register A */
+#define REG_SERCOM4_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42001804U) /**< \brief (SERCOM4) I2cm Control Register B */
+#define REG_SERCOM4_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42001804U) /**< \brief (SERCOM4) I2cs Control Register B */
+#define REG_SERCOM4_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42001804U) /**< \brief (SERCOM4) Spi SPI Control Register B */
+#define REG_SERCOM4_USART_CTRLB   REG_ACCESS(RwReg  , 0x42001804U) /**< \brief (SERCOM4) Usart USART Control Register B */
+#define REG_SERCOM4_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42001808U) /**< \brief (SERCOM4) I2cm Debug Register */
+#define REG_SERCOM4_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42001808U) /**< \brief (SERCOM4) I2cs Debug Register */
+#define REG_SERCOM4_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42001808U) /**< \brief (SERCOM4) Spi SPI Debug Register */
+#define REG_SERCOM4_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42001808U) /**< \brief (SERCOM4) Usart USART Debug Register */
+#define REG_SERCOM4_I2CM_BAUD     REG_ACCESS(RwReg16, 0x4200180AU) /**< \brief (SERCOM4) I2cm Baud Rate Register */
+#define REG_SERCOM4_SPI_BAUD      REG_ACCESS(RwReg16, 0x4200180AU) /**< \brief (SERCOM4) Spi SPI Baud Rate Register */
+#define REG_SERCOM4_USART_BAUD    REG_ACCESS(RwReg16, 0x4200180AU) /**< \brief (SERCOM4) Usart USART Baud Rate Register */
+#define REG_SERCOM4_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x4200180CU) /**< \brief (SERCOM4) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM4_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x4200180CU) /**< \brief (SERCOM4) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM4_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x4200180CU) /**< \brief (SERCOM4) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM4_USART_INTENCLR REG_ACCESS(RwReg8 , 0x4200180CU) /**< \brief (SERCOM4) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM4_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x4200180DU) /**< \brief (SERCOM4) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM4_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x4200180DU) /**< \brief (SERCOM4) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM4_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x4200180DU) /**< \brief (SERCOM4) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM4_USART_INTENSET REG_ACCESS(RwReg8 , 0x4200180DU) /**< \brief (SERCOM4) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM4_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x4200180EU) /**< \brief (SERCOM4) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x4200180EU) /**< \brief (SERCOM4) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x4200180EU) /**< \brief (SERCOM4) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_USART_INTFLAG REG_ACCESS(RwReg8 , 0x4200180EU) /**< \brief (SERCOM4) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42001810U) /**< \brief (SERCOM4) I2cm Status Register */
+#define REG_SERCOM4_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42001810U) /**< \brief (SERCOM4) I2cs Status Register */
+#define REG_SERCOM4_SPI_STATUS    REG_ACCESS(RwReg  , 0x42001810U) /**< \brief (SERCOM4) Spi SPI Status Register */
+#define REG_SERCOM4_USART_STATUS  REG_ACCESS(RwReg  , 0x42001810U) /**< \brief (SERCOM4) Usart USART Status Register */
+#define REG_SERCOM4_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42001814U) /**< \brief (SERCOM4) I2cm Address Register */
+#define REG_SERCOM4_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42001814U) /**< \brief (SERCOM4) I2cs Address Register */
+#define REG_SERCOM4_SPI_ADDR      REG_ACCESS(RwReg  , 0x42001814U) /**< \brief (SERCOM4) Spi SPI Address Register */
+#define REG_SERCOM4_I2CM_DATA     REG_ACCESS(RwReg  , 0x42001818U) /**< \brief (SERCOM4) I2cm Data Register */
+#define REG_SERCOM4_I2CS_DATA     REG_ACCESS(RwReg  , 0x42001818U) /**< \brief (SERCOM4) I2cs Data Register */
+#define REG_SERCOM4_SPI_DATA      REG_ACCESS(RwReg  , 0x42001818U) /**< \brief (SERCOM4) Spi SPI Data Register */
+#define REG_SERCOM4_USART_DATA    REG_ACCESS(RwReg  , 0x42001818U) /**< \brief (SERCOM4) Usart USART Data Register */
 /* ========== Register definition for SERCOM5 peripheral ========== */
-#define REG_SERCOM5_CTRLA         REG_ACCESS(RwReg  , 0x42001C00U) /**< \brief (SERCOM5) Control Register A */
-#define REG_SERCOM5_CTRLB         REG_ACCESS(RwReg  , 0x42001C04U) /**< \brief (SERCOM5) Control Register B */
-#define REG_SERCOM5_DEBUG         REG_ACCESS(RwReg8 , 0x42001C08U) /**< \brief (SERCOM5) Debug Register */
-#define REG_SERCOM5_BAUD          REG_ACCESS(RwReg16, 0x42001C0AU) /**< \brief (SERCOM5) Baud Rate Register */
-#define REG_SERCOM5_INTENCLR      REG_ACCESS(RwReg8 , 0x42001C0CU) /**< \brief (SERCOM5) Interrupt Enable Clear Register */
-#define REG_SERCOM5_INTENSET      REG_ACCESS(RwReg8 , 0x42001C0DU) /**< \brief (SERCOM5) Interrupt Enable Set Register */
-#define REG_SERCOM5_INTFLAG       REG_ACCESS(RwReg8 , 0x42001C0EU) /**< \brief (SERCOM5) Interrupt Flag Register */
-#define REG_SERCOM5_STATUS        REG_ACCESS(RwReg  , 0x42001C10U) /**< \brief (SERCOM5) Status Register */
-#define REG_SERCOM5_ADDR          REG_ACCESS(RwReg  , 0x42001C14U) /**< \brief (SERCOM5) Address Register */
-#define REG_SERCOM5_DATA          REG_ACCESS(RwReg  , 0x42001C18U) /**< \brief (SERCOM5) Data Register */
+#define REG_SERCOM5_I2CM_CTRLA    REG_ACCESS(RwReg  , 0x42001C00U) /**< \brief (SERCOM5) I2cm Control Register A */
+#define REG_SERCOM5_I2CS_CTRLA    REG_ACCESS(RwReg  , 0x42001C00U) /**< \brief (SERCOM5) I2cs Control Register A */
+#define REG_SERCOM5_SPI_CTRLA     REG_ACCESS(RwReg  , 0x42001C00U) /**< \brief (SERCOM5) Spi SPI Control Register A */
+#define REG_SERCOM5_USART_CTRLA   REG_ACCESS(RwReg  , 0x42001C00U) /**< \brief (SERCOM5) Usart USART Control Register A */
+#define REG_SERCOM5_I2CM_CTRLB    REG_ACCESS(RwReg  , 0x42001C04U) /**< \brief (SERCOM5) I2cm Control Register B */
+#define REG_SERCOM5_I2CS_CTRLB    REG_ACCESS(RwReg  , 0x42001C04U) /**< \brief (SERCOM5) I2cs Control Register B */
+#define REG_SERCOM5_SPI_CTRLB     REG_ACCESS(RwReg  , 0x42001C04U) /**< \brief (SERCOM5) Spi SPI Control Register B */
+#define REG_SERCOM5_USART_CTRLB   REG_ACCESS(RwReg  , 0x42001C04U) /**< \brief (SERCOM5) Usart USART Control Register B */
+#define REG_SERCOM5_I2CM_DEBUG    REG_ACCESS(RwReg8 , 0x42001C08U) /**< \brief (SERCOM5) I2cm Debug Register */
+#define REG_SERCOM5_I2CS_DEBUG    REG_ACCESS(RwReg8 , 0x42001C08U) /**< \brief (SERCOM5) I2cs Debug Register */
+#define REG_SERCOM5_SPI_DEBUG     REG_ACCESS(RwReg8 , 0x42001C08U) /**< \brief (SERCOM5) Spi SPI Debug Register */
+#define REG_SERCOM5_USART_DEBUG   REG_ACCESS(RwReg8 , 0x42001C08U) /**< \brief (SERCOM5) Usart USART Debug Register */
+#define REG_SERCOM5_I2CM_BAUD     REG_ACCESS(RwReg16, 0x42001C0AU) /**< \brief (SERCOM5) I2cm Baud Rate Register */
+#define REG_SERCOM5_SPI_BAUD      REG_ACCESS(RwReg16, 0x42001C0AU) /**< \brief (SERCOM5) Spi SPI Baud Rate Register */
+#define REG_SERCOM5_USART_BAUD    REG_ACCESS(RwReg16, 0x42001C0AU) /**< \brief (SERCOM5) Usart USART Baud Rate Register */
+#define REG_SERCOM5_I2CM_INTENCLR REG_ACCESS(RwReg8 , 0x42001C0CU) /**< \brief (SERCOM5) I2cm Interrupt Enable Clear Register */
+#define REG_SERCOM5_I2CS_INTENCLR REG_ACCESS(RwReg8 , 0x42001C0CU) /**< \brief (SERCOM5) I2cs Interrupt Enable Clear Register */
+#define REG_SERCOM5_SPI_INTENCLR  REG_ACCESS(RwReg8 , 0x42001C0CU) /**< \brief (SERCOM5) Spi SPI Interrupt Enable Clear Register */
+#define REG_SERCOM5_USART_INTENCLR REG_ACCESS(RwReg8 , 0x42001C0CU) /**< \brief (SERCOM5) Usart USART Interrupt Enable Clear Register */
+#define REG_SERCOM5_I2CM_INTENSET REG_ACCESS(RwReg8 , 0x42001C0DU) /**< \brief (SERCOM5) I2cm Interrupt Enable Set Register */
+#define REG_SERCOM5_I2CS_INTENSET REG_ACCESS(RwReg8 , 0x42001C0DU) /**< \brief (SERCOM5) I2cs Interrupt Enable Set Register */
+#define REG_SERCOM5_SPI_INTENSET  REG_ACCESS(RwReg8 , 0x42001C0DU) /**< \brief (SERCOM5) Spi SPI Interrupt Enable Set Register */
+#define REG_SERCOM5_USART_INTENSET REG_ACCESS(RwReg8 , 0x42001C0DU) /**< \brief (SERCOM5) Usart USART Interrupt Enable Set Register */
+#define REG_SERCOM5_I2CM_INTFLAG  REG_ACCESS(RwReg8 , 0x42001C0EU) /**< \brief (SERCOM5) I2cm Interrupt Flag Status and Clear Register */
+#define REG_SERCOM5_I2CS_INTFLAG  REG_ACCESS(RwReg8 , 0x42001C0EU) /**< \brief (SERCOM5) I2cs Interrupt Flag Status and Clear Register */
+#define REG_SERCOM5_SPI_INTFLAG   REG_ACCESS(RwReg8 , 0x42001C0EU) /**< \brief (SERCOM5) Spi SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM5_USART_INTFLAG REG_ACCESS(RwReg8 , 0x42001C0EU) /**< \brief (SERCOM5) Usart USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM5_I2CM_STATUS   REG_ACCESS(RwReg  , 0x42001C10U) /**< \brief (SERCOM5) I2cm Status Register */
+#define REG_SERCOM5_I2CS_STATUS   REG_ACCESS(RwReg  , 0x42001C10U) /**< \brief (SERCOM5) I2cs Status Register */
+#define REG_SERCOM5_SPI_STATUS    REG_ACCESS(RwReg  , 0x42001C10U) /**< \brief (SERCOM5) Spi SPI Status Register */
+#define REG_SERCOM5_USART_STATUS  REG_ACCESS(RwReg  , 0x42001C10U) /**< \brief (SERCOM5) Usart USART Status Register */
+#define REG_SERCOM5_I2CM_ADDR     REG_ACCESS(RwReg  , 0x42001C14U) /**< \brief (SERCOM5) I2cm Address Register */
+#define REG_SERCOM5_I2CS_ADDR     REG_ACCESS(RwReg  , 0x42001C14U) /**< \brief (SERCOM5) I2cs Address Register */
+#define REG_SERCOM5_SPI_ADDR      REG_ACCESS(RwReg  , 0x42001C14U) /**< \brief (SERCOM5) Spi SPI Address Register */
+#define REG_SERCOM5_I2CM_DATA     REG_ACCESS(RwReg  , 0x42001C18U) /**< \brief (SERCOM5) I2cm Data Register */
+#define REG_SERCOM5_I2CS_DATA     REG_ACCESS(RwReg  , 0x42001C18U) /**< \brief (SERCOM5) I2cs Data Register */
+#define REG_SERCOM5_SPI_DATA      REG_ACCESS(RwReg  , 0x42001C18U) /**< \brief (SERCOM5) Spi SPI Data Register */
+#define REG_SERCOM5_USART_DATA    REG_ACCESS(RwReg  , 0x42001C18U) /**< \brief (SERCOM5) Usart USART Data Register */
 /* ========== Register definition for TC0 peripheral ========== */
-#define REG_TC0_CTRLA             REG_ACCESS(RwReg16, 0x42002000U) /**< \brief (TC0) Control Register A */
+#define REG_TC0_CTRLA             REG_ACCESS(RwReg16, 0x42002000U) /**< \brief (TC0) Control A Register */
 #define REG_TC0_READREQ           REG_ACCESS(RwReg16, 0x42002002U) /**< \brief (TC0) Read Request Register */
-#define REG_TC0_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002004U) /**< \brief (TC0) Control Clear Register B */
-#define REG_TC0_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002005U) /**< \brief (TC0) Control Set Register B */
-#define REG_TC0_CTRLC             REG_ACCESS(RwReg8 , 0x42002006U) /**< \brief (TC0) Control Register C */
-#define REG_TC0_DEBUG             REG_ACCESS(RwReg8 , 0x42002008U) /**< \brief (TC0) Control Register C */
+#define REG_TC0_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002004U) /**< \brief (TC0) Control B Clear Register */
+#define REG_TC0_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002005U) /**< \brief (TC0) Control B Set Register */
+#define REG_TC0_CTRLC             REG_ACCESS(RwReg8 , 0x42002006U) /**< \brief (TC0) Control C Register */
+#define REG_TC0_DEBUG             REG_ACCESS(RwReg8 , 0x42002008U) /**< \brief (TC0) Debug Register */
 #define REG_TC0_EVCTRL            REG_ACCESS(RwReg16, 0x4200200AU) /**< \brief (TC0) Event Control Register */
 #define REG_TC0_INTENCLR          REG_ACCESS(RwReg8 , 0x4200200CU) /**< \brief (TC0) Interrupt Enable Clear Register */
 #define REG_TC0_INTENSET          REG_ACCESS(RwReg8 , 0x4200200DU) /**< \brief (TC0) Interrupt Enable Set Register */
-#define REG_TC0_INTFLAG           REG_ACCESS(RwReg8 , 0x4200200EU) /**< \brief (TC0) Interrupt Flag Register */
-#define REG_TC0_STATUS            REG_ACCESS(RwReg8 , 0x4200200FU) /**< \brief (TC0) Status Register */
-#define REG_TC0_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002010U) /**< \brief (TC0) Count16 Count Register 0 */
-#define REG_TC0_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002010U) /**< \brief (TC0) Count32 Count Register 0 */
-#define REG_TC0_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002010U) /**< \brief (TC0) Count8 Count Register 0 */
+#define REG_TC0_INTFLAG           REG_ACCESS(RwReg8 , 0x4200200EU) /**< \brief (TC0) Interrupt Flag Status and Clear Register */
+#define REG_TC0_STATUS            REG_ACCESS(RoReg8 , 0x4200200FU) /**< \brief (TC0) Status Register */
+#define REG_TC0_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002010U) /**< \brief (TC0) Count16 Count Register */
+#define REG_TC0_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002010U) /**< \brief (TC0) Count32 Count Register */
+#define REG_TC0_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002010U) /**< \brief (TC0) Count8 Count Register */
 #define REG_TC0_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42002014U) /**< \brief (TC0) Count8 Period Register */
-#define REG_TC0_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42002018U) /**< \brief (TC0) Count16Cc Compare and Capture Register */
-#define REG_TC0_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42002018U) /**< \brief (TC0) Count32Cc Compare and Capture Register */
-#define REG_TC0_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42002018U) /**< \brief (TC0) Count8Cc Compare and Capture Register */
+#define REG_TC0_COUNT16_CC        REG_ACCESS(RwReg16, 0x42002018U) /**< \brief (TC0) Count16 Compare and Capture Register */
+#define REG_TC0_COUNT32_CC        REG_ACCESS(RwReg  , 0x42002018U) /**< \brief (TC0) Count32 Compare and Capture Register */
+#define REG_TC0_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42002018U) /**< \brief (TC0) Count8 Compare and Capture Register */
 /* ========== Register definition for TC1 peripheral ========== */
-#define REG_TC1_CTRLA             REG_ACCESS(RwReg16, 0x42002400U) /**< \brief (TC1) Control Register A */
+#define REG_TC1_CTRLA             REG_ACCESS(RwReg16, 0x42002400U) /**< \brief (TC1) Control A Register */
 #define REG_TC1_READREQ           REG_ACCESS(RwReg16, 0x42002402U) /**< \brief (TC1) Read Request Register */
-#define REG_TC1_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002404U) /**< \brief (TC1) Control Clear Register B */
-#define REG_TC1_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002405U) /**< \brief (TC1) Control Set Register B */
-#define REG_TC1_CTRLC             REG_ACCESS(RwReg8 , 0x42002406U) /**< \brief (TC1) Control Register C */
-#define REG_TC1_DEBUG             REG_ACCESS(RwReg8 , 0x42002408U) /**< \brief (TC1) Control Register C */
+#define REG_TC1_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002404U) /**< \brief (TC1) Control B Clear Register */
+#define REG_TC1_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002405U) /**< \brief (TC1) Control B Set Register */
+#define REG_TC1_CTRLC             REG_ACCESS(RwReg8 , 0x42002406U) /**< \brief (TC1) Control C Register */
+#define REG_TC1_DEBUG             REG_ACCESS(RwReg8 , 0x42002408U) /**< \brief (TC1) Debug Register */
 #define REG_TC1_EVCTRL            REG_ACCESS(RwReg16, 0x4200240AU) /**< \brief (TC1) Event Control Register */
 #define REG_TC1_INTENCLR          REG_ACCESS(RwReg8 , 0x4200240CU) /**< \brief (TC1) Interrupt Enable Clear Register */
 #define REG_TC1_INTENSET          REG_ACCESS(RwReg8 , 0x4200240DU) /**< \brief (TC1) Interrupt Enable Set Register */
-#define REG_TC1_INTFLAG           REG_ACCESS(RwReg8 , 0x4200240EU) /**< \brief (TC1) Interrupt Flag Register */
-#define REG_TC1_STATUS            REG_ACCESS(RwReg8 , 0x4200240FU) /**< \brief (TC1) Status Register */
-#define REG_TC1_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002410U) /**< \brief (TC1) Count16 Count Register 0 */
-#define REG_TC1_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002410U) /**< \brief (TC1) Count32 Count Register 0 */
-#define REG_TC1_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002410U) /**< \brief (TC1) Count8 Count Register 0 */
+#define REG_TC1_INTFLAG           REG_ACCESS(RwReg8 , 0x4200240EU) /**< \brief (TC1) Interrupt Flag Status and Clear Register */
+#define REG_TC1_STATUS            REG_ACCESS(RoReg8 , 0x4200240FU) /**< \brief (TC1) Status Register */
+#define REG_TC1_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002410U) /**< \brief (TC1) Count16 Count Register */
+#define REG_TC1_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002410U) /**< \brief (TC1) Count32 Count Register */
+#define REG_TC1_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002410U) /**< \brief (TC1) Count8 Count Register */
 #define REG_TC1_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42002414U) /**< \brief (TC1) Count8 Period Register */
-#define REG_TC1_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42002418U) /**< \brief (TC1) Count16Cc Compare and Capture Register */
-#define REG_TC1_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42002418U) /**< \brief (TC1) Count32Cc Compare and Capture Register */
-#define REG_TC1_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42002418U) /**< \brief (TC1) Count8Cc Compare and Capture Register */
+#define REG_TC1_COUNT16_CC        REG_ACCESS(RwReg16, 0x42002418U) /**< \brief (TC1) Count16 Compare and Capture Register */
+#define REG_TC1_COUNT32_CC        REG_ACCESS(RwReg  , 0x42002418U) /**< \brief (TC1) Count32 Compare and Capture Register */
+#define REG_TC1_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42002418U) /**< \brief (TC1) Count8 Compare and Capture Register */
 /* ========== Register definition for TC2 peripheral ========== */
-#define REG_TC2_CTRLA             REG_ACCESS(RwReg16, 0x42002800U) /**< \brief (TC2) Control Register A */
+#define REG_TC2_CTRLA             REG_ACCESS(RwReg16, 0x42002800U) /**< \brief (TC2) Control A Register */
 #define REG_TC2_READREQ           REG_ACCESS(RwReg16, 0x42002802U) /**< \brief (TC2) Read Request Register */
-#define REG_TC2_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002804U) /**< \brief (TC2) Control Clear Register B */
-#define REG_TC2_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002805U) /**< \brief (TC2) Control Set Register B */
-#define REG_TC2_CTRLC             REG_ACCESS(RwReg8 , 0x42002806U) /**< \brief (TC2) Control Register C */
-#define REG_TC2_DEBUG             REG_ACCESS(RwReg8 , 0x42002808U) /**< \brief (TC2) Control Register C */
+#define REG_TC2_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002804U) /**< \brief (TC2) Control B Clear Register */
+#define REG_TC2_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002805U) /**< \brief (TC2) Control B Set Register */
+#define REG_TC2_CTRLC             REG_ACCESS(RwReg8 , 0x42002806U) /**< \brief (TC2) Control C Register */
+#define REG_TC2_DEBUG             REG_ACCESS(RwReg8 , 0x42002808U) /**< \brief (TC2) Debug Register */
 #define REG_TC2_EVCTRL            REG_ACCESS(RwReg16, 0x4200280AU) /**< \brief (TC2) Event Control Register */
 #define REG_TC2_INTENCLR          REG_ACCESS(RwReg8 , 0x4200280CU) /**< \brief (TC2) Interrupt Enable Clear Register */
 #define REG_TC2_INTENSET          REG_ACCESS(RwReg8 , 0x4200280DU) /**< \brief (TC2) Interrupt Enable Set Register */
-#define REG_TC2_INTFLAG           REG_ACCESS(RwReg8 , 0x4200280EU) /**< \brief (TC2) Interrupt Flag Register */
-#define REG_TC2_STATUS            REG_ACCESS(RwReg8 , 0x4200280FU) /**< \brief (TC2) Status Register */
-#define REG_TC2_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002810U) /**< \brief (TC2) Count16 Count Register 0 */
-#define REG_TC2_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002810U) /**< \brief (TC2) Count32 Count Register 0 */
-#define REG_TC2_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002810U) /**< \brief (TC2) Count8 Count Register 0 */
+#define REG_TC2_INTFLAG           REG_ACCESS(RwReg8 , 0x4200280EU) /**< \brief (TC2) Interrupt Flag Status and Clear Register */
+#define REG_TC2_STATUS            REG_ACCESS(RoReg8 , 0x4200280FU) /**< \brief (TC2) Status Register */
+#define REG_TC2_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002810U) /**< \brief (TC2) Count16 Count Register */
+#define REG_TC2_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002810U) /**< \brief (TC2) Count32 Count Register */
+#define REG_TC2_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002810U) /**< \brief (TC2) Count8 Count Register */
 #define REG_TC2_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42002814U) /**< \brief (TC2) Count8 Period Register */
-#define REG_TC2_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42002818U) /**< \brief (TC2) Count16Cc Compare and Capture Register */
-#define REG_TC2_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42002818U) /**< \brief (TC2) Count32Cc Compare and Capture Register */
-#define REG_TC2_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42002818U) /**< \brief (TC2) Count8Cc Compare and Capture Register */
+#define REG_TC2_COUNT16_CC        REG_ACCESS(RwReg16, 0x42002818U) /**< \brief (TC2) Count16 Compare and Capture Register */
+#define REG_TC2_COUNT32_CC        REG_ACCESS(RwReg  , 0x42002818U) /**< \brief (TC2) Count32 Compare and Capture Register */
+#define REG_TC2_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42002818U) /**< \brief (TC2) Count8 Compare and Capture Register */
 /* ========== Register definition for TC3 peripheral ========== */
-#define REG_TC3_CTRLA             REG_ACCESS(RwReg16, 0x42002C00U) /**< \brief (TC3) Control Register A */
+#define REG_TC3_CTRLA             REG_ACCESS(RwReg16, 0x42002C00U) /**< \brief (TC3) Control A Register */
 #define REG_TC3_READREQ           REG_ACCESS(RwReg16, 0x42002C02U) /**< \brief (TC3) Read Request Register */
-#define REG_TC3_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002C04U) /**< \brief (TC3) Control Clear Register B */
-#define REG_TC3_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002C05U) /**< \brief (TC3) Control Set Register B */
-#define REG_TC3_CTRLC             REG_ACCESS(RwReg8 , 0x42002C06U) /**< \brief (TC3) Control Register C */
-#define REG_TC3_DEBUG             REG_ACCESS(RwReg8 , 0x42002C08U) /**< \brief (TC3) Control Register C */
+#define REG_TC3_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42002C04U) /**< \brief (TC3) Control B Clear Register */
+#define REG_TC3_CTRLBSET          REG_ACCESS(RwReg8 , 0x42002C05U) /**< \brief (TC3) Control B Set Register */
+#define REG_TC3_CTRLC             REG_ACCESS(RwReg8 , 0x42002C06U) /**< \brief (TC3) Control C Register */
+#define REG_TC3_DEBUG             REG_ACCESS(RwReg8 , 0x42002C08U) /**< \brief (TC3) Debug Register */
 #define REG_TC3_EVCTRL            REG_ACCESS(RwReg16, 0x42002C0AU) /**< \brief (TC3) Event Control Register */
 #define REG_TC3_INTENCLR          REG_ACCESS(RwReg8 , 0x42002C0CU) /**< \brief (TC3) Interrupt Enable Clear Register */
 #define REG_TC3_INTENSET          REG_ACCESS(RwReg8 , 0x42002C0DU) /**< \brief (TC3) Interrupt Enable Set Register */
-#define REG_TC3_INTFLAG           REG_ACCESS(RwReg8 , 0x42002C0EU) /**< \brief (TC3) Interrupt Flag Register */
-#define REG_TC3_STATUS            REG_ACCESS(RwReg8 , 0x42002C0FU) /**< \brief (TC3) Status Register */
-#define REG_TC3_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002C10U) /**< \brief (TC3) Count16 Count Register 0 */
-#define REG_TC3_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002C10U) /**< \brief (TC3) Count32 Count Register 0 */
-#define REG_TC3_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002C10U) /**< \brief (TC3) Count8 Count Register 0 */
+#define REG_TC3_INTFLAG           REG_ACCESS(RwReg8 , 0x42002C0EU) /**< \brief (TC3) Interrupt Flag Status and Clear Register */
+#define REG_TC3_STATUS            REG_ACCESS(RoReg8 , 0x42002C0FU) /**< \brief (TC3) Status Register */
+#define REG_TC3_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42002C10U) /**< \brief (TC3) Count16 Count Register */
+#define REG_TC3_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42002C10U) /**< \brief (TC3) Count32 Count Register */
+#define REG_TC3_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42002C10U) /**< \brief (TC3) Count8 Count Register */
 #define REG_TC3_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42002C14U) /**< \brief (TC3) Count8 Period Register */
-#define REG_TC3_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42002C18U) /**< \brief (TC3) Count16Cc Compare and Capture Register */
-#define REG_TC3_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42002C18U) /**< \brief (TC3) Count32Cc Compare and Capture Register */
-#define REG_TC3_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42002C18U) /**< \brief (TC3) Count8Cc Compare and Capture Register */
+#define REG_TC3_COUNT16_CC        REG_ACCESS(RwReg16, 0x42002C18U) /**< \brief (TC3) Count16 Compare and Capture Register */
+#define REG_TC3_COUNT32_CC        REG_ACCESS(RwReg  , 0x42002C18U) /**< \brief (TC3) Count32 Compare and Capture Register */
+#define REG_TC3_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42002C18U) /**< \brief (TC3) Count8 Compare and Capture Register */
 /* ========== Register definition for TC4 peripheral ========== */
-#define REG_TC4_CTRLA             REG_ACCESS(RwReg16, 0x42003000U) /**< \brief (TC4) Control Register A */
+#define REG_TC4_CTRLA             REG_ACCESS(RwReg16, 0x42003000U) /**< \brief (TC4) Control A Register */
 #define REG_TC4_READREQ           REG_ACCESS(RwReg16, 0x42003002U) /**< \brief (TC4) Read Request Register */
-#define REG_TC4_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003004U) /**< \brief (TC4) Control Clear Register B */
-#define REG_TC4_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003005U) /**< \brief (TC4) Control Set Register B */
-#define REG_TC4_CTRLC             REG_ACCESS(RwReg8 , 0x42003006U) /**< \brief (TC4) Control Register C */
-#define REG_TC4_DEBUG             REG_ACCESS(RwReg8 , 0x42003008U) /**< \brief (TC4) Control Register C */
+#define REG_TC4_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003004U) /**< \brief (TC4) Control B Clear Register */
+#define REG_TC4_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003005U) /**< \brief (TC4) Control B Set Register */
+#define REG_TC4_CTRLC             REG_ACCESS(RwReg8 , 0x42003006U) /**< \brief (TC4) Control C Register */
+#define REG_TC4_DEBUG             REG_ACCESS(RwReg8 , 0x42003008U) /**< \brief (TC4) Debug Register */
 #define REG_TC4_EVCTRL            REG_ACCESS(RwReg16, 0x4200300AU) /**< \brief (TC4) Event Control Register */
 #define REG_TC4_INTENCLR          REG_ACCESS(RwReg8 , 0x4200300CU) /**< \brief (TC4) Interrupt Enable Clear Register */
 #define REG_TC4_INTENSET          REG_ACCESS(RwReg8 , 0x4200300DU) /**< \brief (TC4) Interrupt Enable Set Register */
-#define REG_TC4_INTFLAG           REG_ACCESS(RwReg8 , 0x4200300EU) /**< \brief (TC4) Interrupt Flag Register */
-#define REG_TC4_STATUS            REG_ACCESS(RwReg8 , 0x4200300FU) /**< \brief (TC4) Status Register */
-#define REG_TC4_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003010U) /**< \brief (TC4) Count16 Count Register 0 */
-#define REG_TC4_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003010U) /**< \brief (TC4) Count32 Count Register 0 */
-#define REG_TC4_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003010U) /**< \brief (TC4) Count8 Count Register 0 */
+#define REG_TC4_INTFLAG           REG_ACCESS(RwReg8 , 0x4200300EU) /**< \brief (TC4) Interrupt Flag Status and Clear Register */
+#define REG_TC4_STATUS            REG_ACCESS(RoReg8 , 0x4200300FU) /**< \brief (TC4) Status Register */
+#define REG_TC4_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003010U) /**< \brief (TC4) Count16 Count Register */
+#define REG_TC4_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003010U) /**< \brief (TC4) Count32 Count Register */
+#define REG_TC4_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003010U) /**< \brief (TC4) Count8 Count Register */
 #define REG_TC4_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42003014U) /**< \brief (TC4) Count8 Period Register */
-#define REG_TC4_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42003018U) /**< \brief (TC4) Count16Cc Compare and Capture Register */
-#define REG_TC4_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42003018U) /**< \brief (TC4) Count32Cc Compare and Capture Register */
-#define REG_TC4_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42003018U) /**< \brief (TC4) Count8Cc Compare and Capture Register */
+#define REG_TC4_COUNT16_CC        REG_ACCESS(RwReg16, 0x42003018U) /**< \brief (TC4) Count16 Compare and Capture Register */
+#define REG_TC4_COUNT32_CC        REG_ACCESS(RwReg  , 0x42003018U) /**< \brief (TC4) Count32 Compare and Capture Register */
+#define REG_TC4_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42003018U) /**< \brief (TC4) Count8 Compare and Capture Register */
 /* ========== Register definition for TC5 peripheral ========== */
-#define REG_TC5_CTRLA             REG_ACCESS(RwReg16, 0x42003400U) /**< \brief (TC5) Control Register A */
+#define REG_TC5_CTRLA             REG_ACCESS(RwReg16, 0x42003400U) /**< \brief (TC5) Control A Register */
 #define REG_TC5_READREQ           REG_ACCESS(RwReg16, 0x42003402U) /**< \brief (TC5) Read Request Register */
-#define REG_TC5_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003404U) /**< \brief (TC5) Control Clear Register B */
-#define REG_TC5_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003405U) /**< \brief (TC5) Control Set Register B */
-#define REG_TC5_CTRLC             REG_ACCESS(RwReg8 , 0x42003406U) /**< \brief (TC5) Control Register C */
-#define REG_TC5_DEBUG             REG_ACCESS(RwReg8 , 0x42003408U) /**< \brief (TC5) Control Register C */
+#define REG_TC5_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003404U) /**< \brief (TC5) Control B Clear Register */
+#define REG_TC5_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003405U) /**< \brief (TC5) Control B Set Register */
+#define REG_TC5_CTRLC             REG_ACCESS(RwReg8 , 0x42003406U) /**< \brief (TC5) Control C Register */
+#define REG_TC5_DEBUG             REG_ACCESS(RwReg8 , 0x42003408U) /**< \brief (TC5) Debug Register */
 #define REG_TC5_EVCTRL            REG_ACCESS(RwReg16, 0x4200340AU) /**< \brief (TC5) Event Control Register */
 #define REG_TC5_INTENCLR          REG_ACCESS(RwReg8 , 0x4200340CU) /**< \brief (TC5) Interrupt Enable Clear Register */
 #define REG_TC5_INTENSET          REG_ACCESS(RwReg8 , 0x4200340DU) /**< \brief (TC5) Interrupt Enable Set Register */
-#define REG_TC5_INTFLAG           REG_ACCESS(RwReg8 , 0x4200340EU) /**< \brief (TC5) Interrupt Flag Register */
-#define REG_TC5_STATUS            REG_ACCESS(RwReg8 , 0x4200340FU) /**< \brief (TC5) Status Register */
-#define REG_TC5_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003410U) /**< \brief (TC5) Count16 Count Register 0 */
-#define REG_TC5_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003410U) /**< \brief (TC5) Count32 Count Register 0 */
-#define REG_TC5_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003410U) /**< \brief (TC5) Count8 Count Register 0 */
+#define REG_TC5_INTFLAG           REG_ACCESS(RwReg8 , 0x4200340EU) /**< \brief (TC5) Interrupt Flag Status and Clear Register */
+#define REG_TC5_STATUS            REG_ACCESS(RoReg8 , 0x4200340FU) /**< \brief (TC5) Status Register */
+#define REG_TC5_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003410U) /**< \brief (TC5) Count16 Count Register */
+#define REG_TC5_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003410U) /**< \brief (TC5) Count32 Count Register */
+#define REG_TC5_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003410U) /**< \brief (TC5) Count8 Count Register */
 #define REG_TC5_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42003414U) /**< \brief (TC5) Count8 Period Register */
-#define REG_TC5_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42003418U) /**< \brief (TC5) Count16Cc Compare and Capture Register */
-#define REG_TC5_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42003418U) /**< \brief (TC5) Count32Cc Compare and Capture Register */
-#define REG_TC5_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42003418U) /**< \brief (TC5) Count8Cc Compare and Capture Register */
+#define REG_TC5_COUNT16_CC        REG_ACCESS(RwReg16, 0x42003418U) /**< \brief (TC5) Count16 Compare and Capture Register */
+#define REG_TC5_COUNT32_CC        REG_ACCESS(RwReg  , 0x42003418U) /**< \brief (TC5) Count32 Compare and Capture Register */
+#define REG_TC5_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42003418U) /**< \brief (TC5) Count8 Compare and Capture Register */
 /* ========== Register definition for TC6 peripheral ========== */
-#define REG_TC6_CTRLA             REG_ACCESS(RwReg16, 0x42003800U) /**< \brief (TC6) Control Register A */
+#define REG_TC6_CTRLA             REG_ACCESS(RwReg16, 0x42003800U) /**< \brief (TC6) Control A Register */
 #define REG_TC6_READREQ           REG_ACCESS(RwReg16, 0x42003802U) /**< \brief (TC6) Read Request Register */
-#define REG_TC6_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003804U) /**< \brief (TC6) Control Clear Register B */
-#define REG_TC6_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003805U) /**< \brief (TC6) Control Set Register B */
-#define REG_TC6_CTRLC             REG_ACCESS(RwReg8 , 0x42003806U) /**< \brief (TC6) Control Register C */
-#define REG_TC6_DEBUG             REG_ACCESS(RwReg8 , 0x42003808U) /**< \brief (TC6) Control Register C */
+#define REG_TC6_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003804U) /**< \brief (TC6) Control B Clear Register */
+#define REG_TC6_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003805U) /**< \brief (TC6) Control B Set Register */
+#define REG_TC6_CTRLC             REG_ACCESS(RwReg8 , 0x42003806U) /**< \brief (TC6) Control C Register */
+#define REG_TC6_DEBUG             REG_ACCESS(RwReg8 , 0x42003808U) /**< \brief (TC6) Debug Register */
 #define REG_TC6_EVCTRL            REG_ACCESS(RwReg16, 0x4200380AU) /**< \brief (TC6) Event Control Register */
 #define REG_TC6_INTENCLR          REG_ACCESS(RwReg8 , 0x4200380CU) /**< \brief (TC6) Interrupt Enable Clear Register */
 #define REG_TC6_INTENSET          REG_ACCESS(RwReg8 , 0x4200380DU) /**< \brief (TC6) Interrupt Enable Set Register */
-#define REG_TC6_INTFLAG           REG_ACCESS(RwReg8 , 0x4200380EU) /**< \brief (TC6) Interrupt Flag Register */
-#define REG_TC6_STATUS            REG_ACCESS(RwReg8 , 0x4200380FU) /**< \brief (TC6) Status Register */
-#define REG_TC6_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003810U) /**< \brief (TC6) Count16 Count Register 0 */
-#define REG_TC6_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003810U) /**< \brief (TC6) Count32 Count Register 0 */
-#define REG_TC6_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003810U) /**< \brief (TC6) Count8 Count Register 0 */
+#define REG_TC6_INTFLAG           REG_ACCESS(RwReg8 , 0x4200380EU) /**< \brief (TC6) Interrupt Flag Status and Clear Register */
+#define REG_TC6_STATUS            REG_ACCESS(RoReg8 , 0x4200380FU) /**< \brief (TC6) Status Register */
+#define REG_TC6_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003810U) /**< \brief (TC6) Count16 Count Register */
+#define REG_TC6_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003810U) /**< \brief (TC6) Count32 Count Register */
+#define REG_TC6_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003810U) /**< \brief (TC6) Count8 Count Register */
 #define REG_TC6_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42003814U) /**< \brief (TC6) Count8 Period Register */
-#define REG_TC6_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42003818U) /**< \brief (TC6) Count16Cc Compare and Capture Register */
-#define REG_TC6_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42003818U) /**< \brief (TC6) Count32Cc Compare and Capture Register */
-#define REG_TC6_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42003818U) /**< \brief (TC6) Count8Cc Compare and Capture Register */
+#define REG_TC6_COUNT16_CC        REG_ACCESS(RwReg16, 0x42003818U) /**< \brief (TC6) Count16 Compare and Capture Register */
+#define REG_TC6_COUNT32_CC        REG_ACCESS(RwReg  , 0x42003818U) /**< \brief (TC6) Count32 Compare and Capture Register */
+#define REG_TC6_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42003818U) /**< \brief (TC6) Count8 Compare and Capture Register */
 /* ========== Register definition for TC7 peripheral ========== */
-#define REG_TC7_CTRLA             REG_ACCESS(RwReg16, 0x42003C00U) /**< \brief (TC7) Control Register A */
+#define REG_TC7_CTRLA             REG_ACCESS(RwReg16, 0x42003C00U) /**< \brief (TC7) Control A Register */
 #define REG_TC7_READREQ           REG_ACCESS(RwReg16, 0x42003C02U) /**< \brief (TC7) Read Request Register */
-#define REG_TC7_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003C04U) /**< \brief (TC7) Control Clear Register B */
-#define REG_TC7_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003C05U) /**< \brief (TC7) Control Set Register B */
-#define REG_TC7_CTRLC             REG_ACCESS(RwReg8 , 0x42003C06U) /**< \brief (TC7) Control Register C */
-#define REG_TC7_DEBUG             REG_ACCESS(RwReg8 , 0x42003C08U) /**< \brief (TC7) Control Register C */
+#define REG_TC7_CTRLBCLR          REG_ACCESS(RwReg8 , 0x42003C04U) /**< \brief (TC7) Control B Clear Register */
+#define REG_TC7_CTRLBSET          REG_ACCESS(RwReg8 , 0x42003C05U) /**< \brief (TC7) Control B Set Register */
+#define REG_TC7_CTRLC             REG_ACCESS(RwReg8 , 0x42003C06U) /**< \brief (TC7) Control C Register */
+#define REG_TC7_DEBUG             REG_ACCESS(RwReg8 , 0x42003C08U) /**< \brief (TC7) Debug Register */
 #define REG_TC7_EVCTRL            REG_ACCESS(RwReg16, 0x42003C0AU) /**< \brief (TC7) Event Control Register */
 #define REG_TC7_INTENCLR          REG_ACCESS(RwReg8 , 0x42003C0CU) /**< \brief (TC7) Interrupt Enable Clear Register */
 #define REG_TC7_INTENSET          REG_ACCESS(RwReg8 , 0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set Register */
-#define REG_TC7_INTFLAG           REG_ACCESS(RwReg8 , 0x42003C0EU) /**< \brief (TC7) Interrupt Flag Register */
-#define REG_TC7_STATUS            REG_ACCESS(RwReg8 , 0x42003C0FU) /**< \brief (TC7) Status Register */
-#define REG_TC7_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003C10U) /**< \brief (TC7) Count16 Count Register 0 */
-#define REG_TC7_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003C10U) /**< \brief (TC7) Count32 Count Register 0 */
-#define REG_TC7_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003C10U) /**< \brief (TC7) Count8 Count Register 0 */
+#define REG_TC7_INTFLAG           REG_ACCESS(RwReg8 , 0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear Register */
+#define REG_TC7_STATUS            REG_ACCESS(RoReg8 , 0x42003C0FU) /**< \brief (TC7) Status Register */
+#define REG_TC7_COUNT16_COUNT     REG_ACCESS(RwReg16, 0x42003C10U) /**< \brief (TC7) Count16 Count Register */
+#define REG_TC7_COUNT32_COUNT     REG_ACCESS(RwReg  , 0x42003C10U) /**< \brief (TC7) Count32 Count Register */
+#define REG_TC7_COUNT8_COUNT      REG_ACCESS(RwReg8 , 0x42003C10U) /**< \brief (TC7) Count8 Count Register */
 #define REG_TC7_COUNT8_PER        REG_ACCESS(RwReg8 , 0x42003C14U) /**< \brief (TC7) Count8 Period Register */
-#define REG_TC7_COUNT16_CC_CC     REG_ACCESS(RwReg16, 0x42003C18U) /**< \brief (TC7) Count16Cc Compare and Capture Register */
-#define REG_TC7_COUNT32_CC_CC     REG_ACCESS(RwReg  , 0x42003C18U) /**< \brief (TC7) Count32Cc Compare and Capture Register */
-#define REG_TC7_COUNT8_CC_CC      REG_ACCESS(RwReg8 , 0x42003C18U) /**< \brief (TC7) Count8Cc Compare and Capture Register */
+#define REG_TC7_COUNT16_CC        REG_ACCESS(RwReg16, 0x42003C18U) /**< \brief (TC7) Count16 Compare and Capture Register */
+#define REG_TC7_COUNT32_CC        REG_ACCESS(RwReg  , 0x42003C18U) /**< \brief (TC7) Count32 Compare and Capture Register */
+#define REG_TC7_COUNT8_CC         REG_ACCESS(RwReg8 , 0x42003C18U) /**< \brief (TC7) Count8 Compare and Capture Register */
 /* ========== Register definition for ADC peripheral ========== */
-#define REG_ADC_CTRLA             REG_ACCESS(RwReg8 , 0x42004000U) /**< \brief (ADC) Control register A */
-#define REG_ADC_REFCTRL           REG_ACCESS(RwReg8 , 0x42004001U) /**< \brief (ADC) Reference control register */
-#define REG_ADC_AVGCTRL           REG_ACCESS(RwReg8 , 0x42004002U) /**< \brief (ADC) Average Control register */
-#define REG_ADC_SAMPCTRL          REG_ACCESS(RwReg8 , 0x42004003U) /**< \brief (ADC) Sample Time Control register */
+#define REG_ADC_CTRLA             REG_ACCESS(RwReg8 , 0x42004000U) /**< \brief (ADC) Control Register A */
+#define REG_ADC_REFCTRL           REG_ACCESS(RwReg8 , 0x42004001U) /**< \brief (ADC) Reference Control Register */
+#define REG_ADC_AVGCTRL           REG_ACCESS(RwReg8 , 0x42004002U) /**< \brief (ADC) Average Control Register */
+#define REG_ADC_SAMPCTRL          REG_ACCESS(RwReg8 , 0x42004003U) /**< \brief (ADC) Sample Time Control Register */
 #define REG_ADC_CTRLB             REG_ACCESS(RwReg16, 0x42004004U) /**< \brief (ADC) Control Register B */
-#define REG_ADC_WINCTRL           REG_ACCESS(RwReg8 , 0x42004008U) /**< \brief (ADC) Window Monitor control register */
-#define REG_ADC_SWTRIG            REG_ACCESS(RwReg8 , 0x4200400CU) /**< \brief (ADC) Control register B */
-#define REG_ADC_INPUTCTRL         REG_ACCESS(RwReg  , 0x42004010U) /**< \brief (ADC) Input controlregister */
-#define REG_ADC_EVCTRL            REG_ACCESS(RwReg8 , 0x42004014U) /**< \brief (ADC) Event control register */
-#define REG_ADC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004016U) /**< \brief (ADC) Interrupt Enable Clear register */
-#define REG_ADC_INTENSET          REG_ACCESS(RwReg8 , 0x42004017U) /**< \brief (ADC) Interrupt Enable Set register */
-#define REG_ADC_INTFLAG           REG_ACCESS(RwReg8 , 0x42004018U) /**< \brief (ADC) Interrupt Flag Status and Claer register */
-#define REG_ADC_STATUS            REG_ACCESS(RoReg8 , 0x42004019U) /**< \brief (ADC) Status register */
-#define REG_ADC_RESULT            REG_ACCESS(RoReg16, 0x4200401AU) /**< \brief (ADC) Result register */
-#define REG_ADC_WINLT             REG_ACCESS(RwReg16, 0x4200401CU) /**< \brief (ADC) Window Monitor Lower Threshold register */
-#define REG_ADC_WINUT             REG_ACCESS(RwReg16, 0x42004020U) /**< \brief (ADC) Window Monitor Upper threshold register */
-#define REG_ADC_GAINCORR          REG_ACCESS(RwReg16, 0x42004024U) /**< \brief (ADC) Gain Correction register */
-#define REG_ADC_OFFSETCORR        REG_ACCESS(RwReg16, 0x42004026U) /**< \brief (ADC) Offset Correction register */
-#define REG_ADC_CALIB             REG_ACCESS(RwReg16, 0x42004028U) /**< \brief (ADC) Calibration register */
-#define REG_ADC_DEBUG             REG_ACCESS(RwReg8 , 0x4200402AU) /**< \brief (ADC) Debug register */
-#define REG_ADC_TEST              REG_ACCESS(RwReg8 , 0x4200402BU) /**< \brief (ADC) Test modes register */
-#define REG_ADC_TESTRESULT        REG_ACCESS(RwReg  , 0x4200402CU) /**< \brief (ADC) Test Result register */
-#define REG_ADC_DCFG              REG_ACCESS(RwReg8 , 0x42004030U) /**< \brief (ADC) Device configuration */
+#define REG_ADC_WINCTRL           REG_ACCESS(RwReg8 , 0x42004008U) /**< \brief (ADC) Window Monitor Control Register */
+#define REG_ADC_SWTRIG            REG_ACCESS(RwReg8 , 0x4200400CU) /**< \brief (ADC) Control Register B */
+#define REG_ADC_INPUTCTRL         REG_ACCESS(RwReg  , 0x42004010U) /**< \brief (ADC) Input Control Register */
+#define REG_ADC_EVCTRL            REG_ACCESS(RwReg8 , 0x42004014U) /**< \brief (ADC) Event Control Register */
+#define REG_ADC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004016U) /**< \brief (ADC) Interrupt Enable Clear Register */
+#define REG_ADC_INTENSET          REG_ACCESS(RwReg8 , 0x42004017U) /**< \brief (ADC) Interrupt Enable Set Register */
+#define REG_ADC_INTFLAG           REG_ACCESS(RwReg8 , 0x42004018U) /**< \brief (ADC) Interrupt Flag Status and Clear Register */
+#define REG_ADC_STATUS            REG_ACCESS(RoReg8 , 0x42004019U) /**< \brief (ADC) Status Register */
+#define REG_ADC_RESULT            REG_ACCESS(RoReg16, 0x4200401AU) /**< \brief (ADC) Result Register */
+#define REG_ADC_WINLT             REG_ACCESS(RwReg16, 0x4200401CU) /**< \brief (ADC) Window Monitor Lower Threshold Register */
+#define REG_ADC_WINUT             REG_ACCESS(RwReg16, 0x42004020U) /**< \brief (ADC) Window Monitor Upper Threshold Register */
+#define REG_ADC_GAINCORR          REG_ACCESS(RwReg16, 0x42004024U) /**< \brief (ADC) Gain Correction Register */
+#define REG_ADC_OFFSETCORR        REG_ACCESS(RwReg16, 0x42004026U) /**< \brief (ADC) Offset Correction Register */
+#define REG_ADC_CALIB             REG_ACCESS(RwReg16, 0x42004028U) /**< \brief (ADC) Calibration Register */
+#define REG_ADC_DEBUG             REG_ACCESS(RwReg8 , 0x4200402AU) /**< \brief (ADC) Debug Register */
+#define REG_ADC_TEST              REG_ACCESS(RwReg8 , 0x4200402BU) /**< \brief (ADC) Test Modes Register */
+#define REG_ADC_TESTRESULT        REG_ACCESS(RwReg  , 0x4200402CU) /**< \brief (ADC) Test Result Register */
+#define REG_ADC_DCFG              REG_ACCESS(RwReg8 , 0x42004030U) /**< \brief (ADC) Device Configuration */
 /* ========== Register definition for AC peripheral ========== */
 #define REG_AC_CTRLA              REG_ACCESS(RwReg8 , 0x42004400U) /**< \brief (AC) Control A Register */
 #define REG_AC_CTRLB              REG_ACCESS(WoReg8 , 0x42004401U) /**< \brief (AC) Control B Register */
 #define REG_AC_EVCTRL             REG_ACCESS(RwReg16, 0x42004402U) /**< \brief (AC) Event Control Register */
 #define REG_AC_INTENCLR           REG_ACCESS(RwReg8 , 0x42004404U) /**< \brief (AC) Interrupt Enable Clear Register */
-#define REG_AC_INTENSET           REG_ACCESS(RwReg8 , 0x42004405U) /**< \brief (AC) Interupt Enable Set Register */
-#define REG_AC_INTFLAG            REG_ACCESS(RwReg8 , 0x42004406U) /**< \brief (AC) Interrupt Flag Register */
+#define REG_AC_INTENSET           REG_ACCESS(RwReg8 , 0x42004405U) /**< \brief (AC) Interrupt Enable Set Register */
+#define REG_AC_INTFLAG            REG_ACCESS(RwReg8 , 0x42004406U) /**< \brief (AC) Interrupt Flag Status and Clear Register */
 #define REG_AC_STATUSA            REG_ACCESS(RoReg8 , 0x42004408U) /**< \brief (AC) Status A Register */
 #define REG_AC_STATUSB            REG_ACCESS(RoReg8 , 0x42004409U) /**< \brief (AC) Status B Register */
 #define REG_AC_STATUSC            REG_ACCESS(RoReg8 , 0x4200440AU) /**< \brief (AC) Status C Register */
 #define REG_AC_WINCTRL            REG_ACCESS(RwReg8 , 0x4200440CU) /**< \brief (AC) Window Control Register */
-#define REG_AC_COMPCTRL0          REG_ACCESS(RwReg  , 0x42004410U) /**< \brief (AC) Comparator Control Register 0 */
-#define REG_AC_COMPCTRL1          REG_ACCESS(RwReg  , 0x42004414U) /**< \brief (AC) Comparator Control Register 1 */
-#define REG_AC_SCALER0            REG_ACCESS(RwReg8 , 0x42004420U) /**< \brief (AC) Scaler Register 0 */
-#define REG_AC_SCALER1            REG_ACCESS(RwReg8 , 0x42004421U) /**< \brief (AC) Scaler Register 1 */
+#define REG_AC_COMPCTRL           REG_ACCESS(RwReg  , 0x42004410U) /**< \brief (AC) Comparator Control Register */
+#define REG_AC_SCALER             REG_ACCESS(RwReg8 , 0x42004420U) /**< \brief (AC) Scaler Register */
 /* ========== Register definition for DAC peripheral ========== */
 #define REG_DAC_CTRLA             REG_ACCESS(RwReg8 , 0x42004800U) /**< \brief (DAC) Control Register A */
 #define REG_DAC_CTRLB             REG_ACCESS(RwReg8 , 0x42004801U) /**< \brief (DAC) Control Register B */
 #define REG_DAC_EVCTRL            REG_ACCESS(RwReg8 , 0x42004802U) /**< \brief (DAC) Event Control Register */
 #define REG_DAC_TEST              REG_ACCESS(RwReg8 , 0x42004803U) /**< \brief (DAC) Test Register */
-#define REG_DAC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004804U) /**< \brief (DAC) Interrupt Enable Clear Regiser */
+#define REG_DAC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004804U) /**< \brief (DAC) Interrupt Enable Clear Register */
 #define REG_DAC_INTENSET          REG_ACCESS(RwReg8 , 0x42004805U) /**< \brief (DAC) Interrupt Enable Set Register */
 #define REG_DAC_INTFLAG           REG_ACCESS(RwReg8 , 0x42004806U) /**< \brief (DAC) Interrupt Flag Status and Clear Register */
 #define REG_DAC_STATUS            REG_ACCESS(RoReg8 , 0x42004807U) /**< \brief (DAC) Status Register */
@@ -7307,15 +7788,15 @@ typedef struct {
 #define REG_PTC_STATUS            REG_ACCESS(RoReg8 , 0x42004C01U) /**< \brief (PTC) Status Register */
 #define REG_PTC_CTRLB             REG_ACCESS(RwReg8 , 0x42004C04U) /**< \brief (PTC) Control Register B */
 #define REG_PTC_EVCTRL            REG_ACCESS(RwReg8 , 0x42004C05U) /**< \brief (PTC) Event Control Register */
-#define REG_PTC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004C08U) /**< \brief (PTC) Interrupt Enable Clear */
-#define REG_PTC_INTENSET          REG_ACCESS(RwReg8 , 0x42004C09U) /**< \brief (PTC) Interrupt Enable Set */
-#define REG_PTC_INTFLAG           REG_ACCESS(RwReg8 , 0x42004C0AU) /**< \brief (PTC) Interrupt Flag */
+#define REG_PTC_INTENCLR          REG_ACCESS(RwReg8 , 0x42004C08U) /**< \brief (PTC) Interrupt Enable Clear Register */
+#define REG_PTC_INTENSET          REG_ACCESS(RwReg8 , 0x42004C09U) /**< \brief (PTC) Interrupt Enable Set Register */
+#define REG_PTC_INTFLAG           REG_ACCESS(RwReg8 , 0x42004C0AU) /**< \brief (PTC) Interrupt Flag Status and Clear Register */
 #define REG_PTC_CTSCTRLA          REG_ACCESS(RwReg8 , 0x42004C0CU) /**< \brief (PTC) CTS Control Register A */
 #define REG_PTC_CTSCTRLC          REG_ACCESS(RwReg8 , 0x42004C0DU) /**< \brief (PTC) CTS Control Register C */
-#define REG_PTC_YSEL              REG_ACCESS(RwReg16, 0x42004C10U) /**< \brief (PTC) Y Line Select */
-#define REG_PTC_XSEL              REG_ACCESS(RwReg16, 0x42004C12U) /**< \brief (PTC) X Line Select */
-#define REG_PTC_YEN               REG_ACCESS(RwReg16, 0x42004C14U) /**< \brief (PTC) Y Line Enable */
-#define REG_PTC_XEN               REG_ACCESS(RwReg16, 0x42004C16U) /**< \brief (PTC) X Line Enable */
+#define REG_PTC_YSEL              REG_ACCESS(RwReg16, 0x42004C10U) /**< \brief (PTC) Y Line Select Register */
+#define REG_PTC_XSEL              REG_ACCESS(RwReg16, 0x42004C12U) /**< \brief (PTC) X Line Select Register */
+#define REG_PTC_YEN               REG_ACCESS(RwReg16, 0x42004C14U) /**< \brief (PTC) Y Line Enable Register */
+#define REG_PTC_XEN               REG_ACCESS(RwReg16, 0x42004C16U) /**< \brief (PTC) X Line Enable Register */
 #define REG_PTC_CCCAL             REG_ACCESS(RwReg16, 0x42004C18U) /**< \brief (PTC) CTS Compensation Capacitor Calibration Register */
 #define REG_PTC_CICAL             REG_ACCESS(RwReg8 , 0x42004C1AU) /**< \brief (PTC) CTS Integrator Capacitor Calibration Register */
 #define REG_PTC_CTSRS             REG_ACCESS(RwReg8 , 0x42004C1BU) /**< \brief (PTC) CTS Resistor Selection Register */
@@ -7324,14 +7805,13 @@ typedef struct {
 #define REG_PTC_WINCCTRL          REG_ACCESS(RwReg8 , 0x42004C21U) /**< \brief (PTC) Window Comparator Control Register */
 #define REG_PTC_WCHT              REG_ACCESS(RwReg16, 0x42004C24U) /**< \brief (PTC) Window Comparator High Threshold Register */
 #define REG_PTC_WCLT              REG_ACCESS(RwReg16, 0x42004C26U) /**< \brief (PTC) Window Comparator Low Threshold Register */
-/* ========== Register definition for ATW peripheral ========== */
 
 /*@}*/
 
 /* ************************************************************************** */
-/**  PERIPHERAL ID DEFINITIONS FOR SAM0D4_REVA */
+/**  PERIPHERAL ID DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_id Peripheral Ids Definitions */
+/** \addtogroup SAM0+D_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -7346,7 +7826,7 @@ typedef struct {
 // Peripheral instances on HPB1 bridge
 #define ID_PAC1        32 /**< \brief Peripheral Access Controller PAC (PAC1) */
 #define ID_DSU         33 /**< \brief Device Service Unit (DSU) */
-#define ID_NVMCTRL     34 /**< \brief NVM Controller (NVMCTRL) */
+#define ID_NVMCTRL     34 /**< \brief Non-Volatile Memory Controller (NVMCTRL) */
 #define ID_PORT        35 /**< \brief Port Module (PORT) */
 #define ID_HMATRIX     36 /**< \brief HSB Matrix (HMATRIX) */
 
@@ -7371,146 +7851,140 @@ typedef struct {
 #define ID_AC          81 /**< \brief Analog Comparators (AC) */
 #define ID_DAC         82 /**< \brief Digital Analog Converter (DAC) */
 #define ID_PTC         83 /**< \brief Peripheral Touch Controller (PTC) */
-#define ID_ATW         84 /**< \brief Analog Test Wire Controller (ATW) */
 
 /*@}*/
 
 /* ************************************************************************** */
-/**  BASE ADDRESS DEFINITIONS FOR SAM0D4_REVA */
+/**  BASE ADDRESS DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_base Peripheral Base Address Definitions */
+/** \addtogroup SAM0+D_base Peripheral Base Address Definitions */
 /*@{*/
 
 #define AC_ADDR           (0x42004400U)                  /**< \brief (AC) APB Base Address */
-#define AC                CAST(Ac,        AC_ADDR)
+#define AC                CAST(Ac,        AC_ADDR)      
 #define AC_INST_NUM       1                              /**< \brief (AC) Number of instances */
 #define AC_INSTS          { AC }                         /**< \brief (AC) Instances List */
 
 #define ADC_ADDR          (0x42004000U)                  /**< \brief (ADC) APB Base Address */
-#define ADC               CAST(Adc,       ADC_ADDR)
+#define ADC               CAST(Adc,       ADC_ADDR)     
 #define ADC_INST_NUM      1                              /**< \brief (ADC) Number of instances */
 #define ADC_INSTS         { ADC }                        /**< \brief (ADC) Instances List */
 
-#define ATW_ADDR          (0x42005000U)                  /**< \brief (ATW) APB Base Address */
-#define ATW               CAST(Atw,       ATW_ADDR)
-#define ATW_INST_NUM      1                              /**< \brief (ATW) Number of instances */
-#define ATW_INSTS         { ATW }                        /**< \brief (ATW) Instances List */
-
 #define DAC_ADDR          (0x42004800U)                  /**< \brief (DAC) APB Base Address */
-#define DAC               CAST(Dac,       DAC_ADDR)
+#define DAC               CAST(Dac,       DAC_ADDR)     
 #define DAC_INST_NUM      1                              /**< \brief (DAC) Number of instances */
 #define DAC_INSTS         { DAC }                        /**< \brief (DAC) Instances List */
 
 #define DSU_ADDR          (0x41002000U)                  /**< \brief (DSU) APB Base Address */
-#define DSU               CAST(Dsu,       DSU_ADDR)
+#define DSU               CAST(Dsu,       DSU_ADDR)     
 #define DSU_INST_NUM      1                              /**< \brief (DSU) Number of instances */
 #define DSU_INSTS         { DSU }                        /**< \brief (DSU) Instances List */
 
 #define EIC_ADDR          (0x40001800U)                  /**< \brief (EIC) APB Base Address */
-#define EIC               CAST(Eic,       EIC_ADDR)
+#define EIC               CAST(Eic,       EIC_ADDR)     
 #define EIC_INST_NUM      1                              /**< \brief (EIC) Number of instances */
 #define EIC_INSTS         { EIC }                        /**< \brief (EIC) Instances List */
 
 #define EVSYS_ADDR        (0x42000400U)                  /**< \brief (EVSYS) APB Base Address */
-#define EVSYS             CAST(Evsys,     EVSYS_ADDR)
+#define EVSYS             CAST(Evsys,     EVSYS_ADDR)   
 #define EVSYS_INST_NUM    1                              /**< \brief (EVSYS) Number of instances */
 #define EVSYS_INSTS       { EVSYS }                      /**< \brief (EVSYS) Instances List */
 
 #define GCLK_ADDR         (0x40000C00U)                  /**< \brief (GCLK) APB Base Address */
-#define GCLK              CAST(Gclk,      GCLK_ADDR)
+#define GCLK              CAST(Gclk,      GCLK_ADDR)    
 #define GCLK_INST_NUM     1                              /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                       /**< \brief (GCLK) Instances List */
 
 #define HMATRIX_ADDR      (0x41004800U)                  /**< \brief (HMATRIX) APB Base Address */
-#define HMATRIX           CAST(Hmatrixb,  HMATRIX_ADDR)
+#define HMATRIX           CAST(Hmatrixb,  HMATRIX_ADDR) 
 #define HMATRIXB_INST_NUM 1                              /**< \brief (HMATRIXB) Number of instances */
 #define HMATRIXB_INSTS    { HMATRIX }                    /**< \brief (HMATRIXB) Instances List */
 
 #define NVMCTRL_ADDR      (0x41004000U)                  /**< \brief (NVMCTRL) APB Base Address */
-#define NVMCTRL           CAST(Nvmctrl,   NVMCTRL_ADDR)
+#define NVMCTRL           CAST(Nvmctrl,   NVMCTRL_ADDR) 
 #define NVMCTRL_INST_NUM  1                              /**< \brief (NVMCTRL) Number of instances */
 #define NVMCTRL_INSTS     { NVMCTRL }                    /**< \brief (NVMCTRL) Instances List */
 
 #define PAC0_ADDR         (0x40000000U)                  /**< \brief (PAC0) APB Base Address */
-#define PAC0              CAST(Pac,       PAC0_ADDR)
+#define PAC0              CAST(Pac,       PAC0_ADDR)    
 #define PAC1_ADDR         (0x41000000U)                  /**< \brief (PAC1) APB Base Address */
-#define PAC1              CAST(Pac,       PAC1_ADDR)
+#define PAC1              CAST(Pac,       PAC1_ADDR)    
 #define PAC2_ADDR         (0x42000000U)                  /**< \brief (PAC2) APB Base Address */
-#define PAC2              CAST(Pac,       PAC2_ADDR)
+#define PAC2              CAST(Pac,       PAC2_ADDR)    
 #define PAC_INST_NUM      3                              /**< \brief (PAC) Number of instances */
 #define PAC_INSTS         { PAC0, PAC1, PAC2 }           /**< \brief (PAC) Instances List */
 
 #define PM_ADDR           (0x40000400U)                  /**< \brief (PM) APB Base Address */
-#define PM                CAST(Pm,        PM_ADDR)
+#define PM                CAST(Pm,        PM_ADDR)      
 #define PM_INST_NUM       1                              /**< \brief (PM) Number of instances */
 #define PM_INSTS          { PM }                         /**< \brief (PM) Instances List */
 
 #define PORT_ADDR         (0x41004400U)                  /**< \brief (PORT) APB Base Address */
-#define PORT              CAST(Port,      PORT_ADDR)
+#define PORT              CAST(Port,      PORT_ADDR)    
 #define PORT_IOBUS_ADDR   (0x60000000U)                  /**< \brief (PORT) IOBUS Base Address */
 #define PORT_INST_NUM     1                              /**< \brief (PORT) Number of instances */
 #define PORT_INSTS        { PORT }                       /**< \brief (PORT) Instances List */
 
 #define PTC_ADDR          (0x42004C00U)                  /**< \brief (PTC) APB Base Address */
-#define PTC               CAST(Ptc,       PTC_ADDR)
+#define PTC               CAST(Ptc,       PTC_ADDR)     
 #define PTC_INST_NUM      1                              /**< \brief (PTC) Number of instances */
 #define PTC_INSTS         { PTC }                        /**< \brief (PTC) Instances List */
 
 #define RTC_ADDR          (0x40001400U)                  /**< \brief (RTC) APB Base Address */
-#define RTC               CAST(Rtc,       RTC_ADDR)
+#define RTC               CAST(Rtc,       RTC_ADDR)     
 #define RTC_INST_NUM      1                              /**< \brief (RTC) Number of instances */
 #define RTC_INSTS         { RTC }                        /**< \brief (RTC) Instances List */
 
 #define SERCOM0_ADDR      (0x42000800U)                  /**< \brief (SERCOM0) APB Base Address */
-#define SERCOM0           CAST(Sercom,    SERCOM0_ADDR)
+#define SERCOM0           CAST(Sercom,    SERCOM0_ADDR) 
 #define SERCOM1_ADDR      (0x42000C00U)                  /**< \brief (SERCOM1) APB Base Address */
-#define SERCOM1           CAST(Sercom,    SERCOM1_ADDR)
+#define SERCOM1           CAST(Sercom,    SERCOM1_ADDR) 
 #define SERCOM2_ADDR      (0x42001000U)                  /**< \brief (SERCOM2) APB Base Address */
-#define SERCOM2           CAST(Sercom,    SERCOM2_ADDR)
+#define SERCOM2           CAST(Sercom,    SERCOM2_ADDR) 
 #define SERCOM3_ADDR      (0x42001400U)                  /**< \brief (SERCOM3) APB Base Address */
-#define SERCOM3           CAST(Sercom,    SERCOM3_ADDR)
+#define SERCOM3           CAST(Sercom,    SERCOM3_ADDR) 
 #define SERCOM4_ADDR      (0x42001800U)                  /**< \brief (SERCOM4) APB Base Address */
-#define SERCOM4           CAST(Sercom,    SERCOM4_ADDR)
+#define SERCOM4           CAST(Sercom,    SERCOM4_ADDR) 
 #define SERCOM5_ADDR      (0x42001C00U)                  /**< \brief (SERCOM5) APB Base Address */
-#define SERCOM5           CAST(Sercom,    SERCOM5_ADDR)
+#define SERCOM5           CAST(Sercom,    SERCOM5_ADDR) 
 #define SERCOM_INST_NUM   6                              /**< \brief (SERCOM) Number of instances */
 #define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5 } /**< \brief (SERCOM) Instances List */
 
 #define SYSCTRL_ADDR      (0x40000800U)                  /**< \brief (SYSCTRL) APB Base Address */
-#define SYSCTRL           CAST(Sysctrl,   SYSCTRL_ADDR)
+#define SYSCTRL           CAST(Sysctrl,   SYSCTRL_ADDR) 
 #define SYSCTRL_INST_NUM  1                              /**< \brief (SYSCTRL) Number of instances */
 #define SYSCTRL_INSTS     { SYSCTRL }                    /**< \brief (SYSCTRL) Instances List */
 
 #define TC0_ADDR          (0x42002000U)                  /**< \brief (TC0) APB Base Address */
-#define TC0               CAST(Tc,        TC0_ADDR)
+#define TC0               CAST(Tc,        TC0_ADDR)     
 #define TC1_ADDR          (0x42002400U)                  /**< \brief (TC1) APB Base Address */
-#define TC1               CAST(Tc,        TC1_ADDR)
+#define TC1               CAST(Tc,        TC1_ADDR)     
 #define TC2_ADDR          (0x42002800U)                  /**< \brief (TC2) APB Base Address */
-#define TC2               CAST(Tc,        TC2_ADDR)
+#define TC2               CAST(Tc,        TC2_ADDR)     
 #define TC3_ADDR          (0x42002C00U)                  /**< \brief (TC3) APB Base Address */
-#define TC3               CAST(Tc,        TC3_ADDR)
+#define TC3               CAST(Tc,        TC3_ADDR)     
 #define TC4_ADDR          (0x42003000U)                  /**< \brief (TC4) APB Base Address */
-#define TC4               CAST(Tc,        TC4_ADDR)
+#define TC4               CAST(Tc,        TC4_ADDR)     
 #define TC5_ADDR          (0x42003400U)                  /**< \brief (TC5) APB Base Address */
-#define TC5               CAST(Tc,        TC5_ADDR)
+#define TC5               CAST(Tc,        TC5_ADDR)     
 #define TC6_ADDR          (0x42003800U)                  /**< \brief (TC6) APB Base Address */
-#define TC6               CAST(Tc,        TC6_ADDR)
+#define TC6               CAST(Tc,        TC6_ADDR)     
 #define TC7_ADDR          (0x42003C00U)                  /**< \brief (TC7) APB Base Address */
-#define TC7               CAST(Tc,        TC7_ADDR)
+#define TC7               CAST(Tc,        TC7_ADDR)     
 #define TC_INST_NUM       8                              /**< \brief (TC) Number of instances */
 #define TC_INSTS          { TC0, TC1, TC2, TC3, TC4, TC5, TC6, TC7 } /**< \brief (TC) Instances List */
 
 #define WDT_ADDR          (0x40001000U)                  /**< \brief (WDT) APB Base Address */
-#define WDT               CAST(Wdt,       WDT_ADDR)
+#define WDT               CAST(Wdt,       WDT_ADDR)     
 #define WDT_INST_NUM      1                              /**< \brief (WDT) Number of instances */
 #define WDT_INSTS         { WDT }                        /**< \brief (WDT) Instances List */
 
 /*@}*/
 
 /* ************************************************************************** */
-/**  INSTANCE PARAMETERS DEFINITIONS FOR SAM0D4_REVA */
+/**  INSTANCE PARAMETERS DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_parameters Instance Parameters Definitions */
+/** \addtogroup SAM0+D_parameters Instance Parameters Definitions */
 /*@{*/
 
 /* ========== Instance parameters for AC peripheral ========== */
@@ -7521,10 +7995,6 @@ typedef struct {
 /* ========== Instance parameters for ADC peripheral ========== */
 #define ADC_ADC_RESULT_MSB          15
 #define ADC_GCLK_ID                 23
-/* ========== Instance parameters for ATW peripheral ========== */
-#define ATW_GROUPS                  2
-#define ATW_PINS                    57
-#define ATW_SPACERS                 2
 /* ========== Instance parameters for DAC peripheral ========== */
 #define DAC_GCLK_ID                 26
 /* ========== Instance parameters for DSU peripheral ========== */
@@ -7687,6 +8157,7 @@ typedef struct {
 #define PM_CTRL_MCSEL_XOSC          1
 #define PM_PM_CLK_AHB_PEVC          0
 #define PM_PM_CLK_APB_NUM           2
+#define PM_                         
 /* ========== Instance parameters for PORT peripheral ========== */
 #define PORT_BITS                   60
 #define PORT_DIR_DEFAULT_VAL        { 0x00000000, 0x00000000 }
@@ -7783,62 +8254,62 @@ typedef struct {
 #define SYSCTRL_XOSC_VERSION        0x100
 #define SYSCTRL_XOSC32K_VERSION     0x100
 /* ========== Instance parameters for TC0 peripheral ========== */
+#define TC0_CC8_NUM                 2
+#define TC0_CC16_NUM                2
+#define TC0_CC32_NUM                2
 #define TC0_GCLK_ID                 19
-#define TC0_TC_CC8_NUM              2
-#define TC0_TC_CC16_NUM             2
-#define TC0_TC_CC32_NUM             2
-#define TC0_TC_OW_NUM               2
+#define TC0_OW_NUM                  2
 /* ========== Instance parameters for TC1 peripheral ========== */
+#define TC1_CC8_NUM                 2
+#define TC1_CC16_NUM                2
+#define TC1_CC32_NUM                2
 #define TC1_GCLK_ID                 19
-#define TC1_TC_CC8_NUM              2
-#define TC1_TC_CC16_NUM             2
-#define TC1_TC_CC32_NUM             2
-#define TC1_TC_OW_NUM               2
+#define TC1_OW_NUM                  2
 /* ========== Instance parameters for TC2 peripheral ========== */
+#define TC2_CC8_NUM                 2
+#define TC2_CC16_NUM                2
+#define TC2_CC32_NUM                2
 #define TC2_GCLK_ID                 20
-#define TC2_TC_CC8_NUM              2
-#define TC2_TC_CC16_NUM             2
-#define TC2_TC_CC32_NUM             2
-#define TC2_TC_OW_NUM               2
+#define TC2_OW_NUM                  2
 /* ========== Instance parameters for TC3 peripheral ========== */
+#define TC3_CC8_NUM                 2
+#define TC3_CC16_NUM                2
+#define TC3_CC32_NUM                2
 #define TC3_GCLK_ID                 20
-#define TC3_TC_CC8_NUM              2
-#define TC3_TC_CC16_NUM             2
-#define TC3_TC_CC32_NUM             2
-#define TC3_TC_OW_NUM               2
+#define TC3_OW_NUM                  2
 /* ========== Instance parameters for TC4 peripheral ========== */
+#define TC4_CC8_NUM                 2
+#define TC4_CC16_NUM                2
+#define TC4_CC32_NUM                2
 #define TC4_GCLK_ID                 21
-#define TC4_TC_CC8_NUM              2
-#define TC4_TC_CC16_NUM             2
-#define TC4_TC_CC32_NUM             2
-#define TC4_TC_OW_NUM               2
+#define TC4_OW_NUM                  2
 /* ========== Instance parameters for TC5 peripheral ========== */
+#define TC5_CC8_NUM                 2
+#define TC5_CC16_NUM                2
+#define TC5_CC32_NUM                2
 #define TC5_GCLK_ID                 21
-#define TC5_TC_CC8_NUM              2
-#define TC5_TC_CC16_NUM             2
-#define TC5_TC_CC32_NUM             2
-#define TC5_TC_OW_NUM               2
+#define TC5_OW_NUM                  2
 /* ========== Instance parameters for TC6 peripheral ========== */
+#define TC6_CC8_NUM                 2
+#define TC6_CC16_NUM                2
+#define TC6_CC32_NUM                2
 #define TC6_GCLK_ID                 22
-#define TC6_TC_CC8_NUM              2
-#define TC6_TC_CC16_NUM             2
-#define TC6_TC_CC32_NUM             2
-#define TC6_TC_OW_NUM               2
+#define TC6_OW_NUM                  2
 /* ========== Instance parameters for TC7 peripheral ========== */
+#define TC7_CC8_NUM                 2
+#define TC7_CC16_NUM                2
+#define TC7_CC32_NUM                2
 #define TC7_GCLK_ID                 22
-#define TC7_TC_CC8_NUM              2
-#define TC7_TC_CC16_NUM             2
-#define TC7_TC_CC32_NUM             2
-#define TC7_TC_OW_NUM               2
+#define TC7_OW_NUM                  2
 /* ========== Instance parameters for WDT peripheral ========== */
 #define WDT_GCLK_ID                 1
 
 /*@}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAM0D4_REVA */
+/**  PORT DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
-/** \addtogroup SAM0D4_REVA_port PORT Definitions */
+/** \addtogroup SAM0+D_port PORT Definitions */
 /*@{*/
 
 #define PIN_PA00                           0  /**< \brief Pin Number for PA00 */
@@ -8646,14 +9117,42 @@ typedef struct {
 /*@}*/
 
 /* ************************************************************************** */
-/**  MEMORY MAPPING DEFINITIONS FOR SAM0D4_REVA */
+/**  MEMORY MAPPING DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
 
-#if defined __SAM0D4_REVA__
+#if defined __SAM0+D64G3__
+  #define FLASH_SIZE          0x10000 /* 64 kB */
+  #define FLASH_PAGE_SIZE     64
+  #define FLASH_NB_OF_PAGES   1024
+  #define FLASH_USER_PAGE_SIZE 64
+  #define HRAMC0_SIZE         0x8000 /* 32 kB */
+
+#elif defined __SAM0+D64G4__
+  #define FLASH_SIZE          0x10000 /* 64 kB */
+  #define FLASH_PAGE_SIZE     64
+  #define FLASH_NB_OF_PAGES   1024
+  #define FLASH_USER_PAGE_SIZE 64
+  #define HRAMC0_SIZE         0x8000 /* 32 kB */
+
+#elif defined __SAM0+D128G3__
+  #define FLASH_SIZE          0x20000 /* 128 kB */
+  #define FLASH_PAGE_SIZE     64
+  #define FLASH_NB_OF_PAGES   2048
+  #define FLASH_USER_PAGE_SIZE 64
+  #define HRAMC0_SIZE         0x8000 /* 32 kB */
+
+#elif defined __SAM0+D128G4__
+  #define FLASH_SIZE          0x20000 /* 128 kB */
+  #define FLASH_PAGE_SIZE     64
+  #define FLASH_NB_OF_PAGES   2048
+  #define FLASH_USER_PAGE_SIZE 64
+  #define HRAMC0_SIZE         0x8000 /* 32 kB */
+
+#elif defined __SAM0+D256G3__
   #define FLASH_SIZE          0x40000 /* 256 kB */
-  #define FLASH_PAGE_SIZE     512
-  #define FLASH_NB_OF_PAGES   512
-  #define FLASH_USER_PAGE_SIZE 512
+  #define FLASH_PAGE_SIZE     64
+  #define FLASH_NB_OF_PAGES   4096
+  #define FLASH_USER_PAGE_SIZE 64
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
 #else
   #error Library does not support the specified device.
@@ -8669,4 +9168,4 @@ typedef struct {
 
 /*@}*/
 
-#endif /* SAM0D4_REVA_H */
+#endif /* SAM0+D_H */
