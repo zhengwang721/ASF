@@ -298,7 +298,7 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		SERCOM_t *hw_dev,struct usart_conf *config);
+		const SERCOM_t *const hw_dev, const struct usart_conf *const config);
 
 /**
  * \brief Enable the module

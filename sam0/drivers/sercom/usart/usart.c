@@ -38,10 +38,10 @@
  * \asf_license_stop
  *
  */
-#include <usart.h>
+#include "usart.h"
 
 #ifdef USART_ASYNC
-#  include <usart_async.h>
+#  include "usart_async.h"
 #endif
 
 enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
@@ -49,7 +49,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 {
 	uint16_t baud_val = 0;
 	uint32_t usart_freq;
-	enum status_code status_code = 0;
+	enum status_code status_code = STATUS_OK;
 
 	/* Temporary registers */
 	uint32_t ctrla = 0;
@@ -59,7 +59,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Set SERCOM gclk generator according to config */
-	status_code = sercom_set_gclk_generator(config->generator_source,
+	status_code = _sercom_set_gclk_generator(config->generator_source,
 		config->run_in_standby, false);
 	if (status_code != STATUS_OK) {
 		return status_code;
@@ -74,7 +74,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	case USART_SAMPLE_MODE_SYNC_MASTER:
 		/* Calculate baud value */
 		//usart_freq = clock_gclk_ch_get_hz(SERCOM_GCLK_ID);
-		status_code = sercom_get_sync_baud_val(config->baudrate, usart_freq, &baud_val);
+		status_code = _sercom_get_sync_baud_val(config->baudrate, usart_freq, &baud_val);
 
 	case USART_SAMPLE_MODE_SYNC_SLAVE:
 		break;
@@ -82,11 +82,11 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	case USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK:
 		/* Calculate baud value */
 		//usart_freq = clock_gclk_ch_get_hz(SERCOM_GCLK_ID);
-		status_code = sercom_get_async_baud_val(config->baudrate, usart_freq, &baud_val);
+		status_code = _sercom_get_async_baud_val(config->baudrate, usart_freq, &baud_val);
 
 	case USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK:
 		/* Calculate baud value */
-		status_code = sercom_get_async_baud_val(config->baudrate, config->ext_clock_freq, &baud_val);
+		status_code = _sercom_get_async_baud_val(config->baudrate, config->ext_clock_freq, &baud_val);
 
 	default:
 		Assert(false);
@@ -106,7 +106,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	ctrla |= config->sample_mode;
 
 	/* Write configuration to CTRLA */
-	usart_module->CTRLA |= ctrla;
+	usart_module->CTRLA = ctrla;
 
 	/* Set stopbits and character size */
 	ctrlb = config->stopbits | config->char_size;
@@ -134,15 +134,15 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * \param dev_inst Pointer to USART device
  * \param config Pointer to configuration struct
  */
-enum status_code usart_init(struct usart_dev_inst *dev_inst,
-		SERCOM_t *hw_dev, struct usart_conf *config)
+enum status_code usart_init(struct usart_dev_inst *const dev_inst,
+		const SERCOM_t *const hw_dev, const struct usart_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(hw_dev);
 	Assert(config);
 
-	enum status_code status_code = 0;
+	enum status_code status_code = STATUS_OK;
 
 	/* Assign module pointer to software instance struct */
 	dev_inst->hw_dev = hw_dev;
@@ -152,6 +152,7 @@ enum status_code usart_init(struct usart_dev_inst *dev_inst,
 
 	if (usart_module->CTRLA & SERCOM_USART_RESET_bm) {
 		/* Reset is ongoing. Abort. */
+		return STATUS_ERR_BUSY;
 	}
 
 	_usart_wait_for_sync(dev_inst);
