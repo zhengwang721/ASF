@@ -4,22 +4,9 @@ from asf.toolchain.avrgcc import AVR32GCCProject
 from asf.database import *
 
 class ARMGCCProject(AVR32GCCProject):
-	"""
-	Abstract class with common functions for the generators for the various
-	sub-architectures of ARM-GCC, and a method for finding the correct
-	generator class for a given project.
-
-	A sub class for each device family should be created and based on
-	this class.
-
-	For example, ARM34GCCProject is the parent class for Coretex-M3 and
-	Coretex-M4 ARM generators and ARM0GCCProject for Coretex-M0 generators.
-
-	The generators must have an attribute named "supported_mcus", which is a
-	list of supported MCUs and MCU groups.
-	"""
-
 	toolchain = "armgcc"
+	linker_id = "sam.utils.linker_scripts"
+	macro_id = "sam.utils.macro_files"
 	arch_prefix = "cortex"
 	config_stack = "armgcc.stack_size"
 	config_heap = "armgcc.heap_size"
@@ -31,34 +18,6 @@ class ARMGCCProject(AVR32GCCProject):
 	optlevel_default = 'low'
 	# Name of the arch-specific makefile to look for
 	makefile_name = 'Makefile.sam.in'
-
-	def __init__(self, project, db, runtime):
-		if type(self) == ARMGCCProject:
-			raise Exception("Abstract class %s instantiated" % self.__class__.__name__)
-		else:
-			super(ARMGCCProject, self).__init__(project, db, runtime)
-			
-	@staticmethod
-	def get_generator(project, db, runtime):
-		# Find the project MCU search list
-		mcu = project.mcu
-		search_list = mcu.get_group_map()
-		
-		# Search recursively in subclasses for generator with support
-		# for current MCU, and return an instance if it was found
-		for childclass in ARMGCCProject.__subclasses__():
-			# Check mcu support of child class if it is defined
-			try:
-				supported_mcus = getattr(childclass, 'supported_mcus')
-			except AttributeError:
-				pass
-			else:
-				for term in search_list:
-					if term in supported_mcus:
-						return childclass(project, db, runtime)
-
-		# No class found
-		raise GeneratorError("Could not find ARMGCC project generator with support for device `%s'" % mcu.name)
 
 	def convert_path_for_makefile(self, path):
 		return path.replace(os.sep, "/")
@@ -142,9 +101,6 @@ class ARMGCCProject(AVR32GCCProject):
 		if ASF["$ASF_ARCH$"] is None:
 			raise ConfigError("Could not determine architecture of device `%s' from map `%s'" % (ASF["$ASF_MCU$"], self.map_id))
 
-		# Handle architecture top level arch directory name
-		ASF["$ASF_ARCH_DIRECTORY$"] = self.arch_directory
-
 		# Handle linker configuration
 		startlibs_flags = self._generate_startlibs_config(config)
 		startuplabel_flags = self._generate_startup_label(config)
@@ -162,6 +118,7 @@ class ARMGCCProject(AVR32GCCProject):
 		ASF['$ASF_LDFLAGS$'] += asf_ldflags.strip()
 
 		# self.project.filelist.add("sam/utils/make/Makefile.in")
+<<<<<<< HEAD
 
 class ARM34GCCProject(ARMGCCProject):
 	supported_mcus = [
@@ -181,3 +138,5 @@ class ARM0GCCProject(ARMGCCProject):
 	arch_directory = "sam0"
 	linker_id = "sam0.utils.linker_scripts"
 	macro_id = "sam0.utils.macro_files"
+=======
+>>>>>>> origin/npi
