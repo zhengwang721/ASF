@@ -45,6 +45,7 @@
 #include <compiler.h>
 #include <clock.h>
 #include <gclk.h>
+#include "sercom_interrupts.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,17 +78,15 @@ extern "C" {
  * @{
  */
 
-#include <sercom_interrupts.h>
-
-enum status_code sercom_set_gclk_generator(
+enum status_code _sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
 		bool force_change);
 
-enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);
 
-enum status_code sercom_get_async_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
 
 /** @} */

@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <sercom.h>
+#include "sercom.h"
 
 /**
  * \internal Configuration structure to save current gclk status.
@@ -57,29 +57,29 @@ static struct _sercom_gclk_conf *sercom_gclk_config;
 /**
  * \brief Calculate synchronous baudrate value (SPI/UART)
  */
-enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval)
 {
-	uint16_t ret = 0;
+	uint16_t return_value = 0;
 
 	if (baudrate > (external_clock / 2)) {
 		// assert error, outside valid range
 	}
 
-	//ret = (external_clock / (2 * baudrate)) - 1;
+	//return_value = (external_clock / (2 * baudrate)) - 1;
 
-	if (ret > 0xFF) {
+	if (return_value > 0xFF) {
 		// assert error; max BAUD value for sync is 255 (8-bit)
 	} else {
-		return ret;
+		return return_value;
 	}
-	return ret;
+	return return_value;
 }
 
 /**
  * \brief Calculate asynchronous baudrate value (UART)
 */
-enum status_code sercom_get_async_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval)
 {
 
@@ -101,7 +101,7 @@ enum status_code sercom_get_async_baud_val(uint32_t baudrate,
 	return STATUS_OK;
 }
 
-enum status_code sercom_set_gclk_generator(
+enum status_code _sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
 		bool force_change)
