@@ -306,6 +306,17 @@ extern "C" {
  * @{
  */
 
+#ifndef   TC_CTRLBSET_CMD_NONE
+#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6)
+#endif
+
+#ifndef   TC_CTRLBSET_CMD_RETRIGGER
+#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6)
+#endif
+
+#ifndef TC_CTRLBSET_CMD_STOP
+#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6)
+#endif
 
 /**
  * \brief Index of the compare capture channels
@@ -426,6 +437,20 @@ enum tc_count_direction {
 	 */
 	TC_COUNT_DIRECTION_DOWN,
 };
+
+
+enum tc_status_flag {
+	TC_STATUS_FLAG_STOP  = TC_STATUS_STOP,
+	TC_STATUS_FLAG_SLAVE = TC_STATUS_SLAVE,
+}
+
+enum tc_interupt_flag {
+	TC_INTERUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
+	TC_INTERUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
+	TC_INTERUPT_FLAG_READY     =  TC_INTFLAG_READY,
+	TC_INTERUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
+	TC_INTERUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF
+}
 
 
 /**
@@ -604,7 +629,7 @@ struct tc_conf {
  */
 struct tc_dev_inst {
 	/** Pointer to the TC Hardware module */
-	TC_t *hw_dev;
+	Tc *hw_dev;
 	/**
 	 * Witch resolution the counter should use. This value is set
 	 * when running tc_init. Use the config struct to set the
@@ -629,7 +654,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 	/* Sanity check arguments  */
 	Assert(dev_inst);
 
-	TC_t tc_module = dev_inst->hw_dev;
+	Tc tc_module = dev_inst->hw_dev;
 
 	/* Synchronize  */
 	while(tc_module->STATUS & TC_SYNCBUSY) {
@@ -667,7 +692,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  *
  * \param[out] config pointer to the config struct
  */
-static inline void tc_get_config_defaults(struct tc_conf *const config)
+static inline void tc_get_config_defaults(const struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -699,9 +724,9 @@ static inline void tc_get_config_defaults(struct tc_conf *const config)
 
 
 enum status_code tc_init(
-		TC_t *const tc_module,
+		Tc *const tc_module,
 		struct tc_dev_inst *const dev_inst,
-		struct tc_conf *const config);
+		const struct tc_conf *const config);
 
 
 /**
@@ -713,19 +738,19 @@ enum status_code tc_init(
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_reset(struct tc_dev_inst *const dev_inst)
+static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the module hardware instance */
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
-	/* Enable TC module, based on the module tc mode  */
+	/* Reset TC module */
 	tc_module->CTRLA = TC_CTRLA_SWRST;
 }
 
@@ -734,18 +759,18 @@ static inline void tc_reset(struct tc_dev_inst *const dev_inst)
  * \brief Enable the TC module
  *
  * Enables the TC module. Except when the counter is enabled for
- * retrigger on even the counter will start when the counter i enabled.
+ * retrigger on even the counter will start when the counter is enabled.
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_enable(struct tc_dev_inst *const dev_inst)
+static inline void tc_enable(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
@@ -773,14 +798,14 @@ static inline void tc_enable(struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_disable(struct tc_dev_inst *const dev_inst)
+static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_ptr);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
@@ -790,11 +815,11 @@ static inline void tc_disable(struct tc_dev_inst *const dev_inst)
 }
 
 
-uint32_t tc_get_count_value(struct tc_dev_inst *const dev_inst);
+uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst);
 
 
 enum status_code tc_set_count_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t count);
 
 
@@ -807,20 +832,24 @@ enum status_code tc_set_count_value(
  *
  * \param dev_inst    pointer to the device struct
  */
-static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
+static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_ptr);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
+	/* Make certain that there are no conflicting comands in the register */
+	tc_module->CTRLBCLR = TC_CTRLBCLR_NONE;
 
+	/* Synchronize */
+	_tc_wait_for_sync(dev_inst);
 	/* Write command to execute */
-	tc_module->CTRLBSET = TC_COMMAND_STOP;//TODO: have to look into this
+	tc_module->CTRLBSET = TC_CTRLBSET_CMD_STOP;
 }
 
 
@@ -832,31 +861,35 @@ static inline void tc_stop_counter(struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst     Pointer to the devise struct.
  */
-static inline void tc_start_counter(struct tc_dev_inst *const dev_inst)
+static inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_ptr);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
+	/* Make certain that there are no conflicting comands in the register */
+	tc_module->CTRLBCLR = TC_CTRLBCLR_NONE;
 
+	/* Synchronize */
+	_tc_wait_for_sync(dev_inst);
 	/* Write command to execute */
-	tc_module->CTRLBSET = TC_COMMAND_START;
+	tc_module->CTRLBSET = TC_CTRLBSET_CMD_RETRIGGER;
 }
 
 
 enum status_code tc_get_capture_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t *period_value
 		enum tc_compare_capture_channel_index channel_index);
 
 
 enum status_code tc_set_compare_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t compare_value,
 		enum tc_compare_capture_channel_index channel_index);
 
@@ -880,31 +913,29 @@ enum status_code tc_set_compare_value(
  *                                out of bounds.
  */
 static enum status_code tc_set_top_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t top_value)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	Assert(compare);
 
-	TC_t * const tc_module = dev_inst->hw_dev;
+	Tc * const tc_module = dev_inst->hw_dev;
 
 	_tc_wait_for_sync(dev_inst);
 
 	switch(dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		tc_module->TC_COUNT8.PER = (uint8_t) top_value;
+		tc_module->COUNT8.PER = (uint8_t) top_value;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
-		tc_module->TC_COUNT16.compare_capture_channel_0 =
-				(uint16_t) top_value;
+		tc_module->COUNT16.CC[0] = (uint16_t) top_value;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
-		tc_module->TC_COUNT32.compare_capture_channel_0 =
-				top_value;
+		tc_module->COUNT32.CC[0] = top_value;
 		return STATUS_OK;
 
 	default:
@@ -931,15 +962,15 @@ static enum status_code tc_set_top_value(
  * \retval STATUS_NO_CHANGE
  * \retval STATUS_ERR_BAD_DATA
  */
-enum status_codes tc_is_new_capture_on_channel(
-		struct tc_dev_inst *const dev_inst,
+enum status_codes tc_check_for_new_capture_on_channel(
+		const struct tc_dev_inst *const dev_inst,
 		enum tc_compare_capture_channel_index channel_index)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	Assert(channel_index);
 
-	TC_t * const tc_module = dev_inst->hw_dev;
+	Tc * const tc_module = dev_inst->hw_dev;
 
 	if(tc_module->INTFLAG & TC_INTFLAG_ERR) {
 			tc_module->INTFLAG |= TC_INTFLAG_ERR;
@@ -956,34 +987,81 @@ enum status_codes tc_is_new_capture_on_channel(
 
 
 /**
- * \brief Checks if a new match has occurred on the channel
+ * \brief 
  *
- * Checks if a new match has occurred on the channel specified in
- * channel_index.
+ * 
  *
  * \param *dev_inst pointer to the devise instance.
- * \param channel_index value used to select either channel 0, 1, 2 or 3.
+ * \param interupt_flag
  *
- * \return A status telling whether a match has occurred
- * \retval STATUS_VALID_DATA   If a match has occurred since last check
- * \retval STATUS_NO_CHANGE    If no new match ha occurred since last check
+ * \return 
+ * \retval 
+ * \retval 
  */
-enum status_codes tc_is_there_match_on_channel(
-		struct tc_dev_inst *const dev_inst,
-		enum tc_compare_capture_channel_index channel_index)
+bool tc_is_interupt_flag_set(
+		const struct tc_dev_inst *const dev_inst,
+		enum tc_interupt_flag interupt_falg)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(channel_index);
+	Assert(interupt_flag);
 
-	TC_t * const tc_module = dev_inst->hw_dev;
+	Tc * const tc_module = dev_inst->hw_dev;
 
-	if(tc_module->INTFLAG & (0x01 << (channel_index + 4))) {
-		tc_module->INTFLAG |= (0x01 << (channel_index + 4));
-		return STATUS_VALID_DATA;
+	if(tc_module->INTFLAG & interupt_flag) {
+		return true;
 	}
 	else {
-		return STATUS_NO_CHANGE;
+		return false;
+	}
+}
+
+
+/**
+ * \brief 
+ *
+ * 
+ *
+ * \param *dev_inst pointer to the devise instance.
+ * \param interupt_flag
+ */
+void tc_clear_interupt_flag(
+		const struct tc_dev_inst *const dev_inst,
+		enum tc_interupt_flag interupt_falg)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(interupt_flag);
+
+	Tc * const tc_module = dev_inst->hw_dev;
+
+	tc_module->INTFLAG &= ~interupt_flag;
+}
+
+
+/**
+ * \brief 
+ *
+ * 
+ *
+ * \param *dev_inst pointer to the devise instance.
+ * \param status_flag
+ */
+bool tc_is_status_flag_set(
+		const struct tc_dev_inst *const dev_inst,
+		enum tc_status_flag status_flag)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(status_flag);
+
+	Tc * const tc_module = dev_inst->hw_dev;
+
+	if (tc_module->STATUS & status_flag) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 

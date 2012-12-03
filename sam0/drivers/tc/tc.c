@@ -1,4 +1,4 @@
-q/**
+/**
  * \file
  *
  * \brief SAM0+ TC Driver
@@ -61,8 +61,8 @@ q/**
  */
 enum status_code tc_init(
 		struct tc_dev_inst *const dev_inst,
-		TC_t *const tc_module,
-		struct tc_config *const config)
+		Tc *const tc_module,
+		const struct tc_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(tc_module);
@@ -152,47 +152,47 @@ enum status_code tc_init(
 
 	case TC_RESOLUTION_8BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.COUNT = config->8bit_conf.count;
+		tc_module->COUNT8.COUNT = config->8bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.PER   = config->8bit_conf.period;
+		tc_module->COUNT8.PER   = config->8bit_conf.period;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC0   =
+		tc_module->COUNT8.CC[0] =
 				config->8bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT8.CC1   =
+		tc_module->COUNT8.CC[1] =
 				config->8bit_conf.capture_compare_channel_1;
 
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT16.COUNT =
+		tc_module->COUNT16.COUNT =
 				config->16bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT16.CC0   =
+		tc_module->COUNT16.CC[0] =
 				config->16bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT16.CC1   =
+		tc_module->COUNT16.CC[1] =
 				config->16bit_conf.capture_compare_channel_1;
 
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT32.COUNT =
+		tc_module->COUNT32.COUNT =
 				config->32bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT32.CC1 =
+		tc_module->COUNT32.CC[0] =
 				config->32bit_conf.capture_compare_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->TC_COUNT32.CC1 =
+		tc_module->COUNT32.CC[1] =
 				config->32bit_conf.capture_compare_channel_1;
 
 		return STATUS_OK;
@@ -223,7 +223,7 @@ enum status_code tc_init(
  *                                is out of bounds.
  */
 enum status_code tc_set_count_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t count)
 {
 	/* Sanity check arguments */
@@ -232,7 +232,7 @@ enum status_code tc_set_count_value(
 	Assert(count);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
@@ -240,15 +240,15 @@ enum status_code tc_set_count_value(
 	/* Write to based on the TC resolution */
 	switch (dev_inst->resolution) {
 	case TC_RESOLUTION_8BIT:
-		tc_module->TC_COUNT8.COUNT = (uint8_t) count;
+		tc_module->COUNT8.COUNT = (uint8_t) count;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
-		tc_module->TC_COUNT16.COUNT = (uint16_t) count;
+		tc_module->COUNT16.COUNT = (uint16_t) count;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
-		tc_module->TC_COUNT32.COUNT = count;
+		tc_module->COUNT32.COUNT = count;
 		return STATUS_OK;
 
 	default:
@@ -275,7 +275,7 @@ enum status_code tc_set_count_value(
  *                                is out of bounds.
  */
 enum status_code tc_get_count_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t *count)
 {
 	/* Sanity check arguments */
@@ -284,7 +284,7 @@ enum status_code tc_get_count_value(
 	Assert(count);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
@@ -293,22 +293,22 @@ enum status_code tc_get_count_value(
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		*count = tc_module->TC_COUNT8.COUNT;
+		*count = tc_module->COUNT8.COUNT;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
-		*count = tc_module->TC_COUNT16.COUNT;
+		*count = tc_module->COUNT16.COUNT;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
-		*count = tc_module->TC_COUNT32.COUNT;
+		*count = tc_module->COUNT32.COUNT;
 		return STATUS_OK;
 
 	default:
 		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC resolution end  */
-	Assert(false);
+	Assert(false);//Geting here should never be posible
 	return STATUS_ERR_PROTOCOL;
 }
 
@@ -330,7 +330,7 @@ enum status_code tc_get_count_value(
  * \retval STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_get_capture_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t *capture,
 		enum tc_capture_capture_channel_index channel_index)
 {
@@ -340,7 +340,7 @@ enum status_code tc_get_capture_value(
 	Assert(capture);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
@@ -349,56 +349,39 @@ enum status_code tc_get_capture_value(
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		/* Read out based on capture register */
-		switch (channel_index) {
 
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*capture = tc_module->TC_COUNT8.CC0;
+		if (channel_index < 2) {
+			*capture = tc_module->COUNT8.CC[channel_index];
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*capture = tc_module->TC_COUNT8.CC1;
-			return STATUS_OK;
-
-		default:
-			return STATUS_ERR_INVALID_ARG;
+		}
+		else {
+			return STATU_ERR_INVALID_ARG;
 		}
 
 	case TC_RESOLUTION_16BIT:
-		/* Read out based on capture register */
-		switch (channel_index) {
 
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*capture = tc_module->TC_COUNT16.CC0;
+		if (channel_index < 2) {
+			*capture = tc_module->COUNT16.CC[channel_index];
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*capture = tc_module->TC_COUNT16.CC1;
-			return STATUS_OK;
-
-		default:
-			return STATUS_ERR_INVALID_ARG;
+		}
+		else {
+			return STATU_ERR_INVALID_ARG;
 		}
 
 	case TC_RESOLUTION_32BIT:
-		/* Read out based on capture register */
-		switch (channel_index) {
 
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			*capture = tc_module->TC_COUNT32.CC0;
+		if (channel_index < 2) {
+			*capture = tc_module->COUNT32.CC[channel_index];
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			*capture = tc_module->TC_COUNT32.CC1;
-			return STATUS_OK;
-
-		default:
-			return STATUS_ERR_INVALID_ARG;
 		}
+		else {
+			return STATU_ERR_INVALID_ARG;
+		}
+
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC resolution end  */
-	Assert(false);
+	Assert(false); //this should never be posible
 	return STATUS_ERR_PROTOCOL;
 }
 
@@ -417,7 +400,7 @@ enum status_code tc_get_capture_value(
  * \retval  STATUS_ERR_INVALID_ARG
  */
 enum status_code tc_set_compare_value(
-		struct tc_dev_inst *const dev_inst,
+		const struct tc_dev_inst *const dev_inst,
 		uint32_t compare,
 		enum tc_compare_capture_channel_index channel_index)
 {
@@ -427,60 +410,42 @@ enum status_code tc_set_compare_value(
 	Assert(compare);
 
 	/* Get a pointer to the module's hardware instance*/
-	TC_t *const tc_module = dev_inst->hw_dev;
+	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
 	/* Read out based on the TC resolution */
 	switch(dev_inst->resolution) {
+
 	case TC_RESOLUTION_8BIT:
-		/* Read out based on compare register */
-		switch (channel_index) {
-
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			tc_module->TC_COUNT8.CC0 = (uint8_t) compare;
+		if (channel_index < 2) {
+			tc_module->COUNT8.CC[channel_index] = (uint8_t) compare;
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			tc_module->TC_COUNT8.CC1 = (uint8_t) compare;
-			return STATUS_OK;
-
-		default:
+		}
+		else {
 			return STATUS_ERR_INVALID_ARG;
 		}
 
+
 	case TC_RESOLUTION_16BIT:
-		/* Read out based on compare register */
-		switch (channel_index) {
-
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			tc_module->TC_COUNT16.CC0 = (uint16_t) compare;
+		if (channel_index < 2) {
+			tc_module->COUNT16.CC[channel_index] = (uint8_t) compare;
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			tc_module->TC_COUNT16.CC1 = (uint16_t) compare;
-			return STATUS_OK;
-
-		default:
+		}
+		else {
 			return STATUS_ERR_INVALID_ARG;
 		}
 
 	case TC_RESOLUTION_32BIT:
-		/* Read out based on compare register */
-		switch (channel_index) {
-
-		case TC_COMPARE_CAPTURE_CHANNEL_0:
-			tc_module->TC_COUNT32.CC0 = compare;
+		if (channel_index < 2) {
+			tc_module->COUNT16.CC[channel_index] = (uint8_t) compare;
 			return STATUS_OK;
-
-		case TC_COMPARE_CAPTURE_CHANNEL_1:
-			tc_module->TC_COUNT32.CC1 = compare;
-			return STATUS_OK;
-
-		default:
+		}
+		else {
 			return STATUS_ERR_INVALID_ARG;
 		}
+
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC resolution  */
