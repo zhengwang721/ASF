@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <sercom_interrupts.h>
+#include "sercom_interrupts.h"
 
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;
@@ -48,26 +48,26 @@ static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
 
 /**
  * \internal Default interrupt handler
- * \param instance Sercom instance used.
+ * \param instance SERCOM instance used.
  */
 void _sercom_default_handler(uint8_t instance)
 {
 	Assert(false);
 }
 
-/* Find sercom instance. */
+/* Find SERCOM instance. */
 uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
 
-	/* Save address of sercom instance. */
+	/* Save address of SERCOM instance. */
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
-	/* Array of sercom instances. */
+	/* Array of SERCOM instances. */
 	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = {SERCOM_INSTS};
 
-	/* Fine index for sercom instance. */
+	/* Find index for SERCOM instance. */
 	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
 		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
 			return i;
@@ -89,7 +89,7 @@ void _sercom_set_handler(uint8_t instance,
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
-			_sercom_instances[i] = 0;
+			_sercom_instances[i] = NULL;
 		}
 		_handler_table_initialized = true;
 	}
