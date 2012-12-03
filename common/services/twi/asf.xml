@@ -117,5 +117,23 @@
 			<device-support value="sam4s"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
+		<module type="service" id="common.services.basic.twi#4" caption="TWI - Two-Wire Interface - SAM4L implementation">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			TWI Two-Wire Interface service. Common API.
+			</info>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="twi_master.h"/>
+			<build type="header-file" subtype="api" value="sam_twim/twi_master.h"/>
+			<build type="doxygen-entry-point" value="twi_group"/>
+			<build type="doxygen-quick-start" value="twi_quickstart"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="sam.drivers.twim"/>
+			<require idref="sam.utils"/>
+			<device-support value="sam4l"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
+		</module>
 	</select-by-device>
 </asf>
