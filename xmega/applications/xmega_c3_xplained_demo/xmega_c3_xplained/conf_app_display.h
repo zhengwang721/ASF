@@ -82,10 +82,10 @@
 #define DISPLAY_LIGHT_PROBAR_SIZE_Y         (4)
 #define DISPLAY_LIGHT_PROBAR_MAX_SIZE_X     (6 * 6)
 
-#define DISPLAY_TEMP_TEXT_POS_X             (DISPLAY_SAMPLING_TEXT_POS_X + (6 * 6))
+#define DISPLAY_TEMP_TEXT_POS_X             (DISPLAY_TEMP_TEXT_VALUE_POS_X + (6 * 2) + 2)
 #define DISPLAY_TEMP_TEXT_POS_Y             23
-#define DISPLAY_TEMP_TEXT                   "   C"
-#define DISPLAY_TEMP_TEXT_VALUE_POS_X       (DISPLAY_TEMP_TEXT_POS_X + (6 * 1))
+#define DISPLAY_TEMP_TEXT                   "C"
+#define DISPLAY_TEMP_TEXT_VALUE_POS_X       (107)
 #define DISPLAY_TEMP_TEXT_VALUE_POS_Y       DISPLAY_TEMP_TEXT_POS_Y
 
 #define DISPLAY_USB_STA_POS_X               0
