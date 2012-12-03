@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef SYSTEM_H
-# define SYSTEM_H
+#ifndef SYSTEM_H_INCLUDED
+#define SYSTEM_H_INCLUDED
 
 #include <compiler.h>
 
@@ -433,7 +433,7 @@ static inline enum system_reset_cause system_get_reset_cause(void)
 
 void system_bod_init(void);
 
-#endif /* SYSTEM_H */
+#endif /* SYSTEM_H_INCLUDED */
 
 /**
  * \page system_extra_info Extra Information (system)

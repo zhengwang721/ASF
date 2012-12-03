@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef UTILS_COMPILER_H
-#define UTILS_COMPILER_H
+#ifndef UTILS_COMPILER_H_INCLUDED
+#define UTILS_COMPILER_H_INCLUDED
 
 /**
  * \defgroup group_sam0_utils Compiler abstraction layer and code utilities
@@ -50,7 +50,7 @@
  *
  * @{
  */
- 
+
 #if (defined __ICCARM__)
 #  include <intrinsics.h>
 #endif
@@ -205,7 +205,7 @@ typedef uint32_t                iram_size_t;
 
 /** \name Aliasing Aggregate Types
  * @{ */
- 
+
 /** 16-bit union. */
 typedef union
 {
@@ -399,7 +399,7 @@ typedef struct
 
 /** \name Bit-Field Handling
  * @{ */
- 
+
 /*! \brief Reads the bits of a value specified by a given bit-mask.
  *
  * \param value Value to read bits from.
@@ -879,7 +879,7 @@ typedef struct
 /** \name Target Abstraction
  *
  * @{ */
- 
+
 #define _GLOBEXT_           extern      /**< extern storage-class specifier. */
 #define _CONST_TYPE_        const       /**< const type qualifier. */
 #define _MEM_TYPE_SLOW_                 /**< Slow memory type. */
@@ -908,4 +908,4 @@ typedef struct
 
 /** @} */
 
-#endif /* UTILS_COMPILER_H */
+#endif /* UTILS_COMPILER_H_INCLUDED */
