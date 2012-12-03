@@ -10,6 +10,7 @@
 		<build type="header-file" subtype="api" value="sercom_interrupts.h"/>
 		<build type="doxygen-entry-point" value="sam0_sercom_group"/>
 		<device-support value="sam0d"/>
+		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.utils"/>
 		<!--<require idref="sam0.drivers.nvic"/>-->
 		<require idref="sam0.drivers.sysctrl.clock"/>

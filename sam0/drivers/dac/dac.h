@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _DAC_H_INCLUDED_
-#define _DAC_H_INCLUDED_
+#ifndef DAC_H_INCLUDED
+#define DAC_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -597,4 +597,4 @@ void dac_reset(
  * - \subpage dac_basic_use_case
  */
 
-#endif /* _DAC_H_INCLUDED_ */
+#endif /* DAC_H_INCLUDED */

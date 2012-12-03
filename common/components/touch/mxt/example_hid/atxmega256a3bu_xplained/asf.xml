@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Device HID Mouse for ATxmega256a3bu xplained" id="common.components.touch.mxt.example_hid.atxmega256a3bu_xplained">
+	<project caption="USB Device example using the mXT143E Xplained kit as mouse" id="common.components.touch.mxt.example_hid.atxmega256a3bu_xplained">
 		<build type="header-file" value="conf_ili9341.h"/>
 		<build type="header-file" value="conf_usart_spi.h"/>
 		<build type="header-file" value="conf_board.h"/>
