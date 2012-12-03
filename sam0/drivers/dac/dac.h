@@ -46,9 +46,13 @@
 extern "C" {
 #endif
 
+#define __SAM0D4_REVA__
+
 #include <compiler.h>
 #include <clock.h>
 #include <gclk.h>
+
+
 
 /**
  * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
@@ -329,11 +333,11 @@ extern "C" {
  */
 enum dac_reference {
 	/** 1V from internal bandgap reference.*/
-	DAC_REF_INT1V = DAC_REF_INT1V_bm,
+	DAC_REF_INT1V = DAC_CTRLB_REFSEL(0),
 	/** Analog VCC as reference. */
-	DAC_REF_AVCC = DAC_REF_AVCC_bm,
+	DAC_REF_AVCC = DAC_CTRLB_REFSEL(1),
 	/** External reference on AREF. */
-	DAC_REF_AREF = DAC_REF_AREF_bm,
+	DAC_REF_AREF = DAC_CTRLB_REFSEL(2),
 };
 
 /**
@@ -343,9 +347,9 @@ enum dac_reference {
  */
 enum dac_output {
 	/** DAC output to VOUT pin */
-	DAC_OUTPUT_EXTERNAL = DAC_EOEN_bm,
+	DAC_OUTPUT_EXTERNAL = DAC_CTRLB_EOEN,
 	/** DAC output as internal reference */
-	DAC_OUTPUT_INTERNAL = DAC_IOEN_bm,
+	DAC_OUTPUT_INTERNAL = DAC_CTRLB_IOEN,
 	/** No output*/
 	DAC_OUTPUT_NONE = 0,
 };
@@ -367,7 +371,7 @@ enum dac_channel {
  */
 struct dac_dev_inst {
 	/** DAC hardware module */
-	DAC_t *hw_dev;
+	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
 };
@@ -421,7 +425,7 @@ void dac_ch_set_config(
 
 void dac_init(
 		struct dac_dev_inst *const dev_inst,
-		DAC_t *const module,
+		Dac *const module,
 		struct dac_conf *const config);
 
 /**
