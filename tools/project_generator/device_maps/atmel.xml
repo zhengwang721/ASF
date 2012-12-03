@@ -607,6 +607,7 @@
 					<group name="sam0d">
 						<mcu name="unspecified-sam0d"/>
 						<mcu name="atsam0d4"/>
+						<mcu name="atsam0d4_reva"/>
 					</group>
 				</group>
 			</group>
