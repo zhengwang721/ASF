@@ -308,7 +308,7 @@ enum status_code tc_get_count_value(
 		return STATUS_ERR_INVALID_ARG;
 
 	} /* Switch TC resolution end  */
-	Assert(false);//Geting here should never be posible
+	Assert(false);//Geting here should never be possible
 	return STATUS_ERR_PROTOCOL;
 }
 
@@ -316,16 +316,16 @@ enum status_code tc_get_count_value(
 /**
  * \brief Gets the capture value
  *
- * This prosedure stores the capture value in the suplied buffer
+ * This procedure stores the capture value in the supplied buffer
  * pointed to by capture. This method can be used in 32, 16 and 8 bit
- * resolution. perform a cast o the buffer after th emethod has
+ * resolution. perform a cast o the buffer after the method has
  * returned.
  *
  * \param[in] dev_inst         pointer to the device struct
  * \param[out] capture         pointer to a buffer
  * \param[in] channel_index    index of the compare register to read from
  *
- * \return Status of the prosedure
+ * \return Status of the procedure
  * \retval STATUS_OK
  * \retval STATUS_ERR_INVALID_ARG
  */
@@ -355,7 +355,7 @@ enum status_code tc_get_capture_value(
 			return STATUS_OK;
 		}
 		else {
-			return STATU_ERR_INVALID_ARG;
+			return STATUS_ERR_INVALID_ARG;
 		}
 
 	case TC_RESOLUTION_16BIT:
@@ -365,7 +365,7 @@ enum status_code tc_get_capture_value(
 			return STATUS_OK;
 		}
 		else {
-			return STATU_ERR_INVALID_ARG;
+			return STATUS_ERR_INVALID_ARG;
 		}
 
 	case TC_RESOLUTION_32BIT:
@@ -375,13 +375,13 @@ enum status_code tc_get_capture_value(
 			return STATUS_OK;
 		}
 		else {
-			return STATU_ERR_INVALID_ARG;
+			return STATUS_ERR_INVALID_ARG;
 		}
 
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC resolution end  */
-	Assert(false); //this should never be posible
+	Assert(false); //this should never be possible
 	return STATUS_ERR_PROTOCOL;
 }
 
