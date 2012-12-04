@@ -60,9 +60,9 @@
  *                            left unaltered in these cases.
  */
 enum status_code tc_init(
-		struct tc_dev_inst *const dev_inst,
 		Tc *const tc_module,
-		const struct tc_config *const config)
+		struct tc_dev_inst *const dev_inst,
+		const struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(tc_module);
@@ -85,17 +85,17 @@ enum status_code tc_init(
 	 */
 	dev_inst->resolution = config->resolution;
 
-	if (tc_module->CTRLA & TC_CTRLA_SWRST) {
+	if (tc_module->COUNT8.CTRLA.reg & TC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	if (tc_module->STATUS & TC_STATUS_SLAVE) {
+	if (tc_module->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
 		/* module is used as a slave*/
 		return STATUS_ERR_DENIED;
 	}
 
-	if (tc_module->CTRLA & TC_CTRLA_ENABLE) {
+	if (tc_module->COUNT8.CTRLA.reg & TC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
@@ -105,13 +105,13 @@ enum status_code tc_init(
 	}
 
 	ctrla_temp = config->resolution | config->wave_generation
-			| config->reload_action | config->clock_prescaler
+			| config->reload_action | config->clock_prescaler;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
 	/* Set configuration to registers common for all 3 modes */
-	tc_module->CTRLA = ctrla_temp;
+	tc_module->COUNT8.CTRLA.reg = ctrla_temp;
 
 	/* Set ctrlb register */
 	if (config->oneshot) {
@@ -124,15 +124,15 @@ enum status_code tc_init(
 
 	if (ctrlbset_temp) {//check if we actually need to go into a wait state.
 		_tc_wait_for_sync(dev_inst);
-		tc_module->CTRLBSET = ctrlbset_temp;
+		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_temp;
 	}
 
-	ctrlc_temp = config->waveform_invert_channel_mask
-			| config->capture_enable_ch_mask;
+	ctrlc_temp = config->waveform_invert_output
+			| config->capture_enable;
 
 
 	_tc_wait_for_sync(dev_inst);
-	tc_module->CTRLC = ctrlc_temp;
+	tc_module->COUNT8.CTRLC.reg = ctrlc_temp;
 
 	/* Set event register */
 	if (config->enable_event_input) {
@@ -144,7 +144,7 @@ enum status_code tc_init(
 	}
 
 	_tc_wait_for_sync(dev_inst);
-	tc_module-EVCTRL = evctrl_temp | config->event_action
+	tc_module->COUNT8.EVCTRL.reg = evctrl_temp | config->event_action
 			| config->event_generation_enable;
 
 	/* Switch for TC resolution  */
@@ -152,48 +152,56 @@ enum status_code tc_init(
 
 	case TC_RESOLUTION_8BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT8.COUNT = config->8bit_conf.count;
+		tc_module->COUNT8.COUNT.reg = config->tc_resolution_conf.\
+				tc_8bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT8.PER   = config->8bit_conf.period;
+		tc_module->COUNT8.PER.reg   = config->tc_resolution_conf.\
+				tc_8bit_conf.period;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT8.CC[0] =
-				config->8bit_conf.capture_compare_channel_0;
+		tc_module->COUNT8.CC[0].reg =
+				config->tc_resolution_conf.tc_8bit_conf.\
+				compare_capture_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT8.CC[1] =
-				config->8bit_conf.capture_compare_channel_1;
+		tc_module->COUNT8.CC[1].reg =
+				config->tc_resolution_conf.tc_8bit_conf.\
+				compare_capture_channel_1;
 
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT16.COUNT =
-				config->16bit_conf.count;
+		tc_module->COUNT16.COUNT.reg =
+				config->tc_resolution_conf.tc_16bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT16.CC[0] =
-				config->16bit_conf.capture_compare_channel_0;
+		tc_module->COUNT16.CC[0].reg =
+				config->tc_resolution_conf.tc_16bit_conf.\
+				compare_capture_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT16.CC[1] =
-				config->16bit_conf.capture_compare_channel_1;
+		tc_module->COUNT16.CC[1].reg =
+				config->tc_resolution_conf.tc_16bit_conf.\
+				compare_capture_channel_1;
 
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT32.COUNT =
-				config->32bit_conf.count;
+		tc_module->COUNT32.COUNT.reg =
+				config->tc_resolution_conf.tc_32bit_conf.count;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT32.CC[0] =
-				config->32bit_conf.capture_compare_channel_0;
+		tc_module->COUNT32.CC[0].reg =
+				config->tc_resolution_conf.tc_32bit_conf.\
+				compare_capture_channel_0;
 
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT32.CC[1] =
-				config->32bit_conf.capture_compare_channel_1;
+		tc_module->COUNT32.CC[1].reg =
+				config->tc_resolution_conf.tc_32bit_conf.\
+				compare_capture_channel_1;
 
 		return STATUS_OK;
 
@@ -201,7 +209,7 @@ enum status_code tc_init(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
-	Assert(false);
+	Assert(false);//geting here should not be posible
 	return STATUS_ERR_PROTOCOL;
 }
 
@@ -240,15 +248,15 @@ enum status_code tc_set_count_value(
 	/* Write to based on the TC resolution */
 	switch (dev_inst->resolution) {
 	case TC_RESOLUTION_8BIT:
-		tc_module->COUNT8.COUNT = (uint8_t) count;
+		tc_module->COUNT8.COUNT.reg = (uint8_t) count;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_16BIT:
-		tc_module->COUNT16.COUNT = (uint16_t) count;
+		tc_module->COUNT16.COUNT.reg = (uint16_t) count;
 		return STATUS_OK;
 
 	case TC_RESOLUTION_32BIT:
-		tc_module->COUNT32.COUNT = count;
+		tc_module->COUNT32.COUNT.reg = count;
 		return STATUS_OK;
 
 	default:
@@ -274,9 +282,7 @@ enum status_code tc_set_count_value(
  * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
  *                                is out of bounds.
  */
-enum status_code tc_get_count_value(
-		const struct tc_dev_inst *const dev_inst,
-		uint32_t *count)
+uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -293,23 +299,17 @@ enum status_code tc_get_count_value(
 	switch (dev_inst->resolution) {
 
 	case TC_RESOLUTION_8BIT:
-		*count = tc_module->COUNT8.COUNT;
-		return STATUS_OK;
+		return (uint32_t) tc_module->COUNT8.COUNT.reg;
 
 	case TC_RESOLUTION_16BIT:
-		*count = tc_module->COUNT16.COUNT;
-		return STATUS_OK;
+		return (uint32_t) tc_module->COUNT16.COUNT.reg;
 
 	case TC_RESOLUTION_32BIT:
-		*count = tc_module->COUNT32.COUNT;
-		return STATUS_OK;
-
+		return tc_module->COUNT32.COUNT.reg;
 	default:
-		return STATUS_ERR_INVALID_ARG;
-
+		Assert(false);
+		return 0;
 	} /* Switch TC resolution end  */
-	Assert(false);//Geting here should never be possible
-	return STATUS_ERR_PROTOCOL;
 }
 
 
@@ -329,15 +329,13 @@ enum status_code tc_get_count_value(
  * \retval STATUS_OK
  * \retval STATUS_ERR_INVALID_ARG
  */
-enum status_code tc_get_capture_value(
+uint32_t tc_get_capture_value(
 		const struct tc_dev_inst *const dev_inst,
-		uint32_t *capture,
-		enum tc_capture_capture_channel_index channel_index)
+		enum tc_compare_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(capture);
 
 	/* Get a pointer to the module's hardware instance*/
 	Tc *const tc_module = dev_inst->hw_dev;
@@ -347,42 +345,18 @@ enum status_code tc_get_capture_value(
 
 	/* Read out based on the TC resolution */
 	switch (dev_inst->resolution) {
-
 	case TC_RESOLUTION_8BIT:
-
-		if (channel_index < 2) {
-			*capture = tc_module->COUNT8.CC[channel_index];
-			return STATUS_OK;
-		}
-		else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		return (uint32_t) tc_module->COUNT8.CC[channel_index].reg;
 
 	case TC_RESOLUTION_16BIT:
-
-		if (channel_index < 2) {
-			*capture = tc_module->COUNT16.CC[channel_index];
-			return STATUS_OK;
-		}
-		else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		return (uint32_t) tc_module->COUNT16.CC[channel_index].reg;
 
 	case TC_RESOLUTION_32BIT:
+		return tc_module->COUNT32.CC[channel_index].reg;
 
-		if (channel_index < 2) {
-			*capture = tc_module->COUNT32.CC[channel_index];
-			return STATUS_OK;
-		}
-		else {
-			return STATUS_ERR_INVALID_ARG;
-		}
-
-	default:
-		return STATUS_ERR_INVALID_ARG;
-	} /* Switch TC resolution end  */
-	Assert(false); //this should never be possible
-	return STATUS_ERR_PROTOCOL;
+	}
+	Assert(false);
+	return 0;
 }
 
 
@@ -420,7 +394,8 @@ enum status_code tc_set_compare_value(
 
 	case TC_RESOLUTION_8BIT:
 		if (channel_index < 2) {
-			tc_module->COUNT8.CC[channel_index] = (uint8_t) compare;
+			tc_module->COUNT8.CC[channel_index].reg =
+					(uint8_t) compare;
 			return STATUS_OK;
 		}
 		else {
@@ -430,7 +405,8 @@ enum status_code tc_set_compare_value(
 
 	case TC_RESOLUTION_16BIT:
 		if (channel_index < 2) {
-			tc_module->COUNT16.CC[channel_index] = (uint8_t) compare;
+			tc_module->COUNT16.CC[channel_index].reg =
+					(uint16_t) compare;
 			return STATUS_OK;
 		}
 		else {
@@ -439,7 +415,8 @@ enum status_code tc_set_compare_value(
 
 	case TC_RESOLUTION_32BIT:
 		if (channel_index < 2) {
-			tc_module->COUNT16.CC[channel_index] = (uint8_t) compare;
+			tc_module->COUNT16.CC[channel_index].reg =
+					(uint32_t) compare;
 			return STATUS_OK;
 		}
 		else {

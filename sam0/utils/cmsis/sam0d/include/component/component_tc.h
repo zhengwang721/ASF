@@ -39,7 +39,21 @@
 
 #ifndef TC_HEADER_H_INCLUDED
 #define TC_HEADER_H_INCLUDED
+
+
+#ifndef __ASSEMBLY__
 #include <stdint.h>
+#ifndef __cplusplus
+typedef volatile const uint8_t  RoReg8;  /**< Read only  8-bit register (volatile const unsigned int) */
+#else
+typedef volatile       uint8_t  RoReg8;  /**< Read only  8-bit register (volatile const unsigned int) */
+#endif
+#define CAST(type, value) ((type *)(value))
+#define REG_ACCESS(type, address) (*(type*)(address)) /**< C code: Register value */
+#else
+#define CAST(type, value) (value)
+#define REG_ACCESS(type, address) (address) /**< Assembly code: Register address */
+#endif
 
 
 
@@ -65,6 +79,7 @@ typedef union {
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_CTRLA_Type;
+
 
 #define TC_CTRLA_OFFSET             0x00         /**< \brief (TC_CTRLA offset) Control A Register */
 #define TC_CTRLA_RESETVALUE         0x0          /**< \brief (TC_CTRLA reset_value) Control A Register */
