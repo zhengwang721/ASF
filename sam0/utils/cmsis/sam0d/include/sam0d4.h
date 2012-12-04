@@ -62,7 +62,7 @@ typedef enum IRQn
 #define __MPU_PRESENT          0
 #define __NVIC_PRIO_BITS       4
 
-#include <core_cm0plus.h>
+#include <core_cm0p.h>
 
 #include <component/component_wdt.h>
 #include <component/component_gclk.h>
