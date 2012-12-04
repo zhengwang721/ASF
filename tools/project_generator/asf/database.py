@@ -2473,7 +2473,7 @@ class ConfigDB(object):
 			except:
 				mcu_name = None
 
-			if gen_name == "doxygen-module":
+			if gen_name == "doxygen-module" or gen_name == "doxygen-module-v2":
 				if mcu_name not in mcu_list:
 					errors += 1
 					if mcu_name == None:
