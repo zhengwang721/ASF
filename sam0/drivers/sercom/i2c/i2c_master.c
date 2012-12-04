@@ -68,7 +68,7 @@ static enum status_code _i2c_master_set_config(
 	Assert(config);
 
 	/* Temporary variables. */
-	uint32_t tmp_config = 0;
+	uint32_t tmp_ctrla = 0;
 	int32_t tmp_baud;
 	enum status_code tmp_status_code = STATUS_OK;
 
@@ -81,16 +81,16 @@ static enum status_code _i2c_master_set_config(
 
 	/* Check and set if module should run in standby. */
 	if (config->run_in_standby) {
-		tmp_config = (1 << I2C_MASTER_RUNINSTDBY_Pos);
+		tmp_ctrla = (1 << I2C_MASTER_RUNINSTDBY_Pos);
 	}
 
 	/* Check and set start data hold timeout. */
 	if (config->start_hold_time != I2C_MASTER_START_HOLD_TIME_DISABLED) {
-		tmp_config |= config->start_hold_time;
+		tmp_ctrla |= config->start_hold_time;
 	}
 
 	/* Write config to register CTRLA. */
-	i2c_module->CTRLA |= tmp_config;
+	i2c_module->CTRLA |= tmp_ctrla;
 
 	/* Set configurations in CTRLB. */
 	i2c_module->CTRLB = I2C_MASTER_SMEN_Msk;
@@ -159,7 +159,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Check if module is enabled. */
-	if(i2c_module->CTRLA & (1 << I2C_MASTER_ENABLE_Pos)) {
+	if (i2c_module->CTRLA & (1 << I2C_MASTER_ENABLE_Pos)) {
 		return STATUS_ERR_DENIED;
 	}
 
@@ -209,6 +209,12 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 	Assert(dev_inst->hw_dev);
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Wait for sync. */
+	_i2c_master_wait_for_sync(dev_inst);
+
+	/* Disable module. */
+	i2c_master_disable(dev_inst);
 
 	/* Wait for sync. */
 	_i2c_master_wait_for_sync(dev_inst);
@@ -307,6 +313,18 @@ static enum status_code _i2c_master_wait_for_bus(
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
  */
+
+enum _i2c_state_machine_state {
+	_I2C_STATE_MACHINE_INIT = 0,
+	_I2C_STATE_MACHINE_WAIT = 1,
+	_I2C_STATE_MACHINE_ADDRESS = 2,
+	_I2C_STATE_MACHINE_CHECK_STATUS = 3,
+	_I2C_STATE_MACHINE_READ = 4,
+	_I2C_STATE_MACHINE_BUS_STATE = 5,
+	_I2C_STATE_MACHINE_CLOSE_CONNECTION = 6,
+	_I2C_STATE_MACHINE_END = 7,
+};
+
 enum status_code i2c_master_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
@@ -327,8 +345,121 @@ enum status_code i2c_master_read_packet(
 	/* Return value. */
 	enum status_code tmp_status = STATUS_OK;
 
+	/* Written buffer counter. */
+	uint16_t counter = 0;
+
+	/* Variables for state machine. */
+	enum _i2c_state_machine_state state = _I2C_STATE_MACHINE_INIT;
+	enum _i2c_state_machine_state next_state;
+	bool run_state_machine = true;
+
+	/* Loop for state machine. */
+	while (run_state_machine) {
+		switch (state) {
+			case _I2C_STATE_MACHINE_INIT:
+				/* Set address and direction bit. Will send start command on bus. */
+				i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_READ_Pos);
+
+				/* Set state to go to. */
+				state = _I2C_STATE_MACHINE_WAIT;
+				/* Set state after wait. */
+				next_state = _I2C_STATE_MACHINE_ADDRESS;
+
+				break;
+
+			case _I2C_STATE_MACHINE_WAIT:
+				/* Wait for response on bus. */
+				tmp_status = _i2c_master_wait_for_bus(dev_inst);
+
+				/* Check status. */
+				state = _I2C_STATE_MACHINE_CHECK_STATUS;
+
+				break;
+
+			case _I2C_STATE_MACHINE_CHECK_STATUS:
+				/* Check for error. */
+				if (tmp_status != STATUS_OK) {
+					state = _I2C_STATE_MACHINE_END;
+
+					/* Save the number of written bytes. */
+					packet->data_length = counter;
+
+				} else {
+					state = next_state;
+				}
+
+				break;
+
+			case _I2C_STATE_MACHINE_ADDRESS:
+				/* Respond to address response. */
+				tmp_status = _i2c_master_address_response(dev_inst);
+
+				/* Check status. */
+				state = _I2C_STATE_MACHINE_CHECK_STATUS;
+				/* State after status check. */
+				next_state = _I2C_STATE_MACHINE_READ;
+
+				break;
+
+			case _I2C_STATE_MACHINE_READ:
+				/* Save data to buffer, sends "ack" when reading DATA register. */
+				packet->data[counter++] = i2c_module->DATA;
+
+				/* Check if packet is sent. */
+				if (packet->data_length-- != 0) {
+					/* Wait for response. */
+					state = _I2C_STATE_MACHINE_WAIT;
+				} else {
+					/* Packet is sent, close connection. */
+					state = _I2C_STATE_MACHINE_CLOSE_CONNECTION;
+				}
+
+				/* Next command after response. */
+				next_state = _I2C_STATE_MACHINE_BUS_STATE;
+
+				break;
+
+			case _I2C_STATE_MACHINE_BUS_STATE:
+				/* Check bus state. */
+				if (!(i2c_module->STATUS & I2C_MASTER_BUSSTATE_OWNER_Msk)) {
+					/* Lost ownership of bus. */
+					tmp_status = STATUS_ERR_PACKET_COLLISION;
+
+					state = _I2C_STATE_MACHINE_CHECK_STATUS;
+
+				} else {
+					/* Owner of bus, read next byte. */
+					state = _I2C_STATE_MACHINE_READ;
+				}
+
+				break;
+
+			case _I2C_STATE_MACHINE_CLOSE_CONNECTION:
+				/* Send nack and stop signal. */
+				i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK | SERCOM_I2C_MASTER_CMD(3);
+
+				state = _I2C_STATE_MACHINE_END;
+
+				break;
+
+			case _I2C_STATE_MACHINE_END:
+				/* Stop state machine. */
+				run_state_machine = false;
+
+				break;
+
+			default:
+				Assert(false);
+				tmp_status = STATUS_ERR_INVALID_ARG;
+				state = _I2C_STATE_MACHINE_END;
+		}
+	}
+
+
+	return tmp_status;
+
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | 0x01;
+	i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_READ_Pos);
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);
@@ -412,7 +543,7 @@ enum status_code i2c_master_write_packet(
 	enum status_code tmp_status = STATUS_OK;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | 0x00;
+	i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_WRITE_Pos);
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);

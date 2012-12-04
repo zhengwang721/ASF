@@ -84,7 +84,7 @@ enum i2c_master_interrupt_flag {
  */
 enum i2c_master_status_flag {
 	/** Check if data line is hold low. */
-	I2C_MASTER_STATUS_CLOCK_HOLD = I2C_MASTER_STATUS_CLKHOLD_Msk,
+	I2C_MASTER_STATUS_CLOCK_HOLD = (1 << I2C_MASTER_STATUS_CLKHOLD_Pos),
 	/** Check if bus state is unknown. */
 	I2C_MASTER_STATUS_BUSSTATE_UNKOWN = I2C_MASTER_STATUS_BUSSTATE_UNKOWN_Msk,
 	/** Check if bus state is idle. */
@@ -94,17 +94,19 @@ enum i2c_master_status_flag {
 	/** Check if bus state is busy. */
 	I2C_MASTER_STATUS_BUSSTATE_BUSY = I2C_MASTER_STATUS_BUSSTATE_BUSY_Msk,
 	/** Check if last slave transfer was acknowledged. */
-	I2C_MASTER_STATUS_ACKNOWLEDGE = I2C_MASTER_STATUS_RXACK_Msk,
+	I2C_MASTER_STATUS_ACKNOWLEDGE = (1 << I2C_MASTER_STATUS_RXACK_Pos),
 	/** Check if arbitration was lost. */
-	I2C_MASTER_STATUS_LOST_ARBITRATION = I2C_MASTER_STATUS_ARBLOST_Msk,
+	I2C_MASTER_STATUS_LOST_ARBITRATION = (1 << I2C_MASTER_STATUS_ARBLOST_Pos),
 	/* Check if bus error occurred. */
-	I2C_MASTER_STATUS_BUS_ERROR = I2C_MASTER_STATUS_BUSERR_Msk,
+	I2C_MASTER_STATUS_BUS_ERROR = (1 << I2C_MASTER_STATUS_BUSERR_Pos),
 };
 
 /**
  * \brief Values for hold time after start bit.
+ *
  * Values for the possible I2C master mode SDA internal hold times after start
- * bit has been sent. */
+ * bit has been sent.
+ */
 enum i2c_master_start_hold_time {
 	/** Internal SDA hold time disabled. */
 	I2C_MASTER_START_HOLD_TIME_DISABLED = 0,

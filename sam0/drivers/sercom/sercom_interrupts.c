@@ -67,7 +67,6 @@ uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
-	uint8_t warning;
 	/* Save address of sercom instance. */
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 

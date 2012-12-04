@@ -219,7 +219,9 @@ enum status_code i2c_master_async_read_packet(
 		return STATUS_ERR_BUSY;
 	}
 
+
 	/* Save packet to device instance. */
+	dev_inst->async_ongoing = true;
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
@@ -263,6 +265,7 @@ enum status_code i2c_master_async_write_packet(
 	}
 
 	/* Save packet to device instance. */
+	dev_inst->async_ongoing = true;
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
@@ -299,7 +302,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 		dev_inst->buffer_length = 0;
-		dev_inst->buffer_remaining = 0;
+		dev_inst->async_ongoing = false;
 
 		/* Call appropriate callback if enabled and registered. */
 		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_READ_COMPLETE)
@@ -334,6 +337,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 		dev_inst->buffer_length = 0;
+		dev_inst->async_ongoing = false;
 
 		/* Call error callback if enabled and registered. */
 		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
