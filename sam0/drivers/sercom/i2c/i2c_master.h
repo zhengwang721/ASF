@@ -43,7 +43,7 @@
 #define I2C_MASTER_H_INCLUDED
 
 #include <sercom.h>
-#include <i2c_common.h>
+#include "i2c_common.h"
 
 #ifdef I2C_MASTER_ASYNC
 # include <sercom_interrupts.h>
@@ -172,11 +172,11 @@ struct i2c_master_dev_inst {
 	/* Buffer write timeout value. */
 	uint16_t buffer_timeout;
 #ifdef I2C_MASTER_ASYNC
-	/** Holder for callback functions. */
+	/** Pointers to callback functions. */
 	i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
-	/** Holder for registered callbacks. */
+	/** Mask for registered callbacks. */
 	uint8_t registered_callback;
-	/** Holder for enabled callbacks. */
+	/** Mask for enabled callbacks. */
 	uint8_t enabled_callback;
 	/** The total number of bytes to transfer. */
 	uint16_t buffer_length;
@@ -189,6 +189,8 @@ struct i2c_master_dev_inst {
 	uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
 	enum status_code status;
+	/** Save if there is an ongoing async operation. */
+	bool async_ongoing;
 #endif
 };
 

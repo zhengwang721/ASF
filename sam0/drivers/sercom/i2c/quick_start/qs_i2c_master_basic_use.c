@@ -47,6 +47,8 @@ static uint8_t buffer[DATA_LENGTH] = {
 };
 
 #define SLAVE_ADDRESS 0x01
+/* Number of time to try and send packet if failed. */
+#define TIMEOUT 1000
 
 /* Init device instance. */
 struct i2c_master_dev_inst dev_inst;
@@ -68,21 +70,29 @@ static void configure_i2c(void)
 
 int main(void)
 {
+	/* Timeout counter. */
+	uint16_t timeout = 0;
+
+	/* Init i2c packet. */
+	i2c_packet_t packet = {
+		.address     = SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = buffer,
+	};
+
 	/* Init system. */
 	//system_init();
 
 	/* Configure device and enable. */
 	configure_i2c();
 
-	/* Init i2c packet. */
-	i2c_packet_t packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer
-	};
-
-	/* Write buffer to slave. */
-	i2c_master_write_packet(&dev_inst, &packet);
+	/* Write buffer to slave until success. */
+	while(i2c_master_write_packet(&dev_inst, &packet) != STATUS_OK) {
+		/* Increment timeout counter and check if timed out. */
+		if (timeout++ >= TIMEOUT) {
+			break;
+		}
+	}
 
 	while (1) {
 		/* Inf loop. */

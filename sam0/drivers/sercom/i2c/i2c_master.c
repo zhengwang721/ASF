@@ -39,10 +39,10 @@
  *
  */
 
-#include <i2c_master.h>
+#include "i2c_master.h"
 
 #ifdef I2C_MASTER_ASYNC
-# include <i2c_master_async.h>
+# include "i2c_master_async.h"
 #endif
 
 /**
@@ -150,7 +150,6 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 {
 	/* Sanity check arguments. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
 	Assert(module);
 	Assert(config);
 
@@ -184,6 +183,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	dev_inst->registered_callback = 0;
 	dev_inst->enabled_callback = 0;
 	dev_inst->buffer_length = 0;
+	dev_inst->async_ongoing = 0;
 #endif
 
 	//dev_inst->callback[0] = 0;
@@ -237,9 +237,9 @@ static enum status_code _i2c_master_address_response(
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Check for error. */
-	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
+	if (i2c_module->INTFLAGS & (1 << I2C_MASTER_WIF_Pos)) {
 		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF;
+		i2c_module->INTFLAGS = (1 << I2C_MASTER_WIF_Pos);
 
 		/* Check for busserror. */
 		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
@@ -281,8 +281,8 @@ static enum status_code _i2c_master_wait_for_bus(
 
 	/* Wait for reply. */
 	uint16_t timeout_counter = 0;
-	while (!(i2c_module->INTFLAGS & I2C_MASTER_WIF) ||
-			!(i2c_module->INTFLAGS & I2C_MASTER_RIF)) {
+	while (!(i2c_module->INTFLAGS & (1 << I2C_MASTER_WIF_Pos)) ||
+			!(i2c_module->INTFLAGS & (1 << I2C_MASTER_RIF_Pos))) {
 		/* Check timeout condition. */
 		if (++timeout_counter >= dev_inst->buffer_timeout) {
 			return STATUS_ERR_TIMEOUT;
@@ -317,11 +317,12 @@ enum status_code i2c_master_read_packet(
 	Assert(packet);
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
-
-	/* Check if the I2C module is busy */
-	if (i2c_module->INTENSET > 0) {
+#ifdef I2C_MASTER_ASYNC
+	/* Check if the I2C module is busy doing async operation. */
+	if (dev_inst->async_ongoing != false) {
 		return STATUS_ERR_BUSY;
 	}
+#endif
 
 	/* Return value. */
 	enum status_code tmp_status = STATUS_OK;
@@ -400,10 +401,12 @@ enum status_code i2c_master_write_packet(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	/* Check if the I2C module is busy */
-	if (i2c_module->INTENSET > 0) {
+#ifdef I2C_MASTER_ASYNC
+	/* Check if the I2C module is busy doing async operation. */
+	if (dev_inst->async_ongoing != false) {
 		return STATUS_ERR_BUSY;
 	}
+#endif
 
 	/* Return value. */
 	enum status_code tmp_status = STATUS_OK;

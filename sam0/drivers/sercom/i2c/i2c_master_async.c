@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <i2c_master_async.h>
+#include "i2c_master_async.h"
 
 /**
  * \internal Read next data.
@@ -101,9 +101,10 @@ static void _i2c_master_async_address_response(
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Check for error. */
-	if (i2c_module->INTFLAGS & I2C_MASTER_WIF) {
+	if (i2c_module->INTFLAGS & (1 << I2C_MASTER_WIF_Pos))
+	{
 		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF;
+		i2c_module->INTENCLR = (1 << I2C_MASTER_WIEN_Pos);
 
 		/* Check for busserror. */
 		if (i2c_module->STATUS & (1 << I2C_MASTER_BUSSERROR_Pos)) {
@@ -213,8 +214,8 @@ enum status_code i2c_master_async_read_packet(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	/* Check if the I2C module is busy */
-	if (i2c_module->INTENSET > 0) {
+	/* Check if the I2C module is busy doing async operation. */
+	if (dev_inst->async_ongoing != false) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -224,7 +225,7 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->transfer_direction = 1;
 
 	/* Enable interrupts. */
-	i2c_module->INTENSET = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+	i2c_module->INTENSET = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_READ_CMD_Msk;
@@ -256,8 +257,8 @@ enum status_code i2c_master_async_write_packet(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	/* Check if the I2C module is busy */
-	if (i2c_module->INTENSET > 0) {
+	/* Check if the I2C module is busy doing async operation. */
+	if (dev_inst->async_ongoing != false) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -267,7 +268,7 @@ enum status_code i2c_master_async_write_packet(
 	dev_inst->transfer_direction = 0;
 
 	/* Enable interrupts. */
-	i2c_module->INTENSET = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+	i2c_module->INTENSET = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_WRITE_CMD_Msk;
@@ -296,7 +297,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Check if buffer transfer is complete. */
 	} else if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining <= 0) {
 		/* Stop packet operation. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+		i2c_module->INTENCLR = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 		dev_inst->buffer_length = 0;
 		dev_inst->buffer_remaining = 0;
 
@@ -331,7 +332,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Check for error. */
 	if ( dev_inst->status != STATUS_OK ) {
 		/* Stop packet operation. */
-		i2c_module->INTENCLR = I2C_MASTER_WIF_Msk | I2C_MASTER_RIF_Msk;
+		i2c_module->INTENCLR = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 		dev_inst->buffer_length = 0;
 
 		/* Call error callback if enabled and registered. */

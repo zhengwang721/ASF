@@ -253,6 +253,10 @@ typedef enum {
 #define I2C_MASTER_STATUS_RXACK_Msk  0
 #define I2C_MASTER_STATUS_ARBLOST_Msk  0
 #define I2C_MASTER_STATUS_BUSERR_Msk  0
+#define I2C_MASTER_WIF_Pos 0
+#define I2C_MASTER_RIF_Pos 0
+#define I2C_MASTER_WIEN_Pos 0
+#define I2C_MASTER_RIEN_Pos 0
 
 
 enum RXPO_group {

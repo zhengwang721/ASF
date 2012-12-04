@@ -42,7 +42,7 @@
 #ifndef I2C_MASTER_ASYNC_H_INCLUDED
 #define I2C_MASTER_ASYNC_H_INCLUDED
 
-#include <i2c_master.h>
+#include "i2c_master.h"
 
 #ifdef __cplusplus
 extern "C" {

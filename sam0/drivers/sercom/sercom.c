@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <sercom.h>
+#include "sercom.h"
 
 /**
  * \internal Configuration structure to save current gclk status.
