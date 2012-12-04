@@ -142,7 +142,7 @@
 #ifndef USB_DEVICE_MAX_EP
 #   error USB_DEVICE_MAX_EP not defined
 #endif
-#if USB_DEVICE_MAX_EP >= UDD_MAX_PEP_NB
+#if USB_DEVICE_MAX_EP > UDD_MAX_PEP_NB
 #   error USB_DEVICE_MAX_EP is too high and not supported by this part
 #endif
 #if (SAM4L)
