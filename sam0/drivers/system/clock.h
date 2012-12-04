@@ -153,7 +153,7 @@
  * The amount of GCLK generators is device dependent.
  */
 enum gclk_generator {
-	GCLK_GENERATOR_0
+	GCLK_GENERATOR_0,
 #if GCLK_GEN_NUM_MSB > 0
 	GCLK_GENERATOR_1,
 #endif
