@@ -454,7 +454,7 @@ enum status_code usart_async_get_last_error(
 /* Interrupt Handler for USART */
 void usart_async_handler(uint8_t instance)
 {
-
+	/* Temporary variables */
 	uint16_t interrupt_status;
 	uint16_t callback_status;
 	uint8_t error_code;
@@ -514,7 +514,12 @@ void usart_async_handler(uint8_t instance)
 	if (((callback_status & interrupt_status) & SERCOM_USART_TXCIF_bm) &&
 			!dev_inst->remaining_tx_buffer_length){
 		dev_inst->async_tx_ongoing = false;
-		(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_TRANSMITTED]))(dev_inst);
+
+		/* Run callback if registered and enabled */
+		if (callback_status
+				& USART_CALLBACK_BUFFER_TRANSMITTED) {
+			(*(dev_inst->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(dev_inst);
+		}
 
 	}
 
@@ -524,47 +529,37 @@ void usart_async_handler(uint8_t instance)
 		/* Check if the reception buffer has data
 		 * to receive */
 		if (dev_inst->remaining_rx_buffer_length) {
-
 			/* Read out the status code and mask away all but the 4 LSBs*/
-			error_code = (usart_module->STATUS & SERCOM_USART_STATUS_MASK);
+			error_code = (uint8_t)(usart_module->STATUS & SERCOM_USART_STATUS_MASK);
 
 			/* Check if an error has occurred during the receiving */
 			if (error_code) {
 				/* Check which error occurred */
-				switch(error_code){
-				case USART_STATUS_FLAG_PERR:
-					/* Store the error code and clearing
-					 * flag by writing 1 to it */
-					dev_inst->status = STATUS_ERR_BAD_DATA;
-					usart_module->STATUS &= ~USART_STATUS_FLAG_PERR;
-
-				case USART_STATUS_FLAG_FERR:
+				if (error_code & USART_STATUS_FLAG_FERR) {
 					/* Store the error code and clearing
 					 * flag by writing 1 to it */
 					dev_inst->status = STATUS_ERR_BAD_FORMAT;
 					usart_module->STATUS &= ~USART_STATUS_FLAG_FERR;
 
-				case USART_STATUS_FLAG_BUFOVF:
+				} else if (error_code & USART_STATUS_FLAG_BUFOVF) {
 					/* Store the error code and clearing
 					 * flag by writing 1 to it */
-					//dev_inst->status = STATUS_ERR_OVERFLOW;
+					dev_inst->status = STATUS_ERR_OVERFLOW;
 					usart_module->STATUS &= ~USART_STATUS_FLAG_BUFOVF;
 
-				default:
-					//TODO: ??
-					dev_inst->status = 0xff;
-
+				} else if (error_code & USART_STATUS_FLAG_PERR) {
+					/* Store the error code and clearing
+					 * flag by writing 1 to it */
+					dev_inst->status = STATUS_ERR_BAD_DATA;
+					usart_module->STATUS &= ~USART_STATUS_FLAG_PERR;
 				}
 
-				/* Call callback if it's enabled  */
+				/* Run callback if registered and enabled */
 				if (callback_status
-						& USART_CALLBACK_TYPE_ERROR) {
-					dev_inst->callback[USART_CALLBACK_TYPE_ERROR];
+						& USART_CALLBACK_ERROR) {
+					(*(dev_inst->callback[USART_CALLBACK_ERROR]))(dev_inst);
 				}
-
 			}
-
-			//TODO: _usart_wait_for_sync(dev_inst);
 
 			/* Read current packet from DATA register,
 			 * increment buffer pointer and decrement buffer length */
@@ -585,8 +580,12 @@ void usart_async_handler(uint8_t instance)
 			/* If the transmission buffer is empty,
 			 * run callback*/
 			dev_inst->async_rx_ongoing = false;
-			(*(dev_inst->callback[USART_CALLBACK_TYPE_BUFFER_RECEIVED]))(dev_inst);
-		}
 
+			/* Run callback if registered and enabled */
+			if (callback_status
+					& USART_CALLBACK_BUFFER_RECEIVED) {
+				(*(dev_inst->callback[USART_CALLBACK_BUFFER_RECEIVED]))(dev_inst);
+			}
+		}
 	}
 }

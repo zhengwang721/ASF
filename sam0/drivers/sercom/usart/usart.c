@@ -44,6 +44,12 @@
 #  include "usart_async.h"
 #endif
 
+
+
+/**
+ * \internal Set Configuration of the USART module
+ *
+ */
 enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		const struct usart_conf const *config)
 {
@@ -134,6 +140,20 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  *
  * \param dev_inst Pointer to USART device
  * \param config Pointer to configuration struct
+ *
+ * \return Status of the initialization
+ *
+ * \retval STATUS_OK                       The initialization was successful
+ * \retval STATUS_ERR_BUSY                 The USART module is occupied with
+ *                                         resetting itself
+ * \retval STATUS_ERR_DENIED               The USART have not been disabled in
+ *                                         advance of initialization
+ * \retval STATUS_ERR_INVALID_ARG          The configuration struct contains
+ *                                         invalid configuration for the sample_mode
+ * \retval STATUS_ERR_ALREADY_INITIALIZED  The SERCOM instance has already been
+ *                                         initialized with different clock configuration
+ * \retval STATUS_ERR_BAUD_UNAVAILABLE     The BAUD rate given by the configuration
+ *                                         struct due to sample_mode or clock frequency
  */
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 		SERCOM_t *const hw_dev, const struct usart_conf *const config)
@@ -287,30 +307,31 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	_usart_wait_for_sync(dev_inst);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
-	error_code = (usart_module->STATUS & SERCOM_USART_STATUS_MASK);
+	error_code = (uint8_t)(usart_module->STATUS & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
 		/* Check which error occurred */
-		switch(error_code){
-		case USART_STATUS_FLAG_PERR:
-			return STATUS_ERR_BAD_DATA;
-
-		case USART_STATUS_FLAG_FERR:
+		if (error_code & USART_STATUS_FLAG_FERR) {
+			/* Clear flag by writing a 1 to it and
+			 * return with an error code */
+			usart_module->STATUS &= ~USART_STATUS_FLAG_FERR;
 			return STATUS_ERR_BAD_FORMAT;
 
-		case USART_STATUS_FLAG_BUFOVF:
-			//TODO: waiting for status_code
-			return 0xff;
-			//return STATUS_ERR_OVERFLOW;
+		} else if (error_code & USART_STATUS_FLAG_BUFOVF) {
+			/* Clear flag by writing a 1 to it and
+			 * return with an error code */
+			usart_module->STATUS &= ~USART_STATUS_FLAG_BUFOVF;
+			return STATUS_ERR_OVERFLOW;
 
-		default:
-			return 0xff;
-			//return something;
+		} else if (error_code & USART_STATUS_FLAG_PERR) {
+			/* Clear flag by writing a 1 to it and
+			 * return with an error code */
+			usart_module->STATUS &= ~USART_STATUS_FLAG_PERR;
+			return STATUS_ERR_BAD_DATA;
+
 		}
 	}
-
-	//TODO: _usart_wait_for_sync(dev_inst);
 
 	/* Read data from USART module */
 	*rx_data = usart_module->DATA;

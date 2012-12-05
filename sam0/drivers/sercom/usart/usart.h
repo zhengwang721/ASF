@@ -223,9 +223,9 @@ struct usart_conf {
 	/** External clock frequency in synchronous mode.
 	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
-	//TODO: clock_setup, config_struct?;
+	/** Generator source for the clock used by USART */
 	enum gclk_generator generator_source;
-	/*  */
+	/** If true the clock used by USART will run in standby mode */
 	bool run_in_standby;
 };
 
