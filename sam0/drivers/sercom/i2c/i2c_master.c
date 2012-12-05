@@ -348,116 +348,6 @@ enum status_code i2c_master_read_packet(
 	/* Written buffer counter. */
 	uint16_t counter = 0;
 
-	/* Variables for state machine. */
-	enum _i2c_state_machine_state state = _I2C_STATE_MACHINE_INIT;
-	enum _i2c_state_machine_state next_state;
-	bool run_state_machine = true;
-
-	/* Loop for state machine. */
-	while (run_state_machine) {
-		switch (state) {
-			case _I2C_STATE_MACHINE_INIT:
-				/* Set address and direction bit. Will send start command on bus. */
-				i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_READ_Pos);
-
-				/* Set state to go to. */
-				state = _I2C_STATE_MACHINE_WAIT;
-				/* Set state after wait. */
-				next_state = _I2C_STATE_MACHINE_ADDRESS;
-
-				break;
-
-			case _I2C_STATE_MACHINE_WAIT:
-				/* Wait for response on bus. */
-				tmp_status = _i2c_master_wait_for_bus(dev_inst);
-
-				/* Check status. */
-				state = _I2C_STATE_MACHINE_CHECK_STATUS;
-
-				break;
-
-			case _I2C_STATE_MACHINE_CHECK_STATUS:
-				/* Check for error. */
-				if (tmp_status != STATUS_OK) {
-					state = _I2C_STATE_MACHINE_END;
-
-					/* Save the number of written bytes. */
-					packet->data_length = counter;
-
-				} else {
-					state = next_state;
-				}
-
-				break;
-
-			case _I2C_STATE_MACHINE_ADDRESS:
-				/* Respond to address response. */
-				tmp_status = _i2c_master_address_response(dev_inst);
-
-				/* Check status. */
-				state = _I2C_STATE_MACHINE_CHECK_STATUS;
-				/* State after status check. */
-				next_state = _I2C_STATE_MACHINE_READ;
-
-				break;
-
-			case _I2C_STATE_MACHINE_READ:
-				/* Save data to buffer, sends "ack" when reading DATA register. */
-				packet->data[counter++] = i2c_module->DATA;
-
-				/* Check if packet is sent. */
-				if (packet->data_length-- != 0) {
-					/* Wait for response. */
-					state = _I2C_STATE_MACHINE_WAIT;
-				} else {
-					/* Packet is sent, close connection. */
-					state = _I2C_STATE_MACHINE_CLOSE_CONNECTION;
-				}
-
-				/* Next command after response. */
-				next_state = _I2C_STATE_MACHINE_BUS_STATE;
-
-				break;
-
-			case _I2C_STATE_MACHINE_BUS_STATE:
-				/* Check bus state. */
-				if (!(i2c_module->STATUS & I2C_MASTER_BUSSTATE_OWNER_Msk)) {
-					/* Lost ownership of bus. */
-					tmp_status = STATUS_ERR_PACKET_COLLISION;
-
-					state = _I2C_STATE_MACHINE_CHECK_STATUS;
-
-				} else {
-					/* Owner of bus, read next byte. */
-					state = _I2C_STATE_MACHINE_READ;
-				}
-
-				break;
-
-			case _I2C_STATE_MACHINE_CLOSE_CONNECTION:
-				/* Send nack and stop signal. */
-				i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK | SERCOM_I2C_MASTER_CMD(3);
-
-				state = _I2C_STATE_MACHINE_END;
-
-				break;
-
-			case _I2C_STATE_MACHINE_END:
-				/* Stop state machine. */
-				run_state_machine = false;
-
-				break;
-
-			default:
-				Assert(false);
-				tmp_status = STATUS_ERR_INVALID_ARG;
-				state = _I2C_STATE_MACHINE_END;
-		}
-	}
-
-
-	return tmp_status;
-
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_READ_Pos);
 
@@ -472,9 +362,6 @@ enum status_code i2c_master_read_packet(
 
 	/* Check that no error has occurred. */
 	if (tmp_status == STATUS_OK) {
-		/* Init data length. */
-		uint16_t buffer_counter = 0;
-
 		/* Read data buffer. */
 		while (packet->data_length--) {
 			/* Check that bus ownership is not lost. */
@@ -483,7 +370,7 @@ enum status_code i2c_master_read_packet(
 			}
 
 			/* Save data to buffer. */
-			packet->data[buffer_counter++] = i2c_module->DATA;
+			packet->data[counter++] = i2c_module->DATA;
 
 			/* Wait for response. */
 			tmp_status = _i2c_master_wait_for_bus(dev_inst);
