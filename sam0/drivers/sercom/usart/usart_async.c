@@ -471,6 +471,9 @@ void usart_async_handler(uint8_t instance)
 	SERCOM_USART_t *const usart_module
 		= &(dev_inst->hw_dev->USART);
 
+	/* Wait for the synchronization to complete */
+	_usart_wait_for_sync(dev_inst);
+
 	/* Read and mask interrupt flag register */
 	interrupt_status = usart_module->INTFLAGS;
 	callback_status = dev_inst->callback_reg_mask

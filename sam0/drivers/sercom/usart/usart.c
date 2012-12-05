@@ -106,6 +106,9 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		return status_code;
 	}
 
+	/* Wait until synchronization is complete */
+	_usart_wait_for_sync(dev_inst);
+
 	/*Set baud val */
 	usart_module->BAUD = baud_val;
 
@@ -124,6 +127,9 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	} else {
 		ctrlb |= (USART_FRAME_FORMAT_WITH_PARITY_gm | config->parity);
 	}
+
+	/* Wait until synchronization is complete */
+	_usart_wait_for_sync(dev_inst);
 
 	/* Write configuration to CTRLB */
 	usart_module->CTRLB = ctrlb;
@@ -171,12 +177,14 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
+	/* Wait for synchronization to be complete*/
+	_usart_wait_for_sync(dev_inst);
+
 	if (usart_module->CTRLA & SERCOM_USART_RESET_bm) {
 		/* Reset is ongoing. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	_usart_wait_for_sync(dev_inst);
 	if (usart_module->CTRLA & SERCOM_USART_ENABLE_bm) {
 		/* Module have to be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
