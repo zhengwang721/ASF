@@ -634,38 +634,9 @@ static inline void usart_disable_tx(const struct usart_dev_inst
  */
 
 /**
- * \name Interrupt and Status flags
+ * \name Interrupt flags
  * {@
  */
-
-static inline bool usart_is_status_flag_set(
-		const struct usart_dev_inst *const dev_inst,
-		enum usart_status_flag status_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
-
-	return (usart_module->STATUS & (1 << status_flag));
-}
-
-static inline void usart_clear_status_flag(
-		const struct usart_dev_inst *const dev_inst,
-		enum usart_status_flag status_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
-
-	/* Clear requested status flag by writing 1 to it */
-	usart_module->STATUS |= (1 << status_flag);
-}
 
 static inline bool usart_is_interrupt_flag_set(
 		const struct usart_dev_inst *const dev_inst,
