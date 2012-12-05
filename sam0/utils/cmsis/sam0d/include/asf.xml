@@ -5,7 +5,7 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="sam0d.h"/>
-		<!-- <build type="header-file" value="sam0d4.h"/> -->
+		<build type="header-file" value="sam0d4.h"/>
 		<build type="header-file" value="sam0d4_reva.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0d"/>
