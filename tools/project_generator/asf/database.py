@@ -2297,7 +2297,10 @@ class ConfigDB(object):
 		run_test(self, self.sanity_check_device_support_valid, device_map)
 		run_test(self, self.sanity_check_device_support_exists)
 		run_test(self, self.sanity_check_selector_matching_parent)
-		run_test(self, self.sanity_check_select_by_configs)
+		# TODO: add support for checking config names also in extension dependencies.
+		# For now, skip this test for FDK checks. (FDK-536)
+		if not fdk_check:
+			run_test(self, self.sanity_check_select_by_configs)
 		run_test(self, self.sanity_check_device_support_alias, device_map)
 		run_test(self, self.sanity_check_project_board_device_support, device_map)
 		# This is the time consuming one (50-ish secs):

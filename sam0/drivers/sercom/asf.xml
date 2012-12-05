@@ -8,6 +8,7 @@
 		<build type="header-file" subtype="api" value="sercom.h"/>
 		<build type="doxygen-entry-point" value="sam0_sercom_group"/>
 		<device-support value="sam0d"/>
+		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.utils"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>

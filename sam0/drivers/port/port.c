@@ -169,27 +169,27 @@ enum status_code port_pin_set_config(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	/* The Multi-Port Configuration Mask register (MPCCTRL) requires the
+	/* The Write Configuration register (WRCONFIG) requires the
 	 * pins to to grouped into two 16-bit half-words - split them out here */
 	uint32_t lower_pin_mask = (pin_mask & 0xFFFF);
 	uint32_t upper_pin_mask = (pin_mask >> 16);
 
 	/* Configure the lower 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
-	port_base->MPCCTRL
-		= (lower_pin_mask << PORT_MPCCTRL_PINMASK_gp) |
-			(pin_cfg << PORT_MPCCTRL_CONFIG_gp) |
-			(config->peripheral_index << PORT_MPCCTRL_PMUX_gp) |
-			PORT_MPCCTRL_WRPMUX_bm | PORT_MPCCTRL_WRPINCFG_bm;
+	port_base->WRCONFIG
+		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_gp) |
+			(pin_cfg << PORT_WRCONFIG_CONFIG_gp) |
+			(config->peripheral_index << PORT_WRCONFIG_PMUX_gp) |
+			PORT_WRCONFIG_WRPMUX_bm | PORT_WRCONFIG_WRPINCFG_bm;
 
 	/* Configure the upper 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
-	port_base->MPCCTRL
-		= (upper_pin_mask << PORT_MPCCTRL_PINMASK_gp) |
-			(pin_cfg << PORT_MPCCTRL_CONFIG_gp) |
-			(config->peripheral_index << PORT_MPCCTRL_PMUX_gp) |
-			PORT_MPCCTRL_WRPMUX_bm | PORT_MPCCTRL_WRPINCFG_bm |
-			PORT_MPCCTRL_HWSEL_bm;
+	port_base->WRCONFIG
+		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_gp) |
+			(pin_cfg << PORT_WRCONFIG_CONFIG_gp) |
+			(config->peripheral_index << PORT_WRCONFIG_PMUX_gp) |
+			PORT_WRCONFIG_WRPMUX_bm | PORT_WRCONFIG_WRPINCFG_bm |
+			PORT_WRCONFIG_HWSEL_bm;
 
 	/* Set the pull-up state once the port pins are configured if one was
 	 * requested and it does not violate the valid set of port

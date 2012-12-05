@@ -190,6 +190,8 @@ A project description is the starting point for the project generator, and must 
             <xs:element ref="info" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="device-support" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="device-support-alias" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="toolchain-config-list" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="generator" minOccurs="0" maxOccurs="unbounded" />
             <xs:element ref="related-module" minOccurs="0" maxOccurs="unbounded"/>
          </xs:choice>

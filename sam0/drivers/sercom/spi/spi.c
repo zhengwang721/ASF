@@ -247,10 +247,10 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= 10000; j++) {
+			for (j = 0; j <= SPI_TIMEOUT; j++) {
 				if (spi_is_ready_to_read(dev_inst)) {
 					break;
-				} else if (j == 10000) {
+				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to read data within timeout period */
 					return STATUS_ERR_TIMEOUT;
 				}
@@ -263,7 +263,11 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		}
 
 		/* Read SPI character */
-		spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
+			spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		} else {
+			spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+		}
 	}
 	return STATUS_OK;
 }
@@ -307,10 +311,10 @@ enum status_code spi_write_buffer(struct spi_dev_inst
 	while (length--) {
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= 10000; j++) {
+			for (j = 0; j <= SPI_TIMEOUT; j++) {
 				if (spi_is_ready_to_write(dev_inst)) {
 					break;
-				} else if (j == 10000) {
+				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to write data within timeout period */
 					return STATUS_ERR_TIMEOUT;
 				}
@@ -377,10 +381,10 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 	while (length--) {
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= 10000; j++) {
+			for (j = 0; j <= SPI_TIMEOUT; j++) {
 				if (spi_is_ready_to_write(dev_inst)) {
 					break;
-				} else if (j == 10000) {
+				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to write data within timeout period */
 					return STATUS_ERR_TIMEOUT;
 				}
@@ -401,10 +405,10 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
-			for (j = 0; j <= 10000; j++) {
+			for (j = 0; j <= SPI_TIMEOUT; j++) {
 				if (spi_is_ready_to_read(dev_inst)) {
 					break;
-				} else if (j == 10000) {
+				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to read data within timeout period */
 					return STATUS_ERR_TIMEOUT;
 				}
@@ -415,7 +419,11 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}
 		/* Read the SPI character */
-		spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
+			spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		} else {
+			spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+		}
 	}
 
 	return STATUS_OK;
