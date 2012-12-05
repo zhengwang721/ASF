@@ -313,18 +313,6 @@ static enum status_code _i2c_master_wait_for_bus(
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
  */
-
-enum _i2c_state_machine_state {
-	_I2C_STATE_MACHINE_INIT = 0,
-	_I2C_STATE_MACHINE_WAIT = 1,
-	_I2C_STATE_MACHINE_ADDRESS = 2,
-	_I2C_STATE_MACHINE_CHECK_STATUS = 3,
-	_I2C_STATE_MACHINE_READ = 4,
-	_I2C_STATE_MACHINE_BUS_STATE = 5,
-	_I2C_STATE_MACHINE_CLOSE_CONNECTION = 6,
-	_I2C_STATE_MACHINE_END = 7,
-};
-
 enum status_code i2c_master_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet)
@@ -335,6 +323,7 @@ enum status_code i2c_master_read_packet(
 	Assert(packet);
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
 #ifdef I2C_MASTER_ASYNC
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->async_ongoing != false) {
