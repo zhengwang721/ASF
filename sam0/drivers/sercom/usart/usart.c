@@ -60,7 +60,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Set SERCOM gclk generator according to config */
-	status_code = _sercom_set_gclk_generator(config->generator_source,
+	status_code = sercom_set_gclk_generator(config->generator_source,
 		config->run_in_standby, false);
 	if (status_code != STATUS_OK) {
 		return status_code;
