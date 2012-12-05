@@ -58,13 +58,13 @@
  */
 /* TODO: Add support for RX started interrupt. */
 #ifdef USART_ASYNC
-enum usart_callback_type {
+enum usart_callback {
 	/** Callback for buffer transmitted. */
-	USART_CALLBACK_TYPE_BUFFER_TRANSMITTED,
+	USART_CALLBACK_BUFFER_TRANSMITTED,
 	/** Callback for buffer received. */
-	USART_CALLBACK_TYPE_BUFFER_RECEIVED,
+	USART_CALLBACK_BUFFER_RECEIVED,
 	/** Callback for error. */
-	USART_CALLBACK_TYPE_ERROR,
+	USART_CALLBACK_ERROR,
 #if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	USART_CALLBACK_N,

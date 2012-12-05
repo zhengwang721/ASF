@@ -102,7 +102,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  */
 void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
 		usart_async_callback_t *callback_func,
-		enum usart_callback_type callback_type)
+		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -126,7 +126,7 @@ void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
  *
  */
 void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
-		enum usart_callback_type callback_type)
+		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -157,7 +157,7 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  */
 enum status_code usart_async_enable_callback(
 		struct usart_dev_inst *const dev_inst,
-		enum usart_callback_type callback_type)
+		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -170,11 +170,11 @@ enum status_code usart_async_enable_callback(
 
 	/* Enable the interrupt flag */
 	switch (callback_type) {
-	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
+	case USART_CALLBACK_BUFFER_TRANSMITTED:
 		usart_module->INTENSET = SERCOM_USART_TXCIF_bm;
 		break;
 
-	case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
+	case USART_CALLBACK_BUFFER_RECEIVED:
 		usart_module->INTENSET = SERCOM_USART_RXCIF_bm;
 		break;
 
@@ -204,7 +204,7 @@ enum status_code usart_async_enable_callback(
  */
 enum status_code usart_async_disable_callback(
 		struct usart_dev_inst *const dev_inst,
-		enum usart_callback_type callback_type)
+		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -217,11 +217,11 @@ enum status_code usart_async_disable_callback(
 
 	/* Disable the interrupt flag */
 	switch (callback_type) {
-	case USART_CALLBACK_TYPE_BUFFER_TRANSMITTED:
+	case USART_CALLBACK_BUFFER_TRANSMITTED:
 		usart_module->INTENCLR = SERCOM_USART_TXCIF_bm;
 		break;
 
-	case USART_CALLBACK_TYPE_BUFFER_RECEIVED:
+	case USART_CALLBACK_BUFFER_RECEIVED:
 		usart_module->INTENCLR = SERCOM_USART_RXCIF_bm;
 		break;
 
