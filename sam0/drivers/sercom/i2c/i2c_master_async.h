@@ -49,6 +49,12 @@ extern "C" {
 #endif
 
 /**
+ * \page i2c_master_async Asynchronous I2C Master
+ *
+ *
+ */
+
+/**
  * \name Callbacks
  * @{
  */

@@ -45,6 +45,7 @@
 # include "i2c_master_async.h"
 #endif
 
+#if !defined(__DOXYGEN__)
 /**
  * \internal Set configurations to module.
  *
@@ -121,7 +122,7 @@ static enum status_code _i2c_master_set_config(
 
 	return tmp_status_code;
 }
-
+#endif /* __DOXYGEN__ */
 /**
  * \brief Initializes the requested I2C Hardware module.
  *
@@ -223,6 +224,7 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst)
 	i2c_module->CTRLA = ( 1 << I2C_MASTER_SWRST_Pos );
 }
 
+#if !defined(__DOXYGEN__)
 /**
  * \internal Address respond.
  *
@@ -296,6 +298,7 @@ static enum status_code _i2c_master_wait_for_bus(
 	}
 	return STATUS_OK;
 }
+#endif /* __DOXYGEN__ */
 
 /**
  * \brief Read data packet from slave.
@@ -338,7 +341,7 @@ enum status_code i2c_master_read_packet(
 	uint16_t counter = 0;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_READ_Pos);
+	i2c_module->ADDR = (packet->address << 1) | (1 << I2C_MASTER_READ_CMD_Pos);;
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);
@@ -419,7 +422,7 @@ enum status_code i2c_master_write_packet(
 	enum status_code tmp_status = STATUS_OK;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | (1 << I2C_MASTER_TRANSFER_WRITE_Pos);
+	i2c_module->ADDR = (packet->address << 1) | (0 << I2C_MASTER_READ_CMD_Pos);;
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);
@@ -457,8 +460,8 @@ enum status_code i2c_master_write_packet(
 			/* Check for ack from slave. */
 			if (!(i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)))
 			{
-				i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
-						SERCOM_I2C_MASTER_CMD(3);
+				i2c_module->CTRLB |= SERCOM_I2C_MASTER_CMD(3);
+
 				/* Return bad data value. */
 				tmp_status = STATUS_ERR_BAD_DATA;
 				break;

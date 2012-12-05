@@ -263,6 +263,8 @@ typedef enum {
 #define I2C_MASTER_STATUS_BUSERR_Pos 0
 #define I2C_MASTER_TRANSFER_READ_Pos 0
 #define I2C_MASTER_TRANSFER_WRITE_Pos 0
+#define I2C_SYNC_BUSY_Pos 0
+#define SERCOM_I2C_MASTER_ACK 0
 
 
 enum RXPO_group {

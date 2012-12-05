@@ -54,19 +54,19 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_master_group SAM0+ I2C Master
+ * \defgroup sam0_i2c_master_group SAM0+ I2C Driver Master (I2C)
  *
- * This is that!
- *
- * \section i2c_master_intro Introduction
- * This is an intro!
- *
- * \section i2c_master_api_overview API Overview
- * @{
+ * \section bab blablba
+ * blalba
  */
 
 /**
- * \brief Interrupt flags.
+ * \section i2c_master_api_overview API Overview
+ * @{
+ *
+ */
+
+/** \brief Interrupt flags.
  *
  * Flags used when reading or setting interrupt flags.
  */
@@ -75,30 +75,6 @@ enum i2c_master_interrupt_flag {
 	I2C_MASTER_INTERRUPT_WRITE = 0,
 	/** Interrupt flag used for read. */
 	I2C_MASTER_INTERRUPT_READ  = 1,
-};
-
-/**
- * \breif Status flags.
- *
- * Flags used to check current status in module.
- */
-enum i2c_master_status_flag {
-	/** Check if data line is hold low. */
-	I2C_MASTER_STATUS_CLOCK_HOLD = (1 << I2C_MASTER_STATUS_CLKHOLD_Pos),
-	/** Check if bus state is unknown. */
-	I2C_MASTER_STATUS_BUSSTATE_UNKOWN = I2C_MASTER_STATUS_BUSSTATE_UNKOWN_Msk,
-	/** Check if bus state is idle. */
-	I2C_MASTER_STATUS_BUSSTATE_IDLE = I2C_MASTER_STATUS_BUSSTATE_IDLE_Msk,
-	/** Check if bus state is owner. */
-	I2C_MASTER_STATUS_BUSSTATE_OWNER = I2C_MASTER_STATUS_BUSSTATE_OWNER_Msk,
-	/** Check if bus state is busy. */
-	I2C_MASTER_STATUS_BUSSTATE_BUSY = I2C_MASTER_STATUS_BUSSTATE_BUSY_Msk,
-	/** Check if last slave transfer was acknowledged. */
-	I2C_MASTER_STATUS_ACKNOWLEDGE = (1 << I2C_MASTER_STATUS_RXACK_Pos),
-	/** Check if arbitration was lost. */
-	I2C_MASTER_STATUS_LOST_ARBITRATION = (1 << I2C_MASTER_STATUS_ARBLOST_Pos),
-	/* Check if bus error occurred. */
-	I2C_MASTER_STATUS_BUS_ERROR = (1 << I2C_MASTER_STATUS_BUSERR_Pos),
 };
 
 /**
@@ -135,9 +111,10 @@ enum i2c_master_baud_rate {
 #ifdef I2C_MASTER_ASYNC
 /**
  * \brief Callback types.
+ *
  * The available callback types for the I2C master module.
  */
-enum i2c_master_callback_type {
+enum i2c_master_callback {
 	/** Callback for packet write complete. */
 	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
 	/** Callback for packet read complete. */
@@ -149,13 +126,13 @@ enum i2c_master_callback_type {
 	_I2C_MASTER_CALLBACK_N             = 3,
 #endif
 };
-
+#if !defined(__DOXYGEN__)
 /* Prototype for device instance. */
 struct i2c_master_dev_inst;
 
 typedef void (*i2c_master_callback_t)(
 		const struct i2c_master_dev_inst *const dev_inst);
-
+#endif
 #endif
 
 /**
@@ -163,7 +140,7 @@ typedef void (*i2c_master_callback_t)(
  *
  * Device instance structure for SERCOM I2C Master instance. This structure
  * is used throughout the driver, and should be initiated using the
- * /ref i2c_master_init() function to associate the struct with a particular
+ * \ref i2c_master_init() function to associate the struct with a particular
  * hardware instance and configurations.
  */
 struct i2c_master_dev_inst {
@@ -239,7 +216,7 @@ static void _i2c_master_wait_for_sync(
 
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
-	while(i2c_module->STATUS & I2C_SYNC_BUSY_Msk) {
+	while(i2c_module->STATUS & (1 << I2C_SYNC_BUSY_Pos)) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -256,7 +233,7 @@ static void _i2c_master_wait_for_sync(
  * - GCLK generator 0
  * - Do not run in standby
  * - Start bit hold time 50ns-100ns
- * - Buffer timeout = 1000
+ * - Buffer timeout = 65535
  * - Unknown bus status timeout 65535
  *
  * \param[out] config Pointer to configuration structure to be initiated.
@@ -270,7 +247,7 @@ static inline void i2c_master_get_config_defaults(
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
-	config->buffer_timeout = 1000;
+	config->buffer_timeout = 65535;
 	config->unkown_bus_state_timeout = 65535;
 }
 
@@ -295,7 +272,7 @@ static inline void i2c_master_enable(
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Timeout counter used to force bus state. */
-	uint16_t timeout_counter = 0;
+	volatile uint16_t timeout_counter = 0;
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
@@ -305,7 +282,8 @@ static inline void i2c_master_enable(
 
 	/* Start timeout if bus state is unknown. */
 	while (i2c_module->STATUS & I2C_MASTER_BUSSTATE_UNKNOWN) {
-		if(++timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
+		timeout_counter++;
+		if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
 			i2c_module->STATUS = I2C_MASTER_BUSSTATE_IDLE;
 		}
@@ -344,28 +322,6 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
 * \name Interrupts and Flags
 * @{
 */
-
-/**
- * \brief Check given status flag.
- *
- * This will return the status of the requested status flag.
- *
- * \param  dev_inst    Pointer to device instance structure.
- * \param  status_flag Status flag to check.
- */
-static inline bool i2c_master_is_status_flag_set(
-		const struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_status_flag status_flag)
-{
-	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
-
-	/* Check requested status flag. */
-	return (i2c_module->STATUS & status_flag);
-}
 
 /**
  * \brief Check interrupt flag.
@@ -425,6 +381,7 @@ enum status_code i2c_master_write_packet(
 
 
 /** @} */
+/** \subpage i2c_master_async */
 /** @} */
 
 

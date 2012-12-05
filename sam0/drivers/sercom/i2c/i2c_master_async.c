@@ -52,8 +52,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
 
 	/* Find index to save next value in buffer. */
-	uint16_t buffer_index = dev_inst->buffer_length -
-			dev_inst->buffer_remaining--;
+	uint16_t buffer_index = dev_inst->buffer_length - dev_inst->buffer_remaining--;
 
 	/* Read byte from slave and put in buffer. */
 	dev_inst->buffer[buffer_index] = i2c_module->DATA;
@@ -73,8 +72,9 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 	/* Check for ack from slave. */
 	if (!(i2c_module->STATUS & (1 << I2C_MASTER_RXACK_Pos)))
 	{
-		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
-				SERCOM_I2C_MASTER_CMD(3);
+		/* Not acknowledged, send NACK and stop bit. */
+		i2c_module->CTRLB |= SERCOM_I2C_MASTER_CMD(3);
+
 		/* Return bad data value. */
 		dev_inst->status = STATUS_ERR_BAD_DATA;
 		return;
@@ -230,7 +230,7 @@ enum status_code i2c_master_async_read_packet(
 	i2c_module->INTENSET = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_READ_CMD_Msk;
+	i2c_module->ADDR = (packet->address << 1) | (1 << I2C_MASTER_READ_CMD_Pos);
 
 	return STATUS_OK;
 }
@@ -274,7 +274,7 @@ enum status_code i2c_master_async_write_packet(
 	i2c_module->INTENSET = (1 << I2C_MASTER_WIEN_Pos | 1 << I2C_MASTER_RIEN_Pos);
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = packet->address << 1 | I2C_MASTER_WRITE_CMD_Msk;
+	i2c_module->ADDR = (packet->address << 1) | (0 << I2C_MASTER_READ_CMD_Pos);
 
 	return STATUS_OK;
 }
