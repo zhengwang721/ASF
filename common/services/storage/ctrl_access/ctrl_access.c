@@ -547,11 +547,7 @@ Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram)
 
 Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector)
 {
-#if (defined __GNUC__) && (defined __AVR32__)
-  __attribute__((__aligned__(4)))
-#elif (defined __ICCAVR32__)
-  #pragma data_alignment = 4
-#endif
+  COMPILER_ALIGNED(4)
   static U8 sector_buf[FS_512B];
   Ctrl_status status = CTRL_GOOD;
 
