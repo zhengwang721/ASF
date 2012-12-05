@@ -44,7 +44,7 @@
 #include "sercom.h"
 
 /* Look-up table for device instances. */
-static void *_sercom_instances[SERCOM_INSTS_NUM];
+static void *_sercom_instances[SERCOM_INST_NUM];
 
 uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance);
 

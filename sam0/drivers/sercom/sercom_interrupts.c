@@ -44,7 +44,7 @@
 static bool _handler_table_initialized = false;
 
 /** Void pointers for saving device instance structures. */
-static void (*_sercom_interrupt_handlers[SERCOM_INSTS_NUM])(uint8_t instance);
+static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(uint8_t instance);
 
 /**
  * \internal Default interrupt handler
@@ -65,7 +65,7 @@ uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
 	/* Array of SERCOM instances. */
-	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = {SERCOM_INSTS};
+	SERCOM_t sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for SERCOM instance. */
 	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
