@@ -88,6 +88,8 @@ void usart_async_cancel_transmission(struct usart_dev_inst
 void usart_async_cancel_reception(struct usart_dev_inst
 		*const dev_inst);
 
+enum status_code usart_async_get_last_error(
+		struct usart_dev_inst *const dev_inst);
 /**
  * @}
  */
@@ -97,7 +99,7 @@ void usart_async_cancel_reception(struct usart_dev_inst
  * {@
  */
 
-void usart_handler(uint8_t instance);
+void usart_async_handler(uint8_t instance);
 
 /**
  * @}

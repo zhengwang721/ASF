@@ -47,11 +47,12 @@
 enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		const struct usart_conf const *config)
 {
+	/* Temporary registers. */
 	uint16_t baud_val = 0;
 	uint32_t usart_freq;
 	enum status_code status_code = STATUS_OK;
 
-	/* Temporary registers */
+	/* Temporary registers. */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
 
@@ -135,7 +136,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * \param config Pointer to configuration struct
  */
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		const SERCOM_t *const hw_dev, const struct usart_conf *const config)
+		SERCOM_t *const hw_dev, const struct usart_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -162,7 +163,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	}
 
 #ifdef USART_ASYNC
-	/* */
+	/* Temporary variables */
 	uint8_t i;
 	uint8_t instance_index;
 
@@ -175,11 +176,13 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	dev_inst->rx_buffer_ptr        = NULL;
 	dev_inst->callback_reg_mask    = 0x00;
 	dev_inst->callback_enable_mask = 0x00;
+	dev_inst->async_rx_ongoing     = false;
+	dev_inst->async_tx_ongoing     = false;
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
 	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
-	_sercom_set_handler(instance_index, (void *)&usart_handler);
+	_sercom_set_handler(instance_index, (void *)&usart_async_handler);
 	_sercom_instances[instance_index] = dev_inst;
 #endif
 	/* Set configuration according to the config struct */
@@ -213,6 +216,12 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
+#ifdef USART_ASYNC
+	/* Check if the USART is busy doing asynchronous operation. */
+	if (dev_inst->async_tx_ongoing != false) {
+		return STATUS_ERR_BUSY;
+	}
+#endif
 	/* Check if USART is ready for new data */
 	if (!usart_is_data_buffer_empty(dev_inst)) {
 		/* Return error code */
@@ -256,6 +265,15 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
+	/* Error variable */
+	uint16_t error_code;
+
+#ifdef USART_ASYNC
+	/* Check if the USART is busy doing asynchronous operation. */
+	if (dev_inst->async_rx_ongoing != false) {
+		return STATUS_ERR_BUSY;
+	}
+#endif
 	/* Check if USART has new data */
 	if (!usart_is_data_received(dev_inst)) {
 		/* Return error code */
@@ -267,6 +285,32 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
+
+	/* Read out the status code and mask away all but the 4 LSBs*/
+	error_code = (usart_module->STATUS & SERCOM_USART_STATUS_MASK);
+
+	/* Check if an error has occurred during the receiving */
+	if (error_code) {
+		/* Check which error occurred */
+		switch(error_code){
+		case USART_STATUS_FLAG_PERR:
+			return STATUS_ERR_BAD_DATA;
+
+		case USART_STATUS_FLAG_FERR:
+			return STATUS_ERR_BAD_FORMAT;
+
+		case USART_STATUS_FLAG_BUFOVF:
+			//TODO: waiting for status_code
+			return 0xff;
+			//return STATUS_ERR_OVERFLOW;
+
+		default:
+			return 0xff;
+			//return something;
+		}
+	}
+
+	//TODO: _usart_wait_for_sync(dev_inst);
 
 	/* Read data from USART module */
 	*rx_data = usart_module->DATA;
@@ -365,6 +409,7 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
  *                                         to invalid arguments
  * \retval        STATUS_ERR_TIMEOUT       If operation was not completed, due
  *                                         to USART module timing out
+ * TODO: add error codes for rx
  */
 enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		const uint8_t *rx_data, uint16_t length)
@@ -376,6 +421,7 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 	/* Timeout variables */
 	uint16_t i = 0;
 	uint16_t timeout;
+
 #ifdef USART_CUSTOM_TIMEOUT
 	timeout = USART_CUSTOM_TIMEOUT;
 #else

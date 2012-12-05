@@ -59,9 +59,16 @@
 /* TODO: Add support for RX started interrupt. */
 #ifdef USART_ASYNC
 enum usart_callback_type {
+	/** Callback for buffer transmitted. */
 	USART_CALLBACK_TYPE_BUFFER_TRANSMITTED,
+	/** Callback for buffer received. */
 	USART_CALLBACK_TYPE_BUFFER_RECEIVED,
+	/** Callback for error. */
+	USART_CALLBACK_TYPE_ERROR,
+#if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
 	USART_CALLBACK_N,
+#endif
 };
 #endif
 
@@ -169,10 +176,10 @@ enum usart_char_size {
  *
  */
 enum usart_status_flag {
-	USART_STATUS_FLAG_PERR,
-	USART_STATUS_FLAG_FERR,
-	USART_STATUS_FLAG_BUFOVF,
-	USART_STATUS_FLAG_SYNCBUSY,
+	USART_STATUS_FLAG_PERR        = SERCOM_USART_STATUS_PERR,
+	USART_STATUS_FLAG_FERR        = SERCOM_USART_STATUS_FERR,
+	USART_STATUS_FLAG_BUFOVF      = SERCOM_USART_STATUS_BUFOVF,
+	USART_STATUS_FLAG_SYNCBUSY    = SERCOM_USART_STATUS_SYNCBUSY,
 };
 
 /**
@@ -236,18 +243,34 @@ typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const dev_in
  */
 struct usart_dev_inst {
 #ifdef USART_ASYNC
+	/** Mode for the SERCOM module */
 	SERCOM_MODE_t sercom_mode;
 #endif
+	/** Pointer to the hardware instance */
 	SERCOM_t *hw_dev;
+	/** Character size of the data being transferred */
 	enum usart_char_size char_size;
 #ifdef USART_ASYNC
+	/** Array to store callback function pointers in */
 	usart_async_callback_t *callback[USART_CALLBACK_N];
+	/** Buffer pointer to where the next received character will be put */
 	uint8_t *rx_buffer_ptr;
+	/** Buffer pointer to where the next character will be transmitted from */
 	uint8_t *tx_buffer_ptr;
+	/** Remaining characters to receive */
 	volatile uint16_t remaining_rx_buffer_length;
+	/** Remaining characters to transmit */
 	volatile uint16_t remaining_tx_buffer_length;
+	/** Bit mask for callbacks registered */
 	uint8_t callback_reg_mask;
+	/** Bit mask for callbacks enabled */
 	uint8_t callback_enable_mask;
+	/** Returns 'true' if asynchronous reception is ongoing */
+	bool async_rx_ongoing;
+	/** Returns 'false' if asynchronous transmission is ongoing */
+	bool async_tx_ongoing;
+	/** Holds the status of the last asynchronous operation */
+	enum status_code status;
 #endif
 };
 
@@ -298,7 +321,7 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		const SERCOM_t *const hw_dev, const struct usart_conf *const config);
+		SERCOM_t *const hw_dev, const struct usart_conf *const config);
 
 /**
  * \brief Enable the module
@@ -509,7 +532,7 @@ static inline bool usart_is_data_buffer_empty(const struct usart_dev_inst
 /**
  * \brief Enable RX
  *
- * Enable receiver in module
+ * Enable receiver in module.
  *
  * \param[in] dev_inst Pointer to USART software instance struct
  *
@@ -534,7 +557,7 @@ static inline void usart_enable_rx(const struct usart_dev_inst
 /**
  * \brief Disable RX
  *
- * Disable receiver in module
+ * Disable receiver in module.
  *
  * \param[in] dev_inst Pointer to USART software instance struct
  *
@@ -559,7 +582,7 @@ static inline void usart_disable_rx(const struct usart_dev_inst
 /**
  * \brief Enable TX
  *
- * Enable transmitter in module
+ * Enable transmitter in module.
  *
  * \param[in] dev_inst Pointer to USART software instance struct
  *
@@ -584,7 +607,7 @@ static inline void usart_enable_tx(const struct usart_dev_inst
 /**
  * \brief Disable TX
  *
- * Disable transmitter in module
+ * Disable transmitter in module.
  *
  * \param[in] dev_inst Pointer to USART software instance struct
  *
@@ -640,7 +663,7 @@ static inline void usart_clear_status_flag(
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
-	/* Clear requested status flag */
+	/* Clear requested status flag by writing 1 to it */
 	usart_module->STATUS |= (1 << status_flag);
 }
 
@@ -669,7 +692,7 @@ static inline void usart_clear_interrupt_flag(
 	/* Get a pointer to the hardware module instance */
 	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
 
-	/* Clear requested status flag */
+	/* Clear requested status flag by writing a one to it */
 	usart_module->INTFLAGS |= (1 << interrupt_flag);
 }
 
