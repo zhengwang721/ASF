@@ -7,6 +7,7 @@
 			<build type="linker-config" subtype="script" value="sam0d/sam0d4/gcc/flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="sam0d/sam0d4/gcc/sram.ld" toolchain="armgcc"/>
 			<device-support value="atsam0d4"/>
+			<device-support value="atsam0d4_reva"/>
 		</module>
 	</select-by-device>
 </asf>

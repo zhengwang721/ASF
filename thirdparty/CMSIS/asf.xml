@@ -48,7 +48,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
 			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM0l_math.a" toolchain="armgcc"/>
 			<build type="define" name="ARM_MATH_CM0" value="true"/>
-			<build type="header-file" value="Include/core_cm0.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cm0p.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/arm_math.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
