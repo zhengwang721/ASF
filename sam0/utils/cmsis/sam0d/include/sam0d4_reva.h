@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef SAM0+D_H
-#define SAM0+D_H
+#ifndef SAMD20_H
+#define SAMD20_H
 
 /** \addtogroup SAM0+D_definitions SAM0+D definitions
   This file defines all structures and symbols for SAM0+D:
@@ -2559,7 +2559,7 @@ typedef struct {
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR HMATRIXB */
 /* ========================================================================== */
-/** \addtogroup SAM0+D_HMATRIXB HSB Matrix */
+/** \addtogroup SAMD20_HMATRIXB HSB Matrix */
 /*@{*/
 
 #define REV_HMATRIXB   0x130
@@ -9344,35 +9344,35 @@ typedef struct {
 /**  MEMORY MAPPING DEFINITIONS FOR SAM0+D */
 /* ************************************************************************** */
 
-#if defined __SAM0+D64G3__
+#if defined __SAMD20G16A__
   #define FLASH_SIZE          0x10000 /* 64 kB */
   #define FLASH_PAGE_SIZE     64
   #define FLASH_NB_OF_PAGES   1024
   #define FLASH_USER_PAGE_SIZE 64
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
 
-#elif defined __SAM0+D64G4__
+#elif defined __SAMD20J16A__
   #define FLASH_SIZE          0x10000 /* 64 kB */
   #define FLASH_PAGE_SIZE     64
   #define FLASH_NB_OF_PAGES   1024
   #define FLASH_USER_PAGE_SIZE 64
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
 
-#elif defined __SAM0+D128G3__
+#elif defined __SAMD20G17A__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     64
   #define FLASH_NB_OF_PAGES   2048
   #define FLASH_USER_PAGE_SIZE 64
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
 
-#elif defined __SAM0+D128G4__
+#elif defined __SAMD20J17A__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     64
   #define FLASH_NB_OF_PAGES   2048
   #define FLASH_USER_PAGE_SIZE 64
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
 
-#elif defined __SAM0+D256G3__
+#elif defined __SAMD20J18A__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     64
   #define FLASH_NB_OF_PAGES   4096
@@ -9392,4 +9392,4 @@ typedef struct {
 
 /*@}*/
 
-#endif /* SAM0+D_H */
+#endif /* SAMD20_H */

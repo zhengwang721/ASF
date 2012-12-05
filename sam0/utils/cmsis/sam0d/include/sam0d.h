@@ -41,7 +41,8 @@
 #define __SAM0D__
 
 #if defined __SAM0D4_REVA__
-  #define __SAM0+D256G3__
+  /* Hack for setting default device until the toolchain can set it */
+  #define __SAMD20J18A__
   #include "sam0d4_reva.h"
 #elif defined __SAM0D4__
   #include "sam0d4.h"
