@@ -1,4 +1,4 @@
-﻿/**
+/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -45,8 +45,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define __SAM0D4_REVA__
 
 #include <compiler.h>
 #include <clock.h>
@@ -333,11 +331,11 @@ extern "C" {
  */
 enum dac_reference {
 	/** 1V from internal bandgap reference.*/
-	DAC_REF_INT1V = DAC_CTRLB_REFSEL(0),
+	DAC_REF_INT1V = 0,
 	/** Analog VCC as reference. */
-	DAC_REF_AVCC = DAC_CTRLB_REFSEL(1),
+	DAC_REF_AVCC = 1,
 	/** External reference on AREF. */
-	DAC_REF_AREF = DAC_CTRLB_REFSEL(2),
+	DAC_REF_AREF = 2,
 };
 
 /**
