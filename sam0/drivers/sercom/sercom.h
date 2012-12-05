@@ -80,7 +80,7 @@ extern "C" {
  * @{
  */
 
-enum status_code _sercom_set_gclk_generator(
+enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
 		bool force_change);
