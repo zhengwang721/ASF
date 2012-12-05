@@ -43,7 +43,8 @@
 #if defined __SAM0D4_REVA__
   #include "sam0d4_reva.h"
 #elif defined __SAM0D4__
-  #include "sam0d4.h"
+  #define __SAM0+D256G3__
+  #include "sam0d4_reva.h"
 #else
   #error Library does not support the specified device.
 #endif
