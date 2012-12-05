@@ -43,7 +43,7 @@
 /**
  * \internal Configuration structure to save current gclk status.
  */
-struct _sercom_gclk_conf {
+struct _sercom_conf {
 	/* Status of gclk generator initialization. */
 	bool generator_is_set;
 	/* Sercom gclk generator used. */
@@ -52,7 +52,7 @@ struct _sercom_gclk_conf {
 	bool run_in_standby;
 };
 
-static struct _sercom_gclk_conf *sercom_gclk_config;
+static struct _sercom_conf _sercom_config;
 
 /**
  * \brief Calculate synchronous baudrate value (SPI/UART)
@@ -116,14 +116,17 @@ enum status_code _sercom_set_gclk_generator(
 		bool force_change)
 {
 	/* Configuration structure for the gclk channel. */
-	struct clock_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_ch_conf gclk_ch_conf;
+
+	/* Pointer to internal SERCOM configuration. */
+	struct _sercom_conf *sercom_config_ptr = &_sercom_config;
 
 	/* Return argument. */
 	enum status_code ret_val;
 
 	/* Check if valid option. */
-	if(!sercom_gclk_config->generator_is_set || force_change) {
-		sercom_gclk_config->generator_is_set = true;
+	if(!sercom_config_ptr->generator_is_set || force_change) {
+		sercom_config_ptr->generator_is_set = true;
 
 		/* Configure GCLK channel and enable clock */
 		gclk_ch_conf.source_generator = generator_source;
@@ -135,17 +138,17 @@ enum status_code _sercom_set_gclk_generator(
 		gclk_ch_conf.enable_during_sleep = run_in_standby;
 #endif
 		/* Apply configuration and enable the GCLK channel */
-		clock_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-		clock_gclk_ch_enable(SERCOM_GCLK_ID);
+		system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+		system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
-		sercom_gclk_config->generator_source = generator_source;
-		sercom_gclk_config->run_in_standby = run_in_standby;
+		sercom_config_ptr->generator_source = generator_source;
+		sercom_config_ptr->run_in_standby = run_in_standby;
 
 		ret_val = STATUS_OK;
 
-	} else if (generator_source == sercom_gclk_config->generator_source &&
-			run_in_standby == sercom_gclk_config->run_in_standby) {
+	} else if (generator_source == sercom_config_ptr->generator_source &&
+			run_in_standby == sercom_config_ptr->run_in_standby) {
 		/* Return status OK if same config. */
 		ret_val = STATUS_OK;
 

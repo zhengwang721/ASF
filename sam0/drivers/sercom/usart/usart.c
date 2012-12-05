@@ -73,7 +73,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	switch (config->sample_mode) {
 	case USART_SAMPLE_MODE_SYNC_MASTER:
 		/* Calculate baud value */
-		//usart_freq = clock_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate, usart_freq, &baud_val);
 
 	case USART_SAMPLE_MODE_SYNC_SLAVE:
@@ -81,7 +81,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 
 	case USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK:
 		/* Calculate baud value */
-		//usart_freq = clock_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_async_baud_val(config->baudrate, usart_freq, &baud_val);
 
 	case USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK:
