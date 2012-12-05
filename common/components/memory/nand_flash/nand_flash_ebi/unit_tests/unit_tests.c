@@ -330,10 +330,6 @@ int main(void)
 
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-#if defined(__GNUC__)
-	setbuf(stdout, NULL);
-#endif
-
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(nand_flash_test_read_id, NULL, run_test_initialization, NULL,
 			"NAND Flash initialization and id test");
