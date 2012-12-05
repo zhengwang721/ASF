@@ -58,22 +58,29 @@ static struct _sercom_gclk_conf *sercom_gclk_config;
  * \brief Calculate synchronous baudrate value (SPI/UART)
  */
 enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
-		uint32_t external_clock, uint16_t *baudval)
+		uint32_t external_clock, uint16_t *baudvalue)
 {
-	uint16_t return_value = 0;
+	/* Baud value variable */
+	uint16_t baud_calculated = 0;
 
+	/* Check if baudrate is outside of valid range. */
 	if (baudrate > (external_clock / 2)) {
-		// assert error, outside valid range
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	}
 
-	//return_value = (external_clock / (2 * baudrate)) - 1;
+	/* Calculate BAUD value from clock frequency and baudrate */
+	baud_calculated = (external_clock / (2 * baudrate)) - 1;
 
-	if (return_value > 0xFF) {
-		// assert error; max BAUD value for sync is 255 (8-bit)
+	/* Check if BAUD value is more than 255, which is maximum
+	 * for synchronous mode */
+	if (baud_calculated > 0xFF) {
+		/* Return with an error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	} else {
-		return return_value;
+		*baudvalue = baud_calculated;
+		return STATUS_OK;
 	}
-	return return_value;
 }
 
 /**
@@ -82,21 +89,23 @@ enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval)
 {
-
-	if ((baudrate * 16) >= peripheral_clock) {
-		// Unattainable baud rate
-		return 4;
-	}
-
+	/* Temporary variables  */
 	uint64_t ratio = 0;
 	uint64_t scale = 0;
-	uint64_t retval = 0;
+	uint64_t baud_calculated = 0;
 
+	/* Check if the baudrate is outside of valid ragnge */
+	if ((baudrate * 16) >= peripheral_clock) {
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+	}
+
+	/* Calculate the BAUD value */
 	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
-	scale = (1ull << SHIFT) - ratio;
-	retval = (65536 * scale) >> SHIFT;
+	scale = ((uint64_t)1 << SHIFT) - ratio;
+	baud_calculated = (65536 * scale) >> SHIFT;
 
-	*baudval = retval;
+	*baudval = baud_calculated;
 
 	return STATUS_OK;
 }
