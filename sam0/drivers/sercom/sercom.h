@@ -43,8 +43,8 @@
 #define SERCOM_H_INCLUDED
 
 #include <compiler.h>
-#include <clock.h>
-#include <gclk.h>
+//#include <clock.h>
+//#include <gclk.h>
 #include "sercom_interrupts.h"
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \

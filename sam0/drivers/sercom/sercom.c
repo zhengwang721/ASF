@@ -47,7 +47,7 @@ struct _sercom_conf {
 	/* Status of gclk generator initialization. */
 	bool generator_is_set;
 	/* Sercom gclk generator used. */
-	enum gclk_generator generator_source;
+	//enum gclk_generator generator_source;
 	/* Will generator be operational in standby. */
 	bool run_in_standby;
 };
@@ -110,6 +110,7 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 	return STATUS_OK;
 }
 
+#ifdef TODO 
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
@@ -159,3 +160,5 @@ enum status_code sercom_set_gclk_generator(
 
 	return ret_val;
 }
+#endif
+
