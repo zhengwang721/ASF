@@ -19,7 +19,7 @@
 		<build type="header-file" subtype="example" value="quick_start/qs_i2c_master_basic_use.h"/>
 		<build type="doxygen-entry-point" value="sam0_i2c_group"/>
 		<build type="doxygen-entry-point" value="sam0_i2c_master_group"/>
-		<device-support value="sam0"/>
+		<device-support value="sam0d"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>

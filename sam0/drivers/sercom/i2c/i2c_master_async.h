@@ -64,11 +64,11 @@ void _i2c_master_async_callback_handler(uint8_t instance);
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_master_callback_t callback,
-		enum i2c_master_callback_type callback_type);
+		enum i2c_master_callback callback_type);
 
 void i2c_master_async_unregister_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
+		enum i2c_master_callback callback_type);
 
 /**
  * \brief Enable callback.
@@ -78,7 +78,7 @@ void i2c_master_async_unregister_callback(
  */
 static inline void i2c_master_async_enable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type)
+		enum i2c_master_callback callback_type)
 {
 	/* Sanity check. */
 	Assert(dev_inst);
@@ -97,7 +97,7 @@ static inline void i2c_master_async_enable_callback(
  */
 static inline void i2c_master_async_disable_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type)
+		enum i2c_master_callback callback_type)
 {
 	/* Sanity check. */
 	Assert(dev_inst);
