@@ -54,10 +54,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_master_group SAM0+ I2C Driver Master (I2C)
+ * \defgroup sam0_i2c_master_group I2C Master Driver
  *
  * \section bab blablba
  * blalba
+ *
+ * blabla
  */
 
 /**
@@ -241,7 +243,7 @@ static void _i2c_master_wait_for_sync(
  * - Baudrate 100kHz
  * - GCLK generator 0
  * - Do not run in standby
- * - Start bit hold time 50ns-100ns
+ * - Start bit hold time 300ns-600ns
  * - Buffer timeout = 65535
  * - Unknown bus status timeout 65535
  *
@@ -255,7 +257,7 @@ static inline void i2c_master_get_config_defaults(
 	config->baud_rate = I2C_MASTER_BAUD_RATE_100KHZ;
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
-	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
+	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_300NS_600NS;
 	config->buffer_timeout = 65535;
 	config->unkown_bus_state_timeout = 65535;
 }

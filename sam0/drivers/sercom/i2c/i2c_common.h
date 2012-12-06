@@ -54,7 +54,9 @@ extern "C" {
  * interface for configuration and management of the SERCOM I2C module in
  * master mode, as well as data transfer via I2C.
  * This driver encompasses the following module within the SAM0+ devices:
- * \li \b I2C (Inter-Integrated Circuit)
+ * - \b I2C (Inter-Integrated Circuit)
+ *  - \ref sam0_i2c_master_group
+ *  - \ref sam0_i2c_slave_group
  *
  * \section module_introduction Introduction
  *
@@ -200,22 +202,22 @@ extern "C" {
  *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
  * \f]
  *
+ * \warning Must be checked with correct toolchain!
+ *
+ * Depending on optimization level.
  *
  * \subsubsection sda_hold SDA Hold Timeout
- * \subsubsection scl_low SCL Low Timeout
- * If
+ *
  *
  * \subsection Transactions
- * There are three fundamental transaction formats:
+ * There are two fundamental transaction formats implemented in the driver:
  * \li Master Write
  *   - The master transmits data packets to the slave after addressing it.
  * \li Master Read
  *   - The slave transmits data packets to the master after being addressed.
- * \li Combined
- *   - A combined transaction consists of several write and read transactions.
  *
  * A data transfer starts with the master issuing a \b Start condition on the
- * bus  followed by the address of the slave together with a bit to indicate
+ * bus, followed by the address of the slave together with a bit to indicate
  * whether the master wants to read from or write to the slave.
  * The addressed slave must respond to this by sending an \b ACK back to the
  * master.
@@ -223,31 +225,28 @@ extern "C" {
  * After this, data packets are sent from the master or slave, according to the
  * read/write bit. Each packet must be acknowledged (ACK) or not
  * acknowledged (NACK) by the receiver.
+ *
  * If a slave responds with a NACK, the master must assume that the slave
  * cannot receive any more data and issue a \b Stop condition to end the
  * transaction.
  *
- * The master completes a transaction by issuing a \b Stop condition.
- * \n\n
- * A master can issue multiple \b Start conditions during a transaction; this
- * is then called a \b Repeated \b Start condition.
- *
  * \subsubsection address_packets Address Packets
  * The slave address consists of seven bits. The 8th bit in the transfer
  * determines the data direction (read or write). An address packet always
- * succeeds a \b Start or \b Repeated \b Start condition.
+ * succeeds a \b Start or \b Repeated \b Start condition. The 8th bit is handled
+ * in the driver, and the user will only have to provide the 7 bit address.
  *
  * \subsubsection data_packets Data Packets
- * 9 bits long, consists of one data byte and an acknowledgement bit.
+ * 9 bits long, consists of one data byte and an acknowledgment bit.
  * Data packets succeed either an address packet or another data packet.
  *
  * \subsubsection trans_examples Transaction Examples
- * The grey bits in the following examples are sent from master to slave, and
+ * The gray bits in the following examples are sent from master to slave, and
  * the white bits are sent from slave to master.
  *
  * Example of a read transaction is shown below. Here, the master first issues
  * a \b Start condition and gets ownership of the bus. An address packet with
- * the dir flag set to read is then sent and acknowledged by the slave. Then the
+ * the direction flag set to read is then sent and acknowledged by the slave. Then the
  * slave sends one data packet which is acknowledged by the master. The slave
  * sends another packet, which is not acknowledged by the master, which
  * indicates that the master will terminate the transaction. In the end
@@ -352,7 +351,10 @@ extern "C" {
  *
  * In a multi master environment, arbitration of the bus is important, as only
  * one master can own the bus at any point.
+ *
  * \subsubsection arbitration Arbitration
+ *
+ *
  * \par Clock stretching
  * The serial clock line is always driven by a master device. However, all
  * devices connected to the bus are allowed stretch the low period of the clock
@@ -386,8 +388,9 @@ extern "C" {
  * condition)
  * \li \b OWNER If the master initiates a transaction successfully
  * \li \b BUSY If another master is driving the bus
- * \li \b UNKNOWN If the master that has recently been enabled or connected to
- * the bus.
+ * \li \b UNKNOWN If the master has recently been enabled or connected to
+ * the bus. Is forced to \b IDLE after given \ref inactive_bus "timeout" when the
+ * master module is enabled.
  *
  * The bus state diagram can be seen below.
  * \li S: Start condition
@@ -441,15 +444,19 @@ extern "C" {
  * \section dependencies Dependencies
  * The I2C driver has the following dependencies:
  * \li \b SERCOM
+ * \li \b SYSTEM
+ * \li \b NVIC when used in asynchronous mode.
  *
  * \section special_cons Special Considerations
+ * No special considerations.
  *
  * \section extra_info Extra Information
  * For extra information see \ref i2c_extra_info.
  *
  * \section module_examples Examples
  * - \ref quickstart
- * \section api_overview API Overview
+ *
+ * \section i2c_api_overview API Overview
  * @{
  */
 

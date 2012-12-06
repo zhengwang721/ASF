@@ -225,6 +225,7 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
+	dev_inst->status = STATUS_OK;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -269,6 +270,7 @@ enum status_code i2c_master_async_write_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
+	dev_inst->status = STATUS_OK;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -291,7 +293,6 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
 
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
-
 
 	/* Check if the module should response to address ack. */
 	if (dev_inst->buffer_length <= 0 && dev_inst->buffer_remaining > 0) {
