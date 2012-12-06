@@ -107,6 +107,7 @@ static struct _nvm_device _nvm_dev;
  *                                  could not set the bootloader and eeprom
  *                                  size
  */
+#ifdef TODO
 enum status_code nvm_init(
 		const struct nvm_config *const config)
 {
@@ -114,21 +115,22 @@ enum status_code nvm_init(
 	Assert(config);
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = &NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVM_ERRORS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
 		return STATUS_ERR_BUSY;
 	}
 
+	//TODO: bit positions
 	/* Writing configuration to the CTRLB register */
-	nvm_module->CTRLB = (config->sleep_power_mode <<  NVM_SLEEP_ENABLE_gp) |
-			(config->manual_page_write << NVM_MAN_PAGE_WRITE_bp) |
-			(config->auto_wait_states << NVM_AUTO_WAIT_STATE_bp) |
-			(config->wait_states << NVM_WAIT_STATES_gp);
+	nvm_module->CTRLB.reg = (config->sleep_power_mode <<  NVMCTRL_CTRLB_SLEEPPRM_Pos) |
+//			(config->manual_page_write << NVMCTRL_CTRLB_MAN_PAGE_WRITE_bp) |
+//			(config->auto_wait_states << NVMCTRL_CTRLB_AUTO_WAIT_STATE_bp) |
+			(config->wait_states << NVMCTRL_CTRLB_RWS_Msk);
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size = 8 * (2 << (nvm_module->PARAM & NVM_PSZ_gm));
@@ -148,10 +150,11 @@ enum status_code nvm_init(
 			(config->eeprom_size << NVM_AUX_EEPROM_gp);
 
 	/* Issue the write auxiliary space command */
-	nvm_module->CTRLA = NVM_COMMAND_WRITE_AUX_ROW;
+	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW;
 
 	return STATUS_OK;
 }
+#endif
 
 /**
  * \brief Executes a command on the NVM controller.
