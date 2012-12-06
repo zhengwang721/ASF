@@ -530,4 +530,4 @@ static inline void events_ch_software_trigger(
  * - \subpage events_basic_use_case
  */
 
-#endif
+#endif /* EVENTS_H_INCLUDED */

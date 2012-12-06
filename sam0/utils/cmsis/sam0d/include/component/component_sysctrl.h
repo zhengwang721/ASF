@@ -124,5 +124,7 @@ typedef struct {
 #define SYSCTRL_PRESC_gm 0
 #define SCR_SLEEPDEEP_bm 0
 
+#define SYSCTRL_VREFCTRLA_TSEN ( 1 << 1)
+#define SYSCTRL_VREFCTRLA_BGOUTEN (1 << 2)
 
 #endif /* SYSCTRL_HEADER_H_INCLUDED */

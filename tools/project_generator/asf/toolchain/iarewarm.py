@@ -190,7 +190,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 			self._insert_single_state_element(self.debuggerfile_root_element, "UseFlashLoader", "0")
 
 		# Get MacroFile
-		file_macro_file = self._get_macro_file(self.macro_id)
+		(file_macro_file, origin_macro_file) = self._get_macro_file(self.macro_id)
 		self.project.filelist.add(file_macro_file)
 		projectfile_dir = self._get_project_file_dir()
 		file_macro_file = os.path.relpath(file_macro_file, projectfile_dir)
@@ -213,7 +213,7 @@ class IAREWARMProject_v600(IAREWARMProject):
 		self._insert_single_state_element(self.debuggerfile_root_element, "UseFlashLoader", "0")
 
 		# Get Auxiliary MacroFile
-		file_aux_macro_file = self._get_aux_macro_file(self.macro_id)
+		(file_aux_macro_file, origin_aux_macro_file) = self._get_aux_macro_file(self.macro_id)
 		self.project.filelist.add(file_aux_macro_file)
 		projectfile_dir = self._get_project_file_dir()
 		file_aux_macro_file = os.path.relpath(file_aux_macro_file, projectfile_dir)

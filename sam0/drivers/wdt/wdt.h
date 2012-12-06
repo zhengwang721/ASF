@@ -359,4 +359,4 @@ void wdt_reset_count(void);
  * - \subpage wdt_basic_use_case
  */
 
-#endif
+#endif /* WDT_H_INCLUDED */

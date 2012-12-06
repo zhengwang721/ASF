@@ -606,9 +606,11 @@
 
   <xsl:template match="//formula">
     <equation>
-    <latex align="center" xmlns="http://forge.scilab.org/p/jlatexmath">
-      <xsl:value-of select="."/>
-    </latex>
+      <!-- LaTeX equation generation requires JLatexMath and its associated
+           FOP plugin, or you will get missing equations in the output -->
+      <latex align="center" xmlns="http://forge.scilab.org/p/jlatexmath">
+        <xsl:value-of select="."/>
+      </latex>
     </equation>
   </xsl:template>
 
