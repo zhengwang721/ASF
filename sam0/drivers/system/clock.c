@@ -290,22 +290,22 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			SYSCTRL.OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
-			waitmask = SYSCTRL_INTFLAG_OSC32KRDY;
+			waitmask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
 			SYSCTRL.XOSC.reg |= SYSCTRL_XOSC_ENABLE;
-			waitmask = SYSCTRL_INTFLAG_XOSCRDY;
+			waitmask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
 			SYSCTRL.XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
-			waitmask = SYSCTRL_INTFLAG_XOSC32KRDY;
+			waitmask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
 			SYSCTRL.DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE;
-			waitmask = SYSCTRL_INTFLAG_DFLLRDY;
+			waitmask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Always enabled */
@@ -318,7 +318,7 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 	if (block_until_ready == true) {
 		/* Wait for the clock source to be ready or timeout */
 		for (timeout = 0; timeout < CONF_CLOCK_TIMEOUT; timeout++) {
-			if(SYSCTRL.INTFLAG.reg & waitmask) {
+			if(SYSCTRL.PCLKSR.reg & waitmask) {
 				return STATUS_OK;
 			}
 		}
@@ -383,16 +383,16 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 			/* TODO: verify that this cannot be disabled */
 			return true;
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			mask = SYSCTRL_INTFLAG_OSC32KRDY;
+			mask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			mask = SYSCTRL_INTFLAG_XOSCRDY;
+			mask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			mask = SYSCTRL_INTFLAG_XOSC32KRDY;
+			mask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			mask = SYSCTRL_INTFLAG_DFLLRDY;
+			mask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Not possible to disable */
@@ -400,7 +400,7 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 			return false;
 		}
 
-	if(SYSCTRL.INTFLAG.reg & mask) {
+	if(SYSCTRL.PCLKSR.reg & mask) {
 		return true;
 	} else {
 		return false;

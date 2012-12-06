@@ -521,17 +521,10 @@ static inline void system_clock_source_get_default_config(
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	/* TODO: Datasheet text and regmap disagreement; figure out which one is correct */
-
 	/* According to text in datasheet */
-//	while (!(SYSCTRL.PCLKSR & SYSCTRL_DFLLRDY_bm)) {
+	while (!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
 		/* Wait for DFLL sync */
-//	}
-
-	/* Make more sense, according to regmap */
-//	while (!(SYSCTRL.DFLLSYNC & SYSCTRL_SYNC_bm)) {
-		/* Wait for DFLL sync */
-//	}
+	}
 }
 
 /**
@@ -540,9 +533,9 @@ static inline void _system_dfll_wait_for_sync(void)
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
-//	while(!(SYSCTRL.PCLKSR & SYSCTRL_OSC32KRDY_bm)) {
+	while(!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
-//	}
+	}
 }
 
 /**
