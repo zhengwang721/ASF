@@ -44,8 +44,6 @@
 #  include "usart_async.h"
 #endif
 
-
-
 /**
  * \internal Set Configuration of the USART module
  *
@@ -198,7 +196,6 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	uint8_t instance_index;
 
 	/* Initialize parameters */
-	dev_inst->sercom_mode          = SERCOM_MODE_USART;
 	for (i = 0; i < USART_CALLBACK_N; i++) {
 		dev_inst->callback[i]  = NULL;
 	}
@@ -284,9 +281,17 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  * param[out]  rx_data  Pointer to received data
  *
  * \return     Status of the operation
- * \retval     STATUS_OK           If the operation was completed
- * \retval     STATUS_ERR_BUSY     If the operation was not completed,
- *                                 due to the USART module being busy.
+ * \retval     STATUS_OK                If the operation was completed
+ * \retval     STATUS_ERR_BUSY          If the operation was not completed,
+ *                                      due to the USART module being busy.
+ * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
+ *                                      due to mismatch configuration mismatch
+ *                                      between USART and the sender.
+ * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
+ *                                      due to the baud rate being to low or the
+ *                                      system frequency being to high.
+ * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
+ *                                      to data being corrupted.
  */
 enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 		uint16_t *const rx_data)
@@ -339,7 +344,6 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 			 * return with an error code */
 			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_PERR;
 			return STATUS_ERR_BAD_DATA;
-
 		}
 	}
 

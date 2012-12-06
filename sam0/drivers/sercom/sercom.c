@@ -40,6 +40,7 @@
  */
 #include "sercom.h"
 
+#if !defined(__DOXYGEN__)
 /**
  * \internal Configuration structure to save current gclk status.
  */
@@ -55,7 +56,7 @@ struct _sercom_conf {
 static struct _sercom_conf _sercom_config;
 
 /**
- * \brief Calculate synchronous baudrate value (SPI/UART)
+ * \internal Calculate synchronous baudrate value (SPI/UART)
  */
 enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudvalue)
@@ -84,7 +85,7 @@ enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 }
 
 /**
- * \brief Calculate asynchronous baudrate value (UART)
+ * \internal Calculate asynchronous baudrate value (UART)
 */
 enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval)
@@ -94,7 +95,7 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 	uint64_t scale = 0;
 	uint64_t baud_calculated = 0;
 
-	/* Check if the baudrate is outside of valid ragnge */
+	/* Check if the baudrate is outside of valid range */
 	if ((baudrate * 16) >= peripheral_clock) {
 		/* Return with error code */
 		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
@@ -109,14 +110,16 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 
 	return STATUS_OK;
 }
+#endif
 
-#ifdef TODO 
+
+#ifdef TODO
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
 		bool force_change)
 {
-	/* Configuration structure for the gclk channel. */
+	/* Configuration structure for the GCLK channel. */
 	struct system_gclk_ch_conf gclk_ch_conf;
 
 	/* Pointer to internal SERCOM configuration. */
@@ -154,7 +157,7 @@ enum status_code sercom_set_gclk_generator(
 		ret_val = STATUS_OK;
 
 	} else {
-		/* Return invalid config to already initialized gclk. */
+		/* Return invalid config to already initialized GCLK. */
 		ret_val = STATUS_ERR_ALREADY_INITIALIZED;
 	}
 

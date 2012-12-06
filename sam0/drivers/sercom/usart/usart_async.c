@@ -234,19 +234,19 @@ enum status_code usart_async_disable_callback(
 }
 
 /**
- * \brief TODO
+ * \brief Asynchronous write a single char
+ *
+ * Sets up the driver to write the data given. If registered and enabled,
+ * a callback function will be called when the transmit is completed.
  *
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
- * param[]
- * param[]
+ * \param[in]     tx_data  Data to transfer
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_BUSY        If operation was not completed,
  *                                    due to the USART module being busy.
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid callback_type
  */
 enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data)
@@ -255,7 +255,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->remaining_tx_buffer_length > 0) {
+	if (dev_inst->async_tx_ongoing) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -266,19 +266,20 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief TODO
+ * \brief Asynchronous read a single char
  *
+ * Sets up the driver to read data from the USART module to the data
+ * pointer given. If registered and enabled, a callback will be called
+ * when the receiving is completed.
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
- * param[]
- * param[]
+ * \param[out]    rx_data  Pointer to where received data should
+ *                         be put
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_BUSY        If operation was not completed,
  *                                    due to the USART module being busy.
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid buffer length
  */
 enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 		uint16_t *const rx_data)
@@ -287,7 +288,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->remaining_rx_buffer_length > 0) {
+	if (dev_inst->async_rx_ongoing) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -298,20 +299,18 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief TODO
+ * \brief Asynchronous buffer write
  *
+ * Sets up the driver to write a given buffer over the USART. If registered and
+ * enabled, a callback function will be called.
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
- * param[]
- * param[]
- * param[]
+ * \param[in]     tx_data  Pointer do data buffer to transmit
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_BUSY        If operation was not completed,
  *                                    due to the USART module being busy.
- * \retval     STATUS_ERR_INVALID     If operation was not completed,
- *                                    due to invalid buffer length
  */
 enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint16_t length)
@@ -323,7 +322,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->remaining_tx_buffer_length) {
+	if (dev_inst->async_tx_ongoing) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -334,8 +333,10 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief TODO
+ * \brief Asynchronous buffer read
  *
+ * Sets up the driver to read from the USART to a given buffer. If registered
+ * and enabled, a callback function will be called.
  *
  * \param[in]     dev_inst Pointer to USART software instance struct
  * \param[out]    rx_data  Pointer to data buffer to receive
@@ -356,7 +357,7 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->remaining_rx_buffer_length) {
+	if (dev_inst->async_rx_ongoing) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -382,7 +383,7 @@ void usart_async_cancel_transmission(struct usart_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	/* Get a pointer to the hardware module instance */
+	/* Getl a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Clear the interrupt flag in order to prevent the transmission
@@ -425,15 +426,13 @@ void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
  * Returns the last error that occurred in asynchronous transfer operation,
  * and resets the status to STATUS_OK.
  *
- * \param[in] 
+ * \param[in] dev_inst    Pointer to USART software instance struct 
  *
  * \return 
- * \retval STATUS_OK
- * \retval STATUS_ERR_BAD_DATA
- * \retval STATUS_ERR_
- * \retval STATUS_ERR_
- *
- *
+ * \retval STATUS_OK                No error has occurred 
+ * \retval STATUS_ERR_BAD_DATA      
+ * \retval STATUS_ERR_BAD_FORMAT     
+ * \retval STATUS_ERR_OVERFLOW       
  */
 enum status_code usart_async_get_last_error(
 		struct usart_dev_inst *const dev_inst)
@@ -446,12 +445,23 @@ enum status_code usart_async_get_last_error(
 	enum status_code status_code = dev_inst->status;
 
 	/* Reset status code */
-	dev_inst->status;
+	dev_inst->status = STATUS_OK;
 
 	return status_code;
 }
 
-/* Interrupt Handler for USART */
+/**
+ * \brief Interrupt Handler for USART module
+ *
+ * Handles interrupts as they occur, and it will run callback functions
+ * which are registered and enabled.
+ *
+ * \note This function will be called by the Sercom_Handler, and should
+ * not be called directly from any application code.
+ *
+ * \param[in]  instance  ID of the SERCOM instance calling the interrupt
+ *                       handler.
+ */
 void usart_async_handler(uint8_t instance)
 {
 	/* Temporary variables */

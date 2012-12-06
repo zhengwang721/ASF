@@ -242,10 +242,6 @@ typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const dev_in
  * \note Device information for USART
  */
 struct usart_dev_inst {
-#ifdef USART_ASYNC
-	/** Mode for the SERCOM module */
-	//SERCOM_MODE_t sercom_mode;
-#endif
 	/** Pointer to the hardware instance */
 	Sercom *hw_dev;
 	/** Character size of the data being transferred */

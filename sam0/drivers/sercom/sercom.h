@@ -47,6 +47,10 @@
 //#include <gclk.h>
 #include "sercom_interrupts.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
           SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
@@ -55,9 +59,7 @@
 # error "SERCOM GCLK id changed."
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define SHIFT 1
 
 /**
  * \defgroup sam0_sercom_group SAM0+ SERCOM
