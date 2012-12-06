@@ -55,7 +55,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 	uint16_t buffer_index = dev_inst->buffer_length - dev_inst->buffer_remaining--;
 
 	/* Read byte from slave and put in buffer. */
-	dev_inst->buffer[buffer_index] = i2c_module->DATA;
+	dev_inst->buffer[buffer_index] = i2c_module->DATA.reg;
 }
 
 /**
@@ -70,10 +70,10 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Check for ack from slave. */
-	if (!(i2c_module->STATUS & SERCOM_I2CM_STATUS_RXACK))
+	if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK))
 	{
 		/* Not acknowledged, send stop bit. */
-		i2c_module->CTRLB |= SERCOM_I2C_MASTER_CMD(3);
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
 		/* Return bad data value. */
 		dev_inst->status = STATUS_ERR_BAD_DATA;
@@ -85,7 +85,7 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 			dev_inst->buffer_remaining--;
 
 	/* Write byte from buffer to slave. */
-	i2c_module->DATA = dev_inst->buffer[buffer_index];
+	i2c_module->DATA.reg = dev_inst->buffer[buffer_index];
 }
 
 /**
@@ -101,25 +101,25 @@ static void _i2c_master_async_address_response(
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Check for error. */
-	if (i2c_module->INTFLAG & SERCOM_I2CM_INTFLAG_WIF)
+	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
 	{
 		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR = SERCOM_I2CM_INTENCLR_WIEN;
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
 		/* Check for busserror. */
-		if (i2c_module->STATUS & SERCOM_I2CM_STATUS_BUSERR) {
+		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSERR) {
 			/* Return denied. */
 			dev_inst->status = STATUS_ERR_DENIED;
 
 		/* Check arbitration. */
-		} else if (i2c_module->STATUS & SERCOM_I2CM_STATUS_ARBLOST) {
+		} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
 			/* Return busy. */
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 		}
-	} else if ( i2c_module->STATUS & SERCOM_I2CM_STATUS_RXACK ) {
+	} else if ( i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK ) {
 		/* Slave busy. Issue ack and stop command. */
-		i2c_module->CTRLB |= SERCOM_I2C_MASTER_NACK |
-				SERCOM_I2C_MASTER_CMD(3);
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT |
+				SERCOM_I2CM_CTRLB_CMD(3);
 
 		/* Return bad address value. */
 		dev_inst->status = STATUS_ERR_BAD_ADDRESS;
@@ -227,10 +227,10 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->transfer_direction = 1;
 
 	/* Enable interrupts. */
-	i2c_module->INTENSET = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = (packet->address << 1) | _I2C_TRANSFER_READ;
+	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
 
 	return STATUS_OK;
 }
@@ -271,10 +271,10 @@ enum status_code i2c_master_async_write_packet(
 	dev_inst->transfer_direction = 0;
 
 	/* Enable interrupts. */
-	i2c_module->INTENSET = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
+	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR = (packet->address << 1) | _I2C_TRANSFER_WRITE;
+	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
 
 	return STATUS_OK;
 }
@@ -292,6 +292,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
+
 	/* Check if the module should response to address ack. */
 	if (dev_inst->buffer_length <= 0 && dev_inst->buffer_remaining > 0) {
 		/* Call function for address response. */
@@ -300,7 +301,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Check if buffer transfer is complete. */
 	} else if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining <= 0) {
 		/* Stop packet operation. */
-		i2c_module->INTENCLR = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
 		dev_inst->async_ongoing = false;
 
@@ -321,7 +322,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Continue buffer write/read. */
 	} else if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining > 0){
 		/* Check that bus ownership is not lost. */
-		if (!(i2c_module->STATUS & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
+		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 
 		/* Call function based on transfer direction. */
@@ -333,9 +334,9 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if ( dev_inst->status != STATUS_OK ) {
+	if (dev_inst->status != STATUS_OK) {
 		/* Stop packet operation. */
-		i2c_module->INTENCLR = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
+		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
 		dev_inst->async_ongoing = false;
 

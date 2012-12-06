@@ -40,6 +40,8 @@
  */
 #include "sercom.h"
 
+#define SHIFT 32
+
 /**
  * \internal Configuration structure to save current gclk status.
  */
