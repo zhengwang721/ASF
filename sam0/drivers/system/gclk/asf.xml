@@ -15,7 +15,7 @@
 		<build type="c-source" value="gclk.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_gclk_basic.h"/>
 		<build type="doxygen-entry-point" value="sam0_gclk_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="atsam0d4_reva"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system.core"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
