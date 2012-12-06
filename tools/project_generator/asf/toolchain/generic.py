@@ -251,7 +251,7 @@ class GenericElement(object):
 		names to single values and to lists of values. The toolchain configurations must
 		be set with the toolchain-config or toolchain-config-list elements in the board
 		or the project.
-
+		
 		The project will override any same-named toolchain-config that is set in the
 		board, while for toolchain-config-list the values are simply added appended to
 		the list.
@@ -528,7 +528,7 @@ class GenericElement(object):
 
 		no_support_list = self.project.resolve_device_support(mcu_search_map)
 		if len(no_support_list) > 0:
-			self.log.error("Project %s uses MCU %s, which is not supported by required module(s):" % (self.project.id, self.project.mcu.name))
+			self.log.warning("Project %s uses MCU %s, which is not supported by required module(s):" % (self.project.id, self.project.mcu.name))
 			for item in no_support_list:
 				dev_supp = item.get_device_support()
 				if len(dev_supp) > 0:
@@ -536,7 +536,7 @@ class GenericElement(object):
 				else:
 					dev_supp = "<device support not specified>"
 
-				self.log.error("  %s [%s]" % (item.id, dev_supp))
+				self.log.warning("  %s [%s]" % (item.id, dev_supp))
 			return False
 		else:
 			return True
