@@ -136,7 +136,7 @@ static inline void i2c_master_async_cancel_transfer(
 	Assert(dev_inst->hw_dev);
 
 	/* Set buffer to 0. */
-	dev_inst->buffer_length = 0;
+	dev_inst->buffer_remaining = 0;
 }
 
 /**
@@ -153,7 +153,7 @@ static inline bool i2c_master_async_is_transfer_done(
 	Assert(dev_inst->hw_dev);
 
 	/* Set buffer to 0. */
-	return (dev_inst->buffer_length & 0xffff);
+	return (dev_inst->buffer_remaining & 0xffff);
 }
 
 /**

@@ -63,7 +63,7 @@ static void _sercom_default_handler(uint8_t instance)
  *
  * \return Index of given instance.
  */
-uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
+uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
@@ -71,7 +71,7 @@ uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
 	/* Array of sercom instances. */
-	SERCOM_t sercom_instances_list[SERCOM_INSTS_NUM] = SERCOM_INSTS;
+	Sercom sercom_instances_list[SERCOM_INSTS_NUM] = SERCOM_INSTS;
 
 	/* Fine index for sercom instance. */
 	for (i = 0; i < SERCOM_INSTS_NUM; i++) {

@@ -54,7 +54,7 @@ extern "C" {
  * interface for configuration and management of the SERCOM I2C module in
  * master mode, as well as data transfer via I2C.
  * This driver encompasses the following module within the SAM0+ devices:
- * \li \b I2C
+ * \li \b I2C (Inter-Integrated Circuit)
  *
  * \section module_introduction Introduction
  *
@@ -62,6 +62,7 @@ extern "C" {
  * The I2C provides a simple two-wire bidirectional bus consisting of a
  * wired-AND type serial clock line (SCA) and a wired-AND type serial data line
  * (SDA).
+ *
  * The I2C bus provides a simple, but efficient method of interconnecting
  * multiple master and slave devices. An arbitration mechanism is provided for
  * resolving bus ownership between masters, as only one master device may own
@@ -69,9 +70,8 @@ extern "C" {
  * connections to avoid bus drivers short-circuiting.
  *
  * A unique address is assigned to all slave devices connected to the bus. A
- * device can contain both math and slave logic, and can emulate multiple slave
+ * device can contain both master and slave logic, and can emulate multiple slave
  * devices by responding to more than one address.
- *
  *
  * \subsection bus_topology Bus Topology
  * The I2C bus topology is illustrated in the figure below. The pullup
@@ -190,10 +190,17 @@ extern "C" {
  *
  * \subsection timeout Timeout
  * Inactive bus timeout and sda hold time is configurable in the driver.
+ *
  * \subsubsection inactive_bus Inactive Bus Timeout
- * When a master is enabled or connected to the bus, the bus state will change
- * from UNKNOWN to IDLE after a timeout.
- * The bus state will also change from BUSY to IDLE after a timeout.
+ * When a master is enabled or connected to the bus, the bus state will be
+ * unknown until either a given timeout or a stop command has occurred. The
+ * timeout is configurable in the device config struct i2c_master_conf and can
+ * roughly be calculated with:
+ * \f[
+ *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
+ * \f]
+ *
+ *
  * \subsubsection sda_hold SDA Hold Timeout
  * \subsubsection scl_low SCL Low Timeout
  * If
