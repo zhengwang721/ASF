@@ -40,12 +40,12 @@
 				<armgcc.linker.general.DoNotUseDefaultLibraries/>
 				<armgcc.linker.general.NoStartupOrDefaultLibs/>
 				<!-- Fixed options, according to ASF 2 AVR32 Makefile -->
-				<armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-				<armgcc.compiler.optimization.DebugLevel>None</armgcc.compiler.optimization.DebugLevel>
-				<armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-				<armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
-				<armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
-				<armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+				<armgcc.compiler.warnings.AllWarnings/>
+				<armgcc.compiler.optimization.DebugLevel/>
+				<armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection/>
+				<armgcc.linker.optimization.GarbageCollectUnusedSections/>
+				<armgcc.compiler.optimization.OtherFlags/>
+				<armgcc.compiler.miscellaneous.OtherFlags/>
 				<armgcc.assembler.general.AssemblerFlags/>
 				<armgcc.preprocessingassembler.general.AssemblerFlags/>
 			</ArmGcc>
@@ -72,12 +72,12 @@
 				<armgcc.linker.general.DoNotUseDefaultLibraries/>
 				<armgcc.linker.general.NoStartupOrDefaultLibs/>
 				<!-- Fixed options, according to ASF 2 AVR32 Makefile -->
-				<armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-				<armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
-				<armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-				<armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
-				<armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
-				<armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+				<armgcc.compiler.warnings.AllWarnings/>
+				<armgcc.compiler.optimization.DebugLevel/>
+				<armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection/>
+				<armgcc.linker.optimization.GarbageCollectUnusedSections/>
+				<armgcc.compiler.optimization.OtherFlags/>
+				<armgcc.compiler.miscellaneous.OtherFlags/>
 				<armgcc.assembler.general.AssemblerFlags/>
 				<armgcc.preprocessingassembler.general.AssemblerFlags/>
 			</ArmGcc>

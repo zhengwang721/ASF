@@ -117,6 +117,7 @@ void twi_write_byte(Twi *p_twi, uint8_t uc_byte);
 void twi_enable_slave_mode(Twi *p_twi);
 void twi_disable_slave_mode(Twi *p_twi);
 void twi_slave_init(Twi *p_twi, uint32_t ul_device_addr);
+void twi_set_slave_addr(Twi *p_twi, uint32_t ul_device_addr);
 uint32_t twi_slave_read(Twi *p_twi, uint8_t *p_data);
 uint32_t twi_slave_write(Twi *p_twi, uint8_t *p_data);
 void twi_reset(Twi *p_twi);
