@@ -47,6 +47,7 @@ extern "C" {
 #define TC_H_INCLUDED
 
 #include <compiler.h>
+#include <gclk.h>
 
 
 /**
@@ -65,11 +66,10 @@ extern "C" {
  * rudimentary counting, perform input capture, pulse width capture,
  * frequency capture, and more.
  * \n\n
- *
  * A TC is basically a counter however if it is supplied with an accurate
  * frequency to count, the module becomes capable of performing timer
  * operations.
- *
+ * \n\n
  * This driver is cheated and meant to be used as a polled driver, as
  * such this documentation will not go into the use of interrupts with
  * regards to the TC module. It should also be noted that this is not
@@ -79,22 +79,15 @@ extern "C" {
  *
  * \subsection functional_description Functional Description
  *
- * describe in some more detail the different possible configurations
- * the user can get from the module. The amount of counters capture/compare
- * registers oneshot, event system connection. Waveform generation and
- * pin outs. period register. count direction. count sources. capture.
- *
  * The TC module in SAM0+ can be configured with 4 timer/counters in 8
  * bit resolution, or 4 timers/counters in 16 bit resolution, or 2
  * timers/counters in 32 bit resolution.
  * \n\n
- *
  * Independent of what resolution the timer runs on it can basically be
  * set up in two different modes, although to some extent one TC instance
  * can be configured in both modes. These modes are capture and
  * compare.
  * \n\n
- *
  * In compare mode the counter value is compared with one or more of
  * the compare values. When the counter coincides with the compare
  * value, this can generate an action. The capture mode is often used
@@ -104,8 +97,8 @@ extern "C" {
  * comparison with the counter value signifies a time for when a
  * subroutine or an even should start. In a similar fashion it can be
  * used to count certain events and when this reaches a certain value
- * an action is taken.  \n\n
- *
+ * an action is taken.
+ * \n\n
  * In capture mode the counter value is stored upon some configurable
  * event. This can be used to generate time stamps or it can be used
  * for frequency capture, event capture and pulse width capture.
@@ -114,46 +107,44 @@ extern "C" {
  * \subsection counter_resolution Timer Counter Resolution
  *
  * When talking about resolution with respect to the timer counter
- * what is meant is the bit precision the user can get with the counter. The
- * timer counter in the SAM0+ can achieve 8, 16 and 32 bit precision or
- * resolution. This naturally effects how far the counter is capable of
- * counting. For easy reference the different modes and their Max value
- * can be seen in the table below
+ * what is meant is the bit precision the user can get with the
+ * counter. The timer counter in the SAM0+ can achieve 8, 16 and 32
+ * bit precision or resolution. This naturally effects how far the
+ * counter is capable of counting. For easy reference the different
+ * modes and their Max value can be seen in the table below
  *
  * <table>
  *  <tr>
- *    <th> <\th>
- *    <th> colspan="2" MAX <\th>
- *  <\tr>
+ *    <th> - </th>
+ *    <th colspan="2">MAX </th>
+ *  </tr>
  *  <tr>
- *    <th> Resolution <\th>
- *    <th> Hexadecimal <\th>
- *    <th> Decimal <\th>
- *  <\tr>
+ *    <th> Resolution </th>
+ *    <th> Hexadecimal </th>
+ *    <th> Decimal </th>
+ *  </tr>
  *  <tr>
- *    <th> 8 bit <\th>
- *    <td> 0xFF <\td>
- *    <td> 256 <\td>
+ *    <th> 8 bit </th>
+ *    <td> 0xFF </td>
+ *    <td> 256 </td>
+ *  </tr>
  *  <tr>
+ *    <th> 16 bit </th>
+ *    <td> 0xFFFF </td>
+ *    <td> 65536 </td>
+ *  </tr>
  *  <tr>
- *    <th> 16 bit <\th>
- *    <td> 0xFFFF <\td>
- *    <td> 65536 <\td>
- *  <tr>
- *  <tr>
- *    <th> 8 bit <\th>
- *    <td> 0xFFFFFFFF <\td>
- *    <td> 4294967296 <\td>
+ *    <th> 32 bit </th>
+ *    <td> 0xFFFFFFFF </td>
+ *    <td> 4294967296 </td>
  *  <tr>
  * </table>
  *
  * It should be noted that when running the counter in 16 and 13 bit
  * resolution, compare capture register 0 is used to store the period
  * value, when this is in use (when running in pwm generation match
- * mode).  \n\n
-
-//TODO: may have to update this when the pwm module is complete
-
+ * mode).
+ * \n\n
  *
  * When using 32 bit resolution two 16 bit counters are used together
  * in cascade to realize this feature. This means that it is only
@@ -163,23 +154,23 @@ extern "C" {
  * \subsection clock_and_prescaler Clock Selection, Prescaler and Reload Action
  *
  * To be able to use the counter the module has to have a clock
- * this has to be configured in the config struct... .  \n\n
- *
+ * this has to be configured in the config struct... .
+ * \n\n
  * In addition to the prescaler that can be used on the g-clock
  * frequency supplied to the module, the module has its own prescaler
  * This prescaler only works to prescale the clock used to provide
  * clock pulses to the counter. This means that while the counter is
  * running on the g-clock frequency the counter value only changes on
- * the prescaled frequency.  \n\n
- *
+ * the prescaled frequency.
+ * \n\n
  * One thing to consider here is that the TC module will have to
  * synchronize when updating certain registers with the system
  * clock. This synchronization can be time consuming especially if the
  * g-clock frequency is much lower than the system clock. For this
  * reason it can be better to use the modules prescaler to reduce the
  * clock frequency to the counter. In this way synchronization should
- * be faster. \n\n
- *
+ * be faster.
+ * \n\n
  * In addition to configuring what clock source the tc module should
  * use and if the prescaler is needed on the clock to the counter. The
  * user have to consider what reload action to use. The reload action
@@ -189,31 +180,31 @@ extern "C" {
  * can then chose between 3 different reload actions:
  *
  * <table>
+ *   <tr>
+ *     <th> Description </th>
+ *     <th> code reference</th>
+ *   </tr>
+ *   <tr>
+ *     <th> Reload on next G-clock cycle leave prescaler as it is </th>
+ *     <td>  </td>
+ *   </tr>
+ *   <tr>
+ *     <th> Reload on next prescaler clock </th>
+ *     <td> - </td>
+ *   </tr>
  *  <tr>
- *   <th> Description <\th>
- *   <th> code reference<\th>
- *  <\tr>
- *  <tr>
- *   <th> Reload on next G-clock cycle leave prescaler as it is <\th>
- *   <td>  <\td>
- *  <\tr>
- *  <tr>
- *   <th> Reload on next prescaler clock <\th>
- *   <td> <\td>
- *  <\tr>
- *  <tr>
- *   <th> Reload on next G-clock cycle  reset prescaler <\th>
- *   <td> <\td>
- *  <\tr>
- * <table>
+ *    <th> Reload on next G-clock cycle, reset prescaler </th>
+ *    <td> - </td>
+ *  </tr>
+ * </table>
  *
  * To better understand these options it helps to have a rudimentary
  * understanding of what the prescaler does. Thankfully this is not so
  * difficult to understand. The prescaler is after all only a counter
  * it self. When the prescaler is used it counts the clock cycles of
  * the modules g-clock. When the counter in the prescaler reaches the
- * chosen division factor the output from the prescaler toggles.  \n\n
- *
+ * chosen division factor the output from the prescaler toggles.
+ * \n\n
  * The question then arises what do we want to happen when a reload
  * action gets triggered. In different scenarios and applications the
  * correct reload option will differ. One example is when an external
@@ -259,8 +250,8 @@ extern "C" {
  * control you let the pulse with relative to the period signify the
  * angle the servo should take. Using PWM for this is far less prone to
  * noise and differing impedances, compared to using an analogue
- * voltage value. \n\n
- *
+ * voltage value.
+ * \n\n
  * PWM signals are generated by configuring the tc_wave_generation
  * enum in the tc_conf struct, and using either the
  * TC_WAVE_GENERATION_MATCH_PWM mode or the
@@ -271,6 +262,7 @@ extern "C" {
  * this is necessary or not depends on if NORMAL or MATCH
  * configuration is in use.
  *
+ *
  * \subsection capture_operations Capture Operations
  *
  * In capture operations some action causes the clock value to be
@@ -279,15 +271,22 @@ extern "C" {
  *
  * \subsubsection event_capture Event Capture
  *
- * 
- *
- * \subsubsection frequency_capture Frequency Capture
- *
- * 
+ * Event capture is in some ways the simplest use of the capture
+ * functionality. This lets you create time stamps for specific
+ * events. Care must be taken though to ensure that the counter value
+ * is correct.
  *
  * \subsubsection pwc Pulse width capture
  *
- * 
+ * Pulse with capture mode lets you measure the pulse with and period
+ * of PWM signals. This mode uses both capture channels of the
+ * counter. This means that the counter module used for pulse with
+ * capture can not be used for any other purpose. There are two modes
+ * for pulse with capture, however they differ very little. In PWP
+ * mode capture channel 0 is used for storing the pulse width, and
+ * capture channel 1 stores the period. While in PPW mode the period
+ * is stored in capture channel 0, and the pulse with is stored in
+ * capture channel 1.
  *
  *
  * \subsection events Events
@@ -307,26 +306,15 @@ extern "C" {
  * \section special_cons Special Considerations
  *
  * \section extra_info Extra Information
- * For extra information see \ref spi_extra_info.
+ * For extra information see \ref tc_extra_info.
  *
  * \section module_examples Examples
  * - \ref quickstart
  *
- * \section api_overview API Overview
+ * \section TC_overview API Overview
  * @{
  */
 
-#ifndef   TC_CTRLBSET_CMD_NONE
-#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6)
-#endif
-
-#ifndef   TC_CTRLBSET_CMD_RETRIGGER
-#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6)
-#endif
-
-#ifndef TC_CTRLBSET_CMD_STOP
-#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6)
-#endif
 
 /**
  * \brief Index of the compare capture channels
@@ -450,82 +438,87 @@ enum tc_count_direction {
 
 
 /**
- * \brief Enum to check status flags.
+ * \brief Enum to be used to check interrupt flags
  *
- * Enum that can be used to check status flags.
- */
-enum tc_status_flag {
-	/**  */
-	TC_STATUS_FLAG_STOP  = TC_STATUS_STOP,
-	/**  */
-	TC_STATUS_FLAG_SLAVE = TC_STATUS_SLAVE,
-};
-
-/**
- * \brief 
- *
- * 
+ * These enums are used as input in the tc_is_interrupt_flag_set and
+ * tc_clear_interrupt_flag function. The interrupt flags will still be
+ * set even when interrupts are not enabled. Interrupt flags has to be
+ * checked in certain cases. When checking if there are matches on a
+ * channel the interrupt flags has to be used.
  */
 enum tc_interrupt_flag {
-	/**  */
+	/** Interrupt flag for channel 0 */
 	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
-	/**  */
+	/** Interrupt flag for channel 1 */
 	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
-	/**  */
+	/**  */ //TODO: Have to check for a use case on this with IC
 	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
-	/**  */
+	/**
+	 * This flag is used to test for capture overflow in capture
+	 * mode
+	 */
 	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
-	/**  */
+	/**
+	 * This flag can be used to check for a counter overflow in
+	 * compare mode
+	 */
 	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
 };
 
 
 /**
- * \brief 
+ * \brief Enum for event action
  *
- * 
+ * Enum to setup specific event actions.
  */
 enum tc_event_action {
-	/**  */
-	TC_EVENT_ACTION_OFF       = TC_EVCTRL_EVACT_OFF,
-	/**  */
-	TC_EVENT_ACTION_RETRIGGER = TC_EVCTRL_EVACT_RETRIGGER,
-	/**  */
-	TC_EVENT_ACTION_COUNT     = TC_EVCTRL_EVACT_COUNT,
-	/**  */
-	TC_EVENT_ACTION_START     = TC_EVCTRL_EVACT_START,
-	/**  */
-	TC_EVENT_ACTION_PPW       = TC_EVCTRL_EVACT_PPW,
-	/**  */
-	TC_EVENT_ACTION_PWP       = TC_EVCTRL_EVACT_PWP,
+	/** No event action */
+	TC_EVENT_ACTION_OFF               = TC_EVCTRL_EVACT_OFF,
+	/** Retrigger on event */
+	TC_EVENT_ACTION_RETRIGGER         = TC_EVCTRL_EVACT_RETRIGGER,
+	/** Increment counter on event */
+	TC_EVENT_ACTION_INCREMENT_COUNTER = TC_EVCTRL_EVACT_COUNT,
+	/** Start counter on event */
+	TC_EVENT_ACTION_START             = TC_EVCTRL_EVACT_START,
+	/**
+	 * Store period in capture register 0, pulse with in capture
+	 * register 1
+	 */
+	TC_EVENT_ACTION_PPW               = TC_EVCTRL_EVACT_PPW,
+	/**
+	 * Store pulse with in capture register 0, period in capture
+	 * register 1
+	 */
+	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
 };
 
 
 /**
- * \brief 
+ * \brief Enum for for inverting waveform output
  *
- * 
+ * This enum can be used to setup inversion of the waveform output
  */
 enum tc_waveform_invert_output {
+	/** No inversion of output */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
-	/**  */
+	/** Invert output from compare channel 0 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(0),
-	/**  */
+	/** Invert output from compare channel 1 */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(1),
 };
 
 
 /**
- * \brief 
+ * \brief Enum for setting up event generation
  *
- * 
+ * Use this enum to configure event generation on respective channels
  */
 enum tc_event_generation_enable {
-	/**  */
+	/** No event generation */
 	TC_EVENT_GENERATION_ENABLE_NONE      = 0,
-	/**  */
+	/** Event generation on channel 0 */
 	TC_EVENT_GENERATION_ENABLE_CHANNEL_0 = TC_EVCTRL_MCEO(0),
-	/**  */
+	/** Event generation on channel 1 */
 	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(1),
 };
 
@@ -630,12 +623,13 @@ struct tc_32bit_conf {
  * \brief TC configuration structure
  *
  * Configuration structure for a TC instance. This structure should be
- * initialized by the \ref spi_get_config_defaults function before being
+ * initialized by the \ref tc_get_config_defaults function before being
  * modified by the user application.
  */
 struct tc_conf {
-	/** Select clock source for the TC clock */
-	//TODO set clock param
+	/** GCLK generator used to clock the peripheral */
+	enum gclk_generator clock_source;
+
 	/**
 	 * run_in_standby: When true the module is enabled during
 	 * standby
@@ -723,7 +717,7 @@ struct tc_dev_inst {
  * Must be called before assessing certain registers in the TC.
  * Blocks while waiting
  *
- * \param dev_inst pointer to device instance
+ * \param dev_inst  Pointer to device instance
  */
 static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 {
@@ -747,6 +741,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  * modified by the user application.
  *
  * The default configuration is as follows:
+ *  \li GCLK generator 0 (GCLK main) clock source
  *  \li 16 bit resolution on the counter
  *  \li No prescaler
  *  \li Normal frequency wave generation
@@ -757,7 +752,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  *  \li Count upward
  *  \li Don't perform oneshot operations
  *  \li No event input enabled
- *  \li no event Action
+ *  \li No event Action
  *  \li No event generation enabled
  *  \li Counter starts on 0
  *  \li Capture compare channel 0 set to 0xFFFF
@@ -765,7 +760,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  *  \li Capture compare channel 2 set to 0
  *  \li Capture compare channel 3 set to 0
  *
- * \param[out] config pointer to the config struct
+ * \param[out] config  Pointer to the config struct
  */
 static inline void tc_get_config_defaults(struct tc_conf *const config)
 {
@@ -773,6 +768,7 @@ static inline void tc_get_config_defaults(struct tc_conf *const config)
 	Assert(config);
 
 	/* Write default config to config struct */
+	config.clock_source                  = GCLK_GENERATOR_0;
 	config->resolution                   = TC_RESOLUTION_16BIT;
 	config->clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
 	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
@@ -812,7 +808,7 @@ enum status_code tc_init(
  * clock domains before performing the reset. The TC module will not
  * be accessible while the reset is being performed.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst  Pointer to the device struct
  */
 static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 {
@@ -837,7 +833,7 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
  * Enables the TC module. Except when the counter is enabled for
  * retrigger on even the counter will start when the counter is enabled.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst  Pointer to the device struct
  */
 static inline void tc_enable(const struct tc_dev_inst *const dev_inst)
 {
@@ -872,7 +868,7 @@ static inline void tc_enable(const struct tc_dev_inst *const dev_inst)
  * \li Invert output waveform
  * \li Event action selection
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst  Pointer to the device struct
  */
 static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
 {
@@ -906,7 +902,7 @@ enum status_code tc_set_count_value(
  * value in the count register is set to 0, if the counter was
  * counting up or MAX, if the counter was counting down when stopped.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst  Pointer to the device struct
  */
 static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
 {
@@ -919,11 +915,7 @@ static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
-	/* Make certain that there are no conflicting commands in the register */
-	tc_module.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
-	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
 	/* Write command to execute */
 	tc_module.CTRLBSET.reg = TC_CTRLBSET_CMD_STOP;
 }
@@ -982,7 +974,7 @@ enum status_code tc_set_compare_value(
  * \param dev_inst    Pointer to the device struct.
  * \param top_value   Value to be used as top in the counter.
  *
- * \return status of the procedure
+ * \return Status of the procedure
  * \retval STATUS_OK              The operation has been successful.
  * \retval STATUS_ERR_INVALID_ARG The resolution in the dev_inst is
  *                                out of bounds.
@@ -1029,13 +1021,13 @@ static enum status_code tc_set_top_value(
  * Checks for new data on the specified channel or if the counter has over run,
  * in which case it returns an error.
  *
- * \param *dev_inst pointer to the devise instance.
- * \param channel_index value used to select either channel 0, 1, 2 or 3.
+ * \param *dev_inst      Pointer to the devise instance.
+ * \param channel_index  Value used to select either channel 0, 1, 2 or 3.
  *
- * \return
- * \retval STATUS_VALID_DATA
- * \retval STATUS_NO_CHANGE
- * \retval STATUS_ERR_BAD_DATA
+ * \return Status of the prosedure
+ * \retval STATUS_VALID_DATA    New data is available to be read in the buffer.
+ * \retval STATUS_NO_CHANGE     No new data in th ebuffer.
+ * \retval STATUS_ERR_BAD_DATA  The counter has overflowed.
  */
 static enum status_code tc_check_for_new_capture_on_channel(
 		const struct tc_dev_inst *const dev_inst,
@@ -1062,16 +1054,17 @@ static enum status_code tc_check_for_new_capture_on_channel(
 
 
 /**
- * \brief 
+ * \brief Function checks if the splied interrupt flag is set
  *
- * 
+ * Checks if the interupt flag indicated by the interupt flag variable
+ * is set.
  *
- * \param *dev_inst pointer to the devise instance.
- * \param interrupt_flag
+ * \param *dev_inst       Pointer to the devise instance.
+ * \param interrupt_flag  Enum that tels what interupt flag to check
  *
- * \return 
- * \retval 
- * \retval 
+ * \return Bool value telling if the flag is set
+ * \retval True   If the flag is set
+ * \retval False  If the flage is not set
  */
 static inline bool tc_is_interrupt_flag_set(
 		const struct tc_dev_inst *const dev_inst,
@@ -1093,12 +1086,14 @@ static inline bool tc_is_interrupt_flag_set(
 
 
 /**
- * \brief 
+ * \brief Clears interupt flag
  *
- * 
+ * This function can be used to clear the interupt flag spesified by
+ * the interupt_flag enum. Using the function when the flag is not set
+ * has no effect.
  *
- * \param *dev_inst pointer to the devise instance.
- * \param interrupt_flag
+ * \param *dev_inst       Pointer to the devise instance.
+ * \param interrupt_flag  Enum teling what flag to check.
  */
 static inline void tc_clear_interrupt_flag(
 		const struct tc_dev_inst *const dev_inst,
@@ -1110,34 +1105,7 @@ static inline void tc_clear_interrupt_flag(
 
 	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
 
-	tc_module.INTFLAG.reg &= ~interrupt_flag;
-}
-
-
-/**
- * \brief 
- *
- * 
- *
- * \param *dev_inst pointer to the devise instance.
- * \param status_flag
- */
-static inline bool tc_is_status_flag_set(
-		const struct tc_dev_inst *const dev_inst,
-		enum tc_status_flag status_flag)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-	Assert(status_flag);
-
-	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
-
-	if (tc_module.STATUS.reg & status_flag) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	tc_module.INTFLAG.reg |= interrupt_flag;
 }
 
 
@@ -1152,7 +1120,7 @@ static inline bool tc_is_status_flag_set(
 
 
 /**
- * \page spi_extra_info Extra Information
+ * \page tc_extra_info Extra Information
  *
  * \section acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
@@ -1190,7 +1158,7 @@ static inline bool tc_is_status_flag_set(
 /**
  * \page quickstart Quick Start Guides for the TC module
  *
- * This is the quick start guide list for the \ref sam0_spi_group module, with
+ * This is the quick start guide list for the \ref sam0_tc_group module, with
  * step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
@@ -1201,7 +1169,7 @@ static inline bool tc_is_status_flag_set(
  *
  * \see General list of module \ref module_examples "examples".
  *
- * \section spi_use_cases SPI driver use cases
- * - \subpage spi_basic_use_case
+ * \section tc_use_cases TC driver use cases
+ * - \subpage tc_basic_use_case
  */
 #endif /* TC_ALL_HEADER */

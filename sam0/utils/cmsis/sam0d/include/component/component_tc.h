@@ -81,6 +81,11 @@ typedef union {
 } TC_CTRLA_Type;
 
 
+#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6)
+#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6)
+#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6)
+
+
 #define TC_CTRLA_OFFSET             0x00         /**< \brief (TC_CTRLA offset) Control A Register */
 #define TC_CTRLA_RESETVALUE         0x0          /**< \brief (TC_CTRLA reset_value) Control A Register */
 

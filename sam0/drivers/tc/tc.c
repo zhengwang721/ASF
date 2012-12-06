@@ -69,12 +69,10 @@ enum status_code tc_init(
 	Assert(dev_inst);
 	Assert(config);
 
-	//TODO: Add clock config
-
-	uint16_t ctrla_temp = 0;
-	uint8_t ctrlbset_temp = 0;
-	uint8_t evctrl_temp = 0;
-	uint8_t ctrlc_temp = 0;
+	uint16_t ctrla_tmp = 0;
+	uint8_t ctrlbset_tmp = 0;
+	uint8_t evctrl_tmp = 0;
+	uint8_t ctrlc_tmp = 0;
 
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
@@ -100,51 +98,68 @@ enum status_code tc_init(
 		return STATUS_ERR_DENIED;
 	}
 
+	/* Setup clock for module */
+	struct clock_gclk_ch_conf gclk_ch_conf;
+	DAC_t *const dac_module = dev_inst->hw_dev;
+	gclk_ch_conf.source_clock = config->clock_source;
+
+	#if defined (REVB)
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->run_in_standby;
+	#else
+	/* Set the GCLK channel sleep enable mode */
+	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
+	#endif
+	/* Apply configuration and enable the GCLK channel */
+	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	clock_gclk_ch_enable(TC_GCLK_ID);
+
+
 	if (config->run_in_standby) {
-		ctrla_temp |= TC_CTRLA_RUNSTDBY;
+		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
 	}
 
-	ctrla_temp = config->resolution | config->wave_generation
+	ctrla_tmp = config->resolution | config->wave_generation
 			| config->reload_action | config->clock_prescaler;
 
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
 	/* Set configuration to registers common for all 3 modes */
-	tc_module->COUNT8.CTRLA.reg = ctrla_temp;
+	tc_module->COUNT8.CTRLA.reg = ctrla_tmp;
 
 	/* Set ctrlb register */
 	if (config->oneshot) {
-		ctrlbset_temp = TC_CTRLBSET_ONESHOT;
+		ctrlbset_tmp = TC_CTRLBSET_ONESHOT;
 	}
 
 	if (config->count_direction) {
-		ctrlbset_temp |= TC_CTRLBSET_DIR;
+		ctrlbset_tmp |= TC_CTRLBSET_DIR;
 	}
 
-	if (ctrlbset_temp) {//check if we actually need to go into a wait state.
+	if (ctrlbset_tmp) {//check if we actually need to go into a wait state.
 		_tc_wait_for_sync(dev_inst);
-		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_temp;
+		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
-	ctrlc_temp = config->waveform_invert_output
+	ctrlc_tmp = config->waveform_invert_output
 			| config->capture_enable;
 
 
 	_tc_wait_for_sync(dev_inst);
-	tc_module->COUNT8.CTRLC.reg = ctrlc_temp;
+	tc_module->COUNT8.CTRLC.reg = ctrlc_tmp;
 
 	/* Set event register */
 	if (config->enable_event_input) {
-		evctrl_temp |= TC_EVCTRL_TCEI;
+		evctrl_tmp |= TC_EVCTRL_TCEI;
 	}
 
 	if (config->invert_event_input) {
-		evctrl_temp |= TC_EVCTRL_TCINV;
+		evctrl_tmp |= TC_EVCTRL_TCINV;
 	}
 
 	_tc_wait_for_sync(dev_inst);
-	tc_module->COUNT8.EVCTRL.reg = evctrl_temp | config->event_action
+	tc_module->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action
 			| config->event_generation_enable;
 
 	/* Switch for TC resolution  */
@@ -276,11 +291,7 @@ enum status_code tc_set_count_value(
  * \param dev_inst      pointer to the device struct
  * \param count         pointer to the where the value is put
  *
- * \return status of the procedure
- * \retval STATUS_OK              The procedure has gone well and the count
- *                                value is available trough the count pointer.
- * \retval STATUS_ERR_INVALID_ARG The resolution argument in the dev_inst struct
- *                                is out of bounds.
+ * \return 
  */
 uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 {
@@ -325,9 +336,7 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
  * \param[out] capture         pointer to a buffer
  * \param[in] channel_index    index of the compare register to read from
  *
- * \return Status of the procedure
- * \retval STATUS_OK
- * \retval STATUS_ERR_INVALID_ARG
+ * \return 
  */
 uint32_t tc_get_capture_value(
 		const struct tc_dev_inst *const dev_inst,
