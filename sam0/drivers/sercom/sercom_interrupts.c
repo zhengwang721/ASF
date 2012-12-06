@@ -56,7 +56,7 @@ void _sercom_default_handler(uint8_t instance)
 }
 
 /* Find SERCOM instance. */
-uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
+uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
@@ -65,10 +65,10 @@ uint8_t _sercom_get_sercom_inst_index(SERCOM_t *sercom_instance)
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
 	/* Array of SERCOM instances. */
-	SERCOM_t sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
+	Sercom sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for SERCOM instance. */
-	for (i = 0; i < SERCOM_INSTS_NUM; i++) {
+	for (i = 0; i < SERCOM_INST_NUM; i++) {
 		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
 			return i;
 		}
@@ -87,7 +87,7 @@ void _sercom_set_handler(uint8_t instance,
 	uint8_t i;
 	/* Initialize handlers with default handler. */
 	if(_handler_table_initialized == false) {
-		for(i = 0; i < SERCOM_INSTS_NUM; i++) {
+		for(i = 0; i < SERCOM_INST_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
 			_sercom_instances[i] = NULL;
 		}

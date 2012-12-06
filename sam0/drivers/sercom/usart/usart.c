@@ -63,7 +63,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	uint32_t ctrlb = 0;
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Set SERCOM gclk generator according to config */
 	status_code = sercom_set_gclk_generator(config->generator_source,
@@ -72,9 +72,11 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		return status_code;
 	}
 
+
+	//TODO: change clock_polarity to enum if we don't get bp's in the header-file
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (config->data_order) | (config->mux_settings)
-		| (config->clock_polarity_inverted << SERCOM_USART_CPOL_bp);
+		| (config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL);
 
 	/* Get baud value from mode and clock */
 	switch (config->sample_mode) {
@@ -110,29 +112,29 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	_usart_wait_for_sync(dev_inst);
 
 	/*Set baud val */
-	usart_module->BAUD = baud_val;
+	usart_module->BAUD.reg = baud_val;
 
 	/* Set sample mode */
 	ctrla |= config->sample_mode;
 
 	/* Write configuration to CTRLA */
-	usart_module->CTRLA = ctrla;
+	usart_module->CTRLA.reg = ctrla;
 
 	/* Set stopbits and character size */
 	ctrlb = config->stopbits | config->char_size;
 
 	/* set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
-		ctrlb |= USART_FRAME_FORMAT_WITHOUT_PARITY_gm;
+		ctrlb |= SERCOM_USART_CTRLA_FORM(0);
 	} else {
-		ctrlb |= (USART_FRAME_FORMAT_WITH_PARITY_gm | config->parity);
+		ctrlb |= (SERCOM_USART_CTRLA_FORM(1) | config->parity);
 	}
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Write configuration to CTRLB */
-	usart_module->CTRLB = ctrlb;
+	usart_module->CTRLB.reg = ctrlb;
 
 	return STATUS_OK;
 }
@@ -162,7 +164,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  *                                         struct due to sample_mode or clock frequency
  */
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		SERCOM_t *const hw_dev, const struct usart_conf *const config)
+		Sercom *const hw_dev, const struct usart_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -175,17 +177,17 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	dev_inst->hw_dev = hw_dev;
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait for synchronization to be complete*/
 	_usart_wait_for_sync(dev_inst);
 
-	if (usart_module->CTRLA & SERCOM_USART_RESET_bm) {
+	if (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
 		/* Reset is ongoing. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
-	if (usart_module->CTRLA & SERCOM_USART_ENABLE_bm) {
+	if (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
 		/* Module have to be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
@@ -257,13 +259,13 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Write data to USART module */
-	usart_module->DATA = tx_data;
+	usart_module->DATA.reg = tx_data;
 
 	return STATUS_OK;
 }
@@ -309,13 +311,13 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
-	error_code = (uint8_t)(usart_module->STATUS & SERCOM_USART_STATUS_MASK);
+	error_code = (uint8_t)(usart_module->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
@@ -323,26 +325,26 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 		if (error_code & USART_STATUS_FLAG_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS &= ~USART_STATUS_FLAG_FERR;
+			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_FERR;
 			return STATUS_ERR_BAD_FORMAT;
 
 		} else if (error_code & USART_STATUS_FLAG_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS &= ~USART_STATUS_FLAG_BUFOVF;
+			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_BUFOVF;
 			return STATUS_ERR_OVERFLOW;
 
 		} else if (error_code & USART_STATUS_FLAG_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS &= ~USART_STATUS_FLAG_PERR;
+			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_PERR;
 			return STATUS_ERR_BAD_DATA;
 
 		}
 	}
 
 	/* Read data from USART module */
-	*rx_data = usart_module->DATA;
+	*rx_data = usart_module->DATA.reg;
 
 	return STATUS_OK;
 }

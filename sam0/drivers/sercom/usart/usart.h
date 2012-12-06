@@ -79,7 +79,7 @@ enum usart_callback {
  * is shifted out first when data is transferred
  */
 enum usart_dataorder {
-	USART_DATAORDER_MSB = SERCOM_USART_DORD_bm,
+	USART_DATAORDER_MSB = SERCOM_USART_CTRLA_DORD,
 	USART_DATAORDER_LSB = 0,
 };
 
@@ -90,11 +90,11 @@ enum usart_dataorder {
  */
 enum usart_sample_mode {
 	/* Sampling is synchronized with the internal clock */
-	USART_SAMPLE_MODE_SYNC_MASTER = (SERCOM_USART_CSRC_bm | SERCOM_USART_CMODE_bm),
+	USART_SAMPLE_MODE_SYNC_MASTER = (SERCOM_USART_CTRLA_CSRC | SERCOM_USART_CTRLA_CMODE),
 	/* Sampling is synchronized with the  external clock */
-	USART_SAMPLE_MODE_SYNC_SLAVE = (SERCOM_USART_CMODE_bm),
+	USART_SAMPLE_MODE_SYNC_SLAVE = (SERCOM_USART_CTRLA_CMODE),
 	/* Sampling is asynchronous and USART is clocked by the internal clock */
-	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CSRC_bm),
+	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CTRLA_CSRC),
 	/* Sampling is asynchronous and USART is clocked by an external clock.
 	 * The clock source is applied to the XCK pin
 	 */
@@ -111,7 +111,7 @@ enum usart_sample_mode {
  *
  */
 enum usart_parity {
-	USART_PARITY_ODD  = SERCOM_USART_PMODE_bm,
+	USART_PARITY_ODD  = SERCOM_USART_CTRLB_PMODE,
 	USART_PARITY_EVEN = 0,
 	USART_PARITY_NONE = 0xFF,
 };
@@ -127,21 +127,21 @@ enum usart_parity {
 //TODO: rename to mux_settings_a-h
 enum usart_signal_mux_settings {
 	/** See \ref mux_setting_a */
-	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_RXPO_0_gc | SERCOM_USART_TXPO_0_gc),
+	USART_RX_0_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(0)  & ~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_b */
-	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_RXPO_0_gc | SERCOM_USART_TXPO_2_gc),
+	USART_RX_0_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_c */
-	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_RXPO_1_gc | SERCOM_USART_TXPO_0_gc),
+	USART_RX_1_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(1)  & ~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_d */
-	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_RXPO_1_gc | SERCOM_USART_TXPO_2_gc),
+	USART_RX_1_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_e */
-	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_RXPO_2_gc | SERCOM_USART_TXPO_0_gc),
+	USART_RX_2_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(2)  & ~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_f */
-	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_RXPO_2_gc | SERCOM_USART_TXPO_2_gc),
+	USART_RX_2_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_g */
-	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_RXPO_3_gc | SERCOM_USART_TXPO_0_gc),
+	USART_RX_3_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(3)  & ~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_h */
-	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_RXPO_3_gc | SERCOM_USART_TXPO_2_gc),
+	USART_RX_3_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
 };
 
 /**
@@ -151,8 +151,8 @@ enum usart_signal_mux_settings {
  *
  */
 enum usart_stopbits {
-	USART_STOPBITS_1 = SERCOM_USART_SBMODE_1_bm,
-	USART_STOPBITS_2 = SERCOM_USART_SBMODE_2_bm,
+	USART_STOPBITS_1 = 0,
+	USART_STOPBITS_2 = SERCOM_USART_CTRLB_SBMODE,
 };
 
 /**
@@ -162,11 +162,11 @@ enum usart_stopbits {
  *
  */
 enum usart_char_size {
-	USART_CHAR_SIZE_5BIT = SERCOM_USART_CHSIZE_5BIT_gc,
-	USART_CHAR_SIZE_6BIT = SERCOM_USART_CHSIZE_6BIT_gc,
-	USART_CHAR_SIZE_7BIT = SERCOM_USART_CHSIZE_7BIT_gc,
-	USART_CHAR_SIZE_8BIT = SERCOM_USART_CHSIZE_8BIT_gc,
-	USART_CHAR_SIZE_9BIT = SERCOM_USART_CHSIZE_9BIT_gc,
+	USART_CHAR_SIZE_5BIT = SERCOM_USART_CTRLB_CHSIZE(5),
+	USART_CHAR_SIZE_6BIT = SERCOM_USART_CTRLB_CHSIZE(6),
+	USART_CHAR_SIZE_7BIT = SERCOM_USART_CTRLB_CHSIZE(7),
+	USART_CHAR_SIZE_8BIT = SERCOM_USART_CTRLB_CHSIZE(0),
+	USART_CHAR_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
 /**
@@ -244,10 +244,10 @@ typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const dev_in
 struct usart_dev_inst {
 #ifdef USART_ASYNC
 	/** Mode for the SERCOM module */
-	SERCOM_MODE_t sercom_mode;
+	//SERCOM_MODE_t sercom_mode;
 #endif
 	/** Pointer to the hardware instance */
-	SERCOM_t *hw_dev;
+	Sercom *hw_dev;
 	/** Character size of the data being transferred */
 	enum usart_char_size char_size;
 #ifdef USART_ASYNC
@@ -283,10 +283,10 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
 		*const dev_inst)
 {
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until the synchronization is complete */
-	while (usart_module->STATUS & SERCOM_USART_SYNCBUSY_bm) {
+	while (usart_module->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
 }
@@ -321,7 +321,7 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		SERCOM_t *const hw_dev, const struct usart_conf *const config);
+		Sercom *const hw_dev, const struct usart_conf *const config);
 
 /**
  * \brief Enable the module
@@ -338,13 +338,13 @@ static inline void usart_enable(const struct usart_dev_inst *const dev_inst)
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Enable USART module */
-	usart_module->CTRLA |= SERCOM_USART_ENABLE_bm;
+	usart_module->CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -361,13 +361,13 @@ static inline void usart_disable(const struct usart_dev_inst *const dev_inst)
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Disable USART module */
-	usart_module->CTRLA &= ~SERCOM_USART_ENABLE_bm;
+	usart_module->CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -385,7 +385,7 @@ static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	usart_disable(dev_inst);
 
@@ -393,7 +393,7 @@ static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
 	_usart_wait_for_sync(dev_inst);
 
 	/* Reset module */
-	usart_module->CTRLA = SERCOM_USART_RESET_bm;
+	usart_module->CTRLA.reg = SERCOM_USART_CTRLA_SWRST;
 }
 
 /**
@@ -441,13 +441,13 @@ static inline bool usart_is_data_received(const struct usart_dev_inst
 	uint8_t rxcif;
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Read out Transmit Complete Interrupt Flag */
-	rxcif = usart_module->INTFLAGS & SERCOM_USART_RXCIF_bm;
+	rxcif = usart_module->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF;
 
 #ifdef USART_ASYNC
 	return rxcif && !(dev_inst->remaining_rx_buffer_length);
@@ -488,10 +488,10 @@ static inline bool usart_is_data_transmitted(const struct usart_dev_inst
 	uint8_t txcif;
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Read out Transmit Complete Interrupt Flag */
-	txcif = usart_module->INTFLAGS & SERCOM_USART_TXCIF_bm;
+	txcif = usart_module->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF;
 
 #ifdef USART_ASYNC
 	return txcif && !(dev_inst->remaining_tx_buffer_length);
@@ -515,13 +515,13 @@ static inline bool usart_is_data_buffer_empty(const struct usart_dev_inst
 	Assert(dev_inst->hw_dev);
 
 	/* Pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 #ifdef USART_ASYNC
 	return dev_inst->remaining_tx_buffer_length &&
-			(usart_module->INTFLAGS & SERCOM_USART_DREIF_bm);
+			(usart_module->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF);
 #endif
-	return usart_module->INTFLAGS & SERCOM_USART_DREIF_bm;
+	return usart_module->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF;
 }
 
 /**
@@ -545,13 +545,13 @@ static inline void usart_enable_rx(const struct usart_dev_inst
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Enable RX */
-	usart_module->CTRLB |= SERCOM_USART_RXEN_bm;
+	usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
 }
 
 /**
@@ -570,13 +570,13 @@ static inline void usart_disable_rx(const struct usart_dev_inst
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Disable RX */
-	usart_module->CTRLB &= ~SERCOM_USART_RXEN_bm;
+	usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
 }
 
 /**
@@ -595,13 +595,13 @@ static inline void usart_enable_tx(const struct usart_dev_inst
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Enable TX */
-	usart_module->CTRLB |= SERCOM_USART_TXEN_bm;
+	usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
 }
 
 /**
@@ -620,13 +620,13 @@ static inline void usart_disable_tx(const struct usart_dev_inst
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
 	/* Disable TX */
-	usart_module->CTRLB &= ~SERCOM_USART_TXEN_bm;
+	usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
 }
 
 /*
@@ -647,9 +647,9 @@ static inline bool usart_is_interrupt_flag_set(
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
-	return (usart_module->INTFLAGS & (1 << interrupt_flag));
+	return (usart_module->INTFLAG.reg & (1 << interrupt_flag));
 }
 
 static inline void usart_clear_interrupt_flag(
@@ -661,10 +661,10 @@ static inline void usart_clear_interrupt_flag(
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the hardware module instance */
-	SERCOM_USART_t *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Clear requested status flag by writing a one to it */
-	usart_module->INTFLAGS |= (1 << interrupt_flag);
+	usart_module->INTFLAG.reg |= (1 << interrupt_flag);
 }
 
 /**
