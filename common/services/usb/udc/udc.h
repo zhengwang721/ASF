@@ -49,6 +49,14 @@
 #include "udc_desc.h"
 #include "udd.h"
 
+#if USB_DEVICE_VENDOR_ID == 0
+#   error USB_DEVICE_VENDOR_ID cannot be equal to 0
+#endif
+
+#if USB_DEVICE_PRODUCT_ID == 0
+#   error USB_DEVICE_PRODUCT_ID cannot be equal to 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -123,37 +131,43 @@ extern "C" {
  *
  * The VBus monitoring is used only for USB SELF Power application.
  *
- *  -  No custom implementation \n
- *     // Authorize VBUS monitoring \n
- *     if (!udc_include_vbus_monitoring()) { \n
- *       // VBUS monitoring is not available on this product \n
- *       // thereby VBUS has to be considered as present \n
- *       // Attach USB Device \n
- *       udc_attach(); \n
- *     } \n
+ * - By default the USB device is automatically attached when Vbus is high
+ * or when USB is start for devices without internal Vbus monitoring. 
+ * conf_usb.h file does not contains define USB_DEVICE_ATTACH_AUTO_DISABLE.
+ * \code //#define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
  *
- *  -  Add custom VBUS monitoring \n
- *     // Authorize VBUS monitoring \n
- *     if (!udc_include_vbus_monitoring()) { \n
- *       // Implement custom VBUS monitoring via GPIO or other \n
- *     } \n
- *     Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other \n
- *     { \n
- *        // Attach USB Device \n
- *        udc_attach(); \n
- *     } \n
+ * - Add custom VBUS monitoring. conf_usb.h file contains define
+ * USB_DEVICE_ATTACH_AUTO_DISABLE:
+ * \code #define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
+ * User C file contains:
+ * \code  
+ * // Authorize VBUS monitoring
+ * if (!udc_include_vbus_monitoring()) {
+ *   // Implement custom VBUS monitoring via GPIO or other
+ * }
+ * Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
+ * {
+ *   // Attach USB Device
+ *   udc_attach();
+ * }
+ * \endcode
  *
- *  -  Case of battery charging \n
- *     Event VBUS present() // VBUS interrupt or GPIO interrupt or .. \n
- *     { \n
- *        // Authorize battery charging, but wait key press to start USB. \n
- *     } \n
- *     Event Key press() \n
- *     { \n
- *        // Stop batteries charging \n
- *        // Start USB \n
- *        udc_attach(); \n
- *     }  \n
+ * - Case of battery charging. conf_usb.h file contains define
+ * USB_DEVICE_ATTACH_AUTO_DISABLE:    
+ * \code #define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
+ * User C file contains:
+ * \code  
+ * Event VBUS present() // VBUS interrupt or GPIO interrupt or ..
+ * {
+ *   // Authorize battery charging, but wait key press to start USB.
+ * }
+ * Event Key press()
+ * {
+ *   // Stop batteries charging
+ *   // Start USB
+ *   udc_attach();
+ * }
+ * \endcode
  */
 static inline bool udc_include_vbus_monitoring(void)
 {
@@ -302,27 +316,13 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * #define USB_DEVICE_MINOR_VERSION 0
  * #define USB_DEVICE_POWER 100
  * #define USB_DEVICE_ATTR USB_CONFIG_ATTR_BUS_POWERED
- *
- * #define  UDC_VBUS_EVENT(b_vbus_high)      my_vbus_action(b_vbus_high)
- * extern void my_vbus_action(bool b_high);
  * \endcode
  *
  * Add to application C-file:
  * \code
  * void usb_init(void)
  * {
- * udc_start();
- * }
- *
- * void my_vbus_action(bool b_high)
- * {
- *   if (b_high) {
- *     // Attach USB Device
- *     udc_attach();
- *   } else {
- *     // Vbus not present
- *     udc_detach();
- *   }
+ *   udc_start();
  * }
  * \endcode
  */
@@ -346,25 +346,11 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * #define USB_DEVICE_POWER 100 // Type 9-bits
  * // USB attributes to enable features
  * #define USB_DEVICE_ATTR USB_CONFIG_ATTR_BUS_POWERED // Flags \endcode
- *   - \code #define  UDC_VBUS_EVENT(b_vbus_high)      my_vbus_action(b_vbus_high)
- * extern void my_vbus_action(bool b_high); \endcode
- *     \note This callback is called when USB Device cable is plugged or unplugged.
- * -# Call the USB device stack start function to enable stack:
+ * -# Call the USB device stack start function to enable stack and start USB:
  *   - \code udc_start(); \endcode
  *     \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
  * SeRefer to "AVR4950 section 6.1 Dual roles" for further information about dual roles.
- * -# Connect or disconnect USB device according to Vbus state:
- *   - \code void my_vbus_action(bool b_high)
- * {
- *   if (b_high) {
- *     // Attach USB Device
- *     udc_attach();
- *   } else {
- *     // Vbus not present
- *     udc_detach();
- *   }
- * } \endcode
  */
 
 /**
@@ -563,58 +549,6 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *     extern void my_callback_remotewakeup_disable(void); \endcode
  * -# Send a remote wakeup (USB upstream):
  *   - \code udc_remotewakeup(); \endcode
- */
-
-/**
- * \page udc_use_case_4 Self power application recommendations
- *
- * In this use case, the USB device self power feature is enabled.
- * To be USB compliance, the SELF power application requires to manage Vbus event,
- * because the USB device D+/- pull-up must be disabled if the USB cable is unplugged
- * (unplug = Vbus not present, pull-up disable = \ref udd_detach()).
- * This use case requires that Atmel products includes a Vbus monitoring, else
- * see \ref udc_include_vbus_monitoring function documentation for more example.
- *
- * \section udc_use_case_4_setup Setup steps
- * Prior to implement this use case, be sure to have already 
- * apply the UDI module "basic use case".
- *
- * \section udc_use_case_4_usage Usage steps
- *
- * \subsection udc_use_case_4_usage_code Example code
- * Content of conf_usb.h:
- * \code
- * #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_SELF_POWERED)
- * #define  UDC_VBUS_EVENT(b_vbus_high) user_callback_vbus_action(b_vbus_high)
- * extern void user_callback_vbus_action(bool b_vbus_high);
- * \endcode
- *
- * Add to application C-file:
- * \code
- * void user_callback_vbus_action(bool b_vbus_high)
- * {
- *   if (b_high) {
- *     // Attach USB Device
- *     udc_attach();
- *   } else {
- *     // Vbus not present
- *     udc_detach();
- *   }
- * }
- * \endcode
- *
- * \subsection udc_use_case_4_usage_flow Workflow
- * -# Ensure that conf_usb.h is available and contains the following parameters
- * required for USB device SELF power device:
- *   - \code // Authorizes the SELF power feature
- * #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_SELF_POWERED) \endcode
- *   - \code // Define callback called when the Vbus level change
- * #define  UDC_VBUS_EVENT(b_vbus_high) user_callback_vbus_action(b_vbus_high)
- * extern void user_callback_vbus_action(bool b_vbus_high); \endcode
- * -# Signal the USB device presence on USB line
- *   - \code udc_attach(); \endcode
- * -# Remove signal of the USB device presence on USB line
- *   - \code udc_detach(); \endcode
  */
 
 /**

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.bpm.unit_tests" caption="Set of unit tests for Backup Power Manager driver">
+	<module type="application" id="sam.drivers.bpm.unit_tests" caption="Unit Tests for the SAM Backup Power Manager Driver">
 		<info type="description" value="summary">
 		The BPM provides all the features required to change power modes.
 		</info>

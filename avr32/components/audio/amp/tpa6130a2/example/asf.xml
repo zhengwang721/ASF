@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.components.audio.amp.tpa6130a2.example" caption="Audio amplifier TPA6130A2 Example">
+	<module type="application" id="avr32.components.audio.amp.tpa6130a2.example" caption="Audio Amplifier TPA6130A2 Example">
 		<info type="description" value="summary">
 		Using the TPA6130, stream an audio buffer from a DAC.
-		</info>	
+		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Audio" />
 		</info>

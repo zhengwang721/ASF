@@ -163,6 +163,9 @@ typedef uint16_t wtk_string_size_t;
 /** Checkbox square frame color. */
 #define WTK_CHECKBOX_BOX_COLOR     GFX_COLOR(0, 0, 0)
 
+/** Checkbox square background color. */
+#define WTK_CHECKBOX_BACKGROUND_COLOR     GFX_COLOR_WHITE
+
 /** Checkbox square select mark color. */
 #define WTK_CHECKBOX_SELECT_COLOR  GFX_COLOR(128, 0, 0)
 
@@ -196,6 +199,9 @@ typedef uint8_t wtk_radio_group_size_t;
 
 /** Radio button circle color. */
 #define WTK_RADIOBUTTON_BUTTON_COLOR  GFX_COLOR(0, 0, 0)
+
+/** Radio button circle background color. */
+#define WTK_RADIOBUTTON_BACKGROUND_COLOR  GFX_COLOR_WHITE
 
 /** Radio button select mark color. */
 #define WTK_RADIOBUTTON_SELECT_COLOR  GFX_COLOR(128, 0, 0)
