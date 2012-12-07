@@ -247,7 +247,7 @@ enum system_dfll_mode {
 	/** The DFLL is operating in closed loop mode with frequency feedback from a
      * low frequency reference clock
      */
-	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_MODE_bm,
+	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_DFLLCTRL_MODE,
 };
 
 /**
@@ -257,7 +257,7 @@ enum system_dfll_wakeup_lock {
 	/** Keep DFLL lock when the device wakes from sleep */
 	SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE,
 	/** Lose DFLL lock when the devices wakes from sleep */
-	SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE = SYSCTRL_LLAW_bm,
+	SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE = SYSCTRL_DFLLCTRL_LLAW,
 };
 
 /**
@@ -267,7 +267,7 @@ enum system_dfll_stable_tracking {
 	/** Keep tracking after the DFLL has gotten a fine lock */
 	SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK,
 	/** Stop tracking after the DFLL has gotten a fine lock */
-	SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_FINE_bm,
+	SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_DFLLCTRL_STABLE,
 };
 
 /** If the difference between the DFLL source clock and output frequency is
@@ -277,7 +277,7 @@ enum system_dfll_chill_cycle {
 	/** Enable a chill cycle, where the DFLL output frequency is not measured */
 	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE,
 	/** Disable a chill cycle, where the DFLL output frequency is not measured */
-	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE = SYSCTRL_CCDIS_bm,
+	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE = SYSCTRL_DFLLCTRL_CCDIS,
 };
 
 /**
@@ -287,7 +287,7 @@ enum system_dfll_quick_lock {
 	/** Enable the QuickLock feature for less strict lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
-	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE,
+	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
 };
 
 
@@ -521,15 +521,8 @@ static inline void system_clock_source_get_default_config(
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	/* TODO: Datasheet text and regmap disagreement; figure out which one is correct */
-
 	/* According to text in datasheet */
-	while (!(SYSCTRL.PCLKSR & SYSCTRL_DFLLRDY_bm)) {
-		/* Wait for DFLL sync */
-	}
-
-	/* Make more sense, according to regmap */
-	while (!(SYSCTRL.DFLLSYNC & SYSCTRL_SYNC_bm)) {
+	while (!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
 		/* Wait for DFLL sync */
 	}
 }
@@ -540,7 +533,7 @@ static inline void _system_dfll_wait_for_sync(void)
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
-	while(!(SYSCTRL.PCLKSR & SYSCTRL_OSC32KRDY_bm)) {
+	while(!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
 }
@@ -577,9 +570,9 @@ static inline void _system_osc32k_wait_for_sync(void)
 static inline void system_main_clock_set_failure_detect(bool enable)
 {
 	if (enable) {
-		PM.CTRL |= PM_CFDEN_bm;
+		PM.CTRL.reg |= PM_CTRL_CFDEN;
 	} else {
-		PM.CTRL &= ~PM_CFDEN_bm;
+		PM.CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
 
 }
@@ -596,7 +589,7 @@ static inline void system_main_clock_set_failure_detect(bool enable)
  */
 static inline void system_main_clock_set_source(enum system_main_clock clock)
 {
-	PM.CTRL = (PM.CTRL & ~PM_MCSEL_gm) | (clock & PM_MCSEL_gm) << PM_MCSEL_gp;
+	PM.CTRL.reg = (PM.CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
 }
 #endif
 
@@ -610,7 +603,7 @@ static inline void system_main_clock_set_source(enum system_main_clock clock)
  */
 static inline void system_cpu_clock_set_divider(enum system_main_clock_div divider)
 {
-	PM.CPUSEL = divider;
+	PM.CPUSEL.reg = divider;
 }
 
 /**
@@ -642,13 +635,13 @@ static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus b
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBASEL = divider;
+			PM.APBASEL.reg = divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBSEL = divider;
+			PM.APBBSEL.reg = divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCSEL = divider;
+			PM.APBCSEL.reg = divider;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
@@ -677,7 +670,7 @@ static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus b
  */
 static inline void system_ahb_clock_set_mask(uint32_t mask)
 {
-	PM.AHBMASK |= mask;
+	PM.AHBMASK.reg |= mask;
 }
 
 /**
@@ -692,7 +685,7 @@ static inline void system_ahb_clock_set_mask(uint32_t mask)
  */
 static inline void system_ahb_clock_clear_mask(uint32_t mask)
 {
-	PM.AHBMASK &= ~mask;
+	PM.AHBMASK.reg &= ~mask;
 }
 
 
@@ -713,13 +706,13 @@ static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus,
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBAMASK |= mask;
+			PM.APBAMASK.reg |= mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBMASK |= mask;
+			PM.APBBMASK.reg |= mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCMASK |= mask;
+			PM.APBCMASK.reg |= mask;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
@@ -746,13 +739,13 @@ static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bu
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBAMASK &= ~mask;
+			PM.APBAMASK.reg &= ~mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBMASK &= ~mask;
+			PM.APBBMASK.reg &= ~mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCMASK &= ~mask;
+			PM.APBCMASK.reg &= ~mask;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
