@@ -12,6 +12,7 @@
 		<build type="include-path" value="."/>
 		<device-support value="xmegaa"/>
 		<device-support value="xmegaau"/>
+		<device-support value="xmegac"/>
 		<require idref="xmega.drivers.aes"/>
 		<require idref="xmega.drivers.pmic"/>
 		<require idref="xmega.drivers.ioport"/>
