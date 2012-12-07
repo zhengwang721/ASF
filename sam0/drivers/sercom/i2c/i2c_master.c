@@ -185,7 +185,6 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	dev_inst->registered_callback = 0;
 	dev_inst->enabled_callback = 0;
 	dev_inst->buffer_length = 0;
-	dev_inst->async_ongoing = 0;
 #endif
 
 	//dev_inst->callback[0] = 0;
@@ -329,7 +328,7 @@ enum status_code i2c_master_read_packet(
 
 #ifdef I2C_MASTER_ASYNC
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->async_ongoing != false) {
+	if (dev_inst->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 #endif
@@ -396,7 +395,7 @@ enum status_code i2c_master_read_packet(
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_BAD_DATA If slave did not acknowledge last sent data,
+ * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
  *                             indicating that slave do not want more data.
  */
 enum status_code i2c_master_write_packet(
@@ -412,7 +411,7 @@ enum status_code i2c_master_write_packet(
 
 #ifdef I2C_MASTER_ASYNC
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->async_ongoing != false) {
+	if (dev_inst->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 #endif
@@ -462,7 +461,7 @@ enum status_code i2c_master_write_packet(
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
 				/* Return bad data value. */
-				tmp_status = STATUS_ERR_BAD_DATA;
+				tmp_status = STATUS_ERR_OVERFLOW;
 				break;
 			}
 		}

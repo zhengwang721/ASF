@@ -60,9 +60,7 @@ extern "C" {
  * blalba
  *
  * blabla
- */
-
-/**
+ *
  * \section i2c_master_api_overview API Overview
  * @{
  *
@@ -106,7 +104,7 @@ enum i2c_master_start_hold_time {
 };
 
 /**
- * /brief I2C protocol frequencies.
+ * \brief I2C protocol frequencies.
  *
  * Values for standard I2C speeds supported by the module.
  *

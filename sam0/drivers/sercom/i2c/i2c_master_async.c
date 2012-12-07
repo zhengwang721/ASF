@@ -76,7 +76,7 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
 		/* Return bad data value. */
-		dev_inst->status = STATUS_ERR_BAD_DATA;
+		dev_inst->status = STATUS_ERR_OVERFLOW;
 		return;
 	}
 
@@ -215,13 +215,12 @@ enum status_code i2c_master_async_read_packet(
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->async_ongoing != false) {
+	if (dev_inst->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
 
 	/* Save packet to device instance. */
-	dev_inst->async_ongoing = true;
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
@@ -261,12 +260,11 @@ enum status_code i2c_master_async_write_packet(
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->async_ongoing != false) {
+	if (dev_inst->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
 	/* Save packet to device instance. */
-	dev_inst->async_ongoing = true;
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
@@ -304,7 +302,6 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
-		dev_inst->async_ongoing = false;
 
 		/* Call appropriate callback if enabled and registered. */
 		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_READ_COMPLETE)
@@ -339,7 +336,6 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
-		dev_inst->async_ongoing = false;
 
 		/* Call error callback if enabled and registered. */
 		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)

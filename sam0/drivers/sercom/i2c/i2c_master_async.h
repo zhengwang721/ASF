@@ -49,17 +49,17 @@ extern "C" {
 #endif
 
 /**
- * \page i2c_master_async Asynchronous I2C Master
- *
- *
+ * \weakgroup sam0_i2c_master_group
+ * @{
  */
 
 /**
  * \name Callbacks
  * @{
  */
-
+#if !defined(__DOXYGEN__)
 void _i2c_master_async_callback_handler(uint8_t instance);
+#endif
 
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -124,6 +124,7 @@ enum status_code i2c_master_async_write_packet(
 
 /**
  * \brief Cancel the currently running operation.
+ *
  * This will terminate the running write or read transfer.
  *
  * \param  dev_inst Pointer to device instance struct.
@@ -141,6 +142,7 @@ static inline void i2c_master_async_cancel_transfer(
 
 /**
  * \brief Check if a started transfer is done.
+ *
  * This will return the current status of the read/write transfer.
  *
  * \param  dev_inst Pointer to the device instance struct.
@@ -171,7 +173,7 @@ static inline bool i2c_master_async_is_transfer_done(
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_BAD_DATA If slave did not acknowledge last sent data,
+ * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
  *                             indicating that slave do not want more data.
  */
 static inline enum status_code i2c_master_async_get_last_error(
@@ -190,6 +192,7 @@ static inline enum status_code i2c_master_async_get_last_error(
 	return tmp_status;
 }
 
+/** @} */
 /** @} */
 
 #ifdef __cplusplus
