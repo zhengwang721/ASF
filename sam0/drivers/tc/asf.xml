@@ -13,7 +13,8 @@
 		<build type="doxygen-entry-point" value="sam0_tc_group"/>
 		<device-support value="sam0d"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.gclk"/>
+		<require idref="sam0.drivers.system.gclk"/>
+		<require idref="sam0.drivers.system"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>
 </asf>

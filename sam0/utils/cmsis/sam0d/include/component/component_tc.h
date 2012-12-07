@@ -80,7 +80,7 @@ typedef union {
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_CTRLA_Type;
 
-
+#define   TC0_GCLK_ID               19
 #define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6)
 #define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6)
 #define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6)
