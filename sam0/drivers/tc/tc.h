@@ -48,6 +48,7 @@ extern "C" {
 
 #include <compiler.h>
 #include <gclk.h>
+#include <clock.h>
 
 
 /**
@@ -57,6 +58,13 @@ extern "C" {
  * interface for configuration and management of the TC module. This
  * driver encompasses the following module within the SAM0+ devices:
  * \li \b TC \b (Timer Counter)
+ * \n\n
+ *
+ * This driver is chreated and meant to be used as a polled driver, as
+ * such this documentation will not go into the use of interrupts with
+ * regards to the TC module. It should also be noted that this is not
+ * complete documentation for the TC module but for the functionality
+ * this driver can deliver.
  *
  * \section module_introduction Introduction
  *
@@ -66,39 +74,42 @@ extern "C" {
  * rudimentary counting, perform input capture, pulse width capture,
  * frequency capture, and more.
  * \n\n
+ *
  * A TC is basically a counter however if it is supplied with an accurate
  * frequency to count, the module becomes capable of performing timer
  * operations.
  * \n\n
- * This driver is cheated and meant to be used as a polled driver, as
- * such this documentation will not go into the use of interrupts with
- * regards to the TC module. It should also be noted that this is not
- * complete documentation for the TC module but for the functionality
- * this driver can deliver.
+ *
+ * The TC in the SAMD20 has got its own prescaler that can be used to
+ * divide the clock frequensy used in the counter. It is posible to
+ * configure the counters to use either 32, 16 or 8 bit
+ * resolution. No mather the resolution you will get two capture
+ * compare registers that can be used either for capture or compare
+ * operations.
  *
  *
  * \subsection functional_description Functional Description
  *
- * The TC module in SAM0+ can be configured with 4 timer/counters in 8
- * bit resolution, or 4 timers/counters in 16 bit resolution, or 2
- * timers/counters in 32 bit resolution.
+ * The TC module in SAMD20 can be configured with 4 timer/counters in
+ * 8 bit resolution, or 4 timers/counters in 16 bit resolution, or 2
+ * timers/counters in 32 bit resolution.  \n\n
+ *
+ * Independent of what resolution the timer runs on it can be set up
+ * in two different modes, although to some extent one TC instance can
+ * be configured in both modes. These modes are capture and compare.
  * \n\n
- * Independent of what resolution the timer runs on it can basically be
- * set up in two different modes, although to some extent one TC instance
- * can be configured in both modes. These modes are capture and
- * compare.
- * \n\n
+ *
  * In compare mode the counter value is compared with one or more of
- * the compare values. When the counter coincides with the compare
- * value, this can generate an action. The capture mode is often used
- * for generating output signals such as waveform generation,
- * frequency generation and PWM generation. In addition the user can
- * use compare mode for timer applications where the value used in
- * comparison with the counter value signifies a time for when a
- * subroutine or an even should start. In a similar fashion it can be
- * used to count certain events and when this reaches a certain value
- * an action is taken.
- * \n\n
+ * the compare values. When the counter value coincides with the
+ * compare value, this can generate an action. The capture mode is
+ * often used for generating output signals such as waveform
+ * generation, frequency generation and PWM generation. In addition
+ * the user can use compare mode for timer applications where the
+ * value used in comparison with the counter value signifies a time
+ * for when a subroutine or an even should start. In a similar fashion
+ * it can be used to count certain events and when this reaches a
+ * certain value an action is taken.  \n\n
+ *
  * In capture mode the counter value is stored upon some configurable
  * event. This can be used to generate time stamps or it can be used
  * for frequency capture, event capture and pulse width capture.
@@ -156,6 +167,7 @@ extern "C" {
  * To be able to use the counter the module has to have a clock
  * this has to be configured in the config struct... .
  * \n\n
+ *
  * In addition to the prescaler that can be used on the g-clock
  * frequency supplied to the module, the module has its own prescaler
  * This prescaler only works to prescale the clock used to provide
@@ -163,6 +175,7 @@ extern "C" {
  * running on the g-clock frequency the counter value only changes on
  * the prescaled frequency.
  * \n\n
+ *
  * One thing to consider here is that the TC module will have to
  * synchronize when updating certain registers with the system
  * clock. This synchronization can be time consuming especially if the
@@ -171,6 +184,7 @@ extern "C" {
  * clock frequency to the counter. In this way synchronization should
  * be faster.
  * \n\n
+ *
  * In addition to configuring what clock source the tc module should
  * use and if the prescaler is needed on the clock to the counter. The
  * user have to consider what reload action to use. The reload action
@@ -205,6 +219,7 @@ extern "C" {
  * the modules g-clock. When the counter in the prescaler reaches the
  * chosen division factor the output from the prescaler toggles.
  * \n\n
+ *
  * The question then arises what do we want to happen when a reload
  * action gets triggered. In different scenarios and applications the
  * correct reload option will differ. One example is when an external
@@ -227,7 +242,6 @@ extern "C" {
  * In compare match operation Capture Compare Channel registers are
  * used in comparison with the counter value. Upon match some action
  * can be taken.
- *
  *
  * \subsubsection timer Timer
  *
@@ -252,6 +266,7 @@ extern "C" {
  * noise and differing impedances, compared to using an analogue
  * voltage value.
  * \n\n
+ *
  * PWM signals are generated by configuring the tc_wave_generation
  * enum in the tc_conf struct, and using either the
  * TC_WAVE_GENERATION_MATCH_PWM mode or the
@@ -768,7 +783,7 @@ static inline void tc_get_config_defaults(struct tc_conf *const config)
 	Assert(config);
 
 	/* Write default config to config struct */
-	config.clock_source                  = GCLK_GENERATOR_0;
+	config->clock_source                 = GCLK_GENERATOR_0;
 	config->resolution                   = TC_RESOLUTION_16BIT;
 	config->clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
 	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
@@ -819,6 +834,14 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 	/* Get a pointer to the module hardware instance */
 	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
 
+	if (dev_inst->resolution == TC_RESOLUTION_32BIT) {
+		if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
+			/* Reset the 16 bit master counter module */
+		}
+		else {
+			/* Reset the 16 bit slave counter module. */
+		}
+	}
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
