@@ -325,22 +325,22 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
 		/* Check which error occurred */
-		if (error_code & USART_STATUS_FLAG_FERR) {
+		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_FERR;
+			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
 			return STATUS_ERR_BAD_FORMAT;
 
-		} else if (error_code & USART_STATUS_FLAG_BUFOVF) {
+		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_BUFOVF;
+			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
 			return STATUS_ERR_OVERFLOW;
 
-		} else if (error_code & USART_STATUS_FLAG_PERR) {
+		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~USART_STATUS_FLAG_PERR;
+			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
 			return STATUS_ERR_BAD_DATA;
 		}
 	}

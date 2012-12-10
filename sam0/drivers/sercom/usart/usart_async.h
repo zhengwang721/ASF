@@ -56,11 +56,60 @@ void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
 void usart_async_unregister_callback(struct usart_dev_inst *dev_inst,
 		enum usart_callback callback_type);
 
-enum status_code usart_async_enable_callback(struct usart_dev_inst *const dev_inst,
-		enum usart_callback callback_type);
+/**
+ * \brief Enables callback
+ *
+ * Enables the callback function registered by the \ref
+ * usart_async_register_callback. The callback function will be called from the
+ * interrupt handler when the conditions for the callback type are met.
+ *
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid callback_type
+ *
+ */
+static inline void usart_async_enable_callback(
+		struct usart_dev_inst *const dev_inst,
+		enum usart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
 
-enum status_code usart_async_disable_callback(struct usart_dev_inst *const dev_inst,
-		enum usart_callback callback_type);
+	/* Enable callback */
+	dev_inst->callback_enable_mask |= (1 << callback_type);
+
+}
+
+/**
+ * \brief Disable callback
+ *
+ * Disables the callback function registered by the \ref
+ * usart_async_register_callback, and the callback will not be called
+ * from the interrupt routine.
+ *
+ * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \returns    Status of the operation
+ * \retval     STATUS_OK              If operation was completed
+ * \retval     STATUS_ERR_INVALID     If operation was not completed,
+ *                                    due to invalid callback_type
+ *
+ */
+static inline void usart_async_disable_callback(
+		struct usart_dev_inst *const dev_inst,
+		enum usart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+
+	/* Disable callback */
+	dev_inst->callback_enable_mask |= (0 << callback_type);
+}
 
 /**
  * @}

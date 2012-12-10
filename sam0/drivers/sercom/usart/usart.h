@@ -170,28 +170,18 @@ enum usart_char_size {
 };
 
 /**
- * \brief USART Status Flags
- *
- * Status flags for the USART module
- *
- */
-enum usart_status_flag {
-	USART_STATUS_FLAG_PERR        = SERCOM_USART_STATUS_PERR,
-	USART_STATUS_FLAG_FERR        = SERCOM_USART_STATUS_FERR,
-	USART_STATUS_FLAG_BUFOVF      = SERCOM_USART_STATUS_BUFOVF,
-	USART_STATUS_FLAG_SYNCBUSY    = SERCOM_USART_STATUS_SYNCBUSY,
-};
-
-/**
  * \brief USART Interrupt Flags
  *
  * Interrupt flags for the USART module
  *
  */
 enum usart_interrupt_flag {
-	USART_INTERRUPT_FLAG_DREIF,
-	USART_INTERRUPT_FLAG_TXCIF,
-	USART_INTERRUPT_FLAG_RXCIF,
+	/** This flag is set when the hardware Data Buffer is Empty */
+	USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY = SERCOM_USART_INTFLAG_DREIF,
+	/** This flag is set when a single Transmission is Complete */
+	USART_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
+	/** This flag is set when a single Reception is Complete */
+	USART_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
 };
 
 /**
