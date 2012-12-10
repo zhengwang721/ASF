@@ -3,7 +3,7 @@
  *
  * \brief Sample of IEE11073 Communication Model
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,10 +44,10 @@
 #ifndef _COMMUNICATION_MODEL_H_
 #define _COMMUNICATION_MODEL_H_
 
-bool ieee11073_com_model_enable(void);
-void ieee11073_com_model_disable(void);
-bool ieee11073_com_model_process(void);
-void ieee11073_com_model_send_measure_1(void);
-void ieee11073_com_model_send_measure_2(void);
+bool ieee11073_skeleton_enable(void);
+void ieee11073_skeleton_disable(void);
+bool ieee11073_skeleton_process(void);
+void ieee11073_skeleton_send_measure_1(void);
+void ieee11073_skeleton_send_measure_2(void);
 
-#endif // _COMMUNICATION_MODEL_H_
+#endif /* _COMMUNICATION_MODEL_H_ */
