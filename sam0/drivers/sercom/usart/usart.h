@@ -59,11 +59,11 @@
 /* TODO: Add support for RX started interrupt. */
 #ifdef USART_ASYNC
 enum usart_callback {
-	/** Callback for buffer transmitted. */
+	/** Callback for buffer transmitted */
 	USART_CALLBACK_BUFFER_TRANSMITTED,
-	/** Callback for buffer received. */
+	/** Callback for buffer received */
 	USART_CALLBACK_BUFFER_RECEIVED,
-	/** Callback for error. */
+	/** Callback for error */
 	USART_CALLBACK_ERROR,
 #if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -79,7 +79,11 @@ enum usart_callback {
  * is shifted out first when data is transferred
  */
 enum usart_dataorder {
+	/** The MSB will be shifted out first during transmission,
+	 *  and shifted in first during reception */
 	USART_DATAORDER_MSB = SERCOM_USART_CTRLA_DORD,
+	/** The LSB will be shifted out first during transmission,
+	 *  and shifted in first during reception */
 	USART_DATAORDER_LSB = 0,
 };
 
@@ -96,7 +100,7 @@ enum usart_sample_mode {
 	/* Sampling is asynchronous and USART is clocked by the internal clock */
 	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CTRLA_CSRC),
 	/* Sampling is asynchronous and USART is clocked by an external clock.
-	 * The clock source is applied to the XCK pin
+	 * The clock source is applied to the XCK pin.
 	 */
 	USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK = 0,
 };
@@ -111,8 +115,14 @@ enum usart_sample_mode {
  *
  */
 enum usart_parity {
+	/** For odd parity checking, the parity bit will be set if number of
+	 *  ones being transferred is even */
 	USART_PARITY_ODD  = SERCOM_USART_CTRLB_PMODE,
+	/** For even parity checking, the parity bit will be set if number of
+	 *  ones being received is odd */
 	USART_PARITY_EVEN = 0,
+	/** No parity checking will be executed, and there will be no parity bit
+	 *  in the received frame */
 	USART_PARITY_NONE = 0xFF,
 };
 
@@ -151,7 +161,9 @@ enum usart_signal_mux_settings {
  *
  */
 enum usart_stopbits {
+	/** Each transferred frame contains 1 stop bit */
 	USART_STOPBITS_1 = 0,
+	/** Each transferred frame contains 2 stop bits */
 	USART_STOPBITS_2 = SERCOM_USART_CTRLB_SBMODE,
 };
 
@@ -162,10 +174,15 @@ enum usart_stopbits {
  *
  */
 enum usart_char_size {
+	/** The char being sent in a frame is 5 bits long */
 	USART_CHAR_SIZE_5BIT = SERCOM_USART_CTRLB_CHSIZE(5),
+	/** The char being sent in a frame is 6 bits long */
 	USART_CHAR_SIZE_6BIT = SERCOM_USART_CTRLB_CHSIZE(6),
+	/** The char being sent in a frame is 7 bits long */
 	USART_CHAR_SIZE_7BIT = SERCOM_USART_CTRLB_CHSIZE(7),
+	/** The char being sent in a frame is 8 bits long */
 	USART_CHAR_SIZE_8BIT = SERCOM_USART_CTRLB_CHSIZE(0),
+	/** The char being sent in a frame is 9 bits long */
 	USART_CHAR_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
@@ -282,17 +299,20 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
  * - 8-bit asynchronous USART
  * - no parity
  * - 1 stop bit
- * - 115200 baud
+ * - 9600 baud
  *
- * Both the device and the config struct will be updated with the predefined
- * settings.
+ * The configuration struct will be updated with the default
+ * configuration.
  *
- * \param[in] dev_inst Pointer to USART software instance struct
+ * \param[out] dev_inst Pointer to configuration struc
  *
  */
 static inline void usart_get_config_defaults(struct usart_conf *const config)
 {
+	/* Sanity check arguments */
 	Assert(config);
+
+	/* Set default config in the config struct */
 	config->data_order = USART_DATAORDER_MSB;
 	config->sample_mode = USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK;
 	config->parity = USART_PARITY_NONE;

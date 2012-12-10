@@ -144,8 +144,9 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * configuration struct. This will leave the device in an enabled state
  * after initialization.
  *
- * \param dev_inst Pointer to USART device
- * \param config Pointer to configuration struct
+ * \param[out] dev_inst Pointer to USART device
+ * \param[in]  hw_dev   Pointer to USART hardware instance
+ * \param[in]  config   Pointer to configuration struct
  *
  * \return Status of the initialization
  *
@@ -436,13 +437,20 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
  * \param[out]    tx_data  Pointer to data to transmit
  * \param[length] number   Number of characters to transmit
  *
- * \return        Status of the operation
- * \retval        STATUS_OK                If operation was completed
- * \retval        STATUS_ERR_INVALID_ARG   If operation was not completed, due
- *                                         to invalid arguments
- * \retval        STATUS_ERR_TIMEOUT       If operation was not completed, due
- *                                         to USART module timing out
- * TODO: add error codes for rx
+ * \return     Status of the operation
+ * \retval     STATUS_OK                If operation was completed
+ * \retval     STATUS_ERR_INVALID_ARG   If operation was not completed, due
+ *                                     to invalid arguments
+ * \retval     STATUS_ERR_TIMEOUT       If operation was not completed, due
+ *                                      to USART module timing out
+ * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
+ *                                      due to mismatch configuration mismatch
+ *                                      between USART and the sender.
+ * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
+ *                                      due to the baud rate being to low or the
+ *                                      system frequency being to high.
+ * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
+ *                                      to data being corrupted.
  */
 enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		const uint8_t *rx_data, uint16_t length)
