@@ -88,21 +88,15 @@ enum usart_dataorder {
 };
 
 /**
- * \brief USART Sample mode enum
+ * \brief USART Transfer mode enum
  *
  *
  */
-enum usart_sample_mode {
-	/* Sampling is synchronized with the internal clock */
-	USART_SAMPLE_MODE_SYNC_MASTER = (SERCOM_USART_CTRLA_CSRC | SERCOM_USART_CTRLA_CMODE),
-	/* Sampling is synchronized with the  external clock */
-	USART_SAMPLE_MODE_SYNC_SLAVE = (SERCOM_USART_CTRLA_CMODE),
-	/* Sampling is asynchronous and USART is clocked by the internal clock */
-	USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK = (SERCOM_USART_CTRLA_CSRC),
-	/* Sampling is asynchronous and USART is clocked by an external clock.
-	 * The clock source is applied to the XCK pin.
-	 */
-	USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK = 0,
+enum usart_transfer_mode {
+	/* Transfer of data is done synchronously */
+	USART_TRANSFER_SYNCHRONOUSLY = (SERCOM_USART_CTRLA_CMODE),
+	/* Transfer of data is done asynchronously */
+	USART_TRANSFER_ASYNCHRONOUSLY = 0
 };
 
 /**
@@ -220,7 +214,7 @@ struct usart_conf {
 	/** USART bit order (MSB or LSB first) */
 	enum usart_dataorder data_order;
 	/** USART in asynchronous or synchronous mode */
-	enum usart_sample_mode sample_mode;
+	enum usart_transfer_mode transfer_mode;
 	/** USART parity */
 	enum usart_parity parity;
 	/** Number of stop bits */
@@ -238,6 +232,11 @@ struct usart_conf {
 	 * is sampled at falling edge
 	 * */
 	bool clock_polarity_inverted;
+	/** States whether to use the external clock applied to the XCK pin.
+	 * In SYNC mode the shift register will act directly on the XCK clock.
+	 * In ASYNC mode the XCK will be the input to the USART hardware module.
+	 */
+	bool use_external_clock;
 	/** External clock frequency in synchronous mode.
 	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
@@ -325,7 +324,7 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 
 	/* Set default config in the config struct */
 	config->data_order = USART_DATAORDER_MSB;
-	config->sample_mode = USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK;
+	config->transfer_mode = USART_TRANSFER_ASYNCHRONOUSLY;
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
 	config->char_size = USART_CHAR_SIZE_8BIT;

@@ -77,28 +77,25 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		| (config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL);
 
 	/* Get baud value from mode and clock */
-	switch (config->sample_mode) {
-	case USART_SAMPLE_MODE_SYNC_MASTER:
+	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
+			!config->use_external_clock) {
 		/* Calculate baud value */
 	//	usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 	//	status_code = _sercom_get_sync_baud_val(config->baudrate, usart_freq, &baud_val);
+	//} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+	//		config->use_external_clock) {
 
-	case USART_SAMPLE_MODE_SYNC_SLAVE:
-		break;
-
-	case USART_SAMPLE_MODE_ASYNC_INTERNAL_CLOCK:
+	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+			!config->use_external_clock) {
 		/* Calculate baud value */
 	//	usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 	//	status_code = _sercom_get_async_baud_val(config->baudrate, usart_freq, &baud_val);
 
-	case USART_SAMPLE_MODE_ASYNC_EXTERNAL_CLOCK:
+	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+			config->use_external_clock) {
 		/* Calculate baud value */
 	//	status_code = _sercom_get_async_baud_val(config->baudrate, config->ext_clock_freq, &baud_val);
-
-	default:
-		Assert(false);
-		return STATUS_ERR_INVALID_ARG;
-	} /* Switch sample mode */
+	}
 
 	/* Check if calculating the baud rate failed */
 	if (status_code != STATUS_OK) {
@@ -113,7 +110,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	usart_module->BAUD.reg = baud_val;
 
 	/* Set sample mode */
-	ctrla |= config->sample_mode;
+	ctrla |= config->transfer_mode;
 
 	/* Write configuration to CTRLA */
 	usart_module->CTRLA.reg = ctrla;
