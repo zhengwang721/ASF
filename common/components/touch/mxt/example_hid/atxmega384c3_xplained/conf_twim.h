@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Clock system driver configuration
+ * \brief TWIM Configuration File for AVR XMEGA.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,11 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef _CONF_TWIM_H_
+#define _CONF_TWIM_H_
 
-#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
-#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
-#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+/*! \name Configuration
+ */
+/** @{ */
+#define TWI_INTERFACE           MXT143E_XPLAINED_TWI
+#define CONF_TWIM_INTLVL        (TWI_MASTER_INTLVL_LO_gc)
+#define CONF_PMIC_INTLVL        (PMIC_LOLVLEN_bm)
+/* @} */
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif // _CONF_TWIM_H_

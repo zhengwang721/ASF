@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Clock system driver configuration
+ * \brief TWI Master driver configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,13 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef CONF_TWIM_H
+#define CONF_TWIM_H
 
-#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
-#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
-#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+#include <board.h>
+#include <compiler.h>
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+#define TWI_INTERFACE           MXT143E_XPLAINED_TWI
+#define CONF_PMIC_INTLVL        (PMIC_LOLVLEN_bm)
+#define CONF_TWIM_INTLVL        (TWI_MASTER_INTLVL_LO_gc)
+
+#endif /* CONF_TWIM_H */

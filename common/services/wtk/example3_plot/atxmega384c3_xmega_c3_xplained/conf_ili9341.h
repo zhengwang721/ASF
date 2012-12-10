@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Clock system driver configuration
+ * \brief ILI9341 display controller configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,11 +40,40 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#include <board.h>
 
-#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
-#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
-#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+#ifndef CONF_ILI9341_H_INCLUDED
+#define CONF_ILI9341_H_INCLUDED
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+/**
+ * \brief Select the correct hardware interface
+ *
+ * Currently supported interfaces are the SPI interface and the USART Master SPI
+ * interface.
+ */
+#define CONF_ILI9341_USART_SPI     MXT143E_XPLAINED_USART_SPI
+
+/**
+ * \brief Select a SPI clock speed
+ *
+ * This selects the clock speed for the SPI clock used to communicate with the
+ * display controller. Higher clock speeds allow for higher frame rates.
+ * \note That the clock speed may be limited by the speed of the microcontroller
+ * a normal limitation would be CPUclk/2. For more details please refer to the
+ * device datasheet.
+ */
+#define CONF_ILI9341_CLOCK_SPEED   8000000UL
+
+/** \brief Define what MCU pin the ILI9341 chip select pin is connected to */
+#define CONF_ILI9341_CS_PIN        MXT143E_XPLAINED_CS
+
+/** \brief Define what MCU pin the ILI9341 DC pin is connected to */
+#define CONF_ILI9341_DC_PIN        MXT143E_XPLAINED_DC
+
+/** \brief Define what MCU pin the ILI9341 back light pin is connected to */
+#define CONF_ILI9341_BACKLIGHT_PIN MXT143E_XPLAINED_BACKLIGHT
+
+/** \brief Define what MCU pin the ILI9341 reset is connected to */
+#define CONF_ILI9341_RESET_PIN     MXT143E_XPLAINED_LCD_RESET
+
+#endif /* CONF_ILI9341_H_INCLUDED */

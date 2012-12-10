@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Clock system driver configuration
+ * \brief Board configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,13 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
-#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
-#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+/* Enable the maXTouch mXT143E Xplained top module */
+#define CONF_BOARD_ENABLE_MXT143E_XPLAINED
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif /* CONF_BOARD_H */
