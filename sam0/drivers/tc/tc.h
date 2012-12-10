@@ -52,11 +52,11 @@ extern "C" {
 
 
 /**
- * \defgroup sam0_TC_group SAM0+ Timer Counter Driver (TC)
+ * \defgroup sam0_TC_group SAMD20 Timer Counter Driver (TC)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for configuration and management of the TC module. This
- * driver encompasses the following module within the SAM0+ devices:
+ * driver encompasses the following module within the SAMD20 devices:
  * \li \b TC \b (Timer Counter)
  * \n\n
  *
@@ -90,8 +90,8 @@ extern "C" {
  *
  * \subsection functional_description Functional Description
  *
- * The TC module in SAMD20 can be configured with 4 timer/counters in
- * 8 bit resolution, or 4 timers/counters in 16 bit resolution, or 2
+ * The TC module in SAMD20 can be configured with 8 timer/counters in
+ * 8 bit resolution, or 8 timers/counters in 16 bit resolution, or 4
  * timers/counters in 32 bit resolution.  \n\n
  *
  * Independent of what resolution the timer runs on it can be set up
@@ -142,16 +142,16 @@ extern "C" {
  *  <tr>
  *    <th> 16 bit </th>
  *    <td> 0xFFFF </td>
- *    <td> 65536 </td>
+ *    <td> 65,536 </td>
  *  </tr>
  *  <tr>
  *    <th> 32 bit </th>
  *    <td> 0xFFFFFFFF </td>
- *    <td> 4294967296 </td>
+ *    <td> 4,294,967,296 </td>
  *  <tr>
  * </table>
  *
- * It should be noted that when running the counter in 16 and 13 bit
+ * It should be noted that when running the counter in 16 and 32 bit
  * resolution, compare capture register 0 is used to store the period
  * value, when this is in use (when running in pwm generation match
  * mode).
@@ -160,38 +160,67 @@ extern "C" {
  * When using 32 bit resolution two 16 bit counters are used together
  * in cascade to realize this feature. This means that it is only
  * possible to utilize two 32 bit counters or one 32 bit counters and
- * ether one 16 and one 8 bit counter or two 8 or 16 bit counters.
+ * ether one 16 and one 8 bit counter or two 8 or 16 bit
+ * counters. Also only even numbered tc modules can be configured as
+ * 32 bit counters. The odd nubered counter will act as slaves to the
+ * even numbered maseters. The paring is as folows:
+ *
+ * <table>
+ *   <tr>
+ *     <th> Master </th>
+ *     <th> Slave </th>
+ *   </tr>
+ *   <tr>
+ *     <td> TC0 </td>
+ *     <td> TC1 </td>
+ *   </tr>
+ *   <tr>
+ *     <td> TC2 </td>
+ *     <td> TC3 </td>
+ *   </tr>
+ *   <tr>
+ *     <td> TC4 </td>
+ *     <td> TC5</td>
+ *   </tr>
+ *   <tr>
+ *     <td> TC6 </td>
+ *     <td> TC7</td>
+ *   </tr>
+ * </table>
  *
  * \subsection clock_and_prescaler Clock Selection, Prescaler and Reload Action
  *
- * To be able to use the counter the module has to have a clock
- * this has to be configured in the config struct... .
+ * To be able to use the counter the module has to have a clock this
+ * has to be configured in the config struct. Her you will be able to
+ * set the clock for each peer of the TC modules. The peering is as
+ * abowe. As an exsample it is not posible to have difering clock
+ * frequensies on TC0 and TC1. However you can have diferent
+ * frequensies on TC0 and TC2. You can thoug use the internal TC
+ * presclaer to get diferent counting frequensies betwen the same
+ * modules in a peer. But the input frequensies to the TC moduel has
+ * to be the same.
  * \n\n
  *
- * In addition to the prescaler that can be used on the g-clock
- * frequency supplied to the module, the module has its own prescaler
- * This prescaler only works to prescale the clock used to provide
- * clock pulses to the counter. This means that while the counter is
- * running on the g-clock frequency the counter value only changes on
- * the prescaled frequency.
- * \n\n
+ * The module has its own prescaler. This prescaler only works to
+ * prescale the clock used to provide clock pulses to the
+ * counter. This means that while the counter is running on the
+ * g-clock frequency the counter value only changes on the prescaled
+ * frequency.  \n\n
  *
- * One thing to consider here is that the TC module will have to
- * synchronize when updating certain registers with the system
- * clock. This synchronization can be time consuming especially if the
- * g-clock frequency is much lower than the system clock. For this
- * reason it can be better to use the modules prescaler to reduce the
- * clock frequency to the counter. In this way synchronization should
- * be faster.
- * \n\n
+ * There are two thing to consider here. One is that the TC module
+ * will have to synchronize when updating certain registers with the
+ * system clock. This synchronization can be time consuming especially
+ * if the g-clock frequency is much lower than the system clock. For
+ * this reason it can be better to use the modules prescaler to reduce
+ * the clock frequency to the counter. In this way synchronization
+ * should be faster.  \n\n
  *
- * In addition to configuring what clock source the tc module should
- * use and if the prescaler is needed on the clock to the counter. The
- * user have to consider what reload action to use. The reload action
- * is performed when a retrigger event occur. Examples of this can be
- * when the counter reaches the MAX value when counting up, or when an
- * event from the event system tels the counter to retrigger. The user
- * can then chose between 3 different reload actions:
+ * The other thing to consider with the prescaler is what reload
+ * action to use. The reload action is performed when a retrigger
+ * event occur. Examples of this can be when the counter reaches the
+ * MAX value when counting up, or when an event from the event system
+ * tels the counter to retrigger. The user can then chose between 3
+ * different reload actions:
  *
  * <table>
  *   <tr>
@@ -200,15 +229,15 @@ extern "C" {
  *   </tr>
  *   <tr>
  *     <th> Reload on next G-clock cycle leave prescaler as it is </th>
- *     <td>  </td>
+ *     <td> TC_RELOAD_ACTION_GCLK </td>
  *   </tr>
  *   <tr>
  *     <th> Reload on next prescaler clock </th>
- *     <td> - </td>
+ *     <td> TC_RELOAD_ACTION_PRESC </td>
  *   </tr>
  *  <tr>
  *    <th> Reload on next G-clock cycle, reset prescaler </th>
- *    <td> - </td>
+ *    <td> TC_RELOAD_ACTION_RESYNC </td>
  *  </tr>
  * </table>
  *
@@ -217,25 +246,22 @@ extern "C" {
  * difficult to understand. The prescaler is after all only a counter
  * it self. When the prescaler is used it counts the clock cycles of
  * the modules g-clock. When the counter in the prescaler reaches the
- * chosen division factor the output from the prescaler toggles.
+ * chosen division factor value, the output from the prescaler toggles.
  * \n\n
  *
- * The question then arises what do we want to happen when a reload
- * action gets triggered. In different scenarios and applications the
- * correct reload option will differ. One example is when an external
- * trigger for a reload occur. If the TC uses the prescaler the
- * counter in the prescaler should not have a value between zero and
- * the division factor. The TC counter and the counter in the
- * prescaler should both start at zero. When the counter is set to
- * retrigger when it reaches the MAX value on the other hand this is
- * not necessarily the right option to use. In such a case it would
- * probably be better if th prescaler is left unaltered when the
- * retrigger happens and then let the counter reset on the next g-clock
- * cycle.
+ * The question then arises, what is it we want to happen when a
+ * reload action gets triggered. In different scenarios and
+ * applications the correct reload option will differ. One example is
+ * when an external trigger for a reload occures. If the TC uses the
+ * prescaler the counter in the prescaler should not have a value
+ * between zero and the division factor. The TC counter and the
+ * counter in the prescaler should both start at zero. When the
+ * counter is set to retrigger when it reaches the MAX value on the
+ * other hand this is not necessarily the right option to use. In such
+ * a case it would probably be better if th prescaler is left
+ * unaltered when the retrigger happens and then let the counter reset
+ * on the next g-clock cycle.
  *
-
-//TODO: may have to be updated after having done the doc review
-
  *
  * \subsection compare_match Compare Match Operations
  *
@@ -245,16 +271,17 @@ extern "C" {
  *
  * \subsubsection timer Timer
  *
- * In many ways the simplest application where compare match operations
- * is used, is a timer. Here the TC module is configured as a clock,
- * where one or more values in the modules compare channels are used to
- * specify the time when an action should be taken by the
+ * In many ways the simplest application where compare match
+ * operations is used, is a timer. Here the TC module is configured as
+ * a clock, where one or more values in the modules compare channels
+ * are used to specify the time when an action should be taken by the
  * microcontroller.
  *
  * \subsubsection waveform_generation Waveform Generation
  *
  * Wave form generation enable the TC module to make square waves or
- * if combined with a passive low pas filter, different analogue waves.
+ * if combined with a passive low pas filter, different analogue
+ * waves.
  *
  * \subsubsection pwm Pulse Width modulation (PWM)
  *
@@ -262,8 +289,8 @@ extern "C" {
  * in many situations. Often it is used to communicate a certain value
  * to some other circuit or component such as a servo. In servo
  * control you let the pulse with relative to the period signify the
- * angle the servo should take. Using PWM for this is far less prone to
- * noise and differing impedances, compared to using an analogue
+ * angle the servo should take. Using PWM for this is far less prone
+ * to noise and differing impedances, compared to using an analogue
  * voltage value.
  * \n\n
  *
@@ -288,8 +315,10 @@ extern "C" {
  *
  * Event capture is in some ways the simplest use of the capture
  * functionality. This lets you create time stamps for specific
- * events. Care must be taken though to ensure that the counter value
- * is correct.
+ * events. Care must be taken though, to ensure that the counter value
+ * is correct. What can happen her is that you get a overflow of the
+ * counter. If this hapens and a capture takes plase after this the
+ * captur value will be incorect.
  *
  * \subsubsection pwc Pulse width capture
  *
@@ -304,19 +333,21 @@ extern "C" {
  * capture channel 1.
  *
  *
- * \subsection events Events
- *
- * 
- *
- *
  * \subsection sleep_modes Operation in Sleep Modes
  *
- * 
+ * The TC module can opperat in all sleep modes. However to use the
+ * capabiliteis the modules has to wake the microcontroler from sleep
+ * modes, interupts has to be enabled and configured for the
+ * module. This driver has not been made to suport interupts. There is
+ * thoug stil some actions that can be performed while in sleep modes
+ * with th ehelp of the event system.
  *
  *
  * \section dependencies Dependencies
  * The TC driver has the following dependencies:
- * \li \b PORT
+ *
+ * \li \b GCLK
+ * \li \b CLOCK
  *
  * \section special_cons Special Considerations
  *
@@ -724,9 +755,12 @@ struct tc_dev_inst {
 	enum tc_resolution resolution;
 };
 
-
+#if !defined (__DOXYGEN__)
 /**
- * \brief Synchronization between clock domains
+ * \internal Wait until the synchronization is complete
+ */
+/**
+ * \internal Synchronization between clock domains
  *
  * Makes sure GCLK_TC is synchronized with sysclock,
  * Must be called before assessing certain registers in the TC.
@@ -745,7 +779,12 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
 		/* Wait for sync */
 	}
 }
+#endif
 
+/**
+ * \name Driver initialization and configuration
+ * @{
+ */
 
 /**
  * \brief Initializes config with predefined default values
@@ -772,8 +811,6 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  *  \li Counter starts on 0
  *  \li Capture compare channel 0 set to 0xFFFF
  *  \li Capture compare channel 1 set to 0
- *  \li Capture compare channel 2 set to 0
- *  \li Capture compare channel 3 set to 0
  *
  * \param[out] config  Pointer to the config struct
  */
@@ -815,40 +852,12 @@ enum status_code tc_init(
 		struct tc_dev_inst *const dev_inst,
 		const struct tc_conf *const config);
 
+/** @} */
 
 /**
- * \brief Reset the TC module
- *
- * Resets the TC module. Will block while waiting for sync between
- * clock domains before performing the reset. The TC module will not
- * be accessible while the reset is being performed.
- *
- * \param dev_inst  Pointer to the device struct
+ * \name Enable/Disable
+ * @{
  */
-static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments  */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the module hardware instance */
-	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
-
-	if (dev_inst->resolution == TC_RESOLUTION_32BIT) {
-		if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
-			/* Reset the 16 bit master counter module */
-		}
-		else {
-			/* Reset the 16 bit slave counter module. */
-		}
-	}
-	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
-
-	/* Reset TC module */
-	tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
-}
-
 
 /**
  * \brief Enable the TC module
@@ -910,12 +919,62 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
 }
 
 
+
+/**
+ * \brief Reset the TC module
+ *
+ * Resets the TC module. Will block while waiting for sync between
+ * clock domains before performing the reset. The TC module will not
+ * be accessible while the reset is being performed.
+ *
+ * \param dev_inst  Pointer to the device struct
+ */
+static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments  */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Get a pointer to the module hardware instance */
+	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
+
+	if (dev_inst->resolution == TC_RESOLUTION_32BIT) {
+		if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
+			/* Reset the 16 bit master counter module */
+		}
+		else {
+			/* Reset the 16 bit slave counter module. */
+		}
+	}
+	/* Synchronize */
+	_tc_wait_for_sync(dev_inst);
+
+	/* Reset TC module */
+	tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
+}
+
+
+/** @} */
+/**
+ * \name Get Set Count value
+ * @{
+ */
+
 uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst);
 
 
 enum status_code tc_set_count_value(
 		const struct tc_dev_inst *const dev_inst,
 		uint32_t count);
+
+
+/** @} */
+
+
+/**
+ * \name Stop Start Counter
+ * @{
+ */
 
 
 /**
@@ -952,7 +1011,7 @@ static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst     Pointer to the devise struct.
  */
-static inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
+tatic inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -972,6 +1031,12 @@ static inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
 	tc_module.CTRLBSET.reg = TC_CTRLBSET_CMD_RETRIGGER;
 }
 
+/** @} */
+
+/**
+ * \name Get Capture Set Compare
+ * @{
+ */
 
 uint32_t tc_get_capture_value(
 		const struct tc_dev_inst *const dev_inst,
@@ -983,6 +1048,13 @@ enum status_code tc_set_compare_value(
 		uint32_t compare_value,
 		enum tc_compare_capture_channel_index channel_index);
 
+/** @} */
+
+
+/**
+ * \name Set Top Value
+ * @{
+ */
 
 /**
  * \brief Sets the top/period value
@@ -1036,6 +1108,13 @@ static enum status_code tc_set_top_value(
 	Assert(false);//This should never happen
 	return STATUS_ERR_PROTOCOL;
 }
+
+/** @} */
+
+/**
+ * \name Check/Reset interupts
+ * @{
+ */
 
 
 /**
@@ -1130,16 +1209,13 @@ static inline void tc_clear_interrupt_flag(
 
 	tc_module.INTFLAG.reg |= interrupt_flag;
 }
-
+/** @} */
 
 /** @} */
 
 #ifdef __cplusplus
 }
 #endif
-
-/** @} */
-
 
 
 /**
@@ -1158,10 +1234,29 @@ static inline void tc_clear_interrupt_flag(
  *		<td>TC</td>
  *		<td>Timer Counter</td>
  *	</tr>
+ *	<tr>
+ *		<td>PWM</td>
+ *		<td>Pulse Width Modulation</td>
+ *	</tr>
+ *	<tr>
+ *		<td>PWP</td>
+ *		<td>Pulse Width Period</td>
+ *	</tr>
+ *	<tr>
+ *		<td>PPW</td>
+ *		<td>Period Pulse Width</td>
+ *	</tr>
+ *	<tr>
+ *		<td> - </td>
+ *		<td> - </td>
+ *	</tr>
  * </table>
  *
  * \section workarounds Workarounds implemented by driver
- * No workarounds in driver.
+ *
+ * Reset of 32bit modules also reset the conected module. Both modules
+ * will be reset.
+ *
  *
  * \section module_history Module History
  * Below is an overview of the module history, detailing enhancements and fixes
@@ -1181,7 +1276,7 @@ static inline void tc_clear_interrupt_flag(
 /**
  * \page quickstart Quick Start Guides for the TC module
  *
- * This is the quick start guide list for the \ref sam0_tc_group module, with
+ * This is the quick start guide for the \ref sam0_tc_group module, with
  * step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
