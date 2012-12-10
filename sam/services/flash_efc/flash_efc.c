@@ -146,8 +146,8 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 	us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 #else
-	assert(ul_addr >= IFLASH_ADDR);
-	assert(ul_addr <= (IFLASH_ADDR + IFLASH_SIZE));
+	Assert(ul_addr >= IFLASH_ADDR);
+	Assert(ul_addr <= (IFLASH_ADDR + IFLASH_SIZE));
 
 	p_efc = EFC;
 	us_page = (ul_addr - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
@@ -700,8 +700,8 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	uint32_t ul_count = 0;
 	uint32_t ul_bit = 0;
 
-	assert(ul_end >= ul_start);
-	assert((ul_start >= IFLASH_ADDR)
+	Assert(ul_end >= ul_start);
+	Assert((ul_start >= IFLASH_ADDR)
 			&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
 
 	/* Compute page numbers */
@@ -715,7 +715,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 
 	/* Retrieve lock status */
 	ul_error = efc_perform_command(p_efc, EFC_FCMD_GLB, 0);
-	assert(!ul_error);
+	Assert(!ul_error);
 
 	/* Skip unrequested regions (if necessary) */
 	ul_status = efc_get_result(p_efc);

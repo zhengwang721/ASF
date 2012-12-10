@@ -989,7 +989,7 @@
  *         from the source pointed to by \a src.
  *
  * The destination areas that are not within the flash
- * array or the User page are caught by an assert() operation.
+ * array or the User page are caught by an Assert() operation.
  *
  * All pointer and size alignments are supported.
  *
@@ -1965,7 +1965,7 @@
  *         from the source pointed to by \a src.
  *
  * The destination areas that are not within the flash
- * array or the User page are caught by an assert() operation.
+ * array or the User page are caught by an Assert() operation.
  *
  * All pointer and size alignments are supported.
  *

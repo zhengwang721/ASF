@@ -635,10 +635,10 @@ void ili9225_fill(ili9225_color_t us_color)
 void ili9225_set_window(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height)
 {
-	assert(ul_x <= 0xAF);
-	assert(ul_y <= 0xDB);
-	assert(ul_width <= (0xB0 - ul_x));
-	assert(ul_height <= (0xDC - ul_y));
+	Assert(ul_x <= 0xAF);
+	Assert(ul_y <= 0xDB);
+	Assert(ul_width <= (0xB0 - ul_x));
+	Assert(ul_height <= (0xDC - ul_y));
 
 	/* Set Horizontal Address End Position */
 	ili9225_write_register(ILI9225_HORIZONTAL_WINDOW_ADDR1,
