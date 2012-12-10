@@ -143,7 +143,7 @@ enum i2c_master_callback {
 /* Prototype for device instance. */
 struct i2c_master_dev_inst;
 
-typedef void (*i2c_master_callback_t)(
+typedef volatile void (*i2c_master_callback_t)(
 		const struct i2c_master_dev_inst *const dev_inst);
 #endif
 #endif
@@ -167,20 +167,20 @@ struct i2c_master_dev_inst {
 	/** Pointers to callback functions. */
 	i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Mask for registered callbacks. */
-	uint8_t registered_callback;
+	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
-	uint8_t enabled_callback;
+	volatile uint8_t enabled_callback;
 	/** The total number of bytes to transfer. */
-	uint16_t buffer_length;
+	volatile uint16_t buffer_length;
 	/** Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read. */
-	uint16_t buffer_remaining;
+	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
-	uint8_t *buffer;
+	volatile uint8_t *buffer;
 	/** Save direction of async request. 1 = read, 0 = write. */
-	uint8_t transfer_direction;
+	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
-	enum status_code status;
+	volatile enum status_code status;
 #endif
 };
 

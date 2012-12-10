@@ -575,7 +575,8 @@ typedef struct {
  * \see General list of module \ref module_examples "examples".
  *
  * \section use_cases I2C driver use cases
- * - \subpage basic_use_case
+ * - \subpage i2c_master_basic_use_case
+ * - \subpage i2c_slave_basic_use_case
  */
 
 #endif /* I2C_MASTER_H_INCLUDED */
