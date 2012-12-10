@@ -49,8 +49,21 @@ extern "C" {
 #endif
 
 /**
- * \weakgroup sam0_i2c_master_group
+ * \defgroup sam0_i2c_master_group_async I2C Master Asynchronous
  * @{
+ *
+ * This is an overview of the API for the asynchronous I2C master
+ * driver.
+ *
+ * The user will still have to use the initialization from the basic use part
+ * of the driver, which can be found \ref sam0_i2c_master_group "here". When the
+ * asynchronous driver is included in the project, an asynchronous part in the basic driver
+ * will be unlocked. This will allow the user to implement the driver in the same way as
+ * for the basic polled driver, but will additionally get the asynchronous functions
+ * documented below.
+ *
+ * \section i2c_master_async_api API Overview
+ *
  */
 
 /**
@@ -72,7 +85,9 @@ void i2c_master_async_unregister_callback(
 
 /**
  * \brief Enable callback.
- * Enables the callback specified the callback_value.
+ *
+ * Enables the callback specified by the callback_value.
+ *
  * \param[in,out]  dev_inst      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to enable.
  */
@@ -91,7 +106,9 @@ static inline void i2c_master_async_enable_callback(
 
 /**
  * \brief Disable callback.
+ *
  * Disables the callback specified by the callback_type.
+ *
  * \param[in,out]  dev_inst      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to disable.
  */
@@ -125,9 +142,9 @@ enum status_code i2c_master_async_write_packet(
 /**
  * \brief Cancel the currently running operation.
  *
- * This will terminate the running write or read transfer.
+ * This will terminate the running transfer operation.
  *
- * \param  dev_inst Pointer to device instance struct.
+ * \param  dev_inst Pointer to device instance structure.
  */
 static inline void i2c_master_async_cancel_transfer(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -141,32 +158,16 @@ static inline void i2c_master_async_cancel_transfer(
 }
 
 /**
- * \brief Check if a started transfer is done.
- *
- * This will return the current status of the read/write transfer.
- *
- * \param  dev_inst Pointer to the device instance struct.
- */
-static inline bool i2c_master_async_is_transfer_done(
-		struct i2c_master_dev_inst *const dev_inst)
-{
-	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Set buffer to 0. */
-	return (dev_inst->buffer_remaining & 0xffff);
-}
-
-/**
  * \brief Get last error from asynchronous operation.
  *
- * Will return the last error that occurred in asynchronous transfer operation.
+ * Will return the last error that occurred in asynchronous transfer operation. The
+ * status will be cleared on next operation.
  *
  * \param  dev_inst Pointer to device instance structure.
  *
  * \return          Last status code from transfer operation.
  * \retval STATUS_OK No error has occurred.
+ * \retval STATUS_IN_PROGRESS If transfer is in progress.
  * \retval STATUS_ERR_BUSY If master module is busy.
  * \retval STATUS_ERR_DENIED If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
@@ -176,20 +177,15 @@ static inline bool i2c_master_async_is_transfer_done(
  * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
  *                             indicating that slave do not want more data.
  */
-static inline enum status_code i2c_master_async_get_last_error(
+static inline enum status_code i2c_master_async_get_operation_status(
 		struct i2c_master_dev_inst *const dev_inst)
 {
 	/* Check sanity. */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	/* Save current status code. */
-	enum status_code tmp_status = dev_inst->status;
-
-	/* Set current status to OK. */
-	dev_inst->status = STATUS_OK;
-
-	return tmp_status;
+	/* Return current status code. */
+	return dev_inst->status;
 }
 
 /** @} */

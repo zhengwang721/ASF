@@ -197,7 +197,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 }
 
 /**
- * \breif Reset module
+ * \brief Reset the hardware module.
  *
  * This will reset the module to hardware defaults.
  *
@@ -304,6 +304,9 @@ static enum status_code _i2c_master_wait_for_bus(
  *
  * Reads a data packet from the specified slave address on the I2C bus.
  *
+ * \note This will stall the device from any other operation. For asynchronous
+ * operation, see \ref i2c_master_async_read_packet.
+ *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
  * \return          Status describing progress of reading packet.
@@ -384,6 +387,9 @@ enum status_code i2c_master_read_packet(
  * \brief Write data packet to slave.
  *
  * Writes a data packet to the specified slave address on the I2C bus.
+ *
+ * \note This will stall the device from any other operation. For asynchronous
+ * operation, see \ref i2c_master_async_read_packet.
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.

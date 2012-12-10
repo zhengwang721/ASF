@@ -39,7 +39,7 @@
  *
  */
 #include "i2c_master_async.h"
-
+#define STATUS_IN_PROGRESS 0x02
 /**
  * \internal Read next data.
  *
@@ -128,7 +128,7 @@ static void _i2c_master_async_address_response(
 	dev_inst->buffer_length = dev_inst->buffer_remaining;
 
 	/* Check for status OK. */
-	if (dev_inst->status == STATUS_OK) {
+	if (dev_inst->status == STATUS_IN_PROGRESS) {
 		/* Call function based on transfer direction. */
 		if (dev_inst->transfer_direction == 0) {
 			_i2c_master_async_write(dev_inst);
@@ -194,9 +194,9 @@ void i2c_master_async_unregister_callback(
  * \brief Read data packet from slave asynchronous.
  *
  * Reads a data packet from the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_read .
+ * is the non-blocking equivalent of \ref i2c_master_read_packet.
  *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
+ * \param[in,out] dev_inst  Pointer to device instance struct.
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  *
  * \return          Status of starting asynchronously reading I2C packet.
@@ -224,7 +224,7 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
-	dev_inst->status = STATUS_OK;
+	dev_inst->status = STATUS_IN_PROGRESS;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -239,7 +239,7 @@ enum status_code i2c_master_async_read_packet(
  * \brief Write data packet to slave asynchronous.
  *
  * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write .
+ * is the non-blocking equivalent of \ref i2c_master_write_packet.
  *
  * \param[in,out]     dev_inst  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
@@ -268,7 +268,7 @@ enum status_code i2c_master_async_write_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
-	dev_inst->status = STATUS_OK;
+	dev_inst->status = STATUS_IN_PROGRESS;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -292,6 +292,9 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
+	/* Combine callback registered and enabled masks. */
+	uint8_t callback_mask = dev_inst->enabled_callback & dev_inst->registered_callback;
+
 	/* Check if the module should response to address ack. */
 	if (dev_inst->buffer_length <= 0 && dev_inst->buffer_remaining > 0) {
 		/* Call function for address response. */
@@ -302,16 +305,15 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
+		dev_inst->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
-		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_READ_COMPLETE)
-				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_READ_COMPLETE)
+		if ((callback_mask & I2C_MASTER_CALLBACK_READ_COMPLETE)
 				&& (dev_inst->transfer_direction == 1)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_READ_COMPLETE](dev_inst);
 
-		} else if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_WRITE_COMPLETE)
-				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_WRITE_COMPLETE)
+		} else if ((callback_mask & I2C_MASTER_CALLBACK_WRITE_COMPLETE)
 				&& (dev_inst->transfer_direction == 0)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](dev_inst);
@@ -332,7 +334,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if (dev_inst->status != STATUS_OK) {
+	if (dev_inst->status != STATUS_IN_PROGRESS) {
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;

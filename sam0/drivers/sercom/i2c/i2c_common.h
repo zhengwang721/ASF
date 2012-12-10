@@ -55,8 +55,12 @@ extern "C" {
  * master mode, as well as data transfer via I2C.
  * This driver encompasses the following module within the SAM0+ devices:
  * - \b I2C (Inter-Integrated Circuit)
- *  - \ref sam0_i2c_master_group
- *  - \ref sam0_i2c_slave_group
+ *  - I2C Master
+ *   - \ref sam0_i2c_master_group
+ *   - \ref sam0_i2c_master_group_async
+ *  - I2C Slave
+ *    - \ref sam0_i2c_slave_group
+ *    - \ref sam0_i2c_slave_group_async
  *
  * \section module_introduction Introduction
  *
@@ -202,12 +206,18 @@ extern "C" {
  *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
  * \f]
  *
- * \warning Must be checked with correct toolchain!
- *
  * Depending on optimization level.
  *
- * \subsubsection sda_hold SDA Hold Timeout
+ * \warning Must be checked with correct toolchain!
  *
+ * \subsubsection sda_hold SDA Hold Timeout
+ * When using the I2C in slave mode, it will be important to set a SDA hold time that
+ * assures that the master will be able to pick up the bit sent from the slave. The
+ * SDA hold time makes sure that this is the case by holding the data line low for a
+ * given period after the negative edge on the clock.
+ *
+ * The SDA hold time is also available for the master driver, but will not be a
+ * neccesarity.
  *
  * \subsection Transactions
  * There are two fundamental transaction formats implemented in the driver:
@@ -347,6 +357,17 @@ extern "C" {
  *      <td BGCOLOR="lightgray">STOP</td>
  *   </tr>
  * </table>
+ *
+ * \subsubsection i2c_packet_timeout Packet Timeout
+ * When sending an I2C packet, there is no way of being sure that someone will acknowledge your
+ * packet. To avoid stalling the device forever while waiting for an acknowledge, a user
+ * selectable timeout is provided in the configuration structure that lets the driver exit a
+ * read or write operation after the specified time. The function will then return the
+ * STATUS_ERR_TIMEOUT flag.
+ *
+ * The time before the timeout occurs, can be found by same formula as that provided for \ref timeout
+ * "unknown bus state" timeout.
+ *
  * \subsection multi_master Multi Master
  *
  * In a multi master environment, arbitration of the bus is important, as only
@@ -425,7 +446,7 @@ extern "C" {
  *
  * <table>
  *   <tr>
- *      <th>active_in_sleep</th>
+ *      <th>Run in standby</th>
  *      <th>Slave</th>
  *      <th>Master</th>
  *   </tr>
@@ -448,7 +469,24 @@ extern "C" {
  * \li \b NVIC when used in asynchronous mode.
  *
  * \section special_cons Special Considerations
- * No special considerations.
+ * \subsection i2c_common_async Asynchronous Operation
+ * When asynchronous operation is used, the functions will be available under the "async" namespace,
+ * i.e. i2c_master_async_ and i2c_slave_async_.
+ *
+ * While asynchronous operation is in progress, subsequent calls to a write or read operation
+ * will return the STATUS_ERR_BUSY flag, indicating that only one operation is allowed at any given
+ * time.
+ *
+ * To check if another transmission can be initiated, the user can either call another transfer operation,
+ * or use the \ref i2c_master_async_operation_status/\ref i2c_slave_async_operation_status functions depending on mode.
+ *
+ * If the user would like to get callback from operations while using the asynchronous driver, then
+ * the callback would have to be both registered and enabled using the "async_register_callback" and
+ * "async_enable_callback" functions.
+ *
+ * API for the asynchronous drivers can be found here:
+ * - \ref sam0_i2c_master_group_async
+ * - \ref sam0_i2c_slave_group_async
  *
  * \section extra_info Extra Information
  * For extra information see \ref i2c_extra_info.

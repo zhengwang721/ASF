@@ -56,10 +56,8 @@ extern "C" {
 /**
  * \defgroup sam0_i2c_master_group I2C Master Driver
  *
- * \section bab blablba
- * blalba
- *
- * blabla
+ * This is the API overview for the basic use of I2C master. For more
+ * advance use with the asynchronous driver, see \subpage sam0_i2c_master_group_async.
  *
  * \section i2c_master_api_overview API Overview
  * @{
@@ -106,9 +104,15 @@ enum i2c_master_start_hold_time {
 /**
  * \brief I2C protocol frequencies.
  *
- * Values for standard I2C speeds supported by the module.
+ * Values for standard I2C speeds supported by the module. The driver will also support setting
+ * any value between 10 and 100kHz, in which case set the value in the \ref i2c_master_conf at
+ * desired value divided by 1000.
  *
- * \note Max speed is given by gclk-frequency divided by 10.
+ * Example: If 10kHz operation is required, give baud_rate in the configuration structure
+ * the value 10.
+ *
+ * \note Max speed is given by gclk-frequency divided by 10, and lowest is given by
+ * gclk-frequency divided by 510.
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz. */
@@ -177,8 +181,6 @@ struct i2c_master_dev_inst {
 	uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
 	enum status_code status;
-	/** Save if there is an ongoing async operation. */
-	bool async_ongoing;
 #endif
 };
 
@@ -267,7 +269,8 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 /**
  * \brief Enable the I2C module.
  *
- * This will enable the requested I2C module.
+ * This will enable the requested I2C module and set the bus state to IDLE after the specified
+ * \ref timeout "timeout" period if no stop bit is detected.
  *
  * \param[in]  dev_inst Pointer to the device instance struct.
  */
@@ -390,9 +393,7 @@ enum status_code i2c_master_write_packet(
 
 
 /** @} */
-/** \subpage i2c_master_async */
 /** @} */
-
 
 #ifdef __cplusplus
 }
