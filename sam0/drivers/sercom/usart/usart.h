@@ -261,10 +261,6 @@ struct usart_dev_inst {
 	uint8_t callback_reg_mask;
 	/** Bit mask for callbacks enabled */
 	uint8_t callback_enable_mask;
-	/** Returns 'true' if asynchronous reception is ongoing */
-	bool async_rx_ongoing;
-	/** Returns 'false' if asynchronous transmission is ongoing */
-	bool async_tx_ongoing;
 	/** Holds the status of the last asynchronous operation */
 	enum status_code status;
 #endif

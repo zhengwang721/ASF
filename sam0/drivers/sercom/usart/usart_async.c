@@ -55,7 +55,6 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint16_t length)
 {
 	/* Write parameters to the device instance */
-	dev_inst->async_tx_ongoing = true;
 	dev_inst->remaining_tx_buffer_length = length;
 	dev_inst->tx_buffer_ptr = tx_data;
 
@@ -79,7 +78,6 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 {
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
-	dev_inst->async_rx_ongoing = true;
 	dev_inst->remaining_rx_buffer_length = length;
 	dev_inst->rx_buffer_ptr = rx_data;
 }
@@ -255,7 +253,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->async_tx_ongoing) {
+	if (dev_inst->remaining_tx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -288,7 +286,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst);
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->async_rx_ongoing) {
+	if (dev_inst->remaining_rx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -322,7 +320,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->async_tx_ongoing) {
+	if (dev_inst->remaining_tx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -357,7 +355,7 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->async_rx_ongoing) {
+	if (dev_inst->remaining_rx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
@@ -526,7 +524,7 @@ void usart_async_handler(uint8_t instance)
 	 * that the transmit buffer is empty */
 	if (((callback_status & interrupt_status) & SERCOM_USART_INTFLAG_TXCIF) &&
 			!dev_inst->remaining_tx_buffer_length){
-		dev_inst->async_tx_ongoing = false;
+
 
 		/* Run callback if registered and enabled */
 		if (callback_status
@@ -592,7 +590,6 @@ void usart_async_handler(uint8_t instance)
 		} else {
 			/* If the transmission buffer is empty,
 			 * run callback*/
-			dev_inst->async_rx_ongoing = false;
 
 			/* Run callback if registered and enabled */
 			if (callback_status

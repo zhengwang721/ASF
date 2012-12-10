@@ -203,8 +203,6 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	dev_inst->rx_buffer_ptr        = NULL;
 	dev_inst->callback_reg_mask    = 0x00;
 	dev_inst->callback_enable_mask = 0x00;
-	dev_inst->async_rx_ongoing     = false;
-	dev_inst->async_tx_ongoing     = false;
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
@@ -245,7 +243,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
-	if (dev_inst->async_tx_ongoing != false) {
+	if (dev_inst->remaining_tx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 #endif
@@ -305,7 +303,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
-	if (dev_inst->async_rx_ongoing != false) {
+	if (dev_inst->remaining_rx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
 #endif
