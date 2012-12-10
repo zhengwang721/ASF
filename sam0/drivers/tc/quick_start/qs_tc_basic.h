@@ -43,8 +43,8 @@
  * \page tc_basic_use_case Quick Start Guide for the TC module - Basic Use Case
  *
  * In this use case, the TC will be used to generate a PWM signal. To
- * keep thing simple the pulse with is set to halfe the period, in
- * this exsample. The TC will be set up as follows:
+ * keep thing simple the pulse with is set to half the period, in
+ * this example. The TC will be set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
  * - 16 bit resolution on the counter
@@ -62,8 +62,8 @@
  * - Counter starts on 0
  * - Capture compare channel 0 set to 0x7FFF
  *
- * Looking at the configureation returned from the function
- * tc_get_config_defaults the only diference is that capture compare
+ * Looking at the configuration returned from the function
+ * tc_get_config_defaults the only difference is that capture compare
  * channel 0 is set to 0x7FFF not zero.
  *
  * \section tc_basic_use_case_setup Quick Start
@@ -82,13 +82,13 @@
  *  - \snippet qs_tc_basic.c dev_inst
  * -# Get default config struct.
  *  - \snippet qs_tc_basic.c tc_get_config_defaults
- * -# setup value on channel 0 to be used as the PWM toogle value.
+ * -# setup value on channel 0 to be used as the PWM toggle value.
  *  - \snippet qs_tc_basic.c channel_0
  * -# Initialize devise registers, and g-clock using the config struct
  *  - \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module
  *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop til there is no power on the devise. Let the moduel generate PWM
+ * -# Loop till there is no power on the devise. Let the module generate PWM
  *  - \snippet qs_tc_basic.c inf_loop
- * \section tc_basic_use_case_workflow Workflow
+ * \section tc_basic_use_case_workflow Work flow
  */
