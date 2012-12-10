@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.applications.xmega_b1_xplained_voltage_meter" caption="Basic Voltage meter demonstration">
+	<module type="application" id="xmega.applications.xmega_b1_xplained_voltage_meter" caption="XMEGA Voltage Meter Example">
 		<info type="description" value="summary">
 		Basic Voltage demonstration that perfoms ADC on-board calibration to measure accurate voltage. The measure voltage is displayed using the on-board LCD.
 		</info>
