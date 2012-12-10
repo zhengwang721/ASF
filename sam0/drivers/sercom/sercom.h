@@ -59,7 +59,7 @@ extern "C" {
 # error "SERCOM GCLK id changed."
 #endif
 
-#define SHIFT 1
+#define SHIFT 32
 
 /**
  * \defgroup sam0_sercom_group SAM0+ SERCOM
