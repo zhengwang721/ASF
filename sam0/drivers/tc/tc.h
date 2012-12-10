@@ -46,10 +46,7 @@ extern "C" {
 #ifndef TC_H_INCLUDED
 #define TC_H_INCLUDED
 
-#include <compiler.h>
-#include <gclk.h>
-#include <clock.h>
-
+#include "asf.h"
 
 /**
  * \defgroup sam0_TC_group SAMD20 Timer Counter Driver (TC)
@@ -361,6 +358,7 @@ extern "C" {
  * @{
  */
 
+#define TC_NEXT_OR_PREV_TC TC1_ADDR-TC0_ADDR
 
 /**
  * \brief Index of the compare capture channels
@@ -373,6 +371,81 @@ enum tc_compare_capture_channel_index {
 	TC_COMPARE_CAPTURE_CHANNEL_0,
 	/** Index of compare capture channel 1 */
 	TC_COMPARE_CAPTURE_CHANNEL_1,
+};
+
+
+/**
+ * \brief TC wave generation mode enum
+ *
+ * These values are used to select what mode to run the wave
+ * generation in. The user can chose to use frequency generation or
+ * pulse width modulation (PWM) In these modes it will either run in
+ * normal mode or in match mode.  In normal mode the TOP value is set
+ * to the maximum allowable value, depending on what resolution is
+ * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF. In normal mode no
+ * registers are used to store these values.
+ *
+ * In match mode the user can configure what the top value should
+ * be. The range will be between the minimum value which is 3, up to
+ * the MAX value.  This mode does however limit the number of compare
+ * capture channels available, as one is used to store the TOP value.
+ */
+enum tc_wave_generation {
+	/**
+	 * TOP is MAX, except in 8 bit resolution where it is the PER
+	 * register
+	 */
+	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
+	/**
+	 * TOP is CC0, expert in 8 bit resolution where it is the PER
+	 * register
+	 */
+	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
+	/**
+	 * TOP is MAX, except in 8 bit resolution where it is the PER
+	 * register
+	 */
+	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
+	/**
+	 * TOP is CC0, except in 8 bit resolution where it is the PER
+	 * register
+	 */
+	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
+};
+
+
+/**
+ * \brief Specifies if the counter is 8, 16 or 32 bits.
+ *
+ * This specifies the maximum value it is possible to count to. What
+ * resolution used, will impose limitations in other areas.  The 32
+ * bit counter uses two 16 bit counters in cascade to realize the 32
+ * bit counter. When using 16 and 32 bit resolution there is no
+ * dedicated period register. In cases when it is necessary to change
+ * the top value, match mode must be used (see
+ * tc_wave_generation). One of the compare registers are used for the
+ * period in this mode.
+ */
+enum tc_resolution {
+	/**
+	 * The counters max value is 0xFF, the period register is
+	 * available to be used as TOP value
+	 */
+	TC_RESOLUTION_8BIT                    = TC_CTRLA_MODE_COUNT8,
+	/**
+	 * The counters MAX value is 0xFFFF. There is no separate
+	 * period register, to modify top one of the capture compare
+	 * registers has to be used. This limits the amount of
+	 * available channels.
+	 */
+	TC_RESOLUTION_16BIT                   = TC_CTRLA_MODE_COUNT16,
+	/**
+	 * The counters MAX value is 0xFFFFFFFF. There is no separate
+	 * period register, to modify top one of the capture compare
+	 * registers has to be used. This limits the amount of
+	 * available channels.
+	 */
+	TC_RESOLUTION_32BIT                   = TC_CTRLA_MODE_COUNT32,
 };
 
 
@@ -428,46 +501,6 @@ enum tc_clock_prescaler {
 
 
 /**
- * \brief TC wave generation mode enum
- *
- * These values are used to select what mode to run the wave
- * generation in. The user can chose to use frequency generation or
- * pulse width modulation (PWM) In these modes it will either run in
- * normal mode or in match mode.  In normal mode the TOP value is set
- * to the maximum allowable value, depending on what resolution is
- * used, MAX is either 0xFF, 0xFFFF or 0xFFFFFFFF. In normal mode no
- * registers are used to store these values.
- *
- * In match mode the user can configure what the top value should
- * be. The range will be between the minimum value which is 3, up to
- * the MAX value.  This mode does however limit the number of compare
- * capture channels available, as one is used to store the TOP value.
- */
-enum tc_wave_generation {
-	/**
-	 * TOP is MAX, except in 8 bit resolution where it is the PER
-	 * register
-	 */
-	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
-	/**
-	 * TOP is CC0, expert in 8 bit resolution where it is the PER
-	 * register
-	 */
-	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
-	/**
-	 * TOP is MAX, except in 8 bit resolution where it is the PER
-	 * register
-	 */
-	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
-	/**
-	 * TOP is CC0, except in 8 bit resolution where it is the PER
-	 * register
-	 */
-	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
-};
-
-
-/**
  * \brief Count direction enum.
  *
  * The counter can be set to either count up or down
@@ -484,31 +517,30 @@ enum tc_count_direction {
 
 
 /**
- * \brief Enum to be used to check interrupt flags
- *
- * These enums are used as input in the tc_is_interrupt_flag_set and
- * tc_clear_interrupt_flag function. The interrupt flags will still be
- * set even when interrupts are not enabled. Interrupt flags has to be
- * checked in certain cases. When checking if there are matches on a
- * channel the interrupt flags has to be used.
+ * \brief TC channel capture enable enum
  */
-enum tc_interrupt_flag {
-	/** Interrupt flag for channel 0 */
-	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
-	/** Interrupt flag for channel 1 */
-	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
-	/**  */ //TODO: Have to check for a use case on this with IC
-	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
-	/**
-	 * This flag is used to test for capture overflow in capture
-	 * mode
-	 */
-	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
-	/**
-	 * This flag can be used to check for a counter overflow in
-	 * compare mode
-	 */
-	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
+enum tc_capture_enable {
+	/** Enables no channels for capture */
+	TC_CAPTURE_ENABLE_NONE                 = 0,
+	/** Enables channel 0 for capture */
+	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(2),
+	/** Enables channel 1 for capture */
+	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(1),
+};
+
+
+/**
+ * \brief Enum for for inverting waveform output
+ *
+ * This enum can be used to setup inversion of the waveform output
+ */
+enum tc_waveform_invert_output {
+	/** No inversion of output */
+	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
+	/** Invert output from compare channel 0 */
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(0),
+	/** Invert output from compare channel 1 */
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(1),
 };
 
 
@@ -540,21 +572,6 @@ enum tc_event_action {
 
 
 /**
- * \brief Enum for for inverting waveform output
- *
- * This enum can be used to setup inversion of the waveform output
- */
-enum tc_waveform_invert_output {
-	/** No inversion of output */
-	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
-	/** Invert output from compare channel 0 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(0),
-	/** Invert output from compare channel 1 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(1),
-};
-
-
-/**
  * \brief Enum for setting up event generation
  *
  * Use this enum to configure event generation on respective channels
@@ -568,51 +585,33 @@ enum tc_event_generation_enable {
 	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(1),
 };
 
-/**
- * \brief TC channel capture enable enum
- */
-enum tc_capture_enable {
-	/** Enables no channels for capture */
-	TC_CAPTURE_ENABLE_NONE                 = 0,
-	/** Enables channel 0 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(2),
-	/** Enables channel 1 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(1),
-};
-
 
 /**
- * \brief Specifies if the counter is 8, 16 or 32 bits.
+ * \brief Enum to be used to check interrupt flags
  *
- * This specifies the maximum value it is possible to count to. What
- * resolution used, will impose limitations in other areas.  The 32
- * bit counter uses two 16 bit counters in cascade to realize the 32
- * bit counter. When using 16 and 32 bit resolution there is no
- * dedicated period register. In cases when it is necessary to change
- * the top value, match mode must be used (see
- * tc_wave_generation). One of the compare registers are used for the
- * period in this mode.
+ * These enums are used as input in the tc_is_interrupt_flag_set and
+ * tc_clear_interrupt_flag function. The interrupt flags will still be
+ * set even when interrupts are not enabled. Interrupt flags has to be
+ * checked in certain cases. When checking if there are matches on a
+ * channel the interrupt flags has to be used.
  */
-enum tc_resolution {
+enum tc_interrupt_flag {
+	/** Interrupt flag for channel 0 */
+	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
+	/** Interrupt flag for channel 1 */
+	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
+	/**  */ //TODO: Have to check for a use case on this with IC
+	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
 	/**
-	 * The counters max value is 0xFF, the period register is
-	 * available to be used as TOP value
+	 * This flag is used to test for capture overflow in capture
+	 * mode
 	 */
-	TC_RESOLUTION_8BIT                    = TC_CTRLA_MODE_COUNT8,
+	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
 	/**
-	 * The counters MAX value is 0xFFFF. There is no separate
-	 * period register, to modify top one of the capture compare
-	 * registers has to be used. This limits the amount of
-	 * available channels.
+	 * This flag can be used to check for a counter overflow in
+	 * compare mode
 	 */
-	TC_RESOLUTION_16BIT                   = TC_CTRLA_MODE_COUNT16,
-	/**
-	 * The counters MAX value is 0xFFFFFFFF. There is no separate
-	 * period register, to modify top one of the capture compare
-	 * registers has to be used. This limits the amount of
-	 * available channels.
-	 */
-	TC_RESOLUTION_32BIT                   = TC_CTRLA_MODE_COUNT32,
+	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
 };
 
 
@@ -759,6 +758,7 @@ struct tc_dev_inst {
 /**
  * \internal Wait until the synchronization is complete
  */
+
 /**
  * \internal Synchronization between clock domains
  *
@@ -809,7 +809,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst  *const dev_inst)
  *  \li No event Action
  *  \li No event generation enabled
  *  \li Counter starts on 0
- *  \li Capture compare channel 0 set to 0xFFFF
+ *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *
  * \param[out] config  Pointer to the config struct
@@ -841,7 +841,7 @@ static inline void tc_get_config_defaults(struct tc_conf *const config)
 	config->tc_resolution_conf.tc_16bit_conf.count                     =
 			0x0000;
 	config->tc_resolution_conf.tc_16bit_conf.compare_capture_channel_0 =
-			0xFFFF;
+			0x0000;
 	config->tc_resolution_conf.tc_16bit_conf.compare_capture_channel_1 =
 			0x0000;
 }
@@ -938,19 +938,25 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 	/* Get a pointer to the module hardware instance */
 	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
 
-	if (dev_inst->resolution == TC_RESOLUTION_32BIT) {
-		if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
-			/* Reset the 16 bit master counter module */
-		}
-		else {
-			/* Reset the 16 bit slave counter module. */
-		}
+	bool slave_test = tc_module.STATUS.reg & TC_STATUS_SLAVE;
+	/* If this is slave reset master first*/
+	if (slave_test) {
+		/* Reset the 16 bit master counter module */
+		Tc *master = dev_inst->hw_dev-TC_NEXT_OR_PREV_TC;
+		master->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
+
 	/* Synchronize */
 	_tc_wait_for_sync(dev_inst);
 
-	/* Reset TC module */
+	/* Reset this TC module */
 	tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
+
+	/* Reset TC slave if one exsist*/
+	if (tc_module.CTRLA.reg & TC_RESOLUTION_32BIT && !(slave_test)) {
+		Tc *slave = dev_inst->hw_dev+TC_NEXT_OR_PREV_TC;
+		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
+	}
 }
 
 
@@ -1011,7 +1017,7 @@ static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
  *
  * \param dev_inst     Pointer to the devise struct.
  */
-tatic inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
+static inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
