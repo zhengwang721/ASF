@@ -41,10 +41,8 @@
  *
  */
 
-#include "compiler.h"
-#include "conf_usb.h"
-#include "udi_phdc.h"
-#include "communication_model.h"
+#include "asf.h"
+#include "ieee11073_skeleton.h"
 
 //! @defgroup IEEE11073_COM_MODEL_PHDC Structure used by Communication Model
 //! to connect a USB PHDC Device
