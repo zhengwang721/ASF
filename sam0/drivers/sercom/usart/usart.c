@@ -247,13 +247,14 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	if (dev_inst->remaining_tx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
-#endif
+#else
 	/* Check if USART is ready for new data */
-	if (!usart_is_data_buffer_empty(dev_inst)) {
+	if (!usart_is_interrupt_flag_set(dev_inst,
+				USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
 		/* Return error code */
 		return STATUS_ERR_BUSY;
 	}
-
+#endif
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
@@ -307,12 +308,14 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	if (dev_inst->remaining_rx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
-#endif
+#else
 	/* Check if USART has new data */
-	if (!usart_is_data_received(dev_inst)) {
+	if (!usart_is_interrupt_flag_set(dev_inst,
+			USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 		/* Return error code */
 		return STATUS_ERR_BUSY;
 	}
+#endif
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -402,7 +405,7 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 		/* Wait for the USART to be ready for new data and abort
 		 * operation if it doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_data_received(dev_inst)) {
+			if (usart_is_interrupt_flag_set(dev_inst, USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;
@@ -478,7 +481,7 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_data_received(dev_inst)) {
+			if (usart_is_interrupt_flag_set(dev_inst, USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;
