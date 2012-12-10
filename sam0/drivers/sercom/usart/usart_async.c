@@ -275,42 +275,16 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief Cancels ongoing write operation
+ * \brief Cancels ongoing read/write operation
  *
- * Cancels the ongoing write operation modifying parameters in the
+ * Cancels the ongoing read/write operation modifying parameters in the
  * USART software struct.
  *
- *
- * \param[in]     dev_inst Pointer to USART software instance struct
- *
+ * \param[in]     dev_inst          Pointer to USART software instance struct
+ * \param[in]     transceiver_type  Transfer type to cancel
  */
-void usart_async_cancel_transmission(struct usart_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Getl a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
-
-	/* Clear the interrupt flag in order to prevent the transmission
-	 * complete callback to fire */
-	usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_TX_COMPLETE;
-
-	/* Clear the software transmission buffer */
-	dev_inst->remaining_tx_buffer_length = 0;
-}
-
-/**
- * \brief Cancels ongoing read operation
- *
- * Cancels the ongoing read operation modifying parameters in the
- * USART software struct.
- *
- * \param[in]     dev_inst Pointer to USART software instance struct
- *
- */
-void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
+void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
+		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -319,12 +293,23 @@ void usart_async_cancel_reception(struct usart_dev_inst *const dev_inst)
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
-	/* Clear the interrupt flag in order to prevent the receive
-	 * complete callback to fire */
-	usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_RX_COMPLETE;
+	switch(transceiver_type) {
+	case USART_TRANSCEIVER_RX:
+		/* Clear the interrupt flag in order to prevent the receive
+		 * complete callback to fire */
+		usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_RX_COMPLETE;
 
-	/* Clear the software reception buffer */
-	dev_inst->remaining_rx_buffer_length = 0;
+		/* Clear the software reception buffer */
+		dev_inst->remaining_rx_buffer_length = 0;
+
+	case USART_TRANSCEIVER_TX:
+		/* Clear the interrupt flag in order to prevent the receive
+		 * complete callback to fire */
+		usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_TX_COMPLETE;
+
+		/* Clear the software reception buffer */
+		dev_inst->remaining_tx_buffer_length = 0;
+	}
 }
 
 /**

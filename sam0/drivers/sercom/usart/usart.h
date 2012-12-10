@@ -202,6 +202,17 @@ enum usart_interrupt_flag {
 };
 
 /**
+ * \brief USART Transceiver Mode
+ *
+ * States if a parameter is for the RX or TX line
+ *
+ */
+enum usart_transceiver_type {
+	USART_TRANSCEIVER_RX,
+	USART_TRANSCEIVER_TX,
+};
+
+/**
  * \name USART configuration struct
  * \note Configuration options for USART
  */
@@ -424,15 +435,16 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
  */
 
 /**
- * \brief Enable RX
+ * \brief Enable Transceiver
  *
- * Enable receiver in module.
+ * Enable the given transceiver. Either RX or TX.
  *
- * \param[in] dev_inst Pointer to USART software instance struct
- *
+ * \param[in] dev_inst   Pointer to USART software instance struct
+ * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_enable_rx(const struct usart_dev_inst
-		*const dev_inst)
+static inline void usart_enable_transceiver(const struct usart_dev_inst
+		*const dev_inst,
+		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -444,20 +456,27 @@ static inline void usart_enable_rx(const struct usart_dev_inst
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
-	/* Enable RX */
-	usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+	switch(transceiver_type){
+	case USART_TRANSCEIVER_RX:
+		/* Enable RX */
+		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+	case USART_TRANSCEIVER_TX:
+		/* Enable TX */
+		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+	}
 }
 
 /**
- * \brief Disable RX
+ * \brief Disable Transceiver
  *
- * Disable receiver in module.
+ * Disable the given transceiver. Either RX or TX.
  *
- * \param[in] dev_inst Pointer to USART software instance struct
- *
+ * \param[in] dev_inst          Pointer to USART software instance struct
+ * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_disable_rx(const struct usart_dev_inst
-		*const dev_inst)
+static inline void usart_disable_transceiver(const struct usart_dev_inst
+		*const dev_inst,
+		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -469,58 +488,14 @@ static inline void usart_disable_rx(const struct usart_dev_inst
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
-	/* Disable RX */
-	usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
-}
-
-/**
- * \brief Enable TX
- *
- * Enable transmitter in module.
- *
- * \param[in] dev_inst Pointer to USART software instance struct
- *
- */
-static inline void usart_enable_tx(const struct usart_dev_inst
-		*const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
-
-	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
-
-	/* Enable TX */
-	usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
-}
-
-/**
- * \brief Disable TX
- *
- * Disable transmitter in module.
- *
- * \param[in] dev_inst Pointer to USART software instance struct
- *
- */
-static inline void usart_disable_tx(const struct usart_dev_inst
-		*const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
-
-	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
-
-	/* Disable TX */
-	usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+	switch(transceiver_type){
+	case USART_TRANSCEIVER_RX:
+		/* Disable RX */
+		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+	case USART_TRANSCEIVER_TX:
+		/* Disable TX */
+		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+	}
 }
 
 /*
