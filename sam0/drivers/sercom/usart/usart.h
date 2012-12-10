@@ -278,8 +278,11 @@ struct usart_dev_inst {
 	uint8_t callback_reg_mask;
 	/** Bit mask for callbacks enabled */
 	uint8_t callback_enable_mask;
-	/** Holds the status of the last asynchronous operation */
-	enum status_code status;
+	/** Holds the status of the ongoing or last read operation */
+	volatile enum status_code rx_status;
+	/** Holds the status of the ongoing or last write operation */
+	volatile enum status_code tx_status;
+
 #endif
 };
 

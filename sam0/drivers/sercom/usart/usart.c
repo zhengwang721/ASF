@@ -201,6 +201,8 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	dev_inst->rx_buffer_ptr        = NULL;
 	dev_inst->callback_reg_mask    = 0x00;
 	dev_inst->callback_enable_mask = 0x00;
+	dev_inst->rx_status                  = STATUS_OK;
+	dev_inst->tx_status                  = STATUS_OK;
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */

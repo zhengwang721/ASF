@@ -55,6 +55,7 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Write parameters to the device instance */
 	dev_inst->remaining_tx_buffer_length = length;
 	dev_inst->tx_buffer_ptr = tx_data;
+	dev_inst->tx_status = STATUS_IN_PROGRESS;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -79,6 +80,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	 * the interrupt handler do the rest */
 	dev_inst->remaining_rx_buffer_length = length;
 	dev_inst->rx_buffer_ptr = rx_data;
+	dev_inst->rx_status = STATUS_IN_PROGRESS;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -313,31 +315,43 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
 }
 
 /**
- * \brief Get last error from asynchronous operation
+ * \brief Get status from the ongoing or last asynchronous transfer operation
  *
- * Returns the last error that occurred in asynchronous transfer operation,
- * and resets the status to STATUS_OK.
+ * Returns the error from a given ongoing or last asynchronous transfer operation.
+ * Either from a read or write transfer.
  *
  * \param[in] dev_inst    Pointer to USART software instance struct 
  *
  * \return 
- * \retval STATUS_OK                No error has occurred 
- * \retval STATUS_ERR_BAD_DATA      
- * \retval STATUS_ERR_BAD_FORMAT     
- * \retval STATUS_ERR_OVERFLOW       
+ * \retval STATUS_OK                No error occurred during the last transfer
+ * \retval STATUS_IN_PROGRESS       A transfer is ongoing
+ * \retval STATUS_ERR_BAD_DATA      The last operation was aborted due to a
+ *                                  parity error. The transfer could be affected
+ *                                  by external noise.
+ * \retval STATUS_ERR_BAD_FORMAT    The last operation was aborted due to a
+ *                                  frame error. Please check the configuration.
+ * \retval STATUS_ERR_OVERFLOW      The last operation was aborted due to an
+ *                                  buffer overflow. Please check the configuration.
  */
-enum status_code usart_async_get_last_error(
-		struct usart_dev_inst *const dev_inst)
+enum status_code usart_async_get_operation_status(
+		struct usart_dev_inst *const dev_inst,
+		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
 
-	/* Save current status code */
-	enum status_code status_code = dev_inst->status;
+	/* Variable for status code */
+	enum status_code status_code;
 
-	/* Reset status code */
-	dev_inst->status = STATUS_OK;
+	switch(transceiver_type) {
+	case USART_TRANSCEIVER_RX:
+		/* Get status code */
+		status_code = dev_inst->rx_status;
+
+	case USART_TRANSCEIVER_TX:
+		/* Get status code */
+		status_code = dev_inst->tx_status;
+	}
 
 	return status_code;
 }
@@ -414,8 +428,9 @@ void usart_async_handler(uint8_t instance)
 	} else if ((interrupt_status & USART_INTERRUPT_FLAG_TX_COMPLETE) &&
 			!dev_inst->remaining_tx_buffer_length){
 
-		/* Disable TX Complete Interrupt */
+		/* Disable TX Complete Interrupt, and set STATUS_OK */
 		usart_module->INTENCLR.reg = USART_INTERRUPT_FLAG_TX_COMPLETE;
+		dev_inst->tx_status = STATUS_OK;
 
 		/* Run callback if registered and enabled */
 		if (callback_status & USART_CALLBACK_BUFFER_TRANSMITTED) {
@@ -435,19 +450,19 @@ void usart_async_handler(uint8_t instance)
 			if (error_code & SERCOM_USART_STATUS_FERR) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->status = STATUS_ERR_BAD_FORMAT;
+				dev_inst->rx_status = STATUS_ERR_BAD_FORMAT;
 				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
 
 			} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->status = STATUS_ERR_OVERFLOW;
+				dev_inst->rx_status = STATUS_ERR_OVERFLOW;
 				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
 
 			} else if (error_code & SERCOM_USART_STATUS_PERR) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->status = STATUS_ERR_BAD_DATA;
+				dev_inst->rx_status = STATUS_ERR_BAD_DATA;
 				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
 			}
 
@@ -456,6 +471,7 @@ void usart_async_handler(uint8_t instance)
 					& USART_CALLBACK_ERROR) {
 				(*(dev_inst->callback[USART_CALLBACK_ERROR]))(dev_inst);
 			}
+
 		} else {
 
 			/* Read current packet from DATA register,
@@ -475,8 +491,10 @@ void usart_async_handler(uint8_t instance)
 
 			/* Check if the last character have been received */
 			if(dev_inst->remaining_rx_buffer_length == 0) {
-				/* Disable RX Complete Interrupt, writing '1' to it */
+				/* Disable RX Complete Interrupt,
+				 * and set STATUS_OK */
 				usart_module->INTENCLR.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
+				dev_inst->rx_status = STATUS_OK;
 
 				/* Run callback if registered and enabled */
 				if (callback_status

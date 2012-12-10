@@ -134,8 +134,9 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
 		enum usart_transceiver_type transceiver_type);
 
-enum status_code usart_async_get_last_error(
-		struct usart_dev_inst *const dev_inst);
+enum status_code usart_async_get_operation_status(
+		struct usart_dev_inst *const dev_inst,
+		enum usart_transceiver_type transceiver_type);
 /**
  * @}
  */
