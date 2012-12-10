@@ -43,6 +43,23 @@
 #define __SAM0XX_INSTANCE_TC__
 
 
-#define TC0 (*( TC_t * ) 0x40000000)
+#define TC0_ADDR          (0x42002000U)                  /**< \brief (TC0) APB Base Address */
+#define TC0               CAST(Tc,        TC0_ADDR)     
+#define TC1_ADDR          (0x42002400U)                  /**< \brief (TC1) APB Base Address */
+#define TC1               CAST(Tc,        TC1_ADDR)     
+#define TC2_ADDR          (0x42002800U)                  /**< \brief (TC2) APB Base Address */
+#define TC2               CAST(Tc,        TC2_ADDR)     
+#define TC3_ADDR          (0x42002C00U)                  /**< \brief (TC3) APB Base Address */
+#define TC3               CAST(Tc,        TC3_ADDR)     
+#define TC4_ADDR          (0x42003000U)                  /**< \brief (TC4) APB Base Address */
+#define TC4               CAST(Tc,        TC4_ADDR)     
+#define TC5_ADDR          (0x42003400U)                  /**< \brief (TC5) APB Base Address */
+#define TC5               CAST(Tc,        TC5_ADDR)     
+#define TC6_ADDR          (0x42003800U)                  /**< \brief (TC6) APB Base Address */
+#define TC6               CAST(Tc,        TC6_ADDR)     
+#define TC7_ADDR          (0x42003C00U)                  /**< \brief (TC7) APB Base Address */
+#define TC7               CAST(Tc,        TC7_ADDR)     
+#define TC_INST_NUM       8                              /**< \brief (TC) Number of instances */
+#define TC_INSTS          { TC0, TC1, TC2, TC3, TC4, TC5, TC6, TC7 } /**< \brief (TC) Instances List */
 
 #endif /* __SAM0XX_INSTANCE_TC__ */
