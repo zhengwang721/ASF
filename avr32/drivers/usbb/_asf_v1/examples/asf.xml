@@ -6,7 +6,7 @@
 		<info type="keyword" value="technology">
 			<keyword value="USB"/>
 			<keyword value="Communication" />
-		</info>		
+		</info>
 		<build type="c-source" value="device_template_task.c"/>
 		<build type="header-file" value="device_template_task.h"/>
 		<build type="header-file" value="enum/conf_usb.h"/>

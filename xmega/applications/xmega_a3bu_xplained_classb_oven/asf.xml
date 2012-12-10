@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.applications.xmega_a3bu_xplained_classb" caption="Class B example for XMEGA-A3BU Xplained">
+	<module type="application" id="xmega.applications.xmega_a3bu_xplained_classb" caption="Class B Oven Controller Example">
 		<info type="description" value="summary">
 			Example demonstrating the use of Class B tests in a simulated application.
 		</info>
