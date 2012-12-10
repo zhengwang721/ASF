@@ -195,12 +195,14 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* Initialize parameters */
 	for (i = 0; i < USART_CALLBACK_N; i++) {
-		dev_inst->callback[i]  = NULL;
+		dev_inst->callback[i]        = NULL;
 	}
-	dev_inst->tx_buffer_ptr        = NULL;
-	dev_inst->rx_buffer_ptr        = NULL;
-	dev_inst->callback_reg_mask    = 0x00;
-	dev_inst->callback_enable_mask = 0x00;
+	dev_inst->tx_buffer_ptr              = NULL;
+	dev_inst->rx_buffer_ptr              = NULL;
+	dev_inst->remaining_tx_buffer_length = 0x0000;
+	dev_inst->remaining_rx_buffer_length = 0x0000;
+	dev_inst->callback_reg_mask          = 0x00;
+	dev_inst->callback_enable_mask       = 0x00;
 	dev_inst->rx_status                  = STATUS_OK;
 	dev_inst->tx_status                  = STATUS_OK;
 
@@ -221,10 +223,6 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
  *
  * This non-blocking function will receive a character via the
  * USART.
- *
- * \note Using this function in combination with the asynchronous functions is
- *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
  *
  * param[in]   dev_inst Pointer to the software instance struct
  * param[out]  tx_data  Data to transfer
@@ -271,10 +269,6 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  *
  * This non-blocking function will receive a character via the
  * USART.
- *
- * \note Using this function in combination with the asynchronous functions is
- *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
  *
  * param[in]   dev_inst Pointer to the software instance struct
  * param[out]  rx_data  Pointer to received data

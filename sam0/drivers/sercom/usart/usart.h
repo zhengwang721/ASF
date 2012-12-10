@@ -202,7 +202,9 @@ enum usart_interrupt_flag {
  *
  */
 enum usart_transceiver_type {
+	/** The parameter is for the receiver/reception/read */
 	USART_TRANSCEIVER_RX,
+	/** The parameter is for the transmitter/transmission/write */
 	USART_TRANSCEIVER_TX,
 };
 
@@ -267,9 +269,9 @@ struct usart_dev_inst {
 	/** Array to store callback function pointers in */
 	usart_async_callback_t *callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
-	uint8_t *rx_buffer_ptr;
+	volatile uint8_t *rx_buffer_ptr;
 	/** Buffer pointer to where the next character will be transmitted from */
-	uint8_t *tx_buffer_ptr;
+	volatile uint8_t *tx_buffer_ptr;
 	/** Remaining characters to receive */
 	volatile uint16_t remaining_rx_buffer_length;
 	/** Remaining characters to transmit */
@@ -332,7 +334,11 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	config->stopbits = USART_STOPBITS_1;
 	config->char_size = USART_CHAR_SIZE_8BIT;
 	config->baudrate = 9600;
+	config->clock_polarity_inverted = false;
+	config->use_external_clock = false;
+	config->ext_clock_freq = 0;
 	config->mux_settings = USART_RX_1_TX_2_XCK_3;
+	config->run_in_standby = false;
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
@@ -415,6 +421,7 @@ static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
  * \name Writing and reading
  * {@
  */
+//TODO: Would it be enough with write/read_buffer?
 enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data);
 
