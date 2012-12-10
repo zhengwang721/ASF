@@ -54,7 +54,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_master_group I2C Master Driver
+ * \defgroup sam0_i2c_master_group I2C Master Basic
  *
  * This is the API overview for the basic use of I2C master. For more
  * advance use with the asynchronous driver, see \subpage sam0_i2c_master_group_async.

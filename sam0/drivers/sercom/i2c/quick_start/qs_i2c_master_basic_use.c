@@ -89,7 +89,7 @@ int main(void)
 
 	//! [run_initialize_i2c]
 	/* Init system. */
-	system_init();
+	//system_init();
 	/* Configure device and enable. */
 	configure_i2c();
 	//! [run_initialize_i2c]

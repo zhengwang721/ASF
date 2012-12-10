@@ -144,6 +144,7 @@ extern "C" {
  * vcc_dev2->i2c2 [constraint=true];
  * vcc_devn->vcc_end [constraint=true];
  * vcc_devn:c->i2cn [constraint=true];
+ * vcc_dev1:c->i2c1 [constraint=true];
  *
  * vcc_end->sda_end [constraint=true, style="invis"];
  *
@@ -193,34 +194,8 @@ extern "C" {
  * }
  * \enddot
  *
- *
- * \subsection timeout Timeout
- * Inactive bus timeout and sda hold time is configurable in the driver.
- *
- * \subsubsection inactive_bus Inactive Bus Timeout
- * When a master is enabled or connected to the bus, the bus state will be
- * unknown until either a given timeout or a stop command has occurred. The
- * timeout is configurable in the device config struct i2c_master_conf and can
- * roughly be calculated with:
- * \f[
- *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
- * \f]
- *
- * Depending on optimization level.
- *
- * \warning Must be checked with correct toolchain!
- *
- * \subsubsection sda_hold SDA Hold Timeout
- * When using the I2C in slave mode, it will be important to set a SDA hold time that
- * assures that the master will be able to pick up the bit sent from the slave. The
- * SDA hold time makes sure that this is the case by holding the data line low for a
- * given period after the negative edge on the clock.
- *
- * The SDA hold time is also available for the master driver, but will not be a
- * neccesarity.
- *
  * \subsection Transactions
- * There are two fundamental transaction formats implemented in the driver:
+ * There are two fundamental transaction methods implemented in the driver:
  * \li Master Write
  *   - The master transmits data packets to the slave after addressing it.
  * \li Master Read
@@ -439,6 +414,31 @@ extern "C" {
  * }
  * \enddot
  *
+ * \subsection timeout Bus Timing
+ * Inactive bus timeout and sda hold time is configurable in the driver.
+ *
+ * \subsubsection inactive_bus Unknown Bus State Timeout
+ * When a master is enabled or connected to the bus, the bus state will be
+ * unknown until either a given timeout or a stop command has occurred. The
+ * timeout is configurable in the device config struct i2c_master_conf and can
+ * roughly be calculated with:
+ * \f[
+ *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
+ * \f]
+ *
+ * Depending on optimization level.
+ *
+ * \warning Must be checked with correct toolchain!
+ *
+ * \subsubsection sda_hold SDA Hold Timeout
+ * When using the I2C in slave mode, it will be important to set a SDA hold time that
+ * assures that the master will be able to pick up the bit sent from the slave. The
+ * SDA hold time makes sure that this is the case by holding the data line low for a
+ * given period after the negative edge on the clock.
+ *
+ * The SDA hold time is also available for the master driver, but will not be a
+ * necessity.
+ *
  * \subsection sleep_modes Operation in Sleep Modes
  * The I2C module can operate in all sleep modes by setting the run_in_standby
  * option in the \ref i2c_master_conf or \ref i2c_slave_conf struct. The operation in Slave and Master Mode
@@ -496,6 +496,14 @@ extern "C" {
  *
  * \section i2c_api_overview API Overview
  * @{
+ *
+ * I2C Master
+ *  - \ref sam0_i2c_master_group
+ *  - \ref sam0_i2c_master_group_async
+ *
+ * I2C Slave
+ *  - \ref sam0_i2c_slave_group
+ *  - \ref sam0_i2c_slave_group_async
  */
 
 /**
