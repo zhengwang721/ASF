@@ -12,11 +12,8 @@
 		<device-support value="sam0d"/>
 		<require idref="sam0.utils"/>
 		<!--<require idref="sam0.drivers.nvic"/>-->
-<<<<<<< HEAD
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.system.gclk"/>
-=======
->>>>>>> npi-trd/master
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>
 </asf>
