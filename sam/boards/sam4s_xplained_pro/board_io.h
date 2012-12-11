@@ -44,6 +44,27 @@
 #include <compiler.h>
 #include <ioport.h>
 
+/**
+ * \ingroup sam4s_xplained_pro_group
+ * \defgroup sam4s_xplained_pro_io_group IO handling
+ *
+ * Functions for interfacing on-board LEDs and buttons.
+ *
+ * These functions allow the user to operate the LEDs and buttons on the board.
+ * They require an ID, which is simply the number of the relevant component,
+ * e.g., SW0 and LED0 both have ID 0.
+ *
+ * See the \ref sam4s_xplained_pro_features_group "feature definitions" for
+ * available LEDs and buttons.
+ *
+ * @{
+ */
+
+/**
+ * \brief Toggle specified LED
+ *
+ * \param led_id ID of LED to toggle
+ */
 static inline void board_toggle_led(uint8_t led_id)
 {
 	switch (led_id) {
@@ -56,6 +77,11 @@ static inline void board_toggle_led(uint8_t led_id)
 	}
 }
 
+/**
+ * \brief Turn specified LED on
+ *
+ * \param led_id ID of LED to turn on
+ */
 static inline void board_turn_led_on(uint8_t led_id)
 {
 	switch (led_id) {
@@ -68,6 +94,11 @@ static inline void board_turn_led_on(uint8_t led_id)
 	}
 }
 
+/**
+ * \brief Turn specified LED off
+ *
+ * \param led_id ID of LED to turn off
+ */
 static inline void board_turn_led_off(uint8_t led_id)
 {
 	switch (led_id) {
@@ -80,6 +111,14 @@ static inline void board_turn_led_off(uint8_t led_id)
 	}
 }
 
+/**
+ * \brief Check if specified button is pressed
+ *
+ * \param button_id ID of button to check
+ *
+ * \retval true button is currently pressed
+ * \retval false button is not currently pressed
+ */
 static inline bool board_button_is_pressed(uint8_t button_id)
 {
 	bool state;
@@ -96,5 +135,7 @@ static inline bool board_button_is_pressed(uint8_t button_id)
 
 	return state;
 }
+
+/** @} */
 
 #endif /* BOARD_IO_H */

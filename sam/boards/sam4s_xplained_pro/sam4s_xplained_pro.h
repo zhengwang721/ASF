@@ -47,23 +47,48 @@
  * @{
  */
 
+
 /**
  * \defgroup sam4s_xplained_pro_config_group Configuration
+ *
+ * Symbols to use for configuring the board and its initialization.
+ *
  * @{
  */
-
-// Define for doxygen, to ensure documentation is generated
 #ifdef __DOXYGEN__
-//! Define to let watchdog keep running at start
-#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-#endif
 
+//! \name Initialization
+//@{
+
+/**
+ * \def CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+ * \brief Let watchdog remain enabled
+ *
+ * If this symbol is defined, the watchdog is left running with its current
+ * configuration. Otherwise, it gets disabled during board initialization.
+ */
+# ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+# endif
+
+//@}
+
+#endif
 /** @} */
+
+
+/**
+ * \defgroup sam4s_xplained_pro_features_group Features
+ *
+ * Symbols that describe features and capabilities of the board.
+ *
+ * @{
+ */
 
 //! Name string macro
 #define BOARD_NAME "SAM4S_XPLAINED_PRO"
 
-//! \name Oscillator settings
+//! \name Resonator definitions
 //@{
 #define BOARD_FREQ_SLCK_XTAL        (32768U)
 #define BOARD_FREQ_SLCK_BYPASS      (32768U)
@@ -75,17 +100,25 @@
 
 //! \name LED #0 definition
 //@{
-#define LED_0_NAME "User LED (yellow)"
+#define LED_0_NAME "User LED 0 (yellow)"
 #define LED_0_PIN  IOPORT_CREATE_PIN(PIOC, 23)
 //@}
 
+//! Number of on-board LEDs
 #define BOARD_NUM_OF_LED 1
 
 //! \name Switch #0 definition
 //@{
-#define BUTTON_0_NAME "User switch"
+#define BUTTON_0_NAME "User switch 0"
 #define BUTTON_0_PIN  IOPORT_CREATE_PIN(PIOA, 2)
 //@}
+//
+
+//! Number of on-board buttons
+#define BOARD_NUM_OF_BUTTON 1
+
+/** @} */
+
 
 /** @} */
 
