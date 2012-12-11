@@ -43,8 +43,8 @@
 #define SERCOM_H_INCLUDED
 
 #include <compiler.h>
-//#include <clock.h>
-//#include <gclk.h>
+#include <system.h>
+#include <clock.h>
 #include "sercom_interrupts.h"
 
 #ifdef __cplusplus
@@ -53,13 +53,11 @@ extern "C" {
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
-          SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
+     SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
 # define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
 #else
 # error "SERCOM GCLK id changed."
 #endif
-
-#define SHIFT 32
 
 /**
  * \defgroup sam0_sercom_group SAM0+ SERCOM

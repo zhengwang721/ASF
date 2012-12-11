@@ -40,6 +40,8 @@
  */
 #include "sercom.h"
 
+#define SHIFT 32
+
 #if !defined(__DOXYGEN__)
 /**
  * \internal Configuration structure to save current gclk status.
@@ -48,7 +50,7 @@ struct _sercom_conf {
 	/* Status of gclk generator initialization. */
 	bool generator_is_set;
 	/* Sercom gclk generator used. */
-	//enum gclk_generator generator_source;
+	enum gclk_generator generator_source;
 	/* Will generator be operational in standby. */
 	bool run_in_standby;
 };
@@ -112,17 +114,34 @@ enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 }
 #endif
 
-
-#ifdef TODO
+/**
+ * \brief Set GCLK channel to generator.
+ *
+ * This will set the appropriate GCLK channel to the requested GCLK generator.
+ * This will set the generator for all sercom instances, and the user will thus
+ * only be able to set the same generator that has previously been set, if any.
+ *
+ * After the generator has been set the first time, the generator can be changed
+ * using the force_change flag.
+ *
+ * \param[in]  generator_source The generator to use for SERCOM.
+ * \param[in]  run_in_standby   If the generator should stay on in standby.
+ * \param[in]  force_change     Force change the generator.
+ *
+ * \return                  status_code of changing generator.
+ * \retval STATUS_OK If changes has been set, or same setting where set before.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED If new configuration was given without
+ *                                        force flag.
+ */
 enum status_code sercom_set_gclk_generator(
 		enum gclk_generator generator_source,
 		bool run_in_standby,
 		bool force_change)
 {
-	/* Configuration structure for the GCLK channel. */
+	/* Configuration structure for the gclk channel. */
 	struct system_gclk_ch_conf gclk_ch_conf;
 
-	/* Pointer to internal SERCOM configuration. */
+	/* Pointer to internal sercom configuration. */
 	struct _sercom_conf *sercom_config_ptr = &_sercom_config;
 
 	/* Return argument. */
@@ -163,5 +182,3 @@ enum status_code sercom_set_gclk_generator(
 
 	return ret_val;
 }
-#endif
-

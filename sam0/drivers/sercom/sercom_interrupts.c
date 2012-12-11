@@ -48,26 +48,33 @@ static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(uint8_t instance);
 
 /**
  * \internal Default interrupt handler
- * \param instance SERCOM instance used.
+ *
+ * \param[in] instance SERCOM instance used.
  */
-void _sercom_default_handler(uint8_t instance)
+static void _sercom_default_handler(uint8_t instance)
 {
 	Assert(false);
 }
 
-/* Find SERCOM instance. */
+/**
+ * \internal Find index of given instance.
+ *
+ * \param[in] Instance pointer.
+ *
+ * \return Index of given instance.
+ */
 uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 {
 	/* Variable used for iteration. */
 	uint8_t i;
-
-	/* Save address of SERCOM instance. */
+	/* Save address of sercom instance. */
 	uint32_t hw_dev = (uint32_t)sercom_instance;
 
-	/* Array of SERCOM instances. */
+	/* Array of sercom instances. */
+
 	Sercom sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
 
-	/* Find index for SERCOM instance. */
+	/* Find index for sercom instance. */
 	for (i = 0; i < SERCOM_INST_NUM; i++) {
 		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
 			return i;
@@ -80,12 +87,18 @@ uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 }
 
 /**
+ * \internal Saves the given callback handler.
+ *
+ * \param[in] instance Instance index.
+ * \param[in] interrupt_handler Pointer to instance callback handler.
+ *
  */
 void _sercom_set_handler(uint8_t instance,
 		void (*interrupt_handler) (uint8_t instance))
 {
 	uint8_t i;
-	/* Initialize handlers with default handler. */
+	/* Initialize handlers with default handler and device instances with 0.
+	 */
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INST_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
@@ -98,7 +111,9 @@ void _sercom_set_handler(uint8_t instance,
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
 }
 
-/* Interrupt Service Routine */
+/**
+ * \internal ISR handler for SERCOM
+ */
 void SERCOM_Handler(void)
 {
 	/* Something something. */

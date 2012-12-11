@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAM0+ BOD configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,86 +40,40 @@
  * \asf_license_stop
  *
  */
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-#include <asf.h>
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-//! [packet_data]
-#define DATA_LENGTH 10
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-static uint8_t buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-};
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-#define SLAVE_ADDRESS 0x01
-//! [packet_data]
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-/* Number of time to try and send packet if failed. */
-#define TIMEOUT 1000
-
-/* Init device instance. */
-//! [dev_inst]
-struct i2c_master_dev_inst dev_inst;
-//! [dev_inst]
-
-//! [initialize_i2c]
-static void configure_i2c(void)
-{
-	/* Initialize config structure and device instance. */
-	//! [init_conf]
-	struct i2c_master_conf conf;
-	i2c_master_get_config_defaults(&conf);
-	//! [init_conf]
-
-	/* Change buffer timeout to something longer. */
-	//! [conf_change]
-	conf.buffer_timeout = 10000;
-	//! [conf_change]
-
-	/* Initialize and enable device with config. */
-	//! [init_module]
-	i2c_master_init(&dev_inst, &SERCOM0, &conf);
-	//! [init_module]
-
-	//! [enable_module]
-	i2c_master_enable(&dev_inst);
-	//! [enable_module]
-}
-//! [initialize_i2c]
-
-int main(void)
-{
-
-	//! [run_initialize_i2c]
-	/* Init system. */
-	//system_init();
-	/* Configure device and enable. */
-	configure_i2c();
-	//! [run_initialize_i2c]
-
-	/* Timeout counter. */
-	uint16_t timeout = 0;
-
-	/* Init i2c packet. */
-	//! [packet]
-	i2c_packet_t packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer,
-	};
-	//! [packet]
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
 
 
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while(i2c_master_write_packet(&dev_inst, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ >= TIMEOUT) {
-			break;
-		}
-	}
-	//! [write_packet]
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
 
-	while (1) {
-		/* Inf loop. */
-	}
-}
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
+
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */
