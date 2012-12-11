@@ -40,31 +40,25 @@
  */
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
+
+#include <sercom.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * Structure to be used when sending i2c packets. Used both for master and
+ * Structure to be used when sending I2C packets. Used both for master and
  * slave.
  */
 typedef struct {
 	/** Address to slave device. Used  */
-	uint8_t bus_address;
+	uint8_t address;
 	/** Length of data array. */
 	uint8_t data_length;
-	/** Data array containing all data to be transfered. */
+	/** Data array containing all data to be transfered.*/
 	uint8_t *data;
 }i2c_packet_t;
-
-/** Enum for the possible I2C bus packet transfer directions. */
-enum i2c_transfer_direction
-{
-	/** Data is being written to the bus. */
-	I2C_TRANSFER_WRITE = 0,
-	/** Data is being read from the bus. */
-	I2C_TRANSFER_READ  = 1,
-};
 
 #ifdef __cplusplus
 }

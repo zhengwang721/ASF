@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAM0+ BOD configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,7 +40,40 @@
  * \asf_license_stop
  *
  */
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-#include <asf.h>
-#include <conf_clocks.h>
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
+
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
+
+
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
+
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
+
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */

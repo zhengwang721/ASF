@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for calendar mode
+ * \brief SAM0+ I2C Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,8 +42,12 @@
 #ifndef I2C_MASTER_H_INCLUDED
 #define I2C_MASTER_H_INCLUDED
 
-#include "i2c_common.h"
-#include "../sercom.h"
+#include <sercom.h>
+#include <i2c_common.h>
+
+#ifdef I2C_MASTER_ASYNC
+# include <sercom_interrupts.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,34 +65,86 @@ extern "C" {
  * @{
  */
 
+enum i2c_master_interrupt_flag {
+	I2C_MASTER_INTERRUPT_WRITE = 0,
+	I2C_MASTER_INTERRUPT_READ  = 1,
+};
+
+enum i2c_master_status_flag {
+	I2C_MASTER_STATUS_ = 0,
+};
+
+/** Enum for the possible I2C master mode SDA internal hold times after start
+ * bit has been sent. */
+enum i2c_master_start_hold_time {
+	/** Internal SDA hold time disabled. */
+	I2C_MASTER_START_HOLD_TIME_DISABLED = 0,
+	/** Internal SDA hold time 50ns-100ns. */
+	I2C_MASTER_START_HOLD_TIME_50NS_100NS = 1,
+	/** Internal SDA hold time 300ns-600ns. */
+	I2C_MASTER_START_HOLD_TIME_300NS_600NS = 2,
+	/** Internal SDA hold time 400ns-800ns. */
+	I2C_MASTER_START_HOLD_TIME_400NS_800NS = 3,
+};
+
+/**
+ * Values for standard I2C speeds.
+ */
+enum i2c_master_baud_rate {
+	/** Baud rate at 100kHz. */
+	I2C_MASTER_BAUD_RATE_100KHZ = 100,
+	/** Baud rate at 400kHz. */
+	I2C_MASTER_BAUD_RATE_400KHZ = 400,
+};
+
+#ifdef I2C_MASTER_ASYNC
 /**
  * \brief Callback types.
  * The available callback types for the I2C master module.
  */
 enum i2c_master_callback_type {
-	I2C_MASTER_CALLBACK_WRITE_DONE = 0,
-	I2C_MASTER_CALLBACK_READ_DONE  = 1,
-	I2C_MASTER_CALLBACK_ERROR      = 2,
+	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
+	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
+	I2C_MASTER_CALLBACK_ERROR          = 2,
+	_I2C_MASTER_CALLBACK_N             = 3,
 };
 
-enum i2c_master_interrupt_flag {
-	I2C_MASTER_INTERRUPT_WRITE = I2C_INTERRUPT_WIF_bp,
-	I2C_MASTER_INTERRUPT_READ  = I2C_INTERRUPT_RIF_bp,
-};
 
-/** Enum for the possible I2C master mode SDA internal hold times. */
-enum i2c_master_sda_hold_time {
-	I2C_MASTER_SDA_HOLD_DISABLED, /**< Internal SDA hold time disabled. */
-	I2C_MASTER_SDA_HOLD_50ns_100ns, /**< Internal SDA hold time 50ns-100ns. */
-	I2C_MASTER_SDA_HOLD_300ns_600ns, /**< Internal SDA hold time 300ns-600ns. */
-	I2C_MASTER_SDA_HOLD_400ns_800ns, /**< Internal SDA hold time 400ns-800ns. */
-};
+struct i2c_master_dev_inst;
 
-enum i2c_master_inactive_timeout {
-	I2C_MASTER_INACTIVE_TIMEOUT_DISABELED,
-	I2C_MASTER_INACTIVE_TIMEOUT_50US_60US,
-	I2C_MASTER_INACTIVE_TIMEOUT_100US_110US,
-	I2C_MASTER_INACTIVE_TIMEOUT_200US_210US,
+
+typedef void (*i2c_master_callback_t)(
+		const struct i2c_master_dev_inst *const dev_inst);
+#endif
+
+/**
+ * \brief SERCOM I2C Master driver hardware instance.
+ *
+ * Device instance structure for SERCOM I2C Master instance. This structure
+ * is used throughout the driver, and should be initiated using the
+ * /ref i2c_master_init() function to associate the struct with a particular
+ * hardware instance and configurations.
+ */
+struct i2c_master_dev_inst {
+	/** Hardware instance initialized for the struct. */
+	SERCOM_t *hw_dev;
+	/** Data buffer for packet write and read. */
+	uint8_t *buffer;
+	/** Counter used for bytes left to send in write and to count number of
+	  * obtained bytes in read. */
+	uint16_t buffer_length;
+	/** Unknown bus state timeout. */
+	uint16_t unkown_bus_state_timeout;
+	/* Buffer write timeout value. */
+	uint16_t buffer_timeout;
+#ifdef I2C_MASTER_ASYNC
+	/** Holder for callback functions. */
+	i2c_master_callback_t callback[_I2C_MASTER_CALLBACK_N];
+	/** Holder for registered callbacks. */
+	uint8_t registered_callback;
+	/** Holder for enabled callbacks. */
+	uint8_t enabled_callback;
+#endif
 };
 
 
@@ -101,14 +157,18 @@ enum i2c_master_inactive_timeout {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_conf {
+	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
-	bool active_in_sleep;
-	bool hold_line_timeout;
-	enum i2c_master_inactive_timeout inactive_timeout;
-	enum i2c_master_sda_hold_time sda_hold_time;
-	/** If true, external will be used that supports tri-stating. 4 wires
-	  * will be used. */
-	bool external_reciever;
+	/** GCLK generator to use as clock source. */
+	enum gclk_generator generator_source;
+	/** Bus hold time after start signal on data line. */
+	enum i2c_master_start_hold_time start_hold_time;
+	/** Unknown bus state timeout. */
+	uint16_t unkown_bus_state_timeout;
+	/** Timeout for packet write to wait for slave. */
+	uint16_t buffer_timeout;
+	/** Set to keep module active in sleep modes. */
+	bool run_in_standby;
 };
 
 /**
@@ -116,22 +176,22 @@ struct i2c_master_conf {
  * @{
  */
 
-typedef (*i2c_master_callback_t)(
-		const struct i2c_master_dev_inst *const dev_inst);
-
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync.
  * \param[in]  dev_inst Pointer to device instance structure.
  */
 
-static void _i2c_wait_for_sync(const struct i2c_master_dev_inst dev_inst)
+static void _i2c_master_wait_for_sync(
+		const struct i2c_master_dev_inst *const dev_inst)
 {
 	/* Sanity check. */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	while(dev_inst->hw_dev->I2C_MASTER.STATUS & I2C_SYNC_BUSY_bm) {
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	while(i2c_module->STATUS & I2C_SYNC_BUSY_Msk) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -153,15 +213,19 @@ static inline void i2c_master_get_config_defaults(
 {
 	/*Sanity check argument. */
 	Assert(config);
-
-
+	config->baud_rate = I2C_MASTER_BAUD_RATE_100KHZ;
+	config->generator_source = GCLK_GENERATOR_0;
+	config->run_in_standby = false;
+	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_50NS_100NS;
+	config->buffer_timeout = 1000;
+	config->unkown_bus_state_timeout = 1000;
 }
 
 /**
  * \brief Initializes the requested I2C Hardware module.
  *
  * Initializes the SERCOM I2C Master device requested and sets the provided
- * device instance struct. This will also reset the hardware module, so all
+ * device instance struct. This will also reset the hardware module, all
  * current settings will be lost. Run this function before any further use of
  * the driver.
  *
@@ -182,8 +246,21 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
  * \param[in]  dev_inst Pointer to the device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_enable(
-		const struct i2c_master_dev_inst *const dev_inst);
+static inline void i2c_master_enable(
+		const struct i2c_master_dev_inst *const dev_inst)
+{
+	/* Sanity check of arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Wait for module to sync. */
+	_i2c_master_wait_for_sync(dev_inst);
+
+	/* Enable module. */
+	i2c_module->CTRLA |= ( 1 << I2C_MASTER_ENABLE_Pos );
+}
 
 /**
  * \brief Disable the I2C module.
@@ -194,15 +271,72 @@ enum status_code i2c_master_enable(
  * \param[in]  dev_inst Pointer to the device instance struct.
  * \return          [description]
  */
-enum status_code i2c_master_disable(
-		const struct i2c_master_dev_inst *const dev_inst);
+static inline void i2c_master_disable(
+		const struct i2c_master_dev_inst *const dev_inst)
+{
+	/* Sanity check of arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Wait for module to sync. */
+	_i2c_master_wait_for_sync(dev_inst);
+
+	/* Disable module. */
+	i2c_module->CTRLA &= ~(1 << I2C_MASTER_ENABLE_Pos);
+}
+
+void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
 
 /** @} */
 
 /**
-* \name Interrupts
+* \name Interrupts and Flags
 * @{
 */
+
+/**
+ * \brief Check given status flag.
+ *
+ * This will return the status of the requested status flag.
+ * \param  dev_inst    Pointer to device instance structure.
+ * \param  status_flag Status flag to check.
+ */
+static inline bool i2c_master_is_status_flag_set(
+		const struct i2c_master_dev_inst *const dev_inst,
+		enum i2c_master_status_flag status_flag)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Check requested status flag. */
+	return (i2c_module->STATUS & (1 << status_flag));
+}
+
+/**
+ * \brief Clear given status flag.
+ *
+ * This will clear the status flag specified.
+ * \param dev_inst    Pointer to device instance structure.
+ * \param status_flag Status flag to clear.
+ */
+static inline void i2c_master_clear_status_flag(
+		struct i2c_master_dev_inst *const dev_inst,
+		enum i2c_master_status_flag status_flag)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	/* Clear requested status flag. */
+	i2c_module->STATUS = (1 << status_flag);
+}
 
 /**
  * \brief Check interrupt flag.
@@ -214,7 +348,7 @@ enum status_code i2c_master_disable(
  *
  * \return Status of the requested interrupt flag.
  */
-static inline bool i2c_master_is_interrupt(
+static inline bool i2c_master_is_interrupt_flag_set(
 		const struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_interrupt_flag interrupt_flag)
 {
@@ -222,7 +356,9 @@ static inline bool i2c_master_is_interrupt(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	return (dev_inst->hw_dev->I2C_MASTER.INTFLAG & (1 << interrupt_flag));
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	return (i2c_module->INTFLAGS & (1 << interrupt_flag));
 }
 
 /**
@@ -233,7 +369,7 @@ static inline bool i2c_master_is_interrupt(
  * \param[out] dev_inst       Pointer to device instance struct.
  * \param[in]  interrupt_flag Value of interrupt flag to clear.
  */
-static inline void i2c_master_clear_interrupt(
+static inline void i2c_master_clear_interrupt_flag(
 		struct i2c_master_dev_inst *const dev_inst,
 		enum i2c_master_interrupt_flag interrupt_flag)
 {
@@ -241,149 +377,25 @@ static inline void i2c_master_clear_interrupt(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	dev_inst->hw_dev->I2C_MASTER.INTFLAG = (1 << interrupt_flag);
+	SERCOM_I2C_MASTER_t *const i2c_module = &(dev_inst->hw_dev->I2C_MASTER);
+
+	i2c_module->INTFLAGS = (1 << interrupt_flag);
 }
-
-/**
- * \brief Register callback for the specified callback type.
- *
- * When called, the given callback function will be associated with the
- * specified callback type.
- *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]  callback      Pointer to the function desired for the specified
- *                       callback.
- * \param[in]  callback_type Specifies the callback type to register.
- * \return          [description]
- */
-enum status_code i2c_master_register_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
-
-/**
- * \brief Unregister callback for the specified callback type.
- *
- * When called, the currently registered callback for the given callback type
- * will be removed.
- *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]      callback_type Specifies the callback type to unregister.
- * \return          [description]
- */
-enum status_code i2c_master_unregister_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
-
-/**
- * \brief Enable callback.
- * Enables the callback specified the callback_value.
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to enable.
- * \return               [description]
- */
-enum status_code i2c_master_enable_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
-
-/**
- * \brief Disable callback.
- * Disables the callback specified by the callback_type.
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
- * \param[in]      callback_type Callback type to disable.
- * \return               [description]
- */
-enum status_code i2c_master_disable_callback(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_callback_type callback_type);
-
 /** @} */
 
 /**
-* \name Read and Write, Blocking
+* \name Read and Write
 * @{
 */
 
-/**
- * \brief Read data packet from slave.
- *
- * Reads a data packet from the specified slave address on the I2C bus.
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_read_packet(
-		const struct i2c_master_dev_inst *const dev_inst,
+		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
-/**
- * \brief Write data packet to slave.
- *
- * Writes a data packet to the specified slave address on the I2C bus.
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
 enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
 		i2c_packet_t *const packet);
 
-
-/** @} */
-
-/**
-* \name Read and Write, Non-Blocking
-* @{
-*/
-
-/**
- * \brief Read data packet from slave asynchronous.
- *
- * Reads a data packet from the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_read .
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
-enum status_code i2c_master_read_packet_async(
-		const struct i2c_master_dev_inst *const dev_inst,
-		i2c_packet_t *const packet);
-
-/**
- * \brief Write data packet to slave asynchronous.
- *
- * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write .
- *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
- * \param[in,out] packet    Pointer to I2C packet to transfer.
- * \return          [description]
- */
-enum status_code i2c_master_write_packet_async(
-		struct i2c_master_dev_inst *const dev_inst,
-		i2c_packet_t *const packet);
-
-/**
- * \brief Cancel the currently running operation.
- * This will terminate the running write or read transfer.
- *
- * \param  dev_inst Pointer to device instance struct.
- * \return          [description]
- */
-enum status_code i2c_master_cancel_operation(
-		struct i2c_master_dev_inst *const dev_inst);
-
-/**
- * \brief Check if a started transfer is done.
- * This will return the current status of the read/write transfer.
- *
- * \param  dev_inst Pointer to the device instance struct.
- * \return          [description]
- */
-enum status_code i2c_master_is_transfer_done(
-		struct i2c_master_dev_inst *const dev_inst);
 
 /** @} */
 /** @} */

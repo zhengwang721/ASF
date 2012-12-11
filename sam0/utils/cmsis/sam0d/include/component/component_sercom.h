@@ -42,7 +42,8 @@
 
 #include <io.h>
 
-/* SERCOM Register Map in USART mode */
+
+/* SERCOM Register Map in USART mode*/ 
 typedef struct {
 	__REG32(CTRLA, __IO);
 	__REG32(CTRLB, __IO);
@@ -53,7 +54,7 @@ typedef struct {
 	__REG8(INTENCLR, __O);
 	__REG8(INTENSET, __IO);
 	__REG16(INTFLAGS, __IO);
-	__REG16(STATUS, __I);
+	__REG16(STATUS, __IO);
 	__I uint16_t reserved_0x16;
 	__REG16(DATA, __IO);
 	__I uint16_t reserved_0x1A;
@@ -61,7 +62,7 @@ typedef struct {
 	__I uint16_t reserved_0x1E;
 } SERCOM_USART_t;
 
-/* SERCOM Register Map in SPI mode */
+// SERCOM Register Map in SPI mode
 typedef struct {
 	__REG32(CTRLA, __IO);
 	__REG32(CTRLB, __IO);
@@ -80,7 +81,7 @@ typedef struct {
 	__I uint16_t reserved_0x1E;
 } SPI_t;
 
-/* SERCOM Register Map in I2C mode */
+// SERCOM Register Map in I2C mode /
 typedef struct {
 	__REG32(CTRLA, __IO);
 	__REG32(CTRLB, __IO);
@@ -90,7 +91,7 @@ typedef struct {
 	__REG8(INTENCLR, __O);
 	__REG8(INTENSET, __IO);
 	__REG16(INTFLAGS, __IO);
-	__REG16(STATUS, __I);
+	__REG16(STATUS, __IO);
 	__I uint16_t reserved_0x16;
 	__REG16(DATA, __IO);
 	__I uint16_t reserved_0x1A;
@@ -99,7 +100,7 @@ typedef struct {
 
 } SERCOM_I2C_SLAVE_t;
 
-/* SERCOM Register Map in I2C mode */
+// SERCOM Register Map in I2C mode /
 typedef struct {
 	__REG32(CTRLA, __IO);
 	__REG32(CTRLB, __IO);
@@ -111,7 +112,7 @@ typedef struct {
 	__REG8(INTENCLR, __O);
 	__REG8(INTENSET, __IO);
 	__REG16(INTFLAGS, __IO);
-	__REG16(STATUS, __I);
+	__REG16(STATUS, __IO);
 	__I uint16_t reserved_0x16;
 	__REG16(DATA, __IO);
 	__I uint16_t reserved_0x1A;
@@ -122,7 +123,7 @@ typedef struct {
 
 
 
-/* SERCOM module */
+// SERCOM module /
 typedef struct {
 	union {
 		SERCOM_I2C_SLAVE_t  I2C_SLAVE;
@@ -137,18 +138,21 @@ typedef struct {
 #define SERCOM_MODE_SPI_gc (1 <<  SERCOM_MODE_gp)
 #define SERCOM_MODE_I2C_gc (2 << SERCOM_MODE_gp)
 
-/* SERCOM Mode Selector */
+// SERCOM Mode Selector /
 typedef enum {
 	SERCOM_MODE_USART = SERCOM_MODE_USART_gc,
 	SERCOM_MODE_SPI   = SERCOM_MODE_SPI_gc,
 	SERCOM_MODE_I2C   = SERCOM_MODE_I2C_gc,
 } SERCOM_MODE_t;
 
-/* Default reset bit on location bit 0 for all modules */
+// Default reset bit on location bit 0 for all modules /
 #define SWRST_bm 0x00000001
 
 
-
+#define SERCOM_INST_NUM 6
+#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
+#define SHIFT 1
+#define SERCOM_GCLK_ID 0
 
 #define SERCOM_USART_ENABLE_bm 0x00000002
 #define SERCOM_USART_CSRC_bm (1 << 31)
@@ -165,10 +169,21 @@ typedef enum {
 #define SERCOM_USART_RXCIF_bm (1 << 2)
 #define SERCOM_USART_RXSIF_bm (1 << 3)
 
-/*TODO: Replace with correct values */
+// From SAM header file
+#define SERCOM_USART_STATUS_PERR    (0x1u <<  0) /**< \brief (SERCOM_USART_STATUS) Parity Error */
+#define SERCOM_USART_STATUS_FERR    (0x1u <<  1) /**< \brief (SERCOM_USART_STATUS) Frame Error */
+#define SERCOM_USART_STATUS_BUFOVF  (0x1u <<  2) /**< \brief (SERCOM_USART_STATUS) Buffer Overflow */
+#define SERCOM_USART_STATUS_SYNCBUSY (0x1u << 15) /**< \brief (SERCOM_USART_STATUS) Synchronization Busy */
+#define SERCOM_USART_STATUS_MASK    0x8007u /**< \brief (SERCOM_USART_STATUS) MASK Register */
+
+
+
+//TODO: Replace with correct values /
 #define SERCOM_USART_FORM_1_gc 0
 #define SERCOM_USART_FORM_5_gc 0
-
+#define SERCOM_USART_CPOL_bp 0
+#define SERCOM_USART_ 0
+#define SERCOM_USART_DATA_gm  (0x1FF << 1)
 
 #define SERCOM_USART_CHSIZE_5BIT_gc 0
 #define SERCOM_USART_CHSIZE_6BIT_gc 0
@@ -178,9 +193,20 @@ typedef enum {
 
 #define SERCOM_USART_PMODE_bm  0
 #define SERCOM_USART_BMODE_bm  0
+#define SERCOM_USART_SYNCBUSY_bp 7
+#define SERCOM_USART_SYNCBUSY_bm (1 << SERCOM_USART_SYNCBUSY_bp)
+#define SERCOM_USART_RESET_bm  0x00000001
+
+#define SERCOM_USART_SBMODE_1_bm 0x00000000
+#define SERCOM_USART_SBMODE_2_bm 0x00000001
+#define USART_FRAME_FORMAT_WITHOUT_PARITY_gm  0x00000000
+#define USART_FRAME_FORMAT_WITH_PARITY_gm  0x00000004
+
+//TODO: set valid values
 
 
-/* SPI defines */
+
+// SPI defines /
 #define SPI_MASTER_bm          (1 << 31)
 
 #define SPI_DORD_bm            (1 << 30)
@@ -216,6 +242,28 @@ typedef enum {
 #define SPI_ADDR_gp         0
 #define SPI_ADDRMASK_gp     16
 
+#define SERCOM_INSTS_NUM 6
+
+
+#define I2C_MASTER_SWRST_Pos 0
+#define SERCOM_MODE_I2C 0
+#define SERCOM_I2C_MASTER 0
+#define SERCOM_I2C_MODE 0
+#define I2C_MASTER_RUNINSTDBY_Pos 0
+#define SERCOM_GCLK_ID 0
+#define I2C_MASTER_BUSSTATE_IDLE 0
+#define I2C_MASTER_BUSSTATE_UNKNOWN 0
+#define I2C_MASTER_SMEN_Msk 0
+#define I2C_MASTER_ARBLOST_Pos 0
+#define SERCOM_I2C_MASTER_CMD(value) value << 4
+#define I2C_MASTER_WIF 0
+#define I2C_MASTER_RIF 0
+#define I2C_MASTER_BUSSERROR_Pos 0
+#define I2C_MASTER_RXACK_Pos 0
+#define SERCOM_I2C_MASTER_NACK 0
+#define I2C_SYNC_BUSY_Msk 0
+#define I2C_MASTER_ENABLE_Pos 1
+
 enum RXPO_group {
 	SERCOM_USART_RXPO_0_gc = (0 << 18),
 	SERCOM_USART_RXPO_1_gc = (1 << 18),
@@ -241,4 +289,4 @@ enum DOPO_group {
 	SPI_DOPO_PIN2_PIN3_PIN1 = (1 << 16),
 };
 
-#endif /* __SAM0XX_COMPONENT_SERCOM__ */
+#endif // __SAM0XX_COMPONENT_SERCOM__ /
