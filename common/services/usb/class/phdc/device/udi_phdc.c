@@ -93,8 +93,10 @@ UDC_DESC_STORAGE udi_api_t udi_api_phdc = {
 //! Variable to store the transfer pending flag
 static le16_t udi_phdc_holding_data;
 
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
 //! Flag to signal the state of preample feature
 static uint8_t udi_phdc_preample_feature;
+#endif
 
 COMPILER_PACK_SET(1)
 
@@ -124,7 +126,7 @@ static struct {
 #endif
 	udi_phdc_metadata_t *metadata;
 	uint16_t metadata_pos;
-	void (*callback) (uint16_t);
+	void (*callback) (bool, uint16_t);
 	void *cntx;
 } udi_phdc_out_trans;
 
@@ -138,6 +140,7 @@ COMPILER_PACK_RESET()
  */
 //@{
 
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
 /*! \brief This function sends a preample message
  *
  * \retval true when success
@@ -151,6 +154,7 @@ static bool udi_phdc_send_preamplemsg(void);
  */
 static void udi_phdc_preamplemsg_ack(udd_ep_status_t status,
 		iram_size_t nb_send, udd_ep_id_t ep);
+#endif
 
 /*! \brief This function sends a metadata
  *
@@ -166,6 +170,7 @@ static bool udi_phdc_send_metadata(void);
 static void udi_phdc_metadata_ack(udd_ep_status_t status, iram_size_t nb_send,
 		udd_ep_id_t ep);
 
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
 /*! \brief This function requests a preample message
  *
  * \retval true when success
@@ -179,12 +184,13 @@ static bool udi_phdc_wait_preamplemsg(void);
  */
 static void udi_phdc_received_preample(udd_ep_status_t status,
 		iram_size_t nb_received, udd_ep_id_t ep);
+#endif
 
 /*! \brief This function request metadata
  *
  * \retval true when success
  */
-static bool udi_phdc_wait_metadata(void);
+static bool udi_phdc_wait_metadata(uint8_t bNumTransfers);
 
 /*! \brief Callback called when metadata is received
  *
@@ -194,6 +200,10 @@ static bool udi_phdc_wait_metadata(void);
 static void udi_phdc_received_metadata(udd_ep_status_t status,
 		iram_size_t nb_received, udd_ep_id_t ep);
 
+/*! \brief Aborts all PHDC transfers on-going or pending
+ */
+static void udi_phdc_abort_all_transfers_ongoing(void);
+
 //@}
 
 
@@ -202,32 +212,36 @@ static void udi_phdc_received_metadata(udd_ep_status_t status,
 
 bool udi_phdc_enable(void)
 {
-	uint8_t sig_tmp[] = METADATA_MESSAGE_SIG;
-
 	// Enable external component of PHDC interface
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
 	udi_phdc_preample_feature = false;
+#endif
 	udi_phdc_holding_data = 0;
 	udi_phdc_in_trans.b_run = false;
 	udi_phdc_out_trans.b_run = false;
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
+	{
+	uint8_t sig_tmp[] = METADATA_MESSAGE_SIG;
 	// Init struct signature
 	memcpy(udi_phdc_in_trans.preample_header.aSignature, sig_tmp,
 			sizeof(sig_tmp));
 	udi_phdc_in_trans.preample_header.bQoSEncodingVersion =
 			USB_PHDC_QOS_ENCODING_VERSION_1;
+	}
+#endif
 	return UDI_PHDC_ENABLE_EXT();
 }
 
 
 void udi_phdc_disable(void)
 {
+	udi_phdc_abort_all_transfers_ongoing();
 	UDI_PHDC_DISABLE_EXT();
 }
 
 
 bool udi_phdc_setup(void)
 {
-	udd_ep_id_t ep_num;
-
 	//** Interface requests
 	if (Udd_setup_is_in()) {
 		// Requests Interface GET
@@ -244,8 +258,7 @@ bool udi_phdc_setup(void)
 						sizeof(udi_phdc_holding_data))
 					return false;
 				udd_g_ctrlreq.payload =
-						(uint8_t *) &
-						udi_phdc_holding_data;
+						(uint8_t *) &udi_phdc_holding_data;
 				udd_g_ctrlreq.payload_size =
 						sizeof(udi_phdc_holding_data);
 				return true;
@@ -265,22 +278,7 @@ bool udi_phdc_setup(void)
 					return false;
 				if ((udd_g_ctrlreq.req.wValue >> 8) != 0)
 					return false;
-				if (0 != udi_phdc_holding_data) {
-#if ((UDI_PHDC_QOS_IN&USB_PHDC_QOS_LOW_GOOD)==USB_PHDC_QOS_LOW_GOOD)
-					if (USB_PHDC_QOS_LOW_GOOD ==
-							udi_phdc_in_trans.metadata->
-							qos)
-						ep_num = UDI_PHDC_EP_INTERRUPT_IN;
-					else
-#endif
-						ep_num = UDI_PHDC_EP_BULK_IN;
-					udd_ep_abort(ep_num);
-				}
-				udi_phdc_preample_feature = false;
-				if (udi_phdc_out_trans.b_run) {
-					// Kill waiting transfer to start new one
-					udd_ep_abort(UDI_PHDC_EP_BULK_OUT);
-				}
+				udi_phdc_abort_all_transfers_ongoing();
 				return true;
 
 			case USB_REQ_SET_FEATURE:
@@ -292,22 +290,7 @@ bool udi_phdc_setup(void)
 				if ((udd_g_ctrlreq.req.wValue >> 8) !=
 						USB_PHDC_QOS_ENCODING_VERSION_1)
 					return false;
-				if (0 != udi_phdc_holding_data) {
-#if ((UDI_PHDC_QOS_IN&USB_PHDC_QOS_LOW_GOOD)==USB_PHDC_QOS_LOW_GOOD)
-					if (USB_PHDC_QOS_LOW_GOOD ==
-							udi_phdc_in_trans.metadata->
-							qos)
-						ep_num = UDI_PHDC_EP_INTERRUPT_IN;
-					else
-#endif
-						ep_num = UDI_PHDC_EP_BULK_IN;
-					udd_ep_abort(ep_num);
-				}
-				udi_phdc_preample_feature = true;
-				if (udi_phdc_out_trans.b_run) {
-					// Kill waiting transfer to start new one
-					udd_ep_abort(UDI_PHDC_EP_BULK_OUT);
-				}
+				udi_phdc_abort_all_transfers_ongoing();
 				return true;
 #endif
 			}
@@ -363,15 +346,31 @@ bool udi_phdc_senddata(udi_phdc_metadata_t * metadata,
 	return b_status;
 }
 
+void udi_phdc_senddata_abort(void)
+{
+	if (udi_phdc_in_trans.b_run) {
+		// transfer running then abort
+#if ((UDI_PHDC_QOS_IN&USB_PHDC_QOS_LOW_GOOD)==USB_PHDC_QOS_LOW_GOOD)
+		if (USB_PHDC_QOS_LOW_GOOD == udi_phdc_in_trans.metadata->qos) {
+			udd_ep_abort(UDI_PHDC_EP_INTERRUPT_IN);
+		} else {
+			udd_ep_abort(UDI_PHDC_EP_BULK_IN);
+		}
+#else
+		udd_ep_abort(UDI_PHDC_EP_BULK_IN);
+#endif
+	}
+}
 
 bool udi_phdc_waitdata(udi_phdc_metadata_t * metadata,
-		void (*callback) (uint16_t))
+		void (*callback) (bool, uint16_t))
 {
 	bool b_status;
 	irqflags_t flags;
 
-	if (udi_phdc_out_trans.b_run)
+	if (udi_phdc_out_trans.b_run) {
 		return false;	// transfer already running
+	}
 
 	// Init transfer
 	udi_phdc_out_trans.metadata = metadata;
@@ -388,15 +387,13 @@ bool udi_phdc_waitdata(udi_phdc_metadata_t * metadata,
 	{
 		// Enable of wait data
 #if (UDI_PHDC_PREAMBLE_FEATURE == true)
-		udi_phdc_out_trans.preample_header.bmLatencyReliability = 0;
+		udi_phdc_out_trans.metadata->qos = 0; // Qos cannot be determinated
 #else
-		udi_phdc_out_trans.preample_header.bmLatencyReliability =
-				UDI_PHDC_QOS_OUT;
+		udi_phdc_out_trans.metadata->qos = UDI_PHDC_QOS_OUT;
 #endif
-		udi_phdc_out_trans.preample_header.bNumTransfers =
-				udi_phdc_out_trans.metadata->metadata_size /
-				UDI_PHDC_EP_SIZE_BULK_OUT;
-		b_status = udi_phdc_wait_metadata();
+		b_status = udi_phdc_wait_metadata(
+			udi_phdc_out_trans.metadata->metadata_size
+			/ UDI_PHDC_EP_SIZE_BULK_OUT);
 	}
 
 	cpu_irq_restore(flags);
@@ -407,6 +404,7 @@ bool udi_phdc_waitdata(udi_phdc_metadata_t * metadata,
 //--------------------------------------------
 //------ Internal routines
 
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
 static bool udi_phdc_send_preamplemsg(void)
 {
 	if ((UDI_PHDC_EP_SIZE_BULK_IN - 1 - sizeof(usb_phdc_metadata_msg_t))
@@ -436,8 +434,8 @@ static bool udi_phdc_send_preamplemsg(void)
 	}
 	udi_phdc_in_trans.b_run = true;
 	udi_phdc_in_trans.b_preample_run = true;
-	udi_phdc_holding_data |=
-			1 << (UDI_PHDC_EP_SIZE_BULK_IN & USB_EP_ADDR_MASK);
+	udi_phdc_holding_data |= cpu_to_le16((
+			1 << (UDI_PHDC_EP_SIZE_BULK_IN & USB_EP_ADDR_MASK)));
 	return true;
 }
 
@@ -447,8 +445,8 @@ static void udi_phdc_preamplemsg_ack(udd_ep_status_t status,
 {
 	// Preample sending
 	udi_phdc_in_trans.b_run = false;
-	udi_phdc_holding_data &=
-			~(1 << (UDI_PHDC_EP_SIZE_BULK_IN & USB_EP_ADDR_MASK));
+	udi_phdc_holding_data &= cpu_to_le16((
+			~(1 << (UDI_PHDC_EP_SIZE_BULK_IN & USB_EP_ADDR_MASK))));
 	udi_phdc_in_trans.b_preample_run = false;
 	if (UDD_EP_TRANSFER_ABORT == status) {
 		// Transfer abort
@@ -460,6 +458,7 @@ static void udi_phdc_preamplemsg_ack(udd_ep_status_t status,
 		udi_phdc_in_trans.callback(0);
 	}
 }
+#endif // (UDI_PHDC_PREAMBLE_FEATURE == true)
 
 
 static bool udi_phdc_send_metadata(void)
@@ -482,7 +481,7 @@ static bool udi_phdc_send_metadata(void)
 		return false;
 	}
 	// Uptade struct
-	udi_phdc_holding_data |= 1 << (ep_num & USB_EP_ADDR_MASK);
+	udi_phdc_holding_data |= cpu_to_le16((1 << (ep_num & USB_EP_ADDR_MASK)));
 	udi_phdc_in_trans.b_run = true;
 	return true;
 }
@@ -501,7 +500,7 @@ static void udi_phdc_metadata_ack(udd_ep_status_t status, iram_size_t nb_send,
 		ep_num = UDI_PHDC_EP_BULK_IN;
 
 	udi_phdc_in_trans.b_run = false;
-	udi_phdc_holding_data &= ~(1 << (ep_num & USB_EP_ADDR_MASK));
+	udi_phdc_holding_data &= cpu_to_le16((~(1 << (ep_num & USB_EP_ADDR_MASK))));
 	udi_phdc_in_trans.callback(nb_send);
 }
 
@@ -556,13 +555,22 @@ static void udi_phdc_received_preample(udd_ep_status_t status,
 					sizeof(usb_phdc_metadata_msg_t)))
 		goto udi_phdc_received_preample_bad;
 
+	udi_phdc_out_trans.metadata->qos =
+			udi_phdc_out_trans.preample_header.bmLatencyReliability;
 	udi_phdc_out_trans.metadata->opaque_size =
 			udi_phdc_out_trans.preample_header.bOpaqueDataSize;
 	udi_phdc_out_trans.metadata->opaquedata =
 			udi_phdc_out_trans.preample_opaque_data;
 
-	if (!udi_phdc_wait_metadata())
+	if (udi_phdc_out_trans.metadata->metadata_size <
+			(udi_phdc_out_trans.preample_header.bNumTransfers
+			* UDI_PHDC_EP_SIZE_BULK_OUT)) {
 		goto udi_phdc_received_preample_bad;
+	}
+
+	if (!udi_phdc_wait_metadata( udi_phdc_out_trans.preample_header.bNumTransfers )) {
+		goto udi_phdc_received_preample_bad;
+	}
 	return;
 
 udi_phdc_received_preample_bad:
@@ -570,27 +578,21 @@ udi_phdc_received_preample_bad:
 	udd_ep_set_halt(UDI_PHDC_EP_BULK_OUT);
 udi_phdc_received_preample_abort:
 	udi_phdc_out_trans.b_run = false;
-	udi_phdc_out_trans.callback(0);
+	udi_phdc_out_trans.callback(false, 0);
 }
-#endif
+#endif // (UDI_PHDC_PREAMBLE_FEATURE == true)
 
 
-static bool udi_phdc_wait_metadata(void)
+static bool udi_phdc_wait_metadata(uint8_t bNumTransfers)
 {
-	// Check output buffer size
-	if (udi_phdc_out_trans.metadata->metadata_size
-			<
-			(udi_phdc_out_trans.preample_header.bNumTransfers *
-					UDI_PHDC_EP_SIZE_BULK_OUT))
-		return false;
-
 	// Wait metadata
 	udi_phdc_out_trans.b_run =
 			udd_ep_run(UDI_PHDC_EP_BULK_OUT,
 			false,
 			udi_phdc_out_trans.metadata->metadata,
-			udi_phdc_out_trans.preample_header.bNumTransfers *
-			UDI_PHDC_EP_SIZE_BULK_OUT, udi_phdc_received_metadata);
+			bNumTransfers * UDI_PHDC_EP_SIZE_BULK_OUT,
+			udi_phdc_received_metadata);
+	Assert(udi_phdc_out_trans.b_run);
 	return udi_phdc_out_trans.b_run;
 }
 
@@ -598,10 +600,36 @@ static bool udi_phdc_wait_metadata(void)
 static void udi_phdc_received_metadata(udd_ep_status_t status,
 		iram_size_t nb_received, udd_ep_id_t ep)
 {
-	if (UDD_EP_TRANSFER_OK == status)
-		udi_phdc_out_trans.b_preample_run = false;
 	udi_phdc_out_trans.b_run = false;
-	udi_phdc_out_trans.callback(nb_received);
+	if (UDD_EP_TRANSFER_OK != status) {
+		udi_phdc_out_trans.callback(false, 0);
+		return;
+	}
+	udi_phdc_out_trans.b_preample_run = false;
+	udi_phdc_out_trans.callback(true, nb_received);
 }
 
+
+static void udi_phdc_abort_all_transfers_ongoing(void)
+{
+	if (0 != udi_phdc_holding_data) {
+#if ((UDI_PHDC_QOS_IN&USB_PHDC_QOS_LOW_GOOD)==USB_PHDC_QOS_LOW_GOOD)
+		if (USB_PHDC_QOS_LOW_GOOD ==
+				udi_phdc_in_trans.metadata->qos) {
+			udd_ep_abort(UDI_PHDC_EP_INTERRUPT_IN);
+		}else{
+			udd_ep_abort(UDI_PHDC_EP_BULK_IN);
+		}
+#else
+		udd_ep_abort(UDI_PHDC_EP_BULK_IN);
+#endif
+	}
+#if (UDI_PHDC_PREAMBLE_FEATURE == true)
+	udi_phdc_preample_feature = false;
+#endif
+	if (udi_phdc_out_trans.b_run) {
+		// Kill waiting transfer to start new one
+		udd_ep_abort(UDI_PHDC_EP_BULK_OUT);
+	}
+}
 //@}

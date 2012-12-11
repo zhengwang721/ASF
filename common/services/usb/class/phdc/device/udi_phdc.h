@@ -189,7 +189,7 @@ COMPILER_PACK_RESET()
    .fnctext.header.bDescriptorType    = USB_DT_PHDC_11073PHD_FUNCTION, \
    .fnctext.header.bReserved          = 0, \
    .fnctext.header.bNumDevSpecs       = sizeof(tmp_wDevSpecializations)/2, \
-   .fnctext.wDevSpecializations       = UDI_PHDC_SPECIALIZATION
+   .fnctext.wDevSpecializations       = UDI_PHDC_SPECIALIZATION,
 #else
 #define UDI_PHDC_FNCTEXT
 #endif
@@ -200,7 +200,7 @@ COMPILER_PACK_RESET()
    .metadata_bulk_in.header.bLength   = \
 			sizeof(udi_phdc_metadata_desc_bulkin_t),\
    .metadata_bulk_in.header.bDescriptorType = USB_DT_PHDC_METADATA,\
-   .metadata_bulk_in.bOpaqueData      = UDI_PHDC_METADATA_DESC_BULK_IN
+   .metadata_bulk_in.bOpaqueData      = UDI_PHDC_METADATA_DESC_BULK_IN,
 #else
 #define UDI_PHDC_METADATA_BULKIN
 #endif
@@ -211,7 +211,7 @@ COMPILER_PACK_RESET()
    .metadata_bulk_out.header.bLength  = \
 			sizeof(udi_phdc_metadata_desc_bulkout_t),\
    .metadata_bulk_out.header.bDescriptorType = USB_DT_PHDC_METADATA,\
-   .metadata_bulk_in.bOpaqueData      = UDI_PHDC_METADATA_DESC_BULK_OUT
+   .metadata_bulk_in.bOpaqueData      = UDI_PHDC_METADATA_DESC_BULK_OUT,
 #else
 #define UDI_PHDC_METADATA_BULKOUT
 #endif
@@ -222,7 +222,7 @@ COMPILER_PACK_RESET()
    .metadata_int_in.header.bLength    = \
 			sizeof(udi_phdc_metadata_desc_intin_t),\
    .metadata_int_in.header.bDescriptorType = USB_DT_PHDC_METADATA,\
-   .metadata_int_in.bOpaqueData       = UDI_PHDC_METADATA_DESC_INT_IN
+   .metadata_int_in.bOpaqueData       = UDI_PHDC_METADATA_DESC_INT_IN,
 #else
 #define UDI_PHDC_METADATA_INTIN
 #endif
@@ -234,7 +234,7 @@ COMPILER_PACK_RESET()
    .ep_int_in.bDescriptorType         = USB_DT_ENDPOINT,\
    .ep_int_in.bEndpointAddress        = UDI_PHDC_EP_INTERRUPT_IN,\
    .ep_int_in.bmAttributes            = USB_EP_TYPE_INTERRUPT,\
-   .ep_int_in.wMaxPacketSize          = UDI_PHDC_EP_SIZE_INT_IN,\
+   .ep_int_in.wMaxPacketSize          = LE16(UDI_PHDC_EP_SIZE_INT_IN),\
    .ep_int_in.bInterval               = 20,\
    .qos_int_in.bLength                = sizeof(usb_phdc_qos_desc_t),\
    .qos_int_in.bDescriptorType        = USB_DT_PHDC_QOS,\
@@ -260,31 +260,31 @@ COMPILER_PACK_RESET()
    .classfnct.bDescriptorType         = USB_DT_PHDC_CLASSFUNCTION,\
    .classfnct.bPHDCDataCode           = UDI_PHDC_DATAMSG_FORMAT,\
    .classfnct.bmCapability            = UDI_PHDC_BMCAPABILITY,\
-   UDI_PHDC_FNCTEXT,\
+   UDI_PHDC_FNCTEXT\
    .ep_bulk_in.bLength                = sizeof(usb_ep_desc_t),\
    .ep_bulk_in.bDescriptorType        = USB_DT_ENDPOINT,\
    .ep_bulk_in.bEndpointAddress       = UDI_PHDC_EP_BULK_IN,\
    .ep_bulk_in.bmAttributes           = USB_EP_TYPE_BULK,\
-   .ep_bulk_in.wMaxPacketSize         = UDI_PHDC_EP_SIZE_BULK_IN,\
+   .ep_bulk_in.wMaxPacketSize         = LE16(UDI_PHDC_EP_SIZE_BULK_IN),\
    .ep_bulk_in.bInterval              = 0,\
    .qos_bulk_in.bLength               = sizeof(usb_phdc_qos_desc_t),\
    .qos_bulk_in.bDescriptorType       = USB_DT_PHDC_QOS,\
    .qos_bulk_in.bQoSEncodingVersion   = USB_PHDC_QOS_ENCODING_VERSION_1,\
    .qos_bulk_in.bmLatencyReliability  = \
 			UDI_PHDC_QOS_IN&(~USB_PHDC_QOS_LOW_GOOD),\
-   UDI_PHDC_METADATA_BULKIN,\
+   UDI_PHDC_METADATA_BULKIN\
    .ep_bulk_out.bLength               = sizeof(usb_ep_desc_t),\
    .ep_bulk_out.bDescriptorType       = USB_DT_ENDPOINT,\
    .ep_bulk_out.bEndpointAddress      = UDI_PHDC_EP_BULK_OUT,\
    .ep_bulk_out.bmAttributes          = USB_EP_TYPE_BULK,\
-   .ep_bulk_out.wMaxPacketSize        = UDI_PHDC_EP_SIZE_BULK_OUT,\
+   .ep_bulk_out.wMaxPacketSize        = LE16(UDI_PHDC_EP_SIZE_BULK_OUT),\
    .ep_bulk_out.bInterval             = 0,\
    .qos_bulk_out.bLength              = sizeof(usb_phdc_qos_desc_t),\
    .qos_bulk_out.bDescriptorType      = USB_DT_PHDC_QOS,\
    .qos_bulk_out.bQoSEncodingVersion  = USB_PHDC_QOS_ENCODING_VERSION_1,\
    .qos_bulk_out.bmLatencyReliability = UDI_PHDC_QOS_OUT,\
-   UDI_PHDC_METADATA_BULKOUT,\
-   UDI_PHDC_EP_INTIN,\
+   UDI_PHDC_METADATA_BULKOUT\
+   UDI_PHDC_EP_INTIN\
 }
 //@}
 
@@ -320,6 +320,11 @@ bool udi_phdc_senddata(udi_phdc_metadata_t * metadata,
 		void (*callback) (uint16_t));
 
 /**
+ * \brief Abort of send metadata to USB host
+ */
+void udi_phdc_senddata_abort(void);
+
+/**
  * \brief Wait metadata from USB host
  *
  * \param metadata      Information about expected metadata
@@ -328,7 +333,7 @@ bool udi_phdc_senddata(udi_phdc_metadata_t * metadata,
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
 bool udi_phdc_waitdata(udi_phdc_metadata_t * metadata,
-		void (*callback) (uint16_t));
+		void (*callback) (bool, uint16_t));
 
 //! @}
 

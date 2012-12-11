@@ -66,8 +66,8 @@
 //	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
-// #define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
-// #define  USB_DEVICE_PRODUCT_NAME          "Product name"
+#define  USB_DEVICE_MANUFACTURE_NAME      "ATMEL AVR"
+#define  USB_DEVICE_PRODUCT_NAME          "PHDC"
 // #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 /**
@@ -77,6 +77,8 @@
  */
 //! To authorize the High speed
 #if (UC3A3||UC3A4)
+//#define  USB_DEVICE_HS_SUPPORT
+#elif (SAM3XA||SAM3U)
 //#define  USB_DEVICE_HS_SUPPORT
 #endif
 //@}
@@ -105,12 +107,10 @@
 //@}
 
 
-
 /**
  * USB Interface Configuration
  * @{
  */
-
 /**
  * Configuration of PHDC interface
  * @{
@@ -123,23 +123,32 @@
 //! USB_PHDC_DATAMSG_FORMAT_VENDOR or USB_PHDC_DATAMSG_FORMAT_11073_20601
 #define  UDI_PHDC_DATAMSG_FORMAT       USB_PHDC_DATAMSG_FORMAT_11073_20601
 //! If USB_PHDC_DATAMSG_FORMAT_11073_20601 then define specialization(s)
-#define  UDI_PHDC_SPECIALIZATION       {0x2345}	// Define in 11073_20601
+#define  UDI_PHDC_SPECIALIZATION       {0x1011}   // 4113(Dec) for BloodGlucose defined in 11073_20601
 
 //! Defines the QOS need for each transfer direction
+/*
 #define  UDI_PHDC_QOS_OUT              \
 	(USB_PHDC_QOS_MEDIUM_BETTER|USB_PHDC_QOS_HIGH_BEST)
 #define  UDI_PHDC_QOS_IN               \
 	(USB_PHDC_QOS_LOW_GOOD|USB_PHDC_QOS_MEDIUM_BETTER|USB_PHDC_QOS_MEDIUM_BEST)
+*/
+#define  UDI_PHDC_QOS_OUT              \
+	(USB_PHDC_QOS_MEDIUM_BEST)
+#define  UDI_PHDC_QOS_IN               \
+	(USB_PHDC_QOS_MEDIUM_BEST)
+
 
 //! The following METADATAs can be send during USB enumeration
 //! for each endpoints (optional).
 //! It can define the Opaque data format of each endpoints
 //! These must be up to 253 and recommended to be less than 30
+/*
 #define  UDI_PHDC_METADATA_DESC_BULK_IN   {0x01,0x02,0x03}
 #define  UDI_PHDC_METADATA_DESC_BULK_OUT  {0x01,0x02,0x03}
 #define  UDI_PHDC_METADATA_DESC_INT_IN    {0x01,0x02,0x03}
-//@}
+*/
 
+//@}
 //@}
 
 

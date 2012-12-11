@@ -3,7 +3,7 @@
  *
  * \brief Sample of IEE11073 Communication Model
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,27 +62,12 @@ uint8_t ieee11073_g_metadata_out[IEEE11073_LGT_METADATA_OUT];
 //! @}
 
 
-//! @defgroup IEEE11073_COM_MODEL_STATE Communication model processing states
+//! @defgroup IEEE11073_ASSOC_STATE Communication model association states
 //! @{
-#define  IEEE11073_STATE_DISABLE       0
-#define  IEEE11073_STATE_WAIT_ASSOC    1
-#define  IEEE11073_STATE_RUNNING       2
-uint8_t ieee11073_g_state = IEEE11073_STATE_DISABLE;
-//! @}
-
-
-//! @defgroup IEEE11073_COM_MODEL_EVENT Internal events
-//! for communication model processing
-//! @{
-#define  IEEE11073_EVENT_NONE          0
-#define  IEEE11073_EVENT_ENABLE        1
-#define  IEEE11073_EVENT_RECEIVED        3
-#define  IEEE11073_EVENT_RETRY_RECEP   4
-#define  IEEE11073_EVENT_SENDING       5
-#define  IEEE11073_EVENT_SEND_ABORT    6
-#define  IEEE11073_EVENT_MEASURE_1      7
-#define  IEEE11073_EVENT_MEASURE_2      8
-uint8_t ieee11073_g_event;
+#define  IEEE11073_ASSOC_ABORT      0
+#define  IEEE11073_ASSOC_RUNNING    1
+#define  IEEE11073_ASSOC_VALIDED    2
+static uint8_t udi_phdc_assoc_state;
 //! @}
 
 
@@ -90,13 +75,25 @@ uint8_t ieee11073_g_event;
 //! @{
 //! Association Data Request
 uint8_t phd_assoc_req[] = {
-	0xE2, 0x00, 0x00, 0x32, 0x80, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x2A,
+	0xE2, 0x00,
+	0x00, 0x32,
+	0x80, 0x00, 0x00, 0x00,
+	0x00, 0x01,
+	0x00, 0x2A,
 	0x50, 0x79,
-	0x00, 0x26, 0x80, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x08,
-	0x4C, 0x4E, 0x49, 0x41, 0x47, 0x45, 0x4E, 0x54, 0x40, 0x00,
-	0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x00, 0x26,
+	0x80, 0x00, 0x00, 0x00,
+	0x80, 0x00,
+	0x80, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x80, 0x00, 0x00,
+	0x00, 0x08,
+	0x4C, 0x4E, 0x49, 0x41, 0x47, 0x45, 0x4E, 0x54,
+	0x40, 0x00,
+	0x00, 0x01, 0x01, 0x00,
+	0x00, 0x00, 0x00, 0x00
 };
+
 
 //! Sample of measure
 uint8_t phd_measure[] = {
@@ -140,7 +137,9 @@ uint8_t phd_attr[] = {
 //! Internal routines
 static bool ieee11073_enable_reception(void);
 static bool ieee11073_decode_metadata(void);
-void ieee11073_received(uint16_t nb_received);
+static bool ieee11073_send_association(void);
+static bool ieee11073_send_mesure(uint8_t qos);
+void ieee11073_received(bool status, uint16_t nb_received);
 void ieee11073_sent(uint16_t nb_send);
 
 
@@ -150,44 +149,44 @@ void ieee11073_sent(uint16_t nb_send);
  */
 bool ieee11073_com_model_enable(void)
 {
-	ieee11073_g_event = IEEE11073_EVENT_ENABLE;
-	return true;
+	if (!ieee11073_enable_reception()) {
+		return false;
+	}
+	return ieee11073_send_association();
 }
 
 /*! \brief Disable the communication model processing
  */
 void ieee11073_com_model_disable(void)
 {
-	ieee11073_g_event = IEEE11073_EVENT_NONE;
-	ieee11073_g_state = IEEE11073_STATE_DISABLE;
 }
 
 /*! \brief Send a measure on communication line
  */
 void ieee11073_com_model_send_measure_1(void)
 {
-	if (IEEE11073_EVENT_NONE != ieee11073_g_event)
-		return;
-	ieee11073_g_event = IEEE11073_EVENT_MEASURE_1;
+	ieee11073_send_mesure(USB_PHDC_QOS_LOW_GOOD);
 }
 
 /*! \brief Send a measure on communication line
  */
 void ieee11073_com_model_send_measure_2(void)
 {
-	if (IEEE11073_EVENT_NONE != ieee11073_g_event)
-		return;
-	ieee11073_g_event = IEEE11073_EVENT_MEASURE_2;
+	ieee11073_send_mesure(USB_PHDC_QOS_MEDIUM_BETTER);
 }
 
 /*! \brief Callback called when a data is received
  *
  * \param nb_received  Number of data received
  */
-void ieee11073_received(uint16_t nb_received)
+void ieee11073_received(bool status, uint16_t nb_received)
 {
+	if (!status) {
+		return; // Error or abort
+	}
 	ieee11073_g_phdc_metadata_out.metadata_size = nb_received;
-	ieee11073_g_event = IEEE11073_EVENT_RECEIVED;
+	ieee11073_decode_metadata();
+	ieee11073_enable_reception();
 }
 
 /*! \brief Callback called when a data is sent
@@ -197,11 +196,11 @@ void ieee11073_received(uint16_t nb_received)
 void ieee11073_sent(uint16_t nb_send)
 {
 	if (0 == nb_send) {
-		ieee11073_g_event = IEEE11073_EVENT_SEND_ABORT;
+		if (udi_phdc_assoc_state==IEEE11073_ASSOC_RUNNING) {
+			udi_phdc_assoc_state = IEEE11073_ASSOC_ABORT;
+		}
 		return;
 	}
-	ieee11073_g_phdc_metadata_in.metadata_size = nb_send;
-	ieee11073_g_event = IEEE11073_EVENT_SENDING;
 }
 
 /*! \brief Function to process communication model
@@ -209,94 +208,7 @@ void ieee11073_sent(uint16_t nb_send)
  */
 bool ieee11073_com_model_process(void)
 {
-	if (IEEE11073_EVENT_NONE == ieee11073_g_event)
-		goto ieee11073_com_model_process_end;
-
-	if (IEEE11073_EVENT_RETRY_RECEP == ieee11073_g_event) {
-		ieee11073_g_event = IEEE11073_EVENT_NONE;
-		ieee11073_enable_reception();
-		goto ieee11073_com_model_process_end;
-	}
-
-	switch (ieee11073_g_state) {
-
-	case IEEE11073_STATE_DISABLE:
-		if (IEEE11073_EVENT_ENABLE != ieee11073_g_event)
-			break;
-		ieee11073_g_phdc_metadata_in.qos = USB_PHDC_QOS_MEDIUM_BEST;
-		ieee11073_g_phdc_metadata_in.opaque_size = 0;
-		ieee11073_g_phdc_metadata_in.metadata = phd_assoc_req;
-		ieee11073_g_phdc_metadata_in.metadata_size =
-				sizeof(phd_assoc_req);
-		if (!udi_phdc_senddata(&ieee11073_g_phdc_metadata_in,
-						ieee11073_sent)) {
-			break;
-		}
-		ieee11073_g_state = IEEE11073_STATE_WAIT_ASSOC;
-		break;
-
-
-	case IEEE11073_STATE_WAIT_ASSOC:
-		switch (ieee11073_g_event) {
-		case IEEE11073_EVENT_SEND_ABORT:
-			// Descriptor abort then resend it
-			ieee11073_g_phdc_metadata_in.qos =
-					USB_PHDC_QOS_MEDIUM_BEST;
-			ieee11073_g_phdc_metadata_in.opaque_size = 0;
-			ieee11073_g_phdc_metadata_in.metadata = phd_assoc_req;
-			ieee11073_g_phdc_metadata_in.metadata_size =
-					sizeof(phd_assoc_req);
-			if (!udi_phdc_senddata(&ieee11073_g_phdc_metadata_in,
-							ieee11073_sent)) {
-				break;
-			}
-			break;
-		case IEEE11073_EVENT_SENDING:
-			// Descriptor sending, OK
-			// Now wait for association to be accepted
-			if (!ieee11073_enable_reception())
-				goto ieee11073_com_model_process_end;
-			break;
-		case IEEE11073_EVENT_RECEIVED:
-			ieee11073_decode_metadata();
-			if (!ieee11073_enable_reception())
-				goto ieee11073_com_model_process_end;
-			break;
-		}
-		break;
-
-
-	case IEEE11073_STATE_RUNNING:
-		switch (ieee11073_g_event) {
-		case IEEE11073_EVENT_RECEIVED:
-			ieee11073_decode_metadata();
-			// Restart reception
-			if (!ieee11073_enable_reception())
-				goto ieee11073_com_model_process_end;
-			break;
-
-		case IEEE11073_EVENT_MEASURE_1:
-		case IEEE11073_EVENT_MEASURE_2:
-			ieee11073_g_phdc_metadata_in.opaque_size = 0;
-			ieee11073_g_phdc_metadata_in.metadata = phd_measure;
-			ieee11073_g_phdc_metadata_in.metadata_size =
-					sizeof(phd_measure);
-			if (IEEE11073_EVENT_MEASURE_1 == ieee11073_g_event)
-				ieee11073_g_phdc_metadata_in.qos =
-						USB_PHDC_QOS_LOW_GOOD;
-			else
-				ieee11073_g_phdc_metadata_in.qos =
-						USB_PHDC_QOS_MEDIUM_BETTER;
-			if (!udi_phdc_senddata(&ieee11073_g_phdc_metadata_in,
-							ieee11073_sent))
-				break;
-		}
-	}
-
-	ieee11073_g_event = IEEE11073_EVENT_NONE;
-
-ieee11073_com_model_process_end:
-	return (ieee11073_g_state == IEEE11073_STATE_RUNNING);
+	return (udi_phdc_assoc_state == IEEE11073_ASSOC_VALIDED);
 }
 
 /*! \brief Start the reception of data on communication line
@@ -314,7 +226,6 @@ static bool ieee11073_enable_reception(void)
 			IEEE11073_LGT_METADATA_OUT;
 	if (!udi_phdc_waitdata(&ieee11073_g_phdc_metadata_out,
 					ieee11073_received)) {
-		ieee11073_g_event = IEEE11073_EVENT_RETRY_RECEP;
 		return false;
 	}
 	return true;
@@ -346,7 +257,18 @@ static bool ieee11073_decode_metadata(void)
 
 	case 0xE300:
 		if (0 == be16_to_cpu(*((uint16_t *) & phd->values[0]))) {
-			ieee11073_g_state = IEEE11073_STATE_RUNNING;
+			if (udi_phdc_assoc_state==IEEE11073_ASSOC_RUNNING) {
+				udi_phdc_assoc_state = IEEE11073_ASSOC_VALIDED;
+			}
+			return true;
+		}
+		break;
+		
+	case 0xE600:
+		if (0 == be16_to_cpu(*((uint16_t *) & phd->values[0]))) {
+			if (udi_phdc_assoc_state==IEEE11073_ASSOC_RUNNING) {
+				udi_phdc_assoc_state = IEEE11073_ASSOC_ABORT;
+			}
 			return true;
 		}
 		break;
@@ -386,4 +308,30 @@ static bool ieee11073_decode_metadata(void)
 		break;
 	}
 	return false;
+}
+
+static bool ieee11073_send_association(void)
+{
+	ieee11073_g_phdc_metadata_in.qos = USB_PHDC_QOS_MEDIUM_BEST;
+	ieee11073_g_phdc_metadata_in.opaque_size = 0;
+	ieee11073_g_phdc_metadata_in.metadata = phd_assoc_req;
+	ieee11073_g_phdc_metadata_in.metadata_size = sizeof(phd_assoc_req);
+	if (!udi_phdc_senddata(&ieee11073_g_phdc_metadata_in, ieee11073_sent)) {
+	return false;
+	}
+	udi_phdc_assoc_state = IEEE11073_ASSOC_RUNNING;
+	return true;
+}
+
+static bool ieee11073_send_mesure(uint8_t qos)
+{
+
+	if (udi_phdc_assoc_state != IEEE11073_ASSOC_VALIDED) {
+		return false;
+	}
+	ieee11073_g_phdc_metadata_in.opaque_size = 0;
+	ieee11073_g_phdc_metadata_in.metadata = phd_measure;
+	ieee11073_g_phdc_metadata_in.metadata_size = sizeof(phd_measure);
+	ieee11073_g_phdc_metadata_in.qos = qos;
+	return udi_phdc_senddata( &ieee11073_g_phdc_metadata_in, ieee11073_sent);
 }
