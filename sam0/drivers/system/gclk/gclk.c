@@ -235,7 +235,6 @@ void system_gclk_gen_disable(const uint8_t generator)
  */
 uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 {
-#if defined (REVA)
 	/* Select the appropriate generator */
 	GCLK_MUX_SELECT(GCLK.GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
@@ -246,27 +245,22 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
 
 	/* Check if the divider is enabled for the generator */
-	if (GCLK.GENCTRL.reg & GCLK_GENCTRL_DIVEN_bm) {
-		GCLK_MUX_SELECT(GCLK.GENDIV, GCLK_GENDIV_GENID, generator);
+	if (GCLK.GENCTRL.reg & GCLK_GENCTRL_DIVSEL == 0 && GCLK.GENDIV.reg <=1) {
+		GCLK_MUX_SELECT(GCLK.GENDIV.reg, GCLK_GENDIV_GENID.reg, generator);
 
 		/* Get the generator divider setting (can be fractional or binary) */
-		uint32_t divider = (GCLK.GENDIV & GCLK_GENDIV_DIV_gm);
+		uint32_t divider = (GCLK.GENDIV.reg & GCLK_GENDIV_DIV_Msk);
 
 		/* Check if the generator is using fractional or binary division */
-		if (GCLK.GENCTRL & GCLK_GENCTRL_DIVFN_bm) {
+		if (GCLK.GENCTRL.reg & GCLK_GENCTRL_DIVSEL) {
 			gen_input_hz /= divider;
 		}
 		else {
 			gen_input_hz >>= (divider + 1);
 		}
 	}
-	
+
 	return gen_input_hz;
-#endif
-#if defined (REVB)
-
-#endif
-
 }
 
 /** \brief Writes a Generic Clock configuration to the hardware module.
