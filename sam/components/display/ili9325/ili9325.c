@@ -657,10 +657,10 @@ void ili9325_fill(ili9325_color_t ul_color)
 void ili9325_set_window(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height)
 {
-	assert(ul_x <= 0xEF);
-	assert(ul_y <= 0x13f);
-	assert(ul_width <= (0xF0 - ul_x));
-	assert(ul_height <= (0x140 - ul_y));
+	Assert(ul_x <= 0xEF);
+	Assert(ul_y <= 0x13f);
+	Assert(ul_width <= (0xF0 - ul_x));
+	Assert(ul_height <= (0x140 - ul_y));
 
 	/* Set Horizontal Address Start Position */
 	ili9325_write_register(ILI9325_HORIZONTAL_ADDR_START, (uint16_t)ul_x);
@@ -783,8 +783,8 @@ uint32_t ili9325_draw_pixel(uint32_t ul_x, uint32_t ul_y)
  */
 ili9325_color_t ili9325_get_pixel(uint32_t ul_x, uint32_t ul_y)
 {
-	assert(ul_x <= ILI9325_LCD_WIDTH);
-	assert(ul_y <= ILI9325_LCD_HEIGHT);
+	Assert(ul_x <= ILI9325_LCD_WIDTH);
+	Assert(ul_y <= ILI9325_LCD_HEIGHT);
 
 	/* Set cursor */
 	ili9325_set_cursor_position(ul_x, ul_y);

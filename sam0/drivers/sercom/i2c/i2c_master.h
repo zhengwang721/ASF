@@ -143,7 +143,7 @@ enum i2c_master_callback {
 /* Prototype for device instance. */
 struct i2c_master_dev_inst;
 
-typedef volatile void (*i2c_master_callback_t)(
+typedef void (*i2c_master_callback_t)(
 		const struct i2c_master_dev_inst *const dev_inst);
 #endif
 #endif
@@ -165,7 +165,7 @@ struct i2c_master_dev_inst {
 	uint16_t buffer_timeout;
 #ifdef I2C_MASTER_ASYNC
 	/** Pointers to callback functions. */
-	i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
+	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
 	/** Mask for registered callbacks. */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */

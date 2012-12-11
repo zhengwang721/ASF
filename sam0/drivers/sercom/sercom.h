@@ -39,12 +39,13 @@
  *
  */
 
-#ifndef __SERCOM_H_INCLUDED
-#define __SERCOM_H_INCLUDED
+#ifndef SERCOM_H_INCLUDED
+#define SERCOM_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 #include <clock.h>
-#include <gclk.h>
+#include "sercom_interrupts.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -90,10 +91,10 @@ enum status_code sercom_set_gclk_generator(
 		bool run_in_standby,
 		bool force_change);
 
-enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 		uint32_t external_clock, uint16_t *baudval);
 
-enum status_code sercom_get_async_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
 
 /** @} */

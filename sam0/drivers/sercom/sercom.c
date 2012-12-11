@@ -42,6 +42,7 @@
 
 #define SHIFT 32
 
+#if !defined(__DOXYGEN__)
 /**
  * \internal Configuration structure to save current gclk status.
  */
@@ -57,51 +58,61 @@ struct _sercom_conf {
 static struct _sercom_conf _sercom_config;
 
 /**
- * \brief Calculate synchronous baudrate value (SPI/UART)
+ * \internal Calculate synchronous baudrate value (SPI/UART)
  */
-enum status_code sercom_get_sync_baud_val(uint32_t baudrate,
-		uint32_t external_clock, uint16_t *baudval)
+enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
+		uint32_t external_clock, uint16_t *baudvalue)
 {
-	uint16_t ret = 0;
+	/* Baud value variable */
+	uint16_t baud_calculated = 0;
 
+	/* Check if baudrate is outside of valid range. */
 	if (baudrate > (external_clock / 2)) {
-		// assert error, outside valid range
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	}
 
-	//ret = (external_clock / (2 * baudrate)) - 1;
+	/* Calculate BAUD value from clock frequency and baudrate */
+	baud_calculated = (external_clock / (2 * baudrate)) - 1;
 
-	if (ret > 0xFF) {
-		// assert error; max BAUD value for sync is 255 (8-bit)
+	/* Check if BAUD value is more than 255, which is maximum
+	 * for synchronous mode */
+	if (baud_calculated > 0xFF) {
+		/* Return with an error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	} else {
-		return ret;
+		*baudvalue = baud_calculated;
+		return STATUS_OK;
 	}
-	return ret;
 }
 
 /**
- * \brief Calculate asynchronous baudrate value (UART)
+ * \internal Calculate asynchronous baudrate value (UART)
 */
-enum status_code sercom_get_async_baud_val(uint32_t baudrate,
+enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval)
 {
-
-	if ((baudrate * 16) >= peripheral_clock) {
-		// Unattainable baud rate
-		return 4;
-	}
-
+	/* Temporary variables  */
 	uint64_t ratio = 0;
 	uint64_t scale = 0;
-	uint64_t retval = 0;
+	uint64_t baud_calculated = 0;
 
+	/* Check if the baudrate is outside of valid range */
+	if ((baudrate * 16) >= peripheral_clock) {
+		/* Return with error code */
+		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+	}
+
+	/* Calculate the BAUD value */
 	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
 	scale = ((uint64_t)1 << SHIFT) - ratio;
-	retval = (65536 * scale) >> SHIFT;
+	baud_calculated = (65536 * scale) >> SHIFT;
 
-	*baudval = retval;
+	*baudval = baud_calculated;
 
 	return STATUS_OK;
 }
+#endif
 
 /**
  * \brief Set GCLK channel to generator.
@@ -165,7 +176,7 @@ enum status_code sercom_set_gclk_generator(
 		ret_val = STATUS_OK;
 
 	} else {
-		/* Return invalid config to already initialized gclk. */
+		/* Return invalid config to already initialized GCLK. */
 		ret_val = STATUS_ERR_ALREADY_INITIALIZED;
 	}
 

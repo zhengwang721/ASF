@@ -49,7 +49,7 @@
  * single-ended measurements with the \ref adc_group.
  *
  * \section files Main files:
- * - adc_example2.c: ADC driver example application
+ * - adc_example2_gfx.c: ADC driver example application
  * - conf_adc.h: configuration of the ADC driver
  * - conf_example.h: configuration of example I/O pins and ADC input
  *

@@ -1,9 +1,9 @@
 <asf xmlversion="1.0">
-	<select-by-device id="avr32.components.display.et024006dhu.example" caption="Display ET024006DHU Example">
-		<module type="application" id="avr32.components.display.et024006dhu.example#0" caption="Display ET024006DHU Example">
+	<select-by-device id="avr32.components.display.et024006dhu.example" caption="ET024006DHU Panel Display Controller Example 1">
+		<module type="application" id="avr32.components.display.et024006dhu.example#0" caption="ET024006DHU Panel Display Controller Example 1">
 			<info type="description" value="summary">
 			Use the ET024006DHU TFT display, display text messages and draw a square.
-			</info>				
+			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Graphics" />
 			</info>
@@ -21,10 +21,10 @@
 			<require idref="avr32.drivers.pwm"/>
 			<require idref="common.services.delay"/>
 		</module>
-		<module type="application" id="avr32.components.display.et024006dhu.example#1" caption="Display ET024006DHU Example">
+		<module type="application" id="avr32.components.display.et024006dhu.example#1" caption="ET024006DHU Panel Display Controller Example 1">
 			<info type="description" value="summary">
 			Use the ET024006DHU TFT display, display text messages and draw a square.
-			</info>				
+			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Graphics" />
 			</info>

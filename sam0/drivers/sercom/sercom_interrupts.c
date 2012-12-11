@@ -43,13 +43,13 @@
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;
 
-/** Void pointers for saving device instance callback handlers. */
+/** Void pointers for saving device instance structures. */
 static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(uint8_t instance);
 
 /**
  * \internal Default interrupt handler
  *
- * \param[in] instance Sercom instance used.
+ * \param[in] instance SERCOM instance used.
  */
 static void _sercom_default_handler(uint8_t instance)
 {
@@ -74,7 +74,7 @@ uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 
 	Sercom sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
 
-	/* Fine index for sercom instance. */
+	/* Find index for sercom instance. */
 	for (i = 0; i < SERCOM_INST_NUM; i++) {
 		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
 			return i;
@@ -102,6 +102,7 @@ void _sercom_set_handler(uint8_t instance,
 	if(_handler_table_initialized == false) {
 		for(i = 0; i < SERCOM_INST_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
+			_sercom_instances[i] = NULL;
 		}
 		_handler_table_initialized = true;
 	}

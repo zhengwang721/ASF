@@ -38,8 +38,9 @@
  * \asf_license_stop
  *
  */
+
 #include "i2c_master_async.h"
-#define STATUS_IN_PROGRESS 0x02
+
 /**
  * \internal Read next data.
  *
