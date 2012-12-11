@@ -47,6 +47,9 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+	// Must initialize IOPORT before setting up IO
+	ioport_init();
+
 	// Initialize LED0, turned off
 	ioport_set_pin_level(LED_0_PIN, true);
 	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
