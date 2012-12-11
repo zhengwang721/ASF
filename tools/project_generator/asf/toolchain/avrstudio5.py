@@ -1227,6 +1227,7 @@ class AVRStudio5Project(GenericProject):
 				'sam3x_ek'            : 'SAM3X-EK.jpg',
 				'sam4s_ek'            : 'SAM4S-EK.jpg',
 				'sam4l_ek'            : 'SAM4L-EK.jpg',
+				'sam4e_ek'            : 'SAM4E-EK.jpg',
 				'stk500.*'            : 'STK500.jpg',
 				'stk600.*'            : 'STK600.jpg',
 				'uc3_a3_xplained'     : 'UC3-A3-Xplained.jpg',

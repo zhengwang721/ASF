@@ -597,6 +597,15 @@
 							<mcu name="atsam4ls4c"/>
 						</group>
 					</group>
+					<group name="sam4e" doc-arch="SAM4E">
+						<mcu name="unspecified-sam4e"/>
+						<group name="sam4e8">
+							<mcu name="atsam4e8e"/>
+						</group>
+						<group name="sam4e16">
+							<mcu name="atsam4e16e"/>
+						</group>
+					</group>
 				</group>
 			</group>
 		</group>

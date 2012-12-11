@@ -108,7 +108,7 @@
 			<build type="header-file" value="interrupt/interrupt_avr8.h" />
 			<build type="doxygen-entry-point" value="interrupt_group"/>
 		</module>
-		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM3 implementation">
+		<module type="driver" id="common.utils.interrupt#sam_nvic" caption="Interrupt management - SAM implementation">
 			<info type="description" value="summary">
 			Driver for global enabling and disabling of interrupts.
 			</info>

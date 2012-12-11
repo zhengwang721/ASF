@@ -120,5 +120,20 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam4l"/>
 		</module>
+
+		<!-- SAM4E //-->
+		<module type="driver" id="sam.utils#7" caption="SAM4E compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAM4E devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.sam4e.include"/>
+			<require idref="sam.utils.cmsis.sam4e.include.component"/>
+			<require idref="sam.utils.cmsis.sam4e.include.instance"/>
+			<require idref="sam.utils.cmsis.sam4e.include.pio"/>
+			<require idref="sam.utils.cmsis.sam4e.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="sam4e"/>
+		</module>
 	</select-by-device>
 </asf>

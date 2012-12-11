@@ -67,29 +67,31 @@
 
 /** \name IOPORT Mode bit definitions */
 /** @{ */
-#define IOPORT_MODE_MUX_MASK            (7 << 0) /*!< MUX bits mask */
-#define IOPORT_MODE_MUX_BIT0            (1 << 0) /*!< MUX BIT0 mask */
+#define IOPORT_MODE_MUX_MASK            (0x7 << 0) /*!< MUX bits mask */
+#define IOPORT_MODE_MUX_BIT0            (  1 << 0) /*!< MUX BIT0 mask */
 
-#if SAM3N || SAM3S || SAM4S
-#define IOPORT_MODE_MUX_BIT1            (1 << 1) /*!< MUX BIT1 mask */
+#if SAM3N || SAM3S || SAM4S || SAM4E
+#define IOPORT_MODE_MUX_BIT1            (  1 << 1) /*!< MUX BIT1 mask */
 #endif
 
-#define IOPORT_MODE_MUX_A               (0 << 0) /*!< MUX function A */
-#define IOPORT_MODE_MUX_B               (1 << 0) /*!< MUX function B */
+#define IOPORT_MODE_MUX_A               (  0 << 0) /*!< MUX function A */
+#define IOPORT_MODE_MUX_B               (  1 << 0) /*!< MUX function B */
 
-#if SAM3N || SAM3S || SAM4S
-#define IOPORT_MODE_MUX_C               (2 << 0) /*!< MUX function C */
-#define IOPORT_MODE_MUX_D               (3 << 0) /*!< MUX function D */
+#if SAM3N || SAM3S || SAM4S || SAM4E
+#define IOPORT_MODE_MUX_C               (  2 << 0) /*!< MUX function C */
+#define IOPORT_MODE_MUX_D               (  3 << 0) /*!< MUX function D */
 #endif
 
-#define IOPORT_MODE_PULLUP              (1 << 3) /*!< Pull-up */
+#define IOPORT_MODE_PULLUP              (  1 << 3) /*!< Pull-up */
 
-#if SAM3N || SAM3S || SAM4S
-#define IOPORT_MODE_PULLDOWN            (1 << 4) /*!< Pull-down */
+#if SAM3N || SAM3S || SAM4S || SAM4E
+#define IOPORT_MODE_PULLDOWN            (  1 << 4) /*!< Pull-down */
 #endif
 
-#define IOPORT_MODE_OPEN_DRAIN          (1 << 5) /*!< Open drain */
-#define IOPORT_MODE_GLITCH_FILTER       (1 << 6) /*!< Glitch filter */
+#define IOPORT_MODE_OPEN_DRAIN          (  1 << 5) /*!< Open drain */
+
+#define IOPORT_MODE_GLITCH_FILTER       (  1 << 6) /*!< Glitch filter */
+#define IOPORT_MODE_DEBOUNCE            (  1 << 7) /*!< Input debounce */
 /** @} */
 
 /** @} */
@@ -177,14 +179,13 @@ __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 		base->PIO_PUDR = mask;
 	}
 
-	#if defined(IOPORT_MODE_PULLDOWN)
+#if defined(IOPORT_MODE_PULLDOWN)
 	if (mode & IOPORT_MODE_PULLDOWN) {
 		base->PIO_PPDER = mask;
 	} else {
 		base->PIO_PPDDR = mask;
 	}
-
-	#endif
+#endif
 
 	if (mode & IOPORT_MODE_OPEN_DRAIN) {
 		base->PIO_MDER = mask;
@@ -192,19 +193,33 @@ __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 		base->PIO_MDDR = mask;
 	}
 
-	if (mode & IOPORT_MODE_GLITCH_FILTER) {
+	if (mode & (IOPORT_MODE_GLITCH_FILTER | IOPORT_MODE_DEBOUNCE)) {
 		base->PIO_IFER = mask;
 	} else {
 		base->PIO_IFDR = mask;
 	}
 
-	#if !defined(IOPORT_MODE_MUX_BIT1)
+	if (mode & IOPORT_MODE_DEBOUNCE) {
+#if SAM3U || SAM3XA
+		base->PIO_DIFSR = mask;
+#else
+		base->PIO_IFSCER = mask;
+#endif
+	} else {
+#if SAM3U || SAM3XA
+		base->PIO_SCIFSR = mask;
+#else
+		base->PIO_IFSCDR = mask;
+#endif
+	}
+
+#if !defined(IOPORT_MODE_MUX_BIT1)
 	if (mode & IOPORT_MODE_MUX_BIT0) {
 		base->PIO_ABSR |= mask;
 	} else {
 		base->PIO_ABSR &= ~mask;
 	}
-	#else
+#else
 	if (mode & IOPORT_MODE_MUX_BIT0) {
 		base->PIO_ABCDSR[0] |= mask;
 	} else {
@@ -216,7 +231,7 @@ __always_inline static void arch_ioport_set_port_mode(ioport_port_t port,
 	} else {
 		base->PIO_ABCDSR[1] &= ~mask;
 	}
-	#endif
+#endif
 }
 
 __always_inline static void arch_ioport_set_pin_mode(ioport_pin_t pin,
@@ -308,26 +323,35 @@ __always_inline static void arch_ioport_set_port_sense_mode(ioport_port_t port,
 		ioport_port_mask_t mask, enum ioport_sense pin_sense)
 {
 	Pio *base = arch_ioport_port_to_base(port);
-
-	if (pin_sense & 0x01) {
-		base->PIO_REHLSR = mask;
-	} else {
-		base->PIO_REHLSR = mask;
-	}
-
-	if (pin_sense & 0x02) {
+	/*   AIMMR    ELSR    FRLHSR
+	 *       0       X         X    IOPORT_SENSE_BOTHEDGES (Default)
+	 *       1       0         0    IOPORT_SENSE_FALLING
+	 *       1       0         1    IOPORT_SENSE_RISING
+	 *       1       1         0    IOPORT_SENSE_LEVEL_LOW
+	 *       1       1         1    IOPORT_SENSE_LEVEL_HIGH
+	 */
+	switch(pin_sense) {
+	case IOPORT_SENSE_LEVEL_LOW:
+		base->PIO_LSR = mask;
 		base->PIO_FELLSR = mask;
-	} else {
+		break;
+	case IOPORT_SENSE_LEVEL_HIGH:
+		base->PIO_LSR = mask;
+		base->PIO_REHLSR = mask;
+		break;
+	case IOPORT_SENSE_FALLING:
+		base->PIO_ESR = mask;
 		base->PIO_FELLSR = mask;
+		break;
+	case IOPORT_SENSE_RISING:
+		base->PIO_ESR = mask;
+		base->PIO_REHLSR = mask;
+		break;
+	default:
+		base->PIO_AIMDR = mask;
+		return;
 	}
-
-	if (pin_sense) {
-		base->PIO_AIMER  = mask;
-	} else {
-		base->PIO_AIMDR  = mask;
-	}
-
-	base->PIO_ESR = mask;
+	base->PIO_AIMER = mask;
 }
 
 __always_inline static void arch_ioport_set_pin_sense_mode(ioport_pin_t pin,

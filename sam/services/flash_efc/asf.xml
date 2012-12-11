@@ -12,6 +12,7 @@
 		<build type="doxygen-entry-point" value="sam_services_flash_efc_group"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="sam4e"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.drivers.efc"/>
 		<require idref="sam.utils"/>

@@ -77,6 +77,18 @@
 			<require idref="mega.drivers.ioport"/>
 			<require idref="mega.utils"/>
 		</module>
+		<module type="application" id="common.services.basic.clock.example1#5" caption="Common API for Clocks Control Example 1">
+			<info type="description" value="summary">
+			Initialize the system clock and blink a LED at a constant 1Hz frequency.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="c-source" value="clock_example1_sam.c"/>
+			<device-support value="sam4e"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+		</module>
 	</select-by-device>
 </asf>
 
