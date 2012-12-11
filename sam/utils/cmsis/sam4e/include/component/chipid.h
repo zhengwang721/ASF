@@ -117,7 +117,7 @@ typedef struct {
 #define   CHIPID_CIDR_ARCH_CAP7 (0x37u << 20) /**< \brief (CHIPID_CIDR) CAP7 Series */
 #define   CHIPID_CIDR_ARCH_CAP9 (0x39u << 20) /**< \brief (CHIPID_CIDR) CAP9 Series */
 #define   CHIPID_CIDR_ARCH_CAP11 (0x3Bu << 20) /**< \brief (CHIPID_CIDR) CAP11 Series */
-#define   CHIPID_CIDR_ARCH_CM4P (0x3Cu << 20) /**< \brief (CHIPID_CIDR) CM4P Series */
+#define   CHIPID_CIDR_ARCH_SAM4ExE (0x3Cu << 20) /**< \brief (CHIPID_CIDR) SAM4ExE Series */
 #define   CHIPID_CIDR_ARCH_AT91x40 (0x40u << 20) /**< \brief (CHIPID_CIDR) AT91x40 Series */
 #define   CHIPID_CIDR_ARCH_AT91x42 (0x42u << 20) /**< \brief (CHIPID_CIDR) AT91x42 Series */
 #define   CHIPID_CIDR_ARCH_AT91x55 (0x55u << 20) /**< \brief (CHIPID_CIDR) AT91x55 Series */
