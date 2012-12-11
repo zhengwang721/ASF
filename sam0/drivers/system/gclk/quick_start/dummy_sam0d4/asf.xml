@@ -6,6 +6,6 @@
 		<require idref="board.dummy.atsam0d4"/>
 		<require idref="sam0.drivers.system.gclk.quick_start"/>
 		<generator value="armgcc"/>
-		<device-support value="atsam0d4"/>
+		<device-support value="atsam0d4_reva"/>
 	</project>
 </asf>
