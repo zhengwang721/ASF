@@ -5,13 +5,13 @@
 		</info>
 		<build type="c-source" value="main.c"/>
 		<build type="c-source" value="gui.c"/>
-		<build type="header-file" subtype="api" value="gui.h"/>
+		<build type="header-file" value="gui.h"/>
 		<build type="c-source" value="app.c"/>
-		<build type="header-file" subtype="api" value="app.h"/>
+		<build type="header-file" value="app.h"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="qtouch/touch.c"/>
-		<build type="header-file" subtype="api" value="qtouch/QDebugSettings.h"/>
-		<build type="header-file" subtype="api" value="qtouch/touch_config_sam4l.h"/>
+		<build type="header-file" value="qtouch/QDebugSettings.h"/>
+		<build type="header-file" value="qtouch/touch_config_sam4l.h"/>
 		<build type="include-path" value="qtouch/"/>
 		<require idref="sam.drivers.usart"/>
 		<build type="c-source" value="src/ast.c"/>
@@ -20,13 +20,13 @@
 		<build type="c-source" value="src/lcdca.c"/>
 		<build type="c-source" value="src/pdca.c"/>
 		<build type="c-source" value="src/bscif.c"/>
-		<build type="header-file" subtype="api" value="src/ast.h"/>
-		<build type="header-file" subtype="api" value="src/c42364a.h"/>
-		<build type="header-file" subtype="api" value="src/eic.h"/>
-		<build type="header-file" subtype="api" value="src/lcdca.h"/>
-		<build type="header-file" subtype="api" value="src/pdca.h"/>
-		<build type="header-file" subtype="api" value="src/conf_lcdca.h"/>
-		<build type="header-file" subtype="api" value="src/bscif.h"/>
+		<build type="header-file" value="src/ast.h"/>
+		<build type="header-file" value="src/c42364a.h"/>
+		<build type="header-file" value="src/eic.h"/>
+		<build type="header-file" value="src/lcdca.h"/>
+		<build type="header-file" value="src/pdca.h"/>
+		<build type="header-file" value="src/conf_lcdca.h"/>
+		<build type="header-file" value="src/bscif.h"/>
 		<build type="include-path" value="./src/"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.sleepmgr"/>

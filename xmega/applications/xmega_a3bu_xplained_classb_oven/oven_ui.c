@@ -42,6 +42,9 @@
  */
 
 #include <asf.h>
+#include "oven.h"
+#include "oven_ui.h"
+#include "oven_bitmaps.h"
 
 /**
  * \brief Update user interface elements

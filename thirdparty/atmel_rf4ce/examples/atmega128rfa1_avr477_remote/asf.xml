@@ -59,13 +59,13 @@
 		<config name="thirdparty.services.atmel_rf4ce.lib.method" value="remote_method"/>
 		<require idref="config.common.services.qtouch.qdebug.stk600.mega"/>
 		<require idref="common.utils"/>
-		<build type="header-file" subtype="api" value="touch_config.h"/>
+		<build type="header-file" value="touch_config.h"/>
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="required-header-file" value="touch_config.h"/>
 		<build type="module-config" subtype="path" value="./"/>
-		<build type="header-file" subtype="api" value="pal_config.h"/>
+		<build type="header-file" value="pal_config.h"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="conf_board.h"/>
+		<build type="header-file" value="conf_board.h"/>
 		<build type="include-path" value="."/>
 		<build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x1f000"/>
 		<config name="config.compiler.avrgcc.optimization" value="size"/>

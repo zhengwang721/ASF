@@ -41,6 +41,9 @@
  */
 
 #include <asf.h>
+#include "oven.h"
+#include "oven_classb.h"
+#include "oven_ui.h"
 #include <avr/eeprom.h>
 #include <string.h>
 
