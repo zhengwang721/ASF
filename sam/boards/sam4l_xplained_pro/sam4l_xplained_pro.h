@@ -55,84 +55,76 @@
  */
 
 //! Osc frequency (Hz.) and startup time (RCOsc periods).
-#define FOSC0                       (12000000)
+#define FOSC0                     (12000000)
 
 //! Osc32 frequency (Hz.) and startup time (RCOsc periods).
-#define FOSC32                      (32768)
+#define FOSC32                    (32768)
 
 /**
  * \name Board oscillator configuration
  *
  */
 //@{
-#define BOARD_OSC32_IS_XTAL         true
-#define BOARD_OSC32_HZ              FOSC32
-#define BOARD_OSC32_STARTUP_US      (71000)
-#define BOARD_OSC32_SELCURR         BSCIF_OSCCTRL32_SELCURR(10)
-#define BOARD_OSC0_IS_XTAL          true
-#define BOARD_OSC0_HZ               FOSC0
-#define BOARD_OSC0_STARTUP_US       (1100)
+#define BOARD_OSC32_IS_XTAL       true
+#define BOARD_OSC32_HZ            FOSC32
+#define BOARD_OSC32_STARTUP_US    (71000)
+#define BOARD_OSC32_SELCURR       BSCIF_OSCCTRL32_SELCURR(10)
+#define BOARD_OSC0_IS_XTAL        true
+#define BOARD_OSC0_HZ             FOSC0
+#define BOARD_OSC0_STARTUP_US     (1100)
 //@}
-
-/*! \name Number of LEDs.
- */
-//! @{
-#define LED_COUNT   1
-//! @}
 
 /**
  * \name LEDs
  *
- * LED0 is a single yellow LED that is active low.
+ * LED 0 is a single yellow LED that is active low.
  */
 //@{
-#define LED0_GPIO                       PIN_PC07
-#define LED0_GPIO_MASK                  GPIO_PC07
-#define LED0_ACTIVE_LEVEL               IOPORT_PIN_LEVEL_LOW
-#define LED0_INACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
+#define LED_0_PIN                 PIN_PC07
+#define LED_0_ACTIVE              IOPORT_PIN_LEVEL_LOW
+#define LED_0_INACTIVE            IOPORT_PIN_LEVEL_HIGH
 //! @}
 
-/*! \name GPIO connection of push button
+//! Number if LEDs on board
+#define LED_COUNT   1
+
+/*! \name Button 0 definitions
  */
 //! @{
-#define GPIO_PUSH_BUTTON                PIN_PC24
-#define GPIO_PUSH_BUTTON_MASK           GPIO_PC24
-#define PUSH_BUTTON_DOWN_LEVEL          IOPORT_PIN_LEVEL_LOW
-#define PUSH_BUTTON_UP_LEVEL            IOPORT_PIN_LEVEL_HIGH
+#define BUTTON_0_PIN              PIN_PC24
+#define BUTTON_0_DOWN             IOPORT_PIN_LEVEL_LOW
+#define BUTTON_0_UP               IOPORT_PIN_LEVEL_HIGH
 //! @}
 
 /*! \name Push button connection of external interrupt line
  */
 //! @{
-#define GPIO_PUSH_BUTTON_EIC_PIN        PIN_PC24B_EIC_EXTINT1
-#define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC24B_EIC_EXTINT1
-#define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC24B_EIC_EXTINT1
-#define GPIO_PUSH_BUTTON_EIC_LINE       1
+#define BUTTON_0_EIC_PIN          PIN_PC24B_EIC_EXTINT1
+#define BUTTON_0_EIC_PIN_MUX      MUX_PC24B_EIC_EXTINT1
+#define BUTTON_0_EIC_LINE         1
 //! @}
 
 
 /*! \name GPIO Connections of touch sensor
  */
 //! @{
-#define GPIO_QTOUCH_DISCHARGE           PIN_PC14
-#define GPIO_QTOUCH_DISCHARGE_MASK      GPIO_PC14
-#define GPIO_QTOUCH_DISCHARGE_MUX       MUX_PC14_CATB_DIS
-#define GPIO_QTOUCH_BUTTON              PIN_PC13
-#define GPIO_QTOUCH_BUTTON_MASK         GPIO_PC13
-#define GPIO_QTOUCH_BUTTON_MUX          MUX_PB04G_CATB_SENSE15
+#define QTOUCH_DISCHARGE_PIN      PIN_PC14
+#define QTOUCH_DISCHARGE_MUX      MUX_PC14_CATB_DIS
+
+#define QTOUCH_BUTTON_PIN         PIN_PC13
+#define QTOUCH_BUTTON_MUX         MUX_PB04G_CATB_SENSE15
 //! @}
 
 /*! \name Touch sensors pin assignements
  */
 //! @{
-#define QTOUCH_PINSEL_BUTTON            15
+#define QTOUCH_PINSEL_BUTTON      15
 //! @}
 
 /*! \name GPIO Connections of VBUS monitoring
  */
 //! @{
-#define GPIO_VBUS_INPUT                 PIN_PC11
-#define GPIO_VBUS_INPUT_MASK            GPIO_PC11
+#define VBUS_INPUT_PIN            PIN_PC11
 //! @}
 
 //@}

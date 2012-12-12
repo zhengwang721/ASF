@@ -45,16 +45,16 @@
 
 void board_init(void)
 {
-	// Initialize IOPORTs
+	// Initialize IOPORT
 	ioport_init();
 
 	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
 
 	// Initialize SW0
-	ioport_set_pin_dir(GPIO_PUSH_BUTTON, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(GPIO_PUSH_BUTTON, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 }
 /**
  * @}
