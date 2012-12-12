@@ -188,6 +188,9 @@
 extern "C" {
 #endif
 
+#define PORTA PORT.Group[0]
+#define PORTB PORT.Group[1]
+
 /** \brief Port external interrupt edge detection configuration enum.
  *
  * Enum for the possible signal edge detection modes of the External
@@ -359,15 +362,15 @@ struct port_pin_conf {
  *
  *  \return Base address of the associated PORT module.
  */
-static inline PORT_t* port_get_port_from_gpio_pin(
+static inline PortGroup* port_get_port_from_gpio_pin(
 		const uint8_t gpio_pin)
 {
-	uint8_t port_index = (gpio_pin / 32);
+	uint8_t port_index = (gpio_pin / 128);
 
 	if (port_index == 0) {
-		return &PORTA;
-	}
-	else {
+		return &PORT.Group[gpio_pin / 32];
+
+	} else {
 		Assert(false);
 		return NULL;
 	}
@@ -382,13 +385,13 @@ static inline PORT_t* port_get_port_from_gpio_pin(
  *
  *  \return Base address of the associated EIC module.
  */
-static inline EIC_t* port_get_eic_from_gpio_pin(
+static inline Eic* port_get_eic_from_gpio_pin(
 		const uint8_t gpio_pin)
 {
 	uint8_t port_index = (gpio_pin / 32);
 
 	if (port_index == 0) {
-		return &EICA;
+		return &EIC;
 	}
 	else {
 		Assert(false);
@@ -407,12 +410,12 @@ static inline EIC_t* port_get_eic_from_gpio_pin(
  *  \return Status of the port pin(s) input buffers.
  */
 static inline uint32_t port_get_input_levels(
-		const PORT_t *const port,
+		const PortGroup *const port,
 		const uint32_t pin_mask)
 {
 	Assert(port);
 
-	return (port->IN & pin_mask);
+	return (port->IN.reg & pin_mask);
 }
 
 /** \brief Sets the state of a port's pins that are configured as outputs.
@@ -425,14 +428,14 @@ static inline uint32_t port_get_input_levels(
  *  \param[in]  level_mask  Mask of the port level(s) to set
  */
 static inline void port_set_output_levels(
-		PORT_t *const port,
+		PortGroup *const port,
 		const uint32_t pin_mask,
 		const uint32_t level_mask)
 {
 	Assert(port);
 
-	port->OUTSET = (pin_mask &  level_mask);
-	port->OUTCLR = (pin_mask & ~level_mask);
+	port->OUTSET.reg = (pin_mask &  level_mask);
+	port->OUTCLR.reg = (pin_mask & ~level_mask);
 }
 
 /** \brief Toggles the state of a port's pins that are configured as an outputs.
@@ -443,12 +446,12 @@ static inline void port_set_output_levels(
  *  \param[in]  pin_mask  Mask of the port pin(s) to toggle
  */
 static inline void port_toggle_output_levels(
-		PORT_t *const port,
+		PortGroup *const port,
 		const uint32_t pin_mask)
 {
 	Assert(port);
 
-	port->OUTTGL = pin_mask;
+	port->OUTTGL.reg = pin_mask;
 }
 
 /** @} */
@@ -515,10 +518,10 @@ enum status_code port_pin_set_config(
 static inline bool port_pin_is_edge_detected(
 		const uint8_t gpio_pin)
 {
-	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t eic_mask = (1UL << (gpio_pin % 32));
 
-	return (eic_base->INTFLAG & eic_mask);
+	return (eic_base->INTFLAG.reg & eic_mask);
 }
 
 /** \brief Clears the edge detection state of a configured port pin.
@@ -531,10 +534,10 @@ static inline bool port_pin_is_edge_detected(
 static inline void port_pin_clear_edge_detected(
 		const uint8_t gpio_pin)
 {
-	EIC_t   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t eic_mask = (1UL << (gpio_pin % 32));
 
-	eic_base->INTFLAG = eic_mask;
+	eic_base->INTFLAG.reg = eic_mask;
 }
 
 /** @} */
@@ -555,10 +558,10 @@ static inline void port_pin_clear_edge_detected(
 static inline bool port_pin_get_input_level(
 		const uint8_t gpio_pin)
 {
-	PORT_t  *port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup  *port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
-	return (port_base->IN & pin_mask);
+	return (port_base->IN.reg & pin_mask);
 }
 
 /** \brief Sets the state of a port pin that is configured as an output.
@@ -572,14 +575,14 @@ static inline void port_pin_set_output_level(
 		const uint8_t gpio_pin,
 		const bool level)
 {
-	PORT_t*  port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Set the pin to high or low atomically based on the requested level */
 	if (level) {
-		port_base->OUTSET = pin_mask;
+		port_base->OUTSET.reg = pin_mask;
 	} else {
-		port_base->OUTCLR = pin_mask;
+		port_base->OUTCLR.reg = pin_mask;
 	}
 }
 
@@ -592,11 +595,11 @@ static inline void port_pin_set_output_level(
 static inline void port_pin_toggle_output_level(
 		const uint8_t gpio_pin)
 {
-	PORT_t  *port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup  *port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Toggle pin output level */
-	port_base->OUTTGL = pin_mask;
+	port_base->OUTTGL.reg = pin_mask;
 }
 
 /** @} */
