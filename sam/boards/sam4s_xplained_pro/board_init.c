@@ -51,10 +51,11 @@ void board_init(void)
 	ioport_init();
 
 	// Initialize LED0, turned off
-	ioport_set_pin_level(LED_0_PIN, true);
+	ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
 	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
 
 	// Initialize SW0
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+	ioport_set_pin_mode(BUTTON_0_PIN, (BUTTON_0_ACTIVE ?
+				IOPORT_MODE_PULLDOWN : IOPORT_MODE_PULLUP));
 }

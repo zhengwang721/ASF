@@ -86,7 +86,7 @@ static inline void board_turn_led_on(uint8_t led_id)
 {
 	switch (led_id) {
 	case 0:
-		ioport_set_pin_level(LED_0_PIN, false);
+		ioport_set_pin_level(LED_0_PIN, LED_0_ACTIVE);
 		break;
 
 	default:
@@ -103,7 +103,7 @@ static inline void board_turn_led_off(uint8_t led_id)
 {
 	switch (led_id) {
 	case 0:
-		ioport_set_pin_level(LED_0_PIN, true);
+		ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
 		break;
 
 	default:
@@ -125,7 +125,7 @@ static inline bool board_button_is_pressed(uint8_t button_id)
 
 	switch (button_id) {
 	case 0:
-		state = !ioport_get_pin_level(BUTTON_0_PIN);
+		state = (ioport_get_pin_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE);
 		break;
 
 	default:
