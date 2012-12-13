@@ -366,10 +366,13 @@ static inline PortGroup* port_get_port_from_gpio_pin(
 		const uint8_t gpio_pin)
 {
 	uint8_t port_index = (gpio_pin / 128);
+	uint8_t group_index = (gpio_pin / 32);
 
-	if (port_index == 0) {
-		return &PORT.Group[gpio_pin / 32];
+	/* Array of available ports. */
+	Port *ports[PORT_INST_NUM] = PORT_INSTS;
 
+	if (port_index < PORT_INST_NUM) {
+		return &(ports[port_index]->Group[group_index]);
 	} else {
 		Assert(false);
 		return NULL;
