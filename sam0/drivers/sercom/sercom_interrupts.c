@@ -69,14 +69,12 @@ uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 	uint8_t i;
 	/* Save address of sercom instance. */
 	uint32_t hw_dev = (uint32_t)sercom_instance;
-
-	/* Array of sercom instances. */
-
-	Sercom sercom_instances_list[SERCOM_INST_NUM] = SERCOM_INSTS;
+	/* Save all available SERCOM instances for compare. */
+	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for sercom instance. */
 	for (i = 0; i < SERCOM_INST_NUM; i++) {
-		if ( hw_dev == (uint32_t)&sercom_instances_list[i]) {
+		if ( hw_dev == (uint32_t)sercom_instances[i] {
 			return i;
 		}
 	}
