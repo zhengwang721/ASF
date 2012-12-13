@@ -42,7 +42,6 @@
 #include "eic.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
-#include "conf_eic.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -155,10 +154,11 @@ static void eic_line_interrupt(uint8_t line_number)
 {
 	if (eic_callback_pointer[line_number]) {
 		eic_callback_pointer[line_number]();
+	} else {
+		Assert(false); /* Catch unexpected interrupt */
 	}
 }
 
-#ifdef EIC_NMI_ENABLE
 /**
  * \brief Interrupt handler for EIC NMI.
  */
@@ -166,9 +166,7 @@ void NMI_Handler(void)
 {
 	eic_line_interrupt(0);
 }
-#endif
 
-#ifdef EIC_INT1_ENABLE
 /**
  * \brief Interrupt handler for EIC line 1.
  */
@@ -176,9 +174,7 @@ void EIC_1_Handler(void)
 {
 	eic_line_interrupt(1);
 }
-#endif
 
-#ifdef EIC_INT2_ENABLE
 /**
  * \brief Interrupt handler for EIC line 2.
  */
@@ -186,9 +182,7 @@ void EIC_2_Handler(void)
 {
 	eic_line_interrupt(2);
 }
-#endif
 
-#ifdef EIC_INT3_ENABLE
 /**
  * \brief Interrupt handler for EIC line 3.
  */
@@ -196,9 +190,7 @@ void EIC_3_Handler(void)
 {
 	eic_line_interrupt(3);
 }
-#endif
 
-#ifdef EIC_INT4_ENABLE
 /**
  * \brief Interrupt handler for EIC line 4.
  */
@@ -206,9 +198,7 @@ void EIC_4_Handler(void)
 {
 	eic_line_interrupt(4);
 }
-#endif
 
-#ifdef EIC_INT5_ENABLE
 /**
  * \brief Interrupt handler for EIC line 5.
  */
@@ -216,9 +206,7 @@ void EIC_5_Handler(void)
 {
 	eic_line_interrupt(5);
 }
-#endif
 
-#ifdef EIC_INT6_ENABLE
 /**
  * \brief Interrupt handler for EIC line 6.
  */
@@ -226,9 +214,7 @@ void EIC_6_Handler(void)
 {
 	eic_line_interrupt(6);
 }
-#endif
 
-#ifdef EIC_INT7_ENABLE
 /**
  * \brief Interrupt handler for EIC line 7.
  */
@@ -236,9 +222,7 @@ void EIC_7_Handler(void)
 {
 	eic_line_interrupt(7);
 }
-#endif
 
-#ifdef EIC_INT8_ENABLE
 /**
  * \brief Interrupt handler for EIC line 8.
  */
@@ -246,7 +230,6 @@ void EIC_8_Handler(void)
 {
 	eic_line_interrupt(8);
 }
-#endif
 
 //@}
 
