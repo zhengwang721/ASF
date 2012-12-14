@@ -251,6 +251,7 @@ static bool widget_settings_time_setup_command_handler(struct wtk_basic_frame *f
 		g_demo_parameters.second--;
 
 		snprintf( str_sec, sizeof( str_sec ), "%02u",g_demo_parameters.second);
+		wtk_label_change(widget->lbl_indication[2], str_sec);
 		break;
 
 	case ICON_SETTINGS_TIME_RET_ID:
