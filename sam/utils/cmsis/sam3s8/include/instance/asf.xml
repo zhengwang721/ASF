@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam.utils.cmsis.sam3s8.include.instance" caption="SAM3S8 instance definitions">
 		<info type="description" value="summary">
-		This file defines all structures and symbols for SAM3S8 peripherals 
+		This file defines all structures and symbols for SAM3S8 peripherals
 		</info>
 		<!--
 		<build type="include-path" value="."/>
@@ -39,6 +39,6 @@
 		<build type="header-file" value="instance_usart2.h"/>
 		<build type="header-file" value="instance_wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
-		<device-support value="sam3sd8"/>
+		<device-support value="sam3sd"/>
 	</module>
 </asf>

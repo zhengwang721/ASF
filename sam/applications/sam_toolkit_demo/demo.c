@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- 
+
 /**
  * \mainpage SAM Toolkit Demo Application
  *
@@ -56,7 +56,7 @@
  *
  * \section Description
  *
- * This demo program presents the general features of the SAM-EK boards. 
+ * This demo program presents the general features of the SAM-EK boards.
  * The basic features involved include FreeRTOS, QTouch, FatFS, Nandflash,
  * USB Mass Storage and LCD.
  *
@@ -79,6 +79,9 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
+ * -# Format a SD card with a FAT32 filesystem and extract out the contents
+ *    of the sam_toolkit_demo_sdcard_resources.zip archive directly to the root
+ *    folder of the card. Insert the SD Card into the SAM4S-EK board.
  * -# Start the application.
  * -# Two LEDs should start blinking on the board. In the terminal window, the
  *    following text should appear (values depend on the board and chip used):
@@ -91,10 +94,11 @@
  * will show and display the result.
  *
  */
- 
+
 #include "conf_board.h"
 #include "demo.h"
 #include <asf.h>
+#include "bitmaps.h"
 #include "task.h"
 #include "string.h"
 #include "rtouch_calibrate.h"

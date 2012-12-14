@@ -13,7 +13,7 @@
 		<device-support value="xmegad"/>
 		<require idref="xmega.drivers.adc"/>
 	</module>
-	<module type="application" id="xmega.drivers.adc.example1_gfx" caption="ADC Example 1 Graphics">
+	<module type="application" id="xmega.drivers.adc.example1_gfx" caption="ADC Example 1 - Graphics">
 		<info type="description" value="summary">
 			Interrupt-based 12-bit ADC conversion using the internal 1 V voltage reference. Channel 0 of the ADC is configured for single-ended measurements from the internal temperature sensor, and output on the display.
 		</info>
