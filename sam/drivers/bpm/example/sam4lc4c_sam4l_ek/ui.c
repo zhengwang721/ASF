@@ -47,14 +47,14 @@
 
 #include "board_monitor.h"
 sam4l_status_t sam4l_status = {
-	.voltage_scaling = VOLTAGE_SCALING_12V,
+	.power_scaling = POWER_SCALING_PS1,
 	.sleep_mode = SLEEP_MODE_RUN,
 	.cpu_freq = 12000000,
 	.cpu_src = CPU_SRC_RC4M,
 };
 /* Power scaling value -> board monitor status */
-voltage_scaling_t ps_statuses[] = {
-	VOLTAGE_SCALING_18V, VOLTAGE_SCALING_12V
+power_scaling_t ps_statuses[] = {
+	POWER_SCALING_PS0, POWER_SCALING_PS1
 };
 /* Sleep modes -> board monitor status */
 sleep_mode_t sleep_statuses[] = {
@@ -99,9 +99,9 @@ void ui_show_mode_info(uint8_t mode, const mode_config_t *mode_config)
 {
 	UNUSED(mode);
 	ui_enable_clocks();
-	sam4l_status.voltage_scaling = ps_statuses[mode_config->ps_value];
+	sam4l_status.power_scaling = ps_statuses[mode_config->ps_value];
 	sam4l_status.sleep_mode = sleep_statuses[mode_config->sleep_mode];
-	bm_send_mcu_status(sam4l_status.voltage_scaling,
+	bm_send_mcu_status(sam4l_status.power_scaling,
 		sam4l_status.sleep_mode,sam4l_status.cpu_freq,
 		sam4l_status.cpu_src);
 	ui_disable_clocks();

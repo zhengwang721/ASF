@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration for the ST7565R example
+ * \brief AST configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,16 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/* Enable the maXTouch mXT143E Xplained top module */
-#define CONF_BOARD_ENABLE_MXT143E_XPLAINED
+//! Configuration of the AST driver
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
+
+#define AST_PER_ENABLE
+// #define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
+
+#endif /* CONF_AST_H_INCLUDED */

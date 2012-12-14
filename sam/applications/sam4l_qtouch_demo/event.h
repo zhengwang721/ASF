@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Management of C42364A LCD Glass component.
+ * \brief Event Manager.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,48 +40,23 @@
  * \asf_license_stop
  *
  */
+#ifndef _EVENT_H
+#define _EVENT_H
 
-#include "compiler.h"
-#include "c42364a.h"
-#include "lcdca.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "ast.h"
+#include "bpm.h"
+#include "eic.h"
+#include "sleepmgr.h"
+#include "sysclk.h"
+#include "touch_api_sam4l.h"
 
-void c42364a_init(void)
-{
-	// LCD_initialization
-	lcdca_clk_init();
-	lcdca_connection_init(PORT_MASK, X_BIAS);
-	lcdca_blink_init(LCDCA_TIMER_FC0, true);;
-	lcdca_csr_init(LCDCA_TIMER_FC0,LCD_CSR_RIGHT,7,0x03);
-	lcdca_enable();
-	lcdca_timer_init(0,3,2,2,1);
-	lcdca_enable_timer(LCDCA_TIMER_FC0);
-	lcdca_enable_timer(LCDCA_TIMER_FC1);
-	lcdca_enable_timer(LCDCA_TIMER_FC2);
-}
+void event_qtouch_init(void);
+void event_button_init(void);
+bool event_qtouch_get_button_state(void);
+bool event_qtouch_get_slider_state( uint8_t* event_qtouch_position );
+bool event_is_push_button_pressed(void);
 
-void c42364a_battery_graph(uint8_t val)
-{
-	lcdca_clear_pixel(ICON_BAT_LEVEL_1);
-	lcdca_clear_pixel(ICON_BAT_LEVEL_2);
-	lcdca_clear_pixel(ICON_BAT_LEVEL_3);
-	lcdca_set_pixel(ICON_BAT);
-	if (val>2) {
-		lcdca_set_pixel(ICON_BAT_LEVEL_3);
-	}
-	if (val>1) {
-		lcdca_set_pixel(ICON_BAT_LEVEL_2);
-	}
-	if (val>0) {
-		lcdca_set_pixel(ICON_BAT_LEVEL_1);
-	}
-}
-
-void c42364a_set_numeric_dec(uint16_t val)
-{
-	uint8_t lcd_num[5];
-
-	sprintf((char*)lcd_num, "%d", val);
-
-	//! Write to character generator
-	c42364a_write_num_packet((uint8_t const*)&lcd_num);
-}
+#endif  // _EVENT_H

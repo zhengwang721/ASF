@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration for the ST7565R example
+ * \brief PDCA configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,27 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/* Enable the maXTouch mXT143E Xplained top module */
-#define CONF_BOARD_ENABLE_MXT143E_XPLAINED
+//! Configuration of the PDCA driver
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_PDCA_H_INCLUDED
+#define CONF_PDCA_H_INCLUDED
+
+//#define PDCA_INT0_ENABLE
+//#define PDCA_INT1_ENABLE
+// #define PDCA_INT2_ENABLE
+#define PDCA_INT3_ENABLE
+// #define PDCA_INT4_ENABLE
+// #define PDCA_INT5_ENABLE
+// #define PDCA_INT6_ENABLE
+// #define PDCA_INT7_ENABLE
+// #define PDCA_INT8_ENABLE
+// #define PDCA_INT9_ENABLE
+// #define PDCA_INT10_ENABLE
+// #define PDCA_INT11_ENABLE
+// #define PDCA_INT12_ENABLE
+// #define PDCA_INT13_ENABLE
+// #define PDCA_INT14_ENABLE
+// #define PDCA_INT15_ENABLE
+
+#endif /* CONF_PDCA_H_INCLUDED */

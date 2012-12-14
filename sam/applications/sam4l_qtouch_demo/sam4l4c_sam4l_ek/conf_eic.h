@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief User Interface.
+ * \brief EIC configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,21 +41,20 @@
  *
  */
 
-#ifndef _GUI_H
-#define _GUI_H
+//! Configuration of the EIC driver
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "compiler.h"
-#include "sleepmgr.h"
-#include "sysclk.h"
-#include "board.h"
-#include "c42364a.h"
-#include "board_monitor.h"
-#include "touch_api_sam4l.h"
-#include "ioport.h"
+#ifndef CONF_EIC_H_INCLUDED
+#define CONF_EIC_H_INCLUDED
 
-void gui_init(void);
-void gui_task(void);
+//#define EIC_NMI_ENABLE
+//#define EIC_INT1_ENABLE
+// #define EIC_INT2_ENABLE
+// #define EIC_INT3_ENABLE
+// #define EIC_INT4_ENABLE
+#define EIC_INT5_ENABLE
+// #define EIC_INT6_ENABLE
+// #define EIC_INT7_ENABLE
+// #define EIC_INT8_ENABLE
 
-#endif  // _GUI_H
+
+#endif /* CONF_EIC_H_INCLUDED */

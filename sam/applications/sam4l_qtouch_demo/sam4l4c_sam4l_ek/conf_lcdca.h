@@ -43,8 +43,9 @@
 #ifndef CONF_LCDCA_H_INCLUDED
 #define CONF_LCDCA_H_INCLUDED
 
+#include "sysclk.h"
 
 /** Source Clock of LCD Controller */
-#define LCDCA_SOURCE_CLK  BPM_CLK32_SOURCE_OSC32K
+#define CONF_LCDCA_SOURCE_CLK  OSC_ID_OSC32
 
 #endif /* CONF_LCDCA_H_INCLUDED */

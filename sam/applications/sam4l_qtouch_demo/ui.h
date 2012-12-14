@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration for the ST7565R example
+ * \brief User Interface.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,33 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/* Enable the maXTouch mXT143E Xplained top module */
-#define CONF_BOARD_ENABLE_MXT143E_XPLAINED
+#ifndef _UI_H
+#define _UI_H
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "compiler.h"
+#include "sleepmgr.h"
+#include "sysclk.h"
+#include "board.h"
+#include "c42364a.h"
+#include "board_monitor.h"
+#include "touch_api_sam4l.h"
+#include "ioport.h"
+
+void ui_set_mcu_status(power_scaling_t power_scaling, 
+	sleep_mode_t sleep_mode, uint32_t cpu_freq, cpu_src_t cpu_src);
+power_scaling_t ui_get_power_scaling_mcu_status(void);
+void ui_set_power_scaling_mcu_status(power_scaling_t power_scaling);
+sleep_mode_t ui_get_sleep_mode_mcu_status(void);
+void ui_set_sleep_mode_mcu_status(sleep_mode_t sleep_mode);
+void ui_bm_init(void);
+void ui_bm_send_mcu_status(void);
+void ui_lcd_init(void);
+void ui_lcd_refresh_alphanum(bool ui_lcd_refresh, 
+	int32_t event_qtouch_slider_position);
+void ui_lcd_refresh_txt(void);
+
+#endif  // _UI_H
