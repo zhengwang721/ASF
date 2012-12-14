@@ -124,10 +124,6 @@ static void configure_console(void)
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
-
-#if defined(__GNUC__)
-	setbuf(stdout, NULL);
-#endif
 }
 
 int main(void)

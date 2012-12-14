@@ -96,6 +96,7 @@
 #include "stdio_serial.h"
 #include "conf_board.h"
 #include "resistive_touch_board.h"
+#include "rtouch_calibrate.h"
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
 #define IRQ_PRIOR_PIO    0
