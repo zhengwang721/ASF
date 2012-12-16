@@ -44,7 +44,9 @@
  *
  */
 
-/*
+/**
+ * \mainpage FreeRTOS USART peripheral control functions and FreeRTOS+CLI Example
+ * \section intro Introduction
  * ************* Introduction **************************************************
  *
  * The examples defined in this project demonstrate:
@@ -79,7 +81,7 @@
  * Readers are recommended to also read the application note that accompanies
  * the FreeRTOS ASF API.
  *
- *
+ * \section loopback USART Echo/Loopback Example
  * ************* USART Echo/Loopback Example ***********************************
  *
  * - Functionality -
@@ -111,7 +113,7 @@
  * By default, the RS232 communication is configured to use 115200 baud, 8 data
  * bits, no parity, one stop bit, and no flow control.
  *
- *
+ * \section usart_cli USART Command Console using FreeRTOS+CLI
  * ************* USART Command Console using FreeRTOS+CLI **********************
  *
  * - Functionality -
@@ -168,7 +170,7 @@
  * By default, the RS232 communication is configured to use 115200 baud, 8 data
  * bits, no parity, one stop bit, and no flow control.
  *
- *
+ * \section usb_cdc_cli USB/CDC Command Console using FreeRTOS+CLI
  * ************* USB/CDC Command Console using FreeRTOS+CLI ********************
  *
  * - Functionality -
@@ -194,7 +196,7 @@
  * data bits, no parity, one stop bit, and no flow control.  The settings might
  * not be critical.
  *
- *
+ * \section twi_eeprom_rw TWI EEPROM Read and Write
  * ************* TWI EEPROM Read and Write ***********************************
  *
  * - Functionality -
@@ -225,7 +227,7 @@
  * As the example uses the EEPROM built onto the evaluation kit, no hardware
  * configuration is required.
  *
- *
+ * \section spi_flash_rw SPI flash Read and Write
  * ************* SPI flash Read and Write ***********************************
  *
  * - Functionality -
