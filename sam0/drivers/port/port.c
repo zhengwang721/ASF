@@ -52,35 +52,35 @@ static inline void _port_pin_set_eic_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_edge_conf *const config)
 {
-	EIC_t*   eic_base       = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic*   eic_base       = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask       = (1UL << (gpio_pin % 32));
 	uint8_t  eic_config_pos = (4 * (gpio_pin % 8));
 	uint32_t eic_new_config;
 
 	/* Enable the EIC module if needed in case it is not already enabled */
 	if (config->mode != PORT_EDGE_DETECT_NONE) {
-		eic_base->CTRL |= EIC_CTRL_ENABLE_bm;
+		eic_base->CTRL.reg |= EIC_CTRL_ENABLE;
 	}
 
 	/* Set the channel's new wake up mode setting */
 	if (config->wake_if_sleeping) {
-		eic_base->WAKEUP |=  pin_mask;
+		eic_base->WAKEUP.reg |=  pin_mask;
 	} else {
-		eic_base->WAKEUP &= ~pin_mask;
+		eic_base->WAKEUP.reg &= ~pin_mask;
 	}
 
 	/* Determine the channel's new edge detection configuration */
-	eic_new_config =
-			(config->mode << EIC_CONFIG_DETECTMODE0_gp);
+	eic_new_config = config->mode;
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
-		eic_new_config |= EIC_CONFIG_FILTEN0_bm;
+		// TODO: Used NMIFILTEN as CONFIG_FILTEN is not in header. */
+		eic_new_config |= EIC_NMICTRL_NMIFILTEN;
 	}
 
 	/* Clear the existing and set the new channel configuration */
-	eic_base->CONFIG[gpio_pin / 8]
-		= (eic_base->CONFIG[gpio_pin / 8] & ~(0xF << eic_config_pos)) |
+	eic_base->CONFIG[gpio_pin / 8].reg
+		= (eic_base->CONFIG[gpio_pin / 8].reg & ~(0xF << eic_config_pos)) |
 			(eic_new_config << eic_config_pos);
 }
 
@@ -103,7 +103,7 @@ enum status_code port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_conf *const config)
 {
-	PORT_t*  port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup*  port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Track the configuration bits into a temporary variable before writing */
@@ -114,22 +114,22 @@ enum status_code port_pin_set_config(
 		/* Check if the user has requested that the input buffer be enabled */
 		if (config->input.enabled) {
 			/* Enable input buffer flag */
-			pin_cfg |= PORT_PINCFG_INEN_bm;
+			pin_cfg |= PORT_PINCFG_INEN;
 
 			/* Enable pull-up/pull-down control flag if requested */
 			if (config->input.pull != PORT_PIN_PULL_NONE) {
-				pin_cfg |= PORT_PINCFG_PULLEN_bm;
+				pin_cfg |= PORT_PINCFG_PULLEN;
 			}
 
 			/* Set the requested sampling mode of the input buffer */
 			if (config->input.sampling_mode == PORT_PIN_SAMPLING_CONTINUOUS) {
-				port_base->CTRL |= pin_mask;
+				port_base->CTRL.reg |= pin_mask;
 			} else {
-				port_base->CTRL &= ~pin_mask;
+				port_base->CTRL.reg &= ~pin_mask;
 			}
 
 			/* Clear the port DIR bits to disable the output buffer */
-			port_base->DIRCLR = pin_mask;
+			port_base->DIRCLR.reg = pin_mask;
 
 			/* Configure pin edge detection if one is requested */
 			_port_pin_set_eic_config(gpio_pin, &config->input.edge_detection);
@@ -140,30 +140,30 @@ enum status_code port_pin_set_config(
 			/* Cannot use a pullup if the output driver is enabled,
 			 * if requested the input buffer can only sample the current
 			 * output state */
-			pin_cfg &= ~PORT_PINCFG_PULLEN_bm;
+			pin_cfg &= ~PORT_PINCFG_PULLEN;
 
 			/* Set the pin drive strength mode */
 			if (config->output.drive_strength == PORT_PIN_STRENGTH_HIGH) {
-				pin_cfg |= PORT_PINCFG_DRVSTR_bm;
+				pin_cfg |= PORT_PINCFG_DRVSTR;
 			}
 
 			/* Set the pin slew rate limiter mode */
 			if (config->output.slew_rate == PORT_PIN_SLEW_RATE_LIMITED) {
-				pin_cfg |= PORT_PINCFG_SLEWLIM_bm;
+				pin_cfg |= PORT_PINCFG_SLEWLIM;
 			}
 
 			/* Set the pin drive mode */
 			if (config->output.drive == PORT_PIN_DRIVE_OPEN_DRAIN) {
-				pin_cfg |= PORT_PINCFG_ODRAIN_bm;
+				pin_cfg |= PORT_PINCFG_ODRAIN;
 			}
 
 			/* Set the port DIR bits to enable the output buffer */
-			port_base->DIRSET = pin_mask;
+			port_base->DIRSET.reg = pin_mask;
 		}
 	} else if (config->type == PORT_PIN_TYPE_PERIPHERAL) {
 		/* Enable the pin peripheral mux flag - pin mux will be written
 		 * later */
-		pin_cfg |= PORT_PINCFG_PMUXEN_bm;
+		pin_cfg |= PORT_PINCFG_PMUXEN;
 	} else {
 		/* Unknown pin mode, return an error */
 		return STATUS_ERR_INVALID_ARG;
@@ -176,31 +176,33 @@ enum status_code port_pin_set_config(
 
 	/* Configure the lower 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
-	port_base->WRCONFIG
-		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_gp) |
-			(pin_cfg << PORT_WRCONFIG_CONFIG_gp) |
-			(config->peripheral_index << PORT_WRCONFIG_PMUX_gp) |
-			PORT_WRCONFIG_WRPMUX_bm | PORT_WRCONFIG_WRPINCFG_bm;
+	port_base->WRCONFIG.reg
+		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
+			/* Shift to upper 16 bits. */
+			(pin_cfg << 16) |
+			(config->peripheral_index << PORT_WRCONFIG_PMUX_Pos) |
+			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
 
 	/* Configure the upper 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
-	port_base->WRCONFIG
-		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_gp) |
-			(pin_cfg << PORT_WRCONFIG_CONFIG_gp) |
-			(config->peripheral_index << PORT_WRCONFIG_PMUX_gp) |
-			PORT_WRCONFIG_WRPMUX_bm | PORT_WRCONFIG_WRPINCFG_bm |
-			PORT_WRCONFIG_HWSEL_bm;
+	port_base->WRCONFIG.reg
+		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
+			/* Shift to upper 16 bits. */
+			(pin_cfg << 16) |
+			(config->peripheral_index << PORT_WRCONFIG_PMUX_Pos) |
+			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
+			PORT_WRCONFIG_HWSEL;
 
 	/* Set the pull-up state once the port pins are configured if one was
 	 * requested and it does not violate the valid set of port
 	 * configurations */
-	if (pin_cfg & PORT_PINCFG_PULLEN_bm) {
+	if (pin_cfg & PORT_PINCFG_PULLEN) {
 		/* Set the OUT register bits to enable the pullup if requested,
 		 * clear to enable pull-down */
 		if (config->input.pull == PORT_PIN_PULL_UP) {
-			port_base->OUTSET = pin_mask;
+			port_base->OUTSET.reg = pin_mask;
 		} else {
-			port_base->OUTCLR = pin_mask;
+			port_base->OUTCLR.reg = pin_mask;
 		}
 	}
 
