@@ -98,7 +98,12 @@
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="sam4s"/>
 	</board>
-	
+
+	<board id="board.user_board.sam4e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<device-support value="sam4e"/>
+	</board>
+
 	<board id="board.user_board.megarf" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="atmega128rfa1"/>
@@ -176,4 +181,15 @@
 		<device-support value="atsam4ls2c"/>
 	</board>
 
+	<board id="board.user_board.sam4e8e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4e8"/>
+		<device-support value="atsam4e8e"/>
+	</board>
+
+	<board id="board.user_board.sam4e16e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts#atsam4e16"/>
+		<device-support value="atsam4e16e"/>
+	</board>
 </asf>
