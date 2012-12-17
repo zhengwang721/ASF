@@ -148,7 +148,8 @@ adcifa_opt_t adcifa_opt = {
 	.sample_and_hold_disable  = false,
 	.single_sequencer_mode    = false,
 	.free_running_mode_enable = false,
-	.sleep_mode_enable        = false
+	.sleep_mode_enable        = false,
+	.mux_settle_more_time     = false
 };
 
 /* Sequencer Configuration */
