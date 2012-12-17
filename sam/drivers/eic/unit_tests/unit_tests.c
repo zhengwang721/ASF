@@ -98,11 +98,8 @@ volatile uint8_t intflag = 0;
  */
 static void set_int_flag(void)
 {
-	/* Check if EIC test line interrupt line is pending */
-	if (eic_line_interrupt_is_pending(EIC, GPIO_UNIT_TEST_EIC_LINE)) {
-		eic_line_disable_interrupt(EIC, GPIO_UNIT_TEST_EIC_LINE);
-		intflag = 1;
-	}
+	eic_line_disable_interrupt(EIC, GPIO_UNIT_TEST_EIC_LINE);
+	intflag = 1;
 }
 
 /**

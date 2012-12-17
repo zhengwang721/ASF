@@ -68,14 +68,7 @@ static void ast_per_callback(void)
  */
 static void eic5_callback(void)
 {
-	sysclk_enable_peripheral_clock(EIC);
-	
-	if(eic_line_interrupt_is_pending(EIC,GPIO_PUSH_BUTTON_EIC_LINE))
-	{
-		eic_line_clear_interrupt(EIC,GPIO_PUSH_BUTTON_EIC_LINE);
-		event_pbEvent = true;
-	}
-	sysclk_disable_peripheral_clock(EIC);
+	event_pbEvent = true;
 }
 
 /**
