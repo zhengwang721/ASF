@@ -11,6 +11,6 @@
 		<require idref="common.services.ioport"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
-		<require idref="common.drivers.nvm#no_extmem"/>
+		<require idref="common.drivers.nvm"/>
 	</module>
 </asf>
