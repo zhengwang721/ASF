@@ -9,7 +9,7 @@
 		<build type="include-path" value="."/>
 		<config name="config.spi_master_type" value="usart_spi"/>
 		<require idref="common.drivers.nvm.example"/>
-		<require idref="common.drivers.nvm#extmem"/>
+		<config name="config.common.drivers.nvm.mem_type" value="extmem"/>
 		<require idref="board.stk600-rcuc3l4"/>
 		<config name="config.board.stk600-rcuc3l4.led" value="yes"/>
 		<generator value="avr32gcc"/>
