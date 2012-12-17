@@ -48,7 +48,8 @@
  * defines, enums, and typedefs for the Backup Power Manager (BPM) driver.
  * It also comes bundled with an application-example of usage.
  *
- * This example demonstrates how to use the BPM driver.
+ * This example demonstrates how to use the BPM driver.And it requires a
+ * board monitor firmware version V1.3 or greater.
  * <b>Operating mode: </b>The user can seleted the low power mode from the 
  * terminal. And the example uses the terminal and board monitor to display
  * infomation of the low power mode switched. 
@@ -88,14 +89,14 @@
 #include "board_monitor.h"
 
 /* Flag to use board monitor */
-static volatile bool ps_status = BPM_PS_1;
+static bool ps_status = BPM_PS_1;
 
 /* Current sleep mode */
-static volatile bool current_sleep_mode = SLEEP_MODE_NA;
+static uint32_t current_sleep_mode = SLEEP_MODE_NA;
 
 /* Power scaling value -> board monitor status */
-voltage_scaling_t ps_statuses[] = {
-	VOLTAGE_SCALING_18V, VOLTAGE_SCALING_12V
+power_scaling_t ps_statuses[] = {
+	POWER_SCALING_PS0, POWER_SCALING_PS1
 };
 
 /**
@@ -220,6 +221,8 @@ static void display_menu(void)
 			"  h: Display menu \r\n"
 			"  --Push button can also be used to exit low power mode--\r\n"
 			"\r\n\r\n");
+	printf("-- IMPORTANT: This example requires a board "
+			"monitor firmware version V1.3 or greater.\r\n");
 }
 
 /**
