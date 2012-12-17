@@ -220,9 +220,9 @@ static void display_menu(void)
 			"  6: Enter Backup mode. \r\n"
 			"  h: Display menu \r\n"
 			"  --Push button can also be used to exit low power mode--\r\n"
-			"\r\n\r\n");
+			"\r\n");
 	printf("-- IMPORTANT: This example requires a board "
-			"monitor firmware version V1.3 or greater.\r\n");
+			"monitor firmware version V1.3 or greater.\r\n\r\n");
 }
 
 /**
