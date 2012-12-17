@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief AST configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,15 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+//! Configuration of the AST driver
 
-/* Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
 
-/* Enable board monitor com port */
-#define CONF_BOARD_BM_USART
+#define AST_PER_ENABLE
+//#define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
 
-/* Configure push button pin as external interrupt */
-#define CONF_BOARD_EIC
-
-/* Backlight config */
-//#define CONF_BOARD_BL
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_AST_H_INCLUDED */

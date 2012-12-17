@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Header file for BPM example.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,29 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#ifndef BPM_EXAMPLE_H_INCLUDED
-#define BPM_EXAMPLE_H_INCLUDED
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-#define PS_18V 0 /* Power scale for 1.8V */
-#define PS_12V 1 /* Power scale for 1.2V */
-
-#define WAKEUP_AST (1u << 0) /* AST wakeup event */
-#define WAKEUP_EIC (1u << 1) /* EIC wakeup event */
-
-typedef struct _mode_config_t {
-	/* Mode prompt */
-	char* mode_info;
-	/* voltage scaling variable */
-	uint32_t ps_value;
-	/* sleep mode variable */
-	uint32_t sleep_mode;
-	/* PM->FASTSLEEP */
-	uint32_t fastsleep;
-	/* CPU frequency */
-	uint32_t cpu_freq;
-	/* CPU source */
-	uint32_t cpu_src;
-} mode_config_t;
-
-#endif // BPM_EXAMPLE_H_INCLUDED
+#endif /* CONF_SLEEPMGR_INCLUDED */

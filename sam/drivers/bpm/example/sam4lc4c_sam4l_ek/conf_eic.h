@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief EIC configuration.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,20 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+//! Configuration of the EIC driver
 
-/* Enable Com Port. */
-#define CONF_BOARD_COM_PORT
+#ifndef CONF_EIC_H_INCLUDED
+#define CONF_EIC_H_INCLUDED
 
-/* Enable board monitor com port */
-#define CONF_BOARD_BM_USART
+//#define EIC_NMI_ENABLE
+#define EIC_INT1_ENABLE
+// #define EIC_INT2_ENABLE
+// #define EIC_INT3_ENABLE
+// #define EIC_INT4_ENABLE
+#define EIC_INT5_ENABLE
+// #define EIC_INT6_ENABLE
+// #define EIC_INT7_ENABLE
+// #define EIC_INT8_ENABLE
 
-/* Configure push button pin as external interrupt */
-#define CONF_BOARD_EIC
 
-/* Backlight config */
-//#define CONF_BOARD_BL
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EIC_H_INCLUDED */
