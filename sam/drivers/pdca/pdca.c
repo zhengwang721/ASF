@@ -101,7 +101,7 @@ volatile PdcaChannel *pdca_channel_get_handler(pdca_channel_num_t
  * \param cfg Pointer to a PDCA channel config
  */
 void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
-		const pdca_channel_config_t * cfg)
+		const pdca_channel_config_t *cfg)
 {
 	/* Get the correct channel pointer */
 	volatile PdcaChannel *pdca_channel =
@@ -131,7 +131,7 @@ void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
  *
  * \param pdca Base address of the PDCA module
  */
-void pdca_disable(Pdca * pdca)
+void pdca_disable(Pdca *pdca)
 {
 	sysclk_disable_peripheral_clock(pdca);
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
@@ -142,7 +142,7 @@ void pdca_disable(Pdca * pdca)
  *
  * \param pdca Base address of the PDCA module
  */
-void pdca_enable(Pdca * pdca)
+void pdca_enable(Pdca *pdca)
 {
 	sysclk_enable_peripheral_clock(pdca);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);

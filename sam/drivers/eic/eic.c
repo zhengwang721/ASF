@@ -74,11 +74,11 @@ eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES] = {NULL};
  * \brief Write the EIC hardware with specified configuration value.
  *
  * \param eic Base address of the EIC module
- * \param eic_line_conf Configuration parameters of the EIC module 
+ * \param eic_line_conf Configuration parameters of the EIC module
  * (see \ref eic_line_config)
  * \param line_number Number of line to config
  */
-void eic_line_set_config(Eic * eic, uint8_t line_number, 
+void eic_line_set_config(Eic *eic, uint8_t line_number,
 	struct eic_line_config *eic_line_conf)
 {
 		/* Set up mode level */
@@ -109,7 +109,7 @@ void eic_line_set_config(Eic * eic, uint8_t line_number,
  *
  * \param eic Base address of the EIC module
  */
-void eic_disable(Eic * eic)
+void eic_disable(Eic *eic)
 {
 	sysclk_disable_peripheral_clock(eic);
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
@@ -120,7 +120,7 @@ void eic_disable(Eic * eic)
  *
  * \param eic Base address of the EIC module
  */
-void eic_enable(Eic * eic)
+void eic_enable(Eic *eic)
 {
 	sysclk_enable_peripheral_clock(eic);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
@@ -135,7 +135,7 @@ void eic_enable(Eic * eic)
  * \param irq_line  interrupt line.
  * \param irq_level interrupt level.
  */
-void eic_line_set_callback(Eic * eic, uint8_t line_number, 
+void eic_line_set_callback(Eic *eic, uint8_t line_number,
 	eic_callback_t callback, uint8_t irq_line, uint8_t irq_level)
 {
 	eic_callback_pointer[line_number] = callback;
