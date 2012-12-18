@@ -111,10 +111,10 @@ void pdca_channel_set_callback(pdca_channel_num_t pdca_ch_number,
 		const pdca_channel_interrupt_mask_t pdca_channel_interrupt_mask);
 volatile PdcaChannel *pdca_channel_get_handler(pdca_channel_num_t
 		pdca_ch_number);
-void pdca_disable(Pdca *pdca);
-void pdca_enable(Pdca *pdca);
+void pdca_disable(Pdca * pdca);
+void pdca_enable(Pdca * pdca);
 void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
-		const pdca_channel_config_t *cfg);
+		const pdca_channel_config_t * cfg);
 void pdca_channel_write_load(pdca_channel_num_t pdca_ch_number,
 		volatile void *addr, uint32_t size);
 void pdca_channel_write_reload(pdca_channel_num_t pdca_ch_number,
