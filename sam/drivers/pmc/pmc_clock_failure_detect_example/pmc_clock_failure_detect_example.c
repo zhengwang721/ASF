@@ -81,15 +81,17 @@
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
 /**
- *  \brief Handler for PMC interrupt.
- *
- *  Toggle LED to indicate the event.
+ * \brief Handler for PMC interrupt. Toggle LED to indicate the event.
  */
 void PMC_Handler(void)
 {
 	if (pmc_get_status() & PMC_SR_CFDEV) {
 		/* A clock failure has been detected. */
+#if SAM4E
+		LED_On(LED0);
+#else
 		LED_On(EXAMPLE_LED);
+#endif
 	}
 }
 
@@ -132,7 +134,11 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* Turn off the LED. */
-	LED_Off(EXAMPLE_LED);
+#if SAM4E
+		LED_Off(LED0);
+#else
+		LED_Off(EXAMPLE_LED);
+#endif
 
 	/* Enable Clock Failure Detector. */
 	pmc_enable_clock_failure_detector();
