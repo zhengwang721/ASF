@@ -26,7 +26,8 @@
 
 	<board id="board.user_board.xmegac" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<device-support value="xmegac"/></board>
+		<device-support value="xmegac"/>
+	</board>
 
 	<board id="board.user_board.xmegad" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
