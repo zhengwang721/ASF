@@ -271,7 +271,11 @@ int main(void)
 
 			/* Toggle LED at the given period. */
 			if ((g_ul_ms_ticks % BLINK_PERIOD) == 0) {
+#if SAM4E
+				LED_Toggle(LED0);
+#else
 				LED_Toggle(LED0_GPIO);
+#endif
 			}
 
 			/* Restart watchdog at the given period. */
