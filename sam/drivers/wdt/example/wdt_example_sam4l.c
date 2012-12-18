@@ -122,7 +122,11 @@ void SysTick_Handler(void)
  */
 static void set_toggle_flag(void)
 {
-	g_b_button_event = 1;
+	/* Check if EIC push button line interrupt line is pending. */
+	if (eic_line_interrupt_is_pending(EIC, GPIO_PUSH_BUTTON_EIC_LINE)) {
+		eic_line_clear_interrupt(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
+		g_b_button_event = 1;
+	}
 }
 
 /**

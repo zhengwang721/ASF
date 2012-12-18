@@ -154,11 +154,6 @@ void eic_line_set_callback(Eic * eic, uint8_t line_number,
  */
 static void eic_line_interrupt(uint8_t line_number)
 {
-	/* Clear EIC Interrupt */
-	sysclk_enable_peripheral_clock(EIC);
-	eic_line_clear_interrupt(EIC, line_number);
-	sysclk_disable_peripheral_clock(EIC);
-
 	if (eic_callback_pointer[line_number]) {
 		eic_callback_pointer[line_number]();
 	} else {

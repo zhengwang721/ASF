@@ -78,9 +78,14 @@ static void ui_disable_asynchronous_interrupt(void);
 // This interrupt wakeup the CPU if this one is in idle mode
 static void UI_WAKEUP_HANDLER(void)
 {
-	ui_disable_asynchronous_interrupt();
-	// It is a wakeup then send wakeup USB
-	udc_remotewakeup();
+	sysclk_enable_peripheral_clock(EIC);
+	if(eic_line_interrupt_is_pending(EIC, UI_WAKEUP_EIC_LINE)) {
+		eic_line_clear_interrupt(EIC, UI_WAKEUP_EIC_LINE);
+		ui_disable_asynchronous_interrupt();
+		// It is a wakeup then send wakeup USB
+		udc_remotewakeup();
+	}
+	sysclk_disable_peripheral_clock(EIC);
 }
 
 /**
