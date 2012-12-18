@@ -72,7 +72,7 @@ extern "C" {
  * \internal
  * \brief PDCA private data for each channel
  */
-pdca_callback_t pdca_callback_pointer[PDCA_NUMBER_OF_CHANNELS] = {NULL};
+pdca_callback_t pdca_callback_pointer[PDCA_NUMBER_OF_CHANNELS];
 
 /**
  * \brief Get PDCA channel handler

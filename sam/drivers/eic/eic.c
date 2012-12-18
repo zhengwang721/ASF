@@ -68,7 +68,7 @@ extern "C" {
  * \internal
  * \brief EIC callback function pointer array
  */
-eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES] = {NULL};
+eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES];
 
 /**
  * \brief Write the EIC hardware with specified configuration value.
