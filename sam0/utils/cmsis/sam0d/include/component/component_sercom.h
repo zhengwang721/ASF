@@ -43,7 +43,7 @@
 #include <io.h>
 
 
-/* SERCOM Register Map in USART mode*/ 
+/* SERCOM Register Map in USART mode*/
 typedef struct {
 	__REG32(CTRLA, __IO);
 	__REG32(CTRLB, __IO);
@@ -149,13 +149,8 @@ typedef enum {
 #define SWRST_bm 0x00000001
 
 
-<<<<<<< HEAD
 #define SERCOM_INSTS_NUM 6
 #define SERCOM_INSTS      {SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5}
-=======
-#define SERCOM_INST_NUM 6
-#define SERCOM_INSTS       { 0, 0, 0, 0, 0, 0 }
->>>>>>> npi-trd/master
 #define SHIFT 1
 #define SERCOM_GCLK_ID 0
 
