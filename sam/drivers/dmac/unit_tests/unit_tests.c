@@ -70,6 +70,7 @@
  * This example has been tested with the following setup:
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
