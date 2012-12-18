@@ -607,6 +607,8 @@
 
 /** @} */
 
+/** @} */
+
 /**
  * \defgroup tiny_part_macros_group tinyAVR parts
  *
@@ -840,6 +842,19 @@
 /** @} */
 
 /**
+ * \name SAM4E series
+ * @{
+ */
+#define SAM4E8 ( \
+		SAM_PART_IS_DEFINED(SAM4E8E) \
+		)
+
+#define SAM4E16 ( \
+		SAM_PART_IS_DEFINED(SAM4E16E) \
+		)
+/** @} */
+
+/**
  * \name SAM families
  * @{
  */
@@ -865,8 +880,12 @@
 #define SAM0D (SAM0D4)
 /** @} */
 
+/** SAM4E Family */
+#define SAM4E (SAM4E8 || SAM4E16)
+/** @} */
+
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM0D)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAM0D)
 
 /** @} */
 
