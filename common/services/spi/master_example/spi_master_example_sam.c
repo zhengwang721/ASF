@@ -83,22 +83,20 @@
 #include "asf.h"
 #include "conf_spi_master_example.h"
 
-uint16_t status;	// Status value for dataflash.
-
 /*! \name AT25DF321 Commands
  */
 //! @{
 //! Status Register Read (Serial/8-bit Mode).
-#define AT25DF_CMDC_RD_MID_REG         0x9F
+#define AT25DF_CMDC_RD_MID_REG    0x9F
 //! @}
 
-#define DATA_BUFFER_SIZE         0x04
+#define DATA_BUFFER_SIZE          0x04
 
-//! First Status Command Register - Second Dummy Data
+/** First Status Command Register - Second Dummy Data */
 uint8_t data[DATA_BUFFER_SIZE] = { AT25DF_CMDC_RD_MID_REG };
 
 struct spi_device SPI_DEVICE_EXAMPLE = {
-	//! Board specific select id
+	/** Board specific select id */
 	.id = SPI_DEVICE_EXAMPLE_ID
 };
 
@@ -115,14 +113,11 @@ static bool spi_at25df_mem_check(void)
 	// Receive the manufacturer and device id.
 	spi_read_packet(SPI_EXAMPLE, data, DATA_BUFFER_SIZE);
 
-	// data[1] contains device id part1, which has the density code.
-	status = data[1];
-
 	// Deselect the checked AT25DF memory.
 	spi_deselect_device(SPI_EXAMPLE, &SPI_DEVICE_EXAMPLE);
 
 	// Unexpected device density.
-	if ((status & AT25DF_MSK_DENSITY) < AT25DF_DENSITY) {
+	if ((data[1] & AT25DF_MSK_DENSITY) < AT25DF_DENSITY) {
 		return false;
 	} else {
 		return true;
@@ -146,23 +141,23 @@ int main(void)
 	spi_master_setup_device(SPI_EXAMPLE, &SPI_DEVICE_EXAMPLE, SPI_MODE_0,
 			SPI_EXAMPLE_BAUDRATE, 0);
 	spi_enable(SPI_EXAMPLE);
-	status = spi_at25df_mem_check();
-	while (true) {
-		if (status == false) {
-	#if SAM4L	
-			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
-			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_HIGH);
-		} else {
-			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
-			ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_LOW);
-		}	
-	#else
-			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-			gpio_set_pin_high(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
-		} else {
-			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-			gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
-		}
-	#endif
+
+	if (spi_at25df_mem_check() == false) {
+#if (SAM4L || SAM4E)
+		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
+		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_HIGH);
+	} else {
+		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_1, IOPORT_PIN_LEVEL_LOW);
+		ioport_set_pin_level(SPI_EXAMPLE_LED_PIN_EXAMPLE_2, IOPORT_PIN_LEVEL_LOW);
+	}
+#else
+		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
+		gpio_set_pin_high(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+	} else {
+		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
+		gpio_set_pin_low(SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+	}
+#endif
+	while (1) {
 	}
 }
