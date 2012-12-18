@@ -129,7 +129,7 @@ void dmac_soft_chunk_transfer_request(Dmac *p_dmac,
 void dmac_soft_set_last_transfer_flag(Dmac *p_dmac,
 		uint32_t ul_num, uint32_t ul_src_flag, uint32_t ul_dst_flag);
 
-#if (SAM3XA)
+#if (SAM3XA || SAM4E)
 void dmac_set_writeprotect(Dmac *p_dmac, uint32_t ul_enable);
 uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
 #endif
