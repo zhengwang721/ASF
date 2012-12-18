@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.adc.quick_start" caption="ADC quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the Analog-to-Digital Converter module demonstrating module configuration.
+		</info>
+		<build type="c-source" value="qs_adc_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.adc"/>
+		<device-support value="atsam0d4"/>
+	</module>
+</asf>
