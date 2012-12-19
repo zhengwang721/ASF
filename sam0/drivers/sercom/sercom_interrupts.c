@@ -74,7 +74,7 @@ uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
 
 	/* Find index for sercom instance. */
 	for (i = 0; i < SERCOM_INST_NUM; i++) {
-		if ( hw_dev == (uint32_t)sercom_instances[i] {
+		if (hw_dev == (uint32_t)sercom_instances[i]) {
 			return i;
 		}
 	}
