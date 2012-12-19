@@ -12,5 +12,6 @@
 		<device-support value="sam"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.ioport"/>
+		<require idref="common.drivers.nvm"/>
 	</module>
 </asf>

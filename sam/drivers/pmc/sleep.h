@@ -53,7 +53,8 @@ extern "C" {
 /**
  * \defgroup sleep_group Power Manager (PM)
  *
- * This is a stub on the SAM Power Manager Control (PMC) for the sleepmgr service.
+ * This is a stub on the SAM Power Manager Control (PMC) for the sleepmgr
+ * service.
  *
  * \note To minimize the code overhead, these functions do not feature
  * interrupt-protected access since they are likely to be called inside
@@ -70,8 +71,8 @@ extern "C" {
  * \param sleep_mode Sleep mode to set.
  */
 #endif
-
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S) // SAM3 and SAM4 series
+/* SAM3 and SAM4 series */
+#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E)
 # include "pmc.h"
 
 # define  SAM_PM_SMODE_ACTIVE     0
@@ -100,9 +101,9 @@ static inline void pmc_save_clock_settings(
 		*p_pll0_setting = PMC->CKGR_PLLAR;
 	}
 	if (p_pll1_setting) {
-#if SAM3S||SAM4S
+#if (SAM3S || SAM4S)
 		*p_pll1_setting = PMC->CKGR_PLLBR;
-#elif SAM3U||SAM3XA
+#elif (SAM3U || SAM3XA)
 		*p_pll1_setting = PMC->CKGR_UCKR;
 #else
 		*p_pll1_setting = 0;
@@ -112,12 +113,13 @@ static inline void pmc_save_clock_settings(
 		*p_mck_setting  = PMC->PMC_MCKR;
 	}
 
-	// Switch MCK to Main clock (internal or external 12MHz) for fast wakeup
-	// If MAIN_CLK is already the source, just skip
+	/* Switch MCK to Main clock (internal or external 12MHz) for fast wakeup.
+	 * If MAIN_CLK is already the source, just skip.
+	 */
 	if ((PMC->PMC_MCKR & PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_MAIN_CLK) {
 		return;
 	}
-	// If we have to enable the MAIN_CLK
+	/* If we have to enable the MAIN_CLK */
 	if ((PMC->PMC_SR & PMC_SR_MOSCXTS) == 0) {
 		// Intend to use internal RC as source of MAIN_CLK
 		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
@@ -142,14 +144,14 @@ static inline void pmc_restore_clock_setting(
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | pll0_setting;
 		while (!(PMC->PMC_SR & PMC_SR_LOCKA));
 	}
-#if SAM3S||SAM4S
+#if (SAM3S || SAM4S)
 	if ((pll1_setting & CKGR_PLLBR_MULB_Msk) &&
 		pll1_setting != PMC->CKGR_PLLBR) {
 		PMC->CKGR_PLLBR = 0;
 		PMC->CKGR_PLLBR = pll1_setting ;
 		while (!(PMC->PMC_SR & PMC_SR_LOCKB));
 	}
-#elif SAM3U||SAM3XA
+#elif (SAM3U || SAM3XA)
 	if ((pll1_setting & CKGR_UCKR_UPLLEN) &&
 		pll1_setting != PMC->CKGR_UCKR) {
 		PMC->CKGR_UCKR = 0;
@@ -161,11 +163,11 @@ static inline void pmc_restore_clock_setting(
 #endif
 	/* Switch to faster clock */
 	mckr = PMC->PMC_MCKR;
-	// Set PRES
+	/* Set PRES */
 	PMC->PMC_MCKR = (mckr & ~PMC_MCKR_PRES_Msk)
 		| (mck_setting & PMC_MCKR_PRES_Msk);
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
-	// Set CSS and others
+	/* Set CSS and others */
 	PMC->PMC_MCKR = mck_setting;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
 	/* Shutdown fastrc */
@@ -179,7 +181,7 @@ static inline void pmc_sleep(int sleep_mode)
 	switch (sleep_mode) {
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
-#if SAM4S
+#if (SAM4S || SAM4E)
 		SCB->SCR &= (uint32_t)~SCR_SLEEPDEEP;
 		cpu_irq_enable();
 		__WFI();
@@ -198,7 +200,7 @@ static inline void pmc_sleep(int sleep_mode)
 		uint32_t mor, pllr0, pllr1, mckr;
 		pmc_save_clock_settings(&mor, &pllr0, &pllr1, &mckr);
 
-		// Enter wait mode
+		/* Enter wait mode */
 		cpu_irq_enable();
 		pmc_enable_waitmode();
 
@@ -210,7 +212,7 @@ static inline void pmc_sleep(int sleep_mode)
 
 	case SAM_PM_SMODE_BACKUP:
 		SCB->SCR |= SCR_SLEEPDEEP;
-#if SAM4S
+#if (SAM4S || SAM4E)
 		SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
 		cpu_irq_enable();
 		__WFI() ;

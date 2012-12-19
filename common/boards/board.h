@@ -112,6 +112,7 @@ extern "C" {
 #define STK600_RC032X         48  //!< STK600 with RC032X routing card board.
 #define SAM4S_EK2             49  //!< SAM4S-EK2 board.
 #define XMEGA_E5_XPLAINED     50  //!< ATxmega32E5 Xplained board.
+#define SAM4E_EK              51  //!< SAM4E-EK board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -217,6 +218,8 @@ extern "C" {
 #  include "system_sam3x.h"
 #elif BOARD == SAM4L_EK
 #  include "sam4l_ek/sam4l_ek.h"
+#elif BOARD == SAM4E_EK
+#  include "sam4e_ek/sam4e_ek.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
 #  include "mega1284p_xplained_bc/mega1284p_xplained_bc.h"
 #elif BOARD == UC3_L0_QT600
