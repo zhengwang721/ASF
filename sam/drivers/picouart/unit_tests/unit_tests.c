@@ -82,6 +82,21 @@ void PM_Handler(void)
 }
 
 /**
+ * \brief Test board monitor functions.
+ *
+ * \param test Current test case.
+ */
+static void run_getversion_test(const struct test_case *test)
+{
+	uint8_t fw_minor_version, fw_major_version;
+
+	/* For test */
+	bm_get_firmware_version(&fw_minor_version, &fw_major_version);
+	test_assert_true(test, fw_minor_version == '3', "FW minor version error!");
+	test_assert_true(test, fw_major_version == '1', "FW major version error!");
+}
+
+/**
  * \brief Test wakeup functions.
  *
  * \param test Current test case.
@@ -153,9 +168,19 @@ int main(void)
 	board_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
+	/* Enable osc32 oscillator*/
+	if (!osc_is_ready(OSC_ID_OSC32)) {
+		osc_enable(OSC_ID_OSC32);
+		osc_wait_ready(OSC_ID_OSC32);
+	}
+
 	/* Disable all AST wake enable bits for safety since the AST is reset
 	only by a POR. */
 	ast_enable(AST);
+	ast_conf.mode = AST_COUNTER_MODE;
+	ast_conf.osc_type = AST_OSC_32KHZ;
+	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
+	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
 	ast_disable_wakeup(AST, ast_wakeup_alarm);
 	ast_disable_wakeup(AST, ast_wakeup_per);
@@ -165,18 +190,15 @@ int main(void)
 	/* Configurate the USART to board monitor */
 	bm_init();
 
-	/* Enable osc32 oscillator*/
-	if (!osc_is_ready(OSC_ID_OSC32)) {
-		osc_enable(OSC_ID_OSC32);
-		osc_wait_ready(OSC_ID_OSC32);
-	}
-
 	/* Define all the test cases. */
 	DEFINE_TEST_CASE(picouart_test, NULL, run_picouart_test, NULL,
 			"SAM PICOUART wakeup test.");
+	DEFINE_TEST_CASE(getversion_test, NULL, run_getversion_test, NULL,
+				"SAM get version test.");
 
 	/* Put test case addresses in an array. */
 	DEFINE_TEST_ARRAY(picouart_tests) = {
+		&getversion_test,
 		&picouart_test,
 	};
 
