@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_nvm.h"/>
 		<build type="include-path" value="."/>
 		<require idref="common.drivers.nvm.example"/>
-		<require idref="common.drivers.nvm#extmem"/>
+		<config name="config.common.drivers.nvm.mem_type" value="extmem"/>
 		<require idref="board.stk600-rc044x.atxmega32a4u"/>
 		<config name="config.board.stk600-rc044x.led" value="yes"/>
 		<generator value="iarew"/>
