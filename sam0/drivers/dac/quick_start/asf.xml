@@ -6,6 +6,6 @@
 		<build type="c-source" value="qs_dac_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.dac"/>
-		<device-support value="atsam0d4_reva"/>
+		<device-support value="sam0d"/>
 	</module>
 </asf>
