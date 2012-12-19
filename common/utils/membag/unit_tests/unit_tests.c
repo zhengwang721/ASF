@@ -41,6 +41,27 @@
  *
  */
 
+/**
+ * \mainpage Memory Bag allocator unit test
+ *
+ * \par Purpose
+ *
+ * A set of unit tests to check each feature of the membag module
+ *
+ * \par Behavior: executing each unit test in turn
+ *
+ * -# Check that the Membag is initialized and re-initialized correctly.
+ * -# Check that the Membag allocates small and large chunks of memory
+ *  correctly, and fails when a chunk that is too large is requested.
+ * -# Check that the Membag frees previously allocated memory correctly
+ * -# Check that the Membag functions to determine memory status work correctly.
+ * -# Check that the Membag allocations fail once all suitable bags are already
+ *  allocated.
+ * -# Check that the Membag re-allocates previously allocated and subsequently
+ *  freed blocks of memory correctly.
+ *
+ */
+
 #include <asf.h>
 #include "conf_test.h"
 
