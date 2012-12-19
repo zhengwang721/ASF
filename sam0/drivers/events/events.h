@@ -407,12 +407,9 @@ static inline bool events_ch_is_ready(
 	uint8_t status_halfword = channel / 8;
 	uint8_t status_bitindex = channel % 8;
 
-	/* Read the status of the event system */
-	uint32_t channel_status = EVSYS.CHSTATUS.reg;
-
 	/* Make it a 16-bit array to be able to work on the upper and lower
 	 * 16-bits */
-	uint16_t *channel_status_ptr = (uint16_t*)(&channel_status);
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS.CHSTATUS.reg);
 
 
 	/* Determine if the specified channel is currently busy */
@@ -446,12 +443,9 @@ static inline bool events_user_is_ready(
 	uint8_t status_halfword = channel / 8;
 	uint8_t status_bitindex = channel % 8;
 
-	/* Read the status of the event system */
-	uint32_t channel_status = EVSYS.CHSTATUS.reg;
-
 	/* Make it a 16-bit array to be able to work on the upper and lower
 	 * 16-bits */
-	uint16_t *channel_status_ptr = (uint16_t*)(&channel_status);
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS.CHSTATUS.reg);
 
 
 	/* Determine if the specified channel users(s) are currently ready */
