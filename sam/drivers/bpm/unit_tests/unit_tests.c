@@ -167,6 +167,10 @@ static void run_backup_test(const struct test_case *test)
 		return;
 	}
 
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	/* Enter backup mode */
 	bpm_sleep(BPM, BPM_SM_BACKUP);
 }
@@ -199,6 +203,10 @@ static void run_ps_test(const struct test_case *test)
  */
 static void run_ret_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_RET);
 	log_event(EVENT_RUN);
@@ -217,6 +225,10 @@ static void run_ret_test(const struct test_case *test)
  */
 static void run_wait_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_WAIT);
 	log_event(EVENT_RUN);
@@ -235,6 +247,10 @@ static void run_wait_test(const struct test_case *test)
  */
 static void run_sleep_3_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_3);
 	log_event(EVENT_RUN);
@@ -253,6 +269,10 @@ static void run_sleep_3_test(const struct test_case *test)
  */
 static void run_sleep_2_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_2);
 	log_event(EVENT_RUN);
@@ -271,6 +291,10 @@ static void run_sleep_2_test(const struct test_case *test)
  */
 static void run_sleep_1_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_1);
 	log_event(EVENT_RUN);
@@ -289,6 +313,10 @@ static void run_sleep_1_test(const struct test_case *test)
  */
 static void run_sleep_0_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_0);
 	log_event(EVENT_RUN);
@@ -345,9 +373,6 @@ int main(void)
 
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
-	/* Retain I/O lines after wakeup from backup */
-	bpm_disable_io_retention(BPM);
-	bpm_enable_io_retention(BPM);
 	/* Enable fast wakeup */
 	bpm_enable_fast_wakeup(BPM);
 

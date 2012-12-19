@@ -67,6 +67,7 @@ extern "C" {
 #if defined(__DOXYGEN__)
 /**
  * \brief Sets the MCU in the specified sleep mode
+ * \param bpm Base address of the BPM instance.
  * \param sleep_mode Sleep mode to set.
  */
 #endif

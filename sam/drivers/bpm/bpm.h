@@ -144,8 +144,8 @@ extern "C" {
  * PSOK is not checked while switching PS mode.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, refer the define in header file
+ *
  */
 void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
 
@@ -155,8 +155,8 @@ void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
  * Wait for a while to check if PSOK is ready.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, refer the define in header file
+ *
  * \param timeout Timeout, in number of processor clocks, max 0xFFFFFF.
  * \return true if PSOK is ready.
  */
@@ -170,8 +170,8 @@ bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
  * 240000 by default, which takes 20ms when 12MHz clock is used.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, refer the define in header file
+ *
  * \param no_halt   No halt or Fail safe, see \c bpm_power_scaling_cpu()
  *                  and bpm_power_scaling_cpu_failsafe()
  * \return true if no error.
@@ -205,7 +205,7 @@ void bpm_disable_fast_wakeup(Bpm *bpm);
  * \brief Set clock source for 32KHz clock.
  *
  * \param bpm  Base address of the BPM instance.
- * \param source  Clock source, see \ref CLK32 32Khz-1Khz clock source selection.
+ * \param source  Clock source, refer the define in header file.
  */
 void bpm_set_clk32_source(Bpm *bpm, uint32_t source);
 
@@ -220,7 +220,7 @@ uint32_t bpm_get_backup_wakeup_cause(Bpm *bpm);
  * \brief Enable wakeup source.
  *
  * \param bpm  Base address of the BPM instance.
- * \param sources  Wakeup source mask, see \ref Backup wake up sources.
+ * \param sources  Wakeup source mask, refer the define in header file.
  */
 void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
 
@@ -228,7 +228,7 @@ void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \brief Disable wakeup source.
  *
  * \param bpm  Base address of the BPM instance.
- * \param sources  Wakeup source mask, see \ref Backup wake up sources.
+ * \param sources  Wakeup source mask, refer the define in header file.
  */
 void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
 
@@ -236,7 +236,7 @@ void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \brief Enable backup pin for wakeup.
  *
  * \param bpm  Base address of the BPM instance.
- * \param backup_pins  Backup pin mask, see \ref Backup pin muxing.
+ * \param backup_pins  Backup pin mask, refer the define in header file.
  */
 void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
 
@@ -244,7 +244,7 @@ void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
  * \brief Disable backup pin for wakeup.
  *
  * \param bpm  Base address of the BPM instance.
- * \param backup_pins  Backup pin mask, see \ref Backup pin muxing.
+ * \param backup_pins  Backup pin mask, refer the define in header file.
  */
 void bpm_disable_backup_pin(Bpm *bpm, uint32_t backup_pins);
 
@@ -306,6 +306,7 @@ uint32_t bpm_get_interrupt_status(Bpm *bpm);
  * \brief Clear BPM interrupt.
  *
  * \param bpm  Base address of the BPM instance.
+ * \param sources BPM interrupt source mask.
  */
 void bpm_clear_interrupt(Bpm *bpm, uint32_t sources);
 
@@ -358,7 +359,6 @@ uint32_t bpm_get_version(Bpm *bpm);
  * Sleep mode itself does not require any IO input, but to wakeup an interrupt
  * is needed.
  * -# \ref ioport_group "Common IOPORT (for GPIO)"
- * -# \ref sam_drivers_eic_group "External Interrupt Controller (EIC)"
  *
  * \subsection bpm_use_case_1_setup_prereq_code Code
  *
