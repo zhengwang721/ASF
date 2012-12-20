@@ -57,8 +57,8 @@ extern "C" {
  * \par Purpose
  *
  * The Peripheral DMA Controller (PDC) transfers data between on-chip serial 
- * peripherals and the on- and/or off-chip memories. The link between the PDC and 
- * a serial peripheral is operated by the AHB to ABP bridge.
+ * peripherals and the on- and/or off-chip memories. The link between the PDC 
+ * and a serial peripheral is operated by the AHB to ABP bridge.
  *
  * @{
  */
