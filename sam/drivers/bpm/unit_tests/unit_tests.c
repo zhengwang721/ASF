@@ -373,6 +373,12 @@ int main(void)
 
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
+	/**
+	 * Retain I/O lines after wakeup from backup.
+	 * Disable to undo the previous retention state then enable.
+	 */
+	bpm_disable_io_retention(BPM);
+	bpm_enable_io_retention(BPM);
 	/* Enable fast wakeup */
 	bpm_enable_fast_wakeup(BPM);
 

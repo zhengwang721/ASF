@@ -178,7 +178,13 @@ static void config_backup_wakeup(void)
 			(1 << BPM_BKUPWEN_EIC) | (1 << BPM_BKUPWEN_AST));
 	/* EIC can wake the device from backup mode */
 	bpm_enable_backup_pin(BPM, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
-
+	/**
+	 * Retain I/O lines after wakeup from backup.
+	 * Disable to undo the previous retention state then enable.
+	 */
+	bpm_disable_io_retention(BPM);
+	bpm_enable_io_retention(BPM);
+	/* Enable fast wakeup */
 	bpm_enable_fast_wakeup(BPM);
 }
 
