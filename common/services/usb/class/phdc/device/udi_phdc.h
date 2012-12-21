@@ -103,7 +103,9 @@ typedef struct {
 } udi_phdc_fnctext_desc_t;
 
 #ifdef UDI_PHDC_METADATA_DESC_BULK_IN
-/* ! Just for compile size but not used and removed by compiler */
+/*! Array used only to compute the size of wDevSpecializations through sizeof()
+ * during compilation. This array is not used and is removed by compiler.
+ */
 static uint8_t tmp_bulk_in[] = UDI_PHDC_METADATA_DESC_BULK_IN;
 /* ! Metadata descriptor of bulk IN for interface descriptors */
 typedef struct {
@@ -113,7 +115,9 @@ typedef struct {
 #endif
 
 #ifdef UDI_PHDC_METADATA_DESC_BULK_OUT
-/* ! Just for compile size but not used and removed by compiler */
+/*! Array used only to compute the size of wDevSpecializations through sizeof()
+ * during compilation. This array is not used and is removed by compiler.
+ */
 static uint8_t tmp_bulk_out[] = UDI_PHDC_METADATA_DESC_BULK_OUT;
 /* ! Metadata descriptor of bulk OUT for interface descriptors */
 typedef struct {
@@ -123,7 +127,9 @@ typedef struct {
 #endif
 
 #ifdef UDI_PHDC_METADATA_DESC_INT_IN
-/* ! Just for compile size but not used and removed by compiler */
+/*! Array used only to compute the size of wDevSpecializations through sizeof()
+ * during compilation. This array is not used and is removed by compiler.
+ */
 static uint8_t tmp_int_in[] = UDI_PHDC_METADATA_DESC_INT_IN;
 /* ! Metadata descriptor of interrupt IN for interface descriptors */
 typedef struct {
