@@ -118,7 +118,7 @@ void main_phdc_disable(void)
  * \section intro Introduction
  * This example shows how to implement a USB Device PHDC
  * on Atmel MCU with USB module.
- * This example uses a IEEEE11073 stack skeleton which have the minimum to
+ * This example uses a IEEEE11073 stack skeleton which has the minimum to
  * pass USB Command Verifier 2.0 Tool (CV2.0) tests from usb.org.
  * Note: No USB driver is provided by Atmel for PHDC, but it is not required
  * to execute CV2.0 PHDC tests.

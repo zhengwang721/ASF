@@ -141,9 +141,9 @@
 #define  UDI_PHDC_QOS_IN \
 	(USB_PHDC_QOS_MEDIUM_BEST)
 
-/* ! The following METADATAs can be send during USB enumeration
+/* ! The following METADATAs can be sent during USB enumeration
  * ! for each endpoints (optional)
- * ! It can define the Opaque data format of each endpoints
+ * ! It can define the "Opaque data" (Refer to IEEE11073) format for each endpoints
  * ! These must be up to 253 and recommended to be less than 30
  */
 

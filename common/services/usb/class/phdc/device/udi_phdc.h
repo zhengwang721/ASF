@@ -92,7 +92,9 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_phdc;
 
 COMPILER_PACK_SET(1)
 
-/* ! Just for compile size but not used and removed by compiler */
+/*! Array used only to compute the size of wDevSpecializations through sizeof()
+ * during compilation. This array is not used and is removed by compiler.
+ */
 static le16_t tmp_wDevSpecializations[] = UDI_PHDC_SPECIALIZATION;
 /* ! Function specialization descriptor for interface descriptors */
 typedef struct {
