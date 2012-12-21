@@ -159,22 +159,6 @@
 #define PHY_MAX_LENGTH                  (127)
 
 
-/** Enables the transceiver interrupts */
-#define ENABLE_TRX_IRQ()  do {                                     \
-    gpio_enable_pin_interrupt(EXT_INT, GPIO_RISING_EDGE);\
-}while(0)
-
-/** Disable the transceiver interrupts */
-#define DISABLE_TRX_IRQ() do {                                     \
-    gpio_disable_pin_interrupt(EXT_INT);\
-}while(0)
-
-/** Clear the transceiver interrupts */
-#define CLEAR_TRX_IRQ()   do {                                     \
-    gpio_clear_pin_interrupt_flag(EXT_INT);\
-}while(0)
-
-
 /**
  * Reset pin low
  */

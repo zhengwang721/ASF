@@ -64,4 +64,7 @@
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD
 
+// Enable AT86RFx interface
+//#define CONF_BOARD_AT86RFX
+
 #endif // CONF_BOARD_H

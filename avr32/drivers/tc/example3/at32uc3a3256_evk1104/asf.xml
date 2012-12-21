@@ -3,8 +3,35 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
+
+		<build type="c-source"    value="common_hw_timer.c"/>
+		<build type="header-file" value="common_hw_timer.h"/>
+		<build type="header-file" value="conf_common_hw_timer.h"/>
+
 		<build type="include-path" value="."/>
 		<require idref="avr32.drivers.tc.example3"/>
+		<require idref="board.evk1104"/>
+		<config name="config.board.evk1104.init" value="no"/>
+		<config name="config.board.evk1104.led" value="yes"/>
+		<generator value="iarew32"/>
+		<generator value="avr32gcc"/>
+		<generator value="as5_32"/>
+		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256"/>
+	</project>
+	<project caption="TC Example 3 for EVK1104" id="avr32.drivers.tc.swexample3.evk1104">
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_example.h"/>
+
+		<build type="c-source"    value="common_hw_timer.c"/>
+		<build type="c-source"    value="common_sw_timer.c"/>
+		<build type="header-file" value="common_hw_timer.h"/>
+		<build type="header-file" value="common_sw_timer.h"/>
+		<build type="header-file" value="conf_common_hw_timer.h"/>
+
+		<build type="include-path" value="."/>
+		<require idref="avr32.drivers.tc.swexample3"/>
 		<require idref="board.evk1104"/>
 		<config name="config.board.evk1104.init" value="no"/>
 		<config name="config.board.evk1104.led" value="yes"/>

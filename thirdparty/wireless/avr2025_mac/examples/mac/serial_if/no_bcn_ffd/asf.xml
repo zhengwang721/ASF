@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type ="application" caption="MAC Serial Interface  Application - No-Beacon FFD" id="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.no_bcn_ffd">
+		<info type="description" value="summary">
+		MAC Serial Interface  Application - No-Beacon FFD
+		</info>
+		<build type="define" name="HIGHEST_STACK_LAYER" value ="MAC"/>
+		<build type="define" name="FFD" value =""/>
+		<build type="define" name="TEST_HARNESS" value =""/>
+		<build type="define" name="ENABLE_TSTAMP" value =""/>
+
+		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.serial_if"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+	</module>
+</asf>

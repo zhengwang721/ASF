@@ -1,0 +1,42 @@
+<asf xmlversion="1.0">
+	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.sal" name="config.thirdparty.wireless.avr2025_mac.source.sal" caption="CONFIG.SAL" default="at86rf2xx">
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.sal#atxmega_sal"     caption="xmega sal support enabled">
+			<info type="description" value="summary">
+			To be Added
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.sal.atxmega_sal"/>
+		</module>
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.sal#at86rf2xx"     caption="at86rf2xx sal support enabled">
+			<info type="description" value="summary">
+			To be Added
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.sal.at86rf2xx"/>
+		</module>
+	</select-by-config>
+	<module type="component" id="thirdparty.wireless.avr2025_mac.source.sal" caption="COMPONENT - SAL">
+		<info type="description" value="summary">
+		To be Added
+		</info>
+
+		<build type="include-path"  value="inc/"/>
+		<build type="header-file"   value="inc/sal.h"/>
+		<build type="doxygen-entry-point" value="sal_group"/>
+		
+		<require idref="thirdparty.wireless.avr2025_mac.source.sal.inc"/>
+		<require idref="config.thirdparty.wireless.avr2025_mac.source.sal"/>
+
+		<device-support value="avr"/>
+	</module>
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.sal.inc" caption="COMPONENT - SAL">
+		<info type="description" value="summary">
+		To be Added
+		</info>
+
+		<build type="header-file"   value="inc/sal_generic.h"/>
+		<build type="header-file"   value="inc/sal_types.h"/>
+		<build type="include-path"  value="inc/"/>
+		<build type="doxygen-entry-point" value="sal_group"/>
+
+		<device-support value="avr"/>
+	</module>
+</asf>

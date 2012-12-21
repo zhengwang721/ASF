@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.includes" caption="Common Stack Include Files">
+		<info type="description" value="summary">
+		These are the generic include files required by the Stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="ieee_const.h"/>
+		<build type="header-file" value="return_val.h"/>
+		<build type="header-file" value="stack_config.h"/>
+		<build type="header-file" value="avr2025_mac.h"/>
+		<build type="header-file" value="mac_build_config.h"/>
+		<build type="header-file" value="tal_build_config.h"/>
+		<build type="doxygen-entry-point" value="common_includes_group"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+		</info>
+	</module>
+</asf>

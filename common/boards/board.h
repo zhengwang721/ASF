@@ -130,8 +130,8 @@ extern "C" {
 #define SENSORS_XPLAINED_LIGHTPROX_1 6  //!< Xplained light & proximity sensor board
 #define SENSORS_XPLAINED_INERTIAL_A1 7  //!< Xplained inertial sensor board "A"
 #define RZ600_AT86RF231              8  //!< AT86RF231 RF board in RZ600
-#define RZ600_AT86RF230B             9  //!< AT86RF231 RF board in RZ600
-#define RZ600_AT86RF212             10  //!< AT86RF231 RF board in RZ600
+#define RZ600_AT86RF230B             9  //!< AT86RF230B RF board in RZ600
+#define RZ600_AT86RF212             10  //!< AT86RF212 RF board in RZ600
 #define SENSORS_XPLAINED_BREADBOARD 11  //!< Xplained sensor development breadboard
 #define SECURITY_XPLAINED           12  //!< Xplained ATSHA204 board
 #define USER_EXT_BOARD              99  //!< User-reserved extension board (if any).

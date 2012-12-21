@@ -140,6 +140,19 @@ void board_init(void)
 	 */
 	sensor_board_init ();
 #endif
+
+#ifdef CONF_BOARD_AT86RFX
+	ioport_configure_pin(AT86RFX_SPI_SCK, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SPI_MOSI, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SPI_MISO, IOPORT_DIR_INPUT);
+	ioport_configure_pin(AT86RFX_SPI_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+
+	/* Initialize TRX_RST and SLP_TR as GPIO. */
+	ioport_configure_pin(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+#endif
 }
 
 /**

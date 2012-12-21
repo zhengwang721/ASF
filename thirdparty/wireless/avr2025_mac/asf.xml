@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.avr2025_mac" caption="AVR2025 - IEEE 802.15.4">
+		<info type="description" value="summary">
+		To be added
+		</info>
+
+		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<build type="doxygen-entry-point" value="avr2025_mac_group"/>
+
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+		</info>
+	</module>
+</asf>

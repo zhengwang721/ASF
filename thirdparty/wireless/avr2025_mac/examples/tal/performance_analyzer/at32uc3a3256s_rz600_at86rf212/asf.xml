@@ -1,0 +1,30 @@
+<asf xmlversion="1.0">
+	<project caption="Performance Analyzer Application" id="thirdparty.wireless.avr2025_mac.examples.tal.performance_analyzer.uc3a3256s_rz600rf212">
+		<require idref="thirdparty.wireless.avr2025_mac.examples.tal.performance_analyzer"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_spi_master.h"/>
+		<build type="header-file" value="conf_common_hw_timer.h"/>
+		<build type="header-file" value="conf_usb.h"/>
+		<build type="header-file" value="conf_sio_helper.h"/>
+
+		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212"/>
+		<require idref="board.rz600"/>
+		<generator value="iarew32"/>
+		<generator value="avr32gcc" />
+		<generator value="as5_32" />
+		<generator value="doxygen"/>
+		<device-support value="at32uc3a3256s"/>
+
+		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
+		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
+
+        <build type="define"   name="FFD"                                 value=""/>
+        <build type="define"   name="ENABLE_TFA"                          value=""/>
+        <build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
+	</project>
+</asf>

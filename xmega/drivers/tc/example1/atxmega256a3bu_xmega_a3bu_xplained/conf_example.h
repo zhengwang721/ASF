@@ -55,7 +55,7 @@
 *The prescaler for TC is 64
 *Thus, 2000000/64=31250
 */
-#define	TIMER_EXAMPLE_PERIOD 31250
+#define	TIMER_EXAMPLE_PERIOD 1000
 #define TIMER_PORT_LED       TCE0
 
 #endif /* CONF_BOARD_H */
