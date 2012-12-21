@@ -64,9 +64,9 @@ PROGMEM_DECLARE(uint8_t, app_microsd_inf_file[]) =
 #if defined(__ICCAVR__)
 /* ! String which contains the inf file required to install the USB CDC driver
  * Note: It is not possible with AVR GCC compiler to add this flash array,
- * because this increase CODE size > 64KB.
- * Thus, a functions are stored after 64KB, but AVR GCC compiler manages
- * function pointers up to 64KB.
+ * because this increases CODE size above 64KB.
+ * With AVR GCC compiler, any functions stored above the 64KB can not be
+ * accessible using a pointer.
  */
 PROGMEM_DECLARE(uint8_t, app_microsd_readme_file[]) =
 #    include "readme_mht.h"
