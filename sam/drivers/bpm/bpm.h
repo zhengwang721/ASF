@@ -362,7 +362,6 @@ uint32_t bpm_get_version(Bpm *bpm);
  *
  * \subsection bpm_use_case_1_setup_prereq_code Code
  *
- * Contents in conf_eic.h.
  * \code
  * #define EIC_INT5_ENABLE
  * \endcode
@@ -398,8 +397,6 @@ uint32_t bpm_get_version(Bpm *bpm);
  * -# Ensure that push button is configured as external interrupt in
  *    conf_board.h:
  *    \code #define CONF_BOARD_EIC \endcode
- * -# Ensure that push button EIC line is enabled in conf_eic.h:
- *    \code #define EIC_INT5_ENABLE \endcode
  * -# Add EIC initialize to application C-file:
  *    \code my_eic_init(); \endcode
  *
