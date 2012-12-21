@@ -43,14 +43,4 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Because the LED pins are defined statically in the board setup,
- * we have to undefine them before they can be moved to the port used
- * by this example.
- */
-#undef LED0_GPIO
-#undef LED1_GPIO
-
-#define LED0_GPIO   IOPORT_CREATE_PIN(PORTD,4)
-#define LED1_GPIO   IOPORT_CREATE_PIN(PORTD,5)
-
 #endif /* CONF_BOARD_H_INCLUDED */
