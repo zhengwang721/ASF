@@ -8,7 +8,6 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_pdca.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.drivers.pdca.pdca_usart_example"/>
 		<require idref="board.sam4l_ek"/>
