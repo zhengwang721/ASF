@@ -108,7 +108,7 @@ void adc12b_set_resolution(Adc12b *p_adc, const enum adc_resolution_t resolution
  * \param p_adc Pointer to an ADC instance.
  * \param trigger Conversion trigger.
  */
-void adc12b_configure_trigger(Adc12b *p_adc, const enum adc_trigger_t trigger)
+void adc12b_configure_trigger(Adc12b *p_adc, const enum adc12b_trigger_t trigger)
 {
 	p_adc->ADC12B_MR |= trigger;
 }

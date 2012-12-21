@@ -86,20 +86,39 @@ enum adc_resolution_t {
 enum adc_trigger_t {
 	ADC_TRIG_SW = ADC_MR_TRGEN_DIS,  /* Starting a conversion is only possible by software. */
 	ADC_TRIG_EXT = ((ADC_MR_TRGSEL_ADC_TRIG0 << ADC_MR_TRGSEL_Pos) & 
-									ADC_MR_TRGSEL_Msk) | ADC_MR_TRGEN,  /* External trigger */
+			ADC_MR_TRGSEL_Msk) | ADC_MR_TRGEN,  /* External trigger */
 	ADC_TRIG_TIO_CH_0 = (ADC_MR_TRGSEL_ADC_TRIG1  & ADC_MR_TRGSEL_Msk) | 
-											ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 0 */
+			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 0 */
 	ADC_TRIG_TIO_CH_1 = (ADC_MR_TRGSEL_ADC_TRIG2  & ADC_MR_TRGSEL_Msk) | 
-											ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 1 */
+			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 1 */
 	ADC_TRIG_TIO_CH_2 = (ADC_MR_TRGSEL_ADC_TRIG3  & ADC_MR_TRGSEL_Msk) | 
-											ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 2 */
+			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 2 */
 #if SAM3S || SAM4S || SAM3XA || SAM3U
 	ADC_TRIG_PWM_EVENT_LINE_0 = (ADC_MR_TRGSEL_ADC_TRIG4  & ADC_MR_TRGSEL_Msk) |
-															ADC_MR_TRGEN, /* PWM Event Line 0 */
+			ADC_MR_TRGEN, /* PWM Event Line 0 */
 	ADC_TRIG_PWM_EVENT_LINE_1 = (ADC_MR_TRGSEL_ADC_TRIG5  & ADC_MR_TRGSEL_Msk) | 
-															ADC_MR_TRGEN  /* PWM Event Line 1 */
+			ADC_MR_TRGEN  /* PWM Event Line 1 */
 #endif    
-} ;
+};
+
+#if SAM3U
+/* Definitions for ADC trigger */
+enum adc12b_trigger_t {
+	ADC12B_TRIG_SW = ADC12B_MR_TRGEN_DIS,  /* Starting a conversion is only possible by software. */
+	ADC12B_TRIG_EXT = ((ADC12B_MR_TRGSEL_ADC_TRIG0 << ADC12B_MR_TRGSEL_Pos) & 
+			ADC12B_MR_TRGSEL_Msk) | ADC12B_MR_TRGEN,  /* External trigger */
+	ADC12B_TRIG_TIO_CH_0 = (ADC12B_MR_TRGSEL_ADC_TRIG1  & ADC12B_MR_TRGSEL_Msk) | 
+			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 0 */
+	ADC12B_TRIG_TIO_CH_1 = (ADC12B_MR_TRGSEL_ADC_TRIG2  & ADC12B_MR_TRGSEL_Msk) | 
+			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 1 */
+	ADC12B_TRIG_TIO_CH_2 = (ADC12B_MR_TRGSEL_ADC_TRIG3  & ADC12B_MR_TRGSEL_Msk) | 
+			ADC12B_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 2 */
+	ADC12B_TRIG_PWM_EVENT_LINE_0 = (ADC12B_MR_TRGSEL_ADC_TRIG4  & ADC12B_MR_TRGSEL_Msk) |
+			ADC12B_MR_TRGEN, /* PWM Event Line 0 */
+	ADC12B_TRIG_PWM_EVENT_LINE_1 = (ADC12B_MR_TRGSEL_ADC_TRIG5  & ADC12B_MR_TRGSEL_Msk) | 
+			ADC12B_MR_TRGEN  /* PWM Event Line 1 */
+};
+#endif
 
 #if SAM3S || SAM4S ||  SAM3N || SAM3XA
 /* Definitions for ADC channel number */
@@ -120,7 +139,7 @@ enum adc_channel_num_t {
 	ADC_CHANNEL_13 = 13,
 	ADC_CHANNEL_14 = 14,
 	ADC_TEMPERATURE_SENSOR = 15,
-} ;
+};
 #elif SAM3U
 /* Definitions for ADC channel number */
 enum adc_channel_num_t {
@@ -132,7 +151,7 @@ enum adc_channel_num_t {
 	ADC_CHANNEL_5  = 5,
 	ADC_CHANNEL_6  = 6,
 	ADC_CHANNEL_7  = 7,
-} ;
+};
 #endif
 /* Definitions for ADC gain value */
 enum adc_gainvalue_t{
@@ -225,7 +244,7 @@ void adc_set_calibmode(Adc *p_adc);
 uint32_t adc12b_init(Adc12b *p_adc, const uint32_t ul_mck, const uint32_t ul_adc_clock, 
                                    const uint32_t ul_startuptime, const uint32_t ul_offmode_startuptime);
 void adc12b_set_resolution(Adc12b *p_adc, const enum adc_resolution_t resolution);
-void adc12b_configure_trigger(Adc12b *p_adc, const enum adc_trigger_t trigger);
+void adc12b_configure_trigger(Adc12b *p_adc, const enum adc12b_trigger_t trigger);
 void adc12b_configure_power_save(Adc12b *p_adc, const uint8_t uc_sleep, const uint8_t uc_offmode);
 void adc12b_configure_timing(Adc12b *p_adc, const uint32_t ul_sh);
 void adc12b_start(Adc12b *p_adc);
