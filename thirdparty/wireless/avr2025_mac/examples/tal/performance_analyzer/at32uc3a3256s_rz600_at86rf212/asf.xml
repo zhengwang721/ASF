@@ -13,6 +13,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf212"/>
 		<require idref="board.rz600"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc" />

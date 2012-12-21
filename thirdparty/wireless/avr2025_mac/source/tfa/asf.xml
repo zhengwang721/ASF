@@ -6,7 +6,6 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf231"/>
-			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf231"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
@@ -17,7 +16,6 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf212"/>
-			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf212"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
@@ -28,7 +26,6 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf230b"/>
-			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf230b"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
@@ -47,7 +44,8 @@
 		<build type="doxygen-entry-point" value="group_tfa"/>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.tfa"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>
-		 <build type="define"   name="ENABLE_TFA"                          value=""/>		
+        <build type="define"   name="ENABLE_TFA"                          value=""/>		
+		<require idref="config.thirdparty.wireless.avr2025_mac.source.tal"/>
 
 	</module>
 </asf>

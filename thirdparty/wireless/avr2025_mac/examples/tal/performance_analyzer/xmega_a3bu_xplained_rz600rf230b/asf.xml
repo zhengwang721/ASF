@@ -15,6 +15,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf230b"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf230b"/>
 
 		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
 
