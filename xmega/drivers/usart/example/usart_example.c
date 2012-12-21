@@ -71,7 +71,7 @@
  *   - XMEGA A3BU Xplained evaluation kit
  *     USARTC0, pin 2 and 3 on header J1 is utilized
  *   - XMEGA E5 Xplained evaluation kit
- *     USARTD0 on PORTD pin 6 and 7 is used (Link to board controller)
+ *     USARTD0 on PORTD pin 6 and 7 is used (Connected to board controller)
  * UART configuration is 9600 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example

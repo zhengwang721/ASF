@@ -61,7 +61,7 @@
  *     USARTC0 on PC2 and PC3 pins should be connected to the RXD and TXD
  *     pins of STK600 RS232 spare port.
  *   - XMEGA E5 Xplained evaluation kit
- *     USARTD0 on PORTD pin 6 and 7 is used (Link to board controller)
+ *     USARTD0 on PORTD pin 6 and 7 is used (Connected to board controller)
  * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
@@ -87,7 +87,7 @@
  * The example waits for a received character on the configured USART and
  * echoes the character back to the same USART.
  *
- * Note: The example configures the USART to use together variable frame lenght
+ * Note: The example configures the USART to use together variable frame length
  * (using the PEC counter of XCL module instead of build in USART counters,
  * to count transmission data bit) and data encoding/decoding features of
  * XMEGAE USART.

@@ -62,7 +62,7 @@
  *     USARTC0 on PC2 and PC3 pins should be connected to the RXD and TXD
  *     pins of STK600 RS232 spare port.
  *   - XMEGA E5 Xplained evaluation kit
- *     USARTD0 on PORTD pin 6 and 7 is used (Link to board controller)
+ *     USARTD0 on PORTD pin 6 and 7 is used (Connected to board controller)
  * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
@@ -70,7 +70,7 @@
  * echoes the character back to the same USART. When waiting for a character,
  * the cpu core enters standby mode and is wake up using the start frame
  * detection on USART.
- * Using the internal 8MHz Oscilator of XMEGA E, the wakeup character is not
+ * Using the internal 8MHz Oscilator of ATxmega32E5, the wakeup character is not
  * lost.
  *
  * \section compinfo Compilation Info

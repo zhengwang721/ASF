@@ -62,19 +62,19 @@
  *     USARTC0 one wire on pin PC2 must be connected
  *     to USARTD0 one wire on pin PD2.
  *     The PC4 must be connected to RS232 TXD pin on STK600
- *     to spi the one wire communication
+ *     to spy the one wire communication
  *   - XMEGA E5 Xplained evaluation kit
  *     USARTC0 one wire on pin PC2 (J1-PIN3) must be connected
  *     to USARTD0 one wire on pin PD2 (J4-PIN3).
  *     The PC4 (J1-PIN5) must be connected to TXD pin (PD7, J4-PIN6).
- *     of board controller to spi the one wire communication
+ *     of board controller to spy the one wire communication
  * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
  * The example executes a transfer between two UARTs in one wire mode.
  * The first UART sends "ping" message and the second responses "pong".
- * Note: Thank to XCL driver, the UART line PC2 is connected internaly to PC4
- * pin to allow the connection of a UART spi.
+ * Note: Using the XCL driver, the UART line PC2 is connected internaly to PC4
+ * pin to allow the connection of a UART spy.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -167,7 +167,7 @@ int main(void)
 	message2_received = true;
 
 	/* Configure XCL so it copies the PC2 pin to PC4 (it allows to wire PC4
-	 * to RS232 TXD pin on STK600 to spi the one wire communication */
+	 * to RS232 TXD pin on STK600 to spy the one wire communication */
 	xcl_enable(XCL_ASYNCHRONOUS);
 	xcl_port(PC);
 	xcl_lut_type(LUT_2LUT2IN);

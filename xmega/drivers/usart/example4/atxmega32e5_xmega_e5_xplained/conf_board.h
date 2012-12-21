@@ -44,7 +44,7 @@
 #define CONF_BOARD_H
 
 /* Initialize IO pins for USART 0 on pins 6 and 7 of port D
- * It is the UART link with board controller
+ * This is the USART used with the board controller on the XMEGA E5 Xplained
  */
 #define CONF_BOARD_ENABLE_USARTD0_REMAP
 
