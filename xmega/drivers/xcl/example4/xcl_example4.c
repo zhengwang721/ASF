@@ -44,7 +44,7 @@
 /*! \mainpage
  * \section intro Introduction
  * This example demonstrates how to use XMEGA E XCL module with LUT sub-module.
- * It perform a logic XOR operation between the 3 external inputs pins.
+ * It perform a logic XOR operation between the 3 external input pins.
  *
  * \section files Main Files
  * - xcl_example4.c: the example application.

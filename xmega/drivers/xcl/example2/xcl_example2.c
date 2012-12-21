@@ -62,7 +62,7 @@
  *
  * \section exampledescription Description of the example
  * This example will configure the XCL Timer sub-module in a 16bit timer with
- * its underflow interrupt to toggling an LED at 4Hz.
+ * its underflow interrupt to toggle a LED at 4Hz.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.

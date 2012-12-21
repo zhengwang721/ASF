@@ -66,7 +66,7 @@
  * a waveform output that is the logic XOR of two generated PWM waveforms.
  *
  * This example configures XCL TC sub-module in two 8bits BTCO/1 timers to
- * generate simgle slope PWM output on their compare output pins (PD2 and PD3).
+ * generate single slope PWM output on their compare output pins (PD2 and PD3).
  * Those PWM output are internaly connected to LUT0/1 inputs configured as a
  * logic XOR function. The resulting waveform is connected to PD4 LUT output.
  *
@@ -139,6 +139,9 @@ int main(void)
 	xcl_enable_oc1();
 	xcl_btc0_set_compare(0x55);
 	xcl_btc1_set_compare(0xAA);
+	/* A resolution of 60 is selected to obtain a slow blink
+	 * which will be visible for user
+	 */
 	real_resolution = xcl_tc_set_resolution(60);
 
 	/*

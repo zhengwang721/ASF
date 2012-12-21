@@ -221,7 +221,7 @@ static void run_xcl_glue_logic_3inputs_xor_test(
 
 	/* Configure the XCL module:
 	 * - Asynchronous mode usage (locks Power Down sleep mode)
-	 * - Configure XCL to use XMEGA port D
+	 * - Configure XCL to use ATxmega32E5 port D
 	 * - Configure LUT in 1 LUTs with 3 differents inputs
 	 * - LUT IN0 input on pin 2 of port D
 	 * - LUT IN1 input on XCL LUT OUT1
