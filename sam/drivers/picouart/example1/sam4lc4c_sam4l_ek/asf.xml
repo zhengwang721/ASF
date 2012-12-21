@@ -4,7 +4,6 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_eic.h"/>
 		<build type="header-file" value="conf_ast.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<device-support value="atsam4lc4c"/>

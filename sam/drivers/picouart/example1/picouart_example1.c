@@ -205,28 +205,32 @@ int main(void)
 	printf("-- IMPORTANT: This example requires a board "
 			"monitor firmware version V1.3 or greater.\r\n");
 
-	/* Config the push button */
-	config_buttons();
+	/* Enable osc32 oscillator*/
+	if (!osc_is_ready(OSC_ID_OSC32)) {
+		osc_enable(OSC_ID_OSC32);
+		osc_wait_ready(OSC_ID_OSC32);
+	}
 
 	/* Disable all AST wake enable bits for safety since the AST is reset
 		only by a POR. */
 	ast_enable(AST);
+	ast_conf.mode = AST_COUNTER_MODE;
+	ast_conf.osc_type = AST_OSC_32KHZ;
+	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
+	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
 	ast_disable_wakeup(AST, ast_wakeup_alarm);
 	ast_disable_wakeup(AST, ast_wakeup_per);
 	ast_disable_wakeup(AST, ast_wakeup_ovf);
 	ast_disable(AST);
 
+	/* Config the push button */
+	config_buttons();
+
 	/* Configurate the USART to board monitor */
 	bm_init();
 	sysclk_enable_hsb_module(SYSCLK_PBA_BRIDGE);
 	sysclk_enable_peripheral_clock(BM_USART_USART);
-
-	/* Enable osc32 oscillator*/
-	if (!osc_is_ready(OSC_ID_OSC32)) {
-		osc_enable(OSC_ID_OSC32);
-		osc_wait_ready(OSC_ID_OSC32);
-	}
 
 	/* Init the PICOUART */
 	picouart_get_config_defaults(&config);
