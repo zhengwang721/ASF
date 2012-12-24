@@ -80,6 +80,7 @@ enum genclk_source {
 	GENCLK_PCK_SRC_MAINCK_XTAL   = 6,//!< External crystal oscillator as PCK source clock
 	GENCLK_PCK_SRC_MAINCK_BYPASS = 7,//!< External bypass oscillator as PCK source clock
 	GENCLK_PCK_SRC_PLLACK        = 8,//!< Use PLLACK as PCK source clock
+	GENCLK_PCK_SRC_MCK	        = 9,	//!< Use Master Clk as PCK source clock
 };
 
 //@}
@@ -149,6 +150,10 @@ static inline void genclk_config_set_source(struct genclk_config *p_cfg,
 		p_cfg->ctrl |= (PMC_MCKR_CSS_PLLA_CLK);
 		break;
 
+	case GENCLK_PCK_SRC_MCK:
+		p_cfg->ctrl |= (PMC_PCK_CSS_MCK);
+		break;
+		
 	default:
 		break;
 	}

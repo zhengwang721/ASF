@@ -81,6 +81,7 @@ enum genclk_source {
 	GENCLK_PCK_SRC_MAINCK_BYPASS	=	7,	//!< External bypass oscillator as PCK source clock
 	GENCLK_PCK_SRC_PLLACK			=	8,	//!< Use PLLACK as PCK source clock
 	GENCLK_PCK_SRC_PLLBCK			=	9,	//!< Use PLLBCK as PCK source clock
+	GENCLK_PCK_SRC_MCK			=	10,	//!< Use Master Clk as PCK source clock
 };
 
 //@}
@@ -135,7 +136,7 @@ static inline void genclk_config_set_source(struct genclk_config *p_cfg,
 	case GENCLK_PCK_SRC_SLCK_RC:
 	case GENCLK_PCK_SRC_SLCK_XTAL:
 	case GENCLK_PCK_SRC_SLCK_BYPASS:
-		p_cfg->ctrl |= (PMC_MCKR_CSS_SLOW_CLK);
+		p_cfg->ctrl |= (PMC_PCK_CSS_SLOW_CLK);
 		break;
 
 	case GENCLK_PCK_SRC_MAINCK_4M_RC:
@@ -143,16 +144,20 @@ static inline void genclk_config_set_source(struct genclk_config *p_cfg,
 	case GENCLK_PCK_SRC_MAINCK_12M_RC:
 	case GENCLK_PCK_SRC_MAINCK_XTAL:
 	case GENCLK_PCK_SRC_MAINCK_BYPASS:
-		p_cfg->ctrl |= (PMC_MCKR_CSS_MAIN_CLK);
+		p_cfg->ctrl |= (PMC_PCK_CSS_MAIN_CLK);
 		break;
 
 	case GENCLK_PCK_SRC_PLLACK:
-		p_cfg->ctrl |= (PMC_MCKR_CSS_PLLA_CLK);
+		p_cfg->ctrl |= (PMC_PCK_CSS_PLLA_CLK);
 		break;
 
 	case GENCLK_PCK_SRC_PLLBCK:
-		p_cfg->ctrl |= (PMC_MCKR_CSS_UPLL_CLK);
+		p_cfg->ctrl |= (PMC_PCK_CSS_UPLL_CLK);
 		break;
+
+	case GENCLK_PCK_SRC_MCK:
+		p_cfg->ctrl |= (PMC_PCK_CSS_MCK);
+		break;		
 	}
 }
 
