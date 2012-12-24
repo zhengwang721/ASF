@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,8 +46,6 @@
 
 #include "compiler.h"
 
-#warning You must refill the following definitions with a correct values
-
 /**
  * USB Device Configuration
  * @{
@@ -87,23 +85,18 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-/* #define  UDC_VBUS_EVENT(b_vbus_high)
- *      user_callback_vbus_action(b_vbus_high) */
-/* extern void user_callback_vbus_action(bool b_vbus_high); */
-/* #define  UDC_SOF_EVENT()                  user_callback_sof_action() */
-/* extern void user_callback_sof_action(void); */
-/* #define  UDC_SUSPEND_EVENT()              user_callback_suspend_action() */
-/* extern void user_callback_suspend_action(void); */
-/* #define  UDC_RESUME_EVENT()               user_callback_resume_action() */
-/* extern void user_callback_resume_action(void); */
+#define  UDC_VBUS_EVENT(b_vbus_high)
+#define  UDC_SOF_EVENT()                  main_sof_action()
+#define  UDC_SUSPEND_EVENT()              main_suspend_action()
+#define  UDC_RESUME_EVENT()               main_resume_action()
 /* ! Mandatory when USB_DEVICE_ATTR authorizes remote wakeup feature */
 /* #define  UDC_REMOTEWAKEUP_ENABLE()        user_callback_remotewakeup_enable() */
 /* extern void user_callback_remotewakeup_enable(void); */
 /* #define  UDC_REMOTEWAKEUP_DISABLE()
  *       user_callback_remotewakeup_disable() */
 /* extern void user_callback_remotewakeup_disable(void); */
-/* ! When a extra string descriptor must be supported */
-/* ! other than manufacturer, product and serial string */
+/* ! When a extra string descriptor must be supported
+ * other than manufacturer, product and serial string */
 /* #define  UDC_GET_EXTRA_STRING() */
 /* @} */
 /* @} */
@@ -118,22 +111,22 @@
  * @{
  */
 /* ! Interface callback definition */
-#define  UDI_PHDC_ENABLE_EXT()          true
-#define  UDI_PHDC_DISABLE_EXT()
+#define  UDI_PHDC_ENABLE_EXT()          main_phdc_enable()
+#define  UDI_PHDC_DISABLE_EXT()         main_phdc_disable()
 
 /* ! Select data format of application */
 /* ! USB_PHDC_DATAMSG_FORMAT_VENDOR or USB_PHDC_DATAMSG_FORMAT_11073_20601 */
 #define  UDI_PHDC_DATAMSG_FORMAT       USB_PHDC_DATAMSG_FORMAT_11073_20601
-/* ! If USB_PHDC_DATAMSG_FORMAT_11073_20601 then define specialization(s) */
-/* 4113(Dec) for BloodGlucose defined in 11073_20601 */
+/* ! If USB_PHDC_DATAMSG_FORMAT_11073_20601 then define specialization(s)
+ * Note: 4113(Dec) for BloodGlucose Define in 11073_20601 */
 #define  UDI_PHDC_SPECIALIZATION       {0x1011}
 
 /* ! Defines the QOS need for each transfer direction */
 
 /*
-#define  UDI_PHDC_QOS_OUT \
+#define  UDI_PHDC_QOS_OUT              \
 		(USB_PHDC_QOS_MEDIUM_BETTER|USB_PHDC_QOS_HIGH_BEST)
-#define  UDI_PHDC_QOS_IN \
+#define  UDI_PHDC_QOS_IN               \
 		(USB_PHDC_QOS_LOW_GOOD|USB_PHDC_QOS_MEDIUM_BETTER|USB_PHDC_QOS_MEDIUM_BEST)
 */
 #define  UDI_PHDC_QOS_OUT \
@@ -141,10 +134,10 @@
 #define  UDI_PHDC_QOS_IN \
 	(USB_PHDC_QOS_MEDIUM_BEST)
 
-/* ! The following METADATAs can be sent during USB enumeration
- * ! for each endpoints (optional)
- * ! It can define the "Opaque data" (Refer to IEEE11073) format for each endpoints
- * ! These must be up to 253 and recommended to be less than 30
+/* ! The following METADATAs can be send during USB enumeration
+ * for each endpoints (optional).
+ * It can define the Opaque data format of each endpoints
+ * These must be up to 253 and recommended to be less than 30.
  */
 
 /*
@@ -159,11 +152,12 @@
 /**
  * USB Device Driver Configuration
  * @{
- * @}
  */
+/* @} */
 
 /* ! The includes of classes and other headers must be done at the end of this
  * file to avoid compile error */
 #include "udi_phdc_conf.h"
+#include "main.h"
 
 #endif /* _CONF_USB_H_ */

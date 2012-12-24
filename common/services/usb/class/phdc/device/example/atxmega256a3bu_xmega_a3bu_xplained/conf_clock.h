@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Default PHDC configuration for a USB Device with a single interface
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,45 +40,38 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#ifndef _UDI_PHDC_CONF_H_
-#define _UDI_PHDC_CONF_H_
+/* ! Configuration using On-Chip RC oscillator at 48MHz */
+/* ! The RC oscillator is calibrated via USB Start Of Frame */
+/* ! Clk USB     = 48MHz (used by USB) */
+/* ! Clk sys     = 48MHz */
+/* ! Clk cpu/per = 12MHz */
+#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_RCOSC
+#define CONFIG_OSC_RC32_CAL      48000000UL
 
-/**
- * \addtogroup udi_phdc_group_single_desc
- * @{
+#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
+
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
+
+/*
+ * Use external board OSC (8MHz)
+ * Clk pll     = 48MHz (used by USB)
+ * Clk sys     = 48MHz
+ * Clk cpu/per = 12MHz
+ *
+ * #define CONFIG_PLL0_SOURCE       PLL_SRC_XOSC
+ * #define CONFIG_PLL0_MUL          6
+ * #define CONFIG_PLL0_DIV          1
+ *
+ * #define CONFIG_USBCLK_SOURCE     USBCLK_SRC_PLL
+ *
+ * #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_PLL
+ * #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+ * #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
  */
 
-/* ! Control endpoint size */
-#define  USB_DEVICE_EP_CTRL_SIZE       32 /* 8 is not supported by PHDC */
-
-/* ! Endpoint numbers used by PHDC interface */
-#define  UDI_PHDC_EP_BULK_OUT          (1 | USB_EP_DIR_OUT)
-#define  UDI_PHDC_EP_BULK_IN           (2 | USB_EP_DIR_IN)
-#define  UDI_PHDC_EP_INTERRUPT_IN      (3 | USB_EP_DIR_IN)
-
-/* ! Endpoint sizes used by PHDC interface */
-#define  UDI_PHDC_EP_SIZE_BULK_OUT     32
-#define  UDI_PHDC_EP_SIZE_BULK_IN      32
-#define  UDI_PHDC_EP_SIZE_INT_IN       8
-
-/* ! Interface number */
-#define  UDI_PHDC_IFACE_NUMBER          0
-
-/**
- * \name UDD Configuration
- * @{
- */
-/* ! 2 or 3 endpoints used by PHDC interface */
-#if ((UDI_PHDC_QOS_IN & USB_PHDC_QOS_LOW_GOOD) == USB_PHDC_QOS_LOW_GOOD)
-#define  USB_DEVICE_MAX_EP             3
-#else
-#define  USB_DEVICE_MAX_EP             2
-#endif
-/* @} */
-
-/* @} */
-
-#include "udi_phdc.h"
-
-#endif /* _UDI_PHDC_CONF_H_ */
+#endif /* CONF_CLOCK_H_INCLUDED */

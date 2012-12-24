@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Default PHDC configuration for a USB Device with a single interface
+ * \brief Declaration of main function used by PHDC example
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,44 +41,32 @@
  *
  */
 
-#ifndef _UDI_PHDC_CONF_H_
-#define _UDI_PHDC_CONF_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-/**
- * \addtogroup udi_phdc_group_single_desc
- * @{
+/*! \brief Called by PHDC interface
+ * Callback running when USB Host enable PHDC interface
+ *
+ * \retval true if phdc startup is ok
  */
+bool main_phdc_enable(void);
 
-/* ! Control endpoint size */
-#define  USB_DEVICE_EP_CTRL_SIZE       32 /* 8 is not supported by PHDC */
-
-/* ! Endpoint numbers used by PHDC interface */
-#define  UDI_PHDC_EP_BULK_OUT          (1 | USB_EP_DIR_OUT)
-#define  UDI_PHDC_EP_BULK_IN           (2 | USB_EP_DIR_IN)
-#define  UDI_PHDC_EP_INTERRUPT_IN      (3 | USB_EP_DIR_IN)
-
-/* ! Endpoint sizes used by PHDC interface */
-#define  UDI_PHDC_EP_SIZE_BULK_OUT     32
-#define  UDI_PHDC_EP_SIZE_BULK_IN      32
-#define  UDI_PHDC_EP_SIZE_INT_IN       8
-
-/* ! Interface number */
-#define  UDI_PHDC_IFACE_NUMBER          0
-
-/**
- * \name UDD Configuration
- * @{
+/*! \brief Called by PHDC interface
+ * Callback running when USB Host disable PHDC interface
  */
-/* ! 2 or 3 endpoints used by PHDC interface */
-#if ((UDI_PHDC_QOS_IN & USB_PHDC_QOS_LOW_GOOD) == USB_PHDC_QOS_LOW_GOOD)
-#define  USB_DEVICE_MAX_EP             3
-#else
-#define  USB_DEVICE_MAX_EP             2
-#endif
-/* @} */
+void main_phdc_disable(void);
 
-/* @} */
+/*! \brief Called when a start of frame is received on USB line
+ */
+void main_sof_action(void);
 
-#include "udi_phdc.h"
+/*! \brief Enters the application in low power mode
+ * Callback called when USB host sets USB line in suspend state
+ */
+void main_suspend_action(void);
 
-#endif /* _UDI_PHDC_CONF_H_ */
+/*! \brief Called by UDD when the USB line exit of suspend state
+ */
+void main_resume_action(void);
+
+#endif /* _MAIN_H_ */

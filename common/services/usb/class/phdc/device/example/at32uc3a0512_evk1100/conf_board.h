@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Sample of IEE11073 Communication Model
+ * \brief Board configuration
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,9 @@
  *
  */
 
-#ifndef _COMMUNICATION_MODEL_H_
-#define _COMMUNICATION_MODEL_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-bool ieee11073_com_model_enable(void);
-void ieee11073_com_model_disable(void);
-bool ieee11073_com_model_process(void);
-void ieee11073_com_model_send_measure_1(void);
-void ieee11073_com_model_send_measure_2(void);
+/* Only the default board init (switchs/leds) is necessary for this example */
 
-#endif // _COMMUNICATION_MODEL_H_
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Default PHDC configuration for a USB Device with a single interface
+ * \brief User Interface
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,44 +41,85 @@
  *
  */
 
-#ifndef _UDI_PHDC_CONF_H_
-#define _UDI_PHDC_CONF_H_
+#include <asf.h>
+#include "ui.h"
+#include "ieee11073_skeleton.h"
+
+void ui_init(void)
+{
+	LED_On(LED0);
+	LED_Off(LED1);
+}
+
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+	LED_Off(LED1);
+	LED_Off(LED2);
+}
+
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_association(bool state)
+{
+	if (state) {
+		LED_On(LED2);
+	} else {
+		LED_Off(LED2);
+	}
+}
+
+void ui_process(uint16_t framenumber)
+{
+	static uint8_t cpt_sof = 0;
+	bool b_btn_state;
+	static bool btn0_last_state = false;
+	static bool btn1_last_state = false;
+
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED1);
+	}
+
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED1);
+	}
+
+	/* Scan process running each 20ms */
+	cpt_sof++;
+	if (20 > cpt_sof) {
+		return;
+	}
+
+	cpt_sof = 0;
+
+	/* Use buttons to send measures */
+	b_btn_state = (!gpio_get_pin_value(GPIO_PUSH_BUTTON_0));
+	if (b_btn_state != btn0_last_state) {
+		btn0_last_state = b_btn_state;
+		if (b_btn_state) {
+			ieee11073_skeleton_send_measure_1();
+		}
+	}
+
+	b_btn_state = (!gpio_get_pin_value(GPIO_PUSH_BUTTON_1));
+	if (b_btn_state != btn1_last_state) {
+		btn1_last_state = b_btn_state;
+		if (b_btn_state) {
+			ieee11073_skeleton_send_measure_2();
+		}
+	}
+}
 
 /**
- * \addtogroup udi_phdc_group_single_desc
- * @{
+ * \defgroup UI User Interface
+ *
+ * Human interface on EVK1100 :
+ * - PWR led is on when power present
+ * - Led 0 is on when USB line is in IDLE mode, and off in SUSPEND mode
+ * - Led 1 blinks when USB host has checked and enabled PHDC interface
+ * - Led 2 is on when PHDC has validated association
+ * - PB0 and PB1 Push Button can be used to send a measure
  */
-
-/* ! Control endpoint size */
-#define  USB_DEVICE_EP_CTRL_SIZE       32 /* 8 is not supported by PHDC */
-
-/* ! Endpoint numbers used by PHDC interface */
-#define  UDI_PHDC_EP_BULK_OUT          (1 | USB_EP_DIR_OUT)
-#define  UDI_PHDC_EP_BULK_IN           (2 | USB_EP_DIR_IN)
-#define  UDI_PHDC_EP_INTERRUPT_IN      (3 | USB_EP_DIR_IN)
-
-/* ! Endpoint sizes used by PHDC interface */
-#define  UDI_PHDC_EP_SIZE_BULK_OUT     32
-#define  UDI_PHDC_EP_SIZE_BULK_IN      32
-#define  UDI_PHDC_EP_SIZE_INT_IN       8
-
-/* ! Interface number */
-#define  UDI_PHDC_IFACE_NUMBER          0
-
-/**
- * \name UDD Configuration
- * @{
- */
-/* ! 2 or 3 endpoints used by PHDC interface */
-#if ((UDI_PHDC_QOS_IN & USB_PHDC_QOS_LOW_GOOD) == USB_PHDC_QOS_LOW_GOOD)
-#define  USB_DEVICE_MAX_EP             3
-#else
-#define  USB_DEVICE_MAX_EP             2
-#endif
-/* @} */
-
-/* @} */
-
-#include "udi_phdc.h"
-
-#endif /* _UDI_PHDC_CONF_H_ */
