@@ -217,7 +217,7 @@ static void tc_waveform_initialize(void)
 			| TC_CMR_ACPC_CLEAR /* RC Compare Effect: clear */
 			| TC_CMR_CPCTRG /* UP mode with automatic trigger on RC Compare */
 			);
-	
+
 	/* Configure waveform frequency and duty cycle. */
 #if (SAM4L)
 	rc = (sysclk_get_peripheral_bus_hz(TC) /
@@ -246,7 +246,7 @@ static void tc_capture_initialize(void)
 {
 	/* Configure the PMC to enable the TC module */
 	sysclk_enable_peripheral_clock(ID_TC_CAPTURE);
-	
+
 	/* Init TC to capture mode. */
 	tc_init(TC, TC_CHANNEL_CAPTURE,
 			TC_CAPTURE_TIMER_SELECTION /* Clock Selection */
@@ -312,7 +312,7 @@ int main(void)
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
 	/* Configure PIO Pins for TC */
-#if SAM4L
+#if (SAM4L || SAM4E)
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_FLAGS);
 	ioport_disable_pin(PIN_TC_WAVEFORM); // Disable IO (but enable peripheral mode)
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_FLAGS);
