@@ -3,7 +3,7 @@
  *
  * \brief Example configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,6 +57,8 @@
 #define USART_SERIAL_STOP_BIT              false
 #define USART_RX_Vect                      USARTC0_RXC_vect
 #define USART_SERIAL_VARIABLE_CHAR_LENGTH  8
+#define USART_SERIAL_XCL_PORT              PC
+#define USART_SERIAL_LUT_IN_PIN            LUT_IN_PINL
 //! @}
 
 #endif // _CONF_USART_EXAMPLE_H

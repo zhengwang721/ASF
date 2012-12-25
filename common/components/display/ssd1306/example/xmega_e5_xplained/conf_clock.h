@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Sample of IEE11073 Communication Model
+ * \brief Clock system configuration for the ST7565R example
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,11 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#ifndef _COMMUNICATION_MODEL_H_
-#define _COMMUNICATION_MODEL_H_
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_4
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
 
-bool ieee11073_com_model_enable(void);
-void ieee11073_com_model_disable(void);
-bool ieee11073_com_model_process(void);
-void ieee11073_com_model_send_measure_1(void);
-void ieee11073_com_model_send_measure_2(void);
-
-#endif // _COMMUNICATION_MODEL_H_
+#endif /* CONF_CLOCK_H_INCLUDED */
