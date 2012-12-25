@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief User interface for BPM example.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,77 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#include <asf.h>
-#include "ui.h"
-#include "conf_board.h"
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include "board_monitor.h"
-sam4l_status_t sam4l_status = {
-	.power_scaling = POWER_SCALING_PS1,
-	.sleep_mode = SLEEP_MODE_RUN,
-	.cpu_freq = 12000000,
-	.cpu_src = CPU_SRC_RC4M,
-};
-/* Power scaling value -> board monitor status */
-power_scaling_t ps_statuses[] = {
-	POWER_SCALING_PS0, POWER_SCALING_PS1
-};
-/* Sleep modes -> board monitor status */
-sleep_mode_t sleep_statuses[] = {
-	SLEEP_MODE_RUN,
-	SLEEP_MODE_NA, SLEEP_MODE_NA, SLEEP_MODE_NA, SLEEP_MODE_NA, // Sleep 0-3
-	SLEEP_MODE_WAIT,
-	SLEEP_MODE_RETENTION,
-	SLEEP_MODE_BACKUP
-};
-
-/**
- * Enable necessary clocks for USARTs
- */
-static void ui_enable_clocks(void)
-{
-	sysclk_enable_hsb_module(SYSCLK_PBA_BRIDGE);
-	sysclk_enable_peripheral_clock(REMOTE_TASK_USART);
-}
-
-/**
- * Disable clocks for UI
- */
-static void ui_disable_clocks(void)
-{
-	sysclk_disable_peripheral_clock(REMOTE_TASK_USART);
-	sysclk_disable_hsb_module(SYSCLK_PBA_BRIDGE);
-}
-
-void ui_init(void)
-{
-	ui_enable_clocks();
-	bm_init();
-	ui_disable_clocks();
-}
-
-void ui_show_backup_wakeup_cause(uint32_t wakeup_cause)
-{
-	UNUSED(wakeup_cause);
-}
-
-void ui_show_mode_info(uint8_t mode, const mode_config_t *mode_config)
-{
-	UNUSED(mode);
-	ui_enable_clocks();
-	sam4l_status.power_scaling = ps_statuses[mode_config->ps_value];
-	sam4l_status.sleep_mode = sleep_statuses[mode_config->sleep_mode];
-	bm_send_mcu_status(sam4l_status.power_scaling,
-		sam4l_status.sleep_mode,sam4l_status.cpu_freq,
-		sam4l_status.cpu_src);
-	ui_disable_clocks();
-}
-
-void ui_show_wakeup_info(uint8_t mode, uint8_t wakeup_events)
-{
-	UNUSED(mode);
-	UNUSED(wakeup_events);
-}
-
-
+#endif /* CONF_SLEEPMGR_INCLUDED */

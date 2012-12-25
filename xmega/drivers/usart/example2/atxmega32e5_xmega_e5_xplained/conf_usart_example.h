@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Header file for BPM example.
+ * \brief Example configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,28 +41,21 @@
  *
  */
 
-#ifndef BPM_EXAMPLE_H_INCLUDED
-#define BPM_EXAMPLE_H_INCLUDED
+#ifndef _CONF_USART_EXAMPLE_H
+#define _CONF_USART_EXAMPLE_H
 
-#define PS_18V 0 /* Power scale for 1.8V */
-#define PS_12V 1 /* Power scale for 1.2V */
+#include "conf_board.h"
+#include "sysclk.h"
 
-#define WAKEUP_AST (1u << 0) /* AST wakeup event */
-#define WAKEUP_EIC (1u << 1) /* EIC wakeup event */
+/*! \name Configuration
+ */
+//! @{
+#define USART_SERIAL_EXAMPLE               &USARTD0
+#define USART_SERIAL_EXAMPLE_BAUDRATE      115200
+#define USART_SERIAL_CHAR_LENGTH           USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY                USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT              false
+#define USART_RX_Vect                      USARTD0_RXC_vect
+//! @}
 
-typedef struct _mode_config_t {
-	/* Mode prompt */
-	char* mode_info;
-	/* voltage scaling variable */
-	uint32_t ps_value;
-	/* sleep mode variable */
-	uint32_t sleep_mode;
-	/* PM->FASTSLEEP */
-	uint32_t fastsleep;
-	/* CPU frequency */
-	uint32_t cpu_freq;
-	/* CPU source */
-	uint32_t cpu_src;
-} mode_config_t;
-
-#endif // BPM_EXAMPLE_H_INCLUDED
+#endif // _CONF_USART_EXAMPLE_H
