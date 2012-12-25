@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM3N and SAM4L evaluation kits.
+ * This package can be used with SAM3N, SAM4L and SAM4E evaluation kits.
  *
  * \section Description
  *
