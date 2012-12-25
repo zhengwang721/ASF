@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief User interface header file for BPM example.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,34 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef UI_H_INCLUDED
-#define UI_H_INCLUDED
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#include "bpm_example.h"
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/**
- * Initialize user interface
- */
-void ui_init(void);
-
-/**
- * Show backup mode wakeup cause
- * \param wakeup_cause Cause bits.
- */
-void ui_show_backup_wakeup_cause(uint32_t wakeup_cause);
-
-/**
- * Show information of the mode
- * \param mode Index of the mode.
- * \param mode_config Configuration information of the mode.
- */
-void ui_show_mode_info(uint8_t mode, const mode_config_t *mode_config);
-
-/**
- * Show information of the mode
- * \param mode Index of the mode.
- * \param wakeup_events Wakeup events bits.
- */
-void ui_show_wakeup_info(uint8_t mode, uint8_t wakeup_events);
-
-#endif
+#endif /* CONF_SLEEPMGR_INCLUDED */

@@ -17,6 +17,7 @@
 		<build type="c-source" value="app_microsd.c"/>
 		<build type="header-file" value="app_microsd.h"/>
 		<build type="header-file" value="atmel_devices_cdc_inf.h"/>
+		<build type="header-file" value="readme_mht.h"/>
 		<build type="c-source" value="app_bitmaps.c"/>
 		<build type="define" name="ISR_CUSTOM_H" value="\&quot;app_cpu_load.h\&quot;" toolchain="avrgcc"/>
 		<build type="define" name="ISR_CUSTOM_H" value="&quot;app_cpu_load.h&quot;" toolchain="iarew"/>
