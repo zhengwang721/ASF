@@ -343,6 +343,11 @@ static void udi_msc_spc_prevent_allow_medium_removal(void);
 static void udi_msc_spc_mode_sense(bool b_sense10);
 
 /**
+ * \brief Process start stop command
+ */
+static void udi_msc_sbc_start_stop(void);
+
+/**
  * \brief Process read capacity command
  */
 static void udi_msc_sbc_read_capacity(void);
@@ -361,6 +366,7 @@ static void udi_msc_sbc_trans(bool b_read);
 
 bool udi_msc_enable(void)
 {
+	uint8_t lun;
 	udi_msc_b_trans_req = false;
 	udi_msc_b_cbw_invalid = false;
 	udi_msc_nb_lun = get_nb_lun();
@@ -371,6 +377,10 @@ bool udi_msc_enable(void)
 	// to initialize memories or signal that interface is enabled
 	if (!UDI_MSC_ENABLE_EXT())
 		return false;
+	// Load the medium on each LUN
+	for (lun = 0; lun <= udi_msc_nb_lun; lun ++) {
+		mem_unload(lun, false);
+	}
 	// Start MSC process by CBW reception
 	udi_msc_cbw_wait();
 	return true;
@@ -529,10 +539,9 @@ static void udi_msc_cbw_received(udd_ep_status_t status,
 		udi_msc_sbc_read_capacity();
 		break;
 
-		// Optional but can not reply INVALID COMMAND because
-		// this command is used by the Linux 2.4 kernel.
-		// Otherwise the disk will not mount.
 	case SBC_START_STOP_UNIT:
+		udi_msc_sbc_start_stop();
+		break;
 
 		// Accepts request to support plug/plug in case of card reader
 	case SPC_PREVENT_ALLOW_MEDIUM_REMOVAL:
@@ -934,6 +943,18 @@ static void udi_msc_spc_prevent_allow_medium_removal(void)
 	} else {
 		udi_msc_sense_fail_cdb_invalid(); // Command is unsupported
 	}
+	udi_msc_csw_process();
+}
+
+
+static void udi_msc_sbc_start_stop(void)
+{
+	bool start = 0x1 & udi_msc_cbw.CDB[4];
+	bool loej = 0x2 & udi_msc_cbw.CDB[4];
+	if (loej) {
+		mem_unload(udi_msc_cbw.bCBWLUN, !start);
+	}
+	udi_msc_sense_pass();
 	udi_msc_csw_process();
 }
 
