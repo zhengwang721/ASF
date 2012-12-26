@@ -330,6 +330,11 @@ static bool udi_msc_spc_testunitready_global(void);
 static void udi_msc_spc_testunitready(void);
 
 /**
+ * \brief Process prevent allow medium removal command
+ */
+static void udi_msc_spc_prevent_allow_medium_removal(void);
+
+/**
  * \brief Process mode sense command
  *
  * \param b_sense10     Sense10 SCSI command, if true
@@ -528,8 +533,12 @@ static void udi_msc_cbw_received(udd_ep_status_t status,
 		// this command is used by the Linux 2.4 kernel.
 		// Otherwise the disk will not mount.
 	case SBC_START_STOP_UNIT:
+
 		// Accepts request to support plug/plug in case of card reader
 	case SPC_PREVENT_ALLOW_MEDIUM_REMOVAL:
+		udi_msc_spc_prevent_allow_medium_removal();
+		break;
+
 		// Accepts request to support full format from Windows
 	case SBC_VERIFY10:
 		udi_msc_sense_pass();
@@ -912,6 +921,18 @@ static void udi_msc_spc_mode_sense(bool b_sense10)
 
 	// Send mode sense data
 	udi_msc_data_send((uint8_t *) & sense, request_lgt);
+}
+
+
+static void udi_msc_spc_prevent_allow_medium_removal(void)
+{
+	uint8_t prevent = udi_msc_cbw.CDB[4];
+	if (0 == prevent) {
+		udi_msc_sense_pass();
+	} else {
+		udi_msc_sense_fail_cdb_invalid(); // Command is unsupported
+	}
+	udi_msc_csw_process();
 }
 
 
