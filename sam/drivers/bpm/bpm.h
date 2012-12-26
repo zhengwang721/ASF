@@ -79,6 +79,7 @@ extern "C" {
 #define BPM_SM_BACKUP    7    /**< Backup mode */
 /* @} */
 
+/** \anchor power_scaling_change_mode */
 /** \name Power scaling change mode */
 /* @{ */
 /** Power scaling change mode: halting the CPU execution */
@@ -87,6 +88,7 @@ extern "C" {
 #define BPM_PSCM_CPU_NOT_HALT       1
 /* @} */
 
+/** \anchor power_scaling_mode_value */
 /** \name Power scaling mode value */
 /* @{ */
 /** Power scaling mode 0 */
@@ -95,6 +97,7 @@ extern "C" {
 #define BPM_PS_1    1
 /* @} */
 
+/** \anchor CLK32_32Khz_1Khz */
 /** \name CLK32 32Khz-1Khz clock source selection */
 /* @{ */
 /** OSC32K : Low frequency crystal oscillator */
@@ -103,6 +106,7 @@ extern "C" {
 #define BPM_CLK32_SOURCE_RC32K   1
 /* @} */
 
+/** \anchor backup_wake_up_sources */
 /** \name Backup wake up sources */
 /* @{ */
 /** EIC wake up */
@@ -119,6 +123,7 @@ extern "C" {
 #define BPM_BKUP_WAKEUP_SRC_PICOUART  (1UL << BPM_BKUPWEN_PICOUART)
 /* @} */
 
+/** \anchor backup_pin_muxing */
 /** \name Backup pin muxing */
 /* @{ */
 #define BPM_BKUP_PIN_PB01_EIC0    BPM_BKUPPMUX_BKUPPMUX(0)
@@ -144,8 +149,8 @@ extern "C" {
  * PSOK is not checked while switching PS mode.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, see \ref power_scaling_mode_value.
+ *
  */
 void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
 
@@ -155,8 +160,8 @@ void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
  * Wait for a while to check if PSOK is ready.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, see \ref power_scaling_mode_value.
+ *
  * \param timeout Timeout, in number of processor clocks, max 0xFFFFFF.
  * \return true if PSOK is ready.
  */
@@ -170,8 +175,8 @@ bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
  * 240000 by default, which takes 20ms when 12MHz clock is used.
  *
  * \param bpm  Base address of the BPM instance.
- * \param ps_value  Power scaling value,
- *                  see \ref Power scaling mode value.
+ * \param ps_value  Power scaling value, see \ref power_scaling_mode_value.
+ *
  * \param no_halt   No halt or Fail safe, see \c bpm_power_scaling_cpu()
  *                  and bpm_power_scaling_cpu_failsafe()
  * \return true if no error.
@@ -205,7 +210,7 @@ void bpm_disable_fast_wakeup(Bpm *bpm);
  * \brief Set clock source for 32KHz clock.
  *
  * \param bpm  Base address of the BPM instance.
- * \param source  Clock source, see \ref CLK32 32Khz-1Khz clock source selection.
+ * \param source  Clock source, see \ref CLK32_32Khz_1Khz.
  */
 void bpm_set_clk32_source(Bpm *bpm, uint32_t source);
 
@@ -220,7 +225,7 @@ uint32_t bpm_get_backup_wakeup_cause(Bpm *bpm);
  * \brief Enable wakeup source.
  *
  * \param bpm  Base address of the BPM instance.
- * \param sources  Wakeup source mask, see \ref Backup wake up sources.
+ * \param sources  Wakeup source mask, see \ref backup_wake_up_sources.
  */
 void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
 
@@ -228,7 +233,7 @@ void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \brief Disable wakeup source.
  *
  * \param bpm  Base address of the BPM instance.
- * \param sources  Wakeup source mask, see \ref Backup wake up sources.
+ * \param sources  Wakeup source mask, see \ref backup_wake_up_sources.
  */
 void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
 
@@ -236,7 +241,7 @@ void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \brief Enable backup pin for wakeup.
  *
  * \param bpm  Base address of the BPM instance.
- * \param backup_pins  Backup pin mask, see \ref Backup pin muxing.
+ * \param backup_pins  Backup pin mask, see \ref backup_pin_muxing.
  */
 void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
 
@@ -244,7 +249,7 @@ void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
  * \brief Disable backup pin for wakeup.
  *
  * \param bpm  Base address of the BPM instance.
- * \param backup_pins  Backup pin mask, see \ref Backup pin muxing.
+ * \param backup_pins  Backup pin mask, see \ref backup_pin_muxing.
  */
 void bpm_disable_backup_pin(Bpm *bpm, uint32_t backup_pins);
 
@@ -306,6 +311,7 @@ uint32_t bpm_get_interrupt_status(Bpm *bpm);
  * \brief Clear BPM interrupt.
  *
  * \param bpm  Base address of the BPM instance.
+ * \param sources BPM interrupt source mask.
  */
 void bpm_clear_interrupt(Bpm *bpm, uint32_t sources);
 
@@ -362,7 +368,6 @@ uint32_t bpm_get_version(Bpm *bpm);
  *
  * \subsection bpm_use_case_1_setup_prereq_code Code
  *
- * Contents in conf_eic.h.
  * \code
  * #define EIC_INT5_ENABLE
  * \endcode
@@ -398,8 +403,6 @@ uint32_t bpm_get_version(Bpm *bpm);
  * -# Ensure that push button is configured as external interrupt in
  *    conf_board.h:
  *    \code #define CONF_BOARD_EIC \endcode
- * -# Ensure that push button EIC line is enabled in conf_eic.h:
- *    \code #define EIC_INT5_ENABLE \endcode
  * -# Add EIC initialize to application C-file:
  *    \code my_eic_init(); \endcode
  *
