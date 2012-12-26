@@ -187,27 +187,51 @@ static const struct
 } lun_desc[MAX_LUN] =
 {
 #if LUN_0 == ENABLE
+# ifndef Lun_0_unload
+#  define Lun_0_unload NULL
+# endif
   Lun_desc_entry(0),
 #endif
 #if LUN_1 == ENABLE
+# ifndef Lun_1_unload
+#  define Lun_1_unload NULL
+# endif
   Lun_desc_entry(1),
 #endif
 #if LUN_2 == ENABLE
+# ifndef Lun_2_unload
+#  define Lun_2_unload NULL
+# endif
   Lun_desc_entry(2),
 #endif
 #if LUN_3 == ENABLE
+# ifndef Lun_3_unload
+#  define Lun_3_unload NULL
+# endif
   Lun_desc_entry(3),
 #endif
 #if LUN_4 == ENABLE
+# ifndef Lun_4_unload
+#  define Lun_4_unload NULL
+# endif
   Lun_desc_entry(4),
 #endif
 #if LUN_5 == ENABLE
+# ifndef Lun_5_unload
+#  define Lun_5_unload NULL
+# endif
   Lun_desc_entry(5),
 #endif
 #if LUN_6 == ENABLE
+# ifndef Lun_6_unload
+#  define Lun_6_unload NULL
+# endif
   Lun_desc_entry(6),
 #endif
 #if LUN_7 == ENABLE
+# ifndef Lun_7_unload
+#  define Lun_7_unload NULL
+# endif
   Lun_desc_entry(7)
 #endif
 };
@@ -357,18 +381,22 @@ U8 mem_sector_size(U8 lun)
 bool mem_unload(U8 lun, bool unload)
 {
   bool unloaded;
-  if (!Ctrl_access_lock()) return true;
+  if (!Ctrl_access_lock()) return false;
 
   unloaded =
 #if MAX_LUN
-	(lun < MAX_LUN) ?
-		(lun_desc[lun].unload ?
-			lun_desc[lun].unload(unload) : false) :
+          (lun < MAX_LUN) ?
+              (lun_desc[lun].unload ?
+                  lun_desc[lun].unload(unload) : !unload) :
 #endif
 #if LUN_USB == ENABLE
-		Lun_usb_unload(lun - LUN_ID_USB);
+# if defined(Lun_usb_unload)
+              Lun_usb_unload(lun - LUN_ID_USB, unload);
+# else
+              !unload /* Can not unload: load success, unload fail */
+# endif
 #else
-		false;
+              false; /* No mem, unload/load fail */
 #endif
 
   Ctrl_access_unlock();
