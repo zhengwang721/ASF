@@ -59,21 +59,7 @@
 /** Timeout to prevent code hang in clock initialization */
 #define AST_POLL_TIMEOUT 10000
 
-/**
- * \name Oscillator Types
- */
-/* @{ */
-/** 1KHz clock from 32KHz oscillator (CLK_1K) */
-#define AST_OSC_1KHZ     4
-/** Generic clock (GCLK) */
-#define AST_OSC_GCLK     3
-/** Peripheral Bus Clock */
-#define AST_OSC_PB       2
-/** 32KHz oscillator (OSC32K) */
-#define AST_OSC_32KHZ    1
-/** System RC oscillator (RCSYS) */
-#define AST_OSC_RC       0
-/* @} */
+
 
 /** \name Predefined PSEL Values
  */
@@ -94,9 +80,6 @@
 /* @} */
 
 
-// Roundup operation for Digital Tuner in AST.
-#define ROUNDUP_DIV(x, y) ((x % y) ? ((x / y) + 1) : (x / y))
-
 // Description for Calendar Field.
 struct ast_calv {
 	uint32_t sec : 6;
@@ -112,24 +95,24 @@ struct ast_calendar {
 	union {
 		uint32_t field;
 		struct ast_calv FIELD;
-};
+	};
 };
 
 #define AST_CALENDAR_MODE    0
 #define AST_COUNTER_MODE    1
 
 struct ast_config {
-	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or 
-	    \ref Counter mode: AST_COUNTER_MODE. */
+	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or
+	   \ref Counter mode: AST_COUNTER_MODE. */
 	uint8_t mode;
-	/* 
-	 Oscillator Type: 
-	 - \ref AST_OSC_RC, 
-	 - \ref AST_OSC_32KHZ, 
-	 - \ref AST_OSC_PB, 
-	 - \ref AST_OSC_1KHZ,
-	 - \ref AST_OSC_GCLK.
-	*/
+	/*
+	 *  Oscillator Type:
+	 *  - \ref AST_OSC_RC,
+	 *  - \ref AST_OSC_32KHZ,
+	 *  - \ref AST_OSC_PB,
+	 *  - \ref AST_OSC_1KHZ,
+	 *  - \ref AST_OSC_GCLK.
+	 */
 	uint8_t osc_type;
 	/* Prescaler Value. */
 	uint8_t psel;
@@ -141,24 +124,37 @@ struct ast_config {
 
 #define AST_INTERRUPT_SOURCE_NUM    5
 
+typedef enum ast_oscilator_source{
+/** 1KHz clock from 32KHz oscillator (CLK_1K) */
+	AST_OSC_1KHZ = 0,
+/** Generic clock (GCLK) */
+	AST_OSC_GCLK,
+/** Peripheral Bus Clock */
+	AST_OSC_PB,
+/** 32KHz oscillator (OSC32K) */
+	AST_OSC_32KHZ,
+/** System RC oscillator (RCSYS) */
+	AST_OSC_RC,
+} ast_oscillator_source_t;
+
 typedef enum ast_interrupt_source {
-	ast_interrupt_alarm = 0,
-	ast_interrupt_per,
-	ast_interrupt_ovf,
-	ast_interrupt_ready,
-	ast_interrupt_clkready,
+	AST_INTERRUPT_ALARM = 0,
+	AST_INTERRUPT_PER,
+	AST_INTERRUPT_OVF,
+	AST_INTERRUPT_READY,
+	AST_INTERRUPT_CLKREADY,
 } ast_interrupt_source_t;
 
 typedef enum ast_wakeup_source {
-	ast_wakeup_alarm = 0,
-	ast_wakeup_per,
-	ast_wakeup_ovf,
+	AST_WAKEUP_ALARM = 0,
+	AST_WAKEUP_PER,
+	AST_WAKEUP_OVF,
 } ast_wakeup_source_t;
 
 typedef enum ast_event_source {
-	ast_event_alarm = 0,
-	ast_event_per,
-	ast_event_ovf,
+	AST_EVENT_ALARM = 0,
+	AST_EVENT_PER,
+	AST_EVENT_OVF,
 } ast_event_source_t;
 
 typedef void (*ast_callback_t)(void);
@@ -169,22 +165,19 @@ void ast_enable(Ast *ast);
 void ast_disable(Ast *ast);
 
 uint32_t ast_set_config(Ast *ast, struct ast_config *ast_conf);
-void ast_set_callback(Ast *ast, ast_interrupt_source_t source, 
-	ast_callback_t callback, uint8_t irq_line, uint8_t irq_level);
-uint32_t ast_configure_digital_tuner(Ast *ast, uint32_t input_freq, 
-	uint32_t tuned_freq);
-void ast_init_digital_tuner(Ast *ast, bool add, uint8_t value, 
-	uint8_t exp);
+void ast_set_callback(Ast *ast, ast_interrupt_source_t source,
+		ast_callback_t callback, uint8_t irq_line, uint8_t irq_level);
+uint32_t ast_configure_digital_tuner(Ast *ast, uint32_t input_freq,
+		uint32_t tuned_freq);
+void ast_init_digital_tuner(Ast *ast, bool add, uint8_t value,
+		uint8_t exp);
 void ast_disable_digital_tuner(Ast *ast);
 
 
-void ast_write_calendar_value(Ast *ast,
-		struct ast_calendar ast_calendar);
+void ast_write_calendar_value(Ast *ast, struct ast_calendar ast_calendar);
 struct ast_calendar ast_read_calendar_value(Ast *ast);
-void ast_write_counter_value(Ast *ast,
-		uint32_t ast_counter);
-void ast_enable_counter_clear_on_alarm(Ast *ast,
-		uint8_t alarm_channel);
+void ast_write_counter_value(Ast *ast, uint32_t ast_counter);
+void ast_enable_counter_clear_on_alarm(Ast *ast, uint8_t alarm_channel);
 void ast_clear_prescalar(Ast *ast);
 
 /**
@@ -252,8 +245,7 @@ void ast_write_periodic0_value(Ast *ast, uint32_t pir);
 
 void ast_enable_interrupt(Ast *ast, ast_interrupt_source_t source);
 void ast_disable_interrupt(Ast *ast, ast_interrupt_source_t source);
-void ast_clear_interrupt_flag(Ast *ast, 
-	ast_interrupt_source_t source);
+void ast_clear_interrupt_flag(Ast *ast, ast_interrupt_source_t source);
 
 void ast_enable_wakeup(Ast *ast, ast_wakeup_source_t source);
 void ast_disable_wakeup(Ast *ast, ast_wakeup_source_t source);

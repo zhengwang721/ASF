@@ -214,11 +214,11 @@ uint32_t ast_set_config(Ast *ast, struct ast_config *ast_conf)
  *
  * \note Parameter Calculation:
  * Formula: \n
- * ADD=0 -> ft= fi(1 - (1/((roundup(256/value) * (2^exp)) + 1))) \n
- * ADD=1 -> ft= fi(1 + (1/((roundup(256/value) * (2^exp)) - 1))) \n
+ * ADD=0 -> ft= fi(1 - (1/((div_ceil(256/value) * (2^exp)) + 1))) \n
+ * ADD=1 -> ft= fi(1 + (1/((div_ceil(256/value) * (2^exp)) - 1))) \n
  * Specifications: \n
  * exp > 0, value > 1 \n
- * Let X = (2 ^ exp), Y = roundup(256 / value) \n
+ * Let X = (2 ^ exp), Y = div_ceil(256 / value) \n
  * Tuned Frequency -> ft \n
  * Input Frequency -> fi \n
  *
@@ -234,13 +234,13 @@ uint32_t ast_set_config(Ast *ast, struct ast_config *ast_conf)
  * The equation can be reduced to (X * Y) = Z
  *
  * Frequency Limits \n
- * (1/((roundup(256/value) * (2^exp)) + 1)) should be min to get the lowest
+ * (1/((div_ceil(256/value) * (2^exp)) + 1)) should be min to get the lowest
  * possible output from Digital Tuner.\n
- * (1/((roundup(256/value) * (2^exp)) - 1)) should be min to get the highest
+ * (1/((div_ceil(256/value) * (2^exp)) - 1)) should be min to get the highest
  * possible output from Digital Tuner.\n
- * For that, roundup(256/value) & (2^exp) should be minimum \n
+ * For that, div_ceil(256/value) & (2^exp) should be minimum \n
  * min (EXP) = 1 (Note: EXP > 0) \n
- * min (roundup(256/value)) = 2 \n
+ * min (div_ceil(256/value)) = 2 \n
  * max (Ft) = (4*fi)/3 \n
  * min (Ft) = (4*fi)/5 \n
  *
@@ -289,9 +289,9 @@ uint32_t ast_configure_digital_tuner(Ast *ast,
 	 * Initialize with minimum possible values.
 	 * exp value should be greater than zero, min(exp) = 1 -> min(x)= (2^1)
 	 * = 2
-	 * y should be greater than one -> roundup(256/value) where value- 0 to
+	 * y should be greater than one -> div_ceil(256/value) where value- 0 to
 	 * 255
-	 * min(y) = roundup(256/255) = 2
+	 * min(y) = div_ceil(256/255) = 2
 	 */
 	y = 2;
 	x = 2;
@@ -314,7 +314,7 @@ uint32_t ast_configure_digital_tuner(Ast *ast,
 	/* Decrement y value after exit from loop */
 	y = y - 1;
 	/* Find VALUE from y */
-	value = ROUNDUP_DIV(256, y);
+	value = div_ceil(256, y);
 	/* Initialize the Digital Tuner using the required parameters */
 	ast_init_digital_tuner(ast, add, value, exp);
 	return 1;
@@ -590,8 +590,8 @@ void ast_clear_interrupt_flag(Ast *ast, ast_interrupt_source_t source)
  * \param irq_line  interrupt line.
  * \param irq_level interrupt level.
  */
-void ast_set_callback(Ast *ast, ast_interrupt_source_t source, 
-	ast_callback_t callback, uint8_t irq_line, uint8_t irq_level)
+void ast_set_callback(Ast *ast, ast_interrupt_source_t source,
+		ast_callback_t callback, uint8_t irq_line, uint8_t irq_level)
 {
 	ast_callback_pointer[source] = callback;
 	NVIC_ClearPendingIRQ(    (IRQn_Type)irq_line);
@@ -645,7 +645,7 @@ void AST_PER_Handler(void)
  * \brief Interrupt handler for AST alarm.
  */
 #ifdef AST_ALARM_ENABLE
- void AST_ALARM_Handler(void)
+void AST_ALARM_Handler(void)
 {
 	ast_interrupt_handler();
 }
@@ -655,7 +655,7 @@ void AST_PER_Handler(void)
  * \brief Interrupt handler for AST periodic.
  */
 #ifdef AST_OVF_ENABLE
- void AST_OVF_Handler(void)
+void AST_OVF_Handler(void)
 {
 	ast_interrupt_handler();
 }
