@@ -762,8 +762,6 @@ static void udi_msc_spc_inquiry(void)
 		.pq_pdt = SCSI_INQ_PQ_CONNECTED | SCSI_INQ_DT_DIR_ACCESS,
 #ifdef UDI_MSC_NOT_REMOVABLE
 		.flags1 = 0,
-#else
-		.flags1 = SCSI_INQ_RMB,
 #endif
 		.version = SCSI_INQ_VER_SPC,
 		.flags3 = SCSI_INQ_RSP_SPC2,
@@ -789,6 +787,10 @@ static void udi_msc_spc_inquiry(void)
 		udi_msc_csw_process();
 		return;
 	}
+
+#ifndef UDI_MSC_NOT_REMOVABLE
+	udi_msc_inquiry_data.flags1 = mem_removal(udi_msc_cbw.bCBWLUN) ? SCSI_INQ_RMB : 0;
+#endif
 
 	//* Fill product ID field
 	// Copy name in product id field
