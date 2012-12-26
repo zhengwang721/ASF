@@ -3,7 +3,7 @@
  *
  * \brief Example configuration file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,10 +55,10 @@
 #define USART2_SERIAL_EXAMPLE            &USARTD0
 #define USART2_RX_Vect                   USARTD0_RXC_vect
 
-#define USART_SERIAL_EXAMPLE_BAUDRATE   115200
-#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
-#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
-#define USART_SERIAL_STOP_BIT           false
+#define USART_SERIAL_EXAMPLE_BAUDRATE    115200
+#define USART_SERIAL_CHAR_LENGTH         USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY              USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT            false
 //! @}
 
 #endif // _CONF_USART_EXAMPLE_H
