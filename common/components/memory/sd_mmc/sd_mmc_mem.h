@@ -98,6 +98,22 @@ extern Ctrl_status sd_mmc_read_capacity_0(uint32_t *u32_nb_sector);
 //! Instance Declaration for sd_mmc_read_capacity Slot 1
 extern Ctrl_status sd_mmc_read_capacity_1(uint32_t *u32_nb_sector);
 
+/*! \brief Unload/Load the SD/MMC card selected
+ *
+ * The START STOP UNIT SCSI optional command allows an application client to
+ * eject the removable medium on a LUN.
+ *
+ * \param slot SD/MMC Slot Card Selected.
+ * \param unload \c true to unload the medium, \c false to load the medium.
+ *
+ * \return \c true if unload/load done success.
+ */
+extern bool sd_mmc_unload(uint8_t slot, bool unload);
+//! Instance Declaration for sd_mmc_unload Slot O
+extern bool sd_mmc_unload_0(bool unload);
+//! Instance Declaration for sd_mmc_unload Slot 1
+extern bool sd_mmc_unload_1(bool unload);
+
 /*! \brief Returns the write-protection state of the memory.
  *
 *  \param slot SD/MMC Slot Card Selected.

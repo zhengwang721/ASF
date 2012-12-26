@@ -232,6 +232,15 @@ extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector);
  */
 extern U8 mem_sector_size(U8 lun);
 
+/*! \brief Unload/load the medium.
+ *
+ * \param lun Logical Unit Number.
+ * \param unload \c true to unload the medium, \c false to load the medium.
+ *
+ * \return \c true if unload/load success, else \c false.
+ */
+extern bool mem_unload(U8 lun, bool unload);
+
 /*! \brief Returns the write-protection state of the memory.
  *
  * \param lun Logical Unit Number.

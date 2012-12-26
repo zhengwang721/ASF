@@ -122,6 +122,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _usb_read_10),\
@@ -135,6 +136,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _usb_read_10),\
@@ -146,6 +148,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _mem_2_ram),\
@@ -157,6 +160,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(LUN_, lun, _NAME)\
@@ -168,6 +172,7 @@ static const struct
 {
   Ctrl_status (*test_unit_ready)(void);
   Ctrl_status (*read_capacity)(U32 *);
+  bool (*unload)(bool);
   bool (*wr_protect)(void);
   bool (*removal)(void);
 #if ACCESS_USB == true
@@ -348,6 +353,28 @@ U8 mem_sector_size(U8 lun)
   return sector_size;
 }
 
+
+bool mem_unload(U8 lun, bool unload)
+{
+  bool unloaded;
+  if (!Ctrl_access_lock()) return true;
+
+  unloaded =
+#if MAX_LUN
+	(lun < MAX_LUN) ?
+		(lun_desc[lun].unload ?
+			lun_desc[lun].unload(unload) : false) :
+#endif
+#if LUN_USB == ENABLE
+		Lun_usb_unload(lun - LUN_ID_USB);
+#else
+		false;
+#endif
+
+  Ctrl_access_unlock();
+
+  return unloaded;
+}
 
 bool mem_wr_protect(U8 lun)
 {
