@@ -291,7 +291,7 @@ void usart_reset(Usart *p_usart)
 	usart_reset_status(p_usart);
 	/* Turn off RTS and DTR if exist. */
 	usart_drive_RTS_pin_high(p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 	usart_drive_DTR_pin_high(p_usart);
 #endif
 }
@@ -362,7 +362,7 @@ uint32_t usart_init_hw_handshaking(Usart *p_usart,
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 
 /**
  * \brief Configure USART to work in modem mode.
@@ -380,10 +380,10 @@ uint32_t usart_init_modem(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck)
 {
 	/*
-	 * SAM3S and SAM4S series support MODEM mode only on USART1,
+	 * SAM3S, SAM4S and SAM4E series support MODEM mode only on USART1,
 	 * SAM3U and SAM4L series support MODEM mode only on USART0.
 	 */
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4E)
 	if (p_usart != USART1) {
 		return 1;
 	}
@@ -1245,7 +1245,7 @@ void usart_restart_rx_timeout(Usart *p_usart)
 	p_usart->US_CR = US_CR_RETTO;
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 
 /**
  * \brief Drive the pin DTR to 0.
@@ -1549,7 +1549,7 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 		p_pdc_base = PDC_USART0;
 		return p_pdc_base;
 	}
-#if (SAM3S || SAM4S || SAM3XA || SAM3U)
+#if (SAM3S || SAM4S || SAM3XA || SAM3U || SAM4E)
 	else if (p_usart == USART1) {
 		p_pdc_base = PDC_USART1;
 		return p_pdc_base;
@@ -1624,7 +1624,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 	return (p_usart->US_NER & US_NER_NB_ERRORS_Msk);
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E)
 
 /**
  * \brief Configure the transmitter preamble length when the Manchester
