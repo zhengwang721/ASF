@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -118,13 +120,13 @@ struct eic_line_config {
 
 typedef void (*eic_callback_t)(void);
 
-void eic_disable(Eic * eic);
-void eic_enable(Eic * eic);
+void eic_disable(Eic *eic);
+void eic_enable(Eic *eic);
 
-void eic_line_set_config(Eic * eic, uint8_t line_number, 
+void eic_line_set_config(Eic *eic, uint8_t line_number,
 	struct eic_line_config *eic_line_conf);
 
-void eic_line_set_callback(Eic * eic, uint8_t line_number, 
+void eic_line_set_callback(Eic *eic, uint8_t line_number,
 	eic_callback_t callback, uint8_t irq_line, uint8_t irq_level);
 
 /**
@@ -133,7 +135,7 @@ void eic_line_set_callback(Eic * eic, uint8_t line_number,
  * \param eic Base address of the EIC module
  * \param line_number The number of enabled line
  */
-static inline void eic_line_enable(Eic * eic, uint8_t line_number)
+static inline void eic_line_enable(Eic *eic, uint8_t line_number)
 {
 	eic->EIC_EN = 1 << line_number;
 }
@@ -144,7 +146,7 @@ static inline void eic_line_enable(Eic * eic, uint8_t line_number)
  * \param eic Base address of the EIC module
  * \param line_number The number of disabled line
  */
-static inline void eic_line_disable(Eic * eic, uint8_t line_number)
+static inline void eic_line_disable(Eic *eic, uint8_t line_number)
 {
 	eic->EIC_DIS = 1 << line_number;
 }
@@ -157,32 +159,32 @@ static inline void eic_line_disable(Eic * eic, uint8_t line_number)
  *
  * \return Whether an EIC line is enabled.
  */
-static inline bool eic_line_is_enabled(Eic * eic, uint8_t line_number)
+static inline bool eic_line_is_enabled(Eic *eic, uint8_t line_number)
 {
 	return (eic->EIC_CTRL & (1 << line_number)) != 0;
 }
 
 /**
- * \brief Enables the external interrupt from specified pin propagate from 
+ * \brief Enables the external interrupt from specified pin propagate from
  * EIC to interrupt controller.
  *
  * \param eic Base address of the EIC (i.e. EIC).
  * \param line_number Line number to test
  */
-static inline void eic_line_enable_interrupt(Eic * eic,
+static inline void eic_line_enable_interrupt(Eic *eic,
 		uint8_t line_number)
 {
 	eic->EIC_IER = 1 << line_number;
 }
 
 /**
- * \brief Disables the external interrupt from specified pin propagate from 
+ * \brief Disables the external interrupt from specified pin propagate from
  * EIC to interrupt controller.
  *
  * \param eic Base address of the EIC (i.e. EIC).
  * \param line_number Line number to test
  */
-static inline void eic_line_disable_interrupt(Eic * eic,
+static inline void eic_line_disable_interrupt(Eic *eic,
 		uint8_t line_number)
 {
 	eic->EIC_IDR = 1 << line_number;
@@ -197,7 +199,7 @@ static inline void eic_line_disable_interrupt(Eic * eic,
  *
  * \return Whether an EIC interrupt line is enabled.
  */
-static inline bool eic_line_interrupt_is_enabled(Eic * eic,
+static inline bool eic_line_interrupt_is_enabled(Eic *eic,
 		uint8_t line_number)
 {
 	return (eic->EIC_IMR & (1 << line_number)) != 0;
@@ -210,7 +212,7 @@ static inline bool eic_line_interrupt_is_enabled(Eic * eic,
  * \param eic Base address of the EIC (i.e. EIC).
  * \param line_number Line number to test
  */
-static inline void eic_line_clear_interrupt(Eic * eic,
+static inline void eic_line_clear_interrupt(Eic *eic,
 		uint8_t line_number)
 {
 	eic->EIC_ICR = 1 << line_number;
@@ -225,7 +227,7 @@ static inline void eic_line_clear_interrupt(Eic * eic,
  *
  * \return Whether an EIC interrupt line is pending.
  */
-static inline bool eic_line_interrupt_is_pending(Eic * eic,
+static inline bool eic_line_interrupt_is_pending(Eic *eic,
 		uint8_t line_number)
 {
 	return (eic->EIC_ISR & (1 << line_number)) != 0;

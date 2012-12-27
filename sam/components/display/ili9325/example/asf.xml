@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.components.display.ili9325.example" caption="ILI9325 LCD Controller Example">
+	<module type="application" id="sam.components.display.ili9325.example" caption="ILI9325 Display Controller Example">
 		<info type="description" value="summary">
 		A simple example for drawing pictures and strings on the ILI9325 LCD controller.
 		</info>

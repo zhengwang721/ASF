@@ -57,9 +57,22 @@ static FATFS app_microsd_fs;
 /* ! Handle on the open file */
 static FIL app_microsd_file;
 /* ! String which contains the inf file required to install the USB CDC driver */
-const char app_microsd_inf_file[] =
+PROGMEM_DECLARE(uint8_t, app_microsd_inf_file[]) =
 #    include "atmel_devices_cdc_inf.h"
 ;
+
+#if defined(__ICCAVR__)
+/* ! String which contains the inf file required to install the USB CDC driver
+ * Note: It is not possible with AVR GCC compiler to add this flash array,
+ * because this increases CODE size above 64KB.
+ * With AVR GCC compiler, any functions stored above the 64KB can not be
+ * accessible using a pointer.
+ */
+PROGMEM_DECLARE(uint8_t, app_microsd_readme_file[]) =
+#    include "readme_mht.h"
+;
+#endif
+
 /* ! State of the microSD task (disabled when USB is enabled) */
 static bool app_microsd_task_running = true;
 /* ! Signal that a microSD initialization has been done */
@@ -71,6 +84,7 @@ static void app_microsd_display_on(void);
 static void app_microsd_display_off(void);
 static void app_microsd_display_failed(void);
 static bool app_microsd_install(void);
+static void app_microsd_f_puts_code(uint8_t PROGMEM_PTR_T str, FIL* fil);
 
 void app_microsd_display_access(bool on_going)
 {
@@ -232,13 +246,27 @@ static bool app_microsd_install(void)
 	char test_file_inf_name[] = "0:atmel_devices_cdc.inf";
 	test_file_inf_name[0] = LUN_ID_SD_MMC_0_MEM + '0';
 	res = f_open(&app_microsd_file,
-			(char const *)test_file_inf_name,
+			test_file_inf_name,
 			FA_CREATE_NEW | FA_WRITE);
 	if (res == FR_OK) {
 		/* Fill file */
-		f_puts(app_microsd_inf_file, &app_microsd_file);
+		app_microsd_f_puts_code(app_microsd_inf_file, &app_microsd_file);
 		f_close(&app_microsd_file);
 	}
+
+#if defined(__ICCAVR__)
+	/* Record readme file */
+	char test_file_readme_name[] = "0:readme.mht";
+	test_file_readme_name[0] = LUN_ID_SD_MMC_0_MEM + '0';
+	res = f_open(&app_microsd_file,
+			test_file_readme_name,
+			FA_CREATE_NEW | FA_WRITE);
+	if (res == FR_OK) {
+		/* Fill file */
+		app_microsd_f_puts_code(app_microsd_readme_file, &app_microsd_file);
+		f_close(&app_microsd_file);
+	}
+#endif
 
 	/* Create & Open file */
 	char test_file_name[] = "0:dat_log_c3_xplained_00.txt";
@@ -275,6 +303,33 @@ static bool app_microsd_install(void)
 	app_microsd_ready = true;
 	printf("MicroSD [OK]\r\n");
 	return true;
+}
+
+/**
+ * \brief Put a string storage in FLASH to the file  
+ *
+ * \param str  Pointer to the string to be output
+ * \param fil  Pointer to the file object
+ */
+static void app_microsd_f_puts_code(uint8_t PROGMEM_PTR_T str, FIL* fil)
+{
+#define BUF_TMP 512
+	uint8_t buf_tmp[BUF_TMP];
+	UINT btw;		/* Number of bytes to write */
+	UINT bw;			/* Pointer to number of bytes written */
+
+	while(PROGMEM_READ_BYTE(str)) {
+		/* Fill internal buffer FLASH to RAM */
+		btw = 0;
+		while(PROGMEM_READ_BYTE(str) && (btw != BUF_TMP)) {
+			buf_tmp[btw++] = PROGMEM_READ_BYTE(str);
+			str++;
+		}
+		/* Write internal buffer FLASH to file */
+		if (FR_OK != f_write(fil, buf_tmp, btw, &bw)) {
+			return;
+		}
+	}
 }
 
 bool app_microsd_is_ready(void)
