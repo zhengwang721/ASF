@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Common IOPORT service demo configuration header file.
+ * \brief STK600 + ATmega128RFA1 board LEDs support package.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the STK600 board.
+ *
+ * To use this board, define BOARD=STK600_RC064X_LCDX.
+ *
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +45,44 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-#define EXAMPLE_LED_PORT IOPORT_PORTB
-#define EXAMPLE_LED_MASK (1<<4)
+#ifndef _LED_H_
+#define _LED_H_
 
-#define EXAMPLE_BUTTON_PORT IOPORT_PORTE
-#define EXAMPLE_BUTTON_MASK (1<<4)
+#include "gpio.h"
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+/*! \name GPIO Connections of LEDs
+ * LED0 is connected to PORTB pin 4
+ */
+ #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
+
+ /* ! PUSH BUTTON ON STK600-ATMEGA128RFA1 EVK. */
+#define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
+ 
+ 
+ 
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
+
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
+
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */

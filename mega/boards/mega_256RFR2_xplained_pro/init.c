@@ -45,8 +45,16 @@
 #include <board.h>
 #include <compiler.h>
 #include <conf_board.h>
+#include "gpio.h"
+#include "led.h"
 
 void board_init(void)
 {
-
+	/* On board LED initialization */
+	gpio_configure_pin(LED_ON_BOARD,	\
+	IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+		
+	/* On board Switch initialization */
+	gpio_configure_pin(GPIO_PUSH_BUTTON_ON_BOARD,	\
+	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 }
