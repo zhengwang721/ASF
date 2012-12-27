@@ -44,7 +44,7 @@
 /* Maximum size of the firmware image .*/
 #define IMAGE_SIZE                  ((uint32_t)60*1024)
 
-#define	FW_VERSION_MAJOR (0x20)
+#define	FW_VERSION_MAJOR (0x02)
 #define	FW_VERSION_MINOR (0x00)
 #define	FW_VERSION_REV	 (0x00)
 

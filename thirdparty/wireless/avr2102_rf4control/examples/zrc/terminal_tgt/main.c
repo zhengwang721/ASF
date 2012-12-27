@@ -189,9 +189,6 @@ int main(void)
     register_nwk_indication_callback(&nwk_ind);
 #endif
 
-#ifdef FLASH_NVRAM
-    pal_ps_set(EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
-#endif
     /* Initialize LEDs. */
     LED_On(LED_START);         /* indicating application is started */
     LED_Off(LED_NWK_SETUP);    /* indicating network is started */
@@ -204,6 +201,8 @@ int main(void)
      * here.
      */
     cpu_irq_enable();
+    
+    nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
 
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
@@ -212,10 +211,7 @@ int main(void)
         /* Something went wrong during initialization. */
         app_alert();
     }
-    /* To make sure the Hyper Terminal Connected to the system*/
-    sio_getchar();
-    printf("\ntraget_Application\r\n\n");
-    printf("\ntarget\r\n\n");
+
 #endif
 
    pal_timer_get_id(&led_timer);
@@ -235,7 +231,6 @@ static void app_task(void)
 {
     int8_t input_char;
 
-    //printf("\n\t app");
     /* Check for incoming characters from terminal program. */
     input_char = sio_getchar_nowait();
     if (input_char != -1)
@@ -422,12 +417,6 @@ static void handle_input(uint8_t input_char)
         case 'Z':
             print_get_alive_submenu();
             break;
-#ifdef ADC_ACCELEROMETER
-        case 'M':
-            enable_accelerometer();
-            break;
-#endif /* ADC_ACCELEROMETER */
-
         default:
             print_main_menu();
             break;
@@ -440,7 +429,6 @@ static void handle_input(uint8_t input_char)
  */
 static void print_main_menu(void)
 {
-    //uint8_t formfeed = 0x0C;
     printf("\n");
 
     print_app_header();
@@ -462,9 +450,6 @@ static void print_main_menu(void)
     printf("(D) : Send remote battery status request\r\n");
     printf("(V) : Send remote firmware version request\r\n");
     printf("(Z) : Send alive request\r\n");
-#ifdef ADC_ACCELEROMETER
-    printf("(M) : Send accelorometer enable request\r\n");
-#endif  /* ADC_ACCELEROMETER */
     printf(">\r\n");
 
 }
@@ -522,7 +507,7 @@ static void print_node_status(void)
     {
         printf("%.2X", addr[7 - i]);
     }
-#if (PAL_GENERIC_TYPE == AVR32)
+#ifdef BIG_ENDIAN
     printf(", PAN Id 0x%.2X%.2X, ",  (uint8_t)tal_pib.PANId, (uint8_t)(tal_pib.PANId >> 8));
 #else
     printf(", PAN Id 0x%.2X%.2X, ", (uint8_t)(tal_pib.PANId >> 8), (uint8_t)tal_pib.PANId);
@@ -551,8 +536,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
 {
     if (start_from_scratch)
     {
-//        uint8_t formfeed = 0x0C;
-        printf("\n");//pal_sio_tx(SIO_CHANNEL, &formfeed, 1);
+        printf("\n");
 
         printf("Pairing table:\r\n");
 
@@ -571,7 +555,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
         table = (pairing_table_t *)table_entry;
 
         printf("Entry #%d\r\n", index);
-#if (PAL_GENERIC_TYPE == AVR32)
+#ifdef BIG_ENDIAN
         printf("Source network address: 0x%.2X%.2X",
                (uint8_t)(table->SourceNetworkAddress),
                (uint8_t)((table->SourceNetworkAddress) >> 8));
@@ -588,7 +572,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
             printf("%.2X", addr[7 - i]);
         }
         printf("\r\n");
-#if (PAL_GENERIC_TYPE == AVR32)
+#ifdef BIG_ENDIAN
         printf("Destination PAN Id: 0x%.2X%.2X",
                (uint8_t)(table->DestinationPANidentifier),
                (uint8_t)((table->DestinationPANidentifier) >> 8));
@@ -597,7 +581,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
                (uint8_t)((table->DestinationPANidentifier) >> 8),
                (uint8_t)(table->DestinationPANidentifier));
 #endif
-#if (PAL_GENERIC_TYPE == AVR32)
+#ifdef BIG_ENDIAN
         printf(", destination network address: 0x%.2X%.2X\r\n",
                (uint8_t)(table->DestinationNetworkAddress),
                (uint8_t)((table->DestinationNetworkAddress) >> 8));
@@ -607,19 +591,17 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
                (uint8_t)(table->DestinationNetworkAddress));
 #endif
         printf("Recipient capabilities: 0x%.2X", table->RecipientCapabilities);
-#if defined(__ICCAVR32__)
+#if 0 //defined(__ICCAVR32__)
         printf(", Recipient frame counter %u\r\n", table->RecipientFrameCounter);
 #else
         printf(", Recipient frame counter %lu\r\n", table->RecipientFrameCounter);
 #endif
-#ifdef RF4CE_SECURITY
         printf("Security link key: 0x");
         for (i = 0; i < 16; i++)
         {
             printf("%.2X", table->SecurityLinkKey[15 - i]);
         }
         printf("\r\n");
-#endif
     }
 }
 
@@ -634,100 +616,8 @@ static void print_app_header(void)
     printf("Configuration: ");
     printf("Target (e.g. TV), ");
 
-#if ((PAL_GENERIC_TYPE == MEGA_RF) && (TAL_TYPE == ATMEGARFA1))
-    printf("ATmega128RFA1, ");
+    printf(BOARD_NAME);
 
-#if (BOARD_TYPE == RCB_6_3_STK541)
-    printf("RCB_6_3_STK541");
-#elif (BOARD_TYPE == RCB_6_3_SENS_TERM_BOARD)
-    printf("RCB_6_3_SENS_TERM_BOARD");
-#elif (BOARD_TYPE == RCB_6_3_BREAKOUT_BOARD)
-    printf("RCB_6_3_BREAKOUT_BOARD");
-#elif (BOARD_TYPE == EK1)
-    printf("EK1");
-#else
-#error "unknown board type";
-#endif
-
-#elif ((PAL_GENERIC_TYPE == MEGA_RF) && (TAL_TYPE == ATMEGARFR2))
-    printf("ATmega256RFR2, ");
-
-#if (BOARD_TYPE == RCB_6_3_2_SENS_TERM_BOARD)
-    printf("RCB_6_3_2_SENS_TERM_BOARD");
-#else
-#error "unknown board type";
-#endif
-
-#else
-    /* Transceiver version */
-#if (TAL_TYPE == AT86RF212)
-    printf("AT86RF212");
-#elif (TAL_TYPE == AT86RF230A)
-    printf("AT86RF230A");
-#elif (TAL_TYPE == AT86RF230B)
-    printf("AT86RF230B");
-#elif (TAL_TYPE == AT86RF231)
-    printf("AT86RF231");
-#elif (TAL_TYPE == AT86RF232)
-    printf("AT86RF232");
-#elif (TAL_TYPE == AT86RF233)
-    printf("AT86RF233");
-#else
-#error "unknown TAL type ";
-#endif
-
-    printf(", ");
-
-    /* Print MCU version */
-#if (PAL_GENERIC_TYPE == AVR)
-#if (PAL_TYPE == ATMEGA1281)
-    printf("ATmega1281");
-#elif (PAL_TYPE == ATMEGA2561)
-    printf("ATmega2561");
-#elif (PAL_TYPE == ATMEGA644P)
-    printf("ATmega644P");
-#elif (PAL_TYPE == ATMEGA1284P)
-    printf("ATmega1284P");
-#elif (PAL_TYPE == AT90USB1287)
-    printf("AT90USB1287");
-#else
-#error "unknown PAL_TYPE";
-#endif
-#elif (PAL_GENERIC_TYPE == AVR32)
-#if (PAL_TYPE == AT32UC3A3256)
-    printf("AT32UC3A3256");
-#elif (PAL_TYPE == AT32UC3B164)
-    printf("AT32UC3B164");
-#elif (PAL_TYPE == AT32UC3B1128)
-    printf("AT32UC3B1128");
-#else
-#error "unknown PAL_TYPE";
-#endif
-#elif (PAL_GENERIC_TYPE == XMEGA)
-#if (PAL_TYPE == ATXMEGA128A1)
-    printf("ATxmega128A1");
-#elif (PAL_TYPE == ATXMEGA256A3)
-    printf("ATxmega256A3");
-#else
-#error "unknown PAL_TYPE";
-#endif
-#elif (PAL_GENERIC_TYPE == ARM7)
-#if (PAL_TYPE == AT91SAM7X256)
-    printf("AT91SAM7X256");
-#else
-#error "unknown PAL_TYPE";
-#endif
-#elif (PAL_GENERIC_TYPE == SAM3)
-#if (PAL_TYPE == AT91SAM3S4B)
-    printf("AT91SAM3S4B");
-#else
-#error "unknown PAL_TYPE";
-#endif
-#else
-#error "unknown PAL_GENERIC_TYPE";
-#endif
-
-#endif  /* #if ((PAL_GENERIC_TYPE == MEGA_RF) && (TAL_TYPE == ATMEGARFA1)) */
 }
 
 
@@ -796,7 +686,6 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
     zrc_frm = (zrc_cmd_frm_t *)nsdu;
     switch (zrc_frm->fcf)
     {
-#ifdef RF4CE_TARGET
         case USER_CONTROL_PRESSED:
             {
                 printf("Rx: ");
@@ -811,7 +700,6 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
 #endif
             }
             break;
-#endif  /* #ifdef RF4CE_TARGET */
 
         case USER_CONTROL_REPEATED:
             printf("Rx: ");
@@ -976,17 +864,8 @@ void zrc_cmd_disc_indication(uint8_t PairingRef)
 {
     /* Send back the response */
     uint8_t cec_cmds[32];
-#if (PAL_GENERIC_TYPE == AVR32)
+
     PGM_READ_BLOCK(cec_cmds, supported_cec_cmds, 32);
-    /*
-    for (uint8_t i = 0; i < 32; i++)
-    {
-        cec_cmds[i] = PGM_READ_BYTE(&supported_cec_cmds[i]);
-    }
-    */
-#else
-    PGM_READ_BLOCK(cec_cmds, supported_cec_cmds, 32);
-#endif
     zrc_cmd_disc_response(PairingRef, cec_cmds);
 }
 #endif
@@ -1333,7 +1212,7 @@ static void print_ch_change_submenu(void)
     uint8_t i;
     uint8_t input;
 
-#if (TAL_TYPE == AT86RF212)
+#if (RF_BAND == BAND_900)
     printf("Enter new base channel (1, 4, or 7): \r\n");
 #else
     printf("Enter new base channel (15, 20, or 25): \r\n");
@@ -1353,7 +1232,7 @@ static void print_ch_change_submenu(void)
     }
     channel = atol(input_char);
 
-#if (TAL_TYPE == AT86RF212)
+#if (RF_BAND == BAND_900)
     if ((channel == 1) || (channel == 4) || (channel == 7))
 #else
     if ((channel == 15) || (channel == 20) || (channel == 25))
@@ -1410,15 +1289,13 @@ static void led_handling(void *callback_parameter)
 static void print_sub_mode_ch_ag_setup(void)
 {
     int8_t input_char;
-    //uint8_t formfeed = 0x0C;
     uint8_t input;
 
-    //pal_sio_tx(SIO_CHANNEL, &formfeed, 1);
     printf("\n");
     printf("Configuration of channel agility, select a configration parameter\r\n");
     printf("(Scan interval > 4*scan duration)\r\n\r\n");
     printf("(F) : Noise threshold, current value: %d\r\n", nwk_Private_ChAgEdThreshold);
-#if defined(__ICCAVR32__)
+#if 0 //defined(__ICCAVR32__)
     printf("(G) : Scan interval, current value: 0x%.8X\r\n", nwk_Private_ChAgScanInterval);
 #else
     printf("(G) : Scan interval, current value: 0x%.8lX\r\n", nwk_Private_ChAgScanInterval);
@@ -1613,67 +1490,7 @@ static void print_get_battery_status_submenu(void)
     }
 }
 
-#ifdef ADC_ACCELEROMETER
-/**
- * @brief  Enable the accelerometer of the paired device i.e, key_remote_controller
- */
-static void enable_accelerometer(void)
-{
-    char input_char[6];
-    uint8_t input;
 
-    printf("Which device should be asked? Pairing Ref = \r\n");
-    input = (char)sio_getchar();
-    printf("\r\n");
-
-    if ((input >= '0') && (input <= '9'))
-    {
-        uint8_t PairingRef = input - 0x30;
-        uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
-        profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu_data[3];
-        uint16_t acc_duration = 0;
-
-        // get the time duration as input....
-        printf("Enter the accelerometer ON duration (10 - 65535)sec \r\n");
-        for (uint8_t i = 0; i < 5; i++)
-        {
-            input = (char)sio_getchar();
-            if (isdigit(input))
-            {
-                input_char[i] = input;
-            }
-            else
-            {
-                break;
-            }
-        }
-        acc_duration = atol(input_char);
-
-        if ( acc_duration >= 10)
-        {
-            nsdu_data[0] = ACC_ENABLE_REQ;
-            nsdu_data[1] = acc_duration & 0xFF;
-            nsdu_data[2] = (acc_duration >> 8) & 0xFF;
-            vendor_data_request(PairingRef, ProfileId,
-                                VendorId, 3, nsdu_data,
-                                TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
-            printf("Leave the device on flat surface for calibration\r\n");
-        }
-        else
-        {
-            printf("Invalid ON duration\r\n");
-        }
-    }
-    else
-    {
-        node_status = IDLE;
-        printf("Unknown paring reference\r\n\r\n");
-        printf("> Press Enter to return to main menu: \r\n");
-    }
-
-}
-#endif  /* ADC_ACCELEROMETER */
 /**
  * @brief Prints the Get FIrmware Version submenu.
  */
@@ -1804,40 +1621,6 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
             case RX_ON_RESP:
                 printf("RX on response\r\n");
                 break;
-#ifdef ADC_ACCELEROMETER
-            case ACC_POSITION:
-                {
-                    if (last_remote_position[PairingRef] != nsdu[1] )
-                    {
-                        last_remote_position[PairingRef] = nsdu[1];
-                        switch (nsdu[1])
-                        {
-                            case REMOTE_POSITION_UP:
-                                printf("REMOTE_POSITION_UP\r\n");
-                                break;
-                            case REMOTE_POSITION_DOWN:
-                                printf("REMOTE_POSITION_DOWN\r\n");
-                                break;
-                            case REMOTE_POSITION_LEFT:
-                                printf("REMOTE_POSITION_LEFT\r\n");
-                                break;
-                            case REMOTE_POSITION_RIGHT:
-                                printf("REMOTE_POSITION_RIGHT\r\n");
-                                break;
-                            default:
-                                printf("IDLE_POSITION\r\n");
-                                break;
-                        }
-                    }
-                    break;
-                }
-            case ACC_DISABLE_IND:
-                {
-                    printf("Accelerometer ON duration expired\r\n");
-                    break;
-                }
-
-#endif  /* ADC_ACCELEROMETER */
 
             default:
                 printf("unknown command: 0x");
