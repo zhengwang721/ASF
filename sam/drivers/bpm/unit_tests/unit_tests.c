@@ -369,7 +369,7 @@ int main(void)
 	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 1);
 
-	ast_enable_wakeup(AST, ast_wakeup_per);
+	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));

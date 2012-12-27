@@ -56,10 +56,16 @@
 
 #include "compiler.h"
 
+/// @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond */
+
 /** Timeout to prevent code hang in clock initialization */
 #define AST_POLL_TIMEOUT 10000
-
-
 
 /** \name Predefined PSEL Values
  */
@@ -79,8 +85,7 @@
 
 /* @} */
 
-
-// Description for Calendar Field.
+/* Description for Calendar Field.*/
 struct ast_calv {
 	uint32_t sec : 6;
 	uint32_t min : 6;
@@ -90,7 +95,7 @@ struct ast_calv {
 	uint32_t year : 6;
 };
 
-// Input when initializing AST in calendar mode.
+/* Input when initializing AST in calendar mode.*/
 struct ast_calendar {
 	union {
 		uint32_t field;
@@ -103,8 +108,9 @@ struct ast_calendar {
 
 struct ast_config {
 	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or
-	   \ref Counter mode: AST_COUNTER_MODE. */
+	 * \ref Counter mode: AST_COUNTER_MODE. */
 	uint8_t mode;
+
 	/*
 	 *  Oscillator Type:
 	 *  - \ref AST_OSC_RC,
@@ -120,23 +126,17 @@ struct ast_config {
 	uint32_t counter;
 	/* Initial calendar Value. */
 	struct ast_calendar calendar;
-} ;
+};
 
-#define AST_INTERRUPT_SOURCE_NUM    5
-
-typedef enum ast_oscilator_source{
-/** 1KHz clock from 32KHz oscillator (CLK_1K) */
-	AST_OSC_1KHZ = 0,
-/** Generic clock (GCLK) */
-	AST_OSC_GCLK,
-/** Peripheral Bus Clock */
-	AST_OSC_PB,
-/** 32KHz oscillator (OSC32K) */
+typedef enum ast_oscilator_source {
+	AST_OSC_RC = 0,
 	AST_OSC_32KHZ,
-/** System RC oscillator (RCSYS) */
-	AST_OSC_RC,
+	AST_OSC_PB,
+	AST_OSC_GCLK,
+	AST_OSC_1KHZ,
 } ast_oscillator_source_t;
 
+#define AST_INTERRUPT_SOURCE_NUM    5
 typedef enum ast_interrupt_source {
 	AST_INTERRUPT_ALARM = 0,
 	AST_INTERRUPT_PER,
@@ -172,7 +172,6 @@ uint32_t ast_configure_digital_tuner(Ast *ast, uint32_t input_freq,
 void ast_init_digital_tuner(Ast *ast, bool add, uint8_t value,
 		uint8_t exp);
 void ast_disable_digital_tuner(Ast *ast);
-
 
 void ast_write_calendar_value(Ast *ast, struct ast_calendar ast_calendar);
 struct ast_calendar ast_read_calendar_value(Ast *ast);
@@ -252,6 +251,14 @@ void ast_disable_wakeup(Ast *ast, ast_wakeup_source_t source);
 
 void ast_enable_event(Ast *ast, ast_event_source_t source);
 void ast_disable_event(Ast *ast, ast_event_source_t source);
+
+/// @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond */
 
 /**
  * \}

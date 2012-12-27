@@ -93,7 +93,7 @@ volatile bool flag = false;
  */
 static void ast_alarm_callback(void)
 {
-	ast_disable_interrupt(AST, ast_interrupt_alarm);
+	ast_disable_interrupt(AST, AST_INTERRUPT_ALARM);
 	flag = true;
 }
 static void config_ast(void)

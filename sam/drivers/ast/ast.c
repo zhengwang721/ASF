@@ -75,7 +75,6 @@ void ast_enable(Ast *ast)
 {
 	sysclk_enable_peripheral_clock(ast);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
-
 }
 
 /**
@@ -339,7 +338,8 @@ void ast_init_digital_tuner(Ast *ast, bool add,
 	}
 
 	if (add) {
-		ast->AST_DTR = AST_DTR_ADD | AST_DTR_VALUE(value) | AST_DTR_EXP(exp);
+		ast->AST_DTR = AST_DTR_ADD | AST_DTR_VALUE(value) | AST_DTR_EXP(
+				exp);
 	} else {
 		ast->AST_DTR = AST_DTR_VALUE(value) | AST_DTR_EXP(exp);
 	}
@@ -364,7 +364,6 @@ void ast_disable_digital_tuner(Ast *ast)
 	while (ast_is_busy(ast)) {
 	}
 }
-
 
 /**
  * \brief This function sets the AST current calendar value.
@@ -454,7 +453,6 @@ void ast_write_periodic0_value(Ast *ast, uint32_t pir)
 	}
 }
 
-
 /**
  * \brief This function enables the AST interrupts
  *
@@ -468,23 +466,23 @@ void ast_enable_interrupt(Ast *ast, ast_interrupt_source_t source)
 	}
 
 	switch (source) {
-	case ast_interrupt_alarm:
+	case AST_INTERRUPT_ALARM:
 		ast->AST_IER = AST_IER_ALARM0_1;
 		break;
 
-	case ast_interrupt_per:
+	case AST_INTERRUPT_PER:
 		ast->AST_IER = AST_IER_PER0_1;
 		break;
 
-	case ast_interrupt_ovf:
+	case AST_INTERRUPT_OVF:
 		ast->AST_IER = AST_IER_OVF_1;
 		break;
 
-	case ast_interrupt_ready:
+	case AST_INTERRUPT_READY:
 		ast->AST_IER = AST_IER_READY_1;
 		break;
 
-	case ast_interrupt_clkready:
+	case AST_INTERRUPT_CLKREADY:
 		ast->AST_IER = AST_IER_CLKRDY_1;
 		break;
 
@@ -492,7 +490,7 @@ void ast_enable_interrupt(Ast *ast, ast_interrupt_source_t source)
 		break;
 	}
 
-	// Wait until write is done
+	/* Wait until write is done */
 	while (ast_is_busy(ast)) {
 	}
 }
@@ -510,23 +508,23 @@ void ast_disable_interrupt(Ast *ast, ast_interrupt_source_t source)
 	}
 
 	switch (source) {
-	case ast_interrupt_alarm:
+	case AST_INTERRUPT_ALARM:
 		ast->AST_IDR = AST_IDR_ALARM0_1;
 		break;
 
-	case ast_interrupt_per:
+	case AST_INTERRUPT_PER:
 		ast->AST_IDR = AST_IDR_PER0_1;
 		break;
 
-	case ast_interrupt_ovf:
+	case AST_INTERRUPT_OVF:
 		ast->AST_IDR = AST_IDR_OVF_1;
 		break;
 
-	case ast_interrupt_ready:
+	case AST_INTERRUPT_READY:
 		ast->AST_IDR = AST_IDR_READY_1;
 		break;
 
-	case ast_interrupt_clkready:
+	case AST_INTERRUPT_CLKREADY:
 		ast->AST_IDR = AST_IDR_CLKRDY_1;
 		break;
 
@@ -552,23 +550,23 @@ void ast_clear_interrupt_flag(Ast *ast, ast_interrupt_source_t source)
 	}
 
 	switch (source) {
-	case ast_interrupt_alarm:
+	case AST_INTERRUPT_ALARM:
 		ast->AST_SCR = AST_SCR_ALARM0;
 		break;
 
-	case ast_interrupt_per:
+	case AST_INTERRUPT_PER:
 		ast->AST_SCR = AST_SCR_PER0;
 		break;
 
-	case ast_interrupt_ovf:
+	case AST_INTERRUPT_OVF:
 		ast->AST_SCR = AST_SCR_OVF;
 		break;
 
-	case ast_interrupt_ready:
+	case AST_INTERRUPT_READY:
 		ast->AST_SCR = AST_SCR_READY;
 		break;
 
-	case ast_interrupt_clkready:
+	case AST_INTERRUPT_CLKREADY:
 		ast->AST_SCR = AST_SCR_CLKRDY;
 		break;
 
@@ -594,9 +592,9 @@ void ast_set_callback(Ast *ast, ast_interrupt_source_t source,
 		ast_callback_t callback, uint8_t irq_line, uint8_t irq_level)
 {
 	ast_callback_pointer[source] = callback;
-	NVIC_ClearPendingIRQ(    (IRQn_Type)irq_line);
-	NVIC_SetPriority(    (IRQn_Type)irq_line, irq_level);
-	NVIC_EnableIRQ(      (IRQn_Type)irq_line);
+	NVIC_ClearPendingIRQ((IRQn_Type)irq_line);
+	NVIC_SetPriority((IRQn_Type)irq_line, irq_level);
+	NVIC_EnableIRQ((IRQn_Type)irq_line);
 	ast_enable_interrupt(ast, source);
 }
 
@@ -611,23 +609,23 @@ static void ast_interrupt_handler(void)
 	mask = ast_read_interrupt_mask(AST);
 
 	if ((status & AST_SR_ALARM0) && (mask & AST_IMR_ALARM0)) {
-		ast_callback_pointer[ast_interrupt_alarm]();
+		ast_callback_pointer[AST_INTERRUPT_ALARM]();
 	}
 
 	if ((status & AST_SR_PER0) && (mask & AST_IMR_PER0)) {
-		ast_callback_pointer[ast_interrupt_per]();
+		ast_callback_pointer[AST_INTERRUPT_PER]();
 	}
 
 	if ((status & AST_SR_OVF) && (mask & AST_IMR_OVF_1)) {
-		ast_callback_pointer[ast_interrupt_ovf]();
+		ast_callback_pointer[AST_INTERRUPT_OVF]();
 	}
 
 	if ((status & AST_SR_READY) && (mask & AST_IMR_READY_1)) {
-		ast_callback_pointer[ast_interrupt_ready]();
+		ast_callback_pointer[AST_INTERRUPT_READY]();
 	}
 
 	if ((status & AST_SR_CLKRDY) && (mask & AST_IMR_CLKRDY_1)) {
-		ast_callback_pointer[ast_interrupt_clkready]();
+		ast_callback_pointer[AST_INTERRUPT_CLKREADY]();
 	}
 }
 
@@ -639,6 +637,7 @@ void AST_PER_Handler(void)
 {
 	ast_interrupt_handler();
 }
+
 #endif
 
 /**
@@ -649,6 +648,7 @@ void AST_ALARM_Handler(void)
 {
 	ast_interrupt_handler();
 }
+
 #endif
 
 /**
@@ -659,6 +659,7 @@ void AST_OVF_Handler(void)
 {
 	ast_interrupt_handler();
 }
+
 #endif
 
 /**
@@ -669,6 +670,7 @@ void AST_READY_Handler(void)
 {
 	ast_interrupt_handler();
 }
+
 #endif
 
 /**
@@ -679,6 +681,7 @@ void AST_CLKREADY_Handler(void)
 {
 	ast_interrupt_handler();
 }
+
 #endif
 
 /**
@@ -689,20 +692,20 @@ void AST_CLKREADY_Handler(void)
  */
 void ast_enable_wakeup(Ast *ast, ast_wakeup_source_t source)
 {
-	// Wait until the ast CTRL register is up-to-date
+	/* Wait until the ast CTRL register is up-to-date */
 	while (ast_is_busy(ast)) {
 	}
 
 	switch (source) {
-	case ast_wakeup_alarm:
+	case AST_WAKEUP_ALARM:
 		ast->AST_WER |= AST_WER_ALARM0_1;
 		break;
 
-	case ast_wakeup_per:
+	case AST_WAKEUP_PER:
 		ast->AST_WER |= AST_WER_PER0_1;
 		break;
 
-	case ast_wakeup_ovf:
+	case AST_WAKEUP_OVF:
 		ast->AST_WER |= AST_WER_OVF_1;
 		break;
 
@@ -728,15 +731,15 @@ void ast_disable_wakeup(Ast *ast, ast_wakeup_source_t source)
 	}
 
 	switch (source) {
-	case ast_wakeup_alarm:
+	case AST_WAKEUP_ALARM:
 		ast->AST_WER &= ~AST_WER_ALARM0_1;
 		break;
 
-	case ast_wakeup_per:
+	case AST_WAKEUP_PER:
 		ast->AST_WER &= ~AST_WER_PER0_1;
 		break;
 
-	case ast_wakeup_ovf:
+	case AST_WAKEUP_OVF:
 		ast->AST_WER &= ~AST_WER_OVF_1;
 		break;
 
@@ -762,15 +765,15 @@ void ast_enable_event(Ast *ast, ast_event_source_t source)
 	}
 
 	switch (source) {
-	case ast_event_alarm:
+	case AST_EVENT_ALARM:
 		ast->AST_EVE = AST_EVE_ALARM0;
 		break;
 
-	case ast_event_per:
+	case AST_EVENT_PER:
 		ast->AST_EVE = AST_EVE_PER0;
 		break;
 
-	case ast_event_ovf:
+	case AST_EVENT_OVF:
 		ast->AST_EVE = AST_EVE_OVF;
 		break;
 
@@ -796,15 +799,15 @@ void ast_disable_event(Ast *ast, ast_event_source_t source)
 	}
 
 	switch (source) {
-	case ast_event_alarm:
+	case AST_EVENT_ALARM:
 		ast->AST_EVD = AST_EVD_ALARM0;
 		break;
 
-	case ast_event_per:
+	case AST_EVENT_PER:
 		ast->AST_EVD = AST_EVD_PER0;
 		break;
 
-	case ast_event_ovf:
+	case AST_EVENT_OVF:
 		ast->AST_EVD = AST_EVD_OVF;
 		break;
 
