@@ -5,7 +5,7 @@
  *        in the example application of the coordinator in addition to the
  *        underlaying stack.
  *
- * $Id: node_config.h 33674 2012-11-30 08:50:15Z agasthian.s $
+ * $Id: node_config.h 33865 2012-12-26 12:39:30Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -32,9 +32,6 @@
 
 /* === Types ================================================================ */
 
-
-/* Offset of IEEE address storage location within EEPROM */
-#define EE_IEEE_ADDR                (0)
 
 /* Configure RF4CE node capabilities */
 /* The capabilities of this node. Implementation specific according to the format

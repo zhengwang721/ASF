@@ -155,7 +155,7 @@ int main(void)
      */
     //pal_global_irq_enable();
 
-
+    nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
 
     key_state_t key_state = key_state_read(COLD_RESET_KEY);
     // For debugging: Force button press
@@ -266,7 +266,7 @@ void nlme_reset_confirm_cold_start(nwk_enum_t Status)
             NULL
 #endif
         );
-        node_status = BUTTON_RELEASE_WAITING;;
+        node_status = BUTTON_RELEASE_WAITING;
     }
     else    // warm start
     {
