@@ -128,13 +128,13 @@ struct ast_config {
 	struct ast_calendar calendar;
 };
 
-typedef enum ast_oscilator_source {
+typedef enum ast_oscillator_type {
 	AST_OSC_RC = 0,
-	AST_OSC_32KHZ,
-	AST_OSC_PB,
-	AST_OSC_GCLK,
-	AST_OSC_1KHZ,
-} ast_oscillator_source_t;
+	AST_OSC_32KHZ = 1,
+	AST_OSC_PB = 2,
+	AST_OSC_GCLK = 3,
+	AST_OSC_1KHZ = 4,
+} ast_oscillator_type_t;
 
 #define AST_INTERRUPT_SOURCE_NUM    5
 typedef enum ast_interrupt_source {
