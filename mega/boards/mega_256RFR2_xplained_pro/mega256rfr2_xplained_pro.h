@@ -55,11 +55,13 @@
  * LED0 is connected to PORTB pin 4
  */
  #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
-
+ #define LED0_GPIO			  LED_ON_BOARD		  
+ #define LED0                 LED0_GPIO
+ 
  /*!  \name GPIO Connections of Switch
  * Push button is connected to PORTE pin 4. 
  */
  #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- 
+ #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
 
 #endif  /* _MEGA256RFR2_XPLAINED_PRO_ */
