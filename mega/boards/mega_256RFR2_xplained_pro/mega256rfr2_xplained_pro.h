@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief STK600 + ATmega128RFA1 board LEDs support package.
+ * \brief STK board header file.
  *
- * This file contains definitions and services related to the LED features of
- * the STK600 board.
+ * This file contains definitions and services related to the features of the
+ * STK600 board.
  *
- * To use this board, define BOARD=STK600_RC064X_LCDX.
+ * To use this board, define BOARD= STK600_MEGA.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,35 +45,21 @@
  * \asf_license_stop
  *
  */
+#ifndef _MEGA256RFR2_XPLAINED_PRO_
+#define _MEGA256RFR2_XPLAINED_PRO_
+#include "compiler.h"
 
-#ifndef _LED_H_
-#define _LED_H_
+# include "led.h"
 
-#include "gpio.h"
+ /*! \name GPIO Connections of LED
+ * LED0 is connected to PORTB pin 4
+ */
+ #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
 
+ /*!  \name GPIO Connections of Switch
+ * Push button is connected to PORTE pin 4. 
+ */
+ #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
  
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
-
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
-
-#endif /* _LED_H_ */
+#endif  /* _MEGA256RFR2_XPLAINED_PRO_ */
