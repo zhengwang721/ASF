@@ -161,7 +161,7 @@ extern "C" {
 #elif BOARD == STK600_MEGA_RF
 #  include "stk600.h"
 #elif BOARD == MEGA_256RFR2_XPLAINED_PRO
-#	include "mega_256RFR2_xplained_pro\mega_256RFR2_xplained_pro.h"
+#  include "mega_256RFR2_xplained_pro/mega256rfr2_xplained_pro.h"
 #elif BOARD == STK600_RC032X
 #  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X
