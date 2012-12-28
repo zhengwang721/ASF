@@ -106,28 +106,6 @@ struct ast_calendar {
 #define AST_CALENDAR_MODE    0
 #define AST_COUNTER_MODE    1
 
-struct ast_config {
-	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or
-	 * \ref Counter mode: AST_COUNTER_MODE. */
-	uint8_t mode;
-
-	/*
-	 *  Oscillator Type:
-	 *  - \ref AST_OSC_RC,
-	 *  - \ref AST_OSC_32KHZ,
-	 *  - \ref AST_OSC_PB,
-	 *  - \ref AST_OSC_1KHZ,
-	 *  - \ref AST_OSC_GCLK.
-	 */
-	uint8_t osc_type;
-	/* Prescaler Value. */
-	uint8_t psel;
-	/* Initial counter Value. */
-	uint32_t counter;
-	/* Initial calendar Value. */
-	struct ast_calendar calendar;
-};
-
 typedef enum ast_oscillator_type {
 	AST_OSC_RC = 0,
 	AST_OSC_32KHZ = 1,
@@ -156,6 +134,21 @@ typedef enum ast_event_source {
 	AST_EVENT_PER,
 	AST_EVENT_OVF,
 } ast_event_source_t;
+
+struct ast_config {
+	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or
+	 * \ref Counter mode: AST_COUNTER_MODE. 
+	 */
+	uint8_t mode;
+	/* Oscillator type */
+	ast_oscillator_type_t osc_type;
+	/* Prescaler Value. */
+	uint8_t psel;
+	/* Initial counter Value. */
+	uint32_t counter;
+	/* Initial calendar Value. */
+	struct ast_calendar calendar;
+};
 
 typedef void (*ast_callback_t)(void);
 
