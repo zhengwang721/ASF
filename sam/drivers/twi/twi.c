@@ -573,7 +573,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
 	}
-#ifdef TWI1
+#ifdef PDC_TWI1
 	else if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
 	}
