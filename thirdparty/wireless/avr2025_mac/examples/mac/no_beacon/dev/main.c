@@ -390,7 +390,7 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
     if (status == MAC_SUCCESS)
     {
 #ifdef SIO_HUB
-        printf("Conntected to nonbeacon-enabled network\r\n");
+        printf("Connected to nonbeacon-enabled network\r\n");
 #endif
 
         /* Stop timer used for search indication (same as used for data transmission). */
