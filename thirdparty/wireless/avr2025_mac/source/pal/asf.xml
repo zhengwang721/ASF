@@ -7,7 +7,7 @@
 		<build type="header-file"   value="pal.h"/>
 		<build type="doxygen-entry-point" value="group_pal"/>
 
-		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_timer" />
+		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc" />
 		<require idref="common.services.ioport" />
 		<require idref="common.services.delay" />

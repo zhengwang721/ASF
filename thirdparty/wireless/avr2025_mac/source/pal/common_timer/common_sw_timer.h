@@ -44,7 +44,7 @@
 
 #include "compiler.h"
 #include "status_codes.h"
-#include "app_config.h"
+
 
 /*
  * Type definition for callbacks for timer functions

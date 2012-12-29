@@ -66,6 +66,7 @@
 #include "tal_constants.h"
 #include "at86rf230b.h"
 #include "tal_config.h"
+#include "app_config.h"
 #ifdef BEACON_SUPPORT
 #include "tal_slotted_csma.h"
 #endif  /* BEACON_SUPPORT */

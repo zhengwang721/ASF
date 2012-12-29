@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+    <module type="service" id="thirdparty.wireless.avr2025_mac.source.pal.common_timer.sam_hw_timer" caption="Common SW Timer - SAM implementation">
+        <info type="description" value="summary">
+        Common SW Timer Implementation For UC3 Architecture
+        </info>
+
+        <build type="include-path"  value="."/>
+        <build type="c-source"      value="common_hw_timer.c"/>
+        <build type="header-file"   value="common_hw_timer.h"/>
+
+        <build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
+        <build type="module-config" subtype="path" value="module_config"/>
+
+        <build type="doxygen-entry-point" value="common_hw_timer_group"/>
+
+        <require idref="sam.drivers.tc"/>
+        <device-support value="sam"/>
+    </module>
+</asf>

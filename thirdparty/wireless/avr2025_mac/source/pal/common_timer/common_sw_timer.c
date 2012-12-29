@@ -40,6 +40,7 @@
 
 
 #include "compiler.h"
+#include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"
 #include "common_sw_timer.h"
 #include "board.h"
@@ -59,7 +60,7 @@ volatile uint16_t sys_time;
  * directory of each application depending on the number of timers required
  * by the stack and the application.
  */
-timer_info_t timer_array[TOTAL_NUMBER_OF_TIMERS];
+timer_info_t timer_array[TOTAL_NUMBER_OF_SW_TIMERS];
 
 /* This is the counter of all running timers. */
 static uint8_t running_timers;
@@ -97,7 +98,7 @@ void hw_expiry_cb(void);
 
 status_code_t sw_timer_get_id(uint8_t* timer_id)
 {
-	if(alloc_timer_id < TOTAL_NUMBER_OF_TIMERS)
+	if(alloc_timer_id < TOTAL_NUMBER_OF_SW_TIMERS)
 	{
 		*timer_id = alloc_timer_id;
 		alloc_timer_id++;
@@ -116,7 +117,7 @@ status_code_t sw_timer_start(uint8_t timer_id,
 	uint32_t now;
     uint32_t point_in_time;
 
-	if(TOTAL_NUMBER_OF_TIMERS <= timer_id || NULL == timer_cb)
+	if(TOTAL_NUMBER_OF_SW_TIMERS <= timer_id || NULL == timer_cb)
 	{
 		return ERR_INVALID_ARG;
 	}
@@ -293,7 +294,7 @@ status_code_t sw_timer_stop(uint8_t timer_id)
     uint8_t prev_index;
 
 
-    if (TOTAL_NUMBER_OF_TIMERS <= timer_id)
+    if (TOTAL_NUMBER_OF_SW_TIMERS <= timer_id)
     {
         return ERR_INVALID_ARG;
     }
@@ -529,7 +530,7 @@ void sw_timer_init(void)
     expired_timer_queue_head = NO_TIMER;
     expired_timer_queue_tail = NO_TIMER;
 
-    for (index = 0; index < TOTAL_NUMBER_OF_TIMERS; index++)
+    for (index = 0; index < TOTAL_NUMBER_OF_SW_TIMERS; index++)
     {
         timer_array[index].next_timer_in_queue = NO_TIMER;
         timer_array[index].timer_cb = NULL;

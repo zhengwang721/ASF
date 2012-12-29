@@ -45,6 +45,7 @@
 #include "compiler.h"
 #include "return_val.h"
 #include "pal.h"
+#include "app_config.h"
 #include "common_sw_timer.h"
 #include "spi_master.h"
 #include "board.h"
