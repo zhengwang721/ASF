@@ -38,16 +38,15 @@
  *
  */
 
-#ifndef CONF_COMMON_HW_TIMER_H_INCLUDED
-#define CONF_COMMON_HW_TIMER_H_INCLUDED
+#ifndef CONF_COMMON_SW_TIMER_H_INCLUDED
+#define CONF_COMMON_SW_TIMER_H_INCLUDED
 
-
+#include "app_config.h"
 
 /*! \name Configuration
  */
 //! @{
-#define TIMER     (&TCC0)
+#define TOTAL_NUMBER_OF_SW_TIMERS     (TOTAL_NUMBER_OF_TIMERS)
 //! @}
 
-
-#endif /* CONF_COMMON_HW_TIMER_H_INCLUDED */
+#endif /* CONF_COMMON_SW_TIMER_H_INCLUDED */
