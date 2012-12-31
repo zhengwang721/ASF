@@ -51,6 +51,7 @@
 
 # include "tal.h"
 #include "string.h"
+# include "app_config.h"
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
  * This  application Performance Analyzer  is a Serial interface based application,

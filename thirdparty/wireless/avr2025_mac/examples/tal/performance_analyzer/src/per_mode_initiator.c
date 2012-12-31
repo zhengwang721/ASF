@@ -1088,7 +1088,7 @@ static void config_per_test_parameters(void)
     curr_trx_config_params.rx_desensitize = default_trx_config_params.rx_desensitize = false;
     /* Disable Rx desensitization */
 
-    tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
+    tal_set_rx_sensitivity_level(NO_RX_DESENSITIZE_LEVEL);
 
 
 #endif /* End of #if(TAL_TYPE != AT86RF230B)*/

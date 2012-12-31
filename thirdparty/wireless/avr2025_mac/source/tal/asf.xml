@@ -58,12 +58,16 @@
 	
 		<build type="header-file"   value="inc/tal.h"/>
 		<build type="header-file"   value="inc/tal_types.h"/>
-		<build type="header-file"   value="inc/tal_generic.h"/>
 		<build type="header-file"   value="inc/tal_timer_config.h"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
+		<build type="include-path"  value="inc/"/>
+	</module>
+
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.inc" caption="COMPONENT - TAL">
+		<build type="header-file"   value="inc/tal_generic.h"/>
 		<build type="include-path"  value="inc/"/>
 		
-	</module>
-	
+	</module>	
 	
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tal_helper" name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" caption="TAL HELPER Configuration" default="no">
 	
