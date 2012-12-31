@@ -144,7 +144,7 @@ typedef struct associated_device_tag
 #define SCAN_CHANNEL                    (1ul << DEFAULT_CHANNEL)
 
 /** Defines the scan duration time. */
-#define SCAN_DURATION_COORDINATOR       (1)
+#define SCAN_DURATION_COORDINATOR       (5)
 /** Defines Beacon Order for Nobeacon Network. */
 #define NOBEACON_BO                     (15)
 /** Defines Superframe Order for Nobeacon Network. */

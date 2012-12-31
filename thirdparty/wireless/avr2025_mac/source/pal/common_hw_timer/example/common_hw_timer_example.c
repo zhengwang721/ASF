@@ -83,29 +83,27 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-#include <conf_example.h>
 #include <asf.h>
 #include "common_hw_timer.h"
 
-uint16_t time_out = 5000;
+uint16_t time_out = 50000;
 
 void overflow_cb(void)
 {
-	ioport_toggle_pin(J2_PIN1);
+	LED_Toggle(LED0);
 }
 
 void expiry_cb(void)
 {
-	ioport_toggle_pin(J2_PIN0);
+	LED_Toggle(LED1);
 	common_tc_delay(time_out);
 }
 
 int main(void)
 {
-	pmic_init();
+	irq_initialize_vectors();
 	board_init();
 	sysclk_init();
-	sleepmgr_init();
 
 	cpu_irq_enable();
 
@@ -113,9 +111,6 @@ int main(void)
 	set_common_tc_expiry_callback(expiry_cb);
 
 	common_tc_init();
-
-	ioport_configure_pin(J2_PIN0, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(J2_PIN1, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 
 	common_tc_delay(time_out);
 

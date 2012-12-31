@@ -48,7 +48,7 @@
 #define DEF_1MHZ	(1000000)
 #define TIMER_PERIOD  UINT16_MAX
 
-
+#if (!XMEGA)
 /**
  * \brief Interrupt event callback function type
  *
@@ -57,7 +57,7 @@
  *
  */
 typedef void (*tc_callback_t) (void);
-
+#endif
 
 void common_tc_init(void);
 uint16_t common_tc_read_count(void);

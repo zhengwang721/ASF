@@ -46,10 +46,10 @@
 /*! \name Configuration
  */
 //! @{
-#define EXAMPLE_PIN1         (AVR32_PIN_PB00)
-#define EXAMPLE_PIN2         (AVR32_PIN_PB01)
-#define EXAMPLE_PIN3         (AVR32_PIN_PB02)
-#define EXAMPLE_PIN4         (AVR32_PIN_PB03)
+#define EXAMPLE_PIN1         (J2_PIN0)
+#define EXAMPLE_PIN2         (J2_PIN1)
+#define EXAMPLE_PIN3         (J2_PIN2)
+#define EXAMPLE_PIN4         (J2_PIN3)
 //! @}
 
 

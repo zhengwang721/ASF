@@ -12,7 +12,7 @@
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_sio_helper.h"/>
 
-		<config name="config.compiler.iarew.data_stack_size" value="0x200"/>
+		<config name="config.compiler.iarew.data_stack_size" value="0x300"/>
 		<config name="config.compiler.iarew.near_heap_size" value="0x40"/>
 
 		<config name="config.spi_master_type" value="standard_spi"/>

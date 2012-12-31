@@ -160,7 +160,7 @@ typedef enum coord_state_tag
 #define SCAN_CHANNEL                    (1ul << DEFAULT_CHANNEL)
 
 /** Defines the scan duration time. */
-#define SCAN_DURATION_COORDINATOR       (1)
+#define SCAN_DURATION_COORDINATOR       (5)
 
 /** Defines the default Beacon Order. */
 #define DEFAULT_BO                      (5)

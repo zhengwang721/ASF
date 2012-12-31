@@ -41,12 +41,10 @@
 #ifndef CONF_COMMON_SW_TIMER_H_INCLUDED
 #define CONF_COMMON_SW_TIMER_H_INCLUDED
 
-#include "app_config.h"
-
 /*! \name Configuration
  */
 //! @{
-#define TOTAL_NUMBER_OF_SW_TIMERS     (TOTAL_NUMBER_OF_TIMERS)
+#define TOTAL_NUMBER_OF_SW_TIMERS     (4)
 //! @}
 
 #endif /* CONF_COMMON_SW_TIMER_H_INCLUDED */

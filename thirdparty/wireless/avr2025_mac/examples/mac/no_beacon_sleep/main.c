@@ -269,17 +269,12 @@ void usr_mcps_data_conf(uint8_t msduHandle,
 
     if (status == MAC_SUCCESS)
     {
+		delay_ms(10);
         /*
          * Dummy data has been transmitted successfully.
          * Application code could be added here ...
          */
-        LED_On(LED_DATA);
-        // Start a timer switching off the LED
-        sw_timer_start(TIMER_LED_OFF,
-                        500000,
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)data_exchange_led_off_cb,
-                        NULL);
+        LED_Off(LED_DATA);
     }
 
     /* Keep compiler happy. */
@@ -858,7 +853,7 @@ static void app_task(void)
 			if (timer_flag)
 			{
 				timer_flag = false;
-				LED_On(LED_START);
+				LED_On(LED_DATA);
 
 				node_status = TRANSMITTING;
 
@@ -924,7 +919,7 @@ static void awake_timer_cb(void *parameter)
 {
 	timer_flag = true;
 	in_sleep_mode = false;
-
+	
 	sw_timer_start(TIMER_LED_OFF,
 				   DATA_TX_PERIOD,
 				   SW_TIMEOUT_RELATIVE,

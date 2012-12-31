@@ -93,43 +93,13 @@
  * For further information, visit
  * <A href="http://www.atmel.com/uc3">Atmel AVR UC3</A>.\n
 */
-#include <stdint.h>
-#include <stdbool.h>
-
+#include <asf.h>
 #include "sysclk.h"
 #include "board.h"
-#include "print_funcs.h"
-#include "tc.h"
-#include "gpio.h"
-#if defined (__GNUC__)
-#  include "intc.h"
-#endif
+#include "ioport.h"
 #include "common_sw_timer.h"
+#include "conf_example.h"
 
-
-//! \name Example configuration
-//!@{
-/**
- * \def CONFIG_SYSCLK_SOURCE
- * \brief Clock source to use
- */
-/**
- * \def EXAMPLE_TC
- * \brief Base address of TC module to use.
- */
-/**
- * \def EXAMPLE_TC_CHANNEL
- * \brief Channel to use with TC module.
- */
-/**
- * \def EXAMPLE_TC_IRQ
- * \brief IRQ Line number for TC module
- */
- /**
- * \def EXAMPLE_TC_IRQ_PRIORITY
- * \brief IRQ Group number for TC module
- */
-//!@}
 
 uint32_t time_out1 = 10000;
 uint32_t time_out2 = 20000;
@@ -141,6 +111,10 @@ static void timeout2_cb(void *parameter);
 static void timeout3_cb(void *parameter);
 static void timeout4_cb(void *parameter);
 
+static uint8_t timer_id1;
+static uint8_t timer_id2;
+static uint8_t timer_id3;
+static uint8_t timer_id4;
 
 /*! \brief Main function:
  *  - Configure the CPU to run at 12MHz
@@ -152,39 +126,28 @@ static void timeout4_cb(void *parameter);
  */
 int main(void)
 {
-	/**
-	 * \note the call to sysclk_init() will disable all non-vital
-	 * peripheral clocks, except for the peripheral clocks explicitly
-	 * enabled in conf_clock.h.
-	 */
+	irq_initialize_vectors();
+	board_init();
 	sysclk_init();
-	// Enable the clock to the selected example Timer/counter peripheral module.
-//	sysclk_enable_peripheral_clock(EXAMPLE_TC);
-	// Initialize the USART module for trace messages
-//	init_dbg_rs232(sysclk_get_pba_hz());
-	// Disable the interrupts
-	cpu_irq_disable();
-
-#if defined (__GNUC__)
-	// Initialize interrupt vectors.
-	INTC_init_interrupts();
-	// Register the RTC interrupt handler to the interrupt controller.
-	INTC_register_interrupt(&tc_irq, EXAMPLE_TC_IRQ, EXAMPLE_TC_IRQ_PRIORITY);
-#endif
 
 	sw_timer_init();
 	// Enable the interrupts
 	cpu_irq_enable();
 
-	gpio_configure_pin(AVR32_PIN_PB00,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
-	gpio_configure_pin(AVR32_PIN_PB01,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
-	gpio_configure_pin(AVR32_PIN_PB02,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
-	gpio_configure_pin(AVR32_PIN_PB03,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
+	sw_timer_get_id(&timer_id1);
+	sw_timer_get_id(&timer_id2);
+	sw_timer_get_id(&timer_id3);
+	sw_timer_get_id(&timer_id4);
 
-	while(STATUS_OK != sw_timer_start(0, time_out1, TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL));
-	while(STATUS_OK != sw_timer_start(1, time_out2, TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL));
-	while(STATUS_OK != sw_timer_start(2, time_out3, TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL));
-	while(STATUS_OK != sw_timer_start(3, time_out4, TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL));
+	ioport_configure_pin(EXAMPLE_PIN1,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
+	ioport_configure_pin(EXAMPLE_PIN2,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
+	ioport_configure_pin(EXAMPLE_PIN3,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
+	ioport_configure_pin(EXAMPLE_PIN4,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
+
+	sw_timer_start(timer_id1, time_out1, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL);
+	sw_timer_start(timer_id2, time_out2, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL);
+	sw_timer_start(timer_id3, time_out3, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL);
+	sw_timer_start(timer_id4, time_out4, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL);
 
 	while (1) {
 		sw_timer_service();
@@ -193,28 +156,28 @@ int main(void)
 
 static void timeout1_cb(void *parameter)
 {
-	gpio_toggle_pin(AVR32_PIN_PB00);
+	ioport_toggle_pin(EXAMPLE_PIN1);
 
-	while(STATUS_OK != sw_timer_start(0, time_out1, TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL));
+	sw_timer_start(timer_id1, time_out1, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL);
 }
 
 static void timeout2_cb(void *parameter)
 {
-	gpio_toggle_pin(AVR32_PIN_PB01);
-	//sw_timer_stop(0);
-	while(STATUS_OK != sw_timer_start(1, time_out2, TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL));
+	ioport_toggle_pin(EXAMPLE_PIN2);
+
+	sw_timer_start(timer_id2, time_out2, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL);
 }
 
 static void timeout3_cb(void *parameter)
 {
-	gpio_toggle_pin(AVR32_PIN_PB02);
+	ioport_toggle_pin(EXAMPLE_PIN3);
 
-	while(STATUS_OK != sw_timer_start(2, time_out3, TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL));
+	sw_timer_start(timer_id3, time_out3, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL);
 }
 
 static void timeout4_cb(void *parameter)
 {
-	gpio_toggle_pin(AVR32_PIN_PB03);
+	ioport_toggle_pin(EXAMPLE_PIN4);
 
-	while(STATUS_OK != sw_timer_start(3, time_out4, TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL));
+	sw_timer_start(timer_id4, time_out4, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL);
 }
