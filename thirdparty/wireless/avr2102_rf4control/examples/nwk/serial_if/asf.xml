@@ -8,6 +8,7 @@
 		<build type="c-source" value="main.c"/>
 		<build type="c-source" value="serial_interface.c"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file" value="app_config.h"/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="RF4CE"/>
 		<build type="define" name="DEBUG" value ="0"/>
 		<build type="define" name="PRIVATE_NIB" value =""/>
