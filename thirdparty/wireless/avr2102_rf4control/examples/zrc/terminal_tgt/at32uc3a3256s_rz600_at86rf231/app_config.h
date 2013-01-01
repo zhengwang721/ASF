@@ -28,6 +28,7 @@
 #include "node_config.h"
 #include "rf4ce.h"
 #include "zrc.h"
+#include "conf_nvm.h"
 
 /* === Macros =============================================================== */
 
@@ -156,7 +157,7 @@
 
 #define BOOT_LOADER_SIZE 0
 
-#define IEEE_FLASH_OFFSET (STACK_FLASH_START_ADDR - 8)
+#define IEEE_FLASH_OFFSET (INT_FLASH_END - STACK_FLASH_SIZE  + 1)
 
 
 /* === Externals ============================================================ */

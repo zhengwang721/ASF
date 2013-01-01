@@ -16,15 +16,6 @@
 
 /* === INCLUDES ============================================================ */
 
-#if 0
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#endif
-
 #include <asf.h>
 #include "conf_board.h"
 #include "pal.h"

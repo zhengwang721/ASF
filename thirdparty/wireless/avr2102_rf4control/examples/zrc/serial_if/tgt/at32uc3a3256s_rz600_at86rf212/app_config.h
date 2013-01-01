@@ -28,6 +28,7 @@
 #include "node_config.h"
 #include "rf4ce.h"
 #include "zrc.h"
+#include "conf_nvm.h"
 
 /* === Macros =============================================================== */
 
@@ -124,12 +125,20 @@
  */
 #define UART_MAX_RX_BUF_LENGTH      (200)
 
-#define NWKC_VENDOR_IDENTIFIER          (0x1014)
-#define NWKC_VENDOR_STRING              "ATMEL  "            /* 7 characters ! */
 #define APP_USER_STRING                 "My Target  "    /* 15 characters ! */
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
+#define SUPPORTED_DEV_TYPE_0        DEV_TYPE_TELEVISION
+#define SUPPORTED_DEV_TYPE_1        DEV_TYPE_TELEVISION
+#define SUPPORTED_DEV_TYPE_2        DEV_TYPE_TELEVISION
+#define SUPPORTED_PROFILE_ID_0      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_1      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_2      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_3      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_4      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_5      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_6      PROFILE_ID_ZRC
 #if (USER_STRING_AVAILABLE == true)
 #define APP_CAPABILITIES                (0x01 | (NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
 #else
@@ -146,60 +155,9 @@
 /* Define the watchdog timeout for system reset */
 #define WDT_TIMEOUT_PERIOD          WDT_TO_4S
 
+#define BOOT_LOADER_SIZE 0
 
-/*
- Flash configuration example for pairing table size = 5
-
-                             +------------------------------+
-                             | 0 kB                         |
-                             |                              |
-                             | Application code area        |
-                             |                              |
-                             |                  120 kB - 1  |
-                             +------------------------------+
- NVM_MULTI_WRITE_START       | 120 kB                       |
-                             |                              |
-                             | NVM multi write section      |
-                             | size = NVM_MULTI_WRITE_SIZE  |
-                             |                              |
-                             |                  123 kB - 1  |
-                             +------------------------------+
- NIB_FLASH_ADDR              | 123 kB                       |
-                             |                              |
-                             | NIB storage area             |
-                             | size = NIB_SIZE              |
-                             |                              |
-                             |                  124 kB - 1  |
-                             +------------------------------+
-                             | 124 kB                       |
-                             |                              |
-                             | Boot loader section          |
-                             | size = BOOT_LOADER_SIZE      |
-                             |                              |
-                             |                  128 kB - 1  | FLASHEND
-                             +------------------------------+
-
-*/
-
-/* Set storage location/addresss of flash memory;
-   ensure that NIB storage location, firmware image and bootloader area do not
-   overlap; check if nib is sufficient while changing pairing table size. */
-#define NIB_SIZE                    (1024) /* bytes */
-/* Fixed size of the boot loader area.
-   If the boot loader area size is changed,
-   the linker information needs to be updated as well. */
-#define BOOT_LOADER_SIZE            (4096) /* bytes */
-#define NIB_FLASH_ADDR              (FLASHEND - BOOT_LOADER_SIZE - NIB_SIZE + 1)
-
-/* Number of variables that are stored using NVM */
-#define NVM_NUM_VARS                (NWKC_MAX_PAIRING_TABLE_ENTRIES + 1) // 1 = own frame counter
-/* Size of the flash used for NVM; i.e. number of flash pages.
-   For every variable two pages are used. */
-#define NVM_MULTI_WRITE_NUM_PG_PER_VAR  (2)
-/* Size of the multi write NVM flash section */
-#define NVM_MULTI_WRITE_SIZE        (NVM_NUM_VARS * NVM_MULTI_WRITE_NUM_PG_PER_VAR * SPM_PAGESIZE)
-/* Flash address where the NVM starts. For final application adjust accordingly. */
-#define NVM_MULTI_WRITE_START       (NIB_FLASH_ADDR - NVM_MULTI_WRITE_SIZE)
+#define IEEE_FLASH_OFFSET (INT_FLASH_END - STACK_FLASH_SIZE  + 1)
 
 
 /* === Externals ============================================================ */

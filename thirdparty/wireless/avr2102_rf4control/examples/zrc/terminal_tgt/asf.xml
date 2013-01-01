@@ -35,6 +35,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 		<require idref="thirdparty.wireless.avr2025_mac.examples.sio_helper"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.config" />
+		<require idref="common.drivers.nvm"/>
 		
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="xmega"/>

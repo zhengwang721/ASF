@@ -52,6 +52,7 @@
 #include "gpio.h"
 #include "delay.h"
 #include "ioport.h"
+#include "common_nvm.h"
 
 static irq_handler_t irq_hdl_trx = NULL;
 struct spi_device SPI_AT86RFX_DEVICE = {
@@ -175,14 +176,14 @@ retval_t pal_init(void)
 	return MAC_SUCCESS;
 }
 
-retval_t pal_ps_get(ps_type_t ps_type, uint16_t start_addr, uint16_t length, void *value)
+retval_t pal_ps_get(ps_type_t mem_type, uint16_t offset, uint16_t length, void *value)
 {
-    return (MAC_INVALID_PARAMETER);
+    return nvm_read(INT_FLASH,(uint32_t)offset + INT_FLASH_END - STACK_FLASH_SIZE + 1, value,length);
 }
 
-retval_t pal_ps_set(uint16_t start_addr, uint16_t length, void *value)
+retval_t pal_ps_set(uint16_t offset, uint16_t length, void *value)
 {
-    return (MAC_INVALID_PARAMETER);
+    return nvm_write(INT_FLASH,(uint32_t)offset + INT_FLASH_END - STACK_FLASH_SIZE + 1, value,length);
 }
 
 void pal_trx_frame_read(uint8_t *data, uint8_t length)

@@ -217,6 +217,7 @@
 #endif
 
 #elif (HIGHEST_STACK_LAYER == RF4CE)
+#include "nwk_config.h"
 
 
 #else

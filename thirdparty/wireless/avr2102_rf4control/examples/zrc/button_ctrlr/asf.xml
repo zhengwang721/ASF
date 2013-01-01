@@ -33,6 +33,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 		<require idref="thirdparty.wireless.avr2025_mac.examples.sio_helper"/>
+		<require idref="common.drivers.nvm"/>
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctrlr.config" />
 		<build type="doxygen-entry-point" value="zrc_group"/>

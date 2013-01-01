@@ -162,6 +162,9 @@
 /* This macro restores the global interrupt status */
 #define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
 
+#define STACK_FLASH_SIZE (1024)
+
+
 /* === Types =============================================================== */
 
 /*

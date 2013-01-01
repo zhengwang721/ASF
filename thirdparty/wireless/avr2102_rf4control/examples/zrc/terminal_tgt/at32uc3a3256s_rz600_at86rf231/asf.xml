@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="UC3A3256S RZ600 RF231" id="thirdparty.wireless.avr2102_rf4control.examples.zrc.terminal_tgt.at32uc3a3256s_rz600_at86rf231">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC TARGET
+		SAMPLE APPLICATION FOR RF4CE ZRC TARGET
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -11,6 +11,7 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_sio_helper.h"/>
 		<build type="header-file" value="conf_usb.h"/>
+		<build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_common_hw_timer.h"/>
 		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
 
@@ -20,6 +21,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>
 		<config name="config.common.services.usb.class.device" value="cdc"/>
+		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.examples.zrc.terminal_tgt"/>

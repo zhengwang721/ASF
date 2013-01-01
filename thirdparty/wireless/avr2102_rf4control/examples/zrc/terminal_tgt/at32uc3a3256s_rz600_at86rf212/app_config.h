@@ -28,6 +28,7 @@
 #include "node_config.h"
 #include "rf4ce.h"
 #include "zrc.h"
+#include "conf_nvm.h"
 
 /* === Macros =============================================================== */
 
@@ -128,6 +129,16 @@
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
+#define SUPPORTED_DEV_TYPE_0        DEV_TYPE_TELEVISION
+#define SUPPORTED_DEV_TYPE_1        DEV_TYPE_TELEVISION
+#define SUPPORTED_DEV_TYPE_2        DEV_TYPE_TELEVISION
+#define SUPPORTED_PROFILE_ID_0      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_1      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_2      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_3      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_4      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_5      PROFILE_ID_ZRC
+#define SUPPORTED_PROFILE_ID_6      PROFILE_ID_ZRC
 #if (USER_STRING_AVAILABLE == true)
 #define APP_CAPABILITIES                (0x01 | (NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
 #else
@@ -148,7 +159,7 @@
 
 #define BOOT_LOADER_SIZE 0
 
-#define IEEE_FLASH_OFFSET (STACK_FLASH_START_ADDR - 8)
+#define IEEE_FLASH_OFFSET (INT_FLASH_END - STACK_FLASH_SIZE  + 1)
 
 
 /* === Externals ============================================================ */
