@@ -1415,6 +1415,7 @@ static inline void convert_16_bit_to_byte_address(uint64_t value, uint8_t *data)
 
 #define PGM_READ_BYTE(x) *(x)
 #define PGM_READ_WORD(x) *(x)
+#define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 
 
 #if (defined __GNUC__)

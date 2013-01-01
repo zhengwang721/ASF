@@ -1161,6 +1161,7 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #endif
 
 #define MEMCPY_ENDIAN memcpy
+#define PGM_READ_BLOCK(dst, src, len) memcpy_P((dst), (src), (len))
 
 #if (defined __GNUC__)
   #define PGM_READ_BYTE(x) pgm_read_byte(x)
