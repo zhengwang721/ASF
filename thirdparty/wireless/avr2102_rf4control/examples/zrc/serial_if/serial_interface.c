@@ -769,7 +769,7 @@ void nlme_start_confirm(nwk_enum_t Status)
     *msg_buf = EOT;
 }
 
-
+#if (!defined RF4CE_CALLBACK_PARAM)
 #if (NWK_UNPAIR_IND_RESP == 1) || (defined RF4CE_PLATFORM)
 void nlme_unpair_indication(uint8_t PairingRef)
 {
@@ -782,6 +782,7 @@ void nlme_unpair_indication(uint8_t PairingRef)
     *msg_buf++ = PairingRef;
     *msg_buf = EOT;
 }
+#endif
 #endif
 
 
@@ -822,7 +823,7 @@ void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
 }
 #endif
 
-
+#if (!defined RF4CE_CALLBACK_PARAM)
 #if (defined CHANNEL_AGILITY) || (defined RF4CE_PLATFORM)
 void nwk_ch_agility_indication(uint8_t LogicalChannel)
 {
@@ -835,6 +836,7 @@ void nwk_ch_agility_indication(uint8_t LogicalChannel)
     *msg_buf++ = LogicalChannel;
     *msg_buf = EOT;
 }
+#endif
 #endif
 
 

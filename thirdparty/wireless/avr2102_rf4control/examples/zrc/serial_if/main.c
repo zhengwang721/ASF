@@ -26,6 +26,7 @@
 #include "tal.h"
 #include "serial_interface.h"
 #include "app_config.h"
+#include "pb_pairing.h"
 
 
 /* === Macros ============================================================== */
@@ -101,7 +102,7 @@ int main (void)
     /* No return statement here, because this code is unreachable */
 }
 
-
+#ifdef PBP_REC
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
                        uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
                        uint8_t KeyExTransferCount)
@@ -116,7 +117,7 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVend
 
     return true;
 }
-
+#endif
 static void app_alert(void)
 {
     while (1)
