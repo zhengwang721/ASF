@@ -180,9 +180,7 @@ retval_t tal_init(void)
         return FAILURE;
     }
 
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    pal_ps_get(EXTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
-#else
+#ifdef ENABLE_STACK_NVM
     pal_ps_get(INTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
 #endif
 

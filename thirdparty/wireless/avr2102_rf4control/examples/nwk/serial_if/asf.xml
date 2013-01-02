@@ -24,6 +24,7 @@
 		<build type="define" name="MAC_USER_BUILD_CONFIG" value =""/>
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
+		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
 		
 		

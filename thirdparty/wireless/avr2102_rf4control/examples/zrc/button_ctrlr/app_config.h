@@ -28,6 +28,7 @@
 #include "node_config.h"
 #include "rf4ce.h"
 #include "zrc.h"
+#include "common_nvm.h"
 #include "conf_nvm.h"
 
 /* === Macros =============================================================== */

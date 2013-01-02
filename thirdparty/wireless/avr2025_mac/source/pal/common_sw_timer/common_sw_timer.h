@@ -44,6 +44,7 @@
 
 #include "compiler.h"
 #include "status_codes.h"
+#include "conf_common_sw_timer.h"
 
 
 /*

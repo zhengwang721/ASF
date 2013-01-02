@@ -27,6 +27,7 @@
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
 		<build type="define" name="ENABLE_PWR_SAVE_MODE" value =""/>
+		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.include"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
