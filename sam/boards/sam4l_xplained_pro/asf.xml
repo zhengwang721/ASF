@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<board id="board.sam4l_xplained_pro" caption="SAM4L Xplained Pro">
+	<board id="board.sam4l_xplained_pro" caption="SAM4L Xplained PRO">
 		<build type="define" name="BOARD" value="SAM4L_XPLAINED_PRO"/>
 		<build type="define" name="__ATSAM4LC4C__" value=""/>
 		<build type="c-source" value="board_init.c"/>
