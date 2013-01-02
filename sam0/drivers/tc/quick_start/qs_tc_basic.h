@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 TC Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,9 +42,9 @@
 /**
  * \page tc_basic_use_case Quick Start Guide for the TC module - Basic Use Case
  *
- * In this use case, the TC will be used to generate a PWM signal. To
- * keep thing simple the pulse with is set to half the period, in
- * this example. The TC will be set up as follows:
+ * In this use case, the TC will be used to generate a PWM signal. Her
+ * the pulse width is set to half the period. The TC module will be set up as
+ * follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
  * - 16 bit resolution on the counter
@@ -84,11 +84,11 @@
  *  - \snippet qs_tc_basic.c tc_get_config_defaults
  * -# setup value on channel 0 to be used as the PWM toggle value.
  *  - \snippet qs_tc_basic.c channel_0
- * -# Initialize devise registers, and g-clock using the config struct
+ * -# Initialize device registers, and g-clock using the config struct
  *  - \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module
  *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop till there is no power on the devise. Let the module generate PWM
+ * -# Loop till there is no power on the device. Let the module generate PWM
  *  - \snippet qs_tc_basic.c inf_loop
  * \section tc_basic_use_case_workflow Work flow
  */

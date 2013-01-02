@@ -40,38 +40,37 @@
  */
 #include <asf.h>
 
-
 int main(void)
 {
-//! [main]
+	/* ! [main] */
 	/* Structures for config and software device instance */
-//! [config]
+	/* ! [config] */
 	struct tc_conf config;
-//! [config]
-//! [dev_inst]
+	/* ! [config] */
+	/* ! [dev_inst] */
 	struct tc_dev_inst dev_inst;
-//! [dev_inst]
+	/* ! [dev_inst] */
 
-//! [tc_get_config_defaults]
+	/* ! [tc_get_config_defaults] */
 	tc_get_config_defaults(&config);
-//! [tc_get_config_defaults]
+	/* ! [tc_get_config_defaults] */
 
-//! [channel_0]
-	config.tc_resolution_conf.tc_16bit_conf.compare_capture_channel_0 =
-			0x7FFF;
-//! [channel_0]
+	/* ! [channel_0] */
+	config.tc_resolution_conf.tc_16bit_conf.compare_capture_channel_0
+		= 0x7FFF;
+	/* ! [channel_0] */
 
-//! [tc_init]
+	/* ! [tc_init] */
 	tc_init(TC0, &dev_inst, &config);
-//! [tc_init]
+	/* ! [tc_init] */
 
-//! [tc_enable]
+	/* ! [tc_enable] */
 	tc_enable(&dev_inst);
-//! [tc_enable]
+	/* ! [tc_enable] */
 
-//! [inf_loop]
+	/* ! [inf_loop] */
 	while (1) {
 	}
-//! [inf_loop]
-//! [main]
+	/* ! [inf_loop] */
+	/* ! [main] */
 }
