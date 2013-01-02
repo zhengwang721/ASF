@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC TARGET
 		</info>
+		<build type="include-path" value="."/>
 		<build type="header-file" value="app_config.h"/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="RF4CE"/>
 		<build type="define" name="DEBUG" value ="0"/>
