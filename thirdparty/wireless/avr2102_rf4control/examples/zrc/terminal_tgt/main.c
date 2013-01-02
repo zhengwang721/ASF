@@ -1585,14 +1585,7 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
                                   );
             node_status = IDLE;
         }
-#ifdef ADC_ACCELEROMETER
-        if (!(nsdu[0] == ACC_POSITION && (last_remote_position[PairingRef] == nsdu[1])))
-        {
-            printf("Vendor data received from pairing ref %d - ", PairingRef);
-        }
-#else
         printf("Vendor data received from pairing ref %d - ", PairingRef);
-#endif /*ADC_ACCELEROMETER */
         switch (nsdu[0])
         {
             case BATTERY_STATUS_RESP:
@@ -1600,13 +1593,8 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
                     uint16_t volt = (uint16_t)nsdu[1] | ((uint16_t)nsdu[2] << 8);
 
                     printf("battery status ");
-#if (PAL_GENERIC_TYPE == AVR32)
                     printf("%d.", volt / 1000);
                     printf("%d V\r\n", volt % 1000);
-#else
-                    printf("%u.", volt / 1000);
-                    printf("%u V\r\n", volt % 1000);
-#endif
                 }
                 break;
 
