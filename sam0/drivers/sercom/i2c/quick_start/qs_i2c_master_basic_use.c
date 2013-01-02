@@ -38,3 +38,86 @@
  * \asf_license_stop
  *
  */
+
+#include <asf.h>
+
+//! [packet_data]
+#define DATA_LENGTH 10
+
+static uint8_t buffer[DATA_LENGTH] = {
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+};
+
+#define SLAVE_ADDRESS 0x01
+//! [packet_data]
+
+/* Number of time to try and send packet if failed. */
+#define TIMEOUT 1000
+
+/* Init device instance. */
+//! [dev_inst]
+struct i2c_master_dev_inst dev_inst;
+//! [dev_inst]
+
+//! [initialize_i2c]
+static void configure_i2c(void)
+{
+	/* Initialize config structure and device instance. */
+	//! [init_conf]
+	struct i2c_master_conf conf;
+	i2c_master_get_config_defaults(&conf);
+	//! [init_conf]
+
+	/* Change buffer timeout to something longer. */
+	//! [conf_change]
+	conf.buffer_timeout = 10000;
+	//! [conf_change]
+
+	/* Initialize and enable device with config. */
+	//! [init_module]
+	i2c_master_init(&dev_inst, &SERCOM0, &conf);
+	//! [init_module]
+
+	//! [enable_module]
+	i2c_master_enable(&dev_inst);
+	//! [enable_module]
+}
+//! [initialize_i2c]
+
+int main(void)
+{
+
+	//! [run_initialize_i2c]
+	/* Init system. */
+	//system_init();
+	/* Configure device and enable. */
+	configure_i2c();
+	//! [run_initialize_i2c]
+
+	/* Timeout counter. */
+	uint16_t timeout = 0;
+
+	/* Init i2c packet. */
+	//! [packet]
+	i2c_packet_t packet = {
+		.address     = SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = buffer,
+	};
+	//! [packet]
+
+
+	/* Write buffer to slave until success. */
+	//! [write_packet]
+	while(i2c_master_write_packet(&dev_inst, &packet) != STATUS_OK) {
+		/* Increment timeout counter and check if timed out. */
+		if (timeout++ >= TIMEOUT) {
+			break;
+		}
+	}
+	//! [write_packet]
+
+	while (1) {
+		/* Inf loop. */
+	}
+}

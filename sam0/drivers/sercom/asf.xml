@@ -1,15 +1,19 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.sercom" caption="SERCOM">
 		<info type="description" value="summary">
-		Driver for the SAM0+ SPI.
+		Driver for the SAM0+ SERCOM.
 		</info>
 		<build type="include-path" value="." />
 		<build type="c-source" value="sercom.c"/>
 		<build type="header-file" subtype="api" value="sercom.h"/>
+		<build type="c-source" value="sercom_interrupts.c"/>
+		<build type="header-file" subtype="api" value="sercom_interrupts.h"/>
 		<build type="doxygen-entry-point" value="sam0_sercom_group"/>
 		<device-support value="sam0d"/>
-		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.utils"/>
+		<!--<require idref="sam0.drivers.nvic"/>-->
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.system.gclk"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
 	</module>
 </asf>

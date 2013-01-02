@@ -40,7 +40,11 @@
 #ifndef __SAM0D__
 #define __SAM0D__
 
-#if defined __SAM0D4__
+#if defined __SAM0D4_REVA__
+  /* Hack for setting default device until the toolchain can set it */
+  #define __SAMD20J18A__
+  #include "sam0d4_reva.h"
+#elif defined __SAM0D4__
   #include "sam0d4.h"
 #else
   #error Library does not support the specified device.

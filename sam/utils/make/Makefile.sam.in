@@ -270,6 +270,9 @@ cflags-gnu-y    += -std=gnu99
 # Compile C++ files using the GNU++98 standard.
 cxxflags-gnu-y  += -std=gnu++98
 
+# Don't use strict aliasing (very common in embedded applications).
+cflags-gnu-y    += -fno-strict-aliasing
+cxxflags-gnu-y  += -fno-strict-aliasing
 
 # Separate each function and data into its own separate section to allow
 # garbage collection of unused sections.

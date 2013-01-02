@@ -69,33 +69,23 @@ extern "C" {
  */
 
 /** TX descriptor lists */
-#ifdef __ICCARM__ /* IAR */
-#pragma data_alignment=8
-#endif
+COMPILER_ALIGNED(8)
 static emac_tx_descriptor_t gs_tx_desc[EMAC_TX_BUFFERS];
 /** TX callback lists */
 static emac_dev_tx_cb_t gs_tx_callback[EMAC_TX_BUFFERS];
 /** RX descriptors lists */
-#ifdef __ICCARM__ /* IAR */
-#pragma data_alignment=8
-#endif
+COMPILER_ALIGNED(8)
 static emac_rx_descriptor_t gs_rx_desc[EMAC_RX_BUFFERS];
 /** Send Buffer. Section 3.6 of AMBA 2.0 spec states that burst should not cross the
  * 1K Boundaries. Receive buffer manager write operations are burst of 2 words => 3 lsb bits
  * of the address shall be set to 0.
  */
-#ifdef __ICCARM__ /* IAR */
-#pragma data_alignment=8
-#endif
-static uint8_t gs_uc_tx_buffer[EMAC_TX_BUFFERS * EMAC_TX_UNITSIZE]
-		__attribute__ ((aligned(8)));
+COMPILER_ALIGNED(8)
+static uint8_t gs_uc_tx_buffer[EMAC_TX_BUFFERS * EMAC_TX_UNITSIZE];
 
-#ifdef __ICCARM__ /* IAR */
-#pragma data_alignment=8
-#endif
 /** Receive Buffer */
-static uint8_t gs_uc_rx_buffer[EMAC_RX_BUFFERS * EMAC_RX_UNITSIZE]
-		__attribute__ ((aligned(8)));
+COMPILER_ALIGNED(8)
+static uint8_t gs_uc_rx_buffer[EMAC_RX_BUFFERS * EMAC_RX_UNITSIZE];
 
 /**
  * EMAC device memory management struct.

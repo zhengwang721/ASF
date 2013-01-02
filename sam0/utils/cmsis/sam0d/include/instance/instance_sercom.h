@@ -43,8 +43,10 @@
 #define __SAM0XX_INSTANCE_SERCOM__
 
 #define SERCOM0            (*(SERCOM_t*) 0x2000)
-#define SERCOM1            (*(SERCOM_t*) 0x2000)
-#define SERCOM2            (*(SERCOM_t*) 0x2000)
-#define SERCOM3            (*(SERCOM_t*) 0x2000)
+#define SERCOM1            (*(SERCOM_t*) 0x3000)
+#define SERCOM2            (*(SERCOM_t*) 0x4000)
+#define SERCOM3            (*(SERCOM_t*) 0x5000)
+#define SERCOM4            (*(SERCOM_t*) 0x6000)
+#define SERCOM5            (*(SERCOM_t*) 0x7000)
 
 #endif /* __SAM0XX_INSTANCE_SERCOM__ */

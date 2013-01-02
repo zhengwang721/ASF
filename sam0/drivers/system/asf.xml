@@ -21,7 +21,7 @@
 		</info>
 		<build type="header-file" subtype="example" value="quick_start/qs_clock_source.h"/>
 		<build type="doxygen-entry-point" value="system_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="atsam0d4_reva"/>
 		<require idref="sam0.drivers.system.core"/>
 		<require idref="sam0.drivers.system.gclk"/>
 		<require idref="sam0.utils"/>

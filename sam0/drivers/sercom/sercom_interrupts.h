@@ -38,30 +38,19 @@
  * \asf_license_stop
  *
  */
-#ifndef __SERCOM_INTERRUPTS__
-#define __SERCOM_INTERRUPTS__
+#ifndef SERCOM_INTERRUPTS_H_INCLUDED
+#define SERCOM_INTERRUPTS_H_INCLUDED
 
-#define SERCOM_INSTANCES 4
-#include <usart.h>
-#include <sercom.h>
+#include "sercom.h"
 
+/* Look-up table for device instances. */
+void *_sercom_instances[SERCOM_INST_NUM];
 
-/*
-struct _sercom_dev_inst {
-	union {
-		//struct spi_dev_inst spi;
-		struct usart_dev_inst usart;
-		//struct i2c_dev_inst i2c;
-	};
-};
+uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance);
 
-
-
-
-/* Lookup table containing sercom instances which have registered callback functions */
-uint32_t _sercom_instances[SERCOM_INSTANCES];
+void _sercom_set_handler(uint8_t instance,
+		void (*interrupt_handler) (uint8_t instance));
 
 void SERCOM_Handler(void);
 
-
-#endif /* __SERCOM_INTERRUPTS__ */
+#endif /* SERCOM_INTERRUPTS_H_INCLUDED */

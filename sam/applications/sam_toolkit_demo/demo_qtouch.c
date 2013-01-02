@@ -42,6 +42,7 @@
  */
 #include <asf.h>
 #include "demo.h"
+#include "bitmaps.h"
 
 /** QTouch library type: QTouch / QMatrix */
 #define QTOUCH_LIB_TPYE_MASK    0x01

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.components.display.dip204.example" caption="Display DIP204 Example">
+	<module type="application" id="avr32.components.display.dip204.example" caption="DIP204 Display Controller Example">
 		<info type="description" value="summary">
 		Using the DIP204 display, display text messages and control the backlight with the on-board buttons.
 		</info>
