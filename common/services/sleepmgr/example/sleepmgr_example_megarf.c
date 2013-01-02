@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager example for MegaRF
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,7 +104,6 @@ ISR(BUTTON_vect)
 	external_interrupt_flag_clear(BUTTON_NUMBER);
 }
 
-
 /**
  * \mainpage
  *
@@ -136,7 +135,7 @@ ISR(BUTTON_vect)
  *		Idle mode.
  *		Power Down mode.
  *	    Power Save mode.
- * 		Standby mode.
+ *		Standby mode.
  *      Extended Standby mode.
  *
  * \section compinfo Compilation Info

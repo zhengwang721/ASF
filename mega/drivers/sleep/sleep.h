@@ -3,7 +3,7 @@
  *
  * \brief Sleep controller driver
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,10 @@
 # error Unsupported compiler.
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  \brief Sleep Mode Select */
 typedef enum SLEEP_SMODE_enum {
 	SLEEP_SMODE_IDLE_gc = (0x00 << 1), /* Idle mode */
@@ -82,6 +86,9 @@ typedef enum SLEEP_SMODE_enum {
 	SLEEP_SMODE_ESTDBY_gc = (0x07 << 1), /* Extended Standby Mode */
 } SLEEP_SMODE_t;
 
+#ifdef __cplusplus
+}
+#endif
 
 /**
  * \code

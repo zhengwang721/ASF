@@ -3,7 +3,7 @@
  *
  * \brief Sleep controller driver
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,6 +57,10 @@
  * @{
  */
 
+ #ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(__ICCAVR__) || defined(__DOXYGEN__)
 
 /**
@@ -90,7 +94,11 @@ static inline void sleep_set_mode(enum SLEEP_SMODE_enum mode)
 {
 #if MEGA_RF
 	SMCR = mode | (SMCR & ~((1 << SM0) | (1 << SM1) | (1 << SM2)));
-#endif	
+#endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _SLEEP_MEGARF_H */
