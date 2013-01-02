@@ -189,13 +189,13 @@
 
 	<board id="board.user_board.sam4e8e" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4e8"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4e8e"/>
 	</board>
 
 	<board id="board.user_board.sam4e16e" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4e16"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4e16e"/>
 	</board>
 </asf>

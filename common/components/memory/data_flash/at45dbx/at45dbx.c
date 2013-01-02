@@ -199,10 +199,6 @@ static bool at45dbx_busy;
 //! Memory data pointer.
 static uint32_t at45dbx_gl_ptr_mem;
 
-//! Sector buffer.
-static uint8_t sector_buf[AT45DBX_SECTOR_SIZE];
-
-
 /*! \name Control Functions
  */
 //! @{
@@ -491,36 +487,6 @@ bool at45dbx_write_byte(uint8_t b)
 		at45dbx_chipselect_df(at45dbx_gl_ptr_mem >> AT45DBX_MEM_SIZE, false);
 		// Memory busy.
 		at45dbx_busy = true;
-	}
-	return true;
-}
-
-
-//! @}
-
-
-/*! \name Multiple-Sector Access Functions
- */
-//! @{
-
-
-bool at45dbx_read_multiple_sector(uint16_t nb_sector)
-{
-	while (nb_sector--) {
-		// Read the next sector.
-		at45dbx_read_sector_to_ram(sector_buf);
-		at45dbx_read_multiple_sector_callback(sector_buf);
-	}
-	return true;
-}
-
-
-bool at45dbx_write_multiple_sector(uint16_t nb_sector)
-{
-	while (nb_sector--) {
-		// Write the next sector.
-		at45dbx_write_multiple_sector_callback(sector_buf);
-		at45dbx_write_sector_from_ram(sector_buf);
 	}
 	return true;
 }

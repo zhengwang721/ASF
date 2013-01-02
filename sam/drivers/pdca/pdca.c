@@ -47,7 +47,6 @@
 #include "pdca.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
-#include "conf_pdca.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -102,7 +101,7 @@ volatile PdcaChannel *pdca_channel_get_handler(pdca_channel_num_t
  * \param cfg Pointer to a PDCA channel config
  */
 void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
-		const pdca_channel_config_t * cfg)
+		const pdca_channel_config_t *cfg)
 {
 	/* Get the correct channel pointer */
 	volatile PdcaChannel *pdca_channel =
@@ -132,7 +131,7 @@ void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
  *
  * \param pdca Base address of the PDCA module
  */
-void pdca_disable(Pdca * pdca)
+void pdca_disable(Pdca *pdca)
 {
 	sysclk_disable_peripheral_clock(pdca);
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
@@ -143,7 +142,7 @@ void pdca_disable(Pdca * pdca)
  *
  * \param pdca Base address of the PDCA module
  */
-void pdca_enable(Pdca * pdca)
+void pdca_enable(Pdca *pdca)
 {
 	sysclk_enable_peripheral_clock(pdca);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
@@ -402,10 +401,11 @@ static void pdca_channel_interrupt(const pdca_channel_num_t pdca_ch_number)
 
 	if (pdca_callback_pointer[pdca_ch_number]) {
 		pdca_callback_pointer[pdca_ch_number] (status);
+	} else {
+		Assert(false); /* Catch unexpected interrupt */
 	}
 }
 
-#ifdef PDCA_INT0_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 0.
  */
@@ -413,9 +413,7 @@ void PDCA_0_Handler(void)
 {
 	pdca_channel_interrupt(0);
 }
-#endif
 
-#ifdef PDCA_INT1_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 1.
  */
@@ -423,9 +421,7 @@ void PDCA_1_Handler(void)
 {
 	pdca_channel_interrupt(1);
 }
-#endif
 
-#ifdef PDCA_INT2_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 2.
  */
@@ -433,9 +429,7 @@ void PDCA_2_Handler(void)
 {
 	pdca_channel_interrupt(2);
 }
-#endif
 
-#ifdef PDCA_INT3_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 3.
  */
@@ -443,9 +437,7 @@ void PDCA_3_Handler(void)
 {
 	pdca_channel_interrupt(3);
 }
-#endif
 
-#ifdef PDCA_INT4_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 4.
  */
@@ -453,9 +445,7 @@ void PDCA_4_Handler(void)
 {
 	pdca_channel_interrupt(4);
 }
-#endif
 
-#ifdef PDCA_INT5_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 5.
  */
@@ -463,9 +453,7 @@ void PDCA_5_Handler(void)
 {
 	pdca_channel_interrupt(5);
 }
-#endif
 
-#ifdef PDCA_INT6_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 6.
  */
@@ -473,9 +461,7 @@ void PDCA_6_Handler(void)
 {
 	pdca_channel_interrupt(6);
 }
-#endif
 
-#ifdef PDCA_INT7_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 7.
  */
@@ -483,9 +469,7 @@ void PDCA_7_Handler(void)
 {
 	pdca_channel_interrupt(7);
 }
-#endif
 
-#ifdef PDCA_INT8_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 8.
  */
@@ -493,9 +477,7 @@ void PDCA_8_Handler(void)
 {
 	pdca_channel_interrupt(8);
 }
-#endif
 
-#ifdef PDCA_INT9_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 9.
  */
@@ -503,9 +485,7 @@ void PDCA_9_Handler(void)
 {
 	pdca_channel_interrupt(9);
 }
-#endif
 
-#ifdef PDCA_INT10_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 10.
  */
@@ -513,9 +493,7 @@ void PDCA_10_Handler(void)
 {
 	pdca_channel_interrupt(10);
 }
-#endif
 
-#ifdef PDCA_INT11_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 11.
  */
@@ -523,9 +501,7 @@ void PDCA_11_Handler(void)
 {
 	pdca_channel_interrupt(11);
 }
-#endif
 
-#ifdef PDCA_INT12_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 12.
  */
@@ -533,9 +509,7 @@ void PDCA_12_Handler(void)
 {
 	pdca_channel_interrupt(12);
 }
-#endif
 
-#ifdef PDCA_INT13_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 13.
  */
@@ -543,9 +517,7 @@ void PDCA_13_Handler(void)
 {
 	pdca_channel_interrupt(13);
 }
-#endif
 
-#ifdef PDCA_INT14_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 14.
  */
@@ -553,9 +525,7 @@ void PDCA_14_Handler(void)
 {
 	pdca_channel_interrupt(14);
 }
-#endif
 
-#ifdef PDCA_INT15_ENABLE
 /**
  * \brief Interrupt handler for PDCA channel 15.
  */
@@ -563,7 +533,7 @@ void PDCA_15_Handler(void)
 {
 	pdca_channel_interrupt(15);
 }
-#endif
+
 
 //@}
 
