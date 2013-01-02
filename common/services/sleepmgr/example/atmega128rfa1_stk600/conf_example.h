@@ -51,7 +51,7 @@
 #define external_interrupt_flag_clear(INT_number)	(EIFR |= (1<<INT_number))
 
 #define LED_PIN         LED_YELLOW_GPIO
-#define BUTTON_PIN      GPIO_PUSH_BUTTON_0
-#define BUTTON_vect     INT0_vect
-#define BUTTON_NUMBER   INT0
+#define BUTTON_PIN      GPIO_PUSH_BUTTON_ON_BOARD
+#define BUTTON_vect     INT5_vect
+#define BUTTON_NUMBER   INT5
 #endif /* CONF_EXAMPLE_H */

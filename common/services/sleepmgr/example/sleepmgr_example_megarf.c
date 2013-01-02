@@ -60,7 +60,7 @@ int main(void)
 	ioport_set_pin_dir(BUTTON_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_PIN, IOPORT_MODE_PULLUP);
 
-	ioport_set_pin_sense_mode(BUTTON_PIN, IOPORT_SENSE_FALLING);
+	ioport_set_pin_sense_mode(BUTTON_PIN, IOPORT_SENSE_LEVEL);
 
 	external_interrupt_enable(BUTTON_NUMBER);
 
