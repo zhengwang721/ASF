@@ -6,7 +6,7 @@
 		<build type="header-file" value="conf_nvm.h"/>
 		<build type="include-path" value="."/>
 		<require idref="common.drivers.nvm.example"/>
-		<require idref="common.drivers.nvm#no_extmem"/>
+		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 		<require idref="board.sam3u_ek"/>
 		<require idref="common.utils.stdio"/>
 		<config name="config.board.sam3u_ek.led" value="yes"/>
