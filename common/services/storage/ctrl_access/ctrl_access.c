@@ -393,7 +393,7 @@ bool mem_unload(U8 lun, bool unload)
 # if defined(Lun_usb_unload)
               Lun_usb_unload(lun - LUN_ID_USB, unload);
 # else
-              !unload /* Can not unload: load success, unload fail */
+              !unload; /* Can not unload: load success, unload fail */
 # endif
 #else
               false; /* No mem, unload/load fail */
