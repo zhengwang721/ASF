@@ -86,68 +86,96 @@
 #include <conf_example.h>
 #include <string.h>
 #include <asf.h>
-#include "common_sw_timer.h"
 
-uint32_t time_out1 = 20000;
-uint32_t time_out2 = 10000;
-uint32_t time_out3 = 40000;
-uint32_t time_out4 = 50000;
+/**
+ * \brief Timer Counter Overflow interrupt callback function
+ *
+ * This function is called when an overflow interrupt has occurred on
+ * TIMER_EXAMPLE and toggles LED0.
+ */
+static void example_ovf_interrupt_callback(void)
+{
+	gpio_toggle_pin(LED0_GPIO);
+}
 
-static void timeout1_cb(void *parameter);
-static void timeout2_cb(void *parameter);
-static void timeout3_cb(void *parameter);
-static void timeout4_cb(void *parameter);
+/**
+ * \brief Timer Counter Capture/Compare A interrupt callback function
+ *
+ * This function is called when an a capture compare channel A has occurred
+ * TIMER_EXAMPLE and toggles LED1.
+ */
+static void example_cca_interrupt_callback(void)
+{
+	gpio_toggle_pin(LED1_GPIO);
+}
+/**
+ * \brief Timer Counter Capture/Compare B interrupt callback function
+ *
+ * This function is called when an a capture compare channel B has occurred
+ * TIMER_EXAMPLE and toggles LED2.
+ */
+static void example_ccb_interrupt_callback(void)
+{
+	gpio_toggle_pin(LED2_GPIO);
+}
+
 
 int main(void)
 {
 	pmic_init();
-	sysclk_init();
 	board_init();
+	sysclk_init();
 	sleepmgr_init();
-
-	sw_timer_init();
 
 	cpu_irq_enable();
 
-	ioport_configure_pin(J2_PIN0, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(J2_PIN1, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(J2_PIN2, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(J2_PIN3, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+#if (BOARD == XMEGA_A3BU_XPLAINED)
+	/* The status LED must be used as LED2, so we turn off
+	 * the green led which is in the same packaging. */
+	ioport_set_pin_high(LED3_GPIO);
+#endif
 
-	while(STATUS_OK != sw_timer_start(0, time_out1, TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL));
-	while(STATUS_OK != sw_timer_start(1, time_out2, TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL));
-//	while(STATUS_OK != sw_timer_start(2, time_out3++, TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL));
-//	while(STATUS_OK != sw_timer_start(3, time_out4++, TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL));
+	/*
+	* Unmask clock for TIMER_EXAMPLE
+	*/
+	tc_enable(&TIMER_EXAMPLE);
+
+	/*
+	* Configure interrupts callback functions for TIMER_EXAMPLE
+	* overflow interrupt, CCA interrupt and CCB interrupt
+	*/
+	tc_set_overflow_interrupt_callback(&TIMER_EXAMPLE,
+			example_ovf_interrupt_callback);
+	tc_set_cca_interrupt_callback(&TIMER_EXAMPLE,
+			example_cca_interrupt_callback);
+	tc_set_ccb_interrupt_callback(&TIMER_EXAMPLE,
+			example_ccb_interrupt_callback);
+
+	/*
+	* Configure TC in normal mode, configure period, CCA and CCB
+	* Enable both CCA and CCB channels
+	*/
+
+	tc_set_wgm(&TIMER_EXAMPLE, TC_WG_NORMAL);
+	tc_write_period(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
+	tc_write_cc(&TIMER_EXAMPLE, TC_CCA, TIMER_EXAMPLE_PERIOD / 2);
+	tc_write_cc(&TIMER_EXAMPLE, TC_CCB, TIMER_EXAMPLE_PERIOD / 4);
+	tc_enable_cc_channels(&TIMER_EXAMPLE,(enum tc_cc_channel_mask_enable_t)(TC_CCAEN | TC_CCBEN));
+
+	/*
+	* Enable TC interrupts (overflow, CCA and CCB)
+	*/
+	tc_set_overflow_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
+	tc_set_cca_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
+	tc_set_ccb_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
+
+	/*
+	* Run TIMER_EXAMPLE at TIMER_EXAMPLE_PERIOD(31250Hz) resolution
+	*/
+	tc_set_resolution(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
 
 	do {
-		sw_timer_service();
+		/* Go to sleep, everything is handled by interrupts. */
+		sleepmgr_enter_sleep();
 	} while (1);
-}
-
-static void timeout1_cb(void *parameter)
-{
-	ioport_toggle_pin(J2_PIN0);
-
-	while(STATUS_OK != sw_timer_start(0, time_out1, TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL));
-}
-
-static void timeout2_cb(void *parameter)
-{
-	ioport_toggle_pin(J2_PIN1);
-	sw_timer_stop(0);
-	//while(STATUS_OK != sw_timer_start(1, time_out2, TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL));
-}
-
-static void timeout3_cb(void *parameter)
-{
-	ioport_toggle_pin(J2_PIN2);
-
-	while(STATUS_OK != sw_timer_start(2, time_out3, TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL));
-}
-
-static void timeout4_cb(void *parameter)
-{
-	ioport_toggle_pin(J2_PIN3);
-
-	while(STATUS_OK != sw_timer_start(3, time_out4, TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL));
 }

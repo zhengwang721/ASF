@@ -104,8 +104,12 @@
 #if defined (__GNUC__)
 #  include "intc.h"
 #endif
-#include "common_hw_timer.h"
+#include "conf_example.h"
 
+
+#if !defined(EXAMPLE_TC) || !defined(EXAMPLE_TC_IRQ)
+#  error The TC preprocessor configuration to use in this example is missing.
+#endif
 
 //! \name Example configuration
 //!@{
@@ -131,18 +135,120 @@
  */
 //!@}
 
-#define delay	(10000)
+// Flag to update the timer value
+volatile static bool update_timer = true;
+// Variable to contain the time ticks occurred
+volatile static uint32_t tc_tick = 0;
 
-static void hw_overflow_cb(void)
+
+/**
+ * \brief TC interrupt.
+ *
+ * The ISR handles RC compare interrupt and sets the update_timer flag to
+ * update the timer value.
+ */
+#if defined (__GNUC__)
+__attribute__((__interrupt__))
+#elif defined (__ICCAVR32__)
+#pragma handler = EXAMPLE_TC_IRQ_GROUP, 1
+__interrupt
+#endif
+static void tc_irq(void)
 {
+	// Increment the ms seconds counter
+	tc_tick++;
+
+	// Clear the interrupt flag. This is a side effect of reading the TC SR.
+	tc_read_sr(EXAMPLE_TC, EXAMPLE_TC_CHANNEL);
+
+	// specify that an interrupt has been raised
+	update_timer = true;
+	// Toggle a GPIO pin (this pin is used as a regular GPIO pin).
 	LED_Toggle(LED0);
 }
 
-static void hw_expiry_cb(void)
+/**
+ * \brief TC Initialization
+ *
+ * Initializes and start the TC module with the following:
+ * - Counter in Up mode with automatic reset on RC compare match.
+ * - fPBA/8 is used as clock source for TC
+ * - Enables RC compare match interrupt
+ * \param tc Base address of the TC module
+ */
+static void tc_init(volatile avr32_tc_t *tc)
 {
-	gpio_toggle_pin(AVR32_PIN_PB00);
-	
-	common_tc_delay(delay);
+	// Options for waveform generation.
+	static const tc_waveform_opt_t waveform_opt = {
+		// Channel selection.
+		.channel  = EXAMPLE_TC_CHANNEL,
+		// Software trigger effect on TIOB.
+		.bswtrg   = TC_EVT_EFFECT_NOOP,
+		// External event effect on TIOB.
+		.beevt    = TC_EVT_EFFECT_NOOP,
+		// RC compare effect on TIOB.
+		.bcpc     = TC_EVT_EFFECT_NOOP,
+		// RB compare effect on TIOB.
+		.bcpb     = TC_EVT_EFFECT_NOOP,
+		// Software trigger effect on TIOA.
+		.aswtrg   = TC_EVT_EFFECT_NOOP,
+		// External event effect on TIOA.
+		.aeevt    = TC_EVT_EFFECT_NOOP,
+		// RC compare effect on TIOA.
+		.acpc     = TC_EVT_EFFECT_NOOP,
+		/*
+		 * RA compare effect on TIOA.
+		 * (other possibilities are none, set and clear).
+		 */
+		.acpa     = TC_EVT_EFFECT_NOOP,
+		/*
+		 * Waveform selection: Up mode with automatic trigger(reset)
+		 * on RC compare.
+		 */
+		.wavsel   = TC_WAVEFORM_SEL_UP_MODE_RC_TRIGGER,
+		// External event trigger enable.
+		.enetrg   = false,
+		// External event selection.
+		.eevt     = 0,
+		// External event edge selection.
+		.eevtedg  = TC_SEL_NO_EDGE,
+		// Counter disable when RC compare.
+		.cpcdis   = false,
+		// Counter clock stopped with RC compare.
+		.cpcstop  = false,
+		// Burst signal selection.
+		.burst    = false,
+		// Clock inversion.
+		.clki     = false,
+		// Internal source clock 3, connected to fPBA / 8.
+		.tcclks   = TC_CLOCK_SOURCE_TC3
+	};
+
+	// Options for enabling TC interrupts
+	static const tc_interrupt_t tc_interrupt = {
+		.etrgs = 0,
+		.ldrbs = 0,
+		.ldras = 0,
+		.cpcs  = 1, // Enable interrupt on RC compare alone
+		.cpbs  = 0,
+		.cpas  = 0,
+		.lovrs = 0,
+		.covfs = 0
+	};
+	// Initialize the timer/counter.
+	tc_init_waveform(tc, &waveform_opt);
+
+	/*
+	 * Set the compare triggers.
+	 * We configure it to count every 1 milliseconds.
+	 * We want: (1 / (fPBA / 8)) * RC = 1 ms, hence RC = (fPBA / 8) / 1000
+	 * to get an interrupt every 10 ms.
+	 */
+	tc_write_rc(tc, EXAMPLE_TC_CHANNEL, (sysclk_get_pba_hz() / 8 / 1000));
+	// configure the timer interrupt
+	tc_configure_interrupts(tc, EXAMPLE_TC_CHANNEL, &tc_interrupt);
+	// Start the timer/counter.
+	tc_start(tc, EXAMPLE_TC_CHANNEL);
 }
 
 /*! \brief Main function:
@@ -155,6 +261,8 @@ static void hw_expiry_cb(void)
  */
 int main(void)
 {
+	volatile avr32_tc_t *tc = EXAMPLE_TC;
+	uint32_t timer = 0;
 	/**
 	 * \note the call to sysclk_init() will disable all non-vital
 	 * peripheral clocks, except for the peripheral clocks explicitly
@@ -162,9 +270,9 @@ int main(void)
 	 */
 	sysclk_init();
 	// Enable the clock to the selected example Timer/counter peripheral module.
-//	sysclk_enable_peripheral_clock(EXAMPLE_TC);
+	sysclk_enable_peripheral_clock(EXAMPLE_TC);
 	// Initialize the USART module for trace messages
-//	init_dbg_rs232(sysclk_get_pba_hz());
+	init_dbg_rs232(sysclk_get_pba_hz());
 	// Disable the interrupts
 	cpu_irq_disable();
 
@@ -177,15 +285,20 @@ int main(void)
 	// Enable the interrupts
 	cpu_irq_enable();
 	// Initialize the timer module
-//	tc_init(tc);
+	tc_init(tc);
 
-	gpio_configure_pin(AVR32_PIN_PB00,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
-
-	set_common_tc_overflow_callback(hw_overflow_cb);
-	set_common_tc_expiry_callback(hw_expiry_cb);
-	common_tc_init();
-	common_tc_delay(delay);
 	while (1) {
+		// Update the display on USART every second.
+		if ((update_timer) && (!(tc_tick%1000))) {
+			timer++;
+			// Set cursor to the position (1; 5)
+			print_dbg("\x1B[5;1H");
+			// Print the timer value
+			print_dbg("ATMEL AVR UC3 - Timer/Counter Example 3\n\rTimer: ");
+			print_dbg_ulong(timer);
+			print_dbg(" s");
+			// Reset the timer update flag to wait till next timer interrupt
+			update_timer = false;
 		}
+	}
 }
-
