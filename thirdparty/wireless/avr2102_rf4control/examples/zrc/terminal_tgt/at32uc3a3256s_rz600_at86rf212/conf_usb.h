@@ -85,7 +85,7 @@
  * USB Device Callbacks definitions
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)      stdio_usb_vbus_event(b_vbus_high)
+#define  UDC_VBUS_EVENT(b_vbus_high)
 #define  UDC_SOF_EVENT()
 #define  UDC_SUSPEND_EVENT()
 #define  UDC_RESUME_EVENT()
@@ -107,7 +107,7 @@
 #define  UDI_CDC_DISABLE_EXT(port)         main_cdc_disable(port)
 #define  UDI_CDC_RX_NOTIFY(port)           usb_rx_notify()
 #define  UDI_CDC_SET_CODING_EXT(port,cfg)
-#define  UDI_CDC_SET_DTR_EXT(port,set)
+#define  UDI_CDC_SET_DTR_EXT(port,set)     dtr_cb(set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)
 
 bool main_cdc_enable(uint8_t port);

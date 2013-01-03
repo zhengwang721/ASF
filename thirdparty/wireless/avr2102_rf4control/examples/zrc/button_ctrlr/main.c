@@ -26,6 +26,7 @@
 #include "zrc.h"
 #include "pb_pairing.h"
 #include "sleepmgr.h"
+#include "vendor_data.h"
 
 
 /* === TYPES =============================================================== */

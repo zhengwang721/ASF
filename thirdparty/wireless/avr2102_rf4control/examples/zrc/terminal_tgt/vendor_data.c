@@ -31,7 +31,7 @@
 
 /* === EXTERNALS =========================================================== */
 
-extern FLASH_DECLARE(uint16_t VendorIdentifier);
+FLASH_EXTERN(uint16_t VendorIdentifier);
 #ifdef RF4CE_CALLBACK_PARAM
 #ifdef RF4CE_TARGET
 extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId

@@ -102,20 +102,6 @@ int main (void)
 }
 
 
-bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
-                       uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
-                       uint8_t KeyExTransferCount)
-{
-    /* Keep compiler happy */
-    Status = Status;
-    SrcIEEEAddr = SrcIEEEAddr;
-    OrgVendorId = OrgVendorId;
-    OrgVendorString[0] = OrgVendorString[0];
-    OrgUserString[0] = OrgUserString[0];
-    KeyExTransferCount = KeyExTransferCount;
-
-    return true;
-}
 
 static void app_alert(void)
 {

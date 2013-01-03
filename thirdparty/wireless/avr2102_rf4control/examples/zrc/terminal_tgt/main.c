@@ -1105,7 +1105,7 @@ void nlme_start_confirm(nwk_enum_t Status)
     }
 }
 
-
+#ifndef RF4CE_CALLBACK_PARAM
 /**
  * @brief Notify the application of the removal of link by another device.
  *
@@ -1120,7 +1120,7 @@ void nlme_unpair_indication(uint8_t PairingRef)
     /* Keep compiler happy */
     PairingRef = PairingRef;
 }
-
+#endif
 
 /**
  * @brief Notify the application for the previous unpair request.
@@ -1449,6 +1449,7 @@ static void print_sub_mode_ch_ag_setup(void)
  * @param PairingRef Pairing reference
  *
  */
+#ifndef RF4CE_CALLBACK_PARAM
 #ifdef RF4CE_SECURITY
 void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
@@ -1456,6 +1457,7 @@ void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
     Status = Status;
     PairingRef = PairingRef;
 }
+#endif
 #endif
 
 

@@ -35,6 +35,7 @@
 #error "Unknown STB type"
 #endif
 #include "stb_generic.h"
+#include "stb_internal.h"
 
 /* === Macros ============================================================= */
 
