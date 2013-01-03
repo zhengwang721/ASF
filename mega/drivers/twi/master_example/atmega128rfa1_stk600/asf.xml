@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<project caption="Twi Master Example for megaRF STK600" id="mega.drivers.twi.master_example.atmegarf_stk600">
+		<build type="header-file" value="conf_twim.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>		
+		<build type="include-path" value="."/>
+		<require idref="mega.drivers.twi.master_example"/>
+		<config name="config.mega.drivers.twi.mode" value="master"/>
+		<require idref="board.stk600-mega.atmega128rfa1"/>
+		<generator value="iarew"/>
+		<generator value="avrgcc" />
+		<generator value="as5_8" />
+		<generator value="doxygen"/>
+		<device-support value="atmega128rfa1"/>
+	</project>
+</asf>

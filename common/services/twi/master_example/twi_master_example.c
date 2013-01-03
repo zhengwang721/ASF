@@ -133,7 +133,7 @@ int main(void)
 
   board_init();
 
-#if !SAM
+#if (!SAM && !MEGA)
   irq_initialize_vectors();
 #endif // SAM
 

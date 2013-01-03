@@ -1,0 +1,56 @@
+<asf xmlversion="1.0">
+	<select-by-config id="mega.drivers.twi" name="config.mega.drivers.twi.mode" caption="TWI - Two-wire Interface" default="both">
+		<info type="description" value="summary">
+		Driver for the Two-Wire Interface (TWI) for megaRF device.
+		Provides functions for configuring and using the TWI in both master and slave mode.
+		</info>
+		<module type="driver" id="mega.drivers.twi#both" caption="TWI - Two-wire Master and Slave Interface">
+			<info type="keyword" value="technology">
+				<keyword value="Communication" />
+			</info>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="twim_megarf.c"/>
+			<build type="header-file" subtype="api" value="twim_megarf.h"/>
+			<build type="c-source" value="twis_megarf.c"/>
+			<build type="header-file" subtype="api" value="twis_megarf.h"/>
+			<build type="header-file" value="twi_common.h"/>
+			<build type="module-config" subtype="required-header-file" value="conf_twim.h"/>
+			<build type="module-config" subtype="required-header-file" value="conf_twis.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>			
+			<build type="doxygen-entry-point" value="group_megarf_drivers_twi"/>
+			<device-support value="megarf"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<require idref="mega.utils"/>
+		</module>
+		<module type="driver" id="mega.drivers.twi#master" caption="TWI - Two-wire Master Interface">
+			<info type="keyword" value="technology">
+				<keyword value="Communication" />
+			</info>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="twim_megarf.c"/>
+			<build type="header-file" subtype="api" value="twim_megarf.h"/>
+			<build type="header-file" value="twi_common.h"/>
+			<build type="doxygen-entry-point" value="group_megarf_drivers_twi"/>
+			<build type="module-config" subtype="required-header-file" value="conf_twim.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<device-support value="megarf"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<require idref="mega.utils"/>
+		</module>
+		<module type="driver" id="mega.drivers.twi#slave" caption="TWI - Two-wire Slave Interface">
+			<info type="keyword" value="technology">
+				<keyword value="Communication" />
+			</info>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="twis_megarf.c"/>
+			<build type="header-file" subtype="api" value="twis_megarf.h"/>
+			<build type="header-file" value="twi_common.h"/>
+			<build type="module-config" subtype="required-header-file" value="conf_twis.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="doxygen-entry-point" value="group_megarf_drivers_twi"/>
+			<device-support value="megarf"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<require idref="mega.utils"/>
+		</module>
+	</select-by-config>
+</asf>
