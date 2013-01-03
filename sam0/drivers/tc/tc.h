@@ -65,7 +65,7 @@ extern "C" {
  * \section module_introduction Introduction
  *
  * \subsection module_overview TC Overview The Timer counter (TC)
- * enable the user to do the folowing:
+ * enable the user to do the following:
  *
  * \li create PWM signals
  * \li waveform generation
@@ -113,10 +113,10 @@ extern "C" {
  * \subsection counter_counter size Timer Counter Counter Size
  *
  *
- * It is posible to use thre difernet counter sizes. These are 8, 16
- * and 32bit. The size of the counter determins the maximal value it
- * can mange to count to. For easy refrens the table below gives the
- * MAX values for the diferent counter sizes.
+ * It is possible to use three different counter sizes. These are 8, 16
+ * and 32bit. The size of the counter determines the maximal value it
+ * can mange to count to. For easy reference the table below gives the
+ * MAX values for the different counter sizes.
  *
  * <table>
  *  <tr>
@@ -201,7 +201,7 @@ extern "C" {
  * frequency the counter value only changes on the prescaled
  * frequency.  \n
  *
- * There are two thing to consider when it comes to the presclaer. One
+ * There are two thing to consider when it comes to the prescaler. One
  * is that the TC module will have to synchronize when updating
  * certain registers. This synchronization can be time consuming
  * especially if the GCLK frequency is much lower than the system
@@ -239,7 +239,7 @@ extern "C" {
  * </table>
  *
  * To better understand these options it helps to have a basic
- * understanding of what the prescaler does. The prescaler consistst
+ * understanding of what the prescaler does. The prescaler consists
  * of counter circuitry it self. When the prescaler is used, it counts
  * the clock cycles of the TC modules GCLK. When the counter in the
  * prescaler reaches the chosen division factor value, the output from
@@ -318,9 +318,9 @@ extern "C" {
  *
  * The first flag to be checked is \ref TC_INTERRUPT_FLAG_OVERFLOW.
  * This should be done to make certain that any new capture value is
- * valid. If an overflow has ocured this error has to be handled. If
- * no error has ocured continue checking if a new capture has
- * hapend. If this is the case get the value and clear the interupt
+ * valid. If an overflow has occurred this error has to be handled. If
+ * no error has occurred continue checking if a new capture has
+ * happened. If this is the case get the value and clear the interrupt
  * flag. In the below diagram a proposed program flow is described.
  *
  * \image html ../../state_dia_capture.svg "State diagram of capture operation"
@@ -367,29 +367,29 @@ extern "C" {
  *
  * \subsection set_count Set Count
  *
- * It is posible to alther the value of the counter while the counter
+ * It is possible to alter the value of the counter while the counter
  * is running by writing a new value to the count register. This can
- * be doen usieng the tc_set_count_value() function.
+ * be done using the tc_set_count_value() function.
  *
  * \subsection get_count Get Count
  *
- * It is posible to read out the counter value at any time while the
+ * It is possible to read out the counter value at any time while the
  * counter is running to do this use the get tc_get_count_value()
  * function.
  *
  * \subsection oneshot Oneshot
  *
- * It is posible to performe oneshot action with the counter by
+ * It is possible to perform oneshot action with the counter by
  * configuring this option in the \ref tc_conf struct. Oneshot action
- * performes one cyccle of counting and then stops the counter. The
- * conter can be started agin by using the start function. When re
- * started it wil again perform a oneshjot operation, unles the
- * tc_init() function has been caled to disable oneshot.
+ * performers one cycle of counting and then stops the counter. The
+ * counter can be started again by using the start function. When re
+ * started it will again perform a oneshot operation, unless the
+ * tc_init() function has been called to disable oneshot.
  *
  * \subsection output_inversion Wave Generation Output Inversion
  *
  * The output of the wave generation can be inverted by selecting this
- * option in the config struct. The figure below ilustrates how this
+ * option in the config struct. The figure below illustrates how this
  * effects the output.
  *
  * \image html inver_ex.svg "Inverted and non inverted output"
