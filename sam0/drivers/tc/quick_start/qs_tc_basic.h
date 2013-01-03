@@ -66,7 +66,7 @@
  * tc_get_config_defaults the only difference is that capture compare
  * channel 0 is set to 0x7FFF not zero.
  *
- * \section tc_basic_use_case_setup Quick Start
+ * \section tc_basic_use_case_setup Quick start
  *
  * \subsection tc_basic_use_case_prereq Prerequisites
  *
@@ -88,7 +88,7 @@
  *  - \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module
  *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop till there is no power on the device. Let the module generate PWM
+ * -# Loop infinitly. Let the module generate PWM
  *  - \snippet qs_tc_basic.c inf_loop
  * \section tc_basic_use_case_workflow Work flow
  */
