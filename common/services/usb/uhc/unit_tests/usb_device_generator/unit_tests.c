@@ -65,15 +65,32 @@
  * the USB host core test.
  *
  * \section startup Startup
- * The default compilation option is to support Atmel MCU with the USBB hardware
- * interface (eg AVR UC3 A and B). For the USBC hardware interface (eg AVR UC3C),
- * the "USBC_TST" define must be uncommented in the main.c file.
+ * The default compilation option is to support all Atmel MCU with a USB
+ * hardware interface with DPRAM.
+ * For other Atmel MCU a compilation opotion must be defined in the
+ * unit_tests.c file:
+ * - #define  AVR32_USBC_TST     // AVR32 MCU with USBC interface
+ * - #define  SAMX_UOTGHS_TST    // SAM MCU with UOTGHS interface
+ * - #define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
  *
  * Please, read "USB host core tests" project documentation for more information.
  */
 
-//#define  USBC_TST
-//#define  UOTGHS_TST
+//#define  AVR32_USBC_TST     // AVR32 MCU with USBC interface
+//#define  SAMX_UOTGHS_TST    // SAM MCU with UOTGHS interface
+//#define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
+
+#ifdef AVR32_USBC_TST
+#  define TST_15_DIS
+#  define TST_18_DIS
+#endif
+#ifdef SAMX_UOTGHS_TST
+#  define TST_15_DIS
+#endif
+#ifdef SAM4L_USBC_TST
+#  define TST_15_DIS
+#endif
+
 
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
 #define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_HIDMOUSE
@@ -953,14 +970,12 @@ int main(void)
 		main_test12();
 		main_test13();
 		main_test14();
-#ifndef USBC_TST
-# ifndef UOTGHS_TST
+#ifndef TST_15_DIS
 		main_test15();
-# endif
 #endif
 		main_test16();
 		main_test17();
-#ifndef USBC_TST
+#ifndef TST_18_DIS
 		main_test18();
 #endif
 		main_test19();
