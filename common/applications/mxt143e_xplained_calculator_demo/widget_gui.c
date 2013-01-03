@@ -41,6 +41,7 @@
  */
 
 #include <asf.h>
+#include "widget_gui.h"
 
 /**
  * \weakgroup app_widget_group

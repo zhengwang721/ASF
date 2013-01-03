@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.components.display.ssd1306.example" caption="SSD1306 Controller Example">
+	<module type="application" id="common.components.display.ssd1306.example" caption="SSD1306 Display Controller Example">
 		<info type="description" value="summary">
 		A simple example for verifying that the SSD1306 low level driver works.
 		</info>

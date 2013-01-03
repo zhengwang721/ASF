@@ -44,12 +44,8 @@
 #include "cycle_counter.h"
 
 // Delay loop is put to SRAM so that FWS will not affect delay time
-#if (defined __GNUC__)
-__attribute__((optimize(s), section(".ramfunc")))
-#elif (defined __ICCARM__)
-_Pragma("optimize=high")
-__ramfunc
-#endif
+OPTIMIZE_HIGH
+RAMFUNC
 void portable_delay_cycles(unsigned long n)
 {
 	__asm (

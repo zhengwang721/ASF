@@ -40,11 +40,9 @@
  * \asf_license_stop
  *
  */
+#include "compiler.h"
 #include "calendar.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <assert.h>
 
 //! Unix epoch year
 #define EPOCH_YEAR 1970
@@ -482,7 +480,7 @@ void calendar_time_between_dates(struct calendar_date *date_end,
 void calendar_add_second_to_date(struct calendar_date *date)
 {
 	// Check if input date is valid
-	assert(calendar_is_date_valid(date));
+	Assert(calendar_is_date_valid(date));
 
 	if (++date->second == 60) {
 		date->second = 0;
