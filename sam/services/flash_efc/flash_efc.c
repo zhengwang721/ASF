@@ -727,13 +727,16 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	uint32_t ul_bit = 0;
 
 	Assert(ul_end >= ul_start);
+
+#ifdef EFC1
 	Assert(((ul_start >= IFLASH0_ADDR) 
 				&& (ul_end <= IFLASH0_ADDR + IFLASH0_SIZE))
-#ifdef EFC1
 				|| ((ul_start >= IFLASH1_ADDR)
-					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE))
+					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE)));
+#else
+	Assert((ul_start >= IFLASH_ADDR) 
+				&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
 #endif
-			);
 
 	/* Compute page numbers */
 	translate_address(&p_efc, ul_start, &us_start_page, 0);
