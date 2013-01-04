@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <ac.h>
+#include "ac.h"
 
 static void _ac_wait_for_sync(
 		struct ac_dev_inst *const dev_inst)
@@ -52,22 +52,6 @@ static void _ac_wait_for_sync(
 	while (ac_module->STATUSB & AC_SYNCBUSY_bm) {
 		/* Do nothing */
 	}
-}
-
-static void _ac_reset(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Software reset the module */
-	ac_module->CTRLA |= AC_SWRST_bm;
 }
 
 static void _ac_set_config(
@@ -104,11 +88,37 @@ static void _ac_set_config(
 	ac_enable_events(dev_inst, config->enabled_events);
 }
 
+/** \brief Resets and disables the Analog Comparator driver.
+ *
+ *  Resets and disables the Analog Comparator driver, resetting the hardware
+ *  module registers to their power-on defaults.
+ *
+ * \param[out] dev_inst  Pointer to the AC software instance struct
+ */
+void ac_reset(
+		struct ac_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	AC_t *const ac_module = dev_inst->hw_dev;
+
+	/* Disable the hardware module */
+	ac_disable(dev_inst);
+
+	/* Wait until the synchronization is complete */
+	_ac_wait_for_sync(dev_inst);
+
+	/* Software reset the module */
+	ac_module->CTRLA |= AC_SWRST_bm;
+}
+
 /** \brief Initializes and configures the Analog Comparator driver.
  *
- *  Initializes the Analog Comparator driver, resetting the hardware module and
- *  configuring it to the user supplied configuration parameters, ready for
- *  use. This function should be called before enabling the Analog Comparator.
+ *  Initializes the Analog Comparator driver, configuring it to the user
+ *  supplied configuration parameters, ready for use. This function should be
+ *  called before enabling the Analog Comparator.
  *
  *  \note Once called the Analog Comparator will not be running; to start the
  *        Analog Comparator call \ref ac_enable() after configuring the module.
@@ -131,105 +141,8 @@ void ac_init(
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	/* Reset the module */
-	_ac_reset(dev_inst);
-
 	/* Write configuration to module */
 	_ac_set_config(dev_inst, config);
-}
-
-/** \brief Enables an Analog Comparator that was previously configured.
- *
- * Enables and starts an Analog Comparator that was previously configured via a
- * call to \ref ac_init().
- *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- */
-void ac_enable(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Write the new comparator module control configuration */
-	ac_module->CTRLA |= AC_ENABLE_bm;
-}
-
-/** \brief Disables an Analog Comparator that was previously enabled.
- *
- * Stops an Analog Comparator that was previously started via a call to
- * \ref ac_enable().
- *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- */
-void ac_disable(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Write the new comparator module control configuration */
-	ac_module->CTRLA &= ~AC_ENABLE_bm;
-}
-
-/** \brief Enables an Analog Comparator event input or output.
- *
- *  Enables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
- *  supports.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to enable
- */
-void ac_enable_events(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	ac_module->EVCTRL |= events;
-}
-
-/** \brief Disables an Analog Comparator event input or output.
- *
- *  Disables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
- *  supports.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to disable
- */
-void ac_disable_events(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	ac_module->EVCTRL &= ~events;
 }
 
 /** \brief Writes an Analog Comparator channel configuration to the hardware module.

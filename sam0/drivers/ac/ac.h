@@ -461,6 +461,9 @@ struct ac_win_conf {
  * @{
  */
 
+void ac_reset(
+		struct ac_dev_inst *const dev_inst);
+
 void ac_init(
 		struct ac_dev_inst *const dev_inst,
 		AC_t *const module,
@@ -491,19 +494,99 @@ static inline void ac_get_config_defaults(
 	config->enabled_events              = 0;
 }
 
-void ac_enable(
-		struct ac_dev_inst *const dev_inst);
+/** \brief Enables an Analog Comparator that was previously configured.
+ *
+ * Enables and starts an Analog Comparator that was previously configured via a
+ * call to \ref ac_init().
+ *
+ * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ */
+static inline void ac_enable(
+		struct ac_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
-void ac_disable(
-		struct ac_dev_inst *const dev_inst);
+	AC_t *const ac_module = dev_inst->hw_dev;
 
-void ac_enable_events(
+	/* Wait until the synchronization is complete */
+	_ac_wait_for_sync(dev_inst);
+
+	/* Write the new comparator module control configuration */
+	ac_module->CTRLA |= AC_ENABLE_bm;
+}
+
+/** \brief Disables an Analog Comparator that was previously enabled.
+ *
+ * Stops an Analog Comparator that was previously started via a call to
+ * \ref ac_enable().
+ *
+ * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ */
+static inline void ac_disable(
+		struct ac_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	AC_t *const ac_module = dev_inst->hw_dev;
+
+	/* Wait until the synchronization is complete */
+	_ac_wait_for_sync(dev_inst);
+
+	/* Write the new comparator module control configuration */
+	ac_module->CTRLA &= ~AC_ENABLE_bm;
+}
+
+/** \brief Enables an Analog Comparator event input or output.
+ *
+ *  Enables one or more input or output events to or from the Analog Comparator
+ *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] events    Mask of one or more events to enable
+ */
+static inline void ac_enable_events(
 		struct ac_dev_inst *const dev_inst,
-		const uint8_t events);
+		const uint8_t events)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
 
-void ac_disable_events(
+	AC_t *const ac_module = dev_inst->hw_dev;
+
+	ac_module->EVCTRL |= events;
+}
+
+/** \brief Disables an Analog Comparator event input or output.
+ *
+ *  Disables one or more input or output events to or from the Analog Comparator
+ *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] events    Mask of one or more events to disable
+ */
+static inline void ac_disable_events(
 		struct ac_dev_inst *const dev_inst,
-		const uint8_t events);
+		const uint8_t events)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	AC_t *const ac_module = dev_inst->hw_dev;
+
+	ac_module->EVCTRL &= ~events;
+}
 
 /** @} */
 
