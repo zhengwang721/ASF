@@ -143,10 +143,10 @@ OBJDUMP         := $(CROSS)objdump
 SIZE            := $(CROSS)size
 GDB             := $(CROSS)gdb
 
-RM              := cs-rm -f
+RM              := rm -f
 ifeq ($(os),Windows)
 #RMDIR           := rmdir /S /Q
-RMDIR           := cs-rm  -rf
+RMDIR           := rm  -rf
 else
 RMDIR           := rmdir -p --ignore-fail-on-non-empty
 endif
@@ -268,6 +268,9 @@ cflags-gnu-y    += -std=gnu99
 # Compile C++ files using the GNU++98 standard.
 cxxflags-gnu-y  += -std=gnu++98
 
+# Don't use strict aliasing (very common in embedded applications).
+cflags-gnu-y    += -fno-strict-aliasing
+cxxflags-gnu-y  += -fno-strict-aliasing
 
 # Separate each function and data into its own separate section to allow
 # garbage collection of unused sections.

@@ -13,13 +13,11 @@
 		<build type="header-file" value="conf/conf_clock.h"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_isp.h"/>
-		
+
 		<require idref="common.services.basic.clock"/>
 		<require idref="xmega.drivers.cpu"/>
-		<device-support value="xmegaa1u"/>
-		<device-support value="xmegaa3u"/>
-		<device-support value="xmegaa3bu"/>
-		<device-support value="xmegaa4u"/>
+		<device-support value="xmegaau"/>
+		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<require idref="common.services.usb.class.device"/>
 		<info type="keyword" value="technology">
@@ -43,13 +41,11 @@
 		<build type="header-file" value="conf/conf_clock.h"/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_isp.h"/>
-				
+
 		<require idref="common.services.basic.clock"/>
 		<require idref="xmega.drivers.cpu"/>
-		<device-support value="xmegaa1u"/>
-		<device-support value="xmegaa3u"/>
-		<device-support value="xmegaa3bu"/>
-		<device-support value="xmegaa4u"/>
+		<device-support value="xmegaau"/>
+		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<require idref="common.services.usb.class.device"/>
 		<info type="keyword" value="technology">

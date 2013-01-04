@@ -27,6 +27,7 @@
 			<build type="include-path" value="."/>
 			<require idref="sam.drivers.usart"/>
 			<require idref="common.services.basic.clock"/>
+			<require idref="common.services.delay"/>
 		</module>
 	</select-by-config>
 

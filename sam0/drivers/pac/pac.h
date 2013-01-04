@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PAC_H
-#define PAC_H
+#ifndef PAC_H_INCLUDED
+#define PAC_H_INCLUDED
 
 /**
  * \defgroup sam0_pac_group SAM0+ PAC Driver (PAC)
@@ -842,7 +842,7 @@ __no_inline enum status_code system_peripheral_unlock(
  * </table>
  */
 
-#endif /* PAC_H */
+#endif /* PAC_H_INCLUDED */
 
 
 

@@ -147,6 +147,7 @@
  */
 
 #include <asf.h>
+#include "pio_handler_with_capture.h"
 
 /** Buffer size. */
 #define SIZE_BUFF_RECEPT               64

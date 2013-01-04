@@ -98,7 +98,12 @@
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="sam4s"/>
 	</board>
-	
+
+	<board id="board.user_board.sam4e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<device-support value="sam4e"/>
+	</board>
+
 	<board id="board.user_board.megarf" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
 		<device-support value="atmega128rfa1"/>
@@ -106,80 +111,91 @@
 
 	<board id="board.user_board.sam4lc4a" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc4a"/>
 	</board>
 
 	<board id="board.user_board.sam4lc4b" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc4b"/>
 	</board>
 
 	<board id="board.user_board.sam4lc4c" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc4c"/>
 	</board>
 
 	<board id="board.user_board.sam4ls4a" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls4a"/>
 	</board>
 
 	<board id="board.user_board.sam4ls4b" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls4b"/>
 	</board>
 
 	<board id="board.user_board.sam4ls4c" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l4"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls4c"/>
 	</board>
 
 	<board id="board.user_board.sam4lc2a" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc2a"/>
 	</board>
 
 	<board id="board.user_board.sam4lc2b" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc2b"/>
 	</board>
 
 	<board id="board.user_board.sam4lc2c" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4lc2c"/>
 	</board>
 
 	<board id="board.user_board.sam4ls2a" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls2a"/>
 	</board>
 
 	<board id="board.user_board.sam4ls2b" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls2b"/>
 	</board>
 
 	<board id="board.user_board.sam4ls2c" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam.utils.linker_scripts#atsam4l2"/>
+		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4ls2c"/>
 	</board>
 
 	<board id="board.user_board.sam0d4" caption="User Board">
 		<require idref="common.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts#atsam0d4"/>
+		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="atsam0d4"/>
 	</board>
 
+	<board id="board.user_board.sam4e8e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4e8e"/>
+	</board>
+
+	<board id="board.user_board.sam4e16e" caption="User Board">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4e16e"/>
+	</board>
 </asf>

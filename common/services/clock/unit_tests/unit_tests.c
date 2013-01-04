@@ -140,7 +140,7 @@ int usart_ready = 0;
  */
 static void run_osc_test(const struct test_case *test)
 {
-	uint32_t wait;
+	volatile uint32_t wait;
 	bool status;
 #ifdef BOARD_OSC0_HZ
 	osc_enable(OSC_ID_OSC0);
@@ -243,7 +243,7 @@ static void run_osc32_test(const struct test_case *test)
 {
 #ifdef BOARD_OSC32_HZ
 	uint32_t osc32_startup_timeout;
-	uint32_t wait;
+	volatile uint32_t wait;
 	bool status;
 
 	osc_enable(OSC_ID_OSC32);

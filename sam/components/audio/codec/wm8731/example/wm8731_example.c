@@ -103,6 +103,7 @@
  */
 
 #include <asf.h>
+#include "xmodem.h"
 
 /* WAV letters "RIFF" */
 #define WAV_CHUNKID       0x46464952

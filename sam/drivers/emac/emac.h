@@ -130,12 +130,8 @@ typedef enum {
 	EMAC_INVALID = 0xFF, /* Invalid */
 } emac_status_t;
 
-#if defined __ICCARM__
-#pragma pack(4)    /* IAR */
-#define __attribute__(...)    /* IAR */
-#endif /* IAR */
-
 /** Receive buffer descriptor struct */
+COMPILER_PACK_SET(8)
 typedef struct emac_rx_descriptor {
 	union emac_rx_addr {
 		uint32_t val;
@@ -168,9 +164,10 @@ typedef struct emac_rx_descriptor {
 			b_boardcast_detect:1;  /**< Global broadcast address detected */
 		} bm;
 	} status;
-} __attribute__ ((packed, aligned(8))) emac_rx_descriptor_t; /* GCC */
+} emac_rx_descriptor_t;
 
 /** Transmit buffer descriptor struct */
+COMPILER_PACK_SET(8)
 typedef struct emac_tx_descriptor {
 	uint32_t addr;
 	union emac_tx_status {
@@ -188,11 +185,9 @@ typedef struct emac_tx_descriptor {
 			b_used:1;        /**< User clear, EMAC sets this to 1 once a frame has been successfully transmitted */
 		} bm;
 	} status;
-} __attribute__ ((packed, aligned(8))) emac_tx_descriptor_t; /* GCC */
+} emac_tx_descriptor_t;
 
-#ifdef __ICCARM__ /* IAR */
-#pragma pack()
-#endif
+COMPILER_PACK_RESET()
 
 /**
  * \brief Input parameters when initializing the emac module mode.

@@ -1,5 +1,4 @@
 /**
-/**
  * \file
  *
  * \brief SAM0+ Peripheral Digital to Analog Converter Driver
@@ -56,13 +55,13 @@ void dac_reset(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS & DAC_SYNC_BUSY_bm);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	/* Software reset the module */
-	dac_module->CTRLA |= DAC_SWRST_bm;
+	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
 
 }
 
@@ -80,7 +79,7 @@ static void _dac_set_config(
 		struct dac_dev_inst *const dev_inst,
 		struct dac_conf *const config)
 {
-	struct clock_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_ch_conf gclk_ch_conf;
 
 
 	/* Sanity check arguments */
@@ -88,38 +87,38 @@ static void _dac_set_config(
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Configure GCLK channel and enable clock */
-	gclk_ch_conf.source_clock = config->clock_source;
+	gclk_ch_conf.source_generator = config->clock_source;
 
 	#if defined (REVB)
 	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->standb_sleep_enable;
+	gclk_ch_conf.run_in_standby = config->standby_sleep_enable;
 	#else
 	/* Set the GCLK channel sleep enable mode */
 	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
 	#endif
 
 	/* Apply configuration and enable the GCLK channel */
-	clock_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
-	clock_gclk_ch_enable(DAC_GCLK_ID);
+	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(DAC_GCLK_ID);
 
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	dev_inst->output = config->output;
 
 	/* Set reference voltage */
-	dac_module->CTRLB  |= config->reference;
+	dac_module->CTRLB.reg  |= config->reference;
 
 	/* Left adjust data if configured */
 	if (config->left_adjust) {
-		dac_module->CTRLB |= DAC_LEFTADJ_bm;
+		dac_module->CTRLB.reg |= DAC_CTRLB_LEFTADJ;
 	}
 
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->standby_sleep_enable) {
-		dac_module->CTRLA |= DAC_SLEEPEN_bm;
+		dac_module->CTRLA.reg |= DAC_CTRLA_RUNSTDBY;
 	}
 }
 
@@ -146,22 +145,22 @@ void dac_ch_set_config(
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	if (config->enable_start_on_event) {
 		/* Enable start conversion event input */
-		dac_module->EVCTRL |= DAC_STARTEI_bm;
+		dac_module->EVCTRL.reg |= DAC_EVCTRL_STARTEI;
 	} else {
 		/* Disable start conversion event input */
-		dac_module->EVCTRL &= ~DAC_STARTEI_bm;
+		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
 	}
 
 	if (config->enable_empty_event) {
 		/* Enable data buffer empty event out */
-		dac_module->EVCTRL |= DAC_EMPTYEO_bm;
+		dac_module->EVCTRL.reg |= DAC_EVCTRL_EMPTYEO;
 	} else {
 		/* Disable data buffer empty event out */
-		dac_module->EVCTRL &= ~DAC_EMPTYEO_bm;
+		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_EMPTYEO;
 	}
 }
 
@@ -180,7 +179,7 @@ void dac_ch_set_config(
  */
 void dac_init(
 		struct dac_dev_inst *const dev_inst,
-		DAC_t *const module,
+		Dac *const module,
 		struct dac_conf *const config)
 {
 	/* Sanity check arguments */
@@ -210,16 +209,16 @@ void dac_enable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS & DAC_SYNC_BUSY_bm);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	/* Enable the module */
-	dac_module->CTRLA |= DAC_ENABLE_bm;
+	dac_module->CTRLA.reg |= DAC_CTRLA_ENABLE;
 
 	/* Enable selected output */
-	dac_module->CTRLB |= dev_inst->output;
+	dac_module->CTRLB.reg |= dev_inst->output;
 }
 
 /**
@@ -253,13 +252,13 @@ void dac_disable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS & DAC_SYNC_BUSY_bm);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	/* Disable DAC */
-	dac_module->CTRLA &= ~DAC_ENABLE_bm;
+	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
 
 	/* Disable output buffer */
 	dac_disable_output_buffer(dev_inst);
@@ -296,10 +295,10 @@ void dac_enable_output_buffer(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Enable output buffer */
-	dac_module->CTRLB |= DAC_OUTPUT_EXTERNAL;
+	dac_module->CTRLB.reg |= DAC_OUTPUT_EXTERNAL;
 
 }
 
@@ -320,10 +319,10 @@ void dac_disable_output_buffer(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Disable output buffer */
-	dac_module->CTRLB &= ~(DAC_OUTPUT_EXTERNAL);
+	dac_module->CTRLB.reg &= ~(DAC_OUTPUT_EXTERNAL);
 }
 
 /**
@@ -355,16 +354,16 @@ void dac_write(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	DAC_t *const dac_module = dev_inst->hw_dev;
+	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS & DAC_SYNC_BUSY_bm);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	if (event_triggered) {
 		/* Event triggered conversion, write DATABUF register */
-		dac_module->DATABUF = data;
+		dac_module->DATABUF.reg = data;
 	} else {
 		/* Manual triggered conversion, write DATA register */
-		dac_module->DATA = data;
+		dac_module->DATA.reg = data;
 	}
 }
