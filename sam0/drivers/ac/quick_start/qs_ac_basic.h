@@ -86,9 +86,8 @@
  * -# Fill the Analog Comparator peripheral configuration structure with the
  *    default module configuration values.
  *  - \snippet qs_ac_basic.c setup_5
- * -# Alter the sleep mode configuration value so that the comparator pair
- *    associated with the comparator channel that will be used remains enabled
- *    even during sleep mode.
+ * -# Alter the sleep mode configuration value so that the comparator pairs
+ *    remain enabled even during sleep mode.
  *  - \snippet qs_ac_basic.c setup_6
  * -# Initialize the Analog Comparator peripheral and associate it with the
  *    software instance structure that was defined previously.

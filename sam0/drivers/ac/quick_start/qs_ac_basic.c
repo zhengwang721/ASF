@@ -69,7 +69,7 @@ void configure_ac(void)
 
 	/* Set the Analog Comparator configuration settings */
 	//! [setup_6]
-	ac_conf.enable_pair_during_sleep[AC_COMPARATOR_CHANNEL / 2] = true;
+	ac_conf.enabled_during_sleep = true;
 	//! [setup_6]
 
 	/* Initialize and enable the Analog Comparator with the user settings */

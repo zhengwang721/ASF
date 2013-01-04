@@ -236,7 +236,7 @@ enum ac_ch_sample_mode {
 	AC_CH_MODE_CONTINUOUS    = 0,
 	/** Single shot mode; when used the comparator channel must be triggered to
 	 *  perform a comparison before reading the result. */
-	AC_CH_MODE_SINGLE_SHOT   = AC_SINGLE_bm,
+	AC_CH_MODE_SINGLE_SHOT   = AC_COMPCTRL_SINGLE,
 };
 
 /** \brief AC channel positive comparator pin input configuration enum.
@@ -246,13 +246,13 @@ enum ac_ch_sample_mode {
  */
 enum ac_ch_pos_mux {
 	/** Positive comparator input is connected to physical AC input pin 0. */
-	AC_CH_POS_MUX_PIN0       = AC_MUXPOS_PIN0_gc,
+	AC_CH_POS_MUX_PIN0       = AC_COMPCTRL_MUXPOS_PIN0,
 	/** Positive comparator input is connected to physical AC input pin 1. */
-	AC_CH_POS_MUX_PIN1       = AC_MUXPOS_PIN1_gc,
+	AC_CH_POS_MUX_PIN1       = AC_COMPCTRL_MUXPOS_PIN1,
 	/** Positive comparator input is connected to physical AC input pin 2. */
-	AC_CH_POS_MUX_PIN2       = AC_MUXPOS_PIN2_gc,
+	AC_CH_POS_MUX_PIN2       = AC_COMPCTRL_MUXPOS_PIN2,
 	/** Positive comparator input is connected to physical AC input pin 3. */
-	AC_CH_POS_MUX_PIN3       = AC_MUXPOS_PIN3_gc,
+	AC_CH_POS_MUX_PIN3       = AC_COMPCTRL_MUXPOS_PIN3,
 };
 
 /** \brief AC channel negative comparator pin input configuration enum.
@@ -262,24 +262,24 @@ enum ac_ch_pos_mux {
  */
 enum ac_ch_neg_mux {
 	/** Negative comparator input is connected to physical AC input pin 0. */
-	AC_CH_NEG_MUX_PIN0       = AC_MUXNEG_PIN0_gc,
+	AC_CH_NEG_MUX_PIN0       = AC_COMPCTRL_MUXNEG_PIN0,
 	/** Negative comparator input is connected to physical AC input pin 1. */
-	AC_CH_NEG_MUX_PIN1       = AC_MUXNEG_PIN1_gc,
+	AC_CH_NEG_MUX_PIN1       = AC_COMPCTRL_MUXNEG_PIN1,
 	/** Negative comparator input is connected to physical AC input pin 2. */
-	AC_CH_NEG_MUX_PIN2       = AC_MUXNEG_PIN2_gc,
+	AC_CH_NEG_MUX_PIN2       = AC_COMPCTRL_MUXNEG_PIN2,
 	/** Negative comparator input is connected to physical AC input pin 3. */
-	AC_CH_NEG_MUX_PIN3       = AC_MUXNEG_PIN3_gc,
+	AC_CH_NEG_MUX_PIN3       = AC_COMPCTRL_MUXNEG_PIN3,
 	/** Negative comparator input is connected to the internal ground plane. */
-	AC_CH_NEG_MUX_GND        = AC_MUXNEG_GND_gc,
+	AC_CH_NEG_MUX_GND        = AC_COMPCTRL_MUXNEG_GND,
 	/** Negative comparator input is connected to the channel's internal VCC
 	 *  plane voltage scalar. */
-	AC_CH_NEG_MUX_SCALED_VCC = AC_MUXNEG_VSCALE_gc,
+	AC_CH_NEG_MUX_SCALED_VCC = AC_COMPCTRL_MUXNEG_VSCALE,
 	/** Negative comparator input is connected to the internal band gap voltage
 	 *  reference. */
-	AC_CH_NEG_MUX_BANDGAP    = AC_MUXNEG_BANDGAP_gc,
+	AC_CH_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 	/** Negative comparator input is connected to the channel's internal DAC
 	 *  channel 0 output. */
-	AC_CH_NEG_MUX_DAC0       = AC_MUXNEG_DAC_gc,
+	AC_CH_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
 };
 
 /** \brief AC channel output filtering configuration enum.
@@ -289,13 +289,13 @@ enum ac_ch_neg_mux {
  */
 enum ac_ch_filter {
 	/** No output filtering is performed on the comparator channel. */
-	AC_CH_FILTER_NONE        = AC_FLEN_OFF_gc,
+	AC_CH_FILTER_NONE        = AC_COMPCTRL_FLEN_OFF,
 	/** Comparator channel output is passed through a Majority-of-Three
 	 *  filter. */
-	AC_CH_FILTER_MAJORITY_3  = AC_FLEN_MAJ3_gc,
+	AC_CH_FILTER_MAJORITY_3  = AC_COMPCTRL_FLEN_MAJ3,
 	/** Comparator channel output is passed through a Majority-of-Five
 	 *  filter. */
-	AC_CH_FILTER_MAJORITY_5  = AC_FLEN_MAJ5_gc,
+	AC_CH_FILTER_MAJORITY_5  = AC_COMPCTRL_FLEN_MAJ5,
 };
 
 /** \brief AC channel GPIO output routing configuration enum.
@@ -306,13 +306,13 @@ enum ac_ch_filter {
 enum ac_ch_output {
 	/** Comparator channel output is not routed to a physical GPIO pin, and is
 	 *  used internally only. */
-	AC_CH_OUTPUT_INTERNAL    = AC_OUT_OFF_gc,
+	AC_CH_OUTPUT_INTERNAL    = AC_COMPCTRL_OUT_OFF,
 	/** Comparator channel output is routed to it's matching physical GPIO pin,
 	 *  via an asynchronous path. */
-	AC_CH_OUTPUT_ASYNCRONOUS = AC_OUT_ASYNC_gc,
+	AC_CH_OUTPUT_ASYNCRONOUS = AC_COMPCTRL_OUT_ASYNC,
 	/** Comparator channel output is routed to it's matching physical GPIO pin,
 	 *  via a synchronous path. */
-	AC_CH_OUTPUT_SYNCHRONOUS = AC_OUT_SYNC_gc,
+	AC_CH_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
 };
 
 /** \brief AC channel output state enum.
@@ -374,25 +374,25 @@ enum ac_win_state {
  * @{
  */
 /** AC input event to trigger a conversion on comparator channel 0. */
-#define AC_EVENT_COMPARATOR0_INPUT     AC_COMPEI0_bm
+#define AC_EVENT_COMPARATOR0_INPUT     AC_EVCTRL_COMPEO0
 /** AC input event to trigger a conversion on comparator channel 1. */
-#define AC_EVENT_COMPARATOR1_INPUT     AC_COMPEI1_bm
+#define AC_EVENT_COMPARATOR1_INPUT     AC_EVCTRL_COMPEI1
 /** AC input event to trigger a conversion on comparator channel 2. */
-#define AC_EVENT_COMPARATOR2_INPUT     AC_COMPEI2_bm
+#define AC_EVENT_COMPARATOR2_INPUT     AC_EVCTRL_COMPEI2
 /** AC input event to trigger a conversion on comparator channel 3. */
-#define AC_EVENT_COMPARATOR3_INPUT     AC_COMPEI3_bm
+#define AC_EVENT_COMPARATOR3_INPUT     AC_EVCTRL_COMPEI3
 /** AC output event, triggered by comparator channel 0. */
-#define AC_EVENT_COMPARATOR0_OUTPUT    AC_COMPEO0_bm
+#define AC_EVENT_COMPARATOR0_OUTPUT    AC_EVCTRL_COMPEO0
 /** AC output event, triggered by comparator channel 1. */
-#define AC_EVENT_COMPARATOR1_OUTPUT    AC_COMPEO1_bm
+#define AC_EVENT_COMPARATOR1_OUTPUT    AC_EVCTRL_COMPEO1
 /** AC output event, triggered by comparator channel 2. */
-#define AC_EVENT_COMPARATOR2_OUTPUT    AC_COMPEO2_bm
+#define AC_EVENT_COMPARATOR2_OUTPUT    AC_EVCTRL_COMPEO2
 /** AC output event, triggered by comparator channel 3. */
-#define AC_EVENT_COMPARATOR3_OUTPUT    AC_COMPEO3_bm
+#define AC_EVENT_COMPARATOR3_OUTPUT    AC_EVCTRL_COMPEO3
 /** AC output event, triggered by comparator window channel 0. */
-#define AC_EVENT_WINDOW0_OUTPUT        AC_WINEO0_bm
+#define AC_EVENT_WINDOW0_OUTPUT        AC_EVCTRL_WINEO0
 /** AC output event, triggered by comparator window channel 1. */
-#define AC_EVENT_WINDOW1_OUTPUT        AC_WINEO1_bm
+#define AC_EVENT_WINDOW1_OUTPUT        AC_EVCTRL_WINEO1
 /** @} */
 
 /** \brief AC device instance structure.
@@ -402,7 +402,7 @@ enum ac_win_state {
  */
 struct ac_dev_inst {
 	/** Hardware module point of the associated Analog Comparator peripheral. */
-	AC_t *hw_dev;
+	Ac *hw_dev;
 };
 
 /** \brief Analog Comparator module configuration structure.
@@ -411,9 +411,9 @@ struct ac_dev_inst {
  *  output settings of the comparator.
  */
 struct ac_conf {
-	/** If \c true, the comparator pair will continue to sample during sleep
+	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
-	bool enable_pair_during_sleep[2];
+	bool enabled_during_sleep;
 	/** Events to enable in the module when configured. */
 	uint8_t enabled_events;
 };
@@ -468,9 +468,9 @@ static inline void _ac_wait_for_sync(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	while (ac_module->STATUSB & AC_SYNCBUSY_bm) {
+	while (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
 		/* Do nothing */
 	}
 }
@@ -485,7 +485,7 @@ void ac_reset(
 
 void ac_init(
 		struct ac_dev_inst *const dev_inst,
-		AC_t *const module,
+		Ac *const module,
 		struct ac_conf *const config);
 
 /** \brief Initializes an Analog Comparator configuration structure to defaults.
@@ -508,9 +508,8 @@ static inline void ac_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->enable_pair_during_sleep[0] = false;
-	config->enable_pair_during_sleep[1] = false;
-	config->enabled_events              = 0;
+	config->enabled_during_sleep = false;
+	config->enabled_events       = 0;
 }
 
 /** \brief Enables an Analog Comparator that was previously configured.
@@ -527,13 +526,13 @@ static inline void ac_enable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
 	_ac_wait_for_sync(dev_inst);
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLA |= AC_ENABLE_bm;
+	ac_module->CTRLA.reg |= AC_CTRLA_ENABLE;
 }
 
 /** \brief Disables an Analog Comparator that was previously enabled.
@@ -550,13 +549,13 @@ static inline void ac_disable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
 	_ac_wait_for_sync(dev_inst);
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLA &= ~AC_ENABLE_bm;
+	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
 }
 
 /** \brief Enables an Analog Comparator event input or output.
@@ -578,9 +577,9 @@ static inline void ac_enable_events(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	ac_module->EVCTRL |= events;
+	ac_module->EVCTRL.reg |= events;
 }
 
 /** \brief Disables an Analog Comparator event input or output.
@@ -602,9 +601,9 @@ static inline void ac_disable_events(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	ac_module->EVCTRL &= ~events;
+	ac_module->EVCTRL.reg &= ~events;
 }
 
 /** @} */
@@ -670,10 +669,10 @@ static inline void ac_ch_enable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel] |= AC_CH_ENABLE_bm;
+	ac_module->COMPCTRL[channel].reg |= AC_COMPCTRL_ENABLE;
 }
 
 /** \brief Disables an Analog Comparator channel that was previously enabled.
@@ -692,10 +691,10 @@ static inline void ac_ch_disable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel] &= ~AC_CH_ENABLE_bm;
+	ac_module->COMPCTRL[channel].reg &= ~AC_COMPCTRL_ENABLE;
 }
 
 /** @} */
@@ -721,10 +720,10 @@ static inline void ac_ch_trigger_single_shot(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLB |= (AC_START0_bm << channel);
+	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << channel);
 }
 
 /** \brief Determines if a given comparator channel is ready for comparisons.
@@ -745,9 +744,9 @@ static inline bool ac_ch_is_ready(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	return (ac_module->STATUSB & (AC_READY0_bm << channel));
+	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << channel));
 }
 
 /** \brief Determines the output state of a comparator channel.
@@ -769,13 +768,13 @@ static inline enum ac_ch_state ac_ch_get_state(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	if (ac_ch_is_ready(dev_inst, channel) == false) {
 		return AC_CH_STATE_UNKNOWN;
 	}
 
-	if (ac_module->STATUSA & (AC_STATE0_bm << channel)) {
+	if (ac_module->STATUSA.reg & (AC_STATUSA_STATE0 << channel)) {
 		return AC_CH_STATE_POS_ABOVE_NEG;
 	} else {
 		return AC_CH_STATE_NEG_ABOVE_POS;
@@ -885,9 +884,9 @@ static inline bool ac_win_is_detected(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	return (ac_module->INTFLAG & (AC_WIN0_bm << win_channel));
+	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel));
 }
 
 /** \brief Clears a Comparator Window condition criteria detection flag.
@@ -906,9 +905,9 @@ static inline void ac_win_clear_detected(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
-	ac_module->INTFLAG = (AC_WIN0_bm << win_channel);
+	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << win_channel);
 }
 
 /** @} */
