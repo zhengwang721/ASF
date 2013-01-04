@@ -101,7 +101,7 @@
 //! \name LED #0 definition
 //@{
 //! Name string macro
-#define LED_0_NAME   "User LED 0 (yellow)"
+#define LED_0_NAME   "LED0 (yellow)"
 //! LED pin identifier
 #define LED_0_PIN    IOPORT_CREATE_PIN(PIOC, 23)
 //! Active level of LED
@@ -109,21 +109,20 @@
 //@}
 
 //! Number of on-board LEDs
-#define BOARD_NUM_OF_LED 1
+#define LED_COUNT 1
 
-//! \name Switch #0 definition
+//! \name Button #0 definition
 //@{
 //! Name string macro
-#define BUTTON_0_NAME   "User switch 0"
+#define BUTTON_0_NAME   "SW0"
 //! Button pin identifier
 #define BUTTON_0_PIN    IOPORT_CREATE_PIN(PIOA, 2)
 //! Active level of button
 #define BUTTON_0_ACTIVE false
 //@}
-//
 
 //! Number of on-board buttons
-#define BOARD_NUM_OF_BUTTON 1
+#define BUTTON_COUNT 1
 
 /** @} */
 
