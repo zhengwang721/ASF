@@ -40,20 +40,6 @@
  */
 #include "ac.h"
 
-static void _ac_wait_for_sync(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	while (ac_module->STATUSB & AC_SYNCBUSY_bm) {
-		/* Do nothing */
-	}
-}
-
 static void _ac_set_config(
 		struct ac_dev_inst *const dev_inst,
 		struct ac_conf *const config)
