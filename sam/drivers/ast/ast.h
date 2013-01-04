@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef _AST_H_INCLUDED
-#define _AST_H_INCLUDED
+#ifndef AST_H_INCLUDED
+#define AST_H_INCLUDED
 
 /**
  * \defgroup group_sam_drivers_ast AST - Asynchronous Timer
@@ -87,12 +87,12 @@ extern "C" {
 
 /* Description for Calendar Field.*/
 struct ast_calv {
-	uint32_t sec : 6;
-	uint32_t min : 6;
-	uint32_t hour : 5;
-	uint32_t day : 5;
+	uint32_t sec   : 6;
+	uint32_t min   : 6;
+	uint32_t hour  : 5;
+	uint32_t day   : 5;
 	uint32_t month : 4;
-	uint32_t year : 6;
+	uint32_t year  : 6;
 };
 
 /* Input when initializing AST in calendar mode.*/
@@ -103,15 +103,17 @@ struct ast_calendar {
 	};
 };
 
-#define AST_CALENDAR_MODE    0
-#define AST_COUNTER_MODE    1
+typedef enum ast_mode {
+	AST_COUNTER_MODE  = 0,
+	AST_CALENDAR_MODE = 1,
+} ast_mode_t;
 
 typedef enum ast_oscillator_type {
-	AST_OSC_RC = 0,
+	AST_OSC_RC    = 0,
 	AST_OSC_32KHZ = 1,
-	AST_OSC_PB = 2,
-	AST_OSC_GCLK = 3,
-	AST_OSC_1KHZ = 4,
+	AST_OSC_PB    = 2,
+	AST_OSC_GCLK  = 3,
+	AST_OSC_1KHZ  = 4,
 } ast_oscillator_type_t;
 
 #define AST_INTERRUPT_SOURCE_NUM    5
@@ -136,10 +138,12 @@ typedef enum ast_event_source {
 } ast_event_source_t;
 
 struct ast_config {
-	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or
-	 * \ref Counter mode: AST_COUNTER_MODE. 
+	/*
+	 * Mode: Calendar mode: 
+	 * \ref AST_CALENDAR_MODE or
+	 * \ref Counter mode: AST_COUNTER_MODE.
 	 */
-	uint8_t mode;
+	ast_mode_t mode;
 	/* Oscillator type */
 	ast_oscillator_type_t osc_type;
 	/* Prescaler Value. */
@@ -349,4 +353,4 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * \endcode
  */
 
-#endif  /* _AST_H_INCLUDED */
+#endif  /* AST_H_INCLUDED */
