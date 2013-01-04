@@ -139,7 +139,7 @@ typedef enum ast_event_source {
 
 struct ast_config {
 	/*
-	 * Mode: Calendar mode: 
+	 * Mode: Calendar mode:
 	 * \ref AST_CALENDAR_MODE or
 	 * \ref Counter mode: AST_COUNTER_MODE.
 	 */
