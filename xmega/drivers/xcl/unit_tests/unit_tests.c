@@ -129,8 +129,8 @@ static void clean_xcl_io_portd(const struct test_case *test)
 	XCL.CTRLB = 0;
 	XCL.CTRLC = 0;
 	XCL.CTRLD = 0;
-	PORTD.DIR = 0;
-	PORTD.OUT = 0;
+	PORTD.DIRCLR = 0x1F;
+	PORTD.OUTCLR = 0x1F;
 }
 
 /**
@@ -221,13 +221,14 @@ static void run_xcl_glue_logic_3inputs_xor_test(
 
 	/* Configure the XCL module:
 	 * - Asynchronous mode usage (locks Power Down sleep mode)
-	 * - Configure XCL to use XMEGA port D
+	 * - Configure XCL to use ATxmega32E5 port D
 	 * - Configure LUT in 1 LUTs with 3 differents inputs
-	 * - LUT IN0 input on pin 2 or port D
-	 * - LUT IN1 input on internla XCL input
-	 * - LUT IN2 input on pin 1 or port D
-	 * - LUT IN3 input on pin 3 or port D
-	 * - LUT OUT0 output on pin 4 or port D
+	 * - LUT IN0 input on pin 2 of port D
+	 * - LUT IN1 input on XCL LUT OUT1
+	 * - LUT OUT0 output on pin 4 of port D
+	 * - LUT IN2 input on pin 1 of port D
+	 * - LUT IN3 input on pin 3 of port D
+	 * - LUT OUT1 output on LUT IN1
 	 * - No time Delay for both LUT0 and LUT1
 	 * - LUT0 performs XOR operation
 	 * - LUT1 performs XOR operation
