@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -106,4 +106,4 @@
 /* Enable ETH PHY: KSZ8051MNL feature */
 #define CONF_BOARD_KSZ8051MNL
 
-#endif // CONF_BOARD_H
+#endif /* CONF_BOARD_H */

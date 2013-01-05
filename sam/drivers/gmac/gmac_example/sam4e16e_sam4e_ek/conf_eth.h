@@ -3,7 +3,7 @@
  *
  * \brief GMAC (Ethernet MAC) driver configuration file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,16 +63,16 @@
 
 /** WAN Address: 192.168.0.2 */
 /* The IP address being used. */
-#define ETHERNET_CONF_IPADDR0                         10
-#define ETHERNET_CONF_IPADDR1                         217
-#define ETHERNET_CONF_IPADDR2                         2
-#define ETHERNET_CONF_IPADDR3                         244
+#define ETHERNET_CONF_IPADDR0                         192
+#define ETHERNET_CONF_IPADDR1                         168
+#define ETHERNET_CONF_IPADDR2                         0
+#define ETHERNET_CONF_IPADDR3                         2
 
-/** WAN gateway: 192.168.0.1 */
+/** WAN gateway: 192.168.0.250 */
 /** The gateway address being used. */
-#define ETHERNET_CONF_GATEWAY_ADDR0                   10
-#define ETHERNET_CONF_GATEWAY_ADDR1                   217
-#define ETHERNET_CONF_GATEWAY_ADDR2                   2
+#define ETHERNET_CONF_GATEWAY_ADDR0                   192
+#define ETHERNET_CONF_GATEWAY_ADDR1                   168
+#define ETHERNET_CONF_GATEWAY_ADDR2                   0
 #define ETHERNET_CONF_GATEWAY_ADDR3                   250
 
 /** The network mask being used. */

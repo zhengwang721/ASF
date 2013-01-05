@@ -1,9 +1,9 @@
  /**
  * \file
  *
- * \brief EMAC (Ethernet MAC) driver for SAM.
+ * \brief GMAC (Ethernet MAC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -77,13 +77,13 @@ extern "C" {
 #define ETHERNET_CONF_IPADDR2                         0
 #define ETHERNET_CONF_IPADDR3                         2
 
-/** WAN gateway: 192.168.0.1 */
+/** WAN gateway: 192.168.0.250 */
 
 /*! The gateway address being used. */
 #define ETHERNET_CONF_GATEWAY_ADDR0                   192
 #define ETHERNET_CONF_GATEWAY_ADDR1                   168
 #define ETHERNET_CONF_GATEWAY_ADDR2                   0
-#define ETHERNET_CONF_GATEWAY_ADDR3                   1
+#define ETHERNET_CONF_GATEWAY_ADDR3                   250
 
 /** The network mask being used. */
 #define ETHERNET_CONF_NET_MASK0                       255

@@ -3,7 +3,7 @@
  *
  * \brief API driver for KSZ8051MNL PHY component.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,9 +53,9 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup dm9161a_ethernet_phy_group PHY component (DM9161A)
+ * \defgroup ksz8051mnl_ethernet_phy_group PHY component (KSZ8051MNL)
  *
- * Driver for the dm9161a component. This driver provides access to the main 
+ * Driver for the ksz8051mnl component. This driver provides access to the main 
  * features of the PHY.
  *
  * \section dependencies Dependencies
