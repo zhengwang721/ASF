@@ -204,7 +204,7 @@ typedef struct gmac_tx_descriptor {
 COMPILER_PACK_RESET()
 
 /**
- * \brief Input parameters when initializing the emac module mode.
+ * \brief Input parameters when initializing the gmac module mode.
  */
 typedef struct gmac_options {
 	/*  Enable/Disable CopyAllFrame */
@@ -1005,8 +1005,8 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *
  * \section gmac_basic_use_case Basic use case
  * In the basic use case, the GMAC driver are configured for:
- * - PHY component DM9161A is used
- * - GMAC uses RMII mode
+ * - PHY component KSZ8051MNL is used
+ * - GMAC uses MII mode
  * - The number of receive buffer is 16
  * - The number of transfer buffer is 8
  * - MAC address is set to 00-04-25-1c-a0-02
@@ -1016,7 +1016,6 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * - Network mask is 255.255.255.0
  * - PHY operation max retry count is 1000000
  * - GMAC is configured to not support copy all frame and support broadcast
- * - The reset PIN of DM9161A is connected to the NRST of SAM3X
  * - The data will be read from the ethernet
  *
  * \section gmac_basic_use_case_setup Setup steps
@@ -1026,7 +1025,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * -# \ref pio_group "Parallel Input/Output Controller (pio)"
  * -# \ref pmc_group "Power Management Controller (pmc)"
  * -# \ref sam_drivers_rstc_group "Reset Controller (RSTC)"
- * -# \ref dm9161a_ethernet_phy_group "PHY component (DM9161A)"
+ * -# \ref ksz8051mnl_ethernet_phy_group "PHY component (KSZ8051MNL)"
  *
  * \subsection gmac_basic_use_case_setup_code Example code
  * Content of conf_eth.h
@@ -1056,7 +1055,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_RMII
  * \endcode
  *
- * A specific emac device and the receive data buffer must be defined; another ul_frm_size should be defined
+ * A specific gmac device and the receive data buffer must be defined; another ul_frm_size should be defined
  * to trace the actual size of the data received.
  * \code
  * static gmac_device_t gs_gmac_dev;
@@ -1072,14 +1071,6 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *       sysclk_init();
  *
  *       board_init();
- *
- *       rstc_set_external_reset(RSTC, 13);
- *       rstc_reset_extern(RSTC);
- *       while (rstc_get_status(RSTC) & RSTC_SR_NRSTL) {
- *       };
- *
- *       ul_delay = sysclk_get_cpu_hz() / 1000 / 3 * 400;
- *       while (ul_delay--); 
  *
  *       pmc_enable_periph_clk(ID_GMAC);
  *
@@ -1100,7 +1091,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * \endcode
  *
  * \subsection gmac_basic_use_case_setup_flow Workflow
- * -# Ensure that conf_emac.h is present and contains the
+ * -# Ensure that conf_eth.h is present and contains the
  * following configuration symbol. This configuration file is used
  * by the driver and should not be included by the user.
  *   - \code
@@ -1132,18 +1123,6 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *   - \code sysclk_init(); \endcode
  * -# Enable PIO configurations for GMAC:
  *   - \code board_init(); \endcode
- * -# Reset PHY; this is required by the DM9161A component:
- *   - \code
- *         rstc_set_external_reset(RSTC, 13);
- *         rstc_reset_extern(RSTC);
- *         while (rstc_get_status(RSTC) & RSTC_SR_NRSTL) {
- *         };
- * \endcode
- * -# Wait for PHY ready:
- *   - \code
- *         ul_delay = sysclk_get_cpu_hz() / 1000 / 3 * 400;
- *         while (ul_delay--);
- * \endcode
  * -# Enable PMC clock for GMAC:
  *   - \code pmc_enable_periph_clk(ID_GMAC); \endcode
  * -# Set the GMAC options; it's set to copy all frame and support broadcast:

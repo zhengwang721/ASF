@@ -13,7 +13,6 @@
 			<require idref="sam.drivers.gmac"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.rstc"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.utils.syscalls"/>
 			<require idref="common.services.basic.gpio"/>
