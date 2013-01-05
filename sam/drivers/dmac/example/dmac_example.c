@@ -123,7 +123,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -162,19 +162,21 @@ static void test_single_buf_xfer(void)
 	desc.ul_source_addr = (uint32_t) g_dma_buf[0];
 	desc.ul_destination_addr = (uint32_t) g_dma_buf[1];
 	/*
-	 * Set Buffer Transfer Size
-	 * Source transfer size is set to 32-bit width
-	 * Destination transfer size is set to 32-bit width
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
 	 */
 	desc.ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
-			DMAC_CTRLA_SRC_WIDTH_WORD |              
+			DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
-	/* 
-	 * Buffer Descriptor Fetch operation is disabled for the source
-	 * Buffer Descriptor Fetch operation is disabled for the destination
-	 * Memory-to-Memory Transfer
-	 * The source address is incremented
-	 * The destination address is incremented
+	/*
+	 * Set DMA CTRLB:
+	 * - Buffer Descriptor Fetch operation is disabled for the source
+	 * - Buffer Descriptor Fetch operation is disabled for the destination
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
 	 */
 	desc.ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_DISABLE |
 			DMAC_CTRLB_DST_DSCR_FETCH_DISABLE |
@@ -241,18 +243,22 @@ static void test_multi_buf_xfer(void)
 	 */
 	desc[0].ul_source_addr = (uint32_t) g_dma_buf[0];
 	desc[0].ul_destination_addr = (uint32_t) g_dma_buf[3];
-	/* Set Buffer Transfer Size */
-	/* Source transfer size is set to 32-bit width */
-	/* Destination transfer size is set to 32-bit width */
+	/*
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
+	 */
 	desc[0].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
 			DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
-	/* 
-	 * Descriptor is fetched from the memory
-	 * Descriptor is fetched from the memory
-	 * Memory-to-Memory Transfer
-	 * The source address is incremented
-	 * The destination address is incremented
+	/*
+	 * Set DMA CTRLB:
+	 * - Descriptor is fetched from the memory
+	 * - Descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
 	 */
 	desc[0].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
 			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
@@ -264,20 +270,22 @@ static void test_multi_buf_xfer(void)
 
 	desc[1].ul_source_addr = (uint32_t) g_dma_buf[1];
 	desc[1].ul_destination_addr = (uint32_t) g_dma_buf[4];
-	/* 
-	 * Set Buffer Transfer Size
-	 * Source transfer size is set to 32-bit width
-	 * Destination transfer size is set to 32-bit width
+	/*
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
 	 */
 	desc[1].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
 			DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
-	/* 
-	 * Descriptor is fetched from the memory
-	 * Descriptor is fetched from the memory
-	 * Memory-to-Memory Transfer
-	 * The source address is incremented
-	 * The destination address is incremented
+	/*
+	 * Set DMA CTRLB:
+	 * - Source descriptor is fetched from the memory
+	 * - Destination descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
 	 */
 	desc[1].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
 			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
@@ -289,7 +297,7 @@ static void test_multi_buf_xfer(void)
 
 	desc[2].ul_source_addr = (uint32_t) g_dma_buf[2];
 	desc[2].ul_destination_addr = (uint32_t) g_dma_buf[5];
-	/* 
+	/*
 	 * Set Buffer Transfer Size
 	 * Source transfer size is set to 32-bit width
 	 * Destination transfer size is set to 32-bit width
@@ -298,11 +306,12 @@ static void test_multi_buf_xfer(void)
 			DMAC_CTRLA_SRC_WIDTH_WORD |
 			DMAC_CTRLA_DST_WIDTH_WORD;
 	/*
-	 * Descriptor is fetched from the memory
-	 * Descriptor is fetched from the memory
-	 * Memory-to-Memory Transfer
-	 * The source address is incremented
-	 * The destination address is incremented
+	 * Set DMA CTRLB:
+	 * - Source descriptor is fetched from the memory
+	 * - Destination descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
 	 */
 	desc[2].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
 			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
