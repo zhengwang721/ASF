@@ -44,7 +44,7 @@
 #include <asf.h>
 #include "ui.h"
 
-static bool ui_b_led_blink = true;
+static volatile bool ui_b_loopback = true;
 
 void ui_init(void)
 {
@@ -64,19 +64,21 @@ void ui_wakeup(void)
 
 void ui_loop_back_state(bool b_started)
 {
-	ui_b_led_blink = b_started;
+	ui_b_loopback = b_started;
 }
 
 void ui_process(uint16_t framenumber)
 {
-	// Blink LED
-	if (ui_b_led_blink) {
-		if ((framenumber % 1000) == 0) {
-			LED_On(LED0);
-		}
-		if ((framenumber % 1000) == 500) {
-			LED_Off(LED0);
-		}
+	if (ui_b_loopback) {
+		LED_On(LED0);
+		return;
+	}
+
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED0);
+	}
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED0);
 	}
 }
 
