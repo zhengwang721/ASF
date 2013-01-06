@@ -118,14 +118,14 @@ static void set_int_flag(void)
 static void run_acifc_test(const struct test_case *test)
 {
 	/* ACIFC Configuration */
-	const acifc_t acifc_opt = {
+	const acifc_cfg_t acifc_opt = {
 		.actest = false,
 		.eventen = true
 	};
 	/* ACIFC Channel Configuration */
-	const acifc_channel_t acifc_channel_opt = {
+	const acifc_channel_cfg_t acifc_channel_opt = {
 		/* Hysteresis value */
-		.hysteresis_value = 0_MV,
+		.hysteresis_value = ACIFC_HYS_0,
 		/* Always on enable */
 		.alwayson = true,
 		/* Fast mode enable */
@@ -134,8 +134,6 @@ static void run_acifc_test(const struct test_case *test)
 		.event_negative = false,
 		/* Output event when ACOUT is one? */
 		.event_positive = false,
-		/* Set the positive input */
-		.positive_input = PI_ACP,
 		/* Set the negative input */
 		.negative_input = NI_ACN,
 		/* Set the comparator mode */
