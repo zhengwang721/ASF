@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.utils.cmsis.samd20.include.pio" caption="SAMD20 PIO definitions">
 		<info type="description" value="summary">
-		TODO
+		SAMD20 PIO component definitions.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="pio_samd2064g3.h"/>

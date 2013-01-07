@@ -862,7 +862,7 @@ void PTC_WCOMP_Handler           ( void );
 /** \addtogroup SAMD20256G3_port PORT Definitions */
 /*@{*/
 
-#include "pio/pio_SAMD20256G3.h"
+#include "pio/pio_samd20256g3.h"
 /*@}*/
 
 /* ************************************************************************** */

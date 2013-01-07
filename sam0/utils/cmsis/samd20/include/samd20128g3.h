@@ -582,7 +582,7 @@ void PTC_WCOMP_Handler           ( void );
  * \brief Configuration of the Cortex-M0+ Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1        
+#define LITTLE_ENDIAN          1
 #define __CM0P_REV             0x0000    /*!< Core revision r0p0 */
 #define __FPU_PRESENT          0         /*!< FPU present or not */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
@@ -862,7 +862,7 @@ void PTC_WCOMP_Handler           ( void );
 /** \addtogroup SAMD20128G3_port PORT Definitions */
 /*@{*/
 
-#include "pio/pio_SAMD20128G3.h"
+#include "pio/pio_samd20128g3.h"
 /*@}*/
 
 /* ************************************************************************** */
