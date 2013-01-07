@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -243,7 +243,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 			}
 			/* Send dummy SPI character to read in master mode */
 			spi_write(dev_inst, dummy);
-		} 
+		}
 
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
@@ -258,7 +258,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		}
 
 		/* Wait until the module is ready to read a character */
-		
+
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}
 
@@ -414,7 +414,7 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 				}
 			}
 		}
-		
+
 		/* Wait until the module is ready to read a character */
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}

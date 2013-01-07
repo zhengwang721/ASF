@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Non Volatile Memory Driver Quick Start
+ * \brief SAMD20 Non Volatile Memory Driver Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -71,7 +71,7 @@
  *  - \snippet qs_nvm_basic.c nvm_basic_def
  * -# Create configuration function
  *   -# Create variable for the configuration struct
- *    - \snippet qs_nvm_basic.c nvm_basic_var1 
+ *    - \snippet qs_nvm_basic.c nvm_basic_var1
  *   -# Load the default configurations into the config struct
  *    - \snippet qs_nvm_basic.c nvm_basic_setup_load
  *   -# Initialize the NVM module with the default configuration
@@ -90,4 +90,4 @@
  *
  *
  */
- 
+

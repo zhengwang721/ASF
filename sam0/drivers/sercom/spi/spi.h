@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -49,12 +49,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_spi_group SAM0+ Serial Peripheral Interface Driver (SPI)
+ * \defgroup sam0_spi_group SAMD20 Serial Peripheral Interface Driver (SPI)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for configuration and management of the SERCOM SPI module, as well
  * as data transfer via SPI. This driver encompasses the following module
- * within the SAM0+ devices:
+ * within the SAMD20 devices:
  * \li \b SPI \b (Serial Peripheral Interface)
  *
  * \section module_introduction Introduction

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Event System Controller Driver
+ * \brief SAMD20 Event System Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

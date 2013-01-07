@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Clock related functionality
+ * \brief SAMD20 Clock related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -52,7 +52,7 @@
  *
  * \section into Introduction
  * This driver provides control of all the clock related functionality
- * of the SAM0+ devices. This is not limited to a single peripheral, but
+ * of the SAMD20 devices. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals:
  * - SYSCTRL (Clock source control)
  * - GCLK (Generic clock control)
@@ -75,7 +75,7 @@
  * \enddot
  *
  * \section system_clock_sources Clock Sources
- * The SAM0+ devices has multiple clock sources, among them internal
+ * The SAMD20 devices has multiple clock sources, among them internal
  * RC oscillators, internal DFLL as well as the possibility of external
  * crystal oscillators. The clock sources are configured using the functions
  * prefixed with system_clock_source. To apply a configuration to a clock source you
@@ -132,7 +132,7 @@
  * for the channel.
  *
  * \section static Static Startup Configuration
- * To simplify the use of the clocks on the SAM0+ there is a configuration file
+ * To simplify the use of the clocks on the SAMD20 there is a configuration file
  * conf_clocks.h that will set up the clock generators and GCLK generators by calling
  * the clocks_init() function. In many applications there is no need for any other
  * configuration than conf_clocks.h.

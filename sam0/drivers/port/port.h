@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ GPIO Port Driver
+ * \brief SAMD20 GPIO Port Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup sam0_port_group SAM0+ Port Driver (PORT)
+ * \defgroup sam0_port_group SAMD20 Port Driver (PORT)
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the physical device pins,
  * including external edge detection, peripheral muxing, input/output control
  * and pad drive characteristics. This driver encompasses multiple physical
@@ -77,12 +77,12 @@
  * \enddot
  *
  * \section module_introduction Introduction
- * The SAM0+ devices contain a number of General Purpose I/O pins, used to
+ * The SAMD20 devices contain a number of General Purpose I/O pins, used to
  * interface the user application logic and internal hardware peripherals to
  * an external system.
  *
  * \subsection physical_logical_pins Physical and Logical GPIO Pins
- * SAM0+ devices use two naming conventions for the I/O pins in the device; one
+ * SAMD20 devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
@@ -91,14 +91,14 @@
  * numbers instead.
  *
  * \subsection peripheral_muxing Peripheral Muxltiplexing
- * SAM0+ devices contain a peripheral MUX, which is individually controllable
+ * SAMD20 devices contain a peripheral MUX, which is individually controllable
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
  * several peripheral modules (such as a I2C module).
  *
  * \subsection edge_detection Edge Detection
- * In each SAM0+ device pin there is a connection to an External Interrupt
+ * In each SAMD20 device pin there is a connection to an External Interrupt
  * Controller module, used to detect external pin edge and level events, and
  * notify the user application via a flag or interrupt. Each pin can be
  * individually configured to sense a given logic level or pulse edge. This
@@ -139,7 +139,7 @@
  * Not all devices support all peripheral MUX combinations and drive modes;
  * see your device specific datasheet for more details.
  *
- * The SAM0+ port pin output driver and input pin sampler can be enabled and
+ * The SAMD20 port pin output driver and input pin sampler can be enabled and
  * disabled seperately; if a pin requires only output functionality with no
  * readback of the current pin state, the pin input sampler can be disabled to
  * save power:

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ BOD configuration
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Watchdog Driver
+ * \brief SAMD20 Watchdog Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

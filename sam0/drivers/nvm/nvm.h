@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Non-Volatile Memory driver
+ * \brief SAMD20 Non-Volatile Memory driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,13 +42,13 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup sam0_nvm_group SAM0+ Non-Volatile Memory Driver (NVM)
+ * \defgroup sam0_nvm_group SAMD20 Non-Volatile Memory Driver (NVM)
  *
- * Driver for the SAM0+ Non-volatile Memory controller. Provides a unified
+ * Driver for the SAMD20 Non-volatile Memory controller. Provides a unified
  * interface for the erasing, reading and writing of data to and from the
  * various non-volatile memories of the device, including executable flash
  * memory and user configuration pages. This driver encompasses the following
- * module within the SAM0 devices:
+ * module within the SAMD20 devices:
  *
  * \li \b NVM (Non-Volatile Memory)
  *

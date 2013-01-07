@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ SPI Quick Start
+ * \brief SAMD20 SPI Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -39,7 +39,7 @@
  * \asf_license_stop
  *
  */
- 
+
 /**
  * \page spi_basic_use_case Quick Start Guide for the SPI module - Basic Use Case
  *

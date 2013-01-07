@@ -11,9 +11,9 @@
 		<build type="header-file" value="quick_start/qs_adc_basic.h" subtype="example"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam0_adc_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

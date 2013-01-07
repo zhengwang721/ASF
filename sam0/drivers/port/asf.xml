@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.port" caption="GPIO Port Driver">
 		<info type="description" value="summary">
-			Driver for the SAM0+ ports. Provides a unified interface for the
+			Driver for the SAMD20 ports. Provides a unified interface for the
 			configuration and management of the physical device pins, including
 			external edge detection, peripheral muxing, input/output control and
 			pad drive characteristics.
@@ -14,8 +14,8 @@
 		<build type="c-source" value="port.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_port_basic.h"/>
 		<build type="doxygen-entry-point" value="sam0_port_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

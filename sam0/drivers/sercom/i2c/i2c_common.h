@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ SERCOM I2C Common Driver
+ * \brief SAMD20 SERCOM I2C Common Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -48,12 +48,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_group SAM0+ I2C Driver (I2C)
+ * \defgroup sam0_i2c_group SAMD20 I2C Driver (I2C)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for configuration and management of the SERCOM I2C module in
  * master mode, as well as data transfer via I2C.
- * This driver encompasses the following module within the SAM0+ devices:
+ * This driver encompasses the following module within the SAMD20 devices:
  * - \b I2C (Inter-Integrated Circuit)
  *  - I2C Master
  *   - \ref sam0_i2c_master_group
