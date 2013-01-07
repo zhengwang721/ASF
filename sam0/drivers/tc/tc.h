@@ -1018,21 +1018,52 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 	bool slave_test = tc_module.STATUS.reg & TC_STATUS_SLAVE;
 	/* If this is slave reset master first*/
 	if (slave_test) {
-		/* Reset the 16 bit master counter module */
+		/* get master hw_dev pointer*/
 		Tc *master = dev_inst->hw_dev - TC_NEXT_OR_PREV_TC;
+
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Disable master*/
+		master->COUNT8.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset the 16-bit master counter module */
 		master->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
 
-	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
-
-	/* Reset this TC module */
-	tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
+	/* Disable this module*/
+	tc_disable(dev_inst);
 
 	/* Reset TC slave if one exists*/
-	if (tc_module.CTRLA.reg & TC_COUNTER_SIZE_32BIT && !(slave_test)) {
+	if (tc_module.CTRLA.reg & TC_COUNTER_SIZE_32BIT && !slave_test) {
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset this TC module */
+		tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
+
+		/* Get the slave hw_dev pointer */
 		Tc *slave = dev_inst->hw_dev + TC_NEXT_OR_PREV_TC;
+
+		/* Disable slave */
+		slave->COUNT8.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset slave */
 		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
+	}
+	else {
+
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset this TC module */
+		tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
 }
 
