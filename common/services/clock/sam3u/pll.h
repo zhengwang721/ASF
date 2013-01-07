@@ -231,6 +231,23 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 #ifdef CONFIG_PLL0_SOURCE
 	case 0:
 		pll_enable_source(CONFIG_PLL0_SOURCE);
+		// Source is mainck, select source for mainck
+		switch(CONFIG_PLL0_SOURCE) {
+		case PLL_SRC_MAINCK_4M_RC:
+		case PLL_SRC_MAINCK_8M_RC:
+		case PLL_SRC_MAINCK_12M_RC:
+			pmc_mainck_osc_select(0);
+			while(!pmc_osc_is_ready_mainck());
+#  ifndef CONFIG_PLL1_SOURCE
+			pmc_osc_disable_main_xtal();
+#  endif
+			break;
+		case PLL_SRC_MAINCK_XTAL:
+		case PLL_SRC_MAINCK_BYPASS:
+			pmc_mainck_osc_select(CKGR_MOR_MOSCSEL);
+			while(!pmc_osc_is_ready_mainck());
+			break;
+		}
 		pll_config_init(&pllcfg,
 				CONFIG_PLL0_SOURCE,
 				CONFIG_PLL0_DIV,
@@ -239,7 +256,13 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 #endif
 #ifdef CONFIG_PLL1_SOURCE
 	case 1:
-		pll_enable_source(CONFIG_PLL1_SOURCE);
+		if (pmc_osc_is_bypassed_main_xtal()) {
+			// There must be 12MHz clock source on board
+		} else {
+			// By default, enable and uses XTAL 12MHz
+			pll_enable_source(CONFIG_PLL1_SOURCE);
+		}
+		// Source is main osc
 		pll_config_init(&pllcfg,
 				CONFIG_PLL1_SOURCE,
 				CONFIG_PLL1_DIV,

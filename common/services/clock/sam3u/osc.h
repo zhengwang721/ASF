@@ -100,28 +100,25 @@ static inline void osc_enable(uint32_t ul_id)
 
 
 	case OSC_MAINCK_4M_RC:
-		pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
+		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
 		break;
 
 	case OSC_MAINCK_8M_RC:
-		pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
+		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
 		break;
 
 	case OSC_MAINCK_12M_RC:
-		pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
+		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
 		break;
 
 
 	case OSC_MAINCK_XTAL:
-		pmc_switch_mainck_to_xtal(PMC_OSC_XTAL,
-			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
-				OSC_SLCK_32K_RC_HZ));
+		pmc_osc_enable_main_xtal(pmc_us_to_moscxtst(
+				BOARD_OSC_STARTUP_US, OSC_SLCK_32K_RC_HZ));
 		break;
 
 	case OSC_MAINCK_BYPASS:
-		pmc_switch_mainck_to_xtal(PMC_OSC_BYPASS,
-			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
-				OSC_SLCK_32K_RC_HZ));
+		pmc_osc_bypass_main_xtal();
 		break;
 	}
 }
@@ -163,9 +160,11 @@ static inline bool osc_is_ready(uint32_t ul_id)
 	case OSC_MAINCK_4M_RC:
 	case OSC_MAINCK_8M_RC:
 	case OSC_MAINCK_12M_RC:
+		return pmc_osc_is_ready_fastrc();
+
 	case OSC_MAINCK_XTAL:
 	case OSC_MAINCK_BYPASS:
-		return pmc_osc_is_ready_mainck();
+		return pmc_osc_is_ready_main_xtal();
 	}
 
 	return 0;
