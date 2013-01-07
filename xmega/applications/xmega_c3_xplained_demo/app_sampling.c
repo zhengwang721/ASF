@@ -272,8 +272,13 @@ void app_sampling_init(void)
 			32,
 			GFX_PIXEL_SET);
 	app_sampling_display_rate();
+	gfx_mono_draw_circle(DISPLAY_TEMP_TEXT_POS_X,
+			DISPLAY_TEMP_TEXT_POS_Y,
+			1,
+			GFX_PIXEL_SET,
+			GFX_WHOLE);
 	gfx_mono_draw_string(DISPLAY_TEMP_TEXT,
-			DISPLAY_TEMP_TEXT_POS_X,
+			DISPLAY_TEMP_TEXT_POS_X + 2,
 			DISPLAY_TEMP_TEXT_POS_Y,
 			&sysfont);
 	gfx_mono_draw_string(DISPLAY_LIGHT_TEXT,

@@ -8,8 +8,8 @@
 		<build type="header-file" value="conf_nvm.h"/>
 		<build type="include-path" value="."/>
 		<require idref="common.drivers.nvm.example"/>
+		<config name="config.common.drivers.nvm.mem_type" value="extmem"/>
 		<require idref="board.evk1104"/>
-		<require idref="common.drivers.nvm#extmem"/>
 		<config name="config.board.evk1104.led" value="yes"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc"/>

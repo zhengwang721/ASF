@@ -51,7 +51,7 @@ extern "C" {
 #include <compiler.h>
 
 /**
- * \defgroup sleep_group Backup Power Manager (BPM)
+ * \defgroup sleep_group Backup Power Manager Sleep Management support (BPM)
  *
  * This is a stub on the SAM4L Backup Power Manager(BPM) for the sleepmgr service.
  *
@@ -67,6 +67,7 @@ extern "C" {
 #if defined(__DOXYGEN__)
 /**
  * \brief Sets the MCU in the specified sleep mode
+ * \param bpm Base address of the BPM instance.
  * \param sleep_mode Sleep mode to set.
  */
 #endif
