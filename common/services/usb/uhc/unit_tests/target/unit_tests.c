@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB host unit tests
  *
- * Copyright (C) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
