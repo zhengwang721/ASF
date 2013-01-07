@@ -309,15 +309,4 @@ enum system_interrupt_priority system_interrupt_get_priority(enum system_interru
 	return priority;
 }
 
-/**
- * \brief Check if interrupt control status flag is set
- */
-bool system_interrupt_is_status_flag_set(enum system_interrupt_status_flag status_flag)
-{
-	uint8_t status_flag_to_pos_translater[] = {SCB_ICSR_NMIPENDSET_Pos, SCB_ICSR_PENDSTSET_Pos};
-
-	return (bool)((SCB->ICSR[0] >> status_flag_to_pos_translater[status_flag]) & 0x00000001);
-}
-
-
 #endif
