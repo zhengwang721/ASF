@@ -60,8 +60,10 @@ int main(void)
 	ioport_set_pin_dir(BUTTON_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_PIN, IOPORT_MODE_PULLUP);
 
+	/* Set the pin sense mode */
 	ioport_set_pin_sense_mode(BUTTON_PIN, IOPORT_SENSE_LEVEL);
-
+    
+    /* Enable external interrupt */
 	external_interrupt_enable(BUTTON_NUMBER);
 
 	/* Turn off the LED		*/
@@ -101,6 +103,7 @@ ISR(BUTTON_vect)
 	delay_ms(10);
 	do {
 	} while (!ioport_get_pin_level(BUTTON_PIN));
+    /* Clear external interrupt flag */
 	external_interrupt_flag_clear(BUTTON_NUMBER);
 }
 

@@ -57,7 +57,7 @@
  * @{
  */
 
- #ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -68,9 +68,7 @@ extern "C" {
  */
 static inline void sleep_enable(void)
 {
-#if MEGA_RF
 	SMCR |= (1 << SE);
-#endif
 }
 
 /**
@@ -78,9 +76,7 @@ static inline void sleep_enable(void)
  */
 static inline void sleep_disable(void)
 {
-#if MEGA_RF
 	SMCR &= ~(1 << SE);
-#endif
 }
 
 #endif
@@ -92,13 +88,13 @@ static inline void sleep_disable(void)
  */
 static inline void sleep_set_mode(enum SLEEP_SMODE_enum mode)
 {
-#if MEGA_RF
 	SMCR = mode | (SMCR & ~((1 << SM0) | (1 << SM1) | (1 << SM2)));
-#endif
 }
 
 #ifdef __cplusplus
 }
 #endif
+
+/*! @} */
 
 #endif /* _SLEEP_MEGARF_H */

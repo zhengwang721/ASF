@@ -127,5 +127,7 @@ typedef enum SLEEP_SMODE_enum {
  *  Possible sleep modes depend on the device that is used. Please refer to the
  *  device datasheet and header file to find these definitions.
  */
+ 
+ /*! @} */
 
 #endif /* _SLEEP_H */
