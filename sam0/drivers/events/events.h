@@ -409,7 +409,7 @@ static inline bool events_ch_is_ready(
 
 	/* Make it a 16-bit array to be able to work on the upper and lower
 	 * 16-bits */
-	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS.CHSTATUS.reg);
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
 
 
 	/* Determine if the specified channel is currently busy */
@@ -445,7 +445,7 @@ static inline bool events_user_is_ready(
 
 	/* Make it a 16-bit array to be able to work on the upper and lower
 	 * 16-bits */
-	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS.CHSTATUS.reg);
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
 
 
 	/* Determine if the specified channel users(s) are currently ready */
@@ -471,7 +471,7 @@ static inline void events_ch_software_trigger(
 {
 	/* Trigger the appropriate event channel - must be performed as a single
 	 * 8-bit write as mandated in the datasheet for the event system module */
-	EVSYS.CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |
+	EVSYS->CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |
 			EVSYS_CHANNEL_SWEVT;
 }
 

@@ -53,34 +53,6 @@ extern uint32_t _ezero;
 extern uint32_t _srelocate;
 extern uint32_t _erelocate;
 
-typedef struct _DeviceVectors
-{
-  /* Stack pointer */
-  void* pvStack;
-
-  /* Cortex-M handlers */
-  void* pfnReset_Handler;
-  void* pfnNMI_Handler;
-  void* pfnHardFault_Handler;
-  void* pfnMemManage_Handler;
-  void* pfnBusFault_Handler;
-  void* pfnUsageFault_Handler;
-  void* pfnReserved1_Handler;
-  void* pfnReserved2_Handler;
-  void* pfnReserved3_Handler;
-  void* pfnReserved4_Handler;
-  void* pfnSVC_Handler;
-  void* pfnDebugMon_Handler;
-  void* pfnReserved5_Handler;
-  void* pfnPendSV_Handler;
-  void* pfnSysTick_Handler;
-
-  /* Peripheral handlers */
-  // TODO - add peripheral handlers here
-} DeviceVectors;
-
-void Reset_Handler(void);
-
 /** \cond DOXYGEN_SHOULD_SKIP_THIS */
 int main(void);
 /** \endcond */
