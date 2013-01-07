@@ -85,17 +85,19 @@
  */
 #include <asf.h>
 #include "common_hw_timer.h"
+#include "conf_example.h"
+#include "ioport.h"
 
-uint16_t time_out = 50000;
+uint16_t time_out = 5000;
 
 void overflow_cb(void)
 {
-	LED_Toggle(LED0);
+	ioport_toggle_pin_level(OVERFLOW_PIN);
 }
 
 void expiry_cb(void)
 {
-	LED_Toggle(LED1);
+	ioport_toggle_pin_level(EXPIRY_PIN);
 	common_tc_delay(time_out);
 }
 
@@ -106,6 +108,11 @@ int main(void)
 	sysclk_init();
 
 	cpu_irq_enable();
+
+	ioport_set_pin_dir(OVERFLOW_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(OVERFLOW_PIN, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(EXPIRY_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(EXPIRY_PIN, IOPORT_PIN_LEVEL_HIGH);
 
 	set_common_tc_overflow_callback(overflow_cb);
 	set_common_tc_expiry_callback(expiry_cb);

@@ -1,9 +1,9 @@
 /**
- * @file common_hw_timer.h
+ * \file
  *
- * @brief 
+ * \brief Chip-specific system clock manager configuration
  *
- *  Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,41 +36,41 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
- 
-/* Prevent double inclusion */
-#ifndef COMMON_HW_TIMER_H
-#define COMMON_HW_TIMER_H
-
-#if (MEGA_RF)
-#include "tc_megarf.h"
-#else
-#include "tc.h"
-#endif
-#include "conf_common_hw_timer.h"
-
-#define DEF_1MHZ	(1000000)
-#define TIMER_PERIOD  UINT16_MAX
-
-#if (!defined(XMEGA) || !defined(MEGA_RF) || defined(UC3) || defined(SAM))
-/**
- * \brief Interrupt event callback function type
  *
- * The interrupt handler can be configured to do a function callback,
- * the callback function must match the tc_callback_t type.
+ * \asf_license_stop
  *
  */
-typedef void (*tc_callback_t) (void);
-#endif
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-void common_tc_init(void);
-uint16_t common_tc_read_count(void);
-void common_tc_delay(uint16_t value);
-void common_tc_compare_stop(void);
-void common_tc_overflow_stop(void);
-void common_tc_stop(void);
-void set_common_tc_overflow_callback(tc_callback_t callback);
-void set_common_tc_expiry_callback(tc_callback_t callback);
+#define CONFIG_SYSCLK_INIT_CPUMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBAMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBBMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBCMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBDMASK  (0)
+#define CONFIG_SYSCLK_INIT_HSBMASK  (0)
 
-#endif /* COMMON_HW_TIMER_H */
-/* EOF */
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCSYS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_OSC0
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL0
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_DFLL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC80M
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCFAST
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC1M
+
+/* RCFAST frequency selection: 0 for 4MHz, 1 for 8MHz and 2 for 12MHz */
+//#define CONFIG_RCFAST_FRANGE    0
+//#define CONFIG_RCFAST_FRANGE    1
+#define CONFIG_RCFAST_FRANGE    2
+
+// Enable HCache Feature
+#define CONFIG_HCACHE_ENABLE    1
+
+/* Fbus = Fsys / (2 ^ BUS_div) */
+#define CONFIG_SYSCLK_CPU_DIV         (0)
+#define CONFIG_SYSCLK_PBA_DIV         (0)
+#define CONFIG_SYSCLK_PBB_DIV         (0)
+#define CONFIG_SYSCLK_PBC_DIV         (2)
+#define CONFIG_SYSCLK_PBD_DIV         (2)
+
+#endif /* CONF_CLOCK_H_INCLUDED */

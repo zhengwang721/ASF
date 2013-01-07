@@ -139,10 +139,17 @@ int main(void)
 	sw_timer_get_id(&timer_id3);
 	sw_timer_get_id(&timer_id4);
 
-	ioport_configure_pin(EXAMPLE_PIN1,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
-	ioport_configure_pin(EXAMPLE_PIN2,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
-	ioport_configure_pin(EXAMPLE_PIN3,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
-	ioport_configure_pin(EXAMPLE_PIN4,IOPORT_DIR_OUTPUT | IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(EXAMPLE_PIN1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXAMPLE_PIN1, IOPORT_PIN_LEVEL_HIGH);
+
+	ioport_set_pin_dir(EXAMPLE_PIN2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXAMPLE_PIN2, IOPORT_PIN_LEVEL_HIGH);
+
+	ioport_set_pin_dir(EXAMPLE_PIN3, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXAMPLE_PIN3, IOPORT_PIN_LEVEL_HIGH);
+
+	ioport_set_pin_dir(EXAMPLE_PIN4, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXAMPLE_PIN4, IOPORT_PIN_LEVEL_HIGH);
 
 	sw_timer_start(timer_id1, time_out1, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL);
 	sw_timer_start(timer_id2, time_out2, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL);
@@ -156,28 +163,28 @@ int main(void)
 
 static void timeout1_cb(void *parameter)
 {
-	ioport_toggle_pin(EXAMPLE_PIN1);
+	ioport_toggle_pin_level(EXAMPLE_PIN1);
 
 	sw_timer_start(timer_id1, time_out1, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout1_cb, NULL);
 }
 
 static void timeout2_cb(void *parameter)
 {
-	ioport_toggle_pin(EXAMPLE_PIN2);
+	ioport_toggle_pin_level(EXAMPLE_PIN2);
 
 	sw_timer_start(timer_id2, time_out2, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout2_cb, NULL);
 }
 
 static void timeout3_cb(void *parameter)
 {
-	ioport_toggle_pin(EXAMPLE_PIN3);
+	ioport_toggle_pin_level(EXAMPLE_PIN3);
 
 	sw_timer_start(timer_id3, time_out3, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout3_cb, NULL);
 }
 
 static void timeout4_cb(void *parameter)
 {
-	ioport_toggle_pin(EXAMPLE_PIN4);
+	ioport_toggle_pin_level(EXAMPLE_PIN4);
 
 	sw_timer_start(timer_id4, time_out4, SW_TIMEOUT_RELATIVE, (FUNC_PTR)timeout4_cb, NULL);
 }

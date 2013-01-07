@@ -11,5 +11,6 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
+		<device-support value="megarf"/>
 	</module>
 </asf>

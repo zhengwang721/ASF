@@ -1,9 +1,9 @@
 /**
- * @file common_hw_timer.h
+ * \file
  *
- * @brief 
+ * \brief  Configuration File for SAM4L-EK Board.
  *
- *  Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,41 +36,23 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
- 
-/* Prevent double inclusion */
-#ifndef COMMON_HW_TIMER_H
-#define COMMON_HW_TIMER_H
-
-#if (MEGA_RF)
-#include "tc_megarf.h"
-#else
-#include "tc.h"
-#endif
-#include "conf_common_hw_timer.h"
-
-#define DEF_1MHZ	(1000000)
-#define TIMER_PERIOD  UINT16_MAX
-
-#if (!defined(XMEGA) || !defined(MEGA_RF) || defined(UC3) || defined(SAM))
-/**
- * \brief Interrupt event callback function type
  *
- * The interrupt handler can be configured to do a function callback,
- * the callback function must match the tc_callback_t type.
+ * \asf_license_stop
  *
  */
-typedef void (*tc_callback_t) (void);
-#endif
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-void common_tc_init(void);
-uint16_t common_tc_read_count(void);
-void common_tc_delay(uint16_t value);
-void common_tc_compare_stop(void);
-void common_tc_overflow_stop(void);
-void common_tc_stop(void);
-void set_common_tc_overflow_callback(tc_callback_t callback);
-void set_common_tc_expiry_callback(tc_callback_t callback);
+// Enable USART used to communicate with Board Monitor
+#define CONF_BOARD_BM_USART
 
-#endif /* COMMON_HW_TIMER_H */
-/* EOF */
+// Force Rev1 definitions for this demo.
+// #define SAM4L_EK_REV1
+
+// Force usage of backlight
+#define CONF_BOARD_BL
+
+// Force usage of external EIC
+#define CONF_BOARD_EIC
+
+#endif /* CONF_BOARD_H_INCLUDED */

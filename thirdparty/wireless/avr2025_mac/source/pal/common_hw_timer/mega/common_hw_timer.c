@@ -82,8 +82,8 @@ uint16_t common_tc_read_count(void)
 
 void common_tc_compare_stop(void)
 {
-	tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_OFF);
-	tc_clear_cc_interrupt(TIMER, TC_CCA);
+	tc_disable_compa_int(TIMER);
+	clear_compa_flag(TIMER);
 
 	uint8_t flags = cpu_irq_save();
 	overflow_counter = 0;
@@ -94,8 +94,8 @@ void common_tc_compare_stop(void)
 
 void common_tc_overflow_stop(void)
 {
-	tc_set_overflow_interrupt_level(TIMER, TC_INT_LVL_OFF);
-	tc_clear_overflow(TIMER);
+	tc_enable_ovf_int(TIMER);
+	clear_ovf_flag(TIMER);
 	timer_mul_var = 0;
 }
 
@@ -126,20 +126,21 @@ void common_tc_delay(uint16_t value)
 		compare_value = (uint16_t)((temp - (UINT16_MAX - countvalue)) -
 							((overflow_counter - 1) << 16));
 
-		tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_OFF);
+		tc_disable_compa_int(TIMER);
 	}
 	else
 	{
 		compare_value = temp + countvalue;
 
-		tc_clear_cc_interrupt(TIMER, TC_CCA);
-		tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_HI);
+		clear_compa_flag(TIMER);
+		tc_enable_compa_int(TIMER);
 	}
+
 	if(compare_value < 100)
 	{
 		compare_value += 100;
 	}
-	tc_write_cc(TIMER, TC_CCA, compare_value);
+	tc_write_cc(TIMER, TC_COMPA, compare_value);
 }
 
 
@@ -153,19 +154,19 @@ void common_tc_init(void)
 
 	tc_set_overflow_interrupt_callback(TIMER, tc_ovf_callback);
 
-	tc_set_wgm(TIMER, TC_WG_NORMAL);
+	tc_set_mode(TIMER, NORMAL);
 
-	tc_write_period(TIMER, TIMER_PERIOD);
+//	tc_write_period(TIMER, TIMER_PERIOD);
+
+	tc_enable_ovf_int(TIMER);
+
+	tc_set_compa_interrupt_callback(TIMER, tc_cca_callback);
+
+//	tc_enable_compa_int(TIMER);
+
+	tc_disable_compa_int(TIMER);
 
 	tc_write_clock_source(TIMER, TC_CLKSEL_DIV1_gc);
-
-	tc_set_overflow_interrupt_level(TIMER, TC_INT_LVL_HI);
-
-	tc_set_cca_interrupt_callback(TIMER, tc_cca_callback);
-
-	tc_enable_cc_channels(TIMER, TC_CCAEN);
-
-	tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_OFF);
 }
 
 
@@ -173,8 +174,8 @@ static void tc_ovf_callback(void)
 {
 	if((overflow_counter > 0) && ((--overflow_counter) == 0))
 	{
-		tc_clear_cc_interrupt(TIMER, TC_CCA);
-		tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_HI);
+		clear_compa_flag(TIMER);
+		tc_enable_compa_int(TIMER);
 	}
 	if((++timer_mul_var) >= timer_multiplier)
 	{
@@ -189,7 +190,7 @@ static void tc_ovf_callback(void)
 
 static void tc_cca_callback(void)
 {
-	tc_set_cca_interrupt_level(TIMER, TC_INT_LVL_OFF);
+	tc_disable_compa_int(TIMER);
 
 	if (common_tc_cca_callback) {
 		common_tc_cca_callback();

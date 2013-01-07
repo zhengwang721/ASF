@@ -88,6 +88,8 @@
  */
 #define irq_initialize_vectors() \
 	PMIC.CTRL = PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_HILVLEN_bm;
+#elif MEGA_RF
+#define irq_initialize_vectors()
 #endif
 
 #ifdef __GNUC__
