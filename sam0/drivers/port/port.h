@@ -394,7 +394,7 @@ static inline Eic* port_get_eic_from_gpio_pin(
 	uint8_t port_index = (gpio_pin / 32);
 
 	if (port_index == 0) {
-		return &EIC;
+		return EIC;
 	}
 	else {
 		Assert(false);
