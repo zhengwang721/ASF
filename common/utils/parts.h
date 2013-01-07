@@ -832,12 +832,30 @@
 /** @} */
 
 /**
- * \name SAM0D series
+ * \name SAMD20 series
  * @{
  */
-#define SAM0D4 ( \
-		SAM_PART_IS_DEFINED(SAM0D4) || \
-		SAM_PART_IS_DEFINED(SAM0D4_REVA) \
+#define SAMD20J ( \
+		SAM_PART_IS_DEFINED(SAMD20J14A) || \
+		SAM_PART_IS_DEFINED(SAMD20J15A) || \
+		SAM_PART_IS_DEFINED(SAMD20J16A) || \
+		SAM_PART_IS_DEFINED(SAMD20J17A) || \
+		SAM_PART_IS_DEFINED(SAMD20J18A) \
+	)
+
+#define SAMD20G ( \
+		SAM_PART_IS_DEFINED(SAMD20G14A) || \
+		SAM_PART_IS_DEFINED(SAMD20G15A) || \
+		SAM_PART_IS_DEFINED(SAMD20G16A) || \
+		SAM_PART_IS_DEFINED(SAMD20G17A) || \
+		SAM_PART_IS_DEFINED(SAMD20G18A) \
+	)
+
+#define SAMD20E ( \
+		SAM_PART_IS_DEFINED(SAMD20E14A) || \
+		SAM_PART_IS_DEFINED(SAMD20E15A) || \
+		SAM_PART_IS_DEFINED(SAMD20E16A) || \
+		SAM_PART_IS_DEFINED(SAMD20E17A) \
 	)
 /** @} */
 
@@ -876,8 +894,8 @@
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)
 
-/** SAM0+ Family */
-#define SAM0D (SAM0D4)
+/** SAMD20 Family */
+#define SAMD20 (SAMD20J || SAMD20G || SAMD20E)
 /** @} */
 
 /** SAM4E Family */
@@ -885,7 +903,7 @@
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAM0D)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAMD20)
 
 /** @} */
 

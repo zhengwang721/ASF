@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.utils.cmsis.samd20.include.pio" caption="SAMD20 PIO definitions">
+		<info type="description" value="summary">
+		TODO
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="pio_samd2064g3.h"/>
+		<build type="header-file" value="pio_samd2064g4.h"/>
+		<build type="header-file" value="pio_samd20128g3.h"/>
+		<build type="header-file" value="pio_samd20128g4.h"/>
+		<build type="header-file" value="pio_samd20256g3.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

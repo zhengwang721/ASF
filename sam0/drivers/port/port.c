@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ GPIO Port Driver
+ * \brief SAMD20 GPIO Port Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

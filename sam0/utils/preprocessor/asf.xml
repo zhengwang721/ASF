@@ -5,7 +5,7 @@
 		<build type="header-file" value="preprocessor.h" />
 		<build type="header-file" value="stringz.h" />
 		<build type="header-file" value="tpaste.h" />
-		<device-support value="sam0+"/>
+		<device-support value="sam0"/>
 		<info type="gui-flag" value="hidden"/>
 	</module>
 </asf>

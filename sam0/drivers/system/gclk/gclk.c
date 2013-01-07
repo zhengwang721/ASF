@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Generic Clock Driver
+ * \brief SAMD20 Generic Clock Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

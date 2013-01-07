@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Clock related functionality
+ * \brief SAMD20 Clock related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

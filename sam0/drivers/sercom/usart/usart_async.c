@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ SERCOM USART Asynchronous Driver
+ * \brief SAMD20 SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -320,9 +320,9 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  * Returns the error from a given ongoing or last asynchronous transfer operation.
  * Either from a read or write transfer.
  *
- * \param[in] dev_inst    Pointer to USART software instance struct 
+ * \param[in] dev_inst    Pointer to USART software instance struct
  *
- * \return 
+ * \return
  * \retval STATUS_OK                No error occurred during the last transfer
  * \retval STATUS_IN_PROGRESS       A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA      The last operation was aborted due to a

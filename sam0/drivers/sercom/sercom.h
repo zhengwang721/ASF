@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -60,10 +60,10 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_sercom_group SAM0+ SERCOM
+ * \defgroup sam0_sercom_group SAMD20 SERCOM
  *
- * Driver for the SAM0+ architecture devices.
- * This driver encompasses the following module within the SAM0+ devices:
+ * Driver for the SAMD20 architecture devices.
+ * This driver encompasses the following module within the SAMD20 devices:
  * \li \b SERCOM
  *
  * \section module_introduction Introduction

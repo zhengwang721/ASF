@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ I2C Serial Peripheral Interface Driver
+ * \brief SAMD20 I2C Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
