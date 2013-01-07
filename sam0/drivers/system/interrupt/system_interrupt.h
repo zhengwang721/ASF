@@ -172,7 +172,7 @@ static inline bool system_interrupt_is_pending(enum system_interrupt_vector vect
 {
 	bool result;
 
-	if(vector => _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
+	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 
 		result = (bool)((NVIC->ISPR[0] >> vector) & 0x00000001);
 
@@ -201,7 +201,7 @@ static inline enum status_code system_interrupt_set_pending(enum system_interrup
 {
 	enum status_code status = STATUS_OK;
 
-	if(vector => _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
+	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 
 		NVIC->ISPR[0] = 1 << vector;
 
@@ -234,7 +234,7 @@ static inline enum status_code system_interrupt_clear_pending(enum system_interr
 
 	enum status_code status = STATUS_OK;
 
-	if(vector => _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
+	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 
 		NVIC->ICPR[0] = 1 << vector;
 
@@ -298,7 +298,7 @@ enum system_interrupt_priority system_interrupt_get_priority(enum system_interru
 	uint8_t priority_pos = ((vector % 4) * 8) + 5;
 	enum system_interrupt_priority priority;
 
-	if (vector => 0) {
+	if (vector >= 0) {
 
 		priority = (NVIC->IP[register_num] >> priority_pos) & _SYSTEM_INTERRUPT_PRIORITY_MASK;
 
