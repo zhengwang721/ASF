@@ -442,8 +442,7 @@ extern "C" {
 
 #define TC_NEXT_OR_PREV_TC TC1_ADDR - TC0_ADDR
 
-/**
- * \brief Index of the compare capture channels
+/** \brief Index of the compare capture channels
  *
  * These values are used in certain functions to specify what
  * capture/compare channel to do operations on.
@@ -455,8 +454,7 @@ enum tc_compare_capture_channel_index {
 	TC_COMPARE_CAPTURE_CHANNEL_1,
 };
 
-/**
- * \brief TC wave generation mode enum
+/** \brief TC wave generation mode enum
  *
  * These values are used to select what mode to run the wave
  * generation in. The user can chose to use frequency generation or
@@ -472,33 +470,28 @@ enum tc_compare_capture_channel_index {
  * capture channels available, as one is used to store the TOP value.
  */
 enum tc_wave_generation {
-	/**
-	 * TOP is max, except in 8-bit counter size where it is the PER
+	/** TOP is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
 
-	/**
-	 * TOP is CC0, except in 8-bit counter size where it is the PER
+	/** TOP is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
 
-	/**
-	 * TOP is max, except in 8-bit counter size where it is the PER
+	/** TOP is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
 
-	/**
-	 * TOP is CC0, except in 8-bit counter size where it is the PER
+	/** TOP is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
 };
 
-/**
- * \brief Specifies if the counter is 8-, 16-, or 32-bits.
+/** \brief Specifies if the counter is 8-, 16-, or 32-bits.
  *
  * This specifies the maximum value it is possible to count to. What
  * counter size used, will impose limitations in other areas.  The
@@ -510,22 +503,19 @@ enum tc_wave_generation {
  * period in this mode.
  */
 enum tc_counter_size {
-	/**
-	 * The counter's max value is 0xFF, the period register is
+	/** The counter's max value is 0xFF, the period register is
 	 * available to be used as TOP value
 	 */
 	TC_COUNTER_SIZE_8BIT                    = TC_CTRLA_MODE_COUNT8,
 
-	/**
-	 * The counter's max value is 0xFFFF. There is no separate
+	/** The counter's max value is 0xFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
 	TC_COUNTER_SIZE_16BIT                   = TC_CTRLA_MODE_COUNT16,
 
-	/**
-	 * The counter's max value is 0xFFFFFFFF. There is no separate
+	/** The counter's max value is 0xFFFFFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
@@ -533,33 +523,28 @@ enum tc_counter_size {
 	TC_COUNTER_SIZE_32BIT                   = TC_CTRLA_MODE_COUNT32,
 };
 
-/**
- * \brief TC Counter reload action enum
+/** \brief TC Counter reload action enum
  *
  * These enums specify how the clock should reload.
  */
 enum tc_reload_action {
-	/**
-	 * The counter is reloaded/reset on the next GCLK and starts
+	/** The counter is reloaded/reset on the next GCLK and starts
 	 * counting on the prescaler clock.
 	 */
 	TC_RELOAD_ACTION_GCLK                 = TC_CTRLA_PRESCSYNC_GCLK,
 
-	/**
-	 * The counter is reloaded/reset on the next prescaler clock
+	/** The counter is reloaded/reset on the next prescaler clock
 	 */
 	TC_RELOAD_ACTION_PRESC                = TC_CTRLA_PRESCSYNC_PRESC,
 
-	/**
-	 * The counter is reloaded/reset on the next GCLK, and the
+	/** The counter is reloaded/reset on the next GCLK, and the
 	 * prescaler is reset as well. This may be useful when an
 	 * event retrigger the clock
 	 */
 	TC_RELOAD_ACTION_RESYNC               = TC_CTRLA_PRESCSYNC_RESYNC,
 };
 
-/**
- * \brief TC clock prescaler values
+/** \brief TC clock prescaler values
  *
  * These values are used to chose the clock prescaler
  * configuration. The prescaler divides the clock frequency of the TC
@@ -584,8 +569,7 @@ enum tc_clock_prescaler {
 	TC_CLOCK_PRESCALER_DIV1024            = TC_CTRLA_PRESCALER(7),
 };
 
-/**
- * \brief Count direction enum.
+/** \brief Count direction enum.
  *
  * The counter can be set to either count up or down
  */
@@ -593,16 +577,13 @@ enum tc_count_direction {
 	/** Makes the counter count up from zero */
 	TC_COUNT_DIRECTION_UP,
 
-	/**
-	 * Makes the counter count down from max or a specific user
-	 * defined value between max and 3
+	/** Makes the counter count down from max or a specific user
+	 *  defined value between max and 3
 	 */
 	TC_COUNT_DIRECTION_DOWN,
 };
 
-/**
- * \brief TC channel capture enable enum
- */
+/** \brief TC channel capture enable enum */
 enum tc_capture_enable {
 	/** Enable no channels for capture */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
@@ -612,8 +593,7 @@ enum tc_capture_enable {
 	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(1),
 };
 
-/**
- * \brief Enum for for inverting waveform output
+/** \brief Enum for for inverting waveform output
  *
  * This enum can be used to setup inversion of the waveform output
  */
@@ -626,8 +606,7 @@ enum tc_waveform_invert_output {
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(1),
 };
 
-/**
- * \brief Enum for event action
+/** \brief Enum for event action
  *
  * Enum to setup specific event actions.
  */
@@ -641,21 +620,18 @@ enum tc_event_action {
 	/** Start counter on event */
 	TC_EVENT_ACTION_START             = TC_EVCTRL_EVACT_START,
 
-	/**
-	 * Store period in capture register 0, pulse width in capture
+	/** Store period in capture register 0, pulse width in capture
 	 * register 1
 	 */
 	TC_EVENT_ACTION_PPW               = TC_EVCTRL_EVACT_PPW,
 
-	/**
-	 * Store pulse width in capture register 0, period in capture
+	/** Store pulse width in capture register 0, period in capture
 	 * register 1
 	 */
 	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
 };
 
-/**
- * \brief Enum for setting up event generation
+/** \brief Enum for setting up event generation
  *
  * Use this enum to configure event generation on respective channels
  */
@@ -668,8 +644,7 @@ enum tc_event_generation_enable {
 	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(1),
 };
 
-/**
- * \brief Enum to be used to check interrupt flags
+/** \brief Enum to be used to check interrupt flags
  *
  * These enums are used as input in the tc_is_interrupt_flag_set()
  * function and tc_clear_interrupt_flag() function. The interrupt flags
@@ -685,29 +660,24 @@ enum tc_interrupt_flag {
 	/**  */ /* TODO: Have to check for a use case on this with IC */
 	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
 
-	/**
-	 * This flag is used to test for capture overflow in capture
-	 * mode
+	/** This flag is used to test for capture overflow in capture
+	 *  mode
 	 */
 	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
 
-	/**
-	 * This flag can be used to check for a counter overflow in
-	 * compare mode
+	/** This flag can be used to check for a counter overflow in
+	 *  compare mode
 	 */
 	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
 };
 
-/**
- * \brief Config struct for 8-bit counter size
- */
+/** \brief Config struct for 8-bit counter size */
 struct tc_8bit_conf {
 	/** Initial count value */
 	uint8_t count;
 
-	/**
-	 * Where to count to or from depending on the direction on the
-	 * counter
+	/** Where to count to or from depending on the direction on the
+	 *  counter
 	 */
 	uint8_t period;
 	/** Value to be used for compare match on channel 0 */
@@ -716,9 +686,7 @@ struct tc_8bit_conf {
 	uint8_t compare_capture_channel_1;
 };
 
-/**
- * \brief Config struct for 16-bit counter size
- */
+/** \brief Config struct for 16-bit counter size */
 struct tc_16bit_conf {
 	/** Initial count value */
 	uint16_t count;
@@ -728,9 +696,7 @@ struct tc_16bit_conf {
 	uint16_t compare_capture_channel_1;
 };
 
-/**
- * \brief Config struct for 32-bit counter size
- */
+/** \brief Config struct for 32-bit counter size */
 struct tc_32bit_conf {
 	/** Initial count value */
 	uint32_t count;
@@ -740,8 +706,7 @@ struct tc_32bit_conf {
 	uint32_t compare_capture_channel_1;
 };
 
-/**
- * \brief TC configuration structure
+/** \brief TC configuration structure
  *
  * Configuration structure for a TC instance. This structure should be
  * initialized by the \ref tc_get_config_defaults function before being
@@ -751,8 +716,7 @@ struct tc_conf {
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
 
-	/**
-	 * When true the module is enabled during standby
+	/** When true the module is enabled during standby
 	 */
 	bool run_in_standby;
 	/** Specifies either 8-, 16-, or 32-bit counter counter size */
@@ -762,8 +726,7 @@ struct tc_conf {
 	/** Specifies which waveform generation mode to use*/
 	enum tc_wave_generation wave_generation;
 
-	/**
-	 *  Specifies the reload or reset time of the counter and
+	/** Specifies the reload or reset time of the counter and
 	 *  prescaler resynchronization on a retrigger event for
 	 *  timer counter
 	 */
@@ -772,8 +735,7 @@ struct tc_conf {
 	/** Specifies which channel(s) to invert the waveform on */
 	uint8_t waveform_invert_output;
 
-	/**
-	 *  Specifies which channel (s) to enable channel capture
+	/** Specifies which channel (s) to enable channel capture
 	 *  operation on. Since all capture channels use the same
 	 *  event line, only one capture channel must be enabled at a
 	 *  time, when used for event capture. When pwm capture is
@@ -782,16 +744,14 @@ struct tc_conf {
 	 */
 	uint8_t capture_enable;
 
-	/**
-	 *  When true oneshot will stop the TC on next HW/SW retrigger
+	/**  When true oneshot will stop the TC on next HW/SW retrigger
 	 *  event or overflow/underflow
 	 */
 	bool oneshot;
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
 
-	/**
-	 *  Specifies if the input event source is inverted, when used
+	/**  Specifies if the input event source is inverted, when used
 	 *  in PWP, PPW event action
 	 */
 	bool invert_event_input;
@@ -801,8 +761,7 @@ struct tc_conf {
 	/** Specifies which event to trigger if an event is triggered */
 	enum tc_event_action event_action;
 
-	/**
-	 *  Specifies which channel(s) to generate event on when a
+	/** Specifies which channel(s) to generate event on when a
 	 *  compare/capture occurs
 	 */
 	uint16_t event_generation_enable;
@@ -816,8 +775,7 @@ struct tc_conf {
 	tc_counter_size_conf;
 };
 
-/**
- * \brief TC software device instance structure
+/** \brief TC software device instance structure
  *
  * TC software device instance structure
  */
@@ -825,19 +783,17 @@ struct tc_dev_inst {
 	/** Pointer to the TC Hardware module */
 	Tc *hw_dev;
 
-	/**
-	 * Which counter size the counter should use. This value is set
-	 * when running tc_init. Use the config struct \ref tc_conf to set the
-	 * counter size. Do not alter this, it is only for internal
-	 * checks.
+	/** Which counter size the counter should use. This value is set
+	 *  when running tc_init. Use the config struct \ref tc_conf to set the
+	 *  counter size. Do not alter this, it is only for internal
+	 *  checks.
 	 */
 	enum tc_counter_size counter_size;
 };
 
 #if !defined (__DOXYGEN__)
 
-/**
- * \internal Synchronization between clock domains
+/** \internal Synchronization between clock domains
  *
  * Makes sure GCLK_TC is synchronized with sysclock,
  * Must be called before assessing certain registers in the TC.
@@ -864,8 +820,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst *const dev_inst)
  * @{
  */
 
-/**
- * \brief Initializes config with predefined default values
+/** \brief Initializes config with predefined default values
  *
  * This function will initialize a given TC configuration structure to
  * a set of known default values. This function should be called on
@@ -936,8 +891,7 @@ enum status_code tc_init(
  * @{
  */
 
-/**
- * \brief Enable the TC module
+/** \brief Enable the TC module
  *
  * Enable the TC module. Except when the counter is enabled for
  * retrigger on an event. The counter will start when the counter is
@@ -961,8 +915,7 @@ static inline void tc_enable(const struct tc_dev_inst *const dev_inst)
 	tc_module.CTRLA.reg |= TC_CTRLA_ENABLE;
 }
 
-/**
- * \brief Disables the TC module
+/** \brief Disables the TC module
  *
  * Disables the TC module. Stops the counter. This is required for
  * changing certain settings. The settings affected by this are
@@ -995,8 +948,7 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
 	tc_module.CTRLA.reg  &= ~TC_CTRLA_ENABLE;
 }
 
-/**
- * \brief Reset the TC module
+/** \brief Reset the TC module
  *
  * Resets the TC module. Will block while waiting for sync between
  * clock domains before performing the reset. The TC module will not
@@ -1087,8 +1039,7 @@ enum status_code tc_set_count_value(
  * @{
  */
 
-/**
- * \brief Stops the counter
+/** \brief Stops the counter
  *
  * This function will stop the counter. When the counter is stopped the
  * value in the count register is set to 0, if the counter was
@@ -1112,8 +1063,7 @@ static inline void tc_stop_counter(const struct tc_dev_inst *const dev_inst)
 	tc_module.CTRLBSET.reg = TC_CTRLBSET_CMD_STOP;
 }
 
-/**
- * \brief Starts the counter
+/** \brief Starts the counter
  *
  * This function can be used to start the counter. It will also
  * restart the counter after a stop action has been performed.
@@ -1164,15 +1114,15 @@ enum status_code tc_set_compare_value(
  * @{
  */
 
-/**
- * \brief Sets the top/period value
+/** \brief Sets the top/period value
  *
  * Writes the top value or period for the counter associated with the
  * dev_inst struct. In the case of a counter running in 8-bit
- * counter size a dedicated register is used for the period. For 16 and
- * 32-bit counter size there is no dedicated register for the period/Top
- * value. In these cases capture compare register 0 is used, and can
- * not be used for anything else.
+ * counter size a dedicated register is used for the period.
+ *
+ * \note For 16 and 32-bit counter size there is no dedicated register for
+ * the period/Top value. In these cases capture compare register 0 is
+ * used, and the value in this register can not be used for anything else.
  *
  * \param[in] dev_inst    Pointer to the device struct.
  * \param[in] top_value   Value to be used as top in the counter.
@@ -1223,8 +1173,7 @@ static enum status_code tc_set_top_value(
  * @{
  */
 
-/**
- * \brief Function checks if the applied interrupt flag is set
+/** \brief Function checks if the applied interrupt flag is set
  *
  * Checks if the interrupt flag indicated by the interrupt flag variable
  * is set.
@@ -1253,8 +1202,7 @@ static inline bool tc_is_interrupt_flag_set(
 	}
 }
 
-/**
- * \brief Clears interrupt flag
+/** \brief Clears interrupt flag
  *
  * This function can be used to clear the interrupt flag specified by
  * the interrupt_flag enum. Using the function when the flag is not set
