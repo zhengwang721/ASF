@@ -48,7 +48,7 @@
 
 #define external_interrupt_enable(INT_number)		(EIMSK |= (1<<INT_number))
 #define external_interrupt_disable(INT_number)		(EIMSK &= ~(1<<INT_number))
-#define external_interrupt_flag_clear(INT_number)	(EIFR |= (1<<INT_number))
+#define external_interrupt_flag_clear(INT_number)		(EIFR |= (1<<INT_number))
 
 #define LED_PIN         LED_YELLOW_GPIO
 #define BUTTON_PIN      GPIO_PUSH_BUTTON_ON_BOARD
