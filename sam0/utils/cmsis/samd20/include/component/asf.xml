@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.utils.cmsis.samd20.include.component" caption="SAMD20 component definitions">
 		<info type="description" value="summary">
-		TODO
+		SAMD20 component definitions.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="component_ac.h"/>
