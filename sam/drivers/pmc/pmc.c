@@ -269,8 +269,8 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
  *
  * \note This function disables the PLLs.
  *
- * \note Switching SCLK back to 32krc is only possible by shutting down the VDDIO
- * power supply.
+ * \note Switching SCLK back to 32krc is only possible by shutting down the
+ *       VDDIO power supply.
  *
  * \param ul_bypass 0 for Xtal, 1 for bypass.
  */
@@ -278,7 +278,8 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) | SUPC_MR_OSCBYPASS;
+		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) |
+			SUPC_MR_OSCBYPASS;
 	}
 
 	SUPC->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
@@ -343,7 +344,8 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
  */
 void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
-	/* Enable Fast RC oscillator but DO NOT switch to RC now. Keep MOSCSEL to 1 */
+	/* Enable Fast RC oscillator but DO NOT switch to RC now.
+	 * Keep MOSCSEL to 1 */
 	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL |
 			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
 	/* Wait the Fast RC to stabilize */
@@ -356,15 +358,16 @@ void pmc_osc_enable_fastrc(uint32_t ul_rc)
 void pmc_osc_disable_fastrc(void)
 {
 	/* Disable Fast RC oscillator */
-	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN & ~CKGR_MOR_MOSCRCF_Msk)
-					| PMC_CKGR_MOR_KEY_VALUE;
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
+					~CKGR_MOR_MOSCRCF_Msk)
+				| PMC_CKGR_MOR_KEY_VALUE;
 }
 
 /**
  * \brief Switch main clock source selection to external Xtal/Bypass.
  *
- * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid any
- * system crash.
+ * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid
+ *       any system crash.
  *
  * \note If used in Xtal mode, the Xtal is automatically enabled.
  *
@@ -697,8 +700,8 @@ uint32_t pmc_switch_pck_to_sclk(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_SLOW_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -721,8 +724,8 @@ uint32_t pmc_switch_pck_to_mainck(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_MAIN_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -745,8 +748,8 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_PLLA_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -965,7 +968,8 @@ uint32_t pmc_get_status(void)
 }
 
 /**
- * \brief Set the wake-up inputs for fast startup mode registers (event generation).
+ * \brief Set the wake-up inputs for fast startup mode registers
+ *        (event generation).
  *
  * \param ul_inputs Wake up inputs to enable.
  */
@@ -976,7 +980,8 @@ void pmc_set_fast_startup_input(uint32_t ul_inputs)
 }
 
 /**
- * \brief Clear the wake-up inputs for fast startup mode registers (remove event generation).
+ * \brief Clear the wake-up inputs for fast startup mode registers
+ *        (remove event generation).
  *
  * \param ul_inputs Wake up inputs to disable.
  */
