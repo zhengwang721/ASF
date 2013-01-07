@@ -364,6 +364,77 @@ void pmc_osc_disable_fastrc(void)
 }
 
 /**
+ * \brief Check if the main fastrc is ready.
+ *
+ * \retval 0 Xtal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_fastrc(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCRCS);
+}
+
+/**
+ * \brief Enable main XTAL oscillator.
+ *
+ * \param ul_xtal_startup_time Xtal start-up time, in number of slow clocks.
+ */
+void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+			CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
+	PMC->CKGR_MOR = mor;
+	/* Wait the main Xtal to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
+}
+
+/**
+ * \brief Bypass main XTAL.
+ */
+void pmc_osc_bypass_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY;
+	/* Enable Crystal oscillator but DO NOT switch now. Keep MOSCSEL to 0 */
+	PMC->CKGR_MOR = mor;
+	/* The MOSCXTS in PMC_SR is automatically set */
+}
+
+/**
+ * \brief Disable the main Xtal.
+ */
+void pmc_osc_disable_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	PMC->CKGR_MOR = mor;
+}
+
+/**
+ * \brief Check if the main crystal is bypassed.
+ *
+ * \retval 0 Xtal is bypassed, otherwise not.
+ */
+uint32_t pmc_osc_is_bypassed_main_xtal(void)
+{
+	return (PMC->CKGR_MOR & CKGR_MOR_MOSCXTBY);
+}
+
+/**
+ * \brief Check if the main crystal is ready.
+ *
+ * \note If main crystal is bypassed, it's always ready.
+ *
+ * \retval 0 main crystal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_main_xtal(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCXTS);
+}
+
+/**
  * \brief Switch main clock source selection to external Xtal/Bypass.
  *
  * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid
@@ -422,6 +493,24 @@ void pmc_osc_disable_xtal(uint32_t ul_bypass)
 uint32_t pmc_osc_is_ready_mainck(void)
 {
 	return PMC->PMC_SR & PMC_SR_MOSCSELS;
+}
+
+/**
+ * \brief Select Main Crystal or internal RC as main clock source.
+ *
+ * \note This function will not enable/disable RC or Main Crystal.
+ *
+ * \param ul_xtal_rc 0 internal RC is selected, otherwise Main Crystal.
+ */
+void pmc_mainck_osc_select(uint32_t ul_xtal_rc)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	if (ul_xtal_rc) {
+		mor |=  CKGR_MOR_MOSCSEL;
+	} else {
+		mor &= ~CKGR_MOR_MOSCSEL;
+	}
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
 }
 
 /**
