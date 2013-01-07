@@ -413,7 +413,7 @@ struct ac_dev_inst {
 struct ac_conf {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
-	bool enabled_during_sleep;
+	bool run_in_standby;
 	/** Events to enable in the module when configured. */
 	uint8_t enabled_events;
 };
@@ -508,8 +508,8 @@ static inline void ac_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->enabled_during_sleep = false;
-	config->enabled_events       = 0;
+	config->run_in_standby = false;
+	config->enabled_events = 0;
 }
 
 /** \brief Enables an Analog Comparator that was previously configured.

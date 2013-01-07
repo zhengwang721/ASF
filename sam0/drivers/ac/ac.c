@@ -55,7 +55,7 @@ static void _ac_set_config(
 	uint32_t ctrla_temp = 0;
 
 	/* Check if the comparators should be enabled during sleep */
-	if (config->enabled_during_sleep == true) {
+	if (config->run_in_standby == true) {
 		ctrla_temp |= AC_CTRLA_RUNSTDBY;
 	}
 
