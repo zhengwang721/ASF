@@ -1,7 +1,7 @@
 #ifndef _SYSTEM_INTERRUPT_H_
 #define _SYSTEM_INTERRUPT_H_
 
-#include<io.h>
+#include <io.h>
 
 enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
@@ -43,14 +43,14 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_NONE,
 }
 
-enum system_interrupt_priotity {
+enum system_interrupt_priority {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
 }
 
-enum _system_interrput_special_reg {
+enum _system_interrupt_special_reg {
 	_SYSTEM_INTERRUPT_APSR,
 	_SYSTEM_INTERRUPT_IAPSR,
 	_SYSTEM_INTERRUPT_EAPSR,
@@ -71,8 +71,6 @@ enum _system_interrput_special_reg {
 
 #define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
 
-static volatile uint8_t _system_interrupt_nested_critical_section = 0;
-
 static inline uint32_t _system_interrupt_read_special_register(enum _system_interrupt_special_reg reg)
 {
 	uint32_t result;
@@ -85,43 +83,37 @@ static inline uint32_t _system_interrupt_read_special_register(enum _system_inte
 /**
  * \brief Enter critical section
  *
- * This function will disable global interrupts. To support nested critcal sections it will also
+ * This function will disable global interrupts. To support nested critical sections it will also
  * keep a counter for how meny times it is called.
  *
  */
-void system_interrupt_enter_crtical_section(void)
+void system_interrupt_enter_critical_section(void)
 {
-	
-	if(_system_interrput_nested_critical_section == 0) {
-		cpu_irq_disable();
-	}
-
-	_system_interrupt_nested_critical_section++;
+	cpu_irq_disable();
 }
 
 /**
  * \brief Leave crical section
  *
- * This function will enable global interrupts. To support nested critcal sections it will only
+ * This function will enable global interrupts. To support nested critical sections it will only
  * enable interrupts when the counter reaches 0.
  *
  */
 void system_interrupt_leave_critical_section(void)
 {
-	_system_interrupt_nested_critical_section--;
-
-	if(_system_interrupt_nested_critical_section == 0) {
-		cpu_irq_enable();
-	}
+	cpu_irq_enable();
 }
 
 /**
  * \brief Check if interrupt vector is enabled or not
  *
  * This function will check if an interrupt is enabled or not and return the state in bool form.
- * True = enabled, False = disabled
  *
  * \param[in] vector Interrupt vector number
+ *
+ * \retval true Interrupt enabled
+ * \retval false Interrupt disabled
+ *
  */
 static inline bool system_interrupt_is_enabled(enum system_interrupt_vector vector)
 {
@@ -169,9 +161,12 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
  * \brief Check if a interrupt line is pending
  *
  * This function will check if the requested interrupt vector is pending, the state will be returned in bool form.
- * True = vector is pening, False = vector is not pending
  *
  * \param[in] vector Interrupt vector number which is beening probed
+ *
+ * \retval true Vector is pending
+ * \retval false Vector is not pending
+ *
  */
 static inline bool system_interrupt_is_pending(enum system_interrupt_vector vector)
 {
@@ -180,12 +175,13 @@ static inline bool system_interrupt_is_pending(enum system_interrupt_vector vect
 	if(vector => _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
 
 		result = (bool)((NVIC->ISPR[0] >> vector) & 0x00000001);
+
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
 
 		result =  (bool)((SCB->ICSR[0] >> SCB_ICSR_PENDSTSET_Pos) & 0x00000001);
 
-
 	} else {
+
 		Assert(false);
 		result = false;
 	}
@@ -211,14 +207,16 @@ static inline enum status_code system_interrupt_set_pending(enum system_interrup
 
 	} else if((vector == SYSTEM_INTERRUPT_SYSTICK) || (vector == SYSTEM_INTERRUPT_NON_MASKABLE)) {
 
-		uint8_t vector_to_pos_translater[] = {SCB_ICSR_NMIPENDSET_Pos, SCB_ICSR_PENDSTSET_Pos};
+		uint8_t vector_to_pos_translater[] = {1 << SCB_ICSR_NMIPENDSET_Pos, 1 << SCB_ICSR_PENDSTSET_Pos};
 
-		SCB->ICSR[0] = 1 << vector_to_pos_translater[vector == SYSTEM_INTERRUPT_SYSTICK];
+		SCB->ICSR[0] = vector_to_pos_translater[vector == SYSTEM_INTERRUPT_SYSTICK];
 
 	} else {
+
 		/* The user want to set something unsopported as pending */
 		Assert(false);
 		status = STATUS_INVALID_ARG;
+
 	}
 
 	return status;
@@ -244,9 +242,10 @@ static inline enum status_code system_interrupt_clear_pending(enum system_interr
 		/* Clearing of NMI pending interrupts does not make sense and is not supported by the
 		   device because it has the highest priority and will executed at the moment it is set */
 
-		SCB->ICSR[0] = (uint32_t)(1 << SCB_ICSR_PENDSTCLR_Pos;
+		SCB->ICSR[0] = (uint32_t)(1 << SCB_ICSR_PENDSTCLR_Pos);
 
 	} else {
+
 		/* The user want to clear pending status on something unsupported */
 		Assert(false);
 		status = STATUS_INVALID_ARG;
@@ -267,7 +266,8 @@ enum status_code system_interrupt_set_priority(enum system_interrupt_vector vect
 {
 	enum status_code status = STATUS_OK;
 
-	if(vector => _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
+	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
+
 		uint8_t register_num = vector / 4;
 		uint8_t priority_pos = ((vector % 4) * 8) + 5;
 
@@ -278,8 +278,10 @@ enum status_code system_interrupt_set_priority(enum system_interrupt_vector vect
 		SCB->SHP[1] = priority_level << SYSTEM_INTERRUPT_SYSTICK_PRI_POS;
 
 	} else {
+
 		Assert(false);
 		status = STATUS_INVALID_ARG;
+
 	}
 
 	return status;
