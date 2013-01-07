@@ -221,6 +221,7 @@
  */
 
 #include <compiler.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -365,36 +366,6 @@ enum ac_win_state {
 	AC_WIN_STATE_BELOW,
 };
 
-/** \name Analog Comparator Event Masks
- *  \anchor ac_event_masks
- *
- * Masks for the various Analog Comparator module event input and outputs, which
- * can be controlled via \ref ac_enable_events() and \ref ac_disable_events().
- *
- * @{
- */
-/** AC input event to trigger a conversion on comparator channel 0. */
-#define AC_EVENT_COMPARATOR0_INPUT     AC_EVCTRL_COMPEO0
-/** AC input event to trigger a conversion on comparator channel 1. */
-#define AC_EVENT_COMPARATOR1_INPUT     AC_EVCTRL_COMPEI1
-/** AC input event to trigger a conversion on comparator channel 2. */
-#define AC_EVENT_COMPARATOR2_INPUT     AC_EVCTRL_COMPEI2
-/** AC input event to trigger a conversion on comparator channel 3. */
-#define AC_EVENT_COMPARATOR3_INPUT     AC_EVCTRL_COMPEI3
-/** AC output event, triggered by comparator channel 0. */
-#define AC_EVENT_COMPARATOR0_OUTPUT    AC_EVCTRL_COMPEO0
-/** AC output event, triggered by comparator channel 1. */
-#define AC_EVENT_COMPARATOR1_OUTPUT    AC_EVCTRL_COMPEO1
-/** AC output event, triggered by comparator channel 2. */
-#define AC_EVENT_COMPARATOR2_OUTPUT    AC_EVCTRL_COMPEO2
-/** AC output event, triggered by comparator channel 3. */
-#define AC_EVENT_COMPARATOR3_OUTPUT    AC_EVCTRL_COMPEO3
-/** AC output event, triggered by comparator window channel 0. */
-#define AC_EVENT_WINDOW0_OUTPUT        AC_EVCTRL_WINEO0
-/** AC output event, triggered by comparator window channel 1. */
-#define AC_EVENT_WINDOW1_OUTPUT        AC_EVCTRL_WINEO1
-/** @} */
-
 /** \brief AC device instance structure.
  *
  * AC software instance structure, used to retain software state information
@@ -403,6 +374,25 @@ enum ac_win_state {
 struct ac_dev_inst {
 	/** Hardware module point of the associated Analog Comparator peripheral. */
 	Ac *hw_dev;
+};
+
+/** \brief AC event enable/disable structure.
+ *
+ * Event flags for the Analog Comparator module. This is used to enable and
+ * disable events via \ref ac_enable_events() and \ref ac_disable_events().
+ */
+struct ac_events {
+	/** If \c true, an event will be generated when a comparator window state
+	 *  changes. */
+	bool output_window[2];
+
+	/** If \c true, an event will be generated when a comparator state
+	 *  changes. */
+	bool output_comparator[4];
+
+	/** If \c true, a comparator will be sampled each time an event is
+	 *  received. */
+	bool input_comparator[4];
 };
 
 /** \brief Analog Comparator module configuration structure.
@@ -414,8 +404,10 @@ struct ac_conf {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
 	bool run_in_standby;
-	/** Events to enable in the module when configured. */
-	uint8_t enabled_events;
+
+	/** Event generation and reception configuration for the AC module; event
+	 *  flags set to true are enabled when the module is configured. */
+	struct ac_events events;
 };
 
 /** \brief Analog Comparator module Comparator configuration structure.
@@ -509,7 +501,7 @@ static inline void ac_get_config_defaults(
 
 	/* Default configuration values */
 	config->run_in_standby = false;
-	config->enabled_events = 0;
+	memset(&config->events, 0x00, sizeof(config->events));
 }
 
 /** \brief Enables an Analog Comparator that was previously configured.
@@ -567,11 +559,11 @@ static inline void ac_disable(
  *  \note Events cannot be altered while the module is enabled.
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to enable
+ *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void ac_enable_events(
 		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
+		struct ac_events *const events)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -579,7 +571,27 @@ static inline void ac_enable_events(
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
-	ac_module->EVCTRL.reg |= events;
+	uint32_t event_mask = 0;
+
+	if (events->output_window[0] == true) {
+		event_mask |= AC_EVCTRL_WINEO0;
+	}
+
+	if (events->output_window[1] == true) {
+		event_mask |= AC_EVCTRL_WINEO1;
+	}
+
+	for (uint8_t i = 0; i < 4; i++) {
+		if (events->input_comparator[i] == true) {
+			event_mask |= (AC_EVCTRL_COMPEI0 << i);
+		}
+
+		if (events->output_comparator[i] == true) {
+			event_mask |= (AC_EVCTRL_COMPEO0 << i);
+		}
+	}
+
+	ac_module->EVCTRL.reg |= event_mask;
 }
 
 /** \brief Disables an Analog Comparator event input or output.
@@ -591,11 +603,11 @@ static inline void ac_enable_events(
  *  \note Events cannot be altered while the module is enabled.
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to disable
+ *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void ac_disable_events(
 		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
+		struct ac_events *const events)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -603,7 +615,27 @@ static inline void ac_disable_events(
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
-	ac_module->EVCTRL.reg &= ~events;
+	uint32_t event_mask = 0;
+
+	if (events->output_window[0] == true) {
+		event_mask |= AC_EVCTRL_WINEO0;
+	}
+
+	if (events->output_window[1] == true) {
+		event_mask |= AC_EVCTRL_WINEO1;
+	}
+
+	for (uint8_t i = 0; i < 4; i++) {
+		if (events->input_comparator[i] == true) {
+			event_mask |= (AC_EVCTRL_COMPEI0 << i);
+		}
+
+		if (events->output_comparator[i] == true) {
+			event_mask |= (AC_EVCTRL_COMPEO0 << i);
+		}
+	}
+
+	ac_module->EVCTRL.reg &= ~event_mask;
 }
 
 /** @} */

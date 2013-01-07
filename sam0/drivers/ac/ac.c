@@ -66,7 +66,7 @@ static void _ac_set_config(
 	ac_module->CTRLA.reg = ctrla_temp;
 
 	/* Enable any requested user events */
-	ac_enable_events(dev_inst, config->enabled_events);
+	ac_enable_events(dev_inst, &config->events);
 }
 
 /** \brief Resets and disables the Analog Comparator driver.
