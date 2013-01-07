@@ -161,9 +161,9 @@
  * longer stages producing a more stable result, at the expense of a higher
  * latency.
  *
- * When used in single shot mode, a single trigger of the comparator will
- * automatically perform the required number of samples to produce a correctly
- * filtered result.
+ * When output filtering is used in one shot mode, a single trigger of the
+ * comparator will automatically perform the required number of samples to
+ * produce a correctly filtered result.
  *
  * \subsection input_hysteresis Input Hysteresis
  * To prevent unwanted noise around the threshold where the comparator unit's
