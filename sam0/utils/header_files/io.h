@@ -50,46 +50,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define __I  volatile const
-#define __O  volatile
-#define __IO volatile
-
-/* Default register macro for sub access of 32-bit registers */
-#define __REG32(name, type) union { \
-		type uint32_t name; \
-		type uint16_t name ## _UINT16_T[2]; \
-		type uint8_t name ## _UINT8_T[4]; \
-}
-
-/* Default register macro for sub access of arrays of 32-bit registers */
-#define __REG32_ARRAY(name, elements, type) union { \
-		type uint32_t name[elements]; \
-		type uint16_t name ## _UINT16_T[elements][2]; \
-		type uint8_t name ## _UINT8_T[elements][4]; \
-}
-
-/* Default register macro for sub access of 16-bit registers */
-#define __REG16(name, type) union { \
-		type uint16_t name; \
-		type uint8_t name ## _UINT8_T[2]; \
-}
-
-/* Default register macro for sub access of arrays of 16-bit registers */
-#define __REG16_ARRAY(name, elements, type) union { \
-		type uint16_t name[elements]; \
-		type uint8_t name ## _UINT8_T[elements][2]; \
-}
-
-/* Default register definition for 8-bit registers */
-#define __REG8(name, type) type uint8_t name
-
-/* Default register definition for arrays of 8-bit registers */
-#define __REG8_ARRAY(name, elements, type) type uint8_t name[elements]
-
-
-/* SAM0D family */
-#if (SAM0D)
-#  include "sam0d.h"
+/* SAMD20 family */
+#if (SAMD20)
+#  include "samd20.h"
 #endif
 
 #endif /* _SAM_IO_ */

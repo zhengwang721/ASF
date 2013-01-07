@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver for calendar mode
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -53,10 +53,10 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_rtc_cal_group SAM0+ Real Time Counter (RTC), Calendar Mode
- * Driver for the SAM0+ architecture devices. This driver provides a
+ * \defgroup sam0_rtc_cal_group SAMD20 Real Time Counter (RTC), Calendar Mode
+ * Driver for the SAMD20 architecture devices. This driver provides a
  * interface for setting up and utilizing the RTC in calendar mode. This module
- * encompasses the following modules within the SAM0+ devices:
+ * encompasses the following modules within the SAMD20 devices:
  * - \b RTC (Real Time Counter)
  *
  * \section rtc_calendar_intro Introduction

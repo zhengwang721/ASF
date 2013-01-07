@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM0+ USART driver" id="sam0.sercom.usart.quick_start.dummy.atsam0d4">
+	<project caption="Quick Start for the SAMD20 USART driver" id="sam0.sercom.usart.quick_start.dummy.samd20g18a">
 		<build type ="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
 		<build type ="define" name ="USART_ASYNC" value =""/>
-		<require idref="board.dummy.atsam0d4"/>
+		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.sercom.usart.quick_start"/>
 		<generator value="armgcc"/>
-		<device-support value="atsam0d4_reva"/>
+		<device-support value="samd20g18a"/>
 	</project>
 </asf>

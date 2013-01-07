@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Watchdog Driver
+ * \brief SAMD20 Watchdog Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,9 +42,9 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup sam0_wdt_group SAM0+ Watchdog Driver (WDT)
+ * \defgroup sam0_wdt_group SAMD20 Watchdog Driver (WDT)
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the Watchdog Timer module
  * within the device, including the enabling, disabling and kicking within the
  * device. This driver encompasses the following module within the SAM0 devices:
@@ -70,7 +70,7 @@
  * \enddot
  *
  * \section module_introduction Introduction
- * The Watchdog module in the SAM0+ devices is designed to give an added level
+ * The Watchdog module in the SAMD20 devices is designed to give an added level
  * of safety in critical systems, to ensure a system reset is triggered in the
  * case of a deadlock or other software malfunction.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Event System Controller Driver
+ * \brief SAMD20 Event System Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup sam0_events_group SAM0+ Event System Driver
+ * \defgroup sam0_events_group SAMD20 Event System Driver
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the peripheral event
  * channels and users within the device, including the enabling, disabling,
  * peripheral source selection and synchronization of clock domains between

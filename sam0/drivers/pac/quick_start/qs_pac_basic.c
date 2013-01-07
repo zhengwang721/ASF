@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ PAC Quick Start
+ * \brief SAMD20 PAC Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

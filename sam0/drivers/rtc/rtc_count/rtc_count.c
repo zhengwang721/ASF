@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for count mode
+ * \brief SAMD20 RTC Driver for count mode
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

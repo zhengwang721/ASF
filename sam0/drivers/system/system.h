@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ System related functionality
+ * \brief SAMD20 System related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -53,7 +53,7 @@
  * \section intro Introduction
  *
  * This driver provides control of all the system related functionality
- * of the SAM0+ devices. This is not limited to a single peripheral, but
+ * of the SAMD20 devices. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals:
  * - SYSCTRL (BOD12, BOD33)
  * - PM (reset cause)
@@ -99,7 +99,7 @@ digraph overview {
  * The possible reset causes are enumerated in the enum \ref system_reset_cause.
  *
  * \section sleep_mode Sleep Modes
- * The SAM0+ have several sleep modes, where the sleep mode controls which clock
+ * The SAMD20 have several sleep modes, where the sleep mode controls which clock
  * systems on the device are enabled/disabled when entering sleep. The table below
  * lists the clock settings of the different sleep modes
  * <table>
