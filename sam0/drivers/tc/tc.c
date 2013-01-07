@@ -41,8 +41,7 @@
 
 #include "tc.h"
 
-/**
- * \brief Initializes the TC
+/** \brief Initializes the TC
  *
  * Enables the clock and initializes the TC module,
  * based on the values of the config struct
@@ -77,8 +76,7 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
-	/*
-	 * make the counter size variable in the dev_inst struct reflect
+	/* make the counter size variable in the dev_inst struct reflect
 	 * the counter size in the module
 	 */
 	dev_inst->counter_size = config->counter_size;
@@ -225,12 +223,11 @@ enum status_code tc_init(
 	return STATUS_ERR_PROTOCOL;
 }
 
-/**
- * \brief Set TC module count value
+/** \brief Set TC module count value
  *
- * Set count value of the TC module This function can be used to
- * update value after init. It can be used while the counter is
- * running, there is no need to disable the counter module.
+ * This function can be used to update count value after init. It can
+ * be used while the counter is running, there is no need to disable
+ * the counter module.
  *
  * \param[in] dev_inst      pointer to the device struct
  * \param[in] count         value to write to the count register
@@ -278,8 +275,7 @@ enum status_code tc_set_count_value(
 	return STATUS_ERR_PROTOCOL;
 }
 
-/**
- * \brief Get TC module count register
+/** \brief Get TC module count value
  *
  * Get the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
@@ -319,13 +315,12 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 	} /* Switch TC counter size end  */
 }
 
-/**
- * \brief Gets the capture value
+/** \brief Gets the capture value
  *
  * This procedure stores the capture value in the supplied buffer
  * pointed to by capture. This method can be used in 32, 16 and 8 bit
- * counter size. perform a cast o the buffer after the method has
- * returned.
+ * counter size. The user should perform a cast of the buffer after
+ * the method has returned.
  *
  * \param[in]  dev_inst       Pointer to the device struct
  * \param[out] capture        Pointer to a buffer
@@ -362,8 +357,7 @@ uint32_t tc_get_capture_value(
 	return 0;
 }
 
-/**
- * \brief Sets a compare value
+/** \brief Sets a compare value
  *
  * Writes a compare value to the given compare/capture channel register
  *
