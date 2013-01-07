@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-EK2 board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -184,7 +184,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_ADM3485_RE
 	/* Configure RS485 transceiver RE pin */
-    gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
+	gpio_configure_pin(PIN_RE_IDX, PIN_RE_FLAGS);
 	gpio_set_pin_low(PIN_RE_IDX);
 #endif
 
@@ -267,5 +267,11 @@ void board_init(void)
 
 	/* Configure SD/MMC card detect pin */
 	gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
+
+#if defined(CONF_BOARD_USB_PORT)
+# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+# endif
 #endif
 }

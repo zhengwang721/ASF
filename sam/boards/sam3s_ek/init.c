@@ -3,7 +3,7 @@
  *
  * \brief SAM3S-EK board init.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -267,5 +267,11 @@ void board_init(void)
 
 	/* Configure SD/MMC card detect pin */
 	gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
+
+#if defined(CONF_BOARD_USB_PORT)
+# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+# endif
 #endif
 }
