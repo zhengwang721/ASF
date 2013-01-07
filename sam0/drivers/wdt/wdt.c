@@ -70,10 +70,10 @@ static struct _wdt_device _wdt_dev;
  */
 static inline void _wdt_wait_for_sync(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
 	/* Poll the SYNCBUSY flag until it signals the module is ready */
-	while (WDT_module->STATUS & WDT_SYNCBUSY_bm) {
+	while (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
 		/* Wait until WDT is synced */
 	}
 }
@@ -97,7 +97,7 @@ static inline void _wdt_wait_for_sync(void)
 enum status_code wdt_init(
 		const struct wdt_conf *const config)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
 	/* Sanity check arguments */
 	Assert(config);
@@ -121,26 +121,26 @@ enum status_code wdt_init(
 
 	/* Update the timeout period value with the requested period */
 	_wdt_wait_for_sync();
-	WDT_module->CTRL = (config->timeout_period - 1) << WDT_PER_gp;
+	WDT_module->CTRL.reg = (config->timeout_period - 1) << WDT_CTRL_PER_Pos;
 
 	_wdt_wait_for_sync();
 
 	/* Check if the user has requested a reset window period */
 	if (config->window_period != WDT_PERIOD_NONE) {
 		/* Update and enable the timeout period value */
-		WDT_module->WINCTRL = WDT_WEN_bm |
-				(config->window_period - 1) << WDT_WINDOW_gp;
+		WDT_module->WINCTRL.reg = WDT_WINCTRL_WEN |
+				(config->window_period - 1) << WDT_WINCTRL_WINDOW_Pos;
 	} else {
 		/* Ensure the window enable control flag is cleared */
-		WDT_module->WINCTRL &= ~WDT_WEN_bm;
+		WDT_module->WINCTRL.reg &= ~WDT_WINCTRL_WEN;
 	}
 
 	/* Check if the user has requested an early warning period */
 	if (config->early_warning_period != WDT_PERIOD_NONE) {
 		/* Set the Early Warning period */
 		_wdt_wait_for_sync();
-		WDT_module->EWCTRL
-			= (config->early_warning_period - 1) << WDT_EWOFFSET_gp;
+		WDT_module->EWCTRL.reg
+			= (config->early_warning_period - 1) << WDT_EWCTRL_EWOFFSET_Pos;
 	}
 
 	/* Save the requested Watchdog lock state for when the WDT is enabled */
@@ -160,7 +160,7 @@ enum status_code wdt_init(
  */
 enum status_code wdt_enable(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
 	/* Check of the Watchdog has been locked to be always on, if so, abort */
 	if (wdt_is_locked()) {
@@ -172,9 +172,9 @@ enum status_code wdt_enable(void)
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
 	if (_wdt_dev.always_on) {
-		WDT_module->CTRL |= WDT_ALWAYSON_bm;
+		WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
 	} else {
-		WDT_module->CTRL |= WDT_ENABLE_bm;
+		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
 	}
 
 	return STATUS_OK;
@@ -191,7 +191,7 @@ enum status_code wdt_enable(void)
  */
 enum status_code wdt_disable(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
 	/* Check of the Watchdog has been locked to be always on, if so, abort */
 	if (wdt_is_locked()) {
@@ -200,7 +200,7 @@ enum status_code wdt_disable(void)
 
 	/* Disable the Watchdog module */
 	_wdt_wait_for_sync();
-	WDT_module->CTRL &= ~WDT_ENABLE_bm;
+	WDT_module->CTRL.reg &= ~WDT_CTRL_ENABLE;
 
 	return STATUS_OK;
 }
@@ -214,9 +214,9 @@ enum status_code wdt_disable(void)
  */
 void wdt_reset_count(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
 	/* Disable the Watchdog module */
 	_wdt_wait_for_sync();
-	WDT_module->CLEAR = WDT_CLEAR_KEY;
+	WDT_module->CLEAR.reg = WDT_CLEAR_KEY;
 }
