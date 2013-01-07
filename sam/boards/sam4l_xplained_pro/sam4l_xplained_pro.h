@@ -134,7 +134,7 @@
 
 /** \name Extension header 1 definitions */
 //@{
-/** \name Pin definitions */
+/** \name Extension header 1 pin definitions */
 //@{
 #define EXT1_PIN_3                PIN_PA04
 #define EXT1_PIN_4                PIN_PA05
@@ -154,7 +154,7 @@
 #define EXT1_PIN_18               PIN_PC30
 //@}
 
-/** \name Pins according to function */
+/** \name Extension header 1 pins according to function */
 //@{
 #define EXT1_PIN_ADC_0            EXT1_PIN_3
 #define EXT1_PIN_ADC_1            EXT1_PIN_4
@@ -174,9 +174,9 @@
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 //@}
 
-/** \name Module-specific functions */
+/** \name Extension header 1 module-specific functions */
 //@{
-/** \name ADC */
+/** \name Extension header 1 ADC */
 //@{
 #define EXT1_ADC_MODULE           ADCIFE
 #define EXT1_ADC_0_CHANNEL        0
@@ -185,7 +185,7 @@
 #define EXT1_ADC_1_MUX            MUX_PA05A_ADCIFE_AD1
 //@}
 
-/** \name PWM */
+/** \name Extension header 1 PWM */
 //@{
 #define EXT1_PWM_MODULE           TC1
 #define EXT1_PWM_0_MUX            MUX_PC00D_TC1_A0
@@ -193,28 +193,28 @@
 // Define TC used here (TC A0/B0)
 //@}
 
-/** \name IRQ/External interrupt */
+/** \name Extension header 1 IRQ/External interrupt */
 //@{
 #define EXT1_IRQ_MODULE           EIC
 #define EXT1_IRQ_MUX              MUX_PC25B_EIC_EXTINT2
 #define EXT1_IRQ_MASK             EIC_IMR_INT2
 //@}
 
-/** \name TWI */
+/** \name Extension header 1 TWI */
 //@{
 #define EXT1_TWI_MODULE           TWIMS0
 #define EXT1_TWI_SDA_MUX          MUX_PA23B_TWIMS0_TWD
 #define EXT1_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWCK
 //@}
 
-/** \name UART */
+/** \name Extension header 1 UART */
 //@{
 #define EXT1_UART_MODULE          USART0
 #define EXT1_UART_RX_MUX          MUX_PB00B_USART0_RXD
 #define EXT1_UART_TX_MUX          MUX_PB01B_USART0_TXD
 //@}
 
-/** \name SPI */
+/** \name Extension header 1 SPI */
 //@{
 #define EXT1_SPI_MODULE           SPI
 #define EXT1_SPI_SS_1_MUX         MUX_PB13B_SPI_NPCS1
@@ -228,7 +228,7 @@
 
 /** \name Extension header 2 definitions */
 //@{
-/** \name Pin definitions */
+/** \name Extension header 2 pin definitions */
 //@{
 #define EXT2_PIN_3                PIN_PA07
 #define EXT2_PIN_4                PIN_PB02
@@ -248,7 +248,7 @@
 #define EXT2_PIN_18               PIN_PC30
 //@}
 
-/** \name Pins according to function */
+/** \name Extension header 2 pins according to function */
 //@{
 #define EXT2_PIN_ADC_0            EXT2_PIN_3
 #define EXT2_PIN_ADC_1            EXT2_PIN_4
@@ -268,9 +268,9 @@
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 //@}
 
-/** \name Module-specific functions */
+/** \name Extension header 2 module-specific functions */
 //@{
-/** \name ADC */
+/** \name Extension header 2 ADC */
 //@{
 #define EXT2_ADC_MODULE           ADCIFE
 #define EXT2_ADC_0_CHANNEL        2
@@ -279,7 +279,7 @@
 #define EXT2_ADC_1_MUX            MUX_PB02A_ADCIFE_AD3
 //@}
 
-/** \name PWM */
+/** \name Extension header 2 PWM */
 //@{
 #define EXT2_PWM_MODULE           TC1
 #define EXT2_PWM_0_MUX            MUX_PC04D_TC1_A2
@@ -287,28 +287,28 @@
 // Define TC used here (TC A2/B2)
 //@}
 
-/** \name IRQ/External interrupt */
+/** \name Extension header 2 IRQ/External interrupt */
 //@{
 #define EXT2_IRQ_MODULE           EIC
 #define EXT2_IRQ_MUX              MUX_PC06B_EIC_EXTINT8
 #define EXT2_IRQ_MASK             EIC_IMR_INT8
 //@}
 
-/** \name TWI */
+/** \name Extension header 2 TWI */
 //@{
 #define EXT2_TWI_MODULE           TWIMS3
 #define EXT2_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT2_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
 
-/** \name UART */
+/** \name Extension header 2 UART */
 //@{
 #define EXT2_UART_MODULE          USART1
 #define EXT2_UART_RX_MUX          MUX_PC26A_USART1_RXD
 #define EXT2_UART_TX_MUX          MUX_PC27A_USART1_TXD
 //@}
 
-/** \name SPI */
+/** \name Extension header 2 SPI */
 //@{
 #define EXT2_SPI_MODULE           SPI
 #define EXT2_SPI_SS_0_MUX         MUX_PB11B_SPI_NPCS2
@@ -321,7 +321,7 @@
 
 /** \name Extension header 3 definitions */
 //@{
-/** \name Pin definitions */
+/** \name Extension header 3 pin definitions */
 //@{
 #define EXT3_PIN_3                PIN_PB03
 #define EXT3_PIN_4                PIN_PB04
@@ -341,7 +341,7 @@
 #define EXT3_PIN_18               PIN_PA18
 //@}
 
-/** \name Pins according to function */
+/** \name Extension header 3 pins according to function */
 //@{
 #define EXT3_PIN_ADC_0            EXT3_PIN_3
 #define EXT3_PIN_ADC_1            EXT3_PIN_4
@@ -361,9 +361,9 @@
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
 //@}
 
-/** \name Module-specific functions */
+/** \name Extension header 3 module-specific functions */
 //@{
-/** \name ADC */
+/** \name Extension header 3 ADC */
 //@{
 #define EXT3_ADC_MODULE           ADCIFE
 #define EXT3_ADC_0_CHANNEL        4
@@ -372,7 +372,7 @@
 #define EXT3_ADC_1_MUX            MUX_PB04A_ADCIFE_AD5
 //@}
 
-/** \name PWM */
+/** \name Extension header 3 PWM */
 //@{
 #define EXT3_PWM_MODULE           TC0
 #define EXT3_PWM_0_MUX            MUX_PA08B_TC0_A0
@@ -380,28 +380,28 @@
 // Define TC used here (TC A0/B0)
 //@}
 
-/** \name IRQ/External interrupt */
+/** \name Extension header 3 IRQ/External interrupt */
 //@{
 #define EXT3_IRQ_MODULE           EIC
 #define EXT3_IRQ_MUX              MUX_PA06C_EIC_EXTINT1
 #define EXT3_IRQ_MASK             EIC_IMR_INT1
 //@}
 
-/** \name TWI */
+/** \name Extension header 3 TWI */
 //@{
 #define EXT3_TWI_MODULE           TWIMS3
 #define EXT3_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT3_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
 
-/** \name UART */
+/** \name Extension header 3 UART */
 //@{
 #define EXT3_UART_MODULE          USART1
 #define EXT3_UART_RX_MUX          MUX_PC26A_USART1_RXD
 #define EXT3_UART_TX_MUX          MUX_PC27A_USART1_TXD
 //@}
 
-/** \name SPI */
+/** \name Extension header 3 SPI */
 //@{
 #define EXT3_SPI_MODULE           USART2
 #define EXT3_SPI_SS_MOSI          MUX_PA20A_USART2_TXD
@@ -413,7 +413,7 @@
 
 /** \name Extension header 4 definitions */
 //@{
-/** \name Pin definitions */
+/** \name Extension header 4 pin definitions */
 //@{
 #define EXT4_PIN_3                PIN_PB05
 #define EXT4_PIN_4                PIN_PC10
@@ -433,7 +433,7 @@
 #define EXT4_PIN_18               PIN_PA18
 //@}
 
-/** \name Pins according to function */
+/** \name Extension header 4 pins according to function */
 //@{
 #define EXT4_PIN_ADC_0            EXT4_PIN_3
 #define EXT4_PIN_ADC_1            EXT4_PIN_4
@@ -453,9 +453,9 @@
 #define EXT4_PIN_SPI_SCK          EXT4_PIN_18
 //@}
 
-/** \name Module-specific functions */
+/** \name Extension header 4 module-specific functions */
 //@{
-/** \name ADC */
+/** \name Extension header 4 ADC */
 //@{
 #define EXT4_ADC_MODULE           ADCIFE
 #define EXT4_ADC_0_CHANNEL        6
@@ -464,7 +464,7 @@
 #define EXT4_ADC_1_MUX            MUX_PC10A_ADCIFE_AD10
 //@}
 
-/** \name PWM */
+/** \name Extension header 4 PWM */
 //@{
 #define EXT4_PWM_MODULE           TC0
 #define EXT4_PWM_0_MUX            MUX_PA12B_TC0_A2
@@ -472,28 +472,28 @@
 // Define TC used here (TC A2/B2)
 //@}
 
-/** \name IRQ/External interrupt */
+/** \name Extension header 4 IRQ/External interrupt */
 //@{
 #define EXT4_IRQ_MODULE           EIC
 #define EXT4_IRQ_MUX              MUX_PA16C_EIC_EXTINT1
 #define EXT4_IRQ_MASK             EIC_IMR_INT1
 //@}
 
-/** \name TWI */
+/** \name Extension header 4 TWI */
 //@{
 #define EXT4_TWI_MODULE           TWIMS3
 #define EXT4_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT4_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
 
-/** \name UART */
+/** \name Extension header 4 UART */
 //@{
 #define EXT4_UART_MODULE          USART0
 #define EXT4_UART_RX_MUX          MUX_PB00B_USART0_RXD
 #define EXT4_UART_TX_MUX          MUX_PB01B_USART0_TXD
 //@}
 
-/** \name SPI */
+/** \name Extension header 4 SPI */
 //@{
 #define EXT4_SPI_MODULE           USART2
 #define EXT4_SPI_SS_MOSI          MUX_PA20A_USART2_TXD
