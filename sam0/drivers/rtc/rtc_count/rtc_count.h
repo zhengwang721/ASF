@@ -42,6 +42,7 @@
 #ifndef RTC_COUNT_H_INCLUDED
 #define RTC_COUNT_H_INCLUDED
 
+#include <compiler.h>
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
@@ -397,9 +398,9 @@ enum rtc_count_compare {
 	RTC_COUNT_COMPARE_2 = 2,
 	/** Compare register 3. */
 	RTC_COUNT_COMPARE_3 = 3,
-	/** Compare register 4. Only available in 16 bit mode */
+	/** Compare register 4. \note Only available in 16 bit mode */
 	RTC_COUNT_COMPARE_4 = 4,
-	/** Compare register 5. Only available in 16 bit mode */
+	/** Compare register 5. \note Only available in 16 bit mode */
 	RTC_COUNT_COMPARE_5 = 5,
 };
 
@@ -412,35 +413,35 @@ enum rtc_count_events {
 	/** To set event off. */
 	RTC_COUNT_EVENT_OFF        = 0,
 	/** Overflow event. */
-	RTC_COUNT_EVENT_OVF        = RTC_EVENT_OVF_bm,
+	RTC_COUNT_EVENT_OVF        = RTC_MODE0_EVCTRL_OVFEO,
 	/** Compare 0 match event. */
-	RTC_COUNT_EVENT_CMP_0       = RTC_EVENT_CMP_0_bm,
+	RTC_COUNT_EVENT_CMP_0      = RTC_MODE0_EVCTRL_CMPEO(1 << 0),
 	/** Compare 1 match event. */
-	RTC_COUNT_EVENT_CMP_1       = RTC_EVENT_CMP_1_bm,
+	RTC_COUNT_EVENT_CMP_1      = RTC_MODE0_EVCTRL_CMPEO(1 << 1),
 	/** Compare 2 match event. */
-	RTC_COUNT_EVENT_CMP_2       = RTC_EVENT_CMP_2_bm,
+	RTC_COUNT_EVENT_CMP_2      = RTC_MODE0_EVCTRL_CMPEO(1 << 2),
 	/** Compare 3 match event. */
-	RTC_COUNT_EVENT_CMP_3       = RTC_EVENT_CMP_3_bm,
-	/** Compare 4 match event. Only available in 16 bit mode. */
-	RTC_COUNT_EVENT_CMP_4       = RTC_EVENT_CMP_4_bm,
-	/** Compare 5 match event. Only available in 16 bit mode. */
-	RTC_COUNT_EVENT_CMP_5       = RTC_EVENT_CMP_5_bm,
+	RTC_COUNT_EVENT_CMP_3      = RTC_MODE0_EVCTRL_CMPEO(1 << 3),
+	/** Compare 4 match event. \note Only available in 16 bit mode. */
+	RTC_COUNT_EVENT_CMP_4      = RTC_MODE0_EVCTRL_CMPEO(1 << 4),
+	/** Compare 5 match event. \note Only available in 16 bit mode. */
+	RTC_COUNT_EVENT_CMP_5      = RTC_MODE0_EVCTRL_CMPEO(1 << 5),
 	/** To set periodic event 0. */
-	RTC_COUNT_EVENT_PERIODIC_0 = RTC_EVENT_PER_0_bm,
+	RTC_COUNT_EVENT_PERIODIC_0 = RTC_MODE0_EVCTRL_PEREO(1 << 0),
 	/** Periodic event 1. */
-	RTC_COUNT_EVENT_PERIODIC_1 = RTC_EVENT_PER_1_bm,
+	RTC_COUNT_EVENT_PERIODIC_1 = RTC_MODE0_EVCTRL_PEREO(1 << 1),
 	/** Periodic event 2. */
-	RTC_COUNT_EVENT_PERIODIC_2 = RTC_EVENT_PER_2_bm,
+	RTC_COUNT_EVENT_PERIODIC_2 = RTC_MODE0_EVCTRL_PEREO(1 << 2),
 	/** Periodic event 3. */
-	RTC_COUNT_EVENT_PERIODIC_3 = RTC_EVENT_PER_3_bm,
+	RTC_COUNT_EVENT_PERIODIC_3 = RTC_MODE0_EVCTRL_PEREO(1 << 3),
 	/** Periodic event 4. */
-	RTC_COUNT_EVENT_PERIODIC_4 = RTC_EVENT_PER_4_bm,
+	RTC_COUNT_EVENT_PERIODIC_4 = RTC_MODE0_EVCTRL_PEREO(1 << 4),
 	/** Periodic event 5. */
-	RTC_COUNT_EVENT_PERIODIC_5 = RTC_EVENT_PER_5_bm,
+	RTC_COUNT_EVENT_PERIODIC_5 = RTC_MODE0_EVCTRL_PEREO(1 << 5),
 	/** Periodic event 6. */
-	RTC_COUNT_EVENT_PERIODIC_6 = RTC_EVENT_PER_6_bm,
+	RTC_COUNT_EVENT_PERIODIC_6 = RTC_MODE0_EVCTRL_PEREO(1 << 6),
 	/** Periodic event 7. */
-	RTC_COUNT_EVENT_PERIODIC_7 = RTC_EVENT_PER_7_bm,
+	RTC_COUNT_EVENT_PERIODIC_7 = RTC_MODE0_EVCTRL_PEREO(1 << 7),
 };
 
 /**
@@ -478,9 +479,9 @@ struct rtc_count_conf {
 static inline void _rtc_count_wait_for_sync(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
-	while(rtc_module->STATUS & RTC_SYNC_BUSY_bm){
+	while (rtc_module->MODE0.STATUS.reg & RTC_STATUS_SYNCBUSY) {
 		/* Wait for RTC to sync. */
 	}
 }
@@ -531,13 +532,13 @@ static inline void rtc_count_get_config_defaults(
 static inline void rtc_count_enable(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sync. */
 	_rtc_count_wait_for_sync();
 
 	/* Enable RTC module. */
-	rtc_module->CTRL |= RTC_ENABLE_bm;
+	rtc_module->MODE0.CTRL.reg |= RTC_MODE0_CTRL_ENABLE;
 }
 
 /**
@@ -548,13 +549,13 @@ static inline void rtc_count_enable(void)
 static inline void rtc_count_disable(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sync. */
 	_rtc_count_wait_for_sync();
 
 	/* Disable RTC module. */
-	rtc_module->CTRL &= ~RTC_ENABLE_bm;
+	rtc_module->MODE0.CTRL.reg &= ~RTC_MODE0_CTRL_ENABLE;
 }
 
 enum status_code rtc_count_init(const struct rtc_count_conf *const config);
@@ -564,7 +565,7 @@ enum status_code rtc_count_init(const struct rtc_count_conf *const config);
 /** \name Set count and compare values
  * @{
  */
-void rtc_count_set_count(uint32_t count_value);
+enum status_code rtc_count_set_count(uint32_t count_value);
 
 uint32_t rtc_count_get_count(void);
 
@@ -593,10 +594,10 @@ enum status_code rtc_count_get_period(uint16_t *const period_value);
 static inline bool rtc_count_is_overflow(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Return status of flag */
-	return (rtc_module->INTFLAG & RTC_INTFLAG_OVF_bm);
+	return (rtc_module->MODE0.INTFLAG.reg & RTC_MODE0_INTFLAG_OVF);
 }
 
 /**
@@ -608,10 +609,10 @@ static inline bool rtc_count_is_overflow(void)
 static inline void rtc_count_clear_overflow(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Clear OVF flag */
-	rtc_module->INTFLAG = RTC_INTFLAG_OVF_bm;
+	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_OVF;
 }
 
 bool rtc_count_is_compare_match(enum rtc_count_compare comp_index);
@@ -638,10 +639,10 @@ enum status_code rtc_count_frequency_correction(int8_t value);
 static inline void rtc_count_enable_events(uint16_t events)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Enable given event. */
-	rtc_module->EVCTRL |= events;
+	rtc_module->MODE0.EVCTRL.reg |= events;
 }
 
 /**
@@ -654,10 +655,10 @@ static inline void rtc_count_enable_events(uint16_t events)
 static inline void rtc_count_disable_events(uint16_t events)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Disable given events. */
-	rtc_module->EVCTRL &= ~events;
+	rtc_module->MODE0.EVCTRL.reg &= ~events;
 }
 
 /** @} */
