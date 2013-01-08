@@ -353,9 +353,8 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
      * be sent to the transceiver and this contains the frame
      * length.
      */
-//    pal_trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
-      pal_trx_frame_write(tal_frame_to_tx, aMaxMACSafePayloadSize);
-    
+    pal_trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
+
     tal_state = TAL_TX_AUTO;
 
     LEAVE_CRITICAL_REGION();
