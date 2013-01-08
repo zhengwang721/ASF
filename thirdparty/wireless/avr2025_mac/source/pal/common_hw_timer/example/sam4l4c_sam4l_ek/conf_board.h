@@ -44,15 +44,15 @@
 #define CONF_BOARD_H_INCLUDED
 
 // Enable USART used to communicate with Board Monitor
-#define CONF_BOARD_BM_USART
+//#define CONF_BOARD_BM_USART
 
 // Force Rev1 definitions for this demo.
 // #define SAM4L_EK_REV1
 
 // Force usage of backlight
-#define CONF_BOARD_BL
+//#define CONF_BOARD_BL
 
 // Force usage of external EIC
-#define CONF_BOARD_EIC
+//#define CONF_BOARD_EIC
 
 #endif /* CONF_BOARD_H_INCLUDED */

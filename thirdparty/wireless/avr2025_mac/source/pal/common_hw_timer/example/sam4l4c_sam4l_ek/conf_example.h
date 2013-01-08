@@ -46,8 +46,8 @@
 /*! \name Configuration
  */
 //! @{
-#define OVERFLOW_PIN         (LED0) //PORTB.0
-#define EXPIRY_PIN           (LED1) //PORTB.1
+#define OVERFLOW_PIN         (PIN_PC13) //PORTB.0
+#define EXPIRY_PIN           (PIN_PA06) //PORTB.1
 //! @}
 
 
