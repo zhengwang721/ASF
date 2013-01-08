@@ -127,15 +127,15 @@ enum status_code nvm_init(
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
 			(config->sleep_power_mode <<  NVMCTRL_CTRLB_SLEEPPRM_Pos) |
-			/*TODO: Define missing in header (config->manual_page_write << NVMCTRL_CTRLB_MANW) |*/
-			(config->manual_page_write << 7) |
-			/* TODO: Fix this (config->auto_wait_states << NVM_AUTO_WAIT_STATE_bp) |*/
+			(config->manual_page_write << NVMCTRL_CTRLB_MANW_Pos) |
+			(config->auto_wait_states << NVMCTRL_CTRLB_ARWS_Pos) |
 			(config->wait_states << NVMCTRL_CTRLB_RWS_Pos);
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size =
-			8 * (2 << (nvm_module->PARAM.reg & NVMCTRL_PARAM_PSZ_Msk));
-	_nvm_dev.number_of_pages = nvm_module->PARAM.reg & NVMCTRL_PARAM_NVMP_Msk;
+			8 * (2 << ((nvm_module->PARAM.reg & NVMCTRL_PARAM_PSZ_Msk) >>
+			NVMCTRL_PARAM_PSZ_Pos));
+	_nvm_dev.number_of_pages = (nvm_module->PARAM.reg & NVMCTRL_PARAM_NVMP_Msk);
 	_nvm_dev.man_page_write = config->manual_page_write;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
