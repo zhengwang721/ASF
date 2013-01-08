@@ -334,4 +334,66 @@ typedef struct
  *       which now contains what was sent through the master.
  *
  */
+
+/*! \brief Enable bridge mode on TWIC.
+ * SDA and SCL are on PORTC for Master and on PORTD for slave
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_bridge_enable(TWI_t *twi)
+{
+  twi->CTRL |= TWI_BRIDGEEN_bm;
+}
+
+/*! \brief Disable bridge mode on TWIC.
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_bridge_disaable(TWI_t *twi)
+{
+  twi->CTRL &= (~TWI_BRIDGEEN_bm);
+}
+
+
+/*! \brief Enable Fast mode plus on TWIC (1MHz).
+ * FMPEN bit enables 1MHz on master and slave.
+ * In bridge mode, it enables only 1MHz on master.
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_fast_mode_enable(TWI_t *twi)
+{
+  twi->CTRL |= TWI_FMPEN_bm;
+}
+
+/*! \brief Disable Fast mode plus on TWIC (1MHz).
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_fast_mode_disable(TWI_t *twi)
+{
+  twi->CTRL &= (~TWI_FMPEN_bm);
+}
+
+/*! \brief Enable Fast mode plus for slave.
+ * If set in bridge mode, it enables 1MHz on slave.
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_slave_fast_mode_enable(TWI_t *twi)
+{
+  twi->CTRL |= TWI_SFMPEN_bm;
+}
+
+/*! \brief Disable Fast mode plus for slave.
+ * If reset in bridge mode, it disables 1MHz on slave.
+ *
+ * \param twi       Base address of the TWI instance.
+ */
+static inline void twi_slave_fast_mode_disable(TWI_t *twi)
+{
+  twi->CTRL &= (~TWI_SFMPEN_bm);
+}
+
+
 #endif // TWI_COMMON_H
