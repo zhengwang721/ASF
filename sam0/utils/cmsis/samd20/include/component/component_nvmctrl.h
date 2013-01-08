@@ -114,6 +114,10 @@ typedef union {
 #define NVMCTRL_CTRLB_RWS_Pos       1
 #define NVMCTRL_CTRLB_RWS_Msk       (0xFu << NVMCTRL_CTRLB_RWS_Pos) /**< \brief (NVMCTRL_CTRLB) NVM Read Wait States */
 #define NVMCTRL_CTRLB_RWS(value)    ((NVMCTRL_CTRLB_RWS_Msk & ((value) << NVMCTRL_CTRLB_RWS_Pos)))
+
+#define NVMCTRL_CTRLB_ARWS_Pos      1 /* Manually added: auto wait states */
+#define NVMCTRL_CTRLB_MANW_Pos      7 /* Manually added */
+
 #define NVMCTRL_CTRLB_MANW          (0x1u <<  7) /**< \brief (NVMCTRL_CTRLB) Manual Write */
 #define NVMCTRL_CTRLB_SLEEPPRM_Pos    8
 #define NVMCTRL_CTRLB_SLEEPPRM_Msk    (0x3u << NVMCTRL_CTRLB_SLEEPPRM_Pos) /**< \brief (NVMCTRL_CTRLB) Power Reduction Mode during Sleep */
