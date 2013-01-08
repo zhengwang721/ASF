@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief STK600 + ATmega128RFA1 board LEDs support package.
+ * \brief c board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the STK600 board.
+ * the MEGA_256RFR2_XPLAINED_PRO board.
  *
- * To use this board, define BOARD=STK600_RC064X_LCDX.
+ * To use this board, define BOARD=MEGA_256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

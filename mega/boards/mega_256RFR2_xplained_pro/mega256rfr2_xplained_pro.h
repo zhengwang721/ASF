@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief STK board header file.
+ * \brief ATmega256RFR2 Xplained Pro board header file.
  *
  * This file contains definitions and services related to the features of the
- * STK600 board.
+ * ATmega256RFR2 Xplained Pro board.
  *
- * To use this board, define BOARD= STK600_MEGA.
+ * To use this board, define BOARD= MEGA_256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

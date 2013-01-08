@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common IOPORT service example 3 for ATmega128RFA1-STK600" id="common.services.ioport.example3.atmega256rfr2_xplain_pro">
+	<project caption="Common IOPORT service example 3 for ATmega256RFR2 Xplained Pro" id="common.services.ioport.example3.atmega256rfr2_xplain_pro">
 		<info type="description" value="summary">
 			Example that reads button 8  (PE5) and outputs it on LED_GREEN_GPIO (PE2).
 		</info>

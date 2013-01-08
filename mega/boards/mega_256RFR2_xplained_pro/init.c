@@ -1,11 +1,11 @@
 /**
  * \file
  *
- * \brief MEGA-1284P Xplained board init.
+ * \brief ATmega256RFR2 Xplained Pro board init.
  *
- * To use this board, define BOARD=STK600_MEGA.
+ * To use this board, define BOARD=MEGA_256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
