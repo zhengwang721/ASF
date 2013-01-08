@@ -45,7 +45,7 @@
 #include "common_sw_timer.h"
 #include "board.h"
 
-
+#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
 /**
  * This is the most significant part of the system time. The least one is
  * timer1 itself.  Exported since input capture units might want
@@ -514,33 +514,6 @@ void sw_timer_service(void)
 }
 
 
-void sw_timer_init(void)
-{
-    /*
-     * Initialize the timer resources like timer arrays
-     * queues, timer registers
-     */
-    uint8_t index;
-
-    running_timers = 0;
-    timer_trigger = false;
-    sys_time = 0;
-
-    running_timer_queue_head = NO_TIMER;
-    expired_timer_queue_head = NO_TIMER;
-    expired_timer_queue_tail = NO_TIMER;
-
-    for (index = 0; index < TOTAL_NUMBER_OF_SW_TIMERS; index++)
-    {
-        timer_array[index].next_timer_in_queue = NO_TIMER;
-        timer_array[index].timer_cb = NULL;
-    }
-
-	alloc_timer_id = 0;
-	set_common_tc_overflow_callback(hw_overflow_cb);
-	set_common_tc_expiry_callback(hw_expiry_cb);
-    common_tc_init();
-}
 
 
 static inline uint32_t gettime(void)
@@ -645,6 +618,36 @@ void hw_expiry_cb(void)
         timer_trigger = true;
     }
 }
+#endif //#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
 
+void sw_timer_init(void)
+{
+#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
+    /*
+     * Initialize the timer resources like timer arrays
+     * queues, timer registers
+     */
+    uint8_t index;
+
+    running_timers = 0;
+    timer_trigger = false;
+    sys_time = 0;
+
+    running_timer_queue_head = NO_TIMER;
+    expired_timer_queue_head = NO_TIMER;
+    expired_timer_queue_tail = NO_TIMER;
+
+    for (index = 0; index < TOTAL_NUMBER_OF_SW_TIMERS; index++)
+    {
+        timer_array[index].next_timer_in_queue = NO_TIMER;
+        timer_array[index].timer_cb = NULL;
+    }
+
+	alloc_timer_id = 0;
+	set_common_tc_overflow_callback(hw_overflow_cb);
+	set_common_tc_expiry_callback(hw_expiry_cb);
+    common_tc_init();
+#endif //#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
+}
 
 /* EOF */

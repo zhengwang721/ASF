@@ -152,7 +152,7 @@ static void run_wpan_init_test(const struct test_case *test)
 
 	status = wpan_init();
 	test_assert_true(test, status == MAC_SUCCESS,
-			"AVR2025_MAC Initialization Failed");
+			"AVR2025_MAC - MAC Initialization Failed");
 }
 
 static void run_wpan_reset_test(const struct test_case *test)
@@ -163,7 +163,7 @@ static void run_wpan_reset_test(const struct test_case *test)
 		wpan_task();
 	}
 	test_assert_true(test, wpan_reset_conf_status == MAC_SUCCESS,
-			"AVR2025_MAC Reset request failed");
+			"AVR2025_MAC - MAC Reset request failed");
 }
 
 static void run_wpan_scan_test(const struct test_case *test)
@@ -179,7 +179,7 @@ static void run_wpan_scan_test(const struct test_case *test)
 	test_assert_true(test, 
 					 (wpan_scan_conf_status == MAC_SUCCESS) ||
 						 (wpan_scan_conf_status == MAC_NO_BEACON),
-					"AVR2025_MAC Scan test failed");
+					"AVR2025_MAC - MAC Scan test failed");
 }
 
 void usr_mlme_reset_conf(uint8_t status)
@@ -204,12 +204,12 @@ void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
 		DEFINE_TEST_CASE(wpan_init_test, NULL, run_wpan_init_test,
-				NULL, "AVR2025_MAC Initialization");
+				NULL, "AVR2025_MAC - MAC Initialization");
 		DEFINE_TEST_CASE(wpan_reset_test, NULL, run_wpan_reset_test,
-				NULL, "AVR2025_MAC Reset request");
+				NULL, "AVR2025_MAC - MAC Reset request");
 		DEFINE_TEST_CASE(wpan_scan_test, NULL,
 				run_wpan_scan_test, NULL,
-				"AVR2025_MAC Scan test (this covers all ASF drivers/services used");
+				"AVR2025_MAC - MAC Scan test (this covers all ASF drivers/services used)");
 
 		// Put test case addresses in an array.
 		DEFINE_TEST_ARRAY(wpan_tests) = {
@@ -219,7 +219,7 @@ void main_cdc_set_dtr(bool b_enable)
 
 		// Define the test suite.
 		DEFINE_TEST_SUITE(wpan_suite, wpan_tests,
-				"AVR2025_MAC unit test suite");
+				"AVR2025_MAC - MAC unit test suite");
 
 		// Run all tests in the test suite.
 		test_suite_run(&wpan_suite);

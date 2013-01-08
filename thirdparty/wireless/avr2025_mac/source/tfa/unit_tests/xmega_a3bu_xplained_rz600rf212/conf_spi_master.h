@@ -1,9 +1,9 @@
 /**
- * @file common_hw_timer.h
+ * \file *********************************************************************
  *
- * @brief 
+ * \brief Spi Master configuration for spi example
  *
- *  Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,41 +36,30 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
- 
-/* Prevent double inclusion */
-#ifndef COMMON_HW_TIMER_H
-#define COMMON_HW_TIMER_H
-
-#if (MEGA_RF)
-#include "tc_megarf.h"
-#else
-#include "tc.h"
-#endif
-#include "conf_common_hw_timer.h"
-
-#define DEF_1MHZ	(1000000)
-#define TIMER_PERIOD  UINT16_MAX
-
-#if (UC3 || SAM)
-/**
- * \brief Interrupt event callback function type
  *
- * The interrupt handler can be configured to do a function callback,
- * the callback function must match the tc_callback_t type.
+ * \asf_license_stop
  *
  */
-typedef void (*tc_callback_t) (void);
-#endif
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-void common_tc_init(void);
-uint16_t common_tc_read_count(void);
-void common_tc_delay(uint16_t value);
-void common_tc_compare_stop(void);
-void common_tc_overflow_stop(void);
-void common_tc_stop(void);
-void set_common_tc_overflow_callback(tc_callback_t callback);
-void set_common_tc_expiry_callback(tc_callback_t callback);
+/* Possibility to change low-level configurations here */
 
-#endif /* COMMON_HW_TIMER_H */
-/* EOF */
+//! Default Config Spi Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
+
+//! Default Config Spi Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+//! Default Config Spi Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+//! Default Config Spi Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
+
+//! Default Config Spi Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#define AT86RFX_SPI_BAUDRATE		3000000
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */
