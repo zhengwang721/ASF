@@ -40,6 +40,9 @@
  */
 #include "rtc_calendar.h"
 
+#define RTC_MODE2_CLOCK_PM_Pos (RTC_MODE2_CLOCK_HOUR_Pos + 3)
+#define RTC_MODE2_CLOCK_PM     (1 << RTC_MODE2_CLOCK_PM_Pos)
+
 /**
  * \internal Device structure
  */
@@ -60,7 +63,7 @@ static struct _rtc_device _rtc_dev;
 static inline void _rtc_calendar_reset(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Disable module before reset. */
 	rtc_calendar_disable();
@@ -69,13 +72,12 @@ static inline void _rtc_calendar_reset(void)
 	_rtc_calendar_wait_for_sync();
 
 	/* Initiate software reset. */
-	rtc_module->CTRL |= RTC_SWRST_bm;
+	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_SWRST;
 }
 
 /**
  * \internal Convert time structure to register_value.
  */
-
 static uint32_t _rtc_calendar_time_to_register_value(
 		const struct rtc_calendar_time *const time)
 {
@@ -84,28 +86,28 @@ static uint32_t _rtc_calendar_time_to_register_value(
 
 	/* Set year value into register_value minus initial year. */
 	register_value = (time->year - _rtc_dev.year_init_value) <<
-			RTC_CLOCK_YEAR_bp;
+			RTC_MODE2_CLOCK_YEAR_Pos;
 
 	/* Set month value into register_value. */
-	register_value |= (time->month) << RTC_CLOCK_MONTH_bp;
+	register_value |= (time->month << RTC_MODE2_CLOCK_MONTH_Pos);
 
 	/* Set day value into register_value. */
-	register_value |= (time->day) << RTC_CLOCK_DAY_bp;
+	register_value |= (time->day << RTC_MODE2_CLOCK_DAY_Pos);
 
 	/* Set 24 hour value into register_value. */
-	register_value |= (time->hour) << RTC_CLOCK_HOUR_bp;
+	register_value |= (time->hour << RTC_MODE2_CLOCK_HOUR_Pos);
 
 	/* Check if 24 h clock and set pm flag. */
 	if (!(_rtc_dev.clock_24h)) {
 		/* Set pm flag. */
-		register_value |= (time->pm) << RTC_CLOCK_PM_bp;
+		register_value |= (time->pm << RTC_MODE2_CLOCK_PM_Pos);
 	}
 
 	/* Set minute value into register_value. */
-	register_value |= (time->minute) << RTC_CLOCK_MINUTE_bp;
+	register_value |= (time->minute << RTC_MODE2_CLOCK_MINUTE_Pos);
 
 	/* Set second value into register_value. */
-	register_value |= (time->second) << RTC_CLOCK_SECOND_bp;
+	register_value |= (time->second << RTC_MODE2_CLOCK_SECOND_Pos);
 
 	return register_value;
 }
@@ -118,36 +120,39 @@ static void _rtc_calendar_register_value_to_time(
 		struct rtc_calendar_time *const time)
 {
 	/* Set year plus value of initial year. */
-	time->year = ((register_value & RTC_CLOCK_YEAR_bm) >> RTC_CLOCK_YEAR_bp)
-			 + _rtc_dev.year_init_value;
+	time->year = ((register_value & RTC_MODE2_CLOCK_YEAR_Msk) >>
+			RTC_MODE2_CLOCK_YEAR_Pos) + _rtc_dev.year_init_value;
 
 	/* Set month value into time struct. */
-	time->month = ((register_value & RTC_CLOCK_MONTH_bm)
-			>> RTC_CLOCK_MONTH_bp);
+	time->month = ((register_value & RTC_MODE2_CLOCK_MONTH_Msk)
+			>> RTC_MODE2_CLOCK_MONTH_Pos);
 
 	/* Set day value into time struct. */
-	time->day = ((register_value & RTC_CLOCK_DAY_bm) >> RTC_CLOCK_DAY_bp);
+	time->day = ((register_value & RTC_MODE2_CLOCK_DAY_Msk) >>
+			RTC_MODE2_CLOCK_DAY_Pos);
 
 	if (_rtc_dev.clock_24h) {
 		/* Set hour in 24h mode. */
-		time->hour = ((register_value & RTC_CLOCK_24HOUR_bm)
-				>> RTC_CLOCK_24HOUR_bp);
+		time->hour = ((register_value & RTC_MODE2_CLOCK_HOUR_Msk)
+				>> RTC_MODE2_CLOCK_HOUR_Pos);
 	} else {
 		/* Set hour in 12h mode. */
-		time->hour = ((register_value & RTC_CLOCK_12HOUR_bm)
-				>> RTC_CLOCK_12HOUR_bp);
+		time->hour = ((register_value &
+				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_PM))
+				>> RTC_MODE2_CLOCK_HOUR_Pos);
+
 		/* Set pm flag */
-		time->pm = ((register_value & RTC_CLOCK_PM_bm)
-				>> RTC_CLOCK_PM_bp);
+		time->pm = ((register_value & RTC_MODE2_CLOCK_PM)
+				>> RTC_MODE2_CLOCK_PM_Pos);
 	}
 
 	/* Set minute value into time struct. */
-	time->minute = ((register_value & RTC_CLOCK_MINUTE_bm)
-			>> RTC_CLOCK_MINUTE_bp);
+	time->minute = ((register_value & RTC_MODE2_CLOCK_MINUTE_Msk)
+			>> RTC_MODE2_CLOCK_MINUTE_Pos);
 
 	/* Set second value into time struct. */
-	time->second = ((register_value & RTC_CLOCK_SECOND_bm)
-			>> RTC_CLOCK_SECOND_bp);
+	time->second = ((register_value & RTC_MODE2_CLOCK_SECOND_Msk)
+			>> RTC_MODE2_CLOCK_SECOND_Pos);
 }
 
 /**
@@ -161,38 +166,37 @@ static void _rtc_calendar_register_value_to_time(
  * \retval STATUS_OK RTC configurations where set successfully.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where given.
  */
-void _rtc_calendar_set_config(
+static void _rtc_calendar_set_config(
 		const struct rtc_calendar_conf *const config)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
-
+	Rtc *const rtc_module = RTC;
 
 	/* Set up temporary register value. */
 	uint16_t tmp_reg;
 
 	/* Set to calendar mode. */
-	tmp_reg = RTC_MODE_CLOCK_bm;
+	tmp_reg = RTC_MODE2_CTRL_MODE(2);
 
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
 		/* Set clock mode 12h. */
-		tmp_reg |= RTC_CLKREP_bm;
+		tmp_reg |= RTC_MODE2_CTRL_CLKREP;
 	}
 
 	/* Check for clear on compare match. */
 	if (config->clear_on_match) {
 		/* Set clear on compare match. */
-		tmp_reg |= RTC_MATCHCLR_bm;
+		tmp_reg |= RTC_MODE2_CTRL_MATCHCLR;
 	}
 
 	/* Set temporary value to register. */
-	rtc_module->CTRL = tmp_reg;
+	rtc_module->MODE2.CTRL.reg = tmp_reg;
 
 	/* Check to set continuously clock read update mode. */
 	if (config->continuously_update) {
 		/* Set continuously mode. */
-		rtc_module->READREQ |= (1 << RTC_RCONT_bp);
+		rtc_module->MODE2.READREQ.reg |= RTC_READREQ_RCONT;
 	}
 
 	/* Set alarm time registers. */
@@ -229,8 +233,7 @@ void _rtc_calendar_set_config(
 void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
-
+	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
 	Assert(config);
@@ -240,7 +243,7 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 
 	//TODO: Do some magic to set up clock!
 	/* Set the prescaler to get 1 Hz. */
-	rtc_module->CTRL = RTC_PRESCALER_DIV1024_bm;
+	rtc_module->MODE2.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
 
 	/* Save conf_struct internally for continued use. */
 	_rtc_dev.clock_24h = config->clock_24h;
@@ -263,7 +266,7 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 void rtc_calendar_swap_time_mode(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Initialize time structure. */
 	struct rtc_calendar_time *time;
@@ -296,7 +299,7 @@ void rtc_calendar_swap_time_mode(void)
 	rtc_calendar_disable();
 
 	/* Toggle mode. */
-	rtc_module->CTRL ^= RTC_CLKREP_bm;
+	rtc_module->MODE2.CTRL.reg ^= RTC_MODE2_CTRL_CLKREP;
 
 	/* Enable RTC. */
 	rtc_calendar_enable();
@@ -316,7 +319,7 @@ void rtc_calendar_set_time(
 		const struct rtc_calendar_time *const time)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	uint32_t register_value = _rtc_calendar_time_to_register_value(time);
 
@@ -324,7 +327,7 @@ void rtc_calendar_set_time(
 	_rtc_calendar_wait_for_sync();
 
 	/* Write value to register. */
-	rtc_module->CALENDAR.CLOCK = register_value;
+	rtc_module->MODE2.CLOCK.reg = register_value;
 }
 
 /**
@@ -337,20 +340,20 @@ void rtc_calendar_set_time(
 void rtc_calendar_get_time(struct rtc_calendar_time *const time)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Change of read method based on value of continuously_update value in
 	 * the configuration structure. */
 	if (!(_rtc_dev.continuously_update)) {
 		/* Request read on CLOCK register. */
-		rtc_module->READREQ = RTC_RREQ_bm;
+		rtc_module->MODE2.READREQ.reg = RTC_READREQ_RREQ;
 
 		/* Sync. */
 		_rtc_calendar_wait_for_sync();
 	}
 
 	/* Read value. */
-	uint32_t register_value = rtc_module->CALENDAR.CLOCK;
+	uint32_t register_value = rtc_module->MODE2.CLOCK.reg;
 
 	/* Convert value to time structure. */
 	_rtc_calendar_register_value_to_time(register_value, time);
@@ -373,7 +376,7 @@ enum status_code rtc_calendar_set_alarm(
 		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
@@ -387,7 +390,7 @@ enum status_code rtc_calendar_set_alarm(
 	_rtc_calendar_wait_for_sync();
 
 	/* Set alarm value. */
-	rtc_module->CALENDAR.ALARM[alarm_index] = register_value;
+	rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg = register_value;
 
 	return STATUS_OK;
 }
@@ -409,7 +412,7 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_time *const alarm,
 		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
@@ -417,7 +420,8 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_time *const alarm,
 	}
 
 	/* Read alarm value. */
-	uint32_t register_value = rtc_module->CALENDAR.ALARM[alarm_index];
+	uint32_t register_value =
+			rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg;
 
 	/* Convert to time structure and return. */
 	_rtc_calendar_register_value_to_time(register_value, alarm);
@@ -447,7 +451,7 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_time *const alarm,
 enum status_code rtc_calendar_frequency_correction(int8_t value)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	bool slower;
 
@@ -468,14 +472,14 @@ enum status_code rtc_calendar_frequency_correction(int8_t value)
 
 	/* Set direction. */
 	if (slower) {
-		rtc_module->FREQCORR = (1 << RTC_FREQCORR_SIGN_bp);
+		rtc_module->MODE2.FREQCORR.reg = RTC_FREQCORR_SIGN;
 	}
 	else {
-		rtc_module->FREQCORR = (0 << RTC_FREQCORR_SIGN_bp);
+		rtc_module->MODE2.FREQCORR.reg = 0;
 	}
 
 	/* Set value. */
-	rtc_module->FREQCORR |= value;
+	rtc_module->MODE2.FREQCORR.reg |= value;
 
 	return STATUS_OK;
 }

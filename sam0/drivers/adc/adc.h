@@ -46,6 +46,8 @@
 extern "C" {
 #endif
 
+#include <compiler.h>
+#include <system.h>
 
 /**
  * \brief ADC status flags.
@@ -54,10 +56,10 @@ extern "C" {
  *
  */
 enum adc_interrupt_flag {
-	ADC_INTERRUPT_RESULT_READY = ADC_READY_bm,
-	ADC_INTERRUPT_WINDOW       = ADC_WINMON_bm,
-	ADC_INTERRUPT_OVERRUN      = ADC_OVERRUN_bm,
-}
+	ADC_INTERRUPT_RESULT_READY = ADC_INTFLAG_RESRDY,
+	ADC_INTERRUPT_WINDOW       = ADC_INTFLAG_WINMON,
+	ADC_INTERRUPT_OVERRUN      = ADC_INTFLAG_MASK,
+};
 
 /**
  * \brief ADC reference voltage enum.
@@ -76,7 +78,7 @@ enum adc_reference {
 	ADC_REFERENCE_AREFA   = ADC_REF_AREFA_bm,
 	/** External reference */
 	ADC_REFERENCE_AREFB   = ADC_REF_AREFB_bm,
-}
+};
 
 /**
  * \brief ADC clock prescaler enum.
@@ -101,7 +103,7 @@ enum adc_clock_prescaler {
 	ADC_CLOCK_PRESCALER_DIV256 = ADC_PRESCALER_DIV256_bm,
 	/** ADC clock division factor 512 */
 	ADC_CLOCK_PRESCALER_DIV512 = ADC_PRESCALER_DIV512_bm,
-}
+};
 
 /**
  * \brief ADC resolution enum.
@@ -112,13 +114,13 @@ enum adc_clock_prescaler {
 enum adc_resolution {
 	/** ADC 12-bit resolution */
 	ADC_RESOLUTION_12BIT = ADC_RESOLUTION_12BIT_bm,
-	/** I assume this will be renamed in the datasheet. Supposed to be "averaging mode output" */
+	/** TODO: I assume this will be renamed in the datasheet. Supposed to be "averaging mode output" */
 	ADC_RESOLUTION_16BIT = ADC_RESOLUTION_16BIT_bm,
 	/** ADC 10-bit resolution */
 	ADC_RESOLUTION_10BIT = ADC_RESOLUTION_10BIT_bm,
 	/** ADC 8-bit resolution */
 	ADC_RESOLUTION_8BIT = ADC_RESOLUTION_8BIT_bm,
-}
+};
 
 /**
  * \brief ADC window monitor mode enum.
@@ -137,7 +139,7 @@ enum adc_window_mode {
 	ADC_WINDOW_MODE_BETWEEN          = ADC_WINMODE3_bm,
 	/** !( WINLT < RESULT < WINUT ) */
 	ADC_WINDOW_MODE_BETWEEN_INVERTED = ADC_WINMODE4_bm,
-}
+};
 
 /**
  * \brief ADC gain factor selection enum.
@@ -147,18 +149,18 @@ enum adc_window_mode {
  */
 enum adc_gain_factor {
 	/** 1x gain */
-	ADC_GAIN_1X   = ADC_GAIN_1X_bm,
+	ADC_GAIN_FACTOR_1X   = ADC_GAIN_1X_bm,
 	/** 2x gain */
-	ADC_GAIN_2X   = ADC_GAIN_2X_bm,
+	ADC_GAIN_FACTOR_2X   = ADC_GAIN_2X_bm,
 	/** 4x gain */
-	ADC_GAIN_4X   = ADC_GAIN_4X_bm,
+	ADC_GAIN_FACTOR_4X   = ADC_GAIN_4X_bm,
 	/** 8x gain */
-	ADC_GAIN_8X   = ADC_GAIN_8X_bm,
+	ADC_GAIN_FACTOR_8X   = ADC_GAIN_8X_bm,
 	/** 16x gain */
-	ADC_GAIN_16X  = ADC_GAIN_16X_bm,
+	ADC_GAIN_FACTOR_16X  = ADC_GAIN_16X_bm,
 	/** 1/2x gain */
-	ADC_GAIN_DIV2 = ADC_GAIN_DIV2_bm,
-}
+	ADC_GAIN_FACTOR_DIV2 = ADC_GAIN_DIV2_bm,
+};
 
 /**
  * \brief ADC positive MUX input selection enum.
@@ -296,7 +298,7 @@ enum adc_negative_input {
  */
 enum adc_average_samples {
 	/** No averaging */
-	ADC_AVERAGE_NONE         = ADC_SAMPLENUM1_bm,
+	ADC_AVERAGE_DISABLE      = ADC_SAMPLENUM1_bm,
 	/** Average 2 samples */
 	ADC_AVERAGE_SAMPLES_2    = ADC_SAMPLENUM2_bm,
 	/** Average 4 samples */
@@ -317,10 +319,10 @@ enum adc_average_samples {
 	ADC_AVERAGE_SAMPLES_512  = ADC_SAMPLENUM512_bm,
 	/** Average 1024 samples */
 	ADC_AVERAGE_SAMPLES_1024 = ADC_SAMPLENUM1024_bm,
-}
+};
 
 /**
- * \brief ADC oversamling and decimation enum.
+ * \brief ADC oversampling and decimation enum.
  *
  * Enum for the possible numbers of bits you can increase resolution of
  * by using oversampling and decimation mode.
@@ -337,7 +339,7 @@ enum adc_oversampling_and_decimation {
 	ADC_OVERSAMPLING_AND_DECIMATION_3BIT,
 	/** 4 bits resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_4BIT
-}
+};
 
 /**
  * \brief ADC configuration structure.
@@ -347,8 +349,8 @@ enum adc_oversampling_and_decimation {
  * function before being modified by the user application.
  */
 struct adc_config {
-	/** Check glock driver for this! */
-	enum glock_source        clock_source;
+	/** TODO */
+	enum gclock_source       clock_source;
 	/** Voltage reference */
 	enum adc_reference       reference;
 	/** Clock prescaler */
@@ -389,13 +391,13 @@ struct adc_config {
 	bool run_in_standby;
 	/**
 	Reference buffer offset compensation enable.
-	Set this to true to ebable the reference buffer compensation to
+	Set this to true to enable the reference buffer compensation to
 	increase the accuracy of the gain stage. But decrease the input
 	impedance; therefore increase the startup time of the reference.
 	*/
 	bool reference_compensation_enable;
 	/**
-	Correct for gain and offset based on values of gain_correction amd
+	Correct for gain and offset based on values of gain_correction and
 	offset_correction.
 	*/
 	bool correction_enable;
@@ -440,7 +442,7 @@ struct adc_config {
  */
 struct adc_dev_inst {
 	/** ADC hardware module */
-	ADC_t *hw_dev;
+	Adc *hw_dev;
 };
 
 /**
@@ -450,9 +452,9 @@ struct adc_dev_inst {
  *
  * \param hw_dev pointer to hardware module
  */
-static inline void _adc_wait_for_sync(ADC_t *const hw_dev)
+static inline void _adc_wait_for_sync(Adc *const hw_dev)
 {
-	while (hw_dev->STATUS & ADC_STATUS_SYNCBUSY_bm) {
+	while (hw_dev->STATUS.reg & ADC_STATUS_SYNCBUSY) {
 	}
 }
 
@@ -464,8 +466,44 @@ static inline void _adc_wait_for_sync(ADC_t *const hw_dev)
  * \param dev_inst    pointer to the device struct
  * \param config pointer to the config struct
  */
-status_code_t adc_init(struct adc_dev_inst *const dev_inst, ADC_t *hw_dev,
+enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_config *config);
+
+/**
+ * \brief Enable the ADC module
+ *
+ * Enables the ADC module.
+ *
+ * \param dev_inst    pointer to the device struct
+ */
+static inline void adc_enable(struct adc_dev_inst *const dev_inst)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Disables the ADC module
+ *
+ * Disables the ADC module. Writes only prescaler to register.
+ *
+ * \param dev_inst    pointer to the device struct
+ */
+static inline void adc_disable(struct adc_dev_inst *const dev_inst)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
+}
 
 /**
  * \brief Reset the ADC module
@@ -478,14 +516,14 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	/* Always disable before reset */
 	adc_disable(dev_inst);
 
 	/* Software reset the module */
 	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA |= ADC_SWRST_bm;
+	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
 }
 
 /**
@@ -523,14 +561,14 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->reference = ADC_REFERENCE_INT1V;
 	config->clock_prescaler = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution = ADC_RESOLUTION_12BIT;
-	config->window_mode = ADC_WINDOW_DISABLE;
-	config->adc_gain_factor = ADC_GAIN_FACTOR_1;
+	config->window_mode = ADC_WINDOW_MODE_DISABLE;
+	config->gain_factor = ADC_GAIN_FACTOR_1X;
 	config->average_samples = ADC_AVERAGE_DISABLE;
 	config->oversampling_and_decimation =
 			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
 	config->window_lower_value = 0;
 	config->window_upper_value = 0;
-	config->left_adjusted = false;
+	config->left_adjust = false;
 	config->differential_mode = false;
 	config->freerunning = false;
 	config->start_conversion_on_event = false;
@@ -538,50 +576,13 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->generate_event_on_conversion_done = false;
 	config->generate_event_on_window_monitor = false;
 	config->run_in_standby = false;
-	config->reference_compenstation_enable = false;
+	config->reference_compensation_enable = false;
 	config->correction_enable = false;
 	config->gain_correction = 0;
 	config->offset_correction = 0;
 	config->sample_length = 0;
 	config->offset_start_scan = 0;
 	config->inputs_to_scan = 0;
-
-}
-
-/**
- * \brief Enable the ADC module
- *
- * Enables the ADC module.
- *
- * \param dev_inst    pointer to the device struct
- */
-static inline void adc_enable(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	ADC_t *const adc_module = dev_inst->hw_dev;
-
-	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA |= ADC_ENABLE_bm;
-}
-
-/**
- * \brief Disables the ADC module
- *
- * Disables the ADC module. Writes only prescaler to register.
- *
- * \param dev_inst    pointer to the device struct
- */
-static inline void adc_disable(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	ADC_t *const adc_module = dev_inst->hw_dev;
-
-	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA &= ~ADC_ENABLE_bm;
 }
 
 /**
@@ -598,10 +599,10 @@ static inline void adc_flush(struct adc_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->SWTRIG |= ADC_FLUSH_bm;
+	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
 }
 
 /**
@@ -616,10 +617,10 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->SWTRIG |= ADC_START_bm;
+	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
 }
 
 /**
@@ -630,7 +631,8 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
  * \param dev_inst       pointer to device struct
  * \param result         pointer to store result
  */
-static inline status_code_t adc_get_result(struct adc_dev_inst *const dev_inst, uint16_t *result)
+static inline enum status_code adc_get_result(
+		struct adc_dev_inst *const dev_inst, uint16_t *result)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -641,11 +643,11 @@ static inline status_code_t adc_get_result(struct adc_dev_inst *const dev_inst, 
 		return STATUS_ERR_BUSY;
 	}
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	/* Get ADC result */
-	*result = adc_module->RESULT;
+	*result = adc_module->RESULT.reg;
 	/* Reset ready flag */
 	adc_clear_interrupt_flag(dev_inst, ADC_INTERRUPT_RESULT_READY);
 
@@ -671,14 +673,14 @@ static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINCTRL = window_mode        << ADC_WINMODE_bp;
+	adc_module->WINCTRL.reg = window_mode        << ADC_WINCTRL_WINMODE_Pos;
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINLT   = window_lower_value << ADC_WINLT_bp;
+	adc_module->WINLT.reg   = window_lower_value << ADC_WINLT_WINLT_Pos;
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINUT   = window_upper_value << ADC_WINUT_bp;
+	adc_module->WINUT.reg   = window_upper_value << ADC_WINUT_WINUT_Pos;
 }
 
 
@@ -695,9 +697,11 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 	_adc_wait_for_sync(adc_module);
-	adc_module->INPUTCTRL |= (gain_factor << ADC_GAIN_bp);
+	adc_module->INPUTCTRL.reg =
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
+			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
 }
 
 
@@ -714,8 +718,8 @@ static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
-	return adc_module->INTFLAG & interrupt_flag;
+	Adc *const adc_module = dev_inst->hw_dev;
+	return adc_module->INTFLAG.reg & interrupt_flag;
 }
 
 
@@ -732,8 +736,8 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
-	adc_module->INTFLAG = interrupt_flag;
+	Adc *const adc_module = dev_inst->hw_dev;
+	adc_module->INTFLAG.reg = interrupt_flag;
 }
 
 
@@ -756,12 +760,14 @@ static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->INPUTCTRL |=
-			(start_offset   << ADC_INPUTOFFSET_bp) |
-			(inputs_to_scan << ADC_INPUTSCAN_bp);
+	adc_module->INPUTCTRL.reg =
+			(adc_module->INPUTCTRL.reg &
+			 ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
+			(start_offset   << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
+			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos);
 }
 
 
@@ -788,10 +794,12 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->INPUTCTRL |= (positive_input << ADC_MUXPOS_bp);
+	adc_module->INPUTCTRL.reg =
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) |
+			(positive_input << ADC_INPUTCTRL_MUXPOS_Pos);
 }
 
 
@@ -807,10 +815,12 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	ADC_t *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->INPUTCTRL |= (negative_input << ADC_MUXNEG_bp);
+	adc_module->INPUTCTRL.reg =
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
+			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
 }
 
 #ifdef __cplusplus
