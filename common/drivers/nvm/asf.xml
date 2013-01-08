@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-config id="common.drivers.nvm" name="config.mem_type" caption="NVM - Non Volatile Memory access (Common API)" default="no_extmem">
+	<select-by-config id="common.drivers.nvm" name="config.common.drivers.nvm.mem_type" caption="NVM - Non Volatile Memory access (Common API)" default="no_extmem">
 		<info type="description" value="summary">
 			API for using NVM (Non Volatile memory) without directly accessing the registers. Common API.
 		</info>
