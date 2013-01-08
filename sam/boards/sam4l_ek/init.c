@@ -71,13 +71,16 @@ void board_init(void)
 
 	// Put all pins to default state (input & pull-up)
 	uint32_t pin;
+
 	for (pin = PIN_PA00; pin <= PIN_PC31; pin ++) {
 		// Skip output pins to configure later
 		if (pin == LED0_GPIO || pin == LCD_BL_GPIO
 #ifdef CONF_BOARD_RS485
 		|| pin == RS485_USART_CTS_PIN
 #endif
-		) {
+		/* PA02 is not configured as it is driven by hardware
+		configuration */
+		|| pin == PIN_PA02) {
 			continue;
 		}
 		ioport_set_pin_dir(pin, IOPORT_DIR_INPUT);
@@ -151,6 +154,15 @@ void board_init(void)
 	ioport_set_pin_level(RS485_USART_CTS_PIN, IOPORT_PIN_LEVEL_LOW);
 #endif
 
+#ifdef CONF_BOARD_TWIMS1
+	ioport_set_pin_peripheral_mode(TWIMS1_TWI_SCL_PIN, TWIMS1_TWI_SCL_MUX);
+	ioport_set_pin_peripheral_mode(TWIMS1_TWI_SDA_PIN, TWIMS1_TWI_SDA_MUX);
+#endif
+
+#ifdef CONF_BOARD_USART0
+	ioport_set_pin_peripheral_mode(USART0_RX_PIN, USART0_RX_MUX);
+	ioport_set_pin_peripheral_mode(USART0_TX_PIN, USART0_TX_MUX);
+#endif
 #ifdef CONF_BOARD_DACC_VOUT
 	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
 #endif

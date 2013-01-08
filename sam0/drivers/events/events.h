@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Event System Controller Driver
+ * \brief SAMD20 Event System Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EVENTS_H_INCLUDED
 
 /**
- * \defgroup sam0_events_group SAM0+ Event System Driver
+ * \defgroup sam0_events_group SAMD20 Event System Driver
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the peripheral event
  * channels and users within the device, including the enabling, disabling,
  * peripheral source selection and synchronization of clock domains between
@@ -407,9 +407,14 @@ static inline bool events_ch_is_ready(
 	uint8_t status_halfword = channel / 8;
 	uint8_t status_bitindex = channel % 8;
 
+	/* Make it a 16-bit array to be able to work on the upper and lower
+	 * 16-bits */
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
+
+
 	/* Determine if the specified channel is currently busy */
-	if (EVSYS.CHSTATUS_UINT16_T[status_halfword] &
-			(EVSYS_CHBUSY0_bp << status_bitindex)) {
+	if (channel_status_ptr[status_halfword] &
+			(EVSYS_CHSTATUS_CHBUSY0_Pos << status_bitindex)) {
 		return false;
 	}
 
@@ -438,9 +443,14 @@ static inline bool events_user_is_ready(
 	uint8_t status_halfword = channel / 8;
 	uint8_t status_bitindex = channel % 8;
 
+	/* Make it a 16-bit array to be able to work on the upper and lower
+	 * 16-bits */
+	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
+
+
 	/* Determine if the specified channel users(s) are currently ready */
-	if (EVSYS.CHSTATUS_UINT16_T[status_halfword] &
-			(EVSYS_USRREADY0_bp << status_bitindex)) {
+	if (channel_status_ptr[status_halfword] &
+			(EVSYS_CHSTATUS_USRREADY0_Pos << status_bitindex)) {
 		return true;
 	}
 
@@ -461,7 +471,8 @@ static inline void events_ch_software_trigger(
 {
 	/* Trigger the appropriate event channel - must be performed as a single
 	 * 8-bit write as mandated in the datasheet for the event system module */
-	EVSYS.CHCTRL = (channel << EVSYS_CHSEL_gp) | EVSYS_STROBE_bm;
+	EVSYS->CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |
+			EVSYS_CHANNEL_SWEVT;
 }
 
 /** @} */
@@ -530,4 +541,4 @@ static inline void events_ch_software_trigger(
  * - \subpage events_basic_use_case
  */
 
-#endif
+#endif /* EVENTS_H_INCLUDED */

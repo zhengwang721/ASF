@@ -8,8 +8,7 @@
 		</info>
 		<build type="c-source" value="example4_xmega.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-		<device-support value="xmegaa"/>
-		<device-support value="xmegaau"/>
+		<device-support value="xmega"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.boards" />

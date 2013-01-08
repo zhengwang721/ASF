@@ -77,7 +77,7 @@
  *
  * \param func Name for the function.
  */
-#  define ISR(func)    \
+#  define ISR(func)   \
 	void func (void)
 
 /**
@@ -89,8 +89,8 @@
  *
  * This must be called prior to \ref irq_register_handler.
  */
-#  define irq_initialize_vectors()                     \
-	do {                                           \
+#  define irq_initialize_vectors()   \
+	do {                             \
 	} while(0)
 
 /**
@@ -117,14 +117,14 @@
 
 //@}
 
-#  define cpu_irq_enable()                             \
-	do {                                           \
+#  define cpu_irq_enable()                     \
+	do {                                       \
 		g_interrupt_enabled = true;            \
 		__DMB();                               \
 		__enable_irq();                        \
 	} while (0)
-#  define cpu_irq_disable()                            \
-	do {                                           \
+#  define cpu_irq_disable()                    \
+	do {                                       \
 		__disable_irq();                       \
 		__DMB();                               \
 		g_interrupt_enabled = false;           \

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SPI Master service configuration
+ * \brief USART SPI driver configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -38,6 +38,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 #ifndef CONF_USART_SPI_H
 #define CONF_USART_SPI_H

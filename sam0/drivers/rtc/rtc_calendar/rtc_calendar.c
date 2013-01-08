@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver for calendar mode
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

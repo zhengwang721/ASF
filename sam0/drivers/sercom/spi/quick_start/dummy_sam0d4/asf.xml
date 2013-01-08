@@ -1,8 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM0+ SERCOM SPI driver" id="sam0.drivers.sercom.spi.quick_start.dummy.atsam0d4">
-		<require idref="board.dummy.atsam0d4"/>
+	<project caption="Quick Start for the SAMD20 SERCOM SPI driver" id="sam0.drivers.sercom.spi.quick_start.dummy.samd20g18a">
+		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.sercom.spi.quick_start"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_bod.h"/>
 		<generator value="armgcc"/>
-		<device-support value="atsam0d4"/>
+		<device-support value="samd20g18a"/>
 	</project>
 </asf>

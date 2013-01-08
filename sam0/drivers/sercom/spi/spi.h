@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _SPI_H_INCLUDED_
-#define _SPI_H_INCLUDED_
+#ifndef SPI_H_INCLUDED
+#define SPI_H_INCLUDED
 
 #include "asf.h"
 
@@ -49,12 +49,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_spi_group SAM0+ Serial Peripheral Interface Driver (SPI)
+ * \defgroup sam0_spi_group SAMD20 Serial Peripheral Interface Driver (SPI)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for configuration and management of the SERCOM SPI module, as well
  * as data transfer via SPI. This driver encompasses the following module
- * within the SAM0+ devices:
+ * within the SAMD20 devices:
  * \li \b SPI \b (Serial Peripheral Interface)
  *
  * \section module_introduction Introduction
@@ -1558,4 +1558,4 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * Back to \ref spi_signal_mux_setting.
  */
 
-#endif /* _SPI_H_INCLUDED_ */
+#endif /* SPI_H_INCLUDED */

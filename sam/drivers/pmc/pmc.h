@@ -91,16 +91,22 @@ extern "C" {
 #define PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN  PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN
 #define PMC_WAIT_MODE_FLASH_IDLE            PMC_FSMR_FLPM_FLASH_IDLE
 #endif
+#if SAM4E
+/** Flash state in Wait Mode */
+#define PMC_WAIT_MODE_FLASH_STANDBY         PMC_FSMR_FLPM(0)
+#define PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN  PMC_FSMR_FLPM(1)
+#define PMC_WAIT_MODE_FLASH_IDLE            PMC_FSMR_FLPM(2)
+#endif
+
 /** Convert startup time from us to MOSCXTST */
-#define pmc_us_to_moscxtst(startup_us, slowck_freq)         \
-	((startup_us * slowck_freq / 8 / 1000000) < 0x100 ? \
-		(startup_us * slowck_freq / 8 / 1000000) :  \
-		0xFF)
+#define pmc_us_to_moscxtst(startup_us, slowck_freq)      \
+	((startup_us * slowck_freq / 8 / 1000000) < 0x100 ?  \
+		(startup_us * slowck_freq / 8 / 1000000) : 0xFF)
 
 /**
  * \name Master clock (MCK) Source and Prescaler configuration
  *
- * The following functions may be used to select the clock source and
+ * \note The following functions may be used to select the clock source and
  * prescaler for the master clock.
  */
 //@{
@@ -116,7 +122,7 @@ uint32_t pmc_switch_mck_to_pllbck(uint32_t ul_pres);
 #if (SAM3XA || SAM3U)
 uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres);
 #endif
-#if SAM4S
+#if (SAM4S || SAM4E)
 void pmc_set_flash_in_wait_mode(uint32_t ul_flash_state);
 #endif
 
@@ -221,7 +227,7 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id);
  */
 //@{
 
-#if (SAM3S || SAM3XA || SAM4S)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E)
 void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv);
 #endif
 #if (SAM3S || SAM4S)
@@ -230,7 +236,7 @@ void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv);
 #if (SAM3XA)
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv);
 #endif
-#if (SAM3S || SAM3XA || SAM4S)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E)
 void pmc_enable_udpck(void);
 void pmc_disable_udpck(void);
 #endif

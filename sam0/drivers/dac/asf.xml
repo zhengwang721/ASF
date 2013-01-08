@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter Driver">
 		<info type="description" value="summary">
-		Driver for the SAM0+ DAC.
+		Driver for the SAMD20 DAC.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Security"/>
@@ -11,10 +11,10 @@
 		<build type="header-file" value="quick_start/qs_dac_basic.h" subtype="example"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam0_dac_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.sysctrl"/>
+		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.events"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

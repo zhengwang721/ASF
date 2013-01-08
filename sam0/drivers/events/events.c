@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Event System Controller Driver
+ * \brief SAMD20 Event System Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -51,8 +51,9 @@
 void events_init(void)
 {
 	/* Software reset the module to ensure it is re-initialized correctly */
-	EVSYS.CTRL = EVSYS_SWRST_bm;
-	while (EVSYS.CTRL & EVSYS_SWRST_bm) {
+	EVSYS->CTRL.reg = EVSYS_CTRL_SWRST;
+
+	while (EVSYS->CTRL.reg & EVSYS_CTRL_SWRST) {
 	}
 }
 
@@ -73,11 +74,10 @@ void events_ch_set_config(
 
 	/* Select and configure the event channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS.CHCTRL
-		= (channel << EVSYS_CHSEL_gp) |
-			(config->generator_id << EVSYS_EVGSEL_gp) |
-			(config->edge_detection << EVSYS_EDGESEL_gp) |
-			(config->path << EVSYS_PATH_gp);
+	EVSYS->CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |
+			(config->generator_id << EVSYS_CHANNEL_EVGEN_Pos) |
+			(config->edge_detection << EVSYS_CHANNEL_EDGSEL_Pos) |
+			(config->path << EVSYS_CHANNEL_PATH_Pos);
 }
 
 /** \brief Writes an Event System user MUX configuration to the hardware module.
@@ -97,7 +97,6 @@ void events_user_set_config(
 
 	/* Select and configure the user MUX channel (must be done in one
 	 * word-access write as specified in the module datasheet */
-	EVSYS.USERMUX
-		= (user << EVSYS_UMUXSEL_gp) |
-			(config->event_channel_id << EVSYS_CHANNELEVENT_gp);
+	EVSYS->USERMUX.reg = (user << EVSYS_USERMUX_UMUXSEL_Pos) |
+			(config->event_channel_id << EVSYS_USERMUX_CHANNELEVENT_Pos);
 }

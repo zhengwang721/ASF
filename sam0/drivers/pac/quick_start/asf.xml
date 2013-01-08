@@ -7,6 +7,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.pac"/>
 		<require idref="sam0.drivers.port"/>
-		<device-support value="atsam0d4"/>
+		<device-support value="samd20g18a"/>
 	</module>
 </asf>

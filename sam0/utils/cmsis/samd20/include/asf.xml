@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.utils.cmsis.samd20.include" caption="SAMD20 part definitions">
+		<info type="description" value="summary">
+		SAMD20 device definitions.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="samd20.h"/>
+		<build type="header-file" value="samd2064g3.h"/>
+		<build type="header-file" value="samd2064g4.h"/>
+		<build type="header-file" value="samd20128g3.h"/>
+		<build type="header-file" value="samd20128g3.h"/>
+		<build type="header-file" value="samd20256g3.h"/>
+		<info type="gui-flag" value="hidden"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

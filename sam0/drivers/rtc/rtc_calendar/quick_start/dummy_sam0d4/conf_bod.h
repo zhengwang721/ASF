@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ BOD configuration
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +47,7 @@
  * ------------------------------------------------------*/
 
 /* Enable BOD33 */
-#define CONF_BOD33_ENABLE true
+#define CONF_BOD33_ENABLE false
 
 #define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
 //#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
@@ -63,7 +63,7 @@
  * ------------------------------------------------------*/
 
 /* Enable BOD12 */
-#define CONF_BOD12_ENABLE true
+#define CONF_BOD12_ENABLE false
 
 /* Action on bod timeout; reset or interrupt */
 #define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET

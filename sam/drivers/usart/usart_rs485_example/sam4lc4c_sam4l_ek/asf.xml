@@ -5,7 +5,6 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_pdca.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<require idref="sam.drivers.usart.usart_rs485_example"/>
 		<require idref="board.sam4l_ek"/>

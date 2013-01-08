@@ -1,0 +1,24 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.sercom.usart" caption=
+		"USART Driver">
+		<info type="description" value="summary">
+			Driver for the SAMD20 USART. Provides a unified
+			interface for the configuration and management of the
+			SERCOM USART interface.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I2C Master" />
+		</info>
+		<build type="include-path" value="." />
+		<build type="header-file" subtype="api" value="usart.h"/>
+		<build type="header-file" subtype="api" value="usart_async.h"/>
+		<build type="c-source" value="usart.c"/>
+		<build type="c-source" value="usart_async.c"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
+		<build type="doxygen-entry-point" value="sam0_usart_group"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.sercom"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+</asf>

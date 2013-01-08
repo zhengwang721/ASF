@@ -1,7 +1,7 @@
-﻿/**
+/**
  * \file
  *
- * \brief SAM0+ Peripheral Digital to Analog Converter Driver
+ * \brief SAMD20 Peripheral Digital to Analog Converter Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _DAC_H_INCLUDED_
-#define _DAC_H_INCLUDED_
+#ifndef DAC_H_INCLUDED
+#define DAC_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,12 +50,14 @@ extern "C" {
 #include <clock.h>
 #include <gclk.h>
 
+
+
 /**
- * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
+ * \defgroup sam0_dac_group SAMD20 Digital to Analog Converter Driver (DAC)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for converting digital values to analog voltage.
- * This driver encompasses the following module within the SAM0+ devices:
+ * This driver encompasses the following module within the SAMD20 devices:
  * \li \b DAC \b (Digital to Analog Converter)
  *
  * \section module_introduction Introduction
@@ -329,11 +331,14 @@ extern "C" {
  */
 enum dac_reference {
 	/** 1V from internal bandgap reference.*/
-	DAC_REF_INT1V = DAC_REF_INT1V_bm,
+	/* TODO: This define needs to be updated once it is available in the header */
+	DAC_REF_INT1V = 0,
 	/** Analog VCC as reference. */
-	DAC_REF_AVCC = DAC_REF_AVCC_bm,
+	/* TODO: This define needs to be updated once it is available in the header */
+	DAC_REF_AVCC = 1,
 	/** External reference on AREF. */
-	DAC_REF_AREF = DAC_REF_AREF_bm,
+	/* TODO: This define needs to be updated once it is available in the header */
+	DAC_REF_AREF = 2,
 };
 
 /**
@@ -343,9 +348,9 @@ enum dac_reference {
  */
 enum dac_output {
 	/** DAC output to VOUT pin */
-	DAC_OUTPUT_EXTERNAL = DAC_EOEN_bm,
+	DAC_OUTPUT_EXTERNAL = DAC_CTRLB_EOEN,
 	/** DAC output as internal reference */
-	DAC_OUTPUT_INTERNAL = DAC_IOEN_bm,
+	DAC_OUTPUT_INTERNAL = DAC_CTRLB_IOEN,
 	/** No output*/
 	DAC_OUTPUT_NONE = 0,
 };
@@ -367,7 +372,7 @@ enum dac_channel {
  */
 struct dac_dev_inst {
 	/** DAC hardware module */
-	DAC_t *hw_dev;
+	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
 };
@@ -421,7 +426,7 @@ void dac_ch_set_config(
 
 void dac_init(
 		struct dac_dev_inst *const dev_inst,
-		DAC_t *const module,
+		Dac *const module,
 		struct dac_conf *const config);
 
 /**
@@ -597,4 +602,4 @@ void dac_reset(
  * - \subpage dac_basic_use_case
  */
 
-#endif /* _DAC_H_INCLUDED_ */
+#endif /* DAC_H_INCLUDED */

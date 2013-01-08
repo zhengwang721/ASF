@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ PAC Quick Start
+ * \brief SAMD20 PAC Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -112,7 +112,7 @@ int main (void)
 //! [lock_perph]
 
 //! [clear_sanity]
-	sanity = NULL;
+	sanity = 0;
 //! [clear_sanity]
 
 //! [enable_interrupts]

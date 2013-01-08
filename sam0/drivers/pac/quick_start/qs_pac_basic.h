@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ PAC Quick Start
+ * \brief SAMD20 PAC Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -71,7 +71,7 @@
  *  - \snippet qs_pac_basic.c set_sanity
  * -# Enable global interrupts.
  *  - \snippet qs_pac_basic.c sei
- * -# Loop to wait for edge detect. 
+ * -# Loop to wait for edge detect.
  *  - \snippet qs_pac_basic.c button_press
  * -# Disable interrupts globally
  *  - \snippet qs_pac_basic.c disable_interrupts
