@@ -76,7 +76,7 @@ struct _eeprom_master_page {
 
 	/* Unused bytes in the page */
 	uint8_t  reserved[45];
-}
+};
 
 /**
  * \brief Internal device instance struct 
@@ -99,9 +99,10 @@ struct _eeprom_emulator_device_struct {
 	uint8_t cached_page;
 };
 
-struct _eeprom_emulator_device_struct _eemprom_emulator_device = {
+static struct _eeprom_emulator_device_struct _eemprom_emulator_device = {
 		.initialized = false,
-		}
+		};
+
 /**
  * \brief Function to initialize memory to initial state
  *
