@@ -344,7 +344,7 @@ enum adc_oversampling_and_decimation {
 /**
  * \brief ADC configuration structure.
  *
- * Configuration structure for a ADC instance. This structure should be
+ * Configuration structure for an ADC instance. This structure should be
  * initialized by the \ref adc_get_config_defaults()
  * function before being modified by the user application.
  */
@@ -437,6 +437,7 @@ struct adc_config {
 
 /**
  * \brief ADC device instance structure.
+ *
  * ADC software instance structure.
  *
  */
@@ -448,9 +449,9 @@ struct adc_dev_inst {
 /**
  * \brief Wait for synchronization to finish
  *
- * Blocks in a busy wait while module synchronizes
+ * Blocks in a busy wait while module synchronizes.
  *
- * \param hw_dev pointer to hardware module
+ * \param[in] hw_dev Pointer to hardware module
  */
 static inline void _adc_wait_for_sync(Adc *const hw_dev)
 {
@@ -458,23 +459,15 @@ static inline void _adc_wait_for_sync(Adc *const hw_dev)
 	}
 }
 
-/**
- * \brief Initializes the ADC module
- *
- * Initializes the ADC module, based on the values of the config struct
- *
- * \param dev_inst    pointer to the device struct
- * \param config pointer to the config struct
- */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_config *config);
 
 /**
  * \brief Enable the ADC module
  *
- * Enables the ADC module.
+ * This function will enables the ADC module.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst[in]    Pointer to the device struct
  */
 static inline void adc_enable(struct adc_dev_inst *const dev_inst)
 {
@@ -488,11 +481,11 @@ static inline void adc_enable(struct adc_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Disables the ADC module
+ * \brief Disable the ADC module
  *
- * Disables the ADC module. Writes only prescaler to register.
+ * This function will disable the ADC module.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst[in]    pointer to the device struct
  */
 static inline void adc_disable(struct adc_dev_inst *const dev_inst)
 {
@@ -508,7 +501,11 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
 /**
  * \brief Reset the ADC module
  *
+ * This function will reset the ADC module.
+ *
  * \param[in] dev_inst Pointer to the ADC software instance struct
+ *
+ * \todo flush pipeline?
  */
 static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 {
@@ -527,11 +524,11 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Initializes a ADC configuration structure to defaults
+ * \brief Initialize a ADC configuration structure to defaults
  *
- *  Initializes a given ADC configuration structure to a set of
+ *  This function will initialize a given ADC configuration struct to a set of
  *  known default values. This function should be called on any new
- *  instance of the configuration structures before being modified by the
+ *  instance of the configuration structs before being modified by the
  *  user application.
  *
  *  The default configuration is as follows:
@@ -588,11 +585,12 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 /**
  * \brief Flush the ADC pipeline
  *
- * Restart the ADC clock on the next peripheral clock edge.
+ * This function will flush the pipeline and restart the ADC clock on the next 
+ * peripheral clock edge.
  * All conversions in progress will be lost.
  * When flush is complete, the module will resume where it left off.
  *
- * \param dev_inst    pointer to the device struct
+ * \param dev_inst[in]    Pointer to the device struct
  */
 static inline void adc_flush(struct adc_dev_inst *const dev_inst)
 {
@@ -657,12 +655,12 @@ static inline enum status_code adc_get_result(
 /**
  * \brief Change ADC window mode
  *
- * Initializes the ADC module, based on the values of the config struct
+ * This function will set the ADC window mode.
  *
- * \param dev_inst           pointer to the device struct
- * \param adc_window_mode    window monitor mode to set
- * \param window_lower_value lower window monitor threshold value
- * \param window_upper_value upper window monitor threshold value
+ * \param dev_inst[in]           Pointer to the device struct
+ * \param adc_window_mode[in]    Window monitor mode to set
+ * \param window_lower_value[in] Lower window monitor threshold value
+ * \param window_upper_value[in] Upper window monitor threshold value
   */
 static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
 		enum adc_window_mode window_moe,
@@ -675,20 +673,30 @@ static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
 
 	Adc *const adc_module = dev_inst->hw_dev;
 
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINCTRL.reg = window_mode        << ADC_WINCTRL_WINMODE_Pos;
+	/* Set window mode */
+	adc_module->WINCTRL.reg = window_mode << ADC_WINCTRL_WINMODE_Pos;
+	
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINLT.reg   = window_lower_value << ADC_WINLT_WINLT_Pos;
+	/* Set lower window monitor threshold value */
+	adc_module->WINLT.reg = window_lower_value << ADC_WINLT_WINLT_Pos;
+	
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
-	adc_module->WINUT.reg   = window_upper_value << ADC_WINUT_WINUT_Pos;
+	/* Set upper window monitor threshold value */
+	adc_module->WINUT.reg = window_upper_value << ADC_WINUT_WINUT_Pos;
 }
 
 
 /**
- * \brief Change ADC gain factor
+ * \brief Set ADC gain factor
  *
- * \param dev_inst           pointer to the device struct
- * \param gain_factor        gain factor value to set
+ * This function will set the ADC gain factor.
+ *
+ * \param dev_inst[in]       Pointer to the device struct
+ * \param gain_factor[in]    Gain factor value to set
  */
 static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
 		enum adc_gain_factor gain_factor)
@@ -698,7 +706,11 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	Adc *const adc_module = dev_inst->hw_dev;
+
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
+
+	/* Set gain factor */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
 			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
@@ -708,8 +720,14 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
 /**
  * \brief Check if a given interrupt flag is set
  *
- * \param dev_inst           pointer to the device struct
- * \param interrupt_flag     interrupt flag to check
+ * This function will check if a given interrupt flag is set.
+ *
+ * \param dev_inst[in]         Pointer to the device struct
+ * \param interrupt_flag[in]   Interrupt flag to check
+ *
+ * \return
+ * \retval true   The flag is set
+ * \retval false  The flag is not set
  */
 static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
 		enum adc_status_flag interrupt_flag)
@@ -725,9 +743,11 @@ static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst
 
 /**
  * \brief Clear a given interrupt flag
+ * 
+ * This function will clear a given interrupt flag.
  *
- * \param dev_inst           pointer to the device struct
- * \param interrupt_flag     interrupt flag to clear
+ * \param dev_inst[in]          Pointer to the device struct
+ * \param interrupt_flag[in]    Interrupt flag to clear
  */
 static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
 		enum adc_status_flag interrupt_flag)
@@ -737,6 +757,8 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	Adc *const adc_module = dev_inst->hw_dev;
+	
+	/* Clear interrupt flag */
 	adc_module->INTFLAG.reg = interrupt_flag;
 }
 
@@ -748,10 +770,10 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * positive input + start_offset. When conversion is done, it will skip to
  * next input until inputs_to_scan conversions are made.
  *
- * \param dev_inst           pointer to the device struct
- * \param inputs_to_scan     numbers of input pins to do ADC on
- * \param start_offset       offset of first pin to scan (relative to
- *                           configured positive input)
+ * \param dev_inst[in]           Pointer to the device struct
+ * \param inputs_to_scan[in]     Number of input pins to do ADC on
+ * \param start_offset[in]       Offset of first pin to scan (relative to
+ *                               configured positive input)
  */
 static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
@@ -762,7 +784,9 @@ static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 
 	Adc *const adc_module = dev_inst->hw_dev;
 
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
+
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg &
 			 ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
@@ -774,10 +798,11 @@ static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 /**
  * \brief Disable pin scan mode
  *
-  * \param dev_inst           pointer to the device struct
+  * \param dev_inst[in]     Pointer to the device struct
  */
 static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst)
 {
+	/* Disable pin scan mode */
 	adc_set_scan_mode(dev_inst, 0, 0);
 }
 
@@ -785,7 +810,8 @@ static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst
 /**
  * \brief Set positive ADC input pin
  *
- * \param positive_input     positive input pin
+ * \param dev_inst[in]        Pointer to the device struct
+ * \param positive_input[in]  Positive input pin
  */
 static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
 		enum adc_positive_input positive_input)
@@ -796,7 +822,10 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
 
 	Adc *const adc_module = dev_inst->hw_dev;
 
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
+
+	/* Set positive input pin */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) |
 			(positive_input << ADC_INPUTCTRL_MUXPOS_Pos);
@@ -806,7 +835,9 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
 /**
  * \brief Set negative ADC input pin for differential mode
  *
- * \param negative_input     negative input pin
+ * \param dev_inst[in]        Pointer to the device struct
+ * \param negative_input[in]  Negative input pin
+ * \param negative_input[in]  Negative input pin
  */
 static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 		enum adc_negative_input negative_input)
@@ -817,7 +848,10 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 
 	Adc *const adc_module = dev_inst->hw_dev;
 
+	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
+
+	/* Set negative input pin */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
 			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);

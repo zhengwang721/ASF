@@ -41,9 +41,18 @@
 
 #include "adc.h"
 
+/**
+ * \internal Write an ADC configuration to the hardware module.
+ *
+ * This function will write out a given configuration to the hardware module.
+ * Used by \ref adc_init.
+ */
 enum status_code _adc_set_config (Adc *const hw_dev,
 		struct adc_config *const config)
 {
+	uint8_t adjres;
+	enum adc_average_samples average;
+
 	/* Configure CTRLA */
 	hw_dev->CTRLA.reg = (config->sleep_enable << ADC_SLEEPEN_bp);
 
@@ -136,11 +145,20 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	return STATUS_OK;
 }
 
+/**
+ * \brief Initialize the ADC
+ *
+ * This function will initialize the ADC device struct and the hardware module
+ * based on the values of the configuration struct.
+ *
+ * \param[out] dev_ins Pointer to the ADC software instance struct
+ * \param[in] hw_dev   Pointer to the ADC module instance
+ * \param[in] config   Pointer to the configuration struct
+ *
+ */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_config *config)
 {
-	uint8_t adjres;
-	enum adc_average_samples average;
 
 	dev_inst->hw_dev = hw_dev;
 
