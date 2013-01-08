@@ -86,6 +86,11 @@ typedef union {
 #define NVMCTRL_CTRLA_CMDEX(value)  ((NVMCTRL_CTRLA_CMDEX_Msk & ((value) << NVMCTRL_CTRLA_CMDEX_Pos)))
 #define NVMCTRL_CTRLA_MASK          0xFF7Fu      /**< \brief (NVMCTRL_CTRLA) MASK Register */
 
+#define NVMCTRL_CMDEX_EXECUTION_KEY 0xA5
+
+#define NVMCTRL_AUX_BOOTPROT_Pos    1
+#define NVMCTRL_AUX_EEPROM_Pos      4
+
 /* -------- NVMCTRL_CTRLB : (NVMCTRL Offset: 0x04) (R/W 32) NVM Control Register B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
