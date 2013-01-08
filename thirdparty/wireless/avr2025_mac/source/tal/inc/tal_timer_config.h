@@ -57,7 +57,7 @@
 /* === MACROS ============================================================== */
 
 /* === TYPES =============================================================== */
-#if (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212)
+#if (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 
 /* Timer ID's used by TAL */
 #ifdef BEACON_SUPPORT
@@ -76,7 +76,7 @@ extern uint8_t TAL_T_BOFF;
 #define NUMBER_OF_TAL_TIMERS        (3)
 #endif
 
-#else
+#else /* FTN_PLL_CALIBRATION DISABLED */
 extern uint8_t TAL_CSMA_CCA;
 extern uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
 #ifdef SW_CONTROLLED_CSMA
