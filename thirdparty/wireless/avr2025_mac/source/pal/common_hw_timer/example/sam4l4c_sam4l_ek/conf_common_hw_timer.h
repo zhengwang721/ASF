@@ -45,7 +45,7 @@
 /*! \name Configuration
  */
 //! @{
-#define TIMER                (&TC0)
+#define TIMER                (TC0)
 #define TIMER_CHANNEL_ID     0
 //! @}
 

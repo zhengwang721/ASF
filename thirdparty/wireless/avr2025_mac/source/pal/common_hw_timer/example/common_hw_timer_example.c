@@ -87,6 +87,8 @@
 #include "common_hw_timer.h"
 #include "conf_example.h"
 #include "ioport.h"
+void overflow_cb(void);
+void expiry_cb(void);
 
 uint16_t time_out = 5000;
 
@@ -110,15 +112,15 @@ int main(void)
 	cpu_irq_enable();
 
 	ioport_set_pin_dir(OVERFLOW_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(OVERFLOW_PIN, IOPORT_PIN_LEVEL_HIGH);
-	ioport_set_pin_dir(EXPIRY_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(EXPIRY_PIN, IOPORT_PIN_LEVEL_HIGH);
+        ioport_set_pin_level(OVERFLOW_PIN, IOPORT_PIN_LEVEL_HIGH);        
+        ioport_set_pin_dir(EXPIRY_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXPIRY_PIN, IOPORT_PIN_LEVEL_HIGH);
 
 	set_common_tc_overflow_callback(overflow_cb);
 	set_common_tc_expiry_callback(expiry_cb);
 
 	common_tc_init();
-
+        
 	common_tc_delay(time_out);
 
 	while (1);

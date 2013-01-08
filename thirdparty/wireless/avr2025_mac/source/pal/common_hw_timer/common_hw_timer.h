@@ -52,7 +52,7 @@
 #define DEF_1MHZ	(1000000)
 #define TIMER_PERIOD  UINT16_MAX
 
-#if (!defined(XMEGA) || !defined(MEGA_RF) || defined(UC3) || defined(SAM))
+#if (UC3 || SAM)
 /**
  * \brief Interrupt event callback function type
  *
