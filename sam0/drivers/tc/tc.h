@@ -317,13 +317,31 @@ extern "C" {
  * \note The tc_set_top_value() function is only meant to be used
  * when using wave generation in match mode, and not in normal mode.  \n
  *
+ * The below figure illustrates operations and different states of
+ * the counter and its output when running the counter in PWM normal
+ * mode. As can be seen the TOP value is unchanged and is set to
+ * max. the compare match value is changed to illustrate different
+ * outcomes of this. The PWM output is here set to be ordinary output
+ * as it is not inverted here.
+ *
  * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
  *
  * \image latex pwm_normal_ex.eps "Example of PWM in normal mode, and different counter operations"
+ * \n
+ *
+ * In the figure below the counter is set to generate PWM in match
+ * mode. The PWM output is inverted. Inversion of the wave generation
+ * output can be done by specifying which channels should be inverted
+ * by specifying this in the \ref tc_conf struct, see \ref
+ * tc_waveform_invert_output. In this example you can see that the
+ * counter value is changed once, but the compare match value is here
+ * kept unchanged. As can be seen you can change the TOP value when
+ * running in PWM match mode.
  *
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
  *
  * \image latex pwm_match_ex.eps "Example of PWM in match mode, and different counter operations"
+ * \n
  *
  * \subsubsection frequency_generation Frequency generation
  *
@@ -365,6 +383,7 @@ extern "C" {
  * flag. In the below diagram a proposed program flow is described.
  *
  * \image html ../../state_dia_capture.svg "State diagram of capture operation"
+ *
  *
  * \image latex ../../state_dia_capture.eps "Diagram of capture operation" width = \textwidth*0.8
  *
@@ -446,6 +465,10 @@ extern "C" {
  *
  * The SAMD20 has got two capture compare registers independent of the
  * counter size.
+ *
+ * There are 8 counter modules in the SAMD20 device, making 4 pairs of
+ * TC modules that can have different GCLK_TC frequencies. It suports
+ * 4 simultaneous 32-bit TC modules.
  *
  * There are 8 TC modules in the device.
  *
