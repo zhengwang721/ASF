@@ -69,9 +69,9 @@
  * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses the services of PAL.
  *
  */
- 
 
- 
+
+
 
 
 
@@ -489,6 +489,16 @@ typedef enum csma_mode_tag
 #define TAL_GET_SUPERFRAME_DURATION_TIME(SO) \
     ((1UL * aBaseSuperframeDuration) << (SO))
 
+#if (TAL_TYPE == ATMEGARFA1)
+/*
+ * Confirmation of a register write access. This operation is needed for most
+ * TRX registers to finish a register write access. It is only needed when TRX
+ * is in one of the PLL states. See also datasheet, section "Register access".
+ */
+#define CONF_REG_WRITE()   do {    \
+        pal_trx_reg_write(RG_PART_NUM, PART_NUM); \
+    } while(0)
+#endif /* TAL_TYPE == ATMEGA128RFA1 */
 
 
 /* === PROTOTYPES ========================================================== */
@@ -500,7 +510,7 @@ typedef enum csma_mode_tag
  * be variations in the function implementation.
  * @{
  */
- 
+
 #ifdef __cplusplus
 extern "C" {
 #endif

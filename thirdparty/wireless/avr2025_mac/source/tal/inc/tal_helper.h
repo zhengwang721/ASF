@@ -80,7 +80,7 @@
 #if(TAL_TYPE == AT86RF212)
 #define CC_1_START_FREQUENCY   (769.0)
 #define CC_1_END_FREQUENCY     (794.5)
-#define CC_2_START_FREQUENCY   (857.0) 
+#define CC_2_START_FREQUENCY   (857.0)
 #define CC_2_END_FREQUENCY     (882.5)
 #define CC_3_START_FREQUENCY   (903.0)
 #define CC_3_END_FREQUENCY     (928.5)
@@ -88,7 +88,7 @@
 #define CC_4_END_FREQUENCY     (863.0)
 #define CC_5_START_FREQUENCY   (833.0)
 #define CC_5_END_FREQUENCY     (935.0)
-#define CC_6_START_FREQUENCY   (902.0) 
+#define CC_6_START_FREQUENCY   (902.0)
 #define CC_6_END_FREQUENCY     (927.5)
 
 #define CC_BAND_0               (0x00)
@@ -106,25 +106,34 @@
 
 #endif /*End of(TAL_TYPE == AT86RF212)*/
 
+
+#if (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2)
+#define MAX_REG_ADDR_VALUE      (0x1ff)
+#else
 #define MAX_REG_ADDR_VALUE      (0x3f)
+#endif
 
 /* parameter types in transceiver */
 typedef enum param_tag
-{  
+{
 #if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
    ANT_DIVERSITY     = 0x00,
-   ANT_SEL           = 0x01,
+   ANT_SELECT        = 0x01,
 #endif
 #if (TAL_TYPE != AT86RF230B)
    ANT_CTRL          = 0x02,
-   AACK_PROM_MODE    = 0x03,
+   AACK_PROMSCS_MODE    = 0x03,
 #endif
 #if(TAL_TYPE == AT86RF212)
    CC_BAND           = 0x04,
    CC_NUMBER         = 0x05,
-#endif 
-   TX_PWR            = 0x06  
-   
+#endif
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFR2))
+   CC_BAND           = 0x04,
+   CC_NUMBER         = 0x05,
+#endif
+   TX_PWR            = 0x06
+
 }SHORTENUM param_type;
 /* === PROTOTYPES ========================================================== */
 
@@ -135,8 +144,8 @@ extern "C" {
     /**
      * \brief Enable/Disable the external RF front end control
      *
-     * \param pa_ext_sw_ctrl true  if external rf front end control has to be 
-     *                              enabled                        
+     * \param pa_ext_sw_ctrl true  if external rf front end control has to be
+     *                              enabled
      *
      * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
      *         FAILURE      otherwise
@@ -144,15 +153,15 @@ extern "C" {
 #if(TAL_TYPE != AT86RF230B)
     retval_t  tal_ext_pa_ctrl (bool  pa_ext_sw_ctrl);
 #endif /* End of (TAL_TYPE != AT86RF230B) */
-    
+
 
 #if(TAL_TYPE != AT86RF212)
 
     /**
      * \brief Enable/Disable the external RF front end control
      *
-     * \param pa_ext_sw_ctrl true  if external rf front end control has to be 
-     *                              enabled                        
+     * \param pa_ext_sw_ctrl true  if external rf front end control has to be
+     *                              enabled
      *
      * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
      *         FAILURE      otherwise
@@ -167,26 +176,26 @@ extern "C" {
      *
      * \return MAC_SUCCESS or FAILURE based on conversion is done or not
      */
- 
+
     retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value);
 #endif /* End of (TAL_TYPE != AT86RF212)*/
 
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))    
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
     /*
-     * \brief Configures antenna diversity and selects antenna 
+     * \brief Configures antenna diversity and selects antenna
      *
      * \param div_ctrl  true/false to enable/disable antenna diversity
      * \param ant_ctrl  0 or 3 when antenna diversity is enabled
-     *                  1 or 2 to select antenna 1 or antenna 2 
-     * \return The value set in the TX_PWR bits 
+     *                  1 or 2 to select antenna 1 or antenna 2
+     * \return The value set in the TX_PWR bits
      */
     retval_t  tal_ant_div_config (bool div_ctrl, uint8_t ant_ctrl);
 #endif /* End of ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))*/
 
-#if(TAL_TYPE == AT86RF212)
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFR2))
 
     /*
-     * \brief Configures the frequency to be set in transceiver 
+     * \brief Configures the frequency to be set in transceiver
      *
      * \param frequency  frequency value to be set
      * \return MAC_SUCCESS if frequency is configured correctly
@@ -194,19 +203,19 @@ extern "C" {
      *                 FAILURE if frequency registers are not configured properly
      */
      retval_t tal_set_frequency (float frequency);
-     
+
      /**
      * \brief to set the frequency based on CC_BAND and CC_NUMBER Registers
      *
-     * \param cc_band band to be selected in cc_band register bits 
+     * \param cc_band band to be selected in cc_band register bits
      * \param cc_number offset frequency to be selected in cc_number register bits
      * \return MAC_SUCCESS if frequency is configured correctly
      *                 MAC_INVALID_PARAMETER if out of range or incorrect values are given
      *                 FAILURE if frequency registers are not configured properly
      */
-   
+
     retval_t tal_set_frequency_regs(uint8_t cc_band, uint8_t cc_number);
-    
+
     /*
      * \brief Calculate the frequency based on CC_BAND and CC_NUMBER Registers
      *
@@ -219,20 +228,20 @@ extern "C" {
      */
     retval_t tal_calculate_frequency(uint8_t cc_band, uint8_t cc_number,float *freq);
 
-#endif /* End of (TAL_TYPE == AT86RF212)*/
-    
+#endif /* End of (TAL_TYPE == AT86RF212)||(TAL_TYPE == ATMEGARFR2)*/
+
 #if (TAL_TYPE != AT86RF230B)
     /*
-     * \brief Configures receiver sensitivity level 
+     * \brief Configures receiver sensitivity level
      *
      * \param pdt_level  0 to 15 levels of rx sensitivity
      * \param MAC_SUCCESS if sensitivity level is configured correctly
-     *        MAC_INVALID_PARAMETER pdt_level is out of range 
+     *        MAC_INVALID_PARAMETER pdt_level is out of range
      *        FAILURE otheriwse
      */
     retval_t tal_set_rx_sensitivity_level(uint8_t  pdt_level);
     /*
-     * \brief Configures promiscous mode in rx_aack_on mode 
+     * \brief Configures promiscous mode in rx_aack_on mode
      *
      * \param prom_ctrl  true/false to enable/disable prom mode
      *
@@ -241,21 +250,21 @@ extern "C" {
      */
     retval_t tal_rxaack_prom_mode_ctrl (bool  prom_ctrl);
 #endif /* End of TAL_TYPE != AT86RF230B */
-    
+
     /*
-     * \brief to get the current status of the transceiver 
+     * \brief to get the current status of the transceiver
      *
      * \return status of the transceiver
      */
     tal_trx_status_t tal_get_trx_status(void);
-    
+
     /*
      * \brief to read a particular transceiver register
      * \param reg_addr address of the transveiver register to be read
-     * \param *data pointer to the location where the register value need to be 
+     * \param *data pointer to the location where the register value need to be
      *              stored
      * \return MAC_SUCCESS if the register is read correctly
-     *         MAC_INVALID_PARAMETER if the reg_addr is out of range     
+     *         MAC_INVALID_PARAMETER if the reg_addr is out of range
      */
     retval_t tal_trx_reg_read (uint16_t  reg_addr, uint8_t *data);
     /*
@@ -263,17 +272,17 @@ extern "C" {
      *
      * \param reg_addr address of the transceiver register to be written
      * \param value value to be written in the register
-     *   
+     *
      * \return MAC_SUCCESS if the register is written correctly
-     *         MAC_INVALID_PARAMETER if the reg_addr is out of range 
+     *         MAC_INVALID_PARAMETER if the reg_addr is out of range
      */
     retval_t  tal_trx_reg_write (uint16_t  reg_addr, uint8_t  value);
     /*
      * \brief to read a current setting particular transceiver parameter
      * \param parameter type of the parameter to be read
-     * \param *param_value pointer to the location where the current parameter value need to be 
+     * \param *param_value pointer to the location where the current parameter value need to be
      *              stored
-     * \return MAC_INVALID_PARAMETER if the parameter is invalid    
+     * \return MAC_INVALID_PARAMETER if the parameter is invalid
      *         MAC_SUCCESS otherwise
      */
 
@@ -283,32 +292,32 @@ extern "C" {
      *
      * \param reg_addr address of the transceiver register to be written
      * \param value value to be written in the register
-     *   
+     *
      * \return MAC_SUCCESS if the register is written correctly
      *         MAC_INVALID_PARAMETER if the reg_addr is out of range
      */
-    
+
     retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr, uint8_t *value);
     /*
      * \brief This function is called to get the base RSSI value for repective radios
      *
      * \return value of the base RSSI value
      */
-    int8_t tal_get_rssi_base_val(void); 
-    
+    int8_t tal_get_rssi_base_val(void);
+
     /**
      * \brief Enable/Disable the rx safe mode
      *
-     * \param safe_mode_ctrl true  if rx safe mode has to be enabled                        
+     * \param safe_mode_ctrl true  if rx safe mode has to be enabled
      *
      * \return MAC_SUCCESS  if rx_safe_mode bit is configured correctly
      *         FAILURE      otherwise
      */
     retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl);
-    
+
 #ifdef __cplusplus
 } /* extern "C" */
-#endif  
+#endif
 
 #endif /* TAL_HELPER_H */
 /* EOF */
