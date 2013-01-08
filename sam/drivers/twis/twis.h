@@ -50,6 +50,8 @@
 /**
  * \defgroup sam_drivers_twis_group TWIS - Two-Wire Slave Interface
  *
+ * See \ref sam_twis_quickstart.
+ *
  * Driver for the TWIS (Two-Wire Slave Interface).
  * This driver provides access to the main features of the TWIS controller.
  * The TWIS interconnects components on a unique two-wire bus.
@@ -172,4 +174,83 @@ uint8_t twis_get_smbus_transfer_nb(Twis *twis);
  * \}
  */
 
+/**
+ * \page sam_twis_quickstart Quickstart guide for SAM TWIS driver
+ *
+ * This is the quickstart guide for the \ref group_sam_drivers_twis
+ * "SAM TWIS driver", with step-by-step instructions on how to
+ * configure and use the driver in a selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section flashcalw_basic_use_case Basic use case
+ * In this basic use case, the last page page and the user page will be written
+ * with a specific magic number.
+ *
+ * \subsection sam_twis_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section twis_basic_use_case_setup Setup steps
+ * by default.
+ * \subsection twis_basic_use_case_setup_code Example code
+ * Enable the following macro in the conf_clock.h:
+ * \code
+ *  #define CONFIG_SYSCLK_SOURCE   SYSCLK_SRC_DFLL
+ *  #define CONFIG_DFLL0_SOURCE     GENCLK_SRC_OSC0
+ * \endcode
+ *
+ * Add the following code in the application C-file:
+ * \code
+ *  sysclk_init();
+ * \endcode
+ *
+ * \subsection twis_basic_use_case_setup_flow Workflow
+ * -# Set system clock source as DFLL:
+ *   - \code #define CONFIG_SYSCLK_SOURCE   SYSCLK_SRC_DFLL \endcode
+ * -# Set DFLL source as OSC0:
+ *   - \code CONFIG_DFLL0_SOURCE     GENCLK_SRC_OSC0 \endcode
+ * -# Initialize the system clock.
+ *   - \code sysclk_init(); \endcode
+ *
+ * \section twis_basic_use_case_usage Usage steps
+ * \subsection twis_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *     twis_enable(BOARD_BASE_TWI_SLAVE);
+ *
+ *     struct twis_config config;
+ *     config.ten_bit = false;
+ *	config.chip = SLAVE_ADDRESS;
+ *	config.smbus = false;
+ *	config.stretch_clk_data = false;
+ *	config.stretch_clk_addr = false;
+ *	config.stretch_clk_hr = true;
+ *	config.ack_general_call = false;
+ *	config.ack_slave_addr = true;
+ *	config.enable_pec = false;
+ *	config.ack_smbus_host_header = false;
+ *	config.ack_smbus_default_addr = false;
+ *
+ *     twis_slave_fct_t twis_slave_fct;
+ *	twis_slave_fct.rx = &twis_slave_rx;
+ *	twis_slave_fct.tx = &twis_slave_tx;
+ *	twis_slave_fct.stop = &twis_slave_stop;
+ *
+ *	twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1);
+ *
+ *	twi_slave_read(BOARD_BASE_TWI_SLAVE);
+ *
+ *	twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM);
+ * \endcode
+ *
+ * \subsection twis_basic_use_case_usage_flow Workflow
+ * -# Enable TWIS module:
+ *   - \code twis_enable(BOARD_BASE_TWI_SLAVE); \endcode
+ * -# Initialize TWIS module with specified configuration:
+ *   - \code twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1); \endcode
+ * -# Enable TWI interrupts:
+ *   - \code twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM); \endcode
+ */
 #endif /* TWIS_H_INCLUDED */
