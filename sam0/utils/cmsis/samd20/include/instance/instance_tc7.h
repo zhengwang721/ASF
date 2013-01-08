@@ -74,13 +74,13 @@
 #define REG_TC7_INTENSET           (*(RwReg8 *)0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set Register */
 #define REG_TC7_INTFLAG            (*(RwReg8 *)0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear Register */
 #define REG_TC7_STATUS             (*(RoReg8 *)0x42003C0FU) /**< \brief (TC7) Status Register */
-#define REG_TC7_COUNT              (*(RwReg16*)0x42003C10U) /**< \brief (TC7) COUNT16 Count Register */
+//#define REG_TC7_COUNT              (*(RwReg16*)0x42003C10U) /**< \brief (TC7) COUNT16 Count Register */
 #define REG_TC7_COUNT              (*(RwReg  *)0x42003C10U) /**< \brief (TC7) COUNT32 Count Register */
-#define REG_TC7_COUNT              (*(RwReg8 *)0x42003C10U) /**< \brief (TC7) COUNT8 Count Register */
+//#define REG_TC7_COUNT              (*(RwReg8 *)0x42003C10U) /**< \brief (TC7) COUNT8 Count Register */
 #define REG_TC7_PER                (*(RwReg8 *)0x42003C14U) /**< \brief (TC7) COUNT8 Period Register */
-#define REG_TC7_CC                 (*(RwReg16*)0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture Register */
+//#define REG_TC7_CC                 (*(RwReg16*)0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture Register */
 #define REG_TC7_CC                 (*(RwReg  *)0x42003C18U) /**< \brief (TC7) COUNT32 Compare and Capture Register */
-#define REG_TC7_CC                 (*(RwReg8 *)0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture Register */
+//#define REG_TC7_CC                 (*(RwReg8 *)0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture Register */
 #endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC7 peripheral ========== */

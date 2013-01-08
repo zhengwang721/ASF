@@ -74,13 +74,13 @@
 #define REG_TC5_INTENSET           (*(RwReg8 *)0x4200340DU) /**< \brief (TC5) Interrupt Enable Set Register */
 #define REG_TC5_INTFLAG            (*(RwReg8 *)0x4200340EU) /**< \brief (TC5) Interrupt Flag Status and Clear Register */
 #define REG_TC5_STATUS             (*(RoReg8 *)0x4200340FU) /**< \brief (TC5) Status Register */
-#define REG_TC5_COUNT              (*(RwReg16*)0x42003410U) /**< \brief (TC5) COUNT16 Count Register */
+//#define REG_TC5_COUNT              (*(RwReg16*)0x42003410U) /**< \brief (TC5) COUNT16 Count Register */
 #define REG_TC5_COUNT              (*(RwReg  *)0x42003410U) /**< \brief (TC5) COUNT32 Count Register */
-#define REG_TC5_COUNT              (*(RwReg8 *)0x42003410U) /**< \brief (TC5) COUNT8 Count Register */
+//#define REG_TC5_COUNT              (*(RwReg8 *)0x42003410U) /**< \brief (TC5) COUNT8 Count Register */
 #define REG_TC5_PER                (*(RwReg8 *)0x42003414U) /**< \brief (TC5) COUNT8 Period Register */
-#define REG_TC5_CC                 (*(RwReg16*)0x42003418U) /**< \brief (TC5) COUNT16 Compare and Capture Register */
+//#define REG_TC5_CC                 (*(RwReg16*)0x42003418U) /**< \brief (TC5) COUNT16 Compare and Capture Register */
 #define REG_TC5_CC                 (*(RwReg  *)0x42003418U) /**< \brief (TC5) COUNT32 Compare and Capture Register */
-#define REG_TC5_CC                 (*(RwReg8 *)0x42003418U) /**< \brief (TC5) COUNT8 Compare and Capture Register */
+//#define REG_TC5_CC                 (*(RwReg8 *)0x42003418U) /**< \brief (TC5) COUNT8 Compare and Capture Register */
 #endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC5 peripheral ========== */
