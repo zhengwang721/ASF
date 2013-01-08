@@ -244,4 +244,69 @@ static inline uint32_t acifc_get_interrupt_mask(Acifc *p_acifc)
 /**INDENT-ON**/
 /// @endcond
 
+/**
+ * \page sam_acifc_quickstart Quickstart guide for SAM ACIFC driver
+ *
+ * This is the quickstart guide for the \ref group_sam_drivers_acifc
+ * "SAM ACIFC driver", with step-by-step instructions on how to
+ * configure and use the driver in a selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section acifc_basic_use_case Basic use case
+ * In this basic use case, the last page page and the user page will be written
+ * with a specific magic number.
+ *
+ * \subsection sam_acifc_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section acifc_basic_use_case_setup Setup steps
+ * by default.
+ * \subsection acifc_basic_use_case_setup_code Example code
+ * Enable the following macro in the conf_clock.h:
+ * \code
+ *  #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL
+ *  #define CONFIG_DFLL0_SOURCE         GENCLK_SRC_OSC32K
+ * \endcode
+ *
+ * Add the following code in the application C-file:
+ * \code
+ *  sysclk_init();
+ * \endcode
+ *
+ * \subsection acifc_basic_use_case_setup_flow Workflow
+ * -# Set system clock source as DFLL:
+ *   - \code #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL \endcode
+ * -# Set DFLL source as OSC32K:
+ *   - \code #define CONFIG_DFLL0_SOURCE         GENCLK_SRC_OSC32K \endcode
+ * -# Initialize the system clock.
+ *   - \code sysclk_init(); \endcode
+ *
+ * \section acifc_basic_use_case_usage Usage steps
+ * \subsection acifc_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *    acifc_enable(ACIFC);
+ *    acifc_configure(ACIFC, &acifc_opt);
+ *    acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL);
+ *    acifc_set_callback(ACIFC, compare_result_output, ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
+ *    acifc_user_trigger_single_comparison(ACIFC);
+ * \endcode
+ *
+ * \subsection acifc_basic_use_case_usage_flow Workflow
+ * -# Enable ACIFC Module:
+ *   - \code acifc_enable(ACIFC); \endcode
+ * -# Configure the ACIFC module:
+ *   - \code acifc_configure(ACIFC, &acifc_opt); \endcode
+ * -# Configure a set of AC channels in normal mode:
+ *   - \code acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL); 
+ * \endcode
+ * -# Set callback for ACIFC:
+ *   - \code acifc_set_callback(ACIFC, compare_result_output, ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
+ *  \endcode
+ * -# User starts a single comparison:
+ *   - \code acifc_user_trigger_single_comparison(ACIFC); \endcode
+ */
 #endif /* ACIFC_H_INCLUDED */

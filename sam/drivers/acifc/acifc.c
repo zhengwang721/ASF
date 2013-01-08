@@ -56,6 +56,8 @@ extern "C" {
 /**
  * \defgroup sam_drivers_acifc_group Analog Comparator (AC)
  *
+ * See \ref sam_acifc_quickstart.
+ *
  * Driver for the Analog Comparator. This driver provides access to the main
  * features of the AC controller.
  *
