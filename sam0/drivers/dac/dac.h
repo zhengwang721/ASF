@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Peripheral Digital to Analog Converter Driver
+ * \brief SAMD20 Peripheral Digital to Analog Converter Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -53,11 +53,11 @@ extern "C" {
 
 
 /**
- * \defgroup sam0_dac_group SAM0+ Digital to Analog Converter Driver (DAC)
+ * \defgroup sam0_dac_group SAMD20 Digital to Analog Converter Driver (DAC)
  *
- * Driver for the SAM0+ architecture devices. This driver provides an
+ * Driver for the SAMD20 architecture devices. This driver provides an
  * interface for converting digital values to analog voltage.
- * This driver encompasses the following module within the SAM0+ devices:
+ * This driver encompasses the following module within the SAMD20 devices:
  * \li \b DAC \b (Digital to Analog Converter)
  *
  * \section module_introduction Introduction

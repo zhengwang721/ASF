@@ -124,12 +124,8 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#ifdef __ICCARM__   /* IAR */
-#pragma data_alignment=512
-#define __attribute__(...)
-#endif
 /** CRC descriptor */
-__attribute__ ((aligned(512)))
+COMPILER_ALIGNED(512)
 crccu_dscr_type_t crc_dscr;
 
 /** CRC data buffer */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Analog Comparator Driver
+ * \brief SAMD20 Analog Comparator Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,9 +42,9 @@
 #define AC_H_INCLUDED
 
 /**
- * \defgroup sam0_ac_group SAM0+ Analog Comparator Driver (AC)
+ * \defgroup sam0_ac_group SAMD20 Analog Comparator Driver (AC)
  *
- * Driver for the SAM0+ Analog Comparator. Provides a unified interface
+ * Driver for the SAMD20 Analog Comparator. Provides a unified interface
  * for the configuration and management of the Analog Comparator
  * module, including the channel comparator input selections, window
  * modes and event generation within the device. This driver encompasses the

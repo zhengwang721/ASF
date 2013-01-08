@@ -6,15 +6,13 @@
 			<info type="keyword" value="technology">
 				<keyword value="Backup Power Manager" />
 			</info>
-			<build type="header-file" value="ui.h"/>
-			<build type="header-file" value="bpm_example.h"/>
 			<build type="c-source" value="bpm_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam4l"/>
 			<require idref="sam.drivers.bpm"/>
-			<!-- <require idref="sam.drivers.eic"/> -->
-			<!-- <require idref="sam.drivers.ast"/> -->
-			<require idref="common.services.ioport" />
+			<require idref="sam.drivers.eic"/>
+			<require idref="sam.drivers.ast"/>
+			<require idref="common.services.delay"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 		</module>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Basic Usage Example
+ * \brief SAMD20 RTC Basic Usage Example
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

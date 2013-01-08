@@ -61,8 +61,10 @@
  * tested with the following setup:
  *  - Xplain evaluation kit
  *  - EVK1100 evaluation kit
+ *  - SAM3N evaluation kit
+ *  - SAM4S evaluation kit
+ *  - SAM4E evaluation kit
  *  - SAM4L evaluation kit
- *  - SAM3X evaluation kit
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  * \section example_description Description of the example
  * This example reads input from a button and outputs it on a LED.

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.components.display.ili9225.example" caption="ILI9225 LCD Controller Example">
+	<module type="application" id="sam.components.display.ili9225.example" caption="ILI9225 Display Controller Example">
 		<info type="description" value="summary">
 		A simple example for verifying that the ILI9225 low level driver works.
 		</info>

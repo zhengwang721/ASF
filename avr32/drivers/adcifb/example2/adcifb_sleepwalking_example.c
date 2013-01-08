@@ -588,7 +588,7 @@ static void power_save_measures_init()
 /* Application Documentation */
 
 /**
- * \defgroup group_avr32_drivers_adcifb_example2_sleepwalking
+ * \mainpage Sleepwalking example using the ADCIFB module on AVR UC3 L devices
  * \section intro Introduction
  *  The Example projects demonstrates:\n
  *  - Sleepwalking Feature in AT32UC3L devices : \n

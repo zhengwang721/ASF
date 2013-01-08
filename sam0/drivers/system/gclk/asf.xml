@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.system.gclk" caption="Generic Clock Driver">
 		<info type="description" value="summary">
-			Driver for the SAM0+ generic clocks. Provides a unified interface
+			Driver for the SAMD20 generic clocks. Provides a unified interface
 			for the configuration and management of the Generic Clock generators
 			and channels within the device, including the enabling, disabling,
 			clock source selection and prescaling of clocks to various modules
@@ -15,9 +15,9 @@
 		<build type="c-source" value="gclk.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_gclk_basic.h"/>
 		<build type="doxygen-entry-point" value="sam0_gclk_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system.core"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

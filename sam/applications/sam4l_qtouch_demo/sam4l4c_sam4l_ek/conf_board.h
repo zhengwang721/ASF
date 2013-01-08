@@ -52,4 +52,7 @@
 // Force usage of backlight
 #define CONF_BOARD_BL
 
+// Force usage of external EIC
+#define CONF_BOARD_EIC
+
 #endif /* CONF_BOARD_H_INCLUDED */

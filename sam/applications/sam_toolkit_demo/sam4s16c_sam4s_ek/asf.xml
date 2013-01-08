@@ -22,7 +22,7 @@
 		<build type="header-file" value="conf_sysfont.h"/>
 		<build type="header-file" value="conf_win.h"/>
 		<build type="header-file" value="conf_wtk.h"/>
-		<build type="header-file" subtype="api" value="QDebugSettings.h"/>
+		<build type="header-file" value="QDebugSettings.h"/>
 		<build type="header-file" value="demo_board.h"/>
 		<build type="c-source" value="demo_board.c"/>
 		<build type="include-path" value="."/>

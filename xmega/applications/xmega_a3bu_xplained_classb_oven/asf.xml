@@ -1,20 +1,20 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.applications.xmega_a3bu_xplained_classb" caption="Class B example for XMEGA-A3BU Xplained">
+	<module type="application" id="xmega.applications.xmega_a3bu_xplained_classb" caption="Class B Oven Controller Example">
 		<info type="description" value="summary">
 			Example demonstrating the use of Class B tests in a simulated application.
 		</info>
-		<build type="c-source"     value="main.c"/>
-		<build type="c-source"     value="oven_classb.c"/>
-		<build type="c-source"     value="oven_controller.c"/>
-		<build type="c-source"     value="oven_plant.c"/>
-		<build type="c-source"     value="oven_ui.c"/>
-		<build type="c-source"     value="oven_bitmaps.c"/>
-		<build type="header-file" subtype="api" value="oven.h"/>
-		<build type="header-file" subtype="api" value="oven_bitmaps.h"/>
-		<build type="header-file" subtype="api" value="oven_classb.h"/>
-		<build type="header-file" subtype="api" value="oven_controller.h"/>
-		<build type="header-file" subtype="api" value="oven_plant.h"/>
-		<build type="header-file" subtype="api" value="oven_ui.h"/>
+		<build type="c-source"    value="main.c"/>
+		<build type="c-source"    value="oven_classb.c"/>
+		<build type="c-source"    value="oven_controller.c"/>
+		<build type="c-source"    value="oven_plant.c"/>
+		<build type="c-source"    value="oven_ui.c"/>
+		<build type="c-source"    value="oven_bitmaps.c"/>
+		<build type="header-file" value="oven.h"/>
+		<build type="header-file" value="oven_bitmaps.h"/>
+		<build type="header-file" value="oven_classb.h"/>
+		<build type="header-file" value="oven_controller.h"/>
+		<build type="header-file" value="oven_plant.h"/>
+		<build type="header-file" value="oven_ui.h"/>
 		<build type="include-path" value="."/>
 		<build type="library" subtype="compiler" value="libm" toolchain="avrgcc"/>
 		<build type="build-config" subtype="c-compiler-flags" value="-fshort-enums" toolchain="avrgcc"/>

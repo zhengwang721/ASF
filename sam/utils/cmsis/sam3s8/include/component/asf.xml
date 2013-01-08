@@ -33,6 +33,6 @@
 		<build type="header-file" value="component_usart.h"/>
 		<build type="header-file" value="component_wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
-		<device-support value="sam3sd8"/>
+		<device-support value="sam3sd"/>
 	</module>
 </asf>

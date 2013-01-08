@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Spi Master configuration for spi example
+ * \brief USART SPI driver configuration
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
