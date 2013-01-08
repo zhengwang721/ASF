@@ -7,7 +7,7 @@
 			SERCOM USART interface.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="I2C Master" />
+			<keyword value="USART" />
 		</info>
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="usart.h"/>
