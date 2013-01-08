@@ -75,8 +75,7 @@ uint8_t *temp;
 
 
 /**
- * \brief Main function of the Performance Analyzer application
- * \ingroup group_app_init
+ * \brief Main function of the Serial Bridge application
  */
 int main(void)
 {
