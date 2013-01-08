@@ -1168,8 +1168,10 @@ enum status_code tc_set_compare_value(
 /** \brief Sets the top/period value
  *
  * Writes the top value or period for the counter associated with the
- * dev_inst struct. In the case of a counter running in 8-bit
- * counter size a dedicated register is used for the period.
+ * dev_inst struct. In the case of a counter running in 8-bit counter
+ * size a dedicated register is used for the period. This function is
+ * only meant to be used in PWM or frequensy match mode. Not in any of
+ * the wave generation normal modees.
  *
  * \note For 16 and 32-bit counter size there is no dedicated register for
  * the period/Top value. In these cases capture compare register 0 is

@@ -88,7 +88,7 @@
  *  - \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module
  *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop infinitly. Let the module generate PWM
+ * -# Loop infinitly. Let the module generate pwm PWM signal.
  *  - \snippet qs_tc_basic.c inf_loop
  * \section tc_basic_use_case_workflow Work flow
  */
