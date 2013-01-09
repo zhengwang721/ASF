@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ System related functionality
+ * \brief SAMD20 System related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -63,34 +63,31 @@ enum status_code system_bod_set_config(struct system_bod_config *conf,
 {
 	Assert(conf);
 
-	uint16_t temp;
+	uint32_t temp;
 
-	temp = conf->action << SYSCTRL_BOD33CTRL_ACTION_gp |
-			conf->mode << SYSCTRL_BOD33CTRL_MODE_bp;
+	temp = conf->action | conf->mode;
 
 	if (conf->mode) {
 	/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33CTRL_CEN_bm;
+		temp |= SYSCTRL_BOD33_CEN;
 	}
 	if (conf->hysteresis) {
-		temp |= SYSCTRL_BOD33CTRL_HYST_bm;
+		temp |= SYSCTRL_BOD33_HYST;
 	}
 
-	temp |= SYSCTRL_BOD33CTRL_ENABLE_bm;
+	temp |= SYSCTRL_BOD33_ENABLE;
 	switch (bod) {
 		case SYSTEM_BOD33:
 			if (conf->level > 0x3F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL.BOD33LEVEL = conf->level; // 6 bits
-			SYSCTRL.BOD33CTRL = temp;
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
 			break;
 		case SYSTEM_BOD12:
 			if (conf->level > 0x1F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL.BOD12LEVEL = conf->level; // 5 bits
-			SYSCTRL.BOD12CTRL = temp;
+			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) | temp;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;

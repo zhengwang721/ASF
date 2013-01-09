@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.lcdca.unit_tests" caption="Unit Tests for the LCDCA driver">
+	<module type="application" id="sam.drivers.lcdca.unit_tests" caption="Unit Tests for the SAM LCDCA Driver">
 		<info type="description" value="summary">
-		This is the unit tests of lcdca driver.
+		This is the unit tests of the SAM LCDCA driver.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Peripheral Access Controller Driver
+ * \brief SAMD20 Peripheral Access Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -43,11 +43,11 @@
 #define PAC_H_INCLUDED
 
 /**
- * \defgroup sam0_pac_group SAM0+ PAC Driver (PAC)
- * Driver for the SAM0+ architecture devices. This driver provides a
+ * \defgroup sam0_pac_group SAMD20 PAC Driver (PAC)
+ * Driver for the SAMD20 architecture devices. This driver provides a
  * convenient interface for locking and unlocking peripheral registers
  * and is located inside the system namespace. This driver encompasses the
- * following module within the SAM0+ devices:
+ * following module within the SAMD20 devices:
  * - \b PAC (Peripheral Access Controller)
  *
  * Physically, the module is interconnected within the device as shown in the
@@ -79,7 +79,7 @@
  * \enddot
  *
  * \section module_introduction Introduction
- * The SAM0+ devices are fitted with a Peripheral Access Controller (PAC)
+ * The SAMD20 devices are fitted with a Peripheral Access Controller (PAC)
  * that can be used to lock and unlock write access to a peripheral's
  * registers\ref pac_non_write_protected "[1]".
  *

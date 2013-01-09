@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.components.display.c42364a.example" caption="C42364A LCD Glass Example">
+	<module type="application" id="sam.components.display.c42364a.example" caption="C42364A Display LCD Glass Example">
 		<info type="description" value="summary">
 			A simple example for drawing pictures and strings on the C42364A LCD Glass.
 		</info>

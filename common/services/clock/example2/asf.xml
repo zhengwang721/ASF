@@ -72,5 +72,17 @@
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.clock"/>
 		</module>
+		<module type="application" id="common.services.basic.clock.example2#5" caption="Common API for Clocks Control Example 2">
+			<info type="description" value="summary">
+			Initialize the clock system and output the CPU clock on a dedicated pin.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>			
+			<build type="c-source" value="clock_example2_sam.c"/>
+			<device-support value="sam4e"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+		</module>
 	</select-by-device>
 </asf>

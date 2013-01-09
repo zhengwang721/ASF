@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Analog Comparator Driver
+ * \brief SAMD20 Analog Comparator Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

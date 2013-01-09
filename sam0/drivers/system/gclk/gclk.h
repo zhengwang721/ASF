@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Generic Clock Driver
+ * \brief SAMD20 Generic Clock Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define SYSTEM_CLOCK_GCLK_H_INCLUDED
 
 /**
- * \defgroup sam0_gclk_group SAM0+ Generic Clock Driver (GCLK)
+ * \defgroup sam0_gclk_group SAMD20 Generic Clock Driver (GCLK)
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the Generic Clock
  * generators and channels within the device, including the enabling, disabling,
  * clock source selection and prescaling of clocks to various modules within the
@@ -77,7 +77,7 @@
  * \section module_introduction Introduction
  *
  * \subsection Overview of the Generic Clock chain
- * Within the SAM0+ devices are a number of Generic Clocks; these are used to
+ * Within the SAMD20 devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input

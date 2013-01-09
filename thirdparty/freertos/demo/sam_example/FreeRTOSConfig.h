@@ -65,12 +65,15 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
+#if defined (__GNUC__) || defined (__ICCARM__) || defined(__CC_ARM)
+#   include "sysclk.h"
+#endif
 
 //#define configUSE_PREEMPTION                     1
 #define configUSE_PREEMPTION                       0
 #define configUSE_IDLE_HOOK                        1
 #define configUSE_TICK_HOOK                        1
-#define configCPU_CLOCK_HZ                         ((unsigned long) CHIP_FREQ_CPU_MAX)
+#define configCPU_CLOCK_HZ                         (sysclk_get_cpu_hz())
 #define configTICK_RATE_HZ                         ((portTickType) 1000)
 #define configMINIMAL_STACK_SIZE                   ((unsigned short) 70)
 //#define configTOTAL_HEAP_SIZE                    ((size_t) ( 0x2C00-600 ))

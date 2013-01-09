@@ -77,7 +77,7 @@
  *
  * \param func Name for the function.
  */
-#  define ISR(func)    \
+#  define ISR(func)   \
 	void func (void)
 
 /**
@@ -89,8 +89,8 @@
  *
  * This must be called prior to \ref irq_register_handler.
  */
-#  define irq_initialize_vectors()                     \
-	do {                                           \
+#  define irq_initialize_vectors()   \
+	do {                             \
 	} while(0)
 
 /**
@@ -117,14 +117,14 @@
 
 //@}
 
-#  define cpu_irq_enable()                             \
-	do {                                           \
+#  define cpu_irq_enable()                     \
+	do {                                       \
 		g_interrupt_enabled = true;            \
 		__DMB();                               \
 		__enable_irq();                        \
 	} while (0)
-#  define cpu_irq_disable()                            \
-	do {                                           \
+#  define cpu_irq_disable()                    \
+	do {                                       \
 		__disable_irq();                       \
 		__DMB();                               \
 		g_interrupt_enabled = false;           \
@@ -132,6 +132,11 @@
 
 typedef uint32_t irqflags_t;
 extern volatile bool g_interrupt_enabled;
+
+#define cpu_irq_is_enabled()    g_interrupt_enabled
+
+static volatile uint32_t cpu_irq_critical_section_counter;
+static volatile bool     cpu_irq_prev_interrupt_state;
 
 static inline irqflags_t cpu_irq_save(void)
 {
@@ -151,7 +156,42 @@ static inline void cpu_irq_restore(irqflags_t flags)
 		cpu_irq_enable();
 }
 
-#define cpu_irq_is_enabled()    g_interrupt_enabled
+static inline void cpu_irq_enter_critical()
+{
+
+	if(cpu_irq_critical_section_counter == 0) {
+
+		if(cpu_irq_is_enabled()) {
+
+			cpu_irq_disable();
+			cpu_irq_prev_interrupt_state = true;
+
+		} else {
+
+			/* Make sure the to save the prev state as false */
+			cpu_irq_prev_interrupt_state = false;
+
+		}
+
+	}
+
+	cpu_irq_critical_section_counter++;
+
+}
+
+static inline void cpu_irq_leave_critical()
+{
+	/* Check if the user is trying to leave a critical section when not in a critical section */
+	Assert(cpu_irq_critical_section_counter > 0);
+
+	cpu_irq_critical_section_counter--;
+
+	/* Only enable global interrupts when the counter reaches 0 and the state of the global interrupt flag
+	   was enabled when entering critical state */
+	if((cpu_irq_critical_section_counter == 0) & (cpu_irq_prev_interrupt_state)) {
+		cpu_irq_enable();
+	}
+}
 
 /**
  * \weakgroup interrupt_deprecated_group

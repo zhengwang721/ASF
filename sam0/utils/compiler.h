@@ -45,7 +45,7 @@
 /**
  * \defgroup group_sam0_utils Compiler abstraction layer and code utilities
  *
- * Compiler abstraction layer and code utilities for AT91SAM0+.
+ * Compiler abstraction layer and code utilities for AT91SAMD20.
  * This module provides various abstraction layers and utilities to make code compatible between different compilers.
  *
  * @{

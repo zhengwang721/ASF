@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Non-Volatile Memory driver
+ * \brief SAMD20 Non-Volatile Memory driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,13 +42,13 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup sam0_nvm_group SAM0+ Non-Volatile Memory Driver (NVM)
+ * \defgroup sam0_nvm_group SAMD20 Non-Volatile Memory Driver (NVM)
  *
- * Driver for the SAM0+ Non-volatile Memory controller. Provides a unified
+ * Driver for the SAMD20 Non-volatile Memory controller. Provides a unified
  * interface for the erasing, reading and writing of data to and from the
  * various non-volatile memories of the device, including executable flash
  * memory and user configuration pages. This driver encompasses the following
- * module within the SAM0 devices:
+ * module within the SAMD20 devices:
  *
  * \li \b NVM (Non-Volatile Memory)
  *
@@ -658,7 +658,7 @@ enum status_code nvm_init(const struct nvm_config *const config);
 static inline bool nvm_is_ready(void)
 {
 	/* Get a pointer to the module hardware instance */
-	Nvmctrl *const nvm_module = &NVMCTRL;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	return nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_READY;
 }
@@ -683,19 +683,20 @@ static inline void nvm_get_parameters(struct nvm_parameters *const parameters)
 	Assert(parameters);
 
 	/* Get a pointer to the module hardware instance */
-	Nvmctrl *const nvm_module = &NVMCTRL;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_INTFLAG_ERROR;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Read out from the PARAM register */
 	uint32_t param_reg;
 	param_reg = nvm_module->PARAM.reg;
 
 	/* Mask out page size and number of pages */
-	parameters->page_size  = (param_reg  & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos;
-	parameters->nvm_number_of_pages = (param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
-
+	parameters->page_size  =
+			(param_reg  & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos;
+	parameters->nvm_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 }
 
 enum status_code nvm_write_page(
@@ -738,13 +739,13 @@ static inline enum nvm_errors nvm_get_error(void)
 	enum nvm_errors ret_val;
 
 	/* Get a pointer to the module hardware instance */
-	Nvmctrl *const nvm_module = &NVMCTRL;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Mask out non-error bits */
 	ret_val =  ((nvm_module->STATUS.reg) & 0x1C);
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVM_ERRORS_MASK;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Return error*/
 	return ret_val;

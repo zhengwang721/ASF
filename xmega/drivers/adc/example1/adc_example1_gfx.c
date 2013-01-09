@@ -49,7 +49,7 @@
  * measurement with the internal sensor.
  *
  * \section files Main files:
- * - adc_example1.c: ADC driver example application
+ * - adc_example1_gfx.c: ADC driver example application
  * - conf_adc.h: configuration of the ADC driver
  * - conf_example.h: configuration of the example
  *
