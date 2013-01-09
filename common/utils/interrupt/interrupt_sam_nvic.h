@@ -159,7 +159,7 @@ static inline void cpu_irq_enter_critical()
 
 	if(cpu_irq_critical_section_counter == 0) {
 
-		if(g_interrupt_enabled) {
+		if(cpu_irq_is_enabled()) {
 
 			cpu_irq_disable();
 			cpu_irq_prev_interrupt_state = true;
