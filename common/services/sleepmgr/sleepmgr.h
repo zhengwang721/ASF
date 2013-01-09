@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 #include <sleep.h>
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)
 # include "sam/sleepmgr.h"
 #elif XMEGA
 # include "xmega/sleepmgr.h"
@@ -144,6 +144,8 @@ static inline void sleepmgr_lock_mode(enum sleepmgr_mode mode)
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
+#else
+	UNUSED(mode);
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 }
 
@@ -169,6 +171,8 @@ static inline void sleepmgr_unlock_mode(enum sleepmgr_mode mode)
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
+#else
+	UNUSED(mode);
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 }
 
