@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDP. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
 #  include "sleepmgr.h"
 #endif
 
-#if !(SAM3S || SAM4S)
+#if !(SAM3S || SAM4S || SAM4E)
 #  error The current UDP Device Driver supports only SAM3S and SAM4S devices.
 #endif
 
