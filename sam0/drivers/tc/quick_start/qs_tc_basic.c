@@ -56,7 +56,7 @@ int main(void)
 	//! [tc_get_config_defaults]
 
 	//! [channel_0]
-	config.tc_resolution_conf.tc_16bit_conf.compare_capture_channel_0
+	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_0
 		= 0x7FFF;
 	//! [channel_0]
 

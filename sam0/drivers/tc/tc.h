@@ -490,7 +490,7 @@ extern "C" {
  * @{
  */
 
-#define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0))
+#define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0)
 
 /** \brief Index of the compare capture channels
  *
@@ -1017,7 +1017,7 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
  * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
  *                                     modules configured as 32-bit slaves.
  */
-static inline enum status_codes tc_reset(const struct tc_dev_inst *const dev_inst)
+static inline enum status_code tc_reset(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
@@ -1042,7 +1042,7 @@ static inline enum status_codes tc_reset(const struct tc_dev_inst *const dev_ins
 		tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
 
 		/* Get the slave hw_dev pointer */
-		Tc *slave = (Tc*)(dev_inst->hw_dev + TC_NEXT__TC);
+		Tc *slave = (Tc*)(dev_inst->hw_dev + TC_NEXT_TC);
 
 		/* Synchronize */
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
