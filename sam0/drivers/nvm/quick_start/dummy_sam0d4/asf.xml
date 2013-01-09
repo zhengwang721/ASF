@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM0+ NVM driver" id="sam0.drivers.nvm.quick_start.dummy.atsam0d4">
-		<require idref="board.dummy.atsam0d4"/>
+	<project caption="Quick Start for the SAMD20 NVM driver" id="sam0.drivers.nvm.quick_start.dummy.sam0d20g18a">
+		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.nvm.quick_start"/>
 		<generator value="armgcc"/>
-		<device-support value="atsam0d4"/>
+		<device-support value="samd20g18a"/>
 	</project>
 </asf>

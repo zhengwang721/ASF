@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -75,7 +75,7 @@ static void configure_i2c(void)
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_master_init(&dev_inst, &SERCOM0, &conf);
+	i2c_master_init(&dev_inst, SERCOM0, &conf);
 	//! [init_module]
 
 	//! [enable_module]

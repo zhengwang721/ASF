@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ I2C Serial Peripheral Interface Driver
+ * \brief SAMD20 I2C Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -71,7 +71,7 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Check for ack from slave. */
-	if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK))
+	if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 	{
 		/* Not acknowledged, send stop bit. */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
@@ -117,7 +117,7 @@ static void _i2c_master_async_address_response(
 			/* Return busy. */
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 		}
-	} else if ( i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK ) {
+	} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
 		/* Slave busy. Issue ack and stop command. */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT |
 				SERCOM_I2CM_CTRLB_CMD(3);

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Clock related functionality
+ * \brief SAMD20 Clock related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -52,7 +52,7 @@
  *
  * \section into Introduction
  * This driver provides control of all the clock related functionality
- * of the SAM0+ devices. This is not limited to a single peripheral, but
+ * of the SAMD20 devices. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals:
  * - SYSCTRL (Clock source control)
  * - GCLK (Generic clock control)
@@ -75,7 +75,7 @@
  * \enddot
  *
  * \section system_clock_sources Clock Sources
- * The SAM0+ devices has multiple clock sources, among them internal
+ * The SAMD20 devices has multiple clock sources, among them internal
  * RC oscillators, internal DFLL as well as the possibility of external
  * crystal oscillators. The clock sources are configured using the functions
  * prefixed with system_clock_source. To apply a configuration to a clock source you
@@ -132,7 +132,7 @@
  * for the channel.
  *
  * \section static Static Startup Configuration
- * To simplify the use of the clocks on the SAM0+ there is a configuration file
+ * To simplify the use of the clocks on the SAMD20 there is a configuration file
  * conf_clocks.h that will set up the clock generators and GCLK generators by calling
  * the clocks_init() function. In many applications there is no need for any other
  * configuration than conf_clocks.h.
@@ -522,7 +522,7 @@ static inline void system_clock_source_get_default_config(
 static inline void _system_dfll_wait_for_sync(void)
 {
 	/* According to text in datasheet */
-	while (!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
 		/* Wait for DFLL sync */
 	}
 }
@@ -533,7 +533,7 @@ static inline void _system_dfll_wait_for_sync(void)
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
-	while(!(SYSCTRL.PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
+	while(!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
 }
@@ -570,9 +570,9 @@ static inline void _system_osc32k_wait_for_sync(void)
 static inline void system_main_clock_set_failure_detect(bool enable)
 {
 	if (enable) {
-		PM.CTRL.reg |= PM_CTRL_CFDEN;
+		PM->CTRL.reg |= PM_CTRL_CFDEN;
 	} else {
-		PM.CTRL.reg &= ~PM_CTRL_CFDEN;
+		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
 
 }
@@ -589,7 +589,7 @@ static inline void system_main_clock_set_failure_detect(bool enable)
  */
 static inline void system_main_clock_set_source(enum system_main_clock clock)
 {
-	PM.CTRL.reg = (PM.CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
+	PM->CTRL.reg = (PM->CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
 }
 #endif
 
@@ -603,7 +603,7 @@ static inline void system_main_clock_set_source(enum system_main_clock clock)
  */
 static inline void system_cpu_clock_set_divider(enum system_main_clock_div divider)
 {
-	PM.CPUSEL.reg = divider;
+	PM->CPUSEL.reg = divider;
 }
 
 /**
@@ -635,13 +635,13 @@ static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus b
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBASEL.reg = divider;
+			PM->APBASEL.reg = divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBSEL.reg = divider;
+			PM->APBBSEL.reg = divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCSEL.reg = divider;
+			PM->APBCSEL.reg = divider;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
@@ -670,7 +670,7 @@ static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus b
  */
 static inline void system_ahb_clock_set_mask(uint32_t mask)
 {
-	PM.AHBMASK.reg |= mask;
+	PM->AHBMASK.reg |= mask;
 }
 
 /**
@@ -685,7 +685,7 @@ static inline void system_ahb_clock_set_mask(uint32_t mask)
  */
 static inline void system_ahb_clock_clear_mask(uint32_t mask)
 {
-	PM.AHBMASK.reg &= ~mask;
+	PM->AHBMASK.reg &= ~mask;
 }
 
 
@@ -706,13 +706,13 @@ static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus,
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBAMASK.reg |= mask;
+			PM->APBAMASK.reg |= mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBMASK.reg |= mask;
+			PM->APBBMASK.reg |= mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCMASK.reg |= mask;
+			PM->APBCMASK.reg |= mask;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
@@ -739,13 +739,13 @@ static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bu
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM.APBAMASK.reg &= ~mask;
+			PM->APBAMASK.reg &= ~mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM.APBBMASK.reg &= ~mask;
+			PM->APBBMASK.reg &= ~mask;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM.APBCMASK.reg &= ~mask;
+			PM->APBCMASK.reg &= ~mask;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;

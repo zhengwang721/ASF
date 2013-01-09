@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Peripheral Access Controller Driver
+ * \brief SAMD20 Peripheral Access Controller Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -75,26 +75,25 @@ __no_inline enum status_code system_peripheral_lock(
 	uint8_t register_pos = peripheral / 32;
 
 	/* Check if key is correct. */
-	if (~peripheral != key){
+	if (~(uint32_t)peripheral != key){
 		/* If key is not correct, do hard fault. */
 		pac_hard_fault_handler();
 	}
 
-#warning "Mock-up only!"
 	switch (register_pos) {
-#ifdef PAC1
+#ifdef PAC0
 		case 0:
-			PAC1.WPSET = (1 << register_bit_pos);
+			PAC0->WPSET.reg = (1 << register_bit_pos);
+			break;
+#endif
+#ifdef PAC1
+		case 1:
+			PAC1->WPSET.reg = (1 << register_bit_pos);
 			break;
 #endif
 #ifdef PAC2
-		case 1:
-			PAC2.WPSET = (1 << register_bit_pos);
-			break;
-#endif
-#ifdef PAC3
 		case 2:
-			PAC3.WPSET = (1 << register_bit_pos);
+			PAC2->WPSET.reg = (1 << register_bit_pos);
 			break;
 #endif
 		default:
@@ -129,26 +128,25 @@ __no_inline enum status_code system_peripheral_unlock(
 	uint8_t register_pos = peripheral / 32;
 
 	/* Check if key is correct. */
-	if (~peripheral != key){
+	if (~(uint32_t)peripheral != key){
 		/* If key is not correct, do hard fault. */
 		pac_hard_fault_handler();
 	}
 
-#warning "Mock-up only!"
 	switch (register_pos) {
-#ifdef PAC1
+#ifdef PAC0
 		case 0:
-			PAC1.WPCLR = (1 << register_bit_pos);
+			PAC0->WPCLR.reg = (1 << register_bit_pos);
+			break;
+#endif
+#ifdef PAC1
+		case 1:
+			PAC1->WPCLR.reg = (1 << register_bit_pos);
 			break;
 #endif
 #ifdef PAC2
-		case 1:
-			PAC2.WPCLR = (1 << register_bit_pos);
-			break;
-#endif
-#ifdef PAC3
 		case 2:
-			PAC3.WPCLR = (1 << register_bit_pos);
+			PAC2->WPCLR.reg = (1 << register_bit_pos);
 			break;
 #endif
 		default:

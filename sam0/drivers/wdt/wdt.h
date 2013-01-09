@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Watchdog Driver
+ * \brief SAMD20 Watchdog Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -42,9 +42,9 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup sam0_wdt_group SAM0+ Watchdog Driver (WDT)
+ * \defgroup sam0_wdt_group SAMD20 Watchdog Driver (WDT)
  *
- * Driver for the SAM0+ architecture devices. This driver provides a unified
+ * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of the Watchdog Timer module
  * within the device, including the enabling, disabling and kicking within the
  * device. This driver encompasses the following module within the SAM0 devices:
@@ -70,7 +70,7 @@
  * \enddot
  *
  * \section module_introduction Introduction
- * The Watchdog module in the SAM0+ devices is designed to give an added level
+ * The Watchdog module in the SAMD20 devices is designed to give an added level
  * of safety in critical systems, to ensure a system reset is triggered in the
  * case of a deadlock or other software malfunction.
  *
@@ -256,9 +256,9 @@ enum status_code wdt_disable(void);
  */
 static inline bool wdt_is_locked(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	return (WDT_module->CTRL & WDT_ALWAYSON_bm);
+	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
 }
 
 /** @} */
@@ -274,9 +274,9 @@ static inline bool wdt_is_locked(void)
  */
 static inline void wdt_clear_early_warning(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	WDT_module->INTFLAG = WDT_EW_bm;
+	WDT_module->INTFLAG.reg = WDT_INTFLAG_EW;
 }
 
 /** \brief Determines if the Watchdog timer Early Warning period has elapsed.
@@ -290,9 +290,9 @@ static inline void wdt_clear_early_warning(void)
  */
 static inline bool wdt_is_early_warning(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	return (WDT_module->INTFLAG & WDT_EW_bm);
+	return (WDT_module->INTFLAG.reg & WDT_INTFLAG_EW);
 }
 
 void wdt_reset_count(void);

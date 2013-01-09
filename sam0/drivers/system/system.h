@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ System related functionality
+ * \brief SAMD20 System related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -53,7 +53,7 @@
  * \section intro Introduction
  *
  * This driver provides control of all the system related functionality
- * of the SAM0+ devices. This is not limited to a single peripheral, but
+ * of the SAMD20 devices. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals:
  * - SYSCTRL (BOD12, BOD33)
  * - PM (reset cause)
@@ -99,7 +99,7 @@ digraph overview {
  * The possible reset causes are enumerated in the enum \ref system_reset_cause.
  *
  * \section sleep_mode Sleep Modes
- * The SAM0+ have several sleep modes, where the sleep mode controls which clock
+ * The SAMD20 have several sleep modes, where the sleep mode controls which clock
  * systems on the device are enabled/disabled when entering sleep. The table below
  * lists the clock settings of the different sleep modes
  * <table>
@@ -275,10 +275,10 @@ struct system_bod_config {
 static inline void system_vref_enable(enum system_voltage_reference vref) {
 	switch(vref) {
 	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL.VREF.reg |= SYSCTRL_VREF_TSEN;
+		SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
 		break;
 	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL.VREF.reg |= SYSCTRL_VREF_BGOUTEN;
+		SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
 		break;
 	default:
 		return;
@@ -295,10 +295,10 @@ static inline void system_vref_enable(enum system_voltage_reference vref) {
 static inline void system_vref_disable(enum system_voltage_reference vref) {
 	switch(vref) {
 	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL.VREF.reg &= ~SYSCTRL_VREF_TSEN;
+		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
 		break;
 	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL.VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
+		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
 		break;
 	default:
 		return;
@@ -374,7 +374,7 @@ static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepm
 		case SYSTEM_SLEEPMODE_IDLE_3:
 			//TODO: is the sleepdeep bit in the CPU ?
 			//CPU.SCR &= ~SCR_SLEEPDEEP_bm;
-			PM.SLEEP.reg = sleepmode;
+			PM->SLEEP.reg = sleepmode;
 			break;
 		case SYSTEM_SLEEPMODE_STANDBY:
 			/* TODO: Find core register for this */
@@ -423,7 +423,7 @@ static inline void system_sleep(void)
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
-	return PM.RCAUSE.reg;
+	return PM->RCAUSE.reg;
 }
 
 /**

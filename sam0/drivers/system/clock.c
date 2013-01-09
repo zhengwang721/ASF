@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Clock related functionality
+ * \brief SAMD20 Clock related functionality
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -70,7 +70,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 			return xosc_frequency;
 
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
-			prescaler = (SYSCTRL.OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
+			prescaler = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
 			if (prescaler) {
 				return 8000000 / prescaler;
 			} else {
@@ -129,7 +129,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 
 	switch (clk_source) {
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
-			SYSCTRL.OSC8M.bit.PRESC = conf->rc8mhz.prescaler;
+			SYSCTRL->OSC8M.bit.PRESC = conf->rc8mhz.prescaler;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -147,7 +147,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 				}
 			}
 
-			SYSCTRL.XOSC.reg = temp_register;
+			SYSCTRL->XOSC.reg = temp_register;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
@@ -169,7 +169,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 				temp_register |= SYSCTRL_XOSC32K_EN32K;
 }
 
-			SYSCTRL.XOSC32K.reg = temp_register;
+			SYSCTRL->XOSC32K.reg = temp_register;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
@@ -178,15 +178,15 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 					conf->dfll.chill_cycle;
 
 			_system_dfll_wait_for_sync();
-			SYSCTRL.DFLLCTRL.reg = temp_register;
+			SYSCTRL->DFLLCTRL.reg = temp_register;
 
 			_system_dfll_wait_for_sync();
-			SYSCTRL.DFLLVAL.reg = SYSCTRL_DFLLVAL_COARSE(conf->dfll.coarse_value)
+			SYSCTRL->DFLLVAL.reg = SYSCTRL_DFLLVAL_COARSE(conf->dfll.coarse_value)
 					| SYSCTRL_DFLLVAL_FINE(conf->dfll.fine_value);
 
 			if (conf->dfll.loop == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
 				_system_dfll_wait_for_sync();
-				SYSCTRL.DFLLMUL.reg =
+				SYSCTRL->DFLLMUL.reg =
 						SYSCTRL_DFLLMUL_CSTEP(conf->dfll.coarse_max_step) |
 						SYSCTRL_DFLLMUL_FSTEP(conf->dfll.fine_max_step);
 			}
@@ -231,8 +231,8 @@ enum status_code system_clock_source_write_calibration(
 				return STATUS_ERR_INVALID_ARG;
 			}
 
-			SYSCTRL.OSC8M.bit.CALIB = calibration_value;
-			SYSCTRL.OSC8M.bit.FRANGE = freq_range;
+			SYSCTRL->OSC8M.bit.CALIB = calibration_value;
+			SYSCTRL->OSC8M.bit.FRANGE = freq_range;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -242,7 +242,7 @@ enum status_code system_clock_source_write_calibration(
 			}
 
 			_system_osc32k_wait_for_sync();
-			SYSCTRL.OSC32K.bit.CALIB = calibration_value;
+			SYSCTRL->OSC32K.bit.CALIB = calibration_value;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
@@ -250,7 +250,7 @@ enum status_code system_clock_source_write_calibration(
 			if (calibration_value > 32) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL.OSCULP32K.bit.CALIB = calibration_value;
+			SYSCTRL->OSCULP32K.bit.CALIB = calibration_value;
 			break;
 
 		default:
@@ -284,27 +284,27 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
 	switch (clock_src) {
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
-			SYSCTRL.OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
+			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
 			/* Not possible to wait for ready, so we return */
 			return STATUS_OK;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			SYSCTRL.OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
+			SYSCTRL->OSC32K.reg |= SYSCTRL_OSC32K_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_OSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			SYSCTRL.XOSC.reg |= SYSCTRL_XOSC_ENABLE;
+			SYSCTRL->XOSC.reg |= SYSCTRL_XOSC_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_XOSCRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			SYSCTRL.XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
+			SYSCTRL->XOSC32K.reg |= SYSCTRL_XOSC32K_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_XOSC32KRDY;
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			SYSCTRL.DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE;
+			SYSCTRL->DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE;
 			waitmask = SYSCTRL_PCLKSR_DFLLRDY;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
@@ -318,7 +318,7 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 	if (block_until_ready == true) {
 		/* Wait for the clock source to be ready or timeout */
 		for (timeout = 0; timeout < CONF_CLOCK_TIMEOUT; timeout++) {
-			if(SYSCTRL.PCLKSR.reg & waitmask) {
+			if(SYSCTRL->PCLKSR.reg & waitmask) {
 				return STATUS_OK;
 			}
 		}
@@ -343,19 +343,19 @@ enum status_code system_clock_source_disable(enum system_clock_source clk_source
 {
 	switch (clk_source) {
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
-			SYSCTRL.OSC8M.reg &= ~SYSCTRL_OSC8M_ENABLE;
+			SYSCTRL->OSC8M.reg &= ~SYSCTRL_OSC8M_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			SYSCTRL.OSC32K.reg &= ~SYSCTRL_OSC32K_ENABLE;
+			SYSCTRL->OSC32K.reg &= ~SYSCTRL_OSC32K_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			SYSCTRL.XOSC.reg &= ~SYSCTRL_XOSC_ENABLE;
+			SYSCTRL->XOSC.reg &= ~SYSCTRL_XOSC_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			SYSCTRL.XOSC32K.reg &= ~SYSCTRL_XOSC32K_ENABLE;
+			SYSCTRL->XOSC32K.reg &= ~SYSCTRL_XOSC32K_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_DFLL:
-			SYSCTRL.DFLLCTRL.reg &= ~SYSCTRL_DFLLCTRL_ENABLE;
+			SYSCTRL->DFLLCTRL.reg &= ~SYSCTRL_DFLLCTRL_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_ULP32KHZ:
 			/* Not possible to disable */
@@ -400,7 +400,7 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 			return false;
 		}
 
-	if(SYSCTRL.PCLKSR.reg & mask) {
+	if(SYSCTRL->PCLKSR.reg & mask) {
 		return true;
 	} else {
 		return false;

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ DAC Quick Start
+ * \brief SAMD20 DAC Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +55,7 @@ int main(void)
 	dac_get_config_defaults(&config);
 //! [get_conf]
 //! [init_dac]
-	dac_init(&dev_inst, &DAC, &config);
+	dac_init(&dev_inst, DAC, &config);
 //! [init_dac]
 //! [enable]
 	dac_enable(&dev_inst);

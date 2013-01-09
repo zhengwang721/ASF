@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Serial Peripheral Interface Driver
+ * \brief SAMD20 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Disable the module */
 	spi_disable(dev_inst);
@@ -87,7 +87,7 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
@@ -144,7 +144,7 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->SPI.CTRLB |= (config->chsize << SPI_CHSIZE_gp);
+	spi_module->SPI.CTRLB.reg |= (config->chsize << SPI_CHSIZE_gp);
 
 	if (config->sleep_enable) {
 		/* Enable in sleep mode */
@@ -155,11 +155,11 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 		/* Wait until the synchronization is complete */
 		_spi_wait_for_sync(dev_inst);
 		/* Enable receiver */
-		spi_module->SPI.CTRLB |= SPI_RXEN_bm;
+		spi_module->SPI.CTRLB.reg |= SPI_RXEN_bm;
 	}
 
 	/* Write CTRLA register */
-	spi_module->SPI.CTRLA = ctrla;
+	spi_module->SPI.CTRLA.reg = ctrla;
 
 	return STATUS_OK;
 }
@@ -178,7 +178,7 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the initialization was done
  */
-enum status_code spi_init(struct spi_dev_inst *const dev_inst, SERCOM_t *module,
+enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 		struct spi_conf *config)
 {
 
@@ -190,10 +190,10 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, SERCOM_t *module,
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Set the SERCOM in SPI mode */
-	spi_module->SPI.CTRLA |= SERCOM_MODE_SPI_gc << SERCOM_MODE_gp;
+	spi_module->SPI.CTRLA.reg |= SERCOM_MODE_SPI_gc << SERCOM_MODE_gp;
 
 	/* Write configuration to module and return status code */
 	return _spi_set_config(dev_inst, config);
@@ -222,12 +222,9 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, SERCOM_t *module,
 enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		uint8_t *rx_data, uint8_t length, uint16_t dummy)
 {
-//note kun 9 el 8
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
 
 	/* Sanity check arguments */
 	if (length == 0) {
@@ -243,7 +240,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 			}
 			/* Send dummy SPI character to read in master mode */
 			spi_write(dev_inst, dummy);
-		} 
+		}
 
 		/* Start timeout period for slave */
 		if (dev_inst->mode == SPI_MODE_SLAVE) {
@@ -258,7 +255,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		}
 
 		/* Wait until the module is ready to read a character */
-		
+
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}
 
@@ -304,9 +301,10 @@ enum status_code spi_write_buffer(struct spi_dev_inst
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	uint8_t i = 0;
+
+	uint8_t  i = 0;
 	uint16_t j = 0;
-	//timeout for slave []
+
 	/* Write block */
 	while (length--) {
 		/* Start timeout period for slave */
@@ -414,7 +412,7 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 				}
 			}
 		}
-		
+
 		/* Wait until the module is ready to read a character */
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}

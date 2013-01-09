@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver for calendar mode
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
@@ -53,10 +53,10 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_rtc_cal_group SAM0+ Real Time Counter (RTC), Calendar Mode
- * Driver for the SAM0+ architecture devices. This driver provides a
+ * \defgroup sam0_rtc_cal_group SAMD20 Real Time Counter (RTC), Calendar Mode
+ * Driver for the SAMD20 architecture devices. This driver provides a
  * interface for setting up and utilizing the RTC in calendar mode. This module
- * encompasses the following modules within the SAM0+ devices:
+ * encompasses the following modules within the SAMD20 devices:
  * - \b RTC (Real Time Counter)
  *
  * \section rtc_calendar_intro Introduction
@@ -378,6 +378,7 @@ extern "C" {
  * \section rtc_cal_api_overview API Overview
  * @{
  */
+
 /**
  * \brief Available alarm registers.
  */
@@ -397,35 +398,35 @@ enum rtc_calendar_alarm {
  *
  * Use these values when disabling or enabling the RTC events.
  */
-enum rtc_calendar_events {
+enum rtc_calendar_event {
 	/** To set event off. */
 	RTC_CALENDAR_EVENT_OFF        = 0,
 	/** Overflow event. */
-	RTC_CALENDAR_EVENT_OVF        = RTC_EVENT_OVF_bm,
+	RTC_CALENDAR_EVENT_OVF        = RTC_MODE2_EVCTRL_OVFEO,
 	/** Alarm 0 match event. */
-	RTC_CALENDAR_EVENT_ALARM_0    = RTC_EVENT_ALARM_0_bm,
+	RTC_CALENDAR_EVENT_ALARM_0    = RTC_MODE2_EVCTRL_ALARMEO(1 << 0),
 	/** Alarm 1 match event. */
-	RTC_CALENDAR_EVENT_ALARM_1    = RTC_EVENT_ALARM_1_bm,
+	RTC_CALENDAR_EVENT_ALARM_1    = RTC_MODE2_EVCTRL_ALARMEO(1 << 1),
 	/** Alarm 2 match event. */
-	RTC_CALENDAR_EVENT_ALARM_2    = RTC_EVENT_ALARM_2_bm,
+	RTC_CALENDAR_EVENT_ALARM_2    = RTC_MODE2_EVCTRL_ALARMEO(1 << 2),
 	/** Alarm 3 match event. */
-	RTC_CALENDAR_EVENT_ALARM_3    = RTC_EVENT_ALARM_3_bm,
+	RTC_CALENDAR_EVENT_ALARM_3    = RTC_MODE2_EVCTRL_ALARMEO(1 << 3),
 	/** Periodic event 0. */
-	RTC_CALENDAR_EVENT_PERIODIC_0 = RTC_EVENT_PER_0_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_0 = RTC_MODE2_EVCTRL_PEREO(1 << 0),
 	/** Periodic event 1. */
-	RTC_CALENDAR_EVENT_PERIODIC_1 = RTC_EVENT_PER_1_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_1 = RTC_MODE2_EVCTRL_PEREO(1 << 1),
 	/** Periodic event 2. */
-	RTC_CALENDAR_EVENT_PERIODIC_2 = RTC_EVENT_PER_2_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_2 = RTC_MODE2_EVCTRL_PEREO(1 << 2),
 	/** Periodic event 3. */
-	RTC_CALENDAR_EVENT_PERIODIC_3 = RTC_EVENT_PER_3_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_3 = RTC_MODE2_EVCTRL_PEREO(1 << 3),
 	/** Periodic event 4. */
-	RTC_CALENDAR_EVENT_PERIODIC_4 = RTC_EVENT_PER_4_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_4 = RTC_MODE2_EVCTRL_PEREO(1 << 4),
 	/** Periodic event 5. */
-	RTC_CALENDAR_EVENT_PERIODIC_5 = RTC_EVENT_PER_5_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_5 = RTC_MODE2_EVCTRL_PEREO(1 << 5),
 	/** Periodic event 6. */
-	RTC_CALENDAR_EVENT_PERIODIC_6 = RTC_EVENT_PER_6_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_6 = RTC_MODE2_EVCTRL_PEREO(1 << 6),
 	/** Periodic event 7. */
-	RTC_CALENDAR_EVENT_PERIODIC_7 = RTC_EVENT_PER_7_bm,
+	RTC_CALENDAR_EVENT_PERIODIC_7 = RTC_MODE2_EVCTRL_PEREO(1 << 7),
 };
 
 /**
@@ -490,9 +491,9 @@ struct rtc_calendar_conf {
 static inline void _rtc_calendar_wait_for_sync(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *rtc_module = RTC;
 
-	while(rtc_module->STATUS & RTC_SYNC_BUSY_bm){
+	while(rtc_module->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY){
 		/* Wait for RTC to sync. */
 	}
 }
@@ -567,13 +568,13 @@ static inline void rtc_calendar_get_config_defaults(
 static inline void rtc_calendar_enable(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sync. */
 	_rtc_calendar_wait_for_sync();
 
 	/* Enable RTC module. */
-	rtc_module->CTRL |= RTC_ENABLE_bm;
+	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_ENABLE;
 }
 
 /**
@@ -584,13 +585,13 @@ static inline void rtc_calendar_enable(void)
 static inline void rtc_calendar_disable(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sync: */
 	_rtc_calendar_wait_for_sync();
 
 	/* Disable RTC module. */
-	rtc_module->CTRL &= ~RTC_ENABLE_bm;
+	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;
 }
 
 void rtc_calendar_init(const struct rtc_calendar_conf *const config);
@@ -630,10 +631,10 @@ enum status_code rtc_calendar_get_alarm(
 static inline bool rtc_calendar_is_overflow(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Return status of flag. */
-	return (rtc_module->INTFLAG & RTC_INTFLAG_OVF_bm);
+	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_OVF);
 }
 
 /**
@@ -644,10 +645,10 @@ static inline bool rtc_calendar_is_overflow(void)
 static inline void rtc_calendar_clear_overflow(void)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Clear flag. */
-	rtc_module->INTFLAG = RTC_INTFLAG_OVF_bm;
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_OVF;
 }
 
 /**
@@ -662,7 +663,7 @@ static inline bool rtc_calendar_is_alarm_match(
 		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
@@ -671,7 +672,7 @@ static inline bool rtc_calendar_is_alarm_match(
 	}
 
 	/* Return int flag status. */
-	return (rtc_module->INTFLAG & (1 << alarm_index));
+	return (rtc_module->MODE2.INTFLAG.reg & (1 << alarm_index));
 }
 
 /**
@@ -688,9 +689,8 @@ static inline bool rtc_calendar_is_alarm_match(
 static enum status_code rtc_calendar_clear_alarm_match(
 		enum rtc_calendar_alarm alarm_index)
 {
-
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
@@ -699,7 +699,7 @@ static enum status_code rtc_calendar_clear_alarm_match(
 	}
 
 	/* Clear flag. */
-	rtc_module->INTFLAG = (1 << alarm_index);
+	rtc_module->MODE2.INTFLAG.reg = (1 << alarm_index);
 
 	return STATUS_OK;
 }
@@ -723,10 +723,10 @@ enum status_code rtc_calendar_frequency_correction(int8_t value);
 static inline void rtc_calendar_enable_events(uint16_t events)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Enable given event. */
-	rtc_module->EVCTRL |= events;
+	rtc_module->MODE2.EVCTRL.reg |= events;
 }
 
 /**
@@ -739,10 +739,10 @@ static inline void rtc_calendar_enable_events(uint16_t events)
 static inline void rtc_calendar_disable_events(uint16_t events)
 {
 	/* Initialize module pointer. */
-	RTC_t *rtc_module = &RTC;
+	Rtc *const rtc_module = RTC;
 
 	/* Disable given events. */
-	rtc_module->EVCTRL &= ~events;
+	rtc_module->MODE2.EVCTRL.reg &= ~events;
 }
 
 /** @} */

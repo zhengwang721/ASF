@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ GPIO Port Driver Quick Start
+ * \brief SAMD20 GPIO Port Driver Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
