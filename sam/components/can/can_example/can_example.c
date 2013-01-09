@@ -50,8 +50,9 @@
  *
  *  \par Requirements
  *
- *  This package can be used with SAM3X evaluation kits. CAN0 and CAN1
- *  should be hooked-up externally before running the example.
+ *  This package can be used with SAM3X or SAM4E evaluation kits.
+ *  CAN0 and CAN1 should be hooked-up externally before running 
+ *  the example.
  *
  *  \par Description
  *
@@ -59,8 +60,10 @@
  *  the LED on the board and display CAN message on the terminal window.
  *  There are four basic tests:
  *  - test1: Test the transmission from CAN0 Mailbox 0 to CAN1 Mailbox 0.
- *  - test2: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7 without overwrite.
- *  - test3: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7 with overwrite.
+ *  - test2: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7
+ *    without overwrite.
+ *  - test3: Test the transmission from CAN0 Mailboxes 1 & 2 to CAN1 Mailbox 7
+ *    with overwrite.
  *  - test4: Test the communication between CAN1 Mailbox 3 and CAN0 Mailbox 3.
  *
  *  \par Usage
@@ -73,16 +76,18 @@
  *    - No parity
  *    - 1 stop bit
  *    - No flow control
- *  -# Connect CAN0 (J17) and CAN1 (J20) CAN in loop.
+ *  -# Connect CAN0 (J17 on SAM3X-EK or J13 on SAM4E-EK) and CAN1 (J20 
+ *     on SAM3X-EK or J14 on SAM4E-EK) in loop.
  *  -# Start the application.
- *  -# Upon startup, the application will output the following lines on the terminal window.
+ *  -# Upon startup, the application will output the following lines 
+ *     on the terminal window.
  *      \code
  *      -- CAN Example --
- *      -- SAM3X-EK --
+ *      -- SAM3X-EK --   (or --SAM4E-EK --) 
  *      -- Compiled: xxx xx xxxx xx:xx:xx --
  *      \endcode
- *  -# Press a key in the terminal window to run the tests. CAN messages will be
- *     displayed on the terminal window and LED0 or LED1 will toggle
+ *  -# Press a key in the terminal window to run the tests. CAN messages 
+ *     will be displayed on the terminal window and LED0 or LED1 will toggle
  *     according to the messages.
  */
 
@@ -93,7 +98,11 @@
 #include "exceptions.h"
 #include "uart.h"
 #include "pmc.h"
+#ifdef SAM4E
+#include "ioport.h"
+#else
 #include "gpio.h"
+#endif
 #include "can.h"
 #include "stdio_serial.h"
 #include "sn65hvd234.h"
@@ -162,10 +171,18 @@ static void decode_can_msg(can_mb_conf_t *p_mailbox)
 	puts("CAN message:" STRING_EOL);
 	if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_0) {
 		puts("  Toggle LED 0" STRING_EOL);
+#ifdef SAM4E
+                ioport_toggle_pin_level(LED0_GPIO);
+#else
 		gpio_toggle_pin(LED0_GPIO);
+#endif
 	} else if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_1) {
 		puts("  Toggle LED 1" STRING_EOL);
+#ifdef SAM4E
+                ioport_toggle_pin_level(LED1_GPIO);
+#else
 		gpio_toggle_pin(LED1_GPIO);
+#endif
 	}
 }
 

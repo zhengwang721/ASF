@@ -367,6 +367,7 @@ void can_enable_tx_repeat(Can *p_can)
 	p_can->CAN_MR &= ~CAN_MR_DRPT;
 }
 
+#ifndef SAM4E 
 /**
  * \brief Configure CAN Controller reception synchronization stage.
  *
@@ -379,6 +380,7 @@ void can_set_rx_sync_stage(Can *p_can, uint32_t ul_stage)
 {
 	p_can->CAN_MR = (p_can->CAN_MR & ~CAN_MR_RXSYNC_Msk) | ul_stage;
 }
+#endif
 
 /**
  * \brief Enable CAN interrupt.
