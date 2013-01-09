@@ -421,7 +421,7 @@ extern "C" {
  * with the help of the event system.
  *
  * To be able to run in standby the \ref run_in_standby value in the config
- * struct has to be sett to true.
+ * struct \ref tc_conf has to be sett to true.
  *
  *
  * \section additional_features Additional features
@@ -895,7 +895,7 @@ static inline void _tc_wait_for_sync(const struct tc_dev_inst *const dev_inst)
  *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *
- * \param[out] config  Pointer to the config struct
+ * \param[out] config  Pointer to the config struct \ref tc_conf
  */
 static inline void tc_get_config_defaults(struct tc_conf *const config)
 {
