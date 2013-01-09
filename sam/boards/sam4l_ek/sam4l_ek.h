@@ -80,7 +80,7 @@
 //@{
 #define BOARD_OSC32_IS_XTAL         true
 #define BOARD_OSC32_HZ              FOSC32
-#define BOARD_OSC32_STARTUP_US      (71000)
+#define BOARD_OSC32_STARTUP_US      (1100000)
 #define BOARD_OSC32_SELCURR         BSCIF_OSCCTRL32_SELCURR(10)
 #define BOARD_OSC0_IS_XTAL          true
 #define BOARD_OSC0_HZ               FOSC0

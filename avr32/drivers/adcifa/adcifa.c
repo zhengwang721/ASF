@@ -48,6 +48,76 @@
 #include "compiler.h"
 #include "adcifa.h"
 
+static bool adcifa_seq1_configured = false;
+
+/** \brief Start Calibration offset procedure.
+ *  Calibration procedure algorithm. It returns offset value.
+ *
+ * \param adcifa       Base address of the ADCIFA
+ * \param p_adcifa_opt Structure for the ADCIFA core configuration
+ * \param pb_hz        Peripheral Bus frequency
+ */
+#define CALIBRATION_ADCIFA_NUMBER_OF_SEQUENCE              8
+
+void adcifa_calibrate_offset(volatile avr32_adcifa_t *adcifa,
+	adcifa_opt_t *p_adcifa_opt, uint32_t pb_hz){
+
+	/* Sequencer Configuration */
+	adcifa_sequencer_opt_t adcifa_sequence_opt;
+	adcifa_sequencer_conversion_opt_t
+	adcifa_sequence_conversion_opt[CALIBRATION_ADCIFA_NUMBER_OF_SEQUENCE];
+
+	/* Configure the ADC */
+	p_adcifa_opt->sample_and_hold_disable  = true;
+	p_adcifa_opt->single_sequencer_mode    = true;
+	p_adcifa_opt->free_running_mode_enable = false;
+	p_adcifa_opt->sleep_mode_enable        = false;
+	p_adcifa_opt->mux_settle_more_time     = false;
+
+	/* Clear offset calibration value before starting calibration */
+	p_adcifa_opt->offset_calibration_value = 0;
+
+	/* Configure ADCIFA core */
+	adcifa_configure(&AVR32_ADCIFA, p_adcifa_opt, pb_hz);
+
+	/* ADCIFA sequencer 0 configuration structure*/
+	adcifa_sequence_opt.convnb               =
+		CALIBRATION_ADCIFA_NUMBER_OF_SEQUENCE;
+	adcifa_sequence_opt.resolution           =
+		ADCIFA_SRES_12B;
+	adcifa_sequence_opt.trigger_selection    =
+		ADCIFA_TRGSEL_SOFT;
+	adcifa_sequence_opt.start_of_conversion  =
+		ADCIFA_SOCB_ALLSEQ;
+	adcifa_sequence_opt.sh_mode              =
+		ADCIFA_SH_MODE_OVERSAMP;
+	adcifa_sequence_opt.half_word_adjustment =
+		ADCIFA_HWLA_NOADJ;
+	adcifa_sequence_opt.software_acknowledge =
+		ADCIFA_SA_NO_EOS_SOFTACK;
+
+	/* ADCIFA conversions for sequencer 0*/
+	for (uint8_t i=0; i<CALIBRATION_ADCIFA_NUMBER_OF_SEQUENCE; i++){
+		adcifa_sequence_conversion_opt[i].channel_p = AVR32_ADCIFA_INP_GNDANA;
+		adcifa_sequence_conversion_opt[i].channel_n = AVR32_ADCIFA_INN_GNDANA;
+		adcifa_sequence_conversion_opt[i].gain = ADCIFA_SHG_1;
+	}
+	/* Configure ADCIFA sequencer 0 */
+	adcifa_configure_sequencer(&AVR32_ADCIFA, 0, &adcifa_sequence_opt,
+			adcifa_sequence_conversion_opt);
+
+	/* Start ADCIFA sequencer 0 */
+	adcifa_start_sequencer(&AVR32_ADCIFA, 0);
+
+	/* Wait end of ADCIFA sequencer 0*/
+	while(!ADCIFA_is_eos_sequencer_0());
+
+	/* The last converted value is the offset value */
+	p_adcifa_opt->offset_calibration_value =
+		- ADCIFA_read_resx_sequencer_0(CALIBRATION_ADCIFA_NUMBER_OF_SEQUENCE-1);
+
+}
+
 /** \brief Get ADCIFA Calibration Data.
  *
  * Mandatory to call if factory calibration data are wanted to be used.
@@ -128,6 +198,8 @@ uint8_t adcifa_configure(volatile avr32_adcifa_t *adcifa,
 			AVR32_ADCIFA_CFG_RS)
 			| (p_adcifa_opt->sample_and_hold_disable <<
 			AVR32_ADCIFA_CFG_SHD)
+			| (p_adcifa_opt->mux_settle_more_time <<
+			AVR32_ADCIFA_CFG_MUXSET)
 			| (((ADCIFA_START_UP_TIME *
 			(p_adcifa_opt->frequency /
 			1000)) / 32000) << AVR32_ADCIFA_CFG_SUT);
@@ -178,9 +250,9 @@ uint8_t adcifa_configure_sequencer(volatile avr32_adcifa_t *adcifa,
 		adcifa_sequencer_opt_t *p_adcifa_sequencer_opt,
 		adcifa_sequencer_conversion_opt_t *p_adcifa_sequencer_conversion_opt)
 {
-	uint8_t g[8] = {0};
-	uint8_t mp[8] = {0};
-	uint8_t mn[8] = {0};
+	uint8_t g[16] = {0};
+	uint8_t mp[16] = {0};
+	uint8_t mn[16] = {0};
 	uint8_t i;
 
 	/* Sanity Check */
@@ -219,6 +291,33 @@ uint8_t adcifa_configure_sequencer(volatile avr32_adcifa_t *adcifa,
 				mp[2], mp[1], mp[0]);
 		ADCIFA_configure_muxsel0n(mn[7], mn[6], mn[5], mn[4], mn[3],
 				mn[2], mn[1], mn[0]);
+
+		/*
+		 * This adcifa_seq1_configured variable check if muxsel1p,muxsel1n 
+		 * registers are already configured. This may happen if this function is
+		 * called first with sequencer 1 as argument and then called with 
+		 * sequencer 0 as argument in case dual mode is used.
+		 */
+		if(!adcifa_seq1_configured)
+		{
+			/*
+			 * Configure gain for sequencer 0 (in single sequencer mode for 
+			 * conversions 9 to 16)
+			 */ 
+			ADCIFA_configure_sh1gain(g[15], g[14], g[13], g[12], g[11], g[10], 
+				g[9], g[8]);
+
+			/*
+			 * Configure Mux for sequencer 0 (in single sequencer mode for 
+			 * conversions 9 to 16)
+			 */
+			ADCIFA_configure_muxsel1p(mp[15], mp[14], mp[13], mp[12], mp[11], 
+				mp[10], mp[9], mp[8]);
+			ADCIFA_configure_muxsel1n(mn[15], mn[14], mn[13], mn[12], mn[11], 
+				mn[10], mn[9], mn[8]);
+
+		}
+
 		break;
 
 	/* Sequencer 1 */
@@ -253,6 +352,9 @@ uint8_t adcifa_configure_sequencer(volatile avr32_adcifa_t *adcifa,
 				mp[2], mp[1], mp[0]);
 		ADCIFA_configure_muxsel1n(mn[7], mn[6], mn[5], mn[4], mn[3],
 				mn[2], mn[1], mn[0]);
+
+		adcifa_seq1_configured = true;
+
 		break;
 
 	default:

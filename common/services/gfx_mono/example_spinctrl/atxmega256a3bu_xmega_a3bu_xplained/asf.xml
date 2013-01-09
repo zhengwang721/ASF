@@ -8,8 +8,9 @@
 		<build type="header-file" value="conf_usart_spi.h"/>
 		<build type="header-file" value="conf_spinctrl.h"/>
 		<config name="config.spi_master_type" value="usart_spi"/>
+		<config name="config.gfx_mono.display" value="c12832_a1z"/>
 		<require idref="common.services.gfx_mono.example.spinctrl"/>
-		<require idref="common.services.gfx_mono.display#c12832_a1z"/>
+		<require idref="common.services.gfx_mono.display"/>
 		<require idref="common.services.gfx_mono.spinctrl"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<generator value="iarew"/>

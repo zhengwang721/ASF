@@ -44,6 +44,20 @@
  *
  */
 
+/**
+ * \mainpage ATSHA204 Example 1 for Security Xplained
+ *
+ * \par Purpose
+ *
+ * Basic communication example of an ATSHA204 component.
+ *
+ * \par Description
+ *
+ * In an infinite loop, sends a DevRev command to all four ATSHA204 devices
+ * and indicates success or failure for one second using the main board LEDs.
+ *
+ */
+
 #include <stdint.h>
 #include <string.h>
 

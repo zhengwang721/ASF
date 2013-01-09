@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam.drivers.dmac.unit_tests" caption="Unit Tests for the SAM DMAC driver">
-		<module type="application" id="sam.drivers.dmac.unit_tests#1" caption="Unit Tests for the SAM DMAC driver">
+	<select-by-device id="sam.drivers.dmac.unit_tests" caption="Unit Tests for the SAM DMAC Driver">
+		<module type="application" id="sam.drivers.dmac.unit_tests#1" caption="Unit Tests for the SAM DMAC Driver">
 			<info type="description" value="summary">
 			Unit test application for the DMAC driver.
 			</info>
@@ -17,7 +17,7 @@
 			<require idref="common.utils.unit_test"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 		</module>
-		<module type="application" id="sam.drivers.dmac.unit_tests#2" caption="Unit Tests for the SAM DMAC driver">
+		<module type="application" id="sam.drivers.dmac.unit_tests#2" caption="Unit Tests for the SAM DMAC Driver">
 			<info type="description" value="summary">
 			Unit test application for the DMAC driver.
 			</info>
