@@ -1,16 +1,15 @@
-#include "asf.h"
-
-#include "stdio.h"
-#include "stdlib.h"
-#include "stdint.h"
-#include "stdbool.h"
+#include "compiler.h"
+#include <string.h>
+#include "nvm.h"
+#include "eeprom.h" 
+#include "status_codes.h"
 
 /* This macro will wait until the command return anything else than STATUS_ERR_BUSY
    Expecting err to be defined as "enum status_code err" */
 #define wait_for_function(function) \
 		do {                    \
-			err = #function; \
-		} while (err == STATUS_ERR_BUSY);
+			err = function; \
+		} while (err == STATUS_ERR_BUSY);\
 
 /* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to
    check as uint32_t values than a string compare. But this numbers will show
@@ -29,8 +28,6 @@
 #define EEPROM_HEADER_SIZE                 4
 #define EEPROM_STATUS_BYTE                 0
 #define EEPROM_PAGE_NUMBER_BYTE            3
-#define EEPROM_DATA_SIZE                   60
-#define EEPROM_MAX_PAGES                   124
 #define EEPROM_INVIALID_PAGE_NUMBER        0xff
 
 #define FLASH_MAX_PAGES                    256
@@ -72,7 +69,7 @@ struct _eeprom_master_page {
 	uint8_t  major_version;
 	uint8_t  minor_version;
 	uint8_t  revision;
-	uint8_t  emualtor_id;
+	uint8_t  emulator_id;
 
 	/* Unused bytes in the page */
 	uint8_t  reserved[45];
@@ -99,8 +96,8 @@ struct _eeprom_emulator_device_struct {
 	uint8_t   cached_page;
 };
 
-static struct _eeprom_emulator_device_struct _eemprom_emulator_device = {
-			initialized = false,
+static struct _eeprom_emulator_device_struct _eeprom_emulator_device = {
+			.initialized = false,
 		};
 
 /**
@@ -112,7 +109,7 @@ static void _eeprom_emulator_create_memory(void)
 	struct _eeprom_data data;
 	uint16_t ppage;
 	uint16_t lpage=0;
-	enum status_code err;
+	enum status_code err = STATUS_OK;
 
 	for (ppage = 0; ppage < (_eeprom_emulator_device.physical_pages  - 4); ++ppage) {
 		/* Is this a new row? */
@@ -126,7 +123,7 @@ static void _eeprom_emulator_create_memory(void)
 			data.header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
 			wait_for_function(nvm_write_page(_eeprom_emulator_device.
-					flash_page_ofset+ ppage, (uint32_t*)&data));
+					flash_start_page + ppage, (uint32_t*)&data.data));
 
 			lpage++;
 		}
@@ -145,7 +142,7 @@ static void _eeprom_emulator_scan_memory(void)
 {
 	uint16_t c;
 	uint8_t logical_page;
-	struct _eeprom_data *data_ptr = (struct _eeprom_data*)_eeprom_emulation_device.flash;
+	struct _eeprom_data *data_ptr = (struct _eeprom_data*)_eeprom_emulator_device.flash;
 
 	for (c = 0; c < (_eeprom_emulator_device.physical_pages - 4); ++c) {
 
@@ -169,8 +166,8 @@ static void _eeprom_emulator_clean_memory(void)
 	uint8_t current_row;
 	uint8_t last_row;
 	uint8_t last_page;
-	struct _eeprom_data *data_ptr = (struct _eeprom_data*)_eeprom_emulation_device.flash;
-	enum status_code err;
+	struct _eeprom_data *data_ptr = (struct _eeprom_data*)_eeprom_emulator_device.flash;
+	enum status_code err = STATUS_OK;
 
 	for (c = 0; c < _eeprom_emulator_device.logical_pages; ++c) {
 
@@ -216,7 +213,7 @@ static bool _eeprom_emulator_is_page_free_on_row(uint8_t current_page, uint8_t *
 	uint8_t row = current_page / 4;
 	uint8_t rest_pages = 4 - (current_page % 4);
 
-	struct _eeprom_data *ee_data = (struct _eeprom_data*)_eeprom_emulation_device.flash;
+	struct _eeprom_data *ee_data = (struct _eeprom_data*)_eeprom_emulator_device.flash;
 
 	/* Is this the first page in a row? */
 	if ((current_page % 4) == 0)
@@ -244,7 +241,7 @@ static bool _eeprom_emulator_is_page_free_on_row(uint8_t current_page, uint8_t *
 static void _eeprom_emulator_scan_row(uint8_t row, struct _eeprom_page_translater *page_trans)
 {
 	struct _eeprom_data *row_data =
-			(struct _eeprom_data*)&_eeprom_emulation_device.flash[row * FLASH_ROW_SIZE];
+			(struct _eeprom_data*)&_eeprom_emulator_device.flash[row * FLASH_ROW_SIZE];
 	uint8_t c;
 	uint8_t c2=0;
 	uint8_t c3=0;
@@ -272,14 +269,14 @@ static void _eeprom_emulator_scan_row(uint8_t row, struct _eeprom_page_translate
  */
 static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t lpage, uint8_t *data)
 {
-	struct page_translater page_trans[2];
+	struct _eeprom_page_translater page_trans[2];
 	uint8_t header[4];
 	uint8_t c;
 	uint32_t new_page;
 	enum status_code err = STATUS_OK;
 
 	/* Scan row for content to be copied to spare row */
-	_eeprom_emulation_scan_row(row, page_trans);
+	_eeprom_emulator_scan_row(row, page_trans);
 
 	for (c = 0; c < 2; ++c) {
 
@@ -290,7 +287,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t
 			header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
 			/* Flush page buffer (ie. cache) */
-			eeprom_flush_page_buffer();
+			eeprom_emulator_flush_page_buffer();
 
 			/* Write header to SRAM cache */
 			memcpy((void*)_eeprom_emulator_device.cache_buffer,
@@ -301,7 +298,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t
 					(void*)data, EEPROM_DATA_SIZE);
 
 			/* Write data to page buffer */
-			wait_for_function(nvm_write_page(new_page + eeprom_emulator_device.flash_start_page,
+			wait_for_function(nvm_write_page(new_page + _eeprom_emulator_device.flash_start_page,
 					(uint32_t*)_eeprom_emulator_device.cache_buffer));
 
 			_eeprom_emulator_device.page_map[page_trans[c].lpage] = new_page;
@@ -309,14 +306,14 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t
 			_eeprom_emulator_device.cache_active = true;
 		} else {
 			/* Flush page buffer (ie. cache) */
-			eeprom_flush_page_buffer();
+			eeprom_emulator_flush_page_buffer();
 
 			/* Copy data buffer to cache buffer */
 			memcpy((void*)_eeprom_emulator_device.cache_buffer,
 					(void*)_eeprom_emulator_device.flash[page_trans[c].ppage *
 					FLASH_PAGE_SIZE], FLASH_PAGE_SIZE);
 
-			wait_for_function(nvm_write_page(new_page + eeprom_emulator_device.flash_start_page,
+			wait_for_function(nvm_write_page(new_page + _eeprom_emulator_device.flash_start_page,
 					(uint32_t*) _eeprom_emulator_device.cache_buffer));
 
 			_eeprom_emulator_device.page_map[page_trans[c].lpage] = new_page;
@@ -326,7 +323,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t
 	}
 
 	/* Erase row and set as spare row */
-	wait_for_function(nvm_erase_row(row + (eeprom_emulator_device.flash_start_page /
+	wait_for_function(nvm_erase_row(row + (_eeprom_emulator_device.flash_start_page /
 			FLASH_PAGES_PR_ROW)));
 
 	/* Set new spare row */
@@ -341,18 +338,18 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row, uint8_t
  */
 static void _eeprom_emulator_create_master_page(void)
 {
-	uint32_t magic_key[] = {MAGIC_KEY_0, MAGIC_KEY_1, MAGIC_KEY_2};
+	uint32_t magic_key[] = {EEPROM_MAGIC_KEY_0, EEPROM_MAGIC_KEY_1, EEPROM_MAGIC_KEY_2};
 	uint8_t c;
-	struct eeprom_master_page master_page;
+	struct _eeprom_master_page master_page;
 
 	for (c = 0; c < EEPROM_MAGIC_KEY_COUNT; ++c) {
-		master_page.magic_key = magic_key[c];
+		master_page.magic_key[c] = magic_key[c];
 	}
 
 	master_page.major_version = EEPROM_MAJOR_VERSION;
 	master_page.minor_version = EEPROM_MINOR_VERSION;
 	master_page.revision      = EEPROM_REVISION;
-	master_page.emualtor_id   = EEPROM_EMULATOR_ID;
+	master_page.emulator_id   = EEPROM_EMULATOR_ID;
 
 	eeprom_emulator_write_page(EEPROM_MASTER_PAGE_NUMBER, (uint32_t*)&master_page);
 }
@@ -361,29 +358,29 @@ static void _eeprom_emulator_create_master_page(void)
 enum status_code eeprom_emulator_init(void)
 {
 	struct nvm_parameters parm;
-	struct eeprom_master_page master_page;
+	struct _eeprom_master_page master_page;
 
 	struct nvm_config config;
 
-	uint32_t magic_key[] = {MAGIC_KEY_0, MAGIC_KEY_1, MAGIC_KEY_2};
-	struct _eeprom_mem_header  = page;
+	uint32_t magic_key[] = {EEPROM_MAGIC_KEY_0, EEPROM_MAGIC_KEY_1, EEPROM_MAGIC_KEY_2};
 	uint8_t c;
 	enum status_code err = STATUS_OK;
 
 	/* The device datasheet is not ready yet, so I do not have these numbers */
-	_eeprom_emulator_device.flash = _eeprom_emulator_get_start_of_eeprom_memory_ptr();
-	_eeprom_emulator_device.flash_page_ofset =
+	//TODO: Find a function get the start of the EEPROM Emulation section in flash
+	//_eeprom_emulator_device.flash = _eeprom_emulator_get_start_of_eeprom_memory_ptr();
+	_eeprom_emulator_device.flash_start_page =
 			(uint32_t)_eeprom_emulator_device.flash / FLASH_PAGE_SIZE;
 
 	nvm_get_config_defaults(&config);
-	config.manual_page_writes = true;
+	config.manual_page_write = true;
 	wait_for_function(nvm_init(&config));
 
-	nvn_get_parameters(&parm);
+	nvm_get_parameters(&parm);
 
 	// This number is not correct, we have to wait for the device sheet. 
-	_eeprom_emulator_device.physical_pages = parm.number_of_pages;
-	_eeprom_emulator_device.logical_pages = (parm.number_of_pages / 2) - FLASH_PAGES_PR_ROW;
+	_eeprom_emulator_device.physical_pages = parm.nvm_number_of_pages;
+	_eeprom_emulator_device.logical_pages = (parm.nvm_number_of_pages / 2) - FLASH_PAGES_PR_ROW;
 
 	_eeprom_emulator_device.cache_active = false;
 	_eeprom_emulator_device.cached_page = EEPROM_INVIALID_PAGE_NUMBER;
@@ -411,7 +408,7 @@ enum status_code eeprom_emulator_init(void)
 }
 
 
-void eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
+enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 {
 	uint8_t eeprom_header[EEPROM_HEADER_SIZE];
 	uint8_t new_page;
@@ -435,7 +432,7 @@ void eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 	if (_eeprom_emulator_device.cache_active) {
 		if (_eeprom_emulator_device.cached_page != lpage) {
 
-			eeprom_flush_page_buffer();
+			eeprom_emulator_flush_page_buffer();
 
 			if (!_eeprom_emulator_is_page_free_on_row(_eeprom_emulator_device.page_map[lpage], &new_page)) {
 
@@ -456,7 +453,7 @@ void eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 	memcpy((void*)&_eeprom_emulator_device.cache_buffer[EEPROM_HEADER_SIZE],
 			(void*)data, EEPROM_DATA_SIZE);
 
-	wait_for_function(nvm_write_page(new_page + eeprom_emulation_device.flash_start_page,
+	wait_for_function(nvm_write_page(new_page + _eeprom_emulator_device.flash_start_page,
 			(uint32_t*)_eeprom_emulator_device.cache_buffer));
 
 	_eeprom_emulator_device.page_map[lpage] = new_page;
@@ -466,7 +463,7 @@ void eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 	return err;
 }
 
-enum status_code eeprom_emulator_read_page(uint8_t page, uint8_t *data)
+enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data)
 {
 
 	if (!_eeprom_emulator_device.initialized) {
@@ -491,7 +488,7 @@ enum status_code eeprom_emulator_read_page(uint8_t page, uint8_t *data)
 	} else {
 		uint32_t flash_addr = (_eeprom_emulator_device.page_map[lpage] *
 				FLASH_PAGE_SIZE) + EEPROM_HEADER_SIZE;
-		uint32_t *flash_ptr = (uint32_t*)&_eeprom_emulator_device.flash[addr];
+		uint32_t *flash_ptr = (uint32_t*)&_eeprom_emulator_device.flash[flash_addr];
 
 		memcpy((void*)data, (void*)flash_ptr, EEPROM_DATA_SIZE);
 	}
@@ -500,7 +497,7 @@ enum status_code eeprom_emulator_read_page(uint8_t page, uint8_t *data)
 
 }
 
-void eeprom_erase_memory()
+void eeprom_emulator_erase_memory(void)
 {
 	/* Create new EEPROM memory block in EEPROM emulation section */
 	_eeprom_emulator_create_memory();
@@ -512,28 +509,14 @@ void eeprom_erase_memory()
 	_eeprom_emulator_create_master_page();
 }
 
-enum status_code eeprom_flush_page_buffer()
+enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, uint16_t length)
 {
-	uint32_t addr;
-	enum status_code err = STATUS_OK;
-
-	addr = _eeprom_emulator_device.page_map[_eeprom_emulator_device.cached_page];
-	addr += _eeprom_emulator_device.start_page;
-	addr *= FLASH_PAGE_SIZE;
-
-	wait_for_function(nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0));
-
-	return err;
-}
-
-enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t length)
-{
-	uint8_t current_page = offset / EEPROM_PAGE_SIZE;
+	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 	uint16_t c;
-	uint8_t buffer[EEPROM_PAGE_SIZE];
+	uint8_t buffer[EEPROM_DATA_SIZE];
 	enum status_code err;
 
-	if (offset % EEPROM_PAGE_SIZE) {
+	if (offset % EEPROM_DATA_SIZE) {
 		err = eeprom_emulator_read_page(current_page, buffer);
 
 		if(err != STATUS_OK) {
@@ -544,7 +527,7 @@ enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t le
 
 	for (c = offset; c < (length+offset); ++c) {
 
-		if (!(c % EEPROM_PAGE_SIZE)) {
+		if (!(c % EEPROM_DATA_SIZE)) {
 
 			err = eeprom_emulator_write_page(current_page, buffer);
 
@@ -552,7 +535,7 @@ enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t le
 				break;
 			}
 
-			current_page = c / EEPROM_PAGE_SIZE;
+			current_page = c / EEPROM_DATA_SIZE;
 			err = eeprom_emulator_read_page(current_page, buffer);
 
 			if(err != STATUS_OK) {
@@ -561,18 +544,18 @@ enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t le
 
 		}
 
-		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		buffer[c % EEPROM_DATA_SIZE] = data[c - offset];
 	}
 }
 
-enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t length)
+enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uint16_t length)
 {
-	uint8_t current_page = offset / EEPROM_PAGE_SIZE;
+	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 	uint16_t c;
-	uint8_t buffer[EEPROM_PAGE_SIZE];
-	enum status_code err
+	uint8_t buffer[EEPROM_DATA_SIZE];
+	enum status_code err;
 
-	if (offset % EEPROM_PAGE_SIZE) {
+	if (offset % EEPROM_DATA_SIZE) {
 		err = eeprom_emulator_read_page(current_page, buffer);
 
 		if(err != STATUS_OK) {
@@ -583,9 +566,9 @@ enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t len
 
 	for (c = offset; c < (length+offset); ++c) {
 
-		if (!(c%EEPROM_PAGE_SIZE)) {
+		if (!(c%EEPROM_DATA_SIZE)) {
 
-			current_page = c / EEPROM_PAGE_SIZE;
+			current_page = c / EEPROM_DATA_SIZE;
 			err = eeprom_emulator_read_page(current_page, buffer);
 
 			if(err != STATUS_OK) {
@@ -594,8 +577,23 @@ enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t len
 
 		}
 
-		data[c - offset] = buffer[c % EEPROM_PAGE_SIZE];
+		data[c - offset] = buffer[c % EEPROM_DATA_SIZE];
 	}
 
 	return err;
 }
+
+enum status_code eeprom_emulator_flush_page_buffer(void)
+{
+	uint32_t addr;
+	enum status_code err = STATUS_OK;
+
+	addr = _eeprom_emulator_device.page_map[_eeprom_emulator_device.cached_page];
+	addr += _eeprom_emulator_device.flash_start_page;
+	addr *= FLASH_PAGE_SIZE;
+
+	wait_for_function(nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0));
+
+	return err;
+}
+

@@ -39,7 +39,7 @@
  *
  */
 
-#include "asf.h"
+#include <compiler.h>
 
 #ifndef _EEPROM_EMULATOR_H_
 #define _EEPROM_EMULATOR_H_
@@ -48,10 +48,13 @@
 extern "C" {
 #endif
 
+#define EEPROM_DATA_SIZE                   60
+#define EEPROM_MAX_PAGES                   124
+
 /**
  * \brief Initializes the eeprom emulator service driver
  *
- * This function will check the EEPROM emualtor space, if there is already 
+ * This function will check the EEPROM emualtor space, if there is already
  * initialized eeprom data in the EEPROM space it will
  *
  * \li Setup the virtual eeprom module
@@ -67,7 +70,7 @@ enum status_code eeprom_emulator_init(void);
 /**
  * \brief Writes a data buffer to the flash page buffer
  *
- * This function will write data to the flash page buffer, the data will be keept 
+ * This function will write data to the flash page buffer, the data will be keept
  * there until another write is executed or the flush function is used.
  *
  * \param[in] page  The number of the page in eeprom emualtor space to be written
@@ -76,18 +79,18 @@ enum status_code eeprom_emulator_init(void);
  * \return This function return a status code
  *
  */
-enum status_code eeprom_write_page(uint8_t lpage, uint8_t *data);
+enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data);
 
 /**
  * \brief Reads a page sized data buffer from EEPROM emulator flash space
  *
  * This function will read a pagesized buffer from the EEPROM emualtor space and
- * place it in the SRAM buffer. 
+ * place it in the SRAM buffer.
  *
  * \param[in] page The number of the page in eeprom emualtor space to be written
  * \param[out] *data Data buffer of page size that will contain the data read from memory
  */
-enum status_code eeprom_read_page(uint8_t lpage, uint8_t *data);
+enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data);
 
 /**
  * \brief Flushes the page buffer to flash memory
@@ -101,7 +104,7 @@ enum status_code eeprom_read_page(uint8_t lpage, uint8_t *data);
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_flush_page_buffer(void) 
+enum status_code eeprom_emulator_flush_page_buffer(void);
 
 /**
  * \brief This function will initalize the EEPROM memory bank i flash
@@ -113,27 +116,27 @@ enum status_code eeprom_flush_page_buffer(void)
  *
  * \return This function may return some status code of unknown value
  */
-void eeprom_erase_memory(void):
+void eeprom_emulator_erase_memory(void);
 
 /**
  * \brief This function writes a buffer to the eeprom emulator
  *
  * This function writes a buffer of data to the eeprom emualtor. This buffer can be
- * bigger than the page baoundery. 
+ * bigger than the page baoundery.
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_write_buffer(uint16_t offset, uint8_t *data, uint16_t lenght);
+enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, uint16_t lenght);
 
 /**
  * \brief This function reads a buffer from the eeprom emulator
  *
- * This function reads a buffer of data from the eeprom emualtor. This function is not 
+ * This function reads a buffer of data from the eeprom emualtor. This function is not
  * limited by the page baoundery
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_read_buffer(uint16_t offset, uint8_t *data, uint16_t length);
+enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uint16_t length);
 
 
 #ifdef __cplusplus
