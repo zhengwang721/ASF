@@ -6,6 +6,6 @@
 		<build type="c-source" value="qs_ac_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.ac"/>
-		<device-support value="samd20g18a"/>
+		<device-support value="samd20"/>
 	</module>
 </asf>

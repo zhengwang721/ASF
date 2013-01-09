@@ -92,7 +92,7 @@ int main(void)
 	config.receiver_enable = false;
 //! [conf_rec]
 //! [init]
-	spi_init(&dev_inst, &SERCOM0, &config);
+	spi_init(&dev_inst, SERCOM0, &config);
 //! [init]
 
 	/* Send a buffer to slave */

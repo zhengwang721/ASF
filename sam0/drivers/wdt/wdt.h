@@ -256,9 +256,9 @@ enum status_code wdt_disable(void);
  */
 static inline bool wdt_is_locked(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	return (WDT_module->CTRL & WDT_ALWAYSON_bm);
+	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
 }
 
 /** @} */
@@ -274,9 +274,9 @@ static inline bool wdt_is_locked(void)
  */
 static inline void wdt_clear_early_warning(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	WDT_module->INTFLAG = WDT_EW_bm;
+	WDT_module->INTFLAG.reg = WDT_INTFLAG_EW;
 }
 
 /** \brief Determines if the Watchdog timer Early Warning period has elapsed.
@@ -290,9 +290,9 @@ static inline void wdt_clear_early_warning(void)
  */
 static inline bool wdt_is_early_warning(void)
 {
-	WDT_t *const WDT_module = &WDT;
+	Wdt *const WDT_module = WDT;
 
-	return (WDT_module->INTFLAG & WDT_EW_bm);
+	return (WDT_module->INTFLAG.reg & WDT_INTFLAG_EW);
 }
 
 void wdt_reset_count(void);

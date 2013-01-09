@@ -81,13 +81,13 @@ enum status_code system_bod_set_config(struct system_bod_config *conf,
 			if (conf->level > 0x3F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL.BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
 			break;
 		case SYSTEM_BOD12:
 			if (conf->level > 0x1F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL.BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) | temp;
+			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) | temp;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;

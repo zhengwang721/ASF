@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 /** \addtogroup SAMD20_EIC External Interrupt Controller */
 /*@{*/
 
-#define REV_EIC        0x100
+#define REV_EIC                     0x100
 
 /* -------- EIC_CTRL : (EIC Offset: 0x00) (R/W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -65,8 +65,10 @@ typedef union {
 #define EIC_CTRL_OFFSET             0x00         /**< \brief (EIC_CTRL offset) Control Register */
 #define EIC_CTRL_RESETVALUE         0x00         /**< \brief (EIC_CTRL reset_value) Control Register */
 
-#define EIC_CTRL_SWRST              (0x1u <<  0) /**< \brief (EIC_CTRL) Software Reset */
-#define EIC_CTRL_ENABLE             (0x1u <<  1) /**< \brief (EIC_CTRL) Enable */
+#define EIC_CTRL_SWRST_Pos          0            /**< \brief (EIC_CTRL) Software Reset */
+#define EIC_CTRL_SWRST              (0x1u << EIC_CTRL_SWRST_Pos)
+#define EIC_CTRL_ENABLE_Pos         1            /**< \brief (EIC_CTRL) Enable */
+#define EIC_CTRL_ENABLE             (0x1u << EIC_CTRL_ENABLE_Pos)
 #define EIC_CTRL_MASK               0x03u        /**< \brief (EIC_CTRL) MASK Register */
 
 /* -------- EIC_STATUS : (EIC Offset: 0x01) (R/   8) Status Register -------- */
@@ -83,7 +85,8 @@ typedef union {
 #define EIC_STATUS_OFFSET           0x01         /**< \brief (EIC_STATUS offset) Status Register */
 #define EIC_STATUS_RESETVALUE       0x00         /**< \brief (EIC_STATUS reset_value) Status Register */
 
-#define EIC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (EIC_STATUS) Sync Busy */
+#define EIC_STATUS_SYNCBUSY_Pos     7            /**< \brief (EIC_STATUS) Sync Busy */
+#define EIC_STATUS_SYNCBUSY         (0x1u << EIC_STATUS_SYNCBUSY_Pos)
 #define EIC_STATUS_MASK             0x80u        /**< \brief (EIC_STATUS) MASK Register */
 
 /* -------- EIC_NMICTRL : (EIC Offset: 0x02) (R/W  8) NMI Control Register -------- */
@@ -101,10 +104,11 @@ typedef union {
 #define EIC_NMICTRL_OFFSET          0x02         /**< \brief (EIC_NMICTRL offset) NMI Control Register */
 #define EIC_NMICTRL_RESETVALUE      0x00         /**< \brief (EIC_NMICTRL reset_value) NMI Control Register */
 
-#define EIC_NMICTRL_NMISENSE_Pos    0
-#define EIC_NMICTRL_NMISENSE_Msk    (0x7u << EIC_NMICTRL_NMISENSE_Pos) /**< \brief (EIC_NMICTRL) NMI Input Sense Configuration */
+#define EIC_NMICTRL_NMISENSE_Pos    0            /**< \brief (EIC_NMICTRL) NMI Input Sense Configuration */
+#define EIC_NMICTRL_NMISENSE_Msk    (0x7u << EIC_NMICTRL_NMISENSE_Pos)
 #define EIC_NMICTRL_NMISENSE(value) ((EIC_NMICTRL_NMISENSE_Msk & ((value) << EIC_NMICTRL_NMISENSE_Pos)))
-#define EIC_NMICTRL_NMIFILTEN       (0x1u <<  3) /**< \brief (EIC_NMICTRL) NMI Filter Enable */
+#define EIC_NMICTRL_NMIFILTEN_Pos   3            /**< \brief (EIC_NMICTRL) NMI Filter Enable */
+#define EIC_NMICTRL_NMIFILTEN       (0x1u << EIC_NMICTRL_NMIFILTEN_Pos)
 #define EIC_NMICTRL_MASK            0x0Fu        /**< \brief (EIC_NMICTRL) MASK Register */
 
 /* -------- EIC_NMIFLAG : (EIC Offset: 0x03) (R/W  8) NMI Interrupt Flag Register -------- */
@@ -121,7 +125,8 @@ typedef union {
 #define EIC_NMIFLAG_OFFSET          0x03         /**< \brief (EIC_NMIFLAG offset) NMI Interrupt Flag Register */
 #define EIC_NMIFLAG_RESETVALUE      0x00         /**< \brief (EIC_NMIFLAG reset_value) NMI Interrupt Flag Register */
 
-#define EIC_NMIFLAG_NMI             (0x1u <<  0) /**< \brief (EIC_NMIFLAG) NMI Interrupt Flag */
+#define EIC_NMIFLAG_NMI_Pos         0            /**< \brief (EIC_NMIFLAG) NMI Interrupt Flag */
+#define EIC_NMIFLAG_NMI             (0x1u << EIC_NMIFLAG_NMI_Pos)
 #define EIC_NMIFLAG_MASK            0x01u        /**< \brief (EIC_NMIFLAG) MASK Register */
 
 /* -------- EIC_EVCTRL : (EIC Offset: 0x04) (R/W 32) Event Control Register -------- */
@@ -190,8 +195,6 @@ typedef union {
 #define EIC_CONFIG_RESETVALUE       0x00000000   /**< \brief (EIC_CONFIG reset_value) Config Register */
 #define EIC_CONFIG_MASK             0xFFFFFFFFu  /**< \brief (EIC_CONFIG) MASK Register */
 
-#define EIC_NUMBER_OF_CONFIG_REGS   2
-
 /** \brief EIC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
@@ -204,8 +207,7 @@ typedef struct {
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Set Register */
   __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Status and Clear Register */
   __IO EIC_WAKEUP_Type           WAKEUP;      /**< \brief Offset: 0x14 (R/W 32) Wake-up Enable Register */
-  __IO EIC_CONFIG_Type           CONFIG[EIC_NUMBER_OF_CONFIG_REGS]; /**< \brief Offset: 0x18 (R/W 32) Config Register */
-       EIC_CONFIG_Type           Reserved1[4 - EIC_NUMBER_OF_CONFIG_REGS];
+  __IO EIC_CONFIG_Type           CONFIG[2];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */
 } Eic;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

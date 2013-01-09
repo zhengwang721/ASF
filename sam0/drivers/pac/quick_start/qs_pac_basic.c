@@ -112,7 +112,7 @@ int main (void)
 //! [lock_perph]
 
 //! [clear_sanity]
-	sanity = NULL;
+	sanity = 0;
 //! [clear_sanity]
 
 //! [enable_interrupts]

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 /** \addtogroup SAMD20_PAC Peripheral Access Controller */
 /*@{*/
 
-#define REV_PAC        0x100
+#define REV_PAC                     0x100
 
 /* -------- PAC_WPCLR : (PAC Offset: 0x0) (R/W 32) Write Protection Clear Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

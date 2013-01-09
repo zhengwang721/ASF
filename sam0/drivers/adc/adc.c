@@ -40,19 +40,17 @@
  */
 
 #include "adc.h"
-#include <status_codes.h>
 
-
-status_code_t _adc_set_config (ADC_t *const hw_dev,
-		struct adc_conf *const config)
+enum status_code _adc_set_config (Adc *const hw_dev,
+		struct adc_config *const config)
 {
 	/* Configure CTRLA */
-	hw_dev->CTRLA = (config->sleep_enable << ADC_SLEEPEN_bp);
+	hw_dev->CTRLA.reg = (config->sleep_enable << ADC_SLEEPEN_bp);
 
 	/* Configure REFCTRL */
-	hw_dev->REFCTRL =
-			(config->reference_compenstation_enable << ADC_REFCOMP_bp) |
-			(config->adc_reference                  << ADC_REFSEL_bp);
+	hw_dev->REFCTRL.reg =
+			(config->reference_compensation_enable << ADC_REFCOMP_bp) |
+			(config->adc_reference                 << ADC_REFSEL_bp);
 
 	/* Configure AVGCTRL */
 	switch (config->oversampling_and_decimation) {
@@ -88,11 +86,11 @@ status_code_t _adc_set_config (ADC_t *const hw_dev,
 	}
 
 	/* Configure SAMPCTRL */
-	hw_dev->SAMPCTRL = (config->sample_length << ADC_SAMPLEN_bp);
+	hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPLEN_bp);
 
 	/* Configure CTRLB */
 	_adc_wait_for_sync(hw_dev);
-	hw_dev->CTRLB =
+	hw_dev->CTRLB.reg =
 			(config->clock_prescaler   << ADC_PRESCALER_bp) |
 			(config->resolution        << ADC_RESSEL_bp)    |
 			(config->correction_enable << ADC_CORREN_bp)    |
@@ -102,17 +100,17 @@ status_code_t _adc_set_config (ADC_t *const hw_dev,
 
 	/* Configure WINCTRL/WINLT/WINUT */
 	_adc_wait_for_sync(hw_dev);
-	hw_dev->WINCTRL = config->window_mode        << ADC_WINMODE_bp;
+	hw_dev->WINCTRL.reg = config->window_mode        << ADC_WINMODE_bp;
 	_adc_wait_for_sync(hw_dev);
 	/* this will NOT work for negative values, please fix! */
-	hw_dev->WINLT   = config->window_lower_value << ADC_WINLT_bp;
+	hw_dev->WINLT.reg   = config->window_lower_value << ADC_WINLT_bp;
 	_adc_wait_for_sync(hw_dev);
 	/* this will NOT work for negative values, please fix! */
-	hw_dev->WINUT   = config->window_upper_value << ADC_WINUT_bp;
+	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_bp;
 
 	/* Configure INPUTCTRL */
 	_adc_wait_for_sync(hw_dev);
-	hw_dev->INPUTCTRL =
+	hw_dev->INPUTCTRL.reg =
 			(config->gain_factor       << ADC_GAIN_bp)        |
 			(config->offset_start_scan << ADC_INPUTOFFSET_bp) |
 			(config->inputs_to_scan    << ADC_INPUTSCAN_bp)   |
@@ -120,26 +118,25 @@ status_code_t _adc_set_config (ADC_t *const hw_dev,
 			(config->positive_input    << ADC_MUXPOS_bp);
 
 	/* Configure EVCTRL */
-	hw_dev->EVCTRL =
+	hw_dev->EVCTRL.reg =
 			(config->generate_event_on_window_monitor  << ADC_WINMONEO_bp) |
 			(config->generate_event_on_conversion_done << ADC_RESRDYEO_bp) |
 			(config->flush_adc_on_event                << ADC_SYNCEI_bp)   |
 			(config->start_conversion_on_event         << ADC_STARTEI_bp);
 
 	/* Disable all interrupts */
-	hw_dev->INTENCLR =
+	hw_dev->INTENCLR.reg =
 			(1 << ADC_READY_bp)   | (1 << ADC_WINMON_bp) |
 			(1 << ADC_OVERRUN_bp) | (1 << ADC_RESRDY_bp);
 
 	/* Configure GAINCORR/OFFSETCORR */
-	hw_dev->GAINCORR   = config->gain_correction   << ADC_GAINCORR_bp;
-	hw_dev->OFFSETCORR = config->offset_correction << ADC_OFFSETCORR_bp;
+	hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_bp;
+	hw_dev->OFFSETCORR.reg = config->offset_correction << ADC_OFFSETCORR_bp;
 
 	return STATUS_OK;
 }
 
-
-status_code_t adc_init(struct adc_dev_inst *const dev_inst, ADC_t *hw_dev,
+enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_config *config)
 {
 	uint8_t adjres;
@@ -147,13 +144,13 @@ status_code_t adc_init(struct adc_dev_inst *const dev_inst, ADC_t *hw_dev,
 
 	dev_inst->hw_dev = hw_dev;
 
-	if (hw_dev->CTRLA & ADC_SWRST_bm) {
+	if (hw_dev->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_ERR_BUSY;
 	}
 
 	_adc_wait_for_sync(hw_dev);
-	if (hw_dev->CTRLA & ADC_ENABLE_bm) {
+	if (hw_dev->CTRLA.reg & ADC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}

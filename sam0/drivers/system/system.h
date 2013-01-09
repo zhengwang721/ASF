@@ -275,10 +275,10 @@ struct system_bod_config {
 static inline void system_vref_enable(enum system_voltage_reference vref) {
 	switch(vref) {
 	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL.VREF.reg |= SYSCTRL_VREF_TSEN;
+		SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
 		break;
 	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL.VREF.reg |= SYSCTRL_VREF_BGOUTEN;
+		SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
 		break;
 	default:
 		return;
@@ -295,10 +295,10 @@ static inline void system_vref_enable(enum system_voltage_reference vref) {
 static inline void system_vref_disable(enum system_voltage_reference vref) {
 	switch(vref) {
 	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL.VREF.reg &= ~SYSCTRL_VREF_TSEN;
+		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
 		break;
 	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL.VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
+		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
 		break;
 	default:
 		return;
@@ -374,7 +374,7 @@ static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepm
 		case SYSTEM_SLEEPMODE_IDLE_3:
 			//TODO: is the sleepdeep bit in the CPU ?
 			//CPU.SCR &= ~SCR_SLEEPDEEP_bm;
-			PM.SLEEP.reg = sleepmode;
+			PM->SLEEP.reg = sleepmode;
 			break;
 		case SYSTEM_SLEEPMODE_STANDBY:
 			/* TODO: Find core register for this */
@@ -423,7 +423,7 @@ static inline void system_sleep(void)
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
-	return PM.RCAUSE.reg;
+	return PM->RCAUSE.reg;
 }
 
 /**
