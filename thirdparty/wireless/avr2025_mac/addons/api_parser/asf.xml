@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.api_parser" caption="API Parser support ">
+			<info type="description" value="summary">
+				API Parser for MAC
+			</info>
+
+			<build type="c-source" value="api_encoder.c"/>
+			<build type="c-source" value="api_decoder.c"/>
+			<build type="header-file" value="api_parser.h"/>
+			<build type="include-path" value="."/>
+			<require idref="thirdparty.wireless.avr2025_mac.includes"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
+
+		</module>	
+		
+</asf>
