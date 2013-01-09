@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common IOPORT service example 1 for ATmega256RFR2 Xplained pro" id="common.services.ioport.example1.atmega256rfr2_xplain_pro">
+	<project caption="Common IOPORT service example 1 for ATmega256RFR2 Xplained pro" id="common.services.ioport.example1.atmega256rfr2_xplained_pro">
 		<info type="description" value="summary">
 			Should toggle one pin on the megaRF port B
 		</info>
@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h" />
 		<build type="header-file" value="conf_example.h" />
 		<require idref="common.services.ioport.example1"/>
-		<require idref="board.mega_256rfr2_xplained_pro"/>
+		<require idref="board.atmega_256rfr2_xplained_pro"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>

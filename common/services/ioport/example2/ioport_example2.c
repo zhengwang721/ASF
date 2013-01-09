@@ -64,6 +64,7 @@
  *  - SAM4L evaluation kit
  *  - SAM4E evaluation kit
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
+ *  - ATmega256RFR2 Xplained Pro kit 
  *
  * \section example_description Description of the example
  * This example flashes a single LEDs present with flash speed of 1Hz.
