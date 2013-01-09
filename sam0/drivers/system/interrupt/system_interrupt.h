@@ -94,7 +94,7 @@ void system_interrupt_leave_critical_section(void)
  */
 bool system_interrupt_is_global_enabled(void)
 {
-	return cpu_irq_is_enabled_flags();
+	return cpu_irq_is_enabled();
 }
 
 /**
