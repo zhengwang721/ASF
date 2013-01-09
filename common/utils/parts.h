@@ -607,8 +607,6 @@
 
 /** @} */
 
-/** @} */
-
 /**
  * \defgroup tiny_part_macros_group tinyAVR parts
  *
@@ -872,6 +870,8 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E)
+
+/** @} */
 
 /** @} */
 
