@@ -335,6 +335,8 @@ typedef struct
  *
  */
 
+#if XMEGA_E
+
 /*! \brief Enable bridge mode on TWIC.
  * SDA and SCL are on PORTC for Master and on PORTD for slave
  *
@@ -349,7 +351,7 @@ static inline void twi_bridge_enable(TWI_t *twi)
  *
  * \param twi       Base address of the TWI instance.
  */
-static inline void twi_bridge_disaable(TWI_t *twi)
+static inline void twi_bridge_disable(TWI_t *twi)
 {
   twi->CTRL &= (~TWI_BRIDGEEN_bm);
 }
@@ -394,6 +396,6 @@ static inline void twi_slave_fast_mode_disable(TWI_t *twi)
 {
   twi->CTRL &= (~TWI_SFMPEN_bm);
 }
-
+#endif
 
 #endif // TWI_COMMON_H
