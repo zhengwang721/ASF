@@ -490,7 +490,7 @@ extern "C" {
  * @{
  */
 
-#define TC_NEXT_OR_PREV_TC TC1_ADDR - TC0_ADDR
+#define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0))
 
 /** \brief Index of the compare capture channels
  *
@@ -1004,11 +1004,20 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
  * clock domains before performing the reset. The TC module will not
  * be accessible while the reset is being performed. To avoid
  * undefined behavior during reset the module is disabled before it is
- * reset.
+ * reset. The module might not have completed the reset upon exiting
+ * this function.
+ *
+ * \note When reseting a 32-bit counter send in only the master
+ * counter's \ref dev_inst struct, not the slave.
  *
  * \param[in] dev_inst  Pointer to the device struct
+ *
+ * \return status of the procedure
+ * \retval STATUS_OK                   The function exited normally.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
+ *                                     modules configured as 32-bit slaves.
  */
-static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
+static inline enum status_codes tc_reset(const struct tc_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
@@ -1017,30 +1026,15 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 	/* Get a pointer to the module hardware instance */
 	TcCount8 tc_module = dev_inst->hw_dev->COUNT8;
 
-	bool slave_test = tc_module.STATUS.reg & TC_STATUS_SLAVE;
-	/* If this is slave reset master first*/
-	if (slave_test) {
-		/* get master hw_dev pointer*/
-		Tc *master = dev_inst->hw_dev - TC_NEXT_OR_PREV_TC;
-
-		/* Synchronize */
-		_tc_wait_for_sync(dev_inst);
-
-		/* Disable master*/
-		master->COUNT8.CTRLA.reg &= ~TC_CTRLA_ENABLE;
-
-		/* Synchronize */
-		_tc_wait_for_sync(dev_inst);
-
-		/* Reset the 16-bit master counter module */
-		master->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
-	}
-
 	/* Disable this module*/
 	tc_disable(dev_inst);
 
+	if (tc_module.STATUS.reg & TC_STATUS_SLAVE) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
 	/* Reset TC slave if one exists*/
-	if (tc_module.CTRLA.reg & TC_COUNTER_SIZE_32BIT && !slave_test) {
+	if (tc_module.CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
 		/* Synchronize */
 		_tc_wait_for_sync(dev_inst);
 
@@ -1048,13 +1042,12 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 		tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
 
 		/* Get the slave hw_dev pointer */
-		Tc *slave = dev_inst->hw_dev + TC_NEXT_OR_PREV_TC;
-
-		/* Disable slave */
-		slave->COUNT8.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+		Tc *slave = (Tc*)(dev_inst->hw_dev + TC_NEXT__TC);
 
 		/* Synchronize */
-		_tc_wait_for_sync(dev_inst);
+		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
+			/* Wait for sync */
+		}
 
 		/* Reset slave */
 		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
@@ -1067,6 +1060,8 @@ static inline void tc_reset(const struct tc_dev_inst *const dev_inst)
 		/* Reset this TC module */
 		tc_module.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
+
+	return STATUS_OK;
 }
 
 /** @} */
