@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common IOPORT service example 1 for STK600" id="common.services.basic.sleepmgr.example.atmega128rfa1_stk600">
+	<project caption="Common IOPORT service example 1 for ATmega128RFA1-EK1" id="common.services.basic.sleepmgr.example.atmega128rfa1_stk600">
 		<info type="description" value="summary">
 		This example shows how to use the Common API for Sleep Management on Atmega128RFA1 devices.
 		</info>

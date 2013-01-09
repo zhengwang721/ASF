@@ -40,22 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef _SLEEP_H
-#define _SLEEP_H
+#ifndef SLEEP_H
+#define SLEEP_H
 
 #include "compiler.h"
-#include "parts.h"
 
 /**
- * \defgroup sleep_group Sleep controller driver
- *
- * This is a low-level driver implementation for the MEGA sleep controller.
- *
- * \note To minimize the code overhead, these functions do not feature
- * interrupt-protected access since they are likely to be called inside
- * interrupt handlers or in applications where such protection is not
- * necessary. If such protection is needed, it must be ensured by the calling
- * code.
+ * \section mega_sleep_quickstart_section Quick Start Guide
+ * See \ref mega_sleep_quickstart
  *
  * @{
  */
@@ -76,21 +68,40 @@ extern "C" {
 #endif
 
 /*  \brief Sleep Mode Select */
-typedef enum SLEEP_SMODE_enum {
-	SLEEP_SMODE_IDLE_gc = (0x00 << 1), /* Idle mode */
-	SLEEP_SMODE_ADC_NOISE_REDUCTION_gc      = (0x01 << 1), /* ADC Noise
+enum SLEEP_SMODE_enum {
+	SLEEP_SMODE_IDLE = (0x00 << SM0), /* Idle mode */
+	SLEEP_SMODE_ADC_NOISE_REDUCTION      = (0x01 << SM0), /* ADC Noise
 	                                                        * Reduction */
-	SLEEP_SMODE_PDOWN_gc        = (0x02 << 1), /* Power-down Mode */
-	SLEEP_SMODE_PSAVE_gc = (0x03 << 1), /* Power-save Mode */
-	SLEEP_SMODE_STDBY_gc = (0x06 << 1), /* Standby Mode */
-	SLEEP_SMODE_ESTDBY_gc = (0x07 << 1), /* Extended Standby Mode */
-} SLEEP_SMODE_t;
+	SLEEP_SMODE_PDOWN        = (0x02 << SM0), /* Power-down Mode */
+	SLEEP_SMODE_PSAVE = (0x03 << SM0), /* Power-save Mode */
+	SLEEP_SMODE_STDBY = (0x06 << SM0), /* Standby Mode */
+	SLEEP_SMODE_ESTDBY = (0x07 << SM0), /* Extended Standby Mode */
+};
 
 #ifdef __cplusplus
 }
 #endif
 
+ /*! @} */
+
 /**
+ * \page mega_sleep_quickstart Quick Start Guide for the MEGA Sleep Driver
+ *
+ * This is the quick start guide for the \ref sleep_group "Sleep Driver", with
+ * step-by-step instructions on how to configure and use the driver for a
+ * specific use case.
+ *
+ * The section described below can be copied into, e.g. the main application
+ * loop or any other function that will need to control and execute different
+ * sleep modes on the device.
+ *
+ * \section mega_sleep_quickstart_basic Basic usage of the sleep driver
+ * This use case will prepare the device to enter the Power Down sleep mode and
+ * then enter the sleep mode. After waking up it will disable sleep.
+ *
+ * \section mega_sleep_basic_usage Usage steps
+ * \subsection mega_sleep_basic_usage_code Example code
+ * Add to, e.g., the main loop in the application C-file:
  * \code
  * sleep_set_mode(SLEEP_SMODE_PDOWN_gc);
  * sleep_enable();
@@ -99,8 +110,7 @@ typedef enum SLEEP_SMODE_enum {
  * \endcode
  *
  * \subsection Workflow
- * -# Set what sleep mode to use, the different sleep modes can be found in the
- *  device header file under the enum definition SLEEP_SMODE_enum:
+ * -# Set what sleep mode to use.
  *  - \code sleep_set_mode(SLEEP_SMODE_PDOWN_gc); \endcode
  * -# Enable that the device are allowed to go to sleep:
  *  - \code sleep_enable(); \endcode
@@ -128,6 +138,5 @@ typedef enum SLEEP_SMODE_enum {
  *  device datasheet and header file to find these definitions.
  */
  
- /*! @} */
 
-#endif /* _SLEEP_H */
+#endif /* SLEEP_H */

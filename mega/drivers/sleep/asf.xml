@@ -13,6 +13,7 @@
 			<require idref="mega.utils"/>
 			<device-support value="megarf"/>		
 			<build type="doxygen-entry-point" value="sleep_group"/>
+			<build type="doxygen-quick-start" value="mega_sleep_quickstart"/>
 			<generator value="doxygen-module" default-mcu="atmega128rfa1"/>
 		</module>
 	</select-by-device>

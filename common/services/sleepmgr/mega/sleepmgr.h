@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AVR XMEGA Sleep manager implementation
+ * \brief AVR MEGA Sleep manager implementation
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,24 +52,23 @@ extern "C" {
 #include <sleep.h>
 # include <sleep_megarf.h>
 
-
 /**
  * \weakgroup sleepmgr_group
  * @{
  */
 
 enum sleepmgr_mode {
-	/* ! Active mode. */
+	/* Active mode. */
 	SLEEPMGR_ACTIVE = 0,
-	/* ! Idle mode. */
+	/* Idle mode. */
 	SLEEPMGR_IDLE,
-	/* ! Power Down mode. */
+	/* Power Down mode. */
 	SLEEPMGR_PDOWN,
-	/* ! Power Save mode. */
+	/* Power Save mode. */
 	SLEEPMGR_PSAVE,
-	/* ! Standby mode. */
+	/* Standby mode. */
 	SLEEPMGR_STDBY,
-	/* ! Extended Standby mode. */
+	/* Extended Standby mode. */
 	SLEEPMGR_ESTDBY,
 	SLEEPMGR_NR_OF_MODES,
 };
@@ -91,6 +90,11 @@ extern enum SLEEP_SMODE_enum sleepmgr_configs[];
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 /* ! @} */
 
+/**
+ * \brief Enter the sleep with interrupt enabled
+ *
+ * \param mode Sleep mode to be entered
+ */
 static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 {
 	Assert(sleep_mode != SLEEPMGR_ACTIVE);

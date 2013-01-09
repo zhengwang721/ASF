@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,8 +38,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef CONF_CLOCK_H
+#define CONF_CLOCK_H
 
 // ===== System Clock Source Options
 #define	SYSCLK_SRC_RC16MHZ    0
@@ -63,4 +63,4 @@
 
 #define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif /* CONF_CLOCK_H */

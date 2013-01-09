@@ -48,8 +48,11 @@ int main(void)
 {
 	/* Set the sleep mode to initially lock. */
 	volatile enum sleepmgr_mode mode = SLEEPMGR_ACTIVE;
+    /* Initialize the pins for input and output. */
 	board_init();
+    /* Initialize the clock and disable clock unused modules */
 	sysclk_init();
+    /* Initialize the IOPORT */
 	ioport_init();
 	delay_init(sysclk_get_cpu_hz());
 

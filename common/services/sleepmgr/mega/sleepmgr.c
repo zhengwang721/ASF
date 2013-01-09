@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -13,7 +13,7 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ *    this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
@@ -46,13 +46,13 @@
 #if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
 
 uint8_t sleepmgr_locks[SLEEPMGR_NR_OF_MODES];
-
+     
 enum SLEEP_SMODE_enum sleepmgr_configs[SLEEPMGR_NR_OF_MODES] = {
-	SLEEP_SMODE_IDLE_gc,
-	SLEEP_SMODE_PDOWN_gc,
-	SLEEP_SMODE_PSAVE_gc,
-	SLEEP_SMODE_STDBY_gc,
-	SLEEP_SMODE_ESTDBY_gc,
+	SLEEP_SMODE_IDLE,
+	SLEEP_SMODE_PDOWN,
+	SLEEP_SMODE_PSAVE,
+	SLEEP_SMODE_STDBY,
+	SLEEP_SMODE_ESTDBY,
 };
 
 #endif /* CONFIG_SLEEPMGR_ENABLE */

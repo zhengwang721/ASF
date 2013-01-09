@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Sleep controller driver
+ * \brief Sleep controller driver for megaRF devices
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef _SLEEP_MEGARF_H
-#define _SLEEP_MEGARF_H
+#ifndef SLEEP_MEGARF_H
+#define SLEEP_MEGARF_H
 
 /**
  * \defgroup sleep_group Sleep controller driver
@@ -97,4 +97,4 @@ static inline void sleep_set_mode(enum SLEEP_SMODE_enum mode)
 
 /*! @} */
 
-#endif /* _SLEEP_MEGARF_H */
+#endif /* SLEEP_MEGARF_H */

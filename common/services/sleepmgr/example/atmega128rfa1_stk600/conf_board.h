@@ -38,9 +38,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
 /* Intentionally empty */
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */
