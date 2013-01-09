@@ -3,7 +3,7 @@
  *
  * \brief Sleep mode access
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,6 +74,7 @@ extern "C" {
 /* SAM3 and SAM4 series */
 #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E)
 # include "pmc.h"
+# include "board.h"
 
 # define  SAM_PM_SMODE_ACTIVE     0
 # define  SAM_PM_SMODE_SLEEP_WFE  1
@@ -83,7 +84,6 @@ extern "C" {
 
 /* (SCR) Sleep deep bit */
 #define SCR_SLEEPDEEP   (0x1 <<  2)
-
 
 /**
  * Save clock settings and shutdown PLLs
@@ -113,18 +113,17 @@ static inline void pmc_save_clock_settings(
 		*p_mck_setting  = PMC->PMC_MCKR;
 	}
 
-	/* Switch MCK to Main clock (internal or external 12MHz) for fast wakeup.
-	 * If MAIN_CLK is already the source, just skip.
-	 */
-	if ((PMC->PMC_MCKR & PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_MAIN_CLK) {
-		return;
-	}
-	/* If we have to enable the MAIN_CLK */
-	if ((PMC->PMC_SR & PMC_SR_MOSCXTS) == 0) {
-		// Intend to use internal RC as source of MAIN_CLK
-		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
-		pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
-	}
+	/* Switch MCK to internal 4/8/12M RC for fast wakeup
+	   and disable unused clock for power saving. */
+	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
+	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
+	pmc_osc_disable_xtal(0);
+	pmc_disable_pllack();
+#if (SAM3S || SAM4S)
+	pmc_disable_pllbck();
+#elif (SAM3U || SAM3XA)
+	pmc_disable_upll_clock();
+#endif
 	pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
 }
 
@@ -138,29 +137,58 @@ static inline void pmc_restore_clock_setting(
 		uint32_t mck_setting)
 {
 	uint32_t mckr;
-	if ((pll0_setting & CKGR_PLLAR_MULA_Msk) &&
-		pll0_setting != PMC->CKGR_PLLAR) {
-		PMC->CKGR_PLLAR = 0;
+	uint32_t pll_sr = 0;
+
+	/* Switch MCK to slow clock  */
+	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
+	/* Switch mainck to external xtal */
+	if (CKGR_MOR_MOSCXTBY == (osc_setting & CKGR_MOR_MOSCXTBY)) {
+		/* Bypass mode */
+		pmc_switch_mainck_to_xtal(PMC_OSC_BYPASS,
+			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
+				CHIP_FREQ_SLCK_RC));
+		pmc_osc_disable_fastrc();
+	} else if (CKGR_MOR_MOSCXTEN == (osc_setting & CKGR_MOR_MOSCXTEN)) {
+		/* External XTAL */
+		pmc_switch_mainck_to_xtal(PMC_OSC_XTAL,
+			pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
+				CHIP_FREQ_SLCK_RC));
+		pmc_osc_disable_fastrc();
+	}
+
+	if (pll0_setting & CKGR_PLLAR_MULA_Msk) {
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | pll0_setting;
-		while (!(PMC->PMC_SR & PMC_SR_LOCKA));
+		pll_sr |= PMC_SR_LOCKA;
 	}
 #if (SAM3S || SAM4S)
-	if ((pll1_setting & CKGR_PLLBR_MULB_Msk) &&
-		pll1_setting != PMC->CKGR_PLLBR) {
-		PMC->CKGR_PLLBR = 0;
-		PMC->CKGR_PLLBR = pll1_setting ;
-		while (!(PMC->PMC_SR & PMC_SR_LOCKB));
+	if (pll1_setting & CKGR_PLLBR_MULB_Msk) {
+		PMC->CKGR_PLLBR = pll1_setting;
+		pll_sr |= PMC_SR_LOCKB;
 	}
 #elif (SAM3U || SAM3XA)
-	if ((pll1_setting & CKGR_UCKR_UPLLEN) &&
-		pll1_setting != PMC->CKGR_UCKR) {
-		PMC->CKGR_UCKR = 0;
+	if (pll1_setting & CKGR_UCKR_UPLLEN) {
 		PMC->CKGR_UCKR = pll1_setting;
-		while (!(PMC->PMC_SR & PMC_SR_LOCKU));
+		pll_sr |= PMC_SR_LOCKU;
 	}
 #else
 	UNUSED(pll1_setting);
 #endif
+	/* Wait MCK source ready */
+	switch(mck_setting & PMC_MCKR_CSS_Msk) {
+	case PMC_MCKR_CSS_PLLA_CLK:
+		while (!(PMC->PMC_SR & PMC_SR_LOCKA));
+		break;
+#if (SAM3S || SAM4S)
+	case PMC_MCKR_CSS_PLLB_CLK:
+		while (!(PMC->PMC_SR & PMC_SR_LOCKB));
+		break;
+#elif (SAM3U || SAM3XA)
+	case PMC_MCKR_CSS_UPLL_CLK:
+		while (!(PMC->PMC_SR & PMC_SR_LOCKU));
+		break;
+#endif
+	}
+
 	/* Switch to faster clock */
 	mckr = PMC->PMC_MCKR;
 	/* Set PRES */
@@ -170,12 +198,13 @@ static inline void pmc_restore_clock_setting(
 	/* Set CSS and others */
 	PMC->PMC_MCKR = mck_setting;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
-	/* Shutdown fastrc */
-	if (0 == (osc_setting & CKGR_MOR_MOSCRCEN)) {
-		pmc_osc_disable_fastrc();
-	}
+	/* Waiting all restored PLLs ready */
+	while (!(PMC->PMC_SR & pll_sr));
 }
 
+/**
+ * Enter sleep mode
+ */
 static inline void pmc_sleep(int sleep_mode)
 {
 	switch (sleep_mode) {
