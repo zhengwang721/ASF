@@ -204,6 +204,23 @@ void sysclk_init(void)
 #ifdef CONFIG_PLL0_SOURCE
 	case SYSCLK_SRC_PLLACK:
 		pll_enable_source(CONFIG_PLL0_SOURCE);
+		// Source is mainck, select source for mainck
+		switch(CONFIG_PLL0_SOURCE) {
+		case PLL_SRC_MAINCK_4M_RC:
+		case PLL_SRC_MAINCK_8M_RC:
+		case PLL_SRC_MAINCK_12M_RC:
+			pmc_mainck_osc_select(0);
+			while(!pmc_osc_is_ready_mainck());
+#  ifndef CONFIG_PLL1_SOURCE
+			pmc_osc_disable_main_xtal();
+#  endif
+			break;
+		case PLL_SRC_MAINCK_XTAL:
+		case PLL_SRC_MAINCK_BYPASS:
+			pmc_mainck_osc_select(CKGR_MOR_MOSCSEL);
+			while(!pmc_osc_is_ready_mainck());
+			break;
+		}
 		pll_config_defaults(&pllcfg, 0);
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
