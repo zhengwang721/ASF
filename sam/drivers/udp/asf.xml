@@ -17,6 +17,7 @@
 			<device-support value="sam3s"/>
 			<device-support value="sam3sd"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="sam.drivers.pmc"/>
@@ -39,6 +40,7 @@
 			<device-support value="sam3s"/>
 			<device-support value="sam3sd"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>

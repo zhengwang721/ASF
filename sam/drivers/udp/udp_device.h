@@ -57,7 +57,7 @@
 //! @name UDP Device properties
 //! These macros give IP properties (from datasheets)
 //! @{
-  //! Get maximal number of endpoints (3S, 0~7)
+  //! Get maximal number of endpoints (3S 4S 4E, 0~7)
 #define  udd_get_endpoint_max_nbr()            (7)
 #define  UDD_MAX_PEP_NB                        (udd_get_endpoint_max_nbr()+1)
   //! Get maximal number of banks of endpoint (3S, 1~2)
