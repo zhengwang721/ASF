@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.tc" caption="Timer Counter (TC) Driver">
 		<info type="description" value="summary">
-			Driver for the SAM0+ Timer counter...
+			Driver for the SAMD20 Timer counter.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers" />
@@ -11,10 +11,10 @@
 		<build type="c-source" value="tc.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_tc_basic.h"/>
 		<build type="doxygen-entry-point" value="sam0_tc_group"/>
-		<device-support value="sam0d"/>
+		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system.gclk"/>
 		<require idref="sam0.drivers.system"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-sam0d"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
