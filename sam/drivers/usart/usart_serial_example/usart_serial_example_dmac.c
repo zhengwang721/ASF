@@ -126,14 +126,15 @@ static void configure_dmac_rx(void)
 	dmac_channel_set_configuration(DMAC, BOARD_USART_DMAC_RX_CH, ul_cfg);
 
 	dmac_channel_disable(DMAC, BOARD_USART_DMAC_RX_CH);
-	dmac_trans.ul_source_addr = (uint32_t)&BOARD_USART->US_RHR;
-	dmac_trans.ul_destination_addr = (uint32_t)gs_puc_buffer;
-	dmac_trans.ul_ctrlA = DMAC_CTRLA_BTSIZE(BUFFER_SIZE) | DMAC_CTRLA_SRC_WIDTH_BYTE |
-			DMAC_CTRLA_DST_WIDTH_BYTE;
-	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
-			DMAC_CTRLB_FC_PER2MEM_DMA_FC |
-			DMAC_CTRLB_SRC_INCR_FIXED |
-			DMAC_CTRLB_DST_INCR_INCREMENTING;
+	dmac_trans.ul_source_addr = (uint32_t) & BOARD_USART->US_RHR;
+	dmac_trans.ul_destination_addr = (uint32_t) gs_puc_buffer;
+	dmac_trans.ul_ctrlA =
+			DMAC_CTRLA_BTSIZE(BUFFER_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_BYTE | DMAC_CTRLA_DST_WIDTH_BYTE;
+	dmac_trans.ul_ctrlB =
+			DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
+			DMAC_CTRLB_FC_PER2MEM_DMA_FC | DMAC_CTRLB_SRC_INCR_FIXED
+			| DMAC_CTRLB_DST_INCR_INCREMENTING;
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, BOARD_USART_DMAC_RX_CH,
 			&dmac_trans);
@@ -155,11 +156,13 @@ static void configure_dmac_tx(void)
 	dmac_channel_set_configuration(DMAC, BOARD_USART_DMAC_TX_CH, ul_cfg);
 
 	dmac_channel_disable(DMAC, BOARD_USART_DMAC_TX_CH);
-	dmac_trans.ul_source_addr = (uint32_t)gs_puc_buffer;
-	dmac_trans.ul_destination_addr = (uint32_t)&BOARD_USART->US_THR;
-	dmac_trans.ul_ctrlA =  DMAC_CTRLA_BTSIZE(BUFFER_SIZE) | DMAC_CTRLA_SRC_WIDTH_BYTE |
-			DMAC_CTRLA_DST_WIDTH_BYTE;
-	dmac_trans.ul_ctrlB = DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
+	dmac_trans.ul_source_addr = (uint32_t) gs_puc_buffer;
+	dmac_trans.ul_destination_addr = (uint32_t) & BOARD_USART->US_THR;
+	dmac_trans.ul_ctrlA =
+			DMAC_CTRLA_BTSIZE(BUFFER_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_BYTE | DMAC_CTRLA_DST_WIDTH_BYTE;
+	dmac_trans.ul_ctrlB =
+			DMAC_CTRLB_SRC_DSCR | DMAC_CTRLB_DST_DSCR |
 			DMAC_CTRLB_FC_MEM2PER_DMA_FC |
 			DMAC_CTRLB_SRC_INCR_INCREMENTING |
 			DMAC_CTRLB_DST_INCR_FIXED;
@@ -263,7 +266,7 @@ int main(void)
 
 	/* Configure USART. */
 	configure_usart();
-	
+
 	/* Configure DMAC. */
 	configure_dmac();
 
