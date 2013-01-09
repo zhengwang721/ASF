@@ -133,6 +133,9 @@
 typedef uint32_t irqflags_t;
 extern volatile bool g_interrupt_enabled;
 
+static volatile uint32_t cpu_irq_critical_section_counter;
+static volatile bool     cpu_irq_prev_interrupt_state;
+
 static inline irqflags_t cpu_irq_save(void)
 {
 	irqflags_t flags = g_interrupt_enabled;
@@ -149,6 +152,43 @@ static inline void cpu_irq_restore(irqflags_t flags)
 {
 	if (cpu_irq_is_enabled_flags(flags))
 		cpu_irq_enable();
+}
+
+static inline void cpu_irq_enter_critical()
+{
+
+	if(cpu_irq_critical_section_counter == 0) {
+
+		if(g_interrupt_enabled) {
+
+			cpu_irq_disable();
+			cpu_irq_prev_interrupt_state = true;
+
+		} else {
+
+			/* Make sure the to save the prev state as false */
+			cpu_irq_prev_interrupt_state = false;
+
+		}
+
+	}
+
+	cpu_irq_critical_section_counter++;
+
+}
+
+static inline void cpu_irq_leave_critical()
+{
+	/* Check if the user is trying to leave a critical section when not in a critical section */
+	Assert(cpu_irq_critical_section_counter > 0);
+
+	cpu_irq_critical_section_counter--;
+
+	/* Only enable global interrupts when the counter reaches 0 and the state of the global interrupt flag
+	   was enabled when entering critical state */
+	if((cpu_irq_critical_section_counter == 0) & (cpu_irq_prev_interrupt_state)) {
+		cpu_irq_enable();
+	}
 }
 
 #define cpu_irq_is_enabled()    g_interrupt_enabled
