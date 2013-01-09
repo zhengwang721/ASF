@@ -72,35 +72,35 @@ struct _eeprom_master_page {
 	uint8_t  major_version;
 	uint8_t  minor_version;
 	uint8_t  revision;
-	uint8_t  emualtor_id; 
+	uint8_t  emualtor_id;
 
 	/* Unused bytes in the page */
 	uint8_t  reserved[45];
 };
 
 /**
- * \brief Internal device instance struct 
+ * \brief Internal device instance struct
  *
  */
 struct _eeprom_emulator_device_struct {
-	bool initialized;
-	uint8_t *flash;
-	uint32_t flash_start_page;
+	bool      initialized;
+	uint8_t   *flash;
+	uint32_t  flash_start_page;
 
-	uint16_t physical_pages;
-	uint8_t logical_pages;
+	uint16_t  physical_pages;
+	uint8_t   logical_pages;
 
-	uint8_t page_map[FLASH_MAX_PAGES];
+	uint8_t   page_map[FLASH_MAX_PAGES];
 
-	uint8_t spare_row;
+	uint8_t   spare_row;
 
-	uint8_t cache_buffer[FLASH_PAGE_SIZE];
-	bool    cache_active;
-	uint8_t cached_page;
+	uint8_t   cache_buffer[FLASH_PAGE_SIZE];
+	bool      cache_active;
+	uint8_t   cached_page;
 };
 
 static struct _eeprom_emulator_device_struct _eemprom_emulator_device = {
-		.initialized = false,
+			initialized = false,
 		};
 
 /**
