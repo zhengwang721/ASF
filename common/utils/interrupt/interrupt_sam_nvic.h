@@ -131,7 +131,7 @@
 	} while (0)
 
 typedef uint32_t irqflags_t;
-extern volatile bool g_interrupt_enabled;
+volatile bool g_interrupt_enabled;
 
 static volatile uint32_t cpu_irq_critical_section_counter;
 static volatile bool     cpu_irq_prev_interrupt_state;
