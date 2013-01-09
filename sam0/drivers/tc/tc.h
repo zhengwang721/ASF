@@ -201,7 +201,7 @@ extern "C" {
  * pair.  \n
  *
  * For clock selection and configuration look at the GCLK
- * documentation.
+ * documentation \ref sam0_gclk_group "GCLK documentation".
  *
  * The module has its own prescaler. This prescaler only works to
  * prescale the clock used to provide clock pulses for the counter to
@@ -467,7 +467,7 @@ extern "C" {
  * counter size.
  *
  * There are 8 counter modules in the SAMD20 device, making 4 pairs of
- * TC modules that can have different GCLK_TC frequencies. It suports
+ * TC modules that can have different GCLK_TC frequencies. It supports
  * 4 simultaneous 32-bit TC modules.
  *
  * There are 8 TC modules in the device.
@@ -1165,8 +1165,8 @@ enum status_code tc_set_compare_value(
  * Writes the top value or period for the counter associated with the
  * dev_inst struct. In the case of a counter running in 8-bit counter
  * size a dedicated register is used for the period. This function is
- * only meant to be used in PWM or frequensy match mode. Not in any of
- * the wave generation normal modees.
+ * only meant to be used in PWM or frequency match mode. Not in any of
+ * the wave generation normal modes.
  *
  * \note For 16 and 32-bit counter size there is no dedicated register for
  * the period/Top value. In these cases capture compare register 0 is
@@ -1210,14 +1210,13 @@ static enum status_code tc_set_top_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	Assert(false); /* This should never happen */
-	return STATUS_ERR_PROTOCOL;
+	Assert(false); /* Getting here should be impossible */
 }
 
 /** @} */
 
 /**
- * \name Check/Reset interupts
+ * \name Check/Reset interrupt flags.
  * @{
  */
 

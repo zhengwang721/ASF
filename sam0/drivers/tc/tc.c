@@ -220,7 +220,6 @@ enum status_code tc_init(
 		return STATUS_ERR_INVALID_ARG;
 	}
 	Assert(false); /* geting here should not be posible */
-	return STATUS_ERR_PROTOCOL;
 }
 
 /** \brief Set TC module count value
@@ -271,8 +270,7 @@ enum status_code tc_set_count_value(
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC counter size end  */
-	Assert(false);
-	return STATUS_ERR_PROTOCOL;
+	Assert(false); /* Geting here should be imposible */
 }
 
 /** \brief Get TC module count value
@@ -417,6 +415,5 @@ enum status_code tc_set_compare_value(
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC counter size */
-	Assert(false);
-	return STATUS_ERR_PROTOCOL;
+	Assert(false);  /* Geting here should be imposible */
 }
