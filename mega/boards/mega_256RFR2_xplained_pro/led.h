@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief c board LEDs support package.
+ * \brief  ATmega256RFR2 Xplained Pro board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
  * the MEGA_256RFR2_XPLAINED_PRO board.
