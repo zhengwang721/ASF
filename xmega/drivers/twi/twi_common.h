@@ -40,8 +40,27 @@
  * \asf_license_stop
  *
  */
+ 
 #ifndef TWI_COMMON_H
 #define TWI_COMMON_H
+
+/* Fix header error in iox32e5.h */
+#ifndef TWI_BRIDGEEN_bm
+#define TWI_BRIDGEEN_bm  0x80  /* Bridge Enable bit mask. */
+#endif
+
+#ifndef TWI_BRIDGEEN_bp
+#define TWI_BRIDGEEN_bp  7  /* Bridge Enable bit position. */
+#endif
+
+#ifndef TWI_SFMPEN_bm
+#define TWI_SFMPEN_bm  0x40  /* Slave Fast Mode Plus Enable bit mask. */
+#endif
+
+#ifndef TWI_SFMPEN_bp
+#define TWI_SFMPEN_bp  6  /* Slave Fast Mode Plus Enable bit position. */
+#endif
+/* End of: Fix header error in iox32e5.h */
 
 /**
  * \defgroup group_xmega_drivers_twi TWI - Two-Wire Interface
