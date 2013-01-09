@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK Board Definition.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -568,7 +568,7 @@
 #define PIN_CAN0_RX_FLAGS         IOPORT_MODE_MUX_A
 
 /** CAN0 PIN TX. */
-#define PIN_CAN0_TX_IDX           PIO_PB2_IDX)
+#define PIN_CAN0_TX_IDX           PIO_PB2_IDX
 #define PIN_CAN0_TX_FLAGS         IOPORT_MODE_MUX_A
 
 /** CAN1 transceiver PIN RS. */
@@ -584,7 +584,7 @@
 #define PIN_CAN1_RX_FLAGS         IOPORT_MODE_MUX_C
 
 /** CAN1 PIN TX. */
-#define PIN_CAN1_TX_IDX           PIO_PC15_IDX)
+#define PIN_CAN1_TX_IDX           PIO_PC15_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
 
 /*----------------------------------------------------------------------------*/
