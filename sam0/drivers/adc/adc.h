@@ -50,6 +50,94 @@ extern "C" {
 #include <system.h>
 
 /**
+ * \defgroup sam0_adc_group SAMD20 Analog-to-Digital Converter Driver (ADC)
+ *
+ * Driver for the SAMD20 architecture devices. This driver provides an
+ * interface for converting analog signals to digital values.
+ * This driver encompasses the following module within the SAMD20 devices:
+ * \li \b ADC \b (Analog-to-Digital Converter)
+ *
+ * \section module_introduction Introduction
+ *
+ * \subsection module_overview ADC Overview
+ * The analog-to-digital converter converts an analog signal to a digital value.
+ * The ADC has up to 12-bit resolution, and is capable of converting up to 500k
+ * samples per second (ksps).
+ * The input selection is flexible, and both single-ended and differential
+ * measurements can be done. For differential measurements, an optional gain
+ * stage is available to increase the dynamic range. In addition, several
+ * internal signal inputs are available. The ADC can provide both signed and
+ * unsigned results.
+ *
+ * The ADC measurements can either be started by application software or an
+ * incoming event from another peripheral in the device.
+ * Both internal and external reference voltages can be used. An integrated
+ * temperature sensor is available for use with the ADC. The bandgap voltage, as
+ * well as the scaled IO and core voltages can also be measured by the ADC.
+ *
+ * The ADC has a compare function for accurate monitoring of user defined
+ * thresholds with minimum software intervention required.
+ * The ADC may be configured for 8-, 10- or 12-bit result, reducing the
+ * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
+ * conversion results are provided left or right adjusted which eases
+ * calculation when the result is represented as a signed integer.
+ * \n\n
+ * A simplified block diagram of the ADC can be seen in the following figure:
+ *
+ * \dot
+ * digraph overview {
+ * splines = false;
+ * rankdir=LR;
+ *
+ * adc0top [label="ADC0", shape=none];
+ * dotstop [label="...", shape=none];
+ * adcntop [label="ADCn", shape=none];
+ * sigtop [label="Int. Sig", shape=none];
+ *
+ * adc0bot [label="ADC0", shape=none];
+ * dotsbot [label="...", shape=none];
+ * adcnbot [label="ADCn", shape=none];
+ * sigbot [label="Int. Sig", shape=none];
+ *
+ *
+ * mux1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ * inputctrl [label="INPUTCTRL", shape=box, style=filled, fillcolor=lightblue];
+ * mux2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *
+ * adc0top -> mux1;
+ * dotstop -> mux1;
+ * adcntop -> mux1;
+ * sigtop -> mux1;
+ *
+ * adc0bot -> mux2:nw;
+ * dotsbot -> mux2:cw;
+ * adcnbot -> mux2:cw;
+ * sigbot -> mux2:sw;
+ *
+ * inputctrl -> mux1;
+ * inputctrl:se -> mux2;
+ * 
+ * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ *
+ * {rank=same; adc0top dotstop adcntop sigtop adc0bot dotsbot adcnbot sigbot }
+ * {rank=same; mux1 inputctrl mux2 }
+ * {rank=same; adc }
+ *
+ * }
+ * \enddot
+ *
+ *
+ * \subsection extra_info Extra Information
+ * For extra information see \ref adc_extra_info.
+ *
+ * \section module_examples Examples
+ * - \ref quickstart
+ *
+ * \section api_overview API Overview
+ * @{
+ */
+
+/**
  * \brief ADC status flags.
  *
  * Enum for the possible status flags
@@ -524,7 +612,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Initialize a ADC configuration structure to defaults
+ * \brief Initialize an ADC configuration structure to defaults
  *
  *  This function will initialize a given ADC configuration struct to a set of
  *  known default values. This function should be called on any new
@@ -663,7 +751,7 @@ static inline enum status_code adc_get_result(
  * \param window_upper_value[in] Upper window monitor threshold value
   */
 static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
-		enum adc_window_mode window_moe,
+		enum adc_window_mode window_mode,
 		int16_t              window_lower_value,
 		int16_t              window_upper_value)
 {
@@ -860,5 +948,65 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
+
+/**
+ * \page dac_extra_info Extra Information
+ *
+ * \section acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>LSB</td>
+ *		<td>Least Significant Bit</td>
+ *	</tr>
+ *	<tr>
+ *		<td>MSB</td>
+ *		<td>Most Significant Bit</td>
+ *	</tr>
+ * </table>
+ *
+ * \section workarounds Workarounds Implemented by Driver
+ * No workarounds in driver.
+ *
+ * \section module_history Module History
+ * Below is an overview of the module history, detailing enhancements and fixes
+ * made to the module since its first release. The current version of this
+ * corresponds to the newest version listed in the table below.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page quickstart Quick Start Guides for the ADC Module
+ *
+ * This is the quick start guide list for the \ref sam0_adc_group module, with
+ * step-by-step instructions on how to configure and use the driver in a
+ * selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function of the
+ * user application and run at system startup, while the steps for usage can be
+ * copied into the normal user application program flow.
+ *
+ * \see General list of module \ref module_examples "examples".
+ *
+ * \section adc_use_cases ADC driver use cases
+ * - \subpage adc_basic_use_case
+ */
 
 #endif /* _ADC_H_INCLUDED_ */

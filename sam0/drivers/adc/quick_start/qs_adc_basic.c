@@ -56,9 +56,9 @@ int main(void)
 //! [get_conf]
 	adc_get_config_defaults(&config);
 //! [get_conf]
-//! [init_dac]
+//! [init_adc]
 	adc_init(&dev_inst, &ADC0, &config);
-//! [init_dac]
+//! [init_adc]
 //! [enable]
 	adc_enable(&dev_inst);
 //! [enable]

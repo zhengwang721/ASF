@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.adc" caption="ADC - Andalog-to-Digital Converter Driver">
+	<module type="driver" id="sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter Driver">
 		<info type="description" value="summary">
 		Driver for the SAMD20 ADC.
 		</info>
