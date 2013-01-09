@@ -6,6 +6,6 @@
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
 		<generator value="armgcc"/>
-		<device-support value="samd20g18a"/>
+		<device-support value="samd20j18a"/>
 	</project>
 </asf>

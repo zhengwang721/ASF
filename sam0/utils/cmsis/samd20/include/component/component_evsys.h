@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 /** \addtogroup SAMD20_EVSYS Event System Interface */
 /*@{*/
 
-#define REV_EVSYS      0x100
+#define REV_EVSYS                   0x100
 
 /* -------- EVSYS_CTRL : (EVSYS Offset: 0x00) ( /W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -66,8 +66,10 @@ typedef union {
 #define EVSYS_CTRL_OFFSET           0x00         /**< \brief (EVSYS_CTRL offset) Control Register */
 #define EVSYS_CTRL_RESETVALUE       0x00         /**< \brief (EVSYS_CTRL reset_value) Control Register */
 
-#define EVSYS_CTRL_SWRST            (0x1u <<  0) /**< \brief (EVSYS_CTRL) Software Reset */
-#define EVSYS_CTRL_GCLKREQ          (0x1u <<  4) /**< \brief (EVSYS_CTRL) Generic Clock Request */
+#define EVSYS_CTRL_SWRST_Pos        0            /**< \brief (EVSYS_CTRL) Software Reset */
+#define EVSYS_CTRL_SWRST            (0x1u << EVSYS_CTRL_SWRST_Pos)
+#define EVSYS_CTRL_GCLKREQ_Pos      4            /**< \brief (EVSYS_CTRL) Generic Clock Request */
+#define EVSYS_CTRL_GCLKREQ          (0x1u << EVSYS_CTRL_GCLKREQ_Pos)
 #define EVSYS_CTRL_MASK             0x11u        /**< \brief (EVSYS_CTRL) MASK Register */
 
 /* -------- EVSYS_CHANNEL : (EVSYS Offset: 0x04) (R/W 32) Channel Register -------- */
@@ -89,18 +91,19 @@ typedef union {
 #define EVSYS_CHANNEL_OFFSET        0x04         /**< \brief (EVSYS_CHANNEL offset) Channel Register */
 #define EVSYS_CHANNEL_RESETVALUE    0x00000000   /**< \brief (EVSYS_CHANNEL reset_value) Channel Register */
 
-#define EVSYS_CHANNEL_CHANNEL_Pos    0
-#define EVSYS_CHANNEL_CHANNEL_Msk    (0xFFu << EVSYS_CHANNEL_CHANNEL_Pos) /**< \brief (EVSYS_CHANNEL) Channel Selection */
+#define EVSYS_CHANNEL_CHANNEL_Pos   0            /**< \brief (EVSYS_CHANNEL) Channel Selection */
+#define EVSYS_CHANNEL_CHANNEL_Msk   (0xFFu << EVSYS_CHANNEL_CHANNEL_Pos)
 #define EVSYS_CHANNEL_CHANNEL(value) ((EVSYS_CHANNEL_CHANNEL_Msk & ((value) << EVSYS_CHANNEL_CHANNEL_Pos)))
-#define EVSYS_CHANNEL_SWEVT         (0x1u <<  8) /**< \brief (EVSYS_CHANNEL) Software Event */
-#define EVSYS_CHANNEL_EVGEN_Pos     16
-#define EVSYS_CHANNEL_EVGEN_Msk     (0xFFu << EVSYS_CHANNEL_EVGEN_Pos) /**< \brief (EVSYS_CHANNEL) Event Generator Selection */
+#define EVSYS_CHANNEL_SWEVT_Pos     8            /**< \brief (EVSYS_CHANNEL) Software Event */
+#define EVSYS_CHANNEL_SWEVT         (0x1u << EVSYS_CHANNEL_SWEVT_Pos)
+#define EVSYS_CHANNEL_EVGEN_Pos     16           /**< \brief (EVSYS_CHANNEL) Event Generator Selection */
+#define EVSYS_CHANNEL_EVGEN_Msk     (0xFFu << EVSYS_CHANNEL_EVGEN_Pos)
 #define EVSYS_CHANNEL_EVGEN(value)  ((EVSYS_CHANNEL_EVGEN_Msk & ((value) << EVSYS_CHANNEL_EVGEN_Pos)))
-#define EVSYS_CHANNEL_PATH_Pos      24
-#define EVSYS_CHANNEL_PATH_Msk      (0x3u << EVSYS_CHANNEL_PATH_Pos) /**< \brief (EVSYS_CHANNEL) Path Selection */
+#define EVSYS_CHANNEL_PATH_Pos      24           /**< \brief (EVSYS_CHANNEL) Path Selection */
+#define EVSYS_CHANNEL_PATH_Msk      (0x3u << EVSYS_CHANNEL_PATH_Pos)
 #define EVSYS_CHANNEL_PATH(value)   ((EVSYS_CHANNEL_PATH_Msk & ((value) << EVSYS_CHANNEL_PATH_Pos)))
-#define EVSYS_CHANNEL_EDGSEL_Pos    26
-#define EVSYS_CHANNEL_EDGSEL_Msk    (0x3u << EVSYS_CHANNEL_EDGSEL_Pos) /**< \brief (EVSYS_CHANNEL) Edge Selection */
+#define EVSYS_CHANNEL_EDGSEL_Pos    26           /**< \brief (EVSYS_CHANNEL) Edge Selection */
+#define EVSYS_CHANNEL_EDGSEL_Msk    (0x3u << EVSYS_CHANNEL_EDGSEL_Pos)
 #define EVSYS_CHANNEL_EDGSEL(value) ((EVSYS_CHANNEL_EDGSEL_Msk & ((value) << EVSYS_CHANNEL_EDGSEL_Pos)))
 #define EVSYS_CHANNEL_MASK          0x0FFF01FFu  /**< \brief (EVSYS_CHANNEL) MASK Register */
 
@@ -118,11 +121,11 @@ typedef union {
 #define EVSYS_USERMUX_OFFSET        0x08         /**< \brief (EVSYS_USERMUX offset) User Mux Register */
 #define EVSYS_USERMUX_RESETVALUE    0x0000       /**< \brief (EVSYS_USERMUX reset_value) User Mux Register */
 
-#define EVSYS_USERMUX_UMUXSEL_Pos    0
-#define EVSYS_USERMUX_UMUXSEL_Msk    (0xFFu << EVSYS_USERMUX_UMUXSEL_Pos) /**< \brief (EVSYS_USERMUX) User Mux Selection */
+#define EVSYS_USERMUX_UMUXSEL_Pos   0            /**< \brief (EVSYS_USERMUX) User Mux Selection */
+#define EVSYS_USERMUX_UMUXSEL_Msk   (0xFFu << EVSYS_USERMUX_UMUXSEL_Pos)
 #define EVSYS_USERMUX_UMUXSEL(value) ((EVSYS_USERMUX_UMUXSEL_Msk & ((value) << EVSYS_USERMUX_UMUXSEL_Pos)))
-#define EVSYS_USERMUX_CHANNELEVENT_Pos    8
-#define EVSYS_USERMUX_CHANNELEVENT_Msk    (0xFFu << EVSYS_USERMUX_CHANNELEVENT_Pos) /**< \brief (EVSYS_USERMUX) Channel Event Selection */
+#define EVSYS_USERMUX_CHANNELEVENT_Pos 8            /**< \brief (EVSYS_USERMUX) Channel Event Selection */
+#define EVSYS_USERMUX_CHANNELEVENT_Msk (0xFFu << EVSYS_USERMUX_CHANNELEVENT_Pos)
 #define EVSYS_USERMUX_CHANNELEVENT(value) ((EVSYS_USERMUX_CHANNELEVENT_Msk & ((value) << EVSYS_USERMUX_CHANNELEVENT_Pos)))
 #define EVSYS_USERMUX_MASK          0xFFFFu      /**< \brief (EVSYS_USERMUX) MASK Register */
 
@@ -142,17 +145,17 @@ typedef union {
 #define EVSYS_CHSTATUS_OFFSET       0x0C         /**< \brief (EVSYS_CHSTATUS offset) Channel Status Register */
 #define EVSYS_CHSTATUS_RESETVALUE   0x00000000   /**< \brief (EVSYS_CHSTATUS reset_value) Channel Status Register */
 
-#define EVSYS_CHSTATUS_USRREADY0_Pos    0
-#define EVSYS_CHSTATUS_USRREADY0_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY0_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 0 to 7 (modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY0_Pos 0            /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 0 to 7 (modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY0_Msk (0xFFu << EVSYS_CHSTATUS_USRREADY0_Pos)
 #define EVSYS_CHSTATUS_USRREADY0(value) ((EVSYS_CHSTATUS_USRREADY0_Msk & ((value) << EVSYS_CHSTATUS_USRREADY0_Pos)))
-#define EVSYS_CHSTATUS_CHBUSY0_Pos    8
-#define EVSYS_CHSTATUS_CHBUSY0_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY0_Pos) /**< \brief (EVSYS_CHSTATUS) Channels Busy 0 to 7 (modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY0_Pos  8            /**< \brief (EVSYS_CHSTATUS) Channels Busy 0 to 7 (modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY0_Msk  (0xFFu << EVSYS_CHSTATUS_CHBUSY0_Pos)
 #define EVSYS_CHSTATUS_CHBUSY0(value) ((EVSYS_CHSTATUS_CHBUSY0_Msk & ((value) << EVSYS_CHSTATUS_CHBUSY0_Pos)))
-#define EVSYS_CHSTATUS_USRREADY1_Pos    16
-#define EVSYS_CHSTATUS_USRREADY1_Msk    (0xFFu << EVSYS_CHSTATUS_USRREADY1_Pos) /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 8 to 15 (modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY1_Pos 16           /**< \brief (EVSYS_CHSTATUS) User Ready for Channels 8 to 15 (modulo 16) */
+#define EVSYS_CHSTATUS_USRREADY1_Msk (0xFFu << EVSYS_CHSTATUS_USRREADY1_Pos)
 #define EVSYS_CHSTATUS_USRREADY1(value) ((EVSYS_CHSTATUS_USRREADY1_Msk & ((value) << EVSYS_CHSTATUS_USRREADY1_Pos)))
-#define EVSYS_CHSTATUS_CHBUSY1_Pos    24
-#define EVSYS_CHSTATUS_CHBUSY1_Msk    (0xFFu << EVSYS_CHSTATUS_CHBUSY1_Pos) /**< \brief (EVSYS_CHSTATUS) Channels Busy 8 to 15 (modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY1_Pos  24           /**< \brief (EVSYS_CHSTATUS) Channels Busy 8 to 15 (modulo 16) */
+#define EVSYS_CHSTATUS_CHBUSY1_Msk  (0xFFu << EVSYS_CHSTATUS_CHBUSY1_Pos)
 #define EVSYS_CHSTATUS_CHBUSY1(value) ((EVSYS_CHSTATUS_CHBUSY1_Msk & ((value) << EVSYS_CHSTATUS_CHBUSY1_Pos)))
 #define EVSYS_CHSTATUS_MASK         0xFFFFFFFFu  /**< \brief (EVSYS_CHSTATUS) MASK Register */
 
@@ -172,17 +175,17 @@ typedef union {
 #define EVSYS_INTENCLR_OFFSET       0x10         /**< \brief (EVSYS_INTENCLR offset) Interrupt Enable Clear Register */
 #define EVSYS_INTENCLR_RESETVALUE   0x00000000   /**< \brief (EVSYS_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define EVSYS_INTENCLR_OVR0_Pos     0
-#define EVSYS_INTENCLR_OVR0_Msk     (0xFFu << EVSYS_INTENCLR_OVR0_Pos) /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_OVR0_Pos     0            /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_OVR0_Msk     (0xFFu << EVSYS_INTENCLR_OVR0_Pos)
 #define EVSYS_INTENCLR_OVR0(value)  ((EVSYS_INTENCLR_OVR0_Msk & ((value) << EVSYS_INTENCLR_OVR0_Pos)))
-#define EVSYS_INTENCLR_EVD0_Pos     8
-#define EVSYS_INTENCLR_EVD0_Msk     (0xFFu << EVSYS_INTENCLR_EVD0_Pos) /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_EVD0_Pos     8            /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENCLR_EVD0_Msk     (0xFFu << EVSYS_INTENCLR_EVD0_Pos)
 #define EVSYS_INTENCLR_EVD0(value)  ((EVSYS_INTENCLR_EVD0_Msk & ((value) << EVSYS_INTENCLR_EVD0_Pos)))
-#define EVSYS_INTENCLR_OVR1_Pos     16
-#define EVSYS_INTENCLR_OVR1_Msk     (0xFFu << EVSYS_INTENCLR_OVR1_Pos) /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_OVR1_Pos     16           /**< \brief (EVSYS_INTENCLR) Overrun Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_OVR1_Msk     (0xFFu << EVSYS_INTENCLR_OVR1_Pos)
 #define EVSYS_INTENCLR_OVR1(value)  ((EVSYS_INTENCLR_OVR1_Msk & ((value) << EVSYS_INTENCLR_OVR1_Pos)))
-#define EVSYS_INTENCLR_EVD1_Pos     24
-#define EVSYS_INTENCLR_EVD1_Msk     (0xFFu << EVSYS_INTENCLR_EVD1_Pos) /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_EVD1_Pos     24           /**< \brief (EVSYS_INTENCLR) Event Detection Interrupt Disable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENCLR_EVD1_Msk     (0xFFu << EVSYS_INTENCLR_EVD1_Pos)
 #define EVSYS_INTENCLR_EVD1(value)  ((EVSYS_INTENCLR_EVD1_Msk & ((value) << EVSYS_INTENCLR_EVD1_Pos)))
 #define EVSYS_INTENCLR_MASK         0xFFFFFFFFu  /**< \brief (EVSYS_INTENCLR) MASK Register */
 
@@ -202,17 +205,17 @@ typedef union {
 #define EVSYS_INTENSET_OFFSET       0x14         /**< \brief (EVSYS_INTENSET offset) Interrupt Enable Set Register */
 #define EVSYS_INTENSET_RESETVALUE   0x00000000   /**< \brief (EVSYS_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define EVSYS_INTENSET_OVR0_Pos     0
-#define EVSYS_INTENSET_OVR0_Msk     (0xFFu << EVSYS_INTENSET_OVR0_Pos) /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_OVR0_Pos     0            /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_OVR0_Msk     (0xFFu << EVSYS_INTENSET_OVR0_Pos)
 #define EVSYS_INTENSET_OVR0(value)  ((EVSYS_INTENSET_OVR0_Msk & ((value) << EVSYS_INTENSET_OVR0_Pos)))
-#define EVSYS_INTENSET_EVD0_Pos     8
-#define EVSYS_INTENSET_EVD0_Msk     (0xFFu << EVSYS_INTENSET_EVD0_Pos) /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_EVD0_Pos     8            /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTENSET_EVD0_Msk     (0xFFu << EVSYS_INTENSET_EVD0_Pos)
 #define EVSYS_INTENSET_EVD0(value)  ((EVSYS_INTENSET_EVD0_Msk & ((value) << EVSYS_INTENSET_EVD0_Pos)))
-#define EVSYS_INTENSET_OVR1_Pos     16
-#define EVSYS_INTENSET_OVR1_Msk     (0xFFu << EVSYS_INTENSET_OVR1_Pos) /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_OVR1_Pos     16           /**< \brief (EVSYS_INTENSET) Overrun Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_OVR1_Msk     (0xFFu << EVSYS_INTENSET_OVR1_Pos)
 #define EVSYS_INTENSET_OVR1(value)  ((EVSYS_INTENSET_OVR1_Msk & ((value) << EVSYS_INTENSET_OVR1_Pos)))
-#define EVSYS_INTENSET_EVD1_Pos     24
-#define EVSYS_INTENSET_EVD1_Msk     (0xFFu << EVSYS_INTENSET_EVD1_Pos) /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_EVD1_Pos     24           /**< \brief (EVSYS_INTENSET) Event Detection Interrupt Enable for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTENSET_EVD1_Msk     (0xFFu << EVSYS_INTENSET_EVD1_Pos)
 #define EVSYS_INTENSET_EVD1(value)  ((EVSYS_INTENSET_EVD1_Msk & ((value) << EVSYS_INTENSET_EVD1_Pos)))
 #define EVSYS_INTENSET_MASK         0xFFFFFFFFu  /**< \brief (EVSYS_INTENSET) MASK Register */
 
@@ -232,17 +235,17 @@ typedef union {
 #define EVSYS_INTFLAG_OFFSET        0x18         /**< \brief (EVSYS_INTFLAG offset) Interrupt Flag Status and Clear Register */
 #define EVSYS_INTFLAG_RESETVALUE    0x00000000   /**< \brief (EVSYS_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define EVSYS_INTFLAG_OVR0_Pos      0
-#define EVSYS_INTFLAG_OVR0_Msk      (0xFFu << EVSYS_INTFLAG_OVR0_Pos) /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTFLAG_OVR0_Pos      0            /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTFLAG_OVR0_Msk      (0xFFu << EVSYS_INTFLAG_OVR0_Pos)
 #define EVSYS_INTFLAG_OVR0(value)   ((EVSYS_INTFLAG_OVR0_Msk & ((value) << EVSYS_INTFLAG_OVR0_Pos)))
-#define EVSYS_INTFLAG_EVD0_Pos      8
-#define EVSYS_INTFLAG_EVD0_Msk      (0xFFu << EVSYS_INTFLAG_EVD0_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTFLAG_EVD0_Pos      8            /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 0 to 7 (modulo 16) */
+#define EVSYS_INTFLAG_EVD0_Msk      (0xFFu << EVSYS_INTFLAG_EVD0_Pos)
 #define EVSYS_INTFLAG_EVD0(value)   ((EVSYS_INTFLAG_EVD0_Msk & ((value) << EVSYS_INTFLAG_EVD0_Pos)))
-#define EVSYS_INTFLAG_OVR1_Pos      16
-#define EVSYS_INTFLAG_OVR1_Msk      (0xFFu << EVSYS_INTFLAG_OVR1_Pos) /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTFLAG_OVR1_Pos      16           /**< \brief (EVSYS_INTFLAG) Overrun Interrupt Flag for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTFLAG_OVR1_Msk      (0xFFu << EVSYS_INTFLAG_OVR1_Pos)
 #define EVSYS_INTFLAG_OVR1(value)   ((EVSYS_INTFLAG_OVR1_Msk & ((value) << EVSYS_INTFLAG_OVR1_Pos)))
-#define EVSYS_INTFLAG_EVD1_Pos      24
-#define EVSYS_INTFLAG_EVD1_Msk      (0xFFu << EVSYS_INTFLAG_EVD1_Pos) /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTFLAG_EVD1_Pos      24           /**< \brief (EVSYS_INTFLAG) Event Detection Interrupt Flag for Channels 8 to 15 (modulo 16) */
+#define EVSYS_INTFLAG_EVD1_Msk      (0xFFu << EVSYS_INTFLAG_EVD1_Pos)
 #define EVSYS_INTFLAG_EVD1(value)   ((EVSYS_INTFLAG_EVD1_Msk & ((value) << EVSYS_INTFLAG_EVD1_Pos)))
 #define EVSYS_INTFLAG_MASK          0xFFFFFFFFu  /**< \brief (EVSYS_INTFLAG) MASK Register */
 
