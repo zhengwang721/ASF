@@ -6,6 +6,8 @@
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20e16a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20e16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd20/iar/samd20e16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20e16a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="samd20e16a"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD20E17A" id="sam0.utils.linker_scripts#samd20e17a">
@@ -14,6 +16,8 @@
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20e17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20e17a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd20/iar/samd20e17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20e17a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="samd20e17a"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD20J16A" id="sam0.utils.linker_scripts#samd20j16a">
@@ -22,6 +26,8 @@
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20j16a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20j16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd20/iar/samd20j16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20j16a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="samd20j16a"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD20J17A" id="sam0.utils.linker_scripts#samd20j17a">
@@ -30,6 +36,8 @@
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20j17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20j17a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd20/iar/samd20j17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20j17a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="samd20j17a"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD20J18A" id="sam0.utils.linker_scripts#samd20j18a">
@@ -38,6 +46,8 @@
 			</info>
 			<build type="linker-config" subtype="script" value="samd20/gcc/samd20j18a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20j18a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd20/iar/samd20j17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20j17a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="samd20j18a"/>
 		</module>
 	</select-by-device>
