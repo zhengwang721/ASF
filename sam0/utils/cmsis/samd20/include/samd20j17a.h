@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,11 +39,11 @@
  *
  */
 
-#ifndef _SAMD2064G4_
-#define _SAMD2064G4_
+#ifndef _SAMD20J17A_
+#define _SAMD20J17A_
 
-/** \addtogroup SAMD2064G4_definitions SAMD2064G4 definitions
-  This file defines all structures and symbols for SAMD2064G4:
+/** \addtogroup SAMD20J17A_definitions SAMD20J17A definitions
+  This file defines all structures and symbols for SAMD20J17A:
     - registers and bitfields
     - peripheral base address
     - peripheral ID
@@ -80,9 +80,9 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 #endif
 
 /* ************************************************************************** */
-/**  CMSIS DEFINITIONS FOR SAMD2064G4 */
+/**  CMSIS DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_cmsis CMSIS Definitions */
+/** \addtogroup SAMD20J17A_cmsis CMSIS Definitions */
 /*@{*/
 
 /**< Interrupt Number Definition */
@@ -94,139 +94,139 @@ typedef enum IRQn
   SVCall_IRQn              = -5,  /**< 11 Cortex-M0+ SV Call Interrupt           */
   PendSV_IRQn              = -2,  /**< 14 Cortex-M0+ Pend SV Interrupt           */
   SysTick_IRQn             = -1,  /**< 15 Cortex-M0+ System Tick Interrupt       */
-  /******  SAMD2064G4-specific Interrupt Numbers ***********************/
-  PM_CFD_IRQn              =  0, /**<  0 SAMD2064G4 Power Manager (PM) */
-  PM_CKRDY_IRQn            =  0, /**<  0 SAMD2064G4 Power Manager (PM) */
-  SYSCTRL_BOD12DET_IRQn    =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_BOD12RDY_IRQn    =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_BOD12SYNRDY_IRQn =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_BOD33DET_IRQn    =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_BOD33RDY_IRQn    =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_BOD33SYNRDY_IRQn =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_DFLLLOCKC_IRQn   =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_DFLLLOCKF_IRQn   =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_DFLLOOB_IRQn     =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_DFLLRCS_IRQn     =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_DFLLRDY_IRQn     =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_OSC32KRDY_IRQn   =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_XOSCRDY_IRQn     =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  SYSCTRL_XOSC32RDY_IRQn   =  1, /**<  1 SAMD2064G4 System Control (SYSCTRL) */
-  WDT_EW_IRQn              =  2, /**<  2 SAMD2064G4 Watchdog Timer (WDT) */
-  RTC_CMP_0_IRQn           =  3, /**<  3 SAMD2064G4 Real-Time Counter (RTC) */
-  RTC_CMP_1_IRQn           =  3, /**<  3 SAMD2064G4 Real-Time Counter (RTC) */
-  RTC_OVF_IRQn             =  3, /**<  3 SAMD2064G4 Real-Time Counter (RTC) */
-  RTC_READY_IRQn           =  3, /**<  3 SAMD2064G4 Real-Time Counter (RTC) */
-  EIC_EXTINT_0_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_1_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_2_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_3_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_4_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_5_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_6_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_7_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_8_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_9_IRQn        =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_10_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_11_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_12_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_13_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_14_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  EIC_EXTINT_15_IRQn       =  4, /**<  4 SAMD2064G4 External Interrupt Controller (EIC) */
-  NVMCTRL_0_IRQn           =  5, /**<  5 SAMD2064G4 Non-Volatile Memory Controller (NVMCTRL) */
-  NVMCTRL_1_IRQn           =  5, /**<  5 SAMD2064G4 Non-Volatile Memory Controller (NVMCTRL) */
-  EVSYS_EVD_0_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_1_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_2_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_3_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_4_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_5_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_6_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_EVD_7_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_0_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_1_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_2_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_3_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_4_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_5_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_6_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  EVSYS_OVR_7_IRQn         =  6, /**<  6 SAMD2064G4 Event System Interface (EVSYS) */
-  SERCOM0_0_IRQn           =  7, /**<  7 SAMD2064G4 Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_1_IRQn           =  7, /**<  7 SAMD2064G4 Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_2_IRQn           =  7, /**<  7 SAMD2064G4 Serial Communication Interface 0 (SERCOM0) */
-  SERCOM0_3_IRQn           =  7, /**<  7 SAMD2064G4 Serial Communication Interface 0 (SERCOM0) */
-  SERCOM1_0_IRQn           =  8, /**<  8 SAMD2064G4 Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_1_IRQn           =  8, /**<  8 SAMD2064G4 Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_2_IRQn           =  8, /**<  8 SAMD2064G4 Serial Communication Interface 1 (SERCOM1) */
-  SERCOM1_3_IRQn           =  8, /**<  8 SAMD2064G4 Serial Communication Interface 1 (SERCOM1) */
-  SERCOM2_0_IRQn           =  9, /**<  9 SAMD2064G4 Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_1_IRQn           =  9, /**<  9 SAMD2064G4 Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_2_IRQn           =  9, /**<  9 SAMD2064G4 Serial Communication Interface 2 (SERCOM2) */
-  SERCOM2_3_IRQn           =  9, /**<  9 SAMD2064G4 Serial Communication Interface 2 (SERCOM2) */
-  SERCOM3_0_IRQn           = 10, /**< 10 SAMD2064G4 Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_1_IRQn           = 10, /**< 10 SAMD2064G4 Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_2_IRQn           = 10, /**< 10 SAMD2064G4 Serial Communication Interface 3 (SERCOM3) */
-  SERCOM3_3_IRQn           = 10, /**< 10 SAMD2064G4 Serial Communication Interface 3 (SERCOM3) */
-  SERCOM4_0_IRQn           = 11, /**< 11 SAMD2064G4 Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_1_IRQn           = 11, /**< 11 SAMD2064G4 Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_2_IRQn           = 11, /**< 11 SAMD2064G4 Serial Communication Interface 4 (SERCOM4) */
-  SERCOM4_3_IRQn           = 11, /**< 11 SAMD2064G4 Serial Communication Interface 4 (SERCOM4) */
-  SERCOM5_0_IRQn           = 12, /**< 12 SAMD2064G4 Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_1_IRQn           = 12, /**< 12 SAMD2064G4 Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_2_IRQn           = 12, /**< 12 SAMD2064G4 Serial Communication Interface 5 (SERCOM5) */
-  SERCOM5_3_IRQn           = 12, /**< 12 SAMD2064G4 Serial Communication Interface 5 (SERCOM5) */
-  TC0_ERR_IRQn             = 13, /**< 13 SAMD2064G4 Basic Timer Counter 0 (TC0) */
-  TC0_MC_0_IRQn            = 13, /**< 13 SAMD2064G4 Basic Timer Counter 0 (TC0) */
-  TC0_MC_1_IRQn            = 13, /**< 13 SAMD2064G4 Basic Timer Counter 0 (TC0) */
-  TC0_OVF_IRQn             = 13, /**< 13 SAMD2064G4 Basic Timer Counter 0 (TC0) */
-  TC0_READY_IRQn           = 13, /**< 13 SAMD2064G4 Basic Timer Counter 0 (TC0) */
-  TC1_ERR_IRQn             = 14, /**< 14 SAMD2064G4 Basic Timer Counter 1 (TC1) */
-  TC1_MC_0_IRQn            = 14, /**< 14 SAMD2064G4 Basic Timer Counter 1 (TC1) */
-  TC1_MC_1_IRQn            = 14, /**< 14 SAMD2064G4 Basic Timer Counter 1 (TC1) */
-  TC1_OVF_IRQn             = 14, /**< 14 SAMD2064G4 Basic Timer Counter 1 (TC1) */
-  TC1_READY_IRQn           = 14, /**< 14 SAMD2064G4 Basic Timer Counter 1 (TC1) */
-  TC2_ERR_IRQn             = 15, /**< 15 SAMD2064G4 Basic Timer Counter 2 (TC2) */
-  TC2_MC_0_IRQn            = 15, /**< 15 SAMD2064G4 Basic Timer Counter 2 (TC2) */
-  TC2_MC_1_IRQn            = 15, /**< 15 SAMD2064G4 Basic Timer Counter 2 (TC2) */
-  TC2_OVF_IRQn             = 15, /**< 15 SAMD2064G4 Basic Timer Counter 2 (TC2) */
-  TC2_READY_IRQn           = 15, /**< 15 SAMD2064G4 Basic Timer Counter 2 (TC2) */
-  TC3_ERR_IRQn             = 16, /**< 16 SAMD2064G4 Basic Timer Counter 3 (TC3) */
-  TC3_MC_0_IRQn            = 16, /**< 16 SAMD2064G4 Basic Timer Counter 3 (TC3) */
-  TC3_MC_1_IRQn            = 16, /**< 16 SAMD2064G4 Basic Timer Counter 3 (TC3) */
-  TC3_OVF_IRQn             = 16, /**< 16 SAMD2064G4 Basic Timer Counter 3 (TC3) */
-  TC3_READY_IRQn           = 16, /**< 16 SAMD2064G4 Basic Timer Counter 3 (TC3) */
-  TC4_ERR_IRQn             = 17, /**< 17 SAMD2064G4 Basic Timer Counter 4 (TC4) */
-  TC4_MC_0_IRQn            = 17, /**< 17 SAMD2064G4 Basic Timer Counter 4 (TC4) */
-  TC4_MC_1_IRQn            = 17, /**< 17 SAMD2064G4 Basic Timer Counter 4 (TC4) */
-  TC4_OVF_IRQn             = 17, /**< 17 SAMD2064G4 Basic Timer Counter 4 (TC4) */
-  TC4_READY_IRQn           = 17, /**< 17 SAMD2064G4 Basic Timer Counter 4 (TC4) */
-  TC5_ERR_IRQn             = 18, /**< 18 SAMD2064G4 Basic Timer Counter 5 (TC5) */
-  TC5_MC_0_IRQn            = 18, /**< 18 SAMD2064G4 Basic Timer Counter 5 (TC5) */
-  TC5_MC_1_IRQn            = 18, /**< 18 SAMD2064G4 Basic Timer Counter 5 (TC5) */
-  TC5_OVF_IRQn             = 18, /**< 18 SAMD2064G4 Basic Timer Counter 5 (TC5) */
-  TC5_READY_IRQn           = 18, /**< 18 SAMD2064G4 Basic Timer Counter 5 (TC5) */
-  TC6_ERR_IRQn             = 19, /**< 19 SAMD2064G4 Basic Timer Counter 6 (TC6) */
-  TC6_MC_0_IRQn            = 19, /**< 19 SAMD2064G4 Basic Timer Counter 6 (TC6) */
-  TC6_MC_1_IRQn            = 19, /**< 19 SAMD2064G4 Basic Timer Counter 6 (TC6) */
-  TC6_OVF_IRQn             = 19, /**< 19 SAMD2064G4 Basic Timer Counter 6 (TC6) */
-  TC6_READY_IRQn           = 19, /**< 19 SAMD2064G4 Basic Timer Counter 6 (TC6) */
-  TC7_ERR_IRQn             = 20, /**< 20 SAMD2064G4 Basic Timer Counter 7 (TC7) */
-  TC7_MC_0_IRQn            = 20, /**< 20 SAMD2064G4 Basic Timer Counter 7 (TC7) */
-  TC7_MC_1_IRQn            = 20, /**< 20 SAMD2064G4 Basic Timer Counter 7 (TC7) */
-  TC7_OVF_IRQn             = 20, /**< 20 SAMD2064G4 Basic Timer Counter 7 (TC7) */
-  TC7_READY_IRQn           = 20, /**< 20 SAMD2064G4 Basic Timer Counter 7 (TC7) */
-  ADC_OVERRUN_IRQn         = 21, /**< 21 SAMD2064G4 Analog Digital Converter (ADC) */
-  ADC_READY_IRQn           = 21, /**< 21 SAMD2064G4 Analog Digital Converter (ADC) */
-  ADC_RESRDY_IRQn          = 21, /**< 21 SAMD2064G4 Analog Digital Converter (ADC) */
-  ADC_WINMON_IRQn          = 21, /**< 21 SAMD2064G4 Analog Digital Converter (ADC) */
-  AC_COMP_0_IRQn           = 22, /**< 22 SAMD2064G4 Analog Comparators (AC) */
-  AC_COMP_1_IRQn           = 22, /**< 22 SAMD2064G4 Analog Comparators (AC) */
-  AC_WIN_0_IRQn            = 22, /**< 22 SAMD2064G4 Analog Comparators (AC) */
-  DAC_EMPTY_IRQn           = 23, /**< 23 SAMD2064G4 Digital Analog Converter (DAC) */
-  DAC_READY_IRQn           = 23, /**< 23 SAMD2064G4 Digital Analog Converter (DAC) */
-  DAC_UNDERRUN_IRQn        = 23, /**< 23 SAMD2064G4 Digital Analog Converter (DAC) */
-  PTC_EOC_IRQn             = 24, /**< 24 SAMD2064G4 Peripheral Touch Controller (PTC) */
-  PTC_READY_IRQn           = 24, /**< 24 SAMD2064G4 Peripheral Touch Controller (PTC) */
-  PTC_WCOMP_IRQn           = 24, /**< 24 SAMD2064G4 Peripheral Touch Controller (PTC) */
+  /******  SAMD20J17A-specific Interrupt Numbers ***********************/
+  PM_CFD_IRQn              =  0, /**<  0 SAMD20J17A Power Manager (PM) */
+  PM_CKRDY_IRQn            =  0, /**<  0 SAMD20J17A Power Manager (PM) */
+  SYSCTRL_BOD12DET_IRQn    =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_BOD12RDY_IRQn    =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_BOD12SYNRDY_IRQn =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_BOD33DET_IRQn    =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_BOD33RDY_IRQn    =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_BOD33SYNRDY_IRQn =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_DFLLLOCKC_IRQn   =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_DFLLLOCKF_IRQn   =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_DFLLOOB_IRQn     =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_DFLLRCS_IRQn     =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_DFLLRDY_IRQn     =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_OSC32KRDY_IRQn   =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_XOSCRDY_IRQn     =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  SYSCTRL_XOSC32RDY_IRQn   =  1, /**<  1 SAMD20J17A System Control (SYSCTRL) */
+  WDT_EW_IRQn              =  2, /**<  2 SAMD20J17A Watchdog Timer (WDT) */
+  RTC_CMP_0_IRQn           =  3, /**<  3 SAMD20J17A Real-Time Counter (RTC) */
+  RTC_CMP_1_IRQn           =  3, /**<  3 SAMD20J17A Real-Time Counter (RTC) */
+  RTC_OVF_IRQn             =  3, /**<  3 SAMD20J17A Real-Time Counter (RTC) */
+  RTC_READY_IRQn           =  3, /**<  3 SAMD20J17A Real-Time Counter (RTC) */
+  EIC_EXTINT_0_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_1_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_2_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_3_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_4_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_5_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_6_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_7_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_8_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_9_IRQn        =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_10_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_11_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_12_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_13_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_14_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  EIC_EXTINT_15_IRQn       =  4, /**<  4 SAMD20J17A External Interrupt Controller (EIC) */
+  NVMCTRL_0_IRQn           =  5, /**<  5 SAMD20J17A Non-Volatile Memory Controller (NVMCTRL) */
+  NVMCTRL_1_IRQn           =  5, /**<  5 SAMD20J17A Non-Volatile Memory Controller (NVMCTRL) */
+  EVSYS_EVD_0_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_1_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_2_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_3_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_4_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_5_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_6_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_EVD_7_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_0_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_1_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_2_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_3_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_4_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_5_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_6_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  EVSYS_OVR_7_IRQn         =  6, /**<  6 SAMD20J17A Event System Interface (EVSYS) */
+  SERCOM0_0_IRQn           =  7, /**<  7 SAMD20J17A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_1_IRQn           =  7, /**<  7 SAMD20J17A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_2_IRQn           =  7, /**<  7 SAMD20J17A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM0_3_IRQn           =  7, /**<  7 SAMD20J17A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM1_0_IRQn           =  8, /**<  8 SAMD20J17A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_1_IRQn           =  8, /**<  8 SAMD20J17A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_2_IRQn           =  8, /**<  8 SAMD20J17A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM1_3_IRQn           =  8, /**<  8 SAMD20J17A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM2_0_IRQn           =  9, /**<  9 SAMD20J17A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_1_IRQn           =  9, /**<  9 SAMD20J17A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_2_IRQn           =  9, /**<  9 SAMD20J17A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM2_3_IRQn           =  9, /**<  9 SAMD20J17A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM3_0_IRQn           = 10, /**< 10 SAMD20J17A Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_1_IRQn           = 10, /**< 10 SAMD20J17A Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_2_IRQn           = 10, /**< 10 SAMD20J17A Serial Communication Interface 3 (SERCOM3) */
+  SERCOM3_3_IRQn           = 10, /**< 10 SAMD20J17A Serial Communication Interface 3 (SERCOM3) */
+  SERCOM4_0_IRQn           = 11, /**< 11 SAMD20J17A Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_1_IRQn           = 11, /**< 11 SAMD20J17A Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_2_IRQn           = 11, /**< 11 SAMD20J17A Serial Communication Interface 4 (SERCOM4) */
+  SERCOM4_3_IRQn           = 11, /**< 11 SAMD20J17A Serial Communication Interface 4 (SERCOM4) */
+  SERCOM5_0_IRQn           = 12, /**< 12 SAMD20J17A Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_1_IRQn           = 12, /**< 12 SAMD20J17A Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_2_IRQn           = 12, /**< 12 SAMD20J17A Serial Communication Interface 5 (SERCOM5) */
+  SERCOM5_3_IRQn           = 12, /**< 12 SAMD20J17A Serial Communication Interface 5 (SERCOM5) */
+  TC0_ERR_IRQn             = 13, /**< 13 SAMD20J17A Basic Timer Counter 0 (TC0) */
+  TC0_MC_0_IRQn            = 13, /**< 13 SAMD20J17A Basic Timer Counter 0 (TC0) */
+  TC0_MC_1_IRQn            = 13, /**< 13 SAMD20J17A Basic Timer Counter 0 (TC0) */
+  TC0_OVF_IRQn             = 13, /**< 13 SAMD20J17A Basic Timer Counter 0 (TC0) */
+  TC0_READY_IRQn           = 13, /**< 13 SAMD20J17A Basic Timer Counter 0 (TC0) */
+  TC1_ERR_IRQn             = 14, /**< 14 SAMD20J17A Basic Timer Counter 1 (TC1) */
+  TC1_MC_0_IRQn            = 14, /**< 14 SAMD20J17A Basic Timer Counter 1 (TC1) */
+  TC1_MC_1_IRQn            = 14, /**< 14 SAMD20J17A Basic Timer Counter 1 (TC1) */
+  TC1_OVF_IRQn             = 14, /**< 14 SAMD20J17A Basic Timer Counter 1 (TC1) */
+  TC1_READY_IRQn           = 14, /**< 14 SAMD20J17A Basic Timer Counter 1 (TC1) */
+  TC2_ERR_IRQn             = 15, /**< 15 SAMD20J17A Basic Timer Counter 2 (TC2) */
+  TC2_MC_0_IRQn            = 15, /**< 15 SAMD20J17A Basic Timer Counter 2 (TC2) */
+  TC2_MC_1_IRQn            = 15, /**< 15 SAMD20J17A Basic Timer Counter 2 (TC2) */
+  TC2_OVF_IRQn             = 15, /**< 15 SAMD20J17A Basic Timer Counter 2 (TC2) */
+  TC2_READY_IRQn           = 15, /**< 15 SAMD20J17A Basic Timer Counter 2 (TC2) */
+  TC3_ERR_IRQn             = 16, /**< 16 SAMD20J17A Basic Timer Counter 3 (TC3) */
+  TC3_MC_0_IRQn            = 16, /**< 16 SAMD20J17A Basic Timer Counter 3 (TC3) */
+  TC3_MC_1_IRQn            = 16, /**< 16 SAMD20J17A Basic Timer Counter 3 (TC3) */
+  TC3_OVF_IRQn             = 16, /**< 16 SAMD20J17A Basic Timer Counter 3 (TC3) */
+  TC3_READY_IRQn           = 16, /**< 16 SAMD20J17A Basic Timer Counter 3 (TC3) */
+  TC4_ERR_IRQn             = 17, /**< 17 SAMD20J17A Basic Timer Counter 4 (TC4) */
+  TC4_MC_0_IRQn            = 17, /**< 17 SAMD20J17A Basic Timer Counter 4 (TC4) */
+  TC4_MC_1_IRQn            = 17, /**< 17 SAMD20J17A Basic Timer Counter 4 (TC4) */
+  TC4_OVF_IRQn             = 17, /**< 17 SAMD20J17A Basic Timer Counter 4 (TC4) */
+  TC4_READY_IRQn           = 17, /**< 17 SAMD20J17A Basic Timer Counter 4 (TC4) */
+  TC5_ERR_IRQn             = 18, /**< 18 SAMD20J17A Basic Timer Counter 5 (TC5) */
+  TC5_MC_0_IRQn            = 18, /**< 18 SAMD20J17A Basic Timer Counter 5 (TC5) */
+  TC5_MC_1_IRQn            = 18, /**< 18 SAMD20J17A Basic Timer Counter 5 (TC5) */
+  TC5_OVF_IRQn             = 18, /**< 18 SAMD20J17A Basic Timer Counter 5 (TC5) */
+  TC5_READY_IRQn           = 18, /**< 18 SAMD20J17A Basic Timer Counter 5 (TC5) */
+  TC6_ERR_IRQn             = 19, /**< 19 SAMD20J17A Basic Timer Counter 6 (TC6) */
+  TC6_MC_0_IRQn            = 19, /**< 19 SAMD20J17A Basic Timer Counter 6 (TC6) */
+  TC6_MC_1_IRQn            = 19, /**< 19 SAMD20J17A Basic Timer Counter 6 (TC6) */
+  TC6_OVF_IRQn             = 19, /**< 19 SAMD20J17A Basic Timer Counter 6 (TC6) */
+  TC6_READY_IRQn           = 19, /**< 19 SAMD20J17A Basic Timer Counter 6 (TC6) */
+  TC7_ERR_IRQn             = 20, /**< 20 SAMD20J17A Basic Timer Counter 7 (TC7) */
+  TC7_MC_0_IRQn            = 20, /**< 20 SAMD20J17A Basic Timer Counter 7 (TC7) */
+  TC7_MC_1_IRQn            = 20, /**< 20 SAMD20J17A Basic Timer Counter 7 (TC7) */
+  TC7_OVF_IRQn             = 20, /**< 20 SAMD20J17A Basic Timer Counter 7 (TC7) */
+  TC7_READY_IRQn           = 20, /**< 20 SAMD20J17A Basic Timer Counter 7 (TC7) */
+  ADC_OVERRUN_IRQn         = 21, /**< 21 SAMD20J17A Analog Digital Converter (ADC) */
+  ADC_READY_IRQn           = 21, /**< 21 SAMD20J17A Analog Digital Converter (ADC) */
+  ADC_RESRDY_IRQn          = 21, /**< 21 SAMD20J17A Analog Digital Converter (ADC) */
+  ADC_WINMON_IRQn          = 21, /**< 21 SAMD20J17A Analog Digital Converter (ADC) */
+  AC_COMP_0_IRQn           = 22, /**< 22 SAMD20J17A Analog Comparators (AC) */
+  AC_COMP_1_IRQn           = 22, /**< 22 SAMD20J17A Analog Comparators (AC) */
+  AC_WIN_0_IRQn            = 22, /**< 22 SAMD20J17A Analog Comparators (AC) */
+  DAC_EMPTY_IRQn           = 23, /**< 23 SAMD20J17A Digital Analog Converter (DAC) */
+  DAC_READY_IRQn           = 23, /**< 23 SAMD20J17A Digital Analog Converter (DAC) */
+  DAC_UNDERRUN_IRQn        = 23, /**< 23 SAMD20J17A Digital Analog Converter (DAC) */
+  PTC_EOC_IRQn             = 24, /**< 24 SAMD20J17A Peripheral Touch Controller (PTC) */
+  PTC_READY_IRQn           = 24, /**< 24 SAMD20J17A Peripheral Touch Controller (PTC) */
+  PTC_WCOMP_IRQn           = 24, /**< 24 SAMD20J17A Peripheral Touch Controller (PTC) */
 
   PERIPH_COUNT_IRQn        = 25  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -582,8 +582,8 @@ void PTC_WCOMP_Handler           ( void );
  * \brief Configuration of the Cortex-M0+ Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1
-#define __CM0P_REV             0x0000    /*!< Core revision r0p0 */
+#define LITTLE_ENDIAN          1        
+#define __CM0P_REV             0         /*!< Core revision r0p0 */
 #define __FPU_PRESENT          0         /*!< FPU present or not */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
 #define __NVIC_PRIO_BITS       2         /*!< Number of bits used for Priority Levels */
@@ -599,14 +599,13 @@ void PTC_WCOMP_Handler           ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAMD2064G4 */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_api Peripheral Software API */
+/** \addtogroup SAMD20J17A_api Peripheral Software API */
 /*@{*/
 
 #include "component/component_ac.h"
 #include "component/component_adc.h"
-#include "component/component_atw.h"
 #include "component/component_dac.h"
 #include "component/component_dsu.h"
 #include "component/component_eic.h"
@@ -626,14 +625,13 @@ void PTC_WCOMP_Handler           ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  REGISTERS ACCESS DEFINITIONS FOR SAMD2064G4 */
+/**  REGISTERS ACCESS DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_reg Registers Access Definitions */
+/** \addtogroup SAMD20J17A_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/instance_ac.h"
 #include "instance/instance_adc.h"
-#include "instance/instance_atw.h"
 #include "instance/instance_dac.h"
 #include "instance/instance_dsu.h"
 #include "instance/instance_eic.h"
@@ -667,9 +665,9 @@ void PTC_WCOMP_Handler           ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PERIPHERAL ID DEFINITIONS FOR SAMD2064G4 */
+/**  PERIPHERAL ID DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_id Peripheral Ids Definitions */
+/** \addtogroup SAMD20J17A_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -714,9 +712,9 @@ void PTC_WCOMP_Handler           ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  BASE ADDRESS DEFINITIONS FOR SAMD2064G4 */
+/**  BASE ADDRESS DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_base Peripheral Base Address Definitions */
+/** \addtogroup SAMD20J17A_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
@@ -729,12 +727,12 @@ void PTC_WCOMP_Handler           ( void );
 #define GCLK                          (0x40000C00U) /**< \brief (GCLK) APB Base Address */
 #define HMATRIX                       (0x41004800U) /**< \brief (HMATRIX) APB Base Address */
 #define NVMCTRL                       (0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
-#define NVMCTRL_CAL                   (0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
-#define NVMCTRL_LOCKBIT               (0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
-#define NVMCTRL_OTP1                  (0x00806000U) /**< \brief (NVMCTRL) OTP1 Base Address */
-#define NVMCTRL_OTP2                  (0x00806008U) /**< \brief (NVMCTRL) OTP2 Base Address */
-#define NVMCTRL_OTP4                  (0x00806020U) /**< \brief (NVMCTRL) OTP4 Base Address */
-#define NVMCTRL_USER                  (0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
+#define NVMCTRL_CAL                   (0x00000000U) /**< \brief (NVMCTRL) CAL Base Address */
+#define NVMCTRL_LOCKBIT               (0x00002000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
+#define NVMCTRL_OTP1                  (0x00006000U) /**< \brief (NVMCTRL) OTP1 Base Address */
+#define NVMCTRL_OTP2                  (0x00006008U) /**< \brief (NVMCTRL) OTP2 Base Address */
+#define NVMCTRL_OTP4                  (0x00006020U) /**< \brief (NVMCTRL) OTP4 Base Address */
+#define NVMCTRL_USER                  (0x00004000U) /**< \brief (NVMCTRL) USER Base Address */
 #define PAC0                          (0x40000000U) /**< \brief (PAC0) APB Base Address */
 #define PAC1                          (0x41000000U) /**< \brief (PAC1) APB Base Address */
 #define PAC2                          (0x42000000U) /**< \brief (PAC2) APB Base Address */
@@ -793,12 +791,12 @@ void PTC_WCOMP_Handler           ( void );
 #define HMATRIXB_INSTS    { HMATRIX }               /**< \brief (HMATRIXB) Instances List */
 
 #define NVMCTRL           ((Nvmctrl  *)0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
-#define NVMCTRL_CAL       ((Nvmctrl  *)0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
-#define NVMCTRL_LOCKBIT   ((Nvmctrl  *)0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
-#define NVMCTRL_OTP1      ((Nvmctrl  *)0x00806000U) /**< \brief (NVMCTRL) OTP1 Base Address */
-#define NVMCTRL_OTP2      ((Nvmctrl  *)0x00806008U) /**< \brief (NVMCTRL) OTP2 Base Address */
-#define NVMCTRL_OTP4      ((Nvmctrl  *)0x00806020U) /**< \brief (NVMCTRL) OTP4 Base Address */
-#define NVMCTRL_USER      ((Nvmctrl  *)0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
+#define NVMCTRL_CAL       ((Nvmctrl  *)0x00000000U) /**< \brief (NVMCTRL) CAL Base Address */
+#define NVMCTRL_LOCKBIT   ((Nvmctrl  *)0x00002000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
+#define NVMCTRL_OTP1      ((Nvmctrl  *)0x00006000U) /**< \brief (NVMCTRL) OTP1 Base Address */
+#define NVMCTRL_OTP2      ((Nvmctrl  *)0x00006008U) /**< \brief (NVMCTRL) OTP2 Base Address */
+#define NVMCTRL_OTP4      ((Nvmctrl  *)0x00006020U) /**< \brief (NVMCTRL) OTP4 Base Address */
+#define NVMCTRL_USER      ((Nvmctrl  *)0x00004000U) /**< \brief (NVMCTRL) USER Base Address */
 #define NVMCTRL_INST_NUM  1                         /**< \brief (NVMCTRL) Number of instances */
 #define NVMCTRL_INSTS     { NVMCTRL }               /**< \brief (NVMCTRL) Instances List */
 
@@ -857,21 +855,21 @@ void PTC_WCOMP_Handler           ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAMD2064G4 */
+/**  PORT DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
-/** \addtogroup SAMD2064G4_port PORT Definitions */
+/** \addtogroup SAMD20J17A_port PORT Definitions */
 /*@{*/
 
-#include "pio/pio_samd2064g4.h"
+#include "pio/pio_samd20j17a.h"
 /*@}*/
 
 /* ************************************************************************** */
-/**  MEMORY MAPPING DEFINITIONS FOR SAMD2064G4 */
+/**  MEMORY MAPPING DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
 
-#define FLASH_SIZE            0x10000 /* 64 kB */
+#define FLASH_SIZE            0x20000 /* 128 kB */
 #define FLASH_PAGE_SIZE       64
-#define FLASH_NB_OF_PAGES     1024
+#define FLASH_NB_OF_PAGES     2048
 #define FLASH_USER_PAGE_SIZE  64
 #define HRAMC0_SIZE           0x8000 /* 32 kB */
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
@@ -879,7 +877,7 @@ void PTC_WCOMP_Handler           ( void );
 #define HRAMC0_ADDR           (0x20000000U) /**< HRAMC0 base address */
 
 /* ************************************************************************** */
-/**  ELECTRICAL DEFINITIONS FOR SAMD2064G4 */
+/**  ELECTRICAL DEFINITIONS FOR SAMD20J17A */
 /* ************************************************************************** */
 
 
@@ -889,4 +887,4 @@ void PTC_WCOMP_Handler           ( void );
 
 /*@}*/
 
-#endif /* SAMD2064G4_H */
+#endif /* SAMD20J17A_H */

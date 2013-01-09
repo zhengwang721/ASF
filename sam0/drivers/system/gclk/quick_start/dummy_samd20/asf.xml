@@ -6,6 +6,6 @@
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.system.gclk.quick_start"/>
 		<generator value="armgcc"/>
-		<device-support value="samd20g18a"/>
+		<device-support value="samd20j18a"/>
 	</project>
 </asf>
