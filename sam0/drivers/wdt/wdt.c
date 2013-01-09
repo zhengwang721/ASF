@@ -40,12 +40,6 @@
  */
 #include <wdt.h>
 
-/** \internal
- *  Key used to reset the Watchdog elapsed count when written to the
- *  CLEAR register to reset the count value.
- */
-#define WDT_CLEAR_KEY  0xA5
-
 /**
  * \internal Internal device structure.
  */

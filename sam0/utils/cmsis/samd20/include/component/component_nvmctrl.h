@@ -86,6 +86,10 @@ typedef union {
 #define NVMCTRL_CTRLA_CMDEX(value)  ((NVMCTRL_CTRLA_CMDEX_Msk & ((value) << NVMCTRL_CTRLA_CMDEX_Pos)))
 #define NVMCTRL_CTRLA_MASK          0xFF7Fu      /**< \brief (NVMCTRL_CTRLA) MASK Register */
 
+#define NVMCTRL_CMDEX_EXECUTION_KEY 0xA5 /** TODO: MISSING FROM CMSIS */
+#define NVMCTRL_AUX_BOOTPROT_Pos    1 /** TODO: MISSING FROM CMSIS */
+#define NVMCTRL_AUX_EEPROM_Pos      4 /** TODO: MISSING FROM CMSIS */
+
 /* -------- NVMCTRL_CTRLB : (NVMCTRL Offset: 0x04) (R/W 32) NVM Control Register B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -106,6 +110,8 @@ typedef union {
 #define NVMCTRL_CTRLB_OFFSET        0x04         /**< \brief (NVMCTRL_CTRLB offset) NVM Control Register B */
 #define NVMCTRL_CTRLB_RESETVALUE    0x00000000   /**< \brief (NVMCTRL_CTRLB reset_value) NVM Control Register B */
 
+#define NVMCTRL_CTRLB_ARWS_Pos      0 /** TODO: MISSING FROM CMSIS */
+#define NVMCTRL_CTRLB_ARWS          (0x1u << NVMCTRL_CTRLB_ARWS_Pos) /** TODO: MISSING FROM CMSIS */
 #define NVMCTRL_CTRLB_RWS_Pos       1            /**< \brief (NVMCTRL_CTRLB) NVM Read Wait States */
 #define NVMCTRL_CTRLB_RWS_Msk       (0xFu << NVMCTRL_CTRLB_RWS_Pos)
 #define NVMCTRL_CTRLB_RWS(value)    ((NVMCTRL_CTRLB_RWS_Msk & ((value) << NVMCTRL_CTRLB_RWS_Pos)))
