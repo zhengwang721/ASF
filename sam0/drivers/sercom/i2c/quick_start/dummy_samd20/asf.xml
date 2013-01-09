@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 RTC Callendar driver" id="sam0.drivers.rtc_calendar.quick_start.dummy.samd20g18a">
+	<project caption="Quick Start for the SAMD20 SERCOM I2C Master Mode driver" id="sam0.drivers.sercom.i2c_master.quick_start.dummy.atsamd20">
 		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.samd20"/>
-		<require idref="sam0.drivers.rtc_calendar.quick_start"/>
+		<require idref="sam0.drivers.sercom.i2c_master.quick_start"/>
 		<generator value="armgcc"/>
 		<device-support value="samd20g18a"/>
 	</project>
