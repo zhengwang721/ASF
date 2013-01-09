@@ -50,35 +50,12 @@ enum system_interrupt_priority {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
 }
 
-enum _system_interrupt_special_reg {
-	_SYSTEM_INTERRUPT_APSR,
-	_SYSTEM_INTERRUPT_IAPSR,
-	_SYSTEM_INTERRUPT_EAPSR,
-	_SYSTEM_INTERRUPT_XPSR,
-	_SYSTEM_INTERRUPT_IPSR,
-	_SYSTEM_INTERRUPT_EPSR,
-	_SYSTEM_INTERRUPT_IEPSR,
-	_SYSTEM_INTERRUPT_MSP,
-	_SYSTEM_INTERRUPT_PSP,
-	_SYSTEM_INTERRUPT_PRIMASK = 0x10,
-	_SYSTEM_INTERRUPT_CONTROL = 0x14,
-}
-
 #define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
 #define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
 
 #define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START  0
 
 #define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
-
-static inline uint32_t _system_interrupt_read_special_register(enum _system_interrupt_special_reg reg)
-{
-	uint32_t result;
-
-	asm("mrs %0, %1" : "=r" (result) : "i" (reg));
-
-	return result;
-}
 
 /**
  * \brief Enter critical section
@@ -89,7 +66,7 @@ static inline uint32_t _system_interrupt_read_special_register(enum _system_inte
  */
 void system_interrupt_enter_critical_section(void)
 {
-	cpu_enter_critical();
+	cpu_irq_enter_critical();
 }
 
 /**
@@ -101,7 +78,7 @@ void system_interrupt_enter_critical_section(void)
  */
 void system_interrupt_leave_critical_section(void)
 {
-	cpu_leave_critical();
+	cpu_irq_leave_critical();
 }
 
 /**
@@ -170,7 +147,7 @@ static inline void system_interrupt_disable(enum system_interrupt_vector vector)
  */
 static inline enum system_interrupt_vector system_interrupt_get_active(void)
 {
-	uint32_t IPSR = _system_interrupt_read_special_register(_SYSTEM_INTERRUPT_IPSR);
+	uint32_t IPSR = __get_IPSR();
 
 	return (enum system_interrupt_vector)(IPSR & _SYSTEM_INTERRUPT_IPSR_MASK);
 }
