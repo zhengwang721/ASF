@@ -700,16 +700,16 @@ static inline void nvm_get_parameters(struct nvm_parameters *const parameters)
 }
 
 enum status_code nvm_write_page(
-		const uint32_t dst_page_nr,
+		const uint16_t dst_page_nr,
 		const uint32_t *buf);
 
 enum status_code nvm_read_page(
-		const uint32_t src_page_nr,
+		const uint16_t src_page_nr,
 		uint32_t *buf);
 
-enum status_code nvm_erase_row(const uint32_t row_nr);
+enum status_code nvm_erase_row(const uint16_t row_nr);
 
-enum status_code nvm_erase_block(const uint32_t addr, const uint32_t length);
+enum status_code nvm_erase_block(const uint16_t row_nr, const uint16_t rows);
 
 enum status_code nvm_execute_command(
 		enum nvm_command command,

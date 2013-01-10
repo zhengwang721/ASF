@@ -39,7 +39,7 @@
  *
  */
 
-#include <nvm.h>
+#include "nvm.h"
 
 /**
  * \brief Number of pages per row in the NVM controller.
@@ -70,7 +70,7 @@ union _nvm_data {
  */
 struct _nvm_device {
 	/** Number of bytes contained per page */
-	uint8_t page_size;
+	uint16_t page_size;
 	/** Total number of pages in the NVM memory */
 	uint16_t number_of_pages;
 	/** If man_write_page returns false, a page write command will
@@ -190,7 +190,7 @@ enum status_code nvm_execute_command(
 		uint32_t parameter)
 {
 	/* Check that the address given is valid  */
-	if (address > (_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+	if (address > (uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -274,7 +274,7 @@ enum status_code nvm_execute_command(
  *                                 pages available in the NVM memory region
  */
 enum status_code nvm_write_page(
-		const uint32_t dst_page_nr,
+		const uint16_t dst_page_nr,
 		const uint32_t *buf)
 {
 	uint32_t i;
@@ -300,14 +300,9 @@ enum status_code nvm_write_page(
 	nvm_addr = dst_page_nr * (_nvm_dev.page_size / 4);
 
 	/* Write to the NVM memory 4 bytes at a time */
-	for(i=0;i<(_nvm_dev.page_size / 4);i++) {
+	for (i = 0; i<(_nvm_dev.page_size / 4); i++) {
 
 		NVM_MEMORY[nvm_addr++].data32 = buf[i];
-	}
-
-	/* Issue the page write command if automatic page write isn't enabled */
-	if (_nvm_dev.man_page_write) {
-		nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_PAGE;
 	}
 
 	return STATUS_OK;
@@ -334,7 +329,7 @@ enum status_code nvm_write_page(
  *                                 pages available in the NVM memory region
  */
 enum status_code nvm_read_page(
-		const uint32_t src_page_nr,
+		const uint16_t src_page_nr,
 		uint32_t *buf)
 {
 	uint32_t i;
@@ -384,9 +379,9 @@ enum status_code nvm_read_page(
  * \retval STATUS_ERR_BAD_ADDRESS  If row_nr was larger than the number of
  *                                 rows available in the NVM memory region
  */
-enum status_code nvm_erase_row(const uint32_t row_nr)
+enum status_code nvm_erase_row(const uint16_t row_nr)
 {
-	uint32_t row_addr;
+	uint16_t row_addr;
 
 	/* Check if the row_nr is valid */
 	if(row_nr > ((_nvm_dev.number_of_pages / NVM_PAGES_PER_ROW) - 1)) {
@@ -435,11 +430,11 @@ enum status_code nvm_erase_row(const uint32_t row_nr)
  *                                 the number of rows available in the
  *                                 NVM memory region
  */
-enum status_code nvm_erase_block(uint32_t row_nr, const uint32_t rows)
+enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
 {
-	uint32_t i;
-	uint32_t row_addr;
-	uint32_t row_size;
+	uint16_t i;
+	uint16_t row_addr;
+	uint16_t row_size;
 	uint32_t block_size;
 
 	/* Byte sizes and address */
@@ -448,7 +443,8 @@ enum status_code nvm_erase_block(uint32_t row_nr, const uint32_t rows)
 	block_size = rows * row_size;
 
 	/* Sanity check of row and block size */
-	if((row_addr + block_size) > (_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+	if((row_addr + block_size) >
+			(uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
