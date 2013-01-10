@@ -184,7 +184,7 @@ static void test_single_buf_xfer(void)
 			DMAC_CTRLB_SRC_INCR_INCREMENTING |
 			DMAC_CTRLB_DST_INCR_INCREMENTING;
 	/* No descriptor for single transfer */
-	desc.ul_descriptor_addr = NULL;
+	desc.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, DMA_CH, &desc);
 
 	/* Start DMA transfer and wait for finish */
@@ -319,7 +319,7 @@ static void test_multi_buf_xfer(void)
 			DMAC_CTRLB_SRC_INCR_INCREMENTING |
 			DMAC_CTRLB_DST_INCR_INCREMENTING;
 	/* The end of LLI */
-	desc[2].ul_descriptor_addr = NULL;
+	desc[2].ul_descriptor_addr = 0;
 
 	dmac_channel_multi_buf_transfer_init(DMAC, DMA_CH, &desc[0]);
 
