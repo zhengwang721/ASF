@@ -116,6 +116,7 @@ extern "C" {
 #define SAM4L_XPLAINED_PRO    52  //!< SAM4L-XPLAINED-PRO board.
 #define XMEGA_USB_ZIGBIT_RF233 53 //!< XMEGA_USB_ZIGBIT_RF233 board.
 #define XMEGA_USB_ZIGBIT_RF212B 54 //!< XMEGA_USB_ZIGBIT_RF212B board.
+#define MEGA_256RFR2_XPLAINED_PRO	55	//!< MEGA_256RFR2_XPLAINED_PRO board 
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -162,6 +163,8 @@ extern "C" {
   /*No header-file to include*/
 #elif BOARD == STK600_MEGA_RF
 #  include "stk600.h"
+#elif BOARD == MEGA_256RFR2_XPLAINED_PRO
+#  include "mega_256RFR2_xplained_pro/mega256rfr2_xplained_pro.h"
 #elif BOARD == STK600_RC032X
 #  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X

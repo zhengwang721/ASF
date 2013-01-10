@@ -27,8 +27,8 @@
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="tal.atmegarfr2_group"/>
 		<build type="define" name="TAL_TYPE" value ="ATMEGARFR2"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="mega"/>		
+		<device-support value="atmega64rfr2"/>
+		<device-support value="atmega256rfr2"/>
+		<device-support value="atmega2564rfr2"/>
 	</module>
 </asf>

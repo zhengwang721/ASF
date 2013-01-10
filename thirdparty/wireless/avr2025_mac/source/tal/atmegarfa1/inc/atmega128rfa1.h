@@ -107,7 +107,7 @@
 
 /** Typical timing values. */
 /* TRX Parameter: t10 */
-#define RST_PULSE_WIDTH_US                                 (5)
+#define RST_PULSE_WIDTH_US                                 (1)
 /* TRX Parameter: tTR1 typical value */
 #define P_ON_TO_CLKM_AVAILABLE_TYP_US                      (380)
 /* TRX Parameter: tTR1 max. value */

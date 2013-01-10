@@ -1,21 +1,40 @@
 <asf xmlversion="1.0">
-	<module type="component" id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
-		<info type="description" value="summary">
-		This module includes PAL wrapper files
-		</info>
-		<build type="c-source"      value="pal.c"/>
-		<build type="header-file"   value="pal.h"/>
-		<build type="doxygen-entry-point" value="group_pal"/>
+	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
+        <module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
+            <info type="description" value="summary">
+            This module includes PAL wrapper files
+            </info>
+            <build type="c-source"      value="pal.c"/>
+            <build type="header-file"   value="pal.h"/>
+            <build type="header-file"   value="pal_ext_trx.h"/>
+            <build type="c-source"      value="pal_ext_trx.c"/>
+            <build type="doxygen-entry-point" value="group_pal"/>
 
-		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-		<require idref="common.services.ioport"/>
-		<require idref="common.services.delay"/>
-		<require idref="common.services.basic.spi_master"/>
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
+            <require idref="common.services.delay"/>
+            <require idref="common.services.basic.spi_master"/>
+            <require idref="common.services.ioport"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+            <device-support value="sam"/>
+		</module>
 
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-	</module>
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
+            <info type="description" value="summary">
+            This module includes PAL wrapper files
+            </info>
+            <build type="c-source"      value="pal.c"/>
+            <build type="header-file"   value="pal.h"/>
+            <build type="doxygen-entry-point" value="group_pal"/>
+
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
+            <require idref="common.services.delay"/>
+            <device-support value="megarf"/>
+		</module>
+    </select-by-device>
+
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.inc" caption="COMPONENT - PAL">
 		<info type="description" value="summary">
 		Pal Generic Include files are included by this module

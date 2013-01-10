@@ -55,7 +55,7 @@ extern "C" {
     /**
      * \brief Sends frame using trx features to handle CSMA and re-transmissions
      *
-     * \param csma_mode Indicates the CSMA Mode used
+     * \param csma_mode Indicates the CSMA mode used
      * \param tx_retries Flag indicating if transmission retries are requested
      *                   by the MAC layer
      */

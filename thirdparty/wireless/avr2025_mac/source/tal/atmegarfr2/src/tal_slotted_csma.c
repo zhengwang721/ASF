@@ -384,7 +384,7 @@ static void csma_backoff_calculation(void)
                 else
                 {
                     tal_csma_state = CSMA_ACCESS_FAILURE;
-                    ASSERT("CCA timer start problem" == 0);
+                    Assert("CCA timer start problem" == 0);
                 }
 
                 /* debug pin to switch on: define ENABLE_DEBUG_PINS, pal_config.h */
@@ -497,7 +497,7 @@ void slotted_csma_state_handling(void)
             break;
 
         default:
-            ASSERT("INVALID CSMA status" == 0);
+            Assert("INVALID CSMA status" == 0);
             break;
     }
 } /* csma_ca_state_handling() */
@@ -547,7 +547,7 @@ static uint8_t perform_cca_twice(void)
     if (tal_beacon_transmission)
     {
 #if (DEBUG > 0)
-        ASSERT("Ongoing beacon transmission, slotted CSMA busy" == 0);
+        Assert("Ongoing beacon transmission, slotted CSMA busy" == 0);
 #endif
         return PHY_BUSY;
     }
@@ -719,15 +719,15 @@ static void start_beacon_loss_timer(void)
     {
         if (timer_status == PAL_TMR_INVALID_TIMEOUT)
         {
-            ASSERT("beacon loss timer start failed: PAL_TMR_INVALID_TIMEOUT" == 0);
+            Assert("beacon loss timer start failed: PAL_TMR_INVALID_TIMEOUT" == 0);
         }
         else if (timer_status == PAL_TMR_ALREADY_RUNNING)
         {
-            ASSERT("beacon loss timer start failed: PAL_TMR_ALREADY_RUNNING" == 0);
+            Assert("beacon loss timer start failed: PAL_TMR_ALREADY_RUNNING" == 0);
         }
         else
         {
-            ASSERT("beacon loss timer start failed: ?" == 0);
+            Assert("beacon loss timer start failed: ?" == 0);
         }
     }
 #endif
@@ -747,7 +747,7 @@ static void beacon_loss_timer_cb(void *parameter)
 #if (DEBUG > 0)
     if (tal_csma_state != BACKOFF_WAITING_FOR_BEACON)
     {
-        ASSERT("beacon loss timer issue" == 0);
+        Assert("beacon loss timer issue" == 0);
     }
 #endif
 
@@ -772,14 +772,14 @@ static void tx_done(retval_t status)
             break;
 
         default:
-            ASSERT("unexpected tal_state" == 0);
+            Assert("unexpected tal_state" == 0);
             break;
     }
 #endif
 #if (DEBUG > 0)
     if (pal_is_timer_running(TAL_CSMA_BEACON_LOSS_TIMER))
     {
-        ASSERT("beacon lost timer is still running" == 0);
+        Assert("beacon lost timer is still running" == 0);
     }
 #endif
 

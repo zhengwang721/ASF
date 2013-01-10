@@ -41,7 +41,7 @@
  *
  */
 #include <stdint.h>
-#include "iom128rfa1.h"
+#include "ioavr.h"
 
 #include "interrupt.h"
 #include "compiler.h"

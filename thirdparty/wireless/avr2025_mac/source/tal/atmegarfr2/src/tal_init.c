@@ -35,6 +35,7 @@
 #include "tal_constants.h"
 #include "atmega256rfr2.h"
 #include "tal_config.h"
+#include "app_config.h"
 #ifdef BEACON_SUPPORT
 #include "tal_slotted_csma.h"
 #endif  /* BEACON_SUPPORT */
@@ -68,7 +69,21 @@
                                      (RESET_TO_TRX_OFF_MAX_US / TRX_POLL_WAIT_TIME_US))
 
 /* === GLOBALS ============================================================= */
-
+#ifdef BEACON_SUPPORT
+// Beacon Support
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+uint8_t TAL_CSMA_CCA;
+uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
+uint8_t TAL_CALIBRATION;
+#else  /* NO FTN PLL CALIBRATION */
+uint8_t TAL_CSMA_CCA;
+uint8_t TAL_CSMA_BEACON_LOSS_TIMER;
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#else /* No BEACON_SUPPORT */
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+uint8_t TAL_CALIBRATION;
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#endif  /* BEACON_SUPPORT */
 
 /* === PROTOTYPES ========================================================== */
 
@@ -78,8 +93,8 @@ static retval_t trx_reset(void);
 static retval_t internal_tal_reset(bool set_default_pib);
 
 //! @}
-/* === IMPLEMENTATION ====================================================== */
 
+/* === IMPLEMENTATION ====================================================== */
 
 /*
  * \brief Initializes the TAL
@@ -94,6 +109,14 @@ static retval_t internal_tal_reset(bool set_default_pib);
  */
 retval_t tal_init(void)
 {
+    MCUSR = 0;
+
+    /* Enable SRAM Data Retention */
+    DRTRAM0 = _BV(ENDRT);
+    DRTRAM1 = _BV(ENDRT);
+    DRTRAM2 = _BV(ENDRT);
+    DRTRAM3 = _BV(ENDRT);
+
     /* Init the PAL and by this means also the transceiver interface */
     if (pal_init() != MAC_SUCCESS)
     {
@@ -105,9 +128,12 @@ retval_t tal_init(void)
         return FAILURE;
     }
 
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    pal_ps_get(EXTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
-#else
+    if (tal_timer_init() != MAC_SUCCESS)
+    {
+        return FAILURE;
+    }
+
+#ifdef ENABLE_STACK_NVM
     pal_ps_get(INTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
 #endif
 
@@ -205,7 +231,7 @@ static retval_t trx_init(void)
     tal_trx_status_t trx_status;
     uint8_t poll_counter = 0;
 
-    /* Ensure control lines have correct levels. */
+    sysclk_enable_peripheral_clock(&TRX_CTRL_0);
     PAL_RST_HIGH();
     PAL_SLP_TR_LOW();
 
@@ -248,6 +274,7 @@ static retval_t trx_init(void)
 #endif
     return MAC_SUCCESS;
 }
+
 
 
 /**
@@ -455,20 +482,9 @@ retval_t tal_reset(bool set_default_pib)
     }
 
 #if (NUMBER_OF_TAL_TIMERS > 0)
-    /* Clear all running TAL timers. */
-    {
-        uint8_t timer_id;
-
-        ENTER_CRITICAL_REGION();
-
-        for (timer_id = TAL_FIRST_TIMER_ID; timer_id <= TAL_LAST_TIMER_ID;
-             timer_id++)
-        {
-            pal_timer_stop(timer_id);
-        }
-
-        LEAVE_CRITICAL_REGION();
-    }
+    ENTER_CRITICAL_REGION();
+    tal_timers_stop();
+    LEAVE_CRITICAL_REGION();
 #endif
 
     /* Clear TAL Incoming Frame queue and free used buffers. */
@@ -521,7 +537,7 @@ retval_t tal_reset(bool set_default_pib)
 
         if (timer_status != MAC_SUCCESS)
         {
-            ASSERT("PLL calibration timer start problem" == 0);
+            Assert("PLL calibration timer start problem" == 0);
         }
     }
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
@@ -604,5 +620,63 @@ void tal_generate_rand_seed(void)
     /* Set the seed for the random number generator. */
     srand(seed);
 }
-/* EOF */
 
+retval_t tal_timer_init(void)
+{
+#ifdef BEACON_SUPPORT
+// Beacon Support
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CSMA_CCA))
+	{
+		return FAILURE;
+	}
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CSMA_BEACON_LOSS_TIMER))
+	{
+		return FAILURE;
+	}
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CALIBRATION))
+	{
+		return FAILURE;
+	}
+#else
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CSMA_CCA))
+	{
+		return FAILURE;
+	}
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CSMA_BEACON_LOSS_TIMER))
+	{
+		return FAILURE;
+	}
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#else /* No BEACON_SUPPORT */
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+	if(MAC_SUCCESS != pal_timer_get_id(&TAL_CALIBRATION))
+	{
+		return FAILURE;
+	}
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#endif  /* BEACON_SUPPORT */
+	return MAC_SUCCESS;
+}
+
+
+retval_t tal_timers_stop(void)
+{
+#ifdef BEACON_SUPPORT
+// Beacon Support
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+	pal_timer_stop(TAL_CSMA_CCA);
+	pal_timer_stop(TAL_CSMA_BEACON_LOSS_TIMER);
+	pal_timer_stop(TAL_CALIBRATION);
+#else
+	pal_timer_stop(TAL_CSMA_CCA);
+	pal_timer_stop(TAL_CSMA_BEACON_LOSS_TIMER);
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#else /* No BEACON_SUPPORT */
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+	pal_timer_stop(TAL_CALIBRATION);
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#endif  /* BEACON_SUPPORT */
+	return MAC_SUCCESS;
+}
+/* EOF */

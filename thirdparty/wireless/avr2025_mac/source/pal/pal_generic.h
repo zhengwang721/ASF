@@ -310,18 +310,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
     /** @endcond */
 
 
-
-
-    /**
-     * @brief Alert indication
-     *
-     * This Function can be used by any application to indicate an error condition.
-     * The function is blocking and does never return.
-     * @ingroup apiPalApi
-     */
-    void pal_alert(void);
-
-
     /**
      * @brief Generation of random seed for function srand() in case this
      *        is not supported by the transceiver (e.g. AT86RF230)
@@ -335,8 +323,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
 } /* extern "C" */
 #endif
 
-void timer_overflow_cb(void);
-void timer_compare_cb(void);
 
-#endif  /* PAL_H */
+#endif  /* PAL_GENERIC_H */
 /* EOF */

@@ -95,7 +95,7 @@ retval_t tal_ed_start(uint8_t scan_duration)
         }
         else
         {
-            ASSERT("TAL is TAL_BUSY" == 0);
+            Assert("TAL is TAL_BUSY" == 0);
             return TAL_BUSY;
         }
     }

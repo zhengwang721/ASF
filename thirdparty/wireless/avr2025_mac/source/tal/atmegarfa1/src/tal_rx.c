@@ -177,7 +177,6 @@ void handle_received_frame_irq(void)
     receive_frame->mpdu[phy_frame_len + LQI_LEN + ED_VAL_LEN] = ed_value;
 
 
-
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
     /*
      * Store the timestamp.

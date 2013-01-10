@@ -49,9 +49,10 @@
  */
 /* === INCLUDES ============================================================ */
 
-#include "conf_sio_helper.h"
 #include "sio_helper.h"
 #include "stdio_serial.h"
+#include "conf_sio_helper.h"
+
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -99,7 +100,7 @@ static volatile bool main_b_cdc_enable = false;
 status_code_t sio_init(void)
 {
 	stdio_serial_init(USART_HOST, &usart_serial_options);
-	usart_set_rx_interrupt_level(USART_HOST, USART_INT_LVL_HI);
+	USART_HOST_RX_ISR_ENABLE();
 	return STATUS_OK;
 }
 

@@ -172,9 +172,9 @@ void tal_task(void)
             tal_rx_on_required = false;
 
             /*
-            * Release the protected buffer and set it again for further protection
-            * since the buffer is available now.
-            */
+             * Release the protected buffer and set it again for further protection
+             * since the buffer is available now.
+             */
             pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_DISABLE);  /* Disable buffer protection mode */
             pal_timer_delay(2); // Allow pin change to get effective
             pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE);  /* Enable buffer protection mode */
@@ -243,7 +243,7 @@ void tal_task(void)
             break;
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
         default:
-            ASSERT("tal_state is not handled" == 0);
+            Assert("tal_state is not handled" == 0);
             break;
     }
 } /* tal_task() */
@@ -387,7 +387,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
                     break;
 
                 default:
-                    ASSERT("state transition not handled" == 0);
+                    Assert("state transition not handled" == 0);
                     break;
             }
             break;
@@ -435,7 +435,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
                     break;
 
                 default:
-                    ASSERT("state transition not handled" == 0);
+                    Assert("state transition not handled" == 0);
                     break;
             }
             break;
@@ -479,7 +479,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
                     break;
 
                 default:
-                    ASSERT("state transition not handled" == 0);
+                    Assert("state transition not handled" == 0);
                     break;
             }
             break;
@@ -523,14 +523,14 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
                     break;
 
                 default:
-                    ASSERT("state transition not handled" == 0);
+                    Assert("state transition not handled" == 0);
                     break;
             }
             break;
 
         default:
             /* CMD_NOP, CMD_TX_START */
-            ASSERT("trx command not handled" == 0);
+            Assert("trx command not handled" == 0);
             break;
     }
 
@@ -556,7 +556,7 @@ static void switch_pll_on(void)
     /* Check if trx is in TRX_OFF; only from PLL_ON the following procedure is applicable */
     if (pal_trx_bit_read(SR_TRX_STATUS) != TRX_OFF)
     {
-        ASSERT("Switch PLL_ON failed, because trx is not in TRX_OFF" == 0);
+        Assert("Switch PLL_ON failed, because trx is not in TRX_OFF" == 0);
         return;
     }
 
@@ -582,7 +582,7 @@ static void switch_pll_on(void)
     while (poll_counter < PLL_LOCK_ATTEMPTS);
 
 #if (DEBUG > 0)
-    ASSERT("PLL switch failed" == 0);
+    Assert("PLL switch failed" == 0);
     pal_alert();
 #endif
 }
@@ -610,7 +610,7 @@ void calibration_timer_handler_cb(void *parameter)
 
     if (timer_status != MAC_SUCCESS)
     {
-        ASSERT("PLL calibration timer start problem" == 0);
+        Assert("PLL calibration timer start problem" == 0);
     }
 
     parameter = parameter;  /* Keep compiler happy. */
@@ -700,5 +700,21 @@ static void handle_ftn_pll_calibration(void)
     }
 }
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
+
+/**
+ * @brief Conversion of symbols to microseconds
+ */
+uint32_t tal_convert_symbols_to_us_def(uint32_t symbols)
+{
+    return (TAL_CONVERT_SYMBOLS_TO_US(symbols));
+}
+
+/**
+ * @brief Conversion of microseconds to symbols
+ */
+uint32_t tal_convert_us_to_symbols_def(uint32_t time)
+{
+    return (TAL_CONVERT_US_TO_SYMBOLS(time));
+}
 
 /* EOF */

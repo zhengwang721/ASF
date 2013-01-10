@@ -9,6 +9,8 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.resources.inc" />
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.resources.inc" caption="RESOURCES_MANAGEMENT">
 		<info type="description" value="summary">
@@ -20,5 +22,7 @@
 		<build type="include-path"  value="queue/inc/"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 </asf>

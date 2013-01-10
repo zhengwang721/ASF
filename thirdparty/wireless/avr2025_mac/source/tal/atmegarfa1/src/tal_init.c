@@ -156,9 +156,7 @@ retval_t tal_init(void)
         return FAILURE;
     }
 
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    pal_ps_get(EXTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
-#else
+#ifdef ENABLE_STACK_NVM
     pal_ps_get(INTERN_EEPROM, EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
 #endif
 
@@ -256,7 +254,7 @@ static retval_t trx_init(void)
     tal_trx_status_t trx_status;
     uint8_t poll_counter = 0;
 
-    sysclk_enable_peripheral_clock(&TRX_CTRL_0);    
+    sysclk_enable_peripheral_clock(&TRX_CTRL_0);
     PAL_RST_HIGH();
     PAL_SLP_TR_LOW();
 
@@ -265,10 +263,10 @@ static retval_t trx_init(void)
     /* Apply reset pulse */
     PAL_RST_LOW();
     pal_timer_delay(RST_PULSE_WIDTH_US);
-    PAL_RST_HIGH();      
+    PAL_RST_HIGH();
 
     /* Verify that the trx has reached TRX_OFF. */
-    poll_counter = 0;    
+    poll_counter = 0;
     do
     {
         /* Wait a short time interval. */
