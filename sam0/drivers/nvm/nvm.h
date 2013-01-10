@@ -641,7 +641,7 @@ static inline void nvm_get_config_defaults(
 	config->bootloader_size   = 0;
 }
 
-enum status_code nvm_init(const struct nvm_config *const config);
+enum status_code nvm_set_config(const struct nvm_config *const config);
 
 /**
  * \brief Checks if the NVM controller is ready

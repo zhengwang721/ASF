@@ -62,7 +62,7 @@ void configure_nvm(void)
 	nvm_get_config_defaults(&config);
 	//! [nvm_basic_setup_load]
 	//! [nvm_basic_setup_init]
-	nvm_init(&config);
+	nvm_set_config(&config);
 	//! [nvm_basic_setup_init]
 	//! [nvm_basic_setup_main]
 }

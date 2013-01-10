@@ -89,9 +89,9 @@ static struct _nvm_device _nvm_dev;
 #define NVM_MEMORY ((union _nvm_data *) 0x00000000)
 
 /**
- * \brief Initializes the NVM hardware module based on the configuration.
+ * \brief Sets the up the NVM hardware module based on the configuration.
  *
- * Writes out a given configuration of a NVM controller configuration to the
+ * Writes a given configuration of a NVM controller configuration to the
  * hardware module, and initializes the internal device struct
  *
  * \param[in] config    Configuration settings for the NVM controller
@@ -107,8 +107,7 @@ static struct _nvm_device _nvm_dev;
  *                                  could not set the bootloader and eeprom
  *                                  size
  */
-#ifdef TODO
-enum status_code nvm_init(
+enum status_code nvm_set_config(
 		const struct nvm_config *const config)
 {
 	/* Sanity check argument */
@@ -157,7 +156,6 @@ enum status_code nvm_init(
 
 	return STATUS_OK;
 }
-#endif
 
 /**
  * \brief Executes a command on the NVM controller.
