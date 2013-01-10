@@ -83,7 +83,7 @@ void ac_reset(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Ac  *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Disable the hardware module */
 	ac_disable(dev_inst);
@@ -162,7 +162,7 @@ void ac_ch_set_config(
 	compctrl_temp |= config->output_mode;
 
 	/* Configure comparator positive and negative pin MUX configurations */
-	compctrl_temp |= (config->positive | config->negative);
+	compctrl_temp |= (config->positive_input | config->negative_input);
 
 	/* Set sampling mode (one shot or continuous) */
 	compctrl_temp |= config->sample_mode;

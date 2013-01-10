@@ -69,12 +69,12 @@ void configure_ac(void)
 
 	/* Set the Analog Comparator configuration settings */
 	//! [setup_6]
-	ac_conf.enabled_during_sleep = true;
+	ac_conf.run_in_standby = true;
 	//! [setup_6]
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_7]
-	ac_init(&ac_dev, &AC, &ac_conf);
+	ac_init(&ac_dev, AC, &ac_conf);
 	//! [setup_7]
 	//! [setup_8]
 	ac_enable(&ac_dev);
@@ -97,8 +97,8 @@ void configure_ac_channel(void)
 	/* Set the Analog Comparator channel configuration settings */
 	//! [setup_12]
 	ac_ch_conf.sample_mode      = AC_CH_MODE_SINGLE_SHOT;
-	ac_ch_conf.positive         = AC_CH_POS_MUX_PIN0;
-	ac_ch_conf.negative         = AC_CH_NEG_MUX_SCALED_VCC;
+	ac_ch_conf.positive_input   = AC_CH_POS_MUX_PIN0;
+	ac_ch_conf.negative_input   = AC_CH_NEG_MUX_SCALED_VCC;
 	ac_ch_conf.vcc_scale_factor = 32;
 	//! [setup_12]
 
@@ -138,11 +138,13 @@ int main(void)
 			//! [main_5]
 			last_comparison = ac_ch_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
 			//! [main_5]
-			//
+
 			//! [main_6]
 			ac_ch_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
 			//! [main_6]
 		}
 	}
 	//! [main]
+
+	UNUSED(last_comparison);
 }

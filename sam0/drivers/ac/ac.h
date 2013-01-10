@@ -124,7 +124,7 @@
  * comparator's positive channel input is higher than the comparator's negative
  * input channel, and \c false if otherwise.
  *
- * \subsection pairs_and_window_comps Comparator Pairs and Window Comparators
+ * \subsection pairs_and_window_comps Window Comparators and Comparator Pairs
  * Each comparator module contains one or more comparator pairs, a set of two
  * distinct comparators which can be used independently or linked together for
  * Window Comparator mode. In this latter mode, the two comparator units in a
@@ -427,9 +427,9 @@ struct ac_ch_conf {
 	 *  internal use, or asynchronously/synchronously linked to a GPIO pin. */
 	enum ac_ch_output output_mode;
 	/** Input multiplexer selection for the comparator's positive input pin. */
-	enum ac_ch_pos_mux positive;
+	enum ac_ch_pos_mux positive_input;
 	/** Input multiplexer selection for the comparator's negative input pin. */
-	enum ac_ch_neg_mux negative;
+	enum ac_ch_neg_mux negative_input;
 	/** Scaled \f$\frac{VCC\times\mbox{n}}{64}\f$ VCC voltage division factor for the channel, when a comparator
 	 *  pin is connected to the VCC voltage scalar input.
 	 *
@@ -675,8 +675,8 @@ static inline void ac_ch_get_config_defaults(
 	config->filter            = AC_CH_FILTER_MAJORITY_5;
 	config->enable_hysteresis = true;
 	config->output_mode       = AC_CH_OUTPUT_INTERNAL;
-	config->positive          = AC_CH_POS_MUX_PIN0;
-	config->negative          = AC_CH_NEG_MUX_SCALED_VCC;
+	config->positive_input    = AC_CH_POS_MUX_PIN0;
+	config->negative_input    = AC_CH_NEG_MUX_SCALED_VCC;
 	config->vcc_scale_factor  = 32;
 }
 
