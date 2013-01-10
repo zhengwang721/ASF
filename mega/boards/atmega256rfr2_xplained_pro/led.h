@@ -1,12 +1,12 @@
 /**
  * \file
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief  ATMEGA256RFR2 Xplained Pro board LEDs support package.
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
+ * This file contains definitions and services related to the LED features of
+ * the ATMEGA256RFR2 XPLAINED PRO board.
  *
- * To use this board, define BOARD= MEGA_256RFR2_XPLAINED_PRO.
+ * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,23 +45,35 @@
  * \asf_license_stop
  *
  */
-#ifndef _MEGA256RFR2_XPLAINED_PRO_
-#define _MEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _LED_H_
+#define _LED_H_
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
+#include "gpio.h"
+
  
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
  */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+#define LED_Off(led_gpio)     ioport_set_value(led_gpio, 1)
 
-#endif  /* _MEGA256RFR2_XPLAINED_PRO_ */
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      ioport_set_value(led_gpio, 0)
+
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  ioport_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */

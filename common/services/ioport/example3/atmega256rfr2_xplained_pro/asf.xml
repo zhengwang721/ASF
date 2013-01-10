@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h" />
 		<build type="header-file" value="conf_example.h" />
 		<require idref="common.services.ioport.example3" />
-		<require idref="board.atmega_256rfr2_xplained_pro" />
+		<require idref="board.atmega256rfr2_xplained_pro" />
 		<generator value="iarew" />
 		<generator value="avrgcc" />
 		<generator value="as5_8" />
