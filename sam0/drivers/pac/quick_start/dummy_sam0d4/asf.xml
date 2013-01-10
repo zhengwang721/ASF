@@ -1,8 +1,0 @@
-<asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 PAC driver" id="sam0.drivers.pac.quick_start.dummy.sam0d20g18a">
-		<require idref="board.dummy.samd20"/>
-		<require idref="sam0.drivers.pac.quick_start"/>
-		<generator value="armgcc"/>
-		<device-support value="samd20g18a"/>
-	</project>
-</asf>
