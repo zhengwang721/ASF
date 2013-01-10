@@ -49,7 +49,7 @@ extern "C" {
 #include "asf.h"
 
 /**
- * \defgroup sam0_TC_group BANANORAMA Timer Counter Driver (TC)
+ * \defgroup sam0_TC_group BANANORAMA Timer Counter(TC) Driver
  *
  * This is the TC driver documentation for the BANANORAMA architecture
  * devices. This driver provides an interface for configuration and
@@ -64,7 +64,7 @@ extern "C" {
  * this driver can deliver.
  *
  *
- * \section module_overview Timer counter (TC) overview
+ * \section module_overview TC overview
  *
  * A TC is basically a counter with registers that can be used to
  * compare the counter value, or capture the counter value. If the
@@ -90,7 +90,7 @@ extern "C" {
  * used in the counter. It is possible to configure the counters to
  * use either 32-, 16-, or 8-bit counter size. The amount of capture
  * compare registers available is dependent on what BANANORAMA device
- * you have and in some cases the counter size. The maximum amount of
+ * are being used and in some cases the counter size. The maximum amount of
  * capture compare registers available in any BANANORAMA device is two
  * when running in 32-bit mode and four in 8-, and 16-bit modes. For
  * device specific information see \ref differences. Capture compare
@@ -99,8 +99,8 @@ extern "C" {
  * \section functional_description Functional description
  *
  * The BANANORAMA architecture can at a maximum be found with 8 timer
- * counters in 8-bit counter size, or 8 timer counters in 16-bit
- * counter size, or 4 timer counters using 32-bit counter size.  \n
+ * counters in 8-bit counter size, or 8 TCs in 16-bit
+ * counter size, or 4 TCs using 32-bit counter size.  \n
  *
  * Independent of what counter size the timer uses, it can be set up
  * in two different modes, although to some extent one TC module can
@@ -119,7 +119,7 @@ extern "C" {
  * capture.
  *
  *
- * \section timer_counter_size Timer counter size
+ * \section timer_counter_size TC size
  *
  * It is possible to use three different counter sizes. These are 8-,
  * 16-, and 32-bit. The size of the counter determines the maximal
@@ -193,14 +193,14 @@ extern "C" {
  *
  * To be able to use the counter the module has to have a clock
  * signal. This has to be configured in the config struct \ref
- * tc_conf. Here you will be able to set the clock for each pair of
- * the TC modules. The pairing is as above. As an example it is not
- * possible to have differing clock frequencies on TC0 and
- * TC1. However you can have different frequencies on modules not in
- * the same pair, for instance TC0 and TC2 does not have to have the
- * same clock input. You can though use the internal TC prescaler to
- * get different counting frequencies between the same modules in a
- * pair.  \n
+ * tc_conf. Her the the clock for each pair of the TC modules can be
+ * set. The pairing is as above. As an example it is not possible to
+ * have differing clock frequencies on TC0 and TC1. However it is
+ * posible to have different frequencies on modules not in the same
+ * pair, for instance TC0 and TC2 does not have to have the same clock
+ * input. It is posible to use the internal TC prescaler to get
+ * different counting frequencies between the same modules in a pair.
+ * \n
  *
  * For more on how to set up the clocks lock at at the \ref
  * sam0_gclk_group "GCLK documentation".
@@ -231,7 +231,7 @@ extern "C" {
  * from the event system tels the counter to retrigger. The reload
  * action determines if the prescaler should be set to zero or not,
  * and when this should happen. The counter will always be reloaded to
- * the value it is set to start counting from. The user can chose
+ * the value it is set to start counting from. The user can choose
  * between three different reload actions:
  *
  * <table>
@@ -297,7 +297,7 @@ extern "C" {
  * Pulse width modulation is a form of waveform generation and a
  * signaling technique that can be useful in many situations. Often it
  * is used to communicate a certain value to some other circuit or
- * component such as a servo. In servo control you let the pulse width
+ * component such as a servo. In servo control the pulse width
  * relative to the period signify the angle the servo should
  * take. Using PWM for this is far less prone to noise and differing
  * impedances, compared to using an analog voltage value.  \n
@@ -307,12 +307,12 @@ extern "C" {
  * struct, and using either the \ref TC_WAVE_GENERATION_MATCH_PWM mode
  * or the \ref TC_WAVE_GENERATION_NORMAL_PWM mode.
  *
- * You then need to set a compare value in the \ref tc_conf struct or
- * by using the tc_set_compare_value() function. This value gives the
- * pulse width together with the top value. In addition you may need to
- * configure the top value using the tc_set_top_value() function,
- * whether this is necessary or not depends on if NORMAL or MATCH
- * configuration is in use.  \n
+ * It is then necessary to set a compare value in the \ref tc_conf
+ * struct or by using the tc_set_compare_value() function. This value
+ * gives the pulse width together with the top value. In addition it
+ * may be necessary to configure the top value using the tc_set_top_value()
+ * function, whether this is necessary or not depends on if NORMAL or
+ * MATCH configuration is in use.  \n
  *
  * The functions tc_set_compare_value() and tc_set_top_value() can be
  * used to set the top value and the pulse width while the counter is
@@ -337,10 +337,10 @@ extern "C" {
  * mode. The PWM output is inverted. Inversion of the wave generation
  * output can be done by specifying which channels should be inverted
  * by specifying this in the \ref tc_conf struct, see \ref
- * tc_waveform_invert_output. In this example you can see that the
- * counter value is changed once, but the compare match value is here
- * kept unchanged. As can be seen you can change the TOP value when
- * running in PWM match mode.
+ * tc_waveform_invert_output. In this example the counter value is
+ * changed once, but the compare match value is here kept
+ * unchanged. As can be seen it is posible to change the TOP value
+ * when running in PWM match mode.
  *
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
  *
@@ -350,14 +350,14 @@ extern "C" {
  * \subsubsection frequency_generation Frequency generation
  *
  * Frequency generation is in many ways the same as PWM
- * generation. However in frequency generation you only toggle the
- * output when a match on a capture channels occur. For frequency
+ * generation. However in frequency generation a toggle only occure on
+ * the output when a match on a capture channels occur. For frequency
  * generation the options that are available are \ref
  * TC_WAVE_GENERATION_NORMAL_FREQ mode and \ref
  * TC_WAVE_GENERATION_MATCH_FREQ these configuration options can be
  * found in the \ref tc_wave_generation enum.  \n
  *
- * As in PWM generation you need to set the period and pulse width
+ * As in PWM generation it is necessary to set the period and pulse width
  * values to be used. Either using the \ref tc_conf struct before
  * initialization or by using the functions tc_set_compare_value() and
  * tc_set_top_value(). As with PWM generation the top value can not be
@@ -373,11 +373,11 @@ extern "C" {
  * \subsubsection event_capture Event capture
  *
  * Event capture is in some ways the simplest use of the capture
- * functionality. This lets you create time stamps for specific
- * events. Care must be taken though, to ensure that the counter value
- * is correct. What can occure, is that you get a overflow of the
- * counter. If this happens and a capture takes place after this the
- * capture value will be incorrect.
+ * functionality. This makes it posible to create time stamps for
+ * specific events. Care must be taken though, to ensure that the
+ * counter value is correct. What can occure, is that a overflow of
+ * the counter can ocure before a capture takes place. If this hapens
+ * a new capture value after this wil be incorect.
  *
  * Before checking for a new capture \ref TC_INTERRUPT_FLAG_OVERFLOW
  * should be checked.  This should be done to make certain that any
@@ -396,24 +396,24 @@ extern "C" {
  * How to handle the buffer overflow error is up to the user. But it
  * should be mentioned that it may be necessary to both clear the
  * capture overflow flag and the capture flag. This should be done as
- * you may have a capture with erroneous capture data at this point.
+ * it may have captureed an erroneous capture valeu at this point.
  *
  * \subsubsection pwc Pulse width capture
  *
- * Pulse width capture mode lets you measure the pulse width and
- * period of PWM signals. This mode uses both capture channels of the
- * counter. This means that the counter module used for pulse width
- * capture can not be used for any other purpose. There are two modes
- * for pulse width capture; Pulse Width Period (PWP) and Period Pulse
- * Width(PPW), however they differ very little. In PWP mode capture
- * channel 0 is used for storing the pulse width, and capture channel
- * 1 stores the period. While in PPW mode the period is stored in
- * capture channel 0, and the pulse width is stored in capture channel
- * 1. \n
+ * Pulse width capture mode makes it posible to measure the pulse
+ * width and period of PWM signals. This mode uses both capture
+ * channels of the counter. This means that the counter module used
+ * for pulse width capture can not be used for any other
+ * purpose. There are two modes for pulse width capture; Pulse Width
+ * Period (PWP) and Period Pulse Width(PPW), however they differ very
+ * little. In PWP mode capture channel 0 is used for storing the pulse
+ * width, and capture channel 1 stores the period. While in PPW mode
+ * the period is stored in capture channel 0, and the pulse width is
+ * stored in capture channel 1. \n
  *
- * As in the above example you have to poll on interrupts to see if a
- * new capture has happened and check that an capture overflow error
- * has not occurred.
+ * As in the above example it is necessary have to poll on interrupts
+ * to see if a new capture has happened and check that an capture
+ * overflow error has not occurred.
  *
  *
  * \subsection sleep_modes Operation in sleep modes
@@ -440,7 +440,7 @@ extern "C" {
  * \subsection get_count Get count
  *
  * It is possible to read out the counter value at any time while the
- * counter is running to do this use the get tc_get_count_value()
+ * counter is running. To do this use the get tc_get_count_value()
  * function.
  *
  * \subsection oneshot Oneshot
@@ -468,7 +468,7 @@ extern "C" {
  *
  * \subsection SAMD20
  *
- * The SAMD20 has got two capture compare registers independent of the
+ * The SAMD20 has two capture compare registers independent of the
  * counter size.
  *
  * There are 8 counter modules in the SAMD20 device, making 4 pairs of
@@ -514,7 +514,7 @@ enum tc_compare_capture_channel_index {
  * \brief TC wave generation mode enum
  *
  * These values are used to select what mode to run the wave
- * generation in. The user can chose to use frequency generation or
+ * generation in. The user can choose to use frequency generation or
  * pulse width modulation (PWM) In these modes it will either run in
  * normal mode or in match mode.  In normal mode the TOP value is set
  * to the maximum allowable value, depending on what counter size is
@@ -606,7 +606,7 @@ enum tc_reload_action {
 /**
  * \brief TC clock prescaler values
  *
- * These values are used to chose the clock prescaler
+ * These values are used to choose the clock prescaler
  * configuration. The prescaler divides the clock frequency of the TC
  * module to make the counter count slower.
  */
@@ -800,7 +800,7 @@ struct tc_conf {
 
 	/** Specifies the reload or reset time of the counter and
 	 *  prescaler resynchronization on a retrigger event for the
-	 *  timer counter
+	 *  TC
 	 */
 	enum tc_reload_action reload_action;
 
