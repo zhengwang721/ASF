@@ -126,6 +126,215 @@ extern "C" {
  * }
  * \enddot
  *
+ * \subsection prescaler Prescaler
+ * The ADC features a prescaler which enables conversion at lower clock rates
+ * than the specified GCLK settings. The precaler can be configured in the
+ * \ref adc_config struct.
+ *
+ * \subsection resolution ADC Resolution
+ * The ADC supports 8-bit, 10-bit or 12-bit resolution. The resolution can be
+ * configured in the \ref adc_config struct.
+ *
+ * \subsubsection oversampling Oversampling and Decimation
+ * Oversampling and decimation can be configured with the
+ * \ref adc_oversampling_and_decimation in the \ref adc_config struct.
+ * In oversampling and decimation mode the ADC resolution is increased from
+ * 12-bits to programmed 13, 14, 15 or 16-bits.
+ * 
+ *
+ * \subsection conversion Conversion
+ * An ADC conversion can be started with the \ref adc_start_conversion
+ * function. It is also possible configure the ADC in free-running mode where
+ * new conversions are started as soon as a conversion is finished, or
+ * configure a number of input pins to scan. See \ref pin_scan for more
+ * information about the latter.
+ *
+ * The result of a conversion can be retrieved with the \ref adc_get_result
+ * function.
+ *
+ * \subsubsection diff_mode Differential and Single-Ended Conversion
+ * The ADC has two conversion modes; differential and single-ended. When
+ * measuring signals where the positive input always is at a higher voltage
+ * than the negative input, the single-ended conversion mode should be used in
+ * order to have full 12-bit resolution in the conversion mode, which has only
+ * positive values.
+ * If however the positive input may go below the negative input, creating
+ * some negative results, the differential mode should be used
+ * in order to get correct results. The configuration of the conversion mode
+ * is done in the \ref adc_config struct.
+ *
+ * \subsubsection sample_time Sample Time
+ * Sample time is configurable with \ref adc_config.sample_length. This value
+ * (0-63) controls the ADC sampling time in number of half-ADC prescaled clock
+ * cycles (depending on the prescaler value), thus controlling the ADC input
+ * impedance. \todo rewrite
+ *
+ * The resulting sampling time is given by the following equation:
+ * \f[
+ * t_{SAMPLE} = (sample\_length+1) \times \frac{ADC_{CLK}} {2}
+ * \f]
+ *
+ * \subsection averaging Averaging
+ * The ADC can be configured to trade conversion speed for accuracy by
+ * averaging multiple samples. This feature is suitable when operating in noisy
+ * conditions. The numbers of samples to be averaged is specified with the
+ * \ref adc_average_samples enum in the \ref adc_config struct.
+ * When reading the ADC result, this will be the output.
+ * The effective ADC sample rate will be reduced with:
+ * <table>
+ *   <tr>
+ *     <th>Number of Samples</th>
+ *     <th>Final Result</th>
+ *   </tr>
+ *   <tr>
+ *     <td>1</td>
+ *     <td>12-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>2</td>
+ *     <td>13-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>4</td>
+ *     <td>14-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>8</td>
+ *     <td>15-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>16</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>32</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>64</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>128</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>256</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>512</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>1024</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ * </table>
+ *
+ * \subsection window_monitor Window Monitor
+ * The window monitor allows comparing the conversion result to predefined
+ * threshold values.
+ * The threshold values are evaluated differently, depending on whether
+ * differential or single-ended mode is selected.
+ * The upper and lower thresholds are evaluated as signed values in
+ * differential mode, otherwise they are evaluated as unsigned values.
+ *
+ * The significant bits of the lower window monitor threshold and upper window
+ * monitor threshold are given by the precision selected by the resolution
+ * option in the \ref adc_config struct. That means that only the eight lower
+ * bits will be considered in 8-bit mode. In addition, if using differential
+ * mode, the 8th bit will be considered as the sign bit even if bit 9 is a
+ * zero.
+ 
+ * The window mode can be configured with the configuration struct before
+ * initializing the ADC, or run-time with the \ref adc_set_window_mode function.
+ *
+ * \subsection offset_corr Offset and Gain Correction
+ * Inherent gain and offset errors affect the absolute accuracy of the ADC. The
+ * offset error is defined as the deviation of the ADC’s actual transfer
+ * function from ideal straight line at zero input voltage.
+ * The gain error is defined as the deviation of the last output step's
+ * midpoint from the ideal straight line, after compensating for offset error.
+ * The offset correction value is subtracted from the converted data before the
+ * result is ready. The gain correction value is multiplied with the offset
+ * corrected value.
+ * 
+ * The equation for both offset and gain error compensation is shown below:
+ * \f[
+ * ADC_{RESULT} = (VALUE_{CONV} + CORR_{OFFSET}) \times CORR_{GAIN}
+ * \f]
+ *
+ * Offset and gain correction is enabled with the
+ * \ref adc_config.correction_enable bool, and the correction values are
+ * written to the \ref adc_config.gain_correction and
+ * \ref adc_config.offset_correction values.
+ * 
+ * In single conversion, a latency of 13 GCLK_ADC is added for the final
+ * RESULT availlability. Since the correction time is always less than
+ * propagation delay, in free running mode this latency appears only during the
+ * first conversion. All other conversion results are available at the defined
+ * sampling rate. 
+
+ * \subsection pin_scan Pin Scan
+ * In pin scan mode, the first conversion will start at the configured positive
+ * input (\ref adc_config.positive_input) plus a start offset
+ * (\ref adc_config.offset_start_scan). When a conversion is done, the next
+ * conversion will start at the next input and so on, until the configured
+ * number of input pins to scan (\ref adc_config.inputs_to_scan) conversions
+ * are done.
+ *
+ * Pin scan mode can be configured in the \ref adc_config struct before
+ * initializing the ADC, or run-time with the \ref adc_set_pin_scan_mode and
+ * \ref adc_disable_pin_scan_mode functions.
+ *
+ * \subsection events Events
+ * Event generation and event actions are configurable in the ADC.
+ *
+ * The ADC has two actions that can be triggered upon event reception:
+ * \li Start conversion
+ * \li Flush pipeline \todo and start new conversion??
+ *
+ * The ADC can generate two events:
+ * \li Window monitor
+ * \li Result ready
+ *
+ * If the event actions are enabled in the configuration, any incoming event
+ * will trigger the action.
+ * \n
+ * If the window monitor monitor event is enabled, an event will be generated
+ * when the configured window condition is detected.
+ * If the result ready event is enabeld, an event will be generated when a
+ * conversion is done.
+ *
+ * \subsection module_clk_sources Clock Sources
+ * The clock for the ADC interface (CLK_ADC) is generated by
+ * the Power Manager. This clock is turned on by default, and can be enabled
+ * and disabled in the Power Manager.
+ *\n\n
+ * Additionally, an asynchronous clock source (GCLK_ADC) is required.
+ * These clocks are normally disabled by default. The selected clock source
+ * must be enabled in the Power Manager before it can be used by the ADC.
+ * The ADC core operates asynchronously from the user interface and
+ * peripheral bus. As a consequence, the ADC needs two clock cycles of both
+ * CLK_ADC and GCLK_ADC to synchronize the values written to some of the
+ * control and data registers.
+ * The oscillator source for the GCLK_ADC clock is selected in the System
+ * Control Interface (SCIF).
+ *
+ * \section dependencies Dependencies
+ * The ADC driver has the following dependencies: 
+ * \li \ref system_group - The ADC can only do conversions in active or
+ * idle mode. The clock for the ADC interface (CLK_ADC) is generated by
+ * the Power Manager. This clock is turned on by default, and can be enabled
+ * and disabled in the Power Manager.
+ * Additionally, an asynchronous clock source (GCLK_ADC) is required.
+ * These clocks are normally disabled by default. The selected clock source
+ * must be enabled in the Power Manager before it can be used by the ADC.
+ * \li \ref sam0_events_group - Event generation and event actions are
+ * configurable in the ADC.
+ *
+ * \section special_cons Special Considerations
  *
  * \subsection extra_info Extra Information
  * For extra information see \ref adc_extra_info.
@@ -134,6 +343,8 @@ extern "C" {
  * - \ref quickstart
  *
  * \section api_overview API Overview
+ * \todo Should calibration be a part of the driver?
+ * \todo 
  * @{
  */
 
@@ -435,6 +646,7 @@ enum adc_oversampling_and_decimation {
  * Configuration structure for an ADC instance. This structure should be
  * initialized by the \ref adc_get_config_defaults()
  * function before being modified by the user application.
+ * \todo adc_conf?
  */
 struct adc_config {
 	/** TODO */
@@ -467,6 +679,7 @@ struct adc_config {
 	bool differential_mode;
 	/** Free running mode */
 	bool freerunning;
+	/** \todo Combine into enum? should only have one enabled at the time */
 	/** Enable event input to trigger conversion start */
 	bool start_conversion_on_event;
 	/** Enable event input to trigger flush ADC module */
@@ -553,7 +766,7 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 /**
  * \brief Enable the ADC module
  *
- * This function will enables the ADC module.
+ * This function will enable the ADC module.
  *
  * \param dev_inst[in]    Pointer to the device struct
  */
@@ -592,8 +805,6 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
  * This function will reset the ADC module.
  *
  * \param[in] dev_inst Pointer to the ADC software instance struct
- *
- * \todo flush pipeline?
  */
 static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 {
@@ -603,7 +814,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
 
 	Adc *const adc_module = dev_inst->hw_dev;
 
-	/* Always disable before reset */
+	/* Disable to make sure the pipeline is flushed before reset */
 	adc_disable(dev_inst);
 
 	/* Software reset the module */
@@ -636,6 +847,13 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li No gain/offset correction
  *   \li No added sampling time
  *   \li Pin scan mode disabled
+ *
+ *
+ * \todo init: 
+ * - clock source
+ * - window values? 
+ * - positive input
+ * - negative input
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -862,6 +1080,7 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * \param inputs_to_scan[in]     Number of input pins to do ADC on
  * \param start_offset[in]       Offset of first pin to scan (relative to
  *                               configured positive input)
+ * \todo "The number of input sources included is INPUTSCAN + 1."??
  */
 static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
@@ -952,7 +1171,7 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 /** @} */
 
 /**
- * \page dac_extra_info Extra Information
+ * \page adc_extra_info Extra Information
  *
  * \section acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
