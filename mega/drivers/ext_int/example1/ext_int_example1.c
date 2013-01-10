@@ -80,7 +80,7 @@
 
 #include <asf.h>
 #include <conf_example.h>
-#include "conf_interrupt.h"
+#include <conf_interrupt.h>
 /**
  *  \brief delay routine for LED to be ON for some time
  *  \param none
