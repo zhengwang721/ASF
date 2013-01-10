@@ -76,6 +76,7 @@ void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);
 void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);
+int tc_read_cv(Tc *p_tc, uint32_t ul_channel);
 
 uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
 		uint32_t *p_uldiv, uint32_t *ul_tcclks, uint32_t ul_boardmck);
