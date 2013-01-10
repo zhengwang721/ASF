@@ -376,14 +376,17 @@ status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
  *
  * Add this to the main loop or a setup function:
  * \code
- * iisc_enable(IISC);
  * struct iisc_config config;
- * config.sample_rate_hz = IISC_SAMPLE_RATE_48000;
- * config.fs_ratio = IISC_FS_RATE_256;
+ * struct iisc_device dev_inst;
  * config.data_word_format = IISC_DATE_16BIT_COMPACT;
- * config.loopback = false;
+ * config.slot_length = 16;
+ * config.fs_ratio = IISC_FS_RATE_256;
+ * config.num_tx_channels = IISC_CHANNEL_STEREO;
+ * config.num_rx_channels = IISC_CHANNEL_STEREO;
+ * config.loopback = true;
  * config.master = true;
- * iisc_set_config(IISC, &config);
+ * iis_init(&dev_inst, IISC, &config);
+ * iisc_enable(&dev_inst);
  * \endcode
  *
  *
@@ -393,23 +396,23 @@ status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
  *
  * We can enable the transfer by
  * \code
- * iisc_enable_transmission(IISC);
- * iisc_enable_clocks(IISC);
+ * iisc_enable_transmission(&dev_inst);
+ * iisc_enable_clocks(&dev_inst);
  * \endcode
  * Or we can enable the receive by
  * \code
- * iisc_enable_reception(IISC);
+ * iisc_enable_reception(&dev_inst);
  * \endcode
  *
  * If we not use the PDCA, we can access the data by
  * \code
- * iisc_write(IISC, data);
- * iisc_read(IISC, &data);
+ * iisc_write(&dev_inst, data);
+ * iisc_read(&dev_inst, &data);
  * \endcode
  *
  * And we can set the interrupt by
  * \code
- * iisc_enable_interrupts(IISC, int_mask);
+ * iisc_enable_interrupts(&dev_inst, int_mask);
  * \endcode
  */
 
