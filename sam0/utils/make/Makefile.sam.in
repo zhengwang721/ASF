@@ -198,8 +198,7 @@ endif
 ifeq ($(VERBOSE), 1)
   Q =
 else
-#  Q = @
-  Q =
+  Q = @
 endif
 
 arflags-gnu-y           := $(ARFLAGS)
@@ -403,9 +402,9 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING)
 	$(Q)$(CC) $(c_flags) -c $< -o $@
@@ -414,9 +413,9 @@ endif
 $(build-dir)%.o: %.cpp $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir $(subst /,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING_CXX)
 	$(Q)$(CXX) $(cxx_flags) -c $< -o $@
