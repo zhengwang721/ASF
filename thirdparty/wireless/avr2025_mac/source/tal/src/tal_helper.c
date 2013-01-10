@@ -170,7 +170,7 @@ retval_t tal_set_tx_pwr (bool  type, int8_t  pwr_value)
  *                  1 or 2 to select antenna 1 or antenna 2
  * \return The value set in the TX_PWR bits
  */
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212)) 
 retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
 {
     retval_t return_var = FAILURE;
@@ -207,7 +207,7 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
     {
       /* do the configurations if diversity has to be disabled */
         pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
-#if(TAL_TYPE != AT86RF212)
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE!= AT86RF212B))
         pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
 #endif
 

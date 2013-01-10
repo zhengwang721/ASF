@@ -535,7 +535,11 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
                         return TAL_BUSY;
                     }
 
+#ifdef HIGH_DATA_RATE_SUPPORT
+                    if ((tal_pib.CurrentPage == 5) || (tal_pib.CurrentPage == 18) || (tal_pib.CurrentPage == 19))
+#else
                     if (tal_pib.CurrentPage == 5)
+#endif
                     {
                         if (((uint32_t)TRX_SUPPORTED_CHANNELS_CHINA & ((uint32_t)0x01 << value->pib_value_8bit)) == false)
                         {
@@ -573,7 +577,11 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
                         }
 
                         /* Check if frequency band/modulation is changed. */
+#ifdef HIGH_DATA_RATE_SUPPORT
+                        if ((tal_pib.CurrentPage == 5) || (tal_pib.CurrentPage == 18) || (tal_pib.CurrentPage == 19))
+#else
                         if (tal_pib.CurrentPage == 5)
+#endif
                         {
                             pal_trx_bit_write(SR_CC_NUMBER, GET_CHINA_FREQ(tal_pib.CurrentChannel));
                         }
@@ -853,7 +861,11 @@ static uint8_t convert_phyTransmitPower_to_reg_value(uint8_t phyTransmitPower_va
     dbm_value = CONV_phyTransmitPower_TO_DBM(phyTransmitPower_value);
 
     /* Select the corresponding tx_pwr_table, also valid for high data rates */
+#ifdef HIGH_DATA_RATE_SUPPORT
     if ((tal_pib.CurrentPage == 5) || (tal_pib.CurrentPage == 18) || (tal_pib.CurrentPage == 19))
+#else
+    if (tal_pib.CurrentPage == 5)
+#endif
     {
         reg_value = PGM_READ_BYTE(&tx_pwr_table_China[MAX_TX_PWR - dbm_value]);
     }
