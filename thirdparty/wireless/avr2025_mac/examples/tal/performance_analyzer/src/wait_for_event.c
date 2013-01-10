@@ -57,11 +57,11 @@
 /* === MACROS ============================================================== */
 /* ED threshold to accept a frame in the configuaration mode  */
 
-#if((TAL_TYPE == AT86RF212))
+#if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define CONFIG_ED_THRESHOLD             (0x3a)
 #else
 #define CONFIG_ED_THRESHOLD             (0x1f)
-#endif /* End of (TAL_TYPE == AT86RF212) */
+#endif /* End of ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)) */
 
 /* === PROTOTYPES ========================================================== */
 static void configure_pibs(void);

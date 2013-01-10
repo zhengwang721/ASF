@@ -87,11 +87,30 @@
 #define  CHANNEL          (0)
 #define  CHANNEL_PAGE     (1)
 #define  TX_POWER_DBM     (2)
-#if ((TAL_TYPE != AT86RF212) )
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 #define  TX_POWER_REG     (3)
 #endif
+#if(TAL_TYPE == AT86RF233)
+#define  FREQ_BAND_08     (4)
+#define  FREQ_BAND_09     (5)
+#endif
+
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MIN_TX_PWR_REG_VAL                  (0x0f)
+
+#if(TAL_TYPE == AT86RF233)
+#define BASE_ISM_FREQUENCY_MHZ              (2306)
+#define MIN_ISM_FREQUENCY_MHZ               (2322)
+#define MAX_ISM_FREQUENCY_MHZ               (2527)
+#define MID_ISM_FREQUENCY_MHZ               (2434)
+
+#define ENABLE_ALL_RPC_MODES                (0xff)
+#define DISABLE_ALL_RPC_MODES               (0xC1)
+#define CC_BAND_0                           (0x00)
+#define CC_BAND_8                           (0x08)
+#define CC_BAND_9                           (0x09)
+#define CC_NUMBER_0                         (0x00)
+#endif
 
 /**
  * \addtogroup group_per_mode
@@ -143,6 +162,10 @@ typedef struct
     bool crc_settings_on_peer;
 #endif
 
+#if (TAL_TYPE == AT86RF233)
+    bool rpc_enable;
+#endif
+
 #if (ANTENNA_DIVERSITY == 1)
     bool antenna_diversity;
     bool antenna_diversity_on_peer;
@@ -152,7 +175,7 @@ typedef struct
 
     uint8_t channel;
     uint8_t channel_page;
-#if( (TAL_TYPE != AT86RF212))
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     uint8_t tx_power_reg;
 #endif
     int8_t tx_power_dbm;
@@ -160,6 +183,10 @@ typedef struct
 
     uint8_t phy_frame_length;
     uint32_t number_test_frames;
+
+#if (TAL_TYPE == AT86RF233)
+    float ism_frequency;
+#endif
 
 } trx_config_params_t;
 /**
@@ -173,7 +200,7 @@ typedef struct
 } ed_scan_result_t;
 
 /* === Externals ============================================================ */
-#if ((TAL_TYPE != AT86RF212))
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
@@ -274,7 +301,6 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
  * \addtogroup group_per_mode_utils
  * \{
  */
-
 
 /*
  * \brief This function is called rest the application equivalent to soft reset

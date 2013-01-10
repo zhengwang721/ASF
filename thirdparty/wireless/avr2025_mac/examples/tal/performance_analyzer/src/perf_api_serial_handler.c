@@ -423,9 +423,12 @@ static inline void handle_incoming_msg(void)
                 /* check for length  */
                 /* Check any ongoing transaction in place */
                 if ( ( (error_code != MAC_SUCCESS) && (error_code != TRANSCEIVER_IN_SLEEP) ) ||
-
+#if(TAL_TYPE != AT86RF233)
                      ( (error_code == TRANSCEIVER_IN_SLEEP) && ( (sio_rx_buf[PARAM_TYPE_POS] != PARAM_TRX_STATE) || (sio_rx_buf[PARAM_VALUE_POS] != TRX_SLEEP)))
-
+#else
+                     ( (error_code == TRANSCEIVER_IN_SLEEP) && ( (sio_rx_buf[PARAM_TYPE_POS] != PARAM_TRX_STATE) ||
+                                                                 ((sio_rx_buf[PARAM_VALUE_POS] != TRX_SLEEP) && (sio_rx_buf[PARAM_VALUE_POS] != TRX_DEEP_SLEEP))))
+#endif
                    )
                 {
                     /* Send the confirmation with status as Failure
@@ -1045,10 +1048,10 @@ void usr_perf_start_confirm(uint8_t status,
     *msg_buf++ = trx_config_params->channel;
     *msg_buf++ = trx_config_params->channel_page;
     *msg_buf++ = trx_config_params->tx_power_dbm;
-#if( (TAL_TYPE != AT86RF212))
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     *msg_buf++ = trx_config_params->tx_power_reg;
 #else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212 transceiver */
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212 and 212B transceivers */
 #endif
     *msg_buf++ = (uint8_t)trx_config_params->csma_enabled;
     *msg_buf++ = (uint8_t)trx_config_params->retry_enabled;
@@ -1059,9 +1062,11 @@ void usr_perf_start_confirm(uint8_t status,
     *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 #endif
 
-
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; //RESERVED FOR FUTURE /*Filled with 0xff to indicate this parameter is not available for this transceiver */
-
+#if(TAL_TYPE == AT86RF233)
+    *msg_buf++ = (uint8_t)trx_config_params->rpc_enable;
+#else
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
+#endif
 
 #if (ANTENNA_DIVERSITY == 1)
     *msg_buf++ = trx_config_params->antenna_selected;
@@ -1742,10 +1747,10 @@ void usr_set_default_config_confirm(uint8_t status, trx_config_params_t *default
     *msg_buf++ = default_trx_config_params->channel;
     *msg_buf++ = default_trx_config_params->channel_page;
     *msg_buf++ = default_trx_config_params->tx_power_dbm;
-#if( (TAL_TYPE != AT86RF212))
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     *msg_buf++ = default_trx_config_params->tx_power_reg;
 #else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212  transceiver */
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212 and 212B transceivers */
 #endif
     *msg_buf++ = (uint8_t)default_trx_config_params->csma_enabled;
     *msg_buf++ = (uint8_t)default_trx_config_params->retry_enabled;
@@ -1756,9 +1761,11 @@ void usr_set_default_config_confirm(uint8_t status, trx_config_params_t *default
     *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 #endif
 
-
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; //RESERVED/*Filled with oxff to indicate this parameter is not available for this transceiver */
-
+#if(TAL_TYPE == AT86RF233)
+    *msg_buf++ = (uint8_t)default_trx_config_params->rpc_enable;
+#else
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
+#endif
 
 #if (ANTENNA_DIVERSITY == 1)
     *msg_buf++ = default_trx_config_params->antenna_selected;
@@ -1923,10 +1930,10 @@ void usr_get_current_config_confirm(uint8_t status, trx_config_params_t *curr_tr
     *msg_buf++ = curr_trx_config_params->channel;
     *msg_buf++ = curr_trx_config_params->channel_page;
     *msg_buf++ = curr_trx_config_params->tx_power_dbm;
-#if( (TAL_TYPE != AT86RF212))
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     *msg_buf++ = curr_trx_config_params->tx_power_reg;
 #else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212  transceiver */
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given for RF212 and 212B transceivers */
 #endif
     *msg_buf++ = (uint8_t)curr_trx_config_params->csma_enabled;
     *msg_buf++ = (uint8_t)curr_trx_config_params->retry_enabled;
@@ -1934,12 +1941,14 @@ void usr_get_current_config_confirm(uint8_t status, trx_config_params_t *curr_tr
 #if(TAL_TYPE != AT86RF230B)
     *msg_buf++ = (uint8_t)curr_trx_config_params->rx_desensitize;
 #else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with oxff to indicate this parameter is not available for this transceiver */
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 #endif
 
-
-    *msg_buf++ = FIELD_DOES_NOT_EXIST; //RESERVED/*Filled with oxff to indicate this parameter is not available for this transceiver */
-
+#if(TAL_TYPE == AT86RF233)
+    *msg_buf++ = (uint8_t)curr_trx_config_params->rpc_enable;
+#else
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
+#endif
 
 #if (ANTENNA_DIVERSITY == 1)
     *msg_buf++ = curr_trx_config_params->antenna_selected;
@@ -1967,14 +1976,17 @@ void usr_get_current_config_confirm(uint8_t status, trx_config_params_t *curr_tr
     *msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
+
+#if(TAL_TYPE == AT86RF233)
+    memcpy(msg_buf, &curr_trx_config_params->ism_frequency, sizeof(float));
+#else
     float temp = 0.0;
     memcpy(msg_buf, &temp, sizeof(float));
-
+#endif
 
     msg_buf += sizeof(float);
     *msg_buf = EOT;
 }
-
 
 
 /* EOF */

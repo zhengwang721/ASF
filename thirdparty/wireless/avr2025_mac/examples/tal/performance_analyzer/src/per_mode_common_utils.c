@@ -60,6 +60,76 @@
 
 /* === IMPLEMENTATION======================================================= */
 
+/* === IMPLEMENTATION======================================================= */
+/*
+ * \brief This function is called to get the base RSSI value for repective radios
+ *
+ * \return value of the base RSSI value
+ */
+int8_t get_rssi_base_val(void)
+{
+#if (TAL_TYPE == AT86RF212B)
+    switch (tal_pib.CurrentPage)
+    {
+        case 0: /* BPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_BPSK_300_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_BPSK_300_DBM);
+            }
+
+        case 2: /* O-QPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_OQPSK_400_SIN_RC_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_OQPSK_400_SIN_RC_DBM);
+            }
+
+        case 5: /* Chinese band */
+        default:    /* High data rate modes */
+            return(RSSI_BASE_VAL_OQPSK_400_RC_DBM);
+    }
+#elif (TAL_TYPE == AT86RF212)
+    switch (tal_pib.CurrentPage)
+    {
+        case 0: /* BPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_BPSK_20_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_BPSK_40_DBM);
+            }
+
+        case 2: /* O-QPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_OQPSK_100_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_OQPSK_SIN_250_DBM);
+            }
+
+        case 5: /* Chinese band */
+        default:    /* High data rate modes */
+            return(RSSI_BASE_VAL_OQPSK_RC_250_DBM);
+    }
+#elif ((TAL_TYPE == AT86RF230A) || (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) ||\
+      (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == AT86RF233)||\
+      (TAL_TYPE == ATMEGARFR2))
+    return (RSSI_BASE_VAL_DBM);
+#else
+#error "Missing RSSI_BASE_VAL define"
+#endif
+}
 /*
  * \brief This function is called rest the application equivalent to soft reset
  *
@@ -72,9 +142,6 @@ void app_reset(void)
     /* INIT was a success - so change to WAIT_FOR_EVENT state */
     set_main_state(WAIT_FOR_EVENT, NULL);
 }
-
-
-
 
 
 
