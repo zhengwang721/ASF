@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,18 +44,18 @@
 
 /* ========== Register definition for GCLK peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_GCLK_CTRL              (0x40000C00U) /**< \brief (GCLK) Control Register */
-#define REG_GCLK_STATUS            (0x40000C01U) /**< \brief (GCLK) Status Register */
-#define REG_GCLK_CLKCTRL           (0x40000C02U) /**< \brief (GCLK) Generic Clock Control Register */
-#define REG_GCLK_GENCTRL           (0x40000C04U) /**< \brief (GCLK) Generic Clock Generator Control Register */
-#define REG_GCLK_GENDIV            (0x40000C08U) /**< \brief (GCLK) Generic Clock Generator Division Register */
+#define REG_GCLK_CTRL                         (0x40000C00U) /**< \brief (GCLK) Control Register */
+#define REG_GCLK_STATUS                       (0x40000C01U) /**< \brief (GCLK) Status Register */
+#define REG_GCLK_CLKCTRL                      (0x40000C02U) /**< \brief (GCLK) Generic Clock Control Register */
+#define REG_GCLK_GENCTRL                      (0x40000C04U) /**< \brief (GCLK) Generic Clock Generator Control Register */
+#define REG_GCLK_GENDIV                       (0x40000C08U) /**< \brief (GCLK) Generic Clock Generator Division Register */
 #else
 #define REG_GCLK_CTRL              (*(RwReg8 *)0x40000C00U) /**< \brief (GCLK) Control Register */
 #define REG_GCLK_STATUS            (*(RwReg8 *)0x40000C01U) /**< \brief (GCLK) Status Register */
 #define REG_GCLK_CLKCTRL           (*(RwReg16*)0x40000C02U) /**< \brief (GCLK) Generic Clock Control Register */
 #define REG_GCLK_GENCTRL           (*(RwReg  *)0x40000C04U) /**< \brief (GCLK) Generic Clock Generator Control Register */
 #define REG_GCLK_GENDIV            (*(RwReg  *)0x40000C08U) /**< \brief (GCLK) Generic Clock Generator Division Register */
-#endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for GCLK peripheral ========== */
 #define GCLK_GEN_NUM_MSB            7

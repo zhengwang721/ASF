@@ -1,28 +1,28 @@
 /**
  * \file
  *
- * \brief Flash Linker script for SAM.
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- * 
- * 4. This software may only be redistributed and used in connection with an 
+ *
+ * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,6 +39,10 @@
  *
  */
 
+/*------------------------------------------------------------------------------
+ *      Linker script for running in internal SRAM on the SAMD20J18A
+ *----------------------------------------------------------------------------*/
+
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
 SEARCH_DIR(.)
@@ -46,12 +50,11 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-	rom (rx)  : ORIGIN = 0x00400000, LENGTH = 0x00040000 /* Flash, 256K */
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000 /* sram, 32K */
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
 }
 
-/* The stack size used by the application. NOTE: you need to adjust  */
-STACK_SIZE = 0x800;
+/* The stack size used by the application. NOTE: you need to adjust according to your application. */
+STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
 
 /* Section Definitions */
 SECTIONS
@@ -61,9 +64,9 @@ SECTIONS
         . = ALIGN(4);
         _sfixed = .;
         KEEP(*(.vectors .vectors.*))
-        *(.text .text.* .gnu.linkonce.t.*) 	
-        *(.glue_7t) *(.glue_7)		
-        *(.rodata .rodata* .gnu.linkonce.r.*)		    	
+        *(.text .text.* .gnu.linkonce.t.*)
+        *(.glue_7t) *(.glue_7)
+        *(.rodata .rodata* .gnu.linkonce.r.*)
         *(.ARM.extab* .gnu.linkonce.armextab.*)
 
         /* Support C constructors, and C destructors in both user code
@@ -81,7 +84,7 @@ SECTIONS
         KEEP (*(.init_array))
         __init_array_end = .;
 
-        . = ALIGN(0x4);
+        . = ALIGN(4);
         KEEP (*crtbegin.o(.ctors))
         KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
         KEEP (*(SORT(.ctors.*)))
@@ -103,15 +106,7 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > rom
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > rom
-    PROVIDE_HIDDEN (__exidx_end = .);
+    } > ram
 
     . = ALIGN(4);
     _etext = .;
@@ -148,6 +143,14 @@ SECTIONS
         . = ALIGN(8);
         _estack = .;
     } > ram
+
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram
+    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;

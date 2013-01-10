@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,13 +44,13 @@
 
 /* ========== Register definition for EVSYS peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_EVSYS_CTRL             (0x42000400U) /**< \brief (EVSYS) Control Register */
-#define REG_EVSYS_CHANNEL          (0x42000404U) /**< \brief (EVSYS) Channel Register */
-#define REG_EVSYS_USERMUX          (0x42000408U) /**< \brief (EVSYS) User Mux Register */
-#define REG_EVSYS_CHSTATUS         (0x4200040CU) /**< \brief (EVSYS) Channel Status Register */
-#define REG_EVSYS_INTENCLR         (0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
-#define REG_EVSYS_INTENSET         (0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
-#define REG_EVSYS_INTFLAG          (0x42000418U) /**< \brief (EVSYS) Interrupt Flag Status and Clear Register */
+#define REG_EVSYS_CTRL                        (0x42000400U) /**< \brief (EVSYS) Control Register */
+#define REG_EVSYS_CHANNEL                     (0x42000404U) /**< \brief (EVSYS) Channel Register */
+#define REG_EVSYS_USERMUX                     (0x42000408U) /**< \brief (EVSYS) User Mux Register */
+#define REG_EVSYS_CHSTATUS                    (0x4200040CU) /**< \brief (EVSYS) Channel Status Register */
+#define REG_EVSYS_INTENCLR                    (0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
+#define REG_EVSYS_INTENSET                    (0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
+#define REG_EVSYS_INTFLAG                     (0x42000418U) /**< \brief (EVSYS) Interrupt Flag Status and Clear Register */
 #else
 #define REG_EVSYS_CTRL             (*(WoReg8 *)0x42000400U) /**< \brief (EVSYS) Control Register */
 #define REG_EVSYS_CHANNEL          (*(RwReg  *)0x42000404U) /**< \brief (EVSYS) Channel Register */
@@ -59,7 +59,7 @@
 #define REG_EVSYS_INTENCLR         (*(RwReg  *)0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear Register */
 #define REG_EVSYS_INTENSET         (*(RwReg  *)0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set Register */
 #define REG_EVSYS_INTFLAG          (*(RwReg  *)0x42000418U) /**< \brief (EVSYS) Interrupt Flag Status and Clear Register */
-#endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EVSYS peripheral ========== */
 #define EVSYS_CHANNELS              8

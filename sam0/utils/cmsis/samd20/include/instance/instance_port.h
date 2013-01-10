@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -97,7 +97,7 @@
 #define REG_PORT_WRCONFIG1         (*(WoReg  *)0x410044A8U) /**< \brief (PORT) Write Configuration Register 1 */
 #define REG_PORT_PMUX1             (*(RwReg  *)0x410044B0U) /**< \brief (PORT) Peripheral Multiplexing Register 1 */
 #define REG_PORT_PINCFG1           (*(RwReg  *)0x410044C0U) /**< \brief (PORT) Pin Configuration Register 1 */
-#endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for PORT peripheral ========== */
 #define PORT_BITS                   60
