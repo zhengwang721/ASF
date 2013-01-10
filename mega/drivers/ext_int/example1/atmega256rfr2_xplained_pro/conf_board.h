@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board-specific example configuration
+ * \brief Board configuration for Interrupt Example
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,16 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
 
-/* Selecting LED ON STK600-ATMEGA128RFA1 EVK  */
-#define LED_PIN         LED_GREEN_GPIO
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/* Buttom on STK600-ATMEGA128RFA1-EK as External Interrupt Source*/
-#define BUTTON_INTERRUPT_SOURCE     CONFIG_EXT_INT5
-
-/* External Interrupt Input Mode */
-#define BUTTON_INTERRUPT_MODE       IOPORT_SENSE_RISING
-
-#endif /* CONF_EXAMPLE_H */
+#endif /* CONF_BOARD_H */

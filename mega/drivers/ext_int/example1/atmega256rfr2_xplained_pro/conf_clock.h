@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief Board-specific example configuration
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,16 +38,27 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/* Selecting LED ON STK600-ATMEGA128RFA1 EVK  */
-#define LED_PIN         LED_GREEN_GPIO
+// ===== System Clock Source Options
+#define	SYSCLK_SRC_RC16MHZ    0
+#define	SYSCLK_SRC_RC128KHZ   1
+#define	SYSCLK_SRC_TRS16MHZ   2
+#define	SYSCLK_SRC_RC32KHZ    3
+#define	SYSCLK_SRC_XOC16MHZ   4
+#define	SYSCLK_SRC_EXTERNAL   5
 
-/* Buttom on STK600-ATMEGA128RFA1-EK as External Interrupt Source*/
-#define BUTTON_INTERRUPT_SOURCE     CONFIG_EXT_INT5
 
-/* External Interrupt Input Mode */
-#define BUTTON_INTERRUPT_MODE       IOPORT_SENSE_RISING
+//=====  Select connected clock source
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ
 
-#endif /* CONF_EXAMPLE_H */
+
+
+// ===== System Clock Bus Division Options
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_8
+
+#endif /* CONF_CLOCK_H_INCLUDED */

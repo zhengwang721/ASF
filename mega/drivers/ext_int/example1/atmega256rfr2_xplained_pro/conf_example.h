@@ -43,13 +43,13 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-/* Selecting LED ON STK600-ATMEGA128RFA1 EVK  */
-#define LED_PIN         LED_GREEN_GPIO
+/* Selecting LED on ATmega256RFR2 Xplained Pro */
+#define LED_PIN         LED_ON_BOARD
 
-/* Buttom on STK600-ATMEGA128RFA1-EK as External Interrupt Source*/
-#define BUTTON_INTERRUPT_SOURCE     CONFIG_EXT_INT5
+/* Buttom on ATmega256RFR2 Xplained Pro as External Interrupt Source*/
+#define BUTTON_INTERRUPT_SOURCE     CONFIG_EXT_INT4
 
-/* External Interrupt Input Mode */
+/* External Interrupt Input Source */
 #define BUTTON_INTERRUPT_MODE       IOPORT_SENSE_RISING
 
 #endif /* CONF_EXAMPLE_H */

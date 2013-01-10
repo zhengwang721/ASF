@@ -48,26 +48,25 @@
  *
  * \section files Main files:
  * - ext_int_example1.c: This example application
- * - conf_interrupt.h: configuration of the megarf driver
+ * - conf_example.h example definitions
  *
  * \section driverinfo Interrupt Driver
  * The interrupt driver can be found \ref megarf_interrupt_group "here".
  *
  * \section deviceinfo Device Info
- * AVR MEGARF device can be used.
+ * AVR MEGARF device can be used. This example has been
+ * tested with the following setup:
+ *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
+ *  - ATmega256RFR2 Xplained Pro kit
  *
  * \section setup Setup
- * user defined External interrupt INTx pin and PCINTx is enabled
- * SW1 and SW2 are the switches connected
- * to the interrupt pins
+ * user defined External interrupt INTx pin is enabled
+ * The on board switch connected to the external interrupt pin 
+ * is used in this example
  *
- * \section exampledescription Description of the example
- * when switch SW1 is pressed, due to pull-up the
- * interrupt INTx will be triggered when SW1 is released and LED1 blinks once.
- * When switch SW2 is pressed the interrupt PCINTx is triggered and LED2 blinks
- * once and when SW2 is released the interrupt PCINTx is triggered once again 
- * and LED2 blinks once again.So a single switch action (press and release)
- * on SW2 produces two blinks on LED2.
+ * \section example description Description of the example
+ * when on board switch is pressed, interrupt INTx will be triggered
+ * when switch is released and LED on the board will blinks once.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -94,7 +93,7 @@ static inline void ext_int_delay(void)
 
 /**
  * \brief Interrupt callback for External interrupt
- *  Switch ON LED1(PORTE2) for some time and then switches OFF
+ *  Switch ON LED on the board for some time and then switches OFF
  *  when the interrupt is triggered
  *  \param none
  */

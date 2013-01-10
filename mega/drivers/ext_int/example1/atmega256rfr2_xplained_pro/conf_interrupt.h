@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board-specific example configuration
+ * \brief Chip-specific Interrupt configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,16 +40,43 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_INTERRUPT_H
+#define CONF_INTERRUPT_H
 
-/* Selecting LED ON STK600-ATMEGA128RFA1 EVK  */
-#define LED_PIN         LED_GREEN_GPIO
+/* External Interrupt INT0 */
+#define CONFIG_EXT_INT0      EXT_INT0_PIN
+/* External Interrupt INT1 */
+#define CONFIG_EXT_INT1      EXT_INT1_PIN
+/* External Interrupt INT2 */
+#define CONFIG_EXT_INT2      EXT_INT2_PIN
+/* External Interrupt INT3 */
+#define CONFIG_EXT_INT3      EXT_INT3_PIN
+/* External Interrupt INT4 */
+#define CONFIG_EXT_INT4      EXT_INT4_PIN
+/* External Interrupt INT5 */
+#define CONFIG_EXT_INT5      EXT_INT5_PIN
+/* External Interrupt INT6 */
+#define CONFIG_EXT_INT6      EXT_INT6_PIN
+/* External Interrupt INT7 */
+#define CONFIG_EXT_INT7      EXT_INT7_PIN
 
-/* Buttom on STK600-ATMEGA128RFA1-EK as External Interrupt Source*/
-#define BUTTON_INTERRUPT_SOURCE     CONFIG_EXT_INT5
+/* External PC Interrupt PCINT0 */
+#define CONFIG_PC_INT0      PC_INT0_PIN
+/* External PC Interrupt PCINT1 */
+#define CONFIG_PC_INT1      PC_INT1_PIN
+/* External PC Interrupt PCINT2 */
+#define CONFIG_PC_INT2      PC_INT2_PIN
+/* External PC Interrupt PCINT3 */
+#define CONFIG_PC_INT3      PC_INT3_PIN
+/* External PC Interrupt PCINT4 */
+#define CONFIG_PC_INT4      PC_INT4_PIN
+/* External PC Interrupt PCINT5 */
+#define CONFIG_PC_INT5      PC_INT5_PIN
+/* External PC Interrupt PCINT6 */
+#define CONFIG_PC_INT6      PC_INT6_PIN
+/* External PC Interrupt PCINT7 */
+#define CONFIG_PC_INT7      PC_INT7_PIN
+/* External PC Interrupt PCINT8 */
+#define CONFIG_PC_INT8      PC_INT8_PIN
 
-/* External Interrupt Input Mode */
-#define BUTTON_INTERRUPT_MODE       IOPORT_SENSE_RISING
-
-#endif /* CONF_EXAMPLE_H */
+#endif
