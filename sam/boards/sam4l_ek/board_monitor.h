@@ -188,13 +188,13 @@ bool bm_get_fifo_free_size(uint16_t* free_size);
  * \brief Send PicoUart Frame. Note that the timeout countdown starts after a
  *        500ms delay in order to keep a stable current measurement.
  * \param frame Frame to be sent.
- * \param timeout timeout_ms Value in ms.
+ * \param timeout_ms Timeout value in ms.
  */
 void bm_send_picouart_frame(uint8_t frame, uint32_t timeout_ms);
 
 /**
  * \brief Force Toggle of Button Line.
- * \param timeout timeout_ms Value in ms.
+ * \param timeout_ms Timeout value in ms.
  */
 void bm_tgl_button(uint32_t timeout_ms);
 
