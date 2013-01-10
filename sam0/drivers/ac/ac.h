@@ -227,7 +227,8 @@
 extern "C" {
 #endif
 
-/** \brief AC channel input sampling mode configuration enum.
+/**
+ * \brief AC channel input sampling mode configuration enum.
  *
  * Enum for the possible channel sampling modes of an Analog Comparator channel.
  */
@@ -240,7 +241,8 @@ enum ac_ch_sample_mode {
 	AC_CH_MODE_SINGLE_SHOT   = AC_COMPCTRL_SINGLE,
 };
 
-/** \brief AC channel positive comparator pin input configuration enum.
+/**
+ * \brief AC channel positive comparator pin input configuration enum.
  *
  * Enum for the possible channel positive pin input of an Analog Comparator
  * channel.
@@ -256,7 +258,8 @@ enum ac_ch_pos_mux {
 	AC_CH_POS_MUX_PIN3       = AC_COMPCTRL_MUXPOS_PIN3,
 };
 
-/** \brief AC channel negative comparator pin input configuration enum.
+/**
+ * \brief AC channel negative comparator pin input configuration enum.
  *
  * Enum for the possible channel negative pin input of an Analog Comparator
  * channel.
@@ -283,7 +286,8 @@ enum ac_ch_neg_mux {
 	AC_CH_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
 };
 
-/** \brief AC channel output filtering configuration enum.
+/**
+ * \brief AC channel output filtering configuration enum.
  *
  * Enum for the possible channel output filtering configurations of an Analog
  * Comparator channel.
@@ -299,7 +303,8 @@ enum ac_ch_filter {
 	AC_CH_FILTER_MAJORITY_5  = AC_COMPCTRL_FLEN_MAJ5,
 };
 
-/** \brief AC channel GPIO output routing configuration enum.
+/**
+ * \brief AC channel GPIO output routing configuration enum.
  *
  * Enum for the possible channel GPIO output routing configurations of an Analog
  * Comparator channel.
@@ -316,7 +321,8 @@ enum ac_ch_output {
 	AC_CH_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
 };
 
-/** \brief AC channel output state enum.
+/**
+ * \brief AC channel output state enum.
  *
  * Enum for the possible output states of an Analog Comparator channel.
  */
@@ -331,7 +337,8 @@ enum ac_ch_state {
 	AC_CH_STATE_POS_ABOVE_NEG,
 };
 
-/** \brief AC window channel detection mode configuration enum.
+/**
+ * \brief AC window channel detection mode configuration enum.
  *
  * Enum for the possible detection modes of an Analog Comparator window channel.
  */
@@ -348,7 +355,8 @@ enum ac_win_detect {
 	AC_WIN_DETECT_OUTSIDE,
 };
 
-/** \brief AC window channel output state enum.
+/**
+ * \brief AC window channel output state enum.
  *
  * Enum for the possible output states of an Analog Comparator window channel.
  */
@@ -366,7 +374,8 @@ enum ac_win_state {
 	AC_WIN_STATE_BELOW,
 };
 
-/** \brief AC device instance structure.
+/**
+ * \brief AC device instance structure.
  *
  * AC software instance structure, used to retain software state information
  * of an associated hardware module instance.
@@ -376,7 +385,8 @@ struct ac_dev_inst {
 	Ac *hw_dev;
 };
 
-/** \brief AC event enable/disable structure.
+/**
+ * \brief AC event enable/disable structure.
  *
  * Event flags for the Analog Comparator module. This is used to enable and
  * disable events via \ref ac_enable_events() and \ref ac_disable_events().
@@ -395,7 +405,8 @@ struct ac_events {
 	bool input_comparator[4];
 };
 
-/** \brief Analog Comparator module configuration structure.
+/**
+ * \brief Analog Comparator module configuration structure.
  *
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
@@ -410,7 +421,8 @@ struct ac_conf {
 	struct ac_events events;
 };
 
-/** \brief Analog Comparator module Comparator configuration structure.
+/**
+ * \brief Analog Comparator module Comparator configuration structure.
  *
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
@@ -438,7 +450,8 @@ struct ac_ch_conf {
 	uint8_t vcc_scale_factor;
 };
 
-/** \brief Analog Comparator module Window Comparator configuration structure.
+/**
+ * \brief Analog Comparator module Window Comparator configuration structure.
  *
  *  Configuration structure for a Window Comparator channel, to configure the
  *  detection characteristics of the window.
@@ -468,7 +481,8 @@ static inline void _ac_wait_for_sync(
 }
 #endif
 
-/** \name Configuration and Initialization
+/**
+ * \name Configuration and Initialization
  * @{
  */
 
@@ -480,7 +494,8 @@ void ac_init(
 		Ac *const module,
 		struct ac_conf *const config);
 
-/** \brief Initializes an Analog Comparator configuration structure to defaults.
+/**
+ * \brief Initializes an Analog Comparator configuration structure to defaults.
  *
  *  Initializes a given Analog Comparator configuration structure to a set of
  *  known default values. This function should be called on all new instances
@@ -504,7 +519,8 @@ static inline void ac_get_config_defaults(
 	memset(&config->events, 0x00, sizeof(config->events));
 }
 
-/** \brief Enables an Analog Comparator that was previously configured.
+/**
+ * \brief Enables an Analog Comparator that was previously configured.
  *
  * Enables and starts an Analog Comparator that was previously configured via a
  * call to \ref ac_init().
@@ -527,7 +543,8 @@ static inline void ac_enable(
 	ac_module->CTRLA.reg |= AC_CTRLA_ENABLE;
 }
 
-/** \brief Disables an Analog Comparator that was previously enabled.
+/**
+ * \brief Disables an Analog Comparator that was previously enabled.
  *
  * Stops an Analog Comparator that was previously started via a call to
  * \ref ac_enable().
@@ -550,7 +567,8 @@ static inline void ac_disable(
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
 }
 
-/** \brief Enables an Analog Comparator event input or output.
+/**
+ * \brief Enables an Analog Comparator event input or output.
  *
  *  Enables one or more input or output events to or from the Analog Comparator
  *  module. See \ref ac_event_masks "here" for a list of events this module
@@ -594,7 +612,8 @@ static inline void ac_enable_events(
 	ac_module->EVCTRL.reg |= event_mask;
 }
 
-/** \brief Disables an Analog Comparator event input or output.
+/**
+ * \brief Disables an Analog Comparator event input or output.
  *
  *  Disables one or more input or output events to or from the Analog Comparator
  *  module. See \ref ac_event_masks "here" for a list of events this module
@@ -641,11 +660,13 @@ static inline void ac_disable_events(
 /** @} */
 
 
-/** \name Channel Configuration and Initialization
+/**
+ * \name Channel Configuration and Initialization
  * @{
  */
 
-/** \brief Initializes an Analog Comparator channel configuration structure to defaults.
+/**
+ * \brief Initializes an Analog Comparator channel configuration structure to defaults.
  *
  *  Initializes a given Analog Comparator channel configuration structure to a
  *  set of known default values. This function should be called on all new
@@ -685,7 +706,8 @@ void ac_ch_set_config(
 		const uint8_t channel,
 		struct ac_ch_conf *const config);
 
-/** \brief Enables an Analog Comparator channel that was previously configured.
+/**
+ * \brief Enables an Analog Comparator channel that was previously configured.
  *
  *  Enables and starts an Analog Comparator channel that was previously
  *  configured via a call to \ref ac_ch_set_config().
@@ -707,7 +729,8 @@ static inline void ac_ch_enable(
 	ac_module->COMPCTRL[channel].reg |= AC_COMPCTRL_ENABLE;
 }
 
-/** \brief Disables an Analog Comparator channel that was previously enabled.
+/**
+ * \brief Disables an Analog Comparator channel that was previously enabled.
  *
  *  Stops an Analog Comparator channel that was previously started via a call to
  *  \ref ac_ch_enable().
@@ -732,11 +755,13 @@ static inline void ac_ch_disable(
 /** @} */
 
 
-/** \name Channel Control
+/**
+ * \name Channel Control
  * @{
  */
 
-/** \brief Trigger a comparison on a comparator that is configured in single shot mode.
+/**
+ * \brief Trigger a comparison on a comparator that is configured in single shot mode.
  *
  *  Triggers a single conversion on a comparator configured to compare on demand
  *  (one shot mode) rather than continuously.
@@ -758,7 +783,8 @@ static inline void ac_ch_trigger_single_shot(
 	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << channel);
 }
 
-/** \brief Determines if a given comparator channel is ready for comparisons.
+/**
+ * \brief Determines if a given comparator channel is ready for comparisons.
  *
  *  Checks a comparator channel to see if the comparator is currently ready to
  *  begin comparisons.
@@ -781,7 +807,8 @@ static inline bool ac_ch_is_ready(
 	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << channel));
 }
 
-/** \brief Determines the output state of a comparator channel.
+/**
+ * \brief Determines the output state of a comparator channel.
  *
  *  Retrieves the last comparison value (after filtering) of a given comparator.
  *  If the comparator was not ready at the time of the check, the comparison
@@ -816,11 +843,13 @@ static inline enum ac_ch_state ac_ch_get_state(
 /** @} */
 
 
-/** \name Window Mode Configuration and Initialization
+/**
+ * \name Window Mode Configuration and Initialization
  * @{
  */
 
-/** \brief Initializes an Analog Comparator window channel configuration structure to defaults.
+/**
+ * \brief Initializes an Analog Comparator window channel configuration structure to defaults.
  *
  *  Initializes a given Analog Comparator window channel configuration structure
  *  to a set of known default values. This function should be called on all new
@@ -859,11 +888,13 @@ void ac_win_disable(
 /** @} */
 
 
-/** \name Window Mode Control
+/**
+ * \name Window Mode Control
  * @{
  */
 
-/** \brief Determines if a given Window Comparator is ready for comparisons.
+/**
+ * \brief Determines if a given Window Comparator is ready for comparisons.
  *
  *  Checks a Window Comparator to see if the both comparators used for window
  *  detection is currently ready to begin comparisons.
@@ -897,7 +928,8 @@ enum ac_win_state ac_win_get_state(
 		struct ac_dev_inst *const dev_inst,
 		const uint8_t channel);
 
-/** \brief Determines if a Window Comparator has detected the configured window criteria.
+/**
+ * \brief Determines if a Window Comparator has detected the configured window criteria.
  *
  *  Tests if a Windows Comparator has detected that the input signal relative
  *  to the window bounds matches the detection criteria previously configured
@@ -921,7 +953,8 @@ static inline bool ac_win_is_detected(
 	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel));
 }
 
-/** \brief Clears a Comparator Window condition criteria detection flag.
+/**
+ * \brief Clears a Comparator Window condition criteria detection flag.
  *
  *  Clears the Analog Comparator window condition detection flag for a specified
  *  comparator channel.
