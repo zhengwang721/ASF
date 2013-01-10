@@ -345,7 +345,7 @@ typedef enum csma_mode_tag
     (TAL_TYPE == ATMEGARFA2) || (TAL_TYPE == ATMEGARFR2)
 /** RF band */
 #define RF_BAND                             BAND_2400
-#elif (TAL_TYPE == AT86RF212)
+#elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)
 #define RF_BAND                             BAND_900
 #else
 #error "Missing RF_BAND define"

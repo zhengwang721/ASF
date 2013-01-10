@@ -15,6 +15,20 @@
 			<device-support value="uc3"/>
 		</module>
 		
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf212b"     caption="at86rf212b tal support enabled">
+			<info type="description" value="summary">
+			AT86RF212b Transceiver Abstraction Layer
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf212b"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>	
+			<require idref="thirdparty.wireless.avr2025_mac.source.resources"/>			
+			<build type="doxygen-entry-point" value="group_tal"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+		</module>
+		
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf230b"    caption="at86rf230b tal support enabled">
 			<info type="description" value="summary">
 			AT86RF230B Transceiver Abstraction Layer
