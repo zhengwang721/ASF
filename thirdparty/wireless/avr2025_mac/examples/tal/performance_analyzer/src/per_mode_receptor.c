@@ -469,7 +469,9 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 
                 param_val = msg->payload.set_parm_req_data.param_value;
 
-
+#if(TAL_TYPE == AT86RF233)
+                set_frequency(CC_BAND_0, CC_NUMBER_0);
+#endif
                 /* set the channel on receptor with the received value */
                 tal_pib_set(phyCurrentChannel, (pib_value_t *)&param_val);
 
@@ -480,6 +482,31 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
             }
             break;
 
+#if(TAL_TYPE == AT86RF233)
+
+        case FREQ_BAND_08: /* Parameter = frequency in band 8 */
+            {
+                float frequency;
+                param_val = msg->payload.set_parm_req_data.param_value;
+                /* Set the transceiver ISM frequency */
+                set_frequency(CC_BAND_8, param_val);
+                frequency = calculate_frequency(CC_BAND_8, param_val);
+                printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
+            }
+            break;
+
+        case FREQ_BAND_09: /* Parameter = frequency in band 9 */
+            {
+                float frequency;
+                param_val = msg->payload.set_parm_req_data.param_value;
+                /* Set the transceiver ISM frequency */
+                set_frequency(CC_BAND_9, param_val);
+                frequency = calculate_frequency(CC_BAND_9, param_val);
+                printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
+            }
+            break;
+
+#endif
         case CHANNEL_PAGE:
             {
                 param_val = msg->payload.set_parm_req_data.param_value;
@@ -506,15 +533,28 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
         case TX_POWER_DBM: /* parameter = Tx power in dBm */
             {
                 uint8_t temp_var;
+#if(TAL_TYPE == AT86RF233)
+                uint8_t previous_RPC_value;
+#endif
                 /* Get the the received tx power in dBm */
                 param_val = msg->payload.set_parm_req_data.param_value;
                 temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);
+                /* If RPC enabled, disable RPC to change the TX power value refer sec 9.2.4 */
+#if(TAL_TYPE == AT86RF233)
+                /* Store currents RPC settings */
+                previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
+                pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+#endif
                 tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
+#if(TAL_TYPE == AT86RF233)
+                /* Restore RPC settings. */
+                pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+#endif
 
 
-#if((TAL_TYPE != AT86RF212) )
+#if((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 
-
+#if(TAL_TYPE != AT86RF233)
                     uint8_t tx_pwr_reg;
                     tal_get_curr_trx_config(TX_PWR,&(tx_pwr_reg));
                     int8_t min_dbm_val;
@@ -534,7 +574,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                         printf("\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
                                (int8_t)param_val, tx_pwr_reg);
                     }
-
+#endif /* (TAL_TYPE != AT86RF233) */
 
 #else               /* In case of AT86Rf212 */
                     printf("\r\n Tx Power set to %d dBm on the node", (int8_t)param_val);
@@ -543,28 +583,42 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
            
             break;
 
-#if((TAL_TYPE != AT86RF212) )
+#if((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
             /* Handle Tx power value in dBm */
         case TX_POWER_REG: /* Parameter = TX power in Reg value */
             {
 
                 int8_t tx_pwr_dbm = 0 ;
+#if(TAL_TYPE == AT86RF233)
+                uint8_t previous_RPC_value;
+#endif
                 /* get the the received tx power as reg value */
                 param_val = msg->payload.set_parm_req_data.param_value;
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(param_val, &tx_pwr_dbm))
                 {
                     uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+                    /* If RPC enabled, disable RPC to change the TX power value refer sec 9.2.4 */
+#if(TAL_TYPE == AT86RF233)
+                    /* Store currents RPC settings */
+                    previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
+                    pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+#endif
                     tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
                     tal_set_tx_pwr(REGISTER_VALUE,param_val);
 
+#if(TAL_TYPE == AT86RF233)
+                    /* Restore RPC settings. */
+                    pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+#endif
 
+#if (TAL_TYPE != AT86RF233)
                         /* With RPC enabled Txpower change will take effect after trx
                         state change only, so printed TX power will not synchronize
                         with user set values, do not print to avoid confusion  */
                         printf("\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
                                tx_pwr_dbm, param_val);
 
-
+#endif /* End of (TAL_TYPE != AT86RF233) */
                     
                 }
             }
@@ -776,15 +830,22 @@ static void set_default_configuration_peer_node(void)
 
     /* antenna diversity default configurations */
 #if(ANTENNA_DIVERSITY == 1)
-
+#if(TAL_TYPE == AT86RF233)
+    /* Disable antenna diversity by default */
+    /* Enable A1/X2 */
+    pal_trx_bit_write(SR_ANT_CTRL, ANT_CTRL_1);
+    pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
+    pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
+#else
     /* Enable Antenna Diversity*/
       tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
 
 
 
 #endif
+#endif
 
-    /* CRC default configurationa */
+    /* CRC default configuration */
 #ifdef CRC_SETTING_ON_REMOTE_NODE
     manual_crc = false;
     /* Disable the Promiscuous Mode */
@@ -874,7 +935,7 @@ static void send_crc_status_rsp(void)
     msg.seq_num = seq_num_receptor;
     data = (crc_stat_rsp_t *)&msg.payload;
 
-    tal_get_curr_trx_config(AACK_PROM_MODE,&(data->status));
+    tal_get_curr_trx_config(AACK_PROMSCS_MODE,&(data->status));
 
     /* Calculate the payload length */
     payload_length = ((sizeof(app_payload_t) -

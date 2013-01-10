@@ -57,7 +57,8 @@
 /* === MACROS ============================================================== */
 
 /* === TYPES =============================================================== */
-#if (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
+#if ((TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFA1) ||\
+     (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF212B))
 
 /* Timer ID's used by TAL */
 #ifdef BEACON_SUPPORT

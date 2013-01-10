@@ -60,6 +60,76 @@
 
 /* === IMPLEMENTATION======================================================= */
 
+/* === IMPLEMENTATION======================================================= */
+/*
+ * \brief This function is called to get the base RSSI value for repective radios
+ *
+ * \return value of the base RSSI value
+ */
+int8_t get_rssi_base_val(void)
+{
+#if (TAL_TYPE == AT86RF212B)
+    switch (tal_pib.CurrentPage)
+    {
+        case 0: /* BPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_BPSK_300_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_BPSK_300_DBM);
+            }
+
+        case 2: /* O-QPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_OQPSK_400_SIN_RC_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_OQPSK_400_SIN_RC_DBM);
+            }
+
+        case 5: /* Chinese band */
+        default:    /* High data rate modes */
+            return(RSSI_BASE_VAL_OQPSK_400_RC_DBM);
+    }
+#elif (TAL_TYPE == AT86RF212)
+    switch (tal_pib.CurrentPage)
+    {
+        case 0: /* BPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_BPSK_20_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_BPSK_40_DBM);
+            }
+
+        case 2: /* O-QPSK */
+            if (tal_pib.CurrentChannel == 0)
+            {
+                return(RSSI_BASE_VAL_OQPSK_100_DBM);
+            }
+            else
+            {
+                return(RSSI_BASE_VAL_OQPSK_SIN_250_DBM);
+            }
+
+        case 5: /* Chinese band */
+        default:    /* High data rate modes */
+            return(RSSI_BASE_VAL_OQPSK_RC_250_DBM);
+    }
+#elif ((TAL_TYPE == AT86RF230A) || (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) ||\
+      (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == AT86RF233)||\
+      (TAL_TYPE == ATMEGARFR2))
+    return (RSSI_BASE_VAL_DBM);
+#else
+#error "Missing RSSI_BASE_VAL define"
+#endif
+}
 /*
  * \brief This function is called rest the application equivalent to soft reset
  *
@@ -76,6 +146,56 @@ void app_reset(void)
 
 
 
+#if (TAL_TYPE == AT86RF233)
+/*
+ * \brief To set the frequency based on CC_BAND and CC_NUMBER Registers
+ *
+ * \param cc_band     CC_BAND Register value used to calculate the ISM frequency.
+ * \param cc_number   CC_BAND Register value used to calculate the ISM frequency.
+ */
+void set_frequency(uint8_t cc_band, uint8_t cc_number)
+{
+    tal_trx_status_t previous_trx_status = TRX_OFF;
+    /*
+     * Set trx to "soft" off avoiding that ongoing
+     * transaction (e.g. ACK) are interrupted.
+     */
+    if (tal_trx_status != TRX_OFF)
+    {
+        previous_trx_status = RX_AACK_ON;   /* any other than TRX_OFF state */
+        do
+        {
+            /* set TRX_OFF until it could be set;
+             * trx might be busy */
+        }
+        while (set_trx_state(CMD_TRX_OFF) != TRX_OFF);
+    }
+
+    pal_trx_bit_write(SR_CC_BAND, cc_band);
+    pal_trx_bit_write(SR_CC_NUMBER, cc_number);
+    /* Re-store previous trx state */
+    if (previous_trx_status != TRX_OFF)
+    {
+        /* Set to default state */
+        set_trx_state(CMD_RX_AACK_ON);
+    }
+}
+
+
+/*
+ * \brief Calculate the frequency based on CC_BAND and CC_NUMBER Registers
+ *
+ * \param CC_BAND and CC_NUMBER register values to calculate the frequency
+ *
+ * \return calculated frequency
+ */
+float calculate_frequency(uint8_t cc_band, uint8_t cc_number)
+{
+    return(float)((cc_band == CC_BAND_8) ?
+                  (BASE_ISM_FREQUENCY_MHZ + 0.5 * cc_number) :
+                  (MID_ISM_FREQUENCY_MHZ + 0.5 * cc_number) );
+}
+#endif
 
 
 /* EOF */

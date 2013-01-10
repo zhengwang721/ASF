@@ -85,6 +85,7 @@
 
 #endif
 
+#define FUNC_PTR                            void *
 /**
  * \def UNUSED
  * \brief Marking \a v as a unused parameter or value.

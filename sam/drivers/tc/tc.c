@@ -228,6 +228,22 @@ int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
 }
 
 /**
+ * \brief Read CV TC counter on the selected channel.
+ *
+ * \param p_tc Pointer to a TC instance.
+ * \param ul_channel Channel to configure.
+ *
+ * \return CV value.
+ */
+int tc_read_cv(Tc *p_tc, uint32_t ul_channel)
+{
+	Assert(ul_channel <
+			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+
+	return p_tc->TC_CHANNEL[ul_channel].TC_CV;
+}
+
+/**
  * \brief Write RA TC counter on the selected channel.
  *
  * \param p_tc Pointer to a TC instance.

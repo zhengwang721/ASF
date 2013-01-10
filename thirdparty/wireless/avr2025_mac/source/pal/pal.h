@@ -110,7 +110,7 @@
 #define RST_LOW()                       ioport_set_pin_level(AT86RFX_RST_PIN, LOW)
 #define SLP_TR_HIGH()                   ioport_set_pin_level(AT86RFX_SLP_PIN, HIGH)
 #define SLP_TR_LOW()                    ioport_set_pin_level(AT86RFX_SLP_PIN, LOW)
-
+# define IRQ_PINGET()                    ioport_get_value(AT86RFX_IRQ_PIN)
 //#define TRX_PORT1                       (PORTC)
 ///*
 // * RESET pin of transceiver
