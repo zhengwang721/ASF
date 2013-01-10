@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<project caption="MEGARF USART Example for xplained-pro" id="mega.drivers.usart.example.atmega256rfr2_xplained_pro">
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_usart_example.h"/>
+		<build type="include-path" value="." />
+		<require idref="mega.drivers.usart.example"/>
+		<require idref="board.mega_256rfr2_xplained_pro"/>
+		<generator value="avrgcc" />
+		<generator value="iarew"/>
+		<generator value="as5_8" />
+		<generator value="doxygen"/>
+		<device-support value="atmega256rfr2"/>
+	</project>
+</asf>
