@@ -156,12 +156,11 @@ static inline void cpu_irq_restore(irqflags_t flags)
 		cpu_irq_enable();
 }
 
-static inline void cpu_irq_enter_critical()
+static inline void cpu_irq_enter_critical(void)
 {
+	if (cpu_irq_critical_section_counter == 0) {
 
-	if(cpu_irq_critical_section_counter == 0) {
-
-		if(cpu_irq_is_enabled()) {
+		if (cpu_irq_is_enabled()) {
 
 			cpu_irq_disable();
 			cpu_irq_prev_interrupt_state = true;
@@ -176,10 +175,9 @@ static inline void cpu_irq_enter_critical()
 	}
 
 	cpu_irq_critical_section_counter++;
-
 }
 
-static inline void cpu_irq_leave_critical()
+static inline void cpu_irq_leave_critical(void)
 {
 	/* Check if the user is trying to leave a critical section when not in a critical section */
 	Assert(cpu_irq_critical_section_counter > 0);
@@ -188,7 +186,7 @@ static inline void cpu_irq_leave_critical()
 
 	/* Only enable global interrupts when the counter reaches 0 and the state of the global interrupt flag
 	   was enabled when entering critical state */
-	if((cpu_irq_critical_section_counter == 0) & (cpu_irq_prev_interrupt_state)) {
+	if ((cpu_irq_critical_section_counter == 0) & (cpu_irq_prev_interrupt_state)) {
 		cpu_irq_enable();
 	}
 }
