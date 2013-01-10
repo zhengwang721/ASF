@@ -110,56 +110,56 @@ void TC00_Handler(void)
         }
 }
 
-//uint16_t common_tc_read_count(void)
-//{
-//    uint16_t countvalue;
-//    uint16_t cv;
-//
-//	cv = 0;
-//	countvalue = tc_read_tc(TIMER, TIMER_CHANNEL_ID);
-//
-//	if(timer_mul_var)
-//	{
-//		cv = ((UINT16_MAX / timer_multiplier) * timer_mul_var) +
-//				(countvalue / timer_multiplier);
-//	}
-//	else
-//	{
-//		cv = countvalue / timer_multiplier;
-//	}
-//
-//	return cv;
-//}
-//
-//
-//void common_tc_compare_stop(void)
-//{
-//	DISABLE_CC_INTERRUPT();
-//
-//	uint8_t flags = cpu_irq_save();
-//	overflow_counter = 0;
-//	compare_value = 0;
-//	cpu_irq_restore(flags);
-//}
-//
-//
-//void common_tc_overflow_stop(void)
-//{
-//	DISABLE_OVF_INTERRUPT();
-//	timer_mul_var = 0;
-//}
-//
-//
-//void common_tc_stop(void)
-//{
-//	common_tc_compare_stop();
-//
-//	common_tc_overflow_stop();
-//
-//	tc_stop(TIMER, TIMER_CHANNEL_ID);
-//}
-//
-//
+uint16_t common_tc_read_count(void)
+{
+    uint16_t countvalue;
+    uint16_t cv;
+
+	cv = 0;
+	countvalue = tc_read_cv(TIMER, TIMER_CHANNEL_ID);
+
+	if(timer_mul_var)
+	{
+		cv = ((UINT16_MAX / timer_multiplier) * timer_mul_var) +
+				(countvalue / timer_multiplier);
+	}
+	else
+	{
+		cv = countvalue / timer_multiplier;
+	}
+
+	return cv;
+}
+
+
+void common_tc_compare_stop(void)
+{
+	DISABLE_CC_INTERRUPT();
+
+	uint8_t flags = cpu_irq_save();
+	overflow_counter = 0;
+	compare_value = 0;
+	cpu_irq_restore(flags);
+}
+
+
+void common_tc_overflow_stop(void)
+{
+	DISABLE_OVF_INTERRUPT();
+	timer_mul_var = 0;
+}
+
+
+void common_tc_stop(void)
+{
+	common_tc_compare_stop();
+
+	common_tc_overflow_stop();
+
+	tc_stop(TIMER, TIMER_CHANNEL_ID);
+}
+
+
 void common_tc_delay(uint16_t value)
 {
 	uint32_t temp;
