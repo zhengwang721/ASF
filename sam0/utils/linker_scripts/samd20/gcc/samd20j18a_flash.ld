@@ -156,4 +156,3 @@ SECTIONS
     . = ALIGN(4);
     _end = . ;
 }
-
