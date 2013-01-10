@@ -11,5 +11,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.serial_if"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 </asf>
