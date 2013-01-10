@@ -11,6 +11,8 @@
 			<build type="include-path"  value="uart/"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="sam"/>
+            <device-support value="megarf"/>
 		</module>
 		
 	</select-by-config>
@@ -27,6 +29,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<device-support value="megarf"/>
 	</module>
-	
 </asf>
