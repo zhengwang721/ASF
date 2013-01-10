@@ -55,9 +55,6 @@ uint32_t SystemCoreClock = __SYSTEM_CLOCK;/*!< System Clock Frequency (Core Cloc
 /**
  * Initialize the system
  *
- * @param  none
- * @return none
- *
  * @brief  Setup the microcontroller system.
  *         Initialize the System and update the SystemCoreClock variable.
  */
@@ -70,9 +67,6 @@ void SystemInit(void)
 
 /**
  * Update SystemCoreClock variable
- *
- * @param  none
- * @return none
  *
  * @brief  Updates the SystemCoreClock with current core Clock
  *         retrieved from cpu registers.

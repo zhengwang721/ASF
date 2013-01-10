@@ -145,7 +145,7 @@ pdca_channel_interrupt_mask_t
 /**
  * \page sam_pdca_quickstart Quickstart guide for SAM PDCA driver
  *
- * This is the quickstart guide for the \ref eic_group "SAM PDCA driver",
+ * This is the quickstart guide for the \ref sam_drivers_pdc_group "SAM PDCA driver",
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
