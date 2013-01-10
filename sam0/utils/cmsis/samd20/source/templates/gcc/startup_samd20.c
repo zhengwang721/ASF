@@ -69,138 +69,31 @@ void PendSV_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler
 void SysTick_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* Peripherals handlers */
-void PM_CFD_IRQn_Handler              ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PM_CKRDY_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD12DET_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD12RDY_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD12SYNRDY_IRQn_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD33DET_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD33RDY_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_BOD33SYNRDY_IRQn_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_DFLLLOCKC_IRQn_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_DFLLLOCKF_IRQn_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_DFLLOOB_IRQn_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_DFLLRCS_IRQn_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_DFLLRDY_IRQn_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_OSC32KRDY_IRQn_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_XOSCRDY_IRQn_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SYSCTRL_XOSC32RDY_IRQn_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void WDT_EW_IRQn_Handler              ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void RTC_CMP_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void RTC_CMP_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void RTC_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void RTC_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_0_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_1_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_2_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_3_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_4_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_5_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_6_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_7_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_8_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_9_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_10_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_11_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_12_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_13_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_14_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EIC_EXTINT_15_IRQn_Handler       ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void NVMCTRL_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void NVMCTRL_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_0_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_1_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_2_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_3_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_4_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_5_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_6_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_EVD_7_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_0_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_1_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_2_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_3_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_4_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_5_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_6_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EVSYS_OVR_7_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM0_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM0_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM0_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM0_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM1_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM1_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM1_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM1_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM2_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM2_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM2_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM2_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM3_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM3_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM3_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM3_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM4_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM4_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM4_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM4_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM5_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM5_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM5_2_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SERCOM5_3_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC0_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC0_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC0_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC0_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC0_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC1_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC1_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC1_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC1_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC1_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC2_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC2_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC2_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC2_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC2_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC3_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC3_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC3_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC3_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC3_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC4_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC4_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC4_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC4_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC4_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC5_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC5_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC5_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC5_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC5_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC6_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC6_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC6_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC6_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC6_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_ERR_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_MC_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_MC_1_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_OVF_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ADC_OVERRUN_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ADC_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ADC_RESRDY_IRQn_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ADC_WINMON_IRQn_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void AC_COMP_0_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void AC_COMP_1_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void AC_WIN_0_IRQn_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void DAC_EMPTY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void DAC_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void DAC_UNDERRUN_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PTC_EOC_IRQn_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PTC_READY_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PTC_WCOMP_IRQn_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PM_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SYSCTRL_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void WDT_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void RTC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void EIC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void NVMCTRL_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void EVSYS_IRQn_Handler      ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM0_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM1_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM2_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM3_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM4_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SERCOM5_IRQn_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC0_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC1_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC2_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC3_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC4_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC5_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC6_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void TC7_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void ADC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void AC_IRQn_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void DAC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PTC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -226,7 +119,31 @@ const DeviceVectors exception_table = {
         (void*) SysTick_Handler,
 
         /* Configurable interrupts */
-        // TODO
+        { (void*) PM_IRQn_Handler      }, /*  0 Power Manager */
+        { (void*) SYSCTRL_IRQn_Handler }, /*  1 System Control */
+          (void*) WDT_IRQn_Handler      , /*  2 Watchdog Timer */
+        { (void*) RTC_IRQn_Handler     }, /*  3 Real-Time Counter */
+        { (void*) EIC_IRQn_Handler     }, /*  4 External Interrupt Controller */
+        { (void*) NVMCTRL_IRQn_Handler }, /*  5 Non-Volatile Memory Controller */
+        { (void*) EVSYS_IRQn_Handler   }, /*  6 Event System Interface */
+        { (void*) SERCOM0_IRQn_Handler }, /*  7 Serial Communication Interface 0 */
+        { (void*) SERCOM1_IRQn_Handler }, /*  8 Serial Communication Interface 1 */
+        { (void*) SERCOM2_IRQn_Handler }, /*  9 Serial Communication Interface 2 */
+        { (void*) SERCOM3_IRQn_Handler }, /* 10 Serial Communication Interface 3 */
+        { (void*) SERCOM4_IRQn_Handler }, /* 11 Serial Communication Interface 4 */
+        { (void*) SERCOM5_IRQn_Handler }, /* 12 Serial Communication Interface 5 */
+        { (void*) TC0_IRQn_Handler     }, /* 13 Basic Timer Counter 0 */
+        { (void*) TC1_IRQn_Handler     }, /* 14 Basic Timer Counter 1 */
+        { (void*) TC2_IRQn_Handler     }, /* 15 Basic Timer Counter 2 */
+        { (void*) TC3_IRQn_Handler     }, /* 16 Basic Timer Counter 3 */
+        { (void*) TC4_IRQn_Handler     }, /* 17 Basic Timer Counter 4 */
+        { (void*) TC5_IRQn_Handler     }, /* 18 Basic Timer Counter 5 */
+        { (void*) TC6_IRQn_Handler     }, /* 19 Basic Timer Counter 6 */
+        { (void*) TC7_IRQn_Handler     }, /* 20 Basic Timer Counter 7 */
+        { (void*) ADC_IRQn_Handler     }, /* 21 Analog Digital Converter */
+        { (void*) AC_IRQn_Handler      }, /* 22 Analog Comparators */
+        { (void*) DAC_IRQn_Handler     }, /* 23 Digital Analog Converter */
+        { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
 };
 
 /**
