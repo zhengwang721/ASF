@@ -76,6 +76,19 @@
 			<build type="doxygen-entry-point" value="group_tal"/>
 		</module>
 
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#atmegarfa1"     caption="atmegarfa1 tal support enabled">
+			<info type="description" value="summary">
+			ATMegaRFA1 Transceiver Abstraction Layer
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
+			<build type="doxygen-entry-point" value="group_tal"/>
+			<device-support value="atmega128rfa1"/>
+		</module>
+
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#atmegarfr2"     caption="atmegarfr2 tal support enabled">
 			<info type="description" value="summary">
 			ATMegaRFR2 Transceiver Abstraction Layer

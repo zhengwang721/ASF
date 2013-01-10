@@ -55,6 +55,16 @@
             <device-support value="sam"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#atmegarfa1"     caption="at86rf230B tfa  support enabled">
+			<info type="description" value="summary">
+			AT86Rf230B Transceiver Feature Access
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfa1"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+			<build type="doxygen-entry-point" value="group_tfa"/>
+		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#atmegarfr2"     caption="at86rf230B tfa  support enabled">
 			<info type="description" value="summary">
 			AT86Rf230B Transceiver Feature Access
