@@ -38,37 +38,7 @@
  * \asf_license_stop
  *
  */
-#include <ac.h>
-
-static void _ac_wait_for_sync(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	while (ac_module->STATUSB & AC_SYNCBUSY_bm) {
-		/* Do nothing */
-	}
-}
-
-static void _ac_reset(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Software reset the module */
-	ac_module->CTRLA |= AC_SWRST_bm;
-}
+#include "ac.h"
 
 static void _ac_set_config(
 		struct ac_dev_inst *const dev_inst,
@@ -79,36 +49,57 @@ static void _ac_set_config(
 	Assert(dev_inst->hw_dev);
 	Assert(config);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Use a temporary register for computing the control bits */
 	uint32_t ctrla_temp = 0;
 
-	/* Check if the first comparator pair should be enabled during sleep */
-	if (config->enable_pair_during_sleep[0] == true) {
-		ctrla_temp |= (0x01 << AC_SLEEPEN_gp);
-	}
-
-	/* Check if the second comparator pair should be enabled during sleep */
-	if (config->enable_pair_during_sleep[1] == true) {
-		ctrla_temp |= (0x02 << AC_SLEEPEN_gp);
+	/* Check if the comparators should be enabled during sleep */
+	if (config->run_in_standby == true) {
+		ctrla_temp |= AC_CTRLA_RUNSTDBY;
 	}
 
 	/* Wait until the synchronization is complete */
 	_ac_wait_for_sync(dev_inst);
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLA = ctrla_temp;
+	ac_module->CTRLA.reg = ctrla_temp;
 
 	/* Enable any requested user events */
-	ac_enable_events(dev_inst, config->enabled_events);
+	ac_enable_events(dev_inst, &config->events);
+}
+
+/** \brief Resets and disables the Analog Comparator driver.
+ *
+ *  Resets and disables the Analog Comparator driver, resetting the hardware
+ *  module registers to their power-on defaults.
+ *
+ * \param[out] dev_inst  Pointer to the AC software instance struct
+ */
+void ac_reset(
+		struct ac_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Ac *const ac_module = dev_inst->hw_dev;
+
+	/* Disable the hardware module */
+	ac_disable(dev_inst);
+
+	/* Wait until the synchronization is complete */
+	_ac_wait_for_sync(dev_inst);
+
+	/* Software reset the module */
+	ac_module->CTRLA.reg |= AC_CTRLA_SWRST;
 }
 
 /** \brief Initializes and configures the Analog Comparator driver.
  *
- *  Initializes the Analog Comparator driver, resetting the hardware module and
- *  configuring it to the user supplied configuration parameters, ready for
- *  use. This function should be called before enabling the Analog Comparator.
+ *  Initializes the Analog Comparator driver, configuring it to the user
+ *  supplied configuration parameters, ready for use. This function should be
+ *  called before enabling the Analog Comparator.
  *
  *  \note Once called the Analog Comparator will not be running; to start the
  *        Analog Comparator call \ref ac_enable() after configuring the module.
@@ -120,7 +111,7 @@ static void _ac_set_config(
  */
 void ac_init(
 		struct ac_dev_inst *const dev_inst,
-		AC_t *const module,
+		Ac *const module,
 		struct ac_conf *const config)
 {
 	/* Sanity check arguments */
@@ -131,103 +122,8 @@ void ac_init(
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	/* Reset the module */
-	_ac_reset(dev_inst);
-
 	/* Write configuration to module */
 	_ac_set_config(dev_inst, config);
-}
-
-/** \brief Enables an Analog Comparator that was previously configured.
- *
- * Enables and starts an Analog Comparator that was previously configured via a
- * call to \ref ac_init().
- *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- */
-void ac_enable(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Write the new comparator module control configuration */
-	ac_module->CTRLA |= AC_ENABLE_bm;
-}
-
-/** \brief Disables an Analog Comparator that was previously enabled.
- *
- * Stops an Analog Comparator that was previously started via a call to
- * \ref ac_enable().
- *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- */
-void ac_disable(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
-
-	/* Write the new comparator module control configuration */
-	ac_module->CTRLA &= ~AC_ENABLE_bm;
-}
-
-/** \brief Enables an Analog Comparator event input or output.
- *
- *  Enables one or more input or output events to or from the Analog Comparator
- *  module.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to enable
- */
-void ac_enable_events(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	ac_module->EVCTRL |= events;
-}
-
-/** \brief Disables an Analog Comparator event input or output.
- *
- *  Disables one or more input or output events to or from the Analog Comparator
- *  module.
- *
- *  \note Events cannot be altered while the module is enabled.
- *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
- *  \param[in] events    Mask of one or more events to disable
- */
-void ac_disable_events(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t events)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	AC_t *const ac_module = dev_inst->hw_dev;
-
-	ac_module->EVCTRL &= ~events;
 }
 
 /** \brief Writes an Analog Comparator channel configuration to the hardware module.
@@ -249,7 +145,7 @@ void ac_ch_set_config(
 	Assert(dev_inst->hw_dev);
 	Assert(config);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Use a temporary variable to compute the comparator configuration */
 	uint32_t compctrl_temp = 0;
@@ -259,24 +155,24 @@ void ac_ch_set_config(
 
 	/* Enable output hysteresis if required */
 	if (config->enable_hysteresis == true) {
-		compctrl_temp |= AC_HYST_bm;
+		compctrl_temp |= AC_COMPCTRL_HYST;
 	}
 
 	/* Set output signal routing mode */
 	compctrl_temp |= config->output_mode;
 
 	/* Configure comparator positive and negative pin MUX configurations */
-	compctrl_temp |= (config->positive | config->negative);
+	compctrl_temp |= (config->positive_input | config->negative_input);
 
 	/* Set sampling mode (one shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
 	/* Write the final configuration to the module's control register */
 	_ac_wait_for_sync(dev_inst);
-	ac_module->COMPCTRL[channel] = compctrl_temp;
+	ac_module->COMPCTRL[channel].reg = compctrl_temp;
 
 	/* Configure VCC voltage scaling for the comparator */
-	ac_module->SCALER[channel] = config->vcc_scale_factor;
+	ac_module->SCALER[channel].reg = config->vcc_scale_factor;
 }
 
 /** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
@@ -298,7 +194,7 @@ void ac_win_set_config(
 	Assert(dev_inst->hw_dev);
 	Assert(config);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	_ac_wait_for_sync(dev_inst);
 
@@ -307,27 +203,33 @@ void ac_win_set_config(
 	switch (config->window_detection)
 	{
 		case AC_WIN_DETECT_ABOVE:
-			win_ctrl_mask = AC_WINTSEL_ABOVE_gc;
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_ABOVE >> AC_WINCTRL_WINTSEL0_Pos;
 			break;
 		case AC_WIN_DETECT_BELOW:
-			win_ctrl_mask = AC_WINTSEL_BELOW_gc;
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_BELOW >> AC_WINCTRL_WINTSEL0_Pos;
 			break;
 		case AC_WIN_DETECT_INSIDE:
-			win_ctrl_mask = AC_WINTSEL_INSIDE_gc;
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_INSIDE >> AC_WINCTRL_WINTSEL0_Pos;
 			break;
 		case AC_WIN_DETECT_OUTSIDE:
-			win_ctrl_mask = AC_WINTSEL_OUTSIDE_gc;
+			win_ctrl_mask =
+					AC_WINCTRL_WINTSEL0_OUTSIDE >> AC_WINCTRL_WINTSEL0_Pos;
 			break;
 		default:
 			break;
 	}
 
 	if (win_channel == 0) {
-		ac_module->WINCTRL = (ac_module->WINCTRL & ~AC_WINTSEL0_gm) |
-				(win_ctrl_mask << AC_WINTSEL0_gp);
+		ac_module->WINCTRL.reg =
+				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
+				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
 	} else {
-		ac_module->WINCTRL = (ac_module->WINCTRL & ~AC_WINTSEL1_gm) |
-				(win_ctrl_mask << AC_WINTSEL1_gp);
+		ac_module->WINCTRL.reg =
+				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
+				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
 	}
 }
 
@@ -361,22 +263,22 @@ enum status_code ac_win_enable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* Load the configurations of the two comparators used in the window */
-	uint32_t win_pair_comp0_conf = ac_module->COMPCTRL[win_channel * 2];
-	uint32_t win_pair_comp1_conf = ac_module->COMPCTRL[win_channel * 2 + 1];
+	uint32_t win_pair_comp0_conf = ac_module->COMPCTRL[win_channel * 2].reg;
+	uint32_t win_pair_comp1_conf = ac_module->COMPCTRL[win_channel * 2 + 1].reg;
 
 	/* Make sure both comparators in the window comparator pair are enabled */
-	if (!(win_pair_comp0_conf & AC_CH_ENABLE_bm) ||
-			!(win_pair_comp1_conf & AC_CH_ENABLE_bm)) {
+	if (!(win_pair_comp0_conf & AC_COMPCTRL_ENABLE) ||
+			!(win_pair_comp1_conf & AC_COMPCTRL_ENABLE)) {
 		return STATUS_ERR_IO;
 	}
 
 	/* Make sure the comparators are configured in the same way, other than the
 	 * negative pin multiplexers */
-	if ((win_pair_comp0_conf & ~AC_MUXNEG_gm) !=
-			(win_pair_comp1_conf & ~AC_MUXNEG_gm)) {
+	if ((win_pair_comp0_conf & ~AC_COMPCTRL_MUXNEG_Msk) !=
+			(win_pair_comp1_conf & ~AC_COMPCTRL_MUXNEG_Msk)) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
@@ -384,9 +286,9 @@ enum status_code ac_win_enable(
 
 	/* Enable the requested window comparator */
 	if (win_channel == 0) {
-		ac_module->WINCTRL |= AC_WEN0_bp;
+		ac_module->WINCTRL.reg |= AC_WINCTRL_WEN0;
 	} else {
-		ac_module->WINCTRL |= AC_WEN1_bp;
+		ac_module->WINCTRL.reg |= AC_WINCTRL_WEN1;
 	}
 
 	return STATUS_OK;
@@ -408,15 +310,15 @@ void ac_win_disable(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	_ac_wait_for_sync(dev_inst);
 
 	/* Disable the requested window comparator */
 	if (win_channel == 0) {
-		ac_module->WINCTRL &= ~AC_WEN0_bp;
+		ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN0;
 	} else {
-		ac_module->WINCTRL &= ~AC_WEN1_bp;
+		ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN1;
 	}
 }
 
@@ -438,7 +340,7 @@ enum ac_win_state ac_win_get_state(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	AC_t *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = dev_inst->hw_dev;
 
 	/* If one or both window comparators not ready, return unknown result */
 	if (ac_win_is_ready(dev_inst, win_channel) == false) {
@@ -449,19 +351,19 @@ enum ac_win_state ac_win_get_state(
 
 	/* Extract window comparison state bits */
 	if (win_channel == 0) {
-		win_state = (ac_module->STATUSA & AC_WSTATE0_gm) >> AC_WSTATE0_gp;
+		win_state = ac_module->STATUSA.bit.WSTATE0;
 	} else {
-		win_state = (ac_module->STATUSA & AC_WSTATE1_gm) >> AC_WSTATE1_gp;
+		win_state = ac_module->STATUSA.bit.WSTATE1;
 	}
 
 	/* Map hardware comparison states to logical window states */
 	switch (win_state)
 	{
-		case AC_WSTATE_ABOVE_gc:
+		case (AC_STATUSA_WSTATE0_ABOVE >> AC_STATUSA_WSTATE0_Pos):
 			return AC_WIN_STATE_ABOVE;
-		case AC_WSTATE_BELOW_gc:
+		case (AC_STATUSA_WSTATE0_BELOW >> AC_STATUSA_WSTATE0_Pos):
 			return AC_WIN_STATE_BELOW;
-		case AC_WSTATE_INSIDE_gc:
+		case (AC_STATUSA_WSTATE0_INSIDE >> AC_STATUSA_WSTATE0_Pos):
 			return AC_WIN_STATE_INSIDE;
 		default:
 			return AC_WIN_STATE_UNKNOWN;

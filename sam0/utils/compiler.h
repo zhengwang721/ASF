@@ -69,10 +69,20 @@
 #include <stdlib.h>
 
 /**
+ * \def UNUSED
+ * \brief Marking \a v as a unused parameter or value.
+ */
+#define UNUSED(v)          (void)(v)
+
+/**
  * \def barrier
  * \brief Memory barrier
  */
-#define barrier()                     __DMB()
+#ifdef __GNUC__
+#  define barrier()        asm volatile("" ::: "memory")
+#else
+#  define barrier()        asm ("")
+#endif
 
 /**
  * \brief Emit the compiler pragma \a arg.
