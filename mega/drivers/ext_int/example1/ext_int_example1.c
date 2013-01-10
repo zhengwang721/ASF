@@ -79,15 +79,7 @@
  */
 
 #include <asf.h>
-#include <conf_interrupt.h>
-
-#ifndef CONFIG_INTERRUPT_SOURCE
-# define CONFIG_INTERRUPT_SOURCE    EXT_INT0
-#endif /* CONFIG_INTERRUPT_SOURCE */
-
-#ifndef CONFIG_INTERRUPT_MODE
-# define CONFIG_INTERRUPT_MODE      IOPORT_SENSE_FALLING
-#endif /* CONFIG_INTERRUPT_SOURCE */
+#include <conf_example.h>
 
 /**
  *  \brief delay routine for LED to be ON for some time
@@ -109,32 +101,14 @@ static inline void ext_int_delay(void)
 static void ext_int_callback(void)
 {
 	/* ! Switch ON LED1 */
-	LED_On(LED_GREEN_GPIO);
+	LED_On(LED_PIN);
 
 	ext_int_delay();
 
 	/* Switch OFF LED1 */
-	LED_Off(LED_GREEN_GPIO);
+	LED_Off(LED_PIN);
 }
 
-/**
- * \brief Interrupt PC callback for External interrupt
- *  Switch ON LED2(PORTE3) for some time and then switches OFF
- *  when the interrupt is triggered
- *  \param none
- */
-static void ext_pcint_callback(void)
-{
-	/* ! Switch ON LED2 * / */
-	LED_On(LED_YELLOW_GPIO);
-
-	/* ! wait for some delay */
-	ext_int_delay();
-
-	/* ! Turn off LED2 */
-	LED_Off(LED_YELLOW_GPIO);
-	
-}
 
 /** \brief Main function.
  */
@@ -151,16 +125,10 @@ int main(void)
 	cpu_irq_disable();
 
     /* Set Interrupt CallBack Function **/
-    ext_int_set_interrupt_callback(CONFIG_INTERRUPT_SOURCE,ext_int_callback);
+    ext_int_set_interrupt_callback(BUTTON_INTERRUPT_SOURCE,ext_int_callback);
 	
 	/* Enable the Ext Int */
-	ext_int_init(CONFIG_INTERRUPT_SOURCE, CONFIG_INTERRUPT_MODE);
-
-	/* Set Interrupt CallBack Function **/
-	ext_int_set_interrupt_callback(CONFIG_PC_INT_SOURCE,ext_pcint_callback);
-	
-	/* Enable the Ext PC INT */
-	ext_int_pcint_init(CONFIG_PC_INT_SOURCE);
+	ext_int_init(BUTTON_INTERRUPT_SOURCE, BUTTON_INTERRUPT_MODE);
 
 	/* Enable Global interrupt */
 	cpu_irq_enable();

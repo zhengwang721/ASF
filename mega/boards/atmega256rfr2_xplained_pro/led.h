@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Chip-specific Interrupt configuration
+ * \brief  ATMEGA256RFR2 Xplained Pro board LEDs support package.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the ATMEGA256RFR2 XPLAINED PRO board.
+ *
+ * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,43 +45,35 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_INTERRUPT_H
-#define CONF_INTERRUPT_H
 
-/* External Interrupt INT0 */
-#define CONFIG_EXT_INT0      EXT_INT0_PIN
-/* External Interrupt INT1 */
-#define CONFIG_EXT_INT1      EXT_INT1_PIN
-/* External Interrupt INT2 */
-#define CONFIG_EXT_INT2      EXT_INT2_PIN
-/* External Interrupt INT3 */
-#define CONFIG_EXT_INT3      EXT_INT3_PIN
-/* External Interrupt INT4 */
-#define CONFIG_EXT_INT4      EXT_INT4_PIN
-/* External Interrupt INT5 */
-#define CONFIG_EXT_INT5      EXT_INT5_PIN
-/* External Interrupt INT6 */
-#define CONFIG_EXT_INT6      EXT_INT6_PIN
-/* External Interrupt INT7 */
-#define CONFIG_EXT_INT7      EXT_INT7_PIN
+#ifndef _LED_H_
+#define _LED_H_
 
-/* External PC Interrupt PCINT0 */
-#define CONFIG_PC_INT0      PC_INT0_PIN
-/* External PC Interrupt PCINT1 */
-#define CONFIG_PC_INT1      PC_INT1_PIN
-/* External PC Interrupt PCINT2 */
-#define CONFIG_PC_INT2      PC_INT2_PIN
-/* External PC Interrupt PCINT3 */
-#define CONFIG_PC_INT3      PC_INT3_PIN
-/* External PC Interrupt PCINT4 */
-#define CONFIG_PC_INT4      PC_INT4_PIN
-/* External PC Interrupt PCINT5 */
-#define CONFIG_PC_INT5      PC_INT5_PIN
-/* External PC Interrupt PCINT6 */
-#define CONFIG_PC_INT6      PC_INT6_PIN
-/* External PC Interrupt PCINT7 */
-#define CONFIG_PC_INT7      PC_INT7_PIN
-/* External PC Interrupt PCINT8 */
-#define CONFIG_PC_INT8      PC_INT8_PIN
+#include "gpio.h"
 
-#endif
+ 
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     ioport_set_value(led_gpio, 1)
+
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      ioport_set_value(led_gpio, 0)
+
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  ioport_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */
