@@ -686,7 +686,7 @@ static inline bool rtc_calendar_is_alarm_match(
  * \retval STATUS_OK If flag was cleared correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-static enum status_code rtc_calendar_clear_alarm_match(
+static inline enum status_code rtc_calendar_clear_alarm_match(
 		enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */

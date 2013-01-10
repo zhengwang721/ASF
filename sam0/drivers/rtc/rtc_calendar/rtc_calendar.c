@@ -40,9 +40,6 @@
  */
 #include "rtc_calendar.h"
 
-#define RTC_MODE2_CLOCK_PM_Pos (RTC_MODE2_CLOCK_HOUR_Pos + 3)
-#define RTC_MODE2_CLOCK_PM     (1 << RTC_MODE2_CLOCK_PM_Pos)
-
 /**
  * \internal Device structure
  */
@@ -269,26 +266,26 @@ void rtc_calendar_swap_time_mode(void)
 	Rtc *const rtc_module = RTC;
 
 	/* Initialize time structure. */
-	struct rtc_calendar_time *time;
+	struct rtc_calendar_time time;
 
 	/* Get current time. */
-	rtc_calendar_get_time(time);
+	rtc_calendar_get_time(&time);
 
 	/* Check current mode. */
 	if (_rtc_dev.clock_24h) {
 		/* Set pm flag. */
-		time->pm = (uint8_t)(time->hour / 12);
+		time.pm = (uint8_t)(time.hour / 12);
 
 		/* Set 12h clock hour value. */
-		time->hour = time->hour % 12;
+		time.hour = time.hour % 12;
 
 		/* Change value in configuration structure. */
 		_rtc_dev.clock_24h = false;
 	} else {
 		/* Set hour value based on pm flag. */
-		if (time->pm == 1) {
-			time->hour = time->hour + 12;
-			time->pm = 0;
+		if (time.pm == 1) {
+			time.hour = time.hour + 12;
+			time.pm = 0;
 		}
 
 		/* Change value in configuration structure. */
@@ -305,7 +302,7 @@ void rtc_calendar_swap_time_mode(void)
 	rtc_calendar_enable();
 
 	/* Set new time format in CLOCK register. */
-	rtc_calendar_set_time(time);
+	rtc_calendar_set_time(&time);
 }
 
 /**
