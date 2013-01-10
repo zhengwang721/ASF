@@ -65,8 +65,7 @@
 
 
 
-
-#if ((TAL_TYPE == AT86RF212))
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define DEFAULT_CHANNEL         (1)
 #else
 #define DEFAULT_CHANNEL         (21)
@@ -126,7 +125,9 @@
 #define EE_IEEE_ADDR                (0)
 
 /* Macro to enable the feature of counting wrong CRC packets */
-#if ( (TAL_TYPE == AT86RF212) ||(TAL_TYPE == AT86RF231))
+#if ( (TAL_TYPE == ATMEGARFR2) ||\
+      (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) ||\
+      (TAL_TYPE == AT86RF231)|| (TAL_TYPE == AT86RF233))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
 

@@ -85,7 +85,7 @@ typedef enum
  * \{
  */
 
-#if((TAL_TYPE != AT86RF212))
+#if((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 /** Lowest power -17dBm  */
 #define CONFIG_MODE_TX_PWR  (0xAF)
 #else

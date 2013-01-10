@@ -123,7 +123,7 @@
 /* Parameter Identifiers */
 #define PARAM_CHANNEL                     (0x00)
 #define PARAM_CHANNEL_PAGE                (0x01)
-#if( (TAL_TYPE != AT86RF212))
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
 #define PARAM_TX_POWER_REG                (0x02)
 #endif
 #define PARAM_TX_POWER_DBM                (0x03)
