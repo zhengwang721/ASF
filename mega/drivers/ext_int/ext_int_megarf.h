@@ -49,7 +49,6 @@ extern "C" {
 
 #include "compiler.h"
 #include "ioport.h"
-#include <conf_interrupt.h>
 
  /**
  * \defgroup megarf_interrupt_group External Interrupt Driver

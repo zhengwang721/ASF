@@ -48,6 +48,7 @@
  *
  * \section files Main files:
  * - ext_int_example1.c: This example application
+ * - conf_interrupt.h: configuration of the megaRF driver
  * - conf_example.h example definitions
  *
  * \section driverinfo Interrupt Driver
@@ -79,7 +80,7 @@
 
 #include <asf.h>
 #include <conf_example.h>
-
+#include "conf_interrupt.h"
 /**
  *  \brief delay routine for LED to be ON for some time
  *  \param none
