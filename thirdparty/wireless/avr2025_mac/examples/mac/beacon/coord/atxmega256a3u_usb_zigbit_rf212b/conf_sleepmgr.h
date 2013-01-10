@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF212B"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega_Zigbit 900Mhz USB"
+#define CONFIG_SLEEPMGR_ENABLE
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

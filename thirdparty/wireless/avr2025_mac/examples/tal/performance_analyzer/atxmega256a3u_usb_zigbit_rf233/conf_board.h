@@ -47,7 +47,7 @@
 #define TRANSCEIVER_NAME    "AT86RF233"
 #define IC_TYPE             (0x00)
 #define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Zigbit 2_4 USB"
+#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
 
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

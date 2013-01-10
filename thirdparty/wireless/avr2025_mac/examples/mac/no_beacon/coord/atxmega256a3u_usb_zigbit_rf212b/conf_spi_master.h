@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Board configuration
+ * \brief Spi Master configuration for spi example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,26 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF212B"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega_Zigbit 900Mhz USB"
+/* Possibility to change low-level configurations here */
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+//! Default Config Spi Master Delay BCS
+// #define CONFIG_SPI_MASTER_DELAY_BCS            0
+
+//! Default Config Spi Master Bits per Transfer Definition
+// #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+//! Default Config Spi Master Delay BCT
+// #define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+//! Default Config Spi Master Delay BS
+// #define CONFIG_SPI_MASTER_DELAY_BS             0
+
+//! Default Config Spi Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#define AT86RFX_SPI_BAUDRATE		3000000
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */
