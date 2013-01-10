@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for IISC driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -146,17 +146,37 @@ static void run_iisc_test(const struct test_case *test)
 {
 	uint32_t i;
 	struct iisc_config config;
+	struct iisc_device dev_inst;
+	struct genclk_config gencfg;
+	struct pll_config pcfg;
 
-	/* Enable the IISC module. */
-	iisc_enable(IISC);
+	/* Set the GCLK according to the sample rate */
+	genclk_config_defaults(&gencfg, IISC_GCLK_NUM);
+	/* CPUCLK 48M */
+	pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
+			BOARD_OSC0_HZ);
+	pll_enable(&pcfg, 0);
+	sysclk_set_prescalers(0, 0, 0, 0, 0);
+	pll_wait_for_lock(0);
+	sysclk_set_source(SYSCLK_SRC_PLL0);
+	/* GCLK according fs ratio */
+	genclk_enable_source(GENCLK_SRC_CLK_CPU);
+	genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+	genclk_config_set_divider(&gencfg, 4);
+	genclk_enable(&gencfg, IISC_GCLK_NUM);
 
 	/* Set the configuration */
-	config.sample_rate_hz = IISC_SAMPLE_RATE_48000;
-	config.fs_ratio = IISC_FS_RATE_256;
 	config.data_word_format = IISC_DATE_16BIT_COMPACT;
-	config.loop = true;
-	config.mode = true;
-	iisc_set_config(IISC, &config);
+	config.slot_length = 16;
+	config.fs_ratio = IISC_FS_RATE_256;
+	config.num_tx_channels = IISC_CHANNEL_STEREO;
+	config.num_rx_channels = IISC_CHANNEL_STEREO;
+	config.loopback = true;
+	config.master = true;
+	iis_init(&dev_inst, IISC, &config);
+
+	/* Enable the IISC module. */
+	iis_enable(&dev_inst);
 
 	/* Config PDCA module */
 	pdca_enable(PDCA);
@@ -170,15 +190,15 @@ static void run_iisc_test(const struct test_case *test)
 	pdca_channel_enable(PDCA_IISC_CHANNEL1);
 
 	/* Enable the functions */
-	iisc_enable_transmission(IISC);
-	iisc_enable_clocks(IISC);
+	iis_enable_transmission(&dev_inst);
+	iis_enable_clocks(&dev_inst);
 	/**
 	 * Since the transfer and receive timing is not under control, we
 	 * need adjust here the enable sequence and add some delay
 	 * functions if it's needed.
 	 */
 	delay_us(20);
-	iisc_enable_reception(IISC);
+	iis_enable_reception(&dev_inst);
 
 	while (!(pdca_get_channel_status(PDCA_IISC_CHANNEL1)
 			== PDCA_CH_TRANSFER_COMPLETED)) {
@@ -190,7 +210,7 @@ static void run_iisc_test(const struct test_case *test)
 	pdca_disable(PDCA);
 
 	/* Disable the IISC module. */
-	iisc_disable(IISC);
+	iis_disable(&dev_inst);
 
 	for (i = 0; i < SOUND_SAMPLES; i++) {
 		if (input_samples[i] != output_samples[i]) {

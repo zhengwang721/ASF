@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the IISC on SAM devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,149 +48,86 @@
 #include "sysclk.h"
 #include "sleepmgr.h"
 
-void iisc_enable(Iisc *iisc)
+void iis_enable(struct iisc_device *dev_inst)
 {
-	sysclk_enable_peripheral_clock(iisc);
+	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 }
 
-void iisc_disable(Iisc *iisc)
+void iis_disable(struct iisc_device *dev_inst)
 {
 	sleepmgr_unlock_mode(SLEEPMGR_ACTIVE);
-	sysclk_enable_peripheral_clock(iisc);
+	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 }
 
-status_code_t iisc_set_config(Iisc *iisc, struct iisc_config *iisc_conf)
+status_code_t iis_init(struct iisc_device *const dev_inst,
+		Iisc *iisc, struct iisc_config *const iisc_conf)
 {
-	uint32_t slot_length;
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(iisc);
+	Assert(iisc_conf);
 
-	if (iisc_conf->data_word_format < 4) {
-		slot_length = 32;
-	} else if (iisc_conf->data_word_format < 6) {
-		slot_length = 16;
-	} else {
-		slot_length = 8;
-	}
+	dev_inst->hw_dev = iisc;
+	dev_inst->iisc_cfg = iisc_conf;
 
-	iisc_reset(iisc);
+	/* Enable APB clock for AESA */
+	sysclk_enable_peripheral_clock(iisc);
 
-	struct genclk_config gencfg;
-	struct pll_config pcfg;
+	iis_reset(dev_inst);
 
 	/* Set the master/slave mode */
-	if (iisc_conf->mode) {
-		/* Set the GCLK according to the sample rate */
-		genclk_config_defaults(&gencfg, IISC_GCLK_NUM);
-
-		switch (iisc_conf->sample_rate_hz) {
-		case IISC_SAMPLE_RATE_32000:
-			/* CPUCLK 32M */
-			pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
-					BOARD_OSC0_HZ);
-			pll_enable(&pcfg, 0);
-			sysclk_set_prescalers(0, 0, 0, 0, 0);
-			pll_wait_for_lock(0);
-			sysclk_set_source(SYSCLK_SRC_PLL0);
-			/* GCLK according fs ratio */
-			genclk_enable_source(GENCLK_SRC_CLK_CPU);
-			genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-			genclk_config_set_divider(&gencfg, 1024 / iisc_conf->fs_ratio);
-			break;
-
-		case IISC_SAMPLE_RATE_48000:
-			/* CPUCLK 48M */
-			pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
-					BOARD_OSC0_HZ);
-			pll_enable(&pcfg, 0);
-			sysclk_set_prescalers(0, 0, 0, 0, 0);
-			pll_wait_for_lock(0);
-			sysclk_set_source(SYSCLK_SRC_PLL0);
-			/* GCLK according fs ratio */
-			genclk_enable_source(GENCLK_SRC_CLK_CPU);
-			genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-			genclk_config_set_divider(&gencfg, 1024 / iisc_conf->fs_ratio);
-			break;
-
-		case IISC_SAMPLE_RATE_96000:
-			/* CPUCLK 48M */
-			pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
-					BOARD_OSC0_HZ);
-			pll_enable(&pcfg, 0);
-			sysclk_set_prescalers(0, 0, 0, 0, 0);
-			pll_wait_for_lock(0);
-			sysclk_set_source(SYSCLK_SRC_PLL0);
-			/* GCLK according fs ratio */
-			genclk_enable_source(GENCLK_SRC_CLK_CPU);
-			genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-			genclk_config_set_divider(&gencfg, 512 / iisc_conf->fs_ratio);
-			break;
-
-		case IISC_SAMPLE_RATE_192000:
-			/* CPUCLK 48M */
-			pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
-					BOARD_OSC0_HZ);
-			pll_enable(&pcfg, 0);
-			sysclk_set_prescalers(0, 0, 0, 0, 0);
-			pll_wait_for_lock(0);
-			sysclk_set_source(SYSCLK_SRC_PLL0);
-			/* GCLK according fs ratio */
-			genclk_enable_source(GENCLK_SRC_CLK_CPU);
-			genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-			genclk_config_set_divider(&gencfg, 256 / iisc_conf->fs_ratio);
-			break;
-
-		default:
-			break;
-		}
-
-		genclk_enable(&gencfg, IISC_GCLK_NUM);
-
+	if (iisc_conf->master) {
 		iisc->IISC_MR |= IISC_MR_MODE;
 	} else {
 		iisc->IISC_MR &= ~IISC_MR_MODE;
 	}
 
 	/* Set the sampling rate related settings */
-	iisc->IISC_MR |= IISC_MR_IMCKFS(iisc_conf->fs_ratio / 16 - 1);
+	iisc->IISC_MR |= IISC_MR_IMCKFS(iisc_conf->fs_ratio);
 
 	/* Set the data word format */
 	iisc->IISC_MR |= IISC_MR_DATALENGTH(iisc_conf->data_word_format);
 
 	/* Set the master clock mode */
-	if ((uint32_t)iisc_conf->fs_ratio > (slot_length * 2)) {
+	if ((((uint32_t)iisc_conf->fs_ratio + 1) * 16)
+			> (iisc_conf->slot_length * 2)) {
 		iisc->IISC_MR |= IISC_MR_IMCKMODE;
 	} else {
 		iisc->IISC_MR &= ~IISC_MR_IMCKMODE;
 	}
 
 	/* Set the mono mode */
-	if (iisc_conf->tx_mono) {
+	if (iisc_conf->num_tx_channels < 2) {
 		iisc->IISC_MR |= IISC_MR_TXMONO;
 	} else {
 		iisc->IISC_MR &= ~IISC_MR_TXMONO;
 	}
-	if (iisc_conf->rx_mono) {
+	if (iisc_conf->num_rx_channels < 2) {
 		iisc->IISC_MR |= IISC_MR_RXMONO;
 	} else {
 		iisc->IISC_MR &= ~IISC_MR_RXMONO;
 	}
 
 	/* Set the loop mode */
-	if (iisc_conf->loop) {
+	if (iisc_conf->loopback) {
 		iisc->IISC_MR |= IISC_MR_RXLOOP;
 	} else {
 		iisc->IISC_MR &= ~IISC_MR_RXLOOP;
 	}
 
+	/* Disable APB clock for AESA */
+	sysclk_disable_peripheral_clock(iisc);
+
 	return STATUS_OK;
 }
 
 
-status_code_t iisc_write(Iisc *iisc, uint32_t data)
+status_code_t iis_write(struct iisc_device *dev_inst, uint32_t data)
 {
 	uint32_t timeout = IISC_RETRY_VALUE;
 
-	while (!(iisc->IISC_SR & IISC_SR_TXRDY) && timeout) {
+	while (!(dev_inst->hw_dev->IISC_SR & IISC_SR_TXRDY) && timeout) {
 		--timeout;
 	}
 
@@ -198,16 +135,16 @@ status_code_t iisc_write(Iisc *iisc, uint32_t data)
 		return ERR_TIMEOUT;
 	}
 
-	iisc->IISC_THR = data;
+	dev_inst->hw_dev->IISC_THR = data;
 
 	return STATUS_OK;
 }
 
-status_code_t iisc_read(Iisc *iisc, uint32_t *data)
+status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data)
 {
 	uint32_t timeout = IISC_RETRY_VALUE;
 
-	while (!(iisc->IISC_SR & IISC_SR_RXRDY) && timeout) {
+	while (!(dev_inst->hw_dev->IISC_SR & IISC_SR_RXRDY) && timeout) {
 		--timeout;
 	}
 
@@ -215,7 +152,7 @@ status_code_t iisc_read(Iisc *iisc, uint32_t *data)
 		return ERR_TIMEOUT;
 	}
 
-	*data = iisc->IISC_RHR;
+	*data = dev_inst->hw_dev->IISC_RHR;
 
 	return STATUS_OK;
 }

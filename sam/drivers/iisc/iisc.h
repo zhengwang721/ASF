@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the IISC on SAM devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,8 +44,8 @@
  *
  */
 
-#ifndef _IISC_H_INCLUDED
-#define _IISC_H_INCLUDED
+#ifndef _IISC_H_INCLUDED_
+#define _IISC_H_INCLUDED_
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,6 +66,13 @@ extern "C" {
 
 #define IISC_RETRY_VALUE   10000
 
+/** Supported number of channels */
+enum iisc_channel_number {
+	IISC_CHANNEL_NONE = 0,
+	IISC_CHANNEL_MONO,
+	IISC_CHANNEL_STEREO,
+};
+
 /** Supported sample rate */
 enum iisc_sample_rate {
 	IISC_SAMPLE_RATE_32000 = 0,
@@ -76,11 +83,18 @@ enum iisc_sample_rate {
 
 /** Supported Master Clock to Sample Frequency (fs) Ratio */
 enum iisc_fs_rate {
-	IISC_FS_RATE_16  = 16,
-	IISC_FS_RATE_32  = 32,
-	IISC_FS_RATE_64  = 64,
-	IISC_FS_RATE_128 = 128,
-	IISC_FS_RATE_256 = 256,
+	IISC_FS_RATE_16  = 0,
+	IISC_FS_RATE_32  = 1,
+	IISC_FS_RATE_48  = 2,
+	IISC_FS_RATE_64  = 3,
+	IISC_FS_RATE_96  = 5,
+	IISC_FS_RATE_128 = 7,
+	IISC_FS_RATE_192 = 11,
+	IISC_FS_RATE_256 = 15,
+	IISC_FS_RATE_384 = 23,
+	IISC_FS_RATE_512 = 31,
+	IISC_FS_RATE_768 = 47,
+	IISC_FS_RATE_1024 = 63,
 };
 
 /** Data format of the data register value */
@@ -97,206 +111,226 @@ enum iisc_data_format {
 
 /** Configuration setting structure */
 struct iisc_config {
-	/* Sample rate. */
-	enum iisc_sample_rate sample_rate_hz;
-	/* Number of bit per sample. */
+	/* Number of bits per sample. */
 	enum iisc_data_format data_word_format;
+
+	/* Number of bits of the slot: 32, 24, 16 or 8 */
+	uint32_t slot_length;
+
 	/* Master Clock to Sample Frequency (fs) Ratio. */
 	enum iisc_fs_rate fs_ratio;
-	/* 1 for Mono, 0 for stereo. */
-	bool tx_mono;
-	/* 1 for Mono, 0 for stereo. */
-	bool rx_mono;
-	/* 1 for loop back, 0 for normal. */
-	bool loop;
+
+	/* Number of channels for Tx (0: no channels, 1 for Mono, 2 for stereo */
+	enum iisc_channel_number num_tx_channels;
+
+	/* Number of channels for Rx (0: no channels, 1 for Mono, 2 for stereo */
+	enum iisc_channel_number num_rx_channels;
+
+	/* 1 for loopback, 0 for normal. */
+	bool loopback;
+
 	/* 1 for master, 0 for slave. */
-	bool mode;
+	bool master;
 };
+
+struct iisc_device {
+	/* Base Address of the IISC module */
+	Iisc *hw_dev;
+
+	/* Pointer to IISC configuration structure. */
+	struct iisc_config  *iisc_cfg;
+};
+
+/**
+ * \brief Initialize and configure the IISC module.
+ *
+ * \param dev_inst    Device structure pointer.
+ * \param iisc         Base address of the IISC instance.
+ * \param cfg         Pointer to IISC configuration.
+ *
+ * \return status
+ */
+status_code_t iis_init(struct iisc_device *const dev_inst,
+		Iisc *iisc, struct iisc_config *const iisc_conf);
 
 /**
  * \brief Resets the IISC module
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_reset(Iisc *iisc)
+static inline void iis_reset(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_SWRST;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_SWRST;
 }
 
 /**
  *  \brief Enable the IISC module in transmission
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_enable_transmission(Iisc *iisc)
+static inline void iis_enable_transmission(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_TXEN;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_TXEN;
 }
 
 /**
  *  \brief Disable the IISC module in transmission
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_disable_transmission(Iisc *iisc)
+static inline void iis_disable_transmission(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_TXDIS;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_TXDIS;
 }
 
 /**
  *  \brief Enable the IISC module in reception
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_enable_reception(Iisc *iisc)
+static inline void iis_enable_reception(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_RXEN;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_RXEN;
 }
 
 /**
  *  \brief Disable the IISC module in reception
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_disable_reception(Iisc *iisc)
+static inline void iis_disable_reception(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_RXDIS;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_RXDIS;
 }
 
 /**
  * \brief Enable the clocks for the IISC module
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_enable_clocks(Iisc *iisc)
+static inline void iis_enable_clocks(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_CKEN;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_CKEN;
 }
 
 /**
  *  \brief Disable the clocks for the IISC module
  *
- *  \param iisc Base address of the IISC
+ *  \param dev_inst    Device structure pointer.
  */
-static inline void iisc_disable_clocks(Iisc *iisc)
+static inline void iis_disable_clocks(struct iisc_device *dev_inst)
 {
-	iisc->IISC_CR = IISC_CR_CKDIS;
+	dev_inst->hw_dev->IISC_CR = IISC_CR_CKDIS;
 }
 
 /**
  * \brief Get the IISC status value.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  *
  * \return Status value
  */
-static inline uint32_t iisc_get_status(Iisc *iisc)
+static inline uint32_t iis_get_status(struct iisc_device *dev_inst)
 {
-	return iisc->IISC_SR;
+	return dev_inst->hw_dev->IISC_SR;
 }
 
 /**
  * \brief Clear the IISC status value.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param status_mask Status mask value
  */
-static inline void iisc_clear_status(Iisc *iisc, uint32_t status_mask)
+static inline void iis_clear_status(struct iisc_device *dev_inst,
+		uint32_t status_mask)
 {
-	iisc->IISC_SCR = status_mask;
+	dev_inst->hw_dev->IISC_SCR = status_mask;
 }
 
 /**
  * \brief Set the IISC status value.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param status_mask Status mask value
  */
-static inline void iisc_set_status(Iisc *iisc, uint32_t status_mask)
+static inline void iis_set_status(struct iisc_device *dev_inst,
+		uint32_t status_mask)
 {
-	iisc->IISC_SSR = status_mask;
+	dev_inst->hw_dev->IISC_SSR = status_mask;
 }
 
 /**
  * \brief Enable the IISC interrupts.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param int_mask interrupt mask value
  */
-static inline void iisc_enable_interrupts(Iisc *iisc, uint32_t int_mask)
+static inline void iis_enable_interrupts(struct iisc_device *dev_inst,
+		uint32_t int_mask)
 {
-	iisc->IISC_IER = int_mask;
+	dev_inst->hw_dev->IISC_IER = int_mask;
 }
 
 /**
  * \brief Disable the IISC interrupts.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param int_mask interrupt mask value
  */
-static inline void iisc_disable_interrupts(Iisc *iisc, uint32_t int_mask)
+static inline void iis_disable_interrupts(struct iisc_device *dev_inst,
+		uint32_t int_mask)
 {
-	iisc->IISC_IDR = int_mask;
+	dev_inst->hw_dev->IISC_IDR = int_mask;
 }
 
 
 /**
  * \brief Read the IISC interrupts mask value.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  *
  * \return Interrupt mask value
  */
-static inline uint32_t iisc_read_interrupt_mask(Iisc *iisc)
+static inline uint32_t iis_read_interrupt_mask(struct iisc_device *dev_inst)
 {
-	return iisc->IISC_IMR;
+	return dev_inst->hw_dev->IISC_IMR;
 }
 
 /**
  * \brief Enable the IISC module.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  *
  */
-void iisc_enable(Iisc *iisc);
+void iis_enable(struct iisc_device *dev_inst);
 
 /**
  * \brief Disable the IISC module.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  *
  */
-void iisc_disable(Iisc *iisc);
-
-/**
- * \brief Configurate the IISC module.
- *
- * \param iisc Base address of the IISC
- * \param iisc_conf IISC configuration
- *
- * \return status
- */
-status_code_t iisc_set_config(Iisc *iisc, struct iisc_config *iisc_conf);
+void iis_disable(struct iisc_device *dev_inst);
 
 /**
  * \brief Write a single message of data.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param data The data to write
  *
  * \return status
  */
-status_code_t iisc_write(Iisc *iisc, uint32_t data);
+status_code_t iis_write(struct iisc_device *dev_inst, uint32_t data);
 
 /**
  * \brief Read a single message of data.
  *
- * \param iisc Base address of the IISC
+ * \param dev_inst    Device structure pointer.
  * \param *data Pointer for receive data
  *
  * \return status
  */
-status_code_t iisc_read(Iisc *iisc, uint32_t *data);
+status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
 
 /**
  * \}
@@ -347,8 +381,8 @@ status_code_t iisc_read(Iisc *iisc, uint32_t *data);
  * config.sample_rate_hz = IISC_SAMPLE_RATE_48000;
  * config.fs_ratio = IISC_FS_RATE_256;
  * config.data_word_format = IISC_DATE_16BIT_COMPACT;
- * config.loop = false;
- * config.mode = true;
+ * config.loopback = false;
+ * config.master = true;
  * iisc_set_config(IISC, &config);
  * \endcode
  *
@@ -379,4 +413,4 @@ status_code_t iisc_read(Iisc *iisc, uint32_t *data);
  * \endcode
  */
 
-#endif  /* _IISC_H_INCLUDED */
+#endif  /* _IISC_H_INCLUDED_ */
