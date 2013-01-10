@@ -116,7 +116,7 @@
 /* TRX Parameter: Complete CCA Duration in symbols */
 #define CCA_DURATION_SYM   (TAL_CONVERT_US_TO_SYMBOLS(CCA_DETECTION_TIME_US) + CCA_PROCESS_TIME_SYM)
 /* TRX Parameter: Round up RST_PULSE_WIDTH_NS value to us */
-#define RST_PULSE_WIDTH_US   ((RST_PULSE_WIDTH_NS + 999) / 1000)
+//#define RST_PULSE_WIDTH_US   ((RST_PULSE_WIDTH_NS + 999) / 1000)
 
 /** Register addresses */
 

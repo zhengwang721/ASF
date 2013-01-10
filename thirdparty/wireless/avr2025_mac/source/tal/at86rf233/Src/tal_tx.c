@@ -272,7 +272,7 @@ void tx_done_handling(void)
             break;
 
         default:
-            ASSERT("Unexpected tal_tx_state" == 0);
+            Assert("Unexpected tal_tx_state" == 0);
             status = FAILURE;
             break;
     }

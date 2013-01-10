@@ -251,6 +251,7 @@ extern "C" {
 
 #endif /* End of ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2) ||
                  (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))*/
+#if (TAL_TYPE != AT86RF230B)
     /*
      * \brief Configures receiver sensitivity level
      *
