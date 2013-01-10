@@ -43,6 +43,20 @@
 			<build type="doxygen-entry-point" value="group_tal"/>
 		</module>
 		
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#at86rf233"     caption="at86rf233 tal support enabled">
+			<info type="description" value="summary">
+			AT86RF233 Transceiver Abstraction Layer
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf233"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+			<build type="doxygen-entry-point" value="group_tal"/>
+		</module>
+		
 	</select-by-config>	
 	
 <!-- 	This module will not be required if TFA is used since TFA module will directly include the above TAL modules based on the TAL_TYPE -->

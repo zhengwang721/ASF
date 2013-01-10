@@ -77,7 +77,22 @@
 #define AACK_PROM_ENABLE        (0x01)
 #define AACK_PROM_DISABLE       (0x00)
 
-#if(TAL_TYPE == AT86RF212)
+#if((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
+#define BASE_ISM_FREQUENCY_MHZ              (2306)
+#define MIN_ISM_FREQUENCY_MHZ               (2322)
+#define MAX_ISM_FREQUENCY_MHZ               (2527)
+#define MID_ISM_FREQUENCY_MHZ               (2434)
+
+#define CC_BAND_0                           (0x00)
+#define CC_BAND_8                           (0x08)
+#define CC_BAND_9                           (0x09)
+#define CC_NUMBER_0                         (0x00)
+
+#define MIN_CC_BAND_8_OFFSET                (0x20)
+#define MIN_CC_BAND_9_OFFSET                (0xBA)
+#endif /*End of (TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)*/
+
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define CC_1_START_FREQUENCY   (769.0)
 #define CC_1_END_FREQUENCY     (794.5)
 #define CC_2_START_FREQUENCY   (857.0)
@@ -102,10 +117,13 @@
 #define MIN_CC_BAND_4_OFFSET    (0x5E)
 #define MIN_CC_BAND_5_OFFSET    (0x66)
 
+#if (TAL_TYPE == AT86RF212)
 #define MAX_CC_BAND              (0x05)
+#elif (TAL_TYPE == AT86RF212B)
+#define MAX_CC_BAND              (0x06)
+#endif /*End of (TAL_TYPE == AT86RF212) */ 
 
-#endif /*End of(TAL_TYPE == AT86RF212)*/
-
+#endif /*End of(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)*/
 
 #if (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2)
 #define MAX_REG_ADDR_VALUE      (0x1ff)
@@ -128,7 +146,8 @@ typedef enum param_tag
    CC_BAND           = 0x04,
    CC_NUMBER         = 0x05,
 #endif
-#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFR2))
+#if ((TAL_TYPE==AT86RF233 || TAL_TYPE == ATMEGARFR2\
+     || TAL_TYPE == AT86RF212 || TAL_TYPE == AT86RF212B))
    CC_BAND           = 0x04,
    CC_NUMBER         = 0x05,
 #endif
@@ -155,7 +174,7 @@ extern "C" {
 #endif /* End of (TAL_TYPE != AT86RF230B) */
 
 
-#if(TAL_TYPE != AT86RF212)
+#if(TAL_TYPE != AT86RF212 && TAL_TYPE != AT86RF212B)
 
     /**
      * \brief Enable/Disable the external RF front end control
@@ -192,7 +211,9 @@ extern "C" {
     retval_t  tal_ant_div_config (bool div_ctrl, uint8_t ant_ctrl);
 #endif /* End of ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))*/
 
-#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == ATMEGARFR2))
+
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2) ||\
+      (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 
     /*
      * \brief Configures the frequency to be set in transceiver
@@ -228,9 +249,8 @@ extern "C" {
      */
     retval_t tal_calculate_frequency(uint8_t cc_band, uint8_t cc_number,float *freq);
 
-#endif /* End of (TAL_TYPE == AT86RF212)||(TAL_TYPE == ATMEGARFR2)*/
-
-#if (TAL_TYPE != AT86RF230B)
+#endif /* End of ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2) ||
+                 (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))*/
     /*
      * \brief Configures receiver sensitivity level
      *
@@ -298,6 +318,18 @@ extern "C" {
      */
 
     retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr, uint8_t *value);
+    /*
+     * \brief to configure the reduced power consumption mode
+     *
+     * \param rpc_mode_sel value to be written in the TRX_RPC bits                   
+     *   
+     * \return MAC_SUCCESS if the register is written correctly
+     *         FAILURE otherwise
+     */
+#if (TAL_TYPE == AT86RF233)
+    retval_t tal_rpc_mode_config (uint8_t rpc_mode_sel);
+#endif /* End of TAL_TYPE = AT86RF233 */
+
     /*
      * \brief This function is called to get the base RSSI value for repective radios
      *
