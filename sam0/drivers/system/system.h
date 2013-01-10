@@ -52,7 +52,12 @@ static void system_dummy_init(void)
 	return;
 }
 
+#ifdef __GNUC__
 void system_board_init ( void ) __attribute__ ((weak, alias("system_dummy_init")));
+#endif
+#ifdef __ICCARM__
+#pragma weak system_board_init=system_dummy_init
+#endif
 
 /**
  * \defgroup system_group System control
