@@ -76,7 +76,7 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
 
-	/* make the counter size variable in the dev_inst struct reflect
+	/* Make the counter size variable in the dev_inst struct reflect
 	 * the counter size in the module
 	 */
 	dev_inst->counter_size = config->counter_size;
@@ -87,7 +87,7 @@ enum status_code tc_init(
 	}
 
 	if (tc_module->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
-		/* module is used as a slave*/
+		/* Module is used as a slave*/
 		return STATUS_ERR_DENIED;
 	}
 
@@ -232,11 +232,10 @@ enum status_code tc_init(
  * \param[in] count         value to write to the count register
  *
  * \return Status of the procedure
- * \retval STATUS_OK              The procedure has gone well and the count
- *                                value has been set.
- * \retval STATUS_ERR_INVALID_ARG The counter size argument in the dev_inst
- *struct
- *                                is out of bounds.
+ * \retval STATUS_OK               The procedure has gone well and the count
+ *                                 value has been set.
+ * \retval STATUS_ERR_INVALID_ARG  The counter size argument in the dev_inst
+ *                                 struct is out of bounds.
  */
 enum status_code tc_set_count_value(
 		const struct tc_dev_inst *const dev_inst,
@@ -313,7 +312,7 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 	} /* Switch TC counter size end  */
 }
 
-/** \brief Gets the capture value
+/** \brief Get the capture value
  *
  * This procedure stores the capture value in the supplied buffer
  * pointed to by capture. This method can be used in 32, 16 and 8 bit
@@ -321,7 +320,6 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
  * the method has returned.
  *
  * \param[in]  dev_inst       Pointer to the device struct
- * \param[out] capture        Pointer to a buffer
  * \param[in]  channel_index  Index of the compare register to read from
  *
  * \return Capture value
@@ -355,12 +353,12 @@ uint32_t tc_get_capture_value(
 	return 0;
 }
 
-/** \brief Sets a compare value
+/** \brief Set a compare value
  *
  * Writes a compare value to the given compare/capture channel register
  *
  * \param[in] dev_inst       Pointer to the device struct
- * \param[in] compare        Pointer to the compare buffer
+ * \param[in] compare        Compare value
  * \param[in] channel_index  Index of the compare register to write to
  *
  * \return  Status of the procedure
@@ -414,6 +412,6 @@ enum status_code tc_set_compare_value(
 
 	default:
 		return STATUS_ERR_INVALID_ARG;
-	} /* Switch TC counter size */
-	Assert(false);  /* Geting here should be imposible */
+	}
+	Assert(false);  /* Getting here should be imposible */
 }

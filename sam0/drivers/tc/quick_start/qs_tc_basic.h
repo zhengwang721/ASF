@@ -57,7 +57,7 @@
  * - Count upward
  * - Don't perform oneshot operations
  * - No event input enabled
- * - No event Action
+ * - No event action
  * - No event generation enabled
  * - Counter starts on 0
  * - Capture compare channel 0 set to 0x7FFF
@@ -88,7 +88,7 @@
  *  - \snippet qs_tc_basic.c tc_init
  * -# Enable and start the TC module
  *  - \snippet qs_tc_basic.c tc_enable
- * -# Loop infinitly. Let the module generate pwm PWM signal.
+ * -# Loop infinitly. Let the module generate PWM signal.
  *  - \snippet qs_tc_basic.c inf_loop
  * \section tc_basic_use_case_workflow Work flow
  */
