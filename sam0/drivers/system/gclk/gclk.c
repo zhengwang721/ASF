@@ -245,7 +245,9 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
 
 	/* Check if the divider is enabled for the generator */
-	if (GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL == 0 && GCLK->GENDIV.reg <=1) {
+	if ((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 0 &&
+			GCLK->GENDIV.reg <= 1) {
+
 		GCLK_MUX_SELECT(GCLK->GENDIV.reg, GCLK_GENDIV_ID, generator);
 
 		/* Get the generator divider setting (can be fractional or binary) */
