@@ -44,16 +44,17 @@
 /** \brief Initializes the TC
  *
  * Enables the clock and initializes the TC module,
- * based on the values of the config struct
+ * based on the values of the \ref tc_conf struct
  *
  * \param dev_inst  Pointer to the device struct
  * \param tc_module Pointer to the tc module
- * \param config    Pointer to the config struct
+ * \param config    Pointer to the \ref tc_conf struct
  *
  * \return Status of the procedure.
  * \retval STATUS_OK           The function exited sucsesfuly.
  * \retval STATUS_ERR_BUSY     When a reset has been initiated.
- * \retval STATUS_INVALID_ARG  When there is invalid data in the config struct.
+ * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
+ *                             tc_conf struct.
  * \retval STATUS_ERR_DENIED   When module is enabled, and when module is
  *                             configured in 32 bit slave mode. Module will be
  *                             left unaltered in these cases.
@@ -68,9 +69,17 @@ enum status_code tc_init(
 	Assert(dev_inst);
 	Assert(config);
 
-	uint16_t ctrla_tmp = 0;
+	/* Temporary variable to hold all updates to the CTRLA
+	 * register before they are writen to it */
+	uint16_t ctrla_tmp = 0
+	/* Temporary variable to hold all updates to the CTRLBSET
+	 * register before they are writen to it */
 	uint8_t ctrlbset_tmp = 0;
+	/* Temporary variable to hold all updates to the EVCTRL
+	 * register before they are writen to it */
 	uint8_t evctrl_tmp = 0;
+	/* Temporary variable to hold all updates to the CTRLC
+	 * register before they are writen to it */
 	uint8_t ctrlc_tmp = 0;
 
 	/* Associate the given device instance with the hardware module */
@@ -87,7 +96,7 @@ enum status_code tc_init(
 	}
 
 	if (tc_module->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
-		/* Module is used as a slave*/
+		/* Module is used as a slave */
 		return STATUS_ERR_DENIED;
 	}
 
@@ -219,7 +228,6 @@ enum status_code tc_init(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
-	Assert(false); /* geting here should not be posible */
 }
 
 /** \brief Set TC module count value
@@ -269,12 +277,11 @@ enum status_code tc_set_count_value(
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	} /* Switch TC counter size end  */
-	Assert(false); /* Geting here should be imposible */
 }
 
 /** \brief Get TC module count value
  *
- * Get the count value of the TC module. It can be used while the
+ * Gets the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
  *
  * \param[in]  dev_inst      pointer to the device struct
@@ -289,7 +296,7 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 	Assert(dev_inst->hw_dev);
 	Assert(count);
 
-	/* Get a pointer to the module's hardware instance*/
+	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
@@ -332,7 +339,7 @@ uint32_t tc_get_capture_value(
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	/* Get a pointer to the module's hardware instance*/
+	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
@@ -375,7 +382,7 @@ enum status_code tc_set_compare_value(
 	Assert(dev_inst->hw_dev);
 	Assert(compare);
 
-	/* Get a pointer to the module's hardware instance*/
+	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = dev_inst->hw_dev;
 
 	/* Synchronize */
@@ -413,5 +420,4 @@ enum status_code tc_set_compare_value(
 	default:
 		return STATUS_ERR_INVALID_ARG;
 	}
-	Assert(false);  /* Getting here should be imposible */
 }
