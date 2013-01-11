@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SAM toolkit demo for SAM4S-EK2" id="sam.application.sam_toolkit_demo.sam4sd32_ek">
+	<project caption="SAM toolkit demo for SAM4S-EK2" id="sam.application.sam_toolkit_demo.sam4s_ek2">
 		<info type="description" value="summary">
 		The SAM4S-EK2 toolkit demo presents the general features of the board. It will draw the bmpfile stored in the nand flash through FatFS. Then the individual toolkit functions can be accessed through the icon widgets.
 		</info>
