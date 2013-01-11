@@ -164,9 +164,18 @@ struct aesa_dev_inst g_aesa_inst;
 struct aesa_config   g_aesa_cfg;
 
 /* State indicate */
-volatile uint32_t state = false;
+volatile bool state = false;
 
-volatile uint32_t flag = false;
+volatile bool flag = false;
+
+#define PDCA_RX_CHANNEL  0
+#define PDCA_TX_CHANNEL  1
+
+/* Timeout value for unit test */
+#define TIMEOUT_VALUE  10000
+
+/** PDCA channel options. */
+pdca_channel_config_t PDCA_RX_OPTIONS, PDCA_TX_OPTIONS;
 
 /**
  * \brief The AESA interrupt call back function.
@@ -182,12 +191,173 @@ static void aesa_callback(void)
 }
 
 /**
- * \brief Test ECB mode encryption and decryption..
+ * \brief The AESA interrupt call back function.
+ */
+static void aesa_callback_pdca(void)
+{
+	/* Read the output(this will clear the DATRDY flag) by PDCA. */
+	pdca_channel_enable(PDCA_RX_CHANNEL);
+	while (pdca_get_channel_status(PDCA_RX_CHANNEL) !=
+			PDCA_CH_TRANSFER_COMPLETED) {
+	}
+	state = true;
+}
+
+/**
+ * \brief Test ECB mode encryption and decryption with PDCA.
+ *
+ * \param test Current test case.
+ */
+static void run_ecb_mode_test_pdca(const struct test_case *test)
+{
+	uint32_t timeout;
+
+	/* Change the AESA interrupt callback function. */
+	aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
+			aesa_callback_pdca, 1);
+
+	/* Enable PDCA module clock */
+	pdca_enable(PDCA);
+
+	state = false;
+
+	/* Configure the AESA. */
+	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
+	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
+	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
+	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
+	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	aesa_set_config(&g_aesa_inst);
+
+	/* Beginning of a new message. */
+	aesa_set_new_message(&g_aesa_inst);
+
+	/* Set the cryptographic key. */
+	aesa_write_key(&g_aesa_inst, key128);
+
+	/* The initialization vector is not used by the ECB cipher mode. */
+
+	/* Write the data to be ciphered to the input data registers. */
+	/* Init PDCA channel with the pdca_options.*/
+	PDCA_TX_OPTIONS.addr = (void *)ref_plain_text; /* memory address */
+	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - USART0 TX line.*/
+	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
+	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
+	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
+	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
+	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - USART0 TX line.*/
+	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
+	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
+	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
+
+	/* Enable PDCA channel, start transfer data. */
+	pdca_channel_enable(PDCA_TX_CHANNEL);
+
+	/* Wait for the end of the encryption process. */
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
+	}
+
+	/* Disable PDCA channel. */
+	pdca_channel_disable(PDCA_RX_CHANNEL);
+	pdca_channel_disable(PDCA_TX_CHANNEL);
+
+	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
+			(ref_cipher_text_ecb[1] != output_data[1]) ||
+			(ref_cipher_text_ecb[2] != output_data[2]) ||
+			(ref_cipher_text_ecb[3] != output_data[3])) {
+		flag = false;
+	} else {
+		flag = true;
+	}
+
+	test_assert_true(test, flag == true, "ECB mode encryption not work!");
+
+	state = false;
+
+	/* Configure the AESA. */
+	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
+	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
+	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
+	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
+	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	aesa_set_config(&g_aesa_inst);
+
+	/* Beginning of a new message. */
+	aesa_set_new_message(&g_aesa_inst);
+
+	/* Set the cryptographic key. */
+	aesa_write_key(&g_aesa_inst, key128);
+
+	/* The initialization vector is not used by the ECB cipher mode. */
+
+	/* Write the data to be deciphered to the input data registers. */
+	/* Init PDCA channel with the pdca_options.*/
+	/* Init PDCA channel with the pdca_options.*/
+	PDCA_TX_OPTIONS.addr = (void *)ref_cipher_text_ecb; /* memory address */
+	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - USART0 TX line.*/
+	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
+	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
+	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
+	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
+	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - USART0 TX line.*/
+	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
+	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
+	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
+
+	/* Enable PDCA channel, start transfer data. */
+	pdca_channel_enable(PDCA_TX_CHANNEL);
+
+	/* Wait for the end of the decryption process. */
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
+	}
+
+	/* Disable PDCA channel. */
+	pdca_channel_disable(PDCA_RX_CHANNEL);
+	pdca_channel_disable(PDCA_TX_CHANNEL);
+
+	/* check the result. */
+	if ((ref_plain_text[0] != output_data[0]) ||
+			(ref_plain_text[1] != output_data[1]) ||
+			(ref_plain_text[2] != output_data[2]) ||
+			(ref_plain_text[3] != output_data[3])) {
+		flag = false;
+	} else {
+		flag = true;
+	}
+
+	test_assert_true(test, flag == true, "ECB mode decryption not work!");
+
+	/* Disable PDCA module clock */
+	pdca_disable(PDCA);
+
+	/* Change back the AESA interrupt callback function. */
+	aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
+			aesa_callback, 1);
+}
+
+/**
+ * \brief Test ECB mode encryption and decryption.
  *
  * \param test Current test case.
  */
 static void run_ecb_mode_test(const struct test_case *test)
 {
+	uint32_t timeout;
+
 	state = false;
 
 	/* Configure the AESA. */
@@ -214,7 +384,9 @@ static void run_ecb_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
@@ -254,7 +426,9 @@ static void run_ecb_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ecb[3]);
 
 	/* Wait for the end of the decryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -277,6 +451,8 @@ static void run_ecb_mode_test(const struct test_case *test)
  */
 static void run_cbc_mode_test(const struct test_case *test)
 {
+	uint32_t timeout;
+
 	state = false;
 
 	/* Configure the AESA. */
@@ -304,7 +480,9 @@ static void run_cbc_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	if ((ref_cipher_text_cbc[0] != output_data[0]) ||
@@ -345,7 +523,9 @@ static void run_cbc_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cbc[3]);
 
 	/* Wait for the end of the decryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	if ((ref_plain_text[0] != output_data[0]) ||
@@ -361,12 +541,14 @@ static void run_cbc_mode_test(const struct test_case *test)
 }
 
 /**
- * \brief Test CFB128 mode encryption and decryption..
+ * \brief Test CFB128 mode encryption and decryption.
  *
  * \param test Current test case.
  */
 static void run_cfb128_mode_test(const struct test_case *test)
 {
+	uint32_t timeout;
+
 	state = false;
 
 	/* Configure the AESA. */
@@ -394,7 +576,9 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -436,7 +620,9 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cfb128[3]);
 
 	/* Wait for the end of the decryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -453,12 +639,14 @@ static void run_cfb128_mode_test(const struct test_case *test)
 }
 
 /**
- * \brief Test OFB mode encryption and decryption..
+ * \brief Test OFB mode encryption and decryption.
  *
  * \param test Current test case.
  */
 static void run_ofb_mode_test(const struct test_case *test)
 {
+	uint32_t timeout;
+
 	state = false;
 
 	/* Configure the AESA. */
@@ -486,7 +674,9 @@ static void run_ofb_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -528,7 +718,9 @@ static void run_ofb_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ofb[3]);
 
 	/* Wait for the end of the decryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -545,12 +737,14 @@ static void run_ofb_mode_test(const struct test_case *test)
 }
 
 /**
- * \brief Test CTR mode encryption and decryption..
+ * \brief Test CTR mode encryption and decryption.
  *
  * \param test Current test case.
  */
 static void run_ctr_mode_test(const struct test_case *test)
 {
+	uint32_t timeout;
+
 	state = false;
 
 	/* Configure the AESA. */
@@ -578,7 +772,9 @@ static void run_ctr_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -620,7 +816,9 @@ static void run_ctr_mode_test(const struct test_case *test)
 	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ctr[3]);
 
 	/* Wait for the end of the decryption process. */
-	while (false == state) {
+	timeout = 0;
+	while ((false == state) && (timeout < TIMEOUT_VALUE)) {
+		timeout++;
 	}
 
 	/* check the result. */
@@ -672,6 +870,8 @@ int main(void)
 			"SAM AESA OFB mode encryption and decryption test.");
 	DEFINE_TEST_CASE(ctr_mode_test, NULL, run_ctr_mode_test, NULL,
 			"SAM AESA CTR mode encryption and decryption test.");
+	DEFINE_TEST_CASE(ecb_mode_test_pdca, NULL, run_ecb_mode_test_pdca, NULL,
+			"SAM AESA ECB mode encryption and decryption with PDCA test.");
 
 	/* Put test case addresses in an array. */
 	DEFINE_TEST_ARRAY(aesa_tests) = {
@@ -680,6 +880,7 @@ int main(void)
 		&cfb128_mode_test,
 		&ofb_mode_test,
 		&ctr_mode_test,
+		&ecb_mode_test_pdca,
 	};
 
 	/* Define the test suite. */

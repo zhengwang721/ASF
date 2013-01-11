@@ -133,9 +133,9 @@ void aesa_enable(struct aesa_dev_inst *const dev_inst)
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_0);
 	dev_inst->hw_dev->AESA_CTRL = AESA_CTRL_ENABLE;
 	genclk_config_defaults(&gencfg, AESA_GCLK_NUM);
-	genclk_enable_source(CONFIG_GENERIC_SRC);
-	genclk_config_set_source(&gencfg, CONFIG_GENERIC_SRC);
-	genclk_config_set_divider(&gencfg, CONFIG_GENERIC_DIV);
+	genclk_enable_source(CONFIG_AESA_GENERIC_SRC);
+	genclk_config_set_source(&gencfg, CONFIG_AESA_GENERIC_SRC);
+	genclk_config_set_divider(&gencfg, CONFIG_AESA_GENERIC_DIV);
 	genclk_enable(&gencfg, AESA_GCLK_NUM);
 }
 

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.aesa.example" caption="AESA Example">
 		<info type="description" value="summary">
-		Use the AESA module, encrypt and decrypt blocks of data in various mode (auto, manual, ECB, CBC).
+		Use the AESA module, encrypt and decrypt blocks of data in various mode with and without PDCA.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Cryptography"/>

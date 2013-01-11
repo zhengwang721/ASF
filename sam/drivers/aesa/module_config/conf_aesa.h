@@ -47,7 +47,7 @@
 #define CONF_AESA_H_INCLUDED
 
 /* Generic clock setting for CLK_AESA */
-#define CONFIG_GENERIC_SRC    GENCLK_SRC_CLK_CPU
-#define CONFIG_GENERIC_DIV    1
+#define CONFIG_AESA_GENERIC_SRC    GENCLK_SRC_CLK_CPU
+#define CONFIG_AESA_GENERIC_DIV    1
 
 #endif /* CONF_AESA_H_INCLUDED */
