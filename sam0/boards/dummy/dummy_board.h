@@ -1,14 +1,13 @@
-/*****************************************************************************
- *
+/**
  * \file
  *
  * \brief Dummy board header file.
  *
- * This file contains empty definitions to support board-independant applications (e.g. bootloader)
+ * This file contains empty definitions to support board-independent applications (e.g. bootloader)
  *
  * To use this board, define BOARD=DUMMY_BOARD.
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,8 +43,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
-
+ */
 
 #ifndef _DUMMY_BOARD_H_
 #define _DUMMY_BOARD_H_
