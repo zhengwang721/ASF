@@ -3,7 +3,7 @@
  *
  * \brief Configurations for the graphical window system
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
