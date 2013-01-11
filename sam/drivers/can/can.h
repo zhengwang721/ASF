@@ -142,7 +142,7 @@ void can_enable_timer_freeze(Can *p_can);
 void can_disable_tx_repeat(Can *p_can);
 void can_enable_tx_repeat(Can *p_can);
 
-#ifndef SAM4E
+#if !(SAM4E)
 void can_set_rx_sync_stage(Can *p_can, uint32_t ul_stage);
 #endif
 

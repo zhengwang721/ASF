@@ -377,7 +377,7 @@ void can_enable_tx_repeat(Can *p_can)
 	p_can->CAN_MR &= ~CAN_MR_DRPT;
 }
 
-#ifndef SAM4E
+#if !(SAM4E)
 
 /**
  * \brief Configure CAN Controller reception synchronization stage.

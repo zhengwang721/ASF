@@ -98,7 +98,7 @@
 #include "exceptions.h"
 #include "uart.h"
 #include "pmc.h"
-#ifdef SAM4E
+#if SAM4E
 #include "ioport.h"
 #else
 #include "gpio.h"
@@ -171,15 +171,15 @@ static void decode_can_msg(can_mb_conf_t *p_mailbox)
 	puts("CAN message:" STRING_EOL);
 	if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_0) {
 		puts("  Toggle LED 0" STRING_EOL);
-#ifdef SAM4E
-                ioport_toggle_pin_level(LED0_GPIO);
+#if SAM4E
+		ioport_toggle_pin_level(LED0_GPIO);
 #else
 		gpio_toggle_pin(LED0_GPIO);
 #endif
 	} else if (ul_led_Ctrl == CAN_MSG_TOGGLE_LED_1) {
 		puts("  Toggle LED 1" STRING_EOL);
-#ifdef SAM4E
-                ioport_toggle_pin_level(LED1_GPIO);
+#if SAM4E
+		ioport_toggle_pin_level(LED1_GPIO);
 #else
 		gpio_toggle_pin(LED1_GPIO);
 #endif
