@@ -101,8 +101,15 @@ extern "C" {
  *
  *
  * mux1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- * inputctrl [label="INPUTCTRL", shape=box, style=filled, fillcolor=lightblue];
  * mux2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
+ *
+ *
+ * int1v [label="INT1V", shape=none];
+ * intvcc [label="INTVCC", shape=none];
+ * arefa [label="AEFA", shape=none];
+ * arefb [label="AREFB", shape=none];
+ *
+ * mux3 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
  *
  * adc0top -> mux1;
  * dotstop -> mux1;
@@ -110,18 +117,64 @@ extern "C" {
  * sigtop -> mux1;
  *
  * adc0bot -> mux2:nw;
- * dotsbot -> mux2:cw;
- * adcnbot -> mux2:cw;
+ * dotsbot -> mux2:w;
+ * adcnbot -> mux2:w;
  * sigbot -> mux2:sw;
  *
- * inputctrl -> mux1;
- * inputctrl:se -> mux2;
+ * int1v -> mux3;
+ * intvcc -> mux3;
+ * arefa -> mux3;
+ * arefb -> mux3;
+ *
  * 
  * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ * prescaler [label="PRESCALER", shape=box];
+ *
+ * mux1 -> adc;
+ * mux2 -> adc;
+ * mux3 -> adc:sw;
+ * prescaler -> adc;
+ *
+ * postproc [label="Post processing", shape=box];
+ * result [label="RESULT", shape=box];
+ *
+ * adc:e -> postproc:w;
+ * postproc:e -> result:w;
  *
  * {rank=same; adc0top dotstop adcntop sigtop adc0bot dotsbot adcnbot sigbot }
- * {rank=same; mux1 inputctrl mux2 }
- * {rank=same; adc }
+ * {rank=same; mux1 mux2 int1v intvcc arefa arefb}
+ * {rank=same; prescaler adc}
+ *
+ * }
+ * \enddot
+ *
+ * \dot
+ * digraph overview {
+ * splines = false;
+ * rankdir=LR;
+ *
+ * mux1 [label="Positive input", shape=box];
+ * mux2 [label="Negative input", shape=box];
+ *
+ *
+ * mux3 [label="Reference", shape=box];
+ * 
+ * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ * prescaler [label="PRESCALER", shape=box, style=filled, fillcolor=lightblue];
+ *
+ * mux1 -> adc;
+ * mux2 -> adc;
+ * mux3 -> adc:sw;
+ * prescaler -> adc;
+ *
+ * postproc [label="Post processing", shape=box];
+ * result [label="RESULT", shape=box, style=filled, fillcolor=lightblue];
+ *
+ * adc:e -> postproc:w;
+ * postproc:e -> result:w;
+ *
+ * {rank=same; mux1 mux2}
+ * {rank=same; prescaler adc}
  *
  * }
  * \enddot
