@@ -64,7 +64,7 @@ extern "C" {
  * this driver can deliver.
  *
  *
- * \section module_overview TC overview
+ * \section module_overview TC Overview
  *
  * A TC is basically a counter with registers that can be used to
  * compare the counter value, or capture the counter value. If the
@@ -96,7 +96,7 @@ extern "C" {
  * device specific information see \ref differences. Capture compare
  * registers are used in capture and compare operations.
  *
- * \section functional_description Functional description
+ * \section functional_description Functional Description
  *
  * The BANANORAMA architecture can at a maximum be found with 8 timer
  * counters in 8-bit counter size, or 8 TCs in 16-bit
@@ -109,17 +109,17 @@ extern "C" {
  *
  * In compare mode the counter value is compared with one or more of
  * the compare values. When the counter value coincides with the
- * compare value, this can generate an action, such as running an
- * interrupt routine, generating an event or toggling a pin when used
- * for frequency or PWM generation.  \n
+ * compare value, this can generate an action, such as generating an
+ * event or toggling a pin when used for frequency or PWM generation. For mor see \ref capture_compare
+ * \n
  *
  * In capture mode the counter value is stored upon some configurable
  * event. This can be used to generate time stamps used in event
  * capture or it can be used for frequency capture, or pulse width
- * capture.
+ * capture. For more on this look at the \ref compare_match section.
  *
  *
- * \section timer_counter_size TC size
+ * \section timer_counter_size TC Size
  *
  * It is possible to use three different counter sizes. These are 8-,
  * 16-, and 32-bit. The size of the counter determines the maximal
@@ -187,7 +187,7 @@ extern "C" {
  *   </tr>
  * </table>
  *
- * \section clock_and_prescaler Clock selection, prescaler and reload action
+ * \section clock_and_prescaler Clock Selection, Prescaler and Reload Action
  *
  * \subsection clock_selection
  *
@@ -195,7 +195,7 @@ extern "C" {
  * signal. This has to be configured in the config struct \ref
  * tc_conf. Her the the clock for each pair of the TC modules can be
  * set. The pairing is as above. As an example it is not possible to
- * have differing clock frequencies on TC0 and TC1. However it is
+ * have differing clock frequencies on TC0 and TC1. However, it is
  * posible to have different frequencies on modules not in the same
  * pair, for instance TC0 and TC2 does not have to have the same clock
  * input. It is posible to use the internal TC prescaler to get
@@ -219,7 +219,7 @@ extern "C" {
  * consuming especially if the GCLK frequency is much lower than the
  * system clock. For this reason it can be better to use the modules
  * prescaler to reduce the clock frequency to the counter. In this way
- * synchronization should be faster. Higher frequencies will however
+ * synchronization should be faster. Higher frequencies will however,
  * make the module consume more power. The prescaler is configured
  * with the help of the config struct \ref tc_conf and the enums in
  * the \ref tc_clock_prescaler enum.\n
@@ -272,7 +272,7 @@ extern "C" {
  * counter reset on the next GCLK cycle.
  *
  *
- * \section compare_match Compare match operations
+ * \section compare_match Compare Match Operations
  *
  * In compare match operation compare capture registers are used in
  * comparison with the counter value. Upon match some action can be
@@ -350,7 +350,7 @@ extern "C" {
  * \subsubsection frequency_generation Frequency generation
  *
  * Frequency generation is in many ways the same as PWM
- * generation. However in frequency generation a toggle only occure on
+ * generation. However, in frequency generation a toggle only occure on
  * the output when a match on a capture channels occur. For frequency
  * generation the options that are available are \ref
  * TC_WAVE_GENERATION_NORMAL_FREQ mode and \ref
@@ -372,12 +372,11 @@ extern "C" {
  *
  * \subsubsection event_capture Event capture
  *
- * Event capture is in some ways the simplest use of the capture
- * functionality. This makes it posible to create time stamps for
- * specific events. Care must be taken though, to ensure that the
- * counter value is correct. What can occure, is that a overflow of
- * the counter can ocure before a capture takes place. If this hapens
- * a new capture value after this wil be incorect.
+ * Event capture is a simple use of the capture functionality. This
+ * makes it possible to create time stamps for specific events. To ensure that the counter value is correct. What
+ * can occure, is that a overflow of the counter can ocure before a
+ * capture takes place. If this hapens a new capture value after this
+ * wil be incorect.
  *
  * Before checking for a new capture \ref TC_INTERRUPT_FLAG_OVERFLOW
  * should be checked.  This should be done to make certain that any
@@ -405,7 +404,7 @@ extern "C" {
  * channels of the counter. This means that the counter module used
  * for pulse width capture can not be used for any other
  * purpose. There are two modes for pulse width capture; Pulse Width
- * Period (PWP) and Period Pulse Width(PPW), however they differ very
+ * Period (PWP) and Period Pulse Width(PPW). However, they differ very
  * little. In PWP mode capture channel 0 is used for storing the pulse
  * width, and capture channel 1 stores the period. While in PPW mode
  * the period is stored in capture channel 0, and the pulse width is
@@ -418,7 +417,7 @@ extern "C" {
  *
  * \subsection sleep_modes Operation in sleep modes
  *
- * The TC module can operate in all sleep modes. However to use the
+ * The TC module can operate in all sleep modes. However, to use the
  * capabilities the module's has to wake the microcontroller from sleep
  * modes, interrupts has to be enabled and configured for the
  * module. This driver has not been made to support interrupts. There is
@@ -429,7 +428,7 @@ extern "C" {
  * struct \ref tc_conf has to be true.
  *
  *
- * \section additional_features Additional features
+ * \section additional_features Additional Features
  *
  * \subsection set_count Set count
  *
@@ -464,7 +463,7 @@ extern "C" {
  * \image latex ../../inver_ex.eps "Inverted and non inverted output" width = \textwidth*0.8
  *
  *
- * \section differences Differences between BANANORAMA devices
+ * \section differences Differences Between BANANORAMA Devices
  *
  * \subsection SAMD20
  *
@@ -483,15 +482,15 @@ extern "C" {
  * \li \b GCLK
  * \li \b CLOCK
  *
- * \section special_cons Special considerations
+ * \section special_cons Special Considerations
  *
- * \section extra_info Extra information
+ * \section extra_info Extra Information
  * For extra information see \ref tc_extra_info.
  *
  * \section module_examples Examples
  * - \ref quickstart
  *
- * \section TC_overview API overview
+ * \section TC_overview API Overview
  * @{
  */
 
@@ -523,7 +522,7 @@ enum tc_compare_capture_channel_index {
  *
  * In match mode the user can configure what the top value should
  * be. The range will be between the minimum value which is 3, up to
- * the max value.  This mode does however limit the number of compare
+ * the max value.  This mode does however, limit the number of compare
  * capture channels available, as one is used to store the TOP value.
  */
 enum tc_wave_generation {
