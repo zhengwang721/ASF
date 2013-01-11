@@ -72,14 +72,14 @@ extern "C" {
  * stable frequency it can be used for timer operations. The TC
  * enables the user to do the following:
  *
- * \li Create PWM signals \ref pwm
- * \li Do waveform generation \ref waveform_generation
- * \li Keep time
- * \li Generate time stamps for events
- * \li Do counting
- * \li Perform input capture \ref capture_operations
- * \li Do Pulse width capture \ref pwc
- * \li Perform Frequency capture
+ * \li Generate \ref pwm
+ * \li \ref waveform_generation
+ * \li Keep track of time
+ * \li Generate timestamps for events
+ * \li Count
+ * \li Perform \ref capture_operations
+ * \li Perform \ref pwc
+ * \li Perform frequency capture
  * \n
  *
  * \image html overview.svg "Basic overview of the TC module"
@@ -87,15 +87,15 @@ extern "C" {
  * \image latex overview.eps "Basic overview of the TC module"
  * \n
  *
- * As seen in the above illustration the TC in the BANANORAMA has got
+ * As seen in the figure above, the TC in the BANANORAMA has
  * its own prescaler that can be used to divide the clock frequency
  * used in the counter. It is possible to configure the counters to
  * use either 8-, 16-, or 32-bit counter size. The amount of capture
  * compare registers available is dependent on what BANANORAMA device
- * are being used and in some cases the counter size. The maximum amount of
+ * is being used and in some cases the counter size. The maximum amount of
  * capture compare registers available in any BANANORAMA device is two
  * when running in 32-bit mode and four in 8-, and 16-bit modes. For
- * device specific information see \ref differences. Capture compare
+ * device specific information, see \ref differences. Capture compare
  * registers are used in capture and compare operations.
  *
  * \section functional_description Functional Description
@@ -105,20 +105,20 @@ extern "C" {
  * counter size, or 4 TC's using 32-bit counter size.  \n
  *
  * Independent of what counter size the timer uses, it can be set up
- * in two different modes, although to some extent one TC module can
+ * in two different modes, although to some extent, one TC module can
  * be configured in both modes. These modes are capture and compare.
  * \n
  *
- * In compare mode the counter value is compared with one or more of
+ * In compare mode, the counter value is compared with one or more of
  * the compare values. When the counter value coincides with the
  * compare value, this can generate an action, such as generating an
  * event or toggling a pin when used for frequency or PWM
- * generation. For more see \ref operations  \n
+ * generation. For more information, see \ref operations.  \n
  *
  * In capture mode the counter value is stored upon some configurable
- * event. This can be used to generate time stamps used in event
- * capture or it can be used for frequency capture, or pulse width
- * capture. For more on this look at the \ref compare_match section.
+ * event. This can be used to generate timestamps used in event
+ * capture, or it can be used for frequency capture or pulse width
+ * capture. For more on this, see the \ref compare_match section.
  *
  *
  * \section timer_counter_size TC Size
@@ -157,7 +157,7 @@ extern "C" {
  *
  * It should be noted that when using the counter with 16-, and 32-bit
  * counter size, compare capture register 0 (CC0) is used to store the
- * period value, that is when running in pwm generation match mode.  \n
+ * period value when running in PWM generation match mode.  \n
  *
  * When using 32-bit counter size, two 16-bit counters are used
  * together in cascade to realize this feature. This means that it is
@@ -193,20 +193,20 @@ extern "C" {
  *
  * \subsection clock_selection Clock Selection
  *
- * To be able to use the counter the module has to have a clock
- * signal. This has to be configured in the \ref tc_conf struct. Her
- * the the clock for each pair of the TC modules can be set. The
- * pairing is as above. As an example it is not possible to have
+ * To be able to use the counter, the module needs a clock
+ * signal. This has to be configured in the \ref tc_conf struct. Here,
+ * the clock for each pair of the TC modules can be set. The
+ * pairing is as above. As an example, it is not possible to have
  * differing clock frequencies on TC0 and TC1. However, it is possible
  * to have different frequencies on modules not in the same pair, for
  * instance TC0 and TC2 does not have to have the same GCLK input. It
  * is possible to use the internal TC prescaler to get different
  * counting frequencies between the same modules in a pair.  \n
  *
- * For more on how to set up the clocks lock at at the \ref
+ * For more on how to set up the clocks, see the \ref
  * sam0_gclk_group "GCLK documentation".
  *
- * \subsection prescaler Prescaler.
+ * \subsection prescaler Prescaler
  *
  * The module has its own prescaler. This prescaler only works to
  * prescale the clock used to provide clock pulses for the counter to
@@ -217,53 +217,53 @@ extern "C" {
  * There are two things to consider when it comes to the
  * prescaler. One is that the TC module will have to synchronize when
  * updating certain registers. This synchronization can be time
- * consuming especially if the GCLK frequency is much lower than the
- * system clock. For this reason it can be better to use the modules
+ * consuming, especially if the GCLK frequency is much lower than the
+ * system clock. For this reason it can be better to use the module's
  * prescaler to reduce the clock frequency to the counter. In this way
- * synchronization should be faster. Higher frequencies will however,
+ * synchronization should be faster. Higher frequencies will however
  * make the module consume more power. The prescaler is configured
  * with the help of the \ref tc_conf struct and the enums in
  * the \ref tc_clock_prescaler enum.  \n
  *
  * The other thing to consider with the prescaler is what reload
  * action to use. The reload action is the action performed when a
- * retrigger event occur. Examples of a retrigger event can be when the
+ * retrigger event occurs. Examples of a retrigger event can be when the
  * counter reaches the max value when counting up, or when an event
- * from the event system tels the counter to retrigger. The reload
+ * from the event system tells the counter to retrigger. The reload
  * action determines if the prescaler should be set to zero or not,
- * and when this should happen. The counter will always be reloaded to
+ * and when this should happen. The counter will always be reloaded with
  * the value it is set to start counting from. The user can choose
  * between three different reload actions:
  *
  * <table>
  *   <tr>
- *     <th> code reference</th>
+ *     <th> Code reference</th>
  *     <th> Description </th>
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_GCLK </td>
- *     <td> Reload on next GCLK cycle. No special action performed to set prescaler to zero </td>
+ *     <td> Reload on next GCLK cycle. No special action performed to set prescaler to zero. </td>
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_PRESC </td>
- *     <td> Reload on next prescaler clock. No special action performed to set prescaler to zero </td>
+ *     <td> Reload on next prescaler clock. No special action performed to set prescaler to zero. </td>
  *   </tr>
  *  <tr>
  *    <td> \ref TC_RELOAD_ACTION_RESYNC </td>
- *    <td> Reload on next GCLK cycle. Set prescaler to zero </td>
+ *    <td> Reload on next GCLK cycle. Set prescaler to zero. </td>
  *  </tr>
  * </table>
  *
- * To better understand these options it helps to have a basic
+ * To better understand these options, it helps to have a basic
  * understanding of what the prescaler does. The prescaler consists of
- * a basic counter circuitry it self. When the prescaler is used, it
+ * a basic counter circuitry itself. When the prescaler is used, it
  * counts the clock cycles of the TC module's GCLK. When the counter
  * in the prescaler reaches the chosen division factor value, the
  * output from the prescaler toggles.  \n
  *
  * In different scenarios and applications the correct reload option
  * will differ. One example is when an external trigger for a reload
- * occurs. If the TC uses the prescaler the counter in the prescaler
+ * occurs. If the TC uses the prescaler, the counter in the prescaler
  * should not have a value between zero and the division factor. The
  * TC counter and the counter in the prescaler should both start at
  * zero. When the counter is set to retrigger when it reaches the max
@@ -275,7 +275,7 @@ extern "C" {
  *
  * \section compare_match Compare Match Operations
  *
- * In compare match operation compare capture registers are used in
+ * In compare match operation, compare capture registers are used in
  * comparison with the counter value. Upon match some action can be
  * taken.
  *
@@ -285,13 +285,13 @@ extern "C" {
  * operations is used, is a timer. In timer operations one or more
  * values in the module's compare channels are used to specify the
  * time when an action should be taken by the microcontroller. This
- * can be an interrupt service routine. Or it can be set as an event
+ * can be an interrupt service routine, or it can be set as an event
  * generator in the event system.
  *
  * \subsection waveform_generation Waveform Generation
  *
- * Waveform generation enable the TC module to make square waves or if
- * combined with a passive low-pass filter, analog wave forms.
+ * Waveform generation enables the TC module to make square waves, or if
+ * combined with a passive low-pass filter, analog waveforms.
  *
  * \subsubsection pwm Pulse Width Modulation (PWM)
  *
@@ -311,8 +311,8 @@ extern "C" {
  * struct or by using the tc_set_compare_value() function. This value
  * gives the pulse width together with the top value. In addition it
  * may be necessary to configure the top value using the
- * tc_set_top_value() function, whether this is necessary or not
- * depends on if the PWM or frequensy modes; normal or match is in
+ * tc_set_top_value() function. Whether this is necessary or not
+ * depends on if the PWM or frequency modes; normal or match is in
  * use.  \n
  *
  * The functions tc_set_compare_value() and tc_set_top_value() can be
@@ -322,10 +322,10 @@ extern "C" {
  * \note The tc_set_top_value() function is only meant to be used
  * when using wave generation in match mode, and not in normal mode.  \n
  *
- * The below figure illustrates operations and different states of
+ * The figure below illustrates operations and different states of
  * the counter and its output when running the counter in PWM normal
- * mode. As can be seen the TOP value is unchanged and is set to
- * max. the compare match value is changed to illustrate different
+ * mode. As can be seen, the TOP value is unchanged and is set to
+ * max. The compare match value is changed to illustrate different
  * outcomes of this. The PWM output is here set to be ordinary output
  * as it is not inverted here.
  *
@@ -334,13 +334,13 @@ extern "C" {
  * \image latex pwm_normal_ex.eps "Example of PWM in normal mode, and different counter operations"
  * \n
  *
- * In the figure below the counter is set to generate PWM in match
+ * In the figure below, the counter is set to generate PWM in match
  * mode. The PWM output is inverted. Inversion of the wave generation
  * output can be done by specifying which channels should be inverted
- * by specifying this in the \ref tc_conf struct, see \ref
- * tc_waveform_invert_output. In this example the counter value is
- * changed once, but the compare match value is here kept
- * unchanged. As can be seen it is possible to change the TOP value
+ * in the \ref tc_conf struct, see \ref
+ * tc_waveform_invert_output. In this example, the counter value is
+ * changed once, but the compare match value is kept
+ * unchanged. As can be seen, it is possible to change the TOP value
  * when running in PWM match mode. \n
  *
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
@@ -348,45 +348,45 @@ extern "C" {
  * \image latex pwm_match_ex.eps "Example of PWM in match mode, and different counter operations"
  * \n
  *
- * \subsubsection frequency_generation Frequency generation
+ * \subsubsection frequency_generation Frequency Generation
  *
  * Frequency generation is in many ways the same as PWM
- * generation. However, in frequency generation a toggle only occur on
- * the output when a match on a capture channels occur. For frequency
- * generation the options that are available are \ref
+ * generation. However, in frequency generation a toggle only occurs on
+ * the output when a match on a capture channels occurs. For frequency
+ * generation, the options that are available are \ref
  * TC_WAVE_GENERATION_NORMAL_FREQ mode and \ref
- * TC_WAVE_GENERATION_MATCH_FREQ these configuration options can be
+ * TC_WAVE_GENERATION_MATCH_FREQ. These configuration options can be
  * found in the \ref tc_wave_generation enum.  \n
  *
- * As in PWM generation it is necessary to set the period and pulse width
- * values to be used. Either using the \ref tc_conf struct before
+ * As in PWM generation, it is necessary to set the period and pulse width
+ * values to be used. Either by using the \ref tc_conf struct before
  * initialization or by using the functions tc_set_compare_value() and
- * tc_set_top_value(). As with PWM generation the top value can not be
+ * tc_set_top_value(). As with PWM generation, the top value can not be
  * set in any other mode than match, not in normal mode.
  *
- * \subsection capture_operations Capture operations
+ * \subsection capture_operations Capture Operations
  *
- * In capture operations any event from the event system or a pin
- * change, can trigger a capture of the counter value. This captured
- * counter value can be used as a time stamp for the event, or it can
+ * In capture operations, any event from the event system or a pin
+ * change can trigger a capture of the counter value. This captured
+ * counter value can be used as a timestamp for the event, or it can
  * be used in frequency and pulse width capture.
  *
- * \subsubsection event_capture Event capture
+ * \subsubsection event_capture Event Capture
  *
  * Event capture is a simple use of the capture functionality. This
- * makes it possible to create time stamps for specific events. The
+ * makes it possible to create timestamps for specific events. The
  * user should be aware that when performing any capture operation
  * there is a risk that the counter reaches its TOP value when
- * counting up or the bottom value (zero) when counting down, before
+ * counting up, or the bottom value (zero) when counting down, before
  * the capture event takes place. This eventuality must be checked for
  * and handled should it happen.
  *
- * Before checking for a new capture \ref TC_INTERRUPT_FLAG_OVERFLOW
+ * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
  * should be checked.  This should be done to make certain that any
  * new capture value is valid. If an overflow has occurred this error
- * has to be handled. If no error has occurred continue checking if a
- * new capture has happened. If this is the case get the value and
- * clear the interrupt flag. In the below diagram a proposed program
+ * has to be handled. If no error has occurred, continue checking if a
+ * new capture has happened. If this is the case, get the value and
+ * clear the interrupt flag. In the diagram below a proposed program
  * flow is described.
  *
  * \image html ../../state_dia_capture.svg "Diagram of capture operation"
@@ -396,11 +396,11 @@ extern "C" {
  *
  *
  * How to handle the buffer overflow error is up to the user. But it
- * should be mentioned that it may be necessary to both clear the
+ * should be mentioned that it may be necessary to clear both the
  * capture overflow flag and the capture flag. This should be done as
  * it may have captured an erroneous capture value at this point.
  *
- * \subsubsection pwc Pulse width capture
+ * \subsubsection pwc Pulse Width Capture
  *
  * Pulse width capture mode makes it possible to measure the pulse
  * width and period of PWM signals. This mode uses both capture
@@ -408,32 +408,32 @@ extern "C" {
  * for pulse width capture can not be used for any other
  * purpose. There are two modes for pulse width capture; Pulse Width
  * Period (PWP) and Period Pulse Width(PPW). However, they differ very
- * little. In PWP mode capture channel 0 is used for storing the pulse
- * width, and capture channel 1 stores the period. While in PPW mode
- * the period is stored in capture channel 0, and the pulse width is
+ * little. In PWP mode, capture channel 0 is used for storing the pulse
+ * width and capture channel 1 stores the period. While in PPW mode,
+ * the period is stored in capture channel 0 and the pulse width is
  * stored in capture channel 1. \n
  *
- * As in the above example it is necessary have to poll on interrupts
- * to see if a new capture has happened and check that an capture
+ * As in the above example it is necessary to poll on interrupt flags
+ * to see if a new capture has happened and check that a capture
  * overflow error has not occurred.
  *
  *
- * \subsection sleep_modes Operation in sleep modes
+ * \subsection sleep_modes Operation in Sleep Modes
  *
  * The TC module can operate in all sleep modes. Note that to be able
- * to run in standby the \ref run_in_standby value in the config
+ * to run in standby, the \ref run_in_standby value in the config
  * struct \ref tc_conf has to be true.
  *
  *
  * \section additional_features Additional Features
  *
- * \subsection set_count Set count
+ * \subsection set_count Set Count
  *
  * It is possible to alter the value of the counter while the counter
  * is running by writing a new value to the count register. This can
  * be done using the tc_set_count_value() function.
  *
- * \subsection get_count Get count
+ * \subsection get_count Get Count
  *
  * It is possible to read out the counter value at any time while the
  * counter is running. To do this use the get tc_get_count_value()
@@ -445,16 +445,16 @@ extern "C" {
  * configuring this option in the \ref tc_conf struct. Oneshot action
  * performs one cycle of counting and then stops the counter. The
  * counter will start counting when enabled and then stop. The counter
- * can be restarted by using the start function
- * tc_start_counter(). When restarted it will again perform a oneshot
+ * can be restarted by using the start function 
+ * tc_start_counter(). When restarted, it will again perform a oneshot
  * operation, unless the tc_init() function has been called to disable
  * oneshot.
  *
- * \subsection output_inversion Wave generation output inversion
+ * \subsection output_inversion Wave Generation Output Inversion
  *
  * The output of the wave generation can be inverted by selecting this
  * option in the \ref tc_conf struct. The figure below
- * illustrates how this effects the output.
+ * illustrates how this affects the output.
  *
  * \image html inver_ex.svg "Inverted and non inverted output"
  *
@@ -512,7 +512,7 @@ enum tc_compare_capture_channel_index {
  *
  * These values are used to select what mode to run the wave
  * generation in. The user can choose to use frequency generation or
- * pulse width modulation (PWM) In these modes it will either run in
+ * pulse width modulation (PWM). In these modes it will either run in
  * normal mode or in match mode.  In normal mode the TOP value is set
  * to the maximum allowable value, depending on what counter size is
  * used, max is either 0xFF, 0xFFFF or 0xFFFFFFFF. In normal mode no
@@ -520,7 +520,7 @@ enum tc_compare_capture_channel_index {
  *
  * In match mode the user can configure what the top value should
  * be. The range will be between the minimum value which is 3, up to
- * the max value.  This mode does however, limit the number of compare
+ * the max value.  This mode does however limit the number of compare
  * capture channels available, as one is used to store the TOP value.
  */
 enum tc_wave_generation {
@@ -551,7 +551,7 @@ enum tc_wave_generation {
  * This specifies the maximum value it is possible to count to. What
  * counter size used, will impose limitations in other areas.  The
  * 32-bit counter uses two 16-bit counters in cascade to realize the
- * 32-bit counter. When using 16-, and 32-bit counter size there is no
+ * 32-bit counter. When using 16- and 32-bit counter size there is no
  * dedicated period register. In cases when it is necessary to change
  * the top value, match mode must be used (see
  * \ref tc_wave_generation). One of the compare registers are used for the
@@ -720,9 +720,9 @@ enum tc_interrupt_flag {
 	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
 	/** Interrupt flag for channel 1 */
 	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
-	/** Interrupt flag for generating interupts when
+	/** Interrupt flag for generating interrupts when
 	 *  synchronization is done. This is flag is meant for the
-	 *  asynch driver. */
+	 *  async driver. */
 	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
 
 	/** This flag is used to test for capture overflow in capture
@@ -807,13 +807,13 @@ struct tc_conf {
 	/** Specifies which channel (s) to enable channel capture
 	 *  operation on. Since all capture channels use the same
 	 *  event line, only one capture channel must be enabled at a
-	 *  time, when used for event capture. When pwm capture is
+	 *  time, when used for event capture. When PWM capture is
 	 *  used this is not the case as it does not use the event
 	 *  line.
 	 */
 	uint8_t capture_enable;
 
-	/**  When true oneshot will stop the TC on next HW/SW retrigger
+	/**  When true, oneshot will stop the TC on next HW/SW retrigger
 	 *  event or overflow/underflow
 	 */
 	bool oneshot;
@@ -1024,12 +1024,12 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
  * reset. The module might not have completed the reset upon exiting
  * this function.
  *
- * \note When reseting a 32-bit counter send in only the master
+ * \note When resetting a 32-bit counter send in only the master
  * counter's \ref dev_inst struct, not the slave.
  *
  * \param[in] dev_inst  Pointer to the device struct
  *
- * \return status of the procedure
+ * \return Status of the procedure
  * \retval STATUS_OK                   The function exited normally.
  * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
  *                                     modules configured as 32-bit slaves.
@@ -1245,7 +1245,7 @@ static enum status_code tc_set_top_value(
  * is set.
  *
  * \param[in] dev_inst       Pointer to the device instance.
- * \param[in] interrupt_flag  Enum that tels what interrupt flag to check
+ * \param[in] interrupt_flag  Enum that tells what interrupt flag to check
  *
  * \return Bool value telling if the flag is set
  * \retval True   If the flag is set
