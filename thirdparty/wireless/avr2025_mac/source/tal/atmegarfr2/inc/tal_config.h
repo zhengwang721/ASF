@@ -47,7 +47,6 @@
 
 /* === TYPES =============================================================== */
 
-
 #ifdef ENABLE_QUEUE_CAPACITY
 #define TAL_INCOMING_FRAME_QUEUE_CAPACITY   (255)
 #endif  /* ENABLE_QUEUE_CAPACITY */

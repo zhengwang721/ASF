@@ -157,6 +157,7 @@
 //! @}
 
 #include "interrupt.h"
+#include "progmem.h"
 
 #if (defined __GNUC__)
   #define SHORTENUM                           __attribute__ ((packed))
@@ -301,6 +302,16 @@
   #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
 #elif (defined __ICCAVR__)
   #define nop() __no_operation()
+#endif
+
+#if (defined __GNUC__)
+#define FORCE_INLINE(type, name, ...) \
+    static inline type name(__VA_ARGS__) __attribute__((always_inline)); \
+    static inline type name(__VA_ARGS__)
+#elif (defined __ICCAVR__)
+#define FORCE_INLINE(type, name, ...) \
+    PRAGMA(inline=forced) \
+    static inline type name(__VA_ARGS__)
 #endif
 
 #endif  // UTILS_COMPILER_H

@@ -138,7 +138,7 @@ extern volatile bool tal_awake_end_flag;
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 extern uint32_t tal_rx_timestamp;
-#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)*/
+#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
 #ifdef BEACON_SUPPORT
 extern csma_state_t tal_csma_state;
@@ -152,6 +152,13 @@ extern bool tal_beacon_transmission;
 #endif /* ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) */
 
 /* === MACROS ============================================================== */
+
+#ifndef _BV
+/**
+ * Bit value -- compute the bitmask for a bit position
+ */
+#define _BV(x) (1 << (x))
+#endif
 
 /**
  * Conversion of number of PSDU octets to duration in microseconds
@@ -270,5 +277,152 @@ void calibration_timer_handler_cb(void *parameter);
  */
 void ed_scan_done(void);
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
+
+
+/**
+ * \name Transceiver Access Macros
+ *  \sa \b Transceiver \b macros section of group_pal_gpio
+ * @{
+ */
+
+/**
+ * \brief Writes data into a transceiver register
+ *
+ * This macro writes a value into transceiver register.
+ *
+ * \param addr Address of the trx register
+ * \param data Data to be written to trx register
+ * \ingroup group_pal_trx
+ */
+#define pal_trx_reg_write(addr, data) \
+    (*(volatile uint8_t *)(addr)) = (data)
+
+/**
+ * \brief Reads current value from a transceiver register
+ *
+ * This macro reads the current value from a transceiver register.
+ *
+ * \param addr Specifies the address of the trx register
+ * from which the data shall be read
+ * \ingroup group_pal_trx
+ * \return value of the register read
+ */
+#define pal_trx_reg_read(addr) \
+    (*(volatile uint8_t *)(addr))
+
+/**
+ * \brief Reads frame buffer of the transceiver
+ *
+ * This macro reads the frame buffer of the transceiver.
+ *
+ * \param[out] data Pointer to the location to store frame
+ * \param[in] length Number of bytes to be read from the frame
+ * buffer.
+  * \ingroup group_pal_trx
+ */
+#define pal_trx_frame_read(data, length) \
+    memcpy((data), (void *)&TRXFBST, (length))
+
+/**
+ * \brief Writes data into frame buffer of the transceiver
+ *
+ * This macro writes data into the frame buffer of the transceiver
+ *
+ * \param[in] data Pointer to data to be written into frame buffer
+ * \param[in] length Number of bytes to be written into frame buffer
+  * \ingroup group_pal_trx
+ */
+#define pal_trx_frame_write(data, length) \
+    memcpy((void *)&TRXFBST, (data), (length))
+
+#ifndef DOXYGEN
+#define _pal_trx_bit_read(addr, mask, pos) \
+    (((*(volatile uint8_t *)(addr)) & (mask)) >> (pos))
+#endif
+/**
+ * \brief Subregister read
+ *
+ * \param   arg Subregister
+ *
+ * \return  Value of the read subregister
+  * \ingroup group_pal_trx
+ */
+#define pal_trx_bit_read(arg) \
+    _pal_trx_bit_read(arg)
+
+#ifndef DOXYGEN
+#define _pal_trx_bit_write(addr, mask, pos, val) do {   \
+        (*(volatile uint8_t *)(addr)) =                 \
+                                                        ((*(volatile uint8_t *)(addr)) & ~(mask)) | \
+                                                        (((val) << (pos)) & (mask));                \
+    } while (0)
+#endif
+
+
+/**
+ * \brief Subregister write
+ *
+ * \param[in]   arg1  Subregister
+ * \param[out]  val  Data, which is muxed into the register
+  * \ingroup group_pal_trx
+ */
+#define pal_trx_bit_write(arg1, val) \
+    _pal_trx_bit_write(arg1, val)
+
+//! @}
+
+/**
+ * \name Transceiver Access  Macros
+ * @{
+ */
+/*
+ * Set TRX GPIO pins.
+ */
+#define PAL_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set Reset Bit. */
+#define PAL_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear Reset Bit. */
+#define PAL_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set Sleep/TR Bit. */
+#define PAL_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear Sleep/TR Bit. */
+
+//! @}
+
+/**
+ * \name Transceiver IRQ Macros
+ * @{
+ */
+/** Clears TRX TX_END interrupt. */
+#define CLEAR_TRX_IRQ_TX_END()          (IRQ_STATUS = _BV(TX_END))
+
+/** Clear RX TIME STAMP interrupt. */
+#define CLEAR_TRX_IRQ_TSTAMP()          (IRQ_STATUS = _BV(RX_START))
+
+/** Clear TRX RX_END interrupt. */
+#define CLEAR_TRX_IRQ_RX_END()          (IRQ_STATUS = _BV(RX_END))
+
+/** Clear TRX CCA_ED_DONE interrupt. */
+#define CLEAR_TRX_IRQ_CCA_ED()          (IRQ_STATUS = _BV(CCA_ED_DONE_EN))
+
+/** Clear AMI interrupt. */
+#define CLEAR_TRX_IRQ_AMI()             (IRQ_STATUS = _BV(AMI))
+
+/** Clear TRX BAT LOW interrupt. */
+#define CLEAR_TRX_IRQ_BATMON()          (BATMON = _BV(BAT_LOW))
+
+/** Clear TRX AWAKE interrupt. */
+#define CLEAR_TRX_IRQ_AWAKE()           (IRQ_STATUS = _BV(AWAKE))
+
+/** Clear TRX PLL LOCK interrupt. */
+#define CLEAR_TRX_IRQ_PLL_LOCK()        (IRQ_STATUS = _BV(PLL_LOCK))
+
+/** Clear TRX PLL UNLOCK interrupt. */
+#define CLEAR_TRX_IRQ_PLL_UNLOCK()      (IRQ_STATUS = _BV(PLL_UNLOCK))
+
+/*
+ * Note: TRX AES RDY is cleared on read/write of
+ * AES_STATE, which has to be done in the AES
+ * application.
+ */
+//! @}
+
+
 
 #endif /* TAL_INTERNAL_H */

@@ -33,6 +33,8 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="megarf"/>
+            <device-support value="sam"/>
 		</module>
 	</select-by-config>
 
@@ -47,6 +49,8 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="megarf"/>
+            <device-support value="sam"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.api#no" caption="MAC Api support disabled">
 			<info type="description" value="summary">
@@ -55,6 +59,8 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="megarf"/>
+            <device-support value="sam"/>
 		</module>
 	</select-by-config>
 
@@ -96,6 +102,8 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 	
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.mac.inc" caption="COMPONENT - MAC">
@@ -111,5 +119,7 @@
 		<build type="doxygen-entry-point" value="mac_group"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 </asf>

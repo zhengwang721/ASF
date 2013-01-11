@@ -11,6 +11,8 @@
 			<build type="include-path"  value="uart/"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="sam"/>
+            <device-support value="megarf"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.addons.sio2host#usb"     caption="USB support Enabled">
 			<info type="description" value="summary">
@@ -23,6 +25,8 @@
 			<build type="include-path"  value="usb/"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="sam"/>
+            <device-support value="megarf"/>
 		</module>
 	</select-by-config>
 	<module type="component" id="thirdparty.wireless.avr2025_mac.addons.sio2host" caption="COMPONENT - SIO2HOST">
@@ -37,5 +41,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<device-support value="megarf"/>
 	</module>
 </asf>

@@ -315,7 +315,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
     if (tal_state == TAL_ED_RUNNING)
     {
-        ASSERT("TAL is busy" == 0);
+        Assert("TAL is busy" == 0);
         return TAL_BUSY;
     }
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */

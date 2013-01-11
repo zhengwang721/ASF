@@ -201,7 +201,7 @@ void tx_done_handling(void)
             break;
 
         default:
-            ASSERT("Unexpected tal_tx_state" == 0);
+            Assert("Unexpected tal_tx_state" == 0);
             status = FAILURE;
             break;
     }
@@ -377,7 +377,7 @@ void handle_tx_end_irq(void)
 
                 case TRAC_INVALID:  /* Handle this in the same way as default. */
                 default:
-                    ASSERT("not handled trac status" == 0);
+                    Assert("not handled trac status" == 0);
                     tal_csma_state = CSMA_ACCESS_FAILURE;
                     break;
             }
@@ -422,7 +422,7 @@ void tal_tx_beacon(frame_info_t *tx_frame)
     /* Avoid that the beacon is transmitted while other transmision is on-going. */
     if (tal_state == TAL_TX_AUTO)
     {
-        ASSERT("trying to transmit beacon while ongoing transmission" == 0);
+        Assert("trying to transmit beacon while ongoing transmission" == 0);
         return;
     }
 
@@ -433,7 +433,7 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 #if (DEBUG > 1)
         if (trx_status != PLL_ON)
         {
-            ASSERT("PLL_ON failed for beacon transmission" == 0);
+            Assert("PLL_ON failed for beacon transmission" == 0);
         }
 #endif
     }

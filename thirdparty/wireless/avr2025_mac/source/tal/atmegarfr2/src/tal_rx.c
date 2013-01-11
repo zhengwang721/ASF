@@ -84,7 +84,7 @@ void handle_received_frame_irq(void)
 
     if (tal_rx_buffer == NULL)
     {
-        ASSERT("no tal_rx_buffer available" == 0);
+        Assert("no tal_rx_buffer available" == 0);
         /*
          * Although the buffer protection mode is enabled and the receiver has
          * been switched to PLL_ON, the next incoming frame was faster.

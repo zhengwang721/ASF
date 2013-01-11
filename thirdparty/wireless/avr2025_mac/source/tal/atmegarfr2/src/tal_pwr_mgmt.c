@@ -155,7 +155,7 @@ retval_t tal_trx_wakeup(void)
 
         if (timer_status != MAC_SUCCESS)
         {
-            ASSERT("PLL calibration timer start problem" == 0);
+            Assert("PLL calibration timer start problem" == 0);
         }
     }
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
