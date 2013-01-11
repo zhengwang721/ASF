@@ -44,7 +44,20 @@
 #define SYSTEM_H_INCLUDED
 
 #include <compiler.h>
+#include "clock.h"
 
+/* Weak init functions used in system_init */
+static void system_dummy_init(void)
+{
+	return;
+}
+
+#ifdef __GNUC__
+void system_board_init ( void ) __attribute__ ((weak, alias("system_dummy_init")));
+#endif
+#ifdef __ICCARM__
+#pragma weak system_board_init=system_dummy_init
+#endif
 
 /**
  * \defgroup system_group System control
@@ -433,6 +446,9 @@ static inline enum system_reset_cause system_get_reset_cause(void)
 /* @} */
 
 void system_bod_init(void);
+
+void system_init(void);
+
 
 #endif /* SYSTEM_H_INCLUDED */
 
