@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK Board Definition.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -439,8 +439,6 @@
 /** USB D+ pin */
 #define PIN_USB_DP      {PIO_PB11, }
 
-
-
 /* KSZ8051MNL relate PIN definition */
 #define PIN_KSZ8051MNL_RXC_IDX				PIO_PD14_IDX
 #define PIN_KSZ8051MNL_RXC_FLAGS			(IOPORT_MODE_MUX_A)
@@ -477,22 +475,6 @@
 #define PIN_KSZ8051MNL_MDIO_IDX				PIO_PD9_IDX
 #define PIN_KSZ8051MNL_MDIO_FLAGS		(IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_INTRP_IDX			PIO_PD28_IDX
-
-
-
-
-
-
-//GMAC 
-#define BOARD_EMAC_MODE_PINS     {0x300, PIOD, ID_PIOD, PIO_PERIPH_A, PIO_DEFAULT}
-/// The PIN list of PIO for EMAC
-#define BOARD_EMAC_RUN_PINS          {0x1FFFF, PIOD, ID_PIOD, PIO_PERIPH_A, PIO_DEFAULT},\
-									{(1<<28),PIOD, ID_PIOD, PIO_INPUT,    PIO_PULLUP}
-
-
-
-
-#define BOARD_GMAC_PHY_ADDR				0
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -592,6 +574,8 @@
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
+/* GMAC HW configurations */
 #define BOARD_GMAC_MODE_MII 0
+#define BOARD_GMAC_PHY_ADDR 0
 
 #endif  /* _SAM4E_EK_H_ */
