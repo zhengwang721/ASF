@@ -41,9 +41,54 @@
  *
  */
 
+/**
+ * \mainpage
+ *
+ * \section intro Introduction
+ * This simple example shows how to use the \ref sleepmgr_group.
+ *
+ * \section files Main files:
+ * - sleepmgr_example_megarf.c: Sleep manager example application
+ *
+ * \section apiinfo Sleep manager API
+ * The sleep manager API can be found \ref sleepmgr_group "here".
+ *
+ * \section deviceinfo Device Info
+ * The example has been tested on the STK600 kit.
+ *
+ * \section exampledescription Description of the example
+ * This example puts the device to sleep in sleep modes with increasing "depth"
+ * and utilizes the external interrupt to wake it up again.
+ *
+ * For measuring the current consumption in various sleep mode, an ammeter can
+ * be connected on JS2 of ATmega128RFA1-EK1 kit.
+ *
+ * The device will remain in ACTIVE mode for approximately 3 seconds after wake-
+ * up, before it goes to sleep in the next mode.
+ *
+ * The Yellow Led in ATmega128RFA1-EK1 is On when the device is in active mode
+ * and is in off state during sleep. Pressing the pushbutton on the kit will
+ * wake the device up and goes to next sleep mode in the following order.
+ *		Idle mode.
+ *		Power Down mode.
+ *	    Power Save mode.
+ *		Standby mode.
+ *      Extended Standby mode.
+ *
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for AVR.
+ * Other compilers may or may not work.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
+ */
+
 #include <asf.h>
 #include "conf_example.h"
 
+/** \brief Main function.
+ */
 int main(void)
 {
 	/* Set the sleep mode to initially lock. */
@@ -106,49 +151,6 @@ ISR(BUTTON_vect)
 	delay_ms(10);
 	do {
 	} while (!ioport_get_pin_level(BUTTON_PIN));
-    /* Clear external interrupt flag */
-	external_interrupt_flag_clear(BUTTON_NUMBER);
 }
 
-/**
- * \mainpage
- *
- * \section intro Introduction
- * This simple example shows how to use the \ref sleepmgr_group.
- *
- * \section files Main files:
- * - sleepmgr_example_megarf.c: Sleep manager example application
- *
- * \section apiinfo Sleep manager API
- * The sleep manager API can be found \ref sleepmgr_group "here".
- *
- * \section deviceinfo Device Info
- * The example has been tested on the STK600 kit.
- *
- * \section exampledescription Description of the example
- * This example puts the device to sleep in sleep modes with increasing "depth"
- * and utilizes the external interrupt to wake it up again.
- *
- * For measuring the current consumption in various sleep mode, an ammeter can
- * be connected on JS2 of ATmega128RFA1-EK1 kit.
- *
- * The device will remain in ACTIVE mode for approximately 3 seconds after wake-
- * up, before it goes to sleep in the next mode.
- *
- * The Yellow Led in ATmega128RFA1-EK1 is On when the device is in active mode
- * and is in off state during sleep. Pressing the pushbutton on the kit will
- * wake the device up and goes to next sleep mode in the following order.
- *		Idle mode.
- *		Power Down mode.
- *	    Power Save mode.
- *		Standby mode.
- *      Extended Standby mode.
- *
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
- * Other compilers may or may not work.
- *
- * \section contactinfo Contact Information
- * For further information, visit
- * <A href="http://www.atmel.com/">Atmel</A>.\n
- */
+
