@@ -470,7 +470,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                 param_val = msg->payload.set_parm_req_data.param_value;
 
 #if(TAL_TYPE == AT86RF233)
-                set_frequency(CC_BAND_0, CC_NUMBER_0);
+                tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
                 /* set the channel on receptor with the received value */
                 tal_pib_set(phyCurrentChannel, (pib_value_t *)&param_val);
@@ -489,8 +489,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                 float frequency;
                 param_val = msg->payload.set_parm_req_data.param_value;
                 /* Set the transceiver ISM frequency */
-                set_frequency(CC_BAND_8, param_val);
-                frequency = calculate_frequency(CC_BAND_8, param_val);
+                tal_set_frequency_regs(CC_BAND_8, param_val);
+                 tal_calculate_frequency(CC_BAND_8, param_val,&frequency);
                 printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
             }
             break;
@@ -500,8 +500,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                 float frequency;
                 param_val = msg->payload.set_parm_req_data.param_value;
                 /* Set the transceiver ISM frequency */
-                set_frequency(CC_BAND_9, param_val);
-                frequency = calculate_frequency(CC_BAND_9, param_val);
+                tal_set_frequency_regs(CC_BAND_9, param_val);
+                 tal_calculate_frequency(CC_BAND_9, param_val,&frequency);
                 printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
             }
             break;
@@ -542,13 +542,14 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                 /* If RPC enabled, disable RPC to change the TX power value refer sec 9.2.4 */
 #if(TAL_TYPE == AT86RF233)
                 /* Store currents RPC settings */
-                previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
-                pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+                tal_trx_reg_read(RG_TRX_RPC ,&previous_RPC_value);
+               
+                tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
 #endif
                 tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
 #if(TAL_TYPE == AT86RF233)
                 /* Restore RPC settings. */
-                pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+                tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
 #endif
 
 
@@ -600,15 +601,16 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
                     /* If RPC enabled, disable RPC to change the TX power value refer sec 9.2.4 */
 #if(TAL_TYPE == AT86RF233)
                     /* Store currents RPC settings */
-                    previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
-                    pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+                    tal_trx_reg_read(RG_TRX_RPC ,&previous_RPC_value);
+               
+                tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
 #endif
                     tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
                     tal_set_tx_pwr(REGISTER_VALUE,param_val);
 
 #if(TAL_TYPE == AT86RF233)
                     /* Restore RPC settings. */
-                    pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+                    tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
 #endif
 
 #if (TAL_TYPE != AT86RF233)
@@ -832,10 +834,8 @@ static void set_default_configuration_peer_node(void)
 #if(ANTENNA_DIVERSITY == 1)
 #if(TAL_TYPE == AT86RF233)
     /* Disable antenna diversity by default */
-    /* Enable A1/X2 */
-    pal_trx_bit_write(SR_ANT_CTRL, ANT_CTRL_1);
-    pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
-    pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
+    tal_ant_div_config(ANT_DIVERSITY_DISABLE,ANT_CTRL_1); /* Enable A1/X2 */
+   
 #else
     /* Enable Antenna Diversity*/
       tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);

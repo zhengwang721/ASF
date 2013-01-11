@@ -105,9 +105,7 @@ void init_state_init(void *arg)
 
 #if (TAL_TYPE == AT86RF233) && (ANTENNA_DIVERSITY == 1)
     /* In order to demonstrate RPC the antenna diversity is disabled. */
-    pal_trx_bit_write(SR_ANT_CTRL, ANT_CTRL_1); /* Enable A1/X2 */
-    pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
-    pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
+    tal_ant_div_config(ANT_DIVERSITY_DISBLE,ANT_CTRL_1);/* Enable A1/X2 */
 #endif
 
     /* Keep compiler happy */

@@ -297,28 +297,7 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
 
 //! \}
 
-/**
- * \addtogroup group_per_mode_utils
- * \{
- */
 
-#if (TAL_TYPE == AT86RF233)
-/**
- * \brief to set the frequency based on CC_BAND and CC_NUMBER Registers
- *
- * \param cc_band     CC_BAND Register value used to set the ISM frequency.
- * \param cc_number   CC_BAND Register value used to set the ISM frequency.
- */
-void set_frequency(uint8_t cc_band, uint8_t cc_number);
-
-/**
- * \brief To Calculate the frequency based on CC_BAND and CC_NUMBER Registers
- *
- * \param cc_band     CC_BAND Register value used to calculate the ISM frequency.
- * \param cc_number   CC_BAND Register value used to calculate the ISM frequency.
- */
-float calculate_frequency(uint8_t cc_band, uint8_t cc_number);
-#endif
 
 /*
  * \brief This function is called rest the application equivalent to soft reset

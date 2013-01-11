@@ -107,7 +107,7 @@ typedef struct
 #else
 #define MAX_REG_ADDRESS                         (0x3f)
 #define MIN_REG_ADDRESS                         (0x00)
-#endif /* End of #if (PAL_GENERIC_TYPE == MEGA_RF) */
+#endif /* End of #if (TAL_TYPE == ATMEGARFR2) */
 
 #define RX_DESENSITIZE_LEVEL                    (0x08)
 #define NO_RX_DESENSITIZE_LEVEL                 (0x00)
@@ -804,7 +804,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 
 #if(TAL_TYPE == AT86RF233)
                 /* Set the CC_BAND register value to 0 */
-                set_frequency(CC_BAND_0, CC_NUMBER_0);
+                tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
                 /* As the transceiver set to work in compliant IEEE channels, set
                  * the ISM frequency as INVALID
                  */
@@ -833,8 +833,8 @@ static void set_parameter_on_transmitter_node(retval_t status)
             {
                 float frequency;
                 /* Set the Transceiver ISM frequency */
-                set_frequency(CC_BAND_8, set_param_cb.param_value);
-                frequency = calculate_frequency(CC_BAND_8, set_param_cb.param_value);
+                tal_set_frequency_regs(CC_BAND_8, set_param_cb.param_value);
+                tal_calculate_frequency(CC_BAND_8, set_param_cb.param_value,&frequency);
 
                 /* Update the data base with this value */
                 curr_trx_config_params.ism_frequency = frequency;
@@ -854,8 +854,8 @@ static void set_parameter_on_transmitter_node(retval_t status)
             {
                 float frequency;
                 /* Set the Transceiver ISM frequency */
-                set_frequency(CC_BAND_9, set_param_cb.param_value);
-                frequency = calculate_frequency(CC_BAND_9, set_param_cb.param_value);
+                tal_set_frequency_regs(CC_BAND_9, set_param_cb.param_value);
+                 tal_calculate_frequency(CC_BAND_9, set_param_cb.param_value,&frequency);
 
                 curr_trx_config_params.ism_frequency = frequency;
                 /* As the transceiver is set to work in the non compliant ISM frequencies set
@@ -906,14 +906,15 @@ static void set_parameter_on_transmitter_node(retval_t status)
                 /* If RPC enabled, disble RPC to change the TX power value refer sec 9.2.4 */
 #if(TAL_TYPE == AT86RF233)
                 /* Store currents RPC settings */
-                previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
-                pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+                tal_trx_reg_read(RG_TRX_RPC ,&previous_RPC_value);
+                tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
+
 #endif
 
                 tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
 #if(TAL_TYPE == AT86RF233)
                 /* Restore RPC settings. */
-                pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+                tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
 #endif
 
                 /* update the data base with this value */
@@ -946,8 +947,9 @@ static void set_parameter_on_transmitter_node(retval_t status)
                     /* If RPC enabled, disble RPC to change the TX power value refer sec 9.2.4 */
 #if(TAL_TYPE == AT86RF233)
                     /* Store currents RPC settings */
-                    previous_RPC_value = pal_trx_reg_read(RG_TRX_RPC);
-                    pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+                    tal_trx_reg_read(RG_TRX_RPC ,&previous_RPC_value);
+                    tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
+
 #endif
 
                     tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
@@ -958,7 +960,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
                     tal_set_tx_pwr(REGISTER_VALUE,tx_pwr_reg);
 #if(TAL_TYPE == AT86RF233)
                     /* Restore RPC settings. */
-                    pal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
+                    tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
 #endif
 
                     /* update the data base with this value */
@@ -1179,10 +1181,8 @@ static void config_per_test_parameters(void)
     /* This is required for set default config request command to set the config parameters to their defaults */
     /* Disable antenna diversity by default */
     /* Enable A1/X2 */
-    pal_trx_bit_write(SR_ANT_CTRL, ANT_CTRL_1);
-    pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
-    pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
-
+     tal_ant_div_config(ANT_DIVERSITY_DISABLE,ANT_CTRL_1);/* Enable A1/X2 */
+   
 #else
     curr_trx_config_params.antenna_diversity = default_trx_config_params.antenna_diversity = true;
     curr_trx_config_params.antenna_selected = default_trx_config_params.antenna_selected = ANT_CTRL_0;
@@ -1208,9 +1208,9 @@ static void config_per_test_parameters(void)
     curr_trx_config_params.rpc_enable = default_trx_config_params.rpc_enable = true;
 
     /* Enable RPC feature by default */
-    pal_trx_reg_write(RG_TRX_RPC, ENABLE_ALL_RPC_MODES); /* RPC feature configuration. */
+    tal_rpc_mode_config(ENABLE_ALL_RPC_MODES);
     /* Reset RX_SAFE Mode in TRX_CTRL_2 */
-    pal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
+    tal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
 #endif
     if (peer_found == true)
     {
@@ -1546,7 +1546,7 @@ static void recover_all_settings(void)
     /* Set the ISM frequency back   */
     if (CC_BAND_0 != cc_band_ct)
     {
-        set_frequency(cc_band_ct, cc_number_ct);
+        tal_set_frequency_regs(cc_band_ct, cc_number_ct);
     }
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
 
@@ -1600,7 +1600,7 @@ void pulse_cw_transmission(void)
     /* Set the frequency back to already set value after tal_reset */
     if (CC_BAND_0 != cc_band_ct)
     {
-        set_frequency(cc_band_ct, cc_number_ct);
+        tal_set_frequency_regs(cc_band_ct, cc_number_ct);
     }
 #endif /* End of (TAL_TYPE == AT86RF233) */
 
@@ -2251,7 +2251,7 @@ static void set_channel(uint8_t channel)
         {
 #if(TAL_TYPE == AT86RF233)
             /* Set the CC_BAND to zero before setting the channel */
-            set_frequency(CC_BAND_0, CC_NUMBER_0);
+            tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
 
             tal_pib_set(phyCurrentChannel, (pib_value_t *)&channel);
@@ -2671,7 +2671,7 @@ void get_current_configuration(void)
             cc_number = (uint8_t)((curr_trx_config_params.ism_frequency - MID_ISM_FREQUENCY_MHZ) * FREQUENCY_MULTIPLIER) ;
         }
         /* Set the ism frequency */
-        set_frequency(cc_band, cc_number);
+        tal_set_frequency_regs(cc_band, cc_number);
     }
 #endif
 
@@ -3769,16 +3769,14 @@ static void config_rpc_mode(bool config_value)
     {
         curr_trx_config_params.rpc_enable = false;
         /* Disable RPC feature configuration. */
-        pal_trx_reg_write(RG_TRX_RPC, DISABLE_ALL_RPC_MODES);
+        tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
         /* Set the the default configuration for TRX_CTRL_2*/
-        pal_trx_reg_write(RG_TRX_CTRL_2, ENABLE_RX_SAFE_MODE);
+        tal_trx_reg_write(RG_TRX_CTRL_2, ENABLE_RX_SAFE_MODE);
 
 #if (ANTENNA_DIVERSITY == 1)
         /*  Enable antenna diversity */
-        pal_trx_bit_write(SR_ANT_CTRL, ANTENNA_DEFAULT);
-        pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_ENABLE);
-        pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_ENABLE);
-        pal_trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_ENABLE);
+        tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT)
+       
         /* Update this changes in the data base */
         curr_trx_config_params.antenna_diversity = true;;
         curr_trx_config_params.antenna_selected = ANT_CTRL_0;
@@ -3786,7 +3784,7 @@ static void config_rpc_mode(bool config_value)
     }
     else /* if RPC feature is to be enabled */
     {
-        uint8_t curr_state = pal_trx_bit_read(SR_TRX_STATUS);
+        uint8_t curr_state = tal_get_trx_status();
 
         curr_trx_config_params.rpc_enable = true;
         /*
@@ -3800,19 +3798,18 @@ static void config_rpc_mode(bool config_value)
             set_trx_state(CMD_TRX_OFF);
         }
 
-        pal_trx_reg_write(RG_TRX_RPC, ENABLE_ALL_RPC_MODES); /* RPC feature configuration. */
+       tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature configuration. */
 #if (ANTENNA_DIVERSITY == 1)
         /*  Disable antenna diversity */
-        pal_trx_bit_write(SR_ANT_CTRL, ANT_CTRL_1); /* Enable A1/X2 */
-        pal_trx_bit_write(SR_ANT_DIV_EN, ANT_DIV_DISABLE);
-        pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
+       tal_ant_div_config(ANT_DIVERSITY_DISABLE,ANT_CTRL_1); /* Enable A1/X2 */
+
 
         /* Update this changes in the data base */
         curr_trx_config_params.antenna_diversity = false;
         curr_trx_config_params.antenna_selected = ANT_CTRL_1;
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
         /* Reset RX_SAFE Mode in TRX_CTRL_2 */
-        pal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
+        tal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
 
         /* Restore the current state back again */
         if (RX_ON == curr_state)
@@ -3877,7 +3874,7 @@ static void config_frequency(float frequency)
         /* write the CC_BAND,CC_NUMBER registers as transceiver is in TRX_OFF */
         pal_trx_bit_write(SR_CC_BAND, cc_band);
         pal_trx_bit_write(SR_CC_NUMBER, cc_number);
-        curr_trx_config_params.ism_frequency = calculate_frequency(cc_band, cc_number);
+        tal_calculate_frequency(cc_band, cc_number,&(curr_trx_config_params.ism_frequency ));
         /* As the transceiver is set to work in the non compliant ISM frequencies set
          * the channel as INVALID
          */
