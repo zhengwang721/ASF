@@ -630,6 +630,8 @@ typedef union {
 #define RTC_MODE2_CLOCK_YEAR_Msk    (0x3Fu << RTC_MODE2_CLOCK_YEAR_Pos)
 #define RTC_MODE2_CLOCK_YEAR(value) ((RTC_MODE2_CLOCK_YEAR_Msk & ((value) << RTC_MODE2_CLOCK_YEAR_Pos)))
 #define RTC_MODE2_CLOCK_MASK        0xFFFFFFFFu  /**< \brief (RTC_MODE2_CLOCK) MASK Register */
+#define RTC_MODE2_CLOCK_PM_Pos      (RTC_MODE2_CLOCK_HOUR_Pos + 3) /* TODO: Manually added */
+#define RTC_MODE2_CLOCK_PM          (1 << RTC_MODE2_CLOCK_PM_Pos) /* TODO: Manually added */
 
 /* -------- RTC_MODE1_PER : (RTC Offset: 0x14) (R/W 16) MODE1 MODE1 Period Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
