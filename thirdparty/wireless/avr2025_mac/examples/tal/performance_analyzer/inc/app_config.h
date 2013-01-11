@@ -94,10 +94,14 @@
 #define STATUS_LED              LED0
 #define TX_LED                  LED1
 #define RX_LED                  LED2
-#else
+#elif (LED_COUNT >= 2)
 #define STATUS_LED              LED0
 #define TX_LED                  LED0
 #define RX_LED                  LED1
+#else
+#define STATUS_LED              LED0
+#define TX_LED                  LED0
+#define RX_LED                  LED0
 #endif
 
 

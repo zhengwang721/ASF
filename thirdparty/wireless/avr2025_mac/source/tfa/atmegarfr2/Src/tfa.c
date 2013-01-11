@@ -25,6 +25,7 @@
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"
+#include "tal_irq_handler.h"
 #include "tal_constants.h"
 #include "tal_internal.h"
 #include "ieee_const.h"
@@ -46,12 +47,26 @@
 
 /* === GLOBALS ============================================================= */
 
+
 #ifdef ENABLE_TFA
 /**
  * TFA PIB attribute to reduce the Rx sensitivity.
  * Represents the Rx sensitivity value in dBm; example: -52
  */
 static int8_t tfa_pib_rx_sens;
+
+/**
+ * Pin State
+ */
+/* Please dont change this type. */
+typedef enum pin_state_tag
+{
+    /** Pin state low */
+    LOW ,
+    /** Pin state high */
+    HIGH
+} SHORTENUM pin_state_t;
+
 #endif
 
 /* === PROTOTYPES ========================================================== */
@@ -468,6 +483,8 @@ static void write_all_tfa_pibs_to_trx(void)
  */
 double tfa_get_temperature(void)
 {
+  uint32_t F_CPU_VAL;
+  F_CPU_VAL = F_CPU;
     float temp_result;
     float offset;
     double result;
@@ -496,13 +513,13 @@ double tfa_get_temperature(void)
     ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX3) | (1 << MUX0);
 
     /* Dummy conversion to clear PGA */
-#if ((F_CPU == 16000000UL) || (F_CPU == 15384600UL))
+#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
     ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU == 8000000UL)
+#elif (F_CPU_VAL == 8000000UL)
     ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU == 4000000UL)
+#elif (F_CPU_VAL == 4000000UL)
     ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU"
+#error "unsupported F_CPU_VAL"
 #endif
     /* Wait for conversion to be completed */
     do
@@ -520,13 +537,13 @@ double tfa_get_temperature(void)
          * Clear ADIF
          * Prescaler = 32 (500kHz) for 16 MHz main clock
          */
-#if ((F_CPU == 16000000UL) || (F_CPU == 15384600UL))
+#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU == 8000000UL)
+#elif (F_CPU_VAL == 8000000UL)
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU == 4000000UL)
+#elif (F_CPU_VAL == 4000000UL)
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU"
+#error "unsupported F_CPU_VAL"
 #endif
         /* Wait for conversion to be completed */
         do
@@ -549,13 +566,13 @@ double tfa_get_temperature(void)
 
     for (i = 0; i < NUM_SAMPLES; i++)
     {
-#if ((F_CPU == 16000000UL) || (F_CPU == 15384600UL))
+#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU == 8000000UL)
+#elif (F_CPU_VAL == 8000000UL)
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU == 4000000UL)
+#elif (F_CPU_VAL == 4000000UL)
         ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU"
+#error "unsupported F_CPU_VAL"
 #endif
         /* Wait for conversion to be completed */
         do
@@ -581,7 +598,7 @@ double tfa_get_temperature(void)
 
     temp_result -= offset;
     result = ((double)temp_result * 1.13) - 272.8;
-
+F_CPU_VAL=F_CPU_VAL ; // Ignore Warnings
     return result;
 }
 #endif

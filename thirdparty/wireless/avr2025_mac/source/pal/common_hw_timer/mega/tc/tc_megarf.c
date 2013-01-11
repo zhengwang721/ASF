@@ -41,8 +41,6 @@
  *
  */
 #include <stdint.h>
-#include "ioavr.h"
-
 #include "interrupt.h"
 #include "compiler.h"
 #include "parts.h"
