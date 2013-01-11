@@ -1,9 +1,9 @@
 /**
- * \file sio_helper.h
+ * \file
  *
- * \brief Event handling Serial I/O  Functionalities
- 
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * \brief Chip-specific system clock manager configuration
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,30 +38,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
-#ifndef SIO_HELPER_H
-#define SIO_HELPER_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/* === INCLUDES ============================================================ */
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-#include "compiler.h"
-#include "status_codes.h"
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
 
-#define SERIAL_RX_BUF_SIZE    156
+/* ===== System Clock Bus Division Options */
 
-status_code_t sio_init(void);
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
-uint8_t sio_tx(uint8_t *data, uint8_t length);
-
-uint8_t sio_rx(uint8_t *data, uint8_t max_length);
-
-int sio_getchar(void);
-
-int sio_getchar_nowait(void);
-
-#endif /* SIO_HELPER_UART_H */
+#endif /* CONF_CLOCK_H_INCLUDED */

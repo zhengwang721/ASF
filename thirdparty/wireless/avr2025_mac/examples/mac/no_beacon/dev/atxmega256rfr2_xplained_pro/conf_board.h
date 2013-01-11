@@ -1,9 +1,9 @@
 /**
- * \file sio_helper.h
+ * \file
  *
- * \brief Event handling Serial I/O  Functionalities
- 
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * \brief Example specific board configuration file
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,30 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
-#ifndef SIO_HELPER_H
-#define SIO_HELPER_H
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/* === INCLUDES ============================================================ */
+#define CONF_BOARD_ENABLE_USARTA1
 
-#include "compiler.h"
-#include "status_codes.h"
-
-#define SERIAL_RX_BUF_SIZE    156
-
-status_code_t sio_init(void);
-
-uint8_t sio_tx(uint8_t *data, uint8_t length);
-
-uint8_t sio_rx(uint8_t *data, uint8_t max_length);
-
-int sio_getchar(void);
-
-int sio_getchar_nowait(void);
-
-#endif /* SIO_HELPER_UART_H */
+#endif /* CONF_BOARD_H */

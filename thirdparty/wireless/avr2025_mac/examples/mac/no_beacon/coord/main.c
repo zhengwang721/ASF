@@ -106,6 +106,7 @@
 #include "led.h"
 #include "delay.h"
 #include "common_sw_timer.h"
+#include "sio_helper.h"
 
 /* === TYPES =============================================================== */
 

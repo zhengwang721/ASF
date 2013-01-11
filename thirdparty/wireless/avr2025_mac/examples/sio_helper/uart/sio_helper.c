@@ -186,8 +186,15 @@ uint8_t sio_rx(uint8_t *data, uint8_t max_length)
 }
 
 
-int sio_getchar_nowait(void)
+int sio_getchar(void)
+{
+    uint8_t c;
 
+	while (0 == sio_rx(&c, 1));
+	return c;
+}
+
+int sio_getchar_nowait(void)
 {
     uint8_t c;
 
@@ -201,7 +208,6 @@ int sio_getchar_nowait(void)
       
         return (-1);
     }
-
 }
 
 

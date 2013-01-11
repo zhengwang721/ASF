@@ -96,6 +96,7 @@
 #define RST_LOW()                       ioport_set_pin_level(AT86RFX_RST_PIN, LOW)
 #define SLP_TR_HIGH()                   ioport_set_pin_level(AT86RFX_SLP_PIN, HIGH)
 #define SLP_TR_LOW()                    ioport_set_pin_level(AT86RFX_SLP_PIN, LOW)
+#define IRQ_PINGET()                    ioport_get_pin_level(AT86RFX_IRQ_PIN)
 
 //#if(ANTENNA_DIVERSITY == 1)
 //#define TIMER_SRC_DURING_TRX_SLEEP() {TCC0_CTRLA = TC0_CLKSEL3_bm;}
