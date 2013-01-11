@@ -676,7 +676,7 @@ static inline void handle_incoming_msg(void)
                      * with error code as the reason for failure
                      */
                     usr_register_read_confirm(error_code,
-                                              ((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]),
+                                              ((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])),
                                               NUL_VAL);
                     return;
                 }
@@ -687,7 +687,7 @@ static inline void handle_incoming_msg(void)
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
                 {
-                    read_trx_registers(((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]));
+                    read_trx_registers(((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])));
                 }
                 else
                 {
@@ -695,7 +695,7 @@ static inline void handle_incoming_msg(void)
                      * as this command is not allowed in this state
                      */
                     usr_register_read_confirm(INVALID_CMD,
-                                              ((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]),
+                                              ((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])),
                                               NUL_VAL);
                 }
             }
@@ -717,7 +717,7 @@ static inline void handle_incoming_msg(void)
                      * with error code as the reason for failure
                      */
                     usr_register_write_confirm(error_code,
-                                               ((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]),
+                                               ((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])),
                                                NUL_VAL);
                     return;
                 }
@@ -729,7 +729,7 @@ static inline void handle_incoming_msg(void)
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
                 {
-                    write_trx_registers(((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]),
+                    write_trx_registers(((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])),
                                         sio_rx_buf[REGISTER_VAL_POS] );
                 }
                 else
@@ -738,7 +738,7 @@ static inline void handle_incoming_msg(void)
                      * as this command is not allowed in this state
                      */
                     usr_register_write_confirm(INVALID_CMD,
-                                               ((uint16_t )sio_rx_buf[REGISTER_ADDR_POS]),
+                                               ((uint16_t )(sio_rx_buf[REGISTER_ADDR_POS+1]<<8) | (sio_rx_buf[REGISTER_ADDR_POS])),
                                                NUL_VAL);
                 }
             }
@@ -760,8 +760,8 @@ static inline void handle_incoming_msg(void)
                      * error code as the reason for failure
                      */
                     usr_register_dump_confirm(error_code,
-                                              ((uint16_t )sio_rx_buf[START_REG_ADDR_POS]),
-                                              ((uint16_t )sio_rx_buf[END_REG_ADDR_POS]),
+                                              ((uint16_t )(sio_rx_buf[START_REG_ADDR_POS+1]<<8) | (sio_rx_buf[START_REG_ADDR_POS])),
+                                             (((uint16_t )sio_rx_buf[END_REG_ADDR_POS+1]<<8) | (sio_rx_buf[END_REG_ADDR_POS])),
                                               NULL);
                     return;
                 }
@@ -772,8 +772,8 @@ static inline void handle_incoming_msg(void)
                     (SINGLE_NODE_TESTS == node_info.main_state)
                    )
                 {
-                    dump_trx_register_values(((uint16_t )sio_rx_buf[START_REG_ADDR_POS]),
-                                             ((uint16_t )sio_rx_buf[END_REG_ADDR_POS]) );
+                    dump_trx_register_values(((uint16_t )(sio_rx_buf[START_REG_ADDR_POS+1]<<8) | (sio_rx_buf[START_REG_ADDR_POS])),
+                                             (((uint16_t )sio_rx_buf[END_REG_ADDR_POS+1]<<8) | (sio_rx_buf[END_REG_ADDR_POS])) );
                 }
                 else
                 {
@@ -781,8 +781,8 @@ static inline void handle_incoming_msg(void)
                      * as this command is not allowed in this state
                      */
                     usr_register_dump_confirm(INVALID_CMD,
-                                              ((uint16_t)sio_rx_buf[START_REG_ADDR_POS]),
-                                              ((uint16_t )sio_rx_buf[END_REG_ADDR_POS]),
+                                             ((uint16_t )(sio_rx_buf[START_REG_ADDR_POS+1]<<8) | (sio_rx_buf[START_REG_ADDR_POS])),
+                                             (((uint16_t )sio_rx_buf[END_REG_ADDR_POS+1]<<8) | (sio_rx_buf[END_REG_ADDR_POS])),
                                               NULL);
                 }
             }

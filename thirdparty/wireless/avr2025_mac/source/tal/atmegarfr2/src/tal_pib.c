@@ -76,7 +76,7 @@ uint8_t limit_tx_pwr(uint8_t curr_transmit_power);
 #else
 static uint8_t limit_tx_pwr(uint8_t curr_transmit_power);
 #endif
-static uint8_t convert_phyTransmitPower_to_reg_value(uint8_t phyTransmitPower_value);
+uint8_t convert_phyTransmitPower_to_reg_value(uint8_t phyTransmitPower_value);
 #ifdef HIGH_DATA_RATE_SUPPORT
 static bool apply_channel_page_configuration(uint8_t ch_page);
 #endif
@@ -646,7 +646,7 @@ static uint8_t limit_tx_pwr(uint8_t curr_transmit_power)
  *
  * \return register value
  */
-static uint8_t convert_phyTransmitPower_to_reg_value(uint8_t phyTransmitPower_value)
+uint8_t convert_phyTransmitPower_to_reg_value(uint8_t phyTransmitPower_value)
 {
     int8_t dbm_value;
     uint8_t i;

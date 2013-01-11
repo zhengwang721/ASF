@@ -36,10 +36,8 @@
 		<require idref="thirdparty.wireless.avr2025_mac.examples.sio_helper"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<require idref="common.services.basic.spi_master"/>
-		<require idref="common.services.ioport"/>
-		<require idref="common.services.basic.clock"/>
-		<require idref="common.services.delay"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 
 		
 	<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
