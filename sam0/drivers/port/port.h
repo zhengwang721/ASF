@@ -369,7 +369,7 @@ static inline PortGroup* port_get_port_from_gpio_pin(
 	uint8_t group_index = (gpio_pin / 32);
 
 	/* Array of available ports. */
-	Port *ports[PORT_INST_NUM] = PORT_INSTS;
+	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
 
 	if (port_index < PORT_INST_NUM) {
 		return &(ports[port_index]->Group[group_index]);
@@ -521,7 +521,7 @@ enum status_code port_pin_set_config(
 static inline bool port_pin_is_edge_detected(
 		const uint8_t gpio_pin)
 {
-	Eic   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic *const eic_base = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t eic_mask = (1UL << (gpio_pin % 32));
 
 	return (eic_base->INTFLAG.reg & eic_mask);
@@ -537,7 +537,7 @@ static inline bool port_pin_is_edge_detected(
 static inline void port_pin_clear_edge_detected(
 		const uint8_t gpio_pin)
 {
-	Eic   *eic_base = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic *const eic_base = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t eic_mask = (1UL << (gpio_pin % 32));
 
 	eic_base->INTFLAG.reg = eic_mask;
@@ -561,7 +561,7 @@ static inline void port_pin_clear_edge_detected(
 static inline bool port_pin_get_input_level(
 		const uint8_t gpio_pin)
 {
-	PortGroup  *port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	return (port_base->IN.reg & pin_mask);
@@ -578,7 +578,7 @@ static inline void port_pin_set_output_level(
 		const uint8_t gpio_pin,
 		const bool level)
 {
-	PortGroup *port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Set the pin to high or low atomically based on the requested level */
@@ -598,7 +598,7 @@ static inline void port_pin_set_output_level(
 static inline void port_pin_toggle_output_level(
 		const uint8_t gpio_pin)
 {
-	PortGroup  *port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Toggle pin output level */

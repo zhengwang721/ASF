@@ -52,7 +52,7 @@ static inline void _port_pin_set_eic_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_edge_conf *const config)
 {
-	Eic*   eic_base       = port_get_eic_from_gpio_pin(gpio_pin);
+	Eic *const eic_base     = port_get_eic_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask       = (1UL << (gpio_pin % 32));
 	uint8_t  eic_config_pos = (4 * (gpio_pin % 8));
 	uint32_t eic_new_config;
@@ -103,8 +103,8 @@ enum status_code port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_conf *const config)
 {
-	PortGroup*  port_base = port_get_port_from_gpio_pin(gpio_pin);
-	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
+	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
+	uint32_t pin_mask = (1UL << (gpio_pin % 32));
 
 	/* Track the configuration bits into a temporary variable before writing */
 	uint32_t pin_cfg = 0;
