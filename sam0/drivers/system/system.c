@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 System related functionality
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -125,4 +125,23 @@ void system_bod_init(void)
 	#endif
 }
 
+/**
+ * \brief Initialize system
+ *
+ * This function will call the initialization functions for the system namespace
+ * in a single function. The functions are weak functions, so if one of the
+ * functions are not provided by the ASF project it will just run a no operation
+ * function.
+ *
+ */
+void system_init(void)
+{
+	/* Initialize BOD according to conf_bod.h */
+	system_bod_init();
+	/* Configure GCLK and clock sources according to
+	 * conf_clocks.h */
+	system_clock_init();
+	/* Initialize board hardware */
+	system_board_init();
+}
 
