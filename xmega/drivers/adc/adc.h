@@ -82,6 +82,7 @@ extern "C" {
 /* ADC.CTRLB  bit masks and bit positions */
 #  define ADC_CURRLIMIT_gm  0x60  /* Current limit group mask. */
 #endif
+#if (!XMEGA_E)
 /* Negative input multiplexer selection without gain */
 typedef enum ADC_CH_MUXNEG_MODE10_enum
 {
@@ -103,6 +104,7 @@ typedef enum ADC_CH_MUXNEG_MODE11_enum
     ADC_CH_MUXNEG_MODE11_INTGND_gc = (0x04<<0),  /* Internal ground */
     ADC_CH_MUXNEG_MODE11_GND_gc = (0x05<<0),  /* PAD ground */
 } ADC_CH_MUXNEGH_t;
+#endif
 
 /**
  * \defgroup adc_group Analog to Digital Converter (ADC)
@@ -166,7 +168,7 @@ typedef enum ADC_CH_MUXNEG_MODE11_enum
  */
 #if XMEGA_A || XMEGA_AU || defined(__DOXYGEN__)
 #  define ADC_NR_OF_CHANNELS    4
-#elif XMEGA_B || XMEGA_C || XMEGA_D
+#elif XMEGA_B || XMEGA_C || XMEGA_D || XMEGA_E
 #  define ADC_NR_OF_CHANNELS    1
 #endif
 
@@ -181,6 +183,10 @@ struct adc_config {
 	uint8_t evctrl;
 	uint8_t prescaler;
 	uint16_t cmp;
+#if XMEGA_E
+	/* XMEGA E sample time value stored in SAMPCTRL */
+	uint8_t sampctrl;
+#endif
 };
 
 /**
@@ -249,6 +255,9 @@ enum adc_trigger {
 	/** Manually triggered conversions */
 	ADC_TRIG_MANUAL,
 
+	/** Freerun mode conversion */
+	ADC_TRIG_FREERUN,
+
 	/**
 	 * \brief Event-triggered conversions on individual channels
 	 * Pairs each event channel with an ADC channel.
@@ -292,6 +301,14 @@ enum adc_resolution {
 	ADC_RES_12      = ADC_RESOLUTION_12BIT_gc,
 	/** 12-bit resolution, left-adjusted. */
 	ADC_RES_12_LEFT = ADC_RESOLUTION_LEFT12BIT_gc,
+#if XMEGA_E
+
+	/** More than 12-bit resolution.
+	 * Must be used when adcch_enable_averaging() or
+	 * adcch_enable_oversampling() is used.
+	 */
+	ADC_RES_MT12 = ADC_RESOLUTION_MT12BIT_gc,
+#endif
 };
 
 /**
@@ -307,8 +324,13 @@ enum adc_reference {
 	ADC_REF_VCC      = ADC_REFSEL_INTVCC_gc,
 	/** External reference on AREFA pin. */
 	ADC_REF_AREFA    = ADC_REFSEL_AREFA_gc,
+#if XMEGA_E
+	/** External reference on AREFD pin. */
+	ADC_REF_AREFD    = ADC_REFSEL_AREFD_gc,
+#else
 	/** External reference on AREFB pin. */
 	ADC_REF_AREFB    = ADC_REFSEL_AREFB_gc,
+#endif
 	/** VCC divided by 2. */
 	ADC_REF_VCCDIV2 = ADC_REFSEL_VCCDIV2_gc,
 };
@@ -432,7 +454,11 @@ bool adc_is_enabled(ADC_t *adc);
 static inline void adc_start_conversion(ADC_t *adc, uint8_t ch_mask)
 {
 	irqflags_t flags = cpu_irq_save();
+#if !XMEGA_E
 	adc->CTRLA |= ch_mask << ADC_CH0START_bp;
+#else
+	adc->CTRLA |= ch_mask << ADC_START_bp;
+#endif
 	cpu_irq_restore(flags);
 }
 
@@ -656,6 +682,50 @@ static inline uint16_t adc_get_unsigned_compare_value(ADC_t *adc)
 	return val;
 }
 
+#if XMEGA_E
+
+/**
+ * \brief Set sample time value directly to ADC
+ *
+ * Sets the sample time value directly to the ADC, for quick access while the
+ * ADC is enabled.
+ *
+ * \param adc Pointer to ADC module.
+ * \param val Sample time value to set.
+ *
+ * \note The ADC must be enabled for this function to have any effect.
+ */
+static inline void adc_set_sample_value(ADC_t *adc, uint8_t val)
+{
+	irqflags_t flags;
+
+	flags = cpu_irq_save();
+	adc->SAMPCTRL = (uint8_t)val;
+	cpu_irq_restore(flags);
+}
+
+/**
+ * \brief Get sample time value directly from ADC
+ *
+ * Gets the sample time value directly from the ADC, for quick access while the
+ * ADC is enabled.
+ *
+ * \param adc Pointer to ADC module.
+ *
+ * \return Current sample time value of the ADC.
+ *
+ * \note This macro does not protect the 8-bit read from interrupts. If an
+ * interrupt may do a 8-bit read or write to the ADC while this macro is
+ * executing, interrupts \a must be temporarily disabled to avoid corruption of
+ * the read.
+ */
+static inline uint8_t adc_get_sample_value(ADC_t *adc)
+{
+	return adc->SAMPCTRL;
+}
+
+#endif
+
 /**
  * \brief Get calibration data
  *
@@ -733,7 +803,7 @@ static inline void adc_set_clock_rate(struct adc_config *conf, uint32_t clk_adc)
 	Assert(clk_adc <= 2000000UL);
 #elif XMEGA_D
 	Assert(clk_adc <= 1400000UL);
-#elif XMEGA_B || XMEGA_C
+#elif XMEGA_B || XMEGA_C || XMEGA_E
 	Assert(clk_adc <= 1800000UL);
 #endif
 
@@ -811,7 +881,7 @@ static inline void adc_set_conversion_trigger(struct adc_config *conf,
 {
 	Assert(nr_of_ch);
 	Assert(nr_of_ch <= ADC_NR_OF_CHANNELS);
-#if XMEGA_A || XMEGA_AU
+#if XMEGA_A || XMEGA_AU || XMEGA_E
 	Assert(base_ev_ch <= 7);
 #elif XMEGA_B || XMEGA_C || XMEGA_D
 	Assert(base_ev_ch <= 3);
@@ -827,6 +897,10 @@ static inline void adc_set_conversion_trigger(struct adc_config *conf,
 		conf->ctrlb &= ~ADC_FREERUN_bm;
 		conf->evctrl = (base_ev_ch << ADC_EVSEL_gp) |
 				(nr_of_ch << ADC_EVACT_gp);
+		break;
+
+	case ADC_TRIG_FREERUN:
+		conf->ctrlb |= ADC_FREERUN_bm;
 		break;
 
 #if ADC_NR_OF_CHANNELS > 1
@@ -1007,6 +1081,7 @@ static inline void adc_set_current_limit(struct adc_config *conf,
 		Assert(0);
 	}
 }
+
 #endif
 
 /**
@@ -1027,6 +1102,28 @@ static inline void adc_set_current_limit(struct adc_config *conf,
  * \param conf Pointer to ADC module configuration.
  */
 #define adc_get_config_compare_value(conf)    (conf->cmp)
+
+#if XMEGA_E
+
+/**
+ * \brief Set ADC sample time value in configuration
+ *
+ * \param conf Pointer to ADC module configuration.
+ * \param val Sample time value to set.
+ */
+#define adc_set_config_sample_value(conf, val) \
+	do { \
+		conf->sampctrl = (uint8_t)val; \
+	} \
+	while (0)
+
+/**
+ * \brief Get ADC sample time value from configuration
+ *
+ * \param conf Pointer to ADC module configuration.
+ */
+#define adc_get_config_sample_value(conf)    (conf->sampctrl)
+#endif
 
 /** @} */
 
@@ -1061,6 +1158,14 @@ struct adc_channel_config {
 	uint8_t muxctrl;
 	uint8_t intctrl;
 	uint8_t scan;
+#if XMEGA_E
+	uint8_t corrctrl;
+	uint8_t offsetcorr0;
+	uint8_t offsetcorr1;
+	uint8_t gaincorr0;
+	uint8_t gaincorr1;
+	uint8_t avgctrl;
+#endif
 };
 
 /**
@@ -1092,7 +1197,7 @@ enum adcch_positive_input {
 	ADCCH_POS_TEMPSENSE,     /**< Temperature sensor. */
 	ADCCH_POS_BANDGAP,       /**< Bandgap reference. */
 	ADCCH_POS_SCALED_VCC,    /**< VCC scaled down by 10. */
-#if XMEGA_A || XMEGA_AU || defined(__DOXYGEN__)
+#if XMEGA_A || XMEGA_AU || XMEGA_E || defined(__DOXYGEN__)
 	ADCCH_POS_DAC,           /**< DAC output. */
 #endif
 	/** @} */
@@ -1265,14 +1370,18 @@ static inline void adcch_set_input(struct adc_channel_config *ch_conf,
 
 		ch_conf->ctrl = ADC_CH_INPUTMODE_SINGLEENDED_gc;
 		ch_conf->muxctrl = pos << ADC_CH_MUXPOS_gp;
-
 	} else if (neg <= ADCCH_NEG_PIN3) {
 		/* Configure for differential measurement.
 		 * Pins 0-3 can only be used for negative input if the gain
 		 * stage is not used, i.e., unity gain (except XMEGA E).
 		 */
+#if XMEGA_E
+		ch_conf->ctrl = adcch_get_gain_setting(gain) |
+				ADC_CH_INPUTMODE_DIFFWGAINL_gc;
+#else
 		Assert(gain == 1);
 		ch_conf->ctrl = ADC_CH_INPUTMODE_DIFF_gc;
+#endif
 		ch_conf->muxctrl = (pos << ADC_CH_MUXPOS_gp) |
 				(neg << ADC_CH_MUXNEG_gp);
 	} else if (neg <= ADCCH_NEG_PIN7) {
@@ -1281,14 +1390,36 @@ static inline void adcch_set_input(struct adc_channel_config *ch_conf,
 		 * including unity gain, which is available even if
 		 * the gain stage is active.
 		 */
+#if XMEGA_E
+		ch_conf->ctrl = adcch_get_gain_setting(gain) |
+				ADC_CH_INPUTMODE_DIFFWGAINH_gc;
+#else
 		ch_conf->ctrl = adcch_get_gain_setting(gain) |
 				ADC_CH_INPUTMODE_DIFFWGAIN_gc;
+#endif
 		ch_conf->muxctrl = (pos << ADC_CH_MUXPOS_gp) |
 				((neg - ADCCH_NEG_PIN4) <<
 				ADC_CH_MUXNEG_gp);
 	} else {
-		Assert((neg == ADCCH_NEG_PAD_GND) || (neg == ADCCH_NEG_INTERNAL_GND));
-		/* Configure for differential measurement through GND or internal GND.
+		Assert((neg == ADCCH_NEG_PAD_GND) ||
+				(neg == ADCCH_NEG_INTERNAL_GND));
+#if XMEGA_E
+
+		/* Configure for differential measurement through PAD GND or
+		 * internal GND.
+		 * DIFFWGAINH (INPUTMODE) is not used because it support
+		 * only PAD GND.
+		 */
+		ch_conf->ctrl = ADC_CH_INPUTMODE_DIFFWGAINL_gc |
+				adcch_get_gain_setting(gain);
+		ch_conf->muxctrl = (pos << ADC_CH_MUXPOS_gp) |
+				((neg == ADCCH_NEG_INTERNAL_GND) ?
+				ADC_CH_MUXNEGL_INTGND_gc
+				: ADC_CH_MUXNEGL_GND_gc);
+#else
+
+		/* Configure for differential measurement through GND or
+		 * internal GND.
 		 * The bitmasks for the on-chip GND signals change when
 		 * gain is enabled. To avoid unnecessary current consumption,
 		 * do not enable gainstage for unity gain unless user explicitly
@@ -1308,6 +1439,8 @@ static inline void adcch_set_input(struct adc_channel_config *ch_conf,
 					ADC_CH_MUXNEG_MODE11_INTGND_gc
 					: ADC_CH_MUXNEG_MODE11_GND_gc);
 		}
+
+#endif
 	}
 }
 
@@ -1375,6 +1508,171 @@ static inline void adcch_disable_interrupt(struct adc_channel_config *ch_conf)
 	ch_conf->intctrl &= ~ADC_CH_INTLVL_gm;
 	ch_conf->intctrl |= ADC_CH_INTLVL_OFF_gc;
 }
+
+#if XMEGA_E
+
+/**
+ * \brief Enable gain & offset correction on ADC channel
+ *
+ * \param ch_conf         Pointer to ADC channel configuration.
+ * \param offset_corr     Offset correction value to set.
+ * \param expected_value  Value expected for a specific input voltage
+ * \param captured_value  Value captured for a specific input voltage
+ *
+ * \Note
+ * Gived "expected_value = captured_value = 1" to ignore the gain correction
+ * Gain correction is equal to "expected_value / captured_value"
+ */
+static inline void adcch_enable_correction(struct adc_channel_config *ch_conf,
+		uint16_t offset_corr, uint16_t expected_value,
+		uint16_t captured_value)
+{
+	uint32_t gain_corr;
+
+	gain_corr = (2048L * expected_value) / captured_value;
+	ch_conf->offsetcorr0 = LSB(offset_corr);
+	ch_conf->offsetcorr1 = MSB(offset_corr);
+	ch_conf->gaincorr0 = LSB(gain_corr);
+	ch_conf->gaincorr1 = MSB(gain_corr);
+	ch_conf->corrctrl = ADC_CH_CORREN_bm;
+}
+
+/**
+ * \brief Disable gain & offset correction on ADC channel
+ *
+ * \param ch_conf Pointer to ADC channel configuration.
+ */
+static inline void adcch_disable_correction(struct adc_channel_config *ch_conf)
+{
+	ch_conf->corrctrl = ADC_CH_CORREN_bp;
+}
+
+/** \brief ADC channel sample number settings */
+enum adcch_sampnum {
+	/** 2 samples to accumulate. */
+	ADC_SAMPNUM_2X = ADC_SAMPNUM_2X_gc,
+	/** 4 samples to accumulate. */
+	ADC_SAMPNUM_4X = ADC_SAMPNUM_4X_gc,
+	/** 8 samples to accumulate. */
+	ADC_SAMPNUM_8X = ADC_SAMPNUM_8X_gc,
+	/** 16 samples to accumulate. */
+	ADC_SAMPNUM_16X = ADC_SAMPNUM_16X_gc,
+	/** 32 samples to accumulate. */
+	ADC_SAMPNUM_32X = ADC_SAMPNUM_32X_gc,
+	/** 64 samples to accumulate. */
+	ADC_SAMPNUM_64X = ADC_SAMPNUM_64X_gc,
+	/** 128 samples to accumulate. */
+	ADC_SAMPNUM_128X = ADC_SAMPNUM_128X_gc,
+	/** 256 samples to accumulate. */
+	ADC_SAMPNUM_256X = ADC_SAMPNUM_256X_gc,
+	/** 512 samples to accumulate. */
+	ADC_SAMPNUM_512X = ADC_SAMPNUM_512X_gc,
+	/** 1024 samples to accumulate. */
+	ADC_SAMPNUM_1024X = ADC_SAMPNUM_1024X_gc,
+};
+
+/**
+ * \brief Enables ADC channel averaging
+ *
+ * Sets the parameters number of samples used during averaging.
+ *
+ * \param ch_conf  Pointer to the ADC channel configuration structure
+ * \param sample   Number of samples to accumulate
+ *
+ * \note Only the AVR XMEGA E family features this setting.
+ * \note Check that "ADC_RES_MT12" param is used
+ * in adc_set_conversion_parameters() call.
+ */
+static inline void adcch_enable_averaging(
+		struct adc_channel_config *ch_conf,
+		enum adcch_sampnum sample)
+{
+	uint8_t rshift;
+
+	Assert( sample >= ADC_SAMPNUM_2X );
+
+	if (sample >= ADC_SAMPNUM_16X) {
+		rshift = 4;
+	} else if (sample == ADC_SAMPNUM_8X) {
+		rshift = 3;
+	} else if (sample == ADC_SAMPNUM_4X) {
+		rshift = 2;
+	} else {
+		rshift = 1;
+	}
+
+	ch_conf->avgctrl = sample | (rshift << ADC_CH_RIGHTSHIFT_gp);
+}
+
+/**
+ * \brief Disables ADC channel averaging
+ *
+ * \param ch_conf    Pointer to the ADC channel configuration structure
+ *
+ * \note Only the AVR XMEGA E family features this setting.
+ * \note Check that "ADC_RES_MT12" param is not used
+ * in adc_set_conversion_parameters() call.
+ */
+static inline void adcch_disable_averaging(struct adc_channel_config *ch_conf)
+{
+	ch_conf->avgctrl = 0;
+}
+
+/**
+ * \brief Enables ADC channel over-sampling
+ *
+ * Sets the parameters number of samples and result resolution
+ * used during over-sampling.
+ *
+ * \param ch_conf    Pointer to the ADC channel configuration structure
+ * \param sample     Number of samples to accumulate
+ * \param resolution result resolution (12 bits to 16 bits)
+ *                   15 bits maximum if sample = 8
+ *                   14 bits maximum if sample = 4
+ *                   13 bits maximum if sample = 2
+ *
+ * \note Only the AVR XMEGA E family features this setting.
+ * \note Check that "ADC_RES_MT12" param is used
+ * in adc_set_conversion_parameters() call.
+ */
+static inline void adcch_enable_oversampling(
+		struct adc_channel_config *ch_conf,
+		enum adcch_sampnum sample, uint8_t resolution)
+{
+	uint8_t rshift;
+
+	Assert((resolution >= 12) && (resolution <= 16));
+
+	if (sample >= ADC_SAMPNUM_16X) {
+		rshift = 4;
+	} else if (sample == ADC_SAMPNUM_8X) {
+		rshift = 3;
+	} else if (sample == ADC_SAMPNUM_4X) {
+		rshift = 2;
+	} else {
+		rshift = 1;
+	}
+
+	Assert(rshift >= resolution - 12);
+	rshift -= resolution - 12;
+	ch_conf->avgctrl = sample | (rshift << ADC_CH_RIGHTSHIFT_gp);
+}
+
+/**
+ * \brief Disables ADC channel over-sampling
+ *
+ * \param ch_conf    Pointer to the ADC channel configuration structure
+ *
+ * \note Only the AVR XMEGA E family features this setting.
+ * \note Check that "ADC_RES_MT12" param is not used
+ * in adc_set_conversion_parameters() call.
+ */
+static inline void adcch_disable_oversampling(struct adc_channel_config *ch_conf)
+{
+	ch_conf->avgctrl = 0;
+}
+
+#endif
 
 /** @} */
 
