@@ -37,7 +37,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- #include <compiler.h>
+#include <compiler.h>
 #include "sysclk.h"
 #include "common_hw_timer.h"
 #include "status_codes.h"

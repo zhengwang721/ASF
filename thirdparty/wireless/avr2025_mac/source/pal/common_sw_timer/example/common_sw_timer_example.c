@@ -104,7 +104,7 @@
 uint32_t time_out1 = 10000;
 uint32_t time_out2 = 20000;
 uint32_t time_out3 = 30000;
-uint32_t time_out4 = 40000;
+uint32_t time_out4 = 1000000;
 
 static void timeout1_cb(void *parameter);
 static void timeout2_cb(void *parameter);

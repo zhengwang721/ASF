@@ -37,17 +37,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- #include <compiler.h>
+#include <compiler.h>
 #include "sysclk.h"
 #include "common_hw_timer.h"
 #include "status_codes.h"
-
-//todo remove later
-#include <asf.h>
-#include "conf_example.h"
-#include "conf_common_hw_timer.h"
-#include "ioport.h"
 #include "tc.h"
+#include "conf_common_hw_timer.h"
 
 static uint8_t timer_multiplier;
 static uint16_t compare_value;
@@ -81,33 +76,31 @@ void TC00_Handler(void)
  
 	/* Read TC0 Status. */
 	ul_status = tc_get_status(TIMER,TIMER_CHANNEL_ID);
-        ul_status &= tc_get_interrupt_mask(TIMER,TIMER_CHANNEL_ID);
-        if (TC_SR_CPCS == (ul_status & TC_SR_CPCS))
+    ul_status &= tc_get_interrupt_mask(TIMER,TIMER_CHANNEL_ID);
+    if (TC_SR_CPCS == (ul_status & TC_SR_CPCS))
 	{
-            DISABLE_CC_INTERRUPT();
-            
-            if (common_tc_cca_callback) {
-                    common_tc_cca_callback();
-            }        
-        }
+        DISABLE_CC_INTERRUPT();
+
+        if (common_tc_cca_callback) {
+            common_tc_cca_callback();
+        }        
+    }
 	/* Overflow */
-        if (TC_SR_COVFS == (ul_status & TC_SR_COVFS))
+    if (TC_SR_COVFS == (ul_status & TC_SR_COVFS))
 	{
-            if((overflow_counter > 0) && ((--overflow_counter) == 0))
-            {
-                    ENABLE_CC_INTERRUPT();
-            }
-            if((++timer_mul_var) >= timer_multiplier)
-            {
-                    timer_mul_var = 0;
-                    
-                    if (common_tc_ovf_callback) {
-                            common_tc_ovf_callback();
-                    }
-            }
-          
-          
+        if((overflow_counter > 0) && ((--overflow_counter) == 0))
+        {
+                ENABLE_CC_INTERRUPT();
         }
+        if((++timer_mul_var) >= timer_multiplier)
+        {
+            timer_mul_var = 0;
+            
+            if (common_tc_ovf_callback) {
+                common_tc_ovf_callback();
+            }
+        }
+    }
 }
 
 uint16_t common_tc_read_count(void)
