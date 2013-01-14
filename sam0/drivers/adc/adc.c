@@ -48,7 +48,7 @@
  * Used by \ref adc_init.
  */
 enum status_code _adc_set_config (Adc *const hw_dev,
-		struct adc_config *const config)
+		struct adc_conf *const config)
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
@@ -157,7 +157,7 @@ enum status_code _adc_set_config (Adc *const hw_dev,
  *
  */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
-		struct adc_config *config)
+		struct adc_conf *config)
 {
 
 	dev_inst->hw_dev = hw_dev;

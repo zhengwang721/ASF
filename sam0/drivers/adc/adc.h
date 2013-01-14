@@ -182,15 +182,15 @@ extern "C" {
  * \subsection prescaler Prescaler
  * The ADC features a prescaler which enables conversion at lower clock rates
  * than the specified GCLK settings. The precaler can be configured in the
- * \ref adc_config struct.
+ * \ref adc_conf struct.
  *
  * \subsection resolution ADC Resolution
  * The ADC supports 8-bit, 10-bit or 12-bit resolution. The resolution can be
- * configured in the \ref adc_config struct.
+ * configured in the \ref adc_conf struct.
  *
  * \subsubsection oversampling Oversampling and Decimation
  * Oversampling and decimation can be configured with the
- * \ref adc_oversampling_and_decimation in the \ref adc_config struct.
+ * \ref adc_oversampling_and_decimation in the \ref adc_conf struct.
  * In oversampling and decimation mode the ADC resolution is increased from
  * 12-bits to programmed 13, 14, 15 or 16-bits.
  * 
@@ -214,10 +214,10 @@ extern "C" {
  * If however the positive input may go below the negative input, creating
  * some negative results, the differential mode should be used
  * in order to get correct results. The configuration of the conversion mode
- * is done in the \ref adc_config struct.
+ * is done in the \ref adc_conf struct.
  *
  * \subsubsection sample_time Sample Time
- * Sample time is configurable with \ref adc_config.sample_length. This value
+ * Sample time is configurable with \ref adc_conf.sample_length. This value
  * (0-63) controls the ADC sampling time in number of half-ADC prescaled clock
  * cycles (depending on the prescaler value), thus controlling the ADC input
  * impedance. \todo rewrite
@@ -231,7 +231,7 @@ extern "C" {
  * The ADC can be configured to trade conversion speed for accuracy by
  * averaging multiple samples. This feature is suitable when operating in noisy
  * conditions. The numbers of samples to be averaged is specified with the
- * \ref adc_average_samples enum in the \ref adc_config struct.
+ * \ref adc_average_samples enum in the \ref adc_conf struct.
  * When reading the ADC result, this will be the output.
  * The effective ADC sample rate will be reduced with:
  * <table>
@@ -295,7 +295,7 @@ extern "C" {
  *
  * The significant bits of the lower window monitor threshold and upper window
  * monitor threshold are given by the precision selected by the resolution
- * option in the \ref adc_config struct. That means that only the eight lower
+ * option in the \ref adc_conf struct. That means that only the eight lower
  * bits will be considered in 8-bit mode. In addition, if using differential
  * mode, the 8th bit will be considered as the sign bit even if bit 9 is a
  * zero.
@@ -319,9 +319,9 @@ extern "C" {
  * \f]
  *
  * Offset and gain correction is enabled with the
- * \ref adc_config.correction_enable bool, and the correction values are
- * written to the \ref adc_config.gain_correction and
- * \ref adc_config.offset_correction values.
+ * \ref adc_conf.correction_enable bool, and the correction values are
+ * written to the \ref adc_conf.gain_correction and
+ * \ref adc_conf.offset_correction values.
  * 
  * In single conversion, a latency of 13 GCLK_ADC is added for the final
  * RESULT availlability. Since the correction time is always less than
@@ -331,13 +331,13 @@ extern "C" {
 
  * \subsection pin_scan Pin Scan
  * In pin scan mode, the first conversion will start at the configured positive
- * input (\ref adc_config.positive_input) plus a start offset
- * (\ref adc_config.offset_start_scan). When a conversion is done, the next
+ * input (\ref adc_conf.positive_input) plus a start offset
+ * (\ref adc_conf.offset_start_scan). When a conversion is done, the next
  * conversion will start at the next input and so on, until the configured
- * number of input pins to scan (\ref adc_config.inputs_to_scan) conversions
+ * number of input pins to scan (\ref adc_conf.inputs_to_scan) conversions
  * are done.
  *
- * Pin scan mode can be configured in the \ref adc_config struct before
+ * Pin scan mode can be configured in the \ref adc_conf struct before
  * initializing the ADC, or run-time with the \ref adc_set_pin_scan_mode and
  * \ref adc_disable_pin_scan_mode functions.
  *
@@ -701,7 +701,7 @@ enum adc_oversampling_and_decimation {
  * function before being modified by the user application.
  * \todo adc_conf?
  */
-struct adc_config {
+struct adc_conf {
 	/** TODO */
 	enum gclock_source       clock_source;
 	/** Voltage reference */
@@ -814,7 +814,7 @@ static inline void _adc_wait_for_sync(Adc *const hw_dev)
 }
 
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
-		struct adc_config *config);
+		struct adc_conf *config);
 
 /**
  * \brief Enable the ADC module
@@ -910,7 +910,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void adc_get_config_defaults(struct adc_config *const config)
+static inline void adc_get_config_defaults(struct adc_conf *const config)
 {
 	Assert(config);
 
