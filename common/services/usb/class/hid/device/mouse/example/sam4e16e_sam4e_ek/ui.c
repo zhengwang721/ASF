@@ -63,6 +63,7 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 	if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
 		// It is a wakeup then send wakeup USB
 		udc_remotewakeup();
+		LED_On(LED0);
 	}
 }
 
@@ -73,7 +74,7 @@ void ui_init(void)
 	// Enable IRQ for button (PIOA)
 	NVIC_EnableIRQ((IRQn_Type) WAKEUP_PIO_ID);
 	// Initialize LEDs
-	LED_On(LED0);
+	LED_Off(LED0);
 	LED_Off(LED1);
 }
 
@@ -86,9 +87,9 @@ void ui_powerdown(void)
 
 void ui_wakeup_enable(void)
 {
-	// Configure PA15 as PIO input
+	// Configure BP3 as PIO input
 	pio_configure_pin(WAKEUP_PIN, WAKEUP_PIO_ATTR);
-	// Enable interrupt for PA15
+	// Enable interrupt for BP3
 	pio_enable_pin_interrupt(WAKEUP_PIN);
 	// Enable fast wakeup for button pin (WKUP14 for PA15)
 	pmc_set_fast_startup_input(WAKEUP_PMC_FSTT);
@@ -98,7 +99,7 @@ void ui_wakeup_disable(void)
 {
 	// Disable interrupt for button pin
 	pio_disable_pin_interrupt(WAKEUP_PIN);
-	// Disable fast wakeup for button pin (WKUP14 for PA15)
+	// Disable fast wakeup for button pin (WKUP10 for BP3)
 	pmc_clr_fast_startup_input(WAKEUP_PMC_FSTT);
 }
 
@@ -114,10 +115,10 @@ void ui_process(uint16_t framenumber)
 	bool btn_pressed;
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
+		LED_On(LED1);
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
+		LED_Off(LED1);
 	}
 	// Scan process running each 2ms
 	cpt_sof++;
@@ -150,7 +151,8 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAM4E-EK:
- * - Led 0 (D2) blinks when USB host has checked and enabled HID Mouse interface
+ * - Led 0 (D2) is on when USB is wakeup
+ * - Led 1 (D3) blinks when USB host has checked and enabled HID Mouse interface
  * - BP3 and BP2 are linked to mouse button left and right
  * - BP4 and BP5 are used to move mouse up and down
  * - Only a low level on BP3 will generate a wakeup to USB Host in remote wakeup
