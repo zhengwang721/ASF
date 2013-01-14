@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDP. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -121,6 +121,12 @@
 //! @{
 #define  udd_disable_all_events()            (UDP->IDR = 0xFFFF)
 #define  udd_disable_endpoint_events()       (UDP->IDR = 0xFF)
+
+#define  udd_enable_wakeups()                (UDP->UDP_IER = (UDP_IER_RXRSM|UDP_IER_EXTRSM|UDP_IER_WAKEUP))
+#define  udd_disable_wakeups()               (UDP->UDP_IDR = (UDP_IDR_RXRSM|UDP_IDR_EXTRSM|UDP_IDR_WAKEUP))
+#define  udd_ack_wakeups()                   (UDP->UDP_ICR = (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP))
+#define  Is_udd_any_wakeup()                 (Tst_bits(UDP->UDP_ISR, (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP)))
+#define  Is_udd_expected_wakeup()            ((UDP->UDP_ISR & (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP)) & UDP->UDP_IMR)
 //! @}
 
 //! Manage remote wake-up event

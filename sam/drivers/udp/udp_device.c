@@ -158,6 +158,7 @@ static void udd_sleep_mode(bool b_idle)
 
 static void udd_sleep_mode(bool b_idle)
 {
+	UNUSED(b_idle);
 }
 
 #endif // UDD_NO_SLEEP_MGR
@@ -375,6 +376,16 @@ static bool udd_ep_interrupt(void);
  */
 ISR(UDD_USB_INT_FUN)
 {
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	/* The UDP peripheral clock in the Power Management Controller (PMC)
 	   must be enabled before any read/write operations to the UDP registers
 	   including the UDP_TXVC register. */
@@ -403,18 +414,15 @@ ISR(UDD_USB_INT_FUN)
 		(Is_udd_resume_interrupt_enabled() && Is_udd_resume()) ||
 		(Is_udd_ext_resume_interrupt_enabled() && Is_udd_ext_resume())) {
 		// Ack wakeup interrupt and enable suspend interrupt
-		udd_ack_wake_up();
-		udd_ack_resume();
-		udd_ack_ext_resume();
+		udd_ack_wakeups();
 		// Do resume operations
-		udd_disable_wake_up_interrupt();
-		udd_disable_resume_interrupt();
-		udd_disable_ext_resume_interrupt();
+		udd_disable_wakeups();
 
 		udd_sleep_mode(true); // Enter in IDLE mode
 #ifdef UDC_RESUME_EVENT
 		UDC_RESUME_EVENT();
 #endif
+		udd_ack_suspend();
 		udd_enable_suspend_interrupt();
 		udd_enable_sof_interrupt();
 		goto udd_interrupt_end;
