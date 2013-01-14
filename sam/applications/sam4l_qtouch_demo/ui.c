@@ -3,7 +3,7 @@
  *
  * \brief User Interface.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,9 +114,9 @@ void ui_bm_init(void)
 	/* 
 	 * Initialize Board Monitor and send first status
 	 */
-	sysclk_enable_peripheral_clock(REMOTE_TASK_USART);
+	sysclk_enable_peripheral_clock(BM_USART_USART);
 	bm_init();
-	sysclk_disable_peripheral_clock(REMOTE_TASK_USART);
+	sysclk_disable_peripheral_clock(BM_USART_USART);
 	ui_bm_send_mcu_status();
 }
 
@@ -127,13 +127,13 @@ void ui_bm_init(void)
 void ui_bm_send_mcu_status(void)
 {
 	uint32_t power_scaling, sleep_mode, cpu_freq, cpu_src;
-	sysclk_enable_peripheral_clock(REMOTE_TASK_USART);
+	sysclk_enable_peripheral_clock(BM_USART_USART);
 	power_scaling = sam4l_status.power_scaling;
 	sleep_mode = sam4l_status.sleep_mode;
 	cpu_freq = sam4l_status.cpu_freq;
 	cpu_src = sam4l_status.cpu_src;
 	bm_send_mcu_status(power_scaling, sleep_mode, cpu_freq, cpu_src);
-	sysclk_disable_peripheral_clock(REMOTE_TASK_USART);
+	sysclk_disable_peripheral_clock(BM_USART_USART);
 }
 
 /** 
