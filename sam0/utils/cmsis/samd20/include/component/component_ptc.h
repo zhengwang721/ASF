@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 /** \addtogroup SAMD20_PTC Peripheral Touch Controller */
 /*@{*/
 
-#define REV_PTC        0x100
+#define REV_PTC                     0x100
 
 /* -------- PTC_CTRLA : (PTC Offset: 0x00) (R/W  8) Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -66,9 +66,12 @@ typedef union {
 #define PTC_CTRLA_OFFSET            0x00         /**< \brief (PTC_CTRLA offset) Control Register A */
 #define PTC_CTRLA_RESETVALUE        0x00         /**< \brief (PTC_CTRLA reset_value) Control Register A */
 
-#define PTC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (PTC_CTRLA) Software Reset */
-#define PTC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (PTC_CTRLA) Enable */
-#define PTC_CTRLA_RUNSTDBY          (0x1u <<  2) /**< \brief (PTC_CTRLA) Run during Standby */
+#define PTC_CTRLA_SWRST_Pos         0            /**< \brief (PTC_CTRLA) Software Reset */
+#define PTC_CTRLA_SWRST             (0x1u << PTC_CTRLA_SWRST_Pos)
+#define PTC_CTRLA_ENABLE_Pos        1            /**< \brief (PTC_CTRLA) Enable */
+#define PTC_CTRLA_ENABLE            (0x1u << PTC_CTRLA_ENABLE_Pos)
+#define PTC_CTRLA_RUNSTDBY_Pos      2            /**< \brief (PTC_CTRLA) Run during Standby */
+#define PTC_CTRLA_RUNSTDBY          (0x1u << PTC_CTRLA_RUNSTDBY_Pos)
 #define PTC_CTRLA_MASK              0x07u        /**< \brief (PTC_CTRLA) MASK Register */
 
 /* -------- PTC_STATUS : (PTC Offset: 0x01) (R/   8) Status Register -------- */
@@ -89,10 +92,14 @@ typedef union {
 #define PTC_STATUS_OFFSET           0x01         /**< \brief (PTC_STATUS offset) Status Register */
 #define PTC_STATUS_RESETVALUE       0x00         /**< \brief (PTC_STATUS reset_value) Status Register */
 
-#define PTC_STATUS_SWRST            (0x1u <<  0) /**< \brief (PTC_STATUS) Software Reset Status */
-#define PTC_STATUS_ENABLE           (0x1u <<  1) /**< \brief (PTC_STATUS) Enable Status */
-#define PTC_STATUS_CTSBUSY          (0x1u <<  3) /**< \brief (PTC_STATUS) CTS Busy */
-#define PTC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (PTC_STATUS) Synchronization Busy */
+#define PTC_STATUS_SWRST_Pos        0            /**< \brief (PTC_STATUS) Software Reset Status */
+#define PTC_STATUS_SWRST            (0x1u << PTC_STATUS_SWRST_Pos)
+#define PTC_STATUS_ENABLE_Pos       1            /**< \brief (PTC_STATUS) Enable Status */
+#define PTC_STATUS_ENABLE           (0x1u << PTC_STATUS_ENABLE_Pos)
+#define PTC_STATUS_CTSBUSY_Pos      3            /**< \brief (PTC_STATUS) CTS Busy */
+#define PTC_STATUS_CTSBUSY          (0x1u << PTC_STATUS_CTSBUSY_Pos)
+#define PTC_STATUS_SYNCBUSY_Pos     7            /**< \brief (PTC_STATUS) Synchronization Busy */
+#define PTC_STATUS_SYNCBUSY         (0x1u << PTC_STATUS_SYNCBUSY_Pos)
 #define PTC_STATUS_MASK             0x8Bu        /**< \brief (PTC_STATUS) MASK Register */
 
 /* -------- PTC_CTRLB : (PTC Offset: 0x04) (R/W  8) Control Register B -------- */
@@ -111,11 +118,13 @@ typedef union {
 #define PTC_CTRLB_OFFSET            0x04         /**< \brief (PTC_CTRLB offset) Control Register B */
 #define PTC_CTRLB_RESETVALUE        0x00         /**< \brief (PTC_CTRLB reset_value) Control Register B */
 
-#define PTC_CTRLB_PRSC_Pos          0
-#define PTC_CTRLB_PRSC_Msk          (0x3u << PTC_CTRLB_PRSC_Pos) /**< \brief (PTC_CTRLB) Clock Prescaler */
+#define PTC_CTRLB_PRSC_Pos          0            /**< \brief (PTC_CTRLB) Clock Prescaler */
+#define PTC_CTRLB_PRSC_Msk          (0x3u << PTC_CTRLB_PRSC_Pos)
 #define PTC_CTRLB_PRSC(value)       ((PTC_CTRLB_PRSC_Msk & ((value) << PTC_CTRLB_PRSC_Pos)))
-#define PTC_CTRLB_FREERUN           (0x1u <<  2) /**< \brief (PTC_CTRLB) Freerunning PTC */
-#define PTC_CTRLB_ADRS              (0x1u <<  3) /**< \brief (PTC_CTRLB) ADC Resolution Select */
+#define PTC_CTRLB_FREERUN_Pos       2            /**< \brief (PTC_CTRLB) Freerunning PTC */
+#define PTC_CTRLB_FREERUN           (0x1u << PTC_CTRLB_FREERUN_Pos)
+#define PTC_CTRLB_ADRS_Pos          3            /**< \brief (PTC_CTRLB) ADC Resolution Select */
+#define PTC_CTRLB_ADRS              (0x1u << PTC_CTRLB_ADRS_Pos)
 #define PTC_CTRLB_MASK              0x0Fu        /**< \brief (PTC_CTRLB) MASK Register */
 
 /* -------- PTC_EVCTRL : (PTC Offset: 0x05) (R/W  8) Event Control Register -------- */
@@ -134,9 +143,12 @@ typedef union {
 #define PTC_EVCTRL_OFFSET           0x05         /**< \brief (PTC_EVCTRL offset) Event Control Register */
 #define PTC_EVCTRL_RESETVALUE       0x00         /**< \brief (PTC_EVCTRL reset_value) Event Control Register */
 
-#define PTC_EVCTRL_STCONVEI         (0x1u <<  0) /**< \brief (PTC_EVCTRL) Start Conversion Event Input */
-#define PTC_EVCTRL_EOCEO            (0x1u <<  1) /**< \brief (PTC_EVCTRL) End of Conversion Event Output */
-#define PTC_EVCTRL_WCOMPEO          (0x1u <<  2) /**< \brief (PTC_EVCTRL) Window Comparator Event Output */
+#define PTC_EVCTRL_STCONVEI_Pos     0            /**< \brief (PTC_EVCTRL) Start Conversion Event Input */
+#define PTC_EVCTRL_STCONVEI         (0x1u << PTC_EVCTRL_STCONVEI_Pos)
+#define PTC_EVCTRL_EOCEO_Pos        1            /**< \brief (PTC_EVCTRL) End of Conversion Event Output */
+#define PTC_EVCTRL_EOCEO            (0x1u << PTC_EVCTRL_EOCEO_Pos)
+#define PTC_EVCTRL_WCOMPEO_Pos      2            /**< \brief (PTC_EVCTRL) Window Comparator Event Output */
+#define PTC_EVCTRL_WCOMPEO          (0x1u << PTC_EVCTRL_WCOMPEO_Pos)
 #define PTC_EVCTRL_MASK             0x07u        /**< \brief (PTC_EVCTRL) MASK Register */
 
 /* -------- PTC_INTENCLR : (PTC Offset: 0x08) (R/W  8) Interrupt Enable Clear Register -------- */
@@ -155,9 +167,12 @@ typedef union {
 #define PTC_INTENCLR_OFFSET         0x08         /**< \brief (PTC_INTENCLR offset) Interrupt Enable Clear Register */
 #define PTC_INTENCLR_RESETVALUE     0x00         /**< \brief (PTC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define PTC_INTENCLR_EOC            (0x1u <<  0) /**< \brief (PTC_INTENCLR) End of Conversion Interrupt Disable */
-#define PTC_INTENCLR_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENCLR) Window Compare Interrupt Disable */
-#define PTC_INTENCLR_READY          (0x1u <<  2) /**< \brief (PTC_INTENCLR) Ready Interrupt Disable */
+#define PTC_INTENCLR_EOC_Pos        0            /**< \brief (PTC_INTENCLR) End of Conversion Interrupt Disable */
+#define PTC_INTENCLR_EOC            (0x1u << PTC_INTENCLR_EOC_Pos)
+#define PTC_INTENCLR_WCOMP_Pos      1            /**< \brief (PTC_INTENCLR) Window Compare Interrupt Disable */
+#define PTC_INTENCLR_WCOMP          (0x1u << PTC_INTENCLR_WCOMP_Pos)
+#define PTC_INTENCLR_READY_Pos      2            /**< \brief (PTC_INTENCLR) Ready Interrupt Disable */
+#define PTC_INTENCLR_READY          (0x1u << PTC_INTENCLR_READY_Pos)
 #define PTC_INTENCLR_MASK           0x07u        /**< \brief (PTC_INTENCLR) MASK Register */
 
 /* -------- PTC_INTENSET : (PTC Offset: 0x09) (R/W  8) Interrupt Enable Set Register -------- */
@@ -176,9 +191,12 @@ typedef union {
 #define PTC_INTENSET_OFFSET         0x09         /**< \brief (PTC_INTENSET offset) Interrupt Enable Set Register */
 #define PTC_INTENSET_RESETVALUE     0x00         /**< \brief (PTC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define PTC_INTENSET_EOC            (0x1u <<  0) /**< \brief (PTC_INTENSET) End of Conversion Interrupt Enable */
-#define PTC_INTENSET_WCOMP          (0x1u <<  1) /**< \brief (PTC_INTENSET) Window Compare Interrupt Enable */
-#define PTC_INTENSET_READY          (0x1u <<  2) /**< \brief (PTC_INTENSET) Ready Interrupt Enable */
+#define PTC_INTENSET_EOC_Pos        0            /**< \brief (PTC_INTENSET) End of Conversion Interrupt Enable */
+#define PTC_INTENSET_EOC            (0x1u << PTC_INTENSET_EOC_Pos)
+#define PTC_INTENSET_WCOMP_Pos      1            /**< \brief (PTC_INTENSET) Window Compare Interrupt Enable */
+#define PTC_INTENSET_WCOMP          (0x1u << PTC_INTENSET_WCOMP_Pos)
+#define PTC_INTENSET_READY_Pos      2            /**< \brief (PTC_INTENSET) Ready Interrupt Enable */
+#define PTC_INTENSET_READY          (0x1u << PTC_INTENSET_READY_Pos)
 #define PTC_INTENSET_MASK           0x07u        /**< \brief (PTC_INTENSET) MASK Register */
 
 /* -------- PTC_INTFLAG : (PTC Offset: 0x0A) (R/W  8) Interrupt Flag Status and Clear Register -------- */
@@ -197,9 +215,12 @@ typedef union {
 #define PTC_INTFLAG_OFFSET          0x0A         /**< \brief (PTC_INTFLAG offset) Interrupt Flag Status and Clear Register */
 #define PTC_INTFLAG_RESETVALUE      0x00         /**< \brief (PTC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define PTC_INTFLAG_EOC             (0x1u <<  0) /**< \brief (PTC_INTFLAG) End of Conversion Interrupt Flag */
-#define PTC_INTFLAG_WCOMP           (0x1u <<  1) /**< \brief (PTC_INTFLAG) Window Compare Interrupt Flag */
-#define PTC_INTFLAG_READY           (0x1u <<  2) /**< \brief (PTC_INTFLAG) Ready Interrupt Flag */
+#define PTC_INTFLAG_EOC_Pos         0            /**< \brief (PTC_INTFLAG) End of Conversion Interrupt Flag */
+#define PTC_INTFLAG_EOC             (0x1u << PTC_INTFLAG_EOC_Pos)
+#define PTC_INTFLAG_WCOMP_Pos       1            /**< \brief (PTC_INTFLAG) Window Compare Interrupt Flag */
+#define PTC_INTFLAG_WCOMP           (0x1u << PTC_INTFLAG_WCOMP_Pos)
+#define PTC_INTFLAG_READY_Pos       2            /**< \brief (PTC_INTFLAG) Ready Interrupt Flag */
+#define PTC_INTFLAG_READY           (0x1u << PTC_INTFLAG_READY_Pos)
 #define PTC_INTFLAG_MASK            0x07u        /**< \brief (PTC_INTFLAG) MASK Register */
 
 /* -------- PTC_CTSCTRLA : (PTC Offset: 0x0C) (R/W  8) CTS Control Register A -------- */
@@ -218,12 +239,13 @@ typedef union {
 #define PTC_CTSCTRLA_OFFSET         0x0C         /**< \brief (PTC_CTSCTRLA offset) CTS Control Register A */
 #define PTC_CTSCTRLA_RESETVALUE     0x00         /**< \brief (PTC_CTSCTRLA reset_value) CTS Control Register A */
 
-#define PTC_CTSCTRLA_SDS_Pos        0
-#define PTC_CTSCTRLA_SDS_Msk        (0xFu << PTC_CTSCTRLA_SDS_Pos) /**< \brief (PTC_CTSCTRLA) Sampling Delay Selection */
+#define PTC_CTSCTRLA_SDS_Pos        0            /**< \brief (PTC_CTSCTRLA) Sampling Delay Selection */
+#define PTC_CTSCTRLA_SDS_Msk        (0xFu << PTC_CTSCTRLA_SDS_Pos)
 #define PTC_CTSCTRLA_SDS(value)     ((PTC_CTSCTRLA_SDS_Msk & ((value) << PTC_CTSCTRLA_SDS_Pos)))
-#define PTC_CTSCTRLA_ASDV           (0x1u <<  4) /**< \brief (PTC_CTSCTRLA) Automatic Sampling Delay Variation */
-#define PTC_CTSCTRLA_CCDS_Pos       5
-#define PTC_CTSCTRLA_CCDS_Msk       (0x3u << PTC_CTSCTRLA_CCDS_Pos) /**< \brief (PTC_CTSCTRLA) Channel Change Delay Selection */
+#define PTC_CTSCTRLA_ASDV_Pos       4            /**< \brief (PTC_CTSCTRLA) Automatic Sampling Delay Variation */
+#define PTC_CTSCTRLA_ASDV           (0x1u << PTC_CTSCTRLA_ASDV_Pos)
+#define PTC_CTSCTRLA_CCDS_Pos       5            /**< \brief (PTC_CTSCTRLA) Channel Change Delay Selection */
+#define PTC_CTSCTRLA_CCDS_Msk       (0x3u << PTC_CTSCTRLA_CCDS_Pos)
 #define PTC_CTSCTRLA_CCDS(value)    ((PTC_CTSCTRLA_CCDS_Msk & ((value) << PTC_CTSCTRLA_CCDS_Pos)))
 #define PTC_CTSCTRLA_MASK           0x7Fu        /**< \brief (PTC_CTSCTRLA) MASK Register */
 
@@ -242,10 +264,11 @@ typedef union {
 #define PTC_CTSCTRLC_OFFSET         0x0D         /**< \brief (PTC_CTSCTRLC offset) CTS Control Register C */
 #define PTC_CTSCTRLC_RESETVALUE     0x00         /**< \brief (PTC_CTSCTRLC reset_value) CTS Control Register C */
 
-#define PTC_CTSCTRLC_ADAS_Pos       0
-#define PTC_CTSCTRLC_ADAS_Msk       (0x7u << PTC_CTSCTRLC_ADAS_Pos) /**< \brief (PTC_CTSCTRLC) ADC Accumulation Number Select */
+#define PTC_CTSCTRLC_ADAS_Pos       0            /**< \brief (PTC_CTSCTRLC) ADC Accumulation Number Select */
+#define PTC_CTSCTRLC_ADAS_Msk       (0x7u << PTC_CTSCTRLC_ADAS_Pos)
 #define PTC_CTSCTRLC_ADAS(value)    ((PTC_CTSCTRLC_ADAS_Msk & ((value) << PTC_CTSCTRLC_ADAS_Pos)))
-#define PTC_CTSCTRLC_STCONV         (0x1u <<  7) /**< \brief (PTC_CTSCTRLC) Start Conversion */
+#define PTC_CTSCTRLC_STCONV_Pos     7            /**< \brief (PTC_CTSCTRLC) Start Conversion */
+#define PTC_CTSCTRLC_STCONV         (0x1u << PTC_CTSCTRLC_STCONV_Pos)
 #define PTC_CTSCTRLC_MASK           0x87u        /**< \brief (PTC_CTSCTRLC) MASK Register */
 
 /* -------- PTC_YSEL : (PTC Offset: 0x10) (R/W 16) Y Line Select Register -------- */
@@ -261,8 +284,8 @@ typedef union {
 #define PTC_YSEL_OFFSET             0x10         /**< \brief (PTC_YSEL offset) Y Line Select Register */
 #define PTC_YSEL_RESETVALUE         0x0000       /**< \brief (PTC_YSEL reset_value) Y Line Select Register */
 
-#define PTC_YSEL_YSEL_Pos           0
-#define PTC_YSEL_YSEL_Msk           (0xFFFFu << PTC_YSEL_YSEL_Pos) /**< \brief (PTC_YSEL) Y Line Selection */
+#define PTC_YSEL_YSEL_Pos           0            /**< \brief (PTC_YSEL) Y Line Selection */
+#define PTC_YSEL_YSEL_Msk           (0xFFFFu << PTC_YSEL_YSEL_Pos)
 #define PTC_YSEL_YSEL(value)        ((PTC_YSEL_YSEL_Msk & ((value) << PTC_YSEL_YSEL_Pos)))
 #define PTC_YSEL_MASK               0xFFFFu      /**< \brief (PTC_YSEL) MASK Register */
 
@@ -279,8 +302,8 @@ typedef union {
 #define PTC_XSEL_OFFSET             0x12         /**< \brief (PTC_XSEL offset) X Line Select Register */
 #define PTC_XSEL_RESETVALUE         0x0000       /**< \brief (PTC_XSEL reset_value) X Line Select Register */
 
-#define PTC_XSEL_XSEL_Pos           0
-#define PTC_XSEL_XSEL_Msk           (0xFFFFu << PTC_XSEL_XSEL_Pos) /**< \brief (PTC_XSEL) X Line Selection */
+#define PTC_XSEL_XSEL_Pos           0            /**< \brief (PTC_XSEL) X Line Selection */
+#define PTC_XSEL_XSEL_Msk           (0xFFFFu << PTC_XSEL_XSEL_Pos)
 #define PTC_XSEL_XSEL(value)        ((PTC_XSEL_XSEL_Msk & ((value) << PTC_XSEL_XSEL_Pos)))
 #define PTC_XSEL_MASK               0xFFFFu      /**< \brief (PTC_XSEL) MASK Register */
 
@@ -297,8 +320,8 @@ typedef union {
 #define PTC_YEN_OFFSET              0x14         /**< \brief (PTC_YEN offset) Y Line Enable Register */
 #define PTC_YEN_RESETVALUE          0x0000       /**< \brief (PTC_YEN reset_value) Y Line Enable Register */
 
-#define PTC_YEN_YEN_Pos             0
-#define PTC_YEN_YEN_Msk             (0xFFFFu << PTC_YEN_YEN_Pos) /**< \brief (PTC_YEN) Y Line Enable */
+#define PTC_YEN_YEN_Pos             0            /**< \brief (PTC_YEN) Y Line Enable */
+#define PTC_YEN_YEN_Msk             (0xFFFFu << PTC_YEN_YEN_Pos)
 #define PTC_YEN_YEN(value)          ((PTC_YEN_YEN_Msk & ((value) << PTC_YEN_YEN_Pos)))
 #define PTC_YEN_MASK                0xFFFFu      /**< \brief (PTC_YEN) MASK Register */
 
@@ -315,8 +338,8 @@ typedef union {
 #define PTC_XEN_OFFSET              0x16         /**< \brief (PTC_XEN offset) X Line Enable Register */
 #define PTC_XEN_RESETVALUE          0x0000       /**< \brief (PTC_XEN reset_value) X Line Enable Register */
 
-#define PTC_XEN_XEN_Pos             0
-#define PTC_XEN_XEN_Msk             (0xFFFFu << PTC_XEN_XEN_Pos) /**< \brief (PTC_XEN) X Line Enable */
+#define PTC_XEN_XEN_Pos             0            /**< \brief (PTC_XEN) X Line Enable */
+#define PTC_XEN_XEN_Msk             (0xFFFFu << PTC_XEN_XEN_Pos)
 #define PTC_XEN_XEN(value)          ((PTC_XEN_XEN_Msk & ((value) << PTC_XEN_XEN_Pos)))
 #define PTC_XEN_MASK                0xFFFFu      /**< \brief (PTC_XEN) MASK Register */
 
@@ -337,17 +360,17 @@ typedef union {
 #define PTC_CCCAL_OFFSET            0x18         /**< \brief (PTC_CCCAL offset) CTS Compensation Capacitor Calibration Register */
 #define PTC_CCCAL_RESETVALUE        0x0000       /**< \brief (PTC_CCCAL reset_value) CTS Compensation Capacitor Calibration Register */
 
-#define PTC_CCCAL_CCA_Pos           0
-#define PTC_CCCAL_CCA_Msk           (0xFu << PTC_CCCAL_CCA_Pos) /**< \brief (PTC_CCCAL) Compensation Capacitor Accurate Value */
+#define PTC_CCCAL_CCA_Pos           0            /**< \brief (PTC_CCCAL) Compensation Capacitor Accurate Value */
+#define PTC_CCCAL_CCA_Msk           (0xFu << PTC_CCCAL_CCA_Pos)
 #define PTC_CCCAL_CCA(value)        ((PTC_CCCAL_CCA_Msk & ((value) << PTC_CCCAL_CCA_Pos)))
-#define PTC_CCCAL_CCF_Pos           4
-#define PTC_CCCAL_CCF_Msk           (0xFu << PTC_CCCAL_CCF_Pos) /**< \brief (PTC_CCCAL) Compensation Capacitor Fine Value */
+#define PTC_CCCAL_CCF_Pos           4            /**< \brief (PTC_CCCAL) Compensation Capacitor Fine Value */
+#define PTC_CCCAL_CCF_Msk           (0xFu << PTC_CCCAL_CCF_Pos)
 #define PTC_CCCAL_CCF(value)        ((PTC_CCCAL_CCF_Msk & ((value) << PTC_CCCAL_CCF_Pos)))
-#define PTC_CCCAL_CCC_Pos           8
-#define PTC_CCCAL_CCC_Msk           (0xFu << PTC_CCCAL_CCC_Pos) /**< \brief (PTC_CCCAL) Compensation Capacitor Coarse Value */
+#define PTC_CCCAL_CCC_Pos           8            /**< \brief (PTC_CCCAL) Compensation Capacitor Coarse Value */
+#define PTC_CCCAL_CCC_Msk           (0xFu << PTC_CCCAL_CCC_Pos)
 #define PTC_CCCAL_CCC(value)        ((PTC_CCCAL_CCC_Msk & ((value) << PTC_CCCAL_CCC_Pos)))
-#define PTC_CCCAL_CCR_Pos           12
-#define PTC_CCCAL_CCR_Msk           (0x3u << PTC_CCCAL_CCR_Pos) /**< \brief (PTC_CCCAL) Compensation Capacitor Rough Value */
+#define PTC_CCCAL_CCR_Pos           12           /**< \brief (PTC_CCCAL) Compensation Capacitor Rough Value */
+#define PTC_CCCAL_CCR_Msk           (0x3u << PTC_CCCAL_CCR_Pos)
 #define PTC_CCCAL_CCR(value)        ((PTC_CCCAL_CCR_Msk & ((value) << PTC_CCCAL_CCR_Pos)))
 #define PTC_CCCAL_MASK              0x3FFFu      /**< \brief (PTC_CCCAL) MASK Register */
 
@@ -366,11 +389,11 @@ typedef union {
 #define PTC_CICAL_OFFSET            0x1A         /**< \brief (PTC_CICAL offset) CTS Integrator Capacitor Calibration Register */
 #define PTC_CICAL_RESETVALUE        0x00         /**< \brief (PTC_CICAL reset_value) CTS Integrator Capacitor Calibration Register */
 
-#define PTC_CICAL_CIF_Pos           0
-#define PTC_CICAL_CIF_Msk           (0xFu << PTC_CICAL_CIF_Pos) /**< \brief (PTC_CICAL) Integration Capacitor Fine Value */
+#define PTC_CICAL_CIF_Pos           0            /**< \brief (PTC_CICAL) Integration Capacitor Fine Value */
+#define PTC_CICAL_CIF_Msk           (0xFu << PTC_CICAL_CIF_Pos)
 #define PTC_CICAL_CIF(value)        ((PTC_CICAL_CIF_Msk & ((value) << PTC_CICAL_CIF_Pos)))
-#define PTC_CICAL_CIC_Pos           4
-#define PTC_CICAL_CIC_Msk           (0x3u << PTC_CICAL_CIC_Pos) /**< \brief (PTC_CICAL) Integration Capacitor Coarse Value */
+#define PTC_CICAL_CIC_Pos           4            /**< \brief (PTC_CICAL) Integration Capacitor Coarse Value */
+#define PTC_CICAL_CIC_Msk           (0x3u << PTC_CICAL_CIC_Pos)
 #define PTC_CICAL_CIC(value)        ((PTC_CICAL_CIC_Msk & ((value) << PTC_CICAL_CIC_Pos)))
 #define PTC_CICAL_MASK              0x3Fu        /**< \brief (PTC_CICAL) MASK Register */
 
@@ -388,8 +411,8 @@ typedef union {
 #define PTC_CTSRS_OFFSET            0x1B         /**< \brief (PTC_CTSRS offset) CTS Resistor Selection Register */
 #define PTC_CTSRS_RESETVALUE        0x00         /**< \brief (PTC_CTSRS reset_value) CTS Resistor Selection Register */
 
-#define PTC_CTSRS_RSEL_Pos          0
-#define PTC_CTSRS_RSEL_Msk          (0x3u << PTC_CTSRS_RSEL_Pos) /**< \brief (PTC_CTSRS) Resistor Select */
+#define PTC_CTSRS_RSEL_Pos          0            /**< \brief (PTC_CTSRS) Resistor Select */
+#define PTC_CTSRS_RSEL_Msk          (0x3u << PTC_CTSRS_RSEL_Pos)
 #define PTC_CTSRS_RSEL(value)       ((PTC_CTSRS_RSEL_Msk & ((value) << PTC_CTSRS_RSEL_Pos)))
 #define PTC_CTSRS_MASK              0x03u        /**< \brief (PTC_CTSRS) MASK Register */
 
@@ -406,8 +429,8 @@ typedef union {
 #define PTC_RESULT_OFFSET           0x1C         /**< \brief (PTC_RESULT offset) Conversion Result Register */
 #define PTC_RESULT_RESETVALUE       0x0000       /**< \brief (PTC_RESULT reset_value) Conversion Result Register */
 
-#define PTC_RESULT_RES_Pos          0
-#define PTC_RESULT_RES_Msk          (0xFFFFu << PTC_RESULT_RES_Pos) /**< \brief (PTC_RESULT) Result */
+#define PTC_RESULT_RES_Pos          0            /**< \brief (PTC_RESULT) Result */
+#define PTC_RESULT_RES_Msk          (0xFFFFu << PTC_RESULT_RES_Pos)
 #define PTC_RESULT_RES(value)       ((PTC_RESULT_RES_Msk & ((value) << PTC_RESULT_RES_Pos)))
 #define PTC_RESULT_MASK             0xFFFFu      /**< \brief (PTC_RESULT) MASK Register */
 
@@ -427,9 +450,10 @@ typedef union {
 #define PTC_CTSCTRLB_OFFSET         0x20         /**< \brief (PTC_CTSCTRLB offset) CTS Control Register B */
 #define PTC_CTSCTRLB_RESETVALUE     0x00         /**< \brief (PTC_CTSCTRLB reset_value) CTS Control Register B */
 
-#define PTC_CTSCTRLB_CTSLP          (0x1u <<  2) /**< \brief (PTC_CTSCTRLB) CTS Low Power Mode */
-#define PTC_CTSCTRLB_CTSM_Pos       4
-#define PTC_CTSCTRLB_CTSM_Msk       (0xFu << PTC_CTSCTRLB_CTSM_Pos) /**< \brief (PTC_CTSCTRLB) CTS Mode */
+#define PTC_CTSCTRLB_CTSLP_Pos      2            /**< \brief (PTC_CTSCTRLB) CTS Low Power Mode */
+#define PTC_CTSCTRLB_CTSLP          (0x1u << PTC_CTSCTRLB_CTSLP_Pos)
+#define PTC_CTSCTRLB_CTSM_Pos       4            /**< \brief (PTC_CTSCTRLB) CTS Mode */
+#define PTC_CTSCTRLB_CTSM_Msk       (0xFu << PTC_CTSCTRLB_CTSM_Pos)
 #define PTC_CTSCTRLB_CTSM(value)    ((PTC_CTSCTRLB_CTSM_Msk & ((value) << PTC_CTSCTRLB_CTSM_Pos)))
 #define PTC_CTSCTRLB_MASK           0xF4u        /**< \brief (PTC_CTSCTRLB) MASK Register */
 
@@ -447,8 +471,8 @@ typedef union {
 #define PTC_WINCCTRL_OFFSET         0x21         /**< \brief (PTC_WINCCTRL offset) Window Comparator Control Register */
 #define PTC_WINCCTRL_RESETVALUE     0x00         /**< \brief (PTC_WINCCTRL reset_value) Window Comparator Control Register */
 
-#define PTC_WINCCTRL_WINCM_Pos      0
-#define PTC_WINCCTRL_WINCM_Msk      (0x7u << PTC_WINCCTRL_WINCM_Pos) /**< \brief (PTC_WINCCTRL) Window Comparator Mode */
+#define PTC_WINCCTRL_WINCM_Pos      0            /**< \brief (PTC_WINCCTRL) Window Comparator Mode */
+#define PTC_WINCCTRL_WINCM_Msk      (0x7u << PTC_WINCCTRL_WINCM_Pos)
 #define PTC_WINCCTRL_WINCM(value)   ((PTC_WINCCTRL_WINCM_Msk & ((value) << PTC_WINCCTRL_WINCM_Pos)))
 #define PTC_WINCCTRL_MASK           0x07u        /**< \brief (PTC_WINCCTRL) MASK Register */
 
@@ -465,8 +489,8 @@ typedef union {
 #define PTC_WCHT_OFFSET             0x24         /**< \brief (PTC_WCHT offset) Window Comparator High Threshold Register */
 #define PTC_WCHT_RESETVALUE         0x0000       /**< \brief (PTC_WCHT reset_value) Window Comparator High Threshold Register */
 
-#define PTC_WCHT_WCHT_Pos           0
-#define PTC_WCHT_WCHT_Msk           (0xFFFFu << PTC_WCHT_WCHT_Pos) /**< \brief (PTC_WCHT) Window Comparator High Threshold */
+#define PTC_WCHT_WCHT_Pos           0            /**< \brief (PTC_WCHT) Window Comparator High Threshold */
+#define PTC_WCHT_WCHT_Msk           (0xFFFFu << PTC_WCHT_WCHT_Pos)
 #define PTC_WCHT_WCHT(value)        ((PTC_WCHT_WCHT_Msk & ((value) << PTC_WCHT_WCHT_Pos)))
 #define PTC_WCHT_MASK               0xFFFFu      /**< \brief (PTC_WCHT) MASK Register */
 
@@ -483,8 +507,8 @@ typedef union {
 #define PTC_WCLT_OFFSET             0x26         /**< \brief (PTC_WCLT offset) Window Comparator Low Threshold Register */
 #define PTC_WCLT_RESETVALUE         0x0000       /**< \brief (PTC_WCLT reset_value) Window Comparator Low Threshold Register */
 
-#define PTC_WCLT_WCLT_Pos           0
-#define PTC_WCLT_WCLT_Msk           (0xFFFFu << PTC_WCLT_WCLT_Pos) /**< \brief (PTC_WCLT) Window Comparator Low Threshold */
+#define PTC_WCLT_WCLT_Pos           0            /**< \brief (PTC_WCLT) Window Comparator Low Threshold */
+#define PTC_WCLT_WCLT_Msk           (0xFFFFu << PTC_WCLT_WCLT_Pos)
 #define PTC_WCLT_WCLT(value)        ((PTC_WCLT_WCLT_Msk & ((value) << PTC_WCLT_WCLT_Pos)))
 #define PTC_WCLT_MASK               0xFFFFu      /**< \brief (PTC_WCLT) MASK Register */
 

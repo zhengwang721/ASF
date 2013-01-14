@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 /** \addtogroup SAMD20_WDT Watchdog Timer */
 /*@{*/
 
-#define REV_WDT        0x100
+#define REV_WDT                     0x100
 
 /* -------- WDT_CTRL : (WDT Offset: 0x0) (R/W  8) Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -67,11 +67,13 @@ typedef union {
 #define WDT_CTRL_OFFSET             0x0          /**< \brief (WDT_CTRL offset) Control Register */
 #define WDT_CTRL_RESETVALUE         0x2C         /**< \brief (WDT_CTRL reset_value) Control Register */
 
-#define WDT_CTRL_ENABLE             (0x1u <<  1) /**< \brief (WDT_CTRL) Enable */
-#define WDT_CTRL_PER_Pos            2
-#define WDT_CTRL_PER_Msk            (0xFu << WDT_CTRL_PER_Pos) /**< \brief (WDT_CTRL) Timeout Period */
+#define WDT_CTRL_ENABLE_Pos         1            /**< \brief (WDT_CTRL) Enable */
+#define WDT_CTRL_ENABLE             (0x1u << WDT_CTRL_ENABLE_Pos)
+#define WDT_CTRL_PER_Pos            2            /**< \brief (WDT_CTRL) Timeout Period */
+#define WDT_CTRL_PER_Msk            (0xFu << WDT_CTRL_PER_Pos)
 #define WDT_CTRL_PER(value)         ((WDT_CTRL_PER_Msk & ((value) << WDT_CTRL_PER_Pos)))
-#define WDT_CTRL_ALWAYSON           (0x1u <<  7) /**< \brief (WDT_CTRL) Watchdog Timer Always-On Enable */
+#define WDT_CTRL_ALWAYSON_Pos       7            /**< \brief (WDT_CTRL) Watchdog Timer Always-On Enable */
+#define WDT_CTRL_ALWAYSON           (0x1u << WDT_CTRL_ALWAYSON_Pos)
 #define WDT_CTRL_MASK               0xBEu        /**< \brief (WDT_CTRL) MASK Register */
 
 /* -------- WDT_WINCTRL : (WDT Offset: 0x1) (R/W  8) Window Control Register -------- */
@@ -90,9 +92,10 @@ typedef union {
 #define WDT_WINCTRL_OFFSET          0x1          /**< \brief (WDT_WINCTRL offset) Window Control Register */
 #define WDT_WINCTRL_RESETVALUE      0x2C         /**< \brief (WDT_WINCTRL reset_value) Window Control Register */
 
-#define WDT_WINCTRL_WEN             (0x1u <<  1) /**< \brief (WDT_WINCTRL) Watchdog Timer Window Mode Enable */
-#define WDT_WINCTRL_WINDOW_Pos      2
-#define WDT_WINCTRL_WINDOW_Msk      (0xFu << WDT_WINCTRL_WINDOW_Pos) /**< \brief (WDT_WINCTRL) Watchdow Timer Window Timeout Period */
+#define WDT_WINCTRL_WEN_Pos         1            /**< \brief (WDT_WINCTRL) Watchdog Timer Window Mode Enable */
+#define WDT_WINCTRL_WEN             (0x1u << WDT_WINCTRL_WEN_Pos)
+#define WDT_WINCTRL_WINDOW_Pos      2            /**< \brief (WDT_WINCTRL) Watchdow Timer Window Timeout Period */
+#define WDT_WINCTRL_WINDOW_Msk      (0xFu << WDT_WINCTRL_WINDOW_Pos)
 #define WDT_WINCTRL_WINDOW(value)   ((WDT_WINCTRL_WINDOW_Msk & ((value) << WDT_WINCTRL_WINDOW_Pos)))
 #define WDT_WINCTRL_MASK            0x3Eu        /**< \brief (WDT_WINCTRL) MASK Register */
 
@@ -111,8 +114,8 @@ typedef union {
 #define WDT_EWCTRL_OFFSET           0x2          /**< \brief (WDT_EWCTRL offset) Early Warning Control Register */
 #define WDT_EWCTRL_RESETVALUE       0x00         /**< \brief (WDT_EWCTRL reset_value) Early Warning Control Register */
 
-#define WDT_EWCTRL_EWOFFSET_Pos     2
-#define WDT_EWCTRL_EWOFFSET_Msk     (0xFu << WDT_EWCTRL_EWOFFSET_Pos) /**< \brief (WDT_EWCTRL) Early Warning Interrupt Time Offset */
+#define WDT_EWCTRL_EWOFFSET_Pos     2            /**< \brief (WDT_EWCTRL) Early Warning Interrupt Time Offset */
+#define WDT_EWCTRL_EWOFFSET_Msk     (0xFu << WDT_EWCTRL_EWOFFSET_Pos)
 #define WDT_EWCTRL_EWOFFSET(value)  ((WDT_EWCTRL_EWOFFSET_Msk & ((value) << WDT_EWCTRL_EWOFFSET_Pos)))
 #define WDT_EWCTRL_MASK             0x3Cu        /**< \brief (WDT_EWCTRL) MASK Register */
 
@@ -130,7 +133,8 @@ typedef union {
 #define WDT_INTENCLR_OFFSET         0x4          /**< \brief (WDT_INTENCLR offset) Interrupt Enable Clear Register */
 #define WDT_INTENCLR_RESETVALUE     0x00         /**< \brief (WDT_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define WDT_INTENCLR_EW             (0x1u <<  0) /**< \brief (WDT_INTENCLR) Early Warning Interrupt Disable */
+#define WDT_INTENCLR_EW_Pos         0            /**< \brief (WDT_INTENCLR) Early Warning Interrupt Disable */
+#define WDT_INTENCLR_EW             (0x1u << WDT_INTENCLR_EW_Pos)
 #define WDT_INTENCLR_MASK           0x01u        /**< \brief (WDT_INTENCLR) MASK Register */
 
 /* -------- WDT_INTENSET : (WDT Offset: 0x5) (R/W  8) Interrupt Enable Set Register -------- */
@@ -147,7 +151,8 @@ typedef union {
 #define WDT_INTENSET_OFFSET         0x5          /**< \brief (WDT_INTENSET offset) Interrupt Enable Set Register */
 #define WDT_INTENSET_RESETVALUE     0x00         /**< \brief (WDT_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define WDT_INTENSET_EW             (0x1u <<  0) /**< \brief (WDT_INTENSET) Early Warning Interrupt Enable */
+#define WDT_INTENSET_EW_Pos         0            /**< \brief (WDT_INTENSET) Early Warning Interrupt Enable */
+#define WDT_INTENSET_EW             (0x1u << WDT_INTENSET_EW_Pos)
 #define WDT_INTENSET_MASK           0x01u        /**< \brief (WDT_INTENSET) MASK Register */
 
 /* -------- WDT_INTFLAG : (WDT Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear Register -------- */
@@ -164,7 +169,8 @@ typedef union {
 #define WDT_INTFLAG_OFFSET          0x6          /**< \brief (WDT_INTFLAG offset) Interrupt Flag Status and Clear Register */
 #define WDT_INTFLAG_RESETVALUE      0x00         /**< \brief (WDT_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define WDT_INTFLAG_EW              (0x1u <<  0) /**< \brief (WDT_INTFLAG) Early Warning Interrupt Flag */
+#define WDT_INTFLAG_EW_Pos          0            /**< \brief (WDT_INTFLAG) Early Warning Interrupt Flag */
+#define WDT_INTFLAG_EW              (0x1u << WDT_INTFLAG_EW_Pos)
 #define WDT_INTFLAG_MASK            0x01u        /**< \brief (WDT_INTFLAG) MASK Register */
 
 /* -------- WDT_STATUS : (WDT Offset: 0x7) (R/   8) Status Register -------- */
@@ -181,7 +187,8 @@ typedef union {
 #define WDT_STATUS_OFFSET           0x7          /**< \brief (WDT_STATUS offset) Status Register */
 #define WDT_STATUS_RESETVALUE       0x00         /**< \brief (WDT_STATUS reset_value) Status Register */
 
-#define WDT_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (WDT_STATUS) Synchronization Busy */
+#define WDT_STATUS_SYNCBUSY_Pos     7            /**< \brief (WDT_STATUS) Synchronization Busy */
+#define WDT_STATUS_SYNCBUSY         (0x1u << WDT_STATUS_SYNCBUSY_Pos)
 #define WDT_STATUS_MASK             0x80u        /**< \brief (WDT_STATUS) MASK Register */
 
 /* -------- WDT_CLEAR : (WDT Offset: 0x8) ( /W  8) Clear Register -------- */
@@ -197,10 +204,11 @@ typedef union {
 #define WDT_CLEAR_OFFSET            0x8          /**< \brief (WDT_CLEAR offset) Clear Register */
 #define WDT_CLEAR_RESETVALUE        0x00         /**< \brief (WDT_CLEAR reset_value) Clear Register */
 
-#define WDT_CLEAR_CLEAR_Pos         0
-#define WDT_CLEAR_CLEAR_Msk         (0xFFu << WDT_CLEAR_CLEAR_Pos) /**< \brief (WDT_CLEAR) Watchdog Timer Clears Command Register */
+#define WDT_CLEAR_CLEAR_Pos         0            /**< \brief (WDT_CLEAR) Watchdog Timer Clears Command Register */
+#define WDT_CLEAR_CLEAR_Msk         (0xFFu << WDT_CLEAR_CLEAR_Pos)
 #define WDT_CLEAR_CLEAR(value)      ((WDT_CLEAR_CLEAR_Msk & ((value) << WDT_CLEAR_CLEAR_Pos)))
 #define WDT_CLEAR_MASK              0xFFu        /**< \brief (WDT_CLEAR) MASK Register */
+#define WDT_CLEAR_KEY               0xA5 /** TODO: MISSING FROM CMSIS */
 
 /** \brief WDT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

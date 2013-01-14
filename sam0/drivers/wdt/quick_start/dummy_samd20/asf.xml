@@ -1,0 +1,9 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAMD20 WDT driver" id="sam0.drivers.wdt.quick_start.dummy.atsamd20">
+		<build type="include-path" value="."/>
+		<require idref="board.dummy.samd20"/>
+		<require idref="sam0.drivers.wdt.quick_start"/>
+		<generator value="armgcc"/>
+		<device-support value="samd20j18a"/>
+	</project>
+</asf>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,12 +44,12 @@
 
 /* ========== Register definition for PAC0 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_PAC0_WPCLR             (0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
-#define REG_PAC0_WPSET             (0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
+#define REG_PAC0_WPCLR                        (0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
+#define REG_PAC0_WPSET                        (0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
 #else
 #define REG_PAC0_WPCLR             (*(RwReg  *)0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
 #define REG_PAC0_WPSET             (*(RwReg  *)0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
-#endif /* (defined(__ASSEMBLY__) || defines(__IAR_SYSTEMS_ASM__)) */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for PAC0 peripheral ========== */
 #define PAC0_WPROT_DEFAULT_VAL      0x00000000
