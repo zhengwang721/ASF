@@ -3,7 +3,7 @@
  *
  * \brief SAM4L-EK Board Monitor Control.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,12 +48,6 @@
 #include "usart.h"
 #include "board.h"
 #include "sysclk.h"
-
-#define REMOTE_TASK_USART              BM_USART_USART
-#define REMOTE_TASK_USART_ID           BM_USART_USART_ID
-
-void remote_task_init(void);
-void remote_task(void);
 
 //! Power scaling definitions
 typedef enum {
