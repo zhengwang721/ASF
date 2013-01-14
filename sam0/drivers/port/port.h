@@ -46,14 +46,12 @@
 /**
  * \defgroup sam0_port_group SAMD20 Port Driver (PORT)
  *
- * Driver for the SAMD20 architecture devices. This driver provides a unified
- * interface for the configuration and management of the physical device pins,
- * including external edge detection, peripheral muxing, input/output control
- * and pad drive characteristics. This driver encompasses multiple physical
- * modules within the device to provide a consistent interface:
+ * Driver for the SAMD20 architecture devices. This driver provides a interface
+ * for the configuration and management of the device's General Purpose
+ * Input/Output (GPIO) pin functionality, for manual pin state reading and
+ * writing. This driver encompasses the following module within the SAM0 devices:
  *
  * \li \b PORT (Port I/O Management)
- * \li \b EIC (External Interrupt Controller)
  *
  * Physically, the modules are interconnected within the device as shown in the
  * following diagram:
@@ -65,13 +63,11 @@
  *   subgraph driver {
  *     node [label="Peripheral Mux" shape=trapezium] pinmux;
  *     node [label="GPIO Module" shape=ellipse] gpio;
- *     node [label="External Interrupt Module" shape=ellipse] eic;
- *     node [label="Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
+ *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
  *   }
  *
  *   pinmux -> gpio;
  *   pad    -> pinmux;
- *   pinmux -> eic;
  *   pinmux -> peripherals;
  * }
  * \enddot
@@ -95,16 +91,8 @@
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
- * several peripheral modules (such as a I2C module).
- *
- * \subsection edge_detection Edge Detection
- * In each SAMD20 device pin there is a connection to an External Interrupt
- * Controller module, used to detect external pin edge and level events, and
- * notify the user application via a flag or interrupt. Each pin can be
- * individually configured to sense a given logic level or pulse edge. This
- * feature is commonly used to wake up the device from a deep sleep mode when
- * an external activity (e.g. a user button press) occurs, to achieve maximum
- * power savings.
+ * several peripheral modules (such as a I2C module). When a pin is configured
+ * in GPIO mode, other peripherals connected to the same pin will be disabled.
  *
  * \subsection pad_characteristics Special Pad Characteristics
  * There are several special modes that can be selected on one or more I/O pins
@@ -132,16 +120,13 @@
  * \section module_dependencies Dependencies
  * The port driver has the following dependencies.
  *
- * \li None
+ * \li \ref sam0_pinmux_group "System Pin Multiplexer Driver"
  *
  * \section special_considerations Special Considerations
  *
- * Not all devices support all peripheral MUX combinations and drive modes;
- * see your device specific datasheet for more details.
- *
  * The SAMD20 port pin output driver and input pin sampler can be enabled and
- * disabled seperately; if a pin requires only output functionality with no
- * readback of the current pin state, the pin input sampler can be disabled to
+ * disabled separately; if a pin requires only output functionality with no
+ * read back of the current pin state, the pin input sampler can be disabled to
  * save power:
  *
  * <table>
@@ -183,44 +168,40 @@
  */
 
 #include <compiler.h>
+#include <pinmux.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define PORTA PORT.Group[0]
-#define PORTB PORT.Group[1]
+/** Convenience definition for GPIO module group A on the device. */
+#define PORTA                 PORT.Group[0]
 
-/** \brief Port external interrupt edge detection configuration enum.
- *
- * Enum for the possible signal edge detection modes of the External
- * Interrupt Controller module.
- */
-enum port_edge_detect {
-	/** No edge detection. */
-	PORT_EDGE_DETECT_NONE    = 0,
-	/** Detect rising signal edges. */
-	PORT_EDGE_DETECT_RISING  = 1,
-	/** Detect falling signal edges. */
-	PORT_EDGE_DETECT_FALLING = 2,
-	/** Detect both signal edges. */
-	PORT_EDGE_DETECT_BOTH    = 3,
-	/** Detect high signal levels. */
-	PORT_EDGE_DETECT_HIGH    = 4,
-	/** Detect low signal levels. */
-	PORT_EDGE_DETECT_LOW     = 5,
-};
+#if (PORT_GROUPS > 1) || defined(__DOXYGEN__)
+	/** Convenience definition for GPIO module group B on the device. */
+	#define PORTB             PORT.Group[1]
+#endif
 
-/** \brief Port pin type configuration enum.
+#if (PORT_GROUPS > 2) || defined(__DOXYGEN__)
+	/** Convenience definition for GPIO module group C on the device. */
+	#define PORTC             PORT.Group[2]
+#endif
+
+/** \brief Port pin direction configuration enum.
  *
- * Enum for the possible type setting of the port pin configuration
- * structure, to indicate the control type the pin should use.
+ * Enum for the possible pin direction settings of the port pin configuration
+ * structure, to indicate the direction the pin should use.
  */
-enum port_pin_type {
-	/** Pin level is user controller as a GPIO. */
-	PORT_PIN_TYPE_GPIO,
-	/** Pin controlled by a peripheral within the device. */
-	PORT_PIN_TYPE_PERIPHERAL,
+enum port_pin_dir {
+	/** The pin's input buffer should be enabled, so that the pin state can
+	 *  be read. */
+	PORT_PIN_DIR_INPUT,
+	/** The pin's output buffer should be enabled, so that the pin state can
+	 *  be set. */
+	PORT_PIN_DIR_OUTPUT,
+	/** The pin's input and buffers should be enabled, so that the pin state can
+	 *  be set and the physical state read back. */
+	PORT_PIN_DIR_BOTH,
 };
 
 /** \brief Port pin input pull configuration enum.
@@ -230,11 +211,11 @@ enum port_pin_type {
  */
 enum port_pin_pull {
 	/** No logical pull should be applied to the pin. */
-	PORT_PIN_PULL_NONE,
+	PORT_PIN_PULL_NONE  = SYSTEM_PINMUX_PIN_PULL_NONE,
 	/** Pin should be pulled up when idle. */
-	PORT_PIN_PULL_UP,
+	PORT_PIN_PULL_UP    = SYSTEM_PINMUX_PIN_PULL_UP,
 	/** Pin should be pulled down when idle. */
-	PORT_PIN_PULL_DOWN,
+	PORT_PIN_PULL_DOWN  = SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
 /** \brief Port pin digital input sampling mode enum.
@@ -244,9 +225,9 @@ enum port_pin_pull {
  */
 enum port_pin_sampling_mode {
 	/** Pin input buffer should be enabled when the IN register is read. */
-	PORT_PIN_SAMPLING_ONDEMAND,
+	PORT_PIN_SAMPLING_ONDEMAND   = SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
 	/** Pin input buffer should continuously sample the pin state. */
-	PORT_PIN_SAMPLING_CONTINUOUS,
+	PORT_PIN_SAMPLING_CONTINUOUS = SYSTEM_PINMUX_PIN_SAMPLING_CONTINUOUS,
 };
 
 /** \brief Port pin drive output strength enum.
@@ -257,9 +238,9 @@ enum port_pin_sampling_mode {
  */
 enum port_pin_strength {
 	/** Normal output driver strength. */
-	PORT_PIN_STRENGTH_NORMAL,
+	PORT_PIN_STRENGTH_NORMAL = SYSTEM_PINMUX_PIN_STRENGTH_NORMAL,
 	/** High current output driver strength. */
-	PORT_PIN_STRENGTH_HIGH,
+	PORT_PIN_STRENGTH_HIGH   = SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
 };
 
 /** \brief Port pin output slew rate enum.
@@ -270,9 +251,9 @@ enum port_pin_strength {
  */
 enum port_pin_slew_rate {
 	/** Normal pin output slew rate. */
-	PORT_PIN_SLEW_RATE_NORMAL,
+	PORT_PIN_SLEW_RATE_NORMAL  = SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL,
 	/** Enable slew rate limiter on the pin. */
-	PORT_PIN_SLEW_RATE_LIMITED,
+	PORT_PIN_SLEW_RATE_LIMITED = SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
 };
 
 /** \brief Port pin output drive mode enum.
@@ -282,25 +263,9 @@ enum port_pin_slew_rate {
  */
 enum port_pin_drive {
 	/** Use totem pole output drive mode. */
-	PORT_PIN_DRIVE_TOTEM,
+	PORT_PIN_DRIVE_TOTEM      = SYSTEM_PINMUX_PIN_DRIVE_TOTEM,
 	/** Use open drain output drive mode. */
-	PORT_PIN_DRIVE_OPEN_DRAIN,
-};
-
-/** \brief External Interrupt Controller channel configuration structure.
- *
- *  Configuration structure for the input sampler edge detection mode of a GPIO
- *  pin channel.
- */
-struct port_pin_edge_conf {
-	/** Wake up the microcontroller if the channel interrupt fires during
-	 *  sleep mode. */
-	bool wake_if_sleeping;
-	/** Filter the raw input signal to prevent noise from triggering an
-	 *  interrupt accidentally, using a 3 sample majority filter. */
-	bool filter_input_signal;
-	/** Edge detection mode to use. */
-	enum port_edge_detect mode;
+	PORT_PIN_DRIVE_OPEN_DRAIN = SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
 };
 
 /** \brief Port pin configuration structure.
@@ -310,36 +275,22 @@ struct port_pin_edge_conf {
  *  function before being modified by the user application.
  */
 struct port_pin_conf {
-	/** Port pin control type. */
-	enum port_pin_type type;
-
-	/** Index of the peripheral that should control the pin, if peripheral
-	 *  control type is selected. If \ref type if set to \ref PORT_PIN_TYPE_GPIO
-	 *  this value is ignored. */
-	uint8_t peripheral_index;
+	/** Port buffer input/output direction. */
+	enum port_pin_dir direction;
 
 	/** Configuration of the input buffer of a GPIO pin. */
 	struct {
-		/** Enables the pin level input buffer if set. */
-		bool enabled;
-
 		/** Logic level pull of the input buffer. */
 		enum port_pin_pull pull;
 
 		/** Sampling mode of the input buffer. */
 		enum port_pin_sampling_mode sampling_mode;
-
-		/** External interrupt controller configuration. */
-		struct port_pin_edge_conf edge_detection;
 	} input; /**< Pin input sampler configuration. */
 
 	/** Configuration of the output buffer of a GPIO pin. */
 	struct {
-		/** Enables the pin level output buffer if set. */
-		bool enabled;
-
 		/** Strength of the output driver. */
-		enum port_pin_strength drive_strength;
+		enum port_pin_strength strength;
 
 		/** Slew rate of the output driver. */
 		enum port_pin_slew_rate slew_rate;
@@ -365,41 +316,7 @@ struct port_pin_conf {
 static inline PortGroup* port_get_port_from_gpio_pin(
 		const uint8_t gpio_pin)
 {
-	uint8_t port_index = (gpio_pin / 128);
-	uint8_t group_index = (gpio_pin / 32);
-
-	/* Array of available ports. */
-	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
-
-	if (port_index < PORT_INST_NUM) {
-		return &(ports[port_index]->Group[group_index]);
-	} else {
-		Assert(false);
-		return NULL;
-	}
-}
-
-/** \brief Retrieves the base EIC module address from a given GPIO pin number.
- *
- *  Retrieves the base address of a EIC hardware module associated with
- *  the given GPIO pin number.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert
- *
- *  \return Base address of the associated EIC module.
- */
-static inline Eic* port_get_eic_from_gpio_pin(
-		const uint8_t gpio_pin)
-{
-	uint8_t port_index = (gpio_pin / 32);
-
-	if (port_index == 0) {
-		return EIC;
-	}
-	else {
-		Assert(false);
-		return NULL;
-	}
+	return system_pinmux_get_port_from_gpio_pin(gpio_pin);
 }
 
 /** \brief Retrieves the state of a port's pins that are configured as inputs.
@@ -485,63 +402,17 @@ static inline void port_pin_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->type = PORT_PIN_TYPE_GPIO;
-	config->input.enabled = true;
+	config->direction = PORT_PIN_DIR_INPUT;
 	config->input.pull = PORT_PIN_PULL_UP;
 	config->input.sampling_mode = PORT_PIN_SAMPLING_ONDEMAND;
-	config->input.edge_detection.wake_if_sleeping = false;
-	config->input.edge_detection.filter_input_signal = false;
-	config->input.edge_detection.mode = PORT_EDGE_DETECT_NONE;
-	config->output.enabled = false;
-	config->output.drive_strength = PORT_PIN_STRENGTH_NORMAL;
+	config->output.strength = PORT_PIN_STRENGTH_NORMAL;
 	config->output.slew_rate = PORT_PIN_SLEW_RATE_NORMAL;
 	config->output.drive = PORT_PIN_DRIVE_TOTEM;
 }
 
-enum status_code port_pin_set_config(
+void port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_pin_conf *const config);
-
-/** @} */
-
-
-/** \name Edge detection
- * @{
- */
-
-/** \brief Retrieves the edge detection state of a configured port pin.
- *
- *  Reads the current state of a configured port pin, and determines if
- *  if the detection criteria of the channel has been met.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin to check
- *
- *  \return Status of the requested pin's edge detection state.
- */
-static inline bool port_pin_is_edge_detected(
-		const uint8_t gpio_pin)
-{
-	Eic *const eic_base = port_get_eic_from_gpio_pin(gpio_pin);
-	uint32_t eic_mask = (1UL << (gpio_pin % 32));
-
-	return (eic_base->INTFLAG.reg & eic_mask);
-}
-
-/** \brief Clears the edge detection state of a configured port pin.
- *
- *  Clears the current state of a configured port pin, readying it for
- *  the next level or edge detection.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin edge detection state to clear
- */
-static inline void port_pin_clear_edge_detected(
-		const uint8_t gpio_pin)
-{
-	Eic *const eic_base = port_get_eic_from_gpio_pin(gpio_pin);
-	uint32_t eic_mask = (1UL << (gpio_pin % 32));
-
-	eic_base->INTFLAG.reg = eic_mask;
-}
 
 /** @} */
 
@@ -624,10 +495,6 @@ static inline void port_pin_toggle_output_level(
  *	<tr>
  *		<th>Acronym</th>
  *		<th>Description</th>
- *	</tr>
- *	<tr>
- *		<td>EIC</td>
- *		<td>External Interrupt Controller</td>
  *	</tr>
  *	<tr>
  *		<td>GPIO</td>

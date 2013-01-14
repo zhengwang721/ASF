@@ -53,16 +53,14 @@ void config_port_pins(void)
 //! [setup_2]
 
 //! [setup_3]
-	pin_conf.input.enabled  = true;
-	pin_conf.output.enabled = false;
+	pin_conf.direction = PORT_PIN_DIR_INPUT;
 //! [setup_3]
 //! [setup_4]
 	port_pin_set_config(10, &pin_conf);
 //! [setup_4]
 
 //! [setup_5]
-	pin_conf.input.enabled  = false;
-	pin_conf.output.enabled = true;
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 //! [setup_5]
 //! [setup_6]
 	port_pin_set_config(11, &pin_conf);
