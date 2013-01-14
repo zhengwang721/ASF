@@ -66,20 +66,20 @@ extern "C" {
  *
  * \section module_overview TC Overview
  *
- * A TC is basically a counter with registers (capture compare
- * registers) that can be used to compare the counter value, or
- * capture the counter value. If the counter counts the pulses from a
- * stable frequency it can be used for timer operations. The TC
- * enables the user to do the following:
+ * A TC is basically a counter with capture compare registers that can
+ * be used to compare the counter value, or capture the counter
+ * value. If the counter counts the pulses from a stable frequency it
+ * can be used for timer operations. The TC enables the user to do the
+ * following:
  *
- * \li Create PWM signals \ref pwm
+ * \li Generate PWM \ref pwm signals
  * \li Do waveform generation \ref waveform_generation
- * \li Keep time
+ * \li Keep time track
  * \li Generate time stamps for events
- * \li Do counting
- * \li Perform input capture \ref capture_operations
- * \li Do Pulse width capture \ref pwc
- * \li Perform Frequency capture
+ * \li Counting
+ * \li Perform input \ref capture_operations
+ * \li Perform \ref pwc
+ * \li Perform frequency capture
  * \n
  *
  * \image html overview.svg "Basic overview of the TC module"
@@ -87,22 +87,19 @@ extern "C" {
  * \image latex overview.eps "Basic overview of the TC module"
  * \n
  *
- * As seen in the above illustration the TC in the BANANORAMA has got
- * its own prescaler that can be used to divide the clock frequency
- * used in the counter. It is possible to configure the counters to
- * use either 8-, 16-, or 32-bit counter size. The amount of capture
- * compare registers available is dependent on what BANANORAMA device
- * are being used and in some cases the counter size. The maximum amount of
- * capture compare registers available in any BANANORAMA device is two
- * when running in 32-bit mode and four in 8-, and 16-bit modes. For
- * device specific information see \ref differences. Capture compare
- * registers are used in capture and compare operations.
+ * As seen in the above figure, the TC in the BANANORAMA has its own
+ * prescaler that can be used to divide the clock frequency used in
+ * the counter. It is possible to configure the counters to use either
+ * 8-, 16-, or 32-bit counter size. The amount of capture compare
+ * registers available is dependent on what BANANORAMA device is
+ * being used and in some cases the counter size. The maximum amount
+ * of capture compare registers available in any BANANORAMA device is
+ * two when running in 32-bit mode and four in 8-, and 16-bit
+ * modes. For device specific information see \ref
+ * differences. Capture compare registers are used in capture and
+ * compare operations.
  *
  * \section functional_description Functional Description
- *
- * The BANANORAMA architecture can at a maximum be found with 8 timer
- * counters in 8-bit counter size, or 8 TC's in 16-bit
- * counter size, or 4 TC's using 32-bit counter size.  \n
  *
  * Independent of what counter size the timer uses, it can be set up
  * in two different modes, although to some extent one TC module can
@@ -113,12 +110,12 @@ extern "C" {
  * the compare values. When the counter value coincides with the
  * compare value, this can generate an action, such as generating an
  * event or toggling a pin when used for frequency or PWM
- * generation. For more see \ref operations  \n
+ * generation. For more, see \ref operations  \n
  *
- * In capture mode the counter value is stored upon some configurable
+ * In capture mode the counter value is stored upon an incoming
  * event. This can be used to generate time stamps used in event
  * capture or it can be used for frequency capture, or pulse width
- * capture. For more on this look at the \ref compare_match section.
+ * capture. For more, see \ref compare_match section.
  *
  *
  * \section timer_counter_size TC Size
@@ -141,30 +138,29 @@ extern "C" {
  *  <tr>
  *    <th> 8-bit </th>
  *    <td> 0xFF </td>
- *    <td> 256 </td>
+ *    <td> 255 </td>
  *  </tr>
  *  <tr>
  *    <th> 16-bit </th>
  *    <td> 0xFFFF </td>
- *    <td> 65,536 </td>
+ *    <td> 65,535 </td>
  *  </tr>
  *  <tr>
  *    <th> 32-bit </th>
  *    <td> 0xFFFFFFFF </td>
- *    <td> 4,294,967,296 </td>
+ *    <td> 4,294,967,295 </td>
  *  </tr>
  * </table>
  *
  * It should be noted that when using the counter with 16-, and 32-bit
  * counter size, compare capture register 0 (CC0) is used to store the
- * period value, that is when running in pwm generation match mode.  \n
+ * period value when running in PWM generation match mode.  \n
  *
  * When using 32-bit counter size, two 16-bit counters are used
- * together in cascade to realize this feature. This means that it is
- * only possible to utilize four 32-bit counters. Also only even
- * numbered TC modules can be configured as 32-bit counters. The odd
- * numbered counters will act as slaves to the even numbered
- * masters. The pairing is as follows:
+ * together in cascade to realize this feature. Even numbered TC
+ * modules can be configured as 32-bit counters. The odd numbered
+ * counters will act as slaves to the even numbered masters. The
+ * pairing is as follows:
  *
  * <table>
  *   <tr>
@@ -176,25 +172,21 @@ extern "C" {
  *     <td> TC1 </td>
  *   </tr>
  *   <tr>
- *     <td> TC2 </td>
- *     <td> TC3 </td>
+ *     <td> ... </td>
+ *     <td> ... </td>
  *   </tr>
  *   <tr>
- *     <td> TC4 </td>
- *     <td> TC5</td>
- *   </tr>
- *   <tr>
- *     <td> TC6 </td>
- *     <td> TC7</td>
+ *     <td> TCm </td>
+ *     <td> TCn</td>
  *   </tr>
  * </table>
  *
- * \section clock_and_prescaler Clock Selection, Prescaler and Reload Action
+ * \section clock_and_prescaler TC Clock Options
  *
  * \subsection clock_selection Clock Selection
  *
- * To be able to use the counter the module has to have a clock
- * signal. This has to be configured in the \ref tc_conf struct. Her
+ * To be able to use the counter, the module has to have a clock
+ * signal. This has to be configured in the \ref tc_conf struct. Here
  * the the clock for each pair of the TC modules can be set. The
  * pairing is as above. As an example it is not possible to have
  * differing clock frequencies on TC0 and TC1. However, it is possible
@@ -206,7 +198,7 @@ extern "C" {
  * For more on how to set up the clocks lock at at the \ref
  * sam0_gclk_group "GCLK documentation".
  *
- * \subsection prescaler Prescaler.
+ * \subsection prescaler Prescaler
  *
  * The module has its own prescaler. This prescaler only works to
  * prescale the clock used to provide clock pulses for the counter to
