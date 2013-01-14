@@ -112,15 +112,16 @@ static struct {
 	{false,false,HID_CAPS_LOCK},
 };
 
-/* Wakeup pin is BP3 (fast wakeup 10) */
+/* Wakeup pin is push button (BP3, fast wakeup 10) */
 #define  WAKEUP_PMC_FSTT (PUSHBUTTON_2_WKUP_FSTT)
 #define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_2)
 #define  WAKEUP_PIO      (PIN_PUSHBUTTON_2_PIO)
 #define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_2_ID)
 #define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
-#define  WAKEUP_PIO_ATTR (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
+#define  WAKEUP_PIO_ATTR \
+	(PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
 
-/* Interrupt on "pin change" from BP3 to do wakeup on USB
+/* Interrupt on "pin change" from push button to do wakeup on USB
  * Note:
  * This interrupt is enable when the USB host enable remotewakeup feature
  * This interrupt wakeup the CPU if this one is in idle mode
