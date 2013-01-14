@@ -1130,12 +1130,12 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * next input until inputs_to_scan conversions are made.
  *
  * \param dev_inst[in]           Pointer to the device struct
- * \param inputs_to_scan[in]     Number of input pins to do ADC on
+ * \param inputs_to_scan[in]     Number of input pins to do ADC on (must be two
+ *                               or more)
  * \param start_offset[in]       Offset of first pin to scan (relative to
  *                               configured positive input)
- * \todo "The number of input sources included is INPUTSCAN + 1."??
  */
-static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
 {
 	/* Sanity check arguments */
@@ -1143,10 +1143,18 @@ static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	Adc *const adc_module = dev_inst->hw_dev;
-
+	
+	if (inputs_to_scan > 1) {
+		/*
+		* Number of input sources included is the value written to INPUTSCAN
+		* plus 1.
+		*/
+		inputs_to_scan--;
+	}
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
 
+	/* Set pin scan mode */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg &
 			 ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk)) |
