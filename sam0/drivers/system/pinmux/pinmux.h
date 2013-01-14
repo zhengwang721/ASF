@@ -43,6 +43,102 @@
 #ifndef PINMUX_H_INCLUDED
 #define PINMUX_H_INCLUDED
 
+/**
+ * \defgroup sam0_pinmux_group SAMD20 Pin Multiplexer Driver (PINMUX)
+ *
+ * Driver for the SAMD20 architecture devices. This driver provides a interface
+ * for the configuration and management of the device's physical I/O Pins, to
+ * alter the direction and input/drive characteristics as well as to configure
+ * the pin peripheral multiplexer selection. This driver encompasses the
+ * following module within the SAM0 devices:
+ *
+ * \li \b PORT (Port I/O Management)
+ *
+ * Physically, the modules are interconnected within the device as shown in the
+ * following diagram:
+ *
+ * \dot
+ * digraph overview {
+ *   node [label="Port Pad" shape=square] pad;
+ *
+ *   subgraph driver {
+ *     node [label="Peripheral Mux" shape=trapezium] pinmux;
+ *     node [label="GPIO Module" shape=ellipse shape=ellipse style=filled fillcolor=lightgray] gpio;
+ *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
+ *   }
+ *
+ *   pinmux -> gpio;
+ *   pad    -> pinmux;
+ *   pinmux -> peripherals;
+ * }
+ * \enddot
+ *
+ * \section module_introduction Introduction
+ * The SAMD20 devices contain a number of General Purpose I/O pins, used to
+ * interface the user application logic and internal hardware peripherals to
+ * an external system.
+ *
+ * \subsection physical_logical_pins Physical and Logical GPIO Pins
+ * SAMD20 devices use two naming conventions for the I/O pins in the device; one
+ * physical, and one logical. Each physical pin on a device package is assigned
+ * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
+ * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
+ * former is used to map physical pins to their physical internal device module
+ * counterparts, for simplicity the design of this driver uses the logical GPIO
+ * numbers instead.
+ *
+ * \subsection peripheral_muxing Peripheral Muxltiplexing
+ * SAMD20 devices contain a peripheral MUX, which is individually controllable
+ * for each I/O pin of the device. The peripheral MUX allows you to select the
+ * function of a physical package pin - whether it will be controlled as a user
+ * controllable GPIO pin, or whether it will be connected internally to one of
+ * several peripheral modules (such as a I2C module). When a pin is configured
+ * in GPIO mode, other peripherals connected to the same pin will be disabled.
+ *
+ * \subsection pad_characteristics Special Pad Characteristics
+ * There are several special modes that can be selected on one or more I/O pins
+ * of the device, which alter the input and output characteristics of the pad:
+ *
+ * \subsubsection drive_strength Drive Strength
+ * The Drive Strength configures the strength of the output driver on the
+ * pad. Normally, there is a fixed current limit that each I/O pin can safely
+ * drive, however some I/O pads offer a higher drive mode which increases this
+ * limit for that I/O pin at the expense of an increased power consumption.
+ *
+ * \subsubsection slew_rate Slew Rate
+ * The Slew Rate configures the slew rate of the output driver, limiting the
+ * rate at which the pad output voltage can change with time.
+ *
+ * \subsubsection input_sample_mode Input Sample Mode
+ * The Input Sample Mode configures the input sampler buffer of the pad. By
+ * default, the input buffer is only sampled "on-demand", i.e. when the user
+ * application attempts to read from the input buffer. This mode is the most
+ * power efficient, but increases the latency of the input sample by two clock
+ * cycles of the port clock. To reduce latency, the input sampler can instead
+ * be configured to always sample the input buffer on each port clock cycle, at
+ * the expense of an increased power consumption.
+ *
+ * \section module_dependencies Dependencies
+ * The port driver has the following dependencies.
+ *
+ * \li None
+ *
+ * \section special_considerations Special Considerations
+ *
+ * The SAMD20 port pin input sampling mode is set in groups of four physical
+ * pins; setting the sampling mode of any pin in a sub-group of four I/O pins
+ * will configure the sampling mode of the entire sub-group.
+ *
+ * \section module_extra_info Extra Information
+ * For extra information see \ref pinmux_extra_info.
+ *
+ * \section module_examples Examples
+ * - \ref pinmux_quickstart
+ *
+ * \section api_overview API Overview
+ * @{
+ */
+
 #include <compiler.h>
 
 #ifdef __cplusplus
@@ -60,13 +156,10 @@ extern "C" {
 enum system_pinmux_pin_dir {
 	/** The pin's input buffer should be enabled, so that the pin state can
 	 *  be read. */
-	SYTEM_PINMUX_DIR_INPUT,
+	SYSTEM_PINMUX_PIN_DIR_INPUT,
 	/** The pin's output buffer should be enabled, so that the pin state can
 	 *  be set. */
-	SYTEM_PINMUX_DIR_OUTPUT,
-	/** The pin's input and buffers should be enabled, so that the pin state can
-	 *  be set and the physical state read back. */
-	SYTEM_PINMUX_DIR_BOTH,
+	SYSTEM_PINMUX_PIN_DIR_OUTPUT,
 };
 
 /** \brief Port pin input pull configuration enum.
@@ -136,10 +229,10 @@ enum system_pinmux_pin_drive {
 /** \brief Port pin configuration structure.
  *
  *  Configuration structure for a port pin instance. This structure should be
- *  structure should be initialized by the \ref port_pin_get_config_defaults()
+ *  structure should be initialized by the \ref pinmux_get_config_defaults()
  *  function before being modified by the user application.
  */
-struct system_pinmux_pin_conf {
+struct system_pinmux_conf {
 	/** MUX index of the peripheral that should control the pin, if peripheral
 	 *  control is desired. For GPIO use, this should be set to
 	 *  \ref SYSTEM_PINMUX_GPIO. */
@@ -148,53 +241,9 @@ struct system_pinmux_pin_conf {
 	/** Port buffer input/output direction. */
 	enum system_pinmux_pin_dir direction;
 
-	/** Configuration of the input buffer of a GPIO pin. */
-	struct {
-		/** Logic level pull of the input buffer. */
-		enum system_pinmux_pin_pull pull;
-
-		/** Sampling mode of the input buffer. */
-		enum system_pinmux_pin_sampling_mode sampling_mode;
-	} input; /**< Pin input sampler configuration. */
-
-	/** Configuration of the output buffer of a GPIO pin. */
-	struct {
-		/** Strength of the output driver. */
-		enum system_pinmux_pin_strength drive_strength;
-
-		/** Slew rate of the output driver. */
-		enum system_pinmux_pin_slew_rate slew_rate;
-
-		/** Drive mode of the output buffer. */
-		enum system_pinmux_pin_drive drive;
-	} output; /**< Pin output driver configuration. */
+	/** Logic level pull of the input buffer. */
+	enum system_pinmux_pin_pull input_pull;
 };
-
-/** \brief Retrieves the base PORT module address from a given GPIO pin number.
- *
- *  Retrieves the base address of a PORT hardware module associated with
- *  the given GPIO pin number.
- *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert
- *
- *  \return Base address of the associated PORT module.
- */
-static inline PortGroup* system_pinmux_get_port_from_gpio_pin(
-		const uint8_t gpio_pin)
-{
-	uint8_t port_index = (gpio_pin / 128);
-	uint8_t group_index = (gpio_pin / 32);
-
-	/* Array of available ports. */
-	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
-
-	if (port_index < PORT_INST_NUM) {
-		return &(ports[port_index]->Group[group_index]);
-	} else {
-		Assert(false);
-		return NULL;
-	}
-}
 
 /** \name Configuration and initialization
  * @{
@@ -215,25 +264,162 @@ static inline PortGroup* system_pinmux_get_port_from_gpio_pin(
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
-static inline void system_pinmux_pin_get_config_defaults(
-		struct system_pinmux_pin_conf *const config)
+static inline void system_pinmux_get_config_defaults(
+		struct system_pinmux_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Default configuration values */
 	config->mux_position = SYSTEM_PINMUX_GPIO;
-	config->direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	config->input.pull = SYSTEM_PINMUX_PIN_PULL_UP;
-	config->input.sampling_mode = SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND;
-	config->output.strength = SYSTEM_PINMUX_PIN_STRENGTH_NORMAL;
-	config->output.slew_rate = SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL;
-	config->output.drive = SYSTEM_PINMUX_PIN_DRIVE_TOTEM;
+	config->direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	config->input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
 }
 
 void system_pinmux_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct system_pinmux_pin_conf *const config);
+		const struct system_pinmux_conf *const config);
+
+void system_pinmux_group_set_config(
+		PortGroup *const port,
+		const uint32_t mask,
+		const struct system_pinmux_conf *const config);
+
+/** @} */
+
+/** \name Special mode configuration (physical group orientated)
+ * @{
+ */
+
+/** \brief Retrieves the base PORT module address from a given GPIO pin number.
+ *
+ *  Retrieves the base address of a PORT hardware module associated with
+ *  the given GPIO pin number.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin to convert.
+ *
+ *  \return Base address of the associated PORT module.
+ */
+static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
+		const uint8_t gpio_pin)
+{
+	uint8_t port_index = (gpio_pin / 128);
+	uint8_t group_index = (gpio_pin / 32);
+
+	/* Array of available ports. */
+	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
+
+	if (port_index < PORT_INST_NUM) {
+		return &(ports[port_index]->Group[group_index]);
+	} else {
+		Assert(false);
+		return NULL;
+	}
+}
+
+/** @} */
+
+/** \name Special mode configuration (logical pin orientated)
+ * @{
+ */
+
+/**
+ * \brief Configures the input sampling mode for a GPIO pin.
+ *
+ * Configures the input sampling mode for a GPIO input, to
+ * control when the physical I/O pin value is sampled and
+ * stored inside the microcontroller.
+ *
+ * \param gpio_pin Index of the GPIO pin to configure.
+ * \param mode     New pin sampling mode to configure.
+ */
+static inline void system_pinmux_pin_set_input_sample_mode(
+		const uint8_t gpio_pin,
+		const enum system_pinmux_pin_sampling_mode mode)
+{
+	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
+	uint32_t sample_quad_mask = (1UL << ((gpio_pin % 32) / 4));
+
+	if (mode == SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND) {
+		port->CTRL.reg |=  sample_quad_mask;
+	}
+	else {
+		port->CTRL.reg &= ~sample_quad_mask;
+	}
+}
+
+/**
+ * \brief Configures the output driver strength mode for a GPIO pin.
+ *
+ * Configures the output drive strength for a GPIO output, to
+ * control the amount of current the pad is able to sink/source.
+ *
+ * \param gpio_pin  Index of the GPIO pin to configure.
+ * \param mode      New output driver strength mode to configure.
+ */
+static inline void system_pinmux_pin_set_output_strength(
+		const uint8_t gpio_pin,
+		const enum system_pinmux_pin_strength mode)
+{
+	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_index = (gpio_pin % 32);
+
+	if (mode == SYSTEM_PINMUX_PIN_STRENGTH_HIGH) {
+		port->PINCFG[pin_index].reg |=  PORT_PINCFG_DRVSTR;
+	}
+	else {
+		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_DRVSTR;
+	}
+}
+
+/**
+ * \brief Configures the input slew rate mode for a GPIO pin.
+ *
+ * Configures the input slew rate mode for a GPIO input, to
+ * control the speed at which the input pin can react to
+ * physical changes of the I/O pin value.
+ *
+ * \param gpio_pin  Index of the GPIO pin to configure.
+ * \param mode      New pin slew rate mode to configure.
+ */
+static inline void system_pinmux_pin_set_output_slew_rate(
+		const uint8_t gpio_pin,
+		const enum system_pinmux_pin_slew_rate mode)
+{
+	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_index = (gpio_pin % 32);
+
+	if (mode == SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED) {
+		port->PINCFG[pin_index].reg |=  PORT_PINCFG_SLEWLIM;
+	}
+	else {
+		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_SLEWLIM;
+	}
+}
+
+/**
+ * \brief Configures the output driver mode for a GPIO pin.
+ *
+ * Configures the output driver mode for a GPIO output, to
+ * control the pad behaviour.
+ *
+ * \param gpio_pin  Index of the GPIO pin to configure.
+ * \param mode      New pad output driver mode to configure.
+ */
+static inline void system_pinmux_pin_set_output_drive(
+		const uint8_t gpio_pin,
+		const enum system_pinmux_pin_drive mode)
+{
+	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_index = (gpio_pin % 32);
+
+	if (mode == SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN) {
+		port->PINCFG[pin_index].reg |=  PORT_PINCFG_ODRAIN;
+	}
+	else {
+		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_ODRAIN;
+	}
+}
 
 /** @} */
 
@@ -244,7 +430,7 @@ void system_pinmux_pin_set_config(
 /** @} */
 
 /**
- * \page port_extra_info Extra Information
+ * \page pinmux_extra_info Extra Information
  *
  * \section acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
@@ -280,9 +466,9 @@ void system_pinmux_pin_set_config(
  */
 
 /**
- * \page port_quickstart Quick Start Guides for the PORT module
+ * \page pinmux_quickstart Quick Start Guides for the PINMUX module
  *
- * This is the quick start guide list for the \ref sam0_port_group module, with
+ * This is the quick start guide list for the \ref sam0_pinmux_group module, with
  * step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
@@ -293,8 +479,8 @@ void system_pinmux_pin_set_config(
  *
  * \see General list of module \ref module_examples "examples".
  *
- * \section port_use_cases PORT module use cases
- * - \subpage port_basic_use_case
+ * \section pinmux_use_cases PINMUX module use cases
+ * - \subpage pinmux_basic_use_case
  */
 
 #endif

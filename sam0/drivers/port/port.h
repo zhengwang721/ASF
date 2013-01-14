@@ -86,37 +86,6 @@
  * counterparts, for simplicity the design of this driver uses the logical GPIO
  * numbers instead.
  *
- * \subsection peripheral_muxing Peripheral Muxltiplexing
- * SAMD20 devices contain a peripheral MUX, which is individually controllable
- * for each I/O pin of the device. The peripheral MUX allows you to select the
- * function of a physical package pin - whether it will be controlled as a user
- * controllable GPIO pin, or whether it will be connected internally to one of
- * several peripheral modules (such as a I2C module). When a pin is configured
- * in GPIO mode, other peripherals connected to the same pin will be disabled.
- *
- * \subsection pad_characteristics Special Pad Characteristics
- * There are several special modes that can be selected on one or more I/O pins
- * of the device, which alter the input and output characteristics of the pad:
- *
- * \subsubsection drive_strength Drive Strength
- * The Drive Strength configures the strength of the output driver on the
- * pad. Normally, there is a fixed current limit that each I/O pin can safely
- * drive, however some I/O pads offer a higher drive mode which increases this
- * limit for that I/O pin at the expense of an increased power consumption.
- *
- * \subsubsection slew_rate Slew Rate
- * The Slew Rate configures the slew rate of the output driver, limiting the
- * rate at which the pad output voltage can change with time.
- *
- * \subsubsection input_sample_mode Input Sample Mode
- * The Input Sample Mode configures the input sampler buffer of the pad. By
- * default, the input buffer is only sampled "on-demand", i.e. when the user
- * application attempts to read from the input buffer. This mode is the most
- * power efficient, but increases the latency of the input sample by two clock
- * cycles of the port clock. To reduce latency, the input sampler can instead
- * be configured to always sample the input buffer on each port clock cycle, at
- * the expense of an increased power consumption.
- *
  * \section module_dependencies Dependencies
  * The port driver has the following dependencies.
  *
@@ -124,38 +93,9 @@
  *
  * \section special_considerations Special Considerations
  *
- * The SAMD20 port pin output driver and input pin sampler can be enabled and
- * disabled separately; if a pin requires only output functionality with no
- * read back of the current pin state, the pin input sampler can be disabled to
- * save power:
- *
- * <table>
- *	<tr>
- *		<th>Input Sampler</th>
- *		<th>Output Driver</th>
- *		<th>Resulting GPIO Functionality</th>
- *	</tr>
- *	<tr>
- *		<td>Disabled</td>
- *		<td>Disabled</td>
- *		<td>Low power mode, no output or input possible.</td>
- *	</tr>
- *	<tr>
- *		<td>Enabled</td>
- *		<td>Disabled</td>
- *		<td>Input only mode, no output possible</td>
- *	</tr>
- *	<tr>
- *		<td>Disabled</td>
- *		<td>Enabled</td>
- *		<td>Output only mode, no readback of current pin state possible</td>
- *	</tr>
- *	<tr>
- *		<td>Enabled</td>
- *		<td>Enabled</td>
- *		<td>Output mode, with readback of the physical pin state</td>
- *	</tr>
- * </table>
+ * The SAMD20 port pin input sampler is disabled when the pin is configured as
+ * an output; reading the pin state of an output will read the logical output
+ * state that was last set.
  *
  * \section module_extra_info Extra Information
  * For extra information see \ref port_extra_info.
@@ -187,191 +127,127 @@ extern "C" {
 	#define PORTC             PORT.Group[2]
 #endif
 
-/** \brief Port pin direction configuration enum.
+/**
+ *  \brief Port pin direction configuration enum.
  *
- * Enum for the possible pin direction settings of the port pin configuration
- * structure, to indicate the direction the pin should use.
+ *  Enum for the possible pin direction settings of the port pin configuration
+ *  structure, to indicate the direction the pin should use.
  */
 enum port_pin_dir {
 	/** The pin's input buffer should be enabled, so that the pin state can
 	 *  be read. */
-	PORT_PIN_DIR_INPUT,
+	PORT_PIN_DIR_INPUT  = SYSTEM_PINMUX_PIN_DIR_INPUT,
 	/** The pin's output buffer should be enabled, so that the pin state can
 	 *  be set. */
-	PORT_PIN_DIR_OUTPUT,
-	/** The pin's input and buffers should be enabled, so that the pin state can
-	 *  be set and the physical state read back. */
-	PORT_PIN_DIR_BOTH,
+	PORT_PIN_DIR_OUTPUT = SYSTEM_PINMUX_PIN_DIR_OUTPUT,
 };
 
-/** \brief Port pin input pull configuration enum.
+/**
+ *  \brief Port pin input pull configuration enum.
  *
- * Enum for the possible pin pull settings of the port pin configuration
- * structure, to indicate the type of logic level pull the pin should use.
+ *  Enum for the possible pin pull settings of the port pin configuration
+ *  structure, to indicate the type of logic level pull the pin should use.
  */
 enum port_pin_pull {
 	/** No logical pull should be applied to the pin. */
-	PORT_PIN_PULL_NONE  = SYSTEM_PINMUX_PIN_PULL_NONE,
+	PORT_PIN_PULL_NONE = SYSTEM_PINMUX_PIN_PULL_NONE,
 	/** Pin should be pulled up when idle. */
-	PORT_PIN_PULL_UP    = SYSTEM_PINMUX_PIN_PULL_UP,
+	PORT_PIN_PULL_UP   = SYSTEM_PINMUX_PIN_PULL_UP,
 	/** Pin should be pulled down when idle. */
-	PORT_PIN_PULL_DOWN  = SYSTEM_PINMUX_PIN_PULL_DOWN,
+	PORT_PIN_PULL_DOWN = SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
-/** \brief Port pin digital input sampling mode enum.
- *
- * Enum for the possible input sampling modes for the port pin configuration
- * structure, to indicate the type of sampling a port pin should use.
- */
-enum port_pin_sampling_mode {
-	/** Pin input buffer should be enabled when the IN register is read. */
-	PORT_PIN_SAMPLING_ONDEMAND   = SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
-	/** Pin input buffer should continuously sample the pin state. */
-	PORT_PIN_SAMPLING_CONTINUOUS = SYSTEM_PINMUX_PIN_SAMPLING_CONTINUOUS,
-};
-
-/** \brief Port pin drive output strength enum.
- *
- * Enum for the possible output drive strengths for the port pin
- * configuration structure, to indicate the driver strength the pin should
- * use.
- */
-enum port_pin_strength {
-	/** Normal output driver strength. */
-	PORT_PIN_STRENGTH_NORMAL = SYSTEM_PINMUX_PIN_STRENGTH_NORMAL,
-	/** High current output driver strength. */
-	PORT_PIN_STRENGTH_HIGH   = SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
-};
-
-/** \brief Port pin output slew rate enum.
- *
- * Enum for the possible output drive slew rates for the port pin
- * configuration structure, to indicate the driver slew rate the pin should
- * use.
- */
-enum port_pin_slew_rate {
-	/** Normal pin output slew rate. */
-	PORT_PIN_SLEW_RATE_NORMAL  = SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL,
-	/** Enable slew rate limiter on the pin. */
-	PORT_PIN_SLEW_RATE_LIMITED = SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
-};
-
-/** \brief Port pin output drive mode enum.
- *
- * Enum for the possible output drive modes for the port pin configuration
- * structure, to indicate the output mode the pin should use.
- */
-enum port_pin_drive {
-	/** Use totem pole output drive mode. */
-	PORT_PIN_DRIVE_TOTEM      = SYSTEM_PINMUX_PIN_DRIVE_TOTEM,
-	/** Use open drain output drive mode. */
-	PORT_PIN_DRIVE_OPEN_DRAIN = SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
-};
-
-/** \brief Port pin configuration structure.
+/**
+ *  \brief Port pin configuration structure.
  *
  *  Configuration structure for a port pin instance. This structure should be
- *  structure should be initialized by the \ref port_pin_get_config_defaults()
+ *  structure should be initialized by the \ref port_get_config_defaults()
  *  function before being modified by the user application.
  */
-struct port_pin_conf {
+struct port_conf {
 	/** Port buffer input/output direction. */
-	enum port_pin_dir direction;
+	enum port_pin_dir  direction;
 
-	/** Configuration of the input buffer of a GPIO pin. */
-	struct {
-		/** Logic level pull of the input buffer. */
-		enum port_pin_pull pull;
-
-		/** Sampling mode of the input buffer. */
-		enum port_pin_sampling_mode sampling_mode;
-	} input; /**< Pin input sampler configuration. */
-
-	/** Configuration of the output buffer of a GPIO pin. */
-	struct {
-		/** Strength of the output driver. */
-		enum port_pin_strength strength;
-
-		/** Slew rate of the output driver. */
-		enum port_pin_slew_rate slew_rate;
-
-		/** Drive mode of the output buffer. */
-		enum port_pin_drive drive;
-	} output; /**< Pin output driver configuration. */
+	/** Port pull-up/pull-down for input pins. */
+	enum port_pin_pull input_pull;
 };
 
-/** \name State reading/writing (physical module orientated)
+/** \name State reading/writing (physical group orientated)
  * @{
  */
 
-/** \brief Retrieves the base PORT module address from a given GPIO pin number.
+/**
+ *  \brief Retrieves the base PORT module address from a given GPIO pin number.
  *
  *  Retrieves the base address of a PORT hardware module associated with
  *  the given GPIO pin number.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert
+ *  \param[in] gpio_pin  Index of the GPIO pin to convert.
  *
  *  \return Base address of the associated PORT module.
  */
-static inline PortGroup* port_get_port_from_gpio_pin(
+static inline PortGroup* port_get_group_from_gpio_pin(
 		const uint8_t gpio_pin)
 {
-	return system_pinmux_get_port_from_gpio_pin(gpio_pin);
+	return system_pinmux_get_group_from_gpio_pin(gpio_pin);
 }
 
-/** \brief Retrieves the state of a port's pins that are configured as inputs.
+/**
+ *  \brief Retrieves the state of a port's pins that are configured as inputs.
  *
  *  Reads the current logic level of a port module's pins and returns the
  *  current levels as a bitmask.
  *
- *  \param[in] port      Base of the PORT module to read from
- *  \param[in] pin_mask  Mask of the port pin(s) to read
+ *  \param[in] port  Base of the PORT module to read from.
+ *  \param[in] mask  Mask of the port pin(s) to read.
  *
  *  \return Status of the port pin(s) input buffers.
  */
-static inline uint32_t port_get_input_levels(
+static inline uint32_t port_group_get_input_level(
 		const PortGroup *const port,
-		const uint32_t pin_mask)
+		const uint32_t mask)
 {
 	Assert(port);
 
-	return (port->IN.reg & pin_mask);
+	return (port->IN.reg & mask);
 }
 
-/** \brief Sets the state of a port's pins that are configured as outputs.
+/**
+ *  \brief Sets the state of a port's pins that are configured as outputs.
  *
  *  Sets the current output level of a port module's pins to a given logic
  *  level.
  *
- *  \param[out] port        Base of the PORT module to write to
- *  \param[in]  pin_mask    Mask of the port pin(s) to change
- *  \param[in]  level_mask  Mask of the port level(s) to set
+ *  \param[out] port        Base of the PORT module to write to.
+ *  \param[in]  mask        Mask of the port pin(s) to change.
+ *  \param[in]  level_mask  Mask of the port level(s) to set.
  */
-static inline void port_set_output_levels(
+static inline void port_group_set_output_level(
 		PortGroup *const port,
-		const uint32_t pin_mask,
+		const uint32_t mask,
 		const uint32_t level_mask)
 {
 	Assert(port);
 
-	port->OUTSET.reg = (pin_mask &  level_mask);
-	port->OUTCLR.reg = (pin_mask & ~level_mask);
+	port->OUTSET.reg = (mask &  level_mask);
+	port->OUTCLR.reg = (mask & ~level_mask);
 }
 
-/** \brief Toggles the state of a port's pins that are configured as an outputs.
+/**
+ *  \brief Toggles the state of a port's pins that are configured as an outputs.
  *
  *  Toggles the current output levels of a port module's pins.
  *
- *  \param[out] port      Base of the PORT module to write to
- *  \param[in]  pin_mask  Mask of the port pin(s) to toggle
+ *  \param[out] port  Base of the PORT module to write to.
+ *  \param[in]  mask  Mask of the port pin(s) to toggle.
  */
-static inline void port_toggle_output_levels(
+static inline void port_group_toggle_output_level(
 		PortGroup *const port,
-		const uint32_t pin_mask)
+		const uint32_t mask)
 {
 	Assert(port);
 
-	port->OUTTGL.reg = pin_mask;
+	port->OUTTGL.reg = mask;
 }
 
 /** @} */
@@ -380,7 +256,8 @@ static inline void port_toggle_output_levels(
  * @{
  */
 
-/** \brief Initializes a Port pin configuration structure to defaults.
+/**
+ *  \brief Initializes a Port pin configuration structure to defaults.
  *
  *  Initializes a given Port pin configuration structure to a set of
  *  known default values. This function should be called on all new
@@ -388,31 +265,29 @@ static inline void port_toggle_output_levels(
  *  user application.
  *
  *  The default configuration is as follows:
- *   \li Non peripheral (i.e. GPIO) controlled
- *   \li Input mode with internal pullup enabled, output mode disabled
- *   \li Edge detection disabled
- *   \li On-demand input sampling
+ *   \li Input mode with internal pullup enabled
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ *  \param[out] config  Configuration structure to initialize to default values.
  */
-static inline void port_pin_get_config_defaults(
-		struct port_pin_conf *const config)
+static inline void port_get_config_defaults(
+		struct port_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Default configuration values */
 	config->direction = PORT_PIN_DIR_INPUT;
-	config->input.pull = PORT_PIN_PULL_UP;
-	config->input.sampling_mode = PORT_PIN_SAMPLING_ONDEMAND;
-	config->output.strength = PORT_PIN_STRENGTH_NORMAL;
-	config->output.slew_rate = PORT_PIN_SLEW_RATE_NORMAL;
-	config->output.drive = PORT_PIN_DRIVE_TOTEM;
+	config->input_pull = PORT_PIN_PULL_UP;
 }
 
 void port_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct port_pin_conf *const config);
+		const struct port_conf *const config);
+
+void port_group_set_config(
+		PortGroup *const port,
+		const uint32_t mask,
+		const struct port_conf *const config);
 
 /** @} */
 
@@ -420,36 +295,38 @@ void port_pin_set_config(
  * @{
  */
 
-/** \brief Retrieves the state of a port pin that is configured as an input.
+/**
+ *  \brief Retrieves the state of a port pin that is configured as an input.
  *
  *  Reads the current logic level of a port pin and returns the current
  *  level as a boolean value.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to read
+ *  \param[in] gpio_pin  Index of the GPIO pin to read.
  *
  *  \return Status of the port pin's input buffer.
  */
 static inline bool port_pin_get_input_level(
 		const uint8_t gpio_pin)
 {
-	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	return (port_base->IN.reg & pin_mask);
 }
 
-/** \brief Sets the state of a port pin that is configured as an output.
+/**
+ *  \brief Sets the state of a port pin that is configured as an output.
  *
  *  Sets the current output level of a port pin to a given logic level.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to write to
- *  \param[in] level     Logical level to set the given pin to
+ *  \param[in] gpio_pin  Index of the GPIO pin to write to.
+ *  \param[in] level     Logical level to set the given pin to.
  */
 static inline void port_pin_set_output_level(
 		const uint8_t gpio_pin,
 		const bool level)
 {
-	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Set the pin to high or low atomically based on the requested level */
@@ -460,16 +337,17 @@ static inline void port_pin_set_output_level(
 	}
 }
 
-/** \brief Toggles the state of a port pin that is configured as an output.
+/**
+ *  \brief Toggles the state of a port pin that is configured as an output.
  *
  *  Toggles the current output level of a port pin.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to toggle
+ *  \param[in] gpio_pin  Index of the GPIO pin to toggle.
  */
 static inline void port_pin_toggle_output_level(
 		const uint8_t gpio_pin)
 {
-	PortGroup *const port_base = port_get_port_from_gpio_pin(gpio_pin);
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
 	/* Toggle pin output level */

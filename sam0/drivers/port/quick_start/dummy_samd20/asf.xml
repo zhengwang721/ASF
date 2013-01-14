@@ -3,8 +3,6 @@
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.port.quick_start"/>
 		<build type ="include-path" value="."/>
-		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<generator value="armgcc"/>
 		<device-support value="samd20j18a"/>
 	</project>

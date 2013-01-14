@@ -40,31 +40,56 @@
  */
 #include <port.h>
 
-/** \brief Writes a Port pin configuration to the hardware module.
+/**
+ *  \brief Writes a Port pin configuration to the hardware module.
  *
  *  Writes out a given configuration of a Port pin configuration to the hardware
  *  module.
  *
- *  \note If the pin output buffer is enabled, the pull-up/pull-down input
- *        buffer configuration setting is ignored.
+ *  \note If the pin direction is set as an output, the pull-up/pull-down input
+ *        configuration setting is ignored.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to configure
- *  \param[in] config    Configuration settings for the pin
+ *  \param[in] gpio_pin  Index of the GPIO pin to configure.
+ *  \param[in] config    Configuration settings for the pin.
  */
 void port_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct port_pin_conf *const config)
+		const struct port_conf *const config)
 {
-	struct system_pinmux_pin_conf pinmux_config;
-	system_pinmux_pin_get_config_defaults(&pinmux_config);
+	struct system_pinmux_conf pinmux_config;
+	system_pinmux_get_config_defaults(&pinmux_config);
 
-	pinmux_config.mux_position        = SYSTEM_PINMUX_GPIO;
-	pinmux_config.direction           = config->direction;
-	pinmux_config.input.pull          = config->input.pull;
-	pinmux_config.input.sampling_mode = config->input.sampling_mode;
-	pinmux_config.output.strength     = config->output.strength;
-	pinmux_config.output.slew_rate    = config->output.slew_rate;
-	pinmux_config.output.drive        = config->output.drive;
+	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pinmux_config.direction    = config->direction;
+	pinmux_config.input_pull   = config->input_pull;
 
 	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
+}
+
+/**
+ *  \brief Writes a Port pin configuration group to the hardware module.
+ *
+ *  Writes out a given configuration of a Port pin group configuration to the hardware
+ *  module.
+ *
+ *  \note If the pin direction is set as an output, the pull-up/pull-down input
+ *        configuration setting is ignored.
+ *
+ *  \param[out] port      Base of the PORT module to write to.
+ *  \param[in]  mask      Mask of the port pin(s) to configure.
+ *  \param[in]  config    Configuration settings for the pin group.
+ */
+void port_group_set_config(
+		PortGroup *const port,
+		const uint32_t mask,
+		const struct port_conf *const config)
+{
+	struct system_pinmux_conf pinmux_config;
+	system_pinmux_get_config_defaults(&pinmux_config);
+
+	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pinmux_config.direction    = config->direction;
+	pinmux_config.input_pull   = config->input_pull;
+
+	system_pinmux_group_set_config(port, mask, &pinmux_config);
 }
