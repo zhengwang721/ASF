@@ -1,6 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Serial Bridge Application" id="thirdparty.wireless.avr2025_mac.examples.serial_bridge.xmega_a3bu_xplained">
-		<require idref="thirdparty.wireless.avr2025_mac.examples.serial_bridge"/>
+	<project caption="Serial Bridge Application" id="thirdparty.wireless.avr2025_mac.addons.serial_bridge.xmega_a3bu_xplained">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -10,11 +9,12 @@
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_sio2ncp.h"/>
 
+		<require idref="thirdparty.wireless.avr2025_mac.addons.serial_bridge"/>
 		<require idref="board.xmega_a3bu_xplained"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.addons.sio2host" value="usb"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.addons.sio2ncp" value="uart"/>
 
-		
+		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
+		<config name="config.thirdparty.wireless.addons.sio2ncp" value="uart"/>
+
 		<generator value="iarew"/>
 		<generator value="avrgcc" />
 		<generator value="as5_8" />

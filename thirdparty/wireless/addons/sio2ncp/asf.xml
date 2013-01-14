@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.thirdparty.wireless.avr2025_mac.addons.sio2ncp" name="config.thirdparty.wireless.avr2025_mac.addons.sio2ncp" caption="CONFIG Serial connectivity Helper files" default="uart">
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.addons.sio2ncp#uart"     caption="UART support Enabled">
+	<select-by-config id="config.thirdparty.wireless.addons.sio2ncp" name="config.thirdparty.wireless.addons.sio2ncp" caption="CONFIG Serial connectivity Helper files" default="uart">
+		<module type="driver" id="config.thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
 			<info type="description" value="summary">
 			SIO2NCP communication using UART
 			</info>
@@ -17,13 +17,13 @@
 		
 	</select-by-config>
 	
-	<module type="component" id="thirdparty.wireless.avr2025_mac.addons.sio2ncp" caption="COMPONENT - SIO 2 NCP">
+	<module type="component" id="thirdparty.wireless.addons.sio2ncp" caption="COMPONENT - SIO 2 NCP">
 		<info type="description" value="summary">
 		SIO2NCP Communication
 		</info>
 		<build type="doxygen-entry-point" value="group_sio_helper"/>
 
-		<require idref="config.thirdparty.wireless.avr2025_mac.addons.sio2ncp" />
+		<require idref="config.thirdparty.wireless.addons.sio2ncp" />
 
 		<build type="module-config" subtype="required-header-file" value="conf_sio2ncp.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
