@@ -15,6 +15,7 @@
 			<build type="doxygen-entry-point" value="udi_cdc_group"/>
 			<build type="doxygen-quick-start" value="udi_cdc_use_case_composite"/>
 			<build type="distribute" subtype="user-file" value="atmel_devices_cdc.inf"/>
+			<build type="distribute" subtype="user-file" value="atmel_devices_cdc.cat"/>
 			<require idref="common.services.usb.class.cdc.protocol"/>
 			<require idref="common.services.usb.class.composite.device"/>
 			<device-support value="uc3a"/>
@@ -65,6 +66,7 @@
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="doxygen-entry-point" value="udi_cdc_group"/>
 		<build type="distribute" subtype="user-file" value="atmel_devices_cdc.inf"/>
+		<build type="distribute" subtype="user-file" value="atmel_devices_cdc.cat"/>
 		<require idref="common.services.usb.class.cdc.protocol"/>
 		<require idref="common.services.usb.device"/>
 		<device-support value="uc3a"/>
