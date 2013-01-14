@@ -253,18 +253,18 @@ static void ecb_mode_test_pdca(void)
 	/* Write the data to be ciphered to the input data registers. */
 	/* Init PDCA channel with the pdca_options.*/
 	PDCA_TX_OPTIONS.addr = (void *)ref_plain_text; /* memory address */
-	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - USART0 TX line.*/
+	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - AESA TX.*/
 	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
-	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
 	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
-	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - USART0 TX line.*/
+	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - AESA RX.*/
 	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
-	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
 
 	/* Enable PDCA channel, start transfer data. */
@@ -317,18 +317,18 @@ static void ecb_mode_test_pdca(void)
 	/* Init PDCA channel with the pdca_options.*/
 	/* Init PDCA channel with the pdca_options.*/
 	PDCA_TX_OPTIONS.addr = (void *)ref_cipher_text_ecb; /* memory address */
-	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - USART0 TX line.*/
+	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - AESA TX.*/
 	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
-	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
 	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
-	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - USART0 TX line.*/
+	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - AESA RX.*/
 	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
-	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD; /* select size of the transfer */
+	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_RX_CHANNEL, &PDCA_RX_OPTIONS);
 
 	/* Enable PDCA channel, start transfer data. */
