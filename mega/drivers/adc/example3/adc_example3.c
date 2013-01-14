@@ -3,7 +3,7 @@
  *
  * \brief megaAVR ADC example 3, measure bandgap voltage
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,13 +71,16 @@
 
 #include "adc.h"
 
-// Internal bandgap voltages in mV.
-#if MEGA_XX8 || MEGA_XX0_1 || MEGA_XX4 || AVR8_PART_IS_DEFINED(ATmega169)
-#	define BG_VOLTAGE   1100
-#	define BG_MUX       ADC_MUX_1V1
+/* Internal bandgap voltages in mV. */
+#if MEGA_RF
+#       define BG_VOLTAGE       1200
+#       define BG_MUX       ADC_MUX_1V2
+#elif MEGA_XX8 || MEGA_XX0_1 || MEGA_XX4 || AVR8_PART_IS_DEFINED(ATmega169)
+#       define BG_VOLTAGE   1100
+#       define BG_MUX       ADC_MUX_1V1
 #elif MEGA_XX
-#	define BG_VOLTAGE   1220
-#	define BG_MUX       ADC_MUX_1V22
+#       define BG_VOLTAGE   1220
+#       define BG_MUX       ADC_MUX_1V22
 #endif
 
 int main(void)
@@ -87,15 +90,15 @@ int main(void)
 	uint16_t supply_voltage;
 	volatile uint16_t dummy;
 
-	// initialize and enable the ADC
+	/* initialize and enable the ADC */
 	adc_init(ADC_PRESCALER_DIV128);
 
-	// Do some dummy reads to make sure the reference is stable
+	/* Do some dummy reads to make sure the reference is stable */
 	for (i = 0; i < 5; i++) {
 		bandgap = adc_read_10bit(BG_MUX, ADC_VREF_AVCC);
 	}
 
-	// measure bandgap voltage using AVCC as reference
+	/* measure bandgap voltage using AVCC as reference */
 	bandgap = adc_read_10bit(BG_MUX, ADC_VREF_AVCC);
 
 	/*

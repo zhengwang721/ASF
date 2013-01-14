@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service example 2.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,7 @@
  * tested with the following setup:
  *  - Xplain evaluation kit
  *  - EVK1100 evaluation kit
+ *  - SAM3X evaluation kit
  *  - SAM4L evaluation kit
  *  - SAM4E evaluation kit
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)

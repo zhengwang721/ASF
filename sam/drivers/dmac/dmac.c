@@ -3,7 +3,7 @@
  *
  * \brief DMA Controller (DMAC) driver for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -448,7 +448,7 @@ void dmac_soft_set_last_transfer_flag(Dmac *p_dmac,
 	p_dmac->DMAC_SREQ |= (flag << ul_num);
 }
 
-#if (SAM3XA)
+#if (SAM3XA || SAM4E)
 
 /** DMAC write protect key */
 #define DMAC_WPKEY 0x50494Fu
