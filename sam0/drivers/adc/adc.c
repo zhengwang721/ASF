@@ -151,9 +151,9 @@ enum status_code _adc_set_config (Adc *const hw_dev,
  * This function will initialize the ADC device struct and the hardware module
  * based on the values of the configuration struct.
  *
- * \param[out] dev_ins Pointer to the ADC software instance struct
- * \param[in] hw_dev   Pointer to the ADC module instance
- * \param[in] config   Pointer to the configuration struct
+ * \param[out] dev_inst Pointer to the ADC software instance struct
+ * \param[in] hw_dev    Pointer to the ADC module instance
+ * \param[in] config    Pointer to the configuration struct
  *
  */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,

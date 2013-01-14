@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 ADC Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
