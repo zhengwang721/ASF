@@ -47,11 +47,11 @@
  * based on the values of the \ref tc_conf struct
  *
  * \param dev_inst  Pointer to the device struct
- * \param tc_module Pointer to the tc module
+ * \param tc_module Pointer to the TC module
  * \param config    Pointer to the \ref tc_conf struct
  *
  * \return Status of the procedure.
- * \retval STATUS_OK           The function exited sucsesfuly.
+ * \retval STATUS_OK           The function exited successfully.
  * \retval STATUS_ERR_BUSY     When a reset has been initiated.
  * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
  *                             tc_conf struct.
@@ -369,7 +369,7 @@ uint32_t tc_get_capture_value(
  * \param[in] channel_index  Index of the compare register to write to
  *
  * \return  Status of the procedure
- * \retval  STATUS_OK               The function exited sucsesfuly.
+ * \retval  STATUS_OK               The function exited successfully.
  * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range.
  */
 enum status_code tc_set_compare_value(
