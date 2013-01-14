@@ -66,11 +66,11 @@ extern "C" {
  *
  * \section module_overview TC Overview
  *
- * A TC is basically a counter with registers (capture compare
- * registers) that can be used to compare the counter value, or
- * capture the counter value. If the counter counts the pulses from a
- * stable frequency it can be used for timer operations. The TC
- * enables the user to do the following:
+ * A TC is basically a counter with capture compare registers that can
+ * be used to compare the counter value, or capture the counter
+ * value. If the counter counts the pulses from a stable frequency it
+ * can be used for timer operations. The TC enables the user to do the
+ * following:
  *
  * \li Generate \ref pwm
  * \li \ref waveform_generation
@@ -141,17 +141,17 @@ extern "C" {
  *  <tr>
  *    <th> 8-bit </th>
  *    <td> 0xFF </td>
- *    <td> 256 </td>
+ *    <td> 255 </td>
  *  </tr>
  *  <tr>
  *    <th> 16-bit </th>
  *    <td> 0xFFFF </td>
- *    <td> 65,536 </td>
+ *    <td> 65,535 </td>
  *  </tr>
  *  <tr>
  *    <th> 32-bit </th>
  *    <td> 0xFFFFFFFF </td>
- *    <td> 4,294,967,296 </td>
+ *    <td> 4,294,967,295 </td>
  *  </tr>
  * </table>
  *
@@ -180,12 +180,12 @@ extern "C" {
  *     <td> TC3 </td>
  *   </tr>
  *   <tr>
- *     <td> TC4 </td>
- *     <td> TC5</td>
+ *     <td> ... </td>
+ *     <td> ... </td>
  *   </tr>
  *   <tr>
- *     <td> TC6 </td>
- *     <td> TC7</td>
+ *     <td> TCn-| </td>
+ *     <td> TCn</td>
  *   </tr>
  * </table>
  *
@@ -193,18 +193,28 @@ extern "C" {
  *
  * \subsection clock_selection Clock Selection
  *
- * To be able to use the counter, the module needs a clock
- * signal. This has to be configured in the \ref tc_conf struct. Here,
- * the clock for each pair of the TC modules can be set. The
- * pairing is as above. As an example, it is not possible to have
- * differing clock frequencies on TC0 and TC1. However, it is possible
- * to have different frequencies on modules not in the same pair, for
- * instance TC0 and TC2 does not have to have the same GCLK input. It
- * is possible to use the internal TC prescaler to get different
- * counting frequencies between the same modules in a pair.  \n
+ * The TC peripheral is clocked asynchronously to the system clock
+ * by a GCLK (Generic Clock) channel. The GCLK channel connects to any
+ * of the GCLK generators. The GCLK generators are configured to use
+ * one of the available clock sources on the system such as internal
+ * oscillator, external crystals etc. The GCLK generator provides a
+ * prescaler that can be used to divide the clock source if needed.
+ * Configuring the GCLK generator is done in the conf_clocks.h
+ * configuration file, where all GCLK generators are configured. This
+ * configuration is applied when running system_init. \n
  *
- * For more on how to set up the clocks, see the \ref
- * sam0_gclk_group "GCLK documentation".
+ * To connect a clock channel to the module use the \ref tc_conf
+ * struct. Here, the clock for each pair of the TC modules can be
+ * set. The pairing is as above. As an example, it is not possible to
+ * have differing clock frequencies on TC0 and TC1. However, it is
+ * possible to have different frequencies on modules not in the same
+ * pair, for instance TC0 and TC2 does not have to have the same GCLK
+ * input. It is possible to use the internal TC prescaler to get
+ * different counting frequencies between the same modules in a pair.
+ * \n
+ *
+ * For more on how to set up the clocks, see the \ref sam0_gclk_group
+ * "GCLK documentation".
  *
  * \subsection prescaler Prescaler
  *
@@ -281,12 +291,12 @@ extern "C" {
  *
  * \subsection timer Timer
  *
- * In many ways the simplest application where compare match
- * operations is used, is a timer. In timer operations one or more
- * values in the module's compare channels are used to specify the
- * time when an action should be taken by the microcontroller. This
- * can be an interrupt service routine, or it can be set as an event
- * generator in the event system.
+ * A Timer is a simple application where compare match operations is
+ * used. In timer operations one or more values in the module's
+ * compare channels are used to specify the time when an action should
+ * be taken by the microcontroller. This can be an interrupt service
+ * routine, or it can be set as an event generator in the event
+ * system.
  *
  * \subsection waveform_generation Waveform Generation
  *
@@ -368,7 +378,7 @@ extern "C" {
  *
  * In capture operations, any event from the event system or a pin
  * change can trigger a capture of the counter value. This captured
- * counter value can be used as a timestamp for the event, or it can
+ * counter value can be used as a time stamp for the event, or it can
  * be used in frequency and pulse width capture.
  *
  * \subsubsection event_capture Event Capture
