@@ -112,20 +112,6 @@
 
 /* === MACROS ============================================================== */
 
-/** Defines the default channel. */
-#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#ifdef CHINESE_BAND
-#define DEFAULT_CHANNEL                 (0)
-#define DEFAULT_CHANNEL_PAGE            (5)
-#else
-#define DEFAULT_CHANNEL                 (1)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #ifdef CHINESE_BAND */
-#else
-#define DEFAULT_CHANNEL                 (20)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)) */
-
 /** Defines the PAN ID of the network. */
 #define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
 /** This is a device which will communicate with a single coordinator.
@@ -140,7 +126,9 @@
 /** Define the LED on duration time. */
 #define LED_ON_DURATION                 (500000)
 
-#define SCAN_CHANNEL                    (1ul << DEFAULT_CHANNEL)
+#define CHANNEL_OFFSET                  (0)
+
+#define SCAN_CHANNEL                    (1ul << current_channel)
 
 /** Defines the short scan duration time. */
 #define SCAN_DURATION_SHORT             (5)
@@ -168,6 +156,10 @@ static uint16_t coord_addr;
 
 /*Stores total receive count*/
 static uint32_t rx_cnt;
+
+static uint8_t current_channel;
+static uint8_t current_channel_page;
+static uint32_t channels_supported;
 
 static uint8_t APP_TIMER_LED_OFF;
 static uint8_t APP_TIMER_POLL_DATA;
@@ -550,7 +542,55 @@ void usr_mlme_get_conf(uint8_t status,
                        uint8_t PIBAttribute,
                        void *PIBAttributeValue)
 {
-	
+	if((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage))
+	{
+		current_channel_page = *(uint8_t *)PIBAttributeValue;
+		wpan_mlme_get_req(phyChannelsSupported);
+	}
+	else if((status == MAC_SUCCESS) && (PIBAttribute == phyChannelsSupported))
+	{
+		uint8_t index;
+		
+		channels_supported = *(uint32_t *)PIBAttributeValue;
+		
+		for(index = 0; index < 32; index++)
+		{
+			if(channels_supported & (1 << index))
+			{
+				current_channel = index + CHANNEL_OFFSET;
+				break;
+			}
+		}
+
+#ifdef SIO_HUB
+        printf("Searching network in Channel - %d\r\n",current_channel);
+#endif
+
+        /*
+         * Initiate an active scan over all channels to determine
+         * which channel is used by the coordinator.
+         * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
+         *                              uint32_t ScanChannels,
+         *                              uint8_t ScanDuration,
+         *                              uint8_t ChannelPage);
+         *
+         * This request leads to a scan confirm message -> usr_mlme_scan_conf
+         * Scan for about 50 ms on each channel -> ScanDuration = 1
+         * Scan for about 1/2 second on each channel -> ScanDuration = 5
+         * Scan for about 1 second on each channel -> ScanDuration = 6
+         */
+        wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
+                           SCAN_CHANNEL,
+                           SCAN_DURATION_SHORT,
+                           current_channel_page);
+
+        /* Indicate network scanning by a LED flashing. */
+        sw_timer_start(APP_TIMER_LED_OFF,
+                        LED_ON_DURATION,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)network_search_indication_cb,
+                        NULL);
+	}
 }
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
@@ -603,34 +643,7 @@ void usr_mlme_reset_conf(uint8_t status)
 {
     if (status == MAC_SUCCESS)
     {
-#ifdef SIO_HUB
-        printf("Searching network\r\n");
-#endif
-
-        /*
-         * Initiate an active scan over all channels to determine
-         * which channel is used by the coordinator.
-         * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
-         *                              uint32_t ScanChannels,
-         *                              uint8_t ScanDuration,
-         *                              uint8_t ChannelPage);
-         *
-         * This request leads to a scan confirm message -> usr_mlme_scan_conf
-         * Scan for about 50 ms on each channel -> ScanDuration = 1
-         * Scan for about 1/2 second on each channel -> ScanDuration = 5
-         * Scan for about 1 second on each channel -> ScanDuration = 6
-         */
-        wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-                           SCAN_CHANNEL,
-                           SCAN_DURATION_SHORT,
-                           DEFAULT_CHANNEL_PAGE);
-
-        /* Indicate network scanning by a LED flashing. */
-        sw_timer_start(APP_TIMER_LED_OFF,
-                        LED_ON_DURATION,
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)network_search_indication_cb,
-                        NULL);
+		wpan_mlme_get_req(phyCurrentPage);
     }
     else
     {
@@ -694,8 +707,8 @@ void usr_mlme_scan_conf(uint8_t status,
              * Check if the PAN descriptor belongs to our coordinator.
              * Check if coordinator allows association.
              */
-            if ((coordinator->LogicalChannel == DEFAULT_CHANNEL) &&
-                (coordinator->ChannelPage == DEFAULT_CHANNEL_PAGE) &&
+            if ((coordinator->LogicalChannel == current_channel) &&
+                (coordinator->ChannelPage == current_channel_page) &&
                 (coordinator->CoordAddrSpec.PANId == DEFAULT_PAN_ID) &&
                 ((coordinator->SuperframeSpec & ((uint16_t)1 << ASSOC_PERMIT_BIT_POS)) == ((uint16_t)1 << ASSOC_PERMIT_BIT_POS))
                )
@@ -742,7 +755,7 @@ void usr_mlme_scan_conf(uint8_t status,
         wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
                            SCAN_CHANNEL,
                            SCAN_DURATION_SHORT,
-                           DEFAULT_CHANNEL_PAGE);
+                           current_channel_page);
     }
     else if (status == MAC_NO_BEACON)
     {
@@ -753,7 +766,7 @@ void usr_mlme_scan_conf(uint8_t status,
         wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
                            SCAN_CHANNEL,
                            SCAN_DURATION_LONG,
-                           DEFAULT_CHANNEL_PAGE);
+                           current_channel_page);
     }
     else
     {

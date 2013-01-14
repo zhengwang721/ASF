@@ -137,20 +137,6 @@ typedef enum coord_state_tag
 
 /* === MACROS ============================================================== */
 
-/** Defines the default channel. */
-#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#ifdef CHINESE_BAND
-#define DEFAULT_CHANNEL                 (0)
-#define DEFAULT_CHANNEL_PAGE            (5)
-#else
-#define DEFAULT_CHANNEL                 (1)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #ifdef CHINESE_BAND */
-#else
-#define DEFAULT_CHANNEL                 (20)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)) */
-
 #define DEFAULT_PAN_ID                  CCPU_ENDIAN_TO_LE16(0xBABE)
 
 /** Defines the short address of the coordinator. */
@@ -158,7 +144,9 @@ typedef enum coord_state_tag
 /** Defines the maximum number of devices this coordinator will handle. */
 #define MAX_NUMBER_OF_DEVICES           (100)
 
-#define SCAN_CHANNEL                    (1ul << DEFAULT_CHANNEL)
+#define CHANNEL_OFFSET                  (0)
+
+#define SCAN_CHANNEL                    (1ul << current_channel)
 
 /** Defines the scan duration time. */
 #define SCAN_DURATION_COORDINATOR       (5)
@@ -228,10 +216,16 @@ static uint32_t tx_cnt;
 /** Store the current MSDU handle to be used for a data frame. */
 static uint8_t curr_msdu_handle;
 
+static uint8_t current_channel;
+static uint8_t current_channel_page;
+static uint32_t channels_supported;
+
 static uint8_t APP_TIMER_INDIRECT_DATA;
 static uint8_t APP_TIMER_BCN_PAYLOAD_UPDATE;
 static uint8_t APP_TIMER_BC_DATA;
+#ifdef GPIO_PUSH_BUTTON_0
 static wpan_addr_spec_t dst_addr;
+#endif //GPIO_PUSH_BUTTON_0
 
 
 /* === PROTOTYPES ========================================================== */
@@ -328,8 +322,10 @@ int main(void)
      */
     wpan_mlme_reset_req(true);
 
+#ifdef GPIO_PUSH_BUTTON_0
 	dst_addr.AddrMode = 2;
 	dst_addr.PANId = DEFAULT_PAN_ID;
+#endif //GPIO_PUSH_BUTTON_0
 
 	while (true)
 	{
@@ -665,6 +661,38 @@ void usr_mlme_get_conf(uint8_t status,
                        void *PIBAttributeValue)
 {
 	
+	if((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage))
+	{
+		current_channel_page = *(uint8_t *)PIBAttributeValue;
+		wpan_mlme_get_req(phyChannelsSupported);
+	}
+	else if((status == MAC_SUCCESS) && (PIBAttribute == phyChannelsSupported))
+	{
+		uint8_t index;
+		
+		channels_supported = *(uint32_t *)PIBAttributeValue;
+		
+		for(index = 0; index < 32; index++)
+		{
+			if(channels_supported & (1 << index))
+			{
+				current_channel = index + CHANNEL_OFFSET;
+				break;
+			}
+		}
+        /*
+         * Set the short address of this node.
+         * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
+         *                             void *PIBAttributeValue);
+         *
+         * This request leads to a set confirm message -> usr_mlme_set_conf
+         */
+        uint8_t short_addr[2];
+
+        short_addr[0] = (uint8_t)COORD_SHORT_ADDR;          // low byte
+        short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8);   // high byte
+        wpan_mlme_set_req(macShortAddress, short_addr);
+	}
 }
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
@@ -712,18 +740,7 @@ void usr_mlme_reset_conf(uint8_t status)
 {
     if (status == MAC_SUCCESS)
     {
-        /*
-         * Set the short address of this node.
-         * Use: bool wpan_mlme_set_req(uint8_t PIBAttribute,
-         *                             void *PIBAttributeValue);
-         *
-         * This request leads to a set confirm message -> usr_mlme_set_conf
-         */
-        uint8_t short_addr[2];
-
-        short_addr[0] = (uint8_t)COORD_SHORT_ADDR;          // low byte
-        short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8);   // high byte
-        wpan_mlme_set_req(macShortAddress, short_addr);
+		wpan_mlme_get_req(phyCurrentPage);
     }
     else
     {
@@ -787,8 +804,8 @@ void usr_mlme_scan_conf(uint8_t status,
      * This request leads to a start confirm message -> usr_mlme_start_conf
      */
     wpan_mlme_start_req(DEFAULT_PAN_ID,
-                        DEFAULT_CHANNEL,
-                        DEFAULT_CHANNEL_PAGE,
+                        current_channel,
+                        current_channel_page,
                         DEFAULT_BO,
                         DEFAULT_SO,
                         true, false, false);
@@ -873,7 +890,7 @@ void usr_mlme_set_conf(uint8_t status,
             wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
                                SCAN_CHANNEL,
                                SCAN_DURATION_COORDINATOR,
-                               DEFAULT_CHANNEL_PAGE);
+                               current_channel_page);
         }
         else
         {
@@ -899,7 +916,8 @@ void usr_mlme_start_conf(uint8_t status)
     {
         coord_state = COORD_RUNNING;
 #ifdef SIO_HUB
-        printf("Started beacon-enabled network\r\n");
+        printf("Started beacon-enabled network in Channel - %d\r\n",
+			   current_channel);
 #endif
         /*
          * Network is established.

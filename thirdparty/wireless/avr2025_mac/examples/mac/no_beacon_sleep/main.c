@@ -125,20 +125,6 @@ typedef enum node_status_tag
 
 /* === MACROS ============================================================== */
 
-/** Defines the default channel. */
-#if ((TAL_TYPE == AT86RF212))
-#ifdef CHINESE_BAND
-#define DEFAULT_CHANNEL                 (0)
-#define DEFAULT_CHANNEL_PAGE            (5)
-#else
-#define DEFAULT_CHANNEL                 (1)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #ifdef CHINESE_BAND */
-#else
-#define DEFAULT_CHANNEL                 (20)
-#define DEFAULT_CHANNEL_PAGE            (0)
-#endif  /* #if (TAL_TYPE == AT86RF212) */
-
 /** Defines the PAN ID of the network. */
 #ifdef PAN_ID
 #define DEFAULT_PAN_ID                  (PAN_ID)
@@ -152,7 +138,9 @@ typedef enum node_status_tag
 /** This is the time period in micro seconds for data transmissions. */
 #define DATA_TX_PERIOD                  (2000000)
 
-#define SCAN_CHANNEL                    (1ul << DEFAULT_CHANNEL)
+#define CHANNEL_OFFSET                  (0)
+
+#define SCAN_CHANNEL                    (1ul << current_channel)
 
 /** Defines the scan duration time. */
 #define SCAN_DURATION                   (4)
@@ -185,6 +173,10 @@ static uint8_t number_of_scans;
 static associated_device_t device_list[MAX_NUMBER_OF_DEVICES];
 /** Current status of the node. */
 static node_status_t node_status;
+
+static uint8_t current_channel;
+static uint8_t current_channel_page;
+static uint32_t channels_supported;
 
 volatile bool timer_flag = false;
 volatile bool in_sleep_mode = false;
@@ -447,7 +439,50 @@ void usr_mlme_get_conf(uint8_t status,
                        uint8_t PIBAttribute,
                        void *PIBAttributeValue)
 {
-	
+	if((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage))
+	{
+		current_channel_page = *(uint8_t *)PIBAttributeValue;
+		wpan_mlme_get_req(phyChannelsSupported);
+	}
+	else if((status == MAC_SUCCESS) && (PIBAttribute == phyChannelsSupported))
+	{
+		uint8_t index;
+		
+		channels_supported = *(uint32_t *)PIBAttributeValue;
+		
+		for(index = 0; index < 32; index++)
+		{
+			if(channels_supported & (1 << index))
+			{
+				current_channel = index + CHANNEL_OFFSET;
+				break;
+			}
+		}
+        /*
+         * Initiate an active scan over all channels to determine
+         * which channel is used by the coordinator.
+         * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
+         *                              uint32_t ScanChannels,
+         *                              uint8_t ScanDuration,
+         *                              uint8_t ChannelPage);
+         *
+         * This request leads to a scan confirm message -> usr_mlme_scan_conf
+         * Scan for about 50 ms on each channel -> ScanDuration = 1
+         * Scan for about 1/2 second on each channel -> ScanDuration = 5
+         * Scan for about 1 second on each channel -> ScanDuration = 6
+         */
+        wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
+                           SCAN_CHANNEL,
+                           SCAN_DURATION,
+                           current_channel_page);
+
+        // Indicate network scanning by a LED flashing
+        sw_timer_start(TIMER_LED_OFF,
+                        500000,
+                        SW_TIMEOUT_RELATIVE,
+                        (FUNC_PTR)network_scan_indication_cb,
+                        NULL);
+	}
 }
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
@@ -472,30 +507,7 @@ void usr_mlme_reset_conf(uint8_t status)
 {
     if (status == MAC_SUCCESS)
     {
-        /*
-         * Initiate an active scan over all channels to determine
-         * which channel is used by the coordinator.
-         * Use: bool wpan_mlme_scan_req(uint8_t ScanType,
-         *                              uint32_t ScanChannels,
-         *                              uint8_t ScanDuration,
-         *                              uint8_t ChannelPage);
-         *
-         * This request leads to a scan confirm message -> usr_mlme_scan_conf
-         * Scan for about 50 ms on each channel -> ScanDuration = 1
-         * Scan for about 1/2 second on each channel -> ScanDuration = 5
-         * Scan for about 1 second on each channel -> ScanDuration = 6
-         */
-        wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
-                           SCAN_CHANNEL,
-                           SCAN_DURATION,
-                           DEFAULT_CHANNEL_PAGE);
-
-        // Indicate network scanning by a LED flashing
-        sw_timer_start(TIMER_LED_OFF,
-                        500000,
-                        SW_TIMEOUT_RELATIVE,
-                        (FUNC_PTR)network_scan_indication_cb,
-                        NULL);
+		wpan_mlme_get_req(phyCurrentPage);
     }
     else
     {
@@ -542,8 +554,8 @@ void usr_mlme_scan_conf(uint8_t status,
              * Check if the PAN descriptor belongs to our coordinator.
              * Check if coordinator allows association.
              */
-            if ((coordinator->LogicalChannel == DEFAULT_CHANNEL) &&
-                (coordinator->ChannelPage == DEFAULT_CHANNEL_PAGE) &&
+            if ((coordinator->LogicalChannel == current_channel) &&
+                (coordinator->ChannelPage == current_channel_page) &&
                 (coordinator->CoordAddrSpec.PANId == DEFAULT_PAN_ID) &&
                 ((coordinator->SuperframeSpec & ((uint16_t)1 << ASSOC_PERMIT_BIT_POS)) == ((uint16_t)1 << ASSOC_PERMIT_BIT_POS))
                )
@@ -593,7 +605,7 @@ void usr_mlme_scan_conf(uint8_t status,
             wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
                                SCAN_CHANNEL,
                                SCAN_DURATION,
-                               DEFAULT_CHANNEL_PAGE);
+                               current_channel_page);
         }
         else
         {
@@ -623,7 +635,7 @@ void usr_mlme_scan_conf(uint8_t status,
             wpan_mlme_scan_req(MLME_SCAN_TYPE_ACTIVE,
                                SCAN_CHANNEL,
                                SCAN_DURATION,
-                               DEFAULT_CHANNEL_PAGE);
+                               current_channel_page);
         }
         else
         {
@@ -701,8 +713,8 @@ void usr_mlme_set_conf(uint8_t status,
          * This request leads to a start confirm message -> usr_mlme_start_conf
          */
         wpan_mlme_start_req(DEFAULT_PAN_ID,
-                            DEFAULT_CHANNEL,
-                            DEFAULT_CHANNEL_PAGE,
+                            current_channel,
+                            current_channel_page,
                             15, 15,
                             true, false, false);
     }
