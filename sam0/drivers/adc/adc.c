@@ -167,7 +167,6 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		return STATUS_ERR_BUSY;
 	}
 
-	_adc_wait_for_sync(hw_dev);
 	if (hw_dev->CTRLA.reg & ADC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
