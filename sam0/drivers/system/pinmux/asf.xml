@@ -4,6 +4,7 @@
 		<build type="header-file" subtype="api" value="pinmux.h"/>
 		<build type="c-source" value="pinmux.c"/>
 		<build type="doxygen-entry-point" value="sam0_pinmux_group"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_pinmux_basic.h"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>

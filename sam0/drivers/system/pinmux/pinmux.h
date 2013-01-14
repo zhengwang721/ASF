@@ -229,8 +229,9 @@ enum system_pinmux_pin_drive {
 /** \brief Port pin configuration structure.
  *
  *  Configuration structure for a port pin instance. This structure should be
- *  structure should be initialized by the \ref pinmux_get_config_defaults()
- *  function before being modified by the user application.
+ *  structure should be initialized by the
+ *  \ref system_pinmux_get_config_defaults() function before being modified by
+ *  the user application.
  */
 struct system_pinmux_conf {
 	/** MUX index of the peripheral that should control the pin, if peripheral
@@ -249,7 +250,8 @@ struct system_pinmux_conf {
  * @{
  */
 
-/** \brief Initializes a Port pin configuration structure to defaults.
+/**
+ *  \brief Initializes a Port pin configuration structure to defaults.
  *
  *  Initializes a given Port pin configuration structure to a set of
  *  known default values. This function should be called on all new
@@ -288,13 +290,14 @@ void system_pinmux_group_set_config(
 /** @} */
 
 /** \name Special mode configuration (physical group orientated)
- * @{
+ *  @{
  */
 
-/** \brief Retrieves the base PORT module address from a given GPIO pin number.
+/**
+ *  \brief Retrieves the PORT module group instance from a given GPIO pin number.
  *
- *  Retrieves the base address of a PORT hardware module associated with
- *  the given GPIO pin number.
+ *  Retrieves the PORT module group instance associated with a given logical
+ *  GPIO pin number.
  *
  *  \param[in] gpio_pin  Index of the GPIO pin to convert.
  *
@@ -320,7 +323,7 @@ static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
 /** @} */
 
 /** \name Special mode configuration (logical pin orientated)
- * @{
+ *  @{
  */
 
 /**
@@ -373,11 +376,11 @@ static inline void system_pinmux_pin_set_output_strength(
 }
 
 /**
- * \brief Configures the input slew rate mode for a GPIO pin.
+ * \brief Configures the output slew rate mode for a GPIO pin.
  *
- * Configures the input slew rate mode for a GPIO input, to
- * control the speed at which the input pin can react to
- * physical changes of the I/O pin value.
+ * Configures the output slew rate mode for a GPIO output, to
+ * control the speed at which the physical output pin can react to
+ * logical changes of the I/O pin value.
  *
  * \param gpio_pin  Index of the GPIO pin to configure.
  * \param mode      New pin slew rate mode to configure.

@@ -177,10 +177,10 @@ struct port_conf {
  */
 
 /**
- *  \brief Retrieves the base PORT module address from a given GPIO pin number.
+ *  \brief Retrieves the PORT module group instance from a given GPIO pin number.
  *
- *  Retrieves the base address of a PORT hardware module associated with
- *  the given GPIO pin number.
+ *  Retrieves the PORT module group instance associated with a given logical
+ *  GPIO pin number.
  *
  *  \param[in] gpio_pin  Index of the GPIO pin to convert.
  *
