@@ -73,11 +73,11 @@
 
 #define BOARD_OSC32_IS_XTAL       true
 #define BOARD_OSC32_HZ            FOSC32
-#define BOARD_OSC32_STARTUP_US    (71000)
+#define BOARD_OSC32_STARTUP_US    (750000)
 #define BOARD_OSC32_SELCURR       BSCIF_OSCCTRL32_SELCURR(10)
 #define BOARD_OSC0_IS_XTAL        true
 #define BOARD_OSC0_HZ             FOSC0
-#define BOARD_OSC0_STARTUP_US     (1100)
+#define BOARD_OSC0_STARTUP_US     (6100)
 //@}
 
 /**
@@ -118,8 +118,8 @@
 #define QTOUCH_DISCHARGE_PIN      PIN_PC14
 #define QTOUCH_DISCHARGE_MUX      MUX_PC14_CATB_DIS
 
-#define QTOUCH_BUTTON_PIN         PIN_PC13
-#define QTOUCH_BUTTON_MUX         MUX_PB04G_CATB_SENSE15
+#define QTOUCH_SENSE_PIN          PIN_PC13
+#define QTOUCH_SENSE_MUX          MUX_PB04G_CATB_SENSE15
 //@}
 
 /** \name Touch sensors pin assignements */
