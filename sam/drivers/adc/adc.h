@@ -3,7 +3,7 @@
  *
  * \brief Analog-to-Digital Converter (ADC/ADC12B) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -107,15 +107,15 @@ enum adc12b_trigger_t {
 	ADC12B_TRIG_SW = ADC12B_MR_TRGEN_DIS,  /* Starting a conversion is only possible by software. */
 	ADC12B_TRIG_EXT = ((ADC12B_MR_TRGSEL_ADC_TRIG0 << ADC12B_MR_TRGSEL_Pos) & 
 			ADC12B_MR_TRGSEL_Msk) | ADC12B_MR_TRGEN,  /* External trigger */
-	ADC12B_TRIG_TIO_CH_0 = (ADC12B_MR_TRGSEL_ADC_TRIG1  & ADC12B_MR_TRGSEL_Msk) | 
+	ADC12B_TRIG_TIO_CH_0 = (ADC12B_MR_TRGSEL_ADC_TRIG1 & ADC12B_MR_TRGSEL_Msk) | 
 			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 0 */
-	ADC12B_TRIG_TIO_CH_1 = (ADC12B_MR_TRGSEL_ADC_TRIG2  & ADC12B_MR_TRGSEL_Msk) | 
+	ADC12B_TRIG_TIO_CH_1 = (ADC12B_MR_TRGSEL_ADC_TRIG2 & ADC12B_MR_TRGSEL_Msk) | 
 			ADC_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 1 */
-	ADC12B_TRIG_TIO_CH_2 = (ADC12B_MR_TRGSEL_ADC_TRIG3  & ADC12B_MR_TRGSEL_Msk) | 
+	ADC12B_TRIG_TIO_CH_2 = (ADC12B_MR_TRGSEL_ADC_TRIG3 & ADC12B_MR_TRGSEL_Msk) | 
 			ADC12B_MR_TRGEN,  /* TIO Output of the Timer Counter Channel 2 */
-	ADC12B_TRIG_PWM_EVENT_LINE_0 = (ADC12B_MR_TRGSEL_ADC_TRIG4  & ADC12B_MR_TRGSEL_Msk) |
+	ADC12B_TRIG_PWM_EVENT_LINE_0 = (ADC12B_MR_TRGSEL_ADC_TRIG4 & ADC12B_MR_TRGSEL_Msk) |
 			ADC12B_MR_TRGEN, /* PWM Event Line 0 */
-	ADC12B_TRIG_PWM_EVENT_LINE_1 = (ADC12B_MR_TRGSEL_ADC_TRIG5  & ADC12B_MR_TRGSEL_Msk) | 
+	ADC12B_TRIG_PWM_EVENT_LINE_1 = (ADC12B_MR_TRGSEL_ADC_TRIG5 & ADC12B_MR_TRGSEL_Msk) | 
 			ADC12B_MR_TRGEN  /* PWM Event Line 1 */
 };
 #endif
