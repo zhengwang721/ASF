@@ -131,7 +131,7 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck,
 	}
 
 	/* Check whether the input MCK is too small. */
-	if (ul_mck  < ul_baudrate * CAN_MIN_TQ_NUM * 1000) {
+	if ((ul_mck / 2)  < ul_baudrate * CAN_MIN_TQ_NUM * 1000) {
 		return 0;
 	}
 
@@ -158,7 +158,10 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck,
 
 	/* Calculate the baudrate prescale value. */
 	uc_prescale = ul_mck / (ul_baudrate * uc_tq * 1000);
-
+	if (uc_prescale < 2) {
+		return 0;
+	}
+	
 	/* Get the right CAN BIT Timing group. */
 	p_bit_time = (can_bit_timing_t *)&can_bit_time[uc_tq - CAN_MIN_TQ_NUM];
 
