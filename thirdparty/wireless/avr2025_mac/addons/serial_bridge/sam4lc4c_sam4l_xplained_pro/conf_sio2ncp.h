@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef CONF_SIO_HELPER_H_INCLUDED
-#define CONF_SIO_HELPER_H_INCLUDED
+#ifndef CONF_SIO2NCP_H_INCLUDED
+#define CONF_SIO2NCP_H_INCLUDED
 
 
 //! @{
@@ -63,4 +63,4 @@
 
 #include "serial.h"
 
-#endif /* CONF_SIO_HELPER_H_INCLUDED */
+#endif /* CONF_SIO2NCP_H_INCLUDED */

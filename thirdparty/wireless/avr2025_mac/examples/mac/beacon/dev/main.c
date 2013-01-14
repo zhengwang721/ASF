@@ -111,7 +111,7 @@
 #include "led.h"
 #include "delay.h"
 #include "common_sw_timer.h"
-#include "sio_helper.h"
+#include "sio2host.h"
 
 /* === TYPES =============================================================== */
 /**
@@ -243,14 +243,14 @@ int main(void)
 
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
-    if (STATUS_OK != sio_init())
+    if (STATUS_OK != sio2host_init())
     {
         /* Something went wrong during initialization. */
         app_alert();
     }
 
     /* To Make sure the Hyper Terminal to the System */
-	sio_getchar();
+	sio2host_getchar();
 
     printf("\nBeacon_Application\r\n\n");
     printf("\nDevice\r\n\n");

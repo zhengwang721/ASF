@@ -1,5 +1,5 @@
 /**
- * \file sio_helper.c
+ * \file sio2ncp.c
  *
  * \brief Event handling Serial I/O  Functionalities
  

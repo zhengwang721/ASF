@@ -58,7 +58,7 @@
 #include "tal_helper.h"
 #include "tal_constants.h"
 #include "app_frame_format.h"
-# include "sio_helper.h"
+# include "sio2host.h"
 #include "perf_api.h"
 #include "conf_board.h"
 /* === TYPES =============================================================== */

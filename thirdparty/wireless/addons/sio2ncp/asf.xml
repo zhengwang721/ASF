@@ -21,7 +21,7 @@
 		<info type="description" value="summary">
 		SIO2NCP Communication
 		</info>
-		<build type="doxygen-entry-point" value="group_sio_helper"/>
+		<build type="doxygen-entry-point" value="group_sio2ncp"/>
 
 		<require idref="config.thirdparty.wireless.addons.sio2ncp" />
 

@@ -53,7 +53,7 @@
 #include "ieee_const.h"
 #include "app_init.h"
 #include "perf_msg_const.h"
-# include "sio_helper.h"
+#include "sio2host.h"
 #include "perf_api.h"
 #include "perf_api_serial_handler.h"
 /**
@@ -192,7 +192,7 @@ void serial_data_handler(void)
     {
         /* No data to process, read the stream IO */
         rx_index = 0;
-        data_length = sio_rx(data, SIO_RX_BUF_SIZE);
+        data_length = sio2host_rx(data, SIO_RX_BUF_SIZE);
     }
     else    /* Data has been received, process the data */
     {
@@ -205,7 +205,7 @@ void serial_data_handler(void)
     /* Tx processing */
     if (buf_count != 0)
     {
-        uint8_t no_of_bytes_transmitted = sio_tx(&sio_tx_buf[head][curr_tx_buffer_index],
+        uint8_t no_of_bytes_transmitted = sio2host_tx(&sio_tx_buf[head][curr_tx_buffer_index],
                                                      (sio_tx_buf[head][1] + 3) - curr_tx_buffer_index );
 
         /* Transmission of the current buffer is done completely */

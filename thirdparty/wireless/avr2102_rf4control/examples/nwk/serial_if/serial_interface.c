@@ -25,7 +25,7 @@
 #include "pal.h"
 #include "nwk_msg_code.h"
 #include "serial_interface.h"
-#include "sio_helper.h"
+#include "sio2host.h"
 #include "rf4ce.h"
 
 /* === MACROS ============================================================== */
@@ -238,7 +238,7 @@ void nwk_indication_callback_init(void)
 void serial_interface_init(void)
 {
     sio_rx_state = UART_RX_STATE_SOT;
-    sio_init();
+    sio2host_init();
 }
 
 
@@ -252,7 +252,7 @@ void serial_data_handler(void)
     {
         /* No data to process, read the stream IO */
         rx_index = 0;
-        data_length = sio_rx(data, SIO_RX_BUF_SIZE);
+        data_length = sio2host_rx(data, SIO_RX_BUF_SIZE);
     }
     else    /* Data has been received, process the data */
     {
@@ -265,7 +265,7 @@ void serial_data_handler(void)
     /* Tx processing */
     if (buf_count != 0)
     {
-        if (sio_tx(sio_tx_buf[head], (sio_tx_buf[head][1] + 3)) != 0)
+        if (sio2host_tx(sio_tx_buf[head], (sio_tx_buf[head][1] + 3)) != 0)
         {
             head++;
             head %= SIO_BUF_COUNT;

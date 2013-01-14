@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef CONF_SIO_HELPER_H_INCLUDED
-#define CONF_SIO_HELPER_H_INCLUDED
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
 // FOR UART 
 /*! \name Configuration
@@ -58,4 +58,4 @@
 
 //#include "stdio_usb.h"
  
-#endif /* CONF_SIO_HELPER_H_INCLUDED */
+#endif /* CONF_SIO2HOST_H_INCLUDED */

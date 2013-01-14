@@ -57,7 +57,7 @@
 #include "app_init.h"
 #include "ieee_const.h"
 #include "app_frame_format.h"
-# include "sio_helper.h"
+#include "sio2host.h"
 #include "app_range_mode.h"
 #include "user_interface.h"
 
@@ -123,7 +123,7 @@ void range_test_tx_on_task(void)
     uint8_t key_press;
 
     /* See if any character received on the UART */
-    char_received = sio_getchar_nowait();
+    char_received = sio2host_getchar_nowait();
 
     /* Check for any key press */
     key_press = app_debounce_button();
@@ -188,7 +188,7 @@ void range_test_tx_off_task(void)
     uint8_t key_press;
 
     /* See if any character received on the UART */
-    char_received = sio_getchar_nowait();
+    char_received = sio2host_getchar_nowait();
 
     /* Check for any key press */
     key_press = app_debounce_button();

@@ -13,7 +13,7 @@
 		<build type="define" name="SIO_HUB" value =""/>
 
 		<require idref="thirdparty.wireless.avr2025_mac"/>
-		<require idref="thirdparty.wireless.avr2025_mac.examples.sio_helper"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>

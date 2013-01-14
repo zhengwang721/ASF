@@ -52,7 +52,7 @@
 #include "tal_constants.h"
 #include "tal_helper.h"
 #include "ieee_const.h"
-# include "sio_helper.h"
+#include "sio2host.h"
 #include "app_frame_format.h"
 #include "app_init.h"
 #include "app_peer_search.h"

@@ -1,5 +1,5 @@
 /**
- * \file sio_helper.c
+ * \file sio2host.c
  *
  * \brief Event handling Serial I/O  Functionalities
  
@@ -101,7 +101,7 @@ static volatile bool main_b_cdc_enable = false;
 status_code_t sio2host_init(void)
 {
 	stdio_serial_init(USART_HOST, &usart_serial_options);
-	usart_set_rx_interrupt_level(USART_HOST, USART_INT_LVL_HI);
+	USART_HOST_RX_ISR_ENABLE();
 	return STATUS_OK;
 }
 
@@ -186,9 +186,15 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 
 }
 
+int sio2host_getchar(void)
+{
+    uint8_t c;
+
+	while (0 == sio2host_rx(&c, 1));
+	return c;
+}
 
 int sio2host_getchar_nowait(void)
-
 {
     uint8_t c;
 

@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef CONF_SIO_HELPER_H_INCLUDED
-#define CONF_SIO_HELPER_H_INCLUDED
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
 
 /*! \name Configuration
@@ -54,4 +54,4 @@
 
 #define USART_HOST_ISR_VECT       USARTE0_RXC_vect
 
-#endif /* CONF_SIO_HELPER_H_INCLUDED */
+#endif /* CONF_SIO2HOST_H_INCLUDED */

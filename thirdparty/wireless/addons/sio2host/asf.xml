@@ -33,7 +33,7 @@
 		<info type="description" value="summary">
 		The SIO2HOST Component acts as a api layer serial communication
 		</info>
-		<build type="doxygen-entry-point" value="group_sio_helper"/>
+		<build type="doxygen-entry-point" value="group_sio2host"/>
 
 		<require idref="config.thirdparty.wireless.addons.sio2host" />
 

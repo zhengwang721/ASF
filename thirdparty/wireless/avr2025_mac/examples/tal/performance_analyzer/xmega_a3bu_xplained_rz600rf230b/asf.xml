@@ -8,11 +8,11 @@
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_common_hw_timer.h"/>
 		<build type="header-file" value="conf_usb.h"/>
-		<build type="header-file" value="conf_sio_helper.h"/>
+		<build type="header-file" value="conf_sio2host.h"/>
 
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<require idref="board.xmega_a3bu_xplained"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>		
+		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf230b"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf230b"/>

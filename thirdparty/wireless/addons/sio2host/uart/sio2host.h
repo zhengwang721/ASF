@@ -1,5 +1,5 @@
 /**
- * \file sio_helper.h
+ * \file sio2host.h
  *
  * \brief Event handling Serial I/O  Functionalities
  
@@ -60,7 +60,7 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length);
 
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
 
-
+int sio2host_getchar(void);
 int sio2host_getchar_nowait(void);
 
 #endif /* SIO2HOST_H */

@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_sio_helper.h"/>
+		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_common_hw_timer.h"/>
@@ -18,7 +18,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf231"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="at86rf2xx"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
-		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="usb"/>
+		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 

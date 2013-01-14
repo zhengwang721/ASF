@@ -54,7 +54,7 @@
 #include "tal_helper.h"
 #include "app_init.h"
 #include "perf_api_serial_handler.h"
-# include "sio_helper.h"
+#include "sio2host.h"
 #include "common_sw_timer.h"
 
 /* === TYPES =============================================================== */

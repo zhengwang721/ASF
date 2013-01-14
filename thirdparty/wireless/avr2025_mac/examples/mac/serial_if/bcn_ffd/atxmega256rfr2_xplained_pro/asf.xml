@@ -3,7 +3,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_sio_helper.h"/>
+		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_common_hw_timer.h"/>
 
@@ -12,7 +12,7 @@
 
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="atmegarfr2"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" value="none"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.examples.sio_helper" value="uart"/>
+		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_ffd"/>
 		<require idref="board.mega_256rfr2_xplained_pro"/>

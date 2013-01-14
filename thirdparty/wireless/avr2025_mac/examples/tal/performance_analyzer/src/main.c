@@ -57,7 +57,7 @@
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
 #include "asf.h"
-#include "sio_helper.h"
+#include "sio2host.h"
 #include "conf_board.h"
 
 /**
@@ -367,7 +367,7 @@ int main(void)
 
     cpu_irq_enable();
     
-        if (sio_init() != STATUS_OK)
+        if (sio2host_init() != STATUS_OK)
     {
         /* something went wrong during initialization */
         app_alert();
