@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Peripheral Access Controller Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,13 @@
 
 #include "pac.h"
 
-#warning "Will need to be updated!"
-/*! Infinite loop if CPU exception is detected */
-void pac_hard_fault_handler(void)
+/** Handler for the CPU Hard Fault interrupt, fired if an illegal access was
+ *  attempted to a locked peripheral.
+ */
+void HardFault_Handler(void)
 {
-	while(1) {
-		/* Loop here on access error */
+	while (1) {
+		/* Infinite loop if CPU exception is detected */
 	}
 }
 
@@ -77,7 +78,7 @@ __no_inline enum status_code system_peripheral_lock(
 	/* Check if key is correct. */
 	if (~(uint32_t)peripheral != key){
 		/* If key is not correct, do hard fault. */
-		pac_hard_fault_handler();
+		HardFault_Handler();
 	}
 
 	switch (register_pos) {
@@ -130,7 +131,7 @@ __no_inline enum status_code system_peripheral_unlock(
 	/* Check if key is correct. */
 	if (~(uint32_t)peripheral != key){
 		/* If key is not correct, do hard fault. */
-		pac_hard_fault_handler();
+		HardFault_Handler();
 	}
 
 	switch (register_pos) {

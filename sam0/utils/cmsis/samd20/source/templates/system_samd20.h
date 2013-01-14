@@ -4,7 +4,7 @@
  * \brief Provides the low-level initialization functions that called
  * on chip startup.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
