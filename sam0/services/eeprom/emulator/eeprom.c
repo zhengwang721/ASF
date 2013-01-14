@@ -245,7 +245,6 @@ static void _eeprom_emulator_scan_row(uint8_t row, struct _eeprom_page_translate
 			(struct _eeprom_data*)&_eeprom_emulator_device.flash[row * FLASH_ROW_SIZE];
 	uint8_t c;
 	uint8_t c2=0;
-	uint8_t c3=0;
 
 	/* We assume that there are some content on the first two pages */
 	page_trans[0].lpage = row_data[0].header[EEPROM_PAGE_NUMBER_BYTE];
@@ -352,7 +351,7 @@ static void _eeprom_emulator_create_master_page(void)
 	master_page.revision      = EEPROM_REVISION;
 	master_page.emulator_id   = EEPROM_EMULATOR_ID;
 
-	eeprom_emulator_write_page(EEPROM_MASTER_PAGE_NUMBER, (uint32_t*)&master_page);
+	eeprom_emulator_write_page(EEPROM_MASTER_PAGE_NUMBER, (uint8_t*)&master_page);
 }
 
 
@@ -375,7 +374,7 @@ enum status_code eeprom_emulator_init(void)
 
 	nvm_get_config_defaults(&config);
 	config.manual_page_write = true;
-	wait_for_function(nvm_init(&config));
+	wait_for_function(nvm_set_config(&config));
 
 	nvm_get_parameters(&parm);
 
@@ -388,7 +387,7 @@ enum status_code eeprom_emulator_init(void)
 
 	_eeprom_emulator_scan_memory();
 
-	eeprom_emulator_read_page(EEPROM_MASTER_PAGE_NUMBER, &master_page);
+	eeprom_emulator_read_page(EEPROM_MASTER_PAGE_NUMBER, (uint8_t*)&master_page);
 
 	for (c = 0; c < EEPROM_MAGIC_KEY_COUNT; ++c) {
 
@@ -413,7 +412,7 @@ enum status_code eeprom_emulator_init(void)
 enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 {
 	uint8_t eeprom_header[EEPROM_HEADER_SIZE];
-	uint8_t new_page;
+	uint8_t new_page = 0;
 	enum status_code err = STATUS_OK;
 
 	if (!_eeprom_emulator_device.initialized) {
@@ -516,7 +515,7 @@ enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, ui
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 	uint16_t c;
 	uint8_t buffer[EEPROM_DATA_SIZE];
-	enum status_code err;
+	enum status_code err = STATUS_OK;
 
 	if (offset % EEPROM_DATA_SIZE) {
 		err = eeprom_emulator_read_page(current_page, buffer);
@@ -548,6 +547,8 @@ enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, ui
 
 		buffer[c % EEPROM_DATA_SIZE] = data[c - offset];
 	}
+
+	return err;
 }
 
 enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uint16_t length)
@@ -555,7 +556,7 @@ enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uin
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 	uint16_t c;
 	uint8_t buffer[EEPROM_DATA_SIZE];
-	enum status_code err;
+	enum status_code err = STATUS_OK;
 
 	if (offset % EEPROM_DATA_SIZE) {
 		err = eeprom_emulator_read_page(current_page, buffer);
