@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.services.eeprom_emulator" caption="EEProm emualtor service">
+	<module type="driver" id="sam0.services.eeprom_emulator" caption="EEPROM Emulator Service">
 		<info type="description" value="summary">
-			This EEPROM Emulator service for SAM0+ provides a eeprom like, safe, 
-			non-volatile data storage in flash.
+			This EEPROM Emulator service for SAM0D provides an
+			EEPROM-like safe non-volatile data storage in FLASH memory
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory" />

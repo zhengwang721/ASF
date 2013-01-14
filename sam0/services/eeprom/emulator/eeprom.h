@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ Peripheral Digital to Analog Converter Driver
+ * \brief SAM0+ EEPROM Emulator service
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *

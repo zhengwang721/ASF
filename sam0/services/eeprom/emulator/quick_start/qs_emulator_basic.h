@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ DAC Quick Start
+ * \brief SAM0+ EEPROM Emulator Service Quick Start
  *
  * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
