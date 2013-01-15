@@ -236,7 +236,7 @@ extern "C" {
  * reload action determines if the prescaler should be restarted, and
  * when this should happen. The counter will always be reloaded with
  * the value it is set to start counting from. The user can choose
- * between three different reload actions:
+ * between three different reload actions.
  *
  * The prescaler consists of a basic counter circuitry itself. When
  * the prescaler is used, it counts the clock cycles of the TC
@@ -250,15 +250,18 @@ extern "C" {
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_GCLK </td>
- *     <td> Reload on next GCLK cycle. prescaler to zero. </td>
+ *     <td> Reload TC counter value on next GCLK cycle. Leav prescaler
+ *     as it is. </td>
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_PRESC </td>
- *     <td> Reloads TC counter value on next prescaler clock. No special action performed to set prescaler to zero. </td>
+ *     <td> Reloads TC counter value on next prescaler clock. No
+ *     special action performed to set prescaler to zero. </td>
  *   </tr>
  *  <tr>
  *    <td> \ref TC_RELOAD_ACTION_RESYNC </td>
- *    <td> Reload on next GCLK cycle. Set prescaler to zero. </td>
+ *    <td> Reload TC counter value on next GCLK cycle. Set prescaler
+ *    to zero. </td>
  *  </tr>
  * </table>
  *
