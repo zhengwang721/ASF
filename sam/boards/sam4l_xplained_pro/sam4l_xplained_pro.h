@@ -122,7 +122,7 @@
 #define QTOUCH_SENSE_MUX          MUX_PB04G_CATB_SENSE15
 //@}
 
-/** \name Touch sensors pin assignements */
+/** \name Touch sensors pin assignments */
 //@{
 #define QTOUCH_PINSEL_BUTTON      15
 //@}
