@@ -503,6 +503,30 @@
 //@}
 //@}
 
+/** \name Embedded debugger interfaces */
+//@{
+
+/** \name Embedded debugger GPIO interface */
+//@{
+#define EDBG_GPIO0_PIN            PIN_PB05
+#define EDBG_GPIO1_PIN            PIN_PB10
+#define EDBG_GPIO2_PIN            PIN_PB06
+#define EDBG_GPIO3_PIN            PIN_PB07
+//@}
+
+/** \name Embedded debugger USART interface */
+//@{
+#define EDBG_UART_MODULE          USART3
+#define EDBG_UART_RX_PIN          PIN_PC28A_USART3_RXD
+#define EDBG_UART_RX_MUX          MUX_PC28A_USART3_RXD
+#define EDBG_UART_TX_PIN          PIN_PC29A_USART3_TXD
+#define EDBG_UART_TX_MUX          MUX_PC29A_USART3_TXD
+#define EDBG_UART_CLK_PIN         PIN_PC31A_USART3_CLK
+#define EDBG_UART_CLK_MUX         MUX_PC31A_USART3_CLK
+//@}
+
+//@}
+
 //@}
 //@}
 #endif /* SAM4L_XPLAINED_PRO_INCLUDED */
