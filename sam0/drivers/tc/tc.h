@@ -325,7 +325,7 @@ extern "C" {
  *
  * The figure below illustrates operations and different states of
  * the counter and its output when running the counter in PWM normal
- * mode. As can be seen, the TOP value is unchanged and is set to
+ * mode. As can be seen, the top value is unchanged and is set to
  * max. The compare match value is changed to illustrate different
  * outcomes of this. The PWM output is here set to be ordinary output
  * as it is not inverted here.
@@ -341,7 +341,7 @@ extern "C" {
  * in the \ref tc_conf struct, see \ref
  * tc_waveform_invert_output. In this example, the counter value is
  * changed once, but the compare match value is kept
- * unchanged. As can be seen, it is possible to change the TOP value
+ * unchanged. As can be seen, it is possible to change the top value
  * when running in PWM match mode. \n
  *
  * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
@@ -377,7 +377,7 @@ extern "C" {
  * Event capture is a simple use of the capture functionality. This
  * makes it possible to create timestamps for specific events. The
  * user should be aware that when performing any capture operation
- * there is a risk that the counter reaches its TOP value when
+ * there is a risk that the counter reaches its top value when
  * counting up, or the bottom value (zero) when counting down, before
  * the capture event takes place. This eventuality must be checked for
  * and handled should it happen.
@@ -497,22 +497,22 @@ enum tc_compare_capture_channel_index {
  *
  */
 enum tc_wave_generation {
-	/** TOP is max, except in 8-bit counter size where it is the PER
+	/** Top is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_NORMAL_FREQ         = TC_CTRLA_WAVEGEN_NFRQ,
 
-	/** TOP is CC0, except in 8-bit counter size where it is the PER
+	/** Top is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_MATCH_FREQ          = TC_CTRLA_WAVEGEN_MFRQ,
 
-	/** TOP is max, except in 8-bit counter size where it is the PER
+	/** Top is max, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_NORMAL_PWM          = TC_CTRLA_WAVEGEN_NPWM,
 
-	/** TOP is CC0, except in 8-bit counter size where it is the PER
+	/** Top is CC0, except in 8-bit counter size where it is the PER
 	 * register
 	 */
 	TC_WAVE_GENERATION_MATCH_PWM           = TC_CTRLA_WAVEGEN_MPWM,
@@ -525,7 +525,7 @@ enum tc_wave_generation {
  */
 enum tc_counter_size {
 	/** The counter's max value is 0xFF, the period register is
-	 * available to be used as TOP value
+	 * available to be used as top value
 	 */
 	TC_COUNTER_SIZE_8BIT                    = TC_CTRLA_MODE_COUNT8,
 
@@ -1071,7 +1071,7 @@ enum status_code tc_set_count_value(
  *
  * This function will stop the counter. When the counter is stopped
  * the value in the count value is set to 0 if the counter was
- * counting up, or max or the TOP value if the counter was counting
+ * counting up, or max or the top value if the counter was counting
  * down when stopped.
  *
  * \param[in] dev_inst  Pointer to the device struct
