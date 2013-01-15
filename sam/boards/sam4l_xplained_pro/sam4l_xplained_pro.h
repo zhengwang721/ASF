@@ -525,6 +525,15 @@
 #define EDBG_UART_CLK_MUX         MUX_PC31A_USART3_CLK
 //@}
 
+/** \name Embedded debugger TWI interface */
+//@{
+#define EDBG_TWI_MODULE           TWIMS0
+#define EDBG_TWI_SDA_PIN          PIN_PA23B_TWIMS0_TWD
+#define EDBG_TWI_SDA_MUX          MUX_PA23B_TWIMS0_TWD
+#define EDBG_TWI_SCL_PIN          PIN_PA24B_TWIMS0_TWCK
+#define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWC
+//@}
+
 //@}
 
 //@}
