@@ -132,8 +132,6 @@
 #define VBUS_INPUT_PIN            PIN_PC11
 //@}
 
-/** \name Extension header 1 definitions */
-//@{
 /** \name Extension header 1 pin definitions */
 //@{
 #define EXT1_PIN_3                PIN_PA04
@@ -174,8 +172,6 @@
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 //@}
 
-/** \name Extension header 1 module-specific functions */
-//@{
 /** \name Extension header 1 ADC */
 //@{
 #define EXT1_ADC_MODULE           ADCIFE
@@ -223,11 +219,7 @@
 #define EXT1_SPI_SS_MISO          MUX_PA21A_SPI_MISO
 #define EXT1_SPI_SS_SCK           MUX_PC30B_SPI_SCK
 //@}
-//@}
-//@}
 
-/** \name Extension header 2 definitions */
-//@{
 /** \name Extension header 2 pin definitions */
 //@{
 #define EXT2_PIN_3                PIN_PA07
@@ -268,8 +260,6 @@
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 //@}
 
-/** \name Extension header 2 module-specific functions */
-//@{
 /** \name Extension header 2 ADC */
 //@{
 #define EXT2_ADC_MODULE           ADCIFE
@@ -316,11 +306,7 @@
 #define EXT2_SPI_SS_MISO          MUX_PA21A_SPI_MISO
 #define EXT2_SPI_SS_SCK           MUX_PC30B_SPI_SCK
 //@}
-//@}
-//@}
 
-/** \name Extension header 3 definitions */
-//@{
 /** \name Extension header 3 pin definitions */
 //@{
 #define EXT3_PIN_3                PIN_PB03
@@ -361,8 +347,6 @@
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
 //@}
 
-/** \name Extension header 3 module-specific functions */
-//@{
 /** \name Extension header 3 ADC */
 //@{
 #define EXT3_ADC_MODULE           ADCIFE
@@ -408,11 +392,7 @@
 #define EXT3_SPI_SS_MISO          MUX_PA19A_USART2_RXD
 #define EXT3_SPI_SS_SCK           MUX_PA18A_USART2_CLK
 //@}
-//@}
-//@}
 
-/** \name Extension header 4 definitions */
-//@{
 /** \name Extension header 4 pin definitions */
 //@{
 #define EXT4_PIN_3                PIN_PB05
@@ -453,8 +433,6 @@
 #define EXT4_PIN_SPI_SCK          EXT4_PIN_18
 //@}
 
-/** \name Extension header 4 module-specific functions */
-//@{
 /** \name Extension header 4 ADC */
 //@{
 #define EXT4_ADC_MODULE           ADCIFE
@@ -500,11 +478,6 @@
 #define EXT4_SPI_SS_MISO          MUX_PA19A_USART2_RXD
 #define EXT4_SPI_SS_SCK           MUX_PA18A_USART2_CLK
 //@}
-//@}
-//@}
-
-/** \name Embedded debugger interfaces */
-//@{
 
 /** \name Embedded debugger GPIO interface */
 //@{
@@ -534,7 +507,6 @@
 #define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWC
 //@}
 
-//@}
 
 //@}
 //@}
