@@ -507,7 +507,8 @@
 #define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWC
 //@}
 
+/** @} */
 
-//@}
-//@}
+/** @} */
+
 #endif /* SAM4L_XPLAINED_PRO_INCLUDED */
