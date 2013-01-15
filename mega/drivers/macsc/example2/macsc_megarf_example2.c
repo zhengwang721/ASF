@@ -157,7 +157,7 @@ int main(void)
 
 	sysclk_enable_peripheral_clock(&TRX_CTRL_0);
 
-	sleep_set_mode(SLEEP_SMODE_PSAVE_gc);
+	sleep_set_mode(SLEEP_SMODE_PSAVE);
 
 	cpu_irq_enable();
 
