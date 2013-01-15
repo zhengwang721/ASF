@@ -43,7 +43,7 @@
 
 /** \brief Initializes the TC
  *
- * Enables the clock and initializes the TC module,
+ * This function enables the clock and initializes the TC module,
  * based on the values of the \ref tc_conf struct.
  *
  * \param dev_inst  Pointer to the device struct
@@ -280,7 +280,7 @@ enum status_code tc_set_count_value(
 
 /** \brief Get TC module count value
  *
- * Gets the count value of the TC module. It can be used while the
+ * This function gets the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
  *
  * \param[in]  dev_inst      Pointer to the device struct
@@ -358,7 +358,7 @@ uint32_t tc_get_capture_value(
 
 /** \brief Set a compare value
  *
- * Writes a compare value to the given compare/capture channel register
+ * This function writes a compare value to the given compare/capture channel register
  *
  * \param[in] dev_inst       Pointer to the device struct
  * \param[in] compare        Compare value
