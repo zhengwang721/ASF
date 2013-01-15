@@ -76,9 +76,7 @@ int main(void)
 
 	//! [main]
 	while (true) {
-		//! [main_1]
-
-		//! [main_1]
+		// Do nothing
 	}
 	//! [main]
 }

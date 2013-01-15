@@ -182,10 +182,10 @@ enum system_pinmux_pin_pull {
  * structure, to indicate the type of sampling a port pin should use.
  */
 enum system_pinmux_pin_sampling_mode {
-	/** Pin input buffer should be enabled when the IN register is read. */
-	SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
 	/** Pin input buffer should continuously sample the pin state. */
 	SYSTEM_PINMUX_PIN_SAMPLING_CONTINUOUS,
+	/** Pin input buffer should be enabled when the IN register is read. */
+	SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
 };
 
 /** \brief Port pin drive output strength enum.
@@ -320,6 +320,26 @@ static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
 	}
 }
 
+void system_pinmux_group_set_input_sample_mode(
+		PortGroup *const port,
+		const uint32_t mask,
+		const enum system_pinmux_pin_sampling_mode mode);
+
+void system_pinmux_group_set_output_strength(
+		PortGroup *const port,
+		const uint32_t mask,
+		const enum system_pinmux_pin_strength mode);
+
+void system_pinmux_group_set_output_slew_rate(
+		PortGroup *const port,
+		const uint32_t mask,
+		const enum system_pinmux_pin_slew_rate mode);
+
+void system_pinmux_group_set_output_drive(
+		PortGroup *const port,
+		const uint32_t mask,
+		const enum system_pinmux_pin_drive mode);
+
 /** @} */
 
 /** \name Special mode configuration (logical pin orientated)
@@ -333,8 +353,8 @@ static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
  * control when the physical I/O pin value is sampled and
  * stored inside the microcontroller.
  *
- * \param gpio_pin Index of the GPIO pin to configure.
- * \param mode     New pin sampling mode to configure.
+ * \param[in] gpio_pin Index of the GPIO pin to configure.
+ * \param[in] mode     New pin sampling mode to configure.
  */
 static inline void system_pinmux_pin_set_input_sample_mode(
 		const uint8_t gpio_pin,
@@ -357,8 +377,8 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  * Configures the output drive strength for a GPIO output, to
  * control the amount of current the pad is able to sink/source.
  *
- * \param gpio_pin  Index of the GPIO pin to configure.
- * \param mode      New output driver strength mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure.
+ * \param[in] mode      New output driver strength mode to configure.
  */
 static inline void system_pinmux_pin_set_output_strength(
 		const uint8_t gpio_pin,
@@ -382,8 +402,8 @@ static inline void system_pinmux_pin_set_output_strength(
  * control the speed at which the physical output pin can react to
  * logical changes of the I/O pin value.
  *
- * \param gpio_pin  Index of the GPIO pin to configure.
- * \param mode      New pin slew rate mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure.
+ * \param[in] mode      New pin slew rate mode to configure.
  */
 static inline void system_pinmux_pin_set_output_slew_rate(
 		const uint8_t gpio_pin,
@@ -404,10 +424,10 @@ static inline void system_pinmux_pin_set_output_slew_rate(
  * \brief Configures the output driver mode for a GPIO pin.
  *
  * Configures the output driver mode for a GPIO output, to
- * control the pad behaviour.
+ * control the pad behavior.
  *
- * \param gpio_pin  Index of the GPIO pin to configure.
- * \param mode      New pad output driver mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure.
+ * \param[in] mode      New pad output driver mode to configure.
  */
 static inline void system_pinmux_pin_set_output_drive(
 		const uint8_t gpio_pin,

@@ -81,7 +81,7 @@
  *    the input sampler on the pin.
  *  - \snippet qs_pinmux_basic.c setup_4
  * -# Adjust the configuration of the pin to enable on-demand sampling mode.
- *  - \snippet qs_port_basic.c setup_5
+ *  - \snippet qs_pinmux_basic.c setup_5
  *
  * \section pinmux_basic_use_case Use Case
  *
