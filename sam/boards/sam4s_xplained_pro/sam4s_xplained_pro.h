@@ -124,15 +124,9 @@
 //! Number of on-board buttons
 #define BUTTON_COUNT 1
 
-/** @} */
-
-/** EXT1 */
-/** */
-#define EXT1_PIN_1
-#define EXT1_PIN_2
- /** PIN3_ADC(+) */
+//! \name EXT1 pins
+//@{
 #define EXT1_PIN_3  IOPORT_CREATE_PIN(PIOA, 17)
- /** PIN3_ADC(-) */
 #define EXT1_PIN_4  IOPORT_CREATE_PIN(PIOA, 18)
 #define EXT1_PIN_5  IOPORT_CREATE_PIN(PIOA, 24)
 #define EXT1_PIN_6  IOPORT_CREATE_PIN(PIOA, 25)
@@ -148,10 +142,10 @@
 #define EXT1_PIN_16 IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT1_PIN_17 IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT1_PIN_18 IOPORT_CREATE_PIN(PIOA, 14)
+//@}
 
-/** EXT2 */
-#define EXT2_PIN_1
-#define EXT2_PIN_2
+//! \name EXT2 pins
+//@{
 #define EXT2_PIN_3  IOPORT_CREATE_PIN(PIOB, 0)
 #define EXT2_PIN_4  IOPORT_CREATE_PIN(PIOB, 1)
 #define EXT2_PIN_5  IOPORT_CREATE_PIN(PIOC, 24)
@@ -168,12 +162,10 @@
 #define EXT2_PIN_16 IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT2_PIN_17 IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT2_PIN_18 IOPORT_CREATE_PIN(PIOA, 14)
-#define EXT2_PIN_19
-#define EXT2_PIN_20
+//@}
 
-/** EXT3 */
-#define EXT3_PIN_1
-#define EXT3_PIN_2
+//! \name EXT3 pins
+//@{
 #define EXT3_PIN_3  IOPORT_CREATE_PIN(PIOC, 29)
 #define EXT3_PIN_4  IOPORT_CREATE_PIN(PIOC, 30)
 #define EXT3_PIN_5  IOPORT_CREATE_PIN(PIOC, 21)
@@ -190,9 +182,9 @@
 #define EXT3_PIN_16 IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT3_PIN_17 IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT3_PIN_18 IOPORT_CREATE_PIN(PIOA, 14)
-#define EXT3_PIN_19
-#define EXT3_PIN_20
+//@}
 
+/** @} */
 
 /** @} */
 
