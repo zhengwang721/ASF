@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for GPBR driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -183,7 +183,7 @@ static void run_gpbr_test(const struct test_case *test)
 
 #if SAM4S
 		/* Erase flag page */
-		flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_4);
+		flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8);
 
 		/* Clear backup mode flag */
 		if (flash_write(ul_last_page_addr, (uint8_t *)&ul_normal_mode_flag,
@@ -222,7 +222,7 @@ static void run_gpbr_test(const struct test_case *test)
 
 #if SAM4S
 	/* Erase flag page */
-	if(flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_4) != FLASH_RC_OK)
+	if(flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8) != FLASH_RC_OK)
 		printf("erase page failed!\r\n");
 
 	/* Write backup mode flag */
