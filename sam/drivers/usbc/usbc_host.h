@@ -102,38 +102,52 @@
 //! @name Host Vbus line control
 //!
 //! VBOF is an optional output pin which allows to enable or disable
-//! the external VBus generator.
+//! the external VBus generator. VBOF is managed through GPIO driver.
+//! This feature is optional, and it is enabled if USB_VBOF_PIN
+//! is defined in board.h and (CONF_BOARD_USB_VBUS_CONTROL) not defined in
+//! conf_board.h.
 //!
 //! @{
-#define uhd_enable_vbus_interrupt()
-#define uhd_disable_vbus_interrupt()
+#define UHD_VBUS_CTRL       (defined(CONF_BOARD_USB_VBUS_CONTROL))
+#define UHD_VBOF_IO         (defined(USB_VBOF_PIN) && UHD_VBUS_CTRL)
 
-//! Enables hardware control of USB_VBOF output pin when a Vbus error occur
-#define uhd_enable_vbus_error_hw_control()
-//! Disables hardware control of USB_VBOF output pin when a Vbus error occur
-#define uhd_disable_vbus_error_hw_control()
-//! Set USB_VBOF output pin polarity
-#define uhd_set_vbof_active_high()
-#define uhd_set_vbof_active_low()
-
-//! Requests VBus activation
-#define uhd_enable_vbus()                     USBC_REG_SET(USBSTA,VBUSRQ)
-//! Requests VBus deactivation
-#define uhd_disable_vbus()                    USBC_REG_CLR(USBSTA,VBUSRQ)
-//! Tests if VBus activation has been requested
-#define Is_uhd_vbus_enabled()                 USBC_TST_BITS(USBSTA,VBUSRQ)
+#if UHD_VBOF_IO
+# define pad_vbus_enable()  ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_ACTIVE_LEVEL)
+# define pad_vbus_disable() ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL)
+#else
+# define pad_vbus_enable()
+# define pad_vbus_disable()
+#endif
 //! @}
 
-//! @name Host Vbus line monitoring
+//! @name Host Vbus line error monitoring
 //!
-//! The VBus level is always checked by USBC hardware.
+//! The VBus generator can provide an error signal through
+//! a GPIO or EIC pin.
+//! This feature is optional, and it is enabled if USB_VBERR_PIN or
+//! USB_VBERR_EIC is defined in board.h and CONF_BOARD_USB_VBUS_ERR_DETECT
+//! defined in conf_board.h.
 //!
 //! @{
-#define uhd_enable_vbus_error_interrupt()
-#define uhd_disable_vbus_error_interrupt()
-#define Is_uhd_vbus_error_interrupt_enabled() false
-#define uhd_ack_vbus_error_interrupt()
-#define Is_uhd_vbus_error_interrupt()         false
+#define UHD_VBUS_ERR_DETECT (defined(CONF_BOARD_USB_VBUS_ERR_DETECT))
+#define UHD_VBERR_IO        (defined(USB_VBERR_PIN) && UHD_VBUS_ERR_DETECT)
+#define UHD_VBERR_EIC       (defined(USB_VBERR_EIC) && UHD_VBUS_ERR_DETECT)
+
+#if UHD_VBERR_EIC
+# define pad_vbus_error_init() \
+	eic_pad_init(USB_VBERR_EIC_LINE, uhd_vberr_handler, USB_VBERR_EIC_IRQn, USB_VBERR_EIC, UHD_USB_INT_LEVEL);
+# define pad_vbus_error_interrupt_disable() eic_line_disable_interrupt(EIC, USB_VBERR_EIC_LINE)
+# define pad_ack_vbus_error_interrupt() \
+	(eic_line_change_config(USB_VBERR_EIC_LINE, !ioport_get_pin_level(USB_VBERR_EIC)), \
+	eic_line_clear_interrupt(EIC, USB_VBERR_EIC_LINE))
+# define Is_pad_vbus_error()                ioport_get_pin_level(USB_VBERR_EIC)
+#elif UHD_VBERR_IO
+# define pad_vbus_error_init() \
+	io_pad_init(USB_VBERR_PIN, USB_VBERR_FLAGS, uhd_vberr_handler, UHD_USB_INT_LEVEL);
+# define pad_vbus_error_interrupt_disable() gpio_disable_pin_interrupt(USB_VBERR_PIN)
+# define pad_ack_vbus_error_interrupt()     gpio_clear_pin_interrupt_flag(USB_VBERR_PIN)
+# define Is_pad_vbus_error()                ioport_get_pin_level(USB_VBERR_PIN)
+#endif
 //! @}
 
 //! @name USB device connection/disconnection monitoring

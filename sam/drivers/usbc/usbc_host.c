@@ -42,53 +42,18 @@
  *
  */
 
-/* Get USB pads pins configuration in board configuration */
-#include "conf_board.h"
-#include "board.h"
+#include <string.h>
+#include <stdlib.h>
+
 /* Get USB host configuration */
 #include "conf_usb_host.h"
-
 #include "sysclk.h"
 #include "uhd.h"
 #include "usbc_otg.h"
 #include "usbc_host.h"
-#include <string.h>
-#include <stdlib.h>
 
 #if !(SAM4L)
-# error The current UOTGHS Host Driver supports only SAM4L.
-#endif
-
-/* USB pads pins configuration */
-#define UHD_ID_DETECT (!defined(CONF_BOARD_USB_NO_ID_DETECT))
-#define UHD_ID     (defined(USB_ID    ) && UHD_ID_DETECT)
-#define UHD_ID_IO  (defined(USB_ID_PIN) && UHD_ID_DETECT)
-#define UHD_ID_EIC (defined(USB_ID_EIC) && UHD_ID_DETECT)
-
-#define UHD_VBUS_DETECT (!defined(CONF_BOARD_USB_NO_VBUS_DETECT))
-#define UHD_VBUS     (defined(USB_VBUS    ) && UHD_VBUS_DETECT)
-#define UHD_VBUS_IO  (defined(USB_VBUS_PIN) && UHD_VBUS_DETECT)
-#define UHD_VBUS_EIC (defined(USB_VBUS_EIC) && UHD_VBUS_DETECT)
-
-#define UHD_VBUS_CTRL (defined(CONF_BOARD_USB_VBUS_CONTROL))
-#define UHD_VBOF    (defined(USB_VBOF    ) && UHD_VBUS_CTRL)
-#define UHD_VBOF_IO (defined(USB_VBOF_PIN) && UHD_VBUS_CTRL)
-
-#define UHD_VBUS_ERR_DETECT (!defined(CONF_BOARD_USB_NO_VBUS_ERR_DETECT))
-#define UHD_VBERR     (defined(USB_VBERR    ) && UHD_VBUS_ERR_DETECT)
-#define UHD_VBERR_IO  (defined(USB_VBERR_PIN) && UHD_VBUS_ERR_DETECT)
-#define UHD_VBERR_EIC (defined(USB_VBERR_EIC) && UHD_VBUS_ERR_DETECT)
-
-/* Add more includes */
-#if UHD_ID_EIC || UHD_VBUS_EIC || UHD_VBERR_EIC
-# include "ioport.h"
-# include "gpio.h"
-# include "eic.h"
-#elif UHD_ID_IO || UHD_VBUS_IO || UHD_VBERR_IO
-# include "ioport.h"
-# include "gpio.h"
-#elif UHD_VBOF_IO
-# include "ioport.h"
+# error The current USBC Host Driver supports only SAM4L.
 #endif
 
 //#define dbg_print printf
@@ -146,10 +111,10 @@ extern void udc_start(void);
  * The following USBC driver configuration must be defined in conf_usb_host.h
  * file of the application.
  *
- * UHC_USB_INT_LEVEL<br>
+ * UHD_USB_INT_LEVEL<br>
  * Option to change the interrupt priority (0 to 15) by default 5 (recommended).
  *
- * UHC_USB_INT_FUN<br>
+ * UHD_USB_INT_FUN<br>
  * Option to fit interrupt function to what defined in exception table.
  *
  * \section Callbacks management
@@ -196,19 +161,21 @@ static void uhd_sleep_mode(enum uhd_usbc_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_BACKUP,  // UHD_STATE_OFF (not used)
-#if UHD_ID_IO
+#if OTG_ID_IO || OTG_VBUS_IO || UHD_VBERR_IO
 		SLEEPMGR_SLEEP_1, // UHD_STATE_WAIT_ID_HOST
 		SLEEPMGR_SLEEP_1, // UHD_STATE_NO_VBUS
+		SLEEPMGR_SLEEP_1, // UHD_STATE_DISCONNECT
 #else
 		SLEEPMGR_RET,     // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_SLEEP_3, // UHD_STATE_NO_VBUS
+		SLEEPMGR_RET,     // UHD_STATE_NO_VBUS
+		SLEEPMGR_RET,     // UHD_STATE_DISCONNECT
 #endif
-		SLEEPMGR_SLEEP_0, // UHD_STATE_DISCONNECT
-#if UHD_ID_IO || UHD_VBUS_IO || UHD_VBERR_IO
-		SLEEPMGR_SLEEP_1, // UHD_STATE_SUSPEND
-#else
+		/* In suspend state, the SLEEPMGR_RET level is authorized
+		 * even if ID Pin, Vbus... pins are managed through IO.
+		 * When a ID disconnection or Vbus low event occurs,
+		 * the asynchrone USB wakeup occurs.
+		 */
 		SLEEPMGR_RET,     // UHD_STATE_SUSPEND
-#endif
 		SLEEPMGR_SLEEP_0, // UHD_STATE_IDLE
 	};
 	static enum uhd_usbc_state_enum uhd_state = UHD_STATE_OFF;
@@ -233,308 +200,78 @@ static void uhd_sleep_mode(enum uhd_usbc_state_enum new_state)
 //@}
 
 /**
- * \name USB IO PADs management
+ * \name USB IO PADs handlers
  */
 //@{
 
-#if UHD_ID_EIC
-# define pad_id_interrupt_enable()  eic_line_enable_interrupt(EIC, USB_ID_EIC_LINE)
-# define pad_id_interrupt_disable() eic_line_disable_interrupt(EIC, USB_ID_EIC_LINE)
-# define Is_pad_id_interrupt()      eic_line_interrupt_is_pending(EIC, USB_ID_EIC_LINE)
-# define pad_ack_id_interrupt()     eic_line_clear_interrupt(EIC, USB_ID_EIC_LINE)
-# define Is_pad_id_device()         ioport_get_pin_level(USB_ID_EIC)
-#elif UHD_ID_IO
-# define pad_id_interrupt_enable()  gpio_enable_pin_interrupt(USB_ID_PIN)
-# define pad_id_interrupt_disable() gpio_disable_pin_interrupt(USB_ID_PIN)
-# define Is_pad_id_interrupt()      gpio_get_pin_interrupt_flag(USB_ID_PIN)
-# define pad_ack_id_interrupt()     gpio_clear_pin_interrupt_flag(USB_ID_PIN)
-# define Is_pad_id_device()         ioport_get_pin_level(USB_ID_PIN)
-#elif UHD_ID
-# define pad_id_interrupt_enable()  otg_enable_id_interrupt()
-# define pad_id_interrupt_disable() otg_disable_id_interrupt()
-# define Is_pad_id_interrupt()      Is_otg_id_transition()
-# define pad_ack_id_interrupt()     otg_ack_id_transition()
-# define Is_pad_id_device()         Is_otg_device_mode_forced() /* selected mode*/
-#else
-# define pad_id_interrupt_enable()  do { } while(0)
-# define pad_id_interrupt_disable() do { } while(0)
-# define Is_pad_id_interrupt()      true
-# define pad_ack_id_interrupt()     do { } while(0)
-# define Is_pad_id_device()         Is_otg_device_mode_forced() /* selected mode*/
-#endif
-#define Is_pad_id_host()            (!Is_pad_id_device())
-
-#if UHD_VBOF_IO
-# define pad_vbus_enable()  ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_ACTIVE_LEVEL)
-# define pad_vbus_disable() ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL)
-#else
-// Automatically performed by USBC HW base on ID
-# define pad_vbus_enable()  do { } while (0)
-# define pad_vbus_disable() do { } while (0)
-#endif
-
-#if UHD_VBUS_EIC
-# define pad_vbus_interrupt_enable()  eic_line_enable_interrupt(EIC, USB_VBUS_EIC_LINE)
-# define pad_vbus_interrupt_disable() eic_line_disable_interrupt(EIC, USB_VBUS_EIC_LINE)
-# define Is_pad_vbus_interrupt()      eic_line_interrupt_is_pending(EIC, USB_VBUS_EIC_LINE)
-# define pad_ack_vbus_interrupt()     eic_line_clear_interrupt(EIC, USB_VBUS_EIC_LINE)
-# define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_EIC)
-#elif UHD_VBUS_IO
-# define pad_vbus_interrupt_enable()  gpio_enable_pin_interrupt(USB_VBUS_PIN)
-# define pad_vbus_interrupt_disable() gpio_disable_pin_interrupt(USB_VBUS_PIN)
-# define Is_pad_vbus_interrupt()      gpio_get_pin_interrupt_flag(USB_VBUS_PIN)
-# define pad_ack_vbus_interrupt()     gpio_clear_pin_interrupt_flag(USB_VBUS_PIN)
-# define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
-#elif UHD_VBUS
-# define pad_vbus_interrupt_enable()  otg_enable_vbus_interrupt()
-# define pad_vbus_interrupt_disable() otg_disable_vbus_interrupt()
-# define Is_pad_vbus_interrupt()      Is_otg_vbus_transition()
-# define pad_ack_vbus_interrupt()     otg_ack_vbus_transition()
-# define Is_pad_vbus_high()           Is_otg_vbus_high()
-#else
-# define pad_vbus_interrupt_enable()  do { } while (0)
-# define pad_vbus_interrupt_disable() do { } while (0)
-# define Is_pad_vbus_interrupt()      true
-# define pad_ack_vbus_interrupt()     do { } while (0)
-# define Is_pad_vbus_high()           Is_otg_host_mode_forced() /* Aways on in host mode */
-#endif
-#define Is_pad_vbus_low()             (!Is_pad_vbus_high())
-
-#if UHD_VBERR_EIC
-# define pad_vbus_error_interrupt_enable()  eic_line_enable_interrupt(EIC, USB_VBERR_EIC_LINE)
-# define pad_vbus_error_interrupt_disable() eic_line_disable_interrupt(EIC, USB_VBERR_EIC_LINE)
-# define Is_pad_vbus_error_interrupt()      eic_line_interrupt_is_pending(EIC, USB_VBERR_EIC_LINE)
-# define pad_ack_vbus_error_interrupt()     eic_line_clear_interrupt(EIC, USB_VBERR_EIC_LINE)
-# define Is_pad_vbus_error()                ioport_get_pin_level(USB_VBERR_EIC)
-#elif UHD_VBERR_IO
-# define pad_vbus_error_interrupt_enable()  gpio_enable_pin_interrupt(USB_VBERR_PIN)
-# define pad_vbus_error_interrupt_disable() gpio_disable_pin_interrupt(USB_VBERR_PIN)
-# define Is_pad_vbus_error_interrupt()      gpio_get_pin_interrupt_flag(USB_VBERR_PIN)
-# define pad_ack_vbus_error_interrupt()     gpio_clear_pin_interrupt_flag(USB_VBERR_PIN)
-# define Is_pad_vbus_error()                ioport_get_pin_level(USB_VBERR_PIN)
-#elif UHD_VBUS
-# define pad_vbus_error_interrupt_enable()  otg_enable_vbus_error_interrupt()
-# define pad_vbus_error_interrupt_disable() otg_disable_vbus_error_interrupt()
-# define Is_pad_vbus_error_interrupt()      Is_pad_vbus_error()
-# define pad_ack_vbus_error_interrupt()     otg_ack_vbus_error()
-# define Is_pad_vbus_error()                Is_otg_vbus_error()
-#else
-# define pad_vbus_error_interrupt_enable()  do { } while (0)
-# define pad_vbus_error_interrupt_disable() do { } while (0)
-# define Is_pad_vbus_error_interrupt()      Is_pad_vbus_error()
-# define pad_ack_vbus_error_interrupt()     do { } while (0)
-# define Is_pad_vbus_error()                false /* Never error */
-#endif
-
-#if UHD_ID_EIC || UHD_VBUS_EIC
-__always_inline static void eic_line_change_config(
-		uint8_t line, bool b_level, bool b_high)
-{
-	struct eic_line_config eic_line_conf;
-	eic_line_conf.eic_mode = b_level ?
-			EIC_MODE_LEVEL_TRIGGERED:EIC_MODE_EDGE_TRIGGERED;
-	eic_line_conf.eic_edge = b_high ?
-			EIC_EDGE_RISING_EDGE:EIC_EDGE_FALLING_EDGE;
-	eic_line_conf.eic_level = b_high ?
-			EIC_LEVEL_HIGH_LEVEL:EIC_LEVEL_LOW_LEVEL;
-	eic_line_conf.eic_filter = EIC_FILTER_DISABLED;
-	eic_line_conf.eic_async = EIC_ASYNCH_MODE;
-	eic_line_set_config(EIC, line, &eic_line_conf);
-}
-#else
-# define eic_line_change_config(v) do { } while (0)
-#endif
-
-#if UHD_ID_IO || UHD_ID_EIC
+#if OTG_ID_IO || OTG_ID_EIC
 /**
  * USB ID pin change handler
  */
-static void uhd_id_handler(void)
+static void otg_id_handler(void)
 {
-	bool b_is_device = Is_pad_id_device();
-#if UHD_ID_EIC
-	eic_line_change_config(USB_ID_EIC_LINE, true, !b_is_device);
-	// Ack here
-	if (Is_pad_id_interrupt()) {
-		pad_ack_id_interrupt();
-	}
-#endif
-	if (b_is_device) {
+	pad_ack_id_interrupt();
+	if (Is_pad_id_device()) {
 		uhc_stop(false);
 		UHC_MODE_CHANGE(false);
+		otg_enable_device_mode();
 		udc_start();
 	} else {
 		udc_stop();
 		UHC_MODE_CHANGE(true);
+		otg_enable_host_mode();
 		uhc_start();
 	}
 }
-
-/**
- * USB IN pin initialize
- */
-static void uhd_pad_id_init(void)
-{
-	static bool b_pad_id_initialized = false;
-	if (b_pad_id_initialized) {
-		return;
-	}
-#if UHD_ID_EIC
-	eic_line_disable_interrupt(EIC, USB_ID_EIC_LINE);
-	eic_line_disable(EIC, USB_ID_EIC_LINE);
-	eic_line_clear_interrupt(EIC, USB_ID_EIC_LINE);
-	eic_line_set_callback(EIC, USB_ID_EIC_LINE, uhd_id_handler,
-			USB_ID_EIC_IRQn, UHC_USB_INT_LEVEL);
-	eic_line_change_config(USB_ID_EIC_LINE, true, !Is_pad_id_device());
-	eic_line_enable(EIC, USB_ID_EIC_LINE);
-#elif UHD_ID_IO
-	gpio_disable_pin_interrupt(USB_ID_PIN);
-	ioport_set_pin_mode(USB_ID_PIN, USB_ID_FLAGS);
-	ioport_set_pin_sense_mode(USB_ID_PIN, USB_ID_PIN_SENSE);
-	gpio_set_pin_callback(USB_ID_PIN, uhd_id_handler, UHD_USB_INT_LEVEL);
-#endif
-	pad_id_interrupt_enable();
-	b_pad_id_initialized = true;
-}
 #endif
 
-#if UHD_VBUS_IO || UHD_VBUS_EIC
+#if OTG_VBUS_IO || OTG_VBUS_EIC
 /**
  * USB VBus pin change handler
  */
 static void uhd_vbus_handler(void)
 {
-	bool b_is_high = Is_pad_vbus_high();
-#if UHD_VBUS_EIC
-	eic_line_change_config(USB_VBUS_EIC_LINE, true, !b_is_high);
-	// Ack here
-	if (Is_pad_vbus_interrupt()) {
-		pad_ack_vbus_interrupt();
-	}
-#endif
-	if (b_is_high) {
+	pad_ack_vbus_interrupt();
+	while (!Is_otg_clock_usable());
+	if (Is_pad_vbus_high()) {
+		otg_unfreeze_clock();
+		uhd_vbus_is_on();
+		/* Freeze USB clock to use wakeup interrupt
+		 * to detect connection.
+		 * After detection of wakeup interrupt,
+		 * the clock is unfreeze to have the true
+		 * connection interrupt.
+		 */
+		uhd_enable_wakeup_interrupt();
+		otg_freeze_clock();
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		UHC_VBUS_CHANGE(true);
 	} else {
-		uhd_sleep_mode(UHD_STATE_NO_VBUS);
+		otg_unfreeze_clock();
+		uhd_vbus_is_off();
 		otg_freeze_clock();
+		uhd_sleep_mode(UHD_STATE_NO_VBUS);
 		UHC_VBUS_CHANGE(false);
 	}
-}
-
-/**
- * USB VBus pin initialize
- */
-static void uhd_pad_vbus_init(void)
-{
-	static bool b_pad_vbus_initialized = false;
-	if (b_pad_vbus_initialized) {
-		return;
-	}
-#if UHD_VBUS_EIC
-	eic_line_disable_interrupt(EIC, USB_VBUS_EIC_LINE);
-	eic_line_disable(EIC, USB_VBUS_EIC_LINE);
-	eic_line_clear_interrupt(EIC, USB_VBUS_EIC_LINE);
-	eic_line_set_callback(EIC, USB_VBUS_EIC_LINE, uhd_vbus_handler,
-			USB_VBUS_EIC_IRQn, UHD_USB_INT_LEVEL);
-	eic_line_change_config(USB_VBUS_EIC_LINE, true, !Is_pad_vbus_high());
-	eic_line_enable(EIC, USB_VBUS_EIC_LINE);
-#elif UHD_VBUS_IO
-	gpio_disable_pin_interrupt(USB_VBUS_PIN);
-	ioport_set_pin_mode(USB_VBUS_PIN, USB_VBUS_FLAGS);
-	ioport_set_pin_sense_mode(USB_VBUS_PIN, USB_VBUS_PIN_SENSE);
-	gpio_set_pin_callback(USB_VBUS_PIN, uhd_vbus_handler,
-			UHD_USB_INT_LEVEL);
-#endif
-	pad_vbus_interrupt_enable();
-	b_pad_vbus_initialized = true;
 }
 #endif
 
 #if UHD_VBERR_IO || UHD_VBERR_EIC
-static void uhd_vbus_error_handler(void)
+/**
+ * USB VBus error pin change handler
+ */
+static void uhd_vberr_handler(void)
 {
-#if UHD_VBERR_EIC
-	// Ack here
-	if (Is_pad_vbus_error_interrupt()) {
-		pad_ack_vbus_error_interrupt();
-	}
-#endif
+	pad_ack_vbus_error_interrupt();
 	if (Is_pad_vbus_error()) {
 		UHC_VBUS_ERROR();
+	} else {
+		// End of error
 	}
 }
-
-/**
- * USB VBus pin initialize
- */
-static void uhd_pad_vbus_error_init(void)
-{
-	static bool b_pad_vbus_error_initialized;
-	if (b_pad_vbus_error_initialized) {
-		return;
-	}
-#if UHD_VBERR_EIC
-	eic_line_disable_interrupt(EIC, USB_VBERR_EIC_LINE);
-	eic_line_disable(EIC, USB_VBERR_EIC_LINE);
-	eic_line_clear_interrupt(EIC, USB_VBERR_EIC_LINE);
-	eic_line_set_callback(EIC, USB_VBERR_EIC_LINE, uhd_vbus_error_handler,
-			USB_VBERR_EIC_IRQn, UHC_USB_INT_LEVEL);
-	eic_line_change_config(USB_VBERR_EIC_LINE, true, true);
-	eic_line_enable(EIC, USB_VBERR_EIC_LINE);
-#elif UHD_VBERR_IO
-	gpio_disable_pin_interrupt(USB_VBERR_PIN);
-	ioport_set_pin_mode(USB_VBERR_PIN, USB_VBERR_FLAGS);
-	ioport_set_pin_sense_mode(USB_VBERR_PIN, USB_VBERR_PIN_SENSE);
-	gpio_set_pin_callback(USB_VBERR_PIN, uhd_vbus_error_handler,
-			UHD_USB_INT_LEVEL);
 #endif
-	pad_vbus_error_interrupt_enable();
-	b_pad_vbus_error_initialized = true;
-}
-#endif
-
-/**
- * Initialize for PADs
- */
-static void uhd_pads_init(void)
-{
-#if UHD_ID_EIC || UHD_VBUS_EIC || UHD_VBERR_EIC
-	eic_enable(EIC);
-#endif
-#if UHD_ID_EIC || UHD_ID_IO
-	uhd_pad_id_init();
-#endif
-#if UHD_VBUS_EIC || UHD_VBUS_IO
-	uhd_pad_vbus_init();
-#endif
-#if UHD_VBERR_EIC || UHD_VBERR_IO
-	uhd_pad_vbus_error_init();
-#endif
-}
-
-
 //@}
 
-/*! \brief Enable one or several asynchronous wake-up source.
- *
- * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
- *  PM_AWEN_xxxx in the part-specific header file)
- */
-__always_inline static void usbc_async_wake_up_enable(uint32_t awen_mask)
-{
-	PM->PM_AWEN |= awen_mask;
-}
-
-/*! \brief Disable one or several asynchronous wake-up source.
- *
- * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
- *  PM_AWEN_xxxx in the part-specific header file)
- */
-__always_inline static void usbc_async_wake_up_disable(uint32_t awen_mask)
-{
-	PM->PM_AWEN &= ~awen_mask;
-}
 /**
  * @brief USB SRAM data containing pipe descriptor table
  * The content of the USB SRAM can be :
@@ -708,33 +445,8 @@ static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
  */
 ISR(UHD_USB_INT_FUN)
 {
-	bool b_mode_device;
-
-#if UHD_ID
-	if (Is_otg_id_transition()) {
-		while (!Is_otg_clock_usable());
-		otg_unfreeze_clock();
-		otg_ack_id_transition();
-		otg_freeze_clock();
-		if (Is_otg_id_device()) {
-			uhc_stop(false);
-			UHC_MODE_CHANGE(false);
-			udc_start();
-		} else {
-			udc_stop();
-			UHC_MODE_CHANGE(true);
-			uhc_start();
-		}
-		return;
-	}
-	b_mode_device = Is_otg_id_device();
-#else
-	// ID managed by EIC/IO interrupt, use current running mode
-	b_mode_device = Is_otg_device_mode_forced();
-#endif
-
 	// Redirection to host or device interrupt
-	if (b_mode_device) {
+	if (Is_otg_device_mode_enabled()) {
 		udd_interrupt();
 	} else {
 		uhd_interrupt();
@@ -754,26 +466,25 @@ bool otg_dual_enable(void)
 
 	//* Link USB interrupt on OTG interrupt in dual role
 	NVIC_ClearPendingIRQ(USBC_IRQn);
+	NVIC_SetPriority(USBC_IRQn, UHD_USB_INT_LEVEL);
 	NVIC_EnableIRQ(USBC_IRQn);
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
-	usbc_async_wake_up_enable(1 << PM_AWEN_USBC);
+	usbc_async_wake_up_enable();
 
-#if UHD_ID_IO || UHD_ID_EIC
-	/* ID is a pin but not USBC HW
-	 * By default, ID pin is already configured in board init
-	 */
-	uhd_pads_init();
-	pad_ack_id_interrupt();
-	bool b_id_device = Is_pad_id_device();
-# if UHD_ID_EIC
-	eic_line_change_config(!b_id_device);
-# endif
-	if (b_id_device) {
+#if OTG_ID_EIC || OTG_VBUS_EIC || UHD_VBERR_EIC
+	eic_enable(EIC);
+#endif
+
+#if OTG_ID_IO || OTG_ID_EIC
+	pad_id_init();
+	if (Is_pad_id_device()) {
+		otg_enable_device_mode();
 		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 		UHC_MODE_CHANGE(false);
 		udc_start();
 	} else {
+		otg_enable_host_mode();
 		UHC_MODE_CHANGE(true);
 		uhc_start();
 	}
@@ -781,29 +492,6 @@ bool otg_dual_enable(void)
 	// End of host or device startup,
 	// the current mode selected is already started now
 	return true; // ID pin management has been enabled
-
-#elif UHD_ID
-	/* ID is integrated in USBC HW
-	 * By default, ID pin is already configured in board init
-	 */
-	otg_unfreeze_clock();
-	otg_enable();
-	otg_enable_id_interrupt();
-	otg_ack_id_transition();
-	otg_freeze_clock();
-	if (Is_otg_id_device()) {
-		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
-		UHC_MODE_CHANGE(false);
-		udc_start();
-	} else {
-		UHC_MODE_CHANGE(true);
-		uhc_start();
-	}
-
-	// End of host or device startup,
-	// the current mode selected is already started now
-	return true; // ID pin management has been enabled
-
 #else
 	uhd_sleep_mode(UHD_STATE_OFF);
 	return false; // ID pin management has not been enabled
@@ -819,17 +507,15 @@ void otg_dual_disable(void)
 	otg_initialized = false;
 
 	// Do not authorize asynchronous USB interrupts
-	usbc_async_wake_up_disable(1 << PM_AWEN_USBC);
+	usbc_async_wake_up_disable();
 	otg_unfreeze_clock();
-
-#if UHD_ID_IO || UHD_ID_EIC
+#if OTG_ID_IO || OTG_ID_EIC
 	pad_id_interrupt_disable();
-#elif UHD_ID
-	otg_disable_id_interrupt();
 #endif
-
+#if OTG_ID_EIC || OTG_VBUS_EIC || UHD_VBERR_EIC
+	eic_disable(EIC);
+#endif
 	otg_disable();
-	otg_disable_pad();
 	sysclk_disable_usb();
 	uhd_sleep_mode(UHD_STATE_OFF);
 }
@@ -848,34 +534,17 @@ void uhd_enable(void)
 		return;
 	}
 
-#if UHD_ID_EIC || UHD_ID_IO
+#if OTG_ID_EIC || OTG_ID_IO
 	// Check that the host mode is selected by ID pin
 	if (Is_pad_id_device()) {
 		cpu_irq_restore(flags);
 		return; // Host is not the current mode
 	}
-	// No auto mode control, force a host mode
-	otg_force_host_mode();
 #else
-	// ID pin not used then force host mode
-	otg_disable_id_pin();
-	otg_force_host_mode();
+	// ID pin not used then enable host mode
+	otg_enable_host_mode();
 #endif
 
-	// Enable USB hardware
-	uhd_pads_init();
-
-#if UHD_VBOF_IO
-	pad_vbus_enable(); /* Always on if controled by IO */
-#elif UHD_VBOF
-# if USB_VBOF_ACTIVE_LEVEL
-	uhd_set_vbof_active_high();
-# else
-	uhd_set_vbof_active_low();
-# endif
-#endif
-
-	otg_enable_pad();
 	otg_enable();
 	otg_unfreeze_clock();
 
@@ -891,7 +560,6 @@ void uhd_enable(void)
 
 	// Clear all interrupts that may have been set by a previous host mode
 	uhd_ack_all_interrupts();
-	otg_ack_vbus_transition();
 
 	// Need on more cycle in the case that the CPIU/PBx frequency is 48 MHz.
 	// Otherwise, there is a race between the previous clear in UHINT and
@@ -899,37 +567,45 @@ void uhd_enable(void)
 	__DMB();
 	__NOP();
 
-	otg_enable_vbus_interrupt();
-	uhd_enable_vbus();
-# if UHD_VBUS
-	// Force Vbus interrupt when Vbus is always high
-	// This is possible due to a short timing between a Host mode stop/start.
-	if (Is_otg_vbus_high()) {
-		otg_raise_vbus_transition();
-	}
-	// Waiting VBus interrupt
 	uhd_sleep_mode(UHD_STATE_NO_VBUS);
-# elif UHD_VBUS_EIC
-	// Interrupt triggered by level, no need to force check
-# elif UHD_VBUS_IO
-	// Force VBus check, since it's edge triggered
-	uhd_vbus_handler();
+
+	/* Enable VBus error monitoring */
+#if UHD_VBERR_EIC || UHD_VBERR_IO
+	pad_vbus_error_init();
+#endif
+
+	/* Enable VBus monitoring */
+# if OTG_VBUS_EIC || OTG_VBUS_IO
+	pad_vbus_init(UHD_USB_INT_LEVEL);
+	/* Force Vbus interrupt when Vbus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_pad_vbus_high()) {
+		uhd_vbus_handler();
+		otg_unfreeze_clock();
+	}
 # else
 	// No VBus detect, assume always high
-	UHC_VBUS_CHANGE(true); /* Changed to HIGH */
+	uhd_vbus_is_on();
+	/* Freeze USB clock to use wakeup interrupt
+	 * to detect connection.
+	 * After detection of wakeup interrupt,
+	 * the clock is unfreeze to have the true
+	 * connection interrupt.
+	 */
+	uhd_enable_wakeup_interrupt();
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
+	UHC_VBUS_CHANGE(true); /* Changed to HIGH */
 # endif
+
+	/* enable VBus */
+	pad_vbus_enable();
 
 	// Enable main control interrupt
 	// Connection, SOF and reset
-	uhd_enable_wakeup_interrupt();
 	uhd_enable_sof_interrupt();
 	uhd_enable_reset_sent_interrupt();
-	uhd_enable_disconnection_int();
-
-	// Assume VBus always ON, so we need a disconn event to force re-check
-	// device connection status
-	uhd_raise_disconnection();
+	uhd_enable_connection_int();
 	otg_freeze_clock();
 
 	cpu_irq_restore(flags);
@@ -946,26 +622,22 @@ void uhd_disable(bool b_id_stop)
 	otg_unfreeze_clock();
 
 	// Disable Vbus change and error interrupts
-	otg_ack_vbus_transition();
-	otg_ack_vbus_error();
+#if OTG_VBUS_IO || OTG_VBUS_EIC
+	pad_vbus_interrupt_disable();
+#endif
+#if UHD_VBERR_IO || UHD_VBERR_EIC
+	pad_vbus_error_interrupt_disable();
+#endif
 
 	// Disable main control interrupt
 	// (Connection, disconnection, SOF and reset)
 	uhd_disable_all_interrupts();
-
 	uhd_disable_sof();
-	uhd_disable_vbus();
+	pad_vbus_disable();
 	uhc_notify_connection(false);
 	otg_freeze_clock();
 
-#if UHD_VBOF_IO
-	pad_vbus_disable();
-# if !UHD_VBUS && !UHD_VBUS_EIC && !UHD_VBUS_IO
-	UHC_VBUS_CHANGE(false); /* Changed to LOW */
-# endif
-#endif
-
-#if UHD_ID_EIC || UHD_ID_IO || UHD_ID
+#if OTG_ID_EIC || OTG_ID_IO
 	uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 	if (!b_id_stop) {
 		return; // No need to disable host, it is done automatically by hardware
@@ -1339,7 +1011,13 @@ static void uhd_interrupt(void)
 		// Disable wakeup/resumes interrupts,
 		// in case of disconnection during suspend mode
 		uhd_disable_wakeup_interrupts();
+		/* Enable connection detection through asynchrone
+		 * wakeup interrupt
+		 */
 		uhd_enable_connection_int();
+		uhd_ack_wakeup();
+		uhd_enable_wakeup_interrupt();
+		otg_freeze_clock();
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
@@ -1359,18 +1037,17 @@ static void uhd_interrupt(void)
 		goto uhd_interrupt_exit;
 	}
 
-#if UHD_VBERR
-	// Manage Vbus error
-	if (Is_uhd_vbus_error_interrupt()) {
-		uhd_ack_vbus_error_interrupt();
-		dbg_print("vBusErr ");
-		UHC_VBUS_ERROR();
+	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() &&
+			Is_uhd_connection_int_enabled())) {
+		/* Here the wakeup interrupt has been used to detect connection
+		 * with an asynchrone interrupt
+		 */
+		uhd_disable_wakeup_interrupt();
 		goto uhd_interrupt_exit;
 	}
-#endif
-
+	
 	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() ||
-	Is_uhd_downstream_resume() || Is_uhd_upstream_resume())) {
+			Is_uhd_downstream_resume() || Is_uhd_upstream_resume())) {
 		dbg_print("Wkup ");
 		// Disable wakeup/resumes interrupts
 		USBC->USBC_UHINTECLR = USBC_UHINTECLR_HWUPIEC
@@ -1395,24 +1072,6 @@ static void uhd_interrupt(void)
 		uhd_sleep_mode(UHD_STATE_IDLE);
 		goto uhd_interrupt_exit;
 	}
-
-#if UHD_VBUS
-	// Manage Vbus state change
-	if (Is_otg_vbus_transition()) {
-		otg_ack_vbus_transition();
-		if (Is_otg_vbus_high()) {
-			dbg_print("vBusH ");
-			uhd_sleep_mode(UHD_STATE_DISCONNECT);
-			UHC_VBUS_CHANGE(true);
-		} else {
-			dbg_print("vBusL ");
-			uhd_sleep_mode(UHD_STATE_NO_VBUS);
-			otg_freeze_clock();
-			UHC_VBUS_CHANGE(false);
-		}
-		goto uhd_interrupt_exit;
-	}
-#endif
 
 	Assert(false); // Interrupt event no managed
 uhd_interrupt_exit:
@@ -2048,9 +1707,11 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 				// of UHD_ENDPOINT_MAX_TRANS Bytes
 				next_trans = max_trans;
 			}
+
 			// In case of USB low speed and high CPU frequency,
 			// be sure to wait end of ACK on IN pipe.
 			while (!Is_uhd_pipe_frozen(pipe));
+
 			if (next_trans < pipe_size) {
 				// Use the cache buffer for Bulk or Interrupt size endpoint
 				uhd_in_request_number(pipe, 1);
