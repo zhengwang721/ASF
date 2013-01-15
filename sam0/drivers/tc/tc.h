@@ -803,8 +803,11 @@ struct tc_conf {
 
 	/** This setting determines what size counter is used */
 	union {
+		/** Struct for 8-bit configuration */
 		struct tc_8bit_conf tc_8bit_conf;
+		/** Struct for 16-bit configuration */
 		struct tc_16bit_conf tc_16bit_conf;
+		/** Struct for 32-bit configuration */
 		struct tc_32bit_conf tc_32bit_conf;
 	}tc_counter_size_conf;
 };
