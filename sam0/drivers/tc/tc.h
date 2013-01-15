@@ -357,12 +357,12 @@ extern "C" {
  * \subsubsection frequency_generation Frequency Generation
  *
  * Frequency generation is in many ways the same as PWM
- * generation. However, in frequency generation a toggle only occurs on
- * the output when a match on a capture channels occurs. For frequency
- * generation, the options that are available are \ref
+ * generation. However, in frequency generation a toggle only occurs
+ * on the output when a match on a capture channels occurs. For
+ * frequency generation, the options that are available are \ref
  * TC_WAVE_GENERATION_NORMAL_FREQ mode and \ref
- * TC_WAVE_GENERATION_MATCH_FREQ mode. These configuration options can be
- * found in the \ref tc_wave_generation enum.  \n
+ * TC_WAVE_GENERATION_MATCH_FREQ mode. These configuration options can
+ * be found in the \ref tc_wave_generation enum.  \n
  *
  * As in PWM generation, it is necessary to set the period and pulse width
  * values to be used. Either by using the \ref tc_conf struct before
@@ -395,10 +395,10 @@ extern "C" {
  * clear the interrupt flag. In the diagram below a proposed program
  * flow is described.
  *
- * \image html ../../state_dia_capture.svg "Diagram of capture operation"
+ * \image html state_dia_capture.svg "Diagram of capture operation"
  *
  *
- * \image latex ../../state_dia_capture.eps "Diagram of capture operation" width = \textwidth*0.8
+ * \image latex state_dia_capture.eps "Diagram of capture operation" width = \textwidth*0.8
  *
  *
  * How to handle the buffer overflow error is up to the user. But it
