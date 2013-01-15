@@ -57,7 +57,7 @@ int main(void)
 	adc_get_config_defaults(&config);
 //! [get_conf]
 //! [init_adc]
-	adc_init(&dev_inst, &ADC0, &config);
+	adc_init(&dev_inst, ADC, &config);
 //! [init_adc]
 //! [enable]
 	adc_enable(&dev_inst);

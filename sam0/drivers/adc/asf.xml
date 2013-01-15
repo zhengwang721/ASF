@@ -4,7 +4,7 @@
 		Driver for the SAMD20 ADC.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Security"/>
+			<keyword value="Analog"/>
 		</info>
 		<build type="c-source" value="adc.c"/>
 		<build type="header-file" subtype="api" value="adc.h"/>

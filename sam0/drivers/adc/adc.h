@@ -422,15 +422,15 @@ enum adc_interrupt_flag {
  */
 enum adc_reference {
 	/** 1.0V voltage reference */
-	ADC_REFERENCE_INT1V   = ADC_REF_INT1V_bm,
+	ADC_REFERENCE_INT1V   = ADC_REFCTRL_REFSEL_INT1V,
 	/** 1/1.48 VCC reference */
-	ADC_REFERENCE_INTVCC0 = ADC_REF_INTVCC0_bm,
+	ADC_REFERENCE_INTVCC0 = ADC_REFCTRL_REFSEL_INTVCC0,
 	/** 1/2 VCC (only for internal Vcc > 2.1v) */
-	ADC_REFERENCE_INTVCC1 = ADC_REF_INTVCC1_bm,
-	/** External reference */
-	ADC_REFERENCE_AREFA   = ADC_REF_AREFA_bm,
-	/** External reference */
-	ADC_REFERENCE_AREFB   = ADC_REF_AREFB_bm,
+	ADC_REFERENCE_INTVCC1 = ADC_REFCTRL_REFSEL_INTVCC1,
+	/** External reference A */
+	ADC_REFERENCE_AREFA   = ADC_REFCTRL_REFSEL_AREFA,
+	/** External reference B */
+	ADC_REFERENCE_AREFB   = ADC_REFCTRL_REFSEL_AREFB,
 };
 
 /**
@@ -441,21 +441,21 @@ enum adc_reference {
  */
 enum adc_clock_prescaler {
 	/** ADC clock division factor 4 */
-	ADC_CLOCK_PRESCALER_DIV4   = ADC_PRESCALER_DIV4_bm,
+	ADC_CLOCK_PRESCALER_DIV4   = ADC_CTRLB_PRESCALER_DIV4,
 	/** ADC clock division factor 8 */
-	ADC_CLOCK_PRESCALER_DIV8   = ADC_PRESCALER_DIV8_bm,
+	ADC_CLOCK_PRESCALER_DIV8   = ADC_CTRLB_PRESCALER_DIV8,
 	/** ADC clock division factor 16 */
-	ADC_CLOCK_PRESCALER_DIV16  = ADC_PRESCALER_DIV16_bm,
+	ADC_CLOCK_PRESCALER_DIV16  = ADC_CTRLB_PRESCALER_DIV16,
 	/** ADC clock division factor 32 */
-	ADC_CLOCK_PRESCALER_DIV32  = ADC_PRESCALER_DIV32_bm,
+	ADC_CLOCK_PRESCALER_DIV32  = ADC_CTRLB_PRESCALER_DIV32,
 	/** ADC clock division factor 64 */
-	ADC_CLOCK_PRESCALER_DIV64  = ADC_PRESCALER_DIV64_bm,
+	ADC_CLOCK_PRESCALER_DIV64  = ADC_CTRLB_PRESCALER_DIV64,
 	/** ADC clock division factor 128 */
-	ADC_CLOCK_PRESCALER_DIV128 = ADC_PRESCALER_DIV128_bm,
+	ADC_CLOCK_PRESCALER_DIV128 = ADC_CTRLB_PRESCALER_DIV128,
 	/** ADC clock division factor 256 */
-	ADC_CLOCK_PRESCALER_DIV256 = ADC_PRESCALER_DIV256_bm,
+	ADC_CLOCK_PRESCALER_DIV256 = ADC_CTRLB_PRESCALER_DIV256,
 	/** ADC clock division factor 512 */
-	ADC_CLOCK_PRESCALER_DIV512 = ADC_PRESCALER_DIV512_bm,
+	ADC_CLOCK_PRESCALER_DIV512 = ADC_CTRLB_PRESCALER_DIV512,
 };
 
 /**
@@ -466,13 +466,13 @@ enum adc_clock_prescaler {
  */
 enum adc_resolution {
 	/** ADC 12-bit resolution */
-	ADC_RESOLUTION_12BIT = ADC_RESOLUTION_12BIT_bm,
+	ADC_RESOLUTION_12BIT = ADC_CTRLB_RESSEL_12BIT,
 	/** TODO: I assume this will be renamed in the datasheet. Supposed to be "averaging mode output" */
-	ADC_RESOLUTION_16BIT = ADC_RESOLUTION_16BIT_bm,
+	ADC_RESOLUTION_16BIT = ADC_CTRLB_RESSEL_16BIT,
 	/** ADC 10-bit resolution */
-	ADC_RESOLUTION_10BIT = ADC_RESOLUTION_10BIT_bm,
+	ADC_RESOLUTION_10BIT = ADC_CTRLB_RESSEL_10BIT,
 	/** ADC 8-bit resolution */
-	ADC_RESOLUTION_8BIT = ADC_RESOLUTION_8BIT_bm,
+	ADC_RESOLUTION_8BIT = ADC_CTRLB_RESSEL_8BIT,
 };
 
 /**
@@ -483,15 +483,15 @@ enum adc_resolution {
  */
 enum adc_window_mode {
 	/** No window mode */
-	ADC_WINDOW_MODE_DISABLE          = ADC_WINMODE_DISABLE_bm,
+	ADC_WINDOW_MODE_DISABLE          = ADC_WINCTRL_WINMODE_DISABLE,
 	/** RESULT > WINLT */
-	ADC_WINDOW_MODE_ABOVE_LOWER      = ADC_WINMODE1_bm,
+	ADC_WINDOW_MODE_ABOVE_LOWER      = ADC_WINCTRL_WINMODE_MODE1,
 	/** RESULT < WINUT */
-	ADC_WINDOW_MODE_BELOW_UPPER      = ADC_WINMODE2_bm,
+	ADC_WINDOW_MODE_BELOW_UPPER      = ADC_WINCTRL_WINMODE_MODE2,
 	/** WINLT < RESULT < WINUT */
-	ADC_WINDOW_MODE_BETWEEN          = ADC_WINMODE3_bm,
+	ADC_WINDOW_MODE_BETWEEN          = ADC_WINCTRL_WINMODE_MODE3,
 	/** !( WINLT < RESULT < WINUT ) */
-	ADC_WINDOW_MODE_BETWEEN_INVERTED = ADC_WINMODE4_bm,
+	ADC_WINDOW_MODE_BETWEEN_INVERTED = ADC_WINCTRL_WINMODE_MODE4,
 };
 
 /**
@@ -502,17 +502,17 @@ enum adc_window_mode {
  */
 enum adc_gain_factor {
 	/** 1x gain */
-	ADC_GAIN_FACTOR_1X   = ADC_GAIN_1X_bm,
+	ADC_GAIN_FACTOR_1X   = ADC_INPUTCTRL_GAIN_1X,
 	/** 2x gain */
-	ADC_GAIN_FACTOR_2X   = ADC_GAIN_2X_bm,
+	ADC_GAIN_FACTOR_2X   = ADC_INPUTCTRL_GAIN_2X,
 	/** 4x gain */
-	ADC_GAIN_FACTOR_4X   = ADC_GAIN_4X_bm,
+	ADC_GAIN_FACTOR_4X   = ADC_INPUTCTRL_GAIN_4X,
 	/** 8x gain */
-	ADC_GAIN_FACTOR_8X   = ADC_GAIN_8X_bm,
+	ADC_GAIN_FACTOR_8X   = ADC_INPUTCTRL_GAIN_8X,
 	/** 16x gain */
-	ADC_GAIN_FACTOR_16X  = ADC_GAIN_16X_bm,
+	ADC_GAIN_FACTOR_16X  = ADC_INPUTCTRL_GAIN_16X,
 	/** 1/2x gain */
-	ADC_GAIN_FACTOR_DIV2 = ADC_GAIN_DIV2_bm,
+	ADC_GAIN_FACTOR_DIV2 = ADC_INPUTCTRL_GAIN_DIV2,
 };
 
 /**
@@ -523,63 +523,64 @@ enum adc_gain_factor {
  */
 enum adc_positive_input {
 	/** ADC0 pin */
-	ADC_POSITIVE_INPUT_PIN0          = ADC_POSPIN0_bm,
+	ADC_POSITIVE_INPUT_PIN0          = ADC_INPUTCTRL_MUXPOS_PIN0,
 	/** ADC1 pin */
-	ADC_POSITIVE_INPUT_PIN1          = ADC_POSPIN1_bm,
+	ADC_POSITIVE_INPUT_PIN1          = ADC_INPUTCTRL_MUXPOS_PIN1,
 	/** ADC2 pin */
-	ADC_POSITIVE_INPUT_PIN2          = ADC_POSPIN2_bm,
+	ADC_POSITIVE_INPUT_PIN2          = ADC_INPUTCTRL_MUXPOS_PIN2,
 	/** ADC3 pin */
-	ADC_POSITIVE_INPUT_PIN3          = ADC_POSPIN3_bm,
+	ADC_POSITIVE_INPUT_PIN3          = ADC_INPUTCTRL_MUXPOS_PIN3,
 	/** ADC4 pin */
-	ADC_POSITIVE_INPUT_PIN4          = ADC_POSPIN4_bm,
+	ADC_POSITIVE_INPUT_PIN4          = ADC_INPUTCTRL_MUXPOS_PIN4,
 	/** ADC5 pin */
-	ADC_POSITIVE_INPUT_PIN5          = ADC_POSPIN5_bm,
+	ADC_POSITIVE_INPUT_PIN5          = ADC_INPUTCTRL_MUXPOS_PIN5,
 	/** ADC6 pin */
-	ADC_POSITIVE_INPUT_PIN6          = ADC_POSPIN6_bm,
+	ADC_POSITIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXPOS_PIN6,
 	/** ADC7 pin */
-	ADC_POSITIVE_INPUT_PIN7          = ADC_POSPIN7_bm,
+	ADC_POSITIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXPOS_PIN7,
 	/** ADC8 pin */
-	ADC_POSITIVE_INPUT_PIN8          = ADC_POSPIN8_bm,
+	ADC_POSITIVE_INPUT_PIN8          = ADC_INPUTCTRL_MUXPOS_PIN8,
 	/** ADC9 pin */
-	ADC_POSITIVE_INPUT_PIN9          = ADC_POSPIN9_bm,
+	ADC_POSITIVE_INPUT_PIN9          = ADC_INPUTCTRL_MUXPOS_PIN9,
 	/** ADC10 pin */
-	ADC_POSITIVE_INPUT_PIN10         = ADC_POSPIN10_bm,
+	ADC_POSITIVE_INPUT_PIN10         = ADC_INPUTCTRL_MUXPOS_PIN10,
 	/** ADC11 pin */
-	ADC_POSITIVE_INPUT_PIN11         = ADC_POSPIN11_bm,
+	ADC_POSITIVE_INPUT_PIN11         = ADC_INPUTCTRL_MUXPOS_PIN11,
 	/** ADC12 pin */
-	ADC_POSITIVE_INPUT_PIN12         = ADC_POSPIN12_bm,
+	ADC_POSITIVE_INPUT_PIN12         = ADC_INPUTCTRL_MUXPOS_PIN12,
 	/** ADC13 pin */
-	ADC_POSITIVE_INPUT_PIN13         = ADC_POSPIN13_bm,
+	ADC_POSITIVE_INPUT_PIN13         = ADC_INPUTCTRL_MUXPOS_PIN13,
 	/** ADC14 pin */
-	ADC_POSITIVE_INPUT_PIN14         = ADC_POSPIN14_bm,
+	ADC_POSITIVE_INPUT_PIN14         = ADC_INPUTCTRL_MUXPOS_PIN14,
 	/** ADC15 pin */
-	ADC_POSITIVE_INPUT_PIN15         = ADC_POSPIN15_bm,
+	ADC_POSITIVE_INPUT_PIN15         = ADC_INPUTCTRL_MUXPOS_PIN15,
 	/** ADC16 pin */
-	ADC_POSITIVE_INPUT_PIN16         = ADC_POSPIN16_bm,
+	ADC_POSITIVE_INPUT_PIN16         = ADC_INPUTCTRL_MUXPOS_PIN16,
 	/** ADC17 pin */
-	ADC_POSITIVE_INPUT_PIN17         = ADC_POSPIN17_bm,
+	ADC_POSITIVE_INPUT_PIN17         = ADC_INPUTCTRL_MUXPOS_PIN17,
 	/** ADC18 pin */
-	ADC_POSITIVE_INPUT_PIN18         = ADC_POSPIN18_bm,
+	ADC_POSITIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXPOS_PIN18,
 	/** ADC19 pin */
-	ADC_POSITIVE_INPUT_PIN19         = ADC_POSPIN19_bm,
+	ADC_POSITIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXPOS_PIN19,
 	/** ADC20 pin */
-	ADC_POSITIVE_INPUT_PIN20         = ADC_POSPIN20_bm,
+	ADC_POSITIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXPOS_PIN20,
 	/** ADC21 pin */
-	ADC_POSITIVE_INPUT_PIN21         = ADC_POSPIN21_bm,
+	ADC_POSITIVE_INPUT_PIN21         = ADC_INPUTCTRL_MUXPOS_PIN21,
 	/** ADC22 pin */
-	ADC_POSITIVE_INPUT_PIN22         = ADC_POSPIN22_bm,
+	ADC_POSITIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXPOS_PIN22,
 	/** ADC23 pin */
-	ADC_POSITIVE_INPUT_PIN23         = ADC_POSPIN23_bm,
+	ADC_POSITIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXPOS_PIN23,
 	/** Temperature reference */
-	ADC_POSITIVE_INPUT_TEMP          = ADC_POSPIN_TEMP_bm,
+	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
 	/** Bandgap voltage */
-	ADC_POSITIVE_INPUT_BANDGAP       = ADC_POSPIN_BANDGAP_bm,
+	ADC_POSITIVE_INPUT_BANDGAP       = ADC_INPUTCTRL_MUXPOS_BANDGAP,
 	/** 1/4 scaled core supply */
-	ADC_POSITIVE_INPUT_SCALEDCOREVCC = ADC_POSPIN_SCALEDCOREVCC_bm,
+	ADC_POSITIVE_INPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
 	/** 1/4 scaled I/O supply */
-	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_POSPIN_SCALEDIOVCC_bm,
-	/** AUX input */
-	ADC_POSITIVE_INPUT_AUX           = ADC_POSPIN_AUX_bm,
+	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
+	/** DAC input */
+	/* TODO: Check if this can be used */
+	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
 };
 
 /**
@@ -590,57 +591,57 @@ enum adc_positive_input {
  */
 enum adc_negative_input {
 	/** ADC0 pin */
-	ADC_NEGATIVE_INPUT_PIN0          = ADC_NEGPIN0_bm,
+	ADC_NEGATIVE_INPUT_PIN0          = ADC_INPUTCTRL_MUXNEG_PIN0,
 	/** ADC1 pin */
-	ADC_NEGATIVE_INPUT_PIN1          = ADC_NEGPIN1_bm,
+	ADC_NEGATIVE_INPUT_PIN1          = ADC_INPUTCTRL_MUXNEG_PIN1,
 	/** ADC2 pin */
-	ADC_NEGATIVE_INPUT_PIN2          = ADC_NEGPIN2_bm,
+	ADC_NEGATIVE_INPUT_PIN2          = ADC_INPUTCTRL_MUXNEG_PIN2,
 	/** ADC3 pin */
-	ADC_NEGATIVE_INPUT_PIN3          = ADC_NEGPIN3_bm,
+	ADC_NEGATIVE_INPUT_PIN3          = ADC_INPUTCTRL_MUXNEG_PIN3,
 	/** ADC4 pin */
-	ADC_NEGATIVE_INPUT_PIN4          = ADC_NEGPIN4_bm,
+	ADC_NEGATIVE_INPUT_PIN4          = ADC_INPUTCTRL_MUXNEG_PIN4,
 	/** ADC5 pin */
-	ADC_NEGATIVE_INPUT_PIN5          = ADC_NEGPIN5_bm,
+	ADC_NEGATIVE_INPUT_PIN5          = ADC_INPUTCTRL_MUXNEG_PIN5,
 	/** ADC6 pin */
-	ADC_NEGATIVE_INPUT_PIN6          = ADC_NEGPIN6_bm,
+	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_PIN6,
 	/** ADC7 pin */
-	ADC_NEGATIVE_INPUT_PIN7          = ADC_NEGPIN7_bm,
+	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_PIN7,
 	/** ADC8 pin */
-	ADC_NEGATIVE_INPUT_PIN8          = ADC_NEGPIN8_bm,
+	ADC_NEGATIVE_INPUT_PIN8          = ADC_INPUTCTRL_MUXNEG_PIN8,
 	/** ADC9 pin */
-	ADC_NEGATIVE_INPUT_PIN9          = ADC_NEGPIN9_bm,
+	ADC_NEGATIVE_INPUT_PIN9          = ADC_INPUTCTRL_MUXNEG_PIN9,
 	/** ADC10 pin */
-	ADC_NEGATIVE_INPUT_PIN10         = ADC_NEGPIN10_bm,
+	ADC_NEGATIVE_INPUT_PIN10         = ADC_INPUTCTRL_MUXNEG_PIN10,
 	/** ADC11 pin */
-	ADC_NEGATIVE_INPUT_PIN11         = ADC_NEGPIN11_bm,
+	ADC_NEGATIVE_INPUT_PIN11         = ADC_INPUTCTRL_MUXNEG_PIN11,
 	/** ADC12 pin */
-	ADC_NEGATIVE_INPUT_PIN12         = ADC_NEGPIN12_bm,
+	ADC_NEGATIVE_INPUT_PIN12         = ADC_INPUTCTRL_MUXNEG_PIN12,
 	/** ADC13 pin */
-	ADC_NEGATIVE_INPUT_PIN13         = ADC_NEGPIN13_bm,
+	ADC_NEGATIVE_INPUT_PIN13         = ADC_INPUTCTRL_MUXNEG_PIN13,
 	/** ADC14 pin */
-	ADC_NEGATIVE_INPUT_PIN14         = ADC_NEGPIN14_bm,
+	ADC_NEGATIVE_INPUT_PIN14         = ADC_INPUTCTRL_MUXNEG_PIN14,
 	/** ADC15 pin */
-	ADC_NEGATIVE_INPUT_PIN15         = ADC_NEGPIN15_bm,
+	ADC_NEGATIVE_INPUT_PIN15         = ADC_INPUTCTRL_MUXNEG_PIN15,
 	/** ADC16 pin */
-	ADC_NEGATIVE_INPUT_PIN16         = ADC_NEGPIN16_bm,
+	ADC_NEGATIVE_INPUT_PIN16         = ADC_INPUTCTRL_MUXNEG_PIN16,
 	/** ADC17 pin */
-	ADC_NEGATIVE_INPUT_PIN17         = ADC_NEGPIN17_bm,
+	ADC_NEGATIVE_INPUT_PIN17         = ADC_INPUTCTRL_MUXNEG_PIN17,
 	/** ADC18 pin */
-	ADC_NEGATIVE_INPUT_PIN18         = ADC_NEGPIN18_bm,
+	ADC_NEGATIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXNEG_PIN18,
 	/** ADC19 pin */
-	ADC_NEGATIVE_INPUT_PIN19         = ADC_NEGPIN19_bm,
+	ADC_NEGATIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXNEG_PIN19,
 	/** ADC20 pin */
-	ADC_NEGATIVE_INPUT_PIN20         = ADC_NEGPIN20_bm,
+	ADC_NEGATIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXNEG_PIN20,
 	/** ADC21 pin */
-	ADC_NEGATIVE_INPUT_PIN21         = ADC_NEGPIN21_bm,
+	ADC_NEGATIVE_INPUT_PIN21         = ADC_INPUTCTRL_MUXNEG_PIN21,
 	/** ADC22 pin */
-	ADC_NEGATIVE_INPUT_PIN22         = ADC_NEGPIN22_bm,
+	ADC_NEGATIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXNEG_PIN22,
 	/** ADC23 pin */
-	ADC_NEGATIVE_INPUT_PIN23         = ADC_NEGPIN23_bm,
+	ADC_NEGATIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXNEG_PIN23,
 	/** Internal ground */
-	ADC_NEGATIVE_INPUT_GND           = ADC_NEGPIN_GND_bm,
+	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
 	/** I/O ground */
-	ADC_NEGATIVE_INPUT_IOGND         = ADC_NEGPIN_IOGND_bm,
+	ADC_NEGATIVE_INPUT_IOGND         = ADC_INPUTCTRL_MUXNEG_IOGND,
 };
 
 /**
@@ -651,27 +652,27 @@ enum adc_negative_input {
  */
 enum adc_average_samples {
 	/** No averaging */
-	ADC_AVERAGE_DISABLE      = ADC_SAMPLENUM1_bm,
+	ADC_AVERAGE_DISABLE      = ADC_AVGCTRL_SAMPLENUM_1,
 	/** Average 2 samples */
-	ADC_AVERAGE_SAMPLES_2    = ADC_SAMPLENUM2_bm,
+	ADC_AVERAGE_SAMPLES_2    = ADC_AVGCTRL_SAMPLENUM_2,
 	/** Average 4 samples */
-	ADC_AVERAGE_SAMPLES_4    = ADC_SAMPLENUM4_bm,
+	ADC_AVERAGE_SAMPLES_4    = ADC_AVGCTRL_SAMPLENUM_4,
 	/** Average 8 samples */
-	ADC_AVERAGE_SAMPLES_8    = ADC_SAMPLENUM8_bm,
+	ADC_AVERAGE_SAMPLES_8    = ADC_AVGCTRL_SAMPLENUM_8,
 	/** Average 16 samples */
-	ADC_AVERAGE_SAMPLES_16   = ADC_SAMPLENUM16_bm,
+	ADC_AVERAGE_SAMPLES_16   = ADC_AVGCTRL_SAMPLENUM_16,
 	/** Average 32 samples */
-	ADC_AVERAGE_SAMPLES_32   = ADC_SAMPLENUM32_bm,
+	ADC_AVERAGE_SAMPLES_32   = ADC_AVGCTRL_SAMPLENUM_32,
 	/** Average 64 samples */
-	ADC_AVERAGE_SAMPLES_64   = ADC_SAMPLENUM64_bm,
+	ADC_AVERAGE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples */
-	ADC_AVERAGE_SAMPLES_128  = ADC_SAMPLENUM128_bm,
+	ADC_AVERAGE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
 	/** Average 265 samples */
-	ADC_AVERAGE_SAMPLES_265  = ADC_SAMPLENUM265_bm,
+	ADC_AVERAGE_SAMPLES_265  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples */
-	ADC_AVERAGE_SAMPLES_512  = ADC_SAMPLENUM512_bm,
+	ADC_AVERAGE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
 	/** Average 1024 samples */
-	ADC_AVERAGE_SAMPLES_1024 = ADC_SAMPLENUM1024_bm,
+	ADC_AVERAGE_SAMPLES_1024 = ADC_AVGCTRL_SAMPLENUM_1024,
 };
 
 /**
@@ -703,7 +704,7 @@ enum adc_oversampling_and_decimation {
  */
 struct adc_conf {
 	/** TODO */
-	enum gclock_source       clock_source;
+	enum gclk_generator       clock_source;
 	/** Voltage reference */
 	enum adc_reference       reference;
 	/** Clock prescaler */
@@ -981,6 +982,50 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 }
 
 /**
+ * \brief Check if a given interrupt flag is set
+ *
+ * This function will check if a given interrupt flag is set.
+ *
+ * \param dev_inst[in]         Pointer to the device struct
+ * \param interrupt_flag[in]   Interrupt flag to check
+ *
+ * \return
+ * \retval true   The flag is set
+ * \retval false  The flag is not set
+ */
+static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+		enum adc_interrupt_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+	return adc_module->INTFLAG.reg & interrupt_flag;
+}
+
+/**
+ * \brief Clear a given interrupt flag
+ * 
+ * This function will clear a given interrupt flag.
+ *
+ * \param dev_inst[in]          Pointer to the device struct
+ * \param interrupt_flag[in]    Interrupt flag to clear
+ */
+static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+		enum adc_interrupt_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+	
+	/* Clear interrupt flag */
+	adc_module->INTFLAG.reg = interrupt_flag;
+}
+
+/**
  * \brief Read ADC result
  *
  * Read result from ADC conversion. Clears INTFLAG register after reading.
@@ -1075,53 +1120,6 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
 			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
 }
 
-
-/**
- * \brief Check if a given interrupt flag is set
- *
- * This function will check if a given interrupt flag is set.
- *
- * \param dev_inst[in]         Pointer to the device struct
- * \param interrupt_flag[in]   Interrupt flag to check
- *
- * \return
- * \retval true   The flag is set
- * \retval false  The flag is not set
- */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
-		enum adc_status_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-	return adc_module->INTFLAG.reg & interrupt_flag;
-}
-
-
-/**
- * \brief Clear a given interrupt flag
- * 
- * This function will clear a given interrupt flag.
- *
- * \param dev_inst[in]          Pointer to the device struct
- * \param interrupt_flag[in]    Interrupt flag to clear
- */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
-		enum adc_status_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-	
-	/* Clear interrupt flag */
-	adc_module->INTFLAG.reg = interrupt_flag;
-}
-
-
 /**
  * \brief Set up pin scan mode
  *
@@ -1135,7 +1133,9 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * \param start_offset[in]       Offset of first pin to scan (relative to
  *                               configured positive input)
  */
-static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+//static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+//		uint8_t inputs_to_scan, uint8_t start_offset)
+static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
 {
 	/* Sanity check arguments */
@@ -1171,7 +1171,7 @@ static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const d
 static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst)
 {
 	/* Disable pin scan mode */
-	adc_set_scan_mode(dev_inst, 0, 0);
+	adc_set_pin_scan_mode(dev_inst, 0, 0);
 }
 
 

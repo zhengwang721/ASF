@@ -54,39 +54,39 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	enum adc_average_samples average;
 
 	/* Configure CTRLA */
-	hw_dev->CTRLA.reg = (config->sleep_enable << ADC_SLEEPEN_bp);
+	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
 
 	/* Configure REFCTRL */
 	hw_dev->REFCTRL.reg =
-			(config->reference_compensation_enable << ADC_REFCOMP_bp) |
-			(config->adc_reference                 << ADC_REFSEL_bp);
+			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) |
+			(config->reference);
 
 	/* Configure AVGCTRL */
 	switch (config->oversampling_and_decimation) {
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_DISABLE:
-		adjres = 0;
+		adjres = 0x00;
 		average = config->average_samples;
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_1BIT:
 		adjres = 0x01;
-		average = ADC_AVERAGE_SAMPLES_4;
+		average = ADC_AVGCTRL_SAMPLENUM_4;
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_2BIT:
 		adjres = 0x02;
-		average = ADC_AVERAGE_SAMPLES_16;
+		average = ADC_AVGCTRL_SAMPLENUM_16;
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_3BIT:
 		adjres = 0x01;
-		average = ADC_AVERAGE_SAMPLES_64;
+		average = ADC_AVGCTRL_SAMPLENUM_64;
 		break;
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_4BIT:
 		adjres = 0x00;
-		average = ADC_AVERAGE_SAMPLES_256;
+		average = ADC_AVGCTRL_SAMPLENUM_256;
 		break;
 
 	default:
@@ -95,52 +95,55 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	}
 
 	/* Configure SAMPCTRL */
-	hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPLEN_bp);
+	hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
 
 	/* Configure CTRLB */
 	_adc_wait_for_sync(hw_dev);
 	hw_dev->CTRLB.reg =
-			(config->clock_prescaler   << ADC_PRESCALER_bp) |
-			(config->resolution        << ADC_RESSEL_bp)    |
-			(config->correction_enable << ADC_CORREN_bp)    |
-			(config->freerunning       << ADC_FREERUN_bp)   |
-			(config->left_adjust       << ADC_LEFTADJ_bp)   |
-			(config->differential_mode << ADC_DIFFMODE_bp);
+			config->clock_prescaler |
+			config->resolution |
+			(config->correction_enable << ADC_CTRLB_CORREN_Pos) |
+			(config->freerunning << ADC_CTRLB_FREERUN_Pos) |
+			(config->left_adjust << ADC_CTRLB_LEFTADJ_Pos) |
+			(config->differential_mode << ADC_CTRLB_DIFFMODE_Pos);
 
 	/* Configure WINCTRL/WINLT/WINUT */
 	_adc_wait_for_sync(hw_dev);
-	hw_dev->WINCTRL.reg = config->window_mode        << ADC_WINMODE_bp;
+	hw_dev->WINCTRL.reg = config->window_mode;
 	_adc_wait_for_sync(hw_dev);
-	/* this will NOT work for negative values, please fix! */
-	hw_dev->WINLT.reg   = config->window_lower_value << ADC_WINLT_bp;
+	/* TODO: this will NOT work for negative values, please fix! */
+	hw_dev->WINLT.reg   = config->window_lower_value << ADC_WINLT_WINLT_Pos;
 	_adc_wait_for_sync(hw_dev);
-	/* this will NOT work for negative values, please fix! */
-	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_bp;
+	/* TODO: this will NOT work for negative values, please fix! */
+	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_WINUT_Pos;
 
+	/* TODO: check size of inputs */
 	/* Configure INPUTCTRL */
 	_adc_wait_for_sync(hw_dev);
 	hw_dev->INPUTCTRL.reg =
-			(config->gain_factor       << ADC_GAIN_bp)        |
-			(config->offset_start_scan << ADC_INPUTOFFSET_bp) |
-			(config->inputs_to_scan    << ADC_INPUTSCAN_bp)   |
-			(config->negative_input    << ADC_MUXNEG_bp)      |
-			(config->positive_input    << ADC_MUXPOS_bp);
+			config->gain_factor |
+			(config->offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
+			(config->inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
+			config->negative_input |
+			config->positive_input;
 
 	/* Configure EVCTRL */
 	hw_dev->EVCTRL.reg =
-			(config->generate_event_on_window_monitor  << ADC_WINMONEO_bp) |
-			(config->generate_event_on_conversion_done << ADC_RESRDYEO_bp) |
-			(config->flush_adc_on_event                << ADC_SYNCEI_bp)   |
-			(config->start_conversion_on_event         << ADC_STARTEI_bp);
+			(config->generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
+			(config->generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos) |
+			(config->flush_adc_on_event                << ADC_EVCTRL_SYNCEI_Pos)   |
+			(config->start_conversion_on_event         << ADC_EVCTRL_STARTEI_Pos);
 
+	/* TODO: Necessary? */
 	/* Disable all interrupts */
 	hw_dev->INTENCLR.reg =
-			(1 << ADC_READY_bp)   | (1 << ADC_WINMON_bp) |
-			(1 << ADC_OVERRUN_bp) | (1 << ADC_RESRDY_bp);
+			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
+			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
+	/* TODO: check size */
 	/* Configure GAINCORR/OFFSETCORR */
-	hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_bp;
-	hw_dev->OFFSETCORR.reg = config->offset_correction << ADC_OFFSETCORR_bp;
+	hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_GAINCORR_Pos;
+	hw_dev->OFFSETCORR.reg = config->offset_correction << ADC_OFFSETCORR_OFFSETCORR_Pos;
 
 	return STATUS_OK;
 }
