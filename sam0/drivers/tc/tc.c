@@ -51,7 +51,7 @@
  * \param config    Pointer to the \ref tc_conf struct
  *
  * \return Status of the procedure.
- * \retval STATUS_OK           The function exited successfully
+ * \retval STATUS_OK           The function exited normally
  * \retval STATUS_ERR_BUSY     When a reset has been initiated
  * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
  *                             tc_conf struct
@@ -70,16 +70,16 @@ enum status_code tc_init(
 	Assert(config);
 
 	/* Temporary variable to hold all updates to the CTRLA
-	 * register before they are writen to it */
+	 * register before they are written to it */
 	uint16_t ctrla_tmp = 0;
 	/* Temporary variable to hold all updates to the CTRLBSET
-	 * register before they are writen to it */
+	 * register before they are written to it */
 	uint8_t ctrlbset_tmp = 0;
 	/* Temporary variable to hold all updates to the EVCTRL
-	 * register before they are writen to it */
+	 * register before they are written to it */
 	uint8_t evctrl_tmp = 0;
 	/* Temporary variable to hold all updates to the CTRLC
-	 * register before they are writen to it */
+	 * register before they are written to it */
 	uint8_t ctrlc_tmp = 0;
 
 	/* Associate the given device instance with the hardware module */
@@ -235,7 +235,7 @@ enum status_code tc_init(
  * This function can be used to update count value after init. It can
  * be used while the counter is running.
  *
- * \param[in] dev_inst      pointer to the device struct
+ * \param[in] dev_inst      Pointer to the device struct
  * \param[in] count         value to write to the count register
  *
  * \return Status of the procedure
@@ -283,7 +283,7 @@ enum status_code tc_set_count_value(
  * Gets the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
  *
- * \param[in]  dev_inst      pointer to the device struct
+ * \param[in]  dev_inst      Pointer to the device struct
  *
  * \return Count value
  */
@@ -319,7 +319,7 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 
 /** \brief Gets the capture value
  *
- * This function resturnes a capture value in the supplied buffer
+ * This function returns a capture value in the supplied buffer
  * pointed to by capture.
  *
  * \param[in]  dev_inst       Pointer to the device struct
@@ -365,7 +365,7 @@ uint32_t tc_get_capture_value(
  * \param[in] channel_index  Index of the compare register to write to
  *
  * \return  Status of the procedure
- * \retval  STATUS_OK               The function exited normaly
+ * \retval  STATUS_OK               The function exited normally
  * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range
  */
 enum status_code tc_set_compare_value(

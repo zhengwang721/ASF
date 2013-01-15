@@ -462,8 +462,6 @@ extern "C" {
  * \li \b GCLK
  * \li \b CLOCK
  *
- * \section special_cons Special Considerations
- *
  * \section extra_info Extra Information
  * For extra information see \ref tc_extra_info.
  *
@@ -474,8 +472,9 @@ extern "C" {
  * @{
  */
 
-
+#if !defined (__DOXYGEN__)
 #define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0)
+#endif
 
 /**
  * \brief Index of the compare capture channels
