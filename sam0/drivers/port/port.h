@@ -87,7 +87,7 @@
  * numbers instead.
  *
  * \section module_dependencies Dependencies
- * The port driver has the following dependencies.
+ * The port driver has the following dependencies:
  *
  * \li \ref sam0_pinmux_group "System Pin Multiplexer Driver"
  *
