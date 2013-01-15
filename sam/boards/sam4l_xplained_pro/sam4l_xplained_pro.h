@@ -1,12 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained PRO Board header file.
+ * \brief SAM4L Xplained PRO board definition
  *
- * This file contains definitions and services related to the features of the
- * SAM4L Xplained PRO Board.
- *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +40,12 @@
  * \asf_license_stop
  *
  */
+
 #ifndef SAM4L_XPLAINED_PRO_INCLUDED
 #define SAM4L_XPLAINED_PRO_INCLUDED
 
 /**
- * \defgroup sam4l_xplained_pro_group SAM4L Xplained PRO Board
+ * \defgroup sam4l_xplained_pro_group SAM4L Xplained PRO board
  * @{
  */
 

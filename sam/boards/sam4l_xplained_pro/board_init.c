@@ -3,7 +3,7 @@
  *
  * \brief SAM4L Xplained PRO board initialization
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,8 +36,10 @@
  *
  * \asf_license_stop
  */
+
 #include <board.h>
 #include <ioport.h>
+
 /**
  * \addtogroup  sam4l_xplained_pro_group
  * @{
@@ -56,6 +58,5 @@ void board_init(void)
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 }
-/**
- * @}
- */
+
+/** @} */
