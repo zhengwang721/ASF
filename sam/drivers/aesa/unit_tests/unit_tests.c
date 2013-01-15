@@ -292,7 +292,6 @@ static void run_ecb_mode_test_pdca(const struct test_case *test)
 
 	/* Write the data to be deciphered to the input data registers. */
 	/* Init PDCA channel with the pdca_options.*/
-	/* Init PDCA channel with the pdca_options.*/
 	PDCA_TX_OPTIONS.addr = (void *)ref_cipher_text_ecb; /* memory address */
 	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - AESA TX.*/
 	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
