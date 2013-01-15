@@ -228,7 +228,7 @@ extern "C" {
  * with the help of the \ref tc_conf struct and the enums in
  * the \ref tc_clock_prescaler enum.  \n
  *
- * The other thing to consider with the prescaler is witch reload
+ * The other thing to consider with the prescaler is which reload
  * action to use. The reload action is the action performed when a
  * retrigger event occurs. Examples of a retrigger event can be when
  * the counter reaches the max value when counting up, or when an
@@ -250,7 +250,7 @@ extern "C" {
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_GCLK </td>
- *     <td> Reload on next GCLK cycle. rescaler to zero. </td>
+ *     <td> Reload on next GCLK cycle. prescaler to zero. </td>
  *   </tr>
  *   <tr>
  *     <td> \ref TC_RELOAD_ACTION_PRESC </td>
@@ -319,7 +319,7 @@ extern "C" {
  * when using wave generation in match mode, and not in normal mode.  \n
  *
  * The functions tc_set_compare_value() and tc_set_top_value() can be
- * used to set the pulse width and the perod, respectively. They can
+ * used to set the pulse width and the period, respectively. They can
  * be used while the counter is running.  \n
  *
  *
@@ -474,12 +474,13 @@ extern "C" {
  * @{
  */
 
+
 #define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0)
 
 /**
  * \brief Index of the compare capture channels
  *
- * These values are used in certain functions to specify wich
+ * These values are used in certain functions to specify which
  * capture/compare channel to do operations on.
  */
 enum tc_compare_capture_channel_index {
@@ -677,7 +678,7 @@ enum tc_event_generation_enable {
 /**
  * \brief Enum to be used to check interrupt flags
  *
- * This enum defines the diferent interupt flags for the TC module.
+ * This enum defines the different interrupt flags for the TC module.
  */
 enum tc_interrupt_flag {
 	/** Interrupt flag for channel 0 */
@@ -689,12 +690,12 @@ enum tc_interrupt_flag {
 	 *  async driver. */
 	TC_INTERRUPT_FLAG_READY     =  TC_INTFLAG_READY,
 
-	/** Interupt flag used to test for capture overflow in capture
+	/** Interrupt flag used to test for capture overflow in capture
 	 *  mode
 	 */
 	TC_INTERRUPT_FLAG_ERROR     =  TC_INTFLAG_ERR,
 
-	/** Interupt flag used to check for a counter overflow in
+	/** Interrupt flag used to check for a counter overflow in
 	 *  compare mode
 	 */
 	TC_INTERRUPT_FLAG_OVERFLOW  =  TC_INTFLAG_OVF,
@@ -989,7 +990,7 @@ static inline void tc_disable(const struct tc_dev_inst *const dev_inst)
  * not have completed the reset upon exiting this function.
  *
  * \note When resetting a 32-bit counter use in only the master
- * counter's \ref dev_inst struct, as a paramether. not the slave \ref
+ * counter's \ref dev_inst struct, as a parameter. not the slave \ref
  * dev_inst.
  *
  * \param[in] dev_inst  Pointer to the device struct
@@ -1161,7 +1162,7 @@ enum status_code tc_set_compare_value(
  * \param[in] top_value   Value to be used as top in the counter.
  *
  * \return Status of the procedure
- * \retval STATUS_OK              The operation has been successful
+ * \retval STATUS_OK              The function exited normally
  * \retval STATUS_ERR_INVALID_ARG The counter size in the dev_inst is
  *                                out of bounds.
  */
@@ -1206,7 +1207,7 @@ static enum status_code tc_set_top_value(
 /**
  * \brief Checks an interrupt flag is set
  *
- * Checks if the interrupt flag indicated by the interrupt flag paramether
+ * Checks if the interrupt flag indicated by the interrupt flag parameter
  * is set.
  *
  * \param[in] dev_inst       Pointer to the device instance
@@ -1237,7 +1238,7 @@ static inline bool tc_is_interrupt_flag_set(
  * \brief Clears an interrupt flag
  *
  * This function can be used to clear the interrupt flag specified by
- * the interrupt_flag paramether. Using the function when the flag is not set
+ * the interrupt_flag parameter. Using the function when the flag is not set
  * has no effect.
  *
  * \param[in] dev_inst       Pointer to the device instance
