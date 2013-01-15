@@ -1133,10 +1133,9 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * \param start_offset[in]       Offset of first pin to scan (relative to
  *                               configured positive input)
  */
-//static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
-//		uint8_t inputs_to_scan, uint8_t start_offset)
-static inline void adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+static inline enum staus_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
+
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
