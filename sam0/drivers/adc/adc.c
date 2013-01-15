@@ -93,6 +93,7 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		/* Unknown. Abort. */
 		return STATUS_ERR_INVALID_ARG;
 	}
+	hw_dev->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
 
 	/* Configure SAMPCTRL */
 	hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
