@@ -6,9 +6,9 @@
 		<build type="header-file" value="sam4l_xplained_pro.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
-		<build type="macro-config" subtype="script" value="debug_scripts/iar/sam4l_ek_flash.mac" toolchain="iarewarm"/>
-		<build type="macro-config" subtype="script" value="debug_scripts/gcc/sam4l_ek_flash.gdb" toolchain="armgcc"/>
-		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/sam4l_ek_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/sam4l_xplained_pro_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/sam4l_xplained_pro_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/sam4l_xplained_pro_sram.gdb" toolchain="armgcc"/>
 		<require idref="sam.utils.cmsis.sam4l.source.template"/>
 		<require idref="common.utils"/>
 		<require idref="common.boards"/>
