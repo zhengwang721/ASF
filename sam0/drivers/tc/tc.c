@@ -44,20 +44,20 @@
 /** \brief Initializes the TC
  *
  * Enables the clock and initializes the TC module,
- * based on the values of the \ref tc_conf struct
+ * based on the values of the \ref tc_conf struct.
  *
  * \param dev_inst  Pointer to the device struct
  * \param tc_module Pointer to the TC module
  * \param config    Pointer to the \ref tc_conf struct
  *
  * \return Status of the procedure.
- * \retval STATUS_OK           The function exited successfully.
- * \retval STATUS_ERR_BUSY     When a reset has been initiated.
+ * \retval STATUS_OK           The function exited successfully
+ * \retval STATUS_ERR_BUSY     When a reset has been initiated
  * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
- *                             tc_conf struct.
- * \retval STATUS_ERR_DENIED   When module is enabled, and when module is
+ *                             tc_conf struct
+ * \retval STATUS_ERR_DENIED   When module is enabled, or when module is
  *                             configured in 32 bit slave mode. Module will be
- *                             left unaltered in these cases.
+ *                             left unaltered in these cases
  */
 enum status_code tc_init(
 		Tc *const tc_module,
@@ -233,17 +233,16 @@ enum status_code tc_init(
 /** \brief Set TC module count value
  *
  * This function can be used to update count value after init. It can
- * be used while the counter is running, there is no need to disable
- * the counter module.
+ * be used while the counter is running.
  *
  * \param[in] dev_inst      pointer to the device struct
  * \param[in] count         value to write to the count register
  *
  * \return Status of the procedure
  * \retval STATUS_OK               The procedure has gone well and the count
- *                                 value has been set.
+ *                                 value has been set
  * \retval STATUS_ERR_INVALID_ARG  The counter size argument in the dev_inst
- *                                 struct is out of bounds.
+ *                                 struct is out of bounds
  */
 enum status_code tc_set_count_value(
 		const struct tc_dev_inst *const dev_inst,
@@ -285,7 +284,6 @@ enum status_code tc_set_count_value(
  * counter is running, there is no need to disable the counter module.
  *
  * \param[in]  dev_inst      pointer to the device struct
- * \param[out] count         pointer to the where the value is put
  *
  * \return Count value
  */
@@ -319,15 +317,13 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 	} /* Switch TC counter size end  */
 }
 
-/** \brief Get the capture value
+/** \brief Gets the capture value
  *
- * This procedure stores the capture value in the supplied buffer
- * pointed to by capture. This method can be used in 32, 16 and 8 bit
- * counter size. The user should perform a cast of the buffer after
- * the method has returned.
+ * This function resturnes a capture value in the supplied buffer
+ * pointed to by capture.
  *
  * \param[in]  dev_inst       Pointer to the device struct
- * \param[in]  channel_index  Index of the compare register to read from
+ * \param[in]  channel_index  Index of the Compare Capture register to read from
  *
  * \return Capture value
  */
@@ -369,8 +365,8 @@ uint32_t tc_get_capture_value(
  * \param[in] channel_index  Index of the compare register to write to
  *
  * \return  Status of the procedure
- * \retval  STATUS_OK               The function exited successfully.
- * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range.
+ * \retval  STATUS_OK               The function exited successfully
+ * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range
  */
 enum status_code tc_set_compare_value(
 		const struct tc_dev_inst *const dev_inst,
