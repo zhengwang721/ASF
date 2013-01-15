@@ -43,11 +43,12 @@
 
 #include <asf.h>
 #include "ui.h"
+#include "board_monitor.h"
 
-// Wakeup pin is PB0 (PC3, EIC5)
+/* Wakeup pin is PB0 (PC3, EIC5) */
 #define UI_WAKEUP_IRQN         EIC_5_IRQn
 #define UI_WAKEUP_IRQ_LEVEL    5
-#define UI_WAKEUP_EIC_LINE     GPIO_PUSH_BUTTON_EIC_LINE // 5
+#define UI_WAKEUP_EIC_LINE     GPIO_PUSH_BUTTON_EIC_LINE
 #define UI_WAKEUP_HANDLER      button_handler
 #define UI_WAKEUP_BPM_SRC      BPM_BKUPWEN_EIC
 
@@ -67,15 +68,16 @@ static void ui_disable_asynchronous_interrupt(void);
 static void UI_WAKEUP_HANDLER(void)
 {
 	sysclk_enable_peripheral_clock(EIC);
-	if(eic_line_interrupt_is_pending(EIC, UI_WAKEUP_EIC_LINE)) {
+	if (eic_line_interrupt_is_pending(EIC, UI_WAKEUP_EIC_LINE)) {
 		eic_line_clear_interrupt(EIC, UI_WAKEUP_EIC_LINE);
 		if (uhc_is_suspend()) {
 			ui_disable_asynchronous_interrupt();
 
-			// Wakeup host and device
+			/* Wakeup host and device */
 			uhc_resume();
 		}
 	}
+
 	sysclk_disable_peripheral_clock(EIC);
 }
 
@@ -86,7 +88,7 @@ static void ui_enable_asynchronous_interrupt(void)
 {
 	/* Initialize EIC for button wakeup */
 	sysclk_enable_peripheral_clock(EIC);
-	struct eic_line_config eic_opt ={
+	struct eic_line_config eic_opt = {
 		.eic_mode = EIC_MODE_EDGE_TRIGGERED,
 		.eic_edge = EIC_EDGE_FALLING_EDGE,
 		.eic_level = EIC_LEVEL_LOW_LEVEL,
@@ -96,7 +98,7 @@ static void ui_enable_asynchronous_interrupt(void)
 	eic_enable(EIC);
 	eic_line_set_config(EIC, UI_WAKEUP_EIC_LINE, &eic_opt);
 	eic_line_set_callback(EIC, UI_WAKEUP_EIC_LINE, UI_WAKEUP_HANDLER,
-		UI_WAKEUP_IRQN, UI_WAKEUP_IRQ_LEVEL);
+			UI_WAKEUP_IRQN, UI_WAKEUP_IRQ_LEVEL);
 	eic_line_enable(EIC, UI_WAKEUP_EIC_LINE);
 	eic_line_enable_interrupt(EIC, UI_WAKEUP_EIC_LINE);
 
@@ -116,7 +118,8 @@ static void ui_disable_asynchronous_interrupt(void)
 	bpm_disable_backup_pin(BPM, 1 << UI_WAKEUP_EIC_LINE);
 	sysclk_disable_peripheral_clock(EIC);
 }
-//! @}
+
+/* ! @} */
 
 /**
  * \name Main user interface functions
@@ -124,37 +127,41 @@ static void ui_disable_asynchronous_interrupt(void)
  */
 void ui_init(void)
 {
-	// Initialize LEDs
+	/* Initialize LEDs */
 	LED_Off(LED0);
+	/* Initialize Board Monitor */
+	bm_init();
+	bm_mouse_pointer_ctrl(false);
 }
 
 void ui_usb_mode_change(bool b_host_mode)
 {
-	UNUSED(b_host_mode);
+	if (b_host_mode) {
+		LED_On(LED0);
+	} else {
+		LED_Off(LED0);
+	}
 }
-//! @}
+
+/* ! @} */
 
 /**
  * \name Host mode user interface functions
  * @{
  */
 
-//! Status of device enumeration
-static uhc_enum_status_t ui_enum_status=UHC_ENUM_DISCONNECT;
-//! Blink frequency depending on device speed
+/* ! Status of device enumeration */
+static uhc_enum_status_t ui_enum_status = UHC_ENUM_DISCONNECT;
+/* ! Blink frequency depending on device speed */
 static uint16_t ui_device_speed_blink;
-//! Manages device mouse moving
-static int8_t ui_x, ui_y, ui_scroll;
-//! Manages device mouse button down
+/* ! Manages device mouse moving */
+static int16_t bm_x, bm_y;
+/* ! Manages device mouse button down */
 static uint8_t ui_nb_down = 0;
 
 void ui_usb_vbus_change(bool b_vbus_present)
 {
-	if(b_vbus_present) {
-		LED_On(LED0);
-	} else {
-		LED_Off(LED0);
-	}
+	UNUSED(b_vbus_present);
 }
 
 void ui_usb_vbus_error(void)
@@ -168,6 +175,7 @@ void ui_usb_connection_event(uhc_device_t *dev, bool b_present)
 	if (!b_present) {
 		LED_On(LED0);
 		ui_enum_status = UHC_ENUM_DISCONNECT;
+		bm_mouse_pointer_ctrl(false);
 	}
 }
 
@@ -175,14 +183,18 @@ void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
 {
 	ui_enum_status = status;
 	if (ui_enum_status == UHC_ENUM_SUCCESS) {
-		ui_x = 0, ui_y = 0, ui_scroll = 0;
+		bm_mouse_pointer_ctrl(true);
+		bm_x = (128 / 2) * 8;
+		bm_y = (62 / 2) * 8;
 		switch (dev->speed) {
 		case UHD_SPEED_HIGH:
 			ui_device_speed_blink = 250;
 			break;
+
 		case UHD_SPEED_FULL:
 			ui_device_speed_blink = 500;
 			break;
+
 		case UHD_SPEED_LOW:
 		default:
 			ui_device_speed_blink = 1000;
@@ -201,22 +213,22 @@ void ui_usb_sof_event(void)
 	bool b_btn_state;
 	static bool btn_suspend_and_remotewakeup = false;
 	static uint16_t counter_sof = 0;
+	static uint16_t counter_sof_move_refresh = 0;
 
 	if (ui_enum_status == UHC_ENUM_SUCCESS) {
-
-		// Display device enumerated and in active mode
+		/* Display device enumerated and in active mode */
 		if (++counter_sof > ui_device_speed_blink) {
 			counter_sof = 0;
 			LED_Toggle(LED0);
 		}
 
-		// Scan button to enter in suspend mode and remote wakeup
+		/* Scan button to enter in suspend mode and remote wakeup */
 		b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
 		if (b_btn_state != btn_suspend_and_remotewakeup) {
-			// Button have changed
+			/* Button have changed */
 			btn_suspend_and_remotewakeup = b_btn_state;
 			if (b_btn_state) {
-				// Button has been pressed
+				/* Button has been pressed */
 				ui_enable_asynchronous_interrupt();
 				LED_Off(LED0);
 				uhc_suspend(true);
@@ -224,12 +236,13 @@ void ui_usb_sof_event(void)
 			}
 		}
 
-		// Power on a LED when the mouse move
-		if (ui_x || ui_y || ui_scroll) {
-			ui_x = ui_y = ui_scroll = 0;
-			LED_On(LED0);
+		/* Move the remote mouse pointer on the Board Monitor screen */
+		if (++counter_sof_move_refresh > 100) {
+			counter_sof_move_refresh = 0;
+			bm_mouse_pointer_move(bm_x / 8, bm_y / 8);
 		}
-		// Power on a LED when the mouse button down
+
+		/* Power on a LED when the mouse button down */
 		if (ui_nb_down) {
 			LED_On(LED0);
 		}
@@ -260,13 +273,18 @@ void ui_uhi_hid_mouse_btn_middle(bool b_state)
 	ui_uhi_hid_mouse_btn(b_state);
 }
 
-void ui_uhi_hid_mouse_move(int8_t x,int8_t y,int8_t scroll)
+void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
 {
-	ui_x = x;
-	ui_y = y;
-	ui_scroll = scroll;
+	UNUSED(scroll);
+	bm_x += x;
+	bm_y += y;
+	bm_x = Max(bm_x, 0);
+	bm_x = Min(bm_x, 126 * 8);
+	bm_y = Max(bm_y, 0);
+	bm_y = Min(bm_y, 62 * 8);
 }
-//! @}
+
+/* ! @} */
 
 /**
  * \defgroup UI User Interface
@@ -284,7 +302,7 @@ void ui_uhi_hid_mouse_move(int8_t x,int8_t y,int8_t scroll)
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
  * - Led 0 is on when a HID mouse button is pressed
- * - Led 0 is on when the mouse move
+ * - The mouse on board monitor display moves when the mouse move
  * - Button PB0 allows to enter the device in suspend mode with remote wakeup
  *   feature authorized
  * - Only PB0 button can be used to wakeup USB device in suspend mode

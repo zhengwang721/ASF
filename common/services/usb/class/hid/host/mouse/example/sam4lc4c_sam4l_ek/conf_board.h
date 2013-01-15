@@ -44,14 +44,19 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-// Auto-initialize USART GPIOs when board_init() is called
+/* Auto-initialize USART GPIOs when board_init() is called */
 //#define CONF_BOARD_COM_PORT
 
-// Enable USB interface (USB)
+/* Enable USB interface (USB) */
 #define CONF_BOARD_USB_PORT
-//#   define CONF_BOARD_USB_NO_VBUS_DETECT /* VBUS detect NOT enabled, uncomment it if jumper PA06/USB not set */
-//#   define CONF_BOARD_USB_NO_ID_DETECT /* ID detect NOT enabled,  uncomment it if jumper PB05/USB not set */
-#   define CONF_BOARD_USB_VBUS_CONTROL /* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#       define CONF_BOARD_USB_NO_VBUS_ERR_DETECT /* Host VBUS error detect NOT enabled,  uncomment it if jumper PC07/USB not set */
+/* ID detect NOT enabled,  uncomment it if jumper PB05/USB set */
+#define CONF_BOARD_USB_ID_DETECT
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+#define CONF_BOARD_USB_VBUS_CONTROL
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+#define CONF_BOARD_USB_VBUS_ERR_DETECT
+
+/* Enable USART to control Board Monitoring */
+#define CONF_BOARD_BM_USART
 
 #endif /* CONF_BOARD_H_INCLUDED */
