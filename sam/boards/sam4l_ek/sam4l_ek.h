@@ -190,22 +190,19 @@
 #define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
 #define USB_VBUS_PIN             PIN_PC14  /* As IO pin input */
 /* No EIC for VBus pin */
-#else
+#elif 0 // The Vbus monitoring can not be used on SAM4L_EK Rev. 2
 #define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
-#define USB_VBUS_PIN             PIN_PA06  /* As IO pin input */
 #define USB_VBUS_EIC             PIN_PA06C_EIC_EXTINT1 /* As EIC input */
 #define USB_VBUS_EIC_MUX         IOPORT_MODE_MUX_C
 #define USB_VBUS_EIC_LINE        1
 #define USB_VBUS_EIC_IRQn        EIC_1_IRQn
 #endif
-#define USB_VBUS_PIN_SENSE       IOPORT_SENSE_BOTHEDGES
 //! @}
 
 /*! \name GPIO Connections of SAM4L4C VBUS Power Control
  */
 //! @{
 #define USB_VBOF_PIN            PIN_PC08 /* As IO pin output */
-#define USB_VBUS_PIN_SENSE      IOPORT_SENSE_BOTHEDGES
 #define USB_VBOF_ACTIVE_LEVEL   0
 #define USB_VBOF_INACTIVE_LEVEL 1
 //! @}
@@ -215,7 +212,6 @@
 //! @{
 #define USB_VBERR_FLAGS          IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
 #define USB_VBERR_PIN            PIN_PC07 /* As IO pin input */
-#define USB_VBERR_PIN_SENSE      IOPORT_SENSE_BOTHEDGES
 /* No EIC for VBErr pin */
 //! @}
 
@@ -224,7 +220,6 @@
 //! @{
 #define USB_ID_FLAGS             IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
 #define USB_ID_PIN               PIN_PB05 /* As IO pin input */
-#define USB_ID_PIN_SENSE         IOPORT_SENSE_BOTHEDGES
 /* No EIC for ID pin */
 //! @}
 

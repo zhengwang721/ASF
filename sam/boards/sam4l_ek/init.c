@@ -112,7 +112,7 @@ void board_init(void)
 #if (defined CONF_BOARD_USB_PORT)
 	ioport_set_pin_peripheral_mode(PIN_PA25A_USBC_DM, MUX_PA25A_USBC_DM);
 	ioport_set_pin_peripheral_mode(PIN_PA26A_USBC_DP, MUX_PA26A_USBC_DP);
-# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+# if defined(CONF_BOARD_USB_VBUS_DETECT)
 #   if defined(USB_VBUS_EIC)
 	ioport_set_pin_peripheral_mode(USB_VBUS_EIC,
 			USB_VBUS_EIC_MUX|USB_VBUS_FLAGS);
@@ -122,7 +122,7 @@ void board_init(void)
 #       warning USB_VBUS pin not defined
 #   endif
 # endif
-# if !defined(CONF_BOARD_USB_NO_ID_DETECT)
+# if defined(CONF_BOARD_USB_ID_DETECT)
 #   if defined(USB_ID_EIC)
 	ioport_set_pin_peripheral_mode(USB_ID_EIC,
 			USB_ID_EIC_MUX|USB_ID_FLAGS);
@@ -139,7 +139,7 @@ void board_init(void)
 #   else
 #       warning USB_VBOF pin not defined
 #   endif
-#  if !defined(CONF_BOARD_USB_NO_VBUS_ERR_DETECT)
+#  if defined(CONF_BOARD_USB_VBUS_ERR_DETECT)
 #    if defined(USB_VBERR_EIC)
 	ioport_set_pin_peripheral_mode(USB_VBERR_EIC,
 			USB_VBERR_EIC_MUX|USB_VBERR_FLAGS);
