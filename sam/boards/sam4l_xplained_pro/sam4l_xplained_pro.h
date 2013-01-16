@@ -208,9 +208,9 @@
 //! \name Extension header #1 PWM definitions
 //@{
 #define EXT1_PWM_MODULE           TC1
+#define EXT1_PWM_CHANNEL          0
 #define EXT1_PWM_0_MUX            MUX_PC00D_TC1_A0
 #define EXT1_PWM_1_MUX            MUX_PC01D_TC1_B0
-// Define TC used here (TC A0/B0)
 //@}
 
 //! \name Extension header #1 IRQ/External interrupt definitions
@@ -296,9 +296,9 @@
 //! \name Extension header #2 PWM definitions
 //@{
 #define EXT2_PWM_MODULE           TC1
+#define EXT2_PWM_CHANNEL          2
 #define EXT2_PWM_0_MUX            MUX_PC04D_TC1_A2
 #define EXT2_PWM_1_MUX            MUX_PC05D_TC1_B2
-// Define TC used here (TC A2/B2)
 //@}
 
 //! \name Extension header #2 IRQ/External interrupt definitions
@@ -383,9 +383,9 @@
 //! \name Extension header #3 PWM definitions
 //@{
 #define EXT3_PWM_MODULE           TC0
+#define EXT3_PWM_CHANNEL          0
 #define EXT3_PWM_0_MUX            MUX_PA08B_TC0_A0
 #define EXT3_PWM_1_MUX            MUX_PA09B_TC0_B0
-// Define TC used here (TC A0/B0)
 //@}
 
 //! \name Extension header #3 IRQ/External interrupt definitions
@@ -469,9 +469,9 @@
 //! \name Extension header #4 PWM definitions
 //@{
 #define EXT4_PWM_MODULE           TC0
+#define EXT1_PWM_CHANNEL          2
 #define EXT4_PWM_0_MUX            MUX_PA12B_TC0_A2
 #define EXT4_PWM_1_MUX            MUX_PA13B_TC0_B2
-// Define TC used here (TC A2/B2)
 //@}
 
 //! \name Extension header #4 IRQ/External interrupt definitions
