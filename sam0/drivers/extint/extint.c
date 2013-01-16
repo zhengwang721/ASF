@@ -88,7 +88,7 @@ void extint_enable(void)
  * \brief Disables the External Interrupt driver.
  *
  * Disables EIC modules that were previously started via a call to
- * \ref eic_enable().
+ * \ref extint_enable().
  */
 void extint_disable(void)
 {

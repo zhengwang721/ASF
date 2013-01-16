@@ -317,7 +317,7 @@ void extint_disable(void);
  * \brief Enables an External Interrupt event output.
  *
  *  Enables one or more output events from the External Interrupt module. See
- *  \ref struct extint_events "here" for a list of events this module supports.
+ *  \ref extint_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -352,7 +352,7 @@ static inline void extint_enable_events(
  * \brief Disables an External Interrupt event output.
  *
  *  Disables one or more output events from the External Interrupt module. See
- *  \ref struct extint_events "here" for a list of events this module supports.
+ *  \ref extint_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
