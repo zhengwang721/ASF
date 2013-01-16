@@ -126,8 +126,8 @@
 
 /** @} */
 
-/** EXT1 */
-/** */
+//! \name Extension header #1 pin definitions
+//@{
 #define EXT1_PIN_3                IOPORT_CREATE_PIN(PIOA, 17)
 #define EXT1_PIN_4                IOPORT_CREATE_PIN(PIOA, 18)
 #define EXT1_PIN_5                IOPORT_CREATE_PIN(PIOA, 24)
@@ -144,7 +144,10 @@
 #define EXT1_PIN_16               IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT1_PIN_17               IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT1_PIN_18               IOPORT_CREATE_PIN(PIOA, 14)
+//@}
 
+//! \name Extension header #1 pin definitions by function
+//@{
 #define EXT1_PIN_ADC_0            EXT1_PIN_3
 #define EXT1_PIN_ADC_1            EXT1_PIN_4
 #define EXT1_PIN_GPIO_0           EXT1_PIN_5
@@ -161,24 +164,44 @@
 #define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
 #define EXT1_PIN_SPI_MISO         EXT1_PIN_17
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
+//@}
 
+//! \name Extension header #1 ADC definitions
+//@{
 #define EXT1_ADC_MODULE           ADC
 #define EXT1_ADC_0_CHANNEL        0
 #define EXT1_ADC_1_CHANNEL        1
+//@}
 
+//! \name Extension header #1 PWM definitions
+//@{
 #define EXT1_PWM_MODULE           PWM
 #define EXT1_PWM_CHANNEL          0
+//@}
 
+//! \name Extension header #1 IRQ/External interrupt definitions
+//@{
 #define EXT1_IRQ_MODULE           SUPC
 #define EXT1_IRQ_CHANNEL          1
+//@}
 
+//! \name Extension header #1 TWI definitions
+//@{
 #define EXT1_TWI_MODULE           TWI0
+//@}
 
+//! \name Extension header #1 UART definitions
+//@{
 #define EXT1_UART_MODULE          USART1
+//@}
 
+//! \name Extension header #1 SPI definitions
+//@{
 #define EXT1_SPI_MODULE           SPI
+//@}
 
-/** EXT2 */
+//! \name Extension header #2 pin definitions
+//@{
 #define EXT2_PIN_3                IOPORT_CREATE_PIN(PIOB, 0)
 #define EXT2_PIN_4                IOPORT_CREATE_PIN(PIOB, 1)
 #define EXT2_PIN_5                IOPORT_CREATE_PIN(PIOC, 24)
@@ -195,7 +218,10 @@
 #define EXT2_PIN_16               IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT2_PIN_17               IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT2_PIN_18               IOPORT_CREATE_PIN(PIOA, 14)
+//@}
 
+//! \name Extension header #2 pin definitions by function
+//@{
 #define EXT2_PIN_ADC_0            EXT2_PIN_3
 #define EXT2_PIN_ADC_1            EXT2_PIN_4
 #define EXT2_PIN_GPIO_0           EXT2_PIN_5
@@ -212,24 +238,44 @@
 #define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
 #define EXT2_PIN_SPI_MISO         EXT2_PIN_17
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
+//@}
 
+//! \name Extension header #2 ADC definitions
+//@{
 #define EXT2_ADC_MODULE           ADC
 #define EXT2_ADC_0_CHANNEL        4
 #define EXT2_ADC_1_CHANNEL        5
+//@}
 
+//! \name Extension header #2 PWM definitions
+//@{
 #define EXT2_PWM_MODULE           PWM
 #define EXT2_PWM_CHANNEL          1
+//@}
 
+//! \name Extension header #2 IRQ/External interrupt definitions
+//@{
 //#define EXT2_IRQ_MODULE           SUPC
 //#define EXT2_IRQ_CHANNEL          1
+//@}
 
+//! \name Extension header #2 TWI definitions
+//@{
 #define EXT2_TWI_MODULE           TWI0
+//@}
 
+//! \name Extension header #2 UART definitions
+//@{
 #define EXT2_UART_MODULE          USART1
+//@}
 
+//! \name Extension header #2 SPI definitions
+//@{
 #define EXT2_SPI_MODULE           SPI
+//@}
 
-/** EXT3 */
+//! \name Extension header #3 pin definitions
+//@{
 #define EXT3_PIN_3                IOPORT_CREATE_PIN(PIOC, 29)
 #define EXT3_PIN_4                IOPORT_CREATE_PIN(PIOC, 30)
 #define EXT3_PIN_5                IOPORT_CREATE_PIN(PIOC, 21)
@@ -246,7 +292,10 @@
 #define EXT3_PIN_16               IOPORT_CREATE_PIN(PIOA, 13)
 #define EXT3_PIN_17               IOPORT_CREATE_PIN(PIOA, 12)
 #define EXT3_PIN_18               IOPORT_CREATE_PIN(PIOA, 14)
+//@}
 
+//! \name Extension header #3 pin definitions by function
+//@{
 #define EXT3_PIN_ADC_0            EXT3_PIN_3
 #define EXT3_PIN_ADC_1            EXT3_PIN_4
 #define EXT3_PIN_GPIO_0           EXT3_PIN_5
@@ -263,22 +312,65 @@
 #define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
 #define EXT3_PIN_SPI_MISO         EXT3_PIN_17
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+//@}
 
+//! \name Extension header #3 ADC definitions
+//@{
 #define EXT2_ADC_MODULE           ADC
 #define EXT2_ADC_0_CHANNEL        13
 #define EXT2_ADC_1_CHANNEL        14
+//@}
 
+//! \name Extension header #3 PWM definitions
+//@{
 #define EXT2_PWM_MODULE           PWM
 #define EXT2_PWM_CHANNEL          2
+//@}
 
+//! \name Extension header #3 IRQ/External interrupt definitions
+//@{
 #define EXT2_IRQ_MODULE           SUPC
 #define EXT2_IRQ_CHANNEL          0
+//@}
 
+//! \name Extension header #3 TWI definitions
+//@{
 #define EXT2_TWI_MODULE           TWI1
+//@}
 
+//! \name Extension header #3 UART definitions
+//@{
 #define EXT2_UART_MODULE          UART1
+//@}
 
+//! \name Extension header #3 SPI definitions
+//@{
 #define EXT2_SPI_MODULE           SPI
+//@}
+
+//! \name Embedded debugger GPIO interface definitions
+//@{
+#define EDBG_GPIO0_PIN            IOPORT_CREATE_PIN(PIOA, 6)
+#define EDBG_GPIO1_PIN            IOPORT_CREATE_PIN(PIOC, 22)
+#define EDBG_GPIO2_PIN            IOPORT_CREATE_PIN(PIOC, 24)
+#define EDBG_GPIO3_PIN            IOPORT_CREATE_PIN(PIOC, 25)
+//@}
+
+//! \name Embedded debugger USART interface definitions
+//@{
+#define EDBG_UART_MODULE          UART1
+//@}
+
+//! \name Embedded debugger TWI interface definitions
+//@{
+#define EDBG_TWI_MODULE           TWI0
+//@}
+
+//! \name Embedded debugger SPI interface definitions
+//@{
+#define EDBG_SPI_MODULE           SPI
+//@}
+
 /** @} */
 
 #endif /* SAM4S_XPLAINED_PRO_H */
