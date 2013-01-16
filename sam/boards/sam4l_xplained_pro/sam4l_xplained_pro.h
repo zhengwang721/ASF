@@ -45,7 +45,9 @@
 #define SAM4L_XPLAINED_PRO_INCLUDED
 
 /**
+ * \ingroup group_common_boards
  * \defgroup sam4l_xplained_pro_group SAM4L Xplained PRO board
+ *
  * @{
  */
 
