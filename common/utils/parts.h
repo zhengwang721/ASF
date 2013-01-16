@@ -3,7 +3,7 @@
  *
  * \brief Atmel part identification macros
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -607,8 +607,6 @@
 
 /** @} */
 
-/** @} */
-
 /**
  * \defgroup tiny_part_macros_group tinyAVR parts
  *
@@ -904,6 +902,8 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAMD20)
+
+/** @} */
 
 /** @} */
 
