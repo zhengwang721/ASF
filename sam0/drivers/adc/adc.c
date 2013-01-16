@@ -119,9 +119,9 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	switch (config->resolution) {
 	case ADC_RESOLUTION_8BIT:
 		if (config->differential_mode && (config->window_lower_value > 127 ||
-				config->window_lower_value < -127 ||
+				config->window_lower_value < -128 ||
 				config->window_upper_value > 127 ||
-				config->window_upper_value < -127)) {
+				config->window_upper_value < -128)) {
 			/* Invalid value */
 			return STATUS_ERR_INVALID_ARG;
 		} else if (config->window_lower_value > 255 ||
@@ -132,9 +132,9 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		break;
 	case ADC_RESOLUTION_10BIT:
 		if (config->differential_mode && (config->window_lower_value > 511 ||
-				config->window_lower_value < -511 ||
+				config->window_lower_value < -512 ||
 				config->window_upper_value > 511 ||
-				config->window_upper_value > -511)) {
+				config->window_upper_value > -512)) {
 			/* Invalid value */
 			return STATUS_ERR_INVALID_ARG;
 		} else if (config->window_lower_value > 1023 ||
@@ -145,9 +145,9 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		break;
 	case ADC_RESOLUTION_12BIT:
 		if (config->differential_mode && (config->window_lower_value > 2047 ||
-				config->window_lower_value < -2047 ||
+				config->window_lower_value < -2048 ||
 				config->window_upper_value > 2047 ||
-				config->window_upper_value < -2047)) {
+				config->window_upper_value < -2048)) {
 			/* Invalid value */
 			return STATUS_ERR_INVALID_ARG;
 		} else if (config->window_lower_value > 4095 ||
@@ -158,9 +158,9 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		break;
 	case ADC_RESOLUTION_16BIT:
 		if (config->differential_mode && (config->window_lower_value > 32767 ||
-				config->window_lower_value < -32767 ||
+				config->window_lower_value < -32768 ||
 				config->window_upper_value > 32767 ||
-				config->window_upper_value < -32767)) {
+				config->window_upper_value < -32768)) {
 			/* Invalid value */
 			return STATUS_ERR_INVALID_ARG;
 		} else if (config->window_lower_value > 65535 ||
