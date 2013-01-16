@@ -3,7 +3,7 @@
  *
  * \brief SPI example configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAM4S-EK  --  SAM4S-EK </b>
+ *  - <b> SAM4E-EK  --  SAM4E-EK </b>
  *  - VCC -- VCC
  *  - NPCS0(PA11) -- NPCS0(PA11)
  *  - MISO(PA12)  -- MISO(PA12)

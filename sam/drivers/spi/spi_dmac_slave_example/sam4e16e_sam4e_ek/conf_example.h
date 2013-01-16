@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,15 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/** SPI Hw ID */
+#define SPI_ID          ID_SPI
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+/** SPI base address for SPI master mode */
+#define SPI_MASTER_BASE      SPI
+/** SPI base address for SPI slave mode (on different board) */
+#define SPI_SLAVE_BASE       SPI
 
-/** SPI pins initialization */
-#define CONF_BOARD_SPI
-
-/** SPI pin NPCS3 initialization */
-#define CONF_BOARD_SPI_NPCS3
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

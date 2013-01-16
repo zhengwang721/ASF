@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -185,10 +185,15 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
-	
+
+#ifdef CONF_BOARD_SPI_NPCS0
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_SPI_NPCS3
 #if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
-	ioport_set_pin_peripheral_mode(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
+	ioport_set_pin_peripheral_mode(CONF_BOARD_SPI_NPCS3_GPIO,
+			CONF_BOARD_SPI_NPCS3_FLAGS);
 #else
 	ioport_set_pin_peripheral_mode(SPI_NPCS3_PA5_GPIO, SPI_NPCS3_PA5_FLAGS);
 #endif

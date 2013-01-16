@@ -44,16 +44,12 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
-
-/** SPI pins initialization */
+/** SPI MACRO definition */
 #define CONF_BOARD_SPI
 
-/** SPI pin NPCS3 initialization */
-#define CONF_BOARD_SPI_NPCS3
+/** SPI slave select0 MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
 
 #endif /* CONF_BOARD_H_INCLUDED */
