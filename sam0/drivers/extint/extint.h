@@ -74,7 +74,81 @@
  * \enddot
  *
  * \section module_introduction Introduction
- * TODO
+ * The External Interrupt (EXTINT) module provides a method of asynchronously
+ * detecting rising edge, falling edge or specific level detection on individual
+ * I/O pins of a device. This detection can then be used to trigger a software
+ * interrupt or event, or polled for later use if required. External interrupts
+ * can also optionally be used to automatically wake up the device from sleep
+ * mode, allowing the device to conserve power while still being able to react
+ * to an external stimulus in a timely manner.
+ *
+ * \subsection logical_channels Logical Channels
+ * The external interrupt module contains a number of logical channels, each of
+ * which is capable of being individually configured for a given pin routing,
+ * detection mode and filtering/wake up characteristics.
+ *
+ * Each individual logical external interrupt channel may be routed to a single
+ * physical device I/O pin in order to detect a particular edge or level of the
+ * incoming signal.
+ *
+ * \subsection nmi_chanel NMI Channel(s)
+ * One or more Non Maskable Interrupt (NMI) channels are provided within each
+ * physical External Interrupt Controller module, allowing a single physical pin
+ * of the device to fire a single NMI interrupt in response to a particular
+ * edge or level stimulus. A NMI cannot, as the name suggests, be disabled in
+ * firmware and will take precedence over any in-progress interrupt sources.
+ *
+ * NMIs can be used to implement critical device features such as en emergency
+ * stop, forced software reset or other functionality where the action should
+ * be executed in preference to all other running code.
+ *
+ * \subsection filtering_and_detection Input Filtering and Detection
+ * To reduce the possibility of noise or other transient signals causing
+ * unwanted device wake-ups, interrupts and/or events via an external interrupt
+ * channel, a hardware signal filter can be enabled on individual channels. This
+ * filter provides a Majority-of-Three voter filter on the incoming signal, so
+ * that the input state is considered to be the majority of three subsequent
+ * samples of the input:
+ *
+ * <table>
+ *	<tr>
+ *		<th>Input Sample 1</th>
+ *		<th>Input Sample 2</th>
+ *		<th>Input Sample 3</th>
+ *		<th>Filtered Output</th>
+ *	</tr>
+ *	<tr>
+ *		<td>0</td> <td>0</td> <td>0</td> <td>0</td>
+ *	</tr>
+ *	<tr>
+ *		<td>0</td> <td>0</td> <td>1</td> <td>0</td>
+ *	</tr>
+ *	<tr>
+ *		<td>0</td> <td>1</td> <td>0</td> <td>0</td>
+ *	</tr>
+ *	<tr>
+ *		<td>0</td> <td>1</td> <td>1</td> <td>1</td>
+ *	</tr>
+ *	<tr>
+ *		<td>1</td> <td>0</td> <td>0</td> <td>0</td>
+ *	</tr>
+ *	<tr>
+ *		<td>1</td> <td>0</td> <td>1</td> <td>1</td>
+ *	</tr>
+ *	<tr>
+ *		<td>1</td> <td>1</td> <td>0</td> <td>1</td>
+ *	</tr>
+ *	<tr>
+ *		<td>1</td> <td>1</td> <td>1</td> <td>1</td>
+ *	</tr>
+ * </table>
+ *
+ * \subsection events_and_interrupts Events and Interrupts
+ * Channel detection states may be polled inside the application for synchronous
+ * detection, or events and interrupts may be used for asynchronous behavior.
+ * Each channel can be configured to give an asynchronous hardware event (which
+ * may in turn trigger actions in other hardware modules) or an asynchronous
+ * software interrupt.
  *
  * \section module_dependencies Dependencies
  * The external interrupt driver has the following dependencies:
@@ -82,7 +156,8 @@
  * \li \ref sam0_pinmux_group "System Pin Multiplexer Driver"
  *
  * \section special_considerations Special Considerations
- * TODO
+ * Not all devices support disabling of the NMI channel(s) detection mode - see
+ * your device datasheet.
  *
  * \section module_extra_info Extra Information
  * For extra information see \ref extint_extra_info.
@@ -108,7 +183,10 @@ extern "C" {
  * Interrupt Controller module.
  */
 enum extint_detect {
-	/** No edge detection. */
+	/** No edge detection.
+	 *
+	 *  \note Not allowed as a NMI detection mode on some devices.
+	 */
 	EXTINT_DETECT_NONE    = 0,
 	/** Detect rising signal edges. */
 	EXTINT_DETECT_RISING  = 1,
@@ -166,7 +244,10 @@ struct extint_nmi_conf {
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
-	/** Edge detection mode to use. */
+	/** Edge detection mode to use.
+	 *
+	 *  \note Not all devices support all possible detection modes for NMIs.
+	 */
 	enum extint_detect detect;
 };
 
@@ -483,12 +564,12 @@ static inline void extint_nmi_clear_detected(
  *		<td>External Interrupt Controller</td>
  *	</tr>
  *	<tr>
- *		<td>GPIO</td>
- *		<td>General Purpose Input/Output</td>
- *	</tr>
- *	<tr>
  *		<td>MUX</td>
  *		<td>Multiplexer</td>
+ *	</tr>
+ *	<tr>
+ *		<td>NMI</td>
+ *		<td>Non-Maskable Interrupt</td>
  *	</tr>
  * </table>
  *

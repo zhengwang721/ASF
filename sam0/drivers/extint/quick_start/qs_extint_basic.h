@@ -43,9 +43,14 @@
  * \page extint_basic_use_case Quick Start Guide for the EXTINT module - Basic Use Case
  *
  * In this use case, the EXTINT module is configured for:
- *  \li TODO
+ *  \li Channel 1 routed to physical pin PA01
+ *  \li Channel 1 configured to automatically wake up the device from sleep
+ *      upon detection
+ *  \li Channel 1 configured to detect falling input edges
  *
- * This use case TODO.
+ * This use case configures a physical I/O pin of the device so that it is
+ * routed to a logical External Interrupt Controller channel to detect falling
+ * edges of the incoming signal.
  *
  * \section extint_basic_use_case_setup Setup
  *
@@ -60,13 +65,22 @@
  * \snippet qs_extint_basic.c setup_init
  *
  * \subsection extint_basic_use_case_setup_flow Workflow
- * -# TODO
+ * -# Create an EXTINT module channel configuration struct, which can be filled
+ *    out to adjust the configuration of a single external interrupt channel.
  *  - \snippet qs_extint_basic.c setup_1
- * -# TODO
+ * -# Initialize the channel configuration struct with the module's default
+ *    values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
+ *
  *  - \snippet qs_extint_basic.c setup_2
- * -# TODO
+ * -# Adjust the configuration struct to configure the pin MUX (to route the
+ *    desired physical pin to the logical channel) and to configure the channel
+ *    into auto-wake, unfiltered mode with falling edge detection.
  *  - \snippet qs_extint_basic.c setup_3
- * -# TODO
+ * -# Configure external interrupt channel 1 with the desired configuration
+ *    settings.
  *  - \snippet qs_extint_basic.c setup_4
  *
  * \section extint_basic_use_case_main Use Case
@@ -76,8 +90,10 @@
  * \snippet qs_extint_basic.c main
  *
  * \subsection extint_basic_use_case_main_flow Workflow
- * -# TODO
+ * -# Read in the current external interrupt channel 1 state to see if a falling
+ *    edge has been detected.
  *  - \snippet qs_extint_basic.c main_1
- * -# TODO
+ * -# Clear the detection state of the external interrupt channel 1 so that it
+ *    is ready to detect a future falling edge.
  *  - \snippet qs_extint_basic.c main_2
  */

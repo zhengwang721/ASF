@@ -173,6 +173,7 @@ enum status_code extint_ch_set_config(
  * \returns Status code indicating the success or failure of the request.
  * \retval  STATUS_OK                   Configuration succeeded
  * \retval  STATUS_ERR_PIN_MUX_INVALID  An invalid pin mux value was supplied
+ * \retval  STATUS_ERR_BAD_FORMAT       An invalid detection mode was requested
  */
 enum status_code extint_nmi_set_config(
 		const uint8_t nmi_channel,
@@ -180,6 +181,11 @@ enum status_code extint_nmi_set_config(
 {
 	if (!config->pinmux_position == 0) {
 		return STATUS_ERR_PIN_MUX_INVALID;
+	}
+
+	if (((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
+			(config->detect == EXTINT_DETECT_NONE)) {
+		return STATUS_ERR_BAD_FORMAT;
 	}
 
 	struct system_pinmux_conf pinmux_config;
