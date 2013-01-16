@@ -107,19 +107,19 @@ extern "C" {
  * Enum for the possible signal edge detection modes of the External
  * Interrupt Controller module.
  */
-enum extint_edge_detect {
+enum extint_detect {
 	/** No edge detection. */
-	EXTINT_EDGE_DETECT_NONE    = 0,
+	EXTINT_DETECT_NONE    = 0,
 	/** Detect rising signal edges. */
-	EXTINT_EDGE_DETECT_RISING  = 1,
+	EXTINT_DETECT_RISING  = 1,
 	/** Detect falling signal edges. */
-	EXTINT_EDGE_DETECT_FALLING = 2,
+	EXTINT_DETECT_FALLING = 2,
 	/** Detect both signal edges. */
-	EXTINT_EDGE_DETECT_BOTH    = 3,
+	EXTINT_DETECT_BOTH    = 3,
 	/** Detect high signal levels. */
-	EXTINT_EDGE_DETECT_HIGH    = 4,
+	EXTINT_DETECT_HIGH    = 4,
 	/** Detect low signal levels. */
-	EXTINT_EDGE_DETECT_LOW     = 5,
+	EXTINT_DETECT_LOW     = 5,
 };
 
 /**
@@ -139,7 +139,18 @@ struct extint_ch_conf {
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
 	/** Edge detection mode to use. */
-	enum extint_edge_detect mode;
+	enum extint_detect detect;
+};
+
+/**
+ * \brief External Interrupt event enable/disable structure.
+ *
+ * Event flags for the External Interrupt) and \ref extint_disable_events().
+ */
+struct extint_events {
+	/** If \c true, an event will be generated when an external interrupt
+	 *  channel detection state changes. */
+	bool output_on_detect[32 * EIC_INST_NUM];
 };
 
 /**
@@ -156,7 +167,7 @@ struct extint_nmi_conf {
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
 	/** Edge detection mode to use. */
-	enum extint_edge_detect mode;
+	enum extint_detect detect;
 };
 
 #if !defined(__DOXYGEN__)
@@ -221,6 +232,76 @@ void extint_reset(void);
 void extint_enable(void);
 void extint_disable(void);
 
+/**
+ * \brief Enables an External Interrupt event output.
+ *
+ *  Enables one or more output events from the External Interrupt module. See
+ *  \ref struct extint_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to enable
+ */
+static inline void extint_enable_events(
+		struct extint_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(events);
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	/* Update the event control register for each physical EIC instance */
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		uint32_t event_mask = 0;
+
+		/* Create an enable mask for the current EIC module */
+		for (uint32_t j = 0; j < 32; j++) {
+			if (events->output_on_detect[(32 * i) + j]) {
+				event_mask |= (1UL << j);
+			}
+		}
+
+		/* Enable the masked events */
+		eics[i]->EVCTRL.reg |= event_mask;
+	}
+}
+
+/**
+ * \brief Disables an External Interrupt event output.
+ *
+ *  Disables one or more output events from the External Interrupt module. See
+ *  \ref struct extint_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to disable
+ */
+static inline void extint_disable_events(
+		struct extint_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(events);
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	/* Update the event control register for each physical EIC instance */
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		uint32_t event_mask = 0;
+
+		/* Create a disable mask for the current EIC module */
+		for (uint32_t j = 0; j < 32; j++) {
+			if (events->output_on_detect[(32 * i) + j]) {
+				event_mask |= (1UL << j);
+			}
+		}
+
+		/* Disable the masked events */
+		eics[i]->EVCTRL.reg &= ~event_mask;
+	}
+}
+
 /** @} */
 
 /** \name Configuration and initialization (channel)
@@ -249,10 +330,10 @@ static inline void extint_ch_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->pinmux_position  = 0;
+	config->pinmux_position     = 0;
 	config->wake_if_sleeping    = true;
 	config->filter_input_signal = false;
-	config->mode                = EXTINT_EDGE_DETECT_FALLING;
+	config->detect              = EXTINT_DETECT_FALLING;
 }
 
 enum status_code extint_ch_set_config(
@@ -288,7 +369,7 @@ static inline void extint_nmi_get_config_defaults(
 	/* Default configuration values */
 	config->pinmux_position     = 0;
 	config->filter_input_signal = false;
-	config->mode                = EXTINT_EDGE_DETECT_FALLING;
+	config->detect              = EXTINT_DETECT_FALLING;
 }
 
 enum status_code extint_nmi_set_config(
@@ -314,10 +395,10 @@ enum status_code extint_nmi_set_config(
 static inline bool extint_ch_is_detected(
 		const uint8_t channel)
 {
-	Eic *const eic_base = _extint_get_eic_from_channel(channel);
+	Eic *const eic_module = _extint_get_eic_from_channel(channel);
 	uint32_t eic_mask   = (1UL << (channel % 32));
 
-	return (eic_base->INTFLAG.reg & eic_mask);
+	return (eic_module->INTFLAG.reg & eic_mask);
 }
 
 /**
@@ -331,10 +412,10 @@ static inline bool extint_ch_is_detected(
 static inline void extint_ch_clear_detected(
 		const uint8_t channel)
 {
-	Eic *const eic_base = _extint_get_eic_from_channel(channel);
+	Eic *const eic_module = _extint_get_eic_from_channel(channel);
 	uint32_t eic_mask   = (1UL << (channel % 32));
 
-	eic_base->INTFLAG.reg = eic_mask;
+	eic_module->INTFLAG.reg = eic_mask;
 }
 
 /** @} */
@@ -356,9 +437,9 @@ static inline void extint_ch_clear_detected(
 static inline bool extint_nmi_is_detected(
 		const uint8_t nmi_channel)
 {
-	Eic *const eic_base = _extint_get_eic_from_nmi(nmi_channel);
+	Eic *const eic_module = _extint_get_eic_from_nmi(nmi_channel);
 
-	return (eic_base->NMIFLAG.reg & EIC_NMIFLAG_NMI);
+	return (eic_module->NMIFLAG.reg & EIC_NMIFLAG_NMI);
 }
 
 /**
@@ -372,9 +453,9 @@ static inline bool extint_nmi_is_detected(
 static inline void extint_nmi_clear_detected(
 		const uint8_t nmi_channel)
 {
-	Eic *const eic_base = _extint_get_eic_from_nmi(nmi_channel);
+	Eic *const eic_module = _extint_get_eic_from_nmi(nmi_channel);
 
-	eic_base->NMIFLAG.reg = EIC_NMIFLAG_NMI;
+	eic_module->NMIFLAG.reg = EIC_NMIFLAG_NMI;
 }
 
 /** @} */

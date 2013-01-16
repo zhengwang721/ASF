@@ -194,6 +194,10 @@ typedef union {
 #define EIC_CONFIG_OFFSET           0x18         /**< \brief (EIC_CONFIG offset) Config Register */
 #define EIC_CONFIG_RESETVALUE       0x00000000   /**< \brief (EIC_CONFIG reset_value) Config Register */
 #define EIC_CONFIG_MASK             0xFFFFFFFFu  /**< \brief (EIC_CONFIG) MASK Register */
+#define EIC_CONFIG_SENSE0_Pos       0 /** TODO: Manually added */
+#define EIC_CONFIG_SENSE0_Msk       0x00000007u /** TODO: Manually added */
+#define EIC_CONFIG_FILTEN0_Pos      3 /** TODO: Manually added */
+#define EIC_CONFIG_FILTEN0          0x00000008 /** TODO: Manually added */
 
 /** \brief EIC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -207,7 +211,7 @@ typedef struct {
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Set Register */
   __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Status and Clear Register */
   __IO EIC_WAKEUP_Type           WAKEUP;      /**< \brief Offset: 0x14 (R/W 32) Wake-up Enable Register */
-  __IO EIC_CONFIG_Type           CONFIG[2];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */
+  __IO EIC_CONFIG_Type           CONFIG[4];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */ /* TODO: Manually altered to match datasheet */
 } Eic;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

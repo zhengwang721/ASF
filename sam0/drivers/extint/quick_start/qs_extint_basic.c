@@ -56,7 +56,7 @@ void config_extint_channel(void)
 	eint_ch_conf.pinmux_position     = PINMUX_PA01A_EIC_EXTINT1;
 	eint_ch_conf.wake_if_sleeping    = true;
 	eint_ch_conf.filter_input_signal = false;
-	eint_ch_conf.mode                = EXTINT_EDGE_DETECT_FALLING;
+	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;
 //! [setup_3]
 //! [setup_4]
 	extint_ch_set_config(1, &eint_ch_conf);
@@ -73,7 +73,15 @@ int main(void)
 
 	//! [main]
 	while (true) {
+		//! [main_1]
+		if (extint_ch_is_detected(1)) {
+		//! [main_1]
+		//! [main_2]
+			// Do something in response to EXTINT 1 detection
 
+			extint_ch_clear_detected(1);
+		//! [main_2]
+		}
 	}
 	//! [main]
 }

@@ -62,14 +62,22 @@
  * \subsection extint_basic_use_case_setup_flow Workflow
  * -# TODO
  *  - \snippet qs_extint_basic.c setup_1
+ * -# TODO
+ *  - \snippet qs_extint_basic.c setup_2
+ * -# TODO
+ *  - \snippet qs_extint_basic.c setup_3
+ * -# TODO
+ *  - \snippet qs_extint_basic.c setup_4
  *
- * \section extint_basic_use_case Use Case
+ * \section extint_basic_use_case_main Use Case
  *
- * \subsection extint_basic_use_case_code Code
+ * \subsection extint_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_extint_basic.c main
  *
- * \subsection extint_basic_use_case_flow Workflow
+ * \subsection extint_basic_use_case_main_flow Workflow
  * -# TODO
  *  - \snippet qs_extint_basic.c main_1
+ * -# TODO
+ *  - \snippet qs_extint_basic.c main_2
  */

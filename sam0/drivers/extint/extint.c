@@ -129,10 +129,35 @@ enum status_code extint_ch_set_config(
 	pinmux_config.mux_position = (config->pinmux_position & 0xFFFF);
 	pinmux_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pinmux_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-
 	system_pinmux_pin_set_config(config->pinmux_position >> 16, &pinmux_config);
 
-	// TODO
+	/* Get a pointer to the module hardware instance */
+	Eic *const EIC_module = _extint_get_eic_from_channel(channel);
+
+	/* Set the channel's new wake up mode setting */
+	if (config->wake_if_sleeping) {
+		EIC_module->WAKEUP.reg |=  (1UL << channel);
+	} else {
+		EIC_module->WAKEUP.reg &= ~(1UL << channel);
+	}
+
+	uint8_t  config_pos = (4 * (channel % 8));
+	uint32_t new_config;
+
+	/* Determine the channel's new edge detection configuration */
+	new_config = (config->detect << EIC_CONFIG_SENSE0_Pos);
+
+	/* Enable the hardware signal filter if requested in the config */
+	if (config->filter_input_signal) {
+		new_config |= EIC_CONFIG_FILTEN0;
+	}
+
+	/* Clear the existing and set the new channel configuration */
+	EIC_module->CONFIG[channel / 8].reg
+		= (EIC_module->CONFIG[channel / 8].reg &
+			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
+			(new_config << config_pos);
+	return STATUS_OK;
 }
 
 /**
@@ -163,8 +188,21 @@ enum status_code extint_nmi_set_config(
 	pinmux_config.mux_position = (config->pinmux_position & 0xFFFF);
 	pinmux_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pinmux_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-
 	system_pinmux_pin_set_config(config->pinmux_position >> 16, &pinmux_config);
 
-	// TODO
+	/* Get a pointer to the module hardware instance */
+	Eic *const EIC_module = _extint_get_eic_from_channel(nmi_channel);
+
+	uint32_t new_config;
+
+	/* Determine the NMI's new edge detection configuration */
+	new_config = (config->detect << EIC_NMICTRL_NMISENSE_Pos);
+
+	/* Enable the hardware signal filter if requested in the config */
+	if (config->filter_input_signal) {
+		new_config |= EIC_NMICTRL_NMIFILTEN;
+	}
+
+	EIC_module->NMICTRL.reg = new_config;
+	return STATUS_OK;
 }
