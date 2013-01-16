@@ -279,7 +279,6 @@
 #define EXT2_UART_MODULE          UART1
 
 #define EXT2_SPI_MODULE           SPI
-
 /** @} */
 
 #endif /* SAM4S_XPLAINED_PRO_H */
