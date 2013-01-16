@@ -571,7 +571,7 @@ static inline void ac_disable(
  * \brief Enables an Analog Comparator event input or output.
  *
  *  Enables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  module. See \ref struct ac_events "here" for a list of events this module
  *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -586,6 +586,7 @@ static inline void ac_enable_events(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
+	Assert(events);
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
@@ -616,7 +617,7 @@ static inline void ac_enable_events(
  * \brief Disables an Analog Comparator event input or output.
  *
  *  Disables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  module. See \ref struct ac_events "here" for a list of events this module
  *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -631,6 +632,7 @@ static inline void ac_disable_events(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
+	Assert(events);
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
