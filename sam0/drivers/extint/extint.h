@@ -95,12 +95,289 @@
  */
 
 #include <compiler.h>
+#include <pinmux.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// TODO
+/**
+ * \brief External interrupt edge detection configuration enum.
+ *
+ * Enum for the possible signal edge detection modes of the External
+ * Interrupt Controller module.
+ */
+enum extint_edge_detect {
+	/** No edge detection. */
+	EXTINT_EDGE_DETECT_NONE    = 0,
+	/** Detect rising signal edges. */
+	EXTINT_EDGE_DETECT_RISING  = 1,
+	/** Detect falling signal edges. */
+	EXTINT_EDGE_DETECT_FALLING = 2,
+	/** Detect both signal edges. */
+	EXTINT_EDGE_DETECT_BOTH    = 3,
+	/** Detect high signal levels. */
+	EXTINT_EDGE_DETECT_HIGH    = 4,
+	/** Detect low signal levels. */
+	EXTINT_EDGE_DETECT_LOW     = 5,
+};
+
+/**
+ * \brief External Interrupt Controller channel configuration structure.
+ *
+ *  Configuration structure for the edge detection mode of an external
+ *  interrupt channel.
+ */
+struct extint_ch_conf {
+	/** Pin MUX position from the channel, a \c PINMUX_* header file
+	 *  constant. */
+	uint32_t pinmux_position;
+	/** Wake up the microcontroller if the channel interrupt fires during
+	 *  sleep mode. */
+	bool wake_if_sleeping;
+	/** Filter the raw input signal to prevent noise from triggering an
+	 *  interrupt accidentally, using a 3 sample majority filter. */
+	bool filter_input_signal;
+	/** Edge detection mode to use. */
+	enum extint_edge_detect mode;
+};
+
+/**
+ * \brief External Interrupt Controller NMI configuration structure.
+ *
+ *  Configuration structure for the edge detection mode of an external
+ *  interrupt NMI channel.
+ */
+struct extint_nmi_conf {
+	/** Pin MUX position from the channel, a \c PINMUX_* header file
+	 *  constant. */
+	uint32_t pinmux_position;
+	/** Filter the raw input signal to prevent noise from triggering an
+	 *  interrupt accidentally, using a 3 sample majority filter. */
+	bool filter_input_signal;
+	/** Edge detection mode to use. */
+	enum extint_edge_detect mode;
+};
+
+#if !defined(__DOXYGEN__)
+/**
+ * \brief Retrieves the base EIC module address from a given channel number.
+ *
+ * Retrieves the base address of a EIC hardware module associated with the
+ * given external interrupt channel.
+ *
+ * \param[in] channel  External interrupt channel index to convert.
+ *
+ * \return Base address of the associated EIC module.
+ */
+static inline Eic *const _extint_get_eic_from_channel(
+		const uint8_t channel)
+{
+	uint8_t eic_index = (channel / 32);
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	if (eic_index < EIC_INST_NUM) {
+		return eics[eic_index];
+	} else {
+		Assert(false);
+		return NULL;
+	}
+}
+
+/**
+ * \brief Retrieves the base EIC module address from a given NMI channel number.
+ *
+ * Retrieves the base address of a EIC hardware module associated with the
+ * given non-maskable external interrupt channel.
+ *
+ * \param[in] nmi_channel  Non-Maskable interrupt channel index to convert.
+ *
+ * \return Base address of the associated EIC module.
+ */
+static inline Eic *const _extint_get_eic_from_nmi(
+		const uint8_t nmi_channel)
+{
+	uint8_t eic_index = nmi_channel;
+
+	/* Array of available EICs. */
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	if (eic_index < EIC_INST_NUM) {
+		return eics[eic_index];
+	} else {
+		Assert(false);
+		return NULL;
+	}
+}
+#endif
+
+/** \name Configuration and initialization
+ * @{
+ */
+
+void extint_reset(void);
+void extint_enable(void);
+void extint_disable(void);
+
+/** @} */
+
+/** \name Configuration and initialization (channel)
+ * @{
+ */
+
+/**
+ * \brief Initializes an External Interrupt channel configuration structure to defaults.
+ *
+ * Initializes a given External Interrupt channel configuration structure to a
+ * set of known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
+ *
+ * The default configuration is as follows:
+ * \li Wake the device if an edge detection occurs whilst in sleep
+ * \li Input filtering disabled
+ * \li Detect falling edges of a signal
+ *
+ * \param[out] config  Configuration structure to initialize to default values
+ */
+static inline void extint_ch_get_config_defaults(
+		struct extint_ch_conf *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->pinmux_position  = 0;
+	config->wake_if_sleeping    = true;
+	config->filter_input_signal = false;
+	config->mode                = EXTINT_EDGE_DETECT_FALLING;
+}
+
+enum status_code extint_ch_set_config(
+		const uint8_t channel,
+		const struct extint_ch_conf *const config);
+
+/** @} */
+
+/** \name Configuration and initialization (NMI)
+ * @{
+ */
+
+/**
+ * \brief Initializes an External Interrupt NMI channel configuration structure to defaults.
+ *
+ * Initializes a given External Interrupt NMI channel configuration structure
+ * to a set of known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
+ *
+ * The default configuration is as follows:
+ * \li Input filtering disabled
+ * \li Detect falling edges of a signal
+ *
+ * \param[out] config  Configuration structure to initialize to default values
+ */
+static inline void extint_nmi_get_config_defaults(
+		struct extint_nmi_conf *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->pinmux_position     = 0;
+	config->filter_input_signal = false;
+	config->mode                = EXTINT_EDGE_DETECT_FALLING;
+}
+
+enum status_code extint_nmi_set_config(
+		const uint8_t nmi_channel,
+		const struct extint_nmi_conf *const config);
+
+/** @} */
+
+/** \name Detection testing and clearing (channel)
+ * @{
+ */
+
+/**
+ * \brief Retrieves the edge detection state of a configured channel.
+ *
+ *  Reads the current state of a configured channel, and determines if
+ *  if the detection criteria of the channel has been met.
+ *
+ *  \param[in] channel  External Interrupt channel index to check.
+ *
+ *  \return Status of the requested channel's edge detection state.
+ */
+static inline bool extint_ch_is_detected(
+		const uint8_t channel)
+{
+	Eic *const eic_base = _extint_get_eic_from_channel(channel);
+	uint32_t eic_mask   = (1UL << (channel % 32));
+
+	return (eic_base->INTFLAG.reg & eic_mask);
+}
+
+/**
+ * \brief Clears the edge detection state of a configured channel.
+ *
+ *  Clears the current state of a configured channel, readying it for
+ *  the next level or edge detection.
+ *
+ *  \param[in] channel  External Interrupt channel index to check.
+ */
+static inline void extint_ch_clear_detected(
+		const uint8_t channel)
+{
+	Eic *const eic_base = _extint_get_eic_from_channel(channel);
+	uint32_t eic_mask   = (1UL << (channel % 32));
+
+	eic_base->INTFLAG.reg = eic_mask;
+}
+
+/** @} */
+
+/** \name Detection testing and clearing (NMI)
+ * @{
+ */
+
+/**
+ * \brief Retrieves the edge detection state of a configured NMI channel.
+ *
+ *  Reads the current state of a configured NMI channel, and determines if
+ *  if the detection criteria of the NMI channel has been met.
+ *
+ *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
+ *
+ *  \return Status of the requested NMI channel's edge detection state.
+ */
+static inline bool extint_nmi_is_detected(
+		const uint8_t nmi_channel)
+{
+	Eic *const eic_base = _extint_get_eic_from_nmi(nmi_channel);
+
+	return (eic_base->NMIFLAG.reg & EIC_NMIFLAG_NMI);
+}
+
+/**
+ * \brief Clears the edge detection state of a configured NMI channel.
+ *
+ *  Clears the current state of a configured NMI channel, readying it for
+ *  the next level or edge detection.
+ *
+ *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
+ */
+static inline void extint_nmi_clear_detected(
+		const uint8_t nmi_channel)
+{
+	Eic *const eic_base = _extint_get_eic_from_nmi(nmi_channel);
+
+	eic_base->NMIFLAG.reg = EIC_NMIFLAG_NMI;
+}
+
+/** @} */
 
 #ifdef __cplusplus
 }

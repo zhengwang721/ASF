@@ -40,25 +40,35 @@
  */
 #include <asf.h>
 
-void config_extint_pins(void);
+void config_extint_channel(void);
 
 //! [setup]
-void config_extint_pins(void)
+void config_extint_channel(void)
 {
 //! [setup_1]
-	struct extint_pin_conf eint_conf;
+	struct extint_ch_conf eint_ch_conf;
 //! [setup_1]
 //! [setup_2]
-	extint_pin_get_config_defaults(&eint_conf);
+	extint_ch_get_config_defaults(&eint_ch_conf);
 //! [setup_2]
 
+//! [setup_3]
+	eint_ch_conf.pinmux_position     = PINMUX_PA01A_EIC_EXTINT1;
+	eint_ch_conf.wake_if_sleeping    = true;
+	eint_ch_conf.filter_input_signal = false;
+	eint_ch_conf.mode                = EXTINT_EDGE_DETECT_FALLING;
+//! [setup_3]
+//! [setup_4]
+	extint_ch_set_config(1, &eint_ch_conf);
+//! [setup_4]
 }
 //! [setup]
 
 int main(void)
 {
 	//! [setup_init]
-	config_extint_pins();
+	extint_enable();
+	config_extint_channel();
 	//! [setup_init]
 
 	//! [main]

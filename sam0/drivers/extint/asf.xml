@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.extint" caption="External Interrupt Port Driver">
+	<module type="driver" id="sam0.drivers.extint" caption="External Interrupt Driver">
 		<info type="description" value="summary">
 			Driver for the SAMD20 external interrupts. Provides a unified
 			interface for the configuration and management of external
@@ -10,11 +10,12 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="extint.h"/>
-		<build type="c-source" value="port.c"/>
+		<build type="c-source" value="extint.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_extint_basic.h"/>
 		<build type="doxygen-entry-point" value="sam0_extint_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system.pinmux"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
