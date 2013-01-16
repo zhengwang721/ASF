@@ -42,10 +42,17 @@
 #include "adc.h"
 
 /**
- * \internal Write an ADC configuration to the hardware module.
+ * \internal Writes an ADC configuration to the hardware module
  *
  * This function will write out a given configuration to the hardware module.
  * Used by \ref adc_init.
+ *
+ * \param[out] hw_dev Pointer to the ADC software instance struct 
+ * \param[in] config  Pointer to configuration struct
+ *
+ * \return
+ * \retval STATUS_OK
+ * \retval STATUS_ERR_INVALID_ARG
  */
 enum status_code _adc_set_config (Adc *const hw_dev,
 		struct adc_conf *const config)
@@ -108,14 +115,75 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 			(config->left_adjust << ADC_CTRLB_LEFTADJ_Pos) |
 			(config->differential_mode << ADC_CTRLB_DIFFMODE_Pos);
 
-	/* Configure WINCTRL/WINLT/WINUT */
+	/* Check validity of window thresholds */
+	switch (config->resolution) {
+	case ADC_RESOLUTION_8BIT:
+		if (config->differential_mode && (config->window_lower_value > 127 ||
+				config->window_lower_value < -127 ||
+				config->window_upper_value > 127 ||
+				config->window_upper_value < -127)) {
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		} else if (config->window_lower_value > 255 ||
+				config->window_upper_value > 255){
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		}
+		break;
+	case ADC_RESOLUTION_10BIT:
+		if (config->differential_mode && (config->window_lower_value > 511 ||
+				config->window_lower_value < -511 ||
+				config->window_upper_value > 511 ||
+				config->window_upper_value > -511)) {
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		} else if (config->window_lower_value > 1023 ||
+				config->window_upper_value > 1023){
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		}
+		break;
+	case ADC_RESOLUTION_12BIT:
+		if (config->differential_mode && (config->window_lower_value > 2047 ||
+				config->window_lower_value < -2047 ||
+				config->window_upper_value > 2047 ||
+				config->window_upper_value < -2047)) {
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		} else if (config->window_lower_value > 4095 ||
+				config->window_upper_value > 4095){
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		}
+		break;
+	case ADC_RESOLUTION_16BIT:
+		if (config->differential_mode && (config->window_lower_value > 32767 ||
+				config->window_lower_value < -32767 ||
+				config->window_upper_value > 32767 ||
+				config->window_upper_value < -32767)) {
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		} else if (config->window_lower_value > 65535 ||
+				config->window_upper_value > 65535){
+			/* Invalid value */
+			return STATUS_ERR_INVALID_ARG;
+		}
+		break;
+	}
+	
+	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
+	/* Configure window mode */
 	hw_dev->WINCTRL.reg = config->window_mode;
+	
+	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
-	/* TODO: this will NOT work for negative values, please fix! */
+	/* Configure lower threshold */
 	hw_dev->WINLT.reg   = config->window_lower_value << ADC_WINLT_WINLT_Pos;
+	
+	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
-	/* TODO: this will NOT work for negative values, please fix! */
+	/* Configure lower threshold */
 	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_WINUT_Pos;
 
 	/* TODO: check size of inputs */
@@ -123,27 +191,33 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	_adc_wait_for_sync(hw_dev);
 	hw_dev->INPUTCTRL.reg =
 			config->gain_factor |
-			(config->offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
-			(config->inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
+			ADC_INPUTCTRL_INPUTOFFSET(config->offset_start_scan) |
+			ADC_INPUTCTRL_INPUTSCAN(config->inputs_to_scan) |
 			config->negative_input |
 			config->positive_input;
 
-	/* Configure EVCTRL */
+	/* Configure events */
 	hw_dev->EVCTRL.reg =
+			config->event_action |
 			(config->generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
-			(config->generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos) |
-			(config->flush_adc_on_event                << ADC_EVCTRL_SYNCEI_Pos)   |
-			(config->start_conversion_on_event         << ADC_EVCTRL_STARTEI_Pos);
+			(config->generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
+			//(config->flush_adc_on_event                << ADC_EVCTRL_SYNCEI_Pos)   |
+			//(config->start_conversion_on_event         << ADC_EVCTRL_STARTEI_Pos);
 
-	/* TODO: Necessary? */
 	/* Disable all interrupts */
 	hw_dev->INTENCLR.reg =
 			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
 			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
-	/* TODO: check size */
-	/* Configure GAINCORR/OFFSETCORR */
-	hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_GAINCORR_Pos;
+	/* Make sure gain_correction value is valid */
+	if (config->gain_correction > ADC_GAINCORR_GAINCORR_Msk) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		/* Set gain correction value */
+		hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_GAINCORR_Pos;
+	}
+	
+	/* Set offset correction value TODO: check validity */
 	hw_dev->OFFSETCORR.reg = config->offset_correction << ADC_OFFSETCORR_OFFSETCORR_Pos;
 
 	return STATUS_OK;

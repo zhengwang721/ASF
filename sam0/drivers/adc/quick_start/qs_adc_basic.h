@@ -49,6 +49,8 @@
  * - 12 bit resolution
  * - Window monitor disabled
  * - No gain
+ * - Positive input on ADC PIN 0
+ * - Negative input on ADC PIN 1
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data
