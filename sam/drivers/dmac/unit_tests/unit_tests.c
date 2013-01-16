@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for DMAC driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -70,6 +70,7 @@
  * This example has been tested with the following setup:
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -151,7 +152,7 @@ static void run_single_buf_xfer_test(const struct test_case *test)
 			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |              /* Memory-to-Memory Transfer */
 			DMAC_CTRLB_SRC_INCR_INCREMENTING |          /* The source address is incremented */
 			DMAC_CTRLB_DST_INCR_INCREMENTING;           /* The destination address is incremented */
-	desc.ul_descriptor_addr = NULL;                     /* No descriptor for single transfer */
+	desc.ul_descriptor_addr = 0;                        /* No descriptor for single transfer */
 	dmac_channel_single_buf_transfer_init(DMAC, DMA_CH, &desc);
 
 	/* Start DMA transfer and wait for finish */
@@ -238,7 +239,7 @@ static void run_multi_buf_xfer_test(const struct test_case *test)
 			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |                  /* Memory-to-Memory Transfer */
 			DMAC_CTRLB_SRC_INCR_INCREMENTING |              /* The source address is incremented */
 			DMAC_CTRLB_DST_INCR_INCREMENTING;               /* The destination address is incremented */
-	desc[2].ul_descriptor_addr = NULL;                      /* The end of LLI */
+	desc[2].ul_descriptor_addr = 0;                         /* The end of LLI */
 
 	dmac_channel_multi_buf_transfer_init(DMAC, DMA_CH, &desc[0]);
 
