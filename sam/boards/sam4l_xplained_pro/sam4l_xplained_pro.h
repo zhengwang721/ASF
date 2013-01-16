@@ -103,8 +103,23 @@
 #define TOUCH_PINSEL_BUTTON       15
 //@}
 
-//! VBUS monitoring pin
-#define VBUS_INPUT_PIN            PIN_PC11
+/**
+ * \name USB pin definitions
+ *
+ * These are named according to the USBC driver's requirements.
+ */
+//@{
+#define USB_ID_PIN                PIN_PC10
+#define USB_ID_FLAGS              (IOPORT_MODE_PULLUP \
+		| IOPORT_MODE_GLITCH_FILTER)
+#define USB_VBUS_PIN              PIN_PC11
+#define USB_VBUS_FLAGS            IOPORT_MODE_GLITCH_FILTER
+#define USB_VBOF_PIN              PIN_PC12
+#define USB_VBOF_ACTIVE           true
+#define USB_VBOF_INACTIVE         !USB_VBOF_ACTIVE
+#define USB_VBOF_ACTIVE_LEVEL     USB_VBOF_ACTIVE
+#define USB_VBOF_INACTIVE_LEVEL   USB_VBOF_INACTIVE
+//@}
 
 /**
  * \name LED #0 definitions
