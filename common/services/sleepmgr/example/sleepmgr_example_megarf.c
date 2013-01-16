@@ -101,13 +101,6 @@ int main(void)
 	ioport_init();
 	delay_init(sysclk_get_cpu_hz());
 
-	/* Set output direction on the given LED IOPORTs */
-	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
-
-	/* Set direction and pullup on the given button IOPORT */
-	ioport_set_pin_dir(BUTTON_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_PIN, IOPORT_MODE_PULLUP);
-
 	/* Set the pin sense mode */
 	ioport_set_pin_sense_mode(BUTTON_PIN, IOPORT_SENSE_LEVEL);
     
