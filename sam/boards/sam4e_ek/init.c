@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -181,4 +181,15 @@ void board_init(void)
 #   endif
 #endif
 
+#ifdef CONF_BOARD_TFDU4300_SD
+	/* Configure IrDA transceiver shutdown pin */
+	ioport_set_pin_dir(PIN_IRDA_SD_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_IRDA_SD_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ADM3485_RE
+	/* Configure RS485 transceiver RE pin */
+	ioport_set_pin_dir(PIN_RE_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_RE_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
 }
