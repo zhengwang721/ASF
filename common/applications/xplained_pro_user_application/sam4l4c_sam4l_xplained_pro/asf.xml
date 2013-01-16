@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.xplained_pro.sam4l_xplained_pro" caption="SAM4L Xplained PRO template project" type="template">
+	<project id="common.applications.user_application.xplained_pro.sam4l_xplained_pro" caption="SAM4L Xplained Pro template project" type="template">
 		<device-support value="atsam4lc4c"/>
 		<require idref="common.applications.user_application.xplained_pro"/>
 		<require idref="board.sam4l_xplained_pro"/>

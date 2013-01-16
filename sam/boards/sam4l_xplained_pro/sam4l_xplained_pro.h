@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained PRO board definition
+ * \brief SAM4L Xplained Pro board definition
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -46,7 +46,7 @@
 
 /**
  * \ingroup group_common_boards
- * \defgroup sam4l_xplained_pro_group SAM4L Xplained PRO board
+ * \defgroup sam4l_xplained_pro_group SAM4L Xplained Pro board
  *
  * @{
  */
@@ -109,7 +109,7 @@
 /**
  * \name LED #0 definitions
  *
- * Wrapper macros for LED0, to ensure common naming across all Xplained PRO
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
  * boards.
  */
 //@{
@@ -125,7 +125,7 @@
 /**
  * \name Button #0 definitions
  *
- * Wrapper macros for SW0, to ensure common naming across all Xplained PRO
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
  * boards.
  */
 //@{

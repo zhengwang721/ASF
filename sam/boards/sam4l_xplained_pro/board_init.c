@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained PRO board initialization
+ * \brief SAM4L Xplained Pro board initialization
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
