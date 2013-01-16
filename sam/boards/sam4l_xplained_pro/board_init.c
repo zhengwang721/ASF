@@ -41,7 +41,7 @@
 #include <ioport.h>
 
 /**
- * \addtogroup  sam4l_xplained_pro_group
+ * \addtogroup sam4l_xplained_pro_group
  * @{
  */
 
