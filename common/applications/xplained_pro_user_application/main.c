@@ -10,7 +10,10 @@
  *
  * \par Empty user application template
  *
- * Bare minimum empty user application template
+ * This is a bare minimum user application template.
+ *
+ * For documentation of the board, go \ref group_common_boards "here" for a link
+ * to the board-specific documentation.
  *
  * \par Content
  *
