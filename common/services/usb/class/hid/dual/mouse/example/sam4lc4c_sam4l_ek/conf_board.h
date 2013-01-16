@@ -49,11 +49,11 @@
 
 /* Enable USB interface (USB) */
 #define CONF_BOARD_USB_PORT
-/* ID detect NOT enabled,  uncomment it if jumper PB05/USB set */
+/* ID detect enabled,  uncomment it if jumper PB05/USB not set */
 #define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB not set */
 #define CONF_BOARD_USB_VBUS_CONTROL
-/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB not set */
 #define CONF_BOARD_USB_VBUS_ERR_DETECT
 
 /* Enable USART to control Board Monitoring */

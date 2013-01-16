@@ -54,9 +54,10 @@
 
 /* Initialize the SAM4L pins for the USB SAM4L plug */
 #define CONF_BOARD_USB_PORT
-#define CONF_BOARD_USB_ID_DETECT           /* ID detect NOT enabled,  uncomment it if jumper PB05/USB set */
-#define CONF_BOARD_USB_VBUS_CONTROL        /* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
-#define CONF_BOARD_USB_VBUS_ERR_DETECT     /* Host VBUS error detect NOT enabled,  uncomment it if jumper PC07/USB set */
+//#define CONF_BOARD_USB_VBUS_DETECT         /* VBus detect enabled, can not be used on SAM4L_EK Rev. 2 */
+#define CONF_BOARD_USB_ID_DETECT           /* ID detect enabled,  uncomment it if jumper PB05/USB not set */
+#define CONF_BOARD_USB_VBUS_CONTROL        /* Host VBUS control enabled,  uncomment it if jumper PC08/USB not set */
+#define CONF_BOARD_USB_VBUS_ERR_DETECT     /* Host VBUS error detect NOT enabled,  uncomment it if jumper PC07/USB not set */
 
 /* Initialize the USART pins for the COM PORT interface with the JLink OB
 module that acts as a USB CDC gateway over the USB JLink plug. */

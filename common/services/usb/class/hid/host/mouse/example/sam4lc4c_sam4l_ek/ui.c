@@ -119,7 +119,7 @@ static void ui_disable_asynchronous_interrupt(void)
 	sysclk_disable_peripheral_clock(EIC);
 }
 
-/* ! @} */
+/*! @} */
 
 /**
  * \name Main user interface functions
@@ -143,20 +143,20 @@ void ui_usb_mode_change(bool b_host_mode)
 	}
 }
 
-/* ! @} */
+/*! @} */
 
 /**
  * \name Host mode user interface functions
  * @{
  */
 
-/* ! Status of device enumeration */
+/*! Status of device enumeration */
 static uhc_enum_status_t ui_enum_status = UHC_ENUM_DISCONNECT;
-/* ! Blink frequency depending on device speed */
+/*! Blink frequency depending on device speed */
 static uint16_t ui_device_speed_blink;
-/* ! Manages device mouse moving */
+/*! Manages device mouse moving */
 static int16_t bm_x, bm_y;
-/* ! Manages device mouse button down */
+/*! Manages device mouse button down */
 static uint8_t ui_nb_down = 0;
 
 void ui_usb_vbus_change(bool b_vbus_present)
@@ -284,7 +284,7 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
 	bm_y = Min(bm_y, 62 * 8);
 }
 
-/* ! @} */
+/*! @} */
 
 /**
  * \defgroup UI User Interface
