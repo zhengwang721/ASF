@@ -164,7 +164,7 @@ void ac_ch_set_config(
 	/* Configure comparator positive and negative pin MUX configurations */
 	compctrl_temp |= (config->positive_input | config->negative_input);
 
-	/* Set sampling mode (one shot or continuous) */
+	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
 	/* Write the final configuration to the module's control register */

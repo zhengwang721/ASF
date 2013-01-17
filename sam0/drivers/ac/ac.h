@@ -161,7 +161,7 @@
  * longer stages producing a more stable result, at the expense of a higher
  * latency.
  *
- * When output filtering is used in one shot mode, a single trigger of the
+ * When output filtering is used in single shot mode, a single trigger of the
  * comparator will automatically perform the required number of samples to
  * produce a correctly filtered result.
  *
@@ -172,9 +172,9 @@
  * flips. This mode will prevent a change in the comparison output unless the
  * inputs cross one-another beyond the hysteresis gap introduces by this mode.
  *
- * \subsection one_shot_cont_sampling One Shot and Continuous Sampling Modes
- * Comparators can be configured to run in either One Shot or Continuous
- * sampling modes; when in One Shot mode, the comparator will only perform a
+ * \subsection single_shot_cont_sampling Single Shot and Continuous Sampling Modes
+ * Comparators can be configured to run in either Single Shot or Continuous
+ * sampling modes; when in Single Shot mode, the comparator will only perform a
  * comparison (and any resulting filtering, see \ref output_filtering) when
  * triggered via a software or event trigger. This mode improves the power
  * efficiency of the system by only performing comparisons when actually
@@ -761,10 +761,10 @@ static inline void ac_ch_disable(
  */
 
 /**
- * \brief Trigger a comparison on a comparator that is configured in single shot mode.
+ * \brief Triggers a comparison on a comparator that is configured in single shot mode.
  *
  *  Triggers a single conversion on a comparator configured to compare on demand
- *  (one shot mode) rather than continuously.
+ *  (single shot mode) rather than continuously.
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to trigger
