@@ -4,6 +4,7 @@
 		<require idref="common.applications.user_application.xplained_pro"/>
 		<require idref="board.sam4l_xplained_pro"/>
 		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board initialization
+ * \brief SAM4L Xplained Pro board configuration
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -37,31 +37,9 @@
  * \asf_license_stop
  */
 
-#include <board.h>
-#include <ioport.h>
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/**
- * \addtogroup sam4l_xplained_pro_group
- * @{
- */
+//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	// Disable the watchdog
-	WDT->WDT_MR = WDT_MR_WDDIS;
-#endif
-
-	// Initialize IOPORT
-	ioport_init();
-
-	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
-
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-}
-
-/** @} */
+#endif /* CONF_BOARD_H */

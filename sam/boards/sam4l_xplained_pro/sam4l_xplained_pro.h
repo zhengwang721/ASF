@@ -44,12 +44,42 @@
 #ifndef SAM4L_XPLAINED_PRO_INCLUDED
 #define SAM4L_XPLAINED_PRO_INCLUDED
 
+#include <conf_board.h>
+
 /**
  * \ingroup group_common_boards
  * \defgroup sam4l_xplained_pro_group SAM4L Xplained Pro board
  *
  * @{
  */
+
+/**
+ * \defgroup sam4s_xplained_pro_config_group Configuration
+ *
+ * Symbols to use for configuring the board and its initialization.
+ *
+ * @{
+ */
+#ifdef __DOXYGEN__
+
+//! \name Initialization
+//@{
+
+/**
+ * \def CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+ * \brief Let watchdog remain enabled
+ *
+ * If this symbol is defined, the watchdog is left running with its current
+ * configuration. Otherwise, it gets disabled during board initialization.
+ */
+# ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#  define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+# endif
+
+//@}
+
+#endif // __DOXYGEN__
+/** @} */
 
 /**
  * \defgroup sam4l_xplained_pro_features_group Features
