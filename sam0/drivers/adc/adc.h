@@ -220,7 +220,7 @@ extern "C" {
  * Sample time is configurable with \ref adc_conf.sample_length. This value
  * (0-63) controls the ADC sampling time in number of half-ADC prescaled clock
  * cycles (depending on the prescaler value), thus controlling the ADC input
- * impedance. \todo rewrite
+ * impedance.
  *
  * The resulting sampling time is given by the following equation:
  * \f[
@@ -329,7 +329,7 @@ extern "C" {
  *
  * The ADC has two actions that can be triggered upon event reception:
  * \li Start conversion
- * \li Flush pipeline \todo and start new conversion??
+ * \li Flush pipeline and start conversion
  *
  * The ADC can generate two events:
  * \li Window monitor
@@ -596,7 +596,6 @@ enum adc_positive_input {
 	/** 1/4 scaled I/O supply */
 	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
 	/** DAC input */
-	/* TODO: Check if this can be used */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
 };
 
@@ -720,7 +719,7 @@ enum adc_oversampling_and_decimation {
  * function before being modified by the user application.
  */
 struct adc_conf {
-	/** TODO */
+	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator       clock_source;
 	/** Voltage reference */
 	enum adc_reference       reference;
@@ -750,7 +749,6 @@ struct adc_conf {
 	bool differential_mode;
 	/** Free running mode */
 	bool freerunning;
-	/** \todo Combine into enum? should only have one enabled at the time */
 	/** Event action to take on incoming event */
 	enum adc_event_action event_action;
 	/** Enable event input to trigger conversion start */
@@ -786,7 +784,7 @@ struct adc_conf {
 	/**
 	If correction_enable is set to true, these bits define how the ADC
 	conversion result is compensated for offset error before written to
-	the result register. This value is in two’s complement format.
+	the result register. This is a 12-bit value is in two’s complement format.
 	*/
 	int16_t offset_correction;
 	/**
@@ -904,6 +902,7 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *  user application.
  *
  *  The default configuration is as follows:
+  *   \li GCLK generator 0 (GCLK main) clock source
  *   \li 1V from internal bandgap reference
  *   \li Div 4 clock prescaler
  *   \li 12 bit resolution
@@ -923,16 +922,13 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *   \li No added sampling time
  *   \li Pin scan mode disabled
  *
- *
- * \todo init: clock source
- *
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
  */
 static inline void adc_get_config_defaults(struct adc_conf *const config)
 {
 	Assert(config);
-
+	config->clock_source = GCLK_GENERATOR_0;
 	config->reference = ADC_REFERENCE_INT1V;
 	config->clock_prescaler = ADC_CLOCK_PRESCALER_DIV4;
 	config->resolution = ADC_RESOLUTION_12BIT;
@@ -1054,6 +1050,10 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  *
  * \param dev_inst       Pointer to the ADC software instance struct
  * \param result         Pointer to store the result value in
+ *
+ * \return Status of the procedure
+ * \retval STATUS_OK                The result was retrieved successfully
+ * \retval STATUS_ERR_BUSY          The result is not ready
  */
 static inline enum status_code adc_get_result(
 		struct adc_dev_inst *const dev_inst, uint16_t *result)
@@ -1063,7 +1063,7 @@ static inline enum status_code adc_get_result(
 	Assert(result);
 
 	if (!adc_is_interrupt_flag_set(dev_inst, ADC_INTERRUPT_RESULT_READY)) {
-		/* Result not ready. Abort. */
+		/* Result not ready */
 		return STATUS_ERR_BUSY;
 	}
 
@@ -1148,7 +1148,7 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * This function will set up the pin scan mode.
  * In pin scan mode, the first conversion will start at the configured
  * positive input + start_offset. When a conversion is done, a conversion will
- * start on the next inpu, until inputs_to_scan conversions are made.
+ * start on the next input, until inputs_to_scan conversions are made.
  *
  * \param dev_inst[in]           Pointer to the ADC software instance struct
  * \param inputs_to_scan[in]     Number of input pins to do conversion on
@@ -1161,7 +1161,6 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * \retval STATUS_ERR_INVALID_ARG Number of input pins to scan or offset
  *                                has an invalid value
  */
- /* TODO: status code */
 static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
 
@@ -1172,13 +1171,15 @@ static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const 
 
 	Adc *const adc_module = dev_inst->hw_dev;
 	
-	if (inputs_to_scan > 1) {
+	if (inputs_to_scan > 0) {
 		/*
 		* Number of input sources included is the value written to INPUTSCAN
 		* plus 1.
 		*/
 		inputs_to_scan--;
-	} else if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk) {
+	}
+	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
+			start_offset > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
 		/* Invalid number of input pins */
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -1215,7 +1216,7 @@ static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst
 /**
  * \brief Sets positive ADC input pin
  *
- * This function will set the the positive ADC input pin.
+ * This function will set the positive ADC input pin.
  *
  * \param dev_inst[in]        Pointer to the ADC software instance struct
  * \param positive_input[in]  Positive input pin
@@ -1242,7 +1243,7 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
 /**
  * \brief Sets negative ADC input pin for differential mode
  *
- * This function will set the the negative ADC input pin to be used in
+ * This function will set the negative ADC input pin to be used in
  * differential mode.
  *
  * \param dev_inst[in]        Pointer to the ADC software instance struct

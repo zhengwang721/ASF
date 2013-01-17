@@ -50,25 +50,42 @@
  * \param[out] hw_dev Pointer to the ADC software instance struct 
  * \param[in] config  Pointer to configuration struct
  *
- * \return
- * \retval STATUS_OK
- * \retval STATUS_ERR_INVALID_ARG
+ * \return Status of the configuration procedure
+ * \retval STATUS_OK                The configuration was successful
+ * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
 enum status_code _adc_set_config (Adc *const hw_dev,
 		struct adc_conf *const config)
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
+	struct system_gclk_ch_conf gclk_ch_conf;
 
-	/* Configure CTRLA */
+
+	/* Configure GCLK channel and enable clock */
+	gclk_ch_conf.source_generator = config->clock_source;
+
+	#if defined (REVB)
+	/* Set the GCLK channel to run in standby mode */
+	gclk_ch_conf.run_in_standby = config->run_in_standby;
+	#else
+	/* Set the GCLK channel sleep enable mode */
+	gclk_ch_conf.enable_during_sleep = config->run_in_standby;
+	#endif
+
+	/* Apply configuration and enable the GCLK channel */
+	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(DAC_GCLK_ID);
+
+	/* Configure run in standby */
 	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
 
-	/* Configure REFCTRL */
+	/* Configure reference */
 	hw_dev->REFCTRL.reg =
 			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) |
 			(config->reference);
 
-	/* Configure AVGCTRL */
+	/* Set a */
 	switch (config->oversampling_and_decimation) {
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_DISABLE:
@@ -102,8 +119,13 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	}
 	hw_dev->AVGCTRL.reg = ADC_AVGCTRL_ADJRES(adjres) | average;
 
-	/* Configure SAMPCTRL */
-	hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+	/* Check validity of sample length value */
+	if (config->sample_length > 63) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		/* Configure sample length */
+		hw_dev->SAMPCTRL.reg = (config->sample_length << ADC_SAMPCTRL_SAMPLEN_Pos);
+	}
 
 	/* Configure CTRLB */
 	_adc_wait_for_sync(hw_dev);
@@ -185,14 +207,26 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	_adc_wait_for_sync(hw_dev);
 	/* Configure lower threshold */
 	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_WINUT_Pos;
-
-	/* TODO: check size of inputs */
-	/* Configure INPUTCTRL */
+	uint8_t inputs_to_scan = config->inputs_to_scan;
+	if (inputs_to_scan > 0) {
+		/*
+		* Number of input sources included is the value written to INPUTSCAN
+		* plus 1.
+		*/
+		inputs_to_scan--;
+	}
+	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
+			config->offset_start_scan > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
+		/* Invalid number of input pins or input offset */
+		return STATUS_ERR_INVALID_ARG;
+	}
+	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
+	/* Configure pin scan mode and positive and negative input pins */
 	hw_dev->INPUTCTRL.reg =
 			config->gain_factor |
-			ADC_INPUTCTRL_INPUTOFFSET(config->offset_start_scan) |
-			ADC_INPUTCTRL_INPUTSCAN(config->inputs_to_scan) |
+			(config->offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
+			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
 			config->negative_input |
 			config->positive_input;
 
@@ -214,12 +248,18 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		return STATUS_ERR_INVALID_ARG;
 	} else {
 		/* Set gain correction value */
-		hw_dev->GAINCORR.reg   = config->gain_correction   << ADC_GAINCORR_GAINCORR_Pos;
+		hw_dev->GAINCORR.reg =
+				config->gain_correction << ADC_GAINCORR_GAINCORR_Pos;
 	}
 	
-	/* Set offset correction value TODO: check validity */
-	hw_dev->OFFSETCORR.reg = config->offset_correction << ADC_OFFSETCORR_OFFSETCORR_Pos;
-
+	/* Make sure offset correction value is valid */
+	if (config->offset_correction > 2047 || config->offset_correction < -2048) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		/* Set offset correction value */
+		hw_dev->OFFSETCORR.reg =
+				config->offset_correction << ADC_OFFSETCORR_OFFSETCORR_Pos;
+	}
 	return STATUS_OK;
 }
 
@@ -233,6 +273,11 @@ enum status_code _adc_set_config (Adc *const hw_dev,
  * \param[in] hw_dev    Pointer to the ADC module instance
  * \param[in] config    Pointer to the configuration struct
  *
+ * \return Status of the initialization procedure
+ * \retval STATUS_OK                The initialization was successful
+ * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
+ * \retval STATUS_ERR_BUSY          The module is busy with a reset operation
+ * \retval STATUS_ERR_DENIED        The module is enabled
  */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_conf *config)
@@ -250,11 +295,6 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		return STATUS_ERR_DENIED;
 	}
 
-	/* TODO: Set up GCLK_ADC using sysclock driver*/
-
-
 	/* Write configuration to module */
-	_adc_set_config(hw_dev, config);
-
-	return STATUS_OK;
+	return _adc_set_config(hw_dev, config);;
 }
