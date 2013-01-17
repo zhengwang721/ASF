@@ -85,7 +85,7 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) |
 			(config->reference);
 
-	/* Set a */
+	/* Set adjusting result and number of samples */
 	switch (config->oversampling_and_decimation) {
 
 	case ADC_OVERSAMPLING_AND_DECIMATION_DISABLE:
