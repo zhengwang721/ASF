@@ -252,7 +252,7 @@
 
 //! \name Extension header #1 TWI definitions
 //@{
-#define EXT1_TWI_MODULE           TWIMS0
+#define EXT1_TWI_MODULE           TWIM0
 #define EXT1_TWI_SDA_MUX          MUX_PA23B_TWIMS0_TWD
 #define EXT1_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWCK
 //@}
@@ -340,7 +340,7 @@
 
 //! \name Extension header #2 TWI definitions
 //@{
-#define EXT2_TWI_MODULE           TWIMS3
+#define EXT2_TWI_MODULE           TWIM3
 #define EXT2_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT2_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
@@ -427,7 +427,7 @@
 
 //! \name Extension header #3 TWI definitions
 //@{
-#define EXT3_TWI_MODULE           TWIMS3
+#define EXT3_TWI_MODULE           TWIM3
 #define EXT3_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT3_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
@@ -513,7 +513,7 @@
 
 //! \name Extension header #4 TWI definitions
 //@{
-#define EXT4_TWI_MODULE           TWIMS3
+#define EXT4_TWI_MODULE           TWIM3
 #define EXT4_TWI_SDA_MUX          MUX_PB14C_TWIMS3_TWD
 #define EXT4_TWI_SCL_MUX          MUX_PB15C_TWIMS3_TWCK
 //@}
@@ -554,11 +554,11 @@
 
 //! \name Embedded debugger TWI interface definitions
 //@{
-#define EDBG_TWI_MODULE           TWIMS0
+#define EDBG_TWI_MODULE           TWIM0
 #define EDBG_TWI_SDA_PIN          PIN_PA23B_TWIMS0_TWD
 #define EDBG_TWI_SDA_MUX          MUX_PA23B_TWIMS0_TWD
 #define EDBG_TWI_SCL_PIN          PIN_PA24B_TWIMS0_TWCK
-#define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWC
+#define EDBG_TWI_SCL_MUX          MUX_PA24B_TWIMS0_TWCK
 //@}
 
 /** @} */
