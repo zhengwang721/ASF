@@ -41,10 +41,6 @@
  *
  */
 
-/* Get VBus pin configuration in board configuration */
-#include "conf_board.h"
-#include "board.h"
-
 #include "conf_usb.h"
 #include "sysclk.h"
 #include "udd.h"
@@ -63,11 +59,6 @@
 #ifndef UDD_USB_INT_LEVEL
 #  define UDD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
 #endif
-
-/* USB VBus monitor configuration */
-#define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
- 		defined(CONF_BOARD_USB_VBUS_DETECT))
-#define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
 
 /**
  * \ingroup udd_group
@@ -171,6 +162,7 @@ static void udd_sleep_mode(bool b_idle)
 
 static void udd_sleep_mode(bool b_idle)
 {
+	UNUSED(b_idle);
 }
 
 #endif // UDD_NO_SLEEP_MGR
@@ -183,10 +175,6 @@ static void udd_sleep_mode(bool b_idle)
 //@{
 
 #if UDD_VBUS_IO
-
-# include "ioport.h"
-# include "pio.h"
-# include "pio_handler.h"
 
 # if !defined(UDD_NO_SLEEP_MGR) && !defined(USB_VBUS_WKUP)
 /* Lock to SLEEPMGR_SLEEP_WFI if VBus not connected */
@@ -206,7 +194,7 @@ static void udd_vbus_monitor_sleep_mode(bool b_lock)
 	}
 }
 # else
-#  udd_vbus_monitor_sleep_mode(lock)
+#  define udd_vbus_monitor_sleep_mode(lock)
 # endif
 
 /**
@@ -218,37 +206,17 @@ static void udd_vbus_handler(uint32_t id, uint32_t mask)
 		return;
 	}
 	/* PIO interrupt status has been cleared, just detect level */
-	bool b_vbus_high = ioport_get_pin_level(USB_VBUS_PIN);
+	bool b_vbus_high = Is_udd_vbus_high();
 	if (b_vbus_high) {
+		udd_ack_vbus_interrupt(true);
 		udd_vbus_monitor_sleep_mode(false);
-		ioport_set_pin_sense_mode(USB_VBUS_PIN,
-				IOPORT_SENSE_LEVEL_LOW);
 		udd_attach();
 	} else {
+		udd_ack_vbus_interrupt(false);
 		udd_vbus_monitor_sleep_mode(true);
-		ioport_set_pin_sense_mode(USB_VBUS_PIN,
-				IOPORT_SENSE_LEVEL_HIGH);
 		udd_detach();
 	}
 	UDC_VBUS_EVENT(b_vbus_high);
-}
-
-/**
- * USB VBus pin monitor initialize
- */
-static void udd_vbus_init(void)
-{
-	ioport_init();
-	pio_handler_set_pin(USB_VBUS_PIN, USB_VBUS_FLAGS, udd_vbus_handler);
-	ioport_set_pin_sense_mode(USB_VBUS_PIN, IOPORT_SENSE_LEVEL_HIGH);
-	NVIC_EnableIRQ(USB_VBUS_PIN_IRQn);
-	pio_enable_pin_interrupt(USB_VBUS_PIN);
-#ifdef USB_VBUS_WKUP
-	/* VBus can wakeup system */
-	pmc_set_fast_startup_input(USB_VBUS_WKUP);
-#else
-	udd_vbus_monitor_sleep_mode(true);
-#endif
 }
 
 #endif
@@ -595,7 +563,14 @@ void udd_enable(void)
 
 #if UDD_VBUS_IO
 	/* Initialize VBus monitor */
-	udd_vbus_init();
+	udd_vbus_init(udd_vbus_handler);
+	udd_vbus_monitor_sleep_mode(true);
+	/* Force Vbus interrupt when Vbus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_udd_vbus_high()) {
+		udd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+	}
 #else
 #  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
@@ -620,7 +595,7 @@ void udd_disable(void)
 	sleepmgr_unlock_mode(UDP_SLEEP_MODE_USB_SUSPEND);
 #endif
 
-# if UDD_VBUS_IO && !defined(USB_VBUS_WKUP)
+# if UDD_VBUS_IO
 	udd_vbus_monitor_sleep_mode(false);
 # endif
 
