@@ -127,9 +127,9 @@
 //! \name TOUCH QTouch button definitions
 //@{
 #define TOUCH_DISCHARGE_PIN       PIN_PC14
-#define TOUCH_DISCHARGE_MUX       MUX_PC14_CATB_DIS
+#define TOUCH_DISCHARGE_MUX       MUX_PC14G_CATB_DIS
 #define TOUCH_SENSE_PIN           PIN_PC13
-#define TOUCH_SENSE_MUX           MUX_PB04G_CATB_SENSE15
+#define TOUCH_SENSE_MUX           MUX_PC13G_CATB_SENSE15
 #define TOUCH_PINSEL_BUTTON       15
 //@}
 

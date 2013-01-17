@@ -48,8 +48,13 @@
 void board_init(void)
 {
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	// Disable the watchdog
-	WDT->WDT_MR = WDT_MR_WDDIS;
+	// Disable the watchdog using keyed write sequence
+	uint32_t wdt_ctrl_val = WDT->WDT_CTRL & ~WDT_CTRL_EN;
+	uint32_t wdt_ctrl_1 = wdt_ctrl_val | (0x55 << (3 * 8));
+	uint32_t wdt_ctrl_2 = wdt_ctrl_val | (0xAA << (3 * 8));
+
+	WDT->WDT_CTRL = wdt_ctrl_1;
+	WDT->WDT_CTRL = wdt_ctrl_2;
 #endif
 
 	// Initialize IOPORT
