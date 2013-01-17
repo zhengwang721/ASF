@@ -117,13 +117,13 @@
  * -# Enable the now initialized Analog Comparator channel.
  *  - \snippet qs_ac_basic.c setup_14
  *
- * \section ac_basic_use_case Use Case
+ * \section ac_basic_use_case_imp Implementation
  *
- * \subsection ac_basic_use_case_code Code
+ * \subsection ac_basic_use_case_imp_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_ac_basic.c main
  *
- * \subsection ac_basic_use_case_flow Workflow
+ * \subsection ac_basic_use_case_imp_flow Workflow
  * -# Trigger the first comparison on the comparator channel.
  *  - \snippet qs_ac_basic.c main_1
  * -# Create a local variable to maintain the current comparator state. Since no
