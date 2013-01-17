@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief AESA software driver for SAM.
+ * \brief AES software driver for SAM.
  *
- * This file defines a useful set of functions for the AESA on SAM devices.
+ * This file defines a useful set of functions for the AES on SAM devices.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,18 +44,18 @@
  *
  */
 
-#ifndef AESA_H_INCLUDED
-#define AESA_H_INCLUDED
+#ifndef AES_H_INCLUDED
+#define AES_H_INCLUDED
 
 /**
- * \defgroup group_sam_drivers_aesa AESA - Advanced Encryption Standard module
+ * \defgroup group_sam_drivers_aes AES - Advanced Encryption Standard module
  *
- * Driver for the AESA (Advanced Encryption Standard) module.
+ * Driver for the AES (Advanced Encryption Standard) module.
  * Provides functions for configuring and initiating ciphering/deciphering
  * with AES algorithms.
  * Several modes(ECB, CBC, OFB, CFB or CTR) and
  * key sizes(128-, 192- or 256-bit) are supported,
- * in addition to manual or DMA-based data input to the AESA module.
+ * in addition to manual or DMA-based data input to the AES module.
  *
  * \{
  */
@@ -63,107 +63,108 @@
 #include "compiler.h"
 
 
-/** AESA Processing mode */
-enum aesa_encrypt_mode {
-	AESA_DECRYPTION = 0,
-	AESA_ENCRYPTION,
+/** AES Processing mode */
+enum aes_encrypt_mode {
+	AES_DECRYPTION = 0,
+	AES_ENCRYPTION,
 };
-/** AESA Cryptographic key size */
-enum aesa_key_size {
-	AESA_KEY_SIZE_128 = 0,
-	AESA_KEY_SIZE_192,
-	AESA_KEY_SIZE_256,
-};
-
-/** AESA DMA mode */
-enum aesa_dma_mode {
-	AESA_MANUAL_MODE = 0,
-	AESA_DMA_MODE,
+/** AES Cryptographic key size */
+enum aes_key_size {
+	AES_KEY_SIZE_128 = 0,
+	AES_KEY_SIZE_192,
+	AES_KEY_SIZE_256,
 };
 
-/** AESA Confidentiality mode */
-enum aesa_opmode {
-	AESA_ECB_MODE = 0,
-	AESA_CBC_MODE,
-	AESA_OFB_MODE,
-	AESA_CFB_MODE,
-	AESA_CTR_MODE,
+/** AES DMA mode */
+enum aes_dma_mode {
+	AES_MANUAL_MODE = 0,
+	AES_DMA_MODE,
 };
 
-/** AESA CFB size */
-enum aesa_cfb_size {
-	AESA_CFB_SIZE_128 = 0,
-	AESA_CFB_SIZE_64,
-	AESA_CFB_SIZE_32,
-	AESA_CFB_SIZE_16,
-	AESA_CFB_SIZE_8,
+/** AES Confidentiality mode */
+enum aes_opmode {
+	AES_ECB_MODE = 0,
+	AES_CBC_MODE,
+	AES_OFB_MODE,
+	AES_CFB_MODE,
+	AES_CTR_MODE,
 };
 
-/** AESA CounterMeasure type */
-enum aesa_countermeature_type {
-	AESA_COUNTERMEASURE_TYPE_1 = 0x01,
-	AESA_COUNTERMEASURE_TYPE_2 = 0x02,
-	AESA_COUNTERMEASURE_TYPE_3 = 0x04,
-	AESA_COUNTERMEASURE_TYPE_4 = 0x08,
-	AESA_COUNTERMEASURE_TYPE_ALL = 0x0F,
+/** AES CFB size */
+enum aes_cfb_size {
+	AES_CFB_SIZE_128 = 0,
+	AES_CFB_SIZE_64,
+	AES_CFB_SIZE_32,
+	AES_CFB_SIZE_16,
+	AES_CFB_SIZE_8,
 };
 
-typedef enum aesa_interrupt_source {
-	AESA_INTERRUPT_INPUT_BUFFER_READY = AESA_IER_ODATARDY,
-	AESA_INTERRUPT_OUTPUT_DATA_READY = AESA_IER_IBUFRDY,
-} aesa_interrupt_source_t;
+/** AES CounterMeasure type */
+enum aes_countermeature_type {
+	AES_COUNTERMEASURE_TYPE_1 = 0x01,
+	AES_COUNTERMEASURE_TYPE_2 = 0x02,
+	AES_COUNTERMEASURE_TYPE_3 = 0x04,
+	AES_COUNTERMEASURE_TYPE_4 = 0x08,
+	AES_COUNTERMEASURE_TYPE_ALL = 0x0F,
+};
+
+/** AES interrupt source type */
+typedef enum aes_interrupt_source {
+	AES_INTERRUPT_INPUT_BUFFER_READY = AESA_IER_ODATARDY,
+	AES_INTERRUPT_OUTPUT_DATA_READY = AESA_IER_IBUFRDY,
+} aes_interrupt_source_t;
 
 /**
- * \brief Interrupt callback function type for AESA.
+ * \brief Interrupt callback function type for AES.
  *
  * The interrupt handler can be configured to do a function callback,
- * the callback function must match the aesa_callback_t type.
+ * the callback function must match the aes_callback_t type.
  *
  */
-typedef void (*aesa_callback_t)(void);
+typedef void (*aes_callback_t)(void);
 
-/** AESA Configuration structure. */
-struct aesa_config {
+/** AES Configuration structure. */
+struct aes_config {
 	/* 0=decryption data, 1=encryption data */
-	enum aesa_encrypt_mode encrypt_mode;
+	enum aes_encrypt_mode encrypt_mode;
 	/* 0 = 128bits, 1 = 192bits, 2 = 256bits */
-	enum aesa_key_size key_size;
+	enum aes_key_size key_size;
 	/* 0=Non-DMA mode, 1=DMA mode */
-	enum aesa_dma_mode dma_mode;
+	enum aes_dma_mode dma_mode;
 	/* 0 = ECB, 1 = CBC, 2 = OFB, 3 = CFB, 4 = CTR */
-	enum aesa_opmode opmode;
+	enum aes_opmode opmode;
 	/* 0 = 128bits, 1 = 64bits, 2 = 32bits, 3 = 16bits, 4 = 8bits */
-	enum aesa_cfb_size cfb_size;
+	enum aes_cfb_size cfb_size;
 	/* [0,15], bit=0 means CounterMeasure is disabled. */
-	enum aesa_countermeature_type countermeasure_mask;
+	enum aes_countermeature_type countermeasure_mask;
 };
 
 /**
- * \brief AESA driver software instance structure.
+ * \brief AES driver software instance structure.
  *
- * Device instance structure for a AESA driver instance. This
- * structure should be initialized by the \ref aesa_init() function to
+ * Device instance structure for a AES driver instance. This
+ * structure should be initialized by the \ref aes_init() function to
  * associate the instance with a particular hardware module of the device.
  */
-struct aesa_dev_inst {
-	/** Base address of the AESA module. */
+struct aes_dev_inst {
+	/** Base address of the AES module. */
 	Aesa *hw_dev;
-	/** Pointer to AESA configuration structure. */
-	struct aesa_config  *aesa_cfg;
+	/** Pointer to AES configuration structure. */
+	struct aes_config  *aes_cfg;
 };
 
-void aesa_get_config_defaults(struct aesa_config *const cfg);
+void aes_get_config_defaults(struct aes_config *const cfg);
 
-bool aesa_init(struct aesa_dev_inst *const dev_inst, Aesa *const aesa,
-		struct aesa_config *const cfg);
+bool aes_init(struct aes_dev_inst *const dev_inst, Aesa *const aes,
+		struct aes_config *const cfg);
 
 /**
- * \brief Perform a software reset of the AESA.
+ * \brief Perform a software reset of the AES.
  *
  * \param dev_inst Device structure pointer.
  *
  */
-static inline void aesa_reset(struct aesa_dev_inst *const dev_inst)
+static inline void aes_reset(struct aes_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->AESA_CTRL |= AESA_CTRL_SWRST;
 }
@@ -175,7 +176,7 @@ static inline void aesa_reset(struct aesa_dev_inst *const dev_inst)
  * \param dev_inst Device structure pointer.
  *
  */
-static inline void aesa_set_new_message(struct aesa_dev_inst *const dev_inst)
+static inline void aes_set_new_message(struct aes_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->AESA_CTRL |= AESA_CTRL_NEWMSG;
 }
@@ -186,30 +187,30 @@ static inline void aesa_set_new_message(struct aesa_dev_inst *const dev_inst)
  * \param dev_inst Device structure pointer.
  *
  */
-static inline void aesa_decryption_key_generate(
-		struct aesa_dev_inst *const dev_inst)
+static inline void aes_decryption_key_generate(
+		struct aes_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->AESA_CTRL |= AESA_CTRL_DKEYGEN;
 }
 
-void aesa_enable(struct aesa_dev_inst *const dev_inst);
+void aes_enable(struct aes_dev_inst *const dev_inst);
 
-void aesa_disable(struct aesa_dev_inst *const dev_inst);
+void aes_disable(struct aes_dev_inst *const dev_inst);
 
 /**
- * \brief Configure the AESA.
+ * \brief Configure the AES.
  *
  * \param  dev_inst Device structure pointer.
  *
  */
-static inline void aesa_set_config(struct aesa_dev_inst *const dev_inst)
+static inline void aes_set_config(struct aes_dev_inst *const dev_inst)
 {
-	dev_inst->hw_dev->AESA_MODE = dev_inst->aesa_cfg->encrypt_mode |
-			AESA_MODE_KEYSIZE(dev_inst->aesa_cfg->key_size) |
-			(dev_inst->aesa_cfg->dma_mode ? AESA_MODE_DMA : 0) |
-			AESA_MODE_OPMODE(dev_inst->aesa_cfg->opmode) |
-			AESA_MODE_CFBS(dev_inst->aesa_cfg->cfb_size) |
-			AESA_MODE_CTYPE(dev_inst->aesa_cfg->countermeasure_mask);
+	dev_inst->hw_dev->AESA_MODE = dev_inst->aes_cfg->encrypt_mode |
+			AESA_MODE_KEYSIZE(dev_inst->aes_cfg->key_size) |
+			(dev_inst->aes_cfg->dma_mode ? AESA_MODE_DMA : 0) |
+			AESA_MODE_OPMODE(dev_inst->aes_cfg->opmode) |
+			AESA_MODE_CFBS(dev_inst->aes_cfg->cfb_size) |
+			AESA_MODE_CTYPE(dev_inst->aes_cfg->countermeasure_mask);
 }
 
 /**
@@ -219,8 +220,8 @@ static inline void aesa_set_config(struct aesa_dev_inst *const dev_inst)
  * \param  ul_in_position Input buffer pointer position.
  *
  */
-static inline void aesa_write_input_buffer_pointer(
-		struct aesa_dev_inst *const dev_inst, uint32_t ul_in_position)
+static inline void aes_write_input_buffer_pointer(
+		struct aes_dev_inst *const dev_inst, uint32_t ul_in_position)
 {
 	dev_inst->hw_dev->AESA_DATABUFPTR |=
 			AESA_DATABUFPTR_IDATAW(ul_in_position);
@@ -233,8 +234,8 @@ static inline void aesa_write_input_buffer_pointer(
  * \param  ul_out_position Output buffer pointer position.
  *
  */
-static inline void aesa_write_output_buffer_pointer(
-		struct aesa_dev_inst *const dev_inst, uint32_t ul_out_position)
+static inline void aes_write_output_buffer_pointer(
+		struct aes_dev_inst *const dev_inst, uint32_t ul_out_position)
 {
 	dev_inst->hw_dev->AESA_DATABUFPTR |=
 			AESA_DATABUFPTR_ODATAW(ul_out_position);
@@ -248,8 +249,8 @@ static inline void aesa_write_output_buffer_pointer(
  * \return the input buffer pointer position.
  *
  */
-static inline uint32_t aesa_read_input_buffer_pointer(
-		struct aesa_dev_inst *const dev_inst)
+static inline uint32_t aes_read_input_buffer_pointer(
+		struct aes_dev_inst *const dev_inst)
 {
 	return ((dev_inst->hw_dev->AESA_DATABUFPTR & AESA_DATABUFPTR_IDATAW_Msk)
 			>> AESA_DATABUFPTR_IDATAW_Pos);
@@ -263,74 +264,74 @@ static inline uint32_t aesa_read_input_buffer_pointer(
  * \return the output buffer pointer position.
  *
  */
-static inline uint32_t aesa_read_output_buffer_pointer(
-		struct aesa_dev_inst *const dev_inst)
+static inline uint32_t aes_read_output_buffer_pointer(
+		struct aes_dev_inst *const dev_inst)
 {
 	return ((dev_inst->hw_dev->AESA_DATABUFPTR & AESA_DATABUFPTR_ODATAW_Msk)
 			>> AESA_DATABUFPTR_ODATAW_Pos);
 }
 
 /**
- * \brief Get the AESA status.
+ * \brief Get the AES status.
  *
  * \param  dev_inst Device structure pointer.
  *
  * \return the content of the status register.
  *
  */
-static inline uint32_t aesa_read_status(struct aesa_dev_inst *const dev_inst)
+static inline uint32_t aes_read_status(struct aes_dev_inst *const dev_inst)
 {
 	return dev_inst->hw_dev->AESA_SR;
 }
 
-void aesa_set_callback(struct aesa_dev_inst *const dev_inst,
-		aesa_interrupt_source_t source, aesa_callback_t callback,
+void aes_set_callback(struct aes_dev_inst *const dev_inst,
+		aes_interrupt_source_t source, aes_callback_t callback,
 		uint8_t irq_level);
 
 /**
- * \brief Enable the AESA interrupt.
+ * \brief Enable the AES interrupt.
  *
  * \param  dev_inst Device structure pointer.
  * \param  source Interrupt source.
  *
  */
-static inline void aesa_enable_interrupt(struct aesa_dev_inst *const dev_inst,
-		aesa_interrupt_source_t source)
+static inline void aes_enable_interrupt(struct aes_dev_inst *const dev_inst,
+		aes_interrupt_source_t source)
 {
 	dev_inst->hw_dev->AESA_IER = (uint32_t)source;
 }
 
 /**
- * \brief Disable the AESA interrupt.
+ * \brief Disable the AES interrupt.
  *
  * \param  dev_inst Device structure pointer.
  * \param  source Interrupt source.
  *
  */
-static inline void aesa_disable_interrupt(
-		struct aesa_dev_inst *const dev_inst, aesa_interrupt_source_t source)
+static inline void aes_disable_interrupt(
+		struct aes_dev_inst *const dev_inst, aes_interrupt_source_t source)
 {
 	dev_inst->hw_dev->AESA_IDR = (uint32_t)source;
 }
 
 /**
- * \brief Get the AESA interrupt mask status.
+ * \brief Get the AES interrupt mask status.
  *
  * \param  dev_inst Device structure pointer.
  *
  * \return the content of the interrupt mask register.
  *
  */
-static inline uint32_t aesa_read_interrupt_mask(
-		struct aesa_dev_inst *const dev_inst)
+static inline uint32_t aes_read_interrupt_mask(
+		struct aes_dev_inst *const dev_inst)
 {
 	return dev_inst->hw_dev->AESA_IMR;
 }
 
-void aesa_write_key(struct aesa_dev_inst *const dev_inst,
+void aes_write_key(struct aes_dev_inst *const dev_inst,
 		const uint32_t *p_key);
 
-void aesa_write_initvector(struct aesa_dev_inst *const dev_inst,
+void aes_write_initvector(struct aes_dev_inst *const dev_inst,
 		const uint32_t *p_vector);
 
 /**
@@ -340,8 +341,8 @@ void aesa_write_initvector(struct aesa_dev_inst *const dev_inst,
  * \param  ul_data Input data.
  *
  */
-static inline void aesa_write_input_data(
-		struct aesa_dev_inst *const dev_inst, uint32_t ul_data)
+static inline void aes_write_input_data(
+		struct aes_dev_inst *const dev_inst, uint32_t ul_data)
 {
 	dev_inst->hw_dev->AESA_IDATA = ul_data;
 }
@@ -354,8 +355,8 @@ static inline void aesa_write_input_data(
  * \return  the output data.
  *
  */
-static inline uint32_t aesa_read_output_data(
-		struct aesa_dev_inst *const dev_inst)
+static inline uint32_t aes_read_output_data(
+		struct aes_dev_inst *const dev_inst)
 {
 	return dev_inst->hw_dev->AESA_ODATA;
 }
@@ -367,7 +368,7 @@ static inline uint32_t aesa_read_output_data(
  * \param  ul_drng_seed DRNG seed.
  *
  */
-static inline void aesa_write_drng_seed(struct aesa_dev_inst *const dev_inst,
+static inline void aes_write_drng_seed(struct aes_dev_inst *const dev_inst,
 		uint32_t ul_drng_seed)
 {
 	dev_inst->hw_dev->AESA_DRNGSEED = ul_drng_seed;
@@ -378,84 +379,84 @@ static inline void aesa_write_drng_seed(struct aesa_dev_inst *const dev_inst,
  */
 
 /**
- * \page sam_aesa_quick_start Quick Start Guide for the AESA driver
+ * \page sam_aes_quick_start Quick Start Guide for the AES driver
  *
- * This is the quick start guide for the \ref group_sam_drivers_aesa, with
+ * This is the quick start guide for the \ref group_sam_drivers_aes, with
  * step-by-step instructions on how to configure and use the driver for
  * a specific use case.The code examples can be copied into e.g the main
  * application loop or any other function that will need to control the
- * AESA module.
+ * AES module.
  *
- * \section aesa_qs_use_cases Use cases
- * - \ref aesa_basic
+ * \section aes_qs_use_cases Use cases
+ * - \ref aes_basic
  *
- * \section aesa_basic AESA basic usage
+ * \section aes_basic AES basic usage
  *
- * This use case will demonstrate how to initialize the AESA module to
+ * This use case will demonstrate how to initialize the AES module to
  * encryption or decryption data.
  *
  *
- * \section aesa_basic_setup Setup steps
+ * \section aes_basic_setup Setup steps
  *
- * \subsection aesa_basic_prereq Prerequisites
+ * \subsection aes_basic_prereq Prerequisites
  *
  * This module requires the following service
  * - \ref clk_group
  *
- * \subsection aesa_basic_setup_code
+ * \subsection aes_basic_setup_code
  *
  * Add this to the main loop or a setup function:
  * \code
- * struct aesa_dev_inst g_aesa_inst;
- * struct aesa_config   g_aesa_cfg;
- * aesa_get_config_defaults(&g_aesa_cfg);
- * aesa_init(&g_aesa_inst, AESA, &g_aesa_cfg);
- * aesa_enable(&g_aesa_inst);
+ * struct aes_dev_inst g_aes_inst;
+ * struct aes_config   g_aes_cfg;
+ * aes_get_config_defaults(&g_aes_cfg);
+ * aes_init(&g_aes_inst, AESA, &g_aes_cfg);
+ * aes_enable(&g_aes_inst);
  * \endcode
  *
- * \subsection aesa_basic_setup_workflow
+ * \subsection aes_basic_setup_workflow
  *
- * -# Enable the AESA module
- *  - \code aesa_enable(&g_aesa_inst); \endcode
+ * -# Enable the AES module
+ *  - \code aes_enable(&g_aes_inst); \endcode
  *
- * -# Set the AESA interrupt and callback
+ * -# Set the AES interrupt and callback
  * \code
- * aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
- *		aesa_callback, 1);
+ * aes_set_callback(&g_aes_inst, AES_INTERRUPT_INPUT_BUFFER_READY,
+ *		aes_callback, 1);
  * \endcode
  *
- * -# Initialize the AESA to ECB cipher mode
+ * -# Initialize the AES to ECB cipher mode
  * \code
- * g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
- * g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
- * g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
- * g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
- * g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
- * g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
- * aesa_set_config(&g_aesa_inst);
+ * g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+ * g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+ * g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+ * g_aes_inst.aes_cfg->opmode = AES_ECB_MODE;
+ * g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+ * g_aes_inst.aes_cfg->countermeasure_mask = 0xF;
+ * aes_set_config(&g_aes_inst);
  * \endcode
  *
- * \section aesa_basic_usage Usage steps
+ * \section aes_basic_usage Usage steps
  *
- * \subsection aesa_basic_usage_code
+ * \subsection aes_basic_usage_code
  *
  * We can then encrypte the plain text by
  * \code
- * aesa_set_new_message(&g_aesa_inst);
- * aesa_write_key(&g_aesa_inst, key128);
- * aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
- * aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
- * aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
- * aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+ * aes_set_new_message(&g_aes_inst);
+ * aes_write_key(&g_aes_inst, key128);
+ * aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+ * aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+ * aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+ * aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
  * \endcode
  *
  * We can get the cipher text after it's ready by
  * \code
- * output_data[0] = aesa_read_output_data(&g_aesa_inst);
- * output_data[1] = aesa_read_output_data(&g_aesa_inst);
- * output_data[2] = aesa_read_output_data(&g_aesa_inst);
- * output_data[3] = aesa_read_output_data(&g_aesa_inst);
+ * output_data[0] = aes_read_output_data(&g_aes_inst);
+ * output_data[1] = aes_read_output_data(&g_aes_inst);
+ * output_data[2] = aes_read_output_data(&g_aes_inst);
+ * output_data[3] = aes_read_output_data(&g_aes_inst);
  * \endcode
  */
 
-#endif  /* AESA_H_INCLUDED */
+#endif  /* AES_H_INCLUDED */

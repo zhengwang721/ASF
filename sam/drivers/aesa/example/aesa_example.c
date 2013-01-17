@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief AESA example for SAM.
+ * \brief AES example for SAM.
  *
- * This file defines a useful set of functions for the AESA on SAM devices.
+ * This file defines a useful set of functions for the AES on SAM devices.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -47,8 +47,8 @@
 /** \mainpage
  * \section intro Introduction
  * This is the documentation for the data structures, functions, variables,
- * defines, enums, and typedefs for the AESA driver. <BR>It also gives several
- * examples of usage of the AESA module: <BR>
+ * defines, enums, and typedefs for the AES driver. <BR>It also gives several
+ * examples of usage of the AES module: <BR>
  * - ECB ciphering and deciphering.
  * - CBC ciphering and deciphering.
  * - CFB ciphering and deciphering.
@@ -59,14 +59,14 @@
  * \section files Main Files
  * - aesa.c : AESA driver
  * - aesa.h : AESA header file
- * - aesa_example.c : AESA code example
+ * - aesa_example.c : AES code example
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR Systems compiler.
  * Other compilers may or may not work.
  *
  * \section deviceinfo Device Info
- * All SAM devices with an AESA module can be used. This example has been
+ * All SAM devices with an AES module can be used. This example has been
  * tested with the following setup:<BR>
  * - SAM4L evaluation kit.
  *
@@ -88,14 +88,14 @@
 #include <asf.h>
 #include <string.h>
 
-#define AESA_EXAMPLE_REFBUF_SIZE 4
+#define AES_EXAMPLE_REFBUF_SIZE 4
 
 /**
  * \name sample data from NIST-800-38A appendix F
  */
 /* @{ */
 /** Reference plain data. */
-const uint32_t ref_plain_text[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_plain_text[AES_EXAMPLE_REFBUF_SIZE] = {
 	0xe2bec16b,
 	0x969f402e,
 	0x117e3de9,
@@ -103,7 +103,7 @@ const uint32_t ref_plain_text[AESA_EXAMPLE_REFBUF_SIZE] = {
 };
 
 /** Reference ECB cipher data. */
-const uint32_t ref_cipher_text_ecb[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_cipher_text_ecb[AES_EXAMPLE_REFBUF_SIZE] = {
 	0xb47bd73a,
 	0x60367a0d,
 	0xf3ca9ea8,
@@ -111,7 +111,7 @@ const uint32_t ref_cipher_text_ecb[AESA_EXAMPLE_REFBUF_SIZE] = {
 };
 
 /** Reference CBC cipher data. */
-const uint32_t ref_cipher_text_cbc[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_cipher_text_cbc[AES_EXAMPLE_REFBUF_SIZE] = {
 	0xacab4976,
 	0x46b21981,
 	0x9b8ee9ce,
@@ -119,7 +119,7 @@ const uint32_t ref_cipher_text_cbc[AESA_EXAMPLE_REFBUF_SIZE] = {
 };
 
 /** Reference CFB128 cipher data. */
-const uint32_t ref_cipher_text_cfb128[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_cipher_text_cfb128[AES_EXAMPLE_REFBUF_SIZE] = {
 	0x2ed93f3b,
 	0x20ad2db7,
 	0xf8493433,
@@ -127,7 +127,7 @@ const uint32_t ref_cipher_text_cfb128[AESA_EXAMPLE_REFBUF_SIZE] = {
 };
 
 /** Reference OFB cipher data. */
-const uint32_t ref_cipher_text_ofb[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_cipher_text_ofb[AES_EXAMPLE_REFBUF_SIZE] = {
 	0x2ed93f3b,
 	0x20ad2db7,
 	0xf8493433,
@@ -135,7 +135,7 @@ const uint32_t ref_cipher_text_ofb[AESA_EXAMPLE_REFBUF_SIZE] = {
 };
 
 /** Reference CTR cipher data. */
-const uint32_t ref_cipher_text_ctr[AESA_EXAMPLE_REFBUF_SIZE] = {
+const uint32_t ref_cipher_text_ctr[AES_EXAMPLE_REFBUF_SIZE] = {
 	0x91614d87,
 	0x26e320b6,
 	0x6468ef1b,
@@ -169,16 +169,16 @@ const uint32_t init_vector_ctr[4] = {
 /* @} */
 
 /* Output data array */
-static uint32_t output_data[AESA_EXAMPLE_REFBUF_SIZE];
+static uint32_t output_data[AES_EXAMPLE_REFBUF_SIZE];
 
 /* State indicate */
 volatile bool state = false;
 
-/** AESA instance */
-struct aesa_dev_inst g_aesa_inst;
+/** AES instance */
+struct aes_dev_inst g_aes_inst;
 
-/** AESA configuration */
-struct aesa_config   g_aesa_cfg;
+/** AES configuration */
+struct aes_config   g_aes_cfg;
 
 #define PDCA_RX_CHANNEL  0
 #define PDCA_TX_CHANNEL  1
@@ -187,22 +187,22 @@ struct aesa_config   g_aesa_cfg;
 pdca_channel_config_t PDCA_RX_OPTIONS, PDCA_TX_OPTIONS;
 
 /**
- * \brief The AESA interrupt call back function.
+ * \brief The AES interrupt call back function.
  */
-static void aesa_callback(void)
+static void aes_callback(void)
 {
 	/* Read the output(this will clear the DATRDY flag). */
-	output_data[0] = aesa_read_output_data(&g_aesa_inst);
-	output_data[1] = aesa_read_output_data(&g_aesa_inst);
-	output_data[2] = aesa_read_output_data(&g_aesa_inst);
-	output_data[3] = aesa_read_output_data(&g_aesa_inst);
+	output_data[0] = aes_read_output_data(&g_aes_inst);
+	output_data[1] = aes_read_output_data(&g_aes_inst);
+	output_data[2] = aes_read_output_data(&g_aes_inst);
+	output_data[3] = aes_read_output_data(&g_aes_inst);
 	state = true;
 }
 
 /**
- * \brief The AESA interrupt call back function.
+ * \brief The AES interrupt call back function.
  */
-static void aesa_callback_pdca(void)
+static void aes_callback_pdca(void)
 {
 	/* Read the output(this will clear the DATRDY flag) by PDCA. */
 	pdca_channel_enable(PDCA_RX_CHANNEL);
@@ -217,9 +217,9 @@ static void aesa_callback_pdca(void)
  */
 static void ecb_mode_test_pdca(void)
 {
-	/* Change the AESA interrupt callback function. */
-	aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
-			aesa_callback_pdca, 1);
+	/* Change the AES interrupt callback function. */
+	aes_set_callback(&g_aes_inst, AES_INTERRUPT_INPUT_BUFFER_READY,
+			aes_callback_pdca, 1);
 
 	/* Enable PDCA module clock */
 	pdca_enable(PDCA);
@@ -233,20 +233,20 @@ static void ecb_mode_test_pdca(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_DMA_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_ECB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
@@ -254,14 +254,14 @@ static void ecb_mode_test_pdca(void)
 	/* Init PDCA channel with the pdca_options.*/
 	PDCA_TX_OPTIONS.addr = (void *)ref_plain_text; /* memory address */
 	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - AESA TX.*/
-	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_TX_OPTIONS.size = AES_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
 	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
 	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
 	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - AESA RX.*/
-	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_RX_OPTIONS.size = AES_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
 	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
@@ -296,20 +296,20 @@ static void ecb_mode_test_pdca(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_DMA_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_ECB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
@@ -317,14 +317,14 @@ static void ecb_mode_test_pdca(void)
 	/* Init PDCA channel with the pdca_options.*/
 	PDCA_TX_OPTIONS.addr = (void *)ref_cipher_text_ecb; /* memory address */
 	PDCA_TX_OPTIONS.pid = AESA_PDCA_ID_TX; /* select peripheral - AESA TX.*/
-	PDCA_TX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_TX_OPTIONS.size = AES_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_TX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_TX_OPTIONS.r_size = 0; /* next transfer counter */
 	PDCA_TX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
 	pdca_channel_set_config(PDCA_TX_CHANNEL, &PDCA_TX_OPTIONS);
 	PDCA_RX_OPTIONS.addr = (void *)output_data; /* memory address */
 	PDCA_RX_OPTIONS.pid = AESA_PDCA_ID_RX; /* select peripheral - AESA RX.*/
-	PDCA_RX_OPTIONS.size = AESA_EXAMPLE_REFBUF_SIZE; /* transfer counter */
+	PDCA_RX_OPTIONS.size = AES_EXAMPLE_REFBUF_SIZE; /* transfer counter */
 	PDCA_RX_OPTIONS.r_addr = (void *)0; /* next memory address */
 	PDCA_RX_OPTIONS.r_size = 0; /* next transfer counter */
 	PDCA_RX_OPTIONS.transfer_size = PDCA_MR_SIZE_WORD;
@@ -354,9 +354,9 @@ static void ecb_mode_test_pdca(void)
 	/* Disable PDCA module clock */
 	pdca_disable(PDCA);
 
-	/* Change back the AESA interrupt callback function. */
-	aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
-			aesa_callback, 1);
+	/* Change back the AES interrupt callback function. */
+	aes_set_callback(&g_aes_inst, AES_INTERRUPT_INPUT_BUFFER_READY,
+			aes_callback, 1);
 }
 
 /**
@@ -373,28 +373,28 @@ static void ecb_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_ECB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
 	/* Write the data to be ciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -418,28 +418,28 @@ static void ecb_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_ECB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
 	/* Write the data to be deciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ecb[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ecb[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ecb[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ecb[3]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ecb[0]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ecb[1]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ecb[2]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ecb[3]);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -470,29 +470,29 @@ static void cbc_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CBC_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CBC_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -516,29 +516,29 @@ static void cbc_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CBC_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CBC_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cbc[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cbc[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cbc[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cbc[3]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cbc[0]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cbc[1]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cbc[2]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cbc[3]);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -568,29 +568,29 @@ static void cfb128_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CFB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CFB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -615,29 +615,29 @@ static void cfb128_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CFB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CFB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cfb128[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cfb128[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cfb128[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_cfb128[3]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cfb128[0]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cfb128[1]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cfb128[2]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_cfb128[3]);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -668,29 +668,29 @@ static void ofb_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_OFB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_OFB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -715,29 +715,29 @@ static void ofb_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_OFB_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_OFB_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector);
+	aes_write_initvector(&g_aes_inst, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ofb[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ofb[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ofb[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ofb[3]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ofb[0]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ofb[1]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ofb[2]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ofb[3]);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -768,29 +768,29 @@ static void ctr_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_ENCRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CTR_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_ENCRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CTR_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector_ctr);
+	aes_write_initvector(&g_aes_inst, init_vector_ctr);
 
 	/* Write the data to be ciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_plain_text[3]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[0]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[1]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[2]);
+	aes_write_input_data(&g_aes_inst, ref_plain_text[3]);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -815,29 +815,29 @@ static void ctr_mode_test(void)
 
 	state = false;
 
-	/* Configure the AESA. */
-	g_aesa_inst.aesa_cfg->encrypt_mode = AESA_DECRYPTION;
-	g_aesa_inst.aesa_cfg->key_size = AESA_KEY_SIZE_128;
-	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
-	g_aesa_inst.aesa_cfg->opmode = AESA_CTR_MODE;
-	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
-	aesa_set_config(&g_aesa_inst);
+	/* Configure the AES. */
+	g_aes_inst.aes_cfg->encrypt_mode = AES_DECRYPTION;
+	g_aes_inst.aes_cfg->key_size = AES_KEY_SIZE_128;
+	g_aes_inst.aes_cfg->dma_mode = AES_MANUAL_MODE;
+	g_aes_inst.aes_cfg->opmode = AES_CTR_MODE;
+	g_aes_inst.aes_cfg->cfb_size = AES_CFB_SIZE_128;
+	g_aes_inst.aes_cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
+	aes_set_config(&g_aes_inst);
 
 	/* Beginning of a new message. */
-	aesa_set_new_message(&g_aesa_inst);
+	aes_set_new_message(&g_aes_inst);
 
 	/* Set the cryptographic key. */
-	aesa_write_key(&g_aesa_inst, key128);
+	aes_write_key(&g_aes_inst, key128);
 
 	/* Set the initialization vector. */
-	aesa_write_initvector(&g_aesa_inst, init_vector_ctr);
+	aes_write_initvector(&g_aes_inst, init_vector_ctr);
 
 	/* Write the data to be deciphered to the input data registers. */
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ctr[0]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ctr[1]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ctr[2]);
-	aesa_write_input_data(&g_aesa_inst, ref_cipher_text_ctr[3]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ctr[0]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ctr[1]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ctr[2]);
+	aes_write_input_data(&g_aes_inst, ref_cipher_text_ctr[3]);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -906,18 +906,18 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("-- AESA Example --\r\n");
+	printf("-- AES Example --\r\n");
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
-	/* Enable the AESA module. */
-	aesa_get_config_defaults(&g_aesa_cfg);
-	aesa_init(&g_aesa_inst, AESA, &g_aesa_cfg);
-	aesa_enable(&g_aesa_inst);
+	/* Enable the AES module. */
+	aes_get_config_defaults(&g_aes_cfg);
+	aes_init(&g_aes_inst, AESA, &g_aes_cfg);
+	aes_enable(&g_aes_inst);
 
-	/* Enable AESA interrupt. */
-	aesa_set_callback(&g_aesa_inst, AESA_INTERRUPT_INPUT_BUFFER_READY,
-			aesa_callback, 1);
+	/* Enable AES interrupt. */
+	aes_set_callback(&g_aes_inst, AES_INTERRUPT_INPUT_BUFFER_READY,
+			aes_callback, 1);
 
 	/* Display menu */
 	display_menu();

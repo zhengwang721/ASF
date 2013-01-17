@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief AESA software driver for SAM.
+ * \brief AES software driver for SAM.
  *
- * This file defines a useful set of functions for the AESA on SAM devices.
+ * This file defines a useful set of functions for the AES on SAM devices.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -51,14 +51,14 @@
 
 /**
  * \internal
- * \brief AESA callback function pointer
+ * \brief AES callback function pointer
  */
-aesa_callback_t aesa_callback_pointer;
+aes_callback_t aes_callback_pointer;
 
 /**
- * \brief Initializes a AESA configuration structure to defaults.
+ * \brief Initializes a AES configuration structure to defaults.
  *
- *  Initializes a given AESA configuration structure to a set of
+ *  Initializes a given AES configuration structure to a set of
  *  known default values. This function should be called on all new
  *  instances of these configuration structures before being modified by the
  *  user application.
@@ -72,32 +72,32 @@ aesa_callback_t aesa_callback_pointer;
  *
  *  \param cfg    Configuration structure to initialize to default values.
  */
-void aesa_get_config_defaults(struct aesa_config *const cfg)
+void aes_get_config_defaults(struct aes_config *const cfg)
 {
 	/* Sanity check arguments */
 	Assert(cfg);
 
 	/* Default configuration values */
-	cfg->encrypt_mode = AESA_ENCRYPTION;
-	cfg->key_size = AESA_KEY_SIZE_128;
-	cfg->dma_mode = AESA_MANUAL_MODE;
-	cfg->opmode = AESA_ECB_MODE;
-	cfg->cfb_size = AESA_CFB_SIZE_128;
-	cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
+	cfg->encrypt_mode = AES_ENCRYPTION;
+	cfg->key_size = AES_KEY_SIZE_128;
+	cfg->dma_mode = AES_MANUAL_MODE;
+	cfg->opmode = AES_ECB_MODE;
+	cfg->cfb_size = AES_CFB_SIZE_128;
+	cfg->countermeasure_mask = AES_COUNTERMEASURE_TYPE_ALL;
 }
 
 /**
- * \brief Initialize the AESA module.
+ * \brief Initialize the AES module.
  *
  * \param dev_inst    Device structure pointer.
  * \param aesa         Base address of the AESA instance.
- * \param cfg         Pointer to AESA configuration.
+ * \param cfg         Pointer to AES configuration.
  *
  * \retval true if the initialization was successful.
  * \retval false if initialization failed.
  */
-bool aesa_init(struct aesa_dev_inst *const dev_inst, Aesa *const aesa,
-		struct aesa_config *const cfg)
+bool aes_init(struct aes_dev_inst *const dev_inst, Aesa *const aesa,
+		struct aes_config *const cfg)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -105,27 +105,27 @@ bool aesa_init(struct aesa_dev_inst *const dev_inst, Aesa *const aesa,
 	Assert(cfg);
 
 	dev_inst->hw_dev = aesa;
-	dev_inst->aesa_cfg = cfg;
+	dev_inst->aes_cfg = cfg;
 
-	/* Enable APB clock for AESA */
+	/* Enable APB clock for AES */
 	sysclk_enable_peripheral_clock(aesa);
 
-	/* Initialize the AESA with new configurations */
-	aesa_set_config(dev_inst);
+	/* Initialize the AES with new configurations */
+	aes_set_config(dev_inst);
 
-	/* Disable APB clock for AESA */
+	/* Disable APB clock for AES */
 	sysclk_disable_peripheral_clock(aesa);
 
 	return true;
 }
 
 /**
- * \brief Enable the AESA.
+ * \brief Enable the AES.
  *
  * \param dev_inst Device structure pointer.
  *
  */
-void aesa_enable(struct aesa_dev_inst *const dev_inst)
+void aes_enable(struct aes_dev_inst *const dev_inst)
 {
 	struct genclk_config gencfg;
 
@@ -140,12 +140,12 @@ void aesa_enable(struct aesa_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Disable the AESA.
+ * \brief Disable the AES.
  *
  * \param dev_inst Device structure pointer.
  *
  */
-void aesa_disable(struct aesa_dev_inst *const dev_inst)
+void aes_disable(struct aes_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->AESA_CTRL &= ~AESA_CTRL_ENABLE;
 	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
@@ -161,7 +161,7 @@ void aesa_disable(struct aesa_dev_inst *const dev_inst)
  * \note The key size depends on the AES configuration.
  *
  */
-void aesa_write_key(struct aesa_dev_inst *const dev_inst,
+void aes_write_key(struct aes_dev_inst *const dev_inst,
 		const uint32_t *p_key)
 {
 	uint32_t i, key_length = 0;
@@ -198,7 +198,7 @@ void aesa_write_key(struct aesa_dev_inst *const dev_inst,
  * \param  *p_vector Pointer on 4 contiguous 32bit words.
  *
  */
-void aesa_write_initvector(struct aesa_dev_inst *const dev_inst,
+void aes_write_initvector(struct aes_dev_inst *const dev_inst,
 		const uint32_t *p_vector)
 {
 	uint32_t i;
@@ -210,29 +210,29 @@ void aesa_write_initvector(struct aesa_dev_inst *const dev_inst,
 }
 
 /**
- * \brief Set callback for AESA
+ * \brief Set callback for AES
  *
  * \param dev_inst Device structure pointer.
  * \param source Interrupt source.
  * \param callback callback function pointer.
  * \param irq_level interrupt level.
  */
-void aesa_set_callback(struct aesa_dev_inst *const dev_inst,
-		aesa_interrupt_source_t source, aesa_callback_t callback,
+void aes_set_callback(struct aes_dev_inst *const dev_inst,
+		aes_interrupt_source_t source, aes_callback_t callback,
 		uint8_t irq_level)
 {
-	aesa_callback_pointer = callback;
+	aes_callback_pointer = callback;
 	irq_register_handler((IRQn_Type)AESA_IRQn, irq_level);
-	aesa_enable_interrupt(dev_inst, source);
+	aes_enable_interrupt(dev_inst, source);
 }
 
 /**
- * \brief The AESA interrupt handler.
+ * \brief The AES interrupt handler.
  */
 void AESA_Handler(void)
 {
-	if (aesa_callback_pointer) {
-		aesa_callback_pointer();
+	if (aes_callback_pointer) {
+		aes_callback_pointer();
 	} else {
 		Assert(false); /* Catch unexpected interrupt */
 	}
