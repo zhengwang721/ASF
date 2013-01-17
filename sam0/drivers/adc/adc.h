@@ -398,7 +398,6 @@ extern "C" {
  * - \ref quickstart
  *
  * \section api_overview API Overview
- * \todo Should calibration be a part of the driver?
  * @{
  */
 
@@ -831,67 +830,12 @@ static inline void _adc_wait_for_sync(Adc *const hw_dev)
 	}
 }
 
+/**
+ * \name Driver initialization and configuration
+ * @{
+ */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 		struct adc_conf *config);
-
-/**
- * \brief Enable the ADC module
- *
- * This function will enable the ADC module.
- *
- * \param[in] dev_inst    Pointer to the ADC software instance struct
- */
-static inline void adc_enable(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-
-	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
-}
-
-/**
- * \brief Disable the ADC module
- *
- * This function will disable the ADC module.
- *
- * \param[in] dev_inst Pointer to the ADC software instance struct
- */
-static inline void adc_disable(struct adc_dev_inst *const dev_inst)
-{
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-
-	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
-}
-
-/**
- * \brief Reset the ADC module
- *
- * This function will reset the ADC module.
- *
- * \param[in] dev_inst Pointer to the ADC software instance struct
- */
-static inline void adc_reset(struct adc_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-
-	/* Disable to make sure the pipeline is flushed before reset */
-	adc_disable(dev_inst);
-
-	/* Software reset the module */
-	_adc_wait_for_sync(adc_module);
-	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
-}
 
 /**
  * \brief Initialize an ADC configuration structure to defaults
@@ -959,17 +903,21 @@ static inline void adc_get_config_defaults(struct adc_conf *const config)
 	config->inputs_to_scan = 0;
 }
 
+/** @} */
+
 /**
- * \brief Flushes the ADC pipeline
- *
- * This function will flush the pipeline and restart the ADC clock on the next 
- * peripheral clock edge.
- * All conversions in progress will be lost.
- * When flush is complete, the module will resume where it left off.
- *
- * \param dev_inst[in]    Pointer to the ADC software instance struct
+ * \name Enable, disable and reset ADC module, start conversion and read result
+ * @{
  */
-static inline void adc_flush(struct adc_dev_inst *const dev_inst)
+ 
+/**
+ * \brief Enable the ADC module
+ *
+ * This function will enable the ADC module.
+ *
+ * \param[in] dev_inst    Pointer to the ADC software instance struct
+ */
+static inline void adc_enable(struct adc_dev_inst *const dev_inst)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -977,7 +925,48 @@ static inline void adc_flush(struct adc_dev_inst *const dev_inst)
 	Adc *const adc_module = dev_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
-	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
+	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Disable the ADC module
+ *
+ * This function will disable the ADC module.
+ *
+ * \param[in] dev_inst Pointer to the ADC software instance struct
+ */
+static inline void adc_disable(struct adc_dev_inst *const dev_inst)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Reset the ADC module
+ *
+ * This function will reset the ADC module.
+ *
+ * \param[in] dev_inst Pointer to the ADC software instance struct
+ */
+static inline void adc_reset(struct adc_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+
+	/* Disable to make sure the pipeline is flushed before reset */
+	adc_disable(dev_inst);
+
+	/* Software reset the module */
+	_adc_wait_for_sync(adc_module);
+	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
 }
 
 /**
@@ -996,50 +985,6 @@ static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
-}
-
-/**
- * \brief Checks if a given interrupt flag is set
- *
- * This function will check if a given interrupt flag is set.
- *
- * \param dev_inst[in]         Pointer to the ADC software instance struct
- * \param interrupt_flag[in]   Interrupt flag to check
- *
- * \return Boolean value to indicate if the interrupt flag is set or not.
- * \retval true   The flag is set
- * \retval false  The flag is not set
- */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
-		enum adc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-	return adc_module->INTFLAG.reg & interrupt_flag;
-}
-
-/**
- * \brief Clears a given interrupt flag
- * 
- * This function will clear a given interrupt flag.
- *
- * \param dev_inst[in]          Pointer to the ADC software instance struct
- * \param interrupt_flag[in]    Interrupt flag to clear
- */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
-		enum adc_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Adc *const adc_module = dev_inst->hw_dev;
-	
-	/* Clear interrupt flag */
-	adc_module->INTFLAG.reg = interrupt_flag;
 }
 
 /**
@@ -1076,6 +1021,34 @@ static inline enum status_code adc_get_result(
 	adc_clear_interrupt_flag(dev_inst, ADC_INTERRUPT_RESULT_READY);
 
 	return STATUS_OK;
+}
+
+/** @} */
+
+/**
+ * \name Runtime changes of ADC module
+ * @{
+ */
+ 
+/**
+ * \brief Flushes the ADC pipeline
+ *
+ * This function will flush the pipeline and restart the ADC clock on the next 
+ * peripheral clock edge.
+ * All conversions in progress will be lost.
+ * When flush is complete, the module will resume where it left off.
+ *
+ * \param dev_inst[in]    Pointer to the ADC software instance struct
+ */
+static inline void adc_flush(struct adc_dev_inst *const dev_inst)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+
+	_adc_wait_for_sync(adc_module);
+	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
 }
 
 /**
@@ -1197,7 +1170,6 @@ static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const 
 	return STATUS_OK;
 }
 
-
 /**
  * \brief Disables pin scan mode
  *
@@ -1266,6 +1238,57 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
 			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
 }
+
+/** @} */
+
+/**
+ * \name Checking and clearing of interrupt flags
+ * @{
+ */
+/**
+ * \brief Checks if a given interrupt flag is set
+ *
+ * This function will check if a given interrupt flag is set.
+ *
+ * \param dev_inst[in]         Pointer to the ADC software instance struct
+ * \param interrupt_flag[in]   Interrupt flag to check
+ *
+ * \return Boolean value to indicate if the interrupt flag is set or not.
+ * \retval true   The flag is set
+ * \retval false  The flag is not set
+ */
+static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+		enum adc_interrupt_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+	return adc_module->INTFLAG.reg & interrupt_flag;
+}
+
+/**
+ * \brief Clears a given interrupt flag
+ * 
+ * This function will clear a given interrupt flag.
+ *
+ * \param dev_inst[in]          Pointer to the ADC software instance struct
+ * \param interrupt_flag[in]    Interrupt flag to clear
+ */
+static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+		enum adc_interrupt_flag interrupt_flag)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	Adc *const adc_module = dev_inst->hw_dev;
+	
+	/* Clear interrupt flag */
+	adc_module->INTFLAG.reg = interrupt_flag;
+}
+/** @} */
 
 #ifdef __cplusplus
 }
