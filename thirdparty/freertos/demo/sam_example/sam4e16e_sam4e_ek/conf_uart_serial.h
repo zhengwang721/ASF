@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,13 +41,14 @@
  *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/* Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/* Enable ETH PHY: KSZ8051MNL feature */
-#define CONF_BOARD_KSZ8051MNL
-
-#endif /* CONF_BOARD_H */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

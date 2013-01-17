@@ -3,9 +3,11 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,13 +41,10 @@
  *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* Configure UART pins */
+/** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/* Enable ETH PHY: KSZ8051MNL feature */
-#define CONF_BOARD_KSZ8051MNL
-
-#endif /* CONF_BOARD_H */
+#endif /* CONF_BOARD_H_INCLUDED */
