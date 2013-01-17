@@ -174,7 +174,7 @@ retval_t tfa_init(void)
 {
     init_tfa_pib();
     write_all_tfa_pibs_to_trx();
-
+    sysclk_enable_peripheral_clock(&ADC);
     return MAC_SUCCESS;
 }
 #endif
@@ -513,23 +513,27 @@ double tfa_get_temperature(void)
     ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX3) | (1 << MUX0);
 
     /* Dummy conversion to clear PGA */
-#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
-    ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU_VAL == 8000000UL)
-    ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU_VAL == 4000000UL)
-    ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU_VAL"
-#endif
+    if((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL)){
+      ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);}
+    
+    else if (F_CPU_VAL == 8000000UL){
+      ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);}
+    else if  (F_CPU_VAL == 4000000UL){
+      ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);}
+    else{
+    }
+
+    
     /* Wait for conversion to be completed */
     do
-    {
+    { 
     }
     while ((ADCSRA & (1 << ADIF)) == 0x00);
 
     /* Sample */
     for (i = 0; i < NUM_SAMPLES; i++)
     {
+      ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIF);
         /*
          * ADC Control and Status Register A:
          * ADC Enable
@@ -537,14 +541,7 @@ double tfa_get_temperature(void)
          * Clear ADIF
          * Prescaler = 32 (500kHz) for 16 MHz main clock
          */
-#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU_VAL == 8000000UL)
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU_VAL == 4000000UL)
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU_VAL"
-#endif
+
         /* Wait for conversion to be completed */
         do
         {
@@ -558,7 +555,7 @@ double tfa_get_temperature(void)
     }
     temp_result = (float)temp_result32 / NUM_SAMPLES;
 
-    ADCSRA &= ~(1 << ADEN); // Disable ADC for channel change
+    ADCSRA ^= (1 << ADEN); // Disable ADC for channel change
 
     /* Get offset value */
     ADCSRB = 0x00;
@@ -566,14 +563,9 @@ double tfa_get_temperature(void)
 
     for (i = 0; i < NUM_SAMPLES; i++)
     {
-#if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL))
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2) | (1 << ADPS0);
-#elif (F_CPU_VAL == 8000000UL)
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS2);
-#elif (F_CPU_VAL == 4000000UL)
-        ADCSRA = (1 << ADEN) | (1 << ADSC) | (1 << ADIF) | (1 << ADPS1) | (1 << ADPS0);
-#error "unsupported F_CPU_VAL"
-#endif
+      
+      ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIF) ;
+
         /* Wait for conversion to be completed */
         do
         {
@@ -598,7 +590,7 @@ double tfa_get_temperature(void)
 
     temp_result -= offset;
     result = ((double)temp_result * 1.13) - 272.8;
-F_CPU_VAL=F_CPU_VAL ; // Ignore Warnings
+    F_CPU_VAL=F_CPU_VAL ; // Ignore Warnings
     return result;
 }
 #endif
