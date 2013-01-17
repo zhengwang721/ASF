@@ -147,8 +147,6 @@
 //! Number of on-board buttons
 #define BUTTON_COUNT              1
 
-/** @} */
-
 //! \name Extension header #1 pin definitions
 //@{
 #define EXT1_PIN_3                IOPORT_CREATE_PIN(PIOA, 17)
@@ -386,6 +384,8 @@
 //@{
 #define EDBG_SPI_MODULE           SPI
 //@}
+
+/** @} */
 
 /** @} */
 
