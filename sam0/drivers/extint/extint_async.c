@@ -63,8 +63,8 @@ extern struct _extint_device _extint_dev;
  *                               table.
  */
 enum status_code extint_async_register_callback(
-	extint_async_callback_t callback,
-	enum extint_async_type type)
+	const extint_async_callback_t callback,
+	const enum extint_async_type type)
 {
 	for (uint8_t i = 0; i < EXTINT_CALLBACKS_MAX; i++) {
 		if (_extint_dev.callbacks[i].handler == NULL) {
@@ -92,7 +92,7 @@ enum status_code extint_async_register_callback(
  *                               table.
  */
 enum status_code extint_async_unregister_callback(
-	extint_async_callback_t callback)
+	const extint_async_callback_t callback)
 {
 	for (uint8_t i = 0; i < EXTINT_CALLBACKS_MAX; i++) {
 		if (_extint_dev.callbacks[i].handler == callback) {
@@ -104,6 +104,67 @@ enum status_code extint_async_unregister_callback(
 	return STATUS_ERR_BAD_ADDRESS;
 }
 
+/**
+ * \brief Enables asynchronous callback generation for a given channel and type.
+ *
+ * Enables asynchronous callbacks for a given logical external interrupt channel
+ * and type. This must be called before an external interrupt channel will
+ * generate callback events.
+ *
+ * \param channel  Logical channel to enable callback generations for
+ * \param type     Type of callback function callbacks to enable
+ *
+ * \return Status of the callback enable operation.
+ * \retval STATUS_OK               The callbacks was enabled successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ */
+enum status_code extint_async_callback_enable(
+	const uint32_t channel,
+	const enum extint_async_type type)
+{
+	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
+		Eic *const eic = _extint_get_eic_from_channel(channel);
+
+		eic->INTENSET.reg = (1 << channel);
+	}
+	else {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Disables asynchronous callback generation for a given channel and type.
+ *
+ * Disables asynchronous callbacks for a given logical external interrupt
+ * channel and type.
+ *
+ * \param channel  Logical channel to disable callback generations for
+ * \param type     Type of callback function callbacks to disable
+ *
+ * \return Status of the callback disable operation.
+ * \retval STATUS_OK               The callbacks was disabled successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ */
+enum status_code extint_async_callback_disable(
+	const uint32_t channel,
+	const enum extint_async_type type)
+{
+	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
+		Eic *const eic = _extint_get_eic_from_channel(channel);
+
+		eic->INTENCLR.reg = (1 << channel);
+	}
+	else {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	return STATUS_OK;
+}
+
 void EIC_IRQn_Handler(void);
 void EIC_IRQn_Handler(void)
 {
@@ -112,8 +173,7 @@ void EIC_IRQn_Handler(void)
 		if (extint_ch_is_detected(i)) {
 			/* Find any associated callback entries in the callback table */
 			for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
-				if (_extint_dev.callbacks[j].type !=
-						EXTINT_ASYNC_TYPE_CHANNEL) {
+				if (_extint_dev.callbacks[j].type != EXTINT_ASYNC_TYPE_CHANNEL) {
 					continue;
 				}
 
@@ -132,8 +192,7 @@ void EIC_IRQn_Handler(void)
 		if (extint_nmi_is_detected(k)) {
 			/* Find any associated callback entries in the callback table */
 			for (uint8_t l = 0; l < EXTINT_CALLBACKS_MAX; l++) {
-				if (_extint_dev.callbacks[l].type !=
-						EXTINT_ASYNC_TYPE_NMI) {
+				if (_extint_dev.callbacks[l].type != EXTINT_ASYNC_TYPE_NMI) {
 					continue;
 				}
 

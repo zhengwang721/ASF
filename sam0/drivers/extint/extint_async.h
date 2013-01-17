@@ -42,6 +42,7 @@
 #define EXTINT_ASYNC_H_INCLUDED
 
 #include <compiler.h>
+#include "extint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,11 +71,19 @@ enum extint_async_type
 };
 
 enum status_code extint_async_register_callback(
-	extint_async_callback_t callback,
-	enum extint_async_type type);
+	const extint_async_callback_t callback,
+	const enum extint_async_type type);
 
 enum status_code extint_async_unregister_callback(
-	extint_async_callback_t callback);
+	const extint_async_callback_t callback);
+
+enum status_code extint_async_callback_enable(
+	const uint32_t channel,
+	const enum extint_async_type type);
+
+enum status_code extint_async_callback_disable(
+	const uint32_t channel,
+	const enum extint_async_type type);
 
 #ifdef __cplusplus
 }
