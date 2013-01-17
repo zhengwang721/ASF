@@ -239,7 +239,7 @@ static void ecb_mode_test_pdca(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -302,7 +302,7 @@ static void ecb_mode_test_pdca(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_DMA_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -379,7 +379,7 @@ static void ecb_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -424,7 +424,7 @@ static void ecb_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_ECB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -476,7 +476,7 @@ static void cbc_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CBC_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -522,7 +522,7 @@ static void cbc_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CBC_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -574,7 +574,7 @@ static void cfb128_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CFB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -621,7 +621,7 @@ static void cfb128_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CFB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -674,7 +674,7 @@ static void ofb_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_OFB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -721,7 +721,7 @@ static void ofb_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_OFB_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -774,7 +774,7 @@ static void ctr_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CTR_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */
@@ -821,7 +821,7 @@ static void ctr_mode_test(void)
 	g_aesa_inst.aesa_cfg->dma_mode = AESA_MANUAL_MODE;
 	g_aesa_inst.aesa_cfg->opmode = AESA_CTR_MODE;
 	g_aesa_inst.aesa_cfg->cfb_size = AESA_CFB_SIZE_128;
-	g_aesa_inst.aesa_cfg->countermeasure_mask = 0xF;
+	g_aesa_inst.aesa_cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 	aesa_set_config(&g_aesa_inst);
 
 	/* Beginning of a new message. */

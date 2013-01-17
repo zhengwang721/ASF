@@ -83,7 +83,7 @@ void aesa_get_config_defaults(struct aesa_config *const cfg)
 	cfg->dma_mode = AESA_MANUAL_MODE;
 	cfg->opmode = AESA_ECB_MODE;
 	cfg->cfb_size = AESA_CFB_SIZE_128;
-	cfg->countermeasure_mask = 0xF;
+	cfg->countermeasure_mask = AESA_COUNTERMEASURE_TYPE_ALL;
 }
 
 /**

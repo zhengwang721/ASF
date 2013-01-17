@@ -44,8 +44,8 @@
  *
  */
 
-#ifndef _AESA_H_INCLUDED
-#define _AESA_H_INCLUDED
+#ifndef AESA_H_INCLUDED
+#define AESA_H_INCLUDED
 
 /**
  * \defgroup group_sam_drivers_aesa AESA - Advanced Encryption Standard module
@@ -64,31 +64,49 @@
 
 
 /** AESA Processing mode */
-#define AESA_DECRYPTION 0
-#define AESA_ENCRYPTION 1
-
+enum aesa_encrypt_mode {
+	AESA_DECRYPTION = 0,
+	AESA_ENCRYPTION,
+};
 /** AESA Cryptographic key size */
-#define AESA_KEY_SIZE_128 0
-#define AESA_KEY_SIZE_192 1
-#define AESA_KEY_SIZE_256 2
+enum aesa_key_size {
+	AESA_KEY_SIZE_128 = 0,
+	AESA_KEY_SIZE_192,
+	AESA_KEY_SIZE_256,
+};
 
 /** AESA DMA mode */
-#define AESA_MANUAL_MODE 0
-#define AESA_DMA_MODE 1
+enum aesa_dma_mode {
+	AESA_MANUAL_MODE = 0,
+	AESA_DMA_MODE,
+};
 
 /** AESA Confidentiality mode */
-#define AESA_ECB_MODE 0
-#define AESA_CBC_MODE 1
-#define AESA_OFB_MODE 2
-#define AESA_CFB_MODE 3
-#define AESA_CTR_MODE 4
+enum aesa_opmode {
+	AESA_ECB_MODE = 0,
+	AESA_CBC_MODE,
+	AESA_OFB_MODE,
+	AESA_CFB_MODE,
+	AESA_CTR_MODE,
+};
 
 /** AESA CFB size */
-#define AESA_CFB_SIZE_128 0
-#define AESA_CFB_SIZE_64 1
-#define AESA_CFB_SIZE_32 2
-#define AESA_CFB_SIZE_16 3
-#define AESA_CFB_SIZE_8 4
+enum aesa_cfb_size {
+	AESA_CFB_SIZE_128 = 0,
+	AESA_CFB_SIZE_64,
+	AESA_CFB_SIZE_32,
+	AESA_CFB_SIZE_16,
+	AESA_CFB_SIZE_8,
+};
+
+/** AESA CounterMeasure type */
+enum aesa_countermeature_type {
+	AESA_COUNTERMEASURE_TYPE_1 = 0x01,
+	AESA_COUNTERMEASURE_TYPE_2 = 0x02,
+	AESA_COUNTERMEASURE_TYPE_3 = 0x04,
+	AESA_COUNTERMEASURE_TYPE_4 = 0x08,
+	AESA_COUNTERMEASURE_TYPE_ALL = 0x0F,
+};
 
 typedef enum aesa_interrupt_source {
 	AESA_INTERRUPT_INPUT_BUFFER_READY = AESA_IER_ODATARDY,
@@ -107,17 +125,17 @@ typedef void (*aesa_callback_t)(void);
 /** AESA Configuration structure. */
 struct aesa_config {
 	/* 0=decryption data, 1=encryption data */
-	uint8_t encrypt_mode;
+	enum aesa_encrypt_mode encrypt_mode;
 	/* 0 = 128bits, 1 = 192bits, 2 = 256bits */
-	uint8_t key_size;
+	enum aesa_key_size key_size;
 	/* 0=Non-DMA mode, 1=DMA mode */
-	uint8_t dma_mode;
+	enum aesa_dma_mode dma_mode;
 	/* 0 = ECB, 1 = CBC, 2 = OFB, 3 = CFB, 4 = CTR */
-	uint8_t opmode;
+	enum aesa_opmode opmode;
 	/* 0 = 128bits, 1 = 64bits, 2 = 32bits, 3 = 16bits, 4 = 8bits */
-	uint8_t cfb_size;
+	enum aesa_cfb_size cfb_size;
 	/* [0,15], bit=0 means CounterMeasure is disabled. */
-	uint8_t countermeasure_mask;
+	enum aesa_countermeature_type countermeasure_mask;
 };
 
 /**
@@ -440,4 +458,4 @@ static inline void aesa_write_drng_seed(struct aesa_dev_inst *const dev_inst,
  * \endcode
  */
 
-#endif  /* _AESA_H_INCLUDED */
+#endif  /* AESA_H_INCLUDED */
