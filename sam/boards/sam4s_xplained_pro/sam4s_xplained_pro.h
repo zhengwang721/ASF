@@ -73,7 +73,7 @@
 
 //@}
 
-#endif
+#endif // __DOXYGEN__
 /** @} */
 
 
