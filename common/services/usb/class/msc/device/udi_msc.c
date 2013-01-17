@@ -371,7 +371,7 @@ bool udi_msc_enable(void)
 	udi_msc_b_cbw_invalid = false;
 	udi_msc_nb_lun = get_nb_lun();
 	if (0 == udi_msc_nb_lun)
-		return false;	// No lun available, then not authorize to enable interface
+		return false; // No lun available, then not authorize to enable interface
 	udi_msc_nb_lun--;
 	// Call application callback
 	// to initialize memories or signal that interface is enabled
@@ -769,9 +769,6 @@ static void udi_msc_spc_inquiry(void)
 	// Constant inquiry data for all LUNs
 	static struct scsi_inquiry_data udi_msc_inquiry_data = {
 		.pq_pdt = SCSI_INQ_PQ_CONNECTED | SCSI_INQ_DT_DIR_ACCESS,
-#ifdef UDI_MSC_NOT_REMOVABLE
-		.flags1 = 0,
-#endif
 		.version = SCSI_INQ_VER_SPC,
 		.flags3 = SCSI_INQ_RSP_SPC2,
 		.addl_len = SCSI_INQ_ADDL_LEN(sizeof(struct scsi_inquiry_data)),
@@ -797,9 +794,8 @@ static void udi_msc_spc_inquiry(void)
 		return;
 	}
 
-#ifndef UDI_MSC_NOT_REMOVABLE
-	udi_msc_inquiry_data.flags1 = mem_removal(udi_msc_cbw.bCBWLUN) ? SCSI_INQ_RMB : 0;
-#endif
+	udi_msc_inquiry_data.flags1 = mem_removal(udi_msc_cbw.bCBWLUN) ?
+			SCSI_INQ_RMB : 0;
 
 	//* Fill product ID field
 	// Copy name in product id field
