@@ -499,7 +499,7 @@
 //! \name Extension header #4 PWM definitions
 //@{
 #define EXT4_PWM_MODULE           TC0
-#define EXT1_PWM_CHANNEL          2
+#define EXT4_PWM_CHANNEL          2
 #define EXT4_PWM_0_MUX            MUX_PA12B_TC0_A2
 #define EXT4_PWM_1_MUX            MUX_PA13B_TC0_B2
 //@}
