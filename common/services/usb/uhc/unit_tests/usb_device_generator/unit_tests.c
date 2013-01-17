@@ -909,6 +909,20 @@ static void main_test21(void)
 }
 //! @}
 
+//! \brief Reset and initialize USB OTG perhipheral
+static void main_otg_init(void)
+{
+	otg_disable();
+	delay_ms(10);
+	otg_enable();
+
+	otg_disable_id_pin();
+	otg_force_device_mode();
+	otg_enable_pad();
+	otg_enable();
+	otg_unfreeze_clock();
+	(void)Is_otg_clock_frozen();
+}
 
 /*! \brief Main function. Execution starts here.
  */
@@ -924,15 +938,10 @@ int main(void)
 #if SAM
 	pmc_enable_periph_clk(ID_UOTGHS);
 #endif
-	otg_disable_id_pin();
-	otg_force_device_mode();
-	otg_enable_pad();
-	otg_enable();
-	otg_unfreeze_clock();
-	(void)Is_otg_clock_frozen();
 
 	// Execute all USB core tests for each USB speed (low, full and high)
 	for (speed = 0; speed < 3; speed++) {
+		main_otg_init();
 		switch (speed) {
 		// LS speed
 		case 0:
