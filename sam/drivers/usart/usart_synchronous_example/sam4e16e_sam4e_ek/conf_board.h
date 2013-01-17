@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Smart Card Standard ISO7816 driver.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,30 +41,15 @@
  *
  */
 
-#ifndef ISO7816_H_INCLUDED
-#define ISO7816_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "board.h"
-#include "usart.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#if defined(SMART_CARD_USING_GPIO)
-#include "gpio.h"
-#elif defined(SMART_CARD_USING_IOPORT)
-#include "ioport.h"
-#else
-#error Smart Card service is not supported.
-#endif
+/* USART1 module is used in SYNC. mode. */
+#define CONF_BOARD_USART_RXD
+#define CONF_BOARD_USART_TXD
+#define CONF_BOARD_USART_SCK
 
-void iso7816_init(const usart_iso7816_opt_t *p_usart_opt, uint32_t ul_mck,
-		uint32_t ul_rst_pin_idx);
-void iso7816_icc_power_off(void);
-uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
-		uint16_t us_length);
-void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
-uint8_t iso7816_get_reset_statuts(void);
-void iso7816_cold_reset(void);
-void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint8_t *p_atr);
-
-#endif /* ISO7816_H_INCLUDED */
-
+#endif /* CONF_BOARD_H_INCLUDED */

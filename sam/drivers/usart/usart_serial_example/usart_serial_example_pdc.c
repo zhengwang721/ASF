@@ -3,7 +3,7 @@
  *
  * \brief USART Serial example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -132,7 +132,7 @@ static uint32_t gs_ul_size_buffer = BUFFER_SIZE;
 static uint32_t gs_ul_size_nextbuffer = BUFFER_SIZE;
 
 /** Byte mode read buffer. */
-static uint16_t gs_us_read_buffer = 0;
+static uint32_t gs_us_read_buffer = 0;
 
 /** Current transfer mode. */
 static uint8_t gs_uc_trans_mode = PDC_TRANSFER;
