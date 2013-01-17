@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.extint" caption="External Interrupt Driver">
+	<select-by-config id="sam0.drivers.extint" name="config.sam0.drivers.extint" caption="External Interrupt Driver" default="async">
 		<info type="description" value="summary">
 			Driver for the SAMD20 external interrupts. Provides a unified
 			interface for the configuration and management of external
@@ -8,14 +8,41 @@
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
 		</info>
-		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="extint.h"/>
-		<build type="c-source" value="extint.c"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_extint_basic.h"/>
-		<build type="doxygen-entry-point" value="sam0_extint_group"/>
-		<device-support value="samd20"/>
-		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.pinmux"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
-	</module>
+
+		<module type="driver" id="sam0.drivers.extint#polled" caption="External Interrupt Driver (Polled Mode)">
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="extint.h"/>
+			<build type="c-source" value="extint.c"/>
+
+			<build type="define" name="EXTINT_ASYNC" value="false"/>
+
+			<build type="header-file" subtype="example" value="quick_start/qs_extint_basic.h"/>
+			<build type="doxygen-entry-point" value="sam0_extint_group"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system.pinmux"/>
+
+			<device-support value="samd20"/>
+		</module>
+
+		<module type="driver" id="sam0.drivers.extint#async" caption="External Interrupt Driver (Asynchronous Mode)">
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="extint.h"/>
+			<build type="header-file" subtype="api" value="extint_async.h"/>
+			<build type="c-source" value="extint.c"/>
+			<build type="c-source" value="extint_async.c"/>
+
+			<build type="define" name="EXTINT_ASYNC" value="true"/>
+
+			<build type="header-file" subtype="example" value="quick_start/qs_extint_basic.h"/>
+			<build type="doxygen-entry-point" value="sam0_extint_group"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system.pinmux"/>
+
+			<device-support value="samd20"/>
+		</module>
+	</select-by-config>
 </asf>

@@ -172,6 +172,10 @@
 #include <compiler.h>
 #include <pinmux.h>
 
+#if EXTINT_ASYNC == true
+#  include "extint_async.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -210,8 +214,7 @@ struct extint_ch_conf {
 	/** Pin MUX position from the channel, a \c PINMUX_* header file
 	 *  constant. */
 	uint32_t pinmux_position;
-	/** Wake up the microcontroller if the channel interrupt fires during
-	 *  sleep mode. */
+	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
@@ -252,6 +255,20 @@ struct extint_nmi_conf {
 };
 
 #if !defined(__DOXYGEN__)
+/** \internal
+ *  Internal EXTINT module device instance structure definition.
+ */
+struct _extint_device
+{
+#  if EXTINT_ASYNC == true
+	/** Asynchronous channel callback table, for user-registered handlers. */
+	struct {
+	    enum extint_async_type type;
+	    extint_async_callback_t handler;
+	} callbacks[EXTINT_CALLBACKS_MAX];
+#  endif
+};
+
 /**
  * \brief Retrieves the base EIC module address from a given channel number.
  *

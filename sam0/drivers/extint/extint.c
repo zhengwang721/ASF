@@ -38,8 +38,21 @@
  * \asf_license_stop
  *
  */
-#include <extint.h>
+#include "extint.h"
 
+/**
+ * \internal
+ * Internal driver device instance struct.
+ */
+struct _extint_device _extint_dev;
+
+/**
+ * \internal
+ * Waits for the given EIC module to synchronize across the main and peripheral
+ * digital clock domains.
+ *
+ * \param[in] module  Pointer to an EIC module to wait for sync
+ */
 static void _eic_wait_for_sync(Eic* module)
 {
 	while (module->STATUS.reg & EIC_STATUS_SYNCBUSY) {
@@ -183,7 +196,7 @@ enum status_code extint_nmi_set_config(
 		return STATUS_ERR_PIN_MUX_INVALID;
 	}
 
-	if (((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
+	if ((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
 			(config->detect == EXTINT_DETECT_NONE)) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
