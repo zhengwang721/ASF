@@ -316,36 +316,36 @@
 
 //! \name Extension header #3 ADC definitions
 //@{
-#define EXT2_ADC_MODULE           ADC
-#define EXT2_ADC_0_CHANNEL        13
-#define EXT2_ADC_1_CHANNEL        14
+#define EXT3_ADC_MODULE           ADC
+#define EXT3_ADC_0_CHANNEL        13
+#define EXT3_ADC_1_CHANNEL        14
 //@}
 
 //! \name Extension header #3 PWM definitions
 //@{
-#define EXT2_PWM_MODULE           PWM
-#define EXT2_PWM_CHANNEL          2
+#define EXT3_PWM_MODULE           PWM
+#define EXT3_PWM_CHANNEL          2
 //@}
 
 //! \name Extension header #3 IRQ/External interrupt definitions
 //@{
-#define EXT2_IRQ_MODULE           SUPC
-#define EXT2_IRQ_CHANNEL          0
+#define EXT3_IRQ_MODULE           SUPC
+#define EXT3_IRQ_CHANNEL          0
 //@}
 
 //! \name Extension header #3 TWI definitions
 //@{
-#define EXT2_TWI_MODULE           TWI1
+#define EXT3_TWI_MODULE           TWI1
 //@}
 
 //! \name Extension header #3 UART definitions
 //@{
-#define EXT2_UART_MODULE          UART1
+#define EXT3_UART_MODULE          UART1
 //@}
 
 //! \name Extension header #3 SPI definitions
 //@{
-#define EXT2_SPI_MODULE           SPI
+#define EXT3_SPI_MODULE           SPI
 //@}
 
 //! \name Embedded debugger GPIO interface definitions
