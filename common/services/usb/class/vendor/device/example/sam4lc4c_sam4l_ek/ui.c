@@ -86,6 +86,8 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAM4L-EK:
- * - LED0 blinks when USB host has checked and enabled HID generic interface
- * - LED0 is on when loopback is running
+ * - LED0 blinks when USB host has checked and enabled Vendor interface
+ * - LED0 is on when
+ *   - USB is in IDLE mode and Vendor interface is not enabled by Host
+ *   - loopback is running
  */
