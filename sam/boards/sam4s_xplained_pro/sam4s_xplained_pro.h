@@ -100,11 +100,8 @@
 
 //! \name LED #0 definition
 //@{
-//! Name string macro
 #define LED_0_NAME                "LED0 (yellow)"
-//! LED pin identifier
 #define LED_0_PIN                 IOPORT_CREATE_PIN(PIOC, 23)
-//! Active level of LED
 #define LED_0_ACTIVE              false
 //@}
 
@@ -113,11 +110,8 @@
 
 //! \name Button #0 definition
 //@{
-//! Name string macro
 #define BUTTON_0_NAME             "SW0"
-//! Button pin identifier
 #define BUTTON_0_PIN              IOPORT_CREATE_PIN(PIOA, 2)
-//! Active level of button
 #define BUTTON_0_ACTIVE           false
 //@}
 
