@@ -94,6 +94,6 @@
  * disconnected and consumes more power.
  */
 //#define CONF_BOARD_USB_PORT
-//#define CONF_BOARD_USB_NO_VBUS_DETECT /* VBUS detect NOT enabled */
+//#define CONF_BOARD_USB_VBUS_DETECT /* VBUS detect enabled */
 
 #endif /* CONF_BOARD_H_INCLUDED */

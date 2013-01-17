@@ -94,13 +94,13 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_TWI0
-		gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
-		gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+	gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_TWI1
-		gpio_configure_pin(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
-		gpio_configure_pin(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+	gpio_configure_pin(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+	gpio_configure_pin(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
 	/* Configure SPI pins */
@@ -116,34 +116,34 @@ void board_init(void)
 	 * CONF_BOARD_SPI_NPCS_FLAGS macros.
 	 */
 
-	#ifdef CONF_BOARD_SPI_NPCS0
-		gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS0
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS1
-		#if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS1_PA0_GPIO, SPI_NPCS1_PA0_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS1
+#    if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS1_PA0_GPIO, SPI_NPCS1_PA0_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS2
-		#if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS2_PA1_GPIO, SPI_NPCS2_PA1_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS2
+#    if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS2_PA1_GPIO, SPI_NPCS2_PA1_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS3
-		#if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS3_PA19_GPIO, SPI_NPCS3_PA19_FLAGS);
-		#endif
-	#endif
-#endif
+#  ifdef CONF_BOARD_SPI_NPCS3
+#    if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS3_PA19_GPIO, SPI_NPCS3_PA19_FLAGS);
+#    endif
+#  endif
+#endif /* CONF_BOARD_SPI */
 
 #ifdef CONF_BOARD_USART_RXD
 	/* Configure USART RXD pin */
@@ -352,8 +352,8 @@ void board_init(void)
 #endif
 
 #if defined(CONF_BOARD_USB_PORT)
-# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+#  if defined(CONF_BOARD_USB_VBUS_DETECT)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
-# endif
+#  endif
 #endif
 }

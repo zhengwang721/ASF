@@ -116,34 +116,34 @@ void board_init(void)
 	 * CONF_BOARD_SPI_NPCS_FLAGS macros.
 	 */
 
-	#ifdef CONF_BOARD_SPI_NPCS0
-		gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS0
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS1
-		#if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS1_PA31_GPIO, SPI_NPCS1_PA31_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS1
+#    if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS1_PA31_GPIO, SPI_NPCS1_PA31_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS2
-		#if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS2_PA30_GPIO, SPI_NPCS2_PA30_FLAGS);
-		#endif
-	#endif
+#  ifdef CONF_BOARD_SPI_NPCS2
+#    if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS2_PA30_GPIO, SPI_NPCS2_PA30_FLAGS);
+#    endif
+#  endif
 
-	#ifdef CONF_BOARD_SPI_NPCS3
-		#if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
-			gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
-		#else
-			gpio_configure_pin(SPI_NPCS3_PA22_GPIO, SPI_NPCS3_PA22_FLAGS);
-		#endif
-	#endif
-#endif
+#  ifdef CONF_BOARD_SPI_NPCS3
+#    if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
+#    else
+	gpio_configure_pin(SPI_NPCS3_PA22_GPIO, SPI_NPCS3_PA22_FLAGS);
+#    endif
+#  endif
+#endif /* CONF_BOARD_SPI */
 
 #ifdef CONF_BOARD_USART_RXD
 	/* Configure USART RXD pin */
@@ -270,7 +270,7 @@ void board_init(void)
 #endif
 
 #if defined(CONF_BOARD_USB_PORT)
-# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+# if defined(CONF_BOARD_USB_VBUS_DETECT)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
 # endif
 #endif

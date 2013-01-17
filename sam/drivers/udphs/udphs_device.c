@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDPHS. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,7 +78,7 @@
 
 /* USB VBus monitor configuration */
 #define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
- 		!defined(CONF_BOARD_USB_NO_VBUS_DETECT))
+ 		defined(CONF_BOARD_USB_VBUS_DETECT))
 #define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
 
 #define UDD_EP_USED(ep)      (USB_DEVICE_MAX_EP >= ep)

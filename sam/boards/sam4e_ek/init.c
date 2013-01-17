@@ -182,8 +182,8 @@ void board_init(void)
 #endif
 
 #if defined(CONF_BOARD_USB_PORT)
-# if !defined(CONF_BOARD_USB_NO_VBUS_DETECT)
+#  if defined(CONF_BOARD_USB_VBUS_DETECT)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
-# endif
+#  endif
 #endif
 }

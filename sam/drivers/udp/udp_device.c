@@ -66,7 +66,7 @@
 
 /* USB VBus monitor configuration */
 #define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
- 		!defined(CONF_BOARD_USB_NO_VBUS_DETECT))
+ 		defined(CONF_BOARD_USB_VBUS_DETECT))
 #define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
 
 /**
