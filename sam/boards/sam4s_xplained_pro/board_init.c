@@ -40,6 +40,11 @@
 #include <board.h>
 #include <ioport.h>
 
+/**
+ * \addtogroup sam4s_xplained_pro_group
+ * @{
+ */
+
 void board_init(void)
 {
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
@@ -59,3 +64,5 @@ void board_init(void)
 	ioport_set_pin_mode(BUTTON_0_PIN, (BUTTON_0_ACTIVE ?
 				IOPORT_MODE_PULLDOWN : IOPORT_MODE_PULLUP));
 }
+
+/** @} */

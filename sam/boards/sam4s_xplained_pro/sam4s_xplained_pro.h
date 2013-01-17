@@ -43,6 +43,7 @@
 #include <conf_board.h>
 
 /**
+ * \ingroup group_common_boards
  * \defgroup sam4s_xplained_pro_group SAM4S Xplained Pro board
  * @{
  */
@@ -98,21 +99,49 @@
 #define BOARD_OSC_STARTUP_US      15625
 //@}
 
-//! \name LED #0 definition
+//! \name LED0 definitions
+//@{
+#define LED0_PIN                  IOPORT_CREATE_PIN(PIOC, 23)
+#define LED0_ACTIVE               false
+#define LED0_INACTIVE             !LED0_ACTIVE
+//@}
+
+//! \name SW0 definitions
+//@{
+#define SW0_PIN                   IOPORT_CREATE_PIN(PIOA, 2)
+#define SW0_ACTIVE                false
+#define SW0_INACTIVE              !SW0_ACTIVE
+#define SW0_SUPC_INPUT            2
+//@}
+
+/**
+ * \name LED #0 definitions
+ *
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
+ * boards.
+ */
 //@{
 #define LED_0_NAME                "LED0 (yellow)"
-#define LED_0_PIN                 IOPORT_CREATE_PIN(PIOC, 23)
-#define LED_0_ACTIVE              false
+#define LED_0_PIN                 LED0_PIN
+#define LED_0_ACTIVE              LED0_ACTIVE
+#define LED_0_INACTIVE            LED0_INACTIVE
 //@}
 
 //! Number of on-board LEDs
 #define LED_COUNT 1
 
-//! \name Button #0 definition
+/**
+ * \name Button #0 definitions
+ *
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
+ * boards.
+ */
 //@{
 #define BUTTON_0_NAME             "SW0"
-#define BUTTON_0_PIN              IOPORT_CREATE_PIN(PIOA, 2)
-#define BUTTON_0_ACTIVE           false
+#define BUTTON_0_PIN              SW0_PIN
+#define BUTTON_0_ACTIVE           SW0_ACTIVE
+#define BUTTON_0_INACTIVE         SW0_INACTIVE
+#define BUTTON_0_SUPC_INPUT       SW0_SUPC_INPUT
 //@}
 
 //! Number of on-board buttons
@@ -176,7 +205,7 @@
 //! \name Extension header #1 IRQ/External interrupt definitions
 //@{
 #define EXT1_IRQ_MODULE           SUPC
-#define EXT1_IRQ_CHANNEL          1
+#define EXT1_IRQ_INPUT            1
 //@}
 
 //! \name Extension header #1 TWI definitions
@@ -222,7 +251,6 @@
 #define EXT2_PIN_GPIO_1           EXT2_PIN_6
 #define EXT2_PIN_PWM_0            EXT2_PIN_7
 #define EXT2_PIN_PWM_1            EXT2_PIN_8
-#define EXT2_PIN_IRQ              EXT2_PIN_9
 #define EXT2_PIN_TWI_SDA          EXT2_PIN_11
 #define EXT2_PIN_TWI_SCL          EXT2_PIN_12
 #define EXT2_PIN_UART_RX          EXT2_PIN_13
@@ -245,12 +273,6 @@
 //@{
 #define EXT2_PWM_MODULE           PWM
 #define EXT2_PWM_CHANNEL          1
-//@}
-
-//! \name Extension header #2 IRQ/External interrupt definitions
-//@{
-//#define EXT2_IRQ_MODULE           SUPC
-//#define EXT2_IRQ_CHANNEL          1
 //@}
 
 //! \name Extension header #2 TWI definitions
@@ -324,7 +346,7 @@
 //! \name Extension header #3 IRQ/External interrupt definitions
 //@{
 #define EXT3_IRQ_MODULE           SUPC
-#define EXT3_IRQ_CHANNEL          0
+#define EXT3_IRQ_INPUT            0
 //@}
 
 //! \name Extension header #3 TWI definitions
