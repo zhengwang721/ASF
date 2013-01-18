@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for BPM driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -137,7 +137,7 @@ static inline void wait_test_assert_idle(void)
 static void ast_per_callback(void)
 {
 	log_event(EVENT_WAKEUP);
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
 /**
@@ -363,13 +363,13 @@ int main(void)
 	ast_set_config(AST, &ast_conf);
 
 	/* Set periodic 0 to interrupt after 1/16 second in counter mode. */
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 2);
 
-	ast_set_callback(AST, ast_interrupt_per, ast_per_callback,
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 1);
 
-	ast_enable_wakeup(AST, ast_wakeup_per);
+	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
