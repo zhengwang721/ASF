@@ -59,6 +59,10 @@ extern "C" {
 #  define EXTINT_CALLBACKS_MAX 10
 #endif
 
+/** \name Callback configuration and initialization
+ * @{
+ */
+
 /** Type definition for an EXTINT module callback function. */
 typedef void (*extint_async_callback_t)(uint32_t channel);
 
@@ -71,10 +75,6 @@ enum extint_async_type
 	EXTINT_ASYNC_TYPE_DETECT,
 };
 
-/** \name Callback Configuration and initialization
- * @{
- */
-
 enum status_code extint_async_register_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type);
@@ -85,7 +85,7 @@ enum status_code extint_async_unregister_callback(
 
 /** @} */
 
-/** \name Callback Enabling and disabling (channel)
+/** \name Callback enabling and disabling (channel)
  * @{
  */
 
