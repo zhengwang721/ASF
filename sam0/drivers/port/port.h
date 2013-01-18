@@ -114,18 +114,31 @@
 extern "C" {
 #endif
 
+/** \name PORT Alias Macros
+ * @{
+ */
+
 /** Convenience definition for GPIO module group A on the device. */
-#define PORTA                 PORT.Group[0]
+#if (PORT_GROUPS > 0) || defined(__DOXYGEN__)
+#  define PORTA             PORT.Group[0]
+#endif
 
 #if (PORT_GROUPS > 1) || defined(__DOXYGEN__)
-	/** Convenience definition for GPIO module group B on the device. */
-	#define PORTB             PORT.Group[1]
+/** Convenience definition for GPIO module group B on the device. */
+#  define PORTB             PORT.Group[1]
 #endif
 
 #if (PORT_GROUPS > 2) || defined(__DOXYGEN__)
-	/** Convenience definition for GPIO module group C on the device. */
-	#define PORTC             PORT.Group[2]
+/** Convenience definition for GPIO module group C on the device. */
+#  define PORTC             PORT.Group[2]
 #endif
+
+#if (PORT_GROUPS > 3) || defined(__DOXYGEN__)
+/** Convenience definition for GPIO module group D on the device. */
+#  define PORTD             PORT.Group[3]
+#endif
+
+/** @} */
 
 /**
  *  \brief Port pin direction configuration enum.
@@ -207,6 +220,7 @@ static inline uint32_t port_group_get_input_level(
 		const PortGroup *const port,
 		const uint32_t mask)
 {
+	/* Sanity check arguments */
 	Assert(port);
 
 	return (port->IN.reg & mask);
@@ -227,6 +241,7 @@ static inline void port_group_set_output_level(
 		const uint32_t mask,
 		const uint32_t level_mask)
 {
+	/* Sanity check arguments */
 	Assert(port);
 
 	port->OUTSET.reg = (mask &  level_mask);
@@ -245,6 +260,7 @@ static inline void port_group_toggle_output_level(
 		PortGroup *const port,
 		const uint32_t mask)
 {
+	/* Sanity check arguments */
 	Assert(port);
 
 	port->OUTTGL.reg = mask;

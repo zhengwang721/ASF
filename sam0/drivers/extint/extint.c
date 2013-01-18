@@ -55,6 +55,9 @@ struct _extint_device _extint_dev;
  */
 static void _eic_wait_for_sync(Eic* module)
 {
+	/* Sanity check arguments */
+	Assert(module);
+
 	while (module->STATUS.reg & EIC_STATUS_SYNCBUSY) {
 		/* Wait for sync to complete */
 	}
@@ -139,6 +142,9 @@ enum status_code extint_ch_set_config(
 		const uint8_t channel,
 		const struct extint_ch_conf *const config)
 {
+	/* Sanity check arguments */
+	Assert(config);
+
 	if (!config->pinmux_position == 0) {
 		return STATUS_ERR_PIN_MUX_INVALID;
 	}
@@ -199,6 +205,9 @@ enum status_code extint_nmi_set_config(
 		const uint8_t nmi_channel,
 		const struct extint_nmi_conf *const config)
 {
+	/* Sanity check arguments */
+	Assert(config);
+
 	if (!config->pinmux_position == 0) {
 		return STATUS_ERR_PIN_MUX_INVALID;
 	}

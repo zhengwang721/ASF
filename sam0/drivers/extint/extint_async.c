@@ -72,6 +72,9 @@ enum status_code extint_async_register_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type)
 {
+	/* Sanity check arguments */
+	Assert(callback);
+
 	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
@@ -106,6 +109,9 @@ enum status_code extint_async_unregister_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type)
 {
+	/* Sanity check arguments */
+	Assert(callback);
+
 	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
@@ -142,7 +148,7 @@ enum status_code extint_async_callback_enable(
 	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
-		eic->INTENSET.reg = (1 << channel);
+		eic->INTENSET.reg = (1UL << channel);
 	}
 	else {
 		Assert(false);
@@ -172,7 +178,7 @@ enum status_code extint_async_callback_disable(
 	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
-		eic->INTENCLR.reg = (1 << channel);
+		eic->INTENCLR.reg = (1UL << channel);
 	}
 	else {
 		Assert(false);

@@ -56,6 +56,9 @@ void port_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct port_conf *const config)
 {
+	/* Sanity check arguments */
+	Assert(config);
+
 	struct system_pinmux_conf pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
@@ -84,6 +87,10 @@ void port_group_set_config(
 		const uint32_t mask,
 		const struct port_conf *const config)
 {
+	/* Sanity check arguments */
+	Assert(port);
+	Assert(config);
+
 	struct system_pinmux_conf pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
