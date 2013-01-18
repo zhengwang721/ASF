@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Flash Program example configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,16 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define IFLASH_PAGE_SIZE  IFLASH0_PAGE_SIZE
+/** Define to avoid disabling the watchdog at startup. */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-/* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH1_ADDR + IFLASH1_SIZE - IFLASH_PAGE_SIZE * 8)
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#endif /* CONF_EXAMPLE_H */
+/** Usart Hw ID used by the console (UART0). */
+#define CONSOLE_UART_ID          ID_UART0
+
+#endif /* CONF_BOARD_H_INCLUDED */

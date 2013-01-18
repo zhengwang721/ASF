@@ -3,7 +3,7 @@
  *
  * \brief Non volatile memories management for SAM devices
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -119,8 +119,8 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data)
 	switch (mem) {
 	case INT_FLASH:
 #if SAM4S
-		/*! This erases 4 pages of flash before writing */
-		if (flash_erase_page(address, IFLASH_ERASE_PAGES_4)) {
+		/*! This erases 8 pages of flash before writing */
+		if (flash_erase_page(address, IFLASH_ERASE_PAGES_8)) {
 			return ERR_INVALID_ARG;
 		} else if (flash_write(address, (const void *)&data, 1,
 				false)) {
@@ -221,8 +221,8 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 	switch (mem) {
 	case INT_FLASH:
 #if SAM4S
-		/*! This erases 4 pages of flash before writing */
-		if (flash_erase_page(address, IFLASH_ERASE_PAGES_4)) {
+		/*! This erases 8 pages of flash before writing */
+		if (flash_erase_page(address, IFLASH_ERASE_PAGES_8)) {
 			return ERR_INVALID_ARG;
 		}
 
@@ -274,9 +274,9 @@ status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number)
 	case INT_FLASH:
 	{
 #if SAM4S
-		/*! Page erase function erases minimum 4 pages in Flash */
+		/*! Page erase function erases minimum 8 pages in Flash */
 		if (flash_erase_page((uint32_t)(page_number * IFLASH_PAGE_SIZE),
-				IFLASH_ERASE_PAGES_4)) {
+				IFLASH_ERASE_PAGES_8)) {
 			return ERR_INVALID_ARG;
 		}
 
