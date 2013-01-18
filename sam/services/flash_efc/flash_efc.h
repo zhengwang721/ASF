@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -67,7 +67,9 @@ typedef enum flash_rc {
 } flash_rc_t;
 //! @}
 
-/*! \name Flash erase page num in FARG[1:0] */
+/*! \name Flash erase page num in FARG[1:0] 
+  \note The erase page commands should be cautiouly used as EPA4/EPA32 will not
+  take effect according to errata and EPA8/EPA16 must module 8/16 page addresses.*/
 //! @{
 typedef enum flash_farg_page_num {
 	/* 4 of pages to be erased with EPA command*/
