@@ -68,7 +68,7 @@ enum extint_async_type
 	/** Callback type for when an external interrupt detects the configured
 	 *  channel criteria (i.e. edge or level detection)
 	 */
-	EXTINT_ASYNC_TYPE_CHANNEL,
+	EXTINT_ASYNC_TYPE_DETECT,
 };
 
 /** \name Callback Configuration and initialization
@@ -83,15 +83,19 @@ enum status_code extint_async_unregister_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type);
 
-enum status_code extint_async_callback_enable(
-	const uint32_t channel,
-	const enum extint_async_type type);
-
-enum status_code extint_async_callback_disable(
-	const uint32_t channel,
-	const enum extint_async_type type);
-
 /** @} */
+
+/** \name Callback Enabling and disabling (channel)
+ * @{
+ */
+
+enum status_code extint_async_ch_enable_callback(
+	const uint32_t channel,
+	const enum extint_async_type type);
+
+enum status_code extint_async_ch_disable_callback(
+	const uint32_t channel,
+	const enum extint_async_type type);
 
 /** @} */
 

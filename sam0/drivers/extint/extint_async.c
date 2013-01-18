@@ -75,7 +75,7 @@ enum status_code extint_async_register_callback(
 	/* Sanity check arguments */
 	Assert(callback);
 
-	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
+	if (type != EXTINT_ASYNC_TYPE_DETECT) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -113,7 +113,7 @@ enum status_code extint_async_unregister_callback(
 	/* Sanity check arguments */
 	Assert(callback);
 
-	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
+	if (type != EXTINT_ASYNC_TYPE_DETECT) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -142,11 +142,11 @@ enum status_code extint_async_unregister_callback(
  * \retval STATUS_OK               The callbacks was enabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
-enum status_code extint_async_callback_enable(
+enum status_code extint_async_ch_enable_callback(
 	const uint32_t channel,
 	const enum extint_async_type type)
 {
-	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
+	if (type == EXTINT_ASYNC_TYPE_DETECT) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
 		eic->INTENSET.reg = (1UL << channel);
@@ -172,11 +172,11 @@ enum status_code extint_async_callback_enable(
  * \retval STATUS_OK               The callbacks was disabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
-enum status_code extint_async_callback_disable(
+enum status_code extint_async_ch_disable_callback(
 	const uint32_t channel,
 	const enum extint_async_type type)
 {
-	if (type == EXTINT_ASYNC_TYPE_CHANNEL) {
+	if (type == EXTINT_ASYNC_TYPE_DETECT) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
 		eic->INTENCLR.reg = (1UL << channel);
