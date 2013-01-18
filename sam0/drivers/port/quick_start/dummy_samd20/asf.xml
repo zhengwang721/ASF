@@ -4,6 +4,7 @@
 		<require idref="sam0.drivers.port.quick_start"/>
 		<build type ="include-path" value="."/>
 		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
 		<device-support value="samd20j18a"/>
 	</project>
 </asf>
