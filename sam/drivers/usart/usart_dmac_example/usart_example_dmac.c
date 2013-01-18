@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART DMAC Serial example for SAM.
+ * \brief USART DMAC Example for SAM.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,11 +42,11 @@
  */
 
 /**
- * \mainpage USART DMAC Serial Example
+ * \mainpage USART DMAC Example
  *
  * \par Purpose
- * This example demonstrates the normal (serial) mode provided by the USART
- * peripherals.
+ * This example demonstrates how to use DMAC to implement USART
+ * peripherals function.
  *
  * \par Requirements
  *  This package can be used with all SAM-EK with UART/USART and DMAC.
@@ -76,7 +76,7 @@
  *   - No flow control
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- USART DMAC Serial Example --
+ *     -- USART DMAC Example --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
