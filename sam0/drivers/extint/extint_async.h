@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAMD20 External Interrupt Driver Asynchronous API Implementation
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,8 +49,7 @@ extern "C" {
 #endif
 
 /**
- * \ingroup sam0_extint_group
- * \defgroup sam0_extint_async_group EXTINT Asynchronous Driver Mode APIs
+ * \addtogroup sam0_extint_group
  *
  * @{
  */

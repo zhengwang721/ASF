@@ -92,15 +92,16 @@ enum status_code extint_async_register_callback(
 }
 
 /**
- * \brief De-registers an asynchronous callback function with the driver.
+ * \brief Unregisters an asynchronous callback function with the driver.
  *
- * De-registers an asynchronous callback with the EXTINT driver, removing it
+ * Unregisters an asynchronous callback with the EXTINT driver, removing it
  * from the internal callback registration table.
  *
- * \param callback  Pointer to the callback function to de-register
+ * \param callback  Pointer to the callback function to unregister
+ * \param type      Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK               The callback was de-registered successfully.
+ * \retval STATUS_OK               The callback was Unregistered successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  * \retval STATUS_ERR_BAD_ADDRESS  No matching entry was found in the
  *                                 registration table.
