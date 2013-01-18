@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Flash Program example configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,32 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define IFLASH_PAGE_SIZE  IFLASH0_PAGE_SIZE
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH1_ADDR + IFLASH1_SIZE - IFLASH_PAGE_SIZE * 8)
+/** Don't change WDT mode register in init.c */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-#endif /* CONF_EXAMPLE_H */
+/** Usart Hw ID used by the console (UART0). */
+#define CONSOLE_UART_ID          ID_UART0
+
+/** Push button definition */
+#define PUSHBUTTON_STRING  PUSHBUTTON_1_NAME
+#define PUSHBUTTON_IRQn    PIOA_IRQn
+#define PUSHBUTTON_MASK    PIN_PUSHBUTTON_1_MASK
+#define PUSHBUTTON_PIO     PIN_PUSHBUTTON_1_PIO
+#define PUSHBUTTON_ID      PIN_PUSHBUTTON_1_ID
+#define PUSHBUTTON_TYPE    PIN_PUSHBUTTON_1_TYPE
+#define PUSHBUTTON_ATTR    PIN_PUSHBUTTON_1_ATTR
+
+/** LED definition */
+#define LED_MASK  PIN_LED_0_MASK
+#define LED_PIO   PIN_LED_0_PIO
+#define LED_ID    PIN_LED_0_ID
+#define LED_TYPE  PIN_LED_0_TYPE
+#define LED_ATTR  PIN_LED_0_ATTR
+
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Flash Program example configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,14 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#define IFLASH_PAGE_SIZE  IFLASH0_PAGE_SIZE
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH1_ADDR + IFLASH1_SIZE - IFLASH_PAGE_SIZE * 8)
-
-#endif /* CONF_EXAMPLE_H */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
