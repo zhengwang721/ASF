@@ -42,7 +42,7 @@
  */
 
 #include "compiler.h"
-#include "sleep.h"
+#include "bpm.h"
 
 RAMFUNC bool bpm_ps_no_halt_exec(Bpm *bpm, uint32_t pmcon);
 /**
