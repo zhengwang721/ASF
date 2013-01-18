@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -727,8 +727,16 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	uint32_t ul_bit = 0;
 
 	Assert(ul_end >= ul_start);
-	Assert((ul_start >= IFLASH_ADDR)
-			&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
+
+#ifdef EFC1
+	Assert(((ul_start >= IFLASH0_ADDR) 
+				&& (ul_end <= IFLASH0_ADDR + IFLASH0_SIZE))
+				|| ((ul_start >= IFLASH1_ADDR)
+					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE)));
+#else
+	Assert((ul_start >= IFLASH_ADDR) 
+				&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
+#endif
 
 	/* Compute page numbers */
 	translate_address(&p_efc, ul_start, &us_start_page, 0);
