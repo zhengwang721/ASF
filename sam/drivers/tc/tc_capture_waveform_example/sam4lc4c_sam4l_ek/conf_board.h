@@ -51,6 +51,7 @@
  * \note For test the example in SAM4L-EK, we need:
  * 1. Connect pin 3 and pin 7 on J4.
  * 2. Remove jumper on J600, J601 (disconnect from board monitor)
+ * 3. Remove jumper on J200, J203 (disconnect from RS485)
  */
 
 #define TC  TC1
