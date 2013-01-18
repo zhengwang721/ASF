@@ -47,6 +47,12 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 
+/**
+ * \note For test the example in SAM4L-EK, we need:
+ * 1. Connect pin 3 and pin 7 on J4.
+ * 2. Remove jumper on J600, J601 (disconnect from board monitor)
+ */
+
 #define TC  TC1
 #define TC_PERIPHERAL  1
 
@@ -62,7 +68,7 @@
 #define PIN_TC_CAPTURE PIN_PC02D_TC1_A1
 #define PIN_TC_CAPTURE_FLAGS (MUX_PC02D_TC1_A1)
 
-/** Use TC2_Handler for TC capture interrupt**/
+/** Use TC11_Handler for TC capture interrupt**/
 #define TC_Handler  TC11_Handler
 #define TC_IRQn     TC11_IRQn
 
