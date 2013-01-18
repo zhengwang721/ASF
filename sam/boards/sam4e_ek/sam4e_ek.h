@@ -203,7 +203,7 @@
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
-#define PUSHBUTTON_1_NAME        "BP2 WAKUP9"
+#define PUSHBUTTON_1_NAME        "BP2 WAKU"
 #define PUSHBUTTON_1_WKUP_LINE   (9)
 #define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
 #define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)

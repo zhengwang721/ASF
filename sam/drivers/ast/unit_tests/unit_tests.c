@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for AST driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -81,8 +81,8 @@ volatile uint8_t flag = 0;
  */
 static void ast_per_callback(void)
 {
-	ast_disable_interrupt(AST, ast_interrupt_per);
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_disable_interrupt(AST, AST_INTERRUPT_PER);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	flag = 1;
 }
 
@@ -91,8 +91,8 @@ static void ast_per_callback(void)
  */
 static void ast_alarm_callback(void)
 {
-	ast_disable_interrupt(AST, ast_interrupt_alarm);
-	ast_clear_interrupt_flag(AST, ast_interrupt_alarm);
+	ast_disable_interrupt(AST, AST_INTERRUPT_ALARM);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_ALARM);
 	flag = 2;
 }
 
@@ -124,9 +124,9 @@ static void run_alarm_test(const struct test_case *test)
 	ast_set_config(AST, &ast_conf);
 
 	/* Set callback for alarm0. */
-	ast_clear_interrupt_flag(AST, ast_interrupt_alarm);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_ALARM);
 	ast_write_alarm0_value(AST, calendar.field + 1);
-	ast_set_callback(AST, ast_interrupt_alarm, ast_alarm_callback,
+	ast_set_callback(AST, AST_INTERRUPT_ALARM, ast_alarm_callback,
 		AST_ALARM_IRQn, 1);
 
 	flag = 0;
@@ -144,8 +144,8 @@ static void run_alarm_test(const struct test_case *test)
 	ast_counter = ast_read_counter_value(AST);
 	ast_alarm = ast_counter + 4;
 	ast_write_alarm0_value(AST, ast_alarm);
-	ast_enable_interrupt(AST, ast_interrupt_alarm);
-	ast_enable_wakeup(AST, ast_wakeup_alarm);
+	ast_enable_interrupt(AST, AST_INTERRUPT_ALARM);
+	ast_enable_wakeup(AST, AST_WAKEUP_ALARM);
 
 	/* AST can wakeup the device. */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
@@ -179,20 +179,20 @@ static void run_periodic_test(const struct test_case *test)
 	ast_set_config(AST, &ast_conf);
 
 	/* Set periodic 0 to interrupt after 1/16 second in counter mode. */
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 4);
 	/* Set callback for periodic0. */
 	flag = 0;
-	ast_set_callback(AST, ast_interrupt_per, ast_per_callback,
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 1);
 	delay_ms(200);
 	test_assert_true(test, flag == 1, "Periodic interrupt not work!");
 
 	/* Set periodic 0 to wakeup after 1/16 second in counter mode. */
 	while (!(ast_read_interrupt_mask(AST) & AST_IMR_PER0_1)) {
-		ast_enable_interrupt(AST, ast_interrupt_per);
+		ast_enable_interrupt(AST, AST_INTERRUPT_PER);
 	}
-	ast_enable_wakeup(AST, ast_wakeup_per);
+	ast_enable_wakeup(AST, AST_WAKEUP_PER);
 
 	/* AST can wakeup the device. */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
@@ -202,7 +202,7 @@ static void run_periodic_test(const struct test_case *test)
 	bpm_sleep(BPM, BPM_SM_WAIT);
 	delay_ms(200);
 	test_assert_true(test, flag == 1, "Periodic wakeup not work!");
-	ast_disable_interrupt(AST, ast_interrupt_per);
+	ast_disable_interrupt(AST, AST_INTERRUPT_PER);
 
 	/* Disable the AST. */
 	ast_disable(AST);
