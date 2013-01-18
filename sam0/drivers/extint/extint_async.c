@@ -54,22 +54,32 @@ extern struct _extint_device _extint_dev;
  * channel detects the configured channel detection criteria
  * (e.g. edge or level). Callbacks are fired once for each detected channel.
  *
+ * \note NMI channel callbacks cannot be registered via this function; the
+ *       device's NMI interrupt should be hooked directly in the user
+ *       application and the NMI flags manually cleared via
+ *       \ref extint_nmi_clear_detected().
+ *
  * \param callback  Pointer to the callback function to register
  * \param type      Type of callback function to register
  *
  * \return Status of the registration operation.
- * \retval STATUS_OK             The callback was registered successfully.
- * \retval STATUS_ERR_NO_MEMORY  No free entries were found in the registration
- *                               table.
+ * \retval STATUS_OK               The callback was registered successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_ERR_NO_MEMORY    No free entries were found in the registration
+ *                                 table.
  */
 enum status_code extint_async_register_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type)
 {
+	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
 	for (uint8_t i = 0; i < EXTINT_CALLBACKS_MAX; i++) {
-		if (_extint_dev.callbacks[i].handler == NULL) {
-			_extint_dev.callbacks[i].type    = type;
-			_extint_dev.callbacks[i].handler = callback;
+		if (_extint_dev.callbacks[i] == NULL) {
+			_extint_dev.callbacks[i] = callback;
 			return STATUS_OK;
 		}
 	}
@@ -87,16 +97,23 @@ enum status_code extint_async_register_callback(
  * \param callback  Pointer to the callback function to de-register
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK             The callback was de-registered successfully.
- * \retval STATUS_ERR_NO_MEMORY  No matching entry was found in the registration
- *                               table.
+ * \retval STATUS_OK               The callback was de-registered successfully.
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_ERR_BAD_ADDRESS  No matching entry was found in the
+ *                                 registration table.
  */
 enum status_code extint_async_unregister_callback(
-	const extint_async_callback_t callback)
+	const extint_async_callback_t callback,
+	const enum extint_async_type type)
 {
+	if (type != EXTINT_ASYNC_TYPE_CHANNEL) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
 	for (uint8_t i = 0; i < EXTINT_CALLBACKS_MAX; i++) {
-		if (_extint_dev.callbacks[i].handler == callback) {
-			_extint_dev.callbacks[i].handler = NULL;
+		if (_extint_dev.callbacks[i] == callback) {
+			_extint_dev.callbacks[i] = NULL;
 			return STATUS_OK;
 		}
 	}
@@ -173,36 +190,13 @@ void EIC_IRQn_Handler(void)
 		if (extint_ch_is_detected(i)) {
 			/* Find any associated callback entries in the callback table */
 			for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
-				if (_extint_dev.callbacks[j].type != EXTINT_ASYNC_TYPE_CHANNEL) {
-					continue;
-				}
-
-				if (_extint_dev.callbacks[j].handler != NULL) {
+				if (_extint_dev.callbacks[j] != NULL) {
 					/* Run the registered callback */
-					_extint_dev.callbacks[j].handler(i);
+					_extint_dev.callbacks[j](i);
 				}
 			}
 
 			extint_ch_clear_detected(i);
-		}
-	}
-
-	/* Find any triggered NMI channels, run associated callback handlers */
-	for (uint32_t k = 0; k < EIC_INST_NUM; k++) {
-		if (extint_nmi_is_detected(k)) {
-			/* Find any associated callback entries in the callback table */
-			for (uint8_t l = 0; l < EXTINT_CALLBACKS_MAX; l++) {
-				if (_extint_dev.callbacks[l].type != EXTINT_ASYNC_TYPE_NMI) {
-					continue;
-				}
-
-				if (_extint_dev.callbacks[l].handler != NULL) {
-					/* Run the registered callback */
-					_extint_dev.callbacks[l].handler(k);
-				}
-			}
-
-			extint_nmi_clear_detected(k);
 		}
 	}
 }

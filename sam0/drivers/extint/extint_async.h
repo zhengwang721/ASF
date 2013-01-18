@@ -48,6 +48,13 @@
 extern "C" {
 #endif
 
+/**
+ * \ingroup sam0_extint_group
+ * \defgroup sam0_extint_async_group EXTINT Asynchronous Driver Mode APIs
+ *
+ * @{
+ */
+
 #if !defined(EXTINT_CALLBACKS_MAX)
 #  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
 #  define EXTINT_CALLBACKS_MAX 10
@@ -63,19 +70,19 @@ enum extint_async_type
 	 *  channel criteria (i.e. edge or level detection)
 	 */
 	EXTINT_ASYNC_TYPE_CHANNEL,
-
-	/** Callback type for when an external NMI interrupt detects the configured
-	 *  channel criteria (i.e. edge or level detection)
-	 */
-	EXTINT_ASYNC_TYPE_NMI,
 };
+
+/** \name Callback Configuration and initialization
+ * @{
+ */
 
 enum status_code extint_async_register_callback(
 	const extint_async_callback_t callback,
 	const enum extint_async_type type);
 
 enum status_code extint_async_unregister_callback(
-	const extint_async_callback_t callback);
+	const extint_async_callback_t callback,
+	const enum extint_async_type type);
 
 enum status_code extint_async_callback_enable(
 	const uint32_t channel,
@@ -84,6 +91,10 @@ enum status_code extint_async_callback_enable(
 enum status_code extint_async_callback_disable(
 	const uint32_t channel,
 	const enum extint_async_type type);
+
+/** @} */
+
+/** @} */
 
 #ifdef __cplusplus
 }

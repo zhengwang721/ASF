@@ -262,10 +262,7 @@ struct _extint_device
 {
 #  if EXTINT_ASYNC == true
 	/** Asynchronous channel callback table, for user-registered handlers. */
-	struct {
-	    enum extint_async_type type;
-	    extint_async_callback_t handler;
-	} callbacks[EXTINT_CALLBACKS_MAX];
+	extint_async_callback_t callbacks[EXTINT_CALLBACKS_MAX];
 #  endif
 };
 

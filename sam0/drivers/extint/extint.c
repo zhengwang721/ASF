@@ -94,6 +94,13 @@ void extint_enable(void)
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
 		_eic_wait_for_sync(eics[i]);
+
+#if EXTINT_ASYNC == true
+		/* Clear callback registration table */
+		for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
+			_extint_dev.callbacks[j] = NULL;
+		}
+#endif
 	}
 }
 
