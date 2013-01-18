@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK Board Definition.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -138,7 +138,7 @@
 #define LED1_GPIO            (PIO_PD20_IDX)
 #define LED1_FLAGS           (0)
 #define LED1_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+#define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /** LED #2 pin definition (Green). */
 #define LED_2_NAME      "Green LED D4"
@@ -203,7 +203,7 @@
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
-#define PUSHBUTTON_1_NAME        "BP2 WAKUP9"
+#define PUSHBUTTON_1_NAME        "BP2 WAKU"
 #define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
