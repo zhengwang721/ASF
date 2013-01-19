@@ -386,6 +386,7 @@ enum conf_clock_rtc_freq {
  */
 struct system_clock_source_config {
 	/** External oscillator/Crystal (XOSC) */
+	enum system_clock_source clk_source;
 	struct {
 		/** External crystal or clock*/
 		enum system_external_clock external_clock;
@@ -432,6 +433,122 @@ struct system_clock_source_config {
 		uint16_t multiply_factor;
 	} dfll;
 };
+
+
+struct system_clock_source_extosc_config {
+	/** External crystal or clock*/
+	enum system_external_clock external_clock;
+	/** Crystal oscillator start-up time */
+	enum clock_startup startup_time;
+	/** Enable automatic amplitude gain control */
+	bool auto_gain_control;
+	/** External clock/crystal frequency */
+	uint32_t frequency;
+};
+
+struct system_clock_source_extosc32k_config {
+	/** External crystal or clock*/
+	enum system_external_clock external_clock;
+	/** Crystal oscillator start-up time */
+	enum clock_startup startup_time;
+	/** Enable automatic amplitude control */
+	bool auto_gain_control;
+	/** Enable 1kHz output */
+	bool enable_1khz_output;
+	/** Enable 32kHz output */
+	bool enable_32khz_output;
+	/** External clock/crystal frequency */
+	uint32_t frequency;
+};
+
+struct system_clock_source_rc8mhz_config {
+	/* Internal 8MHz RC oscillator prescaler */
+	uint8_t prescaler;
+};
+
+struct system_clock_source_osc32k_config {
+	/** Enable 1kHz output */
+	bool enable_1khz_output;
+	/** Enable 32kHz output */
+	bool enable_32khz_output;
+};
+
+struct system_clock_source_dfll_config {
+	/** Loop mode */
+	enum system_dfll_mode loop;
+	/** Enable Quick Lock */
+	enum system_dfll_quick_lock quick_lock;
+	/** Enable Chill Cycle */
+	enum system_dfll_chill_cycle chill_cycle;
+	/** DFLL lock state on wakeup */
+	enum system_dfll_wakeup_lock wakeup_lock;
+	/** DFLL tracking after fine lock */
+	enum system_dfll_stable_tracking stable_tracking;
+	/** Coarse calibration value (Open loop mode) */
+	uint8_t coarse_value;
+	/** Fine calibration value (Open loop mode) */
+	uint8_t fine_value;
+	/** Coarse adjustment max step size (Closed loop mode) */
+	uint8_t coarse_max_step;
+	/** Fine adjustment max step size (Closed loop mode) */
+	uint8_t fine_max_step;
+	/** DFLL multiply factor (Closed loop mode */
+	uint16_t multiply_factor;
+};
+
+void system_clock_source_extosc_set_config(
+		struct system_clock_source_extosc_config *const conf);
+void system_clock_source_extosc32k_set_config(
+		struct system_clock_source_extosc32k_config *const conf);
+void system_clock_source_osc32k_set_config(
+		struct system_clock_source_osc32k_config *const conf);
+void system_clock_source_osculp32k_set_config(
+		struct system_clock_source_osc32k_config *const conf);
+void system_clock_source_rc8mhz_set_config(
+		struct system_clock_source_rc8mhz_config *const conf);
+void system_clock_source_dfll_set_config(
+		struct system_clock_source_dfll_config *const conf);
+
+
+static inline void system_clock_source_extosc_get_default_config(
+		struct system_clock_source_extosc_config *const conf)
+{
+
+}
+
+static inline void system_clock_source_extosc32k_get_default_config(
+		struct system_clock_source_extosc32k_config *const conf)
+{
+	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	conf->startup_time =         SYSTEM_CLOCK_STARTUP_16384;
+	conf->auto_gain_control =    true;
+	conf->frequency =            32768UL;
+	conf->enable_1khz_output =   false;
+	conf->enable_32khz_output =  true;
+}
+static inline void system_clock_source_osc32k_get_default_config(
+		struct system_clock_source_osc32k_config *const conf)
+{
+
+}
+static inline void system_clock_source_osculp32k_get_default_config(
+		struct system_clock_source_osc32k_config *const conf)
+{
+
+}
+
+static inline void system_clock_source_rc8mhz_get_default_config(
+		struct system_clock_source_rc8mhz_config *const conf)
+{
+
+}
+
+static inline void system_clock_source_dfll_get_default_config(
+		struct system_clock_source_dfll_config *const conf)
+{
+
+}
+
 
 /**
  * \name Clock source configuration
@@ -514,6 +631,16 @@ static inline void system_clock_source_get_default_config(
 
 }
 
+
+
+/**
+ * \internal
+ * \brief wait for DFLL ready
+ */
+static inline void _system_dfll_wait_for_ready(void)
+{
+
+}
 
 /**
  * \internal
