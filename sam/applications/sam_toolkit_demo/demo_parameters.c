@@ -3,7 +3,7 @@
  *
  * \brief SAM toolkit demo parameter initialization and storage.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
 
 /** Parameter offset */
 const int __offset_parameters__
-	= (IFLASH0_ADDR + IFLASH0_SIZE - IFLASH0_PAGE_SIZE);
+	= (IFLASH0_ADDR + IFLASH0_SIZE - IFLASH0_PAGE_SIZE*8);
 
 /** Parameters used in the demo */
 demo_param_t g_demo_parameters = {
@@ -115,7 +115,7 @@ uint32_t demo_parameters_commit_changes( void )
 			0, 0);
 #if SAM4S
 	/* Erase flag page */
-	flash_erase_page(__offset_parameters__, IFLASH_ERASE_PAGES_4);
+	flash_erase_page(__offset_parameters__, IFLASH_ERASE_PAGES_8);
 	ret = flash_write((uint32_t)(__offset_parameters__),
 			(void *)&g_demo_parameters, sizeof(demo_param_t), 0);
 #else
