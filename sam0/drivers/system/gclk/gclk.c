@@ -117,6 +117,12 @@ void system_gclk_gen_set_config(
 		GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_OOV;
 	}
 
+	if (config->output_enable) {
+		GCLK->GENCTRL.reg |= GCLK_GENCTRL_OE;
+	} else {
+		GCLK->GENCTRL.reg &= GCLK_GENCTRL_OE;
+	}
+
 	/* Set division factor */
 	if (config->division_factor > 1) {
 

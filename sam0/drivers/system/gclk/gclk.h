@@ -204,6 +204,8 @@ struct system_gclk_gen_conf {
 	/** If \c true the clock is kept enabled during device standby mode */
 	bool run_in_standby;
 	#endif
+	/* Enable GCLK output to pin */
+	bool output_enable;
 };
 
 /** \brief Generic Clock configuration structure.
@@ -262,6 +264,7 @@ static inline void system_gclk_gen_get_config_defaults(
 	#if defined (REVB)
 	config->run_in_standby     = false;
 	#endif
+	config->output_enable      = false;
 }
 
 void system_gclk_gen_set_config(
