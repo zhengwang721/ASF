@@ -38,40 +38,82 @@
  * \asf_license_stop
  */
 #include <asf.h>
+#include "debug.h"
+
+#define GCLK_GEN 6
+#define GCLK_CH 
+#define GCLKIO_PIN 26
+#define GCLKIO_PIN_MUX MUX_PA26G_GCLK_IO6
 
 void configure_system_clock_sources(void);
+void configure_extosc32k(void);
+void configure_gclk_generator(void);
 
-void configure_system_clock_sources(void)
+
+
+void configure_extosc32k(void)
 {
-	struct system_clock_source_config cs_conf;
-	system_clock_source_get_default_config(&cs_conf);
+	struct system_clock_source_extosc32k_config ext32k_conf;
+	system_clock_source_extosc32k_get_default_config(&ext32k_conf);
+	system_clock_source_extosc32k_set_config(&ext32k_conf);
+}
 
-	/* 8MHz RC oscillator */
-	cs_conf.rc8mhz.prescaler = 4;
 
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_RC8MHZ);
+void configure_gclk_generator(void)
+{
+	struct system_gclk_gen_conf gclock_gen_conf;
+	struct port_pin_conf pin_conf;
+	
+	pin_conf.input.enabled  = false;
+	pin_conf.output.enabled = true;
 
-	/* XOSC */
-	cs_conf.ext.external_clock = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	pin_conf.type = PORT_PIN_TYPE_PERIPHERAL;
+	pin_conf.peripheral_index = GCLKIO_PIN_MUX;
 
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_XOSC);
+	port_pin_set_config(GCLKIO_PIN, &pin_conf);
 
-	/* DFLL */
-	cs_conf.dfll.coarse_value = 42;
-	cs_conf.dfll.fine_value = 42;
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
 
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_DFLL);
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_XOSC32K;
+	gclock_gen_conf.division_factor = 32000;
+	gclock_gen_conf.output_enable   = true;
+
+	system_gclk_gen_set_config(GCLK_GEN, &gclock_gen_conf);
+	system_gclk_gen_enable(GCLK_GEN);
+}
+	
+void configure_gclk_channel(void)
+{
+	struct system_gclk_ch_conf gclock_ch_conf;
+
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator = GCLK_GEN;
+
+
 }
 
 int main(void)
 {
-	/** [setup_init] */
-	configure_system_clock_sources();
-	/** [setup_init] */
+	enum status_code retval;
+	init_debug_pins();
+	configure_extosc32k();
 
 
-	/** [main1] */
-	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
-	/** [main1] */
+	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
+	if (retval != STATUS_OK) {
+		debug_set_val(0xa);
+			configure_gclk_generator();
+			
+	} else {
+		debug_set_val(0xf);
+	}
+
+
+
+
+
+
+	while(true);
+
 
 }
