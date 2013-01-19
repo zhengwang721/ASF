@@ -95,8 +95,36 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 
 }
 
+/**
+ * \brief Apply configuration for the extosc32k clock source
+ *
+ * \param conf extosc32k configuration struct
+ *
+ * \retval STATUS_OK The operation completed successfully
+ */
+void system_clock_source_extosc32k_set_config(
+		struct system_clock_source_extosc32k_config *const conf)
+{
+	uint32_t temp_register = conf->startup_time;
 
+	if (conf->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
+		temp_register |= SYSCTRL_XOSC32K_XTALEN;
+		if (conf->auto_gain_control) {
+			/* Automatic Amplitude control */
+			temp_register |= SYSCTRL_XOSC32K_AAMPEN;
+		}
+	}
 
+	if (conf->enable_1khz_output) {
+		temp_register |= SYSCTRL_XOSC32K_EN1K;
+	}
+
+	if (conf->enable_32khz_output) {
+		temp_register |= SYSCTRL_XOSC32K_EN32K;
+	}
+
+	SYSCTRL->XOSC32K.reg = temp_register;
+}
 
 
 
@@ -150,28 +178,7 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 			SYSCTRL->XOSC.reg = temp_register;
 			break;
 
-		case SYSTEM_CLOCK_SOURCE_XOSC32K:
-			temp_register = conf->ext.startup_time;
-
-			if (conf->ext.external_clock) {
-				temp_register |= SYSCTRL_XOSC32K_XTALEN;
-				if (conf->ext.auto_gain_control) {
-					/* Automatic Amplitude control */
-					temp_register |= SYSCTRL_XOSC32K_AAMPEN;
-				}
-			}
-
-			if (conf->osc32k.enable_1khz_output) {
-				temp_register |= SYSCTRL_XOSC32K_EN1K;
-			}
-
-			if (conf->osc32k.enable_32khz_output) {
-				temp_register |= SYSCTRL_XOSC32K_EN32K;
-}
-
-			SYSCTRL->XOSC32K.reg = temp_register;
-			break;
-
+		
 		case SYSTEM_CLOCK_SOURCE_DFLL:
 			temp_register |= conf->dfll.loop | conf->dfll.wakeup_lock |
 					conf->dfll.stable_tracking | conf->dfll.quick_lock |
