@@ -50,7 +50,7 @@
 
 /** Internal variable to keep external oscillator frequency */
 static uint32_t xosc_frequency = 0;
-
+static uint32_t xosc32k_frequency = 0;
 /**
  * \brief Get clock source frequency
  *
@@ -72,7 +72,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
 			prescaler = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
 			if (prescaler) {
-				return 8000000 / prescaler;
+				return 8000000 / (1 << prescaler);
 			} else {
 				return 8000000;
 			}
