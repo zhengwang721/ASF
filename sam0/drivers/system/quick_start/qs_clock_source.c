@@ -75,7 +75,7 @@ void configure_gclk_generator(void)
 	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
 
 	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_XOSC32K;
-	gclock_gen_conf.division_factor = 32000;
+	gclock_gen_conf.division_factor = 4;
 	gclock_gen_conf.output_enable   = true;
 
 	system_gclk_gen_set_config(GCLK_GEN, &gclock_gen_conf);
@@ -95,17 +95,20 @@ void configure_gclk_channel(void)
 int main(void)
 {
 	enum status_code retval;
+	volatile uint32_t temp;
 	init_debug_pins();
+	
+
 	configure_extosc32k();
 
 
 	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
 	if (retval != STATUS_OK) {
-		debug_set_val(0xa);
-			configure_gclk_generator();
-			
+		debug_set_val(0xa);	
 	} else {
 		debug_set_val(0xf);
+		configure_gclk_generator();
+		temp = system_gclk_gen_get_hz(GCLK_GEN);
 	}
 
 
