@@ -143,7 +143,9 @@ void system_gclk_gen_set_config(
 			uint32_t div2_count = 0;
 			uint32_t mask = (1 << 0);
 			for (mask = 1; mask != config->division_factor; mask <<= 1) {
-				div2_count++;
+				if (mask != 1) {
+					div2_count++;
+				}
 			}
 
 			/* Set binary divider power of 2 division factor */
@@ -151,11 +153,11 @@ void system_gclk_gen_set_config(
 
 			#if !defined (REVB)
 			/* Enable binary division */
-			GCLK->GENCTRL.reg |= GCLK_GENCTRL_DIVSEL;
+			GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_DIVSEL;
 			GCLK->GENCTRL.reg &= ~(GCLK_GENCTRL_IDC);
 			#else
 			/* Enable binary division and disable increased duty cycle accuracy*/
-			GCLK->GENCTRL.reg &= ~(GCLK_GENCTRL_DIVSEL | GCLK_GENCTRL_IDC);
+			GCLK->GENCTRL.reg |= (GCLK_GENCTRL_DIVSEL | GCLK_GENCTRL_IDC);
 			#endif
 
 		} else {
@@ -181,7 +183,7 @@ void system_gclk_gen_set_config(
 		GCLK->GENDIV.bit.DIV = 1;
 		#else
 		/* Turn off clock division */
-		/* TODO: wth REVB chages in REV A header ? */
+		/* TODO: wth REVB changes in REV A header ? */
 		GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_DIVSEL;
 		#endif
 	}
