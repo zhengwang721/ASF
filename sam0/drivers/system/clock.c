@@ -148,8 +148,8 @@ void system_clock_source_dfll_set_config(
 	temp_register = conf->wakeup_lock | conf->stable_tracking |
 			conf->quick_lock | conf->chill_cycle;
 
-	//_system_dfll_wait_for_sync();
-	//SYSCTRL->DFLLCTRL.reg = temp_register;
+	_system_dfll_wait_for_sync();
+	SYSCTRL->DFLLCTRL.reg |= temp_register;
 
 	if (conf->loop == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) {
 		_system_dfll_wait_for_sync();
