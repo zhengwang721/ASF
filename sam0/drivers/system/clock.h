@@ -245,8 +245,7 @@ enum system_dfll_mode {
 	/** The DFLL is operating in open loop mode with no feedback */
 	SYSTEM_CLOCK_DFLL_OPEN_LOOP,
 	/** The DFLL is operating in closed loop mode with frequency feedback from a
-     * low frequency reference clock
-     */
+	 * low frequency reference clock */
 	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_DFLLCTRL_MODE,
 };
 
@@ -546,6 +545,20 @@ static inline void system_clock_source_rc8mhz_get_default_config(
 static inline void system_clock_source_dfll_get_default_config(
 		struct system_clock_source_dfll_config *const conf)
 {
+	conf->loop =                 SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	conf->quick_lock =           SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
+	conf->chill_cycle =          SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
+	conf->wakeup_lock =          SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	conf->stable_tracking =      SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+
+	/* Open loop mode calibration value */
+	conf->coarse_value =          0x1f / 4; /* midpoint */
+	conf->fine_value =            0xff / 4; /* midpoint */
+
+	/* Closed loop mode */
+	conf->coarse_max_step =       1;
+	conf->fine_max_step =         1;
+	conf->multiply_factor =  6; /* multiply 8MHZ by 6 to get 48MHz */
 
 }
 
@@ -648,7 +661,6 @@ static inline void _system_dfll_wait_for_ready(void)
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
-	/* According to text in datasheet */
 	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
 		/* Wait for DFLL sync */
 	}
