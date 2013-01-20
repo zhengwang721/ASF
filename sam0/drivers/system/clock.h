@@ -286,6 +286,16 @@ enum system_osc32k_startup {
 	SYSTEM_OSC32K_STARTUP_128,
 };
 
+enum system_rc8mhz_div {
+	/** Do not divide 8MHz */
+	SYSTEM_RC8MHZ_DIV_0,
+	/** Divide 8MHz by 2 */
+	SYSTEM_RC8MHZ_DIV_2,
+	/** Divide 8MHz by 4 */
+	SYSTEM_RC8MHZ_DIV_4,
+	/** Divide 8MHz by 8 */
+	SYSTEM_RC8MHZ_DIV_8,
+};
 
 /**
  * If using an external clock source, this can either be a crystal oscillator
@@ -523,7 +533,7 @@ struct system_clock_source_xosc32k_config {
 
 struct system_clock_source_rc8mhz_config {
 	/* Internal 8MHz RC oscillator prescaler */
-	uint8_t prescaler;
+	enum system_rc8mhz_div prescaler;
 };
 
 struct system_clock_source_osc32k_config {
