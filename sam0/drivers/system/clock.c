@@ -99,6 +99,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const conf)
 {
+	
 	SYSCTRL_OSC32K_Type temp = SYSCTRL->OSC32K;
 
 	if (conf->enable_1khz_output) {
@@ -116,6 +117,7 @@ void system_clock_source_osc32k_set_config(
 	temp.bit.STARTUP = conf->startup_time;
 
 	SYSCTRL->OSC32K = temp;
+	
 }
 
 /**
@@ -124,8 +126,8 @@ void system_clock_source_osc32k_set_config(
  * \param conf extosc configuration struct
  *
  */
-void system_clock_source_extosc_set_config(
-		struct system_clock_source_extosc_config *const conf)
+void system_clock_source_xosc_set_config(
+		struct system_clock_source_xosc_config *const conf)
 {
 	uint32_t temp_register = conf->startup_time;
 
@@ -147,8 +149,8 @@ void system_clock_source_extosc_set_config(
  *
  * \retval STATUS_OK The operation completed successfully
  */
-void system_clock_source_extosc32k_set_config(
-		struct system_clock_source_extosc32k_config *const conf)
+void system_clock_source_xosc32k_set_config(
+		struct system_clock_source_xosc32k_config *const conf)
 {
 	uint32_t temp_register = conf->startup_time;
 

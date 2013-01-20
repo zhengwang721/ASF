@@ -61,10 +61,10 @@ void configure_dfll_open_loop(void);
 
 void configure_extosc32k(void)
 {
-	struct system_clock_source_extosc32k_config ext32k_conf;
-	system_clock_source_extosc32k_get_default_config(&ext32k_conf);
+	struct system_clock_source_xosc32k_config ext32k_conf;
+	system_clock_source_xosc32k_get_default_config(&ext32k_conf);
 	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
-	system_clock_source_extosc32k_set_config(&ext32k_conf);
+	system_clock_source_xosc32k_set_config(&ext32k_conf);
 }
 
 
@@ -164,7 +164,7 @@ int main(void)
 	//system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, true);
 	debug_set_val(0xb);
 	configure_gclk_generator();
-	debug_set_val(0xf);
+	//debug_set_val(0xf);
 #endif
 
 

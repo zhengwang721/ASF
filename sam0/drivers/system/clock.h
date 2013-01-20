@@ -495,7 +495,7 @@ struct system_clock_source_config {
 };
 
 
-struct system_clock_source_extosc_config {
+struct system_clock_source_xosc_config {
 	/** External crystal or clock*/
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
@@ -506,7 +506,7 @@ struct system_clock_source_extosc_config {
 	uint32_t frequency;
 };
 
-struct system_clock_source_extosc32k_config {
+struct system_clock_source_xosc32k_config {
 	/** External crystal or clock*/
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
@@ -558,10 +558,10 @@ struct system_clock_source_dfll_config {
 	uint16_t multiply_factor;
 };
 
-void system_clock_source_extosc_set_config(
-		struct system_clock_source_extosc_config *const conf);
-void system_clock_source_extosc32k_set_config(
-		struct system_clock_source_extosc32k_config *const conf);
+void system_clock_source_xosc_set_config(
+		struct system_clock_source_xosc_config *const conf);
+void system_clock_source_xosc32k_set_config(
+		struct system_clock_source_xosc32k_config *const conf);
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const conf);
 void system_clock_source_rc8mhz_set_config(
@@ -570,8 +570,8 @@ void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const conf);
 
 
-static inline void system_clock_source_extosc_get_default_config(
-		struct system_clock_source_extosc_config *const conf)
+static inline void system_clock_source_xosc_get_default_config(
+		struct system_clock_source_xosc_config *const conf)
 {
 	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 	conf->startup_time =         SYSTEM_XOSC_STARTUP_16384;
@@ -579,8 +579,8 @@ static inline void system_clock_source_extosc_get_default_config(
 	conf->frequency =            12000000UL;
 }
 
-static inline void system_clock_source_extosc32k_get_default_config(
-		struct system_clock_source_extosc32k_config *const conf)
+static inline void system_clock_source_xosc32k_get_default_config(
+		struct system_clock_source_xosc32k_config *const conf)
 {
 	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 	conf->startup_time =         SYSTEM_XOSC32K_STARTUP_16384;
