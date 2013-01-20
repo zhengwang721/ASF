@@ -1,3 +1,6 @@
+#ifndef DEBUG_H
+#  define DEBUG_G
+
 #include <asf.h>
 
 
@@ -22,3 +25,6 @@
 void init_debug_pins(void);
 
 void debug_set_val(uint8_t val);
+
+
+#endif /* DEBUG_H */

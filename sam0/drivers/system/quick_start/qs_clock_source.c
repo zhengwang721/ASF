@@ -41,13 +41,21 @@
 #include "debug.h"
 
 #define GCLK_GEN 6
-#define GCLK_CH 
+#define GCLK_DFLL_GEN 5
+#define DFLL_GCLK_CH 0
 #define GCLKIO_PIN 26
 #define GCLKIO_PIN_MUX MUX_PA26G_GCLK_IO6
+
+#define OUTPUT_DFLL_OPEN
+//#define OUTPUT_XOSC32K
+
+//Sysctrl *sysctrl_dbg = (Sysctrl  *)0x40000800U;
+
 
 void configure_system_clock_sources(void);
 void configure_extosc32k(void);
 void configure_gclk_generator(void);
+void configure_dfll_open_loop(void);
 
 
 
@@ -55,7 +63,27 @@ void configure_extosc32k(void)
 {
 	struct system_clock_source_extosc32k_config ext32k_conf;
 	system_clock_source_extosc32k_get_default_config(&ext32k_conf);
+	ext32k_conf.startup_time = SYSTEM_CLOCK_STARTUP_4096;
 	system_clock_source_extosc32k_set_config(&ext32k_conf);
+}
+
+
+void configure_dfll_open_loop(void)
+{
+	struct system_clock_source_dfll_config dfll_conf;
+	system_clock_source_dfll_get_default_config(&dfll_conf);
+	system_clock_source_dfll_set_config(&dfll_conf);
+
+}
+
+void configure_dfll_closed_loop(void)
+{
+	struct system_gclk_ch_conf gclock_ch_conf;
+
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator = GCLK_GEN;
+
+
 }
 
 
@@ -74,12 +102,23 @@ void configure_gclk_generator(void)
 
 	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
 
+#ifdef OUTPUT_XOSC32K
 	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_XOSC32K;
-	gclock_gen_conf.division_factor = 4;
+	gclock_gen_conf.division_factor = 10;
+	gclock_gen_conf.output_enable   = true;
+#endif
+#ifdef OUTPUT_DFLL_OPEN
+
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
+	gclock_gen_conf.division_factor = 2;
 	gclock_gen_conf.output_enable   = true;
 
+#endif
 	system_gclk_gen_set_config(GCLK_GEN, &gclock_gen_conf);
+
 	system_gclk_gen_enable(GCLK_GEN);
+
+	
 }
 	
 void configure_gclk_channel(void)
@@ -95,22 +134,38 @@ void configure_gclk_channel(void)
 int main(void)
 {
 	enum status_code retval;
-	volatile uint32_t temp;
+	volatile uint32_t temp = 0;
+        volatile uint32_t bob;
+	
 	init_debug_pins();
 	
 
+	
+
+
+#ifdef OUTPUT_XOSC32K
 	configure_extosc32k();
-
-
-	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
+	debug_set_val(0x1);
+	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, false);
+	debug_set_val(0x2);
 	if (retval != STATUS_OK) {
 		debug_set_val(0xa);	
 	} else {
 		debug_set_val(0xf);
 		configure_gclk_generator();
 		temp = system_gclk_gen_get_hz(GCLK_GEN);
+		bob = temp;
+		debug_set_val(temp);
+                
 	}
-
+#endif
+#ifdef OUTPUT_DFLL_OPEN
+	configure_dfll_open_loop();
+	//system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, true);
+	debug_set_val(0xb);
+	configure_gclk_generator();
+	debug_set_val(0xf);
+#endif
 
 
 
