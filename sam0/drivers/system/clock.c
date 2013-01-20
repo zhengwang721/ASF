@@ -91,6 +91,56 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 }
 
 /**
+ * \brief Apply configuration for the osc32k clock source
+ *
+ * \param conf osc32k configuration struct
+ *
+ */
+void system_clock_source_osc32k_set_config(
+		struct system_clock_source_osc32k_config *const conf)
+{
+	SYSCTRL_OSC32K_Type temp = SYSCTRL->OSC32K;
+
+	if (conf->enable_1khz_output) {
+		temp.bit.EN1K = 1;
+	} else {
+		temp.bit.EN1K = 0;
+	}
+
+	if (conf->enable_32khz_output) {
+		temp.bit.EN32K = 1;
+	} else {
+		temp.bit.EN32K = 0;
+	}
+
+	temp.bit.STARTUP = conf->startup_time;
+
+	SYSCTRL->OSC32K = temp;
+}
+
+/**
+ * \brief Apply configuration for the extosc clock source
+ *
+ * \param conf extosc configuration struct
+ *
+ */
+void system_clock_source_extosc_set_config(
+		struct system_clock_source_extosc_config *const conf)
+{
+	uint32_t temp_register = conf->startup_time;
+
+	if (conf->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
+		temp_register |= SYSCTRL_XOSC_XTALEN;
+		if (conf->auto_gain_control) {
+			temp_register |= SYSCTRL_XOSC_AMPGC;
+		}
+	}
+
+	SYSCTRL->XOSC.reg = temp_register;
+}
+
+
+/**
  * \brief Apply configuration for the extosc32k clock source
  *
  * \param conf extosc32k configuration struct
@@ -127,9 +177,10 @@ void system_clock_source_extosc32k_set_config(
 /**
  * \brief Apply configuration for the DFLL clock source
  *
+ * The DFLL will be running after this function is done
+ *
  * \param conf dfll configuration struct
  *
- * \retval STATUS_OK The operation completed successfully
  */
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const conf)
@@ -158,14 +209,10 @@ void system_clock_source_dfll_set_config(
 				SYSCTRL_DFLLMUL_FSTEP(conf->fine_max_step) |
 				SYSCTRL_DFLLMUL_MUL(conf->multiply_factor);
 		_system_dfll_wait_for_sync();
+		
 		/* Enable the closed loop mode */
 		SYSCTRL->DFLLCTRL.reg |= conf->loop;
 	}
-
-	//system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, true);
-
-
-
 }
 
 
@@ -203,24 +250,10 @@ enum status_code system_clock_source_set_config(struct system_clock_source_confi
 			break;
 
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
-			/* Need to enable before we can configure */
-			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
-			/* TODO: verify that this is always enabled */
-			break;
+			
 
 		case SYSTEM_CLOCK_SOURCE_XOSC:
-			temp_register = conf->ext.startup_time;
-			if (conf->ext.external_clock) {
-				temp_register |= SYSCTRL_XOSC_XTALEN;
-				if (conf->ext.auto_gain_control) {
-					temp_register |= SYSCTRL_XOSC_AMPGC;
-				}
-			}
-
-			SYSCTRL->XOSC.reg = temp_register;
-			break;
-
-		
+			
 		default:
 			return STATUS_ERR_INVALID_ARG;
 		}
@@ -472,7 +505,7 @@ void system_clock_init(void)
 	/* XOSC32K */
 	#if CONF_CLOCK_XOSC32K_ENABLE == true
 	conf.ext.external_clock = CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL;
-	conf.ext.startup_time = CONF_CLOCK_XOSC32K_STARTUP_TIME;
+	//conf.ext.startup_time = CONF_CLOCK_XOSC32K_STARTUP_TIME;
 	conf.ext.auto_gain_control = CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL;
 	conf.osc32k.enable_1khz_output = CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT;
 	conf.osc32k.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;

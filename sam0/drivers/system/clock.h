@@ -205,26 +205,87 @@ enum gclk_generator {
 };
 
 /**
- * Available start up times for the external oscillators
+ * Available start up times for the XOSC32K
  */
-enum clock_startup {
+enum system_xosc32k_startup {
 	/** Wait 0 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_0,
+	SYSTEM_XOSC32K_STARTUP_0,
 	/** Wait 32 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_32,
+	SYSTEM_XOSC32K_STARTUP_32,
 	/** Wait 2048 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_2048,
+	SYSTEM_XOSC32K_STARTUP_2048,
 	/** Wait 4096 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_4096,
+	SYSTEM_XOSC32K_STARTUP_4096,
 	/** Wait 16384 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_16384,
+	SYSTEM_XOSC32K_STARTUP_16384,
 	/** Wait 32768 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_32768,
+	SYSTEM_XOSC32K_STARTUP_32768,
 	/** Wait 65536 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_65536,
+	SYSTEM_XOSC32K_STARTUP_65536,
 	/** Wait 131072 clock cycles until the clock source is considered stable */
-	SYSTEM_CLOCK_STARTUP_131072,
+	SYSTEM_XOSC32K_STARTUP_131072,
 };
+
+/**
+ * Available start up times for the XOSC
+ */
+enum system_xosc_startup {
+	/** Wait 1 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_1,
+	/** Wait 2 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_2,
+	/** Wait 4 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_4,
+	/** Wait 8 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_8,
+	/** Wait 16 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_16,
+	/** Wait 32 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_32,
+	/** Wait 64 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_64,
+	/** Wait 128 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_128,
+	/** Wait 256 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_256,
+	/** Wait 512 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_512,
+	/** Wait 1024 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_1024,
+	/** Wait 2048 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_2048,
+	/** Wait 4096 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_4096,
+	/** Wait 8192 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_8192,
+	/** Wait 16384 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_16384,
+	/** Wait 32768 clock cycles until the clock source is considered stable */
+	SYSTEM_XOSC_STARTUP_32768,
+};
+
+/**
+ * Available start up times for the OSC32K
+ */
+enum system_osc32k_startup {
+	/** Wait 0 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_0,
+	/** Wait 2 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_2,
+	/** Wait 4 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_4,
+	/** Wait 8 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_8,
+	/** Wait 16 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_16,
+	/** Wait 32 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_32,
+	/** Wait 64 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_64,
+	/** Wait 128 clock cycles until the clock source is considered stable */
+	SYSTEM_OSC32K_STARTUP_128,
+};
+
 
 /**
  * If using an external clock source, this can either be a crystal oscillator
@@ -390,7 +451,7 @@ struct system_clock_source_config {
 		/** External crystal or clock*/
 		enum system_external_clock external_clock;
 		/** Crystal oscillator start-up time */
-		enum clock_startup startup_time;
+		enum system_xosc32k_startup startup_time;
 		/** Enable automatic amplitude gain control */
 		bool auto_gain_control;
 		/** External clock frequency */
@@ -438,7 +499,7 @@ struct system_clock_source_extosc_config {
 	/** External crystal or clock*/
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
-	enum clock_startup startup_time;
+	enum system_xosc_startup startup_time;
 	/** Enable automatic amplitude gain control */
 	bool auto_gain_control;
 	/** External clock/crystal frequency */
@@ -449,7 +510,7 @@ struct system_clock_source_extosc32k_config {
 	/** External crystal or clock*/
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
-	enum clock_startup startup_time;
+	enum system_xosc32k_startup startup_time;
 	/** Enable automatic amplitude control */
 	bool auto_gain_control;
 	/** Enable 1kHz output */
@@ -466,6 +527,8 @@ struct system_clock_source_rc8mhz_config {
 };
 
 struct system_clock_source_osc32k_config {
+	/** Startup time */
+	enum system_osc32k_startup startup_time;
 	/** Enable 1kHz output */
 	bool enable_1khz_output;
 	/** Enable 32kHz output */
@@ -501,8 +564,6 @@ void system_clock_source_extosc32k_set_config(
 		struct system_clock_source_extosc32k_config *const conf);
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const conf);
-void system_clock_source_osculp32k_set_config(
-		struct system_clock_source_osc32k_config *const conf);
 void system_clock_source_rc8mhz_set_config(
 		struct system_clock_source_rc8mhz_config *const conf);
 void system_clock_source_dfll_set_config(
@@ -512,14 +573,17 @@ void system_clock_source_dfll_set_config(
 static inline void system_clock_source_extosc_get_default_config(
 		struct system_clock_source_extosc_config *const conf)
 {
-
+	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	conf->startup_time =         SYSTEM_XOSC_STARTUP_16384;
+	conf->auto_gain_control =    true;
+	conf->frequency =            12000000UL;
 }
 
 static inline void system_clock_source_extosc32k_get_default_config(
 		struct system_clock_source_extosc32k_config *const conf)
 {
 	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->startup_time =         SYSTEM_CLOCK_STARTUP_16384;
+	conf->startup_time =         SYSTEM_XOSC32K_STARTUP_16384;
 	conf->auto_gain_control =    true;
 	conf->frequency =            32768UL;
 	conf->enable_1khz_output =   false;
@@ -528,18 +592,15 @@ static inline void system_clock_source_extosc32k_get_default_config(
 static inline void system_clock_source_osc32k_get_default_config(
 		struct system_clock_source_osc32k_config *const conf)
 {
-
-}
-static inline void system_clock_source_osculp32k_get_default_config(
-		struct system_clock_source_osc32k_config *const conf)
-{
-
+	
+	conf->enable_1khz_output = true;
+	conf->enable_32khz_output = true;
 }
 
 static inline void system_clock_source_rc8mhz_get_default_config(
 		struct system_clock_source_rc8mhz_config *const conf)
 {
-
+	conf->prescaler = 8;
 }
 
 static inline void system_clock_source_dfll_get_default_config(
@@ -612,10 +673,9 @@ static inline void system_clock_source_get_default_config(
 		struct system_clock_source_config *conf)
 {
 	Assert(conf);
-
 	/* XOSC/XOSC32 driver settings */
 	conf->ext.external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->ext.startup_time =         SYSTEM_CLOCK_STARTUP_16384;
+	//conf->ext.startup_time =         SYSTEM_CLOCK_STARTUP_16384;
 	conf->ext.auto_gain_control =    true;
 	conf->ext.frequency =            16000000UL;
 

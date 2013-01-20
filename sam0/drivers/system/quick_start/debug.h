@@ -1,5 +1,5 @@
 #ifndef DEBUG_H
-#  define DEBUG_G
+#  define DEBUG_H
 
 #include <asf.h>
 
