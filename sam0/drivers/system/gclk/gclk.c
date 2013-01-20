@@ -96,7 +96,6 @@ void system_gclk_gen_set_config(
 {
 	/* Sanity check arguments */
 	Assert(config);
-
 	/* Select the appropriate generator in the generator control register */
 	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
@@ -184,7 +183,8 @@ void system_gclk_gen_set_config(
 		#else
 		/* Turn off clock division */
 		/* TODO: wth REVB changes in REV A header ? */
-		GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_DIVSEL;
+		GCLK->GENCTRL.reg |= GCLK_GENCTRL_DIVSEL;
+		GCLK->GENDIV.bit.DIV = 1;
 		#endif
 	}
 	#if defined (REVB)
@@ -209,7 +209,7 @@ void system_gclk_gen_enable(const uint8_t generator)
 	/* Select the requested generator */
 	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
-	/* Enable generator generator */
+	/* Enable generator */
 	GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN;
 }
 
@@ -271,6 +271,7 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	}
 
 	return gen_input_hz;
+
 }
 
 /** \brief Writes a Generic Clock configuration to the hardware module.
