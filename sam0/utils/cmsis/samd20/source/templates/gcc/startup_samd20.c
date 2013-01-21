@@ -97,7 +97,7 @@ void PTC_IRQn_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
-const DeviceVectors exception_table = {
+const DeviceVectors __vector_table = {
 
         /* Configure Initial Stack Pointer, using linker-generated symbols */
         (void*) (&_estack),
