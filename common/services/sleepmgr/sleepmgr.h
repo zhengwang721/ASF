@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,6 @@
 #define SLEEPMGR_H
 
 #include <compiler.h>
-#include <sleep.h>
 #include <parts.h>
 
 #if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)

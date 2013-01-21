@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief User Interface
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,83 +41,90 @@
  *
  */
 
-#ifndef SAM_SLEEPMGR_INCLUDED
-#define SAM_SLEEPMGR_INCLUDED
+#include <asf.h>
+#include "ui.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <compiler.h>
-#include <conf_sleepmgr.h>
-#include <interrupt.h>
-#include "bpm.h"
-
-/**
- * \weakgroup sleepmgr_group
- * @{
- */
-
-enum sleepmgr_mode {
-	/** Active mode. */
-	SLEEPMGR_ACTIVE = 0,
-
-	/**
-	 *  Sleep mode.
-	 *  Potential Wake Up sources: fast startup events and interrupt.
-	 */
-	SLEEPMGR_SLEEP_0,
-	SLEEPMGR_SLEEP_1,
-	SLEEPMGR_SLEEP_2,
-	SLEEPMGR_SLEEP_3,
-
-	/**
-	 *  Wait mode.
-	 *  Potential Wake Up sources: fast startup events
-	 */
-	SLEEPMGR_WAIT,
-
-	/**
-	 *  Retention mode.
-	 *  Potential Wake Up sources: fast startup events
-	 */
-	SLEEPMGR_RET,
-
-	/** Backup mode. Potential Wake Up sources: WKUPs, SM, RTT, RTC. */
-	SLEEPMGR_BACKUP,
-
-	SLEEPMGR_NR_OF_MODES,
-};
-
-/**
- * \internal
- * \name Internal arrays
- * @{
- */
-#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
-/** Sleep mode lock counters */
-extern uint8_t sleepmgr_locks[];
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-/** @} */
-
-static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
+void ui_init(void)
 {
-	Assert(sleep_mode != SLEEPMGR_ACTIVE);
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	cpu_irq_disable();
-
-	/* Enter the sleep mode. */
-	bpm_sleep(BPM, sleep_mode);
-#else
-	UNUSED(sleep_mode);
-	cpu_irq_enable();
-#endif /* CONFIG_SLEEPMGR_ENABLE */
+	// Initialize LEDs
+	LED_On(LED0);
 }
 
-/** @} */
-
-#ifdef __cplusplus
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
 }
-#endif
 
-#endif /* SAM_SLEEPMGR_INCLUDED */
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_com_open(uint8_t port)
+{
+	UNUSED(port);
+}
+
+void ui_com_close(uint8_t port)
+{
+	UNUSED(port);
+}
+
+void ui_com_rx_start(void)
+{
+}
+
+void ui_com_rx_stop(void)
+{
+}
+
+void ui_com_tx_start(void)
+{
+}
+
+void ui_com_tx_stop(void)
+{
+}
+
+void ui_com_error(void)
+{
+}
+
+void ui_com_overflow(void)
+{
+}
+
+void ui_start_read(void)
+{
+}
+
+void ui_stop_read(void)
+{
+}
+
+void ui_start_write(void)
+{
+}
+
+void ui_stop_write(void)
+{
+}
+
+void ui_process(uint16_t framenumber)
+{
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED0);
+	}
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED0);
+	}
+}
+
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4L-EK
+ * - LED0 blinks when USB host has checked and enabled CDC and MSC interface
+ *
+ */
