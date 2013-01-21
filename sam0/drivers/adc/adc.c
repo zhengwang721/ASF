@@ -54,7 +54,7 @@
  * \retval STATUS_OK                The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
-enum status_code _adc_set_config (Adc *const hw_dev,
+static enum status_code _adc_set_config (Adc *const hw_dev,
 		struct adc_conf *const config)
 {
 	uint8_t adjres;
@@ -74,8 +74,8 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	#endif
 
 	/* Apply configuration and enable the GCLK channel */
-	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(DAC_GCLK_ID);
+	system_gclk_ch_set_config(ADC_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(ADC_GCLK_ID);
 
 	/* Configure run in standby */
 	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
@@ -132,82 +132,87 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	hw_dev->CTRLB.reg =
 			config->clock_prescaler |
 			config->resolution |
-			(config->correction_enable << ADC_CTRLB_CORREN_Pos) |
+			(config->correction.correction_enable << ADC_CTRLB_CORREN_Pos) |
 			(config->freerunning << ADC_CTRLB_FREERUN_Pos) |
 			(config->left_adjust << ADC_CTRLB_LEFTADJ_Pos) |
 			(config->differential_mode << ADC_CTRLB_DIFFMODE_Pos);
 
 	/* Check validity of window thresholds */
-	switch (config->resolution) {
-	case ADC_RESOLUTION_8BIT:
-		if (config->differential_mode && (config->window_lower_value > 127 ||
-				config->window_lower_value < -128 ||
-				config->window_upper_value > 127 ||
-				config->window_upper_value < -128)) {
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		} else if (config->window_lower_value > 255 ||
-				config->window_upper_value > 255){
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
+	if (config->window.window_mode != ADC_WINDOW_MODE_DISABLE) {
+		switch (config->resolution) {
+		case ADC_RESOLUTION_8BIT:
+			if (config->differential_mode &&
+					(config->window.window_lower_value > 127 ||
+					config->window.window_lower_value < -128 ||
+					config->window.window_upper_value > 127 ||
+					config->window.window_upper_value < -128)) {
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			} else if (config->window.window_lower_value > 255 ||
+					config->window.window_upper_value > 255){
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			}
+			break;
+		case ADC_RESOLUTION_10BIT:
+			if (config->differential_mode &&
+					(config->window.window_lower_value > 511 ||
+					config->window.window_lower_value < -512 ||
+					config->window.window_upper_value > 511 ||
+					config->window.window_upper_value > -512)) {
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			} else if (config->window.window_lower_value > 1023 ||
+					config->window.window_upper_value > 1023){
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			}
+			break;
+		case ADC_RESOLUTION_12BIT:
+			if (config->differential_mode &&
+					(config->window.window_lower_value > 2047 ||
+					config->window.window_lower_value < -2048 ||
+					config->window.window_upper_value > 2047 ||
+					config->window.window_upper_value < -2048)) {
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			} else if (config->window.window_lower_value > 4095 ||
+					config->window.window_upper_value > 4095){
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			}
+			break;
+		case ADC_RESOLUTION_16BIT:
+			if (config->differential_mode && (config->window.window_lower_value > 32767 ||
+					config->window.window_lower_value < -32768 ||
+					config->window.window_upper_value > 32767 ||
+					config->window.window_upper_value < -32768)) {
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			} else if (config->window.window_lower_value > 65535 ||
+					config->window.window_upper_value > 65535){
+				/* Invalid value */
+				return STATUS_ERR_INVALID_ARG;
+			}
+			break;
 		}
-		break;
-	case ADC_RESOLUTION_10BIT:
-		if (config->differential_mode && (config->window_lower_value > 511 ||
-				config->window_lower_value < -512 ||
-				config->window_upper_value > 511 ||
-				config->window_upper_value > -512)) {
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		} else if (config->window_lower_value > 1023 ||
-				config->window_upper_value > 1023){
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		}
-		break;
-	case ADC_RESOLUTION_12BIT:
-		if (config->differential_mode && (config->window_lower_value > 2047 ||
-				config->window_lower_value < -2048 ||
-				config->window_upper_value > 2047 ||
-				config->window_upper_value < -2048)) {
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		} else if (config->window_lower_value > 4095 ||
-				config->window_upper_value > 4095){
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		}
-		break;
-	case ADC_RESOLUTION_16BIT:
-		if (config->differential_mode && (config->window_lower_value > 32767 ||
-				config->window_lower_value < -32768 ||
-				config->window_upper_value > 32767 ||
-				config->window_upper_value < -32768)) {
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		} else if (config->window_lower_value > 65535 ||
-				config->window_upper_value > 65535){
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		}
-		break;
 	}
-	
 	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
 	/* Configure window mode */
-	hw_dev->WINCTRL.reg = config->window_mode;
+	hw_dev->WINCTRL.reg = config->window.window_mode;
 	
 	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
 	/* Configure lower threshold */
-	hw_dev->WINLT.reg   = config->window_lower_value << ADC_WINLT_WINLT_Pos;
+	hw_dev->WINLT.reg = config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 	
 	/* Wait for synchronization */
 	_adc_wait_for_sync(hw_dev);
 	/* Configure lower threshold */
-	hw_dev->WINUT.reg   = config->window_upper_value << ADC_WINUT_WINUT_Pos;
-	uint8_t inputs_to_scan = config->inputs_to_scan;
+	hw_dev->WINUT.reg = config->window.window_upper_value << ADC_WINUT_WINUT_Pos;
+	
+	uint8_t inputs_to_scan = config->pin_scan.inputs_to_scan;
 	if (inputs_to_scan > 0) {
 		/*
 		* Number of input sources included is the value written to INPUTSCAN
@@ -216,7 +221,7 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 		inputs_to_scan--;
 	}
 	if (inputs_to_scan > ADC_INPUTCTRL_INPUTSCAN_Msk ||
-			config->offset_start_scan > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
+			config->pin_scan.offset_start_scan > ADC_INPUTCTRL_INPUTOFFSET_Msk) {
 		/* Invalid number of input pins or input offset */
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -225,40 +230,42 @@ enum status_code _adc_set_config (Adc *const hw_dev,
 	/* Configure pin scan mode and positive and negative input pins */
 	hw_dev->INPUTCTRL.reg =
 			config->gain_factor |
-			(config->offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
+			(config->pin_scan.offset_start_scan << ADC_INPUTCTRL_INPUTOFFSET_Pos) |
 			(inputs_to_scan << ADC_INPUTCTRL_INPUTSCAN_Pos) |
 			config->negative_input |
 			config->positive_input;
 
 	/* Configure events */
 	hw_dev->EVCTRL.reg =
-			config->event_action |
-			(config->generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
-			(config->generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
-			//(config->flush_adc_on_event                << ADC_EVCTRL_SYNCEI_Pos)   |
-			//(config->start_conversion_on_event         << ADC_EVCTRL_STARTEI_Pos);
+			config->event.event_action |
+			(config->event.generate_event_on_window_monitor  << ADC_EVCTRL_WINMONEO_Pos) |
+			(config->event.generate_event_on_conversion_done << ADC_EVCTRL_RESRDYEO_Pos);
+			
 
 	/* Disable all interrupts */
 	hw_dev->INTENCLR.reg =
 			(1 << ADC_INTENCLR_READY_Pos)   | (1 << ADC_INTENCLR_WINMON_Pos) |
 			(1 << ADC_INTENCLR_OVERRUN_Pos) | (1 << ADC_INTENCLR_RESRDY_Pos);
 
-	/* Make sure gain_correction value is valid */
-	if (config->gain_correction > ADC_GAINCORR_GAINCORR_Msk) {
-		return STATUS_ERR_INVALID_ARG;
-	} else {
-		/* Set gain correction value */
-		hw_dev->GAINCORR.reg =
-				config->gain_correction << ADC_GAINCORR_GAINCORR_Pos;
-	}
-	
-	/* Make sure offset correction value is valid */
-	if (config->offset_correction > 2047 || config->offset_correction < -2048) {
-		return STATUS_ERR_INVALID_ARG;
-	} else {
-		/* Set offset correction value */
-		hw_dev->OFFSETCORR.reg =
-				config->offset_correction << ADC_OFFSETCORR_OFFSETCORR_Pos;
+	if (config->correction.correction_enable){
+		/* Make sure gain_correction value is valid */
+		if (config->correction.gain_correction > ADC_GAINCORR_GAINCORR_Msk) {
+			return STATUS_ERR_INVALID_ARG;
+		} else {
+			/* Set gain correction value */
+			hw_dev->GAINCORR.reg = config->correction.gain_correction <<
+					ADC_GAINCORR_GAINCORR_Pos;
+		}
+		
+		/* Make sure offset correction value is valid */
+		if (config->correction.offset_correction > 2047 ||
+				config->correction.offset_correction < -2048) {
+			return STATUS_ERR_INVALID_ARG;
+		} else {
+			/* Set offset correction value */
+			hw_dev->OFFSETCORR.reg = config->correction.offset_correction <<
+					ADC_OFFSETCORR_OFFSETCORR_Pos;
+		}
 	}
 	return STATUS_OK;
 }
