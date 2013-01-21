@@ -191,7 +191,7 @@ void zrc_indication_callback_init(void);
 #if (defined ZRC_CMD_DISCOVERY)
 static void zrc_cmd_disc_indication(uint8_t PairingRef);
 #endif
-#if (defined RF4CE_TARGET)
+#if (defined RF4CE_TARGET)|| (defined ZRC_CMD_DISCOVERY)
 static void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                                uint8_t RxLinkQuality, uint8_t RxFlags);
 #endif
@@ -206,7 +206,7 @@ static void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 #ifdef RF4CE_CALLBACK_PARAM
 void zrc_indication_callback_init(void)
 {
-#if (defined RF4CE_TARGET)
+#if (defined RF4CE_TARGET)|| (defined ZRC_CMD_DISCOVERY)
     zrc_ind.zrc_cmd_indication_cb = zrc_cmd_indication;
 #endif
 #if (defined ZRC_CMD_DISCOVERY)
@@ -919,7 +919,7 @@ void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef,
 #endif
 
 
-#if ((defined ZRC_PROFILE) && (defined RF4CE_TARGET))
+#if ((defined RF4CE_TARGET)||(defined ZRC_CMD_DISCOVERY))
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif

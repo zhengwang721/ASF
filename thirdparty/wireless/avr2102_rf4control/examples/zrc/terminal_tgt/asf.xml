@@ -23,7 +23,6 @@
 		<build type="define" name="SIO_HUB" value =""/>
 		<build type="define" name="STB_ON_SAL" value =""/>
 		<build type="define" name="ENABLE_TRX_SRAM" value =""/>
-		<build type="define" name="PAL_USE_SPI_TRX" value ="1"/>
 		<build type="define" name="NLDE_HANDLE" value =""/>
 		<build type="define" name="MAC_USER_BUILD_CONFIG" value =""/>
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>

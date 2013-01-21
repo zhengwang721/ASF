@@ -1428,7 +1428,7 @@ extern "C" {
      *
      * @ingroup apiRF4CONTROL_GENERIC_API
      */
-    nwk_enum_t nwk_init(uint8_t BandInfo);
+    nwk_enum_t nwk_init(void);
 
     /**
      * @brief Task handling of RF4CE network layer
