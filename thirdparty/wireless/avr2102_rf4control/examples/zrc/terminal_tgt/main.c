@@ -171,8 +171,9 @@ int main(void)
     sysclk_init();
 
     sw_timer_init();
-        
-    if (nwk_init(RF_BAND) != NWK_SUCCESS)
+       
+       
+    if (nwk_init()!= NWK_SUCCESS)
     {
         app_alert();
     }
@@ -206,7 +207,7 @@ int main(void)
 
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
-    if (STATUS_OK != sio_init())
+    if (STATUS_OK != sio2host_init())
     {
         /* Something went wrong during initialization. */
         app_alert();
@@ -215,9 +216,12 @@ int main(void)
 #endif
 
    pal_timer_get_id(&led_timer);
+   
     /* Endless while loop */
     while (1)
     {
+      
+       //printf("a");
         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
     }
@@ -232,7 +236,7 @@ static void app_task(void)
     int8_t input_char;
 
     /* Check for incoming characters from terminal program. */
-    input_char = sio_getchar_nowait();
+    input_char = sio2host_getchar_nowait();
     if (input_char != -1)
     {
         if (nwk_stack_idle())
@@ -629,7 +633,7 @@ static void print_unpair_submenu(void)
     char input_char;
 
     printf("Which device should be unpaired? Pairing Ref = \r\n");
-    input_char = (char)sio_getchar();
+    input_char = (char)sio2host_getchar();
 
     if ((input_char >= '0') && (input_char <= '9'))
     {
@@ -1220,7 +1224,7 @@ static void print_ch_change_submenu(void)
 
     for (i = 0; i < 3; i++)
     {
-        input = (char)sio_getchar();
+        input = (char)sio2host_getchar();
         if (isdigit(input))
         {
             input_char[i] = input;
@@ -1305,7 +1309,7 @@ static void print_sub_mode_ch_ag_setup(void)
     /* Check for incoming characters from terminal program. */
     while (1)
     {
-        input_char = sio_getchar_nowait();
+        input_char = sio2host_getchar_nowait();
         if (input_char != -1)
         {
             break;
@@ -1322,7 +1326,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 printf("Default: 10 = -80 dBm, new value: \r\n");
                 for (uint8_t i = 0; i < 3; i++)
                 {
-                    input = (char)sio_getchar();
+                    input = (char)sio2host_getchar();
                     if (isdigit(input))
                     {
                         input_char2[i] = input;
@@ -1350,7 +1354,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 printf("Default: 0x00393870 symbols = 60 sec, new value: 0x \r\n");
                 for (uint8_t i = 0; i < 9; i++)
                 {
-                    input = (char)sio_getchar();
+                    input = (char)sio2host_getchar();
                     input = (uint8_t)toupper(input);
                     if (((input >= '0') && (input <= '9')) ||
                         ((input >= 'A') && (input <= 'F')))
@@ -1411,7 +1415,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 printf("Default: 6 = 1 sec, new value: \r\n");
                 for (uint8_t i = 0; i < 2; i++)
                 {
-                    input = (char)sio_getchar();
+                    input = (char)sio2host_getchar();
                     if (isdigit(input))
                     {
                         input_char2[i] = input;
@@ -1469,7 +1473,7 @@ static void print_get_battery_status_submenu(void)
     char input_char;
 
     printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio_getchar();
+    input_char = (char)sio2host_getchar();
     printf("\r\n");
 
     if ((input_char >= '0') && (input_char <= '9'))
@@ -1501,7 +1505,7 @@ static void print_get_firmware_version_submenu(void)
     char input_char;
 
     printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio_getchar();
+    input_char = (char)sio2host_getchar();
     printf("\r\n");
 
     if ((input_char >= '0') && (input_char <= '9'))
@@ -1533,7 +1537,7 @@ static void print_get_alive_submenu(void)
     char input_char;
 
     printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio_getchar();
+    input_char = (char)sio2host_getchar();
     printf("\r\n");
 
     if ((input_char >= '0') && (input_char <= '9'))
