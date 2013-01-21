@@ -125,64 +125,64 @@
 /** \name Embedded Debugger EXT1 header definitions
  *  @{
  */
-#define EXT1_PIN3              PIN_PA04
-#define EXT1_PIN4              PIN_PA05
-#define EXT1_PIN5              PIN_PB04
-#define EXT1_PIN6              PIN_PB05
-#define EXT1_PIN7              PIN_PB00
-#define EXT1_PIN8              PIN_PB01
-#define EXT1_PIN9              PIN_PB06
-#define EXT1_PIN10             PIN_PB07
-#define EXT1_PIN11             PIN_PA18
-#define EXT1_PIN12             PIN_PA19
-#define EXT1_PIN13             PIN_PA11
-#define EXT1_PIN14             PIN_PA10
-#define EXT1_PIN15             PIN_PA15
-#define EXT1_PIN16             PIN_PA12
-#define EXT1_PIN17             PIN_PA14
-#define EXT1_PIN18             PIN_PA13
+#define EXT1_PIN3               PIN_PA04
+#define EXT1_PIN4               PIN_PA05
+#define EXT1_PIN5               PIN_PB04
+#define EXT1_PIN6               PIN_PB05
+#define EXT1_PIN7               PIN_PB00
+#define EXT1_PIN8               PIN_PB01
+#define EXT1_PIN9               PIN_PB06
+#define EXT1_PIN10              PIN_PB07
+#define EXT1_PIN11              PIN_PA18
+#define EXT1_PIN12              PIN_PA19
+#define EXT1_PIN13              PIN_PA11
+#define EXT1_PIN14              PIN_PA10
+#define EXT1_PIN15              PIN_PA15
+#define EXT1_PIN16              PIN_PA12
+#define EXT1_PIN17              PIN_PA14
+#define EXT1_PIN18              PIN_PA13
 /** @} */
 
 /** \name Embedded Debugger EXT2 header definitions
  *  @{
  */
-#define EXT2_PIN3              PIN_PA06
-#define EXT2_PIN4              PIN_PA07
-#define EXT2_PIN5              PIN_PB12
-#define EXT2_PIN6              PIN_PB13
-#define EXT2_PIN7              PIN_PA30
-#define EXT2_PIN8              PIN_PA31
-#define EXT2_PIN9              PIN_PB16
-#define EXT2_PIN10             PIN_PB17
-#define EXT2_PIN11             PIN_PA18
-#define EXT2_PIN12             PIN_PA19
-#define EXT2_PIN13             PIN_PA25
-#define EXT2_PIN14             PIN_PA24
-#define EXT2_PIN15             PIN_PA16
-#define EXT2_PIN16             PIN_PA12
-#define EXT2_PIN17             PIN_PA14
-#define EXT2_PIN18             PIN_PA13
+#define EXT2_PIN3               PIN_PA06
+#define EXT2_PIN4               PIN_PA07
+#define EXT2_PIN5               PIN_PB12
+#define EXT2_PIN6               PIN_PB13
+#define EXT2_PIN7               PIN_PA30
+#define EXT2_PIN8               PIN_PA31
+#define EXT2_PIN9               PIN_PB16
+#define EXT2_PIN10              PIN_PB17
+#define EXT2_PIN11              PIN_PA18
+#define EXT2_PIN12              PIN_PA19
+#define EXT2_PIN13              PIN_PA25
+#define EXT2_PIN14              PIN_PA24
+#define EXT2_PIN15              PIN_PA16
+#define EXT2_PIN16              PIN_PA12
+#define EXT2_PIN17              PIN_PA14
+#define EXT2_PIN18              PIN_PA13
 /** @} */
 
 /** \name Embedded Debugger EXT3 header definitions
  *  @{
  */
-#define EXT3_PIN3              PIN_PB02
-#define EXT3_PIN4              PIN_PB03
-#define EXT3_PIN5              PIN_PB24
-#define EXT3_PIN6              PIN_PB25
-#define EXT3_PIN7              PIN_PB18
-#define EXT3_PIN8              PIN_PB19
-#define EXT3_PIN9              PIN_PB26
-#define EXT3_PIN10             PIN_PB27
-#define EXT3_PIN11             PIN_PA18
-#define EXT3_PIN12             PIN_PA19
-#define EXT3_PIN13             PIN_PA27
-#define EXT3_PIN14             PIN_PA26
-#define EXT3_PIN15             PIN_PA17
-#define EXT3_PIN16             PIN_PA12
-#define EXT3_PIN17             PIN_PA14
-#define EXT3_PIN18             PIN_PA13
+#define EXT3_PIN3               PIN_PB02
+#define EXT3_PIN4               PIN_PB03
+#define EXT3_PIN5               PIN_PB24
+#define EXT3_PIN6               PIN_PB25
+#define EXT3_PIN7               PIN_PB18
+#define EXT3_PIN8               PIN_PB19
+#define EXT3_PIN9               PIN_PB26
+#define EXT3_PIN10              PIN_PB27
+#define EXT3_PIN11              PIN_PA18
+#define EXT3_PIN12              PIN_PA19
+#define EXT3_PIN13              PIN_PA27
+#define EXT3_PIN14              PIN_PA26
+#define EXT3_PIN15              PIN_PA17
+#define EXT3_PIN16              PIN_PA12
+#define EXT3_PIN17              PIN_PA14
+#define EXT3_PIN18              PIN_PA13
 /** @} */
 
 #endif  /* SAMD20_XPLAINED_PRO_H_INCLUDED */

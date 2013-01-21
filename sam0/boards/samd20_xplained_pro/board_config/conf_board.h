@@ -44,6 +44,4 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-// TODO
-
 #endif /* CONF_BOARD_H_INCLUDED */
