@@ -36,3 +36,21 @@ void debug_set_val(uint8_t val)
 	}
 
 }
+
+void debug_set_leds(uint8_t val)
+{
+	uint8_t i;
+	uint32_t leds[] = {LED1, LED2, LED3, LED4};
+
+	for (i = 0; i < sizeof(leds) / 4; i++) {
+		port_pin_set_output_level(leds[i], (val & (1 << i)));
+	}
+
+}
+
+void debug_delay(uint16_t len)
+{
+	volatile uint32_t delay;
+
+	for(delay = 0; delay < len; delay++);
+}
