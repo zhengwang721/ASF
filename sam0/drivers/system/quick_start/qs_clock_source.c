@@ -40,7 +40,7 @@
 #include <asf.h>
 #include "debug.h"
 
-#define GCLK_GEN 6
+#define GCLK_GEN 0
 #define GCLK_DFLL_GEN 5
 #define DFLL_GCLK_CH 0
 #define GCLKIO_PIN 26
@@ -49,7 +49,7 @@
 #define OUTPUT_DFLL_OPEN
 //#define OUTPUT_XOSC32K
 
-//Sysctrl *sysctrl_dbg = (Sysctrl  *)0x40000800U;
+Sysctrl *sysctrl_dbg = (Sysctrl  *)0x40000800U;
 
 
 void configure_system_clock_sources(void);
@@ -110,7 +110,7 @@ void configure_gclk_generator(void)
 #ifdef OUTPUT_DFLL_OPEN
 
 	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
-	gclock_gen_conf.division_factor = 2;
+	gclock_gen_conf.division_factor = 1;
 	gclock_gen_conf.output_enable   = true;
 
 #endif
@@ -133,17 +133,19 @@ void configure_gclk_channel(void)
 
 int main(void)
 {
-	enum status_code retval;
-	volatile uint32_t temp = 0;
-        volatile uint32_t bob;
+	
+	
+
 	
 	init_debug_pins();
 	
+	//system_init();
 
-	
 
 
 #ifdef OUTPUT_XOSC32K
+	volatile uint32_t temp = 0;
+	enum status_code retval;
 	configure_extosc32k();
 	debug_set_val(0x1);
 	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, false);
@@ -154,7 +156,6 @@ int main(void)
 		debug_set_val(0xf);
 		configure_gclk_generator();
 		temp = system_gclk_gen_get_hz(GCLK_GEN);
-		bob = temp;
 		debug_set_val(temp);
                 
 	}
@@ -164,7 +165,18 @@ int main(void)
 	//system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, true);
 	debug_set_val(0xb);
 	configure_gclk_generator();
+	
+struct system_clock_source_osc8m_config osc8m_conf;
+	osc8m_conf.prescaler = 0;
+	system_clock_source_osc8m_set_config(&osc8m_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
+	//system_main_clock_set_source(3);
+	system_cpu_clock_set_divider(0);
 	//debug_set_val(0xf);
+        	while(1) {
+		debug_set_val(0xff);
+		debug_set_val(0x0);
+	}
 #endif
 
 
