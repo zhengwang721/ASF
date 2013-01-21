@@ -57,6 +57,16 @@ void configure_extosc32k(void);
 void configure_gclk_generator(void);
 void configure_dfll_open_loop(void);
 
+volatile SYSCTRL_DFLLMUL_Type dfll_mul;
+volatile SYSCTRL_DFLLCTRL_Type dfll_ctrl;
+volatile SYSCTRL_DFLLVAL_Type dfll_val;
+
+void debug_dfll(void)
+{
+    dfll_mul = SYSCTRL->DFLLMUL;
+    dfll_ctrl = SYSCTRL->DFLLCTRL;
+    dfll_val = SYSCTRL->DFLLVAL;
+}
 
 
 void configure_extosc32k(void)
@@ -120,7 +130,31 @@ void configure_gclk_generator(void)
 
 	
 }
+
+/* Output GCLK generator 0 on pin PA31 */
+void configure_gclk_pin_0(void) {
+	struct port_pin_conf pin_conf;
 	
+	pin_conf.input.enabled  = false;
+	pin_conf.output.enabled = true;
+
+	pin_conf.type = PORT_PIN_TYPE_PERIPHERAL;
+	pin_conf.peripheral_index = MUX_PA31G_GCLK_IO0;
+
+	port_pin_set_config(31, &pin_conf);
+
+
+
+	pin_conf.input.enabled  = false;
+	pin_conf.output.enabled = true;
+
+	pin_conf.type = PORT_PIN_TYPE_PERIPHERAL;
+	pin_conf.peripheral_index = GCLKIO_PIN_MUX;
+
+	port_pin_set_config(GCLKIO_PIN, &pin_conf);
+}
+
+
 void configure_gclk_channel(void)
 {
 	struct system_gclk_ch_conf gclock_ch_conf;
@@ -138,15 +172,18 @@ int main(void)
 
 	
 	init_debug_pins();
-	
+	configure_gclk_pin_0();
+	//debug_set_leds(0xf);
 	system_init();
 
+        debug_dfll();
 
         while(true) {
-		debug_set_leds(~i);
+		//debug_set_leds(~i);
 		i<<=1;
 		if (i > 0xf) i = 1;
 		debug_delay(0xFFF);
+		//debug_set_val(i);
         }
 
 #ifdef OUTPUT_XOSC32K

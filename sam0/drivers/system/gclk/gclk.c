@@ -125,17 +125,11 @@ void system_gclk_gen_set_config(
 	/* Set division factor */
 	if (config->division_factor > 1) {
 
-		/* Clear Divsel in GENCTRL */
-		GCLK->GENCTRL.reg &= ~(GCLK_GENCTRL_DIVSEL);
-
 		/* Select the appropriate generator in the division register */
 		GCLK_MUX_SELECT(GCLK->GENDIV.reg, GCLK_GENDIV_ID, generator);
 
-		/* Clear existing divider settings */
-		GCLK->GENDIV.reg &= ~(GCLK_GENDIV_DIV_Msk);
-
 		/* Check if division is a power of two */
-		if ((config->division_factor & (config->division_factor - 1)) == 0) {
+		if (((config->division_factor & (config->division_factor - 1)) == 0)) {
 			/* Determine the index of the highest bit set to get the
 			 * division factor that must be loaded into the division
 			 * register */
@@ -148,30 +142,30 @@ void system_gclk_gen_set_config(
 			}
 
 			/* Set binary divider power of 2 division factor */
-			GCLK->GENDIV.reg |= (div2_count << GCLK_GENDIV_DIV_Pos);
+			GCLK->GENDIV.bit.DIV = div2_count;
 
-			#if !defined (REVB)
+			#if defined (REVB)
 			/* Enable binary division */
-			GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_DIVSEL;
-			GCLK->GENCTRL.reg &= ~(GCLK_GENCTRL_IDC);
+			GCLK->GENCTRL.bit.DIVSEL = 1;
+			GCLK->GENCTRL.bit.IDC = 1;
 			#else
 			/* Enable binary division and disable increased duty cycle accuracy*/
-			GCLK->GENCTRL.reg |= (GCLK_GENCTRL_DIVSEL | GCLK_GENCTRL_IDC);
+			GCLK->GENCTRL.bit.IDC = 0;
+			GCLK->GENCTRL.bit.DIVSEL = 0;
 			#endif
 
 		} else {
+			debug_set_val(0xe);
 			/* Set integer division factor */
-			GCLK->GENDIV.reg
-				|= (config->division_factor <<
-					GCLK_GENDIV_DIV_Pos);
+			GCLK->GENDIV.bit.DIV = config->division_factor;
 			#if defined (REVB)
 			/* Enable non-binary division with increased duty cycle accuracy */
-			GCLK->GENCTRL.reg |= GCLK_GENCTRL_IDC | GCLK_GENCTRL_DIVSEL;
+			GCLK->GENCTRL.bit.IDC = 1;
+			GCLK->GENCTRL.bit.DIVSEL = 1;
 			#else
 			/* Enable non-binary division with increased duty cycle accuracy */
-			GCLK->GENCTRL.reg
-				|= (GCLK_GENCTRL_DIVSEL |
-					GCLK_GENCTRL_IDC);
+			GCLK->GENCTRL.bit.DIVSEL = 1;
+			GCLK->GENCTRL.bit.IDC = 1;
 			#endif
 
 		}
@@ -183,7 +177,7 @@ void system_gclk_gen_set_config(
 		#else
 		/* Turn off clock division */
 		/* TODO: wth REVB changes in REV A header ? */
-		GCLK->GENCTRL.reg |= GCLK_GENCTRL_DIVSEL;
+		GCLK->GENCTRL.bit.DIVSEL = 1;
 		GCLK->GENDIV.bit.DIV = 1;
 		#endif
 	}
@@ -246,11 +240,10 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	/* Select the appropriate generator */
 	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
-	uint32_t source_clock_index =
-			(GCLK->CLKCTRL.reg & GCLK_CLKCTRL_ID_Msk) >> GCLK_CLKCTRL_ID_Pos;
+	//uint32_t source_clock_index = GCLK->GENCTRL.bit.SRC;
 
 	/* Get the frequency of the source connected to the GCLK generator */
-	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
+	uint32_t gen_input_hz = system_clock_source_get_hz(GCLK->GENCTRL.bit.SRC);
 
 	/* Check if the divider is enabled for the generator */
 	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 0 &&
@@ -304,6 +297,8 @@ void system_gclk_ch_set_config(
 	/* Select the desired generic clock channel */
 	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID,
 			config->source_generator);
+
+	GCLK->CLKCTRL.bit.GEN = config->source_generator;
 
 	#if !defined (REVB)
 	/* Enable or disable the clock in standby mode */

@@ -25,6 +25,7 @@
 void init_debug_pins(void);
 
 void debug_set_val(uint8_t val);
-
+void debug_set_leds(uint8_t val);
+void debug_delay(uint16_t len);
 
 #endif /* DEBUG_H */

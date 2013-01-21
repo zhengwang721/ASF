@@ -201,6 +201,7 @@ void system_clock_source_dfll_set_config(
 {
 	uint32_t temp_register = 0;
 
+	SYSCTRL->DFLLCTRL.reg = 0;		
 	/* REV A bug ? not documented */
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
 
@@ -227,6 +228,7 @@ void system_clock_source_dfll_set_config(
 		/* Enable the closed loop mode */
 		SYSCTRL->DFLLCTRL.reg |= conf->loop;
 	}
+	
 }
 
 /**
@@ -502,7 +504,7 @@ void system_clock_init(void)
 	/* DFLL */
 	#if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
-
+	system_clock_source_dfll_get_default_config(&dfll_conf);
 	dfll_conf.loop = CONF_CLOCK_DFLL_LOOP_MODE;
 
 	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP)
@@ -529,7 +531,7 @@ void system_clock_init(void)
 		#if CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP == true
 		dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
 		#else
-		dfll_conf_wakeup_lock = SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
+		dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_LOSE_LOCK_AFTER_WAKE;
 		#endif
 
 		#if CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE == true
@@ -539,21 +541,20 @@ void system_clock_init(void)
 		#endif
 
 	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
-		struct system_gclk_ch_conf dfll_gclock_ch_conf;
-
-		system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
-		dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-		system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
-		system_gclk_ch_enable(0);
+		dfll_conf.multiply_factor = CONF_CLOCK_DFLL_MULTIPLY_FACTOR;
 
 	#endif
 
 	dfll_conf.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
+
+	#if CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_OPEN_LOOP
 	system_clock_source_dfll_set_config(&dfll_conf);
+	#endif
+
 	#endif /* CONF_CLOCK_DFLL_ENABLE */
-	debug_set_val(0x2);
+	
 
 	/* OSC8M */
 	struct system_clock_source_osc8m_config osc8m_conf;
@@ -561,14 +562,15 @@ void system_clock_init(void)
 	system_clock_source_osc8m_set_config(&osc8m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
 	
-	debug_set_val(0x3);
+
 
 	#if CONF_CLOCK_CONFIGURE_GCLK == true
-
+	system_gclk_init();
 
 	#if CONF_CLOCK_GCLK_0_ENABLE == true
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_0_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_0_PRESCALER;
+	gclk_generator_conf.output_enable   = true;
 	system_gclk_gen_set_config(0, &gclk_generator_conf);
 	system_gclk_gen_enable(0);
 	#endif
@@ -611,6 +613,7 @@ void system_clock_init(void)
 	#if CONF_CLOCK_GCLK_6_ENABLE == true
 	gclk_generator_conf.source_clock    = CONF_CLOCK_GCLK_6_CLOCK_SOURCE;
 	gclk_generator_conf.division_factor = CONF_CLOCK_GCLK_6_PRESCALER;
+	gclk_generator_conf.output_enable   = true;
 	system_gclk_gen_set_config(6, &gclk_generator_conf);
 	system_gclk_gen_enable(6);
 	#endif
@@ -622,25 +625,35 @@ void system_clock_init(void)
 	system_gclk_gen_enable(7);
 	#endif
 
+	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) && (CONF_CLOCK_DFLL_ENABLE == true)
+	struct system_gclk_ch_conf dfll_gclock_ch_conf;
+	
+
+	system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
+	dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
+	system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
+	system_gclk_ch_enable(0);
+	system_clock_source_dfll_set_config(&dfll_conf);
+	#endif
+
+
 	#endif /* Configure GCLK */
-	debug_set_val(0x4);
-	while (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC8M));
-	debug_set_val(0x5);
+	
 	/* CPU and BUS clocks */
 	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
 	
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-	debug_set_val(0x6);
+
 	#if CONF_CLOCK_ENABLE_CPU_CLOCK_FAILURE_DETECT == true
 	system_main_clock_set_failure_detect(true);
 	#else
 	system_main_clock_set_failure_detect(false);
 	#endif
-	debug_set_val(0x7);
+
 
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
-	debug_set_val(0x8);
+
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
-	debug_set_val(0x9);
+
 }	
 
