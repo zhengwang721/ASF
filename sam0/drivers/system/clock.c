@@ -478,7 +478,7 @@ void system_clock_init(void)
 	/* XOSC32K */
 	#if CONF_CLOCK_XOSC32K_ENABLE == true
 	struct system_clock_source_xosc32k_config xosc32k_conf;
-	
+	xosc32k_conf.frequency             = 32768UL;
 	xosc32k_conf.external_clock        = CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL;
 	xosc32k_conf.startup_time          = CONF_CLOCK_XOSC32K_STARTUP_TIME;
 	xosc32k_conf.auto_gain_control     = CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL;

@@ -240,22 +240,22 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	/* Select the appropriate generator */
 	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
-	//uint32_t source_clock_index = GCLK->GENCTRL.bit.SRC;
-
+	uint32_t source_clock_index = GCLK->GENCTRL.bit.SRC;
+	debug_set_val(source_clock_index);
 	/* Get the frequency of the source connected to the GCLK generator */
-	uint32_t gen_input_hz = system_clock_source_get_hz(GCLK->GENCTRL.bit.SRC);
+	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
 
 	/* Check if the divider is enabled for the generator */
-	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 0 &&
+	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 1 &&
 			GCLK->GENDIV.reg <= 1)) {
 
 		GCLK_MUX_SELECT(GCLK->GENDIV.reg, GCLK_GENDIV_ID, generator);
 
 		/* Get the generator divider setting (can be fractional or binary) */
-		uint32_t divider = (GCLK->GENDIV.reg & GCLK_GENDIV_DIV_Msk);
+		uint32_t divider = (GCLK->GENDIV.bit.DIV);
 
 		/* Check if the generator is using fractional or binary division */
-		if (GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) {
+		if (GCLK->GENCTRL.bit.DIVSEL == 1) {
 			gen_input_hz /= divider;
 		}
 		else {
