@@ -76,9 +76,8 @@ int main(void)
 		//! [main_1]
 		if (extint_ch_is_detected(1)) {
 		//! [main_1]
-		//! [main_2]
 			// Do something in response to EXTINT 1 detection
-
+		//! [main_2]
 			extint_ch_clear_detected(1);
 		//! [main_2]
 		}

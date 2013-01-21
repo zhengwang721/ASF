@@ -148,7 +148,8 @@ extern "C" {
 /** Peripheral multiplexer index to select GPIO mode for a pin. */
 #define SYSTEM_PINMUX_GPIO    (1 << 7)
 
-/** \brief Port pin direction configuration enum.
+/**
+ * \brief Port pin direction configuration enum.
  *
  * Enum for the possible pin direction settings of the port pin configuration
  * structure, to indicate the direction the pin should use.
@@ -162,7 +163,8 @@ enum system_pinmux_pin_dir {
 	SYSTEM_PINMUX_PIN_DIR_OUTPUT,
 };
 
-/** \brief Port pin input pull configuration enum.
+/**
+ * \brief Port pin input pull configuration enum.
  *
  * Enum for the possible pin pull settings of the port pin configuration
  * structure, to indicate the type of logic level pull the pin should use.
@@ -176,7 +178,8 @@ enum system_pinmux_pin_pull {
 	SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
-/** \brief Port pin digital input sampling mode enum.
+/**
+ * \brief Port pin digital input sampling mode enum.
  *
  * Enum for the possible input sampling modes for the port pin configuration
  * structure, to indicate the type of sampling a port pin should use.
@@ -188,7 +191,8 @@ enum system_pinmux_pin_sampling_mode {
 	SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
 };
 
-/** \brief Port pin drive output strength enum.
+/**
+ * \brief Port pin drive output strength enum.
  *
  * Enum for the possible output drive strengths for the port pin
  * configuration structure, to indicate the driver strength the pin should
@@ -201,7 +205,8 @@ enum system_pinmux_pin_strength {
 	SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
 };
 
-/** \brief Port pin output slew rate enum.
+/**
+ * \brief Port pin output slew rate enum.
  *
  * Enum for the possible output drive slew rates for the port pin
  * configuration structure, to indicate the driver slew rate the pin should
@@ -214,7 +219,8 @@ enum system_pinmux_pin_slew_rate {
 	SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
 };
 
-/** \brief Port pin output drive mode enum.
+/**
+ * \brief Port pin output drive mode enum.
  *
  * Enum for the possible output drive modes for the port pin configuration
  * structure, to indicate the output mode the pin should use.
@@ -226,12 +232,13 @@ enum system_pinmux_pin_drive {
 	SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
 };
 
-/** \brief Port pin configuration structure.
+/**
+ * \brief Port pin configuration structure.
  *
- *  Configuration structure for a port pin instance. This structure should be
- *  structure should be initialized by the
- *  \ref system_pinmux_get_config_defaults() function before being modified by
- *  the user application.
+ * Configuration structure for a port pin instance. This structure should be
+ * structure should be initialized by the
+ * \ref system_pinmux_get_config_defaults() function before being modified by
+ * the user application.
  */
 struct system_pinmux_conf {
 	/** MUX index of the peripheral that should control the pin, if peripheral
@@ -251,20 +258,18 @@ struct system_pinmux_conf {
  */
 
 /**
- *  \brief Initializes a Port pin configuration structure to defaults.
+ * \brief Initializes a Port pin configuration structure to defaults.
  *
- *  Initializes a given Port pin configuration structure to a set of
- *  known default values. This function should be called on all new
- *  instances of these configuration structures before being modified by the
- *  user application.
+ * Initializes a given Port pin configuration structure to a set of
+ * known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
  *
- *  The default configuration is as follows:
- *   \li Non peripheral (i.e. GPIO) controlled
- *   \li Input mode with internal pullup enabled, output mode disabled
- *   \li Edge detection disabled
- *   \li On-demand input sampling
+ * The default configuration is as follows:
+ *  \li Non peripheral (i.e. GPIO) controlled
+ *  \li Input mode with internal pull-up enabled
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_pinmux_get_config_defaults(
 		struct system_pinmux_conf *const config)
@@ -294,14 +299,14 @@ void system_pinmux_group_set_config(
  */
 
 /**
- *  \brief Retrieves the PORT module group instance from a given GPIO pin number.
+ * \brief Retrieves the PORT module group instance from a given GPIO pin number.
  *
- *  Retrieves the PORT module group instance associated with a given logical
- *  GPIO pin number.
+ * Retrieves the PORT module group instance associated with a given logical
+ * GPIO pin number.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert.
+ * \param[in] gpio_pin  Index of the GPIO pin to convert.
  *
- *  \return Base address of the associated PORT module.
+ * \return Base address of the associated PORT module.
  */
 static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
 		const uint8_t gpio_pin)
@@ -463,6 +468,10 @@ static inline void system_pinmux_pin_set_output_drive(
  *	<tr>
  *		<th>Acronym</th>
  *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>GPIO</td>
+ *		<td>General Purpose Input/Output</td>
  *	</tr>
  *	<tr>
  *		<td>MUX</td>

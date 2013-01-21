@@ -83,7 +83,7 @@
  * to an external stimulus in a timely manner.
  *
  * \subsection logical_channels Logical Channels
- * The external interrupt module contains a number of logical channels, each of
+ * The External Interrupt module contains a number of logical channels, each of
  * which is capable of being individually configured for a given pin routing,
  * detection mode and filtering/wake up characteristics.
  *
@@ -98,17 +98,17 @@
  * edge or level stimulus. A NMI cannot, as the name suggests, be disabled in
  * firmware and will take precedence over any in-progress interrupt sources.
  *
- * NMIs can be used to implement critical device features such as en emergency
- * stop, forced software reset or other functionality where the action should
- * be executed in preference to all other running code.
+ * NMIs can be used to implement critical device features such as forced
+ * software reset or other functionality where the action should be executed in
+ * preference to all other running code with a minimum amount of latency.
  *
  * \subsection filtering_and_detection Input Filtering and Detection
  * To reduce the possibility of noise or other transient signals causing
  * unwanted device wake-ups, interrupts and/or events via an external interrupt
  * channel, a hardware signal filter can be enabled on individual channels. This
  * filter provides a Majority-of-Three voter filter on the incoming signal, so
- * that the input state is considered to be the majority of three subsequent
- * samples of the input:
+ * that the input state is considered to be the majority vote of three
+ * subsequent samples of the pin input buffer:
  *
  * <table>
  *	<tr>
