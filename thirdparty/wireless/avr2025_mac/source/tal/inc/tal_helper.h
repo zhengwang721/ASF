@@ -142,10 +142,6 @@ typedef enum param_tag
    ANT_CTRL          = 0x02,
    AACK_PROMSCS_MODE    = 0x03,
 #endif
-#if(TAL_TYPE == AT86RF212)
-   CC_BAND           = 0x04,
-   CC_NUMBER         = 0x05,
-#endif
 #if ((TAL_TYPE==AT86RF233 || TAL_TYPE == ATMEGARFR2\
      || TAL_TYPE == AT86RF212 || TAL_TYPE == AT86RF212B))
    CC_BAND           = 0x04,

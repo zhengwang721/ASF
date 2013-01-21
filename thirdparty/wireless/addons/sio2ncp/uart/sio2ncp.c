@@ -58,12 +58,12 @@
 
 
 /* === PROTOTYPES ========================================================== */
-  	const usart_serial_options_t usart_serial_options =
+static usart_serial_options_t usart_serial_options =
 	{
 		.baudrate     = USART_NCP_BAUDRATE,
 		.charlength   = USART_NCP_CHAR_LENGTH,
 		.paritytype   = USART_NCP_PARITY,
-		.stopbits     = USART_NCP_STOP_BIT
+		.stopbits     = USART_NCP_STOP_BITS
 	};
 
 
@@ -98,7 +98,7 @@ status_code_t sio2ncp_init(void)
 {
 	
 	usart_serial_init(USART_NCP, &usart_serial_options);
-	usart_set_rx_interrupt_level(USART_NCP, USART_INT_LVL_HI);
+	USART_NCP_RX_ISR_ENABLE();
 	return STATUS_OK;
 }
 

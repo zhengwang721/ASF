@@ -80,28 +80,33 @@
 #define BOARD_OSC0_STARTUP_US     (1100)
 //@}
 
+/*! \name Number of LEDs.
+ */
+//! @{
+#define LED_COUNT   1
+//! @}
+
 /**
- * \name LED 0 definitions
+ * \name LEDs
  *
- * LED 0 is a single yellow LED that is active low.
+ * LED0 is a single yellow LED that is active low.
  */
 //@{
-#define LED_0_NAME                "LED0 (yellow)"
-#define LED_0_PIN                 PIN_PC07
-#define LED_0_ACTIVE              false
-#define LED_0_INACTIVE            !LED_0_ACTIVE
+#define LED0                          PC07
+#define LED0_GPIO                     PIN_PC07
+#define LED0_GPIO_MASK                GPIO_PC07
+#define LED0_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_LOW
+#define LED0_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
 //@}
 
-/** Number of LEDs on board */
-#define LED_COUNT                 1
-
-/** \name Button 0 definitions */
-//@{
-#define BUTTON_0_NAME             "SW0"
-#define BUTTON_0_PIN              PIN_PC24
-#define BUTTON_0_ACTIVE           false
-#define BUTTON_0_INACTIVE         !BUTTON_0_ACTIVE
-//@}
+/*! \name GPIO Connections of Push Buttons
+ */
+//! @{
+#define GPIO_PUSH_BUTTON_0              PIN_PC24
+#define GPIO_PUSH_BUTTON_0_MASK         GPIO_PC24
+#define PUSH_BUTTON_0_DOWN_LEVEL        IOPORT_PIN_LEVEL_LOW
+#define PUSH_BUTTON_0_UP_LEVEL          IOPORT_PIN_LEVEL_HIGH
+//! @}
 
 /** \name Push button connection of external interrupt line */
 //@{

@@ -64,3 +64,4 @@ int sio2host_getchar(void);
 int sio2host_getchar_nowait(void);
 
 #endif /* SIO2HOST_H */
+
