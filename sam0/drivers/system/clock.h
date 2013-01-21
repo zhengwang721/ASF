@@ -286,15 +286,15 @@ enum system_osc32k_startup {
 	SYSTEM_OSC32K_STARTUP_128,
 };
 
-enum system_rc8mhz_div {
+enum system_osc8m_div {
 	/** Do not divide 8MHz */
-	SYSTEM_RC8MHZ_DIV_0,
+	SYSTEM_OSC8M_DIV_0,
 	/** Divide 8MHz by 2 */
-	SYSTEM_RC8MHZ_DIV_2,
+	SYSTEM_OSC8M_DIV_2,
 	/** Divide 8MHz by 4 */
-	SYSTEM_RC8MHZ_DIV_4,
+	SYSTEM_OSC8M_DIV_4,
 	/** Divide 8MHz by 8 */
-	SYSTEM_RC8MHZ_DIV_8,
+	SYSTEM_OSC8M_DIV_8,
 };
 
 /**
@@ -366,15 +366,13 @@ enum system_dfll_quick_lock {
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
  */
 enum system_main_clock {
-	/** Internal 32kHz oscillator */
-	SYSTEM_MAIN_CLOCK_RCSYS,
+	/** Internal 8MHz oscillator */
+	SYSTEM_MAIN_CLOCK_OSC8M,
 	/** External oscillator */
-	SYSTEM_MAIN_CLOCK_OSC0,
+	SYSTEM_MAIN_CLOCK_XOSC,
 	/** Digital Frequency Locked Loop (DFLL) */
 	SYSTEM_MAIN_CLOCK_DFLL,
-	/** Internal 8MHz RC oscillator */
-	SYSTEM_MAIN_CLOCK_RC8,
-	/** GCLK channel x */
+	/** GCLK channel 0 */
 	SYSTEM_MAIN_CLOCK_GCLK, /* GCLK0 ?*/
 };
 #endif
@@ -419,7 +417,7 @@ enum clock_apb_bus {
  */
 enum system_clock_source {
 	/** Internal 8MHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_RC8MHZ = GCLK_SOURCE_OSC8M,
+	SYSTEM_CLOCK_SOURCE_OSC8M = GCLK_SOURCE_OSC8M,
 	/** Internal 32kHz RC oscillator */
 	SYSTEM_CLOCK_SOURCE_OSC32K = GCLK_SOURCE_OSC32K,
 	/** External oscillator */
@@ -443,65 +441,6 @@ enum conf_clock_rtc_freq {
 	CONF_CLOCK_RTC_FREQ_1KHZ = 32,
 	/** 32kHz counter speed for the RTC. */
 	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
-};
-
-/**
- * \brief Configuration struct for the system clock sources
- *
- * This configuration struct contains all the settings that are needed
- * to configure any of the clock sources on the device. To populate this
- * structure with default values you must use system_clock_source_get_default_config.
- * To apply the configuration to a specific clock source you need to use the
- * system_clock_source_set_config function.
- */
-struct system_clock_source_config {
-	/** External oscillator/Crystal (XOSC) */
-	enum system_clock_source clk_source;
-	struct {
-		/** External crystal or clock*/
-		enum system_external_clock external_clock;
-		/** Crystal oscillator start-up time */
-		enum system_xosc32k_startup startup_time;
-		/** Enable automatic amplitude gain control */
-		bool auto_gain_control;
-		/** External clock frequency */
-		uint32_t frequency;
-	} ext;
-	/** 32KHz ocillators */
-	struct {
-		/** Enable 1kHz output */
-		bool enable_1khz_output;
-		/** Enable 32kHz output */
-		bool enable_32khz_output;
-	} osc32k;
-	/** Internal 8MHz RC oscillator */
-	struct {
-		/** Internal 8MHz RC oscillator prescaler */
-		uint8_t prescaler;
-	} rc8mhz;
-	/** DFLL (Digital frequency locked loop) */
-	struct {
-		/** Loop mode */
-		enum system_dfll_mode loop;
-		/** Enable Quick Lock */
-		enum system_dfll_quick_lock quick_lock;
-		/** Enable Chill Cycle */
-		enum system_dfll_chill_cycle chill_cycle;
-		/** DFLL lock state on wakeup */
-		enum system_dfll_wakeup_lock wakeup_lock;
-		/** DFLL tracking after fine lock */
-		enum system_dfll_stable_tracking stable_tracking;
-		/** Coarse calibration value (Open loop mode) */
-		uint8_t coarse_value;
-		/** Fine calibration value (Open loop mode) */
-		uint8_t fine_value;
-		/** Coarse adjustment max step size (Closed loop mode) */
-		uint8_t coarse_max_step;
-		/** Fine adjustment max step size (Closed loop mode) */
-		uint8_t fine_max_step;
-		/** DFLL multiply factor (Closed loop mode */
-		uint16_t multiply_factor;
-	} dfll;
 };
 
 
@@ -531,9 +470,9 @@ struct system_clock_source_xosc32k_config {
 	uint32_t frequency;
 };
 
-struct system_clock_source_rc8mhz_config {
+struct system_clock_source_osc8m_config {
 	/* Internal 8MHz RC oscillator prescaler */
-	enum system_rc8mhz_div prescaler;
+	enum system_osc8m_div prescaler;
 };
 
 struct system_clock_source_osc32k_config {
@@ -574,8 +513,8 @@ void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const conf);
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const conf);
-void system_clock_source_rc8mhz_set_config(
-		struct system_clock_source_rc8mhz_config *const conf);
+void system_clock_source_osc8m_set_config(
+		struct system_clock_source_osc8m_config *const conf);
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const conf);
 
@@ -607,8 +546,8 @@ static inline void system_clock_source_osc32k_get_default_config(
 	conf->enable_32khz_output = true;
 }
 
-static inline void system_clock_source_rc8mhz_get_default_config(
-		struct system_clock_source_rc8mhz_config *const conf)
+static inline void system_clock_source_osc8m_get_default_config(
+		struct system_clock_source_osc8m_config *const conf)
 {
 	conf->prescaler = 8;
 }
@@ -638,9 +577,6 @@ static inline void system_clock_source_dfll_get_default_config(
  * \name Clock source configuration
  * @{
  */
-enum status_code system_clock_source_set_config(struct system_clock_source_config
-		*conf, enum system_clock_source clk_source);
-
 enum status_code system_clock_source_write_calibration(
 		enum system_clock_source system_clock_source,
 		uint16_t calibration_value, uint8_t freq_range);
@@ -652,67 +588,6 @@ enum status_code system_clock_source_disable(enum system_clock_source clk_source
 bool system_clock_source_is_ready(enum system_clock_source clk_source);
 
 uint32_t system_clock_source_get_hz(enum system_clock_source clk_source);
-
-/**
- * \brief Get clock source default configuration
- *
- * This function will set the configuration struct to the
- * default values:
- * - External crystal oscillator settings:
- *  - 16 MHz External crystal
- *  - Startup time: 16384 cycles
- *  - Auto gain control
- * - 32kHz sources:
- *   - Enable 1kHz output
- *   - Enable 32kHz output
- * - 8MHz RC oscillator:
- *   - Divide by 8
- * - DFLL:
- *   - Open Loop mode
- *   - Quick lock enabled
- *   - Chill cycle enabled
- *   - Keep lock after wake
- *   - Keep tracking after fine lock
- *   - Coarse max step to 1
- *   - Fine max step to 1
- *   - Multiplication factor of 6
- *
- * \param[out] conf Clock source configuration struct to set to defaults
- */
-static inline void system_clock_source_get_default_config(
-		struct system_clock_source_config *conf)
-{
-	Assert(conf);
-	/* XOSC/XOSC32 driver settings */
-	conf->ext.external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	//conf->ext.startup_time =         SYSTEM_CLOCK_STARTUP_16384;
-	conf->ext.auto_gain_control =    true;
-	conf->ext.frequency =            16000000UL;
-
-	/* 32kHz (XOSC/RCOSC) */
-	conf->osc32k.enable_1khz_output =   true;
-	conf->osc32k.enable_32khz_output =  true;
-
-	/* 8MHz RC oscillator (RC8MHZ) */
-	conf->rc8mhz.prescaler =     8;
-
-	/* DFLL config */
-	conf->dfll.loop =                 SYSTEM_CLOCK_DFLL_OPEN_LOOP;
-	conf->dfll.quick_lock =           SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
-	conf->dfll.chill_cycle =          SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
-	conf->dfll.wakeup_lock =          SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
-	conf->dfll.stable_tracking =      SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
-
-	/* TODO: Need to update these values when we know what they mean */
-	conf->dfll.coarse_value =          1;
-	conf->dfll.fine_value =            1;
-
-	conf->dfll.coarse_max_step =       1;
-	conf->dfll.fine_max_step =         1;
-
-	conf->dfll.multiply_factor =       6; /* multiply 8MHZ by 6 to get 48MHz */
-
-}
 
 
 

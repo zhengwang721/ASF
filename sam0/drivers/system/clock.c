@@ -43,7 +43,7 @@
 
 #include <clock.h>
 #include <conf_clocks.h>
-
+#include <debug.h>
 /* \ingroup clock_group
  * @{
  */
@@ -68,7 +68,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 
 	case SYSTEM_CLOCK_SOURCE_XOSC:
 		return xosc_frequency;
-	case SYSTEM_CLOCK_SOURCE_RC8MHZ:
+	case SYSTEM_CLOCK_SOURCE_OSC8M:
 		prescaler = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
 		if (prescaler) {
 			return 8000000 / (1 << prescaler);
@@ -91,13 +91,13 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 }
 
 /**
- * \brief Apply configuration for the rc8mhz clock source
+ * \brief Apply configuration for the osc8m clock source
  *
- * \param conf rc8mhz configuration struct
+ * \param conf osc8m configuration struct
  *
  */
-void system_clock_source_rc8mhz_set_config(
-		struct system_clock_source_rc8mhz_config *const conf)
+void system_clock_source_osc8m_set_config(
+		struct system_clock_source_osc8m_config *const conf)
 {
 	SYSCTRL->OSC8M.bit.PRESC = conf->prescaler;
 }
@@ -256,7 +256,7 @@ enum status_code system_clock_source_write_calibration(
 {
 
 	switch (clock_src) {
-		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC8M:
 
 			if (calibration_value > 255 || freq_range > 4) {
 				return STATUS_ERR_INVALID_ARG;
@@ -314,7 +314,7 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 
 	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
 	switch (clock_src) {
-		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			SYSCTRL->FORCECLKON.bit.OSC8MON = 1;
 			SYSCTRL->OSC8M.reg |= SYSCTRL_OSC8M_ENABLE;
 			/* Not possible to wait for ready, so we return */
@@ -381,7 +381,7 @@ enum status_code system_clock_source_enable(enum system_clock_source clock_src, 
 enum status_code system_clock_source_disable(enum system_clock_source clk_source)
 {
 	switch (clk_source) {
-		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			SYSCTRL->OSC8M.reg &= ~SYSCTRL_OSC8M_ENABLE;
 			break;
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -418,7 +418,7 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 {
 	uint32_t mask;
 	switch (clk_source) {
-		case SYSTEM_CLOCK_SOURCE_RC8MHZ:
+		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			/* TODO: verify that this cannot be disabled */
 			return true;
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -459,7 +459,7 @@ void system_clock_init(void)
 	struct system_gclk_gen_conf gclk_generator_conf;
 
 
-
+	debug_set_val(0x1);
 	/* XOSC */
 	#if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
@@ -541,13 +541,15 @@ void system_clock_init(void)
 
 	system_clock_source_dfll_set_config(&dfll_conf);
 	#endif /* CONF_CLOCK_DFLL_ENABLE */
+	debug_set_val(0x2);
 
-
-	/* RC8MHz */
-	struct system_clock_source_rc8mhz_config rc8mhz_conf;
-	rc8mhz_conf.prescaler = CONF_CLOCK_RC8MHZ_PRESCALER;
-	system_clock_source_rc8mhz_set_config(&rc8mhz_conf);
-
+	/* OSC8M */
+	struct system_clock_source_osc8m_config osc8m_conf;
+	osc8m_conf.prescaler = CONF_CLOCK_OSC8M_PRESCALER;
+	system_clock_source_osc8m_set_config(&osc8m_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
+	
+	debug_set_val(0x3);
 
 	#if CONF_CLOCK_CONFIGURE_GCLK == true
 
@@ -609,18 +611,24 @@ void system_clock_init(void)
 	#endif
 
 	#endif /* Configure GCLK */
-
-
+	debug_set_val(0x4);
+	while (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC8M));
+	debug_set_val(0x5);
 	/* CPU and BUS clocks */
 	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
+	
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+	debug_set_val(0x6);
 	#if CONF_CLOCK_ENABLE_CPU_CLOCK_FAILURE_DETECT == true
 	system_main_clock_set_failure_detect(true);
 	#else
 	system_main_clock_set_failure_detect(false);
 	#endif
+	debug_set_val(0x7);
 
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
+	debug_set_val(0x8);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
-}
+	debug_set_val(0x9);
+}	
 
