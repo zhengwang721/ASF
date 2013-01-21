@@ -42,6 +42,12 @@
 #ifndef I2C_SLAVE_ASYNC_H_INCLUDED
 #define I2C_SLAVE_ASYNC_H_INCLUDED
 
+#include <sercom.h>
+#include "i2c_common.h"
+
+#ifdef I2C_SLAVE_ASYNC
+# include <sercom_interrupts.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,6 +81,10 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
 	/** Callback for packet read complete. */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
+	/** Callback for read request from master can be usde to call write_buff */
+	I2C_SLAVE_CALLBACK_READ_REQUEST,
+	/** Callback for write request from master - can be used to call read_buff */
+	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
 #if !defined(__DOXYGEN__)
@@ -83,6 +93,9 @@ enum i2c_slave_callback {
 #endif
 };
 #if !defined(__DOXYGEN__)
+
+/* Device instance prototype */
+struct i2c_slave_dev_inst;
 
 typedef void (*i2c_slave_callback_t)(
 		const struct i2c_slave_dev_inst *const dev_inst);
@@ -96,16 +109,20 @@ typedef void (*i2c_slave_callback_t)(
  * Enum for the possible SDA hold times with respect to the negative edge
  * of SCL
  */
- enum i2c_slave_sda_hold_time {
+enum i2c_slave_sda_hold_time {
 	/** SDA hold time disabled */
-	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = SERCOM_I2CS_CTRLA_SDAHOLD(0),
+	I2C_SLAVE_SDA_HOLD_TIME_DISABLED = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((0)
+			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 50ns-100ns */
-	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = SERCOM_I2CS_CTRLA_SDAHOLD(1),
+	I2C_SLAVE_SDA_HOLD_TIME_50NS_100NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((1)
+			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 300ns-600ns */
-	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = SERCOM_I2CS_CTRLA_SDAHOLD(2),
+	I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((2)
+			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 	/** SDA hold time 400ns-800ns */
-	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = SERCOM_I2CS_CTRLA_SDAHOLD(3),
- };
+	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((3)
+			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
+};
  
 /** 
  * \brief Enum for the possible address modes
@@ -146,13 +163,15 @@ enum i2c_slave_interrupt_flag {
 struct i2c_slave_dev_inst {
 	/** Hardware instance initialized for the struct. */
 	Sercom *hw_dev;
+	/** Nack on address match */
+	bool nack_address;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
-	/* Buffer write timeout value. */
+	/** Buffer write timeout value. */
 	uint16_t buffer_timeout;
 #ifdef I2C_SLAVE_ASYNC
 	/** Pointers to callback functions. */
-	volatile i2c_slave_callback_t callbacks[_I2C_MASTER_SLAVE_N];
+	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
 	/** Mask for registered callbacks. */
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
@@ -194,11 +213,19 @@ struct i2c_slave_conf {
 	/** Address or upper limit of address range */
 	uint8_t address;
 	/** Address mask, second address or lower limit of address range*/
-	uint8_t address;
+	uint8_t address_mask;
+	/** 
+	 * Enable general call address recognition. General call address
+	 * is defined as 0000000 with dir bit 0
+	 */
+	bool enable_general_call_address;
+	/** 
+	 * Enable nack on address match. Can be changed with \ref 
+	 * enable_address_nack and \ref disable_address_nack functions.
+	 */
+	bool enable_address_nack;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
-	/** Bus hold time after start signal on data line. */
-	enum i2c_slave_start_hold_time start_hold_time;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
 	/** Timeout for packet write to wait for slave. */
@@ -207,6 +234,26 @@ struct i2c_slave_conf {
 	bool run_in_standby;
 };
 
+#if !defined(__DOXYGEN__)
+/**
+ * \internal Wait for hardware module to sync.
+ * \param[in]  dev_inst Pointer to device instance structure.
+ */
+static void _i2c_slave_wait_for_sync(
+		const struct i2c_slave_dev_inst *const dev_inst)
+{
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+
+	while(i2c_module->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+		/* Wait for I2C module to sync. */
+	}
+}
+#endif
+
 /**
  * \brief Get the I2C slave default configurations.
  *
@@ -214,7 +261,14 @@ struct i2c_slave_conf {
  * function should be called at the start of any I2C initiation.
  *
  * The default configuration is as follows:
-  * - GCLK generator 0
+ * - Disable SCL low timeout
+ * - 300ns - 600ns SDA hold time
+ * - Address with mask
+ * - Address = 0
+ * - Address mask = 0 (one single address)
+ * - General call address disabled
+ * - Address nack disabled
+ * - GCLK generator 0
  * - Do not run in standby
  *
  * \param[out] config Pointer to configuration structure to be initiated.
@@ -224,9 +278,15 @@ static inline void i2c_slave_get_config_defaults(
 {
 	/*Sanity check argument. */
 	Assert(config);
+	config->enable_scl_low_timeout = false;
+	config->sda_hold_time = I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS;
+	config->address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config->address = 0;
+	config->address_mask = 0;
+	config->enable_general_call_address = false;
+	config->enable_address_nack = false;
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
-	config->sda_hold_time = I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS;
 }
 
 enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
@@ -250,11 +310,13 @@ static inline void i2c_slave_enable(
 
 	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
 
-	/* Timeout counter used to force bus state. */
-	volatile uint16_t timeout_counter = 0;
 
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(dev_inst);
+
+	/* Enable interrupts */
+	i2c_module->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
+			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
 
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;
@@ -286,6 +348,10 @@ static inline void i2c_slave_disable(
 
 void i2c_slave_reset(struct i2c_slave_dev_inst *const dev_inst);
 
+void i2c_slave_async_enable_address_nack(struct i2c_slave_dev_inst
+		*const dev_inst);
+void i2c_slave_async_disable_address_nack(struct i2c_slave_dev_inst
+		*const dev_inst);
 
 /**
  * \name Callbacks
