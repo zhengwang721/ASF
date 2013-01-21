@@ -1,21 +1,21 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
-	<module type="application" id="thirdparty.wireless.avr2025_mac.addons.serial_bridge" caption="Serial Bridge Application">
+	<module type="application" id="thirdparty.wireless.addons.serial_bridge" caption="Serial Bridge Application">
 		<info type="description" value="summary">
 			Serial Bridge Application
 		</info>
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source"      value="main.c"/>
         
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="sam"/>
-		<device-support value="megarf"/>
 		<require idref="common.services.ioport"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.delay"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<device-support value="megarf"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>
