@@ -484,6 +484,7 @@ void system_clock_init(void)
 	xosc32k_conf.enable_32khz_output   = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, true);
 	#endif /* CONF_CLOCK_XOSC32K_ENABLE */
 
 	/* OSC32K */

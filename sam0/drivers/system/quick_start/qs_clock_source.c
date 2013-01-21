@@ -134,14 +134,20 @@ void configure_gclk_channel(void)
 int main(void)
 {
 	
-	
+	uint8_t i = 1;
 
 	
 	init_debug_pins();
 	
-	//system_init();
+	system_init();
 
 
+        while(true) {
+		debug_set_leds(~i);
+		i<<=1;
+		if (i > 0xf) i = 1;
+		debug_delay(0xFFF);
+        }
 
 #ifdef OUTPUT_XOSC32K
 	volatile uint32_t temp = 0;
@@ -170,7 +176,7 @@ struct system_clock_source_osc8m_config osc8m_conf;
 	osc8m_conf.prescaler = 0;
 	system_clock_source_osc8m_set_config(&osc8m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
-	//system_main_clock_set_source(3);
+	system_main_clock_set_source(3);
 	system_cpu_clock_set_divider(0);
 	//debug_set_val(0xf);
         	while(1) {
