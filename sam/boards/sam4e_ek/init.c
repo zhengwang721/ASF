@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -181,4 +181,9 @@ void board_init(void)
 #   endif
 #endif
 
+#if defined(CONF_BOARD_USB_PORT)
+#  if defined(CONF_BOARD_USB_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+#  endif
+#endif
 }
