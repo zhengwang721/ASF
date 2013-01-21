@@ -44,10 +44,7 @@
 
 #include <sercom.h>
 #include "i2c_common.h"
-
-#ifdef I2C_SLAVE_ASYNC
-# include <sercom_interrupts.h>
-#endif
+#include <sercom_interrupts.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,7 +67,7 @@ extern "C" {
  * \section i2c_slave_async_api API Overview
  *
  */
-#ifdef I2C_SLAVE_ASYNC
+
 /**
  * \brief Callback types.
  *
@@ -99,7 +96,6 @@ struct i2c_slave_dev_inst;
 
 typedef void (*i2c_slave_callback_t)(
 		const struct i2c_slave_dev_inst *const dev_inst);
-#endif
 #endif
 
 /** 
@@ -165,11 +161,6 @@ struct i2c_slave_dev_inst {
 	Sercom *hw_dev;
 	/** Nack on address match */
 	bool nack_address;
-	/** Unknown bus state timeout. */
-	uint16_t unkown_bus_state_timeout;
-	/** Buffer write timeout value. */
-	uint16_t buffer_timeout;
-#ifdef I2C_SLAVE_ASYNC
 	/** Pointers to callback functions. */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
 	/** Mask for registered callbacks. */
@@ -187,7 +178,6 @@ struct i2c_slave_dev_inst {
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
 	volatile enum status_code status;
-#endif
 };
 
 /**
@@ -226,10 +216,6 @@ struct i2c_slave_conf {
 	bool enable_address_nack;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
-	/** Unknown bus state timeout. */
-	uint16_t unkown_bus_state_timeout;
-	/** Timeout for packet write to wait for slave. */
-	uint16_t buffer_timeout;
 	/** Set to keep module active in sleep modes. */
 	bool run_in_standby;
 };
@@ -296,8 +282,7 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
 /**
  * \brief Enable the I2C module.
  *
- * This will enable the requested I2C module and set the bus state to IDLE after the specified
- * \ref timeout "timeout" period if no stop bit is detected.
+ * This will enable the requested I2C module.
  *
  * \param[in]  dev_inst Pointer to the device instance struct.
  */
@@ -310,13 +295,12 @@ static inline void i2c_slave_enable(
 
 	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
 
-
-	/* Wait for module to sync. */
-	_i2c_slave_wait_for_sync(dev_inst);
-
 	/* Enable interrupts */
 	i2c_module->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
+
+	/* Wait for module to sync. */
+	_i2c_slave_wait_for_sync(dev_inst);
 
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;
@@ -338,6 +322,10 @@ static inline void i2c_slave_disable(
 	Assert(dev_inst->hw_dev);
 
 	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+
+	/* Disable interrupts */
+	i2c_module->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
+			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
 
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(dev_inst);
@@ -447,22 +435,22 @@ static inline void i2c_slave_async_cancel_transfer(
 /**
  * \brief Get last error from asynchronous operation.
  *
- * Will return the last error that occurred in asynchronous transfer operation. The
- * status will be cleared on next operation.
+ * Will return the last error that occurred in the last asynchronous transfer
+ * operation. Most errors will not be set until a new start condition has been
+ * detected on the bus.
+ * The status will be cleared on next operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param  dev_inst Pointer to device instance structure
  *
- * \return          Last status code from transfer operation.
- * \retval STATUS_OK No error has occurred.
- * \retval STATUS_IN_PROGRESS If transfer is in progress.
- * \retval STATUS_ERR_BUSY If slave module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
+ * \return                     Last status code from transfer operation
+ * \retval STATUS_OK           No error has occurred
+ * \retval STATUS_IN_PROGRESS  Transfer is in progress
+ * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
+ * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
+ *                             last transfer
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_async_get_operation_status(
 		struct i2c_slave_dev_inst *const dev_inst)
