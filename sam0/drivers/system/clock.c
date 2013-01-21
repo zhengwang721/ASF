@@ -496,6 +496,7 @@ void system_clock_init(void)
 	osc32k_conf.enable_32khz_output = CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT;
 
 	system_clock_source_osc32k_set_config(&osc32k_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K, true);
 	#endif /* CONF_CLOCK_OSC32K_ENABLE */
 
 	/* DFLL */
@@ -536,6 +537,16 @@ void system_clock_init(void)
 		#else
 		dfll_conf.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
 		#endif
+
+	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP)
+		struct system_gclk_ch_conf dfll_gclock_ch_conf;
+
+		system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
+		dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
+		system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
+		system_gclk_ch_enable(0);
+
+	#endif
 
 	dfll_conf.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
