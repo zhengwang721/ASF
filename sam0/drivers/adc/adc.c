@@ -271,7 +271,7 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
 }
 
 /**
- * \brief Initialize the ADC
+ * \brief Initializes the ADC
  *
  * This function will initialize the ADC device struct and the hardware module
  * based on the values of the configuration struct.

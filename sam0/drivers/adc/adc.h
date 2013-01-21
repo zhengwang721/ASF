@@ -717,6 +717,9 @@ enum adc_oversampling_and_decimation {
 
 /**
  * \brief Window monitor configuration structure
+ *
+ * Window monitor configuration structure. Part of the \ref adc_conf struct
+ * and will be initialized by \ref adc_get_config_defaults .
  */
 struct adc_window_conf {
 	/** Selected window mode */
@@ -729,6 +732,9 @@ struct adc_window_conf {
 
 /**
  * \brief Event configuration structure
+ *
+ * Event configuration structure. Part of the \ref adc_conf struct and will
+ * be initialized by \ref adc_get_config_defaults .
  */
 struct adc_event_conf {
 	/** Event action to take on incoming event */
@@ -741,6 +747,10 @@ struct adc_event_conf {
 
 /**
  * \brief Gain and offsett correction configuration structure
+ *
+ * Gain and offsett correction configuration structure.
+ * Part of the \ref adc_conf struct and will  be initialized by
+ * \ref adc_get_config_defaults .
  */
 struct adc_correction_conf {
 	/**
@@ -766,6 +776,9 @@ struct adc_correction_conf {
 
 /**
  * \brief Pin scan configuration structure
+ *
+ * Pin scan configuration structure. Part of the \ref adc_conf struct and will
+ * be initialized by \ref adc_get_config_defaults .
  */
 struct adc_pin_scan_conf {
 	/**
