@@ -587,4 +587,4 @@ typedef struct {
  * - \subpage i2c_slave_basic_use_case
  */
 
-#endif /* I2C_MASTER_H_INCLUDED */
+#endif /* I2C_COMMON_H_INCLUDED */

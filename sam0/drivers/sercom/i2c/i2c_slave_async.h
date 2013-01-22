@@ -46,6 +46,10 @@
 #include "i2c_common.h"
 #include <sercom_interrupts.h>
 
+#ifndef PINMUX_DEFAULT
+#define PINMUX_DEFAULT 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,6 +88,9 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
+	/** Callback for error in last transfer. Discovered on a new address
+	 * interrupt */
+	I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER,
 #if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
 	_I2C_SLAVE_CALLBACK_N,
@@ -218,6 +225,14 @@ struct i2c_slave_conf {
 	enum gclk_generator generator_source;
 	/** Set to keep module active in sleep modes. */
 	bool run_in_standby;
+	/** PAD0 pinout */
+	uint32_t pinout_pad0;
+	/** PAD1 pinout */
+	uint32_t pinout_pad1;
+	/** PAD2 pinout */
+	uint32_t pinout_pad2;
+	/** PAD3 pinout */
+	uint32_t pinout_pad3;
 };
 
 #if !defined(__DOXYGEN__)
@@ -273,6 +288,8 @@ static inline void i2c_slave_get_config_defaults(
 	config->enable_address_nack = false;
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
+	config->pinout_pad0 = PINMUX_DEFAULT;
+	config->pinout_pad1 = PINMUX_DEFAULT;
 }
 
 enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,

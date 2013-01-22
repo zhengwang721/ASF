@@ -48,23 +48,40 @@
  * \param[in]  config Configuration structure with configurations to set.
  *
  * \return              Status of setting config.
- * \retval STATUS_OK If module was configured correctly.
+ * \retval STATUS_OK                      Module was configured correctly
  * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
- *                                        previously set.
+ *                                        previously set
  */
 static enum status_code _i2c_slave_set_config(
 		struct i2c_slave_dev_inst *const dev_inst,
 		const struct i2c_slave_conf *const config)
 {
-
-	//TODO: mux sercom pads
-	
 	/* Sanity check arguments. */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 	Assert(config);
 
 	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	Sercom *const sercom_module = dev_inst->hw_dev;
+	struct system_pinmux_conf pin_conf;
+	uint32_t pad0 = config->pinout_pad0;
+	uint32_t pad1 = config->pinout_pad1;
+	
+	system_pinmux_get_config_defaults(&pin_conf);
+	/* SERCOM PAD0 - SDA */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(sercom_module, 0);
+	}
+	pin_conf.peripheral_index = pad0 & 0xFFFF;
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
+	system_pinmux_set_config(pad0 >> 16, &pin_conf);
+
+	/* SERCOM PAD1 - SCL */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(sercom_module, 1);
+	}
+	pin_conf.peripheral_index = pad1 & 0xFFFF;
+	system_pinmux_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
 	i2c_module->CTRLA.reg = config->sda_hold_time |
@@ -95,11 +112,11 @@ static enum status_code _i2c_slave_set_config(
  * \param[in]  config   Pointer to the configuration struct.
  *
  * \return              Status of initialization.
- * \retval STATUS_OK Module initiated correctly.
- * \retval STATUS_ERR_DENIED If module is enabled.
- * \retval STATUS_ERR_BUSY If module is busy resetting.
- * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
- *                                        previously set.
+ * \retval STATUS_OK                       Module initiated correctly.
+ * \retval STATUS_ERR_DENIED               If module is enabled.
+ * \retval STATUS_ERR_BUSY                 If module is busy resetting.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other gclk generator than
+ *                                         previously set.
  *
  */
 enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
@@ -146,7 +163,7 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
 	/* Set SERCOM module to operate in I2C slave mode. */
 	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
 			& ~SERCOM_I2CS_CTRLA_MASTER;
-	//TODO: mux sercom pads
+
 	/* Set config and return status. */
 	return _i2c_slave_set_config(dev_inst, config);
 }
@@ -408,12 +425,12 @@ void _i2c_slave_async_callback_handler(uint8_t instance)
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occured in last packet transfer */
 			dev_inst->status = STATUS_ERR_IO;
-			if ((callback_mask & I2C_SLAVE_CALLBACK_ERROR)) {
-				dev_inst->callbacks[I2C_SLAVE_CALLBACK_ERROR](dev_inst);
+			if ((callback_mask & I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER)) {
+				dev_inst->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](dev_inst);
 			}
 		}
 		if (dev_inst->nack_address) {
-			// NACK address
+			/* NACK address */
 			i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		}
 		/* Set transfer direction in dev inst */
@@ -494,7 +511,6 @@ void _i2c_slave_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	// TODO: CHECK THIS
 	if (dev_inst->status != STATUS_IN_PROGRESS &&
 			dev_inst->status != STATUS_OK) {
 		/* Stop packet operation. */
