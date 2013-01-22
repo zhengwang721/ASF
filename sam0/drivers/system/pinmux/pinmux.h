@@ -50,7 +50,7 @@
  * for the configuration and management of the device's physical I/O Pins, to
  * alter the direction and input/drive characteristics as well as to configure
  * the pin peripheral multiplexer selection. This driver encompasses the
- * following module within the SAM0 devices:
+ * following module within the SAMD20 devices:
  *
  * \li \b PORT (Port I/O Management)
  *

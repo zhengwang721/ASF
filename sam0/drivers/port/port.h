@@ -49,7 +49,8 @@
  * Driver for the SAMD20 architecture devices. This driver provides a interface
  * for the configuration and management of the device's General Purpose
  * Input/Output (GPIO) pin functionality, for manual pin state reading and
- * writing. This driver encompasses the following module within the SAM0 devices:
+ * writing. This driver encompasses the following module within the SAMD20
+ * devices:
  *
  * \li \b PORT (Port I/O Management)
  *

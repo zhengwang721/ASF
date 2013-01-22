@@ -486,6 +486,8 @@ enum status_code extint_nmi_set_config(
  *  \param[in] channel  External Interrupt channel index to check.
  *
  *  \return Status of the requested channel's edge detection state.
+ *  \retval true  If the channel's edge/level detection criteria was met
+ *  \retval false  If the channel has not detected its configured criteria
  */
 static inline bool extint_ch_is_detected(
 		const uint8_t channel)
@@ -528,6 +530,8 @@ static inline void extint_ch_clear_detected(
  *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
  *
  *  \return Status of the requested NMI channel's edge detection state.
+ *  \retval true  If the NMI channel's edge/level detection criteria was met
+ *  \retval false  If the NMI channel has not detected its configured criteria
  */
 static inline bool extint_nmi_is_detected(
 		const uint8_t nmi_channel)
