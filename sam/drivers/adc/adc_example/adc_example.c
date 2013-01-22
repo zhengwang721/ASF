@@ -57,7 +57,7 @@
  * of the potentiometer. Please refer to the board schematics for ADVREF
  * jumper configuration.
  *
- * We use one push button for ADTGR, so please connect ADTRG to relative button pin 
+ * We use one push button for ADTGR, so please connect ADTRG to relative button pin
  *  \copydoc adc_example_pin_defs
  *
  * \section Description
@@ -128,6 +128,7 @@
  *    ADC_CHANNEL_15 (temperature sensor)
  */
 
+/** There are two peripherals ADC and ADC12B in SAM3U, you can select one of them. */
 #if SAM3U
 //#define ADC_12B
 #endif
@@ -661,7 +662,7 @@ static void start_adc(void)
 #if SAM3S || SAM3XA || SAM4S
 		adc_enable_anch(ADC);
 		/* gain = 2 */
-		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_2);	
+		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_2);
 #elif SAM3U
 #ifdef ADC_12B
 		adc12b_set_input_gain(ADC12B, ADC_GAINVALUE_2);
@@ -670,7 +671,7 @@ static void start_adc(void)
 	} else {
 #if SAM3S || SAM3XA || SAM4S
 		/* gain = 1 */
-		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_0);	
+		adc_set_channel_input_gain(ADC, ADC_CHANNEL_POTENTIOMETER, ADC_GAINVALUE_0);
 #elif SAM3U
 #ifdef ADC_12B
 		adc12b_set_input_gain(ADC12B, ADC_GAINVALUE_0);
@@ -937,7 +938,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
