@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for BPM driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,8 @@
  *
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <board.h>
-#include <sysclk.h>
-#include <bpm.h>
-#include <sleep.h>
-#include <ast.h>
-#include <string.h>
-#include <unit_test/suite.h>
-#include <stdio_serial.h>
+#include <asf.h>
 #include <conf_test.h>
-#include <conf_board.h>
 
 /**
  * \mainpage
@@ -75,6 +65,8 @@
  * - \ref conf_board.h
  * - \ref conf_clock.h
  * - \ref conf_uart_serial.h
+ * - \ref conf_sleepmgr.h
+ * - \ref conf_ast.h
  *
  * \section device_info Device Info
  * Only SAM4L devices can be used.
@@ -142,10 +134,10 @@ static inline void wait_test_assert_idle(void)
 /**
  * \brief AST interrupt handler
  */
-void AST_PER_Handler(void)
+static void ast_per_callback(void)
 {
 	log_event(EVENT_WAKEUP);
-	ast_clear_periodic_status_flag(AST,0);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
 /**
@@ -174,6 +166,10 @@ static void run_backup_test(const struct test_case *test)
 			"Unexpected backup wakeup cause, should be AST!");
 		return;
 	}
+
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
 
 	/* Enter backup mode */
 	bpm_sleep(BPM, BPM_SM_BACKUP);
@@ -207,6 +203,10 @@ static void run_ps_test(const struct test_case *test)
  */
 static void run_ret_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_RET);
 	log_event(EVENT_RUN);
@@ -225,6 +225,10 @@ static void run_ret_test(const struct test_case *test)
  */
 static void run_wait_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_WAIT);
 	log_event(EVENT_RUN);
@@ -243,6 +247,10 @@ static void run_wait_test(const struct test_case *test)
  */
 static void run_sleep_3_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_3);
 	log_event(EVENT_RUN);
@@ -261,6 +269,10 @@ static void run_sleep_3_test(const struct test_case *test)
  */
 static void run_sleep_2_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_2);
 	log_event(EVENT_RUN);
@@ -279,6 +291,10 @@ static void run_sleep_2_test(const struct test_case *test)
  */
 static void run_sleep_1_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_1);
 	log_event(EVENT_RUN);
@@ -297,6 +313,10 @@ static void run_sleep_1_test(const struct test_case *test)
  */
 static void run_sleep_0_test(const struct test_case *test)
 {
+	/* Wait for the printf operation to finish before
+	setting the device in a power save mode. */
+	delay_ms(30);
+
 	reset_log();
 	bpm_sleep(BPM, BPM_SM_SLEEP_0);
 	log_event(EVENT_RUN);
@@ -313,6 +333,8 @@ static void run_sleep_0_test(const struct test_case *test)
  */
 int main(void)
 {
+	struct ast_config ast_conf;
+
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate = CONF_TEST_BAUDRATE,
 		.charlength = CONF_TEST_CHARLENGTH,
@@ -325,22 +347,36 @@ int main(void)
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	/* Initialize AST for all tests */
-	osc_priv_enable_osc32();
-	sysclk_enable_peripheral_clock(AST);
-	ast_init_counter(AST, AST_OSC_32KHZ, AST_PSEL_32KHZ_1HZ, 0);
-	ast_set_periodic0_value(AST,AST_PSEL_32KHZ_1HZ-2);
-	ast_enable_periodic_interrupt(AST,0);
-	ast_enable_periodic_async_wakeup(AST,0);
-	ast_enable_periodic0(AST);
-	ast_clear_periodic_status_flag(AST,0);
-	/* Enable AST interrupt */
-	NVIC_ClearPendingIRQ(AST_PER_IRQn);
-	NVIC_EnableIRQ(AST_PER_IRQn);
-	/* Enable the AST */
+	/* Enable osc32 oscillator*/
+	if (!osc_is_ready(OSC_ID_OSC32)) {
+		osc_enable(OSC_ID_OSC32);
+		osc_wait_ready(OSC_ID_OSC32);
+	}
+
+	/* Enable the AST. */
 	ast_enable(AST);
+
+	ast_conf.mode = AST_COUNTER_MODE;
+	ast_conf.osc_type = AST_OSC_32KHZ;
+	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
+	ast_conf.counter = 0;
+	ast_set_config(AST, &ast_conf);
+
+	/* Set periodic 0 to interrupt after 1/16 second in counter mode. */
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
+	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 2);
+
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
+		AST_PER_IRQn, 1);
+
+	ast_enable_wakeup(AST, AST_WAKEUP_PER);
+
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
-	/* Retain I/O lines after wakeup from backup */
+	/**
+	 * Retain I/O lines after wakeup from backup.
+	 * Disable to undo the previous retention state then enable.
+	 */
 	bpm_disable_io_retention(BPM);
 	bpm_enable_io_retention(BPM);
 	/* Enable fast wakeup */
@@ -381,6 +417,9 @@ int main(void)
 
 	/* Run all tests in the test suite. */
 	test_suite_run(&bpm_suite);
+
+	/* Disable the AST */
+	ast_disable(AST);
 
 	while (1) {
 		/* Busy-wait forever. */

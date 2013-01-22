@@ -3,7 +3,7 @@
  *
  * \brief AST driver for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef _AST_H_INCLUDED
-#define _AST_H_INCLUDED
+#ifndef AST_H_INCLUDED
+#define AST_H_INCLUDED
 
 /**
  * \defgroup group_sam_drivers_ast AST - Asynchronous Timer
@@ -56,24 +56,16 @@
 
 #include "compiler.h"
 
+/// @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond */
+
 /** Timeout to prevent code hang in clock initialization */
 #define AST_POLL_TIMEOUT 10000
-
-/**
- * \name Oscillator Types
- */
-/* @{ */
-/** 1KHz clock from 32KHz oscillator (CLK_1K) */
-#define AST_OSC_1KHZ     4
-/** Generic clock (GCLK) */
-#define AST_OSC_GCLK     3
-/** Peripheral Bus Clock */
-#define AST_OSC_PB       2
-/** 32KHz oscillator (OSC32K) */
-#define AST_OSC_32KHZ    1
-/** System RC oscillator (RCSYS) */
-#define AST_OSC_RC       0
-/* @} */
 
 /** \name Predefined PSEL Values
  */
@@ -93,73 +85,74 @@
 
 /* @} */
 
-
-// Roundup operation for Digital Tuner in AST.
-#define ROUNDUP_DIV(x, y) ((x % y) ? ((x / y) + 1) : (x / y))
-
-// Description for Calendar Field.
+/* Description for Calendar Field.*/
 struct ast_calv {
-	uint32_t sec : 6;
-	uint32_t min : 6;
-	uint32_t hour : 5;
-	uint32_t day : 5;
+	uint32_t sec   : 6;
+	uint32_t min   : 6;
+	uint32_t hour  : 5;
+	uint32_t day   : 5;
 	uint32_t month : 4;
-	uint32_t year : 6;
+	uint32_t year  : 6;
 };
 
-// Input when initializing AST in calendar mode.
+/* Input when initializing AST in calendar mode.*/
 struct ast_calendar {
 	union {
 		uint32_t field;
 		struct ast_calv FIELD;
-};
+	};
 };
 
-#define AST_CALENDAR_MODE    0
-#define AST_COUNTER_MODE    1
+typedef enum ast_mode {
+	AST_COUNTER_MODE  = 0,
+	AST_CALENDAR_MODE = 1,
+} ast_mode_t;
+
+typedef enum ast_oscillator_type {
+	AST_OSC_RC    = 0,
+	AST_OSC_32KHZ = 1,
+	AST_OSC_PB    = 2,
+	AST_OSC_GCLK  = 3,
+	AST_OSC_1KHZ  = 4,
+} ast_oscillator_type_t;
+
+#define AST_INTERRUPT_SOURCE_NUM    5
+typedef enum ast_interrupt_source {
+	AST_INTERRUPT_ALARM = 0,
+	AST_INTERRUPT_PER,
+	AST_INTERRUPT_OVF,
+	AST_INTERRUPT_READY,
+	AST_INTERRUPT_CLKREADY,
+} ast_interrupt_source_t;
+
+typedef enum ast_wakeup_source {
+	AST_WAKEUP_ALARM = 0,
+	AST_WAKEUP_PER,
+	AST_WAKEUP_OVF,
+} ast_wakeup_source_t;
+
+typedef enum ast_event_source {
+	AST_EVENT_ALARM = 0,
+	AST_EVENT_PER,
+	AST_EVENT_OVF,
+} ast_event_source_t;
 
 struct ast_config {
-	/* Mode: Calendar mode: \ref AST_CALENDAR_MODE or 
-	    \ref Counter mode: AST_COUNTER_MODE. */
-	uint8_t mode;
-	/* 
-	 Oscillator Type: 
-	 - \ref AST_OSC_RC, 
-	 - \ref AST_OSC_32KHZ, 
-	 - \ref AST_OSC_PB, 
-	 - \ref AST_OSC_1KHZ,
-	 - \ref AST_OSC_GCLK.
-	*/
-	uint8_t osc_type;
+	/*
+	 * Mode: Calendar mode:
+	 * \ref AST_CALENDAR_MODE or
+	 * \ref Counter mode: AST_COUNTER_MODE.
+	 */
+	ast_mode_t mode;
+	/* Oscillator type */
+	ast_oscillator_type_t osc_type;
 	/* Prescaler Value. */
 	uint8_t psel;
 	/* Initial counter Value. */
 	uint32_t counter;
 	/* Initial calendar Value. */
 	struct ast_calendar calendar;
-} ;
-
-#define AST_INTERRUPT_SOURCE_NUM    5
-
-typedef enum ast_interrupt_source {
-	ast_interrupt_alarm = 0,
-	ast_interrupt_per,
-	ast_interrupt_ovf,
-	ast_interrupt_ready,
-	ast_interrupt_clkready,
-} ast_interrupt_source_t;
-
-typedef enum ast_wakeup_source {
-	ast_wakeup_alarm = 0,
-	ast_wakeup_per,
-	ast_wakeup_ovf,
-} ast_wakeup_source_t;
-
-typedef enum ast_event_source {
-	ast_event_alarm = 0,
-	ast_event_per,
-	ast_event_ovf,
-} ast_event_source_t;
+};
 
 typedef void (*ast_callback_t)(void);
 
@@ -169,22 +162,18 @@ void ast_enable(Ast *ast);
 void ast_disable(Ast *ast);
 
 uint32_t ast_set_config(Ast *ast, struct ast_config *ast_conf);
-void ast_set_callback(Ast *ast, ast_interrupt_source_t source, 
-	ast_callback_t callback, uint8_t irq_line, uint8_t irq_level);
-uint32_t ast_configure_digital_tuner(Ast *ast, uint32_t input_freq, 
-	uint32_t tuned_freq);
-void ast_init_digital_tuner(Ast *ast, bool add, uint8_t value, 
-	uint8_t exp);
+void ast_set_callback(Ast *ast, ast_interrupt_source_t source,
+		ast_callback_t callback, uint8_t irq_line, uint8_t irq_level);
+uint32_t ast_configure_digital_tuner(Ast *ast, uint32_t input_freq,
+		uint32_t tuned_freq);
+void ast_init_digital_tuner(Ast *ast, bool add, uint8_t value,
+		uint8_t exp);
 void ast_disable_digital_tuner(Ast *ast);
 
-
-void ast_write_calendar_value(Ast *ast,
-		struct ast_calendar ast_calendar);
+void ast_write_calendar_value(Ast *ast, struct ast_calendar ast_calendar);
 struct ast_calendar ast_read_calendar_value(Ast *ast);
-void ast_write_counter_value(Ast *ast,
-		uint32_t ast_counter);
-void ast_enable_counter_clear_on_alarm(Ast *ast,
-		uint8_t alarm_channel);
+void ast_write_counter_value(Ast *ast, uint32_t ast_counter);
+void ast_enable_counter_clear_on_alarm(Ast *ast, uint8_t alarm_channel);
 void ast_clear_prescalar(Ast *ast);
 
 /**
@@ -252,14 +241,21 @@ void ast_write_periodic0_value(Ast *ast, uint32_t pir);
 
 void ast_enable_interrupt(Ast *ast, ast_interrupt_source_t source);
 void ast_disable_interrupt(Ast *ast, ast_interrupt_source_t source);
-void ast_clear_interrupt_flag(Ast *ast, 
-	ast_interrupt_source_t source);
+void ast_clear_interrupt_flag(Ast *ast, ast_interrupt_source_t source);
 
 void ast_enable_wakeup(Ast *ast, ast_wakeup_source_t source);
 void ast_disable_wakeup(Ast *ast, ast_wakeup_source_t source);
 
 void ast_enable_event(Ast *ast, ast_event_source_t source);
 void ast_disable_event(Ast *ast, ast_event_source_t source);
+
+/// @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond */
 
 /**
  * \}
@@ -357,4 +353,4 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * \endcode
  */
 
-#endif  /* _AST_H_INCLUDED */
+#endif  /* AST_H_INCLUDED */
