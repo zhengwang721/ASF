@@ -50,7 +50,7 @@
  * for the configuration and management of the device's physical I/O Pins, to
  * alter the direction and input/drive characteristics as well as to configure
  * the pin peripheral multiplexer selection. This driver encompasses the
- * following module within the SAM0 devices:
+ * following module within the SAMD20 devices:
  *
  * \li \b PORT (Port I/O Management)
  *
@@ -159,8 +159,11 @@ enum system_pinmux_pin_dir {
 	 *  be read. */
 	SYSTEM_PINMUX_PIN_DIR_INPUT,
 	/** The pin's output buffer should be enabled, so that the pin state can
-	 *  be set. */
+	 *  be set (but not read back). */
 	SYSTEM_PINMUX_PIN_DIR_OUTPUT,
+	/** The pin's output and input buffers should both be enabled, so that the
+	 *  pin state can be set and read back. */
+	SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
 };
 
 /**

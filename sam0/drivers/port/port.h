@@ -49,7 +49,8 @@
  * Driver for the SAMD20 architecture devices. This driver provides a interface
  * for the configuration and management of the device's General Purpose
  * Input/Output (GPIO) pin functionality, for manual pin state reading and
- * writing. This driver encompasses the following module within the SAM0 devices:
+ * writing. This driver encompasses the following module within the SAMD20
+ * devices:
  *
  * \li \b PORT (Port I/O Management)
  *
@@ -155,10 +156,13 @@ extern "C" {
 enum port_pin_dir {
 	/** The pin's input buffer should be enabled, so that the pin state can
 	 *  be read. */
-	PORT_PIN_DIR_INPUT  = SYSTEM_PINMUX_PIN_DIR_INPUT,
+	PORT_PIN_DIR_INPUT               = SYSTEM_PINMUX_PIN_DIR_INPUT,
 	/** The pin's output buffer should be enabled, so that the pin state can
 	 *  be set. */
-	PORT_PIN_DIR_OUTPUT = SYSTEM_PINMUX_PIN_DIR_OUTPUT,
+	PORT_PIN_DIR_OUTPUT              = SYSTEM_PINMUX_PIN_DIR_OUTPUT,
+	/** The pin's output and input buffers should be enabled, so that the pin
+	 *  state can be set and read back. */
+	PORT_PIN_DIR_OUTPUT_WTH_READBACK = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
 };
 
 /**
