@@ -9,6 +9,7 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam3u"/>
+		<device-support value="sam4e"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sam_driver_dmac_group"/>
 		<build type="c-source" value="dmac.c"/>

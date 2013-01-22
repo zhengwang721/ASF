@@ -3,7 +3,7 @@
  *
  * \brief Memory access control configuration file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,21 +50,21 @@
 
 /*! \name Activation of Logical Unit Numbers
  */
-//! @{
-#define LUN_0                DISABLE    //!< On-Chip Virtual Memory.
-#define LUN_1                DISABLE    //!< AT45DBX Data Flash.
-#define LUN_2                ENABLE     //!< SD/MMC Card over HSMCI Slot 0
-#define LUN_3                DISABLE    //!< Spare
-#define LUN_4                ENABLE     //!< NAND
-#define LUN_5                DISABLE    //!< Spare
-#define LUN_6                DISABLE    //!< Spare
-#define LUN_7                DISABLE    //!< Spare
-#define LUN_USB              DISABLE    //!< Host Mass-Storage Memory.
-//! @}
+/** @{ */
+#define LUN_0                DISABLE    /**< On-Chip Virtual Memory. */
+#define LUN_1                DISABLE    /**< AT45DBX Data Flash. */
+#define LUN_2                ENABLE     /**< SD/MMC Card over HSMCI Slot 0 */
+#define LUN_3                DISABLE    /**< Spare */
+#define LUN_4                ENABLE     /**< NAND */
+#define LUN_5                DISABLE    /**< Spare */
+#define LUN_6                DISABLE    /**< Spare */
+#define LUN_7                DISABLE    /**< Spare */
+#define LUN_USB              DISABLE    /**< Host Mass-Storage Memory. */
+/** @} */
 
 /*! \name LUN 0 Definitions
  */
-//! @{
+/** @{ */
 #define VIRTUAL_MEM                             LUN_0
 #define LUN_ID_VIRTUAL_MEM                      LUN_ID_0
 #define LUN_0_INCLUDE                           "virtual_mem.h"
@@ -77,11 +77,11 @@
 #define Lun_0_mem_2_ram                         virtual_mem_2_ram
 #define Lun_0_ram_2_mem                         virtual_ram_2_mem
 #define LUN_0_NAME                              "\"On-Chip Virtual Memory\""
-//! @}
+/** @} */
 
 /*! \name LUN 1 Definitions
  */
-//! @{
+/** @{ */
 #define AT45DBX_MEM                             LUN_1
 #define LUN_ID_AT45DBX_MEM                      LUN_ID_1
 #define LUN_1_INCLUDE                           "at45dbx_mem.h"
@@ -94,16 +94,17 @@
 #define Lun_1_mem_2_ram                         at45dbx_df_2_ram
 #define Lun_1_ram_2_mem                         at45dbx_ram_2_df
 #define LUN_1_NAME                              "\"AT45DBX Data Flash\""
-//! @}
+/** @} */
 
 /*! \name LUN 2 Definitions
  */
-//! @{
+/** @{ */
 #define SD_MMC_0_MEM                            LUN_2
 #define LUN_ID_SD_MMC_0_MEM                     LUN_ID_2
 #define LUN_2_INCLUDE                           "sd_mmc_mem.h"
 #define Lun_2_test_unit_ready                   sd_mmc_test_unit_ready_0
 #define Lun_2_read_capacity                     sd_mmc_read_capacity_0
+#define Lun_2_unload                            sd_mmc_unload_0
 #define Lun_2_wr_protect                        sd_mmc_wr_protect_0
 #define Lun_2_removal                           sd_mmc_removal_0
 #define Lun_2_usb_read_10                       sd_mmc_usb_read_10_0
@@ -111,11 +112,11 @@
 #define Lun_2_mem_2_ram                         sd_mmc_mem_2_ram_0
 #define Lun_2_ram_2_mem                         sd_mmc_ram_2_mem_0
 #define LUN_2_NAME                              "\"SD/MMC Card Slot 0\""
-//! @}
+/** @} */
 
 /*! \name LUN 4 Definitions
  */
-//! @{
+/** @{ */
 #define NAND_FLASH_MEM                        	LUN_4
 #define LUN_ID_NAND_FLASH_MEM                 	LUN_ID_4
 #define LUN_4_INCLUDE                           "nand_flash_mem.h"
@@ -128,11 +129,11 @@
 #define Lun_4_mem_2_ram                         nand_flash_mem_2_ram
 #define Lun_4_ram_2_mem                         nand_flash_ram_2_mem
 #define LUN_4_NAME                              "\"nand_flash on EBI\""
-//! @}
+/** @} */
 
 /*! \name USB LUNs Definitions
  */
-//! @{
+/** @{ */
 #define MEM_USB                                 LUN_USB
 #define LUN_ID_MEM_USB                          LUN_ID_USB
 #define LUN_USB_INCLUDE                         "host_mem.h"
@@ -144,7 +145,7 @@
 #define Lun_usb_mem_2_ram(addr, ram)            host_read_10_ram(addr, ram)
 #define Lun_usb_ram_2_mem(addr, ram)            host_write_10_ram(addr, ram)
 #define LUN_USB_NAME                            "\"Host Mass-Storage Memory\""
-//! @}
+/** @} */
 
 /*! \name Actions Associated with Memory Accesses
  *
@@ -152,30 +153,30 @@
  *
  * \warning Be careful not to waste time in order not to disturb the functions.
  */
-//! @{
+/** @{ */
 #define memory_start_read_action(nb_sectors)    ui_start_read()
 #define memory_stop_read_action()               ui_stop_read()
 #define memory_start_write_action(nb_sectors)   ui_start_write()
 #define memory_stop_write_action()              ui_stop_write()
 #include "ui.h"
-//! @}
+/** @} */
 
 /*! \name Activation of Interface Features
  */
-//! @{
-#define ACCESS_USB           true    //!< MEM <-> USB interface.
-#define ACCESS_MEM_TO_RAM    false   //!< MEM <-> RAM interface.
-#define ACCESS_STREAM        false   //!< Streaming MEM <-> MEM interface.
-#define ACCESS_STREAM_RECORD false   //!< Streaming MEM <-> MEM interface in record mode.
-#define ACCESS_MEM_TO_MEM    false   //!< MEM <-> MEM interface.
-#define ACCESS_CODEC         false   //!< Codec interface.
-//! @}
+/** @{ */
+#define ACCESS_USB           true    /**< MEM <-> USB interface. */
+#define ACCESS_MEM_TO_RAM    false   /**< MEM <-> RAM interface. */
+#define ACCESS_STREAM        false   /**< Streaming MEM <-> MEM interface. */
+#define ACCESS_STREAM_RECORD false   /**< Streaming MEM <-> MEM interface in record mode. */
+#define ACCESS_MEM_TO_MEM    false   /**< MEM <-> MEM interface. */
+#define ACCESS_CODEC         false   /**< Codec interface. */
+/** @} */
 
 /*! \name Specific Options for Access Control
  */
-//! @{
-#define GLOBAL_WR_PROTECT    false   //!< Management of a global write protection.
-//! @}
+/** @{ */
+#define GLOBAL_WR_PROTECT    false   /**< Management of a global write protection. */
+/** @} */
 
 
-#endif // _CONF_ACCESS_H_
+#endif /* _CONF_ACCESS_H_ */

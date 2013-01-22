@@ -6,6 +6,7 @@
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.rtc_calendar.quick_start"/>
 		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
 		<device-support value="samd20j18a"/>
 	</project>
 </asf>

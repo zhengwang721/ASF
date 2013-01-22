@@ -3,7 +3,7 @@
  *
  * \brief Preprocessor token pasting utils.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,7 +60,7 @@
  * UTYPE(WIDTH) and invoked as UTYPE(UL_WIDTH) with UL_WIDTH \#defined as 32 is
  * equivalent to writing U32.
  *
- * @{ */ 
+ * @{ */
 #define TPASTE2( a, b)                            a##b
 #define TPASTE3( a, b, c)                         a##b##c
 #define TPASTE4( a, b, c, d)                      a##b##c##d
@@ -70,7 +70,7 @@
 #define TPASTE8( a, b, c, d, e, f, g, h)          a##b##c##d##e##f##g##h
 #define TPASTE9( a, b, c, d, e, f, g, h, i)       a##b##c##d##e##f##g##h##i
 #define TPASTE10(a, b, c, d, e, f, g, h, i, j)    a##b##c##d##e##f##g##h##i##j
-/** @} */ 
+/** @} */
 
 /** \name Absolute Token Paste
  *
@@ -91,8 +91,8 @@
 #define ATPASTE8( a, b, c, d, e, f, g, h)         TPASTE8( a, b, c, d, e, f, g, h)
 #define ATPASTE9( a, b, c, d, e, f, g, h, i)      TPASTE9( a, b, c, d, e, f, g, h, i)
 #define ATPASTE10(a, b, c, d, e, f, g, h, i, j)   TPASTE10(a, b, c, d, e, f, g, h, i, j)
-/** @} */ 
+/** @} */
 
-/** @} */ 
+/** @} */
 
 #endif  // _TPASTE_H_
