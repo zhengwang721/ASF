@@ -187,10 +187,8 @@ extern "C" {
  * Interrupt Controller module.
  */
 enum extint_detect {
-	/** No edge detection.
-	 *
-	 *  \note Not allowed as a NMI detection mode on some devices.
-	 */
+	/** No edge detection. Not allowed as a NMI detection mode on some
+	 *  devices. */
 	EXTINT_DETECT_NONE    = 0,
 	/** Detect rising signal edges. */
 	EXTINT_DETECT_RISING  = 1,
@@ -247,9 +245,8 @@ struct extint_nmi_conf {
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
-	/** Edge detection mode to use.
-	 *
-	 *  \note Not all devices support all possible detection modes for NMIs.
+	/** Edge detection mode to use. Not all devices support all possible
+	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detect;
 };

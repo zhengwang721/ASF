@@ -129,6 +129,9 @@
  * pins; setting the sampling mode of any pin in a sub-group of four I/O pins
  * will configure the sampling mode of the entire sub-group.
  *
+ * High Drive Strength output driver mode is not available on all device pins -
+ * refer to your device specific datasheet.
+ *
  * \section module_extra_info Extra Information
  * For extra information see \ref pinmux_extra_info.
  *
@@ -187,11 +190,11 @@ enum system_pinmux_pin_pull {
  * Enum for the possible input sampling modes for the port pin configuration
  * structure, to indicate the type of sampling a port pin should use.
  */
-enum system_pinmux_pin_sampling_mode {
+enum system_pinmux_pin_sample {
 	/** Pin input buffer should continuously sample the pin state. */
-	SYSTEM_PINMUX_PIN_SAMPLING_CONTINUOUS,
+	SYSTEM_PINMUX_PIN_SAMPLE_CONTINUOUS,
 	/** Pin input buffer should be enabled when the IN register is read. */
-	SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND,
+	SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND,
 };
 
 /**
@@ -331,7 +334,7 @@ static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
 void system_pinmux_group_set_input_sample_mode(
 		PortGroup *const port,
 		const uint32_t mask,
-		const enum system_pinmux_pin_sampling_mode mode);
+		const enum system_pinmux_pin_sample mode);
 
 void system_pinmux_group_set_output_strength(
 		PortGroup *const port,
@@ -366,12 +369,12 @@ void system_pinmux_group_set_output_drive(
  */
 static inline void system_pinmux_pin_set_input_sample_mode(
 		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_sampling_mode mode)
+		const enum system_pinmux_pin_sample mode)
 {
 	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
 	uint32_t sample_quad_mask = (1UL << ((gpio_pin % 32) / 4));
 
-	if (mode == SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND) {
+	if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
 		port->CTRL.reg |=  sample_quad_mask;
 	}
 	else {

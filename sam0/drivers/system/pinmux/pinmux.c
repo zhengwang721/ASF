@@ -195,13 +195,13 @@ void system_pinmux_group_set_config(
 void system_pinmux_group_set_input_sample_mode(
 		PortGroup *const port,
 		const uint32_t mask,
-		const enum system_pinmux_pin_sampling_mode mode)
+		const enum system_pinmux_pin_sample mode)
 {
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {
 			uint32_t sample_quad_mask = (1UL << (i / 4));
 
-			if (mode == SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND) {
+			if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
 				port->CTRL.reg |=  sample_quad_mask;
 			}
 			else {
