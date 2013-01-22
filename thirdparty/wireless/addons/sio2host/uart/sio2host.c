@@ -58,12 +58,12 @@
 
 
 /* === PROTOTYPES ========================================================== */
-  	const usart_serial_options_t usart_serial_options =
+static usart_serial_options_t usart_serial_options =
 	{
 		.baudrate     = USART_HOST_BAUDRATE,
 		.charlength   = USART_HOST_CHAR_LENGTH,
 		.paritytype   = USART_HOST_PARITY,
-		.stopbits     = USART_HOST_STOP_BIT
+		.stopbits     = USART_HOST_STOP_BITS
 	};
 
 

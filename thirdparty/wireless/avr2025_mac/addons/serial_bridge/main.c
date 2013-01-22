@@ -68,7 +68,7 @@ void serial_handler(void);
 /* === GLOBALS ============================================================== */
 
 uint8_t length_received_host , length_received_ncp;	
-uint8_t *temp;
+uint8_t temp[SIO_RX_BUF_SIZE];
 
 
 /* === IMPLEMENTATION ====================================================== */
@@ -79,39 +79,34 @@ uint8_t *temp;
  */
 int main(void)
 {
-        irq_initialize_vectors();
+    irq_initialize_vectors();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-        
-        sysclk_init();
+    sysclk_init();
 	board_init();
-	
-      
-   
-    cpu_irq_enable();
-    
-        if ( STATUS_OK != sio2host_init() )
-    {
-        /* something went wrong during initialization */
-        app_alert();
-    }
-    
-       if (STATUS_OK != sio2ncp_init())
-    {
-        /* something went wrong during initialization */
-        app_alert();
-    }
-    
 
-  
+    cpu_irq_enable();
+
+	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+
+    if ( STATUS_OK != sio2host_init() )
+    {
+        /* something went wrong during initialization */
+        app_alert();
+    }
+    
+    if (STATUS_OK != sio2ncp_init())
+    {
+        /* something went wrong during initialization */
+        app_alert();
+    }
     while (1)
     {
-
         serial_handler();
-     
     }
 }
 
@@ -119,74 +114,58 @@ int main(void)
 void serial_handler()
 {
 
-length_received_host = sio2host_rx(temp,SIO_RX_BUF_SIZE);
-           
-if(length_received_host !=0)
-{
-LED_Toggle(LED0);
-sio2ncp_tx(temp,length_received_host);
-length_received_host = 0;
+	length_received_host = sio2host_rx(temp,SIO_RX_BUF_SIZE);
+	if(length_received_host !=0)
+	{
+		sio2ncp_tx(temp,length_received_host);
+		length_received_host = 0;
+	}
 
-}
-
-
-length_received_ncp = sio2ncp_rx(temp,SIO_RX_BUF_SIZE);
-
-if(length_received_ncp !=0)
-{
-LED_Toggle(LED1);
-sio2host_tx(temp,length_received_ncp);
-length_received_ncp = 0;
-
-} 
-
+	length_received_ncp = sio2ncp_rx(temp,SIO_RX_BUF_SIZE);
+	if(length_received_ncp !=0)
+	{
+		sio2host_tx(temp,length_received_ncp);
+		length_received_ncp = 0;
+	} 
 }
 
 
 void app_alert()
 {
-
     while (1)
     {
-     
 #if LED_COUNT > 0
-LED_Toggle(LED0);
+		LED_Toggle(LED0);
 #endif
 
 #if LED_COUNT > 1
-LED_Toggle(LED1);
+		LED_Toggle(LED1);
 #endif
 
 #if LED_COUNT > 2
-LED_Toggle(LED2);
+		LED_Toggle(LED2);
 #endif
 
 #if LED_COUNT > 3
-LED_Toggle(LED3);
+		LED_Toggle(LED3);
 #endif
 
 #if LED_COUNT > 4
-LED_Toggle(LED4);
+		LED_Toggle(LED4);
 #endif
 
 #if LED_COUNT > 5
-LED_Toggle(LED5);
+		LED_Toggle(LED5);
 #endif
 
 #if LED_COUNT > 6
-LED_Toggle(LED6);
+		LED_Toggle(LED6);
 #endif
 
 #if LED_COUNT > 7
-LED_Toggle(LED7);
+		LED_Toggle(LED7);
 #endif
-delay_us(0xFFFF);
+		delay_us(0xFFFF);
 	}
-        
-        
-
-    }
-
-
-
+}
 /* EOF */

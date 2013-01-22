@@ -66,3 +66,4 @@ uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length);
 int sio2ncp_getchar_nowait(void);
 int sio2ncp_getchar(void);
 #endif /* SIO2NCP_H */
+

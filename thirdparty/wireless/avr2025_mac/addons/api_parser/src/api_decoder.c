@@ -1,10 +1,6 @@
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "compiler.h"
 #include "api_parser.h"
 #include "sio2ncp.h"
-#include "api_parser.h"
 #include "common_sw_timer.h"
 
 

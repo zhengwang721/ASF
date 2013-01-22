@@ -1,7 +1,4 @@
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "compiler.h"
 #include "sio2ncp.h"
 #include "api_parser.h"
 
@@ -492,3 +489,4 @@ uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id)
 }
 
 /* EOF */
+

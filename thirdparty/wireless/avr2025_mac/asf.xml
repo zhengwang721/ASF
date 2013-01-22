@@ -1,19 +1,33 @@
 <asf xmlversion="1.0">
-	<module type="component" id="thirdparty.wireless.avr2025_mac" caption="AVR2025 - IEEE 802.15.4">
-		<info type="description" value="summary">
-		To be added
-		</info>
+	<select-by-config id="config.thirdparty.wireless.avr2025_mac" name="config.thirdparty.wireless.avr2025_mac" caption="CONFIG Serial connectivity Helper files" default="source">
+        <module type="meta" id="config.thirdparty.wireless.avr2025_mac#source" caption="AVR2025 - IEEE 802.15.4">
+            <info type="description" value="summary">
+            To be added
+            </info>
+            <require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+        </module>
+        <module type="meta" id="config.thirdparty.wireless.avr2025_mac#api_parser" caption="AVR2025 - IEEE 802.15.4">
+            <info type="description" value="summary">
+            To be added
+            </info>
+            <require idref="thirdparty.wireless.avr2025_mac.api_parser"/>
+        </module>
+	</select-by-config>
 
-		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
-		<device-support value="sam"/>
-		<build type="doxygen-entry-point" value="avr2025_mac_group"/>
+    <module type="meta" id="thirdparty.wireless.avr2025_mac" caption="AVR2025 - IEEE 802.15.4">
+        <info type="description" value="summary">
+        To be added
+        </info>
+        <require idref="config.thirdparty.wireless.avr2025_mac"/>
+        <device-support value="xmega"/>
+        <device-support value="uc3"/>
+        <device-support value="megarf"/>
+        <device-support value="sam"/>
+        <build type="doxygen-entry-point" value="avr2025_mac_group"/>
 
-		<info type="keyword" value="technology">
-			<keyword value="Wireless"/>
-			<keyword value="Communication"/>
-		</info>
-	</module>
+        <info type="keyword" value="technology">
+            <keyword value="Wireless"/>
+            <keyword value="Communication"/>
+        </info>
+    </module>
 </asf>

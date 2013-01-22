@@ -9,7 +9,7 @@
 		<build type="include-path" value="."/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.addons.serial_if"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+		<require idref="thirdparty.wireless.avr2025_mac"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>

@@ -1024,6 +1024,14 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 
 #endif  // #ifndef __ASSEMBLY__
 
+
+#if defined(__ICCARM__)
+#define SHORTENUM           __packed
+#elif defined(__GNUC__)
+#define SHORTENUM           __attribute__((packed))
+#endif
+
+
 /**
  * \}
  */

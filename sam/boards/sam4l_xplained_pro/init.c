@@ -63,16 +63,22 @@ void board_init(void)
 {
 	// Initialize IOPORTs
 	ioport_init();
+
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
+	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
 
-    // Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-
+#ifdef  CONF_BOARD_EIC
+	// Set push button as external interrupt pin
+	ioport_set_pin_peripheral_mode(GPIO_PUSH_BUTTON_EIC_PIN,
+			GPIO_PUSH_BUTTON_EIC_PIN_MUX);
+	ioport_set_pin_peripheral_mode(GPIO_UNIT_TEST_EIC_PIN,
+			GPIO_UNIT_TEST_EIC_PIN_MUX);
+#else
+	// Push button as input: already done, it's the default pin state
+#endif
 
 #if defined (CONF_BOARD_COM_PORT)
 	ioport_set_pin_peripheral_mode(EXT2_PIN_UART_RX, EXT2_UART_RX_MUX);
