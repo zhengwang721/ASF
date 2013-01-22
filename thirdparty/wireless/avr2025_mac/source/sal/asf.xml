@@ -12,6 +12,12 @@
 			</info>
 			<require idref="thirdparty.wireless.avr2025_mac.source.sal.at86rf2xx"/>
 		</module>
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.sal#atmegarf_sal"     caption="atmegarf_sal  support enabled">
+			<info type="description" value="summary">
+			To be Added
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.sal.atmegarf_sal"/>
+		</module>
 	</select-by-config>
 	<module type="component" id="thirdparty.wireless.avr2025_mac.source.sal" caption="COMPONENT - SAL">
 		<info type="description" value="summary">

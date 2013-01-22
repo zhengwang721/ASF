@@ -66,7 +66,7 @@ timer_info_t timer_array[TOTAL_NUMBER_OF_SW_TIMERS];
 static uint8_t running_timers;
 
 /* This flag indicates an expired timer. */
-static volatile bool timer_trigger;
+volatile bool timer_trigger;
 
 /* This is the reference to the head of the running timer queue. */
 static uint_fast8_t running_timer_queue_head;
