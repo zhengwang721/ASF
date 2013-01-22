@@ -3,7 +3,7 @@
  *
  * \brief BPM driver.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -142,6 +142,13 @@ extern "C" {
  */
 /* @{ */
 
+/**
+ * \brief Enter sleep mode
+ *
+ * \param bpm Base address of the BPM instance.
+ * \param sleep_mode Expected sleep mode (active case not included).
+ */
+void bpm_sleep(Bpm *bpm, uint32_t sleep_mode);
 
 /**
  * \brief Change Power Scaling mode
