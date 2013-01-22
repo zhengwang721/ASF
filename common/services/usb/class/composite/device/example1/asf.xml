@@ -65,6 +65,7 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
 		</module>
 	</select-by-device>
 </asf>
