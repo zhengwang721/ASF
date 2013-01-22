@@ -41,9 +41,10 @@
  *
  */
 
-#ifndef _SAMD20_XPLAINED_LED_H_
-#define _SAMD20_XPLAINED_LED_H_
+#ifndef SAMD20_XPLAINED_PRO_LED_INCLUDED
+#define SAMD20_XPLAINED_PRO_LED_INCLUDED
 
+#include <compiler.h>
 #include <port.h>
 
 /**
@@ -67,4 +68,4 @@ void LED_On(uint32_t led_gpio);
  */
 #define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
 
-#endif  // _SAMD20_XPLAINED_LED_H_
+#endif /* SAMD20_XPLAINED_PRO_LED_INCLUDED */
