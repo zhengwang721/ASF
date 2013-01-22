@@ -63,7 +63,7 @@ void config_port_pins(void)
 
 //! [setup_5]
 	system_pinmux_pin_set_input_sample_mode(10,
-			SYSTEM_PINMUX_PIN_SAMPLING_ONDEMAND);
+			SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND);
 //! [setup_5]
 }
 //! [setup]

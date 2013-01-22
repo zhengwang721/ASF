@@ -70,17 +70,17 @@ void port_pin_set_config(
 }
 
 /**
- *  \brief Writes a Port pin configuration group to the hardware module.
+ *  \brief Writes a Port group configuration group to the hardware module.
  *
- *  Writes out a given configuration of a Port pin group configuration to the hardware
- *  module.
+ *  Writes out a given configuration of a Port group configuration to the
+ *  hardware module.
  *
  *  \note If the pin direction is set as an output, the pull-up/pull-down input
  *        configuration setting is ignored.
  *
- *  \param[out] port      Base of the PORT module to write to.
- *  \param[in]  mask      Mask of the port pin(s) to configure.
- *  \param[in]  config    Configuration settings for the pin group.
+ *  \param[out] port    Base of the PORT module to write to.
+ *  \param[in]  mask    Mask of the port pin(s) to configure.
+ *  \param[in]  config  Configuration settings for the pin group.
  */
 void port_group_set_config(
 		PortGroup *const port,
