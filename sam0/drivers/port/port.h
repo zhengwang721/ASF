@@ -216,7 +216,7 @@ static inline PortGroup* port_get_group_from_gpio_pin(
 }
 
 /**
- *  \brief Retrieves the state of a port's pins that are configured as inputs.
+ *  \brief Retrieves the state of a group of port pins that are configured as inputs.
  *
  *  Reads the current logic level of a port module's pins and returns the
  *  current levels as a bitmask.
@@ -237,7 +237,7 @@ static inline uint32_t port_group_get_input_level(
 }
 
 /**
- *  \brief Sets the state of a port's pins that are configured as outputs.
+ *  \brief Sets the state of a group of port pins that are configured as outputs.
  *
  *  Sets the current output level of a port module's pins to a given logic
  *  level.
@@ -259,7 +259,7 @@ static inline void port_group_set_output_level(
 }
 
 /**
- *  \brief Toggles the state of a port's pins that are configured as an outputs.
+ *  \brief Toggles the state of a group of port pins that are configured as an outputs.
  *
  *  Toggles the current output levels of a port module's pins.
  *
@@ -283,9 +283,9 @@ static inline void port_group_toggle_output_level(
  */
 
 /**
- *  \brief Initializes a Port pin configuration structure to defaults.
+ *  \brief Initializes a Port pin/group configuration structure to defaults.
  *
- *  Initializes a given Port pin configuration structure to a set of
+ *  Initializes a given Port pin/group configuration structure to a set of
  *  known default values. This function should be called on all new
  *  instances of these configuration structures before being modified by the
  *  user application.
