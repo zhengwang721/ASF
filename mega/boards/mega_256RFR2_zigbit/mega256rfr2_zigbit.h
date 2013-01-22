@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief STK board header file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the features of the
+ * STK600 board.
+ *
+ * To use this board, define BOARD= STK600_MEGA.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +45,41 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef _MEGA256RFR2_ZIGBIT_
+#define _MEGA256RFR2_ZIGBIT_
+#include "compiler.h"
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+# include "led.h"
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifdef ZIGBIT_EXT
+
+#define LED0_GPIO                       IOPORT_CREATE_PIN(PORTD, 6)
+#define LED1_GPIO                       IOPORT_CREATE_PIN(PORTE, 3)
+#define LED2_GPIO                       IOPORT_CREATE_PIN(PORTE, 2)
+
+#define LED0                            LED0_GPIO
+#define LED1                            LED1_GPIO
+#define LED2                            LED2_GPIO
+
+//! Number of LEDs.
+#define LED_COUNT                       3
+
+#define GPIO_PUSH_BUTTON_0              IOPORT_CREATE_PIN(PORTE, 0)
+
+//! \name Communication interfaces on header J1
+//@{
+#define TWID_SDA                        IOPORT_CREATE_PIN(PORTD, 1)
+#define TWID_SCL                        IOPORT_CREATE_PIN(PORTD, 0)
+#define USARTA1_RXD                     IOPORT_CREATE_PIN(PORTD, 2)
+#define USARTA0_TXD                     IOPORT_CREATE_PIN(PORTD, 3)
+#define SPIB_SS                         IOPORT_CREATE_PIN(PORTB, 0)
+#define SPIB_MOSI                       IOPORT_CREATE_PIN(PORTB, 2)
+#define SPIB_MISO                       IOPORT_CREATE_PIN(PORTB, 3)
+#define SPIB_SCK                        IOPORT_CREATE_PIN(PORTB, 1)
+//@}
+
+
+#endif
+
+//@}
+#endif  /* _MEGA256RFR2_ZIGBIT_ */

@@ -42,7 +42,7 @@
  */
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
+#define ZIGBIT_USB
 #define CONF_BOARD_AT86RFX
 #define TRANSCEIVER_NAME    "AT86RF212B"
 #define IC_TYPE             (0x00)

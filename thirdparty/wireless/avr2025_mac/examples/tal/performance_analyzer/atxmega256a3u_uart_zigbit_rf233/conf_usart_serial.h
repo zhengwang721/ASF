@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief USART Serial Configuration 
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_USART_SERIAL_H_INCLUDED */

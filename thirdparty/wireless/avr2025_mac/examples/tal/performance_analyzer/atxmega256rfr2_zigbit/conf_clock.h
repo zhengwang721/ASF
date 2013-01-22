@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,24 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
+
+/* ===== System Clock Bus Division Options */
+
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
+
+#endif /* CONF_CLOCK_H_INCLUDED */

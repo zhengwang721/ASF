@@ -42,13 +42,13 @@
  */
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
-#define ZIGBIT_USB
+#define CONF_BOARD_ENABLE_USARTE0
+#define ZIGBIT_EXT
 #define CONF_BOARD_AT86RFX
 #define TRANSCEIVER_NAME    "AT86RF233"
 #define IC_TYPE             (0x00)
 #define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+#define BOARD_NAME          "Xmega Zigbit 2.4GHz UART"
 
-# include "conf_usb.h"
+
 #endif /* CONF_BOARD_H_INCLUDED */

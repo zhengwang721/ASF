@@ -1,9 +1,11 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief XMEGA-A3BU Xplained board init.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains board initialization function.
+ *
+ * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +42,55 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <conf_board.h>
+#include <board.h>
+#include <ioport.h>
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+/**
+ * \addtogroup xmega_a3bu_xplained_group
+ * @{
+ */
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+void board_init(void)
+{
+
+#ifdef ZIGBIT_USB
+	ioport_configure_pin(LED0_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED1_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+#endif
+
+#ifdef ZIGBIT_EXT
+	ioport_configure_pin(LED0_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED1_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED2_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(GPIO_PUSH_BUTTON_0, IOPORT_DIR_INPUT
+			| IOPORT_LEVEL | IOPORT_PULL_UP);
+#endif
+
+
+#ifdef CONF_BOARD_ENABLE_USARTE0
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 3), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 2), IOPORT_DIR_INPUT);
+#endif
+
+
+
+
+#ifdef CONF_BOARD_AT86RFX
+	ioport_configure_pin(AT86RFX_SPI_SCK, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SPI_MOSI, IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SPI_MISO, IOPORT_DIR_INPUT);
+	ioport_configure_pin(AT86RFX_SPI_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+
+	/* Initialize TRX_RST and SLP_TR as GPIO. */
+	ioport_configure_pin(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+#endif
+}
+
+/**
+ * @}
+ */

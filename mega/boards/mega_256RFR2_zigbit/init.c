@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief MEGA-1284P Xplained board init.
+ *
+ * To use this board, define BOARD=STK600_MEGA.
  *
  * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
@@ -40,15 +42,24 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <conf_board.h>
+#include <board.h>
+#include <ioport.h>
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+void board_init(void)
+{
+#ifdef ZIGBIT_EXT
+	ioport_configure_pin(LED0_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED1_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED2_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	gpio_configure_pin(GPIO_PUSH_BUTTON_0,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+#endif
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+
+#ifdef CONF_BOARD_ENABLE_USARTA1
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 3), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 2), IOPORT_DIR_INPUT);
+#endif
+
+}

@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Board configuration
+ * \brief XMEGA-A3BU board LEDs support package.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the XMEGA-A3BU Xplained board.
+ *
+ * To use this board, define BOARD=XMEGA_A3BU_XPLAINED.
+ *
+ * Copyright (c) 2011 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +45,36 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef _LED_H_
+#define _LED_H_
 
-#define ZIGBIT_USB
-#define CONF_BOARD_AT86RFX
-#define TRANSCEIVER_NAME    "AT86RF233"
-#define IC_TYPE             (0x00)
-#define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2_4 USB"
+#include "gpio.h"
 
-# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */
