@@ -442,11 +442,10 @@ struct ac_ch_conf {
 	enum ac_ch_pos_mux positive_input;
 	/** Input multiplexer selection for the comparator's negative input pin. */
 	enum ac_ch_neg_mux negative_input;
-	/** Scaled \f$\frac{VCC\times\mbox{n}}{64}\f$ VCC voltage division factor for the channel, when a comparator
-	 *  pin is connected to the VCC voltage scalar input.
-	 *
-	 *  \note If the VCC voltage scalar is not selected as a comparator channel
-	 *        pin's input, this value will be ignored. */
+	/** Scaled \f$\frac{V_{CC}\times\mbox{n}}{64}\f$ VCC voltage division factor
+	 *  for the channel, when a comparator pin is connected to the VCC voltage
+	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
+	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
 };
 
@@ -680,7 +679,7 @@ static inline void ac_disable_events(
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled VCC voltage selected as the negative input
- *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{VCC\times32}{64}\f$)
+ *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{V_{CC}\times32}{64}\f$)
  *
  *   \param[out] config  Channel configuration structure to initialize to
  *                       default values
@@ -1001,7 +1000,7 @@ static inline void ac_win_clear_detected(
  *	</tr>
  *	<tr>
  *		<td>DAC</td>
- *		<td>Digital to Analog Converter</td>
+ *		<td>Digital-to-Analog Converter</td>
  *	</tr>
  *	<tr>
  *		<td>MUX</td>

@@ -86,36 +86,33 @@
  * -# Fill the Analog Comparator peripheral configuration structure with the
  *    default module configuration values.
  *  - \snippet qs_ac_basic.c setup_5
- * -# Alter the sleep mode configuration value so that the comparator pairs
- *    remain enabled even during sleep mode.
- *  - \snippet qs_ac_basic.c setup_6
  * -# Initialize the Analog Comparator peripheral and associate it with the
  *    software instance structure that was defined previously.
- *  - \snippet qs_ac_basic.c setup_7
+ *  - \snippet qs_ac_basic.c setup_6
  * -# Enable the now initialized Analog Comparator peripheral.
- *  - \snippet qs_ac_basic.c setup_8
+ *  - \snippet qs_ac_basic.c setup_7
  *
  * -# Create a new function \c configure_ac_channel(), which will be used to
  *    configure the overall Analog Comparator peripheral.
- *  - \snippet qs_ac_basic.c setup_9
+ *  - \snippet qs_ac_basic.c setup_8
  * -# Create an Analog Comparator channel configuration structure that will
  *    be filled out to set the channel configuration.
- *  - \snippet qs_ac_basic.c setup_10
+ *  - \snippet qs_ac_basic.c setup_9
  * -# Fill the Analog Comparator channel configuration structure with the
  *    default channel configuration values.
- *  - \snippet qs_ac_basic.c setup_11
+ *  - \snippet qs_ac_basic.c setup_10
  * -# Alter the channel configuration parameters to set the channel to one-shot
  *    mode, with the correct negative and positive MUX selections and the
  *    desired voltage scaler.
  *    \note The voltage scalar formula is documented
  *          \ref ac_ch_conf.vcc_scale_factor "here".
  *
- *  - \snippet qs_ac_basic.c setup_12
+ *  - \snippet qs_ac_basic.c setup_11
  * -# Initialize the Analog Comparator channel and configure it with the desired
  *    settings.
- *  - \snippet qs_ac_basic.c setup_13
+ *  - \snippet qs_ac_basic.c setup_12
  * -# Enable the now initialized Analog Comparator channel.
- *  - \snippet qs_ac_basic.c setup_14
+ *  - \snippet qs_ac_basic.c setup_13
  *
  * \section ac_basic_use_case_imp Implementation
  *
