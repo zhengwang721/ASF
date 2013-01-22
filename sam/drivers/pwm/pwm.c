@@ -3,7 +3,7 @@
  *
  * \brief Pulse Width Modulation (PWM) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 #define PWM_WRITE_PROTECT_KEY         0x50574D00
 #define PWM_WRITE_PROTECT_SW_DISABLE  0
 #define PWM_WRITE_PROTECT_SW_ENABLE   1
@@ -162,7 +162,7 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 	/* Channel Mode/Clock Register */
 	ch_mode_reg = (p_channel->ul_prescaler & 0xF) |
 			(p_channel->polarity << 9) |
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 			(p_channel->counter_event) |
 			(p_channel->b_deadtime_generator << 16) |
 			(p_channel->b_pwmh_output_inverted << 17) |
@@ -177,7 +177,7 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 	/* Channel Period Register */
 	p_pwm->PWM_CH_NUM[ch_num].PWM_CPRD = p_channel->ul_period;
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 	/* Channel Dead Time Register */
 	if (p_channel->b_deadtime_generator) {
 		p_pwm->PWM_CH_NUM[ch_num].PWM_DT =
@@ -206,9 +206,33 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 	}
 
 	/* Fault Protection Value Register */
-	p_pwm->PWM_FPV = ((p_channel->ul_fault_output_pwmh) << ch_num) |
-			(((p_channel->ul_fault_output_pwml) << ch_num) << 16);
-
+#if (SAM4E)
+	if (p_channel->ul_fault_output_pwmh == PWM_HIGHZ) {
+		p_pwm->PWM_FPV2 |= (0x01 << ch_num);
+	} else if (p_channel->ul_fault_output_pwmh == PWM_HIGH) {
+		p_pwm->PWM_FPV1 |= (0x01 << ch_num);
+	} else {
+		p_pwm->PWM_FPV1 &= (!(0x01 << ch_num));
+	}
+	if (p_channel->ul_fault_output_pwml == PWM_HIGHZ) {
+		p_pwm->PWM_FPV2 |= ((0x01 << ch_num) << 16);
+	} else if (p_channel->ul_fault_output_pwml == PWM_HIGH) {
+		p_pwm->PWM_FPV1 |= ((0x01 << ch_num) << 16);
+	} else {
+		p_pwm->PWM_FPV1 &= (!((0x01 << ch_num) << 16));
+	}
+#else
+	if (p_channel->ul_fault_output_pwmh == PWM_HIGH) {
+		p_pwm->PWM_FPV |= (0x01 << ch_num);
+	} else {
+		p_pwm->PWM_FPV &= (!(0x01 << ch_num));
+	}
+	if (p_channel->ul_fault_output_pwml == PWM_HIGH) {
+		p_pwm->PWM_FPV |= ((0x01 << ch_num) << 16);
+	} else {
+		p_pwm->PWM_FPV &= (!((0x01 << ch_num) << 16));
+	}
+#endif
 	/* Fault Protection Enable Register */
 	uint32_t fault_enable_reg = 0;
 #if (SAM3XA)
@@ -228,13 +252,28 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 	}
 #endif
 
-#if (SAM3U || SAM3S || SAM4S)
+#if (SAM3U || SAM3S || SAM4S || SAM4E)
 	ch_num *= 8;
 	fault_enable_reg = p_pwm->PWM_FPE;
 	fault_enable_reg &= ~(0xFF << ch_num);
 	fault_enable_reg |= ((p_channel->fault_id) << ch_num);
 	p_pwm->PWM_FPE = fault_enable_reg;
 #endif
+#endif
+
+#if SAM4E
+	if (!ch_num) {
+		if (p_channel->spread_spectrum_mode ==
+				PWM_SPREAD_SPECTRUM_MODE_RANDOM) {
+			p_pwm->PWM_SSPR = PWM_SSPR_SPRD(p_channel->ul_spread) |
+					PWM_SSPR_SPRDM;
+		} else {
+			p_pwm->PWM_SSPR = PWM_SSPR_SPRD(p_channel->ul_spread);
+		}
+	}
+	p_pwm->PWM_CH_NUM_0X400[ch_num].PWM_CAE =
+			PWM_CAE_ADEDGV(p_channel->ul_additional_edge) |
+			p_channel->additional_edge_mode;
 #endif
 
 	return 0;
@@ -436,7 +475,7 @@ void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 }
 
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 /**
  * \brief Change output selection of the PWM channel.
  *
@@ -948,7 +987,7 @@ uint32_t pwm_get_interrupt_mask(Pwm *p_pwm)
 }
 #endif
 
-#if (SAM3S || SAM3XA || SAM4S)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E)
 /**
  * \brief Initialize PWM stepper motor mode.
  *
@@ -966,6 +1005,75 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
 	motor |= ((b_enable_gray | (b_down << 16)) << pair);
 
 	p_pwm->PWM_SMMR = motor;
+}
+#endif
+
+#if SAM4E
+/**
+ * \brief Change spread spectrum value.
+ *
+ * \param p_pwm Pointer to a PWM instance.
+ * \param p_channel Configurations of the specified PWM channel.
+ * \param ul_spread New spread spectrum value.
+ */
+void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_spread)
+{
+	/* Save new spread spectrum value */
+	p_channel->ul_spread = ul_spread;
+
+	/* Write spread spectrum update register */
+	p_pwm->PWM_SSPUP = PWM_SSPUP_SPRDUP(ul_spread);
+}
+
+/**
+ * \brief Change additional edge value and mode.
+ *
+ * \param p_pwm Pointer to a PWM instance.
+ * \param p_channel Configurations of the specified PWM channel.
+ * \param ul_additional_edge New additional edge value.
+ * \param additional_edge_mode New additional edge mode.
+ */
+void pwm_channel_update_additional_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_additional_edge,
+		pwm_additional_edge_mode_t additional_edge_mode)
+{
+	/* Save new additional edge value */
+	p_channel->ul_additional_edge = ul_additional_edge;
+	p_channel->additional_edge_mode = additional_edge_mode;
+
+	/* Write channel additional edge update register */
+	p_pwm->PWM_CH_NUM_0X400[p_channel->channel].PWM_CAEUPD =
+			PWM_CAEUPD_ADEDGVUP(ul_additional_edge) | additional_edge_mode;
+}
+
+/**
+ * \brief Change polarity mode.
+ *
+ * \param p_pwm Pointer to a PWM instance.
+ * \param p_channel Configurations of the specified PWM channel.
+ * \param polarity_inversion_flag Polarity invertion.
+ * \param polarity_flag Polarity value.
+ */
+void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
+		bool polarity_inversion_flag, pwm_level_t polarity_value)
+{
+	if (polarity_inversion_flag) {
+		/* Set polarity inversion to the update register */
+		p_pwm->PWM_CH_NUM_0X400[p_channel->channel].PWM_CMUPD =
+				PWM_CMUPD_CPOLINVUP;
+	} else {
+		/* Save new polarity value */
+		p_channel->polarity = polarity_value;
+
+		/* Write new polarity value to update register */
+		if (polarity_value == PWM_HIGH) {
+			p_pwm->PWM_CH_NUM_0X400[p_channel->channel].PWM_CMUPD =
+					PWM_CMUPD_CPOLUP;
+		} else {
+			p_pwm->PWM_CH_NUM_0X400[p_channel->channel].PWM_CMUPD = 0;
+		}
+	}
 }
 #endif
 

@@ -76,14 +76,6 @@
 /** Baud rate of console UART */
 #define CONSOLE_BAUD_RATE  115200
 
-/*
-In PWM synchronisation mode the channel0 is used as reference channel so it is
-necessary to disable, configure and enable it.
-*/
-#if ((PIN_PWM_LED1_CHANNEL != 0) && (PIN_PWM_LED0_CHANNEL != 0))
-#define PWM_CHANNEL0_REF
-#endif
-
 /** PWM frequency in Hz */
 #define PWM_FREQUENCY  50
 /** PWM period value */
@@ -199,7 +191,7 @@ int main(void)
 {
 	uint32_t i;
 	uint8_t uc_key;
-	int8_t c_numkey;
+	uint8_t c_numkey;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -218,9 +210,13 @@ int main(void)
 	pwm_channel_disable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_disable(PWM, PIN_PWM_LED1_CHANNEL);
 
-	#ifdef PWM_CHANNEL0_REF
-	pwm_channel_disable(PWM, 0);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		pwm_channel_disable(PWM, 0);
+	}
 
 	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t clock_setting = {
@@ -251,10 +247,14 @@ int main(void)
 		.output_selection.b_override_pwml = false  /* Disable override PWML outputs */
 	};
 
-	#ifdef PWM_CHANNEL0_REF
-	sync_channel.channel = 0;
-	pwm_channel_init(PWM, &sync_channel);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		sync_channel.channel = 0;
+		pwm_channel_init(PWM, &sync_channel);
+	}
 
 	/* Initialize PWM channel of LED1 */
 	sync_channel.channel = PIN_PWM_LED1_CHANNEL;
@@ -301,9 +301,13 @@ int main(void)
 	pdc_enable_transfer(PDC_PWM, PERIPH_PTCR_TXTEN);
 
 	/* Enable all synchronous channels by enabling channel 0 */
-	#ifdef PWM_CHANNEL0_REF
-	pwm_channel_enable(PWM, 0);
-	#endif
+	/*
+	 * In PWM synchronisation mode the channel0 is used as reference channel,
+	 * so it is necessary to disable, configure and enable it.
+	 */
+	if (PIN_PWM_LED0_CHANNEL && PIN_PWM_LED1_CHANNEL) {
+		pwm_channel_enable(PWM, 0);
+	}
 	pwm_channel_enable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_enable(PWM, PIN_PWM_LED1_CHANNEL);
 
@@ -331,8 +335,7 @@ int main(void)
 			printf("Input dead time for channel #0 must be between %d and %d.\r\n", INIT_DUTY_VALUE, PERIOD_VALUE);
 			c_numkey = get_num_value();
 
-			if ((c_numkey >= INIT_DUTY_VALUE)
-					&& (c_numkey <= PERIOD_VALUE)) {
+			if (c_numkey <= PERIOD_VALUE) {
 				/* Set new dead time value for channel 0 */
 				pwm_channel_update_dead_time(PWM, &sync_channel,
 						c_numkey, c_numkey);
