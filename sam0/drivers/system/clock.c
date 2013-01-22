@@ -92,7 +92,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 /**
  * \brief Apply configuration for the osc8m clock source
  *
- * \param conf osc8m configuration struct
+ * \param conf[in] osc8m configuration struct
  *
  */
 void system_clock_source_osc8m_set_config(
@@ -104,7 +104,7 @@ void system_clock_source_osc8m_set_config(
 /**
  * \brief Apply configuration for the osc32k clock source
  *
- * \param conf osc32k configuration struct
+ * \param conf[in] osc32k configuration struct
  *
  */
 void system_clock_source_osc32k_set_config(
@@ -132,9 +132,9 @@ void system_clock_source_osc32k_set_config(
 }
 
 /**
- * \brief Apply configuration for the extosc clock source
+ * \brief Apply configuration for the xosc clock source
  *
- * \param conf extosc configuration struct
+ * \param conf[in] extosc configuration struct
  *
  */
 void system_clock_source_xosc_set_config(
@@ -154,11 +154,10 @@ void system_clock_source_xosc_set_config(
 
 
 /**
- * \brief Apply configuration for the extosc32k clock source
+ * \brief Apply configuration for the xsc32k clock source
  *
- * \param conf extosc32k configuration struct
+ * \param conf[in] extosc32k configuration struct
  *
- * \retval STATUS_OK The operation completed successfully
  */
 void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const conf)
@@ -190,9 +189,10 @@ void system_clock_source_xosc32k_set_config(
 /**
  * \brief Apply configuration for the DFLL clock source
  *
- * The DFLL will be running after this function is done
+ * The DFLL will be running when this function returns as the 
+ * DFLL needs to be enabled to do the configuration.
  *
- * \param conf dfll configuration struct
+ * \param conf[in] dfll configuration struct
  *
  */
 void system_clock_source_dfll_set_config(
@@ -309,11 +309,9 @@ enum status_code system_clock_source_write_calibration(
 
 enum status_code system_clock_source_enable(enum system_clock_source clock_src, bool block_until_ready)
 {
-	/* Default value is 0xFFFFFFFF for timeout*/
 	uint32_t timeout;
 	uint32_t waitmask;
 
-	/* TODO: Check _bm naming; this is bit 1 for all ENABLE bits */
 	switch (clock_src) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
 			SYSCTRL->FORCECLKON.bit.OSC8MON = 1;
@@ -420,7 +418,6 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
 	uint32_t mask;
 	switch (clk_source) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
-			/* TODO: verify that this cannot be disabled */
 			return true;
 		case SYSTEM_CLOCK_SOURCE_OSC32K:
 			mask = SYSCTRL_PCLKSR_OSC32KRDY;
@@ -452,7 +449,7 @@ bool system_clock_source_is_ready(enum system_clock_source clk_source)
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
  * This function will apply the settings in conf_clock.h when run from the user
- * application. All clock sources and GCLKs are up and running when this function
+ * application. All clock sources and GCLK generators are running when this function
  * returns.
  */
 void system_clock_init(void)
@@ -625,7 +622,6 @@ void system_clock_init(void)
 	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) && (CONF_CLOCK_DFLL_ENABLE == true)
 	struct system_gclk_ch_conf dfll_gclock_ch_conf;
 	
-
 	system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
 	dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 	system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
@@ -638,7 +634,6 @@ void system_clock_init(void)
 	
 	/* CPU and BUS clocks */
 	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
-	
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
 
 	#if CONF_CLOCK_ENABLE_CPU_CLOCK_FAILURE_DETECT == true
@@ -647,9 +642,8 @@ void system_clock_init(void)
 	system_main_clock_set_failure_detect(false);
 	#endif
 
-
+	/* Bus dividers */
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
-
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
 }	
