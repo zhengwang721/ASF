@@ -155,7 +155,6 @@ void system_gclk_gen_set_config(
 			#endif
 
 		} else {
-			debug_set_val(0xe);
 			/* Set integer division factor */
 			GCLK->GENDIV.bit.DIV = config->division_factor;
 			#if defined (REVB)
@@ -241,7 +240,6 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
 	uint32_t source_clock_index = GCLK->GENCTRL.bit.SRC;
-	debug_set_val(source_clock_index);
 	/* Get the frequency of the source connected to the GCLK generator */
 	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
 

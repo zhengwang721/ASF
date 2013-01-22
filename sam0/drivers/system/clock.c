@@ -43,7 +43,6 @@
 
 #include <clock.h>
 #include <conf_clocks.h>
-#include <debug.h>
 /* \ingroup clock_group
  * @{
  */
@@ -460,8 +459,6 @@ void system_clock_init(void)
 {
 	struct system_gclk_gen_conf gclk_generator_conf;
 
-
-	debug_set_val(0x1);
 	/* XOSC */
 	#if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
