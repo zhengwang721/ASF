@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator interface driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef ACIFC_H_INCLUDED
-#define ACIFC_H_INCLUDED
+#ifndef AC_H_INCLUDED
+#define AC_H_INCLUDED
 
 #include "compiler.h"
 
@@ -54,186 +54,304 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** ACIFC configuration */
-typedef struct {
-	/** Test mode */
-	bool actest;
+/** AC configuration */
+struct ac_config {
 	/** Peripheral Event Trigger Enable */
-	bool eventen;
-} acifc_cfg_t;
+	bool event_trigger;
+	/** Pointers to callback functions. */
+	callbacks[_AC_CALLBACK_N]
+};
+
+/** Hysteresis Voltage */
+enum ac_hysteresis_voltage {
+	AC_HYSTERESIS_0_MV = 0,
+	AC_HYSTERESIS_25_MV,
+	AC_HYSTERESIS_50_MV,
+	AC_HYSTERESIS_75_MV
+};
+
+/** Negative input */
+enum ac_negative_input{
+	AC_NEGTIVE_INPUT_EXTERNAL = 0,
+	AC_NEGTIVE_INPUT_RESERVED1,
+	AC_NEGTIVE_INPUT_RESERVED2,
+	AC_NEGTIVE_INPUT_RESERVED3
+};
+
+/** Comparator mode */
+enum ac_comparator_mode {
+	AC_COMPARATOR_OFF = 0,
+	AC_COMPARATOR_CONTINUOUS,
+	AC_COMPARATOR_USER_TRIGGERED,
+	AC_COMPARATOR_EVENT_TRIGGERED
+};
+
+/** Channel interrupt setting */
+enum ac_ch_interrupt_setting {
+	AC_CH_IS_VINP_GT_VINN = 0,
+	AC_CH_IS_VINP_LT_VINN,
+	AC_CH_IS_OUTPUT_TGL,
+	AC_CH_IS_COMP_DONE
+};
 
 /** AC channel configuration */
-typedef struct {
+struct ac_ch_config {
 	/** Hysteresis value */
-	enum {
-		ACIFC_HYS_0,
-		ACIFC_HYS_1,
-		ACIFC_HYS_2,
-		ACIFC_HYS_3
-	} hysteresis_value;
+	enum ac_hysteresis_voltage hysteresis_voltage;
 	/** Always on enable */
-	bool alwayson;
+	bool always_on;
 	/** Fast mode enable */
-	bool fast;
-	/** Output event when ACOUT is zero? */
+	bool fast_mode;
+	/** Output event when ACOUT is zero */
 	bool event_negative;
-	/** Output event when ACOUT is one? */
+	/** Output event when ACOUT is one */
 	bool event_positive;
 	/** Set the negative input */
-	enum {
-		NI_ACN,
-		RESERVED1,
-		RESERVED2,
-		RESERVED3,
-	} negative_input;
+	enum ac_negative_input negative_input;
 	/** Set the comparator mode */
-	enum {
-		MODE_OFF,
-		MODE_CONTINUOUS,
-		MODE_USER_TRIGGERED,
-		MODE_EVENT_TRIGGERED
-	} mode;
+	enum ac_comparator_mode comparator_mode;
 	/** Interrupt settings */
-	enum {
-		IS_VINP_GT_VINN,
-		IS_VINP_LT_VINN,
-		IS_OUTPUT_TGL,
-		IS_COMP_DONE
-	} interrupt_settings;
-} acifc_channel_cfg_t;
+	enum ac_ch_interrupt_setting interrupt_setting;
+};
+
+/** Window Event output configuration */
+enum ac_win_event_source {
+	AC_WIN_EVENT_ACWOUT_RISING_EDGE = 0,
+	AC_WIN_EVENT_ACWOUT_FALLING_EDGE,
+	AC_WIN_EVENT_ACWOUT_ON_ANY_EDGE,
+	AC_WIN_EVENT_INSIDE_WINDOW,
+	AC_WIN_EVENT_OUTSIDE_WINDOW,
+	AC_WIN_EVENT_MEASURE_DONE
+	AC_WIN_EVENT_RESERVED1,
+	AC_WIN_EVENT_RESERVED2
+};
+
+/** Window interrupt settings */
+enum ac_win_interrupt_setting {
+	AC_WIN_IS_VINP_INSIDE_WINDOW = 0,
+	AC_WIN_IS_VINP_OUTSIDE_WINDOW,
+	AC_WIN_IS_WINDOW_OUTPUT_TGL,
+	AC_WIN_IS_WINDOW_COMP_DONE,
+	AC_WIN_IS_VINP_ENTER_WINDOW,
+	AC_WIN_IS_VINP_LEAVE_WINDOW,
+	AC_WIN_IS_RESERVED1,
+	AC_WIN_IS_RESERVED2,
+};
 
 /** AC Window configuration */
-typedef struct {
+struct ac_win_config {
 	/** Window Mode Enable/Disable */
-	bool window_mode;
-	/** Window Event from awout Enable/Disable */
-	bool window_event_enable;
+	bool enable;
+	/** Window Event from ACWOUT Enable/Disable */
+	bool event_enable;
 	/** Window Event output configuration */
-	enum {
-		EVENT_ON_ACWOUT_RISING_EDGE,
-		EVENT_ON_ACWOUT_FALLING_EDGE,
-		EVENT_ON_ACWOUT_ON_ANY_EDGE,
-		EVENT_ON_INSIDE_WINDOW,
-		EVENT_ON_OUTSIDE_WINDOW,
-		EVENT_ON_COMPARISON_COMPLETE,
-		RESERVED4,
-		RESERVED5,
-	} window_event;
+	enum ac_win_event_source event_source;
 	/** Interrupt settings */
-	enum {
-		IS_VINP_INSIDE_WINDOW,
-		IS_VINP_OUTSIDE_WINDOW,
-		IS_WINDOW_OUTPUT_TGL,
-		IS_WINDOW_COMP_DONE,
-		IS_VINP_ENTER_WINDOW,
-		IS_VINP_LEAVE_WINDOW,
-		RESERVED6,
-		RESERVED7,
-	} interrupt_settings;
-} acifc_window_cfg_t;
+	enum ac_win_interrupt_setting interrupt_setting;
+};
 
-typedef void (*acifc_callback_t) (void);
+struct ac_dev_inst {
+	/** Base address of the AC module. */
+	Acifc *hw_dev;
+	/** Pointer to AC configuration structure. */
+	struct ac_config  *ac_cfg;
+};
 
-void acifc_channel_configure(Acifc *p_acifc, const acifc_channel_cfg_t *ac_chan_cfg,
-		uint8_t nb_chan);
-void acifc_configure(Acifc *p_acifc, const acifc_cfg_t *ac_cfg);
-void acifc_window_configure(Acifc *p_acifc, const acifc_window_cfg_t *ac_window_cfg,
-		uint8_t nb_window);
-void acifc_set_callback(Acifc *p_acifc, acifc_callback_t callback,
-		uint8_t irq_line, uint8_t irq_level, uint32_t interrupt_flags);
-void acifc_enable(Acifc *p_acifc);
-void acifc_disable(Acifc *p_acifc);
+/**
+ * \brief Initializes an Analog Comparator module configuration structure to defaults.
+ *
+ *  Initializes a given Analog Comparator module configuration structure to a
+ *  set of known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li Peripheral event trigger is disabled
+ *
+ * \param cfg  AC module configuration structure to initialize to default value
+ */
+static inline void ac_get_config_defaults(struct ac_config *const cfg)
+{
+	/* Sanity check argument */
+	Assert(cfg);
+
+	cfg->event_trigger = false;
+}
+
+enum status_code ac_init(struct ac_dev_inst *const dev_inst, Acifc *const ac,
+		struct ac_config *const cfg);
+
+/**
+ * \brief Initializes an Analog Comparator channel configuration structure to defaults.
+ *
+ *  Initializes a given Analog Comparator channel configuration structure to a
+ *  set of known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li Hysteresis voltage = 0 mV
+ *   \li AC is disabled between measurements
+ *   \li Fast mode is disabled
+ *   \li AC is disabled between measurements
+ *   \li No output peripheral event when ACOUT is zero
+ *   \li No output peripheral event when ACOUT is one
+ *   \li Negative input from the external pin
+ *   \li User triggered single measurement mode
+ *   \li Interrupt is issued when the comparison is done
+ *
+ * \param cfg  AC channel configuration structure to initialize to default value
+ */
+static inline void ac_ch_get_config_defaults(struct ac_ch_config *const cfg)
+{
+	/* Sanity check argument */
+	Assert(cfg);
+
+	cfg->hysteresis_voltage = AC_HYSTERESIS_0_MV;
+	cfg->always_on = false;
+	cfg->fast_mode = false;
+	cfg->event_negative = false;
+	cfg->event_positive = false;
+	cfg->negative_input = AC_NEGTIVE_INPUT_EXTERNAL;
+	cfg->comparator_mode = AC_COMPARATOR_USER_TRIGGERED;
+	cfg->interrupt_setting = AC_CH_IS_COMP_DONE;
+}
+
+void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
+		struct ac_ch_config *cfg);
+
+/**
+ * \brief Initializes an Analog Comparator window configuration structure to defaults.
+ *
+ *  Initializes a given Analog Comparator window configuration structure to a
+ *  set of known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li Window mode is disabled
+ *   \li Peripheral event from ACWOUT is disabled
+ *   \li Generate the window peripheral event when measure is done
+ *   \li Window interrupt is issued when evaluation of common input voltage is done
+ *
+ * \param cfg  AC window configuration structure to initialize to default value
+ */
+static inline void ac_win_get_config_defaults(struct ac_win_config *const cfg)
+{
+	/* Sanity check argument */
+	Assert(cfg);
+
+	cfg->enable = false;
+	cfg->event_enable = false;
+	cfg->event_source = AC_WIN_EVENT_MEASURE_DONE;
+	cfg->interrupt_setting = AC_WIN_IS_WINDOW_COMP_DONE;
+}
+
+void ac_win_set_config(struct ac_dev_inst *const dev_inst,
+		uint32_t window, struct ac_win_config *cfg);
+
+enum ac_callback_type {
+	/** Equivalent to ACINTx. */
+	AC_CALLBACK_CONVERSION_COMPLETED = 0,
+	/** Equivalent to SUTINTx. */
+	AC_CALLBACK_STARTUP_TIME_ELAPSED = 1,
+	/** Equivalent to WFINTx. */
+	AC_CALLBACK_WINDOW_INTERRUPT = 2,
+#if !defined(__DOXYGEN__)
+	/** Total number of callbacks. */
+	_AC_CALLBACK_N = 3
+#endif
+};
+
+typedef void (*ac_async_callback_t)(struct ac_dev_inst *const dev_inst,
+		uint32_t channel);
+
+void ac_register_callback(struct ac_dev_inst *const dev_inst,
+		ac_async_callback_t callback, enum ac_callback_type type);
+void ac_unregister_callback(struct ac_dev_inst *const dev_inst,
+		enum ac_callback_type type);
+
+#define AC_WIN_INT_POS 24
+/**
+ * \brief Enable the specified channel/window callback
+ *
+ * \param dev_inst Device structure pointer.
+ * \param channel  Channel number if type is not AC_CALLBACK_WINDOW_INTERRUPT, 
+ * window number otherwise.
+ * \param type     Callback type.
+ */
+static inline void ac_async_ch_enable_callback(
+		struct ac_dev_inst *const dev_inst, uint32_t channel,
+		enum ac_callback_type type)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	if (type < AC_CALLBACK_WINDOW_INTERRUPT) {
+		dev_inst->hw_dev->ACIFC_IER = 1 << (type + channel * 2);
+	} else {
+		dev_inst->hw_dev->ACIFC_IER = 1 << (channel + AC_WIN_INT_POS);
+	}
+}
+
+/**
+ * \brief Disable the specified channel/window callback
+ *
+ * \param dev_inst Device structure pointer.
+ * \param channel  Channel number if type is not AC_CALLBACK_WINDOW_INTERRUPT, 
+ * window number otherwise.
+ * \param type     Callback type.
+ */
+static inline void ac_async_ch_disable_callback(
+		struct ac_dev_inst *const dev_inst, uint32_t channel,
+		enum ac_callback_type type)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	if (type < AC_CALLBACK_WINDOW_INTERRUPT) {
+		dev_inst->hw_dev->ACIFC_IDR = 1 << (type + channel * 2);
+	} else {
+		dev_inst->hw_dev->ACIFC_IDR = 1 << (channel + AC_WIN_INT_POS);
+	}
+}
+
+void ac_enable(struct ac_dev_inst *const dev_inst);
+void ac_disable(struct ac_dev_inst *const dev_inst);
 
 /**
  * \brief User starts a single comparison.
  *
- * \param p_acifc Pointer to an ACIFC instance.
+ * \param dev_inst Device structure pointer.
  */
-static inline void acifc_user_trigger_single_comparison(Acifc *p_acifc)
+static inline void ac_user_trigger_single_comparison(
+		struct ac_dev_inst *const dev_inst)
 {
-	p_acifc->ACIFC_CTRL |= ACIFC_CTRL_USTART;
+	dev_inst->hw_dev->ACFIC_CTRL |= ACFIC_CTRL_USTART;
 }
 
 /**
- * \brief Test event trigger start a single analog comparison.
+ * \brief Check if the comparison is done.
  *
- * \param p_acifc Pointer to an ACIFC instance.
+ * \param dev_inst Device structure pointer.
  */
-static inline void acifc_test_event_trigger_single_comparison(Acifc *p_acifc)
+static bool ac_is_comparison_done(struct ac_dev_inst *const dev_inst)
 {
-	p_acifc->ACIFC_CTRL |= ACIFC_CTRL_ESTART;
+	return (dev_inst->hw_dev->ACFIC_CTRL & ACFIC_CTRL_USTART !=
+			ACFIC_CTRL_USTART);
 }
 
 /**
- * \brief Get ACIFC status.
+ * \brief Get AC status.
  *
- * \param p_acifc Pointer to an ACIFC instance.
- *
- */
-static inline uint32_t acifc_get_status(Acifc *p_acifc)
-{
-	return p_acifc->ACIFC_SR;
-}
-
-/**
- * \brief Get ACIFC interrupt status.
- *
- * \param p_acifc Pointer to an ACIFC instance.
+ * \param dev_inst Device structure pointer.
  *
  */
-static inline uint32_t acifc_get_interrupt_status(Acifc *p_acifc)
+static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
 {
-	return p_acifc->ACIFC_ISR;
-}
-
-/**
- * \brief Clear ACIFC interrupt status.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- * \param status_flags status flags.
- *
- */
-static inline void acifc_clear_interrupt_status(Acifc *p_acifc,
-		const uint32_t status_flags)
-{
-	p_acifc->ACIFC_ICR |= status_flags;
-}
-
-/**
- * \brief Enable ACIFC interrupt.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- * \param interrupt_flags interrupt source.
- *
- */
-static inline void acifc_enable_interrupt(Acifc *p_acifc,
-		const uint32_t interrupt_flags)
-{
-	p_acifc->ACIFC_IER |= interrupt_flags;
-}
-
-/**
- * \brief Disable ACIFC interrupt.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- * \param interrupt_flags interrupt source.
- *
- */
-static inline void acifc_disable_interrupt(Acifc *p_acifc,
-		const uint32_t interrupt_flags)
-{
-	p_acifc->ACIFC_IDR |= interrupt_flags;
-}
-
-/**
- * \brief Get ACIFC interrupt mask.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- *
- */
-static inline uint32_t acifc_get_interrupt_mask(Acifc *p_acifc)
-{
-	return p_acifc->ACIFC_IMR;
+	return dev_inst->hw_dev->ACFIC_SR;
 }
 
 /// @cond 0
@@ -244,69 +362,4 @@ static inline uint32_t acifc_get_interrupt_mask(Acifc *p_acifc)
 /**INDENT-ON**/
 /// @endcond
 
-/**
- * \page sam_acifc_quickstart Quickstart guide for SAM ACIFC driver
- *
- * This is the quickstart guide for the \ref group_sam_drivers_acifc
- * "SAM ACIFC driver", with step-by-step instructions on how to
- * configure and use the driver in a selection of use cases.
- *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function, while
- * the steps for usage can be copied into, e.g., the main application function.
- *
- * \section acifc_basic_use_case Basic use case
- * In this basic use case, the last page page and the user page will be written
- * with a specific magic number.
- *
- * \subsection sam_acifc_quickstart_prereq Prerequisites
- * -# \ref sysclk_group "System Clock Management (Sysclock)"
- *
- * \section acifc_basic_use_case_setup Setup steps
- * by default.
- * \subsection acifc_basic_use_case_setup_code Example code
- * Enable the following macro in the conf_clock.h:
- * \code
- *  #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL
- *  #define CONFIG_DFLL0_SOURCE         GENCLK_SRC_OSC32K
- * \endcode
- *
- * Add the following code in the application C-file:
- * \code
- *  sysclk_init();
- * \endcode
- *
- * \subsection acifc_basic_use_case_setup_flow Workflow
- * -# Set system clock source as DFLL:
- *   - \code #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL \endcode
- * -# Set DFLL source as OSC32K:
- *   - \code #define CONFIG_DFLL0_SOURCE         GENCLK_SRC_OSC32K \endcode
- * -# Initialize the system clock.
- *   - \code sysclk_init(); \endcode
- *
- * \section acifc_basic_use_case_usage Usage steps
- * \subsection acifc_basic_use_case_usage_code Example code
- * Add to, e.g., main loop in application C-file:
- * \code
- *    acifc_enable(ACIFC);
- *    acifc_configure(ACIFC, &acifc_opt);
- *    acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL);
- *    acifc_set_callback(ACIFC, compare_result_output, ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
- *    acifc_user_trigger_single_comparison(ACIFC);
- * \endcode
- *
- * \subsection acifc_basic_use_case_usage_flow Workflow
- * -# Enable ACIFC Module:
- *   - \code acifc_enable(ACIFC); \endcode
- * -# Configure the ACIFC module:
- *   - \code acifc_configure(ACIFC, &acifc_opt); \endcode
- * -# Configure a set of AC channels in normal mode:
- *   - \code acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL); 
- * \endcode
- * -# Set callback for ACIFC:
- *   - \code acifc_set_callback(ACIFC, compare_result_output, ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
- *  \endcode
- * -# User starts a single comparison:
- *   - \code acifc_user_trigger_single_comparison(ACIFC); \endcode
- */
-#endif /* ACIFC_H_INCLUDED */
+#endif /* AC_H_INCLUDED */

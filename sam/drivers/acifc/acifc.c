@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator interface driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,6 +53,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+struct ac_dev_inst *_ac_inst;
+
 /**
  * \defgroup sam_drivers_acifc_group Analog Comparator (AC)
  *
@@ -64,140 +66,267 @@ extern "C" {
  * @{
  */
 
-acifc_callback_t acifc_callback_pointer;
-
 /**
- * \brief Configure a set of AC channels in normal mode
+ * \internal Set configurations to module.
  *
- * \param p_acifc   Pointer to an ACIFC instance
- * \param ac_chan_cfg   AC channel configuration value
- * \param nb_chan   The number of AC channel
+ * \param  dev_inst Pointer to device instance structure.
+ * \param  cfg      Configuration structure with configurations to set.
  *
  */
-void acifc_channel_configure(Acifc *p_acifc, const acifc_channel_cfg_t *ac_chan_cfg,
-		uint8_t nb_chan)
+static inline void _ac_set_config(struct ac_dev_inst *const dev_inst, 
+		struct ac_config *const cfg)
 {
-	p_acifc->ACIFC_CONF[nb_chan].ACIFC_CONF =
-			ACIFC_CONF_HYS(ac_chan_cfg->hysteresis_value) |
-			ACIFC_CONF_INSELN(ac_chan_cfg->negative_input) |
-			ACIFC_CONF_MODE(ac_chan_cfg->mode) |
-			ACIFC_CONF_IS(ac_chan_cfg->interrupt_settings);
-	if(ac_chan_cfg->alwayson) {
-		p_acifc->ACIFC_CONF[nb_chan].ACIFC_CONF |= ACIFC_CONF_ALWAYSON;
-	}
-	if(ac_chan_cfg->fast) {
-		p_acifc->ACIFC_CONF[nb_chan].ACIFC_CONF |= ACIFC_CONF_FAST;
-	}
-	if(ac_chan_cfg->event_negative) {
-		p_acifc->ACIFC_CONF[nb_chan].ACIFC_CONF |= ACIFC_CONF_EVENN;
-	}
-	if(ac_chan_cfg->event_positive) {
-		p_acifc->ACIFC_CONF[nb_chan].ACIFC_CONF |= ACIFC_CONF_EVENP;
-	}
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(cfg);
+
+	dev_inst->hw_dev->ACIFC_CTRL |= 
+			(cfg->event_trigger ? ACIFC_CTRL_EVENTEN : 0);
 }
 
+/**
+ * \brief Initializes the requested AC Hardware module.
+ *
+ * Enables the source clock for the requested AC Hardware module and initializes
+ * it with the given configuration.
+ *
+ * \param  dev_inst Pointer to device instance struct.
+ * \param  ac       Pointer to the hardware instance.
+ * \param  cfg      Pointer to the configuration struct.
+ *
+ * \return              Status of initialization.
+ * \retval STATUS_OK Module initiated correctly.
+ * \retval STATUS_ERR_DENIED If module has been enabled.
+ * \retval STATUS_ERR_BUSY If module is busy comparing.
+ *
+ */
+enum status_code ac_init(struct ac_dev_inst *const dev_inst, Acifc *const ac,
+		struct ac_config *const cfg)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(ac);
+	Assert(cfg);
+
+	uint32_t ac_ctrl = ac->ACIFC_CTRL;
+	/* Check if module is enabled. */
+	if (ac_ctrl & ACIFC_CTRL_EN) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if comparison is in progress. */
+	if (ac_ctrl & ACIFC_CTRL_USTART){
+		return STATUS_ERR_BUSY;
+	}
+
+	uint32_t i;
+	for (i = 0; i < _AC_CALLBACK_N; i++) {
+		dev_inst->callbacks[i] = 0;
+	}
+
+	/* Enable and configure device instance */
+	dev_inst->hw_dev = ac;
+	sysclk_enable_peripheral_clock(ac);
+	_ac_set_config(dev_inst, cfg);
+
+	_ac_inst = dev_inst;
+
+	return STATUS_OK;
+}
+
+#define AC_NB_OF_CH 8
+/**
+ * \brief Configure the specified AC channel
+ *
+ * \param dev_inst   Device structure pointer
+ * \param channel    AC channel number
+ * \param cfg        Configuration for AC channel
+ *
+ */
+void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
+		struct ac_ch_config *cfg)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(channel < AC_NB_OF_CH);
+	Assert(cfg);
+
+	uint32_t ac_conf = 0;
+	ac_conf = ACIFC_CONF_HYS(cfg->hysteresis_voltage) |
+			(cfg->always_on ? ACIFC_CONF_ALWAYSON : 0) |
+			(cfg->fast_mode ? ACIFC_CONF_FAST : 0) |
+			(cfg->event_negative ? ACIFC_CONF_EVENN : 0) |
+			(cfg->event_positive ? ACIFC_CONF_EVENP : 0) |
+			ACIFC_CONF_INSELN(cfg->negative_input) |
+			ACIFC_CONF_MODE(cfg->comparator_mode) |
+			ACIFC_CONF_IS(interrupt_setting);
+
+	dev_inst->hw_dev->ACIFC_CONF[channel].ACIFC_CONF = ac_conf;
+}
+
+#define AC_NB_OF_WIN (AC_NB_OF_CH >> 1)
 /**
  * \brief Configure one AC channel in Window mode
  *
- * \param p_acifc   Pointer to an ACIFC instance
- * \param ac_window_cfg   AC Window configuration value
- * \param nb_window   The number of the AC window pair
+ * \param dev_inst   Device structure pointer
+ * \param window     AC window number
+ * \param cfg        Configuration for AC window
  *
  */
-void acifc_window_configure(Acifc *p_acifc, const acifc_window_cfg_t *ac_window_cfg,
-		uint8_t nb_window)
+void ac_win_set_config(struct ac_dev_inst *const dev_inst,
+		uint32_t window, struct ac_win_config *cfg)
 {
-	p_acifc->ACIFC_CONFW[nb_window].ACIFC_CONFW =
-			ACIFC_CONFW_WEVSRC(ac_window_cfg->window_event) |
-			ACIFC_CONFW_WIS(ac_window_cfg->interrupt_settings);
-	if(ac_window_cfg->window_event_enable) {
-		p_acifc->ACIFC_CONFW[nb_window].ACIFC_CONFW |= ACIFC_CONFW_WEVEN;
-	}
-	if(ac_window_cfg->window_mode) {
-		p_acifc->ACIFC_CONFW[nb_window].ACIFC_CONFW |= ACIFC_CONFW_WFEN;
-	}
-}
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(channel < AC_NB_OF_WIN);
+	Assert(cfg);
 
-/**
- * \brief Configure the ACIFC module
- *
- * \param p_acifc   Pointer to an ACIFC instance
- * \param ac   AC configuration value
- *
- */
-void acifc_configure(Acifc *p_acifc, const acifc_cfg_t *ac_cfg)
-{
-	if(ac_cfg->actest) {
-		p_acifc->ACIFC_CTRL |=  ACIFC_CTRL_ACTEST;
-	}
-	if(ac_cfg->eventen) {
-		p_acifc->ACIFC_CTRL |=  ACIFC_CTRL_EVENTEN;
-	}
+	uint32_t ac_confw = 0;
+	ac_confw = (cfg->enable ? ACIFC_CONFW_WFEN : 0) |
+			(cfg->event_enable ? ACIFC_CONFW_WEVEN : 0) |
+			ACIFC_CONFW_WEVSRC(cfg->event_source) |
+			ACIFC_CONFW_WIS(cfg->interrupt_setting);
+
+	dev_inst->hw_dev->ACIFC_CONFW[window].ACIFC_CONFW = ac_confw;
 }
 
 /**
  * \brief Enable ACIFC Module.
  *
- * \param p_acifc Pointer to an ACIFC instance.
+ * \param dev_inst   Device structure pointer
  *
  */
-void acifc_enable(Acifc *p_acifc)
+void acifc_enable(struct ac_dev_inst *const dev_inst)
 {
-	sysclk_enable_peripheral_clock(p_acifc);
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
-	p_acifc->ACIFC_CTRL |= ACIFC_CTRL_EN;
+	dev_inst->hw_dev->ACIFC_CTRL |= ACIFC_CTRL_EN;
 }
 
 /**
  * \brief Disable ACIFC Module.
  *
- * \param p_acifc Pointer to an ACIFC instance.
+ * \param dev_inst   Device structure pointer
  *
  */
-void acifc_disable(Acifc *p_acifc)
+void acifc_disable(struct ac_dev_inst *const dev_inst)
 {
-	p_acifc->ACIFC_CTRL &= ~ACIFC_CTRL_EN;
-	sysclk_disable_peripheral_clock(p_acifc);
+	dev_inst->hw_dev->ACIFC_CTRL &= ~ACIFC_CTRL_EN;
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
 }
 
 /**
- * \brief Set callback for ACIFC
+ * \brief Register callback for the specified callback type.
  *
- * \param p_acifc Base address of the ACIFC module
- * \param callback callback function pointer.
- * \param irq_line  interrupt line.
- * \param irq_level interrupt level.
- * \param interrupt_flags interrupt mask.
+ * When called, the given callback function will be associated with the
+ * specified callback type.
+ *
+ * \param dev_inst   Device structure pointer
+ * \param callback   Pointer to the function desired for the specified
+ * callback type
+ * \param type       Specifies the callback type to register.
  */
-void acifc_set_callback(Acifc *p_acifc, acifc_callback_t callback,
-		uint8_t irq_line, uint8_t irq_level, uint32_t interrupt_flags)
+void ac_register_callback(struct ac_dev_inst *const dev_inst,
+		ac_async_callback_t callback, enum ac_callback_type type)
 {
-	acifc_callback_pointer = callback;
-	irq_register_handler((IRQn_Type) irq_line, irq_level);
-	acifc_enable_interrupt(p_acifc, interrupt_flags);
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(callback);
+
+	/* Register callback. */
+	dev_inst->callbacks[type] = callback;
 }
 
 /**
- * \internal
- * \brief Common ACIFC interrupt handler
+ * \brief Unregister callback for the specified callback type.
  *
- * The optional callback used by the interrupt handler is set by the
- * acifc_set_callback() function.
+ * When called, the currently registered callback for the given callback type
+ * will be removed.
+ *
+ * \param dev_inst   Device structure pointer
+ * \param type       Specifies the callback type to register.
  */
-static void acifc_interrupt(void)
+void ac_unregister_callback(struct ac_dev_inst *const dev_inst,
+		enum ac_callback_type type)
 {
-	if (acifc_callback_pointer) {
-		acifc_callback_pointer();
-	}
+	/* Sanity check. */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Unregister callback. */
+	dev_inst->callbacks[type] = 0;
 }
 
+/**
+ * \brief Get AC interrupt status.
+ *
+ * \param dev_inst Device structure pointer.
+ *
+ */
+static inline uint32_t _ac_get_interrupt_status(
+		struct ac_dev_inst *const dev_inst)
+{
+	return dev_inst->hw_dev->ACFIC_ISR;
+}
+
+/**
+ * \brief Get AC interrupt mask.
+ *
+ * \param dev_inst Device structure pointer.
+ *
+ */
+static inline uint32_t _ac_get_interrupt_mask(
+		struct ac_dev_inst *const dev_inst)
+{
+	return dev_inst->hw_dev->ACFIC_IMR;
+}
+
+/**
+ * \brief Clear AC interrupt status.
+ *
+ * \param dev_inst Device structure pointer.
+ * \param status   Interrupt status to be clear.
+ *
+ */
+static inline void _ac_clear_interrupt_status(
+		struct ac_dev_inst *const dev_inst, uint32_t status)
+{
+	dev_inst->hw_dev->ACFIC_ICR = status;
+}
+
+#define AC_CH_MAX_INT_NB  16
+#define AC_WIN_MAX_INT_NB 4
+#define AC_WIN_INT_OFFSET 24
 /**
  * \brief Interrupt handler for ACIFC interrupt.
  */
 void ACIFC_Handler(void)
 {
-	acifc_interrupt();
+	uint32_t irq_status = _ac_get_interrupt_status(_ac_inst);
+	uint32_t irq_mask = _ac_get_interrupt_mask(_ac_inst);
+	uint32_t status_masked = irq_status & irq_mask;
+
+	uint32_t i = 0;
+	for (; i < AC_CH_MAX_INT_NB; i++) {
+		if (status_masked & (1 << i)) {
+			if (i & 1) {
+				_ac_inst->callbacks[AC_CALLBACK_CONVERSION_COMPLETED](_ac_inst, (i - 1) / 2);
+			} else {
+				_ac_inst->callbacks[AC_CALLBACK_STARTUP_TIME_ELAPSED](_ac_inst, i / 2);
+			}
+		}
+	}
+
+	for (i = AC_WIN_INT_OFFSET; i < AC_WIN_INT_OFFSET + AC_WIN_MAX_INT_NB; i++) {
+		if (status_masked & (1 << i)) {
+			_ac_inst->callbacks[AC_CALLBACK_WINDOW_INTERRUPT](_ac_inst, i - AC_WIN_INT_OFFSET);
+		}
+	}
+
+	_ac_clear_interrupt_status(_ac_inst, irq_status);
 }
 
 //@}

@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator Interfacer (ACIFC) example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -163,10 +163,12 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* ACIFC Configuration */
-	const acifc_cfg_t acifc_opt = {
-		.actest = false,
-		.eventen = true
-	};
+	struct ac_config module_cfg;
+	struct ac_ch_config ch_cfg;
+	ac_get_config_defaults(&module_cfg);
+	ac_ch_get_config_defaults(&ch_cfg);
+	ch_cfg.
+
 	/* ACIFC Channel Configuration */
 	const acifc_channel_cfg_t acifc_channel_opt = {
 		/* Hysteresis value */
