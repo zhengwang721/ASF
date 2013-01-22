@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>6.0</ProjectVersion>
+    <ToolchainName>com.Atmel.ARMGCC</ToolchainName>
+    <ProjectGuid>{a623d17a-926e-4cc9-9dcd-5a50c8d55d58}</ProjectGuid>
+    <avrdevice>ATSAM3S8C</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>StaticLibrary</OutputType>
+    <Language>C</Language>
+    <OutputFileName>lib$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AvrGccProjectExtensions>
+    </AvrGccProjectExtensions>
+    <AssemblyName>libjpeg_cm3</AssemblyName>
+    <Name>libjpeg_cm3</Name>
+    <RootNamespace>libjpeg_cm3</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <AsfVersion>3.3.0</AsfVersion>
+    <KeepTimersRunning>true</KeepTimersRunning>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_CM3' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.general.symbols>__SAM3S8C__</armgcc.common.general.symbols>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../../..</Value>
+      <Value>../../../../v8d</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.compiler.warnings.Pedantic>True</armgcc.compiler.warnings.Pedantic>
+  <armgcc.compiler.miscellaneous.OtherFlags>-std=c99</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>m</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>../cmsis/linkerScripts</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
+  <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
+</ArmGcc>
+    </ToolchainSettings>
+    <OutputPath>bin\Debug_CM3\</OutputPath>
+    <OutputFileName>libjpeg_CM3_dbg</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
+    <PostBuildEvent>copy $(OutputDirectory)\$(OutputFileName).a $(SolutionDir)</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_CM3' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.general.symbols>__SAM3S8C__</armgcc.common.general.symbols>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../../..</Value>
+      <Value>../../../../v8d</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.level>Optimize most (-O3)</armgcc.compiler.optimization.level>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.compiler.warnings.Pedantic>True</armgcc.compiler.warnings.Pedantic>
+  <armgcc.compiler.miscellaneous.OtherFlags>-std=c99</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>m</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>../cmsis/linkerScripts</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
+  <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
+</ArmGcc>
+    </ToolchainSettings>
+    <OutputFileName>libjpeg_CM3_rel</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
+    <PostBuildEvent>copy $(OutputDirectory)\$(OutputFileName).a $(SolutionDir)</PostBuildEvent>
+    <OutputPath>bin\Release_CM3\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="headers for sram\" />
+    <Folder Include="headers\" />
+    <Folder Include="source\" />
+    <Folder Include="source\common\" />
+    <Folder Include="source\compression\" />
+    <Folder Include="source\decompression\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\v8d\cdjpeg.h">
+      <SubType>compile</SubType>
+      <Link>headers\cdjpeg.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jaricom.c">
+      <SubType>compile</SubType>
+      <Link>source\common\jaricom.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcapimin.c">
+      <SubType>compile</SubType>
+      <Link>source\jcapimin.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcapistd.c">
+      <SubType>compile</SubType>
+      <Link>source\jcapistd.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcarith.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcarith.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jccoefct.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jccoefct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jccolor.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jccolor.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcdctmgr.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcdctmgr.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jchuff.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jchuff.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcinit.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcinit.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcmainct.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcmainct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcmarker.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcmarker.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcmaster.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcmaster.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcomapi.c">
+      <SubType>compile</SubType>
+      <Link>source\jcomapi.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcparam.c">
+      <SubType>compile</SubType>
+      <Link>source\jcparam.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcprepct.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcprepct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jcsample.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jcsample.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jctrans.c">
+      <SubType>compile</SubType>
+      <Link>source\jctrans.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdapimin.c">
+      <SubType>compile</SubType>
+      <Link>source\jdapimin.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdapistd.c">
+      <SubType>compile</SubType>
+      <Link>source\jdapistd.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdarith.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdarith.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdcoefct.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdcoefct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdcolor.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdcolor.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jddctmgr.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jddctmgr.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdhuff.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdhuff.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdinput.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdinput.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdmainct.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdmainct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdmarker.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdmarker.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdmaster.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdmaster.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdpostct.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdpostct.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdsample.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdsample.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jdtrans.c">
+      <SubType>compile</SubType>
+      <Link>source\jdtrans.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jerror.c">
+      <SubType>compile</SubType>
+      <Link>source\common\jerror.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jfdctflt.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jfdctflt.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jfdctfst.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jfdctfst.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jfdctint.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jfdctint.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jidctflt.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jidctflt.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jidctfst.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jidctfst.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jidctint.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jidctint.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jinclude.h">
+      <SubType>compile</SubType>
+      <Link>headers\jinclude.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jmemmgr.c">
+      <SubType>compile</SubType>
+      <Link>source\common\jmemmgr.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jmemnobs.c">
+      <SubType>compile</SubType>
+      <Link>source\common\jmemnobs.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jmorecfg.h">
+      <SubType>compile</SubType>
+      <Link>headers\jmorecfg.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jpeglib.h">
+      <SubType>compile</SubType>
+      <Link>headers\jpeglib.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jquant1.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jquant1.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jquant2.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jquant2.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\v8d\jutils.c">
+      <SubType>compile</SubType>
+      <Link>source\common\jutils.c</Link>
+    </Compile>
+    <Compile Include="..\..\jconfig.h">
+      <SubType>compile</SubType>
+      <Link>headers for sram\jconfig.h</Link>
+    </Compile>
+    <Compile Include="..\..\jconfig_as.h">
+      <SubType>compile</SubType>
+      <Link>headers for sram\jconfig_as.h</Link>
+    </Compile>
+    <Compile Include="..\..\jconfig_gcc.h">
+      <SubType>compile</SubType>
+      <Link>headers for sram\jconfig_gcc.h</Link>
+    </Compile>
+    <Compile Include="..\..\jconfig_iar.h">
+      <SubType>compile</SubType>
+      <Link>headers for sram\jconfig_iar.h</Link>
+    </Compile>
+    <Compile Include="..\..\jdatadst_mem.c">
+      <SubType>compile</SubType>
+      <Link>source\compression\jdatadst_mem.c</Link>
+    </Compile>
+    <Compile Include="..\..\jdatasrc_mem.c">
+      <SubType>compile</SubType>
+      <Link>source\decompression\jdatasrc_mem.c</Link>
+    </Compile>
+    <Compile Include="..\..\libjpeg.c">
+      <SubType>compile</SubType>
+      <Link>libjpeg.c</Link>
+    </Compile>
+    <Compile Include="..\..\libjpeg.h">
+      <SubType>compile</SubType>
+      <Link>libjpeg.h</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>

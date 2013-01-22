@@ -108,11 +108,12 @@ extern "C" {
 #define STK600_RCUC3L3        44  //!< ATUCL3 STK600 board
 #define SAM4L_EK              45  //!< SAM4L-EK board.
 #define STK600_MEGA_RF        46  //!< STK600 MEGA RF EVK board.
-#define XMEGA_C3_XPLAINED     47  //!< ATxmega384C3 Xplained board.	
+#define XMEGA_C3_XPLAINED     47  //!< ATxmega384C3 Xplained board.
 #define STK600_RC032X         48  //!< STK600 with RC032X routing card board.
 #define SAM4S_EK2             49  //!< SAM4S-EK2 board.
 #define XMEGA_E5_XPLAINED     50  //!< ATxmega32E5 Xplained board.
 #define SAM4E_EK              51  //!< SAM4E-EK board.
+#define SAM4S_WPIR_RD         54  //!< SAM4S-WPIR-RD board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).

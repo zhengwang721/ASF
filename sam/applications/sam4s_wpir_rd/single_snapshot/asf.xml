@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.applications.single_snapshot" caption=" Single snapshot demonstration ">
+		<info type="description" value="summary">
+		In this demonstration microcontroller stay in backup mode. When users press push-button a picture will be taken and displayed
+		on LCD before microcontroller come back in backup mode.
+		</info>
+		<build type="c-source" value="single_snapshot.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam4s"/>
+		<require idref="sam.drivers.smc"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.gpbr"/>
+		<require idref="sam.drivers.twi"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
+		<require idref="sam.components.display.ili9325"/>
+		<require idref="sam.components.cmos_image_sensor.ov7740"/>
+		<require idref="sam.components.display.aat31xx"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>

@@ -1,0 +1,24 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.applications.periodic_motion_detection" caption=" Periodic motion detection demonstration ">
+		<info type="description" value="summary">
+		This demonstration take a picture and display it on LCD when a motion is detected.
+		</info>
+		<build type="c-source" value="periodic_motion_detection.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam4s"/>
+		<require idref="sam.drivers.smc"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.twi"/>
+		<require idref="sam.drivers.rtt"/>
+		<require idref="sam.drivers.acc"/>
+		<require idref="sam.components.pir_sensor.re200b"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
+		<require idref="sam.components.display.ili9325"/>
+		<require idref="sam.components.cmos_image_sensor.ov7740"/>
+		<require idref="sam.components.display.aat31xx"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>

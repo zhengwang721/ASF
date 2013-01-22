@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.applications.continuous_capture_without_external_sram" caption=" Continuous capture demonstration without external sram ">
+		<info type="description" value="summary">
+		This demonstration work as a camera by configuring microcontroller and ov7740 image sensor in order to continually 
+		take picture,decode it in internal sram and display it on LCD.
+		</info>
+		<build type="c-source" value="continuous_capture_without_external_sram.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam4s"/>
+		<require idref="sam.drivers.smc"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.pio"/>
+		<require idref="sam.drivers.twi"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
+		<require idref="sam.components.display.ili9325"/>
+		<require idref="sam.components.cmos_image_sensor.ov7740"/>
+		<require idref="sam.components.display.aat31xx"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>

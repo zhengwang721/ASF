@@ -1,0 +1,211 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.libjpeg.ijg_8d" caption="IJG JPEG Decoder V8d">
+		<info type="description" value="summary">
+		The IJG (the Independent JPEG Group) JPEG decoder source version 8d.
+		</info>
+		<build type="c-source" value="jcapistd.c"/>
+		<build type="c-source" value="jctrans.c"/>	
+		<build type="c-source" value="jcparam.c"/>	
+		<build type="c-source" value="jcinit.c"/>	
+		<build type="c-source" value="jcmaster.c"/>		
+		<build type="c-source" value="jcmarker.c"/>		
+		<build type="c-source" value="jcmainct.c"/>		
+		<build type="c-source" value="jcprepct.c"/>		
+		<build type="c-source" value="jccoefct.c"/>		
+		<build type="c-source" value="jccolor.c"/>	
+		<build type="c-source" value="jcarith.c"/>		
+		<build type="c-source" value="jdhuff.c"/>	
+		<build type="c-source" value="jdmainct.c"/>
+		<build type="c-source" value="jdcoefct.c"/>
+		<build type="c-source" value="jdpostct.c"/>
+		<build type="c-source" value="jddctmgr.c"/>	
+		<build type="c-source" value="jidctfst.c"/>			
+		<build type="c-source" value="jidctflt.c"/>
+		<build type="c-source" value="jidctint.c"/>	
+		<build type="c-source" value="jdsample.c"/>		
+		<build type="c-source" value="jdcolor.c"/>	
+		<build type="c-source" value="jquant1.c"/>
+		<build type="c-source" value="jquant2.c"/>	
+		<build type="c-source" value="jdmerge.c"/>		
+		<build type="c-source" value="jmemnobs.c"/>
+		<build type="c-source" value="jcomapi.c"/>	
+		<build type="c-source" value="jutils.c"/>
+		<build type="c-source" value="jerror.c"/>		
+		<build type="c-source" value="jmemmgr.c"/>
+		<build type="c-source" value="jcsample.c"/>	
+		<build type="c-source" value="jchuff.c"/>		
+		<build type="c-source" value="jcdctmgr.c"/>		
+		<build type="c-source" value="jfdctfst.c"/>
+		<build type="c-source" value="jfdctflt.c"/>
+		<build type="c-source" value="jfdctint.c"/>
+		<build type="c-source" value="jdapimin.c"/>
+		<build type="c-source" value="jdapistd.c"/>
+		<build type="c-source" value="jdtrans.c"/>
+		<build type="c-source" value="jdmaster.c"/>
+		<build type="c-source" value="jdinput.c"/>
+		<build type="c-source" value="jdmarker.c"/>		
+		<build type="header-file" value="cderror.h"/>
+		<build type="header-file" value="cdjpeg.h"/>
+		<build type="header-file" value="jpeglib.h"/>
+		<build type="header-file" value="jerror.h"/>		
+		<build type="header-file" value="jmemsys.h"/>
+		<build type="header-file" value="jpegint.h"/>	
+		<build type="header-file" value="jversion.h"/>		
+		<build type="header-file" value="jdct.h"/>		
+		<build type="header-file" value="jinclude.h"/>	
+		<build type="header-file" value="jmorecfg.h"/>		
+		<build type="distribute" subtype="file" value="transupp.h"/>
+		<build type="distribute" subtype="file" value="ansi2knr.c"/>
+		<build type="distribute" subtype="file" value="ckconfig.c"/>
+		<build type="distribute" subtype="file" value="cdjpeg.c"/>
+		<build type="distribute" subtype="file" value="cjpeg.c"/>
+		<build type="distribute" subtype="file" value="djpeg.c"/>
+		<build type="distribute" subtype="file" value="example.c"/>
+		<build type="distribute" subtype="file" value="jdatadst.c"/>
+		<build type="distribute" subtype="file" value="jdatasrc.c"/>
+		<build type="distribute" subtype="file" value="jmemname.c"/>
+		<build type="distribute" subtype="file" value="jmemansi.c"/>
+		<build type="distribute" subtype="file" value="jmemdos.c"/>
+		<build type="distribute" subtype="file" value="jmemmac.c"/>
+		<build type="distribute" subtype="file" value="jpegtran.c"/>
+		<build type="distribute" subtype="file" value="rdbmp.c"/>
+		<build type="distribute" subtype="file" value="rdcolmap.c"/>
+		<build type="distribute" subtype="file" value="rdgif.c"/>
+		<build type="distribute" subtype="file" value="rdjpgcom.c"/>
+		<build type="distribute" subtype="file" value="rdppm.c"/>
+		<build type="distribute" subtype="file" value="rdrle.c"/>
+		<build type="distribute" subtype="file" value="rdswitch.c"/>
+		<build type="distribute" subtype="file" value="rdtarga.c"/>
+		<build type="distribute" subtype="file" value="transupp.c"/>
+		<build type="distribute" subtype="file" value="wrrle.c"/>
+		<build type="distribute" subtype="file" value="wrtarga.c"/>
+		<build type="distribute" subtype="file" value="wrbmp.c"/>
+		<build type="distribute" subtype="file" value="wrgif.c"/>
+		<build type="distribute" subtype="file" value="wrjpgcom.c"/>
+		<build type="distribute" subtype="file" value="wrppm.c"/>
+		<build type="distribute" subtype="file" value="aclocal.m4"/>
+		<build type="distribute" subtype="file" value="ansi2knr.1"/>
+		<build type="distribute" subtype="file" value="cderror.h"/>
+		<build type="distribute" subtype="file" value="change.log"/>
+		<build type="distribute" subtype="file" value="cjpeg.1"/>
+		<build type="distribute" subtype="file" value="coderules.txt"/>
+		<build type="distribute" subtype="file" value="config.guess"/>
+		<build type="distribute" subtype="file" value="config.sub"/>
+		<build type="distribute" subtype="file" value="configure"/>
+		<build type="distribute" subtype="file" value="configure.ac"/>
+		<build type="distribute" subtype="file" value="depcomp"/>
+		<build type="distribute" subtype="file" value="djpeg.1"/>
+		<build type="distribute" subtype="file" value="filelist.txt"/>
+		<build type="distribute" subtype="file" value="install-sh"/>
+		<build type="distribute" subtype="file" value="install.txt"/>
+		<build type="distribute" subtype="file" value="jconfig.bcc"/>
+		<build type="distribute" subtype="file" value="jconfig.cfg"/>
+		<build type="distribute" subtype="file" value="jconfig.dj"/>
+		<build type="distribute" subtype="file" value="jconfig.mac"/>
+		<build type="distribute" subtype="file" value="jconfig.manx"/>
+		<build type="distribute" subtype="file" value="jconfig.mc6"/>
+		<build type="distribute" subtype="file" value="jconfig.sas"/>
+		<build type="distribute" subtype="file" value="jconfig.st"/>
+		<build type="distribute" subtype="file" value="jconfig.txt"/>
+		<build type="distribute" subtype="file" value="jconfig.vc"/>
+		<build type="distribute" subtype="file" value="jconfig.vms"/>
+		<build type="distribute" subtype="file" value="jconfig.wat"/>
+		<build type="distribute" subtype="file" value="jdosabcc.obj"/>
+		<build type="distribute" subtype="file" value="jdosamsc.obj"/>
+		<build type="distribute" subtype="file" value="jdosaobj.txt"/>
+		<build type="distribute" subtype="file" value="jmemdosa.asm"/>
+		<build type="distribute" subtype="file" value="jpegtran.1"/>
+		<build type="distribute" subtype="file" value="libjpeg.map"/>
+		<build type="distribute" subtype="file" value="libjpeg.txt"/>
+		<build type="distribute" subtype="file" value="ltmain.sh"/>
+		<build type="distribute" subtype="file" value="makcjpeg.st"/>
+		<build type="distribute" subtype="file" value="makdjpeg.st"/>
+		<build type="distribute" subtype="file" value="makeadsw.vc6"/>
+		<build type="distribute" subtype="file" value="makeasln.v10"/>
+		<build type="distribute" subtype="file" value="makecdep.vc6"/>
+		<build type="distribute" subtype="file" value="makecdsp.vc6"/>
+		<build type="distribute" subtype="file" value="makecfil.v10"/>
+		<build type="distribute" subtype="file" value="makecmak.vc6"/>
+		<build type="distribute" subtype="file" value="makecvcx.v10"/>
+		<build type="distribute" subtype="file" value="makeddep.vc6"/>
+		<build type="distribute" subtype="file" value="makeddsp.vc6"/>
+		<build type="distribute" subtype="file" value="makedfil.v10"/>
+		<build type="distribute" subtype="file" value="makedmak.vc6"/>
+		<build type="distribute" subtype="file" value="makedvcx.v10"/>
+		<build type="distribute" subtype="file" value="Makefile.am"/>
+		<build type="distribute" subtype="file" value="makefile.ansi"/>
+		<build type="distribute" subtype="file" value="makefile.bcc"/>
+		<build type="distribute" subtype="file" value="makefile.dj"/>
+		<build type="distribute" subtype="file" value="Makefile.in"/>
+		<build type="distribute" subtype="file" value="makefile.manx"/>
+		<build type="distribute" subtype="file" value="makefile.mc6"/>
+		<build type="distribute" subtype="file" value="makefile.mms"/>
+		<build type="distribute" subtype="file" value="makefile.sas"/>
+		<build type="distribute" subtype="file" value="makefile.unix"/>
+		<build type="distribute" subtype="file" value="makefile.vc"/>
+		<build type="distribute" subtype="file" value="makefile.vms"/>
+		<build type="distribute" subtype="file" value="makefile.wat"/>
+		<build type="distribute" subtype="file" value="makejdep.vc6"/>
+		<build type="distribute" subtype="file" value="makejdsp.vc6"/>
+		<build type="distribute" subtype="file" value="makejdsw.vc6"/>
+		<build type="distribute" subtype="file" value="makejfil.v10"/>
+		<build type="distribute" subtype="file" value="makejmak.vc6"/>
+		<build type="distribute" subtype="file" value="makejsln.v10"/>
+		<build type="distribute" subtype="file" value="makejvcx.v10"/>
+		<build type="distribute" subtype="file" value="makeproj.mac"/>
+		<build type="distribute" subtype="file" value="makerdep.vc6"/>
+		<build type="distribute" subtype="file" value="makerdsp.vc6"/>
+		<build type="distribute" subtype="file" value="makerfil.v10"/>
+		<build type="distribute" subtype="file" value="makermak.vc6"/>
+		<build type="distribute" subtype="file" value="makervcx.v10"/>
+		<build type="distribute" subtype="file" value="maketdep.vc6"/>
+		<build type="distribute" subtype="file" value="maketdsp.vc6"/>
+		<build type="distribute" subtype="file" value="maketfil.v10"/>
+		<build type="distribute" subtype="file" value="maketmak.vc6"/>
+		<build type="distribute" subtype="file" value="maketvcx.v10"/>
+		<build type="distribute" subtype="file" value="makewdep.vc6"/>
+		<build type="distribute" subtype="file" value="makewdsp.vc6"/>
+		<build type="distribute" subtype="file" value="makewfil.v10"/>
+		<build type="distribute" subtype="file" value="makewmak.vc6"/>
+		<build type="distribute" subtype="file" value="makewvcx.v10"/>
+		<build type="distribute" subtype="file" value="makljpeg.st"/>
+		<build type="distribute" subtype="file" value="maktjpeg.st"/>
+		<build type="distribute" subtype="file" value="makvms.opt"/>
+		<build type="distribute" subtype="file" value="missing"/>
+		<build type="distribute" subtype="file" value="rdjpgcom.1"/>
+		<build type="distribute" subtype="file" value="README"/>
+		<build type="distribute" subtype="file" value="readme.dos"/>
+		<build type="distribute" subtype="file" value="structure.txt"/>
+		<build type="distribute" subtype="file" value="testimg.bmp"/>
+		<build type="distribute" subtype="file" value="testimg.jpg"/>
+		<build type="distribute" subtype="file" value="testimg.ppm"/>
+		<build type="distribute" subtype="file" value="testimgp.jpg"/>
+		<build type="distribute" subtype="file" value="testorig.jpg"/>
+		<build type="distribute" subtype="file" value="testprog.jpg"/>
+		<build type="distribute" subtype="file" value="usage.txt"/>
+		<build type="distribute" subtype="file" value="wizard.txt"/>
+		<build type="distribute" subtype="file" value="wrjpgcom.1"/>
+		<build type="include-path" value="."/>
+		<build type="doxygen-entry-point" value="group_thirdparty_libjpeg_ijg_8d"/>
+		<build type="header-file" value="documentation/documentation.h"/>
+		<device-support value="sam"/>
+		<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+	</module>
+
+	<module type="service" id="thirdparty.libjpeg.ijg_8d.headers_only" caption="IJG JPEG Decoder V8d headers">
+		<info type="description" value="summary">
+		The IJG (the Independent JPEG Group) JPEG decoder headers version 8d. These headers are needed to use a
+		compiled library.
+		</info>	
+		<build type="header-file" subtype="api" value="cderror.h"/>
+		<build type="header-file" subtype="api" value="cdjpeg.h"/>
+		<build type="header-file" subtype="api" value="jpeglib.h"/>
+		<build type="header-file" subtype="api" value="jerror.h"/>			
+		<build type="header-file" subtype="api" value="jinclude.h"/>	
+		<build type="header-file" subtype="api" value="jmorecfg.h"/>		
+		<build type="include-path" value="."/>
+		<build type="doxygen-entry-point" value="group_thirdparty_libjpeg_ijg_8d.headers"/>
+		<device-support value="sam"/>
+		<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+	</module>
+</asf>

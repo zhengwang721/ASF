@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<project caption="re200b pir sensor motion detection example for SAM4S_WPIR_RD" id="sam.components.pir_sensor.re200b.pir_motion_detection_example.sam4s_wpir_rd">
+		<info type="description" value="summary">
+		This example demonstrates how to configure the re200b pir sensor to detect motion and display information about it on LCD.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_ili9325.h"/>
+		<build type="header-file" value="conf_aat31xx.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<require idref="sam.components.pir_sensor.re200b.pir_motion_detection_example"/>
+		<require idref="board.sam4s_wpir_rd"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+	</project>
+</asf>

@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.components.pir_sensor.re200b.pir_motion_detection_example" caption="Re200b pir sensor example">
+		<info type="description" value="summary">
+		A simple example for detect a motion with the re200b pir sensor and display information on LCD.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="pir_sensor" />
+		</info>
+		<build type="c-source" value="pir_motion_detection_example.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.smc"/>
+		<require idref="sam.drivers.acc"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="sam.components.display.ili9325"/>
+		<require idref="sam.components.pir_sensor.re200b"/>
+		<require idref="sam.components.display.aat31xx"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+	</module>
+</asf>
