@@ -159,8 +159,11 @@ enum system_pinmux_pin_dir {
 	 *  be read. */
 	SYSTEM_PINMUX_PIN_DIR_INPUT,
 	/** The pin's output buffer should be enabled, so that the pin state can
-	 *  be set. */
+	 *  be set (but not read back). */
 	SYSTEM_PINMUX_PIN_DIR_OUTPUT,
+	/** The pin's output and input buffers should both be enabled, so that the
+	 *  pin state can be set and read back. */
+	SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
 };
 
 /**

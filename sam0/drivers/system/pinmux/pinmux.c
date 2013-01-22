@@ -70,7 +70,8 @@ static void _system_pinmux_config(
 	}
 
 	/* Check if the user has requested that the input buffer be enabled */
-	if (config->direction == SYSTEM_PINMUX_PIN_DIR_INPUT) {
+	if ((config->direction == SYSTEM_PINMUX_PIN_DIR_INPUT) ||
+			(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
 		/* Enable input buffer flag */
 		pin_cfg |= PORT_PINCFG_INEN;
 
@@ -82,7 +83,15 @@ static void _system_pinmux_config(
 		/* Clear the port DIR bits to disable the output buffer */
 		port->DIRCLR.reg = pin_mask;
 	}
-	else {
+
+	/* Check if the user has requested that the output buffer be enabled */
+	if ((config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT) ||
+			(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
+		/* Cannot use a pullup if the output driver is enabled,
+		 * if requested the input buffer can only sample the current
+		 * output state */
+		pin_cfg &= ~PORT_PINCFG_PULLEN;
+
 		/* Set the port DIR bits to enable the output buffer */
 		port->DIRSET.reg = pin_mask;
 	}
