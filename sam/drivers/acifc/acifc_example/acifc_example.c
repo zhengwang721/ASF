@@ -97,7 +97,7 @@
 #include "conf_clock.h"
 
 /** Analog comparator channel number */
-#define EXAMPLE_ACIFC_CHANNEL         0
+#define EXAMPLE_AC_CHANNEL         0
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- ACIFC IRQ Example  --\r\n" \
@@ -107,12 +107,12 @@
 /**
  * Interrupt handler for the ACIFC.
  */
-static void compare_result_output(void)
+static void compare_result_output(struct ac_dev_inst *const dev_inst)
 {
 	uint32_t ul_int_status, ul_comp_status;
 
-	ul_int_status = acifc_get_interrupt_status(ACIFC);
-	ul_comp_status = acifc_get_status(ACIFC);
+	ul_int_status = ac_get_interrupt_status(dev_inst);
+	ul_comp_status = ac_get_status(dev_inst);
 
 	/* Compare Output Interrupt */
 	if ((ul_int_status & ACIFC_ISR_ACINT0) == ACIFC_ISR_ACINT0) {
@@ -122,7 +122,7 @@ static void compare_result_output(void)
 			puts("-ISR- Voltage Comparison Result: ACAP0 < ACAN0\r");
 		}
 	}
-	acifc_clear_interrupt_status(ACIFC, ACIFC_ICR_ACINT0);
+	ac_clear_interrupt_status(dev_inst, ACIFC_ICR_ACINT0);
 }
 
 /**
@@ -145,6 +145,8 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
+struct ac_dev_inst ac_device;
+
 /**
  *  \brief ACIFC example application entry point.
  *
@@ -162,39 +164,24 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	/* ACIFC Configuration */
+	/* AC instance configuration */
 	struct ac_config module_cfg;
-	struct ac_ch_config ch_cfg;
 	ac_get_config_defaults(&module_cfg);
+	ac_init(&ac_device, ACIFC, &module_cfg);
+
+	/* AC channel configuration */
+	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
-	ch_cfg.
+	ch_cfg.always_on = true;
+	ch_cfg.fast_mode = true;
+	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
 
-	/* ACIFC Channel Configuration */
-	const acifc_channel_cfg_t acifc_channel_opt = {
-		/* Hysteresis value */
-		.hysteresis_value = ACIFC_HYS_0,
-		/* Always on enable */
-		.alwayson = true,
-		/* Fast mode enable */
-		.fast = true,
-		/* Output event when ACOUT is zero? */
-		.event_negative = false,
-		/* Output event when ACOUT is one? */
-		.event_positive = false,
-		/* Set the negative input */
-		.negative_input = NI_ACN,
-		/* Set the comparator mode */
-		.mode = MODE_USER_TRIGGERED,
-		/* Interrupt settings */
-		.interrupt_settings = IS_COMP_DONE,
-	};
+	ac_set_callback(&ac_device, compare_result_output, 1, ACIFC_IER_ACINT0);
 
-	acifc_enable(ACIFC);
-	acifc_configure(ACIFC, &acifc_opt);
-	acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL);
-	acifc_set_callback(ACIFC, compare_result_output,
-		ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
-	acifc_user_trigger_single_comparison(ACIFC);
+	ac_enable(&ac_device);
+
+	/* Start the comparison */
+	ac_user_trigger_single_comparison(&ac_device);
 
 	while (1) {
 	}

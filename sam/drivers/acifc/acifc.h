@@ -45,6 +45,7 @@
 #define AC_H_INCLUDED
 
 #include "compiler.h"
+#include "status_codes.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -54,12 +55,24 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+
 /** AC configuration */
 struct ac_config {
 	/** Peripheral Event Trigger Enable */
 	bool event_trigger;
-	/** Pointers to callback functions. */
-	callbacks[_AC_CALLBACK_N]
+};
+
+/* Prototype for device instance. */
+struct ac_dev_inst;
+
+typedef void (*ac_async_callback_t)(struct ac_dev_inst *const dev_inst);
+
+/** AC driver hardware instance */
+struct ac_dev_inst {
+	/** Base address of the AC module. */
+	Acifc *hw_dev;
+	/** Pointer to AC configuration structure. */
+	struct ac_config  *ac_cfg;
 };
 
 /** Hysteresis Voltage */
@@ -121,7 +134,7 @@ enum ac_win_event_source {
 	AC_WIN_EVENT_ACWOUT_ON_ANY_EDGE,
 	AC_WIN_EVENT_INSIDE_WINDOW,
 	AC_WIN_EVENT_OUTSIDE_WINDOW,
-	AC_WIN_EVENT_MEASURE_DONE
+	AC_WIN_EVENT_MEASURE_DONE,
 	AC_WIN_EVENT_RESERVED1,
 	AC_WIN_EVENT_RESERVED2
 };
@@ -150,15 +163,9 @@ struct ac_win_config {
 	enum ac_win_interrupt_setting interrupt_setting;
 };
 
-struct ac_dev_inst {
-	/** Base address of the AC module. */
-	Acifc *hw_dev;
-	/** Pointer to AC configuration structure. */
-	struct ac_config  *ac_cfg;
-};
-
 /**
- * \brief Initializes an Analog Comparator module configuration structure to defaults.
+ * \brief Initializes an Analog Comparator module configuration structure to
+ * defaults.
  *
  *  Initializes a given Analog Comparator module configuration structure to a
  *  set of known default values. This function should be called on all new
@@ -182,7 +189,8 @@ enum status_code ac_init(struct ac_dev_inst *const dev_inst, Acifc *const ac,
 		struct ac_config *const cfg);
 
 /**
- * \brief Initializes an Analog Comparator channel configuration structure to defaults.
+ * \brief Initializes an Analog Comparator channel configuration structure to
+ * defaults.
  *
  *  Initializes a given Analog Comparator channel configuration structure to a
  *  set of known default values. This function should be called on all new
@@ -221,7 +229,8 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
 		struct ac_ch_config *cfg);
 
 /**
- * \brief Initializes an Analog Comparator window configuration structure to defaults.
+ * \brief Initializes an Analog Comparator window configuration structure to
+ * defaults.
  *
  *  Initializes a given Analog Comparator window configuration structure to a
  *  set of known default values. This function should be called on all new
@@ -232,7 +241,8 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
  *   \li Window mode is disabled
  *   \li Peripheral event from ACWOUT is disabled
  *   \li Generate the window peripheral event when measure is done
- *   \li Window interrupt is issued when evaluation of common input voltage is done
+ *   \li Window interrupt is issued when evaluation of common input voltage is
+ *       done
  *
  * \param cfg  AC window configuration structure to initialize to default value
  */
@@ -250,72 +260,70 @@ static inline void ac_win_get_config_defaults(struct ac_win_config *const cfg)
 void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 		uint32_t window, struct ac_win_config *cfg);
 
-enum ac_callback_type {
-	/** Equivalent to ACINTx. */
-	AC_CALLBACK_CONVERSION_COMPLETED = 0,
-	/** Equivalent to SUTINTx. */
-	AC_CALLBACK_STARTUP_TIME_ELAPSED = 1,
-	/** Equivalent to WFINTx. */
-	AC_CALLBACK_WINDOW_INTERRUPT = 2,
-#if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
-	_AC_CALLBACK_N = 3
-#endif
-};
+void ac_set_callback(struct ac_dev_inst *const dev_inst,
+		ac_async_callback_t callback, uint8_t irq_level, uint32_t mask);
 
-typedef void (*ac_async_callback_t)(struct ac_dev_inst *const dev_inst,
-		uint32_t channel);
-
-void ac_register_callback(struct ac_dev_inst *const dev_inst,
-		ac_async_callback_t callback, enum ac_callback_type type);
-void ac_unregister_callback(struct ac_dev_inst *const dev_inst,
-		enum ac_callback_type type);
-
-#define AC_WIN_INT_POS 24
 /**
- * \brief Enable the specified channel/window callback
+ * \brief Get AC interrupt status.
  *
  * \param dev_inst Device structure pointer.
- * \param channel  Channel number if type is not AC_CALLBACK_WINDOW_INTERRUPT, 
- * window number otherwise.
- * \param type     Callback type.
+ *
  */
-static inline void ac_async_ch_enable_callback(
-		struct ac_dev_inst *const dev_inst, uint32_t channel,
-		enum ac_callback_type type)
+static inline uint32_t ac_get_interrupt_status(
+		struct ac_dev_inst *const dev_inst)
 {
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	if (type < AC_CALLBACK_WINDOW_INTERRUPT) {
-		dev_inst->hw_dev->ACIFC_IER = 1 << (type + channel * 2);
-	} else {
-		dev_inst->hw_dev->ACIFC_IER = 1 << (channel + AC_WIN_INT_POS);
-	}
+	return dev_inst->hw_dev->ACIFC_ISR;
 }
 
 /**
- * \brief Disable the specified channel/window callback
+ * \brief Get AC interrupt mask.
  *
  * \param dev_inst Device structure pointer.
- * \param channel  Channel number if type is not AC_CALLBACK_WINDOW_INTERRUPT, 
- * window number otherwise.
- * \param type     Callback type.
+ *
  */
-static inline void ac_async_ch_disable_callback(
-		struct ac_dev_inst *const dev_inst, uint32_t channel,
-		enum ac_callback_type type)
+static inline uint32_t ac_get_interrupt_mask(
+		struct ac_dev_inst *const dev_inst)
 {
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	return dev_inst->hw_dev->ACIFC_IMR;
+}
 
-	if (type < AC_CALLBACK_WINDOW_INTERRUPT) {
-		dev_inst->hw_dev->ACIFC_IDR = 1 << (type + channel * 2);
-	} else {
-		dev_inst->hw_dev->ACIFC_IDR = 1 << (channel + AC_WIN_INT_POS);
-	}
+/**
+ * \brief Clear AC interrupt status.
+ *
+ * \param dev_inst Device structure pointer.
+ * \param status   Interrupt status to be clear.
+ *
+ */
+static inline void ac_clear_interrupt_status(
+		struct ac_dev_inst *const dev_inst, uint32_t status)
+{
+	dev_inst->hw_dev->ACIFC_ICR = status;
+}
+
+/**
+ * \brief Enable AC interrupt source.
+ *
+ * \param p_acifc Pointer to an ACIFC instance.
+ * \param source  Interrupt source.
+ *
+ */
+static inline void ac_enable_interrupt(struct ac_dev_inst *const dev_inst,
+		const uint32_t source)
+{
+	dev_inst->hw_dev->ACIFC_IER = source;
+}
+
+/**
+ * \brief Disable AC interrupt source.
+ *
+ * \param p_acifc Pointer to an ACIFC instance.
+ * \param source  Interrupt source.
+ *
+ */
+static inline void ac_disable_interrupt(struct ac_dev_inst *const dev_inst,
+		const uint32_t source)
+{
+	dev_inst->hw_dev->ACIFC_IDR = source;
 }
 
 void ac_enable(struct ac_dev_inst *const dev_inst);
@@ -329,7 +337,7 @@ void ac_disable(struct ac_dev_inst *const dev_inst);
 static inline void ac_user_trigger_single_comparison(
 		struct ac_dev_inst *const dev_inst)
 {
-	dev_inst->hw_dev->ACFIC_CTRL |= ACFIC_CTRL_USTART;
+	dev_inst->hw_dev->ACIFC_CTRL |= ACIFC_CTRL_USTART;
 }
 
 /**
@@ -337,10 +345,10 @@ static inline void ac_user_trigger_single_comparison(
  *
  * \param dev_inst Device structure pointer.
  */
-static bool ac_is_comparison_done(struct ac_dev_inst *const dev_inst)
+static inline bool ac_is_comparison_done(struct ac_dev_inst *const dev_inst)
 {
-	return (dev_inst->hw_dev->ACFIC_CTRL & ACFIC_CTRL_USTART !=
-			ACFIC_CTRL_USTART);
+	return (dev_inst->hw_dev->ACIFC_CTRL & ACIFC_CTRL_USTART !=
+			ACIFC_CTRL_USTART);
 }
 
 /**
@@ -351,7 +359,7 @@ static bool ac_is_comparison_done(struct ac_dev_inst *const dev_inst)
  */
 static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
 {
-	return dev_inst->hw_dev->ACFIC_SR;
+	return dev_inst->hw_dev->ACIFC_SR;
 }
 
 /// @cond 0

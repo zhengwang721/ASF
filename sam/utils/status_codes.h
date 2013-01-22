@@ -71,6 +71,8 @@
  */
 enum status_code {
 	STATUS_OK               =  0, //!< Success
+	STATUS_ERR_BUSY         =  0x19,
+	STATUS_ERR_DENIED       =  0x1C,
 	ERR_IO_ERROR            =  -1, //!< I/O error
 	ERR_FLUSHED             =  -2, //!< Request flushed from queue
 	ERR_TIMEOUT             =  -3, //!< Operation timed out

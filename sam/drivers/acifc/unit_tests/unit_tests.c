@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for ACIFC driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,67 +90,54 @@
 //@}
 
 /** Analog comparator channel number */
-#define EXAMPLE_ACIFC_CHANNEL         0
+#define EXAMPLE_AC_CHANNEL         0
 
 volatile uint8_t intflag = 0;
+
+struct ac_dev_inst ac_device;
 
 /**
  * \brief Interrupt handler for ACIFC interrupt.
  */
-static void set_int_flag(void)
+static void set_int_flag(struct ac_dev_inst *const dev_inst)
 {
-	uint32_t ul_int_status;
-
-	ul_int_status = acifc_get_interrupt_status(ACIFC);
+	uint32_t ul_int_status = ac_get_interrupt_status(dev_inst);
 
 	/* Compare Output Interrupt */
 	if ((ul_int_status & ACIFC_ISR_ACINT0) == ACIFC_ISR_ACINT0) {
-		acifc_clear_interrupt_status(ACIFC, ACIFC_ICR_ACINT0);
+		ac_clear_interrupt_status(dev_inst, ACIFC_ICR_ACINT0);
 		intflag = 1;
 	}
 }
 
 /**
- * \brief Test ACIFC
+ * \brief Test AC
  *
  * \param test Current test case.
  */
-static void run_acifc_test(const struct test_case *test)
+static void run_ac_test(const struct test_case *test)
 {
-	/* ACIFC Configuration */
-	const acifc_cfg_t acifc_opt = {
-		.actest = false,
-		.eventen = true
-	};
-	/* ACIFC Channel Configuration */
-	const acifc_channel_cfg_t acifc_channel_opt = {
-		/* Hysteresis value */
-		.hysteresis_value = ACIFC_HYS_0,
-		/* Always on enable */
-		.alwayson = true,
-		/* Fast mode enable */
-		.fast = true,
-		/* Output event when ACOUT is zero? */
-		.event_negative = false,
-		/* Output event when ACOUT is one? */
-		.event_positive = false,
-		/* Set the negative input */
-		.negative_input = NI_ACN,
-		/* Set the comparator mode */
-		.mode = MODE_USER_TRIGGERED,
-		/* Interrupt settings */
-		.interrupt_settings = IS_COMP_DONE,
-	};
+	/* AC instance configuration */
+	struct ac_config module_cfg;
+	ac_get_config_defaults(&module_cfg);
+	module_cfg.event_trigger = true;
+	ac_init(&ac_device, ACIFC, &module_cfg);
 
-	acifc_enable(ACIFC);
-	acifc_configure(ACIFC, &acifc_opt);
-	acifc_channel_configure(ACIFC, &acifc_channel_opt, EXAMPLE_ACIFC_CHANNEL);
-	acifc_set_callback(ACIFC, set_int_flag, ACIFC_IRQn, 1, ACIFC_IER_ACINT0);
-	acifc_user_trigger_single_comparison(ACIFC);
+	/* AC channel configuration */
+	struct ac_ch_config ch_cfg;
+	ac_ch_get_config_defaults(&ch_cfg);
+	ch_cfg.always_on = true;
+	ch_cfg.fast_mode = true;
+	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
+
+	ac_set_callback(&ac_device, set_int_flag, 1, ACIFC_IER_ACINT0);
+	ac_enable(&ac_device);
+	/* Start the comparison */
+	ac_user_trigger_single_comparison(&ac_device);
 
 	delay_ms(1000);
 
-	test_assert_true(test, intflag == 1, "ACIFC test failed");
+	test_assert_true(test, intflag == 1, "AC test failed");
 }
 
 /**
@@ -177,20 +164,20 @@ int main(void)
 #endif
 
 	/* Define all the test cases */
-	DEFINE_TEST_CASE(acifc_test, NULL, run_acifc_test, NULL,
-			"ACIFC test");
+	DEFINE_TEST_CASE(ac_test, NULL, run_ac_test, NULL,
+			"AC test");
 
 	/* Put test case addresses in an array */
-	DEFINE_TEST_ARRAY(acifc_tests) = {
-		&acifc_test
+	DEFINE_TEST_ARRAY(ac_tests) = {
+		&ac_test
 	};
 
 	/* Define the test suite */
-	DEFINE_TEST_SUITE(acifc_suite, acifc_tests,
-			"SAM ACIFC driver test suite");
+	DEFINE_TEST_SUITE(ac_suite, ac_tests,
+			"SAM AC driver test suite");
 
 	/* Run all tests in the test suite */
-	test_suite_run(&acifc_suite);
+	test_suite_run(&ac_suite);
 
 	while (1) {
 		/* Busy-wait forever. */

@@ -53,7 +53,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-struct ac_dev_inst *_ac_inst;
+struct ac_dev_inst  *_ac_instance;
+ac_async_callback_t ac_callback_pointer;
 
 /**
  * \defgroup sam_drivers_acifc_group Analog Comparator (AC)
@@ -73,7 +74,7 @@ struct ac_dev_inst *_ac_inst;
  * \param  cfg      Configuration structure with configurations to set.
  *
  */
-static inline void _ac_set_config(struct ac_dev_inst *const dev_inst, 
+static inline void _ac_set_config(struct ac_dev_inst *const dev_inst,
 		struct ac_config *const cfg)
 {
 	/* Sanity check arguments. */
@@ -81,7 +82,7 @@ static inline void _ac_set_config(struct ac_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 	Assert(cfg);
 
-	dev_inst->hw_dev->ACIFC_CTRL |= 
+	dev_inst->hw_dev->ACIFC_CTRL |=
 			(cfg->event_trigger ? ACIFC_CTRL_EVENTEN : 0);
 }
 
@@ -120,17 +121,12 @@ enum status_code ac_init(struct ac_dev_inst *const dev_inst, Acifc *const ac,
 		return STATUS_ERR_BUSY;
 	}
 
-	uint32_t i;
-	for (i = 0; i < _AC_CALLBACK_N; i++) {
-		dev_inst->callbacks[i] = 0;
-	}
-
 	/* Enable and configure device instance */
 	dev_inst->hw_dev = ac;
 	sysclk_enable_peripheral_clock(ac);
 	_ac_set_config(dev_inst, cfg);
 
-	_ac_inst = dev_inst;
+	_ac_instance = (struct ac_dev_inst *)dev_inst;
 
 	return STATUS_OK;
 }
@@ -161,7 +157,7 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
 			(cfg->event_positive ? ACIFC_CONF_EVENP : 0) |
 			ACIFC_CONF_INSELN(cfg->negative_input) |
 			ACIFC_CONF_MODE(cfg->comparator_mode) |
-			ACIFC_CONF_IS(interrupt_setting);
+			ACIFC_CONF_IS(cfg->interrupt_setting);
 
 	dev_inst->hw_dev->ACIFC_CONF[channel].ACIFC_CONF = ac_conf;
 }
@@ -181,7 +177,7 @@ void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 	/* Sanity check arguments. */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(channel < AC_NB_OF_WIN);
+	Assert(window < AC_NB_OF_WIN);
 	Assert(cfg);
 
 	uint32_t ac_confw = 0;
@@ -194,12 +190,28 @@ void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 }
 
 /**
- * \brief Enable ACIFC Module.
+ * \brief Set callback for AC
+ *
+ * \param dev_inst  Device structure pointer
+ * \param callback  Callback function pointer.
+ * \param irq_level Interrupt level.
+ * \param mask      Interrupt mask.
+ */
+void ac_set_callback(struct ac_dev_inst *const dev_inst,
+		ac_async_callback_t callback, uint8_t irq_level, uint32_t mask)
+{
+	ac_callback_pointer = callback;
+	irq_register_handler(ACIFC_IRQn, irq_level);
+	ac_enable_interrupt(dev_inst, mask);
+}
+
+/**
+ * \brief Enable AC Module.
  *
  * \param dev_inst   Device structure pointer
  *
  */
-void acifc_enable(struct ac_dev_inst *const dev_inst)
+void ac_enable(struct ac_dev_inst *const dev_inst)
 {
 	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
 	dev_inst->hw_dev->ACIFC_CTRL |= ACIFC_CTRL_EN;
@@ -211,122 +223,20 @@ void acifc_enable(struct ac_dev_inst *const dev_inst)
  * \param dev_inst   Device structure pointer
  *
  */
-void acifc_disable(struct ac_dev_inst *const dev_inst)
+void ac_disable(struct ac_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->ACIFC_CTRL &= ~ACIFC_CTRL_EN;
 	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
 }
 
 /**
- * \brief Register callback for the specified callback type.
- *
- * When called, the given callback function will be associated with the
- * specified callback type.
- *
- * \param dev_inst   Device structure pointer
- * \param callback   Pointer to the function desired for the specified
- * callback type
- * \param type       Specifies the callback type to register.
- */
-void ac_register_callback(struct ac_dev_inst *const dev_inst,
-		ac_async_callback_t callback, enum ac_callback_type type)
-{
-	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-	Assert(callback);
-
-	/* Register callback. */
-	dev_inst->callbacks[type] = callback;
-}
-
-/**
- * \brief Unregister callback for the specified callback type.
- *
- * When called, the currently registered callback for the given callback type
- * will be removed.
- *
- * \param dev_inst   Device structure pointer
- * \param type       Specifies the callback type to register.
- */
-void ac_unregister_callback(struct ac_dev_inst *const dev_inst,
-		enum ac_callback_type type)
-{
-	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Unregister callback. */
-	dev_inst->callbacks[type] = 0;
-}
-
-/**
- * \brief Get AC interrupt status.
- *
- * \param dev_inst Device structure pointer.
- *
- */
-static inline uint32_t _ac_get_interrupt_status(
-		struct ac_dev_inst *const dev_inst)
-{
-	return dev_inst->hw_dev->ACFIC_ISR;
-}
-
-/**
- * \brief Get AC interrupt mask.
- *
- * \param dev_inst Device structure pointer.
- *
- */
-static inline uint32_t _ac_get_interrupt_mask(
-		struct ac_dev_inst *const dev_inst)
-{
-	return dev_inst->hw_dev->ACFIC_IMR;
-}
-
-/**
- * \brief Clear AC interrupt status.
- *
- * \param dev_inst Device structure pointer.
- * \param status   Interrupt status to be clear.
- *
- */
-static inline void _ac_clear_interrupt_status(
-		struct ac_dev_inst *const dev_inst, uint32_t status)
-{
-	dev_inst->hw_dev->ACFIC_ICR = status;
-}
-
-#define AC_CH_MAX_INT_NB  16
-#define AC_WIN_MAX_INT_NB 4
-#define AC_WIN_INT_OFFSET 24
-/**
  * \brief Interrupt handler for ACIFC interrupt.
  */
 void ACIFC_Handler(void)
 {
-	uint32_t irq_status = _ac_get_interrupt_status(_ac_inst);
-	uint32_t irq_mask = _ac_get_interrupt_mask(_ac_inst);
-	uint32_t status_masked = irq_status & irq_mask;
-
-	uint32_t i = 0;
-	for (; i < AC_CH_MAX_INT_NB; i++) {
-		if (status_masked & (1 << i)) {
-			if (i & 1) {
-				_ac_inst->callbacks[AC_CALLBACK_CONVERSION_COMPLETED](_ac_inst, (i - 1) / 2);
-			} else {
-				_ac_inst->callbacks[AC_CALLBACK_STARTUP_TIME_ELAPSED](_ac_inst, i / 2);
-			}
-		}
+	if (ac_callback_pointer) {
+		ac_callback_pointer(_ac_instance);
 	}
-
-	for (i = AC_WIN_INT_OFFSET; i < AC_WIN_INT_OFFSET + AC_WIN_MAX_INT_NB; i++) {
-		if (status_masked & (1 << i)) {
-			_ac_inst->callbacks[AC_CALLBACK_WINDOW_INTERRUPT](_ac_inst, i - AC_WIN_INT_OFFSET);
-		}
-	}
-
-	_ac_clear_interrupt_status(_ac_inst, irq_status);
 }
 
 //@}
