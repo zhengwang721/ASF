@@ -78,6 +78,13 @@ static void _system_pinmux_config(
 		if (config->input_pull != SYSTEM_PINMUX_PIN_PULL_NONE) {
 			pin_cfg |= PORT_PINCFG_PULLEN;
 		}
+
+		/* Clear the port DIR bits to disable the output buffer */
+		port->DIRCLR.reg = pin_mask;
+	}
+	else {
+		/* Set the port DIR bits to enable the output buffer */
+		port->DIRSET.reg = pin_mask;
 	}
 
 	/* The Write Configuration register (WRCONFIG) requires the
