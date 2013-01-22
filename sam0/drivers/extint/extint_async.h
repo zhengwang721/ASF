@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAMD20 External Interrupt Driver Asynchronous API Implementation
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,52 +38,69 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef EXTINT_ASYNC_H_INCLUDED
+#define EXTINT_ASYNC_H_INCLUDED
 
-void config_port_pins(void);
+#include <compiler.h>
+#include "extint.h"
 
-//! [setup]
-void config_port_pins(void)
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \addtogroup sam0_extint_group
+ *
+ * @{
+ */
+
+#if !defined(EXTINT_CALLBACKS_MAX)
+#  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
+#  define EXTINT_CALLBACKS_MAX 10
+#endif
+
+/** \name Callback configuration and initialization
+ * @{
+ */
+
+/** Type definition for an EXTINT module callback function. */
+typedef void (*extint_async_callback_t)(uint32_t channel);
+
+/** Enum for the possible callback types for the EXTINT module. */
+enum extint_async_type
 {
-//! [setup_1]
-	struct port_conf pin_conf;
-//! [setup_1]
-//! [setup_2]
-	port_get_config_defaults(&pin_conf);
-//! [setup_2]
+	/** Callback type for when an external interrupt detects the configured
+	 *  channel criteria (i.e. edge or level detection)
+	 */
+	EXTINT_ASYNC_TYPE_DETECT,
+};
 
-//! [setup_3]
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-//! [setup_3]
-//! [setup_4]
-	port_pin_set_config(10, &pin_conf);
-//! [setup_4]
+enum status_code extint_async_register_callback(
+	const extint_async_callback_t callback,
+	const enum extint_async_type type);
 
-//! [setup_5]
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-//! [setup_5]
-//! [setup_6]
-	port_pin_set_config(11, &pin_conf);
-//! [setup_6]
+enum status_code extint_async_unregister_callback(
+	const extint_async_callback_t callback,
+	const enum extint_async_type type);
+
+/** @} */
+
+/** \name Callback enabling and disabling (channel)
+ * @{
+ */
+
+enum status_code extint_async_ch_enable_callback(
+	const uint32_t channel,
+	const enum extint_async_type type);
+
+enum status_code extint_async_ch_disable_callback(
+	const uint32_t channel,
+	const enum extint_async_type type);
+
+/** @} */
+
+#ifdef __cplusplus
 }
-//! [setup]
+#endif
 
-int main(void)
-{
-	//! [setup_init]
-	config_port_pins();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		bool pin_state = port_pin_get_input_level(10);
-		//! [main_1]
-
-		//! [main_2]
-		port_pin_set_output_level(11, !pin_state);
-		//! [main_2]
-	}
-	//! [main]
-}
+#endif

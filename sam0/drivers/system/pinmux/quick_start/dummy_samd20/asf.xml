@@ -1,10 +1,9 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 PORT driver" id="sam0.drivers.port.quick_start.dummy.atsamd20">
+	<project caption="Quick Start for the SAMD20 SYSTEM PINMUX driver" id="sam0.drivers.system.pinmux.quick_start.dummy.atsamd20">
 		<require idref="board.dummy.samd20"/>
-		<require idref="sam0.drivers.port.quick_start"/>
+		<require idref="sam0.drivers.system.pinmux.quick_start"/>
 		<build type ="include-path" value="."/>
 		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
 		<device-support value="samd20j18a"/>
 	</project>
 </asf>

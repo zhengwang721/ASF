@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAMD20 GPIO PINMUX Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -46,26 +46,25 @@ void config_port_pins(void);
 void config_port_pins(void)
 {
 //! [setup_1]
-	struct port_conf pin_conf;
+	struct system_pinmux_conf pin_conf;
 //! [setup_1]
 //! [setup_2]
-	port_get_config_defaults(&pin_conf);
+	system_pinmux_get_config_defaults(&pin_conf);
 //! [setup_2]
 
 //! [setup_3]
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
 //! [setup_3]
 //! [setup_4]
-	port_pin_set_config(10, &pin_conf);
+	system_pinmux_pin_set_config(10, &pin_conf);
 //! [setup_4]
 
 //! [setup_5]
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
+	system_pinmux_pin_set_input_sample_mode(10,
+			SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND);
 //! [setup_5]
-//! [setup_6]
-	port_pin_set_config(11, &pin_conf);
-//! [setup_6]
 }
 //! [setup]
 
@@ -77,13 +76,7 @@ int main(void)
 
 	//! [main]
 	while (true) {
-		//! [main_1]
-		bool pin_state = port_pin_get_input_level(10);
-		//! [main_1]
-
-		//! [main_2]
-		port_pin_set_output_level(11, !pin_state);
-		//! [main_2]
+		// Do nothing
 	}
 	//! [main]
 }

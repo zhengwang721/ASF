@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAMD20 External Interrupt Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -40,50 +40,47 @@
  */
 #include <asf.h>
 
-void config_port_pins(void);
+void config_extint_channel(void);
 
 //! [setup]
-void config_port_pins(void)
+void config_extint_channel(void)
 {
 //! [setup_1]
-	struct port_conf pin_conf;
+	struct extint_ch_conf eint_ch_conf;
 //! [setup_1]
 //! [setup_2]
-	port_get_config_defaults(&pin_conf);
+	extint_ch_get_config_defaults(&eint_ch_conf);
 //! [setup_2]
 
 //! [setup_3]
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	eint_ch_conf.pinmux_position     = PINMUX_PA01A_EIC_EXTINT1;
+	eint_ch_conf.wake_if_sleeping    = true;
+	eint_ch_conf.filter_input_signal = false;
+	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;
 //! [setup_3]
 //! [setup_4]
-	port_pin_set_config(10, &pin_conf);
+	extint_ch_set_config(1, &eint_ch_conf);
 //! [setup_4]
-
-//! [setup_5]
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-//! [setup_5]
-//! [setup_6]
-	port_pin_set_config(11, &pin_conf);
-//! [setup_6]
 }
 //! [setup]
 
 int main(void)
 {
 	//! [setup_init]
-	config_port_pins();
+	extint_enable();
+	config_extint_channel();
 	//! [setup_init]
 
 	//! [main]
 	while (true) {
 		//! [main_1]
-		bool pin_state = port_pin_get_input_level(10);
+		if (extint_ch_is_detected(1)) {
 		//! [main_1]
-
+			// Do something in response to EXTINT 1 detection
 		//! [main_2]
-		port_pin_set_output_level(11, !pin_state);
+			extint_ch_clear_detected(1);
 		//! [main_2]
+		}
 	}
 	//! [main]
 }
