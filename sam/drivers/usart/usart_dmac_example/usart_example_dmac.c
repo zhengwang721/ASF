@@ -46,14 +46,14 @@
  *
  * \par Purpose
  * This example demonstrates how to use DMAC to implement USART
- * peripherals function.
+ * peripherals function in serial mode.
  *
  * \par Requirements
  *  This package can be used with all SAM-EK with UART/USART and DMAC.
  *
  * \par Description
  *
- * On start up, the debug information is dumped to on-board USART port.
+ * On start up, the debug information is dumped to on-board UART port.
  * A terminal application, such as HyperTerminal, is used to monitor these
  * debug information. Open another HyperTerminal to connect with
  * on-board USART port. Then the program works in ECHO mode, so USART will
@@ -61,7 +61,7 @@
  * file from the HyperTerminal connected with USART port to the device (without
  * any protocol such as X-modem).
  *
- * \note The text file size must be equal to BUFFER_SIZE(32 byte in this example).
+ * \note The text file size must be equal to BUFFER_SIZE(32 bytes in this example).
  *
  * \par Usage
  *
