@@ -16,6 +16,8 @@
 		<require idref="common.utils"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.ioport"/>
+		<!-- GPIO service is added to make sure SD/MMC driver compiles. See JIRA issue ASFP-3495 -->
+		<require idref="common.services.basic.gpio"/>
 		<require idref="sam.utils.cmsis.sam4s.source.template"/>
 	</board>
 </asf>
