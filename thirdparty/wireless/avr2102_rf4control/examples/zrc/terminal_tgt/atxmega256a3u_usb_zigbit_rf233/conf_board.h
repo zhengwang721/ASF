@@ -41,5 +41,6 @@
 #define CONF_BOARD_H_INCLUDED
 
 #define CONF_BOARD_AT86RFX
-#define BOARD_NAME "xmegazigbit"
+#define BOARD_NAME "Xmega Zigbit 2_4 USB"
+#define ZIGBIT_USB
 #endif /* CONF_BOARD_H_INCLUDED */
