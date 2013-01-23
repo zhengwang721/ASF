@@ -164,7 +164,7 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
 
 #define AC_NB_OF_WIN (AC_NB_OF_CH >> 1)
 /**
- * \brief Configure one AC channel in Window mode
+ * \brief Configure the requested AC window.
  *
  * \param dev_inst   Device structure pointer
  * \param window     AC window number

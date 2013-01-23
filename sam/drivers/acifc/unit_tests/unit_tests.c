@@ -123,15 +123,16 @@ static void run_ac_test(const struct test_case *test)
 	module_cfg.event_trigger = true;
 	ac_init(&ac_device, ACIFC, &module_cfg);
 
+	ac_enable(&ac_device);
+
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
 	ch_cfg.always_on = true;
 	ch_cfg.fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
-
 	ac_set_callback(&ac_device, set_int_flag, 1, ACIFC_IER_ACINT0);
-	ac_enable(&ac_device);
+
 	/* Start the comparison */
 	ac_user_trigger_single_comparison(&ac_device);
 

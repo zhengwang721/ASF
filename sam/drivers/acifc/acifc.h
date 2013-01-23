@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Analog Comparator interface driver for SAM4L.
+ * \brief Analog Comparator Interface Driver for SAM4L.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -369,5 +369,86 @@ static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
 #endif
 /**INDENT-ON**/
 /// @endcond
+
+/**
+ * \page sam_acifc_quickstart Quickstart guide for SAM4L Analog Comparator Interface Driver
+ *
+ * This is the quickstart guide for the \ref group_sam_drivers_acifc
+ * "SAM4L Analog Comparator Interface driver", with step-by-step instructions
+ * on how to configure and use the driver in a selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section acifc_basic_use_case Basic use case
+ * In this basic use case, AC channel 0 will be configured to compare the
+ * inputs from ACAP0 and ACAN0.
+ *
+ * \subsection sam_acifc_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section acifc_basic_use_case_setup Setup steps
+ * by default.
+ * \subsection acifc_basic_use_case_setup_code Example code
+ * Enable the following macro in the conf_clock.h:
+ * \code
+ *  #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL
+ *  #define CONFIG_DFLL0_SOURCE        GENCLK_SRC_OSC32K
+ * \endcode
+ *
+ * Add the following code in the application C-file:
+ * \code
+ *  sysclk_init();
+ * \endcode
+ *
+ * \subsection acifc_basic_use_case_setup_flow Workflow
+ * -# Set system clock source as DFLL:
+ * \code #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL \endcode
+ * -# Set DFLL source as OSC32K:
+ * \code #define CONFIG_DFLL0_SOURCE        GENCLK_SRC_OSC32K \endcode
+ * -# Initialize the system clock.
+ * \code sysclk_init(); \endcode
+ *
+ * \section acifc_basic_use_case_usage Usage steps
+ * \subsection acifc_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+ *  struct ac_dev_inst ac_device;
+ *  struct ac_config module_cfg;
+ *  ac_get_config_defaults(&module_cfg);
+ *  ac_init(&ac_device, ACIFC, &module_cfg);
+ *  ac_enable(&ac_device);
+ *  struct ac_ch_config ch_cfg;
+ *  ac_ch_get_config_defaults(&ch_cfg);
+ *  ch_cfg.always_on = true;
+ *  ch_cfg.fast_mode = true;
+ *  ac_ch_set_config(&ac_device, 0, &ch_cfg);
+ *  while (!ac_is_comparison_done(&ac_device));
+ * \endcode
+ *
+ * \subsection acifc_basic_use_case_usage_flow Workflow
+ * -# Get the default confguration to initialize the module:
+ * \code
+ *  acifc_configure(ACIFC, &acifc_opt); 
+ *  struct ac_config module_cfg;
+ *  ac_get_config_defaults(&module_cfg);
+ *  ac_init(&ac_device, ACIFC, &module_cfg);
+ * \endcode
+ * -# Enable the module:
+ * \code  ac_enable(&ac_device); \endcode
+ * -# Get the default confguration to initialize the channel 0:
+ * \code 
+ *  struct ac_ch_config ch_cfg;
+ *  ac_ch_get_config_defaults(&ch_cfg);
+ *  ch_cfg.always_on = true;
+ *  ch_cfg.fast_mode = true;
+ *  ac_ch_set_config(&ac_device, 0, &ch_cfg);
+ * \endcode
+ * -# User starts a single comparison:
+ * \code  ac_user_trigger_single_comparison(&ac_device); \endcode
+ * -# Check if the comparison is done:
+ * \code  while (!ac_is_comparison_done(&ac_device)); \endcode
+ */
 
 #endif /* AC_H_INCLUDED */

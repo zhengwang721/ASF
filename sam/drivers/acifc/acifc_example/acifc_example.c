@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Analog Comparator Interfacer (ACIFC) example for SAM.
+ * \brief Analog Comparator Interfacer (ACIFC) example for SAM4L.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used with any SAM MCU featuring Analog Comparator
+ * This example can be used with SAM4L MCU featuring Analog Comparator
  * Interface.
  *
  * \section Description
@@ -104,6 +104,8 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
+struct ac_dev_inst ac_device;
+
 /**
  * Interrupt handler for the ACIFC.
  */
@@ -145,8 +147,6 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-struct ac_dev_inst ac_device;
-
 /**
  *  \brief ACIFC example application entry point.
  *
@@ -169,16 +169,15 @@ int main(void)
 	ac_get_config_defaults(&module_cfg);
 	ac_init(&ac_device, ACIFC, &module_cfg);
 
+	ac_enable(&ac_device);
+
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
 	ch_cfg.always_on = true;
 	ch_cfg.fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
-
 	ac_set_callback(&ac_device, compare_result_output, 1, ACIFC_IER_ACINT0);
-
-	ac_enable(&ac_device);
 
 	/* Start the comparison */
 	ac_user_trigger_single_comparison(&ac_device);
