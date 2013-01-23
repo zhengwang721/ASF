@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Peripheral Event Controller (PEVC) example 1 for SAM.
+ * \brief Peripheral Event Controller (PEVC) example 2 for SAM.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,15 +45,14 @@
  * \mainpage
  * \section intro Introduction
  * This example shows how to use the Peripheral Event Controller.
- * In the example, the AST generate a periodic event which is transmitted
- * to the PDCA. Each time a new event is coming, a character is sent to the
- * USART without the use of the CPU. The main loop of the function is a
- * delay 500ms and toggle a LED continuously to show CPU activity.
+ * In the example, a \ref CONF_EXAMPLE_PIN_EVENT is configured to trigger a GPIO
+ * event when detecting a falling edge. Each time a new event is coming, it
+ * will trigger the PDCA to send a character to the USART without CPU usage.
  *
  * \section files Main Files
  * - events.c: Events driver;
  * - events.h: Events driver header file;
- * - events_example1.c: Events example 1 application.
+ * - events_example2.c: Events example 2 application.
  *
  * \section compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
@@ -80,11 +79,12 @@
  * Support and FAQ: http://support.atmel.com/
  */
 #include <asf.h>
+#include "conf_example.h"
 
 /** PDCA ID for USART2 TX */
 #define PDCA_PID_USART2_TX      20
 
-uint8_t event_string[] = "AST event triggered PDCA!";
+uint8_t event_string[] = "GPIO event triggered PDCA!";
 
 /**
  * PDCA transfer interrupt callback.
@@ -101,39 +101,6 @@ static void pdca_tranfer_done(enum pdca_channel_status status)
 }
 
 /**
- * Initialize the AST as event generator.
- */
-static void init_ast(void)
-{
-	struct ast_config ast_conf;
-
-	/* Enable osc32 oscillator */
-	if (!osc_is_ready(OSC_ID_OSC32)) {
-		osc_enable(OSC_ID_OSC32);
-		osc_wait_ready(OSC_ID_OSC32);
-	}
-
-	/* Enable the AST */
-	ast_enable(AST);
-
-	/* Configure the AST with counter mode and set counter to 0 */
-	ast_conf.mode = AST_COUNTER_MODE;
-	ast_conf.osc_type = AST_OSC_32KHZ;
-	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
-	ast_conf.counter = 0;
-
-	if (!ast_set_config(AST, &ast_conf)) {
-		printf("Error initializing the AST\r\n");
-		while (1) {
-		}
-	}
-
-	/* Enable period enent of AST */
-	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ);
-	ast_enable_event(AST, AST_EVENT_PER);
-}
-
-/**
  * Initialize the PEVC for the example.
  */
 static void init_events(void)
@@ -143,16 +110,20 @@ static void init_events(void)
 	/* Enable clock for PEVC module */
 	sysclk_enable_peripheral_clock(PEVC);
 
+	/* Set Input Glitch Filter Divider */
+	events_set_igf_divider(EVENT_IGF_DIVIDER_1024);
+
 	/*
 	 * Configure an event channel
-	 * - AST periodic event 0 --- Generator
-	 * - PDCA channel 0       --- User
+	 * - GPIO PAD_EVT 1  --- Generator
+	 * - PDCA channel 0  --- User
+	 * - Enable falling edge detection for EVS
 	 */
 	events_ch_get_config_defaults(&config);
 	config.channel_id = PEVC_ID_USER_PDCA_0;
-	config.generator_id = PEVC_ID_GEN_AST_2;
+	config.generator_id = PEVC_ID_GEN_PAD_1;
 	config.sharper_enable = true;
-	config.igf_edge = EVENT_IGF_EDGE_NONE;
+	config.igf_edge = EVENT_IGF_EDGE_FALLING;
 	events_ch_configure(&config);
 
 	/* Enable the channel */
@@ -223,11 +194,17 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("\r\n\r\n-- Events example 1 --\r\n");
+	printf("\r\n\r\n-- Events example 2 --\r\n");
 	printf("-- %s\r\n", BOARD_NAME);
 	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
-	init_ast();
+	/* Configure pin to trigger an enent on falling edge */
+	ioport_set_pin_mode(CONF_EXAMPLE_PIN_EVENT, IOPORT_MODE_PULLUP |
+			IOPORT_MODE_MUX_C);
+	ioport_disable_pin(CONF_EXAMPLE_PIN_EVENT);
+	ioport_set_pin_sense_mode(CONF_EXAMPLE_PIN_EVENT, IOPORT_SENSE_FALLING);
+	gpio_enable_pin_periph_event(CONF_EXAMPLE_PIN_EVENT);
+	printf(CONF_EXAMPLE_EVENT_MSG);
 
 	init_events();
 
