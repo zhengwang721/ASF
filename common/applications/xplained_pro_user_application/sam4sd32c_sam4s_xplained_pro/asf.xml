@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_mma7341l.h"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 	</project>
