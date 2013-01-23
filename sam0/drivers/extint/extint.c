@@ -145,7 +145,7 @@ enum status_code extint_ch_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
-	if (!config->pinmux_position == 0) {
+	if (config->pinmux_position == 0) {
 		return STATUS_ERR_PIN_MUX_INVALID;
 	}
 
