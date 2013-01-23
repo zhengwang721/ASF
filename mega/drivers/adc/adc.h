@@ -2,9 +2,9 @@
  * \file
  *
  * \brief megaAVR ADC driver for ATmegaxx4, ATmegaxx4/A/P/PA, ATmegaxx0/xx1,
- * ATmegaxx8 and ATmegaxx8A/P/PA.
+ * ATmegaxx8 ATmegaxxxRF and ATmegaxx8A/P/PA.
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -97,21 +97,21 @@
  * @{
  */
 
-//! ADC prescaler mask
+/*  ADC prescaler mask */
 #define ADC_PRESCALER_MASK (1 << ADPS2 | 1 << ADPS1 | 1 << ADPS0)
 
-//! ADC voltage reference mask
+/*  ADC voltage reference mask */
 #define ADC_VREF_MASK      (1 << REFS1 | 1 << REFS0)
 
-//! ADC MUX mask
+/*  ADC MUX mask */
 #if MEGA_XX8
-#  define ADC_MUX_MASK    (1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0)
+#       define ADC_MUX_MASK    (1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0)
 #else
-#  define ADC_MUX_MASK    (1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 | \
-		1 << MUX0)
+#       define ADC_MUX_MASK    (1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 |	\
+	1 << MUX0)
 #endif
 
-//! ADC Auto Trigger mask
+/*  ADC Auto Trigger mask */
 #define ADC_ADTS_SOURCE_MASK     (1 << ADTS2 | 1 << ADTS1 | 1 << ADTS0)
 
 /* include the correct header file for the device. Throw an error if
@@ -123,23 +123,25 @@
  * macro. For device names see /common/utils/parts.h
  */
 #if MEGA_XX || defined(__DOXYGEN__)
-#  include "adc_megaxx.h"
+#       include "adc_megaxx.h"
 #elif MEGA_XX8 || defined(__DOXYGEN__)
-#  include "adc_megaxx8.h"
+#       include "adc_megaxx8.h"
+#elif MEGA_RF || defined(__DOXYGEN__)
+#       include "adc_megarf.h"
 #elif MEGA_XX0_1 || MEGA_XX4 || defined(__DOXYGEN__)
-#  include "adc_megaxx0_1_4.h"
+#       include "adc_megaxx0_1_4.h"
 #else
-#  error The selected device is not supported by the ADC driver. To add a new\
-	device you need to add a family header file, or use an existing one,\
+#       error \
+	The selected device is not supported by the ADC driver. To add a new \
+	device you need to add a family header file, or use an existing one, \
 	and add any missing defines or enums.
 #endif
 
-
-//! \brief ADC result adjustment
+/*  \brief ADC result adjustment */
 enum adc_adjustment {
-	//! Right adjust result
+	/*  Right adjust result */
 	ADC_ADJUSTMENT_RIGHT = 0,
-	//! Left adjust result
+	/*  Left adjust result */
 	ADC_ADJUSTMENT_LEFT = (1 << ADLAR),
 };
 
@@ -149,19 +151,19 @@ enum adc_adjustment {
  * Available ADC prescaler settings
  */
 enum adc_prescaler {
-	//! Divide system clock by 2
+	/*  Divide system clock by 2 */
 	ADC_PRESCALER_DIV2 = (0x1 << ADPS0),
-	//! Divide system clock by 4
+	/*  Divide system clock by 4 */
 	ADC_PRESCALER_DIV4 = (0x2 << ADPS0),
-	//! Divide system clock by 8
+	/*  Divide system clock by 8 */
 	ADC_PRESCALER_DIV8 = (0x3 << ADPS0),
-	//! Divide system clock by 16
+	/*  Divide system clock by 16 */
 	ADC_PRESCALER_DIV16 = (0x4 << ADPS0),
-	//! Divide system clock by 32
+	/*  Divide system clock by 32 */
 	ADC_PRESCALER_DIV32 = (0x5 << ADPS0),
-	//! Divide system clock by 64
+	/*  Divide system clock by 64 */
 	ADC_PRESCALER_DIV64 = (0x6 << ADPS0),
-	//! Divide system clock by 128
+	/*  Divide system clock by 128 */
 	ADC_PRESCALER_DIV128 = (0x7 << ADPS0),
 };
 
@@ -171,21 +173,21 @@ enum adc_prescaler {
  * Available trigger sources for ADC Auto Trigger
  */
 enum adc_auto_trigger_source {
-	//! Free Running mode
+	/*  Free Running mode */
 	ADC_AUTOTRIGGER_SOURCE_FREERUNNING = (0x0 << ADTS0),
-	//! Analog Comparator
+	/*  Analog Comparator */
 	ADC_AUTOTRIGGER_SOURCE_ANALOG_COMPARATOR = (0x1 << ADTS0),
-	//! External Interrupt Request 0
+	/*  External Interrupt Request 0 */
 	ADC_AUTOTRIGGER_SOURCE_EIR0 = (0x2 << ADTS0),
-	//! Timer/Counter0 Compare Match
+	/*  Timer/Counter0 Compare Match */
 	ADC_AUTOTRIGGER_SOURCE_TC0_COMPARE = (0x3 <<  ADTS0),
-	//! Timer/Counter0 Overflow
+	/*  Timer/Counter0 Overflow */
 	ADC_AUTOTRIGGER_SOURCE_TC0_OVERFLOW = (0x4 << ADTS0),
-	//! Timer/Counter1 Compare Match B
+	/*  Timer/Counter1 Compare Match B */
 	ADC_AUTOTRIGGER_SOURCE_TC1_COMPARE_B = (0x5 << ADTS0),
-	//! Timer/Counter1 Overflow
+	/*  Timer/Counter1 Overflow */
 	ADC_AUTOTRIGGER_SOURCE_TC1_OVERFLOW = (0x6 << ADTS0),
-	//! Timer/Counter1 Capture Event
+	/*  Timer/Counter1 Capture Event */
 	ADC_AUTOTRIGGER_SOURCE_TC1_CAPTURE = (0x7 << ADTS0),
 };
 
@@ -211,7 +213,6 @@ enum adc_auto_trigger_source {
  *
  */
 
-
 /**
  * \brief ADC initialization. Set ADC prescaler and enable the ADC
  *
@@ -222,33 +223,36 @@ static inline void adc_init(enum adc_prescaler prescaler)
 	ADCSRA = (uint8_t)prescaler | (1 << ADEN);
 }
 
-//! \brief Return MSB (ADCH) of ADC data register
+/*  \brief Return MSB (ADCH) of ADC data register */
 static inline uint8_t adc_get_data_8bit(void)
 {
 	return ADCH;
 }
 
-//! \brief Return ADC data register
+/*  \brief Return ADC data register */
 static inline uint16_t adc_get_data_10bit(void)
 {
 	return ADC;
 }
 
-//! \brief Enable ADC
+/*  \brief Enable ADC */
 static inline void adc_enable(void)
 {
 	ADCSRA |= (1 << ADEN);
 }
-//! \brief Disable ADC
+
+/*  \brief Disable ADC */
 static inline void adc_disable(void)
 {
 	ADCSRA &= ~(1 << ADEN);
 }
-//! \brief Start ADC conversion
+
+/*  \brief Start ADC conversion */
 static inline void adc_start_conversion(void)
 {
 	ADCSRA |= (1 << ADSC);
 }
+
 /**
  * \brief Poll ADC conversion complete interrupt flag
  *
@@ -259,13 +263,13 @@ static inline bool adc_conversion_is_complete(void)
 	return ADCSRA & (1 << ADIF);
 }
 
-//! \brief Enable ADC interrupt
+/*  \brief Enable ADC interrupt */
 static inline void adc_enable_interrupt(void)
 {
 	ADCSRA |= (1 << ADIE);
 }
 
-//! \brief Disable ADC interrupt
+/*  \brief Disable ADC interrupt */
 static inline void adc_disable_interrupt(void)
 {
 	ADCSRA &= ~(1 << ADIE);
@@ -285,13 +289,13 @@ static inline void adc_set_autotrigger_source(enum adc_auto_trigger_source trg)
 	ADC_ADTS_REG = temp;
 }
 
-//! \brief Enable ADC Auto Trigger
+/*  \brief Enable ADC Auto Trigger */
 static inline void adc_enable_autotrigger(void)
 {
 	ADCSRA |= (1 << ADATE);
 }
 
-//! \brief Disable ADC Auto Trigger
+/*  \brief Disable ADC Auto Trigger */
 static inline void adc_disable_autotrigger(void)
 {
 	ADCSRA &= ~(1 << ADATE);
@@ -357,13 +361,14 @@ static inline void adc_set_mux(enum adc_mux_setting input)
 	temp = (ADMUX & ~(ADC_MUX_MASK));
 
 #if defined(MUX5)
-	// if bit 6 (MUX5) is set:
+	/* if bit 6 (MUX5) is set: */
 	if (input & (1 << 5)) {
 		ADCSRB = (1 << MUX5);
 	} else {
 		ADCSRB &= ~(1 << MUX5);
 	}
-	// mask out MUX5 for ADMUX.
+
+	/* mask out MUX5 for ADMUX. */
 	temp |= ((uint8_t)input & ADC_MUX_MASK);
 #else
 	temp |= (uint8_t)input;
@@ -394,25 +399,27 @@ static inline void adc_set_mux(enum adc_mux_setting input)
  * source may be inaccurate, and the user is advised to discard this result.
  * this function is not interrupt safe.
  */
-static inline uint8_t adc_read_8bit(enum adc_mux_setting input,
+static inline uint8_t adc_read_8bit(enum adc_mux_setting input,	\
 		enum adc_voltage_reference vref)
 {
-#if MEGA_XX0
-	// if bit 6 (MUX5) is set:
+#if defined(MUX5)
+	/* if bit 6 (MUX5) is set: */
 	if (input & (1 << 5)) {
 		ADCSRB = (1 << MUX5);
 	} else {
 		ADCSRB &= ~(1 << MUX5);
 	}
-	ADMUX = ((uint8_t)input & ADC_MUX_MASK) | (uint8_t)vref
-		| ADC_ADJUSTMENT_LEFT;
+
+	ADMUX
+		= ((uint8_t)input &
+			ADC_MUX_MASK) | (uint8_t)vref | ADC_ADJUSTMENT_LEFT;
 #else
 	ADMUX = (uint8_t)input | (uint8_t)vref | ADC_ADJUSTMENT_LEFT;
 #endif
 	ADCSRA |= (1 << ADSC);
 
 	while ((ADCSRA & (1 << ADSC))) {
-		//wait for conversion complete
+		/* wait for conversion complete */
 	}
 
 	return ADCH;
@@ -444,13 +451,14 @@ static inline uint8_t adc_read_8bit(enum adc_mux_setting input,
 static inline uint16_t adc_read_10bit(enum adc_mux_setting input, \
 		enum adc_voltage_reference vref)
 {
-#if MEGA_XX0
-	// if bit 6 (MUX5) is set:
+#if defined(MUX5)
+	/* if bit 6 (MUX5) is set: */
 	if (input & (1 << 5)) {
 		ADCSRB = (1 << MUX5);
 	} else {
 		ADCSRB &= ~(1 << MUX5);
 	}
+
 	ADMUX = ((uint8_t)input & ADC_MUX_MASK) | (uint8_t)vref;
 #else
 	ADMUX = (uint8_t)input | (uint8_t)vref;
@@ -458,13 +466,10 @@ static inline uint16_t adc_read_10bit(enum adc_mux_setting input, \
 	ADCSRA |= (1 << ADSC);
 
 	while ((ADCSRA & (1 << ADSC))) {
-		//wait for conversion complete
+		/* wait for conversion complete */
 	}
-
 	return ADC;
 }
-
-
 
 /**
  * \name Optimized functions for register accesses
@@ -472,7 +477,7 @@ static inline uint16_t adc_read_10bit(enum adc_mux_setting input, \
  * of masking out bitfields before updating the register value. These will
  * only do a write to the register instead of a read-modify-write.
  */
- //@{
+/* @{ */
 
 /**
  * \brief Set voltage reference, mux and adjustment bits in admux register
@@ -494,6 +499,7 @@ static inline void adc_set_admux(uint8_t regval)
 }
 
 #if defined(DIDR) || defined(DIDR0)
+
 /**
  * \brief Disable digital input buffers on ADC pin 0-7
  *
@@ -517,7 +523,8 @@ static inline void adc_disable_digital_inputs(uint8_t pinmask)
 #endif
 }
 
-#if MEGA_XX0_1
+#if MEGA_XX0_1 || MEGA_RF
+
 /**
  * \brief Disable digital input buffers on ADC pin 8-15
  *
@@ -536,11 +543,13 @@ static inline void adc_disable_digital_inputs_high(uint8_t pinmask)
 {
 	DIDR2 = pinmask;
 }
-#endif // MEGA_XX0_1
 
-#endif // DIDR
+#endif /* MEGA_XX0_1 || MEGA_RF */
+
+#endif /* DIDR */
+
 //@}
 
 /** @} */
 
-#endif  // _ADC_H_
+#endif  /* _ADC_H_ */
