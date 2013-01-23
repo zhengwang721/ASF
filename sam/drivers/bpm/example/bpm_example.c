@@ -3,7 +3,7 @@
  *
  * \brief BPM example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -119,7 +119,7 @@ static void eic_5_callback(void)
  */
 static void ast_per_callback(void)
 {
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
 /**
@@ -145,10 +145,10 @@ static void config_ast(void)
 	ast_set_config(AST, &ast_conf);
 
 	/* Set periodic 0 to interrupt after 8 second in counter mode. */
-	ast_clear_interrupt_flag(AST, ast_interrupt_per);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 2);
 	/* Set callback for periodic0. */
-	ast_set_callback(AST, ast_interrupt_per, ast_per_callback,
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
 		AST_PER_IRQn, 1);
 }
 
@@ -296,12 +296,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Sleep mode 0.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_0);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 0.\r\n");
 			break;
 
@@ -310,12 +310,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Sleep mode 1.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_1);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 1.\r\n");
 			break;
 
@@ -324,12 +324,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Sleep mode 2.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_2);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 2.\r\n");
 			break;
 
@@ -338,12 +338,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Sleep mode 3.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_SLEEP_3);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Sleep mode 3.\r\n");
 			break;
 
@@ -352,12 +352,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Wait mode.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_WAIT);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Wait mode.\r\n");
 			break;
 
@@ -366,12 +366,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Retention mode.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_RET);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Retention mode.\r\n");
 			break;
 
@@ -380,12 +380,12 @@ int main(void)
 			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
 					12000000, CPU_SRC_RC4M);
 			printf("\r\n--Enter Backup mode.\r\n");
-			ast_enable_wakeup(AST, ast_wakeup_per);
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
 			/* Wait for the printf operation to finish before
 			setting the device in a power save mode. */
 			delay_ms(30);
 			bpm_sleep(BPM, BPM_SM_BACKUP);
-			ast_disable_wakeup(AST, ast_wakeup_per);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
 			printf("\r\n--Exit Backup mode.\r\n");
 			break;
 
