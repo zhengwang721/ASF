@@ -970,7 +970,8 @@ static void uhd_interrupt(void)
 		goto uhd_interrupt_exit_sof;
 	}
 
-	dbg_print("%c ", Is_uhd_high_speed_mode() ? 'H' : 'F');
+	dbg_print("%c ", Is_uhd_low_speed_mode() ? 'L' :
+			(Is_uhd_high_speed_mode() ? 'H' : 'F'));
 
 	// Manage pipe interrupts
 	pipe_int = uhd_get_interrupt_pipe_number();
