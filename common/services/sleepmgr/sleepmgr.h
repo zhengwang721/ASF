@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,8 @@
 # include "uc3/sleepmgr.h"
 #elif SAM4L
 # include "sam4l/sleepmgr.h"
+#elif MEGA
+# include "mega/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif
