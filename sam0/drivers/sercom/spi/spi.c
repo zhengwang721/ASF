@@ -88,7 +88,42 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+	Sercom *const sercom_module = dev_inst->hw_dev;
+	struct system_pinmux_conf pin_conf;
+	uint32_t pad0 = config->pinout_pad0;
+	uint32_t pad1 = config->pinout_pad1;
+	uint32_t pad2 = config->pinout_pad2;
+	uint32_t pad3 = config->pinout_pad3;
+	
+	system_pinmux_get_config_defaults(&pin_conf);
+	/* SERCOM PAD0 */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(sercom_module, 0);
+	}
+	pin_conf.mux_position = pad0 & 0xFFFF;
+	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
 
+	/* SERCOM PAD1 */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(sercom_module, 1);
+	}
+	pin_conf.mux_position = pad1 & 0xFFFF;
+	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+
+	/* SERCOM PAD2 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(sercom_module, 2);
+	}
+	pin_conf.mux_position = pad2 & 0xFFFF;
+	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
+	
+	/* SERCOM PAD3 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(sercom_module, 3);
+	}
+	pin_conf.mux_position = pad3 & 0xFFFF;
+	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+	
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
 

@@ -46,6 +46,9 @@
 #include <port.h>
 #include <sercom.h>
 
+#ifndef PINMUX_DEFAULT
+#define PINMUX_DEFAULT 0
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -623,6 +626,14 @@ struct spi_conf {
 	}; /**< Union for Slave or Master specific configuration */
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
+	/* PAD0 pinout */
+	uint32_t pinout_pad0;
+	/* PAD1 pinout */
+	uint32_t pinout_pad1;
+	/* PAD2 pinout */
+	uint32_t pinout_pad2;
+	/* PAD3 pinout */
+	uint32_t pinout_pad3;
 };
 
 #if !defined (__DOXYGEN__)
@@ -679,6 +690,12 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 
 	/* Master config defaults */
 	config->master.baudrate = 9600;
+
+	/* Pinout config defaults */
+	config->pinout_pad0 = PINMUX_DEFAULT;
+	config->pinout_pad1 = PINMUX_DEFAULT;
+	config->pinout_pad2 = PINMUX_DEFAULT;
+	config->pinout_pad3 = PINMUX_DEFAULT;
 
 };
 
