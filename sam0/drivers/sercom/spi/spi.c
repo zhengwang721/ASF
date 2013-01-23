@@ -54,7 +54,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Disable the module */
 	spi_disable(dev_inst);
@@ -63,7 +63,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
 	_spi_wait_for_sync(dev_inst);
 
 	/* Software reset the module */
-	spi_module->SPI.CTRLA |= SPI_SWRST_bm;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
 }
 
 /**
@@ -79,7 +79,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the configuration was written
  */
-enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
+static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 		struct spi_conf *config)
 {
 	/* Sanity check arguments */
@@ -87,7 +87,7 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
@@ -102,35 +102,35 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
 	 */
-	uint32_t external_clock;
+	uint32_t external_clock = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		err = sercom_get_sync_baud_val(
+		err = _sercom_get_sync_baud_val(
 				config->master.baudrate,
 				external_clock, &baud);
 		if (err != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
 			return STATUS_ERR_INVALID_ARG;
 		}
-		spi_module->SPI.BAUD = (uint8_t)baud;
+		spi_module->BAUD.reg = (uint8_t)baud;
 	}
 
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set module in master mode */
-		ctrla = SPI_MASTER_bm;
+		ctrla = SERCOM_SPI_CTRLA_MASTER;
 	} else {
 		/* Set frame format */
-		ctrla = (config->slave.frame_format << SPI_FORM_gp);
+		ctrla = config->slave.frame_format;
 		/* Set address mode */
-		spi_module->SPI.CTRLB |= (config->slave.addr_mode << SPI_AMODE_gp);
+		spi_module->CTRLB.reg |= config->slave.addr_mode;
 		/* Set address and address mask*/
-		spi_module->SPI.ADDR |= (config->slave.address
-				<< SPI_ADDR_gp) | (config->slave.frame_format
-				<< SPI_ADDRMASK_gp);
+		spi_module->ADDR.reg |= (config->slave.address
+				<< SERCOM_SPI_ADDR_ADDR_Pos) | (config->slave.address_mask
+				<< SERCOM_SPI_ADDR_ADDRMASK_Pos);
 		if (config->slave.preload_enable) {
 			/* Enable pre-loading of shift register */
-			spi_module->SPI.CTRLB |= SPI_PLOADEN_bm;
+			spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
 	}
 
@@ -144,24 +144,26 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->SPI.CTRLB.reg |= (config->chsize << SPI_CHSIZE_gp);
+	spi_module->CTRLB.reg |= config->chsize;
 
-	if (config->sleep_enable) {
+	if (config->run_in_standby) {
 		/* Enable in sleep mode */
-		ctrla |= SPI_SLEEPEN_bm;
+		ctrla |= SERCOM_SPI_CTRLA_RUNSTDBY;
 	}
 
 	if (config->receiver_enable) {
-		/* Wait until the synchronization is complete */
-		_spi_wait_for_sync(dev_inst);
 		/* Enable receiver */
-		spi_module->SPI.CTRLB.reg |= SPI_RXEN_bm;
+		spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
 	/* Write CTRLA register */
-	spi_module->SPI.CTRLA.reg = ctrla;
+	spi_module->CTRLA.reg = ctrla;
 
-	return STATUS_OK;
+	/* Set sercom gclk generator according to config and return status code */
+	return sercom_set_gclk_generator(
+			config->generator_source,
+			config->run_in_standby,
+			false);;
 }
 
 /**
@@ -190,10 +192,10 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Set the SERCOM in SPI mode */
-	spi_module->SPI.CTRLA.reg |= SERCOM_MODE_SPI_gc << SERCOM_MODE_gp;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
 	/* Write configuration to module and return status code */
 	return _spi_set_config(dev_inst, config);

@@ -43,6 +43,9 @@
 #define SPI_H_INCLUDED
 
 #include <compiler.h>
+#include <port.h>
+#include <sercom.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -334,12 +337,12 @@ extern "C" {
  * \enddot
  *
  * \subsection sleep_modes Operation in Sleep Modes
- * The SPI module can operate in all sleep modes by setting the sleep_enable
+ * The SPI module can operate in all sleep modes by setting the run_in_standby
  * option in the \ref spi_conf struct. The operation in Slave and Master Mode
  * is shown in the table below.
  * <table>
  *   <tr>
- *      <th> sleep_enable </th>
+ *      <th> run_in_standby </th>
  *      <th> Slave </th>
  *      <th> Master </th>
  *   </tr>
@@ -423,35 +426,43 @@ enum spi_signal_mux_setting {
 	/**
 	 * See \ref mux_setting_a
 	 */
-	SPI_SIGNAL_MUX_SETTING_A = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN0),
+	SPI_SIGNAL_MUX_SETTING_A = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_b
 	 */
-	SPI_SIGNAL_MUX_SETTING_B = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN1),
+	SPI_SIGNAL_MUX_SETTING_B = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_c
 	 */
-	SPI_SIGNAL_MUX_SETTING_C = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN2),
+	SPI_SIGNAL_MUX_SETTING_C = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_d
 	 */
-	SPI_SIGNAL_MUX_SETTING_D = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN3),
+	SPI_SIGNAL_MUX_SETTING_D = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_e
 	 */
-	SPI_SIGNAL_MUX_SETTING_E = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN0),
+	SPI_SIGNAL_MUX_SETTING_E = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_f
 	 */
-	SPI_SIGNAL_MUX_SETTING_F = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN1),
+	SPI_SIGNAL_MUX_SETTING_F = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_g
 	 */
-	SPI_SIGNAL_MUX_SETTING_G = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN2),
+	SPI_SIGNAL_MUX_SETTING_G = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_h
 	 */
-	SPI_SIGNAL_MUX_SETTING_H = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN3),
+	SPI_SIGNAL_MUX_SETTING_H = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 };
 
 /**
@@ -600,7 +611,7 @@ struct spi_conf {
 	/** SPI character size */
 	enum spi_character_size chsize;
 	/** Enabled in sleep modes */
-	bool sleep_enable;
+	bool run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
 	/** Union for Slave or Master specific configuration */
@@ -610,6 +621,8 @@ struct spi_conf {
 		/** Master specific configuration */
 		struct spi_master_conf master;
 	}; /**< Union for Slave or Master specific configuration */
+	/** GCLK generator to use as clock source. */
+	enum gclk_generator generator_source;
 };
 
 #if !defined (__DOXYGEN__)
@@ -618,10 +631,10 @@ struct spi_conf {
  */
 static inline void _spi_wait_for_sync(struct spi_dev_inst *const dev_inst)
 {
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
-	while (spi_module->SPI.STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
+	while (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
 }
 #endif
 
@@ -661,7 +674,7 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	config->transfer_mode = SPI_TRANSFER_MODE_0;
 	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
 	config->chsize = SPI_CHARACTER_SIZE_8BIT;
-	config->sleep_enable = false;
+	config->run_in_standby = false;
 	config->receiver_enable = true;
 
 	/* Master config defaults */
@@ -713,14 +726,13 @@ static inline void spi_slave_dev_init(struct spi_slave_dev_inst *const dev_inst,
 	dev_inst->address_enabled = config->address_enabled;
 	dev_inst->address = config->address;
 
-	struct port_pin_conf pin_conf;
+	struct port_conf pin_conf;
 
 	/* Get default config for pin */
-	port_pin_get_config_defaults(&pin_conf);
+	port_get_config_defaults(&pin_conf);
 
 	/* Edit config to set the pin as output */
-	pin_conf.input.enabled = false;
-	pin_conf.output.enabled = true;
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 
 	/* Set config on Slave Select pin */
 	port_pin_set_config(dev_inst->ss_pin, &pin_conf);
@@ -749,13 +761,13 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Enable SPI */
-	spi_module->SPI.CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -771,13 +783,13 @@ static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable SPI */
-	spi_module->SPI.CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
 }
 
 void spi_reset(struct spi_dev_inst *const dev_inst);

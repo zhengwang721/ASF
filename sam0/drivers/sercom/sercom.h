@@ -47,7 +47,6 @@
 #include <clock.h>
 #include "sercom_interrupts.h"
 #include "sercom_pinout.h"
-//#include "pinmux.h"
 
 #ifdef __cplusplus
 extern "C" {
