@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for RSTC driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,6 +78,7 @@
  * - sam3sd8c_sam3s_ek2
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
+ * - sam4e16e_sam4e_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
  *
