@@ -53,7 +53,8 @@ void config_extint_channel(void)
 //! [setup_2]
 
 //! [setup_3]
-	eint_ch_conf.pinmux_position     = PINMUX_PA01A_EIC_EXTINT1;
+	eint_ch_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
+	eint_ch_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
 	eint_ch_conf.wake_if_sleeping    = true;
 	eint_ch_conf.filter_input_signal = false;
 	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;

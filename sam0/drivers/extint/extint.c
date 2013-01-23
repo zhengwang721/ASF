@@ -133,29 +133,22 @@ void extint_disable(void)
  *
  * \param channel   External Interrupt channel to configure
  * \param config    Configuration settings for the channel
- *
- * \returns Status code indicating the success or failure of the request.
- * \retval  STATUS_OK                   Configuration succeeded
- * \retval  STATUS_ERR_PIN_MUX_INVALID  An invalid pin mux value was supplied
+
  */
-enum status_code extint_ch_set_config(
+void extint_ch_set_config(
 		const uint8_t channel,
 		const struct extint_ch_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
-	if (config->pinmux_position == 0) {
-		return STATUS_ERR_PIN_MUX_INVALID;
-	}
-
 	struct system_pinmux_conf pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
-	pinmux_config.mux_position = (config->pinmux_position & 0xFFFF);
+	pinmux_config.mux_position = config->gpio_pin_mux;
 	pinmux_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pinmux_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-	system_pinmux_pin_set_config(config->pinmux_position >> 16, &pinmux_config);
+	system_pinmux_pin_set_config(config->gpio_pin, &pinmux_config);
 
 	/* Get a pointer to the module hardware instance */
 	Eic *const EIC_module = _extint_get_eic_from_channel(channel);
@@ -183,7 +176,6 @@ enum status_code extint_ch_set_config(
 		= (EIC_module->CONFIG[channel / 8].reg &
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
-	return STATUS_OK;
 }
 
 /**
@@ -208,10 +200,6 @@ enum status_code extint_nmi_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
-	if (!config->pinmux_position == 0) {
-		return STATUS_ERR_PIN_MUX_INVALID;
-	}
-
 	if ((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
 			(config->detect == EXTINT_DETECT_NONE)) {
 		return STATUS_ERR_BAD_FORMAT;
@@ -220,10 +208,10 @@ enum status_code extint_nmi_set_config(
 	struct system_pinmux_conf pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
-	pinmux_config.mux_position = (config->pinmux_position & 0xFFFF);
+	pinmux_config.mux_position = config->gpio_pin_mux;
 	pinmux_config.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pinmux_config.input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-	system_pinmux_pin_set_config(config->pinmux_position >> 16, &pinmux_config);
+	system_pinmux_pin_set_config(config->gpio_pin, &pinmux_config);
 
 	/* Get a pointer to the module hardware instance */
 	Eic *const EIC_module = _extint_get_eic_from_channel(nmi_channel);
@@ -239,5 +227,6 @@ enum status_code extint_nmi_set_config(
 	}
 
 	EIC_module->NMICTRL.reg = new_config;
+
 	return STATUS_OK;
 }

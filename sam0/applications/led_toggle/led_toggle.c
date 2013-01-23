@@ -40,11 +40,6 @@
  */
 #include <asf.h>
 
-#define BOARD_LED                    PIN_PB08
-#define BOARD_BUTTON                 PIN_PB09
-#define BOARD_BUTTON_EXTINT_MUX      PINMUX_PB09A_EIC_EXTINT5
-#define BOARD_BUTTON_EXTINT_CHANNEL  5
-
 #define USE_INTERRUPTS               false
 #define USE_EIC                      true
 
@@ -54,8 +49,8 @@
 
 static void board_extint_handler(uint32_t channel)
 {
-	bool pin_state = port_pin_get_input_level(BOARD_BUTTON);
-	port_pin_set_output_level(BOARD_LED, !pin_state);
+	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
+	port_pin_set_output_level(LED_0_PIN, !pin_state);
 }
 
 static void configure_led(void)
@@ -64,7 +59,7 @@ static void configure_led(void)
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(BOARD_LED, &pin_conf);
+	port_pin_set_config(LED_0_PIN, &pin_conf);
 }
 
 static void configure_button(void)
@@ -75,21 +70,22 @@ static void configure_button(void)
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BOARD_BUTTON, &pin_conf);
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 #else
 	extint_enable();
 
 	struct extint_ch_conf eint_ch_conf;
 	extint_ch_get_config_defaults(&eint_ch_conf);
 
-	eint_ch_conf.pinmux_position = BOARD_BUTTON_EXTINT_MUX;
+	eint_ch_conf.gpio_pin        = BUTTON_0_EIC_PIN;
+	eint_ch_conf.gpio_pin_mux    = BUTTON_0_EIC_PIN_MUX;
 	eint_ch_conf.detect          = EXTINT_DETECT_BOTH;
-	extint_ch_set_config(BOARD_BUTTON_EXTINT_CHANNEL, &eint_ch_conf);
+	extint_ch_set_config(BUTTON_0_EIC_LINE, &eint_ch_conf);
 
 #  if USE_INTERRUPTS == true
 	extint_async_register_callback(board_extint_handler,
 			EXTINT_ASYNC_TYPE_DETECT);
-	extint_async_ch_enable_callback(BOARD_BUTTON_EXTINT_CHANNEL,
+	extint_async_ch_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_ASYNC_TYPE_DETECT);
 #  endif
 #endif
@@ -127,15 +123,15 @@ int main(void)
 #else
 #  if USE_EIC == false
 	while (true) {
-		board_extint_handler(BOARD_BUTTON_EXTINT_CHANNEL);
+		board_extint_handler(BUTTON_0_EIC_LINE);
 	}
 #  else
 	while (true) {
-		//if (extint_ch_is_detected(BOARD_BUTTON_EXTINT_CHANNEL)) {
-			extint_ch_clear_detected(BOARD_BUTTON_EXTINT_CHANNEL);
+		if (extint_ch_is_detected(BUTTON_0_EIC_LINE)) {
+			extint_ch_clear_detected(BUTTON_0_EIC_LINE);
 
-			board_extint_handler(BOARD_BUTTON_EXTINT_CHANNEL);
-		//}
+			board_extint_handler(BUTTON_0_EIC_LINE);
+		}
 	}
 #  endif
 #endif

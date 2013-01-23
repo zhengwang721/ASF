@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Xplained PRO Board Definition.
+ * \brief SAMD20 Xplained Pro board definition
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,145 +44,390 @@
 #ifndef SAMD20_XPLAINED_PRO_H_INCLUDED
 #define SAMD20_XPLAINED_PRO_H_INCLUDED
 
+#include <conf_board.h>
 #include <compiler.h>
 
-/** \name Board LED definitions
- *  @{
+/**
+ * \ingroup group_common_boards
+ * \defgroup samd20_xplained_pro_group SAMD20 Xplained Pro board
+ *
+ * @{
  */
-#define LED0_GPIO               PIN_PB08
-#define LED0_ACTIVE_LEVEL       0
+
+/**
+ * \defgroup samd20_xplained_pro_features_group Features
+ *
+ * Symbols that describe features and capabilities of the board.
+ *
+ * @{
+ */
+
+/** Name string macro */
+#define BOARD_NAME                "SAMD20_XPLAINED_PRO"
+
+/** \name Board oscillator definitions
+ * @{
+ */
+// TODO
 /** @} */
 
-/** \name Board Button definitions
- *  @{
- */
-#define PUSH_BUTTON_0_GPIO      PIN_PB09
+/** \name LED0 definitions
+ *  @{ */
+#define LED0_PIN                  PIN_PB08
+#define LED0_ACTIVE               false
+#define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
-/** \name Embedded Debugger GPIO link definitions
- *  @{
- */
-#define EMB_GPIO0               PIN_PB24
-#define EMB_GPIO1               PIN_PB25
-#define EMB_GPIO2               PIN_PB26
-#define EMB_GPIO3               PIN_PB27
+/** \name SW0 definitions
+ *  @{ */
+#define SW0_PIN                   PIN_PB09
+#define SW0_ACTIVE                false
+#define SW0_INACTIVE              !SW0_ACTIVE
+#define SW0_EIC_PIN               PIN_PB09A_EIC_EXTINT5
+#define SW0_EIC_PIN_MUX           MUX_PB09A_EIC_EXTINT5
+#define SW0_EIC_LINE              5
 /** @} */
 
-/** \name Embedded Debugger TWI link definitions
- *  @{
- */
-#define EMB_TWI                 SERCOM1
-#define EMB_TWI_SERCOM_INDEX    1
-
-#define EMB_TWI_SDA             PINMUX_PA18B_SERCOM1_PAD0
-#define EMB_TWI_SDA_SERCOM_PAD  0
-#define EMB_TWI_SCL             PINMUX_PA19B_SERCOM1_PAD1
-#define EMB_TWI_SCL_SERCOM_PAD  1
+/**
+ * \name LED #0 definitions
+ *
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
+ * boards.
+ *
+ *  @{ */
+#define LED_0_NAME                "LED0 (yellow)"
+#define LED_0_PIN                 LED0_PIN
+#define LED_0_ACTIVE              LED0_ACTIVE
+#define LED_0_INACTIVE            LED0_INACTIVE
 /** @} */
 
-/** \name Embedded Debugger UART link definitions
- *  @{
- */
-#define EMB_UART                SERCOM5
-#define EMB_UART_SERCOM_INDEX   5
+/** Number of on-board LEDs */
+#define LED_COUNT                 1
 
-#define EMB_UART_RX             PINMUX_PB20B_SERCOM5_PAD0
-#define EMB_UART_RX_SERCOM_PAD  0
-#define EMB_UART_TX             PINMUX_PB22B_SERCOM5_PAD2
-#define EMB_UART_TX_SERCOM_PAD  2
-#define EMB_UART_SCK            PINMUX_PB23B_SERCOM5_PAD3
-#define EMB_UART_SCK_SERCOM_PAD 3
+/**
+ * \name Button #0 definitions
+ *
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
+ * boards.
+ *
+ *  @{ */
+#define BUTTON_0_NAME             "SW0"
+#define BUTTON_0_PIN              SW0_PIN
+#define BUTTON_0_ACTIVE           SW0_ACTIVE
+#define BUTTON_0_INACTIVE         SW0_INACTIVE
+#define BUTTON_0_EIC_PIN          SW0_EIC_PIN
+#define BUTTON_0_EIC_PIN_MUX      SW0_EIC_PIN_MUX
+#define BUTTON_0_EIC_LINE         SW0_EIC_LINE
 /** @} */
 
-/** \name Embedded Debugger SPI link definitions
+/** Number of on-board buttons */
+#define BUTTON_COUNT 1
+
+/** \name Extension header #1 pin definitions
  *  @{
  */
-#define EMB_SPI                 SERCOM5
-#define EMB_SPI_SERCOM_INDEX    5
-
-#define EMB_SPI_MISO            PINMUX_PB20B_SERCOM5_PAD0
-#define EMB_SPI_MISO_SERCOM_PAD 0
-#define EMB_SPI_SS              PINMUX_PB21B_SERCOM5_PAD1
-#define EMB_SPI_SS_SERCOM_PAD   1
-#define EMB_SPI_MOSI            PINMUX_PB22B_SERCOM5_PAD2
-#define EMB_SPI_MOSI_SERCOM_PAD 2
-#define EMB_SPI_SCK             PINMUX_PB23B_SERCOM5_PAD3
-#define EMB_SPI_SCK_SERCOM_PAD  3
+#define EXT1_PIN_3                PIN_PA04
+#define EXT1_PIN_4                PIN_PA05
+#define EXT1_PIN_5                PIN_PB04
+#define EXT1_PIN_6                PIN_PB05
+#define EXT1_PIN_7                PIN_PB00
+#define EXT1_PIN_8                PIN_PB01
+#define EXT1_PIN_9                PIN_PB06
+#define EXT1_PIN_10               PIN_PB07
+#define EXT1_PIN_11               PIN_PA18
+#define EXT1_PIN_12               PIN_PA19
+#define EXT1_PIN_13               PIN_PA11
+#define EXT1_PIN_14               PIN_PA10
+#define EXT1_PIN_15               PIN_PA15
+#define EXT1_PIN_16               PIN_PA12
+#define EXT1_PIN_17               PIN_PA14
+#define EXT1_PIN_18               PIN_PA13
 /** @} */
 
-/** \name Embedded Debugger CDC UART link definitions
+/** \name Extension header #1 pin definitions by function
  *  @{
  */
-#define CDC_UART                SERCOM4
-#define CDC_UART_SERCOM_INDEX   4
-
-#define CDC_UART_RX             PINMUX_PB10B_SERCOM4_PAD2
-#define CDC_UART_RX_SERCOM_PAD  2
-#define CDC_UART_TX             PINMUX_PB11B_SERCOM4_PAD3
-#define CDC_UART_TX_SERCOM_PAD  3
+#define EXT1_PIN_ADC_0            EXT1_PIN_3
+#define EXT1_PIN_ADC_1            EXT1_PIN_4
+#define EXT1_PIN_GPIO_0           EXT1_PIN_5
+#define EXT1_PIN_GPIO_1           EXT1_PIN_6
+#define EXT1_PIN_PWM_0            EXT1_PIN_7
+#define EXT1_PIN_PWM_1            EXT1_PIN_8
+#define EXT1_PIN_IRQ              EXT1_PIN_9
+#define EXT1_PIN_TWI_SDA          EXT1_PIN_11
+#define EXT1_PIN_TWI_SCL          EXT1_PIN_12
+#define EXT1_PIN_UART_RX          EXT1_PIN_13
+#define EXT1_PIN_UART_TX          EXT1_PIN_14
+#define EXT1_PIN_SPI_SS_1         EXT1_PIN_10
+#define EXT1_PIN_SPI_SS_0         EXT1_PIN_15
+#define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
+#define EXT1_PIN_SPI_MISO         EXT1_PIN_17
+#define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
-/** \name Embedded Debugger EXT1 header definitions
+/** \name Extension header #1 ADC definitions
  *  @{
  */
-#define EXT1_PIN3               PIN_PA04
-#define EXT1_PIN4               PIN_PA05
-#define EXT1_PIN5               PIN_PB04
-#define EXT1_PIN6               PIN_PB05
-#define EXT1_PIN7               PIN_PB00
-#define EXT1_PIN8               PIN_PB01
-#define EXT1_PIN9               PIN_PB06
-#define EXT1_PIN10              PIN_PB07
-#define EXT1_PIN11              PIN_PA18
-#define EXT1_PIN12              PIN_PA19
-#define EXT1_PIN13              PIN_PA11
-#define EXT1_PIN14              PIN_PA10
-#define EXT1_PIN15              PIN_PA15
-#define EXT1_PIN16              PIN_PA12
-#define EXT1_PIN17              PIN_PA14
-#define EXT1_PIN18              PIN_PA13
+// TODO
 /** @} */
 
-/** \name Embedded Debugger EXT2 header definitions
+/** \name Extension header #1 PWM definitions
  *  @{
  */
-#define EXT2_PIN3               PIN_PA06
-#define EXT2_PIN4               PIN_PA07
-#define EXT2_PIN5               PIN_PB12
-#define EXT2_PIN6               PIN_PB13
-#define EXT2_PIN7               PIN_PA30
-#define EXT2_PIN8               PIN_PA31
-#define EXT2_PIN9               PIN_PB16
-#define EXT2_PIN10              PIN_PB17
-#define EXT2_PIN11              PIN_PA18
-#define EXT2_PIN12              PIN_PA19
-#define EXT2_PIN13              PIN_PA25
-#define EXT2_PIN14              PIN_PA24
-#define EXT2_PIN15              PIN_PA16
-#define EXT2_PIN16              PIN_PA12
-#define EXT2_PIN17              PIN_PA14
-#define EXT2_PIN18              PIN_PA13
+// TODO
 /** @} */
 
-/** \name Embedded Debugger EXT3 header definitions
+/** \name Extension header #1 IRQ/External interrupt definitions
  *  @{
  */
-#define EXT3_PIN3               PIN_PB02
-#define EXT3_PIN4               PIN_PB03
-#define EXT3_PIN5               PIN_PB24
-#define EXT3_PIN6               PIN_PB25
-#define EXT3_PIN7               PIN_PB18
-#define EXT3_PIN8               PIN_PB19
-#define EXT3_PIN9               PIN_PB26
-#define EXT3_PIN10              PIN_PB27
-#define EXT3_PIN11              PIN_PA18
-#define EXT3_PIN12              PIN_PA19
-#define EXT3_PIN13              PIN_PA27
-#define EXT3_PIN14              PIN_PA26
-#define EXT3_PIN15              PIN_PA17
-#define EXT3_PIN16              PIN_PA12
-#define EXT3_PIN17              PIN_PA14
-#define EXT3_PIN18              PIN_PA13
+// TODO
+/** @} */
+
+/** \name Extension header #1 TWI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #1 UART definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #1 SPI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 pin definitions
+ *  @{
+ */
+#define EXT2_PIN_3                PIN_PA06
+#define EXT2_PIN_4                PIN_PA07
+#define EXT2_PIN_5                PIN_PB12
+#define EXT2_PIN_6                PIN_PB13
+#define EXT2_PIN_7                PIN_PA30
+#define EXT2_PIN_8                PIN_PA31
+#define EXT2_PIN_9                PIN_PB16
+#define EXT2_PIN_10               PIN_PB17
+#define EXT2_PIN_11               PIN_PA18
+#define EXT2_PIN_12               PIN_PA19
+#define EXT2_PIN_13               PIN_PA25
+#define EXT2_PIN_14               PIN_PA24
+#define EXT2_PIN_15               PIN_PA16
+#define EXT2_PIN_16               PIN_PA12
+#define EXT2_PIN_17               PIN_PA14
+#define EXT2_PIN_18               PIN_PA13
+/** @} */
+
+/** \name Extension header #2 pin definitions by function
+ *  @{
+ */
+#define EXT2_PIN_ADC_0            EXT2_PIN_3
+#define EXT2_PIN_ADC_1            EXT2_PIN_4
+#define EXT2_PIN_GPIO_0           EXT2_PIN_5
+#define EXT2_PIN_GPIO_1           EXT2_PIN_6
+#define EXT2_PIN_PWM_0            EXT2_PIN_7
+#define EXT2_PIN_PWM_1            EXT2_PIN_8
+#define EXT2_PIN_IRQ              EXT2_PIN_9
+#define EXT2_PIN_TWI_SDA          EXT2_PIN_11
+#define EXT2_PIN_TWI_SCL          EXT2_PIN_12
+#define EXT2_PIN_UART_RX          EXT2_PIN_13
+#define EXT2_PIN_UART_TX          EXT2_PIN_14
+#define EXT2_PIN_SPI_SS_1         EXT2_PIN_10
+#define EXT2_PIN_SPI_SS_0         EXT2_PIN_15
+#define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
+#define EXT2_PIN_SPI_MISO         EXT2_PIN_17
+#define EXT2_PIN_SPI_SCK          EXT2_PIN_18
+/** @} */
+
+/** \name Extension header #2 ADC definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 PWM definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 IRQ/External interrupt definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 TWI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 UART definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #2 SPI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 pin definitions
+ *  @{
+ */
+#define EXT3_PIN_3                PIN_PB02
+#define EXT3_PIN_4                PIN_PB03
+#define EXT3_PIN_5                PIN_PB24
+#define EXT3_PIN_6                PIN_PB25
+#define EXT3_PIN_7                PIN_PB18
+#define EXT3_PIN_8                PIN_PB19
+#define EXT3_PIN_9                PIN_PB26
+#define EXT3_PIN_10               PIN_PB27
+#define EXT3_PIN_11               PIN_PA18
+#define EXT3_PIN_12               PIN_PA19
+#define EXT3_PIN_13               PIN_PA27
+#define EXT3_PIN_14               PIN_PA26
+#define EXT3_PIN_15               PIN_PA17
+#define EXT3_PIN_16               PIN_PA12
+#define EXT3_PIN_17               PIN_PA14
+#define EXT3_PIN_18               PIN_PA13
+/** @} */
+
+/** \name Extension header #3 pin definitions by function
+ *  @{
+ */
+#define EXT3_PIN_ADC_0            EXT3_PIN_3
+#define EXT3_PIN_ADC_1            EXT3_PIN_4
+#define EXT3_PIN_GPIO_0           EXT3_PIN_5
+#define EXT3_PIN_GPIO_1           EXT3_PIN_6
+#define EXT3_PIN_PWM_0            EXT3_PIN_7
+#define EXT3_PIN_PWM_1            EXT3_PIN_8
+#define EXT3_PIN_IRQ              EXT3_PIN_9
+#define EXT3_PIN_TWI_SDA          EXT3_PIN_11
+#define EXT3_PIN_TWI_SCL          EXT3_PIN_12
+#define EXT3_PIN_UART_RX          EXT3_PIN_13
+#define EXT3_PIN_UART_TX          EXT3_PIN_14
+#define EXT3_PIN_SPI_SS_1         EXT3_PIN_10
+#define EXT3_PIN_SPI_SS_0         EXT3_PIN_15
+#define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
+#define EXT3_PIN_SPI_MISO         EXT3_PIN_17
+#define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+/** @} */
+
+/** \name Extension header #3 ADC definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 PWM definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 IRQ/External interrupt definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 TWI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 UART definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Extension header #3 SPI definitions
+ *  @{
+ */
+// TODO
+/** @} */
+
+/** \name Embedded debugger GPIO interface definitions
+ * @{
+ */
+#define EDBG_GPIO0_PIN            PIN_PB24
+#define EDBG_GPIO1_PIN            PIN_PB25
+#define EDBG_GPIO2_PIN            PIN_PB26
+#define EDBG_GPIO3_PIN            PIN_PB27
+/** @} */
+
+/** \name Embedded debugger USART interface definitions
+ * @{
+ */
+#define EDBG_UART_MODULE          SERCOM5
+#define EDBG_UART_RX_PIN          PIN_PB20B_SERCOM5_PAD0
+#define EDBG_UART_RX_MUX          MUX_PB20B_SERCOM5_PAD0
+#define EDBG_UART_RX_SERCOM_PAD   0
+#define EDBG_UART_TX_PIN          PIN_PB22B_SERCOM5_PAD2
+#define EDBG_UART_TX_MUX          MUX_PB22B_SERCOM5_PAD2
+#define EDBG_UART_TX_SERCOM_PAD   2
+#define EDBG_UART_CLK_PIN         PIN_PB23B_SERCOM5_PAD3
+#define EDBG_UART_CLK_MUX         MUX_PB23B_SERCOM5_PAD3
+#define EDBG_UART_CLK_SERCOM_PAD  3
+/** @} */
+
+/** \name Embedded debugger TWI interface definitions
+ * @{
+ */
+#define EDBG_TWI_MODULE           SERCOM1
+#define EDBG_TWI_SDA_PIN          PIN_PA18B_SERCOM1_PAD0
+#define EDBG_TWI_SDA_MUX          MUX_PA18B_SERCOM1_PAD0
+#define EDBG_TWI_SDA_SERCOM_PAD   0
+#define EDBG_TWI_SCL_PIN          PIN_PA19B_SERCOM1_PAD1
+#define EDBG_TWI_SCL_MUX          MUX_PA19B_SERCOM1_PAD1
+#define EDBG_TWI_SCL_SERCOM_PAD   1
+/** @} */
+
+/** \name Embedded debugger SPI interface definitions
+ * @{
+ */
+#define EDBG_SPI_MODULE           SERCOM5
+#define EDBG_SPI_MOSI_PIN         PIN_PB22B_SERCOM5_PAD2
+#define EDBG_SPI_MOSI_MUX         MUX_PB22B_SERCOM5_PAD2
+#define EDBG_SPI_MOSI_SERCOM_PAD  2
+#define EDBG_SPI_MISO_PIN         PIN_PB20B_SERCOM5_PAD0
+#define EDBG_SPI_MISO_MUX         MUX_PB20B_SERCOM5_PAD0
+#define EDBG_SPI_MISO_SERCOM_PAD  0
+#define EDBG_SPI_SCK_PIN          PIN_PB23B_SERCOM5_PAD3
+#define EDBG_SPI_SCK_MUX          MUX_PB23B_SERCOM5_PAD3
+#define EDBG_SPI_SCK_SERCOM_PAD   3
+#define EDBG_SPI_SS_PIN           PIN_PB21B_SERCOM5_PAD1
+#define EDBG_SPI_SS_MUX           MUX_PB21B_SERCOM5_PAD1
+#define EDBG_SPI_SS_SERCOM_PAD    1
+/** @} */
+
+/** \name Embedded debugger CDC Gateway USART interface definitions
+ * @{
+ */
+#define EDBG_CDC_MODULE           SERCOM5
+#define EDBG_CDC_RX_PIN           PIN_PB20B_SERCOM5_PAD0
+#define EDBG_CDC_RX_MUX           MUX_PB20B_SERCOM5_PAD0
+#define EDBG_CDC_RX_SERCOM_PAD    0
+#define EDBG_CDC_TX_PIN           PIN_PB22B_SERCOM5_PAD2
+#define EDBG_CDC_TX_MUX           MUX_PB22B_SERCOM5_PAD2
+#define EDBG_CDC_TX_SERCOM_PAD    2
+#define EDBG_CDC_CLK_PIN          PIN_PB23B_SERCOM5_PAD3
+#define EDBG_CDC_CLK_MUX          MUX_PB23B_SERCOM5_PAD3
+#define EDBG_CDC_CLK_SERCOM_PAD   3
+/** @} */
+
+/** @} */
+
 /** @} */
 
 #endif  /* SAMD20_XPLAINED_PRO_H_INCLUDED */
