@@ -125,6 +125,10 @@
 #  define UDD_USB_INT_FUN UDP_Handler
 #endif
 
+#ifndef UDC_VBUS_EVENT
+#  define UDC_VBUS_EVENT(present)
+#endif
+
 /**
  * \name Power management routine.
  */
@@ -162,6 +166,60 @@ static void udd_sleep_mode(bool b_idle)
 }
 
 #endif // UDD_NO_SLEEP_MGR
+
+//@}
+
+/**
+ * \name VBus monitor routine
+ */
+//@{
+
+#if UDD_VBUS_IO
+
+# if !defined(UDD_NO_SLEEP_MGR) && !defined(USB_VBUS_WKUP)
+/* Lock to SLEEPMGR_SLEEP_WFI if VBus not connected */
+static bool b_vbus_sleep_lock = false;
+/**
+ * Lock sleep mode for VBus PIO pin change detection
+ */
+static void udd_vbus_monitor_sleep_mode(bool b_lock)
+{
+	if (b_lock && !b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = true;
+		sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+	if (!b_lock && b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = false;
+		sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+}
+# else
+#  define udd_vbus_monitor_sleep_mode(lock)
+# endif
+
+/**
+ * USB VBus pin change handler
+ */
+static void udd_vbus_handler(uint32_t id, uint32_t mask)
+{
+	if (USB_VBUS_PIO_ID != id || USB_VBUS_PIO_MASK != mask) {
+		return;
+	}
+	/* PIO interrupt status has been cleared, just detect level */
+	bool b_vbus_high = Is_udd_vbus_high();
+	if (b_vbus_high) {
+		udd_ack_vbus_interrupt(true);
+		udd_vbus_monitor_sleep_mode(false);
+		udd_attach();
+	} else {
+		udd_ack_vbus_interrupt(false);
+		udd_vbus_monitor_sleep_mode(true);
+		udd_detach();
+	}
+	UDC_VBUS_EVENT(b_vbus_high);
+}
+
+#endif
 
 //@}
 
@@ -475,7 +533,11 @@ udd_interrupt_sof_end:
 
 bool udd_include_vbus_monitoring(void)
 {
+#if UDD_VBUS_IO
+	return true;
+#else
 	return false;
+#endif
 }
 
 
@@ -506,8 +568,20 @@ void udd_enable(void)
 	sleepmgr_lock_mode(UDP_SLEEP_MODE_USB_SUSPEND);
 #endif
 
-#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+#if UDD_VBUS_IO
+	/* Initialize VBus monitor */
+	udd_vbus_init(udd_vbus_handler);
+	udd_vbus_monitor_sleep_mode(true);
+	/* Force Vbus interrupt when Vbus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_udd_vbus_high()) {
+		udd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+	}
+#else
+#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
+#  endif
 #endif
 
 	cpu_irq_restore(flags);
@@ -527,6 +601,11 @@ void udd_disable(void)
 #ifndef UDD_NO_SLEEP_MGR
 	sleepmgr_unlock_mode(UDP_SLEEP_MODE_USB_SUSPEND);
 #endif
+
+# if UDD_VBUS_IO
+	udd_vbus_monitor_sleep_mode(false);
+# endif
+
 	cpu_irq_restore(flags);
 }
 
