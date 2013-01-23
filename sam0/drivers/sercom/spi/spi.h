@@ -836,10 +836,10 @@ static inline bool spi_is_ready_to_write(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
 }
 
 /**
@@ -860,13 +860,13 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait for synchronization */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable receiver */
-	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
 }
 /** @} */
 
@@ -903,7 +903,7 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check if the data register has been copied to the shift register */
 	if (!spi_is_ready_to_write(dev_inst)) {
@@ -912,7 +912,7 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	}
 
 	/* Write the character to the DATA register */
-	spi_module->SPI.DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
+	spi_module->DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
 
 	return STATUS_OK;
 }
@@ -943,7 +943,7 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check until if data is ready to be read */
 	if (!spi_is_ready_to_read(dev_inst)) {
@@ -953,9 +953,9 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 
 	/* Read the character from the DATA register */
 	if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-		*rx_data = (spi_module->SPI.DATA.reg & SERCOM_SPI_DATA_MASK);
+		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
-		*(uint8_t*)rx_data = (uint8_t)spi_module->SPI.DATA.reg;
+		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;
 	}
 
 	return STATUS_OK;
