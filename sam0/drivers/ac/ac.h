@@ -161,7 +161,7 @@
  * longer stages producing a more stable result, at the expense of a higher
  * latency.
  *
- * When output filtering is used in one shot mode, a single trigger of the
+ * When output filtering is used in single shot mode, a single trigger of the
  * comparator will automatically perform the required number of samples to
  * produce a correctly filtered result.
  *
@@ -172,9 +172,9 @@
  * flips. This mode will prevent a change in the comparison output unless the
  * inputs cross one-another beyond the hysteresis gap introduces by this mode.
  *
- * \subsection one_shot_cont_sampling One Shot and Continuous Sampling Modes
- * Comparators can be configured to run in either One Shot or Continuous
- * sampling modes; when in One Shot mode, the comparator will only perform a
+ * \subsection single_shot_cont_sampling Single Shot and Continuous Sampling Modes
+ * Comparators can be configured to run in either Single Shot or Continuous
+ * sampling modes; when in Single Shot mode, the comparator will only perform a
  * comparison (and any resulting filtering, see \ref output_filtering) when
  * triggered via a software or event trigger. This mode improves the power
  * efficiency of the system by only performing comparisons when actually
@@ -442,11 +442,10 @@ struct ac_ch_conf {
 	enum ac_ch_pos_mux positive_input;
 	/** Input multiplexer selection for the comparator's negative input pin. */
 	enum ac_ch_neg_mux negative_input;
-	/** Scaled \f$\frac{VCC\times\mbox{n}}{64}\f$ VCC voltage division factor for the channel, when a comparator
-	 *  pin is connected to the VCC voltage scalar input.
-	 *
-	 *  \note If the VCC voltage scalar is not selected as a comparator channel
-	 *        pin's input, this value will be ignored. */
+	/** Scaled \f$\frac{V_{CC}\times\mbox{n}}{64}\f$ VCC voltage division factor
+	 *  for the channel, when a comparator pin is connected to the VCC voltage
+	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
+	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
 };
 
@@ -571,7 +570,7 @@ static inline void ac_disable(
  * \brief Enables an Analog Comparator event input or output.
  *
  *  Enables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  module. See \ref ac_events "here" for a list of events this module
  *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -586,6 +585,7 @@ static inline void ac_enable_events(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
+	Assert(events);
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
@@ -616,7 +616,7 @@ static inline void ac_enable_events(
  * \brief Disables an Analog Comparator event input or output.
  *
  *  Disables one or more input or output events to or from the Analog Comparator
- *  module. See \ref ac_event_masks "here" for a list of events this module
+ *  module. See \ref ac_events "here" for a list of events this module
  *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -631,6 +631,7 @@ static inline void ac_disable_events(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
+	Assert(events);
 
 	Ac *const ac_module = dev_inst->hw_dev;
 
@@ -680,7 +681,7 @@ static inline void ac_disable_events(
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled VCC voltage selected as the negative input
- *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{VCC\times32}{64}\f$)
+ *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{V_{CC}\times32}{64}\f$)
  *
  *   \param[out] config  Channel configuration structure to initialize to
  *                       default values
@@ -761,10 +762,10 @@ static inline void ac_ch_disable(
  */
 
 /**
- * \brief Trigger a comparison on a comparator that is configured in single shot mode.
+ * \brief Triggers a comparison on a comparator that is configured in single shot mode.
  *
  *  Triggers a single conversion on a comparator configured to compare on demand
- *  (one shot mode) rather than continuously.
+ *  (single shot mode) rather than continuously.
  *
  *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to trigger
@@ -1001,7 +1002,7 @@ static inline void ac_win_clear_detected(
  *	</tr>
  *	<tr>
  *		<td>DAC</td>
- *		<td>Digital to Analog Converter</td>
+ *		<td>Digital-to-Analog Converter</td>
  *	</tr>
  *	<tr>
  *		<td>MUX</td>

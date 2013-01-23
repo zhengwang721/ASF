@@ -219,9 +219,9 @@ int main(void)
 	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
 	ast_conf.counter = 0;
 	ast_set_config(AST, &ast_conf);
-	ast_disable_wakeup(AST, ast_wakeup_alarm);
-	ast_disable_wakeup(AST, ast_wakeup_per);
-	ast_disable_wakeup(AST, ast_wakeup_ovf);
+	ast_disable_wakeup(AST, AST_WAKEUP_ALARM);
+	ast_disable_wakeup(AST, AST_WAKEUP_PER);
+	ast_disable_wakeup(AST, AST_WAKEUP_OVF);
 	ast_disable(AST);
 
 	/* Config the push button */

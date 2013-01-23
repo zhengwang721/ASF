@@ -1,0 +1,8 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAMD20 EXTINT driver" id="sam0.drivers.extint.quick_start.dummy.atsamd20">
+		<require idref="board.dummy.samd20"/>
+		<require idref="sam0.drivers.extint.quick_start"/>
+		<generator value="armgcc"/>
+		<device-support value="samd20j18a"/>
+	</project>
+</asf>
