@@ -71,7 +71,7 @@
 #define CONFIG_SYSCLK_PBD_DIV         1
 
 //#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
-//#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
+#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
 
 /* Fusb = Fsys / USB_div */
 //#define CONFIG_USBCLK_DIV           1
