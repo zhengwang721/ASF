@@ -40,38 +40,51 @@
 #include <asf.h>
 
 void configure_system_clock_sources(void);
+void configure_extosc32k(void);
+void configure_gclk_generator(void);
+void configure_dfll_open_loop(void);
 
-void configure_system_clock_sources(void)
+volatile uint32_t frequency;
+
+void configure_extosc32k(void)
 {
-	struct system_clock_source_config cs_conf;
-	system_clock_source_get_default_config(&cs_conf);
+	struct system_clock_source_xosc32k_config ext32k_conf;
+	system_clock_source_xosc32k_get_default_config(&ext32k_conf);
+	ext32k_conf.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
+	system_clock_source_xosc32k_set_config(&ext32k_conf);
+}
 
-	/* 8MHz RC oscillator */
-	cs_conf.rc8mhz.prescaler = 4;
-
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_RC8MHZ);
-
-	/* XOSC */
-	cs_conf.ext.external_clock = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_XOSC);
-
-	/* DFLL */
-	cs_conf.dfll.coarse_value = 42;
-	cs_conf.dfll.fine_value = 42;
-
-	system_clock_source_set_config(&cs_conf, SYSTEM_CLOCK_SOURCE_DFLL);
+void configure_dfll_open_loop(void)
+{
+	struct system_clock_source_dfll_config dfll_conf;
+	system_clock_source_dfll_get_default_config(&dfll_conf);
+	system_clock_source_dfll_set_config(&dfll_conf);
 }
 
 int main(void)
 {
-	/** [setup_init] */
-	configure_system_clock_sources();
-	/** [setup_init] */
+	enum status_code retval;
 
 
-	/** [main1] */
-	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
-	/** [main1] */
+	/* Configure the external 32K oscillator */	
+	configure_extosc32k();
+
+	/* Enable the external 32k oscillator */
+	retval = system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K, false);
+
+	if (retval != STATUS_OK) {
+		/* Error enabling the clock source */
+	}
+
+	/* Configure the DFLL in open loop mode using default values */
+	configure_dfll_open_loop();
+
+	/* Change system clock to DFLL */
+	system_main_clock_set_source(SYSTEM_CLOCK_SOURCE_DFLL);
+
+
+	while (true) {
+
+	}
 
 }
