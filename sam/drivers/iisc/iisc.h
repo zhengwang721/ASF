@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief IISC driver for SAM.
+ * \brief IIS driver for SAM.
  *
- * This file defines a useful set of functions for the IISC on SAM devices.
+ * This file defines a useful set of functions for the IIS on SAM devices.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -44,8 +44,8 @@
  *
  */
 
-#ifndef _IISC_H_INCLUDED_
-#define _IISC_H_INCLUDED_
+#ifndef IIS_H_INCLUDED
+#define IIS_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,67 +64,78 @@ extern "C" {
 #include "compiler.h"
 #include "status_codes.h"
 
-#define IISC_RETRY_VALUE   10000
+#define IIS_RETRY_VALUE   10000
 
 /** Supported number of channels */
-enum iisc_channel_number {
-	IISC_CHANNEL_NONE = 0,
-	IISC_CHANNEL_MONO,
-	IISC_CHANNEL_STEREO,
-};
-
-/** Supported sample rate */
-enum iisc_sample_rate {
-	IISC_SAMPLE_RATE_32000 = 0,
-	IISC_SAMPLE_RATE_48000,
-	IISC_SAMPLE_RATE_96000,
-	IISC_SAMPLE_RATE_192000,
+enum iis_number_of_channels {
+	IIS_CHANNEL_MONO = 0,
+	IIS_CHANNEL_STEREO
 };
 
 /** Supported Master Clock to Sample Frequency (fs) Ratio */
-enum iisc_fs_rate {
-	IISC_FS_RATE_16  = 0,
-	IISC_FS_RATE_32  = 1,
-	IISC_FS_RATE_48  = 2,
-	IISC_FS_RATE_64  = 3,
-	IISC_FS_RATE_96  = 5,
-	IISC_FS_RATE_128 = 7,
-	IISC_FS_RATE_192 = 11,
-	IISC_FS_RATE_256 = 15,
-	IISC_FS_RATE_384 = 23,
-	IISC_FS_RATE_512 = 31,
-	IISC_FS_RATE_768 = 47,
-	IISC_FS_RATE_1024 = 63,
+enum iis_fs_rate {
+	IIS_FS_RATE_16  = 0,
+	IIS_FS_RATE_32  = 1,
+	IIS_FS_RATE_48  = 2,
+	IIS_FS_RATE_64  = 3,
+	IIS_FS_RATE_96  = 5,
+	IIS_FS_RATE_128 = 7,
+	IIS_FS_RATE_192 = 11,
+	IIS_FS_RATE_256 = 15,
+	IIS_FS_RATE_384 = 23,
+	IIS_FS_RATE_512 = 31,
+	IIS_FS_RATE_768 = 47,
+	IIS_FS_RATE_1024 = 63,
 };
 
-/** Data format of the data register value */
-enum iisc_data_format {
-	IISC_DATE_32BIT = 0,
-	IISC_DATE_24BIT,
-	IISC_DATE_20BIT,
-	IISC_DATE_18BIT,
-	IISC_DATE_16BIT,
-	IISC_DATE_16BIT_COMPACT,
-	IISC_DATE_8BIT,
-	IISC_DATE_8BIT_COMPACT,
+/** Slot length */
+enum iis_slot_length {
+	IIS_SLOT_LENGTH_8BIT  = 8,
+	IIS_SLOT_LENGTH_16BIT = 16,
+	IIS_SLOT_LENGTH_24BIT = 24,
+	IIS_SLOT_LENGTH_32BIT = 32,
+};
+
+/** Data format */
+enum iis_data_format {
+	IIS_DATE_32BIT = 0,
+	IIS_DATE_24BIT,
+	IIS_DATE_20BIT,
+	IIS_DATE_18BIT,
+	IIS_DATE_16BIT,
+	IIS_DATE_16BIT_COMPACT,
+	IIS_DATE_8BIT,
+	IIS_DATE_8BIT_COMPACT,
+};
+
+/** DMA channel usage for IIS transfer */
+enum iis_dma_channel {
+	IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS = 0,
+	IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL,
 };
 
 /** Configuration setting structure */
-struct iisc_config {
+struct iis_config {
 	/* Number of bits per sample. */
-	enum iisc_data_format data_word_format;
+	enum iis_data_format data_format;
 
-	/* Number of bits of the slot: 32, 24, 16 or 8 */
-	uint32_t slot_length;
+	/* Number of bits of the slot */
+	enum iis_slot_length slot_length;
 
 	/* Master Clock to Sample Frequency (fs) Ratio. */
-	enum iisc_fs_rate fs_ratio;
+	enum iis_fs_rate fs_ratio;
 
-	/* Number of channels for Tx (0: no channels, 1 for Mono, 2 for stereo */
-	enum iisc_channel_number num_tx_channels;
+	/* Number of channels for Tx */
+	enum iis_number_of_channels tx_channels;
 
-	/* Number of channels for Rx (0: no channels, 1 for Mono, 2 for stereo */
-	enum iisc_channel_number num_rx_channels;
+	/* Number of channels for Rx */
+	enum iis_number_of_channels rx_channels;
+
+	/* DMA channel usage for IIS transmission */
+	enum iis_dma_channel tx_dma;
+
+	/* DMA channel usage for IIS reception */
+	enum iis_dma_channel rx_dma;
 
 	/* 1 for loopback, 0 for normal. */
 	bool loopback;
@@ -133,204 +144,167 @@ struct iisc_config {
 	bool master;
 };
 
-struct iisc_device {
+struct iis_device {
 	/* Base Address of the IISC module */
 	Iisc *hw_dev;
 
-	/* Pointer to IISC configuration structure. */
-	struct iisc_config  *iisc_cfg;
+	/* Pointer to IIS configuration structure. */
+	struct iis_config *cfg;
 };
 
-/**
- * \brief Initialize and configure the IISC module.
- *
- * \param dev_inst    Device structure pointer.
- * \param iisc         Base address of the IISC instance.
- * \param cfg         Pointer to IISC configuration.
- *
- * \return status
- */
-status_code_t iis_init(struct iisc_device *const dev_inst,
-		Iisc *iisc, struct iisc_config *const iisc_conf);
+typedef void (*iis_callback_t)(void);
 
 /**
- * \brief Resets the IISC module
+ * \brief Get the default IIS module configuration:
+ * Data format: 32 bits
+ * Slot length: 32 bits
+ * Sample frequecny ratio: 1024
+ * Tx channel: Stereo
+ * Rx channel: Stereo
+ * DMA for Tx: 1 DMA channel for 1 IIS Tx channel
+ * DMA for Rx: 1 DMA channel for 1 IIS Rx channel
+ * Loopback: No
+ * Master: Yes
  *
- *  \param dev_inst    Device structure pointer.
+ * \param cfg         Pointer to IIS configuration.
  */
-static inline void iis_reset(struct iisc_device *dev_inst)
+static inline void iis_get_config_defaults(struct iis_config *const cfg)
+{
+	/* Sanity check arguments */
+	Assert(cfg);
+
+	cfg->data_format = IIS_DATE_32BIT;
+	cfg->slot_length = IIS_SLOT_LENGTH_32BIT;
+	cfg->fs_ratio = IIS_FS_RATE_1024;
+	cfg->tx_channels = IIS_CHANNEL_STEREO;
+	cfg->rx_channels = IIS_CHANNEL_STEREO;
+	cfg->tx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
+	cfg->rx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
+	cfg->loopback = false;
+	cfg->master = true;
+}
+
+enum status_code iis_init(struct iis_device *const dev_inst, Iisc *iisc,
+		struct iis_config *const cfg);
+
+/**
+ * \brief Resets the IIS module
+ *
+ * \param dev_inst    Device structure pointer.
+ */
+static inline void iis_reset(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_SWRST;
 }
 
 /**
- *  \brief Enable the IISC module in transmission
+ * \brief Enable the IIS module in transmission
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_enable_transmission(struct iisc_device *dev_inst)
+static inline void iis_enable_transmission(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_TXEN;
 }
 
 /**
- *  \brief Disable the IISC module in transmission
+ * \brief Disable the IIS module in transmission
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_disable_transmission(struct iisc_device *dev_inst)
+static inline void iis_disable_transmission(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_TXDIS;
 }
 
 /**
- *  \brief Enable the IISC module in reception
+ * \brief Enable the IIS module in reception
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_enable_reception(struct iisc_device *dev_inst)
+static inline void iis_enable_reception(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_RXEN;
 }
 
 /**
- *  \brief Disable the IISC module in reception
+ * \brief Disable the IIS module in reception
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_disable_reception(struct iisc_device *dev_inst)
+static inline void iis_disable_reception(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_RXDIS;
 }
 
 /**
- * \brief Enable the clocks for the IISC module
+ * \brief Enable the clocks for the IIS module
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_enable_clocks(struct iisc_device *dev_inst)
+static inline void iis_enable_clocks(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_CKEN;
 }
 
 /**
- *  \brief Disable the clocks for the IISC module
+ * \brief Disable the clocks for the IIS module
  *
- *  \param dev_inst    Device structure pointer.
+ * \param dev_inst    Device structure pointer.
  */
-static inline void iis_disable_clocks(struct iisc_device *dev_inst)
+static inline void iis_disable_clocks(struct iis_device *dev_inst)
 {
 	dev_inst->hw_dev->IISC_CR = IISC_CR_CKDIS;
 }
 
 /**
- * \brief Get the IISC status value.
+ * \brief Get the IIS status value.
  *
  * \param dev_inst    Device structure pointer.
  *
  * \return Status value
  */
-static inline uint32_t iis_get_status(struct iisc_device *dev_inst)
+static inline uint32_t iis_get_status(struct iis_device *dev_inst)
 {
 	return dev_inst->hw_dev->IISC_SR;
 }
 
-/**
- * \brief Clear the IISC status value.
- *
- * \param dev_inst    Device structure pointer.
- * \param status_mask Status mask value
- */
-static inline void iis_clear_status(struct iisc_device *dev_inst,
-		uint32_t status_mask)
-{
-	dev_inst->hw_dev->IISC_SCR = status_mask;
-}
+typedef enum iis_interrupt_source {
+	IIS_INTERRUPT_RXRDY = 0,
+	IIS_INTERRUPT_RXOR,
+	IIS_INTERRUPT_TXRDY,
+	IIS_INTERRUPT_TXUR,
+	_IIS_INTERRUPT_SOURCE_NUM,
+} iis_interrupt_source_t;
+
+void iis_set_callback(struct iis_device *const dev_inst,
+		iis_interrupt_source_t source, iis_callback_t callback,
+		uint8_t irq_level);
+
+void iis_clear_status(struct iis_device *const dev_inst,
+		iis_interrupt_source_t source);
+void iis_enable_interrupt(struct iis_device *const dev_inst,
+		iis_interrupt_source_t source);
+void iis_disable_interrupt(struct iis_device *const dev_inst,
+		iis_interrupt_source_t source);
 
 /**
- * \brief Set the IISC status value.
- *
- * \param dev_inst    Device structure pointer.
- * \param status_mask Status mask value
- */
-static inline void iis_set_status(struct iisc_device *dev_inst,
-		uint32_t status_mask)
-{
-	dev_inst->hw_dev->IISC_SSR = status_mask;
-}
-
-/**
- * \brief Enable the IISC interrupts.
- *
- * \param dev_inst    Device structure pointer.
- * \param int_mask interrupt mask value
- */
-static inline void iis_enable_interrupts(struct iisc_device *dev_inst,
-		uint32_t int_mask)
-{
-	dev_inst->hw_dev->IISC_IER = int_mask;
-}
-
-/**
- * \brief Disable the IISC interrupts.
- *
- * \param dev_inst    Device structure pointer.
- * \param int_mask interrupt mask value
- */
-static inline void iis_disable_interrupts(struct iisc_device *dev_inst,
-		uint32_t int_mask)
-{
-	dev_inst->hw_dev->IISC_IDR = int_mask;
-}
-
-
-/**
- * \brief Read the IISC interrupts mask value.
+ * \brief Get the IIS interrupts mask value.
  *
  * \param dev_inst    Device structure pointer.
  *
  * \return Interrupt mask value
  */
-static inline uint32_t iis_read_interrupt_mask(struct iisc_device *dev_inst)
+static inline uint32_t iis_get_interrupt_mask(struct iis_device *dev_inst)
 {
 	return dev_inst->hw_dev->IISC_IMR;
 }
 
-/**
- * \brief Enable the IISC module.
- *
- * \param dev_inst    Device structure pointer.
- *
- */
-void iis_enable(struct iisc_device *dev_inst);
+void iis_enable(struct iis_device *const dev_inst);
+void iis_disable(struct iis_device *const dev_inst);
 
-/**
- * \brief Disable the IISC module.
- *
- * \param dev_inst    Device structure pointer.
- *
- */
-void iis_disable(struct iisc_device *dev_inst);
-
-/**
- * \brief Write a single message of data.
- *
- * \param dev_inst    Device structure pointer.
- * \param data The data to write
- *
- * \return status
- */
-status_code_t iis_write(struct iisc_device *dev_inst, uint32_t data);
-
-/**
- * \brief Read a single message of data.
- *
- * \param dev_inst    Device structure pointer.
- * \param *data Pointer for receive data
- *
- * \return status
- */
-status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
+enum status_code iis_write(struct iis_device *dev_inst, uint32_t data);
+enum status_code iis_read(struct iis_device *dev_inst, uint32_t *data);
 
 /**
  * \}
@@ -341,7 +315,7 @@ status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
 #endif
 
 /**
- * \page sam_iisc_quick_start Quick Start Guide for the IISC driver
+ * \page sam_iis_quick_start Quick Start Guide for the IISC driver
  *
  * This is the quick start guide for the \ref group_sam_drivers_iisc, with
  * step-by-step instructions on how to configure and use the driver for
@@ -349,22 +323,22 @@ status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
  * application loop or any other function that will need to control the
  * IISC module.
  *
- * \section iisc_qs_use_cases Use cases
- * - \ref iisc_basic
+ * \section iis_qs_use_cases Use cases
+ * - \ref iis_basic
  *
- * \section iisc_basic IISC basic usage
+ * \section iis_basic IISC basic usage
  *
  * This use case will demonstrate how to initialize the IISC module to
  * master or slave mode.
  *
- * \section iisc_basic_setup Setup steps
+ * \section iis_basic_setup Setup steps
  *
- * \subsection iisc_basic_prereq Prerequisites
+ * \subsection iis_basic_prereq Prerequisites
  *
  * This module requires the following service
  * - \ref clk_group
  *
- * \subsection iisc_basic_setup_workflow
+ * \subsection iis_basic_setup_workflow
  *
  * -# Enable the IISC module
  * -# Set the configuration
@@ -372,48 +346,48 @@ status_code_t iis_read(struct iisc_device *dev_inst, uint32_t *data);
  *  - \note The driver not cover all the configuration for
  * the clock setting complexity.
  *
- * \subsection iisc_basic_setup_code
+ * \subsection iis_basic_setup_code
  *
  * Add this to the main loop or a setup function:
  * \code
- * struct iisc_config config;
- * struct iisc_device dev_inst;
- * config.data_word_format = IISC_DATE_16BIT_COMPACT;
+ * struct iis_config config;
+ * struct iis_device dev_inst;
+ * config.data_word_format = IIS_DATE_16BIT_COMPACT;
  * config.slot_length = 16;
- * config.fs_ratio = IISC_FS_RATE_256;
- * config.num_tx_channels = IISC_CHANNEL_STEREO;
- * config.num_rx_channels = IISC_CHANNEL_STEREO;
+ * config.fs_ratio = IIS_FS_RATE_256;
+ * config.num_tx_channels = IIS_CHANNEL_STEREO;
+ * config.num_rx_channels = IIS_CHANNEL_STEREO;
  * config.loopback = true;
  * config.master = true;
  * iis_init(&dev_inst, IISC, &config);
- * iisc_enable(&dev_inst);
+ * iis_enable(&dev_inst);
  * \endcode
  *
  *
- * \section iisc_basic_usage Usage steps
+ * \section iis_basic_usage Usage steps
  *
- * \subsection iisc_basic_usage_code
+ * \subsection iis_basic_usage_code
  *
  * We can enable the transfer by
  * \code
- * iisc_enable_transmission(&dev_inst);
- * iisc_enable_clocks(&dev_inst);
+ * iis_enable_transmission(&dev_inst);
+ * iis_enable_clocks(&dev_inst);
  * \endcode
  * Or we can enable the receive by
  * \code
- * iisc_enable_reception(&dev_inst);
+ * iis_enable_reception(&dev_inst);
  * \endcode
  *
  * If we not use the PDCA, we can access the data by
  * \code
- * iisc_write(&dev_inst, data);
- * iisc_read(&dev_inst, &data);
+ * iis_write(&dev_inst, data);
+ * iis_read(&dev_inst, &data);
  * \endcode
  *
  * And we can set the interrupt by
  * \code
- * iisc_enable_interrupts(&dev_inst, int_mask);
+ * iis_enable_interrupts(&dev_inst, int_mask);
  * \endcode
  */
 
-#endif  /* _IISC_H_INCLUDED_ */
+#endif  /* IIS_H_INCLUDED */

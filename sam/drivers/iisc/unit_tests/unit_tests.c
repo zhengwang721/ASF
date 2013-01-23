@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Unit tests for IISC driver.
+ * \brief Unit tests for IIS driver.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -116,21 +116,21 @@ int16_t input_samples[SOUND_SAMPLES];
 
 /* PDCA channel options */
 static const pdca_channel_config_t pdca_iisc_config_tx = {
-	.addr = 0,   /* memory address */
-	.pid = IISC_PDCA_ID_TX,     /* select peripheral */
-	.size = 0,   /* transfer counter */
-	.r_addr = 0,                   /* next memory address */
-	.r_size = 0,                   /* next transfer counter */
-	.ring = false,                 /* disable ring buffer mode */
+	.addr = 0,               /* memory address */
+	.pid = IISC_PDCA_ID_TX,  /* select peripheral */
+	.size = 0,               /* transfer counter */
+	.r_addr = 0,             /* next memory address */
+	.r_size = 0,             /* next transfer counter */
+	.ring = false,           /* disable ring buffer mode */
 	.transfer_size = PDCA_MR_SIZE_WORD /* select size of the transfer */
 };
 static const pdca_channel_config_t pdca_iisc_config_rx = {
-	.addr = 0,   /* memory address */
-	.pid = IISC_PDCA_ID_RX,     /* select peripheral */
-	.size = 0,   /* transfer counter */
-	.r_addr = 0,                   /* next memory address */
-	.r_size = 0,                   /* next transfer counter */
-	.ring = false,                 /* disable ring buffer mode */
+	.addr = 0,               /* memory address */
+	.pid = IISC_PDCA_ID_RX,  /* select peripheral */
+	.size = 0,               /* transfer counter */
+	.r_addr = 0,             /* next memory address */
+	.r_size = 0,             /* next transfer counter */
+	.ring = false,           /* disable ring buffer mode */
 	.transfer_size = PDCA_MR_SIZE_WORD /* select size of the transfer */
 };
 
@@ -142,11 +142,11 @@ volatile uint32_t flag = true;
  *
  * \param test Current test case.
  */
-static void run_iisc_test(const struct test_case *test)
+static void run_iis_test(const struct test_case *test)
 {
 	uint32_t i;
-	struct iisc_config config;
-	struct iisc_device dev_inst;
+	struct iis_config config;
+	struct iis_device dev_inst;
 	struct genclk_config gencfg;
 	struct pll_config pcfg;
 
@@ -166,16 +166,18 @@ static void run_iisc_test(const struct test_case *test)
 	genclk_enable(&gencfg, IISC_GCLK_NUM);
 
 	/* Set the configuration */
-	config.data_word_format = IISC_DATE_16BIT_COMPACT;
-	config.slot_length = 16;
-	config.fs_ratio = IISC_FS_RATE_256;
-	config.num_tx_channels = IISC_CHANNEL_STEREO;
-	config.num_rx_channels = IISC_CHANNEL_STEREO;
+	iis_get_config_defaults(&config);
+	config.data_format = IIS_DATE_16BIT_COMPACT;
+	config.slot_length = IIS_SLOT_LENGTH_16BIT;
+	config.fs_ratio = IIS_FS_RATE_256;
+	config.tx_channels = IIS_CHANNEL_STEREO;
+	config.rx_channels = IIS_CHANNEL_STEREO;
+	config.tx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
+	config.rx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
 	config.loopback = true;
-	config.master = true;
 	iis_init(&dev_inst, IISC, &config);
 
-	/* Enable the IISC module. */
+	/* Enable the IIS module. */
 	iis_enable(&dev_inst);
 
 	/* Config PDCA module */
@@ -218,7 +220,7 @@ static void run_iisc_test(const struct test_case *test)
 		}
 	}
 
-	test_assert_true(test, flag == true, "Audio data not match!");
+	test_assert_true(test, flag == true, "Audio data did not match!");
 }
 
 /**
@@ -239,19 +241,19 @@ int main(void)
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	/* Define all the test cases. */
-	DEFINE_TEST_CASE(iisc_test, NULL, run_iisc_test, NULL,
-			"SAM IISC transfer test.");
+	DEFINE_TEST_CASE(iis_test, NULL, run_iis_test, NULL,
+			"SAM IIS transfer test");
 
 	/* Put test case addresses in an array. */
-	DEFINE_TEST_ARRAY(iisc_tests) = {
-		&iisc_test,
+	DEFINE_TEST_ARRAY(iis_tests) = {
+		&iis_test,
 	};
 
 	/* Define the test suite. */
-	DEFINE_TEST_SUITE(iisc_suite, iisc_tests, "SAM IISC driver test suite");
+	DEFINE_TEST_SUITE(iis_suite, iis_tests, "SAM IIS driver test suite");
 
 	/* Run all tests in the test suite. */
-	test_suite_run(&iisc_suite);
+	test_suite_run(&iis_suite);
 
 	while (1) {
 		/* Busy-wait forever. */
