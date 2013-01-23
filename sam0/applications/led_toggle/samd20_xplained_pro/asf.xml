@@ -4,6 +4,8 @@
 		<require idref="sam0.applications.led_toggle"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_bod.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="samd20j18a"/>

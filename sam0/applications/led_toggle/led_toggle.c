@@ -46,7 +46,7 @@
 #define BOARD_BUTTON_EXTINT_CHANNEL  5
 
 #define USE_INTERRUPTS               false
-#define USE_EIC                      false
+#define USE_EIC                      true
 
 #if (USE_INTERRUPTS && !USE_EIC)
 #  error Invalid application configuration.
@@ -100,6 +100,24 @@ int main(void)
 	configure_led();
 	configure_button();
 
+#if USE_EIC == true
+	system_gclk_init();
+
+	struct system_gclk_gen_conf gclock_gen_conf;
+	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
+	gclock_gen_conf.source_clock    = 0;
+	gclock_gen_conf.division_factor = 128;
+	system_gclk_gen_set_config(1, &gclock_gen_conf);
+	system_gclk_gen_enable(1);
+
+	struct system_gclk_ch_conf gclock_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator    = 1;
+	gclock_ch_conf.enable_during_sleep = false;
+	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
+	system_gclk_ch_enable(EIC_GCLK_ID);
+#endif
+
 #if USE_INTERRUPTS == true
 	cpu_irq_enable();
 
@@ -113,11 +131,11 @@ int main(void)
 	}
 #  else
 	while (true) {
-		if (extint_ch_is_detected(BOARD_BUTTON_EXTINT_CHANNEL)) {
+		//if (extint_ch_is_detected(BOARD_BUTTON_EXTINT_CHANNEL)) {
 			extint_ch_clear_detected(BOARD_BUTTON_EXTINT_CHANNEL);
 
 			board_extint_handler(BOARD_BUTTON_EXTINT_CHANNEL);
-		}
+		//}
 	}
 #  endif
 #endif
