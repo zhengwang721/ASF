@@ -39,9 +39,7 @@
  */
 #include <asf.h>
 
-void configure_system_clock_sources(void);
 void configure_extosc32k(void);
-void configure_gclk_generator(void);
 void configure_dfll_open_loop(void);
 
 volatile uint32_t frequency;
