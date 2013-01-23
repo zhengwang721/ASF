@@ -19,5 +19,6 @@
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
 	</module>
 </asf>
