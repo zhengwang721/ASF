@@ -151,7 +151,7 @@ static void run_nwk_init_test(const struct test_case *test)
 {
 	retval_t status;
 
-	status = nwk_init(RF_BAND);
+	status = nwk_init();
         printf("init");
 	test_assert_true(test, status == NWK_SUCCESS,
 			"NWK Initialization Failed");
