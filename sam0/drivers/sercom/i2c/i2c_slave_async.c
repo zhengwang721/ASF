@@ -64,8 +64,8 @@ static enum status_code _i2c_slave_set_config(
 	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
 	Sercom *const sercom_module = dev_inst->hw_dev;
 	struct system_pinmux_conf pin_conf;
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
 	
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 - SDA */
@@ -84,7 +84,7 @@ static enum status_code _i2c_slave_set_config(
 	system_pinmux_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
-	i2c_module->CTRLA.reg = config->sda_hold_time |
+	i2c_module->CTRLA.reg |= config->sda_hold_time |
 			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos);
 
 	/* Set CTRLB configuration */
@@ -93,11 +93,8 @@ static enum status_code _i2c_slave_set_config(
 	i2c_module->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
 			config->address_mask << SERCOM_I2CS_ADDR_ADDRMASK_Pos |
 			config->enable_general_call_address << SERCOM_I2CS_ADDR_GENCEN_Pos;
-	/* Set sercom gclk generator according to config and return status code */
-	return sercom_set_gclk_generator(
-			config->generator_source,
-			config->run_in_standby,
-			false);
+
+	return STATUS_OK;
 }
 
 /**
@@ -142,6 +139,21 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
 	if (i2c_module->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
 		return STATUS_ERR_BUSY;
 	}
+	
+	/* Turn on module in PM */
+	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
+			+ PM_APBCMASK_SERCOM0_Pos;
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
+	
+	/* Set up GCLK */
+	struct system_gclk_ch_conf gclk_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	gclk_ch_conf.source_generator = config->generator_source;
+	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
+	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(gclk_index);
+	system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 	/* Get sercom instance index. */
 	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module);
@@ -158,7 +170,6 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
 	dev_inst->enabled_callback = 0;
 	dev_inst->buffer_length = 0;
 
-	//dev_inst->callback[0] = 0;
 
 	/* Set SERCOM module to operate in I2C slave mode. */
 	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
