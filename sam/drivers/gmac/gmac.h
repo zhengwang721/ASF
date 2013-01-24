@@ -65,18 +65,17 @@ extern "C" {
 #define GMAC_RXD_BROADCAST    (1ul << 31) /**< Broadcast detected */
 #define GMAC_RXD_MULTIHASH    (1ul << 30) /**< Multicast hash match */
 #define GMAC_RXD_UNIHASH      (1ul << 29) /**< Unicast hash match */
-#define GMAC_RXD_EXTADDR      (1ul << 28) /**< External address match */
-#define GMAC_RXD_ADDR1        (1ul << 26) /**< Address 1 match */
-#define GMAC_RXD_ADDR2        (1ul << 25) /**< Address 2 match */
-#define GMAC_RXD_ADDR3        (1ul << 24) /**< Address 3 match */
-#define GMAC_RXD_ADDR4        (1ul << 23) /**< Address 4 match */
-#define GMAC_RXD_TYPE         (1ul << 22) /**< Type ID match */
+#define GMAC_RXD_ADDR_FOUND      (1ul << 27) /**< Specific address match found */
+#define GMAC_RXD_ADDR        (3ul << 25) /**< Address match */
+#define GMAC_RXD_RXCOEN        (1ul << 24) /**< RXCOEN related function */
+#define GMAC_RXD_TYPE         (3ul << 22) /**< Type ID match */
 #define GMAC_RXD_VLAN         (1ul << 21) /**< VLAN tag detected */
 #define GMAC_RXD_PRIORITY     (1ul << 20) /**< Priority tag detected */
 #define GMAC_RXD_PRIORITY_MASK  (3ul << 17) /**< VLAN priority */
 #define GMAC_RXD_CFI          (1ul << 16) /**< Concatenation Format Indicator only if bit 21 is set */
 #define GMAC_RXD_EOF          (1ul << 15) /**< End of frame */
 #define GMAC_RXD_SOF          (1ul << 14) /**< Start of frame */
+#define GMAC_RXD_FCS          (1ul << 13) /**< Frame check sequence */
 #define GMAC_RXD_OFFSET_MASK                /**< Receive buffer offset */
 #define GMAC_RXD_LEN_MASK       (0xFFF)     /**< Length of frame including FCS (if selected) */
 #define GMAC_RXD_LENJUMBO_MASK  (0x3FFF)    /**< Jumbo frame length */
@@ -86,9 +85,11 @@ extern "C" {
 #define GMAC_TXD_ERROR        (1ul << 29) /**< Retry limit exceeded, error */
 #define GMAC_TXD_UNDERRUN     (1ul << 28) /**< Transmit underrun */
 #define GMAC_TXD_EXHAUSTED    (1ul << 27) /**< Buffer exhausted */
+#define GMAC_TXD_LATE    (1ul << 26) /**< Late collision,transmit  error  */
+#define GMAC_TXD_CHECKSUM_ERROR   (7ul << 20) /**< Checksum error */
 #define GMAC_TXD_NOCRC        (1ul << 16) /**< No CRC */
 #define GMAC_TXD_LAST         (1ul << 15) /**< Last buffer in frame */
-#define GMAC_TXD_LEN_MASK       (0x7FF)     /**< Length of buffer */
+#define GMAC_TXD_LEN_MASK       (0x1FFF)     /**< Length of buffer */
 
 /** The MAC can support frame lengths up to 1536 bytes */
 #define GMAC_FRAME_LENTGH_MAX       1536
@@ -97,14 +98,12 @@ extern "C" {
 #define GMAC_TX_UNITSIZE            1518    /**< Size for ETH frame length */
 
 /** GMAC clock speed */
-#define GMAC_CLOCK_SPEED_540MHZ        (540*1000*1000)
-#define GMAC_CLOCK_SPEED_320MHZ        (320*1000*1000)
-#define GMAC_CLOCK_SPEED_240MHZ        (240*1000*1000)
-#define GMAC_CLOCK_SPEED_160MHZ        (160*1000*1000)
-#define GMAC_CLOCK_SPEED_120MHZ        (120*1000*1000)
-#define GMAC_CLOCK_SPEED_80MHZ          (80*1000*1000)
-#define GMAC_CLOCK_SPEED_40MHZ          (40*1000*1000)
-#define GMAC_CLOCK_SPEED_20MHZ          (20*1000*1000)
+#define GMAC_MCK_SPEED_240MHZ        (240*1000*1000)
+#define GMAC_MCK_SPEED_160MHZ        (160*1000*1000)
+#define GMAC_MCK_SPEED_120MHZ        (120*1000*1000)
+#define GMAC_MCK_SPEED_80MHZ          (80*1000*1000)
+#define GMAC_MCK_SPEED_40MHZ          (40*1000*1000)
+#define GMAC_MCK_SPEED_20MHZ          (20*1000*1000)
 
 /** GMAC maintain code default value*/
 #define GMAC_MAN_CODE_VALUE    (10)
@@ -127,7 +126,6 @@ extern "C" {
 
 #define GMAC_SPEED_10M      0
 #define GMAC_SPEED_100M     1
-#define GMAC_SPEED_1000M    2
 
 /**
  * \brief Return codes for GMAC APIs.
@@ -166,9 +164,9 @@ typedef struct gmac_rx_descriptor {
 			b_priority_detected:1, /** Priority tag detected */
 			b_vlan_detected:1,     /**< VLAN tag detected */
 			b_type_id_match:2,     /**< Type ID match */
-			b_checksumoffload:1,        /**< Address register 3 match */
-			b_addrmatch:2,        /**< Address register 1 match */
-			b_ext_addr_match:1,    /**< External address match */
+			b_checksumoffload:1,        /**< Checksum offload specific function */
+			b_addrmatch:2,        /**< Address register match */
+			b_ext_addr_match:1,    /**< External address match found */
 			reserved:1,
 			b_uni_hash_match:1,    /**< Unicast hash match */
 			b_multi_hash_match:1,  /**< Multicast hash match */
@@ -189,7 +187,7 @@ typedef struct gmac_tx_descriptor {
 			b_last_buffer:1, /**< Last buffer (in the current frame) */
 			b_no_crc:1,      /**< No CRC */
 			reserved1:3,
-			b_checksumoffload:3,
+			b_checksumoffload:3,    /**< Transmit checksum generation offload errors */
 			reserved2:3,
 			b_lco:1,         /**< Late collision, transmit error detected */
 			b_exhausted:1,   /**< Buffer exhausted in mid frame */
@@ -401,6 +399,86 @@ static inline void gmac_halt_transmission(Gmac* p_gmac)
 }
 
 /**
+ * \brief Transmit pause frame.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ */
+static inline void gmac_tx_pause_frame(Gmac* p_gmac)
+{
+	p_gmac->GMAC_NCR |= GMAC_NCR_TXPF;
+}
+
+/**
+ * \brief Transmit zero quantum pause frame.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ */
+static inline void gmac_tx_pause_zero_quantum_frame(Gmac* p_gmac)
+{
+	p_gmac->GMAC_NCR |= GMAC_NCR_TXZQPF;
+}
+
+/**
+ * \brief Read snapshot.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ */
+static inline void gmac_read_snapshot(Gmac* p_gmac)
+{
+	p_gmac->GMAC_NCR |= GMAC_NCR_RDS;
+}
+
+/**
+ * \brief Store receivetime stamp to memory.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ * \param uc_enable   0 to normal operation, else to enable the store.
+ */
+static inline void gmac_store_rx_time_stamp(Gmac* p_gmac, uint8_t uc_enable)
+{
+	if (uc_enable) {
+		p_gmac->GMAC_NCR |= GMAC_NCR_SRTSM;
+	} else {
+		p_gmac->GMAC_NCR &= ~GMAC_NCR_SRTSM;
+	}
+}
+
+/**
+ * \brief Enable PFC priority-based pause reception.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ * \param uc_enable   1 to set the reception, 0 to disable.
+ */
+static inline void gmac_enable_pfc_pause_frame(Gmac* p_gmac, uint8_t uc_enable)
+{
+	if (uc_enable) {
+		p_gmac->GMAC_NCR |= GMAC_NCR_ENPBPR;
+	} else {
+		p_gmac->GMAC_NCR &= ~GMAC_NCR_ENPBPR;
+	}
+}
+
+/**
+ * \brief Transmit PFC priority-based pause reception.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ */
+static inline void gmac_transmit_pfc_pause_frame(Gmac* p_gmac)
+{
+		p_gmac->GMAC_NCR |= GMAC_NCR_TXPBPF;
+}
+
+/**
+ * \brief Flush next packet.
+ *
+ * \param p_gmac   Pointer to the GMAC instance.
+ */
+static inline void gmac_flush_next_packet(Gmac* p_gmac)
+{
+		p_gmac->GMAC_NCR |= GMAC_NCR_FNP;
+}
+
+/**
  * \brief Set up network configuration register.
  *
  * \param p_gmac   Pointer to the GMAC instance.
@@ -536,25 +614,21 @@ static inline void gmac_enable_big_frame(Gmac* p_gmac, uint8_t uc_enable)
  *
  * \return GMAC_OK if successfully.
  */
-static inline uint8_t gmac_set_clock(Gmac* p_gmac, uint32_t ul_mck)
+static inline uint8_t gmac_set_mdc_clock(Gmac* p_gmac, uint32_t ul_mck)
 {
 	uint32_t ul_clk;
 	
-	if (ul_mck > GMAC_CLOCK_SPEED_540MHZ) {
+	if (ul_mck > GMAC_MCK_SPEED_240MHZ) {
 		return GMAC_INVALID;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_320MHZ) {
-		ul_clk = GMAC_NCFGR_CLK_MCK_224;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_240MHZ) {
-		ul_clk = GMAC_NCFGR_CLK_MCK_128;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_160MHZ) {
+	} else if (ul_mck > GMAC_MCK_SPEED_160MHZ) {
 		ul_clk = GMAC_NCFGR_CLK_MCK_96;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_120MHZ) {
+	} else if (ul_mck > GMAC_MCK_SPEED_120MHZ) {
 		ul_clk = GMAC_NCFGR_CLK_MCK_64;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_80MHZ) {
+	} else if (ul_mck > GMAC_MCK_SPEED_80MHZ) {
 		ul_clk = GMAC_NCFGR_CLK_MCK_48;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_40MHZ) {
+	} else if (ul_mck > GMAC_MCK_SPEED_40MHZ) {
 		ul_clk = GMAC_NCFGR_CLK_MCK_32;
-	} else if (ul_mck > GMAC_CLOCK_SPEED_20MHZ) {
+	} else if (ul_mck > GMAC_MCK_SPEED_20MHZ) {
 		ul_clk = GMAC_NCFGR_CLK_MCK_16;
 	} else {
 		ul_clk = GMAC_NCFGR_CLK_MCK_8;
@@ -952,7 +1026,7 @@ static inline void gmac_set_address64(Gmac* p_gmac, uint8_t uc_index,
 }
 
 /**
- * \brief Enable/Disable RMII.
+ * \brief Enable/Disable RMII. For MII mode, this bit must be set to 1.
  *
  * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_enable   0 to disable the RMII mode, else to enable it.
@@ -1022,9 +1096,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *
  * \subsection gmac_basic_use_case_setup_prereq Prerequisites
  * -# \ref sysclk_group "System Clock Management (sysclock)"
- * -# \ref pio_group "Parallel Input/Output Controller (pio)"
  * -# \ref pmc_group "Power Management Controller (pmc)"
- * -# \ref sam_drivers_rstc_group "Reset Controller (RSTC)"
  * -# \ref ksz8051mnl_ethernet_phy_group "PHY component (KSZ8051MNL)"
  *
  * \subsection gmac_basic_use_case_setup_code Example code
@@ -1052,7 +1124,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * #define ETHERNET_CONF_NET_MASK1                       255
  * #define ETHERNET_CONF_NET_MASK2                       255
  * #define ETHERNET_CONF_NET_MASK3                       0
- * #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_RMII
+ * #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_MII
  * \endcode
  *
  * A specific gmac device and the receive data buffer must be defined; another ul_frm_size should be defined
@@ -1083,11 +1155,11 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *
  *       NVIC_EnableIRQ(GMAC_IRQn);
  *
- *       ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz()
+ *       ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
  * 
- *       ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR
+ *       ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
  *
- *       ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1)
+ *       ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);
  * \endcode
  *
  * \subsection gmac_basic_use_case_setup_flow Workflow
@@ -1117,7 +1189,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *        #define ETHERNET_CONF_NET_MASK1                       255
  *        #define ETHERNET_CONF_NET_MASK2                       255
  *        #define ETHERNET_CONF_NET_MASK3                       0
- *        #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_RMII
+ *        #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_MII
  *   \endcode
  * -# Enable the system clock:
  *   - \code sysclk_init(); \endcode

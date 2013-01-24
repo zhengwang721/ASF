@@ -54,7 +54,6 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
 #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLBCK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1

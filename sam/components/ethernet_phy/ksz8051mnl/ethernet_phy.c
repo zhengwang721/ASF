@@ -55,12 +55,12 @@ extern "C" {
 /**
  * \defgroup ksz8051mnl_ethernet_phy_group PHY component (KSZ8051MNL)
  *
- * Driver for the ksz8051mnl component. This driver provides access to the main 
+ * Driver for the ksz8051mnl component. This driver provides access to the main
  * features of the PHY.
  *
  * \section dependencies Dependencies
  * This driver depends on the following modules:
- * - \ref gmac_group Ethernet Media Access Controller (GMAC) module. 
+ * - \ref gmac_group Ethernet Media Access Controller (GMAC) module.
  *
  * @{
  */
@@ -77,31 +77,29 @@ extern "C" {
 /**
  * \brief Find a valid PHY Address ( from addrStart to 31 ).
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
- * \param uc_start_addr Start address of the PHY to be searched. 
+ * \param uc_start_addr Start address of the PHY to be searched.
  *
- * \return 0xFF when no valid PHY address is found. 
+ * \return 0xFF when no valid PHY address is found.
  */
 static uint8_t ethernet_phy_find_valid(Gmac *p_gmac, uint8_t uc_phy_addr,
-		uint8_t addrStart)
+		uint8_t uc_start_addr)
 {
 	uint32_t ul_value = 0;
-	uint8_t uc_rc;
+	uint8_t uc_rc = 0;
 	uint8_t uc_cnt;
 	uint8_t uc_phy_address = uc_phy_addr;
 
 	gmac_enable_management(p_gmac, true);
 
 	/* Check the current PHY address */
-	uc_rc = uc_phy_address;
-	if (gmac_phy_read(p_gmac, uc_phy_addr, GMII_PHYID1, &ul_value) != GMAC_OK) {
-	}
+	gmac_phy_read(p_gmac, uc_phy_addr, GMII_PHYID1, &ul_value);
 
 	/* Find another one */
 	if (ul_value != GMII_OUI_LSB) {
 		uc_rc = 0xFF;
-		for (uc_cnt = addrStart; uc_cnt <= ETH_PHY_MAX_ADDR; uc_cnt++) {
+		for (uc_cnt = uc_start_addr; uc_cnt <= ETH_PHY_MAX_ADDR; uc_cnt++) {
 			uc_phy_address = (uc_phy_address + 1) & 0x1F;
 			gmac_phy_read(p_gmac, uc_phy_address, GMII_PHYID1, &ul_value);
 			if (ul_value == GMII_OUI_MSB) {
@@ -121,7 +119,7 @@ static uint8_t ethernet_phy_find_valid(Gmac *p_gmac, uint8_t uc_phy_addr,
 
 
 /**
- * \brief Perform a HW initialization to the PHY ( via RSTC ) and set up clocks.
+ * \brief Perform a HW initialization to the PHY and set up clocks.
  *
  * This should be called only once to initialize the PHY pre-settings.
  * The PHY address is the reset status of CRS, RXD[3:0] (the emacPins' pullups).
@@ -130,9 +128,9 @@ static uint8_t ethernet_phy_find_valid(Gmac *p_gmac, uint8_t uc_phy_addr,
  * The above pins should be predefined for corresponding settings in resetPins.
  * The GMAC peripheral pins are configured after the reset is done.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
- * \param ul_mck GMAC MCK. 
+ * \param ul_mck GMAC MCK.
  *
  * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
@@ -144,7 +142,7 @@ uint8_t ethernet_phy_init(Gmac *p_gmac, uint8_t uc_phy_addr, uint32_t mck)
 	ethernet_phy_reset(GMAC,uc_phy_addr);
 
 	/* Configure GMAC runtime clock */
-	uc_rc = gmac_set_clock(p_gmac, mck);
+	uc_rc = gmac_set_mdc_clock(p_gmac, mck);
 	if (uc_rc != GMAC_OK) {
 		return 0;
 	}
@@ -166,11 +164,11 @@ uint8_t ethernet_phy_init(Gmac *p_gmac, uint8_t uc_phy_addr, uint32_t mck)
  * \brief Get the Link & speed settings, and automatically set up the GMAC with the
  * settings.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  * \param uc_apply_setting_flag Set to 0 to not apply the PHY configurations, else to apply.
  *
- * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout. 
+ * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
 uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
 		uint8_t uc_apply_setting_flag)
@@ -251,10 +249,10 @@ uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
 /**
  * \brief Issue an auto negotiation of the PHY.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  *
- * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout. 
+ * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
 uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 {
@@ -372,7 +370,8 @@ uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 	gmac_set_speed(p_gmac, uc_speed);
 	gmac_enable_full_duplex(p_gmac, uc_fd);
 
-	gmac_enable_rmii(p_gmac, 1);
+	/* This bit must be set to true */
+	gmac_enable_rmii(p_gmac, true);
 
 	gmac_enable_transmit(GMAC, true);
 	gmac_enable_receive(GMAC, true);
@@ -384,7 +383,7 @@ uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 /**
  * \brief Issue a SW reset to reset all registers of the PHY.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  *
  * \Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.

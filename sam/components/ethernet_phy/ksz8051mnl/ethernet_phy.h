@@ -41,13 +41,10 @@
  *
  */
 
-#ifndef _GMII_DEFINE_H
-#define _GMII_DEFINE_H
+#ifndef ETHERNET_PHY_H_INCLUDED
+#define ETHERNET_PHY_H_INCLUDED
 
 #include "compiler.h"
-//-----------------------------------------------------------------------------
-///         Definitions
-//-----------------------------------------------------------------------------
 
 // IEEE defined Registers
 #define GMII_BMCR        0x00   // Basic Control
@@ -158,7 +155,7 @@
 #define GMII_LP_AN_ABLE       (1 << 0) // Link Partner Auto-negotiation Able
 
 /**
- * \brief Perform a HW initialization to the PHY ( via RSTC ) and set up clocks.
+ * \brief Perform a HW initialization to the PHY and set up clocks.
  *
  * This should be called only once to initialize the PHY pre-settings.
  * The PHY address is the reset status of CRS, RXD[3:0] (the GmacPins' pullups).
@@ -167,9 +164,9 @@
  * The above pins should be predefined for corresponding settings in resetPins.
  * The GMAC peripheral pins are configured after the reset is done.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
- * \param ul_mck GMAC MCK. 
+ * \param ul_mck GMAC MCK.
  *
  * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
@@ -180,11 +177,11 @@ uint8_t ethernet_phy_init(Gmac *p_gmac, uint8_t uc_phy_addr, uint32_t ul_mck);
  * \brief Get the Link & speed settings, and automatically set up the GMAC with the
  * settings.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  * \param uc_apply_setting_flag Set to 0 to not apply the PHY configurations, else to apply.
  *
- * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout. 
+ * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
 uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
 		uint8_t uc_apply_setting_flag);
@@ -193,22 +190,22 @@ uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
 /**
  * \brief Issue an auto negotiation of the PHY.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  *
- * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout. 
+ * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
 uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr);
 
 /**
  * \brief Issue a SW reset to reset all registers of the PHY.
  *
- * \param p_gmac   Pointer to the GMAC instance. 
+ * \param p_gmac   Pointer to the GMAC instance.
  * \param uc_phy_addr PHY address.
  *
  * \Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
 uint8_t ethernet_phy_reset(Gmac *p_gmac, uint8_t uc_phy_addr);
 
-#endif // #ifndef _MII_DEFINE_H
+#endif /* #ifndef ETHERNET_PHY_H_INCLUDED */
 
