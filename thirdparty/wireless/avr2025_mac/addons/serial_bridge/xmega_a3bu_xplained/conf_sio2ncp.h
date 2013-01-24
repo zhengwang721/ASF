@@ -41,6 +41,7 @@
 #ifndef CONF_SIO2NCP_H_INCLUDED
 #define CONF_SIO2NCP_H_INCLUDED
 
+#define NCP_RESET_GPIO            IOPORT_CREATE_PIN(PORTC, 0)
 
 //! @{
 #define USART_NCP                 &USARTE0
