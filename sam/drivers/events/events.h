@@ -143,24 +143,8 @@ static inline void events_set_igf_divider(enum events_igf_divider divider)
 	PEVC->PEVC_IGFDR = PEVC_IGFDR_IGFDR(divider);
 }
 
-/**
- * \brief Initialize an event channel configuration structure to defaults.
- *
- *  The default configuration is as follows:
- *  - Channel ID is initialized to invalid number.
- *  - Generator ID is initialized to invalid number.
- *  - Event shaper is disabled.
- *  - Event Input Glitch Filter is disabled.
- *
- *  \param config    Configuration structure to initialize to default values.
- */
 void events_chan_get_config_defaults(struct events_chan_conf *const config);
 
-/**
- * \brief Configure an event channel.
- *
- * \param config      Configuration settings for the event channel.
- */
 void events_chan_configure(struct events_chan_conf *const config);
 
 /**
@@ -256,7 +240,107 @@ static inline void events_chan_software_trigger(uint32_t channel_id)
 /**
  * \page sam_events_quick_start Quick Start Guide for the Event System Driver
  *
- * TBD
+ * This is the quick start guide for the \ref group_sam_drivers_events, with
+ * step-by-step instructions on how to configure and use the driver for
+ * a specific use case.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section events_qs_use_cases Use Cases
+ * - \ref event_basic_use_case
+ *
+ * \section event_basic_use_case Event Basic Use Case
+ *
+ * This use case will demonstrate how to use the Peripheral Event Controller
+ * on SAM4L_EK. In this use case, one event channel is configured as:
+ * - Configure AST periodic event 0 as a generator.
+ * - Configure PDCA channel 0 as a user to transfer one word.
+ * - Enable the event sharper for the generator.
+ *
+ * \section event_basic_setup Setup Steps
+ *
+ * \subsection event_basic_prereq Prerequisites
+ *
+ * This module requires the following service
+ * - \ref clk_group
+ *
+ * Enable the clock of PEVC before using this module in system initialization:
+ * \code
+ *   // Enable clock for PEVC module
+ *   sysclk_enable_peripheral_clock(PEVC);
+ * \endcode
+ *
+ * \subsection event_basic_setup_code Setup Code Example
+ *
+ * Add this to the main loop or a setup function:
+ * \code
+ *   // Initialize AST as event generator
+ *   init_ast();
+ *
+ *   // Initialize the PDCA as event user
+ *   init_pdca();
+ *
+ *   struct events_chan_conf config;
+ *
+ *   // Configure an event channel
+ *   // - AST periodic event 0 --- Generator
+ *   // - PDCA channel 0       --- User
+ *   events_chan_get_config_defaults(&config);
+ *   config.channel_id = PEVC_ID_USER_PDCA_0;
+ *   config.generator_id = PEVC_ID_GEN_AST_2;
+ *   config.sharper_enable = true;
+ *   config.igf_edge = EVENT_IGF_EDGE_NONE;
+ *   events_chan_configure(&config);
+ *
+ *   // Enable the channel
+ *   events_chan_enable(PEVC_ID_USER_PDCA_0);
+ * \endcode
+ *
+ * \subsection event_basic_setup_workflow Basic Setup Workflow
+ *
+ * -# Initialize AST to generate periodic event 0,
+ *  see sam/drivers/events/example1 for detail.
+ *  \code
+ *   init_ast();
+ *  \endcode
+ * -# Initialize PDCA channel 0 to tranfer data to USART,
+ *  see sam/drivers/events/example1 for detail.
+ *  \code
+ *   init_pdca();
+ *  \endcode
+ * -# Create an event channel configuration struct, which can be filled out to
+ *    adjust the configuration.
+ *  \code
+ *   struct events_chan_conf config;
+ *  \endcode
+ * -# Initialize the event channel configuration struct with the module's
+ *    default values.
+ *  \code
+ *   events_chan_get_config_defaults(&config);
+ *  \endcode
+ * -# Adjust the event channel configuration struct.
+ *  \code
+ *   config.channel_id = PEVC_ID_USER_PDCA_0;
+ *   config.generator_id = PEVC_ID_GEN_AST_2;
+ *   config.sharper_enable = true;
+ *   config.igf_edge = EVENT_IGF_EDGE_NONE;
+ *  \endcode
+ * -# Configure the event channel using the configuration structure.
+ *  \code
+ *   events_chan_configure(&config);
+ *  \endcode
+ * -# Enable the event channel.
+ *  \code
+ *    events_chan_enable(PEVC_ID_USER_PDCA_0);
+ *  \endcode
+ *
+ * \section event_basic_usage Event Basic Usage
+ *
+ * After the channel is configured correctly and enabled, each time a new
+ * event from AST is coming, a character is sent to the USART via PDCA without
+ * the use of the CPU.
  */
 
 #endif /* EVENTS_H_INCLUDED */
