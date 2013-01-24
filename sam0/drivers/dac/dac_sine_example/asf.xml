@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.dac.sine_example" caption="DAC Sine Function Example">
+		<info type="description" value="summary">
+		Example that outputs a sine wave from the DAC.
+		</info>
+		<build type="c-source" value="dac_sine_example.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.dac"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>
