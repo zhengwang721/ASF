@@ -59,13 +59,13 @@ extern "C" {
 /** AC configuration */
 struct ac_config {
 	/** Peripheral Event Trigger Enable */
-	bool event_trigger;
+	bool ac_event_trigger;
 };
 
 /* Prototype for device instance. */
 struct ac_dev_inst;
 
-typedef void (*ac_async_callback_t)(struct ac_dev_inst *const dev_inst);
+typedef void (*ac_callback_t)(void);
 
 /** AC driver hardware instance */
 struct ac_dev_inst {
@@ -110,21 +110,21 @@ enum ac_ch_interrupt_setting {
 /** AC channel configuration */
 struct ac_ch_config {
 	/** Hysteresis value */
-	enum ac_hysteresis_voltage hysteresis_voltage;
+	enum ac_hysteresis_voltage ac_hysteresis_voltage;
 	/** Always on enable */
-	bool always_on;
+	bool ac_always_on;
 	/** Fast mode enable */
-	bool fast_mode;
+	bool ac_fast_mode;
 	/** Output event when ACOUT is zero */
-	bool event_negative;
+	bool ac_event_negative;
 	/** Output event when ACOUT is one */
-	bool event_positive;
+	bool ac_event_positive;
 	/** Set the negative input */
-	enum ac_negative_input negative_input;
+	enum ac_negative_input ac_negative_input;
 	/** Set the comparator mode */
-	enum ac_comparator_mode comparator_mode;
+	enum ac_comparator_mode ac_comparator_mode;
 	/** Interrupt settings */
-	enum ac_ch_interrupt_setting interrupt_setting;
+	enum ac_ch_interrupt_setting ac_interrupt_setting;
 };
 
 /** Window Event output configuration */
@@ -154,13 +154,13 @@ enum ac_win_interrupt_setting {
 /** AC Window configuration */
 struct ac_win_config {
 	/** Window Mode Enable/Disable */
-	bool enable;
+	bool ac_enable;
 	/** Window Event from ACWOUT Enable/Disable */
-	bool event_enable;
+	bool ac_event_enable;
 	/** Window Event output configuration */
-	enum ac_win_event_source event_source;
+	enum ac_win_event_source ac_event_source;
 	/** Interrupt settings */
-	enum ac_win_interrupt_setting interrupt_setting;
+	enum ac_win_interrupt_setting ac_interrupt_setting;
 };
 
 /**
@@ -182,7 +182,7 @@ static inline void ac_get_config_defaults(struct ac_config *const cfg)
 	/* Sanity check argument */
 	Assert(cfg);
 
-	cfg->event_trigger = false;
+	cfg->ac_event_trigger = false;
 }
 
 enum status_code ac_init(struct ac_dev_inst *const dev_inst, Acifc *const ac,
@@ -215,14 +215,14 @@ static inline void ac_ch_get_config_defaults(struct ac_ch_config *const cfg)
 	/* Sanity check argument */
 	Assert(cfg);
 
-	cfg->hysteresis_voltage = AC_HYSTERESIS_0_MV;
-	cfg->always_on = false;
-	cfg->fast_mode = false;
-	cfg->event_negative = false;
-	cfg->event_positive = false;
-	cfg->negative_input = AC_NEGTIVE_INPUT_EXTERNAL;
-	cfg->comparator_mode = AC_COMPARATOR_USER_TRIGGERED;
-	cfg->interrupt_setting = AC_CH_IS_COMP_DONE;
+	cfg->ac_hysteresis_voltage = AC_HYSTERESIS_0_MV;
+	cfg->ac_always_on = false;
+	cfg->ac_fast_mode = false;
+	cfg->ac_event_negative = false;
+	cfg->ac_event_positive = false;
+	cfg->ac_negative_input = AC_NEGTIVE_INPUT_EXTERNAL;
+	cfg->ac_comparator_mode = AC_COMPARATOR_USER_TRIGGERED;
+	cfg->ac_interrupt_setting = AC_CH_IS_COMP_DONE;
 }
 
 void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
@@ -251,17 +251,42 @@ static inline void ac_win_get_config_defaults(struct ac_win_config *const cfg)
 	/* Sanity check argument */
 	Assert(cfg);
 
-	cfg->enable = false;
-	cfg->event_enable = false;
-	cfg->event_source = AC_WIN_EVENT_MEASURE_DONE;
-	cfg->interrupt_setting = AC_WIN_IS_WINDOW_COMP_DONE;
+	cfg->ac_enable = false;
+	cfg->ac_event_enable = false;
+	cfg->ac_event_source = AC_WIN_EVENT_MEASURE_DONE;
+	cfg->ac_interrupt_setting = AC_WIN_IS_WINDOW_COMP_DONE;
 }
 
 void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 		uint32_t window, struct ac_win_config *cfg);
 
+typedef enum ac_interrupt_source {
+	AC_INTERRUPT_CONVERSION_COMPLETED_0 = 0,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_0,
+	AC_INTERRUPT_CONVERSION_COMPLETED_1,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_1,
+	AC_INTERRUPT_CONVERSION_COMPLETED_2,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_2,
+	AC_INTERRUPT_CONVERSION_COMPLETED_3,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_3,
+	AC_INTERRUPT_CONVERSION_COMPLETED_4,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_4,
+	AC_INTERRUPT_CONVERSION_COMPLETED_5,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_5,
+	AC_INTERRUPT_CONVERSION_COMPLETED_6,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_6,
+	AC_INTERRUPT_CONVERSION_COMPLETED_7,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_7,
+	AC_INTERRUPT_WINDOW_0,
+	AC_INTERRUPT_WINDOW_1,
+	AC_INTERRUPT_WINDOW_2,
+	AC_INTERRUPT_WINDOW_3,
+	AC_INTERRUPT_NUM,
+} ac_interrupt_source_t;
+
 void ac_set_callback(struct ac_dev_inst *const dev_inst,
-		ac_async_callback_t callback, uint8_t irq_level, uint32_t mask);
+		ac_interrupt_source_t source, ac_callback_t callback,
+		uint8_t irq_level);
 
 /**
  * \brief Get AC interrupt status.
@@ -300,31 +325,10 @@ static inline void ac_clear_interrupt_status(
 	dev_inst->hw_dev->ACIFC_ICR = status;
 }
 
-/**
- * \brief Enable AC interrupt source.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- * \param source  Interrupt source.
- *
- */
-static inline void ac_enable_interrupt(struct ac_dev_inst *const dev_inst,
-		const uint32_t source)
-{
-	dev_inst->hw_dev->ACIFC_IER = source;
-}
-
-/**
- * \brief Disable AC interrupt source.
- *
- * \param p_acifc Pointer to an ACIFC instance.
- * \param source  Interrupt source.
- *
- */
-static inline void ac_disable_interrupt(struct ac_dev_inst *const dev_inst,
-		const uint32_t source)
-{
-	dev_inst->hw_dev->ACIFC_IDR = source;
-}
+void ac_enable_interrupt(struct ac_dev_inst *const dev_inst,
+		ac_interrupt_source_t source);
+void ac_disable_interrupt(struct ac_dev_inst *const dev_inst,
+		ac_interrupt_source_t source);
 
 void ac_enable(struct ac_dev_inst *const dev_inst);
 void ac_disable(struct ac_dev_inst *const dev_inst);
@@ -421,8 +425,8 @@ static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
  *  ac_enable(&ac_device);
  *  struct ac_ch_config ch_cfg;
  *  ac_ch_get_config_defaults(&ch_cfg);
- *  ch_cfg.always_on = true;
- *  ch_cfg.fast_mode = true;
+ *  ch_cfg.ac_always_on = true;
+ *  ch_cfg.ac_fast_mode = true;
  *  ac_ch_set_config(&ac_device, 0, &ch_cfg);
  *  while (!ac_is_comparison_done(&ac_device));
  * \endcode
@@ -430,7 +434,7 @@ static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
  * \subsection acifc_basic_use_case_usage_flow Workflow
  * -# Get the default confguration to initialize the module:
  * \code
- *  acifc_configure(ACIFC, &acifc_opt); 
+ *  acifc_configure(ACIFC, &acifc_opt);
  *  struct ac_config module_cfg;
  *  ac_get_config_defaults(&module_cfg);
  *  ac_init(&ac_device, ACIFC, &module_cfg);
@@ -438,11 +442,11 @@ static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
  * -# Enable the module:
  * \code  ac_enable(&ac_device); \endcode
  * -# Get the default confguration to initialize the channel 0:
- * \code 
+ * \code
  *  struct ac_ch_config ch_cfg;
  *  ac_ch_get_config_defaults(&ch_cfg);
- *  ch_cfg.always_on = true;
- *  ch_cfg.fast_mode = true;
+ *  ch_cfg.ac_always_on = true;
+ *  ch_cfg.ac_fast_mode = true;
  *  ac_ch_set_config(&ac_device, 0, &ch_cfg);
  * \endcode
  * -# User starts a single comparison:

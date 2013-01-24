@@ -97,17 +97,12 @@ volatile uint8_t intflag = 0;
 struct ac_dev_inst ac_device;
 
 /**
- * \brief Interrupt handler for ACIFC interrupt.
+ * \brief Callback for ACIFC interrupt.
  */
-static void set_int_flag(struct ac_dev_inst *const dev_inst)
+static void set_int_flag(void)
 {
-	uint32_t ul_int_status = ac_get_interrupt_status(dev_inst);
-
-	/* Compare Output Interrupt */
-	if ((ul_int_status & ACIFC_ISR_ACINT0) == ACIFC_ISR_ACINT0) {
-		ac_clear_interrupt_status(dev_inst, ACIFC_ICR_ACINT0);
-		intflag = 1;
-	}
+	ac_clear_interrupt_status(&ac_device, ACIFC_ICR_ACINT0);
+	intflag = 1;
 }
 
 /**
@@ -120,7 +115,7 @@ static void run_ac_test(const struct test_case *test)
 	/* AC instance configuration */
 	struct ac_config module_cfg;
 	ac_get_config_defaults(&module_cfg);
-	module_cfg.event_trigger = true;
+	module_cfg.ac_event_trigger = true;
 	ac_init(&ac_device, ACIFC, &module_cfg);
 
 	ac_enable(&ac_device);
@@ -128,10 +123,11 @@ static void run_ac_test(const struct test_case *test)
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
-	ch_cfg.always_on = true;
-	ch_cfg.fast_mode = true;
+	ch_cfg.ac_always_on = true;
+	ch_cfg.ac_fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
-	ac_set_callback(&ac_device, set_int_flag, 1, ACIFC_IER_ACINT0);
+	ac_set_callback(&ac_device, AC_INTERRUPT_CONVERSION_COMPLETED_0,
+			set_int_flag, 1);
 
 	/* Start the comparison */
 	ac_user_trigger_single_comparison(&ac_device);

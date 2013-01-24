@@ -54,7 +54,7 @@ extern "C" {
 /// @endcond
 
 struct ac_dev_inst  *_ac_instance;
-ac_async_callback_t ac_callback_pointer;
+ac_callback_t ac_callback_pointer[AC_INTERRUPT_NUM];
 
 /**
  * \defgroup sam_drivers_acifc_group Analog Comparator (AC)
@@ -83,7 +83,7 @@ static inline void _ac_set_config(struct ac_dev_inst *const dev_inst,
 	Assert(cfg);
 
 	dev_inst->hw_dev->ACIFC_CTRL |=
-			(cfg->event_trigger ? ACIFC_CTRL_EVENTEN : 0);
+			(cfg->ac_event_trigger ? ACIFC_CTRL_EVENTEN : 0);
 }
 
 /**
@@ -150,14 +150,14 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
 	Assert(cfg);
 
 	uint32_t ac_conf = 0;
-	ac_conf = ACIFC_CONF_HYS(cfg->hysteresis_voltage) |
-			(cfg->always_on ? ACIFC_CONF_ALWAYSON : 0) |
-			(cfg->fast_mode ? ACIFC_CONF_FAST : 0) |
-			(cfg->event_negative ? ACIFC_CONF_EVENN : 0) |
-			(cfg->event_positive ? ACIFC_CONF_EVENP : 0) |
-			ACIFC_CONF_INSELN(cfg->negative_input) |
-			ACIFC_CONF_MODE(cfg->comparator_mode) |
-			ACIFC_CONF_IS(cfg->interrupt_setting);
+	ac_conf = ACIFC_CONF_HYS(cfg->ac_hysteresis_voltage) |
+			(cfg->ac_always_on ? ACIFC_CONF_ALWAYSON : 0) |
+			(cfg->ac_fast_mode ? ACIFC_CONF_FAST : 0) |
+			(cfg->ac_event_negative ? ACIFC_CONF_EVENN : 0) |
+			(cfg->ac_event_positive ? ACIFC_CONF_EVENP : 0) |
+			ACIFC_CONF_INSELN(cfg->ac_negative_input) |
+			ACIFC_CONF_MODE(cfg->ac_comparator_mode) |
+			ACIFC_CONF_IS(cfg->ac_interrupt_setting);
 
 	dev_inst->hw_dev->ACIFC_CONF[channel].ACIFC_CONF = ac_conf;
 }
@@ -181,10 +181,10 @@ void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 	Assert(cfg);
 
 	uint32_t ac_confw = 0;
-	ac_confw = (cfg->enable ? ACIFC_CONFW_WFEN : 0) |
-			(cfg->event_enable ? ACIFC_CONFW_WEVEN : 0) |
-			ACIFC_CONFW_WEVSRC(cfg->event_source) |
-			ACIFC_CONFW_WIS(cfg->interrupt_setting);
+	ac_confw = (cfg->ac_enable ? ACIFC_CONFW_WFEN : 0) |
+			(cfg->ac_event_enable ? ACIFC_CONFW_WEVEN : 0) |
+			ACIFC_CONFW_WEVSRC(cfg->ac_event_source) |
+			ACIFC_CONFW_WIS(cfg->ac_interrupt_setting);
 
 	dev_inst->hw_dev->ACIFC_CONFW[window].ACIFC_CONFW = ac_confw;
 }
@@ -193,16 +193,106 @@ void ac_win_set_config(struct ac_dev_inst *const dev_inst,
  * \brief Set callback for AC
  *
  * \param dev_inst  Device structure pointer
- * \param callback  Callback function pointer.
- * \param irq_level Interrupt level.
- * \param mask      Interrupt mask.
+ * \param source    Interrupt source
+ * \param callback  Callback function pointer
+ * \param irq_level Interrupt level
  */
 void ac_set_callback(struct ac_dev_inst *const dev_inst,
-		ac_async_callback_t callback, uint8_t irq_level, uint32_t mask)
+		ac_interrupt_source_t source, ac_callback_t callback,
+		uint8_t irq_level)
 {
-	ac_callback_pointer = callback;
+	ac_callback_pointer[source] = callback;
 	irq_register_handler(ACIFC_IRQn, irq_level);
-	ac_enable_interrupt(dev_inst, mask);
+	ac_enable_interrupt(dev_inst, source);
+}
+
+#define AC_WIN_INT_OFFSET 24
+/**
+ * \brief Enable AC interrupt source.
+ *
+ * \param p_acifc Pointer to an ACIFC instance.
+ * \param source  Interrupt source.
+ *
+ */
+void ac_enable_interrupt(struct ac_dev_inst *const dev_inst,
+		ac_interrupt_source_t source)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+
+	switch (source) {
+	case AC_INTERRUPT_CONVERSION_COMPLETED_0:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_0:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_1:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_1:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_2:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_2:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_3:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_3:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_4:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_4:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_5:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_5:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_6:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_6:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_7:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_7:
+		dev_inst->hw_dev->ACIFC_IER = (1 << source);
+		break;
+	case AC_INTERRUPT_WINDOW_0:
+	case AC_INTERRUPT_WINDOW_1:
+	case AC_INTERRUPT_WINDOW_2:
+	case AC_INTERRUPT_WINDOW_3:
+		dev_inst->hw_dev->ACIFC_IER = (1 << (source -
+				AC_INTERRUPT_WINDOW_0 + AC_WIN_INT_OFFSET));
+		break;
+	default:
+		break;
+	}
+}
+
+/**
+ * \brief Disable AC interrupt source.
+ *
+ * \param p_acifc Pointer to an ACIFC instance.
+ * \param source  Interrupt source.
+ *
+ */
+void ac_disable_interrupt(struct ac_dev_inst *const dev_inst,
+		ac_interrupt_source_t source)
+{
+	/* Sanity check arguments. */
+	Assert(dev_inst);
+
+	switch (source) {
+	case AC_INTERRUPT_CONVERSION_COMPLETED_0:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_0:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_1:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_1:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_2:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_2:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_3:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_3:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_4:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_4:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_5:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_5:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_6:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_6:
+	case AC_INTERRUPT_CONVERSION_COMPLETED_7:
+	case AC_INTERRUPT_STARTUP_TIME_ELAPSED_7:
+		dev_inst->hw_dev->ACIFC_IDR = (1 << source);
+		break;
+	case AC_INTERRUPT_WINDOW_0:
+	case AC_INTERRUPT_WINDOW_1:
+	case AC_INTERRUPT_WINDOW_2:
+	case AC_INTERRUPT_WINDOW_3:
+		dev_inst->hw_dev->ACIFC_IDR = (1 << (source -
+				AC_INTERRUPT_WINDOW_0 + AC_WIN_INT_OFFSET));
+		break;
+	default:
+		break;
+	}
 }
 
 /**
@@ -230,13 +320,35 @@ void ac_disable(struct ac_dev_inst *const dev_inst)
 }
 
 /**
+ * \brief Interrupt handler for AST.
+ */
+static void ac_interrupt_handler(void)
+{
+	uint32_t status = ac_get_interrupt_status(_ac_instance);
+	uint32_t mask = ac_get_interrupt_mask(_ac_instance);
+	uint32_t i;
+
+	for (i = 0; i < AC_INTERRUPT_WINDOW_0; i++)
+	{
+		if ((status & (1 << i)) && (mask & (1 << i))) {
+			ac_callback_pointer[i]();
+		}
+	}
+	for (i = 0; i < (AC_INTERRUPT_NUM - AC_INTERRUPT_WINDOW_0); i++)
+	{
+		if ((status & (1 << (i + AC_WIN_INT_OFFSET))) &&
+				(mask & (1 << (i + AC_WIN_INT_OFFSET)))) {
+			ac_callback_pointer[i + AC_INTERRUPT_WINDOW_0]();
+		}
+	}
+}
+
+/**
  * \brief Interrupt handler for ACIFC interrupt.
  */
 void ACIFC_Handler(void)
 {
-	if (ac_callback_pointer) {
-		ac_callback_pointer(_ac_instance);
-	}
+	ac_interrupt_handler();
 }
 
 //@}

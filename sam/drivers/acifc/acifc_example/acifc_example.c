@@ -107,24 +107,19 @@
 struct ac_dev_inst ac_device;
 
 /**
- * Interrupt handler for the ACIFC.
+ * Callback for channel 0 comparison done.
  */
-static void compare_result_output(struct ac_dev_inst *const dev_inst)
+static void compare_result_output(void)
 {
-	uint32_t ul_int_status, ul_comp_status;
-
-	ul_int_status = ac_get_interrupt_status(dev_inst);
-	ul_comp_status = ac_get_status(dev_inst);
+	uint32_t ul_comp_status = ac_get_status(&ac_device);
 
 	/* Compare Output Interrupt */
-	if ((ul_int_status & ACIFC_ISR_ACINT0) == ACIFC_ISR_ACINT0) {
-		if ((ul_comp_status & ACIFC_SR_ACCS0) == ACIFC_SR_ACCS0) {
-			puts("-ISR- Voltage Comparison Result: ACAP0 > ACAN0\r");
-		} else {
-			puts("-ISR- Voltage Comparison Result: ACAP0 < ACAN0\r");
-		}
+	if ((ul_comp_status & ACIFC_SR_ACCS0) == ACIFC_SR_ACCS0) {
+		puts("-ISR- Voltage Comparison Result: ACAP0 > ACAN0\r");
+	} else {
+		puts("-ISR- Voltage Comparison Result: ACAP0 < ACAN0\r");
 	}
-	ac_clear_interrupt_status(dev_inst, ACIFC_ICR_ACINT0);
+	ac_clear_interrupt_status(&ac_device, ACIFC_ICR_ACINT0);
 }
 
 /**
@@ -174,10 +169,11 @@ int main(void)
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
-	ch_cfg.always_on = true;
-	ch_cfg.fast_mode = true;
+	ch_cfg.ac_always_on = true;
+	ch_cfg.ac_fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
-	ac_set_callback(&ac_device, compare_result_output, 1, ACIFC_IER_ACINT0);
+	ac_set_callback(&ac_device, AC_INTERRUPT_CONVERSION_COMPLETED_0,
+			compare_result_output, 1);
 
 	/* Start the comparison */
 	ac_user_trigger_single_comparison(&ac_device);
