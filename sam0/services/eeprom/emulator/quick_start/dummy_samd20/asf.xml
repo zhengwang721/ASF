@@ -2,11 +2,11 @@
 	<project caption="Quick Start for the SAMD20 EEPROM Emulator service" id="sam0.services.eeprom_emulator.quick_start.dummy.samd20">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.service.eeprom_emulator.quick_start"/>
+		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
-		<device-support value="samd20j18a"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
 	</project>
 </asf>
