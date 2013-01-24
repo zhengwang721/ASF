@@ -687,6 +687,7 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	config->chsize = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby = false;
 	config->receiver_enable = true;
+	config->generator_source = GCLK_GENERATOR_0;
 
 	/* Master config defaults */
 	config->master.baudrate = 9600;
@@ -753,6 +754,7 @@ static inline void spi_slave_dev_init(struct spi_slave_dev_inst *const dev_inst,
 
 	/* Set config on Slave Select pin */
 	port_pin_set_config(dev_inst->ss_pin, &pin_conf);
+	port_pin_set_output_level(dev_inst->ss_pin, true);
 }
 
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
@@ -784,7 +786,10 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 	_spi_wait_for_sync(dev_inst);
 
 	/* Enable SPI */
-	spi_module->CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
+
+	/* Wait for enable and rx to sync */
+	_spi_wait_for_sync(dev_inst);
 }
 
 /**
@@ -839,7 +844,7 @@ static inline bool spi_is_ready_to_write(struct spi_dev_inst *const dev_inst)
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DREIF);
 }
 
 /**

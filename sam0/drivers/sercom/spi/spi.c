@@ -94,7 +94,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	uint32_t pad1 = config->pinout_pad1;
 	uint32_t pad2 = config->pinout_pad2;
 	uint32_t pad3 = config->pinout_pad3;
-	
+
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
@@ -192,13 +192,9 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	}
 
 	/* Write CTRLA register */
-	spi_module->CTRLA.reg = ctrla;
+	spi_module->CTRLA.reg |= ctrla;
 
-	/* Set sercom gclk generator according to config and return status code */
-	return sercom_set_gclk_generator(
-			config->generator_source,
-			config->run_in_standby,
-			false);;
+	return STATUS_OK;
 }
 
 /**
@@ -228,6 +224,21 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	dev_inst->hw_dev = module;
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+
+	/* Turn on module in PM */
+	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
+			+ PM_APBCMASK_SERCOM0_Pos;
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
+	
+	/* Set up GCLK */
+	struct system_gclk_ch_conf gclk_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	gclk_ch_conf.source_generator = config->generator_source;
+	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
+	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(gclk_index);
+	system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
