@@ -53,6 +53,24 @@ static void board_extint_handler(uint32_t channel)
 	port_pin_set_output_level(LED_0_PIN, !pin_state);
 }
 
+static void configure_clocks(void)
+{
+	system_ahb_clock_set_mask(0xFFFFFFFF);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, 0xFFFFFFFF);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, 0xFFFFFFFF);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 0xFFFFFFFF);
+
+#if USE_EIC == true
+	struct system_gclk_ch_conf gclock_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator    = 0;
+	gclock_ch_conf.enable_during_sleep = false;
+
+	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
+	system_gclk_ch_enable(EIC_GCLK_ID);
+#endif
+}
+
 static void configure_led(void)
 {
 	struct port_conf pin_conf;
@@ -72,15 +90,15 @@ static void configure_button(void)
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 #else
-	extint_enable();
-
 	struct extint_ch_conf eint_ch_conf;
 	extint_ch_get_config_defaults(&eint_ch_conf);
 
-	eint_ch_conf.gpio_pin        = BUTTON_0_EIC_PIN;
-	eint_ch_conf.gpio_pin_mux    = BUTTON_0_EIC_PIN_MUX;
-	eint_ch_conf.detect          = EXTINT_DETECT_BOTH;
+	eint_ch_conf.gpio_pin     = BUTTON_0_EIC_PIN;
+	eint_ch_conf.gpio_pin_mux = BUTTON_0_EIC_PIN_MUX;
+	eint_ch_conf.detect       = EXTINT_DETECT_BOTH;
 	extint_ch_set_config(BUTTON_0_EIC_LINE, &eint_ch_conf);
+
+	extint_enable();
 
 #  if USE_INTERRUPTS == true
 	extint_async_register_callback(board_extint_handler,
@@ -93,26 +111,11 @@ static void configure_button(void)
 
 int main(void)
 {
+	system_init();
+
+	configure_clocks();
 	configure_led();
 	configure_button();
-
-#if USE_EIC == true
-	system_gclk_init();
-
-	struct system_gclk_gen_conf gclock_gen_conf;
-	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
-	gclock_gen_conf.source_clock    = 0;
-	gclock_gen_conf.division_factor = 128;
-	system_gclk_gen_set_config(1, &gclock_gen_conf);
-	system_gclk_gen_enable(1);
-
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator    = 1;
-	gclock_ch_conf.enable_during_sleep = false;
-	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(EIC_GCLK_ID);
-#endif
 
 #if USE_INTERRUPTS == true
 	cpu_irq_enable();
