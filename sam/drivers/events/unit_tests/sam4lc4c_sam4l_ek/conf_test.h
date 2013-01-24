@@ -61,9 +61,6 @@
 /** User ID for the test */
 #define CONF_TEST_USER_ID    PEVC_ID_USER_PDCA_0
 
-/** PDCA channel for the test */
-#define CONF_TEST_PDCA_CH    0
-
 /** PDCA Peripheral id for the test */
 #define CONF_TEST_PDCA_PID   20
 

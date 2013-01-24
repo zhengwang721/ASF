@@ -105,7 +105,7 @@ static void pdca_tranfer_done(enum pdca_channel_status status)
  */
 static void init_events(void)
 {
-	struct events_ch_conf config;
+	struct events_chan_conf config;
 
 	/* Enable clock for PEVC module */
 	sysclk_enable_peripheral_clock(PEVC);
@@ -119,15 +119,15 @@ static void init_events(void)
 	 * - PDCA channel 0  --- User
 	 * - Enable falling edge detection for EVS
 	 */
-	events_ch_get_config_defaults(&config);
+	events_chan_get_config_defaults(&config);
 	config.channel_id = PEVC_ID_USER_PDCA_0;
 	config.generator_id = PEVC_ID_GEN_PAD_1;
 	config.sharper_enable = true;
 	config.igf_edge = EVENT_IGF_EDGE_FALLING;
-	events_ch_configure(&config);
+	events_chan_configure(&config);
 
 	/* Enable the channel */
-	events_ch_enable(PEVC_ID_USER_PDCA_0);
+	events_chan_enable(PEVC_ID_USER_PDCA_0);
 }
 
 /**

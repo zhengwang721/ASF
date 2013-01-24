@@ -138,7 +138,7 @@ static void init_ast(void)
  */
 static void init_events(void)
 {
-	struct events_ch_conf config;
+	struct events_chan_conf config;
 
 	/* Enable clock for PEVC module */
 	sysclk_enable_peripheral_clock(PEVC);
@@ -148,15 +148,15 @@ static void init_events(void)
 	 * - AST periodic event 0 --- Generator
 	 * - PDCA channel 0       --- User
 	 */
-	events_ch_get_config_defaults(&config);
+	events_chan_get_config_defaults(&config);
 	config.channel_id = PEVC_ID_USER_PDCA_0;
 	config.generator_id = PEVC_ID_GEN_AST_2;
 	config.sharper_enable = true;
 	config.igf_edge = EVENT_IGF_EDGE_NONE;
-	events_ch_configure(&config);
+	events_chan_configure(&config);
 
 	/* Enable the channel */
-	events_ch_enable(PEVC_ID_USER_PDCA_0);
+	events_chan_enable(PEVC_ID_USER_PDCA_0);
 }
 
 /**

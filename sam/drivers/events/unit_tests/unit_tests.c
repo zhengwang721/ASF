@@ -204,7 +204,7 @@ static void init_pdca(void)
 static void run_events_ast_test(const struct test_case *test)
 {
 	uint32_t i;
-	struct events_ch_conf config;
+	struct events_chan_conf config;
 
 	test_step = TEST_STEP_AST_TRIGGER;
 
@@ -216,15 +216,15 @@ static void run_events_ast_test(const struct test_case *test)
 	 * - AST periodic event 0 --- Generator
 	 * - PDCA channel 0       --- User
 	 */
-	events_ch_get_config_defaults(&config);
+	events_chan_get_config_defaults(&config);
 	config.channel_id = CONF_TEST_USER_ID;
 	config.generator_id = CONF_TEST_GEN_ID;
 	config.sharper_enable = true;
 	config.igf_edge = EVENT_IGF_EDGE_NONE;
-	events_ch_configure(&config);
+	events_chan_configure(&config);
 
 	/* Enable the channel */
-	events_ch_enable(CONF_TEST_USER_ID);
+	events_chan_enable(CONF_TEST_USER_ID);
 
 	/* Wait for AST event trigger */
 	for (i = 0; i < (sizeof(event_string) * 2); i++) {
@@ -253,11 +253,11 @@ static void run_events_software_test(const struct test_case *test)
 	test_step = TEST_STEP_SOFTWARE_TRIGGER;
 
 	/* Enable software trigger */
-	events_ch_enable_software_trigger(CONF_TEST_USER_ID);
+	events_chan_enable_software_trigger(CONF_TEST_USER_ID);
 
 	/* Software event trigger */
 	for (i = 0; i < sizeof(event_string) * 2; i++) {
-		events_ch_software_trigger(CONF_TEST_USER_ID);
+		events_chan_software_trigger(CONF_TEST_USER_ID);
 		delay_ms(100);
 		if (test_flag & (0x01u << TEST_STEP_SOFTWARE_TRIGGER)) {
 			break;
@@ -288,7 +288,7 @@ int main(void)
 	DEFINE_TEST_CASE(events_ast_test, NULL, run_events_ast_test, NULL,
 			"Test Event driver with AST trigger.");
 	DEFINE_TEST_CASE(events_software_test, NULL, run_events_software_test, NULL,
-			"Test Event driver with Software trigger.");
+			"Test Event driver with software trigger.");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(events_tests) = {

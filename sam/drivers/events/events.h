@@ -119,7 +119,7 @@ enum events_igf_edge {
  *
  * Configuration structure for an event channel.
  */
-struct events_ch_conf {
+struct events_chan_conf {
 	/** Channel to configure (user) */
 	uint32_t channel_id;
 	/** Event generator to connect to the channel */
@@ -154,21 +154,21 @@ static inline void events_set_igf_divider(enum events_igf_divider divider)
  *
  *  \param config    Configuration structure to initialize to default values.
  */
-void events_ch_get_config_defaults(struct events_ch_conf *const config);
+void events_chan_get_config_defaults(struct events_chan_conf *const config);
 
 /**
  * \brief Configure an event channel.
  *
  * \param config      Configuration settings for the event channel.
  */
-void events_ch_configure(struct events_ch_conf *const config);
+void events_chan_configure(struct events_chan_conf *const config);
 
 /**
  * \brief Enable an event channel.
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_ch_enable(uint32_t channel_id)
+static inline void events_chan_enable(uint32_t channel_id)
 {
 	PEVC->PEVC_CHER = PEVC_CHER_CHE(PEVC_CHER_CHE_1 << channel_id);
 }
@@ -178,7 +178,7 @@ static inline void events_ch_enable(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_ch_disable(uint32_t channel_id)
+static inline void events_chan_disable(uint32_t channel_id)
 {
 	PEVC->PEVC_CHDR = PEVC_CHDR_CHD(PEVC_CHDR_CHD_1 << channel_id);
 }
@@ -191,7 +191,7 @@ static inline void events_ch_disable(uint32_t channel_id)
  * \retval true  channel is enabled.
  * \retval false channel is disabled.
  */
-static inline bool events_ch_is_enabled(uint32_t channel_id)
+static inline bool events_chan_is_enabled(uint32_t channel_id)
 {
 	if (PEVC->PEVC_CHSR & PEVC_CHSR_CHS(PEVC_CHSR_CHS_1 << channel_id)) {
 		return true;
@@ -208,7 +208,7 @@ static inline bool events_ch_is_enabled(uint32_t channel_id)
  *  \retval true  If the channel is ready to be used
  *  \retval false If the channel is currently busy
  */
-static inline bool events_ch_is_ready(uint32_t channel_id)
+static inline bool events_chan_is_ready(uint32_t channel_id)
 {
 	if (PEVC->PEVC_BUSY & PEVC_BUSY_BUSY(PEVC_BUSY_BUSY_1 << channel_id)) {
 		return false;
@@ -222,7 +222,7 @@ static inline bool events_ch_is_ready(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_ch_enable_software_trigger(uint32_t channel_id)
+static inline void events_chan_enable_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_CHMX[channel_id].PEVC_CHMX |= PEVC_CHMX_SMX;
 }
@@ -232,7 +232,7 @@ static inline void events_ch_enable_software_trigger(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_ch_disable_software_trigger(uint32_t channel_id)
+static inline void events_chan_disable_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_CHMX[channel_id].PEVC_CHMX &= (~PEVC_CHMX_SMX);
 }
@@ -242,7 +242,7 @@ static inline void events_ch_disable_software_trigger(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_ch_software_trigger(uint32_t channel_id)
+static inline void events_chan_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_SEV = PEVC_SEV_SEV(PEVC_SEV_SEV_1 << channel_id);
 }
