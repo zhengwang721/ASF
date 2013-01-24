@@ -184,7 +184,9 @@ retval_t tal_init(void)
         }
     }
 #endif  /* #ifndef DISABLE_IEEE_ADDR_CHECK */
-
+#ifdef ENABLE_STACK_NVM
+    pal_ps_set(EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
+#endif
     /*
      * Configure interrupt handling.
      * Install handlers for the transceiver interrupts.

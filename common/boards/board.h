@@ -117,6 +117,9 @@ extern "C" {
 #define XMEGA_USB_ZIGBIT_RF233 53 //!< XMEGA_USB_ZIGBIT_RF233 board.
 #define XMEGA_USB_ZIGBIT_RF212B 54 //!< XMEGA_USB_ZIGBIT_RF212B board.
 #define MEGA_256RFR2_XPLAINED_PRO	55	//!< MEGA_256RFR2_XPLAINED_PRO board 
+#define MEGA_256RFR2_ZIGBIT	56	//!< MEGA_256RFR2_XPLAINED_PRO board 
+#define XMEGA_ZIGBIT_RF233 57 //!< XMEGA_ZIGBIT_RF233 board.
+#define XMEGA_ZIGBIT_RF212B 58 //!< XMEGA_ZIGBIT_RF212B board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD            99  //!< User-reserved board (if any).
@@ -165,6 +168,8 @@ extern "C" {
 #  include "stk600.h"
 #elif BOARD == MEGA_256RFR2_XPLAINED_PRO
 #  include "mega_256RFR2_xplained_pro/mega256rfr2_xplained_pro.h"
+#elif BOARD == MEGA_256RFR2_ZIGBIT
+#  include "mega_256RFR2_zigbit/mega256rfr2_zigbit.h"
 #elif BOARD == STK600_RC032X
 #  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X
@@ -250,10 +255,14 @@ extern "C" {
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
 #  include "xmega_c3_xplained/xmega_c3_xplained.h"
-#elif BOARD == XMEGA_USB_ZIGBIT_RF233
-#  include "xmega_usb_zigbit_rf233/xmega_usb_zigbit_rf233.h"
+#elif BOARD == XMEGA_ZIGBIT_RF233
+#  include "xmega_zigbit_rf233/xmega_zigbit_rf233.h"
+  #elif BOARD == XMEGA_ZIGBIT_RF212B
+#  include "xmega_zigbit_rf212b/xmega_zigbit_rf212b.h"
 #elif BOARD == XMEGA_USB_ZIGBIT_RF212B
 #  include "xmega_usb_zigbit_rf212b/xmega_usb_zigbit_rf212b.h"
+  #elif BOARD == XMEGA_USB_ZIGBIT_RF233
+#  include "xmega_usb_zigbit_rf233/xmega_usb_zigbit_rf233.h"
 #elif BOARD == AVR_SIMULATOR_UC3
 #  include "avr_simulator_uc3/avr_simulator_uc3.h"
 #elif BOARD == USER_BOARD

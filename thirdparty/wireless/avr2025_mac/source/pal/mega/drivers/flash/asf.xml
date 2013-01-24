@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="thirdparty.mega.drivers.flash" caption="Flash driver">
+		<info type="gui-flag" value="hidden"/>
+		<info type="description" value="summary">
+			Flash Drivers
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Flash" />
+		</info>		
+		<build type="c-source" value="flash.c"/>
+		<build type="header-file" subtype="api" value="flash.h"/>
+		<build type="include-path" value="."/>
+		<build type="module-config" subtype="required-header-file" value="conf_flash.h"/>
+		<device-support value="mega"/>
+		<require idref="mega.utils"/>
+		<require idref="common.services.ioport" />
+		<require idref="common.services.basic.clock" />
+		<require idref="common.utils" />
+	</module>
+	
+</asf>

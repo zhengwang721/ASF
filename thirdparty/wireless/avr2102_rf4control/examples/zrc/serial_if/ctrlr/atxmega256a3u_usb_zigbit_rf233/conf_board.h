@@ -42,5 +42,5 @@
 
 //#define CONF_BOARD_ENABLE_USARTE0
 #define CONF_BOARD_AT86RFX
-
+#define ZIGBIT_USB
 #endif /* CONF_BOARD_H_INCLUDED */

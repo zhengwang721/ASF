@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.atmega256rfr2_xplained_pro.lib" caption="COMPONENT - ZRC LIB">
+		<info type="description" value="summary">
+		</info>
+		<build type="library" subtype="user" value="iar/librf4ce-zrc-target.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="gcc/librf4ce-zrc-target.a" toolchain="avrgcc"/>
+
+		<build type="doxygen-entry-point" value="zrc_group"/>
+		
+		<device-support value="atmega256rfr2"/>
+		
+	</module>
+</asf>
