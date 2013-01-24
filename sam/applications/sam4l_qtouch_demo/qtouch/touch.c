@@ -5,7 +5,7 @@
  *
  * \brief QTouch example for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -409,7 +409,6 @@ void touch_autonomous_sensor_disable (void)
  * This function is called by the library when the touch measurement
  * process for QTouch Library sensors is completed.
  *
- * \param p_measure_data   Base address of touch_measure_data_t instance.
  * \note A touch_qt_measure_complete_callback() call signifies that fresh
  * values of touch status, rotor/slider position, measured signals,
  * references and Sensor data is available.
