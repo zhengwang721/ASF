@@ -85,22 +85,22 @@ static void configure_pins(void)
 	pin_conf.mux_position = 7; /* mux H */
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(0, &pin_conf); /* PA0 mux H */
+	system_pinmux_pin_set_config(PIN_PA00, &pin_conf); /* PA0 mux H */
 
 	/* Set up the Xplained PRO LED pin to output status info */
 	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	system_pinmux_pin_set_config(40, &pin_conf);
+	system_pinmux_pin_set_config(PIN_PB08, &pin_conf);
 }
 
 static void error(uint8_t number)
 {
 	switch (number) {
 	case 1:
-		port_pin_set_output_level(40, true);
+		port_pin_set_output_level(PIN_PB08, true);
 		break;
 	case 2:
-		port_pin_set_output_level(40, false);
+		port_pin_set_output_level(PIN_PB08, false);
 		break;
 	default:
 		break;
@@ -126,7 +126,7 @@ int main(void)
 	//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, 0xffffffff);
 	//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, 0xffffffff);
 
-	if (system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, (1 << 18)) != STATUS_OK) {
+	if (system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC) != STATUS_OK) {
 		error(0);
 	}
 
