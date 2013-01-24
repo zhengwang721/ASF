@@ -25,11 +25,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-
-#include <asf.h>
-
-#include "app_config.h"
 #include "conf_board.h"
+#include <asf.h>
+#include "app_config.h"
 #include "pal.h"
 #include "led.h"
 #include "delay.h"
