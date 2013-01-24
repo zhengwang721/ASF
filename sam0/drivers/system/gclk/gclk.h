@@ -199,9 +199,9 @@ struct system_gclk_gen_conf {
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
 	uint32_t division_factor;
-	/** If \c true the clock is kept enabled during device standby mode */
+	/** If \c true the clock is kept enabled during device standby mode. */
 	bool run_in_standby;
-	/* Enable GCLK output to pin */
+	/** If \true, enables GCLK generator clock output to a GPIO pin. */
 	bool output_enable;
 };
 
