@@ -92,10 +92,10 @@ int main(void)
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
 //! [conf_rec]
-	config.pinout_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
-	config.pinout_pad1 = PINMUX_PA15B_SERCOM2_PAD1;
-	config.pinout_pad2 = PINMUX_PA12B_SERCOM2_PAD2;
-	config.pinout_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
+	config.pinmux_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
+	config.pinmux_pad1 = PINMUX_PA15B_SERCOM2_PAD1;
+	config.pinmux_pad2 = PINMUX_PA12B_SERCOM2_PAD2;
+	config.pinmux_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
 	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
 //! [conf_rec]
 //! [init]

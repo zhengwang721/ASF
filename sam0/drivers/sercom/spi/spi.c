@@ -90,10 +90,10 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 	Sercom *const sercom_module = dev_inst->hw_dev;
 	struct system_pinmux_conf pin_conf;
-	uint32_t pad0 = config->pinout_pad0;
-	uint32_t pad1 = config->pinout_pad1;
-	uint32_t pad2 = config->pinout_pad2;
-	uint32_t pad3 = config->pinout_pad3;
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
 
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 */
@@ -207,9 +207,11 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \param[in] module      Pointer to hardware instance
  * \param[in] config      Pointer to the config struct
  *
- * \return The status of the initialization
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_OK              If the initialization was done
+ * \return Status of the initialization
+ * \retval STATUS_OK                     Module initiated correctly.
+ * \retval STATUS_ERR_DENIED             If module is enabled.
+ * \retval STATUS_ERR_BUSY               If module is busy resetting.
+ * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 		struct spi_conf *config)
@@ -225,6 +227,16 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
+		/* Check if module is enabled. */
+	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if reset is in progress. */
+	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
+		return STATUS_ERR_BUSY;
+	}
+	
 	/* Turn on module in PM */
 	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
 			+ PM_APBCMASK_SERCOM0_Pos;

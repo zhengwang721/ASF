@@ -626,14 +626,14 @@ struct spi_conf {
 	}; /**< Union for Slave or Master specific configuration */
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
-	/* PAD0 pinout */
-	uint32_t pinout_pad0;
-	/* PAD1 pinout */
-	uint32_t pinout_pad1;
-	/* PAD2 pinout */
-	uint32_t pinout_pad2;
-	/* PAD3 pinout */
-	uint32_t pinout_pad3;
+	/* PAD0 pinmux */
+	uint32_t pinmux_pad0;
+	/* PAD1 pinmux */
+	uint32_t pinmux_pad1;
+	/* PAD2 pinmux */
+	uint32_t pinmux_pad2;
+	/* PAD3 pinmux */
+	uint32_t pinmux_pad3;
 };
 
 #if !defined (__DOXYGEN__)
@@ -692,11 +692,11 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	/* Master config defaults */
 	config->master.baudrate = 9600;
 
-	/* Pinout config defaults */
-	config->pinout_pad0 = PINMUX_DEFAULT;
-	config->pinout_pad1 = PINMUX_DEFAULT;
-	config->pinout_pad2 = PINMUX_DEFAULT;
-	config->pinout_pad3 = PINMUX_DEFAULT;
+	/* pinmux config defaults */
+	config->pinmux_pad0 = PINMUX_DEFAULT;
+	config->pinmux_pad1 = PINMUX_DEFAULT;
+	config->pinmux_pad2 = PINMUX_DEFAULT;
+	config->pinmux_pad3 = PINMUX_DEFAULT;
 
 };
 
