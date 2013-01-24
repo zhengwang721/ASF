@@ -16,6 +16,6 @@
 		<require idref="common.utils"/>
 		<require idref="common.boards"/>
 		<require idref="sam0.drivers.port"/>
-		<device-support value="samd20j18a"/>
+		<device-support value="atsamd20j18a"/>
 	</board>
 </asf>

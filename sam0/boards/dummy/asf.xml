@@ -11,6 +11,6 @@
 		<require idref="sam0.utils.cmsis.samd20.source.template"/>
 		<require idref="common.boards"/>
 		<build type="define" name="__SAMD20J18A__" value=""/>
-		<device-support value="samd20j18a"/>
+		<device-support value="atsamd20j18a"/>
 	</board>
 </asf>
