@@ -242,7 +242,7 @@ static void run_gpbr_test(const struct test_case *test)
 
 	/* Enter backup mode */
 	pmc_enable_backupmode();
-#if (!defined(SAM4S) && !defined(SAM4E))
+#if (!(SAM4S) && !(SAM4E))
 	supc_enable_backup_mode(SUPC);
 #endif
 
