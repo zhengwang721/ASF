@@ -54,7 +54,7 @@
  */
 iis_callback_t iis_callback_pointer[_IIS_INTERRUPT_SOURCE_NUM];
 
-struct iis_device *_iis_instance;
+struct iis_dev_inst *_iis_instance;
 
 /**
  * \brief Enable the IIS module.
@@ -62,7 +62,7 @@ struct iis_device *_iis_instance;
  * \param dev_inst    Device structure pointer.
  *
  */
-void iis_enable(struct iis_device *const dev_inst)
+void iis_enable(struct iis_dev_inst *const dev_inst)
 {
 	UNUSED(dev_inst);
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
@@ -74,7 +74,7 @@ void iis_enable(struct iis_device *const dev_inst)
  * \param dev_inst    Device structure pointer.
  *
  */
-void iis_disable(struct iis_device *const dev_inst)
+void iis_disable(struct iis_dev_inst *const dev_inst)
 {
 	UNUSED(dev_inst);
 	sleepmgr_unlock_mode(SLEEPMGR_ACTIVE);
@@ -86,35 +86,35 @@ void iis_disable(struct iis_device *const dev_inst)
  * \param  dev_inst Pointer to device instance structure.
  *
  */
-static enum status_code _iis_set_config(struct iis_device *const dev_inst)
+static enum status_code _iis_set_config(struct iis_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->cfg);
 
 	uint32_t mr = 0;
-	mr = (dev_inst->cfg->master ? IISC_MR_MODE : 0) |
-			(dev_inst->cfg->loopback ? IISC_MR_RXLOOP : 0) |
-			((dev_inst->cfg->rx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
+	mr = (dev_inst->cfg->iis_master ? IISC_MR_MODE : 0) |
+			(dev_inst->cfg->iis_loopback ? IISC_MR_RXLOOP : 0) |
+			((dev_inst->cfg->iis_rx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
 				IISC_MR_RXDMA_MULTIPLE : 0) |
-			((dev_inst->cfg->tx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
+			((dev_inst->cfg->iis_tx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
 				IISC_MR_TXDMA_MULTIPLE : 0) |
-			((dev_inst->cfg->rx_channels == IIS_CHANNEL_MONO) ?
+			((dev_inst->cfg->iis_rx_channels == IIS_CHANNEL_MONO) ?
 				IISC_MR_RXMONO : 0) |
-			((dev_inst->cfg->tx_channels == IIS_CHANNEL_MONO) ?
+			((dev_inst->cfg->iis_tx_channels == IIS_CHANNEL_MONO) ?
 				IISC_MR_TXMONO : 0) |
-			IISC_MR_IMCKFS(dev_inst->cfg->fs_ratio) |
-			IISC_MR_DATALENGTH(dev_inst->cfg->data_format);
+			IISC_MR_IMCKFS(dev_inst->cfg->iis_fs_ratio) |
+			IISC_MR_DATALENGTH(dev_inst->cfg->iis_data_format);
 
 	/* Set the master clock mode */
-	if ((((uint32_t)dev_inst->cfg->fs_ratio + 1) * 16)
-			> ((uint32_t)dev_inst->cfg->slot_length * 2)) {
+	if ((((uint32_t)dev_inst->cfg->iis_fs_ratio + 1) * 16)
+			> ((uint32_t)dev_inst->cfg->iis_slot_length * 2)) {
 		mr |= IISC_MR_IMCKMODE;
 	}
 
-	if ((dev_inst->cfg->slot_length == IIS_SLOT_LENGTH_24BIT) &&
-			((dev_inst->cfg->data_format > IIS_DATE_32BIT) &&
-			(dev_inst->cfg->data_format < IIS_DATE_16BIT))) {
+	if ((dev_inst->cfg->iis_slot_length == IIS_SLOT_LENGTH_24BIT) &&
+			((dev_inst->cfg->iis_data_format > IIS_DATE_32BIT) &&
+			(dev_inst->cfg->iis_data_format < IIS_DATE_16BIT))) {
 		mr |= IISC_MR_IWS24_24;
 	}
 
@@ -132,7 +132,7 @@ static enum status_code _iis_set_config(struct iis_device *const dev_inst)
  *
  * \return status
  */
-enum status_code iis_init(struct iis_device *const dev_inst, Iisc *iisc,
+enum status_code iis_init(struct iis_dev_inst *const dev_inst, Iisc *iisc,
 		struct iis_config *const cfg)
 {
 	/* Sanity check arguments */
@@ -160,7 +160,7 @@ enum status_code iis_init(struct iis_device *const dev_inst, Iisc *iisc,
  * \param callback    Callback function pointer.
  * \param irq_level   Interrupt level.
  */
-void iis_set_callback(struct iis_device *const dev_inst,
+void iis_set_callback(struct iis_dev_inst *const dev_inst,
 		iis_interrupt_source_t source, iis_callback_t callback,
 		uint8_t irq_level)
 {
@@ -180,7 +180,7 @@ void iis_set_callback(struct iis_device *const dev_inst,
  * \param dev_inst    Device structure pointer.
  * \param source      Interrupt source
  */
-void iis_enable_interrupt(struct iis_device *const dev_inst,
+void iis_enable_interrupt(struct iis_dev_inst *const dev_inst,
 		iis_interrupt_source_t source)
 {
 	/* Sanity check arguments */
@@ -210,7 +210,7 @@ void iis_enable_interrupt(struct iis_device *const dev_inst,
  * \param dev_inst    Device structure pointer.
  * \param source      Interrupt source
  */
-void iis_disable_interrupt(struct iis_device *const dev_inst,
+void iis_disable_interrupt(struct iis_dev_inst *const dev_inst,
 		iis_interrupt_source_t source)
 {
 	/* Sanity check arguments */
@@ -240,7 +240,7 @@ void iis_disable_interrupt(struct iis_device *const dev_inst,
  * \param dev_inst    Device structure pointer.
  * \param source      Interrupt source
  */
-void iis_clear_status(struct iis_device *dev_inst,
+void iis_clear_status(struct iis_dev_inst *dev_inst,
 		iis_interrupt_source_t source)
 {
 	/* Sanity check arguments */
@@ -266,7 +266,7 @@ void iis_clear_status(struct iis_device *dev_inst,
  *
  * \return status
  */
-enum status_code iis_write(struct iis_device *const dev_inst, uint32_t data)
+enum status_code iis_write(struct iis_dev_inst *const dev_inst, uint32_t data)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -295,7 +295,7 @@ enum status_code iis_write(struct iis_device *const dev_inst, uint32_t data)
  *
  * \return status
  */
-enum status_code iis_read(struct iis_device *const dev_inst, uint32_t *data)
+enum status_code iis_read(struct iis_dev_inst *const dev_inst, uint32_t *data)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);

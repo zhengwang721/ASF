@@ -146,7 +146,7 @@ static void run_iis_test(const struct test_case *test)
 {
 	uint32_t i;
 	struct iis_config config;
-	struct iis_device dev_inst;
+	struct iis_dev_inst dev_inst;
 	struct genclk_config gencfg;
 	struct pll_config pcfg;
 
@@ -167,14 +167,14 @@ static void run_iis_test(const struct test_case *test)
 
 	/* Set the configuration */
 	iis_get_config_defaults(&config);
-	config.data_format = IIS_DATE_16BIT_COMPACT;
-	config.slot_length = IIS_SLOT_LENGTH_16BIT;
-	config.fs_ratio = IIS_FS_RATE_256;
-	config.tx_channels = IIS_CHANNEL_STEREO;
-	config.rx_channels = IIS_CHANNEL_STEREO;
-	config.tx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
-	config.rx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
-	config.loopback = true;
+	config.iis_data_format = IIS_DATE_16BIT_COMPACT;
+	config.iis_slot_length = IIS_SLOT_LENGTH_16BIT;
+	config.iis_fs_ratio = IIS_FS_RATE_256;
+	config.iis_tx_channels = IIS_CHANNEL_STEREO;
+	config.iis_rx_channels = IIS_CHANNEL_STEREO;
+	config.iis_tx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
+	config.iis_rx_dma = IIS_ONE_DMA_CHANNEL_FOR_BOTH_CHANNELS;
+	config.iis_loopback = true;
 	iis_init(&dev_inst, IISC, &config);
 
 	/* Enable the IIS module. */
