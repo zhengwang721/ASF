@@ -83,7 +83,7 @@ static inline void _ac_set_config(struct ac_dev_inst *const dev_inst,
 	Assert(cfg);
 
 	dev_inst->hw_dev->ACIFC_CTRL |=
-			(cfg->ac_event_trigger ? ACIFC_CTRL_EVENTEN : 0);
+			(cfg->event_trigger ? ACIFC_CTRL_EVENTEN : 0);
 }
 
 /**
@@ -149,14 +149,14 @@ void ac_ch_set_config(struct ac_dev_inst *const dev_inst, uint32_t channel,
 	Assert(cfg);
 
 	uint32_t ac_conf = 0;
-	ac_conf = ACIFC_CONF_HYS(cfg->ac_hysteresis_voltage) |
-			(cfg->ac_always_on ? ACIFC_CONF_ALWAYSON : 0) |
-			(cfg->ac_fast_mode ? ACIFC_CONF_FAST : 0) |
-			(cfg->ac_event_negative ? ACIFC_CONF_EVENN : 0) |
-			(cfg->ac_event_positive ? ACIFC_CONF_EVENP : 0) |
-			ACIFC_CONF_INSELN(cfg->ac_negative_input) |
-			ACIFC_CONF_MODE(cfg->ac_comparator_mode) |
-			ACIFC_CONF_IS(cfg->ac_interrupt_setting);
+	ac_conf = ACIFC_CONF_HYS(cfg->hysteresis_voltage) |
+			(cfg->always_on ? ACIFC_CONF_ALWAYSON : 0) |
+			(cfg->fast_mode ? ACIFC_CONF_FAST : 0) |
+			(cfg->event_negative ? ACIFC_CONF_EVENN : 0) |
+			(cfg->event_positive ? ACIFC_CONF_EVENP : 0) |
+			ACIFC_CONF_INSELN(cfg->negative_input) |
+			ACIFC_CONF_MODE(cfg->comparator_mode) |
+			ACIFC_CONF_IS(cfg->interrupt_setting);
 
 	dev_inst->hw_dev->ACIFC_CONF[channel].ACIFC_CONF = ac_conf;
 }
@@ -179,10 +179,10 @@ void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 	Assert(cfg);
 
 	uint32_t ac_confw = 0;
-	ac_confw = (cfg->ac_enable ? ACIFC_CONFW_WFEN : 0) |
-			(cfg->ac_event_enable ? ACIFC_CONFW_WEVEN : 0) |
-			ACIFC_CONFW_WEVSRC(cfg->ac_event_source) |
-			ACIFC_CONFW_WIS(cfg->ac_interrupt_setting);
+	ac_confw = (cfg->enable ? ACIFC_CONFW_WFEN : 0) |
+			(cfg->event_enable ? ACIFC_CONFW_WEVEN : 0) |
+			ACIFC_CONFW_WEVSRC(cfg->event_source) |
+			ACIFC_CONFW_WIS(cfg->interrupt_setting);
 
 	dev_inst->hw_dev->ACIFC_CONFW[window].ACIFC_CONFW = ac_confw;
 }

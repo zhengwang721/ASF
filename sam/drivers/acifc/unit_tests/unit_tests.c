@@ -115,7 +115,7 @@ static void run_ac_test(const struct test_case *test)
 	/* AC instance configuration */
 	struct ac_config module_cfg;
 	ac_get_config_defaults(&module_cfg);
-	module_cfg.ac_event_trigger = true;
+	module_cfg.event_trigger = true;
 	ac_init(&ac_device, ACIFC, &module_cfg);
 
 	ac_enable(&ac_device);
@@ -123,8 +123,8 @@ static void run_ac_test(const struct test_case *test)
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
-	ch_cfg.ac_always_on = true;
-	ch_cfg.ac_fast_mode = true;
+	ch_cfg.always_on = true;
+	ch_cfg.fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
 	ac_set_callback(&ac_device, AC_INTERRUPT_CONVERSION_COMPLETED_0,
 			set_int_flag, 1);

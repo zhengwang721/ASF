@@ -58,7 +58,7 @@
  *
  * The acifc_irq is aimed to demonstrate the usage of ACIFC peripheral with
  * interrupt support. The PA06 and PA07 are selected as two inputs. Connect
- * PA06 (J101.2) on ADC_SENSOR (J101.3) output voltage, PA07(J4.4) on GND(J4.9) 
+ * PA06 (J101.2) on ADC_SENSOR (J101.3) output voltage, PA07(J4.4) on GND(J4.9)
  * or 3.3V(J4.10).
  *
  * The comparison event would be generated if the voltage of one input is
@@ -81,7 +81,7 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# The application will output then a different message if PA06 lower or 
+ * -# The application will output then a different message if PA06 lower or
  * higher than PA07.
  *      -ISR- Voltage Comparison Result: ACAP0 > ACAN0
  *      -ISR- Voltage Comparison Result: ACAP0 < ACAN0
@@ -168,8 +168,8 @@ int main(void)
 	/* AC channel configuration */
 	struct ac_ch_config ch_cfg;
 	ac_ch_get_config_defaults(&ch_cfg);
-	ch_cfg.ac_always_on = true;
-	ch_cfg.ac_fast_mode = true;
+	ch_cfg.always_on = true;
+	ch_cfg.fast_mode = true;
 	ac_ch_set_config(&ac_device, EXAMPLE_AC_CHANNEL, &ch_cfg);
 	ac_set_callback(&ac_device, AC_INTERRUPT_CONVERSION_COMPLETED_0,
 			compare_result_output, 1);
