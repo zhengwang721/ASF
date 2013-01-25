@@ -44,25 +44,13 @@
 #include <gclk.h>
 #include <clock.h>
 
-/** \cond INTERNAL */
-
-/** \internal GCLK MUX group position index from group prefix. */
-#define GCLK_MUX_GROUPPOS(prefix)  prefix ## _Pos
-
-/** \internal GCLK MUX group mask from group prefix. */
-#define GCLK_MUX_GROUPMASK(prefix) prefix ## _Msk
-
-/** \internal GCLK MUX selection helper macro. */
-#define GCLK_MUX_SELECT(reg, mask_prefix, value) \
-	do { \
-		reg = (reg & ~GCLK_MUX_GROUPMASK(mask_prefix)) | \
-				((value << \
-				GCLK_MUX_GROUPPOS(mask_prefix)) & \
-				GCLK_MUX_GROUPMASK(mask_prefix)); \
-	} \
-	while (0)
-
-/** \endcond */
+/** Wait for the GCLK module to synchronize any pending writes. */
+static void _system_gclk_wait_for_sync(void)
+{
+	while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY) {
+		/* Wait for sync to complete */
+	}
+}
 
 /** \brief Initializes the GCLK driver.
  *
@@ -96,98 +84,64 @@ void system_gclk_gen_set_config(
 {
 	/* Sanity check arguments */
 	Assert(config);
-	/* Select the appropriate generator in the generator control register */
-	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
 
-	/* Disable generator */
-	GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_GENEN;
-	while (GCLK->GENCTRL.reg & GCLK_GENCTRL_GENEN) {
-		/* Wait for clock to become enabled */
-	}
+	/* Cache new register configurations to minimize sync requirements. */
+	uint32_t new_genctrl_config = (generator << GCLK_GENCTRL_ID_Pos);
+	uint32_t new_gendiv_config  = (generator << GCLK_GENDIV_ID_Pos);
 
 	/* Select the requested source clock for the generator */
-	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_SRC,
-			config->source_clock);
+	new_genctrl_config |= config->source_clock << GCLK_GENCTRL_SRC_Pos;
 
 	/* Configure the clock to be either high or low when disabled */
 	if (config->high_when_disabled) {
-		GCLK->GENCTRL.reg |= GCLK_GENCTRL_OOV;
-	} else {
-		GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_OOV;
+		new_genctrl_config |= GCLK_GENCTRL_OOV;
 	}
 
+	/* Configure if the clock output to I/O pin should be enabled. */
 	if (config->output_enable) {
-		GCLK->GENCTRL.reg |= GCLK_GENCTRL_OE;
-	} else {
-		GCLK->GENCTRL.reg &= GCLK_GENCTRL_OE;
+		new_genctrl_config |= GCLK_GENCTRL_OE;
 	}
 
 	/* Set division factor */
 	if (config->division_factor > 1) {
-
-		/* Select the appropriate generator in the division register */
-		GCLK_MUX_SELECT(GCLK->GENDIV.reg, GCLK_GENDIV_ID, generator);
-
 		/* Check if division is a power of two */
 		if (((config->division_factor & (config->division_factor - 1)) == 0)) {
 			/* Determine the index of the highest bit set to get the
 			 * division factor that must be loaded into the division
 			 * register */
 			uint32_t div2_count = 0;
-			uint32_t mask = (1 << 0);
-			for (mask = 1; mask != config->division_factor; mask <<= 1) {
-				if (mask != 1) {
-					div2_count++;
-				}
+			uint32_t mask;
+			for (mask = (1UL << 1); mask < config->division_factor; mask <<= 1) {
+				div2_count++;
 			}
 
 			/* Set binary divider power of 2 division factor */
-			GCLK->GENDIV.bit.DIV = div2_count;
-
-			#if defined (REVB)
-			/* Enable binary division */
-			GCLK->GENCTRL.bit.DIVSEL = 1;
-			GCLK->GENCTRL.bit.IDC = 1;
-			#else
-			/* Enable binary division and disable increased duty cycle accuracy*/
-			GCLK->GENCTRL.bit.IDC = 0;
-			GCLK->GENCTRL.bit.DIVSEL = 0;
-			#endif
-
+			new_gendiv_config  |= div2_count << GCLK_GENDIV_DIV_Pos;
 		} else {
 			/* Set integer division factor */
-			GCLK->GENDIV.bit.DIV = config->division_factor;
-			#if defined (REVB)
-			/* Enable non-binary division with increased duty cycle accuracy */
-			GCLK->GENCTRL.bit.IDC = 1;
-			GCLK->GENCTRL.bit.DIVSEL = 1;
-			#else
-			/* Enable non-binary division with increased duty cycle accuracy */
-			GCLK->GENCTRL.bit.DIVSEL = 1;
-			GCLK->GENCTRL.bit.IDC = 1;
-			#endif
+			new_gendiv_config  |= config->division_factor << GCLK_GENDIV_DIV_Pos;
 
+			/* Enable non-binary division with increased duty cycle accuracy */
+			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
+			new_genctrl_config |= GCLK_GENCTRL_IDC;
 		}
-	} else {
-		#if defined (REVB)
-		/* Disable clock division, divide by 1 */
-		GCLK_GENCTRL.reg |= GCLK_GENCTRL_DIVSEL;
-		GCLK->GENDIV.bit.DIV = 1;
-		#else
-		/* Turn off clock division */
-		/* TODO: wth REVB changes in REV A header ? */
-		GCLK->GENCTRL.bit.DIVSEL = 1;
-		GCLK->GENDIV.bit.DIV = 1;
-		#endif
 	}
+
 	#if defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->run_in_standby) {
-		GCLK->GENCTRL.reg |= GCLK_GENCTRL_RUNSTDBY;
-	} else {
-		GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_RUNSTDBY;
+		new_genctrl_config |= GCLK_GENCTRL_RUNSTDBY;
 	}
 	#endif
+
+	/* Disable generator before updating it */
+	system_gclk_gen_disable(generator);
+
+	/* Write the new generator configuration */
+	_system_gclk_wait_for_sync();
+	GCLK->GENDIV.reg  = new_gendiv_config;
+	_system_gclk_wait_for_sync();
+	GCLK->GENCTRL.reg = new_genctrl_config;
 }
 
 /** \brief Enables a Generic Clock Generator that was previously configured.
@@ -200,7 +154,8 @@ void system_gclk_gen_set_config(
 void system_gclk_gen_enable(const uint8_t generator)
 {
 	/* Select the requested generator */
-	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
+	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
+	_system_gclk_wait_for_sync();
 
 	/* Enable generator */
 	GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN;
@@ -216,7 +171,8 @@ void system_gclk_gen_enable(const uint8_t generator)
 void system_gclk_gen_disable(const uint8_t generator)
 {
 	/* Select the requested generator */
-	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
+	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
+	_system_gclk_wait_for_sync();
 
 	/* Disable generator */
 	GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_GENEN;
@@ -237,23 +193,25 @@ void system_gclk_gen_disable(const uint8_t generator)
 uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 {
 	/* Select the appropriate generator */
-	GCLK_MUX_SELECT(GCLK->GENCTRL.reg, GCLK_GENCTRL_ID, generator);
+	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
+	_system_gclk_wait_for_sync();
 
-	uint32_t source_clock_index = GCLK->GENCTRL.bit.SRC;
 	/* Get the frequency of the source connected to the GCLK generator */
-	uint32_t gen_input_hz = system_clock_source_get_hz(source_clock_index);
+	uint32_t gen_input_hz = system_clock_source_get_hz(GCLK->GENCTRL.bit.SRC);
 
 	/* Check if the divider is enabled for the generator */
 	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 1 &&
 			GCLK->GENDIV.reg <= 1)) {
 
-		GCLK_MUX_SELECT(GCLK->GENDIV.reg, GCLK_GENDIV_ID, generator);
+		/* Select the appropriate generator division register */
+		*((uint8_t*)&GCLK->GENDIV.reg) = generator;
+		_system_gclk_wait_for_sync();
 
 		/* Get the generator divider setting (can be fractional or binary) */
-		uint32_t divider = (GCLK->GENDIV.bit.DIV);
+		uint32_t divider = GCLK->GENDIV.bit.DIV;
 
 		/* Check if the generator is using fractional or binary division */
-		if (GCLK->GENCTRL.bit.DIVSEL == 1) {
+		if (GCLK->GENCTRL.bit.DIVSEL) {
 			gen_input_hz /= divider;
 		}
 		else {
@@ -283,29 +241,24 @@ void system_gclk_ch_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
-	/* Select the requested generic clock channel */
-	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID, channel);
+	/* Cache the new config to reduce sync requirements */
+	uint32_t new_clkctrl_config = (channel << GCLK_CLKCTRL_ID_Pos);
 
-	/* Disable generic clock channel */
-	GCLK->CLKCTRL.reg &= ~GCLK_CLKCTRL_CLKEN;
-	while (GCLK->CLKCTRL.reg & GCLK_CLKCTRL_CLKEN) {
-		/* Wait for clock to become disabled */
-	}
-
-	/* Select the desired generic clock channel */
-	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID,
-			config->source_generator);
-
-	GCLK->CLKCTRL.bit.GEN = config->source_generator;
+	/* Select the desired generic clock generator */
+	new_clkctrl_config |= config->source_generator << GCLK_CLKCTRL_GEN_Pos;
 
 	#if !defined (REVB)
 	/* Enable or disable the clock in standby mode */
 	if (config->enable_during_sleep) {
-		GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_RUNSTDBY;
-	} else {
-		GCLK->CLKCTRL.reg &= ~GCLK_CLKCTRL_RUNSTDBY;
+		new_clkctrl_config |= GCLK_CLKCTRL_RUNSTDBY;
 	}
 	#endif
+
+	/* Disable generic clock channel */
+	system_gclk_ch_disable(channel);
+
+	/* Write the new configuration */
+	GCLK->CLKCTRL.reg = new_clkctrl_config;
 }
 
 /** \brief Enables a Generic Clock that was previously configured.
@@ -318,7 +271,7 @@ void system_gclk_ch_set_config(
 void system_gclk_ch_enable(const uint8_t channel)
 {
 	/* Select the requested generator channel */
-	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID, channel);
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
 	/* Enable the generic clock */
 	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
@@ -334,7 +287,7 @@ void system_gclk_ch_enable(const uint8_t channel)
 void system_gclk_ch_disable(const uint8_t channel)
 {
 	/* Select the requested generator channel */
-	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID, channel);
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
 	/* Disable the generic clock */
 	GCLK->CLKCTRL.reg &= ~GCLK_CLKCTRL_CLKEN;
@@ -355,9 +308,8 @@ void system_gclk_ch_disable(const uint8_t channel)
 uint32_t system_gclk_ch_get_hz(const uint8_t channel)
 {
 	/* Select the requested generic clock channel */
-	GCLK_MUX_SELECT(GCLK->CLKCTRL.reg, GCLK_CLKCTRL_ID, channel);
+	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
 	/* Return the clock speed of the associated GCLK generator */
-	return system_gclk_gen_get_hz((GCLK->CLKCTRL.reg & GCLK_CLKCTRL_GEN_Msk) >>
-			GCLK_CLKCTRL_GEN_Pos);
+	return system_gclk_gen_get_hz(GCLK->CLKCTRL.bit.GEN);
 }

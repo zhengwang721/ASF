@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,50 +40,40 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-void config_extint_channel(void);
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-//! [setup]
-void config_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_ch_conf eint_ch_conf;
-//! [setup_1]
-//! [setup_2]
-	extint_ch_get_config_defaults(&eint_ch_conf);
-//! [setup_2]
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-//! [setup_3]
-	eint_ch_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
-	eint_ch_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
-	eint_ch_conf.wake_if_sleeping    = true;
-	eint_ch_conf.filter_input_signal = false;
-	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;
-//! [setup_3]
-//! [setup_4]
-	extint_ch_set_config(1, &eint_ch_conf);
-//! [setup_4]
-}
-//! [setup]
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-int main(void)
-{
-	//! [setup_init]
-	extint_enable();
-	config_extint_channel();
-	//! [setup_init]
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-	//! [main]
-	while (true) {
-		//! [main_1]
-		if (extint_ch_is_detected(1)) {
-		//! [main_1]
-			// Do something in response to EXTINT 1 detection
-		//! [main_2]
-			extint_ch_clear_detected(1);
-		//! [main_2]
-		}
-	}
-	//! [main]
-}
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
+
+
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
+
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
+
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */

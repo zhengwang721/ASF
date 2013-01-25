@@ -3,7 +3,9 @@
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.system.pinmux.quick_start"/>
 		<build type ="include-path" value="."/>
+		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
-		<device-support value="samd20j18a"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
 	</project>
 </asf>

@@ -209,9 +209,10 @@ enum extint_detect {
  *  interrupt channel.
  */
 struct extint_ch_conf {
-	/** Pin MUX position from the channel, a \c PINMUX_* header file
-	 *  constant. */
-	uint32_t pinmux_position;
+	/** GPIO pin the NMI should be connected to. */
+	uint32_t gpio_pin;
+	/** MUX position the GPIO pin should be configured to. */
+	uint32_t gpio_pin_mux;
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 	/** Filter the raw input signal to prevent noise from triggering an
@@ -239,9 +240,10 @@ struct extint_events {
  *  interrupt NMI channel.
  */
 struct extint_nmi_conf {
-	/** Pin MUX position from the channel, a \c PINMUX_* header file
-	 *  constant. */
-	uint32_t pinmux_position;
+	/** GPIO pin the NMI should be connected to. */
+	uint32_t gpio_pin;
+	/** MUX position the GPIO pin should be configured to. */
+	uint32_t gpio_pin_mux;
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
@@ -422,13 +424,14 @@ static inline void extint_ch_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->pinmux_position     = 0;
+	config->gpio_pin            = 0;
+	config->gpio_pin_mux        = 0;
 	config->wake_if_sleeping    = true;
 	config->filter_input_signal = false;
 	config->detect              = EXTINT_DETECT_FALLING;
 }
 
-enum status_code extint_ch_set_config(
+void extint_ch_set_config(
 		const uint8_t channel,
 		const struct extint_ch_conf *const config);
 
@@ -459,7 +462,8 @@ static inline void extint_nmi_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->pinmux_position     = 0;
+	config->gpio_pin            = 0;
+	config->gpio_pin_mux        = 0;
 	config->filter_input_signal = false;
 	config->detect              = EXTINT_DETECT_FALLING;
 }

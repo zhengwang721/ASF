@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Quick Start
+ * \brief SAMD20 Xplained Pro board initialization
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,50 +40,24 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void config_extint_channel(void);
+#include <compiler.h>
+#include <board.h>
+#include <conf_board.h>
+#include <port.h>
 
-//! [setup]
-void config_extint_channel(void)
+void board_init(void)
 {
-//! [setup_1]
-	struct extint_ch_conf eint_ch_conf;
-//! [setup_1]
-//! [setup_2]
-	extint_ch_get_config_defaults(&eint_ch_conf);
-//! [setup_2]
+	struct port_conf pin_conf;
+	port_get_config_defaults(&pin_conf);
 
-//! [setup_3]
-	eint_ch_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
-	eint_ch_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
-	eint_ch_conf.wake_if_sleeping    = true;
-	eint_ch_conf.filter_input_signal = false;
-	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;
-//! [setup_3]
-//! [setup_4]
-	extint_ch_set_config(1, &eint_ch_conf);
-//! [setup_4]
-}
-//! [setup]
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
-int main(void)
-{
-	//! [setup_init]
-	extint_enable();
-	config_extint_channel();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		if (extint_ch_is_detected(1)) {
-		//! [main_1]
-			// Do something in response to EXTINT 1 detection
-		//! [main_2]
-			extint_ch_clear_detected(1);
-		//! [main_2]
-		}
-	}
-	//! [main]
+	/* Set buttons as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 }
