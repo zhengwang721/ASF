@@ -42,12 +42,12 @@
  */
 
 /**
- * \mainpage acifc_irq ACIFC IRQ Example
+ * \mainpage
  *
  * \section Purpose
  *
- * The acifc_irq example demonstrates how to use the ACIFC peripheral to
- * detect comparison event on the input pair.
+ * The Analog Comparator Interfacer example demonstrates how to use the ACIFC
+ * peripheral to detect comparison event on the input pair.
  *
  * \section Requirements
  *
