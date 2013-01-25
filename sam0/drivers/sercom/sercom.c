@@ -182,3 +182,126 @@ enum status_code sercom_set_gclk_generator(
 
 	return ret_val;
 }
+
+/**
+ * \internal Gets the default PAD pinout for a given SERCOM.
+ *
+ * Returns the PINMUX settings for the given SERCOM and pad. This is used
+ * for default configuration of pins.
+ *
+ * \param[in]  sercom_module   Pointer to the SERCOM module
+ * \param[in]  pad             PAD to get default pinout for
+ *
+ * \returns The default PINMUX for the given SERCOM instance and PAD
+ *
+ */
+uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad)
+{
+	switch ((uint32_t)sercom_module) {
+	case (uint32_t)SERCOM0:
+		switch (pad) {
+		case 0:
+			return SERCOM0_PAD0_DEFAULT;
+		case 1:
+			return SERCOM0_PAD1_DEFAULT;
+		case 2:
+			return SERCOM0_PAD2_DEFAULT;
+		case 3:
+			return SERCOM0_PAD3_DEFAULT;
+		}
+#if defined (SERCOM1)
+	case (uint32_t)SERCOM1:
+		switch (pad) {
+		case 0:
+			return SERCOM1_PAD0_DEFAULT;
+		case 1:
+			return SERCOM1_PAD1_DEFAULT;
+		case 2:
+			return SERCOM1_PAD2_DEFAULT;
+		case 3:
+			return SERCOM1_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM2)
+	case (uint32_t)SERCOM2:
+		switch (pad) {
+		case 0:
+			return SERCOM2_PAD0_DEFAULT;
+		case 1:
+			return SERCOM2_PAD1_DEFAULT;
+		case 2:
+			return SERCOM2_PAD2_DEFAULT;
+		case 3:
+			return SERCOM2_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM3)
+	case (uint32_t)SERCOM3:
+		switch (pad) {
+		case 0:
+			return SERCOM3_PAD0_DEFAULT;
+		case 1:
+			return SERCOM3_PAD1_DEFAULT;
+		case 2:
+			return SERCOM3_PAD2_DEFAULT;
+		case 3:
+			return SERCOM3_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM4)
+
+	case (uint32_t)SERCOM4:
+		switch (pad) {
+		case 0:
+			return SERCOM4_PAD0_DEFAULT;
+		case 1:
+			return SERCOM4_PAD1_DEFAULT;
+		case 2:
+			return SERCOM4_PAD2_DEFAULT;
+		case 3:
+			return SERCOM4_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM5)
+	case (uint32_t)SERCOM5:
+		switch (pad) {
+		case 0:
+			return SERCOM5_PAD0_DEFAULT;
+		case 1:
+			return SERCOM5_PAD1_DEFAULT;
+		case 2:
+			return SERCOM5_PAD2_DEFAULT;
+		case 3:
+			return SERCOM5_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM6)
+	case (uint32_t)SERCOM6:
+		switch (pad) {
+		case 0:
+			return SERCOM6_PAD0_DEFAULT;
+		case 1:
+			return SERCOM6_PAD1_DEFAULT;
+		case 2:
+			return SERCOM6_PAD2_DEFAULT;
+		case 3:
+			return SERCOM6_PAD3_DEFAULT;
+		}
+#endif
+#if defined (SERCOM7)
+	case (uint32_t)SERCOM7:
+		switch (pad) {
+		case 0:
+			return SERCOM7_PAD0_DEFAULT;
+		case 1:
+			return SERCOM7_PAD1_DEFAULT;
+		case 2:
+			return SERCOM7_PAD2_DEFAULT;
+		case 3:
+			return SERCOM7_PAD3_DEFAULT;
+		}
+#endif
+	default:
+		return 0;
+	}
+}

@@ -54,7 +54,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Disable the module */
 	spi_disable(dev_inst);
@@ -63,7 +63,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
 	_spi_wait_for_sync(dev_inst);
 
 	/* Software reset the module */
-	spi_module->SPI.CTRLA |= SPI_SWRST_bm;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
 }
 
 /**
@@ -79,7 +79,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the configuration was written
  */
-enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
+static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 		struct spi_conf *config)
 {
 	/* Sanity check arguments */
@@ -87,8 +87,43 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	Assert(config);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+	Sercom *const sercom_module = dev_inst->hw_dev;
+	struct system_pinmux_conf pin_conf;
+	uint32_t pad0 = config->pinmux_pad0;
+	uint32_t pad1 = config->pinmux_pad1;
+	uint32_t pad2 = config->pinmux_pad2;
+	uint32_t pad3 = config->pinmux_pad3;
 
+	system_pinmux_get_config_defaults(&pin_conf);
+	/* SERCOM PAD0 */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(sercom_module, 0);
+	}
+	pin_conf.mux_position = pad0 & 0xFFFF;
+	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
+
+	/* SERCOM PAD1 */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(sercom_module, 1);
+	}
+	pin_conf.mux_position = pad1 & 0xFFFF;
+	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+
+	/* SERCOM PAD2 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(sercom_module, 2);
+	}
+	pin_conf.mux_position = pad2 & 0xFFFF;
+	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
+	
+	/* SERCOM PAD3 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(sercom_module, 3);
+	}
+	pin_conf.mux_position = pad3 & 0xFFFF;
+	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
+	
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
 
@@ -102,35 +137,35 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
 	 */
-	uint32_t external_clock;
+	uint32_t external_clock = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		err = sercom_get_sync_baud_val(
+		err = _sercom_get_sync_baud_val(
 				config->master.baudrate,
 				external_clock, &baud);
 		if (err != STATUS_OK) {
 			/* Baud rate calculation error, return status code */
 			return STATUS_ERR_INVALID_ARG;
 		}
-		spi_module->SPI.BAUD = (uint8_t)baud;
+		spi_module->BAUD.reg = (uint8_t)baud;
 	}
 
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set module in master mode */
-		ctrla = SPI_MASTER_bm;
+		ctrla = SERCOM_SPI_CTRLA_MASTER;
 	} else {
 		/* Set frame format */
-		ctrla = (config->slave.frame_format << SPI_FORM_gp);
+		ctrla = config->slave.frame_format;
 		/* Set address mode */
-		spi_module->SPI.CTRLB |= (config->slave.addr_mode << SPI_AMODE_gp);
+		spi_module->CTRLB.reg |= config->slave.addr_mode;
 		/* Set address and address mask*/
-		spi_module->SPI.ADDR |= (config->slave.address
-				<< SPI_ADDR_gp) | (config->slave.frame_format
-				<< SPI_ADDRMASK_gp);
+		spi_module->ADDR.reg |= (config->slave.address
+				<< SERCOM_SPI_ADDR_ADDR_Pos) | (config->slave.address_mask
+				<< SERCOM_SPI_ADDR_ADDRMASK_Pos);
 		if (config->slave.preload_enable) {
 			/* Enable pre-loading of shift register */
-			spi_module->SPI.CTRLB |= SPI_PLOADEN_bm;
+			spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
 	}
 
@@ -144,22 +179,20 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	ctrla |= config->mux_setting;
 
 	/* Set SPI character size */
-	spi_module->SPI.CTRLB.reg |= (config->chsize << SPI_CHSIZE_gp);
+	spi_module->CTRLB.reg |= config->chsize;
 
-	if (config->sleep_enable) {
+	if (config->run_in_standby) {
 		/* Enable in sleep mode */
-		ctrla |= SPI_SLEEPEN_bm;
+		ctrla |= SERCOM_SPI_CTRLA_RUNSTDBY;
 	}
 
 	if (config->receiver_enable) {
-		/* Wait until the synchronization is complete */
-		_spi_wait_for_sync(dev_inst);
 		/* Enable receiver */
-		spi_module->SPI.CTRLB.reg |= SPI_RXEN_bm;
+		spi_module->CTRLB.reg |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
 	/* Write CTRLA register */
-	spi_module->SPI.CTRLA.reg = ctrla;
+	spi_module->CTRLA.reg |= ctrla;
 
 	return STATUS_OK;
 }
@@ -174,9 +207,11 @@ enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \param[in] module      Pointer to hardware instance
  * \param[in] config      Pointer to the config struct
  *
- * \return The status of the initialization
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
- * \retval STATUS_OK              If the initialization was done
+ * \return Status of the initialization
+ * \retval STATUS_OK                     Module initiated correctly.
+ * \retval STATUS_ERR_DENIED             If module is enabled.
+ * \retval STATUS_ERR_BUSY               If module is busy resetting.
+ * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 		struct spi_conf *config)
@@ -190,10 +225,35 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+
+		/* Check if module is enabled. */
+	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
+		return STATUS_ERR_DENIED;
+	}
+
+	/* Check if reset is in progress. */
+	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
+		return STATUS_ERR_BUSY;
+	}
+	
+	/* Turn on module in PM */
+	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
+			+ PM_APBCMASK_SERCOM0_Pos;
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
+	
+	/* Set up GCLK */
+	struct system_gclk_ch_conf gclk_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	gclk_ch_conf.source_generator = config->generator_source;
+	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
+	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(gclk_index);
+	system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 	/* Set the SERCOM in SPI mode */
-	spi_module->SPI.CTRLA.reg |= SERCOM_MODE_SPI_gc << SERCOM_MODE_gp;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
 	/* Write configuration to module and return status code */
 	return _spi_set_config(dev_inst, config);
