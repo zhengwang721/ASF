@@ -83,7 +83,7 @@
  *     on the terminal window.
  *      \code
  *      -- CAN Example --
- *      -- SAM3X-EK --   (or --SAM4E-EK --)
+ *      -- SAMxx-EK --
  *      -- Compiled: xxx xx xxxx xx:xx:xx --
  *      \endcode
  *  -# Press a key in the terminal window to run the tests. CAN messages
