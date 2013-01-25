@@ -41,15 +41,10 @@
 
 #include "samd20.h"
 
-typedef void (*intfunc) (void);
-typedef union { intfunc __fun; void * __ptr; } intvec_elem;
-
 void __iar_program_start(void);
 int __low_level_init(void);
 
-/* Default empty handler */
 void Dummy_Handler(void);
-
 void Reset_Handler(void);
 
 /**
@@ -186,9 +181,6 @@ const DeviceVectors __vector_table[] = {
         { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
 };
 
-#define SCB_VTOR_TBLBASE_Pos               7                             /*!< SCB VTOR: TBLBASE Position */
-#define SCB_VTOR_TBLBASE_Msk               (0x1fffffff << SCB_VTOR_TBLBASE_Pos) /*!< SCB VTOR: TBLBASE Mask */
-
 /**------------------------------------------------------------------------------
  * This is the code that gets called on processor reset. To initialize the
  * device.
@@ -198,10 +190,6 @@ int __low_level_init(void)
         uint32_t *pSrc = __section_begin(".intvec");
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
-
-        if (((uint32_t) pSrc >= HRAMC0_ADDR) && ((uint32_t) pSrc < (uint32_t) HRAMC0_ADDR + (uint32_t) HRAMC0_SIZE)) {
-                SCB->VTOR |= (1UL) << SCB_VTOR_TBLBASE_Pos;
-        }
 
         return 1; /* if return 0, the data sections will not be initialized */
 }
