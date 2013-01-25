@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
 #ifndef SPI_H_INCLUDED
 #define SPI_H_INCLUDED
 
-#include "asf.h"
+#include <compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -392,11 +392,11 @@ enum spi_transfer_mode {
 	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup */
 	SPI_TRANSFER_MODE_0 = 0,
 	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample */
-	SPI_TRANSFER_MODE_1 = SPI_CPHA_bm,
+	SPI_TRANSFER_MODE_1 = SERCOM_SPI_CTRLA_CPHA,
 	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup */
-	SPI_TRANSFER_MODE_2 = SPI_CPOL_bm,
+	SPI_TRANSFER_MODE_2 = SERCOM_SPI_CTRLA_CPOL,
 	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample */
-	SPI_TRANSFER_MODE_3 = SPI_CPHA_bm | SPI_CPOL_bm,
+	SPI_TRANSFER_MODE_3 = SERCOM_SPI_CTRLA_CPHA | SERCOM_SPI_CTRLA_CPOL,
 };
 
 /**
@@ -406,11 +406,9 @@ enum spi_transfer_mode {
  */
 enum spi_frame_format {
 	/** SPI frame */
-	SPI_FRAME_FORMAT_SPI_FRAME = 0,
+	SPI_FRAME_FORMAT_SPI_FRAME      = SERCOM_SPI_CTRLA_FORM(0),
 	/** SPI frame with address */
-	SPI_FRAME_FORMAT_SPI_FRAME_ADDR = SPI_FORM_WITH_ADDR_bm,
-	/** Half duplex SPI frame */
-	SPI_FRAME_FORMAT_HALF_DUPLEX = SPI_FORM_HALF_DUP_bm,
+	SPI_FRAME_FORMAT_SPI_FRAME_ADDR = SERCOM_SPI_CTRLA_FORM(2),
 };
 
 /**
@@ -466,17 +464,17 @@ enum spi_addr_mode {
 	/**
 	 * addrmask in the \ref spi_conf struct is used as a mask to the register.
 	 */
-	SPI_ADDR_MODE_MASK = 0,
+	SPI_ADDR_MODE_MASK   = SERCOM_SPI_CTRLB_AMODE(0),
 	/**
 	 * The Slave responds to the two unique addresses in addr and addrmask in
 	 * the \ref spi_conf struct.
 	 */
-	SPI_ADDR_MODE_UNIQUE = SPI_ADDRMODE_UNIQUE_bm,
+	SPI_ADDR_MODE_UNIQUE = SERCOM_SPI_CTRLB_AMODE(1),
 	/**
 	 * The Slave responds to the range of addresses between and including addr
 	 * and addrmask in the \ref spi_conf struct. addr is the upper limit.
 	 */
-	SPI_ADDR_MODE_RANGE = SPI_ADDRMODE_RANGE_bm,
+	SPI_ADDR_MODE_RANGE  = SERCOM_SPI_CTRLB_AMODE(3),
 };
 
 /**
@@ -484,7 +482,7 @@ enum spi_addr_mode {
  */
 enum spi_mode {
 	/** Master Mode */
-	SPI_MODE_MASTER = SPI_MASTER_bm,
+	SPI_MODE_MASTER = SERCOM_SPI_CTRLA_MASTER,
 	/** Slave Mode */
 	SPI_MODE_SLAVE = 0,
 };
@@ -494,7 +492,7 @@ enum spi_mode {
  */
 enum spi_data_order {
 	/** The LSB of the data is transmitted first */
-	SPI_DATA_ORDER_LSB = SPI_DORD_bm,
+	SPI_DATA_ORDER_LSB = SERCOM_SPI_CTRLA_DORD,
 	/** The MSB of the data is transmitted first */
 	SPI_DATA_ORDER_MSB = 0,
 };
@@ -506,7 +504,7 @@ enum spi_character_size {
 	/** 8 bit character */
 	SPI_CHARACTER_SIZE_8BIT = 0,
 	/** 9 bit character */
-	SPI_CHARACTER_SIZE_9BIT = SPI_CHSIZE_bm,
+	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE,
 };
 
 /**
@@ -517,7 +515,7 @@ enum spi_character_size {
  */
 struct spi_dev_inst {
 	/** SERCOM hardware module */
-	SERCOM_t *hw_dev;
+	Sercom *hw_dev;
 	/** SPI mode */
 	enum spi_mode mode;
 	/** SPI character size */
@@ -620,10 +618,10 @@ struct spi_conf {
  */
 static inline void _spi_wait_for_sync(struct spi_dev_inst *const dev_inst)
 {
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
-	while (spi_module->SPI.STATUS & SPI_SYNCBUSY_bm);
+	while (spi_module->SPI.STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
 }
 #endif
 
@@ -728,7 +726,7 @@ static inline void spi_slave_dev_init(struct spi_slave_dev_inst *const dev_inst,
 	port_pin_set_config(dev_inst->ss_pin, &pin_conf);
 }
 
-enum status_code spi_init(struct spi_dev_inst *const dev_inst, SERCOM_t *module,
+enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 		struct spi_conf *config);
 
 /** @} */
@@ -751,13 +749,13 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Enable SPI */
-	spi_module->SPI.CTRLA |= SPI_ENABLE_bm;
+	spi_module->SPI.CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -773,13 +771,13 @@ static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable SPI */
-	spi_module->SPI.CTRLA &= ~SPI_ENABLE_bm;
+	spi_module->SPI.CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
 }
 
 void spi_reset(struct spi_dev_inst *const dev_inst);
@@ -809,10 +807,10 @@ static inline bool spi_is_ready_to_write(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Check interrupt flag */
-	return (spi_module->SPI.INTFLAGS & SPI_TXCIF_bm);
+	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
 }
 
 /**
@@ -833,13 +831,13 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Wait for synchronization */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable receiver */
-	return (spi_module->SPI.INTFLAGS & SPI_RXCIF_bm);
+	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
 }
 /** @} */
 
@@ -876,7 +874,7 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Check if the data register has been copied to the shift register */
 	if (!spi_is_ready_to_write(dev_inst)) {
@@ -885,7 +883,7 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	}
 
 	/* Write the character to the DATA register */
-	spi_module->SPI.DATA |= tx_data & SPI_DATA_gm;
+	spi_module->SPI.DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
 
 	return STATUS_OK;
 }
@@ -916,7 +914,7 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	SERCOM_t *const spi_module = dev_inst->hw_dev;
+	Sercom *const spi_module = dev_inst->hw_dev;
 
 	/* Check until if data is ready to be read */
 	if (!spi_is_ready_to_read(dev_inst)) {
@@ -926,9 +924,9 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 
 	/* Read the character from the DATA register */
 	if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-		*rx_data = spi_module->SPI.DATA & SPI_DATA_gm;
+		*rx_data = (spi_module->SPI.DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
-		*(uint8_t*)rx_data = (uint8_t)spi_module->SPI.DATA_UINT8_T[0];
+		*(uint8_t*)rx_data = (uint8_t)spi_module->SPI.DATA.reg;
 	}
 
 	return STATUS_OK;
@@ -970,15 +968,16 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 
 	/* Start timeout period for slave */
 	if (dev_inst->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= 10000; j++) {
+		for (j = 0; j <= SPI_TIMEOUT; j++) {
 			if (spi_is_ready_to_write(dev_inst)) {
 				break;
-			} else if (j == 10000) {
+			} else if (j == SPI_TIMEOUT) {
 				/* Not ready to write data within timeout period */
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
 	}
+
 	/* Wait until the module is ready to write the character */
 	while (!spi_is_ready_to_write(dev_inst)) {
 	}
@@ -987,10 +986,10 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 
 	/* Start timeout period for slave */
 	if (dev_inst->mode == SPI_MODE_SLAVE) {
-		for (j = 0; j <= 10000; j++) {
+		for (j = 0; j <= SPI_TIMEOUT; j++) {
 			if (spi_is_ready_to_read(dev_inst)) {
 				break;
-			} else if (j == 10000) {
+			} else if (j == SPI_TIMEOUT) {
 				/* Not ready to read data within timeout period */
 				return STATUS_ERR_TIMEOUT;
 			}

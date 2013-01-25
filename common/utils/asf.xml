@@ -310,6 +310,7 @@
 			Default toolchain settings for SAM.
 			</info>
 			<device-support value="sam"/>
+			<device-support value="sam0"/>
 
 			<!-- ARMGCC -->
 			<toolchain-config name="armgcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="armgcc"/>

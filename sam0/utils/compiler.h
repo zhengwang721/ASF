@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,10 +69,20 @@
 #include <stdlib.h>
 
 /**
+ * \def UNUSED
+ * \brief Marking \a v as a unused parameter or value.
+ */
+#define UNUSED(v)          (void)(v)
+
+/**
  * \def barrier
  * \brief Memory barrier
  */
-#define barrier()                     __DMB()
+#ifdef __GNUC__
+#  define barrier()        asm volatile("" ::: "memory")
+#else
+#  define barrier()        asm ("")
+#endif
 
 /**
  * \brief Emit the compiler pragma \a arg.

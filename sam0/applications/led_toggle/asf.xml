@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.led_toggle" caption="LED Toggle Application">
+		<info type="description" value="summary">
+		Example application to toggle the board LED when a button is pressed.
+		</info>
+		<build type="c-source" value="led_toggle.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.extint"/>
+		<require idref="sam0.drivers.system.gclk"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

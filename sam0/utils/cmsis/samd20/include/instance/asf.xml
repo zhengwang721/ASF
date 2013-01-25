@@ -11,7 +11,7 @@
 		<build type="header-file" value="instance_eic.h"/>
 		<build type="header-file" value="instance_evsys.h"/>
 		<build type="header-file" value="instance_gclk.h"/>
-		<build type="header-file" value="instance_hmatrixb.h"/>
+		<build type="header-file" value="instance_hmatrix.h"/>
 		<build type="header-file" value="instance_nvmctrl.h"/>
 		<build type="header-file" value="instance_pac0.h"/>
 		<build type="header-file" value="instance_pac1.h"/>

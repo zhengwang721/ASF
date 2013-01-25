@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Non-Volatile Memory driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -353,6 +353,15 @@
 extern "C" {
 #endif
 
+/**
+ * \brief Mask for the error flags in the status register
+ */
+#define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | NVMCTRL_STATUS_LOCKE | NVMCTRL_STATUS_NVME)
+
+/**
+ * \brief Key for executing NVM commands
+ */
+#define NVM_CMDEX_EXECUTION_KEY 0xA5
 
 /**
  * \brief NVM errors
@@ -383,7 +392,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_ERASE_ROW         = NVM_CMD_ER_gc,
+	NVM_COMMAND_ERASE_ROW         = NVMCTRL_CTRLA_CMD_ER,
 
 	/** Write the contents of the page buffer to the addressed memory page.
 	 *
@@ -398,7 +407,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_WRITE_PAGE        = NVM_CMD_WP_gc,
+	NVM_COMMAND_WRITE_PAGE        = NVMCTRL_CTRLA_CMD_WP,
 
 	/** Erases the addressed auxiliary memory row.
 	 *
@@ -415,7 +424,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_ERASE_AUX_ROW     = NVM_CMD_EAR_gc,
+	NVM_COMMAND_ERASE_AUX_ROW     = NVMCTRL_CTRLA_CMD_EAR,
 
 	/** Write the contents of the page buffer to the addressed auxiliary memory
 	 *  row.
@@ -433,7 +442,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_WRITE_AUX_ROW     = NVM_CMD_WAP_gc,
+	NVM_COMMAND_WRITE_AUX_ROW     = NVMCTRL_CTRLA_CMD_WAP,
 
 	/** Locks the addressed memory region, preventing further modifications
 	 *  until the region is unlocked or the device is erased.
@@ -449,7 +458,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_LOCK_REGION       = NVM_CMD_LR_gc,
+	NVM_COMMAND_LOCK_REGION       = NVMCTRL_CTRLA_CMD_LR,
 
 	/** Unlocks the addressed memory region, allowing the region contents to be
 	 *  modified.
@@ -465,7 +474,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_UNLOCK_REGION     = NVM_CMD_UR_gc,
+	NVM_COMMAND_UNLOCK_REGION     = NVMCTRL_CTRLA_CMD_UR,
 
 	/** Clears the page buffer of the NVM controller, resetting the contents to
 	 *  all zero values.
@@ -481,7 +490,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_PAGE_BUFFER_CLEAR = NVM_CMD_PBC_gc,
+	NVM_COMMAND_PAGE_BUFFER_CLEAR = NVMCTRL_CTRLA_CMD_PBC,
 
 	/** Sets the device security bit, disallowing the changing of lock bits and
 	 *  auxiliary row data until a chip erase has been performed.
@@ -497,7 +506,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_SET_SECURITY_BIT  = NVM_CMD_SSB_gc,
+	NVM_COMMAND_SET_SECURITY_BIT  = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
 	 *  consumption of the system. When in low power mode, all commands other
@@ -514,7 +523,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_SET_POWER_REDUCTION_MODE = NVM_CMD_SPRM_gc,
+	NVM_COMMAND_SET_POWER_REDUCTION_MODE = NVMCTRL_CTRLA_CMD_SPRM,
 
 	/** Exit power reduction mode in the NVM controller to allow other NVM
 	 *  commands to be issued.
@@ -530,7 +539,7 @@ enum nvm_command {
 	 *   </tr>
 	 *  </table>
 	 */
-	NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE = NVM_CMD_CPRM_gc,
+	NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE = NVMCTRL_CTRLA_CMD_CPRM,
 };
 
 /**
@@ -538,11 +547,11 @@ enum nvm_command {
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
-	NVM_AUTO_WAKE_MODE_WAKEONACCESS     = NVM_WAKEONACCESS_gc,
+	NVM_AUTO_WAKE_MODE_WAKEONACCESS     = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
 	/** NVM controller exits low power mode when the device exits sleep mode. */
-	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVM_WAKEUPINSTANT_gc,
+	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVM_DISABLED_gc,
+	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**
@@ -632,7 +641,7 @@ static inline void nvm_get_config_defaults(
 	config->bootloader_size   = 0;
 }
 
-enum status_code nvm_init(const struct nvm_config *const config);
+enum status_code nvm_set_config(const struct nvm_config *const config);
 
 /**
  * \brief Checks if the NVM controller is ready
@@ -649,9 +658,9 @@ enum status_code nvm_init(const struct nvm_config *const config);
 static inline bool nvm_is_ready(void)
 {
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
-	return nvm_module->INTFLAG & NVM_INTFLAG_READY_bm;
+	return nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_READY;
 }
 /** @} */
 
@@ -674,32 +683,33 @@ static inline void nvm_get_parameters(struct nvm_parameters *const parameters)
 	Assert(parameters);
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Read out from the PARAM register */
 	uint32_t param_reg;
-	param_reg = nvm_module->PARAM;
+	param_reg = nvm_module->PARAM.reg;
 
 	/* Mask out page size and number of pages */
-	parameters->page_size  = (param_reg  & NVM_PSZ_gm) >> NVM_PSZ_gp;
-	parameters->nvm_number_of_pages = (param_reg & NVM_NVMP_gm) >> NVM_NVMP_gp;
-
+	parameters->page_size  =
+			(param_reg  & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos;
+	parameters->nvm_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 }
 
 enum status_code nvm_write_page(
-		const uint32_t dst_page_nr,
+		const uint16_t dst_page_nr,
 		const uint32_t *buf);
 
 enum status_code nvm_read_page(
-		const uint32_t src_page_nr,
+		const uint16_t src_page_nr,
 		uint32_t *buf);
 
-enum status_code nvm_erase_row(const uint32_t row_nr);
+enum status_code nvm_erase_row(const uint16_t row_nr);
 
-enum status_code nvm_erase_block(const uint32_t addr, const uint32_t length);
+enum status_code nvm_erase_block(const uint16_t row_nr, const uint16_t rows);
 
 enum status_code nvm_execute_command(
 		enum nvm_command command,
@@ -729,13 +739,13 @@ static inline enum nvm_errors nvm_get_error(void)
 	enum nvm_errors ret_val;
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Mask out non-error bits */
-	ret_val =  ((nvm_module->STATUS) & 0x1C);
+	ret_val =  ((nvm_module->STATUS.reg) & 0x1C);
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Return error*/
 	return ret_val;

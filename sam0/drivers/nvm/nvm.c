@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Non Volatile Memory driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,7 +39,7 @@
  *
  */
 
-#include <nvm.h>
+#include "nvm.h"
 
 /**
  * \brief Number of pages per row in the NVM controller.
@@ -70,7 +70,7 @@ union _nvm_data {
  */
 struct _nvm_device {
 	/** Number of bytes contained per page */
-	uint8_t page_size;
+	uint16_t page_size;
 	/** Total number of pages in the NVM memory */
 	uint16_t number_of_pages;
 	/** If man_write_page returns false, a page write command will
@@ -89,9 +89,9 @@ static struct _nvm_device _nvm_dev;
 #define NVM_MEMORY ((union _nvm_data *) 0x00000000)
 
 /**
- * \brief Initializes the NVM hardware module based on the configuration.
+ * \brief Sets the up the NVM hardware module based on the configuration.
  *
- * Writes out a given configuration of a NVM controller configuration to the
+ * Writes a given configuration of a NVM controller configuration to the
  * hardware module, and initializes the internal device struct
  *
  * \param[in] config    Configuration settings for the NVM controller
@@ -107,48 +107,52 @@ static struct _nvm_device _nvm_dev;
  *                                  could not set the bootloader and eeprom
  *                                  size
  */
-enum status_code nvm_init(
+enum status_code nvm_set_config(
 		const struct nvm_config *const config)
 {
 	/* Sanity check argument */
 	Assert(config);
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
 		return STATUS_ERR_BUSY;
 	}
 
+	//TODO: bit positions
 	/* Writing configuration to the CTRLB register */
-	nvm_module->CTRLB = (config->sleep_power_mode <<  NVM_SLEEP_ENABLE_gp) |
-			(config->manual_page_write << NVM_MAN_PAGE_WRITE_bp) |
-			(config->auto_wait_states << NVM_AUTO_WAIT_STATE_bp) |
-			(config->wait_states << NVM_WAIT_STATES_gp);
+	nvm_module->CTRLB.reg =
+			(config->sleep_power_mode <<  NVMCTRL_CTRLB_SLEEPPRM_Pos) |
+			(config->manual_page_write << NVMCTRL_CTRLB_MANW_Pos) |
+			(config->auto_wait_states << NVMCTRL_CTRLB_ARWS_Pos) |
+			(config->wait_states << NVMCTRL_CTRLB_RWS_Pos);
 
 	/* Initialize the internal device struct */
-	_nvm_dev.page_size = 8 * (2 << (nvm_module->PARAM & NVM_PSZ_gm));
-	_nvm_dev.number_of_pages = nvm_module->PARAM & NVM_NVMP_gm;
+	_nvm_dev.page_size =
+			8 * (2 << ((nvm_module->PARAM.reg & NVMCTRL_PARAM_PSZ_Msk) >>
+			NVMCTRL_PARAM_PSZ_Pos));
+	_nvm_dev.number_of_pages = (nvm_module->PARAM.reg & NVMCTRL_PARAM_NVMP_Msk);
 	_nvm_dev.man_page_write = config->manual_page_write;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
-	if(nvm_module->STATUS & NVM_SECURITY_BIT_bm) {
+	if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 		return STATUS_ERR_IO;
 	}
 
 	/* Create pointer to the auxiliary space */
-	uint32_t *aux_row = (uint32_t*)NVM_AUX_ADDRESS;
+	uint32_t *aux_row = (uint32_t*)NVMCTRL_AUX0_ADDRESS;
 
 	/* Writing bootloader and eeprom size to the auxiliary space */
-	*aux_row = (config->bootloader_size << NVM_AUX_BOOTPROT_gp) |
-			(config->eeprom_size << NVM_AUX_EEPROM_gp);
+	*aux_row = (config->bootloader_size << NVMCTRL_AUX_BOOTPROT_Pos) |
+			(config->eeprom_size << NVMCTRL_AUX_EEPROM_Pos);
 
 	/* Issue the write auxiliary space command */
-	nvm_module->CTRLA = NVM_COMMAND_WRITE_AUX_ROW;
+	nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW;
 
 	return STATUS_OK;
 }
@@ -186,15 +190,15 @@ enum status_code nvm_execute_command(
 		uint32_t parameter)
 {
 	/* Check that the address given is valid  */
-	if (address > (_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+	if (address > (uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
@@ -208,14 +212,14 @@ enum status_code nvm_execute_command(
 
 			/* Auxiliary space cannot be accessed if the security
 			 * is set */
-			if(nvm_module->STATUS & NVM_SECURITY_BIT_bm) {
+			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
 
 			/* Set address and command */
-			nvm_module->ADDR = address;
-			nvm_module->CTRLA = (command << NVM_COMMAND_gp) |
-					(NVM_CMDEX_EXECUTION_KEY << NVM_CMDEX_gp);
+			nvm_module->ADDR.reg = address;
+			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
+					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
 			break;
 
 		/* Commands requiring address */
@@ -225,9 +229,9 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_UNLOCK_REGION:
 
 			/* Set address and command */
-			nvm_module->ADDR = address;
-			nvm_module->CTRLA = (command << NVM_COMMAND_gp) |
-					(NVM_CMDEX_EXECUTION_KEY << NVM_CMDEX_gp);
+			nvm_module->ADDR.reg = address;
+			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
+					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
 			break;
 
 		/* Commands not requiring address */
@@ -236,8 +240,8 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_SET_POWER_REDUCTION_MODE:
 		case NVM_COMMAND_CLEAR_POWER_REDUCTION_MODE:
 			/* Set command */
-			nvm_module->CTRLA = (command << NVM_COMMAND_gp) |
-					(NVM_CMDEX_EXECUTION_KEY << NVM_CMDEX_gp);
+			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
+					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
 			break;
 
 		default:
@@ -270,7 +274,7 @@ enum status_code nvm_execute_command(
  *                                 pages available in the NVM memory region
  */
 enum status_code nvm_write_page(
-		const uint32_t dst_page_nr,
+		const uint16_t dst_page_nr,
 		const uint32_t *buf)
 {
 	uint32_t i;
@@ -282,10 +286,10 @@ enum status_code nvm_write_page(
 	}
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
@@ -296,14 +300,9 @@ enum status_code nvm_write_page(
 	nvm_addr = dst_page_nr * (_nvm_dev.page_size / 4);
 
 	/* Write to the NVM memory 4 bytes at a time */
-	for(i=0;i<(_nvm_dev.page_size / 4);i++) {
+	for (i = 0; i<(_nvm_dev.page_size / 4); i++) {
 
 		NVM_MEMORY[nvm_addr++].data32 = buf[i];
-	}
-
-	/* Issue the page write command if automatic page write isn't enabled */
-	if (_nvm_dev.man_page_write) {
-		nvm_module->CTRLA = NVM_COMMAND_WRITE_PAGE;
 	}
 
 	return STATUS_OK;
@@ -330,7 +329,7 @@ enum status_code nvm_write_page(
  *                                 pages available in the NVM memory region
  */
 enum status_code nvm_read_page(
-		const uint32_t src_page_nr,
+		const uint16_t src_page_nr,
 		uint32_t *buf)
 {
 	uint32_t i;
@@ -342,10 +341,10 @@ enum status_code nvm_read_page(
 	}
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
@@ -380,9 +379,9 @@ enum status_code nvm_read_page(
  * \retval STATUS_ERR_BAD_ADDRESS  If row_nr was larger than the number of
  *                                 rows available in the NVM memory region
  */
-enum status_code nvm_erase_row(const uint32_t row_nr)
+enum status_code nvm_erase_row(const uint16_t row_nr)
 {
-	uint32_t row_addr;
+	uint16_t row_addr;
 
 	/* Check if the row_nr is valid */
 	if(row_nr > ((_nvm_dev.number_of_pages / NVM_PAGES_PER_ROW) - 1)) {
@@ -390,10 +389,10 @@ enum status_code nvm_erase_row(const uint32_t row_nr)
 	}
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
@@ -404,9 +403,9 @@ enum status_code nvm_erase_row(const uint32_t row_nr)
 	row_addr =  row_nr * (_nvm_dev.page_size * NVM_PAGES_PER_ROW);
 
 	/* Set address and command */
-	nvm_module->ADDR = row_addr;
-	nvm_module->CTRLA = (NVM_COMMAND_ERASE_ROW << NVM_COMMAND_gp) |
-			(NVM_CMDEX_EXECUTION_KEY << NVM_CMDEX_gp);
+	nvm_module->ADDR.reg = row_addr;
+	nvm_module->CTRLA.reg = (NVM_COMMAND_ERASE_ROW << NVMCTRL_CTRLA_CMD_Pos) |
+			(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
 
 	return STATUS_OK;
 }
@@ -431,11 +430,11 @@ enum status_code nvm_erase_row(const uint32_t row_nr)
  *                                 the number of rows available in the
  *                                 NVM memory region
  */
-enum status_code nvm_erase_block(uint32_t row_nr, const uint32_t rows)
+enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
 {
-	uint32_t i;
-	uint32_t row_addr;
-	uint32_t row_size;
+	uint16_t i;
+	uint16_t row_addr;
+	uint16_t row_size;
 	uint32_t block_size;
 
 	/* Byte sizes and address */
@@ -444,15 +443,16 @@ enum status_code nvm_erase_block(uint32_t row_nr, const uint32_t rows)
 	block_size = rows * row_size;
 
 	/* Sanity check of row and block size */
-	if((row_addr + block_size) > (_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+	if((row_addr + block_size) >
+			(uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
 	/* Get a pointer to the module hardware instance */
-	NVM_t *const nvm_module = &NVM;
+	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS &= ~NVM_ERRORS_gm;
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if(!nvm_is_ready()) {
@@ -461,9 +461,9 @@ enum status_code nvm_erase_block(uint32_t row_nr, const uint32_t rows)
 
 	/* Set address and command */
 	for (i=0;i>rows;i++) {
-		nvm_module->ADDR = row_addr ;
-		nvm_module->CTRLA = (NVM_COMMAND_ERASE_ROW << NVM_COMMAND_gp) |
-				(NVM_CMDEX_EXECUTION_KEY << NVM_CMDEX_gp);
+		nvm_module->ADDR.reg = row_addr ;
+		nvm_module->CTRLA.reg = (NVM_COMMAND_ERASE_ROW << NVMCTRL_CTRLA_CMD_Pos) |
+				(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
 		/* Increment the row address */
 		row_addr += row_size;
 	}
