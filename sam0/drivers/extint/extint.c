@@ -97,14 +97,16 @@ void extint_enable(void)
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
 		_eic_wait_for_sync(eics[i]);
+	}
 
 #if EXTINT_ASYNC == true
-		/* Clear callback registration table */
-		for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
-			_extint_dev.callbacks[j] = NULL;
-		}
-#endif
+	/* Clear callback registration table */
+	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
+		_extint_dev.callbacks[j] = NULL;
 	}
+
+	NVIC_EnableIRQ(EIC_EXTINT_0_IRQn);
+#endif
 }
 
 /**
@@ -153,14 +155,7 @@ void extint_ch_set_config(
 	/* Get a pointer to the module hardware instance */
 	Eic *const EIC_module = _extint_get_eic_from_channel(channel);
 
-	/* Set the channel's new wake up mode setting */
-	if (config->wake_if_sleeping) {
-		EIC_module->WAKEUP.reg |=  (1UL << channel);
-	} else {
-		EIC_module->WAKEUP.reg &= ~(1UL << channel);
-	}
-
-	uint8_t  config_pos = (4 * (channel % 8));
+	uint32_t config_pos = (4 * (channel % 8));
 	uint32_t new_config;
 
 	/* Determine the channel's new edge detection configuration */
@@ -176,6 +171,13 @@ void extint_ch_set_config(
 		= (EIC_module->CONFIG[channel / 8].reg &
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
+
+	/* Set the channel's new wake up mode setting */
+	if (config->wake_if_sleeping) {
+		EIC_module->WAKEUP.reg |=  (1UL << channel);
+	} else {
+		EIC_module->WAKEUP.reg &= ~(1UL << channel);
+	}
 }
 
 /**

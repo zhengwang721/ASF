@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAMD20 Xplained Pro board initialization
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,72 +41,23 @@
  *
  */
 
-#include <asf.h>
+#include <compiler.h>
+#include <board.h>
+#include <conf_board.h>
+#include <port.h>
 
-//! [packet_data]
-#define DATA_LENGTH 10
-
-static uint8_t buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-};
-
-#define SLAVE_ADDRESS 0x01
-//! [packet_data]
-
-/* Number of time to try and send packet if failed. */
-#define TIMEOUT 1000
-
-/* Init device instance. */
-//! [dev_inst]
-struct i2c_slave_module module;
-//! [dev_inst]
-
-//! [initialize_i2c]
-static void configure_i2c(void)
+void board_init(void)
 {
-	/* Initialize config structure and device instance. */
-	//! [init_conf]
-	struct i2c_slave_conf conf;
-	i2c_slave_get_config_defaults(&conf);
-	//! [init_conf]
-	conf.address = SLAVE_ADDRESS;
-	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
-	/* Initialize and enable device with config. */
-	//! [init_module]
-	i2c_slave_init(&module, SERCOM0, &conf);
-	//! [init_module]
+	struct port_conf pin_conf;
+	port_get_config_defaults(&pin_conf);
 
-	//! [enable_module]
-	i2c_slave_enable(&module);
-	//! [enable_module]
-}
-//! [initialize_i2c]
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
-int main(void)
-{
-
-	//! [run_initialize_i2c]
-	/* Init system. */
-	system_init();
-	/* Configure device and enable. */
-	configure_i2c();
-	//! [run_initialize_i2c]
-	
-	/* Init i2c packet. */
-	//! [packet]
-	i2c_packet_t packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer,
-	};
-	//! [packet]
-
-	/* Write buffer to master */
-	//! [write_packet]
-	i2c_slave_write_packet_callback(&module, &packet);
-	//! [write_packet]
-
-	while (1) {
-		/* Inf loop. */
-	}
+	/* Set buttons as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 }

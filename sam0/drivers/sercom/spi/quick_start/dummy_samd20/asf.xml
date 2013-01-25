@@ -5,8 +5,9 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
+		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="samd20j18a"/>
+		<device-support value="atsamd20j18a"/>
 	</project>
 </asf>
