@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK Board Definition.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -138,7 +138,7 @@
 #define LED1_GPIO            (PIO_PD20_IDX)
 #define LED1_FLAGS           (0)
 #define LED1_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+#define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /** LED #2 pin definition (Green). */
 #define LED_2_NAME      "Green LED D4"
@@ -203,7 +203,9 @@
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
-#define PUSHBUTTON_1_NAME        "BP2 WAKUP9"
+#define PUSHBUTTON_1_NAME        "BP2 WAKU"
+#define PUSHBUTTON_1_WKUP_LINE   (9)
+#define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
 #define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
@@ -215,12 +217,15 @@
 #define PIN_PUSHBUTTON_1_ID    ID_PIOA
 #define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
 /**
  * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
  * falling edge.
  */
 #define PUSHBUTTON_2_NAME        "BP3 TAMP"
+#define PUSHBUTTON_2_WKUP_LINE   (10)
+#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT10)
 #define GPIO_PUSH_BUTTON_2       (PIO_PA20_IDX)
 #define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_FALLING)
@@ -232,12 +237,15 @@
 #define PIN_PUSHBUTTON_2_ID    ID_PIOA
 #define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+#define PIN_PUSHBUTTON_2_IRQn  PIOA_IRQn
 
 /**
  * Push button #2 definition. Attributes = pull-up + debounce + interrupt on
  * both edges.
  */
 #define PUSHBUTTON_3_NAME        "BP4 SCROLL-UP"
+#define PUSHBUTTON_3_WKUP_LINE   (1)
+#define PUSHBUTTON_3_WKUP_FSTT   (PMC_FSMR_FSTT1)
 #define GPIO_PUSH_BUTTON_3       (PIO_PA1_IDX)
 #define GPIO_PUSH_BUTTON_3_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_3_SENSE (IOPORT_SENSE_BOTHEDGES)
@@ -249,12 +257,15 @@
 #define PIN_PUSHBUTTON_3_ID    ID_PIOA
 #define PIN_PUSHBUTTON_3_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_3_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_3_IRQn  PIOA_IRQn
 
 /**
  * Push button #3 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
 #define PUSHBUTTON_4_NAME        "BP5 SCROLL-DOWN"
+#define PUSHBUTTON_4_WKUP_LINE   (2)
+#define PUSHBUTTON_4_WKUP_FSTT   (PMC_FSMR_FSTT2)
 #define GPIO_PUSH_BUTTON_4       (PIO_PA2_IDX)
 #define GPIO_PUSH_BUTTON_4_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_4_SENSE (IOPORT_SENSE_RISING)
@@ -266,6 +277,7 @@
 #define PIN_PUSHBUTTON_4_ID    ID_PIOA
 #define PIN_PUSHBUTTON_4_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_4_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_4_IRQn  PIOA_IRQn
 
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2,\
@@ -439,10 +451,18 @@
 
 /** USB VBus monitoring pin definition. */
 #define PIN_USB_VBUS    {PIO_PC21, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-/** USB D- pin */
-#define PIN_USB_DM      {PIO_PB10, }
-/** USB D+ pin */
-#define PIN_USB_DP      {PIO_PB11, }
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOC_IRQn)
+#define USB_VBUS_PIN      (PIO_PC21_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOC)
+#define USB_VBUS_PIO_MASK (PIO_PC21)
+/* This pin can not be used as fast wakeup source such as
+ * USB_VBUS_WKUP PMC_FSMR_FSTT7 */
+
+/** USB D- pin (System function) */
+#define PIN_USB_DM      {PIO_PB10}
+/** USB D+ pin (System function) */
+#define PIN_USB_DP      {PIO_PB11}
 
 /*----------------------------------------------------------------------------*/
 /**
