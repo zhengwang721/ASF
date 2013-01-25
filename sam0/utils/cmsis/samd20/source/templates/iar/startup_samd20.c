@@ -50,8 +50,53 @@ int __low_level_init(void);
 /* Default empty handler */
 void Dummy_Handler(void);
 
+void Reset_Handler(void);
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+	while (1) {
+	}
+}
+
 /* Cortex-M0+ core handlers */
-#pragma weak Reset_Handler            = Dummy_Handler
+void NonMaskableInt_Handler  ( void );
+void HardFault_Handler       ( void );
+void SVCall_Handler          ( void );
+void PendSV_Handler          ( void );
+void SysTick_Handler         ( void );
+
+/* Peripherals handlers */
+void PM_IRQn_Handler         ( void );
+void SYSCTRL_IRQn_Handler    ( void );
+void WDT_IRQn_Handler        ( void );
+void RTC_IRQn_Handler        ( void );
+void EIC_IRQn_Handler        ( void );
+void NVMCTRL_IRQn_Handler    ( void );
+void EVSYS_IRQn_Handler      ( void );
+void SERCOM0_IRQn_Handler    ( void );
+void SERCOM1_IRQn_Handler    ( void );
+void SERCOM2_IRQn_Handler    ( void );
+void SERCOM3_IRQn_Handler    ( void );
+void SERCOM4_IRQn_Handler    ( void );
+void SERCOM5_IRQn_Handler    ( void );
+void TC0_IRQn_Handler        ( void );
+void TC1_IRQn_Handler        ( void );
+void TC2_IRQn_Handler        ( void );
+void TC3_IRQn_Handler        ( void );
+void TC4_IRQn_Handler        ( void );
+void TC5_IRQn_Handler        ( void );
+void TC6_IRQn_Handler        ( void );
+void TC7_IRQn_Handler        ( void );
+void ADC_IRQn_Handler        ( void );
+void AC_IRQn_Handler         ( void );
+void DAC_IRQn_Handler        ( void );
+void PTC_IRQn_Handler        ( void );
+
+/* Cortex-M0+ core handlers */
+//#pragma weak Reset_Handler            = Dummy_Handler
 #pragma weak NonMaskableInt_Handler   = Dummy_Handler
 #pragma weak HardFault_Handler        = Dummy_Handler
 #pragma weak SVCall_Handler           = Dummy_Handler
@@ -86,6 +131,8 @@ void Dummy_Handler(void);
 #pragma weak PTC_IRQn_Handler         = Dummy_Handler
 
 /* Exception Table */
+#pragma language=extended
+#pragma segment="CSTACK"
 
 /* The name "__vector_table" has special meaning for C-SPY: */
 /* it is where the SP start value is found, and the NVIC vector */
@@ -94,8 +141,7 @@ void Dummy_Handler(void);
 #pragma section = ".intvec"
 #pragma location = ".intvec"
 const DeviceVectors __vector_table[] = {
-        (void*) (&__cstack_end__),
-
+        __sfe("CSTACK"),
         (void*) Reset_Handler,
         (void*) NonMaskableInt_Handler,
         (void*) HardFault_Handler,
@@ -139,6 +185,9 @@ const DeviceVectors __vector_table[] = {
         { (void*) DAC_IRQn_Handler     }, /* 23 Digital Analog Converter */
         { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
 };
+
+#define SCB_VTOR_TBLBASE_Pos               7                             /*!< SCB VTOR: TBLBASE Position */
+#define SCB_VTOR_TBLBASE_Msk               (0x1fffffff << SCB_VTOR_TBLBASE_Pos) /*!< SCB VTOR: TBLBASE Mask */
 
 /**------------------------------------------------------------------------------
  * This is the code that gets called on processor reset. To initialize the
