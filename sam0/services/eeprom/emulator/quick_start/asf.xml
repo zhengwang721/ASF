@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.service.eeprom_emulator.quick_start" caption="EEPROM Emulator quickstart">
+		<info type="description" value="summary">
+			EEPROM emulator basic usage
+		</info>
+		<build type="c-source" value="qs_emulator_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.services.eeprom_emulator"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.system.pinmux.quick_start" caption="SYSTEM PINMUX quickstart">
+		<info type="description" value="summary">
+		Quick start guide for the SYSTEM PINMUX driver demonstrating configuration and initialization.
+		</info>
+		<build type="c-source" value="qs_pinmux_basic.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.system.pinmux"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,16 +42,16 @@
 #ifndef _SAMD20_
 #define _SAMD20_
 
-#if defined __SAMD20G16A__
-  #include "samd2064g3.h"
-#elif defined __SAMD20E16A__
-  #include "samd2064g4.h"
-#elif defined __SAMD20G17A__
-  #include "samd20128g3.h"
+#if   defined __SAMD20E16A__
+  #include "samd20e16a.h"
 #elif defined __SAMD20E17A__
-  #include "samd20128g4.h"
-#elif defined __SAMD20G18A__
-  #include "samd20256g3.h"
+  #include "samd20e17a.h"
+#elif defined __SAMD20J16A__
+  #include "samd20j16a.h"
+#elif defined __SAMD20J17A__
+  #include "samd20j17a.h"
+#elif defined __SAMD20J18A__
+  #include "samd20j18a.h"
 #else
   #error Library does not support the specified device.
 #endif

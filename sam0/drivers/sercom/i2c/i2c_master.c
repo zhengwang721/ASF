@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 I2C Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -260,7 +260,7 @@ static enum status_code _i2c_master_address_response(
 			return STATUS_ERR_PACKET_COLLISION;
 		}
 	/* Check that slave responded with ack. */
-	} else if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK)) {
+	} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
 		/* Slave busy. Issue ack and stop command. */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
@@ -337,7 +337,7 @@ enum status_code i2c_master_read_packet(
 #endif
 
 	/* Return value. */
-	enum status_code tmp_status = STATUS_OK;
+	enum status_code tmp_status;
 
 	/* Written buffer counter. */
 	uint16_t counter = 0;
@@ -423,7 +423,7 @@ enum status_code i2c_master_write_packet(
 #endif
 
 	/* Return value. */
-	enum status_code tmp_status = STATUS_OK;
+	enum status_code tmp_status;
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
@@ -461,8 +461,8 @@ enum status_code i2c_master_write_packet(
 				break;
 			}
 
-			/* Check for ack from slave. */
-			if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXACK))
+			/* Check for NAK from slave. */
+			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 			{
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
