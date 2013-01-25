@@ -131,7 +131,7 @@ ISR(compare_irq_handler, AVR32_CORE_IRQ_GROUP0, 0)
 ISR(compare_irq_handler, AVR32_CORE_IRQ_GROUP, 0)
 #endif
 {
-	// Count the number of times this IRQ handler has been called.
+	/* Count the number of times this IRQ handler has been called */
 	number_of_compares++;
 
 	toggle_gpio = true;
@@ -141,7 +141,7 @@ ISR(compare_irq_handler, AVR32_CORE_IRQ_GROUP, 0)
 	 * the same go also schedule the next COUNT and COMPARE match
 	 * interrupt.
 	 */
-	Set_sys_compare(delay_clock_cycles);
+	Set_sys_compare((Get_sys_count()) + delay_clock_cycles);
 }
 
 /**
@@ -190,8 +190,7 @@ int main(void)
 	irq_initialize_vectors();
 
 	/* Register the compare interrupt handler to the interrupt controller.*/
-	irq_register_handler(&compare_irq_handler, AVR32_CORE_COMPARE_IRQ,
-			AVR32_INTC_INT0);
+	irq_register_handler(&compare_irq_handler, AVR32_CORE_COMPARE_IRQ, 0);
 
 	/*
 	 * Calculate the number of clock cycles required for the
