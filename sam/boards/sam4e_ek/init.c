@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board init.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -181,25 +181,30 @@ void board_init(void)
 #   endif
 #endif
 
-#ifdef CONF_BOARD_KSZ8051MNL
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXC_IDX, PIN_KSZ8051MNL_RXC_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXC_IDX, PIN_KSZ8051MNL_TXC_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXEN_IDX, PIN_KSZ8051MNL_TXEN_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD3_IDX, PIN_KSZ8051MNL_TXD3_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD2_IDX, PIN_KSZ8051MNL_TXD2_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD1_IDX, PIN_KSZ8051MNL_TXD1_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD0_IDX, PIN_KSZ8051MNL_TXD0_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD3_IDX, PIN_KSZ8051MNL_RXD3_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD2_IDX, PIN_KSZ8051MNL_RXD2_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD1_IDX, PIN_KSZ8051MNL_RXD1_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD0_IDX, PIN_KSZ8051MNL_RXD0_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXER_IDX, PIN_KSZ8051MNL_RXER_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXDV_IDX, PIN_KSZ8051MNL_RXDV_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_CRS_IDX, PIN_KSZ8051MNL_CRS_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_COL_IDX, PIN_KSZ8051MNL_COL_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_MDC_IDX, PIN_KSZ8051MNL_MDC_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_MDIO_IDX, PIN_KSZ8051MNL_MDIO_FLAGS);
-	ioport_set_pin_dir(PIN_KSZ8051MNL_INTRP_IDX, IOPORT_DIR_INPUT);
+#if defined(CONF_BOARD_USB_PORT)
+#  if defined(CONF_BOARD_USB_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+#  endif
 #endif
 
+#ifdef CONF_BOARD_KSZ8051MNL
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXC_IDX, PIN_KSZ8051MNL_RXC_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXC_IDX, PIN_KSZ8051MNL_TXC_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXEN_IDX, PIN_KSZ8051MNL_TXEN_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD3_IDX, PIN_KSZ8051MNL_TXD3_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD2_IDX, PIN_KSZ8051MNL_TXD2_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD1_IDX, PIN_KSZ8051MNL_TXD1_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_TXD0_IDX, PIN_KSZ8051MNL_TXD0_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD3_IDX, PIN_KSZ8051MNL_RXD3_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD2_IDX, PIN_KSZ8051MNL_RXD2_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD1_IDX, PIN_KSZ8051MNL_RXD1_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXD0_IDX, PIN_KSZ8051MNL_RXD0_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXER_IDX, PIN_KSZ8051MNL_RXER_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXDV_IDX, PIN_KSZ8051MNL_RXDV_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_CRS_IDX, PIN_KSZ8051MNL_CRS_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_COL_IDX, PIN_KSZ8051MNL_COL_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_MDC_IDX, PIN_KSZ8051MNL_MDC_FLAGS);
+  ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_MDIO_IDX, PIN_KSZ8051MNL_MDIO_FLAGS);
+  ioport_set_pin_dir(PIN_KSZ8051MNL_INTRP_IDX, IOPORT_DIR_INPUT);
+#endif
 }

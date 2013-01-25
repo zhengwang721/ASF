@@ -3,7 +3,7 @@
  *
  * \brief SAM4E-EK board configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -86,5 +86,14 @@
 /* Configure ADM3312 enable pin */
 //#define CONF_BOARD_ADM3312_EN
 //#define CONF_BOARD_ADM3312_EN_DISABLE_AT_INIT
+
+/* Configure USB pins (VBus monitoring)
+ * VBus detect by PIO is not enabled here,
+ * because the PIO pin on board can not be used as wakeup source of WAIT mode.
+ * The system with VBus monitoring can not enter WAIT mode when VBus is
+ * disconnected and consumes more power.
+ */
+//#define CONF_BOARD_USB_PORT
+//#define CONF_BOARD_USB_VBUS_DETECT /* VBUS detect enabled */
 
 #endif /* CONF_BOARD_H_INCLUDED */

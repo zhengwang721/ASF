@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
 /* Default page count number */
-#define DEFAULT_PAGE_COUNT (IFLASH0_SIZE/IFLASH0_PAGE_SIZE)
+#define DEFAULT_PAGE_COUNT (IFLASH1_SIZE/IFLASH1_PAGE_SIZE)
 
 /* Default region count number */
 #define DEFAULT_REGION_COUNT 1
@@ -64,9 +64,9 @@
 #define LAST_PAGE_ADDRESS (IFLASH1_ADDR + IFLASH1_SIZE - IFLASH1_PAGE_SIZE)
 
 /* Flash start address */
-#define IFLASH_ADDR IFLASH0_ADDR
+#define IFLASH_ADDR IFLASH1_ADDR
 
 /* Flash page size */
-#define IFLASH_PAGE_SIZE IFLASH0_PAGE_SIZE
+#define IFLASH_PAGE_SIZE IFLASH1_PAGE_SIZE
 
 #endif /* CONF_TEST_H_INCLUDED */

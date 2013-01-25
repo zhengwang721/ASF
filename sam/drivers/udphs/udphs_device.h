@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDPHS. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,13 @@
 #include "compiler.h"
 #include "preprocessor.h"
 
+/* Get USB VBus pin configuration in board configuration */
+#include "conf_board.h"
+#include "board.h"
+#include "ioport.h"
+#include "pio.h"
+#include "pio_handler.h"
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -54,6 +61,23 @@ extern "C" {
 #endif
 /**INDENT-ON**/
 /// @endcond
+
+__always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
+	IRQn_Type port_irqn, uint8_t irq_level,
+	void (*handler)(uint32_t,uint32_t), uint32_t wkup)
+{
+	// IOPORT maybe is not initialized in init.c
+	ioport_init();
+	pio_handler_set_pin(pin, flags, handler);
+	ioport_set_pin_sense_mode(pin, ioport_get_pin_level(pin) ?
+		IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH);
+	NVIC_SetPriority(port_irqn, irq_level);
+	NVIC_EnableIRQ(port_irqn);
+	pio_enable_pin_interrupt(pin);
+	if (wkup) {
+		pmc_set_fast_startup_input(wkup);
+	}
+}
 
 //! \ingroup udd_group
 //! \defgroup udd_udphs_group USB Device High-Speed Port (UDPHS)
@@ -96,10 +120,28 @@ extern "C" {
 #endif
 //! @}
 
-
-//! @name UDPHS Device vbus management
-//! UDPHS does not support vbus management.
+//! @name UDPHS Device vbus pin management
+//! UDPHS peripheral does not support vbus management and it's monitored by a
+//! PIO pin.
+//! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
+//! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
+//! 
 //! @{
+#define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
+ 		defined(CONF_BOARD_USB_VBUS_DETECT))
+#define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
+#ifndef USB_VBUS_WKUP
+#  define USB_VBUS_WKUP 0
+#endif
+
+#define udd_vbus_init(handler) io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
+	USB_VBUS_PIN_IRQn, UDD_USB_INT_LEVEL, handler, USB_VBUS_WKUP)
+#define Is_udd_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
+#define Is_udd_vbus_low()            (!Is_udd_vbus_high())
+#define udd_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
+#define udd_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
+#define udd_ack_vbus_interrupt(high) ioport_set_pin_sense_mode(USB_VBUS_PIN,\
+	high ? IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH)
 //! @}
 
 //! @name UDP peripheral enable/disable
