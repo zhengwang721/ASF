@@ -6,7 +6,7 @@
  * This file defines a useful set of functions for the PDCA interface on SAM4L
  * devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -153,6 +153,9 @@ void pdca_enable(Pdca *pdca)
  *
  * \param pdca_ch_number PDCA channel number
  * \param callback callback function pointer
+ * \param irq_line  interrupt line.
+ * \param irq_level interrupt level.
+ * \param pdca_channel_interrupt_mask Interrupts to be enabled.
  */
 void pdca_channel_set_callback(pdca_channel_num_t pdca_ch_number,
 		pdca_callback_t callback, uint8_t irq_line, uint8_t irq_level,
@@ -336,7 +339,7 @@ void pdca_channel_clear_error(pdca_channel_num_t pdca_ch_number)
  * \brief Disable PDCA  interrupt
  *
  * \param pdca_ch_number PDCA channel
- * \param pdca_channel_interrupt_mask Interrupts to be enabled.
+ * \param pdca_channel_interrupt_mask Interrupts to be disabled.
  */
 void pdca_channel_disable_interrupt(pdca_channel_num_t pdca_ch_number,
 		const pdca_channel_interrupt_mask_t pdca_channel_interrupt_mask)
@@ -352,7 +355,7 @@ void pdca_channel_disable_interrupt(pdca_channel_num_t pdca_ch_number,
  * \brief Enable PDCA transfer error interrupt
  *
  * \param pdca_ch_number PDCA channel
- * \param ul_source Interrupts to be enabled.
+ * \param pdca_channel_interrupt_mask Interrupts to be enabled.
  */
 void pdca_channel_enable_interrupt(pdca_channel_num_t pdca_ch_number,
 		const pdca_channel_interrupt_mask_t pdca_channel_interrupt_mask)
