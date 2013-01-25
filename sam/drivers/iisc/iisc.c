@@ -93,28 +93,28 @@ static enum status_code _iis_set_config(struct iis_dev_inst *const dev_inst)
 	Assert(dev_inst->cfg);
 
 	uint32_t mr = 0;
-	mr = (dev_inst->cfg->iis_master ? IISC_MR_MODE : 0) |
-			(dev_inst->cfg->iis_loopback ? IISC_MR_RXLOOP : 0) |
-			((dev_inst->cfg->iis_rx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
+	mr = (dev_inst->cfg->master ? IISC_MR_MODE : 0) |
+			(dev_inst->cfg->loopback ? IISC_MR_RXLOOP : 0) |
+			((dev_inst->cfg->rx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
 				IISC_MR_RXDMA_MULTIPLE : 0) |
-			((dev_inst->cfg->iis_tx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
+			((dev_inst->cfg->tx_dma == IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL) ?
 				IISC_MR_TXDMA_MULTIPLE : 0) |
-			((dev_inst->cfg->iis_rx_channels == IIS_CHANNEL_MONO) ?
+			((dev_inst->cfg->rx_channels == IIS_CHANNEL_MONO) ?
 				IISC_MR_RXMONO : 0) |
-			((dev_inst->cfg->iis_tx_channels == IIS_CHANNEL_MONO) ?
+			((dev_inst->cfg->tx_channels == IIS_CHANNEL_MONO) ?
 				IISC_MR_TXMONO : 0) |
-			IISC_MR_IMCKFS(dev_inst->cfg->iis_fs_ratio) |
-			IISC_MR_DATALENGTH(dev_inst->cfg->iis_data_format);
+			IISC_MR_IMCKFS(dev_inst->cfg->fs_ratio) |
+			IISC_MR_DATALENGTH(dev_inst->cfg->data_format);
 
 	/* Set the master clock mode */
-	if ((((uint32_t)dev_inst->cfg->iis_fs_ratio + 1) * 16)
-			> ((uint32_t)dev_inst->cfg->iis_slot_length * 2)) {
+	if ((((uint32_t)dev_inst->cfg->fs_ratio + 1) * 16)
+			> ((uint32_t)dev_inst->cfg->slot_length * 2)) {
 		mr |= IISC_MR_IMCKMODE;
 	}
 
-	if ((dev_inst->cfg->iis_slot_length == IIS_SLOT_LENGTH_24BIT) &&
-			((dev_inst->cfg->iis_data_format > IIS_DATE_32BIT) &&
-			(dev_inst->cfg->iis_data_format < IIS_DATE_16BIT))) {
+	if ((dev_inst->cfg->slot_length == IIS_SLOT_LENGTH_24BIT) &&
+			((dev_inst->cfg->data_format > IIS_DATE_32BIT) &&
+			(dev_inst->cfg->data_format < IIS_DATE_16BIT))) {
 		mr |= IISC_MR_IWS24_24;
 	}
 

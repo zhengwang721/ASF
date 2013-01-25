@@ -117,31 +117,31 @@ enum iis_dma_channel {
 /** Configuration setting structure */
 struct iis_config {
 	/* Number of bits per sample. */
-	enum iis_data_format iis_data_format;
+	enum iis_data_format data_format;
 
 	/* Number of bits of the slot */
-	enum iis_slot_length iis_slot_length;
+	enum iis_slot_length slot_length;
 
 	/* Master Clock to Sample Frequency (fs) Ratio. */
-	enum iis_fs_rate iis_fs_ratio;
+	enum iis_fs_rate fs_ratio;
 
 	/* Number of channels for Tx */
-	enum iis_number_of_channels iis_tx_channels;
+	enum iis_number_of_channels tx_channels;
 
 	/* Number of channels for Rx */
-	enum iis_number_of_channels iis_rx_channels;
+	enum iis_number_of_channels rx_channels;
 
 	/* DMA channel usage for IIS transmission */
-	enum iis_dma_channel iis_tx_dma;
+	enum iis_dma_channel tx_dma;
 
 	/* DMA channel usage for IIS reception */
-	enum iis_dma_channel iis_rx_dma;
+	enum iis_dma_channel rx_dma;
 
 	/* 1 for loopback, 0 for normal. */
-	bool iis_loopback;
+	bool loopback;
 
 	/* 1 for master, 0 for slave. */
-	bool iis_master;
+	bool master;
 };
 
 struct iis_dev_inst {
@@ -173,15 +173,15 @@ static inline void iis_get_config_defaults(struct iis_config *const cfg)
 	/* Sanity check arguments */
 	Assert(cfg);
 
-	cfg->iis_data_format = IIS_DATE_32BIT;
-	cfg->iis_slot_length = IIS_SLOT_LENGTH_32BIT;
-	cfg->iis_fs_ratio = IIS_FS_RATE_1024;
-	cfg->iis_tx_channels = IIS_CHANNEL_STEREO;
-	cfg->iis_rx_channels = IIS_CHANNEL_STEREO;
-	cfg->iis_tx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
-	cfg->iis_rx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
-	cfg->iis_loopback = false;
-	cfg->iis_master = true;
+	cfg->data_format = IIS_DATE_32BIT;
+	cfg->slot_length = IIS_SLOT_LENGTH_32BIT;
+	cfg->fs_ratio = IIS_FS_RATE_1024;
+	cfg->tx_channels = IIS_CHANNEL_STEREO;
+	cfg->rx_channels = IIS_CHANNEL_STEREO;
+	cfg->tx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
+	cfg->rx_dma = IIS_ONE_DMA_CHANNEL_FOR_ONE_CHANNEL;
+	cfg->loopback = false;
+	cfg->master = true;
 }
 
 enum status_code iis_init(struct iis_dev_inst *const dev_inst, Iisc *iisc,
@@ -353,13 +353,13 @@ enum status_code iis_read(struct iis_dev_inst *dev_inst, uint32_t *data);
  * \code
  *  struct iis_config config;
  *  struct iis_dev_inst dev_inst;
- *  config.ac_data_format = IIS_DATE_16BIT_COMPACT;
- *  config.ac_slot_length = IIS_SLOT_LENGTH_16BIT;
- *  config.ac_fs_ratio = IIS_FS_RATE_256;
- *  config.ac_num_tx_channels = IIS_CHANNEL_STEREO;
- *  config.ac_num_rx_channels = IIS_CHANNEL_STEREO;
- *  config.ac_loopback = true;
- *  config.ac_master = true;
+ *  config.data_format = IIS_DATE_16BIT_COMPACT;
+ *  config.slot_length = IIS_SLOT_LENGTH_16BIT;
+ *  config.fs_ratio = IIS_FS_RATE_256;
+ *  config.num_tx_channels = IIS_CHANNEL_STEREO;
+ *  config.num_rx_channels = IIS_CHANNEL_STEREO;
+ *  config.loopback = true;
+ *  config.master = true;
  *  iis_init(&dev_inst, IISC, &config);
  *  iis_enable(&dev_inst);
  * \endcode
