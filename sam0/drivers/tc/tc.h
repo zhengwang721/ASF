@@ -1133,7 +1133,6 @@ static inline void tc_start_counter(const struct tc_dev_inst *const dev_inst)
  * \name Get Capture Set Compare
  * @{
  */
-
 uint32_t tc_get_capture_value(
 		const struct tc_dev_inst *const dev_inst,
 		enum tc_compare_capture_channel_index channel_index);
