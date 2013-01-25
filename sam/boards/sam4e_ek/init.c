@@ -198,4 +198,10 @@ void board_init(void)
 	ioport_set_pin_dir(PIN_CAN1_TR_RS_IDX, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(PIN_CAN1_TR_EN_IDX, IOPORT_DIR_OUTPUT);
 #endif
+
+#if defined(CONF_BOARD_USB_PORT)
+#if defined(CONF_BOARD_USB_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+#endif
+#endif
 }
