@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief Chip-specific Interrupt configuration
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,43 +38,27 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_INTERRUPT_H
-#define CONF_INTERRUPT_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/* External Interrupt INT0 */
-#define CONFIG_EXT_INT0      EXT_INT0_PIN
-/* External Interrupt INT1 */
-#define CONFIG_EXT_INT1      EXT_INT1_PIN
-/* External Interrupt INT2 */
-#define CONFIG_EXT_INT2      EXT_INT2_PIN
-/* External Interrupt INT3 */
-#define CONFIG_EXT_INT3      EXT_INT3_PIN
-/* External Interrupt INT4 */
-#define CONFIG_EXT_INT4      EXT_INT4_PIN
-/* External Interrupt INT5 */
-#define CONFIG_EXT_INT5      EXT_INT5_PIN
-/* External Interrupt INT6 */
-#define CONFIG_EXT_INT6      EXT_INT6_PIN
-/* External Interrupt INT7 */
-#define CONFIG_EXT_INT7      EXT_INT7_PIN
+// ===== System Clock Source Options
+#define	SYSCLK_SRC_RC16MHZ    0
+#define	SYSCLK_SRC_RC128KHZ   1
+#define	SYSCLK_SRC_TRS16MHZ   2
+#define	SYSCLK_SRC_RC32KHZ    3
+#define	SYSCLK_SRC_XOC16MHZ   4
+#define	SYSCLK_SRC_EXTERNAL   5
 
-/* External PC Interrupt PCINT0 */
-#define CONFIG_PC_INT0      PC_INT0_PIN
-/* External PC Interrupt PCINT1 */
-#define CONFIG_PC_INT1      PC_INT1_PIN
-/* External PC Interrupt PCINT2 */
-#define CONFIG_PC_INT2      PC_INT2_PIN
-/* External PC Interrupt PCINT3 */
-#define CONFIG_PC_INT3      PC_INT3_PIN
-/* External PC Interrupt PCINT4 */
-#define CONFIG_PC_INT4      PC_INT4_PIN
-/* External PC Interrupt PCINT5 */
-#define CONFIG_PC_INT5      PC_INT5_PIN
-/* External PC Interrupt PCINT6 */
-#define CONFIG_PC_INT6      PC_INT6_PIN
-/* External PC Interrupt PCINT7 */
-#define CONFIG_PC_INT7      PC_INT7_PIN
-/* External PC Interrupt PCINT8 */
-#define CONFIG_PC_INT8      PC_INT8_PIN
 
-#endif
+//=====  Select connected clock source
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ
+
+
+
+// ===== System Clock Bus Division Options
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_8
+
+#endif /* CONF_CLOCK_H_INCLUDED */
