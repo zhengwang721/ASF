@@ -437,18 +437,18 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		if (module->nack_on_address) {
 			/* NACK address */
 			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-		} //TODO
-		/* Set transfer direction in dev inst */
-		if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
-			/* Read request from master */
+		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
+			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
+			/* Read request from master */
 			if ((callback_mask & I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		} else {
-			/* Write request from master */
+			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
+			/* Write request from master */
 			if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}

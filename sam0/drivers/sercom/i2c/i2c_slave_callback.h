@@ -146,7 +146,7 @@ enum i2c_slave_sda_hold_time {
  /** \brief Interrupt flags.
  *
  * Flags used when reading or setting interrupt flags.
- *///TODO WHY?
+*/
 enum i2c_slave_interrupt_flag {
 	/** Interrupt flag for stop condition */
 	I2C_SLAVE_INTERRUPT_STOP = 0,
@@ -223,7 +223,7 @@ struct i2c_slave_conf {
 	bool run_in_standby;
 	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
-	/** PAD1 (SCL) //TODO check pinmux */
+	/** PAD1 (SCL) pinmux */
 	uint32_t pinmux_pad1;
 };
 
@@ -335,7 +335,11 @@ static inline void i2c_slave_disable(
 	/* Disable interrupts */
 	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
-			//TODO:CLEAR FLAGS
+
+	/* Clear interrupt flags */
+	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF | SERCOM_I2CS_INTFLAG_AIF |
+			SERCOM_I2CS_INTFLAG_DIF;
+
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(module);
 
