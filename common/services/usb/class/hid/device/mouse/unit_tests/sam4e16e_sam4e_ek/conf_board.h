@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM3/SAM4 Sleep manager implementation.
+ * \brief Board configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,74 +41,10 @@
  *
  */
 
-#ifndef SAM_SLEEPMGR_INCLUDED
-#define SAM_SLEEPMGR_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/** Enable COM Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#include <compiler.h>
-#include <conf_sleepmgr.h>
-#include <sleep.h>
-#include <interrupt.h>
-
-/**
- * \weakgroup sleepmgr_group
- * @{
- */
-
-enum sleepmgr_mode {
-	//! Active mode.
-	SLEEPMGR_ACTIVE = 0,
-	/*! WFE sleep mode.
-	 *  Potential Wake Up sources:
-	 *  fast startup events (USB, RTC, RTT, WKUPs),
-	 *  interrupt, and events. */
-	SLEEPMGR_SLEEP_WFE,
-	/*! WFI sleep mode.
-	 * Potential Wake Up sources: fast startup events and interrupt. */
-	SLEEPMGR_SLEEP_WFI,
-	/*! Wait mode.
-	 *  Potential Wake Up sources: fast startup events */
-	SLEEPMGR_WAIT,
-	//! Backup mode. Potential Wake Up sources: WKUPs, SM, RTT, RTC.
-	SLEEPMGR_BACKUP,
-
-	SLEEPMGR_NR_OF_MODES,
-};
-
-/**
- * \internal
- * \name Internal arrays
- * @{
- */
-#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
-//! Sleep mode lock counters
-extern uint8_t sleepmgr_locks[];
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-//! @}
-
-
-static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
-{
-	Assert(sleep_mode != SLEEPMGR_ACTIVE);
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	cpu_irq_disable();
-
-	// Atomically enable the global interrupts and enter the sleep mode.
-	pmc_sleep(sleep_mode);
-#else
-	UNUSED(sleep_mode);
-	cpu_irq_enable();
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-
-}
-
-//! @}
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SAM_SLEEPMGR_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
