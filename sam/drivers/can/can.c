@@ -69,22 +69,22 @@ extern "C" {
 #define CAN_BIT_IPT                2
 
 typedef struct {
-	uint8_t uc_tq;      /* ! CAN_BIT_SYNC + uc_prog + uc_phase1 + uc_phase2
-	                     * = uc_tq, 8 <= uc_tq <= 25. */
-	uint8_t uc_prog;    /* ! Propagation segment, (3-bits + 1), 1~8; */
-	uint8_t uc_phase1;  /* ! Phase segment 1, (3-bits + 1), 1~8; */
-	uint8_t uc_phase2;  /* ! Phase segment 2, (3-bits + 1), 1~8, CAN_BIT_IPT
-	                     * <= uc_phase2; */
-	uint8_t uc_sjw;     /* ! Resynchronization jump width, (2-bits + 1),
-	                     * min(uc_phase1, 4); */
-	uint8_t uc_sp;      /* ! Sample point value, 0~100 in percent. */
+	uint8_t uc_tq;      /**< CAN_BIT_SYNC + uc_prog + uc_phase1 + uc_phase2
+	                       = uc_tq, 8 <= uc_tq <= 25. */
+	uint8_t uc_prog;    /**< Propagation segment, (3-bits + 1), 1~8; */
+	uint8_t uc_phase1;  /**< Phase segment 1, (3-bits + 1), 1~8; */
+	uint8_t uc_phase2;  /**< Phase segment 2, (3-bits + 1), 1~8, CAN_BIT_IPT
+	                       <= uc_phase2; */
+	uint8_t uc_sjw;     /**< Resynchronization jump width, (2-bits + 1),
+	                       min(uc_phase1, 4); */
+	uint8_t uc_sp;      /**< Sample point value, 0~100 in percent. */
 } can_bit_timing_t;
 
 /** Values of bit time register for different baudrates, Sample point =
  * ((1 + uc_prog + uc_phase1) / uc_tq) * 100%. */
 const can_bit_timing_t can_bit_time[] = {
-	{8, (2 + 1), (1 + 1), (1 + 1), (2 + 1), 75},
-	{9, (1 + 1), (2 + 1), (2 + 1), (1 + 1), 67},
+	{ 8, (2 + 1), (1 + 1), (1 + 1), (2 + 1), 75},
+	{ 9, (1 + 1), (2 + 1), (2 + 1), (1 + 1), 67},
 	{10, (2 + 1), (2 + 1), (2 + 1), (2 + 1), 70},
 	{11, (3 + 1), (2 + 1), (2 + 1), (3 + 1), 72},
 	{12, (2 + 1), (3 + 1), (3 + 1), (3 + 1), 67},
@@ -123,7 +123,7 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck,
 	can_bit_timing_t *p_bit_time;
 
 	/* Check whether the baudrate prescale will be greater than the max
-	 *divide value. */
+	 * divide value. */
 	if (((ul_mck + (ul_baudrate * CAN_MAX_TQ_NUM * 1000 - 1)) /
 			(ul_baudrate * CAN_MAX_TQ_NUM * 1000)) >
 			CAN_BAUDRATE_MAX_DIV) {
@@ -161,7 +161,7 @@ static uint32_t can_set_baudrate(Can *p_can, uint32_t ul_mck,
 	if (uc_prescale < 2) {
 		return 0;
 	}
-	
+
 	/* Get the right CAN BIT Timing group. */
 	p_bit_time = (can_bit_timing_t *)&can_bit_time[uc_tq - CAN_MIN_TQ_NUM];
 
@@ -294,7 +294,8 @@ void can_disable_overload_frame(Can *p_can)
 
 /**
  * \brief CAN Controller will generate an overload frame after each successful
- * reception for mailboxes configured in Receive mode, Producer and Consumer.
+ *        reception for mailboxes configured in Receive mode, Producer and
+ *        Consumer.
  *
  * \param p_can  Pointer to a CAN peripheral instance.
  */
@@ -305,7 +306,7 @@ void can_enable_overload_frame(Can *p_can)
 
 /**
  * \brief Configure the timestamp capture point, at the start or the end of
- *frame.
+ *        frame.
  *
  * \param p_can   Pointer to a CAN peripheral instance.
  * \param ul_flag 0: Timestamp is captured at each start of frame;
@@ -586,7 +587,7 @@ void can_mailbox_send_abort_cmd(Can *p_can, uint8_t uc_index)
 
 /**
  * \brief Initialize the mailbox in different mode and set up related
- *configuration.
+ *        configuration.
  *
  * \param p_can    Pointer to a CAN peripheral instance.
  * \param p_mailbox Pointer to a CAN mailbox instance.
@@ -597,7 +598,7 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
 
 	uc_index = (uint8_t)p_mailbox->ul_mb_idx;
 	/* Check the object type of the mailbox. If it's used to disable the
-	 *mailbox, reset the whole mailbox. */
+	 * mailbox, reset the whole mailbox. */
 	if (!p_mailbox->uc_obj_type) {
 		p_can->CAN_MB[uc_index].CAN_MMR = 0;
 		p_can->CAN_MB[uc_index].CAN_MAM = 0;
@@ -614,7 +615,7 @@ void can_mailbox_init(Can *p_can, can_mb_conf_t *p_mailbox)
 			(p_mailbox->uc_tx_prio << CAN_MMR_PRIOR_Pos);
 
 	/* Set the message ID and message acceptance mask for the mailbox in
-	 *other modes. */
+	 * other modes. */
 	if (p_mailbox->uc_id_ver) {
 		p_can->CAN_MB[uc_index].CAN_MAM = p_mailbox->ul_id_msk |
 				CAN_MAM_MIDE;
@@ -673,7 +674,7 @@ uint32_t can_mailbox_read(Can *p_can, can_mb_conf_t *p_mailbox)
 	}
 
 	/* Read the mailbox status again to check whether the software needs to
-	 *re-read mailbox data register. */
+	 * re-read mailbox data register. */
 	p_mailbox->ul_status = p_can->CAN_MB[uc_index].CAN_MSR;
 	ul_status = p_mailbox->ul_status;
 	if (ul_status & CAN_MSR_MMI) {

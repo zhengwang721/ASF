@@ -54,7 +54,6 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
 #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_UPLLCK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
@@ -70,7 +69,5 @@
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
 #define CONFIG_PLL0_MUL             14
 #define CONFIG_PLL0_DIV             1
-
-// ===== UPLL (UTMI) Hardware fixed at 480 MHz.
 
 #endif /* CONF_CLOCK_H_INCLUDED */

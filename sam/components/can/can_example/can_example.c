@@ -51,7 +51,7 @@
  *  \par Requirements
  *
  *  This package can be used with SAM3X or SAM4E evaluation kits.
- *  CAN0 and CAN1 should be hooked-up externally before running 
+ *  CAN0 and CAN1 should be hooked-up externally before running
  *  the example.
  *
  *  \par Description
@@ -68,7 +68,7 @@
  *
  *  \par Usage
  *
- *  -# Build the program and download it into the evaluation board. 
+ *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *    - 115200 bauds
@@ -76,17 +76,17 @@
  *    - No parity
  *    - 1 stop bit
  *    - No flow control
- *  -# Connect CAN0 (J17 on SAM3X-EK or J13 on SAM4E-EK) and CAN1 (J20 
+ *  -# Connect CAN0 (J17 on SAM3X-EK or J13 on SAM4E-EK) and CAN1 (J20
  *     on SAM3X-EK or J14 on SAM4E-EK) in loop.
  *  -# Start the application.
- *  -# Upon startup, the application will output the following lines 
+ *  -# Upon startup, the application will output the following lines
  *     on the terminal window.
  *      \code
  *      -- CAN Example --
- *      -- SAM3X-EK --   (or --SAM4E-EK --) 
+ *      -- SAM3X-EK --   (or --SAM4E-EK --)
  *      -- Compiled: xxx xx xxxx xx:xx:xx --
  *      \endcode
- *  -# Press a key in the terminal window to run the tests. CAN messages 
+ *  -# Press a key in the terminal window to run the tests. CAN messages
  *     will be displayed on the terminal window and LED0 or LED1 will toggle
  *     according to the messages.
  */
@@ -248,7 +248,7 @@ static void test_1(void)
 
 	/* Send out the information in the mailbox. */
 	can_global_send_transfer_cmd(CAN0, CAN_TCR_MB0);
-	
+
 	while (!g_ul_recv_status) {
 	}
 
@@ -279,7 +279,7 @@ static void test_2(void)
 
 	puts("\n\rTest2: CAN0 Mailboxes 1 & 2 transmitting to ");
 	puts("CAN1 Mailbox 7 without overwrite" STRING_EOL);
-	
+
 	/* Init CAN1 Mailbox 7 to Reception Mailbox. */
 	reset_mailbox_conf(&can1_mailbox);
 	can1_mailbox.ul_mb_idx = TEST2_CAN1_RX_MB_IDX;
@@ -484,7 +484,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
