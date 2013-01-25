@@ -81,35 +81,10 @@ static void configure_pins(void)
 	struct system_pinmux_conf pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 
-	/* Set up the DAC VOUT pin */
-	pin_conf.mux_position = 7; /* mux H */
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(PIN_PA00, &pin_conf); /* PA0 mux H */
-
 	/* Set up the Xplained PRO LED pin to output status info */
 	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	system_pinmux_pin_set_config(PIN_PB08, &pin_conf);
-}
-
-static void error(uint8_t number)
-{
-	switch (number) {
-	case 1:
-		port_pin_set_output_level(PIN_PB08, true);
-		break;
-	case 2:
-		port_pin_set_output_level(PIN_PB08, false);
-		break;
-	default:
-		break;
-	}
-
-
-	while (1) {
-		/* */
-	}
 }
 
 int main(void)
@@ -123,39 +98,12 @@ int main(void)
 	/* Initialize all the system clocks, pm, gclk... */
 	system_init();
 
-	//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, 0xffffffff);
-	//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, 0xffffffff);
-
-	if (system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC) != STATUS_OK) {
-		error(0);
-	}
-
 	system_vref_enable(SYSTEM_VREF_BANDGAP);
 
 	dac_get_config_defaults(&config);
 	dac_init(&dev_inst, DAC, &config);
 
 	dac_enable(&dev_inst);
-
-	/*port_pin_set_output_level(40, false);
-
-	dac_ctrla = DAC->CTRLA;
-	dac_ctrlb = DAC->CTRLB;
-
-	if (DAC->CTRLB.reg != 0x01) {
-		error(2);
-	}
-
-	if (DAC->CTRLA.reg != 0x02) {
-		error(1);
-	}
-
-	DAC->CTRLB.reg = 0x01;
-	DAC->CTRLB.reg = 0x01;
-	if (DAC->STATUS.reg & (1 << 7)) {
-		error(3);
-	}
-	 */
 
 	dac_ch_get_config_defaults(&ch_config);
 
