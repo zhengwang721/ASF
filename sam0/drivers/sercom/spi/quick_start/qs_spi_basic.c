@@ -46,7 +46,7 @@
 #define BUF_LENGTH 20
 //! [buf_length]
 //! [slave_select_pin]
-#define SLAVE_SELECT_PIN 11
+#define SLAVE_SELECT_PIN PIN_PB08
 //! [slave_select_pin]
 //! [buffer]
 static const uint8_t buffer[20] = {
@@ -72,6 +72,9 @@ int main(void)
 //! [slave_dev_inst]
 	struct spi_slave_dev_inst slave_dev_inst;
 //! [slave_dev_inst]
+//! [system_init]
+	system_init();
+//! [system_init]
 
 	/* Configure and initialize software device instance of peripheral slave */
 //! [slave_conf_defaults]
@@ -89,10 +92,14 @@ int main(void)
 	spi_get_config_defaults(&config);
 //! [conf_defaults]
 //! [conf_rec]
-	config.receiver_enable = false;
+	config.pinmux_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
+	config.pinmux_pad1 = PINMUX_PA15B_SERCOM2_PAD1;
+	config.pinmux_pad2 = PINMUX_PA12B_SERCOM2_PAD2;
+	config.pinmux_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
+	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
 //! [conf_rec]
 //! [init]
-	spi_init(&dev_inst, SERCOM0, &config);
+	spi_init(&dev_inst, SERCOM2, &config);
 //! [init]
 
 	/* Send a buffer to slave */
