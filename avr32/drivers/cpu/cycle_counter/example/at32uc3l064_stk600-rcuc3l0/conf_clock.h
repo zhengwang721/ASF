@@ -63,6 +63,6 @@
 #define CONFIG_SYSCLK_PBB_DIV         2 /* Fpbb = Fsys/(2 ^ PBB_div) */
 
 // ===== Peripheral Clock Management Options-> Enable USART3 for trace messages
-#define CONFIG_SYSCLK_INIT_PBAMASK  (1 << SYSCLK_USART3)
+#define CONFIG_SYSCLK_INIT_PBAMASK  (1 << SYSCLK_USART1)
 
 #endif /* CONF_CLOCK_H_INCLUDED */

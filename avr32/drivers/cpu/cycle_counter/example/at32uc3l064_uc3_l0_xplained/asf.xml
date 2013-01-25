@@ -6,7 +6,7 @@
 		<require idref="avr32.drivers.cpu.cc.example"/>
 		<require idref="board.uc3_l0_xplained"/>
 		<config name="config.board.uc3_l0_xplained.init" value="no"/>
-		<config name="config.board.uc3_l0_xplained" value="yes"/>
+		<config name="config.board.uc3_l0_xplained.led" value="yes"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>

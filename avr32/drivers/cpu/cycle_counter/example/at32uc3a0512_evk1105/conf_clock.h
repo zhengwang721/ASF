@@ -48,6 +48,6 @@
 #define CONFIG_SYSCLK_SOURCE   SYSCLK_SRC_OSC0
 
 // ===== Peripheral Clock Management Options-> Enable USART1 for trace messages
-#define CONFIG_SYSCLK_INIT_PBAMASK  (1 << SYSCLK_USART1)
+#define CONFIG_SYSCLK_INIT_PBAMASK  (1 << SYSCLK_USART0)
 
 #endif /* CONF_CLOCK_H_INCLUDED */

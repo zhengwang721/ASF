@@ -60,7 +60,7 @@
 #define CONFIG_SYSCLK_PBB_DIV         3 /* Fpbb = Fsys/(2 ^ PBB_div) */
 
 // ===== Peripheral Clock Management Options
-#define CONFIG_SYSCLK_INIT_PBAMASK    (1 << SYSCLK_USART0)
+#define CONFIG_SYSCLK_INIT_PBAMASK    (1 << SYSCLK_USART1)
 
 
 #endif /* CONF_CLOCK_H_INCLUDED */

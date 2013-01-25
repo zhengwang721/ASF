@@ -208,7 +208,7 @@ int main(void)
 	 * Calculate the number of clock cycles required for the
 	 * EXAMPLE_DELAY_MS ms delay (CPU frequency * delay_required).
 	 */
-	delay_clock_cycles = (sysclk_get_cpu_hz() * EXAMPLE_DELAY_MS) / 1000;
+	delay_clock_cycles = cpu_ms_2_cy(EXAMPLE_DELAY_MS, sysclk_get_cpu_hz());
 
 	/* Enable all interrupts */
 	cpu_irq_enable();
