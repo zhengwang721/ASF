@@ -99,9 +99,9 @@ int main(void)
 	};
 	//! [packet]
 
-	/* Write buffer to master until success. */
+	/* Write buffer to master */
 	//! [write_packet]
-	while (i2c_slave_write_packet_callback(&module, &packet) != STATUS_OK);
+	i2c_slave_write_packet_callback(&module, &packet);
 	//! [write_packet]
 
 	while (1) {
