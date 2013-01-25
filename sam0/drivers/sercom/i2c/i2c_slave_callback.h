@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef I2C_SLAVE_ASYNC_H_INCLUDED
-#define I2C_SLAVE_ASYNC_H_INCLUDED
+#ifndef I2C_SLAVE_CALLBACK_H_INCLUDED
+#define I2C_SLAVE_CALLBACK_H_INCLUDED
 
 #include <sercom.h>
 #include "i2c_common.h"
@@ -99,10 +99,10 @@ enum i2c_slave_callback {
 #if !defined(__DOXYGEN__)
 
 /* Device instance prototype */
-struct i2c_slave_dev_inst;
+struct i2c_slave_module;
 
 typedef void (*i2c_slave_callback_t)(
-		const struct i2c_slave_dev_inst *const dev_inst);
+		const struct i2c_slave_module *const module);
 #endif
 
 /** 
@@ -145,7 +145,7 @@ enum i2c_slave_sda_hold_time {
  /** \brief Interrupt flags.
  *
  * Flags used when reading or setting interrupt flags.
- */
+ *///TODO WHY?
 enum i2c_slave_interrupt_flag {
 	/** Interrupt flag for stop condition */
 	I2C_SLAVE_INTERRUPT_STOP = 0,
@@ -163,11 +163,11 @@ enum i2c_slave_interrupt_flag {
  * \ref i2c_slave_init() function to associate the struct with a particular
  * hardware instance and configurations.
  */
-struct i2c_slave_dev_inst {
+struct i2c_slave_module {
 	/** Hardware instance initialized for the struct. */
-	Sercom *hw_dev;
+	Sercom *hw;
 	/** Nack on address match */
-	bool nack_address;
+	bool nack_on_address
 	/** Pointers to callback functions. */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
 	/** Mask for registered callbacks. */
@@ -202,11 +202,6 @@ struct i2c_slave_conf {
 	enum i2c_slave_sda_hold_time sda_hold_time;
 	/** Addressing mode */
 	enum i2c_slave_address_mode address_mode;
-	/** 
-	 * Set to enable acknowledge action to be sent immediately after reading
-	 * incoming data
-	 */
-	bool smart_mode_enable;
 	/** Address or upper limit of address range */
 	uint8_t address;
 	/** Address mask, second address or lower limit of address range*/
@@ -220,36 +215,32 @@ struct i2c_slave_conf {
 	 * Enable nack on address match. Can be changed with \ref 
 	 * enable_address_nack and \ref disable_address_nack functions.
 	 */
-	bool enable_address_nack;
+	bool enable_nack_on_address;
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
 	/** Set to keep module active in sleep modes. */
 	bool run_in_standby;
-	/** PAD0 pinout */
-	uint32_t pinout_pad0;
-	/** PAD1 pinout */
-	uint32_t pinout_pad1;
-	/** PAD2 pinout */
-	uint32_t pinout_pad2;
-	/** PAD3 pinout */
-	uint32_t pinout_pad3;
+	/** PAD0 (SDA) pinmux */
+	uint32_t pinmux_pad0;
+	/** PAD1 (SCL) //TODO check pinmux */
+	uint32_t pinmux_pad1;
 };
 
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync.
- * \param[in]  dev_inst Pointer to device instance structure.
+ * \param[in]  module Pointer to device instance structure.
  */
 static void _i2c_slave_wait_for_sync(
-		const struct i2c_slave_dev_inst *const dev_inst)
+		const struct i2c_slave_module *const module)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	while(i2c_module->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+	while(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -285,15 +276,15 @@ static inline void i2c_slave_get_config_defaults(
 	config->address = 0;
 	config->address_mask = 0;
 	config->enable_general_call_address = false;
-	config->enable_address_nack = false;
+	config->enable_nack_on_address = false;
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 	config->pinout_pad0 = PINMUX_DEFAULT;
 	config->pinout_pad1 = PINMUX_DEFAULT;
 }
 
-enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
-		Sercom *const module,
+enum status_code i2c_slave_init(struct i2c_slave_module *const module,
+		Sercom *const hw,
 		const struct i2c_slave_conf *const config);
 
 /**
@@ -301,26 +292,26 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
  *
  * This will enable the requested I2C module.
  *
- * \param[in]  dev_inst Pointer to the device instance struct.
+ * \param[in]  module Pointer to the device instance struct.
  */
 static inline void i2c_slave_enable(
-		const struct i2c_slave_dev_inst *const dev_inst)
+		const struct i2c_slave_module *const module)
 {
 	/* Sanity check of arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Enable interrupts */
-	i2c_module->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
+	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
 
 	/* Wait for module to sync. */
-	_i2c_slave_wait_for_sync(dev_inst);
+	_i2c_slave_wait_for_sync(module);
 
 	/* Enable module. */
-	i2c_module->CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;
+	i2c_hw->CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;
 }
 
 /**
@@ -329,50 +320,49 @@ static inline void i2c_slave_enable(
  * This will disable the I2C module specified in the provided device instance
  * structure.
  *
- * \param[in]  dev_inst Pointer to the device instance struct.
+ * \param[in]  module Pointer to the device instance struct.
  */
 static inline void i2c_slave_disable(
-		const struct i2c_slave_dev_inst *const dev_inst)
+		const struct i2c_slave_module *const module)
 {
 	/* Sanity check of arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Disable interrupts */
-	i2c_module->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
+	i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
-
+			//TODO:CLEAR FLAGS
 	/* Wait for module to sync. */
-	_i2c_slave_wait_for_sync(dev_inst);
+	_i2c_slave_wait_for_sync(module);
 
 	/* Disable module. */
-	i2c_module->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
+	i2c_hw->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
 }
 
-void i2c_slave_reset(struct i2c_slave_dev_inst *const dev_inst);
-
-void i2c_slave_async_enable_address_nack(struct i2c_slave_dev_inst
-		*const dev_inst);
-void i2c_slave_async_disable_address_nack(struct i2c_slave_dev_inst
-		*const dev_inst);
+void i2c_slave_reset(struct i2c_slave_module *const module);
+void i2c_slave_enable_nack_on_address(struct i2c_slave_module
+		*const module);
+void i2c_slave_disable_nack_on_address(struct i2c_slave_module
+		*const module);
 
 /**
  * \name Callbacks
  * @{
  */
 #if !defined(__DOXYGEN__)
-void _i2c_slave_async_callback_handler(uint8_t instance);
+void _i2c_slave_callback_handler(uint8_t instance);
 #endif
 
-void i2c_slave_async_register_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+void i2c_slave_register_callback(
+		struct i2c_slave_module *const module,
 		i2c_slave_callback_t callback,
 		enum i2c_slave_callback callback_type);
 
-void i2c_slave_async_unregister_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+void i2c_slave_unregister_callback(
+		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type);
 
 /**
@@ -380,19 +370,19 @@ void i2c_slave_async_unregister_callback(
  *
  * Enables the callback specified by the callback_value.
  *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
+ * \param[in,out]  module      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to enable.
  */
-static inline void i2c_slave_async_enable_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+static inline void i2c_slave_enable_callback(
+		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Mark callback as enabled. */
-	dev_inst->enabled_callback = (1 << callback_type);
+	module->enabled_callback = (1 << callback_type);
 }
 
 
@@ -401,19 +391,19 @@ static inline void i2c_slave_async_enable_callback(
  *
  * Disables the callback specified by the callback_type.
  *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
+ * \param[in,out]  module      Pointer to the device instance struct.
  * \param[in]      callback_type Callback type to disable.
  */
-static inline void i2c_slave_async_disable_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+static inline void i2c_slave_disable_callback(
+		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Mark callback as enabled. */
-	dev_inst->enabled_callback &= ~(1 << callback_type);
+	module->enabled_callback &= ~(1 << callback_type);
 }
 
 /** @} */
@@ -422,13 +412,14 @@ static inline void i2c_slave_async_disable_callback(
 * \name Read and Write, Asynchronously
 * @{
 */
+	//TODO: typedef i2cpack?
 
-enum status_code i2c_slave_async_read_packet(
-		struct i2c_slave_dev_inst *const dev_inst,
+enum status_code i2c_slave_read_packet_callback(
+		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
-enum status_code i2c_slave_async_write_packet(
-		struct i2c_slave_dev_inst *const dev_inst,
+enum status_code i2c_slave_write_packet_callback(
+		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
 /**
@@ -436,17 +427,17 @@ enum status_code i2c_slave_async_write_packet(
  *
  * This will terminate the running transfer operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param  module Pointer to device instance structure.
  */
-static inline void i2c_slave_async_cancel_transfer(
-		struct i2c_slave_dev_inst *const dev_inst)
+static inline void i2c_slave_cancel_transfer_callback(
+		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Set buffer to 0. */
-	dev_inst->buffer_remaining = 0;
+	module->buffer_remaining = 0;
 }
 
 /**
@@ -457,7 +448,7 @@ static inline void i2c_slave_async_cancel_transfer(
  * detected on the bus.
  * The status will be cleared on next operation.
  *
- * \param  dev_inst Pointer to device instance structure
+ * \param  module Pointer to device instance structure
  *
  * \return                     Last status code from transfer operation
  * \retval STATUS_OK           No error has occurred
@@ -465,19 +456,18 @@ static inline void i2c_slave_async_cancel_transfer(
  * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
  * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
  *                             last transfer
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
  * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
  * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_async_get_operation_status(
-		struct i2c_slave_dev_inst *const dev_inst)
+		struct i2c_slave_module *const module)
 {
 	/* Check sanity. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Return current status code. */
-	return dev_inst->status;
+	return module->status;
 }
 
 /** @} */
@@ -487,4 +477,4 @@ static inline enum status_code i2c_slave_async_get_operation_status(
 }
 #endif
 
-#endif /* I2C_SLAVE_ASYNC_H_INCLUDED */
+#endif /* I2C_SLAVE_CALLBACK_H_INCLUDED */

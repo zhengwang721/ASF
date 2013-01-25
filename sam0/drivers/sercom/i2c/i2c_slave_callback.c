@@ -44,7 +44,7 @@
 /**
  * \internal Set configurations to module.
  *
- * \param[out] dev_inst Pointer to device instance structure.
+ * \param[out] module Pointer to device instance structure.
  * \param[in]  config Configuration structure with configurations to set.
  *
  * \return              Status of setting config.
@@ -53,16 +53,17 @@
  *                                        previously set
  */
 static enum status_code _i2c_slave_set_config(
-		struct i2c_slave_dev_inst *const dev_inst,
+		struct i2c_slave_module *const module,
 		const struct i2c_slave_conf *const config)
 {
 	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 	Assert(config);
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
-	Sercom *const sercom_module = dev_inst->hw_dev;
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	Sercom *const sercom_hw = module->hw;
+	
 	struct system_pinmux_conf pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
@@ -70,7 +71,7 @@ static enum status_code _i2c_slave_set_config(
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 - SDA */
 	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(sercom_module, 0);
+		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
 	pin_conf.peripheral_index = pad0 & 0xFFFF;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
@@ -78,19 +79,19 @@ static enum status_code _i2c_slave_set_config(
 
 	/* SERCOM PAD1 - SCL */
 	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(sercom_module, 1);
+		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
 	pin_conf.peripheral_index = pad1 & 0xFFFF;
 	system_pinmux_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
-	i2c_module->CTRLA.reg |= config->sda_hold_time |
+	i2c_hw->CTRLA.reg |= config->sda_hold_time |
 			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos);
 
 	/* Set CTRLB configuration */
-	i2c_module->CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;
+	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;
 
-	i2c_module->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
+	i2c_hw->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
 			config->address_mask << SERCOM_I2CS_ADDR_ADDRMASK_Pos |
 			config->enable_general_call_address << SERCOM_I2CS_ADDR_GENCEN_Pos;
 
@@ -104,7 +105,7 @@ static enum status_code _i2c_slave_set_config(
  * device instance struct.  Run this function before any further use of
  * the driver.
  *
- * \param[out] dev_inst Pointer to device instance struct.
+ * \param[out] module Pointer to device instance struct.
  * \param[in]  module   Pointer to the hardware instance.
  * \param[in]  config   Pointer to the configuration struct.
  *
@@ -116,39 +117,39 @@ static enum status_code _i2c_slave_set_config(
  *                                         previously set.
  *
  */
-enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
-		Sercom *const module,
+enum status_code i2c_slave_init(struct i2c_slave_module *const module,
+		Sercom *const hw,
 		const struct i2c_slave_conf *const config)
 {
 	/* Sanity check arguments. */
-	Assert(dev_inst);
 	Assert(module);
+	Assert(hw);
 	Assert(config);
 
 	/* Initialize device instance */
-	dev_inst->hw_dev = module;
+	module->hw = hw_module;
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Check if module is enabled. */
-	if (i2c_module->CTRLA.reg & SERCOM_I2CS_CTRLA_ENABLE) {
+	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
 	}
 
 	/* Check if reset is in progress. */
-	if (i2c_module->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
+	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
 		return STATUS_ERR_BUSY;
 	}
 	
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
+	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 	
 	/* Set up GCLK */
 	struct system_gclk_ch_conf gclk_ch_conf;
 	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_ch_conf.source_generator = config->generator_source;
 	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
 	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
@@ -163,20 +164,20 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
 			(void*)(&_i2c_slave_async_callback_handler));
 
 	/* Save device instance. */
-	_sercom_instances[sercom_instance] = (void*) dev_inst;
+	_sercom_instances[sercom_instance] = (void*) module;
 
-	/* Initialize values in dev_inst. */
-	dev_inst->registered_callback = 0;
-	dev_inst->enabled_callback = 0;
-	dev_inst->buffer_length = 0;
+	/* Initialize values in module. */
+	module->registered_callback = 0;
+	module->enabled_callback = 0;
+	module->buffer_length = 0;
 
 
 	/* Set SERCOM module to operate in I2C slave mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
+	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
 			& ~SERCOM_I2CS_CTRLA_MASTER;
 
 	/* Set config and return status. */
-	return _i2c_slave_set_config(dev_inst, config);
+	return _i2c_slave_set_config(module, config);
 }
 
 /**
@@ -184,27 +185,21 @@ enum status_code i2c_slave_init(struct i2c_slave_dev_inst *const dev_inst,
  *
  * This will reset the module to hardware defaults.
  *
- * \param[in,out] dev_inst Pointer to device instance structure.
+ * \param[in,out] module Pointer to device instance structure.
  */
-void i2c_slave_reset(struct i2c_slave_dev_inst *const dev_inst)
+void i2c_slave_reset(struct i2c_slave_module *const module)
 {
 	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
-
-	/* Wait for sync. */
-	_i2c_slave_wait_for_sync(dev_inst);
-
-	/* Disable module. */
-	i2c_slave_disable(dev_inst);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Wait for sync. */
-	_i2c_slave_wait_for_sync(dev_inst);
+	_i2c_slave_wait_for_sync(module);
 
 	/* Reset module. */
-	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_SWRST;
+	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_SWRST;
 }
 
 /**
@@ -213,12 +208,12 @@ void i2c_slave_reset(struct i2c_slave_dev_inst *const dev_inst)
  * This function will enable sending of NACK on address match, thus not
  * being ready for any transactions.
  *
- * \param[in,out] dev_inst Pointer to device instance structure
+ * \param[in,out] module Pointer to device instance structure
  */
-void i2c_slave_async_enable_address_nack(struct i2c_slave_dev_inst
-		*const dev_inst)
+void i2c_slave_enable_nack_on_address(struct i2c_slave_module
+		*const module)
 {
-	dev_inst->nack_address = true;
+	module->nack_address = true;
 }
 
 /**
@@ -227,12 +222,12 @@ void i2c_slave_async_enable_address_nack(struct i2c_slave_dev_inst
  * This function will disable sending of NACK on address match, thus
  * sending an ACK and initating a transaction.
  *
- * \param[in,out] dev_inst Pointer to device instance structure
+ * \param[in,out] module Pointer to device instance structure
  */
-void i2c_slave_async_disable_address_nack(struct i2c_slave_dev_inst
-		*const dev_inst)
+void i2c_slave_disable_nack_on_address(struct i2c_slave_module
+		*const module)
 {
-	dev_inst->nack_address = false;
+	module->nack_on_address = false;
 }
 
 /**
@@ -240,18 +235,18 @@ void i2c_slave_async_disable_address_nack(struct i2c_slave_dev_inst
  *
  * Used by interrupt handler to get next data byte from master.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param module Pointer to device instance structure.
  */
-static void _i2c_slave_async_read(struct i2c_slave_dev_inst *const dev_inst)
+static void _i2c_slave_read(struct i2c_slave_module *const module)
 {
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Find index to save next value in buffer. */
 	uint16_t buffer_index =
-			dev_inst->buffer_length - dev_inst->buffer_remaining--;
+			module->buffer_length - module->buffer_remaining--;
 
 	/* Read byte from master and put in buffer. */
-	dev_inst->buffer[buffer_index] = i2c_module->DATA.reg;
+	module->buffer[buffer_index] = i2c_hw->DATA.reg;
 }
 
 /**
@@ -259,27 +254,27 @@ static void _i2c_slave_async_read(struct i2c_slave_dev_inst *const dev_inst)
  *
  * Used by interrupt handler to send next data byte to master.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param module Pointer to device instance structure.
  */
-static void _i2c_slave_async_write(struct i2c_slave_dev_inst *const dev_inst)
+static void _i2c_slave_write(struct i2c_slave_module *const module)
 {
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Check for NACK from master */
-	if (i2c_module->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK)
+	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK)
 	{
 		/* Not acknowledged, transmission stopped */
 		/* Return bad data value. */
-		dev_inst->status = STATUS_ERR_BAD_DATA;
+		module->status = STATUS_ERR_BAD_DATA;
 		return;
 	}
 
 	/* Find index to get next byte in buffer. */
-	uint16_t buffer_index = dev_inst->buffer_length -
-			dev_inst->buffer_remaining--;
+	uint16_t buffer_index = module->buffer_length -
+			module->buffer_remaining--;
 
 	/* Write byte from buffer to master */
-	i2c_module->DATA.reg = dev_inst->buffer[buffer_index];
+	i2c_hw->DATA.reg = module->buffer[buffer_index];
 }
 
 /**
@@ -288,26 +283,26 @@ static void _i2c_slave_async_write(struct i2c_slave_dev_inst *const dev_inst)
  * When called, the given callback function will be associated with the
  * specified callback type.
  *
- * \param[in,out] dev_inst  Pointer to the device instance struct.
+ * \param[in,out] module  Pointer to the device instance struct.
  * \param[in] callback      Pointer to the function desired for the specified
  *                          callback.
  * \param[in] callback_type Specifies the callback type to register.
  */
-void i2c_slave_async_register_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+void i2c_slave_register_callback(
+		struct i2c_slave_module *const module,
 		i2c_slave_callback_t callback,
 		enum i2c_slave_callback callback_type)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 	Assert(callback);
 
 	/* Register callback. */
-	dev_inst->callbacks[callback_type] = callback;
+	module->callbacks[callback_type] = callback;
 
 	/* Set corresponding bit to set callback as initiated. */
-	dev_inst->registered_callback |= (1 << callback_type);
+	module->registered_callback |= (1 << callback_type);
 }
 
 /**
@@ -316,22 +311,22 @@ void i2c_slave_async_register_callback(
  * When called, the currently registered callback for the given callback type
  * will be removed.
  *
- * \param[in,out]  dev_inst      Pointer to the device instance struct.
+ * \param[in,out]  module      Pointer to the device instance struct.
  * \param[in]      callback_type Specifies the callback type to unregister.
  */
-void i2c_slave_async_unregister_callback(
-		struct i2c_slave_dev_inst *const dev_inst,
+void i2c_slave_unregister_callback(
+		struct i2c_slave_module *const module,
 		enum i2c_slave_callback callback_type)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Register callback. */
-	dev_inst->callbacks[callback_type] = 0;
+	module->callbacks[callback_type] = NULL;
 
 	/* Set corresponding bit to set callback as initiated. */
-	dev_inst->registered_callback &= ~(1 << callback_type);
+	module->registered_callback &= ~(1 << callback_type);
 }
 
 /**
@@ -342,31 +337,31 @@ void i2c_slave_async_unregister_callback(
  * The I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out] dev_inst  Pointer to device instance struct.
+ * \param[in,out] module  Pointer to device instance struct.
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
  * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_async_read_packet(
-		struct i2c_slave_dev_inst *const dev_inst,
+enum status_code i2c_slave_read_packet_callback(
+		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {
 	/* Sanity check */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 	Assert(packet);
 
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->buffer_remaining > 0) {
+	if (module->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
 	/* Save packet to device instance. */
-	dev_inst->buffer = packet->data;
-	dev_inst->buffer_remaining = packet->data_length;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	module->buffer = packet->data;
+	module->buffer_remaining = packet->data_length;
+	module->status = STATUS_IN_PROGRESS;
 
 	/* Read will begin when master initiates the transfer */
 
@@ -381,32 +376,31 @@ enum status_code i2c_slave_async_read_packet(
  * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out]     dev_inst  Pointer to device instance struct.
+ * \param[in,out]     module  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
  * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_async_write_packet(
-		struct i2c_slave_dev_inst *const dev_inst,
+enum status_code i2c_slave_write_packet_callback(
+		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {
 	/* Sanity check */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 	Assert(packet);
 
 	/* Check if the I2C module is busy doing async operation. */
-	if (dev_inst->buffer_remaining > 0) {
+	if (module->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
 
 	/* Save packet to device instance. */
-	dev_inst->buffer = packet->data;
-	dev_inst->buffer_remaining = packet->data_length;
-	dev_inst->transfer_direction = 0;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	module->buffer = packet->data;
+	module->buffer_remaining = packet->data_length;
+	module->status = STATUS_IN_PROGRESS;
 
 	return STATUS_OK;
 }
@@ -416,122 +410,122 @@ enum status_code i2c_slave_async_write_packet(
  *
  * \param[in] instance Sercom instance that triggered interrupt.
  */
-void _i2c_slave_async_callback_handler(uint8_t instance)
+void _i2c_slave_callback_handler(uint8_t instance)
 {
 	/* Get device instance for callback handling. */
-	struct i2c_slave_dev_inst *dev_inst =
-			(struct i2c_slave_dev_inst*)_sercom_instances[instance];
+	struct i2c_slave_module *module =
+			(struct i2c_slave_module*)_sercom_instances[instance];
 
-	SercomI2cs *const i2c_module = &(dev_inst->hw_dev->I2CS);
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Combine callback registered and enabled masks. */
 	uint8_t callback_mask = 
-			dev_inst->enabled_callback & dev_inst->registered_callback;
+			module->enabled_callback & module->registered_callback;
 
 
-	if (i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
+	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 	/* Address match */
 
-		if (i2c_module->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
+		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occured in last packet transfer */
-			dev_inst->status = STATUS_ERR_IO;
+			module->status = STATUS_ERR_IO;
 			if ((callback_mask & I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER)) {
-				dev_inst->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](dev_inst);
+				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
 			}
 		}
-		if (dev_inst->nack_address) {
+		if (module->nack_on_address) {
 			/* NACK address */
-			i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-		}
+			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+		} //TODO
 		/* Set transfer direction in dev inst */
-		if (i2c_module->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
+		if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
 			/* Read request from master */
-			dev_inst->transfer_direction = 1;
+			module->transfer_direction = 1;
 			if ((callback_mask & I2C_SLAVE_CALLBACK_READ_REQUEST)) {
-				dev_inst->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](dev_inst);
+				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
-			i2c_module->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		} else {
 			/* Write request from master */
-			dev_inst->transfer_direction = 0;
+			module->transfer_direction = 0;
 			if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
-				dev_inst->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](dev_inst);
+				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
-			i2c_module->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
 		/* ACK or NACK address */
-		i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
-		i2c_module->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		
-	} else if (i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
 
-		dev_inst->buffer_length = 0;
-		dev_inst->status = STATUS_OK;
+		module->buffer_length = 0;
+		module->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
 		if ((callback_mask & I2C_SLAVE_CALLBACK_READ_COMPLETE)
-				&& (dev_inst->transfer_direction == 0)) {
+				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
-			dev_inst->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](dev_inst);
+			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 		} else if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE)
-				&& (dev_inst->transfer_direction == 1)) {
+				&& (module->transfer_direction == 1)) {
 			/* Write to master complete */
-			dev_inst->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](dev_inst);
+			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
-	} else if (i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
 		/* Check if buffer is full, or no more data to write */
-		if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining <= 0) {
+		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
 	
-			dev_inst->buffer_length = 0;
-			dev_inst->status = STATUS_OK;
-			if (dev_inst->transfer_direction == 0) {
+			module->buffer_length = 0;
+			module->status = STATUS_OK;
+			if (module->transfer_direction == 0) {
 				/* Buffer is full, send NACK */
-				i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-				i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 				/* Set status, new character in DATA register will overflow
 				buffer */
-				dev_inst->status = STATUS_ERR_OVERFLOW;
+				module->status = STATUS_ERR_OVERFLOW;
 				// callback error or callback complete?
 				if (callback_mask & I2C_SLAVE_CALLBACK_READ_COMPLETE) {
 					/* Read complete */
-					dev_inst->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](dev_inst);
+					module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 				}
 			} else {
 				/* Wait for new start condition */
-				i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-				i2c_module->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 
 				if (callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE) {
 					/* No more data to write, write complete */
-					dev_inst->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](dev_inst);
+					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 				}
 			}
 
 		/* Continue buffer write/read. */
-		} else if (dev_inst->buffer_length > 0 && dev_inst->buffer_remaining > 0){
+		} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
 			/* Call function based on transfer direction. */
-			if (dev_inst->transfer_direction == 0) {
-				_i2c_slave_async_read(dev_inst);
+			if (module->transfer_direction == 0) {
+				_i2c_slave_async_read(module);
 			} else {
-				_i2c_slave_async_write(dev_inst);
+				_i2c_slave_async_write(module);
 			}
 		}
 	}
 
 	/* Check for error. */
-	if (dev_inst->status != STATUS_IN_PROGRESS &&
-			dev_inst->status != STATUS_OK) {
+	if (module->status != STATUS_IN_PROGRESS &&
+			module->status != STATUS_OK) {
 		/* Stop packet operation. */
-		dev_inst->buffer_length = 0;
+		module->buffer_length = 0;
 
 		/* Call error callback if enabled and registered */
-		if ((dev_inst->registered_callback & I2C_SLAVE_CALLBACK_ERROR)
-				&& (dev_inst->enabled_callback & I2C_SLAVE_CALLBACK_ERROR)) {
+		if ((module->registered_callback & I2C_SLAVE_CALLBACK_ERROR)
+				&& (module->enabled_callback & I2C_SLAVE_CALLBACK_ERROR)) {
 
-			dev_inst->callbacks[I2C_SLAVE_CALLBACK_ERROR](dev_inst);
+			module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 
 		}
 	}
