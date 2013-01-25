@@ -40,12 +40,17 @@
  */
 #include <asf.h>
 
-#define USE_INTERRUPTS               false
-#define USE_EIC                      true
+/*
+	USE_INTERRUPTS    USE_EIC  Result
+	--------------    -------  ---------------------------------------------
+	false             false    Polled via PORT driver
+	false             true     Polled via EIC driver
+	true              false    Polled via PORT driver, using SysTick handler
+	true              true     Polled via EIC driver, using EIC handler
+ */
 
-#if (USE_INTERRUPTS && !USE_EIC)
-#  error Invalid application configuration.
-#endif
+#define USE_INTERRUPTS   true
+#define USE_EIC          true
 
 static void board_extint_handler(uint32_t channel)
 {
@@ -109,6 +114,13 @@ static void configure_button(void)
 #endif
 }
 
+#if USE_EIC == false && USE_INTERRUPTS == true
+void SysTick_Handler(void)
+{
+	board_extint_handler(BUTTON_0_EIC_LINE);
+}
+#endif
+
 int main(void)
 {
 	system_init();
@@ -118,6 +130,13 @@ int main(void)
 	configure_button();
 
 #if USE_INTERRUPTS == true
+#  if USE_EIC == false
+	SysTick->CTRL = 0;
+	SysTick->LOAD = 999;
+	SysTick->VAL  = 0;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+#  endif
+
 	cpu_irq_enable();
 
 	while (true) {
