@@ -46,8 +46,10 @@
 #include <compiler.h>
 #include "clock.h"
 
+static inline void system_board_init(void);
+
 /* Weak init functions used in system_init */
-static void system_dummy_init(void)
+static inline void system_dummy_init(void)
 {
 	return;
 }
