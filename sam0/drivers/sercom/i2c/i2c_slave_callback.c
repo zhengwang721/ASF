@@ -39,7 +39,7 @@
  *
  */
 
-#include "i2c_slave_async.h"
+#include "i2c_slave_callback.h"
 
 /**
  * \internal Set configurations to module.
@@ -73,16 +73,16 @@ static enum status_code _i2c_slave_set_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
-	pin_conf.peripheral_index = pad0 & 0xFFFF;
+	pin_conf.mux_position = pad0 & 0xFFFF;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
-	system_pinmux_set_config(pad0 >> 16, &pin_conf);
+	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
 
 	/* SERCOM PAD1 - SCL */
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
-	pin_conf.peripheral_index = pad1 & 0xFFFF;
-	system_pinmux_set_config(pad1 >> 16, &pin_conf);
+	pin_conf.mux_position = pad1 & 0xFFFF;
+	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
 	i2c_hw->CTRLA.reg |= config->sda_hold_time |
@@ -127,7 +127,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	Assert(config);
 
 	/* Initialize device instance */
-	module->hw = hw_module;
+	module->hw = hw;
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -157,11 +157,11 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_ch_enable(SERCOM_GCLK_ID);
 
 	/* Get sercom instance index. */
-	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module);
+	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module->hw);
 
 	/* Save device instance in interrupt handler. */
 	_sercom_set_handler(sercom_instance,
-			(void*)(&_i2c_slave_async_callback_handler));
+			(void*)(&_i2c_slave_callback_handler));
 
 	/* Save device instance. */
 	_sercom_instances[sercom_instance] = (void*) module;
@@ -213,7 +213,7 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 void i2c_slave_enable_nack_on_address(struct i2c_slave_module
 		*const module)
 {
-	module->nack_address = true;
+	module->nack_on_address = true;
 }
 
 /**
@@ -508,9 +508,9 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
 			/* Call function based on transfer direction. */
 			if (module->transfer_direction == 0) {
-				_i2c_slave_async_read(module);
+				_i2c_slave_read(module);
 			} else {
-				_i2c_slave_async_write(module);
+				_i2c_slave_write(module);
 			}
 		}
 	}

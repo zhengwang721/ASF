@@ -10,8 +10,8 @@
 			<build type="c-source" value="i2c_master_async.c"/>
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
 			<build type="header-file" subtype="api" value="i2c_master_async.h"/>
-			<build type="c-source" value="i2c_slave_async.c"/>
-			<build type="header-file" subtype="api" value="i2c_slave_async.h"/>
+			<build type="c-source" value="i2c_slave_callback.c"/>
+			<build type="header-file" subtype="api" value="i2c_slave_callback.h"/>
 			<build type="doxygen-entry-point" value="sam0_i2c_group"/>
 			<device-support value="samd20"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
@@ -64,6 +64,7 @@
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
+		<require idref="sam0.drivers.system"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

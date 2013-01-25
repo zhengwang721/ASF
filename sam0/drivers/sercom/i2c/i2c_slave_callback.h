@@ -45,6 +45,7 @@
 #include <sercom.h>
 #include "i2c_common.h"
 #include <sercom_interrupts.h>
+#include <pinmux.h>
 
 #ifndef PINMUX_DEFAULT
 #define PINMUX_DEFAULT 0
@@ -167,7 +168,7 @@ struct i2c_slave_module {
 	/** Hardware instance initialized for the struct. */
 	Sercom *hw;
 	/** Nack on address match */
-	bool nack_on_address
+	bool nack_on_address;
 	/** Pointers to callback functions. */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
 	/** Mask for registered callbacks. */
@@ -279,8 +280,8 @@ static inline void i2c_slave_get_config_defaults(
 	config->enable_nack_on_address = false;
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
-	config->pinout_pad0 = PINMUX_DEFAULT;
-	config->pinout_pad1 = PINMUX_DEFAULT;
+	config->pinmux_pad0 = PINMUX_DEFAULT;
+	config->pinmux_pad1 = PINMUX_DEFAULT;
 }
 
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,

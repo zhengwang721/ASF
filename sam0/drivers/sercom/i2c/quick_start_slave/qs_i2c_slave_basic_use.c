@@ -56,7 +56,7 @@ static uint8_t buffer[DATA_LENGTH] = {
 
 /* Init device instance. */
 //! [dev_inst]
-struct i2c_slave_dev_inst dev_inst;
+struct i2c_slave_module module;
 //! [dev_inst]
 
 //! [initialize_i2c]
@@ -71,11 +71,11 @@ static void configure_i2c(void)
 	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&dev_inst, SERCOM0, &conf);
+	i2c_slave_init(&module, SERCOM0, &conf);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&dev_inst);
+	i2c_slave_enable(&module);
 	//! [enable_module]
 }
 //! [initialize_i2c]
@@ -85,11 +85,11 @@ int main(void)
 
 	//! [run_initialize_i2c]
 	/* Init system. */
-	//system_init();
+	system_init();
 	/* Configure device and enable. */
 	configure_i2c();
 	//! [run_initialize_i2c]
-
+	
 	/* Init i2c packet. */
 	//! [packet]
 	i2c_packet_t packet = {
@@ -101,7 +101,7 @@ int main(void)
 
 	/* Write buffer to master until success. */
 	//! [write_packet]
-	while (i2c_slave_async_write_packet(&dev_inst, &packet) != STATUS_OK);
+	while (i2c_slave_write_packet_callback(&module, &packet) != STATUS_OK);
 	//! [write_packet]
 
 	while (1) {
