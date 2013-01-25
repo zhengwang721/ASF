@@ -92,17 +92,17 @@
 /** Analog comparator channel number */
 #define EXAMPLE_AC_CHANNEL         0
 
-volatile uint8_t intflag = 0;
+volatile bool intflag = false;
 
 struct ac_dev_inst ac_device;
 
 /**
- * \brief Callback for ACIFC interrupt.
+ * \brief Callback for AC interrupt.
  */
 static void set_int_flag(void)
 {
 	ac_clear_interrupt_status(&ac_device, ACIFC_ICR_ACINT0);
-	intflag = 1;
+	intflag = true;
 }
 
 /**
@@ -134,11 +134,11 @@ static void run_ac_test(const struct test_case *test)
 
 	delay_ms(1000);
 
-	test_assert_true(test, intflag == 1, "AC test failed");
+	test_assert_true(test, intflag == true, "AC test failed");
 }
 
 /**
- * \brief Run PDCA driver unit tests.
+ * \brief Run AC driver unit tests.
  */
 int main(void)
 {

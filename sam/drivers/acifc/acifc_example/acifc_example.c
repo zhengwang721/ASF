@@ -58,7 +58,8 @@
  *
  * The acifc_irq is aimed to demonstrate the usage of ACIFC peripheral with
  * interrupt support. The PA06 and PA07 are selected as two inputs. Connect
- * PA06 and ADC_SENSOR output voltage, PA07 and GND or 3.3V voltage.
+ * PA06 (J101.2) on ADC_SENSOR (J101.3) output voltage, PA07(J4.4) on GND(J4.9) 
+ * or 3.3V(J4.10).
  *
  * The comparison event would be generated if the voltage of one input is
  * changed across the voltage of the other input. Both bigger and less events
@@ -66,31 +67,25 @@
  *
  * \section Usage
  *
- * -# Build the program and download it inside the evaluation board. Please
- *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/6421B.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a>
- *    application note or to the
- *    <a href="http://www.iar.com/website1/1.0.1.0/78/1/">
- *    IAR EWARM User and reference guides</a>,
- *    depending on your chosen solution.
  * -# On the computer, open and configure a terminal application
- *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# In the terminal window, the
- *    following text should appear (values depend on the board and chip used):
+ * -# In the terminal window, the following text should appear (values depend
+ *    on the board and chip used):
  *    \code
  *     -- ACIFC IRQ Example xxx --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
+ *    \endcode
+ * -# The application will output then a different message if PA06 lower or 
+ * higher than PA07.
+ *      -ISR- Voltage Comparison Result: ACAP0 > ACAN0
+ *      -ISR- Voltage Comparison Result: ACAP0 < ACAN0
  */
-
 #include "asf.h"
 #include "stdio_serial.h"
 #include "conf_board.h"
@@ -106,6 +101,9 @@
 
 struct ac_dev_inst ac_device;
 
+/* State indicate */
+volatile bool state = false;
+
 /**
  * Callback for channel 0 comparison done.
  */
@@ -120,6 +118,7 @@ static void compare_result_output(void)
 		puts("-ISR- Voltage Comparison Result: ACAP0 < ACAN0\r");
 	}
 	ac_clear_interrupt_status(&ac_device, ACIFC_ICR_ACINT0);
+        state = true;
 }
 
 /**
@@ -179,5 +178,10 @@ int main(void)
 	ac_user_trigger_single_comparison(&ac_device);
 
 	while (1) {
+		while(state == false);
+		state = true;
+		/* Start the comparison */
+		ac_user_trigger_single_comparison(&ac_device);
+		delay_ms(1000);
 	}
 }

@@ -56,6 +56,15 @@ extern "C" {
 /// @endcond
 
 
+/** AC Number of channel */
+#define AC_NB_OF_CH           8
+
+/** AC Number of Window */
+#define AC_NB_OF_WIN          (AC_NB_OF_CH >> 1)
+
+/** AC Window Interrupt Offset */
+#define AC_WIN_INT_OFFSET     24
+
 /** AC configuration */
 struct ac_config {
 	/** Peripheral Event Trigger Enable */
@@ -163,6 +172,31 @@ struct ac_win_config {
 	enum ac_win_interrupt_setting ac_interrupt_setting;
 };
 
+/** AC Interrupt configuration */
+typedef enum ac_interrupt_source {
+	AC_INTERRUPT_CONVERSION_COMPLETED_0 = 0,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_0,
+	AC_INTERRUPT_CONVERSION_COMPLETED_1,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_1,
+	AC_INTERRUPT_CONVERSION_COMPLETED_2,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_2,
+	AC_INTERRUPT_CONVERSION_COMPLETED_3,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_3,
+	AC_INTERRUPT_CONVERSION_COMPLETED_4,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_4,
+	AC_INTERRUPT_CONVERSION_COMPLETED_5,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_5,
+	AC_INTERRUPT_CONVERSION_COMPLETED_6,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_6,
+	AC_INTERRUPT_CONVERSION_COMPLETED_7,
+	AC_INTERRUPT_STARTUP_TIME_ELAPSED_7,
+	AC_INTERRUPT_WINDOW_0,
+	AC_INTERRUPT_WINDOW_1,
+	AC_INTERRUPT_WINDOW_2,
+	AC_INTERRUPT_WINDOW_3,
+	AC_INTERRUPT_NUM,
+} ac_interrupt_source_t;
+
 /**
  * \brief Initializes an Analog Comparator module configuration structure to
  * defaults.
@@ -260,30 +294,6 @@ static inline void ac_win_get_config_defaults(struct ac_win_config *const cfg)
 void ac_win_set_config(struct ac_dev_inst *const dev_inst,
 		uint32_t window, struct ac_win_config *cfg);
 
-typedef enum ac_interrupt_source {
-	AC_INTERRUPT_CONVERSION_COMPLETED_0 = 0,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_0,
-	AC_INTERRUPT_CONVERSION_COMPLETED_1,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_1,
-	AC_INTERRUPT_CONVERSION_COMPLETED_2,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_2,
-	AC_INTERRUPT_CONVERSION_COMPLETED_3,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_3,
-	AC_INTERRUPT_CONVERSION_COMPLETED_4,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_4,
-	AC_INTERRUPT_CONVERSION_COMPLETED_5,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_5,
-	AC_INTERRUPT_CONVERSION_COMPLETED_6,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_6,
-	AC_INTERRUPT_CONVERSION_COMPLETED_7,
-	AC_INTERRUPT_STARTUP_TIME_ELAPSED_7,
-	AC_INTERRUPT_WINDOW_0,
-	AC_INTERRUPT_WINDOW_1,
-	AC_INTERRUPT_WINDOW_2,
-	AC_INTERRUPT_WINDOW_3,
-	AC_INTERRUPT_NUM,
-} ac_interrupt_source_t;
-
 void ac_set_callback(struct ac_dev_inst *const dev_inst,
 		ac_interrupt_source_t source, ac_callback_t callback,
 		uint8_t irq_level);
@@ -375,7 +385,8 @@ static inline uint32_t ac_get_status(struct ac_dev_inst *const dev_inst)
 /// @endcond
 
 /**
- * \page sam_acifc_quickstart Quickstart guide for SAM4L Analog Comparator Interface Driver
+ * \page sam_acifc_quickstart Quickstart guide for SAM4L Analog Comparator 
+  * Interface Driver
  *
  * This is the quickstart guide for the \ref group_sam_drivers_acifc
  * "SAM4L Analog Comparator Interface driver", with step-by-step instructions
