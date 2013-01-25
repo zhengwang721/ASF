@@ -46,6 +46,8 @@
 #include <system.h>
 #include <clock.h>
 #include "sercom_interrupts.h"
+#include "sercom_pinout.h"
+//#include "pinmux.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,6 +98,8 @@ enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 
 enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
+
+uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad);
 
 /** @} */
 
