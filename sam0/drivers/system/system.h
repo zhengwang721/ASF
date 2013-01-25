@@ -47,7 +47,7 @@
 #include "clock.h"
 
 /* Weak init functions used in system_init */
-static void system_dummy_init(void)
+static inline void system_dummy_init(void)
 {
 	return;
 }
@@ -56,6 +56,7 @@ static void system_dummy_init(void)
 void system_board_init ( void ) __attribute__ ((weak, alias("system_dummy_init")));
 #endif
 #ifdef __ICCARM__
+static inline void system_board_init(void);
 #pragma weak system_board_init=system_dummy_init
 #endif
 
