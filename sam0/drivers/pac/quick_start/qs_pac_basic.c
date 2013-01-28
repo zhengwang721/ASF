@@ -45,21 +45,14 @@ void config_port_pins(void);
 //! [pin_setup]
 void config_port_pins(void)
 {
-	struct port_pin_conf pin_conf;
-	port_pin_get_config_defaults(&pin_conf);
+	struct port_conf pin_conf;
+	port_get_config_defaults(&pin_conf);
 
-	pin_conf.input.enabled = true;
-	pin_conf.output.enabled = false;
-	pin_conf.input.pull = PORT_PIN_PULL_UP;
-	pin_conf.input.sampling_mode = PORT_PIN_SAMPLING_CONTINUOUS;
-	pin_conf.input.edge_detection.wake_if_sleeping = false;
-	pin_conf.input.edge_detection.filter_input_signal = true;
-	pin_conf.input.edge_detection.mode
-		= PORT_EDGE_DETECT_FALLING;
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(10, &pin_conf);
 
-	pin_conf.input.enabled = false;
-	pin_conf.output.enabled = true;
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(11, &pin_conf);
 }
 //! [pin_setup]
@@ -70,57 +63,51 @@ int main (void)
 //! [init]
 	config_port_pins();
 //! [init]
+
 //! [init_lock]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_PORT, ~SYSTEM_PERIPHERAL_PORT);
+	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
+			~SYSTEM_PERIPHERAL_ID(PORT));
 //! [init_lock]
 
-//! [set_sanity]
-	uint8_t sanity = 0xFA;
-//! [set_sanity]
-
-//! [sei]
-	//sei();
-//! [sei]
+//! [enable_interrupts]
+	cpu_irq_enable();
+//! [enable_interrupts]
 
 //! [button_press]
-	while(!port_pin_is_edge_detected(10));
-//! [button_press]
-
-//! [disable_interrupts]
-	//cli();
-//! [disable_interrupts]
-
-//! [unlock_perph]
-	system_peripheral_unlock(SYSTEM_PERIPHERAL_PORT,
-			~SYSTEM_PERIPHERAL_PORT);
-//! [unlock_perph]
-
-//! [sanity_check]
-	if (sanity != 0xFA){
-		while(1);
+	while (port_pin_get_input_level(10)) {
+		/* Wait for button press */
 	}
-//! [sanity_check]
+//! [button_press]
+
+//! [disable_interrupts]
+	cpu_irq_disable();
+//! [disable_interrupts]
+
+//! [unlock_perph]
+	system_peripheral_unlock(SYSTEM_PERIPHERAL_ID(PORT),
+			~SYSTEM_PERIPHERAL_ID(PORT));
+//! [unlock_perph]
 
 //! [alter_config]
 	port_pin_toggle_output_level(11);
-	port_pin_clear_edge_detected(10);
 //! [alter_config]
 
 //! [lock_perph]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_PORT,
-			~SYSTEM_PERIPHERAL_PORT);
+	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
+			~SYSTEM_PERIPHERAL_ID(PORT));
 //! [lock_perph]
 
 //! [clear_sanity]
 	sanity = 0;
 //! [clear_sanity]
 
-//! [enable_interrupts]
-	//sei();
-//! [enable_interrupts]
+//! [enable_interrupts_2]
+	cpu_irq_enable();
+//! [enable_interrupts_2]
 
 //! [inf_loop]
-	while(1){
+	while (1) {
+		/* Do nothing */
 	}
 //! [inf_loop]
 //! [main]

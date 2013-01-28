@@ -52,31 +52,36 @@ void HardFault_Handler(void)
 }
 
 /**
- * \brief Lock a given peripheral's registers.
+ * \brief Lock a given peripheral's control registers.
  *
- * Use this function to deny write access to a given peripheral's registers.
+ * Locks a given peripheral's control registers, to deny write access to the
+ * peripheral to prevent accidental changes to the module's configuration.
  *
- * \warning Locking an already locked peripheral will cause an exception.
+ * \warning Locking an already locked peripheral will cause a hard fault
+ *          exception, and terminate program execution.
  *
- * \param[in] peripheral enum value for the peripheral to be locked.
- * \param[in] key bitwise inverse of peripheral, used as key for security
- * enhancement. See \ref bitwise_code
- * \return Status of the configuration procedure.
- * \retval STATUS_OK If the peripheral was successfully locked.
+ * \param[in] peripheral  ID for the peripheral to be locked, sourced via the
+ *                        \ref SYSTEM_PERIPHERAL_ID macro.
+ * \param[in] key         Bitwise inverse of peripheral ID, used as key to
+ *                        reduce the chance of accidental locking. See
+ *                        \ref bitwise_code.
+ *
+ * \return Status of the peripheral lock procedure.
+ * \retval STATUS_OK                If the peripheral was successfully locked.
  * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
  */
 __no_inline enum status_code system_peripheral_lock(
-		enum system_peripheral_flag peripheral,
-		uint32_t key)
+		const uint32_t peripheral_id,
+		const uint32_t key)
 {
 	/* Bit to be set in desired register is given by bit 5:0 */
-	uint8_t register_bit_pos = peripheral % 32;
+	uint8_t register_bit_pos = peripheral_id % 32;
 
 	/* Value of which PAC register to use is given by bit 31:6 */
-	uint8_t register_pos = peripheral / 32;
+	uint8_t register_pos = peripheral_id / 32;
 
 	/* Check if key is correct. */
-	if (~(uint32_t)peripheral != key){
+	if (~peripheral_id != key){
 		/* If key is not correct, do hard fault. */
 		HardFault_Handler();
 	}
@@ -101,35 +106,41 @@ __no_inline enum status_code system_peripheral_lock(
 			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 	}
+
 	return STATUS_OK;
 }
 
 /**
- * \brief Unlock a given peripheral's registers.
+ * \brief Unlock a given peripheral's control registers.
  *
- * Use this function to allow write access to a given peripheral's registers.
+ * Unlocks a given peripheral's control registers, allowing write access to the
+ * peripheral so that changes can be made to the module's configuration.
  *
- * \warning Unlocking an already unlocked peripheral will cause an exception.
+ * \warning Unlocking an already locked peripheral will cause a hard fault
+ *          exception, and terminate program execution.
  *
- * \param[in] peripheral enum value for the peripheral to be unlocked.
- * \param[in] key bitwise inverse of peripheral, used as key for security
- * enhancement. See \ref bitwise_code.
- * \return Status of the configuration procedure.
- * \retval STATUS_OK If the peripheral was successfully unlocked.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were supplied.
+ * \param[in] peripheral  ID for the peripheral to be unlocked, sourced via the
+ *                        \ref SYSTEM_PERIPHERAL_ID macro.
+ * \param[in] key         Bitwise inverse of peripheral ID, used as key to
+ *                        reduce the chance of accidental unlocking. See
+ *                        \ref bitwise_code.
+ *
+ * \return Status of the peripheral unlock procedure.
+ * \retval STATUS_OK                If the peripheral was successfully locked.
+ * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
  */
 __no_inline enum status_code system_peripheral_unlock(
-		enum system_peripheral_flag peripheral,
-		uint32_t key)
+		const uint32_t peripheral_id,
+		const uint32_t key)
 {
 	/* Bit to be set in desired register is given by bit 5:0 */
-	uint8_t register_bit_pos = peripheral % 32;
+	uint8_t register_bit_pos = peripheral_id % 32;
 
 	/* Value of which PAC register to use is given by bit 31:6 */
-	uint8_t register_pos = peripheral / 32;
+	uint8_t register_pos = peripheral_id / 32;
 
 	/* Check if key is correct. */
-	if (~(uint32_t)peripheral != key){
+	if (~peripheral_id != key){
 		/* If key is not correct, do hard fault. */
 		HardFault_Handler();
 	}
@@ -154,5 +165,6 @@ __no_inline enum status_code system_peripheral_unlock(
 			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 	}
+
 	return STATUS_OK;
 }
