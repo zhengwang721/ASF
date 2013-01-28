@@ -515,7 +515,7 @@ void dac_disable_output_buffer(
 		struct dac_dev_inst
 		*const dev_inst);
 
-void dac_write(
+enum status_code dac_write(
 		struct dac_dev_inst *const dev_inst,
 		enum dac_channel channel,
 		const uint16_t data,
