@@ -160,7 +160,7 @@
  * your device datasheet.
  *
  * \section asfdoc_sam0_extint_extra_info Extra Information
- * For extra information see \ref asfdoc_sam0_extint_extra_info.
+ * For extra information see \ref asfdoc_sam0_extint_extra.
  *
  * \section asfdoc_sam0_extint_examples Examples
  * - \ref asfdoc_sam0_extint_quickstart
@@ -567,7 +567,7 @@ static inline void extint_nmi_clear_detected(
 /** @} */
 
 /**
- * \page asfdoc_sam0_extint_extra_info Extra Information
+ * \page asfdoc_sam0_extint_extra Extra Information
  *
  * \section asfdoc_sam0_extint_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
