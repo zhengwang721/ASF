@@ -163,8 +163,14 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(USART0_RX_PIN, USART0_RX_MUX);
 	ioport_set_pin_peripheral_mode(USART0_TX_PIN, USART0_TX_MUX);
 #endif
+
 #ifdef CONF_BOARD_DACC_VOUT
 	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
+#endif
+
+#ifdef CONF_BOARD_ABDACB_PORT
+	ioport_set_pin_peripheral_mode(ABDACB_AUDIO0_PIN, ABDACB_AUDIO0_MUX);
+	ioport_set_pin_peripheral_mode(ABDACB_AUDIO1_PIN, ABDACB_AUDIO1_MUX);
 #endif
 }
 /**
