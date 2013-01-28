@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup sam0_extint_group
+ * \addtogroup asfdoc_sam0_extint
  *
  * @{
  */
@@ -96,6 +96,8 @@ enum status_code extint_async_ch_enable_callback(
 enum status_code extint_async_ch_disable_callback(
 	const uint32_t channel,
 	const enum extint_async_type type);
+
+/** @} */
 
 /** @} */
 

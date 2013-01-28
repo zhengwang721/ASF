@@ -44,7 +44,7 @@
 #define EXTINT_H_INCLUDED
 
 /**
- * \defgroup sam0_extint_group SAMD20 External Interrupt Driver (EXTINT)
+ * \defgroup asfdoc_sam0_extint SAMD20 External Interrupt Driver (EXTINT)
  *
  * Driver for the SAMD20 architecture devices. This driver provides a unified
  * interface for the configuration and management of external interrupts
@@ -73,7 +73,7 @@
  * }
  * \enddot
  *
- * \section module_introduction Introduction
+ * \section asfdoc_sam0_extint_introduction Introduction
  * The External Interrupt (EXTINT) module provides a method of asynchronously
  * detecting rising edge, falling edge or specific level detection on individual
  * I/O pins of a device. This detection can then be used to trigger a software
@@ -82,7 +82,7 @@
  * mode, allowing the device to conserve power while still being able to react
  * to an external stimulus in a timely manner.
  *
- * \subsection logical_channels Logical Channels
+ * \subsection asfdoc_sam0_extint_logical_channels Logical Channels
  * The External Interrupt module contains a number of logical channels, each of
  * which is capable of being individually configured for a given pin routing,
  * detection mode and filtering/wake up characteristics.
@@ -91,7 +91,7 @@
  * physical device I/O pin in order to detect a particular edge or level of the
  * incoming signal.
  *
- * \subsection nmi_chanel NMI Channel(s)
+ * \subsection asfdoc_sam0_extint_nmi_chanel NMI Channel(s)
  * One or more Non Maskable Interrupt (NMI) channels are provided within each
  * physical External Interrupt Controller module, allowing a single physical pin
  * of the device to fire a single NMI interrupt in response to a particular
@@ -102,7 +102,7 @@
  * software reset or other functionality where the action should be executed in
  * preference to all other running code with a minimum amount of latency.
  *
- * \subsection filtering_and_detection Input Filtering and Detection
+ * \subsection asfdoc_sam0_extint_filtering_and_detection Input Filtering and Detection
  * To reduce the possibility of noise or other transient signals causing
  * unwanted device wake-ups, interrupts and/or events via an external interrupt
  * channel, a hardware signal filter can be enabled on individual channels. This
@@ -143,29 +143,29 @@
  *	</tr>
  * </table>
  *
- * \subsection events_and_interrupts Events and Interrupts
+ * \subsection asfdoc_sam0_extint_events_and_interrupts Events and Interrupts
  * Channel detection states may be polled inside the application for synchronous
  * detection, or events and interrupts may be used for asynchronous behavior.
  * Each channel can be configured to give an asynchronous hardware event (which
  * may in turn trigger actions in other hardware modules) or an asynchronous
  * software interrupt.
  *
- * \section module_dependencies Dependencies
+ * \section asfdoc_sam0_extint_module_dependencies Dependencies
  * The external interrupt driver has the following dependencies:
  *
  * \li \ref sam0_pinmux_group "System Pin Multiplexer Driver"
  *
- * \section special_considerations Special Considerations
+ * \section asfdoc_sam0_extint_special_considerations Special Considerations
  * Not all devices support disabling of the NMI channel(s) detection mode - see
  * your device datasheet.
  *
- * \section module_extra_info Extra Information
- * For extra information see \ref extint_extra_info.
+ * \section asfdoc_sam0_extint_extra_info Extra Information
+ * For extra information see \ref asfdoc_sam0_extint_extra_info.
  *
- * \section module_examples Examples
- * - \ref extint_quickstart
+ * \section asfdoc_sam0_extint_examples Examples
+ * - \ref asfdoc_sam0_extint_quickstart
  *
- * \section api_overview API Overview
+ * \section asfdoc_sam0_extint_api_overview API Overview
  * @{
  */
 
@@ -567,9 +567,9 @@ static inline void extint_nmi_clear_detected(
 /** @} */
 
 /**
- * \page extint_extra_info Extra Information
+ * \page asfdoc_sam0_extint_extra_info Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_sam0_extint_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -592,10 +592,10 @@ static inline void extint_nmi_clear_detected(
  *	</tr>
  * </table>
  *
- * \section fixed_errata Erratas fixed by driver
+ * \section asfdoc_sam0_extint_fixed_errata Errata fixed by driver
  * No errata workarounds in driver.
  *
- * \section module_history Module History
+ * \section asfdoc_sam0_extint_module_history Module History
  * Below is an overview of the module history, detailing enhancements and fixes
  * made to the module since its first release. The current version of this
  * corresponds to the newest version listed in the table below.
@@ -611,9 +611,9 @@ static inline void extint_nmi_clear_detected(
  */
 
 /**
- * \page extint_quickstart Quick Start Guides for the EXTINT module
+ * \page asfdoc_sam0_extint_quickstart Quick Start Guides for the EXTINT module
  *
- * This is the quick start guide list for the \ref sam0_extint_group module,
+ * This is the quick start guide list for the \ref asfdoc_sam0_extint,
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
@@ -622,10 +622,10 @@ static inline void extint_nmi_clear_detected(
  * user application and run at system startup, while the steps for usage can be
  * copied into the normal user application program flow.
  *
- * \see General list of module \ref module_examples "examples".
+ * \see General list of module \ref asfdoc_sam0_extint_examples "examples".
  *
- * \section extint_use_cases EXTINT module use cases
- * - \subpage extint_basic_use_case
+ * \section asfdoc_sam0_extint_use_cases EXTINT module use cases
+ * - \subpage asfdoc_sam0_extint_basic_use_case
  */
 
 #endif

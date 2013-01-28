@@ -40,7 +40,7 @@
  */
 
 /**
- * \page extint_basic_use_case Quick Start Guide for the EXTINT module - Basic Use Case
+ * \page asfdoc_sam0_extint_basic_use_case Quick Start Guide for the EXTINT module - Basic Use Case
  *
  * In this use case, the EXTINT module is configured for:
  *  \li Channel 1 routed to physical pin PA01
@@ -52,19 +52,19 @@
  * routed to a logical External Interrupt Controller channel to detect falling
  * edges of the incoming signal.
  *
- * \section extint_basic_use_case_setup Setup
+ * \section asfdoc_sam0_extint_basic_use_case_setup Setup
  *
- * \subsection extint_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection extint_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_extint_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_extint_basic.c setup_init
  *
- * \subsection extint_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_flow Workflow
  * -# Create an EXTINT module channel configuration struct, which can be filled
  *    out to adjust the configuration of a single external interrupt channel.
  *  - \snippet qs_extint_basic.c setup_1
@@ -83,13 +83,13 @@
  *    settings.
  *  - \snippet qs_extint_basic.c setup_4
  *
- * \section extint_basic_use_case_main Use Case
+ * \section asfdoc_sam0_extint_basic_use_case_main Use Case
  *
- * \subsection extint_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_extint_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_extint_basic.c main
  *
- * \subsection extint_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_extint_basic_use_case_main_flow Workflow
  * -# Read in the current external interrupt channel 1 state to see if a falling
  *    edge has been detected.
  *  - \snippet qs_extint_basic.c main_1
