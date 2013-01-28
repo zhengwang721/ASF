@@ -138,37 +138,21 @@ enum usart_parity {
 /* TODO: rename to mux_settings_a-h */
 enum usart_signal_mux_settings {
 	/** See \ref mux_setting_a */
-	USART_RX_0_TX_0_XCK_1
-		= (SERCOM_USART_CTRLA_RXPO(0)  &
-			~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),			
 	/** See \ref mux_setting_b */
-	USART_RX_0_TX_2_XCK_3
-		= (SERCOM_USART_CTRLA_RXPO(0) |
-			SERCOM_USART_CTRLA_TXPO),
+	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_c */
-	USART_RX_1_TX_0_XCK_1
-		= (SERCOM_USART_CTRLA_RXPO(1)  &
-			~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1)),
 	/** See \ref mux_setting_d */
-	USART_RX_1_TX_2_XCK_3
-		= (SERCOM_USART_CTRLA_RXPO(1) |
-			SERCOM_USART_CTRLA_TXPO),
+	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_e */
-	USART_RX_2_TX_0_XCK_1
-		= (SERCOM_USART_CTRLA_RXPO(2)  &
-			~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2)),
 	/** See \ref mux_setting_f */
-	USART_RX_2_TX_2_XCK_3
-		= (SERCOM_USART_CTRLA_RXPO(2) |
-			SERCOM_USART_CTRLA_TXPO),
+	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_g */
-	USART_RX_3_TX_0_XCK_1
-		= (SERCOM_USART_CTRLA_RXPO(3)  &
-			~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
 	/** See \ref mux_setting_h */
-	USART_RX_3_TX_2_XCK_3
-		= (SERCOM_USART_CTRLA_RXPO(3) |
-			SERCOM_USART_CTRLA_TXPO),
+	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
 };
 
 /**
@@ -215,7 +199,7 @@ enum usart_interrupt_flag {
 	/** This flag is set when a single Transmission is Complete */
 	USART_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
 	/** This flag is set when a single Reception is Complete */
-	USART_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
+	USART_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_USART_INTFLAG_RXCIF,
 };
 
 /**
