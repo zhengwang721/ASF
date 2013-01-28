@@ -67,10 +67,8 @@
  *  - \snippet qs_pac_basic.c init
  * -# Lock peripheral access for PORT
  *  - \snippet qs_pac_basic.c init_lock
- * -# Set sanity argument, can be set anywhere before the actual check.
- *  - \snippet qs_pac_basic.c set_sanity
  * -# Enable global interrupts.
- *  - \snippet qs_pac_basic.c sei
+ *  - \snippet qs_pac_basic.c enable_interrupts
  * -# Loop to wait for edge detect.
  *  - \snippet qs_pac_basic.c button_press
  * -# Disable interrupts globally
@@ -81,10 +79,8 @@
  *  - \snippet qs_pac_basic.c alter_config
  * -# Lock the peripheral registers.
  *  - \snippet qs_pac_basic.c lock_perph
- * -# Clear the sanity flag.
- *  - \snippet qs_pac_basic.c clear_sanity
  * -# Re-enable global interrupts.
- *  - \snippet qs_pac_basic.c enable_interrupts
+ *  - \snippet qs_pac_basic.c enable_interrupts_2
  * -# Start inf wait loop.
  *  - \snippet qs_pac_basic.c inf_loop
  */

@@ -46,7 +46,7 @@
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
-# error "conf_clocks.h must be set up for the RTC."
+#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
 #ifdef __cplusplus
