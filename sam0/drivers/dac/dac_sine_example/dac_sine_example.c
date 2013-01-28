@@ -102,6 +102,8 @@ int main(void)
 	system_vref_enable(SYSTEM_VREF_BANDGAP);
 
 	dac_get_config_defaults(&config);
+	config.clock_source = GCLK_GENERATOR_3;
+
 	dac_init(&dev_inst, DAC, &config);
 
 	dac_enable(&dev_inst);
