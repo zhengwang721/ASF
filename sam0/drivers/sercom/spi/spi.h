@@ -811,7 +811,7 @@ static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable SPI */
-	spi_module->CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }
 
 void spi_reset(struct spi_dev_inst *const dev_inst);

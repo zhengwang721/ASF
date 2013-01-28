@@ -46,7 +46,10 @@
 #define BUF_LENGTH 20
 //! [buf_length]
 //! [slave_select_pin]
-#define SLAVE_SELECT_PIN PIN_PB08
+#define SLAVE_SELECT_PIN PIN_PA17
+#define SLAVE_SELECT_PIN2 PIN_PB12
+#define DISPLAY_RESET_PIN PIN_PB27
+#define DISPLAY_DC_PIN PIN_PB24
 //! [slave_select_pin]
 //! [buffer]
 static const uint8_t buffer[20] = {
@@ -55,6 +58,50 @@ static const uint8_t buffer[20] = {
 };
 //! [buffer]
 //! [setup]
+
+uint16_t a = 0;
+struct spi_slave_dev_inst slave_dev_inst;
+struct spi_dev_inst dev_inst;
+
+static void _delay( void )
+{
+	a = 0;
+	for (int i = 0; i < 400; i++) {
+		a++;
+	}
+}
+
+static void delay(uint16_t d) 
+{
+	for (int i = 0; i < d; i++) {
+		_delay();
+	}
+}
+
+static void ssd1306_init() {
+	// Hard reset
+	struct port_conf pin_conf;
+	/* Get default config for pin */
+	port_get_config_defaults(&pin_conf);
+	/* Edit config to set the pin as output */
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
+	/* Set config on reset pin */
+	port_pin_set_config(DISPLAY_RESET_PIN, &pin_conf);
+	/* Set config on dc pin */
+	port_pin_set_config(DISPLAY_DC_PIN, &pin_conf);
+	
+	port_pin_set_output_level(DISPLAY_RESET_PIN, false);
+	delay(10);
+	port_pin_set_output_level(DISPLAY_RESET_PIN, false);
+	delay(10);
+	// Set DC pin low - command
+	port_pin_set_output_level(DISPLAY_DC_PIN, false);
+
+	// 1/32 duty
+	spi_select_slave(&dev_inst, &slave_dev_inst);
+	spi_write(&dev_inst)
+	
+}
 
 int main(void)
 {
@@ -70,7 +117,7 @@ int main(void)
 	struct spi_slave_dev_conf slave_config;
 //! [slave_config]
 //! [slave_dev_inst]
-	struct spi_slave_dev_inst slave_dev_inst;
+	struct spi_slave_dev_inst test;
 //! [slave_dev_inst]
 //! [system_init]
 	system_init();
@@ -85,6 +132,8 @@ int main(void)
 //! [ss_pin]
 //! [slave_init]
 	spi_slave_dev_init(&slave_dev_inst, &slave_config);
+	slave_config.ss_pin = SLAVE_SELECT_PIN2;
+	spi_slave_dev_init(&test, &slave_config);
 //! [slave_init]
 
 	/* Configure, initialize and enable SERCOM SPI module */
@@ -97,29 +146,54 @@ int main(void)
 	config.pinmux_pad2 = PINMUX_PA12B_SERCOM2_PAD2;
 	config.pinmux_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
 	config.mux_setting = SPI_SIGNAL_MUX_SETTING_E;
+	config.mode = SPI_TRANSFER_MODE_3;
 //! [conf_rec]
+
 //! [init]
 	spi_init(&dev_inst, SERCOM2, &config);
 //! [init]
-
+	spi_disable(&dev_inst);
+	spi_reset(&dev_inst);
+	spi_init(&dev_inst, SERCOM2, &config);
 	/* Send a buffer to slave */
 //! [enable]
 	spi_enable(&dev_inst);
 //! [enable]
 //! [slave_select]
-	spi_select_slave(&dev_inst, &slave_dev_inst);
+	//spi_select_slave(&dev_inst, &slave_dev_inst);
 //! [slave_select]
 //! [write_buffer]
-	spi_write_buffer(&dev_inst, buffer, BUF_LENGTH);
+//	spi_write_buffer(&dev_inst, buffer, BUF_LENGTH);
 //! [write_buffer]
 //! [slave_unselect]
-	spi_deselect_slave(&dev_inst, &slave_dev_inst);
+	//spi_deselect_slave(&dev_inst, &slave_dev_inst);
 //! [slave_unselect]
 
 	/* Loop forever */
 //! [inf_loop]
-	while (1); //{
+	//while (1); //{
 	//}
+	
+	/*if (SERCOM2->SPI.CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
+		spi_select_slave(&dev_inst, &slave_dev_inst);
+	}*/
+	/*if (SERCOM2->SPI.CTRLA.reg & SERCOM_SPI_CTRLA_MODE(0x1)) {
+		spi_select_slave(&dev_inst, &slave_dev_inst);
+	}*/
+	/*if (PM->APBCMASK.reg & PM_APBCMASK_SERCOM2) {
+		spi_select_slave(&dev_inst, &slave_dev_inst);
+	}*/
+	ssd1306_init(&dev_inst);
+	
+	while (1) {
+		spi_select_slave(&dev_inst, &slave_dev_inst);
+		spi_select_slave(&dev_inst, &test);
+		spi_write(&dev_inst, 0xAA);
+		while (!(SERCOM2->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF));
+		spi_deselect_slave(&dev_inst, &slave_dev_inst);
+		spi_deselect_slave(&dev_inst, &test);
+		delay(2);
+	}
 //! [inf_loop]
 //! [main]
 }
