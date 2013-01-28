@@ -45,7 +45,7 @@
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
-# error "The GCLK_RTC must be set to use a 32kHz source with a prescaler of 32."
+#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
 #ifdef __cplusplus
