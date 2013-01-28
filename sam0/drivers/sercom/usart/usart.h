@@ -1,5 +1,5 @@
 /**
-
+ *
  * \file
  *
  * \brief SAMD20 SERCOM USART Driver
@@ -42,6 +42,10 @@
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
+#ifndef PINMUX_DEFAULT
+#define PINMUX_DEFAULT 0xFFFFFFFF
+#endif
+
 #include <sercom.h>
 
 #ifdef USART_ASYNC
@@ -82,6 +86,7 @@ enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
 	USART_DATAORDER_MSB = SERCOM_USART_CTRLA_DORD,
+
 	/** The LSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
 	USART_DATAORDER_LSB = 0,
@@ -112,9 +117,11 @@ enum usart_parity {
 	/** For odd parity checking, the parity bit will be set if number of
 	 *  ones being transferred is even */
 	USART_PARITY_ODD  = SERCOM_USART_CTRLB_PMODE,
+
 	/** For even parity checking, the parity bit will be set if number of
 	 *  ones being received is odd */
 	USART_PARITY_EVEN = 0,
+
 	/** No parity checking will be executed, and there will be no parity bit
 	 *  in the received frame */
 	USART_PARITY_NONE = 0xFF,
@@ -128,24 +135,40 @@ enum usart_parity {
  * settings must be chosen according to the rest of the configuration.
  *
  */
-//TODO: rename to mux_settings_a-h
+/* TODO: rename to mux_settings_a-h */
 enum usart_signal_mux_settings {
 	/** See \ref mux_setting_a */
-	USART_RX_0_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(0)  & ~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_0_TX_0_XCK_1
+		= (SERCOM_USART_CTRLA_RXPO(0)  &
+			~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_b */
-	USART_RX_0_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_0_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(0) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_c */
-	USART_RX_1_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(1)  & ~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_1_TX_0_XCK_1
+		= (SERCOM_USART_CTRLA_RXPO(1)  &
+			~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_d */
-	USART_RX_1_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_1_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(1) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_e */
-	USART_RX_2_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(2)  & ~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_2_TX_0_XCK_1
+		= (SERCOM_USART_CTRLA_RXPO(2)  &
+			~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_f */
-	USART_RX_2_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_2_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(2) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_g */
-	USART_RX_3_TX_0_XCK_1    = (SERCOM_USART_CTRLA_RXPO(3)  & ~SERCOM_USART_CTRLA_TXPO),
+	USART_RX_3_TX_0_XCK_1
+		= (SERCOM_USART_CTRLA_RXPO(3)  &
+			~SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_h */
-	USART_RX_3_TX_2_XCK_3    = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_3_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(3) |
+			SERCOM_USART_CTRLA_TXPO),
 };
 
 /**
@@ -227,6 +250,7 @@ struct usart_conf {
 	enum usart_signal_mux_settings mux_settings;
 	/** USART baud rate */
 	uint32_t baudrate;
+
 	/** USART Clock Polarity
 	 * If true, data changes on falling XCK edge and
 	 * is sampled at rising edge
@@ -234,18 +258,30 @@ struct usart_conf {
 	 * is sampled at falling edge
 	 * */
 	bool clock_polarity_inverted;
+
 	/** States whether to use the external clock applied to the XCK pin.
 	 * In SYNC mode the shift register will act directly on the XCK clock.
 	 * In ASYNC mode the XCK will be the input to the USART hardware module.
 	 */
 	bool use_external_clock;
+
 	/** External clock frequency in synchronous mode.
 	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
 	/** Generator source for the clock used by USART */
-	//enum gclk_generator generator_source;
+	/* enum gclk_generator generator_source; */
 	/** If true the clock used by USART will run in standby mode */
 	bool run_in_standby;
+	/** GCLK generator source */
+	enum gclk_generator generator_source;
+	/** PAD0 Pinout */
+	uint32_t pinout_pad0;
+	/** PAD0 Pinout */
+	uint32_t pinout_pad1;
+	/** PAD0 Pinout */
+	uint32_t pinout_pad2;
+	/** PAD0 Pinout */
+	uint32_t pinout_pad3;
 };
 
 #ifdef USART_ASYNC
@@ -253,7 +289,8 @@ struct usart_conf {
 struct usart_dev_inst;
 
 /* Type of the callback functions */
-typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const dev_inst);
+typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const
+		dev_inst);
 #endif
 
 /**
@@ -270,7 +307,9 @@ struct usart_dev_inst {
 	usart_async_callback_t *callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
 	volatile uint8_t *rx_buffer_ptr;
-	/** Buffer pointer to where the next character will be transmitted from */
+
+	/** Buffer pointer to where the next character will be transmitted from
+	**/
 	volatile uint8_t *tx_buffer_ptr;
 	/** Remaining characters to receive */
 	volatile uint16_t remaining_rx_buffer_length;
@@ -284,7 +323,6 @@ struct usart_dev_inst {
 	volatile enum status_code rx_status;
 	/** Holds the status of the ongoing or last write operation */
 	volatile enum status_code tx_status;
-
 #endif
 };
 
@@ -304,7 +342,6 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
 		/* Intentionally left empty */
 	}
 }
-
 #endif
 
 /**
@@ -339,6 +376,11 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	config->ext_clock_freq = 0;
 	config->mux_settings = USART_RX_1_TX_2_XCK_3;
 	config->run_in_standby = false;
+	config->generator_source = GCLK_GENERATOR_0;
+	config->pinout_pad0 = PINMUX_DEFAULT;
+	config->pinout_pad1 = PINMUX_DEFAULT;
+	config->pinout_pad2 = PINMUX_DEFAULT;
+	config->pinout_pad3 = PINMUX_DEFAULT;
 }
 
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
@@ -421,7 +463,7 @@ static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
  * \name Writing and reading
  * {@
  */
-//TODO: Would it be enough with write/read_buffer?
+/* TODO: Would it be enough with write/read_buffer? */
 enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 		const uint16_t tx_data);
 
@@ -465,10 +507,11 @@ static inline void usart_enable_transceiver(const struct usart_dev_inst
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
-	switch(transceiver_type){
+	switch (transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Enable RX */
 		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+
 	case USART_TRANSCEIVER_TX:
 		/* Enable TX */
 		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
@@ -497,10 +540,11 @@ static inline void usart_disable_transceiver(const struct usart_dev_inst
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
 
-	switch(transceiver_type){
+	switch (transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Disable RX */
 		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+
 	case USART_TRANSCEIVER_TX:
 		/* Disable TX */
 		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
@@ -527,7 +571,7 @@ static inline bool usart_is_interrupt_flag_set(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
-	return (usart_module->INTFLAG.reg & (1 << interrupt_flag));
+	return (usart_module->INTFLAG.reg & interrupt_flag);
 }
 
 static inline void usart_clear_interrupt_flag(
@@ -542,11 +586,10 @@ static inline void usart_clear_interrupt_flag(
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Clear requested status flag by writing a one to it */
-	usart_module->INTFLAG.reg |= (1 << interrupt_flag);
+	usart_module->INTFLAG.reg |= interrupt_flag;
 }
 
 /**
  * @}
  */
-
 #endif /* USART_H_INCLUDED */
