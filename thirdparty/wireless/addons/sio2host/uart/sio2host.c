@@ -235,9 +235,6 @@ ISR(USART_HOST_ISR_VECT)
 	{
 		serial_rx_buf_tail++;
 	}
-        //LED_Toggle(LED0);
-        //usart_serial_write_packet(USART_HOST1,&temp,1);
-        //sio_tx(&temp,1);
 	cpu_irq_enable();
 }
 
