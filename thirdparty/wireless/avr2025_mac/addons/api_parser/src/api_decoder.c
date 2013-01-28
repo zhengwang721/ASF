@@ -1,26 +1,27 @@
 #include "compiler.h"
-#include "api_parser.h"
+#include "string.h"
 #include "sio2ncp.h"
+#include "api_parser.h"
 #include "common_sw_timer.h"
 
 
-
 #define SIO_RX_BUF_SIZE 156
- uint8_t data[SIO_RX_BUF_SIZE];
- uint8_t data_length = 0;
+
+static void api_process_incoming_sio_data(void);
+
+uint8_t data[SIO_RX_BUF_SIZE];
+uint8_t data_length = 0;
 
 static uint8_t rx_index = 0;
 
-static uint8_t rcv_buffer[RX_BUFFER_LENGTH] = {0};
+uint8_t rcv_buffer[RX_BUFFER_LENGTH] = {0};
 static uint8_t *rcv_buff_ptr;
-static uint8_t *rcv_frame_ptr = rcv_buffer+1;
+uint8_t *rcv_frame_ptr;
 static uint8_t rcv_state = UART_RX_STATE_SOT, rcv_length = 0;
 
 
 void handle_rx_frame(void)
 {
-  
-    
 	switch (*(rcv_frame_ptr + 1))  /* message type */
     {
         case MCPS_DATA_CONFIRM:
@@ -54,8 +55,12 @@ void handle_rx_frame(void)
 
         case MLME_ASSOCIATE_INDICATION:
 #if (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)
-			usr_mlme_associate_ind(*((uint64_t *)(rcv_frame_ptr + 2)),
-								   *(rcv_frame_ptr + 2 + sizeof(uint64_t)));
+			{
+				uint64_t temp_var;
+				memcpy(&temp_var, rcv_frame_ptr + 2, 8);
+				usr_mlme_associate_ind(temp_var,
+									   *(rcv_frame_ptr + 2 + sizeof(uint64_t)));
+			}
 #endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 			break;
 
@@ -68,8 +73,12 @@ void handle_rx_frame(void)
 
         case MLME_DISASSOCIATE_INDICATION:
 #if (MAC_DISASSOCIATION_BASIC_SUPPORT == 1)
-			usr_mlme_disassociate_ind(*((uint64_t *)(rcv_frame_ptr + 2)),
-									  *(rcv_frame_ptr + 2 + sizeof(uint64_t)));
+			{
+				uint64_t temp_var;
+				memcpy(&temp_var, rcv_frame_ptr + 2, 8);
+				usr_mlme_disassociate_ind(temp_var,
+										  *(rcv_frame_ptr + 2 + sizeof(uint64_t)));
+			}
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 			break;
 
@@ -93,7 +102,11 @@ void handle_rx_frame(void)
 
         case MLME_ORPHAN_INDICATION:
 #if (MAC_ORPHAN_INDICATION_RESPONSE == 1)
-			usr_mlme_orphan_ind(*((uint64_t *)(rcv_frame_ptr + 2)));
+			{
+				uint64_t temp_var;
+				memcpy(&temp_var, rcv_frame_ptr + 2, 8);
+				usr_mlme_orphan_ind(temp_var);
+			}
 #endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 			break;
 
@@ -113,9 +126,20 @@ void handle_rx_frame(void)
 
         case MLME_COMM_STATUS_INDICATION:
 #if ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1))
-			usr_mlme_comm_status_ind((wpan_addr_spec_t *)(rcv_frame_ptr + 2),
-                              (wpan_addr_spec_t *)(rcv_frame_ptr + 2 + sizeof(wpan_addr_spec_t)),
-                              *(rcv_frame_ptr + 2 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t)));
+			{
+				wpan_addr_spec_t SrcAddrSpec;
+				wpan_addr_spec_t DstAddrSpec;
+
+				SrcAddrSpec.AddrMode = *(rcv_frame_ptr + 4);
+				SrcAddrSpec.PANId = *(uint16_t *)(rcv_frame_ptr + 2);
+				memcpy(&SrcAddrSpec.Addr, rcv_frame_ptr + 5, sizeof(address_field_t));
+
+				DstAddrSpec.AddrMode = *(rcv_frame_ptr + 13);
+				memcpy(&DstAddrSpec.Addr, rcv_frame_ptr + 14, sizeof(address_field_t));
+
+				usr_mlme_comm_status_ind(&SrcAddrSpec, &DstAddrSpec,
+								  *(rcv_frame_ptr + 22));
+			}
 #endif  /* ((MAC_ORPHAN_INDICATION_RESPONSE == 1) || (MAC_ASSOCIATION_INDICATION_RESPONSE == 1)) */
 			break;
 
@@ -237,7 +261,7 @@ bool wpan_task(void)
     else    /* Data has been received, process the data */
     {
         /* Process each single byte */
-        process_incoming_sio_data();
+        api_process_incoming_sio_data();
         data_length--;
         rx_index++;
     }
@@ -251,7 +275,7 @@ bool wpan_task(void)
 /**
  * @brief Process data received from SIO
  */
-static void process_incoming_sio_data(void)
+static void api_process_incoming_sio_data(void)
 {
     
      switch (rcv_state)

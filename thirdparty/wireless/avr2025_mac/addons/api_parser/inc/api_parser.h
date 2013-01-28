@@ -45,7 +45,9 @@
 /** The end of transmission delimiter. */
 #define EOT                             (4)
 
-static void process_incoming_sio_data(void);
+extern uint8_t *rcv_frame_ptr;
+extern uint8_t rcv_buffer[];
+
 void process_rf_serial_byte(uint8_t byte);
 void handle_rx_frame(void);
 

@@ -1,7 +1,7 @@
+#include <string.h>
 #include "compiler.h"
 #include "sio2ncp.h"
 #include "api_parser.h"
-
 
 
 /* Size constants for PHY PIB attributes */
@@ -87,6 +87,7 @@ static uint8_t length = 0;
 
 retval_t wpan_init(void)
 {
+	rcv_frame_ptr = &rcv_buffer[0] + 1;
 	sio2ncp_init();
 	tx_buffer[SOT_POS] = SOT;
 	tx_buffer[PROTOCOL_ID_POS] = PROTOCOL_ID;
@@ -129,7 +130,7 @@ bool wpan_mcps_data_req(uint8_t SrcAddrMode,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 
 
@@ -146,7 +147,7 @@ bool wpan_mcps_purge_req(const uint8_t msduHandle)
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 
 }
 #endif  /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1)) */
@@ -177,7 +178,7 @@ bool wpan_mlme_associate_req(uint8_t LogicalChannel,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
@@ -203,7 +204,7 @@ bool wpan_mlme_associate_resp(uint64_t DeviceAddress,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_ASSOCIATION_INDICATION_RESPONSE == 1) */
 
@@ -231,7 +232,7 @@ bool wpan_mlme_disassociate_req(wpan_addr_spec_t *DeviceAddrSpec,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_DISASSOCIATION_BASIC_SUPPORT == 1) */
 
@@ -249,7 +250,7 @@ bool wpan_mlme_get_req(uint8_t PIBAttribute)
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_GET_SUPPORT == 1) */
 
@@ -275,7 +276,7 @@ bool wpan_mlme_orphan_resp(uint64_t OrphanAddress,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_ORPHAN_INDICATION_RESPONSE == 1) */
 	
@@ -299,7 +300,7 @@ bool wpan_mlme_poll_req(wpan_addr_spec_t *CoordAddrSpec)
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_INDIRECT_DATA_BASIC == 1) */
 
@@ -316,14 +317,22 @@ bool wpan_mlme_reset_req(bool SetDefaultPib)
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 
 
 bool wpan_mlme_set_req(uint8_t PIBAttribute,
                        void *PIBAttributeValue)
 {
-	uint8_t pib_len = mac_get_pib_attribute_size(PIBAttribute);
+	uint8_t pib_len;
+	if(macBeaconPayload == PIBAttribute)
+	{
+		pib_len = *((uint8_t *)PIBAttributeValue - 1);
+	}
+	else
+	{
+		pib_len = mac_get_pib_attribute_size(PIBAttribute);
+	}
 	length = 0;
 	tx_buff_ptr = &tx_buffer[CMD_POS];
 
@@ -339,7 +348,7 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 
 
@@ -365,7 +374,7 @@ bool wpan_mlme_rx_enable_req(bool DeferPermit,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_RX_ENABLE_SUPPORT == 1) */
 
@@ -395,7 +404,7 @@ bool wpan_mlme_scan_req(uint8_t ScanType,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif
 
@@ -424,12 +433,12 @@ bool wpan_mlme_start_req(uint16_t PANId,
 	*tx_buff_ptr++ = BatteryLifeExtension;
 	*tx_buff_ptr++ = CoordRealignment;
 
-        *tx_buff_ptr++ = EOT;
+    *tx_buff_ptr++ = EOT;
 
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
@@ -451,7 +460,7 @@ bool wpan_mlme_sync_req(uint8_t LogicalChannel,
 	length = tx_buff_ptr - (uint8_t *)&tx_buffer[0];
 	tx_buffer[LEN_POS] = length - 3;
 	sio2ncp_tx(tx_buffer, length);
-	return false;
+	return true;
 }
 #endif /* (MAC_SYNC_REQUEST == 1) */
 
@@ -466,7 +475,7 @@ uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id)
      */
     if (macBeaconPayload == pib_attribute_id)
     {
-       return (aMaxBeaconPayloadLength);
+       return (*(rcv_frame_ptr + 4));
     }
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 
