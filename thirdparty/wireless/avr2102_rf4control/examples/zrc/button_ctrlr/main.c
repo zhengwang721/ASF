@@ -121,7 +121,7 @@ int main(void)
 	sw_timer_init();
         
     /* Initialize all layers */
-    if (nwk_init(RF_BAND) != NWK_SUCCESS)
+    if (nwk_init() != NWK_SUCCESS)
     {
         // something went wrong during initialization
         while (1)

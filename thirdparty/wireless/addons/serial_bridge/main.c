@@ -90,9 +90,6 @@ int main(void)
 
     cpu_irq_enable();
 
-	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
-
     if ( STATUS_OK != sio2host_init() )
     {
         /* something went wrong during initialization */

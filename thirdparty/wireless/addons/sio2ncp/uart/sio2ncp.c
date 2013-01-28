@@ -96,7 +96,9 @@ static uint8_t serial_rx_count;
 
 status_code_t sio2ncp_init(void)
 {
-	
+	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+
 	usart_serial_init(USART_NCP, &usart_serial_options);
 	USART_NCP_RX_ISR_ENABLE();
 	return STATUS_OK;
