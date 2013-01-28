@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief Serial Input & Output configuration
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2011 Atmel Corporation. All rights reserved.
  *
@@ -38,27 +38,31 @@
  *
  */
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#ifndef CONF_SIO2NCP_H_INCLUDED
+#define CONF_SIO2NCP_H_INCLUDED
 
+#define NCP_RESET_GPIO      PIN_PC00
 
+//! @{
 /** USART Interface */
-#define USART_HOST                 USART1
+#define USART_NCP                 USART0
 /** Baudrate setting */
-#define USART_HOST_BAUDRATE        9600
+#define USART_NCP_BAUDRATE        9600
 /** Character length setting */
-#define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+#define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
 /** Parity setting */
-#define USART_HOST_PARITY          US_MR_PAR_NO
+#define USART_NCP_PARITY          US_MR_PAR_NO
 /** Stop bits setting */
-#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
+#define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-#define USART_HOST_ISR_VECT        USART1_Handler
+#define USART_NCP_ISR_VECT        USART0_Handler
 
-#define USART_HOST_IRQn            USART1_IRQn
+#define USART_NCP_IRQn            USART0_IRQn
 
-#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, US_IER_RXRDY);\
-								   NVIC_EnableIRQ(USART_HOST_IRQn);
+#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
+								  NVIC_EnableIRQ(USART_NCP_IRQn);
+//! @}
 
+#include "serial.h"
 
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif /* CONF_SIO2NCP_H_INCLUDED */

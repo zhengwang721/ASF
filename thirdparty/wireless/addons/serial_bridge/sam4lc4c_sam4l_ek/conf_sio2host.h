@@ -43,7 +43,7 @@
 
 
 /** USART Interface */
-#define USART_HOST                 USART1
+#define USART_HOST                 USART2
 /** Baudrate setting */
 #define USART_HOST_BAUDRATE        9600
 /** Character length setting */
@@ -53,9 +53,9 @@
 /** Stop bits setting */
 #define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-#define USART_HOST_ISR_VECT        USART1_Handler
+#define USART_HOST_ISR_VECT        USART2_Handler
 
-#define USART_HOST_IRQn            USART1_IRQn
+#define USART_HOST_IRQn            USART2_IRQn
 
 #define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, US_IER_RXRDY);\
 								   NVIC_EnableIRQ(USART_HOST_IRQn);
