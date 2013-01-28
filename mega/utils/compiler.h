@@ -93,6 +93,12 @@
 #  define barrier()        asm ("")
 #endif
 
+/*
+ * AVR arch does not care about alignment anyway.
+ */
+#define COMPILER_PACK_RESET(alignment)
+#define COMPILER_PACK_SET(alignment)
+
 //_____ M A C R O S ________________________________________________________
 
 
