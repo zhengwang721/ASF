@@ -60,11 +60,11 @@ void HardFault_Handler(void)
  * \warning Locking an already locked peripheral will cause a hard fault
  *          exception, and terminate program execution.
  *
- * \param[in] peripheral  ID for the peripheral to be locked, sourced via the
- *                        \ref SYSTEM_PERIPHERAL_ID macro.
- * \param[in] key         Bitwise inverse of peripheral ID, used as key to
- *                        reduce the chance of accidental locking. See
- *                        \ref bitwise_code.
+ * \param[in] peripheral_id  ID for the peripheral to be locked, sourced via the
+ *                           \ref SYSTEM_PERIPHERAL_ID macro.
+ * \param[in] key  Bitwise inverse of peripheral ID, used as key to
+ *                 reduce the chance of accidental locking. See
+ *                 \ref bitwise_code.
  *
  * \return Status of the peripheral lock procedure.
  * \retval STATUS_OK                If the peripheral was successfully locked.
@@ -119,11 +119,11 @@ __no_inline enum status_code system_peripheral_lock(
  * \warning Unlocking an already locked peripheral will cause a hard fault
  *          exception, and terminate program execution.
  *
- * \param[in] peripheral  ID for the peripheral to be unlocked, sourced via the
- *                        \ref SYSTEM_PERIPHERAL_ID macro.
- * \param[in] key         Bitwise inverse of peripheral ID, used as key to
- *                        reduce the chance of accidental unlocking. See
- *                        \ref bitwise_code.
+ * \param[in] peripheral_id  ID for the peripheral to be unlocked, sourced via the
+ *                          \ref SYSTEM_PERIPHERAL_ID macro.
+ * \param[in] key  Bitwise inverse of peripheral ID, used as key to
+ *                 reduce the chance of accidental unlocking. See
+ *                 \ref bitwise_code.
  *
  * \return Status of the peripheral unlock procedure.
  * \retval STATUS_OK                If the peripheral was successfully locked.

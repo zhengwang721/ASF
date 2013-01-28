@@ -97,10 +97,6 @@ int main (void)
 			~SYSTEM_PERIPHERAL_ID(PORT));
 //! [lock_perph]
 
-//! [clear_sanity]
-	sanity = 0;
-//! [clear_sanity]
-
 //! [enable_interrupts_2]
 	cpu_irq_enable();
 //! [enable_interrupts_2]
