@@ -41,8 +41,9 @@
 
 #include "pac.h"
 
-/** Handler for the CPU Hard Fault interrupt, fired if an illegal access was
- *  attempted to a locked peripheral.
+/**
+ * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
+ * attempted to a locked peripheral.
  */
 void HardFault_Handler(void)
 {

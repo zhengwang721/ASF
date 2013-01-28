@@ -607,12 +607,13 @@
 extern "C" {
 #endif
 
-/** Retrieves the ID of a specified peripheral name, giving its peripheral bus
- *  location.
+/**
+ * Retrieves the ID of a specified peripheral name, giving its peripheral bus
+ * location.
  *
- *  \param[in] peripheral  Name of the peripheral instance
+ * \param[in] peripheral  Name of the peripheral instance
  *
- *  \returns Bus ID of the specified peripheral instance.
+ * \returns Bus ID of the specified peripheral instance.
  */
 #define SYSTEM_PERIPHERAL_ID(peripheral)    ID_##peripheral
 
