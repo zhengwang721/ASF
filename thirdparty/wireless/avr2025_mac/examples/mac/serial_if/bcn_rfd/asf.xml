@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC Serial Interface  Application - Beacon RFD" id="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_rfd">
+	<module type ="meta" caption="MAC Serial Interface  Application - Beacon FFD" id="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_rfd">
 		<info type="description" value="summary">
-		MAC Serial Interface  Application - Beacon RFD
+		MAC Serial Interface  Application - Beacon FFD
 		</info>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="MAC"/>
 		<build type="define" name="TEST_HARNESS" value =""/>

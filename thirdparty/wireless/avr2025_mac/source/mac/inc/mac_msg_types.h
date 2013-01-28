@@ -58,7 +58,7 @@
 #include "mac_msg_const.h"
 #include "mac_api.h"
 #include "mac_msg_type_data_ind.h"
-
+#include "tal_generic.h"
 /* === Macros =============================================================== */
 
 

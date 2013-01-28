@@ -59,6 +59,7 @@
 #include "stack_config.h"
 #include "tal_generic.h"
 #include "return_val.h"
+#include "mac_api.h"
 
 #include "qmm.h"
 #include "mac_build_config.h"
@@ -206,16 +207,14 @@
 
 /* === Types ================================================================ */
 
-/**
- * MAC Address type
- */
-typedef union
-{
-    uint16_t short_address;
-    uint64_t long_address;
-} address_field_t;
+
 
 /* === Externals ============================================================ */
+
+/**
+ * Queue used by MAC for communication to next higher layer.
+ */
+extern queue_t mac_nhle_q;
 
 extern queue_t nhle_mac_q;
 

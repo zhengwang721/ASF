@@ -452,69 +452,6 @@ static inline bool compare_time(uint32_t t1, uint32_t t2)
 }
 
 
-void sw_timer_service(void)
-{
-    uint8_t flags = cpu_irq_save();
-    internal_timer_handler();
-    cpu_irq_restore(flags);
-
-    /*
-     * Process expired timers.
-     * Call the callback functions of the expired timers in the order of their
-     * expiry.
-     */
-    {
-        timer_expiry_cb_t callback;
-        void *callback_param;
-        uint8_t next_expired_timer;
-
-        /* Expired timer if any will be processed here */
-        while (NO_TIMER != expired_timer_queue_head)
-        {
-            uint8_t flags = cpu_irq_save();
-
-            next_expired_timer = timer_array[expired_timer_queue_head].next_timer_in_queue;
-
-            /* Callback is stored */
-            callback = (timer_expiry_cb_t)timer_array[expired_timer_queue_head].timer_cb;
-
-            /* Callback parameter is stored */
-            callback_param = timer_array[expired_timer_queue_head].param_cb;
-
-            /*
-             * The expired timer's structure elements are updated and the timer
-             * is taken out of expired timer queue
-             */
-            timer_array[expired_timer_queue_head].next_timer_in_queue = NO_TIMER;
-            timer_array[expired_timer_queue_head].timer_cb = NULL;
-            timer_array[expired_timer_queue_head].param_cb = NULL;
-            timer_array[expired_timer_queue_head].loaded = false;
-
-
-            /*
-             * The expired timer queue head is updated with the next timer in the
-             * expired timer queue.
-             */
-            expired_timer_queue_head = next_expired_timer;
-
-            if (NO_TIMER == expired_timer_queue_head)
-            {
-                expired_timer_queue_tail = NO_TIMER;
-            }
-
-            cpu_irq_restore(flags);
-
-            if (NULL != callback)
-            {
-                /* Callback function is called */
-                callback(callback_param);
-            }
-        }
-    }
-}
-
-
-
 
 static inline uint32_t gettime(void)
 {
@@ -647,6 +584,68 @@ void sw_timer_init(void)
 	set_common_tc_overflow_callback(hw_overflow_cb);
 	set_common_tc_expiry_callback(hw_expiry_cb);
     common_tc_init();
+#endif //#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
+}
+
+void sw_timer_service(void)
+{
+#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
+    uint8_t flags = cpu_irq_save();
+    internal_timer_handler();
+    cpu_irq_restore(flags);
+
+    /*
+     * Process expired timers.
+     * Call the callback functions of the expired timers in the order of their
+     * expiry.
+     */
+    {
+        timer_expiry_cb_t callback;
+        void *callback_param;
+        uint8_t next_expired_timer;
+
+        /* Expired timer if any will be processed here */
+        while (NO_TIMER != expired_timer_queue_head)
+        {
+            uint8_t flags = cpu_irq_save();
+
+            next_expired_timer = timer_array[expired_timer_queue_head].next_timer_in_queue;
+
+            /* Callback is stored */
+            callback = (timer_expiry_cb_t)timer_array[expired_timer_queue_head].timer_cb;
+
+            /* Callback parameter is stored */
+            callback_param = timer_array[expired_timer_queue_head].param_cb;
+
+            /*
+             * The expired timer's structure elements are updated and the timer
+             * is taken out of expired timer queue
+             */
+            timer_array[expired_timer_queue_head].next_timer_in_queue = NO_TIMER;
+            timer_array[expired_timer_queue_head].timer_cb = NULL;
+            timer_array[expired_timer_queue_head].param_cb = NULL;
+            timer_array[expired_timer_queue_head].loaded = false;
+
+            /*
+             * The expired timer queue head is updated with the next timer in the
+             * expired timer queue.
+             */
+            expired_timer_queue_head = next_expired_timer;
+
+            if (NO_TIMER == expired_timer_queue_head)
+            {
+                expired_timer_queue_tail = NO_TIMER;
+            }
+
+            cpu_irq_restore(flags);
+
+            if (NULL != callback)
+            {
+                /* Callback function is called */
+                callback(callback_param);
+            }
+        }
+    }
 #endif //#if (TOTAL_NUMBER_OF_SW_TIMERS > 0)
 }
 

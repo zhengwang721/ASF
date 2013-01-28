@@ -4,12 +4,12 @@
 		MAC Serial Interface  Application 
 		</info>
 		<build type="c-source" value="main.c"/>
-		<build type="header-file" value="app_config.h"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
 		<build type="include-path" value="."/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.addons.serial_if"/>
 		<require idref="thirdparty.wireless.avr2025_mac"/>
+        <require idref="common.services.delay"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>

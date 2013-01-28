@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC Serial Interface  Application - Beacon FFD" id="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_ffd">
+	<module type ="meta" caption="MAC Serial Interface  Application - Beacon FFD" id="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_ffd">
 		<info type="description" value="summary">
 		MAC Serial Interface  Application - Beacon FFD
 		</info>

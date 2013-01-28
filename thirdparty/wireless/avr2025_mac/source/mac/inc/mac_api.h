@@ -55,9 +55,9 @@
 /* === Includes ============================================================= */
 
 //#include "pal.h"
-#include "mac.h"
+//#include "mac.h"
 #include "return_val.h"
-#include "qmm.h"
+//#include "qmm.h"
 #include "mac_build_config.h"
 
 /* === Macros =============================================================== */
@@ -159,20 +159,24 @@
 //! @}
 /* === Externals ============================================================ */
 
-/**
- * Queue used by MAC for communication to next higher layer.
- */
-extern queue_t mac_nhle_q;
 
 /* === Types ================================================================ */
-
+COMPILER_PACK_SET(1)
+/**
+ * MAC Address type
+ */
+typedef union
+{
+    uint16_t short_address;
+    uint64_t long_address;
+} address_field_t;
     /**
      * \addtogroup group_mac_ds
      * @{
      */
 	 
 #if !defined(__DOXYGEN___NO_MAC)
-
+COMPILER_PACK_SET(1)
 /**
  * @brief Device address specification structure
  *
@@ -197,7 +201,7 @@ typedef struct wpan_addr_spec_tag
     address_field_t Addr;
 } wpan_addr_spec_t;
 
-
+COMPILER_PACK_SET(1)
 /**
  * @brief PAN descriptor information structure
  *
