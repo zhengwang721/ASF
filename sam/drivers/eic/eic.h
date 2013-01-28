@@ -3,7 +3,7 @@
  *
  * \brief EIC driver for SAM
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,7 +114,7 @@ struct eic_line_config {
 	uint8_t eic_level;
 	/** Filter: \ref EIC_FILTER_DISABLED or \ref EIC_FILTER_ENABLED */
 	uint8_t eic_filter;
-	/** Async: \ref EIC_ASYNCH_MODEmode or \ref EIC_SYNCH_MODE */
+	/** Async: \ref EIC_ASYNCH_MODE or \ref EIC_SYNCH_MODE */
 	uint8_t eic_async;
 };
 
@@ -244,7 +244,7 @@ static inline bool eic_line_interrupt_is_pending(Eic *eic,
 /**
  * \page sam_eic_quickstart Quickstart guide for SAM EIC driver
  *
- * This is the quickstart guide for the \ref eic_group "SAM EIC driver",
+ * This is the quickstart guide for the \ref sam_drivers_eic_group "SAM EIC driver",
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *

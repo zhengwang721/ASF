@@ -58,8 +58,8 @@
  * conf_board.h file to check these previous define.
  *
  * To measure the wavefrom on channel_waveform, connect PIN_TC_WAVEFORM to
- * TC_CHANNEL_CAPTURE, and configure PIN_TC_WAVEFORM as output pin and
- * TC_CHANNEL_CAPTURE as input pin.
+ * PIN_TC_CAPTURE, and configure PIN_TC_WAVEFORM as output pin and
+ * PIN_TC_CAPTURE as input pin.
  *
  * \section Descriptions
  *
