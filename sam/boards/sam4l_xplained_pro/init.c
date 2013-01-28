@@ -67,8 +67,8 @@ void board_init(void)
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
-	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED0, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED0, IOPORT_PIN_LEVEL_HIGH);
 
 #ifdef  CONF_BOARD_EIC
 	// Set push button as external interrupt pin

@@ -59,7 +59,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led)     ioport_set_pin_level(led##_GPIO, led##_INACTIVE_LEVEL)
+#define LED_Off(led)     ioport_set_pin_level(led, IOPORT_PIN_LEVEL_HIGH)
 
 /**
  * \brief Turns on the specified LEDs.
@@ -68,7 +68,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led)      ioport_set_pin_level(led##_GPIO, led##_ACTIVE_LEVEL)
+#define LED_On(led)      ioport_set_pin_level(led, IOPORT_PIN_LEVEL_LOW)
 
 /**
  * \brief Toggles the specified LEDs.
@@ -77,7 +77,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Toggle(led)  ioport_toggle_pin_level(led##_GPIO)
+#define LED_Toggle(led)  ioport_toggle_pin_level(led)
 
 
 #endif  // LED_H_INCLUDED

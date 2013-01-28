@@ -92,11 +92,7 @@
  * LED0 is a single yellow LED that is active low.
  */
 //@{
-#define LED0                          PC07
-#define LED0_GPIO                     PIN_PC07
-#define LED0_GPIO_MASK                GPIO_PC07
-#define LED0_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_LOW
-#define LED0_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
+#define LED0                          PIN_PC07
 //@}
 
 /*! \name GPIO Connections of Push Buttons

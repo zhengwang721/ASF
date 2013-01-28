@@ -1031,6 +1031,25 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define SHORTENUM           __attribute__((packed))
 #endif
 
+#define FLASH_DECLARE(x)  const x
+
+#define PGM_READ_BYTE(x) *(x)
+
+/* Converting of values from CPU endian to little endian. */
+#define CPU_ENDIAN_TO_LE16(x)   (x)
+#define CPU_ENDIAN_TO_LE32(x)   (x)
+#define CPU_ENDIAN_TO_LE64(x)   (x)
+
+/* Converting of values from little endian to CPU endian. */
+#define LE16_TO_CPU_ENDIAN(x)   (x)
+#define LE32_TO_CPU_ENDIAN(x)   (x)
+#define LE64_TO_CPU_ENDIAN(x)   (x)
+
+/* Converting of constants from CPU endian to little endian. */
+#define CCPU_ENDIAN_TO_LE16(x)  (x)
+#define CCPU_ENDIAN_TO_LE32(x)  (x)
+#define CCPU_ENDIAN_TO_LE64(x)  (x)
+
 
 /**
  * \}
