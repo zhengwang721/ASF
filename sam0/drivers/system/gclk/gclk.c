@@ -125,6 +125,8 @@ void system_gclk_gen_set_config(
 			new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 			new_genctrl_config |= GCLK_GENCTRL_IDC;
 		}
+	} else {
+		new_genctrl_config |= GCLK_GENCTRL_DIVSEL;
 	}
 
 	#if defined (REVB)
