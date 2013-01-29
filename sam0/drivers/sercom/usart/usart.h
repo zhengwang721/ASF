@@ -138,21 +138,29 @@ enum usart_parity {
 /* TODO: rename to mux_settings_a-h */
 enum usart_signal_mux_settings {
 	/** See \ref mux_setting_a */
-	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),			
+	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
 	/** See \ref mux_setting_b */
-	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_0_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(0) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_c */
 	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1)),
 	/** See \ref mux_setting_d */
-	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_1_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(1) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_e */
 	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2)),
 	/** See \ref mux_setting_f */
-	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_2_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(2) |
+			SERCOM_USART_CTRLA_TXPO),
 	/** See \ref mux_setting_g */
 	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
 	/** See \ref mux_setting_h */
-	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
+	USART_RX_3_TX_2_XCK_3
+		= (SERCOM_USART_CTRLA_RXPO(3) |
+			SERCOM_USART_CTRLA_TXPO),
 };
 
 /**
@@ -495,10 +503,12 @@ static inline void usart_enable_transceiver(const struct usart_dev_inst
 	case USART_TRANSCEIVER_RX:
 		/* Enable RX */
 		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Enable TX */
 		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+		break;
 	}
 }
 
@@ -528,10 +538,12 @@ static inline void usart_disable_transceiver(const struct usart_dev_inst
 	case USART_TRANSCEIVER_RX:
 		/* Disable RX */
 		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Disable TX */
 		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+		break;
 	}
 }
 
