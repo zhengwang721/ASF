@@ -44,6 +44,8 @@
 #ifndef CONF_GMAC_H_INCLUDED
 #define CONF_GMAC_H_INCLUDED
 
+#include "gmac.h"
+
 /** Number of buffer for RX */
 #define GMAC_RX_BUFFERS  16
 
@@ -82,6 +84,6 @@
 #define ETHERNET_CONF_NET_MASK3                       0
 
 /** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE  0
+#define ETH_PHY_MODE  GMAC_PHY_MII
 
 #endif /* CONF_GMAC_H_INCLUDED */

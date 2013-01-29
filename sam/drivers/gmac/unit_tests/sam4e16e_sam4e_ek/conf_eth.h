@@ -52,6 +52,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#include "gmac.h"
+
 /** Number of buffer for RX */
 #define GMAC_RX_BUFFERS  16
 
@@ -92,7 +94,7 @@ extern "C" {
 #define ETHERNET_CONF_NET_MASK3                       0
 
 /** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE  BOARD_GMAC_MODE_MII
+#define ETH_PHY_MODE  GMAC_PHY_MII
 
 /// @cond 0
 /**INDENT-OFF**/

@@ -51,6 +51,7 @@
 #include "conf_board.h"
 #include "mini_ip.h"
 #include "ethernet_phy.h"
+#include "conf_eth.h"
 
 /**
  * \mainpage

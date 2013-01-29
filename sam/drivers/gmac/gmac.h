@@ -45,7 +45,6 @@
 #define GMAC_H_INCLUDED
 
 #include "compiler.h"
-#include "conf_eth.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -140,6 +139,14 @@ typedef enum {
 	GMAC_INVALID = 0xFF, /* Invalid */
 } gmac_status_t;
 
+/**
+ * \brief Media Independent Interface (MII) type.
+ */
+typedef enum {
+	GMAC_PHY_MII = 0,         /** MII mode */
+	GMAC_PHY_RMII = 1,    /** Reduced MII mode */
+	GMAC_PHY_INVALID = 0xFF, /* Invalid */
+} gmac_mii_mode_t;
 
 /** Receive buffer descriptor struct */
 COMPILER_PACK_SET(8)
@@ -1026,17 +1033,22 @@ static inline void gmac_set_address64(Gmac* p_gmac, uint8_t uc_index,
 }
 
 /**
- * \brief Enable/Disable RMII. For MII mode, this bit must be set to 1.
+ * \brief Select media independent interface mode.
  *
  * \param p_gmac   Pointer to the GMAC instance.
- * \param uc_enable   0 to disable the RMII mode, else to enable it.
+ * \param mode   Media independent interface mode.
  */
-static inline void gmac_enable_rmii(Gmac* p_gmac, uint8_t uc_enable)
+static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 {
-	if (uc_enable) {
-		p_gmac->GMAC_UR |= GMAC_UR_RGMII;
-	} else {
-		p_gmac->GMAC_UR &= ~GMAC_UR_RGMII;
+	switch (mode) {
+		case GMAC_PHY_MII:
+		case GMAC_PHY_RMII:
+			p_gmac->GMAC_UR |= GMAC_UR_RGMII;
+		break;
+
+		default:
+			p_gmac->GMAC_UR &= ~GMAC_UR_RGMII;
+		break;
 	}
 }
 

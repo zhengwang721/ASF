@@ -44,6 +44,7 @@
 #include  "compiler.h"
 #include "gmac.h"
 #include <string.h>
+#include "conf_eth.h"
 
 /// @cond 0
 /**INDENT-OFF**/

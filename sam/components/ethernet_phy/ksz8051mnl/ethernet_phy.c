@@ -43,6 +43,7 @@
 
 #include "ethernet_phy.h"
 #include "gmac.h"
+#include "conf_eth.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -370,8 +371,8 @@ uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 	gmac_set_speed(p_gmac, uc_speed);
 	gmac_enable_full_duplex(p_gmac, uc_fd);
 
-	/* This bit must be set to true */
-	gmac_enable_rmii(p_gmac, true);
+	/* Select Media Independent Interface type */
+	gmac_select_mii_mode(p_gmac, ETH_PHY_MODE);
 
 	gmac_enable_transmit(GMAC, true);
 	gmac_enable_receive(GMAC, true);
