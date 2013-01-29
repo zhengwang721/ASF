@@ -44,11 +44,6 @@
 #  include "usart_async.h"
 #endif
 
-#undef Assert
-#define Assert(x)
-
-extern volatile uint32_t got_hz;
-
 /**
  * \internal Set Configuration of the USART module
  *
@@ -187,6 +182,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	uint32_t sercom_index = 0;
 	uint32_t gclk_index = 0;
 	struct system_pinmux_conf pin_conf;
+
 	uint32_t pad0 = config->pinout_pad0;
 	uint32_t pad1 = config->pinout_pad1;
 	uint32_t pad2 = config->pinout_pad2;
@@ -216,6 +212,8 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 			(1 << (sercom_index + 2)));
 
 	/* Configure Pins */
+	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
@@ -331,6 +329,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(dev_inst);
+
 	/* Write data to USART module */
 	usart_module->DATA.reg = tx_data;
 
