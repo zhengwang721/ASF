@@ -277,10 +277,10 @@ int main(void)
 	{
 		wpan_task();
 #ifdef GPIO_PUSH_BUTTON_0
-		if (ioport_pin_is_low(GPIO_PUSH_BUTTON_0))
+		if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
 		{
 			delay_ms(DEBOUNCE_DELAY_MS);
-			if (ioport_pin_is_low(GPIO_PUSH_BUTTON_0))
+			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
 			{
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr, 14, 
