@@ -104,6 +104,7 @@
 //(USB_CONFIG_ATTR_SELF_POWERED)
 //(USB_CONFIG_ATTR_BUS_POWERED)
 
+//! USB test speed (0:LS, 1:FS, 2:HS)
 static uint8_t speed;
 static usb_setup_req_t main_setup_packet;
 
@@ -178,6 +179,43 @@ static main_conf_desc_t main_conf_desc = {
 
 //! \name Routines USB low level
 //! @{
+
+//! \brief Reset and initialize USB OTG peripheral to specified speed mode
+static void main_otg_init(void)
+{
+	otg_disable();
+	delay_ms(10);
+	otg_enable();
+
+	otg_disable_id_pin();
+	otg_force_device_mode();
+	otg_enable_pad();
+	otg_enable();
+
+	switch (speed) {
+	// LS speed
+	case 0:
+		udd_low_speed_enable();
+		udd_high_speed_disable();
+		break;
+	// FS speed
+	case 1:
+		udd_low_speed_disable();
+		udd_high_speed_disable();
+		break;
+	// HS speed
+	case 2:
+		udd_low_speed_disable();
+		udd_high_speed_enable();
+		break;
+	default:
+		Assert(false);
+		break;
+	}
+
+	otg_unfreeze_clock();
+	(void)Is_otg_clock_frozen();
+}
 
 //! \brief Waits the start of USB reset signal
 //! This routine waits the end of SOF
@@ -529,6 +567,7 @@ static void main_test3(void)
 //! \brief Test 4  - No response data (NACK IN) after first setup packet
 static void main_test4(void)
 {
+	main_otg_init();
 	udd_attach_device();
 	main_usb_enum_step1();
 	main_usb_enum_step2();
@@ -909,21 +948,6 @@ static void main_test21(void)
 }
 //! @}
 
-//! \brief Reset and initialize USB OTG perhipheral
-static void main_otg_init(void)
-{
-	otg_disable();
-	delay_ms(10);
-	otg_enable();
-
-	otg_disable_id_pin();
-	otg_force_device_mode();
-	otg_enable_pad();
-	otg_enable();
-	otg_unfreeze_clock();
-	(void)Is_otg_clock_frozen();
-}
-
 /*! \brief Main function. Execution starts here.
  */
 int main(void)
@@ -941,29 +965,8 @@ int main(void)
 
 	// Execute all USB core tests for each USB speed (low, full and high)
 	for (speed = 0; speed < 3; speed++) {
+
 		main_otg_init();
-		switch (speed) {
-		// LS speed
-		case 0:
-			udd_low_speed_enable();
-			udd_high_speed_disable();
-			break;
-
-		// FS speed
-		case 1:
-			udd_low_speed_disable();
-			udd_high_speed_disable();
-			break;
-
-		// HS speed
-		case 2:
-			udd_low_speed_disable();
-			udd_high_speed_enable();
-			break;
-		default:
-			Assert(false);
-			break;
-		}
 
 		main_test1();
 		main_test2();
