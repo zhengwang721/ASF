@@ -97,7 +97,6 @@
  */
 
  /* === INCLUDES ============================================================ */
-#include <asf.h>
 #include <string.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -107,6 +106,7 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sio2host.h"
+#include <asf.h>
 
 /* === TYPES =============================================================== */
 

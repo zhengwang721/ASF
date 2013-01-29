@@ -104,7 +104,6 @@
  */
 
  /* === INCLUDES ============================================================ */
-#include <asf.h>
 #include <string.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -115,6 +114,7 @@
 #include "common_sw_timer.h"
 #include "sio2host.h"
 #include "ioport.h"	
+#include <asf.h>
 /* === TYPES =============================================================== */
 
 /** This type definition of a structure can store the short address and the

@@ -87,11 +87,11 @@
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
  
-#include <asf.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
 #include "serial_interface.h"
 #include "common_sw_timer.h"
+#include <asf.h>
 
 /** Alert to indicate something has gone wrong in the application */
 static void app_alert(void);

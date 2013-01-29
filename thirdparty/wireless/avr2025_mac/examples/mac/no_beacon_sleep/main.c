@@ -94,7 +94,6 @@
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
-#include <asf.h>
 #include <string.h>
 #include "conf_board.h"
 #include "avr2025_mac.h"
@@ -102,6 +101,7 @@
 #include "delay.h"
 #include "common_sw_timer.h"
 #include "sleepmgr.h"
+#include <asf.h>
 
 /* === TYPES =============================================================== */
 

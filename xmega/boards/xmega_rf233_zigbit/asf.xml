@@ -21,7 +21,7 @@
 	</select-by-config>
 
 	<board id="board.xmega_rf233_zigbit" vendor="Atmel" caption="XMEGA-ZIGBIT RF233">
-		<build type="define" name="BOARD" value="xmega_rf233_zigbit"/>
+		<build type="define" name="BOARD" value="XMEGA_RF233_ZIGBIT"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 		<build type="header-file" value="xmega_rf233_zigbit.h"/>
