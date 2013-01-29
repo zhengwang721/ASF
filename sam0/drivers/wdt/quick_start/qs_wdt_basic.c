@@ -41,6 +41,20 @@
 #include <asf.h>
 
 void configure_wdt(void);
+void configure_led(void);
+
+void configure_led(void)
+{
+	struct port_conf pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(PIN_PB09, &pin_conf);
+
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(PIN_PB08, &pin_conf);
+}
 
 //! [setup]
 void configure_wdt(void)
@@ -54,10 +68,18 @@ void configure_wdt(void)
 	wdt_get_config_defaults(&wdt_conf);
 	//! [setup_2]
 
+	// TODO: Move into driver once scheme to select clock is determined
+	struct system_gclk_ch_conf gclock_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator    = 4;
+	gclock_ch_conf.enable_during_sleep = false;
+	system_gclk_ch_set_config(WDT_GCLK_ID, &gclock_ch_conf);
+	system_gclk_ch_enable(WDT_GCLK_ID);
+
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
 	wdt_conf.always_on      = true;
-	wdt_conf.timeout_period = WDT_PERIOD_512CLK;
+	wdt_conf.timeout_period = WDT_PERIOD_4096CLK;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */
@@ -73,15 +95,37 @@ void configure_wdt(void)
 int main(void)
 {
 	//! [setup_init]
+	system_init();
+	configure_led();
 	configure_wdt();
 	//! [setup_init]
 
 	//! [main]
+	//! [main_1]
+	enum system_reset_cause reset_cause = system_get_reset_cause();
+	//! [main_1]
+
+	//! [main_2]
+	if (reset_cause == SYSTEM_RESET_CAUSE_WDT) {
+		port_pin_set_output_level(PIN_PB08, false);
+	}
+	else {
+		port_pin_set_output_level(PIN_PB08, true);
+	}
+	//! [main_2]
+
+	//! [main_3]
 	while (true) {
-		/* Keep resetting the Watchdog timeout so that it does not expire */
-		//! [main_1]
-		wdt_reset_count();
-		//! [main_1]
+	//! [main_3]
+		//! [main_4]
+		if (port_pin_get_input_level(PIN_PB09) == false) {
+		//! [main_4]
+		//! [main_5]
+			port_pin_set_output_level(PIN_PB08, true);
+
+			wdt_reset_count();
+		//! [main_5]
+		}
 	}
 	//! [main]
 }
