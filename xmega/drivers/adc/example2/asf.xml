@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.adc.example2" caption="ADC Example 2">
+	<module type="application" id="xmega.drivers.adc.example2" caption="ADC Calibration example">
 		<info type="description" value="summary">
 		Offset and gain calibration for single-ended measurements using ADC with an external voltage supply.
 		</info>
@@ -13,7 +13,7 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="xmega.drivers.ioport" />
 	</module>
-	<module type="application" id="xmega.drivers.adc.example2_gfx" caption="ADC Example 2 - Graphics">
+	<module type="application" id="xmega.drivers.adc.example2_gfx" caption="ADC Calibration example - Graphics">
 		<info type="description" value="summary">
 		Offset and gain calibration for single-ended measurements using ADC with an external voltage supply, displayed on screen.
 		</info>

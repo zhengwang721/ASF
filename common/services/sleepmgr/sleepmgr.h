@@ -44,7 +44,6 @@
 #define SLEEPMGR_H
 
 #include <compiler.h>
-#include <sleep.h>
 #include <parts.h>
 
 #if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)

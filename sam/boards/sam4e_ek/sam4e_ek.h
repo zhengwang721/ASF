@@ -203,7 +203,7 @@
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
-#define PUSHBUTTON_1_NAME        "BP2 WAKUP9"
+#define PUSHBUTTON_1_NAME        "BP2 WAKU"
 #define PUSHBUTTON_1_WKUP_LINE   (9)
 #define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
 #define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)
@@ -446,10 +446,18 @@
 
 /** USB VBus monitoring pin definition. */
 #define PIN_USB_VBUS    {PIO_PC21, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-/** USB D- pin */
-#define PIN_USB_DM      {PIO_PB10, }
-/** USB D+ pin */
-#define PIN_USB_DP      {PIO_PB11, }
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOC_IRQn)
+#define USB_VBUS_PIN      (PIO_PC21_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOC)
+#define USB_VBUS_PIO_MASK (PIO_PC21)
+/* This pin can not be used as fast wakeup source such as
+ * USB_VBUS_WKUP PMC_FSMR_FSTT7 */
+
+/** USB D- pin (System function) */
+#define PIN_USB_DM      {PIO_PB10}
+/** USB D+ pin (System function) */
+#define PIN_USB_DP      {PIO_PB11}
 
 /*----------------------------------------------------------------------------*/
 /**
