@@ -3,7 +3,7 @@
  *
  * \brief Timer Counter (TC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,9 +66,10 @@ uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
 void tc_start(Tc *p_tc, uint32_t ul_channel);
 void tc_stop(Tc *p_tc, uint32_t ul_channel);
 
-int tc_read_ra(Tc *p_tc, uint32_t ul_channel);
-int tc_read_rb(Tc *p_tc, uint32_t ul_channel);
-int tc_read_rc(Tc *p_tc, uint32_t ul_channel);
+uint32_t tc_read_cv(Tc *p_tc, uint32_t ul_channel);
+uint32_t tc_read_ra(Tc *p_tc, uint32_t ul_channel);
+uint32_t tc_read_rb(Tc *p_tc, uint32_t ul_channel);
+uint32_t tc_read_rc(Tc *p_tc, uint32_t ul_channel);
 
 void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
 		uint32_t ul_value);

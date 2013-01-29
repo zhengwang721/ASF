@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ADC Example 3 for XMEGA-A3BU Xplain" id="xmega.drivers.adc.example3.xmega_a3bu_xplained">
+	<project caption="ADC Scan example for XMEGA-A3BU Xplain" id="xmega.drivers.adc.example3.xmega_a3bu_xplained">
 		<build type="header-file" value="conf_adc.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
