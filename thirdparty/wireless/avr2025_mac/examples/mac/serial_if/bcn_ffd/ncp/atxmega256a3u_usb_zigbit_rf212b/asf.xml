@@ -18,7 +18,7 @@
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_ffd.ncp"/>
-		<require idref="board.xmega_usb_zigbit_rf212b"/>
+		<require idref="board.xmega_rf212b_zigbit"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>

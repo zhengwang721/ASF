@@ -15,7 +15,7 @@
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.serial_if.bcn_ffd.ncp"/>
-		<require idref="board.mega_256rfr2_xplained_pro"/>
+		<require idref="board.atmega256rfr2_xplained_pro"/>
 		<generator value="avrgcc" />
 		<generator value="iarew"/>
 		<generator value="as5_8" />

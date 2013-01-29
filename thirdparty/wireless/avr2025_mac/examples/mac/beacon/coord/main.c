@@ -290,9 +290,9 @@ int main(void)
 	}
 
     /* Initialize LEDs. */
-    LED_On(LED_START);         // indicating application is started
-    LED_Off(LED_NWK_SETUP);    // indicating network is started
-    LED_Off(LED_DATA);         // indicating data transmission
+//    LED_On(LED_START);         // indicating application is started
+//    LED_Off(LED_NWK_SETUP);    // indicating network is started
+//    LED_Off(LED_DATA);         // indicating data transmission
 
 	cpu_irq_enable();
 
@@ -372,7 +372,7 @@ void usr_mcps_data_conf(uint8_t msduHandle,
 #endif
 
     /*Led_data is turned off after the confirmation*/
-    LED_Off(LED_DATA);
+//    LED_Off(LED_DATA);
     if (status == MAC_SUCCESS)
     {
 #ifdef SIO_HUB
@@ -924,7 +924,7 @@ void usr_mlme_start_conf(uint8_t status)
          * Waiting for association indication from a device.
          * -> usr_mlme_associate_ind
          */
-        LED_On(LED_NWK_SETUP);
+//        LED_On(LED_NWK_SETUP);
 
         /*
          * Now that the network has been started successfully,
@@ -1124,7 +1124,7 @@ static void bc_data_cb(void *parameter)
                            WPAN_TXOPT_OFF)
        )
     {
-        LED_On(LED_DATA);
+//        LED_On(LED_DATA);
     }
     else
     {

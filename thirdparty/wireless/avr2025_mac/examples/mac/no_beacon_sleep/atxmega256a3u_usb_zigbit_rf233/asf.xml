@@ -14,7 +14,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
 		<config name= "config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" value="none"/>
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.no_beacon_sleep"/>
-		<require idref="board.xmega_usb_zigbit_rf233"/>
+		<require idref="board.xmega_rf233_zigbit"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>

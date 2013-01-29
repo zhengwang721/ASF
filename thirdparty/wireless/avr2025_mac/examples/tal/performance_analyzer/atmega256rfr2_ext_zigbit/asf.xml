@@ -13,7 +13,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.examples.tal.performance_analyzer"/>
-		<require idref="board.mega_256rfr2_zigbit"/>
+		<require idref="board.atmega256rfr2_zigbit"/>
 		
 		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>

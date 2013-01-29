@@ -21,7 +21,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.examples.mac.beacon.dev.ncp"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 		<config name="config.common.services.usb.class.device" value="cdc"/>
-		<require idref="board.xmega_usb_zigbit_rf233"/>
+		<require idref="board.xmega_rf233_zigbit"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
