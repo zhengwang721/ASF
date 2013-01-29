@@ -6,7 +6,7 @@
  * This file defines a useful set of functions for the PDCA interface on SAM4L
  * devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -111,10 +111,10 @@ void pdca_channel_set_callback(pdca_channel_num_t pdca_ch_number,
 		const pdca_channel_interrupt_mask_t pdca_channel_interrupt_mask);
 volatile PdcaChannel *pdca_channel_get_handler(pdca_channel_num_t
 		pdca_ch_number);
-void pdca_disable(Pdca * pdca);
-void pdca_enable(Pdca * pdca);
+void pdca_disable(Pdca *pdca);
+void pdca_enable(Pdca *pdca);
 void pdca_channel_set_config(pdca_channel_num_t pdca_ch_number,
-		const pdca_channel_config_t * cfg);
+		const pdca_channel_config_t *cfg);
 void pdca_channel_write_load(pdca_channel_num_t pdca_ch_number,
 		volatile void *addr, uint32_t size);
 void pdca_channel_write_reload(pdca_channel_num_t pdca_ch_number,
@@ -145,7 +145,7 @@ pdca_channel_interrupt_mask_t
 /**
  * \page sam_pdca_quickstart Quickstart guide for SAM PDCA driver
  *
- * This is the quickstart guide for the \ref eic_group "SAM PDCA driver",
+ * This is the quickstart guide for the \ref sam_drivers_pdc_group "SAM PDCA driver",
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *

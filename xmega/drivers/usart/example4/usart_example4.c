@@ -58,8 +58,12 @@
  * \section deviceinfo Device Info
  * All AVR XMEGA devices can be used. This example has been tested
  * with the following setup:
- *   - STK600 with ATxmega32E5 on STK600-RC032X. (USARTC0 should be connected to
- * the RS232 spare port of STK600)
+ *   - STK600 with ATxmega32E5 on STK600-RC032X
+ *     USARTC0 on PC2 and PC3 pins should be connected to the RXD and TXD
+ *     pins of STK600 RS232 spare port.
+ *   - XMEGA E5 Xplained evaluation kit
+ *     USARTD0 on PORTD pin 6 and 7 is used (Link to board controller)
+ * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
  * The example will configure USART to use variable frame lenght feaure

@@ -4,7 +4,6 @@
 		The demonstration program makes the on-board LED blink at a fixed rate.
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_eic.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
