@@ -46,7 +46,7 @@
  *
  * \section Purpose
  *
- * The abdacb_example demonstrates how to use ABDACB driver to
+ * The example demonstrates how to use ABDAC driver to
  * transfers an input buffer of audio samples to an output .
  *
  * \section Requirements
@@ -72,7 +72,7 @@
  * -# In the terminal window, the following text should appear (values depend
  *    on the board and chip used):
  *    \code
- *     -- ABDACB Example xxx --
+ *     -- ABDAC Example xxx --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
@@ -82,8 +82,8 @@
 #include <asf.h>
 #include "sound.h"
 
-#define PDCA_ABDACB_CHANNEL0  0
-#define PDCA_ABDACB_CHANNEL1  1
+#define PDCA_ABDAC_CHANNEL0  0
+#define PDCA_ABDAC_CHANNEL1  1
 
 #define SOUND_SAMPLES 0x100
 int16_t samples_left[SOUND_SAMPLES];
@@ -92,7 +92,7 @@ int16_t samples_right[SOUND_SAMPLES];
 volatile bool exit_flag = false;
 
 /* PDCA channel options */
-static const pdca_channel_config_t pdca_abdacb_config0 = {
+static const pdca_channel_config_t pdca_abdac_config0 = {
 	.addr = 0,   /* memory address */
 	.pid = ABDACB_PDCA_ID_TX_CH0,     /* select peripheral */
 	.size = 0,   /* transfer counter */
@@ -101,7 +101,7 @@ static const pdca_channel_config_t pdca_abdacb_config0 = {
 	.ring = false,                 /* disable ring buffer mode */
 	.transfer_size = PDCA_MR_SIZE_HALF_WORD /* select size of the transfer */
 };
-static const pdca_channel_config_t pdca_abdacb_config1 = {
+static const pdca_channel_config_t pdca_abdac_config1 = {
 	.addr = 0,   /* memory address */
 	.pid = ABDACB_PDCA_ID_TX_CH1,     /* select peripheral */
 	.size = 0,   /* transfer counter */
@@ -111,11 +111,11 @@ static const pdca_channel_config_t pdca_abdacb_config1 = {
 	.transfer_size = PDCA_MR_SIZE_HALF_WORD /* select size of the transfer */
 };
 
-/** ABDACB instance */
-struct abdacb_dev_inst g_abdacb_inst;
+/** ABDAC instance */
+struct abdac_dev_inst g_abdac_inst;
 
-/** ABDACB configuration */
-struct abdacb_config   g_abdacb_cfg;
+/** ABDAC configuration */
+struct abdac_config   g_abdac_cfg;
 
 /**
  * \brief EIC interrupt handler for push button interrupt
@@ -178,7 +178,7 @@ static void display_menu(void)
 }
 
 /**
- * \brief Application entry point for ABDACB example.
+ * \brief Application entry point for ABDAC example.
  *
  * \return Unused (ANSI-C compatibility).
  */
@@ -195,30 +195,30 @@ int main(void)
 	configure_console();
 
 	/* Output example information */
-	printf("-- ABDACB Example --\r\n");
+	printf("-- ABDAC Example --\r\n");
 	printf("-- %s\r\n", BOARD_NAME);
 	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
 
 	/* Config the push button. */
 	config_buttons();
 
-	/* Config the ABDACB. */
-	abdacb_get_config_defaults(&g_abdacb_cfg);
-	g_abdacb_cfg.sample_rate_hz = ABDACB_SAMPLE_RATE_11025;
-	g_abdacb_cfg.data_word_format = ABDACB_DATE_16BIT;
-	g_abdacb_cfg.mono = false;
-	g_abdacb_cfg.cmoc = false;
-	abdacb_init(&g_abdacb_inst, ABDACB, &g_abdacb_cfg);
-	abdacb_enable(&g_abdacb_inst);
-	abdacb_clear_interrupt_flag(&g_abdacb_inst, ABDACB_INTERRUPT_TXRDY);
-	abdacb_clear_interrupt_flag(&g_abdacb_inst, ABDACB_INTERRUPT_TXUR);
+	/* Config the ABDAC. */
+	abdac_get_config_defaults(&g_abdac_cfg);
+	g_abdac_cfg.sample_rate_hz = ABDAC_SAMPLE_RATE_11025;
+	g_abdac_cfg.data_word_format = ABDAC_DATE_16BIT;
+	g_abdac_cfg.mono = false;
+	g_abdac_cfg.cmoc = false;
+	abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
+	abdac_enable(&g_abdac_inst);
+	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXRDY);
+	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXUR);
 
 	/* Config PDCA module */
 	pdca_enable(PDCA);
-	pdca_channel_set_config(PDCA_ABDACB_CHANNEL0, &pdca_abdacb_config0);
-	pdca_channel_enable(PDCA_ABDACB_CHANNEL0);
-	pdca_channel_set_config(PDCA_ABDACB_CHANNEL1, &pdca_abdacb_config1);
-	pdca_channel_enable(PDCA_ABDACB_CHANNEL1);
+	pdca_channel_set_config(PDCA_ABDAC_CHANNEL0, &pdca_abdac_config0);
+	pdca_channel_enable(PDCA_ABDAC_CHANNEL0);
+	pdca_channel_set_config(PDCA_ABDAC_CHANNEL1, &pdca_abdac_config1);
+	pdca_channel_enable(PDCA_ABDAC_CHANNEL1);
 
 	/* Display menu. */
 	display_menu();
@@ -233,8 +233,8 @@ int main(void)
 
 		case 's':
 			printf("--Looped output audio, use push button to exit--\r\n");
-			abdacb_set_volume0(&g_abdacb_inst, false, 0x7FFF);
-			abdacb_set_volume1(&g_abdacb_inst, false, 0x7FFF);
+			abdac_set_volume0(&g_abdac_inst, false, 0x7FFF);
+			abdac_set_volume1(&g_abdac_inst, false, 0x7FFF);
 			i = 0;
 			/* output sample from the sound_table array */
 			while(!exit_flag) {
@@ -248,23 +248,23 @@ int main(void)
 					if (i >= sizeof(sound_table)) i = 0;
 				}
 
-				pdca_channel_write_reload(PDCA_ABDACB_CHANNEL0,
+				pdca_channel_write_reload(PDCA_ABDAC_CHANNEL0,
 						(void *)samples_left, SOUND_SAMPLES);
-				pdca_channel_write_reload(PDCA_ABDACB_CHANNEL1,
+				pdca_channel_write_reload(PDCA_ABDAC_CHANNEL1,
 						(void *)samples_right, SOUND_SAMPLES);
 				/**
 				 * Wait until the reload register is empty. This means that
 				 * one transmission is still ongoing but we are already able
 				 * to set up the next transmission.
 				 */
-				while(!(pdca_get_channel_status(PDCA_ABDACB_CHANNEL1)
+				while(!(pdca_get_channel_status(PDCA_ABDAC_CHANNEL1)
 					== PDCA_CH_COUNTER_RELOAD_IS_ZERO));
 			}
 			exit_flag = false;
 			printf("--Exit the audio output--\r\n\r\n");
 			/* Mute the volume */
-			abdacb_set_volume0(&g_abdacb_inst, true, 0x7FFF);
-			abdacb_set_volume1(&g_abdacb_inst, true, 0x7FFF);
+			abdac_set_volume0(&g_abdac_inst, true, 0x7FFF);
+			abdac_set_volume1(&g_abdac_inst, true, 0x7FFF);
 			break;
 
 		default:

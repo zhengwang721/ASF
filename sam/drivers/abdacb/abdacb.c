@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ABDACB driver for SAM.
+ * \brief ABDAC driver for SAM.
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -47,54 +47,54 @@
 
 /**
  * \internal
- * \brief ABDACB callback function pointer
+ * \brief ABDAC callback function pointer
  */
-abdacb_callback_t abdacb_callback_pointer;
+abdac_callback_t abdac_callback_pointer;
 
-void abdacb_get_config_defaults(struct abdacb_config *const cfg)
+void abdac_get_config_defaults(struct abdac_config *const cfg)
 {
 	/* Sanity check arguments */
 	Assert(cfg);
 
 	/* Default configuration values */
-	cfg->sample_rate_hz = ABDACB_SAMPLE_RATE_8000;
-	cfg->data_word_format = ABDACB_DATE_16BIT;
+	cfg->sample_rate_hz = ABDAC_SAMPLE_RATE_8000;
+	cfg->data_word_format = ABDAC_DATE_16BIT;
 	cfg->mono = false;
 	cfg->cmoc = false;
 }
 
-bool abdacb_init(struct abdacb_dev_inst *const dev_inst, Abdacb *const abdacb,
-		struct abdacb_config *const cfg)
+bool abdac_init(struct abdac_dev_inst *const dev_inst, Abdacb *const abdac,
+		struct abdac_config *const cfg)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
-	Assert(abdacb);
+	Assert(abdac);
 	Assert(cfg);
 
-	dev_inst->hw_dev = abdacb;
-	dev_inst->abdacb_cfg = cfg;
+	dev_inst->hw_dev = abdac;
+	dev_inst->cfg = cfg;
 
 	/* Enable APB clock for AES */
-	sysclk_enable_peripheral_clock(abdacb);
+	sysclk_enable_peripheral_clock(abdac);
 
 	/* Initialize the AES with new configurations */
-	abdacb_set_config(dev_inst);
+	abdac_set_config(dev_inst);
 
 	/* Disable APB clock for AES */
-	sysclk_disable_peripheral_clock(abdacb);
+	sysclk_disable_peripheral_clock(abdac);
 
 	return true;
 }
 
-void abdacb_enable(struct abdacb_dev_inst *const dev_inst)
+void abdac_enable(struct abdac_dev_inst *const dev_inst)
 {
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 }
 
-void abdacb_disable(struct abdacb_dev_inst *const dev_inst)
+void abdac_disable(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
 	dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_EN;
@@ -102,19 +102,19 @@ void abdacb_disable(struct abdacb_dev_inst *const dev_inst)
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 }
 
-void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
+void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 {
 	struct genclk_config gencfg;
 	struct pll_config pcfg;
 
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
 	/* Set the GCLK according to the sample rate */
 	genclk_config_defaults(&gencfg, ABDACB_GCLK_NUM);
 
-	switch (dev_inst->abdacb_cfg->sample_rate_hz) {
-	case ABDACB_SAMPLE_RATE_8000:
+	switch (dev_inst->cfg->sample_rate_hz) {
+	case ABDAC_SAMPLE_RATE_8000:
 		/* CPUCLK 32M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
 				BOARD_OSC0_HZ);
@@ -128,7 +128,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 4);
 		break;
 
-	case ABDACB_SAMPLE_RATE_11025:
+	case ABDAC_SAMPLE_RATE_11025:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -142,7 +142,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 4);
 		break;
 
-	case ABDACB_SAMPLE_RATE_12000:
+	case ABDAC_SAMPLE_RATE_12000:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -156,7 +156,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 4);
 		break;
 
-	case ABDACB_SAMPLE_RATE_16000:
+	case ABDAC_SAMPLE_RATE_16000:
 		/* CPUCLK 32M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
 				BOARD_OSC0_HZ);
@@ -170,7 +170,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 2);
 		break;
 
-	case ABDACB_SAMPLE_RATE_22050:
+	case ABDAC_SAMPLE_RATE_22050:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -184,7 +184,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 2);
 		break;
 
-	case ABDACB_SAMPLE_RATE_24000:
+	case ABDAC_SAMPLE_RATE_24000:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -198,7 +198,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 2);
 		break;
 
-	case ABDACB_SAMPLE_RATE_32000:
+	case ABDAC_SAMPLE_RATE_32000:
 		/* CPUCLK 32M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
 				BOARD_OSC0_HZ);
@@ -212,7 +212,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 1);
 		break;
 
-	case ABDACB_SAMPLE_RATE_44100:
+	case ABDAC_SAMPLE_RATE_44100:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -226,7 +226,7 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 		genclk_config_set_divider(&gencfg, 1);
 		break;
 
-	case ABDACB_SAMPLE_RATE_48000:
+	case ABDAC_SAMPLE_RATE_48000:
 		/* CPUCLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
@@ -248,48 +248,48 @@ void abdacb_set_config(struct abdacb_dev_inst *const dev_inst)
 
 	/* Set the sampling rate related settings */
 	dev_inst->hw_dev->ABDACB_CR |=
-			ABDACB_CR_FS(dev_inst->abdacb_cfg->sample_rate_hz) |
+			ABDACB_CR_FS(dev_inst->cfg->sample_rate_hz) |
 			ABDACB_CR_ALTUPR;
 
 	/* Set the data word format */
 	dev_inst->hw_dev->ABDACB_CR |=
-			ABDACB_CR_DATAFORMAT(dev_inst->abdacb_cfg->data_word_format);
+			ABDACB_CR_DATAFORMAT(dev_inst->cfg->data_word_format);
 
 	/* Set the mono mode */
-	if (dev_inst->abdacb_cfg->mono) {
+	if (dev_inst->cfg->mono) {
 		dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_MONO;
 	} else {
 		dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_MONO;
 	}
 
 	/* Set the common mode offset */
-	if (dev_inst->abdacb_cfg->cmoc) {
+	if (dev_inst->cfg->cmoc) {
 		dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_CMOC;
 	} else {
 		dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_CMOC;
 	}
 
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
 	/* Enable the module after GCLK ready. */
 	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_EN;
 
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 }
 
-void abdacb_sw_reset(struct abdacb_dev_inst *const dev_inst)
+void abdac_sw_reset(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
 	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_SWRST;
 }
 
-void abdacb_swap_channels(struct abdacb_dev_inst *const dev_inst)
+void abdac_swap_channels(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
 	if (dev_inst->hw_dev->ABDACB_CR & ABDACB_CR_SWAP) {
@@ -299,31 +299,31 @@ void abdacb_swap_channels(struct abdacb_dev_inst *const dev_inst)
 	}
 }
 
-void abdacb_write_data0(struct abdacb_dev_inst *const dev_inst,
+void abdac_write_data0(struct abdac_dev_inst *const dev_inst,
 		uint32_t data)
 {
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
-	while(!abdacb_is_tx_ready(dev_inst)) {
+	while(!abdac_is_tx_ready(dev_inst)) {
 	}
 
 	dev_inst->hw_dev->ABDACB_SDR0 = data;
 }
 
-void abdacb_write_data1(struct abdacb_dev_inst *const dev_inst,
+void abdac_write_data1(struct abdac_dev_inst *const dev_inst,
 		uint32_t data)
 {
-	while(abdacb_is_busy(dev_inst)) {
+	while(abdac_is_busy(dev_inst)) {
 	}
 
-	while(!abdacb_is_tx_ready(dev_inst)) {
+	while(!abdac_is_tx_ready(dev_inst)) {
 	}
 
 	dev_inst->hw_dev->ABDACB_SDR1 = data;
 }
 
-void abdacb_set_volume0(struct abdacb_dev_inst *const dev_inst, bool mute,
+void abdac_set_volume0(struct abdac_dev_inst *const dev_inst, bool mute,
 		uint32_t volume)
 {
 	if (mute) {
@@ -334,7 +334,7 @@ void abdacb_set_volume0(struct abdacb_dev_inst *const dev_inst, bool mute,
 	}
 }
 
-void abdacb_set_volume1(struct abdacb_dev_inst *const dev_inst, bool mute,
+void abdac_set_volume1(struct abdac_dev_inst *const dev_inst, bool mute,
 		uint32_t volume)
 {
 	if (mute) {
@@ -345,15 +345,15 @@ void abdacb_set_volume1(struct abdacb_dev_inst *const dev_inst, bool mute,
 	}
 }
 
-void abdacb_enable_interrupt(struct abdacb_dev_inst *const dev_inst,
-		abdacb_interrupt_source_t source)
+void abdac_enable_interrupt(struct abdac_dev_inst *const dev_inst,
+		abdac_interrupt_source_t source)
 {
 	switch (source) {
-	case ABDACB_INTERRUPT_TXRDY:
+	case ABDAC_INTERRUPT_TXRDY:
 		dev_inst->hw_dev->ABDACB_IER = ABDACB_IER_TXRDY;
 		break;
 
-	case ABDACB_INTERRUPT_TXUR:
+	case ABDAC_INTERRUPT_TXUR:
 		dev_inst->hw_dev->ABDACB_IER = ABDACB_IER_TXUR;
 		break;
 
@@ -362,21 +362,15 @@ void abdacb_enable_interrupt(struct abdacb_dev_inst *const dev_inst,
 	}
 }
 
-/**
- * \brief This function disables the ABDACB interrupts
- *
- * \param dev_inst Device structure pointer..
- * \param source ABDACB Interrupts to be disabled
- */
-void abdacb_disable_interrupt(struct abdacb_dev_inst *const dev_inst,
-		abdacb_interrupt_source_t source)
+void abdac_disable_interrupt(struct abdac_dev_inst *const dev_inst,
+		abdac_interrupt_source_t source)
 {
 	switch (source) {
-	case ABDACB_INTERRUPT_TXRDY:
+	case ABDAC_INTERRUPT_TXRDY:
 		dev_inst->hw_dev->ABDACB_IDR = ABDACB_IDR_TXRDY;
 		break;
 
-	case ABDACB_INTERRUPT_TXUR:
+	case ABDAC_INTERRUPT_TXUR:
 		dev_inst->hw_dev->ABDACB_IDR = ABDACB_IDR_TXUR;
 		break;
 
@@ -385,15 +379,15 @@ void abdacb_disable_interrupt(struct abdacb_dev_inst *const dev_inst,
 	}
 }
 
-void abdacb_clear_interrupt_flag(struct abdacb_dev_inst *const dev_inst,
-		abdacb_interrupt_source_t source)
+void abdac_clear_interrupt_flag(struct abdac_dev_inst *const dev_inst,
+		abdac_interrupt_source_t source)
 {
 	switch (source) {
-	case ABDACB_INTERRUPT_TXRDY:
+	case ABDAC_INTERRUPT_TXRDY:
 		dev_inst->hw_dev->ABDACB_SCR = ABDACB_SCR_TXRDY;
 		break;
 
-	case ABDACB_INTERRUPT_TXUR:
+	case ABDAC_INTERRUPT_TXUR:
 		dev_inst->hw_dev->ABDACB_SCR = ABDACB_SCR_TXUR;
 		break;
 
@@ -402,13 +396,13 @@ void abdacb_clear_interrupt_flag(struct abdacb_dev_inst *const dev_inst,
 	}
 }
 
-void abdacb_set_callback(struct abdacb_dev_inst *const dev_inst,
-		abdacb_interrupt_source_t source, abdacb_callback_t callback,
+void abdac_set_callback(struct abdac_dev_inst *const dev_inst,
+		abdac_interrupt_source_t source, abdac_callback_t callback,
 		uint8_t irq_level)
 {
-	abdacb_callback_pointer = callback;
+	abdac_callback_pointer = callback;
 	irq_register_handler((IRQn_Type)ABDACB_IRQn, irq_level);
-	abdacb_enable_interrupt(dev_inst, source);
+	abdac_enable_interrupt(dev_inst, source);
 }
 
 /**
@@ -416,8 +410,8 @@ void abdacb_set_callback(struct abdacb_dev_inst *const dev_inst,
  */
 void ABDACB_Handler(void)
 {
-	if (abdacb_callback_pointer) {
-		abdacb_callback_pointer();
+	if (abdac_callback_pointer) {
+		abdac_callback_pointer();
 	} else {
 		Assert(false); /* Catch unexpected interrupt */
 	}
