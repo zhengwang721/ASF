@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_extint
+ * \addtogroup asfdoc_samd20_extint
  *
  * @{
  */
