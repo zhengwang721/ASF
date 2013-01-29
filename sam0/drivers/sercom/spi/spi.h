@@ -787,9 +787,6 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 
 	/* Enable SPI */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
-
-	/* Wait for enable and rx to sync */
-	_spi_wait_for_sync(dev_inst);
 }
 
 /**
@@ -1010,6 +1007,8 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * In Slave Mode this function will place the data to be sent into the transmit
  * buffer. It will then block until an SPI Master has shifted a complete
  * SPI character, and the received data is available.
+ * \note The data to be sent might not be sent before the next transfer, as
+ * loading of the shift register is dependent on SCK.
  *
  * \param[in] dev_inst    Pointer to the software instance struct
  * \param[in] tx_data     SPI character to transmit
@@ -1019,6 +1018,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * \retval STATUS_OK           If the operation was completed
  * \retval STATUS_ERR_TIMEOUT  If the operation was not completed within the
  *                             timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW If the incoming data is overflown
  */
 static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst,
 		uint16_t tx_data, uint16_t *rx_data)
@@ -1027,7 +1027,7 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 	Assert(dev_inst);
 
 	uint16_t j;
-
+	enum status_code retval = STATUS_OK;
 	/* Start timeout period for slave */
 	if (dev_inst->mode == SPI_MODE_SLAVE) {
 		for (j = 0; j <= SPI_TIMEOUT; j++) {
@@ -1062,9 +1062,9 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 	while (!spi_is_ready_to_read(dev_inst)) {
 	}
 	/* Read data */
-	spi_read(dev_inst, rx_data);
+	retval = spi_read(dev_inst, rx_data);
 
-	return STATUS_OK;
+	return retval;
 }
 
 enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,

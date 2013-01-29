@@ -278,6 +278,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
 enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		uint8_t *rx_data, uint8_t length, uint16_t dummy)
@@ -324,11 +325,13 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			retval = spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
 			if (retval != STATUS_OK) {
+				/* Overflow, abort */
 				return retval;
 			}
 		} else {
 			retval = spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
 			if (retval != STATUS_OK) {
+				/* Overflow, abort */
 				return retval;
 			}
 		}
@@ -428,6 +431,7 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
 enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 		uint8_t *tx_data, uint8_t *rx_data, uint8_t length)
@@ -483,11 +487,21 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 		/* Wait until the module is ready to read a character */
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}
-		/* Read the SPI character */
+
+		enum status_code retval = STATUS_OK;
+		/* Read SPI character */
 		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+			retval = spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+			if (retval != STATUS_OK) {
+				/* Overflow, abort */
+				return retval;
+			}
 		} else {
-			spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			if (retval != STATUS_OK) {
+				/* Overflow, abort */
+				return retval;
+			}
 		}
 	}
 
