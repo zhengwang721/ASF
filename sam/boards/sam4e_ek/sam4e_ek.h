@@ -582,7 +582,6 @@
 #define PIN_ISO7816_RST_FLAG       (0)
 
 /* GMAC HW configurations */
-#define BOARD_GMAC_MODE_MII 0
 #define BOARD_GMAC_PHY_ADDR 0
 
 #endif  /* _SAM4E_EK_H_ */

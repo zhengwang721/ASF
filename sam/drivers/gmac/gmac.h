@@ -145,7 +145,7 @@ typedef enum {
 typedef enum {
 	GMAC_PHY_MII = 0,         /** MII mode */
 	GMAC_PHY_RMII = 1,    /** Reduced MII mode */
-	GMAC_PHY_INVALID = 0xFF, /* Invalid */
+	GMAC_PHY_INVALID = 0xFF, /* Invalid mode*/
 } gmac_mii_mode_t;
 
 /** Receive buffer descriptor struct */
@@ -1136,7 +1136,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * #define ETHERNET_CONF_NET_MASK1                       255
  * #define ETHERNET_CONF_NET_MASK2                       255
  * #define ETHERNET_CONF_NET_MASK3                       0
- * #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_MII
+ * #define ETH_PHY_MODE                                  ETH_PHY_MODE
  * \endcode
  *
  * A specific gmac device and the receive data buffer must be defined; another ul_frm_size should be defined
@@ -1201,7 +1201,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *        #define ETHERNET_CONF_NET_MASK1                       255
  *        #define ETHERNET_CONF_NET_MASK2                       255
  *        #define ETHERNET_CONF_NET_MASK3                       0
- *        #define ETH_PHY_MODE                                  BOARD_GMAC_MODE_MII
+ *        #define ETH_PHY_MODE                                  GMAC_PHY_MII
  *   \endcode
  * -# Enable the system clock:
  *   - \code sysclk_init(); \endcode
