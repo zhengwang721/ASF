@@ -203,18 +203,18 @@ enum system_bod {
  */
 enum system_bod_action {
 	/** A BOD detect will reset the device */
-	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1), // 1
+	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
 	/** A BOD detect will fire an interrupt */
-	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2), // 2
+	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2),
 };
 
 /**
  * BOD sampling mode */
 enum system_bod_mode {
 	/** BOD will sample the supply line continuously */
-	SYSTEM_BOD_MODE_CONTINIOUS = 0,
+	SYSTEM_BOD_MODE_CONTINIOUS  = 0,
 	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line */
-	SYSTEM_BOD_MODE_SAMPLED = SYSCTRL_BOD33_MODE,
+	SYSTEM_BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
 };
 
 /**
@@ -250,15 +250,15 @@ enum system_sleepmode {
  */
 enum system_reset_cause {
 	/** The system was reset by the watchdog timer */
-	SYSTEM_RESET_CAUSE_WDT,
+	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
 	/** The system was reset because the external reset line was pulled low */
-	SYSTEM_RESET_CAUSE_EXTERNAL_RESET,
+	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = PM_RCAUSE_EXT,
 	/** The system was reset by the BOD33 */
-	SYSTEM_RESET_CAUSE_BOD33,
+	SYSTEM_RESET_CAUSE_BOD33          = PM_RCAUSE_BOD33,
 	/** The system was reset by the BOD12 */
-	SYSTEM_RESET_CAUSE_BOD12,
+	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
 	/** The system was reset by the POR (Power on reset). */
-	SYSTEM_RESET_CAUSE_POR,
+	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
 
 

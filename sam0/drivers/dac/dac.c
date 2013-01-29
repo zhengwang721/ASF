@@ -39,6 +39,8 @@
  *
  */
 #include "dac.h"
+#include <system.h>
+#include <pinmux.h>
 
 /**
  * \brief Resets the DAC module
@@ -189,6 +191,19 @@ void dac_init(
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
+
+	/* MUX the DAC VOUT pin */
+	struct system_pinmux_conf pin_conf;
+	system_pinmux_get_config_defaults(&pin_conf);
+
+	/* Set up the DAC VOUT pin */
+	pin_conf.mux_position = MUX_PA00H_DAC_VOUT;
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PA00H_DAC_VOUT, &pin_conf);
 
 	/* Write configuration to module */
 	_dac_set_config(dev_inst, config);
