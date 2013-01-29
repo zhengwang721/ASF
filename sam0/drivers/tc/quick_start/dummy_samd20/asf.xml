@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM0+ TC driver" id="sam0.drivers.tc.quick_start.dummy_samd20">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_bod.h"/>
+		<require idref="board.dummy.samd20"/>
+		<require idref="sam0.drivers.tc.quick_start"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</project>
+</asf>
