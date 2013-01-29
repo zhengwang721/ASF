@@ -42,6 +42,8 @@
 #define CONF_SIO2NCP_H_INCLUDED
 
 
+#define NCP_RESET_GPIO      PIN_PC00
+
 //! @{
 /** USART Interface */
 #define USART_NCP                 USART0
