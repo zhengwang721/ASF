@@ -306,7 +306,7 @@
 			<!-- Linker flags, startup label and stack/heap size settings are added to this config -->
 			<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--entry=Reset_Handler -Wl,--cref -mthumb" toolchain="armgcc"/>
 			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
-			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="avr32gcc"/>
+			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="armgcc"/>
 		</module>
 	</select-by-device>
 </asf>
