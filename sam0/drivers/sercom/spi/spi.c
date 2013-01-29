@@ -319,11 +319,18 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 		while (!spi_is_ready_to_read(dev_inst)) {
 		}
 
+		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
 		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+			retval = spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+			if (retval != STATUS_OK) {
+				return retval;
+			}
 		} else {
-			spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			if (retval != STATUS_OK) {
+				return retval;
+			}
 		}
 	}
 	return STATUS_OK;

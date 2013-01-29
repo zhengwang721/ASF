@@ -822,6 +822,30 @@ void spi_reset(struct spi_dev_inst *const dev_inst);
  * \name Ready to write/read
  * @{
  */
+ 
+ /**
+ * \brief Checks if the SPI module has shifted out last data
+ *
+ * This function will check if the SPI module has shifted out last data.
+ *
+ * \param[in] dev_inst      Pointer to the software instance struct
+ *
+ * \return Boolean value to tell whether the module has shifted out last data or
+ * not
+ * \retval true  If the SPI module has shifted out data
+ * \retval false If the SPI module has not shifter out data
+ */
+static inline bool spi_transmit_complete(struct spi_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+
+	/* Check interrupt flag */
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+}
 
  /**
  * \brief Checks if the SPI module is ready to write data
@@ -867,10 +891,7 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
-	/* Wait for synchronization */
-	_spi_wait_for_sync(dev_inst);
-
-	/* Disable receiver */
+	/* Check interrupt flag */
 	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
 }
 /** @} */
@@ -938,8 +959,9 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  * \param[in] dev_inst   Pointer to the software instance struct
  * \param[out] data      Pointer to store the received data
  *
- * \retval STATUS_OK       If data was read
- * \retval STATUS_ERR_IO   If no data is available
+ * \retval STATUS_OK           If data was read
+ * \retval STATUS_ERR_IO       If no data is available
+ * \retval STATUS_ERR_OVERFLOW If the data is overflown
  */
 static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 		uint16_t *rx_data)
@@ -949,13 +971,19 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
-
-	/* Check until if data is ready to be read */
+	
+	/* Return value */
+	enum status_code retval = STATUS_OK;
+	/* Check if data is ready to be read */
 	if (!spi_is_ready_to_read(dev_inst)) {
 		/* No data has been received, return */
 		return STATUS_ERR_IO;
 	}
 
+	/* Check if data is overflown */
+	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
+		retval = STATUS_ERR_OVERFLOW;
+	}
 	/* Read the character from the DATA register */
 	if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
 		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
@@ -963,7 +991,7 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;
 	}
 
-	return STATUS_OK;
+	return retval;
 }
 
 enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
