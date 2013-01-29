@@ -59,6 +59,7 @@ int main(void)
 {
 	struct usart_dev_inst usart_edbg;
 	struct usart_conf config_struct;
+	uint16_t temp;
 
 	uint8_t string[] = "Hello world!\n\r\0";
 
@@ -69,6 +70,7 @@ int main(void)
 	 * 9600 8N1
 	 */
 	usart_get_config_defaults(&config_struct);
+	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
 
 	/* Apply configuration */
 	while (usart_init(&usart_edbg, QUICKSTART_USART,
@@ -80,8 +82,15 @@ int main(void)
 
 	/* Enable transmitter */
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
+	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 
+	write_string(&usart_edbg, string);
+
+	/* Echo back characters received */
 	while (1) {
-		write_string(&usart_edbg, string);
+		if (usart_read(&usart_edbg, &temp) == STATUS_OK) {
+			while (usart_write(&usart_edbg, temp) != STATUS_OK) {
+			}
+		}
 	}
 }
