@@ -84,11 +84,7 @@ extern "C" {
  *
  * \subsection spi_bus SPI Bus Connection
  * In the figure below, the connection between one Master and one Slave is
- * shown. The SPI lines are hardware controlled, but the port output must be
- * software enabled so that it can be overridden by the SPI.
- * \todo Which port output to enable?
- *
- * For half-duplex mode, the same pin is used for MOSI and MISO.
+ * shown.
  *
  * \dot
  * digraph spi_slaves_par {
@@ -146,8 +142,7 @@ extern "C" {
  * The SPI character size is configurable to 8 or 9 bits.
  *
  * \subsection master_mode Master Mode
- * When configured as a Master, the SS pin must be configured as an output
- * and controlled by user software.
+ * When configured as a Master, the SS pin will be configured as an output..
  *
  * \subsubsection data_transfer Data Transfer
  * Writing a character will start the SPI clock generator, and
@@ -233,11 +228,12 @@ extern "C" {
  *
  *
  * \subsection full_duplex Full-Duplex
- * When enabled as full-duplex SPI, the pins are automatically configured
+ * When enabled as full-duplex SPI, the pads are automatically configured
  * as seen in the table below. If the receiver is disabled, the data input
  * (MISO for Master, MOSI for Slave) can be used for other purposes.
  *
- * In Master Mode, the SS pin(s) must be configured through port configuration.
+ * In Master Mode, the SS pin(s) must be configured using
+ * the \ref slave_dev_inst enum.
  *
  * <table>
  *   <tr>
@@ -1231,7 +1227,7 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
 
  /**
  * \page mux_settings Mux Settings
- * The different options for functionality of the SERCOM pins.
+ * The different options for functionality of the SERCOM pads.
  * As not all settings can be used in different modes of operation, proper
  * settings must be chosen according to the rest of the configuration.
  *
@@ -1272,10 +1268,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1316,10 +1312,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1360,10 +1356,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1404,10 +1400,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1449,10 +1445,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1493,10 +1489,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1537,10 +1533,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1581,10 +1577,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
