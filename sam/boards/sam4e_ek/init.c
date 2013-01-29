@@ -181,9 +181,27 @@ void board_init(void)
 #   endif
 #endif
 
+#ifdef CONF_BOARD_CAN0
+	/* Configure the CAN0 TX and RX pins. */
+	ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_CAN0_TX_IDX, PIN_CAN0_TX_FLAGS);
+	/* Configure the transiver0 RS & EN pins. */
+	ioport_set_pin_dir(PIN_CAN0_TR_RS_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(PIN_CAN0_TR_EN_IDX, IOPORT_DIR_OUTPUT);
+#endif
+
+#ifdef CONF_BOARD_CAN1
+	/* Configure the CAN1 TX and RX pin. */
+	ioport_set_pin_peripheral_mode(PIN_CAN1_RX_IDX, PIN_CAN1_RX_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
+	/* Configure the transiver1 RS & EN pins. */
+	ioport_set_pin_dir(PIN_CAN1_TR_RS_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(PIN_CAN1_TR_EN_IDX, IOPORT_DIR_OUTPUT);
+#endif
+
 #if defined(CONF_BOARD_USB_PORT)
-#  if defined(CONF_BOARD_USB_VBUS_DETECT)
+#if defined(CONF_BOARD_USB_VBUS_DETECT)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
-#  endif
+#endif
 #endif
 }
