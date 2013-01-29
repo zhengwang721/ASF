@@ -83,13 +83,17 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate,
 				usart_freq, &baud_val);
-	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+	}
+
+	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
 		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_async_baud_val(config->baudrate,
 				usart_freq, &baud_val);
-	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+	}
+
+	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
 			config->use_external_clock) {
 		/* Calculate baud value */
 		status_code = _sercom_get_async_baud_val(config->baudrate,
@@ -397,17 +401,17 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_FERR;
 			return STATUS_ERR_BAD_FORMAT;
 		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
 			return STATUS_ERR_OVERFLOW;
 		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_PERR;
 			return STATUS_ERR_BAD_DATA;
 		}
 	}
