@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 PAC Quick Start
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,74 +40,40 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-void config_port_pins(void);
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-//! [pin_setup]
-void config_port_pins(void)
-{
-	struct port_conf pin_conf;
-	port_get_config_defaults(&pin_conf);
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PB09, &pin_conf);
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(PIN_PB08, &pin_conf);
-}
-//! [pin_setup]
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-int main (void)
-{
-//! [main]
-//! [init]
-	system_init();
-	config_port_pins();
-//! [init]
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
 
-//! [init_lock]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [init_lock]
 
-//! [enable_interrupts]
-	cpu_irq_enable();
-//! [enable_interrupts]
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
 
-//! [button_press]
-	while (port_pin_get_input_level(PIN_PB09)) {
-		/* Wait for button press */
-	}
-//! [button_press]
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
 
-//! [disable_interrupts]
-	cpu_irq_disable();
-//! [disable_interrupts]
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-//! [unlock_perph]
-	system_peripheral_unlock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [unlock_perph]
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-//! [alter_config]
-	port_pin_toggle_output_level(PIN_PB08);
-//! [alter_config]
+#define CONF_BOD12_HYSTERESIS true
 
-//! [lock_perph]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [lock_perph]
 
-//! [enable_interrupts_2]
-	cpu_irq_enable();
-//! [enable_interrupts_2]
-
-//! [inf_loop]
-	while (1) {
-		/* Do nothing */
-	}
-//! [inf_loop]
-//! [main]
-}
+#endif /* BOD_CONFIG_H */

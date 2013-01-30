@@ -42,17 +42,6 @@
 #include "pac.h"
 
 /**
- * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
- * attempted to a locked peripheral.
- */
-void HardFault_Handler(void)
-{
-	while (1) {
-		/* Infinite loop if CPU exception is detected */
-	}
-}
-
-/**
  * \brief Lock a given peripheral's control registers.
  *
  * Locks a given peripheral's control registers, to deny write access to the
