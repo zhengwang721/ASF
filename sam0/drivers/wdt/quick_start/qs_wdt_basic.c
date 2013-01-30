@@ -71,8 +71,8 @@ void configure_wdt(void)
 	// TODO: Move into driver once scheme to select clock is determined
 	struct system_gclk_ch_conf gclock_ch_conf;
 	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator    = 4;
-	gclock_ch_conf.enable_during_sleep = false;
+	gclock_ch_conf.source_generator = 4;
+	gclock_ch_conf.run_in_standby   = false;
 	system_gclk_ch_set_config(WDT_GCLK_ID, &gclock_ch_conf);
 	system_gclk_ch_enable(WDT_GCLK_ID);
 
