@@ -109,13 +109,9 @@ enum status_code tc_init(
 	struct system_gclk_ch_conf gclk_ch_conf;
 	gclk_ch_conf.source_generator  = config->clock_source;
 
-	#if defined (REVB)
 	/* Set the GCLK channel to run in standby mode */
 	gclk_ch_conf.run_in_standby = config->run_in_standby;
-	#else
-	/* Set the GCLK channel sleep enable mode */
-	gclk_ch_conf.enable_during_sleep = config->run_in_standby;
-	#endif
+
 	/* Apply configuration and enable the GCLK channel */
 	system_gclk_ch_set_config(TC0_GCLK_ID, &gclk_ch_conf);
 	system_gclk_ch_enable(TC0_GCLK_ID);
