@@ -592,7 +592,11 @@
 #define ISO7816_USART              USART1
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
-/* GMAC HW configurations */#define BOARD_GMAC_PHY_ADDR 0/*----------------------------------------------------------------------------*/
+
+/* GMAC HW configurations */
+#define BOARD_GMAC_PHY_ADDR 0
+     
+/*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_CAN "SAM4E-EK - CAN"
  * This page lists definitions related to CAN0 and CAN1.
@@ -643,7 +647,4 @@
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
 
 /*----------------------------------------------------------------------------*/
-
-
-
 #endif  /* _SAM4E_EK_H_ */
