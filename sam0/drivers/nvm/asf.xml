@@ -16,6 +16,7 @@
 		<build type="doxygen-entry-point" value="sam0_nvm_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
