@@ -397,7 +397,7 @@ struct dac_conf {
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
 	 */
-	bool standby_sleep_enable;
+	bool run_in_standby;
 };
 
 /**
@@ -458,7 +458,7 @@ static inline void dac_get_config_defaults(
 	config->output =               DAC_OUTPUT_EXTERNAL;
 	config->left_adjust =          false;
 	config->clock_source =         GCLK_GENERATOR_0;
-	config->standby_sleep_enable = false;
+	config->run_in_standby =       false;
 };
 
 /**
