@@ -1,12 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 DAC Quick Start
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,55 +40,40 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-int main(void)
-{
-//! [main]
-//! [variable]
-	struct dac_dev_inst dev_inst;
-	struct dac_conf config;
-	struct dac_ch_conf ch_config;
-//! [variable]
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-	/* Setup DAC module*/
-//! [get_conf]
-	dac_get_config_defaults(&config);
-//! [get_conf]
-//! [init_dac]
-	dac_init(&dev_inst, DAC, &config);
-//! [init_dac]
-//! [enable]
-	dac_enable(&dev_inst);
-//! [enable]
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-	/* Setup channel 0*/
-//! [get_ch_conf]
-	dac_ch_get_config_defaults(&ch_config);
-//! [get_ch_conf]
-//! [edit_ch_conf]
-	ch_config.enable_start_on_event = false;
-	//! [edit_ch_conf]
-//! [set_ch_conf]
-	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
-//! [set_ch_conf]
-//! [enable_ch]
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
-	//! [enable_ch]
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-	/* Convert a value */
-	//! [write]
-	dac_write(&dev_inst, DAC_CHANNEL_0, 0x44, false);
-//! [write]
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-	/* Disable DAC*/
-//! [disable]
-	dac_disable(&dev_inst);
-//! [disable]
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
 
-//! [inf_loop]
-	while (1) {
-	}
-//! [inf_loop]
-//! [main]
-}
+
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
+
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
+
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */

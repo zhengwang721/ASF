@@ -63,7 +63,7 @@
  * \section pac_basic_use_case_workflow Workflow
  * -# Make function to set up PORT module.
  *  - \snippet qs_pac_basic.c pin_setup
- * -# Initialize module PORT.
+ * -# Initialize the system peripherals and set up some GPIO port pins.
  *  - \snippet qs_pac_basic.c init
  * -# Lock peripheral access for PORT
  *  - \snippet qs_pac_basic.c init_lock

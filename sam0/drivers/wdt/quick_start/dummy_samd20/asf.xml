@@ -3,6 +3,9 @@
 		<build type="include-path" value="."/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.wdt.quick_start"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_bod.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
