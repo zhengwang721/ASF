@@ -47,4 +47,9 @@
 /** Enable COM Port. */
 #define CONF_BOARD_UART_CONSOLE
 
+/** Enable USART port */
+//#define CONF_BOARD_USART_RXD
+//#define CONF_BOARD_USART_TXD
+//#define CONF_BOARD_ADM3312_EN
+
 #endif /* CONF_BOARD_H_INCLUDED */

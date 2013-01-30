@@ -43,13 +43,26 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
+/* Uses UART */
 #define USART_ENABLE()
 #define USART_DISABLE()
 #define USART_BASE       ((Usart*)UART0)
 #define USART_ID         ID_UART0
-
 #define USART_HANDLER    UART0_Handler
 #define USART_INT_IRQn   UART0_IRQn
+
+/* Uses USART1 */
+/*
+#define USART_ENABLE()   \
+	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_ACTIVE_LEVEL)
+#define USART_DISABLE()  \
+	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_INACTIVE_LEVEL)
+#define USART_BASE       ((Usart*)USART1)
+#define USART_ID         ID_USART1
+#define USART_HANDLER    USART1_Handler
+#define USART_INT_IRQn   USART1_IRQn
+*/
+
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
