@@ -95,7 +95,7 @@ extern "C" {
 #define BPM_PS_0    0
 /** Power scaling mode 1 */
 #define BPM_PS_1    1
-/** Power scaling mode 1 */
+/** Power scaling mode 2 */
 #define BPM_PS_2    2
 /* @} */
 
