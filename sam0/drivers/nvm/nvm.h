@@ -571,12 +571,6 @@ struct nvm_config {
 	 *        executed in either mode.
 	 */
 	bool manual_page_write;
-	/** Auto wait states; if enabled, number of wait states are
-	 *  automatically detected(TODO: from where?) and used. If disabled the
-	 *  number of wait states are specified by \ref nvm_config.wait_states.
-	 *  TODO: remove before release? Maybe?
-	 */
-	bool auto_wait_states;
 	/** Number of wait states to insert when reading from flash, to prevent
 	 *  invalid data from being read at high clock frequencies.
 	 */
@@ -634,8 +628,6 @@ static inline void nvm_get_config_defaults(
 	/* Write the default configuration for the */
 	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
 	config->manual_page_write = true;
-	//TODO: should this be removed?
-	config->auto_wait_states  = false;
 	config->wait_states       = 0;
 	config->eeprom_size       = 0;
 	config->bootloader_size   = 0;
