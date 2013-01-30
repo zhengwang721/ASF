@@ -161,6 +161,7 @@
 
 
 /* === Types ================================================================ */
+
 COMPILER_PACK_SET(1)
 /**
  * MAC Address type
@@ -176,7 +177,6 @@ typedef union
      */
 	 
 #if !defined(__DOXYGEN___NO_MAC)
-COMPILER_PACK_SET(1)
 /**
  * @brief Device address specification structure
  *
@@ -201,7 +201,6 @@ typedef struct wpan_addr_spec_tag
     address_field_t Addr;
 } wpan_addr_spec_t;
 
-COMPILER_PACK_SET(1)
 /**
  * @brief PAN descriptor information structure
  *
@@ -463,6 +462,7 @@ typedef struct mac_sec_pib_tag
 #endif  /* MAC_SECURITY_ZIP */
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
+COMPILER_PACK_RESET()
 //! @}
 /* === Macros =============================================================== */
 
