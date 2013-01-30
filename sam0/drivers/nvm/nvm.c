@@ -85,7 +85,7 @@ static struct _nvm_device _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region
  */
-#define NVM_MEMORY ((union _nvm_data *) 0)
+#define NVM_MEMORY ((union _nvm_data *) 0x00000000)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.

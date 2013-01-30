@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 Non Volatile Memory Driver Quick Start
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,65 +40,40 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-void configure_nvm(void);
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-//! [setup]
-void configure_nvm(void)
-{
-//! [setup_1]
-	struct nvm_config config;
-//! [setup_1]
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-	// TODO: Move into driver once appropriate system clocking scheme is made
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator = 0;
-	gclock_ch_conf.run_in_standby   = false;
-	system_gclk_ch_set_config(NVMCTRL_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(NVMCTRL_GCLK_ID);
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-//! [setup_2]
-	nvm_get_config_defaults(&config);
-//! [setup_2]
-//! [setup_3]
-	nvm_set_config(&config);
-//! [setup_3]
-}
-//! [setup]
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-int main(void)
-{
-	//! [setup_init]
-	configure_nvm();
-	//! [setup_init]
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
 
-//! [main]
-	//! [main_1]
-	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
-	//! [main_1]
 
-	//! [main_2]
-	for (uint32_t i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		page_buffer[i] = i;
-	}
-	//! [main_2]
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
 
-	//! [main_3]
-	nvm_erase_row(100);
-	//! [main_3]
-	//! [main_4]
-	nvm_write_page(100, (uint32_t *)&page_buffer);
-	//! [main_4]
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
 
-	//! [main_5]
-	nvm_read_page(100, (uint32_t *)&page_buffer);
-	//! [main_5]
-//! [main]
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-	while (true) {
-		/* Do nothing */
-	}
-}
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */

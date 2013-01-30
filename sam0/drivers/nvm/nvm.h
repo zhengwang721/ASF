@@ -359,11 +359,6 @@ extern "C" {
 #define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | NVMCTRL_STATUS_LOCKE | NVMCTRL_STATUS_NVME)
 
 /**
- * \brief Key for executing NVM commands
- */
-#define NVM_CMDEX_EXECUTION_KEY 0xA5
-
-/**
  * \brief NVM errors
  */
 enum nvm_errors {
@@ -611,7 +606,7 @@ struct nvm_parameters {
  *
  * The default configuration is as follows:
  *  \li Power reduction mode enabled after sleep until first NVM access
- *  \li Manual (explicit) page write commands required to commit data
+ *  \li Automatic page commit when full pages are written to
  *  \li Zero wait states when reading flash memory
  *  \li No reserved memory for the EEPROM
  *  \li No protected bootloader section

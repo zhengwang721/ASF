@@ -44,50 +44,63 @@
  *
  * In this use case, the NVM module is configured for:
  *  \li Power reduction mode enabled after sleep until first NVM access
- *  \li Manual (explicit) page write commands required to commit data
- *  \note The NVM driver takes care of checking this configuration in the \ref
- *  nvm_write_page() function.
+ *  \li Automatic page write commands issued to commit data as pages are written
+ *      to the internal buffer
  *  \li Zero wait states when reading FLASH memory
  *  \li No memory space for the EEPROM
  *  \li No protected bootloader section
  *
- * This use case sets up the NVM controller to copy from one to another page in
- * flash.
+ * This use case sets up the NVM controller to write a page of data to flash,
+ * and the read it back into the same buffer.
  *
- * \section nvm_basic_use_case_qs Quick Start
+ * \section nvm_basic_use_case_setup Setup
  *
  * \subsection nvm_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection nvm_basic_use_case_code Code
+ * \subsection nvm_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
- * \snippet qs_nvm_basic.c nvm_basic_setup
+ * \snippet qs_nvm_basic.c setup
  *
- * Add to user application main():
- * \snippet qs_nvm_basic.c nvm_basic_main
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_nvm_basic.c setup_init
  *
- * \section nvm_basic_use_case_flow Workflow
- * -# Size of the buffer
- *  - \snippet qs_nvm_basic.c nvm_basic_def
- * -# Create configuration function
- *   -# Create variable for the configuration struct
- *    - \snippet qs_nvm_basic.c nvm_basic_var1
- *   -# Load the default configurations into the config struct
- *    - \snippet qs_nvm_basic.c nvm_basic_setup_load
- *   -# Initialize the NVM module with the default configuration
- *    - \snippet qs_nvm_basic.c nvm_basic_setup_init
- * -# Create variable for buffer
- *  - \snippet qs_nvm_basic.c nvm_basic_var2
- * -# Configure the NVM
- *  - \snippet qs_nvm_basic.c nvm_basic_config
- * -# Read page 0 from NVM memory into the buffer
- *  - \snippet qs_nvm_basic.c nvm_basic_read_page
- * -# Write content of buffer to page 1 in the NVM memory
- *  - \snippet qs_nvm_basic.c nvm_basic_write_page
- * -# Return from main loop
- *  - \snippet qs_nvm_basic.c nvm_basic_return
+ * \subsection nvm_basic_use_case_setup_flow Workflow
+ * -# Create an NVM module configuration struct, which can be filled
+ *    out to adjust the configuration of the NVM controller.
+ *  - \snippet qs_nvm_basic.c setup_1
+ * -# Initialize the NVM configuration struct with the module's default
+ *    values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
+ *  - \snippet qs_nvm_basic.c setup_2
+ * -# Configure NVM controller with the created configuration struct settings.
+ *  - \snippet qs_nvm_basic.c setup_3
  *
+ * \section nvm_basic_use_case_main Use Case
  *
+ * \subsection nvm_basic_use_case_main_code Code
+ * Copy-paste the following code to your user application:
+ * \snippet qs_nvm_basic.c main
+ *
+ * \subsection nvm_basic_use_case_main_flow Workflow
+ * -# Set up a buffer one NVM page in size to hold data to read or write into
+ *    NVM memory.
+ *  - \snippet qs_nvm_basic.c main_1
+ * -# Fill the buffer with a pattern of data.
+ *  - \snippet qs_nvm_basic.c main_2
+ * -# Erase a page of NVM data.
+ *    \note This must be performed before writing new data into a NVM page.
+ *
+ *  - \snippet qs_nvm_basic.c main_3
+ * -# Write the buffer of data to the previously erased page of the NVM.
+ *    \note The new data will be written to NVM memory automatically, as the
+ *          NVM controller is configured in automatic page write mode.
+ *
+ *  - \snippet qs_nvm_basic.c main_4
+ * -# Read back the written page of page from the NVM into the buffer.
+ *  - \snippet qs_nvm_basic.c main_5
  */
 
