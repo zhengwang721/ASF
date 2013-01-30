@@ -5,7 +5,7 @@
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -165,6 +165,15 @@ void board_init(void)
 #endif
 #ifdef CONF_BOARD_DACC_VOUT
 	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
+#endif
+
+#ifdef CONF_BOARD_DACC_VOUT
+	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
+#endif
+
+#ifdef CONF_BOARD_ACIFC
+	ioport_set_pin_peripheral_mode(PIN_PA06E_ACIFC_ACAN0, MUX_PA06E_ACIFC_ACAN0);
+	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
 #endif
 }
 /**
