@@ -98,10 +98,7 @@
 /*! \name GPIO Connections of Push Buttons
  */
 //! @{
-#define GPIO_PUSH_BUTTON_0              PIN_PC24
-#define GPIO_PUSH_BUTTON_0_MASK         GPIO_PC24
-#define PUSH_BUTTON_0_DOWN_LEVEL        IOPORT_PIN_LEVEL_LOW
-#define PUSH_BUTTON_0_UP_LEVEL          IOPORT_PIN_LEVEL_HIGH
+#define GPIO_PUSH_BUTTON_0            PIN_PC24
 //! @}
 
 /** \name Push button connection of external interrupt line */

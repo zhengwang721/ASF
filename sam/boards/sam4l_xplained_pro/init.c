@@ -70,15 +70,8 @@ void board_init(void)
 	ioport_set_pin_dir(LED0, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED0, IOPORT_PIN_LEVEL_HIGH);
 
-#ifdef  CONF_BOARD_EIC
-	// Set push button as external interrupt pin
-	ioport_set_pin_peripheral_mode(GPIO_PUSH_BUTTON_EIC_PIN,
-			GPIO_PUSH_BUTTON_EIC_PIN_MUX);
-	ioport_set_pin_peripheral_mode(GPIO_UNIT_TEST_EIC_PIN,
-			GPIO_UNIT_TEST_EIC_PIN_MUX);
-#else
-	// Push button as input: already done, it's the default pin state
-#endif
+    ioport_set_pin_dir(GPIO_PUSH_BUTTON_0, IOPORT_DIR_INPUT);
+    ioport_set_pin_mode(GPIO_PUSH_BUTTON_0, IOPORT_MODE_PULLUP);
 
 #if defined (CONF_BOARD_COM_PORT)
 	ioport_set_pin_peripheral_mode(EXT2_PIN_UART_RX, EXT2_UART_RX_MUX);
@@ -86,8 +79,8 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_USART0
-	ioport_set_pin_peripheral_mode(EXT4_PIN_UART_RX, EXT4_UART_RX_MUX);
-	ioport_set_pin_peripheral_mode(EXT4_PIN_UART_TX, EXT4_UART_TX_MUX);
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX, EXT1_UART_RX_MUX);
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);
 #endif
 }
 /**
