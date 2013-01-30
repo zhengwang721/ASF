@@ -45,6 +45,17 @@
 #include <conf_bod.h>
 
 /**
+ * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
+ * attempted to a memory address.
+ */
+void HardFault_Handler(void)
+{
+	while (1) {
+		/* Infinite loop if CPU exception is detected */
+	}
+}
+
+/**
  * \brief configure BOD
  *
  * This function will configure the BOD33 or BOD12 module based on the
