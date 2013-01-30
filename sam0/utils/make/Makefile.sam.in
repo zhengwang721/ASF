@@ -402,7 +402,7 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -413,7 +413,7 @@ endif
 $(build-dir)%.o: %.cpp $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	$(Q)-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
 	$(Q)-mkdir -p $(dir $@)
 endif
@@ -424,9 +424,9 @@ endif
 $(build-dir)%.o: %.S $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_ASSEMBLING)
 	$(Q)$(CC) $(a_flags) -c $< -o $@
