@@ -3,7 +3,7 @@
  *
  * \brief Timer Counter (TC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -180,6 +180,22 @@ void tc_stop(Tc *p_tc, uint32_t ul_channel)
 }
 
 /**
+ * \brief Read counter value on the selected channel.
+ *
+ * \param p_tc Pointer to a TC instance.
+ * \param ul_channel Channel to configure.
+ *
+ * \return Counter value.
+ */
+uint32_t tc_read_cv(Tc *p_tc, uint32_t ul_channel)
+{
+	Assert(ul_channel <
+			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+
+	return p_tc->TC_CHANNEL[ul_channel].TC_CV;
+}
+
+/**
  * \brief Read RA TC counter on the selected channel.
  *
  * \param p_tc Pointer to a TC instance.
@@ -187,7 +203,7 @@ void tc_stop(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RA value.
  */
-int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_ra(Tc *p_tc, uint32_t ul_channel)
 {
 	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -203,7 +219,7 @@ int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RB value.
  */
-int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_rb(Tc *p_tc, uint32_t ul_channel)
 {
 	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
@@ -219,7 +235,7 @@ int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RC value.
  */
-int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_read_rc(Tc *p_tc, uint32_t ul_channel)
 {
 	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));

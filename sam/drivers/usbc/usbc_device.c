@@ -4,7 +4,7 @@
  * \brief USB Device driver
  * Compliance with common driver UDD
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -142,7 +142,7 @@
 #ifndef USB_DEVICE_MAX_EP
 #   error USB_DEVICE_MAX_EP not defined
 #endif
-#if USB_DEVICE_MAX_EP >= UDD_MAX_PEP_NB
+#if USB_DEVICE_MAX_EP > UDD_MAX_PEP_NB
 #   error USB_DEVICE_MAX_EP is too high and not supported by this part
 #endif
 #if (SAM4L)

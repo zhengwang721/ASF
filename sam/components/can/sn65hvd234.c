@@ -3,7 +3,7 @@
  *
  * \brief CAN transceiver SN65HVD234 driver.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,9 +42,12 @@
  */
 
 /**
- * \defgroup sam_component_sn65hvd234_transceiver_group CAN - SN65HVD234 Transceiver
+ * \defgroup sam_component_sn65hvd234_transceiver_group CAN - SN65HVD234
+ *  Transceiver
  *
- * This driver provides access to the main features of the SN65HVD234 transceiver.
+ * This driver provides access to the main features of the SN65HVD234
+ * transceiver.
+ *
  * Control the RS and EN pin level for SN65HVD234.
  *
  * \{
@@ -52,7 +55,18 @@
 
 #include "board.h"
 #include "sn65hvd234.h"
+#if SAM4E
+#include "ioport.h"
+#else
 #include "gpio.h"
+#endif
+
+#if SAM4E
+#define CAN_RS_HIGH true
+#define CAN_RS_LOW  false
+#define CAN_EN_HIGH true
+#define CAN_EN_LOW  false
+#endif
 
 /**
  * \brief Initialize RS pin for transceiver.
@@ -83,8 +97,13 @@ void sn65hvd234_set_en(sn65hvd234_ctrl_t *p_component, uint32_t pin_idx)
  */
 void sn65hvd234_enable(sn65hvd234_ctrl_t *p_component)
 {
+#if SAM4E
+	/* Raise EN pin of SN65HVD234 to High Level (Vcc). */
+	ioport_set_pin_level(p_component->pio_en_idx, CAN_EN_HIGH);
+#else
 	/* Raise EN pin of SN65HVD234 to High Level (Vcc). */
 	gpio_set_pin_high(p_component->pio_en_idx);
+#endif
 }
 
 /**
@@ -94,8 +113,13 @@ void sn65hvd234_enable(sn65hvd234_ctrl_t *p_component)
  */
 void sn65hvd234_disable(sn65hvd234_ctrl_t *p_component)
 {
+#if SAM4E
+	/* Lower EN pin of SN65HVD234 to Low Level (0.0v). */
+	ioport_set_pin_level(p_component->pio_en_idx, CAN_EN_LOW);
+#else
 	/* Lower EN pin of SN65HVD234 to Low Level (0.0v). */
 	gpio_set_pin_low(p_component->pio_en_idx);
+#endif
 }
 
 /**
@@ -105,8 +129,13 @@ void sn65hvd234_disable(sn65hvd234_ctrl_t *p_component)
  */
 void sn65hvd234_enable_low_power(sn65hvd234_ctrl_t *p_component)
 {
+#if SAM4E
+	/* Raise RS pin of SN65HVD234 to more than 0.75v. */
+	ioport_set_pin_level(p_component->pio_rs_idx, CAN_RS_HIGH);
+#else
 	/* Raise RS pin of SN65HVD234 to more than 0.75v. */
 	gpio_set_pin_high(p_component->pio_rs_idx);
+#endif
 }
 
 /**
@@ -116,8 +145,13 @@ void sn65hvd234_enable_low_power(sn65hvd234_ctrl_t *p_component)
  */
 void sn65hvd234_disable_low_power(sn65hvd234_ctrl_t *p_component)
 {
+#if SAM4E
+	/* Lower RS pin of SN65HVD234 to 0.0v~0.33v. */
+	ioport_set_pin_level(p_component->pio_rs_idx, CAN_RS_LOW);
+#else
 	/* Lower RS pin of SN65HVD234 to 0.0v~0.33v. */
 	gpio_set_pin_low(p_component->pio_rs_idx);
+#endif
 }
 
 /**
