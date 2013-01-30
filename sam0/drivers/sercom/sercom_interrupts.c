@@ -40,6 +40,8 @@
  */
 #include "sercom_interrupts.h"
 
+void *_sercom_instances[SERCOM_INST_NUM];
+
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;
 
