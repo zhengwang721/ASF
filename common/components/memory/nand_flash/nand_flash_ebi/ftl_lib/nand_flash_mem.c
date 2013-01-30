@@ -60,7 +60,7 @@ static uint32_t addr_address = BOARD_NF_ADDRESS_ADDR;
 /* Address for transferring data to the NAND Flash. */
 static uint32_t data_address = BOARD_NF_DATA_ADDR;
 #else
-  #warning There are no NAND Flash module on the board.
+# warning There is no NAND Flash module on the board.
 /* default address for pass the jenkins. */
 static uint32_t cmd_address = 0x60400000;
 static uint32_t addr_address = 0x60200000;
