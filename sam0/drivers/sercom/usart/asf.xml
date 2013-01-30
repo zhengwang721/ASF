@@ -11,9 +11,7 @@
 		</info>
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="usart.h"/>
-		<!--<build type="header-file" subtype="api" value="usart_async.h"/> -->
 		<build type="c-source" value="usart.c"/>
-		<!-- <build type="c-source" value="usart_async.c"/> -->
 		<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
 		<build type="doxygen-entry-point" value="sam0_usart_group"/>
 		<device-support value="samd20"/>
