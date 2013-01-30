@@ -99,7 +99,7 @@ int main(void)
 //! [di]
 	config.pinmux_pad0 = PINMUX_PA14B_SERCOM2_PAD0;
 //! [di]
-	/* Configure pad 0 for slave select, added  */
+	/* Configure pad 1 for slave select, not necessary in master mode */
 //! [ss]
 	config.pinmux_pad1 = PINMUX_PA15B_SERCOM2_PAD1;
 //! [ss]
@@ -111,10 +111,6 @@ int main(void)
 //! [sck]
 	config.pinmux_pad3 = PINMUX_PA13B_SERCOM2_PAD3;
 //! [sck]
-//! [baud]
-	config.master.baudrate = 9600;
-//! [baud]
-
 //! [init]
 	spi_init(&master, SERCOM2, &config);
 //! [init]
@@ -122,7 +118,6 @@ int main(void)
 //! [enable]
 	spi_enable(&master);
 //! [enable]
-
 //! [select_slave]
 	spi_select_slave(&master, &slave);
 //! [select_slave]

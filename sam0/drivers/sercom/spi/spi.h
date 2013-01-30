@@ -622,13 +622,13 @@ struct spi_conf {
 	}; /**< Union for Slave or Master specific configuration */
 	/** GCLK generator to use as clock source. */
 	enum gclk_generator generator_source;
-	/* PAD0 pinmux */
+	/** PAD0 pinmux */
 	uint32_t pinmux_pad0;
-	/* PAD1 pinmux */
+	/** PAD1 pinmux */
 	uint32_t pinmux_pad1;
-	/* PAD2 pinmux */
+	/** PAD2 pinmux */
 	uint32_t pinmux_pad2;
-	/* PAD3 pinmux */
+	/** PAD3 pinmux */
 	uint32_t pinmux_pad3;
 };
 
@@ -667,6 +667,8 @@ static inline void _spi_wait_for_sync(struct spi_dev_inst *const dev_inst)
  *   \li Not enabled in sleep mode
  *   \li Receiver enabled
  *   \li Baudrate 9600
+ *   \li Default pinmux settings for all pads
+ *   \li GLCK generator 0
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -828,7 +830,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst);
  * \retval true  If the SPI module has shifted out data
  * \retval false If the SPI module has not shifter out data
  */
-static inline bool spi_transmit_complete(struct spi_dev_inst *const dev_inst)
+static inline bool spi_write_complete(struct spi_dev_inst *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
