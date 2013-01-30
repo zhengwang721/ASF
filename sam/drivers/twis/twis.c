@@ -83,82 +83,123 @@ static uint32_t find_twis_channel_num(Twis *twis)
 }
 
 /**
+ * \brief Initializes a TWIS configuration structure to defaults.
+ *
+ *  Initializes a given TWIS configuration structure to a set of
+ *  known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  \param cfg    Configuration structure to initialize to default values.
+ */
+void twis_get_config_defaults(struct twis_config *const cfg)
+{
+	/* Sanity check arguments */
+	Assert(cfg);
+
+	cfg->ten_bit = false;
+	cfg->chip = 0x50;
+	cfg->smbus = false;
+	cfg->stretch_clk_data = false;
+	cfg->stretch_clk_addr = false;
+	cfg->stretch_clk_hr = true;
+	cfg->ack_general_call = false;
+	cfg->ack_slave_addr = true;
+	cfg->enable_pec = false;
+	cfg->ack_smbus_host_header = false;
+	cfg->ack_smbus_default_addr = false;
+}
+
+/**
  * \brief Initialize the TWI Slave Module.
  *
- * \param twis Base address of the TWIS
- * \param *config   Basic configuration for the TWIS
+ * \param dev_inst  Device structure pointer.
+ * \param twis  Base address of the TWIS instance.
+ * \param cfg   Pointer to TWIS configuration.
  * \param slave_fct  Pointer on application functions
  * \param irq_level  Interrupt level
  */
-void twis_slave_init(Twis *twis, struct twis_config *config, twis_slave_fct_t *slave_fct,
-		uint8_t irq_level)
+void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis, 
+		struct twis_config *cfg, twis_slave_fct_t *slave_fct, uint8_t irq_level)
 {
 	uint32_t reg = 0;
 	uint32_t twis_ch = find_twis_channel_num(twis);
 	uint32_t irq_line = 0;
 
-	if (config->ten_bit) {
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(twis);
+	Assert(cfg);
+
+	dev_inst->hw_dev = twis;
+	dev_inst->twis_cfg = cfg;
+
+	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
+	
+	if (cfg->ten_bit) {
 		reg |= TWIS_CR_TENBIT;
 	}
-	if (config->smbus) {
+	if (cfg->smbus) {
 		reg |= TWIS_CR_SMEN;
 	}
-	if (config->stretch_clk_data) {
+	if (cfg->stretch_clk_data) {
 		reg |= TWIS_CR_SODR;
 	} else {
 		reg &= ~TWIS_CR_SODR;
 	}
-	if (config->stretch_clk_addr) {
+	if (cfg->stretch_clk_addr) {
 		reg |= TWIS_CR_SOAM;
 	} else {
 		reg &= ~TWIS_CR_SOAM;
 	}
-	if (config->stretch_clk_hr) {
+	if (cfg->stretch_clk_hr) {
 		reg |= TWIS_CR_STREN;
 	} else {
 		reg &= ~TWIS_CR_STREN;
 	}
-	if (config->ack_general_call) {
+	if (cfg->ack_general_call) {
 		reg |= TWIS_CR_GCMATCH;
 	} else {
 		reg &= ~TWIS_CR_GCMATCH;
 	}
-	if (config->ack_slave_addr) {
+	if (cfg->ack_slave_addr) {
 		reg |= TWIS_CR_SMATCH;
 	} else {
 		reg &= ~TWIS_CR_SMATCH;
 	}
-	if (config->enable_pec) {
+	if (cfg->enable_pec) {
 		reg |= TWIS_CR_PECEN;
 	} else {
 		reg &= ~TWIS_CR_PECEN;
 	}
-	if (config->ack_smbus_host_header) {
+	if (cfg->ack_smbus_host_header) {
 		reg |= TWIS_CR_SMHH;
 	} else {
 		reg &= ~TWIS_CR_SMHH;
 	}
-	if (config->ack_smbus_default_addr) {
+	if (cfg->ack_smbus_default_addr) {
 		reg |= TWIS_CR_SMDA;
 	} else {
 		reg &= ~TWIS_CR_SMDA;
 	}
 	twis->TWIS_CR = TWIS_CR_SWRST;
-	twis->TWIS_CR = reg | TWIS_CR_ADR(config->chip) | TWIS_CR_SEN;
+	twis->TWIS_CR = reg | TWIS_CR_ADR(cfg->chip) | TWIS_CR_SEN;
 	
-	twis->TWIS_TR = TWIS_TR_SUDAT(config->sudat) |
-			TWIS_TR_EXP(config->exp) |
-			TWIS_TR_TTOUT(config->ttouts) |
-			TWIS_TR_TLOWS(config->tlows);
-	twis->TWIS_SRR = TWIS_SRR_DADRIVEL(config->fs_dadrivel) |
-			TWIS_SRR_DASLEW(config->fs_daslew) |
-			TWIS_SRR_FILTER(config->fs_filter);
+	twis->TWIS_TR = TWIS_TR_SUDAT(cfg->sudat) |
+			TWIS_TR_EXP(cfg->exp) |
+			TWIS_TR_TTOUT(cfg->ttouts) |
+			TWIS_TR_TLOWS(cfg->tlows);
+	twis->TWIS_SRR = TWIS_SRR_DADRIVEL(cfg->fs_dadrivel) |
+			TWIS_SRR_DASLEW(cfg->fs_daslew) |
+			TWIS_SRR_FILTER(cfg->fs_filter);
 	
-	twis->TWIS_HSTR = TWIS_HSTR_HDDAT(config->hddat);
-	twis->TWIS_HSSRR = TWIS_HSSRR_DADRIVEL(config->hs_dadrivel) |
-			TWIS_HSSRR_DASLEW(config->hs_daslew) |
-			TWIS_HSSRR_FILTER(config->hs_filter);
+	twis->TWIS_HSTR = TWIS_HSTR_HDDAT(cfg->hddat);
+	twis->TWIS_HSSRR = TWIS_HSSRR_DADRIVEL(cfg->hs_dadrivel) |
+			TWIS_HSSRR_DASLEW(cfg->hs_daslew) |
+			TWIS_HSSRR_FILTER(cfg->hs_filter);
 
+	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
+	
 	#if defined(ID_TWIS0)
 	if (twis == TWIS0) {
 		irq_line = TWIS0_IRQn;
@@ -174,147 +215,25 @@ void twis_slave_init(Twis *twis, struct twis_config *config, twis_slave_fct_t *s
 }
 
 /**
- * \brief Enable NACK transfer in Slave Receiver Mode
+ * \brief Enable Slave Mode of the TWI.
  *
- * \param twis   Base address of the TWIS
+ * \param dev_inst  Device structure pointer.
  */
-void twis_send_data_nack(Twis *twis)
+void twis_enable(struct twis_dev_inst *const dev_inst)
 {
-	twis->TWIS_CR |= TWIS_CR_ACK;
+	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
+	dev_inst->hw_dev->TWIS_CR = TWIS_CR_SEN;
 }
 
 /**
- * \brief Enable ACK transfer in Slave Receiver Mode
+ * \brief Disable Slave Mode of the TWI.
  *
- * \param twis   Base address of the TWIS
+ * \param dev_inst  Device structure pointer.
  */
-void twis_send_data_ack(Twis *twis)
+void twis_disable(struct twis_dev_inst *const dev_inst)
 {
-	twis->TWIS_CR &= ~TWIS_CR_ACK;
-}
-
-/**
- * \brief Get the last byte data received from TWI bus.
- *
- * \param twis   Base address of the TWIS
- *
- * \retval Last byte data received from TWI bus
- */
-uint8_t twi_slave_read(Twis *twis)
-{
-	return twis->TWIS_RHR;
-}
-
-/**
- * \brief Write one byte data to TWI bus.
- *
- * \param twis       Base address of the TWIS
- * \param byte       The byte data to write
- */
-void twi_slave_write(Twis *twis, uint8_t byte)
-{
-	twis->TWIS_THR = byte;
-}
-
-/**
- * \brief Get the calculated PEC value. Only for SMBus mode.
- *
- * \param twis   Base address of the TWIS
- *
- * \retval Calculated PEC value
- */
-uint8_t twis_get_smbus_pec(Twis *twis)
-{
-	return (uint8_t)(twis->TWIS_PECR & 0xFF);
-}
-
-/**
- * \brief Set the total number of data bytes in the transmission. Only for SMBus mode.
- *
- * \param twis       Base address of the TWIS
- * \param nb         Total number of data bytes in the transmission
- * \param increment  Count up per byte transferred if true, otherwise count down
- */
-void twis_set_smbus_transfer_nb(Twis *twis, uint8_t nb, bool increment)
-{
-	if (increment) {
-		twis->TWIS_CR |= TWIS_CR_CUP;
-	} else {
-		twis->TWIS_CR &= ~TWIS_CR_CUP;
-	}
-
-	twis->TWIS_NBYTES = nb;
-}
-
-/**
- * \brief Get the progress of the transfer in SMBus mode.
- *
- * \param twis   Base address of the TWIS
- *
- * \retval The left number of data bytes in the transmission.
- */
-uint8_t twis_get_smbus_transfer_nb(Twis *twis)
-{
-	return (uint8_t)(twis->TWIS_NBYTES & 0xFF);
-}
-
-/**
- * \brief Enable the TWIS interrupts
- *
- * \param twis              Base address of the TWIS
- * \param interrupt_source  The TWIS interrupt to be enabled
- */
-void twis_enable_interrupt(Twis *twis, uint32_t interrupt_source)
-{
-	/* Set the interrupt flags */
-	twis->TWIS_IER = interrupt_source;
-}
-
-/**
- * \brief Disable the TWIS interrupts and clear their status
- *
- * \param twis              Base address of the TWIS.
- * \param interrupt_source  The TWIS interrupt to be disabled
- */
-void twis_disable_interrupt(Twis *twis, uint32_t interrupt_source)
-{
-	/* Clear the interrupt flags */
-	twis->TWIS_IDR = interrupt_source;
-	/* Clear the status flags */
-	twis->TWIS_SCR = interrupt_source;
-}
-
-/**
- * \brief Get the TWIS interrupt mask
- *
- * \param twis   Base address of the TWIS
- *
- * \retval TWIS interrupt mask
- */
-uint32_t twis_get_interrupt_mask(Twis *twis)
-{
-	return twis->TWIS_IMR;
-}
-
-/**
- * \brief Information about the current status of the TWIS
- *
- * \param twis   Base address of the TWIS
- */
-uint32_t twis_get_status(Twis *twis)
-{
-	return twis->TWIS_SR;
-}
-
-/**
- * \brief Clear the current status of the TWIS
- *
- * \param twis   Base address of the TWIS
- * \param clear_status  The TWIS status to be clear
- */
-void twis_clear_status(Twis *twis, uint32_t clear_status)
-{
-	twis->TWIS_SCR = clear_status;
+	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
+	dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_SEN;
 }
 
 /**
@@ -326,7 +245,7 @@ void twis_clear_status(Twis *twis, uint32_t clear_status)
 static void twis_slave_int_handler(Twis *twis)
 {
 	uint32_t twis_ch = find_twis_channel_num(twis);
-
+	
 	/* Get status and interrupt mask register values */
 	uint32_t status  = twis_get_status(twis);
 	uint32_t enabled = twis_get_interrupt_mask(twis);

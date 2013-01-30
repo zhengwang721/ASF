@@ -5,7 +5,7 @@
  *
  * This file defines a useful set of functions for the TWIS on SAM4L devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -115,6 +115,40 @@ struct twis_config {
 	uint8_t tlows;
 };
 
+/**
+ * \brief TWI slave driver software instance structure.
+ *
+ * Device instance structure for a TWI Slave driver instance. This
+ * structure should be initialized by the \ref twis_init() function to
+ * associate the instance with a particular hardware module of the device.
+ */
+struct twis_dev_inst {
+	/** Base address of the TWIS module. */
+	Twis *hw_dev;
+	/** Pointer to TWIS configuration structure. */
+	struct twis_config  *twis_cfg;
+};
+
+/** TWIS interrupt source type */
+typedef enum twis_interrupt_source {
+	TWIS_INTERRUPT_RX_BUFFER_READY = TWIS_IER_RXRDY,
+	TWIS_INTERRUPT_TX_BUFFER_READY = TWIS_IER_TXRDY,
+	TWIS_INTERRUPT_TRANS_COMP           = TWIS_IER_TCOMP,
+	TWIS_INTERRUPT_UNDER_RUN              = TWIS_IER_URUN,
+	TWIS_INTERRUPT_OVER_RUN                = TWIS_IER_ORUN,
+	TWIS_INTERRUPT_NAK_RECEIVED         = TWIS_IER_NAK,
+	TWIS_INTERRUPT_SMBUS_TIMEOUT      = TWIS_IER_SMBTOUT,
+	TWIS_INTERRUPT_SMBUS_PEC_ERROR = TWIS_IER_SMBPECERR,
+	TWIS_INTERRUPT_BUS_ERROR              = TWIS_IER_BUSERR,
+	TWIS_INTERRUPT_SLAVEADR_MATCH   = TWIS_IER_SAM,
+	TWIS_INTERRUPT_GENCALL_MATCH     = TWIS_IER_GCM,
+	TWIS_INTERRUPT_SMBUS_HHADR_MATCH  = TWIS_IER_SMBHHM,
+	TWIS_INTERRUPT_SMBUS_DEFADR_MATCH  = TWIS_IER_SMBDAM,
+	TWIS_INTERRUPT_STOP_RECEIVED                = TWIS_IER_STO,
+	TWIS_INTERRUPT_RESTART_RECEIVED         = TWIS_IER_REP,
+	TWIS_INTERRUPT_BYTE_TRANS_FINISHED          = TWIS_IER_BTF
+} twis_interrupt_source_t;
+
 /*
  * \brief Pointer on TWI slave user specific application routines
  */
@@ -128,47 +162,156 @@ typedef struct
 	void (*stop) (void);
 } twis_slave_fct_t;
 
+void twis_get_config_defaults(struct twis_config *const cfg);
+void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis, 
+		struct twis_config *config, twis_slave_fct_t *slave_fct, uint8_t irq_level);
+void twis_enable(struct twis_dev_inst *const dev_inst);
+void twis_disable(struct twis_dev_inst *const dev_inst);
+
 /**
- * \brief Enable Slave Mode of the TWI.
+ * \brief Get the last byte data received from TWI bus.
  *
- * \param *twis   Base address of the TWIS instance.
+ * \param dev_inst  Device structure pointer.
+ *
+ * \retval Last byte data received from TWI bus
  */
-static inline void twis_enable(Twis *twis)
+static inline uint8_t twi_slave_read(struct twis_dev_inst *const dev_inst)
 {
-	sysclk_enable_peripheral_clock(twis);
-	twis->TWIS_CR = TWIS_CR_SEN;
+	return dev_inst->hw_dev->TWIS_RHR;
 }
 
 /**
- * \brief Disable Slave Mode of the TWI.
+ * \brief Write one byte data to TWI bus.
  *
- * \param *twis   Base address of the TWIS instance.
+ * \param dev_inst  Device structure pointer.
+ * \param byte       The byte data to write
  */
-static inline void twis_disable(Twis *twis)
+static inline void twi_slave_write(struct twis_dev_inst *const dev_inst, uint8_t byte)
 {
-	sysclk_disable_peripheral_clock(twis);
-	twis->TWIS_CR &= ~TWIS_CR_SEN;
+	dev_inst->hw_dev->TWIS_THR = byte;
 }
 
-void twis_slave_init(Twis *twis, struct twis_config *config, twis_slave_fct_t *slave_fct,
-		uint8_t irq_level);
+/**
+ * \brief Enable NACK transfer in Slave Receiver Mode
+ *
+ * \param dev_inst  Device structure pointer.
+ */
+static inline void twis_send_data_nack(struct twis_dev_inst *const dev_inst)
+{
+	dev_inst->hw_dev->TWIS_CR |= TWIS_CR_ACK;
+}
 
-uint8_t twi_slave_read(Twis *twis);
-void twi_slave_write(Twis *twis, uint8_t byte);
+/**
+ * \brief Enable ACK transfer in Slave Receiver Mode
+ *
+ * \param dev_inst  Device structure pointer.
+ */
+static inline twis_send_data_ack(struct twis_dev_inst *const dev_inst)
+{
+	dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_ACK;
+}
 
-void twis_send_data_nack(Twis *twis);
-void twis_send_data_ack(Twis *twis);
+/**
+ * \brief Get the calculated PEC value. Only for SMBus mode.
+ *
+ * \param dev_inst  Device structure pointer.
+ *
+ * \retval Calculated PEC value
+ */
+static inline uint8_t twis_get_smbus_pec(struct twis_dev_inst *const dev_inst)
+{
+	return (uint8_t)(dev_inst->hw_dev->TWIS_PECR & 0xFF);
+}
 
-void twis_enable_interrupt(Twis *twis, uint32_t interrupt_source);
-void twis_disable_interrupt(Twis *twis, uint32_t interrupt_source);
-uint32_t twis_get_interrupt_mask(Twis *twis);
+/**
+ * \brief Set the total number of data bytes in the transmission. Only for SMBus mode.
+ *
+ * \param dev_inst  Device structure pointer
+ * \param nb         Total number of data bytes in the transmission
+ * \param increment  Count up per byte transferred if true, otherwise count down
+ */
+static inline void twis_set_smbus_transfer_nb(struct twis_dev_inst *const dev_inst,
+		uint8_t nb, bool increment)
+{
+	if (increment) {
+		dev_inst->hw_dev->TWIS_CR |= TWIS_CR_CUP;
+	} else {
+		dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_CUP;
+	}
 
-uint32_t twis_get_status(Twis *twis);
-void twis_clear_status(Twis *twis, uint32_t clear_status);
+	dev_inst->hw_dev->TWIS_NBYTES = nb;
+}
 
-uint8_t twis_get_smbus_pec(Twis *twis);
-void twis_set_smbus_transfer_nb(Twis *twis, uint8_t nb, bool increment);
-uint8_t twis_get_smbus_transfer_nb(Twis *twis);
+/**
+ * \brief Get the progress of the transfer in SMBus mode.
+ *
+ * \param dev_inst  Device structure pointer.
+ *
+ * \retval The left number of data bytes in the transmission.
+ */
+static inline uint8_t twis_get_smbus_transfer_nb(struct twis_dev_inst *const dev_inst)
+{
+	return (uint8_t)(dev_inst->hw_dev->TWIS_NBYTES & 0xFF);
+}
+
+/**
+ * \brief Enable the TWIS interrupts
+ *
+ * \param dev_inst  Device structure pointer
+ * \param interrupt_source  The TWIS interrupt to be enabled
+ */
+static inline void twis_enable_interrupt(struct twis_dev_inst *const dev_inst,
+		twis_interrupt_source_t interrupt_source)
+{
+	/* Set the interrupt flags */
+	dev_inst->hw_dev->TWIS_IER |= interrupt_source;
+}
+
+/**
+ * \brief Disable the TWIS interrupts and clear their status
+ *
+ * \param dev_inst  Device structure pointer.
+ * \param interrupt_source  The TWIS interrupt to be disabled
+ */
+static inline void twis_disable_interrupt(struct twis_dev_inst *const dev_inst,
+		twis_interrupt_source_t interrupt_source)
+{
+	/* Clear the interrupt flags */
+	dev_inst->hw_dev->TWIS_IDR |= interrupt_source;
+}
+
+/**
+ * \brief Get the TWIS interrupt mask
+ *
+ * \param dev_inst  Device structure pointer.
+ *
+ * \retval TWIS interrupt mask
+ */
+static inline uint32_t twis_get_interrupt_mask(struct twis_dev_inst *const dev_inst)
+{
+	return dev_inst->hw_dev->TWIS_IMR;
+}
+
+/**
+ * \brief Information about the current status of the TWIS
+ *
+ * \param dev_inst  Device structure pointer.
+ */
+static inline uint32_t twis_get_status(struct twis_dev_inst *const dev_inst)
+{
+	return dev_inst->hw_dev->TWIS_SR;
+}
+
+/**
+ * \brief Clear the current status of the TWIS
+ *
+ * \param dev_inst  Device structure pointer
+ * \param clear_status  The TWIS status to be clear
+ */
+static inline void twis_clear_status(struct twis_dev_inst *const dev_inst, uint32_t clear_status)
+{
+	dev_inst->hw_dev->TWIS_SCR = clear_status;
+}
 
 /**
  * \}
@@ -218,39 +361,28 @@ uint8_t twis_get_smbus_transfer_nb(Twis *twis);
  * \subsection twis_basic_use_case_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *     twis_enable(BOARD_BASE_TWI_SLAVE);
- *
- *     struct twis_config config;
- *     config.ten_bit = false;
- *	config.chip = SLAVE_ADDRESS;
- *	config.smbus = false;
- *	config.stretch_clk_data = false;
- *	config.stretch_clk_addr = false;
- *	config.stretch_clk_hr = true;
- *	config.ack_general_call = false;
- *	config.ack_slave_addr = true;
- *	config.enable_pec = false;
- *	config.ack_smbus_host_header = false;
- *	config.ack_smbus_default_addr = false;
+ *     twis_get_config_defaults(&g_twis_cfg);
  *
  *     twis_slave_fct_t twis_slave_fct;
  *	twis_slave_fct.rx = &twis_slave_rx;
  *	twis_slave_fct.tx = &twis_slave_tx;
  *	twis_slave_fct.stop = &twis_slave_stop;
  *
- *	twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1);
+ *	twis_slave_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg, &twis_slave_fct, 1);
  *
- *	twi_slave_read(BOARD_BASE_TWI_SLAVE);
+ *     twis_enable(&g_twis_inst);
  *
- *	twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM);
+ *	twi_slave_read(&g_twis_inst);
+ *
+ *	twis_enable_interrupt(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
  * \endcode
  *
  * \subsection twis_basic_use_case_usage_flow Workflow
  * -# Enable TWIS module:
- *   - \code twis_enable(BOARD_BASE_TWI_SLAVE); \endcode
+ *   - \code twis_enable(&g_twis_inst); \endcode
  * -# Initialize TWIS module with specified configuration:
- *   - \code twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1); \endcode
+ *   - \code twis_slave_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1); \endcode
  * -# Enable TWI interrupts:
- *   - \code twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM); \endcode
+ *   - \code twis_enable_interrupt(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH); \endcode
  */
 #endif /* TWIS_H_INCLUDED */

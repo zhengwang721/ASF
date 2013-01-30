@@ -137,6 +137,12 @@ uint32_t s_u32_addr;
 /** Content of the Virtual mem*/
 uint8_t s_memory[TWI_MEM_SIZE] = { 0 };
 
+/** TWIS instance */
+struct twis_dev_inst g_twis_inst;
+
+/** TWIS configuration */
+struct twis_config g_twis_cfg;
+
 /**
  * \brief Manage the received data on TWI
  *
@@ -250,33 +256,23 @@ int main(void)
 
 	/* Configure TWI as slave */
 	puts("-I- Configuring the TWIS\n\r");
-	twis_enable(BOARD_BASE_TWI_SLAVE);
-
-	struct twis_config config;
-	config.ten_bit = false;
-	config.chip = SLAVE_ADDRESS;
-	config.smbus = false;
-	config.stretch_clk_data = false;
-	config.stretch_clk_addr = false;
-	config.stretch_clk_hr = true;
-	config.ack_general_call = false;
-	config.ack_slave_addr = true;
-	config.enable_pec = false;
-	config.ack_smbus_host_header = false;
-	config.ack_smbus_default_addr = false;
 
 	/* Set pointer to user specific application routines */
 	twis_slave_fct.rx = &twis_slave_rx;
 	twis_slave_fct.tx = &twis_slave_tx;
 	twis_slave_fct.stop = &twis_slave_stop;
+	
+	twis_get_config_defaults(&g_twis_cfg);
+	
+	twis_slave_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg, &twis_slave_fct, 1);
 
-	twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1);
-
+	twis_enable(&g_twis_inst);
+	
 	/* Clear receipt buffer */
-	twi_slave_read(BOARD_BASE_TWI_SLAVE);
+	twi_slave_read(&g_twis_inst);
 
 	/* Enable TWI interrupts */
-	twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM);
+	twis_enable_interrupt(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
 
 	while (1) {
 	}
