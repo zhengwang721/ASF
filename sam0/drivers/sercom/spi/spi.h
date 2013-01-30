@@ -233,7 +233,7 @@ extern "C" {
  * (MISO for Master, MOSI for Slave) can be used for other purposes.
  *
  * In Master Mode, the SS pin(s) must be configured using
- * the \ref slave_dev_inst enum.
+ * the \ref slave_dev_inst struct.
  *
  * <table>
  *   <tr>
