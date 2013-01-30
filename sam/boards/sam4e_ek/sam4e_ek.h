@@ -557,4 +557,58 @@
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
+/*----------------------------------------------------------------------------*/
+/**
+ * \page sam4e_ek_CAN "SAM4E-EK - CAN"
+ * This page lists definitions related to CAN0 and CAN1.
+ *
+ * CAN
+ * - \ref PIN_CAN0_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN0_TRANSCEIVER_RS
+ * - \ref PIN_CAN0_TXD
+ * - \ref PIN_CAN0_RXD
+ * - \ref PINS_CAN0
+ *
+ * - \ref PIN_CAN1_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN1_TRANSCEIVER_RS
+ * - \ref PIN_CAN1_TXD
+ * - \ref PIN_CAN1_RXD
+ * - \ref PINS_CAN1
+ */
+/** CAN0 transceiver PIN RS. */
+#define PIN_CAN0_TR_RS_IDX        PIO_PE0_IDX
+#define PIN_CAN0_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 transceiver PIN EN. */
+#define PIN_CAN0_TR_EN_IDX        PIO_PE1_IDX
+#define PIN_CAN0_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 PIN RX. */
+#define PIN_CAN0_RX_IDX           PIO_PB3_IDX
+#define PIN_CAN0_RX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN0 PIN TX. */
+#define PIN_CAN0_TX_IDX           PIO_PB2_IDX
+#define PIN_CAN0_TX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN1 transceiver PIN RS. */
+#define PIN_CAN1_TR_RS_IDX        PIO_PE2_IDX
+#define PIN_CAN1_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 transceiver PIN EN. */
+#define PIN_CAN1_TR_EN_IDX        PIO_PE3_IDX
+#define PIN_CAN1_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 PIN RX. */
+#define PIN_CAN1_RX_IDX           PIO_PC12_IDX
+#define PIN_CAN1_RX_FLAGS         IOPORT_MODE_MUX_C
+
+/** CAN1 PIN TX. */
+#define PIN_CAN1_TX_IDX           PIO_PC15_IDX
+#define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+
+/*----------------------------------------------------------------------------*/
+
+
+
 #endif  /* _SAM4E_EK_H_ */
