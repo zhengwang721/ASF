@@ -85,7 +85,7 @@ static struct _nvm_device _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region
  */
-#define NVM_MEMORY ((union _nvm_data *) 0x00000000)
+#define NVM_MEMORY ((union _nvm_data *) 0)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -203,7 +203,7 @@ enum status_code nvm_execute_command(
 		return STATUS_ERR_BUSY;
 	}
 
-	switch(command) {
+	switch (command) {
 		/* Commands requiring address */
 		case NVM_COMMAND_ERASE_AUX_ROW:
 		case NVM_COMMAND_WRITE_AUX_ROW:

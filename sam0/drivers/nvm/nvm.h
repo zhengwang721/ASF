@@ -627,7 +627,7 @@ static inline void nvm_get_config_defaults(
 
 	/* Write the default configuration for the */
 	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
-	config->manual_page_write = true;
+	config->manual_page_write = false;
 	config->wait_states       = 0;
 	config->eeprom_size       = 0;
 	config->bootloader_size   = 0;
