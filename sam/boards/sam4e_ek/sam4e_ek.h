@@ -593,9 +593,10 @@
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
 
+/*----------------------------------------------------------------------------*/
 /* GMAC HW configurations */
 #define BOARD_GMAC_PHY_ADDR 0
-     
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_CAN "SAM4E-EK - CAN"
