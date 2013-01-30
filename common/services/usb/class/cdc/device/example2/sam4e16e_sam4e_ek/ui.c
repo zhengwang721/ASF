@@ -83,28 +83,30 @@ void ui_com_close(uint8_t port)
 
 void ui_com_rx_start(void)
 {
+	LED_On(LED0);
 }
 
 void ui_com_rx_stop(void)
 {
+	LED_Off(LED0);
 }
 
 void ui_com_tx_start(void)
 {
+	LED_On(LED0);
 }
 
 void ui_com_tx_stop(void)
 {
+	LED_Off(LED0);
 }
 
 void ui_com_error(void)
 {
-
 }
 
 void ui_com_overflow(void)
 {
-
 }
 
 void ui_process(uint16_t framenumber)
@@ -122,8 +124,14 @@ void ui_process(uint16_t framenumber)
  *
  * Human interface on SAM4E-EK:
  * - SAM4E USART used UART on J7 connector and USART1 on J5 connector
- * - Led 0 (D2) blinks when USB host has checked and enabled CDC interface
- * - Led 1 (D3) is on when UART CDC port is open
- * - Led 2 (D4) is on when USART CDC port is open
+ * - Jumpers for USART1 RS232 serial mode:
+ *   - JP11: Connect 2 and 3
+ *   - JP10, JP12, JP13: Open
+ * - Led 0 (D2) blinks when USB host has checked and enabled CDC interface, and
+ *   data transfer is stopped. It's on when any CDC port starts data transfer.
+ * - Led 1 (D3) is on when UART CDC interface is not enabled or
+ *   UART CDC port is open
+ * - Led 2 (D4) is on when USART CDC interface is not enabled or
+ *   USART CDC port is open
  *
  */
