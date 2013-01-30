@@ -47,13 +47,9 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 /** Time out value (number of attempts) */
 #define FREQM_NUM_OF_ATTEMPTS        1000000
@@ -225,13 +221,9 @@ static inline uint32_t freqm_get_interrupt_mask(
 	return p_freqm->FREQM_IMR;
 }
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 /**
  * \page sam_freqm_quickstart Quickstart guide for SAM FREQM driver

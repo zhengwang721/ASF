@@ -45,13 +45,9 @@
 #include "sysclk.h"
 #include "sleepmgr.h"
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 /**
  * \defgroup sam_drivers_freqm_group Frequency Meter (FREQM)
@@ -221,10 +217,7 @@ void FREQM_Handler(void)
 
 //@}
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
+

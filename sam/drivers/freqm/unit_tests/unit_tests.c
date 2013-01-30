@@ -102,7 +102,8 @@ struct freqm_config  g_freqm_cfg;
 static void set_int_flag(void)
 {
 	if (freqm_get_interrupt_status(&g_freqm_inst) & FREQM_ISR_DONE) {
-		freqm_disable_interrupt(&g_freqm_inst, FREQM_IDR_DONE);
+		freqm_disable_interrupt(&g_freqm_inst,
+				FREQM_INTERRUPT_MEASURMENT_READY);
 		intflag = 1;
 	}
 }
@@ -117,7 +118,8 @@ static void run_freqm_test(const struct test_case *test)
 	/* Measure default clock. */
 	freqm_get_config_defaults(&g_freqm_cfg);
 	freqm_init(&g_freqm_inst, FREQM, &g_freqm_cfg);
-	freqm_set_callback(&g_freqm_inst, set_int_flag, FREQM_IRQn, 1, FREQM_IER_DONE);
+	freqm_set_callback(&g_freqm_inst, FREQM_INTERRUPT_MEASURMENT_READY,
+		set_int_flag, 1);
 	freqm_start_measure(&g_freqm_inst);
 	if(freqm_get_result(&g_freqm_inst, NULL) == STATUS_OK) {
 		test_assert_true(test, intflag == 1, "FREQM test failed");
