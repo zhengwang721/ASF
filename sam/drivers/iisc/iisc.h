@@ -269,6 +269,7 @@ static inline uint32_t iis_get_status(struct iis_dev_inst *dev_inst)
 	return dev_inst->hw_dev->IISC_SR;
 }
 
+/** IIS interrupt source */
 typedef enum iis_interrupt_source {
 	IIS_INTERRUPT_RXRDY = 0,
 	IIS_INTERRUPT_RXOR,
@@ -316,40 +317,47 @@ enum status_code iis_read(struct iis_dev_inst *dev_inst, uint32_t *data);
 #endif
 
 /**
- * \page sam_iis_quick_start Quick Start Guide for the IIS driver
+ * \page sam_iisc_quick_start Quick Start Guide for the SAM4L IIS driver
  *
- * This is the quick start guide for the \ref group_sam_drivers_iisc, with
- * step-by-step instructions on how to configure and use the driver for
- * a specific use case.The code examples can be copied into e.g the main
- * application loop or any other function that will need to control the
- * IIS module.
+ * This is the quickstart guide for the \ref group_sam_drivers_iisc
+ * "SAM4L Inter-IC Sound Controller driver", with step-by-step instructions
+ * on how to configure and use the driver in a selection of use cases.
  *
- * \section iis_qs_use_cases Use cases
- * - \ref iis_basic
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
  *
- * \section iis_basic IIS basic usage
- *
+ * \section iisc_basic_use_case Basic use case
  * This use case will demonstrate how to initialize the IIS module to
  * master in loopback mode.
  *
- * \section iis_basic_setup Setup steps
+ * \subsection iisc_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
  *
- * \subsection iis_basic_prereq Prerequisites
+ * \section iisc_basic_use_case_setup Clock setup steps
+ * \subsection iisc_basic_use_case_setup_code Example code
+ * Enable the following macro in the conf_clock.h:
+ * \code
+ *  #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL
+ *  #define CONFIG_DFLL0_SOURCE        GENCLK_SRC_OSC32K
+ * \endcode
  *
- * This module requires the following service
- * - \ref clk_group
+ * Add the following code in the application C-file:
+ * \code
+ *  sysclk_init();
+ * \endcode
  *
- * \subsection iis_basic_setup_workflow
+ * \subsection iisc_basic_use_case_setup_flow Workflow
+ * -# Set system clock source as DFLL:
+ * \code #define CONFIG_SYSCLK_SOURCE       SYSCLK_SRC_DFLL \endcode
+ * -# Set DFLL source as OSC32K:
+ * \code #define CONFIG_DFLL0_SOURCE        GENCLK_SRC_OSC32K \endcode
+ * -# Initialize the system clock.
+ * \code sysclk_init(); \endcode
  *
- * -# Enable the IIS module
- * -# Set the configuration
- *
- *  - \note The driver not cover all the configuration for
- * the clock setting complexity.
- *
- * \subsection iis_basic_setup_code
- *
- * Add this to the main loop or a setup function:
+ * \section iisc_basic_use_case_usage Usage steps
+ * \subsection iisc_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
  * \code
  *  struct iis_config config;
  *  struct iis_dev_inst dev_inst;
@@ -364,31 +372,32 @@ enum status_code iis_read(struct iis_dev_inst *dev_inst, uint32_t *data);
  *  iis_enable(&dev_inst);
  * \endcode
  *
- *
- * \section iis_basic_usage Usage steps
- *
- * \subsection iis_basic_usage_code
- *
- * We can enable the transfer by
+ * \subsection iisc_basic_use_case_usage_flow Workflow
+ * -# Initialize the module with given configuration
+ * \code
+ *  struct iis_config config;
+ *  struct iis_dev_inst dev_inst;
+ *  config.data_format = IIS_DATE_16BIT_COMPACT;
+ *  config.slot_length = IIS_SLOT_LENGTH_16BIT;
+ *  config.fs_ratio = IIS_FS_RATE_256;
+ *  config.num_tx_channels = IIS_CHANNEL_STEREO;
+ *  config.num_rx_channels = IIS_CHANNEL_STEREO;
+ *  config.loopback = true;
+ *  config.master = true;
+ *  iis_init(&dev_inst, IISC, &config);
+ * \endcode
+ * -# Enable the module
+ * \code  iis_enable(&dev_inst); \endcode
+ * -# Enable transmission, reception and clocks
  * \code
  *  iis_enable_transmission(&dev_inst);
  *  iis_enable_clocks(&dev_inst);
- * \endcode
- * Or we can enable the receive by
- * \code
  *  iis_enable_reception(&dev_inst);
  * \endcode
- *
- * If we not use the PDCA, we can access the data by
+ * -# Use write/read function to access the data
  * \code
  *  iis_write(&dev_inst, data);
  *  iis_read(&dev_inst, &data);
  * \endcode
- *
- * And we can set the interrupt by
- * \code
- *  iis_enable_interrupt(&dev_inst, interrupt_source);
- * \endcode
  */
-
 #endif  /* IIS_H_INCLUDED */
