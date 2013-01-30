@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<board id="board.atmega256rfr2_zigbit" vendor="Atmel" caption="ATMEGA256RFR2 Zigbit">
-		<build type="define" name="BOARD" value="MEGA_256RFR2_ZIGBIT"/>
+		<build type="define" name="BOARD" value="ATMEGA256RFR2_ZIGBIT"/>
 		<build type="header-file" value="atmega256rfr2_zigbit.h"/>
 		<build type="header-file" value="led.h"/>
 		<build type="include-path" value="."/>

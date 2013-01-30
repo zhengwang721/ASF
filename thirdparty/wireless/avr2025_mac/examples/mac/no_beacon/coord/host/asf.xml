@@ -8,8 +8,6 @@
 		<build type="include-path" value="."/>
 
         <require idref="thirdparty.wireless.avr2025_mac.examples.mac.no_beacon.coord"/>
-        <require idref="common.services.delay"/>
-        <require idref="common.services.ioport"/>
 
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>

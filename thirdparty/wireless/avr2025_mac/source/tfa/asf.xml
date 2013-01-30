@@ -83,8 +83,8 @@
 		<info type="description" value="summary">
 		The Additional hardware features provided by the ATMEL Transceivers are handled by the Transciever Feature Access(TFA)
 		</info>
-		<build type="header-file"   value="Inc/tfa.h"/>
-		<build type="include-path"  value="Inc/"/>
+		<build type="header-file"   value="inc/tfa.h"/>
+		<build type="include-path"  value="inc/"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>

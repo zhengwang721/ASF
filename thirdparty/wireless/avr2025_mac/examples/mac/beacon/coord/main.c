@@ -290,9 +290,9 @@ int main(void)
 	}
 
     /* Initialize LEDs. */
-   LED_On(LED_START);         // indicating application is started
-   LED_Off(LED_NWK_SETUP);    // indicating network is started
-   LED_Off(LED_DATA);         // indicating data transmission
+    LED_On(LED_START);         // indicating application is started
+    LED_Off(LED_NWK_SETUP);    // indicating network is started
+    LED_Off(LED_DATA);         // indicating data transmission
 
 	cpu_irq_enable();
 
