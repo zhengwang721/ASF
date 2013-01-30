@@ -82,7 +82,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @name UDP Device properties
 //! These macros give IP properties (from datasheets)
 //! @{
-  //! Get maximal number of endpoints (3S, 0~7)
+  //! Get maximal number of endpoints (3S 4S 4E, 0~7)
 #define  udd_get_endpoint_max_nbr()            (7)
 #define  UDD_MAX_PEP_NB                        (udd_get_endpoint_max_nbr()+1)
   //! Get maximal number of banks of endpoint (3S, 1~2)
@@ -165,6 +165,12 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 #define  udd_disable_all_events()            (UDP->IDR = 0xFFFF)
 #define  udd_disable_endpoint_events()       (UDP->IDR = 0xFF)
+
+#define  udd_enable_wakeups()                (UDP->UDP_IER = (UDP_IER_RXRSM|UDP_IER_EXTRSM|UDP_IER_WAKEUP))
+#define  udd_disable_wakeups()               (UDP->UDP_IDR = (UDP_IDR_RXRSM|UDP_IDR_EXTRSM|UDP_IDR_WAKEUP))
+#define  udd_ack_wakeups()                   (UDP->UDP_ICR = (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP))
+#define  Is_udd_any_wakeup()                 (Tst_bits(UDP->UDP_ISR, (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP)))
+#define  Is_udd_expected_wakeup()            ((UDP->UDP_ISR & (UDP_ICR_RXRSM|UDP_ICR_EXTRSM|UDP_ICR_WAKEUP)) & UDP->UDP_IMR)
 //! @}
 
 //! Manage remote wake-up event

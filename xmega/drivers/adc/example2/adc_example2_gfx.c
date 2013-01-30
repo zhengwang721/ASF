@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 2
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -288,9 +288,10 @@ int main(void)
 
 	board_init();
 	sysclk_init();
-	pmic_init();
-	gfx_mono_init();
+	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
+	gfx_mono_init();
 
 	// Enable the back light of the LCD
 	ioport_set_pin_high(LCD_BACKLIGHT_ENABLE_PIN);
