@@ -50,8 +50,8 @@
  * \section intro Introduction
  * This is the unit test application for Events driver (PEVC).
  * It consists of test cases for the following functionality:
- * - Using the AST as an event source and the PDCA as a triggered event.
- * - Using the software trigger as an event source and the PDCA as a triggered
+ * - Using the AST as an event source and the DACC as a triggered event.
+ * - Using the software trigger as an event source and the DACC as a triggered
  *   event.
  *
  * \section files Main Files
@@ -60,7 +60,6 @@
  * - \ref conf_board.h
  * - \ref conf_clock.h
  * - \ref conf_uart_serial.h
- * - \ref conf_pdca.h
  * - \ref conf_ast.h
  * - \ref conf_sleepmgr.h
  *
@@ -106,36 +105,6 @@
  */
 /* @} */
 
-enum unit_test_step {
-	TEST_STEP_AST_TRIGGER = 0,
-	TEST_STEP_SOFTWARE_TRIGGER,
-};
-
-enum unit_test_step test_step;
-uint32_t test_flag = 0;
-
-uint8_t event_string[] = "..";
-
-/**
- * PDCA transfer interrupt callback.
- */
-static void pdca_tranfer_done(enum pdca_channel_status status)
-{
-	/* Get PDCA channel status and check if PDCA transfer is completed */
-	if (status == PDCA_CH_TRANSFER_COMPLETED) {
-		/* Reload PDCA data transfer */
-		pdca_channel_write_reload(PEVC_ID_USER_PDCA_0, (void *)event_string,
-				sizeof( event_string));
-		/* Set test_flag */
-		if (test_step == TEST_STEP_AST_TRIGGER) {
-			test_flag |= (0x01u << TEST_STEP_AST_TRIGGER);
-			ast_disable(AST);
-		} else if (test_step == TEST_STEP_SOFTWARE_TRIGGER) {
-			test_flag |= (0x01u << TEST_STEP_SOFTWARE_TRIGGER);
-		}
-	}
-}
-
 /**
  * Initialize the AST as event generator.
  */
@@ -166,34 +135,31 @@ static void init_ast(void)
 }
 
 /**
- * Initialize the PDCA transfer for the example.
+ * Initialize the DAC as event user.
  */
-static void init_pdca(void)
+static void init_dacc(void)
 {
-	/* PDCA channel options */
-	static const pdca_channel_config_t pdca_tx_configs = {
-		.addr = (void *)event_string,
-		.pid = CONF_TEST_PDCA_PID,
-		.size = sizeof(event_string),
-		.r_addr = 0,
-		.r_size = 0,
-		.ring = false,
-		.etrig = true,
-		.transfer_size = PDCA_MR_SIZE_BYTE
-	};
+	/* Enable clock for DACC */
+	sysclk_enable_peripheral_clock(DACC);
 
-	/* Enable PDCA module */
-	pdca_enable(PDCA);
+	/* Reset DACC registers */
+	dacc_reset(DACC);
 
-	/* Init PDCA channel with the pdca_options.*/
-	pdca_channel_set_config(CONF_TEST_USER_ID, &pdca_tx_configs);
+	/* Half word transfer mode */
+	dacc_set_transfer_mode(DACC, 0);
 
-	/* Set callback for PDCA channel */
-	pdca_channel_set_callback(CONF_TEST_USER_ID, pdca_tranfer_done,
-			PDCA_0_IRQn, 1, PDCA_IER_TRC);
+	/*
+	 * Timing:
+	 * startup                - 0x10 (17 clocks)
+	 * internal trigger clock - 0x60 (96 clocks)
+	 */
+	dacc_set_timing(DACC, 0x10, 0x60);
 
-	/* Enable PDCA channel */
-	pdca_channel_enable(CONF_TEST_USER_ID);
+	/* Enable event trigger (0: external trigger, 1: peripheral event) */
+	dacc_set_trigger(DACC, 1);
+
+	/* Enable DAC */
+	dacc_enable(DACC);
 }
 
 /**
@@ -203,42 +169,53 @@ static void init_pdca(void)
  */
 static void run_events_ast_test(const struct test_case *test)
 {
-	uint32_t i;
-	struct events_chan_conf config;
-
-	test_step = TEST_STEP_AST_TRIGGER;
+	uint32_t retry_times = 3;
+	bool trigger_flag = false;
+	struct events_conf    events_config;
+	struct events_ch_conf ch_config;
 
 	init_ast();
-	init_pdca();
+	init_dacc();
+
+	/* Initialize event module */
+	events_get_config_defaults(&events_config);
+	events_init(&events_config);
+	events_enable();
 
 	/*
 	 * Configure an event channel
-	 * - AST periodic event 0 --- Generator
-	 * - PDCA channel 0       --- User
+	 * - AST periodic event 0  --- Generator
+	 * - DAC                   --- User
 	 */
-	events_chan_get_config_defaults(&config);
-	config.channel_id = CONF_TEST_USER_ID;
-	config.generator_id = CONF_TEST_GEN_ID;
-	config.sharper_enable = true;
-	config.igf_edge = EVENT_IGF_EDGE_NONE;
-	events_chan_configure(&config);
+	events_ch_get_config_defaults(&ch_config);
+	ch_config.channel_id = CONF_TEST_USER_ID;
+	ch_config.generator_id = CONF_TEST_GEN_ID;
+	ch_config.sharper_enable = true;
+	ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
+	events_ch_configure(&ch_config);
 
 	/* Enable the channel */
-	events_chan_enable(CONF_TEST_USER_ID);
+	events_ch_enable(CONF_TEST_USER_ID);
+
+	/* Set new DACC value */
+	dacc_write_conversion_data(DACC, DACC_MAX_DATA / 2);
+
 
 	/* Wait for AST event trigger */
-	for (i = 0; i < (sizeof(event_string) * 2); i++) {
-		if (test_flag & (0x01u << TEST_STEP_AST_TRIGGER)) {
+	events_ch_clear_trigger_status(CONF_TEST_USER_ID);
+	do {
+		if (events_ch_is_triggered(CONF_TEST_USER_ID)) {
+			trigger_flag = true;
+			events_ch_clear_trigger_status(CONF_TEST_USER_ID);
 			break;
 		}
 		delay_ms(1000);
-	}
+	} while (retry_times--);
 
 	/* Disable the AST */
 	ast_disable(AST);
 
-	test_assert_true(test, (test_flag & (0x01u << TEST_STEP_AST_TRIGGER)),
-		"AST event not triggered!");
+	test_assert_true(test, trigger_flag, "AST event not triggered!");
 }
 
 /**
@@ -248,24 +225,28 @@ static void run_events_ast_test(const struct test_case *test)
  */
 static void run_events_software_test(const struct test_case *test)
 {
-	uint32_t i;
-
-	test_step = TEST_STEP_SOFTWARE_TRIGGER;
+	uint32_t retry_times = 3;
+	bool trigger_flag = false;
 
 	/* Enable software trigger */
-	events_chan_enable_software_trigger(CONF_TEST_USER_ID);
+	events_ch_enable_software_trigger(CONF_TEST_USER_ID);
+
+	/* Set new DACC value */
+	dacc_write_conversion_data(DACC, DACC_MAX_DATA / 5);
 
 	/* Software event trigger */
-	for (i = 0; i < sizeof(event_string) * 2; i++) {
-		events_chan_software_trigger(CONF_TEST_USER_ID);
+	events_ch_clear_trigger_status(CONF_TEST_USER_ID);
+	do {
+		events_ch_software_trigger(CONF_TEST_USER_ID);
 		delay_ms(100);
-		if (test_flag & (0x01u << TEST_STEP_SOFTWARE_TRIGGER)) {
+		if (events_ch_is_triggered(CONF_TEST_USER_ID)) {
+			trigger_flag = true;
+			events_ch_clear_trigger_status(CONF_TEST_USER_ID);
 			break;
 		}
-	}
+	} while (retry_times--);
 
-	test_assert_true(test, (test_flag & (0x01u << TEST_STEP_SOFTWARE_TRIGGER)),
-		"Software event not triggered!");
+	test_assert_true(test, trigger_flag, "Software event not triggered!");
 }
 
 /**
@@ -298,9 +279,6 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(events_suite, events_tests, "Events driver test suite");
-
-	/* Enable clock for PEVC module */
-	sysclk_enable_peripheral_clock(PEVC);
 
 	/* Run all tests in the test suite */
 	test_suite_run(&events_suite);

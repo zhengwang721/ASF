@@ -64,9 +64,6 @@ extern "C" {
  * such as bus or RAM bandwidth. This offloads the CPU and system resources
  * compared to a traditional interrupt-based software driven system.
  *
- * \note The clock of PEVC must be enabled before using this module.
- * We may enable the clock in system initialization.
- *
  * @{
  */
 
@@ -115,11 +112,21 @@ enum events_igf_edge {
 };
 
 /**
+ * \brief Event configuration structure.
+ *
+ * Configuration structure for event module.
+ */
+struct events_conf {
+	/** Input Glitch Filter divider */
+	enum events_igf_divider igf_divider;
+};
+
+/**
  * \brief Event channel configuration structure.
  *
  * Configuration structure for an event channel.
  */
-struct events_chan_conf {
+struct events_ch_conf {
 	/** Channel to configure (user) */
 	uint32_t channel_id;
 	/** Event generator to connect to the channel */
@@ -130,8 +137,16 @@ struct events_chan_conf {
 	enum events_igf_edge   igf_edge;
 };
 
+void events_get_config_defaults(struct events_conf *const config);
+
+void events_init(struct events_conf *const config);
+
+void events_enable(void);
+
+void events_disable(void);
+
 /**
- * \brief Set a value for the Input Glitch Filter Divider.
+ * \brief Set Input Glitch Filter Divider.
  *
  * \param  divider      Input Glitch Filter divider.
  *
@@ -143,16 +158,16 @@ static inline void events_set_igf_divider(enum events_igf_divider divider)
 	PEVC->PEVC_IGFDR = PEVC_IGFDR_IGFDR(divider);
 }
 
-void events_chan_get_config_defaults(struct events_chan_conf *const config);
+void events_ch_get_config_defaults(struct events_ch_conf *const config);
 
-void events_chan_configure(struct events_chan_conf *const config);
+void events_ch_configure(struct events_ch_conf *const config);
 
 /**
  * \brief Enable an event channel.
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_chan_enable(uint32_t channel_id)
+static inline void events_ch_enable(uint32_t channel_id)
 {
 	PEVC->PEVC_CHER = PEVC_CHER_CHE(PEVC_CHER_CHE_1 << channel_id);
 }
@@ -162,7 +177,7 @@ static inline void events_chan_enable(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_chan_disable(uint32_t channel_id)
+static inline void events_ch_disable(uint32_t channel_id)
 {
 	PEVC->PEVC_CHDR = PEVC_CHDR_CHD(PEVC_CHDR_CHD_1 << channel_id);
 }
@@ -175,7 +190,7 @@ static inline void events_chan_disable(uint32_t channel_id)
  * \retval true  channel is enabled.
  * \retval false channel is disabled.
  */
-static inline bool events_chan_is_enabled(uint32_t channel_id)
+static inline bool events_ch_is_enabled(uint32_t channel_id)
 {
 	if (PEVC->PEVC_CHSR & PEVC_CHSR_CHS(PEVC_CHSR_CHS_1 << channel_id)) {
 		return true;
@@ -192,7 +207,7 @@ static inline bool events_chan_is_enabled(uint32_t channel_id)
  *  \retval true  If the channel is ready to be used
  *  \retval false If the channel is currently busy
  */
-static inline bool events_chan_is_ready(uint32_t channel_id)
+static inline bool events_ch_is_ready(uint32_t channel_id)
 {
 	if (PEVC->PEVC_BUSY & PEVC_BUSY_BUSY(PEVC_BUSY_BUSY_1 << channel_id)) {
 		return false;
@@ -206,7 +221,7 @@ static inline bool events_chan_is_ready(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_chan_enable_software_trigger(uint32_t channel_id)
+static inline void events_ch_enable_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_CHMX[channel_id].PEVC_CHMX |= PEVC_CHMX_SMX;
 }
@@ -216,7 +231,7 @@ static inline void events_chan_enable_software_trigger(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_chan_disable_software_trigger(uint32_t channel_id)
+static inline void events_ch_disable_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_CHMX[channel_id].PEVC_CHMX &= (~PEVC_CHMX_SMX);
 }
@@ -226,9 +241,63 @@ static inline void events_chan_disable_software_trigger(uint32_t channel_id)
  *
  * \param channel_id  Channel ID.
  */
-static inline void events_chan_software_trigger(uint32_t channel_id)
+static inline void events_ch_software_trigger(uint32_t channel_id)
 {
 	PEVC->PEVC_SEV = PEVC_SEV_SEV(PEVC_SEV_SEV_1 << channel_id);
+}
+
+/**
+ * \brief Get the trigger status of an event channel.
+ *
+ * \param channel_id  Channel ID.
+ *
+ *  \retval true  A channel event has occurred
+ *  \retval false A channel event has not occurred
+ */
+static inline bool events_ch_is_triggered(uint32_t channel_id)
+{
+	if (PEVC->PEVC_TRSR & PEVC_TRSR_TRS(PEVC_TRSR_TRS_1 << channel_id)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * \brief Clear the trigger status of an event channel.
+ *
+ * \param channel_id  Channel ID.
+ */
+static inline void events_ch_clear_trigger_status(uint32_t channel_id)
+{
+	PEVC->PEVC_TRSCR = PEVC_TRSCR_TRSC(PEVC_TRSCR_TRSC_1 << channel_id);
+}
+
+/**
+ * \brief Get the overrun status of an event channel.
+ *
+ * \param channel_id  Channel ID.
+ *
+ *  \retval true  A channel overrun event has occurred
+ *  \retval false A channel overrun event has not occurred
+ */
+static inline bool events_ch_is_overrun(uint32_t channel_id)
+{
+	if (PEVC->PEVC_OVSR & PEVC_OVSR_OVS(PEVC_OVSR_OVS_1 << channel_id)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * \brief Clear the overrun status of an event channel.
+ *
+ * \param channel_id  Channel ID.
+ */
+static inline void events_ch_clear_overrun_status(uint32_t channel_id)
+{
+	PEVC->PEVC_OVSCR = PEVC_OVSCR_OVSC(PEVC_OVSCR_OVSC_1 << channel_id);
 }
 
 /** @} */
@@ -266,36 +335,36 @@ static inline void events_chan_software_trigger(uint32_t channel_id)
  * This module requires the following service
  * - \ref clk_group
  *
- * Enable the clock of PEVC before using this module in system initialization:
- * \code
- *   // Enable clock for PEVC module
- *   sysclk_enable_peripheral_clock(PEVC);
- * \endcode
- *
  * \subsection event_basic_setup_code Setup Code Example
  *
  * Add this to the main loop or a setup function:
  * \code
+ *   struct events_conf    events_config;
+ *   struct events_ch_conf ch_config;
+ *
  *   // Initialize AST as event generator
  *   init_ast();
  *
  *   // Initialize the PDCA as event user
  *   init_pdca();
  *
- *   struct events_chan_conf config;
+ *   // Initialize event module
+ *   events_get_config_defaults(&events_config);
+ *   events_init(&events_config);
+ *   events_enable();
  *
  *   // Configure an event channel
  *   // - AST periodic event 0 --- Generator
  *   // - PDCA channel 0       --- User
- *   events_chan_get_config_defaults(&config);
- *   config.channel_id = PEVC_ID_USER_PDCA_0;
- *   config.generator_id = PEVC_ID_GEN_AST_2;
- *   config.sharper_enable = true;
- *   config.igf_edge = EVENT_IGF_EDGE_NONE;
- *   events_chan_configure(&config);
+ *   events_ch_get_config_defaults(&ch_config);
+ *   ch_config.channel_id = PEVC_ID_USER_PDCA_0;
+ *   ch_config.generator_id = PEVC_ID_GEN_AST_2;
+ *   ch_config.sharper_enable = true;
+ *   ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
+ *   events_ch_configure(&ch_config);
  *
  *   // Enable the channel
- *   events_chan_enable(PEVC_ID_USER_PDCA_0);
+ *   events_ch_enable(PEVC_ID_USER_PDCA_0);
  * \endcode
  *
  * \subsection event_basic_setup_workflow Basic Setup Workflow
@@ -310,30 +379,26 @@ static inline void events_chan_software_trigger(uint32_t channel_id)
  *  \code
  *   init_pdca();
  *  \endcode
- * -# Create an event channel configuration struct, which can be filled out to
- *    adjust the configuration.
+ * -# Initialize the event module and enable it.
  *  \code
- *   struct events_chan_conf config;
+ *   struct events_conf    events_config;
+ *
+ *   // Initialize event module
+ *   events_get_config_defaults(&events_config);
+ *   events_init(&events_config);
+ *   events_enable();
  *  \endcode
- * -# Initialize the event channel configuration struct with the module's
- *    default values.
+ * -# Initialize the event channel and enable it.
  *  \code
- *   events_chan_get_config_defaults(&config);
- *  \endcode
- * -# Adjust the event channel configuration struct.
- *  \code
- *   config.channel_id = PEVC_ID_USER_PDCA_0;
- *   config.generator_id = PEVC_ID_GEN_AST_2;
- *   config.sharper_enable = true;
- *   config.igf_edge = EVENT_IGF_EDGE_NONE;
- *  \endcode
- * -# Configure the event channel using the configuration structure.
- *  \code
- *   events_chan_configure(&config);
- *  \endcode
- * -# Enable the event channel.
- *  \code
- *    events_chan_enable(PEVC_ID_USER_PDCA_0);
+ *   struct events_ch_conf ch_config;
+ *
+ *   events_ch_get_config_defaults(&ch_config);
+ *   ch_config.channel_id = PEVC_ID_USER_PDCA_0;
+ *   ch_config.generator_id = PEVC_ID_GEN_AST_2;
+ *   ch_config.sharper_enable = true;
+ *   ch_config.igf_edge = EVENT_IGF_EDGE_NONE;
+ *   events_ch_configure(&ch_config);
+ *   events_ch_enable(PEVC_ID_USER_PDCA_0);
  *  \endcode
  *
  * \section event_basic_usage Event Basic Usage

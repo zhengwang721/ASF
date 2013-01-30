@@ -42,6 +42,53 @@
  */
 
 #include "events.h"
+#include "sysclk.h"
+#include "sleepmgr.h"
+
+/**
+ * \brief Initialize an events configuration structure to defaults.
+ *
+ *  The default configuration is as follows:
+ *  - Input Glitch Filter Divider is set to \ref EVENT_IGF_DIVIDER_1024
+ *
+ *  \param config    Configuration structure to initialize to default values.
+ */
+void events_get_config_defaults(struct events_conf *const config)
+{
+	config->igf_divider = EVENT_IGF_DIVIDER_1024;
+}
+
+/**
+ * \brief Initialize the events module.
+ *
+ *  \param config    Configuration structure to initialize to default values.
+ */
+void events_init(struct events_conf *const config)
+{
+	/* Enable clock for PEVC module */
+	sysclk_enable_peripheral_clock(PEVC);
+
+	/* Set configuration */
+	events_set_igf_divider(config->igf_divider);
+}
+
+/**
+ * \brief Enable the events module.
+ */
+void events_enable(void)
+{
+	sysclk_enable_peripheral_clock(PEVC);
+	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
+}
+
+/**
+ * \brief Disable the events module.
+ */
+void events_disable(void)
+{
+	sysclk_disable_peripheral_clock(PEVC);
+	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
+}
 
 /**
  * \brief Initialize an event channel configuration structure to defaults.
@@ -54,7 +101,7 @@
  *
  *  \param config    Configuration structure to initialize to default values.
  */
-void events_chan_get_config_defaults(struct events_chan_conf *const config)
+void events_ch_get_config_defaults(struct events_ch_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -71,7 +118,7 @@ void events_chan_get_config_defaults(struct events_chan_conf *const config)
  *
  * \param config      Configuration settings for the event channel.
  */
-void events_chan_configure(struct events_chan_conf *const config)
+void events_ch_configure(struct events_ch_conf *const config)
 {
 	uint32_t evs_val = 0;
 
@@ -81,10 +128,10 @@ void events_chan_configure(struct events_chan_conf *const config)
 	Assert(config->generator_id < EVENT_GENERATOR_N);
 
 	/* Disable the channel first */
-	events_chan_disable(config->channel_id);
+	events_ch_disable(config->channel_id);
 
 	/* Configure the event channel */
-	PEVC->PEVC_CHMX[config->channel_id].PEVC_CHMX = 
+	PEVC->PEVC_CHMX[config->channel_id].PEVC_CHMX =
 		PEVC_CHMX_EVMX(config->generator_id);
 	if (config->sharper_enable) {
 		evs_val |= PEVC_EVS_EN;

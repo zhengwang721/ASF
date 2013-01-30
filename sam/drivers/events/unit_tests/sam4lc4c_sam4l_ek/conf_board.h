@@ -47,4 +47,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 
+/** Enable DACC Output Port */
+#define CONF_BOARD_DACC_VOUT
+
 #endif /* CONF_BOARD_H_INCLUDED */

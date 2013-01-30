@@ -59,7 +59,7 @@
 /** Generator ID for the test */
 #define CONF_TEST_GEN_ID     PEVC_ID_GEN_AST_2
 /** User ID for the test */
-#define CONF_TEST_USER_ID    PEVC_ID_USER_PDCA_0
+#define CONF_TEST_USER_ID    PEVC_ID_USER_DACC_CONV
 
 /** PDCA Peripheral id for the test */
 #define CONF_TEST_PDCA_PID   20

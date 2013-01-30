@@ -6,7 +6,6 @@
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_ast.h"/>
-		<build type="header-file" value="conf_pdca.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<require idref="sam.drivers.events.unit_tests"/>
 		<require idref="board.sam4l_ek"/>

@@ -105,13 +105,14 @@ static void pdca_tranfer_done(enum pdca_channel_status status)
  */
 static void init_events(void)
 {
-	struct events_chan_conf config;
+	struct events_conf    events_config;
+	struct events_ch_conf ch_config;
 
-	/* Enable clock for PEVC module */
-	sysclk_enable_peripheral_clock(PEVC);
-
-	/* Set Input Glitch Filter Divider */
-	events_set_igf_divider(EVENT_IGF_DIVIDER_1024);
+	/* Initialize event module */
+	events_get_config_defaults(&events_config);
+	events_config.igf_divider = EVENT_IGF_DIVIDER_1024;
+	events_init(&events_config);
+	events_enable();
 
 	/*
 	 * Configure an event channel
@@ -119,15 +120,15 @@ static void init_events(void)
 	 * - PDCA channel 0  --- User
 	 * - Enable falling edge detection for EVS
 	 */
-	events_chan_get_config_defaults(&config);
-	config.channel_id = PEVC_ID_USER_PDCA_0;
-	config.generator_id = PEVC_ID_GEN_PAD_1;
-	config.sharper_enable = true;
-	config.igf_edge = EVENT_IGF_EDGE_FALLING;
-	events_chan_configure(&config);
+	events_ch_get_config_defaults(&ch_config);
+	ch_config.channel_id = PEVC_ID_USER_PDCA_0;
+	ch_config.generator_id = PEVC_ID_GEN_PAD_1;
+	ch_config.sharper_enable = true;
+	ch_config.igf_edge = EVENT_IGF_EDGE_FALLING;
+	events_ch_configure(&ch_config);
 
 	/* Enable the channel */
-	events_chan_enable(PEVC_ID_USER_PDCA_0);
+	events_ch_enable(PEVC_ID_USER_PDCA_0);
 }
 
 /**
