@@ -49,17 +49,6 @@
 #include "sleepmgr.h"
 
 /**
- * \defgroup sam_drivers_iisc_group Inter-IC Sound Controller (IISC)
- *
- * See \ref sam_iisc_quick_start.
- *
- * Driver for the Inter-IC Sound Controller. This driver provides access to the
- * main features of the IISC controller.
- *
- * @{
- */
-
-/**
  * \internal
  * \brief IIS callback function pointer array
  */
@@ -359,5 +348,3 @@ void IISC_Handler(void)
 {
 	iis_interrupt_handler();
 }
-
-//@}
