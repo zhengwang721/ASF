@@ -40,7 +40,7 @@
  */
 
 /**
- * \page asfdoc_samd20_extint_basic_use_case QSG - Basic Use Case
+ * \page asfdoc_samd20_extint_basic_use_case Quick Start - Basic Use Case
  *
  * In this use case, the EXTINT module is configured for:
  *  - Channel 1 routed to physical pin PA01

@@ -187,7 +187,7 @@
  *
  * \section asfdoc_samd20_extint_examples Examples
  *
- * The following examples are available for this driver: 
+ * The following Quick Start guides and application examples are available for this driver: 
  * - \ref asfdoc_samd20_extint_basic_use_case
  *
  *
@@ -646,9 +646,9 @@ static inline void extint_nmi_clear_detected(
 /**
  * \page asfdoc_samd20_extint_exqsg Examples for EXTINT Driver
  *
- * This is a list of the available Quick Start Guides (QSGs) for \ref asfdoc_samd20_extint.
- * These are examples and step-by-step instructions to configure and use this driver
- * in a selection of use cases. The examples can be compiled as a standalone application
+ * This is a list of the available Quick Start guides (QSGs) and example applications for \ref asfdoc_samd20_extint.
+ * QSGs are simple examples with step-by-step instructions to configure and use this driver
+ * in a selection of use cases. Note that QSGs can be compiled as a standalone application
  * or be added to the user application.
  *
  *  - \subpage asfdoc_samd20_extint_basic_use_case
