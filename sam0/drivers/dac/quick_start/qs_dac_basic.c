@@ -72,7 +72,7 @@ int main(void)
 	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
 //! [set_ch_conf]
 //! [enable_ch]
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0),
+	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
 	//! [enable_ch]
 
 	/* Convert a value */
