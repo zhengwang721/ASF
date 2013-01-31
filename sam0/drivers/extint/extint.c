@@ -114,7 +114,7 @@ void extint_enable(void)
 		_extint_dev.callbacks[j] = NULL;
 	}
 
-	NVIC_EnableIRQ(EIC_EXTINT_0_IRQn);
+	NVIC_EnableIRQ(EIC_IRQn);
 #endif
 }
 
