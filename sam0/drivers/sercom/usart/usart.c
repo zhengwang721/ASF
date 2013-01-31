@@ -106,6 +106,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	_usart_wait_for_sync(dev_inst);
 
 	/*Set baud val */
+	baud_val = 63975;
 	usart_module->BAUD.reg = baud_val;
 
 	/* Set sample mode */
@@ -559,11 +560,11 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Check if the character size exceeds 8 bit */
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
-			usart_read(dev_inst, (uint16_t *)(rx_data));
+			usart_read(dev_inst, (void*)rx_data);
 			rx_data += 2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
-			usart_read(dev_inst, (uint16_t *)(rx_data++));
+			usart_read(dev_inst, (void*)(rx_data++));
 		}
 	}
 
