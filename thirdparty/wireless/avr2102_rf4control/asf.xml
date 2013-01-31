@@ -1,0 +1,36 @@
+<asf xmlversion="1.0">
+	<select-by-config id="config.thirdparty.wireless.avr2102_rf4control" name="config.thirdparty.wireless.avr2102_rf4control" caption="CONFIG Serial connectivity Helper files" default="source">
+        <module type="meta" id="config.thirdparty.wireless.avr2102_rf4control#source" caption="AVR2025 - IEEE 802.15.4">
+            <info type="description" value="summary">
+            To be added
+            </info>
+            <require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
+		    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
+		    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
+        </module>
+        <module type="meta" id="config.thirdparty.wireless.avr2102_rf4control#api_parser" caption="AVR2025 - IEEE 802.15.4">
+            <info type="description" value="summary">
+            To be added
+            </info>
+            <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
+        </module>
+	</select-by-config>
+
+    <module type="meta" id="thirdparty.wireless.avr2102_rf4control" caption="AVR2025 - IEEE 802.15.4">
+        <info type="description" value="summary">
+        To be added
+        </info>
+        <require idref="config.thirdparty.wireless.avr2102_rf4control"/>
+		<device-support value="xmega"/>
+        <device-support value="uc3"/>
+        <device-support value="megarf"/>
+        <device-support value="sam"/>
+        <build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+
+        <info type="keyword" value="technology">
+            <keyword value="Wireless"/>
+            <keyword value="Communication"/>
+        </info>
+    </module>
+</asf>

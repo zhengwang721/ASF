@@ -53,11 +53,11 @@
 
 #define NUMBER_OF_NWK_TIMERS            1 + NUMBER_OF_CH_AG_TIMERS + \
                                         NUMBER_OF_PROFILE_TIMERS + PBP_TIMER
-
+#if (HIGHEST_STACK_LAYER == RF4CE)
 #define NUMBER_OF_LARGE_STACK_BUFS              (5)
 
 #define NUMBER_OF_SMALL_STACK_BUFS              (0)
-
+#endif
 #if (HIGHEST_STACK_LAYER == RF4CE)
 
 
@@ -91,6 +91,8 @@
 
 #define DEVICE_TYPE_LIST_SIZE           3
 #define PROFILE_ID_LIST_SIZE            7
+#define NWKC_VENDOR_IDENTIFIER           (0x1014)
+#define NWKC_VENDOR_STRING               "ATMEL  "          /* 7 characters ! */
 
 
 

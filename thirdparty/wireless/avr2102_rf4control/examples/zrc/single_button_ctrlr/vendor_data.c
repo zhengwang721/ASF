@@ -23,8 +23,6 @@
 #include "rf4ce.h"
 #include "zrc.h"
 #include "vendor_data.h"
-#include "pal.h"
-#include "tal.h"
 #include "app_config.h"
 #ifdef FLASH_SUPPORT
 #include "pal_flash.h"
@@ -60,7 +58,7 @@ extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_i
                                );
 #else /* RF4CE_TARGET */
 extern void nlme_rx_enable_confirm(nwk_enum_t Status);
-static void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
+void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
 #ifdef NLDE_HANDLE
                                 , uint8_t Handle
 #endif
@@ -73,24 +71,7 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
 /* === IMPLEMENTATION ====================================================== */
 
-bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
-                         uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
-                         uint8_t TxOptions)
-{
-    /* Keep compiler happy */
-    ProfileId = ProfileId;
 
-
-    return nlde_data_request(PairingRef, PROFILE_ID_ZRC, VendorId,
-                             nsduLength, nsdu, TxOptions
-#ifdef NLDE_HANDLE
-                             , 1
-#endif
-#ifdef RF4CE_CALLBACK_PARAM
-                             , (FUNC_PTR) vendor_data_confirm
-#endif
-                            );
-}
 
 
 #ifndef RF4CE_TARGET
@@ -244,7 +225,6 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
 #ifndef RF4CE_TARGET
 #ifdef RF4CE_CALLBACK_PARAM
-static
 #endif
 void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
 #ifdef NLDE_HANDLE

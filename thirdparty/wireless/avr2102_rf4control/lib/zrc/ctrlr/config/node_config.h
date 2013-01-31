@@ -54,8 +54,8 @@
 #endif
 
 #define NWKC_MAX_PAIRING_TABLE_ENTRIES    (5)
-#define NWKC_VENDOR_IDENTIFIER           (0x1014)
-#define NWKC_VENDOR_STRING               "ATMEL  "          /* 7 characters ! */
+// #define NWKC_VENDOR_IDENTIFIER           (0x1014)
+// #define NWKC_VENDOR_STRING               "ATMEL  "          /* 7 characters ! */
 
 
 /* Implementation specific ZRC constant defines */

@@ -224,6 +224,7 @@ typedef enum nwk_enum_tag
  *
  * @ingroup apiRF4CONTROL_NWK_CONSTANTS
  */
+
 typedef struct NodeDesc_tag
 {
     /** The status of the discovery request as reported by the responding device.

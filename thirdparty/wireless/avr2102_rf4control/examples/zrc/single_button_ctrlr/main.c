@@ -18,13 +18,12 @@
 
 #include <asf.h>
 #include "conf_board.h"
-#include "pal.h"
+#include "common_sw_timer.h"
 #include "keyboard.h"
 #include "app_config.h"
 #include "rf4ce.h"
 #include "zrc.h"
 #include "pb_pairing.h"
-#include "sleepmgr.h"
 #include "vendor_data.h"
 
 
@@ -119,7 +118,7 @@ int main(void)
         }
     }
     cpu_irq_enable();
-    pal_timer_get_id(&app_timer);
+    sw_timer_get_id(&app_timer);
 #ifdef RF4CE_CALLBACK_PARAM
 #ifdef VENDOR_DATA
     zrc_ind.vendor_data_ind_cb = vendor_data_ind;
@@ -286,9 +285,9 @@ void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 
 #ifdef ZRC_CMD_DISCOVERY
     /* Start timer to send the cmd discovery request */
-    pal_timer_start(app_timer,
+   sw_timer_start(app_timer,
                     aplcMinTargetBlackoutPeriod_us,
-                    TIMEOUT_RELATIVE,
+                    SW_TIMEOUT_RELATIVE,
                     (FUNC_PTR)start_cmd_disc_cb,
                     NULL);
 #else
@@ -425,7 +424,7 @@ static void app_task(void)
                 if (key_state == KEY_PRESSED)
                 {
                     /* Check time to previous transmission. */
-                    pal_get_current_time(&current_time);
+                    current_time=sw_timer_get_time();
                     if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
                     {
                         return;
@@ -449,14 +448,14 @@ static void app_task(void)
                 }
                 else //(button == BUTTON_OFF)
                 {
-                    if (nwk_ready_to_sleep())
+                   /* if (nwk_ready_to_sleep())
                     {
-                        /* Set MCU to sleep */                     
+                        / * Set MCU to sleep * /                     
                         sleepmgr_init();
                         sleepmgr_lock_mode(SLEEPMGR_IDLE);
                         sleepmgr_enter_sleep();
-                        /* MCU is awake again */
-                    }
+                        / * MCU is awake again * /
+                    }*/
                 }
             }
             break;
@@ -585,7 +584,7 @@ static key_state_t key_state_read(key_id_t key_no)
     switch (key_no)
     {
         case SELECT_KEY:
-          if(gpio_pin_is_low(GPIO_PUSH_BUTTON_0))
+          if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
           {
             key_val = KEY_PRESSED; 
           }

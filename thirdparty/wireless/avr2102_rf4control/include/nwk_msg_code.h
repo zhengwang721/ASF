@@ -102,22 +102,23 @@ typedef enum nwk_msg_code_tag
 } SHORTENUM nwk_msg_code_t;
 
 
+
 /** The following defines describe the minimum length of a primitive message. */
-#define NLDE_DATA_REQ_LEN            /**< */
-#define NLME_AUTO_DISCOVERY_REQ_LEN  /**< */
-#define NLME_DISCOVERY_REQ_LEN       /**< */
-#define NLME_DISCOVERY_RESP_LEN      /**< */
-#define NLME_PAIR_REQ_LEN            /**< */
-#define NLME_PAIR_RESP_LEN           /**< */
-#define NLME_RESET_REQ_LEN           /**< */
-#define NLME_GET_REQ_LEN             /**< */
-#define NLME_RX_ENABLE_REQ_LEN       /**< */
-#define NLME_SET_REQ_LEN             /**< */
-#define NLME_START_REQ               /**< */
-#define NLME_UNPAIR_REQ_LEN          /**< */
-#define NLME_UNPAIR_RESP_LEN         /**< */
-#define NLME_UPDATE_KEY_REQ_LEN      /**< */
-#define NWK_CH_AGILITY_REQ_LEN       /**< */
+#define NLDE_DATA_REQ_LEN             7/**< */
+#define NLME_AUTO_DISCOVERY_REQ_LEN   15/**< */
+#define NLME_DISCOVERY_REQ_LEN        29/**< */
+#define NLME_DISCOVERY_RESP_LEN       22/**< */
+#define NLME_PAIR_REQ_LEN             24/**< */
+#define NLME_PAIR_RESP_LEN            24/**< */
+#define NLME_RESET_REQ_LEN            2/**< */
+#define NLME_GET_REQ_LEN              3/**< */
+#define NLME_RX_ENABLE_REQ_LEN        5/**< */
+#define NLME_SET_REQ_LEN              4/**< */
+#define NLME_START_REQ_LEN            1/**< */
+#define NLME_UNPAIR_REQ_LEN           2/**< */
+#define NLME_UNPAIR_RESP_LEN          2/**< */
+#define NLME_UPDATE_KEY_REQ_LEN       18/**< */
+#define NWK_CH_AGILITY_REQ_LEN        2/**< */
 
 #define MAC_DATA_IND_LEN             /**< */
 
@@ -141,6 +142,21 @@ typedef enum nwk_msg_code_tag
 #define NWK_CH_AGILITY_CONF_LEN         4   /**< */
 #define UNSUPPORTED_CMD_LEN             1   /**<*/
 
+#define PBP_ORG_PAIR_REQ_LEN            21
+#define PBP_REC_PAIR_REQ_LEN            12
+#define ZRC_CMD_REQ_LEN                 6
+#define ZRC_CMD_DISCOVERY_REQ_LEN       2
+#define ZRC_CMD_DISCOVERY_RESP_LEN      35
+#define VENDOR_DATA_REQ_LEN             7
+   
+#define PBP_ORG_PAIR_CON_LEN            3 
+#define PBP_REC_PAIR_CONF_LEN           3
+#define ZRC_CMD_IND_LEN                 5
+#define ZRC_CMD_CONF_LEN                4
+#define ZRC_CMD_DISCOVERY_IND_LEN       2
+#define ZRC_CMD_DISCOVERY_CONF_LEN      34
+#define VENDOR_DATA_IND_LEN             8
+#define VENDOR_DATA_CONF_LEN            3
 /* === Externals ============================================================ */
 
 

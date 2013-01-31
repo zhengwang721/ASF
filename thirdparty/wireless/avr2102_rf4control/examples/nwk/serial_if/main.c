@@ -19,11 +19,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-
 #include <asf.h>
 #include "conf_board.h"
-#include "pal.h"
-#include "tal.h"
+#include "common_sw_timer.h"
 #include "serial_interface.h"
 #include "app_config.h"
 
@@ -42,7 +40,7 @@ FLASH_DECLARE(uint8_t supported_cec_cmds[32]) = SUPPORTED_CEC_CMDS;
 
 /* === EXTERNALS =========================================================== */
 #ifdef RF4CE_CALLBACK_PARAM
-extern void nwk_indication_callback_init(void);
+extern void stack_indication_callback_init(void);
 #endif
 
 
@@ -74,7 +72,7 @@ int main (void)
     }
 
 #ifdef RF4CE_CALLBACK_PARAM
-    nwk_indication_callback_init();
+    stack_indication_callback_init();
 #endif
 
 #ifdef FLASH_NVRAM

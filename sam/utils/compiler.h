@@ -1032,8 +1032,11 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #endif
 
 #define FLASH_DECLARE(x)  const x
-
+#define FLASH_EXTERN(x) extern const x
 #define PGM_READ_BYTE(x) *(x)
+#define PGM_READ_WORD(x) *(x)
+#define MEMCPY_ENDIAN memcpy
+#define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 
 /* Converting of values from CPU endian to little endian. */
 #define CPU_ENDIAN_TO_LE16(x)   (x)
@@ -1050,8 +1053,6 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define CCPU_ENDIAN_TO_LE32(x)  (x)
 #define CCPU_ENDIAN_TO_LE64(x)  (x)
 
-#define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
-#define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
 
 /**
  * \}

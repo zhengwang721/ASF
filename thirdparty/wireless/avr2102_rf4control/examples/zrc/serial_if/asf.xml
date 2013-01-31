@@ -4,21 +4,16 @@
 
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="serial_interface.h"/>
 		<build type="c-source" value="main.c"/>
-		<build type="c-source" value="serial_interface.c"/>
-		<build type="header-file" value="conf_common_sw_timer.h"/>
-
+		<require idref="thirdparty.wireless.avr2102_rf4control.addons.serial_interface"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.include"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
+		<device-support value="sam"/>
 	</module>
 </asf>

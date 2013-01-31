@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+
+		<module type="meta" id="thirdparty.wireless.avr2102_rf4control.addons.serial_interface" caption="API Parser support ">
+			<info type="description" value="summary">
+				API Parser for MAC
+			</info>
+
+			<build type="c-source" value="serial_interface.c"/>
+			<build type="header-file" value="serial_interface.h"/>
+			<build type="include-path" value="."/>
+			<device-support value="xmega"/>
+		    <device-support value="uc3"/>
+		    <device-support value="sam"/>
+		    <device-support value="megarf"/>
+		</module>	
+		
+</asf>

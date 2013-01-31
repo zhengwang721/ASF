@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type ="application" caption="Button Controller Application for AVR2102 zrc controller" id="thirdparty.wireless.avr2102_rf4control.examples.zrc.single_button_ctrlr.host">
+		<info type="description" value="summary">
+		BUTTON CONTROLLER APPLICATION FOR RF4CE ZRC CONTROLLER
+		</info>
+		<build type="header-file" value="app_config.h"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file" value="keyboard.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="PBP_REC" value =""/>
+		<build type="define" name="RF4CE_PLATFORM" value =""/>
+		<build type="define" name="CHANNEL_AGILITY" value =""/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.examples.zrc.single_button_ctrlr"/>
+		<require idref="thirdparty.wireless.addons.sio2ncp"/>
+		<require idref="common.services.delay"/>
+        <require idref="common.services.ioport"/>
+		<build type="doxygen-entry-point" value="zrc_group"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
+	</module>
+</asf>
