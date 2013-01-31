@@ -38,7 +38,8 @@
  * \asf_license_stop
  *
  */
-#include <wdt.h>
+#include "wdt.h"
+#include <system.h>
 
 /**
  * \internal Internal device structure.
