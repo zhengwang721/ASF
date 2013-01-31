@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal SRAM on the SAMD20J18A
+ * \brief Linker script for running in internal FLASH on the SAMD20G16A
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -49,11 +49,12 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
+  rom (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00010000
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00002000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
-STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
+STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x800;
 
 /* Section Definitions */
 SECTIONS
@@ -105,7 +106,15 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > ram
+    } > rom
+
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > rom
+    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _etext = .;
@@ -142,14 +151,6 @@ SECTIONS
         . = ALIGN(8);
         _estack = .;
     } > ram
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > ram
-    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;

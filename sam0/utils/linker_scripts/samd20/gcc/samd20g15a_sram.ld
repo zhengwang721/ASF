@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal SRAM on the SAMD20J18A
+ * \brief Linker script for running in internal SRAM on the SAMD20G15A
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -49,11 +49,11 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00001000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
-STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
+STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x400;
 
 /* Section Definitions */
 SECTIONS

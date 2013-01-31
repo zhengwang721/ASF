@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal FLASH on the SAMD20E16A
+ * \brief Linker script for running in internal FLASH on the SAMD20G16A
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

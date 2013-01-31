@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal SRAM on the SAMD20J18A
+ * \brief Linker script for running in internal SRAM on the SAMD20G18A
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
