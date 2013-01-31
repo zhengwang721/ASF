@@ -356,7 +356,7 @@ typedef struct {
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Set Register */
   __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x10 (R/W 32) Interrupt Flag Status and Clear Register */
   __IO EIC_WAKEUP_Type           WAKEUP;      /**< \brief Offset: 0x14 (R/W 32) Wake-up Enable Register */
-  __IO EIC_CONFIG_Type           CONFIG[2];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */
+  __IO EIC_CONFIG_Type           CONFIG[4];   /**< \brief Offset: 0x18 (R/W 32) Config Register [NUMBER_OF_CONFIG_REGS] */ /* TODO: Manually updated to match datasheet */
 } Eic;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
