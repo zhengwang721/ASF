@@ -39,6 +39,7 @@
  *
  */
 #include "extint.h"
+#include <system.h>
 
 /**
  * \internal
@@ -92,6 +93,14 @@ void extint_reset(void)
 void extint_enable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	/* Configure the generic clock for the module */
+	struct system_gclk_ch_conf gclock_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator = 0;
+	gclock_ch_conf.run_in_standby   = false;
+	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
+	system_gclk_ch_enable(EIC_GCLK_ID);
 
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {

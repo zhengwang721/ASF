@@ -58,24 +58,6 @@ static void board_extint_handler(uint32_t channel)
 	port_pin_set_output_level(LED_0_PIN, !pin_state);
 }
 
-static void configure_clocks(void)
-{
-	system_ahb_clock_set_mask(0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, 0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, 0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 0xFFFFFFFF);
-
-#if USE_EIC == true
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator    = 0;
-	gclock_ch_conf.run_in_standby      = false;
-
-	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(EIC_GCLK_ID);
-#endif
-}
-
 static void configure_led(void)
 {
 	struct port_conf pin_conf;
@@ -125,7 +107,6 @@ int main(void)
 {
 	system_init();
 
-	configure_clocks();
 	configure_led();
 	configure_button();
 
