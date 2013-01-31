@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief Low-level initialization functions called upon chip startup
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,14 +41,19 @@
  *
  */
 
-#ifndef SYSTEM_SAMD20_H_INCLUDED
-#define SYSTEM_SAMD20_H_INCLUDED
+#ifndef _SYSTEM_SAMD20_H_INCLUDED_
+#define _SYSTEM_SAMD20_H_INCLUDED_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
+
+extern uint32_t SystemCoreClock;   /*!< System Clock Frequency (Core Clock)  */
+
+void SystemInit(void);
+void SystemCoreClockUpdate(void);
 
 #ifdef __cplusplus
 }

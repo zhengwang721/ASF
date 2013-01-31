@@ -62,15 +62,15 @@ static uint32_t xosc32k_frequency = 0;
  */
 uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 {
-	uint32_t prescaler = 0;
+	uint32_t temp = 0;
 	switch (clk_source) {
 
 	case SYSTEM_CLOCK_SOURCE_XOSC:
 		return xosc_frequency;
 	case SYSTEM_CLOCK_SOURCE_OSC8M:
-		prescaler = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
-		if (prescaler) {
-			return 8000000 / (1 << prescaler);
+		temp = (SYSCTRL->OSC8M.reg & SYSCTRL_OSC8M_PRESC_Msk) >> SYSCTRL_OSC8M_PRESC_Pos;
+		if (temp) {
+			return 8000000 / (1 << temp);
 		} else {
 			return 8000000;
 		}
@@ -81,8 +81,16 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source)
 	case SYSTEM_CLOCK_SOURCE_XOSC32K:
 		return xosc32k_frequency;
 	case SYSTEM_CLOCK_SOURCE_DFLL:
-		/* get_generator_hz * dfll_multiply_factor */
-		return 48000000;
+		/* Closed loop mode */
+		_system_dfll_wait_for_sync();
+		if (SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_MODE) {
+			SYSCTRL->DFLLSYNC.bit.READREQ = 1;
+			_system_dfll_wait_for_sync();
+			temp = SYSCTRL->DFLLMUL.bit.MUL;
+			return system_gclk_ch_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
+		} else {
+			return 48000000;
+		}
 	default:
 		return 0;
 	}

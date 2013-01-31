@@ -251,7 +251,7 @@ void system_gclk_ch_set_config(
 
 	#if !defined (REVB)
 	/* Enable or disable the clock in standby mode */
-	if (config->enable_during_sleep) {
+	if (config->run_in_standby) {
 		new_clkctrl_config |= GCLK_CLKCTRL_RUNSTDBY;
 	}
 	#endif

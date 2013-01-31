@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Linker script for running in internal SRAM on the SAMD20J17A
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -39,9 +41,6 @@
  *
  */
 
-/*------------------------------------------------------------------------------
- *      Linker script for running in internal SRAM on the SAMD20J17A
- *----------------------------------------------------------------------------*/
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
