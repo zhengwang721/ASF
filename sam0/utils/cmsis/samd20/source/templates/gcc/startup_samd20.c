@@ -106,44 +106,44 @@ const DeviceVectors exception_table = {
         (void*) Reset_Handler,
         (void*) NonMaskableInt_Handler,
         (void*) HardFault_Handler,
-        (void*) (0UL), /* Reserved */,
-        (void*) (0UL), /* Reserved */,
-        (void*) (0UL), /* Reserved */,
+        (void*) (0UL), /* Reserved */
+        (void*) (0UL), /* Reserved */
+        (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) SVCall_Handler,
-        (void*) (0UL), /* Reserved */,
+        (void*) (0UL), /* Reserved */
         (void*) (0UL), /* Reserved */
         (void*) PendSV_Handler,
         (void*) SysTick_Handler,
 
         /* Configurable interrupts */
-        (void*) pfnPM_Handler,                    /*  0 Power Manager */
-        (void*) pfnSYSCTRL_Handler,               /*  1 System Control */
-        (void*) pfnWDT_Handler,                   /*  2 Watchdog Timer */
-        (void*) pfnRTC_Handler,                   /*  3 Real-Time Counter */
-        (void*) pfnEIC_Handler,                   /*  4 External Interrupt Controller */
-        (void*) pfnNVMCTRL_Handler,               /*  5 Non-Volatile Memory Controller */
-        (void*) pfnEVSYS_Handler,                 /*  6 Event System Interface */
-        (void*) pfnSERCOM0_Handler,               /*  7 Serial Communication Interface 0 */
-        (void*) pfnSERCOM1_Handler,               /*  8 Serial Communication Interface 1 */
-        (void*) pfnSERCOM2_Handler,               /*  9 Serial Communication Interface 2 */
-        (void*) pfnSERCOM3_Handler,               /* 10 Serial Communication Interface 3 */
-        (void*) pfnSERCOM4_Handler,               /* 11 Serial Communication Interface 4 */
-        (void*) pfnSERCOM5_Handler,               /* 12 Serial Communication Interface 5 */
-        (void*) pfnTC0_Handler,                   /* 13 Basic Timer Counter 0 */
-        (void*) pfnTC1_Handler,                   /* 14 Basic Timer Counter 1 */
-        (void*) pfnTC2_Handler,                   /* 15 Basic Timer Counter 2 */
-        (void*) pfnTC3_Handler,                   /* 16 Basic Timer Counter 3 */
-        (void*) pfnTC4_Handler,                   /* 17 Basic Timer Counter 4 */
-        (void*) pfnTC5_Handler,                   /* 18 Basic Timer Counter 5 */
-        (void*) pfnTC6_Handler,                   /* 19 Basic Timer Counter 6 */
-        (void*) pfnTC7_Handler,                   /* 20 Basic Timer Counter 7 */
-        (void*) pfnADC_Handler,                   /* 21 Analog Digital Converter */
-        (void*) pfnAC_Handler,                    /* 22 Analog Comparators */
-        (void*) pfnDAC_Handler                    /* 23 Digital Analog Converter */
+        (void*) PM_IRQn_Handler,      /*  0 Power Manager */
+        (void*) SYSCTRL_IRQn_Handler, /*  1 System Control */
+        (void*) WDT_IRQn_Handler,     /*  2 Watchdog Timer */
+        (void*) RTC_IRQn_Handler,     /*  3 Real-Time Counter */
+        (void*) EIC_IRQn_Handler,     /*  4 External Interrupt Controller */
+        (void*) NVMCTRL_IRQn_Handler, /*  5 Non-Volatile Memory Controller */
+        (void*) EVSYS_IRQn_Handler,   /*  6 Event System Interface */
+        (void*) SERCOM0_IRQn_Handler, /*  7 Serial Communication Interface 0 */
+        (void*) SERCOM1_IRQn_Handler, /*  8 Serial Communication Interface 1 */
+        (void*) SERCOM2_IRQn_Handler, /*  9 Serial Communication Interface 2 */
+        (void*) SERCOM3_IRQn_Handler, /* 10 Serial Communication Interface 3 */
+        (void*) SERCOM4_IRQn_Handler, /* 11 Serial Communication Interface 4 */
+        (void*) SERCOM5_IRQn_Handler, /* 12 Serial Communication Interface 5 */
+        (void*) TC0_IRQn_Handler,     /* 13 Basic Timer Counter 0 */
+        (void*) TC1_IRQn_Handler,     /* 14 Basic Timer Counter 1 */
+        (void*) TC2_IRQn_Handler,     /* 15 Basic Timer Counter 2 */
+        (void*) TC3_IRQn_Handler,     /* 16 Basic Timer Counter 3 */
+        (void*) TC4_IRQn_Handler,     /* 17 Basic Timer Counter 4 */
+        (void*) TC5_IRQn_Handler,     /* 18 Basic Timer Counter 5 */
+        (void*) TC6_IRQn_Handler,     /* 19 Basic Timer Counter 6 */
+        (void*) TC7_IRQn_Handler,     /* 20 Basic Timer Counter 7 */
+        (void*) ADC_IRQn_Handler,     /* 21 Analog Digital Converter */
+        (void*) AC_IRQn_Handler,      /* 22 Analog Comparators */
+        (void*) DAC_IRQn_Handler      /* 23 Digital Analog Converter */
 };
 
 /**
