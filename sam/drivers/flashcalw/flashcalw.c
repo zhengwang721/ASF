@@ -3,7 +3,7 @@
  *
  * \brief FlashCALW driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -183,6 +183,21 @@ void flashcalw_set_wait_state(uint32_t wait_state)
 void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 		uint32_t ps_value, bool is_fwu_enabled)
 {
+#ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
+	UNUSED(ps_value);
+	UNUSED(is_fwu_enabled);
+	
+	if (cpu_f_hz > FLASH_FREQ_PS2_FWS_0_MAX_FREQ) { /* > 24MHz */
+		/* Set a wait-state. */
+		flashcalw_set_wait_state(1);
+	} else {
+		/* No wait-state. */
+		flashcalw_set_wait_state(0);
+	}
+
+	/* Enable the high-speed read mode. */
+	flashcalw_issue_command(FLASHCALW_FCMD_CMD_HSEN, -1);
+#else
 	if (ps_value == 0) {
 		if (cpu_f_hz > FLASH_FREQ_PS0_FWS_0_MAX_FREQ) {
 			// > 18MHz
@@ -231,6 +246,7 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 		/* Disable the high-speed read mode. */
 		flashcalw_issue_command(FLASHCALW_FCMD_CMD_HSDIS, -1);
 	}
+#endif
 }
 
 /*! \brief Tells whether the Flash Ready interrupt is enabled.
