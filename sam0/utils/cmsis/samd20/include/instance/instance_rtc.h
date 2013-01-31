@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Instance description for RTC
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -106,5 +108,6 @@
 #define RTC_GCLK_ID                 2
 #define RTC_NUM_OF_ALARMS           1
 #define RTC_NUM_OF_COMP16           2
+#define RTC_NUM_OF_COMP32           1
 
 #endif /* _SAMD20_RTC_INSTANCE_ */

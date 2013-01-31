@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for PM
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -288,8 +290,7 @@ typedef union {
     uint32_t ADC:1;            /*!< bit:     16  ADC APB Clock Mask                 */
     uint32_t AC:1;             /*!< bit:     17  AC APB Clock Mask                  */
     uint32_t DAC:1;            /*!< bit:     18  DAC APB Clock Mask                 */
-    uint32_t PTC:1;            /*!< bit:     19  PTC APB Clock Mask                 */
-    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+    uint32_t :13;              /*!< bit: 19..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PM_APBCMASK_Type;
@@ -336,9 +337,7 @@ typedef union {
 #define PM_APBCMASK_AC              (0x1u << PM_APBCMASK_AC_Pos)
 #define PM_APBCMASK_DAC_Pos         18           /**< \brief (PM_APBCMASK) DAC APB Clock Mask */
 #define PM_APBCMASK_DAC             (0x1u << PM_APBCMASK_DAC_Pos)
-#define PM_APBCMASK_PTC_Pos         19           /**< \brief (PM_APBCMASK) PTC APB Clock Mask */
-#define PM_APBCMASK_PTC             (0x1u << PM_APBCMASK_PTC_Pos)
-#define PM_APBCMASK_MASK            0x000FFFFFu  /**< \brief (PM_APBCMASK) MASK Register */
+#define PM_APBCMASK_MASK            0x0007FFFFu  /**< \brief (PM_APBCMASK) MASK Register */
 
 /* -------- PM_INTENCLR : (PM Offset: 0x34) (R/W  8) Interrupt Enable Clear Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
