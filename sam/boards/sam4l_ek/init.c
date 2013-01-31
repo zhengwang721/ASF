@@ -168,6 +168,11 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(DACC_VOUT_PIN, DACC_VOUT_MUX);
 #endif
 
+#ifdef CONF_BOARD_ACIFC
+	ioport_set_pin_peripheral_mode(PIN_PA06E_ACIFC_ACAN0, MUX_PA06E_ACIFC_ACAN0);
+	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
+#endif
+
 #ifdef CONF_BOARD_ABDACB_PORT
 	ioport_set_pin_peripheral_mode(ABDACB_AUDIO0_PIN, ABDACB_AUDIO0_MUX);
 	ioport_set_pin_peripheral_mode(ABDACB_AUDIO1_PIN, ABDACB_AUDIO1_MUX);
