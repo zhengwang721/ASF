@@ -527,40 +527,44 @@ static inline void handle_incoming_msg(void)
           uint8_t k;
           uint8_t *addr_ptr;
           uint8_t numnodes=sio_rx_buf[3];
+		  uint8_t index = 5;
           for (i = 0; i <numnodes; i++)
-    {
-        NodeDescList[i].Status = (nwk_enum_t)sio_rx_buf[5];
-        NodeDescList[i].LogicalChannel = sio_rx_buf[6];
-        NodeDescList[i].PANId = (uint16_t)sio_rx_buf[7] | ((uint16_t)sio_rx_buf[8] << 8);
-        addr_ptr = (uint8_t *)(&NodeDescList[i].IEEEAddr);
-        for (k = 0; k < 8; k++)
-        {
-            *addr_ptr++ = sio_rx_buf[9+k];
-        }
-       NodeDescList[i].NodeCapabilities = sio_rx_buf[17];
-		NodeDescList[i].VendorId = (uint16_t)sio_rx_buf[18] | ((uint16_t)sio_rx_buf[19] << 8);
-        for (k = 0; k < 7; k++)
-        {
-            NodeDescList[i].VendorString[k]= sio_rx_buf[20+k];
-        }
-        NodeDescList[i].AppCapabilities = sio_rx_buf[27];
-        for (k = 0; k < 15; k++)
-        {
-            NodeDescList[i].UserString[k]= sio_rx_buf[28+k];
-        }
-        for (k = 0; k < DEVICE_TYPE_LIST_SIZE; k++)
-        {
+          {
+	          NodeDescList[i].Status = (nwk_enum_t)sio_rx_buf[index++];
+	          NodeDescList[i].LogicalChannel = sio_rx_buf[index++];
+	          NodeDescList[i].PANId = sio_rx_buf[index++];
+			  NodeDescList[i].PANId |=  (sio_rx_buf[index++] << 8);
+	          addr_ptr = (uint8_t *)(&NodeDescList[i].IEEEAddr);
+	          for (k = 0; k < 8; k++)
+	          {
+		          *addr_ptr++ = sio_rx_buf[index++];
+	          }
+	          NodeDescList[i].NodeCapabilities = sio_rx_buf[index++];//17
+	          addr_ptr = (uint8_t *)&NodeDescList[i].VendorId;
+	          *addr_ptr++ = sio_rx_buf[index++];//18
+	          *addr_ptr= sio_rx_buf[index++];//19
+	          for (k = 0; k < 7; k++)
+	          {
+		          NodeDescList[i].VendorString[k]= sio_rx_buf[index++];//20
+	          }
+	          NodeDescList[i].AppCapabilities = sio_rx_buf[index++];//27
+	          for (k = 0; k < 15; k++)
+	          {
+		          NodeDescList[i].UserString[k]= sio_rx_buf[index++];//28
+	          }
+	          for (k = 0; k < DEVICE_TYPE_LIST_SIZE; k++)
+	          {
 
-            NodeDescList[i].DevTypeList[k] = (dev_type_t)sio_rx_buf[43+k];
-        }
-        for (k = 0; k < PROFILE_ID_LIST_SIZE; k++)
-        {
+		          NodeDescList[i].DevTypeList[k] = (dev_type_t)sio_rx_buf[index++];//43
+	          }
+	          for (k = 0; k < PROFILE_ID_LIST_SIZE; k++)
+	          {
 
-            NodeDescList[i].ProfileIdList[k]= (profile_id_t)sio_rx_buf[46+k];
+		          NodeDescList[i].ProfileIdList[k]= (profile_id_t)sio_rx_buf[index++];//46
 
-        }
-        NodeDescList[i].DiscReqLQI = sio_rx_buf[53];
-    }
+	          }
+	          NodeDescList[i].DiscReqLQI = sio_rx_buf[index++];//53
+          }
     
     
 #ifdef RF4CE_CALLBACK_PARAM
@@ -568,7 +572,7 @@ static inline void handle_incoming_msg(void)
 #else
           nlme_discovery_confirm(
 #endif
-          (nwk_enum_t)sio_rx_buf[2],numnodes,NodeDescList);
+          (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],NodeDescList);
     
         }
         break;

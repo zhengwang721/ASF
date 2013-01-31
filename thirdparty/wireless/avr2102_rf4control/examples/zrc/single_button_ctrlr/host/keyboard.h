@@ -44,7 +44,7 @@
 #ifndef KEYBOARD_H_INCLUDED
 #define KEYBOARD_H_INCLUDED
 
-#include "sam4l_xplained_pro"
+#include "sam4l_xplained_pro.h"
 
 typedef enum key_id_tag
 {
