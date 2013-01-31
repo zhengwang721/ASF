@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="mega.utils" caption="megaAVR and tinyAVR compiler driver">
+	<module type="driver" id="mega.utils" caption="MEGA compiler driver">
 		<info type="gui-flag" value="hidden"/>
 		<info type="description" value="summary">
-		Compiler abstraction layer and code utilities for 8-bit megaAVR and tinyAVR. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+		Compiler abstraction layer and code utilities for 8-bit megaAVR. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 		</info>
 		<build type="include-path" value="." />
 		<build type="header-file" value="assembler.h" />
@@ -13,10 +13,8 @@
 		<build type="header-file" subtype="api" value="status_codes.h" />
 		<build type="header-file" value="progmem.h" />
 		<device-support value="mega" />
-		<device-support value="tiny" />
 		<require idref="common.utils.makefile"/>
 		<require idref="common.utils.interrupt" />
 		<require idref="common.utils.part_macros" />
 	</module>
 </asf>
-
