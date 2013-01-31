@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief IAR startup file for SAMD20
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -41,57 +43,16 @@
 
 #include "samd20.h"
 
+typedef void (*intfunc) (void);
+typedef union { intfunc __fun; void * __ptr; } intvec_elem;
+
 void __iar_program_start(void);
 int __low_level_init(void);
 
+/* Default empty handler */
 void Dummy_Handler(void);
-void Reset_Handler(void);
-
-/**
- * \brief Default interrupt handler for unused IRQs.
- */
-void Dummy_Handler(void)
-{
-	while (1) {
-	}
-}
 
 /* Cortex-M0+ core handlers */
-void NonMaskableInt_Handler  ( void );
-void HardFault_Handler       ( void );
-void SVCall_Handler          ( void );
-void PendSV_Handler          ( void );
-void SysTick_Handler         ( void );
-
-/* Peripherals handlers */
-void PM_IRQn_Handler         ( void );
-void SYSCTRL_IRQn_Handler    ( void );
-void WDT_IRQn_Handler        ( void );
-void RTC_IRQn_Handler        ( void );
-void EIC_IRQn_Handler        ( void );
-void NVMCTRL_IRQn_Handler    ( void );
-void EVSYS_IRQn_Handler      ( void );
-void SERCOM0_IRQn_Handler    ( void );
-void SERCOM1_IRQn_Handler    ( void );
-void SERCOM2_IRQn_Handler    ( void );
-void SERCOM3_IRQn_Handler    ( void );
-void SERCOM4_IRQn_Handler    ( void );
-void SERCOM5_IRQn_Handler    ( void );
-void TC0_IRQn_Handler        ( void );
-void TC1_IRQn_Handler        ( void );
-void TC2_IRQn_Handler        ( void );
-void TC3_IRQn_Handler        ( void );
-void TC4_IRQn_Handler        ( void );
-void TC5_IRQn_Handler        ( void );
-void TC6_IRQn_Handler        ( void );
-void TC7_IRQn_Handler        ( void );
-void ADC_IRQn_Handler        ( void );
-void AC_IRQn_Handler         ( void );
-void DAC_IRQn_Handler        ( void );
-void PTC_IRQn_Handler        ( void );
-
-/* Cortex-M0+ core handlers */
-//#pragma weak Reset_Handler            = Dummy_Handler
 #pragma weak NonMaskableInt_Handler   = Dummy_Handler
 #pragma weak HardFault_Handler        = Dummy_Handler
 #pragma weak SVCall_Handler           = Dummy_Handler
@@ -99,35 +60,32 @@ void PTC_IRQn_Handler        ( void );
 #pragma weak SysTick_Handler          = Dummy_Handler
 
 /* Peripherals handlers */
-#pragma weak PM_IRQn_Handler          = Dummy_Handler
-#pragma weak SYSCTRL_IRQn_Handler     = Dummy_Handler
-#pragma weak WDT_IRQn_Handler         = Dummy_Handler
-#pragma weak RTC_IRQn_Handler         = Dummy_Handler
-#pragma weak EIC_IRQn_Handler         = Dummy_Handler
-#pragma weak NVMCTRL_IRQn_Handler     = Dummy_Handler
-#pragma weak EVSYS_IRQn_Handler       = Dummy_Handler
-#pragma weak SERCOM0_IRQn_Handler     = Dummy_Handler
-#pragma weak SERCOM1_IRQn_Handler     = Dummy_Handler
-#pragma weak SERCOM2_IRQn_Handler     = Dummy_Handler
-#pragma weak SERCOM3_IRQn_Handler     = Dummy_Handler
-#pragma weak SERCOM4_IRQn_Handler     = Dummy_Handler
-#pragma weak SERCOM5_IRQn_Handler     = Dummy_Handler
-#pragma weak TC0_IRQn_Handler         = Dummy_Handler
-#pragma weak TC1_IRQn_Handler         = Dummy_Handler
-#pragma weak TC2_IRQn_Handler         = Dummy_Handler
-#pragma weak TC3_IRQn_Handler         = Dummy_Handler
-#pragma weak TC4_IRQn_Handler         = Dummy_Handler
-#pragma weak TC5_IRQn_Handler         = Dummy_Handler
-#pragma weak TC6_IRQn_Handler         = Dummy_Handler
-#pragma weak TC7_IRQn_Handler         = Dummy_Handler
-#pragma weak ADC_IRQn_Handler         = Dummy_Handler
-#pragma weak AC_IRQn_Handler          = Dummy_Handler
-#pragma weak DAC_IRQn_Handler         = Dummy_Handler
-#pragma weak PTC_IRQn_Handler         = Dummy_Handler
+#pragma weak PM_IRQn_Handler                  = Dummy_Handler
+#pragma weak SYSCTRL_IRQn_Handler             = Dummy_Handler
+#pragma weak WDT_IRQn_Handler                 = Dummy_Handler
+#pragma weak RTC_IRQn_Handler                 = Dummy_Handler
+#pragma weak EIC_IRQn_Handler                 = Dummy_Handler
+#pragma weak NVMCTRL_IRQn_Handler             = Dummy_Handler
+#pragma weak EVSYS_IRQn_Handler               = Dummy_Handler
+#pragma weak SERCOM0_IRQn_Handler             = Dummy_Handler
+#pragma weak SERCOM1_IRQn_Handler             = Dummy_Handler
+#pragma weak SERCOM2_IRQn_Handler             = Dummy_Handler
+#pragma weak SERCOM3_IRQn_Handler             = Dummy_Handler
+#pragma weak SERCOM4_IRQn_Handler             = Dummy_Handler
+#pragma weak SERCOM5_IRQn_Handler             = Dummy_Handler
+#pragma weak TC0_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC1_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC2_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC3_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC4_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC5_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC6_IRQn_Handler                 = Dummy_Handler
+#pragma weak TC7_IRQn_Handler                 = Dummy_Handler
+#pragma weak ADC_IRQn_Handler                 = Dummy_Handler
+#pragma weak AC_IRQn_Handler                  = Dummy_Handler
+#pragma weak DAC_IRQn_Handler                 = Dummy_Handler
 
 /* Exception Table */
-#pragma language=extended
-#pragma segment="CSTACK"
 
 /* The name "__vector_table" has special meaning for C-SPY: */
 /* it is where the SP start value is found, and the NVIC vector */
@@ -136,7 +94,8 @@ void PTC_IRQn_Handler        ( void );
 #pragma section = ".intvec"
 #pragma location = ".intvec"
 const DeviceVectors __vector_table[] = {
-        __sfe("CSTACK"),
+        (void*) (&__cstack_end__),
+
         (void*) Reset_Handler,
         (void*) NonMaskableInt_Handler,
         (void*) HardFault_Handler,
@@ -154,31 +113,30 @@ const DeviceVectors __vector_table[] = {
         (void*) SysTick_Handler,
 
         /* Configurable interrupts */
-        { (void*) PM_IRQn_Handler      }, /*  0 Power Manager */
-        { (void*) SYSCTRL_IRQn_Handler }, /*  1 System Control */
-          (void*) WDT_IRQn_Handler      , /*  2 Watchdog Timer */
-        { (void*) RTC_IRQn_Handler     }, /*  3 Real-Time Counter */
-        { (void*) EIC_IRQn_Handler     }, /*  4 External Interrupt Controller */
-        { (void*) NVMCTRL_IRQn_Handler }, /*  5 Non-Volatile Memory Controller */
-        { (void*) EVSYS_IRQn_Handler   }, /*  6 Event System Interface */
-        { (void*) SERCOM0_IRQn_Handler }, /*  7 Serial Communication Interface 0 */
-        { (void*) SERCOM1_IRQn_Handler }, /*  8 Serial Communication Interface 1 */
-        { (void*) SERCOM2_IRQn_Handler }, /*  9 Serial Communication Interface 2 */
-        { (void*) SERCOM3_IRQn_Handler }, /* 10 Serial Communication Interface 3 */
-        { (void*) SERCOM4_IRQn_Handler }, /* 11 Serial Communication Interface 4 */
-        { (void*) SERCOM5_IRQn_Handler }, /* 12 Serial Communication Interface 5 */
-        { (void*) TC0_IRQn_Handler     }, /* 13 Basic Timer Counter 0 */
-        { (void*) TC1_IRQn_Handler     }, /* 14 Basic Timer Counter 1 */
-        { (void*) TC2_IRQn_Handler     }, /* 15 Basic Timer Counter 2 */
-        { (void*) TC3_IRQn_Handler     }, /* 16 Basic Timer Counter 3 */
-        { (void*) TC4_IRQn_Handler     }, /* 17 Basic Timer Counter 4 */
-        { (void*) TC5_IRQn_Handler     }, /* 18 Basic Timer Counter 5 */
-        { (void*) TC6_IRQn_Handler     }, /* 19 Basic Timer Counter 6 */
-        { (void*) TC7_IRQn_Handler     }, /* 20 Basic Timer Counter 7 */
-        { (void*) ADC_IRQn_Handler     }, /* 21 Analog Digital Converter */
-        { (void*) AC_IRQn_Handler      }, /* 22 Analog Comparators */
-        { (void*) DAC_IRQn_Handler     }, /* 23 Digital Analog Converter */
-        { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
+        (void*) PM_Handler,                    /*  0 Power Manager */
+        (void*) SYSCTRL_Handler,               /*  1 System Control */
+        (void*) WDT_Handler,                   /*  2 Watchdog Timer */
+        (void*) RTC_Handler,                   /*  3 Real-Time Counter */
+        (void*) EIC_Handler,                   /*  4 External Interrupt Controller */
+        (void*) NVMCTRL_Handler,               /*  5 Non-Volatile Memory Controller */
+        (void*) EVSYS_Handler,                 /*  6 Event System Interface */
+        (void*) SERCOM0_Handler,               /*  7 Serial Communication Interface 0 */
+        (void*) SERCOM1_Handler,               /*  8 Serial Communication Interface 1 */
+        (void*) SERCOM2_Handler,               /*  9 Serial Communication Interface 2 */
+        (void*) SERCOM3_Handler,               /* 10 Serial Communication Interface 3 */
+        (void*) SERCOM4_Handler,               /* 11 Serial Communication Interface 4 */
+        (void*) SERCOM5_Handler,               /* 12 Serial Communication Interface 5 */
+        (void*) TC0_Handler,                   /* 13 Basic Timer Counter 0 */
+        (void*) TC1_Handler,                   /* 14 Basic Timer Counter 1 */
+        (void*) TC2_Handler,                   /* 15 Basic Timer Counter 2 */
+        (void*) TC3_Handler,                   /* 16 Basic Timer Counter 3 */
+        (void*) TC4_Handler,                   /* 17 Basic Timer Counter 4 */
+        (void*) TC5_Handler,                   /* 18 Basic Timer Counter 5 */
+        (void*) TC6_Handler,                   /* 19 Basic Timer Counter 6 */
+        (void*) TC7_Handler,                   /* 20 Basic Timer Counter 7 */
+        (void*) ADC_Handler,                   /* 21 Analog Digital Converter */
+        (void*) AC_Handler,                    /* 22 Analog Comparators */
+        (void*) DAC_Handler                    /* 23 Digital Analog Converter */
 };
 
 /**------------------------------------------------------------------------------
@@ -190,6 +148,10 @@ int __low_level_init(void)
         uint32_t *pSrc = __section_begin(".intvec");
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+
+        if (((uint32_t) pSrc >= HRAMC0_ADDR) && ((uint32_t) pSrc < (uint32_t) HRAMC0_ADDR + (uint32_t) HRAMC0_SIZE)) {
+                SCB->VTOR |= (1UL) << SCB_VTOR_TBLBASE_Pos;
+        }
 
         return 1; /* if return 0, the data sections will not be initialized */
 }
