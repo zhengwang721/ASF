@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Instance description for EIC
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -100,7 +102,5 @@
 #define EIC_GCLK_ID                 3
 #define EIC_NUMBER_OF_CONFIG_REGS   2
 #define EIC_NUMBER_OF_INTERRUPTS    16
-
-#define EIC_NMI_NO_DETECT_ALLOWED   0 /** TODO: Manually added */
 
 #endif /* _SAMD20_EIC_INSTANCE_ */

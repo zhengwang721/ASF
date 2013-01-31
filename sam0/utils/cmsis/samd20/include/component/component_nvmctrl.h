@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for NVMCTRL
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -84,11 +86,8 @@ typedef union {
 #define NVMCTRL_CTRLA_CMDEX_Pos     8            /**< \brief (NVMCTRL_CTRLA) Command Execution */
 #define NVMCTRL_CTRLA_CMDEX_Msk     (0xFFu << NVMCTRL_CTRLA_CMDEX_Pos)
 #define NVMCTRL_CTRLA_CMDEX(value)  ((NVMCTRL_CTRLA_CMDEX_Msk & ((value) << NVMCTRL_CTRLA_CMDEX_Pos)))
+#define   NVMCTRL_CTRLA_CMDEX_KEY   (0xA5u <<  8) /**< \brief (NVMCTRL_CTRLA) Execution Key */
 #define NVMCTRL_CTRLA_MASK          0xFF7Fu      /**< \brief (NVMCTRL_CTRLA) MASK Register */
-
-#define NVMCTRL_CMDEX_EXECUTION_KEY 0xA5 /** TODO: MISSING FROM CMSIS */
-#define NVMCTRL_AUX_BOOTPROT_Pos    1 /** TODO: MISSING FROM CMSIS */
-#define NVMCTRL_AUX_EEPROM_Pos      4 /** TODO: MISSING FROM CMSIS */
 
 /* -------- NVMCTRL_CTRLB : (NVMCTRL Offset: 0x04) (R/W 32) NVM Control Register B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -110,11 +109,12 @@ typedef union {
 #define NVMCTRL_CTRLB_OFFSET        0x04         /**< \brief (NVMCTRL_CTRLB offset) NVM Control Register B */
 #define NVMCTRL_CTRLB_RESETVALUE    0x00000000   /**< \brief (NVMCTRL_CTRLB reset_value) NVM Control Register B */
 
-#define NVMCTRL_CTRLB_ARWS_Pos      0 /** TODO: MISSING FROM CMSIS */
-#define NVMCTRL_CTRLB_ARWS          (0x1u << NVMCTRL_CTRLB_ARWS_Pos) /** TODO: MISSING FROM CMSIS */
 #define NVMCTRL_CTRLB_RWS_Pos       1            /**< \brief (NVMCTRL_CTRLB) NVM Read Wait States */
 #define NVMCTRL_CTRLB_RWS_Msk       (0xFu << NVMCTRL_CTRLB_RWS_Pos)
 #define NVMCTRL_CTRLB_RWS(value)    ((NVMCTRL_CTRLB_RWS_Msk & ((value) << NVMCTRL_CTRLB_RWS_Pos)))
+#define   NVMCTRL_CTRLB_RWS_SINGLE  (0x0u <<  1) /**< \brief (NVMCTRL_CTRLB) Single Auto Wait State */
+#define   NVMCTRL_CTRLB_RWS_HALF    (0x1u <<  1) /**< \brief (NVMCTRL_CTRLB) Half Auto Wait State */
+#define   NVMCTRL_CTRLB_RWS_DUAL    (0x2u <<  1) /**< \brief (NVMCTRL_CTRLB) Dual Auto Wait State */
 #define NVMCTRL_CTRLB_MANW_Pos      7            /**< \brief (NVMCTRL_CTRLB) Manual Write */
 #define NVMCTRL_CTRLB_MANW          (0x1u << NVMCTRL_CTRLB_MANW_Pos)
 #define NVMCTRL_CTRLB_SLEEPPRM_Pos  8            /**< \brief (NVMCTRL_CTRLB) Power Reduction Mode during Sleep */
