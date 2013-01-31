@@ -51,7 +51,8 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4L-EK boards.
+ * This example can be used on SAM4L-EK boards with hardware rework. Please
+ * see detail in SAM4L-EK Getting Started document.
  *
  * \section Description
  *

@@ -92,22 +92,37 @@ void abdac_enable(struct abdac_dev_inst *const dev_inst)
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 }
 
-void abdac_disable(struct abdac_dev_inst *const dev_inst)
+status_code_t abdac_disable(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdac_is_busy(dev_inst)) {
+	uint32_t timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_EN;
 	sleepmgr_unlock_mode(SLEEPMGR_ACTIVE);
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
+
+	return STATUS_OK;
 }
 
-void abdac_set_config(struct abdac_dev_inst *const dev_inst)
+status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 {
 	struct genclk_config gencfg;
 	struct pll_config pcfg;
+	uint32_t timeout = 0;
 
-	while(abdac_is_busy(dev_inst)) {
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	/* Set the GCLK according to the sample rate */
@@ -115,21 +130,21 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 
 	switch (dev_inst->cfg->sample_rate_hz) {
 	case ABDAC_SAMPLE_RATE_8000:
-		/* CPUCLK 32M */
-		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
+		/* PLL0 CLK 64M */
+		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
 		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 8M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-		genclk_config_set_divider(&gencfg, 4);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
+		genclk_config_set_divider(&gencfg, 8);
 		break;
 
 	case ABDAC_SAMPLE_RATE_11025:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -137,13 +152,13 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 12M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 4);
 		break;
 
 	case ABDAC_SAMPLE_RATE_12000:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -151,27 +166,27 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 12M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 4);
 		break;
 
 	case ABDAC_SAMPLE_RATE_16000:
-		/* CPUCLK 32M */
-		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
+		/* PLL0 CLK 64M */
+		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
 		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 16M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
-		genclk_config_set_divider(&gencfg, 2);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
+		genclk_config_set_divider(&gencfg, 4);
 		break;
 
 	case ABDAC_SAMPLE_RATE_22050:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -179,13 +194,13 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 24M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 2);
 		break;
 
 	case ABDAC_SAMPLE_RATE_24000:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -193,27 +208,27 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 24M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 2);
 		break;
 
 	case ABDAC_SAMPLE_RATE_32000:
-		/* CPUCLK 32M */
-		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 96000000 /
+		/* PLL0 CLK 64M */
+		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
 		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 32M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 1);
 		break;
 
 	case ABDAC_SAMPLE_RATE_44100:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -221,13 +236,13 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 48M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 1);
 		break;
 
 	case ABDAC_SAMPLE_RATE_48000:
-		/* CPUCLK 48M */
+		/* PLL0 CLK 48M */
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
@@ -235,8 +250,8 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_wait_for_lock(0);
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 48M */
-		genclk_enable_source(GENCLK_SRC_CLK_CPU);
-		genclk_config_set_source(&gencfg, GENCLK_SRC_CLK_CPU);
+		genclk_enable_source(GENCLK_SRC_PLL0);
+		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
 		genclk_config_set_divider(&gencfg, 1);
 		break;
 
@@ -269,27 +284,59 @@ void abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_CMOC;
 	}
 
-	while(abdac_is_busy(dev_inst)) {
+	timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	/* Enable the module after GCLK ready. */
 	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_EN;
 
-	while(abdac_is_busy(dev_inst)) {
+	timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
 	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
+	}
+
+	return STATUS_OK;
 }
 
-void abdac_sw_reset(struct abdac_dev_inst *const dev_inst)
+status_code_t abdac_sw_reset(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdac_is_busy(dev_inst)) {
+	uint32_t timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_SWRST;
+
+	return STATUS_OK;
 }
 
-void abdac_swap_channels(struct abdac_dev_inst *const dev_inst)
+status_code_t abdac_swap_channels(struct abdac_dev_inst *const dev_inst)
 {
-	while(abdac_is_busy(dev_inst)) {
+	uint32_t timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	if (dev_inst->hw_dev->ABDACB_CR & ABDACB_CR_SWAP) {
@@ -297,30 +344,64 @@ void abdac_swap_channels(struct abdac_dev_inst *const dev_inst)
 	} else {
 		dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_SWAP;
 	}
+
+	return STATUS_OK;
 }
 
-void abdac_write_data0(struct abdac_dev_inst *const dev_inst,
+status_code_t abdac_write_data0(struct abdac_dev_inst *const dev_inst,
 		uint32_t data)
 {
-	while(abdac_is_busy(dev_inst)) {
+	uint32_t timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
 	}
 
-	while(!abdac_is_tx_ready(dev_inst)) {
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
+	}
+
+	timeout = 0;
+
+	while((!abdac_is_tx_ready(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	dev_inst->hw_dev->ABDACB_SDR0 = data;
+
+	return STATUS_OK;
 }
 
-void abdac_write_data1(struct abdac_dev_inst *const dev_inst,
+status_code_t abdac_write_data1(struct abdac_dev_inst *const dev_inst,
 		uint32_t data)
 {
-	while(abdac_is_busy(dev_inst)) {
+	uint32_t timeout = 0;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
 	}
 
-	while(!abdac_is_tx_ready(dev_inst)) {
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
+	}
+
+	timeout = 0;
+
+	while((!abdac_is_tx_ready(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
 	}
 
 	dev_inst->hw_dev->ABDACB_SDR1 = data;
+
+	return STATUS_OK;
 }
 
 void abdac_set_volume0(struct abdac_dev_inst *const dev_inst, bool mute,

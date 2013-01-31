@@ -44,20 +44,23 @@
 #ifndef _ABDAC_H_INCLUDED
 #define _ABDAC_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * \defgroup group_sam_drivers_abdac ABDAC - Audio Bitstream DAC
  *
  * Audio Bitstream DAC (Digital to Analog Converter) provides functions to
- * convert a 16-bit sample value to a digital bitstream.
+ * convert a sample value to a digital bitstream.
  *
  * \{
  */
 
 #include "compiler.h"
+#include "status_codes.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define ABDAC_BUSY_TIMEOUT 10000
 
 /** Supported sample rate */
 enum abdac_sample_rate {
@@ -90,9 +93,9 @@ struct abdac_config {
 	/* Number of bit per sample. */
 	enum abdac_data_format data_word_format;
 	/* 1 for Mono, 0 for stereo. */
-	uint32_t mono;
+	bool mono;
 	/* 1 for enable, 0 for disable. */
-	uint32_t cmoc;
+	bool cmoc;
 };
 
 /** Interrupt sources */
@@ -125,9 +128,9 @@ struct abdac_dev_inst {
 typedef void (*abdac_callback_t)(void);
 
 /**
- * \brief Initializes a ABDAC configuration structure to defaults.
+ * \brief Initialize a ABDAC configuration structure to defaults.
  *
- *  Initializes a given ABDAC configuration structure to a set of
+ *  Initialize a given ABDAC configuration structure to a set of
  *  known default values. This function should be called on all new
  *  instances of these configuration structures before being modified by the
  *  user application.
@@ -160,7 +163,7 @@ bool abdac_init(struct abdac_dev_inst *const dev_inst, Abdacb *const abdac,
  *
  * \param dev_inst Device structure pointer..
  *
- * \return 1 if ABDAC is busy, else it will return 0.
+ * \return true if ABDAC is busy, else it will return false.
  */
 static inline bool abdac_is_busy(struct abdac_dev_inst *const dev_inst)
 {
@@ -172,8 +175,8 @@ static inline bool abdac_is_busy(struct abdac_dev_inst *const dev_inst)
  *
  * \param dev_inst Device structure pointer..
  *
- * \return 1 if ABDAC is ready to receive a new data in SDR,
- * else it will return 0.
+ * \return true if ABDAC is ready to receive a new data in SDR,
+ * else it will return false.
  */
 static inline bool abdac_is_tx_ready(struct abdac_dev_inst *const dev_inst)
 {
@@ -185,8 +188,8 @@ static inline bool abdac_is_tx_ready(struct abdac_dev_inst *const dev_inst)
  *
  * \param dev_inst Device structure pointer..
  *
- * \return 1 if at least one underrun has occurred since the last time
- * this bit was cleared, else it will return 0.
+ * \return true if at least one underrun has occurred since the last time
+ * this bit was cleared, else it will return false.
  */
 static inline bool abdac_is_tx_underrun(
 		struct abdac_dev_inst *const dev_inst)
@@ -219,28 +222,28 @@ void abdac_enable(struct abdac_dev_inst *const dev_inst);
  *
  * \param dev_inst Device structure pointer..
  */
-void abdac_disable(struct abdac_dev_inst *const dev_inst);
+status_code_t abdac_disable(struct abdac_dev_inst *const dev_inst);
 
 /**
- * \brief Configurate the ABDAC module.
+ * \brief Configure the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
  */
-void abdac_set_config(struct abdac_dev_inst *const dev_inst);
+status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst);
 
 /**
- * \brief Software rest the ABDAC module.
+ * \brief Software reset the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
  */
-void abdac_sw_reset(struct abdac_dev_inst *const dev_inst);
+status_code_t abdac_sw_reset(struct abdac_dev_inst *const dev_inst);
 
 /**
- * \brief Swap the ABDAC channal output.
+ * \brief Swap the ABDAC channel output.
  *
  * \param dev_inst Device structure pointer..
  */
-void abdac_swap_channels(struct abdac_dev_inst *const dev_inst);
+status_code_t abdac_swap_channels(struct abdac_dev_inst *const dev_inst);
 
 /**
  * \brief Writes the data to SDR0.
@@ -248,7 +251,7 @@ void abdac_swap_channels(struct abdac_dev_inst *const dev_inst);
  * \param dev_inst Device structure pointer..
  * \param data Data value to write to SDR0.
  */
-void abdac_write_data0(struct abdac_dev_inst *const dev_inst,
+status_code_t abdac_write_data0(struct abdac_dev_inst *const dev_inst,
 		uint32_t data);
 
 /**
@@ -257,24 +260,24 @@ void abdac_write_data0(struct abdac_dev_inst *const dev_inst,
  * \param dev_inst Device structure pointer..
  * \param data Data value to write to SDR1.
  */
-void abdac_write_data1(struct abdac_dev_inst *const dev_inst,
+status_code_t abdac_write_data1(struct abdac_dev_inst *const dev_inst,
 		uint32_t data);
 
 /**
- * \brief Set the volume of channal 0.
+ * \brief Set the volume of channel 0.
  *
  * \param dev_inst Device structure pointer..
- * \param mute Flag if set the channal mute
+ * \param mute Flag if set the channel mute
  * \param volume Value of volume
  */
 void abdac_set_volume0(struct abdac_dev_inst *const dev_inst, bool mute,
 		uint32_t volume);
 
 /**
- * \brief Set the volume of channal 1.
+ * \brief Set the volume of channel 1.
  *
  * \param dev_inst Device structure pointer..
- * \param mute Flag if set the channal mute
+ * \param mute Flag if set the channel mute
  * \param volume Value of volume
  */
 void abdac_set_volume1(struct abdac_dev_inst *const dev_inst, bool mute,
@@ -370,7 +373,7 @@ void abdac_set_callback(struct abdac_dev_inst *const dev_inst,
  * \subsection abdac_basic_setup_workflow
  *
  * -# Enable the ABDAC module
- * -# Configurate the ABDAC mode
+ * -# Configure the ABDAC mode
  *
  *  - \note The syste clock may changed after setting the ABDAC module.
  *
