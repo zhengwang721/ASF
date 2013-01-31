@@ -334,6 +334,10 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
 		/* Intentionally left empty */
 	}
 }
+
+enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
+		const struct usart_conf const *config);
+
 #endif
 
 /**

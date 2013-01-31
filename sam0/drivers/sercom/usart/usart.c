@@ -74,28 +74,22 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	/* Get baud value from mode and clock */
 	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
 			!config->use_external_clock) {
-		/* Calculate baud value */
 		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate,
 				usart_freq, &baud_val);
 	}
 
-	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
-			!config->use_external_clock) {
-		/* Calculate baud value */
-		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
-		status_code = _sercom_get_async_baud_val(config->baudrate,
-				usart_freq, &baud_val);
+	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY) {
+		if (config->use_external_clock) {
+			status_code = _sercom_get_async_baud_val(config->baudrate,
+					config->ext_clock_freq,
+					&baud_val);
+		} else {
+			usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+			status_code = _sercom_get_async_baud_val(config->baudrate,
+					usart_freq, &baud_val);
+		}
 	}
-
-	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
-			config->use_external_clock) {
-		/* Calculate baud value */
-		status_code = _sercom_get_async_baud_val(config->baudrate,
-				config->ext_clock_freq,
-				&baud_val);
-	}
-
 	/* Check if calculating the baud rate failed */
 	if (status_code != STATUS_OK) {
 		/* Abort */
@@ -559,11 +553,11 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Check if the character size exceeds 8 bit */
 		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
-			usart_read(dev_inst, (uint16_t *)(rx_data));
+			usart_read(dev_inst, (void*)rx_data);
 			rx_data += 2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
-			usart_read(dev_inst, (uint16_t *)(rx_data++));
+			usart_read(dev_inst, (void*)(rx_data++));
 		}
 	}
 
