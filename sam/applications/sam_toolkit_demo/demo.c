@@ -3,7 +3,7 @@
  *
  * \brief SAM toolkit demo application.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4S evaluation kits.
+ * This package can be used with SAM4S-EK/SAM4S-EK2.
  *
  * \section Description
  *
@@ -72,6 +72,13 @@
  *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
  *    IAR EWARM User Guide</a>,
  *    depending on your chosen solution.
+ * -# Erase the nand flash through SAM-BA.
+ * -# Power OFF and ON the board with the USB cable always connected.
+ * -# A new Removable Disk should appear in the computer explorer.
+ * -# Copy the demo folder in the root directory of this removable disk : a
+ *   demo folder should appear in it. The file path should be "/demo/../..".
+ * -# When the copy operation is achieved, disconnect the USB cable, and
+ *    Power OFF and ON the board.
  * -# On the computer, open and configure a terminal application
  *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -79,12 +86,9 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Format a SD card with a FAT32 filesystem and extract out the contents
- *    of the sam_toolkit_demo_sdcard_resources.zip archive directly to the root
- *    folder of the card. Insert the SD Card into the SAM4S-EK board.
  * -# Start the application.
- * -# Two LEDs should start blinking on the board. In the terminal window, the
- *    following text should appear (values depend on the board and chip used):
+ * -# In the terminal window, the following text should appear (values depend
+ * on the board and chip used):
  *    \code
  *     -- SAM Toolkit Demo Example xxx --
  *     -- xxxxxx-xx
@@ -120,6 +124,7 @@
 #define SCR_PPT_SLIDE_FOLDER        "24bpp/"
 #define SCR_PPT_SLIDE_BASENAME      "Slide"
 #define SCR_PPT_SLIDE_EXT           ".bmp"
+#define SCR_PPT_SLIDE0_FULL_PATH  "/demo/slideshow/24bpp/Slide0.bmp"
 
 /** Total slider number supported */
 #define TOTAL_SLIDER_NUM 2
@@ -693,6 +698,7 @@ static void event_handler(rtouch_event_t const *event)
 int main(void)
 {
 	uint8_t uc_result;
+	FIL file_object;
 
 	/* Initialize the sleep manager */
 	sleepmgr_init();
@@ -730,6 +736,11 @@ int main(void)
 	/* Initialize demo parameters */
 	demo_parameters_initialize();
 	while (g_demo_parameters.calib_points[0].raw.x == 0) {
+		if (f_open( &file_object, (const char *)SCR_PPT_SLIDE0_FULL_PATH, FA_OPEN_EXISTING |
+				FA_READ ) != FR_OK) {
+				break;
+			}
+		
 		uc_result = rtouch_calibrate();
 		if (uc_result == 0) {
 			demo_set_special_mode_status(DEMO_LCD_CALIBRATE_MODE, 0);
