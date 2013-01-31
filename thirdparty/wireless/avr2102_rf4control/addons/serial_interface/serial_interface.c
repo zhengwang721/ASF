@@ -1514,7 +1514,7 @@ void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
     msg_buf = get_next_tx_buffer();
     *msg_buf++ = 3 + RF4CONTROL_PID_LEN;
 	*msg_buf++ = RF4CONTROL_PID;
-    *msg_buf++ = PBP_ORG_PAIR_CONFIRFM;
+    *msg_buf++ = PBP_ORG_PAIR_CONFIRM;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
     *msg_buf = EOT;
