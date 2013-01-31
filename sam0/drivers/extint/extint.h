@@ -57,7 +57,7 @@
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_samd20_extint_prerequisites
- *  - \ref asfdoc_samd20_extint_high_level_overview
+ *  - \ref asfdoc_samd20_extint_module_overview
  *  - \ref asfdoc_samd20_extint_special_considerations
  *  - \ref asfdoc_samd20_extint_extra_info
  *  - \ref asfdoc_samd20_extint_examples
@@ -69,7 +69,7 @@
  * There are no prerequisites
  *
  *
- * \section asfdoc_samd20_extint_high_level_overview High Level Overview
+ * \section asfdoc_samd20_extint_module_overview Module Overview
  *
  * The External Interrupt (EXTINT) module provides a method of asynchronously
  * detecting rising edge, falling edge or specific level detection on individual
@@ -78,25 +78,6 @@
  * can also optionally be used to automatically wake up the device from sleep
  * mode, allowing the device to conserve power while still being able to react
  * to an external stimulus in a timely manner.
- *
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
- *
- * \dot
- * digraph overview {
-	 *   node [label="Port Pad" shape=square] pad;
-	 *
-	 *   subgraph driver {
-		 *     node [label="Peripheral Mux" shape=trapezium] pinmux;
-		 *     node [label="EIC Module" shape=ellipse] eic;
-		 *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
-	 *   }
-	 *
-	 *   pinmux -> eic;
-	 *   pad    -> pinmux;
-	 *   pinmux -> peripherals;
- * }
- * \enddot
  *
  * \subsection asfdoc_samd20_extint_logical_channels Logical Channels
  * The External Interrupt module contains a number of logical channels, each of
@@ -107,7 +88,7 @@
  * physical device I/O pin in order to detect a particular edge or level of the
  * incoming signal.
  *
- * \subsection asfdoc_samd20_extint_nmi_chanel NMI Channels
+ * \subsection asfdoc_samd20_extint_module_overview_nmi_chanel NMI Channels
  *
  * One or more Non Maskable Interrupt (NMI) channels are provided within each
  * physical External Interrupt Controller module, allowing a single physical pin
@@ -119,7 +100,7 @@
  * software reset or other functionality where the action should be executed in
  * preference to all other running code with a minimum amount of latency.
  *
- * \subsection asfdoc_samd20_extint_filtering_and_detection Input Filtering and Detection
+ * \subsection asfdoc_samd20_extint_module_overview_filtering Input Filtering and Detection
  *
  * To reduce the possibility of noise or other transient signals causing
  * unwanted device wake-ups, interrupts and/or events via an external interrupt
@@ -161,7 +142,7 @@
  *	</tr>
  * </table>
  *
- * \subsection asfdoc_samd20_extint_events_and_interrupts Events and Interrupts
+ * \subsection asfdoc_samd20_extint_module_overview_events Events and Interrupts
  *
  * Channel detection states may be polled inside the application for synchronous
  * detection, or events and interrupts may be used for asynchronous behavior.
@@ -169,6 +150,25 @@
  * may in turn trigger actions in other hardware modules) or an asynchronous
  * software interrupt.
  *
+ * \subsection asfdoc_samd20_extint_module_overview_physical Physical Connection
+ *
+ * The following diagram shows how this module is interconnected within the device:
+ *
+ * \dot
+ * digraph overview {
+	 *   node [label="Port Pad" shape=square] pad;
+	 *
+	 *   subgraph driver {
+		 *     node [label="Peripheral Mux" shape=trapezium] pinmux;
+		 *     node [label="EIC Module" shape=ellipse] eic;
+		 *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
+	 *   }
+	 *
+	 *   pinmux -> eic;
+	 *   pad    -> pinmux;
+	 *   pinmux -> peripherals;
+ * }
+ * \enddot
  *
  * \section asfdoc_samd20_extint_special_considerations Special Considerations
  *
