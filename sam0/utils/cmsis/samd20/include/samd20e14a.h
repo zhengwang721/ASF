@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Header file for SAMD20E16A
+ * \brief Header file for SAMD20E14A
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,11 +41,11 @@
  *
  */
 
-#ifndef _SAMD20E16A_
-#define _SAMD20E16A_
+#ifndef _SAMD20E14A_
+#define _SAMD20E14A_
 
-/** \addtogroup SAMD20E16A_definitions SAMD20E16A definitions
-  This file defines all structures and symbols for SAMD20E16A:
+/** \addtogroup SAMD20E14A_definitions SAMD20E14A definitions
+  This file defines all structures and symbols for SAMD20E14A:
     - registers and bitfields
     - peripheral base address
     - peripheral ID
@@ -82,9 +82,9 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 #endif
 
 /* ************************************************************************** */
-/**  CMSIS DEFINITIONS FOR SAMD20E16A */
+/**  CMSIS DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_cmsis CMSIS Definitions */
+/** \addtogroup SAMD20E14A_cmsis CMSIS Definitions */
 /*@{*/
 
 /**< Interrupt Number Definition */
@@ -96,31 +96,31 @@ typedef enum IRQn
   SVCall_IRQn              = -5,  /**< 11 Cortex-M0+ SV Call Interrupt           */
   PendSV_IRQn              = -2,  /**< 14 Cortex-M0+ Pend SV Interrupt           */
   SysTick_IRQn             = -1,  /**< 15 Cortex-M0+ System Tick Interrupt       */
-  /******  SAMD20E16A-specific Interrupt Numbers ***********************/
-  PM_IRQn                  =  0, /**<  0 SAMD20E16A Power Manager (PM) */
-  SYSCTRL_IRQn             =  1, /**<  1 SAMD20E16A System Control (SYSCTRL) */
-  WDT_IRQn                 =  2, /**<  2 SAMD20E16A Watchdog Timer (WDT) */
-  RTC_IRQn                 =  3, /**<  3 SAMD20E16A Real-Time Counter (RTC) */
-  EIC_IRQn                 =  4, /**<  4 SAMD20E16A External Interrupt Controller (EIC) */
-  NVMCTRL_IRQn             =  5, /**<  5 SAMD20E16A Non-Volatile Memory Controller (NVMCTRL) */
-  EVSYS_IRQn               =  6, /**<  6 SAMD20E16A Event System Interface (EVSYS) */
-  SERCOM0_IRQn             =  7, /**<  7 SAMD20E16A Serial Communication Interface 0 (SERCOM0) */
-  SERCOM1_IRQn             =  8, /**<  8 SAMD20E16A Serial Communication Interface 1 (SERCOM1) */
-  SERCOM2_IRQn             =  9, /**<  9 SAMD20E16A Serial Communication Interface 2 (SERCOM2) */
-  SERCOM3_IRQn             = 10, /**< 10 SAMD20E16A Serial Communication Interface 3 (SERCOM3) */
-  SERCOM4_IRQn             = 11, /**< 11 SAMD20E16A Serial Communication Interface 4 (SERCOM4) */
-  SERCOM5_IRQn             = 12, /**< 12 SAMD20E16A Serial Communication Interface 5 (SERCOM5) */
-  TC0_IRQn                 = 13, /**< 13 SAMD20E16A Basic Timer Counter 0 (TC0) */
-  TC1_IRQn                 = 14, /**< 14 SAMD20E16A Basic Timer Counter 1 (TC1) */
-  TC2_IRQn                 = 15, /**< 15 SAMD20E16A Basic Timer Counter 2 (TC2) */
-  TC3_IRQn                 = 16, /**< 16 SAMD20E16A Basic Timer Counter 3 (TC3) */
-  TC4_IRQn                 = 17, /**< 17 SAMD20E16A Basic Timer Counter 4 (TC4) */
-  TC5_IRQn                 = 18, /**< 18 SAMD20E16A Basic Timer Counter 5 (TC5) */
-  TC6_IRQn                 = 19, /**< 19 SAMD20E16A Basic Timer Counter 6 (TC6) */
-  TC7_IRQn                 = 20, /**< 20 SAMD20E16A Basic Timer Counter 7 (TC7) */
-  ADC_IRQn                 = 21, /**< 21 SAMD20E16A Analog Digital Converter (ADC) */
-  AC_IRQn                  = 22, /**< 22 SAMD20E16A Analog Comparators (AC) */
-  DAC_IRQn                 = 23, /**< 23 SAMD20E16A Digital Analog Converter (DAC) */
+  /******  SAMD20E14A-specific Interrupt Numbers ***********************/
+  PM_IRQn                  =  0, /**<  0 SAMD20E14A Power Manager (PM) */
+  SYSCTRL_IRQn             =  1, /**<  1 SAMD20E14A System Control (SYSCTRL) */
+  WDT_IRQn                 =  2, /**<  2 SAMD20E14A Watchdog Timer (WDT) */
+  RTC_IRQn                 =  3, /**<  3 SAMD20E14A Real-Time Counter (RTC) */
+  EIC_IRQn                 =  4, /**<  4 SAMD20E14A External Interrupt Controller (EIC) */
+  NVMCTRL_IRQn             =  5, /**<  5 SAMD20E14A Non-Volatile Memory Controller (NVMCTRL) */
+  EVSYS_IRQn               =  6, /**<  6 SAMD20E14A Event System Interface (EVSYS) */
+  SERCOM0_IRQn             =  7, /**<  7 SAMD20E14A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM1_IRQn             =  8, /**<  8 SAMD20E14A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM2_IRQn             =  9, /**<  9 SAMD20E14A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM3_IRQn             = 10, /**< 10 SAMD20E14A Serial Communication Interface 3 (SERCOM3) */
+  SERCOM4_IRQn             = 11, /**< 11 SAMD20E14A Serial Communication Interface 4 (SERCOM4) */
+  SERCOM5_IRQn             = 12, /**< 12 SAMD20E14A Serial Communication Interface 5 (SERCOM5) */
+  TC0_IRQn                 = 13, /**< 13 SAMD20E14A Basic Timer Counter 0 (TC0) */
+  TC1_IRQn                 = 14, /**< 14 SAMD20E14A Basic Timer Counter 1 (TC1) */
+  TC2_IRQn                 = 15, /**< 15 SAMD20E14A Basic Timer Counter 2 (TC2) */
+  TC3_IRQn                 = 16, /**< 16 SAMD20E14A Basic Timer Counter 3 (TC3) */
+  TC4_IRQn                 = 17, /**< 17 SAMD20E14A Basic Timer Counter 4 (TC4) */
+  TC5_IRQn                 = 18, /**< 18 SAMD20E14A Basic Timer Counter 5 (TC5) */
+  TC6_IRQn                 = 19, /**< 19 SAMD20E14A Basic Timer Counter 6 (TC6) */
+  TC7_IRQn                 = 20, /**< 20 SAMD20E14A Basic Timer Counter 7 (TC7) */
+  ADC_IRQn                 = 21, /**< 21 SAMD20E14A Analog Digital Converter (ADC) */
+  AC_IRQn                  = 22, /**< 22 SAMD20E14A Analog Comparators (AC) */
+  DAC_IRQn                 = 23, /**< 23 SAMD20E14A Digital Analog Converter (DAC) */
 
   PERIPH_COUNT_IRQn        = 24  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -232,9 +232,9 @@ void DAC_Handler                 ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAMD20E16A */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_api Peripheral Software API */
+/** \addtogroup SAMD20E14A_api Peripheral Software API */
 /*@{*/
 
 #include "component/component_ac.h"
@@ -257,9 +257,9 @@ void DAC_Handler                 ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  REGISTERS ACCESS DEFINITIONS FOR SAMD20E16A */
+/**  REGISTERS ACCESS DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_reg Registers Access Definitions */
+/** \addtogroup SAMD20E14A_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/instance_ac.h"
@@ -296,9 +296,9 @@ void DAC_Handler                 ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PERIPHERAL ID DEFINITIONS FOR SAMD20E16A */
+/**  PERIPHERAL ID DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_id Peripheral Ids Definitions */
+/** \addtogroup SAMD20E14A_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -342,9 +342,9 @@ void DAC_Handler                 ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  BASE ADDRESS DEFINITIONS FOR SAMD20E16A */
+/**  BASE ADDRESS DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_base Peripheral Base Address Definitions */
+/** \addtogroup SAMD20E14A_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
@@ -480,21 +480,21 @@ void DAC_Handler                 ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAMD20E16A */
+/**  PORT DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
-/** \addtogroup SAMD20E16A_port PORT Definitions */
+/** \addtogroup SAMD20E14A_port PORT Definitions */
 /*@{*/
 
-#include "pio/pio_samd20e16a.h"
+#include "pio/pio_samd20e14a.h"
 /*@}*/
 
 /* ************************************************************************** */
-/**  MEMORY MAPPING DEFINITIONS FOR SAMD20E16A */
+/**  MEMORY MAPPING DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
 
-#define FLASH_SIZE            0x10000 /* 64 kB */
+#define FLASH_SIZE            0x4000 /* 16 kB */
 #define FLASH_PAGE_SIZE       64
-#define FLASH_NB_OF_PAGES     1024
+#define FLASH_NB_OF_PAGES     256
 #define FLASH_USER_PAGE_SIZE  64
 #define HRAMC0_SIZE           0x8000 /* 32 kB */
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
@@ -502,7 +502,7 @@ void DAC_Handler                 ( void );
 #define HRAMC0_ADDR           (0x20000000U) /**< HRAMC0 base address */
 
 /* ************************************************************************** */
-/**  ELECTRICAL DEFINITIONS FOR SAMD20E16A */
+/**  ELECTRICAL DEFINITIONS FOR SAMD20E14A */
 /* ************************************************************************** */
 
 
@@ -512,4 +512,4 @@ void DAC_Handler                 ( void );
 
 /*@}*/
 
-#endif /* SAMD20E16A_H */
+#endif /* SAMD20E14A_H */

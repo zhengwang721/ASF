@@ -212,7 +212,7 @@ void DAC_Handler                 ( void );
  * \brief Configuration of the Cortex-M0+ Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1        
+#define LITTLE_ENDIAN          1
 #define __CM0P_REV             0         /*!< Core revision r0p0 */
 #define __FPU_PRESENT          0         /*!< FPU present or not */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
@@ -224,7 +224,7 @@ void DAC_Handler                 ( void );
  * \brief CMSIS includes
  */
 
-#include <core_cm0p.h>
+#include <core_cm0plus.h>
 #if !defined DONT_USE_CMSIS_INIT
 #include "system_samd20.h"
 #endif /* DONT_USE_CMSIS_INIT */
