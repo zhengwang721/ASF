@@ -6,7 +6,7 @@
  * This file contains definitions and functions for NAND Flash translation
  * operation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -170,5 +170,44 @@ uint32_t nand_flash_translation_get_device_size_in_page(
  */
 uint64_t nand_flash_translation_get_device_size_in_byte(
 		const struct nand_flash_translation *translated);
+
+/**
+ * \brief Carry out all pending operations.
+ */
+void nand_flash_flush(void);
+
+/**
+ * \brief Read data at the specified address of NAND Flash.
+ *
+ * \param address  Address at which the data shall be read.
+ * \param data  Data buffer.
+ * \param length  Number of bytes to read.
+ *
+ * \returns 0 if successful; otherwise return the error code.
+ */
+uint32_t nand_flash_read(uint32_t address, void *data, uint32_t length);
+
+/**
+ * \brief Write a data buffer at the specified address to NAND Flash.
+ *
+ * \param address  Address where the data shall be written.
+ * \param data  Data buffer.
+ * \param length  Number of bytes to write.
+ *
+ * \returns 0 if successful; otherwise return the error code.
+ */
+uint32_t nand_flash_write(uint32_t address, const void *data,
+		uint32_t length);
+
+/**
+ * \brief Get FTL version.
+ *
+ * \param minor_version  Minor version number.
+ * \param major_version  Major version number.
+ *
+ * \returns 0 if successful; otherwise return the error code.
+ */
+void nand_flash_get_version(uint32_t* minor_version,
+		uint32_t* major_version);
 
 #endif /*#ifndef NAND_FLASH_TRANSLATION_H_INCLUDED */

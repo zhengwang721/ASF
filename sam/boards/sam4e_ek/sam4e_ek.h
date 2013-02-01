@@ -362,6 +362,11 @@
 #define SPI_NPCS3_PA22_GPIO   (PIO_PA22_IDX)
 #define SPI_NPCS3_PA22_FLAGS  (IOPORT_MODE_MUX_B)
 
+/* Select the SPI module that AT25DFx is connected to */
+#define AT25DFX_SPI_MODULE          SPI
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS      3
 
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA3_IDX
