@@ -124,7 +124,6 @@
 #define SCR_PPT_SLIDE_FOLDER        "24bpp/"
 #define SCR_PPT_SLIDE_BASENAME      "Slide"
 #define SCR_PPT_SLIDE_EXT           ".bmp"
-#define SCR_PPT_SLIDE0_FULL_PATH  "/demo/slideshow/24bpp/Slide0.bmp"
 
 /** Total slider number supported */
 #define TOTAL_SLIDER_NUM 2
@@ -698,7 +697,6 @@ static void event_handler(rtouch_event_t const *event)
 int main(void)
 {
 	uint8_t uc_result;
-	FIL file_object;
 
 	/* Initialize the sleep manager */
 	sleepmgr_init();
@@ -736,11 +734,6 @@ int main(void)
 	/* Initialize demo parameters */
 	demo_parameters_initialize();
 	while (g_demo_parameters.calib_points[0].raw.x == 0) {
-		if (f_open( &file_object, (const char *)SCR_PPT_SLIDE0_FULL_PATH, FA_OPEN_EXISTING |
-				FA_READ ) != FR_OK) {
-				break;
-			}
-		
 		uc_result = rtouch_calibrate();
 		if (uc_result == 0) {
 			demo_set_special_mode_status(DEMO_LCD_CALIBRATE_MODE, 0);
