@@ -16,6 +16,9 @@
 
 		<build type="doxygen-entry-point" value="nwk_group"/>
 		<require idref="thirdparty.wireless.avr2025_mac.includes" />
-		<device-support value="avr"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<device-support value="megarf"/>
 	</module>
 </asf>
