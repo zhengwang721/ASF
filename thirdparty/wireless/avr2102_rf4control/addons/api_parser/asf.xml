@@ -14,7 +14,10 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.resources.inc"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-		
+		<device-support value="xmega"/>
+        <device-support value="uc3"/>
+        <device-support value="megarf"/>
+        <device-support value="sam"/>
 
 		</module>	
 		
