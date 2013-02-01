@@ -63,13 +63,15 @@ void abdac_get_config_defaults(struct abdac_config *const cfg)
 	cfg->cmoc = false;
 }
 
-bool abdac_init(struct abdac_dev_inst *const dev_inst, Abdacb *const abdac,
-		struct abdac_config *const cfg)
+status_code_t abdac_init(struct abdac_dev_inst *const dev_inst,
+		Abdacb *const abdac, struct abdac_config *const cfg)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(abdac);
 	Assert(cfg);
+
+	status_code_t status;
 
 	dev_inst->hw_dev = abdac;
 	dev_inst->cfg = cfg;
@@ -78,18 +80,34 @@ bool abdac_init(struct abdac_dev_inst *const dev_inst, Abdacb *const abdac,
 	sysclk_enable_peripheral_clock(abdac);
 
 	/* Initialize the AES with new configurations */
-	abdac_set_config(dev_inst);
+	status = abdac_set_config(dev_inst);
 
 	/* Disable APB clock for AES */
 	sysclk_disable_peripheral_clock(abdac);
 
-	return true;
+	return status;
 }
 
-void abdac_enable(struct abdac_dev_inst *const dev_inst)
+status_code_t abdac_enable(struct abdac_dev_inst *const dev_inst)
 {
+	uint32_t timeout = 0;
+
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
+
+	/* Enable the module. */
+	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_EN;
+
+	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
+		timeout++;
+	}
+
+	if (timeout == ABDAC_BUSY_TIMEOUT) {
+		return ERR_TIMEOUT;
+	}
+
+	return STATUS_OK;
+
 }
 
 status_code_t abdac_disable(struct abdac_dev_inst *const dev_inst)
@@ -134,9 +152,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 8M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -148,9 +164,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 12M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -162,9 +176,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 12M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -176,9 +188,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 16M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -190,9 +200,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 24M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -204,9 +212,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 24M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -218,9 +224,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 3, 192000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 32M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -232,9 +236,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 48M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -246,9 +248,7 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 		pll_config_init(&pcfg, PLL_SRC_OSC0, 2, 96000000 /
 				BOARD_OSC0_HZ);
 		pll_enable(&pcfg, 0);
-		sysclk_set_prescalers(0, 0, 0, 0, 0);
 		pll_wait_for_lock(0);
-		sysclk_set_source(SYSCLK_SRC_PLL0);
 		/* GCLK 48M */
 		genclk_enable_source(GENCLK_SRC_PLL0);
 		genclk_config_set_source(&gencfg, GENCLK_SRC_PLL0);
@@ -283,19 +283,6 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst)
 	} else {
 		dev_inst->hw_dev->ABDACB_CR &= ~ABDACB_CR_CMOC;
 	}
-
-	timeout = 0;
-
-	while((abdac_is_busy(dev_inst)) && (timeout < ABDAC_BUSY_TIMEOUT)) {
-		timeout++;
-	}
-
-	if (timeout == ABDAC_BUSY_TIMEOUT) {
-		return ERR_TIMEOUT;
-	}
-
-	/* Enable the module after GCLK ready. */
-	dev_inst->hw_dev->ABDACB_CR |= ABDACB_CR_EN;
 
 	timeout = 0;
 

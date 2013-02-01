@@ -152,11 +152,10 @@ void abdac_get_config_defaults(struct abdac_config *const cfg);
  * \param abdac         Base address of the ABDAC instance.
  * \param cfg         Pointer to ABDAC configuration.
  *
- * \retval true if the initialization was successful.
- * \retval false if initialization failed.
+ * \return Status code.
  */
-bool abdac_init(struct abdac_dev_inst *const dev_inst, Abdacb *const abdac,
-		struct abdac_config *const cfg);
+status_code_t abdac_init(struct abdac_dev_inst *const dev_inst,
+		Abdacb *const abdac, struct abdac_config *const cfg);
 
 /**
  * \brief Check the busy status of ABDAC.
@@ -214,13 +213,17 @@ static inline uint32_t abdac_read_interrupt_mask(
  * \brief Enable the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
+ *
+ * \return Status code.
  */
-void abdac_enable(struct abdac_dev_inst *const dev_inst);
+status_code_t abdac_enable(struct abdac_dev_inst *const dev_inst);
 
 /**
  * \brief Disable the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
+ *
+ * \return Status code.
  */
 status_code_t abdac_disable(struct abdac_dev_inst *const dev_inst);
 
@@ -228,6 +231,8 @@ status_code_t abdac_disable(struct abdac_dev_inst *const dev_inst);
  * \brief Configure the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
+ *
+ * \return Status code.
  */
 status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst);
 
@@ -235,6 +240,8 @@ status_code_t abdac_set_config(struct abdac_dev_inst *const dev_inst);
  * \brief Software reset the ABDAC module.
  *
  * \param dev_inst Device structure pointer..
+ *
+ * \return Status code.
  */
 status_code_t abdac_sw_reset(struct abdac_dev_inst *const dev_inst);
 
@@ -242,6 +249,8 @@ status_code_t abdac_sw_reset(struct abdac_dev_inst *const dev_inst);
  * \brief Swap the ABDAC channel output.
  *
  * \param dev_inst Device structure pointer..
+ *
+ * \return Status code.
  */
 status_code_t abdac_swap_channels(struct abdac_dev_inst *const dev_inst);
 
@@ -250,6 +259,8 @@ status_code_t abdac_swap_channels(struct abdac_dev_inst *const dev_inst);
  *
  * \param dev_inst Device structure pointer..
  * \param data Data value to write to SDR0.
+ *
+ * \return Status code.
  */
 status_code_t abdac_write_data0(struct abdac_dev_inst *const dev_inst,
 		uint32_t data);
@@ -269,6 +280,8 @@ status_code_t abdac_write_data1(struct abdac_dev_inst *const dev_inst,
  * \param dev_inst Device structure pointer..
  * \param mute Flag if set the channel mute
  * \param volume Value of volume
+ *
+ * \return Status code.
  */
 void abdac_set_volume0(struct abdac_dev_inst *const dev_inst, bool mute,
 		uint32_t volume);
@@ -279,6 +292,8 @@ void abdac_set_volume0(struct abdac_dev_inst *const dev_inst, bool mute,
  * \param dev_inst Device structure pointer..
  * \param mute Flag if set the channel mute
  * \param volume Value of volume
+ *
+ * \return Status code.
  */
 void abdac_set_volume1(struct abdac_dev_inst *const dev_inst, bool mute,
 		uint32_t volume);
@@ -372,8 +387,8 @@ void abdac_set_callback(struct abdac_dev_inst *const dev_inst,
  *
  * \subsection abdac_basic_setup_workflow
  *
- * -# Enable the ABDAC module
- * -# Configure the ABDAC mode
+ * -# Initialize the ABDAC module
+ * -# Enable the ABDAC mode
  *
  *  - \note The syste clock may changed after setting the ABDAC module.
  *

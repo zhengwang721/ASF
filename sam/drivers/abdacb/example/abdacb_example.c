@@ -187,6 +187,7 @@ int main(void)
 {
 	uint8_t key;
 	uint32_t i, count;
+	status_code_t status;
 
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -209,7 +210,12 @@ int main(void)
 	g_abdac_cfg.data_word_format = ABDAC_DATE_16BIT;
 	g_abdac_cfg.mono = false;
 	g_abdac_cfg.cmoc = false;
-	abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
+	status = abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
+	if (status == ERR_TIMEOUT) {
+		printf("-- Initialization timeout error. --\r\n");
+		while (1) {
+		}
+	}
 	abdac_enable(&g_abdac_inst);
 	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXRDY);
 	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXUR);
