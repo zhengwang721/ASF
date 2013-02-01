@@ -16,8 +16,6 @@
 		<generator value="as5_32"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarew32.dlib" value="full"/>
-		<config name="config.compiler.avr32gcc.optimization" value="low"/>
-		<config name="config.compiler.iarew32.optimization" value="low"/>
 		<config name="config.compiler.iarew32.sys_stack_size" value="0x4000"/>
 		<config name="config.compiler.iarew32.app_stack_size" value="0x1000"/>
 		<device-support value="at32uc3a3256"/>
