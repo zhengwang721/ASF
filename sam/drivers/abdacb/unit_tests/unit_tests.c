@@ -113,7 +113,7 @@ static void run_abdac_init_test(const struct test_case *test)
 	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXUR);
 
 	test_assert_true(test, status == STATUS_OK,
-			"Initialization not work!");
+			"Initialization fails!");
 }
 
 /**
@@ -133,7 +133,7 @@ static void run_abdac_interrupt_test(const struct test_case *test)
 	delay_ms(30);
 
 	test_assert_true(test, flag == true,
-			"Transfer ready interrupt not work!");
+			"Transfer ready interrupt fails!");
 
 	flag = false;
 
@@ -145,7 +145,7 @@ static void run_abdac_interrupt_test(const struct test_case *test)
 	delay_ms(30);
 
 	test_assert_true(test, flag == true,
-			"Transfer underrun interrupt not work!");
+			"Transfer underrun interrupt fails!");
 }
 
 /**
