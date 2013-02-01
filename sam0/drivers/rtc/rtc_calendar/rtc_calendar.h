@@ -43,7 +43,6 @@
 #define RTC_CALENDAR_H_INCLUDED
 
 #include <conf_clocks.h>
-#include <port.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
 #error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
