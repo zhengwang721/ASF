@@ -97,7 +97,7 @@ void extint_enable(void)
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
-#if EXTINT_ASYNC == true
+#if EXTINT_CALLBACK_MODE == true
 	/* Clear callback registration table */
 	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 		_extint_dev.callbacks[j] = NULL;
