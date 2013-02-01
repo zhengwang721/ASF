@@ -215,6 +215,16 @@ static void twis_slave_stop()
 }
 
 /**
+* \ brief Error handler on TWIS
+*
+* \ remarks User defined operations on error occur.
+*/
+static void twis_slave_error_handler()
+{
+	puts("-I- TWIS error happen\n\r");;
+}
+
+/**
  *  Configure serial console.
  */
 static void configure_console(void)
@@ -240,7 +250,7 @@ static void configure_console(void)
  */
 int main(void)
 {
-	twis_slave_fct_t twis_slave_fct;
+	twis_callback_t twis_slave_fct;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -261,18 +271,18 @@ int main(void)
 	twis_slave_fct.rx = &twis_slave_rx;
 	twis_slave_fct.tx = &twis_slave_tx;
 	twis_slave_fct.stop = &twis_slave_stop;
-	
+	twis_slave_fct.error = &twis_slave_error_handler;
+
 	twis_get_config_defaults(&g_twis_cfg);
 	
-	twis_slave_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg, &twis_slave_fct, 1);
+	twis_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg);
 
 	twis_enable(&g_twis_inst);
+
+	twis_set_callback(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH, &twis_slave_fct, 1);
 	
 	/* Clear receipt buffer */
-	twi_slave_read(&g_twis_inst);
-
-	/* Enable TWI interrupts */
-	twis_enable_interrupt(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
+	twis_read(&g_twis_inst);
 
 	while (1) {
 	}

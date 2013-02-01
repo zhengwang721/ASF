@@ -57,7 +57,9 @@
  * \internal
  * \brief TWIS callback function pointer array
  */
-twis_slave_fct_t *twis_fct_pointer[TWIS_INST_NUM];
+twis_callback_t *twis_fct_pointer[TWIS_INST_NUM];
+
+struct twis_dev_inst *twis_inst0, *twis_inst1;
 
 /**
  * \brief Get TWIS channel number.
@@ -119,12 +121,9 @@ void twis_get_config_defaults(struct twis_config *const cfg)
  * \param slave_fct  Pointer on application functions
  * \param irq_level  Interrupt level
  */
-void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis, 
-		struct twis_config *cfg, twis_slave_fct_t *slave_fct, uint8_t irq_level)
+void twis_init(struct twis_dev_inst *const dev_inst, Twis *const twis, struct twis_config *cfg)
 {
 	uint32_t reg = 0;
-	uint32_t twis_ch = find_twis_channel_num(twis);
-	uint32_t irq_line = 0;
 
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -199,19 +198,37 @@ void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis,
 			TWIS_HSSRR_FILTER(cfg->hs_filter);
 
 	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
+}
+
+/**
+ * \brief Set callback for TWIS
+ *
+ * \param dev_inst  Device structure pointer
+ * \param callback callback function pointer.
+ * \param irq_level interrupt level.
+ * \param source  interrupt source.
+ */
+void twis_set_callback(struct twis_dev_inst *const dev_inst,
+		twis_interrupt_source_t source, twis_callback_t *callback, uint8_t irq_level)
+{
+	uint32_t irq_line = 0;
+	uint32_t twis_ch = find_twis_channel_num(dev_inst->hw_dev);
 	
 	#if defined(ID_TWIS0)
-	if (twis == TWIS0) {
+	if (dev_inst->hw_dev == TWIS0) {
 		irq_line = TWIS0_IRQn;
+		twis_inst0 = dev_inst;
 	}
 	#endif
 	#if defined(ID_TWIS1)
-	if (twis == TWIS1) {
+	if (dev_inst->hw_dev == TWIS1) {
 		irq_line = TWIS1_IRQn;
+		twis_inst1 = dev_inst;
 	}
 	#endif
-	twis_fct_pointer[twis_ch] = slave_fct;
+	twis_fct_pointer[twis_ch] = callback;
 	irq_register_handler((IRQn_Type)irq_line, irq_level);
+	twis_enable_interrupt(dev_inst, source);
 }
 
 /**
@@ -222,7 +239,7 @@ void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis,
 void twis_enable(struct twis_dev_inst *const dev_inst)
 {
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
-	dev_inst->hw_dev->TWIS_CR = TWIS_CR_SEN;
+	//dev_inst->hw_dev->TWIS_CR = TWIS_CR_SEN;
 }
 
 /**
@@ -242,95 +259,99 @@ void twis_disable(struct twis_dev_inst *const dev_inst)
  *
  * \param Base address of the TWIS
  */
-static void twis_slave_int_handler(Twis *twis)
+static void twis_slave_int_handler(struct twis_dev_inst *const dev_inst)
 {
-	uint32_t twis_ch = find_twis_channel_num(twis);
+	uint32_t twis_ch = find_twis_channel_num(dev_inst->hw_dev);
 	
 	/* Get status and interrupt mask register values */
-	uint32_t status  = twis_get_status(twis);
-	uint32_t enabled = twis_get_interrupt_mask(twis);
+	uint32_t status  = twis_get_status(dev_inst);
+	uint32_t enabled = twis_get_interrupt_mask(dev_inst);
 	uint32_t pending = status & enabled;
 
 	/* An error has occurred, set only address match active and return */
 	if (status & TWIS_SR_ERROR) {
-		twis_disable_interrupt(twis, ~0UL);
-		twis_clear_status(twis, ~0UL);
-		twis_enable_interrupt(twis, TWIS_IER_SAM);
+		twis_disable_interrupt(dev_inst, ~0UL);
+		twis_clear_status(dev_inst, ~0UL);
+		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
 		twis_fct_pointer[twis_ch]->stop();
+		twis_fct_pointer[twis_ch]->error();
 		return;
 	}
 	/* Check if the slave address match flag is raised */
-	if (pending & TWIS_IER_SAM) {
+	if (pending & TWIS_SR_SAM) {
 		/* Ignore repeated start and transmission complete flags */
 		if (pending & TWIS_SR_REP) {
-			twis_clear_status(twis, TWIS_SCR_REP);
+			twis_clear_status(dev_inst, TWIS_SCR_REP);
 		}
 		if (pending & TWIS_SR_TCOMP) {
-			twis_clear_status(twis, TWIS_SCR_TCOMP);
+			twis_clear_status(dev_inst, TWIS_SCR_TCOMP);
 		}
 		/* Enable error handling */
-		twis_enable_interrupt(twis, TWIS_SR_ERROR);
+		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_ERROR);
 
 		/* Check if the slave should be in receive or transmit mode */
 		if (status & TWIS_SR_TRA) {
 			/* Transmit mode */
-			twis_clear_status(twis, TWIS_SR_BTF);
-			twis_enable_interrupt(twis, TWIS_IER_BTF |TWIS_IER_TCOMP);
-			twi_slave_write(twis, twis_fct_pointer[twis_ch]->tx());
+			twis_clear_status(dev_inst, TWIS_SR_BTF);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_BYTE_TRANS_FINISHED);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_TRANS_COMP);
+			twis_write(dev_inst, twis_fct_pointer[twis_ch]->tx());
 		} else {
 			/* Receive mode */
-			twis_enable_interrupt(twis, TWIS_IER_RXRDY | TWIS_IER_TCOMP
-					| TWIS_IER_REP);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_RX_BUFFER_READY);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_TRANS_COMP);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_RESTART_RECEIVED);
 		}
 	}
 
 	/* Check if there is data ready to be read in the data receive register */
-	if (pending & TWIS_IER_RXRDY) {
+	if (pending & TWIS_SR_RXRDY) {
 		/* Call user specific receive function */
-		twis_fct_pointer[twis_ch]->rx(twi_slave_read(twis));
+		twis_fct_pointer[twis_ch]->rx(twis_read(dev_inst));
 	}
 
 	/* Check if the transmit ready flag is raised */
 	if (pending & TWIS_SR_BTF) {
 		if (status & TWIS_SR_NAK) {
-			twis_disable_interrupt(twis, TWIS_IDR_BTF);
-			twis_clear_status(twis, TWIS_SCR_BTF);
-			twis_enable_interrupt(twis, TWIS_IER_TCOMP |TWIS_IER_REP);
+			twis_disable_interrupt(dev_inst, TWIS_INTERRUPT_BYTE_TRANS_FINISHED);
+			twis_clear_status(dev_inst, TWIS_SCR_BTF);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_TRANS_COMP);
+			twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_RESTART_RECEIVED);
 			/* Clear the NAK */
-			twis_clear_status(twis, TWIS_SCR_NAK);
+			twis_clear_status(dev_inst, TWIS_SCR_NAK);
 		} else {
-			twi_slave_write(twis, twis_fct_pointer[twis_ch]->tx());
+			twis_write(dev_inst, twis_fct_pointer[twis_ch]->tx());
 		}
 	}
 
 	/* Check if the transmission complete or repeated start flags raised */
-	if (pending & (TWIS_IER_TCOMP | TWIS_IER_REP)) {
+	if (pending & (TWIS_SR_TCOMP | TWIS_SR_REP)) {
 		/* Clear transmit complete and repeated start flags */
-		twis_clear_status(twis, TWIS_SCR_TCOMP | TWIS_SCR_REP | TWIS_SCR_NAK);
+		twis_clear_status(dev_inst, TWIS_SCR_TCOMP | TWIS_SCR_REP | TWIS_SCR_NAK);
 		/* Disable transmission ready interrupt */
-		twis_disable_interrupt(twis, TWIS_IDR_BTF
-			| TWIS_IDR_RXRDY
-			| TWIS_IDR_TCOMP
-			| TWIS_IDR_REP);
+		twis_disable_interrupt(dev_inst, TWIS_INTERRUPT_RX_BUFFER_READY);
+		twis_disable_interrupt(dev_inst, TWIS_INTERRUPT_TRANS_COMP);
+		twis_disable_interrupt(dev_inst, TWIS_INTERRUPT_RESTART_RECEIVED);
+		twis_disable_interrupt(dev_inst, TWIS_INTERRUPT_BYTE_TRANS_FINISHED);
 		/* Enable slave address match interrupt */
-		twis_enable_interrupt(twis, TWIS_IER_SAM);
+		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
 		/* Call user specific stop function */
 		twis_fct_pointer[twis_ch]->stop();
 	}
-	twis_clear_status(twis, pending);
+	twis_clear_status(dev_inst, pending);
 }
 
 #if defined(ID_TWIS0)
 void TWIS0_Handler(void)
 {
-	twis_slave_int_handler(TWIS0);
+	twis_slave_int_handler(twis_inst0);
 }
 #endif
 
 #if defined(ID_TWIS1)
 void TWIS1_Handler(void)
 {
-	twis_slave_int_handler(TWIS1);
+	twis_slave_int_handler(twis_inst1);
 }
 #endif
 

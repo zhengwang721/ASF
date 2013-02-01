@@ -131,22 +131,25 @@ struct twis_dev_inst {
 
 /** TWIS interrupt source type */
 typedef enum twis_interrupt_source {
-	TWIS_INTERRUPT_RX_BUFFER_READY = TWIS_IER_RXRDY,
-	TWIS_INTERRUPT_TX_BUFFER_READY = TWIS_IER_TXRDY,
-	TWIS_INTERRUPT_TRANS_COMP           = TWIS_IER_TCOMP,
-	TWIS_INTERRUPT_UNDER_RUN              = TWIS_IER_URUN,
+	TWIS_INTERRUPT_RX_BUFFER_READY         = TWIS_IER_RXRDY,
+	TWIS_INTERRUPT_TX_BUFFER_READY         = TWIS_IER_TXRDY,
+	TWIS_INTERRUPT_TRANS_COMP              = TWIS_IER_TCOMP,
+	TWIS_INTERRUPT_UNDER_RUN               = TWIS_IER_URUN,
 	TWIS_INTERRUPT_OVER_RUN                = TWIS_IER_ORUN,
-	TWIS_INTERRUPT_NAK_RECEIVED         = TWIS_IER_NAK,
-	TWIS_INTERRUPT_SMBUS_TIMEOUT      = TWIS_IER_SMBTOUT,
-	TWIS_INTERRUPT_SMBUS_PEC_ERROR = TWIS_IER_SMBPECERR,
-	TWIS_INTERRUPT_BUS_ERROR              = TWIS_IER_BUSERR,
-	TWIS_INTERRUPT_SLAVEADR_MATCH   = TWIS_IER_SAM,
-	TWIS_INTERRUPT_GENCALL_MATCH     = TWIS_IER_GCM,
-	TWIS_INTERRUPT_SMBUS_HHADR_MATCH  = TWIS_IER_SMBHHM,
-	TWIS_INTERRUPT_SMBUS_DEFADR_MATCH  = TWIS_IER_SMBDAM,
-	TWIS_INTERRUPT_STOP_RECEIVED                = TWIS_IER_STO,
-	TWIS_INTERRUPT_RESTART_RECEIVED         = TWIS_IER_REP,
-	TWIS_INTERRUPT_BYTE_TRANS_FINISHED          = TWIS_IER_BTF
+	TWIS_INTERRUPT_NAK_RECEIVED            = TWIS_IER_NAK,
+	TWIS_INTERRUPT_SMBUS_TIMEOUT           = TWIS_IER_SMBTOUT,
+	TWIS_INTERRUPT_SMBUS_PEC_ERROR         = TWIS_IER_SMBPECERR,
+	TWIS_INTERRUPT_BUS_ERROR               = TWIS_IER_BUSERR,
+	TWIS_INTERRUPT_SLAVEADR_MATCH          = TWIS_IER_SAM,
+	TWIS_INTERRUPT_GENCALL_MATCH           = TWIS_IER_GCM,
+	TWIS_INTERRUPT_SMBUS_HHADR_MATCH       = TWIS_IER_SMBHHM,
+	TWIS_INTERRUPT_SMBUS_DEFADR_MATCH      = TWIS_IER_SMBDAM,
+	TWIS_INTERRUPT_STOP_RECEIVED           = TWIS_IER_STO,
+	TWIS_INTERRUPT_RESTART_RECEIVED        = TWIS_IER_REP,
+	TWIS_INTERRUPT_BYTE_TRANS_FINISHED     = TWIS_IER_BTF,
+	TWIS_INTERRUPT_ERROR                   = TWIS_IER_URUN | TWIS_IER_ORUN |
+                                           TWIS_IER_SMBTOUT | TWIS_IER_SMBPECERR |
+                                           TWIS_IER_BUSERR
 } twis_interrupt_source_t;
 
 /*
@@ -160,11 +163,15 @@ typedef struct
 	uint8_t (*tx) (void);
 	/** Routine to signal a TWI STOP */
 	void (*stop) (void);
-} twis_slave_fct_t;
+	/** Routine to signal a TWI ERROR */
+	void (*error) (void);
+} twis_callback_t;
 
 void twis_get_config_defaults(struct twis_config *const cfg);
-void twis_slave_init(struct twis_dev_inst *const dev_inst, Twis *const twis, 
-		struct twis_config *config, twis_slave_fct_t *slave_fct, uint8_t irq_level);
+void twis_init(struct twis_dev_inst *const dev_inst, Twis *const twis,
+		struct twis_config *config);
+void twis_set_callback(struct twis_dev_inst *const dev_inst,
+		twis_interrupt_source_t source, twis_callback_t *callback, uint8_t irq_level);
 void twis_enable(struct twis_dev_inst *const dev_inst);
 void twis_disable(struct twis_dev_inst *const dev_inst);
 
@@ -175,7 +182,7 @@ void twis_disable(struct twis_dev_inst *const dev_inst);
  *
  * \retval Last byte data received from TWI bus
  */
-static inline uint8_t twi_slave_read(struct twis_dev_inst *const dev_inst)
+static inline uint8_t twis_read(struct twis_dev_inst *const dev_inst)
 {
 	return dev_inst->hw_dev->TWIS_RHR;
 }
@@ -186,7 +193,7 @@ static inline uint8_t twi_slave_read(struct twis_dev_inst *const dev_inst)
  * \param dev_inst  Device structure pointer.
  * \param byte       The byte data to write
  */
-static inline void twi_slave_write(struct twis_dev_inst *const dev_inst, uint8_t byte)
+static inline void twis_write(struct twis_dev_inst *const dev_inst, uint8_t byte)
 {
 	dev_inst->hw_dev->TWIS_THR = byte;
 }
@@ -206,7 +213,7 @@ static inline void twis_send_data_nack(struct twis_dev_inst *const dev_inst)
  *
  * \param dev_inst  Device structure pointer.
  */
-static inline twis_send_data_ack(struct twis_dev_inst *const dev_inst)
+static inline void twis_send_data_ack(struct twis_dev_inst *const dev_inst)
 {
 	dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_ACK;
 }
@@ -220,7 +227,7 @@ static inline twis_send_data_ack(struct twis_dev_inst *const dev_inst)
  */
 static inline uint8_t twis_get_smbus_pec(struct twis_dev_inst *const dev_inst)
 {
-	return (uint8_t)(dev_inst->hw_dev->TWIS_PECR & 0xFF);
+	return (uint8_t)TWIS_PECR_PEC(dev_inst->hw_dev->TWIS_PECR);
 }
 
 /**
@@ -251,7 +258,7 @@ static inline void twis_set_smbus_transfer_nb(struct twis_dev_inst *const dev_in
  */
 static inline uint8_t twis_get_smbus_transfer_nb(struct twis_dev_inst *const dev_inst)
 {
-	return (uint8_t)(dev_inst->hw_dev->TWIS_NBYTES & 0xFF);
+	return (uint8_t)TWIS_NBYTES_NBYTES(dev_inst->hw_dev->TWIS_PECR);
 }
 
 /**
@@ -264,7 +271,7 @@ static inline void twis_enable_interrupt(struct twis_dev_inst *const dev_inst,
 		twis_interrupt_source_t interrupt_source)
 {
 	/* Set the interrupt flags */
-	dev_inst->hw_dev->TWIS_IER |= interrupt_source;
+	dev_inst->hw_dev->TWIS_IER = interrupt_source;
 }
 
 /**
@@ -277,7 +284,7 @@ static inline void twis_disable_interrupt(struct twis_dev_inst *const dev_inst,
 		twis_interrupt_source_t interrupt_source)
 {
 	/* Clear the interrupt flags */
-	dev_inst->hw_dev->TWIS_IDR |= interrupt_source;
+	dev_inst->hw_dev->TWIS_IDR = interrupt_source;
 }
 
 /**
@@ -308,7 +315,8 @@ static inline uint32_t twis_get_status(struct twis_dev_inst *const dev_inst)
  * \param dev_inst  Device structure pointer
  * \param clear_status  The TWIS status to be clear
  */
-static inline void twis_clear_status(struct twis_dev_inst *const dev_inst, uint32_t clear_status)
+static inline void twis_clear_status(struct twis_dev_inst *const dev_inst,
+		uint32_t clear_status)
 {
 	dev_inst->hw_dev->TWIS_SCR = clear_status;
 }
@@ -328,7 +336,7 @@ static inline void twis_clear_status(struct twis_dev_inst *const dev_inst, uint3
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
  *
- * \section flashcalw_basic_use_case Basic use case
+ * \section twis_basic_use_case Basic use case
  * In this basic use case, the last page page and the user page will be written
  * with a specific magic number.
  *
@@ -367,14 +375,16 @@ static inline void twis_clear_status(struct twis_dev_inst *const dev_inst, uint3
  *	twis_slave_fct.rx = &twis_slave_rx;
  *	twis_slave_fct.tx = &twis_slave_tx;
  *	twis_slave_fct.stop = &twis_slave_stop;
+ *     twis_slave_fct.error = &twis_slave_error_handler;
  *
- *	twis_slave_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg, &twis_slave_fct, 1);
+ *	twis_init(&g_twis_inst, BOARD_BASE_TWI_SLAVE, &g_twis_cfg);
  *
  *     twis_enable(&g_twis_inst);
  *
+ *     twis_set_callback(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH, &twis_slave_fct, 1);
+ *
  *	twi_slave_read(&g_twis_inst);
  *
- *	twis_enable_interrupt(&g_twis_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
  * \endcode
  *
  * \subsection twis_basic_use_case_usage_flow Workflow
