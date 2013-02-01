@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Instance description for TC4
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start

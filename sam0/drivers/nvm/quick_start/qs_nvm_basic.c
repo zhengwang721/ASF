@@ -49,14 +49,6 @@ void configure_nvm(void)
 	struct nvm_config config;
 //! [setup_1]
 
-	// TODO: Move into driver once appropriate system clocking scheme is made
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator = 0;
-	gclock_ch_conf.run_in_standby   = false;
-	system_gclk_ch_set_config(NVMCTRL_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(NVMCTRL_GCLK_ID);
-
 //! [setup_2]
 	nvm_get_config_defaults(&config);
 //! [setup_2]

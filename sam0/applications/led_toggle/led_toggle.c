@@ -55,25 +55,7 @@
 static void board_extint_handler(uint32_t channel)
 {
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-	port_pin_set_output_level(LED_0_PIN, !pin_state);
-}
-
-static void configure_clocks(void)
-{
-	system_ahb_clock_set_mask(0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, 0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, 0xFFFFFFFF);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 0xFFFFFFFF);
-
-#if USE_EIC == true
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator    = 0;
-	gclock_ch_conf.run_in_standby      = false;
-
-	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(EIC_GCLK_ID);
-#endif
+	port_pin_set_output_level(LED_0_PIN, pin_state);
 }
 
 static void configure_led(void)
@@ -95,21 +77,21 @@ static void configure_button(void)
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 #else
-	struct extint_ch_conf eint_ch_conf;
-	extint_ch_get_config_defaults(&eint_ch_conf);
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
 
-	eint_ch_conf.gpio_pin     = BUTTON_0_EIC_PIN;
-	eint_ch_conf.gpio_pin_mux = BUTTON_0_EIC_PIN_MUX;
-	eint_ch_conf.detect       = EXTINT_DETECT_BOTH;
-	extint_ch_set_config(BUTTON_0_EIC_LINE, &eint_ch_conf);
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 
 	extint_enable();
 
 #  if USE_INTERRUPTS == true
-	extint_async_register_callback(board_extint_handler,
-			EXTINT_ASYNC_TYPE_DETECT);
-	extint_async_ch_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_ASYNC_TYPE_DETECT);
+	extint_register_callback(board_extint_handler,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 #  endif
 #endif
 }
@@ -125,7 +107,6 @@ int main(void)
 {
 	system_init();
 
-	configure_clocks();
 	configure_led();
 	configure_button();
 
@@ -149,8 +130,8 @@ int main(void)
 	}
 #  else
 	while (true) {
-		if (extint_ch_is_detected(BUTTON_0_EIC_LINE)) {
-			extint_ch_clear_detected(BUTTON_0_EIC_LINE);
+		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
+			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
 			board_extint_handler(BUTTON_0_EIC_LINE);
 		}

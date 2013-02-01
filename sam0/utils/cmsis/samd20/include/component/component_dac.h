@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for DAC
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start

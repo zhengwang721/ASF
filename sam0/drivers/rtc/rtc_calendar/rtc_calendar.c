@@ -95,9 +95,9 @@ static uint32_t _rtc_calendar_time_to_register_value(
 	register_value |= (time->hour << RTC_MODE2_CLOCK_HOUR_Pos);
 
 	/* Check if 24 h clock and set pm flag. */
-	if (!(_rtc_dev.clock_24h)) {
+	if (!(_rtc_dev.clock_24h) && (time->pm)) {
 		/* Set pm flag. */
-		register_value |= (time->pm << RTC_MODE2_CLOCK_PM_Pos);
+		register_value |= RTC_MODE2_CLOCK_HOUR_PM;
 	}
 
 	/* Set minute value into register_value. */
@@ -135,12 +135,11 @@ static void _rtc_calendar_register_value_to_time(
 	} else {
 		/* Set hour in 12h mode. */
 		time->hour = ((register_value &
-				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_PM))
+				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_HOUR_PM))
 				>> RTC_MODE2_CLOCK_HOUR_Pos);
 
 		/* Set pm flag */
-		time->pm = ((register_value & RTC_MODE2_CLOCK_PM)
-				>> RTC_MODE2_CLOCK_PM_Pos);
+		time->pm = ((register_value & RTC_MODE2_CLOCK_HOUR_PM) != 0);
 	}
 
 	/* Set minute value into time struct. */

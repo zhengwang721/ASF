@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,7 +65,8 @@
  */
 void spi_enable_clock(Spi *p_spi)
 {
-#if (SAM4S || SAM3S || SAM3N || SAM3U)
+#if (SAM4S || SAM3S || SAM3N || SAM3U || SAM4E)
+	UNUSED(p_spi);
 	sysclk_enable_peripheral_clock(ID_SPI);
 #elif (SAM3XA)
 	if (p_spi == SPI0) {
@@ -88,7 +89,8 @@ void spi_enable_clock(Spi *p_spi)
  */
 void spi_disable_clock(Spi *p_spi)
 {
-#if (SAM4S || SAM3S || SAM3N || SAM3U)
+#if (SAM4S || SAM3S || SAM3N || SAM3U || SAM4E)
+	UNUSED(p_spi);
 	sysclk_disable_peripheral_clock(ID_SPI);
 #elif (SAM3XA)
 	if (p_spi == SPI0) {
@@ -276,8 +278,8 @@ void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch,
  * \param mck      SPI module input clock frequency (MCK clock, Hz).
  *
  * \return Divider or error code.
- *   \retval >=0  Success.
- *   \retval  <0  Error.
+ *   \retval > 0  Success.
+ *   \retval < 0  Error.
  */
 int16_t spi_calc_baudrate_div(const uint32_t baudrate, uint32_t mck)
 {

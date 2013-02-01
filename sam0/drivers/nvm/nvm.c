@@ -38,8 +38,8 @@
  * \asf_license_stop
  *
  */
-
 #include "nvm.h"
+#include <system.h>
 
 /**
  * \brief Number of pages per row in the NVM controller.
@@ -111,6 +111,14 @@ enum status_code nvm_set_config(
 {
 	/* Sanity check argument */
 	Assert(config);
+
+	/* Configure the generic clock for the module */
+	struct system_gclk_ch_conf gclock_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	gclock_ch_conf.source_generator = 0;
+	gclock_ch_conf.run_in_standby   = false;
+	system_gclk_ch_set_config(NVMCTRL_GCLK_ID, &gclock_ch_conf);
+	system_gclk_ch_enable(NVMCTRL_GCLK_ID);
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
@@ -217,7 +225,7 @@ enum status_code nvm_execute_command(
 			/* Set address and command */
 			nvm_module->ADDR.reg  = address;
 			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
+					NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
 
 		/* Commands requiring address */
@@ -229,7 +237,7 @@ enum status_code nvm_execute_command(
 			/* Set address and command */
 			nvm_module->ADDR.reg  = address;
 			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
+					NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
 
 		/* Commands not requiring address */
@@ -240,7 +248,7 @@ enum status_code nvm_execute_command(
 
 			/* Set command */
 			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
-					(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
+					NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
 
 		default:
@@ -401,9 +409,8 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
 	row_addr = row_nr * (_nvm_dev.page_size * NVM_PAGES_PER_ROW);
 
 	/* Set address and command */
-	nvm_module->ADDR.reg = row_addr;
-	nvm_module->CTRLA.reg = (NVM_COMMAND_ERASE_ROW << NVMCTRL_CTRLA_CMD_Pos) |
-			(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
+	nvm_module->ADDR.reg  = row_addr;
+	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
 }
@@ -459,9 +466,8 @@ enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
 
 	/* Set address and command */
 	for (i = 0; i > rows; i++) {
-		nvm_module->ADDR.reg = row_addr ;
-		nvm_module->CTRLA.reg = (NVM_COMMAND_ERASE_ROW << NVMCTRL_CTRLA_CMD_Pos) |
-				(NVMCTRL_CMDEX_EXECUTION_KEY << NVMCTRL_CTRLA_CMDEX_Pos);
+		nvm_module->ADDR.reg  = row_addr;
+		nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 		/* Increment the row address */
 		row_addr += row_size;
