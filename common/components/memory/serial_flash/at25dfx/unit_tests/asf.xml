@@ -2,11 +2,11 @@
 	<module type="application" id="common.components.memory.serial_flash.at25dfx.unit_tests" caption="Unit Tests for the SAM AT25DFx DataFlash Component">
 		<device-support value="sam3n"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4e"/>
 		<info type="description" value="summary">
 		AT25DFx DataFlash unit test. Ensure the good functionality of this module by testing one by one the main features of the AT25DFx component.
 		</info>
 		<require idref="common.components.memory.serial_flash.at25dfx.unit_tests.common"/>
-		<require idref="sam.utils.syscalls"/>
 	</module>
 	<module type="meta" id="common.components.memory.serial_flash.at25dfx.unit_tests.common" caption="Unit Tests for the SAM AT25DFx DataFlash Common Part">
 		<info type="gui-flag" value="hidden"/>

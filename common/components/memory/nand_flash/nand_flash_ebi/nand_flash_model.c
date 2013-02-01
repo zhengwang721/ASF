@@ -6,7 +6,7 @@
  * This file contains flash model definitions and functions for NAND Flash
  * module.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -217,8 +217,8 @@ uint32_t nand_flash_model_find(const struct nand_flash_model *model_list,
 			if (model) {
 				memcpy(model, &model_list[i], sizeof(struct nand_flash_model));
 
-				if (model->block_size_in_kilobytes == 0
-						|| model->page_size_in_bytes == 0) {
+				if ((model->block_size_in_kilobytes == 0)
+						|| (model->page_size_in_bytes == 0)) {
 					/* Fetch from the extended ID4
 					 * D5  D4 BlockSize || D1  D0  PageSize
 					 * 0   0   64K      || 0   0   1K
@@ -300,9 +300,9 @@ uint32_t nand_flash_model_translate_access(const struct nand_flash_model
 
 	/* Translate address */
 	uint16_t temp_block = address / block_size;
-	address -= temp_block * block_size;
+	address -= (temp_block * block_size);
 	uint16_t temp_page = address / page_size;
-	address -= temp_page * page_size;
+	address -= (temp_page * page_size);
 	uint16_t temp_Offset = address;
 
 	/* Save results */
