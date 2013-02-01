@@ -53,7 +53,7 @@ extern "C" {
  * \internal
  * \brief FREQM callback function pointer array
  */
-freqm_callback_t freqm_callback[FREQM_INTERRUPT__SOURCE_NUM];
+freqm_callback_t freqm_callback[FREQM_INTERRUPT__SOURCE_N];
 
 struct freqm_dev_inst *_freqm_instance;
 
@@ -82,7 +82,7 @@ void freqm_get_config_defaults(struct freqm_config *const cfg)
  *
  * \return Status code
  */
-status_code_t freqm_init(
+enum status_code freqm_init(
 		struct freqm_dev_inst *const dev_inst,
 		Freqm *const freqm,
 		struct freqm_config *const cfg)
@@ -130,11 +130,10 @@ status_code_t freqm_init(
  *
  * \return Status code
  */
-status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
+enum status_code freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
 		uint32_t *p_result)
 {
 	uint32_t timeout = FREQM_NUM_OF_ATTEMPTS;
-	Freqm *p_freqm = dev_inst->hw_dev;
 
 	/* Wait until the measurement is done */
 	while (freqm_get_status(dev_inst) & FREQM_STATUS_BUSY) {
@@ -142,7 +141,7 @@ status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
 			return ERR_TIMEOUT;
 		}
 	}
-	*p_result = p_freqm->FREQM_VALUE;
+	*p_result = dev_inst->hw_dev->FREQM_VALUE;
 	return STATUS_OK;
 }
 
@@ -154,9 +153,7 @@ status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
  */
 void freqm_enable(struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-
-	sysclk_enable_peripheral_clock(p_freqm);
+	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_1);
 }
 
@@ -167,10 +164,9 @@ void freqm_enable(struct freqm_dev_inst *const dev_inst)
  *
  * \return Status code
  */
-status_code_t freqm_disable(struct freqm_dev_inst *const dev_inst)
+enum status_code freqm_disable(struct freqm_dev_inst *const dev_inst)
 {
 	uint32_t timeout = FREQM_NUM_OF_ATTEMPTS;
-	Freqm *p_freqm = dev_inst->hw_dev;
 
 	/* Wait until the measurement is done */
 	while (freqm_get_status(dev_inst) & FREQM_STATUS_BUSY) {
@@ -178,7 +174,7 @@ status_code_t freqm_disable(struct freqm_dev_inst *const dev_inst)
 			return ERR_TIMEOUT;
 		}
 	}
-	sysclk_disable_peripheral_clock(p_freqm);
+	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_1);
 
 	return STATUS_OK;

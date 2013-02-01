@@ -108,20 +108,20 @@ struct freqm_dev_inst {
 typedef enum freqm_interrupt_source {
 	FREQM_INTERRUPT_MEASURMENT_READY = FREQM_IER_DONE,
 	FREQM_INTERRUPT_REFERENCE_CLOCK_READY = FREQM_IER_RCLKRDY,
-	FREQM_INTERRUPT__SOURCE_NUM
+	FREQM_INTERRUPT__SOURCE_N
 } freqm_interrupt_source_t;
 
 typedef void (*freqm_callback_t)(void);
 
 void freqm_get_config_defaults(struct freqm_config *const cfg);
-status_code_t freqm_init(
+enum status_code freqm_init(
 		struct freqm_dev_inst *const dev_inst,
 		Freqm *const freqm,
 		struct freqm_config *const cfg);
-status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
+enum status_code freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
 		uint32_t *p_result);
 void freqm_enable(struct freqm_dev_inst *const dev_inst);
-status_code_t freqm_disable(struct freqm_dev_inst *const dev_inst);
+enum status_code freqm_disable(struct freqm_dev_inst *const dev_inst);
 void freqm_set_callback(struct freqm_dev_inst *const dev_inst,
 		freqm_interrupt_source_t source, freqm_callback_t callback,
 		uint8_t irq_level);
@@ -160,6 +160,8 @@ static inline void freqm_disable_refclk(struct freqm_dev_inst *const dev_inst)
  * \brief Get FREQM result value
  *
  * \param dev_inst  Device structure pointer
+ *
+ * \return Measurement result value
  */
 static inline uint32_t freqm_get_result_value(
 		struct freqm_dev_inst *const dev_inst)
@@ -171,6 +173,8 @@ static inline uint32_t freqm_get_result_value(
  * \brief Get FREQM status
  *
  * \param dev_inst  Device structure pointer
+ *
+ * \return FREQM status value
  */
 static inline uint32_t freqm_get_status(struct freqm_dev_inst *const dev_inst)
 {
@@ -208,6 +212,7 @@ static inline void freqm_disable_interrupt(
  *
  * \param dev_inst  Device structure pointer
  *
+ * \return Interrupt status value
  */
 static inline uint32_t freqm_get_interrupt_status(
 		struct freqm_dev_inst *const dev_inst)
@@ -234,6 +239,7 @@ static inline void freqm_clear_interrupt_status(
  *
  * \param dev_inst  Device structure pointer.
  *
+ * \return Interrupt mask value
  */
 static inline uint32_t freqm_get_interrupt_mask(
 		struct freqm_dev_inst *const dev_inst)
@@ -290,6 +296,8 @@ static inline uint32_t freqm_get_interrupt_mask(
  * -# Start Measurement.
  *   - \code freqm_start_measure(FREQM); \endcode
  * -# Get mesurement result:
- *   - \code cpu_clk = (freqm_get_result(FREQM) / 128) * 32768; \endcode
+ * \code
+ * 	cpu_clk = (freqm_get_result_blocking(FREQM) / 128) * 32768;
+ * \endcode
  */
 #endif /* FREQM_H_INCLUDED */
