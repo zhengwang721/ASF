@@ -174,11 +174,11 @@ void board_init(void)
 #ifdef CONF_BOARD_ADM3312_EN
 	/* Configure ADM3312 enable pin */
 	ioport_set_pin_dir(PIN_USART1_EN_IDX, IOPORT_DIR_OUTPUT);
-#   ifdef CONF_BOARD_ADM3312_EN_DISABLE_AT_INIT
+#ifdef CONF_BOARD_ADM3312_EN_DISABLE_AT_INIT
 	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_INACTIVE_LEVEL);
-#   else
+#else
 	ioport_set_pin_level(PIN_USART1_EN_IDX, PIN_USART1_EN_ACTIVE_LEVEL);
-#   endif
+#endif
 #endif
 
 #ifdef CONF_BOARD_CAN0
@@ -204,4 +204,28 @@ void board_init(void)
 	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
 #endif
 #endif
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SPI_NPCS0
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS3
+#if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
+	ioport_set_pin_peripheral_mode(CONF_BOARD_SPI_NPCS3_GPIO,
+			CONF_BOARD_SPI_NPCS3_FLAGS);
+#else
+	ioport_set_pin_peripheral_mode(SPI_NPCS3_PA5_GPIO, SPI_NPCS3_PA5_FLAGS);
+#endif
+#endif
+#endif
+
+#ifdef CONF_BOARD_TWI0
+	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+
 }
