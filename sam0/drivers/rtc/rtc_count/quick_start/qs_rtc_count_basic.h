@@ -82,7 +82,9 @@
  * \snippet qs_rtc_count_basic.c implementation_code
  *
  * \subsection rtc_count_basic_imp_workflow Workflow
- * -# Poll on is compare match flag.
+ * -# Set RTC period to 20
+ *  - \snippet qs_rtc_count_basic.c period
+ * -# Poll on compare match flag. Clear compare match flag when set.
  *  - \snippet qs_rtc_count_basic.c poll
  * -# Repeat
  *

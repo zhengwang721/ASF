@@ -95,6 +95,8 @@ extern "C" {
 #define BPM_PS_0    0
 /** Power scaling mode 1 */
 #define BPM_PS_1    1
+/** Power scaling mode 2 */
+#define BPM_PS_2    2
 /* @} */
 
 /** \anchor CLK32_32Khz_1Khz */
@@ -380,7 +382,7 @@ uint32_t bpm_get_version(Bpm *bpm);
  * \endcode
  *
  * The following code needs to be added to the user application, to wakeup
- * system and switch to next power mode. 
+ * system and switch to next power mode.
  * \code
  * static void push_button_eic_handler()
  * {

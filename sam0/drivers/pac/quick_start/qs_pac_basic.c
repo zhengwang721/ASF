@@ -50,10 +50,10 @@ void config_port_pins(void)
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(10, &pin_conf);
+	port_pin_set_config(PIN_PB09, &pin_conf);
 
 	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(11, &pin_conf);
+	port_pin_set_config(PIN_PB08, &pin_conf);
 }
 //! [pin_setup]
 
@@ -61,6 +61,7 @@ int main (void)
 {
 //! [main]
 //! [init]
+	system_init();
 	config_port_pins();
 //! [init]
 
@@ -74,7 +75,7 @@ int main (void)
 //! [enable_interrupts]
 
 //! [button_press]
-	while (port_pin_get_input_level(10)) {
+	while (port_pin_get_input_level(PIN_PB09)) {
 		/* Wait for button press */
 	}
 //! [button_press]
@@ -89,7 +90,7 @@ int main (void)
 //! [unlock_perph]
 
 //! [alter_config]
-	port_pin_toggle_output_level(11);
+	port_pin_toggle_output_level(PIN_PB08);
 //! [alter_config]
 
 //! [lock_perph]

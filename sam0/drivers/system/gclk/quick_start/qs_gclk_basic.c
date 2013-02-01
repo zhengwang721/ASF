@@ -79,8 +79,8 @@ void config_gclock_channel(void)
 //! [setup_7]
 
 //! [setup_8]
-	gclock_ch_conf.source_generator    = EXAMPLE_GCLOCK_GENERATOR;
-	gclock_ch_conf.enable_during_sleep = false;
+	gclock_ch_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
+	gclock_ch_conf.run_in_standby   = false;
 //! [setup_8]
 //! [setup_9]
 	system_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);

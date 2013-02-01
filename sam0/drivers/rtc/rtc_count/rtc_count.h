@@ -388,26 +388,38 @@ enum rtc_count_mode {
 
 /**
  * \brief Available compare registers.
+ * \note Not all compare registers are available in all devices and modes.
  */
 enum rtc_count_compare {
 	/** Compare register 0. */
 	RTC_COUNT_COMPARE_0 = 0,
+#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
 	/** Compare register 1. */
 	RTC_COUNT_COMPARE_1 = 1,
+#endif
+#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
 	/** Compare register 2. */
 	RTC_COUNT_COMPARE_2 = 2,
+#endif
+#if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
 	/** Compare register 3. */
 	RTC_COUNT_COMPARE_3 = 3,
-	/** Compare register 4. \note Only available in 16 bit mode */
+#endif
+#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
+	/** Compare register 4. */
 	RTC_COUNT_COMPARE_4 = 4,
-	/** Compare register 5. \note Only available in 16 bit mode */
+#endif
+#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
+	/** Compare register 5. */
 	RTC_COUNT_COMPARE_5 = 5,
+#endif
 };
 
 /**
  * \brief Values used to enable and disable events.
  *
  * Use these values when disabling or enabling the RTC events.
+* \note Not all compare events are available in all devices and modes.
  */
 enum rtc_count_events {
 	/** To set event off. */
@@ -416,16 +428,26 @@ enum rtc_count_events {
 	RTC_COUNT_EVENT_OVF        = RTC_MODE0_EVCTRL_OVFEO,
 	/** Compare 0 match event. */
 	RTC_COUNT_EVENT_CMP_0      = RTC_MODE0_EVCTRL_CMPEO(1 << 0),
+#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
 	/** Compare 1 match event. */
 	RTC_COUNT_EVENT_CMP_1      = RTC_MODE0_EVCTRL_CMPEO(1 << 1),
+#endif
+#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
 	/** Compare 2 match event. */
 	RTC_COUNT_EVENT_CMP_2      = RTC_MODE0_EVCTRL_CMPEO(1 << 2),
+#endif
+#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Compare 3 match event. */
 	RTC_COUNT_EVENT_CMP_3      = RTC_MODE0_EVCTRL_CMPEO(1 << 3),
-	/** Compare 4 match event. \note Only available in 16 bit mode. */
+#endif
+#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
+	/** Compare 4 match event. */
 	RTC_COUNT_EVENT_CMP_4      = RTC_MODE0_EVCTRL_CMPEO(1 << 4),
-	/** Compare 5 match event. \note Only available in 16 bit mode. */
+#endif
+#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
+	/** Compare 5 match event. */
 	RTC_COUNT_EVENT_CMP_5      = RTC_MODE0_EVCTRL_CMPEO(1 << 5),
+#endif
 	/** To set periodic event 0. */
 	RTC_COUNT_EVENT_PERIODIC_0 = RTC_MODE0_EVCTRL_PEREO(1 << 0),
 	/** Periodic event 1. */
@@ -462,9 +484,11 @@ struct rtc_count_conf {
 	bool continuously_update;
 	/** Set event output generators. */
 	enum rtc_count_events event_generators;
-	/** Array of Compare values. Compare register 4 and 5 are only
-	 * available in 16 bit mode. */
-	uint32_t compare_values[6];
+	/** 
+	 * Array of Compare values. Not all Compare values are available in 32-bit
+	 * mode.
+	 */
+	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
 
 /**

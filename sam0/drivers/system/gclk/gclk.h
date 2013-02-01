@@ -181,6 +181,7 @@
  */
 
 #include <compiler.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -201,7 +202,7 @@ struct system_gclk_gen_conf {
 	uint32_t division_factor;
 	/** If \c true the clock is kept enabled during device standby mode. */
 	bool run_in_standby;
-	/** If \true, enables GCLK generator clock output to a GPIO pin. */
+	/** If \c true, enables GCLK generator clock output to a GPIO pin. */
 	bool output_enable;
 };
 
@@ -215,7 +216,7 @@ struct system_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
 	/** If \c true, the clock is kept enabled during device standby mode. */
-	bool enable_during_sleep;
+	bool run_in_standby;
 };
 
 
@@ -300,7 +301,7 @@ static inline void system_gclk_ch_get_config_defaults(
 	config->source_generator = 0;
 
 	#if !defined (REVB)
-	config->enable_during_sleep = false;
+	config->run_in_standby = false;
 	#endif
 }
 

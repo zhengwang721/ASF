@@ -94,13 +94,8 @@ static void _dac_set_config(
 	/* Configure GCLK channel and enable clock */
 	gclk_ch_conf.source_generator = config->clock_source;
 
-	#if defined (REVB)
 	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->standby_sleep_enable;
-	#else
-	/* Set the GCLK channel sleep enable mode */
-	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
-	#endif
+	gclk_ch_conf.run_in_standby = config->run_in_standby;
 
 	/* Apply configuration and enable the GCLK channel */
 	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
@@ -119,7 +114,7 @@ static void _dac_set_config(
 	}
 
 	/* Enable DAC in standby sleep mode if configured */
-	if (config->standby_sleep_enable) {
+	if (config->run_in_standby) {
 		dac_module->CTRLA.reg |= DAC_CTRLA_RUNSTDBY;
 	}
 }
