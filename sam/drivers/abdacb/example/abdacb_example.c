@@ -211,7 +211,7 @@ int main(void)
 	g_abdac_cfg.mono = false;
 	g_abdac_cfg.cmoc = false;
 	status = abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
-	if (status == ERR_TIMEOUT) {
+	if (status != STATUS_OK) {
 		printf("-- Initialization timeout error. --\r\n");
 		while (1) {
 		}

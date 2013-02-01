@@ -49,7 +49,8 @@
  *
  * \section intro Introduction
  * This is the unit test application for the ABDAC driver.
- * It contains one test case for the ABDACB module:
+ * It contains two test case for the ABDACB module:
+ * - Test Initialization.
  * - Test interrupt management.
  *
  * \section files Main Files
@@ -96,11 +97,31 @@ static void abdac_callback(void)
 }
 
 /**
+ * \brief Test ABDAC initialization APIs.
+ *
+ * \param test Current test case.
+ */
+static void run_abdac_init_test(const struct test_case *test)
+{
+	status_code_t status;
+
+	/* Config the ABDAC. */
+	abdac_get_config_defaults(&g_abdac_cfg);
+	status = abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
+	abdac_enable(&g_abdac_inst);
+	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXRDY);
+	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXUR);
+
+	test_assert_true(test, status == STATUS_OK,
+			"Initialization not work!");
+}
+
+/**
  * \brief Test ABDAC interrupt APIs.
  *
  * \param test Current test case.
  */
-static void run_abdac_test(const struct test_case *test)
+static void run_abdac_interrupt_test(const struct test_case *test)
 {
 	flag = false;
 
@@ -143,20 +164,16 @@ int main(void)
 	board_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	/* Config the ABDAC. */
-	abdac_get_config_defaults(&g_abdac_cfg);
-	abdac_init(&g_abdac_inst, ABDACB, &g_abdac_cfg);
-	abdac_enable(&g_abdac_inst);
-	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXRDY);
-	abdac_clear_interrupt_flag(&g_abdac_inst, ABDAC_INTERRUPT_TXUR);
-
 	/* Define all the test cases. */
-	DEFINE_TEST_CASE(abdac_mode_test, NULL, run_abdac_test, NULL,
-			"SAM ABDAC interrupt test.");
+	DEFINE_TEST_CASE(abdac_init_test, NULL, run_abdac_init_test, NULL,
+			"SAM ABDAC initialization test.");
+	DEFINE_TEST_CASE(abdac_interrupt_test, NULL, run_abdac_interrupt_test,
+			NULL, "SAM ABDAC interrupt test.");
 
 	/* Put test case addresses in an array. */
 	DEFINE_TEST_ARRAY(abdac_tests) = {
-		&abdac_mode_test,
+		&abdac_init_test,
+		&abdac_interrupt_test,
 	};
 
 	/* Define the test suite. */
