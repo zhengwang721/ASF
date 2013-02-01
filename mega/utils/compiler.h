@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -157,5 +157,6 @@
 //! @}
 
 #include "interrupt.h"
+#include "progmem.h"
 
 #endif  // UTILS_COMPILER_H
