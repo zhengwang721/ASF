@@ -344,7 +344,10 @@ void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *Suppor
 #endif
                           );
 #endif
+     
+	     node_status = IDLE;
 
+      
     /* Keep compiler happy */
     Status = Status;
     PairingRef = PairingRef;
@@ -367,6 +370,8 @@ void zrc_cmd_disc_indication(uint8_t PairingRef)
     uint8_t cec_cmds[32];
     PGM_READ_BLOCK(cec_cmds, supported_cec_cmds, 32);
     zrc_cmd_disc_response(PairingRef, cec_cmds);
+	 node_status = IDLE;
+
 }
 #endif
 
