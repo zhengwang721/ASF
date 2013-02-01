@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -886,6 +886,10 @@ void sysclk_init(void)
 	}
 
 	/* Automatically select best power scaling mode */
+#ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
+	ps_value = BPM_PS_2;
+	is_fwu_enabled = false;
+#else
 	if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
 		ps_value = BPM_PS_1;
 		if (sysclk_get_cpu_hz() > FLASH_FREQ_PS1_FWS_0_MAX_FREQ) {
@@ -895,6 +899,7 @@ void sysclk_init(void)
 	} else {
 		ps_value = BPM_PS_0;
 	}
+#endif
 
 	/* Switch to system clock selected by user */
 	if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_RCSYS) {
