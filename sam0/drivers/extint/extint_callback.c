@@ -39,13 +39,13 @@
  *
  */
 #include "extint.h"
-#include "extint_async.h"
+#include "extint_callback.h"
 
 /**
  * \internal
  * Internal driver device instance struct, declared in the main module driver.
  */
-extern struct _extint_device _extint_dev;
+extern struct _extint_module _extint_dev;
 
 /**
  * \brief Registers an asynchronous callback function with the driver.
@@ -68,14 +68,14 @@ extern struct _extint_device _extint_dev;
  * \retval STATUS_ERR_NO_MEMORY    No free entries were found in the registration
  *                                 table.
  */
-enum status_code extint_async_register_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type)
+enum status_code extint_register_callback(
+	const extint_callback_t callback,
+	const enum extint_callback_type type)
 {
 	/* Sanity check arguments */
 	Assert(callback);
 
-	if (type != EXTINT_ASYNC_TYPE_DETECT) {
+	if (type != EXTINT_CALLBACK_TYPE_DETECT) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -106,14 +106,14 @@ enum status_code extint_async_register_callback(
  * \retval STATUS_ERR_BAD_ADDRESS  No matching entry was found in the
  *                                 registration table.
  */
-enum status_code extint_async_unregister_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type)
+enum status_code extint_unregister_callback(
+	const extint_callback_t callback,
+	const enum extint_callback_type type)
 {
 	/* Sanity check arguments */
 	Assert(callback);
 
-	if (type != EXTINT_ASYNC_TYPE_DETECT) {
+	if (type != EXTINT_CALLBACK_TYPE_DETECT) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -142,11 +142,11 @@ enum status_code extint_async_unregister_callback(
  * \retval STATUS_OK               The callbacks was enabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
-enum status_code extint_async_ch_enable_callback(
+enum status_code extint_chan_enable_callback(
 	const uint32_t channel,
-	const enum extint_async_type type)
+	const enum extint_callback_type type)
 {
-	if (type == EXTINT_ASYNC_TYPE_DETECT) {
+	if (type == EXTINT_CALLBACK_TYPE_DETECT) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
 		eic->INTENSET.reg = (1UL << channel);
@@ -172,11 +172,11 @@ enum status_code extint_async_ch_enable_callback(
  * \retval STATUS_OK               The callbacks was disabled successfully.
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
  */
-enum status_code extint_async_ch_disable_callback(
+enum status_code extint_chan_disable_callback(
 	const uint32_t channel,
-	const enum extint_async_type type)
+	const enum extint_callback_type type)
 {
-	if (type == EXTINT_ASYNC_TYPE_DETECT) {
+	if (type == EXTINT_CALLBACK_TYPE_DETECT) {
 		Eic *const eic = _extint_get_eic_from_channel(channel);
 
 		eic->INTENCLR.reg = (1UL << channel);
@@ -189,12 +189,13 @@ enum status_code extint_async_ch_disable_callback(
 	return STATUS_OK;
 }
 
+/** Handler for the EXTINT hardware module interrupt. */
 void EIC_IRQn_Handler(void);
 void EIC_IRQn_Handler(void)
 {
 	/* Find any triggered channels, run associated callback handlers */
 	for (uint32_t i = 0; i < (32 * EIC_INST_NUM); i++) {
-		if (extint_ch_is_detected(i)) {
+		if (extint_chan_is_detected(i)) {
 			/* Find any associated callback entries in the callback table */
 			for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 				if (_extint_dev.callbacks[j] != NULL) {
@@ -203,7 +204,7 @@ void EIC_IRQn_Handler(void)
 				}
 			}
 
-			extint_ch_clear_detected(i);
+			extint_chan_clear_detected(i);
 		}
 	}
 }

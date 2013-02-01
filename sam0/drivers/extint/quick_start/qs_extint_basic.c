@@ -46,21 +46,21 @@ void config_extint_channel(void);
 void config_extint_channel(void)
 {
 //! [setup_1]
-	struct extint_ch_conf eint_ch_conf;
+	struct extint_chan_conf eint_chan_conf;
 //! [setup_1]
 //! [setup_2]
-	extint_ch_get_config_defaults(&eint_ch_conf);
+	extint_chan_get_config_defaults(&eint_chan_conf);
 //! [setup_2]
 
 //! [setup_3]
-	eint_ch_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
-	eint_ch_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
-	eint_ch_conf.wake_if_sleeping    = true;
-	eint_ch_conf.filter_input_signal = false;
-	eint_ch_conf.detect              = EXTINT_DETECT_FALLING;
+	eint_chan_conf.gpio_pin            = PIN_PA01A_EIC_EXTINT1;
+	eint_chan_conf.gpio_pin_mux        = MUX_PA01A_EIC_EXTINT1;
+	eint_chan_conf.wake_if_sleeping    = true;
+	eint_chan_conf.filter_input_signal = false;
+	eint_chan_conf.detection_criteria  = EXTINT_DETECT_FALLING;
 //! [setup_3]
 //! [setup_4]
-	extint_ch_set_config(1, &eint_ch_conf);
+	extint_chan_set_config(1, &eint_chan_conf);
 //! [setup_4]
 }
 //! [setup]
@@ -75,11 +75,11 @@ int main(void)
 	//! [main]
 	while (true) {
 		//! [main_1]
-		if (extint_ch_is_detected(1)) {
+		if (extint_chan_is_detected(1)) {
 		//! [main_1]
 			// Do something in response to EXTINT 1 detection
 		//! [main_2]
-			extint_ch_clear_detected(1);
+			extint_chan_clear_detected(1);
 		//! [main_2]
 		}
 	}

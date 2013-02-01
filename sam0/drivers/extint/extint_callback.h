@@ -64,24 +64,24 @@ extern "C" {
  */
 
 /** Type definition for an EXTINT module callback function. */
-typedef void (*extint_async_callback_t)(uint32_t channel);
+typedef void (*extint_callback_t)(uint32_t channel);
 
 /** Enum for the possible callback types for the EXTINT module. */
-enum extint_async_type
+enum extint_callback_type
 {
 	/** Callback type for when an external interrupt detects the configured
 	 *  channel criteria (i.e. edge or level detection)
 	 */
-	EXTINT_ASYNC_TYPE_DETECT,
+	EXTINT_CALLBACK_TYPE_DETECT,
 };
 
-enum status_code extint_async_register_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type);
+enum status_code extint_register_callback(
+	const extint_callback_t callback,
+	const enum extint_callback_type type);
 
-enum status_code extint_async_unregister_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type);
+enum status_code extint_unregister_callback(
+	const extint_callback_t callback,
+	const enum extint_callback_type type);
 
 /** @} */
 
@@ -89,13 +89,13 @@ enum status_code extint_async_unregister_callback(
  * @{
  */
 
-enum status_code extint_async_ch_enable_callback(
+enum status_code extint_chan_enable_callback(
 	const uint32_t channel,
-	const enum extint_async_type type);
+	const enum extint_callback_type type);
 
-enum status_code extint_async_ch_disable_callback(
+enum status_code extint_chan_disable_callback(
 	const uint32_t channel,
-	const enum extint_async_type type);
+	const enum extint_callback_type type);
 
 /** @} */
 

@@ -55,7 +55,7 @@
 static void board_extint_handler(uint32_t channel)
 {
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-	port_pin_set_output_level(LED_0_PIN, !pin_state);
+	port_pin_set_output_level(LED_0_PIN, pin_state);
 }
 
 static void configure_led(void)
@@ -77,21 +77,21 @@ static void configure_button(void)
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
 #else
-	struct extint_ch_conf eint_ch_conf;
-	extint_ch_get_config_defaults(&eint_ch_conf);
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
 
-	eint_ch_conf.gpio_pin     = BUTTON_0_EIC_PIN;
-	eint_ch_conf.gpio_pin_mux = BUTTON_0_EIC_PIN_MUX;
-	eint_ch_conf.detect       = EXTINT_DETECT_BOTH;
-	extint_ch_set_config(BUTTON_0_EIC_LINE, &eint_ch_conf);
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_PIN_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 
 	extint_enable();
 
 #  if USE_INTERRUPTS == true
-	extint_async_register_callback(board_extint_handler,
-			EXTINT_ASYNC_TYPE_DETECT);
-	extint_async_ch_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_ASYNC_TYPE_DETECT);
+	extint_register_callback(board_extint_handler,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 #  endif
 #endif
 }
@@ -130,8 +130,8 @@ int main(void)
 	}
 #  else
 	while (true) {
-		if (extint_ch_is_detected(BUTTON_0_EIC_LINE)) {
-			extint_ch_clear_detected(BUTTON_0_EIC_LINE);
+		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
+			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
 			board_extint_handler(BUTTON_0_EIC_LINE);
 		}
