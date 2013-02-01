@@ -39,7 +39,7 @@
  *
  */
 #include "extint.h"
-#include "extint_async.h"
+#include "extint_callback.h"
 
 /**
  * \internal

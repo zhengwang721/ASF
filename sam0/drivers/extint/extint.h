@@ -198,8 +198,8 @@
 #include <compiler.h>
 #include <pinmux.h>
 
-#if EXTINT_ASYNC == true
-#  include "extint_async.h"
+#if EXTINT_CALLBACK_MODE == true
+#  include "extint_callback.h"
 #endif
 
 #ifdef __cplusplus
@@ -285,7 +285,7 @@ struct extint_nmi_conf {
  */
 struct _extint_module
 {
-#  if EXTINT_ASYNC == true
+#  if EXTINT_CALLBACK_MODE == true
 	/** Asynchronous channel callback table, for user-registered handlers. */
 	extint_callback_t callbacks[EXTINT_CALLBACKS_MAX];
 #  endif
