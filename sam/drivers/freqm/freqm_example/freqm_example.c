@@ -143,11 +143,12 @@ int main(void)
 	freqm_enable(&g_freqm_inst);
 	freqm_start_measure(&g_freqm_inst);
 
-	if(freqm_get_result(&g_freqm_inst, &result) == STATUS_OK) {
-		clk = ( result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
-		printf(" Current CPU Clock is %d Hz. \n\r", (int)clk);
+	if(freqm_get_result_blocking(&g_freqm_inst, &result) == STATUS_OK) {
+		clk = (result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
+		printf(" Current CPU clock mesurement result is %d Hz. \n\r",
+				(int)clk);
 	} else {
-		printf(" Current CPU Clock Mesurement Fail. \n\r");
+		printf(" Current CPU clock mesurement Failed. \n\r");
 	}
 
 	/* Measure clock from external OSC0. */
@@ -157,11 +158,12 @@ int main(void)
 	freqm_init(&g_freqm_inst, FREQM, &g_freqm_cfg);
 	freqm_start_measure(&g_freqm_inst);
 
-	if(freqm_get_result(&g_freqm_inst, &result) == STATUS_OK) {
-		clk = ( result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
-		printf(" Current OSC0 Output Clock is %d Hz. \n\r", (int)clk);
+	if(freqm_get_result_blocking(&g_freqm_inst, &result) == STATUS_OK) {
+		clk = (result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
+		printf(" Current OSC0 output clock mesurement result is %d Hz. \n\r",
+				(int)clk);
 	} else {
-		printf(" Current OSC0 Output Clock Mesurement Fail. \n\r");
+		printf(" Current OSC0 output clock mesurement Failed. \n\r");
 	}
 
 	/* Measure clock from PLL0. */
@@ -173,11 +175,12 @@ int main(void)
 	freqm_init(&g_freqm_inst, FREQM, &g_freqm_cfg);
 	freqm_start_measure(&g_freqm_inst);
 
-	if(freqm_get_result(&g_freqm_inst, &result) == STATUS_OK) {
-		clk = ( result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
-		printf(" Current PLL0 Output Clock is %d Hz. \n\r", (int)clk);
+	if(freqm_get_result_blocking(&g_freqm_inst, &result) == STATUS_OK) {
+		clk = (result / FREQM_DURATION_DEFAULT) * OSC_RC32K_NOMINAL_HZ;
+		printf(" Current PLL0 output clock mesurement result is %d Hz. \n\r",
+				(int)clk);
 	} else {
-		printf(" Current PLL0 Output Clock Mesurement Fail. \n\r");
+		printf(" Current PLL0 output clock mesurement Failed. \n\r");
 	}
 
 	/* Change CLK_REF source to RCSYS and Measure clock from GENCLK0. */
@@ -191,11 +194,12 @@ int main(void)
 	freqm_init(&g_freqm_inst, FREQM, &g_freqm_cfg);
 	freqm_start_measure(&g_freqm_inst);
 
-	if(freqm_get_result(&g_freqm_inst, &result) == STATUS_OK) {
-		clk = ( result / FREQM_DURATION_DEFAULT) * OSC_RCSYS_NOMINAL_HZ;
-		printf(" Current GENCLK0 Output Clock is %d Hz. \n\r", (int)clk);
+	if(freqm_get_result_blocking(&g_freqm_inst, &result) == STATUS_OK) {
+		clk = (result / FREQM_DURATION_DEFAULT) * OSC_RCSYS_NOMINAL_HZ;
+		printf(" Current GENCLK0 output clock mesurement result is %d Hz. \n\r",
+				(int)clk);
 	} else {
-		printf(" Current GENCLK0 Output Clock Mesurement Fail. \n\r");
+		printf(" Current GENCLK0 output clock mesurement Failed. \n\r");
 	}
 	
 	while (1) {

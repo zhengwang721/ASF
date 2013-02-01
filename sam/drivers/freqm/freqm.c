@@ -50,21 +50,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam_drivers_freqm_group Frequency Meter (FREQM)
- *
- * See \ref sam_freqm_quickstart.
- *
- * Driver for the Frequency Meter. This driver provides access to the main
- * features of the FREQM controller.
- *
- * @{
- */
-
-/**
  * \internal
  * \brief FREQM callback function pointer array
  */
-freqm_callback_t freqm_callback;
+freqm_callback_t freqm_callback[FREQM_INTERRUPT__SOURCE_NUM];
+
+struct freqm_dev_inst *_freqm_instance;
 
 /**
  * \brief Initializes Frequency Meter configuration structure to defaults.
@@ -88,6 +79,8 @@ void freqm_get_config_defaults(struct freqm_config *const cfg)
  * \param dev_inst  Device structure pointer.
  * \param freqm   Base address of the FREQM instance.
  * \param cfg    Pointer to FREQM configuration
+ *
+ * \return Status code
  */
 status_code_t freqm_init(
 		struct freqm_dev_inst *const dev_inst,
@@ -124,6 +117,8 @@ status_code_t freqm_init(
 	freqm->FREQM_MODE |= FREQM_MODE_REFNUM(cfg->duration);
 	freqm->FREQM_MODE |= FREQM_MODE_CLKSEL(cfg->msr_clk);
 
+	_freqm_instance = dev_inst;
+
 	return STATUS_OK;
 }
 
@@ -131,9 +126,11 @@ status_code_t freqm_init(
  * \brief Get measurement result.
 
  * \param dev_inst  Device structure pointer.
- * \param result  measurement result value.
+ * \param p_result  Pointer to measurement result value.
+ *
+ * \return Status code
  */
-status_code_t freqm_get_result(struct freqm_dev_inst *const dev_inst,
+status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
 		uint32_t *p_result)
 {
 	uint32_t timeout = FREQM_NUM_OF_ATTEMPTS;
@@ -168,6 +165,7 @@ void freqm_enable(struct freqm_dev_inst *const dev_inst)
  *
  * \param dev_inst  Device structure pointer.
  *
+ * \return Status code
  */
 status_code_t freqm_disable(struct freqm_dev_inst *const dev_inst)
 {
@@ -198,7 +196,7 @@ void freqm_set_callback(struct freqm_dev_inst *const dev_inst,
 		freqm_interrupt_source_t source, freqm_callback_t callback,
 		uint8_t irq_level)
 {
-	freqm_callback = callback;
+	freqm_callback[source] = callback;
 	irq_register_handler((IRQn_Type)FREQM_IRQn, irq_level);
 	freqm_enable_interrupt(dev_inst, source);
 }
@@ -208,14 +206,19 @@ void freqm_set_callback(struct freqm_dev_inst *const dev_inst,
  */
 void FREQM_Handler(void)
 {
-	if(freqm_callback) {
-		freqm_callback();
-	} else {
-		Assert(false); /* Catch unexpected interrupt */
+	uint32_t status = freqm_get_interrupt_status(_freqm_instance);
+	uint32_t mask = freqm_get_interrupt_mask(_freqm_instance);
+
+	if ((status & FREQM_ISR_DONE) && (mask & FREQM_IMR_DONE)) {
+		freqm_callback[FREQM_INTERRUPT_MEASURMENT_READY]();
+	}
+
+	if ((status & FREQM_ISR_RCLKRDY) && (mask & FREQM_IMR_RCLKRDY)) {
+		freqm_callback[FREQM_INTERRUPT_REFERENCE_CLOCK_READY]();
 	}
 }
 
-//@}
+
 
 #ifdef __cplusplus
 }

@@ -51,10 +51,24 @@
 extern "C" {
 #endif
 
+/**
+ * \defgroup sam_drivers_freqm_group Frequency Meter (FREQM)
+ *
+ * See \ref sam_freqm_quickstart.
+ *
+ * Driver for the Frequency Meter. This driver provides access to the main
+ * features of the FREQM controller.
+ *
+ * @{
+ */
+
 /** Time out value (number of attempts) */
 #define FREQM_NUM_OF_ATTEMPTS        1000000
 
-/** The default duration value of a measurement */
+/**
+ * The default duration value of a measurement, given in number of
+ * reference clock cycles.
+ */
 #define FREQM_DURATION_DEFAULT       128
 
 /**
@@ -69,7 +83,10 @@ struct freqm_config {
 	uint8_t ref_clk;
 	/** Measurement Clock Source Selection */
 	uint8_t msr_clk;
-	/** The duration of a measurement */
+	/**
+	 * The duration of a measurement, given in number of
+	 * reference clock cycles.
+	 */
 	uint8_t duration;
 };
 
@@ -91,6 +108,7 @@ struct freqm_dev_inst {
 typedef enum freqm_interrupt_source {
 	FREQM_INTERRUPT_MEASURMENT_READY = FREQM_IER_DONE,
 	FREQM_INTERRUPT_REFERENCE_CLOCK_READY = FREQM_IER_RCLKRDY,
+	FREQM_INTERRUPT__SOURCE_NUM
 } freqm_interrupt_source_t;
 
 typedef void (*freqm_callback_t)(void);
@@ -100,7 +118,7 @@ status_code_t freqm_init(
 		struct freqm_dev_inst *const dev_inst,
 		Freqm *const freqm,
 		struct freqm_config *const cfg);
-status_code_t freqm_get_result(struct freqm_dev_inst *const dev_inst,
+status_code_t freqm_get_result_blocking(struct freqm_dev_inst *const dev_inst,
 		uint32_t *p_result);
 void freqm_enable(struct freqm_dev_inst *const dev_inst);
 status_code_t freqm_disable(struct freqm_dev_inst *const dev_inst);
@@ -115,8 +133,7 @@ void freqm_set_callback(struct freqm_dev_inst *const dev_inst,
  */
 static inline void freqm_start_measure(struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_CTRL = FREQM_CTRL_START;
+	dev_inst->hw_dev->FREQM_CTRL = FREQM_CTRL_START;
 }
 
 /**
@@ -126,8 +143,7 @@ static inline void freqm_start_measure(struct freqm_dev_inst *const dev_inst)
  */
 static inline void freqm_enable_refclk(struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_MODE |= FREQM_MODE_REFCEN;
+	dev_inst->hw_dev->FREQM_MODE |= FREQM_MODE_REFCEN;
 }
 
 /**
@@ -137,8 +153,18 @@ static inline void freqm_enable_refclk(struct freqm_dev_inst *const dev_inst)
  */
 static inline void freqm_disable_refclk(struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_MODE &= ~FREQM_MODE_REFCEN;
+	dev_inst->hw_dev->FREQM_MODE &= ~FREQM_MODE_REFCEN;
+}
+
+/**
+ * \brief Get FREQM result value
+ *
+ * \param dev_inst  Device structure pointer
+ */
+static inline uint32_t freqm_get_result_value(
+		struct freqm_dev_inst *const dev_inst)
+{
+	return dev_inst->hw_dev->FREQM_VALUE;
 }
 
 /**
@@ -148,36 +174,33 @@ static inline void freqm_disable_refclk(struct freqm_dev_inst *const dev_inst)
  */
 static inline uint32_t freqm_get_status(struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	return p_freqm->FREQM_STATUS;
+	return dev_inst->hw_dev->FREQM_STATUS;
 }
 
 /**
  * \brief Enable FREQM interrupt
  *
  * \param dev_inst  Device structure pointer
- * \param ul_source  Interrupt source
+ * \param source  Interrupt source
  */
 static inline void freqm_enable_interrupt(
 		struct freqm_dev_inst *const dev_inst,
 		freqm_interrupt_source_t source)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_IER |= (uint32_t)source;
+	dev_inst->hw_dev->FREQM_IER = (uint32_t)source;
 }
 
 /**
  * \brief Disable FREQM interrupt
  *
  * \param dev_inst  Device structure pointer
- * \param ul_source  Interrupt source
+ * \param source  Interrupt source
  */
 static inline void freqm_disable_interrupt(
 		struct freqm_dev_inst *const dev_inst,
 		freqm_interrupt_source_t source)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_IDR |= (uint32_t)source;
+	dev_inst->hw_dev->FREQM_IDR = (uint32_t)source;
 }
 
 /**
@@ -189,23 +212,21 @@ static inline void freqm_disable_interrupt(
 static inline uint32_t freqm_get_interrupt_status(
 		struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	return p_freqm->FREQM_ISR;
+	return dev_inst->hw_dev->FREQM_ISR;
 }
 
 /**
  * \brief Clear FREQM interrupt status.
  *
  * \param dev_inst  Device structure pointer.
- * \param int_status_flags interrupt status flag.
+ * \param source Interrupt source.
  *
  */
 static inline void freqm_clear_interrupt_status(
 		struct freqm_dev_inst *const dev_inst,
 		freqm_interrupt_source_t source)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	p_freqm->FREQM_ICR = (uint32_t)source;
+	dev_inst->hw_dev->FREQM_ICR = (uint32_t)source;
 }
 
 /**
@@ -217,9 +238,10 @@ static inline void freqm_clear_interrupt_status(
 static inline uint32_t freqm_get_interrupt_mask(
 		struct freqm_dev_inst *const dev_inst)
 {
-	Freqm *p_freqm = dev_inst->hw_dev;
-	return p_freqm->FREQM_IMR;
+	return dev_inst->hw_dev->FREQM_IMR;
 }
+
+//@}
 
 #ifdef __cplusplus
 }
@@ -257,7 +279,7 @@ static inline uint32_t freqm_get_interrupt_mask(
  *
  *    freqm_start_measure(&g_freqm_inst);
  *
- *    freqm_get_result(&g_freqm_inst, &result);
+ *    freqm_get_result_blocking(&g_freqm_inst, &result);
  * \endcode
  *
  * \subsection freqm_basic_use_case_setup_flow Workflow

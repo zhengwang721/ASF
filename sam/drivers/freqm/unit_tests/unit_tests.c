@@ -41,15 +41,8 @@
  *
  */
 
-#include <board.h>
-#include <sysclk.h>
-#include "freqm.h"
-#include "delay.h"
-#include <string.h>
-#include <unit_test/suite.h>
-#include <stdio_serial.h>
+#include <asf.h>
 #include <conf_test.h>
-#include <conf_board.h>
 
 /**
  * \mainpage
@@ -121,9 +114,11 @@ static void run_freqm_test(const struct test_case *test)
 	freqm_set_callback(&g_freqm_inst, FREQM_INTERRUPT_MEASURMENT_READY,
 		set_int_flag, 1);
 	freqm_start_measure(&g_freqm_inst);
-	if(freqm_get_result(&g_freqm_inst, NULL) == STATUS_OK) {
-		test_assert_true(test, intflag == 1, "FREQM test failed");
-	}
+
+	/* Delay more than the measurement time to wait for interrupt. */
+	delay_ms(20);
+
+	test_assert_true(test, intflag == 1, "FREQM test failed");
 }
 
 /**
