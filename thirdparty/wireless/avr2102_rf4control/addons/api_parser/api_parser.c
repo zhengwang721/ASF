@@ -932,11 +932,11 @@ static inline void handle_incoming_msg(void)
 //        vendor_data_ind(
 #endif
         sio_rx_buf[2],//pairing ref
-        ((uint16_t)sio_rx_buf[3] | ((uint16_t)sio_rx_buf[4] << 8)),//vendor id
-        sio_rx_buf[7],//nsdu length
-        &sio_rx_buf[8],
-        sio_rx_buf[5],//rx link quality
-        sio_rx_buf[6]//rx flags
+        ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),//vendor id
+        sio_rx_buf[8],//nsdu length
+        &sio_rx_buf[9],
+        sio_rx_buf[6],//rx link quality
+        sio_rx_buf[7]//rx flags
           );
         }
         break;
