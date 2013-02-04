@@ -44,7 +44,7 @@
 #ifndef KEYBOARD_H_INCLUDED
 #define KEYBOARD_H_INCLUDED
 
-#include "mega256rfr2_xplained_pro.h"
+#include "atmega256rfr2_xplained_pro.h"
 
 typedef enum key_id_tag
 {
