@@ -65,8 +65,8 @@ void port_pin_set_config(
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pinmux_config.direction    = config->direction;
-	pinmux_config.input_pull   = config->input_pull;
+	pinmux_config.direction    = (enum system_pinmux_pin_dir)config->direction;
+	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->input_pull;
 
 	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
 }
@@ -97,8 +97,8 @@ void port_group_set_config(
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
-	pinmux_config.direction    = config->direction;
-	pinmux_config.input_pull   = config->input_pull;
+	pinmux_config.direction    = (enum system_pinmux_pin_dir)config->direction;
+	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->input_pull;
 
 	system_pinmux_group_set_config(port, mask, &pinmux_config);
 }
