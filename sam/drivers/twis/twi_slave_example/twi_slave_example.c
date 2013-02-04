@@ -3,7 +3,7 @@
  *
  * \brief TWI SLAVE Example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -110,7 +110,7 @@ extern "C" {
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
 /**
- * \brief Information about TWIM Module
+ * \brief Information about TWIS Module
  * @{
  */
 #define SLAVE_ADDRESS          0x50      /** Target's TWI address */
@@ -129,50 +129,52 @@ extern "C" {
 /* @} */
 
 /** State variable */
-uint8_t s_status_cmd = TWI_MEM_IDLE;
+uint8_t status_cmd = TWI_MEM_IDLE;
 /** Offset in the address value */
-uint8_t s_u8_addr_pos;
+uint8_t addr_pos;
 /** The current address in the virtual mem */
-uint32_t s_u32_addr;
+uint32_t addr;
 /** Content of the Virtual mem*/
-uint8_t s_memory[TWI_MEM_SIZE] = { 0 };
+uint8_t memory[TWI_MEM_SIZE];
+
+struct twis_dev_inst twis_device;
 
 /**
  * \brief Manage the received data on TWI
  *
  * \remarks User defined operations after reception
  */
-static void twis_slave_rx(uint8_t u8_value)
+static void twis_slave_rx(uint8_t value)
 {
-	switch( s_status_cmd ) {
+	switch( status_cmd ) {
 		case TWI_MEM_IDLE:
-		/* Init before receiving the target address.	*/
-		s_u8_addr_pos = SLAVE_ADDR_LGT;
-		s_u32_addr = 0;
-		/* No break to continue on next case */
+			/* Init before receiving the target address. */
+			addr_pos = SLAVE_ADDR_LGT;
+			addr = 0;
+			/* No break to continue on next case */
 
 		case TWI_MEM_ADDR:
-		s_u8_addr_pos--;
-		/* Receiving the Nth Byte that makes the address (MSB first). */
-		s_u32_addr += ((uint32_t)u8_value << (s_u8_addr_pos*8));
-		if( 0 == s_u8_addr_pos ) {
-			/* the address is completely received => switch to data mode. */
-			s_status_cmd = TWI_MEM_DATA;
-		} else {
-			s_status_cmd = TWI_MEM_ADDR;
-		}
-		break;
+			addr_pos--;
+			/* Receiving the Nth Byte that makes the address (MSB first). */
+			addr += ((uint32_t)value << (addr_pos * 8));
+			if (0 == addr_pos) {
+				/* the address is completely received => switch to data mode. */
+				status_cmd = TWI_MEM_DATA;
+			} else {
+				status_cmd = TWI_MEM_ADDR;
+			}
+			break;
 
 		case TWI_MEM_DATA:
-		/* Check that we're still in the range of the virtual mem */
-		if( TWI_MEM_SIZE > (s_u32_addr-VIRTUALMEM_ADDR_START) ) {
-			s_memory[s_u32_addr-VIRTUALMEM_ADDR_START] = u8_value;
-		} else {
-			s_u32_addr=VIRTUALMEM_ADDR_START;
-		}
-		/* Update to next position */
-		s_u32_addr++;
-		break;
+			/* Check that we're still in the range of the virtual mem */
+			if (TWI_MEM_SIZE > (addr - VIRTUALMEM_ADDR_START)) {
+				memory[addr - VIRTUALMEM_ADDR_START] = value;
+			} else {
+				addr = VIRTUALMEM_ADDR_START;
+			}
+			/* Update to next position */
+			addr++;
+			break;
 	}
 }
 
@@ -183,33 +185,45 @@ static void twis_slave_rx(uint8_t u8_value)
  */
 static uint8_t twis_slave_tx(void)
 {
-	uint8_t u8_value;
-	/* This callback is called after a read request from the TWI master, for each
-	     Byte to transmit. */
-	s_status_cmd = TWI_MEM_IDLE;
+	uint8_t value;
+	/*
+	 * This callback is called after a read request from the TWI master, for
+	 * each byte to transmit.
+	 */
+	status_cmd = TWI_MEM_IDLE;
 	/* Check that we're still in the range of the virtual mem */
-	if( TWI_MEM_SIZE > (s_u32_addr-VIRTUALMEM_ADDR_START) ) 	{
-		u8_value = s_memory[s_u32_addr-VIRTUALMEM_ADDR_START];
+	if (TWI_MEM_SIZE > (addr - VIRTUALMEM_ADDR_START)) {
+		value = memory[addr - VIRTUALMEM_ADDR_START];
 	} else {
-		u8_value = 0xFF;
+		value = 0xFF;
 	}
 	/* Update to next position */
-	s_u32_addr++;
-	return u8_value;
+	addr++;
+	return value;
 }
 
 /**
-* \ brief Manage stop transfer reception on TWIS
-*
-* \ remarks User defined operations on Stop condition
+ * \brief Manage stop transfer reception on TWIS
+ *
+ * \remarks User defined operations on Stop condition
 */
 static void twis_slave_stop()
 {
-	s_status_cmd = TWI_MEM_IDLE;
+	status_cmd = TWI_MEM_IDLE;
 }
 
 /**
- *  Configure serial console.
+ * \brief Manage Error on TWIS
+ *
+ * \remarks User defined operations on Error condition
+*/
+static void twis_slave_error()
+{
+	puts("I2C bus error\r\n");
+}
+
+/**
+ * \brief Configure serial console.
  */
 static void configure_console(void)
 {
@@ -234,7 +248,7 @@ static void configure_console(void)
  */
 int main(void)
 {
-	twis_slave_fct_t twis_slave_fct;
+	twis_callback_t slave_callbacks;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -249,34 +263,23 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* Configure TWI as slave */
-	puts("-I- Configuring the TWIS\n\r");
-	twis_enable(BOARD_BASE_TWI_SLAVE);
-
 	struct twis_config config;
-	config.ten_bit = false;
+	twis_get_config_defaults(&config);
 	config.chip = SLAVE_ADDRESS;
-	config.smbus = false;
-	config.stretch_clk_data = false;
-	config.stretch_clk_addr = false;
-	config.stretch_clk_hr = true;
-	config.ack_general_call = false;
-	config.ack_slave_addr = true;
-	config.enable_pec = false;
-	config.ack_smbus_host_header = false;
-	config.ack_smbus_default_addr = false;
+	if (twis_init(&twis_device, BOARD_BASE_TWI_SLAVE, &config) == STATUS_OK) {
+		/* Set pointer to user specific application routines */
+		slave_callbacks.rx = &twis_slave_rx;
+		slave_callbacks.tx = &twis_slave_tx;
+		slave_callbacks.stop = &twis_slave_stop;
+		slave_callbacks.error = &twis_slave_error;
+		twis_set_callback(&twis_device, TWIS_INTERRUPT_SLAVEADR_MATCH,
+			slave_callbacks, 1);
+		/* Enable the TWIS module */
+		twis_enable(&twis_device);
 
-	/* Set pointer to user specific application routines */
-	twis_slave_fct.rx = &twis_slave_rx;
-	twis_slave_fct.tx = &twis_slave_tx;
-	twis_slave_fct.stop = &twis_slave_stop;
-
-	twis_slave_init(BOARD_BASE_TWI_SLAVE, &config, &twis_slave_fct, 1);
-
-	/* Clear receipt buffer */
-	twi_slave_read(BOARD_BASE_TWI_SLAVE);
-
-	/* Enable TWI interrupts */
-	twis_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWIS_IER_SAM);
+	} else {
+		puts("-E- Initialization failed!\r\n");
+	}
 
 	while (1) {
 	}
