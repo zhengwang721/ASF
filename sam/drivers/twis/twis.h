@@ -480,6 +480,8 @@ static inline void twis_clear_status(struct twis_dev_inst *const dev_inst,
  *  twis_set_callback(&twis_device, TWIS_INTERRUPT_SLAVEADR_MATCH, slave_callbacks, 1);
  * \endcode
  * -# Enable TWIS module:
- *   - \code twis_enable(&twis_device); \endcode
+ * \code
+ *  twis_enable(&twis_device);
+ * \endcode
  */
 #endif /* TWIS_H_INCLUDED */
