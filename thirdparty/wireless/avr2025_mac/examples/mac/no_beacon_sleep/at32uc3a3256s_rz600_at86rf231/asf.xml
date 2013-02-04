@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_common_hw_timer.h"/>
+		<build type="header-file" value="conf_hw_timer.h"/>
 
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf231"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" value="none"/>

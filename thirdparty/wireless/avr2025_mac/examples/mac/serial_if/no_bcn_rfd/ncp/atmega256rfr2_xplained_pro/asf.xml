@@ -5,7 +5,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>
-		<build type="header-file" value="conf_common_hw_timer.h"/>
+		<build type="header-file" value="conf_hw_timer.h"/>
 
 		<config name="config.compiler.iarew.data_stack_size" value="0x200"/>
 		<config name="config.compiler.iarew.near_heap_size" value="0x40"/>

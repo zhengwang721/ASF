@@ -8,7 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_example.h"/>
-		<build type="header-file" value="conf_common_hw_timer.h"/>
+		<build type="header-file" value="conf_hw_timer.h"/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.xmega"/>
