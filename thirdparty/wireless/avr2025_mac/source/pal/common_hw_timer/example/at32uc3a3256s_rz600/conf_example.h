@@ -46,9 +46,8 @@
 /*! \name Configuration
  */
 //! @{
-#define OVERFLOW_PIN         (AVR32_PIN_PB00)
-#define EXPIRY_PIN           (AVR32_PIN_PB01)
+#define OVERFLOW_PIN         (AVR32_PIN_PX22)
+#define EXPIRY_PIN           (AVR32_PIN_PX41)
 //! @}
-
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

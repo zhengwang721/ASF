@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.mega" caption="Common HW Timer - MEGA library">
+		<info type="description" value="summary">
+		Common HW Timer Implementation
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>		
+		</info>		
+		<build type="c-source"      value="hw_timer.c"/>
+		<build type="header-file"   value="hw_timer.h"/>
+		<build type="include-path"  value="."/>
+		<build type="doxygen-entry-point" value="common_hw_timer_group"/>
+        <build type="library" subtype="user" value="lib/mega_lib_hw_timer.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="lib/libmega_lib_hw_timer.a" toolchain="avrgcc"/>			
+		<device-support value="mega"/>
+	</module>
+</asf>

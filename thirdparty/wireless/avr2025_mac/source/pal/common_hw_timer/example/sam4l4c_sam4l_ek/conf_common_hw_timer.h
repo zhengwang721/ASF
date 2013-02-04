@@ -42,11 +42,12 @@
 #define CONF_COMMON_HW_TIMER_H_INCLUDED
 
 
+
 /*! \name Configuration
  */
 //! @{
 #define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
+#define TIMER_CHANNEL_ID     (0)
 //! @}
 
 

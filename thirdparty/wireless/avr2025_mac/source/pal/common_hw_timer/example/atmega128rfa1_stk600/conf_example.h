@@ -50,5 +50,4 @@
 #define EXPIRY_PIN           (LED1) //PORTB.1
 //! @}
 
-
 #endif /* CONF_EXAMPLE_H_INCLUDED */

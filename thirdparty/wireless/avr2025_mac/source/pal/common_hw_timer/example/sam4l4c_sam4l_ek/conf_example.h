@@ -50,5 +50,4 @@
 #define EXPIRY_PIN           (PIN_PA06) //PORTB.1
 //! @}
 
-
 #endif /* CONF_EXAMPLE_H_INCLUDED */
