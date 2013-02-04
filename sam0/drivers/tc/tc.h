@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -447,7 +449,7 @@ extern "C" {
  * option in the \ref tc_conf struct. The figure below
  * illustrates how this affects the output.
  *
- * 
+ *
  * \section differences Differences Between BANANORAMA Devices
  *
  * \subsection SAMD20

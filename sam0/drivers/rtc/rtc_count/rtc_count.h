@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -484,7 +486,7 @@ struct rtc_count_conf {
 	bool continuously_update;
 	/** Set event output generators. */
 	enum rtc_count_events event_generators;
-	/** 
+	/**
 	 * Array of Compare values. Not all Compare values are available in 32-bit
 	 * mode.
 	 */

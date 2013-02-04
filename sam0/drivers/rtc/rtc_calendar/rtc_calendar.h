@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -584,7 +586,7 @@ static inline void rtc_calendar_get_time_defaults(
  * - 12 hour calendar.
  * - Start year 2000 (Year 0 in the counter will be year 2000).
  * - Events off.
- * - Alarms set to January 1. 2000, 00:00:00. 
+ * - Alarms set to January 1. 2000, 00:00:00.
  * - Alarm will match on second, minute, hour, day, month and year .
  *
  *  \param[out] config Configuration structure to be initialized to default

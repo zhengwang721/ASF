@@ -118,7 +118,7 @@ void system_clock_source_osc8m_set_config(
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const conf)
 {
-	
+
 	SYSCTRL_OSC32K_Type temp = SYSCTRL->OSC32K;
 
 	if (conf->enable_1khz_output) {
@@ -136,7 +136,7 @@ void system_clock_source_osc32k_set_config(
 	temp.bit.STARTUP = conf->startup_time;
 
 	SYSCTRL->OSC32K = temp;
-	
+
 }
 
 /**
@@ -197,7 +197,7 @@ void system_clock_source_xosc32k_set_config(
 /**
  * \brief Apply configuration for the DFLL clock source
  *
- * The DFLL will be running when this function returns as the 
+ * The DFLL will be running when this function returns as the
  * DFLL needs to be enabled to do the configuration.
  *
  * \param conf[in] dfll configuration struct
@@ -208,7 +208,7 @@ void system_clock_source_dfll_set_config(
 {
 	uint32_t temp_register = 0;
 
-	SYSCTRL->DFLLCTRL.reg = 0;		
+	SYSCTRL->DFLLCTRL.reg = 0;
 	/* REV A bug ? not documented */
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL, false);
 
@@ -231,11 +231,11 @@ void system_clock_source_dfll_set_config(
 				SYSCTRL_DFLLMUL_FSTEP(conf->fine_max_step) |
 				SYSCTRL_DFLLMUL_MUL(conf->multiply_factor);
 		_system_dfll_wait_for_sync();
-		
+
 		/* Enable the closed loop mode */
 		SYSCTRL->DFLLCTRL.reg |= conf->loop;
 	}
-	
+
 }
 
 /**
@@ -473,7 +473,7 @@ void system_clock_init(void)
 	xosc_conf.startup_time         = CONF_CLOCK_XOSC_STARTUP_TIME;
 	xosc_conf.auto_gain_control    = CONF_CLOCK_XOSC_AUTO_GAIN_CONTROL;
 	xosc_conf.frequency            = CONF_CLOCK_XOSC_EXTERNAL_FREQUENCY;
-	
+
 	system_clock_source_xosc_set_config(&xosc_conf);
 	#endif /* CONF_CLOCK_XOSC_ENABLE */
 
@@ -556,14 +556,14 @@ void system_clock_init(void)
 	#endif
 
 	#endif /* CONF_CLOCK_DFLL_ENABLE */
-	
+
 
 	/* OSC8M */
 	struct system_clock_source_osc8m_config osc8m_conf;
 	osc8m_conf.prescaler = CONF_CLOCK_OSC8M_PRESCALER;
 	system_clock_source_osc8m_set_config(&osc8m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC8M, false);
-	
+
 
 
 	#if CONF_CLOCK_CONFIGURE_GCLK == true
@@ -629,7 +629,7 @@ void system_clock_init(void)
 
 	#if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) && (CONF_CLOCK_DFLL_ENABLE == true)
 	struct system_gclk_ch_conf dfll_gclock_ch_conf;
-	
+
 	system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
 	dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 	system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
@@ -639,7 +639,7 @@ void system_clock_init(void)
 
 
 	#endif /* Configure GCLK */
-	
+
 	/* CPU and BUS clocks */
 	system_main_clock_set_source(CONF_CLOCK_CPU_CLOCK_SOURCE);
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
@@ -654,5 +654,5 @@ void system_clock_init(void)
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
-}	
+}
 

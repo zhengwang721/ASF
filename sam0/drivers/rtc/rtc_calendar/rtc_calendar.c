@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -225,7 +227,7 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 	/* Set up GCLK */
 	struct system_gclk_ch_conf gclk_ch_conf;
 
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
 	gclk_ch_conf.source_generator = GCLK_GENERATOR_2;
 	system_gclk_ch_set_config(RTC_GCLK_ID, &gclk_ch_conf);
 	system_gclk_ch_enable(RTC_GCLK_ID);
@@ -402,7 +404,7 @@ enum status_code rtc_calendar_set_alarm(
 
 	/* Set alarm value. */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg = register_value;
-	
+
 	/* Set alarm mask */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg = alarm->mask;
 
@@ -442,7 +444,7 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_alarm *const alarm,
 
 	/* Read alarm mask */
 	alarm->mask = rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg;
-	
+
 	return STATUS_OK;
 }
 

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -63,11 +65,11 @@ static enum status_code _i2c_slave_set_config(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	Sercom *const sercom_hw = module->hw;
-	
+
 	struct system_pinmux_conf pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
-	
+
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 - SDA */
 	if (pad0 == PINMUX_DEFAULT) {
@@ -140,15 +142,15 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
 		return STATUS_ERR_BUSY;
 	}
-	
+
 	/* Turn on module in PM */
 	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
-	
+
 	/* Set up GCLK */
 	struct system_gclk_ch_conf gclk_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_ch_conf.source_generator = config->generator_source;
 	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
@@ -419,7 +421,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Combine callback registered and enabled masks. */
-	uint8_t callback_mask = 
+	uint8_t callback_mask =
 			module->enabled_callback & module->registered_callback;
 
 
@@ -458,7 +460,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-		
+
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
 
@@ -478,7 +480,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
 		/* Check if buffer is full, or no more data to write */
 		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
-	
+
 			module->buffer_length = 0;
 			module->status = STATUS_OK;
 			if (module->transfer_direction == 0) {

@@ -541,7 +541,7 @@ static inline void system_clock_source_xosc32k_get_default_config(
 static inline void system_clock_source_osc32k_get_default_config(
 		struct system_clock_source_osc32k_config *const conf)
 {
-	
+
 	conf->enable_1khz_output = true;
 	conf->enable_32khz_output = true;
 }
