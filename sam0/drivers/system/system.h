@@ -46,76 +46,63 @@
 #include <compiler.h>
 #include "clock.h"
 
-/* Weak init functions used in system_init */
-static inline void system_dummy_board_init(void)
-{
-	return;
-}
-
-#ifdef __GNUC__
-void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_board_init")));
-#endif
-#ifdef __ICCARM__
-static inline void system_board_init(void);
-#  pragma weak system_board_init=system_dummy_board_init
-#endif
-
 /**
- * \defgroup system_group System control
+ * \defgroup asfdoc_samd20_system_group SAMD20 System Driver (SYSTEM)
+ *
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's system relation functionality, necessary for
+ * the basic device operation. This is not limited to a single peripheral, but
+ * extends across multiple hardware peripherals,
+ *
+ * The following peripherals are used by this module:
+ *
+ * - SYSCTRL (System Control) for BOD and Clock control
+ * - PM (Power Manager) for Reset Cause determination, Bus control and Sleep
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_system_prerequisites
+ *  - \ref asfdoc_samd20_system_module_overview
+ *  - \ref asfdoc_samd20_system_special_considerations
+ *  - \ref asfdoc_samd20_system_extra_info
+ *  - \ref asfdoc_samd20_system_examples
+ *  - \ref asfdoc_samd20_system_api_overview
  *
  *
- * \section intro Introduction
+ * \section asfdoc_samd20_system_prerequisites Prerequisites
  *
- * This driver provides control of all the system related functionality
- * of the SAMD20 devices. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals:
- * - SYSCTRL (BOD12, BOD33)
- * - PM (reset cause)
-* \dot
-digraph overview {
-	node [shape=record];
-		SYSCTRL
-		[label =<<TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0">
-				<TR><TD PORT="f0"><B>SYSCTRL</B></TD></TR>
-				<TR><TD PORT="f1">BOD12</TD></TR>
-				<TR><TD PORT="f2">BOD33</TD></TR>
-			</TABLE>>
-		shape = "none"];
-
-		PM
-		[label =<<TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0">
-				<TR><TD PORT="f0"><B>PM</B></TD></TR>
-				<TR><TD PORT="f1">Reset Cause</TD></TR>
-			</TABLE>>
-		shape = "none"];
-	}
- * \enddot
- *
- * \section bod BOD (Brown-Out Detector)
- *  The BOD monitors the supply voltage for any dips that go below the set BOD threshold.
- *  In case of a BOD detect the BOD will either reset the system or raise an interrupt.
+ * There are no prerequisites for this module.
  *
  *
- * \par BOD Configuration
- * The BOD configuration is done by using the \ref system_bod_set_config function.
- * This function uses a system_bod_config struct containing configuration
- * options to set either the BOD33 or the BOD12 to the selected settings.
- * To fill the system_bod_config struct with the system defaults you can
- * run the \ref system_bod_get_config_defaults passing you configuration struct
- * as the parameter. The default settings are listed \ref system_bod_get_config_defaults "here"
+ * \section asfdoc_samd20_system_module_overview Module Overview
  *
- * \section reset_cause Reset Cause
- * In some application there might be a need to do a different program
- * flow based on how the controller was reset. Say if the cause of reset
- * was the watchdog timer (WDT), this might indicate an error in the application
- * and some sort of error handling or error logging might be needed.
- * The function system_get_reset_cause() returns the reset cause of latest reset.
- * The possible reset causes are enumerated in the enum \ref system_reset_cause.
+ * The System driver provides a collection of interfaces between the user
+ * application logic, and the core device functionality (such as clocks, Brown
+ * Out Detection, etc.) that is required for all applications. It contains a
+ * number of sub-modules that control one specific aspect of the device.
  *
- * \section sleep_mode Sleep Modes
- * The SAMD20 have several sleep modes, where the sleep mode controls which clock
- * systems on the device are enabled/disabled when entering sleep. The table below
- * lists the clock settings of the different sleep modes
+ * \section asfdoc_samd20_system_module_bod BOD (Brown-Out Detector)
+ * The BOD monitors the supply voltage for any dips that go below the set BOD
+ * threshold. In case of a BOD detect the BOD will either reset the system or
+ * raise a hardware interrupt so that a safe power-down sequence can be
+ * imitated.
+ *
+ * \subsection asfdoc_samd20_system_module_bod_config BOD Configuration
+ * The BOD configuration is performed by the \ref system_bod_set_config
+ * function. This function accepts a struct containing configuration options to
+ * set either the BOD33 or the BOD12 to the selected settings.
+ *
+ * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
+ * In some application there might be a need to perform a different program
+ * flow based on how the device was reset. For example, if the cause of reset
+ * was the Watchdog timer (WDT), this might indicate an error in the application
+ * and a form of error handling or error logging might be needed.
+ *
+ * \section asfdoc_samd20_system_module_sleep_mode Sleep Modes
+ * The SAMD20 devices have several sleep modes, where the sleep mode controls
+ * which clock systems on the device will remain enabled or disabled when the
+ * device enters a low power sleep mode. The table below lists the clock
+ * settings of the different sleep modes.
+ *
  * <table>
  * 	<tr>
  * 		<th>Sleep mode</th>
@@ -180,13 +167,47 @@ digraph overview {
  * 		<td>Low Power</td>
  * 		<td>Source/Drain biasing</td>
  * 	</tr>
- *</table>
+ * </table>
  *
- * \section etra_info Extra Information
- * For extra information see \ref system_extra_info
  *
-* @{
+ * \section asfdoc_samd20_system_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ * \section asfdoc_samd20_system_extra_info Extra Information for SYSTEM
+ *
+ * For extra information see \ref asfdoc_samd20_system_extra. This includes:
+ *  - \ref asfdoc_samd20_system_extra_acronyms
+ *  - \ref asfdoc_samd20_system_extra_dependencies
+ *  - \ref asfdoc_samd20_system_extra_errata
+ *  - \ref asfdoc_samd20_system_extra_history
+ *
+ *
+ * \section asfdoc_samd20_system_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_system_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_system_api_overview API Overview
+
  */
+
+#if !defined(__DOXYGEN__)
+/* Weak init functions used in system_init */
+static inline void system_dummy_board_init(void)
+{
+	return;
+}
+
+#  ifdef __GNUC__
+void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_board_init")));
+#  endif
+#  ifdef __ICCARM__
+static inline void system_board_init(void);
+#    pragma weak system_board_init=system_dummy_board_init
+#  endif
+#endif
 
 /**
  * BOD controller
@@ -452,21 +473,26 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * @}
  */
 
-/* @} */
+/**
+ * \name System initialization
+ * @{
+ */
 
 void system_bod_init(void);
 
 void system_init(void);
 
-
-#endif /* SYSTEM_H_INCLUDED */
+/**
+ * @}
+ */
 
 /**
- * \page system_extra_info Extra Information (system)
- * Below is a listing of the acronyms used in this module:
+ * \page asfdoc_samd20_system_extra Extra Information
  *
- * \section acronyms Acronyms
- * List of acronyms used in the module.
+ * \section asfdoc_samd20_system_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
  * <table>
  *  <tr>
  *      <th>Acronym</th>
@@ -486,17 +512,43 @@ void system_init(void);
  *  </tr>
  * </table>
  *
- * \section fixed_erratas Erratas fixed by driver
- * No errata workarounds in driver
  *
- * \section sys_module_history Module History
+ * \section asfdoc_samd20_system_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_system_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_system_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
  * <table>
- * 	<tr>
- * 		<th>Changelog</th>
- * 	</tr>
- * 	<tr>
- * 		<td>Initial version</td>
- * 	</tr>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
  * </table>
- *
  */
+
+/**
+ * \page asfdoc_samd20_system_exqsg Examples for SYSTEM Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_system_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_system_basic_use_case
+ */
+
+#endif /* SYSTEM_H_INCLUDED */
