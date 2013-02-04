@@ -210,36 +210,46 @@ static inline void system_board_init(void);
 #endif
 
 /**
- * BOD controller
+ * \brief Brown Out Detector hardware instance IDs.
+ *
+ * List of possible BOD controllers within the device.
  */
 enum system_bod {
-	/** BOD12 Internal core voltage*/
+	/** BOD12 Internal core voltage. */
 	SYSTEM_BOD_BOD12,
-	/** BOD33 External IO voltage*/
+	/** BOD33 External I/O voltage, */
 	SYSTEM_BOD_BOD33,
 };
 
 /**
- * BOD Action on a BOD detect
+ * \breif Brown Out Detector detection actions.
+ *
+ * List of possible BOD actions when a BOD module detects a brown-out condition.
  */
 enum system_bod_action {
-	/** A BOD detect will reset the device */
+	/** A BOD detect will reset the device. */
 	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
-	/** A BOD detect will fire an interrupt */
+	/** A BOD detect will fire an interrupt. */
 	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2),
 };
 
 /**
- * BOD sampling mode */
+ * \breif Brown Out Detector sampling modes.
+ *
+ * List of possible BOD module voltage sampling modes.
+ */
 enum system_bod_mode {
-	/** BOD will sample the supply line continuously */
+	/** BOD will sample the supply line continuously. */
 	SYSTEM_BOD_MODE_CONTINIOUS  = 0,
-	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line */
+	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
 	SYSTEM_BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
 };
 
 /**
- * Available voltage references
+ * \brief Voltage references within the device.
+ *
+ * List of available voltage references (VREF) that may be used within the
+ * device.
  */
 enum system_voltage_reference {
 	/** Temperature sensor voltage reference */
@@ -249,8 +259,10 @@ enum system_voltage_reference {
 };
 
 /**
- * Available sleep modes in the device. A table of clocks available in different
- * sleep mode is available here: \ref sleep_mode
+ * \brief Device sleep modes.
+ *
+ * List of available sleep modes in the device. A table of clocks available in
+ * different sleep mode can be found in \ref asfdoc_samd20_system_module_sleep_mode.
  */
 enum system_sleepmode {
 	/** IDLE 0 */
@@ -267,21 +279,22 @@ enum system_sleepmode {
 
 
 /**
- * System reset cause
+ * \brief Reset causes of the system.
+ *
+ * List of possible reset causes of the system.
  */
 enum system_reset_cause {
-	/** The system was reset by the watchdog timer */
+	/** The system was reset by the watchdog timer. */
 	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
-	/** The system was reset because the external reset line was pulled low */
+	/** The system was reset because the external reset line was pulled low. */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = PM_RCAUSE_EXT,
-	/** The system was reset by the BOD33 */
+	/** The system was reset by the BOD33. */
 	SYSTEM_RESET_CAUSE_BOD33          = PM_RCAUSE_BOD33,
-	/** The system was reset by the BOD12 */
+	/** The system was reset by the BOD12. */
 	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
 	/** The system was reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
-
 
 
 /**
@@ -466,7 +479,7 @@ static inline void system_sleep(void)
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
-	return PM->RCAUSE.reg;
+	return (enum system_reset_cause)PM->RCAUSE.reg;
 }
 
 /**

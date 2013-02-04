@@ -199,7 +199,8 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 	_system_gclk_wait_for_sync();
 
 	/* Get the frequency of the source connected to the GCLK generator */
-	uint32_t gen_input_hz = system_clock_source_get_hz(GCLK->GENCTRL.bit.SRC);
+	uint32_t gen_input_hz = system_clock_source_get_hz(
+			(enum system_clock_source)GCLK->GENCTRL.bit.SRC);
 
 	/* Check if the divider is enabled for the generator */
 	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 1 &&
