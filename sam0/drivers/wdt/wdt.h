@@ -44,17 +44,90 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup sam0_wdt_group SAMD20 Watchdog Driver (WDT)
+ * \defgroup asfdoc_samd20_wdt_group SAMD20 Watchdog Driver (WDT)
  *
- * Driver for the SAMD20 architecture devices. This driver provides a unified
- * interface for the configuration and management of the Watchdog Timer module
- * within the device, including the enabling, disabling and kicking within the
- * device. This driver encompasses the following module within the SAM0 devices:
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Watchdog Timer module, including the enabling,
+ * disabling and kicking within the device.
  *
- * \li \b WDT (Watchdog Timer)
+ * The following peripherals are used by this module:
  *
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
+ *  - WDT (Watchdog Timer)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_wdt_prerequisites
+ *  - \ref asfdoc_samd20_wdt_module_overview
+ *  - \ref asfdoc_samd20_wdt_special_considerations
+ *  - \ref asfdoc_samd20_wdt_extra_info
+ *  - \ref asfdoc_samd20_wdt_examples
+ *  - \ref asfdoc_samd20_wdt_api_overview
+ *
+ *
+ * \section asfdoc_samd20_wdt_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_wdt_module_overview Module Overview
+ *
+ * The Watchdog module (WDT) is designed to give an added level of safety in
+ * critical systems, to ensure a system reset is triggered in the case of a
+ * deadlock or other software malfunction that prevents normal device operation.
+ *
+ * At a basic level, the Watchdog is a system timer with a fixed period; once
+ * enabled, it will continue to count ticks of its asynchronous clock until
+ * it is periodically reset, or the timeout period is reached. In the event of a
+ * Watchdog timeout, the module will trigger a system reset identical to a pulse
+ * of the device's reset pin, resetting all peripherals to their power-on
+ * default states and restarting the application software from the reset vector.
+ *
+ * In many systems, there is an obvious upper bound to the amount of time each
+ * iteration of the main application loop can be expected to run, before a
+ * malfunction can be assumed (either due to a deadlock waiting on hardware or
+ * software, or due to other means). When the Watchdog is configured with a
+ * timeout period equal to this upper bound, a malfunction in the system will
+ * force a full system reset to allow for a graceful recovery.
+ *
+ * \subsection asfdoc_samd20_wdt_module_locked_mode Locked Mode
+ * The Watchdog configuration can be set in the device fuses and locked in
+ * hardware, so that no software changes can be made to the Watchdog
+ * configuration. Additionally, the Watchdog can be locked on in software if it
+ * is not already locked, so that the module configuration cannot be modified
+ * until a power on reset of the device.
+ *
+ * The locked configuration can be used to ensure that faulty software does not
+ * cause the Watchdog configuration to be changed, preserving the level of
+ * safety given by the module.
+ *
+ * \subsection asfdoc_samd20_wdt_module_window_mode Window Mode
+ * Just as there is a reasonable upper bound to the time the main program loop
+ * should take for each iteration, there is also in many applications a lower
+ * bound, i.e. a \a minimum time for which each loop iteration should run for
+ * under normal circumstances. To guard against a system failure resetting the
+ * Watchdog in a tight loop (or a failure in the system application causing the
+ * main loop to run faster than expected) a "Window" mode can be enabled to
+ * disallow resetting of the Watchdog counter before a certain period of time.
+ * If the Watchdog is not reset \a after the window opens but not \a before the
+ * Watchdog expires, the system will reset.
+ *
+ * \subsection asfdoc_samd20_wdt_module_early_warning Early Warning
+ * In some cases it is desirable to receive an early warning that the Watchdog is
+ * about to expire, so that some system action (such as saving any system
+ * configuration data for failure analysis purposes) can be performed before the
+ * system reset occurs. The Early Warning feature of the Watchdog module allows
+ * such a notification to be requested; after the configured early warning time
+ * (but before the expiry of the Watchdog counter) the Early Warning flag will
+ * become set, so that the user application can take an appropriate action.
+ *
+ * \note It is important to note that the purpose of the Early Warning feature
+ *       is \a not to allow the user application to reset the Watchdog; doing
+ *       so will defeat the safety the module gives to the user application.
+ *       Instead, this feature should be used purely to perform any tasks that
+ *       need to be undertaken before the system reset occurs.
+ *
+ * \subsection asfdoc_samd20_wdt_module_overview_physical Physical Connection
+ *
+ * The following diagram shows how this module is interconnected within the device:
  *
  * \dot
  * digraph overview {
@@ -71,81 +144,30 @@
  * }
  * \enddot
  *
- * \section module_introduction Introduction
- * The Watchdog module in the SAMD20 devices is designed to give an added level
- * of safety in critical systems, to ensure a system reset is triggered in the
- * case of a deadlock or other software malfunction.
  *
- * \subsection module_overview Overview of the Watchdog
- * At a basic level, the Watchdog is a system timer with a fixed period; once
- * enabled, it will continue to count ticks of its asynchronous clock until
- * it is periodically reset, or the timeout period is reached. In the event of a
- * Watchdog timeout, the module will trigger a system reset identical to a pulse
- * of the device's reset pin, resetting all peripherals to their power-on
- * default states and restarting the application software from the reset vector.
- *
- * In many systems, there is an obvious upper bound to the amount of time each
- * iteration of the main application loop can be expected to run, before a
- * malfunction can be assumed (either due to a deadlock waiting on hardware or
- * software, or due to other means). When the Watchdog is configured with a
- * timeout period equal to this upper bound, a malfunction in the system will
- * force a full system reset to allow for a graceful recovery.
- *
- * \subsection locked_mode Locked Mode
- * The Watchdog configuration can be set in the device fuses and locked in
- * hardware, so that no software changes can be made to the Watchdog
- * configuration. Additionally, the Watchdog can be locked on in software if it
- * is not already locked, so that the module configuration cannot be modified
- * until a power on reset of the device.
- *
- * The locked configuration can be used to ensure that faulty software does not
- * cause the Watchdog configuration to be changed, preserving the level of
- * safety given by the module.
- *
- * \subsection window_mode Window Mode
- * Just as there is a reasonable upper bound to the time the main program loop
- * should take for each iteration, there is also in many applications a lower
- * bound, i.e. a \a minimum time for which each loop iteration should run for
- * under normal circumstances. To guard against a system failure resetting the
- * Watchdog in a tight loop (or a failure in the system application causing the
- * main loop to run faster than expected) a "Window" mode can be enabled to
- * disallow resetting of the Watchdog counter before a certain period of time.
- * If the Watchdog is not reset \a after the window opens but not \a before the
- * Watchdog expires, the system will reset.
- *
- * \subsection early_warning Early Warning
- * In some cases it is desirable to receive an early warning that the Watchdog is
- * about to expire, so that some system action (such as saving any system
- * configuration data for failure analysis purposes) can be performed before the
- * system reset occurs. The Early Warning feature of the Watchdog module allows
- * such a notification to be requested; after the configured early warning time
- * (but before the expiry of the Watchdog counter) the Early Warning flag will
- * become set, so that the user application can take an appropriate action.
- * \note It is important to note that the purpose of the Early Warning feature
- *       is \a not to allow the user application to reset the Watchdog; doing
- *       so will defeat the safety the module gives to the user application.
- *       Instead, this feature should be used purely to perform any tasks that
- *       need to be undertaken before the system reset occurs.
- *
- * \section module_dependencies Dependencies
- * The Watchdog driver has the following dependencies.
- *
- * \li \ref gclk_group "\b GCLK" (Generic Clock Management)
- *
- * \section special_considerations Special Considerations
+ * \section asfdoc_samd20_wdt_special_considerations Special Considerations
  *
  * On some devices the Watchdog configuration can be fused to be always on in
  * a particular configuration; if this mode is enabled the Watchdog is not
  * software configurable and can have its count reset and early warning state
  * checked/cleared only.
  *
- * \section module_extra_info Extra Information
- * For extra information see \ref wdt_extra_info.
+ * \section asfdoc_samd20_wdt_extra_info Extra Information for WDT
  *
- * \section module_examples Examples
- * - \ref wdt_quickstart
+ * For extra information see \ref asfdoc_samd20_wdt_extra. This includes:
+ *  - \ref asfdoc_samd20_wdt_extra_acronyms
+ *  - \ref asfdoc_samd20_wdt_extra_dependencies
+ *  - \ref asfdoc_samd20_wdt_extra_errata
+ *  - \ref asfdoc_samd20_wdt_extra_history
  *
- * \section api_overview API Overview
+ *
+ * \section asfdoc_samd20_wdt_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_wdt_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_wdt_api_overview API Overview
  * @{
  */
 
@@ -155,7 +177,8 @@
 extern "C" {
 #endif
 
-/** \brief Watchdog Timer period configuration enum.
+/**
+ * \brief Watchdog Timer period configuration enum.
  *
  * Enum for the possible period settings of the Watchdog timer module, for
  * values requiring a period as a number of Watchdog timer clock ticks.
@@ -191,7 +214,8 @@ enum wdt_period {
 	WDT_PERIOD_16384CLK = 12,
 };
 
-/** \brief Watchdog Timer configuration structure.
+/**
+ * \brief Watchdog Timer configuration structure.
  *
  *  Configuration structure for a Watchdog Timer instance. This
  *  structure should be initialized by the \ref wdt_get_config_defaults()
@@ -214,7 +238,33 @@ struct wdt_conf {
  * @{
  */
 
-/** \brief Initializes a Watchdog Timer configuration structure to defaults.
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool wdt_is_synching(void)
+{
+	Wdt *const WDT_module = WDT;
+
+	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * \brief Initializes a Watchdog Timer configuration structure to defaults.
  *
  *  Initializes a given Watchdog Timer configuration structure to a set of
  *  known default values. This function should be called on all new
@@ -308,11 +358,10 @@ void wdt_reset_count(void);
 /** @} */
 
 /**
- * \page wdt_extra_info Extra Information
+ * \page asfdoc_samd20_wdt_extra Extra Information for WDT Driver
  *
- * \section acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
+ * \section asfdoc_samd20_wdt_extra_acronyms Acronyms
+ * The table below presents the acronyms used in this module:
  *
  * <table>
  *	<tr>
@@ -325,13 +374,22 @@ void wdt_reset_count(void);
  *	</tr>
  * </table>
  *
- * \section fixed_errata Erratas fixed by driver
- * No errata workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_wdt_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_gclk_group "Generic Clock Driver"
+ *
+ *
+ * \section asfdoc_samd20_wdt_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_wdt_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -344,21 +402,15 @@ void wdt_reset_count(void);
  */
 
 /**
- * \page wdt_quickstart Quick Start Guides for the WDT module
+ * \page asfdoc_samd20_wdt_exqsg Examples for WDT Driver
  *
- * This is the quick start guide list for the \ref sam0_wdt_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_wdt_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section wdt_use_cases WDT module use cases
- * - \subpage wdt_basic_use_case
+ *  - \subpage asfdoc_samd20_wdt_basic_use_case
  */
 
 #endif /* WDT_H_INCLUDED */
