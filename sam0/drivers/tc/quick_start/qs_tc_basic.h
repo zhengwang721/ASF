@@ -42,7 +42,7 @@
 /**
  * \page tc_basic_use_case Quick Start Guide for the TC module - Basic Use Case
  *
- * In this use case, the TC will be used to generate a PWM signal. Her
+ * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to half the period. The TC module will be set up as
  * follows:
  *
@@ -76,17 +76,21 @@
  * Add to user application %main():
  * \snippet qs_tc_basic.c main
  *
+ * -# Initialize system.
+ *  - \snippet qs_tc_basic.c system_init
  * -# Create configuration struct.
  *  - \snippet qs_tc_basic.c config
  * -# Create software device instance struct.
  *  - \snippet qs_tc_basic.c dev_inst
- * -# Get default config struct.
+ * -# Get default configuration values.
  *  - \snippet qs_tc_basic.c tc_get_config_defaults
- * -# setup value on channel 0 to be used as the PWM toggle value.
- *  - \snippet qs_tc_basic.c channel_0
- * -# Initialize device registers, and g-clock using the config struct
+ * -# Set up PWM output on channel 0.
+ *   - \snippet qs_tc_basic.c pwm_channel_0
+ * -# Set counter size, wave generation mode and compare capture value.
+ *  - \snippet qs_tc_basic.c setup
+ * -# Initialize the TC module based on given configuration values.
  *  - \snippet qs_tc_basic.c tc_init
- * -# Enable and start the TC module
+ * -# Enable and start the TC module.
  *  - \snippet qs_tc_basic.c tc_enable
  * -# Loop infinitly. Let the module generate PWM signal.
  *  - \snippet qs_tc_basic.c inf_loop
