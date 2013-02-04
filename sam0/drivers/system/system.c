@@ -52,25 +52,26 @@ void HardFault_Handler(void)
 {
 	while (1) {
 		/* Infinite loop if CPU exception is detected */
+		Assert(false);
 	}
 }
 
 /**
- * \brief configure BOD
+ * \brief Configure a Brown Out Detector module.
  *
- * This function will configure the BOD33 or BOD12 module based on the
- * configuration in the configuration struct. The BOD will be enabled when this
- * function returns.
+ * Configures a given BOD33 or BOD12 module based on the settings stored in the
+ * configuration struct. The BOD will be enabled when this function returns.
  *
- * \param[in] conf pointer to the struct containing configuration
- * \param[in] bod which BOD module to configure
+ * \param[in] bod    BOD module ID to configure
+ * \param[in] conf   Configuration settings for the BOD
  *
  * \retval STATUS_ERR_INVALID_ARG Invalid BOD
  * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
  * \retval STATUS_OK Operation completed successfully
  */
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod)
+enum status_code system_bod_set_config(
+		const enum system_bod bod,
+		struct system_bod_config *const conf)
 {
 	Assert(conf);
 
@@ -149,9 +150,10 @@ void system_init(void)
 {
 	/* Initialize BOD according to conf_bod.h */
 	system_bod_init();
-	/* Configure GCLK and clock sources according to
-	 * conf_clocks.h */
+
+	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
+
 	/* Initialize board hardware */
 	system_board_init();
 }

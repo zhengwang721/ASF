@@ -47,17 +47,17 @@
 #include "clock.h"
 
 /* Weak init functions used in system_init */
-static inline void system_dummy_init(void)
+static inline void system_dummy_board_init(void)
 {
 	return;
 }
 
 #ifdef __GNUC__
-void system_board_init ( void ) __attribute__ ((weak, alias("system_dummy_init")));
+void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_board_init")));
 #endif
 #ifdef __ICCARM__
 static inline void system_board_init(void);
-#pragma weak system_board_init=system_dummy_init
+#  pragma weak system_board_init=system_dummy_board_init
 #endif
 
 /**
@@ -190,7 +190,7 @@ digraph overview {
 
 /**
  * BOD controller
-*/
+ */
 enum system_bod {
 	/** BOD12 Internal core voltage*/
 	SYSTEM_BOD12,
@@ -222,9 +222,9 @@ enum system_bod_mode {
  */
 enum system_voltage_reference {
 	/** Temperature sensor voltage reference */
-	SYSTEM_VREF_TEMPSENSE,
+	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
 	/** Bandgap voltage reference */
-	SYSTEM_VREF_BANDGAP,
+	SYSTEM_VOLTAGE_REFERENCE_BANDGAP,
 };
 
 /**
@@ -286,16 +286,19 @@ struct system_bod_config {
  *
  * \param[in] vref Voltage reference to enable
  */
-static inline void system_vref_enable(enum system_voltage_reference vref) {
-	switch(vref) {
-	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
-		break;
-	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
-		break;
-	default:
-		return;
+static inline void system_vref_enable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
+			SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
+			break;
+		default:
+			Assert(false);
+			return;
 	}
 }
 
@@ -306,16 +309,19 @@ static inline void system_vref_enable(enum system_voltage_reference vref) {
  *
  * \param[in] vref Voltage reference to disable
  */
-static inline void system_vref_disable(enum system_voltage_reference vref) {
-	switch(vref) {
-	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
-		break;
-	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
-		break;
-	default:
-		return;
+static inline void system_vref_disable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
+			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
+			break;
+		default:
+			Assert(false);
+			return;
 	}
 }
 
@@ -336,7 +342,7 @@ static inline void system_vref_disable(enum system_voltage_reference vref) {
  * \param[out] conf BOD configuration struct to set to default settings
  */
 static inline void system_bod_get_config_defaults(
-		struct system_bod_config *conf)
+		struct system_bod_config *const conf)
 {
 	Assert(conf);
 
@@ -346,8 +352,9 @@ static inline void system_bod_get_config_defaults(
 	conf->hysteresis = true;
 }
 
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod);
+enum status_code system_bod_set_config(
+		const enum system_bod bod,
+		struct system_bod_config *const conf);
 
 /**
  * @}
@@ -378,9 +385,9 @@ enum status_code system_bod_set_config(struct system_bod_config *conf,
  * \retval STATUS_OK Operation performed successfully
  * \retval STATUS_ERR_INVALID_ARG The supplied sleep mode is not available
  */
-static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepmode)
+static inline enum status_code system_set_sleepmode(
+	const enum system_sleepmode sleepmode)
 {
-
 	switch (sleepmode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
@@ -410,7 +417,7 @@ static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepm
  */
 static inline void system_sleep(void)
 {
-	asm volatile ("wfi\n");
+	__WFI();
 }
 
 /**
