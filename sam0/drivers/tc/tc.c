@@ -41,6 +41,36 @@
 
 #include "tc.h"
 
+/**
+ * \internal Find index of given instance.
+ *
+ * \param[in] Instance pointer.
+ *
+ * \return Index of given instance.
+ */
+uint8_t _tc_get_inst_index(Tc *tc_instance);
+uint8_t _tc_get_inst_index(Tc *tc_instance)
+{
+	/* Variable used for iteration. */
+	uint8_t i;
+	/* Save address of tc instance. */
+	uint32_t hw_dev = (uint32_t)tc_instance;
+	/* Save all available TC instances for compare. */
+	Tc *tc_instances[TC_INST_NUM] = TC_INSTS;
+
+	/* Find index for tc instance. */
+	for (i = 0; i < TC_INST_NUM; i++) {
+		if (hw_dev == (uint32_t)tc_instances[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
+	Assert(false);
+	return 0;
+}
+
+
 /** \brief Initializes the TC
  *
  * This function enables the clock and initializes the TC module,
@@ -81,6 +111,17 @@ enum status_code tc_init(
 	/* Temporary variable to hold all updates to the CTRLC
 	 * register before they are written to it */
 	uint8_t ctrlc_tmp = 0;
+	/* Temporary variable to hold TC instance number */
+	uint8_t instance = _tc_get_inst_index(tc_module);
+
+	/* Array of GLCK ID for different TC instances */
+	uint8_t inst_gckl_id[] = TC_INST_GCKL_ID;
+	/* Array of PM APBC mask bit position for different TC instances */
+	uint16_t inst_pm_apbmask[] = TC_INST_PM_APBCMASK;
+
+	struct system_pinmux_conf pin_conf;
+	struct system_gclk_ch_conf gclk_ch_conf;
+
 
 	/* Associate the given device instance with the hardware module */
 	dev_inst->hw_dev = tc_module;
@@ -105,8 +146,28 @@ enum status_code tc_init(
 		return STATUS_ERR_DENIED;
 	}
 
+	/* Set up the TC PWM out pin for channel 0*/
+	if (config->channel_0_pwm_out_enabled) {
+		system_pinmux_get_config_defaults(&pin_conf);
+		pin_conf.mux_position = config->channel_0_pwm_out_mux;
+		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+		system_pinmux_pin_set_config(config->channel_0_pwm_out_pin, &pin_conf);
+	}
+
+	/* Set up the TC PWM out pin for channel 1*/
+	if (config->channel_1_pwm_out_enabled) {
+		system_pinmux_get_config_defaults(&pin_conf);
+		pin_conf.mux_position = config->channel_1_pwm_out_mux;
+		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+		system_pinmux_pin_set_config(config->channel_1_pwm_out_pin, &pin_conf);
+	}
+
+	/* Enable the user interface clock in the PM */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
+			inst_pm_apbmask[instance]);
+
 	/* Setup clock for module */
-	struct system_gclk_ch_conf gclk_ch_conf;
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
 	gclk_ch_conf.source_generator  = config->clock_source;
 
 	#if defined (REVB)
@@ -117,8 +178,8 @@ enum status_code tc_init(
 	gclk_ch_conf.enable_during_sleep = config->run_in_standby;
 	#endif
 	/* Apply configuration and enable the GCLK channel */
-	system_gclk_ch_set_config(TC0_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(TC0_GCLK_ID);
+	system_gclk_ch_set_config(inst_gckl_id[instance], &gclk_ch_conf);
+	system_gclk_ch_enable(inst_gckl_id[instance]);
 
 	if (config->run_in_standby) {
 		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
@@ -251,7 +312,6 @@ enum status_code tc_set_count_value(
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(count);
 
 	/* Get a pointer to the module's hardware instance*/
 	Tc *const tc_module = dev_inst->hw_dev;
@@ -292,7 +352,6 @@ uint32_t tc_get_count_value(const struct tc_dev_inst *const dev_inst)
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
-	Assert(count);
 
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = dev_inst->hw_dev;
@@ -414,6 +473,127 @@ enum status_code tc_set_compare_value(
 		}
 
 	default:
+		return STATUS_ERR_INVALID_ARG;
+	}
+}
+
+/**
+ * \brief Reset the TC module
+ *
+ * This function resets the TC module. The TC module will not be
+ * accessible while the reset is being performed. To avoid undefined
+ * behavior during reset the module is disabled before it is
+ * reset. The module might not have completed the reset upon exiting
+ * this function.
+ *
+ * \note When resetting a 32-bit counter use in only the master
+ * counter's \ref dev_inst struct, as a parameter. not the slave \ref
+ * dev_inst.
+ *
+ * \param[in] dev_inst  Pointer to the device struct
+ *
+ * \return Status of the procedure
+ * \retval STATUS_OK                   The function exited normally
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
+ *                                     modules configured as 32-bit slaves
+ */
+enum status_code tc_reset(const struct tc_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments  */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	/* Get a pointer to the module hardware instance */
+	TcCount8 *tc_module = &(dev_inst->hw_dev->COUNT8);
+
+	/* Disable this module */
+	tc_disable(dev_inst);
+
+	if (tc_module->STATUS.reg & TC_STATUS_SLAVE) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	/* Reset TC slave if one exists */
+	if (tc_module->CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset this TC module */
+		tc_module->CTRLA.reg |= TC_CTRLA_SWRST;
+
+		/* Get the slave hw_dev pointer */
+		Tc *slave = (Tc*)(dev_inst->hw_dev + TC_NEXT_TC);
+
+		/* Synchronize */
+		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
+			/* Wait for sync */
+		}
+
+		/* Reset slave */
+		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
+	}
+	else {
+
+		/* Synchronize */
+		_tc_wait_for_sync(dev_inst);
+
+		/* Reset this TC module */
+		tc_module->CTRLA.reg |= TC_CTRLA_SWRST;
+	}
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Set the top/period value
+ *
+ * For 8-bit counter size this function writes the top value to the
+ * period register.
+ *
+ * For 16- and 32-bit counter size this function writes the top value
+ * to Capture Compare register 0. The value in this register can not
+ * be used for any other purpose.
+ *
+ * \note This function is only meant to be used in PWM or frequency
+ * match mode. When the counter is set to 16- or 32-bit counter
+ * size. In 8-bit counter size it will always be posible to change the
+ * top value even in normal mode.
+ *
+ * \param[in] dev_inst    Pointer to the device struct
+ * \param[in] top_value   Value to be used as top in the counter.
+ *
+ * \return Status of the procedure
+ * \retval STATUS_OK              The function exited normally
+ * \retval STATUS_ERR_INVALID_ARG The counter size in the dev_inst is
+ *                                out of bounds.
+ */
+enum status_code tc_set_top_value (
+		const struct tc_dev_inst *const dev_inst,
+		uint32_t top_value)
+{
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+	Assert(compare);
+
+	Tc *const tc_module = dev_inst->hw_dev;
+
+	_tc_wait_for_sync(dev_inst);
+
+	switch (dev_inst->counter_size) {
+	case TC_COUNTER_SIZE_8BIT:
+		tc_module->COUNT8.PER.reg = (uint8_t)top_value;
+		return STATUS_OK;
+
+	case TC_COUNTER_SIZE_16BIT:
+		tc_module->COUNT16.CC[0].reg = (uint16_t)top_value;
+		return STATUS_OK;
+
+	case TC_COUNTER_SIZE_32BIT:
+		tc_module->COUNT32.CC[0].reg = top_value;
+		return STATUS_OK;
+
+	default:
+		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
 }
