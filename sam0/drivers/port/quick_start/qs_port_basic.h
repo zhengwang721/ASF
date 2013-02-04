@@ -52,7 +52,7 @@
  * an input, and mirrors the opposite logical state on a pin configured as an
  * output.
  *
- * \section asfdoc_samd20_port_basic_use_case__setup Setup
+ * \section asfdoc_samd20_port_basic_use_case_setup Setup
  *
  * \subsection asfdoc_samd20_port_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
@@ -89,7 +89,7 @@
  *    the output driver on the pin.
  *  - \snippet qs_port_basic.c setup_6
  *
- * \section asfdoc_samd20_port_basic_use_case Use Case
+ * \section asfdoc_samd20_port_basic_use_case_use_main Use Case
  *
  * \subsection asfdoc_samd20_port_basic_use_case_code Code
  * Copy-paste the following code to your user application:
