@@ -45,6 +45,7 @@ void config_rtc_calendar(void);
 //! [initiate]
 void config_rtc_calendar(void)
 {
+
 	/* Initialize RTC in calendar mode. */
 //! [set_conf]
 	struct rtc_calendar_conf config;
@@ -61,11 +62,13 @@ void config_rtc_calendar(void)
 	alarm.day       = 1;
 	alarm.hour      = 0;
 	alarm.minute    = 0;
+	alarm.second    = 2;
 //! [time_struct]
 
 //! [set_config]
 	config.clock_24h = true;
-	config.alarm[0] = alarm;
+	config.alarm[0].time = alarm;
+	config.alarm[0].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
 //! [set_config]
 
 //! [init_rtc]
@@ -81,25 +84,29 @@ void config_rtc_calendar(void)
 int main(void)
 {
 //! [add_main]
+	system_init();
 
 	struct rtc_calendar_time time;
 	time.year      = 2012;
 	time.month     = 12;
-	time.day       = 12;
-	time.hour      = 13;
-	time.minute    = 37;
-
-	//system_init();
-
+	time.day       = 31;
+	time.hour      = 22;
+	time.minute    = 0;
+	time.second    = 0;
 	config_rtc_calendar();
 
 	/* Set current time. */
 	rtc_calendar_set_time(&time);
 
 	rtc_calendar_swap_time_mode();
+
 //! [add_main]
 	while(1){
 		/* Inf loop. */
+		if (rtc_calendar_is_alarm_match(RTC_CALENDAR_ALARM_0)) {
+			/* Do something */
+			rtc_calendar_clear_alarm_match(RTC_CALENDAR_ALARM_0);
+		}
 	}
 
 	return 0;
