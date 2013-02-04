@@ -3,7 +3,7 @@
  *
  * \brief FlashCALW driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,10 @@
 #define FLASH_FREQ_PS1_FWS_0_MAX_FREQ        (8000000UL)
 /** \brief Maximum operating frequency when FWS is 1 in PS1 mode */
 #define FLASH_FREQ_PS1_FWS_1_MAX_FREQ        (12000000UL)
-
+/** \brief Maximum operating frequency when FWS is 0 in PS2 mode */
+#define FLASH_FREQ_PS2_FWS_0_MAX_FREQ        (24000000UL)
+/** \brief Maximum operating frequency when FWS is 1 in PS2 mode */
+#define FLASH_FREQ_PS2_FWS_1_MAX_FREQ        (48000000UL)
 /*! \name Flash Properties
  */
 //! @{

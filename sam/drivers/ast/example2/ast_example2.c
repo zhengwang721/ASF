@@ -3,7 +3,7 @@
  *
  * \brief AST example 2 for SAM.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -93,7 +93,7 @@ volatile bool flag = false;
  */
 static void ast_alarm_callback(void)
 {
-	ast_disable_interrupt(AST, ast_interrupt_alarm);
+	ast_disable_interrupt(AST, AST_INTERRUPT_ALARM);
 	flag = true;
 }
 static void config_ast(void)
@@ -125,17 +125,17 @@ static void config_ast(void)
 	}
 
 	/* First clear alarm status. */
-	ast_clear_interrupt_flag(AST, ast_interrupt_alarm);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_ALARM);
 
 	/* Enable wakeup from alarm0. */
-	ast_enable_wakeup(AST, ast_wakeup_alarm);
+	ast_enable_wakeup(AST, AST_WAKEUP_ALARM);
 
 	/* Set callback for alarm0. */
-	ast_set_callback(AST, ast_interrupt_alarm, ast_alarm_callback,
+	ast_set_callback(AST, AST_INTERRUPT_ALARM, ast_alarm_callback,
 		AST_ALARM_IRQn, 1);
 
 	/* Disable first interrupt for alarm0. */
-	ast_disable_interrupt(AST, ast_interrupt_alarm);
+	ast_disable_interrupt(AST, AST_INTERRUPT_ALARM);
 
 }
 
@@ -225,7 +225,7 @@ int main(void)
 		ast_alarm = ast_counter + 6;
 		ast_write_alarm0_value(AST, ast_alarm);
 
-		ast_enable_interrupt(AST, ast_interrupt_alarm);
+		ast_enable_interrupt(AST, AST_INTERRUPT_ALARM);
 
 		/* Go into selected low power mode. */
 		bpm_sleep(BPM, key);
@@ -233,7 +233,7 @@ int main(void)
 		flag = true;
 
 		/* After wake up, clear the Alarm0. */
-		ast_clear_interrupt_flag(AST, ast_interrupt_alarm);
+		ast_clear_interrupt_flag(AST, AST_INTERRUPT_ALARM);
 
 		/* Output the counter value. */
 		ast_counter = ast_read_counter_value(AST);
