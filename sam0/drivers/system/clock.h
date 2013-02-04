@@ -40,13 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef SYSTEM_CLOCK_H_INCLUDED
+#define SYSTEM_CLOCK_H_INCLUDED
 
-#include <compiler.h>
-#include <gclk.h>
-
-#ifndef SYSTEM_CLOCK_H
-# define SYSTEM_CLOCK_H
-/* TODO: Replace with compiler.h */
 /**
  * \defgroup clock_group Clock control
  *
@@ -142,6 +138,10 @@
  *
  * @{
  */
+
+#include <compiler.h>
+#include <gclk.h>
+
 
 /* TODO: Where to put this ? */
  #define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
@@ -417,15 +417,15 @@ enum clock_apb_bus {
  */
 enum system_clock_source {
 	/** Internal 8MHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC8M = GCLK_SOURCE_OSC8M,
+	SYSTEM_CLOCK_SOURCE_OSC8M    = GCLK_SOURCE_OSC8M,
 	/** Internal 32kHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC32K = GCLK_SOURCE_OSC32K,
+	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
 	/** External oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC = GCLK_SOURCE_XOSC ,
+	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
 	/** External 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC32K = GCLK_SOURCE_XOSC32K,
+	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
 	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_CLOCK_SOURCE_DFLL = GCLK_SOURCE_DFLL48M,
+	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32KHZ = GCLK_SOURCE_OSCULP32K ,
 };
@@ -436,13 +436,12 @@ enum system_clock_source {
 enum conf_clock_rtc_freq {
 	/** 1Hz counter speed for the RTC. \note Must be used for calender
 	 * function. */
-	CONF_CLOCK_RTC_FREQ_1HZ = 32,
+	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
 	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ = 32,
+	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
 	/** 32kHz counter speed for the RTC. */
 	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
 };
-
 
 struct system_clock_source_xosc_config {
 	/** External crystal or clock*/
@@ -522,53 +521,54 @@ void system_clock_source_dfll_set_config(
 static inline void system_clock_source_xosc_get_default_config(
 		struct system_clock_source_xosc_config *const conf)
 {
-	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->startup_time =         SYSTEM_XOSC_STARTUP_16384;
-	conf->auto_gain_control =    true;
-	conf->frequency =            12000000UL;
+	conf->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	conf->startup_time        = SYSTEM_XOSC_STARTUP_16384;
+	conf->auto_gain_control   = true;
+	conf->frequency           = 12000000UL;
 }
 
 static inline void system_clock_source_xosc32k_get_default_config(
 		struct system_clock_source_xosc32k_config *const conf)
 {
-	conf->external_clock =       SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->startup_time =         SYSTEM_XOSC32K_STARTUP_16384;
-	conf->auto_gain_control =    true;
-	conf->frequency =            32768UL;
-	conf->enable_1khz_output =   false;
-	conf->enable_32khz_output =  true;
+	conf->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	conf->startup_time        = SYSTEM_XOSC32K_STARTUP_16384;
+	conf->auto_gain_control   = true;
+	conf->frequency           = 32768UL;
+	conf->enable_1khz_output  = false;
+	conf->enable_32khz_output = true;
 }
+
 static inline void system_clock_source_osc32k_get_default_config(
 		struct system_clock_source_osc32k_config *const conf)
 {
 
-	conf->enable_1khz_output = true;
+	conf->enable_1khz_output  = true;
 	conf->enable_32khz_output = true;
 }
 
 static inline void system_clock_source_osc8m_get_default_config(
 		struct system_clock_source_osc8m_config *const conf)
 {
-	conf->prescaler = 8;
+	conf->prescaler = SYSTEM_OSC8M_DIV_8;
 }
 
 static inline void system_clock_source_dfll_get_default_config(
 		struct system_clock_source_dfll_config *const conf)
 {
-	conf->loop =                 SYSTEM_CLOCK_DFLL_OPEN_LOOP;
-	conf->quick_lock =           SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
-	conf->chill_cycle =          SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
-	conf->wakeup_lock =          SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
-	conf->stable_tracking =      SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	conf->loop            = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	conf->quick_lock      = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
+	conf->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
+	conf->wakeup_lock     = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	conf->stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
 
 	/* Open loop mode calibration value */
-	conf->coarse_value =          0x1f / 4; /* midpoint */
-	conf->fine_value =            0xff / 4; /* midpoint */
+	conf->coarse_value    = 0x1f / 4; /* midpoint */
+	conf->fine_value      = 0xff / 4; /* midpoint */
 
 	/* Closed loop mode */
-	conf->coarse_max_step =       1;
-	conf->fine_max_step =         1;
-	conf->multiply_factor =  6; /* multiply 8MHZ by 6 to get 48MHz */
+	conf->coarse_max_step = 1;
+	conf->fine_max_step   = 1;
+	conf->multiply_factor = 6; /* multiply 8MHZ by 6 to get 48MHz */
 
 }
 
@@ -578,17 +578,22 @@ static inline void system_clock_source_dfll_get_default_config(
  * @{
  */
 enum status_code system_clock_source_write_calibration(
-		enum system_clock_source system_clock_source,
-		uint16_t calibration_value, uint8_t freq_range);
+		const enum system_clock_source system_clock_source,
+		const uint16_t calibration_value,
+		const uint8_t freq_range);
 
-enum status_code system_clock_source_enable(enum system_clock_source system_clock_source, bool block_until_ready);
+enum status_code system_clock_source_enable(
+		const enum system_clock_source system_clock_source,
+		const bool block_until_ready);
 
-enum status_code system_clock_source_disable(enum system_clock_source clk_source);
+enum status_code system_clock_source_disable(
+		const enum system_clock_source clk_source);
 
-bool system_clock_source_is_ready(enum system_clock_source clk_source);
+bool system_clock_source_is_ready(
+		const enum system_clock_source clk_source);
 
-uint32_t system_clock_source_get_hz(enum system_clock_source clk_source);
-
+uint32_t system_clock_source_get_hz(
+		const enum system_clock_source clk_source);
 
 
 /**
@@ -597,7 +602,7 @@ uint32_t system_clock_source_get_hz(enum system_clock_source clk_source);
  */
 static inline void _system_dfll_wait_for_ready(void)
 {
-
+	// TODO
 }
 
 /**
@@ -625,16 +630,18 @@ static inline void _system_osc32k_wait_for_sync(void)
 /**
  * @}
  */
+
 /**
  * \name Main clock configuration
  * @{
  */
 
 /**
- * \brief Enable or disable the main clock failure detection
+ * \brief Enable or disable the main clock failure detection.
  *
  * This mechanism allows switching automatically the main clock to the safe
  * RCSYS clock, when the main clock source is considered off.
+ *
  * This may happen for instance when an external crystal is selected as the
  * clock source of the main clock and the crystal dies. The mechanism is to
  * detect, during a RCSYS period, at least one rising edge of the main clock.
@@ -644,21 +651,20 @@ static inline void _system_osc32k_wait_for_sync(void)
  * the main clock automatically switches to the RCSYS clock and the CFD
  * interrupt is generated if enabled.
  *
- * \note The failure detect  must be disabled if the system clock is the same or
- * slower than 32kHz as it will believe the system clock has failed with a
- * too slow clock.
+ * \note The failure detect must be disabled if the system clock is the same or
+ *       slower than 32kHz as it will believe the system clock has failed with
+ *       a too-slow clock.
  *
- * \param[in] enable true to enable, false to disable
- *
+ * \param[in] enable  Boolean \c true to enable, \c false to disable detection
  */
-static inline void system_main_clock_set_failure_detect(bool enable)
+static inline void system_main_clock_set_failure_detect(
+		const bool enable)
 {
 	if (enable) {
-		PM->CTRL.reg |= PM_CTRL_CFDEN;
+		PM->CTRL.reg |=  PM_CTRL_CFDEN;
 	} else {
 		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
-
 }
 
 #if !defined (REVB)
@@ -669,67 +675,59 @@ static inline void system_main_clock_set_failure_detect(bool enable)
  * the CPU and synchronous bus clocks
  *
  * \param[in] clock CPU clock source
- *
  */
-static inline void system_main_clock_set_source(enum system_main_clock clock)
+static inline void system_main_clock_set_source(
+		const enum system_main_clock clock)
 {
 	PM->CTRL.reg = (PM->CTRL.reg & ~PM_CTRL_MCSEL_Msk) | PM_CTRL_MCSEL(clock);
 }
 #endif
 
 /**
- * \brief set CPU clock divider
+ * \brief Set main CPU clock divider.
  *
- * Set the clock divider used on the main clock to provide the CPU clock
+ * Sets the clock divider used on the main clock to provide the CPU clock.
  *
- * \param[in] divider CPU clock divider
- *
+ * \param[in] divider  CPU clock divider to set
  */
-static inline void system_cpu_clock_set_divider(enum system_main_clock_div divider)
+static inline void system_cpu_clock_set_divider(
+		const enum system_main_clock_div divider)
 {
-	PM->CPUSEL.reg = divider;
+	PM->CPUSEL.reg = (uint32_t)divider;
 }
 
 /**
- * \brief Set APBx clock divider
+ * \brief Set APBx clock divider.
  *
- * Set the clock divider used on the main clock to provide the
- * clock for the given APBx bus.
+ * Set the clock divider used on the main clock to provide the clock for the
+ * given APBx bus.
  *
- * The following peripherals are connected to the APBA:
- * - WDT
- * - RTC
- * - PM
- * - SYSCTRL
+ * \param[in] divider  APBx bus divider to set
+ * \param[in] bus      APBx bus to set divider for
  *
- * The following peripherals are connected to the APBB:
- * - AC
- * - ADC
- * - TC
- * - ETC
- * - SERCOM
+ * \returns Status of the clock division change operation.
  *
- * \param[in] divider APBA divider
- * \param[in] bus APB bus to set divider for
- *
- * \retval STATUS_ERR_INVALID_ARG Invalid bus given
- * \retval STATUS_OK The APBx clock was set successfully
+ * \retval STATUS_ERR_INVALID_ARG  Invalid bus ID was given
+ * \retval STATUS_OK               The APBx clock was set successfully
  */
-static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus bus, enum system_main_clock_div divider)
+static inline enum status_code system_apb_clock_set_divider(
+		const enum clock_apb_bus bus,
+		const enum system_main_clock_div divider)
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			PM->APBASEL.reg = divider;
+			PM->APBASEL.reg = (uint32_t)divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
-			PM->APBBSEL.reg = divider;
+			PM->APBBSEL.reg = (uint32_t)divider;
 			break;
 		case SYSTEM_CLOCK_APB_APBC:
-			PM->APBCSEL.reg = divider;
+			PM->APBCSEL.reg = (uint32_t)divider;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
+
 	return STATUS_OK;
 }
 
@@ -743,50 +741,53 @@ static inline enum status_code system_apb_clock_set_divider(enum clock_apb_bus b
  */
 
 /**
- * \brief Set bits in the clock mask for the AHB
+ * \brief Set bits in the clock mask for the AHB bus.
  *
  * This function will set bits in the clock mask for the AHB bus.
  * Any bits set to 1 will enable that clock, 0 bits in the mask
  * will be ignored
  *
- * \param[in] ahb_mask AHB clock mask
- *
+ * \param[in] ahb_mask  AHB clock mask to enable
  */
-static inline void system_ahb_clock_set_mask(uint32_t mask)
+static inline void system_ahb_clock_set_mask(
+		const uint32_t mask)
 {
 	PM->AHBMASK.reg |= mask;
 }
 
 /**
- * \brief Clear bits in the clock mask for the AHB
+ * \brief Clear bits in the clock mask for the AHB bus.
  *
  * This function will clear bits in the clock mask for the AHB bus.
  * Any bits set to 1 will disable that clock, 0 bits in the mask
- * will be ignored
+ * will be ignored.
  *
- * \param[in] ahb_mask AHB clock mask
- *
+ * \param[in] ahb_mask  AHB clock mask to disable
  */
-static inline void system_ahb_clock_clear_mask(uint32_t mask)
+static inline void system_ahb_clock_clear_mask(
+		const uint32_t mask)
 {
 	PM->AHBMASK.reg &= ~mask;
 }
 
-
 /**
- * \brief Set bits in the clock mask for an APBx bus
+ * \brief Set bits in the clock mask for an APBx bus.
  *
  * This function will set bits in the clock mask for an APBx bus.
  * Any bits set to 1 will enable that clock, zero bits in the mask
  * will be ignored.
  *
- * \param[in] mask APBx clock mask
- * \param[in] bus Bus to set clock mask bits for
+ * \param[in] mask  APBx clock mask
+ * \param[in] bus   Bus to set clock mask bits for
  *
- * \retval STATUS_ERR_INVALID_ARG Invalid bus given
- * \retval STATUS_OK The clock mask was set successfully
+ * \returns Status indicating the result of the clock mask change operation.
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid bus given
+ * \retval STATUS_OK               The clock mask was set successfully
  */
-static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus, uint32_t mask)
+static inline enum status_code system_apb_clock_set_mask(
+		const enum clock_apb_bus bus,
+		const uint32_t mask)
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
@@ -807,19 +808,23 @@ static inline enum status_code system_apb_clock_set_mask(enum clock_apb_bus bus,
 }
 
 /**
- * \brief Clear bits in the clock mask for an APBx bus
+ * \brief Clear bits in the clock mask for an APBx bus.
  *
  * This function will clear bits in the clock mask for an APBx bus.
  * Any bits set to 1 will disable that clock, zero bits in the mask
  * will be ignored.
  *
- * \param[in] mask APBx clock mask
- * \param[in] bus Bus to clear clock mask bits for
+ * \param[in] mask  APBx clock mask
+ * \param[in] bus   Bus to clear clock mask bits for
  *
- * \retval STATUS_ERR_INVALID_ARG Invalid bus given
- * \retval STATUS_OK The clock mask was set successfully
+ * \returns Status indicating the result of the clock mask change operation.
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid bus ID was given.
+ * \retval STATUS_OK               The clock mask was changed successfully.
  */
-static inline enum status_code system_apb_clock_clear_mask(enum clock_apb_bus bus, uint32_t mask)
+static inline enum status_code system_apb_clock_clear_mask(
+		const enum clock_apb_bus bus,
+		const uint32_t mask)
 {
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
