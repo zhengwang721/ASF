@@ -44,18 +44,50 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup sam0_port_group SAMD20 Port Driver (PORT)
+ * \defgroup asfdoc_samd20_port_group SAMD20 Port Driver (PORT)
  *
- * Driver for the SAMD20 architecture devices. This driver provides a interface
- * for the configuration and management of the device's General Purpose
- * Input/Output (GPIO) pin functionality, for manual pin state reading and
- * writing. This driver encompasses the following module within the SAMD20
- * devices:
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's General Purpose Input/Output (GPIO) pin
+ * functionality, for manual pin state reading and writing.
  *
- * \li \b PORT (Port I/O Management)
+ * The following peripherals are used by this module:
  *
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
+ *  - PORT (GPIO Management)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_port_prerequisites
+ *  - \ref asfdoc_samd20_port_module_overview
+ *  - \ref asfdoc_samd20_port_special_considerations
+ *  - \ref asfdoc_samd20_port_extra_info
+ *  - \ref asfdoc_samd20_port_examples
+ *  - \ref asfdoc_samd20_port_api_overview
+ *
+ *
+ * \section asfdoc_samd20_port_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_port_module_overview Module Overview
+ *
+ * The device GPIO (PORT) module provides an interface between the user
+ * application logic and external hardware peripherals, when general pin state
+ * manipulation is required. This driver provides an easy-to-use interface to
+ * the physical pin input samplers and output drivers, so that pins can be read
+ * from or written to for general purpose external hardware control.
+ *
+ * \subsection asfdoc_samd20_port_module_overview_pin_numbering Physical and Logical GPIO Pins
+ * SAMD20 devices use two naming conventions for the I/O pins in the device; one
+ * physical, and one logical. Each physical pin on a device package is assigned
+ * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
+ * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
+ * former is used to map physical pins to their physical internal device module
+ * counterparts, for simplicity the design of this driver uses the logical GPIO
+ * numbers instead.
+ *
+ * \subsection asfdoc_samd20_port_module_overview_physical Physical Connection
+ *
+ * The following diagram shows how this module is interconnected within the device:
  *
  * \dot
  * digraph overview {
@@ -73,40 +105,29 @@
  * }
  * \enddot
  *
- * \section module_introduction Introduction
- * The SAMD20 devices contain a number of General Purpose I/O pins, used to
- * interface the user application logic and internal hardware peripherals to
- * an external system. This driver provides an easy-to-use interface to the
- * physical pin input samplers and output drivers, so that pins can be read from
- * or written to for general purpose external hardware control.
  *
- * \subsection physical_logical_pins Physical and Logical GPIO Pins
- * SAMD20 devices use two naming conventions for the I/O pins in the device; one
- * physical, and one logical. Each physical pin on a device package is assigned
- * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
- * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
- * former is used to map physical pins to their physical internal device module
- * counterparts, for simplicity the design of this driver uses the logical GPIO
- * numbers instead.
+ * \section asfdoc_samd20_port_special_considerations Special Considerations
  *
- * \section module_dependencies Dependencies
- * The port driver has the following dependencies:
+ * The SAMD20 port pin input sampler can be disabled when the pin is configured
+ * in pure output mode to save power; reading the pin state of a pin configured
+ * in output-only mode will read the logical output state that was last set.
  *
- * \li \ref sam0_pinmux_group "System Pin Multiplexer Driver"
+ * \section asfdoc_samd20_port_extra_info Extra Information for PORT
  *
- * \section special_considerations Special Considerations
+ * For extra information see \ref asfdoc_samd20_port_extra. This includes:
+ *  - \ref asfdoc_samd20_port_extra_acronyms
+ *  - \ref asfdoc_samd20_port_extra_dependencies
+ *  - \ref asfdoc_samd20_port_extra_errata
+ *  - \ref asfdoc_samd20_port_extra_history
  *
- * The SAMD20 port pin input sampler is disabled when the pin is configured as
- * an output; reading the pin state of an output will read the logical output
- * state that was last set.
  *
- * \section module_extra_info Extra Information
- * For extra information see \ref port_extra_info.
+ * \section asfdoc_samd20_port_examples Examples
  *
- * \section module_examples Examples
- * - \ref port_quickstart
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_port_basic_use_case
  *
- * \section api_overview API Overview
+ *
+ * \section asfdoc_samd20_port_api_overview API Overview
  * @{
  */
 
@@ -389,9 +410,9 @@ static inline void port_pin_toggle_output_level(
 /** @} */
 
 /**
- * \page port_extra_info Extra Information
+ * \page asfdoc_samd20_port_extra Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_samd20_port_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -410,13 +431,22 @@ static inline void port_pin_toggle_output_level(
  *	</tr>
  * </table>
  *
- * \section fixed_errata Erratas fixed by driver
- * No errata workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_port_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *
+ *
+ * \section asfdoc_samd20_port_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_port_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -429,21 +459,15 @@ static inline void port_pin_toggle_output_level(
  */
 
 /**
- * \page port_quickstart Quick Start Guides for the PORT module
+ * \page asfdoc_samd20_port_exqsg Examples for PORT Driver
  *
- * This is the quick start guide list for the \ref sam0_port_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_port_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section port_use_cases PORT module use cases
- * - \subpage port_basic_use_case
+ *  - \subpage asfdoc_samd20_port_basic_use_case
  */
 
 #endif
