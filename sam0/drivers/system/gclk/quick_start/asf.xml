@@ -7,6 +7,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.system.gclk"/>
 		<require idref="sam0.drivers.port"/>
-		<device-support value="samd20g18a"/>
+		<device-support value="samd20"/>
 	</module>
 </asf>

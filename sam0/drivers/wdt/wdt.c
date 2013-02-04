@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Watchdog Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,13 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <wdt.h>
-
-/** \internal
- *  Key used to reset the Watchdog elapsed count when written to the
- *  CLEAR register to reset the count value.
- */
-#define WDT_CLEAR_KEY  0xA5
+#include "wdt.h"
+#include <system.h>
 
 /**
  * \internal Internal device structure.
@@ -218,5 +215,5 @@ void wdt_reset_count(void)
 
 	/* Disable the Watchdog module */
 	_wdt_wait_for_sync();
-	WDT_module->CLEAR.reg = WDT_CLEAR_KEY;
+	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
 }

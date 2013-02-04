@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Watchdog Driver Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,14 +45,14 @@
  * \page wdt_basic_use_case Quick Start Guide for the Watchdog module - Basic Use Case
  *
  * In this use case, the Watchdog module is configured for:
- *  \li System reset after 512 clocks of the Watchdog generic clock
+ *  \li System reset after 4096 clocks of the Watchdog generic clock
  *  \li Always on mode, so that it is lock-enabled until the system power is
  *      cycled
  *  \li Basic mode, with no window or early warning periods
  *
- * This use case sets up the Watchdog to force a system reset after every 512
- * clocks of the Watchdog's Generic Clock channel, unless the user application
- * periodically resets the Watchdog counter.
+ * This use case sets up the Watchdog to force a system reset after every 4096
+ * clocks of the Watchdog's Generic Clock channel, unless the user periodically
+ * resets the Watchdog counter via a button before the timer expires.
  *
  * \section wdt_basic_use_case_setup Setup
  *
@@ -91,6 +93,15 @@
  * \snippet qs_wdt_basic.c main
  *
  * \subsection wdt_basic_use_case_flow Workflow
- * -# Clear the Watchdog counter repeatedly to ensure the system does not reset.
+ * -# Retrieve the cause of the system reset to determine if the watchdog module
+ *    was the cause of the last reset.
  *  - \snippet qs_wdt_basic.c main_1
+ * -# Turn on or off the board LED based on whether the watchdog reset the device.
+ *  - \snippet qs_wdt_basic.c main_2
+ * -# Enter an infinite loop to hold the main program logic.
+ *  - \snippet qs_wdt_basic.c main_3
+ * -# Test to see if the board button is currently being pressed.
+ *  - \snippet qs_wdt_basic.c main_4
+ * -# If the button is pressed, turn off board LED and reset the Watchdog timer.
+ *  - \snippet qs_wdt_basic.c main_5
  */

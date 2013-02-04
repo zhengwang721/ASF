@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Generic Clock Driver Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -79,8 +81,8 @@ void config_gclock_channel(void)
 //! [setup_7]
 
 //! [setup_8]
-	gclock_ch_conf.source_generator    = EXAMPLE_GCLOCK_GENERATOR;
-	gclock_ch_conf.enable_during_sleep = false;
+	gclock_ch_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
+	gclock_ch_conf.run_in_standby   = false;
 //! [setup_8]
 //! [setup_9]
 	system_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);

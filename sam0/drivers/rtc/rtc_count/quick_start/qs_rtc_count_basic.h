@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 PAC Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,7 +84,9 @@
  * \snippet qs_rtc_count_basic.c implementation_code
  *
  * \subsection rtc_count_basic_imp_workflow Workflow
- * -# Poll on is compare match flag.
+ * -# Set RTC period to 20
+ *  - \snippet qs_rtc_count_basic.c period
+ * -# Poll on compare match flag. Clear compare match flag when set.
  *  - \snippet qs_rtc_count_basic.c poll
  * -# Repeat
  *

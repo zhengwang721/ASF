@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Peripheral Digital to Analog Converter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -397,7 +399,7 @@ struct dac_conf {
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
 	 */
-	bool standby_sleep_enable;
+	bool run_in_standby;
 };
 
 /**
@@ -458,7 +460,7 @@ static inline void dac_get_config_defaults(
 	config->output =               DAC_OUTPUT_EXTERNAL;
 	config->left_adjust =          false;
 	config->clock_source =         GCLK_GENERATOR_0;
-	config->standby_sleep_enable = false;
+	config->run_in_standby =       false;
 };
 
 /**

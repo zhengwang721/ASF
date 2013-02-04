@@ -3,7 +3,7 @@
  *
  * \brief TC Capture Waveform Example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,8 +58,8 @@
  * conf_board.h file to check these previous define.
  *
  * To measure the wavefrom on channel_waveform, connect PIN_TC_WAVEFORM to
- * TC_CHANNEL_CAPTURE, and configure PIN_TC_WAVEFORM as output pin and
- * TC_CHANNEL_CAPTURE as input pin.
+ * PIN_TC_CAPTURE, and configure PIN_TC_WAVEFORM as output pin and
+ * PIN_TC_CAPTURE as input pin.
  *
  * \section Descriptions
  *
@@ -217,7 +217,7 @@ static void tc_waveform_initialize(void)
 			| TC_CMR_ACPC_CLEAR /* RC Compare Effect: clear */
 			| TC_CMR_CPCTRG /* UP mode with automatic trigger on RC Compare */
 			);
-	
+
 	/* Configure waveform frequency and duty cycle. */
 #if (SAM4L)
 	rc = (sysclk_get_peripheral_bus_hz(TC) /
@@ -246,7 +246,7 @@ static void tc_capture_initialize(void)
 {
 	/* Configure the PMC to enable the TC module */
 	sysclk_enable_peripheral_clock(ID_TC_CAPTURE);
-	
+
 	/* Init TC to capture mode. */
 	tc_init(TC, TC_CHANNEL_CAPTURE,
 			TC_CAPTURE_TIMER_SELECTION /* Clock Selection */
@@ -312,7 +312,7 @@ int main(void)
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
 	/* Configure PIO Pins for TC */
-#if SAM4L
+#if (SAM4L || SAM4E)
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_FLAGS);
 	ioport_disable_pin(PIN_TC_WAVEFORM); // Disable IO (but enable peripheral mode)
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_FLAGS);

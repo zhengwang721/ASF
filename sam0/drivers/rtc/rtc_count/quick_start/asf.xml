@@ -6,6 +6,6 @@
 		<build type="c-source" value="qs_rtc_count_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.rtc_count"/>
-		<device-support value="samd20g18a"/>
+		<device-support value="samd20"/>
 	</module>
 </asf>

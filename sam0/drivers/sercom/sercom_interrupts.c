@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,6 +41,8 @@
  *
  */
 #include "sercom_interrupts.h"
+
+void *_sercom_instances[SERCOM_INST_NUM];
 
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;

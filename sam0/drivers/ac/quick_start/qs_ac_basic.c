@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Analog Comparator Driver Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,64 +47,68 @@ void configure_ac_channel(void);
 
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
+//! [setup_1]
 static struct ac_dev_inst ac_dev;
+//! [setup_1]
 
 /* Comparator channel that will be used */
+//! [setup_2]
 #define AC_COMPARATOR_CHANNEL   0
+//! [setup_2]
 
+//! [setup_3]
 void configure_ac(void)
 {
+//! [setup_3]
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
-	//! [setup_1]
+	//! [setup_4]
 	struct ac_conf ac_conf;
-	//! [setup_1]
-	//! [setup_2]
+	//! [setup_4]
+	//! [setup_5]
 	ac_get_config_defaults(&ac_conf);
-	//! [setup_2]
+	//! [setup_5]
 
-	/* Set the Analog Comparator configuration settings */
-	//! [setup_3]
-	ac_conf.enable_pair_during_sleep[0] = true;
-	//! [setup_3]
+	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
-	//! [setup_4]
-	ac_init(&ac_dev, &AC, &ac_conf);
-	//! [setup_4]
-	//! [setup_5]
+	//! [setup_6]
+	ac_init(&ac_dev, AC, &ac_conf);
+	//! [setup_6]
+	//! [setup_7]
 	ac_enable(&ac_dev);
-	//! [setup_5]
-
+	//! [setup_7]
 }
 
+//! [setup_8]
 void configure_ac_channel(void)
 {
+//! [setup_8]
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
-	//! [setup_6]
+	//! [setup_9]
 	struct ac_ch_conf ac_ch_conf;
-	//! [setup_6]
-	//! [setup_7]
+	//! [setup_9]
+	//! [setup_10]
 	ac_ch_get_config_defaults(&ac_ch_conf);
-	//! [setup_7]
+	//! [setup_10]
 
 	/* Set the Analog Comparator channel configuration settings */
-	//! [setup_8]
+	//! [setup_11]
 	ac_ch_conf.sample_mode      = AC_CH_MODE_SINGLE_SHOT;
-	ac_ch_conf.positive         = AC_CH_POS_MUX_PIN0;
-	ac_ch_conf.negative         = AC_CH_NEG_MUX_SCALED_VCC;
+	ac_ch_conf.positive_input   = AC_CH_POS_MUX_PIN0;
+	ac_ch_conf.negative_input   = AC_CH_NEG_MUX_SCALED_VCC;
 	ac_ch_conf.vcc_scale_factor = 32;
-	//! [setup_8]
+	//! [setup_11]
 
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
-	//! [setup_9]
-	ac_ch_set_config(&ac_dev, &ac_ch_conf, AC_COMPARATOR_CHANNEL);
-	//! [setup_9]
-	//! [setup_10]
+	//! [setup_12]
+	ac_ch_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_ch_conf);
+	//! [setup_12]
+	//! [setup_13]
 	ac_ch_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_10]
+	//! [setup_13]
 }
 //! [setup]
 
@@ -129,10 +135,15 @@ int main(void)
 		if (ac_ch_is_ready(&ac_dev, AC_COMPARATOR_CHANNEL)) {
 	//! [main_4]
 			//! [main_5]
-			last_comparison = ac_ch_get_state(
-					&ac_dev, AC_COMPARATOR_CHANNEL);
+			last_comparison = ac_ch_get_state(&ac_dev, AC_COMPARATOR_CHANNEL);
 			//! [main_5]
+
+			//! [main_6]
+			ac_ch_trigger_single_shot(&ac_dev, AC_COMPARATOR_CHANNEL);
+			//! [main_6]
 		}
 	}
 	//! [main]
+
+	UNUSED(last_comparison);
 }

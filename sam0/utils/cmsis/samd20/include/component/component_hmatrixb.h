@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \brief Component description for HMATRIXB
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +50,7 @@
 /** \addtogroup SAMD20_HMATRIXB HSB Matrix */
 /*@{*/
 
-#define REV_HMATRIXB   0x130
+#define REV_HMATRIXB                0x130
 
 /* -------- HMATRIXB_MCFG : (HMATRIXB Offset: 0x000) (R/W 32) Master Configuration Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -64,8 +66,8 @@ typedef union {
 #define HMATRIXB_MCFG_OFFSET        0x000        /**< \brief (HMATRIXB_MCFG offset) Master Configuration Register */
 #define HMATRIXB_MCFG_RESETVALUE    0x00000002   /**< \brief (HMATRIXB_MCFG reset_value) Master Configuration Register */
 
-#define HMATRIXB_MCFG_ULBT_Pos      0
-#define HMATRIXB_MCFG_ULBT_Msk      (0x7u << HMATRIXB_MCFG_ULBT_Pos) /**< \brief (HMATRIXB_MCFG) Undefined Length Burst Type */
+#define HMATRIXB_MCFG_ULBT_Pos      0            /**< \brief (HMATRIXB_MCFG) Undefined Length Burst Type */
+#define HMATRIXB_MCFG_ULBT_Msk      (0x7u << HMATRIXB_MCFG_ULBT_Pos)
 #define HMATRIXB_MCFG_ULBT(value)   ((HMATRIXB_MCFG_ULBT_Msk & ((value) << HMATRIXB_MCFG_ULBT_Pos)))
 #define   HMATRIXB_MCFG_ULBT_INFINITE (0x0u <<  0) /**< \brief (HMATRIXB_MCFG) Infinite Length */
 #define   HMATRIXB_MCFG_ULBT_SINGLE (0x1u <<  0) /**< \brief (HMATRIXB_MCFG) Single Access */
@@ -93,19 +95,20 @@ typedef union {
 #define HMATRIXB_SCFG_OFFSET        0x040        /**< \brief (HMATRIXB_SCFG offset) Slave Configuration Register */
 #define HMATRIXB_SCFG_RESETVALUE    0x00000010   /**< \brief (HMATRIXB_SCFG reset_value) Slave Configuration Register */
 
-#define HMATRIXB_SCFG_SLOT_CYCLE_Pos    0
-#define HMATRIXB_SCFG_SLOT_CYCLE_Msk    (0xFFu << HMATRIXB_SCFG_SLOT_CYCLE_Pos) /**< \brief (HMATRIXB_SCFG) Maximum Number of Allowed Cycles for a Burst */
+#define HMATRIXB_SCFG_SLOT_CYCLE_Pos 0            /**< \brief (HMATRIXB_SCFG) Maximum Number of Allowed Cycles for a Burst */
+#define HMATRIXB_SCFG_SLOT_CYCLE_Msk (0xFFu << HMATRIXB_SCFG_SLOT_CYCLE_Pos)
 #define HMATRIXB_SCFG_SLOT_CYCLE(value) ((HMATRIXB_SCFG_SLOT_CYCLE_Msk & ((value) << HMATRIXB_SCFG_SLOT_CYCLE_Pos)))
-#define HMATRIXB_SCFG_DEFMSTR_TYPE_Pos    16
-#define HMATRIXB_SCFG_DEFMSTR_TYPE_Msk    (0x3u << HMATRIXB_SCFG_DEFMSTR_TYPE_Pos) /**< \brief (HMATRIXB_SCFG) Default Master Type */
+#define HMATRIXB_SCFG_DEFMSTR_TYPE_Pos 16           /**< \brief (HMATRIXB_SCFG) Default Master Type */
+#define HMATRIXB_SCFG_DEFMSTR_TYPE_Msk (0x3u << HMATRIXB_SCFG_DEFMSTR_TYPE_Pos)
 #define HMATRIXB_SCFG_DEFMSTR_TYPE(value) ((HMATRIXB_SCFG_DEFMSTR_TYPE_Msk & ((value) << HMATRIXB_SCFG_DEFMSTR_TYPE_Pos)))
 #define   HMATRIXB_SCFG_DEFMSTR_TYPE_NO_DEFAULT (0x0u << 16) /**< \brief (HMATRIXB_SCFG) No Default Master. At the end of current slave access, if no other master request is pending, the slave is deconnected from all masters. This resusts in having a one cycle latency for the first transfer of a burst. */
 #define   HMATRIXB_SCFG_DEFMSTR_TYPE_LAST_DEFAULT (0x1u << 16) /**< \brief (HMATRIXB_SCFG) Last Default Master At the end of current slave access, if no other master request is pending, the slave stay connected with the last master havingaccessed it.This resusts in not having the one cycle latency when the last master re-trying access on the slave. */
 #define   HMATRIXB_SCFG_DEFMSTR_TYPE_FIXED_DEFAULT (0x2u << 16) /**< \brief (HMATRIXB_SCFG) Fixed Default Master At the end of current slave access, if no other master request is pending, the slave connects with fixed master which numberis in FIXED_DEFMSTR register.This resusts in not having the one cycle latency when the fixed master re-trying access on the slave. */
-#define HMATRIXB_SCFG_FIXED_DEFMSTR_Pos    18
-#define HMATRIXB_SCFG_FIXED_DEFMSTR_Msk    (0xFu << HMATRIXB_SCFG_FIXED_DEFMSTR_Pos) /**< \brief (HMATRIXB_SCFG) Fixed Index of Default Master */
+#define HMATRIXB_SCFG_FIXED_DEFMSTR_Pos 18           /**< \brief (HMATRIXB_SCFG) Fixed Index of Default Master */
+#define HMATRIXB_SCFG_FIXED_DEFMSTR_Msk (0xFu << HMATRIXB_SCFG_FIXED_DEFMSTR_Pos)
 #define HMATRIXB_SCFG_FIXED_DEFMSTR(value) ((HMATRIXB_SCFG_FIXED_DEFMSTR_Msk & ((value) << HMATRIXB_SCFG_FIXED_DEFMSTR_Pos)))
-#define HMATRIXB_SCFG_ARBT          (0x1u << 24) /**< \brief (HMATRIXB_SCFG) Arbitration Type */
+#define HMATRIXB_SCFG_ARBT_Pos      24           /**< \brief (HMATRIXB_SCFG) Arbitration Type */
+#define HMATRIXB_SCFG_ARBT          (0x1u << HMATRIXB_SCFG_ARBT_Pos)
 #define   HMATRIXB_SCFG_ARBT_ROUND_ROBIN (0x0u << 24) /**< \brief (HMATRIXB_SCFG) Round-Robin Arbitration */
 #define   HMATRIXB_SCFG_ARBT_FIXED_PRIORITY (0x1u << 24) /**< \brief (HMATRIXB_SCFG) Fixed Priority Arbitration */
 #define HMATRIXB_SCFG_MASK          0x013F00FFu  /**< \brief (HMATRIXB_SCFG) MASK Register */
@@ -130,29 +133,29 @@ typedef union {
 #define HMATRIXB_PRAS_OFFSET        0x080        /**< \brief (HMATRIXB_PRAS offset) Priority Register A for Slave */
 #define HMATRIXB_PRAS_RESETVALUE    0x00000000   /**< \brief (HMATRIXB_PRAS reset_value) Priority Register A for Slave */
 
-#define HMATRIXB_PRAS_M0PR_Pos      0
-#define HMATRIXB_PRAS_M0PR_Msk      (0xFu << HMATRIXB_PRAS_M0PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 0 Priority */
+#define HMATRIXB_PRAS_M0PR_Pos      0            /**< \brief (HMATRIXB_PRAS) Master 0 Priority */
+#define HMATRIXB_PRAS_M0PR_Msk      (0xFu << HMATRIXB_PRAS_M0PR_Pos)
 #define HMATRIXB_PRAS_M0PR(value)   ((HMATRIXB_PRAS_M0PR_Msk & ((value) << HMATRIXB_PRAS_M0PR_Pos)))
-#define HMATRIXB_PRAS_M1PR_Pos      4
-#define HMATRIXB_PRAS_M1PR_Msk      (0xFu << HMATRIXB_PRAS_M1PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 1 Priority */
+#define HMATRIXB_PRAS_M1PR_Pos      4            /**< \brief (HMATRIXB_PRAS) Master 1 Priority */
+#define HMATRIXB_PRAS_M1PR_Msk      (0xFu << HMATRIXB_PRAS_M1PR_Pos)
 #define HMATRIXB_PRAS_M1PR(value)   ((HMATRIXB_PRAS_M1PR_Msk & ((value) << HMATRIXB_PRAS_M1PR_Pos)))
-#define HMATRIXB_PRAS_M2PR_Pos      8
-#define HMATRIXB_PRAS_M2PR_Msk      (0xFu << HMATRIXB_PRAS_M2PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 2 Priority */
+#define HMATRIXB_PRAS_M2PR_Pos      8            /**< \brief (HMATRIXB_PRAS) Master 2 Priority */
+#define HMATRIXB_PRAS_M2PR_Msk      (0xFu << HMATRIXB_PRAS_M2PR_Pos)
 #define HMATRIXB_PRAS_M2PR(value)   ((HMATRIXB_PRAS_M2PR_Msk & ((value) << HMATRIXB_PRAS_M2PR_Pos)))
-#define HMATRIXB_PRAS_M3PR_Pos      12
-#define HMATRIXB_PRAS_M3PR_Msk      (0xFu << HMATRIXB_PRAS_M3PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 3 Priority */
+#define HMATRIXB_PRAS_M3PR_Pos      12           /**< \brief (HMATRIXB_PRAS) Master 3 Priority */
+#define HMATRIXB_PRAS_M3PR_Msk      (0xFu << HMATRIXB_PRAS_M3PR_Pos)
 #define HMATRIXB_PRAS_M3PR(value)   ((HMATRIXB_PRAS_M3PR_Msk & ((value) << HMATRIXB_PRAS_M3PR_Pos)))
-#define HMATRIXB_PRAS_M4PR_Pos      16
-#define HMATRIXB_PRAS_M4PR_Msk      (0xFu << HMATRIXB_PRAS_M4PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 4 Priority */
+#define HMATRIXB_PRAS_M4PR_Pos      16           /**< \brief (HMATRIXB_PRAS) Master 4 Priority */
+#define HMATRIXB_PRAS_M4PR_Msk      (0xFu << HMATRIXB_PRAS_M4PR_Pos)
 #define HMATRIXB_PRAS_M4PR(value)   ((HMATRIXB_PRAS_M4PR_Msk & ((value) << HMATRIXB_PRAS_M4PR_Pos)))
-#define HMATRIXB_PRAS_M5PR_Pos      20
-#define HMATRIXB_PRAS_M5PR_Msk      (0xFu << HMATRIXB_PRAS_M5PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 5 Priority */
+#define HMATRIXB_PRAS_M5PR_Pos      20           /**< \brief (HMATRIXB_PRAS) Master 5 Priority */
+#define HMATRIXB_PRAS_M5PR_Msk      (0xFu << HMATRIXB_PRAS_M5PR_Pos)
 #define HMATRIXB_PRAS_M5PR(value)   ((HMATRIXB_PRAS_M5PR_Msk & ((value) << HMATRIXB_PRAS_M5PR_Pos)))
-#define HMATRIXB_PRAS_M6PR_Pos      24
-#define HMATRIXB_PRAS_M6PR_Msk      (0xFu << HMATRIXB_PRAS_M6PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 6 Priority */
+#define HMATRIXB_PRAS_M6PR_Pos      24           /**< \brief (HMATRIXB_PRAS) Master 6 Priority */
+#define HMATRIXB_PRAS_M6PR_Msk      (0xFu << HMATRIXB_PRAS_M6PR_Pos)
 #define HMATRIXB_PRAS_M6PR(value)   ((HMATRIXB_PRAS_M6PR_Msk & ((value) << HMATRIXB_PRAS_M6PR_Pos)))
-#define HMATRIXB_PRAS_M7PR_Pos      28
-#define HMATRIXB_PRAS_M7PR_Msk      (0xFu << HMATRIXB_PRAS_M7PR_Pos) /**< \brief (HMATRIXB_PRAS) Master 7 Priority */
+#define HMATRIXB_PRAS_M7PR_Pos      28           /**< \brief (HMATRIXB_PRAS) Master 7 Priority */
+#define HMATRIXB_PRAS_M7PR_Msk      (0xFu << HMATRIXB_PRAS_M7PR_Pos)
 #define HMATRIXB_PRAS_M7PR(value)   ((HMATRIXB_PRAS_M7PR_Msk & ((value) << HMATRIXB_PRAS_M7PR_Pos)))
 #define HMATRIXB_PRAS_MASK          0xFFFFFFFFu  /**< \brief (HMATRIXB_PRAS) MASK Register */
 
@@ -176,29 +179,29 @@ typedef union {
 #define HMATRIXB_PRBS_OFFSET        0x084        /**< \brief (HMATRIXB_PRBS offset) Priority Register B for Slave */
 #define HMATRIXB_PRBS_RESETVALUE    0x00000000   /**< \brief (HMATRIXB_PRBS reset_value) Priority Register B for Slave */
 
-#define HMATRIXB_PRBS_M8PR_Pos      0
-#define HMATRIXB_PRBS_M8PR_Msk      (0xFu << HMATRIXB_PRBS_M8PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 8 Priority */
+#define HMATRIXB_PRBS_M8PR_Pos      0            /**< \brief (HMATRIXB_PRBS) Master 8 Priority */
+#define HMATRIXB_PRBS_M8PR_Msk      (0xFu << HMATRIXB_PRBS_M8PR_Pos)
 #define HMATRIXB_PRBS_M8PR(value)   ((HMATRIXB_PRBS_M8PR_Msk & ((value) << HMATRIXB_PRBS_M8PR_Pos)))
-#define HMATRIXB_PRBS_M9PR_Pos      4
-#define HMATRIXB_PRBS_M9PR_Msk      (0xFu << HMATRIXB_PRBS_M9PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 9 Priority */
+#define HMATRIXB_PRBS_M9PR_Pos      4            /**< \brief (HMATRIXB_PRBS) Master 9 Priority */
+#define HMATRIXB_PRBS_M9PR_Msk      (0xFu << HMATRIXB_PRBS_M9PR_Pos)
 #define HMATRIXB_PRBS_M9PR(value)   ((HMATRIXB_PRBS_M9PR_Msk & ((value) << HMATRIXB_PRBS_M9PR_Pos)))
-#define HMATRIXB_PRBS_M10PR_Pos     8
-#define HMATRIXB_PRBS_M10PR_Msk     (0xFu << HMATRIXB_PRBS_M10PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 10 Priority */
+#define HMATRIXB_PRBS_M10PR_Pos     8            /**< \brief (HMATRIXB_PRBS) Master 10 Priority */
+#define HMATRIXB_PRBS_M10PR_Msk     (0xFu << HMATRIXB_PRBS_M10PR_Pos)
 #define HMATRIXB_PRBS_M10PR(value)  ((HMATRIXB_PRBS_M10PR_Msk & ((value) << HMATRIXB_PRBS_M10PR_Pos)))
-#define HMATRIXB_PRBS_M11PR_Pos     12
-#define HMATRIXB_PRBS_M11PR_Msk     (0xFu << HMATRIXB_PRBS_M11PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 11 Priority */
+#define HMATRIXB_PRBS_M11PR_Pos     12           /**< \brief (HMATRIXB_PRBS) Master 11 Priority */
+#define HMATRIXB_PRBS_M11PR_Msk     (0xFu << HMATRIXB_PRBS_M11PR_Pos)
 #define HMATRIXB_PRBS_M11PR(value)  ((HMATRIXB_PRBS_M11PR_Msk & ((value) << HMATRIXB_PRBS_M11PR_Pos)))
-#define HMATRIXB_PRBS_M12PR_Pos     16
-#define HMATRIXB_PRBS_M12PR_Msk     (0xFu << HMATRIXB_PRBS_M12PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 12 Priority */
+#define HMATRIXB_PRBS_M12PR_Pos     16           /**< \brief (HMATRIXB_PRBS) Master 12 Priority */
+#define HMATRIXB_PRBS_M12PR_Msk     (0xFu << HMATRIXB_PRBS_M12PR_Pos)
 #define HMATRIXB_PRBS_M12PR(value)  ((HMATRIXB_PRBS_M12PR_Msk & ((value) << HMATRIXB_PRBS_M12PR_Pos)))
-#define HMATRIXB_PRBS_M13PR_Pos     20
-#define HMATRIXB_PRBS_M13PR_Msk     (0xFu << HMATRIXB_PRBS_M13PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 13 Priority */
+#define HMATRIXB_PRBS_M13PR_Pos     20           /**< \brief (HMATRIXB_PRBS) Master 13 Priority */
+#define HMATRIXB_PRBS_M13PR_Msk     (0xFu << HMATRIXB_PRBS_M13PR_Pos)
 #define HMATRIXB_PRBS_M13PR(value)  ((HMATRIXB_PRBS_M13PR_Msk & ((value) << HMATRIXB_PRBS_M13PR_Pos)))
-#define HMATRIXB_PRBS_M14PR_Pos     24
-#define HMATRIXB_PRBS_M14PR_Msk     (0xFu << HMATRIXB_PRBS_M14PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 14 Priority */
+#define HMATRIXB_PRBS_M14PR_Pos     24           /**< \brief (HMATRIXB_PRBS) Master 14 Priority */
+#define HMATRIXB_PRBS_M14PR_Msk     (0xFu << HMATRIXB_PRBS_M14PR_Pos)
 #define HMATRIXB_PRBS_M14PR(value)  ((HMATRIXB_PRBS_M14PR_Msk & ((value) << HMATRIXB_PRBS_M14PR_Pos)))
-#define HMATRIXB_PRBS_M15PR_Pos     28
-#define HMATRIXB_PRBS_M15PR_Msk     (0xFu << HMATRIXB_PRBS_M15PR_Pos) /**< \brief (HMATRIXB_PRBS) Master 15 Priority */
+#define HMATRIXB_PRBS_M15PR_Pos     28           /**< \brief (HMATRIXB_PRBS) Master 15 Priority */
+#define HMATRIXB_PRBS_M15PR_Msk     (0xFu << HMATRIXB_PRBS_M15PR_Pos)
 #define HMATRIXB_PRBS_M15PR(value)  ((HMATRIXB_PRBS_M15PR_Msk & ((value) << HMATRIXB_PRBS_M15PR_Pos)))
 #define HMATRIXB_PRBS_MASK          0xFFFFFFFFu  /**< \brief (HMATRIXB_PRBS) MASK Register */
 
@@ -231,54 +234,70 @@ typedef union {
 #define HMATRIXB_MRCR_OFFSET        0x100        /**< \brief (HMATRIXB_MRCR offset) Master Remap Control Register */
 #define HMATRIXB_MRCR_RESETVALUE    0x00000000   /**< \brief (HMATRIXB_MRCR reset_value) Master Remap Control Register */
 
-#define HMATRIXB_MRCR_RCB0          (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 0 */
-#define   HMATRIXB_MRCR_RCB0_0      (0x0u <<  0) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB0_1      (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB1          (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 1 */
-#define   HMATRIXB_MRCR_RCB1_0      (0x0u <<  1) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB1_1      (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB2          (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 2 */
-#define   HMATRIXB_MRCR_RCB2_0      (0x0u <<  2) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB2_1      (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB3          (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 3 */
-#define   HMATRIXB_MRCR_RCB3_0      (0x0u <<  3) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB3_1      (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB4          (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 4 */
-#define   HMATRIXB_MRCR_RCB4_0      (0x0u <<  4) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB4_1      (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB5          (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 5 */
-#define   HMATRIXB_MRCR_RCB5_0      (0x0u <<  5) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB5_1      (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB6          (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 6 */
-#define   HMATRIXB_MRCR_RCB6_0      (0x0u <<  6) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB6_1      (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB7          (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 7 */
-#define   HMATRIXB_MRCR_RCB7_0      (0x0u <<  7) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB7_1      (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB8          (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 8 */
-#define   HMATRIXB_MRCR_RCB8_0      (0x0u <<  8) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB8_1      (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB9          (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 9 */
-#define   HMATRIXB_MRCR_RCB9_0      (0x0u <<  9) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB9_1      (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB10         (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 10 */
-#define   HMATRIXB_MRCR_RCB10_0     (0x0u << 10) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB10_1     (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB11         (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 11 */
-#define   HMATRIXB_MRCR_RCB11_0     (0x0u << 11) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB11_1     (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB12         (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 12 */
-#define   HMATRIXB_MRCR_RCB12_0     (0x0u << 12) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB12_1     (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB13         (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 13 */
-#define   HMATRIXB_MRCR_RCB13_0     (0x0u << 13) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB13_1     (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB14         (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 14 */
-#define   HMATRIXB_MRCR_RCB14_0     (0x0u << 14) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB14_1     (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
-#define HMATRIXB_MRCR_RCB15         (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 15 */
-#define   HMATRIXB_MRCR_RCB15_0     (0x0u << 15) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
-#define   HMATRIXB_MRCR_RCB15_1     (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB0_Pos      0            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 0 */
+#define HMATRIXB_MRCR_RCB0          (0x1u << HMATRIXB_MRCR_RCB0_Pos)
+#define   HMATRIXB_MRCR_RCB0_DIS    (0x0u <<  0) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB0_ENA    (0x1u <<  0) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB1_Pos      1            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 1 */
+#define HMATRIXB_MRCR_RCB1          (0x1u << HMATRIXB_MRCR_RCB1_Pos)
+#define   HMATRIXB_MRCR_RCB1_DIS    (0x0u <<  1) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB1_ENA    (0x1u <<  1) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB2_Pos      2            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 2 */
+#define HMATRIXB_MRCR_RCB2          (0x1u << HMATRIXB_MRCR_RCB2_Pos)
+#define   HMATRIXB_MRCR_RCB2_DIS    (0x0u <<  2) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB2_ENA    (0x1u <<  2) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB3_Pos      3            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 3 */
+#define HMATRIXB_MRCR_RCB3          (0x1u << HMATRIXB_MRCR_RCB3_Pos)
+#define   HMATRIXB_MRCR_RCB3_DIS    (0x0u <<  3) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB3_ENA    (0x1u <<  3) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB4_Pos      4            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 4 */
+#define HMATRIXB_MRCR_RCB4          (0x1u << HMATRIXB_MRCR_RCB4_Pos)
+#define   HMATRIXB_MRCR_RCB4_DIS    (0x0u <<  4) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB4_ENA    (0x1u <<  4) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB5_Pos      5            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 5 */
+#define HMATRIXB_MRCR_RCB5          (0x1u << HMATRIXB_MRCR_RCB5_Pos)
+#define   HMATRIXB_MRCR_RCB5_DIS    (0x0u <<  5) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB5_ENA    (0x1u <<  5) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB6_Pos      6            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 6 */
+#define HMATRIXB_MRCR_RCB6          (0x1u << HMATRIXB_MRCR_RCB6_Pos)
+#define   HMATRIXB_MRCR_RCB6_DIS    (0x0u <<  6) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB6_ENA    (0x1u <<  6) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB7_Pos      7            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 7 */
+#define HMATRIXB_MRCR_RCB7          (0x1u << HMATRIXB_MRCR_RCB7_Pos)
+#define   HMATRIXB_MRCR_RCB7_DIS    (0x0u <<  7) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB7_ENA    (0x1u <<  7) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB8_Pos      8            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 8 */
+#define HMATRIXB_MRCR_RCB8          (0x1u << HMATRIXB_MRCR_RCB8_Pos)
+#define   HMATRIXB_MRCR_RCB8_DIS    (0x0u <<  8) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB8_ENA    (0x1u <<  8) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB9_Pos      9            /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 9 */
+#define HMATRIXB_MRCR_RCB9          (0x1u << HMATRIXB_MRCR_RCB9_Pos)
+#define   HMATRIXB_MRCR_RCB9_DIS    (0x0u <<  9) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB9_ENA    (0x1u <<  9) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB10_Pos     10           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 10 */
+#define HMATRIXB_MRCR_RCB10         (0x1u << HMATRIXB_MRCR_RCB10_Pos)
+#define   HMATRIXB_MRCR_RCB10_DIS   (0x0u << 10) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB10_ENA   (0x1u << 10) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB11_Pos     11           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 11 */
+#define HMATRIXB_MRCR_RCB11         (0x1u << HMATRIXB_MRCR_RCB11_Pos)
+#define   HMATRIXB_MRCR_RCB11_DIS   (0x0u << 11) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB11_ENA   (0x1u << 11) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB12_Pos     12           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 12 */
+#define HMATRIXB_MRCR_RCB12         (0x1u << HMATRIXB_MRCR_RCB12_Pos)
+#define   HMATRIXB_MRCR_RCB12_DIS   (0x0u << 12) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB12_ENA   (0x1u << 12) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB13_Pos     13           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 13 */
+#define HMATRIXB_MRCR_RCB13         (0x1u << HMATRIXB_MRCR_RCB13_Pos)
+#define   HMATRIXB_MRCR_RCB13_DIS   (0x0u << 13) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB13_ENA   (0x1u << 13) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB14_Pos     14           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 14 */
+#define HMATRIXB_MRCR_RCB14         (0x1u << HMATRIXB_MRCR_RCB14_Pos)
+#define   HMATRIXB_MRCR_RCB14_DIS   (0x0u << 14) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB14_ENA   (0x1u << 14) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
+#define HMATRIXB_MRCR_RCB15_Pos     15           /**< \brief (HMATRIXB_MRCR) Remap Command Bit for Master 15 */
+#define HMATRIXB_MRCR_RCB15         (0x1u << HMATRIXB_MRCR_RCB15_Pos)
+#define   HMATRIXB_MRCR_RCB15_DIS   (0x0u << 15) /**< \brief (HMATRIXB_MRCR) Disable remapped address decoding for master */
+#define   HMATRIXB_MRCR_RCB15_ENA   (0x1u << 15) /**< \brief (HMATRIXB_MRCR) Enable remapped address decoding for master */
 #define HMATRIXB_MRCR_MASK          0x0000FFFFu  /**< \brief (HMATRIXB_MRCR) MASK Register */
 
 /* -------- HMATRIXB_SFR : (HMATRIXB Offset: 0x110) (R/W 32) Special Function Register -------- */
@@ -294,8 +313,8 @@ typedef union {
 #define HMATRIXB_SFR_OFFSET         0x110        /**< \brief (HMATRIXB_SFR offset) Special Function Register */
 #define HMATRIXB_SFR_RESETVALUE     0x00000000   /**< \brief (HMATRIXB_SFR reset_value) Special Function Register */
 
-#define HMATRIXB_SFR_SFR_Pos        0
-#define HMATRIXB_SFR_SFR_Msk        (0xFFFFFFFFu << HMATRIXB_SFR_SFR_Pos) /**< \brief (HMATRIXB_SFR) Special Function Register */
+#define HMATRIXB_SFR_SFR_Pos        0            /**< \brief (HMATRIXB_SFR) Special Function Register */
+#define HMATRIXB_SFR_SFR_Msk        (0xFFFFFFFFu << HMATRIXB_SFR_SFR_Pos)
 #define HMATRIXB_SFR_SFR(value)     ((HMATRIXB_SFR_SFR_Msk & ((value) << HMATRIXB_SFR_SFR_Pos)))
 #define HMATRIXB_SFR_MASK           0xFFFFFFFFu  /**< \brief (HMATRIXB_SFR) MASK Register */
 

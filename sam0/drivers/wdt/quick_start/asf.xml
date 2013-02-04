@@ -6,6 +6,7 @@
 		<build type="c-source" value="qs_wdt_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.wdt"/>
-		<device-support value="samd20g18a"/>
+		<require idref="sam0.drivers.port"/>
+		<device-support value="samd20"/>
 	</module>
 </asf>

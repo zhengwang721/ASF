@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.system.pinmux" caption="Pin Multiplexer Driver">
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="pinmux.h"/>
+		<build type="c-source" value="pinmux.c"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_pinmux"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_pinmux_basic.h"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+</asf>

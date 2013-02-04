@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Non-Volatile Memory driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -353,6 +355,10 @@
 extern "C" {
 #endif
 
+/**
+ * \brief Mask for the error flags in the status register
+ */
+#define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | NVMCTRL_STATUS_LOCKE | NVMCTRL_STATUS_NVME)
 
 /**
  * \brief NVM errors
@@ -562,12 +568,6 @@ struct nvm_config {
 	 *        executed in either mode.
 	 */
 	bool manual_page_write;
-	/** Auto wait states; if enabled, number of wait states are
-	 *  automatically detected(TODO: from where?) and used. If disabled the
-	 *  number of wait states are specified by \ref nvm_config.wait_states.
-	 *  TODO: remove before release? Maybe?
-	 */
-	bool auto_wait_states;
 	/** Number of wait states to insert when reading from flash, to prevent
 	 *  invalid data from being read at high clock frequencies.
 	 */
@@ -608,7 +608,7 @@ struct nvm_parameters {
  *
  * The default configuration is as follows:
  *  \li Power reduction mode enabled after sleep until first NVM access
- *  \li Manual (explicit) page write commands required to commit data
+ *  \li Automatic page commit when full pages are written to
  *  \li Zero wait states when reading flash memory
  *  \li No reserved memory for the EEPROM
  *  \li No protected bootloader section
@@ -624,15 +624,14 @@ static inline void nvm_get_config_defaults(
 
 	/* Write the default configuration for the */
 	config->sleep_power_mode  = NVM_AUTO_WAKE_MODE_WAKEONACCESS;
-	config->manual_page_write = true;
-	//TODO: should this be removed?
-	config->auto_wait_states  = false;
+	config->manual_page_write = false;
 	config->wait_states       = 0;
 	config->eeprom_size       = 0;
 	config->bootloader_size   = 0;
 }
 
-enum status_code nvm_init(const struct nvm_config *const config);
+enum status_code nvm_set_config(
+		const struct nvm_config *const config);
 
 /**
  * \brief Checks if the NVM controller is ready
@@ -668,7 +667,8 @@ static inline bool nvm_is_ready(void)
  * \param[out] parameters    Parameter structure, which holds page size and
  *                           number of pages in the NVM memory
  */
-static inline void nvm_get_parameters(struct nvm_parameters *const parameters)
+static inline void nvm_get_parameters(
+		struct nvm_parameters *const parameters)
 {
 	/* Sanity check parameters */
 	Assert(parameters);
@@ -685,28 +685,30 @@ static inline void nvm_get_parameters(struct nvm_parameters *const parameters)
 
 	/* Mask out page size and number of pages */
 	parameters->page_size  =
-			(param_reg  & NVMCTRL_PARAM_PSZ_Msk) >> NVMCTRL_PARAM_PSZ_Pos;
+			(param_reg & NVMCTRL_PARAM_PSZ_Msk)  >> NVMCTRL_PARAM_PSZ_Pos;
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
-
 }
 
 enum status_code nvm_write_page(
-		const uint32_t dst_page_nr,
+		const uint16_t dst_page_nr,
 		const uint32_t *buf);
 
 enum status_code nvm_read_page(
-		const uint32_t src_page_nr,
+		const uint16_t src_page_nr,
 		uint32_t *buf);
 
-enum status_code nvm_erase_row(const uint32_t row_nr);
+enum status_code nvm_erase_row(
+		const uint16_t row_nr);
 
-enum status_code nvm_erase_block(const uint32_t addr, const uint32_t length);
+enum status_code nvm_erase_block(
+		const uint16_t row_nr,
+		const uint16_t rows);
 
 enum status_code nvm_execute_command(
-		enum nvm_command command,
-		uint32_t address,
-		uint32_t parameter);
+		const enum nvm_command command,
+		const uint32_t address,
+		const uint32_t parameter);
 
 /**
  * \brief Retrieves, if any, error from the last NVM operation.

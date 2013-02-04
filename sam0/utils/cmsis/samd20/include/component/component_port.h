@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \brief Component description for PORT
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +50,7 @@
 /** \addtogroup SAMD20_PORT Port Module */
 /*@{*/
 
-#define REV_PORT       0x100
+#define REV_PORT                    0x100
 
 /* -------- PORT_DIR : (PORT Offset: 0x00) (R/W 32) GROUP Data Direction Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -162,8 +164,8 @@ typedef union {
 #define PORT_CTRL_OFFSET            0x24         /**< \brief (PORT_CTRL offset) Control Register */
 #define PORT_CTRL_RESETVALUE        0x00000000   /**< \brief (PORT_CTRL reset_value) Control Register */
 
-#define PORT_CTRL_SAMPLING_Pos      0
-#define PORT_CTRL_SAMPLING_Msk      (0xFFFFFFFFu << PORT_CTRL_SAMPLING_Pos) /**< \brief (PORT_CTRL) Input Sampling Mode */
+#define PORT_CTRL_SAMPLING_Pos      0            /**< \brief (PORT_CTRL) Input Sampling Mode */
+#define PORT_CTRL_SAMPLING_Msk      (0xFFFFFFFFu << PORT_CTRL_SAMPLING_Pos)
 #define PORT_CTRL_SAMPLING(value)   ((PORT_CTRL_SAMPLING_Msk & ((value) << PORT_CTRL_SAMPLING_Pos)))
 #define PORT_CTRL_MASK              0xFFFFFFFFu  /**< \brief (PORT_CTRL) MASK Register */
 
@@ -193,21 +195,30 @@ typedef union {
 #define PORT_WRCONFIG_OFFSET        0x28         /**< \brief (PORT_WRCONFIG offset) Write Configuration Register */
 #define PORT_WRCONFIG_RESETVALUE    0x00000000   /**< \brief (PORT_WRCONFIG reset_value) Write Configuration Register */
 
-#define PORT_WRCONFIG_PINMASK_Pos    0
-#define PORT_WRCONFIG_PINMASK_Msk    (0xFFFFu << PORT_WRCONFIG_PINMASK_Pos) /**< \brief (PORT_WRCONFIG) Pin Mask for Multiple Pin Configuration */
+#define PORT_WRCONFIG_PINMASK_Pos   0            /**< \brief (PORT_WRCONFIG) Pin Mask for Multiple Pin Configuration */
+#define PORT_WRCONFIG_PINMASK_Msk   (0xFFFFu << PORT_WRCONFIG_PINMASK_Pos)
 #define PORT_WRCONFIG_PINMASK(value) ((PORT_WRCONFIG_PINMASK_Msk & ((value) << PORT_WRCONFIG_PINMASK_Pos)))
-#define PORT_WRCONFIG_PMUXEN        (0x1u << 16) /**< \brief (PORT_WRCONFIG) Select Peripheral Multiplexer */
-#define PORT_WRCONFIG_INEN          (0x1u << 17) /**< \brief (PORT_WRCONFIG) Input Enable */
-#define PORT_WRCONFIG_PULLEN        (0x1u << 18) /**< \brief (PORT_WRCONFIG) Pull Enable */
-#define PORT_WRCONFIG_ODRAIN        (0x1u << 19) /**< \brief (PORT_WRCONFIG) Open Drain Output */
-#define PORT_WRCONFIG_SLEWLIM       (0x1u << 20) /**< \brief (PORT_WRCONFIG) Output Driver Slew Rate Limit Enable */
-#define PORT_WRCONFIG_DRVSTR        (0x1u << 22) /**< \brief (PORT_WRCONFIG) Output Driver Strength Selection */
-#define PORT_WRCONFIG_PMUX_Pos      24
-#define PORT_WRCONFIG_PMUX_Msk      (0xFu << PORT_WRCONFIG_PMUX_Pos) /**< \brief (PORT_WRCONFIG) Peripheral Multiplexing Template */
+#define PORT_WRCONFIG_PMUXEN_Pos    16           /**< \brief (PORT_WRCONFIG) Select Peripheral Multiplexer */
+#define PORT_WRCONFIG_PMUXEN        (0x1u << PORT_WRCONFIG_PMUXEN_Pos)
+#define PORT_WRCONFIG_INEN_Pos      17           /**< \brief (PORT_WRCONFIG) Input Enable */
+#define PORT_WRCONFIG_INEN          (0x1u << PORT_WRCONFIG_INEN_Pos)
+#define PORT_WRCONFIG_PULLEN_Pos    18           /**< \brief (PORT_WRCONFIG) Pull Enable */
+#define PORT_WRCONFIG_PULLEN        (0x1u << PORT_WRCONFIG_PULLEN_Pos)
+#define PORT_WRCONFIG_ODRAIN_Pos    19           /**< \brief (PORT_WRCONFIG) Open Drain Output */
+#define PORT_WRCONFIG_ODRAIN        (0x1u << PORT_WRCONFIG_ODRAIN_Pos)
+#define PORT_WRCONFIG_SLEWLIM_Pos   20           /**< \brief (PORT_WRCONFIG) Output Driver Slew Rate Limit Enable */
+#define PORT_WRCONFIG_SLEWLIM       (0x1u << PORT_WRCONFIG_SLEWLIM_Pos)
+#define PORT_WRCONFIG_DRVSTR_Pos    22           /**< \brief (PORT_WRCONFIG) Output Driver Strength Selection */
+#define PORT_WRCONFIG_DRVSTR        (0x1u << PORT_WRCONFIG_DRVSTR_Pos)
+#define PORT_WRCONFIG_PMUX_Pos      24           /**< \brief (PORT_WRCONFIG) Peripheral Multiplexing Template */
+#define PORT_WRCONFIG_PMUX_Msk      (0xFu << PORT_WRCONFIG_PMUX_Pos)
 #define PORT_WRCONFIG_PMUX(value)   ((PORT_WRCONFIG_PMUX_Msk & ((value) << PORT_WRCONFIG_PMUX_Pos)))
-#define PORT_WRCONFIG_WRPMUX        (0x1u << 28) /**< \brief (PORT_WRCONFIG) Write PMUX Registers */
-#define PORT_WRCONFIG_WRPINCFG      (0x1u << 30) /**< \brief (PORT_WRCONFIG) Write PINCFG Registers */
-#define PORT_WRCONFIG_HWSEL         (0x1u << 31) /**< \brief (PORT_WRCONFIG) Half-Word Select */
+#define PORT_WRCONFIG_WRPMUX_Pos    28           /**< \brief (PORT_WRCONFIG) Write PMUX Registers */
+#define PORT_WRCONFIG_WRPMUX        (0x1u << PORT_WRCONFIG_WRPMUX_Pos)
+#define PORT_WRCONFIG_WRPINCFG_Pos  30           /**< \brief (PORT_WRCONFIG) Write PINCFG Registers */
+#define PORT_WRCONFIG_WRPINCFG      (0x1u << PORT_WRCONFIG_WRPINCFG_Pos)
+#define PORT_WRCONFIG_HWSEL_Pos     31           /**< \brief (PORT_WRCONFIG) Half-Word Select */
+#define PORT_WRCONFIG_HWSEL         (0x1u << PORT_WRCONFIG_HWSEL_Pos)
 #define PORT_WRCONFIG_MASK          0xDF5FFFFFu  /**< \brief (PORT_WRCONFIG) MASK Register */
 
 /* -------- PORT_PMUX : (PORT Offset: 0x30) (R/W  8) GROUP Peripheral Multiplexing Register -------- */
@@ -224,11 +235,11 @@ typedef union {
 #define PORT_PMUX_OFFSET            0x30         /**< \brief (PORT_PMUX offset) Peripheral Multiplexing Register */
 #define PORT_PMUX_RESETVALUE        0x00         /**< \brief (PORT_PMUX reset_value) Peripheral Multiplexing Register */
 
-#define PORT_PMUX_PMUXE_Pos         0
-#define PORT_PMUX_PMUXE_Msk         (0xFu << PORT_PMUX_PMUXE_Pos) /**< \brief (PORT_PMUX) Peripheral Multiplexing for Even-Numbered Pin */
+#define PORT_PMUX_PMUXE_Pos         0            /**< \brief (PORT_PMUX) Peripheral Multiplexing for Even-Numbered Pin */
+#define PORT_PMUX_PMUXE_Msk         (0xFu << PORT_PMUX_PMUXE_Pos)
 #define PORT_PMUX_PMUXE(value)      ((PORT_PMUX_PMUXE_Msk & ((value) << PORT_PMUX_PMUXE_Pos)))
-#define PORT_PMUX_PMUXO_Pos         4
-#define PORT_PMUX_PMUXO_Msk         (0xFu << PORT_PMUX_PMUXO_Pos) /**< \brief (PORT_PMUX) Peripheral Multiplexing for Odd-Numbered Pin */
+#define PORT_PMUX_PMUXO_Pos         4            /**< \brief (PORT_PMUX) Peripheral Multiplexing for Odd-Numbered Pin */
+#define PORT_PMUX_PMUXO_Msk         (0xFu << PORT_PMUX_PMUXO_Pos)
 #define PORT_PMUX_PMUXO(value)      ((PORT_PMUX_PMUXO_Msk & ((value) << PORT_PMUX_PMUXO_Pos)))
 #define PORT_PMUX_MASK              0xFFu        /**< \brief (PORT_PMUX) MASK Register */
 
@@ -252,15 +263,19 @@ typedef union {
 #define PORT_PINCFG_OFFSET          0x40         /**< \brief (PORT_PINCFG offset) Pin Configuration Register */
 #define PORT_PINCFG_RESETVALUE      0x00         /**< \brief (PORT_PINCFG reset_value) Pin Configuration Register */
 
-#define PORT_PINCFG_PMUXEN          (0x1u <<  0) /**< \brief (PORT_PINCFG) Select Peripheral Multiplexer */
-#define PORT_PINCFG_INEN            (0x1u <<  1) /**< \brief (PORT_PINCFG) Input Enable */
-#define PORT_PINCFG_PULLEN          (0x1u <<  2) /**< \brief (PORT_PINCFG) Pull Enable */
-#define PORT_PINCFG_ODRAIN          (0x1u <<  3) /**< \brief (PORT_PINCFG) Open Drain Output */
-#define PORT_PINCFG_SLEWLIM         (0x1u <<  4) /**< \brief (PORT_PINCFG) Output Driver Slew Rate Limit Enable */
-#define PORT_PINCFG_DRVSTR          (0x1u <<  6) /**< \brief (PORT_PINCFG) Output Driver Strength Selection */
+#define PORT_PINCFG_PMUXEN_Pos      0            /**< \brief (PORT_PINCFG) Select Peripheral Multiplexer */
+#define PORT_PINCFG_PMUXEN          (0x1u << PORT_PINCFG_PMUXEN_Pos)
+#define PORT_PINCFG_INEN_Pos        1            /**< \brief (PORT_PINCFG) Input Enable */
+#define PORT_PINCFG_INEN            (0x1u << PORT_PINCFG_INEN_Pos)
+#define PORT_PINCFG_PULLEN_Pos      2            /**< \brief (PORT_PINCFG) Pull Enable */
+#define PORT_PINCFG_PULLEN          (0x1u << PORT_PINCFG_PULLEN_Pos)
+#define PORT_PINCFG_ODRAIN_Pos      3            /**< \brief (PORT_PINCFG) Open Drain Output */
+#define PORT_PINCFG_ODRAIN          (0x1u << PORT_PINCFG_ODRAIN_Pos)
+#define PORT_PINCFG_SLEWLIM_Pos     4            /**< \brief (PORT_PINCFG) Output Driver Slew Rate Limit Enable */
+#define PORT_PINCFG_SLEWLIM         (0x1u << PORT_PINCFG_SLEWLIM_Pos)
+#define PORT_PINCFG_DRVSTR_Pos      6            /**< \brief (PORT_PINCFG) Output Driver Strength Selection */
+#define PORT_PINCFG_DRVSTR          (0x1u << PORT_PINCFG_DRVSTR_Pos)
 #define PORT_PINCFG_MASK            0x5Fu        /**< \brief (PORT_PINCFG) MASK Register */
-
-#define PORT_GROUPS                 2
 
 /** \brief PortGroup hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -286,8 +301,7 @@ typedef struct {
 /** \brief PORT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
-       PortGroup                 Group[PORT_GROUPS]; /**< \brief Offset: 0x00 PortGroup groups */
-       PortGroup                 Reserved1[4 - PORT_GROUPS];
+       PortGroup                 Group[2];    /**< \brief Offset: 0x00 PortGroup groups [GROUPS] */
 } Port;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

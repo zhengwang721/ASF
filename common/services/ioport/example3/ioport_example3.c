@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service example 3.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,7 +65,10 @@
  *  - SAM4S evaluation kit
  *  - SAM4E evaluation kit
  *  - SAM4L evaluation kit
+ *  - SAM3X evaluation kit
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
+ *  - ATmega256RFR2 Xplained Pro kit
+ *
  * \section example_description Description of the example
  * This example reads input from a button and outputs it on a LED.
  *

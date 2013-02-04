@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 SERCOM USART Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,7 +41,7 @@
  *
  */
 #include "usart.h"
-
+#include <pinmux.h>
 #ifdef USART_ASYNC
 #  include "usart_async.h"
 #endif
@@ -52,6 +54,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 		const struct usart_conf const *config)
 {
 	/* Temporary registers. */
+
 	uint16_t baud_val = 0;
 	uint32_t usart_freq;
 	enum status_code status_code = STATUS_OK;
@@ -63,38 +66,36 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
-	/* Set SERCOM gclk generator according to config */
-	//status_code = sercom_set_gclk_generator(config->generator_source,
-	//	config->run_in_standby, false);
-	if (status_code != STATUS_OK) {
-		return status_code;
-	}
-
-
-	//TODO: change clock_polarity to enum if we don't get bp's in the header-file
+	/* TODO: change clock_polarity to enum if we don't get bp's in the
+	 * header-file */
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (config->data_order) | (config->mux_settings)
-		| (config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL);
+			| (config->clock_polarity_inverted <<
+			SERCOM_USART_CTRLA_CPOL_Pos);
 
 	/* Get baud value from mode and clock */
 	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
-	//	usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
-	//	status_code = _sercom_get_sync_baud_val(config->baudrate, usart_freq, &baud_val);
-	//} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
-	//		config->use_external_clock) {
+		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		status_code = _sercom_get_sync_baud_val(config->baudrate,
+				usart_freq, &baud_val);
+	}
 
-	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
-	//	usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
-	//	status_code = _sercom_get_async_baud_val(config->baudrate, usart_freq, &baud_val);
+		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		status_code = _sercom_get_async_baud_val(config->baudrate,
+				usart_freq, &baud_val);
+	}
 
-	} else if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
+	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
 			config->use_external_clock) {
 		/* Calculate baud value */
-	//	status_code = _sercom_get_async_baud_val(config->baudrate, config->ext_clock_freq, &baud_val);
+		status_code = _sercom_get_async_baud_val(config->baudrate,
+				config->ext_clock_freq,
+				&baud_val);
 	}
 
 	/* Check if calculating the baud rate failed */
@@ -111,18 +112,21 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 
 	/* Set sample mode */
 	ctrla |= config->transfer_mode;
+	ctrla |= SERCOM_USART_CTRLA_MODE(0);
 
-	/* Write configuration to CTRLA */
-	usart_module->CTRLA.reg = ctrla;
+	if (config->use_external_clock == false) {
+		ctrla |= SERCOM_USART_CTRLA_CSRC;
+	}
 
 	/* Set stopbits and character size */
 	ctrlb = config->stopbits | config->char_size;
 
 	/* set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
-		ctrlb |= SERCOM_USART_CTRLA_FORM(0);
+		ctrla |= SERCOM_USART_CTRLA_FORM(1);
+		ctrlb |= config->parity;
 	} else {
-		ctrlb |= (SERCOM_USART_CTRLA_FORM(1) | config->parity);
+		ctrla |= SERCOM_USART_CTRLA_FORM(0);
 	}
 
 	/* Wait until synchronization is complete */
@@ -130,6 +134,10 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 
 	/* Write configuration to CTRLB */
 	usart_module->CTRLB.reg = ctrlb;
+
+	_usart_wait_for_sync(dev_inst);
+	/* Write configuration to CTRLA */
+	usart_module->CTRLA.reg = ctrla;
 
 	return STATUS_OK;
 }
@@ -153,11 +161,15 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * \retval STATUS_ERR_DENIED               The USART have not been disabled in
  *                                         advance of initialization
  * \retval STATUS_ERR_INVALID_ARG          The configuration struct contains
- *                                         invalid configuration for the sample_mode
+ *                                         invalid configuration for the
+ * sample_mode
  * \retval STATUS_ERR_ALREADY_INITIALIZED  The SERCOM instance has already been
- *                                         initialized with different clock configuration
- * \retval STATUS_ERR_BAUD_UNAVAILABLE     The BAUD rate given by the configuration
- *                                         struct due to sample_mode or clock frequency
+ *                                         initialized with different clock
+ * configuration
+ * \retval STATUS_ERR_BAUD_UNAVAILABLE     The BAUD rate given by the
+ * configuration
+ *                                         struct due to sample_mode or clock
+ * frequency
  */
 enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 		Sercom *const hw_dev, const struct usart_conf *const config)
@@ -167,20 +179,81 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	Assert(hw_dev);
 	Assert(config);
 
+	struct system_gclk_ch_conf gclk_ch_conf;
 	enum status_code status_code = STATUS_OK;
+	uint32_t sercom_index = 0;
+	uint32_t gclk_index = 0;
+	struct system_pinmux_conf pin_conf;
+
+	uint32_t pad0 = config->pinout_pad0;
+	uint32_t pad1 = config->pinout_pad1;
+	uint32_t pad2 = config->pinout_pad2;
+	uint32_t pad3 = config->pinout_pad3;
 
 	/* Assign module pointer to software instance struct */
 	dev_inst->hw_dev = hw_dev;
-
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+
+	/* Set up the GCLK for the module */
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
+
+	sercom_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
+
+	gclk_index =  sercom_index + 13;
+
+	gclk_ch_conf.source_generator = config->generator_source;
+	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
+	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
+	system_gclk_ch_enable(gclk_index);
+	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	system_pinmux_get_config_defaults(&pin_conf);
+
+	/* Enable the user interface clock in the PM */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
+			(1 << (sercom_index + 2)));
+
+	/* Configure Pins */
+	system_pinmux_get_config_defaults(&pin_conf);
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+
+	/* SERCOM PAD0 */
+	if (pad0 == PINMUX_DEFAULT) {
+		pad0 = _sercom_get_default_pad(hw_dev, 0);
+	}
+
+	pin_conf.mux_position = pad0 & 0xFFFF;
+	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
+
+	/* SERCOM PAD1 */
+	if (pad1 == PINMUX_DEFAULT) {
+		pad1 = _sercom_get_default_pad(hw_dev, 1);
+	}
+
+	pin_conf.mux_position = pad1 & 0xFFFF;
+	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+
+	/* SERCOM PAD2 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(hw_dev, 2);
+	}
+
+	pin_conf.mux_position = pad2 & 0xFFFF;
+
+	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
+
+	/* SERCOM PAD3 */
+	if (pad2 == PINMUX_DEFAULT) {
+		pad2 = _sercom_get_default_pad(hw_dev, 3);
+	}
+
+	pin_conf.mux_position = pad3 & 0xFFFF;
+	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
 	/* Wait for synchronization to be complete*/
 	_usart_wait_for_sync(dev_inst);
 
-	if (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
-		/* Reset is ongoing. Abort. */
-		return STATUS_ERR_BUSY;
+	while (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
 	}
 
 	if (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
@@ -209,7 +282,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
 	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
-	_sercom_set_handler(instance_index, (void *)&usart_async_handler);
+	/* _sercom_set_handler(instance_index, (void *)&usart_async_handler); */
 	_sercom_instances[instance_index] = dev_inst;
 #endif
 	/* Set configuration according to the config struct */
@@ -244,10 +317,11 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	if (dev_inst->remaining_tx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
+
 #else
 	/* Check if USART is ready for new data */
 	if (!usart_is_interrupt_flag_set(dev_inst,
-				USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
+			USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
 		/* Return error code */
 		return STATUS_ERR_BUSY;
 	}
@@ -301,6 +375,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	if (dev_inst->remaining_rx_buffer_length > 0) {
 		return STATUS_ERR_BUSY;
 	}
+
 #else
 	/* Check if USART has new data */
 	if (!usart_is_interrupt_flag_set(dev_inst,
@@ -317,7 +392,9 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	_usart_wait_for_sync(dev_inst);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
-	error_code = (uint8_t)(usart_module->STATUS.reg & SERCOM_USART_STATUS_MASK);
+	error_code
+		= (uint8_t)(usart_module->STATUS.reg &
+			SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
 	if (error_code) {
@@ -325,19 +402,17 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_FERR;
 			return STATUS_ERR_BAD_FORMAT;
-
 		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
 			return STATUS_ERR_OVERFLOW;
-
 		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
+			usart_module->STATUS.reg &= SERCOM_USART_STATUS_PERR;
 			return STATUS_ERR_BAD_DATA;
 		}
 	}
@@ -396,9 +471,10 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Blocks while buffer is being transferred */
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
-		 * operation if it doesn't get ready within the timeout*/
+		* operation if it doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(dev_inst, USART_INTERRUPT_FLAG_RX_COMPLETE)) {
+			if (usart_is_interrupt_flag_set(dev_inst,
+					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;
@@ -474,7 +550,8 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(dev_inst, USART_INTERRUPT_FLAG_RX_COMPLETE)) {
+			if (usart_is_interrupt_flag_set(dev_inst,
+					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;

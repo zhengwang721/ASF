@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Peripheral Digital to Analog Converter Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,6 +41,8 @@
  *
  */
 #include "dac.h"
+#include <system.h>
+#include <pinmux.h>
 
 /**
  * \brief Resets the DAC module
@@ -92,13 +96,8 @@ static void _dac_set_config(
 	/* Configure GCLK channel and enable clock */
 	gclk_ch_conf.source_generator = config->clock_source;
 
-	#if defined (REVB)
 	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->standby_sleep_enable;
-	#else
-	/* Set the GCLK channel sleep enable mode */
-	gclk_ch_conf.enable_during_sleep = config->standby_sleep_enable;
-	#endif
+	gclk_ch_conf.run_in_standby = config->run_in_standby;
 
 	/* Apply configuration and enable the GCLK channel */
 	system_gclk_ch_set_config(DAC_GCLK_ID, &gclk_ch_conf);
@@ -117,7 +116,7 @@ static void _dac_set_config(
 	}
 
 	/* Enable DAC in standby sleep mode if configured */
-	if (config->standby_sleep_enable) {
+	if (config->run_in_standby) {
 		dac_module->CTRLA.reg |= DAC_CTRLA_RUNSTDBY;
 	}
 }
@@ -189,6 +188,19 @@ void dac_init(
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
+
+	/* MUX the DAC VOUT pin */
+	struct system_pinmux_conf pin_conf;
+	system_pinmux_get_config_defaults(&pin_conf);
+
+	/* Set up the DAC VOUT pin */
+	pin_conf.mux_position = MUX_PA00H_DAC_VOUT;
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PA00H_DAC_VOUT, &pin_conf);
 
 	/* Write configuration to module */
 	_dac_set_config(dev_inst, config);

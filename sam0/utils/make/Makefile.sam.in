@@ -198,8 +198,7 @@ endif
 ifeq ($(VERBOSE), 1)
   Q =
 else
-#  Q = @
-  Q =
+  Q = @
 endif
 
 arflags-gnu-y           := $(ARFLAGS)
@@ -403,9 +402,9 @@ objfiles: $(obj-y)
 $(build-dir)%.o: %.c $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING)
 	$(Q)$(CC) $(c_flags) -c $< -o $@
@@ -414,9 +413,9 @@ endif
 $(build-dir)%.o: %.cpp $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_COMPILING_CXX)
 	$(Q)$(CXX) $(cxx_flags) -c $< -o $@
@@ -425,9 +424,9 @@ endif
 $(build-dir)%.o: %.S $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk
 	@echo $(MSG_MKDIR)
 ifeq ($(os),Windows)
-	-mkdir $(subst /,\,$(dir $@))
+	$(Q)-mkdir -p $(subst \/,\,$(dir $@))
 else
-	-mkdir -p $(dir $@)
+	$(Q)-mkdir -p $(dir $@)
 endif
 	@echo $(MSG_ASSEMBLING)
 	$(Q)$(CC) $(a_flags) -c $< -o $@
@@ -448,7 +447,6 @@ ifeq ($(target_type),elf)
 # if the common Makefile.sam.in or project config.mk is changed.
 $(target): $(linker_script) $(PRJ_PATH)/sam0/utils/make/Makefile.sam.in config.mk $(obj-y)
 	@echo $(MSG_LINKING)
-	@echo $(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	$(Q)$(LD) $(l_flags) $(obj-y) $(libflags-gnu-y) -o $@
 	@echo $(MSG_SIZE)
 	$(Q)$(SIZE) -Ax $@

@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \brief Top header file for SAMD20
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,16 +44,36 @@
 #ifndef _SAMD20_
 #define _SAMD20_
 
-#if defined __SAMD20G16A__
-  #include "samd2064g3.h"
+#if   defined __SAMD20E14A__
+  #include "samd20e14a.h"
+#elif defined __SAMD20E15A__
+  #include "samd20e15a.h"
 #elif defined __SAMD20E16A__
-  #include "samd2064g4.h"
-#elif defined __SAMD20G17A__
-  #include "samd20128g3.h"
+  #include "samd20e16a.h"
 #elif defined __SAMD20E17A__
-  #include "samd20128g4.h"
+  #include "samd20e17a.h"
+#elif defined __SAMD20E18A__
+  #include "samd20e18a.h"
+#elif defined __SAMD20G14A__
+  #include "samd20g14a.h"
+#elif defined __SAMD20G15A__
+  #include "samd20g15a.h"
+#elif defined __SAMD20G16A__
+  #include "samd20g16a.h"
+#elif defined __SAMD20G17A__
+  #include "samd20g17a.h"
 #elif defined __SAMD20G18A__
-  #include "samd20256g3.h"
+  #include "samd20g18a.h"
+#elif defined __SAMD20J14A__
+  #include "samd20j14a.h"
+#elif defined __SAMD20J15A__
+  #include "samd20j15a.h"
+#elif defined __SAMD20J16A__
+  #include "samd20j16a.h"
+#elif defined __SAMD20J17A__
+  #include "samd20j17a.h"
+#elif defined __SAMD20J18A__
+  #include "samd20j18a.h"
 #else
   #error Library does not support the specified device.
 #endif

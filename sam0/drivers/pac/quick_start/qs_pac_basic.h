@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 PAC Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,14 +65,12 @@
  * \section pac_basic_use_case_workflow Workflow
  * -# Make function to set up PORT module.
  *  - \snippet qs_pac_basic.c pin_setup
- * -# Initialize module PORT.
+ * -# Initialize the system peripherals and set up some GPIO port pins.
  *  - \snippet qs_pac_basic.c init
  * -# Lock peripheral access for PORT
  *  - \snippet qs_pac_basic.c init_lock
- * -# Set sanity argument, can be set anywhere before the actual check.
- *  - \snippet qs_pac_basic.c set_sanity
  * -# Enable global interrupts.
- *  - \snippet qs_pac_basic.c sei
+ *  - \snippet qs_pac_basic.c enable_interrupts
  * -# Loop to wait for edge detect.
  *  - \snippet qs_pac_basic.c button_press
  * -# Disable interrupts globally
@@ -81,10 +81,8 @@
  *  - \snippet qs_pac_basic.c alter_config
  * -# Lock the peripheral registers.
  *  - \snippet qs_pac_basic.c lock_perph
- * -# Clear the sanity flag.
- *  - \snippet qs_pac_basic.c clear_sanity
  * -# Re-enable global interrupts.
- *  - \snippet qs_pac_basic.c enable_interrupts
+ *  - \snippet qs_pac_basic.c enable_interrupts_2
  * -# Start inf wait loop.
  *  - \snippet qs_pac_basic.c inf_loop
  */

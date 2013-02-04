@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,6 +48,7 @@
 #include <system.h>
 #include <clock.h>
 #include "sercom_interrupts.h"
+#include "sercom_pinout.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,6 +99,8 @@ enum status_code _sercom_get_sync_baud_val(uint32_t baudrate,
 
 enum status_code _sercom_get_async_baud_val(uint32_t baudrate,
 		uint32_t peripheral_clock, uint16_t *baudval);
+
+uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad);
 
 /** @} */
 

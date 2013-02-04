@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Generic Clock Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -200,10 +200,10 @@ struct system_gclk_gen_conf {
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
 	uint32_t division_factor;
-	#if defined (REVB)
-	/** If \c true the clock is kept enabled during device standby mode */
+	/** If \c true the clock is kept enabled during device standby mode. */
 	bool run_in_standby;
-	#endif
+	/** If \c true, enables GCLK generator clock output to a GPIO pin. */
+	bool output_enable;
 };
 
 /** \brief Generic Clock configuration structure.
@@ -215,10 +215,8 @@ struct system_gclk_gen_conf {
 struct system_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
-	#if !defined (REVB)
 	/** If \c true, the clock is kept enabled during device standby mode. */
-	bool enable_during_sleep;
-	#endif
+	bool run_in_standby;
 };
 
 
@@ -259,9 +257,8 @@ static inline void system_gclk_gen_get_config_defaults(
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
 	config->source_clock       = 0;
-	#if defined (REVB)
 	config->run_in_standby     = false;
-	#endif
+	config->output_enable      = false;
 }
 
 void system_gclk_gen_set_config(
@@ -304,7 +301,7 @@ static inline void system_gclk_ch_get_config_defaults(
 	config->source_generator = 0;
 
 	#if !defined (REVB)
-	config->enable_during_sleep = false;
+	config->run_in_standby = false;
 	#endif
 }
 

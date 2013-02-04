@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 RTC Basic Usage Example
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,12 +42,10 @@
  */
 #include <asf.h>
 
-void config_rtc_count(void);
-
 //! [initiate]
-void config_rtc_count(void)
+static void config_rtc_count(void)
 {
-	/* Initialize RTC in 16 bit count mode. */
+
 //! [set_conf]
 	struct rtc_count_conf config;
 //! [set_conf]
@@ -57,11 +57,11 @@ void config_rtc_count(void)
 //! [set_config]
 	config.mode = RTC_COUNT_MODE_16BIT;
 	config.continuously_update = true;
-	config.compare_values[0] = 2000;
+	config.compare_values[0] = 10;
 //! [set_config]
-
 //! [init_rtc]
 	rtc_count_init(&config);
+
 //! [init_rtc]
 
 //! [enable]
@@ -73,21 +73,28 @@ void config_rtc_count(void)
 int main(void)
 {
 	/* Initialize system. Must configure conf_clocks.h first. */
-	//system_init();
-//! [add_main]
-	config_rtc_count();
+//! [system]
+	system_init();
+//! [system]
 
-	rtc_count_set_count(1000);
+//! [add_main]
+
+	config_rtc_count();
 //! [add_main]
 
 //! [implementation_code]
+//! [period]
+	rtc_count_set_period(20);
+//! [period]
+
 	while(1) {
 //! [poll]
 		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
-			/* Do something. */
+			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
+			/* Do something */
 		}
 //! [poll]
 	}
 //! [implementation_code]
-	return 0;
+
 }

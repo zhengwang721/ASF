@@ -6,9 +6,11 @@
  * This file defines various status codes returned by functions,
  * indicating success or failure as well as what kind of failure.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -99,6 +101,7 @@ enum status_code {
 	STATUS_ERR_DENIED                 = STATUS_CATEGORY_COMMON | 0x0c,
 	STATUS_ERR_ALREADY_INITIALIZED    = STATUS_CATEGORY_COMMON | 0x0d,
 	STATUS_ERR_OVERFLOW               = STATUS_CATEGORY_COMMON | 0x0e,
+	STATUS_ERR_NOT_INITALIZATED       = STATUS_CATEGORY_COMMON | 0x0f,
 
 	STATUS_ERR_SAMPLERATE_UNAVAILABLE = STATUS_CATEGORY_ANALOG | 0x00,
 	STATUS_ERR_RESOLUTION_UNAVAILABLE = STATUS_CATEGORY_ANALOG | 0x01,

@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Non Volatile Memory Driver Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,67 +44,53 @@
 
 void configure_nvm(void);
 
-//! [nvm_basic_setup]
-/* Buffer with same size of a page */
-//! [nvm_basic_def]
-/*   */
-#define BUFFER_SIZE 0x40
-//! [nvm_basic_def]
-
-/* Configuration function */
+//! [setup]
 void configure_nvm(void)
 {
-	/* Variable for the function */
-	//! [nvm_basic_var1]
+//! [setup_1]
 	struct nvm_config config;
-	//! [nvm_basic_var1]
+//! [setup_1]
 
-	/* Initialize the NVM controller */
-	//! [nvm_basic_setup_load]
+//! [setup_2]
 	nvm_get_config_defaults(&config);
-	//! [nvm_basic_setup_load]
-	//! [nvm_basic_setup_init]
-	nvm_init(&config);
-	//! [nvm_basic_setup_init]
-	//! [nvm_basic_setup_main]
+//! [setup_2]
+//! [setup_3]
+	nvm_set_config(&config);
+//! [setup_3]
 }
-//! [nvm_basic_setup]
-
+//! [setup]
 
 int main(void)
 {
-//! [nvm_basic_main]
-	//! [nvm_basic_setup_main]
-	/* Variables for the QuickStart */
-	//! [nvm_basic_var2]
-	uint32_t buf[BUFFER_SIZE];
-	//! [nvm_basic_var2]
-
-	/* Configure the NVM */
-	//! [nvm_basic_config]
+	//! [setup_init]
 	configure_nvm();
-	//! [nvm_basic_config]
+	//! [setup_init]
 
-	/* Copy content from page 0 to page 1 */
-	//! [nvm_basic_read_page]
-	nvm_read_page(0, (uint32_t *)&buf);
-	//! [nvm_basic_read_page]
-	//! [nvm_basic_write_page]
-	nvm_write_page(1, (uint32_t *)&buf);
-	//! [nvm_basic_write_page]
+//! [main]
+	//! [main_1]
+	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
+	//! [main_1]
 
-	/* Infinite loop */
-	//! [nvm_basic_inf_loop]
-	while (true) {
-		/* Intentionally left empty */
+	//! [main_2]
+	for (uint32_t i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+		page_buffer[i] = i;
 	}
-	//! [nvm_basic_inf_loop]
+	//! [main_2]
 
-	/* Return from main loop */
-	//! [nvm_basic_return]
-	return 0;
-	//! [nvm_basic_return]
+	//! [main_3]
+	nvm_erase_row(100);
+	//! [main_3]
+	//! [main_4]
+	nvm_write_page(100, (uint32_t *)&page_buffer);
+	//! [main_4]
 
-//! [nvm_basic_main]
+	//! [main_5]
+	nvm_read_page(100, (uint32_t *)&page_buffer);
+	//! [main_5]
+//! [main]
+
+	while (true) {
+		/* Do nothing */
+	}
 }
 

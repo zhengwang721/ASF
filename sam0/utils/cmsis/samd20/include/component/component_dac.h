@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \brief Component description for DAC
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +50,7 @@
 /** \addtogroup SAMD20_DAC Digital Analog Converter */
 /*@{*/
 
-#define REV_DAC        0x100
+#define REV_DAC                     0x100
 
 /* -------- DAC_CTRLA : (DAC Offset: 0x0) (R/W  8) Control Register A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -66,9 +68,12 @@ typedef union {
 #define DAC_CTRLA_OFFSET            0x0          /**< \brief (DAC_CTRLA offset) Control Register A */
 #define DAC_CTRLA_RESETVALUE        0x00         /**< \brief (DAC_CTRLA reset_value) Control Register A */
 
-#define DAC_CTRLA_SWRST             (0x1u <<  0) /**< \brief (DAC_CTRLA) Software Reset */
-#define DAC_CTRLA_ENABLE            (0x1u <<  1) /**< \brief (DAC_CTRLA) Enable */
-#define DAC_CTRLA_RUNSTDBY          (0x1u <<  2) /**< \brief (DAC_CTRLA) Run during Standby */
+#define DAC_CTRLA_SWRST_Pos         0            /**< \brief (DAC_CTRLA) Software Reset */
+#define DAC_CTRLA_SWRST             (0x1u << DAC_CTRLA_SWRST_Pos)
+#define DAC_CTRLA_ENABLE_Pos        1            /**< \brief (DAC_CTRLA) Enable */
+#define DAC_CTRLA_ENABLE            (0x1u << DAC_CTRLA_ENABLE_Pos)
+#define DAC_CTRLA_RUNSTDBY_Pos      2            /**< \brief (DAC_CTRLA) Run during Standby */
+#define DAC_CTRLA_RUNSTDBY          (0x1u << DAC_CTRLA_RUNSTDBY_Pos)
 #define DAC_CTRLA_MASK              0x07u        /**< \brief (DAC_CTRLA) MASK Register */
 
 /* -------- DAC_CTRLB : (DAC Offset: 0x1) (R/W  8) Control Register B -------- */
@@ -89,12 +94,16 @@ typedef union {
 #define DAC_CTRLB_OFFSET            0x1          /**< \brief (DAC_CTRLB offset) Control Register B */
 #define DAC_CTRLB_RESETVALUE        0x00         /**< \brief (DAC_CTRLB reset_value) Control Register B */
 
-#define DAC_CTRLB_EOEN              (0x1u <<  0) /**< \brief (DAC_CTRLB) Output Buffer Enable */
-#define DAC_CTRLB_IOEN              (0x1u <<  1) /**< \brief (DAC_CTRLB) Internal DAC Output Channel Enabled for AC or ADC */
-#define DAC_CTRLB_LEFTADJ           (0x1u <<  2) /**< \brief (DAC_CTRLB) Left-Adjusted Value */
-#define DAC_CTRLB_VPD               (0x1u <<  3) /**< \brief (DAC_CTRLB) Voltage Pump Disable */
-#define DAC_CTRLB_REFSEL_Pos        6
-#define DAC_CTRLB_REFSEL_Msk        (0x3u << DAC_CTRLB_REFSEL_Pos) /**< \brief (DAC_CTRLB) Voltage Reference Select for DAC */
+#define DAC_CTRLB_EOEN_Pos          0            /**< \brief (DAC_CTRLB) Output Buffer Enable */
+#define DAC_CTRLB_EOEN              (0x1u << DAC_CTRLB_EOEN_Pos)
+#define DAC_CTRLB_IOEN_Pos          1            /**< \brief (DAC_CTRLB) Internal DAC Output Channel Enabled for AC or ADC */
+#define DAC_CTRLB_IOEN              (0x1u << DAC_CTRLB_IOEN_Pos)
+#define DAC_CTRLB_LEFTADJ_Pos       2            /**< \brief (DAC_CTRLB) Left-Adjusted Value */
+#define DAC_CTRLB_LEFTADJ           (0x1u << DAC_CTRLB_LEFTADJ_Pos)
+#define DAC_CTRLB_VPD_Pos           3            /**< \brief (DAC_CTRLB) Voltage Pump Disable */
+#define DAC_CTRLB_VPD               (0x1u << DAC_CTRLB_VPD_Pos)
+#define DAC_CTRLB_REFSEL_Pos        6            /**< \brief (DAC_CTRLB) Voltage Reference Select for DAC */
+#define DAC_CTRLB_REFSEL_Msk        (0x3u << DAC_CTRLB_REFSEL_Pos)
 #define DAC_CTRLB_REFSEL(value)     ((DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos)))
 #define DAC_CTRLB_MASK              0xCFu        /**< \brief (DAC_CTRLB) MASK Register */
 
@@ -113,8 +122,10 @@ typedef union {
 #define DAC_EVCTRL_OFFSET           0x2          /**< \brief (DAC_EVCTRL offset) Event Control Register */
 #define DAC_EVCTRL_RESETVALUE       0x00         /**< \brief (DAC_EVCTRL reset_value) Event Control Register */
 
-#define DAC_EVCTRL_STARTEI          (0x1u <<  0) /**< \brief (DAC_EVCTRL) Start Conversion Event Input */
-#define DAC_EVCTRL_EMPTYEO          (0x1u <<  1) /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output */
+#define DAC_EVCTRL_STARTEI_Pos      0            /**< \brief (DAC_EVCTRL) Start Conversion Event Input */
+#define DAC_EVCTRL_STARTEI          (0x1u << DAC_EVCTRL_STARTEI_Pos)
+#define DAC_EVCTRL_EMPTYEO_Pos      1            /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output */
+#define DAC_EVCTRL_EMPTYEO          (0x1u << DAC_EVCTRL_EMPTYEO_Pos)
 #define DAC_EVCTRL_MASK             0x03u        /**< \brief (DAC_EVCTRL) MASK Register */
 
 /* -------- DAC_TEST : (DAC Offset: 0x3) (R/W  8) Test Register -------- */
@@ -131,7 +142,8 @@ typedef union {
 #define DAC_TEST_OFFSET             0x3          /**< \brief (DAC_TEST offset) Test Register */
 #define DAC_TEST_RESETVALUE         0x00         /**< \brief (DAC_TEST reset_value) Test Register */
 
-#define DAC_TEST_TESTEN             (0x1u <<  0) /**< \brief (DAC_TEST) Test Enable */
+#define DAC_TEST_TESTEN_Pos         0            /**< \brief (DAC_TEST) Test Enable */
+#define DAC_TEST_TESTEN             (0x1u << DAC_TEST_TESTEN_Pos)
 #define DAC_TEST_MASK               0x01u        /**< \brief (DAC_TEST) MASK Register */
 
 /* -------- DAC_INTENCLR : (DAC Offset: 0x4) (R/W  8) Interrupt Enable Clear Register -------- */
@@ -150,9 +162,12 @@ typedef union {
 #define DAC_INTENCLR_OFFSET         0x4          /**< \brief (DAC_INTENCLR offset) Interrupt Enable Clear Register */
 #define DAC_INTENCLR_RESETVALUE     0x00         /**< \brief (DAC_INTENCLR reset_value) Interrupt Enable Clear Register */
 
-#define DAC_INTENCLR_UNDERRUN       (0x1u <<  0) /**< \brief (DAC_INTENCLR) Underrun Interrupt Disable */
-#define DAC_INTENCLR_EMPTY          (0x1u <<  1) /**< \brief (DAC_INTENCLR) Empty Interrupt Disable */
-#define DAC_INTENCLR_READY          (0x1u <<  2) /**< \brief (DAC_INTENCLR) Ready Interrupt Disable */
+#define DAC_INTENCLR_UNDERRUN_Pos   0            /**< \brief (DAC_INTENCLR) Underrun Interrupt Disable */
+#define DAC_INTENCLR_UNDERRUN       (0x1u << DAC_INTENCLR_UNDERRUN_Pos)
+#define DAC_INTENCLR_EMPTY_Pos      1            /**< \brief (DAC_INTENCLR) Empty Interrupt Disable */
+#define DAC_INTENCLR_EMPTY          (0x1u << DAC_INTENCLR_EMPTY_Pos)
+#define DAC_INTENCLR_READY_Pos      2            /**< \brief (DAC_INTENCLR) Ready Interrupt Disable */
+#define DAC_INTENCLR_READY          (0x1u << DAC_INTENCLR_READY_Pos)
 #define DAC_INTENCLR_MASK           0x07u        /**< \brief (DAC_INTENCLR) MASK Register */
 
 /* -------- DAC_INTENSET : (DAC Offset: 0x5) (R/W  8) Interrupt Enable Set Register -------- */
@@ -171,9 +186,12 @@ typedef union {
 #define DAC_INTENSET_OFFSET         0x5          /**< \brief (DAC_INTENSET offset) Interrupt Enable Set Register */
 #define DAC_INTENSET_RESETVALUE     0x00         /**< \brief (DAC_INTENSET reset_value) Interrupt Enable Set Register */
 
-#define DAC_INTENSET_UNDERRUN       (0x1u <<  0) /**< \brief (DAC_INTENSET) Underrun Interrupt Enable */
-#define DAC_INTENSET_EMPTY          (0x1u <<  1) /**< \brief (DAC_INTENSET) Empty Interrupt Enable */
-#define DAC_INTENSET_READY          (0x1u <<  2) /**< \brief (DAC_INTENSET) Ready Interrupt Enable */
+#define DAC_INTENSET_UNDERRUN_Pos   0            /**< \brief (DAC_INTENSET) Underrun Interrupt Enable */
+#define DAC_INTENSET_UNDERRUN       (0x1u << DAC_INTENSET_UNDERRUN_Pos)
+#define DAC_INTENSET_EMPTY_Pos      1            /**< \brief (DAC_INTENSET) Empty Interrupt Enable */
+#define DAC_INTENSET_EMPTY          (0x1u << DAC_INTENSET_EMPTY_Pos)
+#define DAC_INTENSET_READY_Pos      2            /**< \brief (DAC_INTENSET) Ready Interrupt Enable */
+#define DAC_INTENSET_READY          (0x1u << DAC_INTENSET_READY_Pos)
 #define DAC_INTENSET_MASK           0x07u        /**< \brief (DAC_INTENSET) MASK Register */
 
 /* -------- DAC_INTFLAG : (DAC Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear Register -------- */
@@ -192,9 +210,12 @@ typedef union {
 #define DAC_INTFLAG_OFFSET          0x6          /**< \brief (DAC_INTFLAG offset) Interrupt Flag Status and Clear Register */
 #define DAC_INTFLAG_RESETVALUE      0x00         /**< \brief (DAC_INTFLAG reset_value) Interrupt Flag Status and Clear Register */
 
-#define DAC_INTFLAG_UNDERRUN        (0x1u <<  0) /**< \brief (DAC_INTFLAG) Underrun Interrupt Flag */
-#define DAC_INTFLAG_EMPTY           (0x1u <<  1) /**< \brief (DAC_INTFLAG) Empty Interrupt Flag */
-#define DAC_INTFLAG_READY           (0x1u <<  2) /**< \brief (DAC_INTFLAG) Ready Interrupt Flag */
+#define DAC_INTFLAG_UNDERRUN_Pos    0            /**< \brief (DAC_INTFLAG) Underrun Interrupt Flag */
+#define DAC_INTFLAG_UNDERRUN        (0x1u << DAC_INTFLAG_UNDERRUN_Pos)
+#define DAC_INTFLAG_EMPTY_Pos       1            /**< \brief (DAC_INTFLAG) Empty Interrupt Flag */
+#define DAC_INTFLAG_EMPTY           (0x1u << DAC_INTFLAG_EMPTY_Pos)
+#define DAC_INTFLAG_READY_Pos       2            /**< \brief (DAC_INTFLAG) Ready Interrupt Flag */
+#define DAC_INTFLAG_READY           (0x1u << DAC_INTFLAG_READY_Pos)
 #define DAC_INTFLAG_MASK            0x07u        /**< \brief (DAC_INTFLAG) MASK Register */
 
 /* -------- DAC_STATUS : (DAC Offset: 0x7) (R/   8) Status Register -------- */
@@ -213,9 +234,12 @@ typedef union {
 #define DAC_STATUS_OFFSET           0x7          /**< \brief (DAC_STATUS offset) Status Register */
 #define DAC_STATUS_RESETVALUE       0x00         /**< \brief (DAC_STATUS reset_value) Status Register */
 
-#define DAC_STATUS_SWRST            (0x1u <<  0) /**< \brief (DAC_STATUS) Software Reset Status */
-#define DAC_STATUS_ENABLE           (0x1u <<  1) /**< \brief (DAC_STATUS) Enable Status */
-#define DAC_STATUS_SYNCBUSY         (0x1u <<  7) /**< \brief (DAC_STATUS) Synchronization Busy */
+#define DAC_STATUS_SWRST_Pos        0            /**< \brief (DAC_STATUS) Software Reset Status */
+#define DAC_STATUS_SWRST            (0x1u << DAC_STATUS_SWRST_Pos)
+#define DAC_STATUS_ENABLE_Pos       1            /**< \brief (DAC_STATUS) Enable Status */
+#define DAC_STATUS_ENABLE           (0x1u << DAC_STATUS_ENABLE_Pos)
+#define DAC_STATUS_SYNCBUSY_Pos     7            /**< \brief (DAC_STATUS) Synchronization Busy */
+#define DAC_STATUS_SYNCBUSY         (0x1u << DAC_STATUS_SYNCBUSY_Pos)
 #define DAC_STATUS_MASK             0x83u        /**< \brief (DAC_STATUS) MASK Register */
 
 /* -------- DAC_DATA : (DAC Offset: 0x8) (R/W 16) Data Register -------- */
@@ -231,8 +255,8 @@ typedef union {
 #define DAC_DATA_OFFSET             0x8          /**< \brief (DAC_DATA offset) Data Register */
 #define DAC_DATA_RESETVALUE         0x0000       /**< \brief (DAC_DATA reset_value) Data Register */
 
-#define DAC_DATA_DATA_Pos           0
-#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos) /**< \brief (DAC_DATA) Data to be Converted */
+#define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) Data to be Converted */
+#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos)
 #define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
 #define DAC_DATA_MASK               0xFFFFu      /**< \brief (DAC_DATA) MASK Register */
 
@@ -249,8 +273,8 @@ typedef union {
 #define DAC_DATABUF_OFFSET          0xC          /**< \brief (DAC_DATABUF offset) Data Buffer Register */
 #define DAC_DATABUF_RESETVALUE      0x0000       /**< \brief (DAC_DATABUF reset_value) Data Buffer Register */
 
-#define DAC_DATABUF_DATABUF_Pos     0
-#define DAC_DATABUF_DATABUF_Msk     (0xFFFFu << DAC_DATABUF_DATABUF_Pos) /**< \brief (DAC_DATABUF) Data Buffer */
+#define DAC_DATABUF_DATABUF_Pos     0            /**< \brief (DAC_DATABUF) Data Buffer */
+#define DAC_DATABUF_DATABUF_Msk     (0xFFFFu << DAC_DATABUF_DATABUF_Pos)
 #define DAC_DATABUF_DATABUF(value)  ((DAC_DATABUF_DATABUF_Msk & ((value) << DAC_DATABUF_DATABUF_Pos)))
 #define DAC_DATABUF_MASK            0xFFFFu      /**< \brief (DAC_DATABUF) MASK Register */
 

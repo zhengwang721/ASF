@@ -3,10 +3,11 @@
  *
  * \brief SAMD20 DAC Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -72,7 +73,7 @@ int main(void)
 	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
 //! [set_ch_conf]
 //! [enable_ch]
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0),
+	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
 	//! [enable_ch]
 
 	/* Convert a value */

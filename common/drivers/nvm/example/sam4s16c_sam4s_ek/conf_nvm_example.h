@@ -3,7 +3,7 @@
  *
  * \brief NVM example configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #include "flash_efc.h"
 
 // Last page start address
-#define TEST_ADDRESS_INT (IFLASH_ADDR + IFLASH_SIZE- IFLASH_PAGE_SIZE)
+#define TEST_ADDRESS_INT (IFLASH_ADDR + IFLASH_SIZE- IFLASH_PAGE_SIZE*8)
 
 #define NVM_EXAMPLE_LED0 LED0_GPIO
 #define NVM_EXAMPLE_LED1 LED1_GPIO

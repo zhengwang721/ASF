@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 GPIO Port Driver Quick Start
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +42,7 @@
  */
 
 /**
- * \page port_basic_use_case Quick Start Guide for the PORT module - Basic Use Case
+ * \page asfdoc_samd20_port_basic_use_case Quick Start - Basic Use Case
  *
  * In this use case, the PORT module is configured for:
  *  \li One pin in input mode, with pull-up enabled
@@ -50,19 +52,19 @@
  * an input, and mirrors the opposite logical state on a pin configured as an
  * output.
  *
- * \section port_basic_use_case_setup Setup
+ * \section asfdoc_samd20_port_basic_use_case_setup Setup
  *
- * \subsection port_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd20_port_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection port_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_port_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_port_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_port_basic.c setup_init
  *
- * \subsection port_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd20_port_basic_use_case_setup_flow Workflow
  * -# Create a PORT module pin configuration struct, which can be filled out to
  *    adjust the configuration of a single port pin.
  *  - \snippet qs_port_basic.c setup_1
@@ -87,13 +89,13 @@
  *    the output driver on the pin.
  *  - \snippet qs_port_basic.c setup_6
  *
- * \section port_basic_use_case Use Case
+ * \section asfdoc_samd20_port_basic_use_case_use_main Use Case
  *
- * \subsection port_basic_use_case_code Code
+ * \subsection asfdoc_samd20_port_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_port_basic.c main
  *
- * \subsection port_basic_use_case_flow Workflow
+ * \subsection asfdoc_samd20_port_basic_use_case_flow Workflow
  * -# Read in the current input sampler state of GPIO10, which has been
  *    configured as an input in the use-case setup code.
  *  - \snippet qs_port_basic.c main_1

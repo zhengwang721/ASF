@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called
- * on chip startup.
+ * \brief Low-level initialization functions called upon chip startup.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,13 +41,38 @@
  *
  */
 
-#include "system_samd20.h"
 #include "samd20.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/**
+ * Initial system clock frequency. The System RC Oscillator (RCSYS) provides
+ *  the source for the main clock at chip startup.
+ */
+#define __SYSTEM_CLOCK    (115000)
 
-#ifdef __cplusplus
+uint32_t SystemCoreClock = __SYSTEM_CLOCK;/*!< System Clock Frequency (Core Clock)*/
+
+/**
+ * Initialize the system
+ *
+ * @brief  Setup the microcontroller system.
+ *         Initialize the System and update the SystemCoreClock variable.
+ */
+void SystemInit(void)
+{
+	// Keep the default device state after reset
+	SystemCoreClock = __SYSTEM_CLOCK;
+	return;
 }
-#endif
+
+/**
+ * Update SystemCoreClock variable
+ *
+ * @brief  Updates the SystemCoreClock with current core Clock
+ *         retrieved from cpu registers.
+ */
+void SystemCoreClockUpdate(void)
+{
+	// Not implemented
+	SystemCoreClock = __SYSTEM_CLOCK;
+	return;
+}

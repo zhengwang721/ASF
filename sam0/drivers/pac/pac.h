@@ -3,9 +3,11 @@
  *
  * \brief SAMD20 Peripheral Access Controller Driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -606,40 +608,27 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-//TODO: remove unwanted includes and defines
 
-#warning "Mock-up only"
-/*!
- * Peripherals available for write access modifications.
+/**
+ * Retrieves the ID of a specified peripheral name, giving its peripheral bus
+ * location.
+ *
+ * \param[in] peripheral  Name of the peripheral instance
+ *
+ * \returns Bus ID of the specified peripheral instance.
  */
-enum system_peripheral_flag {
-	/*! WDT lock/unlock flag */
-	SYSTEM_PERIPHERAL_WDT		= 0,
-	/*! TC0 lock/unlock flag */
-	SYSTEM_PERIPHERAL_TC0		= 1,
-	/*! TC1 lock/unlock flag */
-	SYSTEM_PERIPHERAL_TC1		= 2,
-	/*! SERCOM0 lock/unlock flag */
-	SYSTEM_PERIPHERAL_SERCOM0	= 3,
-	/*! PORT lock/unlock flag */
-	SYSTEM_PERIPHERAL_PORT		= 4,
-	/*
-	 * Put in more here.
-	 */
-	/*! AC0 lock/unlock flag */
-	SYSTEM_PERIPHERAL_AC0		= 47,
-};
+#define SYSTEM_PERIPHERAL_ID(peripheral)    ID_##peripheral
 
 /** \name Peripheral lock and unlock
  * @{
  */
 __no_inline enum status_code system_peripheral_lock(
-		enum system_peripheral_flag peripheral,
-		uint32_t key);
+		const uint32_t peripheral_id,
+		const uint32_t key);
 
 __no_inline enum status_code system_peripheral_unlock(
-		enum system_peripheral_flag peripheral,
-		uint32_t key);
+		const uint32_t peripheral_id,
+		const uint32_t key);
 /** @}  */
 
 #ifdef __cplusplus
