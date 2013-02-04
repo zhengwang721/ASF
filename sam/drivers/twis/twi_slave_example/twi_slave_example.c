@@ -58,7 +58,7 @@
  * -# Connect TWD1 (SDA) for the 2 boards.
  * -# Connect TWCK1 (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
- * -# Add a pull up of 2,2KOhms on TWD and TWCK
+ * -# Add a pull up of 2.2KOhms on TWD and TWCK
  *
  * \section files Main files:
  *  - twis.c SAM Two-Wire Slave Interface driver implementation.

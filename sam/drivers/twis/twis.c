@@ -270,7 +270,7 @@ void twis_disable(struct twis_dev_inst *const dev_inst)
 {
 	Assert(dev_inst->hw_dev);
 
-	dev_inst->hw_dev->TWIS_CR &= TWIS_CR_SEN;
+	dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_SEN;
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_1);
 }
 
@@ -295,6 +295,7 @@ static void twis_interrupt_handler(uint32_t ch)
 		twis_clear_status(dev_inst, TWIS_INTERRUPT_ALL);
 		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
 		twis_callback_pointer[ch].stop();
+		twis_callback_pointer[ch].error();
 		return;
 	}
 	/* Check if the slave address match flag is raised */
