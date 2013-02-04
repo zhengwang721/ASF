@@ -1053,6 +1053,8 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define CCPU_ENDIAN_TO_LE32(x)  (x)
 #define CCPU_ENDIAN_TO_LE64(x)  (x)
 
+#define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
+#define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
 
 /**
  * \}

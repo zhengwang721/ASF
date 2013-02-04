@@ -54,10 +54,7 @@
 
 /* === Includes ============================================================= */
 
-//#include "pal.h"
-//#include "mac.h"
 #include "return_val.h"
-//#include "qmm.h"
 #include "mac_build_config.h"
 
 /* === Macros =============================================================== */
@@ -1332,6 +1329,12 @@ void usr_mlme_sync_loss_ind(uint8_t LossReason,
 
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
+
+/**
+ * @brief Checks if the mac stack is idle
+ * \ingroup group_mac_gen_int
+ */
+bool mac_ready_to_sleep(void);
 
 /*@}*//* group_mac_cb */
 

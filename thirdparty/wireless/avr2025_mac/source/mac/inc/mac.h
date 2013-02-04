@@ -803,12 +803,6 @@ retval_t mac_init(void);
  */
 bool mac_task(void);
 
-/**
- * @brief Checks if the mac stack is idle
- * \ingroup group_mac_gen_int
- */
-bool mac_ready_to_sleep(void);
-
 /*
  * @brief Helper function to extract the complete address information
  *        of the received frame
