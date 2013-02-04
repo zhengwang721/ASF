@@ -43,35 +43,35 @@
 
 int main(void)
 {
-
-	system_init();
-
 	//! [main]
+
+	//! [system_init]
+	system_init();
+	//! [system_init]
+
 	/* Structures for config and software device instance */
 	//! [config]
-
 	struct tc_conf config;
 	//! [config]
 	//! [dev_inst]
-	struct tc_dev_inst dev_inst;
+	struct tc_module dev_inst;
 	//! [dev_inst]
 
 	//! [tc_get_config_defaults]
 	tc_get_config_defaults(&config);
 	//! [tc_get_config_defaults]
 
-	//! [channel_0]
+	//! [pwm_channel_0]
 	config.channel_0_pwm_out_enabled = true;
 	config.channel_0_pwm_out_pin = PWM_OUT_PIN;
 	config.channel_0_pwm_out_mux = PWM_OUT_PIN_MUX;
+	//! [pwm_channel_0]
 
-	config.counter_size = TC_COUNTER_SIZE_8BIT;
-	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV2;
-	config.wave_generation = TC_WAVE_GENERATION_NORMAL_PWM;
-	config.tc_counter_size_conf.tc_8bit_conf.period = 0xFF;
-	config.tc_counter_size_conf.tc_8bit_conf.compare_capture_channel_0 = 0x7F;
-
-	//! [channel_0]
+	//! [setup]
+	config.counter_size = TC_COUNTER_SIZE_16BIT;
+	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_0 = 0x7FFF;
+	//! [setup]
 
 	//! [tc_init]
 	tc_init(PWM_MODULE, &dev_inst, &config);
@@ -84,7 +84,6 @@ int main(void)
 	//! [inf_loop]
 	while (1) {
 	}
-
 	//! [inf_loop]
 	//! [main]
 }

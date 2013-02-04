@@ -44,8 +44,11 @@
 #ifndef CONF_QUICK_START_H_INCLUDED
 #define CONF_QUICK_START_H_INCLUDED
 
+/** PWM module to use */
 #define PWM_MODULE      EXT1_PWM_MODULE
+/** PWM output pin */
 #define PWM_OUT_PIN     EXT1_PWM_0_PIN
+/** PWM ouptut pin mux */
 #define PWM_OUT_PIN_MUX EXT1_PWM_0_PIN_MUX
 
 #endif /* CONF_QUICK_START_H_INCLUDED */
