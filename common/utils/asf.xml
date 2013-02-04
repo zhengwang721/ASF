@@ -287,6 +287,10 @@
 			<toolchain-config name="avr32gcc.preprocessingassembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
 			<!-- Linker flags, trampoline/startup label and stack/heap size settings are added to this config -->
 			<toolchain-config name="avr32gcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avr32gcc"/>
+			<!-- Standard library settings for linker: ASF has its own startup-files for UC3 -->
+			<toolchain-config name="avr32gcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseStandardStartFiles" value="True" toolchain="avr32gcc"/>
 		</module>
 
 		<module type="build-specific" id="common.utils.toolchain_config#sam" caption="Toolchain configuration defaults for SAM">
