@@ -72,6 +72,7 @@
 #define Lun_0_read_capacity                     virtual_read_capacity
 #define Lun_0_wr_protect                        virtual_wr_protect
 #define Lun_0_removal                           virtual_removal
+#define Lun_0_unload                            virtual_unload
 #define Lun_0_usb_read_10                       virtual_usb_read_10
 #define Lun_0_usb_write_10                      virtual_usb_write_10
 #define Lun_0_mem_2_ram                         virtual_mem_2_ram
