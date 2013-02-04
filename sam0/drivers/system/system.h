@@ -193,9 +193,9 @@ digraph overview {
  */
 enum system_bod {
 	/** BOD12 Internal core voltage*/
-	SYSTEM_BOD12,
+	SYSTEM_BOD_BOD12,
 	/** BOD33 External IO voltage*/
-	SYSTEM_BOD33,
+	SYSTEM_BOD_BOD33,
 };
 
 /**
@@ -344,11 +344,12 @@ static inline void system_vref_disable(
 static inline void system_bod_get_config_defaults(
 		struct system_bod_config *const conf)
 {
+	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->mode = SYSTEM_BOD_MODE_CONTINIOUS;
+	conf->mode   = SYSTEM_BOD_MODE_CONTINIOUS;
 	conf->action = SYSTEM_BOD_ACTION_RESET;
-	conf->level = 0x12; /* TODO: Need to revisit this level */
+	conf->level  = 0x12; /* TODO: Need to revisit this level */
 	conf->hysteresis = true;
 }
 
