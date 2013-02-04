@@ -2,53 +2,48 @@
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
 #include <compiler.h>
-
+#include <core_cm0plus.h>
 enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
 	SYSTEM_INTERRUPT_HARD_FAULT        = HardFault_IRQn,
-	SYSTEM_INTERRUPT_MEMORY_MANAGEMENT = MemoryManagement_IRQn,
-	SYSTEM_INTERRUPT_BUS_FAULT         = BusFault_IRQn,
-	SYSTEM_INTERRUPT_USER_FAULT        = UsageFault_IRQn,
 	SYSTEM_INTERRUPT_SV_CALL           = SVCall_IRQn,
-	SYSTEM_INTERRUPT_DEBUG_MONITOR     = DebugMonitor_IRQn,
 	SYSTEM_INTERRUPT_PENDING_SV        = PendSV_IRQn,
 	SYSTEM_INTERRUPT_SYSTICK           = SysTick_IRQn,
 
-	SYSTEM_INTERRUPT_MODULE_PM         = PM_CFD_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SYSCTRL    = SYSCTRL_BOD12DET_IRQn,
-	SYSTEM_INTERRUPT_MODULE_WDT        = WDT_EW_IRQn,
-	SYSTEM_INTERRUPT_MODULE_RTC        = RTC_CMP_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_EIC        = EIC_EXTINT_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_EVSYS      = EVSYS_EVD_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SERCOM0    = SERCOM0_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SERCOM1    = SERCOM1_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SERCOM2    = SERCOM2_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SERCOM3    = SERCOM3_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_SERCOM4    = SERCOM4_0_IRQn,
-	SYSTEN_INTERRUPT_MODULE_SERCOM5    = SERCOM5_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC0        = TC0_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC1        = TC1_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC2        = TC2_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC5        = TC5_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_ERR_IRQn,
-	SYSTEM_INTERRUPT_MODULE_ADC        = ADC_OVERRUN_IRQn,
-	SYSTEM_INTERRUPT_MODULE_AC         = AC_COMP_0_IRQn,
-	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_EMPTY_IRQn,
-	SYSTEM_INTERRUPT_MODULE_PTC        = PTC_EOC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_PM         = PM_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SYSCTRL    = SYSCTRL_IRQn,
+	SYSTEM_INTERRUPT_MODULE_WDT        = WDT_IRQn,
+	SYSTEM_INTERRUPT_MODULE_RTC        = RTC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_EIC        = EIC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
+	SYSTEM_INTERRUPT_MODULE_EVSYS      = EVSYS_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM0    = SERCOM0_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM1    = SERCOM1_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM2    = SERCOM2_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM3    = SERCOM3_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM4    = SERCOM4_IRQn,
+	SYSTEN_INTERRUPT_MODULE_SERCOM5    = SERCOM5_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC0        = TC0_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC1        = TC1_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC2        = TC2_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC5        = TC5_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_IRQn,
+	SYSTEM_INTERRUPT_MODULE_ADC        = ADC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_AC         = AC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 
 	SYSTEM_INTERRUPT_MODULE_NONE,
-}
+};
 
-enum system_interrupt_priority {
+enum system_interrupt_priority_level {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
-}
+};
 
 #define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
 #define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
@@ -64,7 +59,7 @@ enum system_interrupt_priority {
  * keep a counter for how meny times it is called.
  *
  */
-void system_interrupt_enter_critical_section(void)
+static inline void system_interrupt_enter_critical_section(void)
 {
 	cpu_irq_enter_critical();
 }
@@ -76,7 +71,7 @@ void system_interrupt_enter_critical_section(void)
  * enable interrupts when the counter reaches 0.
  *
  */
-void system_interrupt_leave_critical_section(void)
+static inline void system_interrupt_leave_critical_section(void)
 {
 	cpu_irq_leave_critical();
 }
@@ -92,7 +87,7 @@ void system_interrupt_leave_critical_section(void)
  * \retval false Global interrupts are disabled
  *
  */
-bool system_interrupt_is_global_enabled(void)
+static inline bool system_interrupt_is_global_enabled(void)
 {
 	return cpu_irq_is_enabled();
 }
@@ -165,26 +160,7 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
  * \retval false Vector is not pending
  *
  */
-static inline bool system_interrupt_is_pending(enum system_interrupt_vector vector)
-{
-	bool result;
-
-	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
-
-		result = (bool)((NVIC->ISPR[0] >> vector) & 0x00000001);
-
-	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-
-		result =  (bool)((SCB->ICSR[0] >> SCB_ICSR_PENDSTSET_Pos) & 0x00000001);
-
-	} else {
-
-		Assert(false);
-		result = false;
-	}
-
-	return result:
-}
+bool system_interrupt_is_pending(enum system_interrupt_vector vector);
 
 /**
  * \brief Set a interrupt vector as pending
@@ -199,31 +175,7 @@ static inline bool system_interrupt_is_pending(enum system_interrupt_vector vect
  * \retval STATUS_OK If no error where detected
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
  */
-static inline enum status_code system_interrupt_set_pending(enum system_interrupt_vector vector)
-{
-	enum status_code status = STATUS_OK;
-
-	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
-
-		NVIC->ISPR[0] = 1 << vector;
-
-	} else if((vector == SYSTEM_INTERRUPT_SYSTICK) || (vector == SYSTEM_INTERRUPT_NON_MASKABLE)) {
-		/* Because NMI has highest priority it will be executed immediately after it has been set pending */
-
-		uint8_t vector_to_pos_translater[] = {1 << SCB_ICSR_NMIPENDSET_Pos, 1 << SCB_ICSR_PENDSTSET_Pos};
-
-		SCB->ICSR[0] = vector_to_pos_translater[vector == SYSTEM_INTERRUPT_SYSTICK];
-
-	} else {
-
-		/* The user want to set something unsopported as pending */
-		Assert(false);
-		status = STATUS_INVALID_ARG;
-
-	}
-
-	return status;
-}
+enum status_code system_interrupt_set_pending(enum system_interrupt_vector vector);
 
 /**
  * \brief Clear pending interrupt vector
@@ -237,29 +189,7 @@ static inline enum status_code system_interrupt_set_pending(enum system_interrup
  * \retval STATUS_OK If no error where detected
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
  */
-static inline enum status_code system_interrupt_clear_pending(enum system_interrupt_vector vector)
-{
-
-	enum status_code status = STATUS_OK;
-
-	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
-
-		NVIC->ICPR[0] = 1 << vector;
-
-	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-		/* Clearing of NMI pending interrupts does not make sense and is not supported by the
-		   device because it has the highest priority and will executed at the moment it is set */
-
-		SCB->ICSR[0] = (uint32_t)(1 << SCB_ICSR_PENDSTCLR_Pos);
-
-	} else {
-
-		Assert(false);
-		status = STATUS_INVALID_ARG;
-	}
-
-	return status;
-}
+enum status_code system_interrupt_clear_pending(enum system_interrupt_vector vector);
 
 /**
  * \brief Set interrupt vector priority level
@@ -275,52 +205,12 @@ static inline enum status_code system_interrupt_clear_pending(enum system_interr
  */
 enum status_code system_interrupt_set_priority(enum system_interrupt_vector vector,
 		enum system_interrupt_priority_level priority_level);
-{
-	enum status_code status = STATUS_OK;
-
-	if(vector >= _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START) {
-
-		uint8_t register_num = vector / 4;
-		uint8_t priority_pos = ((vector % 4) * 8) + 5;
-
-		NVIC->IP[register_num] = priority_level << priority_pos;
-
-	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-
-		SCB->SHP[1] = priority_level << SYSTEM_INTERRUPT_SYSTICK_PRI_POS;
-
-	} else {
-
-		Assert(false);
-		status = STATUS_INVALID_ARG;
-
-	}
-
-	return status;
-}
 
 /**
  * \brief Get interrupt vector priority level
  *
  * Get the priority level of the requested external interrupt or exception
  */
-enum system_interrupt_priority system_interrupt_get_priority(enum system_interrupt_vector vector)
-{
-	uint8_t register_num = vector / 4;
-	uint8_t priority_pos = ((vector % 4) * 8) + 5;
-	enum system_interrupt_priority priority;
-
-	if (vector >= 0) {
-
-		priority = (NVIC->IP[register_num] >> priority_pos) & _SYSTEM_INTERRUPT_PRIORITY_MASK;
-
-	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-
-		priority = (SCB->SHP[1] >> SYSTEM_INTERRUPT_SYSTICK_PRI_POS) & _SYSTEM_INTERRUPT_PRIORITY_MASK;
-
-	}
-
-	return priority;
-}
+enum system_interrupt_priority_level system_interrupt_get_priority(enum system_interrupt_vector vector);
 
 #endif
