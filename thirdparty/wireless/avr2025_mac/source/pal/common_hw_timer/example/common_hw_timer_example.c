@@ -118,7 +118,6 @@ int main(void)
 
 	set_common_tc_overflow_callback(overflow_cb);
 	set_common_tc_expiry_callback(expiry_cb);
-
 	common_tc_init();
         
 	common_tc_delay(time_out);

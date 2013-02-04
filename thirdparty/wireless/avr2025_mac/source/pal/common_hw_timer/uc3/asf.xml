@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">	
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.uc3" caption="Common HW Timer - UC3 library">
+			<info type="description" value="summary">
+			Common HW Timer Implementation
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>		
+			</info>		
+            <build type="c-source"      value="hw_timer.c"/>
+			<build type="header-file"   value="hw_timer.h"/>
+            <build type="include-path"  value="."/>			
+            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
+            <build type="library" subtype="user" value="lib/uc3_lib_hw_timer.r82" toolchain="iarew32"/>
+			<build type="library" subtype="user" value="lib/libuc3_lib_hw_timer.a" toolchain="avrgcc"/>			
+       		<device-support value="uc3"/>
+		</module>
+
+</asf>
