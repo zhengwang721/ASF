@@ -1,5 +1,5 @@
 /**
- * @file common_hw_timer.h
+ * @file hw_timer.h
  *
  * @brief 
  *
@@ -39,55 +39,21 @@
  */
  
 /* Prevent double inclusion */
-#ifndef COMMON_HW_TIMER_H
-#define COMMON_HW_TIMER_H
+#ifndef HW_TIMER_H
+#define HW_TIMER_H
 
-#include <stdint.h>
-#include "hw_timer.h"
+typedef void (*tmr_callback_t) (void);
 
-#define DEF_1MHZ	(1000000)
-#define TIMER_PERIOD  UINT16_MAX
+uint16_t tmr_read_count(void);
+uint8_t save_cpu_interrupt(void);
+void restore_cpu_interrupt(uint8_t flags);
+void tmr_stop(void);
+void tmr_write_cmpreg(uint16_t compare_value);
+uint8_t tmr_init(void);
+void tmr_disable_cc_interrupt(void);
+void tmr_enable_cc_interrupt(void);
+void tmr_disable_ovf_interrupt(void);
+void tmr_stop(void);
 
-/*! \brief  To initialize common hw timer
- */
-void common_tc_init(void);
-
-/*! \brief  To read current count of the timer after issuing common tc delay
- */
-uint16_t common_tc_read_count(void);
-
-/*! \brief  To create a non blocking delay
- *  \param  value delay in us 
- */
-void common_tc_delay(uint16_t value);
-
-/*! \brief  To disable timer compare interrupt
- */
-void common_tc_compare_stop(void);
-
-/*! \brief  To disable timer overflow interrupt
- */
-void common_tc_overflow_stop(void);
-
-/*! \brief  To disable timer 
- */
-void common_tc_stop(void);
-
-/*! \brief  to set common hw timer overflow callback
- */
-void set_common_tc_overflow_callback(tmr_callback_t callback);
-
-/*! \brief  to set common hw timer compare callback
- */
-void set_common_tc_expiry_callback(tmr_callback_t callback);
-
-/*! \brief  timer overflow interrupt callback
- */
-void tmr_ovf_callback(void);
-
-/*! \brief  timer compare interrupt callback
- */
-void tmr_cca_callback(void);
-
-#endif /* COMMON_HW_TIMER_H */
+#endif /* HW_TIMER_H */
 /* EOF */

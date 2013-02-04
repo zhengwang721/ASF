@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer ">
+	<select-by-device id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer ">
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
@@ -7,65 +7,48 @@
 		Common HW Timer Implementation
 		</info>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#0" caption="Common HW Timer - XMEGA implementation">
-            <build type="include-path"  value="xmega/"/>
-            <build type="c-source"      value="xmega/common_hw_timer.c"/>
-            <build type="header-file"   value="common_hw_timer.h"/>
-            <build type="include-path"  value="."/>
-
-			<build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#0" caption="Common HW Timer - XMEGA implementation">
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.xmega"/>
             <require idref="xmega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
        		<device-support value="xmega"/>
 		</module>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#1" caption="Common HW Timer - UC3 implementation">
-            <build type="include-path"  value="uc3/"/>
-            <build type="c-source"      value="uc3/common_hw_timer.c"/>
-            <build type="header-file"   value="common_hw_timer.h"/>
-            <build type="include-path"  value="."/>
-
-			<build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#1" caption="Common HW Timer - UC3 implementation">
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.uc3"/>
             <require idref="avr32.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support value="uc3"/>
 		</module>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#2" caption="Common HW Timer - SAM implementation">
-            <build type="include-path"  value="sam/"/>
-            <build type="c-source"      value="sam/common_hw_timer.c"/>
-            <build type="header-file"   value="common_hw_timer.h"/>
-            <build type="include-path"  value="."/>
-
-			<build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-
-            <require idref="sam.drivers.tc"/>
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#2" caption="Common HW Timer - SAM implementation">
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.sam"/>
+			<require idref="sam.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <require idref="common.utils"/>
             <device-support value="sam4l"/>
 		</module>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
-            <build type="include-path"  value="mega/"/>
-            <build type="c-source"      value="mega/common_hw_timer.c"/>
-            <build type="header-file"   value="common_hw_timer.h"/>
-            <build type="include-path"  value="."/>
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
 
-			<build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.mega"/>
             <require idref="mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support value="megarf"/>
 		</module>
     </select-by-device>
+
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer - MEGA-RF implementation">
+		<build type="header-file"   value="common_hw_timer.h"/>
+		<build type="include-path"  value="."/>
+
+		<build type="module-config" subtype="required-header-file" value="conf_common_hw_timer.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="doxygen-entry-point" value="common_hw_timer_group"/>
+		<require idref="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
+        <device-support value="sam4l"/>
+        <device-support value="megarf"/>
+        <device-support value="uc3"/>
+        <device-support value="xmega"/>
+	</module>
 </asf>

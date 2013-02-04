@@ -50,5 +50,4 @@
 #define EXPIRY_PIN           (J2_PIN1)
 //! @}
 
-
 #endif /* CONF_EXAMPLE_H_INCLUDED */
