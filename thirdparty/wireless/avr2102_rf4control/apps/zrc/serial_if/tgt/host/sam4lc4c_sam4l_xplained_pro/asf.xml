@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.examples.zrc.serial_if.tgt.host.sam4l_xplained_pro">
+	<project caption="Xmega A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host.sam4l_xplained_pro">
 		<info type="description" value="summary">
 		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
 		</info>
@@ -19,7 +19,7 @@
 		<config name="config.thirdparty.wireless.avr2102_rf4control" value="api_parser"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.addons.sio2ncp" value="uart"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.examples.zrc.serial_if.tgt.host"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host"/>
 		
 	
 

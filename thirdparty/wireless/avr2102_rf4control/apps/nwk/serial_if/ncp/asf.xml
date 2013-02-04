@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Zrc controller Lib for AVR2102 RF4Control" id="thirdparty.wireless.avr2102_rf4control.examples.nwk.serial_if.ncp">
+	<module type ="application" caption="Zrc controller Lib for AVR2102 RF4Control" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp">
 		<info type="description" value="summary">
 		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
 		</info>
@@ -23,7 +23,7 @@
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
 		
-		<require idref="thirdparty.wireless.avr2102_rf4control.examples.nwk.serial_if"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
 		<require idref="common.drivers.nvm"/>

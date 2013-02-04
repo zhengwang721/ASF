@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Serial Interface for AVR2102 zrc controller" id="thirdparty.wireless.avr2102_rf4control.examples.zrc.serial_if.tgt.host">
+	<module type ="application" caption="Serial Interface for AVR2102 zrc controller" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host">
 		<info type="description" value="summary">
 		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC TARGET
 		</info>
@@ -29,7 +29,7 @@
 		
 
 
-		<require idref="thirdparty.wireless.avr2102_rf4control.examples.zrc.serial_if.tgt"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<require idref="common.services.delay"/>
         <require idref="common.services.ioport"/>
