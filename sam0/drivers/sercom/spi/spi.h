@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -817,7 +819,7 @@ void spi_reset(struct spi_dev_inst *const dev_inst);
  * \name Ready to write/read
  * @{
  */
- 
+
  /**
  * \brief Checks if the SPI module has shifted out last data
  *
@@ -966,7 +968,7 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
-	
+
 	/* Return value */
 	enum status_code retval = STATUS_OK;
 	/* Check if data is ready to be read */

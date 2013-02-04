@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -116,14 +118,14 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	}
 	pin_conf.mux_position = pad2 & 0xFFFF;
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
-	
+
 	/* SERCOM PAD3 */
 	if (pad2 == PINMUX_DEFAULT) {
 		pad2 = _sercom_get_default_pad(sercom_module, 3);
 	}
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
-	
+
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
 
@@ -236,15 +238,15 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
 		return STATUS_ERR_BUSY;
 	}
-	
+
 	/* Turn on module in PM */
 	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
-	
+
 	/* Set up GCLK */
 	struct system_gclk_ch_conf gclk_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
 	gclk_ch_conf.source_generator = config->generator_source;
 	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
