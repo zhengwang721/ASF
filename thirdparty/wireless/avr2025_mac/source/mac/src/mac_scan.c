@@ -229,7 +229,7 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf)
 
                 mac_scan_state = MAC_SCAN_IDLE;
             }
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert(MAC_SUCCESS == set_status);
 #endif
             /* Continue scanning, after setting channel */
@@ -278,12 +278,12 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf)
                 }
 
                 /* Restore macPANId after active scan completed. */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                 set_status =
 #endif
                 set_tal_pib_internal(macPANId, (void *)&mac_scan_orig_panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                 Assert(MAC_SUCCESS == set_status);
 #endif
                 /* Done with scanning */
@@ -313,12 +313,12 @@ static void scan_proceed(uint8_t scan_type, buffer_t *buf)
             }
 
             /* Restore macPANId after passive scan completed. */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             set_status =
 #endif
                 set_tal_pib_internal(macPANId, (void *)&mac_scan_orig_panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert(MAC_SUCCESS == set_status);
 #endif
             scan_clean_up(buf);
@@ -398,12 +398,12 @@ static void mac_awake_scan(buffer_t *scan_buf)
 
             mac_scan_orig_panid = tal_pib.PANId;
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             retval_t set_status =
 #endif
             set_tal_pib_internal(macPANId, (void *)&broadcast_panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert(MAC_SUCCESS == set_status);
 #endif
             if (MLME_SCAN_TYPE_ACTIVE == scan_type)
@@ -698,7 +698,7 @@ void scan_set_complete(retval_t set_status)
                                                        TIMEOUT_RELATIVE,
                                                        (FUNC_PTR)mac_t_scan_duration_cb,
                                                        NULL);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         Assert(MAC_SUCCESS == timer_status);
 #endif
                         if (MAC_SUCCESS != timer_status)
@@ -799,7 +799,7 @@ void mac_scan_send_complete(retval_t status)
                                        TIMEOUT_RELATIVE,
                                        (FUNC_PTR)mac_t_scan_duration_cb,
                                        NULL);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == timer_status);
 #endif
         if (MAC_SUCCESS != timer_status)
@@ -1112,7 +1112,7 @@ void tal_ed_end_cb(uint8_t energy_level)
  */
 static void scan_clean_up(buffer_t *buffer)
 {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status;
 #endif
 
@@ -1122,21 +1122,21 @@ static void scan_clean_up(buffer_t *buffer)
     /* Set original channel page and channel. */
     scan_curr_page = mac_scan_orig_page;
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     set_status =
 #endif
     set_tal_pib_internal(phyCurrentPage, (void *)&scan_curr_page);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
     scan_curr_channel = mac_scan_orig_channel;
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     set_status =
 #endif
     set_tal_pib_internal(phyCurrentChannel, (void *)&scan_curr_channel);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
@@ -1201,7 +1201,7 @@ void mac_process_orphan_realign(buffer_t *buf_ptr)
     set_status = set_tal_pib_internal(macPANId,
         (void *)&mac_parse_data.mac_payload_data.coord_realign_data.pan_id);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
@@ -1211,7 +1211,7 @@ void mac_process_orphan_realign(buffer_t *buf_ptr)
         set_status = set_tal_pib_internal(macShortAddress,
             (void *)&mac_parse_data.mac_payload_data.coord_realign_data.short_addr);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
     }
@@ -1228,7 +1228,7 @@ void mac_process_orphan_realign(buffer_t *buf_ptr)
         set_status =
         set_tal_pib_internal(phyCurrentPage,
                              (void *)&mac_parse_data.mac_payload_data.coord_realign_data.channel_page);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
     }
@@ -1236,7 +1236,7 @@ void mac_process_orphan_realign(buffer_t *buf_ptr)
     set_status = set_tal_pib_internal(phyCurrentChannel,
                                       (void *)&mac_parse_data.mac_payload_data.coord_realign_data.logical_channel);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 

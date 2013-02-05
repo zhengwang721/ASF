@@ -1,9 +1,9 @@
 /**
- * \file sio2host.h
+ * \file main.c
  *
- * \brief Event handling Serial I/O  Functionalities
- 
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * \brief  Serial Bridge Application
+ *
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,64 +39,46 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+/**
+ * \page license License
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
-#ifndef SIO2HOST_H
-#define SIO2HOST_H
-
-/**
-  * \defgroup group_sio2host_uart SIO2HOST - UART
-  * This module performs serial input/output functionalities via UART
-  * @{
+ 
+ /**
+  * \mainpage Serial Bridge Application
   */
-  
 /* === INCLUDES ============================================================ */
 
-#include "compiler.h"
-#include "status_codes.h"
 
-#define SERIAL_RX_BUF_SIZE    156
+#include "sio2host.h"
+#include "sio2ncp.h"
 
-/* === PROTOTYPES ============================================================ */
+/* === MACROS ============================================================== */
+#define SIO_RX_BUF_SIZE                 (32)
+
+/* === PROTOTYPES =============================================================== */
+
 /**
- * \brief Initializes the Serial IO Module
- * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
+ * \defgroup group_serial_bridge SERIAL BRIDGE
+ * The Serial Bridge Module acts as a bridge layer between the Host and NCP for Serial I/O Communications
+ * @{
+ */
+ 
+ /**
+  *  \brief Initializes the Serial Bridge Module 
+  * Both Host and NCP Serial interfaces are initialized 
+  * \return STATUS_OK if initialization is succesful else FAILURE
   */
-status_code_t sio2host_init(void);
+  
+status_code_t serial_bridge_init(void);
 
 /**
- * \brief Transmits data via UART 
- * \param data Pointer to the buffer where the data to be transmitted is present
- * \param length Number of bytes to be transmitted
- *
- * \return Number of bytes actually transmitted 
+ * \brief The serial_bridge_handler performs the functionality of the serial bridge 
+ * by pushing data that comes from the host to the NCP and vice-versa
  */
-uint8_t sio2host_tx(uint8_t *data, uint8_t length);
+void serial_bridge_handler(void);
 
-/**
- * \brief Receives data from UART 
- *
- * \param data pointer to the buffer where the received data is to be stored
- * \param max_length maximum length of data to be received
- *
- * \return actual number of bytes received
- */
-uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
-
-/**
- * \brief This function performs a blocking character receive functionality
- * \return returns the data which is received
- */ 
-uint8_t sio2host_getchar(void);
-
-/**
- * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if ia charqacter is received
- */
-int sio2host_getchar_nowait(void);
-
-#endif /* SIO2HOST_H */
-
+//! @}
+/* EOF */

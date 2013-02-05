@@ -343,7 +343,7 @@ void mac_coord_realignment_command_tx_success(uint8_t tx_status, buffer_t *buf_p
             set_tal_pib_internal(phyCurrentPage,
                                  (void *)&(msr_params.ChannelPage));
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == channel_page_set_status);
 #endif
 
@@ -351,7 +351,7 @@ void mac_coord_realignment_command_tx_success(uint8_t tx_status, buffer_t *buf_p
             set_tal_pib_internal(phyCurrentChannel,
                                  (void *)&msr_params.LogicalChannel);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == channel_set_status);
 #endif
         if ((MAC_SUCCESS == channel_set_status) && (MAC_SUCCESS == channel_page_set_status))

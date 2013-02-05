@@ -19,7 +19,7 @@
 			<require idref="thirdparty.wireless.avr2025_mac.source.sal.atmegarf_sal"/>
 		</module>
 	</select-by-config>
-	<module type="component" id="thirdparty.wireless.avr2025_mac.source.sal" caption="COMPONENT - SAL">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.sal" caption="SAL">
 		<info type="description" value="summary">
 		To be Added
 		</info>
@@ -33,7 +33,7 @@
 
 		<device-support value="avr"/>
 	</module>
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.sal.inc" caption="COMPONENT - SAL">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.sal.inc" caption="SAL">
 		<info type="description" value="summary">
 		To be Added
 		</info>

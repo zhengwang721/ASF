@@ -104,7 +104,7 @@ static void mac_t_missed_beacons_cb(void *callback_parameter);
  */
 void mlme_sync_request(uint8_t *m)
 {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status, set_status_2;
 #endif
 
@@ -136,7 +136,7 @@ void mlme_sync_request(uint8_t *m)
     /* Stop the beacon tracking period timer. */
     pal_timer_stop(T_Beacon_Tracking_Period);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (pal_is_timer_running(T_Beacon_Tracking_Period))
     {
         Assert("BCN tmr running" == 0);
@@ -185,19 +185,19 @@ void mlme_sync_request(uint8_t *m)
     /* Wake up radio first */
     mac_trx_wakeup();
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     set_status =
 #endif
     set_tal_pib_internal(phyCurrentPage, (void *)&(msr->ChannelPage));
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     set_status_2 =
 #endif
     set_tal_pib_internal(phyCurrentChannel, (void *)&(msr->LogicalChannel));
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status_2);
 #endif
 
@@ -293,7 +293,7 @@ void mac_start_missed_beacon_timer(void)
     /* Stop the missed beacon timer. */
     pal_timer_stop(T_Missed_Beacon);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (pal_is_timer_running(T_Missed_Beacon))
     {
         Assert("Missed BCN tmr running" == 0);
@@ -335,7 +335,7 @@ void mac_start_missed_beacon_timer(void)
 
     if (MAC_SUCCESS != timer_status)
     {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == timer_status);
 #endif
         /* Sync timer could not be started hence report sync-loss */
@@ -441,26 +441,26 @@ void mac_process_coord_realign(buffer_t *ind)
 
     /* Set the appropriate PIB entries */
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status =
 #endif
     set_tal_pib_internal(macPANId,
         (void *)&mac_parse_data.mac_payload_data.coord_realign_data.pan_id);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
     if (BROADCAST != mac_parse_data.mac_payload_data.coord_realign_data.short_addr)
     {
         /* Short address only to be set if not broadcast address */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         set_status =
 #endif
         set_tal_pib_internal(macShortAddress,
             (void *)&mac_parse_data.mac_payload_data.coord_realign_data.short_addr);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
     }
@@ -474,23 +474,23 @@ void mac_process_coord_realign(buffer_t *ind)
      */
     if (mac_parse_data.fcf & FCF_FRAME_VERSION_2006)
     {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         set_status =
 #endif
         set_tal_pib_internal(phyCurrentPage,
                              (void *)&mac_parse_data.mac_payload_data.coord_realign_data.channel_page);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
     }
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     set_status =
 #endif
     set_tal_pib_internal(phyCurrentChannel,
                          (void *)&mac_parse_data.mac_payload_data.coord_realign_data.logical_channel);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 } /* mac_process_coord_realign() */

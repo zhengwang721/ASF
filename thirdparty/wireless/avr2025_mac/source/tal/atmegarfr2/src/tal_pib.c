@@ -30,7 +30,7 @@
 
 
 /**
- * \addtogroup group_tal_pib
+ * \addtogroup group_tal_pib_rfr2
  * @{
  */
 

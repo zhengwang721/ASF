@@ -557,7 +557,7 @@ void mac_process_data_request(buffer_t *msg)
         (MAC_ASSOCIATED == mac_state)
        )
     {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert("Neither PAN coordinator nor coordinator" == 0);
 #endif
         return;
@@ -598,7 +598,7 @@ void mac_process_data_request(buffer_t *msg)
     }
     else
     {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Unexpected addressing mode" == 0);
 #endif
             return;

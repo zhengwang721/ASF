@@ -71,7 +71,7 @@ extern "C" {
 #endif
 
     /**
-     * \addtogroup group_tal_tx
+     * \addtogroup group_tal_tx_rfa1
      * @{
      */
 

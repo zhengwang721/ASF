@@ -247,7 +247,7 @@ void mac_process_data_response(void)
         /* Stop the MaxFrameResponseTime timer */
         pal_timer_stop(T_Poll_Wait_Time);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         if (pal_is_timer_running(T_Poll_Wait_Time))
         {
             Assert("Frame resp tmr running" == 0);

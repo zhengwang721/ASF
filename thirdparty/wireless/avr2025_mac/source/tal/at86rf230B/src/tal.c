@@ -613,7 +613,7 @@ static void switch_pll_on(void)
         if (pal_sub_time_us(now, start_time) > (10 * PLL_LOCK_TIME_US))
         {
             /* leave poll loop and throw assertion */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("PLL switch failed" == 0);
 #endif
             break;

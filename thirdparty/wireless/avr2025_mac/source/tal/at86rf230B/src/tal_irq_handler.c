@@ -122,7 +122,7 @@ void trx_irq_handler_cb(void)
         }
     }
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     /* Other IRQ than TRX_END */
     if (trx_irq_cause != TRX_IRQ_TRX_END)
     {

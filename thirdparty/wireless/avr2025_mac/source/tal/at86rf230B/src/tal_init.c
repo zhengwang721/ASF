@@ -346,8 +346,8 @@ static retval_t trx_init(void)
         trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
         if (poll_counter == 0xFF)
         {
-#if (DEBUG > 0)
-            pal_alert();
+#if (_DEBUG_ > 0)
+            app_alert();
 #endif
             return FAILURE;
         }
@@ -491,8 +491,8 @@ static retval_t trx_reset(void)
         poll_counter++;
         if (poll_counter > 250)
         {
-#if (DEBUG > 0)
-            pal_alert();
+#if (_DEBUG_ > 0)
+            app_alert();
 #endif
             return FAILURE;
         }

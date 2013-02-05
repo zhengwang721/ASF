@@ -222,18 +222,18 @@ void mac_idle_trans(void)
     {
         uint16_t default_shortaddress = macShortAddress_def;
         uint16_t default_panid = macPANId_def;
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         retval_t set_status =
 #endif
         set_tal_pib_internal(macShortAddress, (void *)&default_shortaddress);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 
         set_status =
 #endif
         set_tal_pib_internal(macPANId, (void *)&default_panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
     }

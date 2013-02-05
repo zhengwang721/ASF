@@ -1,33 +1,38 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.thirdparty.wireless.avr2102_rf4control" name="config.thirdparty.wireless.avr2102_rf4control" caption="CONFIG Serial connectivity Helper files" default="source">
-        <module type="meta" id="config.thirdparty.wireless.avr2102_rf4control#source" caption="AVR2025 - IEEE 802.15.4">
+	<select-by-config id="config.thirdparty.wireless.avr2102_rf4control" name="config.thirdparty.wireless.avr2102_rf4control" caption="RF4CE Configuration" default="source">
+        <module type="component" id="config.thirdparty.wireless.avr2102_rf4control#source" caption="RF4CE-Configuration - Source">
             <info type="description" value="summary">
-            To be added
-            </info>
+           This module will be selected when a single processor approach is implemented and when NCP is used in two processor approach
+             </info>
+			 <info type="gui-flag" value="hidden"/>           
             <require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+			<device-support value="megarf"/>
         </module>
-        <module type="meta" id="config.thirdparty.wireless.avr2102_rf4control#api_parser" caption="AVR2025 - IEEE 802.15.4">
+        <module type="component" id="config.thirdparty.wireless.avr2102_rf4control#api_parser" caption="RF4CE-Configuration - API Parser">
             <info type="description" value="summary">
-            To be added
-            </info>
+           This module will be selected for two processor approach in Host device
+             </info>
+			  <info type="gui-flag" value="hidden"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
+			<device-support value="sam"/>
         </module>
 	</select-by-config>
 
-    <module type="meta" id="thirdparty.wireless.avr2102_rf4control" caption="AVR2025 - IEEE 802.15.4">
+    <module type="component" id="thirdparty.wireless.avr2102_rf4control" caption="AVR2102 - RF4CE">
         <info type="description" value="summary">
-        To be added
+        RF4CE
         </info>
-        <require idref="config.thirdparty.wireless.avr2102_rf4control"/>
+         <require idref="config.thirdparty.wireless.avr2102_rf4control"/>
 		<device-support value="xmega"/>
         <device-support value="uc3"/>
         <device-support value="megarf"/>
         <device-support value="sam"/>
         <build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
-
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>

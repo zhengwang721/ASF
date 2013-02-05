@@ -97,20 +97,20 @@ tal_pib_t tal_pib;
 
 /**
  * Current state of the TAL state machine.
- * \ingroup group_tal_state_machine
+ * \ingroup group_tal_state_machine_rfa1
  */
 tal_state_t tal_state;
 
 /**
  * Current state of the transceiver.
- * \ingroup group_tal_state_machine
+ * \ingroup group_tal_state_machine_rfa1
  */
 tal_trx_status_t tal_trx_status;
 
 /**
  * Indicates if the transceiver needs to switch on its receiver by tal_task(),
  * because it could not be switched on due to buffer shortage.
- * \ingroup group_tal_state_machine
+ * \ingroup group_tal_state_machine_rfa1
  */
 bool tal_rx_on_required;
 
@@ -579,7 +579,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 /**
  * \brief Switches the PLL on
- * \ingroup group_tal_state_machine
+ * \ingroup group_tal_state_machine_rfa1
  */
 static void switch_pll_on(void)
 {
@@ -614,9 +614,9 @@ static void switch_pll_on(void)
     }
     while (poll_counter < PLL_LOCK_ATTEMPTS);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert("PLL switch failed" == 0);
-    pal_alert();
+    app_alert();
 #endif
 }
 

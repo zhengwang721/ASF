@@ -57,7 +57,7 @@
 #include "ieee_const.h"
 #include "mac_data_structures.h"
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
 /* Needs to be included for make_mac_disp_not_busy() while debugging */
 #include "tal_internal.h"
 #endif
@@ -635,7 +635,7 @@ extern "C" {
     /**
      * This macro sets the MAC to busy
      */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
 #define MAKE_MAC_BUSY()             do {        \
         if (mac_busy)                               \
         {                                           \
@@ -654,7 +654,7 @@ extern "C" {
     /**
      * This macro sets the MAC to not busy
      */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
 #define MAKE_MAC_NOT_BUSY()         do {        \
         if (!mac_busy)                              \
         {                                           \

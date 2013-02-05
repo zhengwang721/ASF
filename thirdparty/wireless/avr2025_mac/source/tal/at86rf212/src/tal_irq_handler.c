@@ -146,7 +146,7 @@ void trx_irq_handler_cb(void)
         }
     }
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     /* Other IRQ than TRX_END */
     if (trx_irq_cause != TRX_IRQ_3_TRX_END)
     {
@@ -221,7 +221,7 @@ void trx_irq_awake_handler_cb(void)
         tal_awake_end_flag = true;
     }
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (trx_irq_cause & (~(TRX_IRQ_0_PLL_LOCK | TRX_IRQ_4_CCA_ED_DONE)))
     {
         Assert("Unexpected interrupt" == 0);

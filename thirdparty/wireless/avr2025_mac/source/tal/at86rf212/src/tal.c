@@ -626,9 +626,9 @@ static void switch_pll_on(void)
     }
     while (poll_counter < PLL_LOCK_ATTEMPTS);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert("PLL switch failed" == 0);
-    pal_alert();
+    app_alert();
 #endif
 }
 

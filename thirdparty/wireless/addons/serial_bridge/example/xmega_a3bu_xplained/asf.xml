@@ -9,7 +9,7 @@
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_sio2ncp.h"/>
 
-		<require idref="thirdparty.wireless.addons.serial_bridge"/>
+		<require idref="thirdparty.wireless.addons.serial_bridge.example"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>

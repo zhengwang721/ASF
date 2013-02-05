@@ -208,7 +208,7 @@ static void trx_ed_irq_handler_cb(void)
         }
     }
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (trx_irq_cause & (~(TRX_IRQ_PLL_LOCK | TRX_IRQ_CCA_ED_READY)))
     {
         Assert("Unexpected interrupt" == 0);

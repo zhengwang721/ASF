@@ -296,7 +296,7 @@ extern "C" {
 #endif
 
     /**
-     * \addtogroup group_tal_irq
+     * \addtogroup group_tal_irq_rfr2
      * @{
      */
 

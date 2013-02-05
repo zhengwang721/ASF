@@ -7,8 +7,6 @@
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
 
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="atmegarfr2"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="atmegarfr2"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
 

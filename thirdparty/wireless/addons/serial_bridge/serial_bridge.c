@@ -53,62 +53,37 @@
 /* === INCLUDES ============================================================ */
 
 #include <stdlib.h>
+#include "serial_bridge.h"
 #include "sio2host.h"
 #include "sio2ncp.h"
 #include "asf.h"
-
-/* === PROTOTYPES =============================================================== */
-
-void app_alert(void);
-void serial_handler(void);
-
-/* === MACROS ============================================================== */
-#define SIO_RX_BUF_SIZE                 (32)
 
 /* === GLOBALS ============================================================== */
 
 uint8_t length_received_host , length_received_ncp;	
 uint8_t temp[SIO_RX_BUF_SIZE];
 
-
 /* === IMPLEMENTATION ====================================================== */
 
-
-/**
- * \brief Main function of the Serial Bridge application
- */
-int main(void)
+status_code_t serial_bridge_init()
 {
-    irq_initialize_vectors();
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-    sysclk_init();
-	board_init();
-
-    cpu_irq_enable();
-
-    if ( STATUS_OK != sio2host_init() )
+	if ( STATUS_OK != sio2host_init() )
     {
         /* something went wrong during initialization */
-        app_alert();
+        return ERR_IO_ERROR ;
     }
     
     if (STATUS_OK != sio2ncp_init())
     {
         /* something went wrong during initialization */
-        app_alert();
+        return ERR_IO_ERROR ;
     }
-    while (1)
-    {
-        serial_handler();
-    }
+
+return STATUS_OK;
 }
 
-
-void serial_handler()
+void serial_bridge_handler()
 {
 
 	length_received_host = sio2host_rx(temp,SIO_RX_BUF_SIZE);
@@ -127,42 +102,4 @@ void serial_handler()
 }
 
 
-void app_alert()
-{
-    while (1)
-    {
-#if LED_COUNT > 0
-		LED_Toggle(LED0);
-#endif
-
-#if LED_COUNT > 1
-		LED_Toggle(LED1);
-#endif
-
-#if LED_COUNT > 2
-		LED_Toggle(LED2);
-#endif
-
-#if LED_COUNT > 3
-		LED_Toggle(LED3);
-#endif
-
-#if LED_COUNT > 4
-		LED_Toggle(LED4);
-#endif
-
-#if LED_COUNT > 5
-		LED_Toggle(LED5);
-#endif
-
-#if LED_COUNT > 6
-		LED_Toggle(LED6);
-#endif
-
-#if LED_COUNT > 7
-		LED_Toggle(LED7);
-#endif
-		delay_us(0xFFFF);
-	}
-}
 /* EOF */

@@ -32,12 +32,73 @@
 
 
 /**
- * \defgroup group_tal ATMEGARFR2 Transceiver Abstraction Layer
+ * \ingroup group_tal 
+ * \defgroup group_tal_rfr2 ATMEGARFR2 Transceiver Abstraction Layer
  * The ATmega256RFR2 is a low-power CMOS 8-bit microcontroller based on the AVR
  * enhanced RISC architecture combined with a high data rate transceiver for the 2.4 GHz
  *  ISM band. It is derived from the ATmega1281 microcontroller and the AT86RF231 radio transceiver.
  * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
  * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses the services of PAL.
+ */
+ 
+ /**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_state_machine_rfr2  TAL State Machine
+ * The different operating states of the Transceiver are controlled by the TAL state machine.
+ *
+ */
+ 
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_init_rfr2  TAL Initialization and reset
+ * Performs initialization and reset functionalities of the transceiver
+ *
+ */
+
+
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_ed_rfr2   TAL Energy Detection
+ * Performs the ED scan functionalities.
+ *
+ */
+
+
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_irq_rfr2  Transceiver Interrupt Handling
+ * Handles Transceiver related Interrupts.
+ *
+ */
+
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_pib_rfr2   TAL PIB Storage
+ * The PIB(Pan Information Base) attributes related to the TAL are Stored and handled  by the TAL PIB storage.
+ *
+ */
+
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_tx_rfr2   TAL Frame Transmission Unit
+ * The Frame Transmission Unit generates and transmits the frames using PAL .
+ *
+ */
+
+/**
+* \ingroup group_tal_tx_rfr2
+* \defgroup group_tal_tx_csma_rfr2   TAL CSMA/CA Module
+* Performs channel access mechanism for frame transmission
+* For Detailed information refer  CSMA-CA algorithm section of IEEE Std 802.15.4-2006
+*
+*/
+
+
+/**
+ * \ingroup group_tal_rfr2
+ * \defgroup group_tal_rx_rfr2   TAL Frame Reception Unit
+ * The Frame Reception Unit reads/uploads the incoming frames .
+ *
  */
 
 

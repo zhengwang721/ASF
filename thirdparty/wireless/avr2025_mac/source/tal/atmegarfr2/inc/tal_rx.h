@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
     /**
-     * \addtogroup group_tal_rx
+     * \addtogroup group_tal_rx_rfr2
      * @{
      */
 

@@ -212,7 +212,7 @@ static inline void initiate_ed_sampling(void)
                                        TAL_CONVERT_SYMBOLS_TO_US(ED_SAMPLE_DURATION_SYM + 1),
                                        TIMEOUT_RELATIVE,
                                        (FUNC_PTR)ed_sampling_done_cb, NULL);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         if (timer_status != MAC_SUCCESS)
         {
             Assert("Unable to start ED sample timer" == 0);
@@ -269,7 +269,7 @@ static void ed_sampling_done_cb(void *parameter)
  */
 static void scan_duration_timer_expired_cb(void *parameter)
 {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     uint8_t irq_status;
 #endif
 
@@ -279,7 +279,7 @@ static void scan_duration_timer_expired_cb(void *parameter)
     pal_timer_stop(TAL_ED_SAMPLE_TIMER);
 #endif
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (pal_is_timer_running(TAL_ED_SAMPLE_TIMER))
     {
         Assert("ED timer running after ED scan" == 0);
@@ -293,14 +293,14 @@ static void scan_duration_timer_expired_cb(void *parameter)
      */
     set_trx_state(CMD_FORCE_PLL_ON);   // cancel any ongoing reception
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     irq_status =
 #endif
         pal_trx_reg_read(RG_IRQ_STATUS);        // clear IRQ status
     /* Avoid to trigger the ISR; input capture flag is cleared */
     pal_trx_irq_flag_clr();
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (irq_status != TRX_NO_IRQ)
     {
         // \TODO handle trx interrupts like battery monitor

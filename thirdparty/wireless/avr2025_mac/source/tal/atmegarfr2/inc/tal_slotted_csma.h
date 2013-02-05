@@ -21,8 +21,8 @@
 #define TAL_SLOTTED_CSMA_H
 
 /**
- * \ingroup group_tal_tx_csma
- * \defgroup group_tal_slotted_csma  Slotted CSMA Module
+ * \ingroup group_tal_tx_csma_rfr2
+ * \defgroup group_tal_slotted_csma_rfr2  Slotted CSMA Module
  * Transmits data using Slotted CSMA/CA mechanism.
  *  @{
  */

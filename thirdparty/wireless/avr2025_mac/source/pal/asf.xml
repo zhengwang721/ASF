@@ -1,9 +1,10 @@
 <asf xmlversion="1.0">
 	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
-        <module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
+        <module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
             <info type="description" value="summary">
             This module includes PAL wrapper files
             </info>
+			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
             <build type="header-file"   value="pal.h"/>
             <build type="header-file"   value="pal_ext_trx.h"/>
@@ -20,10 +21,11 @@
             <device-support value="sam"/>
 		</module>
 
-		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
+		<module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
             <info type="description" value="summary">
             This module includes PAL wrapper files
             </info>
+			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
             <build type="header-file"   value="pal.h"/>
             <build type="doxygen-entry-point" value="group_pal"/>
@@ -35,7 +37,7 @@
 		</module>
     </select-by-device>
 
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.inc" caption="COMPONENT - PAL">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.inc" caption="PAL Includes">
 		<info type="description" value="summary">
 		Pal Generic Include files are included by this module
 		</info>

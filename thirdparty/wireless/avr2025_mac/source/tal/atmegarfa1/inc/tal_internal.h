@@ -63,7 +63,8 @@
 
 
 /**
- * \defgroup group_tal ATMEGARFA1 Transceiver Abstraction Layer
+ * \ingroup group_tal
+ * \defgroup group_tal_rfa1 ATMEGARFA1 Transceiver Abstraction Layer
  * The ATmega128RFA1 is a low-power CMOS 8-bit microcontroller based on the AVR
  * enhanced RISC architecture combined with a high data rate transceiver for the 2.4 GHz
  *  ISM band. It is derived from the ATmega1281 microcontroller and the AT86RF231 radio transceiver.
@@ -72,6 +73,67 @@
  * \a Refer <A href="http://www.atmel.com/Images/doc8266.pdf">ATMEGARFA1 Data Sheet </A> \b for \b detailed \b information .
  */
 
+ 
+ /**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_state_machine_rfa1 TAL State Machine
+ * The different operating states of the Transceiver are controlled by the TAL state machine.
+ *
+ */
+ 
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_init_rfa1  TAL Initialization and reset
+ * Performs initialization and reset functionalities of the transceiver
+ *
+ */
+
+
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_ed_rfa1   TAL Energy Detection
+ * Performs the ED scan functionalities.
+ *
+ */
+
+
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_irq_rfa1  Transceiver Interrupt Handling
+ * Handles Transceiver related Interrupts.
+ *
+ */
+
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_pib_rfa1   TAL PIB Storage
+ * The PIB(Pan Information Base) attributes related to the TAL are Stored and handled  by the TAL PIB storage.
+ *
+ */
+
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_tx_rfa1   TAL Frame Transmission Unit
+ * The Frame Transmission Unit generates and transmits the frames using PAL .
+ *
+ */
+
+/**
+* \ingroup group_tal_tx_rfa1
+* \defgroup group_tal_tx_csma_rfa1   TAL CSMA/CA Module
+* Performs channel access mechanism for frame transmission
+* For Detailed information refer  CSMA-CA algorithm section of IEEE Std 802.15.4-2006
+*
+*/
+
+
+/**
+ * \ingroup group_tal_rfa1
+ * \defgroup group_tal_rx_rfa1   TAL Frame Reception Unit
+ * The Frame Reception Unit reads/uploads the incoming frames .
+ *
+ */
+ 
 
 
 
@@ -279,7 +341,7 @@ extern bool tal_beacon_transmission;
  * \param trx_cmd needs to be one of the trx commands
  *
  * \return current trx state
- * \ingroup group_tal_state_machine
+ * \ingroup group_tal_state_machine_rfa1
  */
 tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd);
 #ifdef ENABLE_FTN_PLL_CALIBRATION
@@ -301,7 +363,7 @@ void calibration_timer_handler_cb(void *parameter);
  * This function updates the max_ed_level and invokes the callback function
  * tal_ed_end_cb().
  *
- * \ingroup group_tal_ed
+ * \ingroup group_tal_ed_rfa1
  */
 void ed_scan_done(void);
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */

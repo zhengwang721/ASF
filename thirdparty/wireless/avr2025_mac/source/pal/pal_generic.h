@@ -304,9 +304,9 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
     bool pal_is_timer_running(uint8_t timer_id);
 
     /** @cond DOXYGEN_PAL_DEBUG */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     bool pal_are_all_timers_stopped(void);
-#endif  /* (DEBUG > 0) */
+#endif  /* (_DEBUG_ > 0) */
     /** @endcond */
 
 

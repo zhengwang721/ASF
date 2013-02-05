@@ -68,7 +68,7 @@
 /* === MACROS ============================================================== */
 
 /**
- * \addtogroup group_tal_ed
+ * \addtogroup group_tal_ed_rfa1
  * @{
  */
 

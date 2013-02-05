@@ -254,7 +254,7 @@ static void mac_process_tal_tx_status(retval_t tx_status,  frame_info_t *frame)
                                              (FUNC_PTR)mac_t_response_wait_cb,
                                              NULL);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                     Assert(MAC_SUCCESS == status);
 #endif
                     if (MAC_SUCCESS != status)
@@ -437,7 +437,7 @@ static void mac_process_tal_tx_status(retval_t tx_status,  frame_info_t *frame)
 #endif /* (MAC_START_REQUEST_CONFIRM == 1) */
 
         default:
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Unknown message type" == 0);
 #endif
             /* Set radio to sleep if allowed */

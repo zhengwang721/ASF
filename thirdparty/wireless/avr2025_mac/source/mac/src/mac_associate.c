@@ -163,12 +163,12 @@ void mlme_associate_request(uint8_t *m)
     }
 
     /* Set the PAN ID. */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status =
 #endif
     set_tal_pib_internal(macPANId, (void *)&mar.CoordPANId);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
 
@@ -280,7 +280,7 @@ void mlme_associate_request(uint8_t *m)
     status = set_tal_pib_internal(phyCurrentPage,
                                   (void *)&(mar.ChannelPage));
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == status);
 #endif
 
@@ -288,7 +288,7 @@ void mlme_associate_request(uint8_t *m)
     status_2 = set_tal_pib_internal(phyCurrentChannel,
                                       (void *)&(mar.LogicalChannel));
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == status_2);
 #endif
 
@@ -538,7 +538,7 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 {
     uint16_t panid;
     uint16_t short_addr;
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status;
 #endif
     uint8_t status = mac_parse_data.mac_payload_data.assoc_response_data.assoc_status;
@@ -549,13 +549,13 @@ void mac_process_associate_response(buffer_t *assoc_resp)
     if (ASSOCIATION_SUCCESSFUL == status)
     {
         /* Set the short address received in association response frame. */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         set_status =
 #endif
         set_tal_pib_internal(macShortAddress,
                     (void *)&(mac_parse_data.mac_payload_data.assoc_response_data.short_addr));
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
         short_addr = mac_parse_data.mac_payload_data.assoc_response_data.short_addr;
@@ -578,12 +578,12 @@ void mac_process_associate_response(buffer_t *assoc_resp)
 
         panid = macPANId_def;
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         set_status =
 #endif
         set_tal_pib_internal(macPANId, (void *)&panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert(MAC_SUCCESS == set_status);
 #endif
         mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;
@@ -658,7 +658,7 @@ void mac_t_response_wait_cb(void *callback_parameter)
                                    TIMEOUT_RELATIVE,
                                    (FUNC_PTR)mac_t_assocresponsetime_cb, NULL);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == timer_status);
 #endif
 
@@ -697,12 +697,12 @@ void mac_t_assocresponsetime_cb(void *callback_parameter)
 
     /* Set the default parameters. */
     panid = macPANId_def;
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t set_status =
 #endif
         set_tal_pib_internal(macPANId, (void *)&panid);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     Assert(MAC_SUCCESS == set_status);
 #endif
     mac_pib.mac_CoordShortAddress = macCoordShortAddress_def;

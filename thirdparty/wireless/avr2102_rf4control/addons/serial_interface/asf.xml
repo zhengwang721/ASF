@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
 
-		<module type="meta" id="thirdparty.wireless.avr2102_rf4control.addons.serial_interface" caption="API Parser support ">
+		<module type="service" id="thirdparty.wireless.avr2102_rf4control.addons.serial_interface" caption="Serial Interface support for RF4CE">
 			<info type="description" value="summary">
-				API Parser for MAC
+				Serial Interface Support for RF4CE
 			</info>
-
+			<build type="doxygen-entry-point" value="group_sif_rf4ce"/>
 			<build type="c-source" value="serial_interface.c"/>
 			<build type="header-file" value="serial_interface.h"/>
 			<build type="include-path" value="."/>

@@ -181,7 +181,7 @@ typedef void (*irq_handler_t)(void);
 
 
 #ifdef TEST_HARNESS
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
 /**
  * @brief This is the ALERT.indication message structure.
  */
@@ -194,7 +194,7 @@ typedef struct assert_tag
     /**< Bytes to read to frame, data[0] gives the length */
     uint8_t data[1]         ALIGN8BIT;
 } assert_t;
-#endif  /* (DEBUG > 0) */
+#endif  /* (_DEBUG_ > 0) */
 #endif  /* TEST_HARNESS */
 
 /* === Externals ============================================================ */

@@ -1,12 +1,13 @@
 <asf xmlversion="1.0">
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" name="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks" caption="MAC Callbacks Configuration" default="all">
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks#all" caption="Support for all callbacks from MAC">
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks#all" caption="Support for all callbacks from MAC">
 			<info type="description" value="summary">
 			All the callbacks from the MAc is included in separate files for ease implementation.
 			</info>
-			<info type="gui-flag" value="hidden"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
+            <device-support value="megarf"/>
+            <device-support value="sam"/>
 			<build type="c-source"      value="src/usr_mcps_data_conf.c"/>
 			<build type="c-source"      value="src/usr_mcps_data_ind.c"/>
 			<build type="c-source"      value="src/usr_mcps_purge_conf.c"/>
@@ -26,11 +27,10 @@
 			<build type="c-source"      value="src/usr_mlme_start_conf.c"/>
 			<build type="c-source"      value="src/usr_mlme_sync_loss_ind.c"/>
 		</module>
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks#none" caption="All Files are Supported">
+		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks#none" caption="All Files are Supported">
 			<info type="description" value="summary">
 			Callbacks are expected to be included in the application itself.
 			</info>
-			<info type="gui-flag" value="hidden"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="megarf"/>
@@ -68,6 +68,7 @@
 		<info type="description" value="summary">
 		This modules includes all the MAC files of the Stack
 		</info>
+		<info type="gui-flag" value="hidden"/>
 		<build type="c-source"      value="src/mac.c"/>
 		<build type="c-source"      value="src/mac_associate.c"/>
 		<build type="c-source"      value="src/mac_beacon.c"/>

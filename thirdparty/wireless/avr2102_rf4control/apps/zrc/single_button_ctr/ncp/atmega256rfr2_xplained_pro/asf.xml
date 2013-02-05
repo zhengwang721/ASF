@@ -19,9 +19,7 @@
 		<config name="config.compiler.iarew.near_heap_size" value="0x40"/>
 		
 		
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="atmegarfr2"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="atmegarf_sal"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="atmegarfr2"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<require idref="common.services.basic.sleepmgr"/>

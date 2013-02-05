@@ -1,11 +1,10 @@
 /**
  * \file sio2ncp.c
  *
- * \brief Event handling Serial I/O  Functionalities
- 
+ * \brief Handles Serial I/O  Functionalities 
  *
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,6 +57,8 @@
 
 
 /* === PROTOTYPES ========================================================== */
+
+/* === GLOBALS ========================================================== */
 static usart_serial_options_t usart_serial_options =
 	{
 		.baudrate     = USART_NCP_BAUDRATE,
@@ -68,8 +69,8 @@ static usart_serial_options_t usart_serial_options =
 
 
 /**
- * USB receive buffer
- * The buffer size is defined in app_config.h
+ * Receive buffer
+ * The buffer size is defined in sio2ncp.h
  */
 static uint8_t serial_rx_buf[SERIAL_RX_BUF_SIZE_NCP];
 
@@ -87,8 +88,6 @@ static uint8_t serial_rx_buf_tail;
  * Number of bytes in receive buffer
  */
 static uint8_t serial_rx_count;
-
-
 
 
 /* === IMPLEMENTATION ====================================================== */
@@ -186,7 +185,7 @@ uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
 }
 
 
-int sio2ncp_getchar(void)
+uint8_t sio2ncp_getchar(void)
 {
     uint8_t c;
 
@@ -199,8 +198,8 @@ int sio2ncp_getchar_nowait(void)
 {
     uint8_t c;
 
- int back = sio2ncp_rx(&c, 1);
-        if (back >= 1)
+	int back = sio2ncp_rx(&c, 1);
+    if (back >= 1)
     {
       return c;
     }
@@ -236,12 +235,10 @@ ISR(USART_NCP_ISR_VECT)
 	{
 		serial_rx_buf_tail++;
 	}
-        //LED_Toggle(LED0);
-        //usart_serial_write_packet(USART_HOST1,&temp,1);
-        //sio_tx(&temp,1);
+
 	cpu_irq_enable();
 }
 
 
-
+/** EOF */
 

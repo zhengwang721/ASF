@@ -1,21 +1,24 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
-	<module type="application" id="thirdparty.wireless.addons.serial_bridge" caption="Serial Bridge Application">
+	<module type="service" id="thirdparty.wireless.addons.serial_bridge" caption="Serial Bridge ">
 		<info type="description" value="summary">
-			Serial Bridge Application
+			Serial Bridge acts as a bridge for performing serial i/o between host and ncp
 		</info>
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
-		<build type="c-source"      value="main.c"/>
         
 		<require idref="common.services.ioport"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.delay"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
+		<build type="c-source"      value="serial_bridge.c"/>
+        <build type="header-file"   value="serial_bridge.h"/>
+		<build type="include-path" value="."/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
 		<device-support value="megarf"/>
+		<build type="doxygen-entry-point" value="group_serial_bridge"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>

@@ -1,11 +1,9 @@
 /**
  * \file sio2host.c
  *
- * \brief Event handling Serial I/O  Functionalities
- 
+ * \brief Handles Serial I/O  Functionalities For the Host Device
  *
- *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,6 +56,8 @@
 
 
 /* === PROTOTYPES ========================================================== */
+
+/* === GLOBALS ========================================================== */
 static usart_serial_options_t usart_serial_options =
 	{
 		.baudrate     = USART_HOST_BAUDRATE,
@@ -67,10 +67,9 @@ static usart_serial_options_t usart_serial_options =
 	};
 
 
-
 /**
- * USB receive buffer
- * The buffer size is defined in app_config.h
+ * Receive buffer
+ * The buffer size is defined in sio2host.h
  */
 static uint8_t serial_rx_buf[SERIAL_RX_BUF_SIZE];
 
@@ -89,10 +88,6 @@ static uint8_t serial_rx_buf_tail;
  */
 static uint8_t serial_rx_count;
 
-# ifdef USB_ENABLE
-static volatile bool usb_rx_byte_rcvd = false;
-static volatile bool main_b_cdc_enable = false;
-# endif
 
 
 /* === IMPLEMENTATION ====================================================== */
@@ -104,7 +99,6 @@ status_code_t sio2host_init(void)
 	USART_HOST_RX_ISR_ENABLE();
 	return STATUS_OK;
 }
-
 
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
@@ -124,7 +118,6 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
     uint8_t data_received = 0;
     if (serial_rx_count == 0)
     {
-        
         return 0;
     }
     if (SERIAL_RX_BUF_SIZE <= serial_rx_count)
@@ -186,10 +179,9 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 
 }
 
-int sio2host_getchar(void)
+uint8_t sio2host_getchar(void)
 {
     uint8_t c;
-
 	while (0 == sio2host_rx(&c, 1));
 	return c;
 }
@@ -197,15 +189,13 @@ int sio2host_getchar(void)
 int sio2host_getchar_nowait(void)
 {
     uint8_t c;
-
- int back = sio2host_rx(&c, 1);
-        if (back >= 1)
+	int back = sio2host_rx(&c, 1);
+    if (back >= 1)
     {
       return c;
     }
     else
-    {
-      
+    {     
         return (-1);
     }
 
@@ -221,8 +211,7 @@ ISR(USART_HOST_ISR_VECT)
 	cpu_irq_disable();
 	
 	/* The count of characters present in receive buffer is incremented. */
-	serial_rx_count++;
-	
+	serial_rx_count++;	
 	
 	serial_rx_buf[serial_rx_buf_tail] = temp;
 	
@@ -238,6 +227,7 @@ ISR(USART_HOST_ISR_VECT)
 	cpu_irq_enable();
 }
 
+/* EOF */
 
 
 

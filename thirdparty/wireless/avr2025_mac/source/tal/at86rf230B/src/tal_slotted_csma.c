@@ -813,7 +813,7 @@ static void ack_reception_handler_cb(void *parameter)
                          * the transmitted sequence number.
                          */
                         pal_timer_stop(TAL_ACK_WAIT_TIMER);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         if (pal_is_timer_running(TAL_ACK_WAIT_TIMER))
                         {
                             Assert("Ack timer running" == 0);
@@ -906,7 +906,7 @@ static void ack_timer_expiry_handler_cb(void *parameter)
 static void start_beacon_loss_timer(void)
 {
     uint32_t timer_duration_us;
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     retval_t timer_status;
 #endif
 
@@ -918,7 +918,7 @@ static void start_beacon_loss_timer(void)
     timer_duration_us *= aMaxLostBeacons;
     timer_duration_us += CSMA_BEACON_LOSS_GUARD_TIME_US;
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     timer_status =
 #endif
         pal_timer_start(TAL_CSMA_BEACON_LOSS_TIMER,
@@ -927,7 +927,7 @@ static void start_beacon_loss_timer(void)
                         (FUNC_PTR)beacon_loss_timer_cb,
                         NULL);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (timer_status != MAC_SUCCESS)
     {
         if (timer_status == PAL_TMR_INVALID_TIMEOUT)
@@ -957,7 +957,7 @@ static void beacon_loss_timer_cb(void *parameter)
     /* debug pin to switch on: define ENABLE_DEBUG_PINS, pal_config.h */
     PIN_BEACON_LOSS_TIMER_END();
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (tal_csma_state != BACKOFF_WAITING_FOR_BEACON)
     {
         Assert("beacon loss timer issue" == 0);
@@ -977,7 +977,7 @@ static void beacon_loss_timer_cb(void *parameter)
  */
 static void tx_done(retval_t status)
 {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     switch (tal_state)
     {
         case TAL_SLOTTED_CSMA:
@@ -996,7 +996,7 @@ static void tx_done(retval_t status)
             break;
     }
 #endif
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     if (pal_is_timer_running(TAL_CSMA_BEACON_LOSS_TIMER))
     {
         Assert("beacon lost timer is still running" == 0);

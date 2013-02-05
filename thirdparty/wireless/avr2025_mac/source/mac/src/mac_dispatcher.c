@@ -302,7 +302,7 @@ void dispatch_event(uint8_t *event)
         else
         {
             bmm_buffer_free((buffer_t *)event);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Dispatch handler unavailable" == 0);
 #endif
         }

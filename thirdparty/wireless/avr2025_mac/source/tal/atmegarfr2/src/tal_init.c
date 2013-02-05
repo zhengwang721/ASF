@@ -47,7 +47,7 @@
 #include "stb.h"
 #endif
 /**
- * \addtogroup group_tal_init
+ * \addtogroup group_tal_init_rfr2
  * @{
  */
 
@@ -256,8 +256,8 @@ static retval_t trx_init(void)
         /* Wait not more than max. value of TR2. */
         if (poll_counter == RESET_TO_TRX_OFF_ATTEMPTS)
         {
-#if (DEBUG > 0)
-            pal_alert();
+#if (_DEBUG_ > 0)
+            app_alert();
 #endif
             return FAILURE;
         }
@@ -438,8 +438,8 @@ static retval_t trx_reset(void)
         /* Wait not more than max. value of TR2. */
         if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS)
         {
-#if (DEBUG > 0)
-            pal_alert();
+#if (_DEBUG_ > 0)
+            app_alert();
 #endif
             return FAILURE;
         }

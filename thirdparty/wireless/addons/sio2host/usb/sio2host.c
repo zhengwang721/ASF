@@ -3,7 +3,7 @@
  *
  * \brief Event handling Serial I/O  Functionalities
  
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,8 +58,8 @@
 /* === PROTOTYPES ========================================================== */
 
 /**
- * USB receive buffer
- * The buffer size is defined in app_config.h
+ * Receive buffer
+ * The buffer size is defined in sio2host.h
  */
 static uint8_t serial_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 
@@ -169,10 +169,9 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 }
 
 
-int sio2host_getchar(void)
+uint8_t sio2host_getchar(void)
 {
     uint8_t c;
-
 	while (0 == sio2host_rx(&c, 1));
 	return c;
 }
@@ -215,14 +214,14 @@ void main_cdc_disable(uint8_t port)
 
 void dtr_cb(bool set)
 {
-if (set)
-{
- stdio_usb_enable();
-}
-else
-{
-stdio_usb_disable();
-}
+	if (set)
+	{
+		stdio_usb_enable();
+	}
+	else
+	{
+		stdio_usb_disable();
+	}
 
 
 }
@@ -256,4 +255,4 @@ void usb_rx_notify(void)
 		}
 	}
 }
-
+/** EOF */

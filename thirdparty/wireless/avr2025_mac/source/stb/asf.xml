@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="component" id="thirdparty.wireless.avr2025_mac.source.stb" caption="COMPONENT - PAL">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.stb" caption="STB Component">
 		<info type="description" value="summary">
 		To be Added
 		</info>
@@ -10,18 +10,16 @@
 		<build type="header-file"   value="inc/stb_internal.h"/>
 		<build type="header-file"   value="inc/stb_armcrypto.h"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb.inc"/>
-		<build type="doxygen-entry-point" value="stb_group"/>
+		<build type="doxygen-entry-point" value="group_stb"/>
 
 		<device-support value="avr"/>
 	</module>
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.stb.inc" caption="COMPONENT - STB">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.stb.inc" caption="STB Includes">
 		<info type="description" value="summary">
 		To be Added
 		</info>
-
 		<build type="header-file"   value="inc/stb_generic.h"/>
 		<build type="include-path"  value="inc/"/>
-		<build type="doxygen-entry-point" value="stb_group"/>
 		<device-support value="avr"/>
 	</module>
 </asf>

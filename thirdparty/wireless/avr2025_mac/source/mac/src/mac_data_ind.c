@@ -291,7 +291,7 @@ void mac_process_tal_data_ind(uint8_t *msg)
 #endif  /* (MAC_SYNC_LOSS_INDICATION == 1) */
 
                         default:
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                             Assert("Unsupported MAC frame in state MAC_EXPLICIT_POLL or MAC_POLL_IMPLICIT" == 0);
 #endif
                             break;
@@ -325,7 +325,7 @@ void mac_process_tal_data_ind(uint8_t *msg)
                 /* This is the expected association response frame. */
                 pal_timer_stop(T_Poll_Wait_Time);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                 if (pal_is_timer_running(T_Poll_Wait_Time))
                 {
                     Assert("T_Poll_Wait_Time tmr during association running" == 0);
@@ -344,7 +344,7 @@ void mac_process_tal_data_ind(uint8_t *msg)
 #endif /* (MAC_ASSOCIATION_REQUEST_CONFIRM == 1) */
 
         default:
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Received frame in unsupported MAC poll state" == 0);
 #endif
             break;
@@ -439,7 +439,7 @@ static bool process_data_ind_scanning(buffer_t *b_ptr)
 
         default:
         {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Unexpected TAL data indication while checking mac_scan_state" == 0);
 #endif
         }
@@ -588,11 +588,11 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
                     {
                         beacon_tx_time_symb = TAL_CONVERT_US_TO_SYMBOLS(f_ptr->time_stamp);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         retval_t set_status =
 #endif
                         set_tal_pib_internal(macBeaconTxTime, (void *)&beacon_tx_time_symb);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         Assert(MAC_SUCCESS == set_status);
 #endif
                         if ((MAC_SYNC_TRACKING_BEACON == mac_sync_state) ||
@@ -624,7 +624,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 
                                 pal_timer_stop(T_Beacon_Tracking_Period);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                                 if (pal_is_timer_running(T_Beacon_Tracking_Period))
                                 {
                                     Assert("Bcn tmr running" == 0);
@@ -846,7 +846,7 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 
         default:
         {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert("Unexpected TAL data indication" == 0);
 #endif
         }
@@ -1153,7 +1153,7 @@ static bool parse_mpdu(frame_info_t *rx_frame_ptr)
                 break;
 
             default:
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                 Assert("Unsupported MAC command in parse_MPDU" == 0);
 #endif
                 return false;
@@ -1182,7 +1182,7 @@ void tal_rx_frame_cb(frame_info_t *frame)
 
     if (NULL == frame->buffer_header)
     {
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert("Null frame From TAL" == 0);
 #endif
         return;

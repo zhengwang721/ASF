@@ -61,7 +61,7 @@
 
 
 /**
- * \addtogroup group_tal_pib
+ * \addtogroup group_tal_pib_rfa1
  * @{
  */
 

@@ -156,22 +156,22 @@ void mac_process_beacon_frame(buffer_t *beacon)
             beacon_order =
                 GET_BEACON_ORDER(mac_parse_data.mac_payload_data.beacon_data.superframe_spec);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             retval_t set_status =
 #endif
             set_tal_pib_internal(macBeaconOrder, (void *)&beacon_order);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert(MAC_SUCCESS == set_status);
 #endif
             superframe_order =
                 GET_SUPERFRAME_ORDER(mac_parse_data.mac_payload_data.beacon_data.superframe_spec);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             set_status =
 #endif
             set_tal_pib_internal(macSuperframeOrder, (void *)&superframe_order);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             Assert(MAC_SUCCESS == set_status);
 #endif
 
@@ -471,7 +471,7 @@ void mac_process_beacon_frame(buffer_t *beacon)
             if (MAC_SYNC_NEVER != mac_sync_state)
             {
                 uint8_t index;
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                 bool status;
 #endif
                 /*
@@ -502,12 +502,12 @@ void mac_process_beacon_frame(buffer_t *beacon)
                          * in the beacon address list. Implicit poll (using the
                          * device short address) is done to get the pending data
                          */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         status =
 #endif
                             mac_build_and_tx_data_req(false, false, 0, NULL, 0);
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         Assert(status == true);
 #endif
                         return;
@@ -533,13 +533,13 @@ void mac_process_beacon_frame(buffer_t *beacon)
                          * (using the device extended address) is done to get
                          * the pending data
                          */
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         status =
 #endif
                             mac_build_and_tx_data_req(false, true, 0, NULL, 0);
 
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
                         Assert(status == true);
 #endif
                         return;

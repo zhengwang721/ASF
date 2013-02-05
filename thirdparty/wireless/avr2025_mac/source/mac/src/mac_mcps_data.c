@@ -837,7 +837,7 @@ void mac_start_persistence_timer(void)
     {
         /* Got to the persistence timer callback function immediately. */
         mac_t_persistence_cb(NULL);
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
         Assert("Indirect data persistence timer start failed" == 0);
 #endif
     }

@@ -331,7 +331,7 @@ static retval_t trx_init(void)
         if (poll_counter == P_ON_TO_TRX_OFF_ATTEMPTS)
         {
 #if (_DEBUG_ > 0)
-            pal_alert();
+            app_alert();
 #endif
             return FAILURE;
         }
@@ -510,7 +510,7 @@ static retval_t trx_reset(void)
         if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS)
         {
 #if (_DEBUG_ > 0)
-            pal_alert();
+            app_alert();
 #endif
             return FAILURE;
         }

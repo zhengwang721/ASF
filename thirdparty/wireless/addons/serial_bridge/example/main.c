@@ -1,9 +1,9 @@
 /**
- * \file sio2ncp.h
+ * \file main.c
  *
- * \brief Handles Serial I/O  Functionalities
- 
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * \brief  Serial Bridge Application
+ *
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,65 +39,101 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+/**
+ * \page license License
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
-#ifndef SIO2NCP_H
-#define SIO2NCP_H
+ 
+ /**
+  * \mainpage Serial Bridge Application
+  */
 
 /* === INCLUDES ============================================================ */
 
-#include "compiler.h"
-#include "status_codes.h"
+#include <stdlib.h>
+#include "serial_bridge.h"
+#include "asf.h"
 
-/**
-  * \defgroup group_sio2ncp_uart SIO2NCP - UART
-  * This module performs serial input/output functionalities via UART from and to the HOST 
-  * @{
-  */
-  
-#define SERIAL_RX_BUF_SIZE_NCP    156
+/* === PROTOTYPES =============================================================== */
 
-/* === PROTOTYPES ============================================================ */
-/**
- * \brief Initializes the Serial IO Module of the NCP Device
- * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
-  */
-status_code_t sio2ncp_init(void);
+void app_alert(void);
+
+
+/* === GLOBALS ============================================================== */
+
+
+
+/* === IMPLEMENTATION ====================================================== */
 
 
 /**
- * \brief Transmits data via UART 
- * \param data Pointer to the buffer where the data to be transmitted is present
- * \param length Number of bytes to be transmitted
- *
- * \return Number of bytes actually transmitted 
+ * \brief Main function of the Serial Bridge application
  */
-uint8_t sio2ncp_tx(uint8_t *data, uint8_t length);
+int main(void)
+{
+    irq_initialize_vectors();
 
-/**
- * \brief Receives data from UART 
- *
- * \param data pointer to the buffer where the received data is to be stored
- * \param max_length maximum length of data to be received
- *
- * \return actual number of bytes received
- */
-uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length);
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+    sysclk_init();
+	board_init();
 
-/**
- * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if a charqacter is received
- */
-int sio2ncp_getchar_nowait(void);
+    cpu_irq_enable();
 
-/**
- * \brief This function performs a blocking character receive functionality
- * \return returns the data which is received
- */
-uint8_t sio2ncp_getchar(void);
+    if(serial_bridge_init() != STATUS_OK )
+	{
+	app_alert();	
+	}
+	
+    while (1)
+    {
+        serial_bridge_handler();
+    }
+}
 
-#endif /* SIO2NCP_H */
 
+
+
+void app_alert()
+{
+    while (1)
+    {
+#if LED_COUNT > 0
+		LED_Toggle(LED0);
+#endif
+
+#if LED_COUNT > 1
+		LED_Toggle(LED1);
+#endif
+
+#if LED_COUNT > 2
+		LED_Toggle(LED2);
+#endif
+
+#if LED_COUNT > 3
+		LED_Toggle(LED3);
+#endif
+
+#if LED_COUNT > 4
+		LED_Toggle(LED4);
+#endif
+
+#if LED_COUNT > 5
+		LED_Toggle(LED5);
+#endif
+
+#if LED_COUNT > 6
+		LED_Toggle(LED6);
+#endif
+
+#if LED_COUNT > 7
+		LED_Toggle(LED7);
+#endif
+		delay_us(0xFFFF);
+	}
+}
+/* EOF */

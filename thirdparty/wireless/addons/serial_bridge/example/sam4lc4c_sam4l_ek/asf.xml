@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Serial Bridge Application" id="thirdparty.wireless.addons.serial_bridge.sam4l_xplained_pro">
+	<project caption="Serial Bridge Application" id="thirdparty.wireless.addons.serial_bridge.sam4l_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -7,9 +7,10 @@
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_sio2ncp.h"/>
 
-		<require idref="thirdparty.wireless.addons.serial_bridge"/>
-		<require idref="board.sam4l_xplained_pro"/>
+		<require idref="thirdparty.wireless.addons.serial_bridge.example"/>
+		<require idref="board.sam4l_ek"/>
 
+        <config name="config.board.sam4l_ek.bm" value="no"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.addons.sio2ncp" value="uart"/>
 

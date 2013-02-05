@@ -13,6 +13,8 @@
 		<build type="doxygen-entry-point" value="common_includes_group"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
+		<device-support value="megarf"/>
+		<device-support value="sam"/>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 			<keyword value="Communication"/>

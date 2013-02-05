@@ -487,7 +487,7 @@ void tal_tx_beacon(frame_info_t *tx_frame)
     do
     {
         trx_status = set_trx_state(CMD_PLL_ON);
-#if (DEBUG > 1)
+#if (_DEBUG_ > 1)
         if (trx_status != PLL_ON)
         {
             Assert("PLL_ON failed for beacon transmission" == 0);

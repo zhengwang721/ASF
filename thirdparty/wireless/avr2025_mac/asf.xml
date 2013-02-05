@@ -1,30 +1,35 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.thirdparty.wireless.avr2025_mac" name="config.thirdparty.wireless.avr2025_mac" caption="CONFIG Serial connectivity Helper files" default="source">
-        <module type="meta" id="config.thirdparty.wireless.avr2025_mac#source" caption="AVR2025 - IEEE 802.15.4">
-            <info type="description" value="summary">
-            To be added
-            </info>
-            <require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+	<select-by-config id="config.thirdparty.wireless.avr2025_mac" name="config.thirdparty.wireless.avr2025_mac" caption="AVR 2025 - IEEE 802.15.4 MAC Configuration" default="source">
+        <module type="driver" id="config.thirdparty.wireless.avr2025_mac#source" caption="AVR2025 - IEEE 802.15.4 MAC Source">
+			<info type="description" value="summary">
+			This module is used by default in a single processor approach and by NCP(Network Co-Processor) for a two processor approach
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
+			<device-support value="xmega"/>
+			<device-support value="uc3"/>
+			<device-support value="megarf"/>
+			<build type="doxygen-entry-point" value="group_mac"/>
         </module>
-        <module type="meta" id="config.thirdparty.wireless.avr2025_mac#api_parser" caption="AVR2025 - IEEE 802.15.4">
+        <module type="driver" id="config.thirdparty.wireless.avr2025_mac#api_parser" caption="AVR2025 - IEEE 802.15.4 MAC - API Parser">
             <info type="description" value="summary">
-            To be added
+            This module is used by the host for a two processor approach
             </info>
             <require idref="thirdparty.wireless.avr2025_mac.api_parser"/>
+			<device-support value="sam"/>
+			<build type="doxygen-entry-point" value="group_mac_api_parser"/>
         </module>
 	</select-by-config>
 
-    <module type="meta" id="thirdparty.wireless.avr2025_mac" caption="AVR2025 - IEEE 802.15.4">
+    <module type="component" id="thirdparty.wireless.avr2025_mac" caption="AVR2025 - IEEE 802.15.4 MAC ">
         <info type="description" value="summary">
-        To be added
+        AVR2025 - IEEE 802.15.4 MAC
         </info>
         <require idref="config.thirdparty.wireless.avr2025_mac"/>
         <device-support value="xmega"/>
         <device-support value="uc3"/>
         <device-support value="megarf"/>
         <device-support value="sam"/>
-        <build type="doxygen-entry-point" value="avr2025_mac_group"/>
-
+        <build type="doxygen-entry-point" value="group_mac"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>

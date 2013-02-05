@@ -316,12 +316,12 @@ static retval_t trx_init(void)
     while ((tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS) != TRX_OFF);
 
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
     tal_trx_status_t trx_status;
     trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
     if (trx_status != TRX_OFF)
     {
-        pal_alert();
+        app_alert();
         return FAILURE;
     }
 #endif
@@ -506,8 +506,8 @@ static retval_t trx_reset(void)
         /* Wait not more than max. value of TR2. */
         if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS)
         {
-#if (DEBUG > 0)
-            pal_alert();
+#if (_DEBUG_ > 0)
+            app_alert();
 #endif
             return FAILURE;
         }

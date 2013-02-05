@@ -64,7 +64,7 @@
 
 /**
  * \ingroup group_tal
- * \defgroup group_tal AT86RF212B Transceiver Abstraction Layer
+ * \defgroup group_tal_212B AT86RF212B Transceiver Abstraction Layer
  * The AT86RF212B is a  low-power ,low voltage 700/800/900 MHz radio transceiver designed for industrial
  * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz  ISM band applications.
  * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
