@@ -44,17 +44,9 @@
 #include <system.h>
 
 /**
- * \brief Number of pages per row in the NVM controller.
- *
- * Number of pages per row in the NVM controller. An NVM memory row consists of
- * \ref NVM_PAGES_PER_ROW * \ref nvm_parameters.page_size bytes.
- */
-#define NVM_PAGES_PER_ROW  4
-
-/**
  * \internal NVM data
  *
- *  Union of different data lengths
+ * Union of different data lengths
  */
 union _nvm_data {
 	uint32_t data32;
@@ -392,7 +384,7 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
 	uint16_t row_addr;
 
 	/* Check if the row_nr is valid */
-	if (row_nr > ((_nvm_dev.number_of_pages / NVM_PAGES_PER_ROW) - 1)) {
+	if (row_nr > ((_nvm_dev.number_of_pages / NVMCTRL_ROW_PAGES) - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -408,7 +400,7 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
 	}
 
 	/* Address to row */
-	row_addr = row_nr * (_nvm_dev.page_size * NVM_PAGES_PER_ROW);
+	row_addr = row_nr * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = row_addr;
@@ -445,7 +437,7 @@ enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
 	uint32_t block_size;
 
 	/* Byte sizes and address */
-	row_size = _nvm_dev.page_size * NVM_PAGES_PER_ROW;
+	row_size = _nvm_dev.page_size * NVMCTRL_ROW_PAGES;
 	row_addr = row_nr * row_size;
 	block_size = rows * row_size;
 

@@ -174,7 +174,7 @@
  *    <td> 2:0 </td>
  *    <td> BOOTPROT </td>
  *    <td> Used to set one of eight bootloader sizes.
- *         \note Can not be changed when security bit is set.
+ *         \note Cannot be changed when security bit is set.
  *         \note Rows included in bootloader section can only be erased
  *         by a chip erase.</td>
  *   </tr>
@@ -187,7 +187,7 @@
  *    <td> 6:4 </td>
  *    <td> EEPROM </td>
  *    <td> Used to set one of eight EEPROM sizes
- *           \note Can not be changed when security bit is set. </td>
+ *           \note Cannot be changed when security bit is set. </td>
  *   </tr>
  *   <tr>
  *    <td> 7 </td>
