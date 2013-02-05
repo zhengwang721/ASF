@@ -832,7 +832,7 @@ iram_size_t udi_cdc_get_nb_received_data(void)
 
 bool udi_cdc_multi_is_rx_ready(uint8_t port)
 {
-	return (0 < udi_cdc_multi_get_nb_received_data(port));
+	return (udi_cdc_multi_get_nb_received_data(port) > 0);
 }
 
 bool udi_cdc_is_rx_ready(void)
