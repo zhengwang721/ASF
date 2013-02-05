@@ -39,7 +39,7 @@
  */
 
 #include "tc.h"
-#include "conf_common_hw_timer.h"
+#include "conf_hw_timer.h"
 #include "hw_timer.h"
 #include <compiler.h>
 #include "sysclk.h"
