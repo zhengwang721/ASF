@@ -53,7 +53,7 @@ extern "C" {
  * \internal
  * \brief FREQM callback function pointer array
  */
-freqm_callback_t freqm_callback[FREQM_INTERRUPT__SOURCE_N];
+freqm_callback_t freqm_callback[FREQM_INTERRUPT_SOURCE_N];
 
 struct freqm_dev_inst *_freqm_instance;
 

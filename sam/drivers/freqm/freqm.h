@@ -108,7 +108,7 @@ struct freqm_dev_inst {
 typedef enum freqm_interrupt_source {
 	FREQM_INTERRUPT_MEASURMENT_READY = FREQM_IER_DONE,
 	FREQM_INTERRUPT_REFERENCE_CLOCK_READY = FREQM_IER_RCLKRDY,
-	FREQM_INTERRUPT__SOURCE_N
+	FREQM_INTERRUPT_SOURCE_N
 } freqm_interrupt_source_t;
 
 typedef void (*freqm_callback_t)(void);
