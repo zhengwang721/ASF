@@ -44,24 +44,42 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup sam0_nvm_group SAMD20 Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_samd20_nvm_group SAMD20 Non-Volatile Memory Driver (NVM)
  *
- * Driver for the SAMD20 Non-volatile Memory controller. Provides a unified
- * interface for the erasing, reading and writing of data to and from the
- * various non-volatile memories of the device, including executable flash
- * memory and user configuration pages. This driver encompasses the following
- * module within the SAMD20 devices:
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of non-volatile memories within the device, for partitioning,
+ * erasing, reading and writing of data.
  *
- * \li \b NVM (Non-Volatile Memory)
+ * The following peripherals are used by this module:
  *
- * \section nvm_introduction Introduction
+ *  - NVM (Non-Volatile Memory)
  *
- * \subsection memory_region NVM Memory Layout
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_nvm_prerequisites
+ *  - \ref asfdoc_samd20_nvm_module_overview
+ *  - \ref asfdoc_samd20_nvm_special_considerations
+ *  - \ref asfdoc_samd20_nvm_extra_info
+ *  - \ref asfdoc_samd20_nvm_examples
+ *  - \ref asfdoc_samd20_nvm_api_overview
  *
- * The NVM memory is divided into two sections: Main Array and Auxiliary space,
- * where the Main Array can be configured to have both a EEPROM and boot loader
- * section. The memory layout with EEPROM and bootloader is shown in the figure
- * below.
+ *
+ * \section asfdoc_samd20_nvm_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_nvm_module_overview Module Overview
+ *
+ * The Non-Volatile Memory (NVM) module provides an interface to the device's
+ * Non-Volatile Memory controller, so that memory pages can be written, read,
+ * erased and reconfigured in a standardized manner.
+ *
+ * \subsection asfdoc_samd20_nvm_module_overview_regions Memory Regions
+ * The NVM memory space of the SAMD20 devices is divided into two sections:
+ * a Main Array section, and an Auxiliary space section. The Main Array space
+ * can be configured to have an (emulated) EEPROM and/or boot loader section.
+ * The memory layout with the EEPROM and bootloader partitions is shown in the
+ * figure below.
  *
  * \dot
  * digraph memory_layout {
@@ -185,7 +203,7 @@
  *    <td> 63:48 </td>
  *    <td> LOCK </td>
  *    <td> Used to lock different regions of the NVM. See
- *         \ref nvm_locking_regions
+ *         \ref asfdoc_samd20_nvm_module_overview_locking_regions
  *   </td>
  *   </tr>
  *  </table>
@@ -276,22 +294,24 @@
  *  </tr>
  * </table>
  *
- * \subsection nvm_locking_regions Region Lock Bits
- * As mentioned in \ref memory_region, the main block of the NVM memory is
- * divided into pages. These pages are grouped into 16 equal sized regions,
- * where each region can be locked separately issuing an
+ * \subsection asfdoc_samd20_nvm_module_overview_locking_regions Region Lock Bits
+ * As mentioned in \ref asfdoc_samd20_nvm_module_overview_regions, the main
+ * block of the NVM memory is divided into pages. These pages are grouped into
+ * 16 equal sized regions, where each region can be locked separately issuing an
  * \ref NVM_COMMAND_LOCK_REGION command or by writing the LOCK bits in the User
  * Row. Rows reserved for the EEPROM section is not affected by the locking.
  *
- * \note By using the \ref NVM_COMMAND_LOCK_REGION/\ref NVM_COMMAND_UNLOCK_REGION commands
- * the settings will stay in effect until the next reset. By changing the
- * default lock setting for the regions, the auxiliary space have to be written.
- * These settings will not come into action before a reset is issued.
+ * \note By using the \ref NVM_COMMAND_LOCK_REGION or
+ *       \ref NVM_COMMAND_UNLOCK_REGION commands the settings will stay in
+ *       effect until the next reset. By changing the default lock setting for
+ *       the regions, the auxiliary space have to be written. These settings
+ *       will not come into action before a reset is issued.
  *
- * \note If the \ref nvm_security_bit is set, the auxiliary space cannot be written.
- * Clearing the \ref nvm_security_bit can only be done by a chip erase.
+ * \note If the \ref asfdoc_samd20_nvm_special_consideration_security_bit is
+ *       set, the auxiliary space cannot be written. Clearing of the security
+ *       bit can only be done by a chip erase.
  *
- * \subsection nvm_sub_rw Read/Write
+ * \subsection asfdoc_samd20_nvm_module_overview_sub_rw Read/Write
  * Reading from the NVM memory can be done by directly addressing it, or by
  * using the \ref nvm_write_page(). Writing to the NVM memory requires some
  * special considerations. If a whole page is to be written the
@@ -313,37 +333,39 @@
  *       to buffer the three remaining pages, as an erase is mandatory before
  *       writing to a page.
  *
- * \section module_dependencies Dependencies
- * The NVM driver has the following dependencies:
  *
- * \li \b None
+ * \section asfdoc_samd20_nvm_special_considerations Special Considerations
  *
- * \section nvm_special_considerations Special Considerations
- *
- * \subsection nvm_clocks Clocks
+ * \subsection asfdoc_samd20_nvm_special_consideration_clocks Clocks
  * The user must ensure that the driver is configured with a proper number of
  * wait states when the CPU is running at high frequencies.
  *
- * \subsection nvm pac Peripheral Access Control (PAC)
- * The user must ensure that the Peripheral Access Controller is configured to
- * enable write protection when using this driver.
- *
- * \subsection nvm_security_bit Security Bit
+ * \subsection asfdoc_samd20_nvm_special_consideration_security_bit Security Bit
  * The User Row in the Auxiliary Space Cannot be read or written when
  * the Security Bit is set. The Security Bit can be set by using passing
  * \ref NVM_COMMAND_SET_SECURITY_BIT to the \ref nvm_execute_command() function,
- * or it will be be set if one tries to access a locked region. See \ref
- * nvm_locking_regions.
+ * or it will be be set if one tries to access a locked region. See
+ * \ref asfdoc_samd20_nvm_module_overview_locking_regions.
  *
  * The Security Bit can only be cleared by performing a chip erase.
  *
- * \subsection nvm_sub_extra_info Extra Info
- * For extra information see \ref nvm_extra_info.
  *
- * \section module_examples Examples
- * - \ref nvm_quickstart
+ * \section asfdoc_samd20_nvm_extra_info Extra Information for NVM
  *
- * \section api_overview API Overview
+ * For extra information see \ref asfdoc_samd20_nvm_extra. This includes:
+ *  - \ref asfdoc_samd20_nvm_extra_acronyms
+ *  - \ref asfdoc_samd20_nvm_extra_dependencies
+ *  - \ref asfdoc_samd20_nvm_extra_errata
+ *  - \ref asfdoc_samd20_nvm_extra_history
+ *
+ *
+ * \section asfdoc_samd20_nvm_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_nvm_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_nvm_api_overview API Overview
  * @{
  */
 
@@ -358,7 +380,9 @@ extern "C" {
 /**
  * \brief Mask for the error flags in the status register
  */
-#define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | NVMCTRL_STATUS_LOCKE | NVMCTRL_STATUS_NVME)
+#define NVM_ERRORS_MASK     (NVMCTRL_STATUS_PROGE | \
+                             NVMCTRL_STATUS_LOCKE | \
+                             NVMCTRL_STATUS_NVME)
 
 /**
  * \brief NVM errors
@@ -716,9 +740,9 @@ enum status_code nvm_execute_command(
  * Retrieves, if any, error from the last executed NVM operation. Once
  * retrieved, any error state flags in the controller are cleared.
  *
- * \note \ref nvm_is_ready() is an exception. Thus, errors retrieved after
- * running this function should be valid for the function executed before
- * nvm_is_ready().
+ * \note The \ref nvm_is_ready() function is an exception. Thus, errors
+ *       retrieved after running this function should be valid for the function
+ *       executed before nvm_is_ready().
  *
  * \return Error caused by the last NVM operation.
  *
@@ -750,14 +774,14 @@ static inline enum nvm_errors nvm_get_error(void)
 #ifdef __cplusplus
 }
 #endif
+
 /** @} */
 
 /**
- * \page nvm_extra_info Extra Information
+ * \page asfdoc_samd20_nvm_extra Extra Information for NVM Driver
  *
- * \section Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
+ * \section asfdoc_samd20_nvm_extra_acronyms Acronyms
+ * The table below presents the acronyms used in this module:
  *
  * <table>
  *  <tr>
@@ -774,40 +798,43 @@ static inline enum nvm_errors nvm_get_error(void)
  *  </tr>
  * </table>
  *
- * \section nvm_workaround Workarounds in the driver
- * There are no workarounds in this driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_nvm_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_nvm_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_nvm_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
- *  <tr>
- *   <th>Changelog</th>
- *  </tr>
- *  <tr>
- *   <td>Initial Release</td>
- *  </tr>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
  * </table>
  */
 
 /**
- * \page nvm_quickstart Quick Start Guides for the NVM module
+ * \page asfdoc_samd20_nvm_exqsg Examples for NVM Driver
  *
- * This is the quick start guide list for the \ref sam0_nvm_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_nvm_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section nvm_use_cases NVM module use cases
- * - \subpage nvm_basic_use_case
+ *  - \subpage asfdoc_samd20_nvm_basic_use_case
  */
 
 #endif /* NVM_H_INCLUDED */

@@ -172,7 +172,7 @@ enum status_code nvm_set_config(
  * action such as a NVM page read or write operation.
  *
  * \note The function will return before the execution of the given command is
- *       done.
+ *       completed.
  *
  * \param[in] command    Command to issue to the NVM controller
  * \param[in] address    Address to pass to the NVM controller
@@ -269,10 +269,10 @@ enum status_code nvm_execute_command(
  * \param[in] buf              Pointer to buffer to write from into the
  *                             NVM memory
  *
- * \note The nvm_is_ready() should be used in advance to make sure that the
- *       NVM controller is ready.
- * \note The user have to perform an \ref nvm_erase_row() before this command
- *       is used.
+ * \note The \ref nvm_is_ready() function should be called in advance to ensure
+ *       that the NVM controller is ready.
+ * \note The user have to perform an \ref nvm_erase_row() operation on the NNM
+ *       row to be written to before this command is used.
  *
  * \return Status of the attempt to write a page.
  *
@@ -325,8 +325,8 @@ enum status_code nvm_write_page(
  * \param[out] buf              Pointer to buffer where the content of the
  *                               page will be stored
  *
- * \note The nvm_is_ready() should be used in advance to make sure that the
- *       NVM controller is ready.
+ * \note The \ref nvm_is_ready() function should be called in advance to ensure
+ *       that the NVM controller is ready.
  *
  * \return Status of the attempt to read a page.
  *
@@ -377,8 +377,8 @@ enum status_code nvm_read_page(
  *
  * \param[in] row_nr      Number of the row to erase
  *
- * \note The nvm_is_ready() should be used in advance to make sure that the
- *       NVM controller is ready.
+ * \note The \ref nvm_is_ready() function should be called in advance to ensure
+ *       that the NVM controller is ready.
  *
  * \return Status of the attempt to erase a row.
  *
@@ -426,8 +426,8 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
  * \param[in] row_nr      Number of the first row to erase
  * \param[in] rows        Number of rows to erase
  *
- * \note The nvm_is_ready() should be used in advance to make sure that the
- *       NVM controller is ready.
+ * \note The \ref nvm_is_ready() function should be called in advance to ensure
+ *       that the NVM controller is ready.
  *
  * \return Status of the attempt to erase a block.
  *
