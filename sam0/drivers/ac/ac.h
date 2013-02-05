@@ -224,6 +224,7 @@
 
 #include <compiler.h>
 #include <string.h>
+#include <clock.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -421,6 +422,9 @@ struct ac_conf {
 	/** Event generation and reception configuration for the AC module; event
 	 *  flags set to true are enabled when the module is configured. */
 	struct ac_events events;
+
+	/** Source generator for AC GCLK. */
+	enum gclk_generator source_generator;
 };
 
 /**
@@ -506,6 +510,7 @@ void ac_init(
  *  The default configuration is as follows:
  *   \li All comparator pairs disabled during sleep mode
  *   \li No events enabled by default
+ *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
@@ -518,6 +523,7 @@ static inline void ac_get_config_defaults(
 	/* Default configuration values */
 	config->run_in_standby = false;
 	memset(&config->events, 0x00, sizeof(config->events));
+	config->source_generator = GCLK_GENERATOR_0;
 }
 
 /**
