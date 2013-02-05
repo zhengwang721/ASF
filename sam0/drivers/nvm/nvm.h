@@ -321,12 +321,12 @@
  * it can be done by the following procedure:
  * -# Erase the location in the NVM memory of where the buffer is to be written.
  * -# Write to the page buffer, which has the size of one page, by addressing
- *  the NVM memory location directly.
+ *    the NVM memory location directly.
  * -# Issue an \ref NVM_COMMAND_WRITE_PAGE
  *  -# If the manual_page_write in the \ref nvm_config is disabled, and the last
- *  byte of the page buffer is addressed, this will happen automatically.
+ *     byte of the page buffer is addressed, this will happen automatically.
  *  -# If not, use the \ref nvm_execute_command() with the
- *  \ref NVM_COMMAND_WRITE_PAGE.
+ *     \ref NVM_COMMAND_WRITE_PAGE.
  *
  * \note The granularity of an erase is per row while the granularity of a
  *       write is per page. Thus, modifying only one page of a row will require
@@ -378,22 +378,25 @@ extern "C" {
 #endif
 
 /**
- * \brief Mask for the error flags in the status register
+ * \brief Mask for the error flags in the status register.
  */
 #define NVM_ERRORS_MASK     (NVMCTRL_STATUS_PROGE | \
                              NVMCTRL_STATUS_LOCKE | \
                              NVMCTRL_STATUS_NVME)
 
 /**
- * \brief NVM errors
+ * \brief NVM error flags.
+ *
+ * Possible NVM controller error codes, which can be returned by the NVM
+ * controller after a command is issued.
  */
-enum nvm_errors {
+enum nvm_error {
 	/** No errors */
-	NVM_ERROR_NONE  = 0x00,
-	/** Lock error, a locked region was attempted accessed */
-	NVM_ERROR_LOCK  = 0x18,
-	/** Program error, invalid command was executed */
-	NVM_ERROR_PROG  = 0x14,
+	NVM_ERROR_NONE  = 0,
+	/** Lock error, a locked region was attempted accessed. */
+	NVM_ERROR_LOCK  = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
+	/** Program error, invalid command was executed. */
+	NVM_ERROR_PROG  = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_PROGE,
 };
 
 /**
@@ -565,6 +568,9 @@ enum nvm_command {
 
 /**
  * \brief NVM controller power reduction mode configurations.
+ *
+ * Power reduction modes of the NVM controller, to conserve power while the
+ * device is in sleep.
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
@@ -605,10 +611,9 @@ struct nvm_config {
 };
 
 /**
- * \brief Parameter struct
+ * \brief NVM memory parameter structure.
  *
- * Struct holding the parameters for the NVM module.
- *
+ * Structure containing the memory layout parameters of the NVM module.
  */
 struct nvm_parameters {
 	/** Number of bytes per page */
@@ -658,15 +663,15 @@ enum status_code nvm_set_config(
 		const struct nvm_config *const config);
 
 /**
- * \brief Checks if the NVM controller is ready
+ * \brief Checks if the NVM controller is ready to accept a new command.
  *
- * Retrieves information on whether the NVM controller is ready
- * to be used or if it is busy.
+ * Checks the NVM controller to determine if it is currently busy execution an
+ * operation, or ready for a new command.
  *
- * \return    Returns the state of the NVM hardware module
+ * \return Busy state of the NVM controller.
  *
- * \retval true     If the hardware module is ready
- * \retval false    If the hardware module is busy
+ * \retval true   If the hardware module is ready for a new command
+ * \retval false  If the hardware module is busy executing a command
  *
  */
 static inline bool nvm_is_ready(void)
@@ -676,6 +681,7 @@ static inline bool nvm_is_ready(void)
 
 	return nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_READY;
 }
+
 /** @} */
 
 /**
@@ -684,7 +690,7 @@ static inline bool nvm_is_ready(void)
  */
 
 /**
- * \brief Gets the parameters of the NVM controller
+ * \brief Reads the parameters of the NVM controller.
  *
  * Retrieves the page size and number of pages in the NVM memory region.
  *
@@ -734,9 +740,9 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter);
 
 /**
- * \brief Retrieves, if any, error from the last NVM operation.
+ * \brief Retrieves the error code of the last issued NVM operation.
  *
- * Retrieves, if any, error from the last executed NVM operation. Once
+ * Retrieves the error code from the last executed NVM operation. Once
  * retrieved, any error state flags in the controller are cleared.
  *
  * \note The \ref nvm_is_ready() function is an exception. Thus, errors
@@ -751,15 +757,15 @@ enum status_code nvm_execute_command(
  *                         region
  * \retval NVM_ERROR_PROG  An invalid NVM command was issued
  */
-static inline enum nvm_errors nvm_get_error(void)
+static inline enum nvm_error nvm_get_error(void)
 {
-	enum nvm_errors ret_val;
+	enum nvm_error ret_val;
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Mask out non-error bits */
-	ret_val = (enum nvm_errors)(nvm_module->STATUS.reg & NVM_ERRORS_MASK);
+	ret_val = (enum nvm_error)(nvm_module->STATUS.reg & NVM_ERRORS_MASK);
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
