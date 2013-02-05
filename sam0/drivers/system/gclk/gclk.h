@@ -44,39 +44,34 @@
 #define SYSTEM_CLOCK_GCLK_H_INCLUDED
 
 /**
- * \defgroup sam0_gclk_group SAMD20 Generic Clock Driver (GCLK)
+ * \defgroup asfdoc_samd20_gclk_group SAMD20 Generic Clock Driver (GCLK)
  *
- * Driver for the SAMD20 architecture devices. This driver provides a unified
- * interface for the configuration and management of the Generic Clock
- * generators and channels within the device, including the enabling, disabling,
- * clock source selection and prescaling of clocks to various modules within the
- * device. This driver encompasses the following module within the SAM0 devices:
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Generic Clock generators and channels within
+ * the device, including the enabling, disabling, clock source selection and
+ * prescaling of clocks to various modules within the device.
  *
- * \li \b GCLK (Generic Clock Management)
+ * The following peripherals are used by this module:
  *
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
+ *  - GCLK (Generic Clock Management)
  *
- * \dot
- * digraph overview {
- *   rankdir=LR;
- *   node [label="Clock\nSources" shape=square] system_clock_sources;
  *
- *   subgraph driver {
- *     node [label="<f0> GCLK | <f1> Generic Clock Generators" shape=record] gclk_gen;
- *     node [label="<f0> GCLK | <f1> Generic Clock Channels" shape=record] gclk_chan;
- *     node [label="Peripherals" shape=ellipse style=filled fillcolor=lightgray] peripherals;
- *   }
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_gclk_prerequisites
+ *  - \ref asfdoc_samd20_gclk_module_overview
+ *  - \ref asfdoc_samd20_gclk_special_considerations
+ *  - \ref asfdoc_samd20_gclk_extra_info
+ *  - \ref asfdoc_samd20_gclk_examples
+ *  - \ref asfdoc_samd20_gclk_api_overview
  *
- *   system_clock_sources -> gclk_gen:f1 [label="Source\nMUXs"];
- *   gclk_gen:f1   -> gclk_chan:f1 [label="Generator\nMUXs"];
- *   gclk_chan:f1  -> peripherals;
- * }
- * \enddot
  *
- * \section module_introduction Introduction
+ * \section asfdoc_samd20_gclk_prerequisites Prerequisites
  *
- * \subsection Overview of the Generic Clock chain
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_gclk_module_overview Module Overview
+ *
  * Within the SAMD20 devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
@@ -136,14 +131,14 @@
  * }
  * \enddot
  *
- * \subsection source_clocks Source Clocks
+ * \subsection asfdoc_samd20_gclk_module_overview_source_clocks Source Clocks
  * A number of master clock sources are provided within the chip; these are
  * based on a number of internal and external clock systems, such as
  * R/C Oscillators, external crystals, PLL modules and DFLL modules. These clock
  * sources can each be individually selected as the input for a Generic Clock
  * Generator unit.
  *
- * \subsection gen_clock_generators Generic Clock Generators
+ * \subsection asfdoc_samd20_gclk_module_overview_gen_clock_generators Generic Clock Generators
  * Each Generic Clock generator within the device can source its input clock
  * from one of the provided Source Clocks, and prescale the output for one or
  * more Generic Clock Channels in a one-to-many relationship. The generators
@@ -151,7 +146,7 @@
  * power usages and accuracies, which can be turned on and off individually to
  * disable the clocks to multiple peripherals as a group.
  *
- * \subsection gen_clock_channels Generic Clock Channels
+ * \subsection asfdoc_samd20_gclk_module_overview_gen_clock_channels Generic Clock Channels
  * To connect a Generic Clock Generator to a peripheral module within the
  * device, a Generic Clock Channel module must be used. Each peripheral or
  * peripheral group has an associated Generic Clock Channel, which serves as the
@@ -159,24 +154,50 @@
  * module(s), the associated channel must be connected to a running Generic
  * Clock Generator and the channel enabled.
  *
- * \section module_dependencies Dependencies
- * The generic clock driver has the following dependencies.
  *
- * \li \ref clock_group "\b Clock" (System Clock Management)
+ * \subsection asfdoc_samd20_gclk_module_overview_physical Physical Connection
  *
- * \section special_considerations Special Considerations
+ * The following diagram shows how this module is interconnected within the device:
  *
- * Not all devices have the same source clock selections, number of generic
- * clock generators or number of generic clock channels; refer to your device
- * specific datasheet for details.
+ * \dot
+ * digraph overview {
+ *   rankdir=LR;
+ *   node [label="Clock\nSources" shape=square] system_clock_sources;
  *
- * \section module_extra_info Extra Information
- * For extra information see \ref gclk_extra_info.
+ *   subgraph driver {
+ *     node [label="<f0> GCLK | <f1> Generic Clock Generators" shape=record] gclk_gen;
+ *     node [label="<f0> GCLK | <f1> Generic Clock Channels" shape=record] gclk_chan;
+ *     node [label="Peripherals" shape=ellipse style=filled fillcolor=lightgray] peripherals;
+ *   }
  *
- * \section module_examples Examples
- * - \ref gclk_quickstart
+ *   system_clock_sources -> gclk_gen:f1 [label="Source\nMUXs"];
+ *   gclk_gen:f1   -> gclk_chan:f1 [label="Generator\nMUXs"];
+ *   gclk_chan:f1  -> peripherals;
+ * }
+ * \enddot
  *
- * \section api_overview API Overview
+ *
+ * \section asfdoc_samd20_gclk_special_considerations Special Considerations
+ *
+ * There are no special considerations for this module.
+ *
+ *
+ * \section asfdoc_samd20_gclk_extra_info Extra Information for GCLK
+ *
+ * For extra information see \ref asfdoc_samd20_gclk_extra. This includes:
+ *  - \ref asfdoc_samd20_gclk_extra_acronyms
+ *  - \ref asfdoc_samd20_gclk_extra_dependencies
+ *  - \ref asfdoc_samd20_gclk_extra_errata
+ *  - \ref asfdoc_samd20_gclk_extra_history
+ *
+ *
+ * \section asfdoc_samd20_gclk_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_gclk_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_gclk_api_overview API Overview
  * @{
  */
 
@@ -186,12 +207,13 @@
 extern "C" {
 #endif
 
-/** \brief Generic Clock Generator configuration structure.
+/**
+ * \brief Generic Clock Generator configuration structure.
  *
- *  Configuration structure for a Generic Clock Generator channel. This
- *  structure should be initialized by the
- *  \ref system_gclk_gen_get_config_defaults() function before being modified by
- *  the user application.
+ * Configuration structure for a Generic Clock Generator channel. This
+ * structure should be initialized by the
+ * \ref system_gclk_gen_get_config_defaults() function before being modified by
+ * the user application.
  */
 struct system_gclk_gen_conf {
 	/** Source clock input channel index. */
@@ -206,11 +228,12 @@ struct system_gclk_gen_conf {
 	bool output_enable;
 };
 
-/** \brief Generic Clock configuration structure.
+/**
+ * \brief Generic Clock configuration structure.
  *
- *  Configuration structure for a Generic Clock channel. This structure
- *  should be initialized by the \ref system_gclk_ch_get_config_defaults()
- *  function before being modified by the user application.
+ * Configuration structure for a Generic Clock channel. This structure
+ * should be initialized by the \ref system_gclk_ch_get_config_defaults()
+ * function before being modified by the user application.
  */
 struct system_gclk_ch_conf {
 	/** Generic Clock Generator source channel. */
@@ -229,23 +252,25 @@ void system_gclk_init(void);
 /** @} */
 
 
-/** \name Configuration and initialization (Generators)
+/**
+ * \name Configuration and initialization (Generators)
  * @{
  */
 
-/** \brief Initializes a Generic Clock Generator configuration structure to defaults.
+/**
+ * \brief Initializes a Generic Clock Generator configuration structure to defaults.
  *
- *  Initializes a given Generic Clock Generator configuration structure to
- *  a set of known default values. This function should be called on all
- *  new instances of these configuration structures before being modified
- *  by the user application.
+ * Initializes a given Generic Clock Generator configuration structure to
+ * a set of known default values. This function should be called on all
+ * new instances of these configuration structures before being modified
+ * by the user application.
  *
- *  The default configuration is as follows:
- *   \li Clock is generated undivided from the source frequency
- *   \li Clock generator output is low when the generator is disabled
- *   \li The input clock is sourced from input clock channel 0
+ * The default configuration is as follows:
+ *  \li Clock is generated undivided from the source frequency
+ *  \li Clock generator output is low when the generator is disabled
+ *  \li The input clock is sourced from input clock channel 0
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_gen_get_config_defaults(
 		struct system_gclk_gen_conf *const config)
@@ -274,22 +299,24 @@ void system_gclk_gen_disable(
 /** @} */
 
 
-/** \name Configuration and initialization (Channels)
+/**
+ * \name Configuration and initialization (Channels)
  * @{
  */
 
-/** \brief Initializes a Generic Clock configuration structure to defaults.
+/**
+ * \brief Initializes a Generic Clock configuration structure to defaults.
  *
- *  Initializes a given Generic Clock configuration structure to a set of
- *  known default values. This function should be called on all new
- *  instances of these configuration structures before being modified by the
- *  user application.
+ * Initializes a given Generic Clock configuration structure to a set of
+ * known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
  *
- *  The default configuration is as follows:
- *   \li Clock is sourced from the Generic Clock Generator channel 0
- *   \li Clock is disabled during device sleep
+ * The default configuration is as follows:
+ *  \li Clock is sourced from the Generic Clock Generator channel 0
+ *  \li Clock is disabled during device sleep
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_ch_get_config_defaults(
 		struct system_gclk_ch_conf *const config)
@@ -318,7 +345,8 @@ void system_gclk_ch_disable(
 /** @} */
 
 
-/** \name Clock frequency retrieval
+/**
+ * \name Clock frequency retrieval
  * @{
  */
 
@@ -337,9 +365,9 @@ uint32_t system_gclk_ch_get_hz(
 /** @} */
 
 /**
- * \page gclk_extra_info Extra Information
+ * \page asfdoc_samd20_gclk_extra Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_samd20_gclk_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -366,13 +394,22 @@ uint32_t system_gclk_ch_get_hz(
  *	</tr>
  * </table>
  *
- * \section fixed_errata Erratas fixed by driver
- * No errata workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_gclk_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_gclk_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_gclk_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -385,21 +422,15 @@ uint32_t system_gclk_ch_get_hz(
  */
 
 /**
- * \page gclk_quickstart Quick Start Guides for the GCLK module
+ * \page asfdoc_samd20_gclk_exqsg Examples for GCLK Driver
  *
- * This is the quick start guide list for the \ref sam0_gclk_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_gclk_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section gclk_use_cases GCLK module use cases
- * - \subpage gclk_basic_use_case
+ *  - \subpage asfdoc_samd20_gclk_basic_use_case
  */
 
 #endif

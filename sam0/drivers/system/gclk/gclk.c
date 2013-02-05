@@ -52,10 +52,11 @@ static void _system_gclk_wait_for_sync(void)
 	}
 }
 
-/** \brief Initializes the GCLK driver.
+/**
+ * \brief Initializes the GCLK driver.
  *
- *  Initializes the Generic Clock module, disabling and resetting all active
- *  Generic Clock Generators and Channels to their power-on default values.
+ * Initializes the Generic Clock module, disabling and resetting all active
+ * Generic Clock Generators and Channels to their power-on default values.
  */
 void system_gclk_init(void)
 {
@@ -66,17 +67,18 @@ void system_gclk_init(void)
 	}
 }
 
-/** \brief Writes a Generic Clock Generator configuration to the hardware module.
+/**
+ * \brief Writes a Generic Clock Generator configuration to the hardware module.
  *
- *  Writes out a given configuration of a Generic Clock Generator configuration
- *  to the hardware module. If the generator is currently running, it will be
- *  stopped.
+ * Writes out a given configuration of a Generic Clock Generator configuration
+ * to the hardware module. If the generator is currently running, it will be
+ * stopped.
  *
- *  \note Once called the generator will not be running; to start the generator,
- *        call \ref system_gclk_gen_enable() after configuring a generator.
+ * \note Once called the generator will not be running; to start the generator,
+ *       call \ref system_gclk_gen_enable() after configuring a generator.
  *
- *  \param[in] generator  Generic Clock Generator index to configure
- *  \param[in] config     Configuration settings for the generator
+ * \param[in] generator  Generic Clock Generator index to configure
+ * \param[in] config     Configuration settings for the generator
  */
 void system_gclk_gen_set_config(
 		const uint8_t generator,
@@ -146,12 +148,13 @@ void system_gclk_gen_set_config(
 	GCLK->GENCTRL.reg = new_genctrl_config;
 }
 
-/** \brief Enables a Generic Clock Generator that was previously configured.
+/**
+ * \brief Enables a Generic Clock Generator that was previously configured.
  *
- *  Starts the clock generation of a Generic Clock Generator that was previously
- *  configured via a call to \ref system_gclk_gen_set_config().
+ * Starts the clock generation of a Generic Clock Generator that was previously
+ * configured via a call to \ref system_gclk_gen_set_config().
  *
- *  \param[in] generator  Generic Clock Generator index to enable
+ * \param[in] generator  Generic Clock Generator index to enable
  */
 void system_gclk_gen_enable(const uint8_t generator)
 {
@@ -163,12 +166,13 @@ void system_gclk_gen_enable(const uint8_t generator)
 	GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN;
 }
 
-/** \brief Disables a Generic Clock Generator that was previously enabled.
+/**
+ * \brief Disables a Generic Clock Generator that was previously enabled.
  *
- *  Stops the clock generation of a Generic Clock Generator that was previously
- *  started via a call to \ref system_gclk_gen_enable().
+ * Stops the clock generation of a Generic Clock Generator that was previously
+ * started via a call to \ref system_gclk_gen_enable().
  *
- *  \param[in] generator  Generic Clock Generator index to disable
+ * \param[in] generator  Generic Clock Generator index to disable
  */
 void system_gclk_gen_disable(const uint8_t generator)
 {
@@ -183,14 +187,15 @@ void system_gclk_gen_disable(const uint8_t generator)
 	}
 }
 
-/** \brief Retrieves the clock frequency of a Generic Clock generator.
+/**
+ * \brief Retrieves the clock frequency of a Generic Clock generator.
  *
- *  Determines the clock frequency (in Hz) of a specified Generic Clock
- *  generator, used as a source to a Generic Clock Channel module.
+ * Determines the clock frequency (in Hz) of a specified Generic Clock
+ * generator, used as a source to a Generic Clock Channel module.
  *
- *  \param[in] generator  Generic Clock Generator index
+ * \param[in] generator  Generic Clock Generator index
  *
- *  \return The frequency of the generic clock generator, in Hz.
+ * \return The frequency of the generic clock generator, in Hz.
  */
 uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 {
@@ -226,16 +231,17 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 
 }
 
-/** \brief Writes a Generic Clock configuration to the hardware module.
+/**
+ * \brief Writes a Generic Clock configuration to the hardware module.
  *
- *  Writes out a given configuration of a Generic Clock configuration to the
- *  hardware module. If the clock is currently running, it will be stopped.
+ * Writes out a given configuration of a Generic Clock configuration to the
+ * hardware module. If the clock is currently running, it will be stopped.
  *
- *  \note Once called the clock will not be running; to start the clock,
- *        call \ref system_gclk_ch_enable() after configuring a clock channel.
+ * \note Once called the clock will not be running; to start the clock,
+ *       call \ref system_gclk_ch_enable() after configuring a clock channel.
  *
- *  \param[in] channel   Generic Clock channel to configure
- *  \param[in] config    Configuration settings for the clock
+ * \param[in] channel   Generic Clock channel to configure
+ * \param[in] config    Configuration settings for the clock
  */
 void system_gclk_ch_set_config(
 		const uint8_t channel,
@@ -264,12 +270,13 @@ void system_gclk_ch_set_config(
 	GCLK->CLKCTRL.reg = new_clkctrl_config;
 }
 
-/** \brief Enables a Generic Clock that was previously configured.
+/**
+ * \brief Enables a Generic Clock that was previously configured.
  *
- *  Starts the clock generation of a Generic Clock that was previously
- *  configured via a call to \ref system_gclk_ch_set_config().
+ * Starts the clock generation of a Generic Clock that was previously
+ * configured via a call to \ref system_gclk_ch_set_config().
  *
- *  \param[in] channel   Generic Clock channel to enable
+ * \param[in] channel   Generic Clock channel to enable
  */
 void system_gclk_ch_enable(const uint8_t channel)
 {
@@ -280,12 +287,13 @@ void system_gclk_ch_enable(const uint8_t channel)
 	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
 }
 
-/** \brief Disables a Generic Clock that was previously enabled.
+/**
+ * \brief Disables a Generic Clock that was previously enabled.
  *
- *  Stops the clock generation of a Generic Clock that was previously started
- *  via a call to \ref system_gclk_ch_enable().
+ * Stops the clock generation of a Generic Clock that was previously started
+ * via a call to \ref system_gclk_ch_enable().
  *
- *  \param[in] channel   Generic Clock channel to disable
+ * \param[in] channel   Generic Clock channel to disable
  */
 void system_gclk_ch_disable(const uint8_t channel)
 {
@@ -299,14 +307,15 @@ void system_gclk_ch_disable(const uint8_t channel)
 	}
 }
 
-/** \brief Retrieves the clock frequency of a Generic Clock channel.
+/**
+ * \brief Retrieves the clock frequency of a Generic Clock channel.
  *
- *  Determines the clock frequency (in Hz) of a specified Generic Clock
- *  channel, used as a source to a device peripheral module.
+ * Determines the clock frequency (in Hz) of a specified Generic Clock
+ * channel, used as a source to a device peripheral module.
  *
- *  \param[in] channel  Generic Clock Channel index
+ * \param[in] channel  Generic Clock Channel index
  *
- *  \return The frequency of the generic clock channel, in Hz.
+ * \return The frequency of the generic clock channel, in Hz.
  */
 uint32_t system_gclk_ch_get_hz(const uint8_t channel)
 {
