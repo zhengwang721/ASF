@@ -110,7 +110,7 @@ static enum status_code _i2c_master_set_config(
 	}
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)(system_gclk_ch_get_hz(SERCOM_GCLK_ID)
+	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
 			/ (2*config->baud_rate)-5);
 
 	/* Check that baud rate is supported at current speed. */

@@ -141,7 +141,7 @@ enum status_code sercom_set_gclk_generator(
 		bool force_change)
 {
 	/* Configuration structure for the gclk channel. */
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 
 	/* Pointer to internal sercom configuration. */
 	struct _sercom_conf *sercom_config_ptr = &_sercom_config;
@@ -154,14 +154,14 @@ enum status_code sercom_set_gclk_generator(
 		sercom_config_ptr->generator_is_set = true;
 
 		/* Configure GCLK channel and enable clock */
-		gclk_ch_conf.source_generator = generator_source;
+		gclk_chan_conf.source_generator = generator_source;
 
 		/* Set the GCLK channel to run in standby mode */
-		gclk_ch_conf.run_in_standby = run_in_standby;
+		gclk_chan_conf.run_in_standby = run_in_standby;
 
 		/* Apply configuration and enable the GCLK channel */
-		system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-		system_gclk_ch_enable(SERCOM_GCLK_ID);
+		system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+		system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 		/* Save config. */
 		sercom_config_ptr->generator_source = generator_source;

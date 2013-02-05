@@ -88,7 +88,7 @@ uint32_t system_clock_source_get_hz(
 				SYSCTRL->DFLLSYNC.bit.READREQ = 1;
 				_system_dfll_wait_for_sync();
 				temp = SYSCTRL->DFLLMUL.bit.MUL;
-				return system_gclk_ch_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
+				return system_gclk_chan_get_hz(SYSCTRL_GCLK_ID_DFLL48) * temp;
 			} else {
 				return 48000000;
 			}
@@ -636,12 +636,12 @@ void system_clock_init(void)
 #  endif
 
 #  if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) && (CONF_CLOCK_DFLL_ENABLE == true)
-	struct system_gclk_ch_conf dfll_gclock_ch_conf;
+	struct system_gclk_chan_conf dfll_gclk_chan_conf;
 
-	system_gclk_ch_get_config_defaults(&dfll_gclock_ch_conf);
-	dfll_gclock_ch_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-	system_gclk_ch_set_config(0, &dfll_gclock_ch_conf);
-	system_gclk_ch_enable(0);
+	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
+	dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
+	system_gclk_chan_set_config(0, &dfll_gclk_chan_conf);
+	system_gclk_chan_enable(0);
 	system_clock_source_dfll_set_config(&dfll_conf);
 #  endif
 

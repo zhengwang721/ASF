@@ -61,18 +61,18 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 
 
 	/* Configure GCLK channel and enable clock */
-	gclk_ch_conf.source_generator = config->clock_source;
+	gclk_chan_conf.source_generator = config->clock_source;
 
 	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->run_in_standby;
+	gclk_chan_conf.run_in_standby = config->run_in_standby;
 
 	/* Apply configuration and enable the GCLK channel */
-	system_gclk_ch_set_config(ADC_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(ADC_GCLK_ID);
+	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(ADC_GCLK_ID);
 
 	/* Configure run in standby */
 	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);

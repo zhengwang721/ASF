@@ -77,7 +77,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
-		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate,
 				usart_freq, &baud_val);
 	}
@@ -85,7 +85,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY &&
 			!config->use_external_clock) {
 		/* Calculate baud value */
-		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_async_baud_val(config->baudrate,
 				usart_freq, &baud_val);
 	}
@@ -179,7 +179,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	Assert(hw_dev);
 	Assert(config);
 
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 	enum status_code status_code = STATUS_OK;
 	uint32_t sercom_index = 0;
 	uint32_t gclk_index = 0;
@@ -196,17 +196,17 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Set up the GCLK for the module */
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 
 	sercom_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 
 	gclk_index =  sercom_index + 13;
 
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
-	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(gclk_index);
-	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	gclk_chan_conf.source_generator = config->generator_source;
+	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
+	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(gclk_index);
+	system_gclk_chan_enable(SERCOM_GCLK_ID);
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Enable the user interface clock in the PM */
