@@ -53,12 +53,15 @@
 #define REG_DSU_ADDR                          (0x41002004U) /**< \brief (DSU) Address Register */
 #define REG_DSU_LENGTH                        (0x41002008U) /**< \brief (DSU) Length Register */
 #define REG_DSU_DATA                          (0x4100200CU) /**< \brief (DSU) Data Register */
-#define REG_DSU_DCC                           (0x41002010U) /**< \brief (DSU) Debug Communication Channel Register */
+#define REG_DSU_DCC0                          (0x41002010U) /**< \brief (DSU) Debug Communication Channel Register 0 */
+#define REG_DSU_DCC1                          (0x41002014U) /**< \brief (DSU) Debug Communication Channel Register 1 */
 #define REG_DSU_DID                           (0x41002018U) /**< \brief (DSU) Device Identification Register */
-#define REG_DSU_DCFG                          (0x410020F0U) /**< \brief (DSU) Device Configuration Register */
+#define REG_DSU_DCFG0                         (0x410020F0U) /**< \brief (DSU) Device Configuration Register 0 */
+#define REG_DSU_DCFG1                         (0x410020F4U) /**< \brief (DSU) Device Configuration Register 1 */
 #define REG_DSU_UPTM                          (0x410020F8U) /**< \brief (DSU) UnProtected Test Mode Register */
 #define REG_DSU_TESTMODE                      (0x410020FCU) /**< \brief (DSU) Test Mode Register */
-#define REG_DSU_ENTRY                         (0x41003000U) /**< \brief (DSU) CoreSight ROM Table Entry Register */
+#define REG_DSU_ENTRY0                        (0x41003000U) /**< \brief (DSU) CoreSight ROM Table Entry Register 0 */
+#define REG_DSU_ENTRY1                        (0x41003004U) /**< \brief (DSU) CoreSight ROM Table Entry Register 1 */
 #define REG_DSU_END                           (0x41003008U) /**< \brief (DSU) CoreSight ROM Table End Register */
 #define REG_DSU_MEMTYPE                       (0x41003FCCU) /**< \brief (DSU) CoreSight ROM Table Memory Type Register */
 #define REG_DSU_PID4                          (0x41003FD0U) /**< \brief (DSU) Peripheral Identification Register 4 */
