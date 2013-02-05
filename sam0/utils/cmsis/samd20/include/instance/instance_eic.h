@@ -46,42 +46,15 @@
 
 /* ========== Register definition for EIC peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_EIC_CTRL0                         (0x40001800U) /**< \brief (EIC) Control Register 0 */
-#define REG_EIC_CTRL1                         (0x40001801U) /**< \brief (EIC) Control Register 1 */
-#define REG_EIC_CTRL2                         (0x40001802U) /**< \brief (EIC) Control Register 2 */
-#define REG_EIC_CTRL3                         (0x40001803U) /**< \brief (EIC) Control Register 3 */
-#define REG_EIC_STATUS0                       (0x40001801U) /**< \brief (EIC) Status Register 0 */
-#define REG_EIC_STATUS1                       (0x40001802U) /**< \brief (EIC) Status Register 1 */
-#define REG_EIC_STATUS2                       (0x40001803U) /**< \brief (EIC) Status Register 2 */
-#define REG_EIC_STATUS3                       (0x40001804U) /**< \brief (EIC) Status Register 3 */
-#define REG_EIC_NMICTRL0                      (0x40001802U) /**< \brief (EIC) NMI Control Register 0 */
-#define REG_EIC_NMICTRL1                      (0x40001803U) /**< \brief (EIC) NMI Control Register 1 */
-#define REG_EIC_NMICTRL2                      (0x40001804U) /**< \brief (EIC) NMI Control Register 2 */
-#define REG_EIC_NMICTRL3                      (0x40001805U) /**< \brief (EIC) NMI Control Register 3 */
-#define REG_EIC_NMIFLAG0                      (0x40001803U) /**< \brief (EIC) NMI Interrupt Flag Register 0 */
-#define REG_EIC_NMIFLAG1                      (0x40001804U) /**< \brief (EIC) NMI Interrupt Flag Register 1 */
-#define REG_EIC_NMIFLAG2                      (0x40001805U) /**< \brief (EIC) NMI Interrupt Flag Register 2 */
-#define REG_EIC_NMIFLAG3                      (0x40001806U) /**< \brief (EIC) NMI Interrupt Flag Register 3 */
-#define REG_EIC_EVCTRL0                       (0x40001804U) /**< \brief (EIC) Event Control Register 0 */
-#define REG_EIC_EVCTRL1                       (0x40001808U) /**< \brief (EIC) Event Control Register 1 */
-#define REG_EIC_EVCTRL2                       (0x4000180CU) /**< \brief (EIC) Event Control Register 2 */
-#define REG_EIC_EVCTRL3                       (0x40001810U) /**< \brief (EIC) Event Control Register 3 */
-#define REG_EIC_INTENCLR0                     (0x40001808U) /**< \brief (EIC) Interrupt Enable Clear Register 0 */
-#define REG_EIC_INTENCLR1                     (0x4000180CU) /**< \brief (EIC) Interrupt Enable Clear Register 1 */
-#define REG_EIC_INTENCLR2                     (0x40001810U) /**< \brief (EIC) Interrupt Enable Clear Register 2 */
-#define REG_EIC_INTENCLR3                     (0x40001814U) /**< \brief (EIC) Interrupt Enable Clear Register 3 */
-#define REG_EIC_INTENSET0                     (0x4000180CU) /**< \brief (EIC) Interrupt Enable Set Register 0 */
-#define REG_EIC_INTENSET1                     (0x40001810U) /**< \brief (EIC) Interrupt Enable Set Register 1 */
-#define REG_EIC_INTENSET2                     (0x40001814U) /**< \brief (EIC) Interrupt Enable Set Register 2 */
-#define REG_EIC_INTENSET3                     (0x40001818U) /**< \brief (EIC) Interrupt Enable Set Register 3 */
-#define REG_EIC_INTFLAG0                      (0x40001810U) /**< \brief (EIC) Interrupt Flag Status and Clear Register 0 */
-#define REG_EIC_INTFLAG1                      (0x40001814U) /**< \brief (EIC) Interrupt Flag Status and Clear Register 1 */
-#define REG_EIC_INTFLAG2                      (0x40001818U) /**< \brief (EIC) Interrupt Flag Status and Clear Register 2 */
-#define REG_EIC_INTFLAG3                      (0x4000181CU) /**< \brief (EIC) Interrupt Flag Status and Clear Register 3 */
-#define REG_EIC_WAKEUP0                       (0x40001814U) /**< \brief (EIC) Wake-up Enable Register 0 */
-#define REG_EIC_WAKEUP1                       (0x40001818U) /**< \brief (EIC) Wake-up Enable Register 1 */
-#define REG_EIC_WAKEUP2                       (0x4000181CU) /**< \brief (EIC) Wake-up Enable Register 2 */
-#define REG_EIC_WAKEUP3                       (0x40001820U) /**< \brief (EIC) Wake-up Enable Register 3 */
+#define REG_EIC_CTRL                          (0x40001800U) /**< \brief (EIC) Control Register */
+#define REG_EIC_STATUS                        (0x40001801U) /**< \brief (EIC) Status Register */
+#define REG_EIC_NMICTRL                       (0x40001802U) /**< \brief (EIC) NMI Control Register */
+#define REG_EIC_NMIFLAG                       (0x40001803U) /**< \brief (EIC) NMI Interrupt Flag Register */
+#define REG_EIC_EVCTRL                        (0x40001804U) /**< \brief (EIC) Event Control Register */
+#define REG_EIC_INTENCLR                      (0x40001808U) /**< \brief (EIC) Interrupt Enable Clear Register */
+#define REG_EIC_INTENSET                      (0x4000180CU) /**< \brief (EIC) Interrupt Enable Set Register */
+#define REG_EIC_INTFLAG                       (0x40001810U) /**< \brief (EIC) Interrupt Flag Status and Clear Register */
+#define REG_EIC_WAKEUP                        (0x40001814U) /**< \brief (EIC) Wake-up Enable Register */
 #define REG_EIC_CONFIG0                       (0x40001818U) /**< \brief (EIC) Config Register 0 */
 #define REG_EIC_CONFIG1                       (0x4000181CU) /**< \brief (EIC) Config Register 1 */
 #else
