@@ -43,10 +43,11 @@
 
 #include <events.h>
 
-/** \brief Initializes the event driver.
+/**
+ * \brief Initializes the event driver.
  *
- *  Initializes the event driver ready for use. This resets the underlying
- *  hardware modules, clearing any existing event channel configuration(s).
+ * Initializes the event driver ready for use. This resets the underlying
+ * hardware modules, clearing any existing event channel configuration(s).
  */
 void events_init(void)
 {
@@ -57,13 +58,14 @@ void events_init(void)
 	}
 }
 
-/** \brief Writes an Event System channel configuration to the hardware module.
+/**
+ * \brief Writes an Event System channel configuration to the hardware module.
  *
- *  Writes out a given configuration of a Event System channel configuration to
- *  the hardware module.
+ * Writes out a given configuration of a Event System channel configuration to
+ * the hardware module.
  *
- *  \param[in] channel  Event channel to configure
- *  \param[in] config   Configuration settings for the event channel
+ * \param[in] channel  Event channel to configure
+ * \param[in] config   Configuration settings for the event channel
  */
 void events_ch_set_config(
 		const uint8_t channel,
@@ -80,13 +82,14 @@ void events_ch_set_config(
 			(config->path << EVSYS_CHANNEL_PATH_Pos);
 }
 
-/** \brief Writes an Event System user MUX configuration to the hardware module.
+/**
+ * \brief Writes an Event System user MUX configuration to the hardware module.
  *
- *  Writes out a given configuration of a Event System user MUX configuration to
- *  the hardware module.
+ * Writes out a given configuration of a Event System user MUX configuration to
+ * the hardware module.
  *
- *  \param[in] user    Event User MUX index to configure
- *  \param[in] config  Configuration settings for the event user MUX
+ * \param[in] user    Event User MUX index to configure
+ * \param[in] config  Configuration settings for the event user MUX
  */
 void events_user_set_config(
 		const uint8_t user,
