@@ -232,10 +232,10 @@ struct system_gclk_gen_conf {
  * \brief Generic Clock configuration structure.
  *
  * Configuration structure for a Generic Clock channel. This structure
- * should be initialized by the \ref system_gclk_ch_get_config_defaults()
+ * should be initialized by the \ref system_gclk_chan_get_config_defaults()
  * function before being modified by the user application.
  */
-struct system_gclk_ch_conf {
+struct system_gclk_chan_conf {
 	/** Generic Clock Generator source channel. */
 	uint8_t source_generator;
 	/** If \c true, the clock is kept enabled during device standby mode. */
@@ -246,6 +246,29 @@ struct system_gclk_ch_conf {
 /** \name Configuration and initialization
  * @{
  */
+
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool system_gclk_is_synching(void)
+{
+	if (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY) {
+		return true;
+	}
+
+	return false;
+}
 
 void system_gclk_init(void);
 
@@ -318,8 +341,8 @@ void system_gclk_gen_disable(
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void system_gclk_ch_get_config_defaults(
-		struct system_gclk_ch_conf *const config)
+static inline void system_gclk_chan_get_config_defaults(
+		struct system_gclk_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -332,14 +355,14 @@ static inline void system_gclk_ch_get_config_defaults(
 	#endif
 }
 
-void system_gclk_ch_set_config(
+void system_gclk_chan_set_config(
 		const uint8_t channel,
-		struct system_gclk_ch_conf *const config);
+		struct system_gclk_chan_conf *const config);
 
-void system_gclk_ch_enable(
+void system_gclk_chan_enable(
 		const uint8_t channel);
 
-void system_gclk_ch_disable(
+void system_gclk_chan_disable(
 		const uint8_t channel);
 
 /** @} */
@@ -353,7 +376,7 @@ void system_gclk_ch_disable(
 uint32_t system_gclk_gen_get_hz(
 		const uint8_t generator);
 
-uint32_t system_gclk_ch_get_hz(
+uint32_t system_gclk_chan_get_hz(
 		const uint8_t channel);
 
 /** @} */

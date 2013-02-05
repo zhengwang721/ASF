@@ -44,14 +44,6 @@
 #include <gclk.h>
 #include <clock.h>
 
-/** Wait for the GCLK module to synchronize any pending writes. */
-static void _system_gclk_wait_for_sync(void)
-{
-	while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY) {
-		/* Wait for sync to complete */
-	}
-}
-
 /**
  * \brief Initializes the GCLK driver.
  *
@@ -142,9 +134,13 @@ void system_gclk_gen_set_config(
 	system_gclk_gen_disable(generator);
 
 	/* Write the new generator configuration */
-	_system_gclk_wait_for_sync();
+	while (system_gclk_is_synching()) {
+		/* Wait for synchronization */
+	};
 	GCLK->GENDIV.reg  = new_gendiv_config;
-	_system_gclk_wait_for_sync();
+	while (system_gclk_is_synching()) {
+		/* Wait for synchronization */
+	};
 	GCLK->GENCTRL.reg = new_genctrl_config;
 }
 
@@ -156,11 +152,14 @@ void system_gclk_gen_set_config(
  *
  * \param[in] generator  Generic Clock Generator index to enable
  */
-void system_gclk_gen_enable(const uint8_t generator)
+void system_gclk_gen_enable(
+		const uint8_t generator)
 {
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	_system_gclk_wait_for_sync();
+	while (system_gclk_is_synching()) {
+		/* Wait for synchronization */
+	};
 
 	/* Enable generator */
 	GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN;
@@ -174,11 +173,14 @@ void system_gclk_gen_enable(const uint8_t generator)
  *
  * \param[in] generator  Generic Clock Generator index to disable
  */
-void system_gclk_gen_disable(const uint8_t generator)
+void system_gclk_gen_disable(
+		const uint8_t generator)
 {
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	_system_gclk_wait_for_sync();
+	while (system_gclk_is_synching()) {
+		/* Wait for synchronization */
+	};
 
 	/* Disable generator */
 	GCLK->GENCTRL.reg &= ~GCLK_GENCTRL_GENEN;
@@ -197,11 +199,14 @@ void system_gclk_gen_disable(const uint8_t generator)
  *
  * \return The frequency of the generic clock generator, in Hz.
  */
-uint32_t system_gclk_gen_get_hz(const uint8_t generator)
+uint32_t system_gclk_gen_get_hz(
+		const uint8_t generator)
 {
 	/* Select the appropriate generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	_system_gclk_wait_for_sync();
+	while (system_gclk_is_synching()) {
+		/* Wait for synchronization */
+	};
 
 	/* Get the frequency of the source connected to the GCLK generator */
 	uint32_t gen_input_hz = system_clock_source_get_hz(
@@ -213,7 +218,9 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
 
 		/* Select the appropriate generator division register */
 		*((uint8_t*)&GCLK->GENDIV.reg) = generator;
-		_system_gclk_wait_for_sync();
+		while (system_gclk_is_synching()) {
+			/* Wait for synchronization */
+		};
 
 		/* Get the generator divider setting (can be fractional or binary) */
 		uint32_t divider = GCLK->GENDIV.bit.DIV;
@@ -238,14 +245,14 @@ uint32_t system_gclk_gen_get_hz(const uint8_t generator)
  * hardware module. If the clock is currently running, it will be stopped.
  *
  * \note Once called the clock will not be running; to start the clock,
- *       call \ref system_gclk_ch_enable() after configuring a clock channel.
+ *       call \ref system_gclk_chan_enable() after configuring a clock channel.
  *
  * \param[in] channel   Generic Clock channel to configure
  * \param[in] config    Configuration settings for the clock
  */
-void system_gclk_ch_set_config(
+void system_gclk_chan_set_config(
 		const uint8_t channel,
-		struct system_gclk_ch_conf *const config)
+		struct system_gclk_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -264,7 +271,7 @@ void system_gclk_ch_set_config(
 	#endif
 
 	/* Disable generic clock channel */
-	system_gclk_ch_disable(channel);
+	system_gclk_chan_disable(channel);
 
 	/* Write the new configuration */
 	GCLK->CLKCTRL.reg = new_clkctrl_config;
@@ -274,11 +281,12 @@ void system_gclk_ch_set_config(
  * \brief Enables a Generic Clock that was previously configured.
  *
  * Starts the clock generation of a Generic Clock that was previously
- * configured via a call to \ref system_gclk_ch_set_config().
+ * configured via a call to \ref system_gclk_chan_set_config().
  *
  * \param[in] channel   Generic Clock channel to enable
  */
-void system_gclk_ch_enable(const uint8_t channel)
+void system_gclk_chan_enable(
+		const uint8_t channel)
 {
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
@@ -291,11 +299,12 @@ void system_gclk_ch_enable(const uint8_t channel)
  * \brief Disables a Generic Clock that was previously enabled.
  *
  * Stops the clock generation of a Generic Clock that was previously started
- * via a call to \ref system_gclk_ch_enable().
+ * via a call to \ref system_gclk_chan_enable().
  *
  * \param[in] channel   Generic Clock channel to disable
  */
-void system_gclk_ch_disable(const uint8_t channel)
+void system_gclk_chan_disable(
+		const uint8_t channel)
 {
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
@@ -317,7 +326,8 @@ void system_gclk_ch_disable(const uint8_t channel)
  *
  * \return The frequency of the generic clock channel, in Hz.
  */
-uint32_t system_gclk_ch_get_hz(const uint8_t channel)
+uint32_t system_gclk_chan_get_hz(
+		const uint8_t channel)
 {
 	/* Select the requested generic clock channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
