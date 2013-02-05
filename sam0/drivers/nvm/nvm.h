@@ -704,8 +704,7 @@ static inline void nvm_get_parameters(
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Read out from the PARAM register */
-	uint32_t param_reg;
-	param_reg = nvm_module->PARAM.reg;
+	uint32_t param_reg = nvm_module->PARAM.reg;
 
 	/* Mask out page size and number of pages */
 	parameters->page_size  =
@@ -742,15 +741,15 @@ enum status_code nvm_execute_command(
  *
  * \note The \ref nvm_is_ready() function is an exception. Thus, errors
  *       retrieved after running this function should be valid for the function
- *       executed before nvm_is_ready().
+ *       executed before \ref nvm_is_ready().
  *
  * \return Error caused by the last NVM operation.
  *
- * \retval NVM_ERROR_NONE          No error did occur in the last NVM operation
+ * \retval NVM_ERROR_NONE  No error occurred in the last NVM operation
  *
- * \retval NVM_ERROR_LOCK          It was attempted to access a locked region
- *                                 in the last NVM operation
- * \retval NVM_ERROR_PROG          An invalid command has been issued
+ * \retval NVM_ERROR_LOCK  The last NVM operation attempted to access a locked
+ *                         region
+ * \retval NVM_ERROR_PROG  An invalid NVM command was issued
  */
 static inline enum nvm_errors nvm_get_error(void)
 {
@@ -760,12 +759,12 @@ static inline enum nvm_errors nvm_get_error(void)
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Mask out non-error bits */
-	ret_val =  ((nvm_module->STATUS.reg) & 0x1C);
+	ret_val = (enum nvm_errors)(nvm_module->STATUS.reg & NVM_ERRORS_MASK);
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Return error*/
+	/* Return error code from the NVM controller */
 	return ret_val;
 }
 
