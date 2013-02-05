@@ -160,7 +160,7 @@
  *   node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
- *   events_chan     -> dst_peripheral;
+ *   events_chan    -> dst_peripheral;
  *
  *   label="(Note: identical shape borders indicate a shared generic clock channel)" [labelloc=b];
  * }
@@ -182,7 +182,7 @@
  *   node [label="Destination\nPeripheral" shape=ellipse style="filled, dotted" fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan;
- *   events_chan     -> dst_peripheral;
+ *   events_chan    -> dst_peripheral;
  *
  *   label="(Note: identical shape borders indicate a shared generic clock channel)" [labelloc=b];
  * }
@@ -228,15 +228,15 @@
  *   node [label="Destination\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
  *   src_peripheral -> events_chan:f1 [label="Source\nMUXs"];
- *   events_chan:f1  -> events_user:f1 [label="Channel\nMUXs"];
- *   events_user:f1  -> dst_peripheral;
+ *   events_chan:f1 -> events_user:f1 [label="Channel\nMUXs"];
+ *   events_user:f1 -> dst_peripheral;
  * }
  * \enddot
  *
  *
  * \section asfdoc_samd20_events_special_considerations Special Considerations
  *
- * TODO
+ * There are no special considerations for this module.
  *
  *
  * \section asfdoc_samd20_events_extra_info Extra Information for EVENTS
@@ -308,10 +308,10 @@ enum events_path {
  * \brief Event System Channel configuration structure.
  *
  * Configuration structure for an Event System channel. This structure
- * should be initialized by the \ref events_ch_get_config_defaults() function
+ * should be initialized by the \ref events_chan_get_config_defaults() function
  * before being modified by the user application.
  */
-struct events_ch_conf {
+struct events_chan_conf {
 	/** Edge detection for synchronous event channels, from \ref events_edge. */
 	enum events_edge edge_detection;
 	/** Path of the event system, from \ref events_path. */
@@ -359,14 +359,14 @@ void events_init(void);
  *
  * The default configuration is as follows:
  *  \li Event channel fires on rising edge of trigger
- *  \li Event channel is synchronised between the source and destination
+ *  \li Event channel is synchronized between the source and destination
  *      event system digital clocks
  *  \li Event channel is not connected to an Event Generator
  *
  * \param config    Configuration structure to initialize to default values
  */
-static inline void events_ch_get_config_defaults(
-		struct events_ch_conf *const config)
+static inline void events_chan_get_config_defaults(
+		struct events_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -377,8 +377,9 @@ static inline void events_ch_get_config_defaults(
 	config->generator_id   = 0;
 }
 
-void events_ch_set_config(const uint8_t channel,
-		struct events_ch_conf *const config);
+void events_chan_set_config(
+		const uint8_t channel,
+		struct events_chan_conf *const config);
 
 /** @} */
 
@@ -438,7 +439,7 @@ void events_user_set_config(
  * \retval true  If the channel is ready to be used
  * \retval false If the channel is currently busy
  */
-static inline bool events_ch_is_ready(
+static inline bool events_chan_is_ready(
 		const uint8_t channel)
 {
 	/* Event channel busy/user busy flags are interleaved, 8 channels to a
@@ -449,7 +450,6 @@ static inline bool events_ch_is_ready(
 	/* Make it a 16-bit array to be able to work on the upper and lower
 	 * 16-bits */
 	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
-
 
 	/* Determine if the specified channel is currently busy */
 	if (channel_status_ptr[status_halfword] &
@@ -487,7 +487,6 @@ static inline bool events_user_is_ready(
 	 * 16-bits */
 	uint16_t *channel_status_ptr = (uint16_t*)(&EVSYS->CHSTATUS.reg);
 
-
 	/* Determine if the specified channel users(s) are currently ready */
 	if (channel_status_ptr[status_halfword] &
 			(EVSYS_CHSTATUS_USRREADY0_Pos << status_bitindex)) {
@@ -500,14 +499,14 @@ static inline bool events_user_is_ready(
 /**
  * \brief Software triggers an event channel.
  *
- * Triggers an event channel via software, seting an event notification to
+ * Triggers an event channel via software, setting an event notification to
  * the channel subscriber module(s) of the channel.
  *
  * \pre The specified event channel must be configured and enabled.
  *
  * \param[in] channel  Event channel to trigger
  */
-static inline void events_ch_software_trigger(
+static inline void events_chan_software_trigger(
 		const uint8_t channel)
 {
 	/* Trigger the appropriate event channel - must be performed as a single

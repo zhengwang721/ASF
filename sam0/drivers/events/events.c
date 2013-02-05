@@ -67,9 +67,9 @@ void events_init(void)
  * \param[in] channel  Event channel to configure
  * \param[in] config   Configuration settings for the event channel
  */
-void events_ch_set_config(
+void events_chan_set_config(
 		const uint8_t channel,
-		struct events_ch_conf *const config)
+		struct events_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
