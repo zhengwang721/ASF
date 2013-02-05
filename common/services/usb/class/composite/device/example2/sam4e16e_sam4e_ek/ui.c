@@ -133,7 +133,6 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 	if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
 		/* It is a wakeup then send wakeup USB */
 		udc_remotewakeup();
-		LED_On(LED0);
 	}
 }
 
@@ -178,33 +177,38 @@ void ui_wakeup_disable(void)
 
 void ui_wakeup(void)
 {
-	LED_On(LED0);
 }
 
 void ui_com_open(uint8_t port)
 {
 	UNUSED(port);
+	LED_On(LED1);
 }
 
 void ui_com_close(uint8_t port)
 {
 	UNUSED(port);
+	LED_Off(LED1);
 }
 
 void ui_com_rx_start(void)
 {
+	LED_On(LED2);
 }
 
 void ui_com_rx_stop(void)
 {
+	LED_Off(LED2);
 }
 
 void ui_com_tx_start(void)
 {
+	LED_On(LED2);
 }
 
 void ui_com_tx_stop(void)
 {
+	LED_Off(LED2);
 }
 
 void ui_com_error(void)
@@ -217,42 +221,44 @@ void ui_com_overflow(void)
 
 void ui_start_read(void)
 {
-	LED_On(LED1);
+	LED_On(LED2);
 }
 
 void ui_stop_read(void)
 {
-	LED_Off(LED1);
+	LED_Off(LED2);
 }
 
 void ui_start_write(void)
 {
-	LED_On(LED1);
+	LED_On(LED2);
 }
 
 void ui_stop_write(void)
 {
-	LED_Off(LED1);
+	LED_Off(LED2);
 }
 
 void ui_process(uint16_t framenumber)
 {
-	static uint8_t cpt_sof = 0;
-	static bool btn_left = false, btn_right = false;
-	bool btn_pressed;
+	bool b_btn_state, success;
+	static bool btn_last_state = false, btn_left = false, btn_right = false;
+	static bool sequence_running = false;
+	static uint8_t u8_sequence_pos = 0;
+	uint8_t u8_value;
+	static uint16_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED1);
+		LED_On(LED0);
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED1);
+		LED_Off(LED0);
 	}
 	/* Scan process running each 2ms */
 	cpt_sof++;
-	if (cpt_sof < 2) {
+	if ((cpt_sof % 2) == 0) {
 		return;
 	}
-	cpt_sof = 0;
 
 	/* Uses buttons to move mouse */
 	if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_3)) {
@@ -261,21 +267,16 @@ void ui_process(uint16_t framenumber)
 	if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_4)) {
 		udi_hid_mouse_moveY( MOUSE_MOVE_RANGE);
 	}
+
 	/* Check button click */
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_2);
-	if (btn_pressed != btn_left) {
-		btn_left = btn_pressed;
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_2);
+	if (b_btn_state != btn_left) {
+		btn_left = b_btn_state;
 		udi_hid_mouse_btnleft(btn_left);
 	}
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
-	if (btn_pressed != btn_right) {
-		btn_right = btn_pressed;
-		udi_hid_mouse_btnright(btn_right);
-	}
 
-	/* Both buttons down to send keys sequence */
-	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_1)
-			&& !ioport_get_pin_level(GPIO_PUSH_BUTTON_2));
+	/* BP2 down to send keys sequence */
+	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_1));
 	if (b_btn_state != btn_last_state) {
 		btn_last_state = b_btn_state;
 		sequence_running = true;
@@ -293,18 +294,18 @@ void ui_process(uint16_t framenumber)
 		if (u8_value!=0) {
 			if (ui_sequence[u8_sequence_pos].b_modifier) {
 				if (ui_sequence[u8_sequence_pos].b_down) {
-					sucess = udi_hid_kbd_modifier_down(u8_value);
+					success = udi_hid_kbd_modifier_down(u8_value);
 				} else {
-					sucess = udi_hid_kbd_modifier_up(u8_value);
+					success = udi_hid_kbd_modifier_up(u8_value);
 				}
 			} else {
 				if (ui_sequence[u8_sequence_pos].b_down) {
-					sucess = udi_hid_kbd_down(u8_value);
+					success = udi_hid_kbd_down(u8_value);
 				} else {
-					sucess = udi_hid_kbd_up(u8_value);
+					success = udi_hid_kbd_up(u8_value);
 				}
 			}
-			if (!sucess) {
+			if (!success) {
 				return; /* Retry it on next schedule */
 			}
 		}
@@ -323,18 +324,19 @@ void ui_kbd_led(uint8_t value)
 	UNUSED(value);
 }
 
+
 /**
  * \defgroup UI User Interface
  *
  * Human interface on SAM4E-EK:
- * - Led 0 (D2) is on when USB is wakeup
- * - Led 1 (D3) blinks when USB host has checked and enabled All interfaces
+ * - SAM4E USART used UART on J7 connector
+ * - Led 0 (D2) blinks when USB host has checked and enabled All interfaces
+ * - Led 1 (D3) is on when CDC UART port is open
  * - Led 2 (D4) is on during read/write operation
- * - Push button 2 (BP3) and push button 1 (BP2) are linked to mouse button
- *   left and right
- * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up
- *   and down
- * - Only both BP2 and BP3 down opens a notepad application on Windows O.S.
+ * - Push button 2 (BP3) is linked to mouse button left
+ * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up and
+ *   down
+ * - Only push button 1 (BP2) down opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"
  * - Only a low level on push button 2 (BP3) will generate a wakeup to USB Host
  *   in remote wakeup mode.

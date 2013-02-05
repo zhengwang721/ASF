@@ -44,4 +44,12 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/** Enable COM Port. */
+//#define CONF_BOARD_UART_CONSOLE
+
+/** Enable USART port */
+//#define CONF_BOARD_USART_RXD
+//#define CONF_BOARD_USART_TXD
+//#define CONF_BOARD_ADM3312_EN
+
 #endif /* CONF_BOARD_H_INCLUDED */

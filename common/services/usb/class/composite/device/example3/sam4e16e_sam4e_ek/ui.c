@@ -44,7 +44,7 @@
 #include <asf.h>
 #include "ui.h"
 
-//! Sequence process running each \c SEQUENCE_PERIOD ms
+/*! Sequence process running each \c SEQUENCE_PERIOD ms */
 #define SEQUENCE_PERIOD 150
 
 static struct {
@@ -52,14 +52,14 @@ static struct {
 	bool b_down;
 	uint8_t u8_value;
 } ui_sequence[] = {
-	// Display windows menu
+	/* Display windows menu */
 	{true,true,HID_MODIFIER_LEFT_UI},
-	// Launch Windows Command line
+	/* Launch Windows Command line */
 	{false,true,HID_R},
 	{false,false,HID_R},
-	// Clear modifier
+	/* Clear modifier */
 	{true,false,HID_MODIFIER_LEFT_UI},
-	// Tape sequence "notepad" + return
+	/* Tape sequence "notepad" + return */
 	{false,true,HID_N},
 	{false,false,HID_N},
 	{false,true,HID_O},
@@ -76,19 +76,19 @@ static struct {
 	{false,false,HID_D},
 	{false,true,HID_ENTER},
 	{false,false,HID_ENTER},
-	// Delay to wait "notepad" focus
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	{false,false,0}, // No key (= SEQUENCE_PERIOD delay)
-	// Display "Atmel "
-	{true,true,HID_MODIFIER_RIGHT_SHIFT}, // Enable Maj
+	/* Delay to wait "notepad" focus */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	{false,false,0}, /* No key (= SEQUENCE_PERIOD delay) */
+	/* Display "Atmel " */
+	{true,true,HID_MODIFIER_RIGHT_SHIFT}, /* Enable Maj */
 	{false,true,HID_A},
 	{false,false,HID_A},
-	{true,false,HID_MODIFIER_RIGHT_SHIFT}, // Disable Maj
+	{true,false,HID_MODIFIER_RIGHT_SHIFT}, /* Disable Maj */
 	{false,true,HID_T},
 	{false,false,HID_T},
 	{false,true,HID_M},
@@ -99,8 +99,8 @@ static struct {
 	{false,false,HID_L},
 	{false,true,HID_SPACEBAR},
 	{false,false,HID_SPACEBAR},
-	// Display "ARM "
-	{false,true,HID_CAPS_LOCK}, // Enable caps lock
+	/* Display "ARM " */
+	{false,true,HID_CAPS_LOCK}, /* Enable caps lock */
 	{false,false,HID_CAPS_LOCK},
 	{false,true,HID_A},
 	{false,false,HID_A},
@@ -108,17 +108,18 @@ static struct {
 	{false,false,HID_R},
 	{false,true,HID_M},
 	{false,false,HID_M},
-	{false,true,HID_CAPS_LOCK}, // Disable caps lock
+	{false,true,HID_CAPS_LOCK}, /* Disable caps lock */
 	{false,false,HID_CAPS_LOCK},
 };
 
-// Wakeup pin is PA15 (fast wakeup 14)
-#define  WAKEUP_PMC_FSTT (PMC_FSMR_FSTT14)
-#define  WAKEUP_PIN      (PIO_PA15_IDX)
-#define  WAKEUP_PIO      (PIOA)
-#define  WAKEUP_PIO_ID   (ID_PIOA)
-#define  WAKEUP_PIO_MASK (PIO_PA15)
-#define  WAKEUP_PIO_ATTR (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
+/* Wakeup pin is push button 2 (BP3, fast wakeup 10) */
+#define  WAKEUP_PMC_FSTT (PUSHBUTTON_2_WKUP_FSTT)
+#define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_2)
+#define  WAKEUP_PIO      (PIN_PUSHBUTTON_2_PIO)
+#define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_2_ID)
+#define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
+#define  WAKEUP_PIO_ATTR \
+	(PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
 
 /* Interrupt on "pin change" from push button to do wakeup on USB
  * Note:
@@ -178,70 +179,6 @@ void ui_wakeup(void)
 	LED_On(LED0);
 }
 
-void ui_process(uint16_t framenumber)
-{
-	bool b_btn_state, sucess;
-	static bool btn_last_state = false;
-	static bool sequence_running = false;
-	static uint8_t u8_sequence_pos = 0;
-	uint8_t u8_value;
-	static uint16_t cpt_sof = 0;
-
-	if ((framenumber % 1000) == 0) {
-		LED_On(LED1);
-	}
-	if ((framenumber % 1000) == 500) {
-		LED_Off(LED1);
-	}
-	/* Scan process running each 2ms */
-	cpt_sof++;
-	if ((cpt_sof % 2) == 0) {
-		return;
-	}
-
-	// Scan buttons on switch 0 to send keys sequence
-	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_2)) ? true : false;
-	if (b_btn_state != btn_last_state) {
-		btn_last_state = b_btn_state;
-		sequence_running = true;
-	}
-
-	// Sequence process running each period
-	if (SEQUENCE_PERIOD > cpt_sof) {
-		return;
-	}
-	cpt_sof = 0;
-
-	if (sequence_running) {
-		// Send next key
-		u8_value = ui_sequence[u8_sequence_pos].u8_value;
-		if (u8_value!=0) {
-			if (ui_sequence[u8_sequence_pos].b_modifier) {
-				if (ui_sequence[u8_sequence_pos].b_down) {
-					sucess = udi_hid_kbd_modifier_down(u8_value);
-				} else {
-					sucess = udi_hid_kbd_modifier_up(u8_value);
-				}
-			} else {
-				if (ui_sequence[u8_sequence_pos].b_down) {
-					sucess = udi_hid_kbd_down(u8_value);
-				} else {
-					sucess = udi_hid_kbd_up(u8_value);
-				}
-			}
-			if (!sucess) {
-				return; // Retry it on next schedule
-			}
-		}
-		// Valid sequence position
-		u8_sequence_pos++;
-		if (u8_sequence_pos >=
-			sizeof(ui_sequence) / sizeof(ui_sequence[0])) {
-			u8_sequence_pos = 0;
-			sequence_running = false;
-		}
-	}
-}
 
 void ui_start_read(void)
 {
@@ -263,6 +200,71 @@ void ui_stop_write(void)
 	LED_Off(LED2);
 }
 
+void ui_process(uint16_t framenumber)
+{
+	bool b_btn_state, success;
+	static bool btn_last_state = false, btn_left = false, btn_right = false;
+	static bool sequence_running = false;
+	static uint8_t u8_sequence_pos = 0;
+	uint8_t u8_value;
+	static uint16_t cpt_sof = 0;
+
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED1);
+	}
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED1);
+	}
+	/* Scan process running each 2ms */
+	cpt_sof++;
+	if ((cpt_sof % 2) == 0) {
+		return;
+	}
+
+	/* BP2 down to send keys sequence */
+	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_1));
+	if (b_btn_state != btn_last_state) {
+		btn_last_state = b_btn_state;
+		sequence_running = true;
+	}
+
+	/* Sequence process running each period */
+	if (SEQUENCE_PERIOD > cpt_sof) {
+		return;
+	}
+	cpt_sof = 0;
+
+	if (sequence_running) {
+		/* Send next key */
+		u8_value = ui_sequence[u8_sequence_pos].u8_value;
+		if (u8_value!=0) {
+			if (ui_sequence[u8_sequence_pos].b_modifier) {
+				if (ui_sequence[u8_sequence_pos].b_down) {
+					success = udi_hid_kbd_modifier_down(u8_value);
+				} else {
+					success = udi_hid_kbd_modifier_up(u8_value);
+				}
+			} else {
+				if (ui_sequence[u8_sequence_pos].b_down) {
+					success = udi_hid_kbd_down(u8_value);
+				} else {
+					success = udi_hid_kbd_up(u8_value);
+				}
+			}
+			if (!success) {
+				return; /* Retry it on next schedule */
+			}
+		}
+		/* Valid sequence position */
+		u8_sequence_pos++;
+		if (u8_sequence_pos >=
+			sizeof(ui_sequence) / sizeof(ui_sequence[0])) {
+			u8_sequence_pos = 0;
+			sequence_running = false;
+		}
+	}
+}
+
 void ui_kbd_led(uint8_t value)
 {
 	UNUSED(value);
@@ -275,11 +277,9 @@ void ui_kbd_led(uint8_t value)
  * Human interface on SAM4E-EK:
  * - Led 0 (D2) is on when USB is wakeup
  * - Led 1 (D3) blinks when USB host has checked and enabled All interfaces
- * - Led 2 (D4) is on when read/write data through MSC
- * - Push button 2 (BP3) and push button 1 (BP2) are linked to mouse button
- *   left and right
- * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up
- *   and down
+ * - Led 2 (D4) is on during read/write operation
+ * - Only push button 1 (BP2) down opens a notepad application on Windows O.S.
+ *   and sends key sequence "Atmel ARM"
  * - Only a low level on push button 2 (BP3) will generate a wakeup to USB Host
  *   in remote wakeup mode.
  *

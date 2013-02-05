@@ -113,11 +113,32 @@ void ui_wakeup(void)
 	LED_On(LED0);
 }
 
+
+void ui_start_read(void)
+{
+	LED_On(LED2);
+}
+
+void ui_stop_read(void)
+{
+	LED_Off(LED2);
+}
+
+void ui_start_write(void)
+{
+	LED_On(LED2);
+}
+
+void ui_stop_write(void)
+{
+	LED_Off(LED2);
+}
+
 void ui_process(uint16_t framenumber)
 {
-	static uint8_t cpt_sof = 0;
+	bool b_btn_state;
 	static bool btn_left = false, btn_right = false;
-	bool btn_pressed;
+	static uint16_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED1);
@@ -140,45 +161,24 @@ void ui_process(uint16_t framenumber)
 		udi_hid_mouse_moveY( MOUSE_MOVE_RANGE);
 	}
 	/* Check button click */
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_2);
-	if (btn_pressed != btn_left) {
-		btn_left = btn_pressed;
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_2);
+	if (b_btn_state != btn_left) {
+		btn_left = b_btn_state;
 		udi_hid_mouse_btnleft(btn_left);
 	}
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
-	if (btn_pressed != btn_right) {
-		btn_right = btn_pressed;
+	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
+	if (b_btn_state != btn_right) {
+		btn_right = b_btn_state;
 		udi_hid_mouse_btnright(btn_right);
 	}
 }
-
-void ui_start_read(void)
-{
-	LED_On(LED2);
-}
-
-void ui_stop_read(void)
-{
-	LED_Off(LED2);
-}
-
-void ui_start_write(void)
-{
-	LED_On(LED2);
-}
-
-void ui_stop_write(void)
-{
-	LED_Off(LED2);
-}
-
 /**
  * \defgroup UI User Interface
  *
  * Human interface on SAM4E-EK:
  * - Led 0 (D2) is on when USB is wakeup
  * - Led 1 (D3) blinks when USB host has checked and enabled HID and MSC interface
- * - Led 2 (D4) is on during read/write operation
+ * - Led 2 (D4) is on during MSC read/write operation
  * - Push button 2 (BP3) and push button 1 (BP2) are linked to mouse button
  *   left and right
  * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up
