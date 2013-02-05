@@ -53,7 +53,7 @@
  * \param[in] dev_inst  Pointer to the DAC software instance struct
  */
 void dac_reset(
-		struct dac_dev_inst *const dev_inst)
+		struct dac_module *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -61,8 +61,9 @@ void dac_reset(
 
 	Dac *const dac_module = dev_inst->hw_dev;
 
-	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
+	while (dac_is_synching(dev_inst)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	/* Software reset the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
@@ -80,7 +81,7 @@ void dac_reset(
  *
  */
 static void _dac_set_config(
-		struct dac_dev_inst *const dev_inst,
+		struct dac_module *const dev_inst,
 		struct dac_conf *const config)
 {
 	/* Sanity check arguments */
@@ -127,10 +128,10 @@ static void _dac_set_config(
  * \param[in] config    Pointer to the configuration struct
  *
  */
-void dac_ch_set_config(
-		struct dac_dev_inst *const dev_inst,
+void dac_chan_set_config(
+		struct dac_module *const dev_inst,
 		const enum dac_channel channel,
-		struct dac_ch_conf *const config)
+		struct dac_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -161,16 +162,17 @@ void dac_ch_set_config(
  *
  * Use this function to initialize the Digital to Analog Converter. Resets the
  * underlying hardware module and configures it.
+ *
  * \note The DAC channel must be configured separately.
  *
  * \param[out] dev_inst  Pointer to the DAC software instance struct
- * \param[in] module     Pointer to the DAC module instance
- * \param[in] config     Pointer to the config struct, created by the user
+ * \param[in]  module    Pointer to the DAC module instance
+ * \param[in]  config    Pointer to the config struct, created by the user
  *                       application
  *
  */
 void dac_init(
-		struct dac_dev_inst *const dev_inst,
+		struct dac_module *const dev_inst,
 		Dac *const module,
 		struct dac_conf *const config)
 {
@@ -191,8 +193,8 @@ void dac_init(
 
 	/* Set up the DAC VOUT pin */
 	pin_conf.mux_position = MUX_PA00H_DAC_VOUT;
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
 	system_pinmux_pin_set_config(PIN_PA00H_DAC_VOUT, &pin_conf);
 
 	/* Write configuration to module */
@@ -208,7 +210,7 @@ void dac_init(
  *
  */
 void dac_enable(
-		struct dac_dev_inst *const dev_inst)
+		struct dac_module *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -216,8 +218,9 @@ void dac_enable(
 
 	Dac *const dac_module = dev_inst->hw_dev;
 
-	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
+	while (dac_is_synching(dev_inst)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	/* Enable the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_ENABLE;
@@ -235,11 +238,11 @@ void dac_enable(
  * \param[in] channel   Channel to enable
  *
  */
-void dac_ch_enable(
-		struct dac_dev_inst *const dev_inst,
+void dac_chan_enable(
+		struct dac_module *const dev_inst,
 		enum dac_channel channel)
 {
-	/* No channel support yet*/
+	/* No channel support yet */
 }
 
 /**
@@ -251,9 +254,9 @@ void dac_ch_enable(
  *
  */
 void dac_disable(
-		struct dac_dev_inst *const dev_inst)
+		struct dac_module *const dev_inst)
 {
-	/* Sanity check arguments*/
+	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
@@ -278,11 +281,11 @@ void dac_disable(
  * \param[in] channel   Channel to disable
  *
  */
-void dac_ch_disable(
-		struct dac_dev_inst *const dev_inst,
+void dac_chan_disable(
+		struct dac_module *const dev_inst,
 		enum dac_channel channel)
 {
-	/* No channel support yet*/
+	/* No channel support yet */
 }
 
 /**
@@ -294,7 +297,7 @@ void dac_ch_disable(
  *
  */
 void dac_enable_output_buffer(
-		struct dac_dev_inst *const dev_inst)
+		struct dac_module *const dev_inst)
 {
 	/*Sanity check arguments*/
 	Assert(dev_inst);
@@ -318,7 +321,7 @@ void dac_enable_output_buffer(
  *
  */
 void dac_disable_output_buffer(
-		struct dac_dev_inst *const dev_inst)
+		struct dac_module *const dev_inst)
 {
 	/* Sanity check arguments*/
 	Assert(dev_inst);
@@ -351,7 +354,7 @@ void dac_disable_output_buffer(
  *                             event.
  */
 void dac_write(
-		struct dac_dev_inst *const dev_inst,
+		struct dac_module *const dev_inst,
 		enum dac_channel channel,
 		const uint16_t data,
 		bool event_triggered)
