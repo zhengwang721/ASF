@@ -74,22 +74,22 @@ void config_gclock_generator(void)
 void config_gclock_channel(void)
 {
 //! [setup_6]
-	struct system_gclk_ch_conf gclock_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 //! [setup_6]
 //! [setup_7]
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 //! [setup_7]
 
 //! [setup_8]
-	gclock_ch_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
-	gclock_ch_conf.run_in_standby   = false;
+	gclk_chan_conf.source_generator = EXAMPLE_GCLOCK_GENERATOR;
+	gclk_chan_conf.run_in_standby   = false;
 //! [setup_8]
 //! [setup_9]
-	system_gclk_ch_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclock_ch_conf);
+	system_gclk_chan_set_config(EXAMPLE_GCLOCK_CHANNEL, &gclk_chan_conf);
 //! [setup_9]
 
 //! [setup_10]
-	system_gclk_ch_enable(EXAMPLE_GCLOCK_CHANNEL);
+	system_gclk_chan_enable(EXAMPLE_GCLOCK_CHANNEL);
 //! [setup_10]
 }
 //! [setup]

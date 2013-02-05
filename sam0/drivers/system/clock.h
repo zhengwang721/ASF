@@ -123,8 +123,8 @@
  *
  * \section gclk_chan GCLK Channels
  * A GCLK channel is connected to one or more peripherals and provide clocking
- * to that module. To configure a specific GCLK channel you must use system_gclk_ch_set_config().
- * This needs a struct of type clock_gclock_ch_conf providing all configuration options
+ * to that module. To configure a specific GCLK channel you must use system_gclk_chan_set_config().
+ * This needs a struct of type clock_gclk_chan_conf providing all configuration options
  * for the channel.
  *
  * \section static Static Startup Configuration

@@ -83,12 +83,12 @@ void extint_enable(void)
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	/* Configure the generic clock for the module */
-	struct system_gclk_ch_conf gclock_chan_conf;
-	system_gclk_ch_get_config_defaults(&gclock_chan_conf);
-	gclock_chan_conf.source_generator = 0;
-	gclock_chan_conf.run_in_standby   = false;
-	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_chan_conf);
-	system_gclk_ch_enable(EIC_GCLK_ID);
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = 0;
+	gclk_chan_conf.run_in_standby   = false;
+	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(EIC_GCLK_ID);
 
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {

@@ -225,12 +225,12 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 	Assert(config);
 
 	/* Set up GCLK */
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
-	gclk_ch_conf.source_generator = GCLK_GENERATOR_2;
-	system_gclk_ch_set_config(RTC_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(RTC_GCLK_ID);
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
+	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(RTC_GCLK_ID);
 
 	/* Reset module to hardware defaults. */
 	_rtc_calendar_reset();
