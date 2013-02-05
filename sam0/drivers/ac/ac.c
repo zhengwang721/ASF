@@ -116,7 +116,7 @@ void ac_init(
 		Ac *const module,
 		struct ac_conf *const config)
 {
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -127,9 +127,9 @@ void ac_init(
 	dev_inst->hw_dev = module;
 
 	/* Set up GCLK */
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(AC_GCLK_ID_DIG, &gclk_ch_conf);
-	system_gclk_ch_enable(AC_GCLK_ID_DIG);
+	gclk_chan_conf.source_generator = config->source_generator;
+	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+	system_gclk_chan_enable(AC_GCLK_ID_DIG);
 
 	/* Write configuration to module */
 	_ac_set_config(dev_inst, config);
