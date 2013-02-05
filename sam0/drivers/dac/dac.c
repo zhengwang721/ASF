@@ -45,12 +45,12 @@
 #include <pinmux.h>
 
 /**
- * \brief Resets the DAC module
+ * \brief Resets the DAC module.
  *
  * This function will reset the DAC module to its power on default values and
  * disable it.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
  */
 void dac_reset(
 		struct dac_dev_inst *const dev_inst)
@@ -75,17 +75,14 @@ void dac_reset(
  * Writes out a given configuration to the hardware module.
  * Used by \ref dac_init.
  *
- * \param[out] dev_inst Pointer to the DAC software instance struct
- * \param[in]  config   Pointer to the configuration struct
+ * \param[out] dev_inst  Pointer to the DAC software instance struct
+ * \param[in]  config    Pointer to the configuration struct
  *
  */
 static void _dac_set_config(
 		struct dac_dev_inst *const dev_inst,
 		struct dac_conf *const config)
 {
-	struct system_gclk_chan_conf gclk_chan_conf;
-
-
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(config);
@@ -94,15 +91,11 @@ static void _dac_set_config(
 	Dac *const dac_module = dev_inst->hw_dev;
 
 	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_conf gclk_chan_conf;
 	gclk_chan_conf.source_generator = config->clock_source;
-
-	/* Set the GCLK channel to run in standby mode */
-	gclk_chan_conf.run_in_standby = config->run_in_standby;
-
-	/* Apply configuration and enable the GCLK channel */
+	gclk_chan_conf.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(DAC_GCLK_ID);
-
 
 	/* Set selected DAC output to be enabled when enabling the module */
 	dev_inst->output = config->output;
@@ -129,9 +122,9 @@ static void _dac_set_config(
  * \note The \ref dac_dev_inst "DAC device instance structure" must be
  * initialized before calling this function.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
- * \param[in] channel  Channel to configure
- * \param[in] config   Pointer to the configuration struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
+ * \param[in] channel   Channel to configure
+ * \param[in] config    Pointer to the configuration struct
  *
  */
 void dac_ch_set_config(
@@ -164,16 +157,16 @@ void dac_ch_set_config(
 }
 
 /**
- * \brief Initialize the DAC device struct
+ * \brief Initialize the DAC device struct.
  *
  * Use this function to initialize the Digital to Analog Converter. Resets the
  * underlying hardware module and configures it.
  * \note The DAC channel must be configured separately.
  *
- * \param[out] dev_inst Pointer to the DAC software instance struct
- * \param[in] module    Pointer to the DAC module instance
- * \param[in] config    Pointer to the config struct, created by the user
- *                      application
+ * \param[out] dev_inst  Pointer to the DAC software instance struct
+ * \param[in] module     Pointer to the DAC module instance
+ * \param[in] config     Pointer to the config struct, created by the user
+ *                       application
  *
  */
 void dac_init(
@@ -207,11 +200,11 @@ void dac_init(
 }
 
 /**
- * \brief Enable the DAC module
+ * \brief Enable the DAC module.
  *
  * Enables the DAC interface and the selected output.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
  *
  */
 void dac_enable(
@@ -234,12 +227,12 @@ void dac_enable(
 }
 
 /**
- * \brief Enable a DAC channel
+ * \brief Enable a DAC channel.
  *
  * Enables the selected DAC channel.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
- * \param[in] channel  Channel to enable
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
+ * \param[in] channel   Channel to enable
  *
  */
 void dac_ch_enable(
@@ -250,11 +243,11 @@ void dac_ch_enable(
 }
 
 /**
- * \brief Disable the DAC module
+ * \brief Disable the DAC module.
  *
  * Disables the DAC interface and the output buffer.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
  *
  */
 void dac_disable(
@@ -277,12 +270,12 @@ void dac_disable(
 }
 
 /**
- * \brief Disable a DAC channel
+ * \brief Disable a DAC channel.
  *
  * Disables the selected DAC channel.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
- * \param[in] channel  Channel to disable
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
+ * \param[in] channel   Channel to disable
  *
  */
 void dac_ch_disable(
@@ -293,11 +286,11 @@ void dac_ch_disable(
 }
 
 /**
- * \brief Enable the output buffer
+ * \brief Enable the output buffer.
  *
  * Enables the output buffer and drives the DAC output to the VOUT pin.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
  *
  */
 void dac_enable_output_buffer(
@@ -315,13 +308,13 @@ void dac_enable_output_buffer(
 }
 
 /**
- * \brief Disable the output buffer
+ * \brief Disable the output buffer.
  *
  * Disables the output buffer.
  * \note Should be done when the output buffer is not needed, as it will draw
  * current even if the system is in sleep mode.
  *
- * \param[in] dev_inst Pointer to the DAC software instance struct
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
  *
  */
 void dac_disable_output_buffer(
@@ -350,11 +343,12 @@ void dac_disable_output_buffer(
  * \note To be event triggered, the enable_start_on_event must be
  * enabled in the configuration.
  *
- * \param[in] dev_inst Pointer to the DAC software device struct
- * \param[in] channel  DAC channel to write to
- * \param[in] data     Conversion data
- * \param[in] event_triggered Boolean value to determine whether the conversion
- *        should be triggered immediately or by an incoming event.
+ * \param[in] dev_inst         Pointer to the DAC software device struct
+ * \param[in] channel          DAC channel to write to
+ * \param[in] data             Conversion data
+ * \param[in] event_triggered  Boolean value to determine whether the conversion
+ *                             should be triggered immediately or by an incoming
+ *                             event.
  */
 void dac_write(
 		struct dac_dev_inst *const dev_inst,
