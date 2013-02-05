@@ -169,10 +169,10 @@
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_sync Synchronous Paths
  * Synchronous event paths can be used when the source and destination
  * peripherals, as well as the generic clock to the event system itself, use
- * different \ref sam0_gclk_group "generic clock" channels. This case introduces
- * additional latency in the event propagation due to the addition of a
- * synchronizer and edge detector on the input event signal, however this allows
- * modules of different clocks to communicate events to one-another.
+ * different generic clock channels. This case introduces additional latency in
+ * the event propagation due to the addition of a synchronizer and edge detector
+ * on the input event signal, however this allows modules of different clocks to
+ * communicate events to one-another.
  *
  * \dot
  * digraph overview {
@@ -190,11 +190,10 @@
  *
  * \subsubsection asfdoc_samd20_events_module_overview_path_selection_resync Re-synchronous Paths
  * Re-synchronous event paths are a special form of synchronous events, where
- * the event users share the same \ref sam0_gclk_group "generic clock" channel
- * as the event system module itself, but the event generator does not. This
- * reduces latency by performing the synchronization across the event source
- * and event user clock domains once within the event channel itself, rather
- * than in each event user.
+ * the event users share the same generic clock channel as the event system
+ * module itself, but the event generator does not. This reduces latency by
+ * performing the synchronization across the event source and event user clock
+ * domains once within the event channel itself, rather than in each event user.
  *
  * \dot
  * digraph overview {
