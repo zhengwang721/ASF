@@ -459,7 +459,7 @@ static inline void i2c_slave_cancel_transfer_callback(
  *
  * \return                     Last status code from transfer operation
  * \retval STATUS_OK           No error has occurred
- * \retval STATUS_IN_PROGRESS  Transfer is in progress
+ * \retval STATUS_BUSY  Transfer is in progress
  * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
  * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
  *                             last transfer

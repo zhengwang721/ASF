@@ -280,7 +280,7 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
  * \return Status of the initialization procedure
  * \retval STATUS_OK                The initialization was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
- * \retval STATUS_ERR_BUSY          The module is busy with a reset operation
+ * \retval STATUS_BUSY          The module is busy with a reset operation
  * \retval STATUS_ERR_DENIED        The module is enabled
  */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
@@ -291,7 +291,7 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 
 	if (hw_dev->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	if (hw_dev->CTRLA.reg & ADC_CTRLA_ENABLE) {

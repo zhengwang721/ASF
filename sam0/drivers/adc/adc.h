@@ -1049,7 +1049,7 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  *
  * \return Status of the procedure
  * \retval STATUS_OK                The result was retrieved successfully
- * \retval STATUS_ERR_BUSY          The result is not ready
+ * \retval STATUS_BUSY          The result is not ready
  */
 static inline enum status_code adc_read(
 		struct adc_dev_inst *const dev_inst, uint16_t *result)
@@ -1060,7 +1060,7 @@ static inline enum status_code adc_read(
 
 	if (!adc_is_interrupt_flag_set(dev_inst, ADC_INTERRUPT_RESULT_READY)) {
 		/* Result not ready */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	Adc *const adc_module = dev_inst->hw_dev;

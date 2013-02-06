@@ -71,7 +71,7 @@ int main(void)
 	/* Wait for conversion to be done and read out result */
 //! [get_res]
 	do {
-	} while(adc_read(&dev_inst, &result) == STATUS_ERR_BUSY);
+	} while(adc_read(&dev_inst, &result) == STATUS_BUSY);
 //! [get_res]
 
 //! [inf_loop]
