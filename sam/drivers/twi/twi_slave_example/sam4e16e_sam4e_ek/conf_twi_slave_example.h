@@ -60,14 +60,4 @@
 /** TWI Base for TWI MASTER application to use */
 #define BOARD_BASE_TWI_MASTER        TWI0
 
-#define BOARD_ID_USART             ID_USART1
-
-#define BOARD_USART                USART1
-
-#define BOARD_USART_BAUDRATE       115200
-
-#define USART_Handler              USART1_Handler
-
-#define USART_IRQn                 USART1_IRQn
-
 #endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

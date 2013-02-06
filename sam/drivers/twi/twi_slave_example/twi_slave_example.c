@@ -130,6 +130,12 @@ typedef struct _slave_device_t {
 
 slave_device_t emulate_driver;
 
+#if SAM4E
+#define REG_CCFG_SYSIO MATRIX->MATRIX_SFR[1]
+#define CCFG_SYSIO_SYSIO4 (0x1u << 4)
+#define CCFG_SYSIO_SYSIO5 (0x1u << 5)
+#endif
+
 void BOARD_TWI_Handler(void)
 {
 	uint32_t status;
@@ -227,13 +233,10 @@ int main(void)
 	/* Initialize the SAM system */
 	sysclk_init();
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 	/* Select PB4 and PB5 function, this will cause JTAG discconnect */
-	MATRIX->CCFG_SYSIO = CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5;
-#endif
-#if SAM4E
-	/* Select PB4 and PB5 function, this will cause JTAG discconnect */
-	MATRIX->MATRIX_SFR[1] = (0x1u << 4) | (0x1u << 5);
+	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
+	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO5;
 #endif
 
 	/* Initialize the board */
@@ -268,6 +271,12 @@ int main(void)
 	NVIC_SetPriority(BOARD_TWI_IRQn, 0);
 	NVIC_EnableIRQ(BOARD_TWI_IRQn);
 	twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_SR_SVACC);
+
+#if (SAM4S || SAM4E)
+	/* Reset PB4 and PB5 for JTAG */
+	REG_CCFG_SYSIO &= ~CCFG_SYSIO_SYSIO4;
+	REG_CCFG_SYSIO &= ~CCFG_SYSIO_SYSIO4;
+#endif
 
 	while (1) {
 	}
