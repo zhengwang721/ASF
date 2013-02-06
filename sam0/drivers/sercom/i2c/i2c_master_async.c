@@ -101,19 +101,16 @@ static void _i2c_master_async_address_response(
 {
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
-	/* Check for error. */
+	/* Check for error. Ignore bus-error; workaround for busstate stuck in BUSY. */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
 	{
 		/* Clear write interrupt flag. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
-		/* Check for busserror. */
-		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSERR) {
-			/* Return denied. */
-			dev_inst->status = STATUS_ERR_DENIED;
+		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
 		/* Check arbitration. */
-		} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
+		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
 			/* Return busy. */
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 		}

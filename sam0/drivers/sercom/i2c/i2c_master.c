@@ -113,6 +113,9 @@ static enum status_code _i2c_master_set_config(
 		tmp_ctrla |= config->start_hold_time;
 	}
 
+        /* Workaround for BUSSTATE stuck at BUSY */
+        tmp_ctrla |= SERCOM_I2CM_CTRLA_INACTOUT(3);
+
 	/* Write config to register CTRLA. */
 	i2c_module->CTRLA.reg |= tmp_ctrla;
 
@@ -286,18 +289,14 @@ static enum status_code _i2c_master_address_response(
 {
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
-	/* Check for error. */
+	/* Check for error. Ignore bus-error; workaround for BUSSTATE stuck in BUSY. */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF) {
+
 		/* Clear write interrupt flag. */
 		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_RIF;
 
-		/* Check for busserror. */
-		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSERR) {
-			/* Return denied. */
-			return STATUS_ERR_DENIED;
-
 		/* Check arbitration. */
-		} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
+		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
 			/* Return packet collision. */
 			return STATUS_ERR_PACKET_COLLISION;
 		}
