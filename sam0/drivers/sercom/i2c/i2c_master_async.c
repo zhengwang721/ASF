@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -129,7 +131,7 @@ static void _i2c_master_async_address_response(
 	dev_inst->buffer_length = dev_inst->buffer_remaining;
 
 	/* Check for status OK. */
-	if (dev_inst->status == STATUS_IN_PROGRESS) {
+	if (dev_inst->status == STATUS_BUSY) {
 		/* Call function based on transfer direction. */
 		if (dev_inst->transfer_direction == 0) {
 			_i2c_master_async_write(dev_inst);
@@ -202,7 +204,7 @@ void i2c_master_async_unregister_callback(
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -217,7 +219,7 @@ enum status_code i2c_master_async_read_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 
@@ -225,7 +227,7 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -247,7 +249,7 @@ enum status_code i2c_master_async_read_packet(
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -262,14 +264,14 @@ enum status_code i2c_master_async_write_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -335,7 +337,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if (dev_inst->status != STATUS_IN_PROGRESS) {
+	if (dev_inst->status != STATUS_BUSY) {
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;

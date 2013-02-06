@@ -88,10 +88,8 @@ void TC7_IRQn_Handler        ( void );
 void ADC_IRQn_Handler        ( void );
 void AC_IRQn_Handler         ( void );
 void DAC_IRQn_Handler        ( void );
-void PTC_IRQn_Handler        ( void );
 
 /* Cortex-M0+ core handlers */
-//#pragma weak Reset_Handler            = Dummy_Handler
 #pragma weak NonMaskableInt_Handler   = Dummy_Handler
 #pragma weak HardFault_Handler        = Dummy_Handler
 #pragma weak SVCall_Handler           = Dummy_Handler
@@ -123,7 +121,6 @@ void PTC_IRQn_Handler        ( void );
 #pragma weak ADC_IRQn_Handler         = Dummy_Handler
 #pragma weak AC_IRQn_Handler          = Dummy_Handler
 #pragma weak DAC_IRQn_Handler         = Dummy_Handler
-#pragma weak PTC_IRQn_Handler         = Dummy_Handler
 
 /* Exception Table */
 #pragma language=extended
@@ -178,7 +175,6 @@ const DeviceVectors __vector_table[] = {
         { (void*) ADC_IRQn_Handler     }, /* 21 Analog Digital Converter */
         { (void*) AC_IRQn_Handler      }, /* 22 Analog Comparators */
         { (void*) DAC_IRQn_Handler     }, /* 23 Digital Analog Converter */
-        { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
 };
 
 /**------------------------------------------------------------------------------

@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for WDT
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -207,8 +209,8 @@ typedef union {
 #define WDT_CLEAR_CLEAR_Pos         0            /**< \brief (WDT_CLEAR) Watchdog Timer Clears Command Register */
 #define WDT_CLEAR_CLEAR_Msk         (0xFFu << WDT_CLEAR_CLEAR_Pos)
 #define WDT_CLEAR_CLEAR(value)      ((WDT_CLEAR_CLEAR_Msk & ((value) << WDT_CLEAR_CLEAR_Pos)))
+#define   WDT_CLEAR_CLEAR_KEY       (0xA5u <<  0) /**< \brief (WDT_CLEAR) Clear Key */
 #define WDT_CLEAR_MASK              0xFFu        /**< \brief (WDT_CLEAR) MASK Register */
-#define WDT_CLEAR_KEY               0xA5 /** TODO: MISSING FROM CMSIS */
 
 /** \brief WDT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

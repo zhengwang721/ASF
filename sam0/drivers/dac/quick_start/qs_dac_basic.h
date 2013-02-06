@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -40,7 +42,7 @@
  */
 
 /**
- * \page dac_basic_use_case Quick Start Guide for the DAC module - Basic Use Case
+ * \page asfdoc_samd20_dac_basic_use_case Quick Start Guide for the DAC module - Basic Use Case
  *
  * In this use case, the DAC will be used  The DAC will be set up as follows:
  * - Analog VCC as reference
@@ -49,16 +51,16 @@
  * - Right adjust data
  * - The output buffer is disabled when the chip enters STANDBY sleep mode
  *
- * \section dac_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_dac_basic_use_case_setup Quick Start
  *
- * \subsection dac_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_dac_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection dac_basic_use_case_code Code
+ * \subsection asfdoc_samd20_dac_basic_use_case_code Code
  * Add to user application %main():
  * \snippet qs_dac_basic.c main
  *
- * \section dac_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_dac_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
  *  - \snippet qs_dac_basic.c variable
  * -# Get DAC config defaults.

@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for TC
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -180,10 +182,9 @@ typedef union {
 #define TC_CTRLBSET_CMD_Pos         6            /**< \brief (TC_CTRLBSET) Command */
 #define TC_CTRLBSET_CMD_Msk         (0x3u << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD(value)      ((TC_CTRLBSET_CMD_Msk & ((value) << TC_CTRLBSET_CMD_Pos)))
-#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6) /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6) /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6) /**< \brief (TC_CTRLBSET)  */
-
+#define   TC_CTRLBSET_CMD_NONE      (0x0u <<  6) /** TODO: Manually Added */
+#define   TC_CTRLBSET_CMD_RETRIGGER (0x1u <<  6) /** TODO: Manually Added */
+#define   TC_CTRLBSET_CMD_STOP      (0x2u <<  6) /** TODO: Manually Added */
 #define TC_CTRLBSET_MASK            0xC5u        /**< \brief (TC_CTRLBSET) MASK Register */
 
 /* -------- TC_CTRLC : (TC Offset: 0x06) (R/W  8) Control C Register -------- */
@@ -381,6 +382,17 @@ typedef union {
 #define TC_STATUS_SYNCBUSY          (0x1u << TC_STATUS_SYNCBUSY_Pos)
 #define TC_STATUS_MASK              0x98u        /**< \brief (TC_STATUS) MASK Register */
 
+/* -------- TC_COUNT8_COUNT : (TC Offset: 0x10) (R/W  8) COUNT8 COUNT8 Count Register -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  uint8_t reg;                 /*!< Type      used for register access              */
+} TC_COUNT8_COUNT_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define TC_COUNT8_COUNT_OFFSET      0x10         /**< \brief (TC_COUNT8_COUNT offset) COUNT8 Count Register */
+#define TC_COUNT8_COUNT_RESETVALUE  0x00         /**< \brief (TC_COUNT8_COUNT reset_value) COUNT8 Count Register */
+#define TC_COUNT8_COUNT_MASK        0xFFu        /**< \brief (TC_COUNT8_COUNT) MASK Register */
+
 /* -------- TC_COUNT16_COUNT : (TC Offset: 0x10) (R/W 16) COUNT16 COUNT16 Count Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -403,17 +415,6 @@ typedef union {
 #define TC_COUNT32_COUNT_RESETVALUE 0x00000000   /**< \brief (TC_COUNT32_COUNT reset_value) COUNT32 Count Register */
 #define TC_COUNT32_COUNT_MASK       0xFFFFFFFFu  /**< \brief (TC_COUNT32_COUNT) MASK Register */
 
-/* -------- TC_COUNT8_COUNT : (TC Offset: 0x10) (R/W  8) COUNT8 COUNT8 Count Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint8_t reg;                 /*!< Type      used for register access              */
-} TC_COUNT8_COUNT_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT8_COUNT_OFFSET      0x10         /**< \brief (TC_COUNT8_COUNT offset) COUNT8 Count Register */
-#define TC_COUNT8_COUNT_RESETVALUE  0x00         /**< \brief (TC_COUNT8_COUNT reset_value) COUNT8 Count Register */
-#define TC_COUNT8_COUNT_MASK        0xFFu        /**< \brief (TC_COUNT8_COUNT) MASK Register */
-
 /* -------- TC_COUNT8_PER : (TC Offset: 0x14) (R/W  8) COUNT8 COUNT8 Period Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -424,6 +425,17 @@ typedef union {
 #define TC_COUNT8_PER_OFFSET        0x14         /**< \brief (TC_COUNT8_PER offset) COUNT8 Period Register */
 #define TC_COUNT8_PER_RESETVALUE    0x00         /**< \brief (TC_COUNT8_PER reset_value) COUNT8 Period Register */
 #define TC_COUNT8_PER_MASK          0xFFu        /**< \brief (TC_COUNT8_PER) MASK Register */
+
+/* -------- TC_COUNT8_CC : (TC Offset: 0x18) (R/W  8) COUNT8 COUNT8 Compare and Capture Register -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  uint8_t reg;                 /*!< Type      used for register access              */
+} TC_COUNT8_CC_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define TC_COUNT8_CC_OFFSET         0x18         /**< \brief (TC_COUNT8_CC offset) COUNT8 Compare and Capture Register */
+#define TC_COUNT8_CC_RESETVALUE     0x00         /**< \brief (TC_COUNT8_CC reset_value) COUNT8 Compare and Capture Register */
+#define TC_COUNT8_CC_MASK           0xFFu        /**< \brief (TC_COUNT8_CC) MASK Register */
 
 /* -------- TC_COUNT16_CC : (TC Offset: 0x18) (R/W 16) COUNT16 COUNT16 Compare and Capture Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -446,17 +458,6 @@ typedef union {
 #define TC_COUNT32_CC_OFFSET        0x18         /**< \brief (TC_COUNT32_CC offset) COUNT32 Compare and Capture Register */
 #define TC_COUNT32_CC_RESETVALUE    0x00000000   /**< \brief (TC_COUNT32_CC reset_value) COUNT32 Compare and Capture Register */
 #define TC_COUNT32_CC_MASK          0xFFFFFFFFu  /**< \brief (TC_COUNT32_CC) MASK Register */
-
-/* -------- TC_COUNT8_CC : (TC Offset: 0x18) (R/W  8) COUNT8 COUNT8 Compare and Capture Register -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint8_t reg;                 /*!< Type      used for register access              */
-} TC_COUNT8_CC_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT8_CC_OFFSET         0x18         /**< \brief (TC_COUNT8_CC offset) COUNT8 Compare and Capture Register */
-#define TC_COUNT8_CC_RESETVALUE     0x00         /**< \brief (TC_COUNT8_CC reset_value) COUNT8 Compare and Capture Register */
-#define TC_COUNT8_CC_MASK           0xFFu        /**< \brief (TC_COUNT8_CC) MASK Register */
 
 /** \brief TC_COUNT8 hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

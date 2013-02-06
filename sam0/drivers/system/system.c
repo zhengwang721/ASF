@@ -52,57 +52,65 @@ void HardFault_Handler(void)
 {
 	while (1) {
 		/* Infinite loop if CPU exception is detected */
+		Assert(false);
 	}
 }
 
 /**
- * \brief configure BOD
+ * \brief Configure a Brown Out Detector module.
  *
- * This function will configure the BOD33 or BOD12 module based on the
- * configuration in the configuration struct. The BOD will be enabled when this
- * function returns.
+ * Configures a given BOD33 or BOD12 module based on the settings stored in the
+ * configuration struct. The BOD will be enabled when this function returns.
  *
- * \param[in] conf pointer to the struct containing configuration
- * \param[in] bod which BOD module to configure
+ * \param[in] bod    BOD module ID to configure
+ * \param[in] conf   Configuration settings for the BOD
  *
  * \retval STATUS_ERR_INVALID_ARG Invalid BOD
  * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
  * \retval STATUS_OK Operation completed successfully
  */
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod)
+enum status_code system_bod_set_config(
+		const enum system_bod bod,
+		struct system_bod_config *const conf)
 {
+	/* Sanity check arguments */
 	Assert(conf);
 
 	uint32_t temp;
 
-	temp = conf->action | conf->mode;
+	/* Convert BOD trigger action and mode to a bitmask */
+	temp = (uint32_t)conf->action | (uint32_t)conf->mode;
 
-	if (conf->mode) {
-	/* Enable sampling clock if sampled mode */
+	if (conf->mode == SYSTEM_BOD_MODE_SAMPLED) {
+		/* Enable sampling clock if sampled mode */
 		temp |= SYSCTRL_BOD33_CEN;
 	}
-	if (conf->hysteresis) {
+
+	if (conf->hysteresis == true) {
 		temp |= SYSCTRL_BOD33_HYST;
 	}
 
-	temp |= SYSCTRL_BOD33_ENABLE;
 	switch (bod) {
-		case SYSTEM_BOD33:
+		case SYSTEM_BOD_BOD33:
 			if (conf->level > 0x3F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
+
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
+					temp | SYSCTRL_BOD33_ENABLE;
 			break;
-		case SYSTEM_BOD12:
+		case SYSTEM_BOD_BOD12:
 			if (conf->level > 0x1F) {
 				return STATUS_ERR_INVALID_ARG;
 			}
-			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) | temp;
+
+			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) |
+					temp | SYSCTRL_BOD12_ENABLE;
 			break;
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
+
 	return STATUS_OK;
 }
 
@@ -112,28 +120,28 @@ enum status_code system_bod_set_config(struct system_bod_config *conf,
  */
 void system_bod_init(void)
 {
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
+#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
 	struct system_bod_config conf;
 
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
+#  if BOD33_ENABLED == true
+	conf.action       = BOD33_ACTION;
 	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
+	conf.prescaler    = BOD33_PRESCALER;
+	conf.hysteresis   = BOD33_HYSTERESIS;
 
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
+	system_bod_set_config(SYSTEM_BOD_BOD33, &conf);
+#  endif
 
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
+#  if BOD12_ENABLED == true
+	conf.action       = BOD12_ACTION;
 	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
+	conf.prescaler    = BOD12_PRESCALER;
+	conf.hysteresis   = BOD12_HYSTERESIS;
 
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
+	system_bod_set_config(SYSTEM_BOD_BOD12, &conf);
+#  endif
 
-	#endif
+#endif
 }
 
 /**
@@ -149,9 +157,10 @@ void system_init(void)
 {
 	/* Initialize BOD according to conf_bod.h */
 	system_bod_init();
-	/* Configure GCLK and clock sources according to
-	 * conf_clocks.h */
+
+	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
+
 	/* Initialize board hardware */
 	system_board_init();
 }

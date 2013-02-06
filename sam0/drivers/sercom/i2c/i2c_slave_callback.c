@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -63,11 +65,11 @@ static enum status_code _i2c_slave_set_config(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	Sercom *const sercom_hw = module->hw;
-	
+
 	struct system_pinmux_conf pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
-	
+
 	system_pinmux_get_config_defaults(&pin_conf);
 	/* SERCOM PAD0 - SDA */
 	if (pad0 == PINMUX_DEFAULT) {
@@ -112,7 +114,7 @@ static enum status_code _i2c_slave_set_config(
  * \return              Status of initialization.
  * \retval STATUS_OK                       Module initiated correctly.
  * \retval STATUS_ERR_DENIED               If module is enabled.
- * \retval STATUS_ERR_BUSY                 If module is busy resetting.
+ * \retval STATUS_BUSY                 If module is busy resetting.
  * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other gclk generator than
  *                                         previously set.
  *
@@ -138,23 +140,23 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 
 	/* Check if reset is in progress. */
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
-	
+
 	/* Turn on module in PM */
 	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
-	
+
 	/* Set up GCLK */
-	struct system_gclk_ch_conf gclk_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
-	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(gclk_index);
-	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	gclk_chan_conf.source_generator = config->generator_source;
+	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
+	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(gclk_index);
+	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 	/* Get sercom instance index. */
 	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module->hw);
@@ -342,7 +344,7 @@ void i2c_slave_unregister_callback(
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_slave_read_packet_callback(
 		struct i2c_slave_module *const module,
@@ -355,13 +357,13 @@ enum status_code i2c_slave_read_packet_callback(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
-	module->status = STATUS_IN_PROGRESS;
+	module->status = STATUS_BUSY;
 
 	/* Read will begin when master initiates the transfer */
 
@@ -381,7 +383,7 @@ enum status_code i2c_slave_read_packet_callback(
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_slave_write_packet_callback(
 		struct i2c_slave_module *const module,
@@ -394,13 +396,13 @@ enum status_code i2c_slave_write_packet_callback(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
-	module->status = STATUS_IN_PROGRESS;
+	module->status = STATUS_BUSY;
 
 	return STATUS_OK;
 }
@@ -419,7 +421,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Combine callback registered and enabled masks. */
-	uint8_t callback_mask = 
+	uint8_t callback_mask =
 			module->enabled_callback & module->registered_callback;
 
 
@@ -458,7 +460,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
 		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-		
+
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
 
@@ -478,7 +480,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
 		/* Check if buffer is full, or no more data to write */
 		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
-	
+
 			module->buffer_length = 0;
 			module->status = STATUS_OK;
 			if (module->transfer_direction == 0) {
@@ -516,7 +518,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if (module->status != STATUS_IN_PROGRESS &&
+	if (module->status != STATUS_BUSY &&
 			module->status != STATUS_OK) {
 		/* Stop packet operation. */
 		module->buffer_length = 0;

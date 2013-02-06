@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -108,7 +110,7 @@ static enum status_code _i2c_master_set_config(
 	}
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)(system_gclk_ch_get_hz(SERCOM_GCLK_ID)
+	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
 			/ (2*config->baud_rate)-5);
 
 	/* Check that baud rate is supported at current speed. */
@@ -139,7 +141,7 @@ static enum status_code _i2c_master_set_config(
  * \return              Status of initialization.
  * \retval STATUS_OK Module initiated correctly.
  * \retval STATUS_ERR_DENIED If module is enabled.
- * \retval STATUS_ERR_BUSY If module is busy resetting.
+ * \retval STATUS_BUSY If module is busy resetting.
  * \retval STATUS_ERR_ALREADY_INITIALIZED If setting other gclk generator than
  *                                        previously set.
  * \retval STAUS_ERR_BAUDRATE_UNAVAILABLE If given baud rate is not compatible
@@ -167,7 +169,7 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 
 	/* Check if reset is in progress. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 #ifdef I2C_MASTER_ASYNC
@@ -311,7 +313,7 @@ static enum status_code _i2c_master_wait_for_bus(
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
  * \return          Status describing progress of reading packet.
  * \retval STATUS_OK If packet was read.
- * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_BUSY If master module is busy.
  * \retval STATUS_ERR_DENIED If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
@@ -332,7 +334,7 @@ enum status_code i2c_master_read_packet(
 #ifdef I2C_MASTER_ASYNC
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 
@@ -395,7 +397,7 @@ enum status_code i2c_master_read_packet(
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
  * \return          Status describing progress of reading packet.
  * \retval STATUS_OK If packet was read.
- * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_BUSY If master module is busy.
  * \retval STATUS_ERR_DENIED If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
@@ -418,7 +420,7 @@ enum status_code i2c_master_write_packet(
 #ifdef I2C_MASTER_ASYNC
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 

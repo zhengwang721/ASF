@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -45,24 +47,7 @@
  * \internal
  * Internal driver device instance struct.
  */
-struct _extint_device _extint_dev;
-
-/**
- * \internal
- * Waits for the given EIC module to synchronize across the main and peripheral
- * digital clock domains.
- *
- * \param[in] module  Pointer to an EIC module to wait for sync
- */
-static void _eic_wait_for_sync(Eic* module)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	while (module->STATUS.reg & EIC_STATUS_SYNCBUSY) {
-		/* Wait for sync to complete */
-	}
-}
+struct _extint_module _extint_dev;
 
 /**
  * \brief Resets and disables the External Interrupt driver.
@@ -80,7 +65,10 @@ void extint_reset(void)
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_SWRST;
-		_eic_wait_for_sync(eics[i]);
+	}
+
+	while (extint_is_synching()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 }
 
@@ -95,26 +83,29 @@ void extint_enable(void)
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	/* Configure the generic clock for the module */
-	struct system_gclk_ch_conf gclock_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclock_ch_conf);
-	gclock_ch_conf.source_generator = 0;
-	gclock_ch_conf.run_in_standby   = false;
-	system_gclk_ch_set_config(EIC_GCLK_ID, &gclock_ch_conf);
-	system_gclk_ch_enable(EIC_GCLK_ID);
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = 0;
+	gclk_chan_conf.run_in_standby   = false;
+	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(EIC_GCLK_ID);
 
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
-		_eic_wait_for_sync(eics[i]);
 	}
 
-#if EXTINT_ASYNC == true
+	while (extint_is_synching()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
+#if EXTINT_CALLBACK_MODE == true
 	/* Clear callback registration table */
 	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 		_extint_dev.callbacks[j] = NULL;
 	}
 
-	NVIC_EnableIRQ(EIC_EXTINT_0_IRQn);
+	NVIC_EnableIRQ(EIC_IRQn);
 #endif
 }
 
@@ -131,7 +122,10 @@ void extint_disable(void)
 	/* Disable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg &= ~EIC_CTRL_ENABLE;
-		_eic_wait_for_sync(eics[i]);
+	}
+
+	while (extint_is_synching()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 }
 
@@ -146,9 +140,9 @@ void extint_disable(void)
  * \param config    Configuration settings for the channel
 
  */
-void extint_ch_set_config(
+void extint_chan_set_config(
 		const uint8_t channel,
-		const struct extint_ch_conf *const config)
+		const struct extint_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -168,7 +162,7 @@ void extint_ch_set_config(
 	uint32_t new_config;
 
 	/* Determine the channel's new edge detection configuration */
-	new_config = (config->detect << EIC_CONFIG_SENSE0_Pos);
+	new_config = (config->detection_criteria << EIC_CONFIG_SENSE0_Pos);
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
@@ -212,7 +206,7 @@ enum status_code extint_nmi_set_config(
 	Assert(config);
 
 	if ((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
-			(config->detect == EXTINT_DETECT_NONE)) {
+			(config->detection_criteria == EXTINT_DETECT_NONE)) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
@@ -230,7 +224,7 @@ enum status_code extint_nmi_set_config(
 	uint32_t new_config;
 
 	/* Determine the NMI's new edge detection configuration */
-	new_config = (config->detect << EIC_NMICTRL_NMISENSE_Pos);
+	new_config = (config->detection_criteria << EIC_NMICTRL_NMISENSE_Pos);
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {

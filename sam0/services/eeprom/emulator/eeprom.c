@@ -3,12 +3,12 @@
 #include <string.h>
 #include <nvm.h>
 
-/* This macro will wait until the command return anything else than STATUS_ERR_BUSY
+/* This macro will wait until the command return anything else than STATUS_BUSY
    Expecting err to be defined as "enum status_code err" */
 #define wait_for_function(function) \
 		do {                    \
 			err = function; \
-		} while (err == STATUS_ERR_BUSY);\
+		} while (err == STATUS_BUSY);\
 
 /* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to
    check as uint32_t values than a string compare. But this numbers will show

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -74,18 +76,18 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	/* Get baud value from mode and clock */
 	if (config->transfer_mode == USART_TRANSFER_SYNCHRONOUSLY &&
 			!config->use_external_clock) {
-		usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+		/* Calculate baud value */
+		usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 		status_code = _sercom_get_sync_baud_val(config->baudrate,
 				usart_freq, &baud_val);
 	}
-
 	if (config->transfer_mode == USART_TRANSFER_ASYNCHRONOUSLY) {
 		if (config->use_external_clock) {
 			status_code = _sercom_get_async_baud_val(config->baudrate,
 					config->ext_clock_freq,
 					&baud_val);
 		} else {
-			usart_freq = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+			usart_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 			status_code = _sercom_get_async_baud_val(config->baudrate,
 					usart_freq, &baud_val);
 		}
@@ -148,7 +150,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * \return Status of the initialization
  *
  * \retval STATUS_OK                       The initialization was successful
- * \retval STATUS_ERR_BUSY                 The USART module is occupied with
+ * \retval STATUS_BUSY                 The USART module is occupied with
  *                                         resetting itself
  * \retval STATUS_ERR_DENIED               The USART have not been disabled in
  *                                         advance of initialization
@@ -171,7 +173,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	Assert(hw_dev);
 	Assert(config);
 
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 	enum status_code status_code = STATUS_OK;
 	uint32_t sercom_index = 0;
 	uint32_t gclk_index = 0;
@@ -188,17 +190,17 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
 
 	/* Set up the GCLK for the module */
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 
 	sercom_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 
 	gclk_index =  sercom_index + 13;
 
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
-	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(gclk_index);
-	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	gclk_chan_conf.source_generator = config->generator_source;
+	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
+	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(gclk_index);
+	system_gclk_chan_enable(SERCOM_GCLK_ID);
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Enable the user interface clock in the PM */
@@ -235,8 +237,8 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
 
 	/* SERCOM PAD3 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw_dev, 3);
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(hw_dev, 3);
 	}
 
 	pin_conf.mux_position = pad3 & 0xFFFF;
@@ -294,7 +296,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
  *
  * \return     Status of the operation
  * \retval     STATUS_OK           If the operation was completed
- * \retval     STATUS_ERR_BUSY     If the operation was not completed,
+ * \retval     STATUS_BUSY     If the operation was not completed,
  *                                 due to the USART module being busy.
  */
 enum status_code usart_write(struct usart_dev_inst *const dev_inst,
@@ -307,7 +309,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (dev_inst->remaining_tx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 #else
@@ -315,7 +317,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	if (!usart_is_interrupt_flag_set(dev_inst,
 			USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
 		/* Return error code */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 	/* Get a pointer to the hardware module instance */
@@ -341,7 +343,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If the operation was completed
- * \retval     STATUS_ERR_BUSY          If the operation was not completed,
+ * \retval     STATUS_BUSY          If the operation was not completed,
  *                                      due to the USART module being busy.
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
  *                                      due to mismatch configuration mismatch
@@ -365,7 +367,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (dev_inst->remaining_rx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 #else
@@ -373,7 +375,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	if (!usart_is_interrupt_flag_set(dev_inst,
 			USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 		/* Return error code */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 

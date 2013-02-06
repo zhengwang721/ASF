@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -116,14 +118,14 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	}
 	pin_conf.mux_position = pad2 & 0xFFFF;
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
-	
+
 	/* SERCOM PAD3 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(sercom_module, 3);
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(sercom_module, 3);
 	}
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
-	
+
 	dev_inst->mode = config->mode;
 	dev_inst->chsize = config->chsize;
 
@@ -137,7 +139,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	/**
 	 * \todo need to get reference clockspeed from conf struct and gclk_get_hz
 	 */
-	uint32_t external_clock = system_gclk_ch_get_hz(SERCOM_GCLK_ID);
+	uint32_t external_clock = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
@@ -210,7 +212,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \return Status of the initialization
  * \retval STATUS_OK                     Module initiated correctly.
  * \retval STATUS_ERR_DENIED             If module is enabled.
- * \retval STATUS_ERR_BUSY               If module is busy resetting.
+ * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
@@ -234,23 +236,23 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 
 	/* Check if reset is in progress. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
-	
+
 	/* Turn on module in PM */
 	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
-	
+
 	/* Set up GCLK */
-	struct system_gclk_ch_conf gclk_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf); 
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
-	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(gclk_index);
-	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	gclk_chan_conf.source_generator = config->generator_source;
+	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
+	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(gclk_index);
+	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);

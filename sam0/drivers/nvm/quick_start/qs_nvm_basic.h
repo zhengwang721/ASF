@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -40,7 +42,7 @@
  */
 
 /**
- * \page nvm_basic_use_case Quick Start Guide for the NVM module - Basic Use Case
+ * \page asfdoc_samd20_nvm_basic_use_case Quick Start Guide for the NVM module - Basic Use Case
  *
  * In this use case, the NVM module is configured for:
  *  \li Power reduction mode enabled after sleep until first NVM access
@@ -53,19 +55,19 @@
  * This use case sets up the NVM controller to write a page of data to flash,
  * and the read it back into the same buffer.
  *
- * \section nvm_basic_use_case_setup Setup
+ * \section asfdoc_samd20_nvm_basic_use_case_setup Setup
  *
- * \subsection nvm_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd20_nvm_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection nvm_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_nvm_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_nvm_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_nvm_basic.c setup_init
  *
- * \subsection nvm_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd20_nvm_basic_use_case_setup_flow Workflow
  * -# Create an NVM module configuration struct, which can be filled
  *    out to adjust the configuration of the NVM controller.
  *  - \snippet qs_nvm_basic.c setup_1
@@ -79,13 +81,13 @@
  * -# Configure NVM controller with the created configuration struct settings.
  *  - \snippet qs_nvm_basic.c setup_3
  *
- * \section nvm_basic_use_case_main Use Case
+ * \section asfdoc_samd20_nvm_basic_use_case_main Use Case
  *
- * \subsection nvm_basic_use_case_main_code Code
+ * \subsection asfdoc_samd20_nvm_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_nvm_basic.c main
  *
- * \subsection nvm_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_samd20_nvm_basic_use_case_main_flow Workflow
  * -# Set up a buffer one NVM page in size to hold data to read or write into
  *    NVM memory.
  *  - \snippet qs_nvm_basic.c main_1

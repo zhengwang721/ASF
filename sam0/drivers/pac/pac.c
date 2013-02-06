@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -54,7 +56,7 @@
  *                           \ref SYSTEM_PERIPHERAL_ID macro.
  * \param[in] key  Bitwise inverse of peripheral ID, used as key to
  *                 reduce the chance of accidental locking. See
- *                 \ref bitwise_code.
+ *                 \ref asfdoc_samd20_pac_bitwise_code.
  *
  * \return Status of the peripheral lock procedure.
  * \retval STATUS_OK                If the peripheral was successfully locked.
@@ -113,7 +115,7 @@ __no_inline enum status_code system_peripheral_lock(
  *                          \ref SYSTEM_PERIPHERAL_ID macro.
  * \param[in] key  Bitwise inverse of peripheral ID, used as key to
  *                 reduce the chance of accidental unlocking. See
- *                 \ref bitwise_code.
+ *                 \ref asfdoc_samd20_pac_bitwise_code.
  *
  * \return Status of the peripheral unlock procedure.
  * \retval STATUS_OK                If the peripheral was successfully locked.

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -40,7 +42,7 @@
  */
 
 /**
- * \page events_basic_use_case Quick Start Guide for the EVENT module - Basic Use Case
+ * \page asfdoc_samd20_events_basic_use_case Quick Start Guide for the EVENT module - Basic Use Case
  *
  * In this use case, the EVENT module is configured for:
  *  \li One generator attached to event channel 0
@@ -51,19 +53,19 @@
  * a peripheral's event generator, and attaching a second peripheral's event
  * user to the configured channel. The event channel is then software triggered.
  *
- * \section events_basic_use_case_setup Setup
+ * \section asfdoc_samd20_events_basic_use_case_setup Setup
  *
- * \subsection events_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd20_events_basic_use_casesetup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection events_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_events_basic_use_casesetup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_events_basic.c setup_init
  *
- * \subsection events_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd20_events_basic_use_casesetup_flow Workflow
  * -# Create an event channel configuration struct, which can be filled out to
  *    adjust the configuration of a single event channel.
  *  - \snippet qs_events_basic.c setup_1
@@ -105,9 +107,9 @@
  *
  *  - \snippet qs_events_basic.c setup_8
  *
- * \section events_basic_use_case Use Case
+ * \section asfdoc_samd20_events_basic_use_case_main Use Case
  *
- * \subsection events_basic_use_case_code_code Code
+ * \subsection asfdoc_samd20_events_basic_use_casecode_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_events_basic.c main
  *
