@@ -305,10 +305,10 @@ static inline Eic *const _extint_get_eic_from_channel(
 {
 	uint8_t eic_index = (channel / 32);
 
-	/* Array of available EICs. */
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-
 	if (eic_index < EIC_INST_NUM) {
+		/* Array of available EICs. */
+		Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
 		return eics[eic_index];
 	} else {
 		Assert(false);
@@ -331,10 +331,10 @@ static inline Eic *const _extint_get_eic_from_nmi(
 {
 	uint8_t eic_index = nmi_channel;
 
-	/* Array of available EICs. */
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-
 	if (eic_index < EIC_INST_NUM) {
+		/* Array of available EICs. */
+		Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
 		return eics[eic_index];
 	} else {
 		Assert(false);
