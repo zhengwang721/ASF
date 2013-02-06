@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -171,8 +173,8 @@ static void _rtc_calendar_set_config(
 	/* Set up temporary register value. */
 	uint16_t tmp_reg;
 
-	/* Set to calendar mode. */
-	tmp_reg = RTC_MODE2_CTRL_MODE(2);
+	/* Set to calendar mode and set the prescaler to get 1 Hz. */
+	tmp_reg = RTC_MODE2_CTRL_MODE(2) | RTC_MODE2_CTRL_PRESCALER_DIV1024;
 
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
@@ -196,18 +198,9 @@ static void _rtc_calendar_set_config(
 	}
 
 	/* Set alarm time registers. */
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
-	rtc_calendar_set_alarm(&(config->alarm[0]), RTC_CALENDAR_ALARM_0);
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
-	rtc_calendar_set_alarm(&(config->alarm[1]), RTC_CALENDAR_ALARM_1);
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
-	rtc_calendar_set_alarm(&(config->alarm[2]), RTC_CALENDAR_ALARM_2);
-	/* Sync. */
-	_rtc_calendar_wait_for_sync();
-	rtc_calendar_set_alarm(&(config->alarm[3]), RTC_CALENDAR_ALARM_3);
+	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
+		rtc_calendar_set_alarm(&(config->alarm[i]), i);
+	}
 
 	/* Set event source. */
 	rtc_calendar_enable_events(config->event_generators);
@@ -228,18 +221,19 @@ static void _rtc_calendar_set_config(
  */
 void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
-
 	/* Sanity check. */
 	Assert(config);
 
+	/* Set up GCLK */
+	struct system_gclk_chan_conf gclk_chan_conf;
+
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
+	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(RTC_GCLK_ID);
+
 	/* Reset module to hardware defaults. */
 	_rtc_calendar_reset();
-
-	//TODO: Do some magic to set up clock!
-	/* Set the prescaler to get 1 Hz. */
-	rtc_module->MODE2.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1024;
 
 	/* Save conf_struct internally for continued use. */
 	_rtc_dev.clock_24h = config->clock_24h;
@@ -266,6 +260,7 @@ void rtc_calendar_swap_time_mode(void)
 
 	/* Initialize time structure. */
 	struct rtc_calendar_time time;
+	struct rtc_calendar_alarm alarm;
 
 	/* Get current time. */
 	rtc_calendar_get_time(&time);
@@ -278,6 +273,16 @@ void rtc_calendar_swap_time_mode(void)
 		/* Set 12h clock hour value. */
 		time.hour = time.hour % 12;
 
+		/* Update alarms */
+		for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
+			rtc_calendar_get_alarm(&alarm, i);
+			alarm.time.pm = (uint8_t)(alarm.time.hour / 12);
+			alarm.time.hour = alarm.time.hour % 12;
+			_rtc_dev.clock_24h = false;
+			rtc_calendar_set_alarm(&alarm, i);
+			_rtc_dev.clock_24h = true;
+		}
+
 		/* Change value in configuration structure. */
 		_rtc_dev.clock_24h = false;
 	} else {
@@ -285,6 +290,18 @@ void rtc_calendar_swap_time_mode(void)
 		if (time.pm == 1) {
 			time.hour = time.hour + 12;
 			time.pm = 0;
+		}
+
+		/* Update alarms */
+		for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
+			rtc_calendar_get_alarm(&alarm, i);
+			if (alarm.time.pm == 1) {
+				alarm.time.hour = alarm.time.hour + 12;
+				alarm.time.pm = 0;
+				_rtc_dev.clock_24h = true;
+				rtc_calendar_set_alarm(&alarm, i);
+				_rtc_dev.clock_24h = false;
+			}
 		}
 
 		/* Change value in configuration structure. */
@@ -307,9 +324,9 @@ void rtc_calendar_swap_time_mode(void)
 /**
  * \brief Set the current calendar time to desired time.
  *
- * This will set the time provided to the clock.
+ * This will set the time provided to the calendar.
  *
- * \param[in] time The time to set in the clock.
+ * \param[in] time The time to set in the calendar.
  */
 void rtc_calendar_set_time(
 		const struct rtc_calendar_time *const time)
@@ -329,7 +346,7 @@ void rtc_calendar_set_time(
 /**
  * \brief Get the current calendar value.
  *
- * Returns the current time of the clock
+ * Returns the current time of the calendar
  *
  * \param[out] time Pointer to value that will be filled with current time.
  */
@@ -358,9 +375,9 @@ void rtc_calendar_get_time(struct rtc_calendar_time *const time)
 /**
  * \brief Set the alarm time for the specified alarm.
  *
- * This set the time specified to the requested alarm.
+ * This set the time and mask specified to the requested alarm.
  *
- * \param[in] alarm The time to set the alarm.
+ * \param[in] alarm The alarm struct to set the alarm with.
  * \param[in] alarm_index The index of the alarm to set.
  *
  * \return Status of setting alarm.
@@ -368,25 +385,28 @@ void rtc_calendar_get_time(struct rtc_calendar_time *const time)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_set_alarm(
-		const struct rtc_calendar_time *const alarm,
-		enum rtc_calendar_alarm alarm_index)
+		const struct rtc_calendar_alarm *const alarm,
+		enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
-	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
+	if ((uint32_t)alarm_index > RTC_NUM_OF_ALARMS) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Get register_value from time. */
-	uint32_t register_value = _rtc_calendar_time_to_register_value(alarm);
+	uint32_t register_value = _rtc_calendar_time_to_register_value(&(alarm->time));
 
 	/* Sync. */
 	_rtc_calendar_wait_for_sync();
 
 	/* Set alarm value. */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg = register_value;
+
+	/* Set alarm mask */
+	rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg = alarm->mask;
 
 	return STATUS_OK;
 }
@@ -396,22 +416,22 @@ enum status_code rtc_calendar_set_alarm(
  *
  * This will provide the current alarm time for the alarm specified.
  *
- * \param[out] alarm Pointer to the value that will be filled with alarm
- * time of the specified alarm.
+ * \param[out] alarm Pointer to the struct that will be filled with alarm
+ * time and mask of the specified alarm.
  * \param[in] alarm_index Index of alarm to get alarm time from.
  *
  * \return Status of getting alarm.
  * \retval STATUS_OK If alarm was read correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-enum status_code rtc_calendar_get_alarm(struct rtc_calendar_time *const alarm,
-		enum rtc_calendar_alarm alarm_index)
+enum status_code rtc_calendar_get_alarm(struct rtc_calendar_alarm *const alarm,
+		enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
 	/* Sanity check. */
-	if ((uint32_t)alarm_index > RTC_CALENDAR_ALARM_3) {
+	if ((uint32_t)alarm_index > RTC_NUM_OF_ALARMS) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -419,8 +439,11 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_time *const alarm,
 	uint32_t register_value =
 			rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg;
 
-	/* Convert to time structure and return. */
-	_rtc_calendar_register_value_to_time(register_value, alarm);
+	/* Convert to time structure. */
+	_rtc_calendar_register_value_to_time(register_value, &(alarm->time));
+
+	/* Read alarm mask */
+	alarm->mask = rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg;
 
 	return STATUS_OK;
 }

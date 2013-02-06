@@ -46,76 +46,63 @@
 #include <compiler.h>
 #include "clock.h"
 
-/* Weak init functions used in system_init */
-static inline void system_dummy_init(void)
-{
-	return;
-}
-
-#ifdef __GNUC__
-void system_board_init ( void ) __attribute__ ((weak, alias("system_dummy_init")));
-#endif
-#ifdef __ICCARM__
-static inline void system_board_init(void);
-#pragma weak system_board_init=system_dummy_init
-#endif
-
 /**
- * \defgroup system_group System control
+ * \defgroup asfdoc_samd20_system_group SAMD20 System Driver (SYSTEM)
+ *
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's system relation functionality, necessary for
+ * the basic device operation. This is not limited to a single peripheral, but
+ * extends across multiple hardware peripherals,
+ *
+ * The following peripherals are used by this module:
+ *
+ * - SYSCTRL (System Control) for BOD and Clock control
+ * - PM (Power Manager) for Reset Cause determination, Bus control and Sleep
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_system_prerequisites
+ *  - \ref asfdoc_samd20_system_module_overview
+ *  - \ref asfdoc_samd20_system_special_considerations
+ *  - \ref asfdoc_samd20_system_extra_info
+ *  - \ref asfdoc_samd20_system_examples
+ *  - \ref asfdoc_samd20_system_api_overview
  *
  *
- * \section intro Introduction
+ * \section asfdoc_samd20_system_prerequisites Prerequisites
  *
- * This driver provides control of all the system related functionality
- * of the SAMD20 devices. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals:
- * - SYSCTRL (BOD12, BOD33)
- * - PM (reset cause)
-* \dot
-digraph overview {
-	node [shape=record];
-		SYSCTRL
-		[label =<<TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0">
-				<TR><TD PORT="f0"><B>SYSCTRL</B></TD></TR>
-				<TR><TD PORT="f1">BOD12</TD></TR>
-				<TR><TD PORT="f2">BOD33</TD></TR>
-			</TABLE>>
-		shape = "none"];
-
-		PM
-		[label =<<TABLE BORDER="0" CELLBORDER="1" CELLPADDING="4" CELLSPACING="0">
-				<TR><TD PORT="f0"><B>PM</B></TD></TR>
-				<TR><TD PORT="f1">Reset Cause</TD></TR>
-			</TABLE>>
-		shape = "none"];
-	}
- * \enddot
- *
- * \section bod BOD (Brown-Out Detector)
- *  The BOD monitors the supply voltage for any dips that go below the set BOD threshold.
- *  In case of a BOD detect the BOD will either reset the system or raise an interrupt.
+ * There are no prerequisites for this module.
  *
  *
- * \par BOD Configuration
- * The BOD configuration is done by using the \ref system_bod_set_config function.
- * This function uses a system_bod_config struct containing configuration
- * options to set either the BOD33 or the BOD12 to the selected settings.
- * To fill the system_bod_config struct with the system defaults you can
- * run the \ref system_bod_get_config_defaults passing you configuration struct
- * as the parameter. The default settings are listed \ref system_bod_get_config_defaults "here"
+ * \section asfdoc_samd20_system_module_overview Module Overview
  *
- * \section reset_cause Reset Cause
- * In some application there might be a need to do a different program
- * flow based on how the controller was reset. Say if the cause of reset
- * was the watchdog timer (WDT), this might indicate an error in the application
- * and some sort of error handling or error logging might be needed.
- * The function system_get_reset_cause() returns the reset cause of latest reset.
- * The possible reset causes are enumerated in the enum \ref system_reset_cause.
+ * The System driver provides a collection of interfaces between the user
+ * application logic, and the core device functionality (such as clocks, Brown
+ * Out Detection, etc.) that is required for all applications. It contains a
+ * number of sub-modules that control one specific aspect of the device.
  *
- * \section sleep_mode Sleep Modes
- * The SAMD20 have several sleep modes, where the sleep mode controls which clock
- * systems on the device are enabled/disabled when entering sleep. The table below
- * lists the clock settings of the different sleep modes
+ * \section asfdoc_samd20_system_module_bod BOD (Brown-Out Detector)
+ * The BOD monitors the supply voltage for any dips that go below the set BOD
+ * threshold. In case of a BOD detect the BOD will either reset the system or
+ * raise a hardware interrupt so that a safe power-down sequence can be
+ * imitated.
+ *
+ * \subsection asfdoc_samd20_system_module_bod_config BOD Configuration
+ * The BOD configuration is performed by the \ref system_bod_set_config
+ * function. This function accepts a struct containing configuration options to
+ * set either the BOD33 or the BOD12 to the selected settings.
+ *
+ * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
+ * In some application there might be a need to perform a different program
+ * flow based on how the device was reset. For example, if the cause of reset
+ * was the Watchdog timer (WDT), this might indicate an error in the application
+ * and a form of error handling or error logging might be needed.
+ *
+ * \section asfdoc_samd20_system_module_sleep_mode Sleep Modes
+ * The SAMD20 devices have several sleep modes, where the sleep mode controls
+ * which clock systems on the device will remain enabled or disabled when the
+ * device enters a low power sleep mode. The table below lists the clock
+ * settings of the different sleep modes.
+ *
  * <table>
  * 	<tr>
  * 		<th>Sleep mode</th>
@@ -180,56 +167,102 @@ digraph overview {
  * 		<td>Low Power</td>
  * 		<td>Source/Drain biasing</td>
  * 	</tr>
- *</table>
+ * </table>
  *
- * \section etra_info Extra Information
- * For extra information see \ref system_extra_info
  *
-* @{
+ * \section asfdoc_samd20_system_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ * \section asfdoc_samd20_system_extra_info Extra Information for SYSTEM
+ *
+ * For extra information see \ref asfdoc_samd20_system_extra. This includes:
+ *  - \ref asfdoc_samd20_system_extra_acronyms
+ *  - \ref asfdoc_samd20_system_extra_dependencies
+ *  - \ref asfdoc_samd20_system_extra_errata
+ *  - \ref asfdoc_samd20_system_extra_history
+ *
+ *
+ * \section asfdoc_samd20_system_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_system_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_system_api_overview API Overview
+
  */
 
+#if !defined(__DOXYGEN__)
+/* Weak init functions used in system_init */
+static inline void system_dummy_board_init(void)
+{
+	return;
+}
+
+#  ifdef __GNUC__
+void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_board_init")));
+#  endif
+#  ifdef __ICCARM__
+static inline void system_board_init(void);
+#    pragma weak system_board_init=system_dummy_board_init
+#  endif
+#endif
+
 /**
- * BOD controller
-*/
+ * \brief Brown Out Detector hardware instance IDs.
+ *
+ * List of possible BOD controllers within the device.
+ */
 enum system_bod {
-	/** BOD12 Internal core voltage*/
-	SYSTEM_BOD12,
-	/** BOD33 External IO voltage*/
-	SYSTEM_BOD33,
+	/** BOD12 Internal core voltage. */
+	SYSTEM_BOD_BOD12,
+	/** BOD33 External I/O voltage, */
+	SYSTEM_BOD_BOD33,
 };
 
 /**
- * BOD Action on a BOD detect
+ * \breif Brown Out Detector detection actions.
+ *
+ * List of possible BOD actions when a BOD module detects a brown-out condition.
  */
 enum system_bod_action {
-	/** A BOD detect will reset the device */
+	/** A BOD detect will reset the device. */
 	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
-	/** A BOD detect will fire an interrupt */
+	/** A BOD detect will fire an interrupt. */
 	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2),
 };
 
 /**
- * BOD sampling mode */
+ * \breif Brown Out Detector sampling modes.
+ *
+ * List of possible BOD module voltage sampling modes.
+ */
 enum system_bod_mode {
-	/** BOD will sample the supply line continuously */
+	/** BOD will sample the supply line continuously. */
 	SYSTEM_BOD_MODE_CONTINIOUS  = 0,
-	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line */
+	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
 	SYSTEM_BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
 };
 
 /**
- * Available voltage references
+ * \brief Voltage references within the device.
+ *
+ * List of available voltage references (VREF) that may be used within the
+ * device.
  */
 enum system_voltage_reference {
 	/** Temperature sensor voltage reference */
-	SYSTEM_VREF_TEMPSENSE,
+	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
 	/** Bandgap voltage reference */
-	SYSTEM_VREF_BANDGAP,
+	SYSTEM_VOLTAGE_REFERENCE_BANDGAP,
 };
 
 /**
- * Available sleep modes in the device. A table of clocks available in different
- * sleep mode is available here: \ref sleep_mode
+ * \brief Device sleep modes.
+ *
+ * List of available sleep modes in the device. A table of clocks available in
+ * different sleep mode can be found in \ref asfdoc_samd20_system_module_sleep_mode.
  */
 enum system_sleepmode {
 	/** IDLE 0 */
@@ -246,21 +279,22 @@ enum system_sleepmode {
 
 
 /**
- * System reset cause
+ * \brief Reset causes of the system.
+ *
+ * List of possible reset causes of the system.
  */
 enum system_reset_cause {
-	/** The system was reset by the watchdog timer */
+	/** The system was reset by the watchdog timer. */
 	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
-	/** The system was reset because the external reset line was pulled low */
+	/** The system was reset because the external reset line was pulled low. */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = PM_RCAUSE_EXT,
-	/** The system was reset by the BOD33 */
+	/** The system was reset by the BOD33. */
 	SYSTEM_RESET_CAUSE_BOD33          = PM_RCAUSE_BOD33,
-	/** The system was reset by the BOD12 */
+	/** The system was reset by the BOD12. */
 	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
 	/** The system was reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
-
 
 
 /**
@@ -286,16 +320,19 @@ struct system_bod_config {
  *
  * \param[in] vref Voltage reference to enable
  */
-static inline void system_vref_enable(enum system_voltage_reference vref) {
-	switch(vref) {
-	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
-		break;
-	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
-		break;
-	default:
-		return;
+static inline void system_vref_enable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
+			SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
+			break;
+		default:
+			Assert(false);
+			return;
 	}
 }
 
@@ -306,16 +343,19 @@ static inline void system_vref_enable(enum system_voltage_reference vref) {
  *
  * \param[in] vref Voltage reference to disable
  */
-static inline void system_vref_disable(enum system_voltage_reference vref) {
-	switch(vref) {
-	case SYSTEM_VREF_TEMPSENSE:
-		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
-		break;
-	case SYSTEM_VREF_BANDGAP:
-		SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
-		break;
-	default:
-		return;
+static inline void system_vref_disable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
+			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
+			break;
+		default:
+			Assert(false);
+			return;
 	}
 }
 
@@ -336,18 +376,20 @@ static inline void system_vref_disable(enum system_voltage_reference vref) {
  * \param[out] conf BOD configuration struct to set to default settings
  */
 static inline void system_bod_get_config_defaults(
-		struct system_bod_config *conf)
+		struct system_bod_config *const conf)
 {
+	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->mode = SYSTEM_BOD_MODE_CONTINIOUS;
+	conf->mode   = SYSTEM_BOD_MODE_CONTINIOUS;
 	conf->action = SYSTEM_BOD_ACTION_RESET;
-	conf->level = 0x12; /* TODO: Need to revisit this level */
+	conf->level  = 0x12; /* TODO: Need to revisit this level */
 	conf->hysteresis = true;
 }
 
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod);
+enum status_code system_bod_set_config(
+		const enum system_bod bod,
+		struct system_bod_config *const conf);
 
 /**
  * @}
@@ -378,9 +420,9 @@ enum status_code system_bod_set_config(struct system_bod_config *conf,
  * \retval STATUS_OK Operation performed successfully
  * \retval STATUS_ERR_INVALID_ARG The supplied sleep mode is not available
  */
-static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepmode)
+static inline enum status_code system_set_sleepmode(
+	const enum system_sleepmode sleepmode)
 {
-
 	switch (sleepmode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
@@ -410,7 +452,7 @@ static inline enum status_code system_set_sleepmode(enum system_sleepmode sleepm
  */
 static inline void system_sleep(void)
 {
-	asm volatile ("wfi\n");
+	__WFI();
 }
 
 /**
@@ -437,28 +479,33 @@ static inline void system_sleep(void)
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
-	return PM->RCAUSE.reg;
+	return (enum system_reset_cause)PM->RCAUSE.reg;
 }
 
 /**
  * @}
  */
 
-/* @} */
+/**
+ * \name System initialization
+ * @{
+ */
 
 void system_bod_init(void);
 
 void system_init(void);
 
-
-#endif /* SYSTEM_H_INCLUDED */
+/**
+ * @}
+ */
 
 /**
- * \page system_extra_info Extra Information (system)
- * Below is a listing of the acronyms used in this module:
+ * \page asfdoc_samd20_system_extra Extra Information
  *
- * \section acronyms Acronyms
- * List of acronyms used in the module.
+ * \section asfdoc_samd20_system_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
  * <table>
  *  <tr>
  *      <th>Acronym</th>
@@ -478,17 +525,43 @@ void system_init(void);
  *  </tr>
  * </table>
  *
- * \section fixed_erratas Erratas fixed by driver
- * No errata workarounds in driver
  *
- * \section sys_module_history Module History
+ * \section asfdoc_samd20_system_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_system_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_system_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
  * <table>
- * 	<tr>
- * 		<th>Changelog</th>
- * 	</tr>
- * 	<tr>
- * 		<td>Initial version</td>
- * 	</tr>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
  * </table>
- *
  */
+
+/**
+ * \page asfdoc_samd20_system_exqsg Examples for SYSTEM Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_system_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_system_basic_use_case
+ */
+
+#endif /* SYSTEM_H_INCLUDED */

@@ -10,6 +10,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -83,7 +85,8 @@ enum status_code {
 	STATUS_OK                         = STATUS_CATEGORY_OK     | 0x00,
 	STATUS_VALID_DATA                 = STATUS_CATEGORY_OK     | 0x01,
 	STATUS_NO_CHANGE                  = STATUS_CATEGORY_OK     | 0x02,
-	STATUS_IN_PROGRESS                = STATUS_CATEGORY_OK     | 0x03,
+	STATUS_ABORTED                    = STATUS_CATEGORY_OK     | 0x04,
+	STATUS_BUSY                       = STATUS_CATEGORY_OK     | 0x05,
 
 	STATUS_ERR_IO                     = STATUS_CATEGORY_COMMON | 0x00,
 	STATUS_ERR_REQ_FLUSHED            = STATUS_CATEGORY_COMMON | 0x01,
@@ -93,7 +96,6 @@ enum status_code {
 	STATUS_ERR_NO_MEMORY              = STATUS_CATEGORY_COMMON | 0x06,
 	STATUS_ERR_INVALID_ARG            = STATUS_CATEGORY_COMMON | 0x07,
 	STATUS_ERR_BAD_ADDRESS            = STATUS_CATEGORY_COMMON | 0x08,
-	STATUS_ERR_BUSY                   = STATUS_CATEGORY_COMMON | 0x09,
 	STATUS_ERR_BAD_FORMAT             = STATUS_CATEGORY_COMMON | 0x0A,
 	STATUS_ERR_BAD_FRQ                = STATUS_CATEGORY_COMMON | 0x0B,
 	STATUS_ERR_DENIED                 = STATUS_CATEGORY_COMMON | 0x0c,

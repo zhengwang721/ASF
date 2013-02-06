@@ -50,10 +50,34 @@
 #define REG_HMATRIX_MCFG1                     (0x41004804U) /**< \brief (HMATRIX) Master Configuration Register 1 */
 #define REG_HMATRIX_MCFG2                     (0x41004808U) /**< \brief (HMATRIX) Master Configuration Register 2 */
 #define REG_HMATRIX_MCFG3                     (0x4100480CU) /**< \brief (HMATRIX) Master Configuration Register 3 */
+#define REG_HMATRIX_MCFG4                     (0x41004810U) /**< \brief (HMATRIX) Master Configuration Register 4 */
+#define REG_HMATRIX_MCFG5                     (0x41004814U) /**< \brief (HMATRIX) Master Configuration Register 5 */
+#define REG_HMATRIX_MCFG6                     (0x41004818U) /**< \brief (HMATRIX) Master Configuration Register 6 */
+#define REG_HMATRIX_MCFG7                     (0x4100481CU) /**< \brief (HMATRIX) Master Configuration Register 7 */
+#define REG_HMATRIX_MCFG8                     (0x41004820U) /**< \brief (HMATRIX) Master Configuration Register 8 */
+#define REG_HMATRIX_MCFG9                     (0x41004824U) /**< \brief (HMATRIX) Master Configuration Register 9 */
+#define REG_HMATRIX_MCFG10                    (0x41004828U) /**< \brief (HMATRIX) Master Configuration Register 10 */
+#define REG_HMATRIX_MCFG11                    (0x4100482CU) /**< \brief (HMATRIX) Master Configuration Register 11 */
+#define REG_HMATRIX_MCFG12                    (0x41004830U) /**< \brief (HMATRIX) Master Configuration Register 12 */
+#define REG_HMATRIX_MCFG13                    (0x41004834U) /**< \brief (HMATRIX) Master Configuration Register 13 */
+#define REG_HMATRIX_MCFG14                    (0x41004838U) /**< \brief (HMATRIX) Master Configuration Register 14 */
+#define REG_HMATRIX_MCFG15                    (0x4100483CU) /**< \brief (HMATRIX) Master Configuration Register 15 */
 #define REG_HMATRIX_SCFG0                     (0x41004840U) /**< \brief (HMATRIX) Slave Configuration Register 0 */
 #define REG_HMATRIX_SCFG1                     (0x41004844U) /**< \brief (HMATRIX) Slave Configuration Register 1 */
 #define REG_HMATRIX_SCFG2                     (0x41004848U) /**< \brief (HMATRIX) Slave Configuration Register 2 */
 #define REG_HMATRIX_SCFG3                     (0x4100484CU) /**< \brief (HMATRIX) Slave Configuration Register 3 */
+#define REG_HMATRIX_SCFG4                     (0x41004850U) /**< \brief (HMATRIX) Slave Configuration Register 4 */
+#define REG_HMATRIX_SCFG5                     (0x41004854U) /**< \brief (HMATRIX) Slave Configuration Register 5 */
+#define REG_HMATRIX_SCFG6                     (0x41004858U) /**< \brief (HMATRIX) Slave Configuration Register 6 */
+#define REG_HMATRIX_SCFG7                     (0x4100485CU) /**< \brief (HMATRIX) Slave Configuration Register 7 */
+#define REG_HMATRIX_SCFG8                     (0x41004860U) /**< \brief (HMATRIX) Slave Configuration Register 8 */
+#define REG_HMATRIX_SCFG9                     (0x41004864U) /**< \brief (HMATRIX) Slave Configuration Register 9 */
+#define REG_HMATRIX_SCFG10                    (0x41004868U) /**< \brief (HMATRIX) Slave Configuration Register 10 */
+#define REG_HMATRIX_SCFG11                    (0x4100486CU) /**< \brief (HMATRIX) Slave Configuration Register 11 */
+#define REG_HMATRIX_SCFG12                    (0x41004870U) /**< \brief (HMATRIX) Slave Configuration Register 12 */
+#define REG_HMATRIX_SCFG13                    (0x41004874U) /**< \brief (HMATRIX) Slave Configuration Register 13 */
+#define REG_HMATRIX_SCFG14                    (0x41004878U) /**< \brief (HMATRIX) Slave Configuration Register 14 */
+#define REG_HMATRIX_SCFG15                    (0x4100487CU) /**< \brief (HMATRIX) Slave Configuration Register 15 */
 #define REG_HMATRIX_PRAS0          (0x41004880U) /**< \brief (HMATRIX) Priority Register A for Slave 0 */
 #define REG_HMATRIX_PRBS0          (0x41004884U) /**< \brief (HMATRIX) Priority Register B for Slave 0 */
 #define REG_HMATRIX_PRAS1          (0x41004888U) /**< \brief (HMATRIX) Priority Register A for Slave 1 */
@@ -86,22 +110,7 @@
 #define REG_HMATRIX_PRBS14         (0x410048F4U) /**< \brief (HMATRIX) Priority Register B for Slave 14 */
 #define REG_HMATRIX_PRAS15         (0x410048F8U) /**< \brief (HMATRIX) Priority Register A for Slave 15 */
 #define REG_HMATRIX_PRBS15         (0x410048FCU) /**< \brief (HMATRIX) Priority Register B for Slave 15 */
-#define REG_HMATRIX_MRCR0                     (0x41004900U) /**< \brief (HMATRIX) Master Remap Control Register 0 */
-#define REG_HMATRIX_MRCR1                     (0x41004904U) /**< \brief (HMATRIX) Master Remap Control Register 1 */
-#define REG_HMATRIX_MRCR2                     (0x41004908U) /**< \brief (HMATRIX) Master Remap Control Register 2 */
-#define REG_HMATRIX_MRCR3                     (0x4100490CU) /**< \brief (HMATRIX) Master Remap Control Register 3 */
-#define REG_HMATRIX_MRCR4                     (0x41004910U) /**< \brief (HMATRIX) Master Remap Control Register 4 */
-#define REG_HMATRIX_MRCR5                     (0x41004914U) /**< \brief (HMATRIX) Master Remap Control Register 5 */
-#define REG_HMATRIX_MRCR6                     (0x41004918U) /**< \brief (HMATRIX) Master Remap Control Register 6 */
-#define REG_HMATRIX_MRCR7                     (0x4100491CU) /**< \brief (HMATRIX) Master Remap Control Register 7 */
-#define REG_HMATRIX_MRCR8                     (0x41004920U) /**< \brief (HMATRIX) Master Remap Control Register 8 */
-#define REG_HMATRIX_MRCR9                     (0x41004924U) /**< \brief (HMATRIX) Master Remap Control Register 9 */
-#define REG_HMATRIX_MRCR10                    (0x41004928U) /**< \brief (HMATRIX) Master Remap Control Register 10 */
-#define REG_HMATRIX_MRCR11                    (0x4100492CU) /**< \brief (HMATRIX) Master Remap Control Register 11 */
-#define REG_HMATRIX_MRCR12                    (0x41004930U) /**< \brief (HMATRIX) Master Remap Control Register 12 */
-#define REG_HMATRIX_MRCR13                    (0x41004934U) /**< \brief (HMATRIX) Master Remap Control Register 13 */
-#define REG_HMATRIX_MRCR14                    (0x41004938U) /**< \brief (HMATRIX) Master Remap Control Register 14 */
-#define REG_HMATRIX_MRCR15                    (0x4100493CU) /**< \brief (HMATRIX) Master Remap Control Register 15 */
+#define REG_HMATRIX_MRCR                      (0x41004900U) /**< \brief (HMATRIX) Master Remap Control Register */
 #define REG_HMATRIX_SFR0                      (0x41004910U) /**< \brief (HMATRIX) Special Function Register 0 */
 #define REG_HMATRIX_SFR1                      (0x41004914U) /**< \brief (HMATRIX) Special Function Register 1 */
 #define REG_HMATRIX_SFR2                      (0x41004918U) /**< \brief (HMATRIX) Special Function Register 2 */

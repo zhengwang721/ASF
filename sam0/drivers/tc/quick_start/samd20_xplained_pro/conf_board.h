@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAMD20 External Interrupt Driver Asynchronous API Implementation
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,71 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef EXTINT_ASYNC_H_INCLUDED
-#define EXTINT_ASYNC_H_INCLUDED
 
-#include <compiler.h>
-#include "extint.h"
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup asfdoc_samd20_extint
- *
- * @{
- */
-
-#if !defined(EXTINT_CALLBACKS_MAX)
-#  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
-#  define EXTINT_CALLBACKS_MAX 10
-#endif
-
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for an EXTINT module callback function. */
-typedef void (*extint_async_callback_t)(uint32_t channel);
-
-/** Enum for the possible callback types for the EXTINT module. */
-enum extint_async_type
-{
-	/** Callback type for when an external interrupt detects the configured
-	 *  channel criteria (i.e. edge or level detection)
-	 */
-	EXTINT_ASYNC_TYPE_DETECT,
-};
-
-enum status_code extint_async_register_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type);
-
-enum status_code extint_async_unregister_callback(
-	const extint_async_callback_t callback,
-	const enum extint_async_type type);
-
-/** @} */
-
-/** \name Callback enabling and disabling (channel)
- * @{
- */
-
-enum status_code extint_async_ch_enable_callback(
-	const uint32_t channel,
-	const enum extint_async_type type);
-
-enum status_code extint_async_ch_disable_callback(
-	const uint32_t channel,
-	const enum extint_async_type type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */

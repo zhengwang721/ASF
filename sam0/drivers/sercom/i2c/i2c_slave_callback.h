@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -14,7 +16,7 @@
  *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the followingma disclaimer in the documentation
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
@@ -106,7 +108,7 @@ typedef void (*i2c_slave_callback_t)(
 		const struct i2c_slave_module *const module);
 #endif
 
-/** 
+/**
  * \brief Enum for the possible SDA hold times with respect to the negative edge
  * of SCL
  *
@@ -127,8 +129,8 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_SDA_HOLD_TIME_400NS_800NS = ((SERCOM_I2CS_CTRLA_SDAHOLD_Msk & ((3)
 			<< SERCOM_I2CS_CTRLA_SDAHOLD_Pos))),
 };
- 
-/** 
+
+/**
  * \brief Enum for the possible address modes
  *
  * Enum for the possible address modes
@@ -142,7 +144,7 @@ enum i2c_slave_sda_hold_time {
 	* address_mask */
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
- 
+
  /** \brief Interrupt flags.
  *
  * Flags used when reading or setting interrupt flags.
@@ -155,7 +157,7 @@ enum i2c_slave_interrupt_flag {
 	/** Interrupt flag for data */
 	I2C_SLAVE_INTERRUPT_DATA  = 1,
 };
- 
+
  /**
  * \brief SERCOM I2C Slave driver hardware instance
  *
@@ -207,13 +209,13 @@ struct i2c_slave_conf {
 	uint8_t address;
 	/** Address mask, second address or lower limit of address range*/
 	uint8_t address_mask;
-	/** 
+	/**
 	 * Enable general call address recognition. General call address
 	 * is defined as 0000000 with dir bit 0
 	 */
 	bool enable_general_call_address;
-	/** 
-	 * Enable nack on address match. Can be changed with \ref 
+	/**
+	 * Enable nack on address match. Can be changed with \ref
 	 * enable_address_nack and \ref disable_address_nack functions.
 	 */
 	bool enable_nack_on_address;
@@ -457,7 +459,7 @@ static inline void i2c_slave_cancel_transfer_callback(
  *
  * \return                     Last status code from transfer operation
  * \retval STATUS_OK           No error has occurred
- * \retval STATUS_IN_PROGRESS  Transfer is in progress
+ * \retval STATUS_BUSY  Transfer is in progress
  * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
  * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
  *                             last transfer

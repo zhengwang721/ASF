@@ -189,8 +189,8 @@
 #define EXT1_PWM_0_PIN            PIN_PB00D_TC5_WO0
 #define EXT1_PWM_0_PIN_MUX        MUX_PB00D_TC5_WO0
 #define EXT1_PWM_1_CHANNEL        0
-#define EXT1_PWM_1_PIN            PIN_PB01D_TC5_WO0
-#define EXT1_PWM_1_PIN_MUX        MUX_PB01D_TC5_WO0
+#define EXT1_PWM_1_PIN            PIN_PB01D_TC5_WO1
+#define EXT1_PWM_1_PIN_MUX        MUX_PB01D_TC5_WO1
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
