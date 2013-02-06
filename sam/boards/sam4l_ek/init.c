@@ -180,7 +180,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_PA20D_GLOC_IN0, MUX_PA20D_GLOC_IN0);
 	ioport_set_pin_peripheral_mode(PIN_PA21D_GLOC_IN1, MUX_PA21D_GLOC_IN1);
 	ioport_set_pin_peripheral_mode(PIN_PA22D_GLOC_IN2, MUX_PA22D_GLOC_IN2);
-	ioport_set_pin_peripheral_mode(PIN_PA23D_GLOC_IN3, MUX_PA23D_GLOC_IN3);
+	ioport_set_pin_peripheral_mode(PIN_PA07D_GLOC_IN3, MUX_PA07D_GLOC_IN3);
 	ioport_set_pin_peripheral_mode(PIN_PA24D_GLOC_OUT0, MUX_PA24D_GLOC_OUT0);
 #endif
 }

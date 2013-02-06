@@ -104,4 +104,62 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst);
 }
 #endif
 
+/**
+ * \page sam_gloc_quick_start Quick Start Guide for the GLOC driver
+ *
+ * This is the quick start guide for the \ref sam_drivers_gloc_group, with
+ * step-by-step instructions on how to configure and use the driver for
+ * a specific use case.The code examples can be copied into e.g the main
+ * application loop or any other function that will need to control the
+ * GLOC module.
+ *
+ * \section gloc_qs_use_cases Use cases
+ * - \ref gloc_basic
+ *
+ * \section gloc_basic GLOC basic usage
+ *
+ * This use case will demonstrate how to initialize the GLOC module to
+ * encryption or decryption data.
+ *
+ *
+ * \section gloc_basic_setup Setup steps
+ *
+ * \subsection gloc_basic_prereq Prerequisites
+ *
+ * This module requires the following service
+ * - \ref clk_group
+ *
+ * \subsection gloc_basic_setup_code
+ *
+ * Add this to the main loop or a setup function:
+ * \code
+ * struct gloc_lut_config config[GLOC_LUTS];
+ * struct gloc_dev_inst dev_inst;
+ * gloc_lut_get_config_defaults(config);
+ * gloc_init(&dev_inst, GLOC, config);
+ * gloc_enable(&dev_inst);
+ * \endcode
+ *
+ * \subsection gloc_basic_setup_workflow
+ *
+ * -# Get the GLOC default configuration
+ *  - \code gloc_lut_get_config_defaults(config); \endcode
+ *
+ * -# Initialize the GLOC module
+ *  - \code gloc_init(&dev_inst, GLOC, config); \endcode
+ * -# Enable the GLOC module
+ *  - \code gloc_enable(&dev_inst); \endcode
+ *
+ * \section gloc_basic_usage Usage steps
+ *
+ * \subsection gloc_basic_usage_code
+ *
+ * -# Set the 4 inputs XOR truth table value in LUT0.
+ * \code
+ * dev_inst.gloc_lut_cfg[0]->truth_table_value = 0x6996;
+ * dev_inst.gloc_lut_cfg[0]->input_mask = 0xF;
+ * gloc_lut_set_config(&dev_inst);
+ * \endcode
+ */
+
 #endif /* GLOC_H_INCLUDED */

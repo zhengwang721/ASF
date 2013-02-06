@@ -66,7 +66,7 @@ void gloc_lut_get_config_defaults(struct gloc_lut_config *const cfg)
 	uint32_t i;
 	struct gloc_lut_config *p_temp_cfg = cfg;
 
-	for (i=0; i<GLOC_LUTS; i++) {
+	for (i = 0; i < GLOC_LUTS; i++) {
 		p_temp_cfg->filter = true;
 		p_temp_cfg->input_mask = 0xF;
 		p_temp_cfg->truth_table_value = 0x00;
@@ -95,7 +95,7 @@ void gloc_init(struct gloc_dev_inst *const dev_inst, Gloc *const gloc,
 
 	dev_inst->hw_dev = gloc;
 
-	for (i=0; i<GLOC_LUTS; i++) {
+	for (i = 0; i < GLOC_LUTS; i++) {
 		dev_inst->gloc_lut_cfg[i] = p_temp_cfg;
 		p_temp_cfg++;
 	}
@@ -150,7 +150,7 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst)
 {
 	uint32_t i;
 
-	for (i=0; i<GLOC_LUTS; i++) {
+	for (i = 0; i < GLOC_LUTS; i++) {
 		if (dev_inst->gloc_lut_cfg[i]->filter) {
 			dev_inst->hw_dev->GLOC_LUT[i].GLOC_CR = GLOC_CR_FILTEN |
 					GLOC_CR_AEN(dev_inst->gloc_lut_cfg[i]->input_mask);
