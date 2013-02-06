@@ -47,7 +47,7 @@
 #define CONF_GLOC_H_INCLUDED
 
 /* Generic clock setting for GLOC */
-#define CONFIG_GLOC_GENERIC_SRC    GENCLK_SRC_RCSYS
-#define CONFIG_GLOC_GENERIC_DIV    1
+#define CONFIG_GLOC_GENCLK_SRC     GENCLK_SRC_RCSYS
+#define CONFIG_GLOC_GENCLK_DIV     1
 
 #endif /* CONF_GLOC_H_INCLUDED */

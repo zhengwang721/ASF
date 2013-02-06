@@ -77,6 +77,9 @@
 struct gloc_lut_config config[GLOC_LUTS];
 struct gloc_dev_inst dev_inst;
 
+#define FOUR_XOR_TRUTH_TABLE_VALUE 0x6996
+#define INPUT_MASK_4_ENABLE 0xF
+
 /**
  * \brief Test GLOC Logic module with 4 Inputs XOR.
  *
@@ -89,142 +92,142 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 {
 	bool out;
 
-	ioport_set_pin_dir(in0, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(in1, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(in2, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(in3, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(CONF_TEST_GLOC_IN0, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(CONF_TEST_GLOC_IN1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(CONF_TEST_GLOC_IN2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(CONF_TEST_GLOC_IN3, IOPORT_DIR_OUTPUT);
 
 	/* Set the 4 inputs XOR truth table value in LUT0. */
-	dev_inst.gloc_lut_cfg[0]->truth_table_value = 0x6996;
-	dev_inst.gloc_lut_cfg[0]->input_mask = 0xF;
+	dev_inst.gloc_lut_cfg[0]->truth_table_value = FOUR_XOR_TRUTH_TABLE_VALUE;
+	dev_inst.gloc_lut_cfg[0]->input_mask = INPUT_MASK_4_ENABLE;
 	gloc_lut_set_config(&dev_inst);
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, LOW);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, LOW);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, LOW);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed");
 
-	ioport_set_pin_level(in0, HIGH);
-	ioport_set_pin_level(in1, HIGH);
-	ioport_set_pin_level(in2, HIGH);
-	ioport_set_pin_level(in3, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
+	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
-	out = ioport_get_pin_level(out0);
+	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed");
 }
 

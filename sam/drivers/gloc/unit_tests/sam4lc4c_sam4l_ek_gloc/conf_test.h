@@ -57,11 +57,11 @@
 #define CONF_TEST_STOPBITS   US_MR_NBSTOP_1
 
 /* Test pins setting for GLOC */
-#define in0 PIN_PC01
-#define in1 PIN_PC07
-#define in2 PIN_PC08
-#define in3 PIN_PC13
+#define CONF_TEST_GLOC_IN0 PIN_PC01
+#define CONF_TEST_GLOC_IN1 PIN_PC07
+#define CONF_TEST_GLOC_IN2 PIN_PC08
+#define CONF_TEST_GLOC_IN3 PIN_PC13
 
-#define out0 PIN_PA24
+#define CONF_TEST_GLOC_OUT0 PIN_PA24
 
 #endif /* CONF_TEST_H_INCLUDED */

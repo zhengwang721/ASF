@@ -122,9 +122,9 @@ void gloc_enable(struct gloc_dev_inst *const dev_inst)
 	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_0);
 	genclk_config_defaults(&gencfg, GLOC_GCLK_NUM);
-	genclk_enable_source(CONFIG_GLOC_GENERIC_SRC);
-	genclk_config_set_source(&gencfg, CONFIG_GLOC_GENERIC_SRC);
-	genclk_config_set_divider(&gencfg, CONFIG_GLOC_GENERIC_DIV);
+	genclk_enable_source(CONFIG_GLOC_GENCLK_SRC);
+	genclk_config_set_source(&gencfg, CONFIG_GLOC_GENCLK_SRC);
+	genclk_config_set_divider(&gencfg, CONFIG_GLOC_GENCLK_DIV);
 	genclk_enable(&gencfg, GLOC_GCLK_NUM);
 }
 
