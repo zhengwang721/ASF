@@ -32,25 +32,19 @@
 /* === EXTERNALS =========================================================== */
 
 FLASH_EXTERN(uint16_t VendorIdentifier);
-#ifdef RF4CE_CALLBACK_PARAM
 #ifdef RF4CE_TARGET
 extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
                                 , uint8_t Handle
-#endif
                                );
 #else /* RF4CE_TARGET */
 extern void nlme_rx_enable_confirm(nwk_enum_t Status);
 static void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
                                 , uint8_t Handle
-#endif
                                );
 void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
                      uint8_t nsduLength, uint8_t *nsdu, uint8_t RxLinkQuality,
                      uint8_t RxFlags);
 #endif /* RF4CE_TARGET */
-#endif /* RF4CE_CALLBACK_PARAM */
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -64,12 +58,8 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
 
     return nlde_data_request(PairingRef, PROFILE_ID_ZRC, VendorId,
                              nsduLength, nsdu, TxOptions
-#ifdef NLDE_HANDLE
                              , 1
-#endif
-#ifdef RF4CE_CALLBACK_PARAM
                              , (FUNC_PTR) vendor_data_confirm
-#endif
                             );
 }
 
@@ -121,9 +111,7 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
                     memcpy(&duration, &nsdu[1], 3);
                     if (!nlme_rx_enable_request(duration
-#ifdef RF4CE_CALLBACK_PARAM
                                                 , (FUNC_PTR) nlme_rx_enable_confirm
-#endif
                                                ))
                     {
                         /*
@@ -154,12 +142,8 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
         nlde_data_request(PairingRef, PROFILE_ID_ZRC, VendorId,
                           nsduLength, nsdu,
                           TXO_UNICAST | TXO_DST_ADDR_NET | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC
-#ifdef NLDE_HANDLE
                           , 1
-#endif
-#ifdef RF4CE_CALLBACK_PARAM
                           , (FUNC_PTR) vendor_data_confirm
-#endif
                          );
         /* Keep compiler happy */
         RxLinkQuality = RxLinkQuality;
@@ -171,22 +155,17 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
 
 #ifndef RF4CE_TARGET
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
+static void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
                          , uint8_t Handle
-#endif
                         )
 {
     /* Keep compiler happy */
     Status = Status;
     PairingRef = PairingRef;
-#ifdef NLDE_HANDLE
+
     Handle = Handle;
     ProfileId = ProfileId;
-#endif
+
 }
 #endif
 

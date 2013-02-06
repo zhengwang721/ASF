@@ -58,12 +58,8 @@ typedef struct nlde_data_req_tag
     uint16_t VendorId           ALIGN8BIT;
     uint8_t nsduLength          ALIGN8BIT;
     uint8_t TxOptions           ALIGN8BIT;
-#ifdef NLDE_HANDLE
     uint8_t Handle              ALIGN8BIT;
-#endif
-#ifdef RF4CE_CALLBACK_PARAM
     FUNC_PTR confirm_cb            ALIGN8BIT;
-#endif
     uint8_t nsdu[1]             ALIGN8BIT;
 } nlde_data_req_t;
 
@@ -78,12 +74,9 @@ typedef struct nlde_data_conf_tag
     nwk_enum_t Status           ALIGN8BIT;
     uint8_t PairingRef          ALIGN8BIT;
     profile_id_t ProfileId      ALIGN8BIT;
-#ifdef NLDE_HANDLE
     uint8_t Handle              ALIGN8BIT;
-#endif
-#ifdef RF4CE_CALLBACK_PARAM
     FUNC_PTR confirm_cb            ALIGN8BIT;
-#endif
+
 } nlde_data_conf_t;
 
 

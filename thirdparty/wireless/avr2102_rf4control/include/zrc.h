@@ -215,7 +215,6 @@ typedef struct zrc_cmd_frm_tag
     uint8_t payload; /**< actual payload */
 } zrc_cmd_frm_t;
 
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
 
 #if (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_disc_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef,
@@ -259,7 +258,6 @@ typedef struct zrc_indication_callback
 #endif
 } zrc_indication_callback_t;
 
-#endif /* (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN) */
 
 /* === Externals ============================================================ */
 
@@ -302,74 +300,12 @@ char *zrc_print_rc_cmd_text(uint8_t command);
 #if (!defined RF4CE_TARGET) || (defined DOXYGEN)
 bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCode,
                      uint8_t CmdLength, uint8_t *Cmd, uint8_t TxOptions
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                      , FUNC_PTR confirm_cb
-#endif
                     );
 #endif /* !defined RF4CE_TARGET */
 
 
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-/**
- * @brief Callback function to the application indicating the status the sent
- *        ZRC command request.
- *
- * @param Status           Status of the command request
- * @param PairingRef       Pairing reference
- * @param RcCmd            RC command code.
- *
- * @ingroup apiRF4Control_ZRC_API
- */
-#if (!defined RF4CE_TARGET) || (defined DOXYGEN)
-void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd);
-#endif /* !defined RF4CE_TARGET */
 
-
-/**
- * @brief API indicating a received the command to ZRC application.
- *
- * @param PairingRef        Pairing reference of the source node
- * @param nsduLength        Length of the received data
- * @param nsdu              Pointer to payload data, i.e. RC command
- * @param RxLinkQuality     Link quality of received packet
- * @param RxFlags           Rx Flags.
- *
- * @ingroup apiRF4Control_ZRC_API
- */
-#if (defined RF4CE_TARGET) || (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
-void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
-                        uint8_t RxLinkQuality, uint8_t RxFlags);
-#endif
-
-
-/**
- * @brief Handles the cmd data indications received from the network layer.
- *       (cmd discovery and remote control commands).
- *
- * @param PairingRef        Pairing reference
- * @param VendorId          Vendor ID
- * @param nsduLength        Length of the received data
- * @param nsdu              Actual data
- * @param RxLinkQuality     Link quality of received packet
- * @param RxFlags           Rx Flags.
- */
-void zrc_data_indication(uint8_t PairingRef, uint16_t VendorId, uint8_t nsduLength,
-                         uint8_t *nsdu, uint8_t RxLinkQuality, uint8_t RxFlags);
-
-
-/**
- * @brief Handle the data confirm (received from network layer).
- *
- * @param Status           Status received from the network layer.
- * @param PairingRef       Pairing reference
- * @param Handle           Data retry handle
- */
-void zrc_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
-                      , uint8_t Handle
-#endif
-                     );
-#endif /* (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN) */
 
 
 /* --- Command discovery handling ------------------------------------------ */
@@ -391,45 +327,13 @@ void zrc_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Profil
  */
 #if (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
 bool zrc_cmd_disc_request(uint8_t PairingRef
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
 #endif
 
 
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-/**
- * @brief Callback ZRC command discovery confirm
- *
- * The command discovery confirm callback provides information about the sent
- * command discovery request.
- *
- * @param Status        Status of the sent command discovery request
- * @param PairingRef    Pairing reference used for the command discovery request
- * @param SupportedCmd  Pointer to 32 byte array containing the supported commands
- *
- * @ingroup apiRF4Control_ZRC_CMD_DISC_API
- */
-#if (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
-void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd);
-#endif
 
 
-/**
- * @brief Callback ZRC command discovery indication
- *
- * The command discovery indication callback indicates that a command discovery
- * request command was receiced.
- *
- * @param PairingRef    Pairing reference used for the command discovery request
- *
- * @ingroup apiRF4Control_ZRC_CMD_DISC_API
- */
-#if (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
-void zrc_cmd_disc_indication(uint8_t PairingRef);
-#endif
-#endif /* #if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN) */
 
 
 /**
@@ -462,9 +366,7 @@ bool zrc_cmd_disc_response(uint8_t PairingRef, uint8_t *SupportedCmd);
  * @see zrc_indication_callback_t
  * @ingroup apiRF4Control_ZRC_API
  */
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
 void register_zrc_indication_callback(zrc_indication_callback_t *zrc_ind_callback);
-#endif
 
 
 

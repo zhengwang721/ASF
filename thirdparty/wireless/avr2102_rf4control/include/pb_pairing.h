@@ -28,14 +28,14 @@
 /* === Macros =============================================================== */
 
 /* === Types ================================================================ */
-#if (defined RF4CE_CALLBACK_PARAM)
+
 #if (defined PBP_ORG)
 typedef void (*pbp_org_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef);
 #endif
 #if (defined PBP_REC)
 typedef void (*pbp_rec_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef);
 #endif
-#endif
+
 
 /* === Externals ============================================================ */
 
@@ -65,9 +65,7 @@ typedef void (*pbp_rec_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef)
 bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
                           dev_type_t RecDevTypeList[3],
                           profile_id_t RecProfileIdList[7]
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
 #endif
 
@@ -95,25 +93,6 @@ bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
                        uint16_t OrgVendorId, uint8_t OrgVendorString[7],
                        uint8_t OrgUserString[15], uint8_t KeyExTransferCount);
-#endif
-
-
-/**
- * @brief Push button pairing confirm; target and controller use
- *
- * The push button pairing confirm is a callback that provides the status of the
- * push pairing request.
- *
- * @param Status        Status of the last pairing transaction
- * @param PairingRef    If pairing was successful, PairingRef contains assigned
- *                      pairing reference.
- *
- * @ingroup apiRF4CONTROL_PBP_API
- */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (defined PBP_REC) || (defined DOXYGEN)
-void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef);
-#endif
 #endif
 
 
@@ -145,30 +124,11 @@ bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
                           profile_id_t OrgProfileIdList[7],
                           dev_type_t SearchDevType, uint8_t DiscProfileIdListSize,
                           profile_id_t DiscProfileIdList[7]
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
 #endif
 
 
-/**
- * @brief Push button pairing confirm; target and controller use
- *
- * The push button pairing confirm is a callback that provides the status of the
- * push pairing request.
- *
- * @param Status        Status of the last pairing transaction
- * @param PairingRef    If pairing was successful, PairingRef contains assigned
- *                      pairing reference.
- *
- * @ingroup apiRF4CONTROL_PBP_API
- */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (defined PBP_ORG) || (defined DOXYGEN)
-void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef);
-#endif
-#endif
 
 
 

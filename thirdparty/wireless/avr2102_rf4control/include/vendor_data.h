@@ -109,44 +109,6 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                          uint8_t TxOptions);
 
 
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-/**
- * @brief Vendor data indication
- *
- * Callback function indicating incoming vendor data.
- *
- * @param PairingRef    Pairing reference of the sender
- * @param VendorId      Vendor id used for the transmission
- * @param nsduLength    Length of the payload data
- * @param nsdu          Pointer to the payload data
- * @param RxLinkQuality LQI of the incoming frame
- * @param RxFlags       Options used for transmission
- *
- * @return true if command could be handled; else false
- *
- * @ingroup apiRF4CONTROL_VENDOR_DATA_API
- */
-void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId, uint8_t nsduLength,
-                     uint8_t *nsdu, uint8_t RxLinkQuality, uint8_t RxFlags);
-
-
-/**
- * @brief Vendor data confirm
- *
- * Callback function indicating status of the request
- *
- * @param Status        Status of the request
- * @param PairingRef    Pairing reference used for the transmission
- * @param Handle        Data retry handle
- *
- * @ingroup apiRF4CONTROL_VENDOR_DATA_API
- */
-void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
-                         , uint8_t Handle
-#endif
-                        );
-#endif
 
 /**
  * @brief Vendor data alive request

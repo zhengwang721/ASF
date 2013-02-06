@@ -66,7 +66,6 @@ static void start_cmd_disc_cb(void *callback_parameter);
 
 
 
-#ifdef RF4CE_CALLBACK_PARAM
 static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd);
 static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd);
 static void nlme_reset_confirm(nwk_enum_t Status);
@@ -86,7 +85,6 @@ extern void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 zrc_indication_callback_t zrc_ind;
 uint8_t app_timer;
 
-#endif
 /* === IMPLEMENTATION ====================================================== */
 
 
@@ -119,7 +117,7 @@ int main(void)
     }
     cpu_irq_enable();
     sw_timer_get_id(&app_timer);
-#ifdef RF4CE_CALLBACK_PARAM
+
 #ifdef VENDOR_DATA
     zrc_ind.vendor_data_ind_cb = vendor_data_ind;
 #endif
@@ -128,7 +126,7 @@ int main(void)
 #endif
 
     register_zrc_indication_callback(&zrc_ind);
-#endif
+
     /*
      * The stack is initialized above,
      * hence the global interrupts are enabled here.
@@ -147,9 +145,7 @@ int main(void)
         LED_On(LED0);
         node_status = COLD_START;
         nlme_reset_request(true
-#ifdef RF4CE_CALLBACK_PARAM
                            , (FUNC_PTR)nlme_reset_confirm
-#endif
                           );        
     }
     else
@@ -157,19 +153,17 @@ int main(void)
         /* Warm start */
         node_status = WARM_START;
         nlme_reset_request(false
-#ifdef RF4CE_CALLBACK_PARAM
                            , (FUNC_PTR)nlme_reset_confirm
-#endif
                           );
     }
-#if 1
+
     /* Endless while loop */
     while (1)
     {
         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
     }
-#endif
+
 }
 
 
@@ -177,10 +171,7 @@ int main(void)
  * The NLME-RESET.confirm primitive allows the NLME to notify the application of
  * the status of its request to reset the NWK layer.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_reset_confirm(nwk_enum_t Status)
+static void nlme_reset_confirm(nwk_enum_t Status)
 {
   
    if (Status != NWK_SUCCESS)
@@ -196,9 +187,7 @@ void nlme_reset_confirm(nwk_enum_t Status)
     {
         pairing_ref = 0xFF;
        nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
             (FUNC_PTR)nlme_start_confirm
-#endif
         );
     }
     else    // warm start
@@ -207,15 +196,11 @@ void nlme_reset_confirm(nwk_enum_t Status)
         /* Set power save mode */
 #ifdef ENABLE_PWR_SAVE_MODE
         nlme_rx_enable_request(nwkcMinActivePeriod
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                               );
 #else
         nlme_rx_enable_request(RX_DURATION_OFF
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                               );
 #endif
     }
@@ -228,10 +213,7 @@ void nlme_reset_confirm(nwk_enum_t Status)
  * The NLME-START.confirm primitive allows the NLME to notify the application of
  * the status of its request to start a network.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_start_confirm(nwk_enum_t Status)
+static void nlme_start_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
@@ -254,9 +236,7 @@ void nlme_start_confirm(nwk_enum_t Status)
 
     pbp_org_pair_request(APP_CAPABILITIES, OrgDevTypeList, OrgProfileIdList,
                          DEV_TYPE_WILDCARD, NUM_SUPPORTED_PROFILES, DiscProfileIdList
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR)pbp_org_pair_confirm
-#endif
                         );
 }
 
@@ -271,10 +251,7 @@ void nlme_start_confirm(nwk_enum_t Status)
  * @param PairingRef    If pairing was successful, PairingRef contains assigned
  *                      pairing reference.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
+static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     if (Status != NWK_SUCCESS)
     {
@@ -309,9 +286,7 @@ void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 static void start_cmd_disc_cb(void *callback_parameter)
 {
     zrc_cmd_disc_request(pairing_ref
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR)zrc_cmd_disc_confirm
-#endif
                         );
 
     /* Keep compiler happy */
@@ -325,23 +300,16 @@ static void start_cmd_disc_cb(void *callback_parameter)
  * discovery reqest.
  */
 #ifdef ZRC_CMD_DISCOVERY
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd)
+static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd)
 {
     /* Enable transceiver Power Save Mode */
 #ifdef ENABLE_PWR_SAVE_MODE
     nlme_rx_enable_request(nwkcMinActivePeriod
-#ifdef RF4CE_CALLBACK_PARAM
                            , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                           );
 #else
     nlme_rx_enable_request(RX_DURATION_OFF
-#ifdef RF4CE_CALLBACK_PARAM
                            , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                           );
 #endif
      
@@ -361,10 +329,7 @@ void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *Suppor
  * request command was receiced.
  */
 #ifdef ZRC_CMD_DISCOVERY
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_disc_indication(uint8_t PairingRef)
+static void zrc_cmd_disc_indication(uint8_t PairingRef)
 {
     /* Send back the response */
     uint8_t cec_cmds[32];
@@ -443,9 +408,7 @@ static void app_task(void)
                     uint8_t cmd = POWER_TOGGLE_FUNCTION;  // 0x6b
                      if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_PRESSED,
                                             1, &cmd, TX_OPTIONS
-    #ifdef RF4CE_CALLBACK_PARAM
                                             , (FUNC_PTR)zrc_cmd_confirm
-    #endif
                                            ))
                     {
                         node_status = TRANSMITTING;
@@ -482,10 +445,7 @@ static void app_task(void)
  * @param PairingRef    Pairing reference
  * @param RcCmd         Sent RC command
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
+static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
 {
     node_status = IDLE;
 
@@ -504,36 +464,6 @@ void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
 }
 
 //
-/*
- * The NLDE-DATA.confirm primitive is generated by the NWK layer entity in
- * response to an NLDE-DATA.request primitive.
- */
-#ifndef RF4CE_CALLBACK_PARAM
-void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
-                       , uint8_t Handle
-#endif
-                      )
-{
-    node_status = IDLE;
-
-    if (Status == NWK_SUCCESS)
-    {
-        LED_Off(LED0);
-    }
-    else
-    {
-        indicate_fault_behavior();
-    }
-
-    /* Keep compiler happy. */
-    PairingRef = PairingRef;
-    ProfileId = ProfileId;
-#ifdef NLDE_HANDLE
-    Handle = Handle;
-#endif
-}
-#endif
 
 
 /* --- Helper functions ---------------------------------------------------- */
