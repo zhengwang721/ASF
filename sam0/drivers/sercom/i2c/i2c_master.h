@@ -295,7 +295,7 @@ static inline void i2c_master_enable(
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Timeout counter used to force bus state. */
-	volatile uint16_t timeout_counter = 0;
+	uint32_t timeout_counter = 0;
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
@@ -304,11 +304,13 @@ static inline void i2c_master_enable(
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
 	/* Start timeout if bus state is unknown. */
-	while (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(0)) {
-		timeout_counter++;
-		if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
+	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {		
+                timeout_counter++;
+                if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
-			i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
+                        i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
+                        /* Workaround #1 */
+                        return;
 		}
 	}
 }
