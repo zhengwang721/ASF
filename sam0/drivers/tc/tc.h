@@ -479,10 +479,6 @@ extern "C" {
  * @{
  */
 
-#if !defined (__DOXYGEN__)
-#define TC_NEXT_TC ((uintptr_t)TC1 - (uintptr_t)TC0)
-#endif
-
 /** TODO: remove once present in device header file */
 #define TC_INST_GCKL_ID  { TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, \
 		TC3_GCLK_ID, TC4_GCLK_ID, TC5_GCLK_ID, TC6_GCLK_ID, TC7_GCLK_ID }
@@ -633,9 +629,9 @@ enum tc_capture_enable {
 	/** No channels are enabled for capture */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	/** Enable channel 0 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(2),
+	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(1),
 	/** Enable channel 1 for capture */
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(1),
+	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -647,9 +643,9 @@ enum tc_waveform_invert_output {
 	/** No inversion of output */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
 	/** Invert output from compare channel 0 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(0),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(1),
 	/** Invert output from compare channel 1 */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(1),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(2),
 };
 
 /**
@@ -687,9 +683,9 @@ enum tc_event_generation_enable {
 	/** No event generation */
 	TC_EVENT_GENERATION_ENABLE_NONE      = 0,
 	/** Event generation on channel 0 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_0 = TC_EVCTRL_MCEO(0),
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_0 = TC_EVCTRL_MCEO(1),
 	/** Event generation on channel 1 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(1),
+	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(2),
 };
 
 /**
@@ -699,9 +695,9 @@ enum tc_event_generation_enable {
  */
 enum tc_interrupt_flag {
 	/** Interrupt flag for channel 0 */
-	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(0),
+	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(1),
 	/** Interrupt flag for channel 1 */
-	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(1),
+	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(2),
 	/** Interrupt flag for generating interrupts when
 	 *  synchronization is done. This is flag is meant for the
 	 *  async driver. */

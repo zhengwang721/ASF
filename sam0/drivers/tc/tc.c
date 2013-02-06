@@ -44,9 +44,9 @@
 #include "tc.h"
 
 /**
- * \internal Find index of given instance.
+ * \internal Find the index of given TC module instance.
  *
- * \param[in] Instance pointer.
+ * \param[in] TC module instance pointer.
  *
  * \return Index of given instance.
  */
@@ -505,7 +505,8 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
 		tc_instance->CTRLA.reg  |= TC_CTRLA_SWRST;
 
 		/* Get the slave hw_dev pointer */
-		Tc *const slave = (Tc *const)(dev_inst->hw_dev + TC_NEXT_TC);
+		Tc *const tc_instances[TC_INST_NUM] = TC_INSTS;
+		Tc *const slave = tc_instances[_tc_get_inst_index(dev_inst->hw_dev) + 1];
 
 		/* Synchronize */
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
