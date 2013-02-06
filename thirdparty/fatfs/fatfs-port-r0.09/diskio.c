@@ -56,7 +56,7 @@ extern "C" {
 #include <stdio.h>
 #include <assert.h>
 
-#if (SAM3 || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
 # include <rtc.h>
 #endif
 
@@ -92,7 +92,7 @@ DSTATUS disk_initialize(BYTE drv)
 	int i;
 	Ctrl_status mem_status;
 
-#if (SAM3 || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
 	/* Default RTC configuration, 24-hour mode */
 	rtc_set_hour_mode(RTC, 0);
 #endif
