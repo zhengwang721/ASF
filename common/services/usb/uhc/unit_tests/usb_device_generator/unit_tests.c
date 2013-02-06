@@ -3,7 +3,7 @@
  *
  * \brief Main functions to generate USB patterns
  *
- * Copyright (C) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,15 +65,32 @@
  * the USB host core test.
  *
  * \section startup Startup
- * The default compilation option is to support Atmel MCU with the USBB hardware
- * interface (eg AVR UC3 A and B). For the USBC hardware interface (eg AVR UC3C),
- * the "USBC_TST" define must be uncommented in the main.c file.
+ * The default compilation option is to support all Atmel MCU with a USB
+ * hardware interface with DPRAM.
+ * For other Atmel MCU a compilation opotion must be defined in the
+ * unit_tests.c file:
+ * - #define  AVR32_USBC_TST     // AVR32 MCU with USBC interface
+ * - #define  SAMX_UOTGHS_TST    // SAM MCU with UOTGHS interface
+ * - #define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
  *
  * Please, read "USB host core tests" project documentation for more information.
  */
 
-//#define  USBC_TST
-//#define  UOTGHS_TST
+//#define  AVR32_USBC_TST     // AVR32 MCU with USBC interface
+//#define  SAMX_UOTGHS_TST    // SAM MCU with UOTGHS interface
+//#define  SAM4L_USBC_TST     // SAM4L MCU with USBC interface
+
+#ifdef AVR32_USBC_TST
+#  define TST_15_DIS
+#  define TST_18_DIS
+#endif
+#ifdef SAMX_UOTGHS_TST
+#  define TST_15_DIS
+#endif
+#ifdef SAM4L_USBC_TST
+#  define TST_15_DIS
+#endif
+
 
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
 #define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_HIDMOUSE
@@ -87,6 +104,7 @@
 //(USB_CONFIG_ATTR_SELF_POWERED)
 //(USB_CONFIG_ATTR_BUS_POWERED)
 
+//! USB test speed (0:LS, 1:FS, 2:HS)
 static uint8_t speed;
 static usb_setup_req_t main_setup_packet;
 
@@ -161,6 +179,43 @@ static main_conf_desc_t main_conf_desc = {
 
 //! \name Routines USB low level
 //! @{
+
+//! \brief Reset and initialize USB OTG peripheral to specified speed mode
+static void main_otg_init(void)
+{
+	otg_disable();
+	delay_ms(10);
+	otg_enable();
+
+	otg_disable_id_pin();
+	otg_force_device_mode();
+	otg_enable_pad();
+	otg_enable();
+
+	switch (speed) {
+	// LS speed
+	case 0:
+		udd_low_speed_enable();
+		udd_high_speed_disable();
+		break;
+	// FS speed
+	case 1:
+		udd_low_speed_disable();
+		udd_high_speed_disable();
+		break;
+	// HS speed
+	case 2:
+		udd_low_speed_disable();
+		udd_high_speed_enable();
+		break;
+	default:
+		Assert(false);
+		break;
+	}
+
+	otg_unfreeze_clock();
+	(void)Is_otg_clock_frozen();
+}
 
 //! \brief Waits the start of USB reset signal
 //! This routine waits the end of SOF
@@ -512,6 +567,7 @@ static void main_test3(void)
 //! \brief Test 4  - No response data (NACK IN) after first setup packet
 static void main_test4(void)
 {
+	main_otg_init();
 	udd_attach_device();
 	main_usb_enum_step1();
 	main_usb_enum_step2();
@@ -892,7 +948,6 @@ static void main_test21(void)
 }
 //! @}
 
-
 /*! \brief Main function. Execution starts here.
  */
 int main(void)
@@ -907,37 +962,11 @@ int main(void)
 #if SAM
 	pmc_enable_periph_clk(ID_UOTGHS);
 #endif
-	otg_disable_id_pin();
-	otg_force_device_mode();
-	otg_enable_pad();
-	otg_enable();
-	otg_unfreeze_clock();
-	(void)Is_otg_clock_frozen();
 
 	// Execute all USB core tests for each USB speed (low, full and high)
 	for (speed = 0; speed < 3; speed++) {
-		switch (speed) {
-		// LS speed
-		case 0:
-			udd_low_speed_enable();
-			udd_high_speed_disable();
-			break;
 
-		// FS speed
-		case 1:
-			udd_low_speed_disable();
-			udd_high_speed_disable();
-			break;
-
-		// HS speed
-		case 2:
-			udd_low_speed_disable();
-			udd_high_speed_enable();
-			break;
-		default:
-			Assert(false);
-			break;
-		}
+		main_otg_init();
 
 		main_test1();
 		main_test2();
@@ -953,14 +982,12 @@ int main(void)
 		main_test12();
 		main_test13();
 		main_test14();
-#ifndef USBC_TST
-# ifndef UOTGHS_TST
+#ifndef TST_15_DIS
 		main_test15();
-# endif
 #endif
 		main_test16();
 		main_test17();
-#ifndef USBC_TST
+#ifndef TST_18_DIS
 		main_test18();
 #endif
 		main_test19();
