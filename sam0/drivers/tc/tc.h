@@ -858,31 +858,31 @@ static inline void tc_get_config_defaults(
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->clock_source                 = GCLK_GENERATOR_0;
-	config->counter_size                 = TC_COUNTER_SIZE_16BIT;
-	config->clock_prescaler              = TC_CLOCK_PRESCALER_DIV1;
-	config->wave_generation              = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->reload_action                = TC_RELOAD_ACTION_GCLK;
-	config->run_in_standby               = false;
+	config->clock_source              = GCLK_GENERATOR_0;
+	config->counter_size              = TC_COUNTER_SIZE_16BIT;
+	config->clock_prescaler           = TC_CLOCK_PRESCALER_DIV1;
+	config->wave_generation           = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->reload_action             = TC_RELOAD_ACTION_GCLK;
+	config->run_in_standby            = false;
 
-	config->waveform_invert_output       = TC_WAVEFORM_INVERT_OUTPUT_NONE;
-	config->capture_enable               = TC_CAPTURE_ENABLE_NONE;
+	config->waveform_invert_output    = TC_WAVEFORM_INVERT_OUTPUT_NONE;
+	config->capture_enable            = TC_CAPTURE_ENABLE_NONE;
 
-	config->count_direction              = TC_COUNT_DIRECTION_UP;
-	config->oneshot                      = false;
+	config->count_direction           = TC_COUNT_DIRECTION_UP;
+	config->oneshot                   = false;
 
-	config->enable_event_input           = false;
-	config->invert_event_input           = false;
-	config->event_action                 = TC_EVENT_ACTION_OFF;
-	config->event_generation_enable      = TC_EVENT_GENERATION_ENABLE_NONE;
+	config->enable_event_input        = false;
+	config->invert_event_input        = false;
+	config->event_action              = TC_EVENT_ACTION_OFF;
+	config->event_generation_enable   = TC_EVENT_GENERATION_ENABLE_NONE;
 
-	config->channel_0_pwm_out_enabled    = false;
-	config->channel_0_pwm_out_pin        = 0;
-	config->channel_0_pwm_out_mux        = 0;
+	config->channel_0_pwm_out_enabled = false;
+	config->channel_0_pwm_out_pin     = 0;
+	config->channel_0_pwm_out_mux     = 0;
 
-	config->channel_1_pwm_out_enabled    = false;
-	config->channel_1_pwm_out_pin        = 0;
-	config->channel_1_pwm_out_mux        = 0;
+	config->channel_1_pwm_out_enabled = false;
+	config->channel_1_pwm_out_pin     = 0;
+	config->channel_1_pwm_out_mux     = 0;
 
 	config->tc_counter_size_conf.tc_16bit_conf.count
 		= 0x0000;
@@ -893,7 +893,7 @@ static inline void tc_get_config_defaults(
 }
 
 enum status_code tc_init(
-		Tc *const tc_instance,
+		Tc *const tc_module,
 		struct tc_module *const module_inst,
 		const struct tc_conf *const config);
 
@@ -926,13 +926,13 @@ static inline void tc_enable(
 	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
 	_tc_wait_for_sync(module_inst);
 
 	/* Enable TC module */
-	tc_instance->CTRLA.reg |= TC_CTRLA_ENABLE;
+	tc_module->CTRLA.reg |= TC_CTRLA_ENABLE;
 }
 
 /**
@@ -950,13 +950,13 @@ static inline void tc_disable(
 	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
 	_tc_wait_for_sync(module_inst);
 
 	/* Disable TC module */
-	tc_instance->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
+	tc_module->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
 }
 
 /** @} */
@@ -998,13 +998,13 @@ static inline void tc_stop_counter(
 	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
 	_tc_wait_for_sync(module_inst);
 
 	/* Write command to execute */
-	tc_instance->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
 }
 
 /**
@@ -1023,19 +1023,19 @@ static inline void tc_start_counter(
 	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
 	_tc_wait_for_sync(module_inst);
 	/* Make certain that there are no conflicting commands in the register
 	 **/
-	tc_instance->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
+	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
 	/* Synchronize */
 	_tc_wait_for_sync(module_inst);
 
 	/* Write command to execute */
-	tc_instance->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
 }
 
 /** @} */
@@ -1094,9 +1094,9 @@ static inline bool tc_is_interrupt_flag_set(
 	Assert(module_inst->hw_dev);
 	Assert(interrupt_flag);
 
-	TcCount8 *tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *tc_module = &(module_inst->hw_dev->COUNT8);
 
-	if (tc_instance->INTFLAG.reg & interrupt_flag) {
+	if (tc_module->INTFLAG.reg & interrupt_flag) {
 		return true;
 	} else {
 		return false;
@@ -1122,9 +1122,9 @@ static inline void tc_clear_interrupt_flag(
 	Assert(module_inst->hw_dev);
 	Assert(interrupt_flag);
 
-	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
-	tc_instance->INTFLAG.reg |= interrupt_flag;
+	tc_module->INTFLAG.reg |= interrupt_flag;
 }
 
 /** @} */
