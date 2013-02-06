@@ -113,7 +113,7 @@ enum status_code tc_init(
 	uint8_t instance = _tc_get_inst_index(tc_instance);
 
 	/* Array of GLCK ID for different TC instances */
-	uint8_t inst_gckl_id[] = TC_INST_GCKL_ID;
+	uint8_t inst_gclk_id[] = TC_INST_GCLK_ID;
 	/* Array of PM APBC mask bit position for different TC instances */
 	uint16_t inst_pm_apbmask[] = TC_INST_PM_APBCMASK;
 
@@ -172,8 +172,8 @@ enum status_code tc_init(
 	gclk_chan_conf.run_in_standby = config->run_in_standby;
 
 	/* Apply configuration and enable the GCLK channel */
-	system_gclk_chan_set_config(inst_gckl_id[instance], &gclk_chan_conf);
-	system_gclk_chan_enable(inst_gckl_id[instance]);
+	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_conf);
+	system_gclk_chan_enable(inst_gclk_id[instance]);
 
 	if (config->run_in_standby) {
 		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
@@ -470,9 +470,8 @@ enum status_code tc_set_compare_value(
  * reset. The module might not have completed the reset upon exiting
  * this function.
  *
- * \note When resetting a 32-bit counter use in only the master
- *       counter's \ref dev_inst struct, as a parameter. not the slave
- *       \ref dev_inst.
+ * \note When resetting a 32-bit counter only the master TC module's instance
+ *       structure should be used.
  *
  * \param[in] dev_inst  Pointer to the device struct
  *

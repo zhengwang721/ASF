@@ -40,455 +40,367 @@
  * \asf_license_stop
  *
  */
+#ifndef TC_H_INCLUDED
+#define TC_H_INCLUDED
+
+/**
+ * \defgroup asfdoc_samd20_tc_group SAMD20 Timer/Counter Driver (TC)
+ *
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the timer modules within the device, for waveform
+ * generation and timing operations.
+ *
+ * The following peripherals are used by this module:
+ *
+ *  - TC (Timer/Counter)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_tc_prerequisites
+ *  - \ref asfdoc_samd20_tc_module_overview
+ *  - \ref asfdoc_samd20_tc_special_considerations
+ *  - \ref asfdoc_samd20_tc_extra_info
+ *  - \ref asfdoc_samd20_tc_examples
+ *  - \ref asfdoc_samd20_tc_api_overview
+ *
+ *
+ * \section asfdoc_samd20_tc_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_tc_module_overview Module Overview
+ *
+ * The Timer/Counter (TC) module provides a set of timing and counting related
+ * functionality, such as the generation of periodic waveforms, the capturing
+ * of a periodic waveform's frequency/duty cycle, and software timekeeping for
+ * periodic operations. TC modules can be configured to use an 8-, 16-, or
+ * 32-bit counter size.
+ *
+ * This TC module for the SAMD20 is capable of the following functions:
+ *
+ * - Generation of PWM signals
+ * - Generation of timestamps for events
+ * - General time counting
+ * - Waveform period capture
+ * - Waveform frequency capture
+ *
+ * The diagram below shows the overview of the TC module design.
+ *
+ * \image html overview.svg "Basic overview of the TC module"
+ *
+ *
+ * \subsection asfdoc_samd20_tc_module_overview_func_desc Functional Description
+ * Independent of the configured counter size, each TC module can be set set up
+ * in one of two different modes; capture and compare.
+ *
+ * In capture mode, the counter value is stored when a configurable event
+ * occurs. This mode can be used to generate timestamps used in event capture,
+ * or it can be used for the measurement of a periodic input signal's
+ * frequency/duty cycle.
+ *
+ * In compare mode, the counter value is compared against one or more of the
+ * configured channel compare values. When the counter value coincides with a
+ * compare value an action can be taken automatically by the module, such as
+ * generating an output event or toggling a pin when used for frequency or PWM
+ * signal generation.
+ *
+ * \subsection asfdoc_samd20_tc_module_overview_tc_size Timer/Counter Size
+ * Each timer module can be configured in one of three different counter
+ * sizes; 8-, 16-, and 32-bits. The size of the counter determines the maximum
+ * value it can count to before an overflow occurs and the count is reset back
+ * to zero. The table below shows the maximum values for each of the possible
+ * counter sizes.
+ *
+ * <table>
+ *  <tr>
+ *    <th>Counter Size</th>
+ *    <th>Max (Hexadecimal)</th>
+ *    <th>Max (Decimal)</th>
+ *  </tr>
+ *  <tr>
+ *    <th>8-bit</th>
+ *    <td>0xFF</td>
+ *    <td>255</td>
+ *  </tr>
+ *  <tr>
+ *    <th>16-bit</th>
+ *    <td>0xFFFF</td>
+ *    <td>65,535</td>
+ *  </tr>
+ *  <tr>
+ *    <th>32-bit</th>
+ *    <td>0xFFFFFFFF</td>
+ *    <td>4,294,967,295</td>
+ *  </tr>
+ * </table>
+ *
+ * When using the counter in 16- or 32-bit count mode, Compare Capture
+ * register 0 (CC0) is used to store the period value when running in PWM
+ * generation match mode.
+ *
+ * When using 32-bit counter size, two 16-bit counters are chained together
+ * in a cascade formation. Even numbered TC modules (e,g, TC0, TC2) can be
+ * configured as 32-bit counters. The odd numbered counters will act as slaves
+ * to the even numbered masters, and will not be reconfigurable until the
+ * master timer is disabled. The pairing of timer modules for 32-bit mode is
+ * shown in the table below.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Master TC Module</th>
+ *     <th>Slave TC Module</th>
+ *   </tr>
+ *   <tr>
+ *     <td>TC0</td>
+ *     <td>TC1</td>
+ *   </tr>
+ *   <tr>
+ *     <td>TC2</td>
+ *     <td>TC3</td>
+ *   </tr>
+ *   <tr>
+ *     <td>...</td>
+ *     <td>...</td>
+ *   </tr>
+ *   <tr>
+ *     <td>TCn-1</td>
+ *     <td>TCn</td>
+ *   </tr>
+ * </table>
+ *
+ * \subsection asfdoc_samd20_tc_module_overview_clock Clock Settings
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_clock_selection Clock Selection
+ * Each TC peripheral is clocked asynchronously to the system clock by a GCLK
+ * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
+ * generators. The GCLK generators are configured to use one of the available
+ * clock sources on the system such as internal oscillator, external crystals
+ * etc. - see the \ref asfdoc_samd20_gclk_group "Generic Clock Driver" for
+ * more information.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_clock_prescaler Prescaler
+ * Each TC module in the SAMD20 has its own individual clock prescaler, which
+ * can be used to divide the input clock frequency used in the counter. This
+ * prescaler only scales the clock used to provide clock pulses for the counter
+ * to count, and does not affect the digital register interface portion of
+ * the module, thus the timer registers will synchronized to the raw GCLK
+ * frequency input to the module.
+ *
+ * As a result of this, when selecting a GCLK frequency and timer prescaler
+ * value the user application should consider both the timer resolution
+ * required and the synchronization frequency, to avoid lengthy
+ * synchronization times of the module if a very slow GCLK frequency is fed
+ * into the TC module. It is preferable to use a higher module GCLK frequency
+ * as the input to the timer and prescale this down as much as possible to
+ * obtain a suitable counter frequency in latency-sensitive applications.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_clock_reloading Reloading
+ * Timer modules also contain a configurable reload action, used when a
+ * re-trigger event occurs. Examples of a re-trigger event are the counter
+ * reaching the max value when counting up, or when an event from the event
+ * system tells the counter to re-trigger. The reload action determines if the
+ * prescaler should be reset, and when this should happen. The counter will
+ * always be reloaded with the value it is set to start counting from. The user
+ * can choose between three different reload actions, described in the
+ * following table.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Reload Action</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TC_RELOAD_ACTION_GCLK </td>
+ *     <td>Reload TC counter value on next GCLK cycle. Leave prescaler
+ *         as-is.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TC_RELOAD_ACTION_PRESC </td>
+ *     <td>Reloads TC counter value on next prescaler clock. Leave prescaler
+ *         as-is.</td>
+ *   </tr>
+ *  <tr>
+ *    <td> \ref TC_RELOAD_ACTION_RESYNC </td>
+ *    <td>Reload TC counter value on next GCLK cycle. Clear prescaler to
+ *        zero.</td>
+ *  </tr>
+ * </table>
+ *
+ * The reload action to use will depend on the specific application being
+ * implemented. One example is when an external trigger for a reload occurs; if
+ * the TC uses the prescaler, the counter in the prescaler should not have a
+ * value between zero and the division factor. The TC counter and the counter
+ * in the prescaler should both start at zero. When the counter is set to
+ * re-trigger when it reaches the max value on the other hand, this is not the
+ * right option to use. In such a case it would be better if the prescaler is
+ * left unaltered when the re-trigger happens, letting the counter reset on the
+ * next GCLK cycle.
+ *
+ * \subsection asfdoc_samd20_tc_module_overview_compare_match Compare Match Operations
+ * In compare match operation, Compare/Capture registers are used in comparison
+ * with the counter value. When the timer's count value matches the value of a
+ * compare channel, a user defined action can be taken.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_timer Basic Timer
+ *
+ * A Basic Timer is a simple application where compare match operations is used
+ * to determine when a specific period has elapsed. In Basic Timer operations,
+ * one or more values in the module's Compare/Capture registers are used to
+ * specify the time (as a number of prescaled GCLK cycles) when an action should
+ * be taken by the microcontroller. This can be an Interrupt Service Routine
+ * (ISR), event generator via the event system, or a software flag that is polled
+ * via the user application.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg Waveform Generation
+ *
+ * Waveform generation enables the TC module to generate square waves, or if
+ * combined with an external passive low-pass filter, analog waveforms.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_pwm Waveform Generation - PWM
+ *
+ * Pulse width modulation is a form of waveform generation and a signaling
+ * technique that can be useful in many situations. When PWM mode is used,
+ * a digital pulse train with a configurable frequency and duty cycle can be
+ * generated by the TC module and output to a GPIO pin of the device.
+ *
+ * Often PWM is used to communicate a control or information parameter to an
+ * external circuit or component. Differing impedances of the source generator
+ * and sink receiver circuits is less of an issue when using PWM compared to
+ * using an analog voltage value, as noise will not generally affect the
+ * signal's integrity to a meaningful extent.
+ *
+ * The figure below illustrates operations and different states of the counter
+ * and its output when running the counter in PWM normal mode. As can be seen,
+ * the TOP value is unchanged and is set to MAX. The compare match value is
+ * changed at several points to illustrate the resulting waveform output
+ * changes. The PWM output is set to normal (i.e non-inverted) output mode.
+ *
+ * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
+ *
+ *
+ * In the figure below, the counter is set to generate PWM in Match mode. The
+ * PWM output is inverted via the appropriate configuration option in the TC
+ * driver configuration structure. In this example, the counter value is
+ * changed once, but the compare match value is kept unchanged. As can be seen,
+ * it is possible to change the TOP value when running in PWM match mode.
+ *
+ * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
+ *
+ * Frequency Generation mode is in many ways identical to PWM generation. However,
+ * in Frequency Generation a toggle only occurs on the output when a match on
+ * a capture channels occurs. When the match is made, the timer value is reset,
+ * resulting in a variable frequency square wave with a fixed 50% duty cycle.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt Capture Operations
+ *
+ * In capture operations, any event from the event system or a pin change can
+ * trigger a capture of the counter value. This captured counter value can be
+ * used as a timestamp for the event, or it can be used in frequency and pulse
+ * width capture.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_event_capture Capture Operations - Event
+ *
+ * Event capture is a simple use of the capture functionality, designed to create
+ * timestamps for specific events. When the TC module's input capture pin is
+ * externally toggled, the current timer count value is copied into a buffered
+ * register which can then be read out by the user application.
+ *
+ * Note that when performing any capture operation, there is a risk that the
+ * counter reaches its top value (MAX) when counting up, or the bottom value
+ * (zero) when counting down, before the capture event occurs. This can distort
+ * the result, making event timestamps to appear shorter than reality; the
+ * user application should check for timer overflow when reading a capture
+ * result in order to detect this situation and perform an appropriate
+ * adjustment.
+ *
+ * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
+ * should be checked. A suitable program flow for capture events is shown below.
+ *
+ * \image html state_dia_capture.svg "Diagram of capture operation"
+ *
+ * How to handle the buffer overflow error is up to the user, however it may be
+ * necessary to clear both the capture overflow flag and the capture flag upon
+ * each capture reading.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc Capture Operations - Pulse Width
+ *
+ * Pulse Width Capture mode makes it possible to measure the pulse width and
+ * period of PWM signals. This mode uses two capture channels of the counter.
+ * This means that the counter module used for Pulse Width Capture can not be
+ * used for any other purpose. There are two modes for pulse width capture;
+ * Pulse Width Period (PWP) and Period Pulse Width (PPW). In PWP mode, capture
+ * channel 0 is used for storing the pulse width and capture channel 1 stores
+ * the observed period. While in PPW mode, the roles of the two capture channels
+ * is reversed.
+ *
+ * As in the above example it is necessary to poll on interrupt flags to see
+ * if a new capture has happened and check that a capture overflow error has
+ * not occurred.
+ *
+ * \subsection asfdoc_samd20_tc_module_overview_oneshot One-shot Mode
+ *
+ * TC modules can be configured into a one-shot mode. When configured in this
+ * manner, starting the timer will cause it to count until the next overflow
+ * or underflow condition before automatically halting, waiting to be manually
+ * triggered by the user application software or an event signal from the event
+ * system.
+ *
+ * \subsubsection asfdoc_samd20_tc_module_overview_inversion Wave Generation Output Inversion
+ *
+ * The output of the wave generation can be inverted by hardware if desired,
+ * resulting in the logically inverted value being output to the configured
+ * device GPIO pin.
+ *
+ *
+ * \section asfdoc_samd20_tc_special_considerations Special Considerations
+ *
+ * The number of capture compare registers in each TC module is dependent on
+ * the specific SAMD20 device being used, and in some cases the counter size.
+ *
+ * The maximum amount of capture compare registers available in any SAMD20
+ * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
+ *
+ *
+ * \section asfdoc_samd20_tc_extra_info Extra Information for TC
+ *
+ * For extra information see \ref asfdoc_samd20_tc_extra. This includes:
+ *  - \ref asfdoc_samd20_tc_extra_acronyms
+ *  - \ref asfdoc_samd20_tc_extra_dependencies
+ *  - \ref asfdoc_samd20_tc_extra_errata
+ *  - \ref asfdoc_samd20_tc_extra_history
+ *
+ *
+ * \section asfdoc_samd20_tc_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_tc_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_tc_api_overview API Overview
+ * @{
+ */
+
+#include <compiler.h>
+#include <clock.h>
+#include <gclk.h>
+#include <pinmux.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef TC_H_INCLUDED
-#define TC_H_INCLUDED
-
-#include "asf.h"
-
-/**
- * \defgroup sam0_TC_group BANANORAMA Timer Counter(TC) Driver
- *
- * This is the TC driver documentation for the BANANORAMA architecture
- * devices. This driver provides an interface for configuration and
- * management of the TC module. This driver encompasses the following
- * module within the BANANORAMA devices: \li \b TC \b (Timer Counter)
- * \n
- *
- * This driver is created and meant to be used as a polled driver, as
- * such this documentation will not go into the use of interrupts with
- * regards to the TC module. It should also be noted that this is not
- * complete documentation for the TC module, but for the functionality
- * this driver can deliver.
- *
- *
- * \section module_overview TC Overview
- *
- * A TC is basically a counter with capture compare registers that can
- * be used to compare the counter value, or capture the counter
- * value. If the counter counts the pulses from a stable frequency it
- * can be used for timer operations. The TC enables the user to do the
- * following:
- *
- * \li Generate \ref pwm
- * \li \ref waveform_generation
- * \li Generate timestamps for events
- * \li Count
- * \li Perform \ref capture_operations
- * \li Perform \ref pwc
- * \li Perform frequency capture
- * \n
- *
- * \image html overview.svg "Basic overview of the TC module"
- *
- * \image latex overview.eps "Basic overview of the TC module"
- * \n
- *
- * As seen in the figure above, the TC in the BANANORAMA has
- * its own prescaler that can be used to divide the clock frequency
- * used in the counter. It is possible to configure the counters to
- * use either 8-, 16-, or 32-bit counter size. The amount of capture
- * compare registers available is dependent on what BANANORAMA device
- * is being used and in some cases the counter size. The maximum amount of
- * capture compare registers available in any BANANORAMA device is two
- * when running in 32-bit mode and four in 8-, and 16-bit modes. For
- * device specific information, see \ref differences.
- *
- * \section functional_description Functional Description
- *
- * Independent of what counter size the timer uses, it can be set up
- * in two different modes, although to some extent, one TC module can
- * be configured in both modes. These modes are capture and compare.
- * \n
- *
- * In compare mode, the counter value is compared with one or more of
- * the compare values. When the counter value coincides with the
- * compare value, this can generate an action, such as generating an
- * event or toggling a pin when used for frequency or PWM
- * generation. For more information, see \ref operations.  \n
- *
- * In capture mode the counter value is stored upon some configurable
- * event. This can be used to generate timestamps used in event
- * capture, or it can be used for frequency capture or pulse width
- * capture. For more on this, see the \ref compare_match section.
- *
- *
- * \section timer_counter_size TC Size
- *
- * It is possible to use three different counter sizes. These are 8-,
- * 16-, and 32-bits. The size of the counter determines the maximal
- * value it can manage to count to. For easy reference the table below
- * gives the max values for the different counter sizes.
- *
- * <table>
- *  <tr>
- *    <th> - </th>
- *    <th colspan="2">Max </th>
- *  </tr>
- *  <tr>
- *    <th> Counter Size </th>
- *    <th> Hexadecimal </th>
- *    <th> Decimal </th>
- *  </tr>
- *  <tr>
- *    <th> 8-bit </th>
- *    <td> 0xFF </td>
- *    <td> 255 </td>
- *  </tr>
- *  <tr>
- *    <th> 16-bit </th>
- *    <td> 0xFFFF </td>
- *    <td> 65,535 </td>
- *  </tr>
- *  <tr>
- *    <th> 32-bit </th>
- *    <td> 0xFFFFFFFF </td>
- *    <td> 4,294,967,295 </td>
- *  </tr>
- * </table>
- *
- * It should be noted that when using the counter with 16-, and 32-bit
- * counter size, Compare Capture register 0 (CC0) is used to store the
- * period value when running in PWM generation match mode.  \n
- *
- * When using 32-bit counter size, two 16-bit counters are used
- * together in cascade to realize this feature. Even numbered TC
- * modules can be configured as 32-bit counters. The odd numbered
- * counters will act as slaves to the even numbered masters. The
- * pairing is as follows:
- *
- * <table>
- *   <tr>
- *     <th> Master </th>
- *     <th> Slave </th>
- *   </tr>
- *   <tr>
- *     <td> TC0 </td>
- *     <td> TC1 </td>
- *   </tr>
- *   <tr>
- *     <td> TC2 </td>
- *     <td> TC3 </td>
- *   </tr>
- *   <tr>
- *     <td> ... </td>
- *     <td> ... </td>
- *   </tr>
- *   <tr>
- *     <td> TCn-1 </td>
- *     <td> TCn</td>
- *   </tr>
- * </table>
- *
- * \section clock_and_prescaler Clock Settings
- *
- * \subsection clock_selection Clock Selection
- *
- * The TC peripheral is clocked asynchronously to the system clock
- * by a GCLK (Generic Clock) channel. The GCLK channel connects to any
- * of the GCLK generators. The GCLK generators are configured to use
- * one of the available clock sources on the system such as internal
- * oscillator, external crystals etc. The GCLK generator provides a
- * prescaler that can be used to divide the clock source if needed.
- * Configuring the GCLK generator is done in the conf_clocks.h
- * configuration file, where all GCLK generators are configured. This
- * configuration is applied when running system_init. \n
- *
- * To connect a clock channel to the module use the \ref tc_conf
- * struct. Here, the clock for each pair of the TC modules can be
- * set. The pairing is as above. As an example, it is not possible to
- * have differing clock frequencies on TC0 and TC1. However, it is
- * possible to have different frequencies on modules not in the same
- * pair, for instance TC0 and TC2 does not have to have the same GCLK
- * input. It is possible to use the internal TC prescaler to get
- * different counting frequencies between the same modules in a pair.
- * \n
- *
- * For more on how to set up the clocks, see the \ref sam0_gclk_group
- * "GCLK documentation".
- *
- * \subsection prescaler Prescaler
- *
- * The module has its own prescaler. This prescaler only works to
- * prescale the clock used to provide clock pulses for the counter to
- * count. This means that while the counter module is running on the
- * GCLK frequency the counter value only changes on the prescaled
- * frequency.  \n
- *
- * There are two things to consider when it comes to the
- * prescaler. One is that the TC module will have to synchronize when
- * updating certain registers. This synchronization can be time
- * consuming, especially if the GCLK frequency is much lower than the
- * system clock. For this reason it can be better to use the module's
- * prescaler to reduce the clock frequency to the counter. In this way
- * synchronization should be faster. Higher frequencies will however
- * make the module consume more power. The prescaler is configured
- * with the help of the \ref tc_conf struct and the enums in
- * the \ref tc_clock_prescaler enum.  \n
- *
- * The other thing to consider with the prescaler is which reload
- * action to use. The reload action is the action performed when a
- * retrigger event occurs. Examples of a retrigger event can be when
- * the counter reaches the max value when counting up, or when an
- * event from the event system tells the counter to retrigger. The
- * reload action determines if the prescaler should be restarted, and
- * when this should happen. The counter will always be reloaded with
- * the value it is set to start counting from. The user can choose
- * between three different reload actions.
- *
- * The prescaler consists of a basic counter circuitry itself. When
- * the prescaler is used, it counts the clock cycles of the TC
- * module's GCLK. When the counter in the prescaler reaches the chosen
- * division factor value, the output from the prescaler toggles.  \n
- *
- * <table>
- *   <tr>
- *     <th> Code reference</th>
- *     <th> Description </th>
- *   </tr>
- *   <tr>
- *     <td> \ref TC_RELOAD_ACTION_GCLK </td>
- *     <td> Reload TC counter value on next GCLK cycle. Leav prescaler
- *     as it is. </td>
- *   </tr>
- *   <tr>
- *     <td> \ref TC_RELOAD_ACTION_PRESC </td>
- *     <td> Reloads TC counter value on next prescaler clock. No
- *     special action performed to set prescaler to zero. </td>
- *   </tr>
- *  <tr>
- *    <td> \ref TC_RELOAD_ACTION_RESYNC </td>
- *    <td> Reload TC counter value on next GCLK cycle. Set prescaler
- *    to zero. </td>
- *  </tr>
- * </table>
- *
- *
- * In different scenarios and applications the correct reload option
- * will differ. One example is when an external trigger for a reload
- * occurs. If the TC uses the prescaler, the counter in the prescaler
- * should not have a value between zero and the division factor. The
- * TC counter and the counter in the prescaler should both start at
- * zero. When the counter is set to retrigger when it reaches the max
- * value on the other hand, this is not the right option to use. In
- * such a case it would be better if the prescaler is left unaltered
- * when the retrigger happens and then let the counter reset on the
- * next GCLK cycle.
- *
- *
- * \section compare_match Compare Match Operations
- *
- * In compare match operation, compare capture registers are used in
- * comparison with the counter value. Upon match some action can be
- * taken.
- *
- * \subsection timer Timer
- *
- * A Timer is a simple application where compare match operations is
- * used. In timer operations one or more values in the module's
- * compare capture registers are used to specify the time when an
- * action should be taken by the microcontroller. This can be an
- * interrupt service routine, or it can be set as an event generator
- * in the event system.
- *
- * \subsection waveform_generation Waveform Generation
- *
- * Waveform generation enables the TC module to make square waves, or if
- * combined with a passive low-pass filter, analog waveforms.
- *
- * \subsubsection pwm Pulse Width Modulation (PWM)
- *
- * Pulse width modulation is a form of waveform generation and a
- * signaling technique that can be useful in many situations. Often it
- * is used to communicate a certain value to some other circuit or
- * component. Differing impedances is also a smaller problem when
- * using PWM compared to using an analog voltage value. PWM is far
- * less prone to noise.  \n
- *
- * PWM signals are generated by configuring the \ref tc_conf struct
- * using the \ref tc_wave_generation enum in the \ref tc_conf
- * struct, and using either the \ref TC_WAVE_GENERATION_MATCH_PWM mode
- * or the \ref TC_WAVE_GENERATION_NORMAL_PWM mode.
- *
- * It is necessary to set a compare value in the \ref tc_conf struct
- * or by using the tc_set_compare_value() function. This value gives
- * the pulse width together with the top value. In addition it may be
- * necessary to configure the top value using the tc_set_top_value()
- * function.
- *
- * \note The tc_set_top_value() function is only meant to be used when
- * using wave generation in match mode, and not in normal mode. Except
- * in 8-bit mode where it will always be possible to change the top
- * value. \n
- *
- * The functions tc_set_compare_value() and tc_set_top_value() can be
- * used to set the pulse width and the period, respectively. They can
- * be used while the counter is running.  \n
- *
- *
- * The figure below illustrates operations and different states of
- * the counter and its output when running the counter in PWM normal
- * mode. As can be seen, the top value is unchanged and is set to
- * max. The compare match value is changed to illustrate different
- * outcomes of this. The PWM output is here set to be ordinary output
- * as it is not inverted here.
- *
- * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
- *
- * \image latex pwm_normal_ex.eps "Example of PWM in normal mode, and different counter operations"
- * \n
- *
- * In the figure below, the counter is set to generate PWM in match
- * mode. The PWM output is inverted. Inversion of the wave generation
- * output can be done by specifying which channels should be inverted
- * in the \ref tc_conf struct, see \ref
- * tc_waveform_invert_output. In this example, the counter value is
- * changed once, but the compare match value is kept
- * unchanged. As can be seen, it is possible to change the top value
- * when running in PWM match mode. \n
- *
- * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
- *
- * \image latex pwm_match_ex.eps "Example of PWM in match mode, and different counter operations"
- * \n
- *
- * \subsubsection frequency_generation Frequency Generation
- *
- * Frequency generation is in many ways the same as PWM
- * generation. However, in frequency generation a toggle only occurs
- * on the output when a match on a capture channels occurs. For
- * frequency generation, the options that are available are \ref
- * TC_WAVE_GENERATION_NORMAL_FREQ mode and \ref
- * TC_WAVE_GENERATION_MATCH_FREQ mode. These configuration options can
- * be found in the \ref tc_wave_generation enum.  \n
- *
- * As in PWM generation, it is necessary to set the period and pulse width
- * values to be used. Either by using the \ref tc_conf struct before
- * initialization or by using the functions tc_set_top_value() and
- * tc_set_compare_value(). As with PWM generation, the top value can not be
- * set in any other mode than match.
- *
- * \subsection capture_operations Capture Operations
- *
- * In capture operations, any event from the event system or a pin
- * change can trigger a capture of the counter value. This captured
- * counter value can be used as a timestamp for the event, or it can
- * be used in frequency and pulse width capture.
- *
- * \subsubsection event_capture Event Capture
- *
- * Event capture is a simple use of the capture functionality. This
- * makes it possible to create timestamps for specific events. The
- * user should be aware that when performing any capture operation
- * there is a risk that the counter reaches its top value when
- * counting up, or the bottom value (zero) when counting down, before
- * the capture event takes place. This eventuality must be checked for
- * and handled should it happen.
- *
- * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
- * should be checked.  This should be done to make certain that any
- * new capture value is valid. If an overflow has occurred this error
- * has to be handled. If no error has occurred, continue checking if a
- * new capture has happened. If this is the case, get the value and
- * clear the interrupt flag. In the diagram below a proposed program
- * flow is described.
- *
- * \image html state_dia_capture.svg "Diagram of capture operation"
- *
- *
- * \image latex state_dia_capture.eps "Diagram of capture operation" width = \textwidth*0.8
- *
- *
- * How to handle the buffer overflow error is up to the user. But it
- * should be mentioned that it may be necessary to clear both the
- * capture overflow flag and the capture flag. This should be done as
- * an erroneous capture value  may have been captured at this point.
- *
- * \subsubsection pwc Pulse Width Capture
- *
- * Pulse width capture mode makes it possible to measure the pulse
- * width and period of PWM signals. This mode uses two capture
- * channels of the counter. This means that the counter module used
- * for pulse width capture can not be used for any other
- * purpose. There are two modes for pulse width capture; Pulse Width
- * Period (PWP) and Period Pulse Width(PPW). In PWP mode, capture
- * channel 0 is used for storing the pulse width and capture channel 1
- * stores the period. While in PPW mode, the period is stored in
- * capture channel 0 and the pulse width is stored in capture channel
- * 1. \n
- *
- * As in the above example it is necessary to poll on interrupt flags
- * to see if a new capture has happened and check that a capture
- * overflow error has not occurred.
- *
- *
- * \subsection sleep_modes Operation in Sleep Modes
- *
- * The TC module can operate in all sleep modes. Note that to be able
- * to run in standby, the \ref run_in_standby value in the \ref tc_conf
- * struct \ref tc_conf has to be true for the TC module to be able to run in standby.
- *
- *
- * \section oneshot Oneshot
- *
- * It is possible to perform a oneshot action with the counter by
- * configuring this option in the \ref tc_conf struct. Oneshot action
- * performs one cycle of counting and then stops the counter. The
- * counter will start counting when enabled and then stop. The counter
- * can be restarted by using the start function
- * tc_start_counter(). When restarted, it will again perform a oneshot
- * operation.
- *
- * \subsection output_inversion Wave Generation Output Inversion
- *
- * The output of the wave generation can be inverted by selecting this
- * option in the \ref tc_conf struct. The figure below
- * illustrates how this affects the output.
- *
- *
- * \section differences Differences Between BANANORAMA Devices
- *
- * \subsection SAMD20
- *
- * The SAMD20 has two capture compare registers independent of the
- * counter size.
- *
- * There are 8 counter modules in the SAMD20 device, making 4 pairs of
- * TC modules that can have different GCLK_TC frequencies. It supports
- * 4 simultaneous 32-bit TC modules.
- *
- * There are 8 TC modules in the device.
- *
- * \section dependencies Dependencies
- * The TC driver has the following dependencies:
- *
- * \li \b GCLK
- * \li \b CLOCK
- *
- * \section extra_info Extra Information
- * For extra information see \ref tc_extra_info.
- *
- * \section module_examples Examples
- * - \ref quickstart
- *
- * \section TC_overview API Overview
- * @{
- */
+#if !defined(__DOXYGEN__)
+#  define _TC_GCLK_ID(n, unused)     TC##n##_GCLK_ID   ,
+#  define _TC_PM_APBCMASK(n, unused) PM_APBCMASK_TC##n ,
 
 /** TODO: remove once present in device header file */
-#define TC_INST_GCKL_ID  { TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, \
-		TC3_GCLK_ID, TC4_GCLK_ID, TC5_GCLK_ID, TC6_GCLK_ID, TC7_GCLK_ID }
-
+#  define TC_INST_GCLK_ID     { MREPEAT(TC_INST_NUM, _TC_GCLK_ID, ~)     }
 
 /** TODO: remove once present in device header file */
-#define TC_INST_PM_APBCMASK { PM_APBCMASK_TC0, PM_APBCMASK_TC1, \
-		PM_APBCMASK_TC2, PM_APBCMASK_TC3, PM_APBCMASK_TC4, \
-		PM_APBCMASK_TC5, PM_APBCMASK_TC6, PM_APBCMASK_TC7 }
-
+#  define TC_INST_PM_APBCMASK { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
+#endif
 
 /**
  * \brief Index of the compare capture channels
@@ -776,7 +688,7 @@ struct tc_conf {
 	enum tc_wave_generation wave_generation;
 
 	/** Specifies the reload or reset time of the counter and
-	 *  prescaler resynchronization on a retrigger event for the
+	 *  prescaler resynchronization on a re-trigger event for the
 	 *  TC
 	 */
 	enum tc_reload_action reload_action;
@@ -793,7 +705,7 @@ struct tc_conf {
 	 */
 	uint8_t capture_enable;
 
-	/**  When true, oneshot will stop the TC on next HW/SW retrigger
+	/** When true, one-shot will stop the TC on next HW/SW re-trigger
 	 *  event or overflow/underflow
 	 */
 	bool oneshot;
@@ -1216,11 +1128,10 @@ static inline void tc_clear_interrupt_flag(
 #endif
 
 /**
- * \page tc_extra_info Extra Information
+ * \page asfdoc_samd20_tc_extra Extra Information for TC Driver
  *
- * \section acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
+ * \section asfdoc_samd20_tc_extra_acronyms Acronyms
+ * The table below presents the acronyms used in this module:
  *
  * <table>
  *	<tr>
@@ -1249,16 +1160,22 @@ static inline void tc_clear_interrupt_flag(
  *	</tr>
  * </table>
  *
- * \section workarounds Workarounds implemented by driver
  *
- * Reset of 32-bit modules also reset the connected module. Both modules
- * will be reset.
+ * \section asfdoc_samd20_tc_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_tc_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_tc_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -1271,20 +1188,15 @@ static inline void tc_clear_interrupt_flag(
  */
 
 /**
- * \page quickstart Quick Start Guides for the TC module
+ * \page asfdoc_samd20_tc_exqsg Examples for TC Driver
  *
- * This is the quick start guide for the \ref sam0_tc_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_tc_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section tc_use_cases TC driver use cases
- * - \subpage tc_basic_use_case
+ *  - \subpage asfdoc_samd20_tc_basic_use_case
  */
-#endif /* TC_ALL_HEADER */
+
+#endif /* TC_H_INCLUDED */
