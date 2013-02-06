@@ -243,8 +243,8 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
 
 	/* SERCOM PAD3 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw_dev, 3);
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(hw_dev, 3);
 	}
 
 	pin_conf.mux_position = pad3 & 0xFFFF;

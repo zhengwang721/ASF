@@ -349,10 +349,12 @@ enum status_code usart_async_get_operation_status(
 	case USART_TRANSCEIVER_RX:
 		/* Get status code */
 		status_code = dev_inst->rx_status;
+		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Get status code */
 		status_code = dev_inst->tx_status;
+		break;
 	}
 
 	return status_code;
