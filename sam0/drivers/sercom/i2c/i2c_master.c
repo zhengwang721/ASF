@@ -123,22 +123,11 @@ static enum status_code _i2c_master_set_config(
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
 
 	/* Set sercom gclk generator according to config. */
-	tmp_status_code = sercom_set_gclk_generator(
-			config->generator_source,
-			config->run_in_standby,
-			false);
-	/* Return status code if not OK. */
-	if (tmp_status_code != STATUS_OK) {
-		return tmp_status_code;
-	}
-
         uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+
 	/* Find and set baudrate. */
 	tmp_baud = (int32_t)((system_gclk_ch_get_hz(gclk_index)
 			/ (2*1000*config->baud_rate))-5);
-
-
-
 	/* Check that baud rate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
 		/* Baud rate not supported. */
