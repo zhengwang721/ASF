@@ -61,7 +61,6 @@
 			<info type="keyword" value="technology">
 				<keyword value="Communication" />
 			</info>
-			<device-support value="megarf"/>
 			<build type="header-file" subtype="api" value="stdio_serial.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="group_common_utils_stdio_stdio_serial"/>
@@ -69,7 +68,8 @@
 			<require idref="common.services.basic.serial"/>
 			<require idref="common.utils.stdio"/>
 			<require idref="mega.utils"/>
-			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<device-support value="megarf"/>
+			<generator value="doxygen-module" default-mcu="atmega128rfa1"/>
 		</module>
 	</select-by-device>
 </asf>

@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA B/C/D specific ADC driver implementation
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -210,7 +210,7 @@ void adc_read_configuration(ADC_t *adc, struct adc_config *conf)
 void adcch_write_configuration(ADC_t *adc, uint8_t ch_mask,
 		const struct adc_channel_config *ch_conf)
 {
-	ADC_CH_tmpfix_t *adc_ch;
+	ADC_CH_t *adc_ch;
 	irqflags_t flags;
 
 	adc_ch = adc_get_channel(adc, ch_mask);
@@ -242,6 +242,7 @@ void adcch_write_configuration(ADC_t *adc, uint8_t ch_mask,
 	adc_ch->CTRL = ch_conf->ctrl;
 	adc_ch->INTCTRL = ch_conf->intctrl;
 	adc_ch->MUXCTRL = ch_conf->muxctrl;
+	adc_ch->SCAN = ch_conf->scan;
 	adc_disable_clock(adc);
 
 	cpu_irq_restore(flags);
@@ -262,7 +263,7 @@ void adcch_write_configuration(ADC_t *adc, uint8_t ch_mask,
 void adcch_read_configuration(ADC_t *adc, uint8_t ch_mask,
 		struct adc_channel_config *ch_conf)
 {
-	ADC_CH_tmpfix_t *adc_ch;
+	ADC_CH_t *adc_ch;
 	irqflags_t flags;
 
 	adc_ch = adc_get_channel(adc, ch_mask);
@@ -273,6 +274,7 @@ void adcch_read_configuration(ADC_t *adc, uint8_t ch_mask,
 	ch_conf->ctrl = adc_ch->CTRL;
 	ch_conf->intctrl = adc_ch->INTCTRL;
 	ch_conf->muxctrl = adc_ch->MUXCTRL;
+	ch_conf->scan = adc_ch->SCAN;
 	adc_disable_clock(adc);
 
 	cpu_irq_restore(flags);

@@ -58,10 +58,9 @@
 # include "xmega_usart/usart_serial.h"
 #elif MEGA_RF
 # include "megarf_usart/usart_serial.h"
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || \
-	defined(__AAVR32__))
+#elif UC3
 # include "uc3_usart/usart_serial.h"
-#elif (defined(__GNUC__) || (defined(__ICCARM__)))
+#elif SAM
 # include "sam_uart/uart_serial.h"
 #else
 # error Unsupported chip type
@@ -73,8 +72,8 @@
  *
  * See \ref serial_quickstart.
  *
- * This is the common API for serial interface. Additional features are
- * available in the documentation of the specific modules.
+ * This is the common API for serial interface. Additional features are available
+ * in the documentation of the specific modules.
  *
  * \section serial_group_platform Platform Dependencies
  *
@@ -97,14 +96,13 @@
  *
  * @{
  */
-
-/* ! @} */
+ 
+//! @}
 
 /**
  * \page serial_quickstart Quick start guide for Serial Interface service
  *
- * This is the quick start guide for the \ref serial_group "Serial Interface
- * module", with
+ * This is the quick start guide for the \ref serial_group "Serial Interface module", with
  * step-by-step instructions on how to configure and use the serial in a
  * selection of use cases.
  *
@@ -134,7 +132,7 @@
  * -# \ref sysclk_group "System Clock Management (sysclk)"
  *
  * \subsection serial_basic_use_case_setup_code Example code
- * The following configuration must be added to the project (typically to a
+ * The following configuration must be added to the project (typically to a 
  * conf_serial.h file, but it can also be added to your main application file.)
  * \code
  *    #define USART_SERIAL                     &USARTD0
@@ -211,7 +209,7 @@
  * -# \ref sysclk_group "System Clock Management (sysclk)"
  *
  * \subsection serial_use_case_1_setup_code Example code
- * The following configuration must be added to the project (typically to a
+ * The following configuration must be added to the project (typically to a 
  * conf_serial.h file, but it can also be added to your main application file.):
  * \code
  *    #define USART_SERIAL                     &USARTD0
@@ -255,14 +253,12 @@
  * \subsection serial_use_case_1_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *       usart_serial_write_packet(USART_SERIAL, "Test String", strlen("Test
- * String"));
+ *       usart_serial_write_packet(USART_SERIAL, "Test String", strlen("Test String"));
  * \endcode
  *
  * \subsection serial_use_case_1_usage_flow Workflow
  * -# Write a string of text to the USART:
- *   - \code usart_serial_write_packet(USART_SERIAL, "Test String", strlen("Test
- * String")); \endcode
+ *   - \code usart_serial_write_packet(USART_SERIAL, "Test String", strlen("Test String")); \endcode
  */
 
 #endif /* SERIAL_H_INCLUDED */
