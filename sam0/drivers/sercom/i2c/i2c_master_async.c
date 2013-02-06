@@ -112,8 +112,6 @@ static void _i2c_master_async_address_response(
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
 	{
 		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN;
-
 		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
 		/* Check arbitration. */

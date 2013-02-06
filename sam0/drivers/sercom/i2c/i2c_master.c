@@ -141,6 +141,7 @@ static enum status_code _i2c_master_set_config(
 	return tmp_status_code;
 }
 #endif /* __DOXYGEN__ */
+
 /**
  * \brief Initializes the requested I2C Hardware module.
  *
@@ -222,9 +223,9 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 #endif
 
 	//dev_inst->callback[0] = 0;
-
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_MODE_Msk | SERCOM_I2CM_CTRLA_MASTER;
+	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
+			| SERCOM_I2CS_CTRLA_MASTER;
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(dev_inst, config);
@@ -318,8 +319,9 @@ static enum status_code _i2c_master_wait_for_bus(
 
 	/* Wait for reply. */
 	uint16_t timeout_counter = 0;
-	while (!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF) ||
+	while (!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF) &&
 			!(i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_RIF)) {
+
 		/* Check timeout condition. */
 		if (++timeout_counter >= dev_inst->buffer_timeout) {
 			return STATUS_ERR_TIMEOUT;
