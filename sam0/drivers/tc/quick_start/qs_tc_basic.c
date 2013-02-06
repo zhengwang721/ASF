@@ -70,7 +70,7 @@ int main(void)
 	//! [setup]
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
-	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[0] = 0x7FFF;
+	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
 	//! [setup]
 
 	//! [tc_init]

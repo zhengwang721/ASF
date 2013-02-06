@@ -56,7 +56,7 @@ static uint8_t _tc_get_inst_index(
 	/* List of available TC modules. */
 	Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
 
-	/* Find index for tc instance. */
+	/* Find index for TC instance. */
 	for (uint32_t i = 0; i < TC_INST_NUM; i++) {
 		if (tc_module == tc_modules[i]) {
 			return i;
@@ -121,7 +121,6 @@ enum status_code tc_init(
 	struct system_pinmux_conf pin_conf;
 	struct system_gclk_chan_conf gclk_chan_conf;
 
-
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw_dev = tc_module;
 
@@ -167,12 +166,8 @@ enum status_code tc_init(
 
 	/* Setup clock for module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator  = config->clock_source;
-
-	/* Set the GCLK channel to run in standby mode */
-	gclk_chan_conf.run_in_standby = config->run_in_standby;
-
-	/* Apply configuration and enable the GCLK channel */
+	gclk_chan_conf.source_generator = config->clock_source;
+	gclk_chan_conf.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_conf);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
@@ -183,8 +178,9 @@ enum status_code tc_init(
 	ctrla_tmp = config->counter_size | config->wave_generation
 			| config->reload_action | config->clock_prescaler;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Set configuration to registers common for all 3 modes */
 	tc_module->COUNT8.CTRLA.reg = ctrla_tmp;
@@ -199,84 +195,111 @@ enum status_code tc_init(
 	}
 
 	if (ctrlbset_tmp) {
-		/* check if we actually need to go into a wait state. */
-		_tc_wait_for_sync(module_inst);
+		while (tc_is_syncing(module_inst)) {
+			/* Wait for sync */
+		}
+
+		/* Check if we actually need to go into a wait state. */
 		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
-	ctrlc_tmp = config->waveform_invert_output
-			| config->capture_enable;
+	ctrlc_tmp = config->waveform_invert_output | config->capture_enable;
 
-	_tc_wait_for_sync(module_inst);
-	tc_module->COUNT8.CTRLC.reg = ctrlc_tmp;
-
-	/* Set event register */
-	if (config->enable_event_input) {
-		evctrl_tmp |= TC_EVCTRL_TCEI;
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
 	}
+
+	tc_module->COUNT8.CTRLC.reg = ctrlc_tmp;
 
 	if (config->invert_event_input) {
 		evctrl_tmp |= TC_EVCTRL_TCINV;
 	}
 
-	_tc_wait_for_sync(module_inst);
-	tc_module->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action
-			| config->event_generation_enable;
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+	tc_module->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action;
 
 	/* Switch for TC counter size  */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			_tc_wait_for_sync(module_inst);
-			tc_module->COUNT8.COUNT.reg = config->tc_counter_size_conf. \
-					tc_8bit_conf.count;
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
 
-			_tc_wait_for_sync(module_inst);
-			tc_module->COUNT8.PER.reg   = config->tc_counter_size_conf. \
-					tc_8bit_conf.period;
+			tc_module->COUNT8.COUNT.reg =
+					config->size_specific.size_8_bit.count;
 
-			_tc_wait_for_sync(module_inst);
+
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
+			tc_module->COUNT8.PER.reg =
+					config->size_specific.size_8_bit.period;
+
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT8.CC[0].reg
-				= config->tc_counter_size_conf.tc_8bit_conf. \
-					compare_capture_channel[0];
+				= config->size_specific.size_8_bit.compare_capture_channel[0];
 
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT8.CC[1].reg
-				= config->tc_counter_size_conf.tc_8bit_conf. \
-					compare_capture_channel[1];
+				= config->size_specific.size_8_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_16BIT:
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT16.COUNT.reg
-				= config->tc_counter_size_conf.tc_16bit_conf.count;
+				= config->size_specific.size_16_bit.count;
 
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT16.CC[0].reg
-				= config->tc_counter_size_conf.tc_16bit_conf. \
-					compare_capture_channel[0];
+				= config->size_specific.size_16_bit.compare_capture_channel[0];
 
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT16.CC[1].reg
-				= config->tc_counter_size_conf.tc_16bit_conf. \
-					compare_capture_channel[1];
+				= config->size_specific.size_16_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_32BIT:
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT32.COUNT.reg
-				= config->tc_counter_size_conf.tc_32bit_conf.count;
+				= config->size_specific.size_32_bit.count;
 
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT32.CC[0].reg
-				= config->tc_counter_size_conf.tc_32bit_conf. \
-					compare_capture_channel[0];
+				= config->size_specific.size_32_bit.compare_capture_channel[0];
 
-			_tc_wait_for_sync(module_inst);
+			while (tc_is_syncing(module_inst)) {
+				/* Wait for sync */
+			}
+
 			tc_module->COUNT32.CC[1].reg
-				= config->tc_counter_size_conf.tc_32bit_conf. \
-					compare_capture_channel[1];
+				= config->size_specific.size_32_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
 	}
@@ -310,8 +333,9 @@ enum status_code tc_set_count_value(
 	/* Get a pointer to the module's hardware instance*/
 	Tc *const tc_module = module_inst->hw_dev;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Write to based on the TC counter_size */
 	switch (module_inst->counter_size) {
@@ -351,8 +375,9 @@ uint32_t tc_get_count_value(
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = module_inst->hw_dev;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Read from based on the TC counter size */
 	switch (module_inst->counter_size) {
@@ -391,8 +416,9 @@ uint32_t tc_get_capture_value(
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = module_inst->hw_dev;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Read out based on the TC counter size */
 	switch (module_inst->counter_size) {
@@ -435,8 +461,9 @@ enum status_code tc_set_compare_value(
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = module_inst->hw_dev;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Read out based on the TC counter size */
 	switch (module_inst->counter_size) {
@@ -500,8 +527,9 @@ enum status_code tc_reset(
 
 	/* Reset TC slave if one exists */
 	if (tc_module->CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
-		/* Synchronize */
-		_tc_wait_for_sync(module_inst);
+		while (tc_is_syncing(module_inst)) {
+			/* Wait for sync */
+		}
 
 		/* Reset this TC module */
 		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
@@ -519,8 +547,9 @@ enum status_code tc_reset(
 		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
 	else {
-		/* Synchronize */
-		_tc_wait_for_sync(module_inst);
+		while (tc_is_syncing(module_inst)) {
+			/* Wait for sync */
+		}
 
 		/* Reset this TC module */
 		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
@@ -562,7 +591,9 @@ enum status_code tc_set_top_value (
 
 	Tc *const tc_module = module_inst->hw_dev;
 
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
@@ -574,7 +605,7 @@ enum status_code tc_set_top_value (
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_32BIT:
-			tc_module->COUNT32.CC[0].reg = top_value;
+			tc_module->COUNT32.CC[0].reg = (uint32_t)top_value;
 			return STATUS_OK;
 
 		default:

@@ -582,20 +582,6 @@ enum tc_event_action {
 	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
 };
 
-/**
- * \brief TC event enable/disable structure.
- *
- * Event flags for the \ref tc_enable_events() and \ref tc_disable_events().
- */
-enum tc_events {
-	/** No event generation */
-	TC_EVENT_GENERATION_ENABLE_NONE      = 0,
-	/** Event generation on channel 0 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_0 = TC_EVCTRL_MCEO(1),
-	/** Event generation on channel 1 */
-	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(2),
-};
-
 /** TODO
  * \brief Enum to be used to check interrupt flags
  *
@@ -625,14 +611,23 @@ enum tc_interrupt_flag {
 };
 
 /**
+ * \brief TC event enable/disable structure.
+ *
+ * Event flags for the \ref tc_enable_events() and \ref tc_disable_events().
+ */
+struct tc_events {
+	bool generate_event_on_compare_channel[2];
+	bool generate_event_on_overflow;
+	bool on_event_perform_action;
+};
+
+/**
  * \brief Configuration struct for TC module in 8-bit size counter mode.
  */
 struct tc_8bit_conf {
 	/** Initial count value. */
 	uint8_t count;
-	/** Where to count to or from depending on the direction on the
-	 *  counter.
-	 */
+	/** Where to count to or from depending on the direction on the counter. */
 	uint8_t period;
 	/** Value to be used for compare match on each channel. */
 	uint8_t compare_capture_channel[2];
@@ -706,16 +701,9 @@ struct tc_conf {
 	 *  PPW event action modes.
 	 */
 	bool invert_event_input;
-	/** Must be set to true to enable event actions. */
-	bool enable_event_input;
 
 	/** Specifies which event to trigger if an event is triggered. */
 	enum tc_event_action event_action;
-
-	/** Specifies which channel(s) to generate event on when a compare/capture
-	 *  occurs.
-	 */
-	uint16_t event_generation_enable;
 
 	/** When true, PWM output for the given channel is enabled */
 	bool channel_pwm_out_enabled[2];
@@ -726,13 +714,13 @@ struct tc_conf {
 
 	/** This setting determines what size counter is used. */
 	union {
-		/** Struct for 8-bit timer configuration */
-		struct tc_8bit_conf tc_8bit_conf;
-		/** Struct for 16-bit timer configuration */
-		struct tc_16bit_conf tc_16bit_conf;
-		/** Struct for 32-bit timer configuration */
-		struct tc_32bit_conf tc_32bit_conf;
-	} tc_counter_size_conf;
+		/** Struct for 8-bit specific timer configuration. */
+		struct tc_8bit_conf  size_8_bit;
+		/** Struct for 16-bit specific timer configuration. */
+		struct tc_16bit_conf size_16_bit;
+		/** Struct for 32-bit specific timer configuration. */
+		struct tc_32bit_conf size_32_bit;
+	} size_specific;
 };
 
 /**
@@ -751,6 +739,11 @@ struct tc_module {
 	 */
 	enum tc_counter_size counter_size;
 };
+
+/**
+ * \name Driver Initialization and Configuration
+ * @{
+ */
 
 /**
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
@@ -778,34 +771,6 @@ static inline bool tc_is_syncing(
 	return (module_inst->hw_dev->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
 }
 
-#if !defined (__DOXYGEN__)
-/** \internal Synchronization between clock domains
- *
- * Makes sure GCLK_TC is synchronized with sysclock,
- * Must be called before assessing certain registers in the TC.
- * Blocks while waiting
- *
- * \param module_inst  Pointer to device instance
- */
-static inline void _tc_wait_for_sync(
-		const struct tc_module *const module_inst)
-{
-	/* Sanity check arguments  */
-	Assert(module_inst);
-	Assert(module_inst->hw_dev);
-
-	/* Synchronize */
-	while (tc_is_syncing(module_inst)) {
-		/* Wait for sync */
-	}
-}
-#endif
-
-/**
- * \name Driver Initialization and Configuration
- * @{
- */
-
 /**
  * \brief Initializes config with predefined default values.
  *
@@ -825,9 +790,7 @@ static inline void _tc_wait_for_sync(
  *  \li No capture enabled
  *  \li Count upward
  *  \li Don't perform oneshot operations
- *  \li No event input enabled
  *  \li No event action
- *  \li No event generation enabled
  *  \li No channel 0 PWM output
  *  \li No channel 1 PWM output
  *  \li Counter starts on 0
@@ -856,10 +819,8 @@ static inline void tc_get_config_defaults(
 	config->count_direction            = TC_COUNT_DIRECTION_UP;
 	config->oneshot                    = false;
 
-	config->enable_event_input         = false;
 	config->invert_event_input         = false;
 	config->event_action               = TC_EVENT_ACTION_OFF;
-	config->event_generation_enable    = TC_EVENT_GENERATION_ENABLE_NONE;
 
 	config->channel_pwm_out_enabled[0] = false;
 	config->channel_pwm_out_pin[0]     = 0;
@@ -869,18 +830,104 @@ static inline void tc_get_config_defaults(
 	config->channel_pwm_out_pin[1]     = 0;
 	config->channel_pwm_out_mux[1]     = 0;
 
-	config->tc_counter_size_conf.tc_16bit_conf.count
-		= 0x0000;
-	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[0]
-		= 0x0000;
-	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[1]
-		= 0x0000;
+	config->size_specific.size_16_bit.count = 0x0000;
+	config->size_specific.size_16_bit.compare_capture_channel[0] = 0x0000;
+	config->size_specific.size_16_bit.compare_capture_channel[1] = 0x0000;
 }
 
 enum status_code tc_init(
 		Tc *const tc_module,
 		struct tc_module *const module_inst,
 		const struct tc_conf *const config);
+
+/** @} */
+
+/**
+ * \name Event Management
+ * @{
+ */
+
+/**
+ * \brief Enables an TC module event input or output.
+ *
+ *  Enables one or more input or output events to or from the TC module.
+ *  See \ref tc_events for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the TC module
+ *  \param[in] events    Struct containing flags of events to enable
+ */
+static inline void tc_enable_events(
+		struct tc_module *const module_inst,
+		struct tc_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
+	Assert(events);
+
+	Tc *const tc_module = module_inst->hw_dev;
+
+	uint32_t event_mask = 0;
+
+	if (events->on_event_perform_action == true) {
+		event_mask |= TC_EVCTRL_TCEI;
+	}
+
+	if (events->generate_event_on_overflow == true) {
+		event_mask |= TC_EVCTRL_OVFEO;
+	}
+
+	for (uint8_t i = 0; i < 2; i++) {
+		if (events->generate_event_on_compare_channel[i] == true) {
+			event_mask |= (TC_EVCTRL_MCEO(0) << i);
+		}
+	}
+
+	tc_module->COUNT8.EVCTRL.reg |= event_mask;
+}
+
+/**
+ * \brief Disables an TC module event input or output.
+ *
+ *  Disables one or more input or output events to or from the TC module.
+ *  See \ref tc_events for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the TC module
+ *  \param[in] events    Struct containing flags of events to disable
+ */
+static inline void tc_disable_events(
+		struct tc_module *const module_inst,
+		struct tc_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
+	Assert(events);
+
+	Tc *const tc_module = module_inst->hw_dev;
+
+	uint32_t event_mask = 0;
+
+	if (events->on_event_perform_action == true) {
+		event_mask |= TC_EVCTRL_TCEI;
+	}
+
+	if (events->generate_event_on_overflow == true) {
+		event_mask |= TC_EVCTRL_OVFEO;
+	}
+
+	for (uint8_t i = 0; i < 2; i++) {
+		if (events->generate_event_on_compare_channel[i] == true) {
+			event_mask |= (TC_EVCTRL_MCEO(0) << i);
+		}
+	}
+
+	tc_module->COUNT8.EVCTRL.reg &= ~event_mask;
+}
 
 /** @} */
 
@@ -913,8 +960,9 @@ static inline void tc_enable(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Enable TC module */
 	tc_module->CTRLA.reg |= TC_CTRLA_ENABLE;
@@ -937,8 +985,9 @@ static inline void tc_disable(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Disable TC module */
 	tc_module->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
@@ -985,8 +1034,9 @@ static inline void tc_stop_counter(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Write command to execute */
 	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
@@ -1010,14 +1060,16 @@ static inline void tc_start_counter(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
-	/* Make certain that there are no conflicting commands in the register
-	 **/
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+	/* Make certain that there are no conflicting commands in the register */
 	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
-	/* Synchronize */
-	_tc_wait_for_sync(module_inst);
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
 
 	/* Write command to execute */
 	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
