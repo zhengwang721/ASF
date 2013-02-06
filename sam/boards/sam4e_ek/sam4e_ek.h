@@ -204,6 +204,8 @@
  * rising edge.
  */
 #define PUSHBUTTON_1_NAME        "BP2 WAKU"
+#define PUSHBUTTON_1_WKUP_LINE   (9)
+#define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
 #define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
@@ -215,12 +217,15 @@
 #define PIN_PUSHBUTTON_1_ID    ID_PIOA
 #define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
 /**
  * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
  * falling edge.
  */
 #define PUSHBUTTON_2_NAME        "BP3 TAMP"
+#define PUSHBUTTON_2_WKUP_LINE   (10)
+#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT10)
 #define GPIO_PUSH_BUTTON_2       (PIO_PA20_IDX)
 #define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_FALLING)
@@ -232,12 +237,15 @@
 #define PIN_PUSHBUTTON_2_ID    ID_PIOA
 #define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+#define PIN_PUSHBUTTON_2_IRQn  PIOA_IRQn
 
 /**
  * Push button #2 definition. Attributes = pull-up + debounce + interrupt on
  * both edges.
  */
 #define PUSHBUTTON_3_NAME        "BP4 SCROLL-UP"
+#define PUSHBUTTON_3_WKUP_LINE   (1)
+#define PUSHBUTTON_3_WKUP_FSTT   (PMC_FSMR_FSTT1)
 #define GPIO_PUSH_BUTTON_3       (PIO_PA1_IDX)
 #define GPIO_PUSH_BUTTON_3_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_3_SENSE (IOPORT_SENSE_BOTHEDGES)
@@ -249,12 +257,15 @@
 #define PIN_PUSHBUTTON_3_ID    ID_PIOA
 #define PIN_PUSHBUTTON_3_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_3_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_3_IRQn  PIOA_IRQn
 
 /**
  * Push button #3 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
 #define PUSHBUTTON_4_NAME        "BP5 SCROLL-DOWN"
+#define PUSHBUTTON_4_WKUP_LINE   (2)
+#define PUSHBUTTON_4_WKUP_FSTT   (PMC_FSMR_FSTT2)
 #define GPIO_PUSH_BUTTON_4       (PIO_PA2_IDX)
 #define GPIO_PUSH_BUTTON_4_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_4_SENSE (IOPORT_SENSE_RISING)
@@ -266,6 +277,7 @@
 #define PIN_PUSHBUTTON_4_ID    ID_PIOA
 #define PIN_PUSHBUTTON_4_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_4_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_4_IRQn  PIOA_IRQn
 
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2,\
@@ -350,6 +362,11 @@
 #define SPI_NPCS3_PA22_GPIO   (PIO_PA22_IDX)
 #define SPI_NPCS3_PA22_FLAGS  (IOPORT_MODE_MUX_B)
 
+/* Select the SPI module that AT25DFx is connected to */
+#define AT25DFX_SPI_MODULE          SPI
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS      3
 
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA3_IDX
@@ -544,5 +561,59 @@
 #define ISO7816_USART              USART1
 #define PIN_ISO7816_RST_IDX        PIO_PA15_IDX
 #define PIN_ISO7816_RST_FLAG       (0)
+
+/*----------------------------------------------------------------------------*/
+/**
+ * \page sam4e_ek_CAN "SAM4E-EK - CAN"
+ * This page lists definitions related to CAN0 and CAN1.
+ *
+ * CAN
+ * - \ref PIN_CAN0_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN0_TRANSCEIVER_RS
+ * - \ref PIN_CAN0_TXD
+ * - \ref PIN_CAN0_RXD
+ * - \ref PINS_CAN0
+ *
+ * - \ref PIN_CAN1_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN1_TRANSCEIVER_RS
+ * - \ref PIN_CAN1_TXD
+ * - \ref PIN_CAN1_RXD
+ * - \ref PINS_CAN1
+ */
+/** CAN0 transceiver PIN RS. */
+#define PIN_CAN0_TR_RS_IDX        PIO_PE0_IDX
+#define PIN_CAN0_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 transceiver PIN EN. */
+#define PIN_CAN0_TR_EN_IDX        PIO_PE1_IDX
+#define PIN_CAN0_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 PIN RX. */
+#define PIN_CAN0_RX_IDX           PIO_PB3_IDX
+#define PIN_CAN0_RX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN0 PIN TX. */
+#define PIN_CAN0_TX_IDX           PIO_PB2_IDX
+#define PIN_CAN0_TX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN1 transceiver PIN RS. */
+#define PIN_CAN1_TR_RS_IDX        PIO_PE2_IDX
+#define PIN_CAN1_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 transceiver PIN EN. */
+#define PIN_CAN1_TR_EN_IDX        PIO_PE3_IDX
+#define PIN_CAN1_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 PIN RX. */
+#define PIN_CAN1_RX_IDX           PIO_PC12_IDX
+#define PIN_CAN1_RX_FLAGS         IOPORT_MODE_MUX_C
+
+/** CAN1 PIN TX. */
+#define PIN_CAN1_TX_IDX           PIO_PC15_IDX
+#define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+
+/*----------------------------------------------------------------------------*/
+
+
 
 #endif  /* _SAM4E_EK_H_ */

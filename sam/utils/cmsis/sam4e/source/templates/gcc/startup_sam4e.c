@@ -3,7 +3,7 @@
  *
  * \brief Startup file for SAM4E.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,9 @@
 #include "sam4e.h"
 #include "exceptions.h"
 #include "system_sam4e.h"
+#if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
+#include "fpu.h"
+#endif
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -160,6 +163,10 @@ void Reset_Handler(void)
 	/* Set the vector table base address */
 	pSrc = (uint32_t *) & _sfixed;
 	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+
+#if __FPU_USED
+	fpu_enable();
+#endif
 
 	/* Initialize the C library */
 	__libc_init_array();
