@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAMD20 SERCOM I2C Master Mode driver, using callbacks" id="sam0.drivers.sercom.i2c_master.quick_start_callback.dummy.atsamd20">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_bod.h"/>
+		<require idref="board.dummy.samd20"/>
+		<require idref="sam0.drivers.sercom.i2c_master.quick_start_callback"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</project>
+</asf>
