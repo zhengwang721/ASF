@@ -42,6 +42,8 @@
  */
 
 #include <asf.h>
+#include <system_interrupt.h>
+
 
 //! [packet_data]
 #define DATA_LENGTH 10
