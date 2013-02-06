@@ -50,7 +50,8 @@
  *
  * \return Index of given instance.
  */
-static uint8_t _tc_get_inst_index(Tc *const tc_instance)
+static uint8_t _tc_get_inst_index(
+		Tc *const tc_instance)
 {
 	/* List of available TC modules. */
 	Tc *const tc_instances[TC_INST_NUM] = TC_INSTS;
@@ -196,8 +197,8 @@ enum status_code tc_init(
 		ctrlbset_tmp |= TC_CTRLBSET_DIR;
 	}
 
-	if (ctrlbset_tmp) { /* check if we actually need to go into a wait
-		             * state. */
+	if (ctrlbset_tmp) {
+		/* check if we actually need to go into a wait state. */
 		_tc_wait_for_sync(dev_inst);
 		tc_instance->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
@@ -223,65 +224,64 @@ enum status_code tc_init(
 
 	/* Switch for TC counter size  */
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT8.COUNT.reg = config->tc_counter_size_conf. \
-				tc_8bit_conf.count;
+		case TC_COUNTER_SIZE_8BIT:
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT8.COUNT.reg = config->tc_counter_size_conf. \
+					tc_8bit_conf.count;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT8.PER.reg   = config->tc_counter_size_conf. \
-				tc_8bit_conf.period;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT8.PER.reg   = config->tc_counter_size_conf. \
+					tc_8bit_conf.period;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT8.CC[0].reg
-			= config->tc_counter_size_conf.tc_8bit_conf. \
-				compare_capture_channel_0;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT8.CC[0].reg
+				= config->tc_counter_size_conf.tc_8bit_conf. \
+					compare_capture_channel_0;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT8.CC[1].reg
-			= config->tc_counter_size_conf.tc_8bit_conf. \
-				compare_capture_channel_1;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT8.CC[1].reg
+				= config->tc_counter_size_conf.tc_8bit_conf. \
+					compare_capture_channel_1;
 
-		return STATUS_OK;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_16BIT:
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT16.COUNT.reg
-			= config->tc_counter_size_conf.tc_16bit_conf.count;
+		case TC_COUNTER_SIZE_16BIT:
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT16.COUNT.reg
+				= config->tc_counter_size_conf.tc_16bit_conf.count;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT16.CC[0].reg
-			= config->tc_counter_size_conf.tc_16bit_conf. \
-				compare_capture_channel_0;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT16.CC[0].reg
+				= config->tc_counter_size_conf.tc_16bit_conf. \
+					compare_capture_channel_0;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT16.CC[1].reg
-			= config->tc_counter_size_conf.tc_16bit_conf. \
-				compare_capture_channel_1;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT16.CC[1].reg
+				= config->tc_counter_size_conf.tc_16bit_conf. \
+					compare_capture_channel_1;
 
-		return STATUS_OK;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_32BIT:
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT32.COUNT.reg
-			= config->tc_counter_size_conf.tc_32bit_conf.count;
+		case TC_COUNTER_SIZE_32BIT:
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT32.COUNT.reg
+				= config->tc_counter_size_conf.tc_32bit_conf.count;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT32.CC[0].reg
-			= config->tc_counter_size_conf.tc_32bit_conf. \
-				compare_capture_channel_0;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT32.CC[0].reg
+				= config->tc_counter_size_conf.tc_32bit_conf. \
+					compare_capture_channel_0;
 
-		_tc_wait_for_sync(dev_inst);
-		tc_instance->COUNT32.CC[1].reg
-			= config->tc_counter_size_conf.tc_32bit_conf. \
-				compare_capture_channel_1;
+			_tc_wait_for_sync(dev_inst);
+			tc_instance->COUNT32.CC[1].reg
+				= config->tc_counter_size_conf.tc_32bit_conf. \
+					compare_capture_channel_1;
 
-		return STATUS_OK;
-
-	default:
-		Assert(false);
-		return STATUS_ERR_INVALID_ARG;
+			return STATUS_OK;
 	}
+
+	Assert(false);
+	return STATUS_ERR_INVALID_ARG;
 }
 
 /** \brief Set TC module count value
@@ -300,7 +300,7 @@ enum status_code tc_init(
  */
 enum status_code tc_set_count_value(
 		const struct tc_module *const dev_inst,
-		uint32_t count)
+		const uint32_t count)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -314,21 +314,21 @@ enum status_code tc_set_count_value(
 
 	/* Write to based on the TC counter_size */
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		tc_instance->COUNT8.COUNT.reg  = (uint8_t)count;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_8BIT:
+			tc_instance->COUNT8.COUNT.reg  = (uint8_t)count;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_16BIT:
-		tc_instance->COUNT16.COUNT.reg = (uint16_t)count;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_16BIT:
+			tc_instance->COUNT16.COUNT.reg = (uint16_t)count;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_32BIT:
-		tc_instance->COUNT32.COUNT.reg = count;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_32BIT:
+			tc_instance->COUNT32.COUNT.reg = (uint32_t)count;
+			return STATUS_OK;
 
-	default:
-		return STATUS_ERR_INVALID_ARG;
-	} /* Switch TC counter size end  */
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
 }
 
 /** \brief Get TC module count value
@@ -340,7 +340,8 @@ enum status_code tc_set_count_value(
  *
  * \return Count value
  */
-uint32_t tc_get_count_value(const struct tc_module *const dev_inst)
+uint32_t tc_get_count_value(
+		const struct tc_module *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -354,19 +355,18 @@ uint32_t tc_get_count_value(const struct tc_module *const dev_inst)
 
 	/* Read from based on the TC counter size */
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		return (uint32_t)tc_instance->COUNT8.COUNT.reg;
+		case TC_COUNTER_SIZE_8BIT:
+			return (uint32_t)tc_instance->COUNT8.COUNT.reg;
 
-	case TC_COUNTER_SIZE_16BIT:
-		return (uint32_t)tc_instance->COUNT16.COUNT.reg;
+		case TC_COUNTER_SIZE_16BIT:
+			return (uint32_t)tc_instance->COUNT16.COUNT.reg;
 
-	case TC_COUNTER_SIZE_32BIT:
-		return tc_instance->COUNT32.COUNT.reg;
+		case TC_COUNTER_SIZE_32BIT:
+			return tc_instance->COUNT32.COUNT.reg;
+	}
 
-	default:
-		Assert(false);
-		return 0;
-	} /* Switch TC counter size end  */
+	Assert(false);
+	return 0;
 }
 
 /** \brief Gets the capture value
@@ -381,7 +381,7 @@ uint32_t tc_get_count_value(const struct tc_module *const dev_inst)
  */
 uint32_t tc_get_capture_value(
 		const struct tc_module *const dev_inst,
-		enum tc_compare_capture_channel_index channel_index)
+		const enum tc_compare_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -396,14 +396,15 @@ uint32_t tc_get_capture_value(
 	/* Read out based on the TC counter size */
 	switch (dev_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			return (uint32_t)tc_instance->COUNT8.CC[channel_index].reg;
+			return tc_instance->COUNT8.CC[channel_index].reg;
 
 		case TC_COUNTER_SIZE_16BIT:
-			return (uint32_t)tc_instance->COUNT16.CC[channel_index].reg;
+			return tc_instance->COUNT16.CC[channel_index].reg;
 
 		case TC_COUNTER_SIZE_32BIT:
 			return tc_instance->COUNT32.CC[channel_index].reg;
 	}
+
 	Assert(false);
 	return 0;
 }
@@ -422,8 +423,8 @@ uint32_t tc_get_capture_value(
  */
 enum status_code tc_set_compare_value(
 		const struct tc_module *const dev_inst,
-		uint32_t compare,
-		enum tc_compare_capture_channel_index channel_index)
+		const uint32_t compare,
+		const enum tc_compare_capture_channel_index channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -480,7 +481,8 @@ enum status_code tc_set_compare_value(
  * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
  *                                     modules configured as 32-bit slaves
  */
-enum status_code tc_reset(const struct tc_module *const dev_inst)
+enum status_code tc_reset(
+		const struct tc_module *const dev_inst)
 {
 	/* Sanity check arguments  */
 	Assert(dev_inst);
@@ -517,7 +519,6 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
 		slave->COUNT8.CTRLA.reg |= TC_CTRLA_SWRST;
 	}
 	else {
-
 		/* Synchronize */
 		_tc_wait_for_sync(dev_inst);
 
@@ -553,7 +554,7 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
  */
 enum status_code tc_set_top_value (
 		const struct tc_module *const dev_inst,
-		uint32_t top_value)
+		const uint32_t top_value)
 {
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
@@ -564,20 +565,20 @@ enum status_code tc_set_top_value (
 	_tc_wait_for_sync(dev_inst);
 
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		tc_instance->COUNT8.PER.reg    = (uint8_t)top_value;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_8BIT:
+			tc_instance->COUNT8.PER.reg    = (uint8_t)top_value;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_16BIT:
-		tc_instance->COUNT16.CC[0].reg = (uint16_t)top_value;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_16BIT:
+			tc_instance->COUNT16.CC[0].reg = (uint16_t)top_value;
+			return STATUS_OK;
 
-	case TC_COUNTER_SIZE_32BIT:
-		tc_instance->COUNT32.CC[0].reg = top_value;
-		return STATUS_OK;
+		case TC_COUNTER_SIZE_32BIT:
+			tc_instance->COUNT32.CC[0].reg = top_value;
+			return STATUS_OK;
 
-	default:
-		Assert(false);
-		return STATUS_ERR_INVALID_ARG;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
 	}
 }
