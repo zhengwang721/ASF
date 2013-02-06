@@ -296,7 +296,6 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Get device instance for callback handling. */
 	struct i2c_master_dev_inst *dev_inst =
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
-
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Combine callback registered and enabled masks. */
@@ -313,6 +312,12 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
 		dev_inst->status = STATUS_OK;
+
+		/* No nack from slave, no recent stop condition has been issued. */
+		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)) {
+			/* Send nack and stop command. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);	
+		}
 
 		/* Call appropriate callback if enabled and registered. */
 		if ((callback_mask & (1 << I2C_MASTER_CALLBACK_READ_COMPLETE))
