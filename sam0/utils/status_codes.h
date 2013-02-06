@@ -85,7 +85,6 @@ enum status_code {
 	STATUS_OK                         = STATUS_CATEGORY_OK     | 0x00,
 	STATUS_VALID_DATA                 = STATUS_CATEGORY_OK     | 0x01,
 	STATUS_NO_CHANGE                  = STATUS_CATEGORY_OK     | 0x02,
-	STATUS_IN_PROGRESS                = STATUS_CATEGORY_OK     | 0x03,
 	STATUS_ABORTED                    = STATUS_CATEGORY_OK     | 0x04,
 	STATUS_BUSY                       = STATUS_CATEGORY_OK     | 0x05,
 

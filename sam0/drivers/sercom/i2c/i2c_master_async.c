@@ -131,7 +131,7 @@ static void _i2c_master_async_address_response(
 	dev_inst->buffer_length = dev_inst->buffer_remaining;
 
 	/* Check for status OK. */
-	if (dev_inst->status == STATUS_IN_PROGRESS) {
+	if (dev_inst->status == STATUS_BUSY) {
 		/* Call function based on transfer direction. */
 		if (dev_inst->transfer_direction == 0) {
 			_i2c_master_async_write(dev_inst);
@@ -227,7 +227,7 @@ enum status_code i2c_master_async_read_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -271,7 +271,7 @@ enum status_code i2c_master_async_write_packet(
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -337,7 +337,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if (dev_inst->status != STATUS_IN_PROGRESS) {
+	if (dev_inst->status != STATUS_BUSY) {
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;

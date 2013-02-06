@@ -57,7 +57,7 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Write parameters to the device instance */
 	dev_inst->remaining_tx_buffer_length = length;
 	dev_inst->tx_buffer_ptr = tx_data;
-	dev_inst->tx_status = STATUS_IN_PROGRESS;
+	dev_inst->tx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -82,7 +82,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	 * the interrupt handler do the rest */
 	dev_inst->remaining_rx_buffer_length = length;
 	dev_inst->rx_buffer_ptr = rx_data;
-	dev_inst->rx_status = STATUS_IN_PROGRESS;
+	dev_inst->rx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -326,7 +326,7 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  *
  * \return
  * \retval STATUS_OK                No error occurred during the last transfer
- * \retval STATUS_IN_PROGRESS       A transfer is ongoing
+ * \retval STATUS_BUSY       A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA      The last operation was aborted due to a
  *                                  parity error. The transfer could be affected
  *                                  by external noise.
