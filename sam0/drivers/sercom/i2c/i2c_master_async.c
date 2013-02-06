@@ -55,6 +55,11 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 	/* Find index to save next value in buffer. */
 	uint16_t buffer_index = dev_inst->buffer_length - dev_inst->buffer_remaining--;
 
+	if (!dev_inst->buffer_remaining) {
+		/* Send nack and stop command. */
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);	
+	}
+
 	/* Read byte from slave and put in buffer. */
 	dev_inst->buffer[buffer_index] = i2c_module->DATA.reg;
 }
@@ -77,8 +82,10 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
 		/* Return bad data value. */
-		dev_inst->status = STATUS_ERR_OVERFLOW;
-		return;
+		if (dev_inst->buffer_remaining) {
+			dev_inst->status = STATUS_ERR_OVERFLOW;
+			return;
+		}
 	}
 
 	/* Find index to get next byte in buffer. */
