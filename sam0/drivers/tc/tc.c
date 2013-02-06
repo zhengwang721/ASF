@@ -145,20 +145,20 @@ enum status_code tc_init(
 		return STATUS_ERR_DENIED;
 	}
 
-	/* Set up the TC PWM out pin for channel 0*/
-	if (config->channel_0_pwm_out_enabled) {
+	/* Set up the TC PWM out pin for channel 0 */
+	if (config->channel_pwm_out_enabled[0]) {
 		system_pinmux_get_config_defaults(&pin_conf);
-		pin_conf.mux_position = config->channel_0_pwm_out_mux;
+		pin_conf.mux_position = config->channel_pwm_out_mux[0];
 		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_0_pwm_out_pin, &pin_conf);
+		system_pinmux_pin_set_config(config->channel_pwm_out_pin[0], &pin_conf);
 	}
 
-	/* Set up the TC PWM out pin for channel 1*/
-	if (config->channel_1_pwm_out_enabled) {
+	/* Set up the TC PWM out pin for channel 1 */
+	if (config->channel_pwm_out_enabled[1]) {
 		system_pinmux_get_config_defaults(&pin_conf);
-		pin_conf.mux_position = config->channel_1_pwm_out_mux;
+		pin_conf.mux_position = config->channel_pwm_out_mux[1];
 		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_1_pwm_out_pin, &pin_conf);
+		system_pinmux_pin_set_config(config->channel_pwm_out_pin[1], &pin_conf);
 	}
 
 	/* Enable the user interface clock in the PM */
@@ -237,12 +237,12 @@ enum status_code tc_init(
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT8.CC[0].reg
 				= config->tc_counter_size_conf.tc_8bit_conf. \
-					compare_capture_channel_0;
+					compare_capture_channel[0];
 
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT8.CC[1].reg
 				= config->tc_counter_size_conf.tc_8bit_conf. \
-					compare_capture_channel_1;
+					compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -254,12 +254,12 @@ enum status_code tc_init(
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT16.CC[0].reg
 				= config->tc_counter_size_conf.tc_16bit_conf. \
-					compare_capture_channel_0;
+					compare_capture_channel[0];
 
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT16.CC[1].reg
 				= config->tc_counter_size_conf.tc_16bit_conf. \
-					compare_capture_channel_1;
+					compare_capture_channel[1];
 
 			return STATUS_OK;
 
@@ -271,12 +271,12 @@ enum status_code tc_init(
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT32.CC[0].reg
 				= config->tc_counter_size_conf.tc_32bit_conf. \
-					compare_capture_channel_0;
+					compare_capture_channel[0];
 
 			_tc_wait_for_sync(module_inst);
 			tc_module->COUNT32.CC[1].reg
 				= config->tc_counter_size_conf.tc_32bit_conf. \
-					compare_capture_channel_1;
+					compare_capture_channel[1];
 
 			return STATUS_OK;
 	}

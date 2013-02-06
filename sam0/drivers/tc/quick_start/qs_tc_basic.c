@@ -62,15 +62,15 @@ int main(void)
 	//! [tc_get_config_defaults]
 
 	//! [pwm_channel_0]
-	config.channel_0_pwm_out_enabled = true;
-	config.channel_0_pwm_out_pin = PWM_OUT_PIN;
-	config.channel_0_pwm_out_mux = PWM_OUT_PIN_MUX;
+	config.channel_pwm_out_enabled[0] = true;
+	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
+	config.channel_pwm_out_mux[0] = PWM_OUT_PIN_MUX;
 	//! [pwm_channel_0]
 
 	//! [setup]
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
-	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_0 = 0x7FFF;
+	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[0] = 0x7FFF;
 	//! [setup]
 
 	//! [tc_init]

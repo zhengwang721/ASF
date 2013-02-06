@@ -634,10 +634,8 @@ struct tc_8bit_conf {
 	 *  counter.
 	 */
 	uint8_t period;
-	/** Value to be used for compare match on channel 0. */
-	uint8_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1. */
-	uint8_t compare_capture_channel_1;
+	/** Value to be used for compare match on each channel. */
+	uint8_t compare_capture_channel[2];
 };
 
 /**
@@ -646,10 +644,8 @@ struct tc_8bit_conf {
 struct tc_16bit_conf {
 	/** Initial count value */
 	uint16_t count;
-	/** Value to be used for compare match on channel 0. */
-	uint16_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1. */
-	uint16_t compare_capture_channel_1;
+	/** Value to be used for compare match on each channel. */
+	uint16_t compare_capture_channel[2];
 };
 
 /**
@@ -658,10 +654,8 @@ struct tc_16bit_conf {
 struct tc_32bit_conf {
 	/** Initial count value. */
 	uint32_t count;
-	/** Value to be used for compare match on channel 0. */
-	uint32_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1. */
-	uint32_t compare_capture_channel_1;
+	/** Value to be used for compare match on each channel. */
+	uint32_t compare_capture_channel[2];
 };
 
 /**
@@ -672,22 +666,20 @@ struct tc_32bit_conf {
  * modified by the user application.
  */
 struct tc_conf {
-	/** GCLK generator used to clock the peripheral */
+	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 
-	/** When true the module is enabled during standby
-	 */
+	/** When true the module is enabled during standby. */
 	bool run_in_standby;
-	/** Specifies either 8-, 16-, or 32-bit counter counter size */
+	/** Specifies either 8-, 16-, or 32-bit counter counter size. */
 	enum tc_counter_size counter_size;
-	/** Specifies the prescaler value for GCLK_TC */
+	/** Specifies the prescaler value for GCLK_TC. */
 	enum tc_clock_prescaler clock_prescaler;
-	/** Specifies which waveform generation mode to use */
+	/** Specifies which waveform generation mode to use. */
 	enum tc_wave_generation wave_generation;
 
-	/** Specifies the reload or reset time of the counter and
-	 *  prescaler resynchronization on a re-trigger event for the
-	 *  TC
+	/** Specifies the reload or reset time of the counter and prescaler
+	 *  resynchronization on a re-trigger event for the TC.
 	 */
 	enum tc_reload_action reload_action;
 
@@ -704,40 +696,33 @@ struct tc_conf {
 	uint8_t capture_enable;
 
 	/** When true, one-shot will stop the TC on next HW/SW re-trigger
-	 *  event or overflow/underflow
+	 *  event or overflow/underflow.
 	 */
 	bool oneshot;
 	/** Specifies the direction for the TC to count */
 	enum tc_count_direction count_direction;
 
-	/**  Specifies if the input event source is inverted, when used
-	 *  in PWP, PPW event action
+	/** Specifies if the input event source is inverted, when used in PWP or
+	 *  PPW event action modes.
 	 */
 	bool invert_event_input;
-	/** Must be set to true to enable event actions */
+	/** Must be set to true to enable event actions. */
 	bool enable_event_input;
 
-	/** Specifies which event to trigger if an event is triggered */
+	/** Specifies which event to trigger if an event is triggered. */
 	enum tc_event_action event_action;
 
-	/** Specifies which channel(s) to generate event on when a
-	 *  compare/capture occurs
+	/** Specifies which channel(s) to generate event on when a compare/capture
+	 *  occurs.
 	 */
 	uint16_t event_generation_enable;
 
-	/** When true, PWM output for channel 0 is enabled */
-	bool channel_0_pwm_out_enabled;
-	/** Specifies pin output for channel 0. See datasheet for available pins */
-	uint32_t channel_0_pwm_out_pin;
-	/** Specifies MUX setting for channel 0 output pin */
-	uint32_t channel_0_pwm_out_mux;
-
-	/** When true, PWM output for channel 1 is enabled */
-	bool channel_1_pwm_out_enabled;
-	/** Specifies pin output for channel 1. See datasheet for available pins */
-	uint32_t channel_1_pwm_out_pin;
-	/** Specifies MUX setting for channel 1 output pin */
-	uint32_t channel_1_pwm_out_mux;
+	/** When true, PWM output for the given channel is enabled */
+	bool channel_pwm_out_enabled[2];
+	/** Specifies pin output for each channel. */
+	uint32_t channel_pwm_out_pin[2];
+	/** Specifies MUX setting for each output channel pin */
+	uint32_t channel_pwm_out_mux[2];
 
 	/** This setting determines what size counter is used. */
 	union {
@@ -858,37 +843,37 @@ static inline void tc_get_config_defaults(
 	Assert(config);
 
 	/* Write default config to config struct */
-	config->clock_source              = GCLK_GENERATOR_0;
-	config->counter_size              = TC_COUNTER_SIZE_16BIT;
-	config->clock_prescaler           = TC_CLOCK_PRESCALER_DIV1;
-	config->wave_generation           = TC_WAVE_GENERATION_NORMAL_FREQ;
-	config->reload_action             = TC_RELOAD_ACTION_GCLK;
-	config->run_in_standby            = false;
+	config->clock_source               = GCLK_GENERATOR_0;
+	config->counter_size               = TC_COUNTER_SIZE_16BIT;
+	config->clock_prescaler            = TC_CLOCK_PRESCALER_DIV1;
+	config->wave_generation            = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config->reload_action              = TC_RELOAD_ACTION_GCLK;
+	config->run_in_standby             = false;
 
-	config->waveform_invert_output    = TC_WAVEFORM_INVERT_OUTPUT_NONE;
-	config->capture_enable            = TC_CAPTURE_ENABLE_NONE;
+	config->waveform_invert_output     = TC_WAVEFORM_INVERT_OUTPUT_NONE;
+	config->capture_enable             = TC_CAPTURE_ENABLE_NONE;
 
-	config->count_direction           = TC_COUNT_DIRECTION_UP;
-	config->oneshot                   = false;
+	config->count_direction            = TC_COUNT_DIRECTION_UP;
+	config->oneshot                    = false;
 
-	config->enable_event_input        = false;
-	config->invert_event_input        = false;
-	config->event_action              = TC_EVENT_ACTION_OFF;
-	config->event_generation_enable   = TC_EVENT_GENERATION_ENABLE_NONE;
+	config->enable_event_input         = false;
+	config->invert_event_input         = false;
+	config->event_action               = TC_EVENT_ACTION_OFF;
+	config->event_generation_enable    = TC_EVENT_GENERATION_ENABLE_NONE;
 
-	config->channel_0_pwm_out_enabled = false;
-	config->channel_0_pwm_out_pin     = 0;
-	config->channel_0_pwm_out_mux     = 0;
+	config->channel_pwm_out_enabled[0] = false;
+	config->channel_pwm_out_pin[0]     = 0;
+	config->channel_pwm_out_mux[0]     = 0;
 
-	config->channel_1_pwm_out_enabled = false;
-	config->channel_1_pwm_out_pin     = 0;
-	config->channel_1_pwm_out_mux     = 0;
+	config->channel_pwm_out_enabled[1] = false;
+	config->channel_pwm_out_pin[1]     = 0;
+	config->channel_pwm_out_mux[1]     = 0;
 
 	config->tc_counter_size_conf.tc_16bit_conf.count
 		= 0x0000;
-	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_0
+	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[0]
 		= 0x0000;
-	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_1
+	config->tc_counter_size_conf.tc_16bit_conf.compare_capture_channel[1]
 		= 0x0000;
 }
 
