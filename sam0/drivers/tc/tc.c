@@ -315,7 +315,7 @@ enum status_code tc_set_count_value(
 	/* Write to based on the TC counter_size */
 	switch (dev_inst->counter_size) {
 	case TC_COUNTER_SIZE_8BIT:
-		tc_instance->COUNT8.COUNT.reg = (uint8_t)count;
+		tc_instance->COUNT8.COUNT.reg  = (uint8_t)count;
 		return STATUS_OK;
 
 	case TC_COUNTER_SIZE_16BIT:
@@ -395,14 +395,14 @@ uint32_t tc_get_capture_value(
 
 	/* Read out based on the TC counter size */
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		return (uint32_t)tc_instance->COUNT8.CC[channel_index].reg;
+		case TC_COUNTER_SIZE_8BIT:
+			return (uint32_t)tc_instance->COUNT8.CC[channel_index].reg;
 
-	case TC_COUNTER_SIZE_16BIT:
-		return (uint32_t)tc_instance->COUNT16.CC[channel_index].reg;
+		case TC_COUNTER_SIZE_16BIT:
+			return (uint32_t)tc_instance->COUNT16.CC[channel_index].reg;
 
-	case TC_COUNTER_SIZE_32BIT:
-		return tc_instance->COUNT32.CC[channel_index].reg;
+		case TC_COUNTER_SIZE_32BIT:
+			return tc_instance->COUNT32.CC[channel_index].reg;
 	}
 	Assert(false);
 	return 0;
@@ -438,36 +438,26 @@ enum status_code tc_set_compare_value(
 
 	/* Read out based on the TC counter size */
 	switch (dev_inst->counter_size) {
-	case TC_COUNTER_SIZE_8BIT:
-		if (channel_index < 2) {
-			tc_instance->COUNT8.CC[channel_index].reg
-				= (uint8_t)compare;
-			return STATUS_OK;
-		} else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		case TC_COUNTER_SIZE_8BIT:
+			if (channel_index < 2) {
+				tc_instance->COUNT8.CC[channel_index].reg  = (uint8_t)compare;
+				return STATUS_OK;
+			}
 
-	case TC_COUNTER_SIZE_16BIT:
-		if (channel_index < 2) {
-			tc_instance->COUNT16.CC[channel_index].reg
-				= (uint16_t)compare;
-			return STATUS_OK;
-		} else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		case TC_COUNTER_SIZE_16BIT:
+			if (channel_index < 2) {
+				tc_instance->COUNT16.CC[channel_index].reg = (uint16_t)compare;
+				return STATUS_OK;
+			}
 
-	case TC_COUNTER_SIZE_32BIT:
-		if (channel_index < 2) {
-			tc_instance->COUNT16.CC[channel_index].reg
-				= (uint32_t)compare;
-			return STATUS_OK;
-		} else {
-			return STATUS_ERR_INVALID_ARG;
-		}
-
-	default:
-		return STATUS_ERR_INVALID_ARG;
+		case TC_COUNTER_SIZE_32BIT:
+			if (channel_index < 2) {
+				tc_instance->COUNT16.CC[channel_index].reg = (uint32_t)compare;
+				return STATUS_OK;
+			}
 	}
+
+	return STATUS_ERR_INVALID_ARG;
 }
 
 /**
@@ -480,8 +470,8 @@ enum status_code tc_set_compare_value(
  * this function.
  *
  * \note When resetting a 32-bit counter use in only the master
- * counter's \ref dev_inst struct, as a parameter. not the slave \ref
- * dev_inst.
+ *       counter's \ref dev_inst struct, as a parameter. not the slave
+ *       \ref dev_inst.
  *
  * \param[in] dev_inst  Pointer to the device struct
  *
@@ -531,7 +521,7 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
 		_tc_wait_for_sync(dev_inst);
 
 		/* Reset this TC module */
-		tc_instance->CTRLA.reg |= TC_CTRLA_SWRST;
+		tc_instance->CTRLA.reg  |= TC_CTRLA_SWRST;
 	}
 
 	return STATUS_OK;
@@ -574,7 +564,7 @@ enum status_code tc_set_top_value (
 
 	switch (dev_inst->counter_size) {
 	case TC_COUNTER_SIZE_8BIT:
-		tc_instance->COUNT8.PER.reg = (uint8_t)top_value;
+		tc_instance->COUNT8.PER.reg    = (uint8_t)top_value;
 		return STATUS_OK;
 
 	case TC_COUNTER_SIZE_16BIT:
