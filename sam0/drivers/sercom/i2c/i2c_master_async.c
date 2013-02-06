@@ -149,7 +149,7 @@ static void _i2c_master_async_address_response(
  */
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t callback,
+		const i2c_master_callback_t callback,
 		enum i2c_master_callback callback_type)
 {
 	/* Sanity check. */
@@ -216,7 +216,6 @@ enum status_code i2c_master_async_read_packet(
 	if (dev_inst->buffer_remaining > 0) {
 		return STATUS_ERR_BUSY;
 	}
-
 
 	/* Save packet to device instance. */
 	dev_inst->buffer = packet->data;
@@ -309,12 +308,12 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		dev_inst->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
-		if ((callback_mask & I2C_MASTER_CALLBACK_READ_COMPLETE)
+		if ((callback_mask & (1 << I2C_MASTER_CALLBACK_READ_COMPLETE))
 				&& (dev_inst->transfer_direction == 1)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_READ_COMPLETE](dev_inst);
 
-		} else if ((callback_mask & I2C_MASTER_CALLBACK_WRITE_COMPLETE)
+		} else if ((callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE))
 				&& (dev_inst->transfer_direction == 0)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](dev_inst);
@@ -344,9 +343,9 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		if (dev_inst->status != STATUS_ERR_PACKET_COLLISION) {
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
 		}
+
 		/* Call error callback if enabled and registered. */
-		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
-				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_ERROR)) {
+		if (callback_mask & (1 << I2C_MASTER_CALLBACK_ERROR)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_ERROR](dev_inst);
 
