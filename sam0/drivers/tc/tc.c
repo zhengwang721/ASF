@@ -50,19 +50,14 @@
  *
  * \return Index of given instance.
  */
-uint8_t _tc_get_inst_index(Tc *tc_instance);
-uint8_t _tc_get_inst_index(Tc *tc_instance)
+static uint8_t _tc_get_inst_index(Tc *const tc_instance)
 {
-	/* Variable used for iteration. */
-	uint8_t i;
-	/* Save address of tc instance. */
-	uint32_t hw_dev = (uint32_t)tc_instance;
-	/* Save all available TC instances for compare. */
-	Tc *tc_instances[TC_INST_NUM] = TC_INSTS;
+	/* List of available TC modules. */
+	Tc *const tc_instances[TC_INST_NUM] = TC_INSTS;
 
 	/* Find index for tc instance. */
-	for (i = 0; i < TC_INST_NUM; i++) {
-		if (hw_dev == (uint32_t)tc_instances[i]) {
+	for (uint32_t i = 0; i < TC_INST_NUM; i++) {
+		if (tc_instance == tc_instances[i]) {
 			return i;
 		}
 	}
@@ -502,7 +497,7 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
 	Assert(dev_inst->hw_dev);
 
 	/* Get a pointer to the module hardware instance */
-	TcCount8 *tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
 
 	/* Disable this module */
 	tc_disable(dev_inst);
@@ -517,10 +512,10 @@ enum status_code tc_reset(const struct tc_module *const dev_inst)
 		_tc_wait_for_sync(dev_inst);
 
 		/* Reset this TC module */
-		tc_instance->CTRLA.reg |= TC_CTRLA_SWRST;
+		tc_instance->CTRLA.reg  |= TC_CTRLA_SWRST;
 
 		/* Get the slave hw_dev pointer */
-		Tc *slave = (Tc*)(dev_inst->hw_dev + TC_NEXT_TC);
+		Tc *const slave = (Tc *const)(dev_inst->hw_dev + TC_NEXT_TC);
 
 		/* Synchronize */
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
