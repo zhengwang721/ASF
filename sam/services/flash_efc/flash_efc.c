@@ -136,8 +136,9 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	Efc *p_efc;
 	uint16_t us_page;
 	uint16_t us_offset;
+	uint8_t uc_gpnvm2;
 
-#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
+#if (SAM3XA || SAM3U4)
 	if (ul_addr >= IFLASH1_ADDR) {
 		p_efc = EFC1;
 		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
@@ -146,6 +147,29 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 		p_efc = EFC0;
 		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
+	}
+#elif (SAM4SD16 || SAM4SD32)
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (ul_addr >= IFLASH1_ADDR) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC0;
+			us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
+			us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
+		} else {
+			p_efc = EFC1;
+			us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
+			us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
+		} 
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC1;
+			us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
+			us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
+		} else {
+			p_efc = EFC0;
+			us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
+			us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
+		}
 	}
 #elif (SAM3SD8)
 	p_efc = EFC;
