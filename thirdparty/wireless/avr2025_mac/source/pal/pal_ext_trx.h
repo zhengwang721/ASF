@@ -1,7 +1,7 @@
 /**
- * @file pal.h
+ * @file pal_ext_trx.h
  *
- * @brief PAL related APIs
+ * @brief PAL related APIs for ecternally plugged transceivers
  *
  *  Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
@@ -37,11 +37,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-/*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
 
 /* Prevent double inclusion */
 #ifndef PAL_EXT_TRX_H
@@ -52,6 +47,12 @@
  *        all return value enums.
  */
 
+ /** 
+  * \ingroup group_pal
+  * \defgroup group_pal_ext PAL Wrapper for External Transceivers
+  * This module includes api's and defenitions required for Devices with externally plugged transceivers(Non Soc's)
+  * @{
+  */
 /* === Includes ============================================================ */
 
 #include "compiler.h"
@@ -59,37 +60,37 @@
 #include "ioport.h"
 /* === Macros =============================================================== */
 
-/*
+/**
  * Write access command of the transceiver
  */
 #define WRITE_ACCESS_COMMAND            (0xC0)
 
-/*
+/**
  * Read access command to the tranceiver
  */
 #define READ_ACCESS_COMMAND             (0x80)
 
-/*
+/**
  * Frame write command of transceiver
  */
 #define TRX_CMD_FW                      (0x60)
 
-/*
+/**
  * Frame read command of transceiver
  */
 #define TRX_CMD_FR                      (0x20)
 
-/*
+/**
  * SRAM write command of transceiver
  */
 #define TRX_CMD_SW                      (0x40)
 
-/*
+/**
  * SRAM read command of transceiver
  */
 #define TRX_CMD_SR                      (0x00)
 
-/*
+/**
  * Set TRX GPIO pins.
  */
 #define RST_HIGH()                      ioport_set_pin_level(AT86RFX_RST_PIN, HIGH)
@@ -174,7 +175,6 @@ extern "C" {
      * @param[out] data Pointer to the location to store frame
      * @param[in] length Number of bytes to be read from the frame
      * buffer.
-     * @ingroup apiPalApi
      */
     void pal_trx_frame_read(uint8_t *data, uint8_t length);
 
@@ -185,7 +185,6 @@ extern "C" {
      *
      * @param[in] data Pointer to data to be written into frame buffer
      * @param[in] length Number of bytes to be written into frame buffer
-     * @ingroup apiPalApi
      */
     void pal_trx_frame_write(uint8_t *data, uint8_t length);
 
@@ -198,7 +197,6 @@ extern "C" {
      * from which the data shall be read
      *
      * @return value of the register read
-     * @ingroup apiPalApi
      */
     uint8_t pal_trx_reg_read(uint8_t addr);
 
@@ -210,7 +208,6 @@ extern "C" {
      * @param addr Address of the trx register
      * @param data Data to be written to trx register
      *
-     * @ingroup apiPalApi
      */
     void pal_trx_reg_write(uint8_t addr, uint8_t data);
 
@@ -222,7 +219,6 @@ extern "C" {
      * @param   pos   bit position of the subregister
      *
      * @return  value of the read bit(s)
-     * @ingroup apiPalApi
      */
     uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos);
 
@@ -233,7 +229,6 @@ extern "C" {
      * @param[in]   mask  Bit mask of the subregister
      * @param[in]   pos   Bit position of the subregister
      * @param[out]  new_value  Data, which is muxed into the register
-     * @ingroup apiPalApi
      */
     void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos, uint8_t new_value);
 
@@ -245,7 +240,6 @@ extern "C" {
      * @param[in] addr Start address in SRAM for read operation
      * @param[out] data Pointer to the location where data stored
      * @param[in] length Number of bytes to be read from SRAM
-     * @ingroup apiPalApi
      */
     void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length);
 
@@ -257,7 +251,6 @@ extern "C" {
      * @param addr Start address in the SRAM for the write operation
      * @param data Pointer to the data to be written into SRAM
      * @param length Number of bytes to be written into SRAM
-     * @ingroup apiPalApi
      */
     void pal_trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length);
 
@@ -270,7 +263,6 @@ extern "C" {
      * @param addr Start address in the SRAM for the write operation
      * @param idata Pointer to the data written/read into/from SRAM
      * @param length Number of bytes written/read into/from SRAM
-     * @ingroup apiPalApi
      */
     void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length);
 
@@ -280,13 +272,16 @@ extern "C" {
      * @brief SPI done callback initialization
      *
      * @param spi_done_cb Pointer to SPI done callback function
-     * @ingroup apiPalApi
      */
     void pal_spi_done_cb_init(void *spi_done_cb);
 #endif
 
+    /**
+     * @brief Initializes the SPI interface for communication with the transceiver
+     */
     void pal_spi_init(void);
 
+	//! @}
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

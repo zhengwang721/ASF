@@ -46,7 +46,13 @@
 #include "status_codes.h"
 #include "conf_common_sw_timer.h"
 
-
+/**
+ * \ingroup group_pal
+ * \defgroup group_pal_common_sw_timer
+ * Implements the software Algorithm for Timer Handling in the Stack
+ * @{
+ */
+ 
 /*
  * Type definition for callbacks for timer functions
  */
@@ -123,18 +129,69 @@ typedef struct timer_info_tag
 } timer_info_t;
 
 
+/**
+ * @brief Returns a timer id to be used before starting a timer
+ * @param timer_id Value of the id returned by the function
+ */
 status_code_t sw_timer_get_id(uint8_t* timer_id);
+
+    /**
+     * \brief Starts a  timer
+     *
+     * This function starts a regular timer and installs the corresponding
+     * callback function handle the timeout event.
+     *
+     * \param timer_id Timer identifier
+     * \param timer_count Timeout in microseconds
+     * \param timeout_type \ref TIMEOUT_RELATIVE or \ref TIMEOUT_ABSOLUTE
+     * \param timer_cb Callback handler invoked upon timer expiry
+     * \param param_cb Argument for the callback handler
+     *
+     */
 status_code_t sw_timer_start(uint8_t timer_id, 
 							uint32_t timer_count,  
 							sw_timeout_type_t timeout_type, 
 							FUNC_PTR timer_cb, 
 							void* param_cb);
+							
+							    /**
+     * \brief Stops a running timer
+     *
+     * This function stops a running timer with specified timer_id
+     *
+     * \param timer_id Timer identifier
+     *
+     */
 status_code_t sw_timer_stop (uint8_t timer_id);
+
+    /**
+     * \brief Gets current time
+     *
+     * This function returns the current time.
+     *
+     * \param[out] current_time Returns current system time
+     */
 uint32_t sw_timer_get_time(void);
+
+    /**
+     * \brief Checks whether a given timer is running or not
+     *
+     *
+     * \param[out] True if the timer is running else False
+     */
 bool sw_timer_is_running(uint8_t timer_id);
 
+    /**
+     * \brief Handles Queues and Callbacks for Expired Timers
+     */
 void sw_timer_service(void);
+
+    /**
+     * \brief Initializes the Software Timer module
+
+     */
 void sw_timer_init(void);
 
+//! @}
 #endif /* COMMON_SW_TIMER_H */
 /* EOF */

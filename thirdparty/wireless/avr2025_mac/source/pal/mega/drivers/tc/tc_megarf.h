@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file tc_megarf.h
  *
- * \brief AVR XMEGA Timer Counter (TC) driver
+ * \brief AVR MEGA Timer Counter (TC) driver
  *
  * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
  *
@@ -43,7 +43,7 @@
 #ifndef _TC_H_
 #define _TC_H_
 
-
+// Timer prescalars
 typedef enum TC_CLKSEL_enum {
 	TC_CLKSEL_OFF_gc = (0x00),	///< Timer Off
 	TC_CLKSEL_DIV1_gc = (0x01),	///< System Clock
@@ -56,6 +56,7 @@ typedef enum TC_CLKSEL_enum {
 	
 } TC_CLKSEL_t;
 
+//Timer Modes of operation
 typedef enum TC_MODE_enum {
   
   NORMAL     = 0X00,
@@ -97,23 +98,56 @@ enum tc_cc_channel_t {
  * the callback function must match the tc_callback_t type.
  *
  */
-
-
 typedef void (*tc_callback_t) (void);
 
+
+/**
+ * @brief Enable Timer 
+ * @param tc Timer Address
+ */
 void tc_enable(volatile void *tc);
 
+/**
+ * @brief Disable Timer 
+ * @param tc Timer Address
+ */
 void tc_disable(volatile void *tc);
 
+/**
+ * @brief Register a Overflow interrupt callback 
+ * @param tc Timer Address
+ * @param callback Callback called once Overflow interrupt occurs
+ */
 void tc_set_overflow_interrupt_callback(volatile void *tc,tc_callback_t callback);
 
+/**
+ * @brief Register a Compare interrupt callback 
+ * @param tc Timer Address
+ * @param callback Callback called once Compare interrupt occurs in channel A
+ */
 void tc_set_compa_interrupt_callback(volatile void *tc, tc_callback_t callback);
 
+
+/**
+ * @brief Register a Compare interrupt callback 
+ * @param tc Timer Address
+ * @param callback Callback called once Compare interrupt occurs in channel B
+ */
 void tc_set_compb_interrupt_callback(volatile void *tc, tc_callback_t callback);
 
+/**
+ * @brief Register a Compare interrupt callback 
+ * @param tc Timer Address
+ * @param callback Callback called once Compare interrupt occurs in channel C
+ */
 void tc_set_compc_interrupt_callback(volatile void *tc, tc_callback_t callback);
 
 
+/**
+ * @brief Select a source for a timer 
+ * @param tc Timer Address
+ * @param TC_CLKSEL_enum Select a source from enum type
+ */
 static inline void tc_write_clock_source(volatile void *tc,
 		TC_CLKSEL_t TC_CLKSEL_enum)
 {
@@ -135,6 +169,10 @@ static inline void tc_write_clock_source(volatile void *tc,
 
 }
 
+/**
+ * @brief Enable Overflow Interrupt 
+ * @param tc Timer Address
+ */
 static inline void tc_enable_ovf_int(volatile void *tc)
 {
 	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -154,6 +192,11 @@ static inline void tc_enable_ovf_int(volatile void *tc)
 
 }
 
+
+/**
+ * @brief Enable Compare Interrupt in channel A
+ * @param tc Timer Address
+ */
 static inline void tc_enable_compa_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -173,6 +216,11 @@ static inline void tc_enable_compa_int(volatile void *tc)
         
 }
 
+
+/**
+ * @brief Enable Compare Interrupt in channel B
+ * @param tc Timer Address
+ */
 static inline void tc_enable_compb_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -192,6 +240,11 @@ static inline void tc_enable_compb_int(volatile void *tc)
         
 }
 
+
+/**
+ * @brief Enable Compare Interrupt in channel C
+ * @param tc Timer Address
+ */
 static inline void tc_enable_compc_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -211,6 +264,11 @@ static inline void tc_enable_compc_int(volatile void *tc)
         
 }
 
+
+/**
+ * @brief Disable Overflow Interrupt 
+ * @param tc Timer Address
+ */
 static inline void tc_disable_ovf_int(volatile void *tc)
 {
 	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -230,6 +288,11 @@ static inline void tc_disable_ovf_int(volatile void *tc)
 
 }
 
+
+/**
+ * @brief Disable Compare Interrupt in channel A
+ * @param tc Timer Address
+ */
 static inline void tc_disable_compa_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -249,6 +312,10 @@ static inline void tc_disable_compa_int(volatile void *tc)
         
 }
 
+/**
+ * @brief Disable Compare Interrupt in channel B
+ * @param tc Timer Address
+ */
 static inline void tc_disable_compb_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -268,6 +335,10 @@ static inline void tc_disable_compb_int(volatile void *tc)
         
 }
 
+/**
+ * @brief Disable Compare Interrupt in channel C
+ * @param tc Timer Address
+ */
 static inline void tc_disable_compc_int(volatile void *tc)
 {
   	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -287,6 +358,12 @@ static inline void tc_disable_compc_int(volatile void *tc)
         
 }
 
+/**
+ * @brief Write Compare register with timer Value
+ * @param tc Timer Address
+  * @param channel_index Compare Channel to be used
+   * @param value Compare value to be written
+ */
 static inline void tc_write_cc(volatile void *tc,
 		enum tc_cc_channel_t channel_index, uint16_t value)
 
@@ -298,6 +375,10 @@ static inline void tc_write_cc(volatile void *tc,
 
 }
 
+/**
+ * @brief Checks whether a timer has overflowed
+ * @param tc Timer Address
+ */
 static inline bool tc_is_overflow(volatile void *tc)
 {
   
@@ -320,6 +401,10 @@ static inline bool tc_is_overflow(volatile void *tc)
 	
 }
 
+/**
+ * @brief Clears Overflow Flag
+ * @param tc Timer Address
+ */
 static inline void clear_ovf_flag(volatile void *tc)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -337,10 +422,13 @@ static inline void clear_ovf_flag(volatile void *tc)
 
         {}
   
-
-
 }
 
+
+/**
+ * @brief Checks whether a Compare Match has occured in Channel A
+ * @param tc Timer Address
+ */
 static inline bool tc_is_compa_match(volatile void *tc)
 {
   
@@ -363,6 +451,10 @@ static inline bool tc_is_compa_match(volatile void *tc)
 	
 }
 
+/**
+ * @brief Clears Compare Match  Flag in channel A
+ * @param tc Timer Address
+ */
 static inline void clear_compa_flag(volatile void *tc)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -384,6 +476,10 @@ static inline void clear_compa_flag(volatile void *tc)
 
 }
 
+/**
+ * @brief Checks whether a Compare Match has occured in Channel B
+ * @param tc Timer Address
+ */
 static inline bool tc_is_compb_match(volatile void *tc)
 {
   
@@ -406,6 +502,10 @@ static inline bool tc_is_compb_match(volatile void *tc)
 	
 }
 
+/**
+ * @brief Clears Compare Match  Flag in channel B
+ * @param tc Timer Address
+ */
 static inline void clear_compb_flag(volatile void *tc)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -427,6 +527,10 @@ static inline void clear_compb_flag(volatile void *tc)
 
 }
 
+/**
+ * @brief Checks whether a Compare Match has occured in Channel C
+ * @param tc Timer Address
+ */
 static inline bool tc_is_compc_match(volatile void *tc)
 {
   
@@ -449,6 +553,10 @@ static inline bool tc_is_compc_match(volatile void *tc)
 	
 }
 
+/**
+ * @brief Clears Compare Match  Flag in channel C
+ * @param tc Timer Address
+ */
 static inline void clear_compc_flag(volatile void *tc)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -468,6 +576,11 @@ static inline void clear_compc_flag(volatile void *tc)
   
 }
 
+/**
+ * @brief Writes a count value to the Timer Counter Register
+ * @param tc Timer Address
+ * @param value count to be written in the register
+ */
 static inline void tc_write_count(volatile void *tc, uint16_t value)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -487,6 +600,11 @@ static inline void tc_write_count(volatile void *tc, uint16_t value)
 }
 
 
+/**
+ * @brief Reads the  count value in the Timer Counter Register
+ * @param tc Timer Address
+ * @return  count  in the register
+ */
 static inline uint16_t tc_read_count(volatile void *tc)
 {
     	if ((uintptr_t) tc == (uintptr_t) & TCCR1A) {
@@ -504,6 +622,11 @@ static inline uint16_t tc_read_count(volatile void *tc)
 	return NULL;
 }
 
+/**
+ * @brief Sets a timer in a particular mode of operation
+ * @param tc Timer Address
+ * @param mode Enum value of the selected mode
+ */
 static inline void tc_set_mode(volatile void *tc, TC_MODE_t mode)
 {
   

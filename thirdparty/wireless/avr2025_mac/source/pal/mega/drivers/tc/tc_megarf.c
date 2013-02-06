@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file tc_megarf.c
  *
- * \brief AVR XMEGA TC Driver
+ * \brief AVR MEGA TC Driver
  *
  * Copyright (c) 2010 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
 
 #include "status_codes.h"
 
-//! \internal Local storage of Timer Counter TCC0 interrupt callback function
+//! \internal Local storage of Timer Counter TCC1  interrupt callback function
 static tc_callback_t tc_tccr1_ovf_callback;
 static tc_callback_t tc_tccr1_compa_callback;
 static tc_callback_t tc_tccr1_compb_callback;
@@ -58,10 +58,7 @@ static tc_callback_t tc_tccr1_compc_callback;
 
 /**
  * \internal
- * \brief Interrupt handler for Timer Counter C0 overflow
- *
- * This function will handle interrupt on Timer Counter CO overflow and
- * call the callback function.
+ * \brief Interrupt handler for Timer Counter  overflow
  */
 ISR(TIMER1_OVF_vect)
 {
@@ -70,7 +67,9 @@ ISR(TIMER1_OVF_vect)
 	}
 }
 
-
+/**
+ * \brief Interrupt handler for Timer Counter  Compare Match in Channel A
+ */
 ISR(TIMER1_COMPA_vect)
 {
 	if (tc_tccr1_compa_callback) {
@@ -78,6 +77,9 @@ ISR(TIMER1_COMPA_vect)
 	}
 }
 
+/**
+ * \brief Interrupt handler for Timer Counter  Compare Match in Channel B
+ */
 ISR(TIMER1_COMPB_vect)
 {
 	if (tc_tccr1_compb_callback) {
@@ -85,6 +87,9 @@ ISR(TIMER1_COMPB_vect)
 	}
 }
 
+/**
+ * \brief Interrupt handler for Timer Counter  Compare Match in Channel C
+ */
 ISR(TIMER1_COMPC_vect)
 {
 	if (tc_tccr1_compc_callback) {
@@ -92,6 +97,7 @@ ISR(TIMER1_COMPC_vect)
 	}
 }
 
+//!  Local storage of Timer Counter  TCC3 interrupt callback function
 static tc_callback_t tc_tccr3_ovf_callback;
 static tc_callback_t tc_tccr3_compa_callback;
 static tc_callback_t tc_tccr3_compb_callback;
@@ -126,6 +132,7 @@ ISR(TIMER3_COMPC_vect)
 	}
 }
 
+//!  Local storage of Timer Counter  TCC4 interrupt callback function
 static tc_callback_t tc_tccr4_ovf_callback;
 static tc_callback_t tc_tccr4_compa_callback;
 static tc_callback_t tc_tccr4_compb_callback;
@@ -160,6 +167,7 @@ ISR(TIMER4_COMPC_vect)
 	}
 }
 
+//!  Local storage of Timer Counter  TCC5 interrupt callback function
 static tc_callback_t tc_tccr5_ovf_callback;
 static tc_callback_t tc_tccr5_compa_callback;
 static tc_callback_t tc_tccr5_compb_callback;

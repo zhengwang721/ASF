@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file flash.h
  *
  * \brief MEGA FLASH DRIVER
  *
@@ -45,6 +45,8 @@
 #ifndef FLASH_H
 #define FLASH_H
 
+/* Flash Commands*/
+
 #if defined(__ICCAVR__)
 
 #define PGM_READ_BYTE_FAR(x) __extended_load_program_memory((const unsigned char __farflash *)x)
@@ -59,7 +61,7 @@
 #define FLASH_PAGE_WRITE(addr)  _SPM_24_PAGEWRITE(addr)
 
 
-#endif
+#endif // #if defined(__ICCAVR__)
 
 #if defined(__GNUC__)
 
@@ -72,65 +74,92 @@
 #define SPM_BUSY_WAIT() boot_spm_busy_wait()
 #define ENABLE_RWW_SECTION() boot_rww_enable()
 #define EEPROM_BUSY_WAIT() eeprom_busy_wait()
-
+/* Flash write abstraction */
 #define FLASH_ERASE(addr)  boot_page_erase(addr)
 #define FLASH_PAGE_FILL(addr, data)  boot_page_fill(addr, data)
 #define FLASH_PAGE_WRITE(addr)  boot_page_write(addr)
 
-#endif
+#endif // #if defined(__GNUC__)
 
-void flash_write(uint32_t , uint32_t , uint8_t*);
+/**
+ * @brief Writes data to flash location : Performs all activities like filling the page buffer,erasing the 
+ * flash page and pushing the data to the appropriate page address
+ *
+ * @param flash_addr    Flash address to be written
+ * @param length        Number of bytes to write
+ * @param data          Pointer to data location
+ *
+ */
+void flash_write(uint32_t flash_addr, uint32_t length, uint8_t *data);
 
-void flash_read(uint32_t , uint32_t  ,uint8_t*);
 
+/**
+ *  @brief Reads data from the flash memory
+ * @param read_addr Address in the Flash to be read
+ * @param len  		Number of bytes to be read
+ * @param ret_buf	Pointer to the  location of the read data
+ */
+void flash_read(uint32_t read_addr, uint32_t len ,uint8_t *ret_buf);
 
+/**
+ * @brief Erases a page 
+ * @param page_number The page that has to be erased
+ */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_erase_page(uint32_t);
+void flash_erase_page(uint32_t page_number);
 #endif
 #ifdef __GNUC__
-void flash_erase_page(uint32_t )
+void flash_erase_page(uint32_t page_number);
     __attribute__((section(".bootloader"),noinline));
 #endif
 
 
+/**
+ * @brief Fills the temporary page buffer
+ *
+ * This function fills the temporay flash page buffer.
+ *
+ * @param flash_addr    address of flash to be written
+ * @param length        Length of provide data buffer
+ * @param data          Pointer to data buffer
+ *
+ */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_write_page(uint32_t );
+void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data );
 #endif
 #ifdef __GNUC__
-void flash_write_page(uint32_t )
+void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data );
     __attribute__((section(".bootloader"),noinline));
 #endif
 
 
+ /**
+ * @brief Erases and Writes the actual flash page
+ *
+ * This function writes the data from the temporary flash page buffer to the
+ * actual flash page.
+ *
+ * @param page_start_addr  Start address of the flash page
+ *
+ */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_fill_page_buffer(uint32_t , uint16_t , uint8_t* );
+void flash_program_page(uint32_t page_start_addr);
 #endif
 #ifdef __GNUC__
-void flash_fill_page_buffer(uint32_t , uint16_t , uint8_t*)
+void flash_program_page(uint32_t page_start_addr)
     __attribute__((section(".bootloader"),noinline));
 #endif
 
 
- 
-#ifdef __ICCAVR__
-#pragma location = "bootloader"
-void flash_program_page(uint32_t ) ;
-#endif
-#ifdef __GNUC__
-void flash_program_page(uint32_t )
-    __attribute__((section(".bootloader"),noinline));
-#endif
-
-
-
+/** Page size */
 #if 	AVR8_PART_IS_DEFINED(ATmega128RFA1) | \
 		AVR8_PART_IS_DEFINED(ATmega256RFR2)
 
 #define FLASH_PAGE_SIZE      (SPM_PAGESIZE)
-#define FLASH_SIZE (FLASHEND+1)
+#define FLASH_SIZE 			 (FLASHEND+1)
 
 #endif
 
