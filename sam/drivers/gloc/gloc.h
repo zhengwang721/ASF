@@ -119,7 +119,7 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst);
  * \section gloc_basic GLOC basic usage
  *
  * This use case will demonstrate how to initialize the GLOC module to
- * encryption or decryption data.
+ * match the truth table for simple glue logic functions.
  *
  *
  * \section gloc_basic_setup Setup steps
