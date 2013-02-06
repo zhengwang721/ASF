@@ -45,6 +45,13 @@
 #include <stdint.h>
 #include "hw_timer.h"
 
+/**
+ * \ingroup group_pal_common_sw_timer
+ * \defgroup group_pal_common_hw_timer
+ * Implements a common api interface for accessing timer drivers of all architectures
+ * @{
+ */
+ 
 #define DEF_1MHZ	(1000000)
 #define TIMER_PERIOD  UINT16_MAX
 
@@ -89,5 +96,6 @@ void tmr_ovf_callback(void);
  */
 void tmr_cca_callback(void);
 
+//! @}
 #endif /* COMMON_HW_TIMER_H */
 /* EOF */

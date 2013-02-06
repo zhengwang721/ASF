@@ -50,8 +50,6 @@
 
 
 
-
-
 void flash_write(uint32_t flash_addr, uint32_t length, uint8_t *data)
 {
     static uint8_t temp_buf[SPM_PAGESIZE];
@@ -64,34 +62,36 @@ void flash_write(uint32_t flash_addr, uint32_t length, uint8_t *data)
     {
         next_page_addr = ((flash_addr + SPM_PAGESIZE)-(flash_addr%SPM_PAGESIZE));
         
+		// copy the data in the page to be written into a temporary buffer,before erasing
         flash_read((flash_addr - (flash_addr%SPM_PAGESIZE)),SPM_PAGESIZE,temp_buf);
         
+		//fill the temporary page buffer starting from address 0
         flash_fill_page_buffer(0x0000, SPM_PAGESIZE, temp_buf);
         
-        
+        /* If the length of bytes to be written crosses the current page,
+		write till the end of the current page and calculate the remaining length to be written*/
         if((flash_addr+remaining_len)>(next_page_addr))
         {
             current_len = (next_page_addr-flash_addr);
-        
-        
+             
         }
         else
-        {
-        
+        {        
             current_len = remaining_len;
-        
         }
         
         remaining_len -= current_len ;
         
+		// Fill the page buffer with the data to be written at the given address
         flash_fill_page_buffer(flash_addr, current_len, ptr);
+        /* Erase and program flash page */
         flash_program_page(flash_addr);
         flash_addr = next_page_addr ;
         ptr += current_len;
-        /* Erase and program flash page */
+
     
     
-    } while (remaining_len != 0);
+    } while (remaining_len != 0); //Check if there is remaining  data  to be written to the next page
     
    
 }
@@ -104,49 +104,20 @@ void flash_erase_page(uint32_t page_number)
 {
   
     uint32_t page_start_addr;
+	//Find the start address of the given page number
     page_start_addr = (page_number * FLASH_PAGE_SIZE) ;
     irqflags_t flags;
     flags = cpu_irq_save();
     
     EEPROM_BUSY_WAIT();
-    
+    //Perform Page Erase
     FLASH_ERASE(page_start_addr);
     SPM_BUSY_WAIT();  // Wait until the memory is erased.
     
-    // Reenable RWW-section again. We need this if we want to jump back
-    // to the application after bootloading.
+    // Reenable RWW-section again. 
     ENABLE_RWW_SECTION();
     
     cpu_irq_restore(flags);
-}
-
-
-
-
-#ifdef __ICCAVR__
-#pragma optimize = no_inline
-#endif
-void flash_write_page(uint32_t page_start_addr)
-{
-    irqflags_t flags;
-    
-    
-    
-    flags = cpu_irq_save();
-    
-    
-    EEPROM_BUSY_WAIT();
-    
-    FLASH_PAGE_WRITE(page_start_addr);  // Store buffer in flash page.
-    SPM_BUSY_WAIT();  // Wait until the memory is written.
-    
-    // Reenable RWW-section again. We need this if we want to jump back
-    // to the application after bootloading.
-    ENABLE_RWW_SECTION();
-    
-    cpu_irq_restore(flags);
-    
-    
 }
 
 
@@ -160,21 +131,21 @@ void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data 
     uint8_t write_length = length;
     uint16_t start_offset = (flash_addr%SPM_PAGESIZE);
     
-    if(start_offset%2) //odd address
-    {
-    
+	/* For even address we can directly write a word to the address.
+	  For odd address the previous byte has to be copied and written together as a word */
+    if(start_offset%2)  //odd address
+    {    
         temp = PGM_READ_BYTE_FAR(flash_addr-1);
         uint16_t w = temp;
         w += (*data++) << 8;
         FLASH_PAGE_FILL(start_offset++, w);
-        length--;
-      
+        length--;      
     }
-
     
     for (uint16_t i = start_offset; i < length + start_offset; i+=2)
     {
     
+	//If the last address to be written is odd ,then copy the adjacent byte and push it as a word
     if(((length+start_offset)-i) == 1)
     {
         temp = PGM_READ_BYTE_FAR(flash_addr+write_length);
@@ -212,8 +183,7 @@ void flash_program_page(uint32_t page_start_addr)
     FLASH_PAGE_WRITE(page_start_addr);  // Store buffer in flash page.
     SPM_BUSY_WAIT();  // Wait until the memory is written.
     
-    // Reenable RWW-section again. We need this if we want to jump back
-    // to the application after bootloading.
+    // Reenable RWW-section again.
     ENABLE_RWW_SECTION();
     
     cpu_irq_restore(flags);
@@ -230,6 +200,7 @@ void flash_read(uint32_t read_addr, uint32_t len ,uint8_t *ret_buf)
     
     for (uint16_t k = 0; k < len ; k++)
     {
+		// copy a byte and push to the ret_buf
          *(ret_buf+k) = PGM_READ_BYTE_FAR(read_addr++);   
     
     }
@@ -238,7 +209,7 @@ void flash_read(uint32_t read_addr, uint32_t len ,uint8_t *ret_buf)
 
 
 }
-
+//! EOF
 
 
 

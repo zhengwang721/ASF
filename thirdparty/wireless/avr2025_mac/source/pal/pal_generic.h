@@ -66,6 +66,10 @@
 /* === Types =============================================================== */
 
 /**
+ * @addtogroup group_pal
+ * @{
+ */
+/**
  * \brief IDs for persistence storage type
  */
 typedef enum ps_type_tag
@@ -129,7 +133,6 @@ extern "C" {
      *          - @ref PAL_TMR_ALREADY_RUNNING if the timer is already running.
      *          - @ref MAC_SUCCESS if timer is started or
      *          - @ref PAL_TMR_INVALID_TIMEOUT if timeout is not within timeout range.
-     * @ingroup apiPalApi
      */
     retval_t pal_timer_start(uint8_t timer_id,
                              uint32_t timer_count,
@@ -148,7 +151,6 @@ extern "C" {
      *          - @ref MAC_SUCCESS if timer stopped successfully,
      *          - @ref PAL_TMR_NOT_RUNNING if specified timer is not running,
      *          - @ref PAL_TMR_INVALID_ID if the specifed timer id is undefined.
-     * @ingroup apiPalApi
      */
     retval_t pal_timer_stop(uint8_t timer_id);
 
@@ -158,7 +160,6 @@ extern "C" {
      * This function returns the current time.
      *
      * @param[out] current_time Returns current system time
-     * @ingroup apiPalApi
      */
     void pal_get_current_time(uint32_t *current_time);
 
@@ -183,7 +184,6 @@ extern "C" {
      * - @ref MAC_INVALID_PARAMETER if the callback function for this timer is NULL,
      * - @ref PAL_TMR_ALREADY_RUNNING if the timer is already running, or
      * - @ref MAC_SUCCESS if timer is started successfully.
-     * @ingroup apiPalApi
      */
     retval_t pal_start_high_priority_timer(uint8_t timer_id,
                                            uint16_t timer_count,
@@ -201,7 +201,6 @@ extern "C" {
      * - @ref PAL_TMR_NOT_RUNNING if the timer id does not match with the high priority
      * timer register, or
      * - @ref MAC_SUCCESS otherwise.
-     * @ingroup apiPalApi
      */
     retval_t pal_stop_high_priority_timer(uint8_t timer_id);
 #endif
@@ -218,7 +217,6 @@ extern "C" {
      * \param[out] value Data from persistence storage
      *
      * \return MAC_SUCCESS  if everything went OK else FAILURE
-     * \ingroup group_pal_init
      */
     retval_t pal_ps_get(ps_type_t ps_type, uint16_t start_addr, uint16_t length, void *value);
 
@@ -230,7 +228,6 @@ extern "C" {
      * \param[in]  value Data to persistence storage
      *
      * \return MAC_SUCCESS  if everything went OK else FAILURE
-     * \ingroup group_pal_init
      */
     retval_t pal_ps_set(uint16_t start_addr, uint16_t length, void *value);
 
@@ -256,7 +253,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
      *          - \ref PAL_TMR_ALREADY_RUNNING if the timer is already running.
      *          - \ref MAC_SUCCESS if timer is started or
      *          - \ref PAL_TMR_INVALID_TIMEOUT if timeout is not within timeout range.
-     * \ingroup group_pal_timers
      */
     retval_t pal_timer_start(uint8_t timer_id,
                              uint32_t timer_count,
@@ -275,7 +271,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
      *          - \ref MAC_SUCCESS if timer stopped successfully,
      *          - \ref PAL_TMR_NOT_RUNNING if specified timer is not running,
      *          - \ref PAL_TMR_INVALID_ID if the specifed timer id is undefined.
-    * \ingroup group_pal_timers
      */
     retval_t pal_timer_stop(uint8_t timer_id);
 
@@ -285,7 +280,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
      * This function returns the current time.
      *
      * \param[out] current_time Returns current system time
-     * \ingroup group_pal_timers
      */
     void pal_get_current_time(uint32_t *current_time);
 
@@ -299,7 +293,6 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
      * @return
      * - true if timer with requested timer id is running,
      * - false otherwise.
-     * @ingroup apiPalApi
      */
     bool pal_is_timer_running(uint8_t timer_id);
 
@@ -315,10 +308,10 @@ retval_t pal_timer_get_id(uint8_t* timer_id);
      *        is not supported by the transceiver (e.g. AT86RF230)
      *
      * @return uint16_t Random number to be used as seed for function srand()
-     * @ingroup apiPalApi
      */
     uint16_t pal_generate_rand_seed(void);
 
+	//! @}
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

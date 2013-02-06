@@ -52,6 +52,12 @@
  *        all return value enums.
  */
 
+ /**
+  * \defgroup group_pal PAL 
+  * This module acts as a wrapper layer between the Wireless stack and the ASF drivers 
+  * All hardwar level acess to the ASF drivers from the stack happens through this module
+  * @{
+  */
 /* === Includes ============================================================ */
 
 #include "compiler.h"
@@ -75,7 +81,6 @@
      * This functions generates a blocking delay of specified time.
      *
      * @param delay in microseconds
-     * @ingroup apiPalApi
      */
 #define pal_timer_delay(delay)    delay_us(delay)
 
@@ -212,7 +217,6 @@ extern "C" {
      * This function initializes the PAL. The RC Oscillator is calibrated.
      *
      * @return MAC_SUCCESS  if PAL initialization is successful, FAILURE otherwise
-     * @ingroup apiPalApi
      */
     retval_t pal_init(void);
 
@@ -225,7 +229,6 @@ extern "C" {
      * responsible for handling the transceiver timestamp interrupt
      *
      * @param trx_irq_cb Callback function for the transceiver timestamp interrupt
-     * @ingroup apiPalApi
      */
     void pal_trx_irq_init_tstamp(FUNC_PTR trx_irq_cb);
 
@@ -280,14 +283,12 @@ extern "C" {
     /**
      * @brief Clears the transceiver main interrupt
      *
-     * @ingroup apiPalApi
      */
 #define pal_trx_irq_flag_clr()          CLEAR_TRX_IRQ()
 
     /**
      * @brief Clears the transceiver timestamp interrupt
      *
-     * @ingroup apiPalApi
      */
 #define pal_trx_irq_flag_clr_tstamp()   CLEAR_TRX_IRQ_TSTAMP()
 
@@ -295,7 +296,6 @@ extern "C" {
 
     /**
      * @brief Enables the global interrupt
-     * @ingroup apiPalApi
      */
     static inline void pal_global_irq_enable(void)
     {
@@ -305,7 +305,6 @@ extern "C" {
 
     /**
      * @brief Disables the global interrupt
-     * @ingroup apiPalApi
      */
     static inline void pal_global_irq_disable(void)
     {
@@ -319,7 +318,6 @@ extern "C" {
      * responsible for handling the transceiver main interrupt
      *
      * \param trx_irq_cb Callback function for the transceiver main interrupt
-     * \ingroup group_pal_interrupt
      */
     void pal_trx_irq_init(FUNC_PTR trx_irq_cb);
 
@@ -330,7 +328,6 @@ extern "C" {
      * of the last received frame.
      *
      * @param[out] timestamp in microseconds
-     * @ingroup apiPalApi
      */
     void pal_trx_read_timestamp(uint32_t *timestamp);
 
@@ -344,7 +341,6 @@ extern "C" {
      * @brief Calibrates the internal RC oscillator
      *
      * @return True if calibration is successful, false otherwise.
-     * @ingroup apiPalApi
      */
     bool pal_calibrate_rc_osc(void);
 
@@ -356,7 +352,6 @@ extern "C" {
      * @param source
      * - @ref TMR_CLK_SRC_DURING_TRX_SLEEP if clock source during sleep is to be selected, and
      * - @ref TMR_CLK_SRC_DURING_TRX_AWAKE if clock source while being awake is selected.
-     * @ingroup apiPalApi
      */
     void pal_timer_source_select(source_type_t source);
 	
@@ -367,7 +362,6 @@ extern "C" {
      * @param b Time value 2
      *
      * @return Addition of a and b
-     * @ingroup apiPalApi
      */
     static inline uint32_t pal_add_time_us(uint32_t a, uint32_t b)
     {
@@ -382,13 +376,13 @@ extern "C" {
      * @param b Time value 2
      *
      * @return Difference between a and b
-     * @ingroup apiPalApi
      */
     static inline uint32_t pal_sub_time_us(uint32_t a, uint32_t b)
     {
         return (SUB_TIME(a, b));
     }
 
+	//! @}
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
