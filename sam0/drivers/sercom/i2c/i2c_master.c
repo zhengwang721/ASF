@@ -212,16 +212,16 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		return STATUS_ERR_BUSY;
 	}
 
+	/* Check if reset is in progress. */
+	if (i2c_module->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
+		return STATUS_ERR_BUSY;
+	}
+
 #ifdef I2C_MASTER_ASYNC
-	/* Get sercom instance index. */
-	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module);
-
-	/* Save device instance in interrupt handler. */
-	//_sercom_set_handler(sercom_instance,
-	//		(void*)(&_i2c_master_async_callback_handler));
-
-	/* Save device instance. */
-	_sercom_instances[sercom_instance] = (void*) dev_inst;
+	/* Get sercom instance index and register callback. */
+	uint8_t instance_index = _sercom_get_sercom_inst_index(module);
+	_sercom_instances[instance_index] = dev_inst;
+	_sercom_set_handler(instance_index, _i2c_master_async_callback_handler);
 
 	/* Initialize values in dev_inst. */
 	dev_inst->registered_callback = 0;

@@ -94,7 +94,7 @@ uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance)
  *
  */
 void _sercom_set_handler(uint8_t instance,
-		void (*interrupt_handler) (uint8_t instance))
+		sercom_handler_t interrupt_handler)
 {
 	uint8_t i;
 	/* Initialize handlers with default handler and device instances with 0.
@@ -114,11 +114,51 @@ void _sercom_set_handler(uint8_t instance,
 /**
  * \internal ISR handler for SERCOM
  */
-void SERCOM_Handler(void)
+#ifdef ID_SERCOM0
+void SERCOM0_IRQn_Handler(void);
+void SERCOM0_IRQn_Handler(void)
 {
-	/* Something something. */
-	uint8_t instance = 1; // (uint8_t)system_interrupt_get_active()-7;
-
 	/* Call appropriate interrupt handler. */
-	_sercom_interrupt_handlers[instance] (instance);
+	_sercom_interrupt_handlers[0] (0);
 }
+#endif
+#ifdef ID_SERCOM1
+void SERCOM1_IRQn_Handler(void);
+void SERCOM1_IRQn_Handler(void)
+{
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[1] (1);
+}
+#endif
+#ifdef ID_SERCOM2
+void SERCOM2_IRQn_Handler(void);
+void SERCOM2_IRQn_Handler(void)
+{
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[2] (2);
+}
+#endif
+#ifdef ID_SERCOM3
+void SERCOM3_IRQn_Handler(void);
+void SERCOM3_IRQn_Handler(void)
+{
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[3] (3);
+}
+#endif
+#ifdef ID_SERCOM4
+void SERCOM4_IRQn_Handler(void);
+void SERCOM4_IRQn_Handler(void)
+{
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[4] (4);
+}
+#endif
+#ifdef ID_SERCOM5
+void SERCOM5_IRQn_Handler(void);
+void SERCOM5_IRQn_Handler(void)
+{
+	/* Call appropriate interrupt handler. */
+	_sercom_interrupt_handlers[5] (5);
+}
+#endif
