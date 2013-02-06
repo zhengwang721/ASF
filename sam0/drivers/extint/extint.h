@@ -250,7 +250,8 @@ struct extint_chan_conf {
 /**
  * \brief External Interrupt event enable/disable structure.
  *
- * Event flags for the External Interrupt) and \ref extint_disable_events().
+ * Event flags for the \ref extint_enable_events() and
+ * \ref extint_disable_events().
  */
 struct extint_events {
 	/** If \c true, an event will be generated when an external interrupt

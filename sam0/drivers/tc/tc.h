@@ -408,7 +408,7 @@ extern "C" {
  * This enum is used to specify which capture/compare channel to do
  * operations on.
  */
-enum tc_compare_capture_channel_index {
+enum tc_compare_capture_channel {
 	/** Index of compare capture channel 0 */
 	TC_COMPARE_CAPTURE_CHANNEL_0,
 	/** Index of compare capture channel 1 */
@@ -518,80 +518,76 @@ enum tc_clock_prescaler {
 };
 
 /**
- * \brief Count direction enum.
+ * \brief TC module count direction.
  *
- * This enum is used to set the direction to either count up or down.
+ * Timer/Counter count direction.
  */
 enum tc_count_direction {
-	/** Makes the counter count up from zero */
+	/** Timer should count upwards from zero to MAX. */
 	TC_COUNT_DIRECTION_UP,
 
-	/** Makes the counter count down from max or a specific user
-	 *  defined value between max and 3
-	 */
+	/** Timer should count downwards to zero from MAX. */
 	TC_COUNT_DIRECTION_DOWN,
 };
 
 /**
- * \brief TC channel capture enable enum
+ * \brief TC channel capture enable mode.
  *
- * This enum is used to enable capture on the specified channel.
+ * Capture mode to use on a TC module channel.
  */
 enum tc_capture_enable {
-	/** No channels are enabled for capture */
+	/** No channels are enabled for capture. */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
-	/** Enable channel 0 for capture */
+	/** Enable channel 0 for capture. */
 	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(1),
-	/** Enable channel 1 for capture */
+	/** Enable channel 1 for capture. */
 	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(2),
 };
 
 /**
- * \brief Enum for for inverting waveform output
+ * \brief Waveform inversion mode.
  *
- * This enum can be used to configure inversion of the waveform output.
+ * Output waveform inversion mode.
  */
 enum tc_waveform_invert_output {
-	/** No inversion of output */
+	/** No inversion of the waveform output. */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
-	/** Invert output from compare channel 0 */
+	/** Invert output from compare channel 0. */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(1),
-	/** Invert output from compare channel 1 */
+	/** Invert output from compare channel 1. */
 	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(2),
 };
 
 /**
- * \brief Enum for event action
+ * \brief Action to perform when the TC module is triggered by an event.
  *
- * This enum is used to setup specific event actions.
+ * Event action to perform when the module is triggered by an event.
  */
 enum tc_event_action {
-	/** No event action */
+	/** No event action. */
 	TC_EVENT_ACTION_OFF               = TC_EVCTRL_EVACT_OFF,
-	/** Retrigger on event */
+	/** Re-trigger on event. */
 	TC_EVENT_ACTION_RETRIGGER         = TC_EVCTRL_EVACT_RETRIGGER,
-	/** Increment counter on event */
+	/** Increment counter on event. */
 	TC_EVENT_ACTION_INCREMENT_COUNTER = TC_EVCTRL_EVACT_COUNT,
-	/** Start counter on event */
+	/** Start counter on event. */
 	TC_EVENT_ACTION_START             = TC_EVCTRL_EVACT_START,
-
 	/** Store period in capture register 0, pulse width in capture
-	 * register 1
+	 *  register 1.
 	 */
 	TC_EVENT_ACTION_PPW               = TC_EVCTRL_EVACT_PPW,
-
 	/** Store pulse width in capture register 0, period in capture
-	 * register 1
+	 *  register 1.
 	 */
 	TC_EVENT_ACTION_PWP               = TC_EVCTRL_EVACT_PWP,
 };
 
 /**
- * \brief Enum for setting up event generation
+ * \brief TC event enable/disable structure.
  *
- * This enum configures event generation on respective channels
+ * Event flags for the \ref tc_enable_events() and \ref tc_disable_events().
  */
-enum tc_event_generation_enable {
+enum tc_events {
 	/** No event generation */
 	TC_EVENT_GENERATION_ENABLE_NONE      = 0,
 	/** Event generation on channel 0 */
@@ -600,7 +596,7 @@ enum tc_event_generation_enable {
 	TC_EVENT_GENERATION_ENABLE_CHANNEL_1 = TC_EVCTRL_MCEO(2),
 };
 
-/**
+/** TODO
  * \brief Enum to be used to check interrupt flags
  *
  * This enum defines the different interrupt flags for the TC module.
@@ -629,45 +625,47 @@ enum tc_interrupt_flag {
 };
 
 /**
- * \brief Config struct for 8-bit counter size */
+ * \brief Configuration struct for TC module in 8-bit size counter mode.
+ */
 struct tc_8bit_conf {
-	/** Initial count value */
+	/** Initial count value. */
 	uint8_t count;
-
 	/** Where to count to or from depending on the direction on the
-	 *  counter
+	 *  counter.
 	 */
 	uint8_t period;
-	/** Value to be used for compare match on channel 0 */
+	/** Value to be used for compare match on channel 0. */
 	uint8_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1 */
+	/** Value to be used for compare match on channel 1. */
 	uint8_t compare_capture_channel_1;
 };
 
 /**
- * \brief Config struct for 16-bit counter size */
+ * \brief Configuration struct for TC module in 16-bit size counter mode.
+ */
 struct tc_16bit_conf {
 	/** Initial count value */
 	uint16_t count;
-	/** Value to be used for compare match on channel 0 */
+	/** Value to be used for compare match on channel 0. */
 	uint16_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1 */
+	/** Value to be used for compare match on channel 1. */
 	uint16_t compare_capture_channel_1;
 };
 
 /**
- * \brief Config struct for 32-bit counter size */
+ * \brief Configuration struct for TC module in 32-bit size counter mode.
+ */
 struct tc_32bit_conf {
-	/** Initial count value */
+	/** Initial count value. */
 	uint32_t count;
-	/** Value to be used for compare match on channel 0 */
+	/** Value to be used for compare match on channel 0. */
 	uint32_t compare_capture_channel_0;
-	/** Value to be used for compare match on channel 1 */
+	/** Value to be used for compare match on channel 1. */
 	uint32_t compare_capture_channel_1;
 };
 
 /**
- * \brief TC configuration structure
+ * \brief TC configuration structure.
  *
  * Configuration struct for a TC instance. This structure should be
  * initialized by the \ref tc_get_config_defaults function before being
@@ -741,19 +739,19 @@ struct tc_conf {
 	/** Specifies MUX setting for channel 1 output pin */
 	uint32_t channel_1_pwm_out_mux;
 
-	/** This setting determines what size counter is used */
+	/** This setting determines what size counter is used. */
 	union {
-		/** Struct for 8-bit configuration */
+		/** Struct for 8-bit timer configuration */
 		struct tc_8bit_conf tc_8bit_conf;
-		/** Struct for 16-bit configuration */
+		/** Struct for 16-bit timer configuration */
 		struct tc_16bit_conf tc_16bit_conf;
-		/** Struct for 32-bit configuration */
+		/** Struct for 32-bit timer configuration */
 		struct tc_32bit_conf tc_32bit_conf;
 	} tc_counter_size_conf;
 };
 
 /**
- * \brief TC software device instance structure
+ * \brief TC software device instance structure.
  *
  * TC software device instance structure.
  */
@@ -769,12 +767,21 @@ struct tc_module {
 	enum tc_counter_size counter_size;
 };
 
-/** Check if module is busy synchronizing with system clock.
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
  *
- * \param dev_inst  Pointer to device instance
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
  *
- * \retval false            Module is not busy synchronizing
- * \retval true             Module is busy synchronizing
+ * \param[in] dev_inst  Pointer to the module software device instance
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
 		const struct tc_module *const dev_inst)
@@ -815,7 +822,7 @@ static inline void _tc_wait_for_sync(
  */
 
 /**
- * \brief Initializes config with predefined default values
+ * \brief Initializes config with predefined default values.
  *
  * This function will initialize a given TC configuration structure to
  * a set of known default values. This function should be called on
@@ -842,7 +849,7 @@ static inline void _tc_wait_for_sync(
  *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *
- * \param[out] config  Pointer to the \ref tc_conf struct
+ * \param[out] config  Pointer to a TC module configuration structure to set
  */
 static inline void tc_get_config_defaults(
 		struct tc_conf *const config)
@@ -901,7 +908,7 @@ enum status_code tc_reset(
 		const struct tc_module *const dev_inst);
 
 /**
- * \brief Enable the TC module
+ * \brief Enable the TC module.
  *
  * This function enables the TC module. The counter will start when
  * the counter is enabled.
@@ -929,7 +936,7 @@ static inline void tc_enable(
 }
 
 /**
- * \brief Disables the TC module
+ * \brief Disables the TC module.
  *
  * This function disables the TC module and stops the counter.
  *
@@ -974,7 +981,7 @@ enum status_code tc_set_count_value(
  */
 
 /**
- * \brief Stops the counter
+ * \brief Stops the counter.
  *
  * This function will stop the counter. When the counter is stopped
  * the value in the count value is set to 0 if the counter was
@@ -1001,7 +1008,7 @@ static inline void tc_stop_counter(
 }
 
 /**
- * \brief Starts the counter
+ * \brief Starts the counter.
  *
  * This function can be used to start the counter. It will also
  * restart the counter after a stop action has been performed.
@@ -1037,14 +1044,15 @@ static inline void tc_start_counter(
  * \name Get Capture Set Compare
  * @{
  */
+
 uint32_t tc_get_capture_value(
 		const struct tc_module *const dev_inst,
-		const enum tc_compare_capture_channel_index channel_index);
+		const enum tc_compare_capture_channel channel_index);
 
 enum status_code tc_set_compare_value(
 		const struct tc_module *const dev_inst,
 		const uint32_t compare_value,
-		const enum tc_compare_capture_channel_index channel_index);
+		const enum tc_compare_capture_channel channel_index);
 
 /** @} */
 
@@ -1064,8 +1072,8 @@ enum status_code tc_set_top_value (
  * @{
  */
 
-/**
- * \brief Checks an interrupt flag is set
+/** TODO
+ * \brief Checks an interrupt flag is set.
  *
  * This function checks if the interrupt flag indicated by the
  * interrupt flag parameter is set.
@@ -1095,7 +1103,7 @@ static inline bool tc_is_interrupt_flag_set(
 	}
 }
 
-/**
+/** TODO
  * \brief Clears an interrupt flag
  *
  * This function can be used to clear the interrupt flag specified by

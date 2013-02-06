@@ -69,16 +69,17 @@ static uint8_t _tc_get_inst_index(
 }
 
 
-/** \brief Initializes the TC
+/** \brief Initializes a hardware TC module instance.
  *
  * This function enables the clock and initializes the TC module,
  * based on the values of the \ref tc_conf struct.
  *
- * \param dev_inst  Pointer to the device struct
- * \param tc_instance Pointer to the TC module
- * \param config    Pointer to the \ref tc_conf struct
+ * \param dev_inst     Pointer to the device struct
+ * \param tc_instance  Pointer to the TC module
+ * \param config       Pointer to the \ref tc_conf struct
  *
- * \return Status of the procedure.
+ * \return Status of the initialization procedure.
+ *
  * \retval STATUS_OK           The function exited normally
  * \retval STATUS_ERR_BUSY     When a reset has been initiated
  * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
@@ -284,7 +285,7 @@ enum status_code tc_init(
 	return STATUS_ERR_INVALID_ARG;
 }
 
-/** \brief Set TC module count value
+/** \brief Set TC module count value.
  *
  * This function can be used to update count value after init. It can
  * be used while the counter is running.
@@ -331,7 +332,7 @@ enum status_code tc_set_count_value(
 	}
 }
 
-/** \brief Get TC module count value
+/** \brief Get TC module count value.
  *
  * This function gets the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
@@ -369,7 +370,7 @@ uint32_t tc_get_count_value(
 	return 0;
 }
 
-/** \brief Gets the capture value
+/** \brief Gets the capture value.
  *
  * This function returns a capture value in the supplied buffer
  * pointed to by capture.
@@ -381,7 +382,7 @@ uint32_t tc_get_count_value(
  */
 uint32_t tc_get_capture_value(
 		const struct tc_module *const dev_inst,
-		const enum tc_compare_capture_channel_index channel_index)
+		const enum tc_compare_capture_channel channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -409,7 +410,7 @@ uint32_t tc_get_capture_value(
 	return 0;
 }
 
-/** \brief Set a compare value
+/** \brief Set a compare value.
  *
  * This function writes a compare value to the given compare/capture channel register
  *
@@ -424,7 +425,7 @@ uint32_t tc_get_capture_value(
 enum status_code tc_set_compare_value(
 		const struct tc_module *const dev_inst,
 		const uint32_t compare,
-		const enum tc_compare_capture_channel_index channel_index)
+		const enum tc_compare_capture_channel channel_index)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -462,7 +463,7 @@ enum status_code tc_set_compare_value(
 }
 
 /**
- * \brief Reset the TC module
+ * \brief Reset the TC module.
  *
  * This function resets the TC module. The TC module will not be
  * accessible while the reset is being performed. To avoid undefined
@@ -529,7 +530,7 @@ enum status_code tc_reset(
 }
 
 /**
- * \brief Set the top/period value
+ * \brief Set the TOP/period value.
  *
  * For 8-bit counter size this function writes the top value to the
  * period register.
@@ -540,7 +541,7 @@ enum status_code tc_reset(
  *
  * \note This function is only meant to be used in PWM or frequency
  * match mode. When the counter is set to 16- or 32-bit counter
- * size. In 8-bit counter size it will always be posible to change the
+ * size. In 8-bit counter size it will always be possible to change the
  * top value even in normal mode.
  *
  * \param[in] dev_inst    Pointer to the device struct
