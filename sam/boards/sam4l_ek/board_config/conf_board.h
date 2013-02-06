@@ -3,7 +3,7 @@
  *
  * \brief SAM4L-EK board configuration template
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,10 @@
 
 /* Initialize the SAM4L pins for the USB SAM4L plug */
 #define CONF_BOARD_USB_PORT
+//#define CONF_BOARD_USB_VBUS_DETECT         /* VBus detect enabled, can not be used on SAM4L_EK Rev. 2 */
+#define CONF_BOARD_USB_ID_DETECT           /* ID detect enabled,  uncomment it if jumper PB05/USB set */
+#define CONF_BOARD_USB_VBUS_CONTROL        /* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+#define CONF_BOARD_USB_VBUS_ERR_DETECT     /* Host VBUS error detect NOT enabled,  uncomment it if jumper PC07/USB set */
 
 /* Initialize the USART pins for the COM PORT interface with the JLink OB
 module that acts as a USB CDC gateway over the USB JLink plug. */
@@ -63,7 +67,7 @@ module that acts as a USB CDC gateway over the USB JLink plug. */
 #define CONF_BOARD_BM_USART
 
 /* Initialize the SPI pins for use with the on-board serial flash or with the
-WIRELESS connector or with the Sensors Xplained extension board. */
+ * WIRELESS connector or with the Sensors Xplained extension board. */
 #define CONF_BOARD_SPI
 
 /* Initialize the SPI CS for the WIRELESS connector. */
