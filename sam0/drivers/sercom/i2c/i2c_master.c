@@ -379,6 +379,7 @@ enum status_code i2c_master_read_packet(
 
 	/* Return value. */
 	enum status_code tmp_status;
+	uint8_t tmp_data_length = packet->data_length;
 
 	/* Written buffer counter. */
 	uint16_t counter = 0;
@@ -389,6 +390,9 @@ enum status_code i2c_master_read_packet(
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);
 
+	/* Set action to ack. */
+	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+
 	/* Check for address response error unless previous error is
 	 * detected. */
 	if (tmp_status == STATUS_OK) {
@@ -398,7 +402,7 @@ enum status_code i2c_master_read_packet(
 	/* Check that no error has occurred. */
 	if (tmp_status == STATUS_OK) {
 		/* Read data buffer. */
-		while (packet->data_length--) {
+		while (tmp_data_length--) {
 			/* Check that bus ownership is not lost. */
 			if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 				return STATUS_ERR_PACKET_COLLISION;
@@ -415,13 +419,12 @@ enum status_code i2c_master_read_packet(
 				break;
 			}
 		}
+
 		/* Send nack and stop command unless arbitration is lost. */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
-
 	}
 
 	return tmp_status;
-
 }
 
 /**
@@ -465,11 +468,14 @@ enum status_code i2c_master_write_packet(
 
 	/* Return value. */
 	enum status_code tmp_status;
+	uint8_t tmp_data_length = packet->data_length;
+
+        _i2c_master_wait_for_sync(dev_inst);
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
 
-	/* Wait for response on bus. */
+        /* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(dev_inst);
 
 	/* Check for address response error unless previous error is
@@ -478,14 +484,13 @@ enum status_code i2c_master_write_packet(
 		tmp_status = _i2c_master_address_response(dev_inst);
 	}
 
-
 	/* Check that no error has occurred. */
 	if (tmp_status == STATUS_OK) {
 		/* Buffer counter. */
 		uint16_t buffer_counter = 0;
 
 		/* Write data buffer. */
-		while (packet->data_length--) {
+		while (tmp_data_length--) {
 			/* Check that bus ownership is not lost. */
 			if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 				return STATUS_ERR_PACKET_COLLISION;
@@ -506,14 +511,15 @@ enum status_code i2c_master_write_packet(
 			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 			{
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-
-				/* Return bad data value. */
-				tmp_status = STATUS_ERR_OVERFLOW;
-				break;
+				if(packet->data_length) {
+					/* Return bad data value. */
+					tmp_status = STATUS_ERR_OVERFLOW;
+					break;
+				}
 			}
 		}
 
-		/* Send nack and stop command. */
+		/* Stop command. */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 	}
 

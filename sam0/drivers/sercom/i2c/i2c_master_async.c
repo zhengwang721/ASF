@@ -230,6 +230,9 @@ enum status_code i2c_master_async_read_packet(
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
 
+	/* Set action to ack. */
+	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+
 	return STATUS_OK;
 }
 
@@ -337,6 +340,10 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
 
+		/* Send nack and stop command unless arbitration is lost. */
+		if (dev_inst->status != STATUS_ERR_PACKET_COLLISION) {
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		}
 		/* Call error callback if enabled and registered. */
 		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
 				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_ERROR)) {
