@@ -41,11 +41,7 @@
  * \asf_license_stop
  */
 
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 /* === INCLUDES ============================================================ */
 
 #include "sio2ncp.h"
@@ -93,14 +89,14 @@ static uint8_t serial_rx_count;
 /* === IMPLEMENTATION ====================================================== */
 
 
-status_code_t sio2ncp_init(void)
+void sio2ncp_init(void)
 {
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
 
 	usart_serial_init(USART_NCP, &usart_serial_options);
 	USART_NCP_RX_ISR_ENABLE();
-	return STATUS_OK;
+	
 }
 
 
@@ -120,7 +116,7 @@ uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
 {
     uint8_t data_received = 0;
-    if (serial_rx_count == 0)
+    if ( 0 == serial_rx_count)
     {
         
         return 0;
@@ -136,7 +132,7 @@ uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
         serial_rx_buf_head = serial_rx_buf_tail;
 
         /*
-         * This is a buffer overflow case. Byt still only bytes equivalent to
+         * This is a buffer overflow case. But still only the number of bytes equivalent to
          * full buffer size are useful.
          */
         serial_rx_count = SERIAL_RX_BUF_SIZE_NCP;
@@ -220,7 +216,7 @@ ISR(USART_NCP_ISR_VECT)
 	/* Introducing critical section to avoid buffer corruption. */
 	cpu_irq_disable();
 	
-	/* The count of characters present in receive buffer is incremented. */
+	/* The number of data in the receive buffer is incremented and the buffer is updated. */
 	serial_rx_count++;
 	
 	

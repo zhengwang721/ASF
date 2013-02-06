@@ -39,11 +39,7 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 /* === INCLUDES ============================================================ */
 
 #include "conf_sio2host.h"
@@ -84,10 +80,10 @@ static volatile bool main_b_cdc_enable = false;
 
 /* === IMPLEMENTATION ====================================================== */
 
-status_code_t sio2host_init(void)
+void sio2host_init(void)
 {
 	stdio_usb_init();
-	return STATUS_OK;
+	
 }
 
 
@@ -106,7 +102,7 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 {
     uint8_t data_received = 0;
-    if (serial_rx_count == 0)
+    if ( 0 == serial_rx_count)
     {
         
         return 0;
@@ -121,7 +117,7 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
         serial_rx_buf_head = serial_rx_buf_tail;
 
         /*
-         * This is a buffer overflow case. Byt still only bytes equivalent to
+         * This is a buffer overflow case.But still only the number of bytes equivalent to
          * full buffer size are useful.
          */
         serial_rx_count = SERIAL_RX_BUF_SIZE_HOST;

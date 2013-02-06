@@ -40,11 +40,7 @@
  * \asf_license_stop
  */
 
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 /* === INCLUDES ============================================================ */
 
 #include "conf_sio2host.h"
@@ -71,7 +67,7 @@ static usart_serial_options_t usart_serial_options =
  * Receive buffer
  * The buffer size is defined in sio2host.h
  */
-static uint8_t serial_rx_buf[SERIAL_RX_BUF_SIZE];
+static uint8_t serial_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 
 /**
  * Receive buffer head
@@ -93,11 +89,11 @@ static uint8_t serial_rx_count;
 /* === IMPLEMENTATION ====================================================== */
 
 
-status_code_t sio2host_init(void)
+void sio2host_init(void)
 {
 	stdio_serial_init(USART_HOST, &usart_serial_options);
 	USART_HOST_RX_ISR_ENABLE();
-	return STATUS_OK;
+	
 }
 
 
@@ -116,11 +112,11 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 {
     uint8_t data_received = 0;
-    if (serial_rx_count == 0)
+    if ( 0 == serial_rx_count)
     {
         return 0;
     }
-    if (SERIAL_RX_BUF_SIZE <= serial_rx_count)
+    if (SERIAL_RX_BUF_SIZE_HOST <= serial_rx_count)
     {
       
         /*
@@ -131,20 +127,20 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
         serial_rx_buf_head = serial_rx_buf_tail;
 
         /*
-         * This is a buffer overflow case. Byt still only bytes equivalent to
+         * This is a buffer overflow case. But still only the number of bytes equivalent to
          * full buffer size are useful.
          */
-        serial_rx_count = SERIAL_RX_BUF_SIZE;
+        serial_rx_count = SERIAL_RX_BUF_SIZE_HOST;
 
         /* Bytes received is more than or equal to buffer. */
-        if (SERIAL_RX_BUF_SIZE <= max_length)
+        if (SERIAL_RX_BUF_SIZE_HOST <= max_length)
         {
             /*
              * Requested receive length (max_length) is more than the
              * max size of receive buffer, but at max the full
              * buffer can be read.
              */
-            max_length = SERIAL_RX_BUF_SIZE;
+            max_length = SERIAL_RX_BUF_SIZE_HOST;
         }
     }
     else
@@ -170,7 +166,7 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
         serial_rx_count--;
         data++;
         max_length--;
-        if ((SERIAL_RX_BUF_SIZE) == serial_rx_buf_head)
+        if ((SERIAL_RX_BUF_SIZE_HOST) == serial_rx_buf_head)
         {
             serial_rx_buf_head = 0;
         }
@@ -210,12 +206,12 @@ ISR(USART_HOST_ISR_VECT)
 	/* Introducing critical section to avoid buffer corruption. */
 	cpu_irq_disable();
 	
-	/* The count of characters present in receive buffer is incremented. */
+	/* The number of data in the receive buffer is incremented and the buffer is updated. */
 	serial_rx_count++;	
 	
 	serial_rx_buf[serial_rx_buf_tail] = temp;
 	
-	if ((SERIAL_RX_BUF_SIZE - 1) == serial_rx_buf_tail)
+	if ((SERIAL_RX_BUF_SIZE_HOST - 1) == serial_rx_buf_tail)
 	{
 		/* Reached the end of buffer, revert back to beginning of buffer. */
 		serial_rx_buf_tail = 0x00;

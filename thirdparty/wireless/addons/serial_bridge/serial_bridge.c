@@ -65,22 +65,14 @@ uint8_t temp[SIO_RX_BUF_SIZE];
 
 /* === IMPLEMENTATION ====================================================== */
 
-status_code_t serial_bridge_init()
+void serial_bridge_init()
 {
 
-	if ( STATUS_OK != sio2host_init() )
-    {
-        /* something went wrong during initialization */
-        return ERR_IO_ERROR ;
-    }
+	sio2host_init() ;
     
-    if (STATUS_OK != sio2ncp_init())
-    {
-        /* something went wrong during initialization */
-        return ERR_IO_ERROR ;
-    }
+    sio2ncp_init();
 
-return STATUS_OK;
+	
 }
 
 void serial_bridge_handler()

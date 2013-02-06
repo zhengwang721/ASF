@@ -39,11 +39,7 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 #ifndef SIO2NCP_H
 #define SIO2NCP_H
 
@@ -65,7 +61,7 @@
  * \brief Initializes the Serial IO Module of the NCP Device
  * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
   */
-status_code_t sio2ncp_init(void);
+void sio2ncp_init(void);
 
 
 /**
@@ -89,7 +85,7 @@ uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length);
 
 /**
  * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if a charqacter is received
+ * \return '-1' if no data is recieved or returns the data if a character is received
  */
 int sio2ncp_getchar_nowait(void);
 

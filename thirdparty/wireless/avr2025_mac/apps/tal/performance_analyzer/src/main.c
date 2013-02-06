@@ -367,11 +367,8 @@ int main(void)
 
     cpu_irq_enable();
     
-        if (sio2host_init() != STATUS_OK)
-    {
-        /* something went wrong during initialization */
-        app_alert();
-    }
+	sio2host_init();
+
     
     /* INIT was a success - so change to WAIT_FOR_EVENT state */
     set_main_state(WAIT_FOR_EVENT, NULL);

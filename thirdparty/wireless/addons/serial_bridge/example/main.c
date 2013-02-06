@@ -84,10 +84,7 @@ int main(void)
 
     cpu_irq_enable();
 
-    if(serial_bridge_init() != STATUS_OK )
-	{
-	app_alert();	
-	}
+    serial_bridge_init() ;
 	
     while (1)
     {

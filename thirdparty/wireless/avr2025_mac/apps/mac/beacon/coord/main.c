@@ -298,11 +298,8 @@ int main(void)
 
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
-    if (STATUS_OK != sio2host_init())
-    {
-        /* Something went wrong during initialization. */
-        app_alert();
-    }
+	sio2host_init();
+
     /* To make sure the Hyper Terminal Connected to the system*/
     sio2host_getchar();
 

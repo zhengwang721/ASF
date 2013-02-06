@@ -72,7 +72,7 @@
   * \return STATUS_OK if initialization is succesful else FAILURE
   */
   
-status_code_t serial_bridge_init(void);
+void serial_bridge_init(void);
 
 /**
  * \brief The serial_bridge_handler performs the functionality of the serial bridge 

@@ -39,11 +39,7 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 #ifndef SIO2HOST_H
 #define SIO2HOST_H
  
@@ -66,7 +62,7 @@
  * \brief Initializes the Serial IO Module of the Host Device
  * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
   */
-status_code_t sio2host_init(void);
+void sio2host_init(void);
 
 /**
  * \brief Transmits data via USB 
@@ -97,7 +93,7 @@ void dtr_cb(bool);
 
 /**
  * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if ia charqacter is received
+ * \return '-1' if no data is recieved or returns the data if a character is received
  */
 
 int sio2host_getchar_nowait(void);

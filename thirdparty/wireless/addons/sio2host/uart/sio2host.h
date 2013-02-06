@@ -39,11 +39,7 @@
  *
  * \asf_license_stop
  */
-/*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+
 #ifndef SIO2HOST_H
 #define SIO2HOST_H
 
@@ -58,14 +54,14 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-#define SERIAL_RX_BUF_SIZE    156
+#define SERIAL_RX_BUF_SIZE_HOST    156
 
 /* === PROTOTYPES ============================================================ */
 /**
  * \brief Initializes the Serial IO Module
  * \return STATUS_OK for successful initialization and FAILURE incase the IO is not initialized 
   */
-status_code_t sio2host_init(void);
+void sio2host_init(void);
 
 /**
  * \brief Transmits data via UART 
@@ -94,7 +90,7 @@ uint8_t sio2host_getchar(void);
 
 /**
  * \brief This function performs a non-blocking character receive functionality
- * \return '-1' if no data is recieved or returns the data if ia charqacter is received
+ * \return '-1' if no data is recieved or returns the data if a character is received
  */
 int sio2host_getchar_nowait(void);
 
