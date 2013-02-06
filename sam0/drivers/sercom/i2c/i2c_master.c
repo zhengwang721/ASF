@@ -125,7 +125,7 @@ static enum status_code _i2c_master_set_config(
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
 
 	/* Set sercom gclk generator according to config. */
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	//uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
 
 	/* Find and set baudrate. */
 	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
@@ -187,15 +187,15 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up GCLK */
-	struct system_gclk_ch_conf gclk_ch_conf;
-	system_gclk_ch_get_config_defaults(&gclk_ch_conf);
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
-	gclk_ch_conf.source_generator = config->generator_source;
-	system_gclk_ch_set_config(gclk_index, &gclk_ch_conf);
-	gclk_ch_conf.source_generator = GCLK_GENERATOR_1;
-	system_gclk_ch_set_config(SERCOM_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(gclk_index);
-	system_gclk_ch_enable(SERCOM_GCLK_ID);
+	gclk_chan_conf.source_generator = config->generator_source;
+	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
+	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(gclk_index);
+	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 
 	/* Check if module is enabled. */
@@ -208,17 +208,12 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		return STATUS_BUSY;
 	}
 
-	/* Check if reset is in progress. */
-	if (i2c_module->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
-	}
-
 #ifdef I2C_MASTER_ASYNC
 	/* Get sercom instance index and register callback. */
-	uint8_t instance_index = _sercom_get_sercom_inst_index(module);
-	_sercom_instances[instance_index] = dev_inst;
+	uint8_t instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 	_sercom_set_handler(instance_index, _i2c_master_async_callback_handler);
-
+	_sercom_instances[instance_index] = dev_inst;
+	
 	/* Initialize values in dev_inst. */
 	dev_inst->registered_callback = 0;
 	dev_inst->enabled_callback = 0;
@@ -505,7 +500,7 @@ enum status_code i2c_master_write_packet(
 			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 			{
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-				if(packet->data_length) {
+				if(tmp_data_length) {
 					/* Return bad data value. */
 					tmp_status = STATUS_ERR_OVERFLOW;
 					break;
