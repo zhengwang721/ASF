@@ -476,7 +476,7 @@ extern "C" {
  * i.e. i2c_master_async_ and i2c_slave_async_.
  *
  * While asynchronous operation is in progress, subsequent calls to a write or read operation
- * will return the STATUS_ERR_BUSY flag, indicating that only one operation is allowed at any given
+ * will return the STATUS_BUSY flag, indicating that only one operation is allowed at any given
  * time.
  *
  * To check if another transmission can be initiated, the user can either call another transfer operation,

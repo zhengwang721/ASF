@@ -95,7 +95,7 @@ static struct _nvm_module _nvm_dev;
  * \return Status of the configuration procedure.
  *
  * \retval STATUS_OK                If the initialization was a success
- * \retval STATUS_ERR_BUSY          If the module was already busy
+ * \retval STATUS_BUSY          If the module was already busy
  * \retval STATUS_ERR_IO            If the security bit was set, the function
  *                                  could not set the bootloader and eeprom
  *                                  size
@@ -122,7 +122,7 @@ enum status_code nvm_set_config(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Writing configuration to the CTRLB register */
@@ -173,7 +173,7 @@ enum status_code nvm_set_config(
  *
  * \retval STATUS_OK               If the command was accepted and execution
  *                                 is now in progress
- * \retval STATUS_ERR_BUSY         If the NVM controller was already busy
+ * \retval STATUS_BUSY         If the NVM controller was already busy
  *                                 executing a command when the new command
  *                                 was issued
  * \retval STATUS_ERR_IO           If the command was invalid due to memory or
@@ -200,7 +200,7 @@ enum status_code nvm_execute_command(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	switch (command) {
@@ -268,7 +268,7 @@ enum status_code nvm_execute_command(
  *
  * \retval STATUS_OK               If the reading of the NVM memory was
  *                                 successful
- * \retval STATUS_ERR_BUSY         If the NVM controller was already busy
+ * \retval STATUS_BUSY         If the NVM controller was already busy
  * \retval STATUS_ERR_BAD_ADDRESS  If dst_page_nr is larger than the number of
  *                                 pages available in the NVM memory region
  */
@@ -291,7 +291,7 @@ enum status_code nvm_write_page(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* 32 bit addressing the NVM */
@@ -321,7 +321,7 @@ enum status_code nvm_write_page(
  *
  * \retval STATUS_OK               If the reading of the NVM memory was
  *                                 successful
- * \retval STATUS_ERR_BUSY         If the NVM controller was already busy
+ * \retval STATUS_BUSY         If the NVM controller was already busy
  * \retval STATUS_ERR_BAD_ADDRESS  If dst_page_nr is larger than the number of
  *                                 pages available in the NVM memory region
  */
@@ -344,7 +344,7 @@ enum status_code nvm_read_page(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* 32-bit addressing the NVM memory */
@@ -371,7 +371,7 @@ enum status_code nvm_read_page(
  * \return Status of the attempt to erase a row.
  *
  * \retval STATUS_OK               If issuing the erase was successful
- * \retval STATUS_ERR_BUSY         If the NVM controller was already busy
+ * \retval STATUS_BUSY         If the NVM controller was already busy
  * \retval STATUS_ERR_BAD_ADDRESS  If row_nr was larger than the number of
  *                                 rows available in the NVM memory region
  */
@@ -392,7 +392,7 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Address to row */
@@ -420,7 +420,7 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
  * \return Status of the attempt to erase a block.
  *
  * \retval STATUS_OK               If issuing the erase was successful
- * \retval STATUS_ERR_BUSY         If the NVM controller was already busy
+ * \retval STATUS_BUSY         If the NVM controller was already busy
  * \retval STATUS_ERR_BAD_ADDRESS  If row_nr and number of rows was larger than
  *                                 the number of rows available in the
  *                                 NVM memory region
@@ -450,7 +450,7 @@ enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Set address and command */

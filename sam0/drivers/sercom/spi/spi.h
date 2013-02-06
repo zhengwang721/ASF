@@ -916,7 +916,7 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
  *
  * \return Status of the procedure
  * \retval STATUS_OK       If the data was written
- * \retval STATUS_ERR_BUSY If the last write was not completed
+ * \retval STATUS_BUSY If the last write was not completed
  *
  */
 static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
@@ -931,7 +931,7 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	/* Check if the data register has been copied to the shift register */
 	if (!spi_is_ready_to_write(dev_inst)) {
 		/* Data register has not been copied to the shift register, return */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Write the character to the DATA register */

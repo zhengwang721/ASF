@@ -120,8 +120,8 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
 
 	/* SERCOM PAD3 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(sercom_module, 3);
+	if (pad3 == PINMUX_DEFAULT) {
+		pad3 = _sercom_get_default_pad(sercom_module, 3);
 	}
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
@@ -212,7 +212,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \return Status of the initialization
  * \retval STATUS_OK                     Module initiated correctly.
  * \retval STATUS_ERR_DENIED             If module is enabled.
- * \retval STATUS_ERR_BUSY               If module is busy resetting.
+ * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
@@ -236,7 +236,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 
 	/* Check if reset is in progress. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Turn on module in PM */

@@ -81,7 +81,7 @@ static uint8_t _tc_get_inst_index(
  * \return Status of the initialization procedure.
  *
  * \retval STATUS_OK           The function exited normally
- * \retval STATUS_ERR_BUSY     When a reset has been initiated
+ * \retval STATUS_BUSY     When a reset has been initiated
  * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
  *                             tc_conf struct
  * \retval STATUS_ERR_DENIED   When module is enabled, or when module is
@@ -131,7 +131,7 @@ enum status_code tc_init(
 
 	if (tc_module->COUNT8.CTRLA.reg & TC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	if (tc_module->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
