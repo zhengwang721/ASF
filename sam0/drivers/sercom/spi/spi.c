@@ -212,7 +212,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \return Status of the initialization
  * \retval STATUS_OK                     Module initiated correctly.
  * \retval STATUS_ERR_DENIED             If module is enabled.
- * \retval STATUS_ERR_BUSY               If module is busy resetting.
+ * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
@@ -236,7 +236,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 
 	/* Check if reset is in progress. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Turn on module in PM */

@@ -156,7 +156,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * \return Status of the initialization
  *
  * \retval STATUS_OK                       The initialization was successful
- * \retval STATUS_ERR_BUSY                 The USART module is occupied with
+ * \retval STATUS_BUSY                 The USART module is occupied with
  *                                         resetting itself
  * \retval STATUS_ERR_DENIED               The USART have not been disabled in
  *                                         advance of initialization
@@ -302,7 +302,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
  *
  * \return     Status of the operation
  * \retval     STATUS_OK           If the operation was completed
- * \retval     STATUS_ERR_BUSY     If the operation was not completed,
+ * \retval     STATUS_BUSY     If the operation was not completed,
  *                                 due to the USART module being busy.
  */
 enum status_code usart_write(struct usart_dev_inst *const dev_inst,
@@ -315,7 +315,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (dev_inst->remaining_tx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 #else
@@ -323,7 +323,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
 	if (!usart_is_interrupt_flag_set(dev_inst,
 			USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
 		/* Return error code */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 	/* Get a pointer to the hardware module instance */
@@ -349,7 +349,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If the operation was completed
- * \retval     STATUS_ERR_BUSY          If the operation was not completed,
+ * \retval     STATUS_BUSY          If the operation was not completed,
  *                                      due to the USART module being busy.
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
  *                                      due to mismatch configuration mismatch
@@ -373,7 +373,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (dev_inst->remaining_rx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 #else
@@ -381,7 +381,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 	if (!usart_is_interrupt_flag_set(dev_inst,
 			USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 		/* Return error code */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 

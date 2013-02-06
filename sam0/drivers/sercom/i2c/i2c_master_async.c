@@ -204,7 +204,7 @@ void i2c_master_async_unregister_callback(
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -219,7 +219,7 @@ enum status_code i2c_master_async_read_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 
@@ -249,7 +249,7 @@ enum status_code i2c_master_async_read_packet(
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -264,7 +264,7 @@ enum status_code i2c_master_async_write_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */

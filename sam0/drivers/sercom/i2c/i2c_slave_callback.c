@@ -114,7 +114,7 @@ static enum status_code _i2c_slave_set_config(
  * \return              Status of initialization.
  * \retval STATUS_OK                       Module initiated correctly.
  * \retval STATUS_ERR_DENIED               If module is enabled.
- * \retval STATUS_ERR_BUSY                 If module is busy resetting.
+ * \retval STATUS_BUSY                 If module is busy resetting.
  * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other gclk generator than
  *                                         previously set.
  *
@@ -140,7 +140,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 
 	/* Check if reset is in progress. */
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Turn on module in PM */
@@ -344,7 +344,7 @@ void i2c_slave_unregister_callback(
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_slave_read_packet_callback(
 		struct i2c_slave_module *const module,
@@ -357,7 +357,7 @@ enum status_code i2c_slave_read_packet_callback(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */
@@ -383,7 +383,7 @@ enum status_code i2c_slave_read_packet_callback(
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_slave_write_packet_callback(
 		struct i2c_slave_module *const module,
@@ -396,7 +396,7 @@ enum status_code i2c_slave_write_packet_callback(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */

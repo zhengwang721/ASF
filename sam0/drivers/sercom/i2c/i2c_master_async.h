@@ -170,7 +170,7 @@ static inline void i2c_master_async_cancel_transfer(
  * \return          Last status code from transfer operation.
  * \retval STATUS_OK No error has occurred.
  * \retval STATUS_IN_PROGRESS If transfer is in progress.
- * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_BUSY If master module is busy.
  * \retval STATUS_ERR_DENIED If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
