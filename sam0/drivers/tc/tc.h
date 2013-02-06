@@ -776,7 +776,7 @@ struct tc_module {
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
- * \param[in] dev_inst  Pointer to the module software device instance
+ * \param[in] module_inst  Pointer to the module software device instance
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
@@ -784,13 +784,13 @@ struct tc_module {
  * \retval false if the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	return (dev_inst->hw_dev->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
+	return (module_inst->hw_dev->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
 }
 
 #if !defined (__DOXYGEN__)
@@ -800,17 +800,17 @@ static inline bool tc_is_syncing(
  * Must be called before assessing certain registers in the TC.
  * Blocks while waiting
  *
- * \param dev_inst  Pointer to device instance
+ * \param module_inst  Pointer to device instance
  */
 static inline void _tc_wait_for_sync(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments  */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Synchronize */
-	while (tc_is_syncing(dev_inst)) {
+	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
 }
@@ -894,7 +894,7 @@ static inline void tc_get_config_defaults(
 
 enum status_code tc_init(
 		Tc *const tc_instance,
-		struct tc_module *const dev_inst,
+		struct tc_module *const module_inst,
 		const struct tc_conf *const config);
 
 /** @} */
@@ -905,7 +905,7 @@ enum status_code tc_init(
  */
 
 enum status_code tc_reset(
-		const struct tc_module *const dev_inst);
+		const struct tc_module *const module_inst);
 
 /**
  * \brief Enable the TC module.
@@ -916,20 +916,20 @@ enum status_code tc_reset(
  * \note When the counter is enabled for retrigger on an
  * event, the counter will not start until the start function is used.
  *
- * \param[in] dev_inst  Pointer to the device struct
+ * \param[in] module_inst  Pointer to the device struct
  */
 static inline void tc_enable(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Enable TC module */
 	tc_instance->CTRLA.reg |= TC_CTRLA_ENABLE;
@@ -940,20 +940,20 @@ static inline void tc_enable(
  *
  * This function disables the TC module and stops the counter.
  *
- * \param[in] dev_inst  Pointer to the device struct
+ * \param[in] module_inst  Pointer to the device struct
  */
 static inline void tc_disable(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Disable TC module */
 	tc_instance->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
@@ -967,10 +967,10 @@ static inline void tc_disable(
  */
 
 uint32_t tc_get_count_value(
-		const struct tc_module *const dev_inst);
+		const struct tc_module *const module_inst);
 
 enum status_code tc_set_count_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t count);
 
 /** @} */
@@ -988,20 +988,20 @@ enum status_code tc_set_count_value(
  * counting up, or max or the top value if the counter was counting
  * down when stopped.
  *
- * \param[in] dev_inst  Pointer to the device struct
+ * \param[in] module_inst  Pointer to the device struct
  */
 static inline void tc_stop_counter(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Write command to execute */
 	tc_instance->CTRLBSET.reg = TC_CTRLBSET_CMD(2); //TC_CTRLBSET_CMD_STOP;
@@ -1013,26 +1013,26 @@ static inline void tc_stop_counter(
  * This function can be used to start the counter. It will also
  * restart the counter after a stop action has been performed.
  *
- * \param[in] dev_inst     Pointer to the device struct
+ * \param[in] module_inst     Pointer to the device struct
  */
 static inline void tc_start_counter(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 	/* Make certain that there are no conflicting commands in the register
 	 **/
 	tc_instance->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Write command to execute */
 	tc_instance->CTRLBSET.reg = TC_CTRLBSET_CMD(1); //TC_CTRLBSET_CMD_RETRIGGER;
@@ -1046,11 +1046,11 @@ static inline void tc_start_counter(
  */
 
 uint32_t tc_get_capture_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const enum tc_compare_capture_channel channel_index);
 
 enum status_code tc_set_compare_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t compare_value,
 		const enum tc_compare_capture_channel channel_index);
 
@@ -1062,7 +1062,7 @@ enum status_code tc_set_compare_value(
  */
 
 enum status_code tc_set_top_value (
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t top_value);
 
 /** @} */
@@ -1078,7 +1078,7 @@ enum status_code tc_set_top_value (
  * This function checks if the interrupt flag indicated by the
  * interrupt flag parameter is set.
  *
- * \param[in] dev_inst       Pointer to the device instance
+ * \param[in] module_inst       Pointer to the device instance
  * \param[in] interrupt_flag  Enum that tells what interrupt flag to check
  *
  * \return Bool value telling if the flag is set
@@ -1086,15 +1086,15 @@ enum status_code tc_set_top_value (
  * \retval False  If the flag is not set
  */
 static inline bool tc_is_interrupt_flag_set(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const enum tc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(interrupt_flag);
 
-	TcCount8 *tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	if (tc_instance->INTFLAG.reg & interrupt_flag) {
 		return true;
@@ -1110,19 +1110,19 @@ static inline bool tc_is_interrupt_flag_set(
  * the interrupt_flag parameter. Using the function when the flag is not set
  * has no effect.
  *
- * \param[in] dev_inst       Pointer to the device instance
+ * \param[in] module_inst       Pointer to the device instance
  * \param[in] interrupt_flag Enum telling what flag to check
  */
 static inline void tc_clear_interrupt_flag(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const enum tc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(interrupt_flag);
 
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	tc_instance->INTFLAG.reg |= interrupt_flag;
 }

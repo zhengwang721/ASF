@@ -74,7 +74,7 @@ static uint8_t _tc_get_inst_index(
  * This function enables the clock and initializes the TC module,
  * based on the values of the \ref tc_conf struct.
  *
- * \param dev_inst     Pointer to the device struct
+ * \param module_inst     Pointer to the device struct
  * \param tc_instance  Pointer to the TC module
  * \param config       Pointer to the \ref tc_conf struct
  *
@@ -90,12 +90,12 @@ static uint8_t _tc_get_inst_index(
  */
 enum status_code tc_init(
 		Tc *const tc_instance,
-		struct tc_module *const dev_inst,
+		struct tc_module *const module_inst,
 		const struct tc_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(tc_instance);
-	Assert(dev_inst);
+	Assert(module_inst);
 	Assert(config);
 
 	/* Temporary variable to hold all updates to the CTRLA
@@ -123,12 +123,12 @@ enum status_code tc_init(
 
 
 	/* Associate the given device instance with the hardware module */
-	dev_inst->hw_dev = tc_instance;
+	module_inst->hw_dev = tc_instance;
 
-	/* Make the counter size variable in the dev_inst struct reflect
+	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
 	 */
-	dev_inst->counter_size = config->counter_size;
+	module_inst->counter_size = config->counter_size;
 
 	if (tc_instance->COUNT8.CTRLA.reg & TC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
@@ -184,7 +184,7 @@ enum status_code tc_init(
 			| config->reload_action | config->clock_prescaler;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Set configuration to registers common for all 3 modes */
 	tc_instance->COUNT8.CTRLA.reg = ctrla_tmp;
@@ -200,14 +200,14 @@ enum status_code tc_init(
 
 	if (ctrlbset_tmp) {
 		/* check if we actually need to go into a wait state. */
-		_tc_wait_for_sync(dev_inst);
+		_tc_wait_for_sync(module_inst);
 		tc_instance->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
 	ctrlc_tmp = config->waveform_invert_output
 			| config->capture_enable;
 
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 	tc_instance->COUNT8.CTRLC.reg = ctrlc_tmp;
 
 	/* Set event register */
@@ -219,27 +219,27 @@ enum status_code tc_init(
 		evctrl_tmp |= TC_EVCTRL_TCINV;
 	}
 
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 	tc_instance->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action
 			| config->event_generation_enable;
 
 	/* Switch for TC counter size  */
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT8.COUNT.reg = config->tc_counter_size_conf. \
 					tc_8bit_conf.count;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT8.PER.reg   = config->tc_counter_size_conf. \
 					tc_8bit_conf.period;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT8.CC[0].reg
 				= config->tc_counter_size_conf.tc_8bit_conf. \
 					compare_capture_channel_0;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT8.CC[1].reg
 				= config->tc_counter_size_conf.tc_8bit_conf. \
 					compare_capture_channel_1;
@@ -247,16 +247,16 @@ enum status_code tc_init(
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_16BIT:
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT16.COUNT.reg
 				= config->tc_counter_size_conf.tc_16bit_conf.count;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT16.CC[0].reg
 				= config->tc_counter_size_conf.tc_16bit_conf. \
 					compare_capture_channel_0;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT16.CC[1].reg
 				= config->tc_counter_size_conf.tc_16bit_conf. \
 					compare_capture_channel_1;
@@ -264,16 +264,16 @@ enum status_code tc_init(
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_32BIT:
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT32.COUNT.reg
 				= config->tc_counter_size_conf.tc_32bit_conf.count;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT32.CC[0].reg
 				= config->tc_counter_size_conf.tc_32bit_conf. \
 					compare_capture_channel_0;
 
-			_tc_wait_for_sync(dev_inst);
+			_tc_wait_for_sync(module_inst);
 			tc_instance->COUNT32.CC[1].reg
 				= config->tc_counter_size_conf.tc_32bit_conf. \
 					compare_capture_channel_1;
@@ -290,31 +290,31 @@ enum status_code tc_init(
  * This function can be used to update count value after init. It can
  * be used while the counter is running.
  *
- * \param[in] dev_inst      Pointer to the device struct
+ * \param[in] module_inst      Pointer to the device struct
  * \param[in] count         value to write to the count register
  *
  * \return Status of the procedure
  * \retval STATUS_OK               The procedure has gone well and the count
  *                                 value has been set
- * \retval STATUS_ERR_INVALID_ARG  The counter size argument in the dev_inst
+ * \retval STATUS_ERR_INVALID_ARG  The counter size argument in the module_inst
  *                                 struct is out of bounds
  */
 enum status_code tc_set_count_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t count)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance*/
-	Tc *const tc_instance = dev_inst->hw_dev;
+	Tc *const tc_instance = module_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Write to based on the TC counter_size */
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			tc_instance->COUNT8.COUNT.reg  = (uint8_t)count;
 			return STATUS_OK;
@@ -337,25 +337,25 @@ enum status_code tc_set_count_value(
  * This function gets the count value of the TC module. It can be used while the
  * counter is running, there is no need to disable the counter module.
  *
- * \param[in]  dev_inst      Pointer to the device struct
+ * \param[in]  module_inst      Pointer to the device struct
  *
  * \return Count value
  */
 uint32_t tc_get_count_value(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_instance = dev_inst->hw_dev;
+	Tc *const tc_instance = module_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Read from based on the TC counter size */
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			return (uint32_t)tc_instance->COUNT8.COUNT.reg;
 
@@ -375,27 +375,27 @@ uint32_t tc_get_count_value(
  * This function returns a capture value in the supplied buffer
  * pointed to by capture.
  *
- * \param[in]  dev_inst       Pointer to the device struct
+ * \param[in]  module_inst       Pointer to the device struct
  * \param[in]  channel_index  Index of the Compare Capture register to read from
  *
  * \return Capture value
  */
 uint32_t tc_get_capture_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const enum tc_compare_capture_channel channel_index)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_instance = dev_inst->hw_dev;
+	Tc *const tc_instance = module_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Read out based on the TC counter size */
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			return tc_instance->COUNT8.CC[channel_index].reg;
 
@@ -414,7 +414,7 @@ uint32_t tc_get_capture_value(
  *
  * This function writes a compare value to the given compare/capture channel register
  *
- * \param[in] dev_inst       Pointer to the device struct
+ * \param[in] module_inst       Pointer to the device struct
  * \param[in] compare        Compare value
  * \param[in] channel_index  Index of the compare register to write to
  *
@@ -423,23 +423,23 @@ uint32_t tc_get_capture_value(
  * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range
  */
 enum status_code tc_set_compare_value(
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t compare,
 		const enum tc_compare_capture_channel channel_index)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(compare);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_instance = dev_inst->hw_dev;
+	Tc *const tc_instance = module_inst->hw_dev;
 
 	/* Synchronize */
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
 	/* Read out based on the TC counter size */
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			if (channel_index < 2) {
 				tc_instance->COUNT8.CC[channel_index].reg  = (uint8_t)compare;
@@ -474,7 +474,7 @@ enum status_code tc_set_compare_value(
  * \note When resetting a 32-bit counter only the master TC module's instance
  *       structure should be used.
  *
- * \param[in] dev_inst  Pointer to the device struct
+ * \param[in] module_inst  Pointer to the device struct
  *
  * \return Status of the procedure
  * \retval STATUS_OK                   The function exited normally
@@ -482,17 +482,17 @@ enum status_code tc_set_compare_value(
  *                                     modules configured as 32-bit slaves
  */
 enum status_code tc_reset(
-		const struct tc_module *const dev_inst)
+		const struct tc_module *const module_inst)
 {
 	/* Sanity check arguments  */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
 	/* Get a pointer to the module hardware instance */
-	TcCount8 *const tc_instance = &(dev_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_instance = &(module_inst->hw_dev->COUNT8);
 
 	/* Disable this module */
-	tc_disable(dev_inst);
+	tc_disable(module_inst);
 
 	if (tc_instance->STATUS.reg & TC_STATUS_SLAVE) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
@@ -501,14 +501,14 @@ enum status_code tc_reset(
 	/* Reset TC slave if one exists */
 	if (tc_instance->CTRLA.reg & TC_COUNTER_SIZE_32BIT) {
 		/* Synchronize */
-		_tc_wait_for_sync(dev_inst);
+		_tc_wait_for_sync(module_inst);
 
 		/* Reset this TC module */
 		tc_instance->CTRLA.reg  |= TC_CTRLA_SWRST;
 
 		/* Get the slave hw_dev pointer */
 		Tc *const tc_instances[TC_INST_NUM] = TC_INSTS;
-		Tc *const slave = tc_instances[_tc_get_inst_index(dev_inst->hw_dev) + 1];
+		Tc *const slave = tc_instances[_tc_get_inst_index(module_inst->hw_dev) + 1];
 
 		/* Synchronize */
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
@@ -520,7 +520,7 @@ enum status_code tc_reset(
 	}
 	else {
 		/* Synchronize */
-		_tc_wait_for_sync(dev_inst);
+		_tc_wait_for_sync(module_inst);
 
 		/* Reset this TC module */
 		tc_instance->CTRLA.reg  |= TC_CTRLA_SWRST;
@@ -544,27 +544,27 @@ enum status_code tc_reset(
  * size. In 8-bit counter size it will always be possible to change the
  * top value even in normal mode.
  *
- * \param[in] dev_inst    Pointer to the device struct
+ * \param[in] module_inst    Pointer to the device struct
  * \param[in] top_value   Value to be used as top in the counter.
  *
  * \return Status of the procedure
  * \retval STATUS_OK              The function exited normally
- * \retval STATUS_ERR_INVALID_ARG The counter size in the dev_inst is
+ * \retval STATUS_ERR_INVALID_ARG The counter size in the module_inst is
  *                                out of bounds.
  */
 enum status_code tc_set_top_value (
-		const struct tc_module *const dev_inst,
+		const struct tc_module *const module_inst,
 		const uint32_t top_value)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(compare);
 
-	Tc *const tc_instance = dev_inst->hw_dev;
+	Tc *const tc_instance = module_inst->hw_dev;
 
-	_tc_wait_for_sync(dev_inst);
+	_tc_wait_for_sync(module_inst);
 
-	switch (dev_inst->counter_size) {
+	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			tc_instance->COUNT8.PER.reg    = (uint8_t)top_value;
 			return STATUS_OK;
