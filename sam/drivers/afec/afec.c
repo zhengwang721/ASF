@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Analog-to-Digital Converter (ADC/ADC12B) driver for SAM.
+ * \brief Analog-Front-End Controller driver for SAM.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -52,12 +52,12 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup sam_drivers_adc_group Analog-to-digital Converter (ADC)
+ * \defgroup sam_drivers_afec_group Analog-Front-End Controller
  *
- * See \ref sam_adc_quickstart.
+ * See \ref sam_afec_quickstart.
  *
- * Driver for the Analog-to-digital Converter. This driver provides access to the main 
- * features of the ADC controller.
+ * Driver for the Analog-Front-End Controller. This driver provides access to the main 
+ * features of the AFEC controller.
  *
  * @{
  */

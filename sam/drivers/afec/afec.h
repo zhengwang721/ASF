@@ -54,27 +54,28 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/* The max AFEC sample freq definition*/
-#define AFEC_FREQ_MAX   20000000
-/* The min AFEC sample freq definition*/
-#define AFEC_FREQ_MIN    1000000
-/* The normal AFEC startup time*/
-#define AFEC_STARTUP_NORM     40
-/* The fast AFEC startup time*/
-#define AFEC_STARTUP_FAST     12
-
 /* Definitions for AFEC resolution */
-enum afec_resolution_t {
+enum afec_resolution {
 	AFEC_10_BITS = AFE_EMR_RES_LOW_RES,        /* AFEC 10-bit resolution */
 	AFEC_12_BITS = AFE_EMR_RES_NO_AVERAGE,     /* AFEC 12-bit resolution */
 	AFEC_13_BITS = AFE_EMR_RES_OSR4,           /* AFEC 13-bit resolution */
 	AFEC_14_BITS = AFE_EMR_RES_OSR16,          /* AFEC 14-bit resolution */
 	AFEC_15_BITS = AFE_EMR_RES_OSR64,          /* AFEC 15-bit resolution */
-	AFEC_16_BITS = AFE_EMR_RES_OSR256,         /* AFEC 16-bit resolution */
+	AFEC_16_BITS = AFE_EMR_RES_OSR256         /* AFEC 16-bit resolution */
+};
+
+/* Definitions for AFEC resolution */
+enum afec_power_mode {
+	/* AFEC core on and reference voltage circuitry on */
+	AFEC_POWER_MODE_0 = 0,
+	/* AFEC core off and reference voltage circuitry on */
+	AFEC_POWER_MODE_1, 
+	/* AFEC core off and reference voltage circuitry off */
+	AFEC_POWER_MODE_2        
 };
 
 /* Definitions for AFEC trigger */
-enum afec_trigger_t {
+enum afec_trigger {
 	/* Starting a conversion is only possible by software. */
 	AFEC_TRIG_SW = AFE_MR_TRGEN_DIS,
 	/* External trigger */
@@ -88,11 +89,13 @@ enum afec_trigger_t {
 	/* PWM Event Line 0 */
 	AFEC_TRIG_PWM_EVENT_LINE_0 = AFE_MR_TRGSEL_AFE_TRIG4 | AFE_MR_TRGEN,
 	/* PWM Event Line 1 */
-	AFEC_TRIG_PWM_EVENT_LINE_1 = AFE_MR_TRGSEL_AFE_TRIG5 | AFE_MR_TRGEN
+	AFEC_TRIG_PWM_EVENT_LINE_1 = AFE_MR_TRGSEL_AFE_TRIG5 | AFE_MR_TRGEN,
+	/* Freerun mode conversion. */
+	AFEC_TRIG_FREERUN
 } ;
 
 /* Definitions for AFEC channel number */
-enum afec_channel_num_t {
+enum afec_channel_num {
 	AFEC_CHANNEL_0  = 0,
 	AFEC_CHANNEL_1  = 1,
 	AFEC_CHANNEL_2  = 2,
@@ -120,7 +123,7 @@ enum afec_channel_num_t {
 } ;
 
 /* Definitions for AFEC gain value */
-enum afec_gainvalue_t{
+enum afec_gainvalue {
 	AFEC_GAINVALUE_0 = 0,
 	AFEC_GAINVALUE_1 = 1,
 	AFEC_GAINVALUE_2 = 2,
@@ -128,7 +131,7 @@ enum afec_gainvalue_t{
 };
 
 /* Definitions for AFEC Start Up Time */
-enum afec_startup_time_t{
+enum afec_startup_time {
 	AFEC_STARTUP_TIME_0 = AFE_MR_STARTUP_SUT0,
 	AFEC_STARTUP_TIME_1 = AFE_MR_STARTUP_SUT8,
 	AFEC_STARTUP_TIME_2 = AFE_MR_STARTUP_SUT16,
@@ -148,7 +151,7 @@ enum afec_startup_time_t{
 };
 
 /* Definitions for AFEC analog settling time */
-enum afec_settling_time_t{
+enum afec_settling_time {
 	AFEC_SETTLING_TIME_0 = AFE_MR_SETTLING_AST3,
 	AFEC_SETTLING_TIME_1 = AFE_MR_SETTLING_AST5,
 	AFEC_SETTLING_TIME_2 = AFE_MR_SETTLING_AST9,
@@ -156,7 +159,7 @@ enum afec_settling_time_t{
 };
 
 /* Definitions for Comparison Mode */
-enum afec_cmp_mode_t{
+enum afec_cmp_mode {
 	AFEC_CMP_MODE_0 = AFE_EMR_CMPMODE_LOW,
 	AFEC_CMP_MODE_1 = AFE_EMR_CMPMODE_HIGH,
 	AFEC_CMP_MODE_2 = AFE_EMR_CMPMODE_IN,
@@ -164,7 +167,7 @@ enum afec_cmp_mode_t{
 };
 
 /* Definitions for Temperature Comparison Mode */
-enum afec_temp_cmp_mode_t{
+enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_0 = AFE_TEMPMR_TEMPCMPMOD_LOW,
 	AFEC_TEMP_CMP_MODE_1 = AFE_TEMPMR_TEMPCMPMOD_HIGH,
 	AFEC_TEMP_CMP_MODE_2 = AFE_TEMPMR_TEMPCMPMOD_IN,
@@ -182,6 +185,8 @@ struct afec_config {
 	/** Sleep Mode */
 	bool sleep;
 	/** Fast Wake Up */
+	/** Resolution */
+	enum afec_resolution resolution;
 	bool fwup;
 	/** Free Run Mode */
 	bool free_run;
@@ -190,9 +195,9 @@ struct afec_config {
 	/** AFEC Clock */
 	uint32_t afec_clock;
 	/** Start Up Time */
-	enum afec_startup_time_t startup_time;
+	enum afec_startup_time startup_time;
 	/** Analog Settling Time = (settling_time + 1) / AFEC clock */
-	enum afec_settling_time_t settling_time;
+	enum afec_settling_time settling_time;
 	/** Tracking Time = tracktim / AFEC clock */
 	uint8_t tracktim;
 	/** Transfer Period = (transfer * 2 + 3) / AFEC clock */
@@ -218,7 +223,7 @@ struct afec_config {
  */
 struct afec_dev_inst {
 	/** Base address of the AFEC module. */
-	Wdt *hw_dev;
+	Afec *hw_dev;
 	/** Pointer to AFEC configuration structure. */
 	struct afec_config  *afec_cfg;
 };
@@ -227,51 +232,49 @@ struct afec_dev_inst {
 struct afec_input_config {
 	bool diff;
 	bool offset;
-	enum afec_gainvalue_t gain;
+	enum afec_gainvalue gain;
 };
 
 /** AFEC Temperature Sensor configuration structure.*/
 struct afec_temp_sensor_config {
 	bool rctc;
-	enum afec_temp_cmp_mode_t mode;
+	enum afec_temp_cmp_mode mode;
 	uint16_t low_threshold;
 	uint16_t high_threshold;
 };
 
 void afec_get_config_defaults(struct afec_config *const cfg);
+void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg);
 void afec_init(struct afec_dev_inst *const dev_inst, Afec *const afec,
 		struct afec_config *const cfg);
-void adc_configure_sequence(struct afec_dev_inst *const dev_inst,
+void afec_configure_sequence(struct afec_dev_inst *const dev_inst,
 		const enum adc_channel_num_t ch_list[], const uint8_t uc_num);
-void afec_check(struct afec_dev_inst *const dev_inst, const uint32_t ul_mck);
 void afec_configure_channel_input(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num_t channel, struct afec_input_config *input_config);
+		const enum afec_channel_num channel, struct afec_input_config *input_config);
 void afec_configure_temp_sensor(struct afec_dev_inst *const dev_inst,
 		afec_temp_sensor_config config);
 void afec_enable(struct afec_dev_inst *const dev_inst);
 void afec_disable(struct afec_dev_inst *const dev_inst);
-void afec_set_callback(struct afec_dev_inst *const dev_instc, afec_callback_t callback,
-		uint8_t number, uint8_t irq_line, uint8_t irq_level, uint32_t interrupt_flags);
+void afec_set_callback(struct afec_dev_inst *const dev_inst,
+		afec_interrupt_source_t source, afec_callback_t callback, uint8_t irq_level);
 
 /**
  * \brief Configure conversion trigger and free run mode.
  *
  * \param dev_inst  Device structure pointer.
  * \param trigger Conversion trigger.
- * \param uc_freerun AFE_MR_FREERUN_ON enables freerun mode,
- * AFE_MR_FREERUN_OFF disables freerun mode.
  *
  */
 static inline void afec_set_trigger(struct afec_dev_inst *const dev_inst,
-		const enum adc_trigger_t trigger, const bool freerun)
+		const enum afec_trigger trigger)
 {
 	Afec *afec = dev_inst->hw_dev;
-
-	afec->AFE_MR |= trigger;
-	if(freerun) {
+	
+	if(trigger == AFEC_TRIG_FREERUN) {
 		afec->AFE_MR |= AFE_MR_FREERUN_ON;
 	} else {
 		afec->AFE_MR &= ~AFE_MR_FREERUN_ON;
+		afec->AFE_MR |= trigger;
 	}
 }
 
@@ -281,11 +284,11 @@ static inline void afec_set_trigger(struct afec_dev_inst *const dev_inst,
  * \param dev_inst  Device structure pointer..
  * \param mode AFEC comparison mode.
  */
-static inline void afec_set_comparison_mode(struct afec_dev_inst *const dev_inst,
-		const enum afec_cmp_mode_t mode)
+static inline void afec_set_comparison_mode(struct afec_dev_inst *const dev_inst, const enum afec_cmp_mode mode,
+		const enum afec_channel_num channel, bool all_channel, uint8_t cmp_filter)
 {
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_EMR |= mode;
+	dev_inst->afec->AFE_EMR = mode | (all_channel) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
+			| AFE_EMR_CMPFILTER(cmp_filter);
 }
 
 /**
@@ -295,36 +298,10 @@ static inline void afec_set_comparison_mode(struct afec_dev_inst *const dev_inst
  *
  * \retval Compare mode value.
  */
-afec_cmp_mode_t afec_get_comparison_mode(struct afec_dev_inst *const dev_inst)
+afec_cmp_mode afec_get_comparison_mode(struct afec_dev_inst *const dev_inst)
 {
 	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_EMR & AFE_EMR_CMPMODE_Msk;
-}
-
-/**
- * \brief Select one comparison channel.
- *
- * \param dev_inst  Device structure pointer..
- * \param channel Comparison Selected Channel.
- */
-static inline void afec_set_one_comparison_channel(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num_t channel)
-{
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_EMR &= ~AFE_EMR_CMPALL;
-	afec->AFE_EMR |= AFE_EMR_CMPSEL(channel);
-}
-
-/**
- * \brief Select all comparison channel.
- *
- * \param dev_inst  Device structure pointer.
- */
-static inline void afec_set_all_comparison_channel(struct afec_dev_inst *const dev_inst)
-
-{
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_EMR |= AFE_EMR_CMPALL;
 }
 
 /**
@@ -383,20 +360,6 @@ static inline uint32_t afec_get_overrun_status(struct afec_dev_inst *const dev_i
 }
 
 /**
- * \brief Configure the conversion resolution.
- *
- * \param dev_inst  Device structure pointer.
- * \param resolution AFEC resolution.
- *
- */
-static inline void afec_set_resolution(struct afec_dev_inst *const dev_inst,
-		const enum afec_resolution_t resolution)
-{
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_MR |= resolution;
-}
-
-/**
  * \brief Start analog-to-digital conversion.
  *
  * \note If one of the hardware event is selected as AFEC trigger,
@@ -404,21 +367,38 @@ static inline void afec_set_resolution(struct afec_dev_inst *const dev_inst,
  *
  * \param dev_inst  Device structure pointer.
  */
-static inline void afec_start(struct afec_dev_inst *const dev_inst)
+static inline void afec_start_software_conversion(struct afec_dev_inst *const dev_inst)
 {
 	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CR = AFE_CR_START;
 }
 
 /**
- * \brief Stop analog-to-digital conversion.
+ * \brief Configures AFEC power mode.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Pointer to an AFEC instance.
+ * \param sleep  AFE_MR_SLEEP_NORMAL keeps the AFEC Core and reference voltage 
+ * circuitry ON between conversions.
+ * AFE_MR_SLEEP_SLEEP keeps the AFEC Core and reference voltage circuitry OFF 
+ * between conversions.
+ * \param fwup  AFE_MR_FWUP_OFF configures sleep mode as sleep setting, 
+ * AFE_MR_FWUP_ON keeps voltage reference ON and AFEC Core OFF between conversions.
  */
-static inline void afec_stop(struct afec_dev_inst *const dev_inst)
+static inline void afec_configure_power_mode(Afec *afec, const enum afec_power_mode mode)
 {
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_CR = AFE_CR_SWRST;
+	switch(mode) {
+		case AFEC_POWER_MODE_0:
+			afec->AFE_MR &= ~ AFE_MR_SLEEP_SLEEP;
+			break;
+		case AFEC_POWER_MODE_1:
+			afec->AFE_MR |= AFE_MR_SLEEP_SLEEP;
+			afec->AFE_MR &= ~AFE_MR_FWUP_ON;
+			break;
+		case AFEC_POWER_MODE_2:
+			afec->AFE_MR |= AFE_MR_SLEEP_SLEEP;
+			afec->AFE_MR |= AFE_MR_FWUP_ON;
+			break;	
+	}
 }
 
 /**
@@ -428,7 +408,7 @@ static inline void afec_stop(struct afec_dev_inst *const dev_inst)
  * \param afec_ch AFEC channel number.
  */
 static inline void afec_enable_one_channel(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num_t afec_ch)
+		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CHER = 1 << afec_ch;
@@ -452,7 +432,7 @@ static inline void afec_enable_all_channel(struct afec_dev_inst *const dev_inst)
  * \param afec_ch AFEC channel number.
  */
 static inline void afec_disable_one_channel(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num_t afec_ch)
+		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CHDR = 1 << afec_ch;
@@ -479,7 +459,7 @@ static inline void afec_disable_all_channel(struct afec_dev_inst *const dev_inst
  * \retval 0 if channel is disabled.
  */
 static inline uint32_t afec_get_channel_status(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num_t afec_ch)
+		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_CHSR & (1 << afec_ch);
