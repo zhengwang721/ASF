@@ -76,6 +76,9 @@ uint8_t sine_wave[256] = {
 		0x67, 0x6A, 0x6D, 0x70, 0x74, 0x77, 0x7A, 0x7D
 };
 
+/**
+ * \brief Function for configuring the pins
+ */
 static void configure_pins(void)
 {
 	struct system_pinmux_conf pin_conf;
@@ -87,37 +90,60 @@ static void configure_pins(void)
 	system_pinmux_pin_set_config(PIN_PB08, &pin_conf);
 }
 
+/**
+ * \brief Function for configuring DAC
+ *
+ * This function will configure the DAC using the default DAC configuration,
+ * except for manual trigger instead of event trigger.
+ *
+ * \param dev_inst pointer to the module descriptor
+ */
+static void configure_dac(struct dac_dev_inst const *dev_inst)
+{
+	struct dac_conf config;
+	struct dac_ch_conf ch_config;
+
+	/* Get the DAC default configuration */
+	dac_get_config_defaults(&config);
+
+	/* Switch to GCLK generator 3 */
+	config.clock_source = GCLK_GENERATOR_3;
+
+	/* Initialize and enable the DAC */
+	dac_init(&dev_inst, DAC, &config);
+	dac_enable(&dev_inst);
+
+	/* Get the default DAC channel config */
+	dac_ch_get_config_defaults(&ch_config);
+
+	/* Disable start on event, we want manual trigger */
+	ch_config.enable_start_on_event = false;
+
+	/* Set the channel configuration, and enable it */
+	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
+	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
+}
+
+/**
+ * \brief Main application routine
+ */
 int main(void)
 {
 	struct dac_dev_inst dev_inst;
-	struct dac_conf config;
-	struct dac_ch_conf ch_config;
 
 	configure_pins();
 
 	/* Initialize all the system clocks, pm, gclk... */
 	system_init();
 
+	/* Enable the internal bandgap to use as reference to the DAC */
 	system_vref_enable(SYSTEM_VREF_BANDGAP);
 
-	dac_get_config_defaults(&config);
-	config.clock_source = GCLK_GENERATOR_3;
+	/* Configure the DAC */
+	configure_dac(&dev_inst);
 
-	dac_init(&dev_inst, DAC, &config);
-
-	dac_enable(&dev_inst);
-
-	dac_ch_get_config_defaults(&ch_config);
-
-	ch_config.enable_start_on_event = false;
-
-	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
-
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
-
-	dac_write(&dev_inst, DAC_CHANNEL_0, 0x3FF, false);
-
-	while (1) {
+	/* Main application loop that writes a sine wave */
+	while (true) {
 		for (uint8_t i = 0; i < 0xFF; i++) {
 			dac_write(&dev_inst, DAC_CHANNEL_0, (sine_wave[i] << 2), false);
 		}
