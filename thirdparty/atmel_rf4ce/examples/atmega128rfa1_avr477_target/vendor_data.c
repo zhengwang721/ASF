@@ -9,7 +9,7 @@
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2010-2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010-2013, Atmel Corporation All rights reserved.
  */
 
 #ifdef VENDOR_DATA
