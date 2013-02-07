@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,6 +65,15 @@
 
 /* 0: disable PicoCache, 1: enable PicoCache  */
 #define CONFIG_HCACHE_ENABLE          1
+
+/*
+ * To use low power mode for flash read mode (PS0, PS1), don't define it.
+ * To use high speed mode for flash read mode (PS2), define it.
+ *
+ * \note
+ * For early engineer samples, ONLY low power mode support for flash read mode.
+ */
+//#define CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
 
 /* Fbus = Fsys / (2 ^ BUS_div) */
 #define CONFIG_SYSCLK_CPU_DIV         0
