@@ -56,18 +56,10 @@
 
 #define SIO_BUF_COUNT                   (2)
 
-#define SIO_RX2NCP_BUF_SIZE                 (200)
+#define SIO_RX2NCP_BUF_SIZE             (200)
 #define SIO_TX_BUF_SIZE                 SIO_RX2NCP_BUF_SIZE
 
-#ifdef UART0
-#define SIO_CHANNEL                     (SIO_0)
-#endif
-#ifdef UART1
-#define SIO_CHANNEL                     (SIO_1)
-#endif
-#ifdef USB0
-#define SIO_CHANNEL                     (SIO_2)
-#endif
+
 
 /* === Globals ============================================================= */
 
@@ -94,12 +86,6 @@ static uint8_t *sio_rx_ptr;
  */
 static volatile uint8_t sio_rx_state;
 
-/**
- * This is the transmit state of the UART. (\ref UART_TX_STATE_SOT,
- *   \ref UART_TX_STATE_LENGTH, \ref UART_TX_STATE_DATA, or
- *   \ref UART_TX_STATE_EOT)
- */
-//volatile uint8_t sio_tx_state;
 
 /**
  * This is the length of the message should be received.
@@ -252,7 +238,6 @@ zrc_cmd_confirm_cb_t zrc_cmd_confirm_cb;
 zrc_cmd_disc_confirm_cb_t zrc_cmd_disc_confirm_cb;
 
 
-///////////////
 /** Gets attribute size by reading from a table stored in flash */
 #define GET_NIB_ATTR_SIZE(x)    PGM_READ_BYTE(&nib_attr_size[x - nwkActivePeriod])
 
@@ -869,7 +854,7 @@ bool nlme_auto_discovery_request(uint8_t RecAppCapabilities,
    }
    nlme_auto_discovery_confirm_cb = (nlme_auto_discovery_confirm_cb_t)confirm_cb;
 
-  *msg_buf++ = NLME_AUTO_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN+1;
+  *msg_buf++ = NLME_AUTO_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_AUTO_DISCOVERY_REQUEST;
   *msg_buf++ = RecAppCapabilities;
@@ -1162,7 +1147,7 @@ bool nlme_rx_enable_request(uint32_t RxOnDuration
 return true;
   
 }
-///////////check/////////
+
 
 bool nlme_set_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex, uint8_t *NIBAttributeValue
 
@@ -1478,7 +1463,7 @@ bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCo
    }
    zrc_cmd_confirm_cb = (zrc_cmd_confirm_cb_t)confirm_cb;
  
-  *msg_buf++ = ZRC_CMD_REQ_LEN + RF4CONTROL_PID_LEN + CmdLength+1;
+  *msg_buf++ = ZRC_CMD_REQ_LEN + RF4CONTROL_PID_LEN + CmdLength;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = ZRC_CMD_REQUEST;
   *msg_buf++ = PairingRef;
