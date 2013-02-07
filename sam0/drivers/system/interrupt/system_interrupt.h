@@ -43,15 +43,79 @@
 #ifndef SYSTEM_INTERRUPT_H_INCLUDED
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
+/**
+ * \defgroup asfdoc_samd20_system_interrupt_group SAMD20 System Interrupt Driver
+ *
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of internal interrupts.
+ *
+ * The following peripherals are used by this module:
+ *
+ *  - NVIC (Nested Vector Interrupt Controller)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_system_interrupt_prerequisites
+ *  - \ref asfdoc_samd20_system_interrupt_module_overview
+ *  - \ref asfdoc_samd20_system_interrupt_special_considerations
+ *  - \ref asfdoc_samd20_system_interrupt_extra_info
+ *  - \ref asfdoc_samd20_system_interrupt_examples
+ *  - \ref asfdoc_samd20_system_interrupt_api_overview
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_module_overview Module Overview
+ *
+ * TODO
+ *
+ * \section asfdoc_samd20_system_interrupt_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_extra_info Extra Information for System Interrupt
+ *
+ * For extra information see \ref asfdoc_samd20_system_interrupt_extra. This includes:
+ *  - \ref asfdoc_samd20_system_interrupt_extra_acronyms
+ *  - \ref asfdoc_samd20_system_interrupt_extra_dependencies
+ *  - \ref asfdoc_samd20_system_interrupt_extra_errata
+ *  - \ref asfdoc_samd20_system_interrupt_extra_history
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_system_interrupt_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_api_overview API Overview
+ * @{
+ */
+
 #include <compiler.h>
 #include <core_cm0plus.h>
 
 #if !defined(__DOXYGEN__)
+/* Generates a interrupt vector table enum list entry for a given module type
+   and index (e.g. "SYSTEM_INTERRUPT_MODULE_TC0 = TC0_IRQn,"). */
 #  define _MODULE_IRQn(n, module) \
 		SYSTEM_INTERRUPT_MODULE_##module##n = module##n##_IRQn,
 
+/* Generates interrupt vector table enum list entries for all instances of a
+   given module type on the selected device. */
 #  define _SYSTEM_INTERRUPT_MODULES(name) \
 		MREPEAT(name##_INST_NUM, _MODULE_IRQn, name)
+
+
+#  define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
+#  define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
+
+#  define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START  0
+
+#  define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
 #endif
 
 enum system_interrupt_vector {
@@ -69,8 +133,8 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
 	SYSTEM_INTERRUPT_MODULE_EVSYS      = EVSYS_IRQn,
 #if defined(__DOXYGEN__)
-	SYSTEM_INTERRUPT_MODULE_SERCOMn    = SERCOMn_IRQn
-	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn
+	SYSTEM_INTERRUPT_MODULE_SERCOMn    = SERCOMn_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn,
 #else
 	_SYSTEM_INTERRUPT_MODULES(SERCOM)
 	_SYSTEM_INTERRUPT_MODULES(TC)
@@ -87,13 +151,6 @@ enum system_interrupt_priority_level {
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2,
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
 };
-
-#define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
-#define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
-
-#define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START  0
-
-#define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
 
 /**
  * \brief Enter critical section
@@ -217,7 +274,7 @@ bool system_interrupt_is_pending(
  *
  * \param[in] vector Interrupt vector number which is set as pending
  *
- * \returns A status code identifying if the function was sucessfully executed or not
+ * \returns A status code identifying if the function was successfully executed or not
  *
  * \retval STATUS_OK If no error where detected
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
@@ -232,7 +289,7 @@ enum status_code system_interrupt_set_pending(
  *
  * \param[in] vector Interrupt vector number which is cleared
  *
- * \returns A status code identifying if the function was sucessfully executed or not
+ * \returns A status code identifying if the function was successfully executed or not
  *
  * \retval STATUS_OK If no error where detected
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
@@ -247,7 +304,7 @@ enum status_code system_interrupt_clear_pending(
  *
  * \param[in] vector Interrupt vector which the priority level is assigned to
  *
- * \returns A status code identifying if the function was sucessfully executed or not
+ * \returns A status code identifying if the function was successfully executed or not
  *
  * \retval STATUS_OK If no error where detected
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
@@ -263,5 +320,64 @@ enum status_code system_interrupt_set_priority(
  */
 enum system_interrupt_priority_level system_interrupt_get_priority(
 		const enum system_interrupt_vector vector);
+
+
+/** @} */
+
+/**
+ * \page asfdoc_samd20_system_interrupt_extra Extra Information for System Interrupt Driver
+ *
+ * \section asfdoc_samd20_system_interrupt_extra_acronyms Acronyms
+ * The table below presents the acronyms used in this module:
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>ISR</td>
+ *		<td>Interrupt Service Routine</td>
+ *	</tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_system_interrupt_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samd20_system_interrupt_exqsg Examples for System Interrupt Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_system_interrupt_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_system_interrupt_basic_use_case
+ */
 
 #endif
