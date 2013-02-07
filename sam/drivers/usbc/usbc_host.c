@@ -1637,6 +1637,9 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		uhd_udesc_rst_buf0_size(pipe);
 
 		if (0 == nb_trans) {
+			// Wait busy status stable
+			for (int i = 0; uhd_nb_busy_bank(pipe) && i < 5; i ++) {
+			}
 			if (0 == uhd_nb_busy_bank(pipe)) {
 				// All byte are transfered than take nb byte requested
 				nb_trans = uhd_udesc_get_buf0_ctn(pipe);
