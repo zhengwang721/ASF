@@ -217,13 +217,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
 	enum system_interrupt_priority_level priority = SYSTEM_INTERRUPT_PRIORITY_LEVEL_0;
 
 	if (vector >= 0) {
-
 		priority = (NVIC->IP[register_num] >> priority_pos) & _SYSTEM_INTERRUPT_PRIORITY_MASK;
-
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
-
 		priority = (SCB->SHP[1] >> _SYSTEM_INTERRUPT_SYSTICK_PRI_POS) & _SYSTEM_INTERRUPT_PRIORITY_MASK;
-
 	}
 
 	return priority;

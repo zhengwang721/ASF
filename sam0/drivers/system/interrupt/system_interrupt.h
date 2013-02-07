@@ -94,8 +94,11 @@
  *
  * \section asfdoc_samd20_system_interrupt_special_considerations Special Considerations
  *
- * TODO
- *
+ * Interrupts from peripherals in the SAMD20 devices are on a per-module basis;
+ * an interrupt raised from any source within a module will cause a single,
+ * module-common handler to execute. It is the user application or driver's
+ * responsibility to de-multiplex the module-common interrupt to determine the
+ * exact interrupt cause.
  *
  * \section asfdoc_samd20_system_interrupt_extra_info Extra Information for System Interrupt
  *
@@ -207,9 +210,13 @@ enum system_interrupt_vector {
  * device.
  */
 enum system_interrupt_priority_level {
+	/** Priority level 0, the highest possible interrupt priority. */
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0  = 0,
+	/** Priority level 1. */
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1  = 1,
+	/** Priority level 2. */
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2  = 2,
+	/** Priority level 3, the lowest possible interrupt priority. */
 	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3  = 3,
 };
 
