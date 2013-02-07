@@ -274,15 +274,15 @@ typedef enum afec_interrupt_source {
 	TWIS_INTERRUPT_ALL                 = ~0UL
 } afec_interrupt_source_t;
 
+typedef void (*afec_callback_t)(void);
+
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
 void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg);
-void afec_init(struct afec_dev_inst *const dev_inst, Afec *const afec,
-		struct afec_config *const cfg);
-void afec_temp_sensor_set_config(struct afec_dev_inst *const dev_inst,
-		struct afec_temp_sensor_config cfg);
-void afec_ch_set_config(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num channel, struct afec_ch_config cfg);
+void afec_init(Afec *const afec, struct afec_config *const config);
+void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config config);
+void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
+		struct afec_ch_config config);
 void afec_configure_sequence(struct afec_dev_inst *const dev_inst,
 		const enum adc_channel_num_t ch_list[], const uint8_t uc_num);
 void afec_enable(struct afec_dev_inst *const dev_inst);
@@ -439,7 +439,7 @@ static inline void afec_configure_power_mode(Afec *afec, const enum afec_power_m
  * \param dev_inst  Device structure pointer.
  * \param afec_ch AFEC channel number.
  */
-static inline void afec_enable_channel(struct afec_dev_inst *const dev_inst,
+static inline void afec_channel_enable(struct afec_dev_inst *const dev_inst,
 		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
@@ -452,7 +452,7 @@ static inline void afec_enable_channel(struct afec_dev_inst *const dev_inst,
  * \param dev_inst  Device structure pointer.
  * \param afec_ch AFEC channel number.
  */
-static inline void afec_disable_channel(struct afec_dev_inst *const dev_inst,
+static inline void afec_channel_disable(struct afec_dev_inst *const dev_inst,
 		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
@@ -468,7 +468,7 @@ static inline void afec_disable_channel(struct afec_dev_inst *const dev_inst,
  * \retval 1 if channel is enabled.
  * \retval 0 if channel is disabled.
  */
-static inline uint32_t afec_get_channel_status(struct afec_dev_inst *const dev_inst,
+static inline uint32_t afec_channel_get_status(struct afec_dev_inst *const dev_inst,
 		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
@@ -478,12 +478,15 @@ static inline uint32_t afec_get_channel_status(struct afec_dev_inst *const dev_i
  * \brief Read the Converted Data of the selected channel.
  *
  * \param dev_inst  Device structure pointer.
+ * \param afec_ch AFEC channel number.
  *
  * \return AFEC converted value of the selected channel.
  */
-static inline uint32_t afec_get_channel_value(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_channel_get_value(struct afec_dev_inst *const dev_inst
+		const enum afec_channel_num afec_ch)
 {
 	Afec *afec = dev_inst->hw_dev;
+	afec->AFE_CSELR = afec_ch;
 	return afec->AFE_CDR;
 }
 
@@ -491,11 +494,13 @@ static inline uint32_t afec_get_channel_value(struct afec_dev_inst *const dev_in
  * \brief Set analog offset to be used for channel CSEL.
  *
  * \param dev_inst  Device structure pointer.
+ * \param afec_ch AFEC channel number.
  */
-static inline void afec_set_analog_offset(struct afec_dev_inst *const dev_inst,
-		uint16_t offset)
+static inline void afec_channel_set_analog_offset(struct afec_dev_inst *const dev_inst,
+		const enum afec_channel_num afec_ch, uint16_t offset)
 {
 	Afec *afec = dev_inst->hw_dev;
+	afec->AFE_CSELR = afec_ch;
 	afec->AFE_COCR = offset;
 }
 
