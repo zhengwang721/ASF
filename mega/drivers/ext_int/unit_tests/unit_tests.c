@@ -172,7 +172,7 @@ static void run_interrupt_trigger_test(const struct test_case *test)
  */
 static void run_set_functions_test(const struct test_case *test)
 {
-	bool success = false;
+	bool success;
      
 	/* Test enabling and disabling external interrupt */
 	ext_int_enable(CONF_EXT_INT);
