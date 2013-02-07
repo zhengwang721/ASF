@@ -3,13 +3,47 @@
  *
  * @brief Terminal Target application
  *
- * $Id: main.c 32889 2012-08-31 10:40:36Z agasthian.s $
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -112,10 +146,7 @@ static void print_unpair_submenu(void);
 static void led_handling(void *callback_parameter);
 static void print_ch_change_submenu(void);
 static void print_sub_mode_ch_ag_setup(void);
-static void print_get_battery_status_submenu(void);
-
-static void print_get_firmware_version_submenu(void);
-static void print_get_alive_submenu(void);
+static void print_vendor_data_submenu(uint8_t Vcmd);
 static char *get_status_text(nwk_enum_t status);
 
 
@@ -133,6 +164,7 @@ void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Pro
                         );
 
 static void nwk_ch_agility_indication(uint8_t LogicalChannel);
+static void nlme_unpair_indication(uint8_t PairingRef);
 static void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                                uint8_t RxLinkQuality, uint8_t RxFlags);
 #ifdef ZRC_CMD_DISCOVERY
@@ -183,6 +215,7 @@ int main(void)
     register_zrc_indication_callback(&zrc_ind);
 
     nwk_ind.nwk_ch_agility_indication_cb = nwk_ch_agility_indication;
+    nwk_ind.nlme_unpair_indication_cb = nlme_unpair_indication;
     register_nwk_indication_callback(&nwk_ind);
 
 
@@ -199,13 +232,10 @@ int main(void)
      */
     cpu_irq_enable();
     
-    nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
-
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
-	
-	sio2host_init();
-
+  
+   sio2host_init();
 
 #endif
 
@@ -215,7 +245,6 @@ int main(void)
     while (1)
     {
       
-       //printf("a");
         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
     }
@@ -252,8 +281,8 @@ static void app_task(void)
  */
 static void handle_input(uint8_t input_char)
 {
-    // We allow user input if we are either in IDLE state ot POWER_SAVE state
-    // In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req.
+    /* We allow user input if we are either in IDLE state ot POWER_SAVE state
+    In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req*/
     if (((node_status != IDLE) && (node_status != POWER_SAVE)) ||
         ((node_status == POWER_SAVE) && (!((input_char == 'Y') || (input_char == 'R') ||
                                            (input_char == 'A') || (input_char == 'W')))))
@@ -385,15 +414,15 @@ static void handle_input(uint8_t input_char)
             break;
 
         case 'D':
-            print_get_battery_status_submenu();
+            print_vendor_data_submenu(BATTERY_STATUS_REQ);
             break;
 
         case 'V':
-            print_get_firmware_version_submenu();
+            print_vendor_data_submenu(FW_VERSION_REQ);
             break;
 
         case 'Z':
-            print_get_alive_submenu();
+            print_vendor_data_submenu(ALIVE_REQ);
             break;
         default:
             print_main_menu();
@@ -424,7 +453,7 @@ static void print_main_menu(void)
     printf("(C) : Channel agility (periodic mode) - enable/disable\r\n");
     printf("(O) : Channel agility configuration\r\n");
     printf("(B) : Base channel change\r\n");
-    printf("(Y) : Standby (power save mode)\r\n");
+    printf("(Y) : Power save mode - enable/disable\r\n");
     printf("(D) : Send remote battery status request\r\n");
     printf("(V) : Send remote firmware version request\r\n");
     printf("(Z) : Send alive request\r\n");
@@ -567,11 +596,9 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
                (uint8_t)(table->DestinationNetworkAddress));
 #endif
         printf("Recipient capabilities: 0x%.2X", table->RecipientCapabilities);
-#if 0 //defined(__ICCAVR32__)
-        printf(", Recipient frame counter %u\r\n", table->RecipientFrameCounter);
-#else
+
+
         printf(", Recipient frame counter %lu\r\n", table->RecipientFrameCounter);
-#endif
         printf("Security link key: 0x");
         for (i = 0; i < 16; i++)
         {
@@ -661,12 +688,7 @@ static void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *
                 printf("%s", zrc_print_rc_cmd_text(zrc_frm->rc_cmd));
                 printf(" Press (0x%.2X), ", zrc_frm->rc_cmd);
                 printf("from %d, LQI = 0x%.2X\r\n", PairingRef, RxLinkQuality);
-#ifdef RELAY_SUPPORT
-                if (zrc_frm->rc_cmd == POWER_TOGGLE_FUNCTION)
-                {
-                    RELAY_1_TOGGLE();
-                }
-#endif
+
             }
             break;
 
@@ -1009,6 +1031,22 @@ static void nlme_start_confirm(nwk_enum_t Status)
 
 
 /**
+ * @brief Notify the application of the removal of link by another device.
+ *
+ * The NLME-UNPAIR.indication primitive allows the NLME to notify the application
+ * of the removal of a pairing link by another device.
+ *
+ * @param PairingRef       Pairing Ref for which entry is removed from pairing table.
+ */
+void nlme_unpair_indication(uint8_t PairingRef)
+{
+    number_of_paired_dev--;
+    /* Keep compiler happy */
+    PairingRef = PairingRef;
+}
+
+
+/**
  * @brief Notify the application for the previous unpair request.
  *
  * The NLME-UNPAIR.confirm primitive allows the NLME to notify the application of
@@ -1170,11 +1208,7 @@ static void print_sub_mode_ch_ag_setup(void)
     printf("Configuration of channel agility, select a configration parameter\r\n");
     printf("(Scan interval > 4*scan duration)\r\n\r\n");
     printf("(F) : Noise threshold, current value: %d\r\n", nwk_Private_ChAgEdThreshold);
-#if 0 //defined(__ICCAVR32__)
-    printf("(G) : Scan interval, current value: 0x%.8X\r\n", nwk_Private_ChAgScanInterval);
-#else
     printf("(G) : Scan interval, current value: 0x%.8lX\r\n", nwk_Private_ChAgScanInterval);
-#endif
     printf("(E) : Scan duration, current value: %d\r\n", nwk_ScanDuration);
     printf(">\r\n");
     /* Check for incoming characters from terminal program. */
@@ -1191,7 +1225,7 @@ static void print_sub_mode_ch_ag_setup(void)
     {
         case 'F': /* Noise Threshold */
             {
-                char input_char2[3] = {0, 0, 0};
+                char input_char2[4] = {0, 0, 0,0};
                 uint8_t threshold;
                 printf("Enter new noise threshold (0 = -91dBm, 255 = -35 dBm).\r\n");
                 printf("Default: 10 = -80 dBm, new value: \r\n");
@@ -1221,7 +1255,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 uint32_t threshold = 0;
                 printf("Enter new scan interval (0x00000000 ... 0xFFFFFFFF), enter 32-bit value \r\n");
                 printf("Default: 0x00393870 symbols = 60 sec, new value: 0x \r\n");
-                for (uint8_t i = 0; i < 9; i++)
+                for (uint8_t i = 0; i < 8; i++)
                 {
                     input = (char)sio2host_getchar();
                     input = (uint8_t)toupper(input);
@@ -1276,7 +1310,7 @@ static void print_sub_mode_ch_ag_setup(void)
 
         case 'E':
             {
-                char input_char2[2] = {0, 0};
+                char input_char2[3] = {0, 0,0};
                 uint8_t scan_dur;
                 printf("Enter new scan duration (0 = 30 msec, 6 = 1 sec, 14 = 14 min).\r\n");
                 printf("Default: 6 = 1 sec, new value: \r\n");
@@ -1293,9 +1327,18 @@ static void print_sub_mode_ch_ag_setup(void)
                     }
                 }
                 scan_dur = atol(input_char2);
+                if ((scan_dur==0)||(scan_dur==6)||(scan_dur==14))
+                {
                 nlme_set_request(nwkScanDuration, 0, &scan_dur
                                  , (FUNC_PTR)nlme_set_confirm
                                 );
+                }
+                else
+                {
+                   printf("Invalid value. \r\n\r\n");
+                   printf("> Press Enter to return to main menu:\r\n ");
+                   return;
+                }
             }
             break;
 
@@ -1305,13 +1348,15 @@ static void print_sub_mode_ch_ag_setup(void)
     printf("\r\n\r\n");
     printf("> Press Enter to return to main menu:\r\n ");
 }
-
-
 /**
- * @brief Prints the Battery Status submenu.
+ * @brief This function is used to print the vendor data submenu on the hyperterminal.
+ *
+ * @param Vcmd Vendor command id to be requested.
+ *
  */
-static void print_get_battery_status_submenu(void)
+static void print_vendor_data_submenu(uint8_t Vcmd)
 {
+  
     char input_char;
 
     printf("Which device should be asked? Pairing Ref = \r\n");
@@ -1324,8 +1369,7 @@ static void print_get_battery_status_submenu(void)
 
         uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
         profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = BATTERY_STATUS_REQ;
-
+        uint8_t nsdu = Vcmd;
         vendor_data_request(PairingRef, ProfileId,
                             VendorId, 1, &nsdu,
                             TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
@@ -1336,71 +1380,9 @@ static void print_get_battery_status_submenu(void)
         printf("Unknown paring reference\r\n\r\n");
         printf("> Press Enter to return to main menu: \r\n");
     }
+  
 }
 
-
-/**
- * @brief Prints the Get FIrmware Version submenu.
- */
-static void print_get_firmware_version_submenu(void)
-{
-    char input_char;
-
-    printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio2host_getchar();
-    printf("\r\n");
-
-    if ((input_char >= '0') && (input_char <= '9'))
-    {
-        uint8_t PairingRef = input_char - 0x30;
-
-        uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
-        profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = FW_VERSION_REQ;
-
-        vendor_data_request(PairingRef, ProfileId,
-                            VendorId, 1, &nsdu,
-                            TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
-    }
-    else
-    {
-        node_status = IDLE;
-        printf("Unknown paring reference\r\n\r\n");
-        printf("> Press Enter to return to main menu: \r\n");
-    }
-}
-
-
-/**
- * @brief Prints the Get Alive submenu.
- */
-static void print_get_alive_submenu(void)
-{
-    char input_char;
-
-    printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio2host_getchar();
-    printf("\r\n");
-
-    if ((input_char >= '0') && (input_char <= '9'))
-    {
-        uint8_t PairingRef = input_char - 0x30;
-
-        uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
-        profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = ALIVE_REQ;
-
-        vendor_data_request(PairingRef, ProfileId,
-                            VendorId, 1, &nsdu,
-                            TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
-    }
-    else
-    {
-        node_status = IDLE;
-        printf("Unknown paring reference\r\n\r\n");
-        printf("> Press Enter to return to main menu:\r\n ");
-    }
-}
 
 
 /**
