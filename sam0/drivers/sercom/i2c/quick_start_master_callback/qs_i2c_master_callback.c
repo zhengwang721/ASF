@@ -7,8 +7,6 @@
  *
  * \asf_license_start
  *
- * \page License
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -42,12 +40,18 @@
  */
 
 #include <asf.h>
+#include <system_interrupt.h>
 
 //! [packet_data]
-#define DATA_LENGTH 10
+#define DATA_LENGTH 8
+
 static uint8_t buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 };
+static uint8_t buffer_reversed[DATA_LENGTH] = {
+		0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
+};
+i2c_packet_t packet;
 #define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
@@ -58,6 +62,26 @@ static uint8_t buffer[DATA_LENGTH] = {
 //! [dev_inst]
 struct i2c_master_dev_inst dev_inst;
 //! [dev_inst]
+
+
+//! [callback_func]
+static void write_callback(const struct i2c_master_dev_inst *const dev_inst_tass)
+{
+	/* Send every other packet with reversed data. */
+	//! [revert_order]
+	if (packet.data[0] == 0x00) {
+		packet.data = &buffer_reversed[0];
+	} else {
+		packet.data = &buffer[0];
+	}
+	//! [revert_order]
+	
+	/* Initiate new packet write. */
+	//! [write_next]
+	i2c_master_async_write_packet(&dev_inst, &packet);
+	//! [write_next]
+}
+//! [callback_func]
 
 //! [initialize_i2c]
 static void configure_i2c(void)
@@ -77,45 +101,47 @@ static void configure_i2c(void)
 	//! [init_module]
 	i2c_master_init(&dev_inst, SERCOM2, &conf);
 	//! [init_module]
-
+	
 	//! [enable_module]
 	i2c_master_enable(&dev_inst);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
+//! [setup_callback]
+void configure_callbacks(void){
+  	/* Register callback function. */
+	i2c_master_async_register_callback(&dev_inst, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	i2c_master_async_enable_callback(&dev_inst, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+  
+	/* Enable interrupts for SERCOM instance. */
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+}
+//! [setup_callback]
+
 int main(void)
 {
 	//! [run_initialize_i2c]
 	/* Init system. */
-	system_init();
-
+	system_init();	
 	/* Configure device and enable. */
 	configure_i2c();
+	/* Configure callbacks and enable. */
+	configure_callbacks();
 	//! [run_initialize_i2c]
-
-	/* Timeout counter. */
-	uint16_t timeout = 0;
 
 	/* Init i2c packet. */
 	//! [packet]
-	i2c_packet_t packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer,
-	};
+	packet.address     = SLAVE_ADDRESS;
+	packet.data_length = DATA_LENGTH;
+	packet.data        = buffer;
 	//! [packet]
-
-	/* Write buffer to slave until success. */
+		
+	/* Initiate first packet to be sent to slave. */
 	//! [write_packet]
-	while(i2c_master_write_packet(&dev_inst, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ >= TIMEOUT) {
-			break;
-		}
-	}
+	i2c_master_async_write_packet(&dev_inst, &packet);
 	//! [write_packet]
-
+		
 	while (1) {
 		/* Inf loop. */
 	}

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Serial Peripheral Interface Driver
+ * \brief SAMD20 BOD configuration
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -37,22 +37,43 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * \asf_license_stops
+ * \asf_license_stop
  *
  */
-#ifndef SERCOM_INTERRUPTS_H_INCLUDED
-#define SERCOM_INTERRUPTS_H_INCLUDED
+#ifndef BOD_CONFIG_H
+#  define BOD_CONFIG_H
 
-#include "sercom.h"
+/* BOD33 Configuration
+ * ------------------------------------------------------*/
 
-/* Look-up table for device instances. */
-extern void *_sercom_instances[SERCOM_INST_NUM];
+/* Enable BOD33 */
+#define CONF_BOD33_ENABLE false
 
-typedef void (*sercom_handler_t)(uint8_t instance);
+#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
+//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
 
-uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance);
+#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
 
-void _sercom_set_handler(uint8_t instance,
-		sercom_handler_t interrupt_handler);
+#define CONF_BOD33_LEVEL 10
+#define CONF_BOD33_HYSTERESIS true
 
-#endif /* SERCOM_INTERRUPTS_H_INCLUDED */
+
+/* BOD12 Configuration
+ * ------------------------------------------------------*/
+
+/* Enable BOD12 */
+#define CONF_BOD12_ENABLE false
+
+/* Action on bod timeout; reset or interrupt */
+#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
+//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+
+/* Sampled or continious monitoring */
+#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
+//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+
+#define CONF_BOD12_HYSTERESIS true
+
+
+#endif /* BOD_CONFIG_H */
