@@ -70,8 +70,8 @@
  * - Remove jumpers from J200, J203, J600 and J601.
  * - Connect pin 53 (VLCD), pin 87 (VDDIO_1), pin 88 (VDDIO_2) to VDD.
  * - Connect PC01 to PA20, PC07 to PA21, PC08 to PA22, PC13 to PA07.
- *   PC01, PC07, PC08 and PC13 is used for changing GLOC input.
- * - PA24 is GLOC output 0 (can check pin level by GPIO function).
+ *   PC01, PC07, PC08 and PC13 are used for changing GLOC input.
+ * - PA24 is GLOC output 0.
 
  *
  * \section compinfo Compilation info
