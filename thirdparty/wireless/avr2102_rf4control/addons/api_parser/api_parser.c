@@ -56,18 +56,10 @@
 
 #define SIO_BUF_COUNT                   (2)
 
-#define SIO_RX2NCP_BUF_SIZE                 (200)
+#define SIO_RX2NCP_BUF_SIZE             (200)
 #define SIO_TX_BUF_SIZE                 SIO_RX2NCP_BUF_SIZE
 
-#ifdef UART0
-#define SIO_CHANNEL                     (SIO_0)
-#endif
-#ifdef UART1
-#define SIO_CHANNEL                     (SIO_1)
-#endif
-#ifdef USB0
-#define SIO_CHANNEL                     (SIO_2)
-#endif
+
 
 /* === Globals ============================================================= */
 
@@ -94,12 +86,6 @@ static uint8_t *sio_rx_ptr;
  */
 static volatile uint8_t sio_rx_state;
 
-/**
- * This is the transmit state of the UART. (\ref UART_TX_STATE_SOT,
- *   \ref UART_TX_STATE_LENGTH, \ref UART_TX_STATE_DATA, or
- *   \ref UART_TX_STATE_EOT)
- */
-//volatile uint8_t sio_tx_state;
 
 /**
  * This is the length of the message should be received.
@@ -123,27 +109,19 @@ nwk_enum_t nwk_init(void);
 static uint8_t *get_next_tx_buffer(void);
 static inline void handle_incoming_msg(void);
 bool nlme_reset_request(bool SetDefaultNIB
-#ifdef RF4CE_CALLBACK_PARAM
                         , FUNC_PTR confirm_cb
-#endif
                        );
 bool nlde_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                            uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
                            uint8_t TxOptions
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
                            , uint8_t Handle
-#endif
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                            , FUNC_PTR confirm_cb
-#endif
                           );
 bool nlme_auto_discovery_request(uint8_t RecAppCapabilities,
                                  dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE],
                                  profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
                                  uint32_t AutoDiscDuration
-#ifdef RF4CE_CALLBACK_PARAM
                                  , FUNC_PTR confirm_cb
-#endif
                                 );
 bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
                                 uint8_t OrgAppCapabilities,
@@ -153,9 +131,7 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
                                 uint8_t DiscProfileIdListSize,
                                 profile_id_t DiscProfileIdList[7],
                                 uint32_t DiscDuration
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                 , FUNC_PTR confirm_cb
-#endif
                                );
 
 bool nlme_discovery_response(nwk_enum_t Status, uint64_t DstIEEEAddr,
@@ -164,77 +140,52 @@ bool nlme_discovery_response(nwk_enum_t Status, uint64_t DstIEEEAddr,
 bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIEEEAddr,
                        uint8_t OrgAppCapabilities, dev_type_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE],
                        profile_id_t OrgProfileIdList[PROFILE_ID_LIST_SIZE], uint8_t KeyExTransferCount
-#ifdef RF4CE_CALLBACK_PARAM
                        , FUNC_PTR confirm_cb
-#endif
                       );
 bool nlme_pair_response(nwk_enum_t Status, uint16_t DstPANId, uint64_t DstIEEEAddr,
                             uint8_t RecAppCapabilities, dev_type_t RecDevTypeList[3],
                             profile_id_t RecProfileIdList[7], uint8_t ProvPairingRef);
 bool nlme_get_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex
-#ifdef RF4CE_CALLBACK_PARAM
                       , FUNC_PTR confirm_cb
-#endif
                      );
 bool nlme_rx_enable_request(uint32_t RxOnDuration
-#ifdef RF4CE_CALLBACK_PARAM
                             , FUNC_PTR confirm_cb
-#endif
                            );
 bool nlme_set_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex, uint8_t *NIBAttributeValue
-#ifdef RF4CE_CALLBACK_PARAM
                       , FUNC_PTR confirm_cb
-#endif
                      );
 bool nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
     FUNC_PTR confirm_cb);
-#else
-    void);
-#endif
+
 bool nlme_unpair_request(uint8_t PairingRef
-#ifdef RF4CE_CALLBACK_PARAM
                          , FUNC_PTR confirm_cb
-#endif
                         );
 bool nlme_unpair_response(uint8_t PairingRef);
 
 bool nlme_update_key_request(uint8_t PairingRef, uint8_t NewLinkKey[16]
-#ifdef RF4CE_CALLBACK_PARAM
                              , FUNC_PTR confirm_cb
-#endif
                             );
 bool nwk_ch_agility_request(nwk_agility_mode_t AgilityMode
-#ifdef RF4CE_CALLBACK_PARAM
                             , FUNC_PTR confirm_cb
-#endif
                            );
 bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
                           dev_type_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE],
                           profile_id_t OrgProfileIdList[PROFILE_ID_LIST_SIZE],
                           dev_type_t SearchDevType, uint8_t DiscProfileIdListSize,
                           profile_id_t DiscProfileIdList[PROFILE_ID_LIST_SIZE]
-#ifdef RF4CE_CALLBACK_PARAM
                           , FUNC_PTR confirm_cb
-#endif
                          );
 bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
                           dev_type_t RecDevTypeList[3],
                           profile_id_t RecProfileIdList[7]
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
 bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCode,
                      uint8_t CmdLength, uint8_t *Cmd, uint8_t TxOptions
-#ifdef RF4CE_CALLBACK_PARAM
                      , FUNC_PTR confirm_cb
-#endif
                     );
 bool zrc_cmd_disc_request(uint8_t PairingRef
-#ifdef RF4CE_CALLBACK_PARAM
                           , FUNC_PTR confirm_cb
-#endif
                          );
 bool zrc_cmd_disc_response(uint8_t PairingRef, uint8_t *SupportedCmd);
 bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
@@ -244,13 +195,10 @@ void register_nwk_indication_callback(nwk_indication_callback_t *nwk_ind_cb);
 void register_zrc_indication_callback(zrc_indication_callback_t *zrc_ind_callback);
 #ifdef VENDOR_DATA
 extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
                                 , uint8_t Handle
-#endif
                                );
 #endif
 /* === Externals ==========================================================  */
-#ifdef RF4CE_CALLBACK_PARAM
 /* Network confirmation callback pointers */
 
 nlme_start_confirm_cb_t nlme_start_confirm_cb;
@@ -288,9 +236,8 @@ pbp_rec_pair_confirm_cb_t  pbp_rec_pair_confirm_cb;
 zrc_cmd_confirm_cb_t zrc_cmd_confirm_cb;
 #endif
 zrc_cmd_disc_confirm_cb_t zrc_cmd_disc_confirm_cb;
-#endif /* RF4CE_CALLBACK_PARAM */
 
-///////////////
+
 /** Gets attribute size by reading from a table stored in flash */
 #define GET_NIB_ATTR_SIZE(x)    PGM_READ_BYTE(&nib_attr_size[x - nwkActivePeriod])
 
@@ -484,26 +431,12 @@ static inline void handle_incoming_msg(void)
     {
       case NLME_RESET_CONFIRM:
         {
-#ifdef RF4CE_CALLBACK_PARAM
-            nlme_reset_confirm_cb(
-#else
-            nlme_reset_confirm(
-#endif
-            (nwk_enum_t)sio_rx_buf[2]);
+            nlme_reset_confirm_cb((nwk_enum_t)sio_rx_buf[2]);
         }
          break;
       case NLDE_DATA_CONFIRM:
           {
-#ifdef RF4CE_CALLBACK_PARAM
-            nlde_data_confirm_cb(
-#else
-            nlde_data_confirm(
-#endif
-            (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],(profile_id_t)sio_rx_buf[4],
-#ifdef NLDE_HANDLE
-             1
-#endif
-                             );
+            nlde_data_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],(profile_id_t)sio_rx_buf[4],1);
              
           }
           break;
@@ -511,12 +444,8 @@ static inline void handle_incoming_msg(void)
          {
            uint64_t SrcIEEEAddr;
            memcpy(&SrcIEEEAddr, &sio_rx_buf[3], 8);
-#ifdef RF4CE_CALLBACK_PARAM
-         nlme_auto_discovery_confirm_cb(
-#else
-         nlme_auto_discovery_confirm(
-#endif
-        (nwk_enum_t)sio_rx_buf[2],SrcIEEEAddr);
+
+           nlme_auto_discovery_confirm_cb((nwk_enum_t)sio_rx_buf[2],SrcIEEEAddr);
                                 
          }
          break;
@@ -567,23 +496,13 @@ static inline void handle_incoming_msg(void)
           }
     
     
-#ifdef RF4CE_CALLBACK_PARAM
-          nlme_discovery_confirm_cb(
-#else
-          nlme_discovery_confirm(
-#endif
-          (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],NodeDescList);
+          nlme_discovery_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],NodeDescList);
     
         }
         break;
      case NLME_GET_CONFIRM:
         {
-#ifdef RF4CE_CALLBACK_PARAM
-           nlme_get_confirm_cb(
-#else
-           nlme_get_confirm(
-#endif
-           (nwk_enum_t)sio_rx_buf[2],(nib_attribute_t)sio_rx_buf[3],
+           nlme_get_confirm_cb((nwk_enum_t)sio_rx_buf[2],(nib_attribute_t)sio_rx_buf[3],
            sio_rx_buf[4],(void *)&sio_rx_buf[6]);
         }
         break;
@@ -609,12 +528,8 @@ static inline void handle_incoming_msg(void)
         {
           RecProfileIdList[i] = (profile_id_t)sio_rx_buf[32 + i];
         }
-#ifdef RF4CE_CALLBACK_PARAM
-      nlme_pair_confirm_cb(
-#else
-      nlme_pair_confirm(
-#endif 
-        (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],
+
+      nlme_pair_confirm_cb( (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],
         ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),//Rec Vendor Id//
         RecVendorString,//uint8_t RecVendorString[7],
         sio_rx_buf[6+7],//RecAppCapabilities
@@ -625,133 +540,75 @@ static inline void handle_incoming_msg(void)
       break;
       case NLME_RX_ENABLE_CONFIRM: 
       {
-#ifdef RF4CE_CALLBACK_PARAM
-      nlme_rx_enable_confirm_cb(
-#else
-      nlme_rx_enable_confirm(
-#endif
-     (nwk_enum_t)sio_rx_buf[2]);
+      nlme_rx_enable_confirm_cb((nwk_enum_t)sio_rx_buf[2]);
                            
       }
       break;
      case NLME_SET_CONFIRM: 
       {
-#ifdef RF4CE_CALLBACK_PARAM
-        nlme_set_confirm_cb(
-#else
-        nlme_set_confirm(
-#endif
-       (nwk_enum_t)sio_rx_buf[2],(nib_attribute_t)sio_rx_buf[3],sio_rx_buf[4]);                
+        nlme_set_confirm_cb((nwk_enum_t)sio_rx_buf[2],(nib_attribute_t)sio_rx_buf[3],sio_rx_buf[4]);                
      }
      break;
      case NLME_START_CONFIRM: 
       {
-#ifdef RF4CE_CALLBACK_PARAM
-        nlme_start_confirm_cb(
-#else
-        nlme_start_confirm(
-#endif
-       (nwk_enum_t)sio_rx_buf[2]);
+        nlme_start_confirm_cb((nwk_enum_t)sio_rx_buf[2]);
                            
       }
       break;
      case NLME_UNPAIR_CONFIRM:  
       {
-#ifdef RF4CE_CALLBACK_PARAM
-        nlme_unpair_confirm_cb(
-#else
-        nlme_unpair_confirm(
-#endif
-        (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
+        nlme_unpair_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
       }
       break;
      case NLME_UPDATE_KEY_CONFIRM: 
        {
-#ifdef RF4CE_CALLBACK_PARAM
-         nlme_update_key_confirm_cb(
-#else
-         nlme_update_key_confirm(
-#endif
-        (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
+         nlme_update_key_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
        }
        break;
      case NWK_CH_AGILITY_CONFIRM:  
        {
-#ifdef RF4CE_CALLBACK_PARAM
-         nwk_ch_agility_confirm_cb(
-#else
-         nwk_ch_agility_confirm(
-#endif
-         (nwk_enum_t)sio_rx_buf[2],(bool)sio_rx_buf[3],sio_rx_buf[4]);
+         nwk_ch_agility_confirm_cb((nwk_enum_t)sio_rx_buf[2],(bool)sio_rx_buf[3],sio_rx_buf[4]);
        }
        break;
      case PBP_ORG_PAIR_CONFIRM:    
        {
-#ifdef RF4CE_CALLBACK_PARAM
-            pbp_org_pair_confirm_cb(
-#else
-            pbp_org_pair_confirm(
-#endif
-       (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
+            pbp_org_pair_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);
        }
        break;
      case PBP_REC_PAIR_CONFIRM:
        {
-#ifdef RF4CE_CALLBACK_PARAM
-            pbp_rec_pair_confirm_cb(
-#else
-            pbp_rec_pair_confirm(
-#endif
-       (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);   
+            pbp_rec_pair_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3]);   
          
        }
        break;
      case ZRC_CMD_CONFIRM:
        {
-#ifdef RF4CE_CALLBACK_PARAM
-       zrc_cmd_confirm_cb(
-#else
-       zrc_cmd_confirm(
-#endif
-       (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],(cec_code_t)sio_rx_buf[4]);            
+           zrc_cmd_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],(cec_code_t)sio_rx_buf[4]);            
        }
        break;
       case ZRC_CMD_DISCOVERY_CONFIRM:
         {
-#ifdef RF4CE_CALLBACK_PARAM
-         zrc_cmd_disc_confirm_cb(
-#else
-         zrc_cmd_disc_confirm(
-#endif 
-         (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],&sio_rx_buf[4]);
+         zrc_cmd_disc_confirm_cb((nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],&sio_rx_buf[4]);
             
         }
         break;
       case VENDOR_DATA_CONFIRM:
         {
 #ifdef VENDOR_DATA
-#ifdef RF4CE_CALLBACK_PARAM
         vendor_data_confirm(
-#endif 
         (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],(profile_id_t)sio_rx_buf[4],
-#ifdef NLDE_HANDLE
          1
-#endif
         );
 #endif
         }
         break;
       case NLDE_DATA_INDICATION:
         {
-#ifdef RF4CE_CALLBACK_PARAM
         if (nwk_ind_callback.nlde_data_indication_cb == NULL)
         {
           return;
         }
         nwk_ind_callback.nlde_data_indication_cb(
-#else
-    nlde_data_indication(
-#endif       
         sio_rx_buf[2],(profile_id_t)sio_rx_buf[3],
         ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),// Vendor Id//
         sio_rx_buf[8],//nsdu length
@@ -764,53 +621,25 @@ static inline void handle_incoming_msg(void)
         break;
       case NLME_COMM_STATUS_INDICATION:
         {
-#ifdef RF4CE_CALLBACK_PARAM
-      if (nwk_ind_callback.nlme_comm_status_indication_cb == NULL)
-      {
-        return;
-      }
-      nwk_ind_callback.nlme_comm_status_indication_cb(
-#else
-      nlme_comm_status_indication(
-#endif
-      (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],
-      ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),//DstPANId//
-       sio_rx_buf[6],
-       *(uint64_t *)&sio_rx_buf[7]);
-       }
+           if (nwk_ind_callback.nlme_comm_status_indication_cb == NULL)
+          {
+            return;
+          }
+          nwk_ind_callback.nlme_comm_status_indication_cb(
+            (nwk_enum_t)sio_rx_buf[2],sio_rx_buf[3],
+            ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),//DstPANId//
+            sio_rx_buf[6],
+            *(uint64_t *)&sio_rx_buf[7]);
+        }
        break;
        case NLME_DISCOVERY_INDICATION:
          {
-//           uint8_t OrgVendorString[7];
-//           for (uint8_t i = 0; i < 7; i++)
-//           {
-//              OrgVendorString[i] = (uint8_t)sio_rx_buf[14 + i];
-//           }
-//           uint8_t OrgUserString[15];
-//           for (uint8_t i = 0; i < 15; i++)
-//           {
-//              OrgUserString[i] = (uint8_t)sio_rx_buf[22+ i];
-//           }
-//           dev_type_t OrgDevTypeList[3];
-//           for (uint8_t i = 0; i < 3; i++)
-//           {
-//              OrgDevTypeList[i] = (dev_type_t)sio_rx_buf[45+ i];
-//           }
-//           profile_id_t OrgProfileIdList[7];
-//           for (uint8_t i = 0; i < 7; i++)
-//           {
-//              OrgProfileIdList[i] = (profile_id_t)sio_rx_buf[40+ i];
-//           }
            
-#ifdef RF4CE_CALLBACK_PARAM
          if (nwk_ind_callback.nlme_discovery_indication_cb == NULL)
          {
            return;
          }
          nwk_ind_callback.nlme_discovery_indication_cb(
-#else
-         nlme_discovery_indication(
-#endif
          (nwk_enum_t)sio_rx_buf[2],*(uint64_t *)&sio_rx_buf[3],//DstIEEEaddr
          sio_rx_buf[11], ((uint16_t)sio_rx_buf[12] | ((uint16_t)sio_rx_buf[13] << 8)),
          (uint8_t *)&sio_rx_buf[14],sio_rx_buf[21],
@@ -841,15 +670,11 @@ static inline void handle_incoming_msg(void)
              {
                OrgProfileIdList[i] = (profile_id_t)sio_rx_buf[42 + i];
              }
-#ifdef RF4CE_CALLBACK_PARAM
         if (nwk_ind_callback.nlme_pair_indication_cb == NULL)
         {
           return;
         }
        nwk_ind_callback.nlme_pair_indication_cb(
-#else
-       nlme_pair_indication(
-#endif
        (nwk_enum_t)sio_rx_buf[2],((uint16_t)sio_rx_buf[3] | ((uint16_t)sio_rx_buf[4] << 8)),
         *(uint64_t *)&sio_rx_buf[5],
         sio_rx_buf[13],((uint16_t)sio_rx_buf[14] | ((uint16_t)sio_rx_buf[15] << 8)),
@@ -860,44 +685,32 @@ static inline void handle_incoming_msg(void)
         break;
         case NLME_UNPAIR_INDICATION:
           {
-#ifdef RF4CE_CALLBACK_PARAM
           if (nwk_ind_callback.nlme_unpair_indication_cb == NULL)
           {
             return;
           }
           nwk_ind_callback.nlme_unpair_indication_cb(
-#else
-          nlme_unpair_indication(
-#endif
           sio_rx_buf[2]);//pairing ref
           }
           break;
           case NWK_CH_AGILITY_INDICATION:
             {
-#ifdef RF4CE_CALLBACK_PARAM
             if (nwk_ind_callback.nwk_ch_agility_indication_cb == NULL)
             {
               return;
             }
             nwk_ind_callback.nwk_ch_agility_indication_cb(
-#else
-            nwk_ch_agility_indication(
-#endif
              sio_rx_buf[2]);//logical channel
             
             }
             break;
           case ZRC_CMD_INDICATION:
             {
-#ifdef RF4CE_CALLBACK_PARAM
             if (zrc_ind_cb.zrc_cmd_indication_cb == NULL)
             {
               return;
             }
             zrc_ind_cb.zrc_cmd_indication_cb(
-#else
-            zrc_cmd_indication(
-#endif
             sio_rx_buf[2],//pairing ref
             sio_rx_buf[5],//nsdulength
             &sio_rx_buf[6],
@@ -909,15 +722,11 @@ static inline void handle_incoming_msg(void)
             break;
         case ZRC_CMD_DISCOVERY_INDICATION:
           {
-#ifdef RF4CE_CALLBACK_PARAM
             if (zrc_ind_cb.zrc_cmd_disc_indication_cb == NULL)
             {
               return;
             }
             zrc_ind_cb.zrc_cmd_disc_indication_cb(
-#else
-            zrc_cmd_disc_indication(
-#endif
           
           sio_rx_buf[2]//pairing ref
          
@@ -926,11 +735,8 @@ static inline void handle_incoming_msg(void)
           break;
        case VENDOR_DATA_INDICATION:
          {
-#ifdef RF4CE_CALLBACK_PARAM
         zrc_ind_cb.vendor_data_ind_cb(
-//#else
-//        vendor_data_ind(
-#endif
+
         sio_rx_buf[2],//pairing ref
         ((uint16_t)sio_rx_buf[4] | ((uint16_t)sio_rx_buf[5] << 8)),//vendor id
         sio_rx_buf[8],//nsdu length
@@ -944,9 +750,7 @@ static inline void handle_incoming_msg(void)
 }
 
 bool nlme_reset_request(bool SetDefaultNIB
-#ifdef RF4CE_CALLBACK_PARAM
                         , FUNC_PTR confirm_cb
-#endif
                        )
 
 {
@@ -958,13 +762,13 @@ bool nlme_reset_request(bool SetDefaultNIB
   {
         return false;
   }
-#ifdef RF4CE_CALLBACK_PARAM
+
     if (confirm_cb == NULL)
     {
         return false;
     }
    nlme_reset_confirm_cb = (nlme_reset_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_RESET_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_RESET_REQUEST;
@@ -977,12 +781,8 @@ return true;
 bool nlde_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                            uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
                            uint8_t TxOptions
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
                            , uint8_t Handle
-#endif
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                            , FUNC_PTR confirm_cb
-#endif
                           )
 {
    uint8_t *msg_buf;
@@ -992,13 +792,13 @@ bool nlde_data_request(uint8_t PairingRef, profile_id_t ProfileId,
    {
         return false;
    }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlde_data_confirm_cb = (nlde_data_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLDE_DATA_REQ_LEN +RF4CONTROL_PID_LEN + nsduLength;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLDE_DATA_REQUEST;
@@ -1035,9 +835,7 @@ bool nlme_auto_discovery_request(uint8_t RecAppCapabilities,
                                  dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE],
                                  profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
                                  uint32_t AutoDiscDuration
-#ifdef RF4CE_CALLBACK_PARAM
                                  , FUNC_PTR confirm_cb
-#endif
                                 )
 {
   uint8_t *msg_buf;
@@ -1049,39 +847,18 @@ bool nlme_auto_discovery_request(uint8_t RecAppCapabilities,
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_auto_discovery_confirm_cb = (nlme_auto_discovery_confirm_cb_t)confirm_cb;
-#endif
-  *msg_buf++ = NLME_AUTO_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN+1;
+
+  *msg_buf++ = NLME_AUTO_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_AUTO_DISCOVERY_REQUEST;
   *msg_buf++ = RecAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)RecDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
-// #ifndef UC3
-   // ptr = (uint8_t *)RecProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
    for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = RecDevTypeList[i];
@@ -1105,9 +882,7 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
                                 uint8_t DiscProfileIdListSize,
                                 profile_id_t DiscProfileIdList[7],
                                 uint32_t DiscDuration
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                 , FUNC_PTR confirm_cb
-#endif
                                )
 
 {
@@ -1121,13 +896,12 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_discovery_confirm_cb = (nlme_discovery_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_DISCOVERY_REQUEST;
@@ -1148,28 +922,7 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
     *msg_buf++ = (uint8_t)(DstNwkAddr >> 8); //MSB
 #endif
     *msg_buf++ = OrgAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)OrgDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = OrgDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }  
-// #ifndef UC3
-   // ptr = (uint8_t *)OrgProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = OrgProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
    for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = OrgDevTypeList[i];
@@ -1185,17 +938,7 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
     {
         *msg_buf++ = DiscProfileIdList[i];
     }
-// #ifndef UC3
-    // ptr = (uint8_t *)DiscProfileIdList;
-// #endif
-    // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-    // {
-// #if (UC3)
-        // *msg_buf++ = DiscProfileIdList[i];
-// #else
-        // *msg_buf++ = *ptr++;
-// #endif
-    // }
+
   memcpy(msg_buf, &DiscDuration, sizeof(uint32_t));
   msg_buf += sizeof(uint32_t);
   *msg_buf = EOT;
@@ -1203,7 +946,7 @@ return true;
 }
 
 
-    bool nlme_discovery_response(nwk_enum_t Status, uint64_t DstIEEEAddr,
+bool nlme_discovery_response(nwk_enum_t Status, uint64_t DstIEEEAddr,
                                  uint8_t RecAppCapabilities, dev_type_t RecDevTypeList[3],
                                  profile_id_t RecProfileIdList[7], uint8_t DiscReqLQI)
 
@@ -1224,28 +967,7 @@ return true;
   memcpy(msg_buf, &DstIEEEAddr, sizeof(DstIEEEAddr));
   msg_buf += sizeof(uint64_t);
   *msg_buf++ = RecAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)RecDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }  
-// #ifndef UC3
-   // ptr = (uint8_t *)RecProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
     for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = RecDevTypeList[i];
@@ -1267,9 +989,7 @@ return true;
 bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIEEEAddr,
                        uint8_t OrgAppCapabilities, dev_type_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE],
                        profile_id_t OrgProfileIdList[PROFILE_ID_LIST_SIZE], uint8_t KeyExTransferCount
-#ifdef RF4CE_CALLBACK_PARAM
                        , FUNC_PTR confirm_cb
-#endif
                       )
 {
   uint8_t *msg_buf;
@@ -1282,13 +1002,13 @@ bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIE
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_pair_confirm_cb = (nlme_pair_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_PAIR_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_PAIR_REQUEST;
@@ -1304,28 +1024,7 @@ bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIE
   memcpy(msg_buf, &DstIEEEAddr, sizeof(DstIEEEAddr));
   msg_buf += sizeof(uint64_t);
   *msg_buf++ = OrgAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)OrgDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = OrgDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }  
-// #ifndef UC3
-   // ptr = (uint8_t *)OrgProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = OrgProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
     for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = OrgDevTypeList[i];
@@ -1341,7 +1040,7 @@ return true;
 }
 
 
-    bool nlme_pair_response(nwk_enum_t Status, uint16_t DstPANId, uint64_t DstIEEEAddr,
+bool nlme_pair_response(nwk_enum_t Status, uint16_t DstPANId, uint64_t DstIEEEAddr,
                             uint8_t RecAppCapabilities, dev_type_t RecDevTypeList[3],
                             profile_id_t RecProfileIdList[7], uint8_t ProvPairingRef)
 
@@ -1371,28 +1070,7 @@ return true;
   memcpy(msg_buf, &DstIEEEAddr, sizeof(DstIEEEAddr));
   msg_buf += sizeof(uint64_t);
   *msg_buf++ = RecAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)RecDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }  
-// #ifndef UC3
-   // ptr = (uint8_t *)RecProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // } 
+
     for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = RecDevTypeList[i];
@@ -1411,9 +1089,7 @@ return true;
  * NIB attribute from the NLME. */
 
 bool nlme_get_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex
-#ifdef RF4CE_CALLBACK_PARAM
                       , FUNC_PTR confirm_cb
-#endif
                      )
 { 
   uint8_t *msg_buf;
@@ -1424,13 +1100,13 @@ bool nlme_get_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_get_confirm_cb = (nlme_get_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_GET_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_GET_REQUEST;
@@ -1444,9 +1120,7 @@ return true;
 /* The NLME-RX-ENABLE.request primitive allows the application to request that the
  * receiver is either enabled (for a finite period or until further notice) or disabled. */
 bool nlme_rx_enable_request(uint32_t RxOnDuration
-#ifdef RF4CE_CALLBACK_PARAM
                             , FUNC_PTR confirm_cb
-#endif
                            )
 {
   uint8_t *msg_buf;
@@ -1457,13 +1131,13 @@ bool nlme_rx_enable_request(uint32_t RxOnDuration
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_rx_enable_confirm_cb = (nlme_rx_enable_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_RX_ENABLE_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_RX_ENABLE_REQUEST;
@@ -1473,12 +1147,12 @@ bool nlme_rx_enable_request(uint32_t RxOnDuration
 return true;
   
 }
-///////////check/////////
+
 
 bool nlme_set_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex, uint8_t *NIBAttributeValue
-#ifdef RF4CE_CALLBACK_PARAM
+
                       , FUNC_PTR confirm_cb
-#endif
+
                      )
 {
   uint8_t *msg_buf;
@@ -1492,13 +1166,13 @@ bool nlme_set_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex, u
   {
     return false;
   }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_set_confirm_cb = (nlme_set_confirm_cb_t)confirm_cb;
-#endif
+
   attr_len = nwk_get_nib_attribute_size(NIBAttribute);
   *msg_buf++ = NLME_SET_REQ_LEN + RF4CONTROL_PID_LEN + attr_len;
   *msg_buf++ = RF4CONTROL_PID;
@@ -1517,12 +1191,7 @@ return true;
 ///////////////////////
 /* The NLME-START.request primitive allows the application to request the NLME
  * start a network.*/
-bool nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
-    FUNC_PTR confirm_cb)
-#else
-    void)
-#endif
+bool nlme_start_request(FUNC_PTR confirm_cb)
 {
    uint8_t *msg_buf;
    msg_buf = get_next_tx_buffer();
@@ -1532,13 +1201,13 @@ bool nlme_start_request(
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_start_confirm_cb = (nlme_start_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_START_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_START_REQUEST;
@@ -1550,9 +1219,7 @@ return true;
  * removes a pairing link with another device both in the local and remote pairing tables. */
 
 bool nlme_unpair_request(uint8_t PairingRef
-#ifdef RF4CE_CALLBACK_PARAM
                          , FUNC_PTR confirm_cb
-#endif
                         )
 {
    uint8_t *msg_buf;
@@ -1563,13 +1230,13 @@ bool nlme_unpair_request(uint8_t PairingRef
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_unpair_confirm_cb = (nlme_unpair_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_UNPAIR_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_UNPAIR_REQUEST;
@@ -1603,9 +1270,7 @@ return true;
  * NLME change the security link key of an entry in the pairing table. */
 
 bool nlme_update_key_request(uint8_t PairingRef, uint8_t NewLinkKey[16]
-#ifdef RF4CE_CALLBACK_PARAM
                              , FUNC_PTR confirm_cb
-#endif
                             )
 {
   uint8_t *msg_buf;
@@ -1618,13 +1283,13 @@ bool nlme_update_key_request(uint8_t PairingRef, uint8_t NewLinkKey[16]
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nlme_update_key_confirm_cb = (nlme_update_key_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NLME_UPDATE_KEY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NLME_UPDATE_KEY_REQUEST;
@@ -1642,9 +1307,7 @@ return true;
 /* The function configures the channel agility mode. */
 
 bool nwk_ch_agility_request(nwk_agility_mode_t AgilityMode
-#ifdef RF4CE_CALLBACK_PARAM
                             , FUNC_PTR confirm_cb
-#endif
                            )
 {
   uint8_t *msg_buf;
@@ -1655,13 +1318,13 @@ bool nwk_ch_agility_request(nwk_agility_mode_t AgilityMode
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    nwk_ch_agility_confirm_cb = (nwk_ch_agility_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = NWK_CH_AGILITY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = NWK_CH_AGILITY_REQUEST;
@@ -1676,9 +1339,8 @@ bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
                           profile_id_t OrgProfileIdList[PROFILE_ID_LIST_SIZE],
                           dev_type_t SearchDevType, uint8_t DiscProfileIdListSize,
                           profile_id_t DiscProfileIdList[PROFILE_ID_LIST_SIZE]
-#ifdef RF4CE_CALLBACK_PARAM
                           , FUNC_PTR confirm_cb
-#endif
+
                          )
 {
   uint8_t *msg_buf;
@@ -1690,39 +1352,18 @@ bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    pbp_org_pair_confirm_cb = (pbp_org_pair_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = PBP_ORG_PAIR_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = PBP_ORG_PAIR_REQUEST;
   *msg_buf++ = OrgAppCapabilities;
-//#ifndef UC3
-//   ptr = (uint8_t *)OrgDevTypeList;
-//#endif
-//   for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-//   {
-//#if (UC3)
-//    *msg_buf++ = OrgDevTypeList[i];
-//#else
-//    *msg_buf++ = *ptr++;
-//#endif
-//   } 
-//#ifndef UC3
-//   ptr = (uint8_t *)OrgProfileIdList;
-//#endif
-//   for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-//   {
-//#if (UC3)
-//    *msg_buf++ = OrgProfileIdList[i];
-//#else
-//    *msg_buf++ = *ptr++;
-//#endif
-//   }
+
    for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = OrgDevTypeList[i];
@@ -1734,17 +1375,7 @@ bool pbp_org_pair_request(uint8_t OrgAppCapabilities,
    
    *msg_buf++ = SearchDevType;
    *msg_buf++ = DiscProfileIdListSize;
-// #ifndef UC3
-   // ptr = (uint8_t *)DiscProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = DiscProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
     for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
     {
         *msg_buf++ = DiscProfileIdList[i];
@@ -1757,9 +1388,7 @@ return true;
 bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
                           dev_type_t RecDevTypeList[3],
                           profile_id_t RecProfileIdList[7]
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          )
 
 {
@@ -1772,40 +1401,18 @@ bool pbp_rec_pair_request(uint8_t RecAppCapabilities,
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    pbp_rec_pair_confirm_cb = (pbp_rec_pair_confirm_cb_t)confirm_cb;
-#endif
  
   *msg_buf++ = PBP_REC_PAIR_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = PBP_REC_PAIR_REQUEST;
   *msg_buf++ = RecAppCapabilities;
-// #ifndef UC3
-   // ptr = (uint8_t *)RecDevTypeList;
-// #endif
-   // for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecDevTypeList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // } 
-// #ifndef UC3
-   // ptr = (uint8_t *)RecProfileIdList;
-// #endif
-   // for (i = 0; i < PROFILE_ID_LIST_SIZE; i++)
-   // {
-// #if (UC3)
-    // *msg_buf++ = RecProfileIdList[i];
-// #else
-    // *msg_buf++ = *ptr++;
-// #endif
-   // }
+
    for (i = 0; i < DEVICE_TYPE_LIST_SIZE; i++)
     {
         *msg_buf++ = RecDevTypeList[i];
@@ -1836,9 +1443,7 @@ return true;
  */
 bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCode,
                      uint8_t CmdLength, uint8_t *Cmd, uint8_t TxOptions
-#ifdef RF4CE_CALLBACK_PARAM
                      , FUNC_PTR confirm_cb
-#endif
                     )
 {
   uint8_t *msg_buf;
@@ -1851,15 +1456,14 @@ bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCo
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
    if (confirm_cb == NULL)
    {
         return false;
    }
    zrc_cmd_confirm_cb = (zrc_cmd_confirm_cb_t)confirm_cb;
-#endif
  
-  *msg_buf++ = ZRC_CMD_REQ_LEN + RF4CONTROL_PID_LEN + CmdLength+1;
+  *msg_buf++ = ZRC_CMD_REQ_LEN + RF4CONTROL_PID_LEN + CmdLength;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = ZRC_CMD_REQUEST;
   *msg_buf++ = PairingRef;
@@ -1894,9 +1498,7 @@ return true;
  * @return true         if cmd discovery is sent using nlde_data_req.
  */
 bool zrc_cmd_disc_request(uint8_t PairingRef
-#ifdef RF4CE_CALLBACK_PARAM
                           , FUNC_PTR confirm_cb
-#endif
                          )
 {
   uint8_t *msg_buf;
@@ -1907,13 +1509,12 @@ bool zrc_cmd_disc_request(uint8_t PairingRef
     {
         return false;
     }
-#ifdef RF4CE_CALLBACK_PARAM
    if (confirm_cb == NULL)
    {
         return false;
    }
    zrc_cmd_disc_confirm_cb = (zrc_cmd_disc_confirm_cb_t)confirm_cb;
-#endif
+
   *msg_buf++ = ZRC_CMD_DISCOVERY_REQ_LEN + RF4CONTROL_PID_LEN;
   *msg_buf++ = RF4CONTROL_PID;
   *msg_buf++ = ZRC_CMD_DISCOVERY_REQUEST;
@@ -1993,7 +1594,7 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
 return true;
   
 }
-#ifdef RF4CE_CALLBACK_PARAM
+
 void register_nwk_indication_callback(nwk_indication_callback_t *nwk_ind_cb)
 {
 #if (defined CHANNEL_AGILITY) || (defined RF4CE_PLATFORM)
@@ -2038,9 +1639,9 @@ void register_nwk_indication_callback(nwk_indication_callback_t *nwk_ind_cb)
         nwk_ind_callback.nlde_data_indication_cb = nwk_ind_cb->nlde_data_indication_cb;
     }
 }
-#endif /* RF4CE_CALLBACK_PARAM */
+
        
-#ifdef RF4CE_CALLBACK_PARAM
+
 void register_zrc_indication_callback(zrc_indication_callback_t *zrc_ind_callback)
 {
 #if (defined RF4CE_TARGET) || (defined ZRC_CMD_DISCOVERY)
@@ -2062,12 +1663,9 @@ void register_zrc_indication_callback(zrc_indication_callback_t *zrc_ind_callbac
     }
 #endif
 
-//#ifdef PBP_REC
-//    pb_pairing_rec_ind_callback_init();
-//#endif
-    /* This will register zrc_data_ind call back to network layer */
+
  }
-#endif /* RF4CE_CALLBACK_PARAM */      
+     
 
 
             

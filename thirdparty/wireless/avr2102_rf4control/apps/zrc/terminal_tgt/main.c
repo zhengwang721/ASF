@@ -3,13 +3,47 @@
  *
  * @brief Terminal Target application
  *
- * $Id: main.c 32889 2012-08-31 10:40:36Z agasthian.s $
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -112,13 +146,10 @@ static void print_unpair_submenu(void);
 static void led_handling(void *callback_parameter);
 static void print_ch_change_submenu(void);
 static void print_sub_mode_ch_ag_setup(void);
-static void print_get_battery_status_submenu(void);
-
-static void print_get_firmware_version_submenu(void);
-static void print_get_alive_submenu(void);
+static void print_vendor_data_submenu(uint8_t Vcmd);
 static char *get_status_text(nwk_enum_t status);
 
-#ifdef RF4CE_CALLBACK_PARAM
+
 static void nlme_rx_enable_confirm(nwk_enum_t Status);
 static void nlme_reset_confirm(nwk_enum_t Status);
 static void nlme_start_confirm(nwk_enum_t Status);
@@ -129,12 +160,11 @@ static void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef);
 static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd);
 void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
                          , uint8_t Handle
-#endif
                         );
 
 static void nwk_ch_agility_indication(uint8_t LogicalChannel);
+static void nlme_unpair_indication(uint8_t PairingRef);
 static void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                                uint8_t RxLinkQuality, uint8_t RxFlags);
 #ifdef ZRC_CMD_DISCOVERY
@@ -147,7 +177,7 @@ static void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
 static zrc_indication_callback_t zrc_ind;
 static nwk_indication_callback_t nwk_ind;
-#endif /* RF4CE_CALLBACK_PARAM */
+
 
 static void app_alert(void);
 
@@ -175,7 +205,7 @@ int main(void)
     {
         app_alert();
     }
-#ifdef RF4CE_CALLBACK_PARAM
+
     zrc_ind.vendor_data_ind_cb = vendor_data_ind;
 #ifdef ZRC_CMD_DISCOVERY
     zrc_ind.zrc_cmd_disc_indication_cb =  zrc_cmd_disc_indication;
@@ -185,8 +215,9 @@ int main(void)
     register_zrc_indication_callback(&zrc_ind);
 
     nwk_ind.nwk_ch_agility_indication_cb = nwk_ch_agility_indication;
+    nwk_ind.nlme_unpair_indication_cb = nlme_unpair_indication;
     register_nwk_indication_callback(&nwk_ind);
-#endif
+
 
     /* Initialize LEDs. */
     LED_On(LED_START);         /* indicating application is started */
@@ -201,13 +232,10 @@ int main(void)
      */
     cpu_irq_enable();
     
-    nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
-
 #ifdef SIO_HUB
     /* Initialize the serial interface used for communication with terminal program. */
-	
-	sio2host_init();
-
+  
+   sio2host_init();
 
 #endif
 
@@ -217,7 +245,6 @@ int main(void)
     while (1)
     {
       
-       //printf("a");
         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
     }
@@ -254,8 +281,8 @@ static void app_task(void)
  */
 static void handle_input(uint8_t input_char)
 {
-    // We allow user input if we are either in IDLE state ot POWER_SAVE state
-    // In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req.
+    /* We allow user input if we are either in IDLE state ot POWER_SAVE state
+    In case of POWER_SAVE state, we allow only reset & disabling POWER_SAVE req*/
     if (((node_status != IDLE) && (node_status != POWER_SAVE)) ||
         ((node_status == POWER_SAVE) && (!((input_char == 'Y') || (input_char == 'R') ||
                                            (input_char == 'A') || (input_char == 'W')))))
@@ -271,9 +298,7 @@ static void handle_input(uint8_t input_char)
             {
                 printf("Leaving standby (power save mode). Press Enter to return to main menu.\r\n ");
                 nlme_rx_enable_request(RX_DURATION_INFINITY
-#ifdef RF4CE_CALLBACK_PARAM
                                        , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                                       );
                 node_status = IDLE;
             }
@@ -281,9 +306,7 @@ static void handle_input(uint8_t input_char)
             {
                 printf("Entering standby (power save mode). Press Enter to return to main menu.\r\n ");
                 nlme_rx_enable_request(nwkcMinActivePeriod
-#ifdef RF4CE_CALLBACK_PARAM
                                        , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                                       );
                 node_status = POWER_SAVE;
             }
@@ -294,9 +317,7 @@ static void handle_input(uint8_t input_char)
             node_status = RESETTING;
             ch_ag_enabled = false;
             nlme_reset_request(true
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
                               );
             break;
 
@@ -304,9 +325,7 @@ static void handle_input(uint8_t input_char)
             printf("Start node - \r\n");
             node_status = STARTING;
             nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
                 (FUNC_PTR)nlme_start_confirm
-#endif
             );
             break;
 
@@ -327,9 +346,7 @@ static void handle_input(uint8_t input_char)
                 RecProfileIdList[0] = SUPPORTED_PROFILE_ID_0;
 
                 pbp_rec_pair_request(APP_CAPABILITIES, RecDevTypeList, RecProfileIdList
-#ifdef RF4CE_CALLBACK_PARAM
                                      , (FUNC_PTR)pbp_rec_pair_confirm
-#endif
                                     );
             }
             break;
@@ -340,9 +357,7 @@ static void handle_input(uint8_t input_char)
             printf("\tReset node - ");
             ch_ag_enabled = false;
             nlme_reset_request(true
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
                               );
             break;
 
@@ -351,9 +366,7 @@ static void handle_input(uint8_t input_char)
             printf("Warm start - \r\n");
             node_status = WARM_STARTING;
             nlme_reset_request(false
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
                               );
             break;
 
@@ -373,9 +386,7 @@ static void handle_input(uint8_t input_char)
             {
                 ch_ag_enabled = false;
                 nwk_ch_agility_request(AG_STOP
-#ifdef RF4CE_CALLBACK_PARAM
                                        , (FUNC_PTR)nwk_ch_agility_confirm
-#endif
                                       );
                 printf(" - Channel agility is stopped ...\r\n");
             }
@@ -385,9 +396,7 @@ static void handle_input(uint8_t input_char)
                 node_status = CH_AGILITY_EXECUTION;
                 printf(" - Channel agility is started ...\r\n");
                 nwk_ch_agility_request(AG_PERIODIC
-#ifdef RF4CE_CALLBACK_PARAM
                                        , (FUNC_PTR)nwk_ch_agility_confirm
-#endif
                                       );
             }
             break;
@@ -396,9 +405,7 @@ static void handle_input(uint8_t input_char)
             /* Start getting the NIBs value */
             node_status = GETTING_CH_AG_NIBS;
             nlme_get_request(nwkPrivateChAgEdThreshold, 0
-#ifdef RF4CE_CALLBACK_PARAM
                              , (FUNC_PTR)nlme_get_confirm
-#endif
                             );
             break;
 
@@ -407,15 +414,15 @@ static void handle_input(uint8_t input_char)
             break;
 
         case 'D':
-            print_get_battery_status_submenu();
+            print_vendor_data_submenu(BATTERY_STATUS_REQ);
             break;
 
         case 'V':
-            print_get_firmware_version_submenu();
+            print_vendor_data_submenu(FW_VERSION_REQ);
             break;
 
         case 'Z':
-            print_get_alive_submenu();
+            print_vendor_data_submenu(ALIVE_REQ);
             break;
         default:
             print_main_menu();
@@ -446,7 +453,7 @@ static void print_main_menu(void)
     printf("(C) : Channel agility (periodic mode) - enable/disable\r\n");
     printf("(O) : Channel agility configuration\r\n");
     printf("(B) : Base channel change\r\n");
-    printf("(Y) : Standby (power save mode)\r\n");
+    printf("(Y) : Power save mode - enable/disable\r\n");
     printf("(D) : Send remote battery status request\r\n");
     printf("(V) : Send remote firmware version request\r\n");
     printf("(Z) : Send alive request\r\n");
@@ -541,9 +548,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
         printf("Pairing table:\r\n");
 
         nlme_get_request(nwkPairingTable, 0
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR)nlme_get_confirm
-#endif
                         );
     }
     else
@@ -591,11 +596,9 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
                (uint8_t)(table->DestinationNetworkAddress));
 #endif
         printf("Recipient capabilities: 0x%.2X", table->RecipientCapabilities);
-#if 0 //defined(__ICCAVR32__)
-        printf(", Recipient frame counter %u\r\n", table->RecipientFrameCounter);
-#else
+
+
         printf(", Recipient frame counter %lu\r\n", table->RecipientFrameCounter);
-#endif
         printf("Security link key: 0x");
         for (i = 0; i < 16; i++)
         {
@@ -635,9 +638,7 @@ static void print_unpair_submenu(void)
     {
         uint8_t pair_ref = input_char - 0x30;
         nlme_unpair_request(pair_ref
-#ifdef RF4CE_CALLBACK_PARAM
                             , (FUNC_PTR)nlme_unpair_confirm
-#endif
                            );
     }
     else
@@ -658,10 +659,7 @@ static void print_unpair_submenu(void)
  * @param RxLinkQuality    Link quality of received packet.
  * @param RxFlags          Rx Flags.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
+static void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                         uint8_t RxLinkQuality, uint8_t RxFlags)
 {
     zrc_cmd_frm_t *zrc_frm;
@@ -670,9 +668,7 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
     {
         printf("Leaving power save mode.\r\n");
         nlme_rx_enable_request(RX_DURATION_INFINITY
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                               );
         node_status = IDLE;
     }
@@ -692,12 +688,7 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                 printf("%s", zrc_print_rc_cmd_text(zrc_frm->rc_cmd));
                 printf(" Press (0x%.2X), ", zrc_frm->rc_cmd);
                 printf("from %d, LQI = 0x%.2X\r\n", PairingRef, RxLinkQuality);
-#ifdef RELAY_SUPPORT
-                if (zrc_frm->rc_cmd == POWER_TOGGLE_FUNCTION)
-                {
-                    RELAY_1_TOGGLE();
-                }
-#endif
+
             }
             break;
 
@@ -726,43 +717,13 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
 
 
 /**
- * @brief Notify the application of the status of its request for data tx
- *        (nlde-data.request)
- *
- * @param Status              nwk status.
- * @param PairingRef          Pairing Ref for the destination.
- * @param ProfileId           Profile id
- * @param Handle              Netwrok layer retries
- */
-#ifndef RF4CE_CALLBACK_PARAM
-void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
-                       , uint8_t Handle
-#endif
-                      )
-{
-    /* Keep compiler happy. */
-    Status = Status;
-    PairingRef = PairingRef;
-    ProfileId = ProfileId;
-#ifdef NLDE_HANDLE
-    Handle = Handle;
-#endif
-}
-#endif
-
-
-/**
  * @brief Prints the status of push button pairing and if status is success,
  *        then send the cmd discovery to controller.
  *
  * @param Status           nwk status
  * @param PairingRef       Pairing Ref of the new entry.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
+static void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     node_status = IDLE;
     printf("Push button pairing completed\r\nStatus - %s (0x%02X), Pairing Ref 0x%02X\r\n",
@@ -779,9 +740,7 @@ void pbp_rec_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
         printf("Sending ZRC command discovery request\r\n");
         node_status = CMD_DISCOVERING;
         zrc_cmd_disc_request(PairingRef
-#ifdef RF4CE_CALLBACK_PARAM
                              , (FUNC_PTR)zrc_cmd_disc_confirm
-#endif
                             );
 #endif
     }
@@ -832,10 +791,7 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
  * @param SupportedCmd     Supported commands by destination node.
  */
 #ifdef ZRC_CMD_DISCOVERY
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd)
+static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd)
 {
     printf("ZRC command discovery confirm, Status = %s (0x%02X)\r\n",
            get_status_text((nwk_enum_t) Status), Status);
@@ -857,10 +813,7 @@ void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *Suppor
  * @param PairingRef          Pairing Ref for the source.
  */
 #ifdef ZRC_CMD_DISCOVERY
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void zrc_cmd_disc_indication(uint8_t PairingRef)
+static void zrc_cmd_disc_indication(uint8_t PairingRef)
 {
     /* Send back the response */
     uint8_t cec_cmds[32];
@@ -880,10 +833,7 @@ void zrc_cmd_disc_indication(uint8_t PairingRef)
  * @param NIBAttributeIndex   NIBAttributeIndex
  * @param NIBAttributeValue   Value of the NIB attribute.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
+static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                       uint8_t NIBAttributeIndex, void *NIBAttributeValue)
 {
     if (Status == NWK_SUCCESS)
@@ -910,9 +860,7 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                 if (NIBAttributeIndex < (MAX_PAIRED_DEVICES - 1))
                 {
                     nlme_get_request(nwkPairingTable, NIBAttributeIndex + 1
-#ifdef RF4CE_CALLBACK_PARAM
                                      , (FUNC_PTR)nlme_get_confirm
-#endif
                                     );
                 }
                 else
@@ -929,18 +877,14 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
             case nwkPrivateChAgEdThreshold:
                 memcpy(&nwk_Private_ChAgEdThreshold, NIBAttributeValue, 1);
                 nlme_get_request(nwkPrivateChAgScanInterval, 0
-#ifdef RF4CE_CALLBACK_PARAM
                                  , (FUNC_PTR)nlme_get_confirm
-#endif
                                 );
                 break;
 
             case nwkPrivateChAgScanInterval:
                 memcpy(&nwk_Private_ChAgScanInterval, NIBAttributeValue, sizeof(uint32_t));
                 nlme_get_request(nwkScanDuration, 0
-#ifdef RF4CE_CALLBACK_PARAM
                                  , (FUNC_PTR)nlme_get_confirm
-#endif
                                 );
                 break;
 
@@ -964,10 +908,7 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
  *
  * @param Status              nwk status
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_reset_confirm(nwk_enum_t Status)
+static void nlme_reset_confirm(nwk_enum_t Status)
 {
     printf("Node reset completed - %s (0x%.2X)\r\n",
            get_status_text((nwk_enum_t) Status), Status);
@@ -983,18 +924,14 @@ void nlme_reset_confirm(nwk_enum_t Status)
     else if (node_status == WARM_STARTING)
     {
         nlme_rx_enable_request(RX_DURATION_INFINITY
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                               );
     }
     else if (node_status == ALL_IN_ONE_START)
     {
         printf("\tStart RF4CE network layer - \r\n");
         nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
             (FUNC_PTR)nlme_start_confirm
-#endif
         );
     }
 }
@@ -1006,17 +943,12 @@ void nlme_reset_confirm(nwk_enum_t Status)
  *
  * @param Status              nwk status
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_rx_enable_confirm(nwk_enum_t Status)
+static void nlme_rx_enable_confirm(nwk_enum_t Status)
 {
     if (node_status == WARM_STARTING)
     {
         nlme_get_request(nwkPairingTable, 0
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR) nlme_get_confirm
-#endif
                         );
 
     }
@@ -1034,10 +966,7 @@ void nlme_rx_enable_confirm(nwk_enum_t Status)
  * @param NIBAttribute        NIBAttribute
  * @param NIBAttributeIndex   NIBAttributeIndex
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex)
+static void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex)
 {
     if (Status != NWK_SUCCESS)
     {
@@ -1066,10 +995,7 @@ void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t N
  *
  * @param Status       nwk status
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_start_confirm(nwk_enum_t Status)
+static void nlme_start_confirm(nwk_enum_t Status)
 {
     printf("Node start completed - %s (0x%.2X)\r\n",
            get_status_text((nwk_enum_t)Status), Status);
@@ -1098,14 +1024,12 @@ void nlme_start_confirm(nwk_enum_t Status)
         RecProfileIdList[0] = SUPPORTED_PROFILE_ID_0;
 
         pbp_rec_pair_request(APP_CAPABILITIES, RecDevTypeList, RecProfileIdList
-#ifdef RF4CE_CALLBACK_PARAM
                              , (FUNC_PTR)pbp_rec_pair_confirm
-#endif
                             );
     }
 }
 
-#ifndef RF4CE_CALLBACK_PARAM
+
 /**
  * @brief Notify the application of the removal of link by another device.
  *
@@ -1120,7 +1044,7 @@ void nlme_unpair_indication(uint8_t PairingRef)
     /* Keep compiler happy */
     PairingRef = PairingRef;
 }
-#endif
+
 
 /**
  * @brief Notify the application for the previous unpair request.
@@ -1131,10 +1055,7 @@ void nlme_unpair_indication(uint8_t PairingRef)
  * @param Status           nwk status
  * @param PairingRef       Pairing Ref for which entry is removed from pairing table.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
+static void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
 {
     if (node_status == UNPAIRING)
     {
@@ -1161,10 +1082,7 @@ void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
  * @param ChannelChanged   whether channel is changed.
  * @param LogicalChannel   changed logical channel.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel)
+static void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel)
 {
     printf("Channel agility confirm: ");
     if (ch_ag_enabled)
@@ -1193,10 +1111,7 @@ void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t Logi
  *
  * @param LogicalChannel  changed logical channel.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nwk_ch_agility_indication(uint8_t LogicalChannel)
+static void nwk_ch_agility_indication(uint8_t LogicalChannel)
 {
     printf("Channel agility - new channel: %d\r\n", LogicalChannel);
 }
@@ -1239,9 +1154,7 @@ static void print_ch_change_submenu(void)
 #endif
     {
         nlme_set_request(nwkBaseChannel, 0, &channel
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR)nlme_set_confirm
-#endif
                         );
 
         node_status = BASE_CHANNEL_CHANGE;
@@ -1295,11 +1208,7 @@ static void print_sub_mode_ch_ag_setup(void)
     printf("Configuration of channel agility, select a configration parameter\r\n");
     printf("(Scan interval > 4*scan duration)\r\n\r\n");
     printf("(F) : Noise threshold, current value: %d\r\n", nwk_Private_ChAgEdThreshold);
-#if 0 //defined(__ICCAVR32__)
-    printf("(G) : Scan interval, current value: 0x%.8X\r\n", nwk_Private_ChAgScanInterval);
-#else
     printf("(G) : Scan interval, current value: 0x%.8lX\r\n", nwk_Private_ChAgScanInterval);
-#endif
     printf("(E) : Scan duration, current value: %d\r\n", nwk_ScanDuration);
     printf(">\r\n");
     /* Check for incoming characters from terminal program. */
@@ -1316,7 +1225,7 @@ static void print_sub_mode_ch_ag_setup(void)
     {
         case 'F': /* Noise Threshold */
             {
-                char input_char2[3] = {0, 0, 0};
+                char input_char2[4] = {0, 0, 0,0};
                 uint8_t threshold;
                 printf("Enter new noise threshold (0 = -91dBm, 255 = -35 dBm).\r\n");
                 printf("Default: 10 = -80 dBm, new value: \r\n");
@@ -1334,9 +1243,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 }
                 threshold = atol(input_char2);
                 nlme_set_request(nwkPrivateChAgEdThreshold, 0, &threshold
-#ifdef RF4CE_CALLBACK_PARAM
                                  , (FUNC_PTR)nlme_set_confirm
-#endif
                                 );
             }
             break;
@@ -1348,7 +1255,7 @@ static void print_sub_mode_ch_ag_setup(void)
                 uint32_t threshold = 0;
                 printf("Enter new scan interval (0x00000000 ... 0xFFFFFFFF), enter 32-bit value \r\n");
                 printf("Default: 0x00393870 symbols = 60 sec, new value: 0x \r\n");
-                for (uint8_t i = 0; i < 9; i++)
+                for (uint8_t i = 0; i < 8; i++)
                 {
                     input = (char)sio2host_getchar();
                     input = (uint8_t)toupper(input);
@@ -1396,16 +1303,14 @@ static void print_sub_mode_ch_ag_setup(void)
                     }
                 }
                 nlme_set_request(nwkPrivateChAgScanInterval, 0, (uint8_t *)&threshold
-#ifdef RF4CE_CALLBACK_PARAM
                                  , (FUNC_PTR)nlme_set_confirm
-#endif
                                 );
             }
             break;
 
         case 'E':
             {
-                char input_char2[2] = {0, 0};
+                char input_char2[3] = {0, 0,0};
                 uint8_t scan_dur;
                 printf("Enter new scan duration (0 = 30 msec, 6 = 1 sec, 14 = 14 min).\r\n");
                 printf("Default: 6 = 1 sec, new value: \r\n");
@@ -1422,11 +1327,18 @@ static void print_sub_mode_ch_ag_setup(void)
                     }
                 }
                 scan_dur = atol(input_char2);
+                if ((scan_dur==0)||(scan_dur==6)||(scan_dur==14))
+                {
                 nlme_set_request(nwkScanDuration, 0, &scan_dur
-#ifdef RF4CE_CALLBACK_PARAM
                                  , (FUNC_PTR)nlme_set_confirm
-#endif
                                 );
+                }
+                else
+                {
+                   printf("Invalid value. \r\n\r\n");
+                   printf("> Press Enter to return to main menu:\r\n ");
+                   return;
+                }
             }
             break;
 
@@ -1436,36 +1348,15 @@ static void print_sub_mode_ch_ag_setup(void)
     printf("\r\n\r\n");
     printf("> Press Enter to return to main menu:\r\n ");
 }
-
-
 /**
- * @brief Notify the application about the key update.
+ * @brief This function is used to print the vendor data submenu on the hyperterminal.
  *
- * The NLME-UPDATE-KEY.confirm primitive allows the NLME to notify the
- * application of the status of its request to change the security link key of
- * a pairing table entry.
- *
- * @param status     nwk status (constants defined by nwk layer)
- * @param PairingRef Pairing reference
+ * @param Vcmd Vendor command id to be requested.
  *
  */
-#ifndef RF4CE_CALLBACK_PARAM
-#ifdef RF4CE_SECURITY
-void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
+static void print_vendor_data_submenu(uint8_t Vcmd)
 {
-    /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
-}
-#endif
-#endif
-
-
-/**
- * @brief Prints the Battery Status submenu.
- */
-static void print_get_battery_status_submenu(void)
-{
+  
     char input_char;
 
     printf("Which device should be asked? Pairing Ref = \r\n");
@@ -1478,8 +1369,7 @@ static void print_get_battery_status_submenu(void)
 
         uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
         profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = BATTERY_STATUS_REQ;
-
+        uint8_t nsdu = Vcmd;
         vendor_data_request(PairingRef, ProfileId,
                             VendorId, 1, &nsdu,
                             TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
@@ -1490,71 +1380,9 @@ static void print_get_battery_status_submenu(void)
         printf("Unknown paring reference\r\n\r\n");
         printf("> Press Enter to return to main menu: \r\n");
     }
+  
 }
 
-
-/**
- * @brief Prints the Get FIrmware Version submenu.
- */
-static void print_get_firmware_version_submenu(void)
-{
-    char input_char;
-
-    printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio2host_getchar();
-    printf("\r\n");
-
-    if ((input_char >= '0') && (input_char <= '9'))
-    {
-        uint8_t PairingRef = input_char - 0x30;
-
-        uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
-        profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = FW_VERSION_REQ;
-
-        vendor_data_request(PairingRef, ProfileId,
-                            VendorId, 1, &nsdu,
-                            TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
-    }
-    else
-    {
-        node_status = IDLE;
-        printf("Unknown paring reference\r\n\r\n");
-        printf("> Press Enter to return to main menu: \r\n");
-    }
-}
-
-
-/**
- * @brief Prints the Get Alive submenu.
- */
-static void print_get_alive_submenu(void)
-{
-    char input_char;
-
-    printf("Which device should be asked? Pairing Ref = \r\n");
-    input_char = (char)sio2host_getchar();
-    printf("\r\n");
-
-    if ((input_char >= '0') && (input_char <= '9'))
-    {
-        uint8_t PairingRef = input_char - 0x30;
-
-        uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
-        profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = ALIVE_REQ;
-
-        vendor_data_request(PairingRef, ProfileId,
-                            VendorId, 1, &nsdu,
-                            TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);
-    }
-    else
-    {
-        node_status = IDLE;
-        printf("Unknown paring reference\r\n\r\n");
-        printf("> Press Enter to return to main menu:\r\n ");
-    }
-}
 
 
 /**
@@ -1567,10 +1395,7 @@ static void print_get_alive_submenu(void)
  * @param RxLinkQuality    Link quality of received packet.
  * @param RxFlags          Rx Flags.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
+static void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
                      uint8_t nsduLength, uint8_t *nsdu, uint8_t RxLinkQuality,
                      uint8_t RxFlags)
 {
@@ -1581,9 +1406,7 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
         {
             printf("Leaving power save mode.\r\n");
             nlme_rx_enable_request(RX_DURATION_INFINITY
-#ifdef RF4CE_CALLBACK_PARAM
                                    , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                                   );
             node_status = IDLE;
         }
@@ -1641,18 +1464,14 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
  *
  */
 void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#ifdef NLDE_HANDLE
                          , uint8_t Handle
-#endif
                         )
 {
     printf("Vendor data confirm,  Status = %s (0x%.2X), pairing reference %d\r\n",
            get_status_text((nwk_enum_t)Status), Status, PairingRef);
-#ifdef NLDE_HANDLE
     /* Keeps compiler Happy */
     Handle = Handle;
     ProfileId = ProfileId;
-#endif
 }
 
 

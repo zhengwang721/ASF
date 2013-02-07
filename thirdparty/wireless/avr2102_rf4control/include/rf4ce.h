@@ -3,15 +3,42 @@
  *
  * @brief This header file declares the interface for the RF4Control stack.
  *
- * $Id: rf4ce.h 33769 2012-12-10 05:05:32Z agasthian.s $
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
- */
-/*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * \asf_license_start
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
 
 /* Prevent double inclusion */
@@ -28,6 +55,58 @@
 #include "return_val.h"
 #include "nwk_build_config.h"
 
+/**
+ * \defgroup group_rf4control RF4Control
+ * The RF4Control stack is a ZigBee® RF4CE Certified Platform implementing the ZigBee 
+ * RF4CE standard.
+ * 
+ *
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4CONTROL_NWK_API NWK APIs
+ *  This module defines all Nmk layer core apis
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
+ *  Defines generic APIs  to access rf4control stack
+ */
+ /**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4CONTROL_NWK_CONSTANTS NWK Constants
+ *  Defines NWK layer constants
+ */
+ /**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4CONTROL_VENDOR_DATA_API Vendor data APIs
+ *  APIs to access vendor data functions
+ */
+ /**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
+ *  Constants in the ZRC layer.
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4Control_ZRC_API ZRC APIs
+ *  APIs to access ZRC Modules.
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroup group_RF4Control_ZRC_CMD_DISC_API ZRC CMD discovery APIs
+ *  APIs to ZRC cmd discovery functions.
+ */
+ /**
+ * \ingroup group_rf4control
+ * \defgroup group_rf4control_ds RF4Control data structures.
+ *  Defines data structures used in RF4Control stack.
+ */
+/**
+ * \ingroup group_rf4control
+ * \defgroupgroup_RF4CONTROL_PBP_API Push button pairing APIs.
+ * Defines APIs to  access push button pairingm functionality.
+ */
 
 /* === Macros =============================================================== */
 
@@ -127,7 +206,7 @@
  * NWK enumerations as defined by
  * 094945r00ZB_RF4CE-Specification.pdf, Table 45 - NWK enumerations description
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum nwk_enum_tag
 {
@@ -222,7 +301,7 @@ typedef enum nwk_enum_tag
 /**
  * Elements of the NodeDesc type as defined by 094945r00ZB_RF4CE-Specification.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 
 typedef struct NodeDesc_tag
@@ -261,7 +340,7 @@ typedef struct NodeDesc_tag
 /**
  * Network Information Base attributes as defined by 094945r00ZB_RF4CE-Specification.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum nib_attribute_tag
 {
@@ -351,7 +430,7 @@ typedef enum nib_attribute_tag
 /**
  * Structure implementing the pairing table entry as defined by 094945r00ZB_RF4CE-Specification.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef struct pairing_table_tag
 {
@@ -379,7 +458,7 @@ typedef struct pairing_table_tag
 /**
  * Enumeration identifiying the address mode as defined by 094945r00ZB_RF4CE-Specification.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum nwk_addr_mode_tag
 {
@@ -393,7 +472,7 @@ typedef enum nwk_addr_mode_tag
 /**
  * Enumeration used for implementation-specific channel agility
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum nwk_agility_mode_tag
 {
@@ -409,7 +488,7 @@ typedef enum nwk_agility_mode_tag
 /**
  * Device types as defined by 094950r00ZB_RF4CE-Device-Type-List.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum dev_type_tag
 {
@@ -438,7 +517,7 @@ typedef enum dev_type_tag
 /**
  * Profile IDs as defined by 094951r00ZB_RF4CE-Profile-ID-List.pdf
  *
- * @ingroup apiRF4CONTROL_NWK_CONSTANTS
+ * @ingroup group_RF4CONTROL_NWK_CONSTANTS
  */
 typedef enum profile_id_tag
 {
@@ -451,38 +530,154 @@ typedef enum profile_id_tag
     /** Wildcard profile id */
     PROFILE_ID_WILDCARD         = 0xFF
 } SHORTENUM profile_id_t;
+/**
+ * @brief Confirms the previous channel agility request, i.e. nwk_ch_agility_req()
+ *
+ * @param Status Result of last request
+ *               NWK_SUCCESS Channel agility request is performed successfully.
+ *               NWK_NOT_PERMITTED Channel agility is not permitted, because
+ *               power save mode is currently enabled.
+ * @param ChannelChanged True if channel changed due to agility feature
+ * @param LogicalChannel Current channel
+ *
+ * @see nwk_ch_agility_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 
-
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
 
 #if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nwk_ch_agility_confirm_cb_t)(
     nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel);
 #endif
-
+/**
+ * @brief Indicates a channel agility event
+ *
+ * The function indicates that a channel agility event has occured, i.e. the
+ * base channel has been changed automatically. The new channel is indicated
+ * by the parameter LogicalChannel.
+ *
+ * @param LogicalChannel New/Current channel.
+ *
+ * @see nwk_ch_agility_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nwk_ch_agility_indication_cb_t)(uint8_t LogicalChannel);
 #endif
-
+/**
+ * @brief NLME-UPDATE-KEY.confirm primitive API
+ *
+ * The NLME-UPDATE-KEY.confirm primitive allows the NLME to notify the
+ * application of the status of its request to change the security link key of
+ * a pairing table entry.
+ *
+ * @param Status        The status of the request to update the security link
+ *                      key.
+ * @param PairingRef    The reference into the local pairing table of the entry
+ *                      whose key is to be updated.
+ *
+ * @see nlme_update_key_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (NWK_UPDATE_KEY == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_update_key_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef);
 #endif
-
+/**
+ * @brief NLME-UNPAIR.confirm primitive API
+ *
+ * The NLME-UNPAIR.confirm primitive allows the NLME to notify the application of
+ * the status of its request to remove a pair with another device.
+ *
+ * @param Status        The status of the unpair attempt.
+ * @param PairingRef   The pairing table reference for this pairing link.
+ *
+ * @see nlme_unpair_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (NWK_UNPAIR_REQ_CONF == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_unpair_confirm_cb_t)(uint8_t Status, uint8_t PairingRef);
 #endif
-
+/**
+ * @brief NLME-START.confirm primitive API
+ *
+ * The NLME-START.confirm primitive allows the NLME to notify the application of
+ * the status of its request to start a network.
+ *
+ * @param Status    The status of the start attempt.
+ *
+ * @see nlme_start_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 typedef void (*nlme_start_confirm_cb_t)(nwk_enum_t Status);
-
+/**
+ * @brief NLME-SET.confirm primitive API
+ *
+ * The NLME-SET.confirm primitive allows the NLME to notify the application of the
+ * status of its request to change the value of a NIB attribute.
+ *
+ * @param Status            The status of the request to set PIB attribute
+ *                          information.
+ * @param NIBAttribute      The identifier of the NIB attribute that was
+ *                          written.
+ * @param NIBAttributeIndex The index within the table or array of the
+ *                          specified NIB attribute that was written.
+ *
+ * @see nlme_set_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (NWK_SET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_set_confirm_cb_t)(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                                       uint8_t NIBAttributeIndex);
 #endif
-
+/**
+ * @brief Confirmation callback pointer for NLME-RX-ENABLE request
+ *
+ * The NLME-RX-ENABLE.confirm primitive reports the results of the attempt to
+ * enable or disable the receiver.
+ *
+ * @param Status    The result of the request to enable or disable the receiver.
+ *
+ * @see nlme_rx_enable_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 typedef void (*nlme_rx_enable_confirm_cb_t)(nwk_enum_t Status);
-
+/**
+ * @brief NLME-RESET.confirm primitive API
+ *
+ * The NLME-RESET.confirm primitive allows the NLME to notify the application of
+ * the status of its request to reset the NWK layer.
+ *
+ * @param Status    The status of the reset request.
+ *
+ * @see nlme_reset_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 typedef void (*nlme_reset_confirm_cb_t)(nwk_enum_t Status);
-
+/**
+ * @brief NLME-PAIR.confirm primitive API
+ *
+ * The NLME-PAIR.confirm primitive allows the NLME to notify the application of the
+ * status of its request to pair with another device.
+ *
+ * @param Status                The status of the pair attempt.
+ * @param PairingRef            The pairing table reference for this pairing
+ *                              link.
+ * @param RecVendorId           The vendor identifier of the originator of the
+ *                              pair response.
+ * @param RecVendorString       The vendor string of the originator of the pair
+ *                              response.
+ * @param RecAppCapabilities    The application capabilities of the originator
+ *                              of the pair response.
+ * @param RecUserString         The user defined identification string of the
+ *                              originator of the pair response.
+ * @param RecDevTypeList        The list of device types supported by the
+ *                              originator of the pair response.
+ * @param RecProfileIdList      The list of profile identifiers supported by
+ *                              the originator of the pair response.
+ *
+ * @see nlme_pair_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (NWK_PAIR_REQ_CONF == 1) || (defined DOXYGEN)
 typedef void (*nlme_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef, uint16_t RecVendorId,
                                        uint8_t RecVendorString[7], uint8_t RecAppCapabilities,
@@ -490,6 +685,22 @@ typedef void (*nlme_pair_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef, ui
                                        profile_id_t RecProfileIdList[7]);
 #endif
 
+/**
+ * @brief NLME-GET.confirm primitive API
+ *
+ * The NLME-GET.confirm primitive allows the NLME to notify the application of the
+ * status of its request for the value of a NIB attribute.
+ *
+ * @param Status            The status of the request for NIB attribute
+ *                          information.
+ * @param NIBAttribute      The identifier of the NIB attribute that was read.
+ * @param NIBAttributeIndex The index within the table or array of the
+ *                          specified NIB attribute that was read.
+ * @param NIBAttributeValue The value of the NIB attribute that was read.
+ *
+ * @see nlme_get_request, nwk_get_nib_attribute_size
+ * @ingroup group_RF4CONTROL_NWK_API
+ */    
 #if (NWK_GET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_get_confirm_cb_t)(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                                       uint8_t NIBAttributeIndex, void *NIBAttributeValue);
@@ -499,16 +710,70 @@ typedef void (*nlme_get_confirm_cb_t)(nwk_enum_t Status, nib_attribute_t NIBAttr
 typedef void (*nlme_discovery_confirm_cb_t)(nwk_enum_t Status, uint8_t NumNodes,
                                             node_desc_t *NodeDescList);
 #endif
-
+/**
+ * @brief NLME-AUTO-DISCOVERY.confirm primitive API
+ *
+ * The NLME-AUTO-DISCOVERY.confirm primitive allows the NLME to notify the
+ * application of the status of its request to enter auto discovery response mode.
+ *
+ * @param Status        Status of the completed auto-discovery procedure
+ * @param SrcIEEEAddr   Source IEEE address from which the discovery request
+                       was received.
+ *
+ * @see nlme_auto_discovery_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_auto_discovery_confirm_cb_t)(nwk_enum_t Status, uint64_t SrcIEEEAddr);
 #endif
-
+/**
+ * @brief NLDE-DATA.confirm primitive API
+ *
+ * The NLDE-DATA.confirm primitive is generated by the NWK layer entity in
+ * response to an NLDE-DATA.request primitive.
+ *
+ * @param Status      Status for the handled data request
+ * @param PairingRef  Pairing reference used for the data request
+ * @param ProfileId   Profile Id used for the data request
+ * @param Handle      Data retry handle
+ *
+ * @see nlde_data_request
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 typedef void (*nlde_data_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
-                                       , uint8_t Handle
-#endif
-                                      );
+                                       , uint8_t Handle);
+/**
+ * @brief NLME-PAIR.indication primitive API
+ *
+ * The NLME-PAIR.indication primitive allows the NLME to notify the application of
+ * the reception of a pairing request command.
+ *
+ * @param Status                The status of the provisional pairing.
+ * @param SrcPANId              The PAN identifier of the device requesting the
+ *                              pair.
+ * @param SrcIEEEAddr           The IEEE address of the device requesting the
+ *                              pair.
+ * @param OrgNodeCapabilities   The capabilities of the originator of the pair
+ *                              request.
+ * @param OrgVendorId           The vendor identifier of the originator of the
+ *                              pair request.
+ * @param OrgVendorString       The vendor string of the originator of the pair
+ *                              request.
+ * @param OrgAppCapabilities    The application capabilities of the originator
+ *                              of the pair request.
+ * @param OrgUserString         The user defined identification string of the
+ *                              originator of the pair request.
+ * @param OrgDevTypeList        The list of device types supported by the
+ *                              originator of the pair request.
+ * @param OrgProfileIdList      The list of profile identifiers supported by
+ *                              the originator of the pair request.
+ * @param KeyExTransferCount    The number of transfers being requested to
+ *                              exchange the link key.
+ * @param ProvPairingRef        The pairing reference that will be used if this
+ *                              pairing request is successful.
+ *
+ * @see nlme_pair_request, nlme_pair_response
+ * @ingroup group_RF4CONTROL_NWK_API     */
 
 #if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_pair_indication_cb_t)(nwk_enum_t Status, uint16_t SrcPANId, uint64_t SrcIEEEAddr,
@@ -518,11 +783,52 @@ typedef void (*nlme_pair_indication_cb_t)(nwk_enum_t Status, uint16_t SrcPANId, 
                                           profile_id_t OrgProfileIdList[7], uint8_t KeyExTransferCount,
                                           uint8_t ProvPairingRef);
 #endif
-
+/**
+ * @brief NLME-UNPAIR.indication primitive API
+ *
+ * The NLME-UNPAIR.indication primitive allows the NLME to notify the application
+ * of the removal of a pairing link by another device.
+ *
+ * @param PairingRef    The pairing table reference that has been removed from
+ *                      the pairing table.
+ *
+ * @see nlme_unpair_response
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 #if (NWK_UNPAIR_IND_RESP == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_unpair_indication_cb_t)(uint8_t PairingRef);
 #endif
-
+ /**
+  * @brief NLME-DISCOVERY.indication primitive API
+  *
+  * The NLME-DISCOVERY.indication primitive allows the NLME to notify the
+  * application that a discovery request command has been received.
+  *
+  * @param Status                The status of the pairing table.
+  * @param SrcIEEEAddr           The IEEE address of the device requesting the
+  *                              discovery.
+  * @param OrgNodeCapabilities   The capabilities of the originator of the
+  *                              discovery request.
+  * @param OrgVendorId           The vendor identifier of the originator of the
+  *                              discovery request.
+  * @param OrgVendorString       The vendor string of the originator of the
+  *                              discovery request.
+  * @param OrgAppCapabilities    The application capabilities of the originator
+  *                              of the discovery request.
+  * @param OrgUserString         The user defined identification string of the
+  *                              originator of the discovery request.
+  * @param OrgDevTypeList        The list of device types supported by the
+  *                              originator of the discovery request.
+  * @param OrgProfileIdList      The list of profile identifiers supported by
+  *                              the originator of the discovery request.
+  * @param SearchDevType         The device type being discovered. If this is
+  *                              0xff, any type is being requested.
+  * @param RxLinkQuality         LQI value of the discovery request command
+  *                              frame.
+  *
+  * @see nlme_discovery_request, nlme_discovery_confirm, nlme_discovery_response
+  * @ingroup group_RF4CONTROL_NWK_API
+  */
 #if (((defined RF4CE_TARGET) && (NWK_DISCOVERY_IND_RESP == 1)) || (defined DOXYGEN)) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_discovery_indication_cb_t)(nwk_enum_t Status, uint64_t SrcIEEEAddr,
                                                uint8_t OrgNodeCapabilities, uint16_t OrgVendorId,
@@ -531,12 +837,42 @@ typedef void (*nlme_discovery_indication_cb_t)(nwk_enum_t Status, uint64_t SrcIE
                                                profile_id_t OrgProfileIdList[7], dev_type_t SearchDevType,
                                                uint8_t RxLinkQuality);
 #endif
-
+/**
+  * @brief NLME-COMM-STATUS.indication primitive API
+  *
+  * The NLME-COMM-STATUS.indication primitive allows the NLME to notify the
+  * application of a communication status.
+  *
+  * @param Status        Status of the transmission
+  * @param PairingRef    Pairing reference used for the transmission
+  * @param DstPANId      Destination PAN Id used for the transmission
+  * @param DstAddrMode   Destination adress mode used for the transmission
+  * @param DstAddr       Destination address used for the transmission
+  *
+  * @ingroup group_RF4CONTROL_NWK_API
+  */
 #if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nlme_comm_status_indication_cb_t)(nwk_enum_t Status, uint8_t PairingRef,
                                                  uint16_t DstPANId, uint8_t DstAddrMode,
                                                  uint64_t DstAddr);
 #endif
+/**
+ * @brief NLDE-DATA.indication primitive API
+ *
+ * The NLDE-DATA.indication primitive is generated by the NLDE and issued to the
+ * application on receipt of a data frame at the local NWK layer entity.
+ *
+ * @param PairingRef    Pairing reference attached to the incoming frame
+ * @param ProfileId     Profile id used for the frame
+ * @param VendorId      Vendor id used for the frame
+ * @param nsduLength    Payload length
+ * @param nsdu          Pointer to the network payload
+ * @param RxLinkQuality Link quality of the received frame
+ * @param RxFlags       Receive flags
+ *
+ * @see nlde_data_request, nlde_data_confirm
+ * @ingroup group_RF4CONTROL_NWK_API
+ */
 
 typedef void (*nlde_data_indication_cb_t)(uint8_t PairingRef, profile_id_t ProfileId,
                                           uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
@@ -551,7 +887,7 @@ typedef void (*zrc_data_indication_cb_t)(uint8_t PairingRef, uint16_t VendorId, 
   * struct for network indication callback.
   * App should use this struct to register indication callback functions
   *
-  * @ingroup apiRF4CONTROL_NWK_API
+  * @ingroup group_RF4CONTROL_NWK_API
   */
 typedef struct nwk_indication_callback_tag
 {
@@ -575,7 +911,7 @@ typedef struct nwk_indication_callback_tag
 #endif
     nlde_data_indication_cb_t nlde_data_indication_cb;
 } nwk_indication_callback_t;
-#endif
+
 
 /* === Externals ============================================================ */
 
@@ -605,61 +941,16 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlde_data_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
     bool nlde_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                            uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
                            uint8_t TxOptions
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
                            , uint8_t Handle
-#endif
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                            , FUNC_PTR confirm_cb
-#endif
                           );
 
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-    /**
-     * @brief NLDE-DATA.indication primitive API
-     *
-     * The NLDE-DATA.indication primitive is generated by the NLDE and issued to the
-     * application on receipt of a data frame at the local NWK layer entity.
-     *
-     * @param PairingRef    Pairing reference attached to the incoming frame
-     * @param ProfileId     Profile id used for the frame
-     * @param VendorId      Vendor id used for the frame
-     * @param nsduLength    Payload length
-     * @param nsdu          Pointer to the network payload
-     * @param RxLinkQuality Link quality of the received frame
-     * @param RxFlags       Receive flags
-     *
-     * @see nlde_data_request, nlde_data_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-    void nlde_data_indication(uint8_t PairingRef, profile_id_t ProfileId,
-                              uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
-                              uint8_t RxLinkQuality, uint8_t RxFlags);
 
-    /**
-     * @brief NLDE-DATA.confirm primitive API
-     *
-     * The NLDE-DATA.confirm primitive is generated by the NWK layer entity in
-     * response to an NLDE-DATA.request primitive.
-     *
-     * @param Status      Status for the handled data request
-     * @param PairingRef  Pairing reference used for the data request
-     * @param ProfileId   Profile Id used for the data request
-     * @param Handle      Data retry handle
-     *
-     * @see nlde_data_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-    void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
-#if (defined NLDE_HANDLE) || (defined DOXYGEN)
-                           , uint8_t Handle
-#endif
-                          );
-#endif
     /**
      * @brief NLME-AUTO-DISCOVERY.request primitive API
      *
@@ -675,57 +966,17 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_auto_discovery_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_auto_discovery_request(uint8_t RecAppCapabilities,
                                      dev_type_t RecDevTypeList[3],
                                      profile_id_t RecProfileIdList[7],
                                      uint32_t AutoDiscDuration
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                      , FUNC_PTR confirm_cb
-#endif
                                     );
 #endif
 
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-    /**
-     * @brief NLME-AUTO-DISCOVERY.confirm primitive API
-     *
-     * The NLME-AUTO-DISCOVERY.confirm primitive allows the NLME to notify the
-     * application of the status of its request to enter auto discovery response mode.
-     *
-     * @param Status        Status of the completed auto-discovery procedure
-     * @param SrcIEEEAddr   Source IEEE address from which the discovery request
-                            was received.
-     *
-     * @see nlme_auto_discovery_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_auto_discovery_confirm(nwk_enum_t Status, uint64_t SrcIEEEAddr);
-#endif
-
-    /**
-     * @brief NLME-COMM-STATUS.indication primitive API
-     *
-     * The NLME-COMM-STATUS.indication primitive allows the NLME to notify the
-     * application of a communication status.
-     *
-     * @param Status        Status of the transmission
-     * @param PairingRef    Pairing reference used for the transmission
-     * @param DstPANId      Destination PAN Id used for the transmission
-     * @param DstAddrMode   Destination adress mode used for the transmission
-     * @param DstAddr       Destination address used for the transmission
-     *
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_comm_status_indication(nwk_enum_t Status, uint8_t PairingRef,
-                                     uint16_t DstPANId, uint8_t DstAddrMode,
-                                     uint64_t DstAddr);
-#endif
-#endif /* (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN) */
 
     /**
      * @brief NLME-DISCOVERY.request primitive API
@@ -759,7 +1010,7 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_discovery_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_DISCOVERY_REQ_CONF == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
@@ -770,52 +1021,8 @@ extern "C" {
                                 uint8_t DiscProfileIdListSize,
                                 profile_id_t DiscProfileIdList[7],
                                 uint32_t DiscDuration
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                 , FUNC_PTR confirm_cb
-#endif
                                );
-#endif
-
-    /**
-     * @brief NLME-DISCOVERY.indication primitive API
-     *
-     * The NLME-DISCOVERY.indication primitive allows the NLME to notify the
-     * application that a discovery request command has been received.
-     *
-     * @param Status                The status of the pairing table.
-     * @param SrcIEEEAddr           The IEEE address of the device requesting the
-     *                              discovery.
-     * @param OrgNodeCapabilities   The capabilities of the originator of the
-     *                              discovery request.
-     * @param OrgVendorId           The vendor identifier of the originator of the
-     *                              discovery request.
-     * @param OrgVendorString       The vendor string of the originator of the
-     *                              discovery request.
-     * @param OrgAppCapabilities    The application capabilities of the originator
-     *                              of the discovery request.
-     * @param OrgUserString         The user defined identification string of the
-     *                              originator of the discovery request.
-     * @param OrgDevTypeList        The list of device types supported by the
-     *                              originator of the discovery request.
-     * @param OrgProfileIdList      The list of profile identifiers supported by
-     *                              the originator of the discovery request.
-     * @param SearchDevType         The device type being discovered. If this is
-     *                              0xff, any type is being requested.
-     * @param RxLinkQuality         LQI value of the discovery request command
-     *                              frame.
-     *
-     * @see nlme_discovery_request, nlme_discovery_confirm, nlme_discovery_response
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (((defined RF4CE_TARGET) && (NWK_DISCOVERY_IND_RESP == 1)) || (defined DOXYGEN)) || (defined RF4CE_PLATFORM)
-    void nlme_discovery_indication(nwk_enum_t Status, uint64_t SrcIEEEAddr,
-                                   uint8_t OrgNodeCapabilities, uint16_t OrgVendorId,
-                                   uint8_t OrgVendorString[7], uint8_t OrgAppCapabilities,
-                                   uint8_t OrgUserString[15], dev_type_t OrgDevTypeList[3],
-                                   profile_id_t OrgProfileIdList[7],
-                                   dev_type_t SearchDevType, uint8_t RxLinkQuality);
-#endif
 #endif
 
     /**
@@ -839,7 +1046,7 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_discovery_indication
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (((defined RF4CE_TARGET) && (NWK_DISCOVERY_IND_RESP == 1)) || (defined DOXYGEN)) || (defined RF4CE_PLATFORM)
     bool nlme_discovery_response(nwk_enum_t Status, uint64_t DstIEEEAddr,
@@ -847,26 +1054,6 @@ extern "C" {
                                  profile_id_t RecProfileIdList[7], uint8_t DiscReqLQI);
 #endif
 
-    /**
-     * @brief NLME-DISCOVERY.confirm primitive API
-     *
-     * The NLME-DISCOVERY.confirm primitive allows the NLME to notify the
-     * application of the status of its request to perform a network discovery.
-     *
-     * @param Status        The status of the network discovery attempt.
-     * @param NumNodes      The number of discovered nodes in the NodeDescList
-     *                      parameter.
-     * @param NodeDescList  The (pointer of) list of node descriptors discovered.
-     *
-     * @see nlme_discovery_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_DISCOVERY_REQ_CONF == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_discovery_confirm(nwk_enum_t Status, uint8_t NumNodes,
-                                node_desc_t *NodeDescList);
-#endif
-#endif
 
     /**
      * @brief NLME-GET.request primitive API
@@ -882,37 +1069,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_get_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_GET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_get_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
-#endif
-
-    /**
-     * @brief NLME-GET.confirm primitive API
-     *
-     * The NLME-GET.confirm primitive allows the NLME to notify the application of the
-     * status of its request for the value of a NIB attribute.
-     *
-     * @param Status            The status of the request for NIB attribute
-     *                          information.
-     * @param NIBAttribute      The identifier of the NIB attribute that was read.
-     * @param NIBAttributeIndex The index within the table or array of the
-     *                          specified NIB attribute that was read.
-     * @param NIBAttributeValue The value of the NIB attribute that was read.
-     *
-     * @see nlme_get_request, nwk_get_nib_attribute_size
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_GET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
-                          uint8_t NIBAttributeIndex, void *NIBAttributeValue);
-#endif
 #endif
 
     /**
@@ -942,60 +1104,14 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_pair_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_PAIR_REQ_CONF == 1) || (defined DOXYGEN)
     bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIEEEAddr,
                            uint8_t OrgAppCapabilities, dev_type_t OrgDevTypeList[3],
                            profile_id_t OrgProfileIdList[7], uint8_t KeyExTransferCount
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                            , FUNC_PTR confirm_cb
-#endif
                           );
-#endif
-
-    /**
-     * @brief NLME-PAIR.indication primitive API
-     *
-     * The NLME-PAIR.indication primitive allows the NLME to notify the application of
-     * the reception of a pairing request command.
-     *
-     * @param Status                The status of the provisional pairing.
-     * @param SrcPANId              The PAN identifier of the device requesting the
-     *                              pair.
-     * @param SrcIEEEAddr           The IEEE address of the device requesting the
-     *                              pair.
-     * @param OrgNodeCapabilities   The capabilities of the originator of the pair
-     *                              request.
-     * @param OrgVendorId           The vendor identifier of the originator of the
-     *                              pair request.
-     * @param OrgVendorString       The vendor string of the originator of the pair
-     *                              request.
-     * @param OrgAppCapabilities    The application capabilities of the originator
-     *                              of the pair request.
-     * @param OrgUserString         The user defined identification string of the
-     *                              originator of the pair request.
-     * @param OrgDevTypeList        The list of device types supported by the
-     *                              originator of the pair request.
-     * @param OrgProfileIdList      The list of profile identifiers supported by
-     *                              the originator of the pair request.
-     * @param KeyExTransferCount    The number of transfers being requested to
-     *                              exchange the link key.
-     * @param ProvPairingRef        The pairing reference that will be used if this
-     *                              pairing request is successful.
-     *
-     * @see nlme_pair_request, nlme_pair_response
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_pair_indication(nwk_enum_t Status, uint16_t SrcPANId, uint64_t SrcIEEEAddr,
-                              uint8_t OrgNodeCapabilities, uint16_t OrgVendorId,
-                              uint8_t OrgVendorString[7], uint8_t OrgAppCapabilities,
-                              uint8_t OrgUserString[15], dev_type_t OrgDevTypeList[3],
-                              profile_id_t OrgProfileIdList[7], uint8_t KeyExTransferCount,
-                              uint8_t ProvPairingRef);
-#endif
 #endif
 
     /**
@@ -1021,46 +1137,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_pair_indication
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (defined RF4CE_TARGET) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_pair_response(nwk_enum_t Status, uint16_t DstPANId, uint64_t DstIEEEAddr,
                             uint8_t RecAppCapabilities, dev_type_t RecDevTypeList[3],
                             profile_id_t RecProfileIdList[7], uint8_t ProvPairingRef);
-#endif
-
-    /**
-     * @brief NLME-PAIR.confirm primitive API
-     *
-     * The NLME-PAIR.confirm primitive allows the NLME to notify the application of the
-     * status of its request to pair with another device.
-     *
-     * @param Status                The status of the pair attempt.
-     * @param PairingRef            The pairing table reference for this pairing
-     *                              link.
-     * @param RecVendorId           The vendor identifier of the originator of the
-     *                              pair response.
-     * @param RecVendorString       The vendor string of the originator of the pair
-     *                              response.
-     * @param RecAppCapabilities    The application capabilities of the originator
-     *                              of the pair response.
-     * @param RecUserString         The user defined identification string of the
-     *                              originator of the pair response.
-     * @param RecDevTypeList        The list of device types supported by the
-     *                              originator of the pair response.
-     * @param RecProfileIdList      The list of profile identifiers supported by
-     *                              the originator of the pair response.
-     *
-     * @see nlme_pair_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_PAIR_REQ_CONF == 1) || (defined DOXYGEN)
-    void nlme_pair_confirm(nwk_enum_t Status, uint8_t PairingRef, uint16_t RecVendorId,
-                           uint8_t RecVendorString[7], uint8_t RecAppCapabilities,
-                           uint8_t RecUserString[15], dev_type_t RecDevTypeList[3],
-                           profile_id_t RecProfileIdList[7]);
-#endif
 #endif
 
     /**
@@ -1079,28 +1161,11 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_reset_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
     bool nlme_reset_request(bool SetDefaultNIB
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                             , FUNC_PTR confirm_cb
-#endif
                            );
-
-    /**
-     * @brief NLME-RESET.confirm primitive API
-     *
-     * The NLME-RESET.confirm primitive allows the NLME to notify the application of
-     * the status of its request to reset the NWK layer.
-     *
-     * @param Status    The status of the reset request.
-     *
-     * @see nlme_reset_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-    void nlme_reset_confirm(nwk_enum_t Status);
-#endif
 
     /**
      * @brief NLME-RX-ENABLE.request primitive API
@@ -1122,28 +1187,11 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_rx_enable_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
     bool nlme_rx_enable_request(uint32_t RxOnDuration
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                 , FUNC_PTR confirm_cb
-#endif
                                );
-
-    /**
-     * @brief Confirmation callback pointer for NLME-RX-ENABLE request
-     *
-     * The NLME-RX-ENABLE.confirm primitive reports the results of the attempt to
-     * enable or disable the receiver.
-     *
-     * @param Status    The result of the request to enable or disable the receiver.
-     *
-     * @see nlme_rx_enable_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-    void nlme_rx_enable_confirm(nwk_enum_t Status);
-#endif
 
     /**
      * @brief NLME-SET.request primitive API
@@ -1160,36 +1208,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_set_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_SET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_set_request(nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex, uint8_t *NIBAttributeValue
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                           , FUNC_PTR confirm_cb
-#endif
                          );
-#endif
-
-    /**
-     * @brief NLME-SET.confirm primitive API
-     *
-     * The NLME-SET.confirm primitive allows the NLME to notify the application of the
-     * status of its request to change the value of a NIB attribute.
-     *
-     * @param Status            The status of the request to set PIB attribute
-     *                          information.
-     * @param NIBAttribute      The identifier of the NIB attribute that was
-     *                          written.
-     * @param NIBAttributeIndex The index within the table or array of the
-     *                          specified NIB attribute that was written.
-     *
-     * @see nlme_set_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_SET == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex);
-#endif
 #endif
 
     /**
@@ -1203,29 +1227,10 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_start_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
-    bool nlme_start_request(
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-        FUNC_PTR confirm_cb);
-#else
-        void);
-#endif
+    bool nlme_start_request(FUNC_PTR confirm_cb);
 
-    /**
-     * @brief NLME-START.confirm primitive API
-     *
-     * The NLME-START.confirm primitive allows the NLME to notify the application of
-     * the status of its request to start a network.
-     *
-     * @param Status    The status of the start attempt.
-     *
-     * @see nlme_start_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-    void nlme_start_confirm(nwk_enum_t Status);
-#endif
 
     /**
      * @brief NLME-UNPAIR.request primitive API
@@ -1241,32 +1246,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_unpair_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_UNPAIR_REQ_CONF == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_unpair_request(uint8_t PairingRef
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                              , FUNC_PTR confirm_cb
-#endif
                             );
-#endif
-
-    /**
-     * @brief NLME-UNPAIR.indication primitive API
-     *
-     * The NLME-UNPAIR.indication primitive allows the NLME to notify the application
-     * of the removal of a pairing link by another device.
-     *
-     * @param PairingRef    The pairing table reference that has been removed from
-     *                      the pairing table.
-     *
-     * @see nlme_unpair_response
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_UNPAIR_IND_RESP == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_unpair_indication(uint8_t PairingRef);
-#endif
 #endif
 
     /**
@@ -1282,28 +1267,10 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_unpair_indication
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_UNPAIR_IND_RESP == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_unpair_response(uint8_t PairingRef);
-#endif
-
-    /**
-     * @brief NLME-UNPAIR.confirm primitive API
-     *
-     * The NLME-UNPAIR.confirm primitive allows the NLME to notify the application of
-     * the status of its request to remove a pair with another device.
-     *
-     * @param Status        The status of the unpair attempt.
-     * @param PairingRef   The pairing table reference for this pairing link.
-     *
-     * @see nlme_unpair_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_UNPAIR_REQ_CONF == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef);
-#endif
 #endif
 
     /**
@@ -1321,35 +1288,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nlme_update_key_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (NWK_UPDATE_KEY == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nlme_update_key_request(uint8_t PairingRef, uint8_t NewLinkKey[16]
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                  , FUNC_PTR confirm_cb
-#endif
                                 );
-#endif
-
-    /**
-     * @brief NLME-UPDATE-KEY.confirm primitive API
-     *
-     * The NLME-UPDATE-KEY.confirm primitive allows the NLME to notify the
-     * application of the status of its request to change the security link key of
-     * a pairing table entry.
-     *
-     * @param Status        The status of the request to update the security link
-     *                      key.
-     * @param PairingRef    The reference into the local pairing table of the entry
-     *                      whose key is to be updated.
-     *
-     * @see nlme_update_key_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (NWK_UPDATE_KEY == 1) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef);
-#endif
 #endif
 
     /**
@@ -1369,51 +1313,12 @@ extern "C" {
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
      * @see nwk_ch_agility_confirm
-     * @ingroup apiRF4CONTROL_NWK_API
+     * @ingroup group_RF4CONTROL_NWK_API
      */
 #if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
     bool nwk_ch_agility_request(nwk_agility_mode_t AgilityMode
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
                                 , FUNC_PTR confirm_cb
-#endif
                                );
-#endif
-
-    /**
-     * @brief Indicates a channel agility event
-     *
-     * The function indicates that a channel agility event has occured, i.e. the
-     * base channel has been changed automatically. The new channel is indicated
-     * by the parameter LogicalChannel.
-     *
-     * @param LogicalChannel New/Current channel.
-     *
-     * @see nwk_ch_agility_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nwk_ch_agility_indication(uint8_t LogicalChannel);
-#endif
-#endif
-
-    /**
-     * @brief Confirms the previous channel agility request, i.e. nwk_ch_agility_req()
-     *
-     * @param Status Result of last request
-     *               NWK_SUCCESS Channel agility request is performed successfully.
-     *               NWK_NOT_PERMITTED Channel agility is not permitted, because
-     *               power save mode is currently enabled.
-     * @param ChannelChanged True if channel changed due to agility feature
-     * @param LogicalChannel Current channel
-     *
-     * @see nwk_ch_agility_request
-     * @ingroup apiRF4CONTROL_NWK_API
-     */
-#if (!defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
-#if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
-    void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel);
-#endif
 #endif
 
 
@@ -1427,7 +1332,7 @@ extern "C" {
      *
      * @return Status of the initialization
      *
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     nwk_enum_t nwk_init(void);
 
@@ -1439,7 +1344,7 @@ extern "C" {
      *
      * @return true if request has been added to NHLE-NWK queue successfully; else false
      *
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     bool nwk_task(void);
 
@@ -1453,7 +1358,7 @@ extern "C" {
      *
      * @return true if all layers are idle; else false
      *
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     bool nwk_ready_to_sleep(void);
 
@@ -1464,7 +1369,7 @@ extern "C" {
      * The function nwk_state_idle() checks the RF4CE network layer is busy or idle.
      * @return true if nwk layer is idle; else false
      *
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     bool nwk_stack_idle(void);
 
@@ -1481,7 +1386,7 @@ extern "C" {
      * @param length        Number of entries to read
      *
      * @see store_pairing_ref
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     void read_pairing_ref(uint8_t *pairing_ref, uint8_t length);
 
@@ -1496,7 +1401,7 @@ extern "C" {
      * @param length        Number of entries to store
      *
      * @see read_pairing_ref
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     void store_pairing_ref(uint8_t *pairing_ref, uint8_t length);
 
@@ -1511,7 +1416,7 @@ extern "C" {
      * @param length        Number of entries to clear
      *
      * @see store_pairing_ref
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     void clear_pairing_ref(uint8_t first_ref, uint8_t length);
 
@@ -1523,7 +1428,7 @@ extern "C" {
      * @return Size of NIB attribute value in bytes
      *
      * @see nlme_get_confirm
-     * @ingroup apiRF4CONTROL_GENERIC_API
+     * @ingroup group_RF4CONTROL_GENERIC_API
      */
     uint8_t nwk_get_nib_attribute_size(uint8_t nib_attribute_id);
 
@@ -1537,12 +1442,10 @@ extern "C" {
     * @param nwk_indication_callback_t    nwk_indication_cb
     *
     * @see nwk_indication_callback_t
-    * @ingroup apiRF4CONTROL_NWK_API
+    * @ingroup group_RF4CONTROL_NWK_API
     */
 
-#if (defined RF4CE_CALLBACK_PARAM) || (defined DOXYGEN)
     void register_nwk_indication_callback(nwk_indication_callback_t *nwk_indication_cb);
-#endif
 
 
 #endif /* RF4CE_H */
