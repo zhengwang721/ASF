@@ -105,7 +105,7 @@ typedef enum nwk_msg_code_tag
 
 /** The following defines describe the minimum length of a primitive message. */
 #define NLDE_DATA_REQ_LEN             7/**< */
-#define NLME_AUTO_DISCOVERY_REQ_LEN   15/**< */
+#define NLME_AUTO_DISCOVERY_REQ_LEN   16/**< */
 #define NLME_DISCOVERY_REQ_LEN        29/**< */
 #define NLME_DISCOVERY_RESP_LEN       22/**< */
 #define NLME_PAIR_REQ_LEN             24/**< */
@@ -144,7 +144,7 @@ typedef enum nwk_msg_code_tag
 
 #define PBP_ORG_PAIR_REQ_LEN            21
 #define PBP_REC_PAIR_REQ_LEN            12
-#define ZRC_CMD_REQ_LEN                 6
+#define ZRC_CMD_REQ_LEN                 7
 #define ZRC_CMD_DISCOVERY_REQ_LEN       2
 #define ZRC_CMD_DISCOVERY_RESP_LEN      35
 #define VENDOR_DATA_REQ_LEN             7

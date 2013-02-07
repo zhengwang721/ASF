@@ -1,17 +1,44 @@
 /**
  * @file zrc.h
  *
- * @brief API for ZRC profile includes cmd discovery and RC commands
+ * @brief API for ZRC profile includes cmd discovery and RC commands.
  *
- * $Id: zrc.h 33819 2012-12-14 09:25:23Z agasthian.s $
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
- */
-/*
- * Copyright (c) 2010, Atmel Corporation All rights reserved.
+ * \asf_license_start
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
 
 #if ((defined ZRC_PROFILE) || (defined DOXYGEN))
@@ -30,7 +57,7 @@
 /**
  * ZRC profile constants
  *
- * @ingroup apiRF4CONTROL_ZRC_CONSTANTS
+ * @ingroup group_RF4CONTROL_ZRC_CONSTANTS
  */
 /** Controller discovery duration */
 #define DISCOVERY_DURATION                  0x00186A
@@ -88,7 +115,7 @@
 /**
  * Enums used for ZRC command codes
  *
- * @ingroup apiRF4CONTROL_ZRC_CONSTANTS
+ * @ingroup group_RF4CONTROL_ZRC_CONSTANTS
  */
 typedef enum zrc_cmd_code_tag
 {
@@ -106,7 +133,7 @@ typedef enum zrc_cmd_code_tag
   * Enums used for the RC command codes / CEC commands from HDMI spec.
   * (See Annex A: Mandatory command matrix)
   *
-  * @ingroup apiRF4CONTROL_ZRC_CONSTANTS
+  * @ingroup group_RF4CONTROL_ZRC_CONSTANTS
   */
 typedef enum cec_code_tag
 {
@@ -215,20 +242,59 @@ typedef struct zrc_cmd_frm_tag
     uint8_t payload; /**< actual payload */
 } zrc_cmd_frm_t;
 
-
+/**
+ * @brief Callback ZRC command discovery confirm
+ *
+ * The command discovery confirm callback provides information about the sent
+ * command discovery request.
+ *
+ * @param Status        Status of the sent command discovery request
+ * @param PairingRef    Pairing reference used for the command discovery request
+ * @param SupportedCmd  Pointer to 32 byte array containing the supported commands
+ *
+ * @ingroup group_RF4Control_ZRC_CMD_DISC_API
+ */
 #if (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_disc_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef,
                                           uint8_t *SupportedCmd);
 #endif
-
+/**
+ * @brief Callback function to the application indicating the status the sent
+ *        ZRC command request.
+ *
+ * @param Status           Status of the command request
+ * @param PairingRef       Pairing reference
+ * @param RcCmd            RC command code.
+ *
+ * @ingroup group_RF4Control_ZRC_API
+ */
 #if (!defined RF4CE_TARGET)
 typedef void (*zrc_cmd_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd);
 #endif /* !defined RF4CE_TARGET */
-
+/**
+ * @brief Callback ZRC command discovery indication
+ *
+ * The command discovery indication callback indicates that a command discovery
+ * request command was receiced.
+ *
+ * @param PairingRef    Pairing reference used for the command discovery request
+ *
+ * @ingroup group_RF4Control_ZRC_CMD_DISC_API
+ */
 #if (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_disc_indication_cb_t)(uint8_t PairingRef);
 #endif
-
+/**
+ * @brief API indicating a received the command to ZRC application.
+ *
+ * @param PairingRef        Pairing reference of the source node
+ * @param nsduLength        Length of the received data
+ * @param nsdu              Pointer to payload data, i.e. RC command
+ * @param RxLinkQuality     Link quality of received packet
+ * @param RxFlags           Rx Flags.
+ *
+ * @ingroup group_RF4Control_ZRC_API
+ */
 #if (defined RF4CE_TARGET) || (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_indication_cb_t)(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
                                         uint8_t RxLinkQuality, uint8_t RxFlags);
@@ -243,7 +309,7 @@ typedef void (*vendor_data_ind_cb_t)(uint8_t PairingRef, uint16_t VendorId, uint
   * struct for zrc indication callback.
   * App should use this struct to register indication callback functions
   *
-  * @ingroup apiRF4Control_ZRC_API
+  * @ingroup group_RF4Control_ZRC_API
   */
 typedef struct zrc_indication_callback
 {
@@ -270,7 +336,7 @@ typedef struct zrc_indication_callback
  *
  * @return  String describing the command
  *
- * @ingroup apiRF4Control_ZRC_API
+ * @ingroup group_RF4Control_ZRC_API
  */
 char *zrc_print_rc_cmd_text(uint8_t command);
 
@@ -295,7 +361,7 @@ char *zrc_print_rc_cmd_text(uint8_t command);
  *
  * @return true            returns the status of zrc_cmd_request.
  *
- * @ingroup apiRF4Control_ZRC_API
+ * @ingroup group_RF4Control_ZRC_API
  */
 #if (!defined RF4CE_TARGET) || (defined DOXYGEN)
 bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCode,
@@ -323,7 +389,7 @@ bool zrc_cmd_request(uint8_t PairingRef, uint16_t VendorId, zrc_cmd_code_t CmdCo
  *
  * @return true if request has been added to NHLE-NWK queue successfully; else false
  *
- * @ingroup apiRF4Control_ZRC_CMD_DISC_API
+ * @ingroup group_RF4Control_ZRC_CMD_DISC_API
  */
 #if (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
 bool zrc_cmd_disc_request(uint8_t PairingRef
@@ -347,7 +413,7 @@ bool zrc_cmd_disc_request(uint8_t PairingRef
  *
  * @return true if request has been added to NHLE-NWK queue successfully; else false
  *
- * @ingroup apiRF4Control_ZRC_CMD_DISC_API
+ * @ingroup group_RF4Control_ZRC_CMD_DISC_API
  */
 #if (defined ZRC_CMD_DISCOVERY) || (defined DOXYGEN)
 bool zrc_cmd_disc_response(uint8_t PairingRef, uint8_t *SupportedCmd);
@@ -364,7 +430,7 @@ bool zrc_cmd_disc_response(uint8_t PairingRef, uint8_t *SupportedCmd);
  * @param zrc_indication_callback_t    indication callback struct
  *
  * @see zrc_indication_callback_t
- * @ingroup apiRF4Control_ZRC_API
+ * @ingroup group_RF4Control_ZRC_API
  */
 void register_zrc_indication_callback(zrc_indication_callback_t *zrc_ind_callback);
 

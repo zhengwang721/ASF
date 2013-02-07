@@ -3,15 +3,42 @@
  *
  * @brief Declarations of API functions to access vendor specific data functionality
  *
- * $Id: vendor_data.h 33568 2012-11-19 10:19:51Z agasthian.s $
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
- */
-/*
- * Copyright (c) 2010, Atmel Corporation All rights reserved.
+ * \asf_license_start
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
 
 #if ((defined VENDOR_DATA) || (defined DOXYGEN))
@@ -102,7 +129,7 @@ typedef enum vendor_status_tag
  *
  * @return true if command could be handled; else false
  *
- * @ingroup apiRF4CONTROL_VENDOR_DATA_API
+ * @ingroup group_RF4CONTROL_VENDOR_DATA_API
  */
 bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                          uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
@@ -115,7 +142,7 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
  *
  * Hook for the application indicating that an alive request command was received.
  *
- * @ingroup apiRF4CONTROL_VENDOR_DATA_API
+ * @ingroup group_RF4CONTROL_VENDOR_DATA_API
  */
 void vendor_app_alive_req(void);
 
