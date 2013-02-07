@@ -3,7 +3,7 @@
  *
  * \brief API driver for MMA7341L accelerometer component.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -258,6 +258,8 @@ void mma7341l_calibration(void)
 {
 	volatile uint32_t i;
 	volatile uint32_t j;
+	/* avoid Cppcheck Warning */
+	UNUSED(j);
 
 	acc.m.x = 0;
 	acc.m.y = 0;

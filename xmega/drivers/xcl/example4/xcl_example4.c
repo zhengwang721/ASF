@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA XCL example2
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -93,6 +93,8 @@
 int main(void)
 {
 	volatile uint32_t real_resolution;
+	/* avoid Cppcheck Warning */
+	UNUSED(real_resolution);
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of

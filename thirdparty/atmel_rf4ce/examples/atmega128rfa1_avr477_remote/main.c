@@ -3,7 +3,7 @@
  *
  * \brief Example application for the RF4CE and QMatrix integration for ATMega128RFA1 on AVR477 board.
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -756,7 +756,7 @@ static void start_cmd_disc_cb(void *callback_parameter)
     zrc_cmd_disc_request(pairing_ref);
 
     /* Keep compiler happy */
-    callback_parameter = callback_parameter;
+    UNUSED(callback_parameter);
 }
 #endif
 
@@ -785,9 +785,9 @@ void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *Suppor
     //nlme_rx_enable_request(nwkcMinActivePeriod);
 
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
-    SupportedCmd = SupportedCmd;
+    UNUSED(Status);
+    UNUSED(PairingRef);
+    UNUSED(SupportedCmd);
 
 /* Process commands from PC */
 #ifdef _DEBUG_INTERFACE_
@@ -1141,8 +1141,8 @@ void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
         led1_toggle();
     }
     /* Keep compiler happy. */
-    PairingRef = PairingRef;
-    RcCmd = RcCmd;
+    UNUSED(PairingRef);
+    UNUSED(RcCmd);
 }
 
 
@@ -1163,9 +1163,9 @@ void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
     {
         led1_toggle();
     }
-	/* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
+    /* Keep compiler happy */
+    UNUSED(Status);
+    UNUSED(PairingRef);
 }
 #endif
 
@@ -1187,8 +1187,8 @@ void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Profi
     }
 
     /* Keep compiler happy. */
-    PairingRef = PairingRef;
-    ProfileId = ProfileId;
+    UNUSED(PairingRef);
+    UNUSED(ProfileId);
 }
 
 
@@ -1312,9 +1312,9 @@ void vendor_app_alive_req(void)
 void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex)
 {
     /* Keep compiler happy */
-    Status = Status;
-    NIBAttribute = NIBAttribute;
-    NIBAttributeIndex = NIBAttributeIndex;
+    UNUSED(Status);
+    UNUSED(NIBAttribute);
+    UNUSED(NIBAttributeIndex);
 }
 
 /**
@@ -1330,10 +1330,10 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                       uint8_t NIBAttributeIndex, void *NIBAttributeValue)
 {
     /* Keep compiler happy */
-    Status = Status;
-    NIBAttribute = NIBAttribute;
-    NIBAttributeIndex = NIBAttributeIndex;
-    NIBAttributeValue = NIBAttributeValue;
+    UNUSED(Status);
+    UNUSED(NIBAttribute);
+    UNUSED(NIBAttributeIndex);
+    UNUSED(NIBAttributeValue);
 }
 
 /**
@@ -1345,7 +1345,7 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
 void nlme_unpair_indication(uint8_t PairingRef)
 {
     /* Keep compiler happy */
-    PairingRef = PairingRef;
+    UNUSED(PairingRef);
 }
 
 /**
@@ -1358,8 +1358,8 @@ void nlme_unpair_indication(uint8_t PairingRef)
 void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
 {
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
+    UNUSED(Status);
+    UNUSED(PairingRef);
 }
 
 /**
@@ -1373,8 +1373,8 @@ void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
 void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
+    UNUSED(Status);
+    UNUSED(PairingRef);
 }
 
 /**
@@ -1400,7 +1400,7 @@ static void start_warm_reset_cb(void *callback_parameter)
     buzzer_control();
 
     /* Keep compiler happy */
-    callback_parameter = callback_parameter;
+    UNUSED(callback_parameter);
 }
 #endif /* _ENABLE_WARM_RESET_ */
 
@@ -1414,7 +1414,7 @@ static void start_warm_reset_cb(void *callback_parameter)
 static void start_awake_timer_cb(void *callback_parameter)
 {
     /* Keep compiler happy */
-    callback_parameter = callback_parameter;
+    UNUSED(callback_parameter);
 }
 #endif /* _ENABLE_SLEEP_ */
 

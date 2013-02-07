@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -124,6 +124,8 @@
 int main(void)
 {
 	struct genclk_config gcfg;
+	/* avoid Cppcheck Warning */
+	UNUSED(gcfg);
 
 	sysclk_init();
 	board_init();

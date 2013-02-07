@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -157,6 +157,8 @@ void sysclk_disable_usb(void)
 void sysclk_init(void)
 {
 	struct pll_config pllcfg;
+	/* avoid Cppcheck Warning */
+	UNUSED(pllcfg);
 
 	/* Set a flash wait state depending on the new cpu frequency */
 	system_init_flash(sysclk_get_cpu_hz());
@@ -196,7 +198,6 @@ void sysclk_init(void)
 		osc_wait_ready(OSC_MAINCK_12M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
-
 
     case SYSCLK_SRC_MAINCK_XTAL:
 		osc_enable(OSC_MAINCK_XTAL);

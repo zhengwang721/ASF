@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for Cyclic Redundancy Check (CRC) driver
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -231,6 +231,8 @@ static void run_16bit_io_test(const struct test_case *test)
 	int i;
 	uint16_t checksum;
 	bool success;
+	/* avoid Cppcheck Warning */
+	UNUSED(success);
 
 	crc_io_checksum_byte_start(CRC_16BIT);
 
