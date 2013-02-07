@@ -354,7 +354,7 @@ void dac_disable_output_buffer(
  * \param[in] event_triggered Boolean value to determine whether the conversion
  *        should be triggered immediately or by an incoming event.
  */
-enum status_code dac_write(
+void dac_write(
 		struct dac_dev_inst *const dev_inst,
 		enum dac_channel channel,
 		const uint16_t data,
@@ -366,10 +366,8 @@ enum status_code dac_write(
 
 	Dac *const dac_module = dev_inst->hw_dev;
 
-	/* See if the module is busy syncing, return busy if it is */
-	if (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
-		return STATUS_ERR_BUSY;
-	}
+	/* Wait until the synchronization is complete */
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
 	if (event_triggered) {
 		/* Event triggered conversion, write DATABUF register */
@@ -378,6 +376,4 @@ enum status_code dac_write(
 		/* Manual triggered conversion, write DATA register */
 		dac_module->DATA.reg = data;
 	}
-
-	return STATUS_OK;
 }

@@ -92,7 +92,6 @@ int main(void)
 	struct dac_dev_inst dev_inst;
 	struct dac_conf config;
 	struct dac_ch_conf ch_config;
-	uint16_t data;
 
 	configure_pins();
 
@@ -118,15 +117,9 @@ int main(void)
 
 	dac_write(&dev_inst, DAC_CHANNEL_0, 0x3FF, false);
 
-	data = sine_wave[0] << 2;
-
-	while (true) {
+	while (1) {
 		for (uint8_t i = 0; i < 0xFF; i++) {
-			while (dac_write(&dev_inst, DAC_CHANNEL_0, data, false)
-					== STATUS_ERR_BUSY) {
-				/* Wait for sync */
-			}
-			data = sine_wave[i] << 2;
+			dac_write(&dev_inst, DAC_CHANNEL_0, (sine_wave[i] << 2), false);
 		}
 
 	}
