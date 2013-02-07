@@ -47,7 +47,7 @@
  * \defgroup asfdoc_samd20_system_interrupt_group SAMD20 System Interrupt Driver
  *
  * This driver for SAMD20 devices provides an interface for the configuration
- * and management of internal interrupts.
+ * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
  *
@@ -306,16 +306,6 @@ enum status_code system_interrupt_set_priority(
 		const enum system_interrupt_vector vector,
 		const enum system_interrupt_priority_level priority_level);
 
-/**
- * \brief Get interrupt vector priority level
- *
- * Retrieves the priority level of the requested external interrupt or exception.
- *
- * \param[in] vector  Interrupt vector of which the priority level will be read
- *
- * \return Currently configured interrupt priority level of the given interrupt
- *         vector.
- */
 enum system_interrupt_priority_level system_interrupt_get_priority(
 		const enum system_interrupt_vector vector);
 
