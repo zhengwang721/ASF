@@ -3,7 +3,7 @@
  *
  * \brief Common SPI interface for SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 #include "conf_sd_mmc.h"
 #include "sd_mmc_protocol.h"
 #include "sd_mmc_spi.h"
-#include "gpio.h"
+#include "ioport.h"
 
 #ifdef SD_MMC_SPI_MODE
 

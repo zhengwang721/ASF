@@ -76,6 +76,7 @@
 		<require idref="common.services.fs.fatfs-port"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="sam4e"/>
 		<device-support value="xmega"/>
 		<build type="doxygen-entry-point" value="thirdparty_fatfs_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
