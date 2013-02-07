@@ -1076,8 +1076,8 @@ uint32_t tc_get_capture_value(
 
 enum status_code tc_set_compare_value(
 		const struct tc_module *const module_inst,
-		const uint32_t compare_value,
-		const enum tc_compare_capture_channel channel_index);
+		const enum tc_compare_capture_channel channel_index,
+		const uint32_t compare_value);
 
 /** @} */
 
