@@ -42,6 +42,7 @@
  */
 #include "extint.h"
 #include <system.h>
+#include <system_interrupt.h>
 
 /**
  * \internal
@@ -105,7 +106,7 @@ void extint_enable(void)
 		_extint_dev.callbacks[j] = NULL;
 	}
 
-	NVIC_EnableIRQ(EIC_IRQn);
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
 #endif
 }
 
