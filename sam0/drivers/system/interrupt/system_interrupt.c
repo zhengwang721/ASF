@@ -1,6 +1,7 @@
 #include "system_interrupt.h"
 
-bool system_interrupt_is_pending(enum system_interrupt_vector vector)
+bool system_interrupt_is_pending(
+		enum system_interrupt_vector vector)
 {
 	bool result;
 
@@ -21,7 +22,8 @@ bool system_interrupt_is_pending(enum system_interrupt_vector vector)
 	return result;
 }
 
-enum status_code system_interrupt_set_pending(enum system_interrupt_vector vector)
+enum status_code system_interrupt_set_pending(
+		enum system_interrupt_vector vector)
 {
 	enum status_code status = STATUS_OK;
 
@@ -47,7 +49,8 @@ enum status_code system_interrupt_set_pending(enum system_interrupt_vector vecto
 	return status;
 }
 
-enum status_code system_interrupt_clear_pending(enum system_interrupt_vector vector)
+enum status_code system_interrupt_clear_pending(
+		enum system_interrupt_vector vector)
 {
 
 	enum status_code status = STATUS_OK;
@@ -71,7 +74,8 @@ enum status_code system_interrupt_clear_pending(enum system_interrupt_vector vec
 	return status;
 }
 
-enum status_code system_interrupt_set_priority(enum system_interrupt_vector vector,
+enum status_code system_interrupt_set_priority(
+		enum system_interrupt_vector vector,
 		enum system_interrupt_priority_level priority_level)
 {
 	enum status_code status = STATUS_OK;
@@ -97,7 +101,8 @@ enum status_code system_interrupt_set_priority(enum system_interrupt_vector vect
 	return status;
 }
 
-enum system_interrupt_priority_level system_interrupt_get_priority(enum system_interrupt_vector vector)
+enum system_interrupt_priority_level system_interrupt_get_priority(
+		enum system_interrupt_vector vector)
 {
 	uint8_t register_num = vector / 4;
 	uint8_t priority_pos = ((vector % 4) * 8) + 5;
