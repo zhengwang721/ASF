@@ -5,8 +5,9 @@
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +71,7 @@ int main(void)
 	/* Wait for conversion to be done and read out result */
 //! [get_res]
 	do {
-	} while(adc_read(&dev_inst, &result) == STATUS_ERR_BUSY);
+	} while(adc_read(&dev_inst, &result) == STATUS_BUSY);
 //! [get_res]
 
 //! [inf_loop]

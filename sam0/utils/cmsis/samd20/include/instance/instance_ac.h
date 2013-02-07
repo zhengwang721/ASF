@@ -56,8 +56,10 @@
 #define REG_AC_STATUSB                        (0x42004409U) /**< \brief (AC) Status B Register */
 #define REG_AC_STATUSC                        (0x4200440AU) /**< \brief (AC) Status C Register */
 #define REG_AC_WINCTRL                        (0x4200440CU) /**< \brief (AC) Window Control Register */
-#define REG_AC_COMPCTRL                       (0x42004410U) /**< \brief (AC) Comparator Control Register */
-#define REG_AC_SCALER                         (0x42004420U) /**< \brief (AC) Scaler Register */
+#define REG_AC_COMPCTRL0                      (0x42004410U) /**< \brief (AC) Comparator Control Register 0 */
+#define REG_AC_COMPCTRL1                      (0x42004414U) /**< \brief (AC) Comparator Control Register 1 */
+#define REG_AC_SCALER0                        (0x42004420U) /**< \brief (AC) Scaler Register 0 */
+#define REG_AC_SCALER1                        (0x42004421U) /**< \brief (AC) Scaler Register 1 */
 #else
 #define REG_AC_CTRLA               (*(RwReg8 *)0x42004400U) /**< \brief (AC) Control A Register */
 #define REG_AC_CTRLB               (*(WoReg8 *)0x42004401U) /**< \brief (AC) Control B Register */

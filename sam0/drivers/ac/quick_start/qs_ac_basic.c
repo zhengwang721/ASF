@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -73,9 +75,6 @@ void configure_ac(void)
 	//! [setup_6]
 	ac_init(&ac_dev, AC, &ac_conf);
 	//! [setup_6]
-	//! [setup_7]
-	ac_enable(&ac_dev);
-	//! [setup_7]
 }
 
 //! [setup_8]
@@ -113,8 +112,10 @@ void configure_ac_channel(void)
 int main(void)
 {
 	//! [setup_init]
+	system_init();
 	configure_ac();
 	configure_ac_channel();
+	ac_enable(&ac_dev);
 	//! [setup_init]
 
 	//! [main]

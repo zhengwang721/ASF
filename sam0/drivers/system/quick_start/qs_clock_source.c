@@ -78,7 +78,7 @@ int main(void)
 	configure_dfll_open_loop();
 
 	/* Change system clock to DFLL */
-	system_main_clock_set_source(SYSTEM_CLOCK_SOURCE_DFLL);
+	system_main_clock_set_source(SYSTEM_MAIN_CLOCK_DFLL);
 
 
 	while (true) {

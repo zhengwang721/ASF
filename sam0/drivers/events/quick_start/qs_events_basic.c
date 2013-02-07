@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -51,19 +53,19 @@ void configure_event_user(void);
 void configure_event_channel(void)
 {
 //! [setup_1]
-	struct events_ch_conf events_ch_conf;
+	struct events_chan_conf events_chan_conf;
 //! [setup_1]
 //! [setup_2]
-	events_ch_get_config_defaults(&events_ch_conf);
+	events_chan_get_config_defaults(&events_chan_conf);
 //! [setup_2]
 
 //! [setup_3]
-	events_ch_conf.generator_id   = EXAMPLE_EVENT_GENERATOR;
-	events_ch_conf.edge_detection = EVENT_EDGE_RISING;
-	events_ch_conf.path           = EVENT_PATH_SYNCHRONOUS;
+	events_chan_conf.generator_id   = EXAMPLE_EVENT_GENERATOR;
+	events_chan_conf.edge_detection = EVENT_EDGE_RISING;
+	events_chan_conf.path           = EVENT_PATH_SYNCHRONOUS;
 //! [setup_3]
 //! [setup_4]
-	events_ch_set_config(EXAMPLE_EVENT_CHANNEL, &events_ch_conf);
+	events_chan_set_config(EXAMPLE_EVENT_CHANNEL, &events_chan_conf);
 //! [setup_4]
 }
 
@@ -96,13 +98,13 @@ int main(void)
 
 	//! [main]
 	//! [main_1]
-	while (events_ch_is_ready(EXAMPLE_EVENT_CHANNEL) == false) {
+	while (events_chan_is_ready(EXAMPLE_EVENT_CHANNEL) == false) {
 		/* Wait for channel */
 	};
 	//! [main_1]
 
 	//! [main_2]
-	events_ch_software_trigger(EXAMPLE_EVENT_CHANNEL);
+	events_chan_software_trigger(EXAMPLE_EVENT_CHANNEL);
 	//! [main_2]
 
 	while (true) {

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -43,12 +45,10 @@
 
 //! [packet_data]
 #define DATA_LENGTH 10
-
 static uint8_t buffer[DATA_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
-
-#define SLAVE_ADDRESS 0x01
+#define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
 /* Number of time to try and send packet if failed. */
@@ -75,7 +75,7 @@ static void configure_i2c(void)
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_master_init(&dev_inst, SERCOM0, &conf);
+	i2c_master_init(&dev_inst, SERCOM2, &conf);
 	//! [init_module]
 
 	//! [enable_module]
@@ -86,10 +86,10 @@ static void configure_i2c(void)
 
 int main(void)
 {
-
 	//! [run_initialize_i2c]
 	/* Init system. */
-	//system_init();
+	system_init();
+
 	/* Configure device and enable. */
 	configure_i2c();
 	//! [run_initialize_i2c]
@@ -105,7 +105,6 @@ int main(void)
 		.data        = buffer,
 	};
 	//! [packet]
-
 
 	/* Write buffer to slave until success. */
 	//! [write_packet]

@@ -69,8 +69,9 @@
 #define REG_RTC_MODE1_COUNT                   (0x40001410U) /**< \brief (RTC) MODE1 Count Register */
 #define REG_RTC_MODE2_CLOCK                   (0x40001410U) /**< \brief (RTC) MODE2 Clock Register */
 #define REG_RTC_MODE1_PER                     (0x40001414U) /**< \brief (RTC) MODE1 Period Register */
-#define REG_RTC_MODE0_COMP                    (0x40001418U) /**< \brief (RTC) MODE0 Compare Register */
-#define REG_RTC_MODE1_COMP                    (0x40001418U) /**< \brief (RTC) MODE1 Compare Register */
+#define REG_RTC_MODE0_COMP0                   (0x40001418U) /**< \brief (RTC) MODE0 Compare Register 0 */
+#define REG_RTC_MODE1_COMP0                   (0x40001418U) /**< \brief (RTC) MODE1 Compare Register 0 */
+#define REG_RTC_MODE1_COMP1                   (0x4000141AU) /**< \brief (RTC) MODE1 Compare Register 1 */
 #define REG_RTC_MODE2_ALARM_ALARM0 (0x40001418U) /**< \brief (RTC) MODE2_ALARM Alarm Register 0 */
 #define REG_RTC_MODE2_ALARM_MASK0  (0x4000141CU) /**< \brief (RTC) MODE2_ALARM Alarm Mask Register 0 */
 #else

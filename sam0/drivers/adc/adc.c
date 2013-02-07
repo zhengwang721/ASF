@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -59,18 +61,18 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
-	struct system_gclk_ch_conf gclk_ch_conf;
+	struct system_gclk_chan_conf gclk_chan_conf;
 
 
 	/* Configure GCLK channel and enable clock */
-	gclk_ch_conf.source_generator = config->clock_source;
+	gclk_chan_conf.source_generator = config->clock_source;
 
 	/* Set the GCLK channel to run in standby mode */
-	gclk_ch_conf.run_in_standby = config->run_in_standby;
+	gclk_chan_conf.run_in_standby = config->run_in_standby;
 
 	/* Apply configuration and enable the GCLK channel */
-	system_gclk_ch_set_config(ADC_GCLK_ID, &gclk_ch_conf);
-	system_gclk_ch_enable(ADC_GCLK_ID);
+	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(ADC_GCLK_ID);
 
 	/* Configure run in standby */
 	hw_dev->CTRLA.reg = (config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos);
@@ -278,7 +280,7 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
  * \return Status of the initialization procedure
  * \retval STATUS_OK                The initialization was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
- * \retval STATUS_ERR_BUSY          The module is busy with a reset operation
+ * \retval STATUS_BUSY          The module is busy with a reset operation
  * \retval STATUS_ERR_DENIED        The module is enabled
  */
 enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
@@ -289,7 +291,7 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
 
 	if (hw_dev->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	if (hw_dev->CTRLA.reg & ADC_CTRLA_ENABLE) {

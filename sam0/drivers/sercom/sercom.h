@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -122,6 +124,10 @@ uint32_t _sercom_get_default_pad(Sercom *sercom_module, uint8_t pad);
  *		<th>Acronym</th>
  *		<th>Description</th>
  *	</tr>
+ *  <tr>
+ *  	<td>...</td>
+ *  	<td>...</td>
+ *  </tr>
  * </table>
  *
  * \section workarounds Workarounds implemented by driver

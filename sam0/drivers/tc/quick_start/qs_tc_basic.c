@@ -38,30 +38,43 @@
  * \asf_license_stop
  *
  */
+#include <conf_quick_start.h>
 #include <asf.h>
 
 int main(void)
 {
 	//! [main]
+
+	//! [system_init]
+	system_init();
+	//! [system_init]
+
 	/* Structures for config and software device instance */
 	//! [config]
 	struct tc_conf config;
 	//! [config]
 	//! [dev_inst]
-	struct tc_dev_inst dev_inst;
+	struct tc_module dev_inst;
 	//! [dev_inst]
 
 	//! [tc_get_config_defaults]
 	tc_get_config_defaults(&config);
 	//! [tc_get_config_defaults]
 
-	//! [channel_0]
-	config.tc_counter_size_conf.tc_16bit_conf.compare_capture_channel_0
-		= 0x7FFF;
-	//! [channel_0]
+	//! [pwm_channel_0]
+	config.channel_pwm_out_enabled[0] = true;
+	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
+	config.channel_pwm_out_mux[0] = PWM_OUT_PIN_MUX;
+	//! [pwm_channel_0]
+
+	//! [setup]
+	config.counter_size = TC_COUNTER_SIZE_16BIT;
+	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
+	//! [setup]
 
 	//! [tc_init]
-	tc_init(TC0, &dev_inst, &config);
+	tc_init(PWM_MODULE, &dev_inst, &config);
 	//! [tc_init]
 
 	//! [tc_enable]

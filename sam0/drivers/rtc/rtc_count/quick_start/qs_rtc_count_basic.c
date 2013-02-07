@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -59,7 +61,7 @@ static void config_rtc_count(void)
 //! [set_config]
 //! [init_rtc]
 	rtc_count_init(&config);
-	
+
 //! [init_rtc]
 
 //! [enable]
@@ -77,7 +79,7 @@ int main(void)
 
 //! [add_main]
 
-	config_rtc_count();	
+	config_rtc_count();
 //! [add_main]
 
 //! [implementation_code]

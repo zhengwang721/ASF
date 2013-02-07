@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -114,6 +116,8 @@ void ac_init(
 		Ac *const module,
 		struct ac_conf *const config)
 {
+	struct system_gclk_chan_conf gclk_chan_conf;
+
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(module);
@@ -121,6 +125,11 @@ void ac_init(
 
 	/* Initialize device instance */
 	dev_inst->hw_dev = module;
+
+	/* Set up GCLK */
+	gclk_chan_conf.source_generator = config->source_generator;
+	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+	system_gclk_chan_enable(AC_GCLK_ID_DIG);
 
 	/* Write configuration to module */
 	_ac_set_config(dev_inst, config);
