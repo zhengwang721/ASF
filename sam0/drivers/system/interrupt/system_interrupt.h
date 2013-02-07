@@ -118,6 +118,12 @@
 #  define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
 #endif
 
+/**
+ * \brief Table of possible system interrupt/exception vector numbers.
+ *
+ * Table of all possible interrupt and exception vector indexes within the
+ * device.
+ */
 enum system_interrupt_vector {
 	/** Interrupt vector index for a NMI interrupt. */
 	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
@@ -173,18 +179,25 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 };
 
+/**
+ * \brief Table of possible system interrupt/exception vector priorities.
+ *
+ * Table of all possible interrupt and exception vector priorities within the
+ * device.
+ */
 enum system_interrupt_priority_level {
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0,
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1,
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2,
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3,
+	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0  = 0,
+	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1  = 1,
+	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2  = 2,
+	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3  = 3,
 };
 
 /**
- * \brief Enter critical section
+ * \brief Enters a critical section
  *
- * This function will disable global interrupts. To support nested critical sections it will also
- * keep a counter for how many times it is called.
+ * Disables global interrupts. To support nested critical sections, an internal
+ * count of the critical section nesting will be kept, so that global interrupts
+ * are only re-enabled upon leaving the outermost nested critical section.
  *
  */
 static inline void system_interrupt_enter_critical_section(void)
@@ -193,10 +206,11 @@ static inline void system_interrupt_enter_critical_section(void)
 }
 
 /**
- * \brief Leave critical section
+ * \brief Leaves a critical section
  *
- * This function will enable global interrupts. To support nested critical sections it will only
- * enable interrupts when the counter reaches 0.
+ * Enables global interrupts. To support nested critical sections, an internal
+ * count of the critical section nesting will be kept, so that global interrupts
+ * are only re-enabled upon leaving the outermost nested critical section.
  *
  */
 static inline void system_interrupt_leave_critical_section(void)
@@ -207,12 +221,12 @@ static inline void system_interrupt_leave_critical_section(void)
 /**
  * \brief Check if global interrupts are enabled
  *
- * This function will check if global interrupts are enabled.
+ * Checks if global interrupts are currently enabled.
  *
  * \returns A boolean that identifies if the global interrupts are enabled or not.
  *
- * \retval true Global interrupts are enabled
- * \retval false Global interrupts are disabled
+ * \retval true   Global interrupts are currently enabled
+ * \retval false  Global interrupts are currently disabled
  *
  */
 static inline bool system_interrupt_is_global_enabled(void)
@@ -221,55 +235,56 @@ static inline bool system_interrupt_is_global_enabled(void)
 }
 
 /**
- * \brief Check if interrupt vector is enabled or not
+ * \brief Checks if an interrupt vector is enabled or not
  *
- * This function will check if an interrupt is enabled or not and return the state in bool form.
+ * Checks if a specific interrupt vector is currently enabled.
  *
- * \param[in] vector Interrupt vector number
+ * \param[in] vector  Interrupt vector number to check
  *
  * \returns A variable identifying if the requested interrupt vector is enabled
  *
- * \retval true Interrupt enabled
- * \retval false Interrupt disabled
+ * \retval true   Specified interrupt vector is currently enabled
+ * \retval false  Specified interrupt vector is currently disabled
  *
  */
 static inline bool system_interrupt_is_enabled(
 		const enum system_interrupt_vector vector)
 {
-	return (bool)((NVIC->ISER[0] >> vector) & 0x00000001);
+	return (bool)((NVIC->ISER[0] >> (uint32_t)vector) & 0x00000001);
 }
 
 /**
  * \brief Enable interrupt vector
  *
- * This function will enable execution of the software handler for the requested interrupt vector.
+ * Enables execution of the software handler for the requested interrupt vector.
  *
- * \param[in] vector Interrupt vector number which is beeing enabled
+ * \param[in] vector Interrupt vector to enable
  */
 static inline void system_interrupt_enable(
 		const enum system_interrupt_vector vector)
 {
-	NVIC->ISER[0] = (uint32_t)(1 << (vector & 0x0000001f));
+	NVIC->ISER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
 }
 
 /**
  * \brief Disable interrupt vector
  *
- * This function will disable execution of the software handler for the requested interrupt vector.
+ * Disables execution of the software handler for the requested interrupt vector.
  *
- * \param[in] vector Interrupt vector number which is beeing disabled
+ * \param[in] vector  Interrupt vector to disable
  */
 static inline void system_interrupt_disable(
 		const enum system_interrupt_vector vector)
 {
-	NVIC->ICER[0] = (uint32_t)(1 << (vector & 0x0000001f));
+	NVIC->ICER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
 }
 
 /**
- * \brief Get active interrupt if any
+ * \brief Get active interrupt (if any)
  *
- * This function will return the vector number for the current executing software handler if any.
+ * Return the vector number for the current executing software handler, if any.
  *
+ * \return Interrupt number that is currently executing.
  */
 static inline enum system_interrupt_vector system_interrupt_get_active(void)
 {
@@ -281,14 +296,14 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
 /**
  * \brief Check if a interrupt line is pending
  *
- * This function will check if the requested interrupt vector is pending, the state will be returned in bool form.
+ * Checks if the requested interrupt vector is pending.
  *
- * \param[in] vector Interrupt vector number which is beening probed
+ * \param[in] vector  Interrupt vector number to check
  *
- * \returns A boolean identifying if the requested interrupt vector is pending or not.
+ * \returns A boolean identifying if the requested interrupt vector is pending.
  *
- * \retval true Vector is pending
- * \retval false Vector is not pending
+ * \retval true   Specified interrupt vector is pending
+ * \retval false  Specified interrupt vector is not pending
  *
  */
 bool system_interrupt_is_pending(
@@ -297,15 +312,18 @@ bool system_interrupt_is_pending(
 /**
  * \brief Set a interrupt vector as pending
  *
- * This function will set the requested interrupt vector as pending, this software handler will be handled (if enabled)
- * in priorized order based on vector number and priority settings.
+ * Set the requested interrupt vector as pending (i.e issues a software
+ * interrupt request for the specified vector). The software handler will be
+ * handled (if enabled) in a priority order based on vector number and
+ * configured priority settings.
  *
- * \param[in] vector Interrupt vector number which is set as pending
+ * \param[in] vector  Interrupt vector number which is set as pending
  *
- * \returns A status code identifying if the function was successfully executed or not
+ * \returns Status code identifying if the vector was successfully set as
+ *          pending.
  *
- * \retval STATUS_OK If no error where detected
- * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
+ * \retval STATUS_OK           If no error was detected
+ * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
  */
 enum status_code system_interrupt_set_pending(
 		const enum system_interrupt_vector vector);
@@ -313,14 +331,15 @@ enum status_code system_interrupt_set_pending(
 /**
  * \brief Clear pending interrupt vector
  *
- * Clear a pending interrupt vector so the software handler is not executed.
+ * Clear a pending interrupt vector, so the software handler is not executed.
  *
- * \param[in] vector Interrupt vector number which is cleared
+ * \param[in] vector  Interrupt vector number to clear
  *
- * \returns A status code identifying if the function was successfully executed or not
+ * \returns A status code identifying if the interrupt pending state was
+ *          successfully cleared.
  *
- * \retval STATUS_OK If no error where detected
- * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
+ * \retval STATUS_OK           If no error was detected
+ * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
  */
 enum status_code system_interrupt_clear_pending(
 		const enum system_interrupt_vector vector);
@@ -330,12 +349,13 @@ enum status_code system_interrupt_clear_pending(
  *
  * Set the priority level of an external interrupt or exception.
  *
- * \param[in] vector Interrupt vector which the priority level is assigned to
+ * \param[in] vector  Interrupt vector to which the priority level will be set
  *
- * \returns A status code identifying if the function was successfully executed or not
+ * \returns Status code indicating if the priority level of the interrupt was
+ *          successfully set.
  *
- * \retval STATUS_OK If no error where detected
- * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
+ * \retval STATUS_OK           If no error was detected
+ * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
  */
 enum status_code system_interrupt_set_priority(
 		const enum system_interrupt_vector vector,
@@ -344,11 +364,15 @@ enum status_code system_interrupt_set_priority(
 /**
  * \brief Get interrupt vector priority level
  *
- * Get the priority level of the requested external interrupt or exception
+ * Retrieves the priority level of the requested external interrupt or exception.
+ *
+ * \param[in] vector  Interrupt vector of which the priority level will be read
+ *
+ * \return Currently configured interrupt priority level of the given interrupt
+ *         vector.
  */
 enum system_interrupt_priority_level system_interrupt_get_priority(
 		const enum system_interrupt_vector vector);
-
 
 /** @} */
 
