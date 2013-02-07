@@ -41,6 +41,13 @@
  */
 #include <asf.h>
 
+//#include "airplane_chime.h"
+
+const uint32_t sample_rate = 22050;
+const uint16_t number_of_samples = 30000;
+const uint16_t wav_samples[30000] = {
+	#include "data.x"
+};
 uint8_t sine_wave[256] = {
 		0x80, 0x83, 0x86, 0x89, 0x8C, 0x90, 0x93, 0x96,
 		0x99, 0x9C, 0x9F, 0xA2, 0xA5, 0xA8, 0xAB, 0xAE,
@@ -87,7 +94,11 @@ static void configure_pins(void)
 	/* Set up the Xplained PRO LED pin to output status info */
 	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	system_pinmux_pin_set_config(PIN_PB08, &pin_conf);
+
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	system_pinmux_pin_set_config(PIN_PB09, &pin_conf);
 }
 
 /**
@@ -144,8 +155,14 @@ int main(void)
 
 	/* Main application loop that writes a sine wave */
 	while (true) {
-		for (uint8_t i = 0; i < 0xFF; i++) {
-			dac_write(&dac_module, DAC_CHANNEL_0, (sine_wave[i] << 2), false);
+		while (port_pin_get_input_level(PIN_PB09)) {
+			/* Wait */
+		}
+
+		port_pin_toggle_output_level(PIN_PB08);
+
+		for (uint16_t i = 0; i < number_of_samples; i++) {
+			dac_write(&dac_module, DAC_CHANNEL_0, wav_samples[i], false);
 		}
 
 	}
