@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Glue Logic driver for SAM4L.
+ * \brief Glue Logic driver for SAM.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -46,71 +46,23 @@
 #include "sleepmgr.h"
 #include "conf_gloc.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \brief Get the default GLOC module configuration:
- * Filter: enable
- * Input mask: 0xF, all four inputs are enabled
- * Truth table value: 0x00
- *
- * \param cfg Pointer to GLOC configuration array.
- */
-void gloc_lut_get_config_defaults(struct gloc_lut_config *const cfg)
-{
-	/* Sanity check arguments */
-	Assert(cfg);
-
-	uint32_t i;
-	struct gloc_lut_config *p_temp_cfg = cfg;
-
-	for (i = 0; i < GLOC_LUTS; i++) {
-		p_temp_cfg->filter = true;
-		p_temp_cfg->input_mask = 0xF;
-		p_temp_cfg->truth_table_value = 0x00;
-		p_temp_cfg++;
-	}
-}
-
 /**
  * \brief Initialize the GLOC module.
  *
  * \param dev_inst Device structure pointer.
- * \param gloc Base address of the GLOC instance.
- * \param cfg Pointer to GLOC configuration array.
- *
+ * \param gloc     Base address of the GLOC instance.
  */
-void gloc_init(struct gloc_dev_inst *const dev_inst, Gloc *const gloc,
-		struct gloc_lut_config *const cfg)
+void gloc_init(struct gloc_dev_inst *const dev_inst, Gloc *const gloc)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
 	Assert(gloc);
-	Assert(cfg);
-
-	uint32_t i;
-	struct gloc_lut_config *p_temp_cfg = cfg;
 
 	dev_inst->hw_dev = gloc;
-
-	for (i = 0; i < GLOC_LUTS; i++) {
-		dev_inst->gloc_lut_cfg[i] = p_temp_cfg;
-		p_temp_cfg++;
-	}
-	/* Enable APB clock for GLOC */
-	sysclk_enable_peripheral_clock(dev_inst->hw_dev);
-
-	/* Initialize the GLOC with new configurations */
-	gloc_lut_set_config(dev_inst);
-
-	/* Disable APB clock for GLOC */
-	sysclk_disable_peripheral_clock(dev_inst->hw_dev);
 }
 
 /**
- * \brief Enable the GLOC.
+ * \brief Enable the GLOC module.
  *
  * \param dev_inst Device structure pointer.
  *
@@ -129,7 +81,7 @@ void gloc_enable(struct gloc_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Disable the GLOC.
+ * \brief Disable the GLOC module.
  *
  * \param dev_inst Device structure pointer.
  *
@@ -141,29 +93,41 @@ void gloc_disable(struct gloc_dev_inst *const dev_inst)
 }
 
 /**
- * \brief Configure the GLOC.
+ * \brief Get the default configuration for lookup table (LUT) unit of GLOC.
  *
- * \param  dev_inst Device structure pointer.
+ * The default configuration is as follows:
+ * - Filter: enable
+ * - Input mask: 0xF, all four inputs are enabled
+ * - Truth table value: 0x00
  *
+ * \param config Pointer to GLOC LUT configuration.
  */
-void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst)
+void gloc_lut_get_config_defaults(struct gloc_lut_config *const config)
 {
-	uint32_t i;
+	/* Sanity check arguments */
+	Assert(config);
 
-	for (i = 0; i < GLOC_LUTS; i++) {
-		if (dev_inst->gloc_lut_cfg[i]->filter) {
-			dev_inst->hw_dev->GLOC_LUT[i].GLOC_CR = GLOC_CR_FILTEN |
-					GLOC_CR_AEN(dev_inst->gloc_lut_cfg[i]->input_mask);
-		} else {
-			dev_inst->hw_dev->GLOC_LUT[i].GLOC_CR =
-					GLOC_CR_AEN(dev_inst->gloc_lut_cfg[i]->input_mask);
-		}
-		dev_inst->hw_dev->GLOC_LUT[i].GLOC_TRUTH =
-				dev_inst->gloc_lut_cfg[i]->truth_table_value;
+	config->filter = true;
+	config->input_mask = 0xF;
+	config->truth_table_value = 0x00;
+}
+
+/**
+ * \brief Configure the lookup table (LUT) unit of GLOC.
+ *
+ * \param dev_inst Device structure pointer.
+ * \param lut_id   LUT ID.
+ * \param config Pointer to GLOC LUT configuration.
+ */
+void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
+		uint32_t lut_id, struct gloc_lut_config *const config)
+{
+	if (config->filter) {
+		dev_inst->hw_dev->GLOC_LUT[lut_id].GLOC_CR = GLOC_CR_FILTEN |
+			GLOC_CR_AEN(config->input_mask);
+	} else {
+		dev_inst->hw_dev->GLOC_LUT[lut_id].GLOC_CR =
+			GLOC_CR_AEN(config->input_mask);
 	}
+	dev_inst->hw_dev->GLOC_LUT[lut_id].GLOC_TRUTH = config->truth_table_value;
 }
-
-#ifdef __cplusplus
-}
-#endif
-

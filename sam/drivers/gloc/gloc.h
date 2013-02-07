@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Glue Logic driver for SAM4L.
+ * \brief Glue Logic driver for SAM.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -53,16 +53,28 @@ extern "C" {
 /**
  * \defgroup sam_drivers_gloc_group Glue Logic Controller (GLOC)
  *
- * See \ref sam_gloc_quickstart.
- *
  * Driver for the Glue Logic Controller. This driver provides access to the
  * main features of the Glue Logic controller.
+ *
+ * See \ref sam_gloc_quick_start.
  *
  * @{
  */
 
 /**
- * \brief GLOC LUT configuration structure.
+ * \brief Glue Logic Controller driver software instance structure.
+ *
+ * Device instance structure for a Glue Logic Controller driver instance. This
+ * structure should be initialized by the \ref gloc_init() function to
+ * associate the instance with a particular hardware module of the device.
+ */
+struct gloc_dev_inst {
+	/** Base address of the GLOC module. */
+	Gloc *hw_dev;
+};
+
+/**
+ * \brief GLOC lookup table (LUT) configuration structure.
  *
  * Configuration structure for a GLOC LUT instance. This
  * structure could be initialized by the \ref gloc_lut_get_config_defaults()
@@ -77,28 +89,14 @@ struct gloc_lut_config {
 	uint16_t truth_table_value;
 };
 
-/**
- * \brief Glue Logic Controller driver software instance structure.
- *
- * Device instance structure for a Glue Logic Controller driver instance. This
- * structure should be initialized by the \ref gloc_init() function to
- * associate the instance with a particular hardware module of the device.
- */
-struct gloc_dev_inst {
-	/** Base address of the GLOC module. */
-	Gloc *hw_dev;
-	/** Pointer to GLOC LUT configuration structure. */
-	struct gloc_lut_config  *gloc_lut_cfg[GLOC_LUTS];
-};
-
-void gloc_lut_get_config_defaults(struct gloc_lut_config *const cfg);
-void gloc_init(struct gloc_dev_inst *const dev_inst, Gloc *const gloc,
-		struct gloc_lut_config *const cfg);
+void gloc_init(struct gloc_dev_inst *const dev_inst, Gloc *const gloc);
 void gloc_enable(struct gloc_dev_inst *const dev_inst);
 void gloc_disable(struct gloc_dev_inst *const dev_inst);
-void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst);
+void gloc_lut_get_config_defaults(struct gloc_lut_config *const config);
+void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
+		uint32_t lut_id, struct gloc_lut_config *const config);
 
-//@}
+/** @} */
 
 #ifdef __cplusplus
 }
@@ -133,33 +131,35 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst);
  *
  * Add this to the main loop or a setup function:
  * \code
- * struct gloc_lut_config config[GLOC_LUTS];
+ * #define XOR_TRUTH_TABLE_FOUR_INPUT     0x6996u
+ *
  * struct gloc_dev_inst dev_inst;
- * gloc_lut_get_config_defaults(config);
- * gloc_init(&dev_inst, GLOC, config);
+ * struct gloc_lut_config lut_config;
+ *
+ * gloc_init(&dev_inst, GLOC);
  * gloc_enable(&dev_inst);
+ * gloc_lut_get_config_defaults(&lut_config);
+ * lut_config.truth_table_value = XOR_TRUTH_TABLE_FOUR_INPUT;
+ * gloc_lut_set_config(&dev_inst, 0, &lut_config);
  * \endcode
  *
  * \subsection gloc_basic_setup_workflow
  *
- * -# Get the GLOC default configuration
- *  - \code gloc_lut_get_config_defaults(config); \endcode
- *
  * -# Initialize the GLOC module
- *  - \code gloc_init(&dev_inst, GLOC, config); \endcode
+ *  - \code gloc_init(&dev_inst, GLOC); \endcode
  * -# Enable the GLOC module
  *  - \code gloc_enable(&dev_inst); \endcode
+ * -# Configure 4 inputs XOR truth table value in LUT0
+ *    \code
+ *    gloc_lut_get_config_defaults(&lut_config);
+ *    lut_config.truth_table_value = XOR_TRUTH_TABLE_FOUR_INPUT;
+ *    gloc_lut_set_config(&dev_inst, 0, &lut_config);
+ *    \endcode
  *
  * \section gloc_basic_usage Usage steps
  *
- * \subsection gloc_basic_usage_code
- *
- * -# Set the 4 inputs XOR truth table value in LUT0.
- * \code
- * dev_inst.gloc_lut_cfg[0]->truth_table_value = 0x6996;
- * dev_inst.gloc_lut_cfg[0]->input_mask = 0xF;
- * gloc_lut_set_config(&dev_inst);
- * \endcode
+ * The pin OUT0 will output according to lookup table 0 (LUT0) setting when
+ * pin IN0 to IN3 changes.
  */
 
 #endif /* GLOC_H_INCLUDED */

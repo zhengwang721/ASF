@@ -74,11 +74,13 @@
  * Support and FAQ: http://support.atmel.no/
  */
 
-struct gloc_lut_config config[GLOC_LUTS];
-struct gloc_dev_inst dev_inst;
+/** GLOC instance */
+struct gloc_dev_inst   dev_inst;
+/** GLOC LUT configuration */
+struct gloc_lut_config lut_config;
 
-#define FOUR_XOR_TRUTH_TABLE_VALUE 0x6996
-#define INPUT_MASK_4_ENABLE 0xF
+/** XOR truth table for four input */
+#define XOR_TRUTH_TABLE_FOUR_INPUT     0x6996u
 
 /**
  * \brief Test GLOC Logic module with 4 Inputs XOR.
@@ -92,23 +94,25 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 {
 	bool out;
 
+	/* Configure pins for changing GLOC input */
 	ioport_set_pin_dir(CONF_TEST_GLOC_IN0, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(CONF_TEST_GLOC_IN1, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(CONF_TEST_GLOC_IN2, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(CONF_TEST_GLOC_IN3, IOPORT_DIR_OUTPUT);
 
 	/* Set the 4 inputs XOR truth table value in LUT0. */
-	dev_inst.gloc_lut_cfg[0]->truth_table_value = FOUR_XOR_TRUTH_TABLE_VALUE;
-	dev_inst.gloc_lut_cfg[0]->input_mask = INPUT_MASK_4_ENABLE;
-	gloc_lut_set_config(&dev_inst);
+	gloc_lut_get_config_defaults(&lut_config);
+	lut_config.truth_table_value = XOR_TRUTH_TABLE_FOUR_INPUT;
+	gloc_lut_set_config(&dev_inst, 0, &lut_config);
 
+	/* Test GLOC with different input */
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 1");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -116,7 +120,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 2");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -124,7 +128,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 3");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -132,7 +136,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 4");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -140,7 +144,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 5");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -148,7 +152,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 6");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -156,7 +160,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 7");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -164,7 +168,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 8");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -172,7 +176,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 9");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -180,7 +184,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 10");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -188,7 +192,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 11");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -196,7 +200,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 12");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -204,7 +208,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 13");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
@@ -212,7 +216,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 14");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -220,7 +224,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == true, "4 inputs XOR failed");
+	test_assert_true(test, out == true, "4 inputs XOR failed at 15");
 
 	ioport_set_pin_level(CONF_TEST_GLOC_IN0, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
@@ -228,7 +232,7 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
 	delay_us(50);
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
-	test_assert_true(test, out == false, "4 inputs XOR failed");
+	test_assert_true(test, out == false, "4 inputs XOR failed at 16");
 }
 
 /**
@@ -248,9 +252,8 @@ int main(void)
 
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	/* Set the default configuration */
-	gloc_lut_get_config_defaults(config);
-	gloc_init(&dev_inst, GLOC, config);
+	/* Initialize the GLOC module */
+	gloc_init(&dev_inst, GLOC);
 	/* Enable the GLOC module. */
 	gloc_enable(&dev_inst);
 
