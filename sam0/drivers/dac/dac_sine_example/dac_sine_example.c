@@ -98,10 +98,10 @@ static void configure_pins(void)
  *
  * \param dev_inst pointer to the module descriptor
  */
-static void configure_dac(struct dac_dev_inst const *dev_inst)
+static void configure_dac(struct dac_module *dac_module)
 {
 	struct dac_conf config;
-	struct dac_ch_conf ch_config;
+	struct dac_chan_conf ch_config;
 
 	/* Get the DAC default configuration */
 	dac_get_config_defaults(&config);
@@ -110,18 +110,18 @@ static void configure_dac(struct dac_dev_inst const *dev_inst)
 	config.clock_source = GCLK_GENERATOR_3;
 
 	/* Initialize and enable the DAC */
-	dac_init(&dev_inst, DAC, &config);
-	dac_enable(&dev_inst);
+	dac_init(dac_module, DAC, &config);
+	dac_enable(dac_module);
 
 	/* Get the default DAC channel config */
-	dac_ch_get_config_defaults(&ch_config);
+	dac_chan_get_config_defaults(&ch_config);
 
 	/* Disable start on event, we want manual trigger */
 	ch_config.enable_start_on_event = false;
 
 	/* Set the channel configuration, and enable it */
-	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0);
+	dac_chan_set_config(dac_module, DAC_CHANNEL_0, &ch_config);
+	dac_chan_enable(dac_module, DAC_CHANNEL_0);
 }
 
 /**
@@ -129,7 +129,7 @@ static void configure_dac(struct dac_dev_inst const *dev_inst)
  */
 int main(void)
 {
-	struct dac_dev_inst dev_inst;
+	struct dac_module dac_module;
 
 	configure_pins();
 
@@ -137,15 +137,15 @@ int main(void)
 	system_init();
 
 	/* Enable the internal bandgap to use as reference to the DAC */
-	system_vref_enable(SYSTEM_VREF_BANDGAP);
+	system_vref_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 
 	/* Configure the DAC */
-	configure_dac(&dev_inst);
+	configure_dac(&dac_module);
 
 	/* Main application loop that writes a sine wave */
 	while (true) {
 		for (uint8_t i = 0; i < 0xFF; i++) {
-			dac_write(&dev_inst, DAC_CHANNEL_0, (sine_wave[i] << 2), false);
+			dac_write(&dac_module, DAC_CHANNEL_0, (sine_wave[i] << 2), false);
 		}
 
 	}
