@@ -69,7 +69,28 @@
  *
  * \section asfdoc_samd20_system_interrupt_module_overview Module Overview
  *
- * TODO
+ * The Cortex M0+ core contains an interrupt an exception vector table, which
+ * can be used to configure the device's interrupt handlers; individual
+ * interrupts and exceptions can be enabled and disabled, as well as configured
+ * with a variable priority.
+ *
+ * This driver provides a set of wrappers around the core interrupt functions,
+ * to expose a simple API for the management of global and individual interrupts
+ * within the device.
+ *
+ * \subsection asfdoc_samd20_system_interrupt_module_overview_criticalsec Critical Sections
+ * In some applications it is important to ensure that no interrupts may be
+ * executed by the system whilst a critical portion of code is being run; for
+ * example, a buffer may be copied from one context to another - during which
+ * interrupts must be disabled to avoid corruption of the source buffer contents
+ * until the copy has completed. This driver provides a basic API to enter and
+ * exit nested critical sections, so that global interrupts can be kept disabled
+ * for as long as necessary to complete a critical application code section.
+ *
+ * \subsection asfdoc_samd20_system_interrupt_module_overview_softints Software Interrupts
+ * For some applications, it may be desirable to raise a module or core
+ * interrupt via software. For this reason, a set of APIs to set an interrupt or
+ * exception as pending are provided to the user application.
  *
  * \section asfdoc_samd20_system_interrupt_special_considerations Special Considerations
  *
@@ -193,6 +214,11 @@ enum system_interrupt_priority_level {
 };
 
 /**
+ * \name Critical Section Management
+ * @{
+ */
+
+/**
  * \brief Enters a critical section
  *
  * Disables global interrupts. To support nested critical sections, an internal
@@ -217,6 +243,13 @@ static inline void system_interrupt_leave_critical_section(void)
 {
 	cpu_irq_leave_critical();
 }
+
+/** @} */
+
+/**
+ * \name Interrupt Enabling/Disabling
+ * @{
+ */
 
 /**
  * \brief Check if global interrupts are enabled
@@ -279,6 +312,13 @@ static inline void system_interrupt_disable(
 	NVIC->ICER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
 }
 
+/** @} */
+
+/**
+ * \name Interrupt State Management
+ * @{
+ */
+
 /**
  * \brief Get active interrupt (if any)
  *
@@ -302,12 +342,21 @@ enum status_code system_interrupt_set_pending(
 enum status_code system_interrupt_clear_pending(
 		const enum system_interrupt_vector vector);
 
+/** @} */
+
+/**
+ * \name Interrupt Priority Management
+ * @{
+ */
+
 enum status_code system_interrupt_set_priority(
 		const enum system_interrupt_vector vector,
 		const enum system_interrupt_priority_level priority_level);
 
 enum system_interrupt_priority_level system_interrupt_get_priority(
 		const enum system_interrupt_vector vector);
+
+/** @} */
 
 /** @} */
 
