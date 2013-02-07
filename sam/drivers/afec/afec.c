@@ -99,7 +99,9 @@ static uint32_t afec_find_ch_num(Afec *const afec)
  */
 static void afec_set_config(Afec *afec, struct afec_config *config)
 {
-	afec->AFE_MR = (config->anach? AFE_MR_ANACH_ALLOWED : 0) |
+	uint32_t reg = 0;
+	
+	reg = (config->anach? AFE_MR_ANACH_ALLOWED : 0) |
 			(config->useq ? AFE_MR_USEQ_REG_ORDER : 0) |
 			AFE_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
 			AFE_MR_TRACKTIM(config->tracktim) |
@@ -107,13 +109,13 @@ static void afec_set_config(Afec *afec, struct afec_config *config)
 			(config->resolution) | 
 			(config->settling_time)|
 			(config->startup_time);
-
+	
+	afec->AFE_MR = reg;
+	
 	afec->AFE_EMR = (config->tag ? AFE_EMR_TAG : 0) |
 			(config->stm ? AFE_EMR_STM : 0);
 
 	afec->AFE_ACR = AFE_ACR_IBCTL(config->ibctl);
-
-	
 }
 
 /**
@@ -121,7 +123,7 @@ static void afec_set_config(Afec *afec, struct afec_config *config)
  *
  * \param afec  Base address of the AFEC
  * \param channel The channel number
- * \param config   Configuration for the AFEC
+ * \param config   Configuration for the AFEC channel
  */
 void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config)
@@ -129,19 +131,30 @@ void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
 	afec->AFE_CDOR = (config->offset) ? (0x1u << channel) : 0;
 	afec->AFE_DIFFR = (config->diff) ? (0x1u << channel) : 0;
 	afec->AFE_CGR = (0x03u << (2 * channel)) & ((config->gain) << (2 * channel));
-	
-}
-
-void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config config)
-{
-	
 }
 
 /**
- * \brief Get the TWIS master default configurations.
+ * \brief Configure the AFEC temperature sensor.
+ *
+ * \param afec  Base address of the AFEC
+ * \param config   Configuration for the AFEC temperature sensor
+ */
+void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config *config)
+{
+	uint32_t reg = 0;
+
+	reg = (config->rctc) ? AFE_TEMPMR_RTCT : 0 | (config->mode);
+	afec->AFE_TEMPMR = reg;
+	
+	afec->AFE_TEMPCWR = AFE_TEMPCWR_TLOWTHRES(config->low_threshold) |
+			AFE_TEMPCWR_THIGHTHRES(config->high_threshold);
+}
+
+/**
+ * \brief Get the AFEC default configurations.
  *
  * Use to initialize the configuration structure to known default values. This
- * function should be called at the start of any TWIS initiation.
+ * function should be called at the start of any AFEC initiation.
  *
  * The default configuration is as follows:
  * - 7-bit addressing
@@ -163,7 +176,7 @@ void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config conf
  *
  * \param cfg Pointer to configuration structure to be initiated.
  */
-void afec_get_config_defaults(struct twis_config *const cfg)
+void afec_get_config_defaults(struct afec_config *const cfg)
 {
 	/*Sanity check argument. */
 	Assert(cfg);
@@ -193,101 +206,73 @@ void afec_get_config_defaults(struct twis_config *const cfg)
 }
 
 /**
- * \brief Initialize the TWI Slave Module.
+ * \brief Initialize the AFEC Module.
  *
- * \param dev_inst Device structure pointer
- * \param twis     Base address of the TWIS
- * \param config   Configuration for the TWIS
+ * \param afec  Base address of the AFEC
+ * \param config   Configuration for the AFEC
  *
  * \return Status of module initialization.
- * \retval STATUS_OK The data is written correctly.
- * \retval STATUS_ERR_DENIED Initialization failed due to the module was enable
- * before.
- * \retval STATUS_ERR_BUSY Initialization failed due to the module is busy with
- * transfer.
  */
-enum status_code afec_init(struct afec_dev_inst *const dev_inst,
-		Afec *const afec, struct afec_config *config)
+enum status_code afec_init(Afec *const afec, struct afec_config *config)
 {
-	Assert(dev_inst);
-	Assert(twis);
+	Assert(afec);
 	Assert(config);
 
-	if (twis->TWIS_SR & TWIS_SR_SEN) {
-		return STATUS_ERR_DENIED;
-	}
-
-	if (twis->TWIS_SR & (TWIS_SR_RXRDY | TWIS_SR_TXRDY) == 0) {
-		return STATUS_ERR_BUSY;
-	}
-
-	dev_inst->hw_dev = twis;
-	twis_instances[twis_find_ch_num(twis)] = dev_inst;
-	sysclk_enable_peripheral_clock(twis);
 	/* Reset the TWIS module */
-	twis->TWIS_CR = TWIS_CR_SWRST;
-	twis_set_config(dev_inst, config);
+	afec->AFE_CR = AFE_CR_SWRST;
+	afec_set_config(afec, config);
 
 	return STATUS_OK;
 }
 
 /**
- * \brief Set callback for TWIS
+ * \brief Set callback for AFEC
  *
- * \note Slave address match interrupt is enabled in default so that TWIS ISR
- * can work appropriately.
- *
- * \param dev_inst  Device structure pointer
+ * \param afec  Base address of the AFEC
  * \param source    Interrupt source
  * \param callback  Callback function pointer
  * \param irq_level Interrupt level
  */
-void twis_set_callback(struct twis_dev_inst *const dev_inst,
-		twis_interrupt_source_t source, twis_callback_t callback,
-		uint8_t irq_level)
+void twis_set_callback(Afec *afec, afec_interrupt_source_t source,
+		afec_callback_t callback, uint8_t irq_level)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(afec);
 	Assert(callback);
 
-	uint32_t i = twis_find_ch_num(dev_inst->hw_dev);
-	twis_callback_pointer[i] = callback;
+	uint32_t i = afec_find_ch_num(afec);
+	afec_callback_pointer[i] = callback;
 	if (!i) {
-		irq_register_handler(TWIS0_IRQn, irq_level);
+		irq_register_handler(AFEC0_IRQn, irq_level);
 	} else if (i == 1) {
-		irq_register_handler(TWIS1_IRQn, irq_level);
+		irq_register_handler(AFEC1_IRQn, irq_level);
 	}
 	/* Enable the specified interrupt source */
-	twis_enable_interrupt(dev_inst, source);
-	/* Enable slave address match interrupt in default */
-	if (source != TWIS_INTERRUPT_SLAVEADR_MATCH) {
-		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_SLAVEADR_MATCH);
-	}
+	afec_enable_interrupt(afec, source);
 }
 
 /**
- * \brief Enable TWIS Module.
+ * \brief Enable AFEC Module.
  *
- * \param dev_inst   Device structure pointer
+ * \param afec  Base address of the AFEC
  */
-void twis_enable(struct twis_dev_inst *const dev_inst)
+void twis_enable(Afec *afec)
 {
-	Assert(dev_inst->hw_dev);
+	Assert(afec);
 
 	sleepmgr_lock_mode(SLEEPMGR_SLEEP_1);
-	dev_inst->hw_dev->TWIS_CR |= TWIS_CR_SEN;
+	sysclk_enable_peripheral_clock(afec);
 }
 
 /**
- * \brief Disable TWIS Module.
+ * \brief Disable AFEC Module.
  *
- * \param dev_inst   Device structure pointer
+ * \param afec  Base address of the AFEC
  */
-void twis_disable(struct twis_dev_inst *const dev_inst)
+void twis_disable(Afec *afec)
 {
-	Assert(dev_inst->hw_dev);
+	Assert(afec);
 
-	dev_inst->hw_dev->TWIS_CR &= ~TWIS_CR_SEN;
+	sysclk_disable_peripheral_clock(afec);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_1);
 }
 
