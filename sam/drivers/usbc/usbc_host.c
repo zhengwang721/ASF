@@ -1619,6 +1619,8 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 	uint16_t max_trans;
 	iram_size_t next_trans;
 	irqflags_t flags;
+	bool b_is_iso = (uhd_get_pipe_type(pipe) ==
+			(USBC_UPCFG0_PTYPE_ISOCHRONOUS >> USBC_UPCFG0_PTYPE_Pos));
 
 	pipe_size = uhd_get_pipe_size(pipe);
 
@@ -1714,6 +1716,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 			while (!Is_uhd_pipe_frozen(pipe));
 
 			if (next_trans < pipe_size) {
+				uhd_disable_continuous_in_mode(pipe);
 				// Use the cache buffer for Bulk or Interrupt size endpoint
 				uhd_in_request_number(pipe, 1);
 				ptr_job->buf_internal = malloc(pipe_size);
@@ -1726,7 +1729,11 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 			} else {
 				next_trans -= next_trans % pipe_size;
 				// Link the user buffer directly on USB hardware DMA
-				uhd_in_request_number(pipe, (next_trans+pipe_size-1)/pipe_size);
+				if (b_is_iso) {
+					uhd_enable_continuous_in_mode(pipe);
+				} else {
+					uhd_in_request_number(pipe, (next_trans+pipe_size-1)/pipe_size);
+				}
 				uhd_udesc_set_buf0_addr(pipe, (uint32_t *)&ptr_job->buf[ptr_job->nb_trans]);
 				uhd_udesc_set_buf0_size(pipe, next_trans);
 			}
