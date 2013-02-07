@@ -383,9 +383,9 @@ enum ac_win_state {
  * AC software instance structure, used to retain software state information
  * of an associated hardware module instance.
  */
-struct ac_dev_inst {
+struct ac_module {
 	/** Hardware module point of the associated Analog Comparator peripheral. */
-	Ac *hw_dev;
+	Ac *hw;
 };
 
 /**
@@ -414,7 +414,7 @@ struct ac_events {
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
  */
-struct ac_conf {
+struct ac_config {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
 	bool run_in_standby;
@@ -472,13 +472,13 @@ struct ac_win_conf {
  * \internal Wait until the synchronization is complete
  */
 static inline void _ac_wait_for_sync(
-		struct ac_dev_inst *const dev_inst)
+		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	while (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
 		/* Do nothing */
@@ -492,12 +492,12 @@ static inline void _ac_wait_for_sync(
  */
 
 void ac_reset(
-		struct ac_dev_inst *const dev_inst);
+		struct ac_module *const module_inst);
 
 void ac_init(
-		struct ac_dev_inst *const dev_inst,
-		Ac *const module,
-		struct ac_conf *const config);
+		struct ac_module *const module_inst,
+		Ac *const hw,
+		struct ac_config *const config);
 
 /**
  * \brief Initializes an Analog Comparator configuration structure to defaults.
@@ -515,7 +515,7 @@ void ac_init(
  *  \param[out] config  Configuration structure to initialize to default values
  */
 static inline void ac_get_config_defaults(
-		struct ac_conf *const config)
+		struct ac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -532,19 +532,19 @@ static inline void ac_get_config_defaults(
  * Enables and starts an Analog Comparator that was previously configured via a
  * call to \ref ac_init().
  *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ * \param[in] module_inst  Software instance for the Analog Comparator peripheral
  */
 static inline void ac_enable(
-		struct ac_dev_inst *const dev_inst)
+		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
+	_ac_wait_for_sync(module_inst);
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg |= AC_CTRLA_ENABLE;
@@ -556,19 +556,19 @@ static inline void ac_enable(
  * Stops an Analog Comparator that was previously started via a call to
  * \ref ac_enable().
  *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ * \param[in] module_inst  Software instance for the Analog Comparator peripheral
  */
 static inline void ac_disable(
-		struct ac_dev_inst *const dev_inst)
+		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
+	_ac_wait_for_sync(module_inst);
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
@@ -583,19 +583,19 @@ static inline void ac_disable(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void ac_enable_events(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		struct ac_events *const events)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
@@ -629,19 +629,19 @@ static inline void ac_enable_events(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void ac_disable_events(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		struct ac_events *const events)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
@@ -711,7 +711,7 @@ static inline void ac_ch_get_config_defaults(
 }
 
 void ac_ch_set_config(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel,
 		struct ac_ch_conf *const config);
 
@@ -721,18 +721,18 @@ void ac_ch_set_config(
  *  Enables and starts an Analog Comparator channel that was previously
  *  configured via a call to \ref ac_ch_set_config().
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel to enable
  */
 static inline void ac_ch_enable(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
 	ac_module->COMPCTRL[channel].reg |= AC_COMPCTRL_ENABLE;
@@ -744,18 +744,18 @@ static inline void ac_ch_enable(
  *  Stops an Analog Comparator channel that was previously started via a call to
  *  \ref ac_ch_enable().
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to disable
  */
 static inline void ac_ch_disable(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
 	ac_module->COMPCTRL[channel].reg &= ~AC_COMPCTRL_ENABLE;
@@ -775,18 +775,18 @@ static inline void ac_ch_disable(
  *  Triggers a single conversion on a comparator configured to compare on demand
  *  (single shot mode) rather than continuously.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to trigger
  */
 static inline void ac_ch_trigger_single_shot(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << channel);
@@ -798,20 +798,20 @@ static inline void ac_ch_trigger_single_shot(
  *  Checks a comparator channel to see if the comparator is currently ready to
  *  begin comparisons.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to test
  *
  *  \return Comparator channel readiness state.
  */
 static inline bool ac_ch_is_ready(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << channel));
 }
@@ -823,22 +823,22 @@ static inline bool ac_ch_is_ready(
  *  If the comparator was not ready at the time of the check, the comparison
  *  result will be indicated as being unknown.
  *
- *  \param[in] dev_inst   Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst   Software instance for the Analog Comparator peripheral
  *  \param[in] channel    Comparator channel channel to test
  *
  *  \return Comparator channel state.
  */
 static inline enum ac_ch_state ac_ch_get_state(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	if (ac_ch_is_ready(dev_inst, channel) == false) {
+	if (ac_ch_is_ready(module_inst, channel) == false) {
 		return AC_CH_STATE_UNKNOWN;
 	}
 
@@ -882,16 +882,16 @@ static inline void ac_win_get_config_defaults(
 }
 
 void ac_win_set_config(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel,
 		struct ac_win_conf *const config);
 
 enum status_code ac_win_enable(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel);
 
 void ac_win_disable(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel);
 
 /** @} */
@@ -908,22 +908,22 @@ void ac_win_disable(
  *  Checks a Window Comparator to see if the both comparators used for window
  *  detection is currently ready to begin comparisons.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Window Comparator channel channel to test
  *
  *  \return Window Comparator channel readiness state.
  */
 static inline bool ac_win_is_ready(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
 	/* Check if the two comparators used in the window are ready */
-	bool win_pair_comp0_ready = ac_ch_is_ready(dev_inst, (win_channel * 2));
-	bool win_pair_comp1_ready = ac_ch_is_ready(dev_inst, (win_channel * 2) + 1);
+	bool win_pair_comp0_ready = ac_ch_is_ready(module_inst, (win_channel * 2));
+	bool win_pair_comp1_ready = ac_ch_is_ready(module_inst, (win_channel * 2) + 1);
 
 	/* If one or both window comparators not ready, return failure */
 	if ((win_pair_comp0_ready == false) || (win_pair_comp1_ready == false)) {
@@ -934,7 +934,7 @@ static inline bool ac_win_is_ready(
 }
 
 enum ac_win_state ac_win_get_state(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t channel);
 
 /**
@@ -944,20 +944,20 @@ enum ac_win_state ac_win_get_state(
  *  to the window bounds matches the detection criteria previously configured
  *  for the Window Comparator.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
  *  \return State of the Window Comparator criteria detection flag.
  */
 static inline bool ac_win_is_detected(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel));
 }
@@ -968,18 +968,18 @@ static inline bool ac_win_is_detected(
  *  Clears the Analog Comparator window condition detection flag for a specified
  *  comparator channel.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to modify
  */
 static inline void ac_win_clear_detected(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		const uint8_t win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << win_channel);
 }

@@ -48,7 +48,7 @@ void configure_ac_channel(void);
 //! [setup]
 /* AC module software instance (must not go out of scope while in use) */
 //! [setup_1]
-static struct ac_dev_inst ac_dev;
+static struct ac_module ac_dev;
 //! [setup_1]
 
 /* Comparator channel that will be used */
@@ -63,17 +63,17 @@ void configure_ac(void)
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
-	struct ac_conf ac_conf;
+	struct ac_config ac_config;
 	//! [setup_4]
 	//! [setup_5]
-	ac_get_config_defaults(&ac_conf);
+	ac_get_config_defaults(&ac_config);
 	//! [setup_5]
 
 	/* Alter any Analog Comparator configuration settings here if required */
 
 	/* Initialize and enable the Analog Comparator with the user settings */
 	//! [setup_6]
-	ac_init(&ac_dev, AC, &ac_conf);
+	ac_init(&ac_dev, AC, &ac_config);
 	//! [setup_6]
 }
 
