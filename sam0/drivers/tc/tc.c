@@ -43,12 +43,23 @@
 
 #include "tc.h"
 
+#if !defined(__DOXYGEN__)
+#  define _TC_GCLK_ID(n, unused)       TC##n##_GCLK_ID   ,
+#  define _TC_PM_APBCMASK(n, unused)   PM_APBCMASK_TC##n ,
+
+/** TODO: Remove once present in device header file */
+#  define TC_INST_GCLK_ID              { MREPEAT(TC_INST_NUM, _TC_GCLK_ID    , ~) }
+
+/** TODO: Remove once present in device header file */
+#  define TC_INST_PM_APBCMASK          { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
+#endif
+
 /**
  * \internal Find the index of given TC module instance.
  *
  * \param[in] TC module instance pointer.
  *
- * \return Index of given instance.
+ * \return Index of the given TC module instance.
  */
 static uint8_t _tc_get_inst_index(
 		Tc *const tc_module)
@@ -68,25 +79,26 @@ static uint8_t _tc_get_inst_index(
 	return 0;
 }
 
-
-/** \brief Initializes a hardware TC module instance.
+/**
+ * \brief Initializes a hardware TC module instance.
  *
- * This function enables the clock and initializes the TC module,
- * based on the values of the \ref tc_conf struct.
+ * Enables the clock and initializes the TC module, based on the given
+ * configuration values.
  *
- * \param module_inst  Pointer to the device struct
- * \param tc_module    Pointer to the TC module
- * \param config       Pointer to the \ref tc_conf struct
+ * \param[in,out] module_inst  Pointer to the software module instance struct
+ * \param[in]     tc_module    Pointer to the TC hardware module
+ * \param[in]     config       Pointer to the TC configuration options struct
  *
  * \return Status of the initialization procedure.
  *
- * \retval STATUS_OK           The function exited normally
- * \retval STATUS_BUSY     When a reset has been initiated
- * \retval STATUS_INVALID_ARG  When there is invalid data in the \ref
- *                             tc_conf struct
- * \retval STATUS_ERR_DENIED   When module is enabled, or when module is
- *                             configured in 32 bit slave mode. Module will be
- *                             left unaltered in these cases
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_BUSY         Hardware module was busy when the
+ *                             initialization procedure was attempted
+ * \retval STATUS_INVALID_ARG  An invalid configuration option or argument
+ *                             was supplied
+ * \retval STATUS_ERR_DENIED   Hardware module was already enabled, or the
+ *                             hardware module is configured in 32 bit
+ *                             slave mode
  */
 enum status_code tc_init(
 		Tc *const tc_module,
@@ -308,19 +320,19 @@ enum status_code tc_init(
 	return STATUS_ERR_INVALID_ARG;
 }
 
-/** \brief Set TC module count value.
+/**
+ * \brief Set TC module count value.
  *
- * This function can be used to update count value after init. It can
- * be used while the counter is running.
+ * Sets the current timer count value of a initialized TC module. The
+ * specified TC module may be started or stopped.
  *
- * \param[in] module_inst      Pointer to the device struct
- * \param[in] count         value to write to the count register
+ * \param[in] module_inst  Pointer to the software module instance struct
+ * \param[in] count        New timer count value to set
  *
- * \return Status of the procedure
- * \retval STATUS_OK               The procedure has gone well and the count
- *                                 value has been set
- * \retval STATUS_ERR_INVALID_ARG  The counter size argument in the module_inst
- *                                 struct is out of bounds
+ * \return Status of the count update procedure.
+ *
+ * \retval STATUS_OK               The timer count was updated successfully
+ * \retval STATUS_ERR_INVALID_ARG  An invalid timer counter size was specified
  */
 enum status_code tc_set_count_value(
 		const struct tc_module *const module_inst,
@@ -356,14 +368,15 @@ enum status_code tc_set_count_value(
 	}
 }
 
-/** \brief Get TC module count value.
+/**
+ * \brief Get TC module count value.
  *
- * This function gets the count value of the TC module. It can be used while the
- * counter is running, there is no need to disable the counter module.
+ * Retrieves the current count value of a TC module. The specified TC module
+ * may be started or stopped.
  *
- * \param[in]  module_inst      Pointer to the device struct
+ * \param[in] module_inst  Pointer to the software module instance struct
  *
- * \return Count value
+ * \return Count value of the specified TC module.
  */
 uint32_t tc_get_count_value(
 		const struct tc_module *const module_inst)
@@ -395,15 +408,15 @@ uint32_t tc_get_count_value(
 	return 0;
 }
 
-/** \brief Gets the capture value.
+/**
+ * \brief Gets the TC module capture value.
  *
- * This function returns a capture value in the supplied buffer
- * pointed to by capture.
+ * Retrieves the capture value in the indicated TC module capture channel.
  *
- * \param[in]  module_inst       Pointer to the device struct
- * \param[in]  channel_index  Index of the Compare Capture register to read from
+ * \param[in]  module_inst    Pointer to the software module instance struct
+ * \param[in]  channel_index  Index of the Compare Capture channel to read
  *
- * \return Capture value
+ * \return Capture value stored in the specified timer channel.
  */
 uint32_t tc_get_capture_value(
 		const struct tc_module *const module_inst,
@@ -423,35 +436,43 @@ uint32_t tc_get_capture_value(
 	/* Read out based on the TC counter size */
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
-			return tc_module->COUNT8.CC[channel_index].reg;
+			if (channel_index < 2) {
+				return tc_module->COUNT8.CC[channel_index].reg;
+			}
 
 		case TC_COUNTER_SIZE_16BIT:
-			return tc_module->COUNT16.CC[channel_index].reg;
+			if (channel_index < 2) {
+				return tc_module->COUNT16.CC[channel_index].reg;
+			}
 
 		case TC_COUNTER_SIZE_32BIT:
-			return tc_module->COUNT32.CC[channel_index].reg;
+			if (channel_index < 2) {
+				return tc_module->COUNT32.CC[channel_index].reg;
+			}
 	}
 
 	Assert(false);
 	return 0;
 }
 
-/** \brief Set a compare value.
+/**
+ * \brief Set a TC module compare value.
  *
- * This function writes a compare value to the given compare/capture channel register
+ * Writes a compare value to the given TC module compare/capture channel.
  *
- * \param[in] module_inst       Pointer to the device struct
- * \param[in] compare        Compare value
- * \param[in] channel_index  Index of the compare register to write to
+ * \param[in]  module_inst    Pointer to the software module instance struct
+ * \param[in]  channel_index  Index of the compare channel to write to
+ * \param[in]  compare        New compare value to set
  *
- * \return  Status of the procedure
- * \retval  STATUS_OK               The function exited normally
- * \retval  STATUS_ERR_INVALID_ARG  The channel index is out of range
+ * \return Status of the compare update procedure.
+ *
+ * \retval  STATUS_OK               The compare value was updated successfully
+ * \retval  STATUS_ERR_INVALID_ARG  An invalid channel index was supplied
  */
 enum status_code tc_set_compare_value(
 		const struct tc_module *const module_inst,
-		const uint32_t compare,
-		const enum tc_compare_capture_channel channel_index)
+		const enum tc_compare_capture_channel channel_index,
+		const uint32_t compare)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -492,21 +513,18 @@ enum status_code tc_set_compare_value(
 /**
  * \brief Reset the TC module.
  *
- * This function resets the TC module. The TC module will not be
- * accessible while the reset is being performed. To avoid undefined
- * behavior during reset the module is disabled before it is
- * reset. The module might not have completed the reset upon exiting
- * this function.
+ * Resets the TC module, restoring all hardware module registers to their
+ * default values and disabling the module. The TC module will not be
+ * accessible while the reset is being performed.
  *
  * \note When resetting a 32-bit counter only the master TC module's instance
  *       structure should be used.
  *
- * \param[in] module_inst  Pointer to the device struct
+ * \param[in]  module_inst    Pointer to the software module instance struct
  *
  * \return Status of the procedure
- * \retval STATUS_OK                   The function exited normally
- * \retval STATUS_ERR_UNSUPPORTED_DEV  This function does not accept
- *                                     modules configured as 32-bit slaves
+ * \retval STATUS_OK                   The module was reset successfully
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was supplied
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)
@@ -538,7 +556,6 @@ enum status_code tc_reset(
 		Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
 		Tc *const slave = tc_modules[_tc_get_inst_index(module_inst->hw_dev) + 1];
 
-		/* Synchronize */
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
 			/* Wait for sync */
 		}
@@ -559,27 +576,28 @@ enum status_code tc_reset(
 }
 
 /**
- * \brief Set the TOP/period value.
+ * \brief Set the timer TOP/period value.
  *
- * For 8-bit counter size this function writes the top value to the
- * period register.
+ * For 8-bit counter size this function writes the top value to the period
+ * register.
  *
- * For 16- and 32-bit counter size this function writes the top value
- * to Capture Compare register 0. The value in this register can not
- * be used for any other purpose.
+ * For 16- and 32-bit counter size this function writes the top value to
+ * Capture Compare register 0. The value in this register can not be used for
+ * any other purpose.
  *
- * \note This function is only meant to be used in PWM or frequency
- * match mode. When the counter is set to 16- or 32-bit counter
- * size. In 8-bit counter size it will always be possible to change the
- * top value even in normal mode.
+ * \note This function is designed to be used in PWM or frequency
+ *       match modes only. When the counter is set to 16- or 32-bit counter
+ *       size. In 8-bit counter size it will always be possible to change the
+ *       top value even in normal mode.
  *
- * \param[in] module_inst    Pointer to the device struct
- * \param[in] top_value   Value to be used as top in the counter.
+ * \param[in]  module_inst   Pointer to the software module instance struct
+ * \param[in]  top_value     New timer TOP value to set
  *
- * \return Status of the procedure
- * \retval STATUS_OK              The function exited normally
- * \retval STATUS_ERR_INVALID_ARG The counter size in the module_inst is
- *                                out of bounds.
+ * \return Status of the TOP set procedure.
+ *
+ * \retval STATUS_OK              The timer TOP value was updated successfully
+ * \retval STATUS_ERR_INVALID_ARG The configured TC module counter size in the
+ *                                module instance is invalid.
  */
 enum status_code tc_set_top_value (
 		const struct tc_module *const module_inst,
