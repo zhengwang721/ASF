@@ -149,7 +149,7 @@ static inline bool system_interrupt_is_global_enabled(void)
  *
  */
 static inline bool system_interrupt_is_enabled(
-		enum system_interrupt_vector vector)
+		const enum system_interrupt_vector vector)
 {
 	return (bool)((NVIC->ISER[0] >> vector) & 0x00000001);
 }
@@ -162,7 +162,7 @@ static inline bool system_interrupt_is_enabled(
  * \param[in] vector Interrupt vector number which is beeing enabled
  */
 static inline void system_interrupt_enable(
-		enum system_interrupt_vector vector)
+		const enum system_interrupt_vector vector)
 {
 	NVIC->ISER[0] = (uint32_t)(1 << (vector & 0x0000001f));
 }
@@ -175,7 +175,7 @@ static inline void system_interrupt_enable(
  * \param[in] vector Interrupt vector number which is beeing disabled
  */
 static inline void system_interrupt_disable(
-		enum system_interrupt_vector vector)
+		const enum system_interrupt_vector vector)
 {
 	NVIC->ICER[0] = (uint32_t)(1 << (vector & 0x0000001f));
 }
@@ -207,7 +207,7 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
  *
  */
 bool system_interrupt_is_pending(
-		enum system_interrupt_vector vector);
+		const enum system_interrupt_vector vector);
 
 /**
  * \brief Set a interrupt vector as pending
@@ -223,7 +223,7 @@ bool system_interrupt_is_pending(
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
  */
 enum status_code system_interrupt_set_pending(
-		enum system_interrupt_vector vector);
+		const enum system_interrupt_vector vector);
 
 /**
  * \brief Clear pending interrupt vector
@@ -238,7 +238,7 @@ enum status_code system_interrupt_set_pending(
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
  */
 enum status_code system_interrupt_clear_pending(
-		enum system_interrupt_vector vector);
+		const enum system_interrupt_vector vector);
 
 /**
  * \brief Set interrupt vector priority level
@@ -253,8 +253,8 @@ enum status_code system_interrupt_clear_pending(
  * \retval STATUS_INVALID_ARG If and unsupported interrupt vector number is used
  */
 enum status_code system_interrupt_set_priority(
-		enum system_interrupt_vector vector,
-		enum system_interrupt_priority_level priority_level);
+		const enum system_interrupt_vector vector,
+		const enum system_interrupt_priority_level priority_level);
 
 /**
  * \brief Get interrupt vector priority level
@@ -262,6 +262,6 @@ enum status_code system_interrupt_set_priority(
  * Get the priority level of the requested external interrupt or exception
  */
 enum system_interrupt_priority_level system_interrupt_get_priority(
-		enum system_interrupt_vector vector);
+		const enum system_interrupt_vector vector);
 
 #endif
