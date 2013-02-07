@@ -138,7 +138,7 @@ static void run_interrupt_trigger_test(const struct test_case *test)
 	trigger_count =0;
 	
 	/* Output High on the IOPORT pin */
-	ioport_set_pin_level(CONF_OUT_PIN,1);
+	ioport_set_pin_level(CONF_OUT_PIN,HIGH);
 	
 	/* Wait for the ISR to get serviced */
 	for(uint16_t delay=0;delay<10000;delay++);
@@ -154,9 +154,9 @@ static void run_interrupt_trigger_test(const struct test_case *test)
 		
 	/* Wait for the ISR to get serviced */
 	for(uint16_t delay=0;delay<10000;delay++);
-
-        /* Disable Global interrupt */
-        cpu_irq_disable();
+	
+	/* Disable Global interrupt */
+	cpu_irq_disable();
 
 	test_assert_true(test, trigger_count == 2,
 			"Ext Pin change interrupt trigger failed.");		
