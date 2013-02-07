@@ -118,7 +118,7 @@ static void run_loopback_test(const struct test_case *test)
  */
 static void run_set_functions_test(const struct test_case *test)
 {
-	bool success = false;
+	bool success;
 
 	/* Set USART mode and verify that it has been correctly set. */
 	usart_set_mode(&CONF_UNIT_USART, USART_CMODE_MSPI_gc);
@@ -126,14 +126,14 @@ static void run_set_functions_test(const struct test_case *test)
 			USART_CMODE_MSPI_gc;
 	test_assert_true(test, success,
 			"Trying to set USART mode to master SPI failed.");
-        
-        /* Test enabling and disabling USART double baud*/
-        usart_double_baud_enable(&CONF_UNIT_USART);
-        success = (CONF_UNIT_USART.UCSRnA & USART_U2X_bm);
+			
+	/* Test enabling and disabling USART double baud*/
+	usart_double_baud_enable(&CONF_UNIT_USART);
+	success = (CONF_UNIT_USART.UCSRnA & USART_U2X_bm);
 	test_assert_true(test, success, "Trying to enable USART double baud failed.");
-        
-        usart_double_baud_disable(&CONF_UNIT_USART);
-        success = !(CONF_UNIT_USART.UCSRnA & USART_U2X_bm);
+	
+	usart_double_baud_disable(&CONF_UNIT_USART);
+	success = !(CONF_UNIT_USART.UCSRnA & USART_U2X_bm);
 	test_assert_true(test, success, "Trying to disable USART double baud failed.");        
 
 	/* Test enabling and disabling USART RX */
@@ -199,8 +199,8 @@ static void run_set_functions_test(const struct test_case *test)
  */
 static void run_check_registers_test(const struct test_case *test)
 {
-	bool success = false;         
-        uint8_t data = 'b';
+	bool success;
+	uint8_t data = 'b';
 
 	
 	const usart_rs232_options_t options = {
@@ -217,16 +217,16 @@ static void run_check_registers_test(const struct test_case *test)
 	test_assert_true(test, success,
 			"Checking if the data register is empty failed");
 	
-        /* Test finished data transfers */
-        usart_put(&CONF_UNIT_USART, data);
-        for(volatile uint16_t delay=0;delay<20000;delay++);
-        
-   	success = usart_rx_is_complete(&CONF_UNIT_USART);
-        data = usart_get(&CONF_UNIT_USART);
-        test_assert_true(test, success,
+	/* Test finished data transfers */
+	usart_put(&CONF_UNIT_USART, data);
+	for(volatile uint16_t delay=0;delay<20000;delay++);
+    
+	success = usart_rx_is_complete(&CONF_UNIT_USART);
+	usart_get(&CONF_UNIT_USART);
+	test_assert_true(test, success,
    	                "Checking if the receive is finished failed");		       
-
-        success = usart_tx_is_complete(&CONF_UNIT_USART);
+					
+	success = usart_tx_is_complete(&CONF_UNIT_USART);
 	test_assert_true(test, success,
 	                "Checking if the transmit is finished failed");
 
@@ -278,14 +278,14 @@ static uint32_t calculate_baudrate(uint32_t baud, uint32_t cpu_hz)
  */
 static void run_baudrate_test(const struct test_case *test)
 {
-	bool success = false;
+	bool success;
 
 	uint32_t baud;
 	uint32_t cpu_hz;
 	uint32_t ubrr = 0;
-
-        /* Get the system cpu frequency */
-        cpu_hz = sysclk_get_cpu_hz();
+	
+	/* Get the system cpu frequency */
+	cpu_hz = sysclk_get_cpu_hz();
 	
 	/* Test for baud rate equal to 9600 */
 	baud = 9600;
