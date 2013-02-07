@@ -77,35 +77,35 @@ void configure_ac(void)
 	//! [setup_6]
 }
 
-//! [setup_8]
+//! [setup_7]
 void configure_ac_channel(void)
 {
-//! [setup_8]
+//! [setup_7]
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
-	//! [setup_9]
+	//! [setup_8]
 	struct ac_ch_conf ac_ch_conf;
+	//! [setup_8]
 	//! [setup_9]
-	//! [setup_10]
 	ac_ch_get_config_defaults(&ac_ch_conf);
-	//! [setup_10]
+	//! [setup_9]
 
 	/* Set the Analog Comparator channel configuration settings */
-	//! [setup_11]
+	//! [setup_10]
 	ac_ch_conf.sample_mode      = AC_CH_MODE_SINGLE_SHOT;
 	ac_ch_conf.positive_input   = AC_CH_POS_MUX_PIN0;
 	ac_ch_conf.negative_input   = AC_CH_NEG_MUX_SCALED_VCC;
 	ac_ch_conf.vcc_scale_factor = 32;
-	//! [setup_11]
+	//! [setup_10]
 
 	/* Initialize and enable the Analog Comparator channel with the user
 	 * settings */
-	//! [setup_12]
+	//! [setup_11]
 	ac_ch_set_config(&ac_dev, AC_COMPARATOR_CHANNEL, &ac_ch_conf);
+	//! [setup_11]
 	//! [setup_12]
-	//! [setup_13]
 	ac_ch_enable(&ac_dev, AC_COMPARATOR_CHANNEL);
-	//! [setup_13]
+	//! [setup_12]
 }
 //! [setup]
 
@@ -115,7 +115,9 @@ int main(void)
 	system_init();
 	configure_ac();
 	configure_ac_channel();
+	//! [setup_13]
 	ac_enable(&ac_dev);
+	//! [setup_13]
 	//! [setup_init]
 
 	//! [main]
