@@ -163,7 +163,8 @@ enum status_code system_interrupt_clear_pending(
  *
  * Set the priority level of an external interrupt or exception.
  *
- * \param[in] vector  Interrupt vector to which the priority level will be set
+ * \param[in] vector          Interrupt vector to change
+ * \param[in] priority_level  New vector priority level to set
  *
  * \returns Status code indicating if the priority level of the interrupt was
  *          successfully set.
