@@ -1440,7 +1440,7 @@ static void uhd_ctrl_phase_zlp_in(void)
 static void uhd_ctrl_phase_data_out(void)
 {
 	uhd_ctrl_request_phase = UHD_CTRL_REQ_PHASE_DATA_OUT;
-	uint8_t nb_trans;
+	uint16_t nb_trans;
 
 	if (uhd_ctrl_nb_trans == uhd_ctrl_request_first->req.wLength) {
 		// End of DATA phase
