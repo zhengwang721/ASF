@@ -42,7 +42,7 @@
  */
 #include "ac.h"
 
-static void _ac_set_config(
+static enum status_code _ac_set_config(
 		struct ac_module *const module_inst,
 		struct ac_config *const config)
 {
@@ -69,6 +69,8 @@ static void _ac_set_config(
 
 	/* Enable any requested user events */
 	ac_enable_events(module_inst, &config->events);
+
+	return STATUS_OK;
 }
 
 /** \brief Resets and disables the Analog Comparator driver.
@@ -78,7 +80,7 @@ static void _ac_set_config(
  *
  * \param[out] module_inst  Pointer to the AC software instance struct
  */
-void ac_reset(
+enum status_code ac_reset(
 		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
@@ -95,6 +97,8 @@ void ac_reset(
 
 	/* Software reset the module */
 	ac_module->CTRLA.reg |= AC_CTRLA_SWRST;
+
+	return STATUS_OK;
 }
 
 /** \brief Initializes and configures the Analog Comparator driver.
@@ -111,9 +115,9 @@ void ac_reset(
  * \param[in]  config    Pointer to the config struct, created by the user
  *                       application
  */
-void ac_init(
+enum status_code ac_init(
 		struct ac_module *const module_inst,
-		Ac *const hw,
+		Ac *const module,
 		struct ac_config *const config)
 {
 	struct system_gclk_chan_conf gclk_chan_conf;
@@ -124,7 +128,7 @@ void ac_init(
 	Assert(config);
 
 	/* Initialize device instance */
-	module_inst->hw = hw;
+	module_inst->hw = module;
 
 	/* Set up GCLK */
 	gclk_chan_conf.source_generator = config->source_generator;
@@ -132,7 +136,7 @@ void ac_init(
 	system_gclk_chan_enable(AC_GCLK_ID_DIG);
 
 	/* Write configuration to module */
-	_ac_set_config(module_inst, config);
+	return _ac_set_config(module_inst, config);
 }
 
 /** \brief Writes an Analog Comparator channel configuration to the hardware module.
@@ -144,10 +148,10 @@ void ac_init(
  *  \param[in] channel   Analog Comparator channel to configure
  *  \param[in] config    Pointer to the channel configuration struct
  */
-void ac_ch_set_config(
+enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
 		const uint8_t channel,
-		struct ac_ch_conf *const config)
+		struct ac_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -182,6 +186,8 @@ void ac_ch_set_config(
 
 	/* Configure VCC voltage scaling for the comparator */
 	ac_module->SCALER[channel].reg = config->vcc_scale_factor;
+
+	return STATUS_OK;
 }
 
 /** \brief Writes an Analog Comparator Window channel configuration to the hardware module.
@@ -193,7 +199,7 @@ void ac_ch_set_config(
  *  \param[in] win_channel  Analog Comparator window channel to configure
  *  \param[in] config       Pointer to the window channel configuration struct
  */
-void ac_win_set_config(
+enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
 		const uint8_t win_channel,
 		struct ac_win_conf *const config)
@@ -240,6 +246,8 @@ void ac_win_set_config(
 				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
 				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
 	}
+
+	return STATUS_OK;
 }
 
 
