@@ -252,7 +252,7 @@ struct wdt_conf {
  * \retval true if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool wdt_is_synching(void)
+static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 

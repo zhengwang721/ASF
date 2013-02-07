@@ -67,7 +67,7 @@ void extint_reset(void)
 		eics[i]->CTRL.reg |= EIC_CTRL_SWRST;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
@@ -95,7 +95,7 @@ void extint_enable(void)
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -124,7 +124,7 @@ void extint_disable(void)
 		eics[i]->CTRL.reg &= ~EIC_CTRL_ENABLE;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
