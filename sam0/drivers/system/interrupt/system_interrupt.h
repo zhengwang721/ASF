@@ -293,70 +293,15 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
 	return (enum system_interrupt_vector)(IPSR & _SYSTEM_INTERRUPT_IPSR_MASK);
 }
 
-/**
- * \brief Check if a interrupt line is pending
- *
- * Checks if the requested interrupt vector is pending.
- *
- * \param[in] vector  Interrupt vector number to check
- *
- * \returns A boolean identifying if the requested interrupt vector is pending.
- *
- * \retval true   Specified interrupt vector is pending
- * \retval false  Specified interrupt vector is not pending
- *
- */
 bool system_interrupt_is_pending(
 		const enum system_interrupt_vector vector);
 
-/**
- * \brief Set a interrupt vector as pending
- *
- * Set the requested interrupt vector as pending (i.e issues a software
- * interrupt request for the specified vector). The software handler will be
- * handled (if enabled) in a priority order based on vector number and
- * configured priority settings.
- *
- * \param[in] vector  Interrupt vector number which is set as pending
- *
- * \returns Status code identifying if the vector was successfully set as
- *          pending.
- *
- * \retval STATUS_OK           If no error was detected
- * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
- */
 enum status_code system_interrupt_set_pending(
 		const enum system_interrupt_vector vector);
 
-/**
- * \brief Clear pending interrupt vector
- *
- * Clear a pending interrupt vector, so the software handler is not executed.
- *
- * \param[in] vector  Interrupt vector number to clear
- *
- * \returns A status code identifying if the interrupt pending state was
- *          successfully cleared.
- *
- * \retval STATUS_OK           If no error was detected
- * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
- */
 enum status_code system_interrupt_clear_pending(
 		const enum system_interrupt_vector vector);
 
-/**
- * \brief Set interrupt vector priority level
- *
- * Set the priority level of an external interrupt or exception.
- *
- * \param[in] vector  Interrupt vector to which the priority level will be set
- *
- * \returns Status code indicating if the priority level of the interrupt was
- *          successfully set.
- *
- * \retval STATUS_OK           If no error was detected
- * \retval STATUS_INVALID_ARG  If an unsupported interrupt vector number was given
- */
 enum status_code system_interrupt_set_priority(
 		const enum system_interrupt_vector vector,
 		const enum system_interrupt_priority_level priority_level);
