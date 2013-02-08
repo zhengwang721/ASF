@@ -329,12 +329,12 @@ void i2c_slave_unregister_callback(
 /**
  * \brief Read data packet from master asynchronous.
  *
- * Reads a data packet from the master. A write request must be initated by
+ * Reads a data packet from the master. A write request must be initiated by
  * the master before the packet can be read.
  * The I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out] module  Pointer to device instance struct.
+ * \param[in,out] module    Pointer to device instance struct.
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  *
  * \return          Status of starting asynchronously reading I2C packet.
@@ -368,7 +368,7 @@ enum status_code i2c_slave_read_packet_callback(
 /**
  * \brief Write data packet to master  asynchronous.
  *
- * Writes a data packet to the master. A read request must be initated by
+ * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.
  * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
