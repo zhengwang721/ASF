@@ -313,9 +313,9 @@
  *
  * \subsection asfdoc_samd20_nvm_module_overview_sub_rw Read/Write
  * Reading from the NVM memory can be done by directly addressing it, or by
- * using the \ref nvm_write_page(). Writing to the NVM memory requires some
+ * using the \ref nvm_write_page_buffer(). Writing to the NVM memory requires some
  * special considerations. If a whole page is to be written the
- * \ref nvm_write_page() function can be used after erasing the row where the
+ * \ref nvm_write_page_buffer() function can be used after erasing the row where the
  * page is located, this can be done by \ref nvm_erase_row(). However, if a
  * buffer of a different size or location than a specific page is to be written,
  * it can be done by the following procedure:
@@ -719,20 +719,18 @@ static inline void nvm_get_parameters(
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 }
 
-enum status_code nvm_write_page(
-		const uint16_t dst_page_nr,
-		const uint32_t *buf);
+enum status_code nvm_write_buffer(
+		const uint16_t destination_page,
+		const uint8_t *buffer,
+		uint16_t length);
 
-enum status_code nvm_read_page(
-		const uint16_t src_page_nr,
-		uint32_t *buf);
+enum status_code nvm_read_buffer(
+		const uint16_t source_page,
+		uint8_t *const buffer,
+		uint16_t length);
 
 enum status_code nvm_erase_row(
-		const uint16_t row_nr);
-
-enum status_code nvm_erase_block(
-		const uint16_t row_nr,
-		const uint16_t rows);
+		const uint16_t row_number);
 
 enum status_code nvm_execute_command(
 		const enum nvm_command command,
