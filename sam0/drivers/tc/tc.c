@@ -101,8 +101,8 @@ static uint8_t _tc_get_inst_index(
  *                             slave mode
  */
 enum status_code tc_init(
-		Tc *const tc_module,
 		struct tc_module *const module_inst,
+		Tc *const tc_module,
 		const struct tc_conf *const config)
 {
 	/* Sanity check arguments */

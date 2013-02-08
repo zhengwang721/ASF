@@ -825,8 +825,8 @@ static inline void tc_get_config_defaults(
 }
 
 enum status_code tc_init(
-		Tc *const tc_module,
 		struct tc_module *const module_inst,
+		Tc *const tc_module,
 		const struct tc_conf *const config);
 
 /** @} */
