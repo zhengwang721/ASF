@@ -44,6 +44,51 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+//! Osc frequency (Hz.) and startup time (RCOsc periods).
+#define FOSC0                       (12000000)
+
+//! Osc32 frequency (Hz.) and startup time (RCOsc periods).
+#define FOSC32                      (32768)
+
+/**
+ * \name Board oscillator configuration
+ *
+ */
+//@{
+#define BOARD_OSC32_IS_XTAL         true
+#define BOARD_OSC32_HZ              FOSC32
+#define BOARD_OSC32_STARTUP_US      (1100000)
+#define BOARD_OSC32_SELCURR         BSCIF_OSCCTRL32_SELCURR(10)
+#define BOARD_OSC0_IS_XTAL          true
+#define BOARD_OSC0_HZ               FOSC0
+#define BOARD_OSC0_STARTUP_US       (1100)
+//@}
+
+/**
+ * \name LEDs
+ *
+ * LED0 is a single yellow LED that is active low.
+ */
+//@{
+#define LED0                            PC10
+#define LED0_GPIO                       PIN_PC10
+#define LED0_GPIO_MASK                  GPIO_PC10
+#define LED0_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
+#define LED0_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
+//@}
+
+//! \name USART connections to GPIO for Virtual Com Port
+// @{
+#define COM_PORT_USART                 USART2
+#define COM_PORT_USART_ID              ID_USART2
+#define COM_PORT_RX_PIN                PIN_PC11B_USART2_RXD
+#define COM_PORT_RX_GPIO               GPIO_PC11B_USART2_RXD
+#define COM_PORT_RX_MUX                MUX_PC11B_USART2_RXD
+#define COM_PORT_TX_PIN                PIN_PC12B_USART2_TXD
+#define COM_PORT_TX_GPIO               GPIO_PC12B_USART2_TXD
+#define COM_PORT_TX_MUX                MUX_PC12B_USART2_TXD
+// @}
+
 /* Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 

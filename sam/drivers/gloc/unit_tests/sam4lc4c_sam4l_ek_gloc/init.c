@@ -1,11 +1,11 @@
 /**
  * \file
  *
- * \brief SAM4L-EK Board init.
+ * \brief SAM4L-GLOC Board init.
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,12 +43,11 @@
  *
  */
 #include "compiler.h"
-#include "sam4l_ek.h"
 #include "conf_board.h"
 #include "ioport.h"
 #include "board.h"
 /**
- * \addtogroup  sam4l_ek_group
+ * \addtogroup  sam4l_gloc_group
  * @{
  */
 
@@ -74,7 +73,7 @@ void board_init(void)
 
 	for (pin = PIN_PA00; pin <= PIN_PC31; pin ++) {
 		// Skip output pins to configure later
-		if (pin == LED0_GPIO || pin == LCD_BL_GPIO
+		if (pin == LED0_GPIO
 #ifdef CONF_BOARD_RS485
 		|| pin == RS485_USART_CTS_PIN
 #endif
@@ -101,12 +100,6 @@ void board_init(void)
 			GPIO_UNIT_TEST_EIC_PIN_MUX);
 #else
 	// Push button as input: already done, it's the default pin state
-#endif
-
-#if (defined CONF_BOARD_BL)
-	// Configure LCD backlight
-	ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_INACTIVE_LEVEL);
 #endif
 
 #if (defined CONF_BOARD_USB_PORT)
@@ -211,6 +204,14 @@ void board_init(void)
 #ifdef CONF_BOARD_ACIFC
 	ioport_set_pin_peripheral_mode(PIN_PA06E_ACIFC_ACAN0, MUX_PA06E_ACIFC_ACAN0);
 	ioport_set_pin_peripheral_mode(PIN_PA07E_ACIFC_ACAP0, MUX_PA07E_ACIFC_ACAP0);
+#endif
+
+#ifdef CONF_BOARD_GLOC_LUT0_PORT
+	ioport_set_pin_peripheral_mode(PIN_PA20D_GLOC_IN0, MUX_PA20D_GLOC_IN0);
+	ioport_set_pin_peripheral_mode(PIN_PA21D_GLOC_IN1, MUX_PA21D_GLOC_IN1);
+	ioport_set_pin_peripheral_mode(PIN_PA22D_GLOC_IN2, MUX_PA22D_GLOC_IN2);
+	ioport_set_pin_peripheral_mode(PIN_PA07D_GLOC_IN3, MUX_PA07D_GLOC_IN3);
+	ioport_set_pin_peripheral_mode(PIN_PA24D_GLOC_OUT0, MUX_PA24D_GLOC_OUT0);
 #endif
 }
 /**

@@ -7,9 +7,16 @@
 		<build type="header-file" value="conf_test.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_gloc.h"/>
+		<build type="c-source" value="init.c"/>
 		<device-support value="atsam4lc4c"/>
 		<require idref="sam.drivers.gloc.unit_tests"/>
-		<require idref="board.sam4l_ek"/>
+		<require idref="board.user_board.sam4lc4c"/>
+		<config name="config.common.boards.user_board.init" value="no"/>
+		<build type="define" name="__ATSAM4LC4C__" value=""/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/sam4l_gloc_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/sam4l_gloc_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/sam4l_gloc_sram.gdb" toolchain="armgcc"/>
+		<require idref="sam.utils.cmsis.sam4l.source.template"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
