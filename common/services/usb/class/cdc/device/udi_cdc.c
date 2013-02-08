@@ -3,7 +3,7 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -690,6 +690,7 @@ static void udi_cdc_tx_send(uint8_t port)
 	uint8_t buf_sel_trans;
 	bool b_short_packet;
 	udd_ep_id_t ep;
+	static uint16_t sof_zlp_counter = 0;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
@@ -710,6 +711,16 @@ static void udi_cdc_tx_send(uint8_t port)
 
 	flags = cpu_irq_save(); // to protect udi_cdc_tx_buf_sel
 	buf_sel_trans = udi_cdc_tx_buf_sel[port];
+	if (udi_cdc_tx_buf_nb[port][buf_sel_trans] == 0) {
+		sof_zlp_counter++;
+		if (((!udd_is_high_speed()) && (sof_zlp_counter < 100)) 
+				|| (udd_is_high_speed() && (sof_zlp_counter < 800))) {
+			cpu_irq_restore(flags);
+			return;
+		}
+	}
+	sof_zlp_counter = 0;
+
 	if (!udi_cdc_tx_both_buf_to_send[port]) {
 		// Send current Buffer
 		// and switch the current buffer

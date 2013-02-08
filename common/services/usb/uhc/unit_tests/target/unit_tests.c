@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB host unit tests
  *
- * Copyright (C) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -96,21 +96,21 @@
  */
 //@}
 
-#define MAIN_EVENT_HOST_MODE                     (1<<0)
-#define MAIN_EVENT_DEVICE_MODE                   (1<<1)
-#define MAIN_EVENT_VBUS_PRESENT                  (1<<2)
-#define MAIN_EVENT_VBUS_NOT_PRESENT              (1<<3)
-#define MAIN_EVENT_CONNECTION                    (1<<4)
-#define MAIN_EVENT_DISCONNECTION                 (1<<5)
-#define MAIN_EVENT_ENUM_SUCCESS_LOW_SPEEP        (1<<6)
-#define MAIN_EVENT_ENUM_SUCCESS_FULL_SPEEP       (1<<7)
-#define MAIN_EVENT_ENUM_SUCCESS_HIGH_SPEEP       (1<<8)
-#define MAIN_EVENT_ENUM_UNSUPPORTED              (1<<9)
-#define MAIN_EVENT_ENUM_OVERCURRENT              (1<<10)
-#define MAIN_EVENT_ENUM_FAIL                     (1<<11)
-#define MAIN_EVENT_ENUM_HARDWARE_LIMIT           (1<<12)
-#define MAIN_EVENT_ENUM_UNKNOW                   (1<<13)
-#define MAIN_EVENT_WAKEUP                        (1<<14)
+#define MAIN_EVENT_HOST_MODE                     (1u<<0)
+#define MAIN_EVENT_DEVICE_MODE                   (1u<<1)
+#define MAIN_EVENT_VBUS_PRESENT                  (1u<<2)
+#define MAIN_EVENT_VBUS_NOT_PRESENT              (1u<<3)
+#define MAIN_EVENT_CONNECTION                    (1u<<4)
+#define MAIN_EVENT_DISCONNECTION                 (1u<<5)
+#define MAIN_EVENT_ENUM_SUCCESS_LOW_SPEEP        (1u<<6)
+#define MAIN_EVENT_ENUM_SUCCESS_FULL_SPEEP       (1u<<7)
+#define MAIN_EVENT_ENUM_SUCCESS_HIGH_SPEEP       (1u<<8)
+#define MAIN_EVENT_ENUM_UNSUPPORTED              (1u<<9)
+#define MAIN_EVENT_ENUM_OVERCURRENT              (1u<<10)
+#define MAIN_EVENT_ENUM_FAIL                     (1u<<11)
+#define MAIN_EVENT_ENUM_HARDWARE_LIMIT           (1u<<12)
+#define MAIN_EVENT_ENUM_UNKNOW                   (1u<<13)
+#define MAIN_EVENT_WAKEUP                        (1u<<14)
 
 volatile uint32_t main_events = 0;
 
@@ -274,7 +274,7 @@ static void run_test_enum_unsupported(const struct test_case *test)
 	CHECK_EVENT_ENUM_UNSUPPORTED();
 	CHECK_EVENT_DISCONNECTION();
 }
-#if !UC3C // USBC have no hardware limit about endpoint size
+#if !UC3C && !SAM4L // USBC have no hardware limit about endpoint size
 # if !SAM3XA // UOTGHS has no hardware limit about ep0
 static void run_test_enum_hardwarelimit(const struct test_case *test)
 {
@@ -398,7 +398,7 @@ int main(void)
 		NULL, "13 - Too high power consumption in setup request get configuration 0");
 	DEFINE_TEST_CASE(usb_test_14, NULL, run_test_enum_unsupported,
 		NULL, "14 - No supported interface (interface subclass not possible)");
-#if !UC3C // USBC have no hardware limit about endpoint size
+#if !UC3C && !SAM4L // USBC have no hardware limit about endpoint size
 # if !SAM3XA // UOTGHS has no hardware limit about ep0
 	DEFINE_TEST_CASE(usb_test_15, NULL, run_test_enum_hardwarelimit,
 		NULL, "15 - HID mouse with too large endpoint size (hardware limit)");
@@ -443,7 +443,7 @@ int main(void)
 		&usb_test_12,
 		&usb_test_13,
 		&usb_test_14,
-#if !UC3C // USBC have no hardware limit about endpoint size
+#if !UC3C && !SAM4L // USBC have no hardware limit about endpoint size
 # if !SAM3XA // UOTGHS has no hardware limit about ep0
 		&usb_test_15,
 # endif
@@ -471,7 +471,7 @@ int main(void)
 		&usb_test_12,
 		&usb_test_13,
 		&usb_test_14,
-#if !UC3C // USBC have no hardware limit about endpoint size
+#if !UC3C && !SAM4L // USBC have no hardware limit about endpoint size
 # if !SAM3XA // UOTGHS has no hardware limit about ep0
 		&usb_test_15,
 # endif
@@ -499,7 +499,7 @@ int main(void)
 		&usb_test_12,
 		&usb_test_13,
 		&usb_test_14,
-#if !UC3C // USBC have no hardware limit about endpoint size
+#if !UC3C && !SAM4L // USBC have no hardware limit about endpoint size
 # if !SAM3XA // UOTGHS has no hardware limit about ep0
 		&usb_test_15,
 # endif

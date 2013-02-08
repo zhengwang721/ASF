@@ -3,7 +3,7 @@
  *
  * \brief USBC Device Driver header file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,8 +59,8 @@
 //! @{
   //! Get maximal number of endpoints
 #define  udd_get_endpoint_max_nbr() otg_get_max_nbr_endpoints()
-#define  UDD_MAX_PEP_NB             USBC_EPT_NBR
-#define  UDD_PEP_NB                 (UDD_MAX_PEP_NB+1)
+#define  UDD_MAX_PEP_NB             (USBC_EPT_NBR-1)
+#define  UDD_PEP_NB                 (USBC_EPT_NBR)
 //! @}
 
 //! @name USBC Device speeds management
@@ -270,6 +270,8 @@
 
 //! @name USBC Device endpoint configuration
 //! @{
+#define  udd_disable_endpoints() \
+		(Clr_bits(USBC->USBC_UERST, (1 << USBC_EPT_NBR) - 1))
 #define  udd_enable_endpoint(ep) \
 		(Set_bits(USBC->USBC_UERST, USBC_UERST_EPEN0 << (ep)))
 #define  udd_disable_endpoint(ep) \
