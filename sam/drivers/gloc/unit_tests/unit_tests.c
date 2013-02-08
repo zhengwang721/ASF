@@ -62,17 +62,6 @@
  *
  * \section device_info Device Info
  * Only SAM devices with GLOC can be used.
- * This example has been tested with the following setup:
- * - sam4lc4c_sam4l_ek_gloc
- *
- * \note SAM4L-EK need to be modified for GLOC unit test:
- * - Unsolder the LCD from the board.
- * - Remove jumpers from J200, J203, J600 and J601.
- * - Connect pin 53 (VLCD), pin 87 (VDDIO_1), pin 88 (VDDIO_2) to VDD.
- * - Connect PC01 to PA20, PC07 to PA21, PC08 to PA22, PC13 to PA07.
- *   PC01, PC07, PC08 and PC13 are used for changing GLOC input.
- * - PA24 is GLOC output 0.
-
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers

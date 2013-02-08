@@ -64,19 +64,6 @@
 #define BOARD_OSC0_STARTUP_US       (1100)
 //@}
 
-/**
- * \name LEDs
- *
- * LED0 is a single yellow LED that is active low.
- */
-//@{
-#define LED0                            PC10
-#define LED0_GPIO                       PIN_PC10
-#define LED0_GPIO_MASK                  GPIO_PC10
-#define LED0_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
-#define LED0_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
-//@}
-
 //! \name USART connections to GPIO for Virtual Com Port
 // @{
 #define COM_PORT_USART                 USART2
@@ -91,12 +78,6 @@
 
 /* Enable Com Port. */
 #define CONF_BOARD_COM_PORT
-
-/* Backlight: configured to initialize & off to save power */
-#define CONF_BOARD_BL
-
-/* USB port: configured to initialize to draw less current on 4L USB port */
-#define CONF_BOARD_USB_PORT
 
 /* Enable GLOC LUT 0 pins. */
 #define CONF_BOARD_GLOC_LUT0_PORT
