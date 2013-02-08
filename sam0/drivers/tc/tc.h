@@ -316,13 +316,9 @@
  * adjustment.
  *
  * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
- * should be checked. A suitable program flow for capture events is shown below.
- *
- * \image html state_dia_capture.svg "Diagram of capture operation"
- *
- * How to handle the buffer overflow error is up to the user, however it may be
- * necessary to clear both the capture overflow flag and the capture flag upon
- * each capture reading.
+ * should be checked. The response to a overflow error is left to the user
+ * application, however it may be necessary to clear both the capture overflow
+ * flag and the capture flag upon each capture reading.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc Capture Operations - Pulse Width
  *
