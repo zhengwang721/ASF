@@ -171,8 +171,6 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	/* Initialize values in module. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
-	module->buffer_length = 0;
-
 
 	/* Set SERCOM module to operate in I2C slave mode. */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
@@ -243,12 +241,11 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 {
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	/* Find index to save next value in buffer. */
-	uint16_t buffer_index =
-			module->buffer_length - module->buffer_remaining--;
-
 	/* Read byte from master and put in buffer. */
-	module->buffer[buffer_index] = i2c_hw->DATA.reg;
+	*(module->buffer_ptr++) = i2c_hw->DATA.reg;
+
+	/*Decrement remaining buffer length */
+	module->buffer_remaining--;
 }
 
 /**
@@ -271,12 +268,11 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 		return;
 	}
 
-	/* Find index to get next byte in buffer. */
-	uint16_t buffer_index = module->buffer_length -
-			module->buffer_remaining--;
-
 	/* Write byte from buffer to master */
-	i2c_hw->DATA.reg = module->buffer[buffer_index];
+	i2c_hw->DATA.reg = *(module->buffer_ptr++);
+
+	/*Decrement remaining buffer length */
+	module->buffer_remaining--;
 }
 
 /**
@@ -361,7 +357,7 @@ enum status_code i2c_slave_read_packet_callback(
 	}
 
 	/* Save packet to device instance. */
-	module->buffer = packet->data;
+	module->buffer_ptr = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
@@ -400,7 +396,7 @@ enum status_code i2c_slave_write_packet_callback(
 	}
 
 	/* Save packet to device instance. */
-	module->buffer = packet->data;
+	module->buffer_ptr = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
@@ -463,8 +459,6 @@ void _i2c_slave_callback_handler(uint8_t instance)
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
-
-		module->buffer_length = 0;
 		module->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
@@ -481,7 +475,6 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		/* Check if buffer is full, or no more data to write */
 		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
 
-			module->buffer_length = 0;
 			module->status = STATUS_OK;
 			if (module->transfer_direction == 0) {
 				/* Buffer is full, send NACK */
@@ -521,7 +514,6 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	if (module->status != STATUS_BUSY &&
 			module->status != STATUS_OK) {
 		/* Stop packet operation. */
-		module->buffer_length = 0;
 
 		/* Call error callback if enabled and registered */
 		if ((module->registered_callback & I2C_SLAVE_CALLBACK_ERROR)

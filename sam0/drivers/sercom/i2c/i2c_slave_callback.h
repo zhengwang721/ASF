@@ -177,8 +177,6 @@ struct i2c_slave_module {
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
-	volatile uint16_t buffer_length;
 	/** Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read. */
 	volatile uint16_t buffer_remaining;
