@@ -118,6 +118,7 @@ include files
 #include "zrc.h"
 #include "pb_pairing.h"
 #include "vendor_data.h"
+#include "compiler.h"
 
 #if defined(__ICCAVR__)
 #include "ioavr.h"              

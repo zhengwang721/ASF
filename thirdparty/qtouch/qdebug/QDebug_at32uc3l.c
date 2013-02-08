@@ -49,6 +49,7 @@
 
 /*============================ INCLUDES ======================================*/
 #include "QDebug_at32uc3l.h"
+#include "compiler.h"
 
 /*! compile file only when QDebug is enabled. */
 #if DEF_TOUCH_QDEBUG_ENABLE == 1

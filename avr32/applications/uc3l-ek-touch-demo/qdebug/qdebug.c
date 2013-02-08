@@ -45,6 +45,7 @@
 #include "qdebug.h"
 #include "qdebugtransport.h"
 #include "QDebugSettings.h"
+#include "compiler.h"
 
 #if (defined QDEBUG_SPI)
   #include "SPI_Master.h"

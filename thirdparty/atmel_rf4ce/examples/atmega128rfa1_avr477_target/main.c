@@ -109,7 +109,7 @@
 
 #include "qdebug_transport.h"
 #include "twi_master.h"
-
+#include "compiler.h"
 
 /* === TYPES =============================================================== */
 
