@@ -8,6 +8,8 @@
 		<require idref="sam0.drivers.dac"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.tc"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>

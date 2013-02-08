@@ -128,11 +128,72 @@ static void configure_dac(struct dac_module *dac_module)
 	dac_chan_get_config_defaults(&ch_config);
 
 	/* Disable start on event, we want manual trigger */
-	ch_config.enable_start_on_event = false;
+	ch_config.enable_start_on_event = true;
 
 	/* Set the channel configuration, and enable it */
 	dac_chan_set_config(dac_module, DAC_CHANNEL_0, &ch_config);
 	dac_chan_enable(dac_module, DAC_CHANNEL_0);
+}
+
+static void configure_tc(struct tc_module *tc_module)
+{
+	struct tc_conf config;
+	struct tc_events events;
+
+	tc_get_config_defaults(&config);
+
+	config.clock_source = GCLK_GENERATOR_3;
+
+	events.generate_event_on_overflow = true;
+	events.on_event_perform_action = false;
+	events.generate_event_on_compare_channel[0] = false;
+	events.generate_event_on_compare_channel[1] = false;
+
+	tc_enable_events(tc_module, &events);
+
+	tc_set_top_value(tc_module, 363);
+
+	tc_init(TC0, tc_module, &config);
+
+	tc_enable(tc_module);
+}
+
+static void configure_event_channel(void)
+{
+	struct events_chan_conf events_chan_conf;
+	events_chan_get_config_defaults(&events_chan_conf);
+
+	events_chan_conf.generator_id = EVSYS_ID_GEN_TC0_OVF;
+	events_chan_conf.edge_detection = EVENT_EDGE_NONE;
+	events_chan_conf.path = EVENT_PATH_ASYNCHRONOUS;
+	events_chan_set_config(0, &events_chan_conf);
+
+	while (!events_chan_is_ready(0));
+}
+
+static void configure_event_user(void)
+{
+	struct events_user_conf events_user_conf;
+	events_user_get_config_defaults(&events_user_conf);
+	events_user_conf.event_channel_id = 1;
+	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_conf);
+
+	//while (!events_user_is_ready(0));
+}
+
+static void configure_events(void)
+{
+	struct system_gclk_chan_conf gclk_chan_conf;
+
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_3;
+	gclk_chan_conf.run_in_standby   = false;
+	system_gclk_chan_set_config(EVSYS_GCLK_ID_0, &gclk_chan_conf);
+	system_gclk_chan_enable(EVSYS_GCLK_ID_0);
+
+	events_init();
+
+	configure_event_channel();
+	configure_event_user();
 }
 
 /**
@@ -141,6 +202,7 @@ static void configure_dac(struct dac_module *dac_module)
 int main(void)
 {
 	struct dac_module dac_module;
+	struct tc_module tc_module;
 
 	configure_pins();
 
@@ -150,8 +212,14 @@ int main(void)
 	/* Enable the internal bandgap to use as reference to the DAC */
 	system_vref_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 
+	configure_tc(&tc_module);
+
 	/* Configure the DAC */
 	configure_dac(&dac_module);
+
+	tc_start_counter(&tc_module);
+
+	configure_events();
 
 	/* Main application loop that writes a sine wave */
 	while (true) {
@@ -161,8 +229,19 @@ int main(void)
 
 		port_pin_toggle_output_level(PIN_PB08);
 
-		for (uint16_t i = 0; i < number_of_samples; i++) {
-			dac_write(&dac_module, DAC_CHANNEL_0, wav_samples[i], false);
+		for (uint16_t i = 0; i < 0xFF; i++) {
+			dac_write(&dac_module, DAC_CHANNEL_0, sine_wave[i] << 2, true);
+
+			events_chan_software_trigger(0);
+
+			while (!(DAC->INTFLAG.reg & DAC_INTFLAG_EMPTY)) {
+				/* Wait for data buffer to be empty */
+			}
+
+		}
+
+		while (!port_pin_get_input_level(PIN_PB09)) {
+			/* Wait */
 		}
 
 	}
