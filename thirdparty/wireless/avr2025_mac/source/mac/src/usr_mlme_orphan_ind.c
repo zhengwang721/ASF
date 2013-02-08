@@ -2,7 +2,7 @@
  * @file usr_mlme_orphan_ind.c
  *
  * @brief This file contains user call back function for MLME-ORPHAN.indication.
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,7 +39,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */

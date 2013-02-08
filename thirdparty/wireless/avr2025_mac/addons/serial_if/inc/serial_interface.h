@@ -1,8 +1,8 @@
 /**
  * @file serial_interface.h
  *
- * @brief This header defines protoypes and defenitions for serial interface functionalities
- * Copyright (c) 2010-2011 Atmel Corporation. All rights reserved.
+ * @brief This header defines protoypes and definitions for serial interface functionalities
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,7 +38,7 @@
  */
  
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
