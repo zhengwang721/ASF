@@ -42,6 +42,7 @@
  */
 
 #include <events.h>
+#include <system.h>
 
 /**
  * \brief Initializes the event driver.
@@ -51,6 +52,8 @@
  */
 void events_init(void)
 {
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
+
 	/* Software reset the module to ensure it is re-initialized correctly */
 	EVSYS->CTRL.reg = EVSYS_CTRL_SWRST;
 
