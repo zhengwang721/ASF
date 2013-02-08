@@ -120,20 +120,4 @@
 #define AT86RFX_TX_STATUS_NOTIFY(status)  	at86rfx_tal_tx_status_cb(status)
 //@}
 
-/*! \name SPI Connections of the AT86RFX transceiver
- */
-//! @{
-#define AT86RFX_SPI                  (&AVR32_SPI0)
-#define AT86RFX_SPI_NPCS             0
-#define AT86RFX_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
-#define AT86RFX_SPI_SCK_FUNCTION     AVR32_SPI0_SCK_0_0_FUNCTION
-#define AT86RFX_SPI_MISO_PIN         AVR32_SPI0_MISO_0_0_PIN
-#define AT86RFX_SPI_MISO_FUNCTION    AVR32_SPI0_MISO_0_0_FUNCTION
-#define AT86RFX_SPI_MOSI_PIN         AVR32_SPI0_MOSI_0_0_PIN
-#define AT86RFX_SPI_MOSI_FUNCTION    AVR32_SPI0_MOSI_0_0_FUNCTION
-#define AT86RFX_SPI_NPCS_PIN         AVR32_SPI0_NPCS_0_0_PIN
-#define AT86RFX_SPI_NPCS_FUNCTION    AVR32_SPI0_NPCS_0_0_FUNCTION
-#define AT86RFX_SPI_BAUDRATE         (48000)
-//! @}
-
 #endif /* CONF_AT86RFX_H */
