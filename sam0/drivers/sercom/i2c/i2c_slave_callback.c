@@ -159,14 +159,13 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 	/* Get sercom instance index. */
-	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module->hw);
+	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
 	/* Save device instance in interrupt handler. */
-	_sercom_set_handler(sercom_instance,
-			(void*)(&_i2c_slave_callback_handler));
+	_sercom_set_handler(instance_index, _i2c_slave_callback_handler);
 
 	/* Save device instance. */
-	_sercom_instances[sercom_instance] = (void*) module;
+	_sercom_instances[instance_index] = module;
 
 	/* Initialize values in module. */
 	module->registered_callback = 0;
@@ -410,6 +409,7 @@ enum status_code i2c_slave_write_packet_callback(
  */
 void _i2c_slave_callback_handler(uint8_t instance)
 {
+	system_interrupt_enter_critical();
 	/* Get device instance for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
@@ -439,7 +439,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
 			/* Read request from master */
-			if ((callback_mask & I2C_SLAVE_CALLBACK_READ_REQUEST)) {
+			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
@@ -447,11 +447,12 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
 			/* Write request from master */
-			if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
+			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
+
 		/* ACK or NACK address */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
@@ -462,11 +463,11 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		module->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
-		if ((callback_mask & I2C_SLAVE_CALLBACK_READ_COMPLETE)
+		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
 				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
-		} else if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE)
+		} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
 				&& (module->transfer_direction == 1)) {
 			/* Write to master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
@@ -493,7 +494,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 
-				if (callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE) {
+				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 					/* No more data to write, write complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 				}
@@ -522,4 +523,5 @@ void _i2c_slave_callback_handler(uint8_t instance)
 
 		}
 	}
+	system_interrupt_leave_critical();
 }
