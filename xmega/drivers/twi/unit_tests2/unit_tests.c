@@ -1,10 +1,10 @@
 /**
  * \file
  *
- * \brief Unit tests for TWI driver in bridge mode (only available on XmegaE)
+ * \brief Unit tests for TWI driver in bridge mode (only available on XMEGA E)
  * Test are performed at 1MHz to check Fast Mode + mode. 
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -420,13 +420,6 @@ int main(void)
 	sysclk_init();
 	board_init();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
-
-	// When TWI frequency is 1MHz, external pullup values are 3.3kOhms
-	// If TWI frequency is decreased, it is possible to use internal
-	// 24kOhms resistors.
-	// Use the internal pullups for SDA and SCL
-	//TWI_MASTER_PORT.PIN0CTRL = PORT_OPC_WIREDANDPULL_gc;
-  //TWI_MASTER_PORT.PIN1CTRL = PORT_OPC_WIREDANDPULL_gc;
 
 	// Define single ended conversion test cases
 	DEFINE_TEST_CASE(twi_master_send_test, NULL,
