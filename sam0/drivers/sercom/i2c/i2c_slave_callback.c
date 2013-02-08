@@ -472,8 +472,8 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
-		/* Check if buffer is full, or no more data to write */
-		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
+		/* Check if buffer is full, or NACK from master */
+		if (module->buffer_remaining <= 0 || (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK)) {
 
 			module->status = STATUS_OK;
 			if (module->transfer_direction == 0) {
@@ -500,7 +500,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			}
 
 		/* Continue buffer write/read. */
-		} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
+		} else if (module->buffer_remaining > 0) {
 			/* Call function based on transfer direction. */
 			if (module->transfer_direction == 0) {
 				_i2c_slave_read(module);
@@ -516,8 +516,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		/* Stop packet operation. */
 
 		/* Call error callback if enabled and registered */
-		if ((module->registered_callback & I2C_SLAVE_CALLBACK_ERROR)
-				&& (module->enabled_callback & I2C_SLAVE_CALLBACK_ERROR)) {
+		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
 
 			module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 
