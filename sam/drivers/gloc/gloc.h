@@ -159,7 +159,7 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
  * \section gloc_basic_usage Usage steps
  *
  * The pin OUT0 will output according to lookup table 0 (LUT0) setting when
- * pin IN0 to IN3 changes.
+ * pin IN0 to IN3 change.
  */
 
 #endif /* GLOC_H_INCLUDED */

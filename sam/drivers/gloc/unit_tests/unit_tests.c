@@ -61,7 +61,17 @@
  * - \ref conf_gloc.h
  *
  * \section device_info Device Info
- * Only SAM devices with GLOC can be used.
+ * This example has been tested on a sam4lc4c_sam4l_user_board with the 
+ * following setup:
+ * - A 12MHz oscillator on OSC0,
+ * - A USART connected on PIN_PC11 (RxD) and PIN_PC12 (TxD) pins,
+ * - The selected GLOC input/output pins are PIN_PA20 (GLOC_IN0), PIN_PA21 
+ *   (GLOC_IN1), PIN_PA22 (GLOC_IN2), PIN_PA07 (GLOC_IN3) and PIN_PA24 
+ *   (GLOC_OUT0).
+ * - GPIO pins used to set/clear GLOC input pins are PIN_PC01 (connected to 
+ *   GLOC_IN0), PIN_PC07 (connected to GLOC_IN1), PIN_PC08 (connected to 
+ *   GLOC_IN2) and PIN_PC13 (connected to GLOC_IN3).
+ * - GPIO pin used to read GLOC output pin is PA24 (connected to GLOC_OUT0).
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers

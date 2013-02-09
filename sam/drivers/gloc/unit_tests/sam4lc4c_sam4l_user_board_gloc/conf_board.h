@@ -64,7 +64,7 @@
 #define BOARD_OSC0_STARTUP_US       (1100)
 //@}
 
-//! \name USART connections to GPIO for Virtual Com Port
+//! \name USART connections to GPIO
 // @{
 #define COM_PORT_USART                 USART2
 #define COM_PORT_USART_ID              ID_USART2
