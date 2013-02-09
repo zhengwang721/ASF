@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief XMEGA_ZIGBIT_RF212B board header file.
+ * \brief XMEGA_RF212B_ZIGBIT board header file.
  *
  * This file contains definitions and services related to the features of the
- * XMEGA_ZIGBIT_RF212B board.
+ * XMEGA_RF212B_ZIGBIT board.
  *
- * To use this board define BOARD=XMEGA_ZIGBIT_RF212B
+ * To use this board define BOARD=XMEGA_RF212B_ZIGBIT
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,8 +45,8 @@
  * \asf_license_stop
  *
  */
-#ifndef _XMEGA_ZIGBIT_RF212B_H_
-#define _XMEGA_ZIGBIT_RF212B_H_
+#ifndef _XMEGA_RF212B_ZIGBIT_H_
+#define _XMEGA_RF212B_ZIGBIT_H_
 
 #include <compiler.h>
 
@@ -213,4 +213,4 @@
  * @}
  */
 
-#endif /* _XMEGA_ZIGBIT_RF212B_H_ */
+#endif /* _XMEGA_RF212B_ZIGBIT_H_ */

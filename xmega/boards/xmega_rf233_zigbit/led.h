@@ -1,14 +1,12 @@
 /**
  * \file
  *
- * \brief XMEGA-A3BU board LEDs support package.
+ * \brief XMEGA-AT86RF233 Zigbit board LEDs support package.
  *
  * This file contains definitions and services related to the LED features of
- * the XMEGA-A3BU Xplained board.
+ * the XMEGA-AT86RF233 Zigbit board.
  *
- * To use this board, define BOARD=XMEGA_A3BU_XPLAINED.
- *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

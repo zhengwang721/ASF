@@ -1,12 +1,12 @@
 /**
  * \file
  *
- * \brief STK board header file.
+ * \brief ATMEGA256RFR2-Zigbit board header file.
  *
  * This file contains definitions and services related to the features of the
  * STK600 board.
  *
- * To use this board, define BOARD= STK600_MEGA.
+ * To use this board, define BOARD= ATMEGA256RFR2_ZIGBIT.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,8 +45,8 @@
  * \asf_license_stop
  *
  */
-#ifndef _MEGA256RFR2_ZIGBIT_
-#define _MEGA256RFR2_ZIGBIT_
+#ifndef _ATMEGA256RFR2_ZIGBIT_
+#define _ATMEGA256RFR2_ZIGBIT_
 #include "compiler.h"
 
 # include "led.h"
@@ -82,4 +82,4 @@
 #endif
 
 //@}
-#endif  /* _MEGA256RFR2_ZIGBIT_ */
+#endif  /* _ATMEGA256RFR2_ZIGBIT_ */

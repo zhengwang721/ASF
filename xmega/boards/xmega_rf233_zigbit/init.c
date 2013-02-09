@@ -1,11 +1,11 @@
 /**
  * \file
  *
- * \brief XMEGA-A3BU Xplained board init.
+ * \brief XMEGA-AT86RF233 Zigbit board init.
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,10 +46,7 @@
 #include <board.h>
 #include <ioport.h>
 
-/**
- * \addtogroup xmega_a3bu_xplained_group
- * @{
- */
+
 
 void board_init(void)
 {
@@ -91,6 +88,4 @@ void board_init(void)
 #endif
 }
 
-/**
- * @}
- */
+

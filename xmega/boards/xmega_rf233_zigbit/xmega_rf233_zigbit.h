@@ -1,14 +1,14 @@
 /**
  * \file
  *
- * \brief XMEGA_ZIGBIT_RF233 board header file.
+ * \brief XMEGA_RF233_ZIGBIT board header file.
  *
  * This file contains definitions and services related to the features of the
- * XMEGA-A3BU Xplained board.
+ * XMEGA_RF233_ZIGBIT Xplained board.
  *
- * To use this board define BOARD=XMEGA_ZIGBIT_RF233
+ * To use this board define BOARD=XMEGA_RF233_ZIGBIT
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

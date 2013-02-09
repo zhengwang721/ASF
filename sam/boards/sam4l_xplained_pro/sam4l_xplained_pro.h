@@ -6,7 +6,7 @@
  * This file contains definitions and services related to the features of the
  * SAM4L Xplained PRO Board.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
