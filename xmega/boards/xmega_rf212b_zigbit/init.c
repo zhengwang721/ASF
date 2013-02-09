@@ -1,11 +1,11 @@
 /**
  * \file
  *
- * \brief XMEGA-A3BU Xplained board init.
+ * \brief XMEGA-AT86RF212B Zigbit board init.
  *
  * This file contains board initialization function.
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -3,7 +3,7 @@
  *
  * \brief SAM4L-XPLAINED-PRO board configuration template
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

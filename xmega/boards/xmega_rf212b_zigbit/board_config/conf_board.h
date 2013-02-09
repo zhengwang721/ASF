@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief XMEGA-A3BU Xplained board configuration template
+ * \brief XMEGA-AT86RF212B Zigbit board configuration template
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,10 +43,10 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-// uSED when EXT board is used
+// Enabled when Zigbit Extension board is used
 //# define ZIGBIT_EXT 
 
-//Used when USB Zigbit board is used
+// Enabled when Zigbit USB-Extension board is used
 //#define ZIGBIT_USB
 
 #endif // CONF_BOARD_H
