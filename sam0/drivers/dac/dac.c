@@ -143,6 +143,9 @@ void dac_chan_set_config(
 	Assert(config);
 	Assert(module_inst->hw_dev);
 
+	/* No channel support yet */
+	UNUSED(channel);
+
 	Dac *const dac_module = module_inst->hw_dev;
 
 	if (config->enable_start_on_event) {
@@ -248,6 +251,7 @@ void dac_chan_enable(
 		enum dac_channel channel)
 {
 	/* No channel support yet */
+	UNUSED(channel);
 }
 
 /**
@@ -272,9 +276,6 @@ void dac_disable(
 
 	/* Disable DAC */
 	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
-
-	/* Disable output buffer */
-	dac_disable_output_buffer(module_inst);
 }
 
 /**
@@ -291,6 +292,7 @@ void dac_chan_disable(
 		enum dac_channel channel)
 {
 	/* No channel support yet */
+	UNUSED(channel);
 }
 
 /**
@@ -301,18 +303,21 @@ void dac_chan_disable(
  * \param[in] module_inst  Pointer to the DAC software instance struct
  *
  */
-void dac_enable_output_buffer(
-		struct dac_module *const module_inst)
+void dac_chan_enable_output_buffer(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
 {
 	/*Sanity check arguments*/
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
 
+	/* No channel support yet */
+	UNUSED(channel);
+
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Enable output buffer */
 	dac_module->CTRLB.reg |= DAC_OUTPUT_EXTERNAL;
-
 }
 
 /**
@@ -325,17 +330,21 @@ void dac_enable_output_buffer(
  * \param[in] module_inst  Pointer to the DAC software instance struct
  *
  */
-void dac_disable_output_buffer(
-		struct dac_module *const module_inst)
+void dac_chan_disable_output_buffer(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
 {
 	/* Sanity check arguments*/
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
 
+	/* No channel support yet */
+	UNUSED(channel);
+
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Disable output buffer */
-	dac_module->CTRLB.reg &= ~(DAC_OUTPUT_EXTERNAL);
+	dac_module->CTRLB.reg &= ~DAC_OUTPUT_EXTERNAL;
 }
 
 /**
@@ -367,6 +376,9 @@ void dac_write(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
+
+	/* No channel support yet */
+	UNUSED(channel);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
