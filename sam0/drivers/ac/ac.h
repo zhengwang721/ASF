@@ -467,25 +467,6 @@ struct ac_win_conf {
 	enum ac_win_detect window_detection;
 };
 
-#if !defined (__DOXYGEN__)
-/**
- * \internal Wait until the synchronization is complete
- */
-static inline void _ac_wait_for_sync(
-		struct ac_module *const module_inst)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw);
-
-	Ac *const ac_module = module_inst->hw;
-
-	while (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
-		/* Do nothing */
-	}
-}
-#endif
-
 /**
  * \name Configuration and Initialization
  * @{
