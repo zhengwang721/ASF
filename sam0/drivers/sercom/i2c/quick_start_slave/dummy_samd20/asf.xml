@@ -3,7 +3,6 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.sercom.i2c_slave.quick_start"/>
 		<generator value="armgcc"/>

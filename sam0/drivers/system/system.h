@@ -56,8 +56,8 @@
  *
  * The following peripherals are used by this module:
  *
- * - SYSCTRL (System Control) for BOD and Clock control
- * - PM (Power Manager) for Reset Cause determination, Bus control and Sleep
+ * - SYSCTRL (System Control) for Clock control
+ * - PM (Power Manager) for Reset Cause determination, Peripheral Bus Control and Sleep
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_samd20_system_prerequisites
@@ -76,20 +76,9 @@
  * \section asfdoc_samd20_system_module_overview Module Overview
  *
  * The System driver provides a collection of interfaces between the user
- * application logic, and the core device functionality (such as clocks, Brown
- * Out Detection, etc.) that is required for all applications. It contains a
- * number of sub-modules that control one specific aspect of the device.
- *
- * \section asfdoc_samd20_system_module_bod BOD (Brown-Out Detector)
- * The BOD monitors the supply voltage for any dips that go below the set BOD
- * threshold. In case of a BOD detect the BOD will either reset the system or
- * raise a hardware interrupt so that a safe power-down sequence can be
- * imitated.
- *
- * \subsection asfdoc_samd20_system_module_bod_config BOD Configuration
- * The BOD configuration is performed by the \ref system_bod_set_config
- * function. This function accepts a struct containing configuration options to
- * set either the BOD33 or the BOD12 to the selected settings.
+ * application logic, and the core device functionality (such as clocks, reset
+ * cause determination, etc.) that is required for all applications. It contains
+ * a number of sub-modules that control one specific aspect of the device.
  *
  * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
  * In some application there might be a need to perform a different program
@@ -381,13 +370,7 @@ static inline void system_sleep(void)
  *
  * This function will return the cause of a system reset
  *
- * \retval SYSTEM_RESET_CAUSE_WDT The last system reset was from the Watchdog timer
- * \retval SYSTEM_RESET_CAUSE_EXTERNAL_RESET Last system reset was from the
- * external reset pin
- * \retval SYSTEM_RESET_CAUSE_BOD33 Last system reset was from the BOD33
- * \retval SYSTEM_RESET_CAUSE_BOD12 Last system reset was from the BOD12
- * \retval SYSTEM_RESET_CAUSE POR Last system reset was from the power-on-reset
- * (power up)
+ * \return A enum value indicating the cause of the last system reset.
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
@@ -402,8 +385,6 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * \name System initialization
  * @{
  */
-
-void system_bod_init(void);
 
 void system_init(void);
 
@@ -422,10 +403,6 @@ void system_init(void);
  *  <tr>
  *      <th>Acronym</th>
  *      <th>Definition</th>
- *  </tr>
- *  <tr>
- *      <td>BOD</td>
- *      <td>Brownout detector</td>
  *  </tr>
  *  <tr>
  *		<td>PM</td>

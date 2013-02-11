@@ -42,7 +42,6 @@
  */
 
 #include <system.h>
-#include <conf_bod.h>
 
 /**
  * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
@@ -57,36 +56,6 @@ void HardFault_Handler(void)
 }
 
 /**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
- *
- */
-void system_bod_init(void)
-{
-#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct system_bod_config conf;
-
-#  if BOD33_ENABLED == true
-	conf.action       = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler    = BOD33_PRESCALER;
-	conf.hysteresis   = BOD33_HYSTERESIS;
-
-	system_bod_set_config(SYSTEM_BOD_BOD33, &conf);
-#  endif
-
-#  if BOD12_ENABLED == true
-	conf.action       = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler    = BOD12_PRESCALER;
-	conf.hysteresis   = BOD12_HYSTERESIS;
-
-	system_bod_set_config(SYSTEM_BOD_BOD12, &conf);
-#  endif
-
-#endif
-}
-
-/**
  * \brief Initialize system
  *
  * This function will call the initialization functions for the system namespace
@@ -97,9 +66,6 @@ void system_bod_init(void)
  */
 void system_init(void)
 {
-	/* Initialize BOD according to conf_bod.h */
-	system_bod_init();
-
 	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
 

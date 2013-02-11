@@ -7,7 +7,6 @@
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-		<build type="module-config" subtype="required-header-file" value="conf_bod.h"/>
 
 		<info type="gui-flag" value="hidden"/>
 	</module>
@@ -26,7 +25,6 @@
 		<require idref="sam0.drivers.system.gclk"/>
 		<require idref="sam0.drivers.system.pinmux"/>
 		<require idref="sam0.drivers.system.interrupt"/>
-		<require idref="sam0.drivers.bod"/>
 		<require idref="sam0.utils"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
