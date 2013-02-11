@@ -210,42 +210,6 @@ static inline void system_board_init(void);
 #endif
 
 /**
- * \brief Brown Out Detector hardware instance IDs.
- *
- * List of possible BOD controllers within the device.
- */
-enum system_bod {
-	/** BOD12 Internal core voltage. */
-	SYSTEM_BOD_BOD12,
-	/** BOD33 External I/O voltage, */
-	SYSTEM_BOD_BOD33,
-};
-
-/**
- * \breif Brown Out Detector detection actions.
- *
- * List of possible BOD actions when a BOD module detects a brown-out condition.
- */
-enum system_bod_action {
-	/** A BOD detect will reset the device. */
-	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
-	/** A BOD detect will fire an interrupt. */
-	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2),
-};
-
-/**
- * \breif Brown Out Detector sampling modes.
- *
- * List of possible BOD module voltage sampling modes.
- */
-enum system_bod_mode {
-	/** BOD will sample the supply line continuously. */
-	SYSTEM_BOD_MODE_CONTINIOUS  = 0,
-	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
-	SYSTEM_BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
-};
-
-/**
  * \brief Voltage references within the device.
  *
  * List of available voltage references (VREF) that may be used within the
@@ -277,7 +241,6 @@ enum system_sleepmode {
 	SYSTEM_SLEEPMODE_STANDBY,
 };
 
-
 /**
  * \brief Reset causes of the system.
  *
@@ -294,21 +257,6 @@ enum system_reset_cause {
 	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
 	/** The system was reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
-};
-
-
-/**
- * Configuration struct for the BOD12 and BOD33
- */
-struct system_bod_config {
-	/** Sampled or continuous mode */
-	enum system_bod_mode mode;
-	/** Action on detect; reset or interrupt */
-	enum system_bod_action action;
-	/** BOD level */
-	uint8_t level; /* TODO: document this more */
-	/** Enable hysteresis */
-	bool hysteresis;
 };
 
 /**
@@ -358,42 +306,6 @@ static inline void system_vref_disable(
 			return;
 	}
 }
-
-/**
- * \name BOD configuration
- * @{
- */
-
-/**
- * \brief Get default BOD configuration
- *
- * The default BOD configuration is:
- * - Continuous mode
- * - Reset on BOD detect
- * - Hysteresis enabled
- * - BOD level 0x12
- *
- * \param[out] conf BOD configuration struct to set to default settings
- */
-static inline void system_bod_get_config_defaults(
-		struct system_bod_config *const conf)
-{
-	/* Sanity check arguments */
-	Assert(conf);
-
-	conf->mode   = SYSTEM_BOD_MODE_CONTINIOUS;
-	conf->action = SYSTEM_BOD_ACTION_RESET;
-	conf->level  = 0x12; /* TODO: Need to revisit this level */
-	conf->hysteresis = true;
-}
-
-enum status_code system_bod_set_config(
-		const enum system_bod bod,
-		struct system_bod_config *const conf);
-
-/**
- * @}
- */
 
 /**
  * \name Device sleep
