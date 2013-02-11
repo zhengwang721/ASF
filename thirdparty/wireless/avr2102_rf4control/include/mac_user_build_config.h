@@ -54,7 +54,7 @@
 /**
   * \ingroup group_rf4control 
  * \defgroup group_mac_user_build MAC User Build Configurations
- * All Build configurations Macros are defined in this module
+ * All Build configuration Macros are defined in this module
  * @{
  */
 /* MAC primitive configuration */
