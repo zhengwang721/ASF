@@ -383,6 +383,8 @@ struct dac_module {
 	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
+	/** Channel output buffered writes */
+	bool buffered_channel_output[1];
 };
 
 /**
@@ -567,8 +569,7 @@ void dac_chan_disable_output_buffer(
 void dac_write(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel,
-		const uint16_t data,
-		bool event_triggered);
+		const uint16_t data);
 
 /** @} */
 

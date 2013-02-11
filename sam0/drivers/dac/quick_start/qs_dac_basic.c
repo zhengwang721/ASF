@@ -78,7 +78,7 @@ int main(void)
 
 	/* Convert a value */
 	//! [write]
-	dac_write(&dev_inst, DAC_CHANNEL_0, 0x44, false);
+	dac_write(&dev_inst, DAC_CHANNEL_0, 0x44);
 //! [write]
 
 	/* Disable DAC*/
