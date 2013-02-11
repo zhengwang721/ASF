@@ -44,9 +44,10 @@
 #ifndef I2C_SLAVE_CALLBACK_H_INCLUDED
 #define I2C_SLAVE_CALLBACK_H_INCLUDED
 
-#include <sercom.h>
 #include "i2c_common.h"
+#include <sercom.h>
 #include <sercom_interrupts.h>
+#include <system_interrupt.h>
 #include <pinmux.h>
 
 #ifndef PINMUX_DEFAULT
