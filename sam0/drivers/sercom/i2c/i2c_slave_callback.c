@@ -341,7 +341,7 @@ void i2c_slave_unregister_callback(
  * \retval STATUS_OK If reading was started successfully.
  * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_read_packet_callback(
+enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {
@@ -361,7 +361,6 @@ enum status_code i2c_slave_read_packet_callback(
 	module->status = STATUS_BUSY;
 
 	/* Read will begin when master initiates the transfer */
-
 	return STATUS_OK;
 }
 
@@ -380,7 +379,7 @@ enum status_code i2c_slave_read_packet_callback(
  * \retval STATUS_OK If writing was started successfully.
  * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_write_packet_callback(
+enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {

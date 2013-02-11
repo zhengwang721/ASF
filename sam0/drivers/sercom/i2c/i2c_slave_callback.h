@@ -420,11 +420,11 @@ static inline void i2c_slave_disable_callback(
 */
 	//TODO: typedef i2cpack?
 
-enum status_code i2c_slave_read_packet_callback(
+enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
-enum status_code i2c_slave_write_packet_callback(
+enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
@@ -435,7 +435,7 @@ enum status_code i2c_slave_write_packet_callback(
  *
  * \param  module Pointer to device instance structure.
  */
-static inline void i2c_slave_cancel_transfer_callback(
+static inline void i2c_slave_abort_job(
 		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */
@@ -465,7 +465,7 @@ static inline void i2c_slave_cancel_transfer_callback(
  * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
  * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
  */
-static inline enum status_code i2c_slave_async_get_operation_status(
+static inline enum status_code i2c_slave_get_job_status(
 		struct i2c_slave_module *const module)
 {
 	/* Check sanity. */

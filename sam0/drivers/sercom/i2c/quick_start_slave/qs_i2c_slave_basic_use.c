@@ -75,7 +75,7 @@ static void read_request_callback(const struct i2c_slave_module *const module)
 
 	/* Write buffer to master */
 	//! [write_packet]
-	i2c_slave_write_packet_callback(&sw_module, &packet);
+	i2c_slave_write_packet_job(&sw_module, &packet);
 	//! [write_packet]
 }
 //! [read_request]
@@ -91,7 +91,7 @@ static void write_request_callback(const struct i2c_slave_module *const module)
 
 	/* Read buffer to master */
 	//! [read_packet]
-	i2c_slave_read_packet_callback(&sw_module, &packet);
+	i2c_slave_read_packet_job(&sw_module, &packet);
 	//! [read_packet]
 }
 //! [write_request]
