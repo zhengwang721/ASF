@@ -134,11 +134,11 @@ void system_gclk_gen_set_config(
 	system_gclk_gen_disable(generator);
 
 	/* Write the new generator configuration */
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 	GCLK->GENDIV.reg  = new_gendiv_config;
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 	GCLK->GENCTRL.reg = new_genctrl_config;
@@ -157,7 +157,7 @@ void system_gclk_gen_enable(
 {
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 
@@ -178,7 +178,7 @@ void system_gclk_gen_disable(
 {
 	/* Select the requested generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 
@@ -204,7 +204,7 @@ uint32_t system_gclk_gen_get_hz(
 {
 	/* Select the appropriate generator */
 	*((uint8_t*)&GCLK->GENCTRL.reg) = generator;
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 	/* Get the frequency of the source connected to the GCLK generator */
@@ -215,7 +215,7 @@ uint32_t system_gclk_gen_get_hz(
 
 	/* Select the appropriate generator division register */
 	*((uint8_t*)&GCLK->GENDIV.reg) = generator;
-	while (system_gclk_is_synching()) {
+	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
 
