@@ -130,7 +130,7 @@ extern "C" {
     void sal_aes_read(uint8_t *data);
 
 
-#if defined(DOXYGEN)
+#if defined(__DOXYGEN__)
     /**
      * @brief En/decrypt one AES block.
      *
@@ -162,7 +162,7 @@ extern "C" {
      */
     void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
 
-#else   /* !defined(DOXYGEN) */
+#else   /* !defined(__DOXYGEN__) */
 
 #if (SAL_TYPE == ATMEGARF_SAL) || (SAL_TYPE == SW_AES_SAL) || \
     (SAL_TYPE == ATXMEGA_SAL)
@@ -173,7 +173,7 @@ extern "C" {
 #error "unknown SAL_TYPE"
 #endif  /* SAL_TYPE */
 
-#endif  /* DOXYGEN */
+#endif  /* __DOXYGEN__ */
 
     /**
      * @brief Re-inits key and state after a sleep or TRX reset
@@ -196,7 +196,7 @@ extern "C" {
      *
      * @ingroup apiSalApi
      */
-#if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || (defined DOXYGEN)
+#if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || (defined __DOXYGEN__)
     void _sal_aes_clean_up(void);
     /** Route function macro to the corresponding function. */
 #define sal_aes_clean_up()      _sal_aes_clean_up()

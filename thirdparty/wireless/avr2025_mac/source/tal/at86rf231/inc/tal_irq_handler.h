@@ -86,7 +86,7 @@ extern "C" {
 
     void trx_irq_awake_handler_cb(void);
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 #if ((ANTENNA_DIVERSITY == 0) && (DISABLE_TSTAMP_IRQ == 0))
     /**
      * \brief Timestamp interrupt handler
@@ -101,7 +101,7 @@ extern "C" {
 
     void trx_irq_timestamp_handler_cb(void);
 #endif  /* #if ((ANTENNA_DIVERSITY == 0) && (DISABLE_TSTAMP_IRQ == 0)) */
-#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN) */
+#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__) */
 
     //! @}
 #ifdef __cplusplus

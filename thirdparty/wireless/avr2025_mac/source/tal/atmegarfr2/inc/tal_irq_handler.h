@@ -55,7 +55,7 @@
 
 /* === EXTERNALS =========================================================== */
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 extern uint32_t pal_tx_timestamp;
 #endif
 
@@ -353,7 +353,7 @@ extern "C" {
      */
     void trx_awake_handler_cb(void);
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
     /**
      * \brief Timestamp interrupt handler
      *

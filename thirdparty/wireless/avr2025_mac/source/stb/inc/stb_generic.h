@@ -50,7 +50,7 @@
 #ifndef STB_GENERIC_H
 #define STB_GENERIC_H
 
-#if defined(STB_ON_SAL) || defined(STB_ARMCRYPTO) || defined(DOXYGEN)
+#if defined(STB_ON_SAL) || defined(STB_ARMCRYPTO) || defined(__DOXYGEN__)
 
 /* === Includes =========================================================== */
 #include "compiler.h"
@@ -137,7 +137,7 @@ extern "C" {
 #endif
 
 
-#endif /* #if defined(STB_ON_SAL) || defined(STB_ARMCRYPTO) || defined(DOXYGEN) */
+#endif /* #if defined(STB_ON_SAL) || defined(STB_ARMCRYPTO) || defined(__DOXYGEN__) */
 
 #endif /* STB_GENERIC_H */
 /* EOF */

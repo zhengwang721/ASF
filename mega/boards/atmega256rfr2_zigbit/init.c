@@ -1,9 +1,7 @@
 /**
  * \file
  *
- * \brief MEGA-1284P Xplained board init.
- *
- * To use this board, define BOARD=STK600_MEGA.
+ * \brief ATMEGA256RFR2-Zigbit board initialization.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *

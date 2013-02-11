@@ -267,7 +267,7 @@ extern "C" {
     void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length);
 
 
-#if defined(NON_BLOCKING_SPI) || defined(DOXYGEN)
+#if defined(NON_BLOCKING_SPI) || defined(__DOXYGEN__)
     /**
      * @brief SPI done callback initialization
      *

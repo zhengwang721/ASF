@@ -165,7 +165,7 @@ extern "C" {
 
 
 
-#if defined(ENABLE_HIGH_PRIO_TMR) || defined(DOXYGEN)
+#if defined(ENABLE_HIGH_PRIO_TMR) || defined(__DOXYGEN__)
     /*
      * Internal prototypes for pal_timer module
      */

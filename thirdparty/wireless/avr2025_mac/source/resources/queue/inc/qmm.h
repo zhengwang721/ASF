@@ -71,7 +71,7 @@
  * @brief Structure to search for a buffer to be removed from a queue
  */
 typedef struct
-#if !defined(DOXYGEN)
+#if !defined(__DOXYGEN__)
 search_tag
 #endif
 {
@@ -90,7 +90,7 @@ search_tag
  *
  */
 typedef struct
-#if !defined(DOXYGEN)
+#if !defined(__DOXYGEN__)
 queue_tag
 #endif
 {

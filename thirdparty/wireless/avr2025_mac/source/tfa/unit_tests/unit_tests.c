@@ -185,7 +185,7 @@ void main_cdc_set_dtr(bool b_enable)
 	}
 }
 
-#if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(DOXYGEN)
+#if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
 void tal_ed_end_cb(uint8_t energy_level)
 {
 	

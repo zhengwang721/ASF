@@ -275,7 +275,7 @@ typedef enum
  *
  */
 typedef struct
-#if !defined(DOXYGEN)
+#if !defined(__DOXYGEN__)
         frame_info_tag
 #endif
 {
@@ -354,7 +354,7 @@ typedef enum csma_mode_tag
 /*
  * Channel numbers and channel masks for scanning.
  */
-#if (RF_BAND == BAND_2400) || defined(DOXYGEN)
+#if (RF_BAND == BAND_2400) || defined(__DOXYGEN__)
 /** Minimum channel */
 #define MIN_CHANNEL                 (11)
 /** Maximum channel */
@@ -552,7 +552,7 @@ extern "C" {
      */
     retval_t tal_reset(bool set_default_pib);
 
-#if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(DOXYGEN)
+#if (MAC_SCAN_ED_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
     /**
      * \brief Starts ED Scan
      *
@@ -647,7 +647,7 @@ extern "C" {
     void rtb_rx_frame_cb(frame_info_t *rx_frame);
 #endif  /* ENABLE_RTB */
 
-#if ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) || defined(DOXYGEN)
+#if ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) || defined(__DOXYGEN__)
     /**
      * \brief Beacon frame transmission
      *
