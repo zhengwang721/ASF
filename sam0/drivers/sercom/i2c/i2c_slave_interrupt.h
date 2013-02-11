@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef I2C_SLAVE_CALLBACK_H_INCLUDED
-#define I2C_SLAVE_CALLBACK_H_INCLUDED
+#ifndef I2C_SLAVE_INTERRUPT_H_INCLUDED
+#define I2C_SLAVE_INTERRUPT_H_INCLUDED
 
 #include "i2c_common.h"
 #include <sercom.h>
@@ -483,4 +483,4 @@ static inline enum status_code i2c_slave_get_job_status(
 }
 #endif
 
-#endif /* I2C_SLAVE_CALLBACK_H_INCLUDED */
+#endif /* I2C_SLAVE_INTERRUPT_H_INCLUDED */
