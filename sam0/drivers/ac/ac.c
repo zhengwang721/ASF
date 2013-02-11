@@ -61,8 +61,9 @@ static enum status_code _ac_set_config(
 		ctrla_temp |= AC_CTRLA_RUNSTDBY;
 	}
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg = ctrla_temp;
@@ -92,8 +93,9 @@ enum status_code ac_reset(
 	/* Disable the hardware module */
 	ac_disable(module_inst);
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Software reset the module */
 	ac_module->CTRLA.reg |= AC_CTRLA_SWRST;
@@ -180,8 +182,11 @@ enum status_code ac_chan_set_config(
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
 
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
 	/* Write the final configuration to the module's control register */
-	_ac_wait_for_sync(module_inst);
 	ac_module->COMPCTRL[channel].reg = compctrl_temp;
 
 	/* Configure VCC voltage scaling for the comparator */
@@ -211,7 +216,9 @@ enum status_code ac_win_set_config(
 
 	Ac *const ac_module = module_inst->hw;
 
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	uint32_t win_ctrl_mask = 0;
 
@@ -299,7 +306,9 @@ enum status_code ac_win_enable(
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Enable the requested window comparator */
 	if (win_channel == 0) {
@@ -329,7 +338,9 @@ void ac_win_disable(
 
 	Ac *const ac_module = module_inst->hw;
 
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Disable the requested window comparator */
 	if (win_channel == 0) {
