@@ -41,8 +41,7 @@
  *
  */
 
-#include "i2c_slave_callback.h"
-
+#include "i2c_slave_interrupt.h"
 /**
  * \internal Set configurations to module.
  *
@@ -409,7 +408,6 @@ enum status_code i2c_slave_write_packet_job(
 void _i2c_slave_callback_handler(uint8_t instance)
 {
 	system_interrupt_enter_critical_section();
-	system_interrupt_enter_critical();
 	/* Get device instance for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
@@ -524,5 +522,4 @@ void _i2c_slave_callback_handler(uint8_t instance)
 		}
 	}
 	system_interrupt_leave_critical_section();
-	system_interrupt_leave_critical();
 }
