@@ -3,7 +3,7 @@
  *
  * \brief BPM driver.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -95,6 +95,8 @@ extern "C" {
 #define BPM_PS_0    0
 /** Power scaling mode 1 */
 #define BPM_PS_1    1
+/** Power scaling mode 2 */
+#define BPM_PS_2    2
 /* @} */
 
 /** \anchor CLK32_32Khz_1Khz */
@@ -142,6 +144,13 @@ extern "C" {
  */
 /* @{ */
 
+/**
+ * \brief Enter sleep mode
+ *
+ * \param bpm Base address of the BPM instance.
+ * \param sleep_mode Expected sleep mode (active case not included).
+ */
+void bpm_sleep(Bpm *bpm, uint32_t sleep_mode);
 
 /**
  * \brief Change Power Scaling mode
@@ -373,7 +382,7 @@ uint32_t bpm_get_version(Bpm *bpm);
  * \endcode
  *
  * The following code needs to be added to the user application, to wakeup
- * system and switch to next power mode. 
+ * system and switch to next power mode.
  * \code
  * static void push_button_eic_handler()
  * {
