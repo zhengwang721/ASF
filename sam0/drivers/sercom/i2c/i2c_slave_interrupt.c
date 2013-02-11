@@ -41,8 +41,7 @@
  *
  */
 
-#include "i2c_slave_callback.h"
-
+#include "i2c_slave_interrupt.h"
 /**
  * \internal Set configurations to module.
  *
