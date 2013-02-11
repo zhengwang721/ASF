@@ -34,6 +34,7 @@
 		<require idref="board.xmega_a3bu_xplained"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
+		<generator value="doxygen"/>
 		<generator value="as5_8"/>
 		<device-support value="atxmega256a3bu"/>
 	</project>

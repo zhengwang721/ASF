@@ -65,7 +65,7 @@
 /**
  * \ingroup group_rf4control
  * \defgroup group_RF4CONTROL_NWK_API NWK APIs
- *  This module defines all Nmk layer core apis
+ *  This module defines all Nwk layer core apis
  */
 /**
  * \ingroup group_rf4control
@@ -90,25 +90,26 @@
 /**
  * \ingroup group_rf4control
  * \defgroup group_RF4Control_ZRC_API ZRC APIs
- *  APIs to access ZRC Modules.
+ *  This module defines all the ZRC core APIs.
  */
 /**
  * \ingroup group_rf4control
  * \defgroup group_RF4Control_ZRC_CMD_DISC_API ZRC CMD discovery APIs
- *  APIs to ZRC cmd discovery functions.
+ *  APIs to access ZRC cmd discovery functions.
  */
  /**
  * \ingroup group_rf4control
  * \defgroup group_rf4control_ds RF4Control data structures.
- *  Defines data structures used in RF4Control stack.
+ *  Defines all the data structures used in RF4Control stack.
  */
 /**
  * \ingroup group_rf4control
- * \defgroupgroup_RF4CONTROL_PBP_API Push button pairing APIs.
- * Defines APIs to  access push button pairingm functionality.
+ * \defgroup group_RF4CONTROL_PBP_API Push button pairing APIs.
+ * Defines APIs to  access push button pairing functionality.
  */
 
 /* === Macros =============================================================== */
+
 
 #define BAND_900_BASE_CHANNEL 1
 #define BAND_900_CHANNEL_OFFSET 3
