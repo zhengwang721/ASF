@@ -120,9 +120,6 @@ void dac_init(
 	/* Initialize device instance */
 	module_inst->hw_dev = module;
 
-	/* By default no channel output uses buffered writes */
-	module_inst->buffered_channel_output[0] = false;
-
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
@@ -243,10 +240,6 @@ void dac_chan_set_config(
 
 	/* No channel support yet */
 	UNUSED(channel);
-
-	/* If a channel uses event driven conversions, we must buffer output
-	   writes */
-	module_inst->buffered_channel_output[0] = config->enable_start_on_event;
 
 	Dac *const dac_module = module_inst->hw_dev;
 
@@ -389,11 +382,6 @@ void dac_chan_write(
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
-	if (module_inst->buffered_channel_output[0]) {
-		/* Event triggered conversion, write DATABUF register */
-		dac_module->DATABUF.reg = data;
-	} else {
-		/* Manual triggered conversion, write DATA register */
-		dac_module->DATA.reg = data;
-	}
+	/* Write the new value to the buffered DAC data register */
+	dac_module->DATABUF.reg = data;
 }

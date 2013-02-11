@@ -383,8 +383,6 @@ struct dac_module {
 	Dac *hw_dev;
 	/** DAC output selection */
 	enum dac_output output;
-	/** Channel output buffered writes */
-	bool buffered_channel_output[1];
 };
 
 /**
