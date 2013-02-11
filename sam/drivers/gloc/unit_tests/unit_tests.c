@@ -118,7 +118,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 1");
 
@@ -126,7 +132,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 2");
 
@@ -134,7 +146,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 3");
 
@@ -142,7 +160,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 4");
 
@@ -150,7 +174,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 5");
 
@@ -158,7 +188,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 6");
 
@@ -166,7 +202,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 7");
 
@@ -174,7 +216,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, LOW);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 8");
 
@@ -182,7 +230,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 9");
 
@@ -190,7 +244,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 10");
 
@@ -198,7 +258,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 11");
 
@@ -206,7 +272,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 12");
 
@@ -214,7 +286,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 13");
 
@@ -222,7 +300,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, LOW);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 14");
 
@@ -230,7 +314,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == true, "4 inputs XOR failed at 15");
 
@@ -238,7 +328,13 @@ static void run_gloc_4inputs_xor_test(const struct test_case *test)
 	ioport_set_pin_level(CONF_TEST_GLOC_IN1, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN2, HIGH);
 	ioport_set_pin_level(CONF_TEST_GLOC_IN3, HIGH);
-	delay_us(50);
+	/* 
+	* Ensure a 50ns propagation delay to read the port pin with a CPU clock
+	* at 48Mhz.
+	*/
+	asm volatile ("nop");
+	asm volatile ("nop");
+	asm volatile ("nop");
 	out = ioport_get_pin_level(CONF_TEST_GLOC_OUT0);
 	test_assert_true(test, out == false, "4 inputs XOR failed at 16");
 }
