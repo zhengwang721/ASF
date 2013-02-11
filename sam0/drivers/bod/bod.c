@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 BOD configuration
+ * \brief SAMD20 Brown Out Detector Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,40 +40,64 @@
  * \asf_license_stop
  *
  */
-#ifndef BOD_CONFIG_H
-#  define BOD_CONFIG_H
+#include "bod.h"
 
-/* BOD33 Configuration
- * ------------------------------------------------------*/
+/**
+ * \brief Configure a Brown Out Detector module.
+ *
+ * Configures a given BOD module with the settings stored in the given
+ * configuration structure.
+ *
+ * \param[in] bod   BOD module to configure
+ * \param[in] conf  Configuration settings to use for the specified BOD
+ *
+ * \retval STATUS_OK                  Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
+ * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
+ */
+enum status_code bod_set_config(
+		const enum bod bod,
+		struct bod_config *const conf)
+{
+	/* Sanity check arguments */
+	Assert(conf);
 
-/* Enable BOD33 */
-#define CONF_BOD33_ENABLE false
+	uint32_t temp;
 
-#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
-//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+	/* Convert BOD trigger action and mode to a bitmask */
+	temp = (uint32_t)conf->action | (uint32_t)conf->mode;
 
-#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
+	if (conf->mode == BOD_MODE_SAMPLED) {
+		/* Enable sampling clock if sampled mode */
+		temp |= SYSCTRL_BOD33_CEN;
+	}
 
-#define CONF_BOD33_LEVEL 10
-#define CONF_BOD33_HYSTERESIS true
+	if (conf->hysteresis == true) {
+		temp |= SYSCTRL_BOD33_HYST;
+	}
 
+	switch (bod) {
+		case BOD_BOD33:
+			if (conf->level > 0x3F) {
+				return STATUS_ERR_INVALID_ARG;
+			}
 
-/* BOD12 Configuration
- * ------------------------------------------------------*/
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
+					temp | SYSCTRL_BOD33_ENABLE;
+			break;
 
-/* Enable BOD12 */
-#define CONF_BOD12_ENABLE false
+		case BOD_BOD12:
+			if (conf->level > 0x1F) {
+				return STATUS_ERR_INVALID_ARG;
+			}
 
-/* Action on bod timeout; reset or interrupt */
-#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
-//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
+			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) |
+					temp | SYSCTRL_BOD12_ENABLE;
+			break;
 
-/* Sampled or continious monitoring */
-#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
 
-#define CONF_BOD12_HYSTERESIS true
-
-
-#endif /* BOD_CONFIG_H */
+	return STATUS_OK;
+}
