@@ -252,7 +252,7 @@ typedef struct zrc_cmd_frm_tag
  * @param PairingRef    Pairing reference used for the command discovery request
  * @param SupportedCmd  Pointer to 32 byte array containing the supported commands
  *
- * @ingroup group_RF4Control_ZRC_CMD_DISC_API
+ * @ingroup group_RF4Control_ZRC_API
  */
 #if (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_disc_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef,
@@ -279,7 +279,7 @@ typedef void (*zrc_cmd_confirm_cb_t)(nwk_enum_t Status, uint8_t PairingRef, cec_
  *
  * @param PairingRef    Pairing reference used for the command discovery request
  *
- * @ingroup group_RF4Control_ZRC_CMD_DISC_API
+ * @ingroup group_RF4Control_ZRC_API
  */
 #if (defined ZRC_CMD_DISCOVERY)
 typedef void (*zrc_cmd_disc_indication_cb_t)(uint8_t PairingRef);

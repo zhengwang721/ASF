@@ -79,11 +79,6 @@
  */
  /**
  * \ingroup group_rf4control
- * \defgroup group_RF4CONTROL_VENDOR_DATA_API Vendor data APIs
- *  APIs to access vendor data functions
- */
- /**
- * \ingroup group_rf4control
  * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
  *  Constants in the ZRC layer.
  */
@@ -93,11 +88,6 @@
  *  This module defines all the ZRC core APIs.
  */
 /**
- * \ingroup group_rf4control
- * \defgroup group_RF4Control_ZRC_CMD_DISC_API ZRC CMD discovery APIs
- *  APIs to access ZRC cmd discovery functions.
- */
- /**
  * \ingroup group_rf4control
  * \defgroup group_rf4control_ds RF4Control data structures.
  *  Defines all the data structures used in RF4Control stack.

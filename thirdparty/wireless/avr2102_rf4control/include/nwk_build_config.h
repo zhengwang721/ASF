@@ -50,12 +50,6 @@
 /* === Includes ============================================================= */
 
 /* === Macros =============================================================== */
-/**
-  * \ingroup group_rf4control 
- * \defgroup group_nwk_build_config  NWK layer build configurations
- * All Build configuration Macros are defined in this module
- * @{
- */
 
 /* NWK primitive configuration */
 
@@ -79,7 +73,7 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-//! @}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
