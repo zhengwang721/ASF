@@ -12,6 +12,8 @@
 		<device-support value="mega"/>
 		<require idref="mega.drivers.macsc"/>
 		<require idref="common.utils" />
-		<require idref="common.boards" />		
+		<require idref="common.boards" />	
+		<require idref="common.services.ioport"/>	
+		<require idref="mega.drivers.usart"/>
 	</module>
 </asf>

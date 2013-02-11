@@ -140,6 +140,19 @@ void macsc_enable(void)
 }
 
 /**
+ * \brief Check if MACSC is enabled
+ *
+ * check if the MACSC is enabled.
+ *
+ * \param none
+ *
+ */
+bool is_macsc_enable(void)
+{	
+   	return(SCCR0&&(1<<SCEN));	
+}
+
+/**
  * \brief Disable MAC SC
  *
  * Disables the MAC SC
@@ -150,6 +163,19 @@ void macsc_enable(void)
 void macsc_disable(void)
 {
 	SCCR0 = 0;
+}
+
+/**
+ * \brief Check if back-off slot counter is enabled
+ *
+ * check if the back-off slot counter is enabled.
+ *
+ * \param none
+ *
+ */
+bool is_macsc_backoff_enable(void)
+{	
+   	return(SCCR1&&(1<<SCENBO));	
 }
 
 /**
@@ -201,7 +227,6 @@ void macsc_enable_cmp_int(enum macsc_cc_channel_t channel)
  * \param abs_rel  0 for absoulte cmp;1 for relative cmp
  * \param cmp compare value for SCOCRx register
  * \param channel Compare channel
- * \note    This enables the corresponding compare interrupt as well
  */
 void macsc_use_cmp(bool abs_rel, uint32_t cmp,
 		enum macsc_cc_channel_t channel)

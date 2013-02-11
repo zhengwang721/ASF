@@ -73,12 +73,12 @@
  * Compare Channels 1 and 2 will be setup at 1/4 and 1/2 of the
  * CONFIG_MACSC_TIMEOUT_TICK_HZ period.
  *
- * Each callback interrupts functions are setup to toggle a LED.
- *  - LED0: Toggles on MACSC overflow interrupt
- *  - LED1: Toggle on Compare 1 interrupt
- *  - LED2: Toggle on Compare 2 interrupt
- *  - LED3: Toggle on Compare 3 interrupt
- *  - LED4: Toggle on backoff slot counter interrupt
+ * Each callback interrupts functions are setup to toggle a IO pin.
+ *  - OVF_INT_CHK_PIN: Toggles on MACSC overflow interrupt
+ *  - CMP1_INT_CHK_PIN: Toggle on Compare 1 interrupt
+ *  - CMP2_INT_CHK_PIN: Toggle on Compare 2 interrupt
+ *  - CMP3_INT_CHK_PIN: Toggle on Compare 3 interrupt
+ *  - BACKOFF_INT_CHK_PIN: Toggle on backoff slot counter interrupt
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -96,22 +96,32 @@
  * \brief Symbol Counter Overflow interrupt callback function
  *
  * This function is called when an overflow interrupt has occurred on
- * Symbol Counter and toggles LED0.
+ * Symbol Counter and toggles OVF_INT_CHK_PIN.
  */
 static void example_ovf_int_cb(void)
 {
-	LED_Toggle(LED0_GPIO);
+	ioport_toggle_pin(OVF_INT_CHK_PIN);
+
+	uint8_t tx_buf[] = "\n\rOverflow interrupt";
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 }
 
 /**
  * \brief Symbol Counter Compare 1 interrupt callback function
  *
  * This function is called when a compare match has occured on channel 1 of
- * symbol counter and toggles LED1.
+ * symbol counter and toggles CMP1_INT_CHK_PIN.
  */
 static void example_cmp1_int_cb(void)
 {
-	LED_Toggle(LED1_GPIO);
+	ioport_toggle_pin(CMP1_INT_CHK_PIN);
+
+	uint8_t tx_buf[] = "\n\rcmp1 interrupt(1/4th a sec)";
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 
 	if ((macsc_read_count() + (CONFIG_MACSC_TIMEOUT_TICK_HZ / 4)) <
 			0xFFFFFFFF) {
@@ -129,11 +139,16 @@ static void example_cmp1_int_cb(void)
  *
  * This function is called when a compare match has occured on channel 2 has
  * occurred
- * Symbol Counter and toggles LED2.
+ * Symbol Counter and toggles CMP2_INT_CHK_PIN.
  */
 static void example_cmp2_int_cb(void)
 {
-	LED_Toggle(LED2_GPIO);
+	ioport_toggle_pin(CMP2_INT_CHK_PIN);
+
+	uint8_t tx_buf[] = "\n\rcmp2 interrupt(1/2th a sec)";
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 
 	if ((macsc_read_count() + (CONFIG_MACSC_TIMEOUT_TICK_HZ / 2)) <
 			0xFFFFFFFF) {
@@ -150,11 +165,16 @@ static void example_cmp2_int_cb(void)
  * \brief Symbol Counter Compare 3 interrupt callback function
  *
  * This function is called when a compare match has occured on channel 3 of
- * symbol counter  and toggles LED3.
+ * symbol counter  and toggles CMP3_INT_CHK_PIN.
  */
 static void example_cmp3_int_cb(void)
 {
-	LED_Toggle(LED3_GPIO);
+	ioport_toggle_pin(CMP3_INT_CHK_PIN);
+
+	uint8_t tx_buf[] = "\n\rcmp3 interrupt(1 sec)";
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 
 	if ((macsc_read_count() + CONFIG_MACSC_TIMEOUT_TICK_HZ) < 0xFFFFFFFF) {
 		macsc_use_cmp(COMPARE_MODE,
@@ -172,11 +192,11 @@ static void example_cmp3_int_cb(void)
  * \brief Backoff slot counter interrupt callback function
  *
  * This function is called when a backoff slot counter interrupt has occured
- * and toggles LED4.
+ * and toggles BACKOFF_INT_CHK_PIN.
  */
 static void example_backoff_slot_cntr_int_cb(void)
 {
-	LED_Toggle(LED4_GPIO);
+	ioport_toggle_pin(BACKOFF_INT_CHK_PIN);
 }
 
 int main(void)
@@ -188,6 +208,34 @@ int main(void)
 	sysclk_enable_peripheral_clock(&TRX_CTRL_0);
 
 	cpu_irq_enable();
+
+	/* USART options. */
+	static usart_rs232_options_t USART_SERIAL_OPTIONS = {
+		.baudrate = USART_SERIAL_BAUDRATE,
+		.charlength = USART_SERIAL_CHAR_LENGTH,
+		.paritytype = USART_SERIAL_PARITY,
+		.stopbits = USART_SERIAL_STOP_BIT
+	};
+
+	/* Initialize usart driver in RS232 mode */
+	usart_init_rs232(USART_SERIAL_PORT, &USART_SERIAL_OPTIONS);
+
+	/* configure port pins*/
+	ioport_configure_pin(OVF_INT_CHK_PIN,
+			IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+	ioport_configure_pin(CMP1_INT_CHK_PIN,
+			IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+	ioport_configure_pin(CMP2_INT_CHK_PIN,
+			IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+	ioport_configure_pin(CMP3_INT_CHK_PIN,
+			IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+	ioport_configure_pin(BACKOFF_INT_CHK_PIN,
+			IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+
+	uint8_t tx_buf[] = "\n\rStarting MAC symbol counter";
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 
 	/*
 	 * Enable Symbol Counter and back-off slot counter

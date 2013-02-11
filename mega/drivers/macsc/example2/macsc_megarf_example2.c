@@ -83,12 +83,14 @@
  * superframe(SLEEP_PERIOD in conf_example.h)
  *
  * Action taken on occurence of interrupt callbacks
- *  - Compare 3 callback:LED3 toggle.End of Beacon Interval.Relative compare for
- * active period on compare 1 is started
- *  - Compare 1 callback:LED1 toggle.End of active period of superframe.Relative
+ *  - Compare 3 callback:CMP3_INT_CHK_PIN toggle.CMP2_INT_CHK_PIN set high.
+ * End of Beacon Interval.Relative compare for active period on cmp 1 is started.
+ *
+ *  - Compare 1 callback:End of active period of superframe.Relative
  * compare for sleep period on compare 2 is started.Put system to sleep.
- *  - Compare 2 callback:LED2 toggle.End of sleep period of superframe.Sleep is
- * disabled.
+ *
+ *  - Compare 2 callback:CMP2_INT_CHK_PIN set low.
+ * End of sleep period of superframe.Sleep is disabled.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -114,6 +116,12 @@ volatile static bool sleep;
 static void example_cmp1_int_cb (void)
 {
 	sleep = 1;
+        ioport_set_value(CMP2_INT_CHK_PIN, 0);
+        
+        uint8_t tx_buf[] = "\n\rsleep period starts";	    
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 	macsc_enable_cmp_int(MACSC_CC2);
 	macsc_use_cmp(COMPARE_MODE, SLEEP_PERIOD, MACSC_CC2);
 }
@@ -123,13 +131,17 @@ static void example_cmp1_int_cb (void)
  *
  * This function is called when a compare match has occured on channel 2 has
  * occurred
- *  Symbol Counter and switches off LED2.
+ *  CMP2_INT_CHK_PIN is set to LOW.
  * Compare match occurs on end of active period
  */
 static void example_cmp2_int_cb(void)
 {
 	sleep_disable();
-	LED_Off(LED2_GPIO);
+	        
+        uint8_t tx_buf[] = "\n\rend of sleep period";	    
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
 	sleep = 0;
 }
 
@@ -137,13 +149,20 @@ static void example_cmp2_int_cb(void)
  * \brief Symbol Counter Compare 3 interrupt callback function
  *
  * This function is called when a compare match has occured on channel 3 of
- *  symbol counter  and toggles LED3.LED2 is turned on.
+ *  symbol counter  and toggles CMP3_INT_CHK_PIN.
+ * CMP2_INT_CHK_PIN is set HIGH.
  *  Compare match occurs at the end of every beacon interval.
  */
 static void example_cmp3_int_cb(void)
 {
-	LED_Toggle(LED3_GPIO);
-	LED_On(LED2_GPIO);
+	ioport_toggle_pin(CMP3_INT_CHK_PIN);
+	ioport_set_value(CMP2_INT_CHK_PIN, 1);        
+        
+        uint8_t tx_buf[] = "\n\rStarting beacon interval";	    
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
+        
 	macsc_enable_manual_bts();
 	macsc_enable_cmp_int(MACSC_CC1);
 	macsc_use_cmp(COMPARE_MODE, ACTIVE_PERIOD, MACSC_CC1);
@@ -160,8 +179,29 @@ int main(void)
 	sleep_set_mode(SLEEP_SMODE_PSAVE);
 
 	cpu_irq_enable();
-
-	/*
+        
+          /* USART options. */
+	static usart_rs232_options_t USART_SERIAL_OPTIONS = {
+		.baudrate = USART_SERIAL_BAUDRATE,
+		.charlength = USART_SERIAL_CHAR_LENGTH,
+		.paritytype = USART_SERIAL_PARITY,
+		.stopbits = USART_SERIAL_STOP_BIT
+	};
+        
+        
+	/* Initialize usart driver in RS232 mode */
+	usart_init_rs232(USART_SERIAL_PORT, &USART_SERIAL_OPTIONS);
+        
+    /* configure port pins*/
+    ioport_configure_pin(CMP2_INT_CHK_PIN, IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);        
+    ioport_configure_pin(CMP3_INT_CHK_PIN, IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
+        
+	
+        uint8_t tx_buf[] = "\n\rStarting MAC symbol counter";	    
+	for (uint8_t i = 0; i < sizeof(tx_buf); i++) {
+		usart_putchar(USART_SERIAL_PORT, tx_buf[i]);
+	}
+    /*
 	 * Enable Symbol Counter
 	 */
 	macsc_enable();

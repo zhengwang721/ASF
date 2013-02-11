@@ -175,6 +175,16 @@ static inline uint32_t macsc_read32(volatile uint8_t *hh,
 void macsc_enable(void);
 
 /**
+ * \brief Check if MACSC is enabled
+ *
+ * check if the MACSC is enabled.
+ *
+ * \param none
+ *
+ */
+bool is_macsc_enable(void);
+
+/**
  * \brief Disable MAC SC
  *
  * Disables the MAC SC
@@ -184,6 +194,15 @@ void macsc_enable(void);
  */
 void macsc_disable(void);
 
+/**
+ * \brief Check if back-off slot counter is enabled
+ *
+ * check if the back-off slot counter is enabled.
+ *
+ * \param none
+ *
+ */
+bool is_macsc_backoff_enable(void);
 
 /**
  * \brief Absolute compare usage
@@ -508,17 +527,17 @@ static inline bool macsc_is_cmp_interrupt(enum macsc_cc_channel_t channel)
 {
 	switch (channel) {
 	case MACSC_CC1:
-		return(SCIRQS & (1 << IRQSCP1));
+		return(SCIRQS && (1 << IRQSCP1));
 
 		break;
 
 	case MACSC_CC2:
-		return(SCIRQS & (1 << IRQSCP2));
+		return(SCIRQS && (1 << IRQSCP2));
 
 		break;
 
 	case MACSC_CC3:
-		return(SCIRQS & (1 << IRQSCP3));
+		return(SCIRQS && (1 << IRQSCP3));
 
 		break;
 

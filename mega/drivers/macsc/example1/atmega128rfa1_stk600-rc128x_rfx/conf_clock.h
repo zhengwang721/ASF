@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief TC Timeout Driver configuration
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,41 +38,24 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#define SYS_CLK_SRC                     MACSC_16MHz
-#define RTC_CLK_SRC                                     MACSC_32KHz
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-#define ENABLE_SLEEP                            1
-#define ENABLE_AUTO_TIMESTAMP                   0
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
 
-#define COMPARE_MODE                            MACSC_RELATIVE_CMP
+/* ===== System Clock Bus Division Options */
 
-/*
- * Beacon Interval,BI = aBaseSuperframeDuration*(2^BO) (Symbols) .
- * For example, given aBaseSuperframeDuration of 960 symbols and macBeaconOrder
- * of 5,
- * the beacon interval will be 3840 symbols.
- * One symbol duration = 16 us for 2.4 GHz O-QPSK modulation scheme
- */
-#define BEACON_INTERVAL                         62500
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
-/*
- * Active Period duration(also called Superframe Duration),SD =
- * aBaseSuperframeDuration*(2^SO) (Symbols).
- * SO is always less than or equal to BO.
- * For example, given aBaseSuperframeDuration of 960 symbols and
- * macSuperframeOrder of 2,
- * the beacon interval will be 3840 symbols.
- * One symbol duration = 16 us for 2.4 GHz O-QPSK modulation scheme
- */
-#define ACTIVE_PERIOD                           3840
-
-/*
- * Wake-up a few symbol periods(3) earlier so that the next incoming beacon is
- * not missed.
- */
-#define SLEEP_PERIOD                            (BEACON_INTERVAL - \
-	ACTIVE_PERIOD - 3)
-#endif /* CONF_EXAMPLE_H */
+#endif /* CONF_CLOCK_H_INCLUDED */

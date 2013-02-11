@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TC Timeout Driver configuration
+ * \brief Unit test configuration
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,19 +40,22 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#define SYS_CLK_SRC                        MACSC_16MHz
-#define RTC_CLK_SRC                                        MACSC_32KHz
+/*
+ * For USARTA1 use a two wire cable for PORTD2 to connect with RXD
+ * For USARTA1 use a two wire cable for PORTD3 to connect with TXD
+ */
+#define CONF_TEST_USART      &USARTA1
+//! \note 38400 baud
+#define CONF_TEST_BAUDRATE   38400
+//! \note 8-bit character length
+#define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc
+//! \note No parity check
+#define CONF_TEST_PARITY     USART_PMODE_DISABLED_gc
+//! \note No extra stopbit, i.e., use 1
+#define CONF_TEST_STOPBITS   false
 
-#define ENABLE_SLEEP                               0
-#define ENABLE_AUTO_TIMESTAMP              0
-#define ENABLE_BACKOFF_SLOT_CNTR           1
 
-#define COMPARE_MODE                               MACSC_ABSOLUTE_CMP
-
-/* We request a tick of 1Hz */
-#define CONFIG_MACSC_TIMEOUT_TICK_HZ   62500
-
-#endif /* CONF_EXAMPLE_H */
+#endif

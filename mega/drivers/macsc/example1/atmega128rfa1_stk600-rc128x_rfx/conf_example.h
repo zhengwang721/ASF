@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief Chip-specific system clock manager configuration
+ * \brief TC Timeout Driver configuration
  *
  * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,24 +40,44 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-/* ===== System Clock Source Options */
-#define SYSCLK_SRC_RC16MHZ    0
-#define SYSCLK_SRC_RC128KHZ   1
-#define SYSCLK_SRC_TRS16MHZ   2
-#define SYSCLK_SRC_RC32KHZ    3
-#define SYSCLK_SRC_XOC16MHZ   4
-#define SYSCLK_SRC_EXTERNAL   5
+#include "ioport.h"
 
-#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
-/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
-/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
-/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
+#define SYS_CLK_SRC                        MACSC_16MHz
+#define RTC_CLK_SRC                                        MACSC_32KHz
 
-/* ===== System Clock Bus Division Options */
+#define ENABLE_SLEEP                               0
+#define ENABLE_AUTO_TIMESTAMP              0
+#define ENABLE_BACKOFF_SLOT_CNTR           1
 
-#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_8
+#define COMPARE_MODE                               MACSC_ABSOLUTE_CMP
 
-#endif /* CONF_CLOCK_H_INCLUDED */
+/* We request a tick of 1Hz */
+#define CONFIG_MACSC_TIMEOUT_TICK_HZ   62500
+
+/*
+ * These pins(output) can be probed to check the timing duration of the
+ * functionalities of the MACSC. 
+ */
+enum macsc_cb_pins {
+	OVF_INT_CHK_PIN     = IOPORT_CREATE_PIN(PORTB,0),       /*!< overflow interrupt toggle  */
+	CMP1_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,1),      /*!< cmp1 int toggle */
+	CMP2_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,2),     /*!< cmp2 int toggle */
+	CMP3_INT_CHK_PIN    = IOPORT_CREATE_PIN(PORTB,3),    /*!< cmp3 int toggle */
+	BACKOFF_INT_CHK_PIN = IOPORT_CREATE_PIN(PORTB,4),    /*!< back-off int toggle */
+};
+
+/*
+ * For USARTA1 connect a two wire cable for PORTD2 to connect with RXD
+ * For USARTA1 connect a two wire cable for PORTD3 to connect with TXD
+ */
+#define USART_SERIAL_PORT            &USARTA1
+
+#define USART_SERIAL_BAUDRATE   9600
+#define USART_SERIAL_CHAR_LENGTH        USART_CHSIZE_8BIT_gc
+#define USART_SERIAL_PARITY             USART_PMODE_DISABLED_gc
+#define USART_SERIAL_STOP_BIT           false
+
+#endif /* CONF_EXAMPLE_H */
