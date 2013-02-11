@@ -43,70 +43,134 @@
 
 #include <asf.h>
 
+//! [packet]
+static i2c_packet_t packet;
+//! [packet]
+
 //! [packet_data]
 #define DATA_LENGTH 10
 
-static uint8_t buffer[DATA_LENGTH] = {
+static uint8_t write_buffer[DATA_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
-
-#define SLAVE_ADDRESS 0x01
+static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
 
-/* Number of time to try and send packet if failed. */
-#define TIMEOUT 1000
+/* Adress of the slave */
+#define SLAVE_ADDRESS 0x12
 
 /* Init device instance. */
-//! [dev_inst]
-struct i2c_slave_module module;
-//! [dev_inst]
+//! [module]
+struct i2c_slave_module sw_module;
+//! [module]
+
+//! [read_request]
+static void read_request_callback(const struct i2c_slave_module *const module)
+{
+	/* Init i2c packet. */
+	//! [packet_write]
+	packet.data_length = DATA_LENGTH;
+	packet.data        = write_buffer;
+	//! [packet_write]
+
+	/* Write buffer to master */
+	//! [write_packet]
+	i2c_slave_write_packet_callback(&sw_module, &packet);
+	//! [write_packet]
+}
+//! [read_request]
+
+//! [write_request]
+static void write_request_callback(const struct i2c_slave_module *const module)
+{
+	/* Init i2c packet. */
+	//! [packet_read]
+	packet.data_length = DATA_LENGTH;
+	packet.data        = read_buffer;
+	//! [packet_read]
+
+	/* Read buffer to master */
+	//! [read_packet]
+	i2c_slave_read_packet_callback(&sw_module, &packet);
+	//! [read_packet]
+}
+//! [write_request]
+
+static void read_complete_callback(const struct i2c_slave_module *const module)
+{
+	port_pin_toggle_output_level(PIN_PB08);
+}
+
+static void write_complete_callback(const struct i2c_slave_module *const module)
+{
+	port_pin_toggle_output_level(PIN_PB08);
+}
+
 
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
-	/* Initialize config structure and device instance. */
+	/* Initialize config structure and module instance. */
 	//! [init_conf]
 	struct i2c_slave_conf conf;
 	i2c_slave_get_config_defaults(&conf);
 	//! [init_conf]
+	/* Change address and address_mode. */
+	//! [conf_changes]
 	conf.address = SLAVE_ADDRESS;
 	conf.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
+	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&module, SERCOM0, &conf);
+	i2c_slave_init(&sw_module, SERCOM2, &conf);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&module);
+	i2c_slave_enable(&sw_module);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
-int main(void)
+
+//! [setup_i2c_callback]
+static void configure_callbacks(void)
+{
+	/* Register and enable callback functions. */
+	//![reg_en_i2c_callback]
+	i2c_slave_register_callback(&sw_module, read_complete_callback, I2C_SLAVE_CALLBACK_READ_COMPLETE);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_COMPLETE);
+
+	i2c_slave_register_callback(&sw_module, write_complete_callback, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
+
+	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
+
+	i2c_slave_register_callback(&sw_module, write_request_callback, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	//![reg_en_i2c_callback]
+
+	/* Enable global interrupts for SERCOM instance. */
+	//![enable_global_i2c_interrupts]
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+	//![enable_global_i2c_interrupts]
+}
+//! [setup_i2c_callback]
 {
 
+int main(void)
+{
 	//! [run_initialize_i2c]
 	/* Init system. */
 	system_init();
+
 	/* Configure device and enable. */
 	configure_i2c();
+	configure_callbacks();
+	configure_ports();
 	//! [run_initialize_i2c]
 
-	/* Init i2c packet. */
-	//! [packet]
-	i2c_packet_t packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer,
-	};
-	//! [packet]
-
-	/* Write buffer to master */
-	//! [write_packet]
-	i2c_slave_write_packet_callback(&module, &packet);
-	//! [write_packet]
-
 	while (1) {
-		/* Inf loop. */
+		/* Inf loop while waiting for I2C slave interaction.*/
 	}
 }
