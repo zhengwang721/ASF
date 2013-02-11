@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.osc8_calib" caption="Calibrate OSC8MHz">
+		<info type="description" value="summary">
+		Example application to calibrate osc8MHz clock source and set up usart for embedded debugger
+		</info>
+		<build type="c-source" value="osc8_calib.c"/>
+		<build type="include-path" value="."/>
+		<require idref="board.samd20_xplained_pro"/>
+		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</module>
+</asf>
