@@ -3,7 +3,7 @@
  *
  * \brief USBC OTG Driver header file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,13 @@
 #include "compiler.h"
 #include "preprocessor.h"
 
+/* Get USB pads pins configuration in board configuration */
+#include "conf_board.h"
+#include "board.h"
+#include "ioport.h"
+#include "gpio.h"
+#include "eic.h"
+
 // To simplify the macros definition of this file
 #define USBC_CLR_BITS(reg, bit) \
 		(Clr_bits(USBC->TPASTE2(USBC_,reg), TPASTE4(USBC_,reg,_,bit)))
@@ -66,6 +73,43 @@
 		(USBC->TPASTE3(USBC_,reg,CLR) = TPASTE5(USBC_,reg,CLR_,bit,C))
 #define USBC_REG_SET(reg, bit) \
 		(USBC->TPASTE3(USBC_,reg,SET) = TPASTE5(USBC_,reg,SET_,bit,S))
+
+/**
+ * \name USB IO PADs management
+ */
+//@{
+__always_inline static void eic_line_change_config(uint8_t line, bool b_high)
+{
+	struct eic_line_config eic_line_conf;
+	eic_line_conf.eic_mode = EIC_MODE_LEVEL_TRIGGERED;
+	eic_line_conf.eic_level = b_high ?
+			EIC_LEVEL_HIGH_LEVEL : EIC_LEVEL_LOW_LEVEL;
+	eic_line_conf.eic_filter = EIC_FILTER_DISABLED;
+	eic_line_conf.eic_async = EIC_ASYNCH_MODE;
+	eic_line_set_config(EIC, line, &eic_line_conf);
+}
+
+__always_inline static void eic_pad_init(uint8_t line, eic_callback_t callback,
+		uint8_t irq_line, ioport_pin_t pin, uint8_t irq_level)
+{
+	eic_line_disable_interrupt(EIC, line);
+	eic_line_disable(EIC, line);
+	eic_line_clear_interrupt(EIC, line);
+	eic_line_set_callback(EIC, line, callback, irq_line, irq_level);
+	eic_line_change_config(line, !ioport_get_pin_level(pin));
+	eic_line_enable(EIC, line);
+	eic_line_enable_interrupt(EIC, line);
+}
+__always_inline static void io_pad_init(ioport_pin_t pin, ioport_mode_t mode,
+		gpio_pin_callback_t callback, uint8_t irq_level)
+{
+	gpio_disable_pin_interrupt(pin);
+	ioport_set_pin_mode(pin, mode);
+	ioport_set_pin_sense_mode(pin, IOPORT_SENSE_BOTHEDGES);
+	gpio_set_pin_callback(pin, callback, irq_level);
+	gpio_enable_pin_interrupt(pin);
+}
+//@}
 
 //! \ingroup usb_group
 //! \defgroup otg_usbc_group USBC OTG Driver
@@ -106,122 +150,66 @@ void otg_dual_disable(void);
 //! @name USBC OTG ID pin management
 //! The ID pin come from the USB OTG connector (A and B receptable) and
 //! allows to select the USB mode host or device.
-//! The USBC hardware can manage it automatically. This feature is optional
-//! and not implement by SAM4L.
-//!
-//! If ID pin is used, USB_ID_GPIO must be defined in board.h.
+//! The ID pin can be managed through GPIO or EIC pin.
+//! This feature is optional, and it is enabled if USB_ID_PIN or USB_ID_EIC
+//! is defined in board.h and CONF_BOARD_USB_ID_DETECT defined in
+//! conf_board.h.
 //!
 //! @{
-#ifdef USBC_USBCON_UIDE
-#define  otg_enable_id_pin()                 USBC_SET_BITS(USBCON,UIDE)
-#define  otg_disable_id_pin()                USBC_CLR_BITS(USBCON,UIDE)
-#else
-#define  otg_enable_id_pin()                 do { } while(0)
-#define  otg_disable_id_pin()                do { } while(0)
-#endif
-#define  otg_force_device_mode()             USBC_SET_BITS(USBCON,UIMOD)
-#define  Is_otg_device_mode_forced()         USBC_TST_BITS(USBCON,UIMOD)
-#define  otg_force_host_mode()               USBC_CLR_BITS(USBCON,UIMOD)
-#define  Is_otg_host_mode_forced()           (!Is_otg_device_mode_forced())
+#define OTG_ID_DETECT       (defined(CONF_BOARD_USB_ID_DETECT))
+#define OTG_ID_IO           (defined(USB_ID_PIN) && OTG_ID_DETECT)
+#define OTG_ID_EIC          (defined(USB_ID_EIC) && OTG_ID_DETECT)
 
-//! @name USBC OTG ID pin interrupt management
-//! These macros manage the ID pin interrupt
-//! @{
-#ifdef USBC_USBCON_IDTE
-#define  otg_enable_id_interrupt()           USBC_SET_BITS(USBCON,IDTE)
-#define  otg_disable_id_interrupt()          USBC_CLR_BITS(USBCON,IDTE)
-#define  Is_otg_id_interrupt_enabled()       USBC_TST_BITS(USBCON,IDTE)
-#define  otg_ack_id_transition()             USBC_REG_CLR(USBSTA,IDTI)
-#define  Is_otg_id_transition()              USBC_TST_BITS(USBSTA,IDTI)
-#else
-#define  otg_enable_id_interrupt()           do { } while(0)
-#define  otg_disable_id_interrupt()          do { } while(0)
-#define  Is_otg_id_interrupt_enabled()       false
-#define  otg_ack_id_transition()             do { } while(0)
-#define  Is_otg_id_transition()              false
+#if OTG_ID_EIC
+# define pad_id_init() \
+	eic_pad_init(USB_ID_EIC_LINE, otg_id_handler, USB_ID_EIC_IRQn, USB_ID_EIC, UHD_USB_INT_LEVEL);
+# define pad_id_interrupt_disable() eic_line_disable_interrupt(EIC, USB_ID_EIC_LINE)
+# define pad_ack_id_interrupt() \
+	(eic_line_change_config(USB_ID_EIC_LINE, !ioport_get_pin_level(USB_ID_EIC)), \
+	eic_line_clear_interrupt(EIC, USB_ID_EIC_LINE))
+# define Is_pad_id_device()         ioport_get_pin_level(USB_ID_EIC)
+#elif OTG_ID_IO
+# define pad_id_init() \
+	io_pad_init(USB_ID_PIN, USB_ID_FLAGS, otg_id_handler, UHD_USB_INT_LEVEL);
+# define pad_id_interrupt_disable() gpio_disable_pin_interrupt(USB_ID_PIN)
+# define pad_ack_id_interrupt()     gpio_clear_pin_interrupt_flag(USB_ID_PIN)
+# define Is_pad_id_device()         ioport_get_pin_level(USB_ID_PIN)
 #endif
-
-#ifdef USBC_USBCON_ID
-#define  Is_otg_id_device()                  USBC_TST_BITS(USBSTA,ID)
-#else
-#define  Is_otg_id_device()                  Is_otg_device_mode_forced()
-#endif
-#define  Is_otg_id_host()                    (!Is_otg_id_device())
-//! @}
 //! @}
 
-//! @name USBC OTG Vbus management
-//! The USBC hardware can manage VBus automatically. This feature is optional
-//! and not implement by SAM4L.
+//! @name USBC Vbus management
+//!
+//! The VBus line can be monitored through a GPIO pin and
+//! a basic resitor voltage divider.
+//! This feature is optional, and it is enabled if USB_VBUS_PIN or USB_VBUS_EIC
+//! is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
+//! conf_board.h.
 //! @{
-#ifdef USBC_USBCON_VBUSHWC
-#define  otg_enable_vbus_hw_control()          USBC_SET_BITS(USBCON,VBUSHWC)
-#define  otg_disable_vbus_hw_control()         USBC_CLR_BITS(USBCON,VBUSHWC)
-#define  Is_otg_vbus_hw_control_enabled()      USBC_TST_BITS(USBCON,VBUSHWC)
-#else
-#define  otg_enable_vbus_hw_control()          do { } while(0)
-#define  otg_disable_vbus_hw_control()         do { } while(0)
-#define  Is_otg_vbus_hw_control_enabled()      false
+#define OTG_VBUS_DETECT     (defined(CONF_BOARD_USB_VBUS_DETECT))
+#define OTG_VBUS_IO         (defined(USB_VBUS_PIN) && OTG_VBUS_DETECT)
+#define OTG_VBUS_EIC        (defined(USB_VBUS_EIC) && OTG_VBUS_DETECT)
+
+#if OTG_VBUS_EIC
+# define pad_vbus_init(level) \
+	eic_pad_init(USB_VBUS_EIC_LINE, uhd_vbus_handler, USB_VBUS_EIC_IRQn, USB_VBUS_EIC, level);
+# define pad_vbus_interrupt_disable() eic_line_disable_interrupt(EIC, USB_VBUS_EIC_LINE)
+# define pad_ack_vbus_interrupt() \
+	(eic_line_change_config(USB_VBUS_EIC_LINE, !ioport_get_pin_level(USB_VBUS_EIC)), \
+	eic_line_clear_interrupt(EIC, USB_VBUS_EIC_LINE))
+# define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_EIC)
+#elif OTG_VBUS_IO
+# define pad_vbus_init(level) \
+	io_pad_init(USB_VBUS_PIN, USB_VBUS_FLAGS, uhd_vbus_handler, level);
+# define pad_vbus_interrupt_disable() gpio_disable_pin_interrupt(USB_VBUS_PIN)
+# define pad_ack_vbus_interrupt()     gpio_clear_pin_interrupt_flag(USB_VBUS_PIN)
+# define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
 #endif
 
-#ifdef USBC_USBCON_VBUSTE
-#define  otg_enable_vbus_interrupt()         USBC_SET_BITS(USBCON,VBUSTE)
-#define  otg_disable_vbus_interrupt()        USBC_CLR_BITS(USBCON,VBUSTE)
-#define  Is_otg_vbus_interrupt_enabled()     USBC_TST_BITS(USBCON,VBUSTE)
-#define  otg_ack_vbus_transition()           USBC_REG_CLR(USBSTA,VBUSTI)
-#define  otg_raise_vbus_transition()         USBC_REG_SET(USBSTA,VBUSTI)
-#define  Is_otg_vbus_transition()            USBC_TST_BITS(USBSTA,VBUSTI)
-#else
-#define  otg_enable_vbus_interrupt()         do { } while(0)
-#define  otg_disable_vbus_interrupt()        do { } while(0)
-#define  Is_otg_vbus_interrupt_enabled()     false
-#define  otg_ack_vbus_transition()           do { } while(0)
-#define  otg_raise_vbus_transition()         do { } while(0)
-#define  Is_otg_vbus_transition()            false
-#endif
+//! Notify USBC that the VBUS on the usb line is powered
+#define uhd_vbus_is_on()          USBC_REG_SET(USBSTA,VBUSRQ)
+//! Notify USBC that the VBUS on the usb line is not powered
+#define uhd_vbus_is_off()         USBC_REG_CLR(USBSTA,VBUSRQ)
 
-#ifdef USBC_USBSTA_VBUS
-#define  Is_otg_vbus_high()                  USBC_TST_BITS(USBSTA,VBUS)
-#else
-#define  Is_otg_vbus_high()                  true
-#endif
-#define  Is_otg_vbus_low()                   (!Is_otg_vbus_high())
-
-#ifdef USBC_USBCON_VBERRE
-#define  otg_enable_vbus_error_interrupt()     USBC_SET_BITS(USBCON,VBERRE)
-#define  otg_disable_vbus_error_interrupt()    USBC_CLR_BITS(USBCON,VBERRE)
-#define  Is_otg_vbus_error_interrupt_enabled() USBC_TST_BITS(USBCON,VBERRE)
-#define  Is_otg_vbus_error()                   USBC_TST_BITS(USBSTA,VBERRI)
-#define  otg_ack_vbus_error()                  USBC_REG_CLR(USBSTA,VBERRI)
-#define  otg_raise_vbus_error()                USBC_REG_SET(USBSTA,VBERRI)
-#else
-#define  otg_enable_vbus_error_interrupt()     do { } while(0)
-#define  otg_disable_vbus_error_interrupt()    do { } while(0)
-#define  Is_otg_vbus_error_interrupt_enabled() false
-#define  Is_otg_vbus_error()                   false
-#define  otg_ack_vbus_error()                  do { } while(0)
-#define  otg_raise_vbus_error()                do { } while(0)
-#endif
-
-#ifdef USBC_USBCON_VBUSPO
-#define  otg_set_vbus_polarity_active_high()   USBC_CLR_BITS(USBCON,VBUSPO)
-#define  otg_set_vbus_polarity_active_low()    USBC_SET_BITS(USBCON,VBUSPO)
-#define  Is_otg_vbus_polarity_active_low()     USBC_TST_BITS(USBCON,VBUSPO)
-#else
-#define  otg_set_vbus_polarity_active_high()   do { } while(0)
-#define  otg_set_vbus_polarity_active_low()    do { } while(0)
-#define  Is_otg_vbus_polarity_active_low()     false
-#endif
-
-#ifdef USBC_USBSTA_VBUSRQ
-#define  otg_enable_vbus()                     USBC_REG_SET(USBSTA,VBUSRQ)
-#define  otg_disable_vbus()                    USBC_REG_CLR(USBSTA,VBUSRQ)
-#define  Is_otg_vbus_enabled()                 USBC_TST_BITS(USBSTA,VBUSRQ)
-#else
-#define  otg_enable_vbus()                     do { } while(0)
-#define  otg_disable_vbus()                    do { } while(0)
-#define  Is_otg_vbus_enabled()                 true
-#endif
 //! @}
 
 //! @name USBC OTG main management
@@ -230,13 +218,17 @@ void otg_dual_disable(void);
 #define  otg_enable()                        USBC_SET_BITS(USBCON,USBE)
 #define  otg_disable()                       USBC_CLR_BITS(USBCON,USBE)
 
-#ifdef USBC_USBCON_OTGPADE
-#define  otg_enable_pad()                    USBC_SET_BITS(USBCON,OTGPADE)
-#define  otg_disable_pad()                   USBC_CLR_BITS(USBCON,OTGPADE)
-#else
-#define  otg_enable_pad()                    do { } while(0)
-#define  otg_disable_pad()                   do { } while(0)
-#endif
+//! @name USBC mode management
+//! The USBC mode device or host must be selected manualy by user
+//! @{
+#define  otg_enable_device_mode()             USBC_SET_BITS(USBCON,UIMOD)
+#define  Is_otg_device_mode_enabled()         USBC_TST_BITS(USBCON,UIMOD)
+#define  otg_enable_host_mode()               USBC_CLR_BITS(USBCON,UIMOD)
+#define  Is_otg_host_mode_enabled()           (!Is_otg_device_mode_enabled())
+//! @}
+
+//! Get the dual-role device state of the internal USB finite state machine
+#define  otg_get_fsm_drd_state()             USBC_RD_BITFIELD(USBFSM,DRDSTATE)
 
 #define otg_register_desc_tab(addr) \
 		(Wr_bitfield(USBC->USBC_UDESC, USBC_UDESC_UDESCA_Msk, addr))
@@ -254,104 +246,28 @@ void otg_dual_disable(void);
 #define  Is_otg_clock_frozen()               USBC_TST_BITS(USBCON,FRZCLK)
 //! @}
 
-//! @name USBC OTG hardware protocol
-//! These macros manages the hardware OTG protocol
+//! @name USBC Power Manager wake-up feature
 //! @{
 
-#ifdef USBC_USBCON_TIMPAGE
-//! Configure time-out of specified OTG timer
-#define  otg_configure_timeout(timer, timeout) \
-		(USBC_SET_BITS(USBCON,UNLOCK),\
-		USBC_WR_BITFIELD(USBCON,TIMPAGE,timer),\
-		USBC_WR_BITFIELD(USBCON,TIMVALUE,timeout),\
-		USBC_CLR_BITS(USBCON,UNLOCK))
-//! Get configured time-out of specified OTG timer
-#define  otg_get_timeout(timer) \
-		(USBC_SET_BITS(USBCON,UNLOCK),\
-		USBC_WR_BITFIELD(USBCON,TIMPAGE,timer),\
-		USBC_CLR_BITS(USBCON,UNLOCK),\
-		USBC_RD_BITFIELD(USBCON,TIMVALUE))
-#else
-//! Configure time-out of specified OTG timer
-#define  otg_configure_timeout(timer, timeout) do { } while (0)
-//! Get configured time-out of specified OTG timer
-#define  otg_get_timeout(timer)                0
-#endif
+/*! \brief Enable one or several asynchronous wake-up source.
+ *
+ * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
+ *  PM_AWEN_xxxx in the part-specific header file)
+ */
+__always_inline static void usbc_async_wake_up_enable(void)
+{
+	PM->PM_AWEN |= (1U << PM_AWEN_USBC);
+}
 
-//! Get the dual-role device state of the internal USB finite state machine of the USBC controller
-#define  otg_get_fsm_drd_state()             USBC_RD_BITFIELD(USBFSM,DRDSTATE)
-
-//! Host Negotiation Protocol
-//! @{
-#ifdef USBC_USBCON_HNPREQ
-#define  otg_device_initiate_hnp()            USBC_SET_BITS(USBCON,HNPREQ)
-#define  otg_host_accept_hnp()                USBC_SET_BITS(USBCON,HNPREQ)
-#define  otg_host_reject_hnp()                USBC_CLR_BITS(USBCON,HNPREQ)
-#define  Is_otg_hnp()                         USBC_TST_BITS(USBCON,HNPREQ)
-#define  otg_enable_hnp_error_interrupt()     USBC_SET_BITS(USBCON,HNPERRE)
-#define  otg_disable_hnp_error_interrupt()    USBC_CLR_BITS(USBCON,HNPERRE)
-#define  Is_otg_hnp_error_interrupt_enabled() USBC_TST_BITS(USBCON,HNPERRE)
-#define  otg_ack_hnp_error_interrupt()        USBC_REG_CLR(USBSTA,HNPERRI)
-#define  Is_otg_hnp_error_interrupt()         USBC_TST_BITS(USBSTA,HNPERRI)
-#else
-#define  otg_device_initiate_hnp()            do { } while(0)
-#define  otg_host_accept_hnp()                do { } while(0)
-#define  otg_host_reject_hnp()                do { } while(0)
-#define  Is_otg_hnp()                         false
-#define  otg_enable_hnp_error_interrupt()     do { } while(0)
-#define  otg_disable_hnp_error_interrupt()    do { } while(0)
-#define  Is_otg_hnp_error_interrupt_enabled() false
-#define  otg_ack_hnp_error_interrupt()        do { } while(0)
-#define  Is_otg_hnp_error_interrupt()         false
-#endif
-//! @}
-
-//! Session Request Protocol
-//! @{
-#ifdef USBC_USBCON_SRPREQ
-#define  otg_device_initiate_srp()           USBC_SET_BITS(USBCON,SRPREQ)
-#define  Is_otg_device_srp()                 USBC_TST_BITS(USBCON,SRPREQ)
-#define  otg_select_vbus_srp_method()        USBC_SET_BITS(USBCON,SRPSEL)
-#define  Is_otg_vbus_srp_method_selected()   USBC_TST_BITS(USBCON,SRPSEL)
-#define  otg_select_data_srp_method()        USBC_CLR_BITS(USBCON,SRPSEL)
-#define  otg_enable_srp_interrupt()          USBC_SET_BITS(USBCON,SRPE)
-#define  otg_disable_srp_interrupt()         USBC_CLR_BITS(USBCON,SRPE)
-#define  Is_otg_srp_interrupt_enabled()      USBC_TST_BITS(USBCON,SRPE)
-#define  otg_ack_srp_interrupt()             USBC_REG_CLR(USBSTA,SRPI)
-#define  Is_otg_srp_interrupt()              USBC_TST_BITS(USBSTA,SRPI)
-#else
-#define  otg_device_initiate_srp()           do { } while (0)
-#define  Is_otg_device_srp()                 do { } while (0)
-#define  otg_select_vbus_srp_method()        do { } while (0)
-#define  Is_otg_vbus_srp_method_selected()   false
-#define  otg_select_data_srp_method()        do { } while (0)
-#define  otg_enable_srp_interrupt()          do { } while (0)
-#define  otg_disable_srp_interrupt()         do { } while (0)
-#define  Is_otg_srp_interrupt_enabled()      false
-#define  otg_ack_srp_interrupt()             do { } while (0)
-#define  Is_otg_srp_interrupt()              false
-#endif
-#define  Is_otg_data_srp_method_selected()   (!Is_otg_vbus_srp_method_selected())
-//! @}
-
-//! Role exchange interrupt
-//! @{
-#ifdef USBC_USBCON_ROLEEXE
-#define  otg_enable_role_exchange_interrupt()     USBC_SET_BITS(USBCON,ROLEEXE)
-#define  otg_disable_role_exchange_interrupt()    USBC_CLR_BITS(USBCON,ROLEEXE)
-#define  Is_otg_role_exchange_interrupt_enabled() USBC_TST_BITS(USBCON,ROLEEXE)
-#define  otg_ack_role_exchange_interrupt()        USBC_REG_CLR(USBSTA,ROLEEXI)
-#define  otg_raise_role_exchange_interrupt()      USBC_REG_SET(USBSTA,ROLEEXI)
-#define  Is_otg_role_exchange_interrupt()         USBC_TST_BITS(USBSTA,ROLEEXI)
-#else
-#define  otg_enable_role_exchange_interrupt()     do { } while (0)
-#define  otg_disable_role_exchange_interrupt()    do { } while (0)
-#define  Is_otg_role_exchange_interrupt_enabled() false
-#define  otg_ack_role_exchange_interrupt()        do { } while (0)
-#define  otg_raise_role_exchange_interrupt()      do { } while (0)
-#define  Is_otg_role_exchange_interrupt()         false
-#endif
-//! @}
+/*! \brief Disable one or several asynchronous wake-up source.
+ *
+ * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
+ *  PM_AWEN_xxxx in the part-specific header file)
+ */
+__always_inline static void usbc_async_wake_up_disable(void)
+{
+	PM->PM_AWEN &= ~(1U << PM_AWEN_USBC);
+}
 //! @}
 
 //! @}
