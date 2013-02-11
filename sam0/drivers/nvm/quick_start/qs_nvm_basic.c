@@ -78,14 +78,14 @@ int main(void)
 	//! [main_2]
 
 	//! [main_3]
-	nvm_erase_row(100);
+	nvm_erase_row(100 / NVMCTRL_ROW_PAGES);
 	//! [main_3]
 	//! [main_4]
-	nvm_write_page(100, (uint32_t *)&page_buffer);
+	nvm_write_buffer(100, page_buffer, NVMCTRL_PAGE_SIZE);
 	//! [main_4]
 
 	//! [main_5]
-	nvm_read_page(100, (uint32_t *)&page_buffer);
+	nvm_read_buffer(100, page_buffer, NVMCTRL_PAGE_SIZE);
 	//! [main_5]
 //! [main]
 
