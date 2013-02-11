@@ -555,8 +555,9 @@ static inline void ac_enable(
 
 	Ac *const ac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg |= AC_CTRLA_ENABLE;
@@ -579,8 +580,9 @@ static inline void ac_disable(
 
 	Ac *const ac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(module_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
