@@ -105,7 +105,7 @@
  *    mode, with the correct negative and positive MUX selections and the
  *    desired voltage scaler.
  *    \note The voltage scalar formula is documented
- *          \ref ac_ch_conf.vcc_scale_factor "here".
+ *          \ref ac_chan_conf.vcc_scale_factor "here".
  *
  *  - \snippet qs_ac_basic.c setup_10
  * -# Initialize the Analog Comparator channel and configure it with the desired
@@ -127,7 +127,7 @@
  * -# Trigger the first comparison on the comparator channel.
  *  - \snippet qs_ac_basic.c main_1
  * -# Create a local variable to maintain the current comparator state. Since no
- *    comparison has taken place, it is initialized to \ref AC_CH_STATE_UNKNOWN.
+ *    comparison has taken place, it is initialized to \ref AC_CHAN_STATE_UNKNOWN.
  *  - \snippet qs_ac_basic.c main_2
  * -# Make the application loop infinitely, while performing triggered
  *    comparisons.

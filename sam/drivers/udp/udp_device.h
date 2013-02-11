@@ -304,7 +304,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 		reg |= UDP_REG_NO_EFFECT_1_ALL;                    \
 		reg |= (bits);                                     \
 		UDP->UDP_CSR[ep] = reg;                            \
-		for (nop_count = 0; nop_count < 15; nop_count ++) {\
+		for (nop_count = 0; nop_count < 20; nop_count ++) {\
 			__NOP();                                   \
 		}                                                  \
 	} while (0)
@@ -320,7 +320,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 		reg |= UDP_REG_NO_EFFECT_1_ALL;                    \
 		reg &= ~(bits);                                    \
 		UDP->UDP_CSR[ep] = reg;                            \
-		for (nop_count = 0; nop_count < 15; nop_count ++) {\
+		for (nop_count = 0; nop_count < 20; nop_count ++) {\
 			__NOP();                                   \
 		}                                                  \
 	} while (0)
@@ -337,7 +337,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 		reg &= ~(mask);                                    \
 		reg |= bits & mask;                                \
 		UDP->UDP_CSR[ep] = reg;                            \
-		for (nop_count = 0; nop_count < 15; nop_count ++) {\
+		for (nop_count = 0; nop_count < 20; nop_count ++) {\
 			__NOP();                                   \
 		}                                                  \
 	} while (0);
@@ -367,7 +367,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @name UDP Device endpoint configuration
 //! @{
   //! enables the selected endpoint
-#define  udd_enable_endpoint(ep)                   (Set_bits(UDP->UDP_CSR[ep], UDP_CSR_EPEDS))
+#define  udd_enable_endpoint(ep)                   udp_set_csr(ep, UDP_CSR_EPEDS)
   //! disables the selected endpoint
 #define  udd_disable_endpoint(ep)                  (Clr_bits(UDP->UDP_CSR[ep], UDP_CSR_EPEDS))
   //! tests if the selected endpoint is enabled
@@ -382,7 +382,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define  Is_udd_resetting_endpoint(ep)             (Tst_bits(UDP->UDP_RST_EP, UDP_RST_EP_EP0 << (ep)))
 
   //! configures the selected endpoint type (shifted)
-#define  udd_configure_endpoint_type(ep, type)     (Wr_bits(UDP->UDP_CSR[ep], UDP_CSR_EPTYPE_Msk, type))
+#define  udd_configure_endpoint_type(ep, type)     udp_write_csr(ep, UDP_CSR_EPTYPE_Msk, type)
   //! gets the configured selected endpoint type (shifted)
 #define  udd_get_endpoint_type(ep)                 (Rd_bits(UDP->UDP_CSR[ep], UDP_CSR_EPTYPE_Msk))
 #define  Is_udd_endpoint_type_in(ep)               (Tst_bits(UDP->UDP_CSR[ep], 0x4 << UDP_CSR_EPTYPE_Pos))
@@ -440,7 +440,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 #define  Is_udd_endpoint_stall_pending(ep)         (Tst_bits(UDP->UDP_CSR[ep], UDP_CSR_FORCESTALL|UDP_CSR_STALLSENT))
   //! enables the STALL handshake
-#define  udd_enable_stall_handshake(ep)            udp_set_csr  (ep, UDP_CSR_FORCESTALL)
+#define  udd_enable_stall_handshake(ep)            udp_set_csr(ep, UDP_CSR_FORCESTALL)
   //! disables the STALL handshake
 #define  udd_disable_stall_handshake(ep)           udp_clear_csr(ep, UDP_CSR_FORCESTALL)
   //! tests if STALL handshake request is running
@@ -469,11 +469,11 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
   //! test if Bank 0 received
 #define  Is_udd_bank0_received(ep)                 (Tst_bits(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK0))
   //! acks Bank 0 received
-#define  udd_ack_bank0_received(ep)                (Clr_bits(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK0))
+#define  udd_ack_bank0_received(ep)                udp_clear_csr(ep, UDP_CSR_RX_DATA_BK0)
   //! test if Bank 1 received
 #define  Is_udd_bank1_received(ep)                 (Tst_bits(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK1))
   //! acks Bank 1 received
-#define  udd_ack_bank1_received(ep)                (Clr_bits(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK1))
+#define  udd_ack_bank1_received(ep)                udp_clear_csr(ep, UDP_CSR_RX_DATA_BK1)
   //! returns the number of received banks
 #define  udd_nb_banks_received(ep)                 (Rd_bitfield(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK0) + \
 		Rd_bitfield(UDP->UDP_CSR[ep], UDP_CSR_RX_DATA_BK1))

@@ -10,8 +10,8 @@
 			<build type="c-source" value="i2c_master_async.c"/>
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
 			<build type="header-file" subtype="api" value="i2c_master_async.h"/>
-			<build type="c-source" value="i2c_slave_callback.c"/>
-			<build type="header-file" subtype="api" value="i2c_slave_callback.h"/>
+			<build type="c-source" value="i2c_slave_interrupt.c"/>
+			<build type="header-file" subtype="api" value="i2c_slave_interrupt.h"/>
 			<build type="doxygen-entry-point" value="sam0_i2c_group"/>
 			<device-support value="samd20"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
@@ -54,9 +54,9 @@
 			<keyword value="I2C Slave" />
 		</info>
 		<build type="include-path" value="." />
-		<build type="header-file" subtype="api" value="i2c_slave_callback.h"/>
+		<build type="header-file" subtype="api" value="i2c_slave_interrupt.h"/>
 		<build type="header-file" subtype="api" value="i2c_common.h"/>
-		<build type="c-source" value="i2c_slave_callback.c"/>
+		<build type="c-source" value="i2c_slave_interrupt.c"/>
 		<build type="define" name="I2C_SLAVE_CALLBACK" value=""/>
 		<build type="header-file" subtype="example" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 		<build type="doxygen-entry-point" value="sam0_i2c_group"/>
@@ -65,6 +65,7 @@
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.system.interrupt"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

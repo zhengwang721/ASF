@@ -207,31 +207,25 @@ uint32_t system_gclk_gen_get_hz(
 	while (system_gclk_is_syncing()) {
 		/* Wait for synchronization */
 	};
-
 	/* Get the frequency of the source connected to the GCLK generator */
 	uint32_t gen_input_hz = system_clock_source_get_hz(
 			(enum system_clock_source)GCLK->GENCTRL.bit.SRC);
 
-	/* Check if the divider is enabled for the generator */
-	if (!((GCLK->GENCTRL.reg & GCLK_GENCTRL_DIVSEL) == 1 &&
-			GCLK->GENDIV.reg <= 1)) {
+	uint8_t divsel = GCLK->GENCTRL.bit.DIVSEL;
 
-		/* Select the appropriate generator division register */
-		*((uint8_t*)&GCLK->GENDIV.reg) = generator;
-		while (system_gclk_is_syncing()) {
-			/* Wait for synchronization */
-		};
+	/* Select the appropriate generator division register */
+	*((uint8_t*)&GCLK->GENDIV.reg) = generator;
+	while (system_gclk_is_syncing()) {
+		/* Wait for synchronization */
+	};
 
-		/* Get the generator divider setting (can be fractional or binary) */
-		uint32_t divider = GCLK->GENDIV.bit.DIV;
+	uint32_t divider = GCLK->GENDIV.bit.DIV;
 
-		/* Check if the generator is using fractional or binary division */
-		if (GCLK->GENCTRL.bit.DIVSEL) {
-			gen_input_hz /= divider;
-		}
-		else {
-			gen_input_hz >>= (divider + 1);
-		}
+	/* Check if the generator is using fractional or binary division */
+	if (divsel && divider > 1) {
+		gen_input_hz /= divider;
+	} else if (!divsel) {
+		gen_input_hz >>= (divider + 1);
 	}
 
 	return gen_input_hz;
@@ -331,7 +325,7 @@ uint32_t system_gclk_chan_get_hz(
 {
 	/* Select the requested generic clock channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
-
+	uint32_t tmp = GCLK->CLKCTRL.bit.GEN;
 	/* Return the clock speed of the associated GCLK generator */
-	return system_gclk_gen_get_hz(GCLK->CLKCTRL.bit.GEN);
+	return system_gclk_gen_get_hz(tmp);
 }
