@@ -2,7 +2,7 @@
 	<module type="driver" id="sam0.drivers.bod" caption="Brown Out Detector Driver">
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="bod.h"/>
-		<build type="c-source" value="pinmux.c"/>
+		<build type="c-source" value="bod.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_samd20_bod"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>

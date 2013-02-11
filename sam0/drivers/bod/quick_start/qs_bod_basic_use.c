@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAMD20 Brown Out Detector Driver
+ * \brief SAMD20 BOD Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,66 +36,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#include "bod.h"
+#include <asf.h>
 
-/**
- * \brief Configure a Brown Out Detector module.
- *
- * Configures a given BOD33 or BOD12 module based on the settings stored in the
- * configuration struct. The BOD will be enabled when this function returns.
- *
- * \param[in] bod    BOD module ID to configure
- * \param[in] conf   Configuration settings for the BOD
- *
- * \retval STATUS_ERR_INVALID_ARG Invalid BOD
- * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
- * \retval STATUS_OK Operation completed successfully
- */
-enum status_code bod_set_config(
-		const enum bod bod,
-		struct bod_config *const conf)
+void configure_bod33(void);
+
+void configure_bod33(void)
 {
-	/* Sanity check arguments */
-	Assert(conf);
+	struct bod_config bod33_conf;
 
-	uint32_t temp;
+	bod_get_config_defaults(&bod33_conf);
 
-	/* Convert BOD trigger action and mode to a bitmask */
-	temp = (uint32_t)conf->action | (uint32_t)conf->mode;
+	bod_set_config(BOD_BOD33, &bod33_conf);
+}
 
-	if (conf->mode == BOD_MODE_SAMPLED) {
-		/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33_CEN;
+int main(void)
+{
+	/* Configure the BOD 3.3V module */
+	configure_bod33();
+
+	while (true) {
+
 	}
-
-	if (conf->hysteresis == true) {
-		temp |= SYSCTRL_BOD33_HYST;
-	}
-
-	switch (bod) {
-		case BOD_BOD33:
-			if (conf->level > 0x3F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD33_ENABLE;
-			break;
-
-		case BOD_BOD12:
-			if (conf->level > 0x1F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD12_ENABLE;
-			break;
-
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
-
-	return STATUS_OK;
 }

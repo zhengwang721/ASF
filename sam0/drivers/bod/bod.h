@@ -74,7 +74,7 @@ enum bod_action {
  *
  * List of possible BOD module voltage sampling modes.
  */
-enum system_bod_mode {
+enum bod_mode {
 	/** BOD will sample the supply line continuously. */
 	BOD_MODE_CONTINIOUS  = 0,
 	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
@@ -113,14 +113,14 @@ struct bod_config {
  * \param[out] conf BOD configuration struct to set to default settings
  */
 static inline void bod_get_config_defaults(
-		struct system_bod_config *const conf)
+		struct bod_config *const conf)
 {
 	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->mode   = SYSTEM_BOD_MODE_CONTINIOUS;
-	conf->action = SYSTEM_BOD_ACTION_RESET;
-	conf->level  = 0x12; /* TODO: Need to revisit this level */
+	conf->mode       = BOD_MODE_CONTINIOUS;
+	conf->action     = BOD_ACTION_RESET;
+	conf->level      = 0x12; /* TODO: Need to revisit this level */
 	conf->hysteresis = true;
 }
 
