@@ -52,6 +52,7 @@
  */
 void events_init(void)
 {
+	/* Turn on the event system interface clock in the PM */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
 
 	/* Software reset the module to ensure it is re-initialized correctly */
