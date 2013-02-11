@@ -137,12 +137,6 @@ static void configure_callbacks(void)
 {
 	/* Register and enable callback functions. */
 	//![reg_en_i2c_callback]
-	i2c_slave_register_callback(&sw_module, read_complete_callback, I2C_SLAVE_CALLBACK_READ_COMPLETE);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_COMPLETE);
-
-	i2c_slave_register_callback(&sw_module, write_complete_callback, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
-
 	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
 
