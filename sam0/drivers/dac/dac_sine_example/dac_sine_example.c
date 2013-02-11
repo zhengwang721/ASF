@@ -43,11 +43,13 @@
 
 //#include "airplane_chime.h"
 
-const uint32_t sample_rate = 22050;
-const uint16_t number_of_samples = 30000;
-const uint16_t wav_samples[30000] = {
+const uint32_t sample_rate = 8000;
+const uint16_t wav_samples[] = {
 	#include "data.x"
 };
+
+const uint16_t number_of_samples = (sizeof(wav_samples)/sizeof(wav_samples[0]));
+/*
 uint8_t sine_wave[256] = {
 		0x80, 0x83, 0x86, 0x89, 0x8C, 0x90, 0x93, 0x96,
 		0x99, 0x9C, 0x9F, 0xA2, 0xA5, 0xA8, 0xAB, 0xAE,
@@ -82,7 +84,7 @@ uint8_t sine_wave[256] = {
 		0x4F, 0x52, 0x55, 0x58, 0x5B, 0x5E, 0x61, 0x64,
 		0x67, 0x6A, 0x6D, 0x70, 0x74, 0x77, 0x7A, 0x7D
 };
-
+ */
 /**
  * \brief Function for configuring the pins
  */
@@ -118,7 +120,7 @@ static void configure_dac(struct dac_module *dac_module)
 	dac_get_config_defaults(&config);
 
 	/* Switch to GCLK generator 3 */
-	config.clock_source = GCLK_GENERATOR_3;
+	config.clock_source = GCLK_GENERATOR_0;
 
 	/* Initialize and enable the DAC */
 	dac_init(dac_module, DAC, &config);
@@ -142,7 +144,10 @@ static void configure_tc(struct tc_module *tc_module)
 
 	tc_get_config_defaults(&config);
 
-	config.clock_source = GCLK_GENERATOR_3;
+	config.clock_source = GCLK_GENERATOR_0;
+	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+
+	tc_init(TC0, tc_module, &config);
 
 	events.generate_event_on_overflow = true;
 	events.on_event_perform_action = false;
@@ -151,9 +156,7 @@ static void configure_tc(struct tc_module *tc_module)
 
 	tc_enable_events(tc_module, &events);
 
-	tc_set_top_value(tc_module, 363);
-
-	tc_init(TC0, tc_module, &config);
+	tc_set_top_value(tc_module, 1000);
 
 	tc_enable(tc_module);
 }
@@ -164,11 +167,12 @@ static void configure_event_channel(void)
 	events_chan_get_config_defaults(&events_chan_conf);
 
 	events_chan_conf.generator_id = EVSYS_ID_GEN_TC0_OVF;
-	events_chan_conf.edge_detection = EVENT_EDGE_NONE;
-	events_chan_conf.path = EVENT_PATH_ASYNCHRONOUS;
+	events_chan_conf.edge_detection = EVENT_EDGE_RISING;
+	events_chan_conf.path = EVENT_PATH_RESYNCHRONOUS;
 	events_chan_set_config(0, &events_chan_conf);
 
-	while (!events_chan_is_ready(0));
+	//while (!events_chan_is_ready(1));
+	//while (!events_user_is_ready(0));
 }
 
 static void configure_event_user(void)
@@ -177,23 +181,23 @@ static void configure_event_user(void)
 	events_user_get_config_defaults(&events_user_conf);
 	events_user_conf.event_channel_id = 1;
 	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_conf);
-
-	//while (!events_user_is_ready(0));
 }
 
 static void configure_events(void)
 {
 	struct system_gclk_chan_conf gclk_chan_conf;
 
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_3;
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
 	gclk_chan_conf.run_in_standby   = false;
+
 	system_gclk_chan_set_config(EVSYS_GCLK_ID_0, &gclk_chan_conf);
 	system_gclk_chan_enable(EVSYS_GCLK_ID_0);
 
 	events_init();
 
-	configure_event_channel();
 	configure_event_user();
+	configure_event_channel();
+
 }
 
 /**
@@ -229,10 +233,10 @@ int main(void)
 
 		port_pin_toggle_output_level(PIN_PB08);
 
-		for (uint16_t i = 0; i < 0xFF; i++) {
-			dac_write(&dac_module, DAC_CHANNEL_0, sine_wave[i] << 2, true);
+		for (uint16_t i = 0; i < number_of_samples; i++) {
+			dac_write(&dac_module, DAC_CHANNEL_0, wav_samples[i], true);
 
-			events_chan_software_trigger(0);
+			//events_chan_software_trigger(1);
 
 			while (!(DAC->INTFLAG.reg & DAC_INTFLAG_EMPTY)) {
 				/* Wait for data buffer to be empty */
