@@ -397,15 +397,15 @@ struct ac_module {
 struct ac_events {
 	/** If \c true, an event will be generated when a comparator window state
 	 *  changes. */
-	bool output_window[2];
+	bool generate_event_on_window[2];
 
 	/** If \c true, an event will be generated when a comparator state
 	 *  changes. */
-	bool output_comparator[4];
+	bool generate_event_on_state[4];
 
 	/** If \c true, a comparator will be sampled each time an event is
 	 *  received. */
-	bool input_comparator[4];
+	bool on_event_sample[4];
 };
 
 /**
@@ -630,20 +630,20 @@ static inline void ac_enable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->output_window[0] == true) {
+	if (events->generate_event_on_window[0] == true) {
 		event_mask |= AC_EVCTRL_WINEO0;
 	}
 
-	if (events->output_window[1] == true) {
+	if (events->generate_event_on_window[1] == true) {
 		event_mask |= AC_EVCTRL_WINEO1;
 	}
 
 	for (uint8_t i = 0; i < 4; i++) {
-		if (events->input_comparator[i] == true) {
+		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
 
-		if (events->output_comparator[i] == true) {
+		if (events->generate_event_on_state[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEO0 << i);
 		}
 	}
@@ -676,20 +676,20 @@ static inline void ac_disable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->output_window[0] == true) {
+	if (events->generate_event_on_window[0] == true) {
 		event_mask |= AC_EVCTRL_WINEO0;
 	}
 
-	if (events->output_window[1] == true) {
+	if (events->generate_event_on_window[1] == true) {
 		event_mask |= AC_EVCTRL_WINEO1;
 	}
 
 	for (uint8_t i = 0; i < 4; i++) {
-		if (events->input_comparator[i] == true) {
+		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
 
-		if (events->output_comparator[i] == true) {
+		if (events->generate_event_on_state[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEO0 << i);
 		}
 	}
