@@ -46,8 +46,9 @@ void configure_bod33(void)
 	struct bod_config bod33_conf;
 
 	bod_get_config_defaults(&bod33_conf);
-
 	bod_set_config(BOD_BOD33, &bod33_conf);
+
+	bod_enable(BOD_BOD33);
 }
 
 int main(void)

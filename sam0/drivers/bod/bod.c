@@ -45,15 +45,15 @@
 /**
  * \brief Configure a Brown Out Detector module.
  *
- * Configures a given BOD33 or BOD12 module based on the settings stored in the
- * configuration struct. The BOD will be enabled when this function returns.
+ * Configures a given BOD module with the settings stored in the given
+ * configuration structure.
  *
- * \param[in] bod    BOD module ID to configure
- * \param[in] conf   Configuration settings for the BOD
+ * \param[in] bod   BOD module to configure
+ * \param[in] conf  Configuration settings to use for the specified BOD
  *
- * \retval STATUS_ERR_INVALID_ARG Invalid BOD
- * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
- * \retval STATUS_OK Operation completed successfully
+ * \retval STATUS_OK                  Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
+ * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
  */
 enum status_code bod_set_config(
 		const enum bod bod,

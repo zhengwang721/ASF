@@ -4,6 +4,7 @@
 		<build type="header-file" subtype="api" value="bod.h"/>
 		<build type="c-source" value="bod.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_samd20_bod"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_bod_basic_use.h"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>

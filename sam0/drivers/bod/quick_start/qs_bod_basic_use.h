@@ -41,7 +41,6 @@
  */
 
 /**
- * \page asfdoc_samd20_bod_basic_use_case Clock basic use case
- *
+ * \page asfdoc_samd20_bod_basic_use_case Quick Start Guide for the BOD module - Basic Use Case
  * TODO
  */
