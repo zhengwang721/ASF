@@ -63,7 +63,7 @@
 /**
   * \ingroup group_rf4control 
  * \defgroup group_nwk_config  NWK layer configurations
- * All Buffer and timer configurations Macros are defined in this module
+ * All nwk layer configuration Macros are defined in this module
  * @{
  */
 
