@@ -53,7 +53,7 @@
 /**
   * \ingroup group_rf4control 
  * \defgroup group_nwk_build_config  NWK layer build configurations
- * All Build configurations Macros are defined in this module
+ * All Build configuration Macros are defined in this module
  * @{
  */
 
