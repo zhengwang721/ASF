@@ -182,7 +182,7 @@ struct i2c_slave_module {
 	 * obtained bytes in read. */
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
-	volatile uint8_t *buffer;
+	volatile uint8_t *buffer_ptr;
 	/** Save direction of async request. 1 = read, 0 = write. */
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
