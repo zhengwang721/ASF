@@ -48,10 +48,9 @@
  * \internal Writes a DAC configuration to the hardware module.
  *
  * Writes out a given configuration to the hardware module.
- * Used by \ref dac_init.
  *
  * \param[out] module_inst  Pointer to the DAC software instance struct
- * \param[in]  config    Pointer to the configuration struct
+ * \param[in]  config       Pointer to the configuration struct
  *
  */
 static void _dac_set_config(
@@ -103,9 +102,9 @@ static void _dac_set_config(
  * \note The DAC channel must be configured separately.
  *
  * \param[out] module_inst  Pointer to the DAC software instance struct
- * \param[in]  module    Pointer to the DAC module instance
- * \param[in]  config    Pointer to the config struct, created by the user
- *                       application
+ * \param[in]  module       Pointer to the DAC module instance
+ * \param[in]  config       Pointer to the config struct, created by the user
+ *                          application
  *
  */
 void dac_init(
@@ -221,12 +220,12 @@ void dac_disable(
  *
  * Writes out a given channel configuration to the hardware module.
  *
- * \note The \ref dac_module_inst "DAC device instance structure" must be
- * initialized before calling this function.
+ * \note The DAC device instance structure must be initialized before calling
+ *       this function.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to configure
- * \param[in] config    Pointer to the configuration struct
+ * \param[in] channel      Channel to configure
+ * \param[in] config       Pointer to the configuration struct
  *
  */
 void dac_chan_set_config(
@@ -246,7 +245,7 @@ void dac_chan_set_config(
 
 	if (config->enable_start_on_event) {
 		/* Enable start conversion event input */
-		dac_module->EVCTRL.reg |= DAC_EVCTRL_STARTEI;
+		dac_module->EVCTRL.reg |=  DAC_EVCTRL_STARTEI;
 	} else {
 		/* Disable start conversion event input */
 		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
@@ -254,7 +253,7 @@ void dac_chan_set_config(
 
 	if (config->enable_empty_event) {
 		/* Enable data buffer empty event out */
-		dac_module->EVCTRL.reg |= DAC_EVCTRL_EMPTYEO;
+		dac_module->EVCTRL.reg |=  DAC_EVCTRL_EMPTYEO;
 	} else {
 		/* Disable data buffer empty event out */
 		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_EMPTYEO;
@@ -267,7 +266,7 @@ void dac_chan_set_config(
  * Enables the selected DAC channel.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to enable
+ * \param[in] channel      Channel to enable
  *
  */
 void dac_chan_enable(
@@ -284,7 +283,7 @@ void dac_chan_enable(
  * Disables the selected DAC channel.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to disable
+ * \param[in] channel      Channel to disable
  *
  */
 void dac_chan_disable(
@@ -301,7 +300,7 @@ void dac_chan_disable(
  * Enables the output buffer and drives the DAC output to the VOUT pin.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- *
+ * \param[in] channel      DAC channel to alter
  */
 void dac_chan_enable_output_buffer(
 		struct dac_module *const module_inst,
@@ -324,11 +323,13 @@ void dac_chan_enable_output_buffer(
  * \brief Disable the output buffer.
  *
  * Disables the output buffer.
- * \note Should be done when the output buffer is not needed, as it will draw
- * current even if the system is in sleep mode.
+ *
+ * \note The output buffer(s) should be disabled when a channel's output is not
+ *       currently needed, as it will draw current even if the system is in
+ *       sleep mode.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- *
+ * \param[in] channel      DAC channel to alter
  */
 void dac_chan_disable_output_buffer(
 		struct dac_module *const module_inst,
