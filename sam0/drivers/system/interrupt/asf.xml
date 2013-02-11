@@ -1,7 +1,7 @@
 ﻿<asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.system.interrupt" caption="System interrupt driver">
 		<info type="description" value="summary">
-			Interrupt management support for the ARM CM0+ core.
+			This driver will add interrupt management support for the ARM CM0+ core
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="" />
@@ -13,8 +13,8 @@
 		<build type="doxygen-entry-point" value="system_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.core"/>
-		<require idref="thirdparty.cmsis"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="thirdparty.cmsis" />
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
