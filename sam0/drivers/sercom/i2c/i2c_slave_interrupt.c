@@ -159,20 +159,17 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	system_gclk_chan_enable(SERCOM_GCLK_ID);
 
 	/* Get sercom instance index. */
-	uint8_t sercom_instance = _sercom_get_sercom_inst_index(module->hw);
+	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
 	/* Save device instance in interrupt handler. */
-	_sercom_set_handler(sercom_instance,
-			(void*)(&_i2c_slave_callback_handler));
+	_sercom_set_handler(instance_index, _i2c_slave_callback_handler);
 
 	/* Save device instance. */
-	_sercom_instances[sercom_instance] = (void*) module;
+	_sercom_instances[instance_index] = module;
 
 	/* Initialize values in module. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
-	module->buffer_length = 0;
-
 
 	/* Set SERCOM module to operate in I2C slave mode. */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
@@ -243,12 +240,11 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 {
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	/* Find index to save next value in buffer. */
-	uint16_t buffer_index =
-			module->buffer_length - module->buffer_remaining--;
-
 	/* Read byte from master and put in buffer. */
-	module->buffer[buffer_index] = i2c_hw->DATA.reg;
+	*(module->buffer_ptr++) = i2c_hw->DATA.reg;
+
+	/*Decrement remaining buffer length */
+	module->buffer_remaining--;
 }
 
 /**
@@ -271,12 +267,11 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 		return;
 	}
 
-	/* Find index to get next byte in buffer. */
-	uint16_t buffer_index = module->buffer_length -
-			module->buffer_remaining--;
-
 	/* Write byte from buffer to master */
-	i2c_hw->DATA.reg = module->buffer[buffer_index];
+	i2c_hw->DATA.reg = *(module->buffer_ptr++);
+
+	/*Decrement remaining buffer length */
+	module->buffer_remaining--;
 }
 
 /**
@@ -334,19 +329,19 @@ void i2c_slave_unregister_callback(
 /**
  * \brief Read data packet from master asynchronous.
  *
- * Reads a data packet from the master. A write request must be initated by
+ * Reads a data packet from the master. A write request must be initiated by
  * the master before the packet can be read.
  * The I2C_SLAVE_CALLBACK_WRITE_REQUEST callback can be used to call this
  * function.
  *
- * \param[in,out] module  Pointer to device instance struct.
+ * \param[in,out] module    Pointer to device instance struct.
  * \param[in,out] packet    Pointer to I2C packet to transfer.
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
  * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_read_packet_callback(
+enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {
@@ -361,19 +356,18 @@ enum status_code i2c_slave_read_packet_callback(
 	}
 
 	/* Save packet to device instance. */
-	module->buffer = packet->data;
+	module->buffer_ptr = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
 	/* Read will begin when master initiates the transfer */
-
 	return STATUS_OK;
 }
 
 /**
  * \brief Write data packet to master  asynchronous.
  *
- * Writes a data packet to the master. A read request must be initated by
+ * Writes a data packet to the master. A read request must be initiated by
  * the master before the packet can be written.
  * The I2C_SLAVE_CALLBACK_READ_REQUEST callback can be used to call this
  * function.
@@ -385,7 +379,7 @@ enum status_code i2c_slave_read_packet_callback(
  * \retval STATUS_OK If writing was started successfully.
  * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_slave_write_packet_callback(
+enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet)
 {
@@ -400,7 +394,7 @@ enum status_code i2c_slave_write_packet_callback(
 	}
 
 	/* Save packet to device instance. */
-	module->buffer = packet->data;
+	module->buffer_ptr = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
@@ -414,6 +408,8 @@ enum status_code i2c_slave_write_packet_callback(
  */
 void _i2c_slave_callback_handler(uint8_t instance)
 {
+	system_interrupt_enter_critical_section();
+	system_interrupt_enter_critical();
 	/* Get device instance for callback handling. */
 	struct i2c_slave_module *module =
 			(struct i2c_slave_module*)_sercom_instances[instance];
@@ -443,7 +439,7 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
 			/* Read request from master */
-			if ((callback_mask & I2C_SLAVE_CALLBACK_READ_REQUEST)) {
+			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
@@ -451,11 +447,12 @@ void _i2c_slave_callback_handler(uint8_t instance)
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
 			/* Write request from master */
-			if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
+			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
+
 		/* ACK or NACK address */
 		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x3);
 		/* ACK next incoming packet */
@@ -463,25 +460,22 @@ void _i2c_slave_callback_handler(uint8_t instance)
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
-
-		module->buffer_length = 0;
 		module->status = STATUS_OK;
 
 		/* Call appropriate callback if enabled and registered. */
-		if ((callback_mask & I2C_SLAVE_CALLBACK_READ_COMPLETE)
+		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
 				&& (module->transfer_direction == 0)) {
 			/* Read from master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
-		} else if ((callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE)
+		} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
 				&& (module->transfer_direction == 1)) {
 			/* Write to master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
-		/* Check if buffer is full, or no more data to write */
-		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
+		/* Check if buffer is full, or NACK from master */
+		if (module->buffer_remaining <= 0 || (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK)) {
 
-			module->buffer_length = 0;
 			module->status = STATUS_OK;
 			if (module->transfer_direction == 0) {
 				/* Buffer is full, send NACK */
@@ -500,14 +494,14 @@ void _i2c_slave_callback_handler(uint8_t instance)
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
 
-				if (callback_mask & I2C_SLAVE_CALLBACK_WRITE_COMPLETE) {
+				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 					/* No more data to write, write complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 				}
 			}
 
 		/* Continue buffer write/read. */
-		} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
+		} else if (module->buffer_remaining > 0) {
 			/* Call function based on transfer direction. */
 			if (module->transfer_direction == 0) {
 				_i2c_slave_read(module);
@@ -521,14 +515,14 @@ void _i2c_slave_callback_handler(uint8_t instance)
 	if (module->status != STATUS_BUSY &&
 			module->status != STATUS_OK) {
 		/* Stop packet operation. */
-		module->buffer_length = 0;
 
 		/* Call error callback if enabled and registered */
-		if ((module->registered_callback & I2C_SLAVE_CALLBACK_ERROR)
-				&& (module->enabled_callback & I2C_SLAVE_CALLBACK_ERROR)) {
+		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
 
 			module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 
 		}
 	}
+	system_interrupt_leave_critical_section();
+	system_interrupt_leave_critical();
 }

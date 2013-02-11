@@ -42,55 +42,63 @@
  */
 
 /**
- * \page i2c_master_basic_use_case Quick Start Guide for the I2C Master module - Basic Use Case
+ * \page i2c_slave_basic_use_case Quick Start Guide for the I2C Slave module - Basic Use Case (Callbacks)
  *
  * In this use case, the I2C will be used as follows.
- *  - Master mode
+ *  - Slave mode
  *  - 100 kHz operation speed
- *  - Not operational in standby
- *  - 10000 packet timeout value
- *  - 65535 unknown bus state timeout value
  *
- * \section i2c_master_basic_use_case_setup Quick Start
+ * \section i2c_slave_basic_use_case_setup Quick Start
  *
- * \subsection i2c_master_basic_use_case_prereq Prerequisites
+ * \subsection i2c_slave_basic_use_case_prereq Prerequisites
  * The quick start will need the system drivers to operate correctly.
  *
- * \section i2c_master_basic_use_case_setup_code Setup
+ * \section i2c_slave_basic_use_case_setup_code Setup
  * To set up the I2C with desired configurations, add the following:
  *
- * \subsection i2c_master_basic_use_setup_code Code
+ * \subsection i2c_slave_basic_use_setup_code Code
  * Add this globally accessible, i.e at the start of your code outside any functions.
- * \snippet qs_i2c_master_basic_use.c dev_inst
+ * \snippet qs_i2c_slave_basic_use.c module
+ * \snippet qs_i2c_slave_basic_use.c packet
  *
  * Function for setting up module.
- * \snippet qs_i2c_master_basic_use.c initialize_i2c
- *
+ * \snippet qs_i2c_slave_basic_use.c initialize_i2c
+ * Callback functions for read request:
+ * \snippet qs_i2c_slave_basic_use.c read_request
+ * and write request from a master:
+ * \snippet qs_i2c_slave_basic_use.c write_request
+ * Function for setting up the callback functionality of the driver.
+ * \snippet qs_i2c_slave_basic_use.c setup_i2c_callback
  * and the following to the start of main():
- * \snippet qs_i2c_master_basic_use.c run_initialize_i2c
+ * \snippet qs_i2c_slave_basic_use.c run_initialize_i2c
  *
- * \subsection i2c_master_basic_use_workflow Workflow
+ * \subsection i2c_slave_basic_use_workflow Workflow
  * When setting up the device, the correct procedure will be to:
  * -# Initialize configuration structure.
- *  - \snippet qs_i2c_master_basic_use.c init_conf
+ *  - \snippet qs_i2c_slave_basic_use.c init_conf
  * -# Change settings in the configuration.
- *  - \snippet qs_i2c_master_basic_use.c conf_change
+ *  - \snippet qs_i2c_slave_basic_use.c conf_changes
  * -# Initialize the module with the set configurations.
- *  - \snippet qs_i2c_master_basic_use.c init_module
+ *  - \snippet qs_i2c_slave_basic_use.c init_module
  * -# Enable the module.
- *  - \snippet qs_i2c_master_basic_use.c enable_module
+ *  - \snippet qs_i2c_slave_basic_use.c enable_module
+ * -# Register and enable callback functions.
+ *  - \snippet qs_i2c_slave_basic_use.c reg_en_i2c_callback
+ * -# Enable global interrupts (I2C interrupts are enabled in \ref i2c_slave_enable).
+ *  - \snippet qs_i2c_slave_basic_use.c enable_global_i2c_interrupts
  *
- * \section i2c_master_basic_use_implementation Implementation
- * To use the I2C, you must make a packet that can be used for the transfer.
- * \snippet qs_i2c_master_basic_use.c packet
- * Where the 3 values are defined and initialized as:
- * \snippet qs_i2c_master_basic_use.c packet_data
- * Then the packet can be sent using i2c_master_write_packet function:
- * \snippet qs_i2c_master_basic_use.c write_packet
- *
- * Where it will try so send the packet TIMEOUT number of times or until is is
- * successfully sent.
- *
+ * \section i2c_slave_basic_use_implementation Implementation
+ * To use the I2C, you must make a packet that can be used for the reading:
+ * \snippet qs_i2c_slave_basic_use.c packet_read
+ * and writing:
+ * \snippet qs_i2c_slave_basic_use.c packet_write
+ * Where the values are defined and initialized as:
+ * \snippet qs_i2c_slave_basic_use.c packet_data
+ * Then the packets can be sent by using the i2c_slave_write_packet function from the read request
+ * callback:
+ * \snippet qs_i2c_slave_basic_use.c write_packet
+ * and received by using the i2c_slave_read_packet function from the write request callback.
+ * \snippet qs_i2c_slave_basic_use.c read_packet
  */
 
 #include <asf.h>
