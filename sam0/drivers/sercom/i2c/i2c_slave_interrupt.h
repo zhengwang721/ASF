@@ -41,12 +41,13 @@
  *
  */
 
-#ifndef I2C_SLAVE_CALLBACK_H_INCLUDED
-#define I2C_SLAVE_CALLBACK_H_INCLUDED
+#ifndef I2C_SLAVE_INTERRUPT_H_INCLUDED
+#define I2C_SLAVE_INTERRUPT_H_INCLUDED
 
-#include <sercom.h>
 #include "i2c_common.h"
+#include <sercom.h>
 #include <sercom_interrupts.h>
+#include <system_interrupt.h>
 #include <pinmux.h>
 
 #ifndef PINMUX_DEFAULT
@@ -177,13 +178,11 @@ struct i2c_slave_module {
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
-	volatile uint16_t buffer_length;
 	/** Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read. */
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
-	volatile uint8_t *buffer;
+	volatile uint8_t *buffer_ptr;
 	/** Save direction of async request. 1 = read, 0 = write. */
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
@@ -389,7 +388,7 @@ static inline void i2c_slave_enable_callback(
 	Assert(module->hw);
 
 	/* Mark callback as enabled. */
-	module->enabled_callback = (1 << callback_type);
+	module->enabled_callback |= (1 << callback_type);
 }
 
 
@@ -421,11 +420,11 @@ static inline void i2c_slave_disable_callback(
 */
 	//TODO: typedef i2cpack?
 
-enum status_code i2c_slave_read_packet_callback(
+enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
-enum status_code i2c_slave_write_packet_callback(
+enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
 		i2c_packet_t *const packet);
 
@@ -436,7 +435,7 @@ enum status_code i2c_slave_write_packet_callback(
  *
  * \param  module Pointer to device instance structure.
  */
-static inline void i2c_slave_cancel_transfer_callback(
+static inline void i2c_slave_abort_job(
 		struct i2c_slave_module *const module)
 {
 	/* Sanity check. */
@@ -459,14 +458,14 @@ static inline void i2c_slave_cancel_transfer_callback(
  *
  * \return                     Last status code from transfer operation
  * \retval STATUS_OK           No error has occurred
- * \retval STATUS_BUSY  Transfer is in progress
+ * \retval STATUS_BUSY         Transfer is in progress
  * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
  * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
  *                             last transfer
  * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
  * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
  */
-static inline enum status_code i2c_slave_async_get_operation_status(
+static inline enum status_code i2c_slave_get_job_status(
 		struct i2c_slave_module *const module)
 {
 	/* Check sanity. */
@@ -484,4 +483,4 @@ static inline enum status_code i2c_slave_async_get_operation_status(
 }
 #endif
 
-#endif /* I2C_SLAVE_CALLBACK_H_INCLUDED */
+#endif /* I2C_SLAVE_INTERRUPT_H_INCLUDED */
