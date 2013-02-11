@@ -123,9 +123,6 @@
 
 int main(void)
 {
-	struct genclk_config gcfg;
-	/* avoid Cppcheck Warning */
-	UNUSED(gcfg);
 
 	sysclk_init();
 	board_init();

@@ -600,9 +600,6 @@ bool sau_usart_tx_ready()
  */
 void main(void)
 {
-	volatile uint32_t data;
-	/* avoid Cppcheck Warning */
-	UNUSED(data);
 	Enable_global_exception();
 	Enable_global_interrupt();
 	// Clear the LEDs.

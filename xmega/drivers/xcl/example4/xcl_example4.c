@@ -92,10 +92,6 @@
  */
 int main(void)
 {
-	volatile uint32_t real_resolution;
-	/* avoid Cppcheck Warning */
-	UNUSED(real_resolution);
-
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.

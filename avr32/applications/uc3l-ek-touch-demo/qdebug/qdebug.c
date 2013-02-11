@@ -438,8 +438,7 @@ Notes   :   Should only be called from the command handler
 
 void Set_Measurement_Period(void)
 {
-   /* avoid Cppcheck Warning */
-   UNUSED(measurement_period_ms);
+
 }
 
 /*============================================================================

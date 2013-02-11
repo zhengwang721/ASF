@@ -134,11 +134,8 @@ void GMAC_Handler(void)
  */
 static void run_gmac_link_test(const struct test_case *test)
 {
-	volatile uint32_t ul_delay;
 	gmac_options_t gmac_option;
 	uint8_t uc_rc = 1;
-	/* avoid Cppcheck Warning */
-	UNUSED(ul_delay);
 
 	/* Enable GMAC clock */
 	pmc_enable_periph_clk(ID_GMAC);

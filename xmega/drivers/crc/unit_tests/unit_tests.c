@@ -230,9 +230,6 @@ static void run_16bit_io_test(const struct test_case *test)
 	uint8_t tmp_buffer[LENGTH(data_8bit) + sizeof(uint16_t)];
 	int i;
 	uint16_t checksum;
-	bool success;
-	/* avoid Cppcheck Warning */
-	UNUSED(success);
 
 	crc_io_checksum_byte_start(CRC_16BIT);
 

@@ -285,9 +285,6 @@ ISR(ADCIFB_interrupt_handler, AVR32_ADCIFB_IRQ_GROUP, ADC_INTERRUPT_PRIORITY)
  */
 int main(void)
 {
-	uint32_t i;
-	/* avoid Cppcheck Warning */
-	UNUSED(i);
 	/* Switch on the STATUS LED */
 	gpio_clr_gpio_pin(STATUS_LED);
 	/* Switch off the error LED. */
