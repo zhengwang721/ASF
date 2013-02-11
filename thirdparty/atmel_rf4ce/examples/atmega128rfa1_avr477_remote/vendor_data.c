@@ -17,6 +17,7 @@
 /* === INCLUDES ============================================================ */
 
 #include <stdio.h>
+#include "compiler.h"
 
 #include "rf4ce.h"
 #include "zrc.h"
@@ -225,7 +226,7 @@ void vendor_data_ind(uint8_t PairingRef, profile_id_t ProfileId, uint16_t Vendor
         /* Keep compiler happy */
         UNUSED(ProfileId);
         UNUSED(RxLinkQuality);
-        UNUSED(RxFlags)s;
+        UNUSED(RxFlags);
     }
 }
 #endif  /* #ifndef RF4CE_TARGET */

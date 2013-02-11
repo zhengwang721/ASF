@@ -17,6 +17,7 @@
 /* === INCLUDES ============================================================ */
 
 #include <stdio.h>
+#include "compiler.h"
 
 #include "rf4ce.h"
 #include "zrc.h"
