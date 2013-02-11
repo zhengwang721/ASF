@@ -61,7 +61,7 @@ void dac_reset(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
-	while (dac_is_synching(module_inst)) {
+	while (dac_is_syncing(module_inst)) {
 		/* Wait until the synchronization is complete */
 	}
 
@@ -223,7 +223,7 @@ void dac_enable(
 
 	Dac *const dac_module = module_inst->hw_dev;
 
-	while (dac_is_synching(module_inst)) {
+	while (dac_is_syncing(module_inst)) {
 		/* Wait until the synchronization is complete */
 	}
 

@@ -444,7 +444,7 @@ struct dac_chan_conf {
  * \retval true if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool dac_is_synching(
+static inline bool dac_is_syncing(
 	struct dac_module *const dev_inst)
 {
 	/* Sanity check arguments */

@@ -316,13 +316,9 @@
  * adjustment.
  *
  * Before checking for a new capture, \ref TC_INTERRUPT_FLAG_OVERFLOW
- * should be checked. A suitable program flow for capture events is shown below.
- *
- * \image html state_dia_capture.svg "Diagram of capture operation"
- *
- * How to handle the buffer overflow error is up to the user, however it may be
- * necessary to clear both the capture overflow flag and the capture flag upon
- * each capture reading.
+ * should be checked. The response to a overflow error is left to the user
+ * application, however it may be necessary to clear both the capture overflow
+ * flag and the capture flag upon each capture reading.
  *
  * \subsubsection asfdoc_samd20_tc_module_overview_compare_match_capt_pwc Capture Operations - Pulse Width
  *
@@ -389,17 +385,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if !defined(__DOXYGEN__)
-#  define _TC_GCLK_ID(n, unused)     TC##n##_GCLK_ID   ,
-#  define _TC_PM_APBCMASK(n, unused) PM_APBCMASK_TC##n ,
-
-/** TODO: remove once present in device header file */
-#  define TC_INST_GCLK_ID     { MREPEAT(TC_INST_NUM, _TC_GCLK_ID, ~)     }
-
-/** TODO: remove once present in device header file */
-#  define TC_INST_PM_APBCMASK { MREPEAT(TC_INST_NUM, _TC_PM_APBCMASK, ~) }
 #endif
 
 /**
@@ -754,7 +739,7 @@ struct tc_module {
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
- * \param[in] module_inst  Pointer to the module software device instance
+ * \param[in]  module_inst   Pointer to the software module instance struct
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
@@ -789,7 +774,7 @@ static inline bool tc_is_syncing(
  *  \li No inversion of waveform output
  *  \li No capture enabled
  *  \li Count upward
- *  \li Don't perform oneshot operations
+ *  \li Don't perform one-shot operations
  *  \li No event action
  *  \li No channel 0 PWM output
  *  \li No channel 1 PWM output
@@ -797,7 +782,7 @@ static inline bool tc_is_syncing(
  *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *
- * \param[out] config  Pointer to a TC module configuration structure to set
+ * \param[out]  config  Pointer to a TC module configuration structure to set
  */
 static inline void tc_get_config_defaults(
 		struct tc_conf *const config)
@@ -836,8 +821,8 @@ static inline void tc_get_config_defaults(
 }
 
 enum status_code tc_init(
-		Tc *const tc_module,
 		struct tc_module *const module_inst,
+		Tc *const tc_module,
 		const struct tc_conf *const config);
 
 /** @} */
@@ -850,13 +835,13 @@ enum status_code tc_init(
 /**
  * \brief Enables an TC module event input or output.
  *
- *  Enables one or more input or output events to or from the TC module.
- *  See \ref tc_events for a list of events this module supports.
+ * Enables one or more input or output events to or from the TC module.
+ * See \ref tc_events for a list of events this module supports.
  *
- *  \note Events cannot be altered while the module is enabled.
+ * \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] module_inst  Software instance for the TC module
- *  \param[in] events    Struct containing flags of events to enable
+ * \param[in]  module_inst  Pointer to the software module instance struct
+ * \param[in]  events       Struct containing flags of events to enable
  */
 static inline void tc_enable_events(
 		struct tc_module *const module_inst,
@@ -891,13 +876,13 @@ static inline void tc_enable_events(
 /**
  * \brief Disables an TC module event input or output.
  *
- *  Disables one or more input or output events to or from the TC module.
- *  See \ref tc_events for a list of events this module supports.
+ * Disables one or more input or output events to or from the TC module.
+ * See \ref tc_events for a list of events this module supports.
  *
- *  \note Events cannot be altered while the module is enabled.
+ * \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] module_inst  Software instance for the TC module
- *  \param[in] events    Struct containing flags of events to disable
+ * \param[in]  module_inst  Pointer to the software module instance struct
+ * \param[in]  events       Struct containing flags of events to disable
  */
 static inline void tc_disable_events(
 		struct tc_module *const module_inst,
@@ -942,13 +927,13 @@ enum status_code tc_reset(
 /**
  * \brief Enable the TC module.
  *
- * This function enables the TC module. The counter will start when
- * the counter is enabled.
+ * Enables a TC module that has been previously initialized. The counter will
+ * start when the counter is enabled.
  *
- * \note When the counter is enabled for retrigger on an
- * event, the counter will not start until the start function is used.
+ * \note When the counter is configured to re-trigger on an event, the counter
+ *       will not start until the start function is used.
  *
- * \param[in] module_inst  Pointer to the device struct
+ * \param[in]  module_inst   Pointer to the software module instance struct
  */
 static inline void tc_enable(
 		const struct tc_module *const module_inst)
@@ -971,9 +956,9 @@ static inline void tc_enable(
 /**
  * \brief Disables the TC module.
  *
- * This function disables the TC module and stops the counter.
+ * Disables a TC module and stops the counter.
  *
- * \param[in] module_inst  Pointer to the device struct
+ * \param[in]  module_inst   Pointer to the software module instance struct
  */
 static inline void tc_disable(
 		const struct tc_module *const module_inst)
@@ -1022,7 +1007,7 @@ enum status_code tc_set_count_value(
  * counting up, or max or the top value if the counter was counting
  * down when stopped.
  *
- * \param[in] module_inst  Pointer to the device struct
+ * \param[in]  module_inst   Pointer to the software module instance struct
  */
 static inline void tc_stop_counter(
 		const struct tc_module *const module_inst)
@@ -1045,10 +1030,9 @@ static inline void tc_stop_counter(
 /**
  * \brief Starts the counter.
  *
- * This function can be used to start the counter. It will also
- * restart the counter after a stop action has been performed.
+ * Starts or restarts an initialized TC module's counter.
  *
- * \param[in] module_inst     Pointer to the device struct
+ * \param[in]  module_inst   Pointer to the software module instance struct
  */
 static inline void tc_start_counter(
 		const struct tc_module *const module_inst)
@@ -1088,8 +1072,8 @@ uint32_t tc_get_capture_value(
 
 enum status_code tc_set_compare_value(
 		const struct tc_module *const module_inst,
-		const uint32_t compare_value,
-		const enum tc_compare_capture_channel channel_index);
+		const enum tc_compare_capture_channel channel_index,
+		const uint32_t compare_value);
 
 /** @} */
 
