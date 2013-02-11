@@ -2,7 +2,6 @@
 	<project caption="Quick Start for the SAMD20 clock source configuration" id="sam0.drivers.system.quick_start.dummy.atsamd20">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.system.quick_start"/>
 		<generator value="iarewarm"/>

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 BOD configuration
+ * \brief SAMD20 BOD Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,42 +38,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef BOD_CONFIG_H
-#  define BOD_CONFIG_H
 
-/* BOD33 Configuration
- * ------------------------------------------------------*/
-
-/* Enable BOD33 */
-#define CONF_BOD33_ENABLE false
-
-#define CONF_BOD33_ACTION SYSTEM_BOD_ACTION_RESET
-//#define BOD33_ACTION SYSTEM_BOD_ACTION_INTERRUPT
-
-#define CONF_BOD33_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define BOD33_MODE SYSTEM_BOD_MODE_CONTINIOUS
-
-#define CONF_BOD33_LEVEL 10
-#define CONF_BOD33_HYSTERESIS true
-
-
-/* BOD12 Configuration
- * ------------------------------------------------------*/
-
-/* Enable BOD12 */
-#define CONF_BOD12_ENABLE false
-
-/* Action on bod timeout; reset or interrupt */
-#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_RESET
-//#define CONF_BOD12_ACTION SYSTEM_BOD_ACTION_INTERRUPT
-
-/* Sampled or continious monitoring */
-#define CONF_BOD12_MODE SYSTEM_BOD_MODE_SAMPLED
-//#define CONF_BOD12_MODE SYSTEM_BOD_MODE_CONTINIOUS
-
-#define CONF_BOD12_HYSTERESIS true
-
-
-#endif /* BOD_CONFIG_H */
+/**
+ * \page asfdoc_samd20_bod_basic_use_case Quick Start Guide for the BOD module - Basic Use Case
+ * TODO
+ */

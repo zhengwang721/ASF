@@ -1,9 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="LED Toggle Application" id="sam0.applications.led_toggle.samd20_xplained_pro">
+	<project caption="LED Toggle Application" id="sam0.applications.osc8_calib.samd20_xplained_pro">
 		<require idref="board.samd20_xplained_pro"/>
-		<require idref="sam0.applications.led_toggle"/>
+		<require idref="sam0.applications.osc8_calib"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_bod.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

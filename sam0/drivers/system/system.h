@@ -56,8 +56,8 @@
  *
  * The following peripherals are used by this module:
  *
- * - SYSCTRL (System Control) for BOD and Clock control
- * - PM (Power Manager) for Reset Cause determination, Bus control and Sleep
+ * - SYSCTRL (System Control) for Clock control
+ * - PM (Power Manager) for Reset Cause determination, Peripheral Bus Control and Sleep
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_samd20_system_prerequisites
@@ -76,20 +76,9 @@
  * \section asfdoc_samd20_system_module_overview Module Overview
  *
  * The System driver provides a collection of interfaces between the user
- * application logic, and the core device functionality (such as clocks, Brown
- * Out Detection, etc.) that is required for all applications. It contains a
- * number of sub-modules that control one specific aspect of the device.
- *
- * \section asfdoc_samd20_system_module_bod BOD (Brown-Out Detector)
- * The BOD monitors the supply voltage for any dips that go below the set BOD
- * threshold. In case of a BOD detect the BOD will either reset the system or
- * raise a hardware interrupt so that a safe power-down sequence can be
- * imitated.
- *
- * \subsection asfdoc_samd20_system_module_bod_config BOD Configuration
- * The BOD configuration is performed by the \ref system_bod_set_config
- * function. This function accepts a struct containing configuration options to
- * set either the BOD33 or the BOD12 to the selected settings.
+ * application logic, and the core device functionality (such as clocks, reset
+ * cause determination, etc.) that is required for all applications. It contains
+ * a number of sub-modules that control one specific aspect of the device.
  *
  * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
  * In some application there might be a need to perform a different program
@@ -210,42 +199,6 @@ static inline void system_board_init(void);
 #endif
 
 /**
- * \brief Brown Out Detector hardware instance IDs.
- *
- * List of possible BOD controllers within the device.
- */
-enum system_bod {
-	/** BOD12 Internal core voltage. */
-	SYSTEM_BOD_BOD12,
-	/** BOD33 External I/O voltage, */
-	SYSTEM_BOD_BOD33,
-};
-
-/**
- * \breif Brown Out Detector detection actions.
- *
- * List of possible BOD actions when a BOD module detects a brown-out condition.
- */
-enum system_bod_action {
-	/** A BOD detect will reset the device. */
-	SYSTEM_BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
-	/** A BOD detect will fire an interrupt. */
-	SYSTEM_BOD_ACTION_INTERRUPT = SYSCTRL_BOD33_ACTION(2),
-};
-
-/**
- * \breif Brown Out Detector sampling modes.
- *
- * List of possible BOD module voltage sampling modes.
- */
-enum system_bod_mode {
-	/** BOD will sample the supply line continuously. */
-	SYSTEM_BOD_MODE_CONTINIOUS  = 0,
-	/** BOD will use the BOD sampling clock (1kHz) to sample the supply line. */
-	SYSTEM_BOD_MODE_SAMPLED     = SYSCTRL_BOD33_MODE,
-};
-
-/**
  * \brief Voltage references within the device.
  *
  * List of available voltage references (VREF) that may be used within the
@@ -277,7 +230,6 @@ enum system_sleepmode {
 	SYSTEM_SLEEPMODE_STANDBY,
 };
 
-
 /**
  * \brief Reset causes of the system.
  *
@@ -294,21 +246,6 @@ enum system_reset_cause {
 	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
 	/** The system was reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
-};
-
-
-/**
- * Configuration struct for the BOD12 and BOD33
- */
-struct system_bod_config {
-	/** Sampled or continuous mode */
-	enum system_bod_mode mode;
-	/** Action on detect; reset or interrupt */
-	enum system_bod_action action;
-	/** BOD level */
-	uint8_t level; /* TODO: document this more */
-	/** Enable hysteresis */
-	bool hysteresis;
 };
 
 /**
@@ -358,42 +295,6 @@ static inline void system_vref_disable(
 			return;
 	}
 }
-
-/**
- * \name BOD configuration
- * @{
- */
-
-/**
- * \brief Get default BOD configuration
- *
- * The default BOD configuration is:
- * - Continuous mode
- * - Reset on BOD detect
- * - Hysteresis enabled
- * - BOD level 0x12
- *
- * \param[out] conf BOD configuration struct to set to default settings
- */
-static inline void system_bod_get_config_defaults(
-		struct system_bod_config *const conf)
-{
-	/* Sanity check arguments */
-	Assert(conf);
-
-	conf->mode   = SYSTEM_BOD_MODE_CONTINIOUS;
-	conf->action = SYSTEM_BOD_ACTION_RESET;
-	conf->level  = 0x12; /* TODO: Need to revisit this level */
-	conf->hysteresis = true;
-}
-
-enum status_code system_bod_set_config(
-		const enum system_bod bod,
-		struct system_bod_config *const conf);
-
-/**
- * @}
- */
 
 /**
  * \name Device sleep
@@ -469,13 +370,7 @@ static inline void system_sleep(void)
  *
  * This function will return the cause of a system reset
  *
- * \retval SYSTEM_RESET_CAUSE_WDT The last system reset was from the Watchdog timer
- * \retval SYSTEM_RESET_CAUSE_EXTERNAL_RESET Last system reset was from the
- * external reset pin
- * \retval SYSTEM_RESET_CAUSE_BOD33 Last system reset was from the BOD33
- * \retval SYSTEM_RESET_CAUSE_BOD12 Last system reset was from the BOD12
- * \retval SYSTEM_RESET_CAUSE POR Last system reset was from the power-on-reset
- * (power up)
+ * \return A enum value indicating the cause of the last system reset.
  */
 static inline enum system_reset_cause system_get_reset_cause(void)
 {
@@ -490,8 +385,6 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * \name System initialization
  * @{
  */
-
-void system_bod_init(void);
 
 void system_init(void);
 
@@ -510,10 +403,6 @@ void system_init(void);
  *  <tr>
  *      <th>Acronym</th>
  *      <th>Definition</th>
- *  </tr>
- *  <tr>
- *      <td>BOD</td>
- *      <td>Brownout detector</td>
  *  </tr>
  *  <tr>
  *		<td>PM</td>
