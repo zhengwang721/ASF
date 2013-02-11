@@ -50,7 +50,7 @@
 #ifndef STB_ARMCRYPTO_H
 #define STB_ARMCRYPTO_H
 
-#if defined(STB_ARMCRYPTO) || defined(DOXYGEN)
+#if defined(STB_ARMCRYPTO) || defined(__DOXYGEN__)
 
 /* === Includes =========================================================== */
 

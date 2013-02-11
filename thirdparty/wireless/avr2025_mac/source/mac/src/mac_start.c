@@ -74,7 +74,7 @@
 
 /* === Globals ============================================================== */
 
-#if (MAC_START_REQUEST_CONFIRM == 1) || defined(DOXYGEN)
+#if (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__)
 
 static mlme_start_req_t msr_params;    /* Intermediate start parameters */
 
@@ -424,6 +424,6 @@ void mac_coord_realignment_command_tx_success(uint8_t tx_status, buffer_t *buf_p
 } /* mac_coord_realignment_command_tx_success() */
 
 
-#endif /* (MAC_START_REQUEST_CONFIRM == 1) || defined(DOXYGEN) */
+#endif /* (MAC_START_REQUEST_CONFIRM == 1) || defined(__DOXYGEN__) */
 
 /* EOF */

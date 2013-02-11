@@ -71,7 +71,7 @@ extern "C" {
 #endif
 
     /**
-     * \addtogroup group_tal_tx_212B
+     * \addtogroup group_tal_tx_212b
      * @{
      */
 

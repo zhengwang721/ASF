@@ -428,7 +428,7 @@ void ed_scan_done(void);
 #define pal_trx_frame_write(data, length) \
     memcpy((void *)&TRXFBST, (data), (length))
 
-#ifndef DOXYGEN
+#ifndef __DOXYGEN__
 #define _pal_trx_bit_read(addr, mask, pos) \
     (((*(volatile uint8_t *)(addr)) & (mask)) >> (pos))
 #endif
@@ -443,7 +443,7 @@ void ed_scan_done(void);
 #define pal_trx_bit_read(arg) \
     _pal_trx_bit_read(arg)
 
-#ifndef DOXYGEN
+#ifndef __DOXYGEN__
 #define _pal_trx_bit_write(addr, mask, pos, val) do {   \
         (*(volatile uint8_t *)(addr)) =                 \
                                                         ((*(volatile uint8_t *)(addr)) & ~(mask)) | \

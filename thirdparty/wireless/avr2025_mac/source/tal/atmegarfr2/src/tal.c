@@ -615,7 +615,6 @@ static void switch_pll_on(void)
 
 #if (_DEBUG_ > 0)
     Assert("PLL switch failed" == 0);
-    app_alert();
 #endif
 }
 

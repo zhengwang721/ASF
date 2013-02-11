@@ -86,12 +86,12 @@ static irq_handler_t irq_hdl_trx_cca_ed;
 /** Function pointer to store callback for transceiver AWAKE interrupt. */
 static irq_handler_t irq_hdl_trx_awake;
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 /** Function pointer to store callback for transceiver timestamp (RX_START) interrupt. */
 static irq_handler_t irq_hdl_trx_tstamp;
 #endif
 
-#if (defined ENABLE_ALL_TRX_IRQS) || (defined DOXYGEN)
+#if (defined ENABLE_ALL_TRX_IRQS) || (defined __DOXYGEN__)
 /** Function pointer to store callback for transceiver AMI interrupt. */
 static irq_handler_t irq_hdl_trx_ami;
 /** Function pointer to store callback for transceiver BATMON interrupt. */
@@ -150,7 +150,7 @@ void pal_trx_irq_init_cca_ed(FUNC_PTR trx_irq_cb)
 }
 
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 /*
  * \brief Initializes the transceiver timestamp interrupt (RX START interrupt)
  *
@@ -164,7 +164,7 @@ void pal_trx_irq_init_tstamp(FUNC_PTR trx_irq_cb)
 {
     irq_hdl_trx_tstamp = (irq_handler_t)trx_irq_cb;
 }
-#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN) */
+#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__) */
 
 /*
  * \brief Initializes the transceiver AWAKE interrupt
@@ -179,7 +179,7 @@ void pal_trx_irq_init_awake(FUNC_PTR trx_irq_cb)
     irq_hdl_trx_awake = (irq_handler_t)trx_irq_cb;
 }
 
-#if defined(ENABLE_ALL_TRX_IRQS) || defined(DOXYGEN)
+#if defined(ENABLE_ALL_TRX_IRQS) || defined(__DOXYGEN__)
 /*
  * \brief Initializes the transceiver AMI interrupt
  *

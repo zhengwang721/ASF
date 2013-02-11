@@ -122,11 +122,11 @@ extern "C" {
      * Random Number Generator from the transceiver.
      * The Random Number Generator generates 2-bit random values. These 2-bit
      * random values are concatenated to the required 16-bit random seed.
-     * The generated random 16-bit number is feed into function srand()
+     * The generated random 16-bit number is fed into function srand()
      * as initial seed.
      * The transceiver state is initally set to RX_ON.
      * After the completion of the random seed generation, the
-     * trancseiver is set to TRX_OFF.
+     * tranceiver is set to TRX_OFF.
      *
      * @ingroup apiTalApi
      */

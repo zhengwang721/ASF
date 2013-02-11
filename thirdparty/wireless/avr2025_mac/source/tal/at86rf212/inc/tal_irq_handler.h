@@ -86,7 +86,7 @@ extern "C" {
 
     void trx_irq_awake_handler_cb(void);
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
     /**
      * \brief Timestamp interrupt handler
      *

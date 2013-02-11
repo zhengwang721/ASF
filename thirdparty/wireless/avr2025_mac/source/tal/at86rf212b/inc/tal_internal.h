@@ -64,7 +64,7 @@
 
 /**
  * \ingroup group_tal
- * \defgroup group_tal_212B AT86RF212B Transceiver Abstraction Layer
+ * \defgroup group_tal_212b AT86RF212B Transceiver Abstraction Layer
  * The AT86RF212B is a  low-power ,low voltage 700/800/900 MHz radio transceiver designed for industrial
  * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz  ISM band applications.
  * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
@@ -72,52 +72,52 @@
  */
 
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_state_machine_212B  TAL State Machine
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_state_machine_212b  TAL State Machine
  * The different operating states of the Transceiver are controlled by the TAL state machine.
  *
  */
  
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_init_212B  TAL Initialization and reset
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_init_212b  TAL Initialization and reset
  * Performs initialization and reset functionalities of the transceiver
  *
  */
 
 
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_ed_212B   TAL Energy Detection
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_ed_212b   TAL Energy Detection
  * Performs the ED scan functionalities.
  *
  */
 
 
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_irq_212B  Transceiver Interrupt Handling
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_irq_212b  Transceiver Interrupt Handling
  * Handles Transceiver related Interrupts.
  *
  */
 
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_pib_212B   TAL PIB Storage
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_pib_212b   TAL PIB Storage
  * The PIB(Pan Information Base) attributes related to the TAL are Stored and handled  by the TAL PIB storage.
  *
  */
 
 /**
- * \ingroup group_tal_212B
+ * \ingroup group_tal_212b
  * \defgroup group_tal_tx_212   TAL Frame Transmission Unit
  * The Frame Transmission Unit generates and transmits the frames using PAL .
  *
  */
 
 /**
-* \ingroup group_tal_tx_212B
-* \defgroup group_tal_tx_csma_212B   TAL CSMA/CA Module
+* \ingroup group_tal_tx_212b
+* \defgroup group_tal_tx_csma_212b   TAL CSMA/CA Module
 * Performs channel access mechanism for frame transmission
 * For Detailed information refer  CSMA-CA algorithm section of IEEE Std 802.15.4-2006
 *
@@ -125,8 +125,8 @@
 
 
 /**
- * \ingroup group_tal_212B
- * \defgroup group_tal_rx_212B   TAL Frame Reception Unit
+ * \ingroup group_tal_212b
+ * \defgroup group_tal_rx_212b   TAL Frame Reception Unit
  * The Frame Reception Unit reads/uploads the incoming frames .
  *
  */
@@ -346,7 +346,7 @@ extern bool tal_beacon_transmission;
  * \param trx_cmd needs to be one of the trx commands
  *
  * \return current trx state
- * \ingroup group_tal_state_machine_212B
+ * \ingroup group_tal_state_machine_212b
  */
 tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd);
 #ifdef ENABLE_FTN_PLL_CALIBRATION
@@ -369,7 +369,7 @@ void calibration_timer_handler_cb(void *parameter);
  * tal_ed_end_cb().
  *
  * \param parameter unused callback parameter
- * \ingroup group_tal_ed_212B
+ * \ingroup group_tal_ed_212b
  */
 void ed_scan_done(void);
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
