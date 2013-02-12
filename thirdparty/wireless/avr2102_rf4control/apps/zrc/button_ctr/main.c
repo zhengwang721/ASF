@@ -62,8 +62,9 @@
 /**
  * \page overview Overview
  * \section intro Introduction
- * To be added
+ *  To be added
  */
+
 
 /** \page main_files Application Files
  * - main.c\n                      Application main file.
@@ -113,7 +114,7 @@ typedef enum node_status_tag
     WARM_START,
     COLD_START,
     TRANSMITTING,
-    SELECT_TARGET_OPTIONS,
+    TARGET_REQ_HANDLE,
     TARGET_PAIRING,
     TARGET_CHANGING,
     BUTTON_RELEASE_WAITING,
@@ -137,7 +138,8 @@ FLASH_DECLARE(uint8_t supported_cec_cmds[32]) = SUPPORTED_CEC_CMDS;
 
 static node_status_t node_status;
 static uint8_t pairing_ref = 0xFF;
-static uint8_t repeat_press_key_state = USER_CONTROL_RELEASED;
+//static key_state_t prev_button;
+
 /* === PROTOTYPES ========================================================== */
 
 static void app_task(void);
@@ -147,6 +149,9 @@ static void indicate_fault_behavior(void);
 #ifdef ZRC_CMD_DISCOVERY
 static void start_cmd_disc_cb(void *callback_parameter);
 #endif
+
+static void nlme_reset_confirm_cold_start(nwk_enum_t Status);
+
 
 static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd);
 static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd);
@@ -216,6 +221,8 @@ int main(void)
      */
     //pal_global_irq_enable();
 
+    nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
+
     key_state_t key_state = key_state_read(COLD_RESET_KEY);
     // For debugging: Force button press
     //key_state = KEY_PRESSED;
@@ -226,7 +233,7 @@ int main(void)
         LED_On(LED0);
         node_status = COLD_START;
         nlme_reset_request(true
-                           , (FUNC_PTR)nlme_reset_confirm
+                           , (FUNC_PTR)nlme_reset_confirm_cold_start
 
                           );        
     }
@@ -249,7 +256,6 @@ int main(void)
 }
 
 
-
 /*
  * The NLME-RESET.confirm primitive allows the NLME to notify the application of
  * the status of its request to reset the NWK layer.
@@ -270,6 +276,44 @@ static void nlme_reset_confirm(nwk_enum_t Status)
         pairing_ref = 0xFF;
         nlme_start_request(
             (FUNC_PTR)nlme_start_confirm
+        );
+    }
+    else    // warm start
+    {
+        pairing_ref = 0;
+        /* Set power save mode */
+#ifdef ENABLE_PWR_SAVE_MODE
+        nlme_rx_enable_request(nwkcMinActivePeriod
+                               , (FUNC_PTR)nlme_rx_enable_confirm
+                              );
+#else
+        nlme_rx_enable_request(RX_DURATION_OFF
+                               , (FUNC_PTR)nlme_rx_enable_confirm
+                              );
+#endif
+    }
+}
+
+/*
+ * The NLME-RESET.confirm cold start primitive allows the NLME to notify the application of
+ * the status of its request to reset the NWK layer.
+ */
+static void nlme_reset_confirm_cold_start(nwk_enum_t Status)
+{
+    if (Status != NWK_SUCCESS)
+    {
+        while (1)
+        {
+            // endless while loop!
+            indicate_fault_behavior();
+        }
+    }
+
+    if (node_status == COLD_START)
+    {
+        pairing_ref = 0xFF;
+        nlme_start_request(
+            NULL
         );
         node_status = BUTTON_RELEASE_WAITING;
     }
@@ -304,6 +348,21 @@ static void nlme_start_confirm(nwk_enum_t Status)
         }
     }
 
+    LED_Off(LED0);
+    LED_On(LED1);
+
+    dev_type_t OrgDevTypeList[1];
+    profile_id_t OrgProfileIdList[1];
+    profile_id_t DiscProfileIdList[1];
+
+    OrgDevTypeList[0] = DEV_TYPE_REMOTE_CONTROL;
+    OrgProfileIdList[0] = PROFILE_ID_ZRC;
+    DiscProfileIdList[0] = PROFILE_ID_ZRC;
+
+    pbp_org_pair_request(APP_CAPABILITIES, OrgDevTypeList, OrgProfileIdList,
+                         DEV_TYPE_WILDCARD, NUM_SUPPORTED_PROFILES, DiscProfileIdList
+                         , (FUNC_PTR)pbp_org_pair_confirm
+                        );
 }
 
 
@@ -336,11 +395,9 @@ static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 #else
     /* Set power save mode */
 #ifdef ENABLE_PWR_SAVE_MODE
-    nlme_rx_enable_request(nwkcMinActivePeriod
-	                      ,(FUNC_PTR)nlme_rx_enable_confirm);
+    nlme_rx_enable_request(nwkcMinActivePeriod);
 #else
-    nlme_rx_enable_request(RX_DURATION_OFF
-	                      ,(FUNC_PTR)nlme_rx_enable_confirm);
+    nlme_rx_enable_request(RX_DURATION_OFF);
 #endif
 #endif
 }
@@ -458,7 +515,7 @@ static void app_task(void)
     static uint32_t current_time;
     static uint32_t previous_button_time;
     static uint8_t prev_button_no = 0xFF;
-    
+    static uint8_t repeat_press_key_state = USER_CONTROL_RELEASED;
 
     switch (node_status)
     {
@@ -483,7 +540,7 @@ static void app_task(void)
                     pal_get_current_time(&current_time);
                     if (prev_button_no == key_no)
                     {
-                        if ((current_time - previous_button_time) <DEBOUNCE_TIME_US)
+                        if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
                         {
                             return;
                         }
@@ -493,33 +550,34 @@ static void app_task(void)
                     if(SELECT_KEY == key_no)
                     {
                       prev_button_no = 0xFF;
-                      node_status = SELECT_TARGET_OPTIONS;
+                      node_status = TARGET_REQ_HANDLE;
                       return;
                     }
 
                       LED_On(LED0);
-		      zrc_cmd_code_t user_cmd;
-                      uint8_t cmd;
-                                          
                       if(FUNCTION1_KEY == key_no)
                       {
-                        cmd= POWER_TOGGLE_FUNCTION;  
-						user_cmd=USER_CONTROL_PRESSED;
-
-                      }
-                      else if(FUNCTION2_KEY == key_no)
-                      {
-                        cmd = VOLUME_UP; 
-                        repeat_press_key_state = USER_CONTROL_REPEATED;
-						user_cmd=USER_CONTROL_REPEATED;
-                      }
-					  if (zrc_cmd_request(pairing_ref, 0x0000, user_cmd,
+                        uint8_t cmd = POWER_TOGGLE_FUNCTION;  
+                        if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_PRESSED,
                                             1, &cmd, TX_OPTIONS
                                             , (FUNC_PTR)zrc_cmd_confirm
                                            ))
-					 {
-						node_status = TRANSMITTING;
-                     }
+                        {
+                            node_status = TRANSMITTING;
+                        }
+                      }
+                      else if(FUNCTION2_KEY == key_no)
+                      {
+                        uint8_t cmd = VOLUME_UP; 
+                        repeat_press_key_state = USER_CONTROL_REPEATED;
+                        if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_REPEATED,
+                                            1, &cmd, TX_OPTIONS
+                                            , (FUNC_PTR)zrc_cmd_confirm
+                                           ))
+                        {
+                            node_status = TRANSMITTING;
+                        }
+                      }
                 }
                 else 
                 {
@@ -535,7 +593,7 @@ static void app_task(void)
             }
             break;
 
-    case SELECT_TARGET_OPTIONS:
+    case TARGET_REQ_HANDLE:
       {
         uint8_t key_state = 0xFF;
         key_state = key_state_read(SELECT_KEY);
@@ -592,18 +650,10 @@ static void app_task(void)
 
     case TARGET_PAIRING:
  /* Initiate the Targets Pairing Request */
-        pairing_ref = 0xFF;
-      dev_type_t OrgDevTypeList[1];
-      profile_id_t OrgProfileIdList[1];
-      profile_id_t DiscProfileIdList[1];
-
-      OrgDevTypeList[0] = DEV_TYPE_REMOTE_CONTROL;
-      OrgProfileIdList[0] = PROFILE_ID_ZRC;
-      DiscProfileIdList[0] = PROFILE_ID_ZRC;        
-      pbp_org_pair_request(APP_CAPABILITIES, OrgDevTypeList, OrgProfileIdList,
-        DEV_TYPE_WILDCARD, NUM_SUPPORTED_PROFILES, DiscProfileIdList
-        , (FUNC_PTR)pbp_org_pair_confirm
-        );
+                        pairing_ref = 0xFF;
+                        nlme_start_request(
+                            (FUNC_PTR)nlme_start_confirm
+                        );
         node_status = TARGET_PAIRING_WAIT;
       break;
 
@@ -667,7 +717,7 @@ static void app_task(void)
           }
         }
         pal_get_current_time(&current_time);
-        if ((current_time - previous_button_time) < DEBOUNCE_TIME_US)
+        if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
         {
             return;
         }
@@ -714,11 +764,9 @@ static void app_task(void)
  * @param RcCmd         Sent RC command
  */
 static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
-{   
-    if(repeat_press_key_state!=USER_CONTROL_REPEATED)
-	{
-		node_status = IDLE;
-    }    
+{
+    node_status = IDLE;
+
     if (Status == NWK_SUCCESS)
     {
         LED_Off(LED0);
@@ -837,6 +885,10 @@ static key_state_t key_state_read(key_id_t key_no)
           }
           break;
         default:
+          if(gpio_pin_is_low(GPIO_PUSH_BUTTON_0))
+          {
+            key_val = KEY_PRESSED; 
+          }
           break;
     }
   return key_val;
