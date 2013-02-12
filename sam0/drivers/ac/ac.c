@@ -152,7 +152,7 @@ enum status_code ac_init(
  */
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel,
+		const enum ac_chan_channel channel,
 		struct ac_chan_conf *const config)
 {
 	/* Sanity check arguments */

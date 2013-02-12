@@ -235,30 +235,16 @@ extern "C" {
  *
  * Enum for the possible comparator channels.
  */
-enum ac_channel {
+enum ac_chan_channel {
 	/** Comparator channel 0 (Pair 0, Comparator 0) */
-	AC_CHANNEL_0 = 0,
+	AC_CHAN_CHANNEL_0 = 0,
 	/** Comparator channel 1 (Pair 0, Comparator 1) */
-	AC_CHANNEL_1 = 1,
+	AC_CHAN_CHANNEL_1 = 1,
 #if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
 	/** Comparator channel 2 (Pair 1, Comparator 0) */
-	AC_CHANNEL_2 = 2,
+	AC_CHAN_CHANNEL_2 = 2,
 	/** Comparator channel 3 (Pair 1, Comparator 1) */
-	AC_CHANNEL_3 = 3,
-#endif
-};
-
-/**
- * \brief AC window channel selection enum.
- *
- * Enum for the possible window comparator channels.
- */
-enum ac_win_channel {
-	/** Window channel 0 (Pair 0, Comparators 0 and 1) */
-	AC_WIN_CHANNEL_0 = 0,
-#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
-	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
-	AC_WIN_CHANNEL_1 = 1,
+	AC_CHAN_CHANNEL_3 = 3,
 #endif
 };
 
@@ -370,6 +356,20 @@ enum ac_chan_state {
 	/** Comparator's positive input pin is higher in voltage than the negative
 	 *  input pin. */
 	AC_CHAN_STATE_POS_ABOVE_NEG,
+};
+
+/**
+ * \brief AC window channel selection enum.
+ *
+ * Enum for the possible window comparator channels.
+ */
+enum ac_win_channel {
+	/** Window channel 0 (Pair 0, Comparators 0 and 1) */
+	AC_WIN_CHANNEL_0 = 0,
+#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
+	AC_WIN_CHANNEL_1 = 1,
+#endif
 };
 
 /**
@@ -758,7 +758,7 @@ static inline void ac_chan_get_config_defaults(
 
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel,
+		const enum ac_chan_channel channel,
 		struct ac_chan_conf *const config);
 
 /**
@@ -772,7 +772,7 @@ enum status_code ac_chan_set_config(
  */
 static inline void ac_chan_enable(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -795,7 +795,7 @@ static inline void ac_chan_enable(
  */
 static inline void ac_chan_disable(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -826,7 +826,7 @@ static inline void ac_chan_disable(
  */
 static inline void ac_chan_trigger_single_shot(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -851,7 +851,7 @@ static inline void ac_chan_trigger_single_shot(
  */
 static inline bool ac_chan_is_ready(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -876,7 +876,7 @@ static inline bool ac_chan_is_ready(
  */
 static inline enum ac_chan_state ac_chan_get_state(
 		struct ac_module *const module_inst,
-		const enum ac_channel channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -968,10 +968,10 @@ static inline bool ac_win_is_ready(
 	Assert(module_inst->hw);
 
 	/* Convert a window channel index to the individual comparator channels */
-	enum ac_channel win_pair_comp0 =
-			(enum ac_channel)((uint8_t)win_channel * 2);
-	enum ac_channel win_pair_comp1 =
-			(enum ac_channel)(((uint8_t)win_channel * 2) + 1);
+	enum ac_chan_channel win_pair_comp0 =
+			(enum ac_chan_channel)((uint8_t)win_channel * 2);
+	enum ac_chan_channel win_pair_comp1 =
+			(enum ac_chan_channel)(((uint8_t)win_channel * 2) + 1);
 
 	/* Check if the two comparators used in the window are ready */
 	bool win_pair_comp0_ready = ac_chan_is_ready(module_inst, win_pair_comp0);
