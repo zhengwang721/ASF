@@ -112,7 +112,7 @@ extern "C" {
      *
      * This functions initializes the SAL.
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     void sal_init(void);
 
@@ -125,7 +125,7 @@ extern "C" {
      *
      * @param[out] data     - result of previous operation
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     void sal_aes_read(uint8_t *data);
 
@@ -138,7 +138,7 @@ extern "C" {
      *
      * @param[in]  data  AES block to be en/decrypted
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     void sal_aes_exec(uint8_t *data);
 
@@ -158,7 +158,7 @@ extern "C" {
      * @param[out] odata  Result of previous operation
      *                    (odata may be NULL or equal to idata)
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     void sal_aes_wrrd(uint8_t *idata, uint8_t *odata);
 
@@ -184,7 +184,7 @@ extern "C" {
      * the next AES operation started with sal_aes_exec()
      * will be executed correctly.
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     void sal_aes_restart(void);
 
@@ -194,7 +194,7 @@ extern "C" {
      * This function puts the radio to SLEEP if it has been in SLEEP
      * before sal_aes_restart().
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
 #if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || (defined __DOXYGEN__)
     void _sal_aes_clean_up(void);
@@ -217,7 +217,7 @@ extern "C" {
      *
      * @return  False if some parameter was illegal, true else
      *
-     * @ingroup apiSalApi
+     * @ingroup group_SalApi
      */
     bool sal_aes_setup(uint8_t *key,
                        uint8_t enc_mode,
