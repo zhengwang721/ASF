@@ -142,70 +142,108 @@
 #include <compiler.h>
 #include <gclk.h>
 
+/* TODO: Add to conf_clock.h, set default value */
+#define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
 
-/* TODO: Where to put this ? */
- #define CONF_CLOCK_TIMEOUT 0xFFFFFFFF
+/**
+ * \brief Selectable speeds for the RTC to run at.
+ *
+ * RTC generic clock source generator frequency configuration values,
+ * for \c conf_clock.h.
+ */
+enum conf_clock_rtc_freq {
+	/** 1Hz counter speed for the RTC. \note Must be used for calender
+	 * function. */
+	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
+	/** 1kHz counter speed for the RTC. */
+	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
+	/** 32kHz counter speed for the RTC. */
+	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
+};
 
 
 /**
- * Available GCLK generators. This enum is used in the peripheral device
- * drivers to select the GCLK generator to be used for its operation.
- * The amount of GCLK generators is device dependent.
+ * \brief List of available GCLK generators.
+ *
+ * List of Available GCLK generators. This enum is used in the peripheral
+ * device drivers to select the GCLK generator to be used for its operation.
+ *
+ * The number of GCLK generators available is device dependent.
  */
 enum gclk_generator {
+	/** GCLK generator channel 0. */
 	GCLK_GENERATOR_0,
-#if GCLK_GEN_NUM_MSB > 0
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 0)
+	/** GCLK generator channel 1. */
 	GCLK_GENERATOR_1,
 #endif
-#if GCLK_GEN_NUM_MSB > 1
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 1)
+	/** GCLK generator channel 2. */
 	GCLK_GENERATOR_2,
 #endif
-#if GCLK_GEN_NUM_MSB > 2
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 2)
+	/** GCLK generator channel 3. */
 	GCLK_GENERATOR_3,
 #endif
-#if GCLK_GEN_NUM_MSB > 3
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 3)
+	/** GCLK generator channel 4. */
 	GCLK_GENERATOR_4,
 #endif
-#if GCLK_GEN_NUM_MSB > 4
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 4)
+	/** GCLK generator channel 5. */
 	GCLK_GENERATOR_5,
 #endif
-#if GCLK_GEN_NUM_MSB > 5
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 5)
+	/** GCLK generator channel 6. */
 	GCLK_GENERATOR_6,
 #endif
-#if GCLK_GEN_NUM_MSB > 6
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 6)
+	/** GCLK generator channel 7. */
 	GCLK_GENERATOR_7,
 #endif
-#if GCLK_GEN_NUM_MSB > 7
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 7)
+	/** GCLK generator channel 8. */
 	GCLK_GENERATOR_8,
 #endif
-#if GCLK_GEN_NUM_MSB > 8
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 8)
+	/** GCLK generator channel 9. */
 	GCLK_GENERATOR_9,
 #endif
-#if GCLK_GEN_NUM_MSB > 9
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 9)
+	/** GCLK generator channel 10. */
 	GCLK_GENERATOR_10,
 #endif
-#if GCLK_GEN_NUM_MSB > 10
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 10)
+	/** GCLK generator channel 11. */
 	GCLK_GENERATOR_11,
 #endif
-#if GCLK_GEN_NUM_MSB > 11
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 11)
+	/** GCLK generator channel 12. */
 	GCLK_GENERATOR_12,
 #endif
-#if GCLK_GEN_NUM_MSB > 12
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 12)
+	/** GCLK generator channel 13. */
 	GCLK_GENERATOR_13,
 #endif
-#if GCLK_GEN_NUM_MSB > 13
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 13)
+	/** GCLK generator channel 14. */
 	GCLK_GENERATOR_14,
 #endif
-#if GCLK_GEN_NUM_MSB > 14
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 14)
+	/** GCLK generator channel 15. */
 	GCLK_GENERATOR_15,
 #endif
-#if GCLK_GEN_NUM_MSB > 15
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 15)
+	/** GCLK generator channel 16. */
 	GCLK_GENERATOR_16,
 #endif
 };
 
 /**
- * Available start up times for the XOSC32K
+ * \brief Available start-up times for the XOSC32K
+ *
+ * Available external 32KHz oscillator start-up times, as a number of external
+ * clock cycles.
  */
 enum system_xosc32k_startup {
 	/** Wait 0 clock cycles until the clock source is considered stable */
@@ -227,7 +265,10 @@ enum system_xosc32k_startup {
 };
 
 /**
- * Available start up times for the XOSC
+ * \brief Available start-up times for the XOSC
+ *
+ * Available external oscillator start-up times, as a number of external clock
+ * cycles.
  */
 enum system_xosc_startup {
 	/** Wait 1 clock cycles until the clock source is considered stable */
@@ -265,7 +306,10 @@ enum system_xosc_startup {
 };
 
 /**
- * Available start up times for the OSC32K
+ * \brief Available start-up times for the OSC32K
+ *
+ * Available internal 32KHz oscillator start-up times, as a number of internal
+ * OSC32K clock cycles.
  */
 enum system_osc32k_startup {
 	/** Wait 0 clock cycles until the clock source is considered stable */
@@ -286,21 +330,26 @@ enum system_osc32k_startup {
 	SYSTEM_OSC32K_STARTUP_128,
 };
 
+/**
+ * \brief Division prescalers for the internal 8MHz system clock
+ *
+ * Available prescalers for the internal 8MHz (nominal) system clock.
+ */
 enum system_osc8m_div {
-	/** Do not divide 8MHz */
+	/** Do not divide the 8MHz RC oscillator output */
 	SYSTEM_OSC8M_DIV_0,
-	/** Divide 8MHz by 2 */
+	/** Divide the 8MHz RC oscillator output by 2 */
 	SYSTEM_OSC8M_DIV_2,
-	/** Divide 8MHz by 4 */
+	/** Divide the 8MHz RC oscillator output by 4 */
 	SYSTEM_OSC8M_DIV_4,
-	/** Divide 8MHz by 8 */
+	/** Divide the 8MHz RC oscillator output by 8 */
 	SYSTEM_OSC8M_DIV_8,
 };
 
 /**
- * If using an external clock source, this can either be a crystal oscillator
- * or an external clock delivering a logic level clock signal to the oscillator
- * pin
+ * \brief External clock source types.
+ *
+ * Available external clock source types.
  */
 enum system_external_clock {
 	/** The external clock source is a crystal oscillator */
@@ -310,18 +359,23 @@ enum system_external_clock {
 };
 
 /**
- * DFLL operating mode
+ * \brief Operating modes of the DFLL clock source.
+ *
+ * Available operating modes of the DFLL clock source module,
  */
 enum system_dfll_mode {
 	/** The DFLL is operating in open loop mode with no feedback */
 	SYSTEM_CLOCK_DFLL_OPEN_LOOP,
-	/** The DFLL is operating in closed loop mode with frequency feedback from a
-	 * low frequency reference clock */
+	/** The DFLL is operating in closed loop mode with frequency feedback from
+	 *  a low frequency reference clock
+	 */
 	SYSTEM_CLOCK_DFLL_CLOSED_LOOP = SYSCTRL_DFLLCTRL_MODE,
 };
 
 /**
- * DFLL lock behaviour on wakeup from sleep
+ * \brief Locking behavior for the DFLL during device wake-up
+ *
+ * DFLL lock behavior modes on device wake-up from sleep.
  */
 enum system_dfll_wakeup_lock {
 	/** Keep DFLL lock when the device wakes from sleep */
@@ -331,7 +385,9 @@ enum system_dfll_wakeup_lock {
 };
 
 /**
- * DFLL fine tracking behaviour after an acquired lock
+ * \brief Fine tracking behavior for the DFLL once a lock has been acquired
+ *
+ * DFLL fine tracking behavior modes after a lock has been acquired.
  */
 enum system_dfll_stable_tracking {
 	/** Keep tracking after the DFLL has gotten a fine lock */
@@ -340,9 +396,13 @@ enum system_dfll_stable_tracking {
 	SYSTEM_CLOCK_DFLL_FIX_AFTER_FINE_LOCK = SYSCTRL_DFLLCTRL_STABLE,
 };
 
-/** If the difference between the DFLL source clock and output frequency is
- * small, inserting a chill cycle might prevent instability in the DFLL.
- * */
+/**
+ * \brief Chill-cycle behavior of the DFLL module
+ *
+ * DFLL chill-cycle behavior modes of the DFLL module. A chill cycle is a period
+ * of time when the DFLL output frequency is not measured by the unit, to allow
+ * the output to stabilize after a change in the input clock source.
+ */
 enum system_dfll_chill_cycle {
 	/** Enable a chill cycle, where the DFLL output frequency is not measured */
 	SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE,
@@ -351,19 +411,23 @@ enum system_dfll_chill_cycle {
 };
 
 /**
- * DFLL QuickLock settings
+ * \brief QuickLock settings for the DFLL module
+ *
+ * DFLL QuickLock settings for the DFLL module, to allow for a faster lock of
+ * the DFLL output frequency at the expense of accuracy.
  */
 enum system_dfll_quick_lock {
-	/** Enable the QuickLock feature for less strict lock requirements on the DFLL */
+	/** Enable the QuickLock feature for looser lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
 };
 
-
 #if !defined (REVB)
 /**
  * \brief Clock sources for the CPU and APB/AHB buses (main clock)
+ *
+ * Possible clock source inputs that can be used as the main CPU core clock.
  */
 enum system_main_clock {
 	/** Internal 8MHz oscillator */
@@ -377,9 +441,10 @@ enum system_main_clock {
 };
 #endif
 
-
 /**
- * Available divide ratios for the CPU and bus clocks
+ * \brief Main CPU and APB/AHB bus clock source prescaler values
+ *
+ * Available division ratios for the CPU and APB/AHB bus clocks.
  */
 enum system_main_clock_div {
 	/** Divide Main clock by 1 */
@@ -400,19 +465,23 @@ enum system_main_clock_div {
 	SYSTEM_MAIN_CLOCK_DIV_128,
 };
 
+/**
+ * \brief List of APB peripheral buses
+ *
+ * Available bus clock domains on the APB bus.
+ */
 enum clock_apb_bus {
+	/** Peripheral bus A on the APB bus. */
 	SYSTEM_CLOCK_APB_APBA,
+	/** Peripheral bus B on the APB bus. */
 	SYSTEM_CLOCK_APB_APBB,
+	/** Peripheral bus C on the APB bus. */
 	SYSTEM_CLOCK_APB_APBC,
 };
 
-
-/* TODO: Make sure these are the same as the generator sources in GCLK; then
- * the init doesn't need a lookup table when configuring GCLK */
-/* TODO: Should split out into separate header file for device family to avoid
- * blocks of ifdefs ... */
-
 /**
+ * \brief Available clock sources in the system
+ *
  * Clock sources available to the GCLK generators
  */
 enum system_clock_source {
@@ -431,20 +500,12 @@ enum system_clock_source {
 };
 
 /**
- * \brief Selectable speeds for the RTC to run at.
+ * \brief Configuration structure for XOSC
+ *
+ * External oscillator clock configuration structure.
  */
-enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC. \note Must be used for calender
-	 * function. */
-	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
-	/** 1kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
-	/** 32kHz counter speed for the RTC. */
-	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
-};
-
 struct system_clock_source_xosc_config {
-	/** External crystal or clock*/
+	/** External clock type */
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
 	enum system_xosc_startup startup_time;
@@ -454,8 +515,13 @@ struct system_clock_source_xosc_config {
 	uint32_t frequency;
 };
 
+/**
+ * \brief Configuration structure for XOSC32K
+ *
+ * External 32KHz oscillator clock configuration structure.
+ */
 struct system_clock_source_xosc32k_config {
-	/** External crystal or clock*/
+	/** External clock type */
 	enum system_external_clock external_clock;
 	/** Crystal oscillator start-up time */
 	enum system_xosc32k_startup startup_time;
@@ -469,11 +535,21 @@ struct system_clock_source_xosc32k_config {
 	uint32_t frequency;
 };
 
+/**
+ * \brief Configuration structure for OSC8M
+ *
+ * Internal 8MHz (nominal) oscillator configuration structure.
+ */
 struct system_clock_source_osc8m_config {
 	/* Internal 8MHz RC oscillator prescaler */
 	enum system_osc8m_div prescaler;
 };
 
+/**
+ * \brief Configuration structure for OSC32K
+ *
+ * Internal 32KHz (nominal) oscillator configuration structure.
+ */
 struct system_clock_source_osc32k_config {
 	/** Startup time */
 	enum system_osc32k_startup startup_time;
@@ -483,6 +559,11 @@ struct system_clock_source_osc32k_config {
 	bool enable_32khz_output;
 };
 
+/**
+ * \brief Configuration structure for DFLL
+ *
+ * DFLL oscillator configuration structure.
+ */
 struct system_clock_source_dfll_config {
 	/** Loop mode */
 	enum system_dfll_mode loop;
@@ -507,69 +588,126 @@ struct system_clock_source_dfll_config {
 };
 
 void system_clock_source_xosc_set_config(
-		struct system_clock_source_xosc_config *const conf);
+		struct system_clock_source_xosc_config *const config);
 void system_clock_source_xosc32k_set_config(
-		struct system_clock_source_xosc32k_config *const conf);
+		struct system_clock_source_xosc32k_config *const config);
 void system_clock_source_osc32k_set_config(
-		struct system_clock_source_osc32k_config *const conf);
+		struct system_clock_source_osc32k_config *const config);
 void system_clock_source_osc8m_set_config(
-		struct system_clock_source_osc8m_config *const conf);
+		struct system_clock_source_osc8m_config *const config);
 void system_clock_source_dfll_set_config(
-		struct system_clock_source_dfll_config *const conf);
+		struct system_clock_source_dfll_config *const config);
 
-
+/**
+ * \brief Retrieve the default configuration for XOSC
+ *
+ * Fills a configuration structure with the default configuration for an
+ * external oscillator module:
+ *   - External Crystal
+ *   - Start-up time of 16384 external clock cycles
+ *   - Automatic crystal gain control mode enabled
+ *   - Frequency of 12MHz
+ *
+ * \param config  Configuration structure to fill with default values
+ */
 static inline void system_clock_source_xosc_get_default_config(
-		struct system_clock_source_xosc_config *const conf)
+		struct system_clock_source_xosc_config *const config)
 {
-	conf->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->startup_time        = SYSTEM_XOSC_STARTUP_16384;
-	conf->auto_gain_control   = true;
-	conf->frequency           = 12000000UL;
+	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	config->startup_time        = SYSTEM_XOSC_STARTUP_16384;
+	config->auto_gain_control   = true;
+	config->frequency           = 12000000UL;
 }
 
+/**
+ * \brief Retrieve the default configuration for XOSC32K
+ *
+ * Fills a configuration structure with the default configuration for an
+ * external 32KHz oscillator module:
+ *   - External Crystal
+ *   - Start-up time of 16384 external clock cycles
+ *   - Automatic crystal gain control mode enabled
+ *   - Frequency of 32.768KHz
+ *   - 1KHz clock output disabled
+ *   - 32KHz clock output enabled
+ *
+ * \param config  Configuration structure to fill with default values
+ */
 static inline void system_clock_source_xosc32k_get_default_config(
-		struct system_clock_source_xosc32k_config *const conf)
+		struct system_clock_source_xosc32k_config *const config)
 {
-	conf->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	conf->startup_time        = SYSTEM_XOSC32K_STARTUP_16384;
-	conf->auto_gain_control   = true;
-	conf->frequency           = 32768UL;
-	conf->enable_1khz_output  = false;
-	conf->enable_32khz_output = true;
+	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	config->startup_time        = SYSTEM_XOSC32K_STARTUP_16384;
+	config->auto_gain_control   = true;
+	config->frequency           = 32768UL;
+	config->enable_1khz_output  = false;
+	config->enable_32khz_output = true;
 }
 
+/**
+ * \brief Retrieve the default configuration for OSC32K
+ *
+ * Fills a configuration structure with the default configuration for an
+ * internal 32KHz oscillator module:
+ *   - 1KHz clock output enabled
+ *   - 32KHz clock output enabled
+ *
+ * \param config  Configuration structure to fill with default values
+ */
 static inline void system_clock_source_osc32k_get_default_config(
-		struct system_clock_source_osc32k_config *const conf)
+		struct system_clock_source_osc32k_config *const config)
 {
-
-	conf->enable_1khz_output  = true;
-	conf->enable_32khz_output = true;
+	config->enable_1khz_output  = true;
+	config->enable_32khz_output = true;
 }
 
+/**
+ * \brief Retrieve the default configuration for OSC8M
+ *
+ * Fills a configuration structure with the default configuration for an
+ * internal 8MHz (nominal) oscillator module:
+ *   - Clock output frequency divided by a factor of 8
+ *
+ * \param config  Configuration structure to fill with default values
+ */
 static inline void system_clock_source_osc8m_get_default_config(
-		struct system_clock_source_osc8m_config *const conf)
+		struct system_clock_source_osc8m_config *const config)
 {
-	conf->prescaler = SYSTEM_OSC8M_DIV_8;
+	config->prescaler = SYSTEM_OSC8M_DIV_8;
 }
 
+/**
+ * \brief Retrieve the default configuration for DFLL
+ *
+ * Fills a configuration structure with the default configuration for an
+ * DFLL oscillator module:
+ *   - Open loop mode
+ *   - QuickLock mode enabled
+ *   - Chill cycle enabled
+ *   - Output frequency lock maintained during device wake-up
+ *   - Continuous tracking of the output frequency
+ *   - Default tracking values at the mid-points for both coarse and fine
+ *     tracking parameters
+ *
+ * \param config  Configuration structure to fill with default values
+ */
 static inline void system_clock_source_dfll_get_default_config(
-		struct system_clock_source_dfll_config *const conf)
+		struct system_clock_source_dfll_config *const config)
 {
-	conf->loop            = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
-	conf->quick_lock      = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
-	conf->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
-	conf->wakeup_lock     = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
-	conf->stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
+	config->loop            = SYSTEM_CLOCK_DFLL_OPEN_LOOP;
+	config->quick_lock      = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
+	config->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
+	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_KEEP_LOCK_AFTER_WAKE;
+	config->stable_tracking = SYSTEM_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK;
 
 	/* Open loop mode calibration value */
-	conf->coarse_value    = 0x1f / 4; /* midpoint */
-	conf->fine_value      = 0xff / 4; /* midpoint */
+	config->coarse_value    = 0x1f / 4; /* Midpoint */
+	config->fine_value      = 0xff / 4; /* Midpoint */
 
 	/* Closed loop mode */
-	conf->coarse_max_step = 1;
-	conf->fine_max_step   = 1;
-	conf->multiply_factor = 6; /* multiply 8MHZ by 6 to get 48MHz */
-
+	config->coarse_max_step = 1;
+	config->fine_max_step   = 1;
+	config->multiply_factor = 6; /* Multiply 8MHZ by 6 to get 48MHz */
 }
 
 
@@ -594,39 +732,6 @@ bool system_clock_source_is_ready(
 
 uint32_t system_clock_source_get_hz(
 		const enum system_clock_source clk_source);
-
-
-/**
- * \internal
- * \brief wait for DFLL ready
- */
-static inline void _system_dfll_wait_for_ready(void)
-{
-	// TODO
-}
-
-/**
- * \internal
- * \brief Wait for sync to the DFLL control registers
- */
-static inline void _system_dfll_wait_for_sync(void)
-{
-	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
-		/* Wait for DFLL sync */
-	}
-}
-
-/**
- * \internal
- * \brief Wait for sync to the OSC32K control registers
- */
-static inline void _system_osc32k_wait_for_sync(void)
-{
-	while(!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
-		/* Wait for OSC32K sync */
-	}
-}
-
 /**
  * @}
  */
@@ -793,12 +898,15 @@ static inline enum status_code system_apb_clock_set_mask(
 		case SYSTEM_CLOCK_APB_APBA:
 			PM->APBAMASK.reg |= mask;
 			break;
+
 		case SYSTEM_CLOCK_APB_APBB:
 			PM->APBBMASK.reg |= mask;
 			break;
+
 		case SYSTEM_CLOCK_APB_APBC:
 			PM->APBCMASK.reg |= mask;
 			break;
+
 		default:
 			return STATUS_ERR_INVALID_ARG;
 
@@ -830,23 +938,21 @@ static inline enum status_code system_apb_clock_clear_mask(
 		case SYSTEM_CLOCK_APB_APBA:
 			PM->APBAMASK.reg &= ~mask;
 			break;
+
 		case SYSTEM_CLOCK_APB_APBB:
 			PM->APBBMASK.reg &= ~mask;
 			break;
+
 		case SYSTEM_CLOCK_APB_APBC:
 			PM->APBCMASK.reg &= ~mask;
 			break;
+
 		default:
 			return STATUS_ERR_INVALID_ARG;
-
 	}
 
 	return STATUS_OK;
 }
-/*@}*/
-
-
-/*@}*/
 
 void system_clock_init(void);
 
@@ -875,4 +981,4 @@ void system_clock_init(void);
  * No errata workarounds in driver
  *
  */
-#endif /* SYSTEM_CLOCK_H */
+#endif /* SYSTEM_CLOCK_H_INCLUDED */

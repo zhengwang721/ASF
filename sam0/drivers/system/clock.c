@@ -54,6 +54,28 @@ static uint32_t xosc_frequency = 0;
 static uint32_t xosc32k_frequency = 0;
 
 /**
+ * \internal
+ * \brief Wait for sync to the DFLL control registers
+ */
+static inline void _system_dfll_wait_for_sync(void)
+{
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY)) {
+		/* Wait for DFLL sync */
+	}
+}
+
+/**
+ * \internal
+ * \brief Wait for sync to the OSC32K control registers
+ */
+static inline void _system_osc32k_wait_for_sync(void)
+{
+	while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_OSC32KRDY)) {
+		/* Wait for OSC32K sync */
+	}
+}
+
+/**
  * \brief Retrieve the frequency of a clock source
  *
  * Determines the current operating frequency of a given clock source.
