@@ -47,9 +47,9 @@
 static i2c_packet_t packet;
 //! [packet]
 
+
 //! [packet_data]
 #define DATA_LENGTH 10
-
 static uint8_t write_buffer[DATA_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
@@ -96,17 +96,6 @@ static void write_request_callback(const struct i2c_slave_module *const module)
 }
 //! [write_request]
 
-static void read_complete_callback(const struct i2c_slave_module *const module)
-{
-	port_pin_toggle_output_level(PIN_PB08);
-}
-
-static void write_complete_callback(const struct i2c_slave_module *const module)
-{
-	port_pin_toggle_output_level(PIN_PB08);
-}
-
-
 //! [initialize_i2c]
 static void configure_i2c(void)
 {
@@ -131,23 +120,17 @@ static void configure_i2c(void)
 }
 //! [initialize_i2c]
 
-
 //! [setup_i2c_callback]
 static void configure_callbacks(void)
 {
 	/* Register and enable callback functions. */
 	//![reg_en_i2c_callback]
-	i2c_slave_register_callback(&sw_module, read_complete_callback, I2C_SLAVE_CALLBACK_READ_COMPLETE);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_COMPLETE);
-
-	i2c_slave_register_callback(&sw_module, write_complete_callback, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
-	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
-
 	i2c_slave_register_callback(&sw_module, read_request_callback, I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_READ_REQUEST);
 
 	i2c_slave_register_callback(&sw_module, write_request_callback, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	i2c_slave_enable_callback(&sw_module, I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+
 	//![reg_en_i2c_callback]
 
 	/* Enable global interrupts for SERCOM instance. */
@@ -156,7 +139,6 @@ static void configure_callbacks(void)
 	//![enable_global_i2c_interrupts]
 }
 //! [setup_i2c_callback]
-{
 
 int main(void)
 {
@@ -167,7 +149,6 @@ int main(void)
 	/* Configure device and enable. */
 	configure_i2c();
 	configure_callbacks();
-	configure_ports();
 	//! [run_initialize_i2c]
 
 	while (1) {
