@@ -72,11 +72,25 @@ void events_init(void)
  * \param[in] config   Configuration settings for the event channel
  */
 void events_chan_set_config(
-		const uint8_t channel,
+		const enum events_channel event_channel,
 		struct events_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
+
+	/* Get the channel number from the enum selector */
+	uint8_t channel = (uint8_t)event_channel;
+
+	/* Set up a GLCK channel to use with the specific channel */
+	struct system_gclk_chan_conf gclk_chan_conf;
+
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+
+	gclk_chan_conf.source_generator = config->clock_source;
+	gclk_chan_conf.run_in_standby = config->run_in_standby;
+
+	system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + channel, &gclk_chan_conf);
+	system_gclk_chan_enable(EVSYS_GCLK_ID_0 + channel);
 
 	/* Select and configure the event channel (must be done in one
 	 * word-access write as specified in the module datasheet */
@@ -102,8 +116,15 @@ void events_user_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
+	/* Get the event channel number from the channel selector */
+	uint8_t channel = (uint8_t)(config->event_channel_id);
+
+	/* Add one to the channel selector as the channel number is 1 indexed for
+	   the user MUX setting */
+	channel = channel + 1;
+
 	/* Select and configure the user MUX channel (must be done in one
 	 * word-access write as specified in the module datasheet */
 	EVSYS->USERMUX.reg = (user << EVSYS_USERMUX_UMUXSEL_Pos) |
-			(config->event_channel_id << EVSYS_USERMUX_CHANNELEVENT_Pos);
+			(channel << EVSYS_USERMUX_CHANNELEVENT_Pos);
 }

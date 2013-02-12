@@ -258,10 +258,35 @@
  */
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * \brief Event System channel selection
+ *
+ * Enum containing the possible event channel selections
+ */
+enum events_channel {
+	/** Event channel 0 */
+	EVENTS_CHANNEL_0 = 0,
+	/** Event channel 1 */
+	EVENTS_CHANNEL_1 = 1,
+	/** Event channel 2 */
+	EVENTS_CHANNEL_2 = 2,
+	/** Event channel 3 */
+	EVENTS_CHANNEL_3 = 3,
+	/** Event channel 4 */
+	EVENTS_CHANNEL_4 = 4,
+	/** Event channel 5 */
+	EVENTS_CHANNLE_5 = 5,
+	/** Event channel 6 */
+	EVENTS_CHANNLE_6 = 6,
+	/** Event channel 7 */
+	EVENTS_CHANNLE_7 = 7,
+};
 
 /**
  * \brief Event System synchronous channel edge detection configurations.
@@ -317,6 +342,12 @@ struct events_chan_conf {
 	enum events_path path;
 	/** Event generator module that should be attached to the event channel. */
 	uint8_t generator_id;
+	/** GCLK generator used to clock the specific event channel
+	\note This will only be used in \ref EVENT_PATH_SYNCHRONOUS and
+	\ref EVENT_PATH_RESYNCHRONOUS paths */
+	enum gclk_generator clock_source;
+	/** Keep GLCK running in standby */
+	bool run_in_standby;
 };
 
 /**
@@ -329,7 +360,7 @@ struct events_chan_conf {
  */
 struct events_user_conf {
 	/** Event channel ID that should be attached to the user MUX. */
-	uint8_t event_channel_id;
+	enum events_channel event_channel_id;
 };
 
 
@@ -374,10 +405,12 @@ static inline void events_chan_get_config_defaults(
 	config->edge_detection = EVENT_EDGE_RISING;
 	config->path           = EVENT_PATH_SYNCHRONOUS;
 	config->generator_id   = 0;
+	config->clock_source   = GCLK_GENERATOR_0;
+	config->run_in_standby = false;
 }
 
 void events_chan_set_config(
-		const uint8_t channel,
+		const enum events_channel event_channel,
 		struct events_chan_conf *const config);
 
 /** @} */
