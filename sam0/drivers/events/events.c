@@ -68,6 +68,9 @@ void events_init(void)
  * Writes out a given configuration of a Event System channel configuration to
  * the hardware module.
  *
+ * \pre The user must be configured before the channel is configured see
+ * \ref events_user_set_config
+ *
  * \param[in] channel  Event channel to configure
  * \param[in] config   Configuration settings for the event channel
  */
@@ -81,16 +84,21 @@ void events_chan_set_config(
 	/* Get the channel number from the enum selector */
 	uint8_t channel = (uint8_t)event_channel;
 
-	/* Set up a GLCK channel to use with the specific channel */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	/* Setting up GCLK for the event channel only takes effect for the
+	 * synchronous and re-synchronous paths */
+	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
 
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+		/* Set up a GLCK channel to use with the specific channel */
+		struct system_gclk_chan_conf gclk_chan_conf;
 
-	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.run_in_standby = config->run_in_standby;
+		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 
-	system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + channel, &gclk_chan_conf);
-	system_gclk_chan_enable(EVSYS_GCLK_ID_0 + channel);
+		gclk_chan_conf.source_generator = config->clock_source;
+		gclk_chan_conf.run_in_standby = config->run_in_standby;
+
+		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + channel, &gclk_chan_conf);
+		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + channel);
+	}
 
 	/* Select and configure the event channel (must be done in one
 	 * word-access write as specified in the module datasheet */

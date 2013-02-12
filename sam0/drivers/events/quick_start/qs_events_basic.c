@@ -47,7 +47,7 @@ void configure_event_user(void);
 
 //! [setup]
 #define EXAMPLE_EVENT_GENERATOR    0
-#define EXAMPLE_EVENT_CHANNEL      0
+#define EXAMPLE_EVENT_CHANNEL      EVENT_CHANNEL_0
 #define EXAMPLE_EVENT_USER         0
 
 void configure_event_channel(void)
@@ -92,8 +92,8 @@ int main(void)
 	//! [setup_init]
 	events_init();
 
-	configure_event_channel();
 	configure_event_user();
+	configure_event_channel();
 	//! [setup_init]
 
 	//! [main]
