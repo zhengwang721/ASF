@@ -53,7 +53,7 @@ static struct ac_module ac_dev;
 
 /* Comparator channel that will be used */
 //! [setup_2]
-#define AC_COMPARATOR_CHANNEL   0
+#define AC_COMPARATOR_CHANNEL   AC_CHAN_CHANNEL_0
 //! [setup_2]
 
 //! [setup_3]

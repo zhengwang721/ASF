@@ -203,7 +203,7 @@
  * \section module_dependencies Dependencies
  * The Analog Comparator driver has the following dependencies.
  *
- * \li \ref gclk_group "GCLK" (Generic Clock Management)
+ * \li \ref asfdoc_samd20_gclk_group "GCLK" (Generic Clock Management)
  *
  * \section special_considerations Special Considerations
  *
@@ -229,6 +229,24 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * \brief AC comparator channel selection enum.
+ *
+ * Enum for the possible comparator channels.
+ */
+enum ac_chan_channel {
+	/** Comparator channel 0 (Pair 0, Comparator 0) */
+	AC_CHAN_CHANNEL_0 = 0,
+	/** Comparator channel 1 (Pair 0, Comparator 1) */
+	AC_CHAN_CHANNEL_1 = 1,
+#if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+	/** Comparator channel 2 (Pair 1, Comparator 0) */
+	AC_CHAN_CHANNEL_2 = 2,
+	/** Comparator channel 3 (Pair 1, Comparator 1) */
+	AC_CHAN_CHANNEL_3 = 3,
+#endif
+};
 
 /**
  * \brief AC channel input sampling mode configuration enum.
@@ -341,6 +359,20 @@ enum ac_chan_state {
 };
 
 /**
+ * \brief AC window channel selection enum.
+ *
+ * Enum for the possible window comparator channels.
+ */
+enum ac_win_channel {
+	/** Window channel 0 (Pair 0, Comparators 0 and 1) */
+	AC_WIN_CHANNEL_0 = 0,
+#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
+	AC_WIN_CHANNEL_1 = 1,
+#endif
+};
+
+/**
  * \brief AC window channel detection mode configuration enum.
  *
  * Enum for the possible detection modes of an Analog Comparator window channel.
@@ -397,15 +429,15 @@ struct ac_module {
 struct ac_events {
 	/** If \c true, an event will be generated when a comparator window state
 	 *  changes. */
-	bool generate_event_on_window[2];
+	bool generate_event_on_window[AC_PAIRS];
 
 	/** If \c true, an event will be generated when a comparator state
 	 *  changes. */
-	bool generate_event_on_state[4];
+	bool generate_event_on_state[AC_NUM_CMP];
 
 	/** If \c true, a comparator will be sampled each time an event is
 	 *  received. */
-	bool on_event_sample[4];
+	bool on_event_sample[AC_NUM_CMP];
 };
 
 /**
@@ -613,15 +645,15 @@ static inline void ac_enable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->generate_event_on_window[0] == true) {
-		event_mask |= AC_EVCTRL_WINEO0;
+	/* Configure window output events for each comparator pair */
+	for (uint8_t i = 0; i < AC_PAIRS; i++) {
+		if (events->generate_event_on_window[i] == true) {
+			event_mask |= (AC_EVCTRL_WINEO0 << i);
+		}
 	}
 
-	if (events->generate_event_on_window[1] == true) {
-		event_mask |= AC_EVCTRL_WINEO1;
-	}
-
-	for (uint8_t i = 0; i < 4; i++) {
+	/* Configure sample input/output events for each comparator */
+	for (uint8_t i = 0; i < AC_NUM_CMP; i++) {
 		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
@@ -659,15 +691,15 @@ static inline void ac_disable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->generate_event_on_window[0] == true) {
-		event_mask |= AC_EVCTRL_WINEO0;
+	/* Configure window output events for each comparator pair */
+	for (uint8_t i = 0; i < AC_PAIRS; i++) {
+		if (events->generate_event_on_window[i] == true) {
+			event_mask |= (AC_EVCTRL_WINEO0 << i);
+		}
 	}
 
-	if (events->generate_event_on_window[1] == true) {
-		event_mask |= AC_EVCTRL_WINEO1;
-	}
-
-	for (uint8_t i = 0; i < 4; i++) {
+	/* Configure sample input/output events for each comparator */
+	for (uint8_t i = 0; i < AC_NUM_CMP; i++) {
 		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
@@ -726,7 +758,7 @@ static inline void ac_chan_get_config_defaults(
 
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
-		const uint8_t channel,
+		const enum ac_chan_channel channel,
 		struct ac_chan_conf *const config);
 
 /**
@@ -740,7 +772,7 @@ enum status_code ac_chan_set_config(
  */
 static inline void ac_chan_enable(
 		struct ac_module *const module_inst,
-		const uint8_t channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -749,7 +781,7 @@ static inline void ac_chan_enable(
 	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel].reg |= AC_COMPCTRL_ENABLE;
+	ac_module->COMPCTRL[(uint8_t)channel].reg |= AC_COMPCTRL_ENABLE;
 }
 
 /**
@@ -763,7 +795,7 @@ static inline void ac_chan_enable(
  */
 static inline void ac_chan_disable(
 		struct ac_module *const module_inst,
-		const uint8_t channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -772,7 +804,7 @@ static inline void ac_chan_disable(
 	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel].reg &= ~AC_COMPCTRL_ENABLE;
+	ac_module->COMPCTRL[(uint8_t)channel].reg &= ~AC_COMPCTRL_ENABLE;
 }
 
 /** @} */
@@ -794,7 +826,7 @@ static inline void ac_chan_disable(
  */
 static inline void ac_chan_trigger_single_shot(
 		struct ac_module *const module_inst,
-		const uint8_t channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -803,7 +835,7 @@ static inline void ac_chan_trigger_single_shot(
 	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << channel);
+	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << (uint8_t)channel);
 }
 
 /**
@@ -819,7 +851,7 @@ static inline void ac_chan_trigger_single_shot(
  */
 static inline bool ac_chan_is_ready(
 		struct ac_module *const module_inst,
-		const uint8_t channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -827,7 +859,7 @@ static inline bool ac_chan_is_ready(
 
 	Ac *const ac_module = module_inst->hw;
 
-	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << channel));
+	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << (uint8_t)channel));
 }
 
 /**
@@ -844,7 +876,7 @@ static inline bool ac_chan_is_ready(
  */
 static inline enum ac_chan_state ac_chan_get_state(
 		struct ac_module *const module_inst,
-		const uint8_t channel)
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -856,7 +888,7 @@ static inline enum ac_chan_state ac_chan_get_state(
 		return AC_CHAN_STATE_UNKNOWN;
 	}
 
-	if (ac_module->STATUSA.reg & (AC_STATUSA_STATE0 << channel)) {
+	if (ac_module->STATUSA.reg & (AC_STATUSA_STATE0 << (uint8_t)channel)) {
 		return AC_CHAN_STATE_POS_ABOVE_NEG;
 	} else {
 		return AC_CHAN_STATE_NEG_ABOVE_POS;
@@ -897,16 +929,16 @@ static inline void ac_win_get_config_defaults(
 
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel,
+		const enum ac_win_channel win_channel,
 		struct ac_win_conf *const config);
 
 enum status_code ac_win_enable(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel);
+		const enum ac_win_channel win_channel);
 
 void ac_win_disable(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel);
+		const enum ac_win_channel win_channel);
 
 /** @} */
 
@@ -929,15 +961,21 @@ void ac_win_disable(
  */
 static inline bool ac_win_is_ready(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
+	/* Convert a window channel index to the individual comparator channels */
+	enum ac_chan_channel win_pair_comp0 =
+			(enum ac_chan_channel)((uint8_t)win_channel * 2);
+	enum ac_chan_channel win_pair_comp1 =
+			(enum ac_chan_channel)(((uint8_t)win_channel * 2) + 1);
+
 	/* Check if the two comparators used in the window are ready */
-	bool win_pair_comp0_ready = ac_chan_is_ready(module_inst, (win_channel * 2));
-	bool win_pair_comp1_ready = ac_chan_is_ready(module_inst, (win_channel * 2) + 1);
+	bool win_pair_comp0_ready = ac_chan_is_ready(module_inst, win_pair_comp0);
+	bool win_pair_comp1_ready = ac_chan_is_ready(module_inst, win_pair_comp1);
 
 	/* If one or both window comparators not ready, return failure */
 	if ((win_pair_comp0_ready == false) || (win_pair_comp1_ready == false)) {
@@ -949,7 +987,7 @@ static inline bool ac_win_is_ready(
 
 enum ac_win_state ac_win_get_state(
 		struct ac_module *const module_inst,
-		const uint8_t channel);
+		const enum ac_win_channel channel);
 
 /**
  * \brief Determines if a Window Comparator has detected the configured window criteria.
@@ -965,7 +1003,7 @@ enum ac_win_state ac_win_get_state(
  */
 static inline bool ac_win_is_detected(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -973,7 +1011,7 @@ static inline bool ac_win_is_detected(
 
 	Ac *const ac_module = module_inst->hw;
 
-	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel));
+	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << (uint8_t)win_channel));
 }
 
 /**
@@ -987,7 +1025,7 @@ static inline bool ac_win_is_detected(
  */
 static inline void ac_win_clear_detected(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -995,7 +1033,7 @@ static inline void ac_win_clear_detected(
 
 	Ac *const ac_module = module_inst->hw;
 
-	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << win_channel);
+	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << (uint8_t)win_channel);
 }
 
 /** @} */
