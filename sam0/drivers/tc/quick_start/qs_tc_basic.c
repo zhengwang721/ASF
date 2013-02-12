@@ -74,7 +74,7 @@ int main(void)
 	//! [setup]
 
 	//! [tc_init]
-	tc_init(PWM_MODULE, &dev_inst, &config);
+	tc_init(&dev_inst, PWM_MODULE, &config);
 	//! [tc_init]
 
 	//! [tc_enable]

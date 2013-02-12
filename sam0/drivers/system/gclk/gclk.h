@@ -261,7 +261,7 @@ struct system_gclk_chan_conf {
  * \retval true if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool system_gclk_is_synching(void)
+static inline bool system_gclk_is_syncing(void)
 {
 	if (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY) {
 		return true;

@@ -362,7 +362,7 @@ static inline Eic *const _extint_get_eic_from_nmi(
  * \retval true if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool extint_is_synching(void)
+static inline bool extint_is_syncing(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 

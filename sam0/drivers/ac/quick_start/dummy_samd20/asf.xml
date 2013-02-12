@@ -4,7 +4,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.ac.quick_start"/>
 		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

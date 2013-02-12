@@ -42,17 +42,7 @@
  */
 #include "nvm.h"
 #include <system.h>
-
-/**
- * \internal NVM data
- *
- * Union of different data lengths
- */
-union _nvm_data {
-	uint32_t data32;
-	uint16_t data16[2];
-	uint8_t  data8[4];
-};
+#include <string.h>
 
 /**
  * \internal Internal device instance struct
@@ -79,7 +69,7 @@ static struct _nvm_module _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region
  */
-#define NVM_MEMORY ((union _nvm_data *) 0x00000000)
+#define NVM_MEMORY ((uint8_t *)0x00000000)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -94,11 +84,11 @@ static struct _nvm_module _nvm_dev;
  *
  * \return Status of the configuration procedure.
  *
- * \retval STATUS_OK                If the initialization was a success
- * \retval STATUS_BUSY          If the module was already busy
- * \retval STATUS_ERR_IO            If the security bit was set, the function
- *                                  could not set the bootloader and eeprom
- *                                  size
+ * \retval STATUS_OK      If the initialization was a success
+ * \retval STATUS_BUSY    If the module was busy when the operation was attempted
+ * \retval STATUS_ERR_IO  If the security bit has been set, preventing the
+ *                        EEPROM and/or auxiliary space configuration from being
+ *                        altered
  */
 enum status_code nvm_set_config(
 		const struct nvm_config *const config)
@@ -251,136 +241,137 @@ enum status_code nvm_execute_command(
 }
 
 /**
- * \brief Writes to page in the NVM memory region
+ * \brief Writes a number of bytes to a page in the NVM memory region
  *
  * Writes from a buffer to a given page number in the NVM memory.
  *
- * \param[in] dst_page_nr      Number of the page to write to
- * \param[in] buf              Pointer to buffer to write from into the
- *                             NVM memory
+ * \param[in]  destination_page  Destination page index to write to
+ * \param[in]  buffer            Pointer to buffer where the data to write is
+ *                               stored
+ * \param[in]  length            Number of bytes in the page to write
  *
- * \note The \ref nvm_is_ready() function should be called in advance to ensure
- *       that the NVM controller is ready.
- * \note The user have to perform an \ref nvm_erase_row() operation on the NNM
- *       row to be written to before this command is used.
+ * \note If writing to a page that has previously been written to, the page's
+ *       row should be erased (via \ref nvm_erase_row()) before attempting to
+ *       write new data to the page.
  *
  * \return Status of the attempt to write a page.
  *
- * \retval STATUS_OK               If the reading of the NVM memory was
- *                                 successful
- * \retval STATUS_BUSY         If the NVM controller was already busy
- * \retval STATUS_ERR_BAD_ADDRESS  If dst_page_nr is larger than the number of
- *                                 pages available in the NVM memory region
+ * \retval STATUS_OK               Requested NVM memory page was successfully
+ *                                 read
+ * \retval STATUS_BUSY             NVM controller was busy when the operation
+ *                                 was attempted
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
+ *                                 acceptable range of the NVM memory region
+ * \retval STATUS_ERR_INVALID_ARG  Write length was more than the NVM page size
  */
-enum status_code nvm_write_page(
-		const uint16_t dst_page_nr,
-		const uint32_t *buf)
+enum status_code nvm_write_buffer(
+		const uint16_t destination_page,
+		const uint8_t *buffer,
+		uint16_t length)
 {
-	uint32_t nvm_addr;
-
 	/* Sanity check arguments */
-	if (dst_page_nr > (_nvm_dev.number_of_pages - 1)) {
+	if (destination_page > (_nvm_dev.number_of_pages - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Ensure the user isn't trying to copy more than a single page worth of
+	 * data at once */
+	if (length > _nvm_dev.page_size) {
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
-
-	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
 		return STATUS_BUSY;
 	}
 
-	/* 32 bit addressing the NVM */
-	nvm_addr = dst_page_nr * (_nvm_dev.page_size / 4);
+	/* Clear error flags */
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Write to the NVM memory 4 bytes at a time */
-	for (uint32_t i = 0; i < (_nvm_dev.page_size / 4); i++) {
-		NVM_MEMORY[nvm_addr++].data32 = buf[i];
-	}
+	/* Read out from NVM memory space */
+	memcpy(&NVM_MEMORY[destination_page * _nvm_dev.page_size], buffer, length);
 
 	return STATUS_OK;
 }
 
 /**
- * \brief Reads from page in the NVM memory region
+ * \brief Reads a number of bytes from a page in the NVM memory region
  *
- * Reads from a given page number in the NVM memory into a buffer.
+ * Reads a given number of bytes from a given page number in the NVM memory
+ * space into a buffer.
  *
- * \param[in]  src_page_nr      Number of the page to read from
- * \param[out] buf              Pointer to buffer where the content of the
- *                               page will be stored
+ * \param[in]  source_page  Source page index to read from
+ * \param[out] buffer       Pointer to a buffer where the content of the read
+ *                          page will be stored
+ * \param[in]  length       Number of bytes in the page to read
  *
- * \note The \ref nvm_is_ready() function should be called in advance to ensure
- *       that the NVM controller is ready.
+ * \return Status of the page read attempt.
  *
- * \return Status of the attempt to read a page.
- *
- * \retval STATUS_OK               If the reading of the NVM memory was
- *                                 successful
- * \retval STATUS_BUSY         If the NVM controller was already busy
- * \retval STATUS_ERR_BAD_ADDRESS  If dst_page_nr is larger than the number of
- *                                 pages available in the NVM memory region
+ * \retval STATUS_OK               Requested NVM memory page was successfully
+ *                                 read
+ * \retval STATUS_BUSY             NVM controller was busy when the operation
+ *                                 was attempted
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested page number was outside the
+ *                                 acceptable range of the NVM memory region
+ * \retval STATUS_ERR_INVALID_ARG  Read length was more than the NVM page size
  */
-enum status_code nvm_read_page(
-		const uint16_t src_page_nr,
-		uint32_t *buf)
+enum status_code nvm_read_buffer(
+		const uint16_t source_page,
+		uint8_t *const buffer,
+		uint16_t length)
 {
-	uint32_t nvm_addr;
-
 	/* Sanity check arguments */
-	if (src_page_nr > (_nvm_dev.number_of_pages - 1)) {
+	if (source_page > (_nvm_dev.number_of_pages - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
+	}
+
+	/* Ensure the user isn't trying to copy more than a single page worth of
+	 * data at once */
+	if (length > _nvm_dev.page_size) {
+		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
-
-	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
 		return STATUS_BUSY;
 	}
 
-	/* 32-bit addressing the NVM memory */
-	nvm_addr = src_page_nr * (_nvm_dev.page_size / 4);
+	/* Clear error flags */
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Read out from NVM memory 4 bytes at a time */
-	for (uint32_t i = 0; i < (_nvm_dev.page_size / 4); i++) {
-		buf[i] = NVM_MEMORY[nvm_addr++].data32;
-	}
+	/* Copy into NVM memory space */
+	memcpy(buffer, &NVM_MEMORY[source_page * _nvm_dev.page_size], length);
 
 	return STATUS_OK;
 }
 
 /**
- * \brief Erases a row in the NVM memory
+ * \brief Erases a row in the NVM memory space
  *
  * Erases a given row in the NVM memory region.
  *
- * \param[in] row_nr      Number of the row to erase
+ * \param[in] row_number  Index of the row to erase
  *
- * \note The \ref nvm_is_ready() function should be called in advance to ensure
- *       that the NVM controller is ready.
+ * \return Status of the NVM row erase attempt.
  *
- * \return Status of the attempt to erase a row.
- *
- * \retval STATUS_OK               If issuing the erase was successful
- * \retval STATUS_BUSY         If the NVM controller was already busy
- * \retval STATUS_ERR_BAD_ADDRESS  If row_nr was larger than the number of
- *                                 rows available in the NVM memory region
+ * \retval STATUS_OK               Requested NVM memory row was successfully
+ *                                 erased
+ * \retval STATUS_BUSY             NVM controller was busy when the operation
+ *                                 was attempted
+ * \retval STATUS_ERR_BAD_ADDRESS  The requested row number was outside the
+ *                                 acceptable range of the NVM memory region
  */
-enum status_code nvm_erase_row(const uint16_t row_nr)
+enum status_code nvm_erase_row(
+		const uint16_t row_number)
 {
-	uint16_t row_addr;
-
-	/* Check if the row_nr is valid */
-	if (row_nr > ((_nvm_dev.number_of_pages / NVMCTRL_ROW_PAGES) - 1)) {
+	/* Check if the row_number is valid */
+	if (row_number > ((_nvm_dev.number_of_pages / NVMCTRL_ROW_PAGES) - 1)) {
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
@@ -395,72 +386,12 @@ enum status_code nvm_erase_row(const uint16_t row_nr)
 		return STATUS_BUSY;
 	}
 
-	/* Address to row */
-	row_addr = row_nr * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
+	/* Convert row index to a address within NVM memory space */
+	uint16_t row_addr = row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = row_addr;
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-
-	return STATUS_OK;
-}
-
-/**
- * \brief Erases a block in the NVM memory
- *
- * Erases a given number of rows in the NVM memory, starting at a
- * given row number.
- *
- * \param[in] row_nr      Number of the first row to erase
- * \param[in] rows        Number of rows to erase
- *
- * \note The \ref nvm_is_ready() function should be called in advance to ensure
- *       that the NVM controller is ready.
- *
- * \return Status of the attempt to erase a block.
- *
- * \retval STATUS_OK               If issuing the erase was successful
- * \retval STATUS_BUSY         If the NVM controller was already busy
- * \retval STATUS_ERR_BAD_ADDRESS  If row_nr and number of rows was larger than
- *                                 the number of rows available in the
- *                                 NVM memory region
- */
-enum status_code nvm_erase_block(uint16_t row_nr, const uint16_t rows)
-{
-	uint16_t row_addr;
-	uint16_t row_size;
-	uint32_t block_size;
-
-	/* Byte sizes and address */
-	row_size   = _nvm_dev.page_size * NVMCTRL_ROW_PAGES;
-	row_addr   = row_nr * row_size;
-	block_size = rows * row_size;
-
-	/* Sanity check of row and block size */
-	if ((row_addr + block_size) >
-			(uint32_t)(_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
-		return STATUS_ERR_BAD_ADDRESS;
-	}
-
-	/* Get a pointer to the module hardware instance */
-	Nvmctrl *const nvm_module = NVMCTRL;
-
-	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
-
-	/* Check if the module is busy */
-	if (!nvm_is_ready()) {
-		return STATUS_BUSY;
-	}
-
-	/* Set address and command */
-	for (uint32_t i = 0; i > rows; i++) {
-		nvm_module->ADDR.reg  = row_addr;
-		nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-
-		/* Increment the row address */
-		row_addr += row_size;
-	}
 
 	return STATUS_OK;
 }
