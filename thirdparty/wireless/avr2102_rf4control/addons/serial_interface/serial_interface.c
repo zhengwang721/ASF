@@ -928,8 +928,14 @@ static void nlme_comm_status_indication(nwk_enum_t Status, uint8_t PairingRef,
     *msg_buf++ = NLME_COMM_STATUS_INDICATION;
     *msg_buf++ = Status;
     *msg_buf++ = PairingRef;
+#if (UC3) || (SAM)
+    uint8_t *ptr = (uint8_t *)&DstPANId;
+    *msg_buf++ = *ptr++;
+    *msg_buf++ = *ptr;
+#else
     *msg_buf++ = (uint8_t)DstPANId; // LSB
     *msg_buf++ = (uint8_t)(DstPANId >> 8); // MSB
+#endif
     *msg_buf++ = DstAddrMode;
     // @ToDo use memcpy
     addr_ptr = (uint8_t *)&DstAddr;
@@ -966,8 +972,14 @@ static void nlme_discovery_indication(nwk_enum_t Status, uint64_t SrcIEEEAddr,
         *msg_buf++ = *ptr++;
     }
     *msg_buf++ = OrgNodeCapabilities;
+#if (UC3) || (SAM)
+    ptr = (uint8_t *)&OrgVendorId;
+    *msg_buf++ = *ptr++;
+    *msg_buf++ = *ptr++;
+#else
     *msg_buf++ = (uint8_t)OrgVendorId; //LSB
     *msg_buf++ = (uint8_t)(OrgVendorId >> 8); //MSB
+#endif
     ptr = OrgVendorString;
     for (i = 0; i < 7; i++)
     {
@@ -1038,16 +1050,28 @@ static void nlme_discovery_confirm(nwk_enum_t Status, uint8_t NumNodes,
     {
         *msg_buf++ = NodeDescList[i].Status;
         *msg_buf++ = NodeDescList[i].LogicalChannel;
+#if (UC3) || (SAM)
+        addr_ptr = (uint8_t *)&NodeDescList[i].PANId;
+        *msg_buf++ = *addr_ptr++;
+        *msg_buf++ = *addr_ptr;
+#else
         *msg_buf++ = (uint8_t)NodeDescList[i].PANId; // LSB
         *msg_buf++ = (uint8_t)(NodeDescList[i].PANId >> 8); // MSB
+#endif
         addr_ptr = (uint8_t *)(&NodeDescList[i].IEEEAddr);
         for (k = 0; k < 8; k++)
         {
             *msg_buf++ = *addr_ptr++;
         }
         *msg_buf++ = NodeDescList[i].NodeCapabilities;
+#if (UC3) || (SAM)
+        addr_ptr = (uint8_t *)&NodeDescList[i].VendorId;
+        *msg_buf++ = *addr_ptr++;
+        *msg_buf++ = *addr_ptr;
+#else
         *msg_buf++ = (uint8_t)NodeDescList[i].VendorId; // LSB
         *msg_buf++ = (uint8_t)(NodeDescList[i].VendorId >> 8); // MSB
+#endif
         for (k = 0; k < 7; k++)
         {
             *msg_buf++ = NodeDescList[i].VendorString[k];
@@ -1096,17 +1120,32 @@ static void nlme_pair_indication(nwk_enum_t Status, uint16_t SrcPANId, uint64_t 
 	*msg_buf++ = RF4CONTROL_PID;
     *msg_buf++ = NLME_PAIR_INDICATION;
     *msg_buf++ = Status;
+#if (UC3) || (SAM)
+    {
+        uint8_t *ptr = (uint8_t *)&SrcPANId;
+        *msg_buf++ = *ptr++;
+        *msg_buf++ = *ptr;
+    }
+#else
     *msg_buf++ = (uint8_t)SrcPANId; // LSB
     *msg_buf++ = (uint8_t)(SrcPANId >> 8); // MSB
+#endif
     addr_ptr = (uint8_t *)&SrcIEEEAddr;
     for (i = 0; i < 8; i++)
     {
         *msg_buf++ = *addr_ptr++;
     }
     *msg_buf++ = OrgNodeCapabilities;
+#if (UC3) || (SAM)
+    {
+        uint8_t *ptr = (uint8_t *)&OrgVendorId;
+        *msg_buf++ = *ptr++;
+        *msg_buf++ = *ptr;
+    }
+#else
     *msg_buf++ = (uint8_t)OrgVendorId; // LSB
     *msg_buf++ = (uint8_t)(OrgVendorId >> 8); // MSB
-
+#endif
     for (i = 0; i < 7; i++)
     {
         *msg_buf++ = OrgVendorString[i];

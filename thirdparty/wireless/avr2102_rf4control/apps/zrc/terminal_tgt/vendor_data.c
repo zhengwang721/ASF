@@ -68,6 +68,7 @@ FLASH_EXTERN(uint16_t VendorIdentifier);
 extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
                                 , uint8_t Handle
                                );
+static uint16_t get_batmon_voltage(void);
 #else /* RF4CE_TARGET */
 extern void nlme_rx_enable_confirm(nwk_enum_t Status);
 static void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
@@ -108,17 +109,17 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
     {
         switch (nsdu[0])    // vendor-specific command id
         {
-#ifdef TFA_BAT_MON
+
             case BATTERY_STATUS_REQ:
                 {
-                    uint16_t voltage = tfa_get_batmon_voltage();
+                    uint16_t voltage = get_batmon_voltage();
                     nsdu[0] = BATTERY_STATUS_RESP;
                     nsdu[1] = (uint8_t)voltage;    // LSB
                     nsdu[2] = (uint8_t)(voltage >> 8);    // MSB
                     nsduLength = 3;
                 }
                 break;
-#endif
+
             case ALIVE_REQ:  /* Alive request */
                 vendor_app_alive_req();
                 /* Send alive response */
@@ -200,6 +201,17 @@ static void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_i
 
 }
 #endif
-
-
+static uint16_t get_batmon_voltage(void)
+{   
+  uint16_t voltage;
+#ifdef TFA_BAT_MON
+   voltage = tfa_get_batmon_voltage();
+#elif CUSTOM_BOARD
+   /*User can get the battery voltage for his custom board*/
+#else
+   /*USB powered hence giving vcc as bat voltage*/
+   voltage = 0xCE4;
+#endif
+   return voltage;
+}
 #endif  /* #ifdef VENDOR_DATA */
