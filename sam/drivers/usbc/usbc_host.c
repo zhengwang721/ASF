@@ -797,6 +797,7 @@ bool uhd_ep_alloc(
 				0);
 		uhd_udesc_set_uhaddr(pipe,add);
 		uhd_enable_pipe(pipe);
+		uhd_ack_out_ready(pipe);
 
 		// Enable endpoint interrupts
 		uhd_enable_stall_interrupt(pipe);
@@ -1637,13 +1638,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 		uhd_udesc_rst_buf0_size(pipe);
 
 		if (0 == nb_trans) {
-			// Wait busy status stable
-			for (int i = 0; uhd_nb_busy_bank(pipe) && i < 5; i ++) {
-			}
-			if (0 == uhd_nb_busy_bank(pipe)) {
-				// All byte are transfered than take nb byte requested
-				nb_trans = uhd_udesc_get_buf0_ctn(pipe);
-			}
+			nb_trans = uhd_udesc_get_buf0_ctn(pipe);
 		}
 		// Update number of transfered data
 		ptr_job->nb_trans += nb_trans;
