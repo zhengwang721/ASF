@@ -3,7 +3,7 @@
  *
  * \brief  Main of TAL Examples - Performance_Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 /**
  * \page license License
- * Copyright(c) 2013, Atmel Corporation All rights reserved.
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -395,10 +395,6 @@ static void app_task(void)
         handler_func();
     }
 }
-
-
-
-
 
 /*
  * \brief Callback that is called if data has been received by trx.

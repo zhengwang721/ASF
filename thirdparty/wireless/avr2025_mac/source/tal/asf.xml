@@ -219,7 +219,7 @@
 	
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tal_helper" name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" caption="TAL HELPER Configuration" default="no">
 	
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#no"     caption="Tal Helper support disabled">
+		<module type="service" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#no"     caption="Tal Helper support disabled">
 			<info type="description" value="summary">
 			Tal Helper Support is Disabled(Used Only if the Highest Stack Layer is TAL)
 			</info>
@@ -230,7 +230,7 @@
 			<build type="doxygen-entry-point" value="group_tal_helper"/>		
 		</module>
 		
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#yes"    caption="Tal Helper  support enabled">
+		<module type="service" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#yes"    caption="Tal Helper  support enabled">
 			<info type="description" value="summary">
 			Tal Helper Support for applications using TAL as the Highest Layer is Enabled			
 			</info>
