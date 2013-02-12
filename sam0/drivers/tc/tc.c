@@ -62,14 +62,14 @@
  * \return Index of the given TC module instance.
  */
 static uint8_t _tc_get_inst_index(
-		Tc *const tc_module)
+		Tc *const hw)
 {
 	/* List of available TC modules. */
 	Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
 
 	/* Find index for TC instance. */
 	for (uint32_t i = 0; i < TC_INST_NUM; i++) {
-		if (tc_module == tc_modules[i]) {
+		if (hw == tc_modules[i]) {
 			return i;
 		}
 	}
@@ -86,7 +86,7 @@ static uint8_t _tc_get_inst_index(
  * configuration values.
  *
  * \param[in,out] module_inst  Pointer to the software module instance struct
- * \param[in]     tc_module    Pointer to the TC hardware module
+ * \param[in]     hw           Pointer to the TC hardware module
  * \param[in]     config       Pointer to the TC configuration options struct
  *
  * \return Status of the initialization procedure.
@@ -102,11 +102,11 @@ static uint8_t _tc_get_inst_index(
  */
 enum status_code tc_init(
 		struct tc_module *const module_inst,
-		Tc *const tc_module,
-		const struct tc_conf *const config)
+		Tc *const hw,
+		const struct tc_config *const config)
 {
 	/* Sanity check arguments */
-	Assert(tc_module);
+	Assert(hw);
 	Assert(module_inst);
 	Assert(config);
 
@@ -123,53 +123,53 @@ enum status_code tc_init(
 	 * register before they are written to it */
 	uint8_t ctrlc_tmp = 0;
 	/* Temporary variable to hold TC instance number */
-	uint8_t instance = _tc_get_inst_index(tc_module);
+	uint8_t instance = _tc_get_inst_index(hw);
 
 	/* Array of GLCK ID for different TC instances */
 	uint8_t inst_gclk_id[] = TC_INST_GCLK_ID;
 	/* Array of PM APBC mask bit position for different TC instances */
 	uint16_t inst_pm_apbmask[] = TC_INST_PM_APBCMASK;
 
-	struct system_pinmux_conf pin_conf;
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_pinmux_conf pin_config;
+	struct system_gclk_chan_conf gclk_chan_config;
 
 	/* Associate the given device instance with the hardware module */
-	module_inst->hw_dev = tc_module;
+	module_inst->hw = hw;
 
 	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
 	 */
 	module_inst->counter_size = config->counter_size;
 
-	if (tc_module->COUNT8.CTRLA.reg & TC_CTRLA_SWRST) {
+	if (hw->COUNT8.CTRLA.reg & TC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_BUSY;
 	}
 
-	if (tc_module->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
+	if (hw->COUNT8.STATUS.reg & TC_STATUS_SLAVE) {
 		/* Module is used as a slave */
 		return STATUS_ERR_DENIED;
 	}
 
-	if (tc_module->COUNT8.CTRLA.reg & TC_CTRLA_ENABLE) {
+	if (hw->COUNT8.CTRLA.reg & TC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
 
 	/* Set up the TC PWM out pin for channel 0 */
 	if (config->channel_pwm_out_enabled[0]) {
-		system_pinmux_get_config_defaults(&pin_conf);
-		pin_conf.mux_position = config->channel_pwm_out_mux[0];
-		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_pwm_out_pin[0], &pin_conf);
+		system_pinmux_get_config_defaults(&pin_config);
+		pin_config.mux_position = config->channel_pwm_out_mux[0];
+		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+		system_pinmux_pin_set_config(config->channel_pwm_out_pin[0], &pin_config);
 	}
 
 	/* Set up the TC PWM out pin for channel 1 */
 	if (config->channel_pwm_out_enabled[1]) {
-		system_pinmux_get_config_defaults(&pin_conf);
-		pin_conf.mux_position = config->channel_pwm_out_mux[1];
-		pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-		system_pinmux_pin_set_config(config->channel_pwm_out_pin[1], &pin_conf);
+		system_pinmux_get_config_defaults(&pin_config);
+		pin_config.mux_position = config->channel_pwm_out_mux[1];
+		pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+		system_pinmux_pin_set_config(config->channel_pwm_out_pin[1], &pin_config);
 	}
 
 	/* Enable the user interface clock in the PM */
@@ -177,10 +177,10 @@ enum status_code tc_init(
 			inst_pm_apbmask[instance]);
 
 	/* Setup clock for module */
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.run_in_standby   = config->run_in_standby;
-	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_conf);
+	system_gclk_chan_get_config_defaults(&gclk_chan_config);
+	gclk_chan_config.source_generator = config->clock_source;
+	gclk_chan_config.run_in_standby   = config->run_in_standby;
+	system_gclk_chan_set_config(inst_gclk_id[instance], &gclk_chan_config);
 	system_gclk_chan_enable(inst_gclk_id[instance]);
 
 	if (config->run_in_standby) {
@@ -195,7 +195,7 @@ enum status_code tc_init(
 	}
 
 	/* Set configuration to registers common for all 3 modes */
-	tc_module->COUNT8.CTRLA.reg = ctrla_tmp;
+	hw->COUNT8.CTRLA.reg = ctrla_tmp;
 
 	/* Set ctrlb register */
 	if (config->oneshot) {
@@ -212,7 +212,7 @@ enum status_code tc_init(
 		}
 
 		/* Check if we actually need to go into a wait state. */
-		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
+		hw->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
 	ctrlc_tmp = config->waveform_invert_output | config->capture_enable;
@@ -221,7 +221,7 @@ enum status_code tc_init(
 		/* Wait for sync */
 	}
 
-	tc_module->COUNT8.CTRLC.reg = ctrlc_tmp;
+	hw->COUNT8.CTRLC.reg = ctrlc_tmp;
 
 	if (config->invert_event_input) {
 		evctrl_tmp |= TC_EVCTRL_TCINV;
@@ -231,7 +231,7 @@ enum status_code tc_init(
 		/* Wait for sync */
 	}
 
-	tc_module->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action;
+	hw->COUNT8.EVCTRL.reg = evctrl_tmp | config->event_action;
 
 	/* Switch for TC counter size  */
 	switch (module_inst->counter_size) {
@@ -240,7 +240,7 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT8.COUNT.reg =
+			hw->COUNT8.COUNT.reg =
 					config->size_specific.size_8_bit.count;
 
 
@@ -248,21 +248,21 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT8.PER.reg =
+			hw->COUNT8.PER.reg =
 					config->size_specific.size_8_bit.period;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT8.CC[0].reg
+			hw->COUNT8.CC[0].reg
 				= config->size_specific.size_8_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT8.CC[1].reg
+			hw->COUNT8.CC[1].reg
 				= config->size_specific.size_8_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
@@ -272,21 +272,21 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT16.COUNT.reg
+			hw->COUNT16.COUNT.reg
 				= config->size_specific.size_16_bit.count;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT16.CC[0].reg
+			hw->COUNT16.CC[0].reg
 				= config->size_specific.size_16_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT16.CC[1].reg
+			hw->COUNT16.CC[1].reg
 				= config->size_specific.size_16_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
@@ -296,21 +296,21 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT32.COUNT.reg
+			hw->COUNT32.COUNT.reg
 				= config->size_specific.size_32_bit.count;
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT32.CC[0].reg
+			hw->COUNT32.CC[0].reg
 				= config->size_specific.size_32_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			tc_module->COUNT32.CC[1].reg
+			hw->COUNT32.CC[1].reg
 				= config->size_specific.size_32_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
@@ -340,10 +340,10 @@ enum status_code tc_set_count_value(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance*/
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -383,10 +383,10 @@ uint32_t tc_get_count_value(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -424,10 +424,10 @@ uint32_t tc_get_capture_value(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -476,11 +476,11 @@ enum status_code tc_set_compare_value(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(compare);
 
 	/* Get a pointer to the module's hardware instance */
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -531,10 +531,10 @@ enum status_code tc_reset(
 {
 	/* Sanity check arguments  */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module hardware instance */
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	/* Disable this module */
 	tc_disable(module_inst);
@@ -552,9 +552,9 @@ enum status_code tc_reset(
 		/* Reset this TC module */
 		tc_module->CTRLA.reg  |= TC_CTRLA_SWRST;
 
-		/* Get the slave hw_dev pointer */
+		/* Get the slave hw pointer */
 		Tc *const tc_modules[TC_INST_NUM] = TC_INSTS;
-		Tc *const slave = tc_modules[_tc_get_inst_index(module_inst->hw_dev) + 1];
+		Tc *const slave = tc_modules[_tc_get_inst_index(module_inst->hw) + 1];
 
 		while (slave->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY) {
 			/* Wait for sync */
@@ -604,10 +604,10 @@ enum status_code tc_set_top_value (
 		const uint32_t top_value)
 {
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(compare);
 
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */

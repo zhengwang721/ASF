@@ -51,10 +51,10 @@ int main(void)
 
 	/* Structures for config and software device instance */
 	//! [config]
-	struct tc_conf config;
+	struct tc_config config;
 	//! [config]
 	//! [dev_inst]
-	struct tc_module dev_inst;
+	struct tc_module module_inst;
 	//! [dev_inst]
 
 	//! [tc_get_config_defaults]
@@ -74,11 +74,11 @@ int main(void)
 	//! [setup]
 
 	//! [tc_init]
-	tc_init(&dev_inst, PWM_MODULE, &config);
+	tc_init(&module_inst, PWM_MODULE, &config);
 	//! [tc_init]
 
 	//! [tc_enable]
-	tc_enable(&dev_inst);
+	tc_enable(&module_inst);
 	//! [tc_enable]
 
 	//! [inf_loop]
