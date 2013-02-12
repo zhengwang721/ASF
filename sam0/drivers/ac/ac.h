@@ -236,10 +236,14 @@ extern "C" {
  * Enum for the possible comparator channels.
  */
 enum ac_channel {
+	/** Comparator channel 0 (Pair 0, Comparator 0) */
 	AC_CHANNEL_0 = 0,
+	/** Comparator channel 1 (Pair 0, Comparator 1) */
 	AC_CHANNEL_1 = 1,
 #if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+	/** Comparator channel 2 (Pair 1, Comparator 0) */
 	AC_CHANNEL_2 = 2,
+	/** Comparator channel 3 (Pair 1, Comparator 1) */
 	AC_CHANNEL_3 = 3,
 #endif
 };
@@ -250,8 +254,10 @@ enum ac_channel {
  * Enum for the possible window comparator channels.
  */
 enum ac_win_channel {
+	/** Window channel 0 (Pair 0, Comparators 0 and 1) */
 	AC_WIN_CHANNEL_0 = 0,
 #if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
 	AC_WIN_CHANNEL_1 = 1,
 #endif
 };
