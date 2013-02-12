@@ -350,7 +350,7 @@ static enum status_code _i2c_master_wait_for_bus(
  */
 enum status_code i2c_master_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_packet_t *const packet)
+		struct i2c_packet *const packet)
 {
 	/* Sanity check */
 	Assert(dev_inst);
@@ -439,7 +439,7 @@ enum status_code i2c_master_read_packet(
  */
 enum status_code i2c_master_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_packet_t *const packet)
+		struct i2c_packet *const packet)
 {
 	/* Sanity check */
 	Assert(dev_inst);

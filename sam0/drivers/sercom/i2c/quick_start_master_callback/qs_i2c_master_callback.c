@@ -51,7 +51,7 @@ static uint8_t buffer[DATA_LENGTH] = {
 static uint8_t buffer_reversed[DATA_LENGTH] = {
 		0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
 };
-i2c_packet_t packet;
+struct i2c_packet packet;
 #define SLAVE_ADDRESS 0x12
 //! [packet_data]
 

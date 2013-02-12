@@ -514,14 +514,14 @@ extern "C" {
  * Structure to be used when transferring I2C packets. Used both for master and
  * slave.
  */
-typedef struct {
+struct i2c_packet {
 	/** Address to slave device.  */
 	uint8_t address;
 	/** Length of data array. */
 	uint8_t data_length;
 	/** Data array containing all data to be transfered.*/
 	uint8_t *data;
-}i2c_packet_t;
+};
 
 /** @} */
 

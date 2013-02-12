@@ -99,7 +99,7 @@ int main(void)
 
 	/* Init i2c packet. */
 	//! [packet]
-	i2c_packet_t packet = {
+	struct i2c_packet packet = {
 		.address     = SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
 		.data        = buffer,
