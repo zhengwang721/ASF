@@ -100,14 +100,14 @@ enum status_code wdt_init(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	while (wdt_is_synching()) {
+	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
 	/* Update the timeout period value with the requested period */
 	WDT_module->CTRL.reg = (config->timeout_period - 1) << WDT_CTRL_PER_Pos;
 
-	while (wdt_is_synching()) {
+	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -123,7 +123,7 @@ enum status_code wdt_init(
 
 	/* Check if the user has requested an early warning period */
 	if (config->early_warning_period != WDT_PERIOD_NONE) {
-		while (wdt_is_synching()) {
+		while (wdt_is_syncing()) {
 			/* Wait for all hardware modules to complete synchronization */
 		}
 
@@ -158,7 +158,7 @@ enum status_code wdt_enable(void)
 		return STATUS_ERR_IO;
 	}
 
-	while (wdt_is_synching()) {
+	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -193,7 +193,7 @@ enum status_code wdt_disable(void)
 		return STATUS_ERR_IO;
 	}
 
-	while (wdt_is_synching()) {
+	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -215,7 +215,7 @@ void wdt_reset_count(void)
 {
 	Wdt *const WDT_module = WDT;
 
-	while (wdt_is_synching()) {
+	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 

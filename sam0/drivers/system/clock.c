@@ -271,7 +271,7 @@ enum status_code system_clock_source_write_calibration(
 	switch (clock_src) {
 		case SYSTEM_CLOCK_SOURCE_OSC8M:
 
-			if (calibration_value > 255 || freq_range > 4) {
+			if (calibration_value > 0xfff || freq_range > 4) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 

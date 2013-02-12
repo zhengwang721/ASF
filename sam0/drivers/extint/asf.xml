@@ -14,7 +14,7 @@
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="c-source" value="extint.c"/>
 
-			<build type="define" name="EXTINT_ASYNC" value="false"/>
+			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 
 			<build type="header-file" subtype="example" value="quick_start/qs_extint_basic.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_samd20_extint_group"/>

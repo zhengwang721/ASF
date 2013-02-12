@@ -42,6 +42,7 @@
  */
 #include "extint.h"
 #include <system.h>
+#include <system_interrupt.h>
 
 /**
  * \internal
@@ -67,7 +68,7 @@ void extint_reset(void)
 		eics[i]->CTRL.reg |= EIC_CTRL_SWRST;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
@@ -95,7 +96,7 @@ void extint_enable(void)
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -105,7 +106,7 @@ void extint_enable(void)
 		_extint_dev.callbacks[j] = NULL;
 	}
 
-	NVIC_EnableIRQ(EIC_IRQn);
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
 #endif
 }
 
@@ -124,7 +125,7 @@ void extint_disable(void)
 		eics[i]->CTRL.reg &= ~EIC_CTRL_ENABLE;
 	}
 
-	while (extint_is_synching()) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }

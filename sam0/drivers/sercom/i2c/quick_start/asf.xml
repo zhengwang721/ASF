@@ -4,7 +4,7 @@
 		Quick start guide for the SERCOM I2C interface module in master mode demonstrating module configuration.
 		</info>
 		<build type="c-source" value="qs_i2c_master_basic_use.c"/>
-		<build type="define" name="I2C_MASTER_ASYNC" value=""/>
+		<!--<build type="define" name="I2C_MASTER_ASYNC" value=""/>-->
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.sercom.i2c_master"/>
 		<device-support value="samd20"/>

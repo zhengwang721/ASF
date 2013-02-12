@@ -124,17 +124,17 @@
  *
  * The Main Array is divided into rows and pages, where each row contains four
  * pages. The size of each page may vary from 8-1024 bytes dependent of the
- * device. Parameters like page size and total number of pages in the NVM memory
- * are available by using \ref nvm_get_parameters().
+ * device. Device specific parameters such as the page size and total number of
+ * pages in the NVM memory space are available via the \ref nvm_get_parameters()
+ * function.
  *
- * The equations for a page's number and address is given by the equations
- * below.
+ * A NVM page number and address can be computed via the following equations:
  *
  * \f[ PageNum = (RowNum \times 4) + PagePosInRow \f]
  * \f[ PageAddr = PageNum \times PageSize \f]
  *
- * The figure below gives an example to which page numbers and addresses row 7
- * in the NVM memory has.
+ * The figure below shows an example of the memory page and address values
+ * associated with logical row 7 of the NVM memory space.
  *
  * \dot
  * digraph row_layout {
@@ -296,45 +296,43 @@
  *
  * \subsection asfdoc_samd20_nvm_module_overview_locking_regions Region Lock Bits
  * As mentioned in \ref asfdoc_samd20_nvm_module_overview_regions, the main
- * block of the NVM memory is divided into pages. These pages are grouped into
- * 16 equal sized regions, where each region can be locked separately issuing an
- * \ref NVM_COMMAND_LOCK_REGION command or by writing the LOCK bits in the User
- * Row. Rows reserved for the EEPROM section is not affected by the locking.
+ * block of the NVM memory is divided into a number of individually addressable
+ * pages. These pages are grouped into 16 equal sized regions, where each region
+ * can be locked separately issuing an \ref NVM_COMMAND_LOCK_REGION command or
+ * by writing the LOCK bits in the User Row. Rows reserved for the EEPROM
+ * section are not affected by the lock bits or commands.
  *
  * \note By using the \ref NVM_COMMAND_LOCK_REGION or
- *       \ref NVM_COMMAND_UNLOCK_REGION commands the settings will stay in
- *       effect until the next reset. By changing the default lock setting for
- *       the regions, the auxiliary space have to be written. These settings
- *       will not come into action before a reset is issued.
+ *       \ref NVM_COMMAND_UNLOCK_REGION commands the settings will remain in
+ *       effect until the next device reset. By changing the default lock
+ *       setting for the regions, the auxiliary space must to be written,
+ *       however the adjusted configuration will not take effect until the next
+ *       device reset.
  *
  * \note If the \ref asfdoc_samd20_nvm_special_consideration_security_bit is
- *       set, the auxiliary space cannot be written. Clearing of the security
- *       bit can only be done by a chip erase.
+ *       set, the auxiliary space cannot be written to. Clearing of the security
+ *       bit can only be performed by a full chip erase.
  *
  * \subsection asfdoc_samd20_nvm_module_overview_sub_rw Read/Write
- * Reading from the NVM memory can be done by directly addressing it, or by
- * using the \ref nvm_write_page(). Writing to the NVM memory requires some
- * special considerations. If a whole page is to be written the
- * \ref nvm_write_page() function can be used after erasing the row where the
- * page is located, this can be done by \ref nvm_erase_row(). However, if a
- * buffer of a different size or location than a specific page is to be written,
- * it can be done by the following procedure:
- * -# Erase the location in the NVM memory of where the buffer is to be written.
- * -# Write to the page buffer, which has the size of one page, by addressing
- *    the NVM memory location directly.
- * -# Issue an \ref NVM_COMMAND_WRITE_PAGE
- *  -# If the manual_page_write in the \ref nvm_config is disabled, and the last
- *     byte of the page buffer is addressed, this will happen automatically.
- *  -# If not, use the \ref nvm_execute_command() with the
- *     \ref NVM_COMMAND_WRITE_PAGE.
+ * Reading from the NVM memory can be performed using direct addressing into the
+ * NVM memory space, or by calling the \ref nvm_read_buffer() function.
  *
- * \note The granularity of an erase is per row while the granularity of a
- *       write is per page. Thus, modifying only one page of a row will require
- *       to buffer the three remaining pages, as an erase is mandatory before
- *       writing to a page.
+ * Writing to the NVM memory must be performed by the \ref nvm_write_buffer()
+ * function - additionally, a manual page program command must be issued if
+ * the NVM controller is configured in manual page writing mode, or a buffer of
+ * data less than a full page is passed to the buffer write function.
  *
+ * Before a page can be updated, the associated NVM memory row must be erased
+ * first via the \ref nvm_erase_row() function. Writing to a non-erased page
+ * will result in corrupt data being stored in the NVM memory space.
  *
  * \section asfdoc_samd20_nvm_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_samd20_nvm_special_consideration_pageerase Page Erasure
+ * The granularity of an erase is per row, while the granularity of a write is
+ * per page. Thus, if the user application is modifying only one page of a row,
+ * the remaining pages in the row must be buffered and the row erased, as an
+ * erase is mandatory before writing to a page.
  *
  * \subsection asfdoc_samd20_nvm_special_consideration_clocks Clocks
  * The user must ensure that the driver is configured with a proper number of
@@ -719,20 +717,18 @@ static inline void nvm_get_parameters(
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 }
 
-enum status_code nvm_write_page(
-		const uint16_t dst_page_nr,
-		const uint32_t *buf);
+enum status_code nvm_write_buffer(
+		const uint16_t destination_page,
+		const uint8_t *buffer,
+		uint16_t length);
 
-enum status_code nvm_read_page(
-		const uint16_t src_page_nr,
-		uint32_t *buf);
+enum status_code nvm_read_buffer(
+		const uint16_t source_page,
+		uint8_t *const buffer,
+		uint16_t length);
 
 enum status_code nvm_erase_row(
-		const uint16_t row_nr);
-
-enum status_code nvm_erase_block(
-		const uint16_t row_nr,
-		const uint16_t rows);
+		const uint16_t row_number);
 
 enum status_code nvm_execute_command(
 		const enum nvm_command command,

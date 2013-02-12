@@ -250,7 +250,8 @@ struct extint_chan_conf {
 /**
  * \brief External Interrupt event enable/disable structure.
  *
- * Event flags for the External Interrupt) and \ref extint_disable_events().
+ * Event flags for the \ref extint_enable_events() and
+ * \ref extint_disable_events().
  */
 struct extint_events {
 	/** If \c true, an event will be generated when an external interrupt
@@ -361,7 +362,7 @@ static inline Eic *const _extint_get_eic_from_nmi(
  * \retval true if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool extint_is_synching(void)
+static inline bool extint_is_syncing(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
