@@ -147,7 +147,7 @@ static void configure_tc(struct tc_module *tc_module)
 	config.clock_source = GCLK_GENERATOR_0;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
 
-	tc_init(TC0, tc_module, &config);
+	tc_init(tc_module, TC0, &config);
 
 	events.generate_event_on_overflow = true;
 	events.on_event_perform_action = false;
@@ -169,7 +169,7 @@ static void configure_event_channel(void)
 	events_chan_conf.generator_id = EVSYS_ID_GEN_TC0_OVF;
 	events_chan_conf.edge_detection = EVENT_EDGE_RISING;
 	events_chan_conf.path = EVENT_PATH_RESYNCHRONOUS;
-	events_chan_set_config(0, &events_chan_conf);
+	events_chan_set_config(EVENTS_CHANNEL_0, &events_chan_conf);
 
 	//while (!events_chan_is_ready(1));
 	//while (!events_user_is_ready(0));
@@ -179,25 +179,16 @@ static void configure_event_user(void)
 {
 	struct events_user_conf events_user_conf;
 	events_user_get_config_defaults(&events_user_conf);
-	events_user_conf.event_channel_id = 1;
+	events_user_conf.event_channel_id = EVENTS_CHANNEL_0;
 	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_conf);
 }
 
 static void configure_events(void)
 {
-	struct system_gclk_chan_conf gclk_chan_conf;
-
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
-	gclk_chan_conf.run_in_standby   = false;
-
-	system_gclk_chan_set_config(EVSYS_GCLK_ID_0, &gclk_chan_conf);
-	system_gclk_chan_enable(EVSYS_GCLK_ID_0);
-
 	events_init();
 
 	configure_event_user();
 	configure_event_channel();
-
 }
 
 /**
