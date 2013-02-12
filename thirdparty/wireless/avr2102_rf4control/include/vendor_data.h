@@ -129,7 +129,7 @@ typedef enum vendor_status_tag
  *
  * @return true if command could be handled; else false
  *
- * @ingroup group_RF4CONTROL_VENDOR_DATA_API
+ * @ingroup group_RF4CONTROL_ZRC_API
  */
 bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
                          uint16_t VendorId, uint8_t nsduLength, uint8_t *nsdu,
@@ -142,7 +142,7 @@ bool vendor_data_request(uint8_t PairingRef, profile_id_t ProfileId,
  *
  * Hook for the application indicating that an alive request command was received.
  *
- * @ingroup group_RF4CONTROL_VENDOR_DATA_API
+ * @ingroup group_RF4CONTROL_ZRC_API
  */
 void vendor_app_alive_req(void);
 

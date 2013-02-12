@@ -1,5 +1,5 @@
 /**
- * @file sio_handler.c
+ * @file serial_interface.h
  *
  * @brief RF4CE Serial API
  *

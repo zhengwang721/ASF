@@ -479,7 +479,6 @@ static inline void handle_incoming_msg(void)
             break;
 #if (defined RF4CE_TARGET) || (defined RF4CE_PLATFORM)
         case NLME_AUTO_DISCOVERY_REQUEST:
-#if (UC3) || (SAM)
             {
                 dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE];
                 profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE];
@@ -502,18 +501,10 @@ static inline void handle_incoming_msg(void)
                                                       , (FUNC_PTR)nlme_auto_discovery_confirm
                                                      );
             }
-#else
-            ret_val = nlme_auto_discovery_request(sio_rx_buf[2],
-                                                  (dev_type_t *)&sio_rx_buf[3],
-                                                  (profile_id_t *)&sio_rx_buf[3 + 3],
-                                                  *(uint32_t *)&sio_rx_buf[3 + 3 + 7]
-                                                  , (FUNC_PTR)nlme_auto_discovery_confirm
-                                                 );
-#endif
             break;
 #endif
         case NLME_DISCOVERY_REQUEST:
-#if (UC3) || (SAM)
+
             {
 #if (UC3) 
                 uint16_t PANId = ((uint16_t)sio_rx_buf[2] << 8) | (uint16_t)sio_rx_buf[3];
@@ -551,22 +542,10 @@ static inline void handle_incoming_msg(void)
                                                  , (FUNC_PTR)nlme_discovery_confirm
                                                 );
             }
-#else
-            ret_val = nlme_discovery_request(*(uint16_t *)&sio_rx_buf[2], *(uint16_t *)&sio_rx_buf[4],
-                                             sio_rx_buf[6],   // uint8_t OrgAppCapabilities,
-                                             (dev_type_t *)&sio_rx_buf[7],  //uint8_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE],
-                                             (profile_id_t *)&sio_rx_buf[7 + 3/*num_dev_types*/],  //uint8_t OrgProfileIdList[DEVICE_TYPE_LIST_SIZE],
-                                             (dev_type_t)sio_rx_buf[7 + 3/*num_dev_types*/ + 7/*num_profiles*/],    //uint8_t SearchDevType,
-                                             sio_rx_buf[8 + 3 + 7],    //uint8_t DiscProfileIdListSize,
-                                             (profile_id_t *)&sio_rx_buf[9 + 3 + 7],   //uint8_t DiscProfileIdList[PROFILE_ID_LIST_SIZE],
-                                             * (uint32_t *)&sio_rx_buf[9 + 3 + 7 + 7]      //uint32_t DiscDuration);
-                                             , (FUNC_PTR) nlme_discovery_confirm
-                                            );
-#endif
+
             break;
 #if (defined RF4CE_TARGET) || (defined RF4CE_PLATFORM)
         case NLME_DISCOVERY_RESPONSE:
-#if (UC3) || (SAM)
             {
                 nwk_enum_t Status = (nwk_enum_t)sio_rx_buf[2];
                 uint64_t DstIEEEAddr;
@@ -588,19 +567,11 @@ static inline void handle_incoming_msg(void)
                                                   profile_id_list,  //uint8_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
                                                   sio_rx_buf[12 + 3 + 7]);       //uint8_t DiscReqLQI);
             }
-#else
-            ret_val = nlme_discovery_response((nwk_enum_t)sio_rx_buf[2],    //nwk_enum_t Status,
-                                              * (uint64_t *)&sio_rx_buf[3], //uint64_t DstIEEEAddr,
-                                              sio_rx_buf[11],       //uint8_t RecAppCapabilities,
-                                              (dev_type_t *)&sio_rx_buf[12],  //uint8_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE],
-                                              (profile_id_t *)&sio_rx_buf[12 + 3/*num_dev_types*/],  //uint8_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
-                                              sio_rx_buf[12 + 3 + 7]);       //uint8_t DiscReqLQI);
-#endif
+
             break;
 #endif
 #if (defined RF4CE_TARGET) || (defined RF4CE_PLATFORM)
         case NLME_PAIR_RESPONSE:
-#if (UC3) || (SAM)
             {
                 nwk_enum_t Status = (nwk_enum_t)sio_rx_buf[2];
 #if (UC3)
@@ -628,15 +599,6 @@ static inline void handle_incoming_msg(void)
                                              profile_id_list,   //uint8_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
                                              sio_rx_buf[14 + 3 + 7]);    //uint8_t ProvPairingRef);
             }
-#else
-            ret_val = nlme_pair_response((nwk_enum_t)sio_rx_buf[2], //nwk_enum_t Status,
-                                         * (uint16_t *)&sio_rx_buf[3],  //uint16_t DstPANId,
-                                         * (uint64_t *)&sio_rx_buf[5],  //uint64_t DstIEEEAddr,
-                                         sio_rx_buf[13],            //uint8_t RecAppCapabilities,
-                                         (dev_type_t *)&sio_rx_buf[14],   //uint8_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE],
-                                         (profile_id_t *)&sio_rx_buf[14 + 3/*num_dev_types*/],   //uint8_t RecProfileIdList[PROFILE_ID_LIST_SIZE],
-                                         sio_rx_buf[14 + 3 + 7]);    //uint8_t ProvPairingRef);
-#endif
             break;
 #endif
 
@@ -647,7 +609,6 @@ static inline void handle_incoming_msg(void)
                                         );
             break;
 		case NLME_PAIR_REQUEST:
-#if (UC3) || (SAM)
             {
 #if (UC3) 
                 uint16_t DstPANId = ((uint16_t)sio_rx_buf[3] << 8) | (uint16_t)sio_rx_buf[4];
@@ -676,17 +637,7 @@ static inline void handle_incoming_msg(void)
                                             , (FUNC_PTR)nlme_pair_confirm
                                            );
             }
-#else
-            ret_val = nlme_pair_request(sio_rx_buf[2],  //uint8_t LogicalChannel,
-                                        * (uint16_t *)&sio_rx_buf[3],   //uint16_t DstPANId,
-                                        * (uint64_t *)&sio_rx_buf[5],   //uint64_t DstIEEEAddr,
-                                        sio_rx_buf[13], //uint8_t OrgAppCapabilities,
-                                        (dev_type_t *)&sio_rx_buf[14],    //uint8_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE],
-                                        (profile_id_t *)&sio_rx_buf[14 + 3/*num_dev_types*/],    //uint8_t OrgProfileIdList[PROFILE_ID_LIST_SIZE],
-                                        sio_rx_buf[14 + 3 + 7] //uint8_t KeyExTransferCount);
-                                        , (FUNC_PTR)nlme_pair_confirm
-                                       );
-#endif
+
             break;
 
 
@@ -699,7 +650,6 @@ static inline void handle_incoming_msg(void)
 #endif
 
         case NLME_RX_ENABLE_REQUEST:
-#if (UC3) || (SAM)
             {
                 uint32_t rx_on_duration;
                 MEMCPY_ENDIAN(&rx_on_duration, &sio_rx_buf[2], sizeof(uint32_t));
@@ -707,11 +657,6 @@ static inline void handle_incoming_msg(void)
                                                  ,  (FUNC_PTR)nlme_rx_enable_confirm
                                                 );
             }
-#else
-            ret_val = nlme_rx_enable_request(*(uint32_t *)&sio_rx_buf[2]
-                                             ,  (FUNC_PTR)nlme_rx_enable_confirm
-                                            );
-#endif
             break;
 #if (NWK_SET == 1)
         case NLME_SET_REQUEST:
@@ -754,7 +699,6 @@ static inline void handle_incoming_msg(void)
 
 #ifdef PBP_ORG
         case PBP_ORG_PAIR_REQUEST:
-#if (UC3) || (SAM)
             {
                 dev_type_t OrgDevTypeList[DEVICE_TYPE_LIST_SIZE];
                 profile_id_t OrgProfileIdList[PROFILE_ID_LIST_SIZE];
@@ -782,23 +726,11 @@ static inline void handle_incoming_msg(void)
                                                ,  (FUNC_PTR)pbp_org_pair_confirm
                                               );
             }
-#else
-
-            ret_val = pbp_org_pair_request(sio_rx_buf[2],
-                                           (dev_type_t *)&sio_rx_buf[3],
-                                           (profile_id_t *)&sio_rx_buf[3 + DEVICE_TYPE_LIST_SIZE],
-                                           (dev_type_t) sio_rx_buf[3 +  DEVICE_TYPE_LIST_SIZE + PROFILE_ID_LIST_SIZE],
-                                           sio_rx_buf[4 + DEVICE_TYPE_LIST_SIZE + PROFILE_ID_LIST_SIZE],
-                                           (profile_id_t *)&sio_rx_buf[5 + DEVICE_TYPE_LIST_SIZE + PROFILE_ID_LIST_SIZE]
-                                           ,  (FUNC_PTR)pbp_org_pair_confirm
-                                          );
-#endif
             break;
 #endif
 
 #ifdef PBP_REC
         case PBP_REC_PAIR_REQUEST:
-#if (UC3) || (SAM)
             {
                 dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE];
                 profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE];
@@ -818,13 +750,6 @@ static inline void handle_incoming_msg(void)
                                               );
 
             }
-#else
-            ret_val = pbp_rec_pair_request(sio_rx_buf[2] /*uint8_t RecAppCapabilities*/,
-                                           (dev_type_t *)&sio_rx_buf[3]/*dev_type_t RecDevTypeList[DEVICE_TYPE_LIST_SIZE]*/,
-                                           (profile_id_t *)&sio_rx_buf[3 + 3]/*profile_id_t RecProfileIdList[PROFILE_ID_LIST_SIZE]*/
-                                           ,  (FUNC_PTR)pbp_rec_pair_confirm
-                                          );
-#endif
             break;
 #endif
 
@@ -872,12 +797,6 @@ static inline void handle_incoming_msg(void)
 #endif
         default:
             {
-                /* Sending the unsupported command response on receiving the invalid command - For ASF support */
-                //uint8_t *msg_buf;
-                //msg_buf = get_next_tx_buffer();
-                //*msg_buf++ = UNSUPPORTED_CMD_LEN;
-                //*msg_buf++ = UNSUPPORTED_CMD;
-                //*msg_buf = EOT;
             }
             Assert("???" == 0);
             break;

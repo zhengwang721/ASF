@@ -68,7 +68,7 @@ extern "C" {
 #endif
 
     /**
-     * \addtogroup group_tal_pib_212B
+     * \addtogroup group_tal_pib_212b
      * @{
      */
 

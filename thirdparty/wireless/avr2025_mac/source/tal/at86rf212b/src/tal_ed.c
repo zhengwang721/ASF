@@ -68,7 +68,7 @@
 /* === MACROS ============================================================== */
 
 /**
- * \addtogroup group_tal_ed_212B
+ * \addtogroup group_tal_ed_212b
  * @{
  */
 

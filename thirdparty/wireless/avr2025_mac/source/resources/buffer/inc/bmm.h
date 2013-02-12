@@ -82,7 +82,7 @@
  *
  */
 typedef struct
-#if !defined(DOXYGEN)
+#if !defined(__DOXYGEN__)
 buffer_tag
 #endif
 {

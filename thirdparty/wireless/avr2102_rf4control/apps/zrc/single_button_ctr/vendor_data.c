@@ -81,7 +81,7 @@
 /* === EXTERNALS =========================================================== */
 
 FLASH_EXTERN(uint16_t VendorIdentifier);
-
+static uint16_t get_batmon_voltage(void);
 #ifdef RF4CE_TARGET
 extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId
                                 , uint8_t Handle
@@ -115,17 +115,17 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
     {
         switch (nsdu[0])    // vendor-specific command id
         {
-#ifdef TFA_BAT_MON
+
             case BATTERY_STATUS_REQ:
                 {
-                    uint16_t voltage = tfa_get_batmon_voltage();
+                    uint16_t voltage = get_batmon_voltage();
                     nsdu[0] = BATTERY_STATUS_RESP;
                     nsdu[1] = (uint8_t)voltage;    // LSB
                     nsdu[2] = (uint8_t)(voltage >> 8);    // MSB
                     nsduLength = 3;
                 }
                 break;
-#endif
+
             case ALIVE_REQ:  /* Alive request */
                 vendor_app_alive_req();
                 /* Send alive response */
@@ -165,58 +165,6 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
                 }
                 break;
 
-#ifdef FLASH_SUPPORT
-            case FW_DATA_REQ:
-                {
-                    fw_data_frame_t *fw_frame;
-                    vendor_status_t status = VD_SUCCESS;
-
-                    fw_frame = (fw_data_frame_t *)nsdu;
-
-                    /* Verify data chunk size */
-                    uint8_t fw_data_size = nsduLength - 5;  // 5 = header len
-                    if (fw_data_size > 64)
-                    {
-                        status = VD_UNSUPPORTED_SIZE;
-                    }
-                    else
-                    {
-                        /* Fill temporary page buffer */
-                        uint16_t start_addr = (fw_frame->frame_cnt - 1) % 4;
-                        flash_fill_page_buffer(start_addr * (SPM_PAGESIZE / 4), fw_data_size, &fw_frame->fw_data[0]);
-                        /* Write flash page */
-                        if ((fw_frame->frame_cnt % 4) == 0)
-                        {
-                            uint32_t page_start_addr;
-                            page_start_addr = IMAGE_START_ADDR + ((uint32_t)SPM_PAGESIZE * ((fw_frame->frame_cnt / 4) - 1));
-                            flash_program_page(page_start_addr);
-                        }
-                        else if (fw_frame->frame_cnt == fw_frame->total_num_frames)
-                        {
-                            uint32_t page_start_addr;
-                            page_start_addr = IMAGE_START_ADDR + ((uint32_t)SPM_PAGESIZE * (fw_frame->frame_cnt / 4));
-                            flash_program_page(page_start_addr);
-                        }
-                    }
-                    /* Send response */
-                    nsdu[0] = FW_DATA_RESP;
-                    nsdu[1] = status;
-                    nsduLength = 2;
-                }
-                break;
-#endif  /* #ifdef FLASH_SUPPORT */
-
-#ifdef FLASH_SUPPORT
-            case FW_SWAP_REQ:
-                {
-                    /* Send response */
-                    nsdu[0] = FW_SWAP_RESP;
-                    nsduLength = 1;
-                    nsduHandle = 2;
-
-                }
-                break;
-#endif  /* #ifdef FLASH_SUPPORT */
 
             default:
                 {
@@ -264,6 +212,17 @@ void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Pro
     ProfileId = ProfileId;
 }
 #endif
-
-
+static uint16_t get_batmon_voltage(void)
+{   
+  uint16_t voltage;
+#ifdef TFA_BAT_MON
+   voltage = tfa_get_batmon_voltage();
+#elif CUSTOM_BOARD
+   /*User can get the battery voltage for his custom board*/
+#else
+   /*USB powered hence giving vcc as bat voltage*/
+   voltage = 0xCE4;
+#endif
+   return voltage;
+}
 #endif  /* #ifdef VENDOR_DATA */

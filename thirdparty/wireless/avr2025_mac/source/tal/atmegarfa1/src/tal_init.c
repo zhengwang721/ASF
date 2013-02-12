@@ -65,8 +65,6 @@
 #include "tal_internal.h"
 #include "tal_constants.h"
 #include "atmega128rfa1.h"
-#include "tal_timer_config.h"
-#include "app_config.h"
 #ifdef BEACON_SUPPORT
 #include "tal_slotted_csma.h"
 #endif  /* BEACON_SUPPORT */
@@ -122,6 +120,14 @@ static retval_t trx_init(void);
 static void trx_config(void);
 static retval_t trx_reset(void);
 static retval_t internal_tal_reset(bool set_default_pib);
+/**
+ * \brief Initializes all timers used by the TAL module by assigning id's to each of them 
+ */
+static retval_t tal_timer_init(void);
+/**
+ * \brief Stops all initialized TAL timers
+ */
+static void tal_timers_stop(void);
 
 //! @}
 
@@ -280,7 +286,7 @@ static retval_t trx_init(void)
         if (poll_counter == RESET_TO_TRX_OFF_ATTEMPTS)
         {
 #if (_DEBUG_ > 0)
-            app_alert();
+			Assert("MAX Attempts to switch to TRX_OFF state reached" == 0);
 #endif
             return FAILURE;
         }
@@ -449,7 +455,7 @@ static retval_t trx_reset(void)
         if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS)
         {
 #if (_DEBUG_ > 0)
-            app_alert();
+			Assert("MAX Attempts to switch to TRX_OFF state reached" == 0);
 #endif
             return FAILURE;
         }
@@ -493,11 +499,11 @@ retval_t tal_reset(bool set_default_pib)
         return FAILURE;
     }
 
-#if (NUMBER_OF_TAL_TIMERS > 0)
+
     ENTER_CRITICAL_REGION();
     tal_timers_stop();
     LEAVE_CRITICAL_REGION();
-#endif
+
 
     /* Clear TAL Incoming Frame queue and free used buffers. */
     while (tal_incoming_frame_queue.size > 0)
@@ -623,7 +629,7 @@ void tal_generate_rand_seed(void)
     srand(seed);
 }
 
-retval_t tal_timer_init(void)
+static retval_t tal_timer_init(void)
 {
 #ifdef BEACON_SUPPORT
 // Beacon Support
@@ -662,8 +668,10 @@ retval_t tal_timer_init(void)
 }
 
 
-retval_t tal_timers_stop(void)
+static void tal_timers_stop(void)
 {
+#if (NUMBER_OF_TAL_TIMERS > 0)
+
 #ifdef BEACON_SUPPORT
 // Beacon Support
 #ifdef ENABLE_FTN_PLL_CALIBRATION
@@ -680,5 +688,7 @@ retval_t tal_timers_stop(void)
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif  /* BEACON_SUPPORT */
 	return MAC_SUCCESS;
+
+#endif /* (NUMBER_OF_TAL_TIMERS > 0) */
 }
 /* EOF */

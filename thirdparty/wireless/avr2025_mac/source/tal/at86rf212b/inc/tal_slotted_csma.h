@@ -52,8 +52,8 @@
 #define TAL_SLOTTED_CSMA_H
 
 /**
- * \ingroup group_tal_tx_csma_212B
- * \defgroup group_tal_slotted_csma_212B  Slotted CSMA Module
+ * \ingroup group_tal_tx_csma_212b
+ * \defgroup group_tal_slotted_csma_212b  Slotted CSMA Module
  * Transmits data using Slotted CSMA/CA mechanism.
  *  @{
  */

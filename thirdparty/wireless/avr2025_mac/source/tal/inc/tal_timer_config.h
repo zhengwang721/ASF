@@ -188,8 +188,7 @@ extern uint8_t TAL_CALIBRATION;
 #endif
 /* === PROTOTYPES ========================================================== */
 
-retval_t tal_timer_init(void);
-retval_t tal_timers_stop(void);
+
 
 #endif /* TAL_TIMER_CONFIG_H */
 /* EOF */

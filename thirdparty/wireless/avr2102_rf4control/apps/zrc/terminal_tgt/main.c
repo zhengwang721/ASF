@@ -191,7 +191,7 @@ static void print_unpair_submenu(void);
 static void led_handling(void *callback_parameter);
 static void print_ch_change_submenu(void);
 static void print_sub_mode_ch_ag_setup(void);
-static void print_vendor_data_submenu(uint8_t Vcmd);
+static void print_vendor_data_submenu(vendor_cmd_id_t Vcmd);
 static char *get_status_text(nwk_enum_t status);
 
 
@@ -1083,7 +1083,7 @@ static void nlme_start_confirm(nwk_enum_t Status)
  *
  * @param PairingRef       Pairing Ref for which entry is removed from pairing table.
  */
-void nlme_unpair_indication(uint8_t PairingRef)
+static void nlme_unpair_indication(uint8_t PairingRef)
 {
     number_of_paired_dev--;
     /* Keep compiler happy */
@@ -1281,10 +1281,16 @@ static void print_sub_mode_ch_ag_setup(void)
                     {
                         input_char2[i] = input;
                     }
-                    else
+                    else if(input == 0x0D)
                     {
                         break;
                     }
+					else
+					{
+					    printf("Invalid value. \r\n\r\n");
+                        printf("> Press Enter to return to main menu:\r\n ");
+                        return;
+					}
                 }
                 threshold = atol(input_char2);
                 nlme_set_request(nwkPrivateChAgEdThreshold, 0, &threshold
@@ -1366,10 +1372,17 @@ static void print_sub_mode_ch_ag_setup(void)
                     {
                         input_char2[i] = input;
                     }
-                    else
+                    else if(input == 0x0D)
                     {
                         break;
                     }
+					else
+					{
+					    printf("Invalid value. \r\n\r\n");
+                        printf("> Press Enter to return to main menu:\r\n ");
+                        return;
+					}
+					
                 }
                 scan_dur = atol(input_char2);
                 if ((scan_dur==0)||(scan_dur==6)||(scan_dur==14))
@@ -1399,7 +1412,7 @@ static void print_sub_mode_ch_ag_setup(void)
  * @param Vcmd Vendor command id to be requested.
  *
  */
-static void print_vendor_data_submenu(uint8_t Vcmd)
+static void print_vendor_data_submenu(vendor_cmd_id_t Vcmd)
 {
   
     char input_char;
@@ -1414,7 +1427,7 @@ static void print_vendor_data_submenu(uint8_t Vcmd)
 
         uint16_t VendorId = NWKC_VENDOR_IDENTIFIER;
         profile_id_t ProfileId = PROFILE_ID_ZRC;
-        uint8_t nsdu = Vcmd;
+        uint8_t nsdu = (uint8_t)Vcmd;
         vendor_data_request(PairingRef, ProfileId,
                             VendorId, 1, &nsdu,
                             TXO_UNICAST | TXO_DST_ADDR_IEEE | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC);

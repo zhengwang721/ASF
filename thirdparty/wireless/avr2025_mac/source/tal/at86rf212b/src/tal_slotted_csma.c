@@ -70,7 +70,7 @@
 
 /* === MACROS ============================================================== */
 /**
- *\addtogroup group_tal_slotted_csma_212B
+ *\addtogroup group_tal_slotted_csma_212b
  * @{
  */
 

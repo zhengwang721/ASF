@@ -76,7 +76,7 @@
 
 /** Typical timing values. */
 /* TRX Parameter: t10 */
-#define RST_PULSE_WIDTH_US                          (5)
+#define RST_PULSE_WIDTH_NS                          (625)
 /* TRX Parameter: tTR1 typical value */
 #define P_ON_TO_CLKM_AVAILABLE_TYP_US               (330)
 /* TRX Parameter: tTR1 max. value */
@@ -116,7 +116,9 @@
 /* TRX Parameter: Complete CCA Duration in symbols */
 #define CCA_DURATION_SYM   (TAL_CONVERT_US_TO_SYMBOLS(CCA_DETECTION_TIME_US) + CCA_PROCESS_TIME_SYM)
 /* TRX Parameter: Round up RST_PULSE_WIDTH_NS value to us */
-//#define RST_PULSE_WIDTH_US   ((RST_PULSE_WIDTH_NS + 999) / 1000)
+/*delay_us() for time less than 5 seems to provide wrong delay in GCC ,
+hence proper reset is not done.TO be reverted back once the related bug is fixed */
+#define RST_PULSE_WIDTH_US   (5) //((RST_PULSE_WIDTH_NS + 999) / 1000)
 
 /** Register addresses */
 

@@ -74,7 +74,7 @@
 /** Conversion factor: us per symbol for 2,4 GHz. */
 #define PAL_US_PER_SYMBOLS              (16)
 
-#if defined(DOXYGEN)
+#if defined(__DOXYGEN__)
 /**
  * \brief Reads the 32-bit timer register in the required order of bytes
  *
@@ -109,7 +109,7 @@ static inline uint32_t sc_read32(volatile uint8_t *hh,
 
     return x.rv;
 }
-#endif /* DOXYGEN */
+#endif /* __DOXYGEN__ */
 
 /** String concatenation by preprocessor used to create proper register names. */
 #define CONCAT(a,b) a##b
@@ -145,12 +145,12 @@ static irq_handler_t irq_hdl_trx_cca_ed;
 /** Function pointer to store callback for transceiver AWAKE interrupt. */
 static irq_handler_t irq_hdl_trx_awake;
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 /** Function pointer to store callback for transceiver timestamp (RX_START) interrupt. */
 static irq_handler_t irq_hdl_trx_tstamp;
 #endif
 
-#if (defined ENABLE_ALL_TRX_IRQS) || (defined DOXYGEN)
+#if (defined ENABLE_ALL_TRX_IRQS) || (defined __DOXYGEN__)
 /** Function pointer to store callback for transceiver AMI interrupt. */
 static irq_handler_t irq_hdl_trx_ami;
 /** Function pointer to store callback for transceiver BATMON interrupt. */
@@ -173,7 +173,7 @@ static irq_handler_t irq_hdl_trx_ami2;
 static irq_handler_t irq_hdl_trx_ami3;
 #endif  /* ENABLE_ALL_TRX_IRQS */
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined __DOXYGEN__)
 /** Timestamp of the last frame transmission (including auto-ACK) */
 uint32_t pal_tx_timestamp;
 #endif
@@ -225,7 +225,7 @@ void pal_trx_irq_init_cca_ed(FUNC_PTR trx_irq_cb)
 }
 
 
-#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || defined(DOXYGEN)
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || defined(__DOXYGEN__)
 /*
  * \brief Initializes the transceiver timestamp interrupt (RX START interrupt)
  *
@@ -256,7 +256,7 @@ void pal_trx_irq_init_awake(FUNC_PTR trx_irq_cb)
 }
 
 
-#if defined(ENABLE_ALL_TRX_IRQS) || defined(DOXYGEN)
+#if defined(ENABLE_ALL_TRX_IRQS) || defined(__DOXYGEN__)
 /*
  * \brief Initializes the transceiver AMI interrupt
  *
