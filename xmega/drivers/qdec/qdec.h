@@ -106,7 +106,7 @@ typedef struct qdec_config {
 void qdec_get_config_defaults(qdec_config_t *config);
 
 /**
- * \brief This function set up the needed configuration for the port,
+ * \brief This function set up the needed configuration to the port,
  *        used for the quadrature decoding.
  *
  * \param config      Handle on a QDec configuration structure
@@ -241,7 +241,7 @@ void qdec_reset_position(qdec_config_t *config);
  *
  * \return position
  *
- * Note: The origin position is reset:
+ * Note: The origin position is reseted:
  * - at startup
  * - through \ref qdec_reset_position()
  * - when the index line is detect if it is enabled
@@ -284,16 +284,6 @@ uint16_t qdec_get_frequency(qdec_config_t *config);
  * presents code fragments and function definitions along with instructions on
  * where they can be placed, e.g., into the application C-file or the main()
  * function, then follows up with explanations for all the lines of code.
- *
- * \section qdec_use_cases Use cases
- *
- * In addition to the basic use case below, refer to the following use cases for
- * demonstrations of the QDEC's features:
- * - \subpage qdec_use_case_1
- * - \subpage qdec_use_case_2
- *
- * We recommend reading all the use cases for the sake of all the notes on
- * considerations, limitations and other helpful details.
  *
  * \section qdec_basic_use_case Basic use case
  *
@@ -347,7 +337,7 @@ uint16_t qdec_get_frequency(qdec_config_t *config);
  *     - \code
  * qdec_get_config_defaults(&config);
  *       \endcode
- * -# Define the PORT and pins used by QDec. These must be continue on PORT
+ * -# Define the PORT and pins used by QDec. These must be contiguous on PORT
  * and only the first pin phase is request. A filter timing must be given
  * to filter the rebounces:
  *     - \code

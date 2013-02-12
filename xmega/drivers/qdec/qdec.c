@@ -76,7 +76,7 @@
 #define EVSYS_PRESCFILT_CH15_gc (2<<4)
 #define EVSYS_PRESCFILT_CH26_gc (4<<4)
 #define EVSYS_PRESCFILT_CH37_gc (8<<4)
-/* Fix header files which use TC_EVACT_FRW_gc instead of TC_EVACT_FRQ_gc */
+/* Fix header files which uses TC_EVACT_FRW_gc instead of TC_EVACT_FRQ_gc */
 #ifndef TC_EVACT_FRQ_gc
 #  define TC_EVACT_FRQ_gc         (0x05<<5)  /* Frequency Capture */
 #endif
@@ -112,7 +112,7 @@ static void qdec_enabled_pins(qdec_config_t *config)
 
 	/* Check if Index signal is used and configure accordingly */
 	if (config->index.enabled) {
-		/* Check that port pin is not 6 or 7, because continuous 3 pins
+		/* Check that port pin is not 6 or 7, because 3 contiguous pins
 		 * are needed as decoder inputs including index pin
 		 */
 		Assert(config->pins_base < 6);
@@ -128,7 +128,7 @@ static void qdec_enabled_pins(qdec_config_t *config)
 				| PORT_ISC_BOTHEDGES_gc
 				| (config->index.pin_invert ? PORT_INVEN_bm : 0);
 	} else {
-		/* Check that port pin is not 7, because continuous 2 pins
+		/* Check that port pin is not 7, because 2 contiguous pins
 		 * are needed as decoder inputs.
 		 */
 		Assert(config->pins_base < 7);
@@ -491,7 +491,7 @@ uint16_t qdec_get_frequency(qdec_config_t *config)
 		capture = tc_read_cc(config->freq_opt.timer, TC_CCA);
 	}
 	if (capture == 0) {
-		/* Outoff range and certainly due to a rebounce not filtered */
+		/* Out of range and certainly due to a rebounce not filtered */
 		return config->freq_opt.last_freq;
 	}
 

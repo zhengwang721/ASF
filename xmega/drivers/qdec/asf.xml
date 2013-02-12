@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-device id="xmega.drivers.qdec" caption="XMEGA Quadrature Decoder driver">
 		<info type="description" value="summary">
-		Driver for the Quadrature Decoder. It provides functions for configuring and using the Quadrature Decoder.
+		Driver for the Quadrature Decoder (QDEC). It provides functions for configuring and using the Quadrature Decoder.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
@@ -18,7 +18,7 @@
 			<device-support value="xmegaau"/>
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
-			<device-support value="xmegad"/>			
+			<device-support value="xmegad"/
 			<require idref="xmega.utils"/>
 			<require idref="xmega.drivers.tc"/>
 			<require idref="common.services.basic.clock"/>
@@ -30,8 +30,8 @@
 			<build type="header-file" subtype="api" value="qdec.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="qdec_group"/>
-			<build type="doxygen-quick-start" value="xmega_qdec_quickstart"/>					
-			<device-support value="xmegae"/>			
+			<build type="doxygen-quick-start" value="xmega_qdec_quickstart"/>
+			<device-support value="xmegae"/>
 			<require idref="xmega.utils"/>
 			<require idref="xmega.drivers.tc45"/>
 			<require idref="common.services.basic.clock"/>

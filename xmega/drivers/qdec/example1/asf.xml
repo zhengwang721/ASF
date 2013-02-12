@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="xmega.drivers.qdec.example1" caption="XMEGA Quadrature Decoder Example 1">
 		<info type="description" value="summary">
-		XMEGA Quadrature decoder example application shows how to use quadrature decoder driver and it finds position and frequency
+		XMEGA Quadrature decoder example application shows how to use quadrature decoder driver, detects position and scolling frequency.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>

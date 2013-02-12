@@ -48,13 +48,13 @@
  * XMEGA devices include quadrature decoder (QDEC) using the event system and
  * timer counter harware resources.
  *
- * This example project shows how implement a QDec easly through the API
+ * This example project shows how to implement a QDec easly through the API
  * functions provided by XMEGA QDec driver.
  * Here, the Quadrature Encoder is simulated using a Timer Counter.
  *
  * The application checks continuously the QDec position.
  * When the QDec position change, the QDec position, direction and frequency
- * is sent on serial COM, like this:
+ * is sent on serial COM, as bellow:
  * \code
  * 04 ++   317mHz
  * 05 ++  1436mHz
