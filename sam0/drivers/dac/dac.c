@@ -55,7 +55,7 @@
  */
 static void _dac_set_config(
 		struct dac_module *const module_inst,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -110,7 +110,7 @@ static void _dac_set_config(
 void dac_init(
 		struct dac_module *const module_inst,
 		Dac *const module,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);

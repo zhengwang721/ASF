@@ -47,7 +47,7 @@ int main(void)
 //! [main]
 //! [variable]
 	struct dac_module dev_inst;
-	struct dac_conf config;
+	struct dac_config config;
 	struct dac_chan_conf chan_config;
 //! [variable]
 
