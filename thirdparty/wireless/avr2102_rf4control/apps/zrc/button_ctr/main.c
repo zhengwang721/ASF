@@ -121,6 +121,12 @@ typedef enum node_status_tag
     TARGET_PAIRING_WAIT
 } SHORTENUM node_status_t;
 
+typedef enum target_id_tag
+{
+    TARGET1 = 0x00,
+    TARGET2
+} SHORTENUM target_id_t;
+
 /* === MACROS ============================================================== */
 
 #define INTER_FRAME_DURATION_US    200000
@@ -128,6 +134,8 @@ typedef enum node_status_tag
 #define TX_OPTIONS  (TXO_UNICAST | TXO_DST_ADDR_NET | \
                      TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | \
                      TXO_CH_NOT_SPEC | TXO_VEND_NOT_SPEC)
+					 
+#define NO_OF_TARGETS (2)
 
 /* === GLOBALS ============================================================= */
 
@@ -137,8 +145,8 @@ FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
 FLASH_DECLARE(uint8_t supported_cec_cmds[32]) = SUPPORTED_CEC_CMDS;
 
 static node_status_t node_status;
-static uint8_t pairing_ref = 0xFF;
-//static key_state_t prev_button;
+static uint8_t pairing_ref[NO_OF_TARGETS];
+static uint8_t current_target = TARGET1;
 
 /* === PROTOTYPES ========================================================== */
 
@@ -222,6 +230,9 @@ int main(void)
     //pal_global_irq_enable();
 
     nvm_write(INT_FLASH,IEEE_FLASH_OFFSET, (void *)&tal_pib.IeeeAddress,8);
+	
+	/* Get application variable for pairing reference. */
+    read_pairing_ref(pairing_ref, NO_OF_TARGETS);
 
     key_state_t key_state = key_state_read(COLD_RESET_KEY);
     // For debugging: Force button press
@@ -273,14 +284,14 @@ static void nlme_reset_confirm(nwk_enum_t Status)
 
     if (node_status == COLD_START)
     {
-        pairing_ref = 0xFF;
+        
         nlme_start_request(
             (FUNC_PTR)nlme_start_confirm
         );
     }
     else    // warm start
     {
-        pairing_ref = 0;
+
         /* Set power save mode */
 #ifdef ENABLE_PWR_SAVE_MODE
         nlme_rx_enable_request(nwkcMinActivePeriod
@@ -311,7 +322,7 @@ static void nlme_reset_confirm_cold_start(nwk_enum_t Status)
 
     if (node_status == COLD_START)
     {
-        pairing_ref = 0xFF;
+
         nlme_start_request(
             NULL
         );
@@ -319,7 +330,7 @@ static void nlme_reset_confirm_cold_start(nwk_enum_t Status)
     }
     else    // warm start
     {
-        pairing_ref = 0;
+
         /* Set power save mode */
 #ifdef ENABLE_PWR_SAVE_MODE
         nlme_rx_enable_request(nwkcMinActivePeriod
@@ -383,7 +394,7 @@ static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
       indicate_fault_behavior();
     }
 
-    pairing_ref = PairingRef;
+    pairing_ref[current_target] = PairingRef;
 
 #ifdef ZRC_CMD_DISCOVERY
     /* Start timer to send the cmd discovery request */
@@ -558,7 +569,7 @@ static void app_task(void)
                       if(FUNCTION1_KEY == key_no)
                       {
                         uint8_t cmd = POWER_TOGGLE_FUNCTION;  
-                        if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_PRESSED,
+                        if (zrc_cmd_request(pairing_ref[current_target], 0x0000, USER_CONTROL_PRESSED,
                                             1, &cmd, TX_OPTIONS
                                             , (FUNC_PTR)zrc_cmd_confirm
                                            ))
@@ -570,7 +581,7 @@ static void app_task(void)
                       {
                         uint8_t cmd = VOLUME_UP; 
                         repeat_press_key_state = USER_CONTROL_REPEATED;
-                        if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_REPEATED,
+                        if (zrc_cmd_request(pairing_ref[current_target], 0x0000, USER_CONTROL_REPEATED,
                                             1, &cmd, TX_OPTIONS
                                             , (FUNC_PTR)zrc_cmd_confirm
                                            ))
@@ -623,6 +634,7 @@ static void app_task(void)
                 }
                 prev_button_no = 0xFF;
                 node_status = TARGET_PAIRING;
+                current_target = TARGET1;
             }
             previous_button_time = current_time;
             prev_button_no = TARGET1_KEY;
@@ -638,6 +650,7 @@ static void app_task(void)
                 }
                 prev_button_no = 0xFF;
                 node_status = TARGET_PAIRING;
+                current_target = TARGET2;
             }
             previous_button_time = current_time;
             prev_button_no = TARGET2_KEY;
@@ -678,7 +691,7 @@ static void app_task(void)
                   return;
               }
               node_status = BUTTON_RELEASE_WAITING;
-              pairing_ref = 0;
+              current_target = TARGET1;
               return;
           }
           previous_button_time = current_time;
@@ -695,7 +708,7 @@ static void app_task(void)
                   return;
               }
               node_status = BUTTON_RELEASE_WAITING;
-              pairing_ref = 1;
+              current_target = TARGET2;
               return;
           }
           previous_button_time = current_time;
@@ -736,7 +749,7 @@ static void app_task(void)
         {
           uint8_t cmd = VOLUME_UP; 
           repeat_press_key_state = USER_CONTROL_RELEASED;
-          if (zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_RELEASED,
+          if (zrc_cmd_request(pairing_ref[current_target], 0x0000, USER_CONTROL_RELEASED,
                               1, &cmd, TX_OPTIONS
                               , (FUNC_PTR)zrc_cmd_confirm
                              ))
@@ -765,7 +778,12 @@ static void app_task(void)
  */
 static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd)
 {
-    node_status = IDLE;
+    if(POWER_TOGGLE_FUNCTION == RcCmd)
+	{
+	    /* change the node status to IDLE only for user pressed cmd */
+		/* User repeated will be handled separately in app_task     */
+        node_status = IDLE;
+	}
 
     if (Status == NWK_SUCCESS)
     {
