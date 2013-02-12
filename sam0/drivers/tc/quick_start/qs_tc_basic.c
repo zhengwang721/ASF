@@ -48,6 +48,12 @@ int main(void)
 	//! [system_init]
 	system_init();
 	//! [system_init]
+	struct port_conf pin;
+	port_get_config_defaults(&pin);
+	pin.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin);
+
+	port_pin_set_output_level(LED_0_PIN, 0);
 
 	/* Structures for config and software device instance */
 	//! [config]
@@ -61,20 +67,15 @@ int main(void)
 	tc_get_config_defaults(&config);
 	//! [tc_get_config_defaults]
 
-	//! [pwm_channel_0]
-	config.channel_pwm_out_enabled[0] = true;
-	config.channel_pwm_out_pin[0] = PWM_OUT_PIN;
-	config.channel_pwm_out_mux[0] = PWM_OUT_PIN_MUX;
-	//! [pwm_channel_0]
-
 	//! [setup]
-	config.counter_size = TC_COUNTER_SIZE_16BIT;
+	config.counter_size = TC_COUNTER_SIZE_32BIT;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = 0x7FFF;
+	config.onshot = true;
+	config.size_specific.size_32_bit.compare_capture_channel[0] = 6000000;
 	//! [setup]
 
 	//! [tc_init]
-	tc_init(&dev_inst, PWM_MODULE, &config);
+	tc_init(&dev_inst, TC0, &config);
 	//! [tc_init]
 
 	//! [tc_enable]
@@ -83,6 +84,10 @@ int main(void)
 
 	//! [inf_loop]
 	while (1) {
+		if(tc_is_interrupt_flag_set(&dev_inst, TC_INTERRUPT_FLAG_OVERFLOW)) {
+			port_pin_toggle_output_level(LED_0_PIN);
+			tc_clear_interrupt_flag(&dev_inst, TC_INTERRUPT_FLAG_OVERFLOW);
+		}
 	}
 	//! [inf_loop]
 	//! [main]

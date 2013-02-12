@@ -7,6 +7,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_quick_start.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.port"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>
