@@ -126,16 +126,15 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 void setup_usart_channel(void)
 {
 	struct usart_conf config_struct;
-	uint16_t baud;
 
 	usart_get_config_defaults(&config_struct);
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
+	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
+	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
 
-	while (usart_init(&usart_edbg, SERCOM4,
+	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
 			&config_struct) != STATUS_OK) {
 	}
-	_sercom_get_async_baud_val(9600, system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-	SERCOM4->USART.BAUD.reg = baud;
 
 	usart_enable(&usart_edbg);
 

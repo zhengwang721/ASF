@@ -214,6 +214,18 @@
 #define EXT1_TWI_SCL_SERCOM_PAD   1
 /** @} */
 
+/** \name Extension header #1 TWI definitions
+ *  @{
+ */
+#define EXT1_I2C_MODULE           EXT1_TWI_MODULE
+#define EXT1_I2C_SDA_PIN          EXT1_TWI_SDA_PIN
+#define EXT1_I2C_SDA_PIN_MUX      EXT1_TWI_SDA_PIN_MUX
+#define EXT1_I2C_SDA_SERCOM_PAD   EXT1_TWI_SDA_SERCOM_PAD
+#define EXT1_I2C_SCL_PIN          EXT1_TWI_SCL_PIN
+#define EXT1_I2C_SCL_PIN_MUX      EXT1_TWI_SCL_PIN_MUX
+#define EXT1_I2C_SCL_SERCOM_PAD   EXT1_TWI_SCL_SERCOM_PAD
+/** @} */
+
 /** \name Extension header #1 UART definitions
  *  @{
  */
@@ -329,6 +341,18 @@
 #define EXT2_TWI_SCL_PIN          PIN_PA19C_SERCOM3_PAD1
 #define EXT2_TWI_SCL_PIN_MUX      MUX_PA19C_SERCOM3_PAD1
 #define EXT2_TWI_SCL_SERCOM_PAD   1
+/** @} */
+
+ /** \name Extension header #2 TWI definitions
+ *  @{
+ */
+#define EXT2_I2C_MODULE           EXT2_TWI_MODULE
+#define EXT2_I2C_SDA_PIN          EXT2_TWI_SDA_PIN
+#define EXT2_I2C_SDA_PIN_MUX      EXT2_TWI_SDA_PIN_MUX
+#define EXT2_I2C_SDA_SERCOM_PAD   EXT2_TWI_SDA_SERCOM_PAD
+#define EXT2_I2C_SCL_PIN          EXT2_TWI_SCL_PIN
+#define EXT2_I2C_SCL_PIN_MUX      EXT2_TWI_SCL_PIN_MUX
+#define EXT2_I2C_SCL_SERCOM_PAD   EXT2_TWI_SCL_SERCOM_PAD
 /** @} */
 
 /** \name Extension header #2 UART definitions
@@ -448,6 +472,18 @@
 #define EXT3_TWI_SCL_SERCOM_PAD   1
 /** @} */
 
+/** \name Extension header #3 I2C definitions
+ *  @{
+ */
+#define EXT3_I2C_MODULE           EXT3_TWI_MODULE
+#define EXT3_I2C_SDA_PIN          EXT3_TWI_SDA_PIN
+#define EXT3_I2C_SDA_PIN_MUX      EXT3_TWI_SDA_PIN_MUX
+#define EXT3_I2C_SDA_SERCOM_PAD   EXT3_TWI_SDA_SERCOM_PAD
+#define EXT3_I2C_SCL_PIN          EXT3_TWI_SCL_PIN
+#define EXT3_I2C_SCL_PIN_MUX      EXT3_TWI_SCL_PIN_MUX
+#define EXT3_I2C_SCL_SERCOM_PAD   EXT3_TWI_SCL_SERCOM_PAD
+/** @} */
+
 /** \name Extension header #3 UART definitions
  *  @{
  */
@@ -514,6 +550,19 @@
 #define EDBG_TWI_SCL_SERCOM_PAD   1
 /** @} */
 
+/** \name Embedded debugger I2C interface definitions
+ * @{
+ */
+#define EDBG_I2C_MODULE           EDBG_TWI_MODULE
+#define EDBG_I2C_SDA_PIN          EDBG_TWI_SDA_PIN
+#define EDBG_I2C_SDA_MUX          EDBG_TWI_SDA_MUX
+#define EDBG_I2C_SDA_SERCOM_PAD   EDBG_TWI_SDA_SERCOM_PAD
+#define EDBG_I2C_SCL_PIN          EDBG_TWI_SCL_PIN
+#define EDBG_I2C_SCL_MUX          EDBG_TWI_SCL_MUX
+#define EDBG_I2C_SCL_SERCOM_PAD   EDBG_TWI_SCL_SERCOM_PAD
+/** @} */
+
+
 /** \name Embedded debugger SPI interface definitions
  * @{
  */
@@ -535,16 +584,15 @@
 /** \name Embedded debugger CDC Gateway USART interface definitions
  * @{
  */
-#define EDBG_CDC_MODULE           SERCOM5
-#define EDBG_CDC_RX_PIN           PIN_PB20B_SERCOM5_PAD0
-#define EDBG_CDC_RX_MUX           MUX_PB20B_SERCOM5_PAD0
-#define EDBG_CDC_RX_SERCOM_PAD    0
-#define EDBG_CDC_TX_PIN           PIN_PB22B_SERCOM5_PAD2
-#define EDBG_CDC_TX_MUX           MUX_PB22B_SERCOM5_PAD2
+#define EDBG_CDC_MODULE           SERCOM4
+#define EDBG_CDC_RX_PIN           PIN_PB11B_SERCOM4_PAD3
+#define EDBG_CDC_RX_MUX           MUX_PB11B_SERCOM4_PAD3
+#define EDBG_CDC_RX_PINMUX        PINMUX_PB11B_SERCOM4_PAD3
+#define EDBG_CDC_RX_SERCOM_PAD    3
+#define EDBG_CDC_TX_PIN           PIN_PB10B_SERCOM4_PAD2
+#define EDBG_CDC_TX_MUX           MUX_PB10B_SERCOM4_PAD2
+#define EDBG_CDC_TX_PINMUX        PINMUX_PB10B_SERCOM4_PAD2
 #define EDBG_CDC_TX_SERCOM_PAD    2
-#define EDBG_CDC_CLK_PIN          PIN_PB23B_SERCOM5_PAD3
-#define EDBG_CDC_CLK_MUX          MUX_PB23B_SERCOM5_PAD3
-#define EDBG_CDC_CLK_SERCOM_PAD   3
 /** @} */
 
 /** @} */
