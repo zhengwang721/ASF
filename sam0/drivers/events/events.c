@@ -68,7 +68,7 @@ void events_init(void)
  * Writes out a given configuration of a Event System channel configuration to
  * the hardware module.
  *
- * \pre The user must be configured before the channel is configured see
+ * \pre The user must be configured before the channel is configured, see
  * \ref events_user_set_config
  *
  * \param[in] channel  Event channel to configure
