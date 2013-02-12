@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="xmega.drivers.adc.example4" caption="ADC Calibration example">
 		<info type="description" value="summary">
-		Offset and gain calibration of XMEGA E ADC with an external voltage supply for reference voltage and input voltage.
+		Offset and gain calibration of XMEGA E ADC with an external voltage supply as reference input voltage.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>

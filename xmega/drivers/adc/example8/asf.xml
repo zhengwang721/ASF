@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="xmega.drivers.adc.example8" caption="ADC Averaging and oversampling example">
 		<info type="description" value="summary">
-		This example demonstrates a method for averaging, offset and gain calibration for XMEGA E ADC.
+		How to use the XMEGA E ADC together with both hardware calibration (offset and gain) and hardware averaging features from XMEGA E ADC.
 		The DAC output is used on ADC input.
 		</info>
 		<info type="keyword" value="technology">

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="xmega.drivers.adc.unit_tests2" caption="Unit Tests for the XMEGA E ADC Driver (Using DAC Driver)">
 		<info type="description" value="summary">
-		Unit tests for the XMEGA E ADC driver using the built-in DAC.
+		Unit tests for the XMEGA E ADC driver using the on-chip DAC module.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>

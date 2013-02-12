@@ -1512,12 +1512,12 @@ static inline void adcch_disable_interrupt(struct adc_channel_config *ch_conf)
 #if XMEGA_E
 
 /**
- * \brief Enable gain & offset correction on ADC channel
+ * \brief Enable gain & offset corrections on ADC channel
  *
  * \param ch_conf         Pointer to ADC channel configuration.
  * \param offset_corr     Offset correction value to set.
- * \param expected_value  Value expected for a specific input voltage
- * \param captured_value  Value captured for a specific input voltage
+ * \param expected_value  Expected value for a specific input voltage
+ * \param captured_value  Captured value for a specific input voltage
  *
  * \Note
  * Gived "expected_value = captured_value = 1" to ignore the gain correction

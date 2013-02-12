@@ -48,7 +48,7 @@
  * \mainpage
  *
  * \section intro Introduction
- * This is the unit test for the XMEGA ADC driver using the chip DAC as an
+ * This is the unit test for the XMEGA ADC driver using the on-chip DAC as an
  * analog input voltage.
  *
  * The example captures and check sample values (1.8V to -1.8V)
@@ -82,7 +82,7 @@
  * \section board_setup Board setup
  * For STK600 board:
  * - uses the RC032X routine board with TQFP32 socket
- * - PC2 & PC3 pins should be connected to RXD & TXD pins respectively
+ * - PC2 & PC3 pins should be respectively connected to RXD & TXD pins
  *   of RS232 SPARE header
  * - STK600 RS2232 port should be connected to a computer and
  *   the communication terminal configuration should be 38400 baud, no parity.
@@ -201,7 +201,7 @@ static void run_standard_conversion_test(
  *
  * These values are then measured using the ADC on the pins that are connected
  * to the DAC channel, and the results are compared and checked to see if they
- * are within the acceptable averaging of values that passes the test.
+ * are within the acceptable average of values that passes the test.
  *
  * \param test Current test case.
  */
@@ -317,7 +317,7 @@ static void run_correction_conversion_test(
 			captured_value);
 	adcch_write_configuration(&ADCA, ADC_CH0, &adcch_conf);
 
-	/** Check values */
+	/* Check values */
 	for (volt_output = -CONV_MAX_VOLTAGE;
 			volt_output <= CONV_MAX_VOLTAGE;
 			volt_output += CONV_VOLTAGE_STEP) {

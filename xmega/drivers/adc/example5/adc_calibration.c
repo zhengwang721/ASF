@@ -46,8 +46,8 @@
  * \mainpage
  *
  * \section intro Introduction
- * This example demonstrates a method for offset and gain calibration for
- * XMEGA E ADC using featuring hardware compensation with the \ref adc_group.
+ * This example demonstrates an offset and gain calibration method for
+ * XMEGA E ADC using hardware compensation with the \ref adc_group.
  *
  * The DAC is used to generate ADC inputs voltages.
  *
@@ -61,7 +61,7 @@
  * \section exampledescription Description of the example
  *
  * \subsection adc_conf Step 1, ADC configuration
- * When the example starts, the following ADC configuration is done:
+ * When the example starts, the following ADC configuration is applied:
  * - signed, 12-bit results
  * - 1x gain
  * - voltage reference = VCC / 1.6 = 3.3V / 1.6
@@ -70,7 +70,7 @@
  *   - Input voltage V- is ADC3 pin (PA3 pin)
  *
  * \subsection dac_conf Step 2, DAC configuration
- * When the example starts, the following DAC configuration is done:
+ * When the example starts, the following DAC configuration is applied:
  * - AVCC as reference
  * - right adjusted channel value
  * - both DAC channels active on :
@@ -97,7 +97,7 @@
  * \section board_setup Board setup
  * For STK600 board:
  * - uses the RC032X routine board with TQFP32 socket
- * - PC2 & PC3 pins should be connected to RXD & TXD pins respectively
+ * - PC2 & PC3 pins should be respectively connected to RXD & TXD pins
  *   of RS232 SPARE header
  * - STK600 RS2232 port should be connected to a computer and
  *   the communication terminal configuration should be 38400 baud, no parity.

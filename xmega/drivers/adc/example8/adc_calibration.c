@@ -2,7 +2,7 @@
  * \file
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 8
- * ADC calibration and averaging with the DAC voltage supply for reference
+ * ADC calibration and averaging with the DAC voltage supply as reference
  * voltage.
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
@@ -47,8 +47,9 @@
  * \mainpage
  *
  * \section intro Introduction
- * This example demonstrates a method for averaging, for offset and gain
- * calibration for XMEGA E ADC \ref adc_group using featuring hardware.
+ * This example demonstrates how to use the XMEGA E ADC together with both
+ * hardware calibration (offset and gain) and hardware averaging features from
+ * XMEGA E ADC \ref adc_group.
  *
  * The example captures and displays sample values (1.8V to -1.8V)
  * in three modes:
@@ -81,7 +82,7 @@
  * \section board_setup Board setup
  * For STK600 board:
  * - uses the RC032X routine board with TQFP32 socket
- * - PC2 & PC3 pins should be connected to RXD & TXD pins respectively
+ * - PC2 & PC3 pins should be respectively connected to RXD & TXD pins
  *   of RS232 SPARE header
  * - STK600 RS2232 port should be connected to a computer and
  *   the communication terminal configuration should be 38400 baud, no parity.

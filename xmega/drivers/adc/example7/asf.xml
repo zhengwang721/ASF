@@ -2,7 +2,7 @@
 	<module type="application" id="xmega.drivers.adc.example7" caption="ADC Oversampling example">
 		<info type="description" value="summary">
 		Increasing the 12-bit resolution with the hardware oversampling feature of XMEGA E ADC.
-		The DAC is used to generate a ADC input voltage with a periodic signal.
+		The DAC is used to generate an ADC input voltage with a periodic signal.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>

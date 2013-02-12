@@ -46,10 +46,10 @@
  * \mainpage
  *
  * \section intro Introduction
- * This example demonstrates a method for averaging given number of
- * samples using the XMEGA E ADC hardware averaging feature.
+ * This example demonstrates how to use XMEGA E ADC hardware averaging feature
+ * to perform the average of a given number of ADC samples.
  *
- * The application runs continuously a ADC conversion and send ADC values
+ * The application continuously performs ADC conversion and send ADC values
  * on serial COM.
  *
  * At startup the hardware averaging is disabled.
@@ -72,7 +72,7 @@
  * \section board_setup Board setup
  * For STK600 board:
  * - uses the RC032X routine board with TQFP32 socket
- * - PC2 & PC3 pins should be connected to RXD & TXD pins respectively
+ * - PC2 & PC3 pins should be respectively connected to RXD & TXD pins
  *   of RS232 SPARE header
  * - STK600 RS2232 port should be connected to a computer and
  *   the communication terminal configuration should be 38400 baud, no parity.
@@ -122,7 +122,7 @@ int main(void)
 	printf("- key 'a' to enable averaging\n\r");
 	printf("- key 'd' to disable averaging\n\r");
 
-	/* ADC initializations */
+	/* ADC initialization */
 	main_adc_init();
 	main_adc_averaging_stop();
 
