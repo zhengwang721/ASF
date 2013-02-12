@@ -231,7 +231,7 @@ void dac_disable(
 void dac_chan_set_config(
 		struct dac_module *const module_inst,
 		const enum dac_channel channel,
-		struct dac_chan_conf *const config)
+		struct dac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
