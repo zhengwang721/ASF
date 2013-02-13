@@ -177,7 +177,7 @@
  * \section asfdoc_samd20_system_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_system_basic_use_case
+ * - TODO
  *
  *
  * \section asfdoc_samd20_system_api_overview API Overview
@@ -217,7 +217,7 @@ enum system_voltage_reference {
  * \brief Device sleep modes.
  *
  * List of available sleep modes in the device. A table of clocks available in
- * different sleep mode can be found in \ref asfdoc_samd20_system_module_sleep_mode.
+ * different sleep modes can be found in \ref asfdoc_samd20_system_module_sleep_mode.
  */
 enum system_sleepmode {
 	/** IDLE 0 */
@@ -251,13 +251,18 @@ enum system_reset_cause {
 };
 
 /**
+ * \name Voltage references
+ * @{
+ */
+
+/**
  * \brief Enable the selected voltage reference
  *
  * This function will enable the selected voltage reference, making the voltage
  * reference available on a pin as well as an input source to the analog
  * peripherals.
  *
- * \param[in] vref Voltage reference to enable
+ * \param[in] vref  Voltage reference to enable
  */
 static inline void system_vref_enable(
 		const enum system_voltage_reference vref)
@@ -280,7 +285,7 @@ static inline void system_vref_enable(
  *
  * This function will disable the selected voltage reference
  *
- * \param[in] vref Voltage reference to disable
+ * \param[in] vref  Voltage reference to disable
  */
 static inline void system_vref_disable(
 		const enum system_voltage_reference vref)
@@ -299,6 +304,10 @@ static inline void system_vref_disable(
 }
 
 /**
+ * @}
+ */
+
+/**
  * \name Device sleep
  * @{
  */
@@ -306,39 +315,35 @@ static inline void system_vref_disable(
 /**
  * \brief Set the sleep mode of the device
  *
- * This function will set the sleep mode of the device. The possible sleep modes
- * are:
- *
- * - SYSTEM_SLEEPMODE_IDLE_0
- * - SYSTEM_SLEEPMODE_IDLE_1
- * - SYSTEM_SLEEPMODE_IDLE_2
- * - SYSTEM_SLEEPMODE_IDLE_3
- * - SYSTEM_SLEEPMODE_STANDBY
+ * This function will set the sleep mode of the device; the configured sleep
+ * mode will be entered upon the next call of the \ref system_sleep()
+ * function.
  *
  * For an overview of what are being disabled in sleep for the different sleep
- * modes, see \ref system_sleepmode documentation
+ * modes, see \ref asfdoc_samd20_system_module_sleep_mode.
  *
- * \param[in] sleepmode Sleepmode to set
+ * \param[in] sleep_mode  Sleepmode to set
  *
- * \retval STATUS_OK Operation performed successfully
- * \retval STATUS_ERR_INVALID_ARG The supplied sleep mode is not available
+ * \retval STATUS_OK               Operation performed successfully
+ * \retval STATUS_ERR_INVALID_ARG  The supplied sleep mode was invalid or not
+ *                                 available
  */
 static inline enum status_code system_set_sleepmode(
-	const enum system_sleepmode sleepmode)
+	const enum system_sleepmode sleep_mode)
 {
-	switch (sleepmode) {
+	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
 		case SYSTEM_SLEEPMODE_IDLE_2:
 		case SYSTEM_SLEEPMODE_IDLE_3:
-			//TODO: is the sleepdeep bit in the CPU ?
-			//CPU.SCR &= ~SCR_SLEEPDEEP_bm;
-			PM->SLEEP.reg = sleepmode;
+			SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+			PM->SLEEP.reg = sleep_mode;
 			break;
+
 		case SYSTEM_SLEEPMODE_STANDBY:
-			/* TODO: Find core register for this */
-			//CPU.SCR |= SCR_SLEEPDEEP_bm;
+			SCB->SCR |=  SCB_SCR_SLEEPDEEP_Msk;
 			break;
+
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
@@ -389,6 +394,10 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  */
 
 void system_init(void);
+
+/**
+ * @}
+ */
 
 /**
  * @}
@@ -452,7 +461,7 @@ void system_init(void);
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_basic_use_case
+ *  - TODO
  */
 
 #endif /* SYSTEM_H_INCLUDED */
