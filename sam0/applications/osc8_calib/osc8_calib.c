@@ -105,22 +105,55 @@ void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
 {
 	// TODO: Update with event system
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
+
 	struct tc_conf config;
 	tc_get_config_defaults(&config);
 
 	config.counter_size = TC_COUNTER_SIZE_32BIT;
 	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV1;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
+	config.capture_enable = TC_CAPTURE_ENABLE_CHANNEL_0;
 
 	tc_init(calib_chan, TC0, &config);
 
+	config.capture_enable = 0;
 	config.counter_size = TC_COUNTER_SIZE_16BIT;
 	config.clock_source = GCLK_GENERATOR_3;
 	config.size_specific.size_16_bit.compare_capture_channel[0] = RES;
 	tc_init(comp_chan, TC2, &config);
 
+	struct tc_events events;
+
+
+	events.generate_event_on_compare_channel[0] = true;
+	events.generate_event_on_compare_channel[1] = false;
+	events.generate_event_on_overflow = false;
+	events.on_event_perform_action = false;
+
+
+	tc_enable_events(comp_chan, &events);
+
+	events.generate_event_on_compare_channel[0] = false;
+	events.on_event_perform_action = true;
+
+	tc_enable_events(calib_chan, &events);
+
 	tc_enable(calib_chan);
 	tc_enable(comp_chan);
+
+	struct events_chan_conf evch_conf;
+	evch_conf.edge_detection = EVENT_EDGE_NONE;
+	evch_conf.path = EVENT_PATH_ASYNCHRONOUS;
+	evch_conf.generator_id = EVSYS_ID_GEN_TC2_MCX_0;
+
+	struct events_user_conf evus_conf;
+	evus_conf.event_channel_id = 0;
+
+	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
+	events_chan_set_config(0, &evch_conf);
+
+
 }
 
 void setup_usart_channel(void)
@@ -225,6 +258,14 @@ int main(void)
 	debug_write_string(&usart_edbg, (uint8_t*)"Calibration value: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
+
+	events_chan_software_trigger(0);
+	while (1) {
+		debug_int_to_string(string, 10, events_user_is_ready(0) | events_chan_is_ready(0) << 1);
+	    	debug_write_string(&usart_edbg, string);
+	    	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
+	    	break;
+	}
 
 	/* Deactivate tc modules. */
 	tc_disable(&calib_chan);

@@ -130,7 +130,7 @@ enum status_code tc_init(
 	/* Array of PM APBC mask bit position for different TC instances */
 	uint16_t inst_pm_apbmask[] = TC_INST_PM_APBCMASK;
 
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	struct system_gclk_chan_conf gclk_chan_conf;
 
 	/* Associate the given device instance with the hardware module */
