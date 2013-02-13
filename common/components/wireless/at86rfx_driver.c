@@ -48,6 +48,7 @@
 #include "spi_master.h"
 #include "gpio.h"
 #include "at86rfx_driver.h"
+#include "conf_spi_master.h"
 
 /*
  * Default value of current channel in TAL
