@@ -5,7 +5,7 @@
  *
  * -Performance Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -300,7 +300,7 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
 
 
 /*
- * \brief This function is called rest the application equivalent to soft reset
+ * \brief To reset the application (equivalent to soft reset)
  *
  */
 void app_reset(void);

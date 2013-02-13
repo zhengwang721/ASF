@@ -3,7 +3,7 @@
  *
  * \brief Receptor functionalities in PER Measurement mode - Performance Analyzer
  * application
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright(c) 2013, Atmel Corporation All rights reserved.
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -339,7 +339,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
                     /* Antenna diversity need to be enabled */
                     if (msg->payload.div_set_req_data.status)
                     {
-                        tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
+                        tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT);
                         printf("\r\n Antenna diversity enabled");
                     }
                     else /* Antenna diversity need to be disabled */
@@ -838,7 +838,7 @@ static void set_default_configuration_peer_node(void)
    
 #else
     /* Enable Antenna Diversity*/
-      tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
+      tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT);
 
 
 
@@ -862,8 +862,6 @@ static void set_default_configuration_peer_node(void)
 static void get_node_info(peer_info_rsp_t *data)
 {
 
-   
-  
     
     strcpy(data->trx_name, TRANSCEIVER_NAME); 
     data->ic_type = IC_TYPE;

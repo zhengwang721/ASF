@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -98,5 +98,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-# endif
+# endif //PERF_API_SERIAL_HANDLER_H
 /* EOF */

@@ -116,7 +116,7 @@ typedef enum node_status_tag
 
 /* === MACROS ============================================================== */
 
-#define INTER_FRAME_DURATION_US    200000
+#define DEBOUNCE_TIME_US    200000
 #define TX_OPTIONS  (TXO_UNICAST | TXO_DST_ADDR_NET | \
                      TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | \
                      TXO_CH_NOT_SPEC | TXO_VEND_NOT_SPEC)
@@ -203,17 +203,10 @@ int main(void)
 
     register_zrc_indication_callback(&zrc_ind);
 
-    /*
-     * The stack is initialized above,
-     * hence the global interrupts are enabled here.
-     */
-    //pal_global_irq_enable();
-
     
 
     key_state_t key_state = key_state_read(SELECT_KEY);
-    // For debugging: Force button press
-    //key_state = KEY_PRESSED;
+    
     if (key_state == KEY_PRESSED)
     {
         // Force push button pairing
@@ -346,9 +339,11 @@ static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef)
 #else
     /* Set power save mode */
 #ifdef ENABLE_PWR_SAVE_MODE
-    nlme_rx_enable_request(nwkcMinActivePeriod);
+    nlme_rx_enable_request(nwkcMinActivePeriod
+	                      , (FUNC_PTR)nlme_rx_enable_confirm);
 #else
-    nlme_rx_enable_request(RX_DURATION_OFF);
+    nlme_rx_enable_request(RX_DURATION_OFF
+	                      , (FUNC_PTR)nlme_rx_enable_confirm);
 #endif
 #endif
 }
@@ -471,7 +466,7 @@ static void app_task(void)
                 {
                     /* Check time to previous transmission. */
                     current_time=sw_timer_get_time();
-                    if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
+                    if ((current_time - previous_button_time) < DEBOUNCE_TIME_US)
                     {
                         return;
                     }
@@ -572,38 +567,30 @@ static void indicate_fault_behavior(void)
  */
 void vendor_app_alive_req(void)
 {
-    /* Variant to demonstrate FOTA featue */
-#if 1
+   
     LED_On(LED0);
     delay_ms(500);
     LED_Off(LED0);
-#else
-    LED_On(LED0);
-    delay_ms(500);
-    LED_Off(LED0);
-#endif
 }
 
 /**
  * @brief Read key_state
  *
- * @param button_no Button ID
+ * @param key_no Key to be read.
  */
 static key_state_t key_state_read(key_id_t key_no)
 {
     key_state_t key_val = KEY_RELEASED;
-    switch (key_no)
-    {
-        case SELECT_KEY:
+   
+       if(SELECT_KEY == key_no)
+	   {
           if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
           {
             key_val = KEY_PRESSED; 
           }
-        break;
-        default:
-        break;
-    }
-  return key_val;
+	  }
+      
+   return key_val;
 }
 
 

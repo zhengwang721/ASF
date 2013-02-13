@@ -3,7 +3,7 @@
  *
  * \brief SIO service implementation - Performance Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -410,9 +410,7 @@ static inline void handle_incoming_msg(void)
             /* Process Perf Parameters Set Request command */
         case PERF_SET_REQ:
             {
-              uint8_t *var;
-               memcpy(&var,&sio_rx_buf[PARAM_VALUE_POS],2);
-                /* Order of reception:
+                  /* Order of reception:
                      size;
                      protocol_id;
                      msg_id;
@@ -456,7 +454,7 @@ static inline void handle_incoming_msg(void)
                      */
                     usr_perf_set_confirm(INVALID_CMD,
                                          sio_rx_buf[PARAM_TYPE_POS],
-                                         (param_value_t *) &var);
+                                         (param_value_t *) &sio_rx_buf[PARAM_VALUE_POS]);
                 }
             }
             break;

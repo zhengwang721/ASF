@@ -92,7 +92,7 @@ extern "C" {
      *
      * This function initializes the STB.
      *
-     * @ingroup apiStbApi
+     * @ingroup group_StbApi
      */
     void stb_init(void);
 
@@ -122,7 +122,7 @@ extern "C" {
      *
      * @return STB CCM Status
      *
-     * @ingroup apiStbApi
+     * @ingroup group_StbApi
      */
     stb_ccm_t stb_ccm_secure(uint8_t *buffer,
                              uint8_t nonce[AES_BLOCKSIZE],

@@ -102,61 +102,7 @@
 #define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
 
 
-/*
- * USB-specific definitions
- */
 
-/*
- * USB Vendor ID (16-bit number)
- */
-#define USB_VID                 (0x03EB) /* Atmel's USB vendor ID */
-
-/*
- * USB Product ID (16-bit number)
- */
-#define USB_PID                 (0x2018) /* RZ USB stick product ID */
-
-/*
- * USB Release number (BCD format, two bytes)
- */
-#define USB_RELEASE             { 0x00, 0x01 } /* 01.00 */
-
-/*
- * Maximal number of UTF-16 characters used in any of the strings
- * below.  This is only used for compilers that cannot handle the
- * initialization of flexible array members within structs.
- */
-#define USB_STRING_SIZE         (10)
-
-/*
- * String representation for the USB vendor name.
- */
-#define USB_VENDOR_NAME L"ATMEL"
-
-/*
- * String representation for the USB product name.
- */
-#define USB_PRODUCT_NAME L"RZUSBSTICK"
-
-/**
- * Defines the USB transmit buffer size
- */
-#define USB_TX_BUF_SIZE             (200)    //@ToDo size? same as SIO_TX_BUF_SIZE
-
-/**
- * Defines the USB receive buffer size
- */
-#define USB_RX_BUF_SIZE             (200)
-
-/**
- * Defines the UART transmit buffer size
- */
-#define UART_MAX_TX_BUF_LENGTH      (200)        //@ToDo size? same as SIO_TX_BUF_SIZE
-
-/**
- * Defines the UART receive buffer size
- */
-#define UART_MAX_RX_BUF_LENGTH      (200)
 
 #define APP_USER_STRING                 "My Controller  "    /* 15 characters ! */
 #define USER_STRING_AVAILABLE           true

@@ -3,7 +3,7 @@
  *
  * \brief Receptor functionalities in Peer Search Process - Performance Analyzer
  *  application
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2010, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -390,7 +390,7 @@ static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
  */
 static void wait_for_conf_exit(void)
 {
-    /* Off timer as node leaves this sub state */
+    /* stop the timer as node leaves this sub state */
     sw_timer_stop(APP_TIMER_TO_TX);
 }
 

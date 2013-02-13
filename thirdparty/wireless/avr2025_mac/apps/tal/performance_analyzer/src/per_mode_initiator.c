@@ -6,7 +6,7 @@
  * This is the source code of a Packet Error Rate Measurement mode as Initiator.
  *
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright(c) 2013, Atmel Corporation All rights reserved.
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -211,7 +211,7 @@ static void set_transceiver_state(uint8_t trx_state);
 static void set_phy_frame_length(uint8_t frame_len);
 static bool send_set_default_config_command(void);
 static bool send_per_test_start_cmd(void);
-float ReverseFloat( const float inFloat );
+static float reverse_float( const float float_val );
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
@@ -248,15 +248,20 @@ static uint8_t cc_band_ct;
 static uint8_t cc_number_ct;
 #endif /* End of #if (TAL_TYPE == AT86RF233) */
 
-uint8_t last_tx_power_format_set;
-
-float ReverseFloat( const float inFloat )
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
+static uint8_t last_tx_power_format_set;
+#endif //#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
+/**
+ * \brief The reverse_float is used for reversing a float variable for supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+static float reverse_float( const float float_val )
 {
 
   
    float retuVal;
-   char *floatToConvert = ( char* ) & inFloat;
-   char *returnFloat = ( char* ) & retuVal;
+   char* floatToConvert = ( char* ) & float_val;
+   char* returnFloat = ( char* ) & retuVal;
 #ifdef BIG_ENDIAN
    // swap the bytes into a temporary buffer
    returnFloat[0] = floatToConvert[3];
@@ -785,6 +790,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 static void set_parameter_on_transmitter_node(retval_t status)
 {
     uint8_t temp_var;
+
     /* set the parameter on this node */
     if (MAC_SUCCESS != status)
     {
@@ -798,6 +804,10 @@ static void set_parameter_on_transmitter_node(retval_t status)
     {
         case CHANNEL:
             {
+#if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
+				int8_t dbm_val =0;
+				uint8_t tx_pwr =0;
+#endif
                 /* Set back the Tx power to default value when
                  * the channel changed from 26 to other channel
                  */
@@ -815,8 +825,6 @@ static void set_parameter_on_transmitter_node(retval_t status)
                 /* update the data base with this value */
                 curr_trx_config_params.channel = set_param_cb.param_value;
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-                int8_t dbm_val =0;
-                uint8_t tx_pwr =0;
                 tal_pib_get(phyTransmitPower,&tx_pwr);
                 dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
                 curr_trx_config_params.tx_power_dbm = dbm_val;
@@ -873,16 +881,18 @@ static void set_parameter_on_transmitter_node(retval_t status)
             /* Handle changing of channel page */
         case CHANNEL_PAGE:
             {
+#if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
+                uint8_t channel;
+                int8_t dbm_val =0; 
+                uint8_t tx_pwr =0;
+#endif
                 tal_pib_set(phyCurrentPage, (pib_value_t *)&set_param_cb.param_value);
 
                 /* update the data base with this value */
                 curr_trx_config_params.channel_page = set_param_cb.param_value;
 #if((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-                uint8_t channel;
                 tal_pib_get(phyCurrentChannel, &channel);
                 curr_trx_config_params.channel = channel;
-                int8_t dbm_val =0; 
-                uint8_t tx_pwr =0;
                 tal_pib_get(phyTransmitPower, &tx_pwr);
                 dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
                 curr_trx_config_params.tx_power_dbm = dbm_val;
@@ -1034,10 +1044,10 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                         /* get the per test duration */
                         per_test_duration_sec = calculate_time_duration();
                         /* Calculate the net data rate */
-                        net_data_rate = ((calculate_net_data_rate(per_test_duration_sec)));
+                        net_data_rate = (calculate_net_data_rate(per_test_duration_sec));
                         
-                        net_data_rate = ReverseFloat(net_data_rate);
-                        per_test_duration_sec = ReverseFloat(per_test_duration_sec);
+                        net_data_rate = reverse_float(net_data_rate);
+                        per_test_duration_sec = reverse_float(per_test_duration_sec);
                         usr_per_test_end_indication(MAC_SUCCESS,
                                                     rssi_val,
                                                     aver_lqi,
@@ -1047,8 +1057,8 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
                                                     CCPU_ENDIAN_TO_LE32(frame_no_ack),
                                                     CCPU_ENDIAN_TO_LE32(frame_access_failure),
                                                     frames_with_wrong_crc,
-                                                    (per_test_duration_sec),
-                                                    (net_data_rate)
+                                                    per_test_duration_sec,
+                                                    net_data_rate
                                                    );
                         op_mode = TX_OP_MODE;
                     }
@@ -1188,7 +1198,7 @@ static void config_per_test_parameters(void)
     curr_trx_config_params.antenna_selected = default_trx_config_params.antenna_selected = ANT_CTRL_0;
 
     /* Enable Antenna Diversity*/
-    tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
+    tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT);
 
 
 #endif /* end of (TAL_TYPE == AT86RF233) */
@@ -1245,6 +1255,7 @@ static void config_per_test_parameters(void)
     curr_trx_config_params.tx_power_dbm = default_trx_config_params.tx_power_dbm = CONV_phyTransmitPower_TO_DBM(TAL_TRANSMIT_POWER_DEFAULT);
 #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )
     tal_get_curr_trx_config(TX_PWR,&(curr_trx_config_params.tx_power_reg));
+	tal_get_curr_trx_config(TX_PWR,&(default_trx_config_params.tx_power_reg));
 #endif
 
     /* The following fields has no meaning if there is no peer */
@@ -1277,27 +1288,14 @@ static void config_per_test_parameters(void)
 void get_board_details(void)
 {
 
-    uint8_t ic_type;
-    char mcu_soc_name[15];
-    char trx_name[15];
-    char board_name[25];
-    float fw_version = ReverseFloat(2.0);
 
-   
-    
-    strcpy(trx_name, TRANSCEIVER_NAME); 
-    ic_type = IC_TYPE;
-    strcpy(mcu_soc_name, MCU_SOC_NAME);
-    strcpy(board_name, BOARD_NAME);
-    
-    
-    
+    float fw_version = reverse_float(2.0);     
     /* Send the Confirmation with the status as SUCCESS */
     usr_identify_board_confirm(MAC_SUCCESS,
-                               ic_type,
-                               mcu_soc_name,
-                               trx_name,
-                               board_name,
+                               IC_TYPE,
+                               MCU_SOC_NAME,
+                               TRANSCEIVER_NAME,
+                               BOARD_NAME,
                                (uint64_t)tal_pib.IeeeAddress,
                                fw_version);
 }
@@ -1398,7 +1396,7 @@ static void set_transceiver_state(uint8_t trx_state)
             {
 #if (ANTENNA_DIVERSITY == 1)
                 /*  Enable antenna diversity */
-              tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANT_AUTO_SEL);
+              tal_ant_div_config(ANT_DIVERSITY_ENABLE,ANTENNA_DEFAULT);
 #endif
 
                 /*set the state to PLL_ON*/
@@ -1703,10 +1701,10 @@ void read_trx_registers(uint16_t reg_addr)
 {
     uint8_t reg_val = INVALID_VALUE;
 
-#if (TAL_TYPE == ATMEGARFR2)
+#if (TAL_TYPE != ATMEGARFR2)
     if (reg_addr > MAX_REG_ADDRESS)
 #else
-    if (reg_addr <= MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS )
+    if (reg_addr < MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS )
 #endif
 
     {
@@ -1714,7 +1712,7 @@ void read_trx_registers(uint16_t reg_addr)
         usr_register_read_confirm(VALUE_OUT_OF_RANGE, reg_addr, reg_val);
         return;
     }
-#if (TAL_TYPE == ATMEGARFR2)
+#if (TAL_TYPE != ATMEGARFR2)
         tal_trx_reg_read((uint8_t)reg_addr,&reg_val); 
 #else
 		tal_trx_reg_read(reg_addr,&reg_val);
@@ -1731,10 +1729,10 @@ void read_trx_registers(uint16_t reg_addr)
  */
 void write_trx_registers(uint16_t reg_addr, uint8_t reg_val)
 {
-#if (TAL_TYPE == ATMEGARFR2)
+#if (TAL_TYPE != ATMEGARFR2)
     if (reg_addr > MAX_REG_ADDRESS)
 #else
-    if (reg_addr <= MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS )
+    if (reg_addr < MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS )
 #endif
     {
         /* Send the confirmation with status as OUT_OF_RANGE register address */
@@ -1777,7 +1775,7 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
   
     if(status==MAC_SUCCESS)
     {
-    /* Send the confirmation with status as OUT_OF_RANGE register address */
+    /* Send the confirmation with status as MAC_SUCCESS register address */
     usr_register_dump_confirm(MAC_SUCCESS,
                               start_reg_addr,
                               end_reg_addr,
@@ -1931,7 +1929,9 @@ void perf_set_req(uint8_t param_type, param_value_t *param_value)
         case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
             {
                 set_tx_power(1, (int8_t)param_value->param_value_8bit);
+#if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) )                
                 last_tx_power_format_set = 1;
+#endif /* End of (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) */
             }
             break;
         case PARAM_CSMA: /* CSMA configuration request- Enable/Disable */
@@ -2249,6 +2249,10 @@ static void set_channel(uint8_t channel)
         }
         else
         {
+#if(TAL_TYPE == AT86RF212)
+            int8_t dbm_val =0;
+            uint8_t tx_pwr =0;
+#endif
 #if(TAL_TYPE == AT86RF233)
             /* Set the CC_BAND to zero before setting the channel */
             tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
@@ -2259,8 +2263,6 @@ static void set_channel(uint8_t channel)
             /* Update the database */
             curr_trx_config_params.channel = channel;
 #if(TAL_TYPE == AT86RF212)
-            int8_t dbm_val =0;
-            uint8_t tx_pwr =0;
             tal_pib_get(phyTransmitPower, &tx_pwr);
             dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
             curr_trx_config_params.tx_power_dbm = dbm_val;
@@ -2320,16 +2322,18 @@ static void set_channel_page(uint8_t channel_page)
                 }
                 else
                 {
+#if(TAL_TYPE == AT86RF212)
+                    uint8_t channel;
+                    int8_t dbm_val =0;
+                    uint8_t tx_pwr =0;
+#endif
                     tal_pib_set(phyCurrentPage, (pib_value_t *)&channel_page);
 
                     /* update the data base with this value */
                     curr_trx_config_params.channel_page = channel_page;
 #if(TAL_TYPE == AT86RF212)
-                    uint8_t channel;
                     tal_pib_get(phyCurrentChannel, &channel);
                     curr_trx_config_params.channel = channel;
-                    int8_t dbm_val =0;
-                    uint8_t tx_pwr =0;
                     tal_pib_get(phyTransmitPower, &tx_pwr);
                     dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
                     curr_trx_config_params.tx_power_dbm = dbm_val;
@@ -2552,13 +2556,13 @@ void start_ed_scan(uint8_t ed_scan_duration)
         uint8_t scan_time_min = (uint8_t)( scan_time / 60 );
         float scan_time_sec = ( scan_time -  (scan_time_min * 60) );
         /* Send confirm with the status as SUCCESS and scan time in minutes and secs */
-        usr_ed_scan_start_confirm(MAC_SUCCESS, scan_time_min,ReverseFloat(scan_time_sec));
+        usr_ed_scan_start_confirm(MAC_SUCCESS, scan_time_min,reverse_float(scan_time_sec));
 
     }
     else
     {
         /* Send conform with the status as SUCCESS and scan time in secs & minutes = 0 */
-        usr_ed_scan_start_confirm(MAC_SUCCESS, NUL_VAL, ReverseFloat(scan_time));
+        usr_ed_scan_start_confirm(MAC_SUCCESS, NUL_VAL, reverse_float(scan_time));
     }
 
     tal_pib_get(phyCurrentChannel, &channel_before_scan);
@@ -2587,14 +2591,14 @@ void get_sensor_data(void)
     double temperature;
 
     bat_mon = tfa_get_batmon_voltage();
-    bat_voltage = ReverseFloat((double)(bat_mon * MILLI_VOLT_MULTIPLIER));
+    bat_voltage = reverse_float((double)(bat_mon * MILLI_VOLT_MULTIPLIER));
     
 
 #if (TAL_TYPE == ATMEGARFR2)
     temperature = tfa_get_temperature();
-temperature = ReverseFloat(temperature);
+temperature = reverse_float(temperature);
 #else
-    temperature = ReverseFloat(0.0); 
+    temperature = reverse_float(0.0); 
     
 #endif /* End of #if (TAL_TYPE == ATMEGARFR2) */
     /* Send the confirmation with status as SUCCESS */

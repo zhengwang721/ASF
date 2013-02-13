@@ -65,7 +65,20 @@
 #include "stb_internal.h"
 
 /* === Macros ============================================================= */
-
+/**
+ * \defgroup group_stb  Security toolbox
+ * The STB (Security Toolbox) is a high level security abstraction layer providing an easy-
+ * to-use  crypto  API for direct application access.It is placed on top of the SAL and abstracts and implements 
+ * transceiver or MCU dependent functionality that encrypts or decrypts frames usimg CCM according to 802.15.4/Zigbee.
+ */
+ /**
+ * \ingroup group_stb
+ * \defgroup group_sal 
+ * SAL Security abstraction layer
+ * The SAL (Security Abstraction Layer) provides an API that allows access to low level 
+ * AES engine functions abstraction to encrypt and  decrypt frames.
+ *
+ */
 /*
  * The following defines are taken from the ZigBee specification and can be
  * to implement ZigBee security.
@@ -173,7 +186,7 @@ extern "C" {
      *
      * This function re-starts the STB after power down.
      *
-     * @ingroup apiStbApi
+     * @ingroup group_StbApi
      */
     void stb_restart(void);
 
