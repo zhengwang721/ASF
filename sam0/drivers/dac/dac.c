@@ -45,44 +45,17 @@
 #include <pinmux.h>
 
 /**
- * \brief Resets the DAC module.
- *
- * This function will reset the DAC module to its power on default values and
- * disable it.
- *
- * \param[in] module_inst  Pointer to the DAC software instance struct
- */
-void dac_reset(
-		struct dac_module *const module_inst)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(module_inst->hw_dev);
-
-	Dac *const dac_module = module_inst->hw_dev;
-
-	while (dac_is_syncing(module_inst)) {
-		/* Wait until the synchronization is complete */
-	}
-
-	/* Software reset the module */
-	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
-
-}
-
-/**
  * \internal Writes a DAC configuration to the hardware module.
  *
  * Writes out a given configuration to the hardware module.
- * Used by \ref dac_init.
  *
  * \param[out] module_inst  Pointer to the DAC software instance struct
- * \param[in]  config    Pointer to the configuration struct
+ * \param[in]  config       Pointer to the configuration struct
  *
  */
 static void _dac_set_config(
 		struct dac_module *const module_inst,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -121,48 +94,6 @@ static void _dac_set_config(
 }
 
 /**
- * \brief Writes a DAC channel configuration to the hardware module.
- *
- * Writes out a given channel configuration to the hardware module.
- *
- * \note The \ref dac_module_inst "DAC device instance structure" must be
- * initialized before calling this function.
- *
- * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to configure
- * \param[in] config    Pointer to the configuration struct
- *
- */
-void dac_chan_set_config(
-		struct dac_module *const module_inst,
-		const enum dac_channel channel,
-		struct dac_chan_conf *const config)
-{
-	/* Sanity check arguments */
-	Assert(module_inst);
-	Assert(config);
-	Assert(module_inst->hw_dev);
-
-	Dac *const dac_module = module_inst->hw_dev;
-
-	if (config->enable_start_on_event) {
-		/* Enable start conversion event input */
-		dac_module->EVCTRL.reg |= DAC_EVCTRL_STARTEI;
-	} else {
-		/* Disable start conversion event input */
-		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
-	}
-
-	if (config->enable_empty_event) {
-		/* Enable data buffer empty event out */
-		dac_module->EVCTRL.reg |= DAC_EVCTRL_EMPTYEO;
-	} else {
-		/* Disable data buffer empty event out */
-		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_EMPTYEO;
-	}
-}
-
-/**
  * \brief Initialize the DAC device struct.
  *
  * Use this function to initialize the Digital to Analog Converter. Resets the
@@ -171,15 +102,15 @@ void dac_chan_set_config(
  * \note The DAC channel must be configured separately.
  *
  * \param[out] module_inst  Pointer to the DAC software instance struct
- * \param[in]  module    Pointer to the DAC module instance
- * \param[in]  config    Pointer to the config struct, created by the user
- *                       application
+ * \param[in]  module       Pointer to the DAC module instance
+ * \param[in]  config       Pointer to the config struct, created by the user
+ *                          application
  *
  */
 void dac_init(
 		struct dac_module *const module_inst,
 		Dac *const module,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -193,7 +124,7 @@ void dac_init(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
 	/* MUX the DAC VOUT pin */
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Set up the DAC VOUT pin */
@@ -204,6 +135,32 @@ void dac_init(
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
+}
+
+/**
+ * \brief Resets the DAC module.
+ *
+ * This function will reset the DAC module to its power on default values and
+ * disable it.
+ *
+ * \param[in] module_inst  Pointer to the DAC software instance struct
+ */
+void dac_reset(
+		struct dac_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
+
+	Dac *const dac_module = module_inst->hw_dev;
+
+	while (dac_is_syncing(module_inst)) {
+		/* Wait until the synchronization is complete */
+	}
+
+	/* Software reset the module */
+	dac_module->CTRLA.reg |= DAC_CTRLA_SWRST;
+
 }
 
 /**
@@ -235,22 +192,6 @@ void dac_enable(
 }
 
 /**
- * \brief Enable a DAC channel.
- *
- * Enables the selected DAC channel.
- *
- * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to enable
- *
- */
-void dac_chan_enable(
-		struct dac_module *const module_inst,
-		enum dac_channel channel)
-{
-	/* No channel support yet */
-}
-
-/**
  * \brief Disable the DAC module.
  *
  * Disables the DAC interface and the output buffer.
@@ -272,9 +213,68 @@ void dac_disable(
 
 	/* Disable DAC */
 	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
+}
 
-	/* Disable output buffer */
-	dac_disable_output_buffer(module_inst);
+/**
+ * \brief Writes a DAC channel configuration to the hardware module.
+ *
+ * Writes out a given channel configuration to the hardware module.
+ *
+ * \note The DAC device instance structure must be initialized before calling
+ *       this function.
+ *
+ * \param[in] module_inst  Pointer to the DAC software instance struct
+ * \param[in] channel      Channel to configure
+ * \param[in] config       Pointer to the configuration struct
+ *
+ */
+void dac_chan_set_config(
+		struct dac_module *const module_inst,
+		const enum dac_channel channel,
+		struct dac_chan_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(config);
+	Assert(module_inst->hw_dev);
+
+	/* No channel support yet */
+	UNUSED(channel);
+
+	Dac *const dac_module = module_inst->hw_dev;
+
+	if (config->enable_start_on_event) {
+		/* Enable start conversion event input */
+		dac_module->EVCTRL.reg |=  DAC_EVCTRL_STARTEI;
+	} else {
+		/* Disable start conversion event input */
+		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_STARTEI;
+	}
+
+	if (config->enable_empty_event) {
+		/* Enable data buffer empty event out */
+		dac_module->EVCTRL.reg |=  DAC_EVCTRL_EMPTYEO;
+	} else {
+		/* Disable data buffer empty event out */
+		dac_module->EVCTRL.reg &= ~DAC_EVCTRL_EMPTYEO;
+	}
+}
+
+/**
+ * \brief Enable a DAC channel.
+ *
+ * Enables the selected DAC channel.
+ *
+ * \param[in] module_inst  Pointer to the DAC software instance struct
+ * \param[in] channel      Channel to enable
+ *
+ */
+void dac_chan_enable(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
+{
+	/* No channel support yet */
+	UNUSED(channel);
 }
 
 /**
@@ -283,7 +283,7 @@ void dac_disable(
  * Disables the selected DAC channel.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel   Channel to disable
+ * \param[in] channel      Channel to disable
  *
  */
 void dac_chan_disable(
@@ -291,6 +291,7 @@ void dac_chan_disable(
 		enum dac_channel channel)
 {
 	/* No channel support yet */
+	UNUSED(channel);
 }
 
 /**
@@ -299,43 +300,52 @@ void dac_chan_disable(
  * Enables the output buffer and drives the DAC output to the VOUT pin.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- *
+ * \param[in] channel      DAC channel to alter
  */
-void dac_enable_output_buffer(
-		struct dac_module *const module_inst)
+void dac_chan_enable_output_buffer(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
 {
 	/*Sanity check arguments*/
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
 
+	/* No channel support yet */
+	UNUSED(channel);
+
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Enable output buffer */
 	dac_module->CTRLB.reg |= DAC_OUTPUT_EXTERNAL;
-
 }
 
 /**
  * \brief Disable the output buffer.
  *
  * Disables the output buffer.
- * \note Should be done when the output buffer is not needed, as it will draw
- * current even if the system is in sleep mode.
+ *
+ * \note The output buffer(s) should be disabled when a channel's output is not
+ *       currently needed, as it will draw current even if the system is in
+ *       sleep mode.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
- *
+ * \param[in] channel      DAC channel to alter
  */
-void dac_disable_output_buffer(
-		struct dac_module *const module_inst)
+void dac_chan_disable_output_buffer(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
 {
 	/* Sanity check arguments*/
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
 
+	/* No channel support yet */
+	UNUSED(channel);
+
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Disable output buffer */
-	dac_module->CTRLB.reg &= ~(DAC_OUTPUT_EXTERNAL);
+	dac_module->CTRLB.reg &= ~DAC_OUTPUT_EXTERNAL;
 }
 
 /**
@@ -351,33 +361,27 @@ void dac_disable_output_buffer(
  * \note To be event triggered, the enable_start_on_event must be
  * enabled in the configuration.
  *
- * \param[in] module_inst         Pointer to the DAC software device struct
+ * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
  * \param[in] data             Conversion data
- * \param[in] event_triggered  Boolean value to determine whether the conversion
- *                             should be triggered immediately or by an incoming
- *                             event.
  */
-void dac_write(
+void dac_chan_write(
 		struct dac_module *const module_inst,
 		enum dac_channel channel,
-		const uint16_t data,
-		bool event_triggered)
+		const uint16_t data)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw_dev);
+
+	/* No channel support yet */
+	UNUSED(channel);
 
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Wait until the synchronization is complete */
 	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
 
-	if (event_triggered) {
-		/* Event triggered conversion, write DATABUF register */
-		dac_module->DATABUF.reg = data;
-	} else {
-		/* Manual triggered conversion, write DATA register */
-		dac_module->DATA.reg = data;
-	}
+	/* Write the new value to the buffered DAC data register */
+	dac_module->DATABUF.reg = data;
 }

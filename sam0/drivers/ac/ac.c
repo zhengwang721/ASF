@@ -152,8 +152,8 @@ enum status_code ac_init(
  */
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
-		const uint8_t channel,
-		struct ac_chan_conf *const config)
+		const enum ac_chan_channel channel,
+		struct ac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -177,7 +177,8 @@ enum status_code ac_chan_set_config(
 	compctrl_temp |= config->output_mode;
 
 	/* Configure comparator positive and negative pin MUX configurations */
-	compctrl_temp |= (config->positive_input | config->negative_input);
+	compctrl_temp |=
+			(uint32_t)config->positive_input | (uint32_t)config->negative_input;
 
 	/* Set sampling mode (single shot or continuous) */
 	compctrl_temp |= config->sample_mode;
@@ -187,10 +188,10 @@ enum status_code ac_chan_set_config(
 	}
 
 	/* Write the final configuration to the module's control register */
-	ac_module->COMPCTRL[channel].reg = compctrl_temp;
+	ac_module->COMPCTRL[(uint8_t)channel].reg = compctrl_temp;
 
 	/* Configure VCC voltage scaling for the comparator */
-	ac_module->SCALER[channel].reg = config->vcc_scale_factor;
+	ac_module->SCALER[(uint8_t)channel].reg = config->vcc_scale_factor;
 
 	return STATUS_OK;
 }
@@ -206,7 +207,7 @@ enum status_code ac_chan_set_config(
  */
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel,
+		const enum ac_win_channel win_channel,
 		struct ac_win_conf *const config)
 {
 	/* Sanity check arguments */
@@ -244,14 +245,22 @@ enum status_code ac_win_set_config(
 			break;
 	}
 
-	if (win_channel == 0) {
-		ac_module->WINCTRL.reg =
+
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg =
 				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL0_Msk) |
 				(win_ctrl_mask << AC_WINCTRL_WINTSEL0_Pos);
-	} else {
-		ac_module->WINCTRL.reg =
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg =
 				(ac_module->WINCTRL.reg & ~AC_WINCTRL_WINTSEL1_Msk) |
 				(win_ctrl_mask << AC_WINCTRL_WINTSEL1_Pos);
+			break;
+#endif
 	}
 
 	return STATUS_OK;
@@ -281,7 +290,7 @@ enum status_code ac_win_set_config(
  */
 enum status_code ac_win_enable(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -311,10 +320,17 @@ enum status_code ac_win_enable(
 	}
 
 	/* Enable the requested window comparator */
-	if (win_channel == 0) {
-		ac_module->WINCTRL.reg |= AC_WINCTRL_WEN0;
-	} else {
-		ac_module->WINCTRL.reg |= AC_WINCTRL_WEN1;
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg |= AC_WINCTRL_WEN0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg |= AC_WINCTRL_WEN1;
+			break;
+#endif
 	}
 
 	return STATUS_OK;
@@ -330,7 +346,7 @@ enum status_code ac_win_enable(
  */
 void ac_win_disable(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -343,10 +359,17 @@ void ac_win_disable(
 	}
 
 	/* Disable the requested window comparator */
-	if (win_channel == 0) {
-		ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN0;
-	} else {
-		ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN1;
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			ac_module->WINCTRL.reg &= ~AC_WINCTRL_WEN1;
+			break;
+#endif
 	}
 }
 
@@ -362,7 +385,7 @@ void ac_win_disable(
  */
 enum ac_win_state ac_win_get_state(
 		struct ac_module *const module_inst,
-		const uint8_t win_channel)
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -378,10 +401,17 @@ enum ac_win_state ac_win_get_state(
 	uint32_t win_state = 0;
 
 	/* Extract window comparison state bits */
-	if (win_channel == 0) {
-		win_state = ac_module->STATUSA.bit.WSTATE0;
-	} else {
-		win_state = ac_module->STATUSA.bit.WSTATE1;
+	switch (win_channel)
+	{
+		case AC_WIN_CHANNEL_0:
+			win_state = ac_module->STATUSA.bit.WSTATE0;
+			break;
+
+#if (AC_PAIRS > 1)
+		case AC_WIN_CHANNEL_1:
+			win_state = ac_module->STATUSA.bit.WSTATE1;
+			break;
+#endif
 	}
 
 	/* Map hardware comparison states to logical window states */
