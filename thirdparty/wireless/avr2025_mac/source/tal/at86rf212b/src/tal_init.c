@@ -172,7 +172,7 @@ retval_t tal_init(void)
     /* Init the PAL and by this means also the transceiver interface */
     if (pal_init() != MAC_SUCCESS)
     {
-        return FAILURE;
+       return FAILURE;
     }
 
     if (trx_init() != MAC_SUCCESS)
@@ -286,7 +286,7 @@ retval_t tal_init(void)
 static retval_t trx_init(void)
 {
     volatile tal_trx_status_t test_status;
-
+    uint8_t poll_counter = 0;
     /* Wait typical time of timer TR1. */
     pal_timer_delay(P_ON_TO_CLKM_AVAILABLE_TYP_US);
 
@@ -310,10 +310,21 @@ static retval_t trx_init(void)
     test_status = test_status;
 
 #if !(defined FPGA_EMULATION)
-    if (pal_trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF212B)
+    
+    do
     {
-        return FAILURE;
+        /* Wait not more than max. value of TR1. */
+        if (poll_counter == P_ON_TO_CLKM_ATTEMPTS)
+        {
+            return FAILURE;
+        }
+        /* Wait a short time interval. */
+        pal_timer_delay(TRX_POLL_WAIT_TIME_US);
+        poll_counter++;
+        /* Check if AT86RF212B is connected; omit manufacturer id check */
     }
+    while (pal_trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF212B);
+
 #endif  /* !defined FPGA_EMULATION */
 
     /* Set trx to off mode */
