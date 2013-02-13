@@ -50,7 +50,7 @@
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
- * prescaling of clocks to various modules within the device.
+ * prescaling of clocks to various internal peripherals.
  *
  * The following peripherals are used by this module:
  *
@@ -73,7 +73,139 @@
  *
  *
  * \section asfdoc_samd20_system_clock_module_overview Module Overview
- * TODO
+ * The SAMD20 devices contain a sophisticated clocking system, which is designed
+ * to give the maximum flexibility to the user application. This system allows
+ * a system designer to tune the performance and power consumption of the device
+ * in a dynamic manner, to achieve the best trade-off between the two for a
+ * particular application.
+ *
+ * This driver provides a set of functions for the configuration and management
+ * of the various clock related functionality within the device.
+ *
+ * \subsection asfdoc_samd20_system_clock_module_overview_clock_sources Clock Sources
+ * The SAMD20 devices have a number of master clock source modules, each of
+ * which being capable of producing a stabilized output frquency which can then
+ * be fed into the various peripherals and modules within the device.
+ *
+ * Possible clock source modules include internal R/C oscillators, internal
+ * DFLL modules, as well as external crystal oscillators and/or clock inputs.
+ *
+ * \subsection asfdoc_samd20_system_clock_module_overview_cpu_clock CPU / Bus Clocks
+ * The CPU and APH/APBx buses are clocked by the same physical clock source
+ * (referred in this module as the Main Clock), however the APBx buses may
+ * have additional prescaler division ratios set to give each peripheral bus a
+ * different clock speed.
+ *
+ * The general main clock tree for the CPU and associated buses is shown below.
+ * \dot
+ * digraph overview {
+ *   rankdir=LR;
+ *   clk_src [label="Clock Sources", shape=none, height=0];
+ *   node [label="CPU Bus" shape=ellipse] cpu_bus;
+ *   node [label="APH Bus" shape=ellipse] aph_bus;
+ *   node [label="APBA Bus" shape=ellipse] apb_a_bus;
+ *   node [label="APBB Bus" shape=ellipse] apb_b_bus;
+ *   node [label="APBC Bus" shape=ellipse] apb_c_bus;
+ *   node [label="Main Bus\nPrescaler" shape=square] main_prescaler;
+ *   node [label="APBA Bus\nPrescaler" shape=square] apb_a_prescaler;
+ *   node [label="APBB Bus\nPrescaler" shape=square] apb_b_prescaler;
+ *   node [label="APBB Bus\nPrescaler" shape=square] apb_c_prescaler;
+ *   node [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2] main_clock_mux;
+ *
+ *   clk_src         -> main_clock_mux;
+ *   main_clock_mux  -> main_prescaler;
+ *   main_prescaler  -> cpu_bus;
+ *   main_prescaler  -> aph_bus;
+ *   main_prescaler  -> apb_a_prescaler;
+ *   main_prescaler  -> apb_b_prescaler;
+ *   main_prescaler  -> apb_c_prescaler;
+ *   apb_a_prescaler -> apb_a_bus;
+ *   apb_b_prescaler -> apb_b_bus;
+ *   apb_c_prescaler -> apb_c_bus;
+ * }
+ * \enddot
+ *
+ * \subsection asfdoc_samd20_system_clock_module_overview_clock_masking Clock Masking
+ * To save power, the input clock to one or more peripherals on the AHB and APBx
+ * busses can be masked away - when masked, no clock is passed into the module.
+ * Disabling of clocks of unused modules will prevent all access to the masked
+ * module, but will reduce the overall device power consumption.
+ *
+ * \subsection asfdoc_samd20_system_clock_module_overview_gclk Generic Clocks
+ * Within the SAMD20 devices are a number of Generic Clocks; these are used to
+ * provide clocks to the various peripheral clock domains in the device in a
+ * standardized manner. One or more master source clocks can be selected as the
+ * input clock to a Generic Clock Generator, which can prescale down the input
+ * frequency to a slower rate for use in a peripheral.
+ *
+ * Additionally, a number of individually selectable Generic Clock Channels are
+ * provided, which multiplex and gate the various generator outputs for one or
+ * more peripherals within the device. This setup allows for a single common
+ * generator to feed one or more channels, which can then be enabled or disabled
+ * individually as required.
+ *
+ * \dot
+ * digraph overview {
+ *   rankdir=LR;
+ *   node [label="Clock\nSource a" shape=square] system_clock_source;
+ *   node [label="Generator b" shape=square] clock_gen;
+ *   node [label="Channel x" shape=square] clock_chan0;
+ *   node [label="Channel y" shape=square] clock_chan1;
+ *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
+ *   node [label="Peripheral y" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
+ *
+ *   system_clock_source -> clock_gen;
+ *   clock_gen   -> clock_chan0;
+ *   clock_chan0 -> peripheral0;
+ *   clock_gen   -> clock_chan1;
+ *   clock_chan1 -> peripheral1;
+ * }
+ * \enddot
+ *
+ * An example setup of a complete clock chain within the device is shown below.
+ *
+ * \dot
+ * digraph overview {
+ *   rankdir=LR;
+ *   node [label="External\nOscillator" shape=square] system_clock_source0;
+ *   node [label="Generator a" shape=square] clock_gen0;
+ *   node [label="Channel x" shape=square] clock_chan0;
+ *   node [label="Core CPU" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
+ *
+ *   system_clock_source0 -> clock_gen0;
+ *   clock_gen0    -> clock_chan0;
+ *   clock_chan0   -> peripheral0;
+ *
+ *   node [label="8MHz R/C\nOscillator" shape=square style=outline] system_clock_source1;
+ *   node [label="Generator b" shape=square] clock_gen1;
+ *   node [label="Channel y" shape=square] clock_chan1;
+ *   node [label="Channel z" shape=square] clock_chan2;
+ *   node [label="SERCOM\nModule" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
+ *   node [label="Timer\nModule" shape=ellipse  style=filled fillcolor=lightgray] peripheral2;
+ *
+ *   system_clock_source1 -> clock_gen1;
+ *   clock_gen1    -> clock_chan1;
+ *   clock_gen1    -> clock_chan2;
+ *   clock_chan1   -> peripheral1;
+ *   clock_chan2   -> peripheral2;
+ * }
+ * \enddot
+ *
+ * \subsubsection asfdoc_samd20_system_clock_module_overview_gclk_generators Generic Clock Generators
+ * Each Generic Clock generator within the device can source its input clock
+ * from one of the provided Source Clocks, and prescale the output for one or
+ * more Generic Clock Channels in a one-to-many relationship. The generators
+ * thus allow for several clocks to be generated of different frequencies,
+ * power usages and accuracies, which can be turned on and off individually to
+ * disable the clocks to multiple peripherals as a group.
+ *
+ * \subsubsection asfdoc_samd20_system_clock_module_overview_gclk_channels Generic Clock Channels
+ * To connect a Generic Clock Generator to a peripheral module within the
+ * device, a Generic Clock Channel module must be used. Each peripheral or
+ * peripheral group has an associated Generic Clock Channel, which serves as the
+ * clock input for the peripheral(s). To supply a clock to the peripheral
+ * module(s), the associated channel must be connected to a running Generic
+ * Clock Generator and the channel enabled.
  *
  * \section asfdoc_samd20_system_clock_special_considerations Special Considerations
  *
@@ -995,12 +1127,28 @@ void system_clock_init(void);
  *		<td>Multiplexer</td>
  *	</tr>
  *	<tr>
+ *		<td>OSC32K</td>
+ *		<td>Internal 32KHz Oscillator</td>
+ *	</tr>
+ *	<tr>
+ *		<td>OSC8M</td>
+ *		<td>Internal 8MHz Oscillator</td>
+ *	</tr>
+ *	<tr>
  *		<td>PLL</td>
  *		<td>Phase Locked Loop</td>
  *	</tr>
  *	<tr>
- *		<td>R/C Oscillator</td>
- *		<td>Resistor/Capacitor Oscillator</td>
+ *		<td>OSC</td>
+ *		<td>Oscillator</td>
+ *	</tr>
+ *	<tr>
+ *		<td>XOSC</td>
+ *		<td>External Oscillator</td>
+ *	</tr>
+ *	<tr>
+ *		<td>XOSC32K</td>
+ *		<td>External 32KHz Oscillator</td>
  *	</tr>
  * </table>
  *
