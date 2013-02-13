@@ -124,7 +124,7 @@ void dac_init(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
 	/* MUX the DAC VOUT pin */
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Set up the DAC VOUT pin */
