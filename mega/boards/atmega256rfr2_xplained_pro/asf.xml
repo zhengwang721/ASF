@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<board id="board.atmega256rfr2_xplained_pro" vendor="Atmel" caption="ATmega256RFR2 Xplained PRO">
+	<board id="board.atmega256rfr2_xplained_pro" vendor="Atmel" caption="ATmega256RFR2 Xplained Pro">
 		<build type="define" name="BOARD" value="ATMEGA256RFR2_XPLAINED_PRO"/>
 		<build type="header-file" value="atmega256rfr2_xplained_pro.h"/>
 		<build type="header-file" value="led.h"/>

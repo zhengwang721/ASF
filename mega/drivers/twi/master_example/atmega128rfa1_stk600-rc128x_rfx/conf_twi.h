@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration for Interrupt Example
+ * \brief megarf twi master configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,8 +40,16 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_TWI_H
+#define CONF_TWI_H
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#include <twi_megarf.h>
 
-#endif // CONF_BOARD_H
+ //!< TWI slave bus address
+#define SLAVE_BUS_ADDR                                0xA0  
+//!< TWI slave memeory address length     
+#define SLAVE_MEM_ADDR_LENGTH         TWI_SLAVE_ONE_BYTE_SIZE 
+//!< TWI data transfer rate
+#define TWI_SPEED_HZ         125000       
+
+#endif // CONF_TWI_H

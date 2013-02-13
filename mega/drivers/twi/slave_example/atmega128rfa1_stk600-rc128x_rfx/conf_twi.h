@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration for Interrupt Example
+ * \brief megarf twi slave configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_TWI_H
+#define CONF_TWI_H
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
 
-#endif // CONF_BOARD_H
+#endif /* CONF_TWI_H */

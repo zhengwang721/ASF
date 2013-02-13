@@ -7,7 +7,7 @@
  * This file defines a useful set of functions for the TWI interface on AVR Xmega
  * devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,7 @@
 #ifndef _TWI_MASTER_H_
 #define _TWI_MASTER_H_
 
-#include "twim_megarf.h"
+#include "twi_megarf.h"
 #include "sysclk.h"
 
 static inline status_code_t twi_master_setup(volatile void *twi,twi_master_options_t *opt)

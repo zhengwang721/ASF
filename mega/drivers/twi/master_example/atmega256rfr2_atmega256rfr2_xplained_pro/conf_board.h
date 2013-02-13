@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief megarf twi master configuration
+ * \brief Board configuration for TWI master Example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,16 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TWIM_H
-#define CONF_TWIM_H
 
-#include <twim_megarf.h>
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
- //!< TWI slave bus address
-#define SLAVE_BUS_ADDR                                0xB0  
-//!< TWI slave memeory address length     
-#define SLAVE_MEM_ADDR_LENGTH         TWI_SLAVE_ONE_BYTE_SIZE 
-//!< TWI data transfer rate
-#define TWI_SPEED_HZ         125000       
+#define LED_GREEN_GPIO        LED_ON_BOARD
 
-#endif // CONF_TWIM_H
+#endif // CONF_BOARD_H

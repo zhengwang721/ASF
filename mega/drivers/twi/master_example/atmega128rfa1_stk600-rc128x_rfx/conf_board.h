@@ -1,11 +1,7 @@
 /**
- *
  * \file
  *
- * \brief TWI Slave driver for megarf.
- *
- * This file defines a useful set of functions for the TWI interface on AVR Xmega
- * devices.
+ * \brief Board configuration for TWI master Example
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,23 +41,7 @@
  *
  */
 
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#ifndef _TWI_SLAVE_H_
-#define _TWI_SLAVE_H_
-
-#include "twi_megarf.h"
-#include "status_codes.h"
-
-
-static status_code_t twi_slave_setup(uint8_t twi_slave_ownadd)
-{
-
-	sysclk_enable_peripheral_clock(&TWBR);
-	
-	return twi_slave_init(twi_slave_ownadd);
-
-}
-
-#endif  // _TWI_SLAVE_H_
-
-
+#endif // CONF_BOARD_H

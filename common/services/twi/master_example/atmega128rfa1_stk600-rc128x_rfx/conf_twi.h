@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief megarf twi slave configuration
+ * \brief megarf twi master configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,8 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TWIS_H
-#define CONF_TWIS_H
+#ifndef CONF_TWI_H
+#define CONF_TWI_H
 
+#define TWI_EXAMPLE  &TWBR      
 
-#endif /* CONF_TWIS_H */
+#endif // CONF_TWI_H

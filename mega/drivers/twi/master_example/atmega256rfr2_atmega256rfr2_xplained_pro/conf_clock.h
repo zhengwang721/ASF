@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief megarf twi master configuration
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,16 +40,27 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TWIM_H
-#define CONF_TWIM_H
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#include <twim_megarf.h>
+// ===== System Clock Source Options
+#define	SYSCLK_SRC_RC16MHZ    0
+#define	SYSCLK_SRC_RC128KHZ   1
+#define	SYSCLK_SRC_TRS16MHZ   2
+#define	SYSCLK_SRC_RC32KHZ    3
+#define	SYSCLK_SRC_XOC16MHZ   4
+#define	SYSCLK_SRC_EXTERNAL   5
 
- //!< TWI slave bus address
-#define SLAVE_BUS_ADDR                                0xA0  
-//!< TWI slave memeory address length     
-#define SLAVE_MEM_ADDR_LENGTH         TWI_SLAVE_ONE_BYTE_SIZE 
-//!< TWI data transfer rate
-#define TWI_SPEED_HZ         125000       
 
-#endif // CONF_TWIM_H
+//=====  Select connected clock source
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ
+//#define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ
+
+
+
+// ===== System Clock Bus Division Options
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
+
+#endif /* CONF_CLOCK_H_INCLUDED */

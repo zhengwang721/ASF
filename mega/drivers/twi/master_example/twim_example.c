@@ -3,7 +3,7 @@
  *
  * \brief TWi master example for megaRF device
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  * \section files Main Files
  * - twim_example.c: example application.
  * - conf_board.h: board configuration
- * - conf_twim.h: TWI master configuration used in this example
+ * - conf_twi.h: TWI master configuration used in this example
  *
  * \section driverinfo twi master Driver
  * The twi driver can be found \ref group_megarf_drivers_twi "here".
@@ -63,11 +63,10 @@
  * The given example uses one kit as a TWI master:
  *    - the TWI master performs a write  to the TWI slave,
  *    - the TWI master performs a read  of what it just wrote to the TWI
- *nslave,- the read data are compared with the originally written data.
+ *    - the read data are compared with the originally written data.
  *
- * Green LED, Red LED gives the result of the test:
- *  If FAILED: Red LED is on.
- *  If PASS: Green LED is on at the end of the test.
+ * LED gives the result of the test:
+ * If PASS: LED is on at the end of the test.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -79,7 +78,8 @@
  */
 
 #include "asf.h"
-#include <conf_twim.h>
+#include <conf_twi.h>
+#include <conf_board.h>
 
 /**  \name Slave EEPROM memory Test Pattern Constants */
 /**@{ */
@@ -97,7 +97,7 @@ const uint8_t test_pattern[] = {
 };
 
 const uint8_t slave_mem_addr[SLAVE_MEM_ADDR_LENGTH] = {
-	0x08,
+	0x00,
 };
 /** @}*/
 
@@ -137,12 +137,12 @@ int main(void)
 		.chip  = SLAVE_BUS_ADDR,
 		
 	};
-        
-        opt .baud_reg = TWI_CLOCK_RATE(sysclk_get_cpu_hz(), opt.speed);
+	opt .baud_reg = TWI_CLOCK_RATE(sysclk_get_cpu_hz(), opt.speed);
 
-	/* Initialize the TWI master driver. */
-        sysclk_enable_peripheral_clock(TWI_EXAMPLE);
+	/* Enable the peripheral clock for TWI module */
+	sysclk_enable_peripheral_clock(TWI_EXAMPLE);
 	
+	/* Initialize the TWI master driver. */
 	twi_master_init(TWI_EXAMPLE,&opt);
 
 	twi_package_t packet = {
@@ -163,6 +163,9 @@ int main(void)
 
 	while (twi_master_write(TWI_EXAMPLE,&packet) != TWI_SUCCESS) {
 	}
+	
+	/* Write completion time for EEPROM */
+	delay_ms(5);
 
 	uint8_t data_received[PATTERN_TEST_LENGTH] = {0};
 
@@ -188,9 +191,6 @@ int main(void)
 	for (int i = 0; i < PATTERN_TEST_LENGTH; i++) {
 		if (data_received[i] != test_pattern[i]) {
 			/* Error */
-
-			/* RED LED On */
-			LED_On(LED_RED_GPIO);
 
 			while (1) {
 			}

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief megaRF TWI common header file.
+ * \brief TWI driver for megarf.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef TWI_COMMON_H_INCLUDED
-#define TWI_COMMON_H_INCLUDED
 
-#include <compiler.h>
+#ifndef _TWI_MEGARF_H_
+#define _TWI_MEGARF_H_
+
+
+#include "compiler.h"
 #include "status_codes.h"
+#include <conf_twi.h>
 
 /**
  * \defgroup group_megarf_drivers_twi TWI - Two-Wire Interface
@@ -62,7 +65,7 @@
  */
 
 /**
- * \brief Input parameters when initializing the twi module mode
+ * \brief Input parameters when initializing the twi master mode
  */
 typedef struct {
 	/* ! The baudrate of the TWI bus. */
@@ -96,6 +99,97 @@ typedef struct {
 	/* ! How many bytes do we want to write. */
 	unsigned int length;
 } twi_package_t;
+
+/**
+ * \internal
+ * \brief internal address size
+ */
+
+typedef enum {
+	TWI_SLAVE_NO_INTERNAL_ADDRESS,
+	TWI_SLAVE_ONE_BYTE_SIZE,
+	TWI_SLAVE_TWO_BYTE_SIZE,
+	TWI_SLAVE_THREE_BYTE_SIZE
+} twiInternalAddrSize_t;
+
+/** \brief TWI status codes. */
+enum {
+	TWS_BUSERROR                   = 0x00, /*Bus error due to illegal START or STOP
+	                                        * condition.*/
+	TWS_START                      = 0x08, /*A START condition has been transmitted.*/
+	TWS_RSTART                     = 0x10, /*A repeated START condition has been
+	                                        *transmitted.*/
+	TWS_MT_SLA_ACK                 = 0x18, /*SLA+W has been transmitted; ACK has
+	                                        *been received.*/
+	TWS_MT_SLA_NACK                = 0x20, /*SLA+W has been transmitted; NOT ACK has
+	                                        *been received.*/
+	TWS_MT_DATA_ACK                = 0x28, /*Data byte has been transmitted; ACK has
+	                                        *been received.*/
+	TWS_MT_DATA_NACK               = 0x30, /*Data byte has been transmitted; NOT ACK
+	                                        *has been received.*/
+	TWS_M_ARB_LOST                 = 0x38, /*Arbitration lost in SLA+W or data bytes
+	                                       *(Transmitter); Arbitration lost in SLA+R or
+	                                       *NOT ACK bit (Receiver).*/
+	TWS_MR_SLA_ACK                 = 0x40, /*SLA+R has been transmitted; ACK has been
+	                                       *received.*/
+	TWS_MR_SLA_NACK                = 0x48, /*SLA+R has been transmitted; NOT ACK has
+	                                       *been received.*/
+	TWS_MR_DATA_ACK                = 0x50, /*Data byte has been received; ACK has been
+	                                       *returned.*/
+	TWS_MR_DATA_NACK               = 0x58, /*Data byte has been received; NOT ACK has
+	                                       *been returned.*/
+	TWS_ST_SLA_ACK                 = 0xA8, /* ! Own SLA+R has been received;
+	                                        * ACK has been returned */
+	TWS_ST_SLA_ACK_M_ARB_LOST      = 0xB0, /* ! Arbitration lost in SLA+R/W as Master;
+	                                        *own SLA+R has been received;
+	                                        *ACK has been returned */
+	TWS_ST_DATA_ACK                = 0xB8, /* ! Data byte in TWDR has been transmitted; 
+	                                        *ACK has been received */
+	TWS_ST_DATA_NACK               = 0xC0, /* ! Data byte in TWDR has been transmitted; 
+	                                        * NOT ACK has been received */                                      
+	TWS_ST_DATA_ACK_LAST_BYTE      = 0xC8, /* ! Last data byte in TWDR has been transmitted
+	                                        * (TWEA = “0”); ACK has been received */	                                       
+	TWS_SR_SLA_ACK                 = 0x60, /* ! Own SLA+W has been received 
+	                                        *ACK has been returned */
+	TWS_SR_SLA_ACK_M_ARB_LOST      = 0x68, /* ! Arbitration lost in  SLA+R/W as Master;
+	                                        * own SLA+W has been received; 
+	                                        * ACK has been returned */
+	TWS_SR_GEN_ACK                 = 0x70, /* ! General call address has been received; 
+											ACK has been returned */                                     
+	TWS_SR_GEN_ACK_M_ARB_LOST      = 0x78, /* ! Arbitration lost in SLA+R/W as Master; 
+	                                        * General call address has been received;
+	                                        *  ACK has been returned */                                      
+	TWS_SR_SLA_DATA_ACK            = 0x80, /* ! Previously addressed with own SLA+W;
+	                                        * data has been received;  ACK
+	                                        * has been returned */                                      
+	TWS_SR_SLA_DATA_NACK           = 0x88, /* ! Previously addressed with own SLA+W; 
+	                                        * data has been received;NOT ACK has been
+	                                        * returned */
+	TWS_SR_GEN_DATA_ACK            = 0x90, /* ! Previously addressed with general call;
+	                                        * data has been received; ACK
+	                                        * has been returned */
+	TWS_SR_GEN_DATA_NACK           = 0x98, /* ! Previously addressed with general call;
+	                                        *  data has been received;
+	                                        *  NOT ACK has been returned */	                                       
+	TWS_SR_STOP_RESTART            = 0xA0  /* ! A STOP condition or repeated START condition
+	                                        *  has been received while still addressed
+	                                        *  as Slave */	                                       
+};
+
+/**
+ * \internal
+ * \def TWI_STATE
+ * \brief different states of TWI process
+ */
+/* states of the i2c transaction */
+#define TWI_IDLE                     1
+#define TWI_WRITE_IADDR_WRITE_DATA   2
+#define TWI_WRITE_IADDR_READ_DATA    3
+#define TWI_WRITE_DATA               4
+#define TWI_READ_DATA                5
+#define TWI_TRANSAC_SUCCESS          6
+#define TWI_TRANSAC_FAIL             7
+#define TWI_PROCESS                  8
 
 /**
  * \def TWI_TWSR_PRESCALE
@@ -136,15 +230,15 @@ TWI_SPEED) (((F_CPU / \
 TWI_SPEED) - 16) / (2 * TWI_PRESCALER))
 	
 /**
- * \def TWI_STATE
+ * \def TWI_STATUS
  * \brief Define Status of the twi transaction
  */
 #define TWI_SUCCESS                  0
-#define TWI_STATUS_NO_STATE                    1
-#define TWI_STATUS_TX_COMPLETE                 2
-#define TWI_STATUS_RX_COMPLETE                 3
-#define TWI_STATUS_IO_ERROR                    -1
-#define TWI_STATUS_PROTOCOL_ERROR              -2
+#define TWI_STATUS_NO_STATE          1
+#define TWI_STATUS_TX_COMPLETE       2
+#define TWI_STATUS_RX_COMPLETE       3
+#define TWI_STATUS_IO_ERROR         -1
+#define TWI_STATUS_PROTOCOL_ERROR   -2
 
 /**
  * \def TWI_TWSR_STATUS_MASK
@@ -156,13 +250,13 @@ TWI_SPEED) - 16) / (2 * TWI_PRESCALER))
  * \def TWI_WRITE_ENABLE
  * \brief TWI Write Enable
  */
-#define TWI_WRITE_ENABLE(SDA)          ((SDA & 0xFE) | 0x00)
+#define TWI_WRITE_ENABLE(SDA)   (SDA & 0xFE)
 
 /**
  * \def TWI_READ_ENABLE
  * \brief TWI Read Enable
  */
-#define TWI_READ_ENABLE(SDA)           ((SDA & 0xFE) | 0x01)
+#define TWI_READ_ENABLE(SDA)    ((SDA & 0xFE) | 0x01)
 
 /**
  * \brief Enables interrupt on TWI.
@@ -244,7 +338,6 @@ static inline void twi_send_start(void)
 	TWCR = ((1 << TWSTA) | (1 << TWINT) | (1 << TWEN) | (1 << TWIE));
 }
 
-
 /**
  * \brief Perform a TWI master write transfer.
  *
@@ -253,21 +346,21 @@ static inline void twi_send_start(void)
  * \param package -  Package information and data
  *                  (see \ref twi_package_t)
  */
-extern status_code_t twi_master_write(volatile void *twi,const twi_package_t *package);
+status_code_t twi_master_write(volatile void *twi,const twi_package_t *package);
 
 /**
  * \brief Reads the series of bytes from the TWI bus
  * \param package -  Package information and data
  *                  (see \ref twi_package_t)
  */
-extern status_code_t twi_master_read(volatile void *twi,const twi_package_t *package);
+status_code_t twi_master_read(volatile void *twi,const twi_package_t *package);
 
 /**
  * \brief returns the status of TWI bus
  *
  * \param none
  */
-extern status_code_t twi_master_get_status(void);
+status_code_t twi_master_get_status(void);
 
 /**
  * \brief Inits TWI module as master
@@ -277,41 +370,42 @@ extern status_code_t twi_master_get_status(void);
  * \param opt twi setting options
  *                  (see \ref twi_master_options_t)
  */
-extern status_code_t twi_master_init(volatile void *twi, twi_master_options_t *opt);
+status_code_t twi_master_init(volatile void *twi, twi_master_options_t *opt);
 
 /**
- * \brief Get the State of TWI transceiver
+ * \brief Get the Status of TWI transceiver
  *
  * \return int - status information
  */
-extern int twi_slave_status_get(void);
+int twi_slave_status_get(void);
 
 /**
- * \brief Get the status of TWI transceiver
+ * \brief Get the state of TWI transceiver
  *
  * \return int - state information
  */
-extern int twi_slave_state_get(void);
+int twi_slave_state_get(void);
 
 /**
  * \brief Initialize TWI as Slave
  *
  * \param TWI_ownAddress - contains Slave own Address
  */
-extern status_code_t twi_slave_init(uint8_t twi_slave_ownadd);
+status_code_t twi_slave_init(uint8_t twi_slave_ownadd);
 
 /**
  * \brief Start the slave Transceiver
  *
  * \return status_code_t - status of twi slave
  */
-extern status_code_t twi_slave_start(slave_data_buffer_t *package);
+status_code_t twi_slave_start(slave_data_buffer_t *package);
 
 /**
  * \brief Resets the slave state and status to initial for next
- *transmission/reception
+ * transmission/reception
  */
-extern void twi_slave_status_reset(void);
+void twi_slave_status_reset(void);
+
 /** @}*/
 
 /**
@@ -407,8 +501,6 @@ extern void twi_slave_status_reset(void);
  *	for (int i = 0; i < PATTERN_TEST_LENGTH; i++) {
  *		if (data_received[i] != test_pattern[i]) {
  *
- *			LED_On(LED_RED_GPIO);
- *
  *			while (1) {
  *			}
  *		}
@@ -462,7 +554,7 @@ extern void twi_slave_status_reset(void);
  * \code
  * ISR(TWI_vect)
  * {
- *	twi_master_interrupt_handler();
+ *	twi_interrupt_handler();
  * }
  * \endcode
  *
@@ -520,4 +612,5 @@ extern void twi_slave_status_reset(void);
  *       buffer,which now contains what was sent through.
  *
  */
-#endif  /* TWI_COMMON_H_INCLUDED */
+
+#endif  /* _TWI_MEGARF_H_*/

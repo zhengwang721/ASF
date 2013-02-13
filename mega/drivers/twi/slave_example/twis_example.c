@@ -4,7 +4,7 @@
  *
  * \brief megaRF example for twi as slave
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  * \section files Main Files
  * - twis_example.c: example application.
  * - conf_board.h: board configuration
- * - conf_twis.h: TWI slave configuration used in this example
+ * - conf_twi.h: TWI slave configuration used in this example
  *
  * \section driverinfo twi slave Driver
  * The twi driver can be found \ref group_megarf_drivers_twi "here".
@@ -78,7 +78,7 @@
  * <A href="http://www.atmel.com/avr">Atmel AVR</A>.\n
  */
 #include "asf.h"
-#include <conf_twis.h>
+#include <conf_twi.h>
 
 /** \name Slave memory Test Pattern Constants */
 /** @{*/
@@ -108,10 +108,6 @@ static void twi_Transmission_Failure(void);
 static void twi_Transmit_Success(void);
 static void twi_Receive_Success(void);
 
-ISR(TWI_vect)
-{
-	twi_slave_interrupt_handler();
-}
 
 /**
  * \brief TWI Slave Example Main
@@ -126,11 +122,13 @@ int main(void)
 
 	board_init();
 
-	/* Initialize the TWI Slave driver. */
+	/* Enable the peripheral clock for TWI module */
 	sysclk_enable_peripheral_clock(&TWBR);
 
+	/* Initialize the TWI Slave driver. */
 	twi_slave_init(SLAVE_BUS_ADDR | TWI_GCE);
 
+	/* Enable global interrupt */
 	cpu_irq_enable();
 
 	slave_data_buffer_t data_buffer = {
@@ -139,10 +137,12 @@ int main(void)
 		.tx_buffer = (void *)test_pattern	
 	};
 
+	/* Start the TWI slave Transceiver */
 	twi_slave_start(&data_buffer);
-
+	
+	/* Wait in infinite loop and check for TWI status */
 	while (1) {
-		if (!twi_slave_state_get()) {
+		if (twi_slave_state_get() == TWI_IDLE) {
 			switch (twi_slave_status_get()) {
 			case TWI_STATUS_TX_COMPLETE:
 				twi_Transmit_Success();

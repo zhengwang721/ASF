@@ -7,12 +7,13 @@
 			<keyword value="TWI_MASTER"/>
 		</info>	
 		<build type="c-source" value="twim_example.c"/>		
-		<build type="module-config" subtype="required-header-file" value="conf_twim.h"/>		
+		<build type="module-config" subtype="required-header-file" value="conf_twi.h"/>		
 		<device-support value="megarf"/>
 		<require idref="mega.drivers.twi"/>	
         <require idref="common.services.basic.clock"/>
         <require idref="common.services.ioport"/>		
-        <require idref="common.services.basic.gpio"/>		
+        <require idref="common.services.basic.gpio"/>	
+        <require idref="common.services.delay"/>			
 		<build type="doxygen-entry-point" value="megarf_twi_master"/>
 		<generator value="doxygen-module" default-mcu="unspecified-mega"/>
 	</module>
