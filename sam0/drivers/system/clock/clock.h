@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup clock_group Clock control
+ * \defgroup asfdoc_samd20_system_clock_group Clock control
  *
  * \section into Introduction
  * This driver provides control of all the clock related functionality

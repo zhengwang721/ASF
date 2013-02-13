@@ -58,8 +58,8 @@
  *
  * The following peripherals are used by this module:
  *
- * - SYSCTRL (System Control) for Clock control
- * - PM (Power Manager) for Reset Cause determination, Peripheral Bus Control and Sleep
+ * - SYSCTRL (System Control)
+ * - PM (Power Manager)
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_samd20_system_prerequisites
@@ -80,7 +80,13 @@
  * The System driver provides a collection of interfaces between the user
  * application logic, and the core device functionality (such as clocks, reset
  * cause determination, etc.) that is required for all applications. It contains
- * a number of sub-modules that control one specific aspect of the device.
+ * a number of sub-modules that control one specific aspect of the device:
+ *
+ * - System Core (this module)
+ * - \ref asfdoc_samd20_system_clock_group "System Clock Control" (sub-module)
+ * - \ref asfdoc_samd20_system_interrupt_group "System Interrupt Control" (sub-module)
+ * - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Control" (sub-module)
+ *
  *
  * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
  * In some application there might be a need to perform a different program

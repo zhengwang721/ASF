@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.system.clocks" caption="System Clock Driver">
+	<module type="driver" id="sam0.drivers.system.clock" caption="System Clock Driver">
 		<info type="description" value="summary">
 			TODO
 		</info>
@@ -9,7 +9,7 @@
 
 		<device-support value="samd20"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_samd20_clocks_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_system_clock_group"/>
 
 		<build type="include-path" value="."/>
 
