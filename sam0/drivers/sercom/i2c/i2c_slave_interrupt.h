@@ -46,7 +46,7 @@
 
 #include "i2c_common.h"
 #include <sercom.h>
-#include <sercom_interrupts.h>
+#include <sercom_interrupt.h>
 #include <system_interrupt.h>
 #include <pinmux.h>
 

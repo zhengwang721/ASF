@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-#include "sercom_interrupts.h"
+#include "sercom_interrupt.h"
 
 void *_sercom_instances[SERCOM_INST_NUM];
 

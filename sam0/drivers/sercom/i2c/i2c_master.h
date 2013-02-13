@@ -49,7 +49,7 @@
 #include <pinmux.h>
 
 #ifdef I2C_MASTER_ASYNC
-# include <sercom_interrupts.h>
+# include <sercom_interrupt.h>
 #endif
 
 #ifndef PINMUX_DEFAULT
