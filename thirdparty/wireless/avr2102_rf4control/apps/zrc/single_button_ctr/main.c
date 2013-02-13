@@ -145,7 +145,7 @@ static void start_cmd_disc_cb(void *callback_parameter);
 static void zrc_cmd_confirm(nwk_enum_t Status, uint8_t PairingRef, cec_code_t RcCmd);
 static void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd);
 static void nlme_reset_confirm(nwk_enum_t Status);
-static void nlme_rx_enable_confirm(nwk_enum_t Status);
+void nlme_rx_enable_confirm(nwk_enum_t Status);
 static void pbp_org_pair_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void nlme_start_confirm(nwk_enum_t Status);
 
@@ -416,7 +416,7 @@ static void zrc_cmd_disc_indication(uint8_t PairingRef)
  * The NLME-RX-ENABLE.confirm primitive reports the results of the attempt to
  * enable or disable the receiver.
  */
-static void nlme_rx_enable_confirm(nwk_enum_t Status)
+void nlme_rx_enable_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
