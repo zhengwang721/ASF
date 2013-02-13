@@ -113,15 +113,13 @@
  * for \c conf_clock.h.
  */
 enum conf_clock_rtc_freq {
-	/** 1Hz counter speed for the RTC. \note Must be used for calender
-	 * function. */
+	/** 1Hz counter speed for the RTC (Calendar mode only). */
 	CONF_CLOCK_RTC_FREQ_1HZ   = 32,
 	/** 1kHz counter speed for the RTC. */
 	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
 	/** 32kHz counter speed for the RTC. */
 	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
 };
-
 
 /**
  * \brief List of available GCLK generators.
@@ -548,16 +546,10 @@ struct system_clock_source_dfll_config {
 	uint16_t multiply_factor;
 };
 
-void system_clock_source_xosc_set_config(
-		struct system_clock_source_xosc_config *const config);
-void system_clock_source_xosc32k_set_config(
-		struct system_clock_source_xosc32k_config *const config);
-void system_clock_source_osc32k_set_config(
-		struct system_clock_source_osc32k_config *const config);
-void system_clock_source_osc8m_set_config(
-		struct system_clock_source_osc8m_config *const config);
-void system_clock_source_dfll_set_config(
-		struct system_clock_source_dfll_config *const config);
+/**
+ * \name External Oscillator configuration and management
+ * @{
+ */
 
 /**
  * \brief Retrieve the default configuration for XOSC
@@ -579,6 +571,19 @@ static inline void system_clock_source_xosc_get_default_config(
 	config->auto_gain_control   = true;
 	config->frequency           = 12000000UL;
 }
+
+void system_clock_source_xosc_set_config(
+		struct system_clock_source_xosc_config *const config);
+
+/**
+ * @}
+ */
+
+
+/**
+ * \name External 32KHz Oscillator configuration and management
+ * @{
+ */
 
 /**
  * \brief Retrieve the default configuration for XOSC32K
@@ -605,6 +610,18 @@ static inline void system_clock_source_xosc32k_get_default_config(
 	config->enable_32khz_output = true;
 }
 
+void system_clock_source_xosc32k_set_config(
+		struct system_clock_source_xosc32k_config *const config);
+/**
+ * @}
+ */
+
+
+/**
+ * \name Internal 32KHz Oscillator configuration and management
+ * @{
+ */
+
 /**
  * \brief Retrieve the default configuration for OSC32K
  *
@@ -622,6 +639,19 @@ static inline void system_clock_source_osc32k_get_default_config(
 	config->enable_32khz_output = true;
 }
 
+void system_clock_source_osc32k_set_config(
+		struct system_clock_source_osc32k_config *const config);
+
+/**
+ * @}
+ */
+
+
+/**
+ * \name Internal 8MHz Oscillator configuration and management
+ * @{
+ */
+
 /**
  * \brief Retrieve the default configuration for OSC8M
  *
@@ -636,6 +666,19 @@ static inline void system_clock_source_osc8m_get_default_config(
 {
 	config->prescaler = SYSTEM_OSC8M_DIV_8;
 }
+
+void system_clock_source_osc8m_set_config(
+		struct system_clock_source_osc8m_config *const config);
+
+/**
+ * @}
+ */
+
+
+/**
+ * \name DFLL configuration and management
+ * @{
+ */
 
 /**
  * \brief Retrieve the default configuration for DFLL
@@ -671,6 +714,12 @@ static inline void system_clock_source_dfll_get_default_config(
 	config->multiply_factor = 6; /* Multiply 8MHZ by 6 to get 48MHz */
 }
 
+void system_clock_source_dfll_set_config(
+		struct system_clock_source_dfll_config *const config);
+
+/**
+ * @}
+ */
 
 /**
  * \name Clock source configuration
@@ -802,7 +851,7 @@ static inline enum status_code system_apb_clock_set_divider(
  */
 
 /**
- * \name Clock Masking
+ * \name Bus clock masking
  * @{
  */
 
