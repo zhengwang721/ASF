@@ -5,7 +5,7 @@
 		</info>
 		<build type="c-source" value="qs_clock_source.c"/>
 		<build type="include-path" value="."/>
-		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.system.clocks"/>
 		<device-support value="samd20"/>
 	</module>
 </asf>

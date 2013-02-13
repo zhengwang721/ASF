@@ -1,0 +1,63 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.system.gclk" caption="Generic Clock Driver">
+		<info type="description" value="summary">
+			Driver for the SAMD20 generic clocks. Provides a unified interface
+			for the configuration and management of the Generic Clock generators
+			and channels within the device, including the enabling, disabling,
+			clock source selection and prescaling of clocks to various modules
+			within the device.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Clocks" />
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="gclk.h"/>
+		<build type="c-source" value="gclk.c"/>
+		<build type="header-file" subtype="example" value="quick_start_gclk/qs_gclk_basic.h"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_gclk_group"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system.core"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+
+	<module type="driver" id="sam0.drivers.system.sysclk" caption="System Clock Driver">
+		<info type="description" value="summary">
+			TODO
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Clocks" />
+		</info>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="clock.c"/>
+		<build type="header-file" subtype="api" value="clock.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
+		<build type="header-file" subtype="example" value="quick_start_clock/qs_clock_source.h"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_gclk_group"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system.core"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+
+	<module type="driver" id="sam0.drivers.system.clocks" caption="System Clock Driver">
+		<info type="description" value="summary">
+			TODO
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Clocks" />
+		</info>
+
+		<device-support value="samd20"/>
+
+		<build type="doxygen-entry-point" value="asfdoc_samd20_clocks_group"/>
+
+		<require idref="sam0.drivers.system.gclk"/>
+		<require idref="sam0.drivers.system.sysclk"/>
+		<require idref="sam0.drivers.system.core"/>
+		<require idref="sam0.utils"/>
+
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+</asf>
