@@ -18,7 +18,7 @@
 			<device-support value="xmegaau"/>
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
-			<device-support value="xmegad"/
+			<device-support value="xmegad"/>
 			<require idref="xmega.utils"/>
 			<require idref="xmega.drivers.tc"/>
 			<require idref="common.services.basic.clock"/>
