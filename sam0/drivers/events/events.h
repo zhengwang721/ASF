@@ -48,8 +48,8 @@
  *
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
- * the device, including the enabling, disabling, peripheral source selection
- * and synchronization of clock domains between various modules within the
+ * the device, including the enabling and disabling of peripheral source selection
+ * and synchronization of clock domains between various modules.
  *
  * The following peripherals are used by this module:
  *
@@ -109,7 +109,7 @@
  *
  * There are many different events that can be routed in the device, which can
  * then trigger many different actions. For example, an Analog Comparator module
- * could be configured to generate an event when the input signal rises about
+ * could be configured to generate an event when the input signal rises above
  * the compare threshold, which then triggers a Timer module to capture the
  * current count value for later use.
  *
