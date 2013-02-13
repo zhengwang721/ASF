@@ -61,7 +61,7 @@ void port_pin_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
@@ -93,7 +93,7 @@ void port_group_set_config(
 	Assert(port);
 	Assert(config);
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
