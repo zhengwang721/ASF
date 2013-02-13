@@ -72,8 +72,11 @@ int main(void)
 	usart_get_config_defaults(&config_struct);
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
 
+	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
+	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+
 	/* Apply configuration */
-	while (usart_init(&usart_edbg, QUICKSTART_USART,
+	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
 			&config_struct) != STATUS_OK) {
 	}
 
