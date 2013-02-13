@@ -359,7 +359,7 @@ void i2c_slave_disable_nack_on_address(struct i2c_slave_module
  * @{
  */
 #if !defined(__DOXYGEN__)
-void _i2c_slave_callback_handler(uint8_t instance);
+void _i2c_slave_interrupt_handler(uint8_t instance);
 #endif
 
 void i2c_slave_register_callback(

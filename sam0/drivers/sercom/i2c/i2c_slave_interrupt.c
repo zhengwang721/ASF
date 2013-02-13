@@ -161,7 +161,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 
 	/* Save device instance in interrupt handler. */
-	_sercom_set_handler(instance_index, _i2c_slave_callback_handler);
+	_sercom_set_handler(instance_index, _i2c_slave_interrupt_handler);
 
 	/* Save device instance. */
 	_sercom_instances[instance_index] = module;
@@ -406,6 +406,7 @@ enum status_code i2c_slave_write_packet_job(
  * \param[in] instance Sercom instance that triggered interrupt.
  */
 void _i2c_slave_callback_handler(uint8_t instance)
+void _i2c_slave_interrupt_handler(uint8_t instance)
 {
 	system_interrupt_enter_critical_section();
 	/* Get device instance for callback handling. */
