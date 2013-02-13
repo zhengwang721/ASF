@@ -87,11 +87,10 @@ enum usart_callback {
 enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
-	USART_DATAORDER_MSB = SERCOM_USART_CTRLA_DORD,
-
+	USART_DATAORDER_MSB = 0,
 	/** The LSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
-	USART_DATAORDER_LSB = 0,
+	USART_DATAORDER_LSB = SERCOM_USART_CTRLA_DORD,
 };
 
 /**
@@ -363,7 +362,7 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	Assert(config);
 
 	/* Set default config in the config struct */
-	config->data_order = USART_DATAORDER_MSB;
+	config->data_order = USART_DATAORDER_LSB;
 	config->transfer_mode = USART_TRANSFER_ASYNCHRONOUSLY;
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
