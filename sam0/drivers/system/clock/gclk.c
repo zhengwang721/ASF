@@ -295,7 +295,7 @@ void system_gclk_chan_enable(
  * Stops the clock generation of a Generic Clock that was previously started
  * via a call to \ref system_gclk_chan_enable().
  *
- * \param[in] channel   Generic Clock channel to disable
+ * \param[in] channel  Generic Clock channel to disable
  */
 void system_gclk_chan_disable(
 		const uint8_t channel)
@@ -325,7 +325,7 @@ uint32_t system_gclk_chan_get_hz(
 {
 	/* Select the requested generic clock channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
-	uint32_t tmp = GCLK->CLKCTRL.bit.GEN;
+
 	/* Return the clock speed of the associated GCLK generator */
-	return system_gclk_gen_get_hz(tmp);
+	return system_gclk_gen_get_hz(GCLK->CLKCTRL.bit.GEN);
 }
