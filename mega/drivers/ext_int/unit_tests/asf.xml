@@ -2,7 +2,7 @@
 	<module type="application" id="mega.drivers.ext_int.unit_tests" caption="Unit Tests for the MEGARF External Interrupt driver">
 		<device-support value="mega"/>
 		<info type="description" value="summary">
-		Unit tests for the MEGARF USART driver.
+		Unit tests for the MEGARF Ext Interrupt driver.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>
