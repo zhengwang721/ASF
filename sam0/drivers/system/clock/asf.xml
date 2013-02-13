@@ -17,7 +17,6 @@
 		<build type="doxygen-entry-point" value="asfdoc_samd20_gclk_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.core"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 
@@ -31,17 +30,16 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="clock.c"/>
 		<build type="header-file" subtype="api" value="clock.h"/>
+		<build type="header-file" subtype="example" value="quick_start_clock/qs_clock_source.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-		<build type="header-file" subtype="example" value="quick_start_clock/qs_clock_source.h"/>
 		<build type="doxygen-entry-point" value="asfdoc_samd20_gclk_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.core"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 
-	<module type="driver" id="sam0.drivers.system.clocks" caption="System Clock Driver">
+	<module type="meta" id="sam0.drivers.system.clocks" caption="System Clock Driver">
 		<info type="description" value="summary">
 			TODO
 		</info>
@@ -55,7 +53,6 @@
 
 		<require idref="sam0.drivers.system.gclk"/>
 		<require idref="sam0.drivers.system.sysclk"/>
-		<require idref="sam0.drivers.system.core"/>
 		<require idref="sam0.utils"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>

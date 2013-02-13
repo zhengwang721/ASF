@@ -13,7 +13,6 @@
 		<build type="doxygen-entry-point" value="system_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.core"/>
 		<require idref="thirdparty.cmsis"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>

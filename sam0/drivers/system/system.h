@@ -44,6 +44,9 @@
 #define SYSTEM_H_INCLUDED
 
 #include <compiler.h>
+#include <clock.h>
+#include <gclk.h>
+#include <pinmux.h>
 
 /**
  * \defgroup asfdoc_samd20_system_group SAMD20 System Driver (SYSTEM)
@@ -178,7 +181,7 @@
  *
  *
  * \section asfdoc_samd20_system_api_overview API Overview
-
+ * @{
  */
 
 #if !defined(__DOXYGEN__)
@@ -190,13 +193,10 @@ static inline void system_dummy_init(void)
 
 #  ifdef __GNUC__
 void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_init")));
-void system_clock_init ( void ) WEAK __attribute__((alias("system_dummy_init")));
 #  endif
 #  ifdef __ICCARM__
 static inline void system_board_init(void);
-static inline void system_clock_init(void);
 #    pragma weak system_board_init=system_dummy_init
-#    pragma weak system_clock_init=system_dummy_init
 #  endif
 #endif
 
