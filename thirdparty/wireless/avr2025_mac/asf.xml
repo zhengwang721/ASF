@@ -15,7 +15,7 @@
             This module is used by the host for a two processor approach
             </info>
             <require idref="thirdparty.wireless.avr2025_mac.api_parser"/>
-			<device-support value="sam"/>
+			<device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_mac_api_parser"/>
         </module>
 	</select-by-config>
@@ -28,7 +28,7 @@
         <device-support value="xmega"/>
         <device-support value="uc3"/>
         <device-support value="megarf"/>
-        <device-support value="sam"/>
+        <device-support value="sam4l"/>
         <build type="doxygen-entry-point" value="group_mac"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>

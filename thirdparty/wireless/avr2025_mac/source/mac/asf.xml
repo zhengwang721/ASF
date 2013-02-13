@@ -7,7 +7,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="megarf"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="c-source"      value="src/usr_mcps_data_conf.c"/>
 			<build type="c-source"      value="src/usr_mcps_data_ind.c"/>
 			<build type="c-source"      value="src/usr_mcps_purge_conf.c"/>
@@ -34,7 +34,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="megarf"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 		</module>
 	</select-by-config>
 
@@ -50,7 +50,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="megarf"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.api#no" caption="MAC Api support disabled">
 			<info type="description" value="summary">
@@ -60,7 +60,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="megarf"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 		</module>
 	</select-by-config>
 
@@ -104,7 +104,7 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 	</module>
 	
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.mac.inc" caption="COMPONENT - MAC">
@@ -121,6 +121,6 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 	</module>
 </asf>

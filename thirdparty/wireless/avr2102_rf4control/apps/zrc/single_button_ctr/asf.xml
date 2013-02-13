@@ -31,6 +31,6 @@
 		
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 	</module>
 </asf>
