@@ -79,7 +79,7 @@ static enum status_code _i2c_master_set_config(
 	Sercom *const sercom_hw = dev_inst->hw_dev;
 
 	/* Pin configuration */
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
 

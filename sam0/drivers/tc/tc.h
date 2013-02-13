@@ -866,7 +866,7 @@ static inline void tc_enable_events(
 
 	for (uint8_t i = 0; i < 2; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
-			event_mask |= (TC_EVCTRL_MCEO(0) << i);
+			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
 	}
 
@@ -907,7 +907,7 @@ static inline void tc_disable_events(
 
 	for (uint8_t i = 0; i < 2; i++) {
 		if (events->generate_event_on_compare_channel[i] == true) {
-			event_mask |= (TC_EVCTRL_MCEO(0) << i);
+			event_mask |= (TC_EVCTRL_MCEO(1) << i);
 		}
 	}
 

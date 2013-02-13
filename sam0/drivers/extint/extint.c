@@ -148,7 +148,7 @@ void extint_chan_set_config(
 	/* Sanity check arguments */
 	Assert(config);
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = config->gpio_pin_mux;
@@ -211,7 +211,7 @@ enum status_code extint_nmi_set_config(
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = config->gpio_pin_mux;

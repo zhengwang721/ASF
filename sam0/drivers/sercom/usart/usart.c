@@ -183,7 +183,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	enum status_code status_code = STATUS_OK;
 	uint32_t sercom_index = 0;
 	uint32_t gclk_index = 0;
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 
 	uint32_t pad0 = config->pinout_pad0;
 	uint32_t pad1 = config->pinout_pad1;
