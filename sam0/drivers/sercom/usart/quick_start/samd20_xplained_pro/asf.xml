@@ -2,6 +2,7 @@
 	<project caption="Quick Start for the SAMD20 USART driver" id="sam0.drivers.sercom.usart.quick_start.samd20_xplained_pro">
 		<build type ="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_board.h"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<require idref="sam0.drivers.sercom.usart.quick_start"/>
 		<generator value="iarewarm"/>
