@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Clock related functionality
+ * \brief SAMD20 Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

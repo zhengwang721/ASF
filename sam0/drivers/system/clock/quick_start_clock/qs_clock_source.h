@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 GPIO Port Driver Quick Start
+ * \brief SAMD20 System Clock Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,7 @@
  */
 
 /**
- * \page clock_system_clock_source_basic_use_case Clock basic use case
+ * \page asfdoc_samd20_system_clock_basic_use_case Quick Start Guide for the System Clock module - Basic Use Case
  *
  * In this case we apply the following configuration:
  * - RC8MHz (internal 8MHz RC oscillator)

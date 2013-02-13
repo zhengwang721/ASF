@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 Clock related functionality
+ * \brief SAMD20 Clock Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,98 +44,59 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group Clock control
+ * \defgroup asfdoc_samd20_system_clock_group SAMD20 Clock Management Driver (CLOCK)
  *
- * \section into Introduction
- * This driver provides control of all the clock related functionality
- * of the SAMD20 devices. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals:
- * - SYSCTRL (Clock source control)
- * - GCLK (Generic clock control)
- * - PM (CPU and BUS clock control and clock masking)
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's clocking related functions. This includes
+ * the various clock sources, bus clocks and generic clocks within the device,
+ * with functions to manage the enabling, disabling, source selection and
+ * prescaling of clocks to various modules within the device.
  *
- * Here is an overview of how the different modules are connected:
- * \dot
-	digraph overview {
-		node [shape=record];
-		SYSCTRL [label="<f0> SYSCTRL | <f1> Clock sources"];
-		PM [label="<f0> PM | <f1> Clock masking\nSystem Clocks"];
-		GCLK [label="<f0> GCLK | <f1> Clock prescaling"];
-		Peripheral [label="Peripheral"];
-		SYSCTRL:f1 -> PM:f1;
-		PM:f1 -> GCLK:f1;
-		GCLK:f1 -> Peripheral;
-		rankdir=LR;
-	}
-
- * \enddot
+ * The following peripherals are used by this module:
  *
- * \section system_clock_sources Clock Sources
- * The SAMD20 devices has multiple clock sources, among them internal
- * RC oscillators, internal DFLL as well as the possibility of external
- * crystal oscillators. The clock sources are configured using the functions
- * prefixed with system_clock_source. To apply a configuration to a clock source you
- * must run system_clock_source_set_config(...) passing a configuration struct of type
- * system_clock_source_config. To fill this struct with the default settings you can
- * use the function system_clock_source_get_default_config(). This function will populate
- * the configuration struct with the default settings documented
- * \ref system_clock_source_get_default_config "here". As the configuration struct
- * contains the possible configuration fields for all clock sources on the
- * device you can apply the same configuration struct to all clock sources,
- * and the struct can be reused for all clock source. All configuration options
- * that are not relevant to that clock source disregarded in the
- * system_clock_source_set_config() function.
+ * - GCLK (Generic Clock Management)
+ * - PM (Power Management)
+ * - SYSCTRL (Clock Source Control)
  *
- * \section cpu_clock CPU / Bus Clocks
- * The CPU and APH/APBx buses are clocked by the same clock source (main clock),
- * but can have different prescalers, giving different speeds. To set the
- * The source of this clock can be any of the clock sources in the device
- * or a GCLK. The system clock source is set by the system_main_clock_set_clocksource().
- * You can then set the prescalers for the CPU and/or the buses on the device
- * by using system_cpu_clock_set_divider(), clock_apbx_set_divider and clock_ahb_set_divider().
- * It is also possible to enable a main clock failure detector that will switch
- * the main clock to a safe clock if for any reason the clock source fails. This
- * can be enabled by using the system_main_clock_set_failure_detect() function.
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_system_clock_prerequisites
+ *  - \ref asfdoc_samd20_system_clock_module_overview
+ *  - \ref asfdoc_samd20_system_clock_special_considerations
+ *  - \ref asfdoc_samd20_system_clock_extra_info
+ *  - \ref asfdoc_samd20_system_clock_examples
+ *  - \ref asfdoc_samd20_system_clock_api_overview
  *
- * \section clock_masking Clock Masking
- * To disable clocking to a peripheral module you can set the clock masks
- * to disallow clocking of the peripheral. There is a separate clock mask
- * for each bus, making it necessary to look up where the peripheral you
- * want to mask out is actually placed on the bus hierarchy. A "1" in the clock mask
- * will allow clocking of that peripheral, while a "0" in the mask will disallow
- * any clocking of the device.
  *
- * \section gclk Generic Clocks (GCLK)
- * The generic clocks are the clocking system that clock all the peripherals
- * on the device. The GCLK system consists of generators and channels, where
- * the generators are connected to a single clock source, and the channels can
- * individually select the needed generator. A GCLK channel is typically connected
- * to a single peripheral, but can also be shared among multiple instances of a
- * peripheral (e.g SERCOM0, SERCOM1 .. ).
+ * \section asfdoc_samd20_system_clock_prerequisites Prerequisites
  *
- * \section gclk_gen GCLK Generators
- * A GCLK generator is connected to a clock source, and can if needed also prescale
- * the clock source before being used by a GCLK channel. The number of GCLK generators
- * are device dependent. To configure the GCLK generator you use the system_gclk_gen_set_config(),
- * passing a configuration struct of type system_gclk_gen_conf. Note that the generator
- * also needs to be enabled before it can be used by running the gclk_gen_enable()
- * function.
+ * There are no prerequisites for this module.
  *
- * \section gclk_chan GCLK Channels
- * A GCLK channel is connected to one or more peripherals and provide clocking
- * to that module. To configure a specific GCLK channel you must use system_gclk_chan_set_config().
- * This needs a struct of type clock_gclk_chan_conf providing all configuration options
- * for the channel.
  *
- * \section static Static Startup Configuration
- * To simplify the use of the clocks on the SAMD20 there is a configuration file
- * conf_clocks.h that will set up the clock generators and GCLK generators by calling
- * the clocks_init() function. In many applications there is no need for any other
- * configuration than conf_clocks.h.
+ * \section asfdoc_samd20_system_clock_module_overview Module Overview
+ * TODO
  *
- * \section extra_info Extra Information
- * For extra information see \ref clock_extra_info
+ * \section asfdoc_samd20_system_clock_special_considerations Special Considerations
  *
+ * There are no special considerations for this module.
+ *
+ *
+ * \section asfdoc_samd20_system_clock_extra_info Extra Information for System Clock
+ *
+ * For extra information see \ref asfdoc_samd20_system_clock_extra. This includes:
+ *  - \ref asfdoc_samd20_system_clock_extra_acronyms
+ *  - \ref asfdoc_samd20_system_clock_extra_dependencies
+ *  - \ref asfdoc_samd20_system_clock_extra_errata
+ *  - \ref asfdoc_samd20_system_clock_extra_history
+ *
+ *
+ * \section asfdoc_samd20_system_clock_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_system_clock_basic_use_case
+ * - \ref asfdoc_samd20_system_gclk_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_system_clock_api_overview API Overview
  * @{
  */
 
@@ -496,7 +457,7 @@ enum system_clock_source {
 	/** Digital Frequency Locked Loop (DFLL) */
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_ULP32KHZ = GCLK_SOURCE_OSCULP32K ,
+	SYSTEM_CLOCK_SOURCE_ULP32KHZ = GCLK_SOURCE_OSCULP32K,
 };
 
 /**
@@ -855,9 +816,9 @@ static inline enum status_code system_apb_clock_set_divider(
  * \param[in] ahb_mask  AHB clock mask to enable
  */
 static inline void system_ahb_clock_set_mask(
-		const uint32_t mask)
+		const uint32_t ahb_mask)
 {
-	PM->AHBMASK.reg |= mask;
+	PM->AHBMASK.reg |= ahb_mask;
 }
 
 /**
@@ -870,9 +831,9 @@ static inline void system_ahb_clock_set_mask(
  * \param[in] ahb_mask  AHB clock mask to disable
  */
 static inline void system_ahb_clock_clear_mask(
-		const uint32_t mask)
+		const uint32_t ahb_mask)
 {
-	PM->AHBMASK.reg &= ~mask;
+	PM->AHBMASK.reg &= ~ahb_mask;
 }
 
 /**
@@ -954,31 +915,84 @@ static inline enum status_code system_apb_clock_clear_mask(
 	return STATUS_OK;
 }
 
+/**
+ * @}
+ */
+
 void system_clock_init(void);
 
+/**
+ * @}
+ */
 
 /**
- * \page clock_extra_info Extra Information (Clock)
+ * \page asfdoc_samd20_system_clock_extra Extra Information
  *
- * \section acronyms Acronyms
- * List of acronyms used in the module.
+ * \section asfdoc_samd20_system_clock_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
  * <table>
  *	<tr>
  *		<th>Acronym</th>
- *		<th>Definition</th>
- *	</tr>
- *	<tr>
- *		<td>GCLK</td>
- *		<td>Generic Clock</td>
+ *		<th>Description</th>
  *	</tr>
  *	<tr>
  *		<td>DFLL</td>
- *		<td>Digital Frequency locked loop</td>
+ *		<td>Digital Frequency Locked Loop</td>
+ *	</tr>
+ *	<tr>
+ *		<td>MUX</td>
+ *		<td>Multiplexer</td>
+ *	</tr>
+ *	<tr>
+ *		<td>PLL</td>
+ *		<td>Phase Locked Loop</td>
+ *	</tr>
+ *	<tr>
+ *		<td>R/C Oscillator</td>
+ *		<td>Resistor/Capacitor Oscillator</td>
  *	</tr>
  * </table>
  *
- * \section erratas Erratas fixed by driver
- * No errata workarounds in driver
  *
+ * \section asfdoc_samd20_system_clock_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_system_clock_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_system_clock_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
  */
+
+/**
+ * \page asfdoc_samd20_system_clock_exqsg Examples for System Clock Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_system_clock_group. QSGs are simple
+ * examples with step-by-step instructions to configure and use this driver in
+ * a selection of use cases. Note that QSGs can be compiled as a standalone
+ * application or be added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_system_clock_basic_use_case
+ *  - \subpage asfdoc_samd20_system_gclk_basic_use_case
+ */
+
 #endif /* SYSTEM_CLOCK_H_INCLUDED */
