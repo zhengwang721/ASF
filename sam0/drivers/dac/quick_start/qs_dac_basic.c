@@ -47,8 +47,8 @@ int main(void)
 //! [main]
 //! [variable]
 	struct dac_module dev_inst;
-	struct dac_conf config;
-	struct dac_chan_conf chan_config;
+	struct dac_config config;
+	struct dac_chan_config chan_config;
 //! [variable]
 
 	/* Setup DAC module*/
@@ -78,7 +78,7 @@ int main(void)
 
 	/* Convert a value */
 	//! [write]
-	dac_write(&dev_inst, DAC_CHANNEL_0, 0x44, false);
+	dac_chan_write(&dev_inst, DAC_CHANNEL_0, 0x44);
 //! [write]
 
 	/* Disable DAC*/

@@ -4,7 +4,6 @@
 		<require idref="sam0.applications.osc8_calib"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

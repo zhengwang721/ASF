@@ -7,7 +7,6 @@
 		<build type="include-path" value="."/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-		<build type="module-config" subtype="required-header-file" value="conf_bod.h"/>
 
 		<info type="gui-flag" value="hidden"/>
 	</module>

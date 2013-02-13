@@ -91,7 +91,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 
 	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 	Sercom *const sercom_module = dev_inst->hw_dev;
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
 	uint32_t pad2 = config->pinmux_pad2;

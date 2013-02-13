@@ -273,7 +273,7 @@ enum system_pinmux_pin_drive {
  * \ref system_pinmux_get_config_defaults() function before being modified by
  * the user application.
  */
-struct system_pinmux_conf {
+struct system_pinmux_config {
 	/** MUX index of the peripheral that should control the pin, if peripheral
 	 *  control is desired. For GPIO use, this should be set to
 	 *  \ref SYSTEM_PINMUX_GPIO. */
@@ -305,7 +305,7 @@ struct system_pinmux_conf {
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_pinmux_get_config_defaults(
-		struct system_pinmux_conf *const config)
+		struct system_pinmux_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -318,12 +318,12 @@ static inline void system_pinmux_get_config_defaults(
 
 void system_pinmux_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct system_pinmux_conf *const config);
+		const struct system_pinmux_config *const config);
 
 void system_pinmux_group_set_config(
 		PortGroup *const port,
 		const uint32_t mask,
-		const struct system_pinmux_conf *const config);
+		const struct system_pinmux_config *const config);
 
 /** @} */
 

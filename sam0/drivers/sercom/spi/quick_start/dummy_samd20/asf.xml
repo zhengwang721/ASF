@@ -4,7 +4,6 @@
 		<require idref="sam0.drivers.sercom.spi.quick_start"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_bod.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

@@ -335,8 +335,7 @@ extern "C" {
 /**
  * \brief DAC reference voltage enum.
  *
- * Enum for the possible reference voltages for the DAC
- *
+ * Enum for the possible reference voltages for the DAC.
  */
 enum dac_reference {
 	/** 1V from internal bandgap reference.*/
@@ -361,7 +360,7 @@ enum dac_output {
 	/** DAC output as internal reference */
 	DAC_OUTPUT_INTERNAL = DAC_CTRLB_IOEN,
 	/** No output*/
-	DAC_OUTPUT_NONE = 0,
+	DAC_OUTPUT_NONE     = 0,
 };
 
 /**
@@ -393,7 +392,7 @@ struct dac_module {
  * initialized by the \ref dac_get_config_defaults()
  * function before being modified by the user application.
  */
-struct dac_conf {
+struct dac_config {
 	/** Reference voltage */
 	enum dac_reference reference;
 	/** Select DAC output */
@@ -416,7 +415,7 @@ struct dac_conf {
  * \ref dac_chan_get_config_defaults() function before being modified by the
  * user application.
  */
-struct dac_chan_conf {
+struct dac_chan_config {
 	/** Enable Start Conversion Event Input */
 	bool enable_start_on_event;
 	/** Enable Data Buffer Empty Event Output */
@@ -424,7 +423,7 @@ struct dac_chan_conf {
 };
 
 /**
- * \name Driver initialization and configuration
+ * \name Configuration and Initialization
  * @{
  */
 
@@ -459,16 +458,6 @@ static inline bool dac_is_syncing(
 	return false;
 }
 
-void dac_chan_set_config(
-		struct dac_module *const dev_inst,
-		const enum dac_channel channel,
-		struct dac_chan_conf *const config);
-
-void dac_init(
-		struct dac_module *const dev_inst,
-		Dac *const module,
-		struct dac_conf *const config);
-
 /**
  * \brief Initializes a DAC configuration structure to defaults.
  *
@@ -488,7 +477,7 @@ void dac_init(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void dac_get_config_defaults(
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -500,6 +489,27 @@ static inline void dac_get_config_defaults(
 	config->clock_source   = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 };
+
+void dac_init(
+		struct dac_module *const dev_inst,
+		Dac *const module,
+		struct dac_config *const config);
+
+void dac_reset(
+		struct dac_module *const dev_inst);
+
+void dac_enable(
+		struct dac_module *const dev_inst);
+
+void dac_disable(
+		struct dac_module *const dev_inst);
+
+/** @} */
+
+/**
+ * \name Configuration and Initialization (Channel)
+ * @{
+ */
 
 /**
  * \brief Initializes a DAC channel configuration structure to defaults.
@@ -516,7 +526,7 @@ static inline void dac_get_config_defaults(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void dac_chan_get_config_defaults(
-		struct dac_chan_conf *const config)
+		struct dac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -526,42 +536,38 @@ static inline void dac_chan_get_config_defaults(
 	config->enable_empty_event    = false;
 };
 
-/** @} */
-
-/**
- * \name Enable and disable DAC module, channels and output buffer,
- * @{
- */
-
-void dac_enable(
-		struct dac_module *const dev_inst);
+void dac_chan_set_config(
+		struct dac_module *const dev_inst,
+		const enum dac_channel channel,
+		struct dac_chan_config *const config);
 
 void dac_chan_enable(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel);
 
-void dac_disable(
-		struct dac_module *const dev_inst);
-
 void dac_chan_disable(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel);
 
-void dac_enable_output_buffer(
-		struct dac_module *const dev_inst);
+void dac_chan_enable_output_buffer(
+		struct dac_module *const dev_inst,
+		const enum dac_channel channel);
 
-void dac_disable_output_buffer(
-		struct dac_module
-		*const dev_inst);
+void dac_chan_disable_output_buffer(
+		struct dac_module *const dev_inst,
+		const enum dac_channel channel);
 
-void dac_write(
+/** @} */
+
+/**
+ * \name Channel Data Management
+ * @{
+ */
+
+void dac_chan_write(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel,
-		const uint16_t data,
-		bool event_triggered);
-
-void dac_reset(
-		struct dac_module *const dev_inst);
+		const uint16_t data);
 
 /** @} */
 
