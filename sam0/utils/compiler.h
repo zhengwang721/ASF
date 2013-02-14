@@ -87,7 +87,7 @@
 /**
  * \brief Emit the compiler pragma \a arg.
  *
- * \param arg  The pragma directive as it would appear after \e \#pragma
+ * \param[in] arg  The pragma directive as it would appear after \e \#pragma
  *             (i.e. not stringified).
  */
 #define COMPILER_PRAGMA(arg)          _Pragma(#arg)
@@ -163,7 +163,7 @@
  * is defined, a unit test version of the macro is used, to allow execution
  * of further tests after a false expression.
  *
- * \param expr  Expression to evaluate and supposed to be nonzero.
+ * \param[in] expr  Expression to evaluate and supposed to be nonzero.
  */
 #if defined(_ASSERT_ENABLE_)
 #  if defined(TEST_SUITE_DEFINE_ASSERT_MACRO)
@@ -395,7 +395,7 @@ typedef struct
  * \def is_constant(exp)
  * \brief Determine if an expression evaluates to a constant value.
  *
- * \param exp Any expression
+ * \param[in] exp Any expression
  *
  * \return true if \a exp is constant, false otherwise.
  */
@@ -412,8 +412,8 @@ typedef struct
 
 /*! \brief Reads the bits of a value specified by a given bit-mask.
  *
- * \param value Value to read bits from.
- * \param mask  Bit-mask indicating bits to read.
+ * \param[in] value Value to read bits from.
+ * \param[in] mask  Bit-mask indicating bits to read.
  *
  * \return Read bits.
  */
@@ -421,9 +421,9 @@ typedef struct
 
 /*! \brief Writes the bits of a C lvalue specified by a given bit-mask.
  *
- * \param lvalue  C lvalue to write bits to.
- * \param mask    Bit-mask indicating bits to write.
- * \param bits    Bits to write.
+ * \param[in] lvalue  C lvalue to write bits to.
+ * \param[in] mask    Bit-mask indicating bits to write.
+ * \param[in] bits    Bits to write.
  *
  * \return Resulting value with written bits.
  */
@@ -432,8 +432,8 @@ typedef struct
 
 /*! \brief Tests the bits of a value specified by a given bit-mask.
  *
- * \param value Value of which to test bits.
- * \param mask  Bit-mask indicating bits to test.
+ * \param[in] value Value of which to test bits.
+ * \param[in] mask  Bit-mask indicating bits to test.
  *
  * \return \c 1 if at least one of the tested bits is set, else \c 0.
  */
@@ -441,8 +441,8 @@ typedef struct
 
 /*! \brief Clears the bits of a C lvalue specified by a given bit-mask.
  *
- * \param lvalue  C lvalue of which to clear bits.
- * \param mask    Bit-mask indicating bits to clear.
+ * \param[in] lvalue  C lvalue of which to clear bits.
+ * \param[in] mask    Bit-mask indicating bits to clear.
  *
  * \return Resulting value with cleared bits.
  */
@@ -450,8 +450,8 @@ typedef struct
 
 /*! \brief Sets the bits of a C lvalue specified by a given bit-mask.
  *
- * \param lvalue  C lvalue of which to set bits.
- * \param mask    Bit-mask indicating bits to set.
+ * \param[in] lvalue  C lvalue of which to set bits.
+ * \param[in] mask    Bit-mask indicating bits to set.
  *
  * \return Resulting value with set bits.
  */
@@ -459,8 +459,8 @@ typedef struct
 
 /*! \brief Toggles the bits of a C lvalue specified by a given bit-mask.
  *
- * \param lvalue  C lvalue of which to toggle bits.
- * \param mask    Bit-mask indicating bits to toggle.
+ * \param[in] lvalue  C lvalue of which to toggle bits.
+ * \param[in] mask    Bit-mask indicating bits to toggle.
  *
  * \return Resulting value with toggled bits.
  */
@@ -468,8 +468,8 @@ typedef struct
 
 /*! \brief Reads the bit-field of a value specified by a given bit-mask.
  *
- * \param value Value to read a bit-field from.
- * \param mask  Bit-mask indicating the bit-field to read.
+ * \param[in] value Value to read a bit-field from.
+ * \param[in] mask  Bit-mask indicating the bit-field to read.
  *
  * \return Read bit-field.
  */
@@ -477,9 +477,9 @@ typedef struct
 
 /*! \brief Writes the bit-field of a C lvalue specified by a given bit-mask.
  *
- * \param lvalue    C lvalue to write a bit-field to.
- * \param mask      Bit-mask indicating the bit-field to write.
- * \param bitfield  Bit-field to write.
+ * \param[in] lvalue    C lvalue to write a bit-field to.
+ * \param[in] mask      Bit-mask indicating the bit-field to write.
+ * \param[in] bitfield  Bit-field to write.
  *
  * \return Resulting value with written bit-field.
  */
@@ -504,7 +504,7 @@ typedef struct
 
 /** \brief Counts the leading zero bits of the given value considered as a 32-bit integer.
  *
- * \param u Value of which to count the leading zero bits.
+ * \param[in] u Value of which to count the leading zero bits.
  *
  * \return The count of leading zero bits in \a u.
  */
@@ -550,7 +550,7 @@ typedef struct
 
 /** \brief Counts the trailing zero bits of the given value considered as a 32-bit integer.
  *
- * \param u Value of which to count the trailing zero bits.
+ * \param[in] u Value of which to count the trailing zero bits.
  *
  * \return The count of trailing zero bits in \a u.
  */
@@ -600,7 +600,7 @@ typedef struct
 
 /** \brief Reverses the bits of \a u8.
  *
- * \param u8  U8 of which to reverse the bits.
+ * \param[in] u8  U8 of which to reverse the bits.
  *
  * \return Value resulting from \a u8 with reversed bits.
  */
@@ -608,7 +608,7 @@ typedef struct
 
 /** \brief Reverses the bits of \a u16.
  *
- * \param u16 U16 of which to reverse the bits.
+ * \param[in] u16 U16 of which to reverse the bits.
  *
  * \return Value resulting from \a u16 with reversed bits.
  */
@@ -616,7 +616,7 @@ typedef struct
 
 /** \brief Reverses the bits of \a u32.
  *
- * \param u32 U32 of which to reverse the bits.
+ * \param[in] u32 U32 of which to reverse the bits.
  *
  * \return Value resulting from \a u32 with reversed bits.
  */
@@ -624,7 +624,7 @@ typedef struct
 
 /** \brief Reverses the bits of \a u64.
  *
- * \param u64 U64 of which to reverse the bits.
+ * \param[in] u64 U64 of which to reverse the bits.
  *
  * \return Value resulting from \a u64 with reversed bits.
  */
@@ -639,8 +639,8 @@ typedef struct
 
 /** \brief Tests alignment of the number \a val with the \a n boundary.
  *
- * \param val Input value.
- * \param n   Boundary.
+ * \param[in] val Input value.
+ * \param[in] n   Boundary.
  *
  * \return \c 1 if the number \a val is aligned with the \a n boundary, else \c 0.
  */
@@ -648,8 +648,8 @@ typedef struct
 
 /** \brief Gets alignment of the number \a val with respect to the \a n boundary.
  *
- * \param val Input value.
- * \param n   Boundary.
+ * \param[in] val Input value.
+ * \param[in] n   Boundary.
  *
  * \return Alignment of the number \a val with respect to the \a n boundary.
  */
@@ -657,9 +657,9 @@ typedef struct
 
 /** \brief Sets alignment of the lvalue number \a lval to \a alg with respect to the \a n boundary.
  *
- * \param lval  Input/output lvalue.
- * \param n     Boundary.
- * \param alg   Alignment.
+ * \param[in] lval  Input/output lvalue.
+ * \param[in] n     Boundary.
+ * \param[in] alg   Alignment.
  *
  * \return New value of \a lval resulting from its alignment set to \a alg with respect to the \a n boundary.
  */
@@ -667,8 +667,8 @@ typedef struct
 
 /** \brief Aligns the number \a val with the upper \a n boundary.
  *
- * \param val Input value.
- * \param n   Boundary.
+ * \param[in] val Input value.
+ * \param[in] n   Boundary.
  *
  * \return Value resulting from the number \a val aligned with the upper \a n boundary.
  */
@@ -676,8 +676,8 @@ typedef struct
 
 /** \brief Aligns the number \a val with the lower \a n boundary.
  *
- * \param val Input value.
- * \param n   Boundary.
+ * \param[in] val Input value.
+ * \param[in] n   Boundary.
  *
  * \return Value resulting from the number \a val aligned with the lower \a n boundary.
  */
@@ -701,7 +701,7 @@ typedef struct
 
 /** \brief Takes the absolute value of \a a.
  *
- * \param a Input value.
+ * \param[in] a Input value.
  *
  * \return Absolute value of \a a.
  *
@@ -711,8 +711,8 @@ typedef struct
 
 /** \brief Takes the minimal value of \a a and \a b.
  *
- * \param a Input value.
- * \param b Input value.
+ * \param[in] a Input value.
+ * \param[in] b Input value.
  *
  * \return Minimal value of \a a and \a b.
  *
@@ -722,8 +722,8 @@ typedef struct
 
 /** \brief Takes the maximal value of \a a and \a b.
  *
- * \param a Input value.
- * \param b Input value.
+ * \param[in] a Input value.
+ * \param[in] b Input value.
  *
  * \return Maximal value of \a a and \a b.
  *
@@ -733,8 +733,8 @@ typedef struct
 
 /** \brief Takes the minimal value of \a a and \a b.
  *
- * \param a Input value.
- * \param b Input value.
+ * \param[in] a Input value.
+ * \param[in] b Input value.
  *
  * \return Minimal value of \a a and \a b.
  *
@@ -744,8 +744,8 @@ typedef struct
 
 /** \brief Takes the maximal value of \a a and \a b.
  *
- * \param a Input value.
- * \param b Input value.
+ * \param[in] a Input value.
+ * \param[in] b Input value.
  *
  * \return Maximal value of \a a and \a b.
  *
@@ -763,7 +763,7 @@ typedef struct
  * For example, `Long_call(0x80000000)' generates a software reset on a UC3 if
  * it is invoked from the CPU supervisor mode.
  *
- * \param addr  Address of the routine to call.
+ * \param[in] addr  Address of the routine to call.
  *
  * \note It may be used as a long jump opcode in some special cases.
  */
@@ -813,7 +813,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u16 (by swapping its bytes).
  *
- * \param u16 U16 of which to toggle the endianism.
+ * \param[in] u16 U16 of which to toggle the endianism.
  *
  * \return Value resulting from \a u16 with toggled endianism.
  *
@@ -824,7 +824,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u32 (by swapping its bytes).
  *
- * \param u32 U32 of which to toggle the endianism.
+ * \param[in] u32 U32 of which to toggle the endianism.
  *
  * \return Value resulting from \a u32 with toggled endianism.
  *
@@ -835,7 +835,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u64 (by swapping its bytes).
  *
- * \param u64 U64 of which to toggle the endianism.
+ * \param[in] u64 U64 of which to toggle the endianism.
  *
  * \return Value resulting from \a u64 with toggled endianism.
  *
@@ -846,7 +846,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u16 (by swapping its bytes).
  *
- * \param u16 U16 of which to toggle the endianism.
+ * \param[in] u16 U16 of which to toggle the endianism.
  *
  * \return Value resulting from \a u16 with toggled endianism.
  *
@@ -856,7 +856,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u32 (by swapping its bytes).
  *
- * \param u32 U32 of which to toggle the endianism.
+ * \param[in] u32 U32 of which to toggle the endianism.
  *
  * \return Value resulting from \a u32 with toggled endianism.
  *
@@ -870,7 +870,7 @@ typedef struct
 
 /** \brief Toggles the endianism of \a u64 (by swapping its bytes).
  *
- * \param u64 U64 of which to toggle the endianism.
+ * \param[in] u64 U64 of which to toggle the endianism.
  *
  * \return Value resulting from \a u64 with toggled endianism.
  *
@@ -907,8 +907,8 @@ typedef struct
  * \brief Calculate \f$ \left\lceil \frac{a}{b} \right\rceil \f$ using
  * integer arithmetic.
  *
- * \param a An integer
- * \param b Another integer
+ * \param[in] a An integer
+ * \param[in] b Another integer
  *
  * \return (\a a / \a b) rounded up to the nearest integer.
  */
