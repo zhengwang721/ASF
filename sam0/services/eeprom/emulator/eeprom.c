@@ -521,7 +521,7 @@ enum status_code eeprom_emulator_write_page(
 		}
 	}
 
-	memcpy(_eeprom_module_inst.cache_buffer,
+	memcpy(&_eeprom_module_inst.cache_buffer[0],
 			eeprom_header,
 			EEPROM_HEADER_SIZE);
 
@@ -576,12 +576,11 @@ enum status_code eeprom_emulator_read_page(
 		return STATUS_ERR_DENIED;
 	}
 
-	if (_eeprom_module_inst.cache_active) {
-		if (_eeprom_module_inst.cached_page == lpage) {
-			memcpy(data,
-					&_eeprom_module_inst.cache_buffer[EEPROM_HEADER_SIZE],
-					EEPROM_DATA_SIZE);
-		}
+	if ((_eeprom_module_inst.cache_active) &&
+		 (_eeprom_module_inst.cached_page == lpage)) {
+		memcpy(data,
+				&_eeprom_module_inst.cache_buffer[EEPROM_HEADER_SIZE],
+				EEPROM_DATA_SIZE);
 	} else {
 		uintptr_t flash_addr =
 				(_eeprom_module_inst.page_map[lpage] * NVMCTRL_PAGE_SIZE) +
@@ -722,7 +721,7 @@ enum status_code eeprom_emulator_read_buffer(
  * that any outstanding cached data is preserved. This function should be called
  * prior to a system reset or shutdown to prevent data loss.
  *
- * \note This should be the first function executed in a BOD33 early warning
+ * \note This should be the first function executed in a BOD33 Early Warning
  *       callback to ensure that any outstanding cache data is fully written to
  *       prevent data loss.
  *
@@ -735,12 +734,14 @@ enum status_code eeprom_emulator_read_buffer(
 enum status_code eeprom_emulator_flush_page_buffer(void)
 {
 	enum status_code err = STATUS_OK;
-	uint32_t addr;
+	uintptr_t addr;
 
+	/* Convert the currently cached memory page to an absolute byte address */
 	addr  = _eeprom_module_inst.page_map[_eeprom_module_inst.cached_page];
 	addr += _eeprom_module_inst.flash_start_page;
 	addr *= NVMCTRL_PAGE_SIZE;
 
+	/* Perform the page write to commit the NVM page buffer to FLASH */
 	do {
 		err = nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0);
 	} while (err == STATUS_BUSY);
