@@ -51,16 +51,6 @@
 #define EEPROM_MAGIC_KEY                   {0x41744545, 0x50524f4d, 0x456d752e}
 #define EEPROM_MAGIC_KEY_COUNT             3
 
-#define EEPROM_MAJOR_VERSION               1
-#define EEPROM_MINOR_VERSION               0
-#define EEPROM_REVISION                    0
-#define EEPROM_EMULATOR_ID                 1
-#define EEPROM_MASTER_PAGE_NUMBER          123
-
-#define EEPROM_HEADER_SIZE                 2
-#define EEPROM_PAGE_NUMBER_BYTE            0
-#define EEPROM_INVALID_PAGE_NUMBER         0xff
-
 /**
  * \internal
  * \brief Structure describing emulated pages of EEPROM data

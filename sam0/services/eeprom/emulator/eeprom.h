@@ -102,8 +102,20 @@ extern "C" {
  * @{
  */
 
-#define EEPROM_DATA_SIZE         60
-#define EEPROM_MAX_PAGES         124
+#if !defined(__DOXYGEN__)
+#  define EEPROM_MAJOR_VERSION             1
+#  define EEPROM_MINOR_VERSION             0
+#  define EEPROM_REVISION                  0
+#  define EEPROM_EMULATOR_ID               1
+#  define EEPROM_MASTER_PAGE_NUMBER        (EEPROM_MAX_PAGES - 1)
+
+#  define EEPROM_PAGE_NUMBER_BYTE          0
+#  define EEPROM_INVALID_PAGE_NUMBER       0xff
+#  define EEPROM_HEADER_SIZE               2
+#endif
+
+#define EEPROM_DATA_SIZE                   (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
+#define EEPROM_MAX_PAGES                   124
 
 enum status_code eeprom_emulator_init(void);
 
