@@ -126,7 +126,7 @@ static void configure_tc(struct tc_module *tc_module)
 
 static void configure_event_channel(void)
 {
-	struct events_chan_conf events_chan_config;
+	struct events_chan_config events_chan_config;
 	events_chan_get_config_defaults(&events_chan_config);
 
 	events_chan_config.generator_id = EVSYS_ID_GEN_TC0_OVF;
@@ -138,7 +138,7 @@ static void configure_event_channel(void)
 
 static void configure_event_user(void)
 {
-	struct events_user_conf events_user_config;
+	struct events_user_config events_user_config;
 	events_user_get_config_defaults(&events_user_config);
 	events_user_config.event_channel_id = EVENT_CHANNEL_0;
 	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_config);
