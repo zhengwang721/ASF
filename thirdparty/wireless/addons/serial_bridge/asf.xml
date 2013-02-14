@@ -2,7 +2,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<module type="service" id="thirdparty.wireless.addons.serial_bridge" caption="Serial Bridge ">
 		<info type="description" value="summary">
-			Serial Bridge acts as a bridge for performing serial i/o between host and ncp
+			Serial Bridge acts as a bridge for performing serial communication between host and ncp
 		</info>
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
         

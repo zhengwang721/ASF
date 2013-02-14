@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-		<module type="service" id="thirdparty.wireless.avr2102_rf4control.addons.serial_interface" caption="Serial Interface support for RF4CE">
+		<module type="service" id="thirdparty.wireless.avr2102_rf4control.addons.serial_interface" caption="AVR2102 -Serial Interface support for RF4CE">
 			<info type="description" value="summary">
 				Serial Interface Support for RF4CE
 			</info>
