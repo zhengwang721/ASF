@@ -49,9 +49,61 @@ extern "C" {
 
 #include <compiler.h>
 
+/**
+ * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
+ *
+ * This driver for SAMD20 devices provides a TODO.
+ *
+ *
+ * The following peripherals are used by this module:
+ *
+ *  - NVM (Non-Volatile Memory Controller)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_eeprom_prerequisites
+ *  - \ref asfdoc_samd20_eeprom_module_overview
+ *  - \ref asfdoc_samd20_eeprom_special_considerations
+ *  - \ref asfdoc_samd20_eeprom_extra_info
+ *  - \ref asfdoc_samd20_eeprom_examples
+ *  - \ref asfdoc_samd20_eeprom_api_overview
+ *
+ *
+ * \section asfdoc_samd20_eeprom_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_eeprom_module_overview Module Overview
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_eeprom_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_info Extra Information for EEPROM Emulator
+ *
+ * For extra information see \ref asfdoc_samd20_eeprom_extra. This includes:
+ *  - \ref asfdoc_samd20_eeprom_extra_acronyms
+ *  - \ref asfdoc_samd20_eeprom_extra_dependencies
+ *  - \ref asfdoc_samd20_eeprom_extra_errata
+ *  - \ref asfdoc_samd20_eeprom_extra_history
+ *
+ *
+ * \section asfdoc_samd20_eeprom_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_eeprom_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_eeprom_api_overview API Overview
+ * @{
+ */
+
 #define EEPROM_DATA_SIZE         60
 #define EEPROM_MAX_PAGES         124
-
 
 enum status_code eeprom_emulator_init(void);
 
@@ -81,5 +133,68 @@ enum status_code eeprom_emulator_read_buffer(
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
+
+/**
+ * \page asfdoc_samd20_eeprom_extra Extra Information
+ *
+ * \section asfdoc_samd20_eeprom_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>EEPROM</td>
+ *		<td>Electronically Erasable Read-Only Memory</td>
+ *	</tr>
+ *	<tr>
+ *		<td>NVM</td>
+ *		<td>Non-Volatile Memory</td>
+ *	</tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_nvm_group "Non-Volatile Memory Controller Driver"
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samd20_eeprom_exqsg Examples for Emulated EEPROM service
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_eeprom_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_eeprom_basic_use_case
+ */
 
 #endif
