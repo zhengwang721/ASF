@@ -48,8 +48,8 @@
  *
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the device's peripheral event channels and users within
- * the device, including the enabling, disabling, peripheral source selection
- * and synchronization of clock domains between various modules within the
+ * the device, including the enabling and disabling of peripheral source selection
+ * and synchronization of clock domains between various modules.
  *
  * The following peripherals are used by this module:
  *
@@ -109,7 +109,7 @@
  *
  * There are many different events that can be routed in the device, which can
  * then trigger many different actions. For example, an Analog Comparator module
- * could be configured to generate an event when the input signal rises about
+ * could be configured to generate an event when the input signal rises above
  * the compare threshold, which then triggers a Timer module to capture the
  * current count value for later use.
  *
@@ -271,21 +271,21 @@ extern "C" {
  */
 enum events_channel {
 	/** Event channel 0 */
-	EVENTS_CHANNEL_0 = 0,
+	EVENT_CHANNEL_0 = 0,
 	/** Event channel 1 */
-	EVENTS_CHANNEL_1 = 1,
+	EVENT_CHANNEL_1 = 1,
 	/** Event channel 2 */
-	EVENTS_CHANNEL_2 = 2,
+	EVENT_CHANNEL_2 = 2,
 	/** Event channel 3 */
-	EVENTS_CHANNEL_3 = 3,
+	EVENT_CHANNEL_3 = 3,
 	/** Event channel 4 */
-	EVENTS_CHANNEL_4 = 4,
+	EVENT_CHANNEL_4 = 4,
 	/** Event channel 5 */
-	EVENTS_CHANNLE_5 = 5,
+	EVENT_CHANNEL_5 = 5,
 	/** Event channel 6 */
-	EVENTS_CHANNLE_6 = 6,
+	EVENT_CHANNEL_6 = 6,
 	/** Event channel 7 */
-	EVENTS_CHANNLE_7 = 7,
+	EVENT_CHANNEL_7 = 7,
 };
 
 /**
@@ -334,6 +334,9 @@ enum events_path {
  * Configuration structure for an Event System channel. This structure
  * should be initialized by the \ref events_chan_get_config_defaults() function
  * before being modified by the user application.
+ *
+ * \note Selecting a GLCK will only make take effect when
+ * \ref EVENT_PATH_SYNCHRONOUS and \ref EVENT_PATH_RESYNCHRONOUS paths are used.
  */
 struct events_chan_conf {
 	/** Edge detection for synchronous event channels, from \ref events_edge. */
@@ -342,9 +345,7 @@ struct events_chan_conf {
 	enum events_path path;
 	/** Event generator module that should be attached to the event channel. */
 	uint8_t generator_id;
-	/** GCLK generator used to clock the specific event channel
-	\note This will only be used in \ref EVENT_PATH_SYNCHRONOUS and
-	\ref EVENT_PATH_RESYNCHRONOUS paths */
+	/** GCLK generator used to clock the specific event channel */
 	enum gclk_generator clock_source;
 	/** Keep GLCK running in standby */
 	bool run_in_standby;
@@ -392,6 +393,8 @@ void events_init(void);
  *  \li Event channel is synchronized between the source and destination
  *      event system digital clocks
  *  \li Event channel is not connected to an Event Generator
+ *  \li Event channel generic clock source is GLCK_GENERATOR_0
+ *  \li Event channel generic clock does not run in standby mode
  *
  * \param config    Configuration structure to initialize to default values
  */
@@ -472,8 +475,11 @@ void events_user_set_config(
  * \retval false If the channel is currently busy
  */
 static inline bool events_chan_is_ready(
-		const uint8_t channel)
+		const enum events_channel event_channel)
 {
+	/* Get the channel number from the enum selector */
+	uint8_t channel = (uint8_t)event_channel;
+
 	/* Event channel busy/user busy flags are interleaved, 8 channels to a
 	 * 16-bit word */
 	uint8_t status_halfword = channel / 8;
@@ -508,8 +514,11 @@ static inline bool events_chan_is_ready(
  * \retval false If one or more channel subscribers are currently busy
  */
 static inline bool events_user_is_ready(
-		const uint8_t channel)
+		const enum events_channel event_channel)
 {
+	/* Get the channel number from the enum selector */
+	uint8_t channel = (uint8_t)event_channel;
+
 	/* Event channel busy/user busy flags are interleaved, 8 channels to a
 	 * 16-bit word */
 	uint8_t status_halfword = channel / 8;
@@ -539,8 +548,11 @@ static inline bool events_user_is_ready(
  * \param[in] channel  Event channel to trigger
  */
 static inline void events_chan_software_trigger(
-		const uint8_t channel)
+		const enum events_channel event_channel)
 {
+	/* Get the channel number from the enum selector */
+	uint8_t channel = (uint8_t)event_channel;
+
 	/* Trigger the appropriate event channel - must be performed as a single
 	 * 8-bit write as mandated in the datasheet for the event system module */
 	EVSYS->CHANNEL.reg = (channel << EVSYS_CHANNEL_CHANNEL_Pos) |

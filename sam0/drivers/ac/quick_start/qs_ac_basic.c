@@ -84,7 +84,7 @@ void configure_ac_channel(void)
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
 	//! [setup_8]
-	struct ac_chan_conf ac_chan_conf;
+	struct ac_chan_config ac_chan_conf;
 	//! [setup_8]
 	//! [setup_9]
 	ac_chan_get_config_defaults(&ac_chan_conf);

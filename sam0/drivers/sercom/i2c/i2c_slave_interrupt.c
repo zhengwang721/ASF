@@ -65,7 +65,7 @@ static enum status_code _i2c_slave_set_config(
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	Sercom *const sercom_hw = module->hw;
 
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
 

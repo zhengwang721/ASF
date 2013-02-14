@@ -392,7 +392,7 @@ struct dac_module {
  * initialized by the \ref dac_get_config_defaults()
  * function before being modified by the user application.
  */
-struct dac_conf {
+struct dac_config {
 	/** Reference voltage */
 	enum dac_reference reference;
 	/** Select DAC output */
@@ -415,7 +415,7 @@ struct dac_conf {
  * \ref dac_chan_get_config_defaults() function before being modified by the
  * user application.
  */
-struct dac_chan_conf {
+struct dac_chan_config {
 	/** Enable Start Conversion Event Input */
 	bool enable_start_on_event;
 	/** Enable Data Buffer Empty Event Output */
@@ -477,7 +477,7 @@ static inline bool dac_is_syncing(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void dac_get_config_defaults(
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -493,7 +493,7 @@ static inline void dac_get_config_defaults(
 void dac_init(
 		struct dac_module *const dev_inst,
 		Dac *const module,
-		struct dac_conf *const config);
+		struct dac_config *const config);
 
 void dac_reset(
 		struct dac_module *const dev_inst);
@@ -526,7 +526,7 @@ void dac_disable(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void dac_chan_get_config_defaults(
-		struct dac_chan_conf *const config)
+		struct dac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -539,7 +539,7 @@ static inline void dac_chan_get_config_defaults(
 void dac_chan_set_config(
 		struct dac_module *const dev_inst,
 		const enum dac_channel channel,
-		struct dac_chan_conf *const config);
+		struct dac_chan_config *const config);
 
 void dac_chan_enable(
 		struct dac_module *const dev_inst,
