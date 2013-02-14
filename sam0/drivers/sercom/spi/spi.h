@@ -772,7 +772,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
  *
  * This function will enable the SERCOM SPI module.
  *
- * \param dev_inst    Pointer to the software instance struct
+ * \param[in,out] dev_inst    Pointer to the software instance struct
  */
 static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 {
@@ -794,7 +794,7 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
  *
  * This function will disable the SERCOM SPI module.
  *
- * \param dev_inst    Pointer to the software instance struct
+ * \param[in,out] dev_inst    Pointer to the software instance struct
  */
 static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 {

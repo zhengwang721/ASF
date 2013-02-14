@@ -693,7 +693,7 @@ struct system_clock_source_dfll_config {
  *   - Automatic crystal gain control mode enabled
  *   - Frequency of 12MHz
  *
- * \param config  Configuration structure to fill with default values
+ * \param[out] config  Configuration structure to fill with default values
  */
 static inline void system_clock_source_xosc_get_default_config(
 		struct system_clock_source_xosc_config *const config)
@@ -729,7 +729,7 @@ void system_clock_source_xosc_set_config(
  *   - 1KHz clock output disabled
  *   - 32KHz clock output enabled
  *
- * \param config  Configuration structure to fill with default values
+ * \param[out] config  Configuration structure to fill with default values
  */
 static inline void system_clock_source_xosc32k_get_default_config(
 		struct system_clock_source_xosc32k_config *const config)
@@ -762,7 +762,7 @@ void system_clock_source_xosc32k_set_config(
  *   - 1KHz clock output enabled
  *   - 32KHz clock output enabled
  *
- * \param config  Configuration structure to fill with default values
+ * \param[out] config  Configuration structure to fill with default values
  */
 static inline void system_clock_source_osc32k_get_default_config(
 		struct system_clock_source_osc32k_config *const config)
@@ -791,7 +791,7 @@ void system_clock_source_osc32k_set_config(
  * internal 8MHz (nominal) oscillator module:
  *   - Clock output frequency divided by a factor of 8
  *
- * \param config  Configuration structure to fill with default values
+ * \param[out] config  Configuration structure to fill with default values
  */
 static inline void system_clock_source_osc8m_get_default_config(
 		struct system_clock_source_osc8m_config *const config)
@@ -825,7 +825,7 @@ void system_clock_source_osc8m_set_config(
  *   - Default tracking values at the mid-points for both coarse and fine
  *     tracking parameters
  *
- * \param config  Configuration structure to fill with default values
+ * \param[out] config  Configuration structure to fill with default values
  */
 static inline void system_clock_source_dfll_get_default_config(
 		struct system_clock_source_dfll_config *const config)

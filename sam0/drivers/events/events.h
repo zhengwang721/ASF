@@ -396,7 +396,7 @@ void events_init(void);
  *  \li Event channel generic clock source is GLCK_GENERATOR_0
  *  \li Event channel generic clock does not run in standby mode
  *
- * \param config    Configuration structure to initialize to default values
+ * \param[out] config    Configuration structure to initialize to default values
  */
 static inline void events_chan_get_config_defaults(
 		struct events_chan_config *const config)
@@ -435,7 +435,7 @@ void events_chan_set_config(
  * The default configuration is as follows:
  *  \li User MUX input event is not connected to any source channel
  *
- * \param config  Configuration structure to initialize to default values
+ * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void events_user_get_config_defaults(
 		struct events_user_config *const config)
