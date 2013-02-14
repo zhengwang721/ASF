@@ -90,17 +90,17 @@ uint8_t sine_wave[256] = {
  */
 static void configure_pins(void)
 {
-	struct system_pinmux_conf pin_conf;
-	system_pinmux_get_config_defaults(&pin_conf);
+	struct system_pinmux_config pin_config;
+	system_pinmux_get_config_defaults(&pin_config);
 
 	/* Set up the Xplained PRO LED pin to output status info */
-	pin_conf.mux_position = SYSTEM_PINMUX_GPIO;
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	system_pinmux_pin_set_config(PIN_PB08, &pin_conf);
+	pin_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	pin_config.input_pull = PORT_PIN_PULL_UP;
+	system_pinmux_pin_set_config(PIN_PB08, &pin_config);
 
-	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	system_pinmux_pin_set_config(PIN_PB09, &pin_conf);
+	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	system_pinmux_pin_set_config(PIN_PB09, &pin_config);
 }
 
 /**
@@ -113,8 +113,8 @@ static void configure_pins(void)
  */
 static void configure_dac(struct dac_module *dac_module)
 {
-	struct dac_conf config;
-	struct dac_chan_conf ch_config;
+	struct dac_config config;
+	struct dac_chan_config chan_config;
 
 	/* Get the DAC default configuration */
 	dac_get_config_defaults(&config);
@@ -127,13 +127,13 @@ static void configure_dac(struct dac_module *dac_module)
 	dac_enable(dac_module);
 
 	/* Get the default DAC channel config */
-	dac_chan_get_config_defaults(&ch_config);
+	dac_chan_get_config_defaults(&chan_config);
 
 	/* Disable start on event, we want manual trigger */
-	ch_config.enable_start_on_event = true;
+	chan_config.enable_start_on_event = true;
 
 	/* Set the channel configuration, and enable it */
-	dac_chan_set_config(dac_module, DAC_CHANNEL_0, &ch_config);
+	dac_chan_set_config(dac_module, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(dac_module, DAC_CHANNEL_0);
 }
 
@@ -163,13 +163,13 @@ static void configure_tc(struct tc_module *tc_module)
 
 static void configure_event_channel(void)
 {
-	struct events_chan_conf events_chan_conf;
-	events_chan_get_config_defaults(&events_chan_conf);
+	struct events_chan_conf events_chan_config;
+	events_chan_get_config_defaults(&events_chan_config);
 
-	events_chan_conf.generator_id = EVSYS_ID_GEN_TC0_OVF;
-	events_chan_conf.edge_detection = EVENT_EDGE_RISING;
-	events_chan_conf.path = EVENT_PATH_RESYNCHRONOUS;
-	events_chan_set_config(EVENTS_CHANNEL_0, &events_chan_conf);
+	events_chan_config.generator_id = EVSYS_ID_GEN_TC0_OVF;
+	events_chan_config.edge_detection = EVENT_EDGE_RISING;
+	events_chan_config.path = EVENT_PATH_RESYNCHRONOUS;
+	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_config);
 
 	//while (!events_chan_is_ready(1));
 	//while (!events_user_is_ready(0));
@@ -177,10 +177,10 @@ static void configure_event_channel(void)
 
 static void configure_event_user(void)
 {
-	struct events_user_conf events_user_conf;
-	events_user_get_config_defaults(&events_user_conf);
-	events_user_conf.event_channel_id = EVENTS_CHANNEL_0;
-	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_conf);
+	struct events_user_conf events_user_config;
+	events_user_get_config_defaults(&events_user_config);
+	events_user_config.event_channel_id = EVENT_CHANNEL_0;
+	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_config);
 }
 
 static void configure_events(void)
@@ -225,7 +225,7 @@ int main(void)
 		port_pin_toggle_output_level(PIN_PB08);
 
 		for (uint16_t i = 0; i < number_of_samples; i++) {
-			dac_write(&dac_module, DAC_CHANNEL_0, wav_samples[i], true);
+			dac_chan_write(&dac_module, DAC_CHANNEL_0, wav_samples[i]);
 
 			//events_chan_software_trigger(1);
 
