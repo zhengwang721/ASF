@@ -48,9 +48,7 @@
  * check as uint32_t values than a string compare. But this numbers will show
  * up as the string in studio memory view, which makes the data easy to identify
  * */
-#define EEPROM_MAGIC_KEY_0                 0x41744545
-#define EEPROM_MAGIC_KEY_1                 0x50524f4d
-#define EEPROM_MAGIC_KEY_2                 0x456d752e
+#define EEPROM_MAGIC_KEY                   {0x41744545, 0x50524f4d, 0x456d752e}
 #define EEPROM_MAGIC_KEY_COUNT             3
 
 #define EEPROM_MAJOR_VERSION               1
@@ -373,12 +371,11 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 }
 
 /**
- * \brief Create master block
+ * \brief Create master emulated EEPROM management page
  */
 static void _eeprom_emulator_create_master_page(void)
 {
-	uint32_t magic_key[] =
-			{EEPROM_MAGIC_KEY_0, EEPROM_MAGIC_KEY_1, EEPROM_MAGIC_KEY_2};
+	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
 	struct _eeprom_master_page master_page;
 
 	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
@@ -398,26 +395,28 @@ static void _eeprom_emulator_create_master_page(void)
  * \brief Initializes the EEPROM Emulator service
  *
  * Initializes the emulated EEPROM memory space; if the emulated EEPROM memory
- * has not been previously initialized, it will be erased and configured ready
- * for use.
+ * has not been previously initialized, it will need to be explicitly formatted
+ * via \ref eeprom_emulator_erase_memory(). The EEPROM memory space will \b not
+ * be automatically erased by the initialization function, so that partial data
+ * may be recovered by the user application manually if the service is unable to
+ * initialize successfully.
  *
  * \return Status code indicating the status of the operation.
  *
- * \retval TODO
+ * \retval STATUS_OK              EEPROM emulation service was successfully
+ *                                initialized
+ * \retval STATUS_ERR_BAD_FORMAT  Emulated EEPROM memory is corrupt or not
+ *                                formatted
  */
 enum status_code eeprom_emulator_init(void)
 {
+	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
+
 	struct nvm_parameters parm;
 	struct _eeprom_master_page master_page;
-
 	struct nvm_config config;
-
-	uint32_t magic_key[] =
-			{EEPROM_MAGIC_KEY_0, EEPROM_MAGIC_KEY_1, EEPROM_MAGIC_KEY_2};
 	enum status_code err = STATUS_OK;
 
-	/* The device datasheet is not ready yet, so I do not have these numbers
-	 **/
 	/* TODO: Find a function get the start of the EEPROM Emulation section
 	 * in flash */
 	/* _eeprom_module_inst.flash =
@@ -440,7 +439,7 @@ enum status_code eeprom_emulator_init(void)
 			(parm.nvm_number_of_pages / 2) - NVMCTRL_ROW_PAGES;
 
 	_eeprom_module_inst.cache_active = false;
-	_eeprom_module_inst.cached_page = EEPROM_INVALID_PAGE_NUMBER;
+	_eeprom_module_inst.cached_page  = EEPROM_INVALID_PAGE_NUMBER;
 
 	_eeprom_emulator_scan_memory();
 
@@ -479,7 +478,12 @@ enum status_code eeprom_emulator_init(void)
  *
  * \return Status code indicating the status of the operation.
  *
- * \retval TODO
+ * \retval STATUS_OK                    If the page was successfully read
+ * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
+ *                                      EEPROM memory space was supplied
+ * \retval STATUS_ERR_DENIED            If an attempt was made to write to the
+ *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_write_page(
 		uint8_t lpage,
@@ -555,7 +559,12 @@ enum status_code eeprom_emulator_write_page(
  *
  * \return Status code indicating the status of the operation.
  *
- * \retval TODO
+ * \retval STATUS_OK                    If the page was successfully read
+ * \retval STATUS_ERR_NOT_INITALIZATED  If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
+ *                                      EEPROM memory space was supplied
+ * \retval STATUS_ERR_DENIED            If an attempt was made to read from the
+ *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_read_page(
 		uint8_t lpage,
@@ -625,8 +634,6 @@ void eeprom_emulator_erase_memory(void)
  * \param[in] length  Length of the data to write, in bytes
  *
  * \return Status code indicating the status of the operation.
- *
- * \retval TODO
  */
 enum status_code eeprom_emulator_write_buffer(
 		uint16_t offset,
@@ -680,8 +687,6 @@ enum status_code eeprom_emulator_write_buffer(
  * \param[in]  length  Length of the data to read, in bytes
  *
  * \return Status code indicating the status of the operation.
- *
- * \retval TODO
  */
 enum status_code eeprom_emulator_read_buffer(
 		uint16_t offset,
@@ -732,8 +737,6 @@ enum status_code eeprom_emulator_read_buffer(
  *       directly for any other purposes.
  *
  * \return Status code indicating the status of the operation.
- *
- * \retval TODO
  */
 enum status_code eeprom_emulator_flush_page_buffer(void)
 {
