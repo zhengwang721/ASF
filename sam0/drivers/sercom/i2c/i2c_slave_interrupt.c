@@ -355,11 +355,6 @@ enum status_code i2c_slave_read_packet_job(
 		return STATUS_BUSY;
 	}
 
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	/* Enable Address interrupt */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
-
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
@@ -397,11 +392,6 @@ enum status_code i2c_slave_write_packet_job(
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	/* Enable Address interrupt */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
 
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
@@ -447,9 +437,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
-			/* Enable Data and Stop interrupts */
-			i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_DIF |
-					SERCOM_I2CS_INTFLAG_PIF;
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
@@ -458,9 +445,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		} else {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
-			/* Enable Data and Stop interrupts */
-			i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_DIF |
-					SERCOM_I2CS_INTFLAG_PIF;
 			/* Write request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
@@ -486,13 +470,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				&& (module->transfer_direction == 1)) {
 			/* Write to master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
-		}
-		/* Disable Data and Stop interrupt. */
-		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_DIF |
-				SERCOM_I2CS_INTFLAG_PIF;
-		/* and Address if callbacks are disabled. */
-		if (!callback_mask){
-			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AIF;
 		}
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
