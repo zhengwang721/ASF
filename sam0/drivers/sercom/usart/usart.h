@@ -297,7 +297,7 @@ struct usart_dev_inst {
 	enum usart_char_size char_size;
 #ifdef USART_ASYNC
 	/** Array to store callback function pointers in */
-	usart_async_callback_t *callback[USART_CALLBACK_N];
+	usart_async_callback_t callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
 	volatile uint8_t *rx_buffer_ptr;
 

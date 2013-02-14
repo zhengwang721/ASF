@@ -277,7 +277,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
 	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
-	/* _sercom_set_handler(instance_index, (void *)&usart_async_handler); */
+	_sercom_set_handler(instance_index, usart_async_handler);
 	_sercom_instances[instance_index] = dev_inst;
 #endif
 	/* Set configuration according to the config struct */

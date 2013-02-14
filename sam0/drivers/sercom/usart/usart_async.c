@@ -106,7 +106,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  *
  */
 void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
-		usart_async_callback_t *callback_func,
+		usart_async_callback_t callback_func,
 		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
@@ -334,6 +334,7 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  *                                  frame error. Please check the configuration.
  * \retval STATUS_ERR_OVERFLOW      The last operation was aborted due to an
  *                                  buffer overflow. Please check the configuration.
+ * \retval STATUS_ERR_INVALID_ARG   An invalid transceiver enum given.
  */
 enum status_code usart_async_get_operation_status(
 		struct usart_dev_inst *const dev_inst,
@@ -355,7 +356,11 @@ enum status_code usart_async_get_operation_status(
 		/* Get status code */
 		status_code = dev_inst->tx_status;
 		break;
+	default:
+		status_code = STATUS_ERR_INVALID_ARG;
+		break;
 	}
+	
 
 	return status_code;
 }

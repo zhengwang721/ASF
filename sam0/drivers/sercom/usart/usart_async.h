@@ -47,12 +47,19 @@
 
 uint8_t _sercom_get_module_irq_index(struct usart_dev_inst *const dev_inst);
 
+#ifndef __DOXYGEN__
+void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
+		uint8_t *tx_data, uint16_t length);
+void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
+		uint8_t *rx_data, uint16_t length);
+#endif
+
 /**
  * \name Callback Management
  * {@
  */
 void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
-		usart_async_callback_t *callback_func,
+		usart_async_callback_t callback_func,
 		enum usart_callback callback_type);
 
 void usart_async_unregister_callback(struct usart_dev_inst *dev_inst,

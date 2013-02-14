@@ -45,8 +45,16 @@
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string);
+struct usart_dev_inst usart_edbg;
 
+void write_callback(const struct usart_dev_inst *const dev);
+void write_callback(const struct usart_dev_inst *const dev)
+{
+
+}
+
+
+void write_string(struct usart_dev_inst *const dev, uint8_t *string);
 void write_string(struct usart_dev_inst *const dev, uint8_t *string)
 {
 	do {
@@ -55,9 +63,18 @@ void write_string(struct usart_dev_inst *const dev, uint8_t *string)
 	} while (*(++string) != 0);
 }
 
+void configure_callbacks(void);
+void configure_callbacks(void)
+{
+	usart_async_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_async_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
+
+	/* Enable interrupts for SERCOM instance. */
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+}
+
 int main(void)
 {
-	struct usart_dev_inst usart_edbg;
 	struct usart_conf config_struct;
 	uint16_t temp;
 
@@ -80,6 +97,8 @@ int main(void)
 			&config_struct) != STATUS_OK) {
 	}
 
+	configure_callbacks();
+
 	/* Enable USARTs */
 	usart_enable(&usart_edbg);
 
@@ -87,12 +106,12 @@ int main(void)
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 
-	write_string(&usart_edbg, string);
+	usart_async_write_buffer(&usart_edbg,string, sizeof(string));
 
 	/* Echo back characters received */
 	while (1) {
-		if (usart_read(&usart_edbg, &temp) == STATUS_OK) {
-			while (usart_write(&usart_edbg, temp) != STATUS_OK) {
+		if (usart_async_read(&usart_edbg, &temp) == STATUS_OK) {
+			while (usart_async_write(&usart_edbg, temp) != STATUS_OK) {
 			}
 		}
 	}
