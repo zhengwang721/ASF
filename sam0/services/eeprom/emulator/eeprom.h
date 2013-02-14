@@ -70,10 +70,12 @@ enum status_code eeprom_emulator_init(void);
 /**
  * \brief Writes a data buffer to the flash page buffer
  *
- * This function will write data to the flash page buffer, the data will be keept
+ * This function will write data to the flash page buffer, the data will be
+ *keept
  * there until another write is executed or the flush function is used.
  *
- * \param[in] page  The number of the page in eeprom emualtor space to be written
+ * \param[in] page  The number of the page in eeprom emualtor space to be
+ *written
  * \param[in] *data Pointer to the data buffer containing data to be written
  *
  * \return This function return a status code
@@ -88,14 +90,16 @@ enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data);
  * place it in the SRAM buffer.
  *
  * \param[in] page The number of the page in eeprom emualtor space to be written
- * \param[out] *data Data buffer of page size that will contain the data read from memory
+ * \param[out] *data Data buffer of page size that will contain the data read
+ *from memory
  */
 enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data);
 
 /**
  * \brief Flushes the page buffer to flash memory
  *
- * This function will flush the content of the page buffer to the correct location
+ * This function will flush the content of the page buffer to the correct
+ *location
  * in EEPROM emualtor memory space
  *
  * \note This should be the first function executed in a BOD33 interupt routine
@@ -109,10 +113,12 @@ enum status_code eeprom_emulator_flush_page_buffer(void);
 /**
  * \brief This function will initalize the EEPROM memory bank i flash
  *
- * This function fill erase the whole EEPROM memory block in flash. This includes
+ * This function fill erase the whole EEPROM memory block in flash. This
+ *includes
  * erase all rows, write EEPROM memory header, and create new EEPROM pages.
  *
- * \note This function will destroy any content in the alotted EEPROM memory block.
+ * \note This function will destroy any content in the alotted EEPROM memory
+ *block.
  *
  * \return This function may return some status code of unknown value
  */
@@ -121,23 +127,26 @@ void eeprom_emulator_erase_memory(void);
 /**
  * \brief This function writes a buffer to the eeprom emulator
  *
- * This function writes a buffer of data to the eeprom emualtor. This buffer can be
+ * This function writes a buffer of data to the eeprom emualtor. This buffer can
+ *be
  * bigger than the page baoundery.
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, uint16_t lenght);
+enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data,
+		uint16_t lenght);
 
 /**
  * \brief This function reads a buffer from the eeprom emulator
  *
- * This function reads a buffer of data from the eeprom emualtor. This function is not
+ * This function reads a buffer of data from the eeprom emualtor. This function
+ *is not
  * limited by the page baoundery
  *
  * \return This function may return some status code of unknown value
  */
-enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uint16_t length);
-
+enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data,
+		uint16_t length);
 
 #ifdef __cplusplus
 }
