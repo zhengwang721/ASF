@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 DAC Sine Function Example
+ * \brief SAMD20 DAC Sound Player Application
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
