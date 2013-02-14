@@ -257,7 +257,6 @@ static void mma7341l_update(void)
 void mma7341l_calibration(void)
 {
 	volatile uint32_t i;
-	volatile uint32_t j;
 
 	acc.m.x = 0;
 	acc.m.y = 0;
