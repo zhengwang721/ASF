@@ -146,7 +146,7 @@ enum status_code i2c_master_async_write_packet(
  *
  * This will terminate the running transfer operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static inline void i2c_master_async_cancel_transfer(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -165,9 +165,9 @@ static inline void i2c_master_async_cancel_transfer(
  * Will return the last error that occurred in asynchronous transfer operation. The
  * status will be cleared on next operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  *
- * \return          Last status code from transfer operation.
+ * \return Last status code from transfer operation.
  * \retval STATUS_OK No error has occurred.
  * \retval STATUS_BUSY If transfer is in progress.
  * \retval STATUS_BUSY If master module is busy.

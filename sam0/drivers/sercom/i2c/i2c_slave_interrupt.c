@@ -241,7 +241,7 @@ void i2c_slave_disable_nack_on_address(struct i2c_slave_module
  *
  * Used by interrupt handler to get next data byte from master.
  *
- * \param module Pointer to device instance structure.
+ * \param[in,out] module Pointer to device instance structure.
  */
 static void _i2c_slave_read(struct i2c_slave_module *const module)
 {
@@ -259,7 +259,7 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
  *
  * Used by interrupt handler to send next data byte to master.
  *
- * \param module Pointer to device instance structure.
+ * \param[in,out] module Pointer to device instance structure.
  */
 static void _i2c_slave_write(struct i2c_slave_module *const module)
 {

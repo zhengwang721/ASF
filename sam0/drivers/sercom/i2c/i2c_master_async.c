@@ -48,7 +48,7 @@
  *
  * Used by interrupt handler to get next data byte from slave.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 {
@@ -59,7 +59,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 
 	if (!dev_inst->buffer_remaining) {
 		/* Send nack and stop command. */
-		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);	
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
 	}
 
 	/* Read byte from slave and put in buffer. */
@@ -71,7 +71,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
  *
  * Used by interrupt handler to send next data byte to slave.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 {
@@ -103,7 +103,7 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
  *
  * Check for errors concerning master->slave handshake.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_address_response(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -316,7 +316,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		/* No nack from slave, no recent stop condition has been issued. */
 		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)) {
 			/* Send nack and stop command. */
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);	
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
 		}
 
 		/* Call appropriate callback if enabled and registered. */

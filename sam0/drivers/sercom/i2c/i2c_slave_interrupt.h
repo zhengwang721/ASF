@@ -448,7 +448,7 @@ enum status_code i2c_slave_write_packet_job(
  *
  * This will terminate the running transfer operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param[in,out] module Pointer to device instance structure.
  */
 static inline void i2c_slave_abort_job(
 		struct i2c_slave_module *const module)
@@ -470,16 +470,16 @@ static inline void i2c_slave_abort_job(
  * detected on the bus.
  * The status will be cleared on next operation.
  *
- * \param  module Pointer to device instance structure
+ * \param[in,out] module Pointer to device instance structure
  *
- * \return                     Last status code from transfer operation
- * \retval STATUS_OK           No error has occurred
- * \retval STATUS_BUSY         Transfer is in progress
- * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
- * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
- *                             last transfer
- * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
+ * \return Last status code from transfer operation
+ * \retval STATUS_OK            No error has occurred
+ * \retval STATUS_BUSY          Transfer is in progress
+ * \retval STATUS_ERR_BAD_DATA  Master sent a NACK as response to last sent data
+ * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in the
+ *                              last transfer
+ * \retval STATUS_ERR_TIMEOUT   If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW  Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_get_job_status(
 		struct i2c_slave_module *const module)

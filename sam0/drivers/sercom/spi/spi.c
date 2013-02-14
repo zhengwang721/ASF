@@ -48,7 +48,7 @@
  * This function will reset the SPI module to its power on default values and
  * disable it.
  *
- * \param dev_inst Pointer to the software instance struct
+ * \param[in,out] dev_inst Pointer to the software instance struct
  */
 void spi_reset(struct spi_dev_inst *const dev_inst)
 {
