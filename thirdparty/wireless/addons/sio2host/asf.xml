@@ -30,7 +30,7 @@
 	</select-by-config>
 	<module type="component" id="thirdparty.wireless.addons.sio2host" caption="SIO2HOST">
 			<info type="description" value="summary">
-			The SIO2HOST Component acts as a api layer serial communication
+			The SIO2HOST Component acts as a api layer for serial communication with Host
 			</info>
 			<require idref="config.thirdparty.wireless.addons.sio2host" />
 			<build type="doxygen-entry-point" value="group_sio2host"/>

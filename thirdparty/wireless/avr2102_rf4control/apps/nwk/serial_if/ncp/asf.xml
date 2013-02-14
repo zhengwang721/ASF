@@ -25,7 +25,6 @@
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
 		<require idref="common.drivers.nvm"/>
 		
 		

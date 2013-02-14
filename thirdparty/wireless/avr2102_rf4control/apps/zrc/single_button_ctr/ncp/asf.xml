@@ -11,7 +11,6 @@
 		
 		<require idref="common.drivers.nvm"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.single_button_ctr"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.config" />
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="megarf"/>
 		<device-support value="sam4l"/>

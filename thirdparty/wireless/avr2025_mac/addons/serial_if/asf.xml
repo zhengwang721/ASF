@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="service" caption="MAC Serial Interface Module" id="thirdparty.wireless.avr2025_mac.addons.serial_if">
+	<module type ="service" caption="AVR2025-MAC Serial Interface Module" id="thirdparty.wireless.avr2025_mac.addons.serial_if">
 		<info type="description" value="summary">
 		Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding MAC Api's
 		</info>
