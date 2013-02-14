@@ -151,6 +151,30 @@
 #define USB_VBOF_INACTIVE_LEVEL   USB_VBOF_INACTIVE
 //@}
 
+//! \name USART connections to GPIO for Virtual Com Port
+// @{
+	#define COM_PORT_USART				   USART1
+	#define COM_PORT_USART_ID              ID_USART1
+	#define COM_PORT_RX_PIN                PIN_PC26A_USART1_RXD
+	#define COM_PORT_RX_GPIO               GPIO_PC26A_USART1_RXD
+	#define COM_PORT_RX_MUX                MUX_PC26A_USART1_RXD
+	#define COM_PORT_TX_PIN                PIN_PC27A_USART1_TXD
+	#define COM_PORT_TX_GPIO               GPIO_PC27A_USART1_TXD
+	#define COM_PORT_TX_MUX                MUX_PC27A_USART1_TXD
+// @}
+
+//! \name Embedded debugger USART interface definitions
+//@{
+	#define EDBG_UART_MODULE          USART3
+	#define EDBG_UART_RX_PIN          PIN_PC28A_USART3_RXD
+	#define EDBG_UART_RX_MUX          MUX_PC28A_USART3_RXD
+	#define EDBG_UART_TX_PIN          PIN_PC29A_USART3_TXD
+	#define EDBG_UART_TX_MUX          MUX_PC29A_USART3_TXD
+	#define EDBG_UART_CLK_PIN         PIN_PC31A_USART3_CLK
+	#define EDBG_UART_CLK_MUX         MUX_PC31A_USART3_CLK
+//@}
+
+
 /**
  * \name LED #0 definitions
  *

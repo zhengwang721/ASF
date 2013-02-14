@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Low Power demo for SAM3S-EK2" id="sam.applications.low_power.sam3s_ek2">
+	<project caption="Low Power demo for SAM4S XPlained Pro" id="sam.applications.low_power.sam4s_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
 			This demo shows all the different low power modes with several types of wake-up sources.
@@ -14,14 +14,14 @@
 		<build type="c-source" value="low_power_board.c"/>
 
 		<!-- Device support -->
-		<device-support value="atsam3sd8c"/>
+		<device-support value="atsam4sd32c"/>
 
 		<!-- Required modules -->
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.adc"/>
 		<require idref="sam.applications.low_power"/>
-		<require idref="board.sam3s_ek2"/>
+		<require idref="board.sam4s_xplained_pro"/>
 
 		<!-- Generators -->
 		<generator value="iarewarm"/>

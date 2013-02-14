@@ -8,23 +8,23 @@
  * \asf_license_start
  *
  * \page License
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- * 
+ *
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -387,6 +387,19 @@
 //@{
 #define EDBG_SPI_MODULE           SPI
 //@}
+
+#define CONSOLE_UART              UART1
+
+/** UART1 pins (UTXD1 and URXD1) definitions, PB2,PB3. */
+#define PINS_UART1                (PIO_PB2A_URXD1 | PIO_PB3A_UTXD1)
+#define PINS_UART1_FLAGS          (PIO_PERIPH_A | PIO_DEFAULT)
+#define PINS_UART1_PIO            PIOB
+
+#define PIN_PUSHBUTTON_1_MASK     PIO_PA2
+#define PIN_PUSHBUTTON_1_PIO      PIOB
+#define PIN_PUSHBUTTON_1_ID       ID_PIOB
+#define PIN_PUSHBUTTON_1_TYPE     PIO_INPUT
+#define PIN_PUSHBUTTON_1_ATTR     PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE
 
 /** @} */
 

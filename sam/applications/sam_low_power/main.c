@@ -173,6 +173,7 @@ static void configure_console(void)
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -188,7 +189,7 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 	pmc_enable_periph_clk(CONSOLE_UART_ID);
 
 	/* Configure PIO */
-	gpio_configure_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART, CONF_PINS_UART_FLAGS);
 
 	/* Configure UART */
 	uart_init(CONF_UART, &uart_console_settings);
@@ -340,6 +341,7 @@ static void test_active_mode(void)
 {
 	/* Configure button for exiting from active mode */
 	configure_button();
+
 	g_ul_button_pressed = 0;
 
 	/* Select clock for active mode */
