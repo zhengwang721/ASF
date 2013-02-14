@@ -820,20 +820,30 @@ void udi_cdc_multi_signal_overrun(uint8_t port)
 	udi_cdc_ctrl_state_change(port, true, CDC_SERIAL_STATE_OVERRUN);
 }
 
-bool udi_cdc_multi_is_rx_ready(uint8_t port)
+iram_size_t udi_cdc_multi_get_nb_received_data(uint8_t port)
 {
 	irqflags_t flags;
 	uint16_t pos;
-	bool ready;
+	iram_size_t nb_received;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
 #endif
 	flags = cpu_irq_save();
 	pos = udi_cdc_rx_pos[port];
-	ready = pos < udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]];
+	nb_received = udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]] - pos;
 	cpu_irq_restore(flags);
-	return ready;
+	return nb_received;
+}
+
+iram_size_t udi_cdc_get_nb_received_data(void)
+{
+	return udi_cdc_multi_get_nb_received_data(0);
+}
+
+bool udi_cdc_multi_is_rx_ready(uint8_t port)
+{
+	return (udi_cdc_multi_get_nb_received_data(port) > 0);
 }
 
 bool udi_cdc_is_rx_ready(void)
