@@ -44,15 +44,6 @@
 #include <string.h>
 #include <nvm.h>
 
-/* This macro will wait until the command return anything else than STATUS_BUSY
- * Expecting err to be defined as "enum status_code err" */
-#define wait_for_function(function) \
-	do { \
-		err = function;	\
-	} \
-	while (err == STATUS_BUSY); \
-
-
 /* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to
  * check as uint32_t values than a string compare. But this numbers will show
  * up as the string in studio memory view, which makes the data easy to identify
@@ -158,12 +149,12 @@ static void _eeprom_emulator_create_memory(void)
 			data.header[EEPROM_STATUS_BYTE] = 0x40;
 			data.header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
-			wait_for_function(
-					nvm_write_buffer(
+			do {
+				err = nvm_write_buffer(
 						_eeprom_module_inst.flash_start_page + ppage,
 						(uint8_t *)&data.data,
-						NVMCTRL_PAGE_SIZE)
-					);
+						NVMCTRL_PAGE_SIZE);
+			} while (err == STATUS_BUSY);
 
 			lpage++;
 		}
@@ -223,11 +214,15 @@ static void _eeprom_emulator_clean_memory(void)
 				} else {
 					if (last_row != current_row) {
 						if ((page_counter2 % 4) > 1) {
-							wait_for_function(nvm_erase_row(current_row));
+							do {
+								err = nvm_erase_row(current_row);
+							} while (err == STATUS_BUSY);
 
 							_eeprom_module_inst.page_map[page_counter] = last_page;
 						} else {
-							wait_for_function(nvm_erase_row(last_row));
+							do {
+								err = nvm_erase_row(last_row);
+							} while (err == STATUS_BUSY);
 
 							_eeprom_module_inst.page_map[page_counter] = page_counter2;
 						}
@@ -333,12 +328,12 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 					data, EEPROM_DATA_SIZE);
 
 			/* Write data to page buffer */
-			wait_for_function(
-					nvm_write_buffer(
+			do {
+				err = nvm_write_buffer(
 						new_page + _eeprom_module_inst.flash_start_page,
 						_eeprom_module_inst.cache_buffer,
-						NVMCTRL_PAGE_SIZE)
-					);
+						NVMCTRL_PAGE_SIZE);
+			} while (err == STATUS_BUSY);
 
 			_eeprom_module_inst.page_map[page_trans[c].lpage] = new_page;
 			_eeprom_module_inst.cached_page  = page_trans[c].lpage;
@@ -352,12 +347,12 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 					&_eeprom_module_inst.flash[page_trans[c].ppage * NVMCTRL_PAGE_SIZE],
 					NVMCTRL_PAGE_SIZE);
 
-			wait_for_function(
-					nvm_write_buffer(
+			do {
+				err = nvm_write_buffer(
 						new_page + _eeprom_module_inst.flash_start_page,
 						_eeprom_module_inst.cache_buffer,
-						NVMCTRL_PAGE_SIZE)
-					);
+						NVMCTRL_PAGE_SIZE);
+			} while (err == STATUS_BUSY);
 
 			_eeprom_module_inst.page_map[page_trans[c].lpage] = new_page;
 			_eeprom_module_inst.cached_page  = page_trans[c].lpage;
@@ -366,10 +361,10 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 	}
 
 	/* Erase row and set as spare row */
-	wait_for_function(
-			nvm_erase_row(
-				row + (_eeprom_module_inst.flash_start_page / NVMCTRL_ROW_PAGES))
-			);
+	do {
+		err = nvm_erase_row(
+				row + (_eeprom_module_inst.flash_start_page / NVMCTRL_ROW_PAGES));
+	} while (err == STATUS_BUSY);
 
 	/* Set new spare row */
 	_eeprom_module_inst.spare_row = row;
@@ -432,7 +427,10 @@ enum status_code eeprom_emulator_init(void)
 
 	nvm_get_config_defaults(&config);
 	config.manual_page_write = true;
-	wait_for_function(nvm_set_config(&config));
+
+	do {
+		err = nvm_set_config(&config);
+	} while (err == STATUS_BUSY);
 
 	nvm_get_parameters(&parm);
 
@@ -533,12 +531,12 @@ enum status_code eeprom_emulator_write_page(
 			data,
 			EEPROM_DATA_SIZE);
 
-	wait_for_function(
-			nvm_write_buffer(
+	do {
+		err = nvm_write_buffer(
 				new_page + _eeprom_module_inst.flash_start_page,
 				_eeprom_module_inst.cache_buffer,
-				NVMCTRL_PAGE_SIZE)
-			);
+				NVMCTRL_PAGE_SIZE);
+	} while (err == STATUS_BUSY);
 
 	_eeprom_module_inst.page_map[lpage] = new_page;
 	_eeprom_module_inst.cached_page = lpage;
@@ -666,7 +664,7 @@ enum status_code eeprom_emulator_write_buffer(
 		buffer[c % EEPROM_DATA_SIZE] = data[c - offset];
 	}
 
-	return STATUS_OK;
+	return err;
 }
 
 /**
@@ -715,7 +713,7 @@ enum status_code eeprom_emulator_read_buffer(
 		data[c - offset] = buffer[c % EEPROM_DATA_SIZE];
 	}
 
-	return STATUS_OK;
+	return err;
 }
 
 /**
@@ -746,7 +744,9 @@ enum status_code eeprom_emulator_flush_page_buffer(void)
 	addr += _eeprom_module_inst.flash_start_page;
 	addr *= NVMCTRL_PAGE_SIZE;
 
-	wait_for_function(nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0));
+	do {
+		err = nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0);
+	} while (err == STATUS_BUSY);
 
 	return err;
 }
