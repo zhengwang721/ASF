@@ -195,7 +195,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	sercom_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 
-	gclk_index =  sercom_index + 13;
+	gclk_index =  sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
@@ -206,7 +206,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* Enable the user interface clock in the PM */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,
-			(1 << (sercom_index + 2)));
+			(1 << (sercom_index + PM_APBCMASK_SERCOM0_Pos)));
 
 	/* Configure Pins */
 	system_pinmux_get_config_defaults(&pin_conf);
