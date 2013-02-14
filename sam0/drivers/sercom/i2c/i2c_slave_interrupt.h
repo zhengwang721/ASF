@@ -434,7 +434,6 @@ static inline void i2c_slave_disable_callback(
 * \name Read and Write, Asynchronously
 * @{
 */
-	//TODO: typedef i2cpack?
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
@@ -460,6 +459,7 @@ static inline void i2c_slave_abort_job(
 
 	/* Set buffer to 0. */
 	module->buffer_remaining = 0;
+	module->buffer_length = 0;
 }
 
 /**
