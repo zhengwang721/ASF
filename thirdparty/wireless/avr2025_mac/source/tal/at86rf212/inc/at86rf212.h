@@ -100,7 +100,9 @@
 #define CCA_PROCESS_TIME_SYM   (1)  /* TRX Parameter: CCA processing time in symbols */
 #define CCA_PREPARATION_DURATION_US   (50)  /* TRX Parameter: Preparation time for CCA */
 #define CCA_DURATION_SYM   (CCA_DETECTION_TIME_SYMBOL + CCA_PROCESS_TIME_SYM)  /* TRX Parameter: Complete CCA Duration in symbols */
-#define RST_PULSE_WIDTH_US   (5)  /* TRX Parameter: Round up RST_PULSE_WIDTH_NS value to µs */
+/*delay_us() for time less than 5 seems to provide wrong delay in GCC ,
+hence proper reset is not done.TO be reverted back once the related bug is fixed */
+#define RST_PULSE_WIDTH_US   (10)  
 
 /** Register addresses */
 
