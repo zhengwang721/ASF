@@ -20,4 +20,21 @@
 		<require idref="sam0.drivers.port"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
+	<module type="driver" id="sam0.drivers.sercom.usart.async" caption=
+		"USART interrupt driven driver">
+		<info type="description" value="summary">
+			Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
+			Provides a unified interface for the configuration and use of
+			the SERCON USART INTERFACE.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="USART"/>
+		</info>
+		<device-support value="samd20"/>
+		<build type="header-file" subtype="api" value="usart_async.h"/>
+		<build type="c-source" value="usart_async.c"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<build type="define" name="USART_ASYNC" value=""/>
+		<build type="doxygen-entry-point" value="sam0_usart_async_group"/>
+	</module>
 </asf>
