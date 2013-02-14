@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAMD20 DAC driver" id="sam0.drivers.dac.sine_example.xplained_pro.atsamd20">
+	<project caption="Sound player for the Xplained PRO" id="sam0.applications.dac_sound_player.xplained_pro.atsamd20">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_bod.h"/>
 		<require idref="board.dummy.samd20"/>
-		<require idref="sam0.drivers.dac.sine_example"/>
+		<require idref="sam0.applications.dac_sound_player"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="iarewarm"/>
