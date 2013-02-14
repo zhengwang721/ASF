@@ -8,6 +8,6 @@
 		<build type="doxygen-entry-point" value="sal_group"/>
 		<build type="define" name="SAL_TYPE" value ="ATMEGARF_SAL"/>
 
-		<device-support value="avr"/>
+		<device-support value="megarf"/>
 	</module>
 </asf>
