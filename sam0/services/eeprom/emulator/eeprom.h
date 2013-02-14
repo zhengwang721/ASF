@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM0+ EEPROM Emulator service
+ * \brief SAMD20 EEPROM Emulator
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,11 +40,10 @@
  * \asf_license_stop
  *
  */
-
 #include <compiler.h>
 
-#ifndef _EEPROM_EMULATOR_H_
-#define _EEPROM_EMULATOR_H_
+#ifndef EEPROM_EMULATOR_H_INCLUDED
+#define EEPROM_EMULATOR_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
