@@ -346,54 +346,6 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
 /** @} */
 
 /**
-* \name Interrupts and Flags
-* @{
-*/
-
-/**
- * \brief Check interrupt flag.
- *
- * Check status of the requested interrupt flag.
- *
- * \param[in]  dev_inst       Pointer to device instance struct.
- * \param[in]  interrupt_flag Value of interrupt flag to check.
- */
-static inline bool i2c_master_is_interrupt_flag_set(
-		const struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
-
-	return (i2c_module->INTFLAG.reg & (1 << interrupt_flag));
-}
-
-/**
- * \brief Clear interrupt flag.
- *
- * Clear the specified interrupt flag.
- *
- * \param[out] dev_inst       Pointer to device instance struct.
- * \param[in]  interrupt_flag Value of interrupt flag to clear.
- */
-static inline void i2c_master_clear_interrupt_flag(
-		struct i2c_master_dev_inst *const dev_inst,
-		enum i2c_master_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
-
-	i2c_module->INTFLAG.reg = (1 << interrupt_flag);
-}
-/** @} */
-
-/**
 * \name Read and Write
 * @{
 */
