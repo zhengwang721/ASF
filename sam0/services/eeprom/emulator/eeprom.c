@@ -62,77 +62,99 @@
 #define EEPROM_PAGE_NUMBER_BYTE            3
 #define EEPROM_INVALID_PAGE_NUMBER         0xff
 
-#define FLASH_MAX_PAGES                    256
-
 /**
- * \brief Wrapper struct for the user data pages
+ * \internal
+ * \brief Structure describing emulated pages of EEPROM data
  */
-struct _eeprom_data {
-	/* Header information */
+struct _eeprom_page {
+	/** Header information of the EEPROM page. */
 	uint8_t header[EEPROM_HEADER_SIZE];
-	/* Data content */
+	/** Data content of the EEPROM page. */
 	uint8_t data[EEPROM_DATA_SIZE];
 };
 
 /**
- * \brief This struct is used when scanning rows for pages
+ * \internal
+ * \brief Convenience struct for mapping between logical and physical pages
  */
 struct _eeprom_page_translater {
-	/* Logical page number */
+	/** Logical page number. */
 	uint8_t lpage;
-	/* Physical page number */
+	/** Physical page number. */
 	uint8_t ppage;
 };
 
 /**
- * \brief Wrapper struct for the EEPROM emulation master page
+ * \internal
+ * \brief Structure describing the EEPROM Emulation master page
  */
 struct _eeprom_master_page {
-	/* Magic key which in ASCII will show as AtEEPROMEmu. */
+	/** Magic key which in ASCII will show as AtEEPROMEmu. */
 	uint32_t magic_key[EEPROM_MAGIC_KEY_COUNT];
 
-	/* Emulator version information */
+	/** Emulator major version information. */
 	uint8_t major_version;
+	/** Emulator minor version information. */
 	uint8_t minor_version;
+	/** Emulator revision version information. */
 	uint8_t revision;
+
+	/** Emulator identification value (to distinguish between different emulator
+	 *  schemes that carry the same version numbers). */
 	uint8_t emulator_id;
 
-	/* Unused bytes in the page */
+	/** Unused reserved bytes in the master page. */
 	uint8_t reserved[45];
 };
 
 /**
+ * \internal
  * \brief Internal device instance struct
  */
 struct _eeprom_module {
+	/** Initialization state of the EEPROM emulator. */
 	bool     initialized;
+	/** Absolute byte pointer to the first byte of FLASH where the emulated
+	 *  EEPROM is stored. */
 	uint8_t *flash;
+	/** Physical FLASH page number where the emulated EEPROM is stored. */
 	uint32_t flash_start_page;
 
+	/** Number of physical FLASH pages occupied by the EEPROM emulator. */
 	uint16_t physical_pages;
+	/** Number of logical FLASH pages occupied by the EEPROM emulator. */
 	uint8_t  logical_pages;
 
-	uint8_t  page_map[FLASH_MAX_PAGES];
+	/** Mapping array from logical EEPROM pages to physical FLASH pages. */
+	uint8_t  page_map[EEPROM_MAX_PAGES];
 
+	/** Row number for the spare row (used by next write). */
 	uint8_t  spare_row;
 
+	/** Buffer to hold the currently cached page. */
 	uint8_t  cache_buffer[NVMCTRL_PAGE_SIZE];
+	/** Indicates if the cache is currently full. */
 	bool     cache_active;
+	/** Logical EEPROM page number of the currently cached page. */
 	uint8_t  cached_page;
 };
 
+/**
+ * \internal
+ * \brief Internal EEPROM emulator instance
+ */
 static struct _eeprom_module _eeprom_module_inst = {
 	.initialized = false,
 };
 
 
 /**
- * \brief Function to initialize memory to initial state
+ * \brief Initializes the emulated EEPROM memory, destroying the current contents.
  */
-static void _eeprom_emulator_create_memory(void)
+static void _eeprom_emulator_format_memory(void)
 {
 	enum status_code err = STATUS_OK;
-	struct _eeprom_data data;
+	struct _eeprom_page data;
 	uint16_t ppage;
 	uint16_t lpage = 0;
 
@@ -164,13 +186,13 @@ static void _eeprom_emulator_create_memory(void)
 }
 
 /**
- * \brief This function create a map in SRAM to translate logical page numbers to physical page numbers
+ * \brief Creates a map in SRAM to translate logical EEPROM pages to physical FLASH pages
  */
 static void _eeprom_emulator_scan_memory(void)
 {
 	uint8_t logical_page;
-	struct _eeprom_data *data_ptr
-		= (struct _eeprom_data *)_eeprom_module_inst.flash;
+	struct _eeprom_page *data_ptr
+		= (struct _eeprom_page *)_eeprom_module_inst.flash;
 
 	for (uint16_t c = 0; c < (_eeprom_module_inst.physical_pages - NVMCTRL_ROW_PAGES); c++) {
 		logical_page = data_ptr[c].header[EEPROM_PAGE_NUMBER_BYTE];
@@ -192,8 +214,8 @@ static void _eeprom_emulator_clean_memory(void)
 	uint8_t current_row;
 	uint8_t last_row;
 	uint8_t last_page;
-	struct _eeprom_data *data_ptr
-		= (struct _eeprom_data *)_eeprom_module_inst.flash;
+	struct _eeprom_page *data_ptr
+		= (struct _eeprom_page *)_eeprom_module_inst.flash;
 
 	for (uint16_t page_counter = 0;
 			page_counter < _eeprom_module_inst.logical_pages; page_counter++) {
@@ -232,7 +254,15 @@ static void _eeprom_emulator_clean_memory(void)
 }
 
 /**
- * \brief Find new free page
+ * \brief Finds the next free page in the given row if one is available
+ *
+ * \param[in]  current_page  Physical FLASH page index of the row to examine
+ * \param[out] new_page      Index of the physical FLASH page that is free
+ *
+ * \return Whether a free page was found in the specified row.
+ *
+ * \retval \c true   If a free page was found
+ * \retval \c false  If the specified row was full and needs an erase
  */
 static bool _eeprom_emulator_is_page_free_on_row(
 		uint8_t current_page,
@@ -241,8 +271,8 @@ static bool _eeprom_emulator_is_page_free_on_row(
 	uint8_t row        = (current_page / NVMCTRL_ROW_PAGES);
 	uint8_t rest_pages = (current_page % NVMCTRL_ROW_PAGES);
 
-	struct _eeprom_data *ee_data
-		= (struct _eeprom_data *)_eeprom_module_inst.flash;
+	struct _eeprom_page *ee_data
+		= (struct _eeprom_page *)_eeprom_module_inst.flash;
 
 	if (rest_pages > 0) {
 		for (uint8_t c = rest_pages; c < NVMCTRL_ROW_PAGES; c++) {
@@ -260,14 +290,20 @@ static bool _eeprom_emulator_is_page_free_on_row(
 }
 
 /**
- * \brief Build a map of the newest pages in a row
+ * \brief Builds a map of the newest pages in a row
+ *
+ * Creates a translation map between a logical EEPROM page and physical FLASH
+ * page within a row.
+ *
+ * \param[in]  row         Index of the physical row to examine
+ * \param[out] page_trans  Translation map for the given row
  */
 static void _eeprom_emulator_scan_row(
 		uint8_t row,
 		struct _eeprom_page_translater *page_trans)
 {
-	struct _eeprom_data *row_data
-		= (struct _eeprom_data *)&_eeprom_module_inst.flash[row * NVMCTRL_ROW_SIZE];
+	struct _eeprom_page *row_data
+		= (struct _eeprom_page *)&_eeprom_module_inst.flash[row * NVMCTRL_ROW_SIZE];
 
 	/* We assume that there are some content on the first two pages */
 	page_trans[0].lpage = row_data[0].header[EEPROM_PAGE_NUMBER_BYTE];
@@ -287,7 +323,17 @@ static void _eeprom_emulator_scan_row(
 }
 
 /**
- * \brief Move data to spare row
+ * \brief Moves data from the specified logical page to the spare row
+ *
+ * Moves the contents of the specified row into the spare row, so that the
+ * original row can be erased and re-used. The contents of the given logical
+ * page is replaced with a new buffer of data.
+ *
+ * \param[in] row    Physical row to examine
+ * \param[in] lpage  Logical EEPROM page number stored in the row to update
+ * \param[in] data   New data to replace the old in the specified logical page
+ *
+ * \return Status code indicating the status of the operation.
  */
 static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint8_t row,
@@ -457,7 +503,6 @@ enum status_code eeprom_emulator_init(void)
 	return err;
 }
 
-
 /**
  * \brief Writes a page of data to an emulated EEPROM memory page
  *
@@ -601,7 +646,7 @@ enum status_code eeprom_emulator_read_page(
 void eeprom_emulator_erase_memory(void)
 {
 	/* Create new EEPROM memory block in EEPROM emulation section */
-	_eeprom_emulator_create_memory();
+	_eeprom_emulator_format_memory();
 
 	/* Map the newly created EEPROM memory block */
 	_eeprom_emulator_scan_memory();
