@@ -88,7 +88,7 @@ static void configure_i2c(void)
 {
 	/* Initialize config structure and device instance. */
 	//! [init_conf]
-	struct i2c_master_conf conf;
+	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 	//! [init_conf]
 

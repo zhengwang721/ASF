@@ -112,7 +112,7 @@ enum i2c_master_start_hold_time {
  * \brief I2C protocol frequencies.
  *
  * Values for standard I2C speeds supported by the module. The driver will also support setting
- * any value between 10 and 100kHz, in which case set the value in the \ref i2c_master_conf at
+ * any value between 10 and 100kHz, in which case set the value in the \ref i2c_master_config at
  * desired value divided by 1000.
  *
  * Example: If 10kHz operation is required, give baud_rate in the configuration structure
@@ -165,7 +165,7 @@ typedef void (*i2c_master_callback_t)(
  */
 struct i2c_master_dev_inst {
 	/** Hardware instance initialized for the struct. */
-	Sercom *hw_dev;
+	Sercom *hw;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
@@ -200,7 +200,7 @@ struct i2c_master_dev_inst {
  * configurations for the module. The structure should be initiated using the
  * \ref i2c_master_get_config_defaults .
  */
-struct i2c_master_conf {
+struct i2c_master_config {
 	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
 	/** GCLK generator to use as clock source. */
@@ -234,9 +234,9 @@ static void _i2c_master_wait_for_sync(
 {
 	/* Sanity check. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	while(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY) {
 		/* Wait for I2C module to sync. */
@@ -261,7 +261,7 @@ static void _i2c_master_wait_for_sync(
  * \param[out] config Pointer to configuration structure to be initiated.
  */
 static inline void i2c_master_get_config_defaults(
-		struct i2c_master_conf *const config)
+		struct i2c_master_config *const config)
 {
 	/*Sanity check argument. */
 	Assert(config);
@@ -277,7 +277,7 @@ static inline void i2c_master_get_config_defaults(
 
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
 		Sercom *const module,
-		const struct i2c_master_conf *const config);
+		const struct i2c_master_config *const config);
 
 /**
  * \brief Enable the I2C module.
@@ -292,9 +292,9 @@ static inline void i2c_master_enable(
 {
 	/* Sanity check of arguments. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Timeout counter used to force bus state. */
 	uint32_t timeout_counter = 0;
@@ -330,9 +330,9 @@ static inline void i2c_master_disable(
 {
 	/* Sanity check of arguments. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);

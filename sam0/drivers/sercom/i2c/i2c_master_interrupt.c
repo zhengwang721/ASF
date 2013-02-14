@@ -41,7 +41,7 @@
  *
  */
 
-#include "i2c_master_async.h"
+#include "i2c_master_interrupt.h"
 
 /**
  * \internal Read next data.
@@ -52,7 +52,7 @@
  */
 static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 {
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Find index to save next value in buffer. */
 	uint16_t buffer_index = dev_inst->buffer_length - dev_inst->buffer_remaining--;
@@ -75,7 +75,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
  */
 static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 {
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Check for ack from slave. */
 	if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
@@ -108,7 +108,7 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 static void _i2c_master_async_address_response(
 		struct i2c_master_dev_inst *const dev_inst)
 {
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Check for error. Ignore bus-error; workaround for busstate stuck in BUSY. */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
@@ -161,7 +161,7 @@ void i2c_master_async_register_callback(
 {
 	/* Sanity check. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 	Assert(callback);
 
 	/* Register callback. */
@@ -186,7 +186,7 @@ void i2c_master_async_unregister_callback(
 {
 	/* Sanity check. */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 
 	/* Register callback. */
 	dev_inst->callbacks[callback_type] = 0;
@@ -214,10 +214,10 @@ enum status_code i2c_master_async_read_packet(
 {
 	/* Sanity check */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 	Assert(packet);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
@@ -261,10 +261,10 @@ enum status_code i2c_master_async_write_packet(
 {
 	/* Sanity check */
 	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(dev_inst->hw);
 	Assert(packet);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
@@ -296,7 +296,7 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Get device instance for callback handling. */
 	struct i2c_master_dev_inst *dev_inst =
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(dev_inst->hw->I2CM);
 
 	/* Combine callback registered and enabled masks. */
 	uint8_t callback_mask = dev_inst->enabled_callback & dev_inst->registered_callback;
