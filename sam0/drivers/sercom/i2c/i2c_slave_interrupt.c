@@ -169,6 +169,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	/* Initialize values in module. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
+	module->buffer_length = 0;
 
 	/* Set SERCOM module to operate in I2C slave mode. */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
@@ -240,7 +241,7 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Read byte from master and put in buffer. */
-	*(module->buffer_ptr++) = i2c_hw->DATA.reg;
+	*(module->buffer++) = i2c_hw->DATA.reg;
 
 	/*Decrement remaining buffer length */
 	module->buffer_remaining--;
@@ -267,7 +268,7 @@ static void _i2c_slave_write(struct i2c_slave_module *const module)
 	}
 
 	/* Write byte from buffer to master */
-	i2c_hw->DATA.reg = *(module->buffer_ptr++);
+	i2c_hw->DATA.reg = *(module->buffer++);
 
 	/*Decrement remaining buffer length */
 	module->buffer_remaining--;
@@ -360,7 +361,7 @@ enum status_code i2c_slave_read_packet_job(
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
 
 	/* Save packet to device instance. */
-	module->buffer_ptr = packet->data;
+	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
@@ -403,7 +404,7 @@ enum status_code i2c_slave_write_packet_job(
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
 
 	/* Save packet to device instance. */
-	module->buffer_ptr = packet->data;
+	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
 	module->status = STATUS_BUSY;
 
