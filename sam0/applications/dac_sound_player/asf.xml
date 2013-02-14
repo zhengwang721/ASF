@@ -3,7 +3,7 @@
 		<info type="description" value="summary">
 		Example plays a sound using the DAC
 		</info>
-		<build type="c-source" value="dac_sine_example.c"/>
+		<build type="c-source" value="dac_sound_player.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.dac"/>
 		<require idref="sam0.drivers.port"/>
