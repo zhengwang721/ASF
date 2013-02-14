@@ -41,8 +41,8 @@
 #include <asf.h>
 #include <math.h>
 
-#define RES 255
-#define SCALE 32768/RES
+#define RES 256
+#define CAL_CLOCK_HZ 32768
 
 static struct usart_dev_inst usart_edbg;
 
@@ -104,8 +104,7 @@ void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 
 void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
 {
-	// TODO: Update with event system
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
+	events_init();
 
 	struct tc_conf config;
 	tc_get_config_defaults(&config);
@@ -125,15 +124,14 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 
 	struct tc_events events;
 
-
 	events.generate_event_on_compare_channel[0] = true;
 	events.generate_event_on_compare_channel[1] = false;
 	events.generate_event_on_overflow = false;
 	events.on_event_perform_action = false;
 
-
 	tc_enable_events(comp_chan, &events);
 
+	events.generate_event_on_overflow = false;
 	events.generate_event_on_compare_channel[0] = false;
 	events.on_event_perform_action = true;
 
@@ -143,15 +141,17 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 	tc_enable(comp_chan);
 
 	struct events_chan_conf evch_conf;
-	evch_conf.edge_detection = EVENT_EDGE_NONE;
-	evch_conf.path = EVENT_PATH_ASYNCHRONOUS;
+
+	events_chan_get_config_defaults(&evch_conf);
+	evch_conf.edge_detection = EVENT_EDGE_RISING;
+	evch_conf.path = EVENT_PATH_SYNCHRONOUS;
 	evch_conf.generator_id = EVSYS_ID_GEN_TC2_MCX_0;
 
 	struct events_user_conf evus_conf;
-	evus_conf.event_channel_id = 0;
+	evus_conf.event_channel_id = EVENT_CHANNEL_0;
 
 	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
-	events_chan_set_config(0, &evch_conf);
+	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
 
 
 }
@@ -177,7 +177,7 @@ void setup_usart_channel(void)
 
 uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan)
 {
-	uint32_t tmp;
+	uint64_t tmp;
 
 	tc_clear_interrupt_flag(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0);
 
@@ -185,9 +185,22 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 	comp_chan->hw_dev->COUNT16.COUNT.reg = 0;
 
 	while (!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
-	tmp = calib_chan->hw_dev->COUNT32.COUNT.reg;
 
-	return tmp * SCALE;
+	tmp = (uint64_t)tc_get_capture_value(calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0);
+	tmp = tmp * CAL_CLOCK_HZ;
+
+	return (uint32_t)(tmp / RES);
+}
+
+void write_freq(uint32_t freq)
+{
+	uint8_t string[10];
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1036, 2);
+
+	debug_int_to_string(string, 10, freq);
+	debug_write_string(&usart_edbg, (uint8_t*)"Current: ");
+	debug_write_string(&usart_edbg, string);
+	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 }
 
 int main(void)
@@ -195,6 +208,7 @@ int main(void)
 	uint8_t string[10];
 
 	system_init();
+	//setup_usart_channel();
 
 	uint32_t tmp;
 
@@ -215,14 +229,14 @@ int main(void)
 	uint32_t gen_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 
 	for (frange_cal = 1; frange_cal < 4; frange_cal++) {
-		for (comm_cal = 0; comm_cal < 127; comm_cal++) {
+		for (comm_cal = 0; comm_cal < 128; comm_cal++) {
 			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | 8 << 7, frange_cal);
 
 			tmp = debug_get_freq(&calib_chan, &comp_chan);
 
-			if (abs(tmp - gen_freq) <
-				abs(freq_best - gen_freq))
+			if (abs(tmp - gen_freq) < abs(freq_best - gen_freq))
 			{
+				//write_freq(comm_cal);
 				freq_best = tmp;
 				comm_best = comm_cal;
 				frange_best = frange_cal;
@@ -231,6 +245,7 @@ int main(void)
 	}
 	/* Set the found best calibration. */
 	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | 8 << 7, frange_best);
+	//system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1036, 2);
 
 	/* Setup usart module to give information back. */
 	setup_usart_channel();
@@ -259,9 +274,9 @@ int main(void)
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 
-	events_chan_software_trigger(0);
 	while (1) {
-		debug_int_to_string(string, 10, events_user_is_ready(0) | events_chan_is_ready(0) << 1);
+		//debug_int_to_string(string, 10, tc_get_capture_value(&calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0));//EVSYS->INTFLAG.reg);
+		debug_int_to_string(string, 10, gen_freq);
 	    	debug_write_string(&usart_edbg, string);
 	    	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 	    	break;
@@ -270,4 +285,8 @@ int main(void)
 	/* Deactivate tc modules. */
 	tc_disable(&calib_chan);
 	tc_disable(&comp_chan);
+
+	while (1) {
+		/* Inf loop */
+	}
 }
