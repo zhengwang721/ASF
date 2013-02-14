@@ -77,7 +77,6 @@
 
 /**
  * \brief Wrapper struct for the user data pages
- *
  */
 struct _eeprom_data {
 	/* Header information */
@@ -88,7 +87,6 @@ struct _eeprom_data {
 
 /**
  * \brief This struct is used when scanning rows for pages
- *
  */
 struct _eeprom_page_translater {
 	/* Logical page number */
@@ -98,8 +96,7 @@ struct _eeprom_page_translater {
 };
 
 /**
- * \brief Wrapper struct for the eeprom emulation master page
- *
+ * \brief Wrapper struct for the EEPROM emulation master page
  */
 struct _eeprom_master_page {
 	/* Magic key which in ASCII will show as AtEEPROMEmu. */
@@ -117,7 +114,6 @@ struct _eeprom_master_page {
 
 /**
  * \brief Internal device instance struct
- *
  */
 struct _eeprom_module {
 	bool initialized;
@@ -140,9 +136,9 @@ static struct _eeprom_module _eeprom_module_inst = {
 	.initialized = false,
 };
 
+
 /**
  * \brief Function to initialize memory to initial state
- *
  */
 static void _eeprom_emulator_create_memory(void)
 {
@@ -178,9 +174,7 @@ static void _eeprom_emulator_create_memory(void)
 }
 
 /**
- * \brief This function create a map in SRAM to translate logical page
- *  numbers to physical page numbers
- *
+ * \brief This function create a map in SRAM to translate logical page numbers to physical page numbers
  */
 static void _eeprom_emulator_scan_memory(void)
 {
@@ -201,8 +195,7 @@ static void _eeprom_emulator_scan_memory(void)
 /**
  * \brief This function will cleanup the memory
  *
- * \note I have not been able make any working testcase for this function yet
- *
+ * TODO: NOT TESTED YET
  */
 static void _eeprom_emulator_clean_memory(void)
 {
@@ -266,9 +259,9 @@ static void _eeprom_emulator_clean_memory(void)
 
 /**
  * \brief Find new free page
- *
  */
-static bool _eeprom_emulator_is_page_free_on_row(uint8_t current_page,
+static bool _eeprom_emulator_is_page_free_on_row(
+		uint8_t current_page,
 		uint8_t *new_page)
 {
 	uint8_t c;
@@ -300,9 +293,9 @@ static bool _eeprom_emulator_is_page_free_on_row(uint8_t current_page,
 
 /**
  * \brief Build a map of the newest pages in a row
- *
  */
-static void _eeprom_emulator_scan_row(uint8_t row,
+static void _eeprom_emulator_scan_row(
+		uint8_t row,
 		struct _eeprom_page_translater *page_trans)
 {
 	struct _eeprom_data *row_data
@@ -332,9 +325,9 @@ static void _eeprom_emulator_scan_row(uint8_t row,
 
 /**
  * \brief Move data to spare row
- *
  */
-static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row,
+static enum status_code _eeprom_emulator_move_data_to_spare(
+		uint8_t row,
 		uint8_t lpage,
 		uint8_t *data)
 {
@@ -413,7 +406,6 @@ static enum status_code _eeprom_emulator_move_data_to_spare(uint8_t row,
 
 /**
  * \brief Create master block
- *
  */
 static void _eeprom_emulator_create_master_page(void)
 {
@@ -436,6 +428,17 @@ static void _eeprom_emulator_create_master_page(void)
 			(uint8_t *)&master_page);
 }
 
+/**
+ * \brief Initializes the EEPROM Emulator service
+ *
+ * Initializes the emulated EEPROM memory space; if the emulated EEPROM memory
+ * has not been previously initialized, it will be erased and configured ready
+ * for use.
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
 enum status_code eeprom_emulator_init(void)
 {
 	struct nvm_parameters parm;
@@ -494,7 +497,26 @@ enum status_code eeprom_emulator_init(void)
 	return err;
 }
 
-enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
+
+/**
+ * \brief Writes a page of data to an emulated EEPROM memory page
+ *
+ * Writes an emulated EEPROM page of data to the emulated EEPROM memory space.
+ *
+ * \note Data stored in pages may be cached in volatile RAM memory; to commit
+ *       any cached data to physical non-volatile memory, the
+ *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *
+ * \param[in] page  Logical EEPROM page number to write to
+ * \param[in] data  Pointer to the data buffer containing source data to write
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
+enum status_code eeprom_emulator_write_page(
+		uint8_t lpage,
+		uint8_t *data)
 {
 	uint8_t eeprom_header[EEPROM_HEADER_SIZE];
 	uint8_t new_page = 0;
@@ -553,7 +575,21 @@ enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data)
 	return err;
 }
 
-enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data)
+/**
+ * \brief Reads a page of data from an emulated EEPROM memory page
+ *
+ * Reads an emulated EEPROM page of data from the emulated EEPROM memory space.
+ *
+ * \param[in]  page  Logical EEPROM page number to read from
+ * \param[out] data  Pointer to the destination data buffer to fill
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
+enum status_code eeprom_emulator_read_page(
+		uint8_t lpage,
+		uint8_t *data)
 {
 	if (!_eeprom_module_inst.initialized) {
 		return STATUS_ERR_NOT_INITALIZATED;
@@ -587,6 +623,12 @@ enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data)
 	return STATUS_OK;
 }
 
+/**
+ * \brief Erases the entire emulated EEPROM memory space
+ *
+ * Erases and re-initializes the emulated EEPROM memory space, destroying any
+ * existing data.
+ */
 void eeprom_emulator_erase_memory(void)
 {
 	/* Create new EEPROM memory block in EEPROM emulation section */
@@ -595,11 +637,33 @@ void eeprom_emulator_erase_memory(void)
 	/* Map the newly created EEPROM memory block */
 	_eeprom_emulator_scan_memory();
 
-	/* Write eeprom emulation master block */
+	/* Write EEPROM emulation master block */
 	_eeprom_emulator_create_master_page();
 }
 
-enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data,
+/**
+ * \brief Writes a buffer of data to the emulated EEPROM memory space
+ *
+ * Writes a buffer of data to a section of emulated EEPROM memory space. The
+ * source buffer may be of any size, and the destination may lie outside of a
+ * emulated EEPROM page boundary.
+ *
+ * \note Data stored in pages may be cached in volatile RAM memory; to commit
+ *       any cached data to physical non-volatile memory, the
+ *       \ref eeprom_emulator_flush_page_buffer() function should be called.
+ *
+ * \param[in] offset  Starting byte offset to write to, in emulated EEPROM
+ *                    memory space
+ * \param[in] data    Pointer to the data buffer containing source data to write
+ * \param[in] length  Length of the data to write, in bytes
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
+enum status_code eeprom_emulator_write_buffer(
+		uint16_t offset,
+		uint8_t *data,
 		uint16_t length)
 {
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
@@ -637,7 +701,25 @@ enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data,
 	return err;
 }
 
-enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data,
+/**
+ * \brief Reads a buffer of data from the emulated EEPROM memory space
+ *
+ * Reads a buffer of data from a section of emulated EEPROM memory space. The
+ * destination buffer may be of any size, and the source may lie outside of a
+ * emulated EEPROM page boundary.
+ *
+ * \param[in]  offset  Starting byte offset to read from, in emulated EEPROM
+ *                     memory space
+ * \param[out] data    Pointer to the data buffer containing source data to read
+ * \param[in]  length  Length of the data to read, in bytes
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
+enum status_code eeprom_emulator_read_buffer(
+		uint16_t offset,
+		uint8_t *data,
 		uint16_t length)
 {
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
@@ -669,6 +751,25 @@ enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data,
 	return err;
 }
 
+/**
+ * \brief Flushes any cached data to physical non-volatile memory
+ *
+ * Flushes the internal SRAM caches to physical non-volatile memory, to ensure
+ * that any outstanding cached data is preserved. This function should be called
+ * prior to a system reset or shutdown to prevent data loss.
+ *
+ * \note This should be the first function executed in a BOD33 early warning
+ *       callback to ensure that any outstanding cache data is fully written to
+ *       prevent data loss.
+ *
+ *
+ * \note This function should also be called before using the NVM controller
+ *       directly for any other purposes.
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval TODO
+ */
 enum status_code eeprom_emulator_flush_page_buffer(void)
 {
 	uint32_t addr;
