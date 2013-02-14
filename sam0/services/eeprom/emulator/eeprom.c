@@ -159,9 +159,10 @@ static void _eeprom_emulator_create_memory(void)
 			data.header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
 			wait_for_function(
-					nvm_write_page(
+					nvm_write_buffer(
 						_eeprom_module_inst.flash_start_page + ppage,
-						(uint32_t *)&data.data)
+						(uint8_t *)&data.data,
+						NVMCTRL_PAGE_SIZE)
 					);
 
 			lpage++;
@@ -313,7 +314,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 	/* Scan row for content to be copied to spare row */
 	_eeprom_emulator_scan_row(row, page_trans);
 
-	for (uitn8_t c = 0; c < 2; c++) {
+	for (uint8_t c = 0; c < 2; c++) {
 		new_page = ((_eeprom_module_inst.spare_row * 4) + c);
 
 		if (lpage == page_trans[c].lpage) {
@@ -333,10 +334,10 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 
 			/* Write data to page buffer */
 			wait_for_function(
-					nvm_write_page(
+					nvm_write_buffer(
 						new_page + _eeprom_module_inst.flash_start_page,
-						(uint32_t *)_eeprom_module_inst.
-						cache_buffer)
+						_eeprom_module_inst.cache_buffer,
+						NVMCTRL_PAGE_SIZE)
 					);
 
 			_eeprom_module_inst.page_map[page_trans[c].lpage] = new_page;
@@ -348,13 +349,14 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 
 			/* Copy data buffer to cache buffer */
 			memcpy(_eeprom_module_inst.cache_buffer,
-					_eeprom_module_inst.flash[page_trans[c].ppage * NVMCTRL_PAGE_SIZE],
+					&_eeprom_module_inst.flash[page_trans[c].ppage * NVMCTRL_PAGE_SIZE],
 					NVMCTRL_PAGE_SIZE);
 
 			wait_for_function(
-					nvm_write_page(
+					nvm_write_buffer(
 						new_page + _eeprom_module_inst.flash_start_page,
-						(uint32_t *)_eeprom_module_inst.cache_buffer)
+						_eeprom_module_inst.cache_buffer,
+						NVMCTRL_PAGE_SIZE)
 					);
 
 			_eeprom_module_inst.page_map[page_trans[c].lpage] = new_page;
@@ -532,8 +534,10 @@ enum status_code eeprom_emulator_write_page(
 			EEPROM_DATA_SIZE);
 
 	wait_for_function(
-			nvm_write_page(new_page + _eeprom_module_inst.flash_start_page,
-				_eeprom_module_inst.cache_buffer)
+			nvm_write_buffer(
+				new_page + _eeprom_module_inst.flash_start_page,
+				_eeprom_module_inst.cache_buffer,
+				NVMCTRL_PAGE_SIZE)
 			);
 
 	_eeprom_module_inst.page_map[lpage] = new_page;
