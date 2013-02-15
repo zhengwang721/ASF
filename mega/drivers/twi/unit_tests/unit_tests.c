@@ -256,7 +256,7 @@ static void run_twi_master_recv_test(const struct test_case *test)
 
 	for (i = 0; i < PATTERN_TEST_LENGTH; i++) {
 		test_assert_true(test, recv_pattern[i] == test_pattern[i],
-				"Wrong data[%d] received, %d != %d", i,
+				"Wrong twi data[%d] received, %d != %d", i,
 				recv_pattern[i],
 				test_pattern[i]);
 	}
