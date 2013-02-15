@@ -401,23 +401,45 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 
 /**
  * \brief Create master emulated EEPROM management page
+ *
+ * Creates a new master page in emulated EEPROM, giving information on the
+ * emulator used to store the EEPROM data.
  */
 static void _eeprom_emulator_create_master_page(void)
 {
 	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
 	struct _eeprom_master_page master_page;
 
+	/* Fill out the magic key header to indicate an initialized master page */
 	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
 		master_page.magic_key[c] = magic_key[c];
 	}
 
+	/* Update master header with version information of this emulator */
 	master_page.major_version = EEPROM_MAJOR_VERSION;
 	master_page.minor_version = EEPROM_MINOR_VERSION;
 	master_page.revision      = EEPROM_REVISION;
 	master_page.emulator_id   = EEPROM_EMULATOR_ID;
 
-	eeprom_emulator_write_page(EEPROM_MASTER_PAGE_NUMBER,
-			(uint8_t *)&master_page);
+	/* Fill the physical NVM buffer with the new data so that it can be quickly
+	 * flushed in the future if needed due to a low power condition */
+	do {
+		err = nvm_write_buffer(
+				EEPROM_MASTER_PAGE_NUMBER + _eeprom_module_inst.flash_start_page,
+				&master_page,
+				NVMCTRL_PAGE_SIZE);
+	} while (err == STATUS_BUSY);
+
+	/* Convert the logical master memory page index to an absolute byte address */
+	uintptr_t addr;
+	addr  = EEPROM_MASTER_PAGE_NUMBER;
+	addr += _eeprom_module_inst.flash_start_page;
+	addr *= NVMCTRL_PAGE_SIZE;
+
+	/* Write the page out to physical memory */
+	do {
+		err = nvm_execute_command(NVM_COMMAND_WRITE_PAGE, addr, 0);
+	} while (err == STATUS_BUSY);
 }
 
 /**
@@ -426,17 +448,26 @@ static void _eeprom_emulator_create_master_page(void)
  * Verify the contents of a master EEPROM page to ensure that it contains the
  * correct information for this version of the EEPROM emulation service.
  *
- * \return Status code indicating the status of the operation.
- *
  * \retval STATUS_OK              Given master page contents is valid
  * \retval STATUS_ERR_BAD_FORMAT  Master page contents was invalid
  * \retval STATUS_ERR_IO          Master page indicates the data is incompatible
  *                                with this version of the EEPROM emulator
  */
-static enum status_code _eeprom_emulator_verify_master_page(
-	struct _eeprom_master_page* master_page)
+static enum status_code _eeprom_emulator_verify_master_page(void)
 {
 	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
+	struct _eeprom_master_page master_page;
+
+	/* Convert the logical master memory page index to an absolute byte address */
+	uintptr_t addr;
+	addr  = EEPROM_MASTER_PAGE_NUMBER;
+	addr += _eeprom_module_inst.flash_start_page;
+	addr *= NVMCTRL_PAGE_SIZE;
+
+	/* Copy the master page to the RAM buffer so that it can be inspected */
+	memcpy(&master_page,
+		addr,
+		NVMCTRL_PAGE_SIZE);
 
 	/* Verify magic key is correct in the master page header */
 	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
@@ -488,7 +519,6 @@ static enum status_code _eeprom_emulator_verify_master_page(
 enum status_code eeprom_emulator_init(void)
 {
 	enum status_code err = STATUS_OK;
-	struct _eeprom_master_page master_page;
 	struct nvm_config config;
 
 	/* Retrieve the NVM controller configuration - enable manual page writing
@@ -521,10 +551,6 @@ enum status_code eeprom_emulator_init(void)
 	/* Scan physical memory and re-create logical to physical page mapping
 	 * table to locate logical pages of EEPROM data in physical FLASH */
 	_eeprom_emulator_update_page_mapping();
-
-	/* Read the master EEPROM page that describes the emulator configuration */
-	eeprom_emulator_read_page(EEPROM_MASTER_PAGE_NUMBER,
-			(uint8_t *)&master_page);
 
 	/* Verify that the master page contains valid data for this service */
 	err = _eeprom_emulator_verify_master_page(&master_page);
@@ -579,13 +605,9 @@ enum status_code eeprom_emulator_write_page(
 	}
 
 	/* Make sure the write address is not the master EEPROM page number */
-#if 0
-	// TODO: Enable once solution found for allowing the service (only) to read
-	// and write the master page
 	if (lpage == EEPROM_MASTER_PAGE_NUMBER) {
 		return STATUS_ERR_DENIED;
 	}
-#endif
 
 	/* By default unless told otherwise we are writing to page offset 0 in the
 	 * destination NVM row */
@@ -688,13 +710,9 @@ enum status_code eeprom_emulator_read_page(
 	}
 
 	/* Make sure the read address is not the master EEPROM page number */
-#if 0
-	// TODO: Enable once solution found for allowing the service (only) to read
-	// and write the master page
 	if (lpage == EEPROM_MASTER_PAGE_NUMBER) {
 		return STATUS_ERR_DENIED;
 	}
-#endif
 
 	/* Check if the page to read is currently cached (and potentially out of
 	 * sync/newer than the physical memory) */
@@ -761,6 +779,7 @@ enum status_code eeprom_emulator_write_buffer(
 		uint16_t length)
 {
 	enum status_code err = STATUS_OK;
+
 	uint8_t buffer[EEPROM_DATA_SIZE];
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 
