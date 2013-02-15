@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+ 
 /**
 * \mainpage
 * \section preface Preface
@@ -47,7 +48,7 @@
 * \section toc Table of Contents
 *  - \subpage overview
 *  -  \b Application \b Interface(API)\n
-*    - \ref group_rf4control
+*    - \ref group_rf4control_ZRC
 *    - \ref group_mac
 *    - \ref group_pal
 *    - \ref group_tal
@@ -62,9 +63,17 @@
 /**
  * \page overview Overview
  * \section intro Introduction
- * To be added.
+ *  Single Button Controller is the RF4CE demo application which can be used in the ZRC target - controller setup
+ *  This will support push button pairing procedure and zrc commands i.e Sending the button events to the remote terminal target over the air.
+ *
+ *	Application supports cold reset and warm reset. While powering on the device, if the Select key is  pressed then it does cold reset.
+ *  Otherwise it does warm reset i.e retreiving the network information base from NVM.
+ *
+ *  If the Select key is pressed on power on, it does the push pairing procedure following the cold reset.
+ *
+ *  The Application will use the ZRC Commands to send the key press event to paired device.
+ *
  */
-
 
 /** \page main_files Application Files
  * - main.c\n                      Application main file.
@@ -90,6 +99,7 @@
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
+ 
 /* === INCLUDES ============================================================ */
 
 #include <asf.h>
