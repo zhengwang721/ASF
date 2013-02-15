@@ -174,7 +174,7 @@ const uint8_t test_pattern[] = {
 static void run_twi_master_send_test(const struct test_case *test)
 {
 	status_code_t master_status;
-	volatile uint64_t delay=10;
+	volatile uint64_t delay=0;
 	
 	// Package to send
 	twi_package_t packet = {
@@ -207,7 +207,7 @@ static void run_twi_master_send_test(const struct test_case *test)
 	master_status = twi_master_write(TWI_MASTER, &packet);
         
     /* Write completion time for EEPROM */
-	delay_ms(delay);
+	for(delay=0;delay<10000;delay++);
 
 	test_assert_true(test, master_status == STATUS_OK,
 			"Master write not ok");
