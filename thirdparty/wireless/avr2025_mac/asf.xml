@@ -33,6 +33,7 @@
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>
+		<build type="distribute" subtype="license" value="../EULA.txt"/>
         </info>
     </module>
 </asf>
