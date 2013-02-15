@@ -88,7 +88,7 @@ static void configure_i2c(void)
 {
 	/* Initialize config structure and device instance. */
 	//! [init_conf]
-	struct i2c_master_conf conf;
+	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 	//! [init_conf]
 
@@ -111,8 +111,8 @@ static void configure_i2c(void)
 //! [setup_callback]
 void configure_callbacks(void){
   	/* Register callback function. */
-	i2c_master_async_register_callback(&dev_inst, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
-	i2c_master_async_enable_callback(&dev_inst, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	i2c_master_register_callback(&dev_inst, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	i2c_master_enable_callback(&dev_inst, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
   
 	/* Enable interrupts for SERCOM instance. */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);

@@ -56,7 +56,7 @@ static uint8_t buffer[DATA_LENGTH] = {
 
 /* Init device instance. */
 //! [dev_inst]
-struct i2c_master_dev_inst dev_inst;
+struct i2c_master_module dev_inst;
 //! [dev_inst]
 
 //! [initialize_i2c]
@@ -64,7 +64,7 @@ static void configure_i2c(void)
 {
 	/* Initialize config structure and device instance. */
 	//! [init_conf]
-	struct i2c_master_conf conf;
+	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 	//! [init_conf]
 
@@ -108,7 +108,7 @@ int main(void)
 
 	/* Write buffer to slave until success. */
 	//! [write_packet]
-	while(i2c_master_write_packet(&dev_inst, &packet) != STATUS_OK) {
+	while(i2c_master_write_packet_wait(&dev_inst, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ >= TIMEOUT) {
 			break;

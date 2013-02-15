@@ -112,7 +112,7 @@ enum i2c_master_start_hold_time {
  * \brief I2C protocol frequencies.
  *
  * Values for standard I2C speeds supported by the module. The driver will also support setting
- * any value between 10 and 100kHz, in which case set the value in the \ref i2c_master_conf at
+ * any value between 10 and 100kHz, in which case set the value in the \ref i2c_master_config at
  * desired value divided by 1000.
  *
  * Example: If 10kHz operation is required, give baud_rate in the configuration structure
@@ -148,10 +148,10 @@ enum i2c_master_callback {
 };
 #if !defined(__DOXYGEN__)
 /* Prototype for device instance. */
-struct i2c_master_dev_inst;
+struct i2c_master_module;
 
 typedef void (*i2c_master_callback_t)(
-		const struct i2c_master_dev_inst *const dev_inst);
+		const struct i2c_master_module *const module);
 #endif
 #endif
 
@@ -163,9 +163,9 @@ typedef void (*i2c_master_callback_t)(
  * \ref i2c_master_init() function to associate the struct with a particular
  * hardware instance and configurations.
  */
-struct i2c_master_dev_inst {
+struct i2c_master_module {
 	/** Hardware instance initialized for the struct. */
-	Sercom *hw_dev;
+	Sercom *hw;
 	/** Unknown bus state timeout. */
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
@@ -200,7 +200,7 @@ struct i2c_master_dev_inst {
  * configurations for the module. The structure should be initiated using the
  * \ref i2c_master_get_config_defaults .
  */
-struct i2c_master_conf {
+struct i2c_master_config {
 	/** Baud rate for I2C operations. */
 	enum i2c_master_baud_rate baud_rate;
 	/** GCLK generator to use as clock source. */
@@ -227,16 +227,16 @@ struct i2c_master_conf {
 #if !defined(__DOXYGEN__)
 /**
  * \internal Wait for hardware module to sync.
- * \param[in]  dev_inst Pointer to device instance structure.
+ * \param[in]  module Pointer to device instance structure.
  */
 static void _i2c_master_wait_for_sync(
-		const struct i2c_master_dev_inst *const dev_inst)
+		const struct i2c_master_module *const module)
 {
 	/* Sanity check. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	while(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY) {
 		/* Wait for I2C module to sync. */
@@ -261,7 +261,7 @@ static void _i2c_master_wait_for_sync(
  * \param[out] config Pointer to configuration structure to be initiated.
  */
 static inline void i2c_master_get_config_defaults(
-		struct i2c_master_conf *const config)
+		struct i2c_master_config *const config)
 {
 	/*Sanity check argument. */
 	Assert(config);
@@ -275,9 +275,9 @@ static inline void i2c_master_get_config_defaults(
 	config->pinmux_pad1 = PINMUX_DEFAULT;
 }
 
-enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
-		Sercom *const module,
-		const struct i2c_master_conf *const config);
+enum status_code i2c_master_init(struct i2c_master_module *const module,
+		Sercom *const hw,
+		const struct i2c_master_config *const config);
 
 /**
  * \brief Enable the I2C module.
@@ -285,30 +285,34 @@ enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
  * This will enable the requested I2C module and set the bus state to IDLE after the specified
  * \ref timeout "timeout" period if no stop bit is detected.
  *
- * \param[in]  dev_inst Pointer to the device instance struct.
+ * \param[in]  module Pointer to the device instance struct.
  */
 static inline void i2c_master_enable(
-		const struct i2c_master_dev_inst *const dev_inst)
+		const struct i2c_master_module *const module)
 {
 	/* Sanity check of arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	/* Timeout counter used to force bus state. */
 	uint32_t timeout_counter = 0;
 
 	/* Wait for module to sync. */
-	_i2c_master_wait_for_sync(dev_inst);
+	_i2c_master_wait_for_sync(module);
 
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
+#ifdef I2C_ASYNC
+	/* Enable module interrupts */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+#endif
 	/* Start timeout if bus state is unknown. */
 	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {		
                 timeout_counter++;
-                if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
+                if(timeout_counter >= (module->unkown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
                         i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
                         /* Workaround #1 */
@@ -323,25 +327,30 @@ static inline void i2c_master_enable(
  * This will disable the I2C module specified in the provided device instance
  * structure.
  *
- * \param[in]  dev_inst Pointer to the device instance struct.
+ * \param[in]  module Pointer to the device instance struct.
  */
 static inline void i2c_master_disable(
-		const struct i2c_master_dev_inst *const dev_inst)
+		const struct i2c_master_module *const module)
 {
 	/* Sanity check of arguments. */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	/* Wait for module to sync. */
-	_i2c_master_wait_for_sync(dev_inst);
+	_i2c_master_wait_for_sync(module);
 
 	/* Disable module. */
 	i2c_module->CTRLA.reg &= ~SERCOM_I2CM_CTRLA_ENABLE;
+
+#ifdef I2C_ASYNC
+	/* Disable module interrupts */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
+#endif
 }
 
-void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
+void i2c_master_reset(struct i2c_master_module *const module);
 
 /** @} */
 
@@ -350,12 +359,12 @@ void i2c_master_reset(struct i2c_master_dev_inst *const dev_inst);
 * @{
 */
 
-enum status_code i2c_master_read_packet(
-		struct i2c_master_dev_inst *const dev_inst,
+enum status_code i2c_master_read_packet_wait(
+		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_write_packet(
-		struct i2c_master_dev_inst *const dev_inst,
+enum status_code i2c_master_write_packet_wait(
+		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
 
