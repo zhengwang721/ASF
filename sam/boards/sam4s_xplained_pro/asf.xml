@@ -3,7 +3,7 @@
 		<device-support value="atsam4sd32c"/>
 		<build type="define" name="__SAM4SD32C__" value=""/>
 		<build type="define" name="BOARD" value="SAM4S_XPLAINED_PRO"/>
-		<build type="c-source" value="board_init.c"/>
+		<build type="c-source" value="init.c"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<build type="header-file" value="sam4s_xplained_pro.h"/>

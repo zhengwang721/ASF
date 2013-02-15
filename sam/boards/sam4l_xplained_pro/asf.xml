@@ -2,7 +2,7 @@
 	<board id="board.sam4l_xplained_pro" caption="SAM4L Xplained Pro">
 		<build type="define" name="BOARD" value="SAM4L_XPLAINED_PRO"/>
 		<build type="define" name="__ATSAM4LC4C__" value=""/>
-		<build type="c-source" value="board_init.c"/>
+		<build type="c-source" value="init.c"/>
 		<build type="header-file" value="sam4l_xplained_pro.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
