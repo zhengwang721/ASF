@@ -5,8 +5,9 @@
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,9 +46,9 @@ int main(void)
 {
 //! [main]
 //! [variable]
-	struct dac_dev_inst dev_inst;
-	struct dac_conf config;
-	struct dac_ch_conf ch_config;
+	struct dac_module dev_inst;
+	struct dac_config config;
+	struct dac_chan_config chan_config;
 //! [variable]
 
 	/* Setup DAC module*/
@@ -63,21 +64,21 @@ int main(void)
 
 	/* Setup channel 0*/
 //! [get_ch_conf]
-	dac_ch_get_config_defaults(&ch_config);
+	dac_chan_get_config_defaults(&chan_config);
 //! [get_ch_conf]
 //! [edit_ch_conf]
-	ch_config.enable_start_on_event = false;
+	chan_config.enable_start_on_event = false;
 	//! [edit_ch_conf]
 //! [set_ch_conf]
-	dac_ch_set_config(&dev_inst, DAC_CHANNEL_0, &ch_config);
+	dac_chan_set_config(&dev_inst, DAC_CHANNEL_0, &chan_config);
 //! [set_ch_conf]
 //! [enable_ch]
-	dac_ch_enable(&dev_inst, DAC_CHANNEL_0),
+	dac_chan_enable(&dev_inst, DAC_CHANNEL_0);
 	//! [enable_ch]
 
 	/* Convert a value */
 	//! [write]
-	dac_write(&dev_inst, DAC_CHANNEL_0, 0x44, false);
+	dac_chan_write(&dev_inst, DAC_CHANNEL_0, 0x44);
 //! [write]
 
 	/* Disable DAC*/

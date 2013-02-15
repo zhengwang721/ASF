@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Component description for RTC
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -199,7 +201,7 @@ typedef union {
 typedef union {
   struct {
     uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval Event Output Enables */
-    uint16_t CMPEO:1;          /*!< bit:      8  Compare Event Output Enables [NUM_OF_ALARMS] */
+    uint16_t CMPEO:1;          /*!< bit:      8  Compare Event Output Enables [NUM_OF_COMP32] */
     uint16_t :6;               /*!< bit:  9..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -276,7 +278,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Disables [NUM_OF_ALARMS] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Disables [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Disable            */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Disable         */
@@ -351,7 +353,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Enables [NUM_OF_ALARMS] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Enables [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Enable             */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
@@ -426,7 +428,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Flags [NUM_OF_ALARMS] */
+    uint8_t  CMP:1;            /*!< bit:      0  Comparator Interrupt Flags [NUM_OF_COMP32] */
     uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
     uint8_t  READY:1;          /*!< bit:      6  Ready Interrupt Flag               */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Flag            */
@@ -620,6 +622,7 @@ typedef union {
 #define RTC_MODE2_CLOCK_HOUR_Pos    12           /**< \brief (RTC_MODE2_CLOCK) Current Hour */
 #define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos)
 #define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
+#define   RTC_MODE2_CLOCK_HOUR_PM   (0x10u << 12) /**< \brief (RTC_MODE2_CLOCK) PM when CLKREP in 12-hour */
 #define RTC_MODE2_CLOCK_DAY_Pos     17           /**< \brief (RTC_MODE2_CLOCK) Current Day */
 #define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos)
 #define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))
@@ -630,8 +633,6 @@ typedef union {
 #define RTC_MODE2_CLOCK_YEAR_Msk    (0x3Fu << RTC_MODE2_CLOCK_YEAR_Pos)
 #define RTC_MODE2_CLOCK_YEAR(value) ((RTC_MODE2_CLOCK_YEAR_Msk & ((value) << RTC_MODE2_CLOCK_YEAR_Pos)))
 #define RTC_MODE2_CLOCK_MASK        0xFFFFFFFFu  /**< \brief (RTC_MODE2_CLOCK) MASK Register */
-#define RTC_MODE2_CLOCK_PM_Pos      (RTC_MODE2_CLOCK_HOUR_Pos + 3) /* TODO: Manually added */
-#define RTC_MODE2_CLOCK_PM          (1 << RTC_MODE2_CLOCK_PM_Pos) /* TODO: Manually added */
 
 /* -------- RTC_MODE1_PER : (RTC Offset: 0x14) (R/W 16) MODE1 MODE1 Period Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -776,7 +777,7 @@ typedef struct { /* 32-bit Counter with Single 32-bit Compare */
        RoReg8                    Reserved2[0x3];
   __IO RTC_MODE0_COUNT_Type      COUNT;       /**< \brief Offset: 0x10 (R/W 32) MODE0 Count Register */
        RoReg8                    Reserved3[0x4];
-  __IO RTC_MODE0_COMP_Type       COMP[1];     /**< \brief Offset: 0x18 (R/W 32) MODE0 Compare Register [NUM_OF_ALARMS] */
+  __IO RTC_MODE0_COMP_Type       COMP[1];     /**< \brief Offset: 0x18 (R/W 32) MODE0 Compare Register [NUM_OF_COMP32] */
 } RtcMode0;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

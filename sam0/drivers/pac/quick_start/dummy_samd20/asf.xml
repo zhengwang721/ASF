@@ -1,5 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Quick Start for the SAMD20 PAC driver" id="sam0.drivers.pac.quick_start.dummy.atsamd20">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
 		<require idref="board.dummy.samd20"/>
 		<require idref="sam0.drivers.pac.quick_start"/>
 		<generator value="iarewarm"/>

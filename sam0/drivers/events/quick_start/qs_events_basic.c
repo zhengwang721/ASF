@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -45,42 +47,42 @@ void configure_event_user(void);
 
 //! [setup]
 #define EXAMPLE_EVENT_GENERATOR    0
-#define EXAMPLE_EVENT_CHANNEL      0
+#define EXAMPLE_EVENT_CHANNEL      EVENT_CHANNEL_0
 #define EXAMPLE_EVENT_USER         0
 
 void configure_event_channel(void)
 {
 //! [setup_1]
-	struct events_ch_conf events_ch_conf;
+	struct events_chan_config config;
 //! [setup_1]
 //! [setup_2]
-	events_ch_get_config_defaults(&events_ch_conf);
+	events_chan_get_config_defaults(&config);
 //! [setup_2]
 
 //! [setup_3]
-	events_ch_conf.generator_id   = EXAMPLE_EVENT_GENERATOR;
-	events_ch_conf.edge_detection = EVENT_EDGE_RISING;
-	events_ch_conf.path           = EVENT_PATH_SYNCHRONOUS;
+	config.generator_id   = EXAMPLE_EVENT_GENERATOR;
+	config.edge_detection = EVENT_EDGE_RISING;
+	config.path           = EVENT_PATH_SYNCHRONOUS;
 //! [setup_3]
 //! [setup_4]
-	events_ch_set_config(EXAMPLE_EVENT_CHANNEL, &events_ch_conf);
+	events_chan_set_config(EXAMPLE_EVENT_CHANNEL, &config);
 //! [setup_4]
 }
 
 void configure_event_user(void)
 {
 //! [setup_5]
-	struct events_user_conf events_user_conf;
+	struct events_user_config config;
 //! [setup_5]
 //! [setup_6]
-	events_user_get_config_defaults(&events_user_conf);
+	events_user_get_config_defaults(&config);
 //! [setup_6]
 
 //! [setup_7]
-	events_user_conf.event_channel_id = EXAMPLE_EVENT_CHANNEL;
+	config.event_channel_id = EXAMPLE_EVENT_CHANNEL;
 //! [setup_7]
 //! [setup_8]
-	events_user_set_config(EXAMPLE_EVENT_USER, &events_user_conf);
+	events_user_set_config(EXAMPLE_EVENT_USER, &config);
 //! [setup_8]
 }
 //! [setup]
@@ -90,19 +92,19 @@ int main(void)
 	//! [setup_init]
 	events_init();
 
-	configure_event_channel();
 	configure_event_user();
+	configure_event_channel();
 	//! [setup_init]
 
 	//! [main]
 	//! [main_1]
-	while (events_ch_is_ready(EXAMPLE_EVENT_CHANNEL) == false) {
+	while (events_chan_is_ready(EXAMPLE_EVENT_CHANNEL) == false) {
 		/* Wait for channel */
 	};
 	//! [main_1]
 
 	//! [main_2]
-	events_ch_software_trigger(EXAMPLE_EVENT_CHANNEL);
+	events_chan_software_trigger(EXAMPLE_EVENT_CHANNEL);
 	//! [main_2]
 
 	while (true) {

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -46,7 +48,7 @@ void config_port_pins(void);
 void config_port_pins(void)
 {
 //! [setup_1]
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 //! [setup_1]
 //! [setup_2]
 	system_pinmux_get_config_defaults(&pin_conf);

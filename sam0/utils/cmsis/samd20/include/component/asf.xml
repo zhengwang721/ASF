@@ -16,7 +16,6 @@
 		<build type="header-file" value="component_pac.h"/>
 		<build type="header-file" value="component_pm.h"/>
 		<build type="header-file" value="component_port.h"/>
-		<build type="header-file" value="component_ptc.h"/>
 		<build type="header-file" value="component_rtc.h"/>
 		<build type="header-file" value="component_sercom.h"/>
 		<build type="header-file" value="component_sysctrl.h"/>

@@ -42,87 +42,17 @@
  */
 
 #include <system.h>
-#include <conf_bod.h>
 
 /**
- * \brief configure BOD
- *
- * This function will configure the BOD33 or BOD12 module based on the
- * configuration in the configuration struct. The BOD will be enabled when this
- * function returns.
- *
- * \param[in] conf pointer to the struct containing configuration
- * \param[in] bod which BOD module to configure
- *
- * \retval STATUS_ERR_INVALID_ARG Invalid BOD
- * \retval STATUS_ERR_INVALID_OPTION The configured level is outside the acceptable range
- * \retval STATUS_OK Operation completed successfully
+ * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
+ * attempted to a memory address.
  */
-enum status_code system_bod_set_config(struct system_bod_config *conf,
-		enum system_bod bod)
+void HardFault_Handler(void)
 {
-	Assert(conf);
-
-	uint32_t temp;
-
-	temp = conf->action | conf->mode;
-
-	if (conf->mode) {
-	/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33_CEN;
+	while (1) {
+		/* Infinite loop if CPU exception is detected */
+		Assert(false);
 	}
-	if (conf->hysteresis) {
-		temp |= SYSCTRL_BOD33_HYST;
-	}
-
-	temp |= SYSCTRL_BOD33_ENABLE;
-	switch (bod) {
-		case SYSTEM_BOD33:
-			if (conf->level > 0x3F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
-			break;
-		case SYSTEM_BOD12:
-			if (conf->level > 0x1F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) | temp;
-			break;
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
-	return STATUS_OK;
-}
-
-/**
- * \brief Initialize BOD12 and BOD33 based on the configuration in conf_bod.h
- *
- */
-void system_bod_init(void)
-{
-	#if (BOD33_ENABLED == true) || (BOD12_ENABLED == true)
-	struct system_bod_config conf;
-
-	#if BOD33_ENABLED == true
-	conf.action = BOD33_ACTION;
-	conf.sampled_mode = BOD33_MODE;
-	conf.prescaler = BOD33_PRESCALER;
-	conf.hysteresis = BOD33_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD33);
-	#endif
-
-	#if BOD12_ENABLED == true
-	conf.action = BOD12_ACTION;
-	conf.sampled_mode = BOD12_MODE;
-	conf.prescaler = BOD12_PRESCALER;
-	conf.hysteresis = BOD12_HYSTERESIS;
-
-	system_bod_set_config(&conf, SYSCTRL_BOD12);
-	#endif
-
-	#endif
 }
 
 /**
@@ -136,11 +66,9 @@ void system_bod_init(void)
  */
 void system_init(void)
 {
-	/* Initialize BOD according to conf_bod.h */
-	system_bod_init();
-	/* Configure GCLK and clock sources according to
-	 * conf_clocks.h */
+	/* Configure GCLK and clock sources according to conf_clocks.h */
 	system_clock_init();
+
 	/* Initialize board hardware */
 	system_board_init();
 }

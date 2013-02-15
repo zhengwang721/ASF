@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -38,55 +40,40 @@
  * \asf_license_stop
  *
  */
-#include <wdt.h>
+#include "wdt.h"
+#include <system.h>
 
 /**
  * \internal Internal device structure.
  */
-struct _wdt_device {
+struct _wdt_module {
 	/** If \c true, the Watchdog should be locked on when enabled. */
 	bool always_on;
 };
 
-/** \internal
- *
- *  Internal Watchdog device state, used to track instance specific information
- *  for the Watchdog peripheral within the device.
- */
-static struct _wdt_device _wdt_dev;
-
 /**
- *  \internal
- *  \brief Waits for a Watchdog module synchronisation to complete.
+ * \internal
  *
- *  Spinloops until the Watchdog module has completed any pending writes to the
- *  control registers across the system and Watchdog digital clock boundary.
+ * Internal Watchdog device state, used to track instance specific information
+ * for the Watchdog peripheral within the device.
  */
-static inline void _wdt_wait_for_sync(void)
-{
-	Wdt *const WDT_module = WDT;
-
-	/* Poll the SYNCBUSY flag until it signals the module is ready */
-	while (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
-		/* Wait until WDT is synced */
-	}
-}
+static struct _wdt_module _wdt_instance;
 
 /** \brief Initializes and configures the Watchdog driver.
  *
- *  Initializes the Watchdog driver, resetting the hardware module and
- *  configuring it to the user supplied configuration parameters, ready for
- *  use. This function should be called before enabling the Watchdog.
+ * Initializes the Watchdog driver, resetting the hardware module and
+ * configuring it to the user supplied configuration parameters, ready for
+ * use. This function should be called before enabling the Watchdog.
  *
- *  \note Once called the Watchdog will not be running; to start the Watchdog,
- *        call \ref wdt_enable() after configuring the module.
+ * \note Once called the Watchdog will not be running; to start the Watchdog,
+ *       call \ref wdt_enable() after configuring the module.
  *
- *  \param[in] config  Configuration settings for the Watchdog
+ * \param[in] config  Configuration settings for the Watchdog
  *
- *  \return Status of the configuration procedure.
- *  \retval STATUS_OK     If the module was configured correctly
- *  \retval STATUS_ERR_INVALID_ARG   If invalid argument(s) were supplied
- *  \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
+ * \return Status of the configuration procedure.
+ * \retval STATUS_OK     If the module was configured correctly
+ * \retval STATUS_ERR_INVALID_ARG   If invalid argument(s) were supplied
+ * \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
  */
 enum status_code wdt_init(
 		const struct wdt_conf *const config)
@@ -113,11 +100,16 @@ enum status_code wdt_init(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	/* Update the timeout period value with the requested period */
-	_wdt_wait_for_sync();
 	WDT_module->CTRL.reg = (config->timeout_period - 1) << WDT_CTRL_PER_Pos;
 
-	_wdt_wait_for_sync();
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
 
 	/* Check if the user has requested a reset window period */
 	if (config->window_period != WDT_PERIOD_NONE) {
@@ -131,26 +123,31 @@ enum status_code wdt_init(
 
 	/* Check if the user has requested an early warning period */
 	if (config->early_warning_period != WDT_PERIOD_NONE) {
+		while (wdt_is_syncing()) {
+			/* Wait for all hardware modules to complete synchronization */
+		}
+
 		/* Set the Early Warning period */
-		_wdt_wait_for_sync();
 		WDT_module->EWCTRL.reg
 			= (config->early_warning_period - 1) << WDT_EWCTRL_EWOFFSET_Pos;
 	}
 
 	/* Save the requested Watchdog lock state for when the WDT is enabled */
-	_wdt_dev.always_on = config->always_on;
+	_wdt_instance.always_on = config->always_on;
 
 	return STATUS_OK;
 }
 
-/** \brief Enables the Watchdog Timer that was previously configured.
+/**
+ * \brief Enables the Watchdog Timer that was previously configured.
  *
- *  Enables and starts the Watchdog Timer that was previously configured via a
- *  call to \ref wdt_init().
+ * Enables and starts the Watchdog Timer that was previously configured via a
+ * call to \ref wdt_init().
  *
- *  \return Status of the enable procedure.
- *  \retval STATUS_OK      If the module was enabled correctly
- *  \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
+ * \return Status of the enable procedure.
+ *
+ * \retval STATUS_OK      If the module was enabled correctly
+ * \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
  */
 enum status_code wdt_enable(void)
 {
@@ -161,11 +158,13 @@ enum status_code wdt_enable(void)
 		return STATUS_ERR_IO;
 	}
 
-	_wdt_wait_for_sync();
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
 
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
-	if (_wdt_dev.always_on) {
+	if (_wdt_instance.always_on) {
 		WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
 	} else {
 		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
@@ -174,14 +173,16 @@ enum status_code wdt_enable(void)
 	return STATUS_OK;
 }
 
-/** \brief Disables the Watchdog Timer that was previously enabled.
+/**
+ * \brief Disables the Watchdog Timer that was previously enabled.
  *
- *  Stops the Watchdog Timer that was previously started via a call to
- *  \ref wdt_enable().
+ * Stops the Watchdog Timer that was previously started via a call to
+ * \ref wdt_enable().
  *
- *  \return Status of the disable procedure.
- *  \retval STATUS_OK     If the module was disabled correctly
- *  \retval STATUS_ERR_IO If the Watchdog module is locked to be always on
+ * \return Status of the disable procedure.
+ *
+ * \retval STATUS_OK      If the module was disabled correctly
+ * \retval STATUS_ERR_IO  If the Watchdog module is locked to be always on
  */
 enum status_code wdt_disable(void)
 {
@@ -192,25 +193,32 @@ enum status_code wdt_disable(void)
 		return STATUS_ERR_IO;
 	}
 
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	/* Disable the Watchdog module */
-	_wdt_wait_for_sync();
 	WDT_module->CTRL.reg &= ~WDT_CTRL_ENABLE;
 
 	return STATUS_OK;
 }
 
-/** \brief Resets the count of the running Watchdog Timer that was previously enabled.
+/**
+ * \brief Resets the count of the running Watchdog Timer that was previously enabled.
  *
- *  Resets the current count of the Watchdog Timer, restarting the timeout
- *  period count elapsed. This function should be called after the window
- *  period (if one was set in the module configuration) but before the timeout
- *  period to prevent a reset of the system.
+ * Resets the current count of the Watchdog Timer, restarting the timeout
+ * period count elapsed. This function should be called after the window
+ * period (if one was set in the module configuration) but before the timeout
+ * period to prevent a reset of the system.
  */
 void wdt_reset_count(void)
 {
 	Wdt *const WDT_module = WDT;
 
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	/* Disable the Watchdog module */
-	_wdt_wait_for_sync();
-	WDT_module->CLEAR.reg = WDT_CLEAR_KEY;
+	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
 }

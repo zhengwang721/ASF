@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -46,7 +48,7 @@
  *
  * Used by interrupt handler to get next data byte from slave.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 {
@@ -54,6 +56,11 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
 
 	/* Find index to save next value in buffer. */
 	uint16_t buffer_index = dev_inst->buffer_length - dev_inst->buffer_remaining--;
+
+	if (!dev_inst->buffer_remaining) {
+		/* Send nack and stop command. */
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+	}
 
 	/* Read byte from slave and put in buffer. */
 	dev_inst->buffer[buffer_index] = i2c_module->DATA.reg;
@@ -64,7 +71,7 @@ static void _i2c_master_async_read(struct i2c_master_dev_inst *const dev_inst)
  *
  * Used by interrupt handler to send next data byte to slave.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 {
@@ -77,8 +84,10 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 
 		/* Return bad data value. */
-		dev_inst->status = STATUS_ERR_OVERFLOW;
-		return;
+		if (dev_inst->buffer_remaining) {
+			dev_inst->status = STATUS_ERR_OVERFLOW;
+			return;
+		}
 	}
 
 	/* Find index to get next byte in buffer. */
@@ -94,26 +103,21 @@ static void _i2c_master_async_write(struct i2c_master_dev_inst *const dev_inst)
  *
  * Check for errors concerning master->slave handshake.
  *
- * \param dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static void _i2c_master_async_address_response(
 		struct i2c_master_dev_inst *const dev_inst)
 {
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
-	/* Check for error. */
+	/* Check for error. Ignore bus-error; workaround for busstate stuck in BUSY. */
 	if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_WIF)
 	{
 		/* Clear write interrupt flag. */
-		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN;
-
-		/* Check for busserror. */
-		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSERR) {
-			/* Return denied. */
-			dev_inst->status = STATUS_ERR_DENIED;
+		i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_WIEN;
 
 		/* Check arbitration. */
-		} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
+		if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_ARBLOST) {
 			/* Return busy. */
 			dev_inst->status = STATUS_ERR_PACKET_COLLISION;
 		}
@@ -129,7 +133,7 @@ static void _i2c_master_async_address_response(
 	dev_inst->buffer_length = dev_inst->buffer_remaining;
 
 	/* Check for status OK. */
-	if (dev_inst->status == STATUS_IN_PROGRESS) {
+	if (dev_inst->status == STATUS_BUSY) {
 		/* Call function based on transfer direction. */
 		if (dev_inst->transfer_direction == 0) {
 			_i2c_master_async_write(dev_inst);
@@ -152,7 +156,7 @@ static void _i2c_master_async_address_response(
  */
 void i2c_master_async_register_callback(
 		struct i2c_master_dev_inst *const dev_inst,
-		i2c_master_callback_t callback,
+		const i2c_master_callback_t callback,
 		enum i2c_master_callback callback_type)
 {
 	/* Sanity check. */
@@ -202,7 +206,7 @@ void i2c_master_async_unregister_callback(
  *
  * \return          Status of starting asynchronously reading I2C packet.
  * \retval STATUS_OK If reading was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_read_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -217,21 +221,23 @@ enum status_code i2c_master_async_read_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
-
 
 	/* Save packet to device instance. */
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 1;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
+
+	/* Set action to ack. */
+	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
 
 	return STATUS_OK;
 }
@@ -247,7 +253,7 @@ enum status_code i2c_master_async_read_packet(
  *
  * \return          Status of starting asynchronously writing I2C packet.
  * \retval STATUS_OK If writing was started successfully.
- * \retval STATUS_ERR_BUSY If module is currently busy with transfer operation.
+ * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
 enum status_code i2c_master_async_write_packet(
 		struct i2c_master_dev_inst *const dev_inst,
@@ -262,14 +268,14 @@ enum status_code i2c_master_async_write_packet(
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (dev_inst->buffer_remaining > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Save packet to device instance. */
 	dev_inst->buffer = packet->data;
 	dev_inst->buffer_remaining = packet->data_length;
 	dev_inst->transfer_direction = 0;
-	dev_inst->status = STATUS_IN_PROGRESS;
+	dev_inst->status = STATUS_BUSY;
 
 	/* Enable interrupts. */
 	i2c_module->INTENSET.reg = SERCOM_I2CM_INTENSET_WIEN | SERCOM_I2CM_INTENSET_RIEN;
@@ -290,7 +296,6 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	/* Get device instance for callback handling. */
 	struct i2c_master_dev_inst *dev_inst =
 			(struct i2c_master_dev_inst*)_sercom_instances[instance];
-
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Combine callback registered and enabled masks. */
@@ -308,13 +313,19 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 		dev_inst->buffer_length = 0;
 		dev_inst->status = STATUS_OK;
 
+		/* No nack from slave, no recent stop condition has been issued. */
+		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)) {
+			/* Send nack and stop command. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		}
+
 		/* Call appropriate callback if enabled and registered. */
-		if ((callback_mask & I2C_MASTER_CALLBACK_READ_COMPLETE)
+		if ((callback_mask & (1 << I2C_MASTER_CALLBACK_READ_COMPLETE))
 				&& (dev_inst->transfer_direction == 1)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_READ_COMPLETE](dev_inst);
 
-		} else if ((callback_mask & I2C_MASTER_CALLBACK_WRITE_COMPLETE)
+		} else if ((callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE))
 				&& (dev_inst->transfer_direction == 0)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](dev_inst);
@@ -335,14 +346,18 @@ void _i2c_master_async_callback_handler(uint8_t instance)
 	}
 
 	/* Check for error. */
-	if (dev_inst->status != STATUS_IN_PROGRESS) {
+	if (dev_inst->status != STATUS_BUSY) {
 		/* Stop packet operation. */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_WIEN | SERCOM_I2CM_INTENCLR_RIEN;
 		dev_inst->buffer_length = 0;
 
+		/* Send nack and stop command unless arbitration is lost. */
+		if (dev_inst->status != STATUS_ERR_PACKET_COLLISION) {
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		}
+
 		/* Call error callback if enabled and registered. */
-		if ((dev_inst->registered_callback & I2C_MASTER_CALLBACK_ERROR)
-				&& (dev_inst->enabled_callback & I2C_MASTER_CALLBACK_ERROR)) {
+		if (callback_mask & (1 << I2C_MASTER_CALLBACK_ERROR)) {
 
 			dev_inst->callbacks[I2C_MASTER_CALLBACK_ERROR](dev_inst);
 

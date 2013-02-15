@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -43,6 +45,12 @@
 #define SPI_H_INCLUDED
 
 #include <compiler.h>
+#include <port.h>
+#include <sercom.h>
+
+#ifndef PINMUX_DEFAULT
+#define PINMUX_DEFAULT 0
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,11 +86,7 @@ extern "C" {
  *
  * \subsection spi_bus SPI Bus Connection
  * In the figure below, the connection between one Master and one Slave is
- * shown. The SPI lines are hardware controlled, but the port output must be
- * software enabled so that it can be overridden by the SPI.
- * \todo Which port output to enable?
- *
- * For half-duplex mode, the same pin is used for MOSI and MISO.
+ * shown.
  *
  * \dot
  * digraph spi_slaves_par {
@@ -140,8 +144,7 @@ extern "C" {
  * The SPI character size is configurable to 8 or 9 bits.
  *
  * \subsection master_mode Master Mode
- * When configured as a Master, the SS pin must be configured as an output
- * and controlled by user software.
+ * When configured as a Master, the SS pin will be configured as an output..
  *
  * \subsubsection data_transfer Data Transfer
  * Writing a character will start the SPI clock generator, and
@@ -227,11 +230,12 @@ extern "C" {
  *
  *
  * \subsection full_duplex Full-Duplex
- * When enabled as full-duplex SPI, the pins are automatically configured
+ * When enabled as full-duplex SPI, the pads are automatically configured
  * as seen in the table below. If the receiver is disabled, the data input
  * (MISO for Master, MOSI for Slave) can be used for other purposes.
  *
- * In Master Mode, the SS pin(s) must be configured through port configuration.
+ * In Master Mode, the SS pin(s) must be configured using
+ * the \ref slave_dev_inst struct.
  *
  * <table>
  *   <tr>
@@ -334,12 +338,12 @@ extern "C" {
  * \enddot
  *
  * \subsection sleep_modes Operation in Sleep Modes
- * The SPI module can operate in all sleep modes by setting the sleep_enable
+ * The SPI module can operate in all sleep modes by setting the run_in_standby
  * option in the \ref spi_conf struct. The operation in Slave and Master Mode
  * is shown in the table below.
  * <table>
  *   <tr>
- *      <th> sleep_enable </th>
+ *      <th> run_in_standby </th>
  *      <th> Slave </th>
  *      <th> Master </th>
  *   </tr>
@@ -423,35 +427,43 @@ enum spi_signal_mux_setting {
 	/**
 	 * See \ref mux_setting_a
 	 */
-	SPI_SIGNAL_MUX_SETTING_A = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN0),
+	SPI_SIGNAL_MUX_SETTING_A = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_b
 	 */
-	SPI_SIGNAL_MUX_SETTING_B = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN1),
+	SPI_SIGNAL_MUX_SETTING_B = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_c
 	 */
-	SPI_SIGNAL_MUX_SETTING_C = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN2),
+	SPI_SIGNAL_MUX_SETTING_C = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_d
 	 */
-	SPI_SIGNAL_MUX_SETTING_D = (SPI_DOPO_PIN0_PIN1_PIN2 | SPI_DIPO_PIN3),
+	SPI_SIGNAL_MUX_SETTING_D = (0x0 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_e
 	 */
-	SPI_SIGNAL_MUX_SETTING_E = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN0),
+	SPI_SIGNAL_MUX_SETTING_E = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_f
 	 */
-	SPI_SIGNAL_MUX_SETTING_F = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN1),
+	SPI_SIGNAL_MUX_SETTING_F = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_g
 	 */
-	SPI_SIGNAL_MUX_SETTING_G = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN2),
+	SPI_SIGNAL_MUX_SETTING_G = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
 	/**
 	 * See \ref mux_setting_h
 	 */
-	SPI_SIGNAL_MUX_SETTING_H = (SPI_DOPO_PIN2_PIN3_PIN1 | SPI_DIPO_PIN3),
+	SPI_SIGNAL_MUX_SETTING_H = (0x1 << SERCOM_SPI_CTRLA_DOPO_Pos |
+			0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
 };
 
 /**
@@ -600,7 +612,7 @@ struct spi_conf {
 	/** SPI character size */
 	enum spi_character_size chsize;
 	/** Enabled in sleep modes */
-	bool sleep_enable;
+	bool run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
 	/** Union for Slave or Master specific configuration */
@@ -610,6 +622,16 @@ struct spi_conf {
 		/** Master specific configuration */
 		struct spi_master_conf master;
 	}; /**< Union for Slave or Master specific configuration */
+	/** GCLK generator to use as clock source. */
+	enum gclk_generator generator_source;
+	/** PAD0 pinmux */
+	uint32_t pinmux_pad0;
+	/** PAD1 pinmux */
+	uint32_t pinmux_pad1;
+	/** PAD2 pinmux */
+	uint32_t pinmux_pad2;
+	/** PAD3 pinmux */
+	uint32_t pinmux_pad3;
 };
 
 #if !defined (__DOXYGEN__)
@@ -618,10 +640,10 @@ struct spi_conf {
  */
 static inline void _spi_wait_for_sync(struct spi_dev_inst *const dev_inst)
 {
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
-	while (spi_module->SPI.STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
+	while (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
 }
 #endif
 
@@ -647,6 +669,8 @@ static inline void _spi_wait_for_sync(struct spi_dev_inst *const dev_inst)
  *   \li Not enabled in sleep mode
  *   \li Receiver enabled
  *   \li Baudrate 9600
+ *   \li Default pinmux settings for all pads
+ *   \li GLCK generator 0
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -661,11 +685,18 @@ static inline void spi_get_config_defaults(struct spi_conf *const config)
 	config->transfer_mode = SPI_TRANSFER_MODE_0;
 	config->mux_setting = SPI_SIGNAL_MUX_SETTING_D;
 	config->chsize = SPI_CHARACTER_SIZE_8BIT;
-	config->sleep_enable = false;
+	config->run_in_standby = false;
 	config->receiver_enable = true;
+	config->generator_source = GCLK_GENERATOR_0;
 
 	/* Master config defaults */
 	config->master.baudrate = 9600;
+
+	/* pinmux config defaults */
+	config->pinmux_pad0 = PINMUX_DEFAULT;
+	config->pinmux_pad1 = PINMUX_DEFAULT;
+	config->pinmux_pad2 = PINMUX_DEFAULT;
+	config->pinmux_pad3 = PINMUX_DEFAULT;
 
 };
 
@@ -713,17 +744,17 @@ static inline void spi_slave_dev_init(struct spi_slave_dev_inst *const dev_inst,
 	dev_inst->address_enabled = config->address_enabled;
 	dev_inst->address = config->address;
 
-	struct port_pin_conf pin_conf;
+	struct port_conf pin_conf;
 
 	/* Get default config for pin */
-	port_pin_get_config_defaults(&pin_conf);
+	port_get_config_defaults(&pin_conf);
 
 	/* Edit config to set the pin as output */
-	pin_conf.input.enabled = false;
-	pin_conf.output.enabled = true;
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 
 	/* Set config on Slave Select pin */
 	port_pin_set_config(dev_inst->ss_pin, &pin_conf);
+	port_pin_set_output_level(dev_inst->ss_pin, true);
 }
 
 enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
@@ -741,7 +772,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
  *
  * This function will enable the SERCOM SPI module.
  *
- * \param dev_inst    Pointer to the software instance struct
+ * \param[in,out] dev_inst    Pointer to the software instance struct
  */
 static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 {
@@ -749,13 +780,13 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Enable SPI */
-	spi_module->SPI.CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
 }
 
 /**
@@ -763,7 +794,7 @@ static inline void spi_enable(struct spi_dev_inst *const dev_inst)
  *
  * This function will disable the SERCOM SPI module.
  *
- * \param dev_inst    Pointer to the software instance struct
+ * \param[in,out] dev_inst    Pointer to the software instance struct
  */
 static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 {
@@ -771,13 +802,13 @@ static inline void spi_disable(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Wait until the synchronization is complete */
 	_spi_wait_for_sync(dev_inst);
 
 	/* Disable SPI */
-	spi_module->SPI.CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
+	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }
 
 void spi_reset(struct spi_dev_inst *const dev_inst);
@@ -788,6 +819,30 @@ void spi_reset(struct spi_dev_inst *const dev_inst);
  * \name Ready to write/read
  * @{
  */
+
+ /**
+ * \brief Checks if the SPI module has shifted out last data
+ *
+ * This function will check if the SPI module has shifted out last data.
+ *
+ * \param[in] dev_inst      Pointer to the software instance struct
+ *
+ * \return Boolean value to tell whether the module has shifted out last data or
+ * not
+ * \retval true  If the SPI module has shifted out data
+ * \retval false If the SPI module has not shifter out data
+ */
+static inline bool spi_write_complete(struct spi_dev_inst *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+	Assert(dev_inst->hw_dev);
+
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+
+	/* Check interrupt flag */
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+}
 
  /**
  * \brief Checks if the SPI module is ready to write data
@@ -807,10 +862,10 @@ static inline bool spi_is_ready_to_write(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check interrupt flag */
-	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_TXCIF);
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_DREIF);
 }
 
 /**
@@ -831,13 +886,10 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
-	/* Wait for synchronization */
-	_spi_wait_for_sync(dev_inst);
-
-	/* Disable receiver */
-	return (spi_module->SPI.INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
+	/* Check interrupt flag */
+	return (spi_module->INTFLAG.reg & SERCOM_SPI_INTFLAG_RXCIF);
 }
 /** @} */
 
@@ -864,7 +916,7 @@ static inline bool spi_is_ready_to_read(struct spi_dev_inst *const dev_inst)
  *
  * \return Status of the procedure
  * \retval STATUS_OK       If the data was written
- * \retval STATUS_ERR_BUSY If the last write was not completed
+ * \retval STATUS_BUSY If the last write was not completed
  *
  */
 static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
@@ -874,16 +926,16 @@ static inline enum status_code spi_write(struct spi_dev_inst *dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
 	/* Check if the data register has been copied to the shift register */
 	if (!spi_is_ready_to_write(dev_inst)) {
 		/* Data register has not been copied to the shift register, return */
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Write the character to the DATA register */
-	spi_module->SPI.DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
+	spi_module->DATA.reg |= tx_data & SERCOM_SPI_DATA_MASK;
 
 	return STATUS_OK;
 }
@@ -904,8 +956,9 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  * \param[in] dev_inst   Pointer to the software instance struct
  * \param[out] data      Pointer to store the received data
  *
- * \retval STATUS_OK       If data was read
- * \retval STATUS_ERR_IO   If no data is available
+ * \retval STATUS_OK           If data was read
+ * \retval STATUS_ERR_IO       If no data is available
+ * \retval STATUS_ERR_OVERFLOW If the data is overflown
  */
 static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 		uint16_t *rx_data)
@@ -914,22 +967,28 @@ static inline enum status_code spi_read(struct spi_dev_inst *const dev_inst,
 	Assert(dev_inst);
 	Assert(dev_inst->hw_dev);
 
-	Sercom *const spi_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
 
-	/* Check until if data is ready to be read */
+	/* Return value */
+	enum status_code retval = STATUS_OK;
+	/* Check if data is ready to be read */
 	if (!spi_is_ready_to_read(dev_inst)) {
 		/* No data has been received, return */
 		return STATUS_ERR_IO;
 	}
 
+	/* Check if data is overflown */
+	if (spi_module->STATUS.reg & SERCOM_SPI_STATUS_BUFOVF) {
+		retval = STATUS_ERR_OVERFLOW;
+	}
 	/* Read the character from the DATA register */
 	if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-		*rx_data = (spi_module->SPI.DATA.reg & SERCOM_SPI_DATA_MASK);
+		*rx_data = (spi_module->DATA.reg & SERCOM_SPI_DATA_MASK);
 	} else {
-		*(uint8_t*)rx_data = (uint8_t)spi_module->SPI.DATA.reg;
+		*(uint8_t*)rx_data = (uint8_t)spi_module->DATA.reg;
 	}
 
-	return STATUS_OK;
+	return retval;
 }
 
 enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
@@ -948,6 +1007,8 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * In Slave Mode this function will place the data to be sent into the transmit
  * buffer. It will then block until an SPI Master has shifted a complete
  * SPI character, and the received data is available.
+ * \note The data to be sent might not be sent before the next transfer, as
+ * loading of the shift register is dependent on SCK.
  *
  * \param[in] dev_inst    Pointer to the software instance struct
  * \param[in] tx_data     SPI character to transmit
@@ -957,6 +1018,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * \retval STATUS_OK           If the operation was completed
  * \retval STATUS_ERR_TIMEOUT  If the operation was not completed within the
  *                             timeout in slave mode.
+ * \retval STATUS_ERR_OVERFLOW If the incoming data is overflown
  */
 static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst,
 		uint16_t tx_data, uint16_t *rx_data)
@@ -965,7 +1027,7 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 	Assert(dev_inst);
 
 	uint16_t j;
-
+	enum status_code retval = STATUS_OK;
 	/* Start timeout period for slave */
 	if (dev_inst->mode == SPI_MODE_SLAVE) {
 		for (j = 0; j <= SPI_TIMEOUT; j++) {
@@ -1000,9 +1062,9 @@ static inline enum status_code spi_tranceive(struct spi_dev_inst *const dev_inst
 	while (!spi_is_ready_to_read(dev_inst)) {
 	}
 	/* Read data */
-	spi_read(dev_inst, rx_data);
+	retval = spi_read(dev_inst, rx_data);
 
-	return STATUS_OK;
+	return retval;
 }
 
 enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
@@ -1169,7 +1231,7 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
 
  /**
  * \page mux_settings Mux Settings
- * The different options for functionality of the SERCOM pins.
+ * The different options for functionality of the SERCOM pads.
  * As not all settings can be used in different modes of operation, proper
  * settings must be chosen according to the rest of the configuration.
  *
@@ -1210,10 +1272,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1254,10 +1316,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1298,10 +1360,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1342,10 +1404,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1387,10 +1449,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1431,10 +1493,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1475,10 +1537,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>
@@ -1519,10 +1581,10 @@ static inline enum status_code spi_deselect_slave(struct spi_dev_inst *dev_inst,
  * <table>
  *   <tr>
  *      <th> Function </th>
- *      <th> Pin0 </th>
- *      <th> Pin1 </th>
- *      <th> Pin2 </th>
- *      <th> Pin3 </th>
+ *      <th> Pad0 </th>
+ *      <th> Pad1 </th>
+ *      <th> Pad2 </th>
+ *      <th> Pad3 </th>
  *   </tr>
  *   <tr>
  *      <th> SCK </th>

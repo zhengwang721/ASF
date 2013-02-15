@@ -18,7 +18,6 @@
 		<build type="header-file" value="instance_pac2.h"/>
 		<build type="header-file" value="instance_pm.h"/>
 		<build type="header-file" value="instance_port.h"/>
-		<build type="header-file" value="instance_ptc.h"/>
 		<build type="header-file" value="instance_rtc.h"/>
 		<build type="header-file" value="instance_sercom0.h"/>
 		<build type="header-file" value="instance_sercom1.h"/>

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -99,7 +101,11 @@ static enum status_code _rtc_count_set_config(
 				/* Set clear on match. */
 				rtc_module->MODE0.CTRL.reg |= RTC_MODE0_CTRL_MATCHCLR;
 			}
-
+			/* Set compare values. */
+			for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
+				_rtc_count_wait_for_sync();
+				rtc_count_set_compare(config->compare_values[i], i);
+			}
 			break;
 
 		case RTC_COUNT_MODE_16BIT:
@@ -112,9 +118,12 @@ static enum status_code _rtc_count_set_config(
 				Assert(false);
 				return STATUS_ERR_INVALID_ARG;
 			}
-
+			/* Set compare values. */
+			for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+				_rtc_count_wait_for_sync();
+				rtc_count_set_compare(config->compare_values[i], i);
+			}
 			break;
-
 		default:
 			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
@@ -124,30 +133,6 @@ static enum status_code _rtc_count_set_config(
 	if (config->continuously_update) {
 		/* Set continuously mode. */
 		rtc_module->MODE0.READREQ.reg |= RTC_READREQ_RCONT;
-	}
-
-	/* Set compare values. */
-	/* Sync. */
-	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare_values[0], RTC_COUNT_COMPARE_0);
-	/* Sync. */
-	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare_values[1], RTC_COUNT_COMPARE_1);
-	/* Sync. */
-	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare_values[2], RTC_COUNT_COMPARE_2);
-	/* Sync. */
-	_rtc_count_wait_for_sync();
-	rtc_count_set_compare(config->compare_values[3], RTC_COUNT_COMPARE_3);
-
-	/* Check if 16 bit mode. */
-	if (config->mode == RTC_COUNT_MODE_16BIT) {
-		/* Sync. */
-		_rtc_count_wait_for_sync();
-		rtc_count_set_compare(config->compare_values[4], RTC_COUNT_COMPARE_4);
-		/* Sync. */
-		_rtc_count_wait_for_sync();
-		rtc_count_set_compare(config->compare_values[5], RTC_COUNT_COMPARE_5);
 	}
 
 	/* Set event source. */
@@ -178,10 +163,17 @@ enum status_code rtc_count_init(const struct rtc_count_conf *const config)
 	/* Sanity check. */
 	Assert(config);
 
+	/* Set up GCLK */
+	struct system_gclk_chan_conf gclk_chan_conf;
+
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
+	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(RTC_GCLK_ID);
+
 	/* Reset module to hardware defaults. */
 	_rtc_count_reset();
 
-	//TODO: Do some magic to set up clock!
 	//TODO: Get tools to add in alias names for other RTC modes
 	/* Set the prescaler according to settings in conf_clocks.h */
 #if CONF_CLOCK_RTC_FREQ == CONF_CLOCK_RTC_FREQ_1HZ
@@ -189,7 +181,6 @@ enum status_code rtc_count_init(const struct rtc_count_conf *const config)
 #else
 	rtc_module->MODE0.CTRL.reg = RTC_MODE2_CTRL_PRESCALER_DIV1;
 #endif
-
 	/* Save conf_struct internally for continued use. */
 	_rtc_dev.mode = config->mode;
 	_rtc_dev.continuously_update = config->continuously_update;
@@ -324,7 +315,7 @@ enum status_code rtc_count_set_compare(uint32_t comp_value,
 		case RTC_COUNT_MODE_32BIT:
 
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_COUNT_COMPARE_3) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_ALARMS) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -335,7 +326,7 @@ enum status_code rtc_count_set_compare(uint32_t comp_value,
 
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_COUNT_COMPARE_5) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_COMP16) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -384,7 +375,7 @@ enum status_code rtc_count_get_compare(uint32_t *const comp_value,
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_COUNT_COMPARE_3) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_ALARMS) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -395,7 +386,7 @@ enum status_code rtc_count_get_compare(uint32_t *const comp_value,
 
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_COUNT_COMPARE_5) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_COMP16) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -484,8 +475,6 @@ enum status_code rtc_count_set_period(uint16_t period_value)
  *
  * \param[in] comp_index Index of compare to check current flag.
  */
-//TODO: Fault THIS IS WRONG!
-#warning "DO STUFF HERE!"
 bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
 {
 	/* Initialize module pointer. */
@@ -495,7 +484,7 @@ bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32 bit mode. */
-			if (comp_index > RTC_COUNT_COMPARE_3) {
+			if (comp_index > RTC_NUM_OF_ALARMS) {
 				return false;
 			}
 
@@ -503,7 +492,7 @@ bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
 
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity for 16 bit mode. */
-			if (comp_index > RTC_COUNT_COMPARE_5) {
+			if (comp_index > RTC_NUM_OF_COMP16) {
 				return false;
 			}
 
@@ -542,7 +531,7 @@ enum status_code rtc_count_clear_compare_match(enum rtc_count_compare comp_index
 	switch (_rtc_dev.mode){
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32 bit mode. */
-			if (comp_index > RTC_COUNT_COMPARE_3) {
+			if (comp_index > RTC_NUM_OF_ALARMS) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -550,7 +539,7 @@ enum status_code rtc_count_clear_compare_match(enum rtc_count_compare comp_index
 
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity for 16 bit mode. */
-			if (comp_index > RTC_COUNT_COMPARE_5) {
+			if (comp_index > RTC_NUM_OF_COMP16) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ADC Example 1 for atxmega192d3 on stk600 " id="xmega.drivers.adc.example1.xmega192d3_stk600">
+	<project caption="ADC Internal temperature sensor example for atxmega192d3 on stk600 " id="xmega.drivers.adc.example1.xmega192d3_stk600">
 		<build type="header-file" value="conf_adc.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

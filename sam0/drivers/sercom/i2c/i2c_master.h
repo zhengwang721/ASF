@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -44,9 +46,14 @@
 
 #include <sercom.h>
 #include "i2c_common.h"
+#include <pinmux.h>
 
 #ifdef I2C_MASTER_ASYNC
 # include <sercom_interrupts.h>
+#endif
+
+#ifndef PINMUX_DEFAULT
+# define PINMUX_DEFAULT 0
 #endif
 
 #ifdef __cplusplus
@@ -206,6 +213,10 @@ struct i2c_master_conf {
 	uint16_t buffer_timeout;
 	/** Set to keep module active in sleep modes. */
 	bool run_in_standby;
+	/** PAD0 (SDA) pinmux */
+	uint32_t pinmux_pad0;
+	/** PAD1 (SCL) pinmux */
+	uint32_t pinmux_pad1;
 };
 
 /**
@@ -260,6 +271,8 @@ static inline void i2c_master_get_config_defaults(
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_300NS_600NS;
 	config->buffer_timeout = 65535;
 	config->unkown_bus_state_timeout = 65535;
+	config->pinmux_pad0 = PINMUX_DEFAULT;
+	config->pinmux_pad1 = PINMUX_DEFAULT;
 }
 
 enum status_code i2c_master_init(struct i2c_master_dev_inst *const dev_inst,
@@ -284,7 +297,7 @@ static inline void i2c_master_enable(
 	SercomI2cm *const i2c_module = &(dev_inst->hw_dev->I2CM);
 
 	/* Timeout counter used to force bus state. */
-	volatile uint16_t timeout_counter = 0;
+	uint32_t timeout_counter = 0;
 
 	/* Wait for module to sync. */
 	_i2c_master_wait_for_sync(dev_inst);
@@ -293,11 +306,13 @@ static inline void i2c_master_enable(
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
 	/* Start timeout if bus state is unknown. */
-	while (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(0)) {
-		timeout_counter++;
-		if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
+	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {		
+                timeout_counter++;
+                if(timeout_counter >= (dev_inst->unkown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
-			i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
+                        i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
+                        /* Workaround #1 */
+                        return;
 		}
 	}
 }

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -40,7 +42,7 @@
  */
 
 /**
- * \page pac_basic_use_case Quick Start Guide for the PAC module - Basic Use Case
+ * \page asfdoc_samd20_pac_basic_use_case Quick Start Guide for the PAC module - Basic Use Case
  *
  * In this use case, the peripheral-lock will be used to lock and unlock the
  * PORT peripheral access, and show how to implement the PAC module when the
@@ -48,29 +50,27 @@
  * - One pin in input mode, with pull-up and falling edge-detect.
  * - One pin in output mode.
  *
- * \section pac_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_pac_basic_use_case_setup Quick Start
  *
- * \subsection pac_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_pac_basic_use_case_prereq Prerequisites
  * Needs to include and set up the PORT driver. A suggested set up for the PORT
  * in the quick start, but the drivers for the PORT will need to be included.
  *
- * \subsection pac_basic_use_case_code Code
+ * \subsection asfdoc_samd20_pac_basic_use_case_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_pac_basic.c pin_setup
  * Add to user application %main():
  * \snippet qs_pac_basic.c main
  *
- * \section pac_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_pac_basic_use_case_main Workflow
  * -# Make function to set up PORT module.
  *  - \snippet qs_pac_basic.c pin_setup
- * -# Initialize module PORT.
+ * -# Initialize the system peripherals and set up some GPIO port pins.
  *  - \snippet qs_pac_basic.c init
  * -# Lock peripheral access for PORT
  *  - \snippet qs_pac_basic.c init_lock
- * -# Set sanity argument, can be set anywhere before the actual check.
- *  - \snippet qs_pac_basic.c set_sanity
  * -# Enable global interrupts.
- *  - \snippet qs_pac_basic.c sei
+ *  - \snippet qs_pac_basic.c enable_interrupts
  * -# Loop to wait for edge detect.
  *  - \snippet qs_pac_basic.c button_press
  * -# Disable interrupts globally
@@ -81,10 +81,8 @@
  *  - \snippet qs_pac_basic.c alter_config
  * -# Lock the peripheral registers.
  *  - \snippet qs_pac_basic.c lock_perph
- * -# Clear the sanity flag.
- *  - \snippet qs_pac_basic.c clear_sanity
  * -# Re-enable global interrupts.
- *  - \snippet qs_pac_basic.c enable_interrupts
+ *  - \snippet qs_pac_basic.c enable_interrupts_2
  * -# Start inf wait loop.
  *  - \snippet qs_pac_basic.c inf_loop
  */

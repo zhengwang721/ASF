@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Peripheral I/O description for SAMD20E16A
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -537,66 +539,5 @@
 #define MUX_PA01H_DAC_VREFP                7
 #define PINMUX_PA01H_DAC_VREFP     ((PIN_PA01H_DAC_VREFP << 16) | MUX_PA01H_DAC_VREFP)
 #define PORT_PA01H_DAC_VREFP       (1u <<  1)
-/* ========== PORT definition for PTC peripheral ========== */
-#define PIN_PA10H_PTC_X0                  10  /**< \brief PTC signal: X0 on PA10 mux H */
-#define MUX_PA10H_PTC_X0                   7
-#define PINMUX_PA10H_PTC_X0        ((PIN_PA10H_PTC_X0 << 16) | MUX_PA10H_PTC_X0)
-#define PORT_PA10H_PTC_X0          (1u << 10)
-#define PIN_PA11H_PTC_X1                  11  /**< \brief PTC signal: X1 on PA11 mux H */
-#define MUX_PA11H_PTC_X1                   7
-#define PINMUX_PA11H_PTC_X1        ((PIN_PA11H_PTC_X1 << 16) | MUX_PA11H_PTC_X1)
-#define PORT_PA11H_PTC_X1          (1u << 11)
-#define PIN_PA14H_PTC_X2                  14  /**< \brief PTC signal: X2 on PA14 mux H */
-#define MUX_PA14H_PTC_X2                   7
-#define PINMUX_PA14H_PTC_X2        ((PIN_PA14H_PTC_X2 << 16) | MUX_PA14H_PTC_X2)
-#define PORT_PA14H_PTC_X2          (1u << 14)
-#define PIN_PA15H_PTC_X3                  15  /**< \brief PTC signal: X3 on PA15 mux H */
-#define MUX_PA15H_PTC_X3                   7
-#define PINMUX_PA15H_PTC_X3        ((PIN_PA15H_PTC_X3 << 16) | MUX_PA15H_PTC_X3)
-#define PORT_PA15H_PTC_X3          (1u << 15)
-#define PIN_PA16H_PTC_X4                  16  /**< \brief PTC signal: X4 on PA16 mux H */
-#define MUX_PA16H_PTC_X4                   7
-#define PINMUX_PA16H_PTC_X4        ((PIN_PA16H_PTC_X4 << 16) | MUX_PA16H_PTC_X4)
-#define PORT_PA16H_PTC_X4          (1u << 16)
-#define PIN_PA17H_PTC_X5                  17  /**< \brief PTC signal: X5 on PA17 mux H */
-#define MUX_PA17H_PTC_X5                   7
-#define PINMUX_PA17H_PTC_X5        ((PIN_PA17H_PTC_X5 << 16) | MUX_PA17H_PTC_X5)
-#define PORT_PA17H_PTC_X5          (1u << 17)
-#define PIN_PA18H_PTC_X6                  18  /**< \brief PTC signal: X6 on PA18 mux H */
-#define MUX_PA18H_PTC_X6                   7
-#define PINMUX_PA18H_PTC_X6        ((PIN_PA18H_PTC_X6 << 16) | MUX_PA18H_PTC_X6)
-#define PORT_PA18H_PTC_X6          (1u << 18)
-#define PIN_PA19H_PTC_X7                  19  /**< \brief PTC signal: X7 on PA19 mux H */
-#define MUX_PA19H_PTC_X7                   7
-#define PINMUX_PA19H_PTC_X7        ((PIN_PA19H_PTC_X7 << 16) | MUX_PA19H_PTC_X7)
-#define PORT_PA19H_PTC_X7          (1u << 19)
-#define PIN_PA00H_PTC_Y0                   0  /**< \brief PTC signal: Y0 on PA00 mux H */
-#define MUX_PA00H_PTC_Y0                   7
-#define PINMUX_PA00H_PTC_Y0        ((PIN_PA00H_PTC_Y0 << 16) | MUX_PA00H_PTC_Y0)
-#define PORT_PA00H_PTC_Y0          (1u <<  0)
-#define PIN_PA01H_PTC_Y1                   1  /**< \brief PTC signal: Y1 on PA01 mux H */
-#define MUX_PA01H_PTC_Y1                   7
-#define PINMUX_PA01H_PTC_Y1        ((PIN_PA01H_PTC_Y1 << 16) | MUX_PA01H_PTC_Y1)
-#define PORT_PA01H_PTC_Y1          (1u <<  1)
-#define PIN_PA02H_PTC_Y2                   2  /**< \brief PTC signal: Y2 on PA02 mux H */
-#define MUX_PA02H_PTC_Y2                   7
-#define PINMUX_PA02H_PTC_Y2        ((PIN_PA02H_PTC_Y2 << 16) | MUX_PA02H_PTC_Y2)
-#define PORT_PA02H_PTC_Y2          (1u <<  2)
-#define PIN_PA04H_PTC_Y4                   4  /**< \brief PTC signal: Y4 on PA04 mux H */
-#define MUX_PA04H_PTC_Y4                   7
-#define PINMUX_PA04H_PTC_Y4        ((PIN_PA04H_PTC_Y4 << 16) | MUX_PA04H_PTC_Y4)
-#define PORT_PA04H_PTC_Y4          (1u <<  4)
-#define PIN_PA05H_PTC_Y5                   5  /**< \brief PTC signal: Y5 on PA05 mux H */
-#define MUX_PA05H_PTC_Y5                   7
-#define PINMUX_PA05H_PTC_Y5        ((PIN_PA05H_PTC_Y5 << 16) | MUX_PA05H_PTC_Y5)
-#define PORT_PA05H_PTC_Y5          (1u <<  5)
-#define PIN_PA06H_PTC_Y6                   6  /**< \brief PTC signal: Y6 on PA06 mux H */
-#define MUX_PA06H_PTC_Y6                   7
-#define PINMUX_PA06H_PTC_Y6        ((PIN_PA06H_PTC_Y6 << 16) | MUX_PA06H_PTC_Y6)
-#define PORT_PA06H_PTC_Y6          (1u <<  6)
-#define PIN_PA07H_PTC_Y7                   7  /**< \brief PTC signal: Y7 on PA07 mux H */
-#define MUX_PA07H_PTC_Y7                   7
-#define PINMUX_PA07H_PTC_Y7        ((PIN_PA07H_PTC_Y7 << 16) | MUX_PA07H_PTC_Y7)
-#define PORT_PA07H_PTC_Y7          (1u <<  7)
 
 #endif /* _SAMD20E16A_PIO_ */

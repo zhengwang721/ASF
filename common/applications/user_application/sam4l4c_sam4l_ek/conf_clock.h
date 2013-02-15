@@ -30,6 +30,15 @@
 /* 0: disable PicoCache, 1: enable PicoCache  */
 #define CONFIG_HCACHE_ENABLE          1
 
+/*
+ * To use low power mode for flash read mode (PS0, PS1), don't define it.
+ * To use high speed mode for flash read mode (PS2), define it.
+ *
+ * \note
+ * For early engineer samples, ONLY low power mode support for flash read mode.
+ */
+//#define CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
+
 /* Fbus = Fsys / (2 ^ BUS_div) */
 #define CONFIG_SYSCLK_CPU_DIV         0
 #define CONFIG_SYSCLK_PBA_DIV         0
@@ -37,8 +46,9 @@
 #define CONFIG_SYSCLK_PBC_DIV         0
 #define CONFIG_SYSCLK_PBD_DIV         0
 
-//#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
-#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
+//#define CONFIG_USBCLK_SOURCE          USBCLK_SRC_OSC0
+#define CONFIG_USBCLK_SOURCE          USBCLK_SRC_PLL0
+//#define CONFIG_USBCLK_STARTUP_TIMEOUT (OSC0_STARTUP_TIMEOUT*(1000000/OSC_RCSYS_NOMINAL_HZ))
 
 /* Fusb = Fsys / USB_div */
 #define CONFIG_USBCLK_DIV           1

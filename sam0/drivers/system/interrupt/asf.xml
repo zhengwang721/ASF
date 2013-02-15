@@ -1,0 +1,19 @@
+﻿<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.system.interrupt" caption="System interrupt driver">
+		<info type="description" value="summary">
+			Interrupt management support for the ARM CM0+ core.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="" />
+		</info>
+		<build type="include-path" value="." />
+		<build type="header-file" subtype="api" value="system_interrupt.h"/>
+		<build type="header-file" subtype="example" value="quick_start/qs_system_interrupt.h"/>
+		<build type="c-source" value="system_interrupt.c"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_system_interrupt_group"/>
+		<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
+		<require idref="thirdparty.cmsis"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
+</asf>

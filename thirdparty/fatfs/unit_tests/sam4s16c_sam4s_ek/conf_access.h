@@ -3,7 +3,7 @@
  *
  * \brief Memory access control configuration file.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -179,7 +179,7 @@
 /*! \name Activation of Interface Features
  */
 //! @{
-#define ACCESS_USB           true    //!< MEM <-> USB interface.
+#define ACCESS_USB           false   //!< MEM <-> USB interface.
 #define ACCESS_MEM_TO_RAM    true    //!< MEM <-> RAM interface.
 #define ACCESS_STREAM        true    //!< Streaming MEM <-> MEM interface.
 #define ACCESS_STREAM_RECORD false   //!< Streaming MEM <-> MEM interface in record mode.

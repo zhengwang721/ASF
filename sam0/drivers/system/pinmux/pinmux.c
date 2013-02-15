@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -55,7 +57,7 @@
 static void _system_pinmux_config(
 		PortGroup *const port,
 		const uint32_t pin_mask,
-		const struct system_pinmux_conf *const config)
+		const struct system_pinmux_config *const config)
 {
 	Assert(port);
 	Assert(config);
@@ -148,7 +150,7 @@ static void _system_pinmux_config(
  */
 void system_pinmux_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct system_pinmux_conf *const config)
+		const struct system_pinmux_config *const config)
 {
 	PortGroup *const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask = (1UL << (gpio_pin % 32));
@@ -172,7 +174,7 @@ void system_pinmux_pin_set_config(
 void system_pinmux_group_set_config(
 		PortGroup *const port,
 		const uint32_t mask,
-		const struct system_pinmux_conf *const config)
+		const struct system_pinmux_config *const config)
 {
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {

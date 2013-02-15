@@ -5,8 +5,9 @@
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
- * \license
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,11 +48,15 @@
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - \ref mux_setting_d
+ * - \ref mux_setting_e
+ * - MOSI on pad 2, pin PA12
+ * - MISO on pad 0, pin PA14
+ * - SCK on pad 3, pin PA13
+ * - SS on pin PA16
  * - Character size 8 bit
  * - Not enabled in sleep mode
- * - Receiver disabled
  * - Baudrate 9600
+ * - GLCK generator 0
  *
  *
  * \section spi_basic_use_case_setup Quick Start
@@ -80,25 +85,37 @@
  *  - \snippet qs_spi_basic.c slave_config
  * -# Create peripheral slave software device instance struct.
  *  - \snippet qs_spi_basic.c slave_dev_inst
+ * -# Initialize system.
+ *  - \snippet qs_spi_basic.c system_init
  * -# Get default peripheral slave configuration.
  *  - \snippet qs_spi_basic.c slave_conf_defaults
  * -# Set Slave Select pin.
  *  - \snippet qs_spi_basic.c ss_pin
   * -# Initialize peripheral slave software instance with configuration.
  *  - \snippet qs_spi_basic.c slave_init
- * -# Get default configuration.
+ * -# Get default configuration to edit.
  *  - \snippet qs_spi_basic.c conf_defaults
- * -# Initialize SPI module with default configuration.
+ * -# Set mux setting E.
+ *  - \snippet qs_spi_basic.c mux_setting
+ * -# Set pinmux for pad 0 (data in on pin PA14).
+ *  - \snippet qs_spi_basic.c di
+ * -# Set pinmux for pad 1 (slave select on pin PA15). Not necessary in master mode, shown as an example.
+ *  - \snippet qs_spi_basic.c ss
+ * -# Set pinmux for pad 2 (data out on pin PA12).
+ *  - \snippet qs_spi_basic.c do
+ * -# Set pinmux for pad 3 (SCK on pin PA13).
+ *  - \snippet qs_spi_basic.c sck
+ * -# Initialize SPI module with configuration.
  *  - \snippet qs_spi_basic.c init
- * -# Edit configuration to disable receiver.
- *  - \snippet qs_spi_basic.c conf_rec
  * -# Enable SPI module.
  *  - \snippet qs_spi_basic.c config
- * -# Enable slave select pin.
+ * -# Select slave.
  *  - \snippet qs_spi_basic.c slave_select
  * -# Write buffer to SPI slave.
- *  - \snippet qs_spi_basic.c write_buffer
- * -# Disable slave select pin.
+ *  - \snippet qs_spi_basic.c write
+ * -# Wait for last character to be shifted to the slave.
+ *  - \snippet qs_spi_basic.c wait
+ * -# Deselect slave.
  *  - \snippet qs_spi_basic.c slave_unselect
  * -# Infinite loop.
  *  - \snippet qs_spi_basic.c inf_loop

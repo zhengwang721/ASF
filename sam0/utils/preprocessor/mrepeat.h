@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -59,12 +61,12 @@
  *
  * This macro represents a horizontal repetition construct.
  *
- * \param count  The number of repetitious calls to macro. Valid values range
- *               from 0 to MREPEAT_LIMIT.
- * \param macro  A binary operation of the form macro(n, data). This macro is
- *               expanded by MREPEAT with the current repetition number and the
- *               auxiliary data argument.
- * \param data   Auxiliary data passed to macro.
+ * \param[in] count  The number of repetitious calls to macro. Valid values
+ *                   range from 0 to MREPEAT_LIMIT.
+ * \param[in] macro  A binary operation of the form macro(n, data). This macro
+ *                   is expanded by MREPEAT with the current repetition number
+ *                   and the auxiliary data argument.
+ * \param[in] data   Auxiliary data passed to macro.
  *
  * \return       <tt>macro(0, data) macro(1, data) ... macro(count - 1, data)</tt>
  */

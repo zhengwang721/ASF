@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -201,7 +203,7 @@
  * \section module_dependencies Dependencies
  * The Analog Comparator driver has the following dependencies.
  *
- * \li \ref gclk_group "GCLK" (Generic Clock Management)
+ * \li \ref asfdoc_samd20_gclk_group "GCLK" (Generic Clock Management)
  *
  * \section special_considerations Special Considerations
  *
@@ -222,23 +224,42 @@
 
 #include <compiler.h>
 #include <string.h>
+#include <clock.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
+ * \brief AC comparator channel selection enum.
+ *
+ * Enum for the possible comparator channels.
+ */
+enum ac_chan_channel {
+	/** Comparator channel 0 (Pair 0, Comparator 0) */
+	AC_CHAN_CHANNEL_0 = 0,
+	/** Comparator channel 1 (Pair 0, Comparator 1) */
+	AC_CHAN_CHANNEL_1 = 1,
+#if defined(__DOXYGEN__) || (AC_NUM_CMP > 2)
+	/** Comparator channel 2 (Pair 1, Comparator 0) */
+	AC_CHAN_CHANNEL_2 = 2,
+	/** Comparator channel 3 (Pair 1, Comparator 1) */
+	AC_CHAN_CHANNEL_3 = 3,
+#endif
+};
+
+/**
  * \brief AC channel input sampling mode configuration enum.
  *
  * Enum for the possible channel sampling modes of an Analog Comparator channel.
  */
-enum ac_ch_sample_mode {
+enum ac_chan_sample_mode {
 	/** Continuous sampling mode; when the channel is enabled the comparator
 	 *  output is available for reading at any time. */
-	AC_CH_MODE_CONTINUOUS    = 0,
+	AC_CHAN_MODE_CONTINUOUS    = 0,
 	/** Single shot mode; when used the comparator channel must be triggered to
 	 *  perform a comparison before reading the result. */
-	AC_CH_MODE_SINGLE_SHOT   = AC_COMPCTRL_SINGLE,
+	AC_CHAN_MODE_SINGLE_SHOT   = AC_COMPCTRL_SINGLE,
 };
 
 /**
@@ -247,15 +268,15 @@ enum ac_ch_sample_mode {
  * Enum for the possible channel positive pin input of an Analog Comparator
  * channel.
  */
-enum ac_ch_pos_mux {
+enum ac_chan_pos_mux {
 	/** Positive comparator input is connected to physical AC input pin 0. */
-	AC_CH_POS_MUX_PIN0       = AC_COMPCTRL_MUXPOS_PIN0,
+	AC_CHAN_POS_MUX_PIN0       = AC_COMPCTRL_MUXPOS_PIN0,
 	/** Positive comparator input is connected to physical AC input pin 1. */
-	AC_CH_POS_MUX_PIN1       = AC_COMPCTRL_MUXPOS_PIN1,
+	AC_CHAN_POS_MUX_PIN1       = AC_COMPCTRL_MUXPOS_PIN1,
 	/** Positive comparator input is connected to physical AC input pin 2. */
-	AC_CH_POS_MUX_PIN2       = AC_COMPCTRL_MUXPOS_PIN2,
+	AC_CHAN_POS_MUX_PIN2       = AC_COMPCTRL_MUXPOS_PIN2,
 	/** Positive comparator input is connected to physical AC input pin 3. */
-	AC_CH_POS_MUX_PIN3       = AC_COMPCTRL_MUXPOS_PIN3,
+	AC_CHAN_POS_MUX_PIN3       = AC_COMPCTRL_MUXPOS_PIN3,
 };
 
 /**
@@ -264,26 +285,26 @@ enum ac_ch_pos_mux {
  * Enum for the possible channel negative pin input of an Analog Comparator
  * channel.
  */
-enum ac_ch_neg_mux {
+enum ac_chan_neg_mux {
 	/** Negative comparator input is connected to physical AC input pin 0. */
-	AC_CH_NEG_MUX_PIN0       = AC_COMPCTRL_MUXNEG_PIN0,
+	AC_CHAN_NEG_MUX_PIN0       = AC_COMPCTRL_MUXNEG_PIN0,
 	/** Negative comparator input is connected to physical AC input pin 1. */
-	AC_CH_NEG_MUX_PIN1       = AC_COMPCTRL_MUXNEG_PIN1,
+	AC_CHAN_NEG_MUX_PIN1       = AC_COMPCTRL_MUXNEG_PIN1,
 	/** Negative comparator input is connected to physical AC input pin 2. */
-	AC_CH_NEG_MUX_PIN2       = AC_COMPCTRL_MUXNEG_PIN2,
+	AC_CHAN_NEG_MUX_PIN2       = AC_COMPCTRL_MUXNEG_PIN2,
 	/** Negative comparator input is connected to physical AC input pin 3. */
-	AC_CH_NEG_MUX_PIN3       = AC_COMPCTRL_MUXNEG_PIN3,
+	AC_CHAN_NEG_MUX_PIN3       = AC_COMPCTRL_MUXNEG_PIN3,
 	/** Negative comparator input is connected to the internal ground plane. */
-	AC_CH_NEG_MUX_GND        = AC_COMPCTRL_MUXNEG_GND,
+	AC_CHAN_NEG_MUX_GND        = AC_COMPCTRL_MUXNEG_GND,
 	/** Negative comparator input is connected to the channel's internal VCC
 	 *  plane voltage scalar. */
-	AC_CH_NEG_MUX_SCALED_VCC = AC_COMPCTRL_MUXNEG_VSCALE,
+	AC_CHAN_NEG_MUX_SCALED_VCC = AC_COMPCTRL_MUXNEG_VSCALE,
 	/** Negative comparator input is connected to the internal band gap voltage
 	 *  reference. */
-	AC_CH_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
+	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 	/** Negative comparator input is connected to the channel's internal DAC
 	 *  channel 0 output. */
-	AC_CH_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
+	AC_CHAN_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
 };
 
 /**
@@ -292,15 +313,15 @@ enum ac_ch_neg_mux {
  * Enum for the possible channel output filtering configurations of an Analog
  * Comparator channel.
  */
-enum ac_ch_filter {
+enum ac_chan_filter {
 	/** No output filtering is performed on the comparator channel. */
-	AC_CH_FILTER_NONE        = AC_COMPCTRL_FLEN_OFF,
+	AC_CHAN_FILTER_NONE        = AC_COMPCTRL_FLEN_OFF,
 	/** Comparator channel output is passed through a Majority-of-Three
 	 *  filter. */
-	AC_CH_FILTER_MAJORITY_3  = AC_COMPCTRL_FLEN_MAJ3,
+	AC_CHAN_FILTER_MAJORITY_3  = AC_COMPCTRL_FLEN_MAJ3,
 	/** Comparator channel output is passed through a Majority-of-Five
 	 *  filter. */
-	AC_CH_FILTER_MAJORITY_5  = AC_COMPCTRL_FLEN_MAJ5,
+	AC_CHAN_FILTER_MAJORITY_5  = AC_COMPCTRL_FLEN_MAJ5,
 };
 
 /**
@@ -309,16 +330,16 @@ enum ac_ch_filter {
  * Enum for the possible channel GPIO output routing configurations of an Analog
  * Comparator channel.
  */
-enum ac_ch_output {
+enum ac_chan_output {
 	/** Comparator channel output is not routed to a physical GPIO pin, and is
 	 *  used internally only. */
-	AC_CH_OUTPUT_INTERNAL    = AC_COMPCTRL_OUT_OFF,
+	AC_CHAN_OUTPUT_INTERNAL    = AC_COMPCTRL_OUT_OFF,
 	/** Comparator channel output is routed to it's matching physical GPIO pin,
 	 *  via an asynchronous path. */
-	AC_CH_OUTPUT_ASYNCRONOUS = AC_COMPCTRL_OUT_ASYNC,
+	AC_CHAN_OUTPUT_ASYNCRONOUS = AC_COMPCTRL_OUT_ASYNC,
 	/** Comparator channel output is routed to it's matching physical GPIO pin,
 	 *  via a synchronous path. */
-	AC_CH_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
+	AC_CHAN_OUTPUT_SYNCHRONOUS = AC_COMPCTRL_OUT_SYNC,
 };
 
 /**
@@ -326,15 +347,29 @@ enum ac_ch_output {
  *
  * Enum for the possible output states of an Analog Comparator channel.
  */
-enum ac_ch_state {
+enum ac_chan_state {
 	/** Unknown output state; the comparator channel was not ready. */
-	AC_CH_STATE_UNKNOWN,
+	AC_CHAN_STATE_UNKNOWN,
 	/** Comparator's negative input pin is higher in voltage than the positive
 	 *  input pin. */
-	AC_CH_STATE_NEG_ABOVE_POS,
+	AC_CHAN_STATE_NEG_ABOVE_POS,
 	/** Comparator's positive input pin is higher in voltage than the negative
 	 *  input pin. */
-	AC_CH_STATE_POS_ABOVE_NEG,
+	AC_CHAN_STATE_POS_ABOVE_NEG,
+};
+
+/**
+ * \brief AC window channel selection enum.
+ *
+ * Enum for the possible window comparator channels.
+ */
+enum ac_win_channel {
+	/** Window channel 0 (Pair 0, Comparators 0 and 1) */
+	AC_WIN_CHANNEL_0 = 0,
+#if defined(__DOXYGEN__) || (AC_PAIRS > 1)
+	/** Window channel 1 (Pair 1, Comparators 2 and 3) */
+	AC_WIN_CHANNEL_1 = 1,
+#endif
 };
 
 /**
@@ -380,9 +415,9 @@ enum ac_win_state {
  * AC software instance structure, used to retain software state information
  * of an associated hardware module instance.
  */
-struct ac_dev_inst {
+struct ac_module {
 	/** Hardware module point of the associated Analog Comparator peripheral. */
-	Ac *hw_dev;
+	Ac *hw;
 };
 
 /**
@@ -394,15 +429,15 @@ struct ac_dev_inst {
 struct ac_events {
 	/** If \c true, an event will be generated when a comparator window state
 	 *  changes. */
-	bool output_window[2];
+	bool generate_event_on_window[AC_PAIRS];
 
 	/** If \c true, an event will be generated when a comparator state
 	 *  changes. */
-	bool output_comparator[4];
+	bool generate_event_on_state[AC_NUM_CMP];
 
 	/** If \c true, a comparator will be sampled each time an event is
 	 *  received. */
-	bool input_comparator[4];
+	bool on_event_sample[AC_NUM_CMP];
 };
 
 /**
@@ -411,7 +446,7 @@ struct ac_events {
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
  */
-struct ac_conf {
+struct ac_config {
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
 	bool run_in_standby;
@@ -419,6 +454,9 @@ struct ac_conf {
 	/** Event generation and reception configuration for the AC module; event
 	 *  flags set to true are enabled when the module is configured. */
 	struct ac_events events;
+
+	/** Source generator for AC GCLK. */
+	enum gclk_generator source_generator;
 };
 
 /**
@@ -427,21 +465,21 @@ struct ac_conf {
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
  */
-struct ac_ch_conf {
+struct ac_chan_config {
 	/** Sampling mode of the comparator channel. */
-	enum ac_ch_sample_mode sample_mode;
+	enum ac_chan_sample_mode sample_mode;
 	/** Filtering mode for the comparator output, when the comparator is used
 	 *  in a supported mode. */
-	enum ac_ch_filter filter;
+	enum ac_chan_filter filter;
 	/** When \c true, hysteresis mode is enabled on the comparator inputs. */
 	bool enable_hysteresis;
 	/** Output mode of the comparator, whether it should be available for
 	 *  internal use, or asynchronously/synchronously linked to a GPIO pin. */
-	enum ac_ch_output output_mode;
+	enum ac_chan_output output_mode;
 	/** Input multiplexer selection for the comparator's positive input pin. */
-	enum ac_ch_pos_mux positive_input;
+	enum ac_chan_pos_mux positive_input;
 	/** Input multiplexer selection for the comparator's negative input pin. */
-	enum ac_ch_neg_mux negative_input;
+	enum ac_chan_neg_mux negative_input;
 	/** Scaled \f$\frac{V_{CC}\times\mbox{n}}{64}\f$ VCC voltage division factor
 	 *  for the channel, when a comparator pin is connected to the VCC voltage
 	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
@@ -461,37 +499,49 @@ struct ac_win_conf {
 	enum ac_win_detect window_detection;
 };
 
-#if !defined (__DOXYGEN__)
-/**
- * \internal Wait until the synchronization is complete
- */
-static inline void _ac_wait_for_sync(
-		struct ac_dev_inst *const dev_inst)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	Ac *const ac_module = dev_inst->hw_dev;
-
-	while (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
-		/* Do nothing */
-	}
-}
-#endif
-
 /**
  * \name Configuration and Initialization
  * @{
  */
 
-void ac_reset(
-		struct ac_dev_inst *const dev_inst);
+enum status_code ac_reset(
+		struct ac_module *const module_inst);
 
-void ac_init(
-		struct ac_dev_inst *const dev_inst,
+enum status_code ac_init(
+		struct ac_module *const module_inst,
 		Ac *const module,
-		struct ac_conf *const config);
+		struct ac_config *const config);
+
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \param[in] module_inst  Pointer to the AC software instance struct
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool ac_is_syncing(
+        struct ac_module *const module_inst)
+{
+        /* Sanity check arguments */
+        Assert(module_inst);
+
+        Ac *const ac_module = module_inst->hw;
+
+        if (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
+                return true;
+        }
+
+        return false;
+}
 
 /**
  * \brief Initializes an Analog Comparator configuration structure to defaults.
@@ -504,11 +554,12 @@ void ac_init(
  *  The default configuration is as follows:
  *   \li All comparator pairs disabled during sleep mode
  *   \li No events enabled by default
+ *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
 static inline void ac_get_config_defaults(
-		struct ac_conf *const config)
+		struct ac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -516,6 +567,7 @@ static inline void ac_get_config_defaults(
 	/* Default configuration values */
 	config->run_in_standby = false;
 	memset(&config->events, 0x00, sizeof(config->events));
+	config->source_generator = GCLK_GENERATOR_0;
 }
 
 /**
@@ -524,19 +576,20 @@ static inline void ac_get_config_defaults(
  * Enables and starts an Analog Comparator that was previously configured via a
  * call to \ref ac_init().
  *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ * \param[in] module_inst  Software instance for the Analog Comparator peripheral
  */
 static inline void ac_enable(
-		struct ac_dev_inst *const dev_inst)
+		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg |= AC_CTRLA_ENABLE;
@@ -548,19 +601,20 @@ static inline void ac_enable(
  * Stops an Analog Comparator that was previously started via a call to
  * \ref ac_enable().
  *
- * \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ * \param[in] module_inst  Software instance for the Analog Comparator peripheral
  */
 static inline void ac_disable(
-		struct ac_dev_inst *const dev_inst)
+		struct ac_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	_ac_wait_for_sync(dev_inst);
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
@@ -575,36 +629,36 @@ static inline void ac_disable(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void ac_enable_events(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		struct ac_events *const events)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
-	if (events->output_window[0] == true) {
-		event_mask |= AC_EVCTRL_WINEO0;
+	/* Configure window output events for each comparator pair */
+	for (uint8_t i = 0; i < AC_PAIRS; i++) {
+		if (events->generate_event_on_window[i] == true) {
+			event_mask |= (AC_EVCTRL_WINEO0 << i);
+		}
 	}
 
-	if (events->output_window[1] == true) {
-		event_mask |= AC_EVCTRL_WINEO1;
-	}
-
-	for (uint8_t i = 0; i < 4; i++) {
-		if (events->input_comparator[i] == true) {
+	/* Configure sample input/output events for each comparator */
+	for (uint8_t i = 0; i < AC_NUM_CMP; i++) {
+		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
 
-		if (events->output_comparator[i] == true) {
+		if (events->generate_event_on_state[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEO0 << i);
 		}
 	}
@@ -621,36 +675,36 @@ static inline void ac_enable_events(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void ac_disable_events(
-		struct ac_dev_inst *const dev_inst,
+		struct ac_module *const module_inst,
 		struct ac_events *const events)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
-	if (events->output_window[0] == true) {
-		event_mask |= AC_EVCTRL_WINEO0;
+	/* Configure window output events for each comparator pair */
+	for (uint8_t i = 0; i < AC_PAIRS; i++) {
+		if (events->generate_event_on_window[i] == true) {
+			event_mask |= (AC_EVCTRL_WINEO0 << i);
+		}
 	}
 
-	if (events->output_window[1] == true) {
-		event_mask |= AC_EVCTRL_WINEO1;
-	}
-
-	for (uint8_t i = 0; i < 4; i++) {
-		if (events->input_comparator[i] == true) {
+	/* Configure sample input/output events for each comparator */
+	for (uint8_t i = 0; i < AC_NUM_CMP; i++) {
+		if (events->on_event_sample[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEI0 << i);
 		}
 
-		if (events->output_comparator[i] == true) {
+		if (events->generate_event_on_state[i] == true) {
 			event_mask |= (AC_EVCTRL_COMPEO0 << i);
 		}
 	}
@@ -686,71 +740,71 @@ static inline void ac_disable_events(
  *   \param[out] config  Channel configuration structure to initialize to
  *                       default values
  */
-static inline void ac_ch_get_config_defaults(
-		struct ac_ch_conf *const config)
+static inline void ac_chan_get_config_defaults(
+		struct ac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Default configuration values */
-	config->sample_mode       = AC_CH_MODE_CONTINUOUS;
-	config->filter            = AC_CH_FILTER_MAJORITY_5;
+	config->sample_mode       = AC_CHAN_MODE_CONTINUOUS;
+	config->filter            = AC_CHAN_FILTER_MAJORITY_5;
 	config->enable_hysteresis = true;
-	config->output_mode       = AC_CH_OUTPUT_INTERNAL;
-	config->positive_input    = AC_CH_POS_MUX_PIN0;
-	config->negative_input    = AC_CH_NEG_MUX_SCALED_VCC;
+	config->output_mode       = AC_CHAN_OUTPUT_INTERNAL;
+	config->positive_input    = AC_CHAN_POS_MUX_PIN0;
+	config->negative_input    = AC_CHAN_NEG_MUX_SCALED_VCC;
 	config->vcc_scale_factor  = 32;
 }
 
-void ac_ch_set_config(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel,
-		struct ac_ch_conf *const config);
+enum status_code ac_chan_set_config(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel,
+		struct ac_chan_config *const config);
 
 /**
  * \brief Enables an Analog Comparator channel that was previously configured.
  *
  *  Enables and starts an Analog Comparator channel that was previously
- *  configured via a call to \ref ac_ch_set_config().
+ *  configured via a call to \ref ac_chan_set_config().
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel to enable
  */
-static inline void ac_ch_enable(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel)
+static inline void ac_chan_enable(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel].reg |= AC_COMPCTRL_ENABLE;
+	ac_module->COMPCTRL[(uint8_t)channel].reg |= AC_COMPCTRL_ENABLE;
 }
 
 /**
  * \brief Disables an Analog Comparator channel that was previously enabled.
  *
  *  Stops an Analog Comparator channel that was previously started via a call to
- *  \ref ac_ch_enable().
+ *  \ref ac_chan_enable().
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to disable
  */
-static inline void ac_ch_disable(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel)
+static inline void ac_chan_disable(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->COMPCTRL[channel].reg &= ~AC_COMPCTRL_ENABLE;
+	ac_module->COMPCTRL[(uint8_t)channel].reg &= ~AC_COMPCTRL_ENABLE;
 }
 
 /** @} */
@@ -767,21 +821,21 @@ static inline void ac_ch_disable(
  *  Triggers a single conversion on a comparator configured to compare on demand
  *  (single shot mode) rather than continuously.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to trigger
  */
-static inline void ac_ch_trigger_single_shot(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel)
+static inline void ac_chan_trigger_single_shot(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
 	/* Write the new comparator module control configuration */
-	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << channel);
+	ac_module->CTRLB.reg |= (AC_CTRLB_START0 << (uint8_t)channel);
 }
 
 /**
@@ -790,22 +844,22 @@ static inline void ac_ch_trigger_single_shot(
  *  Checks a comparator channel to see if the comparator is currently ready to
  *  begin comparisons.
  *
- *  \param[in] dev_inst  Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] channel   Comparator channel channel to test
  *
  *  \return Comparator channel readiness state.
  */
-static inline bool ac_ch_is_ready(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel)
+static inline bool ac_chan_is_ready(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << channel));
+	return (ac_module->STATUSB.reg & (AC_STATUSB_READY0 << (uint8_t)channel));
 }
 
 /**
@@ -815,29 +869,29 @@ static inline bool ac_ch_is_ready(
  *  If the comparator was not ready at the time of the check, the comparison
  *  result will be indicated as being unknown.
  *
- *  \param[in] dev_inst   Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst   Software instance for the Analog Comparator peripheral
  *  \param[in] channel    Comparator channel channel to test
  *
  *  \return Comparator channel state.
  */
-static inline enum ac_ch_state ac_ch_get_state(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel)
+static inline enum ac_chan_state ac_chan_get_state(
+		struct ac_module *const module_inst,
+		const enum ac_chan_channel channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	if (ac_ch_is_ready(dev_inst, channel) == false) {
-		return AC_CH_STATE_UNKNOWN;
+	if (ac_chan_is_ready(module_inst, channel) == false) {
+		return AC_CHAN_STATE_UNKNOWN;
 	}
 
-	if (ac_module->STATUSA.reg & (AC_STATUSA_STATE0 << channel)) {
-		return AC_CH_STATE_POS_ABOVE_NEG;
+	if (ac_module->STATUSA.reg & (AC_STATUSA_STATE0 << (uint8_t)channel)) {
+		return AC_CHAN_STATE_POS_ABOVE_NEG;
 	} else {
-		return AC_CH_STATE_NEG_ABOVE_POS;
+		return AC_CHAN_STATE_NEG_ABOVE_POS;
 	}
 }
 
@@ -873,18 +927,18 @@ static inline void ac_win_get_config_defaults(
 	config->window_detection = AC_WIN_DETECT_INSIDE;
 }
 
-void ac_win_set_config(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel,
+enum status_code ac_win_set_config(
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel,
 		struct ac_win_conf *const config);
 
 enum status_code ac_win_enable(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel);
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel);
 
 void ac_win_disable(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel);
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel);
 
 /** @} */
 
@@ -900,22 +954,28 @@ void ac_win_disable(
  *  Checks a Window Comparator to see if the both comparators used for window
  *  detection is currently ready to begin comparisons.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Window Comparator channel channel to test
  *
  *  \return Window Comparator channel readiness state.
  */
 static inline bool ac_win_is_ready(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel)
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Convert a window channel index to the individual comparator channels */
+	enum ac_chan_channel win_pair_comp0 =
+			(enum ac_chan_channel)((uint8_t)win_channel * 2);
+	enum ac_chan_channel win_pair_comp1 =
+			(enum ac_chan_channel)(((uint8_t)win_channel * 2) + 1);
 
 	/* Check if the two comparators used in the window are ready */
-	bool win_pair_comp0_ready = ac_ch_is_ready(dev_inst, (win_channel * 2));
-	bool win_pair_comp1_ready = ac_ch_is_ready(dev_inst, (win_channel * 2) + 1);
+	bool win_pair_comp0_ready = ac_chan_is_ready(module_inst, win_pair_comp0);
+	bool win_pair_comp1_ready = ac_chan_is_ready(module_inst, win_pair_comp1);
 
 	/* If one or both window comparators not ready, return failure */
 	if ((win_pair_comp0_ready == false) || (win_pair_comp1_ready == false)) {
@@ -926,8 +986,8 @@ static inline bool ac_win_is_ready(
 }
 
 enum ac_win_state ac_win_get_state(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t channel);
+		struct ac_module *const module_inst,
+		const enum ac_win_channel channel);
 
 /**
  * \brief Determines if a Window Comparator has detected the configured window criteria.
@@ -936,22 +996,22 @@ enum ac_win_state ac_win_get_state(
  *  to the window bounds matches the detection criteria previously configured
  *  for the Window Comparator.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
  *  \return State of the Window Comparator criteria detection flag.
  */
 static inline bool ac_win_is_detected(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel)
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << win_channel));
+	return (ac_module->INTFLAG.reg & (AC_INTFLAG_WIN0 << (uint8_t)win_channel));
 }
 
 /**
@@ -960,20 +1020,20 @@ static inline bool ac_win_is_detected(
  *  Clears the Analog Comparator window condition detection flag for a specified
  *  comparator channel.
  *
- *  \param[in] dev_inst     Software instance for the Analog Comparator peripheral
+ *  \param[in] module_inst     Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to modify
  */
 static inline void ac_win_clear_detected(
-		struct ac_dev_inst *const dev_inst,
-		const uint8_t win_channel)
+		struct ac_module *const module_inst,
+		const enum ac_win_channel win_channel)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw);
 
-	Ac *const ac_module = dev_inst->hw_dev;
+	Ac *const ac_module = module_inst->hw;
 
-	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << win_channel);
+	ac_module->INTFLAG.reg = (AC_INTFLAG_WIN0 << (uint8_t)win_channel);
 }
 
 /** @} */

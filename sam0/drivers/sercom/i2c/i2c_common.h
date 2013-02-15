@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -474,7 +476,7 @@ extern "C" {
  * i.e. i2c_master_async_ and i2c_slave_async_.
  *
  * While asynchronous operation is in progress, subsequent calls to a write or read operation
- * will return the STATUS_ERR_BUSY flag, indicating that only one operation is allowed at any given
+ * will return the STATUS_BUSY flag, indicating that only one operation is allowed at any given
  * time.
  *
  * To check if another transmission can be initiated, the user can either call another transfer operation,
@@ -587,4 +589,4 @@ typedef struct {
  * - \subpage i2c_slave_basic_use_case
  */
 
-#endif /* I2C_MASTER_H_INCLUDED */
+#endif /* I2C_COMMON_H_INCLUDED */

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -55,7 +57,7 @@ void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 	/* Write parameters to the device instance */
 	dev_inst->remaining_tx_buffer_length = length;
 	dev_inst->tx_buffer_ptr = tx_data;
-	dev_inst->tx_status = STATUS_IN_PROGRESS;
+	dev_inst->tx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -80,7 +82,7 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 	 * the interrupt handler do the rest */
 	dev_inst->remaining_rx_buffer_length = length;
 	dev_inst->rx_buffer_ptr = rx_data;
-	dev_inst->rx_status = STATUS_IN_PROGRESS;
+	dev_inst->rx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
@@ -154,7 +156,7 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
 enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
@@ -165,7 +167,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
 	Assert(dev_inst->hw_dev);
 	/* Check if the USART transmitter is busy */
 	if (dev_inst->remaining_tx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Call internal write buffer function with length 1 */
@@ -187,7 +189,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
 enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
@@ -198,7 +200,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
 
 	/* Check if the USART receiver is busy */
 	if (dev_inst->remaining_rx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Call internal read buffer function with length 1 */
@@ -218,7 +220,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed
- * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
 enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
@@ -232,7 +234,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
 
 	/* Check if the USART transmitter is busy */
 	if (dev_inst->remaining_tx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Issue internal asynchronous write */
@@ -253,7 +255,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
  *
  * \returns    Status of the operation
  * \retval     STATUS_OK              If operation was completed.
- * \retval     STATUS_ERR_BUSY        If operation was not completed,
+ * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
 enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
@@ -267,7 +269,7 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
 
 	/* Check if the USART receiver is busy */
 	if (dev_inst->remaining_rx_buffer_length > 0) {
-		return STATUS_ERR_BUSY;
+		return STATUS_BUSY;
 	}
 
 	/* Issue internal asynchronous read */
@@ -324,7 +326,7 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  *
  * \return
  * \retval STATUS_OK                No error occurred during the last transfer
- * \retval STATUS_IN_PROGRESS       A transfer is ongoing
+ * \retval STATUS_BUSY       A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA      The last operation was aborted due to a
  *                                  parity error. The transfer could be affected
  *                                  by external noise.
@@ -347,10 +349,12 @@ enum status_code usart_async_get_operation_status(
 	case USART_TRANSCEIVER_RX:
 		/* Get status code */
 		status_code = dev_inst->rx_status;
+		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Get status code */
 		status_code = dev_inst->tx_status;
+		break;
 	}
 
 	return status_code;

@@ -41,17 +41,55 @@
 
 #include "samd20.h"
 
-typedef void (*intfunc) (void);
-typedef union { intfunc __fun; void * __ptr; } intvec_elem;
-
 void __iar_program_start(void);
 int __low_level_init(void);
 
-/* Default empty handler */
 void Dummy_Handler(void);
+void Reset_Handler(void);
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+	while (1) {
+	}
+}
 
 /* Cortex-M0+ core handlers */
-#pragma weak Reset_Handler            = Dummy_Handler
+void NonMaskableInt_Handler  ( void );
+void HardFault_Handler       ( void );
+void SVCall_Handler          ( void );
+void PendSV_Handler          ( void );
+void SysTick_Handler         ( void );
+
+/* Peripherals handlers */
+void PM_IRQn_Handler         ( void );
+void SYSCTRL_IRQn_Handler    ( void );
+void WDT_IRQn_Handler        ( void );
+void RTC_IRQn_Handler        ( void );
+void EIC_IRQn_Handler        ( void );
+void NVMCTRL_IRQn_Handler    ( void );
+void EVSYS_IRQn_Handler      ( void );
+void SERCOM0_IRQn_Handler    ( void );
+void SERCOM1_IRQn_Handler    ( void );
+void SERCOM2_IRQn_Handler    ( void );
+void SERCOM3_IRQn_Handler    ( void );
+void SERCOM4_IRQn_Handler    ( void );
+void SERCOM5_IRQn_Handler    ( void );
+void TC0_IRQn_Handler        ( void );
+void TC1_IRQn_Handler        ( void );
+void TC2_IRQn_Handler        ( void );
+void TC3_IRQn_Handler        ( void );
+void TC4_IRQn_Handler        ( void );
+void TC5_IRQn_Handler        ( void );
+void TC6_IRQn_Handler        ( void );
+void TC7_IRQn_Handler        ( void );
+void ADC_IRQn_Handler        ( void );
+void AC_IRQn_Handler         ( void );
+void DAC_IRQn_Handler        ( void );
+
+/* Cortex-M0+ core handlers */
 #pragma weak NonMaskableInt_Handler   = Dummy_Handler
 #pragma weak HardFault_Handler        = Dummy_Handler
 #pragma weak SVCall_Handler           = Dummy_Handler
@@ -83,9 +121,10 @@ void Dummy_Handler(void);
 #pragma weak ADC_IRQn_Handler         = Dummy_Handler
 #pragma weak AC_IRQn_Handler          = Dummy_Handler
 #pragma weak DAC_IRQn_Handler         = Dummy_Handler
-#pragma weak PTC_IRQn_Handler         = Dummy_Handler
 
 /* Exception Table */
+#pragma language=extended
+#pragma segment="CSTACK"
 
 /* The name "__vector_table" has special meaning for C-SPY: */
 /* it is where the SP start value is found, and the NVIC vector */
@@ -94,8 +133,7 @@ void Dummy_Handler(void);
 #pragma section = ".intvec"
 #pragma location = ".intvec"
 const DeviceVectors __vector_table[] = {
-        (void*) (&__cstack_end__),
-
+        __sfe("CSTACK"),
         (void*) Reset_Handler,
         (void*) NonMaskableInt_Handler,
         (void*) HardFault_Handler,
@@ -137,7 +175,6 @@ const DeviceVectors __vector_table[] = {
         { (void*) ADC_IRQn_Handler     }, /* 21 Analog Digital Converter */
         { (void*) AC_IRQn_Handler      }, /* 22 Analog Comparators */
         { (void*) DAC_IRQn_Handler     }, /* 23 Digital Analog Converter */
-        { (void*) PTC_IRQn_Handler     }  /* 24 Peripheral Touch Controller */
 };
 
 /**------------------------------------------------------------------------------
@@ -149,10 +186,6 @@ int __low_level_init(void)
         uint32_t *pSrc = __section_begin(".intvec");
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
-
-        if (((uint32_t) pSrc >= HRAMC0_ADDR) && ((uint32_t) pSrc < (uint32_t) HRAMC0_ADDR + (uint32_t) HRAMC0_SIZE)) {
-                SCB->VTOR |= (1UL) << SCB_VTOR_TBLBASE_Pos;
-        }
 
         return 1; /* if return 0, the data sections will not be initialized */
 }

@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -39,29 +41,14 @@
  *
  */
 #include "extint.h"
+#include <system.h>
+#include <system_interrupt.h>
 
 /**
  * \internal
  * Internal driver device instance struct.
  */
-struct _extint_device _extint_dev;
-
-/**
- * \internal
- * Waits for the given EIC module to synchronize across the main and peripheral
- * digital clock domains.
- *
- * \param[in] module  Pointer to an EIC module to wait for sync
- */
-static void _eic_wait_for_sync(Eic* module)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	while (module->STATUS.reg & EIC_STATUS_SYNCBUSY) {
-		/* Wait for sync to complete */
-	}
-}
+struct _extint_module _extint_dev;
 
 /**
  * \brief Resets and disables the External Interrupt driver.
@@ -79,7 +66,10 @@ void extint_reset(void)
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_SWRST;
-		_eic_wait_for_sync(eics[i]);
+	}
+
+	while (extint_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 }
 
@@ -93,19 +83,30 @@ void extint_enable(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
+	/* Configure the generic clock for the module */
+	struct system_gclk_chan_conf gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = 0;
+	gclk_chan_conf.run_in_standby   = false;
+	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(EIC_GCLK_ID);
+
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
-		_eic_wait_for_sync(eics[i]);
 	}
 
-#if EXTINT_ASYNC == true
+	while (extint_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
+#if EXTINT_CALLBACK_MODE == true
 	/* Clear callback registration table */
 	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
 		_extint_dev.callbacks[j] = NULL;
 	}
 
-	NVIC_EnableIRQ(EIC_EXTINT_0_IRQn);
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);
 #endif
 }
 
@@ -122,7 +123,10 @@ void extint_disable(void)
 	/* Disable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRL.reg &= ~EIC_CTRL_ENABLE;
-		_eic_wait_for_sync(eics[i]);
+	}
+
+	while (extint_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 }
 
@@ -133,18 +137,18 @@ void extint_disable(void)
  * configuration to the hardware module. If the channel is already configured,
  * the new configuration will replace the existing one.
  *
- * \param channel   External Interrupt channel to configure
- * \param config    Configuration settings for the channel
+ * \param[in] channel   External Interrupt channel to configure
+ * \param[in] config    Configuration settings for the channel
 
  */
-void extint_ch_set_config(
+void extint_chan_set_config(
 		const uint8_t channel,
-		const struct extint_ch_conf *const config)
+		const struct extint_chan_conf *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = config->gpio_pin_mux;
@@ -159,7 +163,7 @@ void extint_ch_set_config(
 	uint32_t new_config;
 
 	/* Determine the channel's new edge detection configuration */
-	new_config = (config->detect << EIC_CONFIG_SENSE0_Pos);
+	new_config = (config->detection_criteria << EIC_CONFIG_SENSE0_Pos);
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
@@ -187,8 +191,8 @@ void extint_ch_set_config(
  *  configuration to the hardware module. If the channel is already configured,
  *  the new configuration will replace the existing one.
  *
- *  \param nmi_channel   External Interrupt NMI channel to configure
- *  \param config        Configuration settings for the channel
+ *  \param[in] nmi_channel   External Interrupt NMI channel to configure
+ *  \param[in] config        Configuration settings for the channel
  *
  * \returns Status code indicating the success or failure of the request.
  * \retval  STATUS_OK                   Configuration succeeded
@@ -203,11 +207,11 @@ enum status_code extint_nmi_set_config(
 	Assert(config);
 
 	if ((EIC_NMI_NO_DETECT_ALLOWED == 0) &&
-			(config->detect == EXTINT_DETECT_NONE)) {
+			(config->detection_criteria == EXTINT_DETECT_NONE)) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
-	struct system_pinmux_conf pinmux_config;
+	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
 	pinmux_config.mux_position = config->gpio_pin_mux;
@@ -221,7 +225,7 @@ enum status_code extint_nmi_set_config(
 	uint32_t new_config;
 
 	/* Determine the NMI's new edge detection configuration */
-	new_config = (config->detect << EIC_NMICTRL_NMISENSE_Pos);
+	new_config = (config->detection_criteria << EIC_NMICTRL_NMISENSE_Pos);
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {

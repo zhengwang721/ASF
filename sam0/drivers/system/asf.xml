@@ -1,17 +1,4 @@
 ﻿<asf xmlversion="1.0">
-	<module type="meta" id="sam0.drivers.system.core" caption="System Driver">
-		<build type="c-source" value="system.c"/>
-		<build type="c-source" value="clock.c"/>
-		<build type="header-file" subtype="api" value="clock.h"/>
-		<build type="header-file" subtype="api" value="system.h"/>
-		<build type="include-path" value="."/>
-		<build type="module-config" subtype="path" value="module_config"/>
-		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-		<build type="module-config" subtype="required-header-file" value="conf_bod.h"/>
-
-		<info type="gui-flag" value="hidden"/>
-	</module>
-
 	<module type="driver" id="sam0.drivers.system" caption="System Driver">
 		<info type="description" value="summary">
 
@@ -19,13 +6,15 @@
 		<info type="keyword" value="technology">
 			<keyword value="I/O" />
 		</info>
-		<build type="header-file" subtype="example" value="quick_start/qs_clock_source.h"/>
-		<build type="doxygen-entry-point" value="system_group"/>
-		<device-support value="samd20"/>
-		<require idref="sam0.drivers.system.core"/>
-		<require idref="sam0.drivers.system.gclk"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_system_group"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="system.h"/>
+		<build type="c-source" value="system.c"/>
+		<require idref="sam0.drivers.system.clock"/>
 		<require idref="sam0.drivers.system.pinmux"/>
+		<require idref="sam0.drivers.system.interrupt"/>
 		<require idref="sam0.utils"/>
+		<device-support value="samd20"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

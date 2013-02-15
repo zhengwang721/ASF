@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -14,7 +16,7 @@
  *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the followingma disclaimer in the documentation
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
@@ -144,7 +146,7 @@ enum status_code i2c_master_async_write_packet(
  *
  * This will terminate the running transfer operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  */
 static inline void i2c_master_async_cancel_transfer(
 		struct i2c_master_dev_inst *const dev_inst)
@@ -163,12 +165,12 @@ static inline void i2c_master_async_cancel_transfer(
  * Will return the last error that occurred in asynchronous transfer operation. The
  * status will be cleared on next operation.
  *
- * \param  dev_inst Pointer to device instance structure.
+ * \param[in,out] dev_inst Pointer to device instance structure.
  *
- * \return          Last status code from transfer operation.
+ * \return Last status code from transfer operation.
  * \retval STATUS_OK No error has occurred.
- * \retval STATUS_IN_PROGRESS If transfer is in progress.
- * \retval STATUS_ERR_BUSY If master module is busy.
+ * \retval STATUS_BUSY If transfer is in progress.
+ * \retval STATUS_BUSY If master module is busy.
  * \retval STATUS_ERR_DENIED If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the

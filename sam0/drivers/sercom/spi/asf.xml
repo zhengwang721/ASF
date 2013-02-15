@@ -15,6 +15,7 @@
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system.pinmux"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
