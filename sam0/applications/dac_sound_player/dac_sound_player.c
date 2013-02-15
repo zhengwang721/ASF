@@ -41,12 +41,12 @@
  */
 #include <asf.h>
 
-const uint32_t sample_rate = 8000;
+const uint32_t sample_rate = 16000;
 const uint16_t wav_samples[] = {
 	#include "data.x"
 };
 
-const uint16_t number_of_samples = (sizeof(wav_samples)/sizeof(wav_samples[0]));
+const uint32_t number_of_samples = (sizeof(wav_samples)/sizeof(wav_samples[0]));
 
 /**
  * \brief Function for configuring the pins
@@ -119,9 +119,13 @@ static void configure_tc(struct tc_module *tc_module)
 
 	tc_enable_events(tc_module, &events);
 
-	tc_set_top_value(tc_module, 1000);
+	tc_set_top_value(tc_module, 8000000UL/sample_rate);
 
 	tc_enable(tc_module);
+
+	/* Turn off the APB clock for the timer, as we do not need to
+	 * reconfigure it and it runs from the GCLK */
+	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_TC0);
 }
 
 static void configure_event_channel(void)
@@ -150,6 +154,10 @@ static void configure_events(void)
 
 	configure_event_user();
 	configure_event_channel();
+
+	/* Turn off the APB clock for the evsys, as we do not need to
+	 * reconfigure it and it runs from the GCLK */
+	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_EVSYS);
 }
 
 /**
@@ -180,12 +188,12 @@ int main(void)
 	/* Main application loop that writes a sine wave */
 	while (true) {
 		while (port_pin_get_input_level(PIN_PB09)) {
-			/* Wait */
+			/* Wait for the button to be pressed */
 		}
 
 		port_pin_toggle_output_level(PIN_PB08);
 
-		for (uint16_t i = 0; i < number_of_samples; i++) {
+		for (uint32_t i = 0; i < number_of_samples; i++) {
 			dac_chan_write(&dac_module, DAC_CHANNEL_0, wav_samples[i]);
 
 			while (!(DAC->INTFLAG.reg & DAC_INTFLAG_EMPTY)) {
@@ -195,7 +203,7 @@ int main(void)
 		}
 
 		while (!port_pin_get_input_level(PIN_PB09)) {
-			/* Wait */
+			/* Wait for the button to be depressed */
 		}
 
 	}
