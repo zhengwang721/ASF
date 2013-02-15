@@ -60,10 +60,10 @@ static void configure_pins(void)
 	pin_config.mux_position = SYSTEM_PINMUX_GPIO;
 	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	pin_config.input_pull = PORT_PIN_PULL_UP;
-	system_pinmux_pin_set_config(PIN_PB08, &pin_config);
+	system_pinmux_pin_set_config(LED0_PIN, &pin_config);
 
 	pin_config.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	system_pinmux_pin_set_config(PIN_PB09, &pin_config);
+	system_pinmux_pin_set_config(SW0_PIN, &pin_config);
 }
 
 /**
@@ -82,7 +82,7 @@ static void configure_dac(struct dac_module *dac_module)
 	/* Get the DAC default configuration */
 	dac_get_config_defaults(&config);
 
-	/* Switch to GCLK generator 3 */
+	/* Switch to GCLK generator 0 */
 	config.clock_source = GCLK_GENERATOR_0;
 
 	/* Initialize and enable the DAC */
@@ -119,7 +119,8 @@ static void configure_tc(struct tc_module *tc_module)
 
 	tc_enable_events(tc_module, &events);
 
-	tc_set_top_value(tc_module, 8000000UL/sample_rate);
+	tc_set_top_value(tc_module,
+			system_gclk_gen_get_hz(GCLK_GENERATOR_0)/sample_rate);
 
 	tc_enable(tc_module);
 
@@ -187,11 +188,11 @@ int main(void)
 
 	/* Main application loop that writes a sine wave */
 	while (true) {
-		while (port_pin_get_input_level(PIN_PB09)) {
+		while (port_pin_get_input_level(SW0_PIN)) {
 			/* Wait for the button to be pressed */
 		}
 
-		port_pin_toggle_output_level(PIN_PB08);
+		port_pin_toggle_output_level(LED0_PIN);
 
 		for (uint32_t i = 0; i < number_of_samples; i++) {
 			dac_chan_write(&dac_module, DAC_CHANNEL_0, wav_samples[i]);
@@ -202,7 +203,7 @@ int main(void)
 
 		}
 
-		while (!port_pin_get_input_level(PIN_PB09)) {
+		while (!port_pin_get_input_level(SW0_PIN)) {
 			/* Wait for the button to be depressed */
 		}
 
