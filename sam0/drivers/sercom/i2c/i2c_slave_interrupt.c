@@ -201,6 +201,11 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
+	/* Clear all pending interrupts. */
+	system_interrupt_enter_critical_section();
+	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
+	system_interrupt_leave_critical_section();
+
 	/* Wait for sync. */
 	_i2c_slave_wait_for_sync(module);
 
