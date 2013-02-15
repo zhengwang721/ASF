@@ -1,11 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.atxmega256a3u.lib" caption="COMPONENT - ZRC LIB">
+	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.atxmega256a3u.lib" caption="AVR2102 -ZRC LIB For Controller">
 		<info type="description" value="summary">
 		</info>
 		<build type="library" subtype="user" value="iar/librf4ce-zrc-controller.r90" toolchain="iarew"/>
 		<build type="library" subtype="user" value="gcc/librf4ce-zrc-controller.a" toolchain="avrgcc"/>
 
 		<build type="doxygen-entry-point" value="zrc_group"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.config" />
 		
 		<device-support value="atxmega256a3u"/>
 		

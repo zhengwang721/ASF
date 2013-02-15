@@ -2,7 +2,7 @@
 	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
         <module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
             <info type="description" value="summary">
-            This module includes PAL wrapper files
+            This module includes PAL wrapper files for boards with External Transceivers
             </info>
 			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
@@ -18,12 +18,12 @@
             <require idref="common.services.ioport"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 		</module>
 
 		<module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
             <info type="description" value="summary">
-            This module includes PAL wrapper files
+            This module includes PAL wrapper files for Soc's
             </info>
 			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>

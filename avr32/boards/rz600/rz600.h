@@ -138,7 +138,11 @@
 
 #define AT86RFX_SPI_CS               AT86RFX_SPI_NPCS
 
-#define AT86RFX_ISR()                ISR(ext_int_isr, 2, 1)
+#define AT86RFX_IRQ_PIN_GROUP        2
+#define AT86RFX_IRQ_PIN_PRIORITY     1
+
+#define AT86RFX_ISR()                ISR(ext_int_isr, AT86RFX_IRQ_PIN_GROUP, \
+									 AT86RFX_IRQ_PIN_PRIORITY)
 
 #define AT86RFX_INTC_INIT()          irq_register_handler(ext_int_isr, AVR32_GPIO_IRQ_2, 1)
 

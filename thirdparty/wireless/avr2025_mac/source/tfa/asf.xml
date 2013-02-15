@@ -10,7 +10,7 @@
 				<require idref="config.thirdparty.wireless.avr2025_mac.source.tfa.ext"/>
 				<device-support value="xmega"/>
 				<device-support value="uc3"/>
-				<device-support value="sam"/>
+				<device-support value="sam4l"/>
 		</module>
 		
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#2"     caption="atmegarfa1 tfa  support enabled">
@@ -45,7 +45,7 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf231"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
 
@@ -58,7 +58,7 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf212"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf212b"     caption="at86rf212b  tfa  support enabled">
@@ -70,7 +70,7 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf212b"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf230b"     caption="at86rf230B tfa  support enabled">
@@ -82,7 +82,7 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf230b"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf233"     caption="at86rf233 tfa  support enabled">
@@ -94,7 +94,7 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf233"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-            <device-support value="sam"/>
+            <device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
 		
@@ -110,7 +110,7 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 		<build type="doxygen-entry-point" value="group_tfa"/>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.tfa"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>

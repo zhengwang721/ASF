@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.includes" caption="Common Stack Include Files">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.includes" caption="MAC Stack Include Files">
 		<info type="description" value="summary">
-		These are the generic include files required by the Stack
+		These are the generic include files required by the MAC Stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="ieee_const.h"/>
@@ -14,7 +14,7 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 			<keyword value="Communication"/>

@@ -11,7 +11,7 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="megarf"/>
-			<device-support value="sam"/>
+			<device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_sio2host_uart"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.addons.sio2host#usb"     caption="USB support Enabled">
@@ -24,14 +24,13 @@
 			<build type="include-path"  value="usb/"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-			<device-support value="megarf"/>
-			<device-support value="sam"/>
+			<device-support value="sam4l"/>
 			<build type="doxygen-entry-point" value="group_sio2host_usb"/>
 		</module>
 	</select-by-config>
 	<module type="component" id="thirdparty.wireless.addons.sio2host" caption="SIO2HOST">
 			<info type="description" value="summary">
-			The SIO2HOST Component acts as a api layer serial communication
+			The SIO2HOST Component acts as a api layer for serial communication with Host
 			</info>
 			<require idref="config.thirdparty.wireless.addons.sio2host" />
 			<build type="doxygen-entry-point" value="group_sio2host"/>
@@ -40,6 +39,6 @@
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="megarf"/>
-			<device-support value="sam"/>
+			<device-support value="sam4l"/>
 	</module>
 </asf>

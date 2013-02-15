@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="service" caption="MAC Serial Interface Module" id="thirdparty.wireless.avr2025_mac.addons.serial_if">
+	<module type ="service" caption="AVR2025-MAC Serial Interface Module" id="thirdparty.wireless.avr2025_mac.addons.serial_if">
 		<info type="description" value="summary">
 		Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding MAC Api's
 		</info>
@@ -11,7 +11,7 @@
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 		<device-support value="megarf"/>
 	</module>
 </asf>

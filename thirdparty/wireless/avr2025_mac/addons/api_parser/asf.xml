@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-    <module type="service" id="thirdparty.wireless.avr2025_mac.api_parser" caption="MAC - API Parser Module ">
+    <module type="service" id="thirdparty.wireless.avr2025_mac.api_parser" caption="AVR2025-MAC API Parser Module ">
         <info type="description" value="summary">
             API Parser for MAC acts as a interface for converting MAC Api's to appropriate command byte stream
         </info>
@@ -12,9 +12,6 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
         <require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<build type="doxygen-entry-point" value="group_mac_api_parser"/>
-        <device-support value="xmega"/>
-        <device-support value="uc3"/>
-        <device-support value="megarf"/>
-        <device-support value="sam"/>
+        <device-support value="sam4l"/>
     </module>
 </asf>

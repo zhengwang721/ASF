@@ -73,7 +73,9 @@
 /*
  * Typical timing values
  */
-#define RST_PULSE_WIDTH_US                  (5)
+ /*delay_us() for time less than 5 seems to provide wrong delay in GCC ,
+hence proper reset is not done.TO be reverted back once the related bug is fixed */
+#define RST_PULSE_WIDTH_US                  (10)
 #define P_ON_TO_CLKM_AVAILABLE_TYP_US       (330)  /* TRX Parameter: tTR1 typical value */
 #define P_ON_TO_CLKM_AVAILABLE_MAX_US       (1000)  /* TRX Parameter: tTR1 max. value */
 #define SLEEP_TO_TRX_OFF_TYP_US             (380)  /* TRX Parameter: tTR2 typical value */

@@ -25,7 +25,6 @@
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
 		<require idref="common.drivers.nvm"/>
 		
 		
@@ -33,6 +32,6 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 	</module>
 </asf>

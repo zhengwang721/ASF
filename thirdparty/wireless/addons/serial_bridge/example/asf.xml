@@ -11,7 +11,7 @@
 
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
-		<device-support value="sam"/>
+		<device-support value="sam4l"/>
 		<device-support value="megarf"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
