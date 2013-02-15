@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="RF4CE NETWORK SERIAL INTERFACE -  HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.host">
+	<module type ="meta" caption="RF4CE NETWORK SERIAL INTERFACE -  HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.host">
 		<info type="description" value="summary">
 		The host application to drive the network stack running on the network co-processor
 		</info>

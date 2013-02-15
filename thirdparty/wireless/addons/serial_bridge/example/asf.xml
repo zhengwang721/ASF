@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
-	<module type="application" id="thirdparty.wireless.addons.serial_bridge.example" caption="Serial Bridge Application">
+	<module type="meta" id="thirdparty.wireless.addons.serial_bridge.example" caption="Serial Bridge Application">
 		<info type="description" value="summary">
 			Serial Bridge Application
 		</info>
