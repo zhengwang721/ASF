@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="MEGARF USART Example for xplained-pro" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_rfd.ncp.atmega256rfr2_xplained_pro">
+	<project caption="MAC Serial Interface Application -Beacon RFD-ATmegarfr2" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_rfd.ncp.atmega256rfr2_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
