@@ -117,8 +117,8 @@ extern "C" {
 /** Size of each logical EEPROM page, in bytes. */
 #define EEPROM_DATA_SIZE              (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
 
-/** TODO. */
-#define EEPROM_MAX_PAGES              124
+/** Maximum number of physical EEPROM pages that can be reserved. */
+#define EEPROM_MAX_PAGES              (64 * NVMCTRL_ROW_PAGES)
 
 enum status_code eeprom_emulator_init(void);
 

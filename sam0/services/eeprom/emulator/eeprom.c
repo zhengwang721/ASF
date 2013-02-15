@@ -176,7 +176,7 @@ static void _eeprom_emulator_format_memory(void)
 /**
  * \brief Creates a map in SRAM to translate logical EEPROM pages to physical FLASH pages
  */
-static void _eeprom_emulator_scan_memory(void)
+static void _eeprom_emulator_update_page_mapping(void)
 {
 	uint8_t logical_page;
 	struct _eeprom_page *data_ptr
@@ -214,6 +214,7 @@ static void _eeprom_emulator_clean_memory(void)
 				page_counter2 < _eeprom_module_inst.physical_pages; page_counter2++) {
 			current_row = page_counter2 / NVMCTRL_ROW_PAGES;
 
+			// TODO: Find out what the heck this is supposed to be
 			if (data_ptr[page_counter2].header[1] !=
 					_eeprom_module_inst.page_map[page_counter]) {
 				continue;
@@ -420,6 +421,35 @@ static void _eeprom_emulator_create_master_page(void)
 }
 
 /**
+ * \brief Verify the contents of a master EEPROM page
+ *
+ * Verify the contents of a master EEPROM page to ensure that it contains the
+ * correct information for this version of the EEPROM emulation service.
+ *
+ * \return Status code indicating the status of the operation.
+ *
+ * \retval STATUS_OK              Given master page contents is valid
+ * \retval STATUS_ERR_BAD_FORMAT  Master page contents was invalid or incompatible
+ */
+static enum status_code _eeprom_emulator_verify_master_page(
+	struct _eeprom_master_page* master_page)
+{
+	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
+
+	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
+		if (master_page.magic_key[c] != magic_key[c]) {
+			return STATUS_ERR_BAD_FORMAT;
+		}
+	}
+
+	if (master_page.emulator_id != EEPROM_EMULATOR_ID) {
+		return STATUS_ERR_BAD_FORMAT;
+	}
+
+	return STATUS_OK;
+}
+
+/**
  * \brief Initializes the EEPROM Emulator service
  *
  * Initializes the emulated EEPROM memory space; if the emulated EEPROM memory
@@ -438,53 +468,55 @@ static void _eeprom_emulator_create_master_page(void)
  */
 enum status_code eeprom_emulator_init(void)
 {
-	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
 	enum status_code err = STATUS_OK;
 	struct _eeprom_master_page master_page;
-	struct nvm_parameters parm;
 	struct nvm_config config;
 
-	/* TODO: Find a function get the start of the EEPROM Emulation section
-	 * in flash */
-	/* _eeprom_module_inst.flash =
-	 * _eeprom_emulator_get_start_of_eeprom_memory_ptr(); */
-	_eeprom_module_inst.flash_start_page
-		= (uint32_t)_eeprom_module_inst.flash / NVMCTRL_PAGE_SIZE;
-
+	/* Retrieve the NVM controller configuration - enable manual page writing
+	 * mode so that the emulator has exclusive control over page writes to
+	 * allow for caching */
 	nvm_get_config_defaults(&config);
 	config.manual_page_write = true;
 
+	/* Apply new NVM configuration */
 	do {
 		err = nvm_set_config(&config);
 	} while (err == STATUS_BUSY);
 
-	nvm_get_parameters(&parm);
+	/* Configure the EEPROM instance physical and logical number of pages. */
+	_eeprom_module_inst.physical_pages = 64; // TODO - Make this a config option
+	_eeprom_module_inst.logical_pages  = (_eeprom_module_inst.physical_pages / 2);
 
-	/* This number is not correct, we have to wait for the device sheet. */
-	_eeprom_module_inst.physical_pages = parm.nvm_number_of_pages;
-	_eeprom_module_inst.logical_pages  =
-			(parm.nvm_number_of_pages / 2) - NVMCTRL_ROW_PAGES;
+	/* Configure the EEPROM instance starting physical address in FLASH and
+	 * pre-compute the index of the first page in FLASH used for EEPROM */
+	_eeprom_module_inst.flash =
+			(void*)((FLASH_ADDR + FLASH_SIZE) -
+					(_eeprom_module_inst.physical_pages * NVMCTRL_PAGE_SIZE));
+	_eeprom_module_inst.flash_start_page =
+			(uint32_t)_eeprom_module_inst.flash / NVMCTRL_PAGE_SIZE;
 
+	/* Clear EEPROM page write cache on initialization */
 	_eeprom_module_inst.cache_active = false;
 	_eeprom_module_inst.cached_page  = EEPROM_INVALID_PAGE_NUMBER;
 
-	_eeprom_emulator_scan_memory();
+	/* Scan physical memory and re-create logical to physical page mapping
+	 * table to locate logical pages of EEPROM data in physical FLASH */
+	_eeprom_emulator_update_page_mapping();
 
+	/* Read the master EEPROM page that describes the emulator configuration */
 	eeprom_emulator_read_page(EEPROM_MASTER_PAGE_NUMBER,
 			(uint8_t *)&master_page);
 
-	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
-		if (master_page.magic_key[c] != magic_key[c]) {
-			return STATUS_ERR_BAD_FORMAT;
-		}
+	/* Verify that the master page contains valid data for this service */
+	err = _eeprom_emulator_verify_master_page(&master_page);
+	if (err != STATUS_OK) {
+		return err;
 	}
 
-	if (master_page.emulator_id != EEPROM_EMULATOR_ID) {
-		return STATUS_ERR_BAD_FORMAT;
-	}
-
+	/* Detect and clean up and invalid pages in memory */
 	_eeprom_emulator_clean_memory();
 
+	/* Mark initialization as complete */
 	_eeprom_module_inst.initialized = true;
 
 	return err;
@@ -536,11 +568,9 @@ enum status_code eeprom_emulator_write_page(
 	}
 #endif
 
-	uint8_t eeprom_header[EEPROM_HEADER_SIZE];
+	/* By default unless told otherwise we are writing to page offset 0 in the
+	 * destination NVM row */
 	uint8_t new_page = 0;
-
-	/* Store the logical page number in the physical page header */
-	eeprom_header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
 
 	/* Check if the cache is active and the currently cached page is not the
 	 * page that is being written (if not, we need to flush and cache the new
@@ -567,18 +597,30 @@ enum status_code eeprom_emulator_write_page(
 			return STATUS_OK;
 		}
 
-		/* Row is not full, so we still have space to write a new revision */
+		/* Cache data has been written to physical memory, invalidate it */
 		_eeprom_module_inst.cache_active = false;
+		barrier(); // Enforce ordering to prevent incorrect cache state
 	}
 
+	/* Create a buffer to hold the physical page header information of the
+	 * logical EEPROM page we are about to write */
+	uint8_t eeprom_header[EEPROM_HEADER_SIZE];
+
+	/* Fill the new physical page header with the required information */
+	eeprom_header[EEPROM_PAGE_NUMBER_BYTE] = lpage;
+
+	/* Update the page cache header section with the new page header */
 	memcpy(&_eeprom_module_inst.cache_buffer[0],
 			eeprom_header,
 			EEPROM_HEADER_SIZE);
 
+	/* Update the page cache contents with the new data */
 	memcpy(&_eeprom_module_inst.cache_buffer[EEPROM_HEADER_SIZE],
 			data,
 			EEPROM_DATA_SIZE);
 
+	/* Fill the physical NVM buffer with the new data so that it can be quickly
+	 * flushed in the future if needed due to a low power condition */
 	do {
 		err = nvm_write_buffer(
 				new_page + _eeprom_module_inst.flash_start_page,
@@ -586,8 +628,10 @@ enum status_code eeprom_emulator_write_page(
 				NVMCTRL_PAGE_SIZE);
 	} while (err == STATUS_BUSY);
 
+	/* Update the cache parameters and mark the cache as active */
 	_eeprom_module_inst.page_map[lpage] = new_page;
 	_eeprom_module_inst.cached_page     = lpage;
+	barrier(); // Enforce ordering to prevent incorrect cache state
 	_eeprom_module_inst.cache_active    = true;
 
 	return err;
@@ -668,7 +712,7 @@ void eeprom_emulator_erase_memory(void)
 	_eeprom_emulator_format_memory();
 
 	/* Map the newly created EEPROM memory block */
-	_eeprom_emulator_scan_memory();
+	_eeprom_emulator_update_page_mapping();
 
 	/* Write EEPROM emulation master block */
 	_eeprom_emulator_create_master_page();
