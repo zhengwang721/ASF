@@ -603,7 +603,7 @@ enum tc_interrupt_flag {
 struct tc_events {
 	bool generate_event_on_compare_channel[2];
 	bool generate_event_on_overflow;
-	bool on_event_perform_action;
+	bool enable_incoming_events;
 };
 
 /**
@@ -820,6 +820,34 @@ static inline void tc_get_config_defaults(
 	config->size_specific.size_16_bit.compare_capture_channel[1] = 0x0000;
 }
 
+/**
+ * \brief Initializes event config with predefined default values.
+ *
+ * This function will initialize a given event configuration for the TC to
+ * a set of known default values. This function should be called on
+ * any event configuration for the TC.
+ *
+ * The default configuration is as follows:
+ *  \li Generate event on compare channel 0 match off
+ *  \li Generate event on compare channel 1 match off
+ *  \li Generate event on overflow off
+ *  \li Disable incoming events
+ *
+ * \param[out]  events_config Pointer to a event configuration structure to set
+ */
+static inline void tc_get_events_config_default(
+		struct tc_events *const events_config)
+{
+	/* Sanity check arguments */
+	Assert(events_config);
+
+	/* Write default event config */
+	events_config->generate_event_on_compare_channel[0] = false;
+	events_config->generate_event_on_compare_channel[1] = false;
+	events_config->generate_event_on_overflow = false;
+	events_config->enable_incoming_events = false;
+}
+
 enum status_code tc_init(
 		struct tc_module *const module_inst,
 		Tc *const tc_module,
@@ -856,7 +884,7 @@ static inline void tc_enable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->on_event_perform_action == true) {
+	if (events->enable_incoming_events == true) {
 		event_mask |= TC_EVCTRL_TCEI;
 	}
 
@@ -897,7 +925,7 @@ static inline void tc_disable_events(
 
 	uint32_t event_mask = 0;
 
-	if (events->on_event_perform_action == true) {
+	if (events->enable_incoming_events == true) {
 		event_mask |= TC_EVCTRL_TCEI;
 	}
 

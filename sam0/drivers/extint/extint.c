@@ -137,8 +137,8 @@ void extint_disable(void)
  * configuration to the hardware module. If the channel is already configured,
  * the new configuration will replace the existing one.
  *
- * \param channel   External Interrupt channel to configure
- * \param config    Configuration settings for the channel
+ * \param[in] channel   External Interrupt channel to configure
+ * \param[in] config    Configuration settings for the channel
 
  */
 void extint_chan_set_config(
@@ -191,8 +191,8 @@ void extint_chan_set_config(
  *  configuration to the hardware module. If the channel is already configured,
  *  the new configuration will replace the existing one.
  *
- *  \param nmi_channel   External Interrupt NMI channel to configure
- *  \param config        Configuration settings for the channel
+ *  \param[in] nmi_channel   External Interrupt NMI channel to configure
+ *  \param[in] config        Configuration settings for the channel
  *
  * \returns Status code indicating the success or failure of the request.
  * \retval  STATUS_OK                   Configuration succeeded
