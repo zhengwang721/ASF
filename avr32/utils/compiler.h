@@ -1263,9 +1263,6 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
  */
 #define div_ceil(a, b)	(((a) + (b) - 1) / (b))
 
-#endif  // __AVR32_ABI_COMPILER__
-
-
 #if (defined __GNUC__)
   #define SHORTENUM                           __attribute__ ((packed))
 #elif (defined __ICCAVR32__)
@@ -1445,5 +1442,6 @@ static inline void *memcpy_be(void *s1, const void *s2, char n)
 /**
  * \}
  */
+#endif  // __AVR32_ABI_COMPILER__
 
 #endif  // _COMPILER_AVR32_H_
