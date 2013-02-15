@@ -121,7 +121,7 @@ void _sercom_set_handler(uint8_t instance,
  *
  */
 void _sercom_interrupt_enable(Sercom *sercom_instance)
-{	
+{
 	switch (sercom_instance) {
 #ifdef ID_SERCOM0
 	case SERCOM0:
