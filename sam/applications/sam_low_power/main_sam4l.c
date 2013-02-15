@@ -68,9 +68,7 @@
  * \section Usage
  *
  *
- * - Build the program and download it to the evaluation board. Please
- *  refer to the SAM4L main page documentation
- *  http://www.atmel.com/tools/SAM4L-EK.aspx
+ * - Build the program and download it to the evaluation board.
  * - Start the application.
  *
  * -# On the computer, open and configure a terminal application
@@ -93,7 +91,6 @@
  *     Configure:
  *       0 : Power Saving Mode 0
  *       1 : Power Saving Mode 1
- *       2 : Power Saving Mode 2
  *     Mode:
  *       A : Active Mode
  *       R : Retention Mode
@@ -151,7 +148,6 @@ static void display_menu_core(void)
 	printf("Configure:\n\r");
 	printf("  0 : Power Saving Mode 0\n\r");
 	printf("  1 : Power Saving Mode 1\n\r");
-	printf("  2 : Power Saving Mode 2\n\r");
 	printf("Mode:\n\r");
 	printf("  A : Active Mode\n\r");
 	printf("  R : Retention Mode\n\r");
@@ -312,16 +308,11 @@ static void test_core(void)
 			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
 			puts("Power Scaling Mode 0 selected !\r");
 			break;
+
 		case '1':
 			bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_1),true);
 			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
 			puts("Power Scaling Mode 1 selected !\r");
-		break;
-
-		case '2':
-			bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_2),true);
-			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
-			puts("Power Scaling Mode 2 selected !\r");
 		break;
 
 		/* Mode test */
