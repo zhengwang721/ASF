@@ -323,68 +323,67 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint8_t *data)
 {
 	enum status_code err = STATUS_OK;
+
 	struct _eeprom_page_translater page_trans[2];
-	uint8_t  header[EEPROM_HEADER_SIZE];
 	uint32_t new_page;
 
 	/* Scan row for content to be copied to spare row */
 	_eeprom_emulator_scan_row(row_number, page_trans);
 
+	/* Need to move both saved logical pages stored in the same row */
 	for (uint8_t c = 0; c < 2; c++) {
+		/* Find the physical page index for the new spare row pages */
 		new_page = ((_eeprom_module_inst.spare_row * NVMCTRL_ROW_PAGES) + c);
 
+		/* Flush cache buffer to write any uncommitted data */
+		eeprom_emulator_flush_page_buffer();
+
+		/* Check if we we are looking at the page the calling function wishes
+		 * to change during the move operation */
 		if (logical_page == page_trans[c].logical_page) {
+			uint8_t header[EEPROM_HEADER_SIZE];
+
+			/* Fill out new (updated) logical page's header */
 			header[EEPROM_PAGE_NUMBER_BYTE] = logical_page;
 
-			/* Flush page buffer (ie. cache) */
-			eeprom_emulator_flush_page_buffer();
-
-			/* Write header to SRAM cache */
-			memcpy(_eeprom_module_inst.cache_buffer, &header, EEPROM_HEADER_SIZE);
+			/* Write logical page header to cache */
+			memcpy(_eeprom_module_inst.cache_buffer,
+					&header, EEPROM_HEADER_SIZE);
 
 			/* Write data to SRAM cache */
-			memcpy(&_eeprom_module_inst.cache_buffer[4], data, EEPROM_DATA_SIZE);
-
-			/* Write data to page buffer */
-			do {
-				err = nvm_write_buffer(
-						new_page + _eeprom_module_inst.flash_start_page,
-						_eeprom_module_inst.cache_buffer,
-						NVMCTRL_PAGE_SIZE);
-			} while (err == STATUS_BUSY);
-
-			_eeprom_module_inst.page_map[page_trans[c].logical_page] = new_page;
-			_eeprom_module_inst.cached_page  = page_trans[c].logical_page;
-			_eeprom_module_inst.cache_active = true;
+			memcpy(&_eeprom_module_inst.cache_buffer[EEPROM_HEADER_SIZE],
+					data, EEPROM_DATA_SIZE);
 		} else {
-			/* Flush page buffer (ie. cache) */
-			eeprom_emulator_flush_page_buffer();
-
-			/* Copy data buffer to cache buffer */
+			/* Copy existing EEPROM page to cache buffer wholesale */
 			memcpy(_eeprom_module_inst.cache_buffer,
 					&_eeprom_module_inst.flash[page_trans[c].physical_page * NVMCTRL_PAGE_SIZE],
 					NVMCTRL_PAGE_SIZE);
-
-			do {
-				err = nvm_write_buffer(
-						(_eeprom_module_inst.flash_start_page + new_page),
-						_eeprom_module_inst.cache_buffer,
-						NVMCTRL_PAGE_SIZE);
-			} while (err == STATUS_BUSY);
-
-			_eeprom_module_inst.page_map[page_trans[c].logical_page] = new_page;
-			_eeprom_module_inst.cached_page  = page_trans[c].logical_page;
-			_eeprom_module_inst.cache_active = true;
 		}
+
+		/* Fill the physical NVM buffer with the new data so that it can be
+		 * quickly flushed in the future if needed due to a low power
+		 * condition */
+		do {
+			err = nvm_write_buffer(
+					_eeprom_module_inst.flash_start_page + new_page,
+					_eeprom_module_inst.cache_buffer,
+					NVMCTRL_PAGE_SIZE);
+		} while (err == STATUS_BUSY);
+
+		/* Update the page map with the new page location and indicate that
+		 * the cache now holds new data */
+		_eeprom_module_inst.page_map[page_trans[c].logical_page] = new_page;
+		_eeprom_module_inst.cached_page  = page_trans[c].logical_page;
+		_eeprom_module_inst.cache_active = true;
 	}
 
-	/* Erase row and set as spare row */
+	/* Erase the row that was moved and set it as the new spare row */
 	do {
 		err = nvm_erase_row(
 				row_number + (_eeprom_module_inst.flash_start_page / NVMCTRL_ROW_PAGES));
 	} while (err == STATUS_BUSY);
 
-	/* Set new spare row */
+	/* Keep the index of the new spare row */
 	_eeprom_module_inst.spare_row = row_number;
 
 	return err;
