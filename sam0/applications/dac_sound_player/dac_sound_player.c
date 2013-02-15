@@ -113,7 +113,7 @@ static void configure_tc(struct tc_module *tc_module)
 	tc_init(tc_module, TC0, &config);
 
 	events.generate_event_on_overflow = true;
-	events.on_event_perform_action = false;
+	events.enable_incoming_events = false;
 	events.generate_event_on_compare_channel[0] = false;
 	events.generate_event_on_compare_channel[1] = false;
 
