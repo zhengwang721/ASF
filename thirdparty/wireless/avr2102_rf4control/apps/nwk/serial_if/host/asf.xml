@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Zrc controller Lib for AVR2102 RF4Control" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.host">
+	<module type ="application" caption="RF4CE NETWORK SERIAL INTERFACE -  HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.host">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
+		The host application to drive the network stack running on the network co-processor
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="app_config.h"/>

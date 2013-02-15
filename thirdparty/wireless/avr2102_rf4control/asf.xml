@@ -8,9 +8,7 @@
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
-
-			
-			<build type="doxygen-entry-point" value="group_rf4ce"/>
+			<build type="doxygen-entry-point" value="group_rf4control"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
 			<device-support value="megarf"/>
@@ -20,7 +18,7 @@
            This module will be selected for two processor approach in Host device
              </info>
             <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
-			<build type="doxygen-entry-point" value="group_rf4ce"/>
+			<build type="doxygen-entry-point" value="group_rf4control"/>
 			<device-support value="sam4l"/>
         </module>
 	</select-by-config>
@@ -36,6 +34,7 @@
         <device-support value="megarf"/>
         <device-support value="sam4l"/>
         <build type="doxygen-entry-point" value="avr2102_rf4control_group"/>
+		<build type="distribute" subtype="license" value="../EULA.txt"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>

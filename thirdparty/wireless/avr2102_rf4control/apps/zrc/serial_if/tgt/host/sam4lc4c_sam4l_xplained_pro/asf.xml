@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host.sam4l_xplained_pro">
+	<project caption="RF4CE-ZRC TARGET SERIAL INTERFACE - HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host.sam4l_xplained_pro">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
+		The host application to drive the RF4CE-ZRC target stack running on the network co-processor
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

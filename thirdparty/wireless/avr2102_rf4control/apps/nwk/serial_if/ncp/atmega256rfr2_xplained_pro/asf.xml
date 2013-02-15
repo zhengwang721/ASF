@@ -1,12 +1,11 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp.atmega256rfr2_xplained_pro">
+	<project caption="NETWORK SERIAL INTERFACE - NCP SIDE - MEGARF" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp.atmega256rfr2_xplained_pro">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
+		The RF4CE network stack running on the network co-processor and driven by the host application
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>		
         <build type="header-file" value="conf_nvm.h"/>
@@ -26,7 +25,7 @@
         <build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x3f000" toolchain="avrgcc"/>
 		<build type="linker-config" subtype="script" value="link_iar.xcl" toolchain="iarew"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.atmega256rfr2_xplained_pro.lib"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.atmega256rfr2.lib"/>
 		<require idref="board.atmega256rfr2_xplained_pro"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>

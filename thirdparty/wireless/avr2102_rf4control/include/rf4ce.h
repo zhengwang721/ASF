@@ -64,39 +64,28 @@
  */
 /**
  * \ingroup group_rf4control
- * \defgroup group_RF4CONTROL_NWK_API NWK APIs
+ * \defgroup group_rf4control_NWK
+ * \defgroup group_rf4control_ZRC
  *  This module defines all Nwk layer core apis
  */
 /**
- * \ingroup group_rf4control
+ * \ingroup group_rf4control_NWK
+ * \defgroup group_RF4CONTROL_NWK_API NWK APIs
  * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
- *  Defines generic APIs  to access rf4control stack
- */
- /**
- * \ingroup group_rf4control
  * \defgroup group_RF4CONTROL_NWK_CONSTANTS NWK Constants
- *  Defines NWK layer constants
+ *  This module defines all Nwk layer core apis
  */
+
  /**
- * \ingroup group_rf4control
- * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
- *  Constants in the ZRC layer.
- */
-/**
- * \ingroup group_rf4control
+ * \ingroup group_rf4control_ZRC
+ * \defgroup group_RF4CONTROL_PBP_API Push button pairing APIs.
  * \defgroup group_RF4Control_ZRC_API ZRC APIs
+ * \defgroup group_RF4CONTROL_GENERIC_API NWK Generic APIs
+ * \defgroup group_RF4CONTROL_ZRC_CONSTANTS ZRC Constants
  *  This module defines all the ZRC core APIs.
  */
-/**
- * \ingroup group_rf4control
- * \defgroup group_rf4control_ds RF4Control data structures.
- *  Defines all the data structures used in RF4Control stack.
- */
-/**
- * \ingroup group_rf4control
- * \defgroup group_RF4CONTROL_PBP_API Push button pairing APIs.
- * Defines APIs to  access push button pairing functionality.
- */
+
+
 
 /* === Macros =============================================================== */
 

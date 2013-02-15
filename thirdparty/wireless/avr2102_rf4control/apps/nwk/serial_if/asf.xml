@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="meta" caption="Zrc controller Lib for AVR2102 RF4Control" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if">
+	<module type ="meta" caption="SERIAL INTERFACE APPLICATION" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE NETWORK STACK
+		Serial interface application for RF4CE networ stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="main.c"/>

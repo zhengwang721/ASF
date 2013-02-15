@@ -48,7 +48,7 @@
 #define TRANSCEIVER_NAME    "AT86RF233"
 #define IC_TYPE             (0x00)
 #define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega Zigbit 2.4GHz UART"
+#define BOARD_NAME          "ATZB-X-233-XPRO"
 
 
 #endif /* CONF_BOARD_H_INCLUDED */
