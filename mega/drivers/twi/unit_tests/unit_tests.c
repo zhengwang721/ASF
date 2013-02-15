@@ -174,7 +174,7 @@ const uint8_t test_pattern[] = {
 static void run_twi_master_send_test(const struct test_case *test)
 {
 	status_code_t master_status;
-	volatile uint64_t delay=5;
+	volatile uint64_t delay=10;
 	
 	// Package to send
 	twi_package_t packet = {
