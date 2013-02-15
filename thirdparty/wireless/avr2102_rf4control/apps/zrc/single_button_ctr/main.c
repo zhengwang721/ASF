@@ -487,14 +487,7 @@ static void app_task(void)
                 }
                 else //(button == BUTTON_OFF)
                 {
-                   /* if (nwk_ready_to_sleep())
-                    {
-                        / * Set MCU to sleep * /                     
-                        sleepmgr_init();
-                        sleepmgr_lock_mode(SLEEPMGR_IDLE);
-                        sleepmgr_enter_sleep();
-                        / * MCU is awake again * /
-                    }*/
+				   SLEEP_MODE_HANDLER();
                 }
             }
             break;
