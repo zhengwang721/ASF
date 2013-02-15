@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SAM4L Lower Power and QTouch Demo for SAM4L_EK" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example.sam4l_ek">
+	<project caption="Common HW Timer Application" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example.sam4l_ek">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

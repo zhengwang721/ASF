@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="MAC Beacon Application-Coordinator-AT86RF212 " id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example.at32uc3a3256s_rz600">
+	<project caption="Common HW Timer Application" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example.at32uc3a3256s_rz600">
 		<info type="description" value="summary">
-		The basic MAC Example Beacon Application deploys a beacon-enabled network with star topology.
+		Application to demonstrate Common HW Timer
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC Beacon  Application - Coordinator" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example">
+	<module type ="application" caption="Common HW Timer Application" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.example">
 		<info type="description" value="summary">
-		The basic MAC Example Beacon Application deploys a beacon-enabled network with star topology.
+		Common HW Timer Application
 		</info>
 		<build type="c-source" value="common_hw_timer_example.c"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
