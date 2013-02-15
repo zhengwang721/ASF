@@ -480,11 +480,11 @@ extern "C" {
  * time.
  *
  * To check if another transmission can be initiated, the user can either call another transfer operation,
- * or use the \ref i2c_master_async_operation_status/\ref i2c_slave_async_operation_status functions depending on mode.
+ * or use the \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions depending on mode.
  *
  * If the user would like to get callback from operations while using the asynchronous driver, then
- * the callback would have to be both registered and enabled using the "async_register_callback" and
- * "async_enable_callback" functions.
+ * the callback would have to be both registered and enabled using the "register_callback" and
+ * "enable_callback" functions.
  *
  * API for the asynchronous drivers can be found here:
  * - \ref sam0_i2c_master_group_async

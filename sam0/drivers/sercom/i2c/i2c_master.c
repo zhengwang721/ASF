@@ -211,7 +211,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 #ifdef I2C_MASTER_ASYNC
 	/* Get sercom instance index and register callback. */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
-	_sercom_set_handler(instance_index, _i2c_master_async_callback_handler);
+	_sercom_set_handler(instance_index, _i2c_master_interrupt_handler);
 	_sercom_instances[instance_index] = module;
 	
 	/* Initialize values in module. */
@@ -334,8 +334,8 @@ static enum status_code _i2c_master_wait_for_bus(
  *
  * Reads a data packet from the specified slave address on the I2C bus.
  *
- * \note This will stall the device from any other operation. For asynchronous
- * operation, see \ref i2c_master_async_read_packet.
+ * \note This will stall the device from any other operation. For interrupt-driven
+ * operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out]     module  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
@@ -348,7 +348,7 @@ static enum status_code _i2c_master_wait_for_bus(
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
  */
-enum status_code i2c_master_read_packet(
+enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -360,7 +360,7 @@ enum status_code i2c_master_read_packet(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 #ifdef I2C_MASTER_ASYNC
-	/* Check if the I2C module is busy doing async operation. */
+	/* Check if the I2C module is busy doing with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
@@ -421,8 +421,8 @@ enum status_code i2c_master_read_packet(
  *
  * Writes a data packet to the specified slave address on the I2C bus.
  *
- * \note This will stall the device from any other operation. For asynchronous
- * operation, see \ref i2c_master_async_read_packet.
+ * \note This will stall the device from any other operation. For interrupt-driven
+ * operation, see \ref i2c_master_read_packet_job.
  *
  * \param[in,out]     module  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
@@ -437,7 +437,7 @@ enum status_code i2c_master_read_packet(
  * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
  *                             indicating that slave do not want more data.
  */
-enum status_code i2c_master_write_packet(
+enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -449,7 +449,7 @@ enum status_code i2c_master_write_packet(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 #ifdef I2C_MASTER_ASYNC
-	/* Check if the I2C module is busy doing async operation. */
+	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
