@@ -550,17 +550,24 @@ enum status_code eeprom_emulator_write_page(
 		/* Flush the currently cached data buffer to non-volatile memory */
 		eeprom_emulator_flush_page_buffer();
 
+		/* Check if the current row is full, and we need to swap it out with a
+		 * spare row */
 		if (_eeprom_emulator_is_page_free_on_row(
 				_eeprom_module_inst.page_map[lpage],
 				&new_page) == false) {
+			/* Move the other page we aren't writing that is stored in the same
+			 * page to the new row, and replace the old current page with the
+			 * new page contents (cache is updated to match) */
 			_eeprom_emulator_move_data_to_spare(
 					_eeprom_module_inst.page_map[lpage] / NVMCTRL_ROW_PAGES,
 					lpage,
 					data);
 
+			/* New data is now written and the cache is updated, exit */
 			return STATUS_OK;
 		}
 
+		/* Row is not full, so we still have space to write a new revision */
 		_eeprom_module_inst.cache_active = false;
 	}
 
