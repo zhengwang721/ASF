@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Performance Analyzer Application" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer.uc3a3256s_rz600rf231">
+	<project caption="Performance Analyzer Application-AT86RF231" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer.uc3a3256s_rz600rf231">
 		<require idref="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_sleepmgr.h"/>

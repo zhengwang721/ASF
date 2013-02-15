@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="MAC No-Beacon Application - Device-Xmega_Zigbit_AT86RF233" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.dev.ncp.atxmega256a3u_rf233_zigbit_usb">
+	<project caption="MAC No-Beacon Application - Device-AT86RF233" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.dev.ncp.atxmega256a3u_rf233_zigbit_usb">
 		<info type="description" value="summary">
 		The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled network.
 		</info>
