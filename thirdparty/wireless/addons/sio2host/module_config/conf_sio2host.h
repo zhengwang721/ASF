@@ -43,7 +43,7 @@
 #ifndef CONF_SIO2HOST_H_INCLUDED
 #define CONF_SIO2HOST_H_INCLUDED
 
-// FOR UART 
+// FOR XMEGA UART 
 /*! \name Configuration
  */
 //! @{
@@ -59,5 +59,51 @@
 // FOR USB
 
 //#include "stdio_usb.h"
+
+// Enable the below definitions for megarf UART 
+/*! \name Configuration
+ */
+//! @{
+// #define USART_HOST                (&USARTA1)
+// #define USART_HOST_BAUDRATE       9600
+// #define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+// #define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
+// #define USART_HOST_STOP_BITS      1
+// //! @}
+
+// #define USART_HOST_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_HOST)
+// #define USART_HOST_ISR_VECT       USART1_RX_vect
+
+// Enable the below definitions for UC3A
+/*! \name Configuration
+ */
+//! @{
+// #define USART_HOST                &USARTE0
+// #define USART_HOST_BAUDRATE       9600
+// #define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+// #define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
+// #define USART_HOST_STOP_BIT       1
+// //! @}
+
+// #define USART_HOST_ISR_VECT       USARTE0_RXC_vect
+
+// Enable the below definitions for SAM4L
+///** USART Interface */
+// #define USART_HOST                 USART1
+// /** Baudrate setting */
+// #define USART_HOST_BAUDRATE        9600
+// /** Character length setting */
+// #define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+// /** Parity setting */
+// #define USART_HOST_PARITY          US_MR_PAR_NO
+// /** Stop bits setting */
+// #define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
+
+// #define USART_HOST_ISR_VECT        USART1_Handler
+
+// #define USART_HOST_IRQn            USART1_IRQn
+
+// #define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, US_IER_RXRDY);\
+								   // NVIC_EnableIRQ(USART_HOST_IRQn);
  
 #endif /* CONF_SIO2HOST_H_INCLUDED */
