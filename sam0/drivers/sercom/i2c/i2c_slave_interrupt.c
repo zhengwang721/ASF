@@ -192,6 +192,13 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
+	/* Reset module instance. */
+	module->registered_callback = 0;
+	module->enabled_callback = 0;
+	module->buffer_length = 0;
+	module->buffer_remaining = 0;
+	module->buffer = NULL;
+
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Wait for sync. */
@@ -219,7 +226,7 @@ void i2c_slave_enable_nack_on_address(struct i2c_slave_module
  * \brief Disables sending NACK on address match
  *
  * This function will disable sending of NACK on address match, thus
- * sending an ACK and initating a transaction.
+ * sending an ACK and initiating a transaction.
  *
  * \param[in,out] module Pointer to device instance structure
  */
@@ -257,15 +264,6 @@ static void _i2c_slave_read(struct i2c_slave_module *const module)
 static void _i2c_slave_write(struct i2c_slave_module *const module)
 {
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	/* Check for NACK from master */
-	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK)
-	{
-		/* Not acknowledged, transmission stopped */
-		/* Return bad data value. */
-		module->status = STATUS_ERR_BAD_DATA;
-		return;
-	}
 
 	/* Write byte from buffer to master */
 	i2c_hw->DATA.reg = *(module->buffer++);
@@ -355,11 +353,6 @@ enum status_code i2c_slave_read_packet_job(
 		return STATUS_BUSY;
 	}
 
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	/* Enable Address interrupt */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
-
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
@@ -398,11 +391,6 @@ enum status_code i2c_slave_write_packet_job(
 		return STATUS_BUSY;
 	}
 
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-	/* Enable Address interrupt */
-	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_AIEN;
-
 	/* Save packet to device instance. */
 	module->buffer = packet->data;
 	module->buffer_remaining = packet->data_length;
@@ -432,12 +420,11 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AIF) {
 	/* Address match */
-
 		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
 				SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occurred in last packet transfer */
 			module->status = STATUS_ERR_IO;
-			if ((callback_mask & I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER)) {
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER))) {
 				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
 			}
 		}
@@ -447,24 +434,22 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
-			/* Enable Data and Stop interrupts */
-			i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_DIF |
-					SERCOM_I2CS_INTFLAG_PIF;
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
+			/* Setting total length of buffer. */
+			module->buffer_length = module->buffer_remaining;
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		} else {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
-			/* Enable Data and Stop interrupts */
-			i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_DIF |
-					SERCOM_I2CS_INTFLAG_PIF;
 			/* Write request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
+			/* Setting total length of buffer. */
+			module->buffer_length = module->buffer_remaining;
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
 
@@ -475,7 +460,13 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
+		//port_pin_toggle_output_level(PIN_PB05);
 		module->status = STATUS_OK;
+		module->buffer_length = 0;
+		module->buffer_remaining = 0;
+
+		/* Clear Stop interrupt. */
+		i2c_hw->INTFLAG.reg |= SERCOM_I2CS_INTFLAG_PIF;
 
 		/* Call appropriate callback if enabled and registered. */
 		if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
@@ -487,19 +478,17 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			/* Write to master complete */
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
-		/* Disable Data and Stop interrupt. */
-		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_DIF |
-				SERCOM_I2CS_INTFLAG_PIF;
-		/* and Address if callbacks are disabled. */
-		if (!callback_mask){
-			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AIF;
-		}
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
-		/* Check if buffer is full, or no more data to write */
-		if (module->buffer_length > 0 && module->buffer_remaining <= 0) {
+		/* Check if buffer is full, or NACK from master. */
+		if (module->buffer_remaining <= 0 ||
+				((module->buffer_length > module->buffer_remaining)
+				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
+			//port_pin_toggle_output_level(PIN_PB00);
 
-			module->status = STATUS_OK;
+			module->buffer_remaining = 0;
+			module->buffer_length = 0;
+
 			if (module->transfer_direction == 0) {
 				/* Buffer is full, send NACK */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -507,15 +496,18 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				/* Set status, new character in DATA register will overflow
 				buffer */
 				module->status = STATUS_ERR_OVERFLOW;
-				// callback error or callback complete?
-				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE)) {
+
+				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
 					/* Read complete */
-					module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 				}
 			} else {
-				/* Wait for new start condition */
+				/* Release SCL and wait for new start condition */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+
+				/* Transfer successful. */
+				module->status = STATUS_OK;
 
 				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 					/* No more data to write, write complete */
@@ -530,22 +522,10 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				_i2c_slave_read(module);
 			} else {
 				_i2c_slave_write(module);
+			//port_pin_toggle_output_level(PIN_PB04);
 			}
 		}
 	}
-
-	/* Check for error. */
-	if (module->status != STATUS_BUSY &&
-			module->status != STATUS_OK) {
-		/* Stop packet operation. */
-
-		/* Call error callback if enabled and registered */
-		if ((module->registered_callback & I2C_SLAVE_CALLBACK_ERROR)
-				&& (module->enabled_callback & I2C_SLAVE_CALLBACK_ERROR)) {
-
-			module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
-
-		}
-	}
+	//port_pin_toggle_output_level(PIN_PA04);
 	system_interrupt_leave_critical_section();
 }

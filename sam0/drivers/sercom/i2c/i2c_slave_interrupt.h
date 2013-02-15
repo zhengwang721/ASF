@@ -146,19 +146,6 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
 
- /** \brief Interrupt flags.
- *
- * Flags used when reading or setting interrupt flags.
-*/
-enum i2c_slave_interrupt_flag {
-	/** Interrupt flag for stop condition */
-	I2C_SLAVE_INTERRUPT_STOP = 0,
-	/** Interrupt flag for address match */
-	I2C_SLAVE_INTERRUPT_ADDRESS  = 1,
-	/** Interrupt flag for data */
-	I2C_SLAVE_INTERRUPT_DATA  = 1,
-};
-
  /**
  * \brief SERCOM I2C Slave driver hardware instance
  *
@@ -249,6 +236,33 @@ static void _i2c_slave_wait_for_sync(
 	}
 }
 #endif
+
+
+/**
+ * \brief Returns the synchronization status of the module.
+ *
+ * Returns the synchronization status of the module.
+ *
+ * \param[out] module Pointer to device instance structure.
+ *
+ * \return       Status of the synchronization
+ * \retval true  Module is busy synchronizing
+ * \retval false Module is not synchronizing
+ */
+static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 /**
  * \brief Get the I2C slave default configurations.
@@ -420,7 +434,6 @@ static inline void i2c_slave_disable_callback(
 * \name Read and Write, Asynchronously
 * @{
 */
-	//TODO: typedef i2cpack?
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
@@ -446,6 +459,7 @@ static inline void i2c_slave_abort_job(
 
 	/* Set buffer to 0. */
 	module->buffer_remaining = 0;
+	module->buffer_length = 0;
 }
 
 /**

@@ -41,7 +41,6 @@
  *
  */
 #include "sercom_interrupt.h"
-#include "system_interrupt.h"
 
 void *_sercom_instances[SERCOM_INST_NUM];
 
@@ -115,91 +114,52 @@ void _sercom_set_handler(uint8_t instance,
 }
 
 /**
- * \internal Enables the interrupt vector of the given SERCOM instance.
+ * \internal Returns the system interrupt vector.
  *
- * \param[in] sercom_instance  Instance index
+ * \param[in] sercom_instance Instance pointer
  *
+ * \return Enum of system interrupt vector
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM0
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM1
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM2
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM3
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM4
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM5
  */
-void _sercom_interrupt_enable(Sercom *sercom_instance)
+enum system_interrupt_vector _sercom_get_interrupt_vector(Sercom *sercom_instance)
 {
-	switch (sercom_instance) {
-#ifdef ID_SERCOM0
-	case SERCOM0:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-		break;
-#endif
-#ifdef ID_SERCOM1
-	case SERCOM1:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM1);
-		break;
-#endif
-#ifdef ID_SERCOM2
-	case SERCOM2:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
-		break;
-#endif
-#ifdef ID_SERCOM3
-	case SERCOM3:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
-		break;
-#endif
-#ifdef ID_SERCOM4
-	case SERCOM4:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
-		break;
-#endif
-#ifdef ID_SERCOM5
-	case SERCOM5:
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM5);
-		break;
-#endif
-	default:
-		break;
-	}	
-}
+	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
 
-/**
- * \internal Disables the interrupt vector of the given SERCOM instance.
- *
- * \param[in] sercom_instance  Instance index
- *
- */
-void _sercom_interrupt_disable(Sercom *sercom_instance)
-{
-	switch (sercom_instance) {
+	switch (instance_index) {
 #ifdef ID_SERCOM0
-	case SERCOM0:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-		break;
+	case 0:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM0;
 #endif
 #ifdef ID_SERCOM1
-	case SERCOM1:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM1);
-		break;
+	case 1:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM1;
 #endif
 #ifdef ID_SERCOM2
-	case SERCOM2:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
-		break;
+	case 2:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM2;
 #endif
 #ifdef ID_SERCOM3
-	case SERCOM3:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
-		break;
+	case 3:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM3;
 #endif
 #ifdef ID_SERCOM4
-	case SERCOM4:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
-		break;
+	case 4:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM4;
 #endif
 #ifdef ID_SERCOM5
-	case SERCOM5:
-		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM5);
-		break;
+	case 5:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM5;
 #endif
 	default:
-		break;
-	}	
+		/* Invalid data given. */
+		Assert(false);
+		return 0;
+	}
 }
 
 /**
