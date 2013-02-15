@@ -199,6 +199,7 @@ static void _eeprom_emulator_update_page_mapping(void)
 static void _eeprom_emulator_clean_memory(void)
 {
 	enum status_code err = STATUS_OK;
+
 	uint8_t current_row;
 	uint8_t last_row;
 	uint8_t last_page;
@@ -318,7 +319,7 @@ static void _eeprom_emulator_scan_row(
  * original row can be erased and re-used. The contents of the given logical
  * page is replaced with a new buffer of data.
  *
- * \param[in] row           Physical row to examine
+ * \param[in] row_number    Physical row to examine
  * \param[in] logical_page  Logical EEPROM page number in the row to update
  * \param[in] data          New data to replace the old in the logical page
  *
@@ -891,7 +892,8 @@ enum status_code eeprom_emulator_read_buffer(
  *
  *
  * \note This function should also be called before using the NVM controller
- *       directly for any other purposes.
+ *       directly in the user-application for any other purposes to prevent
+ *       data loss.
  *
  * \return Status code indicating the status of the operation.
  */
