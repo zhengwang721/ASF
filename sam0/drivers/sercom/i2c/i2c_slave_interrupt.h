@@ -325,6 +325,9 @@ static inline void i2c_slave_enable(
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
 
+	/* Enable Global interrupt for module */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(module);
 
@@ -356,6 +359,9 @@ static inline void i2c_slave_disable(
 	/* Clear interrupt flags */
 	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF | SERCOM_I2CS_INTFLAG_AIF |
 			SERCOM_I2CS_INTFLAG_DIF;
+
+	/* Enable Global interrupt for module */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(module);
@@ -427,7 +433,6 @@ static inline void i2c_slave_disable_callback(
 	/* Mark callback as enabled. */
 	module->enabled_callback &= ~(1 << callback_type);
 }
-
 /** @} */
 
 /**
