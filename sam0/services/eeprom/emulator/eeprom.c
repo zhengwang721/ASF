@@ -53,17 +53,6 @@
 
 /**
  * \internal
- * \brief Structure describing emulated pages of EEPROM data
- */
-struct _eeprom_page {
-	/** Header information of the EEPROM page. */
-	uint8_t header[EEPROM_HEADER_SIZE];
-	/** Data content of the EEPROM page. */
-	uint8_t data[EEPROM_DATA_SIZE];
-};
-
-/**
- * \internal
  * \brief Convenience struct for mapping between logical and physical pages
  */
 struct _eeprom_page_translater {
@@ -98,6 +87,17 @@ struct _eeprom_master_page {
 
 /**
  * \internal
+ * \brief Structure describing emulated pages of EEPROM data
+ */
+struct _eeprom_page {
+	/** Header information of the EEPROM page. */
+	uint8_t header[EEPROM_HEADER_SIZE];
+	/** Data content of the EEPROM page. */
+	uint8_t data[EEPROM_DATA_SIZE];
+};
+
+/**
+ * \internal
  * \brief Internal device instance struct
  */
 struct _eeprom_module {
@@ -105,7 +105,7 @@ struct _eeprom_module {
 	bool     initialized;
 	/** Absolute byte pointer to the first byte of FLASH where the emulated
 	 *  EEPROM is stored. */
-	uint8_t *flash;
+	struct _eeprom_page *flash;
 	/** Physical FLASH page number where the emulated EEPROM is stored. */
 	uint32_t flash_start_page;
 
@@ -179,11 +179,9 @@ static void _eeprom_emulator_format_memory(void)
 static void _eeprom_emulator_update_page_mapping(void)
 {
 	uint8_t logical_page;
-	struct _eeprom_page *data_ptr
-		= (struct _eeprom_page *)_eeprom_module_inst.flash;
 
 	for (uint16_t c = 0; c < (_eeprom_module_inst.physical_pages - NVMCTRL_ROW_PAGES); c++) {
-		logical_page = data_ptr[c].header[EEPROM_PAGE_NUMBER_BYTE];
+		logical_page = _eeprom_module_inst.flash[c].header[EEPROM_PAGE_NUMBER_BYTE];
 
 		if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
 			_eeprom_module_inst.page_map[logical_page] = c;
@@ -203,8 +201,6 @@ static void _eeprom_emulator_clean_memory(void)
 	uint8_t current_row;
 	uint8_t last_row;
 	uint8_t last_page;
-	struct _eeprom_page *data_ptr
-		= (struct _eeprom_page *)_eeprom_module_inst.flash;
 
 	for (uint16_t page_counter = 0;
 			page_counter < _eeprom_module_inst.logical_pages; page_counter++) {
@@ -216,7 +212,7 @@ static void _eeprom_emulator_clean_memory(void)
 			current_row = page_counter2 / NVMCTRL_ROW_PAGES;
 
 			// TODO: Find out what the heck this is supposed to be
-			if (data_ptr[page_counter2].header[1] !=
+			if (_eeprom_module_inst.flash[page_counter2].header[1] !=
 					_eeprom_module_inst.page_map[page_counter]) {
 				continue;
 			}
@@ -261,14 +257,11 @@ static bool _eeprom_emulator_is_page_free_on_row(
 	uint8_t row        = (current_page / NVMCTRL_ROW_PAGES);
 	uint8_t rest_pages = (current_page % NVMCTRL_ROW_PAGES);
 
-	struct _eeprom_page *ee_data
-		= (struct _eeprom_page *)_eeprom_module_inst.flash;
-
 	if (rest_pages > 0) {
 		for (uint8_t c = rest_pages; c < NVMCTRL_ROW_PAGES; c++) {
 			uint8_t page = (row * NVMCTRL_ROW_PAGES) + c;
 
-			if (ee_data[page].header[EEPROM_PAGE_NUMBER_BYTE] ==
+			if (_eeprom_module_inst.flash[page].header[EEPROM_PAGE_NUMBER_BYTE] ==
 					EEPROM_INVALID_PAGE_NUMBER) {
 				*new_page = page;
 				return true;
@@ -292,14 +285,13 @@ static void _eeprom_emulator_scan_row(
 		uint8_t row_number,
 		struct _eeprom_page_translater *page_trans)
 {
-	struct _eeprom_page *row_data
-		= (struct _eeprom_page *)&_eeprom_module_inst.flash[row_number * NVMCTRL_ROW_SIZE];
+	struct _eeprom_page *row_data = &_eeprom_module_inst.flash[row_number * NVMCTRL_ROW_SIZE];
 
 	/* We assume that there are some content on the first two pages */
-	page_trans[0].logical_page = row_data[0].header[EEPROM_PAGE_NUMBER_BYTE];
+	page_trans[0].logical_page  = row_data[0].header[EEPROM_PAGE_NUMBER_BYTE];
 	page_trans[0].physical_page = row_number * NVMCTRL_ROW_PAGES;
 
-	page_trans[1].logical_page = row_data[1].header[EEPROM_PAGE_NUMBER_BYTE];
+	page_trans[1].logical_page  = row_data[1].header[EEPROM_PAGE_NUMBER_BYTE];
 	page_trans[1].physical_page = (row_number * NVMCTRL_ROW_PAGES) + 1;
 
 	for (uint8_t c = 0; c < 2; c++) {
@@ -348,12 +340,10 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 			eeprom_emulator_flush_page_buffer();
 
 			/* Write header to SRAM cache */
-			memcpy(_eeprom_module_inst.cache_buffer,
-					&header, EEPROM_HEADER_SIZE);
+			memcpy(_eeprom_module_inst.cache_buffer, &header, EEPROM_HEADER_SIZE);
 
 			/* Write data to SRAM cache */
-			memcpy(&_eeprom_module_inst.cache_buffer[4],
-					data, EEPROM_DATA_SIZE);
+			memcpy(&_eeprom_module_inst.cache_buffer[4], data, EEPROM_DATA_SIZE);
 
 			/* Write data to page buffer */
 			do {
@@ -377,7 +367,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 
 			do {
 				err = nvm_write_buffer(
-						new_page + _eeprom_module_inst.flash_start_page,
+						(_eeprom_module_inst.flash_start_page + new_page),
 						_eeprom_module_inst.cache_buffer,
 						NVMCTRL_PAGE_SIZE);
 			} while (err == STATUS_BUSY);
@@ -570,6 +560,24 @@ enum status_code eeprom_emulator_init(void)
 }
 
 /**
+ * \brief Erases the entire emulated EEPROM memory space
+ *
+ * Erases and re-initializes the emulated EEPROM memory space, destroying any
+ * existing data.
+ */
+void eeprom_emulator_erase_memory(void)
+{
+	/* Create new EEPROM memory block in EEPROM emulation section */
+	_eeprom_emulator_format_memory();
+
+	/* Map the newly created EEPROM memory block */
+	_eeprom_emulator_update_page_mapping();
+
+	/* Write EEPROM emulation master block */
+	_eeprom_emulator_create_master_page();
+}
+
+/**
  * \brief Writes a page of data to an emulated EEPROM memory page
  *
  * Writes an emulated EEPROM page of data to the emulated EEPROM memory space.
@@ -740,24 +748,6 @@ enum status_code eeprom_emulator_read_page(
 }
 
 /**
- * \brief Erases the entire emulated EEPROM memory space
- *
- * Erases and re-initializes the emulated EEPROM memory space, destroying any
- * existing data.
- */
-void eeprom_emulator_erase_memory(void)
-{
-	/* Create new EEPROM memory block in EEPROM emulation section */
-	_eeprom_emulator_format_memory();
-
-	/* Map the newly created EEPROM memory block */
-	_eeprom_emulator_update_page_mapping();
-
-	/* Write EEPROM emulation master block */
-	_eeprom_emulator_create_master_page();
-}
-
-/**
  * \brief Writes a buffer of data to the emulated EEPROM memory space
  *
  * Writes a buffer of data to a section of emulated EEPROM memory space. The
@@ -810,9 +800,11 @@ enum status_code eeprom_emulator_write_buffer(
 				break;
 			}
 
+			/* Increment the page number we are looking at */
+			current_page++;
+
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer in case of a partial page write */
-			current_page++;
 			err = eeprom_emulator_read_page(current_page, buffer);
 
 			if (err != STATUS_OK) {
@@ -861,9 +853,11 @@ enum status_code eeprom_emulator_read_buffer(
 	for (uint16_t c = offset; c < (length + offset); c++) {
 		/* Check if we have read up to a new EEPROM page boundary */
 		if ((c % EEPROM_DATA_SIZE) == 0) {
+			/* Increment the page number we are looking at */
+			current_page++;
+
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer */
-			current_page++;
 			err = eeprom_emulator_read_page(current_page, buffer);
 
 			if (err != STATUS_OK) {
