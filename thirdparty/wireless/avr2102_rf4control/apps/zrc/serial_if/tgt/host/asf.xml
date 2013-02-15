@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="RF4CE-ZRC TARGET SERIAL INTERFACE - HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host">
+	<module type ="meta" caption="RF4CE-ZRC TARGET SERIAL INTERFACE - HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.host">
 		<info type="description" value="summary">
 		The host application to drive the RF4CE-ZRC target stack running on the network co-processor
 		</info>

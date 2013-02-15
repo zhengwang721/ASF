@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC Serial Interface Host Application - Beacon RFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_rfd.host">
+	<module type ="meta" caption="MAC Serial Interface Host Application - Beacon RFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_rfd.host">
 		<info type="description" value="summary">
 		MAC Serial Interface Host Application - Beacon RFD
 		</info>

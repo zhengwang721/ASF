@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Common SW Timer Application" id="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer.example">
+	<module type ="meta" caption="Common SW Timer Application" id="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer.example">
 		<info type="description" value="summary">
 		Application to demonstrate Common SW Timer Algorithm
 		</info>

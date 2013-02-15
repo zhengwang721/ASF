@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC No Beacon Application-Coordinator-Host" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.coord.host">
+	<module type ="meta" caption="MAC No Beacon Application-Coordinator-Host" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.coord.host">
 		<info type="description" value="summary">
 		The basic MAC Example NoBeacon Application deploys a Non beacon-enabled network 
 		</info>
