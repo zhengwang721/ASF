@@ -429,22 +429,39 @@ static void _eeprom_emulator_create_master_page(void)
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK              Given master page contents is valid
- * \retval STATUS_ERR_BAD_FORMAT  Master page contents was invalid or incompatible
+ * \retval STATUS_ERR_BAD_FORMAT  Master page contents was invalid
+ * \retval STATUS_ERR_IO          Master page indicates the data is incompatible
+ *                                with this version of the EEPROM emulator
  */
 static enum status_code _eeprom_emulator_verify_master_page(
 	struct _eeprom_master_page* master_page)
 {
 	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
 
+	/* Verify magic key is correct in the master page header */
 	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
 		if (master_page.magic_key[c] != magic_key[c]) {
 			return STATUS_ERR_BAD_FORMAT;
 		}
 	}
 
-	if (master_page.emulator_id != EEPROM_EMULATOR_ID) {
-		return STATUS_ERR_BAD_FORMAT;
+	/* Verify emulator ID in header to ensure the same scheme is used */
+	if (master_page.emulator_id   != EEPROM_EMULATOR_ID) {
+		return STATUS_ERR_IO;
 	}
+
+	/* Verify major version in header to ensure the same version is used */
+	if (master_page.major_version != EEPROM_MAJOR_VERSION) {
+		return STATUS_ERR_IO;
+	}
+
+	/* Verify minor version in header to ensure the same version is used */
+	if (master_page.minor_version != EEPROM_MINOR_VERSION) {
+		return STATUS_ERR_IO;
+	}
+
+	/* Don't verify revision number - same major/minor is considered enough
+	 * to ensure the stored data is compatible. */
 
 	return STATUS_OK;
 }
@@ -465,6 +482,8 @@ static enum status_code _eeprom_emulator_verify_master_page(
  *                                initialized
  * \retval STATUS_ERR_BAD_FORMAT  Emulated EEPROM memory is corrupt or not
  *                                formatted
+ * \retval STATUS_ERR_IO          EEPROM data is incompatible with this version
+ *                                or scheme of the EEPROM emulator
  */
 enum status_code eeprom_emulator_init(void)
 {
