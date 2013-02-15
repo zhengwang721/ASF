@@ -93,6 +93,7 @@
  *     Configure:
  *       0 : Power Saving Mode 0
  *       1 : Power Saving Mode 1
+ *       2 : Power Saving Mode 2
  *     Mode:
  *       A : Active Mode
  *       R : Retention Mode
@@ -112,8 +113,6 @@
  */
 
 #include "asf.h"
-#include "app.h"
-#include "event.h"
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Low Power Demo --\r\n" \
@@ -152,6 +151,7 @@ static void display_menu_core(void)
 	printf("Configure:\n\r");
 	printf("  0 : Power Saving Mode 0\n\r");
 	printf("  1 : Power Saving Mode 1\n\r");
+	printf("  2 : Power Saving Mode 2\n\r");
 	printf("Mode:\n\r");
 	printf("  A : Active Mode\n\r");
 	printf("  R : Retention Mode\n\r");
@@ -191,7 +191,30 @@ static void configure_button(void)
 	eic_line_set_callback(EIC, BUTTON_0_EIC_LINE, button_handler,
 	EIC_1_IRQn, 1);
 	eic_line_enable(EIC, BUTTON_0_EIC_LINE);
+}
 
+static void app_prime_number_run(void)
+{
+	#define PRIM_NUMS 8
+	uint32_t i, d, n;
+	uint32_t primes[PRIM_NUMS];
+
+
+	// Find prime numbers forever
+	primes[0] = 1;
+	for (i = 1; i < PRIM_NUMS;) {
+		for (n = primes[i - 1] + 1; ;n++) {
+			for (d = 2; d <= n; d++) {
+				if (n == d) {
+					primes[i] = n;
+					goto nexti;
+				}
+				if (n%d == 0) break;
+			}
+		}
+		nexti:
+		i++;
+	}
 }
 
 /**
@@ -225,7 +248,6 @@ static void test_wait_mode(void)
 	sleepmgr_sleep(SLEEPMGR_WAIT);
 
 	puts("Exit from Wait Mode.\r");
-
 }
 
 static void test_retention_mode(void)
@@ -238,7 +260,6 @@ static void test_retention_mode(void)
 	sleepmgr_sleep(SLEEPMGR_RET);
 
 	puts("Exit from Retention Mode.\r");
-
 }
 
 
@@ -262,7 +283,6 @@ static void test_backup_mode(void)
 	sleepmgr_sleep(SLEEPMGR_BACKUP);
 
 	/* Note: The core will reset when exiting from backup mode. */
-
 }
 
 
@@ -273,11 +293,9 @@ static void test_core(void)
 {
 	uint32_t uc_key = 0;
 
-	bpm_configure_power_scaling(BPM,
-			BPM_PMCON_PS(BPM_PS_1),
-			true);
-			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
-			puts("Power Scaling Mode 1 selected !\r");
+	bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_1),true);
+  while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
+	puts("Power Scaling Mode 1 selected !\r");
 
 	while (1) {
 		/* Display menu */
@@ -290,20 +308,21 @@ static void test_core(void)
 		switch (uc_key) {
 		/* Configuration */
 		case '0':
-			bpm_configure_power_scaling(BPM,
-			BPM_PMCON_PS(BPM_PS_0),
-			true);
+			bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_0),true);
 			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
 			puts("Power Scaling Mode 0 selected !\r");
 			break;
 		case '1':
-			bpm_configure_power_scaling(BPM,
-			BPM_PMCON_PS(BPM_PS_1),
-			true);
+			bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_1),true);
 			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
 			puts("Power Scaling Mode 1 selected !\r");
 		break;
 
+		case '2':
+			bpm_configure_power_scaling(BPM,BPM_PMCON_PS(BPM_PS_2),true);
+			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
+			puts("Power Scaling Mode 2 selected !\r");
+		break;
 
 		/* Mode test */
 		case 'a':
@@ -334,37 +353,12 @@ static void test_core(void)
 		default:
 			puts("This menu does not exist !\r");
 			break;
-		}       /* Switch */
+		} /* Switch */
 	}
 
 test_core_end:
 	puts(" Exit from core consumption test mode.\r");
 }
-
-void app_prime_number_run(void)
-{
-	#define PRIM_NUMS 8
-	uint32_t i, d, n;
-	uint32_t primes[PRIM_NUMS];
-
-
-	// Find prime numbers forever
-	primes[0] = 1;
-	for (i = 1; i < PRIM_NUMS;) {
-		for (n = primes[i - 1] + 1; ;n++) {
-			for (d = 2; d <= n; d++) {
-				if (n == d) {
-					primes[i] = n;
-					goto nexti;
-				}
-				if (n%d == 0) break;
-			}
-		}
-		nexti:
-		i++;
-	}
-}
-
 
 /**
  * \brief Low power application entry point.

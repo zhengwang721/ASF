@@ -44,6 +44,7 @@
 			<require idref="sam.drivers.eic"/>
 			<require idref="sam.drivers.ast"/>
 			<require idref="sam.drivers.usart"/>
+			<require idref="sam.drivers.wdt"/>
 			<require idref="sam.drivers.flashcalw"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>

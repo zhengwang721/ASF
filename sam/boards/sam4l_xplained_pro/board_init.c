@@ -42,6 +42,7 @@
 
 #include <board.h>
 #include <ioport.h>
+#include <wdt_sam4l.h>
 
 /**
  * \brief Set peripheral mode for one single IOPORT pin.
@@ -105,12 +106,12 @@ void board_init(void)
 	#endif
 
 	// Initialize LED0, turned off
-	//ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	//ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
+	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
 
 	// Initialize SW0
-	//ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	//ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 }
 
 /** @} */
