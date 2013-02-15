@@ -122,23 +122,23 @@ extern "C" {
 
 enum status_code eeprom_emulator_init(void);
 
-enum status_code eeprom_emulator_write_page(
-		uint8_t lpage,
-		uint8_t *data);
-
-
-enum status_code eeprom_emulator_read_page(
-		uint8_t lpage,
-		uint8_t *data);
-
 enum status_code eeprom_emulator_flush_page_buffer(void);
 
 void eeprom_emulator_erase_memory(void);
 
+enum status_code eeprom_emulator_write_page(
+		uint8_t logical_page,
+		uint8_t *data);
+
+
+enum status_code eeprom_emulator_read_page(
+		uint8_t logical_page,
+		uint8_t *data);
+
 enum status_code eeprom_emulator_write_buffer(
 		uint16_t offset,
 		uint8_t *data,
-		uint16_t lenght);
+		uint16_t length);
 
 enum status_code eeprom_emulator_read_buffer(
 		uint16_t offset,
