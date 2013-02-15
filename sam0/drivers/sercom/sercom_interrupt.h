@@ -52,6 +52,10 @@ typedef void (*sercom_handler_t)(uint8_t instance);
 
 uint8_t _sercom_get_sercom_inst_index(Sercom *sercom_instance);
 
+void _sercom_interrupt_enable(uint8_t instance);
+
+void _sercom_interrupt_disable(uint8_t instance);
+
 void _sercom_set_handler(uint8_t instance,
 		sercom_handler_t interrupt_handler);
 

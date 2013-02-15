@@ -41,6 +41,7 @@
  *
  */
 #include "sercom_interrupt.h"
+#include "system_interrupt.h"
 
 void *_sercom_instances[SERCOM_INST_NUM];
 
@@ -111,6 +112,94 @@ void _sercom_set_handler(uint8_t instance,
 
 	/* Save interrupt handler. */
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
+}
+
+/**
+ * \internal Enables the interrupt vector of the given SERCOM instance.
+ *
+ * \param[in] sercom_instance  Instance index
+ *
+ */
+void _sercom_interrupt_enable(Sercom *sercom_instance)
+{	
+	switch (sercom_instance) {
+#ifdef ID_SERCOM0
+	case SERCOM0:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+		break;
+#endif
+#ifdef ID_SERCOM1
+	case SERCOM1:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM1);
+		break;
+#endif
+#ifdef ID_SERCOM2
+	case SERCOM2:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+		break;
+#endif
+#ifdef ID_SERCOM3
+	case SERCOM3:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+		break;
+#endif
+#ifdef ID_SERCOM4
+	case SERCOM4:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+		break;
+#endif
+#ifdef ID_SERCOM5
+	case SERCOM5:
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM5);
+		break;
+#endif
+	default:
+		break;
+	}	
+}
+
+/**
+ * \internal Disables the interrupt vector of the given SERCOM instance.
+ *
+ * \param[in] sercom_instance  Instance index
+ *
+ */
+void _sercom_interrupt_disable(Sercom *sercom_instance)
+{
+	switch (sercom_instance) {
+#ifdef ID_SERCOM0
+	case SERCOM0:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+		break;
+#endif
+#ifdef ID_SERCOM1
+	case SERCOM1:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM1);
+		break;
+#endif
+#ifdef ID_SERCOM2
+	case SERCOM2:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
+		break;
+#endif
+#ifdef ID_SERCOM3
+	case SERCOM3:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+		break;
+#endif
+#ifdef ID_SERCOM4
+	case SERCOM4:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+		break;
+#endif
+#ifdef ID_SERCOM5
+	case SERCOM5:
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_SERCOM5);
+		break;
+#endif
+	default:
+		break;
+	}	
 }
 
 /**
