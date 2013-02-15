@@ -50,7 +50,9 @@
 
 #define SLEEP_MODE_HANDLER() do \
                             { \
-							nop(); \
-                            }while(0)							
+                            }while(0)	
+
+/* Since this is host and USB driven , directly providing voltage level */	
+#define GET_BATTERY_VOLTAGE()    (0xCE4)						
 
 #endif  /* CONF_BOARD_H_INCLUDED */

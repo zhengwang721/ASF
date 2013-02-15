@@ -496,7 +496,6 @@ static inline void handle_incoming_msg(void)
           node_desc_t NodeDescList[3];
           uint8_t i;
           uint8_t k;
-          uint8_t *addr_ptr;
           uint8_t numnodes=sio_rx_buf[3];
 		  uint8_t index = 5;
           for (i = 0; i <numnodes; i++)
@@ -918,7 +917,6 @@ bool nlme_discovery_request(uint16_t DstPANId, uint16_t DstNwkAddr,
 
 {
   uint8_t *msg_buf;
-  uint8_t *ptr;
   uint8_t i;
   msg_buf = get_next_tx_buffer();
 
@@ -1011,7 +1009,6 @@ bool nlme_pair_request(uint8_t LogicalChannel, uint16_t DstPANId, uint64_t DstIE
                       )
 {
   uint8_t *msg_buf;
-  uint8_t *ptr;
   uint8_t i;
   msg_buf = get_next_tx_buffer();
 
@@ -1058,7 +1055,6 @@ bool nlme_pair_response(nwk_enum_t Status, uint16_t DstPANId, uint64_t DstIEEEAd
 
 {
   uint8_t *msg_buf;
-  uint8_t *ptr;
   uint8_t i;
   msg_buf = get_next_tx_buffer();
 

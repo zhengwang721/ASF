@@ -49,7 +49,7 @@
 * \section toc Table of Contents
 *  - \subpage overview
 *  -  \b Application \b Interface(API)\n
-*    - \ref group_rf4control
+*    - \ref group_rf4control_ZRC
 *    - \ref group_mac
 *    - \ref group_pal
 *    - \ref group_tal
@@ -64,8 +64,16 @@
 /**
  * \page overview Overview
  * \section intro Introduction
- * To be added.
- */
+ * Terminal Target Example Application will act as target for the RF4CE ZRC button controller application. Terminal Target stack will respond for the user input via serial interface. 
+ * The user options will be printed on the serial console. Where as the user will choose the options like cold start, warm start, reset(NIB will be reset to default values and stored in EEPROM), 
+ * start network and push button pairing, channel agility, vendor data support, unpair, print the pairing table, setting the base channel on the target device, toggle the standby mode on the target device.
+ *
+ * options are user selectable via serial console, response will be printed on the serial console after processing the requests.
+ * 
+ * Push button pairing procedure can be triggered at target side either by using "All-in-one start" option or "Reset"->"Start"->"Pairing" sequence and make sure that the PBP is triggered at the controller side also.
+ * The status of the push button pairing proceure will be displayed on the terminal.Then it displays ZRC commands received from the controller.
+ *
+ * Terminal target can be used with the single button controller node and button controller nodes.   */
 
 
 /** \page main_files Application Files

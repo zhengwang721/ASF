@@ -1,7 +1,7 @@
 /**
  * @file main.c
  *
- * @brief Single button controller application
+ * @brief button controller application
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +47,7 @@
 * \section toc Table of Contents
 *  - \subpage overview
 *  -  \b Application \b Interface(API)\n
-*    - \ref group_rf4control
+*    - \ref group_rf4control_ZRC
 *    - \ref group_mac
 *    - \ref group_pal
 *    - \ref group_tal
@@ -62,7 +62,20 @@
 /**
  * \page overview Overview
  * \section intro Introduction
- *  To be added
+ *  Button Controller is the RF4CE demo application which can be used in the ZRC target - controller setup
+ *  This will support push button pairing procedure and zrc commands i.e Sending the button events to the remote terminal target over the air.
+ *
+ *	Application supports cold reset and warm reset. While powering on the device, if the Select key is  pressed then it does cold reset.
+ *  Otherwise it does warm reset i.e retreiving the network information base from NVM.
+ *
+ *  When ever the Select key along with Target-1 Key is pressed then the application will start the push button pairing procedure. 
+ *  When ever the Select key along with Target-2 Key pressed then the application will start the push button pairing procedure. LED0 will indicate the push button pairing status on the completion.
+ *
+ *  When ever the Target-1 Key pressed and released followed by Select key pressed and released, then application will set target-1 as active target.
+ *  When ever the Target-2 Key pressed and released followed by Select key pressed and released, then application will set target-2 as active target.
+ *
+ *  The Application will use the ZRC Commands to send the key press events to paired devices. The Application will demonstrates the repeat key pressed event and control key pressed event.
+ *
  */
 
 
@@ -74,13 +87,8 @@
  * - \b ATXMEGA256A3BU
  *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
 
- 
- * \page compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
- * Other compilers may or may not work.
- *
  * \page references References
- * 1)  <A href="http://www.atmel.com/images/doc8412.pdf">AVR2025 IEEE 802.15.4 MAC Reference Manual\n </A>.
+ * 1)  <A href="http://www.atmel.com/images/doc8357.pdf">AVR2102 RF4CE Reference Manual\n </A>.
  * 2)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n

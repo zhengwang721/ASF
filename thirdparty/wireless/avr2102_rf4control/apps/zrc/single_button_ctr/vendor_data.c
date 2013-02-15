@@ -65,6 +65,7 @@
 #ifdef TFA_BAT_MON
 #include "tfa.h"
 #endif
+#include "conf_board.h"
 
 /* === MACROS ============================================================== */
 
@@ -215,14 +216,9 @@ void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Pro
 static uint16_t get_batmon_voltage(void)
 {   
   uint16_t voltage;
-#ifdef TFA_BAT_MON
-   voltage = tfa_get_batmon_voltage();
-#elif CUSTOM_BOARD
-   /*User can get the battery voltage for his custom board*/
-#else
-   /*USB powered hence giving vcc as bat voltage*/
-   voltage = 0xCE4;
-#endif
-   return voltage;
+  /* GET_BATTERY_VOLTAGE - will be board specific */
+  voltage = GET_BATTERY_VOLTAGE();
+
+  return voltage;
 }
 #endif  /* #ifdef VENDOR_DATA */
