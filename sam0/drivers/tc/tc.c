@@ -206,12 +206,17 @@ enum status_code tc_init(
 		ctrlbset_tmp |= TC_CTRLBSET_DIR;
 	}
 
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+	tc_module->COUNT8.CTRLBCLR.reg = 0xFF;
+
+	/* Check if we actually need to go into a wait state. */
 	if (ctrlbset_tmp) {
 		while (tc_is_syncing(module_inst)) {
 			/* Wait for sync */
 		}
 
-		/* Check if we actually need to go into a wait state. */
 		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
