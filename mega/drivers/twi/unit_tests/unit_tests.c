@@ -207,7 +207,7 @@ static void run_twi_master_send_test(const struct test_case *test)
 	master_status = twi_master_write(TWI_MASTER, &packet);
         
     /* Write completion time for EEPROM */
-	delay_ms(delay);
+	delay_ms(10);
 
 	test_assert_true(test, master_status == STATUS_OK,
 			"Master write not ok");
