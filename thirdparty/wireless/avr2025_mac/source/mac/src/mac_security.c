@@ -52,7 +52,7 @@
 /* === Includes ============================================================ */
 
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
-
+#include <compiler.h>
 #include <string.h>
 #include "tal.h"
 #include "ieee_const.h"
