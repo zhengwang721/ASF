@@ -18,7 +18,7 @@
            This module will be selected for two processor approach in Host device
              </info>
             <require idref="thirdparty.wireless.avr2102_rf4control.addons.api_parser"/>
-			<build type="doxygen-entry-point" value="group_rf4ce"/>
+			<build type="doxygen-entry-point" value="group_rf4control"/>
 			<device-support value="sam4l"/>
         </module>
 	</select-by-config>
