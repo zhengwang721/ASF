@@ -338,7 +338,7 @@ enum events_path {
  * \note Selecting a GLCK will only make take effect when
  * \ref EVENT_PATH_SYNCHRONOUS and \ref EVENT_PATH_RESYNCHRONOUS paths are used.
  */
-struct events_chan_conf {
+struct events_chan_config {
 	/** Edge detection for synchronous event channels, from \ref events_edge. */
 	enum events_edge edge_detection;
 	/** Path of the event system, from \ref events_path. */
@@ -359,7 +359,7 @@ struct events_chan_conf {
  * \ref events_user_get_config_defaults() function before being modified by the
  * user application.
  */
-struct events_user_conf {
+struct events_user_config {
 	/** Event channel ID that should be attached to the user MUX. */
 	enum events_channel event_channel_id;
 };
@@ -399,7 +399,7 @@ void events_init(void);
  * \param[out] config    Configuration structure to initialize to default values
  */
 static inline void events_chan_get_config_defaults(
-		struct events_chan_conf *const config)
+		struct events_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -414,7 +414,7 @@ static inline void events_chan_get_config_defaults(
 
 void events_chan_set_config(
 		const enum events_channel event_channel,
-		struct events_chan_conf *const config);
+		struct events_chan_config *const config);
 
 /** @} */
 
@@ -438,7 +438,7 @@ void events_chan_set_config(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void events_user_get_config_defaults(
-		struct events_user_conf *const config)
+		struct events_user_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -449,7 +449,7 @@ static inline void events_user_get_config_defaults(
 
 void events_user_set_config(
 		const uint8_t user,
-		struct events_user_conf *const config);
+		struct events_user_config *const config);
 
 /** @} */
 
