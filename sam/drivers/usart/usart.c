@@ -4,7 +4,7 @@
  * \brief Universal Synchronous Asynchronous Receiver Transmitter (USART) driver
  * for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1549,19 +1549,19 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 		p_pdc_base = PDC_USART0;
 		return p_pdc_base;
 	}
-#if (SAM3S || SAM4S || SAM3XA || SAM3U)
+#ifdef PDC_USART1
 	else if (p_usart == USART1) {
 		p_pdc_base = PDC_USART1;
 		return p_pdc_base;
 	}
 #endif
-#if (SAM3SD8 || SAM3XA || SAM3U)
+#ifdef PDC_USART2
 	else if (p_usart == USART2) {
 		p_pdc_base = PDC_USART2;
 		return p_pdc_base;
 	}
 #endif
-#if (SAM3XA || SAM3U)
+#ifdef PDC_USART3
 	else if (p_usart == USART3) {
 		p_pdc_base = PDC_USART3;
 		return p_pdc_base;
