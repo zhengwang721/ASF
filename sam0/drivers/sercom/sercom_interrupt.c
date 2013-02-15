@@ -114,6 +114,55 @@ void _sercom_set_handler(uint8_t instance,
 }
 
 /**
+ * \internal Returns the system interrupt vector.
+ *
+ * \param[in] sercom_instance Instance pointer
+ *
+ * \return Enum of system interrupt vector
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM0
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM1
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM2
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM3
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM4
+ * \retval SYSTEM_INTERRUPT_MODULE_SERCOM5
+ */
+enum system_interrupt_vector _sercom_get_interrupt_vector(Sercom *sercom_instance)
+{
+	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
+
+	switch (instance_index) {
+#ifdef ID_SERCOM0
+	case 0:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM0;
+#endif
+#ifdef ID_SERCOM1
+	case 1:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM1;
+#endif
+#ifdef ID_SERCOM2
+	case 2:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM2;
+#endif
+#ifdef ID_SERCOM3
+	case 3:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM3;
+#endif
+#ifdef ID_SERCOM4
+	case 4:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM4;
+#endif
+#ifdef ID_SERCOM5
+	case 5:
+		return SYSTEM_INTERRUPT_MODULE_SERCOM5;
+#endif
+	default:
+		/* Invalid data given. */
+		Assert(false);
+		return 0;
+	}
+}
+
+/**
  * \internal ISR handler for SERCOM
  */
 #ifdef ID_SERCOM0
