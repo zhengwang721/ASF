@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega A3BU Xplained" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.atxmega256a3u_uart_zigbit_rf212b">
+	<project caption="RF4CE-ZRC CONTROLLER SERIAL INTERFACE - NCP SIDE - RF212B" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.atxmega256a3u_uart_zigbit_rf212b">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC CONTROLLER
+		The RF4CE-ZRC controller stack running on the network co-processor and driven by the host application
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

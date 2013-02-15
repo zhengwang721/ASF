@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="MAC Beacon  Application - Device" id="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev.host">
+	<module type ="application" caption="MAC Beacon Application-Device-Host" id="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev.host">
 		<info type="description" value="summary">
 		The basic MAC Example Beacon Application deploys a beacon-enabled network with star topology.
 		</info>
@@ -8,9 +8,8 @@
 		<build type="include-path" value="."/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
+
 		<device-support value="sam4l"/>
-		<device-support value="megarf"/>
+
 	</module>
 </asf>

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="UC3A3256S RZ600 RF231" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.ncp.at32uc3a3256s_rz600_at86rf231">
+	<project caption="RF4CE-ZRC TARGET SERIAL INTERFACE - NCP SIDE - RF231" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.ncp.at32uc3a3256s_rz600_at86rf231">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC TARGET
+		The RF4CE-ZRC target stack running on the network co-processor and driven by the host application
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

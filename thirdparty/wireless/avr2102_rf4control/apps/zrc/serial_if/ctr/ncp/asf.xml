@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Serial Interface for AVR2102 zrc controller" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp">
+	<module type ="application" caption="RF4CE-ZRC CONTROLLER SERIAL INTERFACE - NCP SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp">
 		<info type="description" value="summary">
-		SERIAL INTERFACE APPLICATION FOR RF4CE ZRC CONTROLLER
+		The RF4CE-ZRC controller stack running on the network co-processor and driven by the host application
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="app_config.h"/>
@@ -26,7 +26,6 @@
 
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.config" />
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		<require idref="common.drivers.nvm"/>
 		<device-support value="xmega"/>

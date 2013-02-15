@@ -48,4 +48,9 @@
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_USART0
 
+#define SLEEP_MODE_HANDLER() do \
+                            { \
+							nop(); \
+                            }while(0)							
+
 #endif  /* CONF_BOARD_H_INCLUDED */

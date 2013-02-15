@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type ="application" caption="Button Controller Application for AVR2102 zrc controller" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.button_ctr">
+	<module type ="application" caption="ZRC BUTTON CONTROLLER APPLICATION" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.button_ctr">
 		<info type="description" value="summary">
-		BUTTON CONTROLLER APPLICATION FOR RF4CE ZRC CONTROLLER
+		Button controller application for RF4CE-ZRC target-controller setup
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="keyboard.h"/>
@@ -35,9 +35,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-		<require idref="common.drivers.nvm"/>
-
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.config" />
+		<require idref="common.drivers.nvm"/>		
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>

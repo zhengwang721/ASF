@@ -2,7 +2,7 @@
 	<select-by-config id="config.thirdparty.wireless.addons.sio2ncp" name="config.thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP Configuration" default="uart">
 		<module type="driver" id="config.thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
 			<info type="description" value="summary">
-			SIO2NCP communication using UART
+			Enables Support for  UART communication
 			</info>			
 			<require idref="common.services.basic.serial"/>
 			<build type="c-source"      value="uart/sio2ncp.c"/>
@@ -17,9 +17,9 @@
 		
 	</select-by-config>
 	
-	<module type="component" id="thirdparty.wireless.addons.sio2ncp" caption="SIO 2 NCP">
+	<module type="component" id="thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP">
 		<info type="description" value="summary">
-		SIO2NCP Communication
+		The SIO2NCP Component acts as a api layer for serial communication with NCP
 		</info>
 		
 		<build type="doxygen-entry-point" value="group_sio2ncp"/>

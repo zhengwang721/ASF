@@ -46,7 +46,7 @@
 #define TRANSCEIVER_NAME  "ATMEGARFR2"
 #define IC_TYPE             (0x01)
 #define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "RF XPLAINED PRO"
+#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
 
 #define CONF_BOARD_ENABLE_USARTA1
 

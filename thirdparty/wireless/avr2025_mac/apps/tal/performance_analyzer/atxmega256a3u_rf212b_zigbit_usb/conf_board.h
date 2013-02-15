@@ -47,7 +47,7 @@
 #define TRANSCEIVER_NAME    "AT86RF212B"
 #define IC_TYPE             (0x00)
 #define MCU_SOC_NAME        "ATxmega256A3U"
-#define BOARD_NAME          "Xmega_Zigbit 900Mhz USB"
+#define BOARD_NAME          "ATZB-X-212B-USB"
 
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

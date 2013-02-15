@@ -1393,7 +1393,7 @@ static void print_sub_mode_ch_ag_setup(void)
 					
                 }
                 scan_dur = atol(input_char2);
-                if ((scan_dur==0)||(scan_dur==6)||(scan_dur==14))
+                if ((scan_dur >= 0) && (scan_dur <= 14))
                 {
                 nlme_set_request(nwkScanDuration, 0, &scan_dur
                                  , (FUNC_PTR)nlme_set_confirm

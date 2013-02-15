@@ -45,4 +45,13 @@
 
 #define CONFIG_SLEEPMGR_ENABLE
 
+#define SLEEP_MODE_HANDLER()        do {\
+                                     if (nwk_ready_to_sleep()) \
+									 { \
+									 sleepmgr_init(); \
+									 sleepmgr_lock_mode(SLEEPMGR_IDLE); \
+									 sleepmgr_enter_sleep(); \
+									 } \
+									 }while(0)
+
 #endif /* CONF_SLEEPMGR_H */

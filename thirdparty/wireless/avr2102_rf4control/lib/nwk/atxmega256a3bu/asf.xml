@@ -1,9 +1,11 @@
 <asf xmlversion="1.0">
-	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk.atxmega256a3bu.lib" caption="COMPONENT - ZRC LIB">
+	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk.atxmega256a3bu.lib" caption="RF4CE NWK LIB">
 		<info type="description" value="summary">
+		RF4CE network library for XMEGA256A3BU controller
 		</info>
 		<build type="library" subtype="user" value="iar/librf4ce-nwk.r90" toolchain="iarew"/>
 		<build type="library" subtype="user" value="gcc/librf4ce-nwk.a" toolchain="avrgcc"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.lib.nwk.config" />
 
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		
