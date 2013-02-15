@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM0+ EEPROM Emulator service
+ * \brief SAMD20 EEPROM Emulator
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,109 +40,200 @@
  * \asf_license_stop
  *
  */
-
-#include <compiler.h>
-
-#ifndef _EEPROM_EMULATOR_H_
-#define _EEPROM_EMULATOR_H_
+#ifndef EEPROM_EMULATOR_H_INCLUDED
+#define EEPROM_EMULATOR_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define EEPROM_DATA_SIZE                   60
-#define EEPROM_MAX_PAGES                   124
+#include <compiler.h>
 
 /**
- * \brief Initializes the eeprom emulator service driver
+ * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
  *
- * This function will check the EEPROM emualtor space, if there is already
- * initialized eeprom data in the EEPROM space it will
+ * This driver for SAMD20 devices provides a TODO.
  *
- * \li Setup the virtual eeprom module
- * \li Configure the NVM module to correct state
- * \li Re-map data
- * \li Check if the EEPROM block is valid
  *
- * \return This function returns a status code
+ * The following peripherals are used by this module:
  *
+ *  - NVM (Non-Volatile Memory Controller)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_eeprom_prerequisites
+ *  - \ref asfdoc_samd20_eeprom_module_overview
+ *  - \ref asfdoc_samd20_eeprom_special_considerations
+ *  - \ref asfdoc_samd20_eeprom_extra_info
+ *  - \ref asfdoc_samd20_eeprom_examples
+ *  - \ref asfdoc_samd20_eeprom_api_overview
+ *
+ *
+ * \section asfdoc_samd20_eeprom_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_eeprom_module_overview Module Overview
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_eeprom_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_info Extra Information for EEPROM Emulator
+ *
+ * For extra information see \ref asfdoc_samd20_eeprom_extra. This includes:
+ *  - \ref asfdoc_samd20_eeprom_extra_acronyms
+ *  - \ref asfdoc_samd20_eeprom_extra_dependencies
+ *  - \ref asfdoc_samd20_eeprom_extra_errata
+ *  - \ref asfdoc_samd20_eeprom_extra_history
+ *
+ *
+ * \section asfdoc_samd20_eeprom_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_eeprom_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_eeprom_api_overview API Overview
+ * @{
  */
+
+#if !defined(__DOXYGEN__)
+#  define EEPROM_MAJOR_VERSION        1
+#  define EEPROM_MINOR_VERSION        0
+#  define EEPROM_REVISION             0
+#  define EEPROM_EMULATOR_ID          1
+#  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
+
+#  define EEPROM_PAGE_NUMBER_BYTE     0
+#  define EEPROM_INVALID_PAGE_NUMBER  0xff
+#  define EEPROM_HEADER_SIZE          2
+#endif
+
+/** \name Emulated EEPROM size information
+ * @{
+ */
+
+/** Size of each logical EEPROM page, in bytes. */
+#define EEPROM_DATA_SIZE              (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
+
+/** Maximum number of physical EEPROM pages that can be reserved. */
+#define EEPROM_MAX_PAGES              (64 * NVMCTRL_ROW_PAGES)
+
+/** @} */
+
+/** \name Configuration and initialization
+ * @{
+ */
+
 enum status_code eeprom_emulator_init(void);
 
-/**
- * \brief Writes a data buffer to the flash page buffer
- *
- * This function will write data to the flash page buffer, the data will be keept
- * there until another write is executed or the flush function is used.
- *
- * \param[in] page  The number of the page in eeprom emualtor space to be written
- * \param[in] *data Pointer to the data buffer containing data to be written
- *
- * \return This function return a status code
- *
- */
-enum status_code eeprom_emulator_write_page(uint8_t lpage, uint8_t *data);
-
-/**
- * \brief Reads a page sized data buffer from EEPROM emulator flash space
- *
- * This function will read a pagesized buffer from the EEPROM emualtor space and
- * place it in the SRAM buffer.
- *
- * \param[in] page The number of the page in eeprom emualtor space to be written
- * \param[out] *data Data buffer of page size that will contain the data read from memory
- */
-enum status_code eeprom_emulator_read_page(uint8_t lpage, uint8_t *data);
-
-/**
- * \brief Flushes the page buffer to flash memory
- *
- * This function will flush the content of the page buffer to the correct location
- * in EEPROM emualtor memory space
- *
- * \note This should be the first function executed in a BOD33 interupt routine
- * \note If the nvm driver is used to write other location in flash memory this
- *       this function has to be executed first
- *
- * \return This function may return some status code of unknown value
- */
-enum status_code eeprom_emulator_flush_page_buffer(void);
-
-/**
- * \brief This function will initalize the EEPROM memory bank i flash
- *
- * This function fill erase the whole EEPROM memory block in flash. This includes
- * erase all rows, write EEPROM memory header, and create new EEPROM pages.
- *
- * \note This function will destroy any content in the alotted EEPROM memory block.
- *
- * \return This function may return some status code of unknown value
- */
 void eeprom_emulator_erase_memory(void);
 
-/**
- * \brief This function writes a buffer to the eeprom emulator
- *
- * This function writes a buffer of data to the eeprom emualtor. This buffer can be
- * bigger than the page baoundery.
- *
- * \return This function may return some status code of unknown value
- */
-enum status_code eeprom_emulator_write_buffer(uint16_t offset, uint8_t *data, uint16_t lenght);
+/** @} */
 
-/**
- * \brief This function reads a buffer from the eeprom emulator
- *
- * This function reads a buffer of data from the eeprom emualtor. This function is not
- * limited by the page baoundery
- *
- * \return This function may return some status code of unknown value
+/** \name Logical EEPROM page reading/writing
+ * @{
  */
-enum status_code eeprom_emulator_read_buffer(uint16_t offset, uint8_t *data, uint16_t length);
 
+enum status_code eeprom_emulator_flush_page_buffer(void);
+
+enum status_code eeprom_emulator_write_page(
+		uint8_t logical_page,
+		uint8_t *data);
+
+
+enum status_code eeprom_emulator_read_page(
+		uint8_t logical_page,
+		uint8_t *data);
+
+/** @} */
+
+/** \name Buffer EEPROM reading/writing
+ * @{
+ */
+
+enum status_code eeprom_emulator_write_buffer(
+		uint16_t offset,
+		uint8_t *data,
+		uint16_t length);
+
+enum status_code eeprom_emulator_read_buffer(
+		uint16_t offset,
+		uint8_t *data,
+		uint16_t length);
+
+/** @} */
 
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
+
+/**
+ * \page asfdoc_samd20_eeprom_extra Extra Information
+ *
+ * \section asfdoc_samd20_eeprom_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>EEPROM</td>
+ *		<td>Electronically Erasable Read-Only Memory</td>
+ *	</tr>
+ *	<tr>
+ *		<td>NVM</td>
+ *		<td>Non-Volatile Memory</td>
+ *	</tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_nvm_group "Non-Volatile Memory Controller Driver"
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_eeprom_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samd20_eeprom_exqsg Examples for Emulated EEPROM service
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_eeprom_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samd20_eeprom_basic_use_case
+ */
 
 #endif
