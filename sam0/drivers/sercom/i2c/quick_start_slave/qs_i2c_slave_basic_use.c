@@ -133,7 +133,8 @@ static void configure_callbacks(void)
 
 	//![reg_en_i2c_callback]
 
-	/* Enable global interrupts for SERCOM instance. */
+	/* TODO: Remove, should be in enable/disable.
+	 * Enable global interrupts for SERCOM instance. */
 	//![enable_global_i2c_interrupts]
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
 	//![enable_global_i2c_interrupts]
