@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk.at32uc3a3256s.lib" caption="AVR2102 -NWK LIB">
+	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.nwk.at32uc3a3256s.lib" caption="RF4CE NWK LIB">
 		<info type="description" value="summary">
-		
+		RF4CE network library for UC3A3256S controller
 		</info>
 		<build type="library" subtype="user" value="iar/librf4ce-nwk.r82" toolchain="iarew32"/>
 		<build type="library" subtype="user" value="gcc/librf4ce-nwk.a" toolchain="avr32gcc"/>

@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.atxmega256a3u.lib" caption="AVR2102 -ZRC LIB for Target">
+	<module type="service" id="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.atxmega256a3u.lib" caption="RF4CE -ZRC TARGET LIB">
 		<info type="description" value="summary">
+		ZRC target library for XMEGA256A3U controller
 		</info>
 		<build type="library" subtype="user" value="iar/librf4ce-zrc-target.r90" toolchain="iarew"/>
 		<build type="library" subtype="user" value="gcc/librf4ce-zrc-target.a" toolchain="avrgcc"/>
