@@ -64,54 +64,40 @@
 
 void board_init(void)
 {
+	uint32_t pin;
+
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 	struct wdt_dev_inst wdt_inst;
 	wdt_init(&wdt_inst, WDT, NULL);
 	wdt_disable(&wdt_inst);
-/*
-	// Disable the watchdog using keyed write sequence
-	uint32_t wdt_ctrl_val = WDT->WDT_CTRL & ~WDT_CTRL_EN;
-	uint32_t wdt_ctrl_1 = wdt_ctrl_val | (0x55 << (3 * 8));
-	uint32_t wdt_ctrl_2 = wdt_ctrl_val | (0xAA << (3 * 8));
-
-	WDT->WDT_CTRL = wdt_ctrl_1;
-	WDT->WDT_CTRL = wdt_ctrl_2;
-*/
 #endif
 
 	// Initialize IOPORT
 	ioport_init();
 
-		// Put all pins to default state (input & pull-up)
-	uint32_t pin;
-
+  // Put all pins to default state (input & pull-up)
 	for (pin = PIN_PA00; pin <= PIN_PC31; pin ++) {
 		ioport_set_pin_dir(pin, IOPORT_DIR_INPUT);
 		ioport_set_pin_mode(pin, IOPORT_MODE_PULLUP);
 	}
 
-	#ifdef  CONF_BOARD_EIC
+	// Initialize SW0
+#ifdef  CONF_BOARD_EIC
 	// Set push button as external interrupt pin
 	ioport_set_pin_peripheral_mode(BUTTON_0_EIC_PIN,
 	BUTTON_0_EIC_PIN_MUX|IOPORT_MODE_PULLUP);
-	//ioport_set_pin_peripheral_mode(GPIO_UNIT_TEST_EIC_PIN,
-	//GPIO_UNIT_TEST_EIC_PIN_MUX);
-	#else
+#else
 	// Push button as input: already done, it's the default pin state
-	#endif
+#endif
 
-	#if defined (CONF_BOARD_COM_PORT)
+#if defined (CONF_BOARD_COM_PORT)
 	ioport_set_pin_peripheral_mode(COM_PORT_RX_PIN, COM_PORT_RX_MUX);
 	ioport_set_pin_peripheral_mode(COM_PORT_TX_PIN, COM_PORT_TX_MUX);
-	#endif
+#endif
 
 	// Initialize LED0, turned off
 	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
-
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 }
 
 /** @} */
