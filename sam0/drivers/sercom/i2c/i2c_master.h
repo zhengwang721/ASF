@@ -305,6 +305,10 @@ static inline void i2c_master_enable(
 	/* Enable module. */
 	i2c_module->CTRLA.reg |= SERCOM_I2CM_CTRLA_ENABLE;
 
+#ifdef I2C_ASYNC
+	/* Enable module interrupts */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+#endif
 	/* Start timeout if bus state is unknown. */
 	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {		
                 timeout_counter++;
@@ -339,6 +343,11 @@ static inline void i2c_master_disable(
 
 	/* Disable module. */
 	i2c_module->CTRLA.reg &= ~SERCOM_I2CM_CTRLA_ENABLE;
+
+#ifdef I2C_ASYNC
+	/* Disable module interrupts */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
+#endif
 }
 
 void i2c_master_reset(struct i2c_master_module *const module);
