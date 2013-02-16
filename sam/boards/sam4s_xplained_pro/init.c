@@ -52,9 +52,7 @@
 void board_init(void)
 {
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	struct wdt_dev_inst wdt_inst;
-	wdt_init(&wdt_inst, WDT, NULL);
-	wdt_disable(&wdt_inst);
+	wdt_disable(WDT);
 #endif
 
 	// Must initialize IOPORT before setting up IO
@@ -72,7 +70,6 @@ void board_init(void)
   else {
 		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
   }
-
 }
 
 /** @} */
