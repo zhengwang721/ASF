@@ -1,20 +1,30 @@
 <asf xmlversion="1.0">
-	<board id="board.sam4l_xplained_pro" caption="SAM4L Xplained Pro">
+	<board id="board.sam4l_xplained_pro" vendor="Atmel" caption="SAM4L Xplained Pro">
+		<!-- Board name -->
 		<build type="define" name="BOARD" value="SAM4L_XPLAINED_PRO"/>
+
+		<!-- Device support -->
+		<device-support value="atsam4lc4c"/>
 		<build type="define" name="__ATSAM4LC4C__" value=""/>
-		<build type="c-source" value="init.c"/>
-		<build type="header-file" value="sam4l_xplained_pro.h"/>
+
+		<!-- Source code -->
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
+		<build type="c-source" value="init.c"/>
+		<build type="header-file" value="sam4l_xplained_pro.h"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
-		<build type="module-config" subtype="path" value="board_config"/>	
+		<build type="module-config" subtype="path" value="board_config"/>
+
+		<!-- Debug scripts -->
 		<build type="macro-config" subtype="script" value="debug_scripts/iar/sam4l_xplained_pro_flash.mac" toolchain="iarewarm"/>
 		<build type="macro-config" subtype="script" value="debug_scripts/gcc/sam4l_xplained_pro_flash.gdb" toolchain="armgcc"/>
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/sam4l_xplained_pro_sram.gdb" toolchain="armgcc"/>
+
+		<!-- Required modules -->
 		<require idref="sam.utils.cmsis.sam4l.source.template"/>
 		<require idref="common.utils"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.ioport"/>
-		<device-support value="atsam4lc4c"/>
+		<require idref="sam.drivers.wdt"/>
 	</board>
 </asf>
