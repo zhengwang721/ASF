@@ -5,7 +5,7 @@
  *
  * This file contains definitions and functions for raw NAND Flash operation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -107,8 +107,8 @@ static void nfc_translate_address(const struct nand_flash_raw *raw,
 			if (address_cycles == 0) {
 				address_cycle0 = (column_address & 0xFF);
 			} else {
-				address_cycle1234 |= (column_address & 0xFF) <<
-						((address_cycles - 1) * 8);
+				address_cycle1234 |= ((column_address & 0xFF) <<
+						((address_cycles - 1) * 8));
 			}
 
 			page_data_size >>= 8;
@@ -119,8 +119,8 @@ static void nfc_translate_address(const struct nand_flash_raw *raw,
 			if (address_cycles == 0) {
 				address_cycle0 = (row_address & 0xFF);
 			} else {
-				address_cycle1234 |= (row_address & 0xFF) <<
-						((address_cycles - 1) * 8);
+				address_cycle1234 |= ((row_address & 0xFF) <<
+						((address_cycles - 1) * 8));
 			}
 
 			num_page >>= 8;
@@ -131,8 +131,8 @@ static void nfc_translate_address(const struct nand_flash_raw *raw,
 	/* When less than 5 address cycle are used. */
 	else {
 		while (num_page > 0) {
-			address_cycle1234 |= (row_address & 0xFF) <<
-					((address_cycles) * 8);
+			address_cycle1234 |= ((row_address & 0xFF) <<
+					((address_cycles) * 8));
 			num_page >>= 8;
 			row_address >>= 8;
 			address_cycles++;
@@ -216,7 +216,9 @@ static void nfc_copy_data_to_internal_sram(uint8_t *data,
 	uint32_t i;
 	p_buffer = (uint8_t *) (NFC_RAM_ADDR + sram_offset);
 	for (i = 0; i < size; i++) {
-		*p_buffer++ = *data++;
+		*p_buffer = *data;
+		p_buffer++;
+		data++;
 	}
 #endif
 }
@@ -259,7 +261,9 @@ static void nfc_copy_data_from_internal_sram(uint8_t *data,
 	uint32_t i;
 	p_buffer = (uint8_t *)(NFC_RAM_ADDR + sram_offset);
 	for (i = 0; i < size; i++) {
-		*data++ = *p_buffer++;
+		*data = *p_buffer;
+		data++;
+		p_buffer++;
 	}
 #endif
 }
@@ -604,8 +608,8 @@ uint32_t nand_flash_raw_initialize(struct nand_flash_raw *raw,
  */
 void nand_flash_raw_reset(const struct nand_flash_raw *raw)
 {
-	/* Remove warnings */
-	raw = raw;
+	/* avoid Cppcheck Warning */
+	UNUSED(raw);
 
 	smc_nfc_send_command(SMC, 
 			NFCADDR_CMD_NFCCMD       | /* Command. */
@@ -647,9 +651,9 @@ uint32_t nand_flash_raw_read_id(const struct nand_flash_raw *raw)
 	delay_us(1);
 
 	chip_id = READ_DATA8(raw);
-	chip_id |= READ_DATA8(raw) << 8;
-	chip_id |= READ_DATA8(raw) << 16;
-	chip_id |= READ_DATA8(raw) << 24;
+	chip_id |= (READ_DATA8(raw) << 8);
+	chip_id |= (READ_DATA8(raw) << 16);
+	chip_id |= (READ_DATA8(raw) << 24);
 	return chip_id;
 }
 

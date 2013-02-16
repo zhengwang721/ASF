@@ -1330,7 +1330,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, int status,
 	if (NULL == ptr_job->call_trans) {
 		return; // No callback linked to job
 	}
-	if (Is_udd_endpoint_in(ep_num)) {
+	if (Is_udd_endpoint_type_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
 	}	
 	ptr_job->call_trans((status == UDD_EP_TRANSFER_ABORT) ?

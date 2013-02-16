@@ -150,5 +150,15 @@
 			<device-support value="sam3a"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 		</module>
+		<module type="driver" id="common.drivers.usb.host#3" caption="USB Host driver - SAM USBC implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			USB Host driver. Provides functions for configuring and using the USB host functionality. SAM USBC implementation of common API. 
+			</info>
+			<build type="define" name="UHD_ENABLE" value=""/>
+			<require idref="sam.drivers.usbc.host"/>
+			<device-support value="sam4l"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
+		</module>
 	</select-by-device>
 </asf>
