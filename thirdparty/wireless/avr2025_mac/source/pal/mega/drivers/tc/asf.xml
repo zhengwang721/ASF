@@ -1,9 +1,9 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="mega.drivers.tc" caption="Timer/Counter (TC)  driver">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc" caption="Timer/Counter (TC)  driver">
 		<info type="gui-flag" value="hidden"/>
 		<info type="description" value="summary">
 		Driver for using the Timer/Counter.
-	</info>
+        </info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers" />
 		</info>		

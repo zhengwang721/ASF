@@ -87,7 +87,6 @@
 				<device-support value="sam4s"/>
 				<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 			</module>
-			
 			<module type="driver" id="common.drivers.nvm#no_extmem#4" caption="NVM - Non volatile memory access">
 				<info type="description" value="summary">
 				Driver for NVM access. Provides functions for initializing, reading, writing, erasing NVM and getting configuration parameters. Common API.
@@ -98,11 +97,10 @@
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
 				<build type="module-config" subtype="required-header-file" value="conf_nvm.h"/>
-				<require idref="thirdparty.common.drivers.nvm"/>
-				<require idref="thirdparty.mega.drivers.flash"/>
-				<device-support value="mega"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.flash"/>
+				<device-support value="megarf"/>
 			</module>
-			
 		</select-by-device>
 		<select-by-device id="common.drivers.nvm#extmem">
 			<module type="driver" id="common.drivers.nvm#extmem#0" caption="NVM - Non volatile memory access">

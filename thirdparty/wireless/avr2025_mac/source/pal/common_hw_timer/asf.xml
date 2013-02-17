@@ -32,7 +32,7 @@
 		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
 
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.mega"/>
-            <require idref="mega.drivers.tc"/>
+            <require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support value="megarf"/>
 		</module>
