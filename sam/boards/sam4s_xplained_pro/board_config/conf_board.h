@@ -1,30 +1,30 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief SAM4S Xplained Pro board configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
  * \page License
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
+ * 
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -40,36 +40,9 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
+//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-//for SAM4L UART
-/*! \name Configuration
- */
-//! @{
-/** USART Interface */
-//#define USART_NCP                 USART0
-/** Baudrate setting */
-//#define USART_NCP_BAUDRATE        9600
-/** Character length setting */
-//#define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
-/** Parity setting */
-//#define USART_NCP_PARITY          US_MR_PAR_NO
-/** Stop bits setting */
-//#define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
-
-
-//! @}
-
-//#define USART_NCP_ISR_VECT        USART0_Handler
-
-//#define USART_NCP_IRQn            USART0_IRQn
-
-
-//#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
-//								  NVIC_EnableIRQ(USART_NCP_IRQn);
-
-#include "serial.h"
-
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif /* CONF_BOARD_H */

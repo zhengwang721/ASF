@@ -93,9 +93,7 @@ void sio2host_init(void)
 {
 	stdio_serial_init(USART_HOST, &usart_serial_options);
 	USART_HOST_RX_ISR_ENABLE();
-	
 }
-
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
@@ -106,8 +104,6 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 	}while(status!= STATUS_OK);
 	return length;  
 }
-
-
 
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 {
