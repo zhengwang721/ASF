@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.thirdparty.wireless.addons.sio2host" name="config.thirdparty.wireless.addons.sio2host" caption="SIO2HOST Configuration" default="uart">
-		<module type="component" id="config.thirdparty.wireless.addons.sio2host#uart"     caption="UART support Enabled">
+	<select-by-config id="thirdparty.wireless.addons.sio2host" name="config.thirdparty.wireless.addons.sio2host" caption="SIO2HOST Configuration" default="uart">
+		<module type="component" id="thirdparty.wireless.addons.sio2host#uart"     caption="UART support Enabled">
 			<info type="description" value="summary">
 			Enables Support for  UART communication
 			</info>
@@ -17,7 +17,7 @@
 			<device-support value="sam4"/>
 			<build type="doxygen-entry-point" value="group_sio2host_uart"/>
 		</module>
-		<module type="component" id="config.thirdparty.wireless.addons.sio2host#usb"     caption="USB support Enabled">
+		<module type="component" id="thirdparty.wireless.addons.sio2host#usb"     caption="USB support Enabled">
 			<info type="description" value="summary">
 			Enables Support for  USB communication
 			</info>

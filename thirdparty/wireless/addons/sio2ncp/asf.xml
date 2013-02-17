@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.thirdparty.wireless.addons.sio2ncp" name="config.thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP Configuration" default="uart">
-		<module type="component" id="config.thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
+	<select-by-config id="thirdparty.wireless.addons.sio2ncp" name="config.thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP Configuration" default="uart">
+		<module type="component" id="thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
 			<info type="description" value="summary">
 			Enables Support for  UART communication
 			</info>			
