@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-config id="config.thirdparty.wireless.addons.sio2ncp" name="config.thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP Configuration" default="uart">
-		<module type="driver" id="config.thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
+		<module type="component" id="config.thirdparty.wireless.addons.sio2ncp#uart"     caption="UART support Enabled">
 			<info type="description" value="summary">
 			Enables Support for  UART communication
 			</info>			
@@ -8,27 +8,13 @@
 			<build type="c-source"      value="uart/sio2ncp.c"/>
 			<build type="header-file"   value="uart/sio2ncp.h"/>
 			<build type="include-path"  value="uart/"/>
+            <build type="module-config" subtype="required-header-file" value="conf_sio2ncp.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
             <device-support value="sam4l"/>
             <device-support value="megarf"/>
 		<build type="doxygen-entry-point" value="group_sio2ncp_uart"/>			
 		</module>
-		
 	</select-by-config>
-	
-	<module type="component" id="thirdparty.wireless.addons.sio2ncp" caption="SIO2NCP">
-		<info type="description" value="summary">
-		The SIO2NCP Component acts as a api layer for serial communication with NCP
-		</info>
-		
-		<build type="doxygen-entry-point" value="group_sio2ncp"/>
-		<require idref="config.thirdparty.wireless.addons.sio2ncp" />
-		<build type="module-config" subtype="required-header-file" value="conf_sio2ncp.h"/>
-		<build type="module-config" subtype="path" value="module_config"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="sam4l"/>
-		<device-support value="megarf"/>
-	</module>
 </asf>
