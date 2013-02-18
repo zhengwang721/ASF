@@ -519,6 +519,16 @@ ISR(UDD_USB_INT_FUN)
 {
 	udd_enable_periph_ck();
 
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	if (Is_udd_sof()) {
 		udd_ack_sof();
 		if (Is_udd_full_speed_mode()) {
