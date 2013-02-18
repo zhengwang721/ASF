@@ -369,6 +369,11 @@ static enum status_code _i2c_master_read(
 				return STATUS_ERR_PACKET_COLLISION;
 			}
 
+			if (tmp_data_length == 0) {
+				/* Send NACK on last byte */
+				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+			}
+
 			/* Save data to buffer. */
 			packet->data[counter++] = i2c_module->DATA.reg;
 
@@ -381,12 +386,12 @@ static enum status_code _i2c_master_read(
 			}
 		}
 
-		if (module->repeated_start) {
-			/* Send nack and repeated start command unless arbitration is lost. */
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(1);
-		} else {
+		if (module->send_stop) {
 			/* Send nack and stop command unless arbitration is lost. */
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		} else {
+			/* Send nack only. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(2);
 		}
 	}
 
@@ -428,13 +433,13 @@ enum status_code i2c_master_read_packet_wait(
 	}
 #endif
 
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	return _i2c_master_read_packet(module, packet);
 }
 
 /**
- * \brief Read data packet from slave followed by a repeated start.
+ * \brief Read data packet from slave without STOP condition at the end.
  *
  * Reads a data packet from the specified slave address on the I2C bus.
  *
@@ -452,7 +457,7 @@ enum status_code i2c_master_read_packet_wait(
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
  */
-enum status_code i2c_master_read_packet_wait_repeated_start(
+enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -468,7 +473,7 @@ enum status_code i2c_master_read_packet_wait_repeated_start(
 	}
 #endif
 
-	module->repeated_start = true;
+	module->send_stop = false;
 
 	return _i2c_master_read(module, packet);
 }
@@ -586,13 +591,13 @@ enum status_code i2c_master_write_packet_wait(
 	}
 #endif
 
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	return _i2c_master_write_packet(module, packet);
 }
 
 /**
- * \brief Write data packet to slave followed by a repeated start.
+ * \brief Write data packet to slave without STOP condition at the end.
  *
  * Writes a data packet to the specified slave address on the I2C bus.
  *
@@ -612,7 +617,7 @@ enum status_code i2c_master_write_packet_wait(
  * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
  *                             indicating that slave do not want more data.
  */
-enum status_code i2c_master_write_packet_wait_repeated_start(
+enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -628,7 +633,7 @@ enum status_code i2c_master_write_packet_wait_repeated_start(
 	}
 #endif
 
-	module->repeated_start = true;
+	module->send_stop = false;
 
 	return _i2c_master_write_packet(module, packet);
 }

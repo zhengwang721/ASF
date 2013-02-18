@@ -137,7 +137,7 @@ enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_read_packet_job_repeated_start(
+enum status_code i2c_master_read_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
@@ -145,7 +145,7 @@ enum status_code i2c_master_write_packet_job(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_write_packet_job_repeated_start(
+enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
