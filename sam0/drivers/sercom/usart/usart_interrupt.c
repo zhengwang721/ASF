@@ -379,10 +379,6 @@ enum status_code usart_get_job_status(
  */
 void _usart_interrupt_handler(uint8_t instance)
 {
-	/* Sanity check content from the look-up table */
-	Assert(module);
-	Assert(module->hw);
-
 	/* Temporary variables */
 	uint16_t interrupt_status;
 	uint16_t callback_status;

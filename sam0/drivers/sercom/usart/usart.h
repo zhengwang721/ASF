@@ -51,7 +51,7 @@
 #include <sercom.h>
 
 #ifdef USART_ASYNC
-#include <sercom_interrupts.h>
+#include <sercom_interrupt.h>
 #endif
 
 #define USART_DEFAULT_TIMEOUT  0xFFFF
@@ -322,10 +322,22 @@ static inline void _usart_wait_for_sync(const struct usart_module
 	}
 }
 
-enum status_code _usart_set_config(struct usart_module *const module,
-		const struct usart_config const *config);
-
 #endif
+
+static inline bool usart_is_syncing(const struct usart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	if(usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 /**
  * \brief Initializes the device to predefined defaults

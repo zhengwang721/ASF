@@ -50,25 +50,13 @@ volatile uint8_t rx_buffer[5];
 
 volatile uint8_t buff[20];
 
-static int _write(int fd, const void *buf, uint32_t nbyte)
-{
-	usart_write_buffer(&usart_edbg, buf, nbyte);
-	return nbyte;
-}
-
-static int _read(int file, char *ptr, int len) {
-	return 0;
-}
-
-void read_callback(const struct usart_module *const mod);
-void read_callback(const struct usart_module *const mod)
+static void read_callback(const struct usart_module *const mod)
 {
 	usart_write_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer)-1);
 
 }
 
-void write_callback(const struct usart_module *const mod);
-void write_callback(const struct usart_module *const mod)
+static void write_callback(const struct usart_module *const mod)
 {
 	static uint8_t cnt;
 	uint8_t len = sprintf((char *)&buff[0], "CNT:%u\n\r", cnt);
@@ -80,17 +68,15 @@ void write_callback(const struct usart_module *const mod)
 
 
 
-void write_string(struct usart_module *const mod, uint8_t *string);
-void write_string(struct usart_module *const mod, uint8_t *string)
+static void write_string(struct usart_module *const mod, uint8_t *string)
 {
 	do {
-		while (usart_write(mod, *string) != STATUS_OK) {
+		while (usart_write_wait(mod, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
 
-void configure_callbacks(void);
-void configure_callbacks(void)
+static void configure_callbacks(void)
 {
 	usart_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
 	usart_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
@@ -101,7 +87,6 @@ void configure_callbacks(void)
 int main(void)
 {
 	struct usart_config config_struct;
-	uint16_t temp;
 	volatile uint32_t delay;
 
 	uint8_t string[] = "hello there world!\n\r";

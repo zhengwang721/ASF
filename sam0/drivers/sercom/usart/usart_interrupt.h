@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef USART_ASYNC_H_INCLUDED
-#define USART_ASYNC_H_INCLUDED
+#ifndef USART_INTERRUPT_H_INCLUDED
+#define USART_INTERRUPT_H_INCLUDED
 
 #include "usart.h"
 
@@ -161,4 +161,4 @@ void _usart_interrupt_handler(uint8_t instance);
  * @}
  */
 
-#endif /* USART_ASYNC_H_INCLUDED */
+#endif /* USART_INTERRUPT_H_INCLUDED */

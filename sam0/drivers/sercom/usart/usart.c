@@ -51,6 +51,8 @@
  *
  */
 enum status_code _usart_set_config(struct usart_module *const module,
+		const struct usart_config const *config);
+enum status_code _usart_set_config(struct usart_module *const module,
 		const struct usart_config const *config)
 {
 	/* Temporary registers. */
