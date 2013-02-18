@@ -395,9 +395,9 @@ extern "C" {
  */
 enum tc_compare_capture_channel {
 	/** Index of compare capture channel 0 */
-	TC_COMPARE_CAPTURE_CHAN_0,
+	TC_COMPARE_CAPTURE_CHANNEL_0,
 	/** Index of compare capture channel 1 */
-	TC_COMPARE_CAPTURE_CHAN_1,
+	TC_COMPARE_CAPTURE_CHANNEL_1,
 };
 
 /**
@@ -524,9 +524,9 @@ enum tc_capture_enable {
 	/** No channels are enabled for capture. */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	/** Enable channel 0 for capture. */
-	TC_CAPTURE_ENABLE_CHAN_0               = TC_CTRLC_CPTEN(1),
+	TC_CAPTURE_ENABLE_CHANNEL_0               = TC_CTRLC_CPTEN(1),
 	/** Enable channel 1 for capture. */
-	TC_CAPTURE_ENABLE_CHAN_1               = TC_CTRLC_CPTEN(2),
+	TC_CAPTURE_ENABLE_CHANNEL_1               = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -538,9 +538,9 @@ enum tc_waveform_invert_output {
 	/** No inversion of the waveform output. */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
 	/** Invert output from compare channel 0. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHAN_0    = TC_CTRLC_INVEN(1),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_CTRLC_INVEN(1),
 	/** Invert output from compare channel 1. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHAN_1    = TC_CTRLC_INVEN(2),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_CTRLC_INVEN(2),
 };
 
 /**
@@ -574,9 +574,9 @@ enum tc_event_action {
  */
 enum tc_interrupt_flag {
 	/** Interrupt flag for channel 0 */
-	TC_INTERRUPT_FLAG_CHAN_0    =  TC_INTFLAG_MC(1),
+	TC_INTERRUPT_FLAG_CHANNEL_0    =  TC_INTFLAG_MC(1),
 	/** Interrupt flag for channel 1 */
-	TC_INTERRUPT_FLAG_CHAN_1    =  TC_INTFLAG_MC(2),
+	TC_INTERRUPT_FLAG_CHANNEL_1    =  TC_INTFLAG_MC(2),
 	/** Interrupt flag for generating interrupts when
 	 *  synchronization is done. This is flag is meant for the
 	 *  async driver. */
