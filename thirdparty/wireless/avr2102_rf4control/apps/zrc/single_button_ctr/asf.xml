@@ -1,8 +1,9 @@
 <asf xmlversion="1.0">
-	<module type ="meta" caption="Singe button controller application for RF4CE-ZRC target-controller setup" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.single_button_ctr">
+	<module type ="component" caption="Singe button controller application for RF4CE-ZRC target-controller setup" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.single_button_ctr">
 		<info type="description" value="summary">
 		Singe button controller application for RF4CE-ZRC target-controller setup
 		</info>
+		<info type="gui-flag" value="hidden"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="main.c"/>
 		<build type="c-source" value="vendor_data.c"/>		

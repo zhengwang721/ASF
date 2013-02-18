@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ZRC TARGET - TERMINAL TARGET APPLICATION" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.terminal_tgt">
+	<module type="component" caption="ZRC Target - Terminal target application" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.terminal_tgt">
 		<info type="description" value="summary">
         Terminal target application for RF4CE-ZRC target-controller setup
 		</info>

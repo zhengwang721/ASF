@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="meta" caption="RF4CE-ZRC CONTROLLER SERIAL INTERFACE - HOST SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.host">
+	<module type ="component" caption="RF4CE-ZRC controller serial interface - HOST" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.host">
 		<info type="description" value="summary">
 		The host application to drive the RF4CE-ZRC controller stack running on the network co-processor
 		</info>
@@ -28,14 +28,12 @@
 		 <build type="define" name="RF4CE_PLATFORM" value =""/>
 		
 
-
+		<build type="doxygen-entry-point" value="zrc_group"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<require idref="common.services.delay"/>
         <require idref="common.services.ioport"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
+
 		<device-support value="sam4l"/>
 	</module>
 </asf>
