@@ -5,9 +5,10 @@
 			AVR2025 - IEEE 802.15.4 MAC : This module is used by default in a single processor approach and by NCP(Network Co-Processor) for a two processor approach
 			</info>
 			<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-			<device-support value="megarf"/>
+            <device-support-alias value="xmega_tc_support"/>
+            <device-support-alias value="uc3_tc_support"/>
+            <device-support-alias value="sam_tc_support"/>
+            <device-support-alias value="mega_tc_support"/>
 			<build type="doxygen-entry-point" value="group_mac"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>
@@ -20,7 +21,7 @@
             AVR2025 - IEEE 802.15.4 MAC : This module is used by the host for a two processor approach
             </info>
             <require idref="thirdparty.wireless.avr2025_mac.api_parser"/>
-			<device-support value="sam4l"/>
+            <device-support-alias value="sam_tc_support"/>
 			<build type="doxygen-entry-point" value="group_mac_api_parser"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

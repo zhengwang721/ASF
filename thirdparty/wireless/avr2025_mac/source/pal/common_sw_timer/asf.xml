@@ -10,9 +10,9 @@
         <build type="include-path"  value="."/>
         <build type="doxygen-entry-point" value="group_pal_common_sw_timer"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
-        <device-support value="xmega"/>
-        <device-support value="uc3"/>
-        <device-support value="sam4l"/>
-        <device-support value="megarf"/>
-		</module>
+        <device-support-alias value="xmega_tc_support"/>
+        <device-support-alias value="uc3_tc_support"/>
+        <device-support-alias value="sam_tc_support"/>
+        <device-support-alias value="mega_tc_support"/>
+	</module>
 </asf>

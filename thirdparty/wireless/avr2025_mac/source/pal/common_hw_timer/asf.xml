@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<select-by-device id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer ">
+	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer ">
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
@@ -7,7 +7,7 @@
 		Common HW Timer Implementation
 		</info>
 
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#0" caption="Common HW Timer - XMEGA implementation">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#0" caption="Common HW Timer - XMEGA implementation">
             <build type="header-file"   value="common_hw_timer.h"/>
             <build type="include-path"  value="."/>
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
@@ -19,7 +19,7 @@
             <device-support-alias value="xmega_tc_support"/>
 		</module>
 
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#1" caption="Common HW Timer - UC3 implementation">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#1" caption="Common HW Timer - UC3 implementation">
             <build type="header-file"   value="common_hw_timer.h"/>
             <build type="include-path"  value="."/>
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
@@ -31,7 +31,7 @@
             <device-support-alias value="uc3_tc_support"/>
 		</module>
 
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#2" caption="Common HW Timer - SAM implementation">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#2" caption="Common HW Timer - SAM implementation">
             <build type="header-file"   value="common_hw_timer.h"/>
             <build type="include-path"  value="."/>
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
@@ -44,7 +44,7 @@
             <device-support-alias value="sam_tc_support"/>
 		</module>
 
-		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
             <build type="header-file"   value="common_hw_timer.h"/>
             <build type="include-path"  value="."/>
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
