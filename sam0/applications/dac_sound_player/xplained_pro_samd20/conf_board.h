@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMD20 ADC Quick Start
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,44 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-int main(void)
-{
-//! [main]
-//! [variable]
-	struct adc_dev_inst dev_inst;
-	struct adc_conf config;
-//! [variable]
-//! [res_variable]
-	uint16_t result;
-//! [res_variable]
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-	/* Setup ADC module*/
-//! [get_conf]
-	adc_get_config_defaults(&config);
-//! [get_conf]
-//! [init_adc]
-	adc_init(&dev_inst, ADC, &config);
-//! [init_adc]
-//! [enable]
-	adc_enable(&dev_inst);
-//! [enable]
-
-//! [start_conv]
-	adc_start_conversion(&dev_inst);
-//! [start_conv]
-
-	/* Wait for conversion to be done and read out result */
-//! [get_res]
-	do {
-	} while(adc_read(&dev_inst, &result) == STATUS_BUSY);
-//! [get_res]
-
-//! [inf_loop]
-	while (1) {
-		/* Infinite loop */
-	}
-//! [inf_loop]
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */

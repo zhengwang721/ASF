@@ -3,7 +3,7 @@
  *
  * \brief SAMD20 Clock configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 #include <clock.h>
 
 #ifndef CONF_CLOCKS_H
-#  define CONF_CLOCKS_H
+#define CONF_CLOCKS_H
 
 #define CONF_CLOCK_CPU_CLOCK_SOURCE SYSTEM_MAIN_CLOCK_OSC8M
 #define CONF_CLOCK_CPU_DIVIDER SYSTEM_MAIN_CLOCK_DIV_1
@@ -59,7 +59,7 @@
 #define CONF_CLOCK_CONFIGURE_CLOCK_SOURCES true
 
 
-/* SYSTEM_CLOCK_SOURCE_OSC8M configuration */
+ /* SYSTEM_CLOCK_SOURCE_OSC8M configuration */
 #define CONF_CLOCK_OSC8M_PRESCALER SYSTEM_OSC8M_DIV_0
 
 /* SYSTEM_CLOCK_SOURCE_XOSC External oscillator/clock configuration */
@@ -72,11 +72,11 @@
 
 /* SYSTEM_CLOCK_SOURCE_XOSC32K Configuration - External 32KHz crystal/clock oscillator */
 
-#define CONF_CLOCK_XOSC32K_ENABLE true
+#define CONF_CLOCK_XOSC32K_ENABLE false
 #define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL SYSTEM_CLOCK_EXTERNAL_CRYSTAL
 #define CONF_CLOCK_XOSC32K_STARTUP_TIME    SYSTEM_XOSC32K_STARTUP_65536
 #define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL true
-#define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT true
+#define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT false
 #define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT true
 
 /* SYSTEM_CLOCK_SOURCE_OSC32K Configuration - Internal 32KHz Oscillator */
@@ -94,8 +94,8 @@
 
 /* SYSTEM_CLOCK_SOURCE_DFLL Configuration - Digital Frequency locked loop */
 
-#define CONF_CLOCK_DFLL_ENABLE true
-#define CONF_CLOCK_DFLL_LOOP_MODE SYSTEM_CLOCK_DFLL_CLOSED_LOOP
+#define CONF_CLOCK_DFLL_ENABLE false
+#define CONF_CLOCK_DFLL_LOOP_MODE SYSTEM_CLOCK_DFLL_OPEN_LOOP
 
 /* DFLL open loop mode configuration */
 #define CONF_CLOCK_DFLL_48MHZ_CALIBRATE false
@@ -103,8 +103,8 @@
 #define CONF_CLOCK_DFLL_FINE_VALUE (0xff/4)
 
 /* DFLL Closed loop mode configuration */
-#define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR GCLK_GENERATOR_1
-#define CONF_CLOCK_DFLL_MULTIPLY_FACTOR 1465
+#define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR GCLK_GENERATOR_6
+#define CONF_CLOCK_DFLL_MULTIPLY_FACTOR 7
 #define CONF_CLOCK_DFLL_QUICK_LOCK true
 #define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK true
 #define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP true
@@ -123,13 +123,13 @@
 /* Configure GCLK generator 0 (8MHZ div 8 at startup (CPU CLOCK)) */
 
 #define CONF_CLOCK_GCLK_0_ENABLE true
-#define CONF_CLOCK_GCLK_0_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_DFLL
+#define CONF_CLOCK_GCLK_0_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC8M
 #define CONF_CLOCK_GCLK_0_PRESCALER 1
 
 /* Configure GCLK generator 1 */
 
-#define CONF_CLOCK_GCLK_1_ENABLE true
-#define CONF_CLOCK_GCLK_1_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC32K
+#define CONF_CLOCK_GCLK_1_ENABLE false
+#define CONF_CLOCK_GCLK_1_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC8M
 #define CONF_CLOCK_GCLK_1_PRESCALER 1
 
 /* Configure GCLK generator 2*/
@@ -142,7 +142,7 @@
 /* Configure these settings when GCLK 2 is not used for RTC or manual settings
  * are preferred. */
 # define CONF_CLOCK_GCLK_2_ENABLE false
-# define CONF_CLOCK_GCLK_2_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_XOSC32K
+# define CONF_CLOCK_GCLK_2_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC8M
 # define CONF_CLOCK_GCLK_2_PRESCALER 1
 #endif
 
@@ -150,7 +150,7 @@
 
 #define CONF_CLOCK_GCLK_3_ENABLE false
 #define CONF_CLOCK_GCLK_3_CLOCK_SOURCE SYSTEM_CLOCK_SOURCE_OSC8M
-#define CONF_CLOCK_GCLK_3_PRESCALER 1
+#define CONF_CLOCK_GCLK_3_PRESCALER 64
 
 /* Configure GCLK generator 4 */
 
