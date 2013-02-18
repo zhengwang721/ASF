@@ -3,7 +3,7 @@
  *
  * \brief Uart Serial for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -335,6 +335,8 @@ static inline int usart_serial_putchar(usart_if p_usart, const uint8_t c)
 static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 {
 	uint32_t val;
+	/* avoid Cppcheck Warning */
+	UNUSED(val);
 
 #ifdef UART
 	if (UART == (Uart*)p_usart) {

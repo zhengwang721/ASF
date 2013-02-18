@@ -577,7 +577,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
 	}
-#if (SAM3XA || SAM3U || SAM3S || SAM4S || SAM4E)
+#ifdef PDC_TWI1
 	else if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
 	}
