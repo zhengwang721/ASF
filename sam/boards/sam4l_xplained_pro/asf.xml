@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.board.sam4l_xplained_pro.led" name="config.board.sam4l_xplained_pro.led" caption="SAM4L-XPLAINED-PRO LED support" default="yes">
-		<module type="meta" id="config.board.sam4l_xplained_pro.led#no" caption="SAM4L-XPLAINED-PRO LED support disabled"/>
+	<select-by-config id="config.board.sam4l_xplained_pro.led" name="config.board.sam4l_xplained_pro.led" caption="SAM4L Xplained Pro LED support" default="yes">
+		<module type="meta" id="config.board.sam4l_xplained_pro.led#no" caption="SAM4L Xplained Pro LED support disabled"/>
 
-		<module type="meta" id="config.board.sam4l_xplained_pro.led#yes" caption="SAM4L-XPLAINED-PRO LED support enabled">
+		<module type="meta" id="config.board.sam4l_xplained_pro.led#yes" caption="SAM4L Xplained Pro LED support enabled">
 			<!-- Source code -->
 			<build type="header-file" subtype="api" value="led.h"/>
 			<build type="include-path" value="."/>
@@ -12,10 +12,10 @@
 		</module>
 	</select-by-config>
 
-	<select-by-config id="config.board.sam4l_xplained_pro.init" name="config.board.sam4l_xplained_pro.init" caption="SAM4L-XPLAINED-PRO initialization support" default="yes">
-		<module type="meta" id="config.board.sam4l_xplained_pro.init#no" caption="SAM4L-XPLAINED-PRO initialization support disabled"/>
+	<select-by-config id="config.board.sam4l_xplained_pro.init" name="config.board.sam4l_xplained_pro.init" caption="SAM4L Xplained Pro initialization support" default="yes">
+		<module type="meta" id="config.board.sam4l_xplained_pro.init#no" caption="SAM4L Xplained Pro initialization support disabled"/>
 
-		<module type="meta" id="config.board.sam4l_xplained_pro.init#yes" caption="SAM4L-XPLAINED-PRO initialization support enabled">
+		<module type="meta" id="config.board.sam4l_xplained_pro.init#yes" caption="SAM4L Xplained Pro initialization support enabled">
 			<!-- Source code -->
 			<build type="c-source" value="init.c"/>
 
