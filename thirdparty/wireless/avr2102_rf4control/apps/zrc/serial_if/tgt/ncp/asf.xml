@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="meta" caption="RF4CE-ZRC TARGET SERIAL INTERFACE - NCP SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.ncp">
+	<module type ="component" caption="RF4CE-ZRC Target serial interface Application" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt.ncp">
 		<info type="description" value="summary">
 		The RF4CE-ZRC target stack running on the network co-processor and driven by the host application
 		</info>
@@ -25,7 +25,7 @@
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
-
+		<build type="doxygen-entry-point" value="zrc_group"/>
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
@@ -33,6 +33,5 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam4l"/>
 	</module>
 </asf>

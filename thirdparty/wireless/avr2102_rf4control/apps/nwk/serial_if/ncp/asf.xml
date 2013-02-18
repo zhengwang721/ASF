@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="meta" caption="NETWORK SERIAL INTERFACE - NCP SIDE" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp">
+	<module type ="component" caption="Network serial interface Application" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if.ncp">
 		<info type="description" value="summary">
 		The RF4CE network stack running on the network co-processor and driven by the host application
 		</info>
@@ -22,7 +22,7 @@
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
-		
+		<build type="doxygen-entry-point" value="group_rf4control"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		<require idref="common.drivers.nvm"/>
@@ -32,6 +32,5 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="megarf"/>
-		<device-support value="sam4l"/>
 	</module>
 </asf>

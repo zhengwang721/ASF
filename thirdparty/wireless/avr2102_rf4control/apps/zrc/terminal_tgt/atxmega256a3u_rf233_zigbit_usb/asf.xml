@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ZRC TARGET - TERMINAL TARGET APPLICATION - RF233" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.terminal_tgt.atxmega256a3u_usb_zigbit_rf233">
+	<project caption="ZRC Target - terminal target application - AT86RF233 (USB)" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.terminal_tgt.atxmega256a3u_usb_zigbit_rf233">
 		<info type="description" value="summary">
 		Terminal target application for RF4CE-ZRC target-controller setup
 		</info>
