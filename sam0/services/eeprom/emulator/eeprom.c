@@ -147,7 +147,6 @@ static struct _eeprom_module _eeprom_instance = {
 static void _eeprom_emulator_format_memory(void)
 {
 	enum status_code err = STATUS_OK;
-
 	uint16_t logical_page = 0;
 
 	/* Set the first row as the spare row */
@@ -307,7 +306,6 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint8_t *data)
 {
 	enum status_code err = STATUS_OK;
-
 	struct _eeprom_page_translater page_trans[2];
 	uint32_t new_page;
 
@@ -496,9 +494,13 @@ enum status_code eeprom_emulator_init(void)
 		err = nvm_set_config(&config);
 	} while (err == STATUS_BUSY);
 
-	/* Configure the EEPROM instance physical and logical number of pages. */
+	/* Configure the EEPROM instance physical and logical number of pages:
+	 *  - One row is reserved for the master page
+	 *  - One row is reserved for the spare row
+	 *  - Two logical pages can be stored in one physical row
+	 */
 	_eeprom_instance.physical_pages = 64; // TODO - Make this a config option
-	_eeprom_instance.logical_pages  = (_eeprom_instance.physical_pages / 2);
+	_eeprom_instance.logical_pages  = (_eeprom_instance.physical_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
 
 	/* Configure the EEPROM instance starting physical address in FLASH and
 	 * pre-compute the index of the first page in FLASH used for EEPROM */
@@ -726,7 +728,6 @@ enum status_code eeprom_emulator_write_buffer(
 		uint16_t length)
 {
 	enum status_code err = STATUS_OK;
-
 	uint8_t buffer[EEPROM_DATA_SIZE];
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 
@@ -791,7 +792,6 @@ enum status_code eeprom_emulator_read_buffer(
 		uint16_t length)
 {
 	enum status_code err = STATUS_OK;
-
 	uint8_t buffer[EEPROM_DATA_SIZE];
 	uint8_t current_page = offset / EEPROM_DATA_SIZE;
 
@@ -848,8 +848,7 @@ enum status_code eeprom_emulator_read_buffer(
  */
 enum status_code eeprom_emulator_flush_page_buffer(void)
 {
-	enum status_code err = STATUS_OK;
-
+	enum status_code err  = STATUS_OK;
 	uint8_t page_to_write = _eeprom_instance.cache.header.logical_page;
 
 	/* Convert the currently cached memory page to an absolute byte address */
