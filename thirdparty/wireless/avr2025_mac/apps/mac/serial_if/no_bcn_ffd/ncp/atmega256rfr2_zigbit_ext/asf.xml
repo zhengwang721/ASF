@@ -1,5 +1,8 @@
 <asf xmlversion="1.0">
-	<project caption="Serial Interface-NoBeacon-FFD-ATmegarfr2" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.atmega256rfr2_zigbit">
+	<project caption="MAC Serial Interface Application-NoBeacon-FFD-ATmegarfr2" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.atmega256rfr2_zigbit">
+		<info type="description" value="summary">
+		MAC Serial Interface  Application - NoBeacon FFD
+		</info>	
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
