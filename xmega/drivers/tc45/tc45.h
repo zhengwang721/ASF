@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Timer Counter type 4 or 5 (TC4/5) driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -531,11 +531,9 @@ static inline void tc45_set_up3(volatile void *tc)
 static inline void tc45_set_stop(volatile void *tc)
 {
 	if (tc45_is_TC4(void *tc)) {
-		((TC4_t *)tc)->CTRLGSET
-			= (((TC4_t *)tc)->CTRLGSET | TC4_STOP_bm);
+		((TC4_t *)tc)->CTRLGSET = TC4_STOP_bm;
 	} else if (tc45_is_TC5(void *tc)) {
-		((TC5_t *)tc)->CTRLGSET
-			= (((TC5_t *)tc)->CTRLGSET | TC5_STOP_bm);
+		((TC5_t *)tc)->CTRLGSET = TC5_STOP_bm;
 	}
 }
 
@@ -573,6 +571,8 @@ static inline TC45_CLKSEL_t tc45_read_clock_source(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (TC45_CLKSEL_t)(((TC5_t *)tc)->CTRLA & TC5_CLKSEL_gm);
 	}
+	Assert(false);
+	return TC45_CLKSEL_OFF_gc;
 }
 
 /**
@@ -588,7 +588,7 @@ static inline TC45_CLKSEL_t tc45_read_clock_source(volatile void *tc)
  * \param tc   ID of TC to get clock selection for.
  * \param resolution Desired resolution for the TC in Hz.
  */
-static inline void tc45_set_resolution(void *tc, uint32_t resolution)
+static inline void tc45_set_resolution(volatile void *tc, uint32_t resolution)
 {
 	uint32_t tc45_clk_rate = sysclk_get_per_hz();
 
@@ -622,7 +622,7 @@ static inline void tc45_set_resolution(void *tc, uint32_t resolution)
  *
  * \return The resolution of \a tc.
  */
-static inline uint32_t tc45_get_resolution(void *tc)
+static inline uint32_t tc45_get_resolution(volatile void *tc)
 {
 	uint32_t tc45_clk_rate = sysclk_get_per_hz();
 	switch (tc45_read_clock_source(tc)) {
@@ -674,15 +674,15 @@ static inline void tc45_set_direction(volatile void *tc, enum tc45_dir_t dir)
 {
 	if (dir == TC45_UP) {
 		if (tc45_is_TC4(void *tc)) {
-			((TC4_t *)tc)->CTRLGCLR |= ~TC4_DIR_bm;
+			((TC4_t *)tc)->CTRLGCLR = TC4_DIR_bm;
 		} else if (tc45_is_TC5(void *tc)) {
-			((TC5_t *)tc)->CTRLGCLR |= ~TC5_DIR_bm;
+			((TC5_t *)tc)->CTRLGCLR = TC4_DIR_bm;
 		}
 	} else {
 		if (tc45_is_TC4(void *tc)) {
-			((TC4_t *)tc)->CTRLGSET |= TC4_DIR_bm;
+			((TC4_t *)tc)->CTRLGSET = TC4_DIR_bm;
 		} else if (tc45_is_TC5(void *tc)) {
-			((TC5_t *)tc)->CTRLGSET |= TC5_DIR_bm;
+			((TC5_t *)tc)->CTRLGSET = TC5_DIR_bm;
 		}
 	}
 }
@@ -715,6 +715,8 @@ static inline uint16_t tc45_read_count(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->CNT);
 	}
+	Assert(false);
+	return 0;
 }
 
 /**
@@ -745,6 +747,8 @@ static inline uint16_t tc45_read_period(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->PER);
 	}
+	Assert(false);
+	return 0;
 }
 
 /**
@@ -775,6 +779,8 @@ static inline uint16_t tc45_read_period_buffer(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->PERBUF);
 	}
+	Assert(false);
+	return 0;
 }
 
 /**
@@ -786,10 +792,12 @@ static inline uint16_t tc45_read_period_buffer(volatile void *tc)
 static inline bool tc45_period_buffer_is_valid(volatile void *tc)
 {
 	if (tc45_is_TC4(void *tc)) {
-		return (((TC4_t *)tc)->CTRLGCLR & TC4_PERBV_bm);
+		return (((TC4_t *)tc)->CTRLHCLR & TC4_PERBV_bm);
 	} else if (tc45_is_TC5(void *tc)) {
-		return (((TC5_t *)tc)->CTRLGCLR & TC5_PERBV_bm);
+		return (((TC5_t *)tc)->CTRLHCLR & TC5_PERBV_bm);
 	}
+	Assert(false);
+	return false;
 }
 
 /**
@@ -837,6 +845,8 @@ static inline bool tc45_is_overflow(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->INTFLAGS & TC5_OVFIF_bm);
 	}
+	Assert(false);
+	return false;
 }
 
 /**
@@ -867,6 +877,8 @@ static inline bool tc45_read_error(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->INTFLAGS & TC5_ERRIF_bm);
 	}
+	Assert(false);
+	return false;
 }
 
 /**
@@ -961,9 +973,9 @@ static inline void tc45_set_8bits_mode(volatile void *tc)
 static inline void tc45_lock_update_buffers(volatile void *tc)
 {
 	if (tc45_is_TC4(void *tc)) {
-		((TC4_t *)tc)->CTRLGSET |= TC4_LUPD_bm;
+		((TC4_t *)tc)->CTRLGSET = TC4_LUPD_bm;
 	} else if (tc45_is_TC5(void *tc)) {
-		((TC5_t *)tc)->CTRLGSET |= TC5_LUPD_bm;
+		((TC5_t *)tc)->CTRLGSET = TC5_LUPD_bm;
 	}
 }
 
@@ -976,9 +988,9 @@ static inline void tc45_lock_update_buffers(volatile void *tc)
 static inline void tc45_unlock_update_buffers(volatile void *tc)
 {
 	if (tc45_is_TC4(void *tc)) {
-		((TC4_t *)tc)->CTRLGCLR |= TC4_LUPD_bm;
+		((TC4_t *)tc)->CTRLGCLR = TC4_LUPD_bm;
 	} else if (tc45_is_TC5(void *tc)) {
-		((TC5_t *)tc)->CTRLGCLR |= TC5_LUPD_bm;
+		((TC5_t *)tc)->CTRLGCLR = TC5_LUPD_bm;
 	}
 }
 
@@ -1012,11 +1024,11 @@ static inline void tc45_enable_cc_channels(volatile void *tc,
 		((TC4_t *)tc)->CTRLE |= enablemask;
 	} else if (tc45_is_TC5(void *tc)) {
 		((TC5_t *)tc)->CTRLE
-			|= (enablemask &
-				(TC45_CCAMODE_COMP_gc |
-				TC45_CCBMODE_COMP_gc)) |
-				(enablemask &
-				(TC45_CCAMODE_CAPT_gc | TC45_CCBMODE_CAPT_gc));
+			|= enablemask &
+				((uint8_t)TC45_CCAMODE_COMP_gc |
+				(uint8_t)TC45_CCBMODE_COMP_gc |
+				(uint8_t)TC45_CCAMODE_CAPT_gc |
+				(uint8_t)TC45_CCBMODE_CAPT_gc);
 	}
 }
 
@@ -1033,8 +1045,9 @@ static inline void tc45_disable_cc_channels(volatile void *tc,
 		((TC4_t *)tc)->CTRLE &= ~disablemask;
 	} else if (tc45_is_TC5(void *tc)) {
 		((TC5_t *)tc)->CTRLE
-			&= ~(disablemask & TC45_CCAMODE_COMP_gc &
-				TC45_CCBMODE_COMP_gc);
+			&= ~(disablemask &
+				((uint8_t)TC45_CCAMODE_COMP_gc |
+				(uint8_t)TC45_CCBMODE_COMP_gc));
 	}
 }
 
@@ -1050,10 +1063,10 @@ static inline void tc45_set_input_capture(volatile void *tc,
 {
 	if (tc45_is_TC4(void *tc)) {
 		((TC4_t *)tc)->CTRLD &= ~(TC4_EVSEL_gm | TC4_EVACT_gm);
-		((TC4_t *)tc)->CTRLD |= (eventsource | eventaction);
+		((TC4_t *)tc)->CTRLD |= ((uint8_t)eventsource | (uint8_t)eventaction);
 	} else if (tc45_is_TC5(void *tc)) {
 		((TC5_t *)tc)->CTRLD &= ~(TC5_EVSEL_gm | TC5_EVACT_gm);
-		((TC5_t *)tc)->CTRLD |= (eventsource | eventaction);
+		((TC5_t *)tc)->CTRLD |= ((uint8_t)eventsource | (uint8_t)eventaction);
 	}
 }
 
