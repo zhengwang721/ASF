@@ -60,12 +60,12 @@ struct i2c_packet packet;
 
 /* Init device instance. */
 //! [dev_inst]
-struct i2c_master_dev_inst dev_inst;
+struct i2c_master_module sw_module;
 //! [dev_inst]
 
 
 //! [callback_func]
-static void write_callback(const struct i2c_master_dev_inst *const dev_inst_tass)
+static void write_callback(const struct i2c_master_module *const module)
 {
 	/* Send every other packet with reversed data. */
 	//! [revert_order]
@@ -75,10 +75,10 @@ static void write_callback(const struct i2c_master_dev_inst *const dev_inst_tass
 		packet.data = &buffer[0];
 	}
 	//! [revert_order]
-	
+
 	/* Initiate new packet write. */
 	//! [write_next]
-	i2c_master_async_write_packet(&dev_inst, &packet);
+	i2c_master_write_packet_job(&sw_module, &packet);
 	//! [write_next]
 }
 //! [callback_func]
@@ -99,21 +99,21 @@ static void configure_i2c(void)
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_master_init(&dev_inst, SERCOM2, &conf);
+	i2c_master_init(&sw_module, SERCOM2, &conf);
 	//! [init_module]
-	
+
 	//! [enable_module]
-	i2c_master_enable(&dev_inst);
+	i2c_master_enable(&sw_module);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
 //! [setup_callback]
-void configure_callbacks(void){
-  	/* Register callback function. */
-	i2c_master_register_callback(&dev_inst, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
-	i2c_master_enable_callback(&dev_inst, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
-  
+static void configure_callbacks(void){
+	/* Register callback function. */
+	i2c_master_register_callback(&sw_module, write_callback, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	i2c_master_enable_callback(&sw_module, I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+
 	/* Enable interrupts for SERCOM instance. */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
 }
@@ -136,12 +136,12 @@ int main(void)
 	packet.data_length = DATA_LENGTH;
 	packet.data        = buffer;
 	//! [packet]
-		
+
 	/* Initiate first packet to be sent to slave. */
 	//! [write_packet]
-	i2c_master_async_write_packet(&dev_inst, &packet);
+	i2c_master_write_packet_job(&sw_module, &packet);
 	//! [write_packet]
-		
+
 	while (1) {
 		/* Inf loop. */
 	}
