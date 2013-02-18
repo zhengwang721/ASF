@@ -419,7 +419,18 @@ static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 ISR(UHD_USB_INT_FUN)
 {
 	bool b_mode_device;
+
 	pmc_enable_periph_clk(ID_UOTGHS);
+
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
 
 #ifdef USB_ID_GPIO
 	if (Is_otg_id_transition()) {
@@ -1780,7 +1791,7 @@ static void uhd_pipe_out_ready(uint8_t pipe)
 		ptr_src = &ptr_job->buf[ptr_job->nb_trans];
 		// Modify job information
 		ptr_job->nb_trans += nb_data;
-	
+
 		// Copy buffer to FIFO
 		for (i = 0; i < nb_data; i++) {
 			*ptr_dst++ = *ptr_src++;

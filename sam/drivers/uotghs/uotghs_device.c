@@ -520,6 +520,16 @@ void udd_interrupt(void)
 ISR(UDD_USB_INT_FUN)
 #endif
 {
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	if (Is_udd_sof()) {
 		udd_ack_sof();
 		if (Is_udd_full_speed_mode()) {
@@ -1741,7 +1751,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_n
 	}
 	if (Is_udd_endpoint_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
-	}	
+	}
 	ptr_job->call_trans((b_abort) ? UDD_EP_TRANSFER_ABORT :
 			UDD_EP_TRANSFER_OK, ptr_job->buf_size, ep_num);
 }
