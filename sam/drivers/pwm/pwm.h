@@ -81,7 +81,7 @@ typedef enum {
 	PWM_LOW = LOW,     /* Low level */
 	PWM_HIGH = HIGH,  /* High level */
 #if SAM4E
-	PWM_HIGHZ,  /* High level */
+	PWM_HIGHZ,  /* High Impedance */
 #endif
 } pwm_level_t;
 
@@ -446,7 +446,7 @@ void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
  * -# Disable PWM channel 0:
  *   - \code pwm_channel_disable(PWM, PWM_CHANNEL_0); \endcode
  * -# Setup clock for PWM module:
- *   - \code 
+ *   - \code
  *    pwm_clock_t clock_setting = {
  *        .ul_clka = 1000 * 100,
  *        .ul_clkb = 0,
@@ -486,7 +486,7 @@ void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
  * - \subpage pwm_use_case_1 : PWM channel 0 outputs square wave and duty cycle
  *  is updated in the PWM ISR.
  */
- 
+
 /**
  * \page pwm_use_case_1 Use case #1
  *
@@ -600,7 +600,7 @@ void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
  * -# Disable PWM channel 0:
  *   - \code pwm_channel_disable(PWM, PWM_CHANNEL_0); \endcode
  * -# Setup clock for PWM module:
- *   - \code 
+ *   - \code
  *    pwm_clock_t clock_setting = {
  *        .ul_clka = 1000 * 100,
  *        .ul_clkb = 0,

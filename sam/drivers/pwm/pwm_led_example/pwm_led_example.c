@@ -73,8 +73,6 @@
 #include "conf_board.h"
 #include "conf_clock.h"
 
-/** Console baud rate */
-#define CONSOLE_BAUD_RATE  115200
 /** PWM frequency in Hz */
 #define PWM_FREQUENCY      1000
 /** Period value of PWM output waveform */
@@ -140,7 +138,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);

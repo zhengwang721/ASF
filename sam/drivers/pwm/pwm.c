@@ -56,7 +56,7 @@ extern "C" {
  *
  * See \ref sam_pwm_quickstart.
  *
- * Driver for the PWM (Pulse Width Modulation). This driver provides access to the 
+ * Driver for the PWM (Pulse Width Modulation). This driver provides access to the
  * main features of the PWM controller.
  *
  * @{
@@ -702,7 +702,7 @@ uint32_t pwm_cmp_change_setting(Pwm *p_pwm, pwm_cmp_t *p_cmp)
 
 	return 0;
 }
-	
+
 
 /**
  * \brief Report the value of the comparison period counter.
@@ -792,7 +792,7 @@ void pwm_pdc_set_request_mode(Pwm *p_pwm, pwm_pdc_request_mode_t request_mode,
 
 	p_pwm->PWM_SCM = sync_mode;
 }
-		
+
 
 
 /**
