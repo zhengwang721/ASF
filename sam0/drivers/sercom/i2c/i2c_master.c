@@ -124,9 +124,6 @@ static enum status_code _i2c_master_set_config(
 	/* Set configurations in CTRLB. */
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
 
-	/* Set sercom gclk generator according to config. */
-	//uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
-
 	/* Find and set baudrate. */
 	tmp_baud = (int32_t)(system_gclk_chan_get_hz(SERCOM_GCLK_ID)
 			/ (2*config->baud_rate)-5);
@@ -220,7 +217,6 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	module->buffer_length = 0;
 #endif
 
-	//module->callback[0] = 0;
 	/* Set sercom module to operate in I2C master mode. */
 	i2c_module->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(2)
 			| SERCOM_I2CS_CTRLA_MASTER;
