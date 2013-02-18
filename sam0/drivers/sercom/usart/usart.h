@@ -51,7 +51,7 @@
 #include <sercom.h>
 
 #ifdef USART_ASYNC
-#include <sercom_interrupts.h>
+#include <sercom_interrupt.h>
 #endif
 
 #define USART_DEFAULT_TIMEOUT  0xFFFF

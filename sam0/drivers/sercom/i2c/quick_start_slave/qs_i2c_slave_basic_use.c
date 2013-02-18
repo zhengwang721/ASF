@@ -44,7 +44,7 @@
 #include <asf.h>
 
 //! [packet]
-static i2c_packet_t packet;
+static struct i2c_packet packet;
 //! [packet]
 
 
