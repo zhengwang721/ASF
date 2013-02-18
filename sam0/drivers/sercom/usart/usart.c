@@ -279,7 +279,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
 	_sercom_set_handler(instance_index, usart_async_handler);
 	_sercom_instances[instance_index] = dev_inst;
-#endif
+	#endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(dev_inst, config);
 

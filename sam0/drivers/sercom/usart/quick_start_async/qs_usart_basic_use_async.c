@@ -41,17 +41,44 @@
  *
  */
 #include <asf.h>
-
+#include <stdio.h>
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
-
 struct usart_dev_inst usart_edbg;
+
+volatile uint8_t rx_buffer[5];
+uint8_t string[] = "hello there world!\n\r";
+
+volatile uint8_t buff[20];
+
+int _write(int fd, const void *buf, uint32_t nbyte)
+{
+	usart_write_buffer(&usart_edbg, buf, nbyte);
+	return nbyte;
+}
+
+int _read(int file, char *ptr, int len) {
+	return 0;
+}
+
+void read_callback(const struct usart_dev_inst *const dev);
+void read_callback(const struct usart_dev_inst *const dev)
+{
+	usart_async_write_buffer(&usart_edbg, rx_buffer, sizeof(rx_buffer)-1);
+
+}
 
 void write_callback(const struct usart_dev_inst *const dev);
 void write_callback(const struct usart_dev_inst *const dev)
 {
+	static uint8_t cnt;
+	uint8_t len = sprintf(&buff[0], "CNT:%u\n\r", cnt);
 
+	if(cnt++ < 10) {
+		usart_async_write_buffer(&usart_edbg,buff, len);
+	}
 }
+
 
 
 void write_string(struct usart_dev_inst *const dev, uint8_t *string);
@@ -67,7 +94,9 @@ void configure_callbacks(void);
 void configure_callbacks(void)
 {
 	usart_async_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_async_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_async_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_async_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
 
 	/* Enable interrupts for SERCOM instance. */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
@@ -77,12 +106,14 @@ int main(void)
 {
 	struct usart_conf config_struct;
 	uint16_t temp;
+	volatile uint32_t delay;
 
-	uint8_t string[] = "Hello world!\n\r\0";
+
 
 	/* Initialize system clocks */
 	system_init();
 
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1801, 1);
 	/* Get configuration defaults for the USART
 	 * 9600 8N1
 	 */
@@ -106,13 +137,12 @@ int main(void)
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 
+	for(delay=0; delay < 100000; delay++);
+
 	usart_async_write_buffer(&usart_edbg,string, sizeof(string));
 
 	/* Echo back characters received */
 	while (1) {
-		if (usart_async_read(&usart_edbg, &temp) == STATUS_OK) {
-			while (usart_async_write(&usart_edbg, temp) != STATUS_OK) {
-			}
-		}
+		usart_async_read_buffer(&usart_edbg, rx_buffer, sizeof(rx_buffer));
 	}
 }

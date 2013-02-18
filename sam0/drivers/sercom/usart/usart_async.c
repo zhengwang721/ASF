@@ -42,7 +42,6 @@
  */
 
 #include "usart_async.h"
-
 /**
  * \internal      Asynchronous write of a buffer with a given length
  *
@@ -141,7 +140,7 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
 	_sercom_instances[_sercom_get_module_irq_index(dev_inst)] = 0;
 
 	/* Clear the bit corresponding to the callback_type */
-	dev_inst->callback_reg_mask |= (0 << callback_type);
+	dev_inst->callback_reg_mask &= ~(1 << callback_type);
 }
 
 /**
@@ -388,6 +387,7 @@ void usart_async_handler(uint8_t instance)
 	uint16_t callback_status;
 	uint8_t error_code;
 
+
 	/* Get device instance from the look-up table */
 	struct usart_dev_inst *dev_inst
 		= (struct usart_dev_inst *)_sercom_instances[instance];
@@ -416,17 +416,12 @@ void usart_async_handler(uint8_t instance)
 			dev_inst->tx_buffer_ptr += 2;
 
 		} else {
-			usart_module->DATA.reg |= (*(dev_inst->tx_buffer_ptr)
+			usart_module->DATA.reg |= (*(dev_inst->tx_buffer_ptr++)
 					& SERCOM_USART_DATA_MASK);
-			(dev_inst->tx_buffer_ptr)++;
-
 		}
 
-		/* Decrement buffer length */
-		(dev_inst->remaining_tx_buffer_length)--;
-
 		/* Check if it was the last transmission */
-		if (dev_inst->remaining_tx_buffer_length == 0) {
+		if (--(dev_inst->remaining_tx_buffer_length) == 0) {
 			/* Disable the Data Register Empty Interrupt */
 			usart_module->INTENCLR.reg
 				= USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY;
@@ -442,7 +437,7 @@ void usart_async_handler(uint8_t instance)
 		dev_inst->tx_status = STATUS_OK;
 
 		/* Run callback if registered and enabled */
-		if (callback_status & USART_CALLBACK_BUFFER_TRANSMITTED) {
+		if (callback_status & (1 << USART_CALLBACK_BUFFER_TRANSMITTED)) {
 			(*(dev_inst->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(dev_inst);
 		}
 
@@ -491,15 +486,11 @@ void usart_async_handler(uint8_t instance)
 				dev_inst->tx_buffer_ptr += 2;
 			} else {
 				/* Read out from DATA and increment 8bit ptr by one */
-				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA.reg & SERCOM_USART_DATA_MASK);
-				dev_inst->tx_buffer_ptr++;
+				*(dev_inst->rx_buffer_ptr++) = (usart_module->DATA.reg & SERCOM_USART_DATA_MASK);
 			}
 
-			/* Decrement length of the remaining buffer */
-			(dev_inst->remaining_rx_buffer_length)--;
-
 			/* Check if the last character have been received */
-			if(dev_inst->remaining_rx_buffer_length == 0) {
+			if(--(dev_inst->remaining_rx_buffer_length) == 0) {
 				/* Disable RX Complete Interrupt,
 				 * and set STATUS_OK */
 				usart_module->INTENCLR.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
