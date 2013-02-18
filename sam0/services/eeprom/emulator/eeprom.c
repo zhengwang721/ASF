@@ -143,22 +143,32 @@ static struct _eeprom_module _eeprom_module_inst = {
 static void _eeprom_emulator_format_memory(void)
 {
 	enum status_code err = STATUS_OK;
-	struct _eeprom_page data;
-	uint16_t physical_page;
+
 	uint16_t logical_page = 0;
 
-	for (physical_page = 0; physical_page < _eeprom_module_inst.physical_pages; physical_page++) {
+	/* Set the first row as the spare row */
+	_eeprom_module_inst.spare_row = 0;
+	nvm_erase_row(0);
+
+	for (uint16_t physical_page = 1; physical_page < _eeprom_module_inst.physical_pages;
+			physical_page++) {
+
 		if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
 			continue;
 		}
 
-		/* Is this a new row? */
+		/* If we are at the first page in a new row, erase the entire row */
 		if ((physical_page % NVMCTRL_ROW_PAGES) == 0) {
 			nvm_erase_row(physical_page / NVMCTRL_ROW_PAGES);
 		}
 
-		/* Is this the first or second page of a row? */
+		/* Two logical pages are stored in each physical row; program in a
+		 * pair of initialized but blank set of emulated EEPROM pages */
 		if ((physical_page % NVMCTRL_ROW_PAGES) < 2) {
+			/* Make a buffer to hold the initialized EEPROM page */
+			struct _eeprom_page data;
+
+			/* Set up the new EEPROM row's header */
 			data.header[EEPROM_PAGE_NUMBER_BYTE] = logical_page;
 
 			do {
@@ -168,13 +178,11 @@ static void _eeprom_emulator_format_memory(void)
 						NVMCTRL_PAGE_SIZE);
 			} while (err == STATUS_BUSY);
 
+			/* Increment the logical EEPROM page address now that the current
+			 * address' page has been initialized */
 			logical_page++;
 		}
 	}
-
-	/* Set last row as spare row */
-	_eeprom_module_inst.spare_row
-		= (_eeprom_module_inst.physical_pages / NVMCTRL_ROW_PAGES) - 1;
 }
 
 /**
@@ -184,68 +192,19 @@ static void _eeprom_emulator_update_page_mapping(void)
 {
 	uint8_t logical_page;
 
+	/* Scan through all physical pages, to map physical and logical pages */
 	for (uint16_t c = 0; c < _eeprom_module_inst.physical_pages; c++) {
 		if (c == EEPROM_MASTER_PAGE_NUMBER) {
 			continue;
 		}
 
-		logical_page = _eeprom_module_inst.flash[c].header[EEPROM_PAGE_NUMBER_BYTE];
+		/* Read in the logical page stored in the current physical page */
+		logical_page =
+				_eeprom_module_inst.flash[c].header[EEPROM_PAGE_NUMBER_BYTE];
 
+		/* If the logical page number is not invalid, add it to the mapping */
 		if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
 			_eeprom_module_inst.page_map[logical_page] = c;
-		}
-	}
-}
-
-/**
- * \brief This function will cleanup the memory
- *
- * TODO: NOT TESTED YET
- */
-static void _eeprom_emulator_clean_memory(void)
-{
-	enum status_code err = STATUS_OK;
-
-	for (uint16_t logical_page = 0;
-			logical_page < _eeprom_module_inst.logical_pages; logical_page++) {
-
-		uint8_t current_row = 0xFF;
-		uint8_t last_row    = 0xFF;
-		uint8_t last_page   = 0xFF;
-
-		for (uint16_t physical_page = 0;
-				physical_page < _eeprom_module_inst.physical_pages;
-				physical_page++) {
-
-			if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
-				continue;
-			}
-
-			current_row = physical_page / NVMCTRL_ROW_PAGES;
-
-			if (_eeprom_module_inst.flash[physical_page].header[EEPROM_PAGE_NUMBER_BYTE] !=
-					_eeprom_module_inst.page_map[logical_page]) {
-				continue;
-			}
-
-			if (last_row == 0xFF) {
-				last_row  = current_row;
-				last_page = physical_page;
-			} else if (last_row != current_row) {
-				if ((physical_page % NVMCTRL_ROW_PAGES) > 1) {
-					do {
-						err = nvm_erase_row(current_row);
-					} while (err == STATUS_BUSY);
-
-					_eeprom_module_inst.page_map[logical_page] = last_page;
-				} else {
-					do {
-						err = nvm_erase_row(last_row);
-					} while (err == STATUS_BUSY);
-
-					_eeprom_module_inst.page_map[logical_page] = physical_page;
-				}
-			}
 		}
 	}
 }
@@ -566,9 +525,6 @@ enum status_code eeprom_emulator_init(void)
 	if (err != STATUS_OK) {
 		return err;
 	}
-
-	/* Detect and clean up and invalid pages in memory */
-	_eeprom_emulator_clean_memory();
 
 	/* Mark initialization as complete */
 	_eeprom_module_inst.initialized = true;
