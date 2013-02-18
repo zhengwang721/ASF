@@ -286,7 +286,8 @@ static void gmac_process_ip_packet(uint8_t *p_uc_data, uint32_t ul_size)
 	uint32_t ul_icmp_len;
 	int32_t ul_rc = GMAC_OK;
 
-	ul_size = ul_size;	/* stop warning */
+	/* avoid Cppcheck Warning */
+	UNUSED(ul_size);
 
 	p_ethernet_header_t p_eth = (p_ethernet_header_t) p_uc_data;
 	p_ip_header_t p_ip_header = (p_ip_header_t) (p_uc_data + ETH_HEADER_SIZE);

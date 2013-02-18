@@ -220,8 +220,8 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 
 /* One bank flash */
 #else
-	/* Stop warning */
-	p_efc = p_efc;
+	/* avoid Cppcheck Warning */
+	UNUSED(p_efc);
 	/* Compute address */
 	ul_addr = IFLASH_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 #endif
