@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board configuration
+ * \brief Board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,11 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+/** Usart Hw ID used by the console (UART1). */
+#define CONSOLE_UART_ID          ID_UART1
 
-#endif /* CONF_BOARD_H */
+/* Configure UART1 pins */
+#define CONF_BOARD_UART_CONSOLE
+
+#endif /* CONF_BOARD_H_INCLUDED */

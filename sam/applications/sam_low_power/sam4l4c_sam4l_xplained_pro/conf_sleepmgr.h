@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board configuration
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,11 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
-#endif /* CONF_BOARD_H */
+#endif /* CONF_SLEEPMGR_INCLUDED */

@@ -8,23 +8,23 @@
  * \asf_license_start
  *
  * \page License
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- * 
+ *
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -42,6 +42,7 @@
 
 #include <board.h>
 #include <ioport.h>
+#include <wdt.h>
 
 /**
  * \addtogroup sam4s_xplained_pro_group
@@ -51,8 +52,7 @@
 void board_init(void)
 {
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	// Disable the watchdog
-	WDT->WDT_MR = WDT_MR_WDDIS;
+	wdt_disable(WDT);
 #endif
 
 	// Must initialize IOPORT before setting up IO
@@ -64,8 +64,12 @@ void board_init(void)
 
 	// Initialize SW0
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, (BUTTON_0_ACTIVE ?
-				IOPORT_MODE_PULLDOWN : IOPORT_MODE_PULLUP));
+  if ( BUTTON_0_ACTIVE ) {
+		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLDOWN);
+	}
+  else {
+		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+  }
 }
 
 /** @} */

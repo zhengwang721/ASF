@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board configuration
+ * \brief AST configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,11 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+//! Configuration of the AST driver
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
 
-#endif /* CONF_BOARD_H */
+//#define AST_PER_ENABLE
+#define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
+
+#endif /* CONF_AST_H_INCLUDED */

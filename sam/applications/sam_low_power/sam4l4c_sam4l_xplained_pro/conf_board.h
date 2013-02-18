@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board configuration
+ * \brief  Configuration File for SAM4L-EK Board.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,11 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+// Enable USART console
+#define CONF_BOARD_COM_PORT
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+// Force usage of external EIC
+#define CONF_BOARD_EIC
 
-#endif /* CONF_BOARD_H */
+#endif /* CONF_BOARD_H_INCLUDED */
