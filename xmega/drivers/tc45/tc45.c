@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA TC4/5 Driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -210,8 +210,6 @@ static tc45_callback_t tc45_tcd5_ovf_callback;
 static tc45_callback_t tc45_tcd5_err_callback;
 static tc45_callback_t tc45_tcd5_cca_callback;
 static tc45_callback_t tc45_tcd5_ccb_callback;
-static tc45_callback_t tc45_tcd5_ccc_callback;
-static tc45_callback_t tc45_tcd5_ccd_callback;
 
 /**
  * \internal
@@ -268,7 +266,6 @@ ISR(TCD5_CCB_vect)
 		tc45_tcd5_ccb_callback();
 	}
 }
-
 #endif
 
 /**
@@ -448,12 +445,6 @@ void tc45_set_ccc_interrupt_callback(volatile void *tc,
 		tc45_tcc4_ccc_callback = callback;
 	} else
 #endif
-
-#ifdef TCD5
-	if ((uintptr_t)tc == (uintptr_t)&TCD5) {
-		tc45_tcd5_ccc_callback = callback;
-	} else
-#endif
 	{}
 }
 
@@ -463,12 +454,6 @@ void tc45_set_ccd_interrupt_callback(volatile void *tc,
 #ifdef TCC4
 	if ((uintptr_t)tc == (uintptr_t)&TCC4) {
 		tc45_tcc4_ccd_callback = callback;
-	} else
-#endif
-
-#ifdef TCD5
-	if ((uintptr_t)tc == (uintptr_t)&TCD5) {
-		tc45_tcd5_ccd_callback = callback;
 	} else
 #endif
 	{}

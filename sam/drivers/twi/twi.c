@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWI) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -573,7 +573,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
 	}
-#if (SAM3XA || SAM3U || SAM3S || SAM4S)
+#ifdef PDC_TWI1
 	else if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
 	}

@@ -4,6 +4,7 @@
 		<require idref="board.evk1105"/>
 		<config name="config.board.evk1105.init" value="no"/>
 		<config name="config.board.evk1105.led" value="yes"/>
+		<toolchain-config name="avr32gcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,__stack_size__=4K" toolchain="avr32gcc"/>
 		<config name="config.compiler.avr32gcc.stack_size" value="4K"/>
 		<generator value="avr32gcc"/>
 		<generator value="as5_32"/>
