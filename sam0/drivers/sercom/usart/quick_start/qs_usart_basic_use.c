@@ -50,7 +50,7 @@ void write_string(struct usart_module *const mod, uint8_t *string);
 void write_string(struct usart_module *const mod, uint8_t *string)
 {
 	do {
-		while (usart_write(mod, *string) != STATUS_OK) {
+		while (usart_write_wait(mod, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
@@ -91,8 +91,8 @@ int main(void)
 
 	/* Echo back characters received */
 	while (1) {
-		if (usart_read(&usart_edbg, &temp) == STATUS_OK) {
-			while (usart_write(&usart_edbg, temp) != STATUS_OK) {
+		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
+			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
 			}
 		}
 	}

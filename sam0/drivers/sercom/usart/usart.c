@@ -300,7 +300,7 @@ enum status_code usart_init(struct usart_module *const module,
  * \retval     STATUS_BUSY     If the operation was not completed,
  *                                 due to the USART module being busy.
  */
-enum status_code usart_write(struct usart_module *const module,
+enum status_code usart_write_wait(struct usart_module *const module,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
@@ -355,7 +355,7 @@ enum status_code usart_write(struct usart_module *const module,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read(struct usart_module *const module,
+enum status_code usart_read_wait(struct usart_module *const module,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
@@ -439,7 +439,7 @@ enum status_code usart_read(struct usart_module *const module,
  * \retval        STATUS_ERR_TIMEOUT       If operation was not completed,
  *                                         due to USART module timing out
  */
-enum status_code usart_write_buffer(struct usart_module *const module,
+enum status_code usart_write_buffer_wait(struct usart_module *const module,
 		const uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
@@ -479,11 +479,21 @@ enum status_code usart_write_buffer(struct usart_module *const module,
 		/* Check if the character size exceeds 8 bit */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment 8 bit pointer by two */
-			usart_write(module, (uint16_t)*(tx_data));
+			usart_write_wait(module, (uint16_t)*(tx_data));
 			tx_data += 2;
 		} else {
 			/* Increment 8 bit pointer by one */
-			usart_write(module, (uint16_t)*(tx_data++));
+			usart_write_wait(module, (uint16_t)*(tx_data++));
+		}
+	}
+
+	/* Wait until Transmit is complete or timeout */
+	i = 0;
+	for (i = 0; i < timeout; i++) {
+		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF) {
+			break;
+		} else if (i == timeout) {
+			return STATUS_ERR_TIMEOUT;
 		}
 	}
 
@@ -519,7 +529,7 @@ enum status_code usart_write_buffer(struct usart_module *const module,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read_buffer(struct usart_module *const module,
+enum status_code usart_read_buffer_wait(struct usart_module *const module,
 		const uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
@@ -556,11 +566,11 @@ enum status_code usart_read_buffer(struct usart_module *const module,
 		/* Check if the character size exceeds 8 bit */
 		if (module->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
-			usart_read(module, (void*)rx_data);
+			usart_read_wait(module, (void*)rx_data);
 			rx_data += 2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
-			usart_read(module, (void*)(rx_data++));
+			usart_read_wait(module, (void*)(rx_data++));
 		}
 	}
 
