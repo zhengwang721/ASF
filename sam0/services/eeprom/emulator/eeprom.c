@@ -44,10 +44,10 @@
 #include <string.h>
 #include <nvm.h>
 
-/* Magic key is the ASCII codes for "AtEEPROMEmu.", which is much faster to
- * check as uint32_t values than a string compare. But this numbers will show
- * up as the string in studio memory view, which makes the data easy to identify
- * */
+/* Magic key is the sequence "AtEEPROMEmu." in ASCII. The key is encoded as a
+ * sequence of 32-bit values to speed up checking of the key, which can be
+ * implemented as a number of simple integer comparisons,
+ */
 #define EEPROM_MAGIC_KEY        {0x41744545, 0x50524f4d, 0x456d752e}
 #define EEPROM_MAGIC_KEY_COUNT  3
 
@@ -193,8 +193,6 @@ static void _eeprom_emulator_format_memory(void)
  */
 static void _eeprom_emulator_update_page_mapping(void)
 {
-	uint8_t logical_page;
-
 	/* Scan through all physical pages, to map physical and logical pages */
 	for (uint16_t c = 0; c < _eeprom_instance.physical_pages; c++) {
 		if (c == EEPROM_MASTER_PAGE_NUMBER) {
@@ -202,12 +200,39 @@ static void _eeprom_emulator_update_page_mapping(void)
 		}
 
 		/* Read in the logical page stored in the current physical page */
-		logical_page =
-				_eeprom_instance.flash[c].header.logical_page;
+		uint16_t logical_page = _eeprom_instance.flash[c].header.logical_page;
 
 		/* If the logical page number is not invalid, add it to the mapping */
 		if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
 			_eeprom_instance.page_map[logical_page] = c;
+		}
+	}
+
+	/* Scan through all physical rows, to find an erased row to use as the
+	 * spare */
+	for (uint16_t c = 0; c < (_eeprom_instance.physical_pages / NVMCTRL_ROW_PAGES); c++) {
+		bool spare_row_found = true;
+
+		/* Look through pages within the row to see if they are all erased */
+		for (uint8_t c2 = 0; c2 < NVMCTRL_ROW_PAGES; c2++) {
+			uint16_t physical_page = (c * NVMCTRL_ROW_PAGES) + c2;
+
+			if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
+				continue;
+			}
+
+			uint8_t logical_page =
+					_eeprom_instance.flash[physical_page].header.logical_page;
+
+			if (logical_page != EEPROM_INVALID_PAGE_NUMBER) {
+				spare_row_found = false;
+			}
+		}
+
+		/* If we've now found the spare row, store it and abort the search */
+		if (spare_row_found == true) {
+			_eeprom_instance.spare_row = c;
+			break;
 		}
 	}
 }
@@ -499,8 +524,10 @@ enum status_code eeprom_emulator_init(void)
 	 *  - One row is reserved for the spare row
 	 *  - Two logical pages can be stored in one physical row
 	 */
-	_eeprom_instance.physical_pages = 64; // TODO - Make this a config option
-	_eeprom_instance.logical_pages  = (_eeprom_instance.physical_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
+	_eeprom_instance.physical_pages =
+			(64 * NVMCTRL_ROW_PAGES); // TODO - Make this a config option
+	_eeprom_instance.logical_pages  =
+			(_eeprom_instance.physical_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
 
 	/* Configure the EEPROM instance starting physical address in FLASH and
 	 * pre-compute the index of the first page in FLASH used for EEPROM */
@@ -516,6 +543,11 @@ enum status_code eeprom_emulator_init(void)
 	/* Scan physical memory and re-create logical to physical page mapping
 	 * table to locate logical pages of EEPROM data in physical FLASH */
 	_eeprom_emulator_update_page_mapping();
+
+	/* Could not find spare row - abort as the memory appears to be corrupt */
+	if (_eeprom_instance.spare_row == 0) {
+		return STATUS_ERR_BAD_FORMAT;
+	}
 
 	/* Verify that the master page contains valid data for this service */
 	err = _eeprom_emulator_verify_master_page();
@@ -605,8 +637,7 @@ enum status_code eeprom_emulator_write_page(
 		/* Check if the current row is full, and we need to swap it out with a
 		 * spare row */
 		if (_eeprom_emulator_is_page_free_on_row(
-				_eeprom_instance.page_map[logical_page],
-				&new_page) == false) {
+				_eeprom_instance.page_map[logical_page], &new_page) == false) {
 			/* Move the other page we aren't writing that is stored in the same
 			 * page to the new row, and replace the old current page with the
 			 * new page contents (cache is updated to match) */
