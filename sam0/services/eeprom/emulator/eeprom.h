@@ -103,15 +103,14 @@ extern "C" {
  */
 
 #if !defined(__DOXYGEN__)
+#  define EEPROM_EMULATOR_ID          1
 #  define EEPROM_MAJOR_VERSION        1
 #  define EEPROM_MINOR_VERSION        0
 #  define EEPROM_REVISION             0
-#  define EEPROM_EMULATOR_ID          1
 #  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
 
-#  define EEPROM_PAGE_NUMBER_BYTE     0
 #  define EEPROM_INVALID_PAGE_NUMBER  0xff
-#  define EEPROM_HEADER_SIZE          2
+#  define EEPROM_HEADER_SIZE          4
 #endif
 
 /** \name Emulated EEPROM size information
