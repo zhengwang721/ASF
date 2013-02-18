@@ -16,9 +16,8 @@
             <require idref="common.services.delay"/>
             <require idref="common.services.basic.spi_master"/>
             <require idref="common.services.ioport"/>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-            <device-support value="sam4l"/>
+            <device-support value="xmegaau"/>
+            <device-support value="uc3a3_a4"/>
 		</module>
 
 		<module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
@@ -33,7 +32,7 @@
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
             <require idref="common.services.delay"/>
-            <device-support value="megarf"/>
+            <device-support value="atmega256rfr2"/>
 		</module>
     </select-by-device>
 
@@ -44,4 +43,17 @@
 		<build type="header-file"   value="pal_generic.h"/>
 		<build type="include-path"  value="."/>
 	</module>
+
+    <device-alias-map name="avr2025_mac_pal_support">
+        <device-support value="xmegaau"/>
+        <device-support value="uc3a3_a4"/>
+        <device-support value="atmega256rfr2"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_pal_spi_support">
+        <device-support value="xmegaau"/>
+        <device-support value="uc3a3_a4"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_pal_soc_support">
+        <device-support value="atmega256rfr2"/>
+    </device-alias-map>
 </asf>

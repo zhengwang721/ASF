@@ -8,8 +8,6 @@
 		<build type="include-path" value="."/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
 </asf>

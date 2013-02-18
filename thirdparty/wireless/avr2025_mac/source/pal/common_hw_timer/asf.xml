@@ -76,6 +76,6 @@
         <device-support value="sam"/>
     </device-alias-map>
     <device-alias-map name="mega_tc_support">
-        <device-support value="megarf"/>
+        <device-support value="atmega256rfr2"/>
     </device-alias-map>
 </asf>

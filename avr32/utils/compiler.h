@@ -1336,8 +1336,10 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 
 #define MEMCPY_ENDIAN memcpy_be
 
+#ifndef FREERTOS_USED
 #ifndef BIG_ENDIAN
 #define BIG_ENDIAN
+#endif
 #endif
 
 /* Converts a 8 Byte array into a 64-Bit value */

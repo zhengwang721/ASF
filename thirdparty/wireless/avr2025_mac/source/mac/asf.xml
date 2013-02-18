@@ -4,10 +4,7 @@
 			<info type="description" value="summary">
 			All the callbacks from the MAC is included in separate files for ease of implementation.
 			</info>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-            <device-support value="megarf"/>
-            <device-support value="sam4l"/>
+            <device-support-alias value="avr2025_mac_pal_support"/>
 			<build type="c-source"      value="src/usr_mcps_data_conf.c"/>
 			<build type="c-source"      value="src/usr_mcps_data_ind.c"/>
 			<build type="c-source"      value="src/usr_mcps_purge_conf.c"/>
@@ -31,10 +28,7 @@
 			<info type="description" value="summary">
 			Callbacks are expected to be included in the application itself.
 			</info>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-            <device-support value="megarf"/>
-            <device-support value="sam4l"/>
+            <device-support-alias value="avr2025_mac_pal_support"/>
 		</module>
 	</select-by-config>
 
@@ -47,20 +41,14 @@
 			<build type="c-source"      value="src/mac_api.c"/>
 			<build type="c-source"      value="src/mac_callback_wrapper.c"/>
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.mac.callbacks"/>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-            <device-support value="megarf"/>
-            <device-support value="sam4l"/>
+            <device-support-alias value="avr2025_mac_pal_support"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.mac.api#no" caption="MAC Api support disabled">
 			<info type="description" value="summary">
 			MAC API Support disabled (Disabled if NWK Layer(RF4CE) is included)
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<device-support value="xmega"/>
-			<device-support value="uc3"/>
-            <device-support value="megarf"/>
-            <device-support value="sam4l"/>
+            <device-support-alias value="avr2025_mac_pal_support"/>
 		</module>
 	</select-by-config>
 
@@ -101,10 +89,7 @@
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
-		<device-support value="sam4l"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
 	
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.mac.inc" caption="MAC Includes">
@@ -118,9 +103,6 @@
 		<build type="header-file"	value="inc/mac_msg_type_data_ind.h"/>
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="group_mac"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
-		<device-support value="sam4l"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
 </asf>

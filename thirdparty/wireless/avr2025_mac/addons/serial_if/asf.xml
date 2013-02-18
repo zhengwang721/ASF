@@ -9,9 +9,7 @@
 		<build type="include-path" value="inc/"/>
 		<build type="doxygen-entry-point" value="group_mac_serial_if"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 		<device-support value="sam4l"/>
-		<device-support value="megarf"/>
 	</module>
 </asf>

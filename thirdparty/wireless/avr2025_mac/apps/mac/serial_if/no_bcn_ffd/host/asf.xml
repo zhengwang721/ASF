@@ -6,6 +6,6 @@
 		<build type="header-file" value="app_config.h"/>
 		<build type="include-path" value="."/>
 		<require idref="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd"/>
-		<device-support value="sam4l"/>
+        <device-support-alias value="avr2025_mac_api_parser_support"/>
 	</module>
 </asf>

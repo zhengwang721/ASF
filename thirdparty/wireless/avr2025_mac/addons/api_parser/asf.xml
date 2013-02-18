@@ -14,4 +14,7 @@
 		<build type="doxygen-entry-point" value="group_mac_api_parser"/>
         <device-support value="sam4l"/>
     </module>
+    <device-alias-map name="avr2025_mac_api_parser_support">
+        <device-support value="atmega256rfr2"/>
+    </device-alias-map>
 </asf>
