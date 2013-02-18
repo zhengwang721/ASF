@@ -45,6 +45,11 @@
 #include <wdt_sam4l.h>
 
 /**
+ * \addtogroup sam4l_xplained_pro_group
+ * @{
+ */
+
+/**
  * \brief Set peripheral mode for one single IOPORT pin.
  * It will configure port mode and disable pin mode (but enable peripheral).
  * \param pin IOPORT pin to configure
@@ -55,12 +60,6 @@
 		ioport_set_pin_mode(pin, mode);\
 		ioport_disable_pin(pin);\
 	} while (0)
-
-
-/**
- * \addtogroup sam4l_xplained_pro_group
- * @{
- */
 
 void board_init(void)
 {
@@ -75,13 +74,14 @@ void board_init(void)
 	// Initialize IOPORT
 	ioport_init();
 
-  // Put all pins to default state (input & pull-up)
-	for (pin = PIN_PA00; pin <= PIN_PC31; pin ++) {
-		ioport_set_pin_dir(pin, IOPORT_DIR_INPUT);
-		ioport_set_pin_mode(pin, IOPORT_MODE_PULLUP);
-	}
+	// Initialize LED0, turned off
+	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED_0_PIN, IOPORT_PIN_LEVEL_HIGH);
 
 	// Initialize SW0
+	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+
 #ifdef  CONF_BOARD_EIC
 	// Set push button as external interrupt pin
 	ioport_set_pin_peripheral_mode(BUTTON_0_EIC_PIN,
@@ -95,9 +95,10 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(COM_PORT_TX_PIN, COM_PORT_TX_MUX);
 #endif
 
-	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
+#ifdef CONF_BOARD_USART0
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX, EXT1_UART_RX_MUX);
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);
+#endif
 }
 
 /** @} */

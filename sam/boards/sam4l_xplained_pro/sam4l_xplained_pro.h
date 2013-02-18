@@ -109,6 +109,7 @@
 
 //! \name LED0 definitions
 //@{
+#define LED0                      PIN_PC07
 #define LED0_PIN                  PIN_PC07
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
@@ -116,6 +117,7 @@
 
 //! \name SW0 definitions
 //@{
+#define GPIO_PUSH_BUTTON_0        PIN_PC24
 #define SW0_PIN                   PIN_PC24
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE

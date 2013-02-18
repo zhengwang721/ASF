@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board configuration
+ * \brief SAM4L-EK Board LEDs support package.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the SAM4L-XPLAINED-PRO Board.
+ *
+ * To use this board, define BOARD=SAM4L_EK.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,11 +43,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_BOARD_H
-#define CONF_BOARD_H
+#ifndef LED_H_INCLUDED
+#define LED_H_INCLUDED
 
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#include "compiler.h"
+#include "ioport.h"
 
-#endif /* CONF_BOARD_H */
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led)     ioport_set_pin_level(led, IOPORT_PIN_LEVEL_HIGH)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led)      ioport_set_pin_level(led, IOPORT_PIN_LEVEL_LOW)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led)  ioport_toggle_pin_level(led)
+
+
+#endif  // LED_H_INCLUDED
