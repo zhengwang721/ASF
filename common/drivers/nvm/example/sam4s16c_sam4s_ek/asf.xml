@@ -8,7 +8,7 @@
 		<require idref="common.drivers.nvm.example"/>
 		<require idref="board.sam4s_ek"/>
 		<require idref="common.utils.stdio"/>
-		<require idref="common.drivers.nvm#no_extmem"/>
+		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
 		<config name="config.board.sam4s_ek.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

@@ -3,7 +3,7 @@
  *
  * \brief USART IrDA example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -199,7 +199,8 @@ static void func_receiver(void)
 	/* Read dummy to make sure that there are no characters in US_THR! */
 	if (usart_is_rx_ready(BOARD_USART)) {
 		usart_read(BOARD_USART, &ul_temp);
-		ul_temp = ul_temp;
+		/* avoid Cppcheck Warning */
+		UNUSED(ul_temp);
 	}
 }
 
