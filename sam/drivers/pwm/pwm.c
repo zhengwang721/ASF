@@ -447,8 +447,8 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 {
 #if (SAM3N)
 	p_pwm->PWM_IER = (1 << ul_event);
-	/* Remove warning */
-	ul_fault = ul_fault;
+	/* avoid Cppcheck Warning */
+	UNUSED(ul_fault);
 #else
 	p_pwm->PWM_IER1 = (1 << ul_event) | (1 << (ul_fault + 16));
 #endif
@@ -467,8 +467,8 @@ void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 {
 #if (SAM3N)
 	p_pwm->PWM_IDR = (1 << ul_event);
-	/* Remove warning */
-	ul_fault = ul_fault;
+	/* avoid Cppcheck Warning */
+	UNUSED(ul_fault);
 #else
 	p_pwm->PWM_IDR1 = (1 << ul_event) | (1 << (ul_fault + 16));
 #endif
