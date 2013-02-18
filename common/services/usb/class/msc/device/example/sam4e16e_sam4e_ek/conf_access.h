@@ -46,7 +46,7 @@
 
 #include "compiler.h"
 #include "board.h"
-
+#include "ui.h"
 
 /*! \name Activation of Logical Unit Numbers
  */
@@ -154,10 +154,10 @@
  * \warning Be careful not to waste time in order not to disturb the functions.
  */
 /** @{ */
-#define memory_start_read_action(nb_sectors)
-#define memory_stop_read_action()
-#define memory_start_write_action(nb_sectors)
-#define memory_stop_write_action()
+#define memory_start_read_action(nb_sectors)  ui_start_read()
+#define memory_stop_read_action()             ui_stop_read()
+#define memory_start_write_action(nb_sectors) ui_start_write()
+#define memory_stop_write_action()            ui_stop_write()
 
 /** @} */
 

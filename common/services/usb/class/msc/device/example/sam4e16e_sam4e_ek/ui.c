@@ -97,7 +97,7 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM3X-EK:
+ * Human interface on SAM4E-EK:
  * - Led 0 (D2, blue) blinks when USB host has checked and enabled MSC interface
  * - Led 1 (D3, amber) is on during read operation
  * - Led 2 (D4, green) is on during write operation
