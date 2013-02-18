@@ -3,7 +3,7 @@
  *
  * \brief Atmel part identification macros
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -482,10 +482,20 @@
 		AVR8_PART_IS_DEFINED(ATmega64A)  || \
 		AVR8_PART_IS_DEFINED(ATmega128A) \
 		)
-/** ATmegaxxRF group */
-#define MEGA_RF ( \
+/** ATmegaxxRFA1 group */
+#define MEGA_RFA1 ( \
 		AVR8_PART_IS_DEFINED(ATmega128RFA1) \
 		)
+		
+/** ATmegaxxRFR2 group */
+#define MEGA_RFR2 ( \
+		AVR8_PART_IS_DEFINED(ATmega64RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega128RFR2) || \
+		AVR8_PART_IS_DEFINED(ATmega256RFR2) \
+		)
+	
+/** ATmegaxxRFxx group */
+#define MEGA_RF (MEGA_RFA1 || MEGA_RFR2)
 
 /**
  * \name ATmegaxx_un0/un1/un2 subgroups
@@ -551,7 +561,6 @@
 		AVR8_PART_IS_DEFINED(ATmega16U4)     || \
 		AVR8_PART_IS_DEFINED(ATmega2564RFR2) || \
 		AVR8_PART_IS_DEFINED(ATmega256RFA2)  || \
-		AVR8_PART_IS_DEFINED(ATmega256RFR2)  || \
 		AVR8_PART_IS_DEFINED(ATmega324P)     || \
 		AVR8_PART_IS_DEFINED(ATmega325)      || \
 		AVR8_PART_IS_DEFINED(ATmega3250)     || \
@@ -586,7 +595,6 @@
 		AVR8_PART_IS_DEFINED(ATmega649P)     || \
 		AVR8_PART_IS_DEFINED(ATmega64M1)     || \
 		AVR8_PART_IS_DEFINED(ATmega64RFA2)   || \
-		AVR8_PART_IS_DEFINED(ATmega64RFR2)   || \
 		AVR8_PART_IS_DEFINED(ATmega8)        || \
 		AVR8_PART_IS_DEFINED(ATmega8515)     || \
 		AVR8_PART_IS_DEFINED(ATmega8535)     || \
@@ -604,8 +612,6 @@
 /** megaAVR product line */
 #define MEGA (MEGA_XX0_1 || MEGA_XX4 || MEGA_XX8 || MEGA_XX || MEGA_RF || \
 	MEGA_UNSPECIFIED)
-
-/** @} */
 
 /** @} */
 
@@ -872,6 +878,8 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E)
+
+/** @} */
 
 /** @} */
 

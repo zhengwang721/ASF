@@ -3,7 +3,7 @@
  *
  * \brief DMAC (DMA Controller) driver example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -123,7 +123,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -161,15 +161,30 @@ static void test_single_buf_xfer(void)
 	/* Initialize single buffer transfer: buffer 0 -> buffer 1 */
 	desc.ul_source_addr = (uint32_t) g_dma_buf[0];
 	desc.ul_destination_addr = (uint32_t) g_dma_buf[1];
-	desc.ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |   /* Set Buffer Transfer Size */
-			DMAC_CTRLA_SRC_WIDTH_WORD |                 /* Source transfer size is set to 32-bit width */
-			DMAC_CTRLA_DST_WIDTH_WORD;                  /* Destination transfer size is set to 32-bit width */
-	desc.ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_DISABLE | /* Buffer Descriptor Fetch operation is disabled for the source */
-			DMAC_CTRLB_DST_DSCR_FETCH_DISABLE |         /* Buffer Descriptor Fetch operation is disabled for the destination */
-			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |              /* Memory-to-Memory Transfer */
-			DMAC_CTRLB_SRC_INCR_INCREMENTING |          /* The source address is incremented */
-			DMAC_CTRLB_DST_INCR_INCREMENTING;           /* The destination address is incremented */
-	desc.ul_descriptor_addr = NULL;                     /* No descriptor for single transfer */
+	/*
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
+	 */
+	desc.ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_WORD |
+			DMAC_CTRLA_DST_WIDTH_WORD;
+	/*
+	 * Set DMA CTRLB:
+	 * - Buffer Descriptor Fetch operation is disabled for the source
+	 * - Buffer Descriptor Fetch operation is disabled for the destination
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
+	 */
+	desc.ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_DISABLE |
+			DMAC_CTRLB_DST_DSCR_FETCH_DISABLE |
+			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |
+			DMAC_CTRLB_SRC_INCR_INCREMENTING |
+			DMAC_CTRLB_DST_INCR_INCREMENTING;
+	/* No descriptor for single transfer */
+	desc.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, DMA_CH, &desc);
 
 	/* Start DMA transfer and wait for finish */
@@ -228,39 +243,83 @@ static void test_multi_buf_xfer(void)
 	 */
 	desc[0].ul_source_addr = (uint32_t) g_dma_buf[0];
 	desc[0].ul_destination_addr = (uint32_t) g_dma_buf[3];
-	desc[0].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |    /* Set Buffer Transfer Size */
-			DMAC_CTRLA_SRC_WIDTH_WORD |                     /* Source transfer size is set to 32-bit width */
-			DMAC_CTRLA_DST_WIDTH_WORD;                      /* Destination transfer size is set to 32-bit width */
-	desc[0].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM | /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |            /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |                  /* Memory-to-Memory Transfer */
-			DMAC_CTRLB_SRC_INCR_INCREMENTING |              /* The source address is incremented */
-			DMAC_CTRLB_DST_INCR_INCREMENTING;               /* The destination address is incremented */
-	desc[0].ul_descriptor_addr = (uint32_t) &desc[1];       /* Pointer to next descriptor */
+	/*
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
+	 */
+	desc[0].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_WORD |
+			DMAC_CTRLA_DST_WIDTH_WORD;
+	/*
+	 * Set DMA CTRLB:
+	 * - Descriptor is fetched from the memory
+	 * - Descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
+	 */
+	desc[0].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |
+			DMAC_CTRLB_SRC_INCR_INCREMENTING |
+			DMAC_CTRLB_DST_INCR_INCREMENTING;
+	/* Pointer to next descriptor */
+	desc[0].ul_descriptor_addr = (uint32_t) &desc[1];
 
 	desc[1].ul_source_addr = (uint32_t) g_dma_buf[1];
 	desc[1].ul_destination_addr = (uint32_t) g_dma_buf[4];
-	desc[1].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |    /* Set Buffer Transfer Size */
-			DMAC_CTRLA_SRC_WIDTH_WORD |                     /* Source transfer size is set to 32-bit width */
-			DMAC_CTRLA_DST_WIDTH_WORD;                      /* Destination transfer size is set to 32-bit width */
-	desc[1].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM | /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |            /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |                  /* Memory-to-Memory Transfer */
-			DMAC_CTRLB_SRC_INCR_INCREMENTING |              /* The source address is incremented */
-			DMAC_CTRLB_DST_INCR_INCREMENTING;               /* The destination address is incremented */
-	desc[1].ul_descriptor_addr = (uint32_t) &desc[2];       /* Pointer to next descriptor */
+	/*
+	 * Set DMA CTRLA:
+	 * - Set Buffer Transfer Size
+	 * - Source transfer size is set to 32-bit width
+	 * - Destination transfer size is set to 32-bit width
+	 */
+	desc[1].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_WORD |
+			DMAC_CTRLA_DST_WIDTH_WORD;
+	/*
+	 * Set DMA CTRLB:
+	 * - Source descriptor is fetched from the memory
+	 * - Destination descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
+	 */
+	desc[1].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |
+			DMAC_CTRLB_SRC_INCR_INCREMENTING |
+			DMAC_CTRLB_DST_INCR_INCREMENTING;
+	/* Pointer to next descriptor */
+	desc[1].ul_descriptor_addr = (uint32_t) &desc[2];
 
 	desc[2].ul_source_addr = (uint32_t) g_dma_buf[2];
 	desc[2].ul_destination_addr = (uint32_t) g_dma_buf[5];
-	desc[2].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |    /* Set Buffer Transfer Size */
-			DMAC_CTRLA_SRC_WIDTH_WORD |                     /* Source transfer size is set to 32-bit width */
-			DMAC_CTRLA_DST_WIDTH_WORD;                      /* Destination transfer size is set to 32-bit width */
-	desc[2].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM | /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |            /* Descriptor is fetched from the memory */
-			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |                  /* Memory-to-Memory Transfer */
-			DMAC_CTRLB_SRC_INCR_INCREMENTING |              /* The source address is incremented */
-			DMAC_CTRLB_DST_INCR_INCREMENTING;               /* The destination address is incremented */
-	desc[2].ul_descriptor_addr = NULL;                      /* The end of LLI */
+	/*
+	 * Set Buffer Transfer Size
+	 * Source transfer size is set to 32-bit width
+	 * Destination transfer size is set to 32-bit width
+	 */
+	desc[2].ul_ctrlA = DMAC_CTRLA_BTSIZE(DMA_BUF_SIZE) |
+			DMAC_CTRLA_SRC_WIDTH_WORD |
+			DMAC_CTRLA_DST_WIDTH_WORD;
+	/*
+	 * Set DMA CTRLB:
+	 * - Source descriptor is fetched from the memory
+	 * - Destination descriptor is fetched from the memory
+	 * - Memory-to-Memory Transfer
+	 * - The source address is incremented
+	 * - The destination address is incremented
+	 */
+	desc[2].ul_ctrlB = DMAC_CTRLB_SRC_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_DST_DSCR_FETCH_FROM_MEM |
+			DMAC_CTRLB_FC_MEM2MEM_DMA_FC |
+			DMAC_CTRLB_SRC_INCR_INCREMENTING |
+			DMAC_CTRLB_DST_INCR_INCREMENTING;
+	/* The end of LLI */
+	desc[2].ul_descriptor_addr = 0;
 
 	dmac_channel_multi_buf_transfer_init(DMAC, DMA_CH, &desc[0]);
 

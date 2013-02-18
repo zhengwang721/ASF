@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,6 +58,8 @@ void sysclk_init(void)
 	uint8_t i;
 #ifdef CONFIG_OSC_RC32_CAL
 	uint16_t cal;
+	/* avoid Cppcheck Warning */
+	UNUSED(cal);
 #endif
 	bool need_rc2mhz = false;
 
