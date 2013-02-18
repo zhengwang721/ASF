@@ -43,7 +43,7 @@
 #include "usart.h"
 #include <pinmux.h>
 #ifdef USART_ASYNC
-#  include "usart_async.h"
+#  include "usart_interrupt.h"
 #endif
 
 /**

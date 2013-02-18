@@ -41,7 +41,8 @@
  *
  */
 
-#include "usart_async.h"
+#include "usart_interrupt.h"
+
 /**
  * \internal      Asynchronous write of a buffer with a given length
  *

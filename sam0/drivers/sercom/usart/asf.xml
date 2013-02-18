@@ -31,8 +31,8 @@
 			<keyword value="USART"/>
 		</info>
 		<device-support value="samd20"/>
-		<build type="header-file" subtype="api" value="usart_async.h"/>
-		<build type="c-source" value="usart_async.c"/>
+		<build type="header-file" subtype="api" value="usart_interrupt.h"/>
+		<build type="c-source" value="usart_interrupt.c"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<build type="define" name="USART_ASYNC" value=""/>
 		<build type="doxygen-entry-point" value="sam0_usart_async_group"/>
