@@ -3,7 +3,7 @@
 		<info type="description" value="summary">
 		USB Device. Common API.
 		A selector is provided to select a single class or a composite device.
-		The classes provided are CDC, MSC, HID mouse, HID Keyboard, HID Generic, DFU Atmel, PHDC, Vendor Atmel.
+		The provided classes are: CDC, MSC, HID mouse, HID Keyboard, HID Generic, DFU Atmel, PHDC, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.device#cdc" caption="USB Device CDC">
 			<info type="keyword" value="technology">
@@ -314,7 +314,7 @@
 		<info type="description" value="summary">
 		USB Host. Common API.
 		A selector is provided to select a single class support or a multiple classes support.
-		The classes provided are Android, CDC, MSC, HID mouse, Vendor Atmel.
+		The provided classes are: Android, CDC, MSC, HID mouse, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.host#android" caption="USB Host Android Accessory Class">
 			<info type="keyword" value="technology">
