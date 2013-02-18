@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -398,6 +398,19 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
 }
 
+/**
+ * \brief Retrieves the current rate in Hz of the Peripheral Bus clock attached
+ *        to the specified peripheral.
+ *
+ * \param module Pointer to the module's base address.
+ *
+ * \return Frequency of the bus attached to the specified peripheral, in Hz.
+ */
+static inline uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module)
+{
+	UNUSED(module);
+	return sysclk_get_peripheral_hz();
+}
 //@}
 
 //! \name Enabling and disabling synchronous clocks

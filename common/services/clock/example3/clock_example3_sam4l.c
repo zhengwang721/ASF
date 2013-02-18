@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 3
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -153,6 +153,8 @@ int main(void)
 	while (1) {
 		struct dfll_config dcfg;
 		struct pll_config pcfg;
+		/* avoid Cppcheck Warning */
+		UNUSED(pcfg);
 
 		/*
 		 * Initial state: Running from RC80M with all
