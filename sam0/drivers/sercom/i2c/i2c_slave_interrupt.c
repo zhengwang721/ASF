@@ -42,6 +42,7 @@
  */
 
 #include "i2c_slave_interrupt.h"
+
 /**
  * \internal Set configurations to module.
  *
@@ -74,6 +75,7 @@ static enum status_code _i2c_slave_set_config(
 	if (pad0 == PINMUX_DEFAULT) {
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
 	}
+
 	pin_conf.mux_position = pad0 & 0xFFFF;
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
@@ -82,6 +84,7 @@ static enum status_code _i2c_slave_set_config(
 	if (pad1 == PINMUX_DEFAULT) {
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
 	}
+
 	pin_conf.mux_position = pad1 & 0xFFFF;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
@@ -138,7 +141,7 @@ enum status_code i2c_slave_init(struct i2c_slave_module *const module,
 	}
 
 	/* Check if reset is in progress. */
-	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST){
+	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
 
@@ -200,6 +203,11 @@ void i2c_slave_reset(struct i2c_slave_module *const module)
 	module->buffer = NULL;
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	/* Clear all pending interrupts. */
+	system_interrupt_enter_critical_section();
+	system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
+	system_interrupt_leave_critical_section();
 
 	/* Wait for sync. */
 	_i2c_slave_wait_for_sync(module);
@@ -431,13 +439,14 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		if (module->nack_on_address) {
 			/* NACK address */
 			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR){
+		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR) {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 1;
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
+
 			/* Setting total length of buffer. */
 			module->buffer_length = module->buffer_remaining;
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
@@ -448,6 +457,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
 			}
+
 			/* Setting total length of buffer. */
 			module->buffer_length = module->buffer_remaining;
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
@@ -460,7 +470,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
-		//port_pin_toggle_output_level(PIN_PB05);
 		module->status = STATUS_OK;
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
@@ -479,12 +488,11 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 		}
 
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF){
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DIF) {
 		/* Check if buffer is full, or NACK from master. */
 		if (module->buffer_remaining <= 0 ||
 				((module->buffer_length > module->buffer_remaining)
 				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
-			//port_pin_toggle_output_level(PIN_PB00);
 
 			module->buffer_remaining = 0;
 			module->buffer_length = 0;
@@ -501,6 +509,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 					/* Read complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 				}
+
 			} else {
 				/* Release SCL and wait for new start condition */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -516,16 +525,14 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 			}
 
 		/* Continue buffer write/read. */
-		} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
+		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
 			/* Call function based on transfer direction. */
 			if (module->transfer_direction == 0) {
 				_i2c_slave_read(module);
 			} else {
 				_i2c_slave_write(module);
-			//port_pin_toggle_output_level(PIN_PB04);
 			}
 		}
 	}
-	//port_pin_toggle_output_level(PIN_PA04);
 	system_interrupt_leave_critical_section();
 }
