@@ -386,6 +386,9 @@ static inline void usart_enable(const struct usart_module *const module)
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	/* Enable Global interrupt for module */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
@@ -408,6 +411,9 @@ static inline void usart_disable(const struct usart_module *const module)
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Enable Global interrupt for module */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);

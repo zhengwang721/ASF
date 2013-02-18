@@ -96,9 +96,6 @@ void configure_callbacks(void)
 	usart_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
 	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
-
-	/* Enable interrupts for SERCOM instance. */
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
 }
 
 int main(void)
