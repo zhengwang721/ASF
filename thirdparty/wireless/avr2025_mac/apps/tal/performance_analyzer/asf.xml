@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer" caption="Performance Analyzer">
+	<module type="component" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer" caption="Performance Analyzer">
 		<info type="description" value="summary">
 			A Serial interface based application,which communicates with Wireless Analyzer to demonstrate
 			various features and capabilities of the of Atmel Transceivers.
@@ -34,9 +34,7 @@
 		<build type="include-path"  value="."/>
         <build type="doxygen-entry-point" value="group_perf_analyzer"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 
 		
 	<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
