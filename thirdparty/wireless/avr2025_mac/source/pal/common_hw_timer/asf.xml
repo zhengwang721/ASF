@@ -8,47 +8,74 @@
 		</info>
 
 		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#0" caption="Common HW Timer - XMEGA implementation">
+            <build type="header-file"   value="common_hw_timer.h"/>
+            <build type="include-path"  value="."/>
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
+            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.xmega"/>
             <require idref="xmega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
-       		<device-support value="xmega"/>
+            <device-support-alias value="xmega_tc_support"/>
 		</module>
 
 		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#1" caption="Common HW Timer - UC3 implementation">
+            <build type="header-file"   value="common_hw_timer.h"/>
+            <build type="include-path"  value="."/>
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
+            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.uc3"/>
             <require idref="avr32.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
-            <device-support value="uc3"/>
+            <device-support-alias value="uc3_tc_support"/>
 		</module>
 
 		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#2" caption="Common HW Timer - SAM implementation">
+            <build type="header-file"   value="common_hw_timer.h"/>
+            <build type="include-path"  value="."/>
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
+            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.sam"/>
 			<require idref="sam.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <require idref="common.utils"/>
-            <device-support value="sam4l"/>
+            <device-support-alias value="sam_tc_support"/>
 		</module>
 
 		<module type="meta" id="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer#3" caption="Common HW Timer - MEGA-RF implementation">
-
+            <build type="header-file"   value="common_hw_timer.h"/>
+            <build type="include-path"  value="."/>
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
+            <build type="doxygen-entry-point" value="common_hw_timer_group"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.mega"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
-            <device-support value="megarf"/>
+            <device-support-alias value="mega_tc_support"/>
 		</module>
     </select-by-device>
 
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer" caption="Common HW Timer - MEGA-RF implementation">
-		<build type="header-file"   value="common_hw_timer.h"/>
-		<build type="include-path"  value="."/>
-
-		<build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
-		<build type="module-config" subtype="path" value="module_config"/>
-		<build type="doxygen-entry-point" value="common_hw_timer_group"/>
-		<require idref="config.thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
-        <device-support value="sam4l"/>
+    <device-alias-map name="xmega_tc_support">
+        <device-support value="xmegaa"/>
+        <device-support value="xmegaau"/>
+        <device-support value="xmegab"/>
+        <device-support value="xmegac"/>
+        <device-support value="xmegad"/>
+    </device-alias-map>
+    <device-alias-map name="uc3_tc_support">
+        <device-support value="uc3a"/>
+        <device-support value="uc3a3_a4"/>
+        <device-support value="uc3b"/>
+        <device-support value="uc3c"/>
+        <device-support value="uc3d"/>
+        <device-support value="uc3l"/>
+    </device-alias-map>
+    <device-alias-map name="sam_tc_support">
+        <device-support value="sam"/>
+    </device-alias-map>
+    <device-alias-map name="mega_tc_support">
         <device-support value="megarf"/>
-        <device-support value="uc3"/>
-        <device-support value="xmega"/>
-	</module>
+    </device-alias-map>
 </asf>

@@ -66,14 +66,14 @@ extern "C" {
 /*! \name Base Boards
  */
 //! @{
-#define EVK1100                     1   //!< AT32UC3A EVK1100 board.
-#define EVK1101                     2   //!< AT32UC3B EVK1101 board.
-#define UC3C_EK                     3   //!< AT32UC3C UC3C_EK board.
-#define EVK1104                     4   //!< AT32UC3A3 EVK1104 board.
-#define EVK1105                     5   //!< AT32UC3A EVK1105 board.
-#define STK600_RCUC3L0              6   //!< STK600 RCUC3L0 board.
-#define UC3L_EK                     7   //!< AT32UC3L-EK board.
-#define XPLAIN                      8   //!< ATxmega128A1 Xplain board.
+#define EVK1100                     1  //!< AT32UC3A EVK1100 board.
+#define EVK1101                     2  //!< AT32UC3B EVK1101 board.
+#define UC3C_EK                     3  //!< AT32UC3C UC3C_EK board.
+#define EVK1104                     4  //!< AT32UC3A3 EVK1104 board.
+#define EVK1105                     5  //!< AT32UC3A EVK1105 board.
+#define STK600_RCUC3L0              6  //!< STK600 RCUC3L0 board.
+#define UC3L_EK                     7  //!< AT32UC3L-EK board.
+#define XPLAIN                      8  //!< ATxmega128A1 Xplain board.
 #define STK600_RC064X              10  //!< ATxmega256A3 STK600 board.
 #define STK600_RC100X              11  //!< ATxmega128A1 STK600 board.
 #define UC3_A3_XPLAINED            13  //!< ATUC3A3 UC3-A3 Xplained board.
@@ -108,16 +108,17 @@ extern "C" {
 #define STK600_RCUC3L3             44  //!< ATUCL3 STK600 board
 #define SAM4L_EK                   45  //!< SAM4L-EK board.
 #define STK600_MEGA_RF             46  //!< STK600 MEGA RF EVK board.
-#define XMEGA_C3_XPLAINED          47  //!< ATxmega384C3 Xplained board.	
+#define XMEGA_C3_XPLAINED          47  //!< ATxmega384C3 Xplained board.
 #define STK600_RC032X              48  //!< STK600 with RC032X routing card board.
 #define SAM4S_EK2                  49  //!< SAM4S-EK2 board.
 #define XMEGA_E5_XPLAINED          50  //!< ATxmega32E5 Xplained board.
 #define SAM4E_EK                   51  //!< SAM4E-EK board.
-#define ATMEGA256RFR2_XPLAINED_PRO 52  //!< ATmega256RFR2 XPLAINED PRO board.
-#define SAM4L_XPLAINED_PRO         53  //!< SAM4L-XPLAINED-PRO board.
-#define ATMEGA256RFR2_ZIGBIT       54  //!< ATmega256RFR2 zigbit
-#define XMEGA_RF233_ZIGBIT         55  //!< ATxmega256A3U with AT86RF233 zigbit
-#define XMEGA_RF212B_ZIGBIT        56  //!< ATxmega256A3U with AT86RF212B zigbit
+#define ATMEGA256RFR2_XPLAINED_PRO 52  //!< ATmega256RFR2 Xplained Pro board.
+#define SAM4S_XPLAINED_PRO         53  //!< SAM4S Xplained Pro board.
+#define SAM4L_XPLAINED_PRO         54  //!< SAM4L Xplained Pro board.
+#define ATMEGA256RFR2_ZIGBIT       55  //!< ATmega256RFR2 zigbit
+#define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 zigbit
+#define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B zigbit
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -227,8 +228,6 @@ extern "C" {
 #  include "system_sam3x.h"
 #elif BOARD == SAM4L_EK
 #  include "sam4l_ek/sam4l_ek.h"
-#elif BOARD == SAM4L_XPLAINED_PRO
-#  include "sam4l_xplained_pro/sam4l_xplained_pro.h"
 #elif BOARD == SAM4E_EK
 #  include "sam4e_ek/sam4e_ek.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
@@ -249,6 +248,10 @@ extern "C" {
 #  include "atxmega128a1_qt600/atxmega128a1_qt600.h"
 #elif BOARD == STK600_RCUC3L3
 #  include "stk600/rcuc3l3/stk600_rcuc3l3.h"
+#elif BOARD == SAM4S_XPLAINED_PRO
+#  include "sam4s_xplained_pro/sam4s_xplained_pro.h"
+#elif BOARD == SAM4L_XPLAINED_PRO
+#  include "sam4l_xplained_pro/sam4l_xplained_pro.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
