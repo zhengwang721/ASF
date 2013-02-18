@@ -50,8 +50,8 @@
  * \internal Set Configuration of the USART module
  *
  */
-enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
-		const struct usart_conf const *config)
+enum status_code _usart_set_config(struct usart_module *const module,
+		const struct usart_config const *config)
 {
 	/* Temporary registers. */
 
@@ -64,7 +64,7 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	uint32_t ctrlb = 0;
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* TODO: change clock_polarity to enum if we don't get bp's in the
 	 * header-file */
@@ -99,11 +99,11 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/*Set baud val */
 	baud_val = 63975;
-	usart_module->BAUD.reg = baud_val;
+	usart_hw->BAUD.reg = baud_val;
 
 	/* Set sample mode */
 	ctrla |= config->transfer_mode;
@@ -125,14 +125,14 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Write configuration to CTRLB */
-	usart_module->CTRLB.reg = ctrlb;
+	usart_hw->CTRLB.reg = ctrlb;
 
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 	/* Write configuration to CTRLA */
-	usart_module->CTRLA.reg = ctrla;
+	usart_hw->CTRLA.reg = ctrla;
 
 	return STATUS_OK;
 }
@@ -144,8 +144,8 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  * configuration struct. This will leave the device in an enabled state
  * after initialization.
  *
- * \param[out] dev_inst Pointer to USART device
- * \param[in]  hw_dev   Pointer to USART hardware instance
+ * \param[out] module Pointer to USART device
+ * \param[in]  hw   Pointer to USART hardware instance
  * \param[in]  config   Pointer to configuration struct
  *
  * \return Status of the initialization
@@ -166,12 +166,12 @@ enum status_code _usart_set_config(struct usart_dev_inst *const dev_inst,
  *                                         struct due to sample_mode or clock
  * frequency
  */
-enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		Sercom *const hw_dev, const struct usart_conf *const config)
+enum status_code usart_init(struct usart_module *const module,
+		Sercom *const hw, const struct usart_config *const config)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(hw_dev);
+	Assert(module);
+	Assert(hw);
 	Assert(config);
 
 	struct system_gclk_chan_conf gclk_chan_conf;
@@ -186,14 +186,14 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 	uint32_t pad3 = config->pinout_pad3;
 
 	/* Assign module pointer to software instance struct */
-	dev_inst->hw_dev = hw_dev;
+	module->hw = hw;
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Set up the GCLK for the module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 
-	sercom_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
+	sercom_index = _sercom_get_sercom_inst_index(module->hw);
 
 	gclk_index =  sercom_index + SERCOM0_GCLK_ID_CORE;
 
@@ -214,7 +214,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* SERCOM PAD0 */
 	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(hw_dev, 0);
+		pad0 = _sercom_get_default_pad(hw, 0);
 	}
 
 	pin_conf.mux_position = pad0 & 0xFFFF;
@@ -222,7 +222,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* SERCOM PAD1 */
 	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(hw_dev, 1);
+		pad1 = _sercom_get_default_pad(hw, 1);
 	}
 
 	pin_conf.mux_position = pad1 & 0xFFFF;
@@ -230,7 +230,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* SERCOM PAD2 */
 	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw_dev, 2);
+		pad2 = _sercom_get_default_pad(hw, 2);
 	}
 
 	pin_conf.mux_position = pad2 & 0xFFFF;
@@ -239,19 +239,19 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* SERCOM PAD3 */
 	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(hw_dev, 3);
+		pad3 = _sercom_get_default_pad(hw, 3);
 	}
 
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
 	/* Wait for synchronization to be complete*/
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
-	while (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
+	while (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
 	}
 
-	if (usart_module->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
+	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
 		/* Module have to be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
@@ -263,25 +263,25 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
 
 	/* Initialize parameters */
 	for (i = 0; i < USART_CALLBACK_N; i++) {
-		dev_inst->callback[i]        = NULL;
+		module->callback[i]        = NULL;
 	}
-	dev_inst->tx_buffer_ptr              = NULL;
-	dev_inst->rx_buffer_ptr              = NULL;
-	dev_inst->remaining_tx_buffer_length = 0x0000;
-	dev_inst->remaining_rx_buffer_length = 0x0000;
-	dev_inst->callback_reg_mask          = 0x00;
-	dev_inst->callback_enable_mask       = 0x00;
-	dev_inst->rx_status                  = STATUS_OK;
-	dev_inst->tx_status                  = STATUS_OK;
+	module->tx_buffer_ptr              = NULL;
+	module->rx_buffer_ptr              = NULL;
+	module->remaining_tx_buffer_length = 0x0000;
+	module->remaining_rx_buffer_length = 0x0000;
+	module->callback_reg_mask          = 0x00;
+	module->callback_enable_mask       = 0x00;
+	module->rx_status                  = STATUS_OK;
+	module->tx_status                  = STATUS_OK;
 
 	/* Set interrupt handler and register USART software module struct in
 	 * look-up table */
-	instance_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev);
-	_sercom_set_handler(instance_index, usart_async_handler);
-	_sercom_instances[instance_index] = dev_inst;
+	instance_index = _sercom_get_sercom_inst_index(module->hw);
+	_sercom_set_handler(instance_index, _usart_interrupt_handler);
+	_sercom_instances[instance_index] = module;
 	#endif
 	/* Set configuration according to the config struct */
-	status_code = _usart_set_config(dev_inst, config);
+	status_code = _usart_set_config(module, config);
 
 	return status_code;
 }
@@ -292,7 +292,7 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
  * This non-blocking function will receive a character via the
  * USART.
  *
- * param[in]   dev_inst Pointer to the software instance struct
+ * param[in]   module Pointer to the software instance struct
  * param[out]  tx_data  Data to transfer
  *
  * \return     Status of the operation
@@ -300,35 +300,35 @@ enum status_code usart_init(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_BUSY     If the operation was not completed,
  *                                 due to the USART module being busy.
  */
-enum status_code usart_write(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write(struct usart_module *const module,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
-	if (dev_inst->remaining_tx_buffer_length > 0) {
+	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 #else
 	/* Check if USART is ready for new data */
-	if (!usart_is_interrupt_flag_set(dev_inst,
+	if (!usart_is_interrupt_flag_set(module,
 			USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
 #endif
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Write data to USART module */
-	usart_module->DATA.reg = tx_data;
+	usart_hw->DATA.reg = tx_data;
 
 	return STATUS_OK;
 }
@@ -339,7 +339,7 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  * This non-blocking function will receive a character via the
  * USART.
  *
- * param[in]   dev_inst Pointer to the software instance struct
+ * param[in]   module Pointer to the software instance struct
  * param[out]  rx_data  Pointer to received data
  *
  * \return     Status of the operation
@@ -355,25 +355,25 @@ enum status_code usart_write(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read(struct usart_module *const module,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Error variable */
 	uint16_t error_code;
 
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
-	if (dev_inst->remaining_rx_buffer_length > 0) {
+	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 #else
 	/* Check if USART has new data */
-	if (!usart_is_interrupt_flag_set(dev_inst,
+	if (!usart_is_interrupt_flag_set(module,
 			USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 		/* Return error code */
 		return STATUS_BUSY;
@@ -381,14 +381,14 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 #endif
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Read out the status code and mask away all but the 4 LSBs*/
 	error_code
-		= (uint8_t)(usart_module->STATUS.reg &
+		= (uint8_t)(usart_hw->STATUS.reg &
 			SERCOM_USART_STATUS_MASK);
 
 	/* Check if an error has occurred during the receiving */
@@ -397,23 +397,23 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
 		if (error_code & SERCOM_USART_STATUS_FERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= SERCOM_USART_STATUS_FERR;
+			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_FERR;
 			return STATUS_ERR_BAD_FORMAT;
 		} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
+			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_BUFOVF;
 			return STATUS_ERR_OVERFLOW;
 		} else if (error_code & SERCOM_USART_STATUS_PERR) {
 			/* Clear flag by writing a 1 to it and
 			 * return with an error code */
-			usart_module->STATUS.reg &= SERCOM_USART_STATUS_PERR;
+			usart_hw->STATUS.reg &= SERCOM_USART_STATUS_PERR;
 			return STATUS_ERR_BAD_DATA;
 		}
 	}
 
 	/* Read data from USART module */
-	*rx_data = usart_module->DATA.reg;
+	*rx_data = usart_hw->DATA.reg;
 
 	return STATUS_OK;
 }
@@ -428,7 +428,7 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
  *       not recommended as it has no functionality to check if there is an
  *       ongoing asynchronous operation running or not.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[out]    tx_data  Pointer to data to transmit
  * \param[length] number   Number of characters to transmit
  *
@@ -439,12 +439,12 @@ enum status_code usart_read(struct usart_dev_inst *const dev_inst,
  * \retval        STATUS_ERR_TIMEOUT       If operation was not completed,
  *                                         due to USART module timing out
  */
-enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write_buffer(struct usart_module *const module,
 		const uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Timeout variables */
 	uint16_t i = 0;
@@ -461,14 +461,14 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 	}
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Blocks while buffer is being transferred */
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(dev_inst,
+			if (usart_is_interrupt_flag_set(module,
 					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
@@ -477,13 +477,13 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
 		}
 
 		/* Check if the character size exceeds 8 bit */
-		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment 8 bit pointer by two */
-			usart_write(dev_inst, (uint16_t)*(tx_data));
+			usart_write(module, (uint16_t)*(tx_data));
 			tx_data += 2;
 		} else {
 			/* Increment 8 bit pointer by one */
-			usart_write(dev_inst, (uint16_t)*(tx_data++));
+			usart_write(module, (uint16_t)*(tx_data++));
 		}
 	}
 
@@ -500,7 +500,7 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
  *       not recommended as it has no functionality to check if there is an
  *       ongoing asynchronous operation running or not.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[out]    tx_data  Pointer to data to transmit
  * \param[length] number   Number of characters to transmit
  *
@@ -519,12 +519,12 @@ enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                      to data being corrupted.
  */
-enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read_buffer(struct usart_module *const module,
 		const uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Timeout variables */
 	uint16_t i = 0;
@@ -545,7 +545,7 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(dev_inst,
+			if (usart_is_interrupt_flag_set(module,
 					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
 				break;
 			} else if (i == timeout) {
@@ -554,13 +554,13 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
 		}
 
 		/* Check if the character size exceeds 8 bit */
-		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+		if (module->char_size == USART_CHAR_SIZE_9BIT) {
 			/* Increment the 8 bit data pointer by two */
-			usart_read(dev_inst, (void*)rx_data);
+			usart_read(module, (void*)rx_data);
 			rx_data += 2;
 		} else {
 			/* Increment the 8 bit data pointer by one */
-			usart_read(dev_inst, (void*)(rx_data++));
+			usart_read(module, (void*)(rx_data++));
 		}
 	}
 

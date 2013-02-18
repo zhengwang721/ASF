@@ -45,20 +45,20 @@
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string);
+void write_string(struct usart_module *const mod, uint8_t *string);
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string)
+void write_string(struct usart_module *const mod, uint8_t *string)
 {
 	do {
-		while (usart_write(dev, *string) != STATUS_OK) {
+		while (usart_write(mod, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
 
 int main(void)
 {
-	struct usart_dev_inst usart_edbg;
-	struct usart_conf config_struct;
+	struct usart_module usart_edbg;
+	struct usart_config config_struct;
 	uint16_t temp;
 
 	uint8_t string[] = "Hello world!\n\r\0";

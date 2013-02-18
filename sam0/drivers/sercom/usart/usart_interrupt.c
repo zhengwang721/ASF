@@ -46,49 +46,49 @@
 /**
  * \internal      Asynchronous write of a buffer with a given length
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[in]     tx_data  Pointer to data to be transmitted
  * \param[in]     length   Length of data buffer
  *
  */
-void _usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
+void _usart_write_buffer(struct usart_module *const module,
 		uint8_t *tx_data, uint16_t length)
 {
 	/* Write parameters to the device instance */
-	dev_inst->remaining_tx_buffer_length = length;
-	dev_inst->tx_buffer_ptr = tx_data;
-	dev_inst->tx_status = STATUS_BUSY;
+	module->remaining_tx_buffer_length = length;
+	module->tx_buffer_ptr = tx_data;
+	module->tx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Enable the Data Register Empty  and  TX Complete Interrupt */
-	usart_module->INTENSET.reg = (USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY |
+	usart_hw->INTENSET.reg = (USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY |
 			USART_INTERRUPT_FLAG_TX_COMPLETE);
 }
 
 /**
  * \internal      Asynchronous read of a buffer with a given length
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[in]     rx_data  Pointer to data to be received
  * \param[in]     length   Length of data buffer
  *
  */
-void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
+void _usart_read_buffer(struct usart_module *const module,
 		uint8_t *rx_data, uint16_t length)
 {
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
-	dev_inst->remaining_rx_buffer_length = length;
-	dev_inst->rx_buffer_ptr = rx_data;
-	dev_inst->rx_status = STATUS_BUSY;
+	module->remaining_rx_buffer_length = length;
+	module->rx_buffer_ptr = rx_data;
+	module->rx_status = STATUS_BUSY;
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Enable the RX Complete Interrupt */
-	usart_module->INTENSET.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
+	usart_hw->INTENSET.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
 }
 
 /**
@@ -96,28 +96,28 @@ void _usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by \ref usart_async_register_callback,
+ * \note The callback must be enabled by \ref usart_register_callback,
  * in order for the interrupt handler to call it when the conditions for the
  * callback type is met.
  *
- * \param[in]     dev_inst      Pointer to USART software instance struct
+ * \param[in]     module      Pointer to USART software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
-		usart_async_callback_t callback_func,
+void usart_register_callback(struct usart_module *const module,
+		usart_callback_t callback_func,
 		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 	Assert(callback_func);
 
 	/* Register callback function */
-	dev_inst->callback[callback_type] = callback_func;
+	module->callback[callback_type] = callback_func;
 
 	/* Set the bit corresponding to the callback_type */
-	dev_inst->callback_reg_mask |= (1 << callback_type);
+	module->callback_reg_mask |= (1 << callback_type);
 }
 
 /**
@@ -125,23 +125,23 @@ void usart_async_register_callback(struct usart_dev_inst *const dev_inst,
  *
  * Unregisters a callback function which is implemented by the user.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  *
  */
-void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
+void usart_unregister_callback(struct usart_module *const module,
 		enum usart_callback callback_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 
 	/* Unregister callback function */
-	dev_inst->callback[callback_type] = NULL;
-	_sercom_instances[_sercom_get_module_irq_index(dev_inst)] = 0;
+	module->callback[callback_type] = NULL;
+	_sercom_instances[_sercom_get_module_irq_index(module)] = 0;
 
 	/* Clear the bit corresponding to the callback_type */
-	dev_inst->callback_reg_mask &= ~(1 << callback_type);
+	module->callback_reg_mask &= ~(1 << callback_type);
 }
 
 /**
@@ -151,7 +151,7 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  * a callback function will be called when the transmit is completed.
  *
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[in]     tx_data  Data to transfer
  *
  * \returns    Status of the operation
@@ -159,19 +159,19 @@ void usart_async_unregister_callback(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write_job(struct usart_module *const module,
 		const uint16_t tx_data)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->remaining_tx_buffer_length > 0) {
+	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Call internal write buffer function with length 1 */
-	_usart_async_write_buffer(dev_inst, (uint8_t *)&tx_data, 1);
+	_usart_write_buffer(module, (uint8_t *)&tx_data, 1);
 
 	return STATUS_OK;
 }
@@ -183,7 +183,7 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
  * pointer given. If registered and enabled, a callback will be called
  * when the receiving is completed.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[out]    rx_data  Pointer to where received data should
  *                         be put
  *
@@ -192,19 +192,19 @@ enum status_code usart_async_write(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read_job(struct usart_module *const module,
 		uint16_t *const rx_data)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->remaining_rx_buffer_length > 0) {
+	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Call internal read buffer function with length 1 */
-	_usart_async_read_buffer(dev_inst, (uint8_t *)rx_data, 1);
+	_usart_read_buffer(module, (uint8_t *)rx_data, 1);
 
 	return STATUS_OK;
 }
@@ -215,7 +215,7 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
  * Sets up the driver to write a given buffer over the USART. If registered and
  * enabled, a callback function will be called.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[in]     tx_data  Pointer do data buffer to transmit
  *
  * \returns    Status of the operation
@@ -223,22 +223,22 @@ enum status_code usart_async_read(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write_buffer_job(struct usart_module *const module,
 		uint8_t *tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Check if the USART transmitter is busy */
-	if (dev_inst->remaining_tx_buffer_length > 0) {
+	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Issue internal asynchronous write */
-	_usart_async_write_buffer(dev_inst, tx_data, length);
+	_usart_write_buffer(module, tx_data, length);
 
 	return STATUS_OK;
 }
@@ -249,7 +249,7 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
  * Sets up the driver to read from the USART to a given buffer. If registered
  * and enabled, a callback function will be called.
  *
- * \param[in]     dev_inst Pointer to USART software instance struct
+ * \param[in]     module Pointer to USART software instance struct
  * \param[out]    rx_data  Pointer to data buffer to receive
  * \param[in]     length   Data buffer length
  *
@@ -258,22 +258,22 @@ enum status_code usart_async_write_buffer(struct usart_dev_inst *const dev_inst,
  * \retval     STATUS_BUSY            If operation was not completed,
  *                                    due to the USART module being busy.
  */
-enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read_buffer_job(struct usart_module *const module,
 		uint8_t *rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Check if the USART receiver is busy */
-	if (dev_inst->remaining_rx_buffer_length > 0) {
+	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Issue internal asynchronous read */
-	_usart_async_read_buffer(dev_inst, rx_data, length);
+	_usart_read_buffer(module, rx_data, length);
 
 	return STATUS_OK;
 }
@@ -284,35 +284,35 @@ enum status_code usart_async_read_buffer(struct usart_dev_inst *const dev_inst,
  * Cancels the ongoing read/write operation modifying parameters in the
  * USART software struct.
  *
- * \param[in]     dev_inst          Pointer to USART software instance struct
+ * \param[in]     module          Pointer to USART software instance struct
  * \param[in]     transceiver_type  Transfer type to cancel
  */
-void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
+void usart_abort_job(struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	switch(transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Clear the interrupt flag in order to prevent the receive
 		 * complete callback to fire */
-		usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_RX_COMPLETE;
+		usart_hw->INTFLAG.reg |= USART_INTERRUPT_FLAG_RX_COMPLETE;
 
 		/* Clear the software reception buffer */
-		dev_inst->remaining_rx_buffer_length = 0;
+		module->remaining_rx_buffer_length = 0;
 
 	case USART_TRANSCEIVER_TX:
 		/* Clear the interrupt flag in order to prevent the receive
 		 * complete callback to fire */
-		usart_module->INTFLAG.reg |= USART_INTERRUPT_FLAG_TX_COMPLETE;
+		usart_hw->INTFLAG.reg |= USART_INTERRUPT_FLAG_TX_COMPLETE;
 
 		/* Clear the software reception buffer */
-		dev_inst->remaining_tx_buffer_length = 0;
+		module->remaining_tx_buffer_length = 0;
 	}
 }
 
@@ -322,7 +322,7 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  * Returns the error from a given ongoing or last asynchronous transfer operation.
  * Either from a read or write transfer.
  *
- * \param[in] dev_inst    Pointer to USART software instance struct
+ * \param[in] module    Pointer to USART software instance struct
  *
  * \return
  * \retval STATUS_OK                No error occurred during the last transfer
@@ -336,12 +336,12 @@ void usart_async_cancel_transfer(struct usart_dev_inst *const dev_inst,
  *                                  buffer overflow. Please check the configuration.
  * \retval STATUS_ERR_INVALID_ARG   An invalid transceiver enum given.
  */
-enum status_code usart_async_get_operation_status(
-		struct usart_dev_inst *const dev_inst,
+enum status_code usart_get_job_status(
+		struct usart_module *const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 
 	/* Variable for status code */
 	enum status_code status_code;
@@ -349,12 +349,12 @@ enum status_code usart_async_get_operation_status(
 	switch(transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Get status code */
-		status_code = dev_inst->rx_status;
+		status_code = module->rx_status;
 		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Get status code */
-		status_code = dev_inst->tx_status;
+		status_code = module->tx_status;
 		break;
 	default:
 		status_code = STATUS_ERR_INVALID_ARG;
@@ -377,11 +377,11 @@ enum status_code usart_async_get_operation_status(
  * \param[in]  instance  ID of the SERCOM instance calling the interrupt
  *                       handler.
  */
-void usart_async_handler(uint8_t instance)
+void _usart_interrupt_handler(uint8_t instance)
 {
 	/* Sanity check content from the look-up table */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Temporary variables */
 	uint16_t interrupt_status;
@@ -390,64 +390,64 @@ void usart_async_handler(uint8_t instance)
 
 
 	/* Get device instance from the look-up table */
-	struct usart_dev_inst *dev_inst
-		= (struct usart_dev_inst *)_sercom_instances[instance];
+	struct usart_module *module
+		= (struct usart_module *)_sercom_instances[instance];
 
 	/* Pointer to the hardware module instance */
-	SercomUsart *const usart_module
-		= &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw
+		= &(module->hw->USART);
 
 	/* Wait for the synchronization to complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Read and mask interrupt flag register */
-	interrupt_status = usart_module->INTFLAG.reg;
-	callback_status = dev_inst->callback_reg_mask
-			&dev_inst->callback_enable_mask;
+	interrupt_status = usart_hw->INTFLAG.reg;
+	callback_status = module->callback_reg_mask
+			&module->callback_enable_mask;
 
 	/* Check if a DATA READY interrupt has occurred,
 	 * and if there if there is more to transfer */
 	if ((interrupt_status & USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY) &&
-		dev_inst->remaining_tx_buffer_length) {
+		module->remaining_tx_buffer_length) {
 		/* Write current packet from transmission buffer
 		 * and increment buffer pointer */
-		if (dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
-			usart_module->DATA.reg |= *(dev_inst->tx_buffer_ptr)
+		if (module->char_size == USART_CHAR_SIZE_9BIT) {
+			usart_hw->DATA.reg |= *(module->tx_buffer_ptr)
 					& SERCOM_USART_DATA_MASK;
-			dev_inst->tx_buffer_ptr += 2;
+			module->tx_buffer_ptr += 2;
 
 		} else {
-			usart_module->DATA.reg |= (*(dev_inst->tx_buffer_ptr++)
+			usart_hw->DATA.reg |= (*(module->tx_buffer_ptr++)
 					& SERCOM_USART_DATA_MASK);
 		}
 
 		/* Check if it was the last transmission */
-		if (--(dev_inst->remaining_tx_buffer_length) == 0) {
+		if (--(module->remaining_tx_buffer_length) == 0) {
 			/* Disable the Data Register Empty Interrupt */
-			usart_module->INTENCLR.reg
+			usart_hw->INTENCLR.reg
 				= USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY;
 		}
 
 	/* Check if the Transmission Complete interrupt has occurred and
 	 * that the transmit buffer is empty */
 	} else if ((interrupt_status & USART_INTERRUPT_FLAG_TX_COMPLETE) &&
-			!dev_inst->remaining_tx_buffer_length){
+			!module->remaining_tx_buffer_length){
 
 		/* Disable TX Complete Interrupt, and set STATUS_OK */
-		usart_module->INTENCLR.reg = USART_INTERRUPT_FLAG_TX_COMPLETE;
-		dev_inst->tx_status = STATUS_OK;
+		usart_hw->INTENCLR.reg = USART_INTERRUPT_FLAG_TX_COMPLETE;
+		module->tx_status = STATUS_OK;
 
 		/* Run callback if registered and enabled */
 		if (callback_status & (1 << USART_CALLBACK_BUFFER_TRANSMITTED)) {
-			(*(dev_inst->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(dev_inst);
+			(*(module->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(module);
 		}
 
 	/* Check if the Receive Complete interrupt has occurred, and that
 	 * there's more data to receive */
 	} else if ((interrupt_status & USART_INTERRUPT_FLAG_RX_COMPLETE) &&
-			dev_inst->remaining_rx_buffer_length) {
+			module->remaining_rx_buffer_length) {
 		/* Read out the status code and mask away all but the 4 LSBs*/
-		error_code = (uint8_t)(usart_module->STATUS.reg & SERCOM_USART_STATUS_MASK);
+		error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
 		/* Check if an error has occurred during the receiving */
 		if (error_code) {
@@ -455,52 +455,52 @@ void usart_async_handler(uint8_t instance)
 			if (error_code & SERCOM_USART_STATUS_FERR) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->rx_status = STATUS_ERR_BAD_FORMAT;
-				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
+				module->rx_status = STATUS_ERR_BAD_FORMAT;
+				usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_FERR;
 
 			} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->rx_status = STATUS_ERR_OVERFLOW;
-				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
+				module->rx_status = STATUS_ERR_OVERFLOW;
+				usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_BUFOVF;
 
 			} else if (error_code & SERCOM_USART_STATUS_PERR) {
 				/* Store the error code and clearing
 				 * flag by writing 1 to it */
-				dev_inst->rx_status = STATUS_ERR_BAD_DATA;
-				usart_module->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
+				module->rx_status = STATUS_ERR_BAD_DATA;
+				usart_hw->STATUS.reg &= ~SERCOM_USART_STATUS_PERR;
 			}
 
 			/* Run callback if registered and enabled */
 			if (callback_status
 					& USART_CALLBACK_ERROR) {
-				(*(dev_inst->callback[USART_CALLBACK_ERROR]))(dev_inst);
+				(*(module->callback[USART_CALLBACK_ERROR]))(module);
 			}
 
 		} else {
 
 			/* Read current packet from DATA register,
 			 * increment buffer pointer and decrement buffer length */
-			if(dev_inst->char_size == USART_CHAR_SIZE_9BIT) {
+			if(module->char_size == USART_CHAR_SIZE_9BIT) {
 				/* Read out from DATA and increment 8bit ptr by two */
-				*(dev_inst->rx_buffer_ptr) = (usart_module->DATA.reg & SERCOM_USART_DATA_MASK);
-				dev_inst->tx_buffer_ptr += 2;
+				*(module->rx_buffer_ptr) = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
+				module->tx_buffer_ptr += 2;
 			} else {
 				/* Read out from DATA and increment 8bit ptr by one */
-				*(dev_inst->rx_buffer_ptr++) = (usart_module->DATA.reg & SERCOM_USART_DATA_MASK);
+				*(module->rx_buffer_ptr++) = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
 			}
 
 			/* Check if the last character have been received */
-			if(--(dev_inst->remaining_rx_buffer_length) == 0) {
+			if(--(module->remaining_rx_buffer_length) == 0) {
 				/* Disable RX Complete Interrupt,
 				 * and set STATUS_OK */
-				usart_module->INTENCLR.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
-				dev_inst->rx_status = STATUS_OK;
+				usart_hw->INTENCLR.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
+				module->rx_status = STATUS_OK;
 
 				/* Run callback if registered and enabled */
 				if (callback_status
 						& USART_CALLBACK_BUFFER_RECEIVED) {
-					(*(dev_inst->callback[USART_CALLBACK_BUFFER_RECEIVED]))(dev_inst);
+					(*(module->callback[USART_CALLBACK_BUFFER_RECEIVED]))(module);
 				}
 			}
 		}

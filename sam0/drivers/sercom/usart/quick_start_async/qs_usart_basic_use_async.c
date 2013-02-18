@@ -44,48 +44,48 @@
 #include <stdio.h>
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
-struct usart_dev_inst usart_edbg;
+struct usart_module usart_edbg;
 
 volatile uint8_t rx_buffer[5];
 uint8_t string[] = "hello there world!\n\r";
 
 volatile uint8_t buff[20];
 
-int _write(int fd, const void *buf, uint32_t nbyte)
+static int _write(int fd, const void *buf, uint32_t nbyte)
 {
 	usart_write_buffer(&usart_edbg, buf, nbyte);
 	return nbyte;
 }
 
-int _read(int file, char *ptr, int len) {
+static int _read(int file, char *ptr, int len) {
 	return 0;
 }
 
-void read_callback(const struct usart_dev_inst *const dev);
-void read_callback(const struct usart_dev_inst *const dev)
+void read_callback(const struct usart_module *const mod);
+void read_callback(const struct usart_module *const mod)
 {
-	usart_async_write_buffer(&usart_edbg, rx_buffer, sizeof(rx_buffer)-1);
+	usart_write_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer)-1);
 
 }
 
-void write_callback(const struct usart_dev_inst *const dev);
-void write_callback(const struct usart_dev_inst *const dev)
+void write_callback(const struct usart_module *const mod);
+void write_callback(const struct usart_module *const mod)
 {
 	static uint8_t cnt;
-	uint8_t len = sprintf(&buff[0], "CNT:%u\n\r", cnt);
+	uint8_t len = sprintf((char *)&buff[0], "CNT:%u\n\r", cnt);
 
 	if(cnt++ < 10) {
-		usart_async_write_buffer(&usart_edbg,buff, len);
+		usart_write_buffer_job(&usart_edbg,(uint8_t *)buff, len);
 	}
 }
 
 
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string);
-void write_string(struct usart_dev_inst *const dev, uint8_t *string)
+void write_string(struct usart_module *const mod, uint8_t *string);
+void write_string(struct usart_module *const mod, uint8_t *string)
 {
 	do {
-		while (usart_write(dev, *string) != STATUS_OK) {
+		while (usart_write(mod, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
@@ -93,10 +93,10 @@ void write_string(struct usart_dev_inst *const dev, uint8_t *string)
 void configure_callbacks(void);
 void configure_callbacks(void)
 {
-	usart_async_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_async_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
-	usart_async_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_async_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
+	usart_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
 
 	/* Enable interrupts for SERCOM instance. */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
@@ -104,7 +104,7 @@ void configure_callbacks(void)
 
 int main(void)
 {
-	struct usart_conf config_struct;
+	struct usart_config config_struct;
 	uint16_t temp;
 	volatile uint32_t delay;
 
@@ -139,10 +139,10 @@ int main(void)
 
 	for(delay=0; delay < 100000; delay++);
 
-	usart_async_write_buffer(&usart_edbg,string, sizeof(string));
+	usart_write_buffer_job(&usart_edbg,string, sizeof(string));
 
 	/* Echo back characters received */
 	while (1) {
-		usart_async_read_buffer(&usart_edbg, rx_buffer, sizeof(rx_buffer));
+		usart_read_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer));
 	}
 }
