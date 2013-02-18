@@ -272,12 +272,6 @@ int main(void)
 	NVIC_EnableIRQ(BOARD_TWI_IRQn);
 	twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_SR_SVACC);
 
-#if (SAM4S || SAM4E)
-	/* Reset PB4 and PB5 for JTAG */
-	REG_CCFG_SYSIO &= ~CCFG_SYSIO_SYSIO4;
-	REG_CCFG_SYSIO &= ~CCFG_SYSIO_SYSIO4;
-#endif
-
 	while (1) {
 	}
 }
