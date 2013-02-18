@@ -47,7 +47,6 @@
 struct usart_module usart_edbg;
 
 volatile uint8_t rx_buffer[5];
-uint8_t string[] = "hello there world!\n\r";
 
 volatile uint8_t buff[20];
 
@@ -108,6 +107,7 @@ int main(void)
 	uint16_t temp;
 	volatile uint32_t delay;
 
+	uint8_t string[] = "hello there world!\n\r";
 
 
 	/* Initialize system clocks */
