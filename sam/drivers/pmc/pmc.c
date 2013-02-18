@@ -409,7 +409,7 @@ void pmc_osc_disable_main_xtal(void)
 {
 	uint32_t mor = PMC->CKGR_MOR;
 	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
-	PMC->CKGR_MOR = mor;
+	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | mor;
 }
 
 /**
