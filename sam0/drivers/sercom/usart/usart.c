@@ -307,6 +307,9 @@ enum status_code usart_write_wait(struct usart_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_tx_buffer_length > 0) {
@@ -315,15 +318,11 @@ enum status_code usart_write_wait(struct usart_module *const module,
 
 #else
 	/* Check if USART is ready for new data */
-	if (!usart_is_interrupt_flag_set(module,
-			USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY)) {
+	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
 #endif
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
@@ -365,6 +364,9 @@ enum status_code usart_read_wait(struct usart_module *const module,
 	/* Error variable */
 	uint16_t error_code;
 
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
 #ifdef USART_ASYNC
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_rx_buffer_length > 0) {
@@ -373,15 +375,11 @@ enum status_code usart_read_wait(struct usart_module *const module,
 
 #else
 	/* Check if USART has new data */
-	if (!usart_is_interrupt_flag_set(module,
-			USART_INTERRUPT_FLAG_RX_COMPLETE)) {
+	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
 #endif
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
@@ -460,6 +458,9 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
@@ -468,8 +469,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(module,
-					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
+			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DREIF) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;
@@ -550,13 +550,15 @@ enum status_code usart_read_buffer_wait(struct usart_module *const module,
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
 	/* Blocks while buffer is being received */
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
 		for (i = 0; i < timeout; i++) {
-			if (usart_is_interrupt_flag_set(module,
-					USART_INTERRUPT_FLAG_RX_COMPLETE)) {
+			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXCIF)) {
 				break;
 			} else if (i == timeout) {
 				return STATUS_ERR_TIMEOUT;

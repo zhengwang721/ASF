@@ -196,20 +196,6 @@ enum usart_char_size {
 	USART_CHAR_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
-/**
- * \brief USART Interrupt Flags
- *
- * Interrupt flags for the USART module
- *
- */
-enum usart_interrupt_flag {
-	/** This flag is set when the hardware Data Buffer is Empty */
-	USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY = SERCOM_USART_INTFLAG_DREIF,
-	/** This flag is set when a single Transmission is Complete */
-	USART_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
-	/** This flag is set when a single Reception is Complete */
-	USART_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_USART_INTFLAG_RXCIF,
-};
 
 /**
  * \brief USART Transceiver Mode
@@ -556,41 +542,4 @@ static inline void usart_disable_transceiver(const struct usart_module
  * @}
  */
 
-/**
- * \name Interrupt flags
- * {@
- */
-
-static inline bool usart_is_interrupt_flag_set(
-		const struct usart_module *const module,
-		enum usart_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
-	return (usart_hw->INTFLAG.reg & interrupt_flag);
-}
-
-static inline void usart_clear_interrupt_flag(
-		const struct usart_module *const module,
-		enum usart_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
-	/* Clear requested status flag by writing a one to it */
-	usart_hw->INTFLAG.reg |= interrupt_flag;
-}
-
-/**
- * @}
- */
 #endif /* USART_H_INCLUDED */

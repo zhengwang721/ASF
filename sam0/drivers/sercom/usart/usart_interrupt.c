@@ -63,8 +63,8 @@ void _usart_write_buffer(struct usart_module *const module,
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Enable the Data Register Empty  and  TX Complete Interrupt */
-	usart_hw->INTENSET.reg = (USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY |
-			USART_INTERRUPT_FLAG_TX_COMPLETE);
+	usart_hw->INTENSET.reg = (SERCOM_USART_INTFLAG_DREIF |
+			SERCOM_USART_INTFLAG_TXCIF);
 }
 
 /**
@@ -88,7 +88,7 @@ void _usart_read_buffer(struct usart_module *const module,
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Enable the RX Complete Interrupt */
-	usart_hw->INTENSET.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
+	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXCIF;
 }
 
 /**
@@ -301,7 +301,7 @@ void usart_abort_job(struct usart_module *const module,
 	case USART_TRANSCEIVER_RX:
 		/* Clear the interrupt flag in order to prevent the receive
 		 * complete callback to fire */
-		usart_hw->INTFLAG.reg |= USART_INTERRUPT_FLAG_RX_COMPLETE;
+		usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_RXCIF;
 
 		/* Clear the software reception buffer */
 		module->remaining_rx_buffer_length = 0;
@@ -309,7 +309,7 @@ void usart_abort_job(struct usart_module *const module,
 	case USART_TRANSCEIVER_TX:
 		/* Clear the interrupt flag in order to prevent the receive
 		 * complete callback to fire */
-		usart_hw->INTFLAG.reg |= USART_INTERRUPT_FLAG_TX_COMPLETE;
+		usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_TXCIF;
 
 		/* Clear the software reception buffer */
 		module->remaining_tx_buffer_length = 0;
@@ -407,7 +407,7 @@ void _usart_interrupt_handler(uint8_t instance)
 
 	/* Check if a DATA READY interrupt has occurred,
 	 * and if there if there is more to transfer */
-	if ((interrupt_status & USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY) &&
+	if ((interrupt_status & SERCOM_USART_INTFLAG_DREIF) &&
 		module->remaining_tx_buffer_length) {
 		/* Write current packet from transmission buffer
 		 * and increment buffer pointer */
@@ -425,16 +425,16 @@ void _usart_interrupt_handler(uint8_t instance)
 		if (--(module->remaining_tx_buffer_length) == 0) {
 			/* Disable the Data Register Empty Interrupt */
 			usart_hw->INTENCLR.reg
-				= USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY;
+				= SERCOM_USART_INTFLAG_DREIF;
 		}
 
 	/* Check if the Transmission Complete interrupt has occurred and
 	 * that the transmit buffer is empty */
-	} else if ((interrupt_status & USART_INTERRUPT_FLAG_TX_COMPLETE) &&
+	} else if ((interrupt_status & SERCOM_USART_INTFLAG_TXCIF) &&
 			!module->remaining_tx_buffer_length){
 
 		/* Disable TX Complete Interrupt, and set STATUS_OK */
-		usart_hw->INTENCLR.reg = USART_INTERRUPT_FLAG_TX_COMPLETE;
+		usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_TXCIF;
 		module->tx_status = STATUS_OK;
 
 		/* Run callback if registered and enabled */
@@ -444,7 +444,7 @@ void _usart_interrupt_handler(uint8_t instance)
 
 	/* Check if the Receive Complete interrupt has occurred, and that
 	 * there's more data to receive */
-	} else if ((interrupt_status & USART_INTERRUPT_FLAG_RX_COMPLETE) &&
+	} else if ((interrupt_status & SERCOM_USART_INTFLAG_RXCIF) &&
 			module->remaining_rx_buffer_length) {
 		/* Read out the status code and mask away all but the 4 LSBs*/
 		error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
@@ -494,7 +494,7 @@ void _usart_interrupt_handler(uint8_t instance)
 			if(--(module->remaining_rx_buffer_length) == 0) {
 				/* Disable RX Complete Interrupt,
 				 * and set STATUS_OK */
-				usart_hw->INTENCLR.reg = USART_INTERRUPT_FLAG_RX_COMPLETE;
+				usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXCIF;
 				module->rx_status = STATUS_OK;
 
 				/* Run callback if registered and enabled */
