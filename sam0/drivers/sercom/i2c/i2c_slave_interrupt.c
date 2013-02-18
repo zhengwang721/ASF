@@ -470,7 +470,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PIF) {
 		/* Stop condition on bus - current transfer done */
-		//port_pin_toggle_output_level(PIN_PB05);
 		module->status = STATUS_OK;
 		module->buffer_length = 0;
 		module->buffer_remaining = 0;
@@ -494,7 +493,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 		if (module->buffer_remaining <= 0 ||
 				((module->buffer_length > module->buffer_remaining)
 				&& (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
-			//port_pin_toggle_output_level(PIN_PB00);
 
 			module->buffer_remaining = 0;
 			module->buffer_length = 0;
@@ -511,6 +509,7 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 					/* Read complete */
 					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
 				}
+
 			} else {
 				/* Release SCL and wait for new start condition */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
@@ -532,10 +531,8 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				_i2c_slave_read(module);
 			} else {
 				_i2c_slave_write(module);
-			//port_pin_toggle_output_level(PIN_PB04);
 			}
 		}
 	}
-	//port_pin_toggle_output_level(PIN_PA04);
 	system_interrupt_leave_critical_section();
 }
