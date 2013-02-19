@@ -58,6 +58,11 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
+/**
+  * \defgroup group_sif_rf4ce Serial Interface Module
+  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding Rf4control Api's
+  * @{
+  */
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,5 +82,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 #endif /* SERIAL_API_H */
-
+//! @}
 /* EOF */

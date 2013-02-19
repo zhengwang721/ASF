@@ -58,6 +58,11 @@
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
+ /**
+  * \defgroup group_api_parser_rf4ce API Parser Module
+  * API Parser for RF4Control acts as a interface for converting Nwk and Zrc Api's to appropriate command byte stream
+  * @{
+  */
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,5 +80,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 #endif /* SERIAL_API_H */
-
+//! @}
 /* EOF */
