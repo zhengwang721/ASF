@@ -42,7 +42,7 @@
  */
 
 /**
- * \page usart_master_basic_use_case Quick Start Guide for the USART module - Basic Use Case
+ * \page usart_callback Quick Start Guide for the USART module - Callback
  *
  * TODO
  *

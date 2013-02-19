@@ -1,40 +1,47 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.sercom.usart" caption=
-		"USART Driver">
-		<info type="description" value="summary">
-			Driver for the SAMD20 USART. Provides a unified
-			interface for the configuration and management of the
-			SERCOM USART interface.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="USART" />
-		</info>
+	<module type="meta" id="sam0.drivers.sercom.usart.common" caption="Common for USART polled and interrupt driven driver">
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="usart.h"/>
 		<build type="c-source" value="usart.c"/>
-		<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
-		<build type="doxygen-entry-point" value="sam0_usart_group"/>
-		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.port"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
-	<module type="driver" id="sam0.drivers.sercom.usart.async" caption=
-		"USART interrupt driven driver">
-		<info type="description" value="summary">
-			Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
-			Provides a unified interface for the configuration and use of
-			the SERCON USART INTERFACE.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="USART"/>
-		</info>
-		<device-support value="samd20"/>
-		<build type="header-file" subtype="api" value="usart_interrupt.h"/>
-		<build type="c-source" value="usart_interrupt.c"/>
-		<require idref="sam0.drivers.sercom.usart"/>
-		<build type="define" name="USART_ASYNC" value=""/>
-		<build type="doxygen-entry-point" value="sam0_usart_async_group"/>
-	</module>
+	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="USART driver" default="polled">
+		<module type="driver" id="sam0.drivers.sercom.usart#polled" caption=
+		"USART Driver">
+			<info type="description" value="summary">
+				Driver for the SAMD20 USART. Provides a unified
+				interface for the configuration and management of the
+				SERCOM USART interface.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="USART" />
+			</info>
+			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
+					<build type="doxygen-entry-point" value="sam0_usart_group"/>
+			<require idref="sam0.drivers.sercom.usart.common"/>
+			<device-support value="samd20"/>
+		</module>
+		<module type="driver" id="sam0.drivers.sercom.usart#interrupt" caption=
+			"USART interrupt driven driver">
+			<info type="description" value="summary">
+				Driver for the SAMD20 SERCOM in USART mode driven by interrupts.
+				Provides a unified interface for the configuration and use of
+				the SERCON USART INTERFACE.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="USART"/>
+			</info>
+			<build type="include-path" value="." />
+			<build type="header-file" subtype="api" value="usart_interrupt.h"/>
+			<build type="c-source" value="usart_interrupt.c"/>
+			<build type="define" name="USART_ASYNC" value=""/>
+			<build type="doxygen-entry-point" value="sam0_usart_group"/>
+			<build type="doxygen-entry-point" value="sam0_usart_async_group"/>
+			<require idref="sam0.drivers.sercom.usart.common"/>
+			<device-support value="samd20"/>
+		</module>
+	</select-by-config>
 </asf>
