@@ -9,16 +9,7 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 		</module>
 		
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#2"     caption="atmegarfa1 tal support enabled">
-            <info type="description" value="summary">
-            ATMegaRFA1 Transceiver Abstraction Layer
-            </info>
-            <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
-            <device-support value="atmega128rfa1"/>
-            <build type="doxygen-entry-point" value="group_tal_rfa1"/>
-		</module>
-
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#3"     caption="atmegarfr2 tal support enabled">
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal#2"     caption="atmegarfr2 tal support enabled">
             <info type="description" value="summary">
             ATMegaRFR2 Transceiver Abstraction Layer
             </info>
@@ -133,18 +124,6 @@
         <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
-    </module>
-
-    <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"     caption="atmegarfa1 tal support enabled">
-        <info type="description" value="summary">
-        ATMegaRFA1 Transceiver Abstraction Layer
-        </info>
-        <require idref="thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
-        <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
-        <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
-        <build type="doxygen-entry-point" value="group_tal_rfa1"/>
-        <device-support value="atmega128rfa1"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"     caption="atmegarfr2 tal support enabled">

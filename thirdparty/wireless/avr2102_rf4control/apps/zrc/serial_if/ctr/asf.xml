@@ -5,9 +5,7 @@
 		</info>
 		<info type="gui-flag" value="hidden"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if"/>
-		<device-support value="xmega"/>
+		<device-support-alias value="avr2102_rf4control_zrc_ctr_support"/>
 		<device-support value="sam4l"/>
-		<device-support value="uc3"/>
-		<device-support value="megarf"/>
 	</module>
 </asf>

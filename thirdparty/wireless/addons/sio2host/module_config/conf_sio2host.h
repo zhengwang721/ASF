@@ -43,14 +43,12 @@
 #ifndef CONF_SIO2HOST_H_INCLUDED
 #define CONF_SIO2HOST_H_INCLUDED
 
-/*! \name Configuration for USB Devices
- */
+//! \name Configuration for USB Devices
 //! @{
 //#include "stdio_usb.h"
 //! @}
 
-/*! \name Configuration for Xmega
- */
+//! \name Configuration for Xmega
 //! @{
 // #define USART_HOST                &USARTE0
 // #define USART_HOST_BAUDRATE       9600
@@ -62,8 +60,7 @@
 // #define USART_HOST_ISR_VECT       USARTE0_RXC_vect
 //! @}
 
-/*! \name Configuration for MegaRF
- */
+//! \name Configuration for MegaRF
 //! @{
 // #define USART_HOST                (&USARTA1)
 // #define USART_HOST_BAUDRATE       9600
@@ -75,8 +72,7 @@
 // #define USART_HOST_ISR_VECT       USART1_RX_vect
 //! @}
 
-/*! \name Configuration for UC3
- */
+//! \name Configuration for UC3
 //! @{
 // #define USART_HOST                &USARTE0
 // #define USART_HOST_BAUDRATE       9600
@@ -88,8 +84,7 @@
 // #define USART_HOST_ISR_VECT       USARTE0_RXC_vect
 //! @}
 
-/*! \name Configuration for SAM4L
- */
+//! \name Configuration for SAM4L
 //! @{
 // #define USART_HOST                 USART1
 // /** Baudrate setting */

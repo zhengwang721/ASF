@@ -25,9 +25,8 @@
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		<build type="define" name="CHANNEL_AGILITY" value =""/>
 	    <build type="define" name="PBP_REC" value =""/>
-		 <build type="define" name="RF4CE_PLATFORM" value =""/>
+		<build type="define" name="RF4CE_PLATFORM" value =""/>
 		
-
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>

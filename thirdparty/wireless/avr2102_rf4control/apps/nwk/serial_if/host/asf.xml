@@ -26,14 +26,10 @@
 		<build type="define" name="VENDOR_DATA" value =""/>
 		<build type="define" name="PBP_ORG" value =""/>
 		<build type="define" name="PBP_REC" value =""/>
-		
-		
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<require idref="common.services.delay"/>
         <require idref="common.services.ioport"/>
-		
-		
 		<build type="doxygen-entry-point" value="zrc_group"/>
 		<device-support value="sam4l"/>
 	</module>
