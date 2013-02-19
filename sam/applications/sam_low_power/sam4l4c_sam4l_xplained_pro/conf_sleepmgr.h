@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4S Xplained PRO board initialization
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,38 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_SLEEPMGR_INCLUDED
+#define CONF_SLEEPMGR_INCLUDED
 
-#include <board.h>
-#include <ioport.h>
-#include <wdt.h>
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/**
- * \addtogroup sam4s_xplained_pro_group
- * @{
- */
-
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	wdt_disable(WDT);
-#endif
-
-	// Must initialize IOPORT before setting up IO
-	ioport_init();
-
-	// Initialize LED0, turned off
-	ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-  if ( BUTTON_0_ACTIVE ) {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLDOWN);
-	}
-  else {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-  }
-}
-
-/** @} */
+#endif /* CONF_SLEEPMGR_INCLUDED */

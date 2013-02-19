@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4S Xplained PRO board initialization
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,38 +38,39 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#include <board.h>
-#include <ioport.h>
-#include <wdt.h>
+#define CONFIG_SYSCLK_INIT_CPUMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBAMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBBMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBCMASK  (0)
+#define CONFIG_SYSCLK_INIT_PBDMASK  (0)
+#define CONFIG_SYSCLK_INIT_HSBMASK  (0)
 
-/**
- * \addtogroup sam4s_xplained_pro_group
- * @{
- */
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCSYS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_OSC0
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL0
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_DFLL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC80M
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCFAST
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC1M
 
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	wdt_disable(WDT);
-#endif
+/* RCFAST frequency selection: 0 for 4MHz, 1 for 8MHz and 2 for 12MHz */
+//#define CONFIG_RCFAST_FRANGE    0
+//#define CONFIG_RCFAST_FRANGE    1
+#define CONFIG_RCFAST_FRANGE    2
 
-	// Must initialize IOPORT before setting up IO
-	ioport_init();
+// Enable HCache Feature
+#define CONFIG_HCACHE_ENABLE    1
 
-	// Initialize LED0, turned off
-	ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
+/* Fbus = Fsys / (2 ^ BUS_div) */
+#define CONFIG_SYSCLK_CPU_DIV         (0)
+#define CONFIG_SYSCLK_PBA_DIV         (0)
+#define CONFIG_SYSCLK_PBB_DIV         (0)
+#define CONFIG_SYSCLK_PBC_DIV         (2)
+#define CONFIG_SYSCLK_PBD_DIV         (2)
 
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-  if ( BUTTON_0_ACTIVE ) {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLDOWN);
-	}
-  else {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-  }
-}
-
-/** @} */
+#endif /* CONF_CLOCK_H_INCLUDED */

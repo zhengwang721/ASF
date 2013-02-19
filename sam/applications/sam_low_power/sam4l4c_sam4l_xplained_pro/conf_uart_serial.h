@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4L Xplained Pro board initialization
+ * \brief Serial USART service configuration.
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,66 +38,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#include <board.h>
-#include <ioport.h>
-#include <wdt_sam4l.h>
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/**
- * \addtogroup sam4l_xplained_pro_group
- * @{
- */
+/** USART Interface */
+#define CONF_UART              USART1
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE     115200
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY       US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/**
- * \brief Set peripheral mode for one single IOPORT pin.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param pin IOPORT pin to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
- */
-#define ioport_set_pin_peripheral_mode(pin, mode) \
-	do {\
-		ioport_set_pin_mode(pin, mode);\
-		ioport_disable_pin(pin);\
-	} while (0)
-
-void board_init(void)
-{
-
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	struct wdt_dev_inst wdt_inst;
-	wdt_init(&wdt_inst, WDT, NULL);
-	wdt_disable(&wdt_inst);
-#endif
-
-	// Initialize IOPORT
-	ioport_init();
-
-	// Initialize LED0, turned off
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_0_PIN, IOPORT_PIN_LEVEL_HIGH);
-
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-
-#ifdef  CONF_BOARD_EIC
-	// Set push button as external interrupt pin
-	ioport_set_pin_peripheral_mode(BUTTON_0_EIC_PIN,
-	BUTTON_0_EIC_PIN_MUX|IOPORT_MODE_PULLUP);
-#else
-	// Push button as input: already done, it's the default pin state
-#endif
-
-#if defined (CONF_BOARD_COM_PORT)
-	ioport_set_pin_peripheral_mode(COM_PORT_RX_PIN, COM_PORT_RX_MUX);
-	ioport_set_pin_peripheral_mode(COM_PORT_TX_PIN, COM_PORT_TX_MUX);
-#endif
-
-#ifdef CONF_BOARD_USART0
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX, EXT1_UART_RX_MUX);
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX, EXT1_UART_TX_MUX);
-#endif
-}
-
-/** @} */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

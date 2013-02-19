@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4S Xplained PRO board initialization
+ * \brief Serial USART service configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,38 +38,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#include <board.h>
-#include <ioport.h>
-#include <wdt.h>
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-/**
- * \addtogroup sam4s_xplained_pro_group
- * @{
- */
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
 
-void board_init(void)
-{
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	wdt_disable(WDT);
-#endif
+/* Configure UART pins PIO */
+#define CONF_UART_PIO PINS_UART1_PIO
 
-	// Must initialize IOPORT before setting up IO
-	ioport_init();
+/* Configure UART pins */
+#define CONF_PINS_UART PINS_UART1
 
-	// Initialize LED0, turned off
-	ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
-	ioport_set_pin_dir(LED_0_PIN, IOPORT_DIR_OUTPUT);
+/* Configure UART pins flags */
+#define CONF_PINS_UART_FLAGS PINS_UART1_FLAGS
 
-	// Initialize SW0
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-  if ( BUTTON_0_ACTIVE ) {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLDOWN);
-	}
-  else {
-		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-  }
-}
-
-/** @} */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
