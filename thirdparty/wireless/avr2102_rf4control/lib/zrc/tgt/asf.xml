@@ -6,7 +6,7 @@
             </info>
             <build type="library" subtype="user" value="at32uc3a3256s/iar/librf4ce-zrc-target.r82" toolchain="iarew32"/>
             <build type="library" subtype="user" value="at32uc3a3256s/gcc/librf4ce-zrc-target.a" toolchain="avr32gcc"/>
-            <build type="doxygen-entry-point" value="zrc_group"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.config" />
             <device-support value="at32uc3a3256s"/>
         </module>
@@ -16,7 +16,7 @@
             </info>
             <build type="library" subtype="user" value="atmega256rfr2/iar/librf4ce-zrc-target.r90" toolchain="iarew"/>
             <build type="library" subtype="user" value="atmega256rfr2/gcc/librf4ce-zrc-target.a" toolchain="avrgcc"/>
-            <build type="doxygen-entry-point" value="zrc_group"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.config" />
             <device-support value="atmega256rfr2"/>
         </module>
@@ -26,7 +26,7 @@
             </info>
             <build type="library" subtype="user" value="atxmega256a3bu/iar/librf4ce-zrc-target.r90" toolchain="iarew"/>
             <build type="library" subtype="user" value="atxmega256a3bu/gcc/librf4ce-zrc-target.a" toolchain="avrgcc"/>
-            <build type="doxygen-entry-point" value="zrc_group"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.config" />
             <device-support value="atxmega256a3bu"/>
         </module>
@@ -36,7 +36,7 @@
             </info>
             <build type="library" subtype="user" value="atxmega256a3u/iar/librf4ce-zrc-target.r90" toolchain="iarew"/>
             <build type="library" subtype="user" value="atxmega256a3u/gcc/librf4ce-zrc-target.a" toolchain="avrgcc"/>
-            <build type="doxygen-entry-point" value="zrc_group"/>
+            <build type="doxygen-entry-point" value="group_rf4control"/>
             <require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt.config" />
             <device-support value="atxmega256a3u"/>
         </module>
