@@ -229,11 +229,11 @@ static void uhd_sleep_mode(enum uhd_uotghs_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_BACKUP,    // UHD_STATE_OFF (not used)
-		SLEEPMGR_ACTIVE,    // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_WAIT,      // UHD_STATE_NO_VBUS
-		SLEEPMGR_WAIT,      // UHD_STATE_DISCONNECT
+		SLEEPMGR_WAIT,      // UHD_STATE_WAIT_ID_HOST
+		SLEEPMGR_SLEEP_WFI, // UHD_STATE_NO_VBUS
+		SLEEPMGR_SLEEP_WFI, // UHD_STATE_DISCONNECT
 		SLEEPMGR_WAIT,      // UHD_STATE_SUSPEND
-		SLEEPMGR_ACTIVE,    // UHD_STATE_IDLE
+		SLEEPMGR_SLEEP_WFI, // UHD_STATE_IDLE
 	};
 
 	static enum uhd_uotghs_state_enum uhd_state = UHD_STATE_OFF;
@@ -482,8 +482,8 @@ bool otg_dual_enable(void)
 # ifdef USB_ID_GPIO
 	// By default the ID pin is enabled
 	// The UOTGHS hardware must be enabled to provide ID pin interrupt
-	otg_unfreeze_clock();
 	otg_enable();
+	otg_unfreeze_clock();
 	otg_enable_id_interrupt();
 	otg_ack_id_transition();
 	otg_freeze_clock();
@@ -520,6 +520,7 @@ void otg_dual_disable(void)
 # ifdef USB_ID_GPIO
 	otg_disable_id_interrupt();
 # endif
+	otg_freeze_clock();
 	otg_disable();
 	otg_disable_pad();
 	sysclk_disable_usb();
@@ -568,6 +569,10 @@ void uhd_enable(void)
 	otg_enable_pad();
 	otg_enable();
 
+#ifndef USB_HOST_HS_SUPPORT
+	uhd_disable_high_speed_mode();
+#endif
+
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
 	uhd_ctrl_request_timeout = 0;
@@ -575,13 +580,8 @@ void uhd_enable(void)
 	uhd_resume_start = 0;
 	uhd_b_suspend_requested = false;
 
-	otg_unfreeze_clock();
-
-#ifndef USB_HOST_HS_SUPPORT
-	uhd_disable_high_speed_mode();
-#endif
-
 	// Check USB clock
+	otg_unfreeze_clock();
 	while (!Is_otg_clock_usable());
 
 	// Clear all interrupts that may have been set by a previous host mode
@@ -642,6 +642,10 @@ void uhd_disable(bool b_id_stop)
 
 #ifdef USB_ID_GPIO
 	if (!b_id_stop) {
+		// Freeze clock to switch mode
+		otg_freeze_clock();
+		otg_disable();
+		otg_initialized = false; // Need re-initialize
 		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 		return; // No need to disable host, it is done automatically by hardware
 	}
@@ -1179,7 +1183,7 @@ static void uhd_interrupt(void)
 	}
 
 	// Other errors
-	if (Is_uhd_errors_interrupt()) {
+	if (Is_uhd_errors_interrupt_enabled() && Is_uhd_errors_interrupt()) {
 		uhd_ack_errors_interrupt();
 		return;
 	}

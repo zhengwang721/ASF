@@ -123,6 +123,14 @@ void otg_dual_disable(void);
 //! @name UOTGHS OTG main management
 //! These macros allows to enable/disable pad and UOTGHS hardware
 //! @{
+  //! Reset USB macro
+#define otg_reset()                         \
+	do {                                    \
+		UOTGHS->UOTGHS_CTRL = 0;            \
+		while( UOTGHS->UOTGHS_SR & 0x3FFF) {\
+			UOTGHS->UOTGHS_SCR = 0xFFFFFFFF;\
+		}                                   \
+	} while (0)
   //! Enable USB macro
 #define otg_enable()                        (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
   //! Disable USB macro                     
@@ -159,6 +167,7 @@ void otg_dual_disable(void);
   //! Get the dual-role device state of the internal USB finite state machine of the UOTGHS controller
 #define otg_get_fsm_drd_state()             (Rd_bitfield(UOTGHS->UOTGHS_FSM, UOTGHS_FSM_DRDSTATE_Msk))
 #define Is_otg_a_suspend()                  (4==otg_get_fsm_drd_state())
+#define Is_otg_a_wait_vrise()               (1==otg_get_fsm_drd_state())
 //! @}
 
 //! @name UOTGHS OTG hardware protocol
