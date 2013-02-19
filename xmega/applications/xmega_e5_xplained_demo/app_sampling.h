@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Chip-specific system clock manager configuration
+ * \brief Task to manage the sensor sampling
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,42 +40,34 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
+#ifndef APP_SAMPLING_H_INCLUDED
+#define APP_SAMPLING_H_INCLUDED
 
-#define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_RC2MHZ
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32MHZ
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32KHZ
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_XOSC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
+/**
+ * \ingroup demo_xmegae5_xplained_group
+ * \defgroup sampling_task_group Sampling task
+ *
+ * The schedule and the ADC conversions are done only by interrupt
+ * (RTC and ADC) to guarantee a constant acquisition. The FIFO service
+ * is used to save value, thus the sampling task can read FIFO, send values
+ * through UART and display values without timing constraint.
+ * The implementation is available in app_sampling.c/.h files.
+ *
+ * @{
+ */
 
-/* Fbus = Fsys / (2 ^ BUS_div) */
-#define CONFIG_SYSCLK_PSADIV          SYSCLK_PSADIV_1
-#define CONFIG_SYSCLK_PSBCDIV         SYSCLK_PSBCDIV_1_1
+/**
+ * \brief Initialize ADC channels, RTC and start RTC alarm
+ */
+void app_sampling_init(void);
 
-//#define CONFIG_PLL0_SOURCE          PLL_SRC_XOSC
-//#define CONFIG_PLL0_SOURCE          PLL_SRC_RC2MHZ
-//#define CONFIG_PLL0_SOURCE          PLL_SRC_RC32MHZ
+/**
+ * \brief Task to manage the sensors sampling display and control
+ * The sampling task reads FIFO, send values through UART and display values.
+ * Also, it updates the sampling rate following the Quadrature Encoder states.
+ */
+void app_sampling_task(void);
 
-/* Fpll = (Fclk * PLL_mul) / PLL_div */
-//#define CONFIG_PLL0_MUL             (24000000UL / BOARD_XOSC_HZ)
-//#define CONFIG_PLL0_DIV             1
+/* ! @} */
 
-/* External oscillator frequency range */
-/** 0.4 to 2 MHz frequency range */
-//#define CONFIG_XOSC_RANGE XOSC_RANGE_04TO2
-/** 2 to 9 MHz frequency range */
-//#define CONFIG_XOSC_RANGE XOSC_RANGE_2TO9
-/** 9 to 12 MHz frequency range */
-//#define CONFIG_XOSC_RANGE XOSC_RANGE_9TO12
-/** 12 to 16 MHz frequency range */
-//#define CONFIG_XOSC_RANGE XOSC_RANGE_12TO16
-
-/* DFLL autocalibration */
-//#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
-//#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_XOSC
-
-/* Use to enable and select RTC clock source */
-//#define CONFIG_RTC_SOURCE           SYSCLK_RTCSRC_ULP
-
-#endif /* CONF_CLOCK_H_INCLUDED */
+#endif /* APP_SAMPLING_H_INCLUDED */
