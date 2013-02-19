@@ -45,9 +45,15 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
  
+
+ 
 #include <string.h>
 
-
+ /**
+  * \defgroup group_mac_serial_if Serial Interface Module
+  * Serial Interface Module acts as a interface for  converting stream of command bytes to corresponding MAC Api's
+  * @{
+  */
 
 /**
  * A UART state that expects a \ref SOT to be received as the next character.
@@ -98,3 +104,6 @@ void serial_interface_init(void);
  * @brief Function to handle the state machine serial data exchange.
  */
 void serial_data_handler(void);
+
+// @}
+//EOF
