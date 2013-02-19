@@ -3,7 +3,7 @@
  *
  * \brief USB OTG Driver for UOTGHS.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -158,6 +158,7 @@ void otg_dual_disable(void);
 
   //! Get the dual-role device state of the internal USB finite state machine of the UOTGHS controller
 #define otg_get_fsm_drd_state()             (Rd_bitfield(UOTGHS->UOTGHS_FSM, UOTGHS_FSM_DRDSTATE_Msk))
+#define Is_otg_a_suspend()                  (4==otg_get_fsm_drd_state())
 //! @}
 
 //! @name UOTGHS OTG hardware protocol

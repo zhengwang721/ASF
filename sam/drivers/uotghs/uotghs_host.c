@@ -427,7 +427,7 @@ ISR(UHD_USB_INT_FUN)
 	 * After wakeup clocks should be restored, before that ISR should not
 	 * be served.
 	 */
-	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+	if (!pmc_is_wakeup_clocks_restored() && !Is_otg_a_suspend()) {
 		cpu_irq_disable();
 		return;
 	}
