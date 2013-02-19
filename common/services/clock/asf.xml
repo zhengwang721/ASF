@@ -240,7 +240,7 @@
 			<build type="header-file" value="xmega/sysclk.h"/>
 			<build type="include-path" value="."/>
 			<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
-			<build type="module-config" subtype="path" value="xmega/module_config"/>
+			<build type="module-config" subtype="path" value="xmega/module_config_usb"/>
 			<build type="doxygen-entry-point" value="clk_group"/>
 			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
 			<device-support value="xmegaa1u"/>
