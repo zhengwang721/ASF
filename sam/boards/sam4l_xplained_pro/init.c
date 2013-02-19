@@ -42,10 +42,18 @@
 
 #include <board.h>
 #include <ioport.h>
+#include <wdt_sam4l.h>
 
 /**
  * \addtogroup sam4l_xplained_pro_group
  * @{
+ */
+
+/**
+ * \brief Set peripheral mode for one single IOPORT pin.
+ * It will configure port mode and disable pin mode (but enable peripheral).
+ * \param pin IOPORT pin to configure
+ * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
  */
 #define ioport_set_pin_peripheral_mode(pin, mode) \
 	do {\
@@ -55,14 +63,12 @@
 
 void board_init(void)
 {
-#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-	// Disable the watchdog using keyed write sequence
-	uint32_t wdt_ctrl_val = WDT->WDT_CTRL & ~WDT_CTRL_EN;
-	uint32_t wdt_ctrl_1 = wdt_ctrl_val | (0x55 << (3 * 8));
-	uint32_t wdt_ctrl_2 = wdt_ctrl_val | (0xAA << (3 * 8));
+	uint32_t pin;
 
-	WDT->WDT_CTRL = wdt_ctrl_1;
-	WDT->WDT_CTRL = wdt_ctrl_2;
+#ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+	struct wdt_dev_inst wdt_inst;
+	wdt_init(&wdt_inst, WDT, NULL);
+	wdt_disable(&wdt_inst);
 #endif
 
 	// Initialize IOPORT
