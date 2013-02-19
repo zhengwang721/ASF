@@ -1337,8 +1337,10 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define MEMCPY_ENDIAN memcpy_be
 
 #ifndef FREERTOS_USED
+#if (EXT_BOARD != SPB104)
 #ifndef BIG_ENDIAN
 #define BIG_ENDIAN
+#endif
 #endif
 #endif
 
