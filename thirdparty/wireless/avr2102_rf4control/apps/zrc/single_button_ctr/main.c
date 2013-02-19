@@ -495,10 +495,6 @@ static void app_task(void)
                         node_status = TRANSMITTING;
                     }
                 }
-                else //(button == BUTTON_OFF)
-                {
-				   SLEEP_MODE_HANDLER();
-                }
             }
             break;
 
