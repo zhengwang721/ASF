@@ -148,7 +148,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
 #elif (SAM4SD16 || SAM4SD32)
-	uint8_t uc_gpnvm2;
+	uint32_t uc_gpnvm2;
 	uc_gpnvm2 = flash_is_gpnvm_set(2);
 	if (ul_addr >= IFLASH1_ADDR) {
 		if(uc_gpnvm2 == FLASH_RC_YES) {
@@ -860,6 +860,7 @@ uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm)
  *
  * \retval 1 If the given GPNVM bit is currently set.
  * \retval 0 If the given GPNVM bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 {
@@ -896,6 +897,7 @@ uint32_t flash_enable_security_bit(void)
  *
  * \retval 1 If the security bit is currently set.
  * \retval 0 If the security bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_security_bit_enabled(void)
 {
