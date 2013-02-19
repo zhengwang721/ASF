@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,7 +72,7 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 			ui_disable_asynchronous_interrupt();
 
 			/* Wakeup host and device */
-			uhc_resume();
+			pmc_wait_wakeup_clocks_restore(uhc_resume);
 		}
 	}
 }
