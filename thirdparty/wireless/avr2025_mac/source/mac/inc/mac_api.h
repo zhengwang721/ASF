@@ -158,9 +158,9 @@
 
 
 /* === Types ================================================================ */
-#ifndef BIG_ENDIAN
+#ifndef UC3
 COMPILER_PACK_SET(1)
-#endif /* BIG_ENDIAN */
+#endif /* UC3 */
 /**
  * MAC Address type
  */
@@ -461,9 +461,9 @@ typedef struct mac_sec_pib_tag
 
 #endif /* if !defined(__DOXYGEN___NO_MAC) */
 
-#ifndef BIG_ENDIAN
+#ifndef UC3
 COMPILER_PACK_RESET()
-#endif /* BIG_ENDIAN */
+#endif /* UC3 */
 //! @}
 /* === Macros =============================================================== */
 
