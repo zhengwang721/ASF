@@ -66,16 +66,6 @@ static void write_callback(const struct usart_module *const mod)
 	}
 }
 
-
-
-static void write_string(struct usart_module *const mod, uint8_t *string)
-{
-	do {
-		while (usart_write_wait(mod, *string) != STATUS_OK) {
-		}
-	} while (*(++string) != 0);
-}
-
 static void configure_callbacks(void)
 {
 	usart_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
