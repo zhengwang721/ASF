@@ -63,7 +63,6 @@
 
 void board_init(void)
 {
-	uint32_t pin;
 
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 	struct wdt_dev_inst wdt_inst;
