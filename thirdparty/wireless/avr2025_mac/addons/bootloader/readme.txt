@@ -73,6 +73,7 @@ Steps to use this bootloader:
 6. Browse and select the .srec file of application which has to be flashed in NCP.
 7. Before the user clicks upload, reset button in NCP board should be pressed. When the user clicks upload, 
    he will be prompted as "please restart the device".Reset button can be released at this time and the upload will start.
-8. Wait till the upload gets completed.   
+8. Wait till the upload gets completed.  
+9. After this completion, flash the desired application in the host board. For example, choose "thirdparty\wireless\avr2025_mac\apps\mac\beacon\coord\host" for operating it as beacon coordinator host.
 
 		 
