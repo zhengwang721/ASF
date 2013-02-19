@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-XPLAINED Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -366,9 +366,9 @@
 #define PIN_USART0_RTS_IDX        (PIO_PA7_IDX)
 #define PIN_USART0_RTS_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 /** USART0 pin SCK */
-#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT}
 #define PIN_USART0_SCK_IDX        (PIO_PA2_IDX)
-#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** USART1 pin RX */
 #define PIN_USART1_RXD    {PIO_PA21A_RXD1, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
