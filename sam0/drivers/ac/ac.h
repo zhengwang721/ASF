@@ -465,7 +465,7 @@ struct ac_config {
  *  Configuration structure for a Comparator channel, to configure the input and
  *  output settings of the comparator.
  */
-struct ac_chan_conf {
+struct ac_chan_config {
 	/** Sampling mode of the comparator channel. */
 	enum ac_chan_sample_mode sample_mode;
 	/** Filtering mode for the comparator output, when the comparator is used
@@ -741,7 +741,7 @@ static inline void ac_disable_events(
  *                       default values
  */
 static inline void ac_chan_get_config_defaults(
-		struct ac_chan_conf *const config)
+		struct ac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -759,7 +759,7 @@ static inline void ac_chan_get_config_defaults(
 enum status_code ac_chan_set_config(
 		struct ac_module *const module_inst,
 		const enum ac_chan_channel channel,
-		struct ac_chan_conf *const config);
+		struct ac_chan_config *const config);
 
 /**
  * \brief Enables an Analog Comparator channel that was previously configured.

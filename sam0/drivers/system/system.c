@@ -44,6 +44,28 @@
 #include <system.h>
 
 /**
+ * \internal
+ * Dummy initialization function, used as a weak alias target for the various
+ * init functions called by \ref system_init().
+ */
+void _system_dummy_init(void);
+void _system_dummy_init(void)
+{
+	return;
+}
+
+#ifdef __GNUC__
+void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+#elif __ICCARM__
+void system_clock_init(void);
+void system_board_init(void);
+#  pragma weak system_clock_init=_system_dummy_init
+#  pragma weak system_board_init=_system_dummy_init
+#endif
+
+
+/**
  * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
  * attempted to a memory address.
  */
@@ -58,11 +80,13 @@ void HardFault_Handler(void)
 /**
  * \brief Initialize system
  *
- * This function will call the initialization functions for the system namespace
- * in a single function. The functions are weak functions, so if one of the
- * functions are not provided by the ASF project it will just run a no operation
- * function.
+ * This function will call the various initialization functions within the
+ * system namespace. If a given optional system module is not available, the
+ * associated call will effectively be a NOP (No Operation).
  *
+ * Currently the following initialization functions are supported:
+ *  - System clock initialization (via the SYSTEM CLOCK sub-module)
+ *  - Board hardware initialization (via the Board module)
  */
 void system_init(void)
 {

@@ -1,8 +1,9 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.services.eeprom_emulator" caption="EEPROM Emulator Service">
 		<info type="description" value="summary">
-			This EEPROM Emulator service for SAM0D provides an
-			EEPROM-like safe non-volatile data storage in FLASH memory
+			EEPROM Emulator service for SAMD20, providing a EEPROM-like safe
+			non-volatile data storage in FLASH memory for user application
+			configuration data.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory" />
@@ -11,7 +12,7 @@
 		<build type="header-file" subtype="api" value="eeprom.h"/>
 		<build type="c-source" value="eeprom.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_emulator_basic.h"/>
-		<build type="doxygen-entry-point" value="sam0_eeprom_emulator_group"/> 
+		<build type="doxygen-entry-point" value="asfdoc_samd20_eeprom_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.nvm"/>

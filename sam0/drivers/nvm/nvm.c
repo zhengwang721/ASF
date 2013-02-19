@@ -67,9 +67,9 @@ struct _nvm_module {
 static struct _nvm_module _nvm_dev;
 
 /**
- * \internal Pointer to the NVM MEMORY region
+ * \internal Pointer to the NVM MEMORY region start address
  */
-#define NVM_MEMORY ((uint8_t *)0x00000000)
+#define NVM_MEMORY ((uint8_t *)FLASH_ADDR)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.

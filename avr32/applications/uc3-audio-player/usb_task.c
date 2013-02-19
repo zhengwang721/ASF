@@ -21,7 +21,7 @@
  *   - See the conf_usb.h file for more details about the configuration of
  *     this module.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -386,6 +386,8 @@ ISR(usb_general_interrupt, AVR32_USBB_IRQ_GROUP, USB_INT_LEVEL)
   portBASE_TYPE task_woken = pdFALSE;
 #endif
   uint8_t i;
+  /* avoid Cppcheck Warning */
+  UNUSED(i);
 
 // ---------- DEVICE/HOST events management ------------------------------------
 #if USB_DEVICE_FEATURE == true && USB_HOST_FEATURE == true

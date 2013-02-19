@@ -44,7 +44,9 @@
 #define SYSTEM_H_INCLUDED
 
 #include <compiler.h>
-#include "clock.h"
+#include <clock.h>
+#include <gclk.h>
+#include <pinmux.h>
 
 /**
  * \defgroup asfdoc_samd20_system_group SAMD20 System Driver (SYSTEM)
@@ -56,8 +58,8 @@
  *
  * The following peripherals are used by this module:
  *
- * - SYSCTRL (System Control) for Clock control
- * - PM (Power Manager) for Reset Cause determination, Peripheral Bus Control and Sleep
+ * - SYSCTRL (System Control)
+ * - PM (Power Manager)
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_samd20_system_prerequisites
@@ -78,15 +80,34 @@
  * The System driver provides a collection of interfaces between the user
  * application logic, and the core device functionality (such as clocks, reset
  * cause determination, etc.) that is required for all applications. It contains
- * a number of sub-modules that control one specific aspect of the device.
+ * a number of sub-modules that control one specific aspect of the device:
  *
- * \section asfdoc_samd20_system_module_reset_cause System Reset Cause
- * In some application there might be a need to perform a different program
+ * - System Core (this module)
+ * - \ref asfdoc_samd20_system_clock_group "System Clock Control" (sub-module)
+ * - \ref asfdoc_samd20_system_interrupt_group "System Interrupt Control" (sub-module)
+ * - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Control" (sub-module)
+ *
+ *
+ * \subsection asfdoc_samd20_system_module_overview_vref Voltage References
+ * The various analog modules within the SAMD20 devices (such as AC, ADC and
+ * DAC) require a voltage reference to be configured to act as a reference point
+ * for comparisons and conversions.
+ *
+ * The SAMD20 devices contain multiple references, including an internal
+ * temperature sensor, and a fixed band-gap voltage source. When enabled, the
+ * associated voltage reference can be selected within the desired peripheral
+ * where applicable.
+ *
+ * \subsection asfdoc_samd20_system_module_overview_reset_cause System Reset Cause
+ * In some application there may be a need to execute a different program
  * flow based on how the device was reset. For example, if the cause of reset
  * was the Watchdog timer (WDT), this might indicate an error in the application
  * and a form of error handling or error logging might be needed.
  *
- * \section asfdoc_samd20_system_module_sleep_mode Sleep Modes
+ * For this reason, an API is provided to retrieve the cause of the last system
+ * reset, so that appropriate action can be taken.
+ *
+ * \subsection asfdoc_samd20_system_module_overview_sleep_mode Sleep Modes
  * The SAMD20 devices have several sleep modes, where the sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
  * device enters a low power sleep mode. The table below lists the clock
@@ -158,10 +179,21 @@
  * 	</tr>
  * </table>
  *
+ * To enter device sleep, one of the available sleep modes must be set, and the
+ * function to enter sleep called. The device will automatically wake up in
+ * response to an interrupt being generated or other device event.
+ *
+ * Some peripheral clocks will remain enabled during sleep, depending on their
+ * configuration; if desired, modules can remain clocked during sleep to allow
+ * them to continue to operated while other parts of the system are powered down
+ * to save power.
+ *
  *
  * \section asfdoc_samd20_system_special_considerations Special Considerations
  *
- * TODO
+ * Most of the functions in this driver have device specific restrictions and
+ * caveats; refer to your device datasheet.
+ *
  *
  * \section asfdoc_samd20_system_extra_info Extra Information for SYSTEM
  *
@@ -175,28 +207,12 @@
  * \section asfdoc_samd20_system_examples Examples
  *
  * The following Quick Start guides and application examples are available for this driver:
- * - \ref asfdoc_samd20_system_basic_use_case
+ * - TODO
  *
  *
  * \section asfdoc_samd20_system_api_overview API Overview
-
+ * @{
  */
-
-#if !defined(__DOXYGEN__)
-/* Weak init functions used in system_init */
-static inline void system_dummy_board_init(void)
-{
-	return;
-}
-
-#  ifdef __GNUC__
-void system_board_init ( void ) WEAK __attribute__((alias("system_dummy_board_init")));
-#  endif
-#  ifdef __ICCARM__
-static inline void system_board_init(void);
-#    pragma weak system_board_init=system_dummy_board_init
-#  endif
-#endif
 
 /**
  * \brief Voltage references within the device.
@@ -205,9 +221,9 @@ static inline void system_board_init(void);
  * device.
  */
 enum system_voltage_reference {
-	/** Temperature sensor voltage reference */
+	/** Temperature sensor voltage reference. */
 	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
-	/** Bandgap voltage reference */
+	/** Bandgap voltage reference. */
 	SYSTEM_VOLTAGE_REFERENCE_BANDGAP,
 };
 
@@ -215,18 +231,18 @@ enum system_voltage_reference {
  * \brief Device sleep modes.
  *
  * List of available sleep modes in the device. A table of clocks available in
- * different sleep mode can be found in \ref asfdoc_samd20_system_module_sleep_mode.
+ * different sleep modes can be found in \ref asfdoc_samd20_system_module_sleep_mode.
  */
 enum system_sleepmode {
-	/** IDLE 0 */
+	/** IDLE 0 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_0,
-	/** IDLE 1 */
+	/** IDLE 1 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_1,
-	/** IDLE 2 */
+	/** IDLE 2 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_2,
-	/** IDLE 3 */
+	/** IDLE 3 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_3,
-	/** Standby */
+	/** Standby sleep mode. */
 	SYSTEM_SLEEPMODE_STANDBY,
 };
 
@@ -236,17 +252,23 @@ enum system_sleepmode {
  * List of possible reset causes of the system.
  */
 enum system_reset_cause {
-	/** The system was reset by the watchdog timer. */
+	/** The system was last reset by the watchdog timer. */
 	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
-	/** The system was reset because the external reset line was pulled low. */
+	/** The system was last reset because the external reset line was pulled low. */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = PM_RCAUSE_EXT,
-	/** The system was reset by the BOD33. */
+	/** The system was last reset by the BOD33. */
 	SYSTEM_RESET_CAUSE_BOD33          = PM_RCAUSE_BOD33,
-	/** The system was reset by the BOD12. */
+	/** The system was last reset by the BOD12. */
 	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
-	/** The system was reset by the POR (Power on reset). */
+	/** The system was last reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
 };
+
+
+/**
+ * \name Voltage references
+ * @{
+ */
 
 /**
  * \brief Enable the selected voltage reference
@@ -255,7 +277,7 @@ enum system_reset_cause {
  * reference available on a pin as well as an input source to the analog
  * peripherals.
  *
- * \param[in] vref Voltage reference to enable
+ * \param[in] vref  Voltage reference to enable
  */
 static inline void system_vref_enable(
 		const enum system_voltage_reference vref)
@@ -278,7 +300,7 @@ static inline void system_vref_enable(
  *
  * This function will disable the selected voltage reference
  *
- * \param[in] vref Voltage reference to disable
+ * \param[in] vref  Voltage reference to disable
  */
 static inline void system_vref_disable(
 		const enum system_voltage_reference vref)
@@ -297,6 +319,11 @@ static inline void system_vref_disable(
 }
 
 /**
+ * @}
+ */
+
+
+/**
  * \name Device sleep
  * @{
  */
@@ -304,39 +331,35 @@ static inline void system_vref_disable(
 /**
  * \brief Set the sleep mode of the device
  *
- * This function will set the sleep mode of the device. The possible sleep modes
- * are:
- *
- * - SYSTEM_SLEEPMODE_IDLE_0
- * - SYSTEM_SLEEPMODE_IDLE_1
- * - SYSTEM_SLEEPMODE_IDLE_2
- * - SYSTEM_SLEEPMODE_IDLE_3
- * - SYSTEM_SLEEPMODE_STANDBY
+ * This function will set the sleep mode of the device; the configured sleep
+ * mode will be entered upon the next call of the \ref system_sleep()
+ * function.
  *
  * For an overview of what are being disabled in sleep for the different sleep
- * modes, see \ref system_sleepmode documentation
+ * modes, see \ref asfdoc_samd20_system_module_sleep_mode.
  *
- * \param[in] sleepmode Sleepmode to set
+ * \param[in] sleep_mode  Sleep mode to configure for the next sleep operation
  *
- * \retval STATUS_OK Operation performed successfully
- * \retval STATUS_ERR_INVALID_ARG The supplied sleep mode is not available
+ * \retval STATUS_OK               Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG  The requested sleep mode was invalid or not
+ *                                 available
  */
 static inline enum status_code system_set_sleepmode(
-	const enum system_sleepmode sleepmode)
+	const enum system_sleepmode sleep_mode)
 {
-	switch (sleepmode) {
+	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
 		case SYSTEM_SLEEPMODE_IDLE_2:
 		case SYSTEM_SLEEPMODE_IDLE_3:
-			//TODO: is the sleepdeep bit in the CPU ?
-			//CPU.SCR &= ~SCR_SLEEPDEEP_bm;
-			PM->SLEEP.reg = sleepmode;
+			SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+			PM->SLEEP.reg = sleep_mode;
 			break;
+
 		case SYSTEM_SLEEPMODE_STANDBY:
-			/* TODO: Find core register for this */
-			//CPU.SCR |= SCR_SLEEPDEEP_bm;
+			SCB->SCR |=  SCB_SCR_SLEEPDEEP_Msk;
 			break;
+
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
@@ -360,6 +383,7 @@ static inline void system_sleep(void)
  * @}
  */
 
+
 /**
  * \name Reset cause
  * @{
@@ -381,12 +405,18 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * @}
  */
 
+
 /**
  * \name System initialization
  * @{
  */
 
 void system_init(void);
+
+/**
+ * @}
+ */
+
 
 /**
  * @}
@@ -450,7 +480,7 @@ void system_init(void);
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_system_basic_use_case
+ *  - TODO
  */
 
 #endif /* SYSTEM_H_INCLUDED */

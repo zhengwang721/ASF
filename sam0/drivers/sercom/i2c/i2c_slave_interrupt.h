@@ -46,7 +46,7 @@
 
 #include "i2c_common.h"
 #include <sercom.h>
-#include <sercom_interrupts.h>
+#include <sercom_interrupt.h>
 #include <system_interrupt.h>
 #include <pinmux.h>
 
@@ -146,19 +146,6 @@ enum i2c_slave_sda_hold_time {
 	I2C_SLAVE_ADDRESS_MODE_RANGE = SERCOM_I2CS_CTRLB_AMODE(2),
  };
 
- /** \brief Interrupt flags.
- *
- * Flags used when reading or setting interrupt flags.
-*/
-enum i2c_slave_interrupt_flag {
-	/** Interrupt flag for stop condition */
-	I2C_SLAVE_INTERRUPT_STOP = 0,
-	/** Interrupt flag for address match */
-	I2C_SLAVE_INTERRUPT_ADDRESS  = 1,
-	/** Interrupt flag for data */
-	I2C_SLAVE_INTERRUPT_DATA  = 1,
-};
-
  /**
  * \brief SERCOM I2C Slave driver hardware instance
  *
@@ -178,11 +165,13 @@ struct i2c_slave_module {
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
 	volatile uint8_t enabled_callback;
+	/** The total number of bytes to transfer. */
+	volatile uint16_t buffer_length;
 	/** Counter used for bytes left to send in write and to count number of
 	 * obtained bytes in read. */
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
-	volatile uint8_t *buffer_ptr;
+	volatile uint8_t *buffer;
 	/** Save direction of async request. 1 = read, 0 = write. */
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
@@ -248,6 +237,33 @@ static void _i2c_slave_wait_for_sync(
 }
 #endif
 
+
+/**
+ * \brief Returns the synchronization status of the module.
+ *
+ * Returns the synchronization status of the module.
+ *
+ * \param[out] module Pointer to device instance structure.
+ *
+ * \return       Status of the synchronization
+ * \retval true  Module is busy synchronizing
+ * \retval false Module is not synchronizing
+ */
+static inline bool i2c_slave_is_syncing (const struct i2c_slave_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 /**
  * \brief Get the I2C slave default configurations.
  *
@@ -309,6 +325,9 @@ static inline void i2c_slave_enable(
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTENSET_PIEN |
 			SERCOM_I2CS_INTENSET_AIEN | SERCOM_I2CS_INTENSET_DIEN;
 
+	/* Enable Global interrupt for module */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(module);
 
@@ -341,6 +360,9 @@ static inline void i2c_slave_disable(
 	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PIF | SERCOM_I2CS_INTFLAG_AIF |
 			SERCOM_I2CS_INTFLAG_DIF;
 
+	/* Enable Global interrupt for module */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
+
 	/* Wait for module to sync. */
 	_i2c_slave_wait_for_sync(module);
 
@@ -359,7 +381,7 @@ void i2c_slave_disable_nack_on_address(struct i2c_slave_module
  * @{
  */
 #if !defined(__DOXYGEN__)
-void _i2c_slave_callback_handler(uint8_t instance);
+void _i2c_slave_interrupt_handler(uint8_t instance);
 #endif
 
 void i2c_slave_register_callback(
@@ -411,29 +433,27 @@ static inline void i2c_slave_disable_callback(
 	/* Mark callback as enabled. */
 	module->enabled_callback &= ~(1 << callback_type);
 }
-
 /** @} */
 
 /**
 * \name Read and Write, Asynchronously
 * @{
 */
-	//TODO: typedef i2cpack?
 
 enum status_code i2c_slave_read_packet_job(
 		struct i2c_slave_module *const module,
-		i2c_packet_t *const packet);
+		struct i2c_packet *const packet);
 
 enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
-		i2c_packet_t *const packet);
+		struct i2c_packet *const packet);
 
 /**
  * \brief Cancel the currently running operation.
  *
  * This will terminate the running transfer operation.
  *
- * \param  module Pointer to device instance structure.
+ * \param[in,out] module Pointer to device instance structure.
  */
 static inline void i2c_slave_abort_job(
 		struct i2c_slave_module *const module)
@@ -444,6 +464,7 @@ static inline void i2c_slave_abort_job(
 
 	/* Set buffer to 0. */
 	module->buffer_remaining = 0;
+	module->buffer_length = 0;
 }
 
 /**
@@ -454,16 +475,16 @@ static inline void i2c_slave_abort_job(
  * detected on the bus.
  * The status will be cleared on next operation.
  *
- * \param  module Pointer to device instance structure
+ * \param[in,out] module Pointer to device instance structure
  *
- * \return                     Last status code from transfer operation
- * \retval STATUS_OK           No error has occurred
- * \retval STATUS_BUSY         Transfer is in progress
- * \retval STATUS_ERR_BAD_DATA Master sent a NACK as response to last sent data
- * \retval STATUS_ERR_IO       A collision, timeout or buserror happened in the
- *                             last transfer
- * \retval STATUS_ERR_TIMEOUT  If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW Data from master overflows receive buffer
+ * \return Last status code from transfer operation
+ * \retval STATUS_OK            No error has occurred
+ * \retval STATUS_BUSY          Transfer is in progress
+ * \retval STATUS_ERR_BAD_DATA  Master sent a NACK as response to last sent data
+ * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in the
+ *                              last transfer
+ * \retval STATUS_ERR_TIMEOUT   If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW  Data from master overflows receive buffer
  */
 static inline enum status_code i2c_slave_get_job_status(
 		struct i2c_slave_module *const module)

@@ -61,8 +61,8 @@ extern struct _extint_module _extint_dev;
  *       application and the NMI flags manually cleared via
  *       \ref extint_nmi_clear_detected().
  *
- * \param callback  Pointer to the callback function to register
- * \param type      Type of callback function to register
+ * \param[in] callback  Pointer to the callback function to register
+ * \param[in] type      Type of callback function to register
  *
  * \return Status of the registration operation.
  * \retval STATUS_OK               The callback was registered successfully.
@@ -99,8 +99,8 @@ enum status_code extint_register_callback(
  * Unregisters an asynchronous callback with the EXTINT driver, removing it
  * from the internal callback registration table.
  *
- * \param callback  Pointer to the callback function to unregister
- * \param type      Type of callback function to unregister
+ * \param[in] callback  Pointer to the callback function to unregister
+ * \param[in] type      Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
  * \retval STATUS_OK               The callback was Unregistered successfully.
@@ -137,8 +137,8 @@ enum status_code extint_unregister_callback(
  * and type. This must be called before an external interrupt channel will
  * generate callback events.
  *
- * \param channel  Logical channel to enable callback generations for
- * \param type     Type of callback function callbacks to enable
+ * \param[in] channel  Logical channel to enable callback generations for
+ * \param[in] type     Type of callback function callbacks to enable
  *
  * \return Status of the callback enable operation.
  * \retval STATUS_OK               The callbacks was enabled successfully.
@@ -167,8 +167,8 @@ enum status_code extint_chan_enable_callback(
  * Disables asynchronous callbacks for a given logical external interrupt
  * channel and type.
  *
- * \param channel  Logical channel to disable callback generations for
- * \param type     Type of callback function callbacks to disable
+ * \param[in] channel  Logical channel to disable callback generations for
+ * \param[in] type     Type of callback function callbacks to disable
  *
  * \return Status of the callback disable operation.
  * \retval STATUS_OK               The callbacks was disabled successfully.

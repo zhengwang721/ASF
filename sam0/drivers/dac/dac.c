@@ -55,7 +55,7 @@
  */
 static void _dac_set_config(
 		struct dac_module *const module_inst,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -110,7 +110,7 @@ static void _dac_set_config(
 void dac_init(
 		struct dac_module *const module_inst,
 		Dac *const module,
-		struct dac_conf *const config)
+		struct dac_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -124,7 +124,7 @@ void dac_init(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
 	/* MUX the DAC VOUT pin */
-	struct system_pinmux_conf pin_conf;
+	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 
 	/* Set up the DAC VOUT pin */
@@ -231,7 +231,7 @@ void dac_disable(
 void dac_chan_set_config(
 		struct dac_module *const module_inst,
 		const enum dac_channel channel,
-		struct dac_chan_conf *const config)
+		struct dac_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
