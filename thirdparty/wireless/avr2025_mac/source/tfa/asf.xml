@@ -1,7 +1,5 @@
 <asf xmlversion="1.0">
-
-<select-by-device id="config.thirdparty.wireless.avr2025_mac.source.tfa" caption="TAL Config_select by device">
-		
+    <select-by-device id="config.thirdparty.wireless.avr2025_mac.source.tfa" caption="TAL Config_select by device">	
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#1" caption="TFA for EXT transceivers">
 			<info type="description" value="summary">
 			Transceiver Selection for Externally Plugged Transceivers
@@ -13,17 +11,7 @@
 				<device-support value="sam4l"/>
 		</module>
 		
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#2"     caption="atmegarfa1 tfa  support enabled">
-			<info type="description" value="summary">
-			ATMEGARFA1 Transceiver Feature Access
-			</info>
-			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfa1"/>
-			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
-            <device-support value="atmega128rfa1"/>
-			<build type="doxygen-entry-point" value="group_tfa"/>
-		</module>
-		
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#3"     caption="atmegarfr2 tfa  support enabled">
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#2"     caption="atmegarfr2 tfa  support enabled">
 			<info type="description" value="summary">
 			ATMEGARFR2 Transceiver Feature Access
 			</info>
@@ -31,9 +19,8 @@
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"/>
             <device-support value="atmega256rfr2"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
-		</module>
-		
-</select-by-device>
+		</module>	
+    </select-by-device>
 
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext" name="config.thirdparty.wireless.avr2025_mac.source.tfa" caption="TFA Configuration" default="at86rf212">
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf231"     caption="at86rf231 tfa  support enabled">

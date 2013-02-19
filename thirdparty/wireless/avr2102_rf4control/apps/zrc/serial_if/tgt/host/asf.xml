@@ -28,7 +28,6 @@
 		<build type="define" name="RF4CE_PLATFORM" value =""/>
 		<build type="doxygen-entry-point" value="zrc_group"/>
 
-
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.tgt"/>
 		<require idref="thirdparty.wireless.addons.sio2ncp"/>
 		<require idref="common.services.delay"/>

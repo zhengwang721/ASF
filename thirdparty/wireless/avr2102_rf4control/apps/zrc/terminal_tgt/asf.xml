@@ -30,15 +30,15 @@
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.include"/>
+        <require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.tgt"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-				<require idref="common.drivers.nvm"/>
+		<require idref="common.drivers.nvm"/>
 		
 		<build type="doxygen-entry-point" value="zrc_group"/>
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
+		<device-support-alias value="avr2102_rf4control_zrc_tgt_support"/>
 	</module>
 </asf>

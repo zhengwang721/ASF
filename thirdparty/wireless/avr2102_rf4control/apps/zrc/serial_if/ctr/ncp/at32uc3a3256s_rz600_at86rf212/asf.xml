@@ -23,7 +23,6 @@
 
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.lib.zrc.ctr.at32uc3a3256s.lib"/>
 		<require idref="board.rz600"/>
 		<generator value="iarew32"/>
 		<generator value="avr32gcc"/>

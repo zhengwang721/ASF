@@ -40,23 +40,23 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#ifndef CONF_SIO2NCP_H_INCLUDED
+#define CONF_SIO2NCP_H_INCLUDED
 
 
 //for SAM4L UART
-/*! \name Configuration
- */
+//! \name Configuration for SAM4L
+
 //! @{
-/** USART Interface */
+//! USART Interface
 //#define USART_NCP                 USART0
-/** Baudrate setting */
+//! Baudrate setting
 //#define USART_NCP_BAUDRATE        9600
-/** Character length setting */
+//! Character length setting
 //#define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
-/** Parity setting */
+//! Parity setting
 //#define USART_NCP_PARITY          US_MR_PAR_NO
-/** Stop bits setting */
+//! Stop bits setting
 //#define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
 
 
@@ -72,4 +72,4 @@
 
 #include "serial.h"
 
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif /* CONF_SIO2NCP_H_INCLUDED */
