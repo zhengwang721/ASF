@@ -50,7 +50,6 @@
 *  -  \b Application \b Interface(API)
 *    - \ref group_rf4control_ZRC
 *    - \ref group_mac
-*    - \ref group_mac
 *    - \ref group_pal
 *    - \ref group_tal
 *    - \ref group_resources
