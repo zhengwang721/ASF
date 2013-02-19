@@ -44,31 +44,71 @@
 #define CONF_SIO2NCP_H_INCLUDED
 
 
-//for SAM4L UART
-//! \name Configuration for SAM4L
-
+//! \name Configuration for Xmega
 //! @{
-//! USART Interface
-//#define USART_NCP                 USART0
-//! Baudrate setting
-//#define USART_NCP_BAUDRATE        9600
-//! Character length setting
-//#define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
-//! Parity setting
-//#define USART_NCP_PARITY          US_MR_PAR_NO
-//! Stop bits setting
-//#define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
+#if (XMEGA)
+#define USART_NCP                &USARTD0
+#define USART_NCP_BAUDRATE       9600
+#define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+#define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
+#define USART_NCP_STOP_BIT       1
 
-
+#define USART_NCP_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_NCP, USART_INT_LVL_HI) 
+#define USART_NCP_ISR_VECT       USARTD0_RXC_vect
+#endif //XMEGA
 //! @}
 
-//#define USART_NCP_ISR_VECT        USART0_Handler
+//! \name Configuration for MegaRF
+//! @{
+#if (MEGARF)
+#define USART_NCP                (&USARTA1)
+#define USART_NCP_BAUDRATE       9600
+#define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+#define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
+#define USART_NCP_STOP_BITS      1
 
-//#define USART_NCP_IRQn            USART0_IRQn
+#define USART_NCP_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_NCP)
+#define USART_NCP_ISR_VECT       USART1_RX_vect
+#endif //MEGARF
+//! @}
 
+//! \name Configuration for UC3
+//! @{
+#if (UC3)
+#define USART_NCP                &USARTE0
+#define USART_NCP_BAUDRATE       9600
+#define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
+#define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
+#define USART_NCP_STOP_BIT       1
 
-//#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
-//								  NVIC_EnableIRQ(USART_NCP_IRQn);
+#define USART_NCP_RX_ISR_ENABLE() 
+#define USART_NCP_ISR_VECT       USARTE0_RXC_vect
+#endif //UC3
+//! @}
+
+//! \name Configuration for SAM4L
+//! @{
+#if (SAM)
+#define NCP_RESET_GPIO            PIN_PC00
+
+#define USART_NCP                 USART0
+// /** Baudrate setting */
+#define USART_NCP_BAUDRATE        9600
+// /** Character length setting */
+#define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
+// /** Parity setting */
+#define USART_NCP_PARITY          US_MR_PAR_NO
+// /** Stop bits setting */
+#define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
+
+#define USART_NCP_ISR_VECT        USART0_Handler
+
+#define USART_NCP_IRQn            USART0_IRQn
+
+#define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
+						              NVIC_EnableIRQ(USART_NCP_IRQn);
+#endif //SAM
+//! @}
 
 #include "serial.h"
 

@@ -50,7 +50,6 @@
 		<info type="description" value="summary">
 		Generic SAL Includes
 		</info>
-
 		<build type="header-file"   value="inc/sal_generic.h"/>
 		<build type="header-file"   value="inc/sal_types.h"/>
 		<build type="include-path"  value="inc/"/>

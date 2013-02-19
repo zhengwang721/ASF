@@ -20,7 +20,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.xmega_rf212b_zigbit" vendor="Atmel" caption="XMEGA-ZIGBIT RF212b">
+	<board id="board.xmega_rf212b_zigbit" vendor="Atmel" caption="XMEGA-A3U AT86RF212B Zigbit">
 		<build type="define" name="BOARD" value="XMEGA_RF212B_ZIGBIT"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
