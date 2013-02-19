@@ -78,7 +78,7 @@
 
 /**
  * \ingroup group_mac
- * \defgroup group_mac_build   
+ * \defgroup group_mac_build   MAC Build Configurations
  * Defines MAC Build Configuration Used
  *
  */

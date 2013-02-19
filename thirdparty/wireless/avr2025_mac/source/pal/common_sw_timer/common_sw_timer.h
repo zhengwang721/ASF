@@ -48,7 +48,7 @@
 
 /**
  * \ingroup group_pal
- * \defgroup group_pal_common_sw_timer
+ * \defgroup group_pal_common_sw_timer Common SW Timer
  * Implements the software Algorithm for Timer Handling in the Stack
  * @{
  */
