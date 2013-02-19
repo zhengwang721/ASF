@@ -262,7 +262,7 @@ static float reverse_float( const float float_val )
    float retuVal;
    char* floatToConvert = ( char* ) & float_val;
    char* returnFloat = ( char* ) & retuVal;
-#ifdef BIG_ENDIAN
+#if UC3
    // swap the bytes into a temporary buffer
    returnFloat[0] = floatToConvert[3];
    returnFloat[1] = floatToConvert[2];
