@@ -3,7 +3,7 @@
  *
  * \brief HX8347A display controller driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -112,7 +112,7 @@ __always_inline static void hx8347a_send_byte(uint8_t data)
 
 #elif defined(CONF_HX8347A_SPI)
 	spi_write_single(CONF_HX8347A_SPI, data);
-	
+
 	/* Wait for TX to complete */
 	while (!spi_is_tx_ok(CONF_HX8347A_SPI)) {
 		/* Do nothing */
@@ -153,7 +153,7 @@ __always_inline static uint8_t hx8347a_read_byte(void)
 	while (!spi_is_rx_full(CONF_HX8347A_SPI)) {
 		/* Do nothing */
 	}
-	
+
 	spi_read_single(CONF_HX8347A_SPI, &data);
 #endif
 	return data;
