@@ -42,10 +42,10 @@
 #include <compiler.h>
 #include <parts.h>
 #include "tc.h"
-#include "conf_hw_timer.h"
 #include "hw_timer.h"
 #include "sysclk.h"
 #include "common_hw_timer.h"
+#include "conf_hw_timer.h"
 
 #define TIMER_PERIOD  UINT16_MAX
 

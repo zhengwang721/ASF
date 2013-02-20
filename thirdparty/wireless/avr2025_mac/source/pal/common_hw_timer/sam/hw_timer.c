@@ -41,9 +41,9 @@
 #include <compiler.h>
 #include <parts.h>
 #include "tc.h"
-#include "conf_hw_timer.h"
 #include "hw_timer.h"
 #include "common_hw_timer.h"
+#include "conf_hw_timer.h"
 
 extern uint8_t timer_multiplier;
 tmr_callback_t tmr_callback;
