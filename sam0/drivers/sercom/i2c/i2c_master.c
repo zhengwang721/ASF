@@ -184,7 +184,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up GCLK */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
@@ -210,7 +210,7 @@ enum status_code i2c_master_init(struct i2c_master_module *const module,
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
 	_sercom_set_handler(instance_index, _i2c_master_interrupt_handler);
 	_sercom_instances[instance_index] = module;
-	
+
 	/* Initialize values in module. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;

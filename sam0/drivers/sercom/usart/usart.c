@@ -176,7 +176,7 @@ enum status_code usart_init(struct usart_module *const module,
 	Assert(hw);
 	Assert(config);
 
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	enum status_code status_code = STATUS_OK;
 	uint32_t sercom_index = 0;
 	uint32_t gclk_index = 0;

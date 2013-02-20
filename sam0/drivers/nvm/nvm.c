@@ -97,9 +97,9 @@ enum status_code nvm_set_config(
 	Assert(config);
 
 	/* Configure the generic clock for the module */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = 0;
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
 	gclk_chan_conf.run_in_standby   = false;
 	system_gclk_chan_set_config(NVMCTRL_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(NVMCTRL_GCLK_ID);

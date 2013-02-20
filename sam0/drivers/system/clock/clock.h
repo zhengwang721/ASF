@@ -254,83 +254,6 @@ enum conf_clock_rtc_freq {
 };
 
 /**
- * \brief List of available GCLK generators.
- *
- * List of Available GCLK generators. This enum is used in the peripheral
- * device drivers to select the GCLK generator to be used for its operation.
- *
- * The number of GCLK generators available is device dependent.
- */
-enum gclk_generator {
-	/** GCLK generator channel 0. */
-	GCLK_GENERATOR_0,
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 0)
-	/** GCLK generator channel 1. */
-	GCLK_GENERATOR_1,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 1)
-	/** GCLK generator channel 2. */
-	GCLK_GENERATOR_2,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 2)
-	/** GCLK generator channel 3. */
-	GCLK_GENERATOR_3,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 3)
-	/** GCLK generator channel 4. */
-	GCLK_GENERATOR_4,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 4)
-	/** GCLK generator channel 5. */
-	GCLK_GENERATOR_5,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 5)
-	/** GCLK generator channel 6. */
-	GCLK_GENERATOR_6,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 6)
-	/** GCLK generator channel 7. */
-	GCLK_GENERATOR_7,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 7)
-	/** GCLK generator channel 8. */
-	GCLK_GENERATOR_8,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 8)
-	/** GCLK generator channel 9. */
-	GCLK_GENERATOR_9,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 9)
-	/** GCLK generator channel 10. */
-	GCLK_GENERATOR_10,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 10)
-	/** GCLK generator channel 11. */
-	GCLK_GENERATOR_11,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 11)
-	/** GCLK generator channel 12. */
-	GCLK_GENERATOR_12,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 12)
-	/** GCLK generator channel 13. */
-	GCLK_GENERATOR_13,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 13)
-	/** GCLK generator channel 14. */
-	GCLK_GENERATOR_14,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 14)
-	/** GCLK generator channel 15. */
-	GCLK_GENERATOR_15,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 15)
-	/** GCLK generator channel 16. */
-	GCLK_GENERATOR_16,
-#endif
-};
-
-/**
  * \brief Available start-up times for the XOSC32K
  *
  * Available external 32KHz oscillator start-up times, as a number of external
@@ -679,7 +602,7 @@ struct system_clock_source_dfll_config {
 };
 
 /**
- * \name External Oscillator configuration and management
+ * \name External Oscillator management
  * @{
  */
 
@@ -713,7 +636,7 @@ void system_clock_source_xosc_set_config(
 
 
 /**
- * \name External 32KHz Oscillator configuration and management
+ * \name External 32KHz Oscillator management
  * @{
  */
 
@@ -750,7 +673,7 @@ void system_clock_source_xosc32k_set_config(
 
 
 /**
- * \name Internal 32KHz Oscillator configuration and management
+ * \name Internal 32KHz Oscillator management
  * @{
  */
 
@@ -780,7 +703,7 @@ void system_clock_source_osc32k_set_config(
 
 
 /**
- * \name Internal 8MHz Oscillator configuration and management
+ * \name Internal 8MHz Oscillator management
  * @{
  */
 
@@ -808,7 +731,7 @@ void system_clock_source_osc8m_set_config(
 
 
 /**
- * \name DFLL configuration and management
+ * \name Internal DFLL management
  * @{
  */
 
@@ -854,7 +777,7 @@ void system_clock_source_dfll_set_config(
  */
 
 /**
- * \name Clock source configuration
+ * \name Clock source management
  * @{
  */
 enum status_code system_clock_source_write_calibration(
@@ -879,7 +802,7 @@ uint32_t system_clock_source_get_hz(
  */
 
 /**
- * \name Main clock configuration
+ * \name Main clock management
  * @{
  */
 
@@ -1100,7 +1023,17 @@ static inline enum status_code system_apb_clock_clear_mask(
  * @}
  */
 
+/**
+ * \name System Clock Initialization
+ * @{
+ */
+
 void system_clock_init(void);
+
+/**
+ * @}
+ */
+
 
 /**
  * @}

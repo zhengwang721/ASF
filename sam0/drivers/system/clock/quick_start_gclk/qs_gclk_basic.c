@@ -52,7 +52,7 @@ void config_gclock_channel(void);
 void config_gclock_generator(void)
 {
 //! [setup_1]
-	struct system_gclk_gen_conf gclock_gen_conf;
+	struct system_gclk_gen_config gclock_gen_conf;
 //! [setup_1]
 //! [setup_2]
 	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
@@ -74,7 +74,7 @@ void config_gclock_generator(void)
 void config_gclock_channel(void)
 {
 //! [setup_6]
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 //! [setup_6]
 //! [setup_7]
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);

@@ -89,7 +89,7 @@ void events_chan_set_config(
 	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
 
 		/* Set up a GLCK channel to use with the specific channel */
-		struct system_gclk_chan_conf gclk_chan_conf;
+		struct system_gclk_chan_config gclk_chan_conf;
 
 		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 

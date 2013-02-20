@@ -225,7 +225,7 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config)
 	Assert(config);
 
 	/* Set up GCLK */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;

@@ -61,7 +61,7 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 
 
 	/* Configure GCLK channel and enable clock */
