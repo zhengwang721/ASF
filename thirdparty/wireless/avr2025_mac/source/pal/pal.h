@@ -84,18 +84,11 @@
      */
 #define pal_timer_delay(delay)    delay_us(delay)
 
-
-//#if(ANTENNA_DIVERSITY == 1)
-//#define TIMER_SRC_DURING_TRX_SLEEP() {TCC0_CTRLA = TC0_CLKSEL3_bm;}
-//#else
-//#define TIMER_SRC_DURING_TRX_SLEEP() {TCC0_CTRLA = TC0_CLKSEL3_bm; TCC1_CTRLA = TC1_CLKSEL3_bm;}
-//#endif
-
 /* Wait for 1 us. */
 #define PAL_WAIT_1_US()               delay_us(1);
 
 /* Wait for 65 ns. */
-#define  PAL_WAIT_65_NS()  {nop(); nop();}
+#define PAL_WAIT_65_NS()  {nop(); nop();}
 
 /**
  * This macro is used for handling endianness among the different CPUs.

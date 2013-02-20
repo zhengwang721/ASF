@@ -10,7 +10,7 @@
         <build type="header-file"   value="hw_timer.h"/>
         <build type="include-path"  value="."/>			
         <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
-        <build type="module-config" subtype="path" value="module_config"/>
+        <build type="module-config" subtype="path" value="../module_config"/>
         <build type="doxygen-entry-point" value="common_hw_timer_group"/>	
         <build type="library" subtype="user" value="lib/sam4l_lib_hw_timer.a" toolchain="iarewarm"/>
         <build type="library" subtype="user" value="lib/libsam4l_lib_hw_timer.a" toolchain="armgcc"/>			
