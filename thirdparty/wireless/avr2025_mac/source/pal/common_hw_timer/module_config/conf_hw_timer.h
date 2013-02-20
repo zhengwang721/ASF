@@ -68,9 +68,9 @@
 
 //! \name Configuration for MEGARF
 //! @{
-#if (MEGARF)
+#if (MEGA_RF)
 #define TIMER     (&TCCR1A)
-#endif //MEGARF
+#endif //MEGA_RF
 //! @}
 
 

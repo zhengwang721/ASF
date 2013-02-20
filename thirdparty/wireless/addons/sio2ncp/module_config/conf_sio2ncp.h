@@ -60,7 +60,7 @@
 
 //! \name Configuration for MegaRF
 //! @{
-#if (MEGARF)
+#if (MEGA_RF)
 #define USART_NCP                (&USARTA1)
 #define USART_NCP_BAUDRATE       9600
 #define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
@@ -69,20 +69,20 @@
 
 #define USART_NCP_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_NCP)
 #define USART_NCP_ISR_VECT       USART1_RX_vect
-#endif //MEGARF
+#endif //MEGA_RF
 //! @}
 
 //! \name Configuration for UC3
 //! @{
 #if (UC3)
-#define USART_NCP                &USARTE0
+#define USART_NCP                &AVR32_USART0
 #define USART_NCP_BAUDRATE       9600
-#define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
-#define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
-#define USART_NCP_STOP_BITS      1
+#define USART_NCP_CHAR_LENGTH    8
+#define USART_NCP_PARITY         USART_NO_PARITY
+#define USART_NCP_STOP_BITS      USART_1_STOPBIT
 
 #define USART_NCP_RX_ISR_ENABLE() 
-#define USART_NCP_ISR_VECT       USARTE0_RXC_vect
+#define USART_NCP_ISR_VECT       ncp_uart_isr,2,1
 #endif //UC3
 //! @}
 

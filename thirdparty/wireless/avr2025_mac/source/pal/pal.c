@@ -43,7 +43,6 @@
  */
 
 #include "pal.h"
-#include "app_config.h"
 #include "delay.h"
 #include "ioport.h"
 

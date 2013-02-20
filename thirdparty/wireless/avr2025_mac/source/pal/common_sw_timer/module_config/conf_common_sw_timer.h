@@ -46,7 +46,7 @@
 /*! \name Configuration
  */
 //! @{
-// #define TOTAL_NUMBER_OF_TIMERS     (5)
+#define TOTAL_NUMBER_OF_TIMERS     (5)
 //! @}
 
 #endif /* CONF_COMMON_SW_TIMER_H_INCLUDED */
