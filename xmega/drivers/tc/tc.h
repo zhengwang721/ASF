@@ -405,7 +405,7 @@ static inline TC_CLKSEL_t tc_read_clock_source(volatile void *tc)
  * \param tc   ID of TC to get clock selection for.
  * \param resolution Desired resolution for the TC in Hz.
  */
-static inline void tc_set_resolution(volatile void *tc, uint32_t resolution)
+static inline void tc_set_resolution(void *tc, uint32_t resolution)
 {
 	uint32_t tc_clk_rate = sysclk_get_per_hz();
 
@@ -439,7 +439,7 @@ static inline void tc_set_resolution(volatile void *tc, uint32_t resolution)
  *
  * \return The resolution of \a tc.
  */
-static inline uint32_t tc_get_resolution(volatile void *tc)
+static inline uint32_t tc_get_resolution(void *tc)
 {
 	uint32_t tc_clk_rate = sysclk_get_per_hz();
 	switch (tc_read_clock_source(tc)) {
