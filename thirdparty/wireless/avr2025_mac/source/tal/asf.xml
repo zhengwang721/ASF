@@ -184,7 +184,7 @@
 			<build type="header-file"   value="at86rf212/inc/tal_internal.h"/>
 			<build type="include-path"  value="at86rf212/inc/"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-
+            <require idref="thirdparty.wireless.avr2025_mac.source.resources.inc"/>
 			<build type="doxygen-entry-point" value="group_tal_helper"/>
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>

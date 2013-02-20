@@ -62,18 +62,12 @@
 #include "tal_types.h"
 #include "mac_build_config.h"
 
-
 /**
  * \defgroup group_tal  Transceiver Abstraction Layer
  * The Transceiver Abstraction Layer (TAL) implements the transceiver specific functionalities and
  * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses the services of PAL.
  *
  */
-
-
-
-
-
 
 /* === EXTERNALS =========================================================== */
 
