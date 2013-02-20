@@ -90,11 +90,10 @@
  * Other compilers may or may not work.
  *
  * \page references References
- * 1)  <A href="http://www.atmel.com/images/doc8357.pdf">AVR2102 RF4CE Reference Manual\n </A>.
- * 2)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
  *     Networks (WPANs).\n\n
- * 3)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
  * \page contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
