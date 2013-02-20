@@ -3,7 +3,7 @@
  *
  * \brief Management of the virtual memory.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,6 +90,8 @@ COMPILER_WORD_ALIGNED
 static uint8_t vmem_data[VMEM_NB_SECTOR * VMEM_SECTOR_SIZE];
 #endif
 
+static bool b_vmem_unloaded = false;
+
 //_____ D E C L A R A T I O N S ____________________________________________
 
 //! This function tests memory state, and starts memory initialization
@@ -100,7 +102,7 @@ static uint8_t vmem_data[VMEM_NB_SECTOR * VMEM_SECTOR_SIZE];
 //!   An error occurred          ->    CTRL_FAIL
 Ctrl_status virtual_test_unit_ready(void)
 {
-	return CTRL_GOOD;
+	return b_vmem_unloaded ? CTRL_NO_PRESENT : CTRL_GOOD;
 }
 
 
@@ -113,6 +115,10 @@ Ctrl_status virtual_test_unit_ready(void)
 //!   An error occurred          ->    CTRL_FAIL
 Ctrl_status virtual_read_capacity(uint32_t *uint32_t_nb_sector)
 {
+	if (b_vmem_unloaded) {
+		return CTRL_NO_PRESENT;
+	}
+
 	if (VMEM_NB_SECTOR<8) {
 		*uint32_t_nb_sector = 8-1;
 	} else {
@@ -138,9 +144,19 @@ bool virtual_wr_protect(void)
 //!
 bool virtual_removal(void)
 {
-	return false;
+	return true;
 }
 
+
+//! This function unloads/loads the memory
+//!
+//! @return true if the memory is unloaded
+//!
+bool virtual_unload(bool unload)
+{
+	b_vmem_unloaded = unload;
+	return true;
+}
 
 //------------ SPECIFIC FUNCTIONS FOR TRANSFER BY USB -------------------------
 
