@@ -3,7 +3,7 @@
  *
  * \brief AVR UC3C CAN-LIN Loopback Demo
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -262,10 +262,11 @@ static void state_machine_task(void)
 adcifa_opt_t adc_config_t = {
 	.frequency                = 1000000,        // ADC frequency (Hz)
 	.reference_source         = ADCIFA_ADCREF0, // Reference Source
-	.sample_and_hold_disable  = false,    // Disable Sample and Hold Time
-	.single_sequencer_mode    = false,    // Single Sequencer Mode
-	.free_running_mode_enable = false,    // Free Running Mode
-	.sleep_mode_enable        = false     // Sleep Mode
+	.sample_and_hold_disable  = false,    		// Disable Sample and Hold Time
+	.single_sequencer_mode    = false,   		// Single Sequencer Mode
+	.free_running_mode_enable = false,    		// Free Running Mode
+	.sleep_mode_enable        = false,    		// Sleep Mode
+	.mux_settle_more_time     = false     		// Multiplexer Settle Time
 };
 
 // Sequencer Configuration: same for sequencer 0 and sequencer 1

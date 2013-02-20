@@ -3,6 +3,7 @@
 		<build type="include-path" value="../conf/"/>
 		<build type="header-file" value="../conf/conf_can.h"/>
 		<build type="header-file" value="../conf/conf_can_example.h"/>
+		<build type="header-file" value="../conf/conf_clock.h"/>
 		<require idref="avr32.services.network.can.example2"/>
 		<require idref="board.uc3c_ek"/>
 		<config name="config.board.uc3c_ek.init" value="no"/>

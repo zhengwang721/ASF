@@ -7,7 +7,7 @@
  * This file contains basic functions for the AVR32 CAN, with support for all
  * modes, settings and clock speeds.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,6 +52,8 @@
 #include "preprocessor.h"
 #include "intc.h"
 #include "canif.h"
+#include "delay.h"
+
 //_____ D E F I N I T I O N S __________________________________________________
 
 //_____ F U N C T I O N S ______________________________________________________
@@ -266,7 +268,24 @@ U8 can_init(U8 ch,
    }
    canif_clear_all_mob(ch,NB_MOB_CHANNEL);
    CANIF_enable(ch);
-   while(!CANIF_channel_enable_status(ch));
+
+#if (CAN_AUTOBAUD == true)
+#error 'Autobaud feature not supported'
+#else
+/* 
+ * The maximum delay time to wait is the time to transmit 128-bits 
+ * (CAN extended frame at baudrate speed configured by the user).
+ * - 10x bits number of previous undetected message,
+ * - 128x bits MAX length,
+ * - 3x bits of interframe.
+ */
+#define DELAY_HZ         (BAUDRATE_HZ/141.0)   /*Compute Maximum delay time*/
+#define DELAY            (1000000 / DELAY_HZ)  /*Compute Delay in µs*/
+   delay_us(DELAY);
+   if(!CANIF_channel_enable_status(ch)) {
+            return CAN_CMD_REFUSED;
+   }
+#endif
 
 #ifdef CAN_LIB_UNDER_INTERRUPT
    switch(ch)
@@ -364,6 +383,7 @@ U8 can_tx( U8 ch,
                                 handle,
                                 can_msg->id_mask);
     }
+    CANIF_mob_clr_dlc(ch,handle);
     CANIF_mob_set_dlc(ch,handle,dlc);
     if (req_type == CAN_REMOTE_FRAME){
             CANIF_set_rtr(ch,handle);

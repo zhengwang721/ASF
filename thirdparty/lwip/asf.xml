@@ -6,6 +6,7 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="uc3a"/>
+			<device-support value="uc3a3"/>
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<require idref="avr32.services.network.tcpip.lwip"/>
@@ -17,6 +18,7 @@
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="uc3a"/>
+			<device-support value="uc3a3"/>
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<require idref="thirdparty.lwip.140"/>

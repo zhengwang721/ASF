@@ -45,7 +45,7 @@
 
 #include <board.h>
 
-#if BOARD == XMEGA_C3_XPLAINED
+#if (BOARD == XMEGA_C3_XPLAINED) || (BOARD == XMEGA_E5_XPLAINED)
 // Interface configuration for XMEGA-C3 Xplained
 
 #  define SSD1306_USART_SPI_INTERFACE

@@ -157,12 +157,6 @@ int main(void)
 	main_build_usb_serial_number();
 	udc_start();
 
-	if (!udc_include_vbus_monitoring()) {
-		// VBUS monitoring is not available on this product
-		// thereby VBUS has to be considered as present
-		udc_attach();
-	}
-
 	// The main loop manages only the power mode
 	// because everything else is managed by interrupt.
 	// The USB Start of Frame event manages internal tick events for

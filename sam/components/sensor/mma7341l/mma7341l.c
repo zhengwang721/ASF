@@ -3,7 +3,7 @@
  *
  * \brief API driver for MMA7341L accelerometer component.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -122,7 +122,7 @@
 #define mma7341l_adc_configure_power_save() \
 		adc12b_configure_power_save(ADC12B, 0, 0)
 #define mma7341l_adc_configure_trigger() \
-		adc12b_configure_trigger(ADC12B, ADC_TRIG_SW)
+		adc12b_configure_trigger(ADC12B, ADC12B_TRIG_SW)
 #define mma7341l_adc_set_resolution() \
 		adc12b_set_resolution(ADC12B, \
 		(enum adc_resolution_t)ADC12B_MR_LOWRES_BITS_10)
@@ -257,7 +257,6 @@ static void mma7341l_update(void)
 void mma7341l_calibration(void)
 {
 	volatile uint32_t i;
-	volatile uint32_t j;
 
 	acc.m.x = 0;
 	acc.m.y = 0;

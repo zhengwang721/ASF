@@ -9,7 +9,7 @@
 		</info>
 		<build type="c-source" value="calculator.c"/>
 		<build type="c-source" value="widget_gui.c"/>
-		<build type="header-file" subtype="api" value="widget_gui.h"/>
+		<build type="header-file" value="widget_gui.h"/>
 		<build type="header-file" value="conf_membag.h"/>
 		<build type="header-file" value="conf_sysfont.h"/>
 		<build type="header-file" value="conf_wtk.h"/>

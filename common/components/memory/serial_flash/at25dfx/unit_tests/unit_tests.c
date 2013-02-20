@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for AT25DFx driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,10 +72,11 @@
  * - \ref conf_at25dfx.h
  *
  * \section device_info Device Info
- * SAM3N and SAM4L devices can be used.
+ * SAM3N, SAM4L and SAM4E devices can be used.
  * This example has been tested with the following setup:
  * - sam3n4c_sam3n_ek
  * - sam4lc4c_sam4l_ek
+ * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -120,7 +121,8 @@ static void run_test_at25dfx_init(const struct test_case *test)
 	status = at25dfx_mem_check();
 
 	/* Validate the SerialFlash init and check function */
-	test_assert_true(test, status == AT25_SUCCESS, "Specific SerialFlash not found!");
+	test_assert_true(test, status == AT25_SUCCESS, 
+			"Specific SerialFlash not found!");
 }
 
 /**
@@ -149,13 +151,15 @@ static void run_test_at25dfx_protect(const struct test_case *test)
 
 	status = at25dfx_read_sector_protect_status(TEST_PROTECT_ADDRESS);
 
-	test_assert_true(test, status == AT25_SECTOR_PROTECTED, "Protect sector cmd error!");
+	test_assert_true(test, status == AT25_SECTOR_PROTECTED, 
+			"Protect sector cmd error!");
 
 	at25dfx_protect_sector(TEST_PROTECT_ADDRESS, AT25_TYPE_UNPROTECT);
 
 	status = at25dfx_read_sector_protect_status(TEST_PROTECT_ADDRESS);
 
-	test_assert_true(test, status == AT25_SECTOR_UNPROTECTED, "Unrotect sector cmd error!");
+	test_assert_true(test, status == AT25_SECTOR_UNPROTECTED, 
+			"Unrotect sector cmd error!");
 
 	at25dfx_protect_chip(AT25_TYPE_PROTECT);
 
@@ -171,7 +175,8 @@ static void run_test_at25dfx_protect(const struct test_case *test)
 /**
  * \brief Test data read, write and erase API functions.
  *
- * This test calls the data chip erase, read, write and block erase API functions.
+ * This test calls the data chip erase, read, write and block erase API 
+ * functions.
  *
  * \param test Current test case.
  */
@@ -190,10 +195,12 @@ static void run_test_at25dfx_data_access(const struct test_case *test)
 
 	status = at25dfx_erase_block(AT25DFX_UNIT_TEST_BLOCK_ADDR);
 
-	while (page_num<AT25DFX_UNIT_TEST_BLOCK_SIZE/AT25DFX_UNIT_TEST_PAGE_SIZE) {
+	while (page_num < 
+			AT25DFX_UNIT_TEST_BLOCK_SIZE / AT25DFX_UNIT_TEST_PAGE_SIZE) {
 		memset(data_buff, 0x0, sizeof(data_buff));
 
-		at25dfx_read(data_buff,AT25DFX_UNIT_TEST_PAGE_SIZE, page_num*AT25DFX_UNIT_TEST_PAGE_SIZE);
+		at25dfx_read(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE, 
+				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
 
 		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
 			if (data_buff[i] != 0xff) {
@@ -211,17 +218,20 @@ static void run_test_at25dfx_data_access(const struct test_case *test)
 	i = 0;
 	page_num = 0;
 
-	while (page_num<AT25DFX_UNIT_TEST_BLOCK_SIZE/AT25DFX_UNIT_TEST_PAGE_SIZE) {
+	while (page_num <
+			AT25DFX_UNIT_TEST_BLOCK_SIZE / AT25DFX_UNIT_TEST_PAGE_SIZE) {
 		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
 			data_buff[i] = i & 0xff;
 		}
 
-		at25dfx_write(data_buff,AT25DFX_UNIT_TEST_PAGE_SIZE, page_num*AT25DFX_UNIT_TEST_PAGE_SIZE);
+		at25dfx_write(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE,
+				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
 
 		/* Reset the data buffer */
 		memset(data_buff, 0x0, sizeof(data_buff));
 
-		status = at25dfx_read(data_buff,AT25DFX_UNIT_TEST_PAGE_SIZE, page_num*AT25DFX_UNIT_TEST_PAGE_SIZE);
+		status = at25dfx_read(data_buff, AT25DFX_UNIT_TEST_PAGE_SIZE, 
+				page_num * AT25DFX_UNIT_TEST_PAGE_SIZE);
 
 		for (i = 0; i < AT25DFX_UNIT_TEST_PAGE_SIZE; i++) {
 			if (data_buff[i] != (i & 0xff)) {
@@ -263,8 +273,9 @@ int main(void)
 	DEFINE_TEST_CASE(at25dfx_protect_test, NULL, run_test_at25dfx_protect, NULL,
 			"SerialFlash sector protect/unprotect, chip protect/unprotect functions");
 
-	DEFINE_TEST_CASE(at25dfx_data_access_test, NULL, run_test_at25dfx_data_access, NULL,
-		"SerialFlash read, write, and block erase functions");
+	DEFINE_TEST_CASE(at25dfx_data_access_test, NULL, 
+			run_test_at25dfx_data_access, NULL,
+			"SerialFlash read, write, and block erase functions");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(at25dfx_tests) = {
@@ -274,7 +285,8 @@ int main(void)
 	};
 
 	/* Define the test suite */
-	DEFINE_TEST_SUITE(at25dfx_suite, at25dfx_tests, "SAM AT25DFx driver test suite");
+	DEFINE_TEST_SUITE(at25dfx_suite, at25dfx_tests, 
+			"SAM AT25DFx driver test suite");
 
 	/* Run all tests in the test suite */
 	test_suite_run(&at25dfx_suite);

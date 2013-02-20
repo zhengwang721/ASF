@@ -3,7 +3,7 @@
  *
  * \brief Cyclic Redundancy Check Calculation Unit (CRCCU) example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,7 +108,7 @@
 #include "conf_crccu_example.h"
 
 /** Flash buffer address */
-#define FLASH_BUFFER_ADDRESS   (IFLASH_ADDR + IFLASH_SIZE/2 - FLASH_BUFFER_SIZE)
+#define FLASH_BUFFER_ADDRESS   (IFLASH_ADDR + IFLASH_SIZE/2 - FLASH_BUFFER_SIZE*8)
 
 /** CRC data buffer size (in byte) */
 #define BUFFER_LENGTH   64
@@ -124,12 +124,8 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#ifdef __ICCARM__   /* IAR */
-#pragma data_alignment=512
-#define __attribute__(...)
-#endif
 /** CRC descriptor */
-__attribute__ ((aligned(512)))
+COMPILER_ALIGNED(512)
 crccu_dscr_type_t crc_dscr;
 
 /** CRC data buffer */
@@ -275,7 +271,7 @@ int main(void)
 #if SAM4S
 	/* Fill data buffer in Flash, the data is same as in SRAM */
 	flash_erase_page(FLASH_BUFFER_ADDRESS,
-			IFLASH_ERASE_PAGES_4);
+			IFLASH_ERASE_PAGES_8);
 
 	flash_write(FLASH_BUFFER_ADDRESS,
 			(void *)g_uc_data_buf,

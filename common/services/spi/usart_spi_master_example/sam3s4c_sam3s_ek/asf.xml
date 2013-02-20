@@ -6,6 +6,7 @@
 		<build type="header-file" value="conf_usart_spi.h"/>
 		<build type="header-file" value="conf_usart_spi_master_example.h"/>
 		<require idref="common.services.basic.usart_spi_master_example"/>
+		<config name="config.spi_master_type" value="usart_spi"/>
 		<require idref="board.sam3s_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

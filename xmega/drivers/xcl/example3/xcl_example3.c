@@ -56,19 +56,17 @@
  * All AVR XMEGA E devices can be used. This example has been tested
  * with the following setup:
  *   - STK600 with ATxmega32E5 on STK600-RC032X.
- *
- * \section stk600_setup Setup for STK600 and RC032x:
- * - LED0 pin should be connected to PD2 pin
- * - LED1 pin should be connected to PD3 pin
- * - LED1 pin should be connected to PD4 pin
- *
+ *     LED0 pin should be connected to PD2 pin
+ *     LED1 pin should be connected to PD3 pin
+ *     LED2 pin should be connected to PD4 pin
  *
  * \section exampledescription Description of the example
  * This examples demonstrates how to use both Timer and LUT sub-modules together
  * within the XCL module. The purpose of this configuration is to generate
  * a waveform output that is the logic XOR of two generated PWM waveforms.
+ *
  * This example configures XCL TC sub-module in two 8bits BTCO/1 timers to
- * generate simgle slope PWM output on their compare  output pins (PD2 and PD3).
+ * generate single slope PWM output on their compare output pins (PD2 and PD3).
  * Those PWM output are internaly connected to LUT0/1 inputs configured as a
  * logic XOR function. The resulting waveform is connected to PD4 LUT output.
  *
@@ -110,11 +108,12 @@ int main(void)
 
 	/* Configure the XCL LUT sub-module:
 	 * - Configure LUT in 1 LUTs with 3 differents inputs
-	 * - LUT IN0 input on pin 2 or port D
-	 * - LUT IN1 input on internla XCL input
-	 * - LUT IN2 input on internla XCL input
-	 * - LUT IN3 input on pin 3 or port D
-	 * - LUT OUT0 output on pin 4 or port D
+	 * - LUT IN0 input on pin 2 of port D
+	 * - LUT IN1 input on XCL LUT OUT1
+	 * - LUT OUT0 output on pin 4 of port D
+	 * - LUT IN2 input on XCL LUT OUT0 (but ignored)
+	 * - LUT IN3 input on pin 3 of port D
+	 * - LUT OUT1 output keeps internal
 	 * - No time Delay for both LUT0 and LUT1
 	 * - LUT0 performs XOR operation
 	 * - LUT1 copies IN3 input ignoring IN2
@@ -140,7 +139,10 @@ int main(void)
 	xcl_enable_oc1();
 	xcl_btc0_set_compare(0x55);
 	xcl_btc1_set_compare(0xAA);
-	real_resolution = xcl_tc_set_resolution(975);
+	/* A resolution of 60 is selected to obtain a slow blink
+	 * which will be visible for user
+	 */
+	real_resolution = xcl_tc_set_resolution(60);
 
 	/*
 	 * main loop simply enters sleep mode

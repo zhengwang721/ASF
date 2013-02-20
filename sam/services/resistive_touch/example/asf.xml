@@ -6,7 +6,7 @@
 			</info>
 			<build type="c-source" value="ads7843_example.c"/>
 			<build type="c-source" value="rtouch_calibrate.c"/>
-			<build type="header-file" subtype="api" value="rtouch_calibrate.h"/>
+			<build type="header-file" value="rtouch_calibrate.h"/>
 			<build type="include-path" value="."/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.uart"/>
@@ -26,7 +26,7 @@
 			</info>
 			<build type="c-source" value="ads7843_example.c"/>
 			<build type="c-source" value="rtouch_calibrate.c"/>
-			<build type="header-file" subtype="api" value="rtouch_calibrate.h"/>
+			<build type="header-file" value="rtouch_calibrate.h"/>
 			<build type="include-path" value="."/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.uart"/>

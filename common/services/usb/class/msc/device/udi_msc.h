@@ -274,7 +274,6 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * - \subpage udc_use_case_1
  * - \subpage udc_use_case_2
  * - \subpage udc_use_case_3
- * - \subpage udc_use_case_4
  * - \subpage udc_use_case_5
  * - \subpage udc_use_case_6
  */

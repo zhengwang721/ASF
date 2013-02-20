@@ -57,36 +57,44 @@
  * \section deviceinfo Device Info
  * All AVR XMEGA devices can be used. This example has been tested with the 
  * following setup:
- *   - STK600 with ATxmega32E5 on STK600-RC032X. (USARTC0 should be connected to
- * the RS232 spare port of STK600)
+ *   - STK600 with ATxmega32E5 on STK600-RC032X
+ *     USARTC0 on PC2 and PC3 pins should be connected to the RXD and TXD
+ *     pins of STK600 RS232 spare port.
+ *   - XMEGA E5 Xplained evaluation kit
+ *     USARTD0 on PORTD pin 6 and 7 is used (Connected to board controller)
+ * UART configuration is 115200 baudrate, no parity, data 8 bit.
  *
  * \section exampledescription Description of the example
- * The example configures the USART to use together variable frame lenght
- * (using the PEC counter of XCL module instead of build in USART counters,
- * to count transmission data bit) and data encoding/decoding features of XMEGA
- * E USART.
- * To keep the USART communication still functionnal with a regular USART 
- * computer, the example keeps the number of data bit to be proceed equals to
- * 8bits, but it could be extended to any value up to 255 using 
-  *USART_SERIAL_VARIABLE_CHAR_LENGTH.
  * The USART is configured to encode and decode only the data fields of both the
  * received and transmit data frame.
  * The data encoding consists of a NOT operation applied on the data field of
  * the USART frame.
+ *
  * To perform such data encoding, the XCL glue logic sub module is configured
  * as follow:
  *  - On the received side LUTO performs NOT operation with IN0 input and the
  * LUTO output is connected on the USART internal input
  *  - On the transmit side LUT1 performs NOT operation with internal USART
  * TX pin.
+ *
  * The example outputs an encoded message then, waits for a received character
  * on the configured USART and echoes the character back to the same USART.
  * As both USART encoder and decoder are enabled, the received character is
  * encoded twice (first time during reception, the second time during
  * transmission stage) thus, the resulting character is sent back equal to the
- *  orignal received character.
+ * orignal received character.
+ *
  * The example waits for a received character on the configured USART and
  * echoes the character back to the same USART.
+ *
+ * Note: The example configures the USART to use together variable frame length
+ * (using the PEC counter of XCL module instead of build in USART counters,
+ * to count transmission data bit) and data encoding/decoding features of
+ * XMEGAE USART.
+ * To keep the USART communication still functionnal with a regular USART 
+ * computer, the example keeps the number of data bit to be proceed equals to
+ * 8bits, but it could be extended to any value up to 255 using 
+ * USART_SERIAL_VARIABLE_CHAR_LENGTH.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -152,16 +160,17 @@ int main(void)
 	usart_xmegae_init_rs232(USART_SERIAL_EXAMPLE, &USART_SERIAL_OPTIONS);
 	usart_set_rx_interrupt_level(USART_SERIAL_EXAMPLE, USART_INT_LVL_LO);
 
+	xcl_port(USART_SERIAL_XCL_PORT);
 	xcl_lut_type(LUT_2LUT2IN);
-	xcl_lut_in0(LUT_IN_PINL);
+	xcl_lut_in0(USART_SERIAL_LUT_IN_PIN);
 	xcl_lut_in1(LUT_IN_XCL);
 	xcl_lut0_output(LUT0_OUT_DISABLE);
 	xcl_lut_config_delay(DLY11, LUT_DLY_DISABLE, LUT_DLY_DISABLE);
-	xcl_lut0_truth(NOT);
+	xcl_lut0_truth(NOT_IN0);
 
-	xcl_lut_in3(LUT_IN_XCL);
 	xcl_lut_in2(LUT_IN_XCL);
-	xcl_lut1_truth(NOT);
+	xcl_lut_in3(LUT_IN_XCL);
+	xcl_lut1_truth(NOT_IN3);
 
 	/* Send "message header" */
 	for (i = 0; i < sizeof(encoded_message); i++) {

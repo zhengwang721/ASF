@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for NAND Flash component.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -134,6 +134,10 @@ static uint8_t write_buffer[2048];
 static uint8_t read_buffer[2048];
 static uint8_t spare_buffer[NAND_COMMON_MAX_PAGE_SPARE_SIZE];
 
+volatile uint32_t error_code;
+volatile uint32_t flash_id;
+volatile uint32_t block;
+
 /**
  * \brief Test NAND Flash initialization
  *
@@ -143,9 +147,6 @@ static uint8_t spare_buffer[NAND_COMMON_MAX_PAGE_SPARE_SIZE];
  */
 static void run_test_initialization(const struct test_case *test)
 {
-	volatile uint32_t error_code;
-	volatile uint32_t flash_id;
-
 	/* Test1: Check the initialize function */
 	error_code = nand_flash_raw_initialize(&nf_raw, 0, cmd_address,
 			addr_address, data_address);
@@ -184,8 +185,6 @@ static void run_test_initialization(const struct test_case *test)
  */
 static void run_test_raw_read_write(const struct test_case *test)
 {
-	volatile	uint32_t block;
-	volatile	uint32_t error_code;
 	uint32_t i;
 
 	/* Erase block and use the first good block for read/write test */
@@ -246,8 +245,6 @@ static void run_test_raw_read_write(const struct test_case *test)
  */
 static void run_test_software_ecc(const struct test_case *test)
 {
-	volatile	uint32_t block;
-	volatile	uint32_t error_code;
 	uint32_t i;
 
 	/* Erase block and use the first good block for read/write test */
@@ -329,10 +326,6 @@ int main(void)
 	board_init();
 
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
-
-#if defined(__GNUC__)
-	setbuf(stdout, NULL);
-#endif
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(nand_flash_test_read_id, NULL, run_test_initialization, NULL,

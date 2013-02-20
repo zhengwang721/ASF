@@ -95,14 +95,6 @@ int stdio_usb_putchar (volatile void * usart, char data);
  */
 void stdio_usb_getchar (void volatile * usart, char * data);
 
-/*! \brief Callback for VBUS level change event.
- *
- * \param b_high  1 if VBus is present
- *
- * \return Nothing.
- */
-void stdio_usb_vbus_event (bool b_high);
-
 /*! \brief Enables the stdio in USB Serial Mode.
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.

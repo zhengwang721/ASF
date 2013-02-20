@@ -12,7 +12,7 @@
 #
 # \file
 #
-# Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+# Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
 #
 # \asf_license_start
 #
@@ -270,6 +270,9 @@ cflags-gnu-y    += -std=gnu99
 # Compile C++ files using the GNU++98 standard.
 cxxflags-gnu-y  += -std=gnu++98
 
+# Don't use strict aliasing (very common in embedded applications).
+cflags-gnu-y    += -fno-strict-aliasing
+cxxflags-gnu-y  += -fno-strict-aliasing
 
 # Separate each function and data into its own separate section to allow
 # garbage collection of unused sections.
@@ -289,9 +292,6 @@ cflags-gnu-y += -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long
 cflags-gnu-y += -Wunreachable-code
 cflags-gnu-y += -Wcast-align
 cflags-gnu-y += --param max-inline-insns-single=500
-
-# To reduce application size use only integer printf function.
-cflags-gnu-y += -Dprintf=iprintf
 
 # Garbage collect unreferred sections when linking.
 ldflags-gnu-y   += -Wl,--gc-sections
