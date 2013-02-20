@@ -47,7 +47,7 @@ void configure_led(void);
 
 void configure_led(void)
 {
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
