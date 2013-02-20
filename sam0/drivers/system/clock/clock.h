@@ -602,7 +602,7 @@ struct system_clock_source_dfll_config {
 };
 
 /**
- * \name External Oscillator configuration and management
+ * \name External Oscillator management
  * @{
  */
 
@@ -636,7 +636,7 @@ void system_clock_source_xosc_set_config(
 
 
 /**
- * \name External 32KHz Oscillator configuration and management
+ * \name External 32KHz Oscillator management
  * @{
  */
 
@@ -673,7 +673,7 @@ void system_clock_source_xosc32k_set_config(
 
 
 /**
- * \name Internal 32KHz Oscillator configuration and management
+ * \name Internal 32KHz Oscillator management
  * @{
  */
 
@@ -703,7 +703,7 @@ void system_clock_source_osc32k_set_config(
 
 
 /**
- * \name Internal 8MHz Oscillator configuration and management
+ * \name Internal 8MHz Oscillator management
  * @{
  */
 
@@ -731,7 +731,7 @@ void system_clock_source_osc8m_set_config(
 
 
 /**
- * \name DFLL configuration and management
+ * \name Internal DFLL management
  * @{
  */
 
@@ -777,7 +777,7 @@ void system_clock_source_dfll_set_config(
  */
 
 /**
- * \name Clock source configuration
+ * \name Clock source management
  * @{
  */
 enum status_code system_clock_source_write_calibration(
@@ -802,7 +802,7 @@ uint32_t system_clock_source_get_hz(
  */
 
 /**
- * \name Main clock configuration
+ * \name Main clock management
  * @{
  */
 
@@ -1023,7 +1023,17 @@ static inline enum status_code system_apb_clock_clear_mask(
  * @}
  */
 
+/**
+ * \name System Clock Initialization
+ * @{
+ */
+
 void system_clock_init(void);
+
+/**
+ * @}
+ */
+
 
 /**
  * @}

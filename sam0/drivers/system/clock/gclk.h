@@ -167,7 +167,7 @@ struct system_gclk_chan_conf {
 	bool run_in_standby;
 };
 
-/** \name Generic Clock configuration and initialization
+/** \name Generic Clock management
  * @{
  */
 
@@ -200,7 +200,7 @@ void system_gclk_init(void);
 
 
 /**
- * \name Generic Clock configuration and initialization (Generators)
+ * \name Generic Clock management (Generators)
  * @{
  */
 
@@ -247,7 +247,7 @@ void system_gclk_gen_disable(
 
 
 /**
- * \name Generic Clock configuration and initialization (Channels)
+ * \name Generic Clock management (Channels)
  * @{
  */
 
