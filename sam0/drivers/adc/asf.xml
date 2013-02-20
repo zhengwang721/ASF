@@ -10,7 +10,7 @@
 		<build type="header-file" subtype="api" value="adc.h"/>
 		<build type="header-file" value="quick_start/qs_adc_basic.h" subtype="example"/>
 		<build type="include-path" value="."/>
-		<build type="doxygen-entry-point" value="sam0_adc_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>

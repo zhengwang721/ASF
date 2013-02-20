@@ -44,6 +44,33 @@
 #ifndef ADC_H_INCLUDED
 #define ADC_H_INCLUDED
 
+/**
+ * \defgroup asfdoc_samd20_adc_group SAMD20 Analog to Digital Converter Driver (ADC)
+ *
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Analog to Digital Converter functionality, for
+ * the conversion of analog voltages into a corresponding digital form.
+ *
+ * The following peripherals are used by this module:
+ *
+ *  - ADC (Analog to Digital Converter)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_adc_prerequisites
+ *  - \ref asfdoc_samd20_adc_module_overview
+ *  - \ref asfdoc_samd20_adc_special_considerations
+ *  - \ref asfdoc_samd20_adc_extra_info
+ *  - \ref asfdoc_samd20_adc_examples
+ *  - \ref asfdoc_samd20_adc_api_overview
+ *
+ *
+ * \section asfdoc_samd20_adc_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,360 +78,7 @@ extern "C" {
 #include <compiler.h>
 #include <system.h>
 
-/**
- * \defgroup sam0_adc_group SAMD20 Analog-to-Digital Converter Driver (ADC)
- *
- * Driver for the SAMD20 architecture devices. This driver provides an
- * interface for converting analog signals to digital values.
- * This driver encompasses the following module within the SAMD20 devices:
- * \li \b ADC \b (Analog-to-Digital Converter)
- *
- * \section module_introduction Introduction
- *
- * \subsection module_overview ADC Overview
- * The analog-to-digital converter converts an analog signal to a digital value.
- * The ADC has up to 12-bit resolution, and is capable of converting up to 500k
- * samples per second (ksps).
- * The input selection is flexible, and both single-ended and differential
- * measurements can be done. For differential measurements, an optional gain
- * stage is available to increase the dynamic range. In addition, several
- * internal signal inputs are available. The ADC can provide both signed and
- * unsigned results.
- *
- * The ADC measurements can either be started by application software or an
- * incoming event from another peripheral in the device.
- * Both internal and external reference voltages can be used. An integrated
- * temperature sensor is available for use with the ADC. The bandgap voltage, as
- * well as the scaled IO and core voltages can also be measured by the ADC.
- *
- * The ADC has a compare function for accurate monitoring of user defined
- * thresholds with minimum software intervention required.
- * The ADC may be configured for 8-, 10- or 12-bit result, reducing the
- * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
- * conversion results are provided left or right adjusted which eases
- * calculation when the result is represented as a signed integer.
- * \n\n
- * A simplified block diagram of the ADC can be seen in the following figure:
- *
- * \dot
- * digraph overview {
- * splines = false;
- * rankdir=LR;
- *
- * adc0top [label="ADC0", shape=none];
- * dotstop [label="...", shape=none];
- * adcntop [label="ADCn", shape=none];
- * sigtop [label="Int. Sig", shape=none];
- *
- * adc0bot [label="ADC0", shape=none];
- * dotsbot [label="...", shape=none];
- * adcnbot [label="ADCn", shape=none];
- * sigbot [label="Int. Sig", shape=none];
- *
- *
- * mux1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- * mux2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- *
- *
- * int1v [label="INT1V", shape=none];
- * intvcc [label="INTVCC", shape=none];
- * arefa [label="AEFA", shape=none];
- * arefb [label="AREFB", shape=none];
- *
- * mux3 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- *
- * adc0top -> mux1;
- * dotstop -> mux1;
- * adcntop -> mux1;
- * sigtop -> mux1;
- *
- * adc0bot -> mux2:nw;
- * dotsbot -> mux2:w;
- * adcnbot -> mux2:w;
- * sigbot -> mux2:sw;
- *
- * int1v -> mux3;
- * intvcc -> mux3;
- * arefa -> mux3;
- * arefb -> mux3;
- *
- *
- * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- * prescaler [label="PRESCALER", shape=box];
- *
- * mux1 -> adc;
- * mux2 -> adc;
- * mux3 -> adc:sw;
- * prescaler -> adc;
- *
- * postproc [label="Post processing", shape=box];
- * result [label="RESULT", shape=box];
- *
- * adc:e -> postproc:w;
- * postproc:e -> result:w;
- *
- * {rank=same; adc0top dotstop adcntop sigtop adc0bot dotsbot adcnbot sigbot }
- * {rank=same; mux1 mux2 int1v intvcc arefa arefb}
- * {rank=same; prescaler adc}
- *
- * }
- * \enddot
- *
- * \dot
- * digraph overview {
- * splines = false;
- * rankdir=LR;
- *
- * mux1 [label="Positive input", shape=box];
- * mux2 [label="Negative input", shape=box];
- *
- *
- * mux3 [label="Reference", shape=box];
- *
- * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- * prescaler [label="PRESCALER", shape=box, style=filled, fillcolor=lightblue];
- *
- * mux1 -> adc;
- * mux2 -> adc;
- * mux3 -> adc:sw;
- * prescaler -> adc;
- *
- * postproc [label="Post processing", shape=box];
- * result [label="RESULT", shape=box, style=filled, fillcolor=lightblue];
- *
- * adc:e -> postproc:w;
- * postproc:e -> result:w;
- *
- * {rank=same; mux1 mux2}
- * {rank=same; prescaler adc}
- *
- * }
- * \enddot
- *
- * \subsection prescaler Prescaler
- * The ADC features a prescaler which enables conversion at lower clock rates
- * than the specified GCLK settings. The prescaler can be configured in the
- * \ref adc_config struct.
- *
- * \subsection resolution ADC Resolution
- * The ADC supports 8-bit, 10-bit or 12-bit resolution. The resolution can be
- * configured in the \ref adc_config struct.
- *
- * \subsubsection oversampling Oversampling and Decimation
- * Oversampling and decimation can be configured with the
- * \ref adc_oversampling_and_decimation in the \ref adc_config struct.
- * In oversampling and decimation mode the ADC resolution is increased from
- * 12-bits to programmed 13, 14, 15 or 16-bits.
- *
- *
- * \subsection conversion Conversion
- * An ADC conversion can be started with the \ref adc_start_conversion
- * function. It is also possible configure the ADC in free-running mode where
- * new conversions are started as soon as a conversion is finished, or
- * configure a number of input pins to scan. See \ref pin_scan for more
- * information about the latter.
- *
- * The result of a conversion can be retrieved with the \ref adc_read
- * function.
- *
- * \subsubsection diff_mode Differential and Single-Ended Conversion
- * The ADC has two conversion modes; differential and single-ended. When
- * measuring signals where the positive input always is at a higher voltage
- * than the negative input, the single-ended conversion mode should be used in
- * order to have full 12-bit resolution in the conversion mode, which has only
- * positive values.
- * If however the positive input may go below the negative input, creating
- * some negative results, the differential mode should be used
- * in order to get correct results. The configuration of the conversion mode
- * is done in the \ref adc_config struct.
- *
- * \subsubsection sample_time Sample Time
- * Sample time is configurable with \ref adc_conf.sample_length. This value
- * (0-63) controls the ADC sampling time in number of half-ADC prescaled clock
- * cycles (depending on the prescaler value), thus controlling the ADC input
- * impedance.
- *
- * The resulting sampling time is given by the following equation:
- * \f[
- * t_{SAMPLE} = (sample\_length+1) \times \frac{ADC_{CLK}} {2}
- * \f]
- *
- * \subsubsection averaging Averaging
- * The ADC can be configured to trade conversion speed for accuracy by
- * averaging multiple samples. This feature is suitable when operating in noisy
- * conditions. The numbers of samples to be averaged is specified with the
- * \ref adc_average_samples enum in the \ref adc_config struct.
- * When reading the ADC result, this will be the output.
- * The effective ADC sample rate will be reduced with:
- * <table>
- *   <tr>
- *     <th>Number of Samples</th>
- *     <th>Final Result</th>
- *   </tr>
- *   <tr>
- *     <td>1</td>
- *     <td>12-bits</td>
- *  </tr>
- *  <tr>
- *     <td>2</td>
- *     <td>13-bits</td>
- *  </tr>
- *  <tr>
- *     <td>4</td>
- *     <td>14-bits</td>
- *  </tr>
- *  <tr>
- *     <td>8</td>
- *     <td>15-bits</td>
- *  </tr>
- *  <tr>
- *     <td>16</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>32</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>64</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>128</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>256</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>512</td>
- *     <td>16-bits</td>
- *  </tr>
- *  <tr>
- *     <td>1024</td>
- *     <td>16-bits</td>
- *  </tr>
- * </table>
- *
- *
- * \subsubsection offset_corr Offset and Gain Correction
- * Inherent gain and offset errors affect the absolute accuracy of the ADC. The
- * offset error is defined as the deviation of the ADC’s actual transfer
- * function from ideal straight line at zero input voltage.
- * The gain error is defined as the deviation of the last output step's
- * midpoint from the ideal straight line, after compensating for offset error.
- * The offset correction value is subtracted from the converted data before the
- * result is ready. The gain correction value is multiplied with the offset
- * corrected value.
- *
- * The equation for both offset and gain error compensation is shown below:
- * \f[
- * ADC_{RESULT} = (VALUE_{CONV} + CORR_{OFFSET}) \times CORR_{GAIN}
- * \f]
- *
- * Offset and gain correction is enabled with the
- * \ref adc_conf.correction_enable bool, and the correction values are
- * written to the \ref adc_conf.gain_correction and
- * \ref adc_conf.offset_correction values.
- *
- * In single conversion, a latency of 13 GCLK_ADC is added for the final
- * RESULT availability. Since the correction time is always less than
- * propagation delay, in free running mode this latency appears only during the
- * first conversion. All other conversion results are available at the defined
- * sampling rate.
 
- * \subsubsection pin_scan Pin Scan
- * In pin scan mode, the first conversion will start at the configured positive
- * input (\ref adc_conf.positive_input) plus a start offset
- * (\ref adc_conf.offset_start_scan). When a conversion is done, the next
- * conversion will start at the next input and so on, until the configured
- * number of input pins to scan (\ref adc_conf.inputs_to_scan) conversions
- * are done.
- *
- * Pin scan mode can be configured in the \ref adc_config struct before
- * initializing the ADC, or run-time with the \ref adc_set_pin_scan_mode and
- * \ref adc_disable_pin_scan_mode functions.
- *
- * \subsection window_monitor Window Monitor
- * The window monitor allows comparing the conversion result to predefined
- * threshold values.
- * The threshold values are evaluated differently, depending on whether
- * differential or single-ended mode is selected.
- * The upper and lower thresholds are evaluated as signed values in
- * differential mode, otherwise they are evaluated as unsigned values.
- *
- * The significant bits of the lower window monitor threshold and upper window
- * monitor threshold are given by the precision selected by the resolution
- * option in the \ref adc_config struct. That means that only the eight lower
- * bits will be considered in 8-bit mode. In addition, if using differential
- * mode, the 8th bit will be considered as the sign bit even if bit 9 is a
- * zero.
-
- * The window mode can be configured with the configuration struct before
- * initializing the ADC, or run-time with the \ref adc_set_window_mode function.
- * The window monitor result can be polled with the
- * \ref adc_is_interrupt_flag_set function. If this flag is set, it must be
- * cleared with the \ref adc_clear_interrupt_flag function before checking for
- * a new match.
- *
- * \subsection events Events
- * Event generation and event actions are configurable in the ADC.
- *
- * The ADC has two actions that can be triggered upon event reception:
- * \li Start conversion
- * \li Flush pipeline and start conversion
- *
- * The ADC can generate two events:
- * \li Window monitor
- * \li Result ready
- *
- * If the event actions are enabled in the configuration, any incoming event
- * will trigger the action.
- * \n
- * If the window monitor event is enabled, an event will be generated
- * when the configured window condition is detected.
- * If the result ready event is enabled, an event will be generated when a
- * conversion is done.
- *
- * \subsection module_clk_sources Clock Sources
- * The clock for the ADC interface (CLK_ADC) is generated by
- * the Power Manager. This clock is turned on by default, and can be enabled
- * and disabled in the Power Manager.
- *\n\n
- * Additionally, an asynchronous clock source (GCLK_ADC) is required.
- * These clocks are normally disabled by default. The selected clock source
- * must be enabled in the Power Manager before it can be used by the ADC.
- * The ADC core operates asynchronously from the user interface and
- * peripheral bus. As a consequence, the ADC needs two clock cycles of both
- * CLK_ADC and GCLK_ADC to synchronize the values written to some of the
- * control and data registers.
- * The oscillator source for the GCLK_ADC clock is selected in the System
- * Control Interface (SCIF).
- *
- * \section dependencies Dependencies
- * The ADC driver has the following dependencies:
- * \li \ref system_group "System" - The ADC can only do conversions in active or
- * idle mode. The clock for the ADC interface (CLK_ADC) is generated by
- * the Power Manager. This clock is turned on by default, and can be enabled
- * and disabled in the Power Manager.
- * Additionally, an asynchronous clock source (GCLK_ADC) is required.
- * These clocks are normally disabled by default. The selected clock source
- * must be enabled in the Power Manager before it can be used by the ADC.
- * \li \ref sam0_events_group "Events" - Event generation and event actions are
- * configurable in the ADC.
- *
- * \section special_cons Special Considerations
- *
- * \subsection extra_info Extra Information
- * For extra information see \ref adc_extra_info.
- *
- * \section module_examples Examples
- * - \ref quickstart
- *
- * \section api_overview API Overview
- * @{
- */
 
 /**
  * \brief ADC interrupt flags
@@ -1366,10 +1040,11 @@ static inline void adc_clear_interrupt_flag(
 
 /** @} */
 
+
 /**
- * \page adc_extra_info Extra Information
+ * \page asfdoc_samd20_adc_extra Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_samd20_adc_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1400,13 +1075,22 @@ static inline void adc_clear_interrupt_flag(
  *	</tr>
  * </table>
  *
- * \section workarounds Workarounds Implemented by Driver
- * No workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_adc_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *
+ *
+ * \section asfdoc_samd20_adc_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_adc_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -1419,21 +1103,15 @@ static inline void adc_clear_interrupt_flag(
  */
 
 /**
- * \page quickstart Quick Start Guides for the ADC Module
+ * \page asfdoc_samd20_adc_exqsg Examples for ADC Driver
  *
- * This is the quick start guide list for the \ref sam0_adc_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_adc_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section adc_use_cases ADC driver use cases
- * - \subpage adc_basic_use_case
+ *  - \subpage asfdoc_samd20_adc_basic_use_case
  */
 
-#endif /* _ADC_H_INCLUDED_ */
+#endif /* ADC_H_INCLUDED */
