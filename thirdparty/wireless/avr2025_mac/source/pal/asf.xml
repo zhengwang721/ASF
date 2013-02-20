@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="thirdparty.wireless.avr2025_mac.source.pal" caption="COMPONENT - PAL">
-        <module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
+        <module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#1"     caption="PAL SPI access for external transceivers">
             <info type="description" value="summary">
             This module includes PAL wrapper files for boards with External Transceivers
             </info>
@@ -19,7 +19,7 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 		</module>
 
-		<module type="component" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
+		<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal#2"     caption="PAL access for SoC">
             <info type="description" value="summary">
             This module includes PAL wrapper files for Soc's
             </info>
