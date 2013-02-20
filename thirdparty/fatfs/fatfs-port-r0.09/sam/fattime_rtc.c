@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example configuration
+ * \brief Implementation of low level disk I/O module skeleton for FatFS.
  *
  * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,15 +40,46 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#include "compiler.h"
+#include "rtc.h"
 
-#define USART_ENABLE()
-#define USART_DISABLE()
-#define USART_BASE       ((Usart*)UART)
-#define USART_ID         ID_UART
-#define USART_HANDLER    UART_Handler
-#define USART_INT_IRQn   UART_IRQn
-#define USART_INT_LEVEL  3
+uint32_t get_fattime(void);
+/**
+ * \brief Current time returned is packed into a DWORD value.
+ *
+ * The bit field is as follows:
+ *
+ * bit31:25  Year from 1980 (0..127)
+ *
+ * bit24:21  Month (1..12)
+ *
+ * bit20:16  Day in month(1..31)
+ *
+ * bit15:11  Hour (0..23)
+ *
+ * bit10:5   Minute (0..59)
+ *
+ * bit4:0    Second (0..59)
+ *
+ * \return Current time.
+ */
+uint32_t get_fattime(void)
+{
+	uint32_t ul_time;
+	uint32_t ul_hour, ul_minute, ul_second;
+	uint32_t ul_year, ul_month, ul_day, ul_week;
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+	/* Retrieve date and time */
+	rtc_get_time(RTC, &ul_hour, &ul_minute, &ul_second);
+	rtc_get_date(RTC, &ul_year, &ul_month, &ul_day, &ul_week);
+
+	ul_time = ((ul_year - 1980) << 25)
+			| (ul_month << 21)
+			| (ul_day << 16)
+			| (ul_hour << 11)
+			| (ul_minute << 5)
+			| (ul_second << 0);
+
+	return ul_time;
+}
+

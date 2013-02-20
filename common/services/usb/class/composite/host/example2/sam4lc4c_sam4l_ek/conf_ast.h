@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example configuration
+ * \brief AST configuration.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,16 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-#define USART_ENABLE()
-#define USART_DISABLE()
-#define USART_BASE       ((Usart*)UART)
-#define USART_ID         ID_UART
-#define USART_HANDLER    UART_Handler
-#define USART_INT_IRQn   UART_IRQn
-#define USART_INT_LEVEL  3
+//! Configuration of the AST driver
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
+
+// #define AST_PER_ENABLE
+// #define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
+
+#endif /* CONF_AST_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example configuration
+ * \brief  Configuration File for SAM4L-EK Board.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,26 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-#define USART_ENABLE()
-#define USART_DISABLE()
-#define USART_BASE       ((Usart*)UART)
-#define USART_ID         ID_UART
-#define USART_HANDLER    UART_Handler
-#define USART_INT_IRQn   UART_IRQn
-#define USART_INT_LEVEL  3
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+/* Auto-initialize USART GPIOs when board_init() is called */
+//#define CONF_BOARD_COM_PORT
+
+/* Enable USB interface (USB) */
+#define CONF_BOARD_USB_PORT
+/* ID detect enabled,  uncomment it if jumper PB05/USB set */
+#define CONF_BOARD_USB_ID_DETECT
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+#define CONF_BOARD_USB_VBUS_CONTROL
+/* Host VBUS control enabled,  uncomment it if jumper PC08/USB set */
+#define CONF_BOARD_USB_VBUS_ERR_DETECT
+
+/* Enable USART to control Board Monitoring */
+#define CONF_BOARD_BM_USART
+
+/* Initialize the LCD Backlight */
+#define CONF_BOARD_BL
+
+#endif /* CONF_BOARD_H_INCLUDED */

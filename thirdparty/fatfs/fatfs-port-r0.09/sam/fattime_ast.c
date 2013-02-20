@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example configuration
+ * \brief Implementation of low level disk I/O module skeleton for FatFS.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,44 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#include "compiler.h"
+#include "ast.h"
 
-#define USART_ENABLE()
-#define USART_DISABLE()
-#define USART_BASE       ((Usart*)UART)
-#define USART_ID         ID_UART
-#define USART_HANDLER    UART_Handler
-#define USART_INT_IRQn   UART_IRQn
-#define USART_INT_LEVEL  3
+uint32_t get_fattime(void);
+/**
+ * \brief Current time returned is packed into a DWORD value.
+ *
+ * The bit field is as follows:
+ *
+ * bit31:25  Year from 1980 (0..127)
+ *
+ * bit24:21  Month (1..12)
+ *
+ * bit20:16  Day in month(1..31)
+ *
+ * bit15:11  Hour (0..23)
+ *
+ * bit10:5   Minute (0..59)
+ *
+ * bit4:0    Second (0..59)
+ *
+ * \return Current time.
+ */
+uint32_t get_fattime(void)
+{
+	uint32_t time_val;
+	struct ast_calv calendar;
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+	/* Retrieve date and time */
+	calendar = ast_read_calendar_value(AST).FIELD;
+
+	time_val = ((calendar.year - 1980) << 25)
+			| (calendar.month << 21)
+			| (calendar.day << 16)
+			| (calendar.hour << 11)
+			| (calendar.min << 5)
+			| (calendar.sec << 0);
+
+	return time_val;
+}
+
