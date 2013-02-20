@@ -74,7 +74,7 @@ void system_gclk_init(void)
  */
 void system_gclk_gen_set_config(
 		const uint8_t generator,
-		struct system_gclk_gen_conf *const config)
+		struct system_gclk_gen_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -246,7 +246,7 @@ uint32_t system_gclk_gen_get_hz(
  */
 void system_gclk_chan_set_config(
 		const uint8_t channel,
-		struct system_gclk_chan_conf *const config)
+		struct system_gclk_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);

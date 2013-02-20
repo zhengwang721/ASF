@@ -71,7 +71,7 @@ void configure_wdt(void)
 	//! [setup_2]
 
 	// TODO: Move into driver once scheme to select clock is determined
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_4;
 	gclk_chan_conf.run_in_standby   = false;

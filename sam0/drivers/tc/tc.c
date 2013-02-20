@@ -130,8 +130,8 @@ enum status_code tc_init(
 	/* Array of PM APBC mask bit position for different TC instances */
 	uint16_t inst_pm_apbmask[] = TC_INST_PM_APBCMASK;
 
-	struct system_pinmux_conf pin_config;
-	struct system_gclk_chan_conf gclk_chan_config;
+	struct system_pinmux_config pin_config;
+	struct system_gclk_chan_config gclk_chan_config;
 
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
@@ -209,7 +209,7 @@ enum status_code tc_init(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
-	tc_module->COUNT8.CTRLBCLR.reg = 0xFF;
+	hw->COUNT8.CTRLBCLR.reg = 0xFF;
 
 	/* Check if we actually need to go into a wait state. */
 	if (ctrlbset_tmp) {
@@ -218,7 +218,7 @@ enum status_code tc_init(
 		}
 
 		/* Check if we actually need to go into a wait state. */
-		tc_module->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
+		hw->COUNT8.CTRLBSET.reg = ctrlbset_tmp;
 	}
 
 	ctrlc_tmp = config->waveform_invert_output | config->capture_enable;

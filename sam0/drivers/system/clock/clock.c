@@ -524,7 +524,7 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-	struct system_gclk_gen_conf gclk_generator_conf;
+	struct system_gclk_gen_config gclk_generator_conf;
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -690,7 +690,7 @@ void system_clock_init(void)
 #  endif
 
 #  if (CONF_CLOCK_DFLL_MODE == SYSTEM_CLOCK_DFLL_CLOSED_LOOP) && (CONF_CLOCK_DFLL_ENABLE == true)
-	struct system_gclk_chan_conf dfll_gclk_chan_conf;
+	struct system_gclk_chan_config dfll_gclk_chan_conf;
 
 	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 	dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;

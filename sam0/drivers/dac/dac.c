@@ -65,7 +65,7 @@ static void _dac_set_config(
 	Dac *const dac_module = module_inst->hw_dev;
 
 	/* Configure GCLK channel and enable clock */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	gclk_chan_conf.source_generator = config->clock_source;
 	gclk_chan_conf.run_in_standby   = config->run_in_standby;
 	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);

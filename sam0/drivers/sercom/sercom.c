@@ -141,7 +141,7 @@ enum status_code sercom_set_gclk_generator(
 		bool force_change)
 {
 	/* Configuration structure for the gclk channel. */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 
 	/* Pointer to internal sercom configuration. */
 	struct _sercom_conf *sercom_config_ptr = &_sercom_config;

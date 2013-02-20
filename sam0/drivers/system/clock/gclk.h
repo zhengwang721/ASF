@@ -140,7 +140,7 @@ enum gclk_generator {
  * \ref system_gclk_gen_get_config_defaults() function before being modified by
  * the user application.
  */
-struct system_gclk_gen_conf {
+struct system_gclk_gen_config {
 	/** Source clock input channel index. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
@@ -160,7 +160,7 @@ struct system_gclk_gen_conf {
  * should be initialized by the \ref system_gclk_chan_get_config_defaults()
  * function before being modified by the user application.
  */
-struct system_gclk_chan_conf {
+struct system_gclk_chan_config {
 	/** Generic Clock Generator source channel. */
 	enum gclk_generator source_generator;
 	/** If \c true, the clock is kept enabled during device standby mode. */
@@ -220,7 +220,7 @@ void system_gclk_init(void);
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_gen_get_config_defaults(
-		struct system_gclk_gen_conf *const config)
+		struct system_gclk_gen_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -235,7 +235,7 @@ static inline void system_gclk_gen_get_config_defaults(
 
 void system_gclk_gen_set_config(
 		const uint8_t generator,
-		struct system_gclk_gen_conf *const config);
+		struct system_gclk_gen_config *const config);
 
 void system_gclk_gen_enable(
 		const uint8_t generator);
@@ -266,7 +266,7 @@ void system_gclk_gen_disable(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_chan_get_config_defaults(
-		struct system_gclk_chan_conf *const config)
+		struct system_gclk_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -281,7 +281,7 @@ static inline void system_gclk_chan_get_config_defaults(
 
 void system_gclk_chan_set_config(
 		const uint8_t channel,
-		struct system_gclk_chan_conf *const config);
+		struct system_gclk_chan_config *const config);
 
 void system_gclk_chan_enable(
 		const uint8_t channel);
