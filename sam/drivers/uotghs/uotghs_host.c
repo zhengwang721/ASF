@@ -1187,6 +1187,11 @@ static void uhd_interrupt(void)
 		uhd_ack_errors_interrupt();
 		return;
 	}
+	// Still waiting VBus, ignore errors
+	if (Is_uhd_vbus_enabled() && !Is_otg_vbus_high()) {
+		uhd_ack_errors_interrupt();
+		return;
+	}
 
 	Assert(false); // Interrupt event no managed
 }
