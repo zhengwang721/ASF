@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Timeout Driver configuration
+ * \brief Flash Driver configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,11 +40,7 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TC_TIMEOUT_H
-#define CONF_TC_TIMEOUT_H
+#ifndef CONF_FLASH_H
+#define CONF_FLASH_H
 
-
-
-
-
-#endif /* CONF_TC_TIMEOUT_H */
+#endif /* CONF_FLASH_H */

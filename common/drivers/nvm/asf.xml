@@ -96,7 +96,6 @@
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="nvm_quickstart"/>
-				<build type="module-config" subtype="required-header-file" value="conf_nvm.h"/>
 				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
 				<require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.flash"/>
 				<device-support value="megarf"/>

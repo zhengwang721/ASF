@@ -43,34 +43,34 @@
 #ifndef CONF_HW_TIMER_H_INCLUDED
 #define CONF_HW_TIMER_H_INCLUDED
 
-// Enable the below definitions for XMEGA HW timer
-/*! \name Configuration
- */
+//! \name Configuration for XMEGA
 //! @{
-// #define TIMER     (&TCC0)
+#if (XMEGA)
+#define TIMER     (&TCC0)
+#endif //XMEGA
 //! @}
 
-// HW timer for UC3A
-/*! \name Configuration
- */
+//! \name Configuration for UC3
 //! @{
-// #define TIMER                (&AVR32_TC0)
-// #define TIMER_CHANNEL_ID     0
+#if (UC3)
+#define TIMER                (&AVR32_TC0)
+#define TIMER_CHANNEL_ID     0
+#endif //UC3
 //! @}
 
-// Enable the below definitions for SAM4L HW timer
-/*! \name Configuration
- */
+//! \name Configuration for SAM4L
 //! @{
-// #define TIMER                (TC0)
-// #define TIMER_CHANNEL_ID     (0)
+#if (SAM4L)
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     (0)
+#endif //SAM4L
 //! @}
 
-// Enable the below definitions for MEGARF HW timer
-/*! \name Configuration
- */
+//! \name Configuration for MEGARF
 //! @{
-// #define TIMER     (&TCCR1A)
+#if (MEGARF)
+#define TIMER     (&TCCR1A)
+#endif //MEGARF
 //! @}
 
 
