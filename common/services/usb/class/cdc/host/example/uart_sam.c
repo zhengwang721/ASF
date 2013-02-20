@@ -3,7 +3,7 @@
  *
  * \brief UART functions
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,13 @@
 #include "conf_example.h"
 #include "conf_usb_host.h"
 #include <asf.h>
+
+#if SAM4L
+#   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_BASE)
+#else
+#   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_ID)
+#endif
+
 
 /* Default option */
 static sam_usart_opt_t usart_options = {
@@ -171,7 +178,7 @@ void uart_config(usb_cdc_line_coding_t *cfg)
 	imr = usart_get_interrupt_mask(USART_BASE);
 	usart_disable_interrupt(USART_BASE, 0xFFFFFFFF);
 	usart_init_rs232(USART_BASE, &usart_options,
-			sysclk_get_peripheral_hz());
+			sysclk_get_peripheral_bus_hz(USART_BASE));
 	/* Restore both RX and TX */
 	usart_enable_tx(USART_BASE);
 	usart_enable_rx(USART_BASE);
@@ -183,13 +190,13 @@ void uart_open(void)
 	/* IO is initialized in board init
 	 * Enable interrupt with priority higher than USB
 	 */
-	NVIC_SetPriority((IRQn_Type)USART_ID, USART_INT_LEVEL);
-	NVIC_EnableIRQ((IRQn_Type)USART_ID);
+	NVIC_SetPriority(USART_INT_IRQn, USART_INT_LEVEL);
+	NVIC_EnableIRQ(USART_INT_IRQn);
 
 	/* Initialize it in RS232 mode. */
-	pmc_enable_periph_clk(USART_ID);
+	USART_PERIPH_CLK_ENABLE();
 	if (usart_init_rs232(USART_BASE, &usart_options,
-				sysclk_get_peripheral_hz())) {
+			sysclk_get_peripheral_bus_hz(USART_BASE))) {
 		return;
 	}
 

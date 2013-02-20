@@ -45,7 +45,7 @@
 #define _SD_MMC_MEM_H_
 
 /**
- * \ingroup sd_mmc_stack
+ * \ingroup sd_mmc_stack_group
  * \defgroup sd_mmc_stack_mem SD/MMC Memory
  *
  * SD/MMC memory APIs required by CTRL_ACCESS module
