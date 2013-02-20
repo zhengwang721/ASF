@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Management of the virtual memory.
+ * \brief User Interface
  *
- * This file manages the virtual memory.
- *
- * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,52 +41,65 @@
  *
  */
 
-#ifndef _VIRTUAL_MEM_H_
-#define _VIRTUAL_MEM_H_
+#include <asf.h>
+#include "ui.h"
 
-
-#include "conf_access.h"
-
-#if VIRTUAL_MEM == ENABLE
-
-#include "ctrl_access.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//_____ D E F I N I T I O N S ______________________________________________
-
-#define VMEM_SECTOR_SIZE   512
-
-
-//---- CONTROL FUNCTIONS ----
-
-extern Ctrl_status  virtual_test_unit_ready(void);
-extern Ctrl_status  virtual_read_capacity(uint32_t *u32_nb_sector);
-extern bool         virtual_wr_protect(void);
-extern bool         virtual_removal(void);
-extern bool         virtual_unload(bool unload);
-
-
-//---- ACCESS DATA FUNCTIONS ----
-
-// USB interface
-#if ACCESS_USB == true
-extern Ctrl_status  virtual_usb_read_10 (uint32_t addr, uint16_t nb_sector);
-extern Ctrl_status  virtual_usb_write_10(uint32_t addr, uint16_t nb_sector);
-#endif
-
-// RAM interface
-#if ACCESS_MEM_TO_RAM == true
-extern Ctrl_status  virtual_mem_2_ram(uint32_t addr,       void *ram);
-extern Ctrl_status  virtual_ram_2_mem(uint32_t addr, const void *ram);
-#endif
-
-#ifdef __cplusplus
+void ui_init(void)
+{
+	LED_On(LED0);
+	LED_Off(LED1);
+	LED_Off(LED2);
 }
-#endif
 
-#endif
+void ui_powerdown(void)
+{
+	LED_Off(LED0);
+	LED_Off(LED1);
+	LED_Off(LED2);
+}
 
-#endif  // _VIRTUAL_MEM_H_
+void ui_wakeup(void)
+{
+	LED_On(LED0);
+}
+
+void ui_start_read(void)
+{
+	LED_On(LED1);
+}
+
+void ui_stop_read(void)
+{
+	LED_Off(LED1);
+}
+
+void ui_start_write(void)
+{
+	LED_On(LED2);
+}
+
+void ui_stop_write(void)
+{
+	LED_Off(LED2);
+}
+
+void ui_process(uint16_t framenumber)
+{
+	if (0 == framenumber) {
+		LED_On(LED0);
+	}
+	if (1000 == framenumber) {
+		LED_Off(LED0);
+	}
+}
+
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAM4E-EK:
+ * - Led 0 (D2, blue) blinks when USB host has checked and enabled MSC interface
+ * - Led 1 (D3, amber) is on during read operation
+ * - Led 2 (D4, green) is on during write operation
+ *
+ */

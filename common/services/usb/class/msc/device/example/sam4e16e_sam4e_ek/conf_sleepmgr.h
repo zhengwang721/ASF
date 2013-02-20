@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Management of the virtual memory.
+ * \brief Sleep manager configuration
  *
- * This file manages the virtual memory.
- *
- * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,52 +41,9 @@
  *
  */
 
-#ifndef _VIRTUAL_MEM_H_
-#define _VIRTUAL_MEM_H_
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include "conf_access.h"
-
-#if VIRTUAL_MEM == ENABLE
-
-#include "ctrl_access.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//_____ D E F I N I T I O N S ______________________________________________
-
-#define VMEM_SECTOR_SIZE   512
-
-
-//---- CONTROL FUNCTIONS ----
-
-extern Ctrl_status  virtual_test_unit_ready(void);
-extern Ctrl_status  virtual_read_capacity(uint32_t *u32_nb_sector);
-extern bool         virtual_wr_protect(void);
-extern bool         virtual_removal(void);
-extern bool         virtual_unload(bool unload);
-
-
-//---- ACCESS DATA FUNCTIONS ----
-
-// USB interface
-#if ACCESS_USB == true
-extern Ctrl_status  virtual_usb_read_10 (uint32_t addr, uint16_t nb_sector);
-extern Ctrl_status  virtual_usb_write_10(uint32_t addr, uint16_t nb_sector);
-#endif
-
-// RAM interface
-#if ACCESS_MEM_TO_RAM == true
-extern Ctrl_status  virtual_mem_2_ram(uint32_t addr,       void *ram);
-extern Ctrl_status  virtual_ram_2_mem(uint32_t addr, const void *ram);
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-
-#endif  // _VIRTUAL_MEM_H_
+#endif /* CONF_SLEEPMGR_H */
