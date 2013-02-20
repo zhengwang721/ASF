@@ -208,7 +208,7 @@ enum status_code ac_chan_set_config(
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel,
-		struct ac_win_conf *const config)
+		struct ac_win_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
