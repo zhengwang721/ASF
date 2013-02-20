@@ -194,7 +194,7 @@ int sio2host_getchar_nowait(void)
 }
 
 
-ISR(USART_HOST_ISR_VECT)
+USART_HOST_ISR_VECT()
 {
 	uint8_t temp;
 	

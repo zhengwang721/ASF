@@ -43,7 +43,7 @@
 #ifndef CONF_SIO2NCP_H_INCLUDED
 #define CONF_SIO2NCP_H_INCLUDED
 
-
+#warning "Using a default value. Edit this conf_sio2ncp.h file to modify that define value according to the current board."
 //! \name Configuration for Xmega
 //! @{
 #if (XMEGA)
@@ -54,7 +54,7 @@
 #define USART_NCP_STOP_BITS      1
 
 #define USART_NCP_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_NCP, USART_INT_LVL_HI) 
-#define USART_NCP_ISR_VECT       USARTD0_RXC_vect
+#define USART_NCP_ISR_VECT()      ISR(USARTD0_RXC_vect)
 #endif //XMEGA
 //! @}
 
@@ -68,7 +68,7 @@
 #define USART_NCP_STOP_BITS      1
 
 #define USART_NCP_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_NCP)
-#define USART_NCP_ISR_VECT       USART1_RX_vect
+#define USART_NCP_ISR_VECT()      ISR(USART1_RX_vect)
 #endif //MEGA_RF
 //! @}
 
@@ -82,7 +82,7 @@
 #define USART_NCP_STOP_BITS      USART_1_STOPBIT
 
 #define USART_NCP_RX_ISR_ENABLE() 
-#define USART_NCP_ISR_VECT       ncp_uart_isr,2,1
+#define USART_NCP_ISR_VECT()      ISR(ncp_uart_isr,2,1)
 #endif //UC3
 //! @}
 
@@ -97,7 +97,7 @@
 #define USART_NCP_PARITY          US_MR_PAR_NO
 #define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-#define USART_NCP_ISR_VECT        USART0_Handler
+#define USART_NCP_ISR_VECT()      ISR(USART0_Handler)
 #define USART_NCP_IRQn            USART0_IRQn
 #define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
 						              NVIC_EnableIRQ(USART_NCP_IRQn);

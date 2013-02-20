@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.flash" caption="Flash driver">
+	<module type="driver" id="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.flash" caption="Flash driver">
 		<info type="description" value="summary">
 			Flash Drivers
 		</info>
@@ -17,5 +17,4 @@
 		<require idref="common.services.basic.clock" />
 		<require idref="common.utils" />
 	</module>
-	
 </asf>

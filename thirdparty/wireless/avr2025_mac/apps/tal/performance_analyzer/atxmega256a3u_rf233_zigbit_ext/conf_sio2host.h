@@ -54,6 +54,6 @@
 //! @}
 
 #define USART_HOST_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_HOST, USART_INT_LVL_HI)
-#define USART_HOST_ISR_VECT       USARTE0_RXC_vect
+#define USART_HOST_ISR_VECT()     ISR(USARTE0_RXC_vect)
 
 #endif /* CONF_SIO2HOST_H_INCLUDED */

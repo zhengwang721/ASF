@@ -61,7 +61,7 @@
 
 //! @}
 
-#define USART_NCP_ISR_VECT        USART0_Handler
+#define USART_NCP_ISR_VECT()      ISR(USART0_Handler)
 
 #define USART_NCP_IRQn            USART0_IRQn
 

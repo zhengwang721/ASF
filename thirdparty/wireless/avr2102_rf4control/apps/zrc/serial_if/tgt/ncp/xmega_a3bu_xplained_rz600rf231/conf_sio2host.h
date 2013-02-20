@@ -53,6 +53,6 @@
 #define USART_HOST_STOP_BIT       1
 //! @}
 
-#define USART_HOST_ISR_VECT       USARTE0_RXC_vect
+#define USART_HOST_ISR_VECT()     ISR(USARTE0_RXC_vect)
 
 #endif /* CONF_SIO2HOST_H_INCLUDED */

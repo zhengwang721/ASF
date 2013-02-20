@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief USART Serial configuration
+ * \brief Common Software Timer configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
