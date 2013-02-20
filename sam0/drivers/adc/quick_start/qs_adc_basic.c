@@ -46,8 +46,8 @@ int main(void)
 {
 //! [main]
 //! [variable]
-	struct adc_dev_inst dev_inst;
-	struct adc_conf config;
+	struct adc_module dev_inst;
+	struct adc_config config;
 //! [variable]
 //! [res_variable]
 	uint16_t result;

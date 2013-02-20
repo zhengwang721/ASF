@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef _ADC_H_INCLUDED_
-#define _ADC_H_INCLUDED_
+#ifndef ADC_H_INCLUDED
+#define ADC_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -184,15 +184,15 @@ extern "C" {
  * \subsection prescaler Prescaler
  * The ADC features a prescaler which enables conversion at lower clock rates
  * than the specified GCLK settings. The prescaler can be configured in the
- * \ref adc_conf struct.
+ * \ref adc_config struct.
  *
  * \subsection resolution ADC Resolution
  * The ADC supports 8-bit, 10-bit or 12-bit resolution. The resolution can be
- * configured in the \ref adc_conf struct.
+ * configured in the \ref adc_config struct.
  *
  * \subsubsection oversampling Oversampling and Decimation
  * Oversampling and decimation can be configured with the
- * \ref adc_oversampling_and_decimation in the \ref adc_conf struct.
+ * \ref adc_oversampling_and_decimation in the \ref adc_config struct.
  * In oversampling and decimation mode the ADC resolution is increased from
  * 12-bits to programmed 13, 14, 15 or 16-bits.
  *
@@ -216,7 +216,7 @@ extern "C" {
  * If however the positive input may go below the negative input, creating
  * some negative results, the differential mode should be used
  * in order to get correct results. The configuration of the conversion mode
- * is done in the \ref adc_conf struct.
+ * is done in the \ref adc_config struct.
  *
  * \subsubsection sample_time Sample Time
  * Sample time is configurable with \ref adc_conf.sample_length. This value
@@ -233,7 +233,7 @@ extern "C" {
  * The ADC can be configured to trade conversion speed for accuracy by
  * averaging multiple samples. This feature is suitable when operating in noisy
  * conditions. The numbers of samples to be averaged is specified with the
- * \ref adc_average_samples enum in the \ref adc_conf struct.
+ * \ref adc_average_samples enum in the \ref adc_config struct.
  * When reading the ADC result, this will be the output.
  * The effective ADC sample rate will be reduced with:
  * <table>
@@ -322,7 +322,7 @@ extern "C" {
  * number of input pins to scan (\ref adc_conf.inputs_to_scan) conversions
  * are done.
  *
- * Pin scan mode can be configured in the \ref adc_conf struct before
+ * Pin scan mode can be configured in the \ref adc_config struct before
  * initializing the ADC, or run-time with the \ref adc_set_pin_scan_mode and
  * \ref adc_disable_pin_scan_mode functions.
  *
@@ -336,7 +336,7 @@ extern "C" {
  *
  * The significant bits of the lower window monitor threshold and upper window
  * monitor threshold are given by the precision selected by the resolution
- * option in the \ref adc_conf struct. That means that only the eight lower
+ * option in the \ref adc_config struct. That means that only the eight lower
  * bits will be considered in 8-bit mode. In addition, if using differential
  * mode, the 8th bit will be considered as the sign bit even if bit 9 is a
  * zero.
@@ -479,7 +479,7 @@ enum adc_resolution {
 	/** ADC 10-bit resolution */
 	ADC_RESOLUTION_10BIT = ADC_CTRLB_RESSEL_10BIT,
 	/** ADC 8-bit resolution */
-	ADC_RESOLUTION_8BIT = ADC_CTRLB_RESSEL_8BIT,
+	ADC_RESOLUTION_8BIT  = ADC_CTRLB_RESSEL_8BIT,
 };
 
 /**
@@ -720,25 +720,25 @@ enum adc_oversampling_and_decimation {
 /**
  * \brief Window monitor configuration structure
  *
- * Window monitor configuration structure. Part of the \ref adc_conf struct
+ * Window monitor configuration structure. Part of the \ref adc_config struct
  * and will be initialized by \ref adc_get_config_defaults .
  */
-struct adc_window_conf {
+struct adc_window_config {
 	/** Selected window mode */
-	enum adc_window_mode     window_mode;
+	enum adc_window_mode window_mode;
 	/** Lower window value */
-	int32_t                  window_lower_value;
+	int32_t window_lower_value;
 	/** Upper window value */
-		int32_t                  window_upper_value;
+	int32_t window_upper_value;
 };
 
 /**
  * \brief Event configuration structure
  *
- * Event configuration structure. Part of the \ref adc_conf struct and will
+ * Event configuration structure. Part of the \ref adc_config struct and will
  * be initialized by \ref adc_get_config_defaults .
  */
-struct adc_event_conf {
+struct adc_event_config {
 	/** Event action to take on incoming event */
 	enum adc_event_action event_action;
 	/** Enable event generation on conversion done */
@@ -751,10 +751,10 @@ struct adc_event_conf {
  * \brief Gain and offsett correction configuration structure
  *
  * Gain and offsett correction configuration structure.
- * Part of the \ref adc_conf struct and will  be initialized by
+ * Part of the \ref adc_config struct and will  be initialized by
  * \ref adc_get_config_defaults .
  */
-struct adc_correction_conf {
+struct adc_correction_config {
 	/**
 	Enables correction for gain and offset based on values of gain_correction and
 	offset_correction if set to true.
@@ -779,10 +779,10 @@ struct adc_correction_conf {
 /**
  * \brief Pin scan configuration structure
  *
- * Pin scan configuration structure. Part of the \ref adc_conf struct and will
+ * Pin scan configuration structure. Part of the \ref adc_config struct and will
  * be initialized by \ref adc_get_config_defaults .
  */
-struct adc_pin_scan_conf {
+struct adc_pin_scan_config {
 	/**
 	 * Offset (relative to selected positive input) of first input pin to be
 	 * used in pin scan mode.
@@ -802,7 +802,7 @@ struct adc_pin_scan_conf {
  * initialized by the \ref adc_get_config_defaults()
  * function before being modified by the user application.
  */
-struct adc_conf {
+struct adc_config {
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator       clock_source;
 	/** Voltage reference */
@@ -844,13 +844,13 @@ struct adc_conf {
 	*/
 	uint8_t sample_length;
 	/** Window monitor configuration structure */
-	struct adc_window_conf window;
+	struct adc_window_config window;
 	/** Gain and offsett correction configuration structure */
-	struct adc_correction_conf correction;
+	struct adc_correction_config correction;
 	/** Event configuration structure */
-	struct adc_event_conf event;
+	struct adc_event_config event;
 	/** Pin scan configuration structure */
-	struct adc_pin_scan_conf pin_scan;
+	struct adc_pin_scan_config pin_scan;
 };
 
 /**
@@ -859,7 +859,7 @@ struct adc_conf {
  * ADC software instance structure.
  *
  */
-struct adc_dev_inst {
+struct adc_module {
 	/** Pointer to ADC hardware module */
 	Adc *hw_dev;
 };
@@ -881,8 +881,8 @@ static inline void _adc_wait_for_sync(Adc *const hw_dev)
  * \name Driver initialization and configuration
  * @{
  */
-enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
-		struct adc_conf *config);
+enum status_code adc_init(struct adc_module *const module_inst, Adc *hw_dev,
+		struct adc_config *config);
 
 /**
  * \brief Initializes an ADC configuration structure to defaults
@@ -916,7 +916,7 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
  */
-static inline void adc_get_config_defaults(struct adc_conf *const config)
+static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
 	config->clock_source = GCLK_GENERATOR_0;
@@ -960,14 +960,14 @@ static inline void adc_get_config_defaults(struct adc_conf *const config)
  *
  * This function will enable the ADC module.
  *
- * \param[in] dev_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst    Pointer to the ADC software instance struct
  */
-static inline void adc_enable(struct adc_dev_inst *const dev_inst)
+static inline void adc_enable(struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
@@ -978,14 +978,14 @@ static inline void adc_enable(struct adc_dev_inst *const dev_inst)
  *
  * This function will disable the ADC module.
  *
- * \param[in] dev_inst Pointer to the ADC software instance struct
+ * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_disable(struct adc_dev_inst *const dev_inst)
+static inline void adc_disable(struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
@@ -996,18 +996,18 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
  *
  * This function will reset the ADC module.
  *
- * \param[in] dev_inst Pointer to the ADC software instance struct
+ * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_reset(struct adc_dev_inst *const dev_inst)
+static inline void adc_reset(struct adc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Disable to make sure the pipeline is flushed before reset */
-	adc_disable(dev_inst);
+	adc_disable(module_inst);
 
 	/* Software reset the module */
 	_adc_wait_for_sync(adc_module);
@@ -1019,24 +1019,24 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *
  * This function will start an ADC conversion
  *
- * \param[in] dev_inst      Pointer to the ADC software instance struct
+ * \param[in] module_inst      Pointer to the ADC software instance struct
  */
-static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
+static inline void adc_start_conversion(struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
 }
 
 /* Prototype for adc_is_interrupt_flag_set */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+static inline bool adc_is_interrupt_flag_set(struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag);
 /* Prototype for adc_clear_interrupt_flag */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+static inline void adc_clear_interrupt_flag(struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag);
 /**
  * \brief Reads the ADC result
@@ -1044,7 +1044,7 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * This function will read the result from an ADC conversion. It will clear
  * the ADC_INTERRUPT_RESULT_READY flag after reading.
  *
- * \param[in] dev_inst      Pointer to the ADC software instance struct
+ * \param[in] module_inst      Pointer to the ADC software instance struct
  * \param[out] result       Pointer to store the result value in
  *
  * \return Status of the procedure
@@ -1052,24 +1052,24 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * \retval STATUS_BUSY          The result is not ready
  */
 static inline enum status_code adc_read(
-		struct adc_dev_inst *const dev_inst, uint16_t *result)
+		struct adc_module *const module_inst, uint16_t *result)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(result);
 
-	if (!adc_is_interrupt_flag_set(dev_inst, ADC_INTERRUPT_RESULT_READY)) {
+	if (!adc_is_interrupt_flag_set(module_inst, ADC_INTERRUPT_RESULT_READY)) {
 		/* Result not ready */
 		return STATUS_BUSY;
 	}
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;
 	/* Reset ready flag */
-	adc_clear_interrupt_flag(dev_inst, ADC_INTERRUPT_RESULT_READY);
+	adc_clear_interrupt_flag(module_inst, ADC_INTERRUPT_RESULT_READY);
 
 	return STATUS_OK;
 }
@@ -1089,14 +1089,14 @@ static inline enum status_code adc_read(
  * All conversions in progress will be lost.
  * When flush is complete, the module will resume where it left off.
  *
- * \param[in] dev_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst    Pointer to the ADC software instance struct
  */
-static inline void adc_flush(struct adc_dev_inst *const dev_inst)
+static inline void adc_flush(struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
@@ -1107,21 +1107,21 @@ static inline void adc_flush(struct adc_dev_inst *const dev_inst)
  *
  * This function will set the ADC window mode.
  *
- * \param[in] dev_inst           Pointer to the ADC software instance struct
+ * \param[in] module_inst           Pointer to the ADC software instance struct
  * \param[in] adc_window_mode    Window monitor mode to set
  * \param[in] window_lower_value Lower window monitor threshold value
  * \param[in] window_upper_value Upper window monitor threshold value
   */
-static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_window_mode(struct adc_module *const module_inst,
 		enum adc_window_mode window_mode,
 		int16_t              window_lower_value,
 		int16_t              window_upper_value)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1145,17 +1145,17 @@ static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
  *
  * This function will set the ADC gain factor.
  *
- * \param[in] dev_inst       Pointer to the ADC software instance struct
+ * \param[in] module_inst       Pointer to the ADC software instance struct
  * \param[in] gain_factor    Gain factor value to set
  */
-static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_gain(struct adc_module *const module_inst,
 		enum adc_gain_factor gain_factor)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1174,7 +1174,7 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * positive input + start_offset. When a conversion is done, a conversion will
  * start on the next input, until inputs_to_scan conversions are made.
  *
- * \param[in] dev_inst          Pointer to the ADC software instance struct
+ * \param[in] module_inst          Pointer to the ADC software instance struct
  * \param[in] inputs_to_scan    Number of input pins to do conversion on
  *                              (must be two or more)
  * \param[in] start_offset      Offset of first pin to scan (relative to
@@ -1185,15 +1185,15 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * \retval STATUS_ERR_INVALID_ARG Number of input pins to scan or offset
  *                                has an invalid value
  */
-static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
+static inline enum status_code adc_set_pin_scan_mode(struct adc_module *const module_inst,
 		uint8_t inputs_to_scan, uint8_t start_offset)
 
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	if (inputs_to_scan > 0) {
 		/*
@@ -1227,12 +1227,12 @@ static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const 
  * This function will disable pin scan mode. Next conversion will be done
  * on only one pin.
  *
- * \param[in] dev_inst     Pointer to the ADC software instance struct
+ * \param[in] module_inst     Pointer to the ADC software instance struct
  */
-static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst)
+static inline void adc_disable_pin_scan_mode(struct adc_module *const module_inst)
 {
 	/* Disable pin scan mode */
-	adc_set_pin_scan_mode(dev_inst, 0, 0);
+	adc_set_pin_scan_mode(module_inst, 0, 0);
 }
 
 
@@ -1241,17 +1241,17 @@ static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst
  *
  * This function will set the positive ADC input pin.
  *
- * \param[in] dev_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst        Pointer to the ADC software instance struct
  * \param[in] positive_input  Positive input pin
  */
-static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_positive_input(struct adc_module *const module_inst,
 		enum adc_positive_input positive_input)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1269,17 +1269,17 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
  * This function will set the negative ADC input pin to be used in
  * differential mode.
  *
- * \param[in] dev_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst        Pointer to the ADC software instance struct
  * \param[in] negative_input  Negative input pin
  */
-static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_negative_input(struct adc_module *const module_inst,
 		enum adc_negative_input negative_input)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1301,21 +1301,21 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
  *
  * This function will check if a given interrupt flag is set.
  *
- * \param[in] dev_inst         Pointer to the ADC software instance struct
+ * \param[in] module_inst         Pointer to the ADC software instance struct
  * \param[in] interrupt_flag   Interrupt flag to check
  *
  * \return Boolean value to indicate if the interrupt flag is set or not.
  * \retval true   The flag is set
  * \retval false  The flag is not set
  */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+static inline bool adc_is_interrupt_flag_set(struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 	return adc_module->INTFLAG.reg & interrupt_flag;
 }
 
@@ -1324,17 +1324,17 @@ static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst
  *
  * This function will clear a given interrupt flag.
  *
- * \param[in] dev_inst         Pointer to the ADC software instance struct
+ * \param[in] module_inst         Pointer to the ADC software instance struct
  * \param[in] interrupt_flag   Interrupt flag to clear
  */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+static inline void adc_clear_interrupt_flag(struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Clear interrupt flag */
 	adc_module->INTFLAG.reg = interrupt_flag;
