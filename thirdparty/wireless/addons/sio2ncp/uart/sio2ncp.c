@@ -209,7 +209,7 @@ int sio2ncp_getchar_nowait(void)
 }
 
 
-ISR(USART_NCP_ISR_VECT)
+USART_NCP_ISR_VECT()
 {
 	uint8_t temp;
 	
