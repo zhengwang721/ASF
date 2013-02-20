@@ -44,9 +44,9 @@
 
 /* === INCLUDES ============================================================ */
 
+#include "asf.h"
 #include "sio2ncp.h"
 #include "conf_sio2ncp.h"
-#include "asf.h"
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -91,12 +91,13 @@ static uint8_t serial_rx_count;
 
 void sio2ncp_init(void)
 {
+#if (BOARD == SAM4L_XPLAINED_PRO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+#endif //(BOARD == SAM4L_XPLAINED_PRO)
 
 	usart_serial_init(USART_NCP, &usart_serial_options);
 	USART_NCP_RX_ISR_ENABLE();
-	
 }
 
 
