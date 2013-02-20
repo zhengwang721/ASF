@@ -56,7 +56,8 @@
  * \retval STATUS_OK                The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
-static enum status_code _adc_set_config (Adc *const hw_dev,
+static enum status_code _adc_set_config (
+		Adc *const hw_dev,
 		struct adc_config *const config)
 {
 	uint8_t adjres;
@@ -282,7 +283,9 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
  * \retval STATUS_BUSY          The module is busy with a reset operation
  * \retval STATUS_ERR_DENIED        The module is enabled
  */
-enum status_code adc_init(struct adc_module *const dev_inst, Adc *hw_dev,
+enum status_code adc_init(
+		struct adc_module *const dev_inst,
+		Adc *hw_dev,
 		struct adc_config *config)
 {
 
