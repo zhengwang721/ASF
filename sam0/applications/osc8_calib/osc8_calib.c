@@ -44,9 +44,9 @@
 #define RES 255
 #define SCALE 32768/RES
 
-static struct usart_dev_inst usart_edbg;
+static struct usart_module usart_edbg;
 
-void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string);
+void debug_write_string(struct usart_module *const dev, uint8_t const *string);
 
 void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer);
 
@@ -56,10 +56,10 @@ void setup_usart_channel(void);
 
 uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan);
 
-void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string)
+void debug_write_string(struct usart_module *const dev, uint8_t const *string)
 {
 	do {
-		while (usart_write(dev, *string) != STATUS_OK) {
+		while (usart_write_wait(dev, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
@@ -105,7 +105,7 @@ void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
 {
 	// TODO: Update with event system
-	struct tc_conf config;
+	struct tc_config config;
 	tc_get_config_defaults(&config);
 
 	config.counter_size = TC_COUNTER_SIZE_32BIT;
@@ -125,7 +125,7 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 
 void setup_usart_channel(void)
 {
-	struct usart_conf config_struct;
+	struct usart_config config_struct;
 
 	usart_get_config_defaults(&config_struct);
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
@@ -148,11 +148,11 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 
 	tc_clear_interrupt_flag(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0);
 
-	calib_chan->hw_dev->COUNT32.COUNT.reg = 0;
-	comp_chan->hw_dev->COUNT16.COUNT.reg = 0;
+	calib_chan->hw->COUNT32.COUNT.reg = 0;
+	comp_chan->hw->COUNT16.COUNT.reg = 0;
 
 	while (!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
-	tmp = calib_chan->hw_dev->COUNT32.COUNT.reg;
+	tmp = calib_chan->hw->COUNT32.COUNT.reg;
 
 	return tmp * SCALE;
 }
