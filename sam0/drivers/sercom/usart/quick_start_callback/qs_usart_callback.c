@@ -41,31 +41,51 @@
  *
  */
 #include <asf.h>
-
+#include <stdio.h>
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
+struct usart_module usart_edbg;
 
-void write_string(struct usart_module *const mod, uint8_t *string);
+volatile uint8_t rx_buffer[5];
 
-void write_string(struct usart_module *const mod, uint8_t *string)
+volatile uint8_t buff[20];
+
+static void read_callback(const struct usart_module *const mod)
 {
-	do {
-		while (usart_write_wait(mod, *string) != STATUS_OK) {
-		}
-	} while (*(++string) != 0);
+	usart_write_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer)-1);
+
+}
+
+static void write_callback(const struct usart_module *const mod)
+{
+	static uint8_t cnt;
+	uint8_t len = sprintf((char *)&buff[0], "CNT:%u\n\r", cnt);
+
+	if(cnt++ < 10) {
+		usart_write_buffer_job(&usart_edbg,(uint8_t *)buff, len);
+	}
+}
+
+static void configure_callbacks(void)
+{
+	usart_register_callback(&usart_edbg, write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_register_callback(&usart_edbg, read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
+	usart_enable_callback(&usart_edbg, USART_CALLBACK_BUFFER_RECEIVED);
 }
 
 int main(void)
 {
-	struct usart_module usart_edbg;
 	struct usart_config config_struct;
-	uint16_t temp;
+	volatile uint32_t delay;
 
-	uint8_t string[] = "Hello world!\n\r\0";
+	uint8_t string[] = "hello there world!\n\r";
+
 
 	/* Initialize system clocks */
 	system_init();
 
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1801, 1);
 	/* Get configuration defaults for the USART
 	 * 9600 8N1
 	 */
@@ -80,6 +100,8 @@ int main(void)
 			&config_struct) != STATUS_OK) {
 	}
 
+	configure_callbacks();
+
 	/* Enable USARTs */
 	usart_enable(&usart_edbg);
 
@@ -87,13 +109,12 @@ int main(void)
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 
-	write_string(&usart_edbg, string);
+	for(delay=0; delay < 100000; delay++);
+
+	usart_write_buffer_job(&usart_edbg,string, sizeof(string));
 
 	/* Echo back characters received */
 	while (1) {
-		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
-			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
-			}
-		}
+		usart_read_buffer_job(&usart_edbg, (uint8_t *)rx_buffer, sizeof(rx_buffer));
 	}
 }
