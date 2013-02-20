@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Implementation of low level disk I/O module skeleton for FatFS.
+ * \brief SAM4L-EK Board LEDs support package.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the SAM4L-XPLAINED-PRO Board.
+ *
+ * To use this board, define BOARD=SAM4L_EK.
+ *
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,46 +45,39 @@
  * \asf_license_stop
  *
  */
+
+#ifndef LED_H_INCLUDED
+#define LED_H_INCLUDED
+
 #include "compiler.h"
-#include "rtc.h"
+#include "ioport.h"
 
-uint32_t get_fattime(void);
 /**
- * \brief Current time returned is packed into a DWORD value.
+ * \brief Turns off the specified LEDs.
  *
- * The bit field is as follows:
+ * \param led LED to turn off (LEDx_GPIO).
  *
- * bit31:25  Year from 1980 (0..127)
- *
- * bit24:21  Month (1..12)
- *
- * bit20:16  Day in month(1..31)
- *
- * bit15:11  Hour (0..23)
- *
- * bit10:5   Minute (0..59)
- *
- * bit4:0    Second (0..59)
- *
- * \return Current time.
+ * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-uint32_t get_fattime(void)
-{
-	uint32_t ul_time;
-	uint32_t ul_hour, ul_minute, ul_second;
-	uint32_t ul_year, ul_month, ul_day, ul_week;
+#define LED_Off(led)     ioport_set_pin_level(led, IOPORT_PIN_LEVEL_HIGH)
 
-	/* Retrieve date and time */
-	rtc_get_time(RTC, &ul_hour, &ul_minute, &ul_second);
-	rtc_get_date(RTC, &ul_year, &ul_month, &ul_day, &ul_week);
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led)      ioport_set_pin_level(led, IOPORT_PIN_LEVEL_LOW)
 
-	ul_time = ((ul_year - 1980) << 25)
-			| (ul_month << 21)
-			| (ul_day << 16)
-			| (ul_hour << 11)
-			| (ul_minute << 5)
-			| (ul_second << 0);
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led)  ioport_toggle_pin_level(led)
 
-	return ul_time;
-}
 
+#endif  // LED_H_INCLUDED
