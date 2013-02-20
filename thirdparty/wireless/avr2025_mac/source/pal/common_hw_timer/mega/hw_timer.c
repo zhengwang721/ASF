@@ -39,11 +39,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <compiler.h>
+#include <parts.h>
 #include "sysclk.h"
 #include "conf_hw_timer.h"
 #include "hw_timer.h"
-#include <tc_megarf.h>
-#include <compiler.h>
+#include "tc_megarf.h"
 #include "common_hw_timer.h"
 
 #define TIMER_PERIOD  UINT16_MAX

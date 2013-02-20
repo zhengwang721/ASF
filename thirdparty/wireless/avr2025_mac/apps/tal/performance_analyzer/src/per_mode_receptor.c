@@ -881,6 +881,7 @@ static void send_diversity_status_rsp(void)
 {
     uint8_t payload_length;
     app_payload_t msg;
+	uint8_t temp;
     div_stat_rsp_t *data;
 
     /* Create the payload */
@@ -890,7 +891,7 @@ static void send_diversity_status_rsp(void)
     data = (div_stat_rsp_t *)&msg.payload;
 
     uint8_t curr_ant_div;
-    tal_get_curr_trx_config(ANT_DIVERSITY,&curr_ant_div)
+    tal_get_curr_trx_config(ANT_DIVERSITY,&curr_ant_div);
     if(curr_ant_div)
     {
         data->status = 1;
@@ -899,7 +900,8 @@ static void send_diversity_status_rsp(void)
     else
     {
         data->status = 0;
-        tal_get_curr_trx_config(ANT_CTRL,&(data->ant_sel))
+        tal_get_curr_trx_config(ANT_CTRL,&temp);
+		data->ant_sel = temp;
     }
     /* Calculate the payload length */
     payload_length = ((sizeof(app_payload_t) -

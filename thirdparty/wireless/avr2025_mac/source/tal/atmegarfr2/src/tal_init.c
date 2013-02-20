@@ -67,7 +67,7 @@
 #include "tal_constants.h"
 #include "atmega256rfr2.h"
 #include "tal_config.h"
-
+#include "tal_helper.h"
 #ifdef BEACON_SUPPORT
 #include "tal_slotted_csma.h"
 #endif  /* BEACON_SUPPORT */

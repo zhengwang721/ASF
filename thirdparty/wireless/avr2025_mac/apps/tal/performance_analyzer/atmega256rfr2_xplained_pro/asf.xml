@@ -22,7 +22,7 @@
         <build type="define"   name="FFD"                                 value=""/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>
         <build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
-		
+		<build type="define"   name="ANTENNA_DIVERSITY"                   value="1"/>
 		<generator value="avrgcc" />
 		<generator value="iarew"/>
 		<generator value="as5_8" />

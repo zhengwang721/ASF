@@ -38,10 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <compiler.h>
+#include <parts.h>
 #include "tc.h"
 #include "conf_hw_timer.h"
 #include "hw_timer.h"
-#include <compiler.h>
 #include "common_hw_timer.h"
 
 extern uint8_t timer_multiplier;
