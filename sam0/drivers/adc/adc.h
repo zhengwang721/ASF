@@ -69,6 +69,33 @@
  * There are no prerequisites for this module.
  *
  *
+ * \section asfdoc_samd20_adc_module_overview Module Overview
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_adc_special_considerations Special Considerations
+ *
+ * TODO
+ *
+ *
+ * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
+ *
+ * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
+ *  - \ref asfdoc_samd20_adc_extra_acronyms
+ *  - \ref asfdoc_samd20_adc_extra_dependencies
+ *  - \ref asfdoc_samd20_adc_extra_errata
+ *  - \ref asfdoc_samd20_adc_extra_history
+ *
+ *
+ * \section asfdoc_samd20_adc_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_adc_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_adc_api_overview API Overview
+ * @{
  */
 
 #ifdef __cplusplus
@@ -77,8 +104,6 @@ extern "C" {
 
 #include <compiler.h>
 #include <system.h>
-
-
 
 /**
  * \brief ADC interrupt flags
