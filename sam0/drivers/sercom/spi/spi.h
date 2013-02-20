@@ -744,7 +744,7 @@ static inline void spi_slave_dev_init(struct spi_slave_dev_inst *const dev_inst,
 	dev_inst->address_enabled = config->address_enabled;
 	dev_inst->address = config->address;
 
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 
 	/* Get default config for pin */
 	port_get_config_defaults(&pin_conf);
