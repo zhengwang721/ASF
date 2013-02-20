@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-EK2 Board Definition.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -461,9 +461,9 @@
 #define PIN_USART0_RTS_IDX        (PIO_PA7_IDX)
 #define PIN_USART0_RTS_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 /** USART0 pin SCK */
-#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT}
 #define PIN_USART0_SCK_IDX        (PIO_PA2_IDX)
-#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** USART1 pin RX */
 #define PIN_USART1_RXD    {PIO_PA21A_RXD1, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
@@ -491,13 +491,14 @@
 #define PIN_USART1_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 
 /** USB VBus monitoring pin definition. */
-#ifdef BOARD_REV_A
-#define PIN_USB_VBUS    {PIO_PC23, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-#endif
-
-#ifdef BOARD_REV_B
 #define PIN_USB_VBUS    {PIO_PC21, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-#endif
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOC_IRQn)
+#define USB_VBUS_PIN      (PIO_PC21_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOC)
+#define USB_VBUS_PIO_MASK (PIO_PC21)
+/* This pin can not be used as fast wakeup source such as
+ * USB_VBUS_WKUP PMC_FSMR_FSTT7 */
 
 /** NandFlash pins definition: OE. */
 #define PIN_EBI_NANDOE    (PIO_PC9_IDX)

@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for common SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #define _SD_MMC_MEM_H_
 
 /**
- * \ingroup sd_mmc_stack
+ * \ingroup sd_mmc_stack_group
  * \defgroup sd_mmc_stack_mem SD/MMC Memory
  *
  * SD/MMC memory APIs required by CTRL_ACCESS module
@@ -97,6 +97,22 @@ extern Ctrl_status sd_mmc_read_capacity(uint8_t slot,uint32_t *u32_nb_sector);
 extern Ctrl_status sd_mmc_read_capacity_0(uint32_t *u32_nb_sector);
 //! Instance Declaration for sd_mmc_read_capacity Slot 1
 extern Ctrl_status sd_mmc_read_capacity_1(uint32_t *u32_nb_sector);
+
+/*! \brief Unload/Load the SD/MMC card selected
+ *
+ * The START STOP UNIT SCSI optional command allows an application client to
+ * eject the removable medium on a LUN.
+ *
+ * \param slot SD/MMC Slot Card Selected.
+ * \param unload \c true to unload the medium, \c false to load the medium.
+ *
+ * \return \c true if unload/load done success.
+ */
+extern bool sd_mmc_unload(uint8_t slot, bool unload);
+//! Instance Declaration for sd_mmc_unload Slot O
+extern bool sd_mmc_unload_0(bool unload);
+//! Instance Declaration for sd_mmc_unload Slot 1
+extern bool sd_mmc_unload_1(bool unload);
 
 /*! \brief Returns the write-protection state of the memory.
  *

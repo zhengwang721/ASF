@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 
 	<select-by-device id="mega.services.qtouch.generic.avr8.qmatrix.examples.example_qm_mega_stk600.device" caption="">
-		<module id="mega.services.qtouch.generic.avr8.qmatrix.examples.example_qm_mega_stk600.device#atmega128rfa1" caption="" type="application">
+		<module id="mega.services.qtouch.generic.avr8.qmatrix.examples.example_qm_mega_stk600.device#atmega128rfa1" caption="" type="meta">
 			<device-support value="atmega128rfa1"/>
 			<build type="c-source" value="./atmega128rfa1_stk600/main_m128rfa1.c"/>
 			<require idref="config.common.services.qtouch.generic.avr8.mega128rfa1_stk600.method"/>
@@ -22,5 +22,5 @@
 		<device-support value="atmega128rfa1"/>
 		<require idref="config.common.services.qtouch.qdebug.stk600.mega"/>
 	</module>
-		
+
 </asf>

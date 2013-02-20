@@ -30,5 +30,6 @@
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.services.basic.clock"/>
+		<device-support value="at32uc3a3256"/>
 	</module>
 </asf>

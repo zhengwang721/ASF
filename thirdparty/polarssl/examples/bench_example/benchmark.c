@@ -70,6 +70,15 @@ int main( void )
     unsigned char tmp[64];
     t_cpu_time timer;
 
+    /* Keep compiler happy */
+    UNUSED(keysize);
+    UNUSED(i);
+    UNUSED(j);
+    UNUSED(tsc);
+    UNUSED(tmp[0]);
+    UNUSED(timer);
+
+
     // USART options.
     static usart_serial_options_t USART_SERIAL_OPTIONS =
     {

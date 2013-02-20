@@ -3,7 +3,7 @@
  *
  * \brief AT45dbx DataFlash Component Unit Test.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -129,18 +129,6 @@
  * \brief A DataFlash sector-sized buffer for processing data in ram memory
  */
 static uint8_t sector_buf[AT45DBX_SECTOR_SIZE];
-
-/**
- * \brief Index of the current sector being processed.
- * Used by \ref run_multiple_sector_access_test
- */
-static uint32_t cur_sector = 0;
-
-/**
- * \brief Test case pointer used to refer to the current test case in the
- * function \ref at45dbx_read_multiple_sector_callback
- */
-static struct test_case *cur_test;
 
 /**
  * \brief Performs a memory check on all DataFlash memories
@@ -292,6 +280,9 @@ static void run_sector_access_test(const struct test_case *test)
 static void run_multiple_sector_access_test(const struct test_case *test)
 {
 	bool status;
+	uint32_t i;
+	uint8_t value, cur_sector;
+	uint8_t expected;
 
 	/* Write the ram sector to the DataFlash
 	 */
@@ -299,9 +290,18 @@ static void run_multiple_sector_access_test(const struct test_case *test)
 	test_assert_true(test, status == true,
 			"Cannot open the DataFlash memory for write access");
 	cur_sector = 0;
-	status = at45dbx_write_multiple_sector(10);
-	test_assert_true(test, status == true,
-			"Error while writing sector # %i", cur_sector);
+	while (cur_sector++ < 10) {
+		/* Fills a ram sector with a known pattern
+		 */
+		for (i=0; i<AT45DBX_SECTOR_SIZE; i++) {
+			value = BYTE_PATTERN3(cur_sector * AT45DBX_SECTOR_SIZE + i);
+			((uint8_t *) sector_buf)[i] = value;
+		}
+		/* Write sector on DataFlash */
+		status = at45dbx_write_sector_from_ram(sector_buf);
+		test_assert_true(test, status == true,
+				"Error while writing sector # %i", cur_sector);
+	}
 	at45dbx_write_close();
 
 	/* Read back the sector of the DataFlash
@@ -310,55 +310,24 @@ static void run_multiple_sector_access_test(const struct test_case *test)
 	test_assert_true(test, status == true,
 			"Cannot open the DataFlash memory for read access");
 	cur_sector = 0;
-	cur_test = (struct test_case *) test;
-	status = at45dbx_read_multiple_sector(10);
-	test_assert_true(test, status == true,
-			"Error while reading sector # %i", cur_sector);
+	while (cur_sector++ < 10) {
+		// Read the next sector.
+		status = at45dbx_read_sector_to_ram(sector_buf);
+		test_assert_true(test, status == true,
+				"Error while reading sector # %i", cur_sector);
+
+		/* Test each values of the current sector
+		 */
+		for (i=0; i<AT45DBX_SECTOR_SIZE; i++) {
+			expected = BYTE_PATTERN3(cur_sector * AT45DBX_SECTOR_SIZE + i);
+			test_assert_true(test, ((uint8_t *) sector_buf)[i] == expected,
+					"Value not expected @ 0x%08x in sector # %i"
+					" (read: 0x%02x, expected: 0x%02x)", i,
+					cur_sector, ((uint8_t *) sector_buf)[i],
+					expected);
+		}
+	}
 	at45dbx_read_close();
-}
-
-/*! \copybrief at45dbx_write_multiple_sector_callback
- * Used by \ref run_multiple_sector_access_test
- */
-void at45dbx_write_multiple_sector_callback(void *psector)
-{
-	uint32_t i;
-	uint8_t value;
-
-	/* This reflect the index of the current sector being accessed
-	 */
-	cur_sector++;
-
-	/* Fills a ram sector with a known pattern
-	 */
-	for (i=0; i<AT45DBX_SECTOR_SIZE; i++) {
-		value = BYTE_PATTERN3(cur_sector * AT45DBX_SECTOR_SIZE + i);
-		((uint8_t *) psector)[i] = value;
-	}
-}
-
-/*! \copybrief at45dbx_read_multiple_sector_callback
- * Used by \ref run_multiple_sector_access_test
- */
-void at45dbx_read_multiple_sector_callback(const void *psector)
-{
-	uint32_t i;
-	uint8_t expected;
-
-	/* This reflect the index of the current sector being accessed
-	 */
-	cur_sector++;
-
-	/* Test each values of the current sector
-	 */
-	for (i=0; i<AT45DBX_SECTOR_SIZE; i++) {
-		expected = BYTE_PATTERN3(cur_sector * AT45DBX_SECTOR_SIZE + i);
-		test_assert_true(cur_test, ((uint8_t *) psector)[i] == expected,
-				"Value not expected @ 0x%08x in sector # %i"
-				" (read: 0x%02x, expected: 0x%02x)", i,
-				cur_sector, ((uint8_t *) psector)[i],
-				expected);
-	}
 }
 
 /**

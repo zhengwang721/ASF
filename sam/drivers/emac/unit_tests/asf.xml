@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="sam.drivers.emac.unit_tests" caption="Unit Tests for the SAM EMAC Driver">
-		<module type="application" id="sam.drivers.emac.unit_tests#0" caption="Unit Tests for the SAM EMAC driver">
+		<module type="application" id="sam.drivers.emac.unit_tests#0" caption="Unit Tests for the SAM EMAC Driver">
 			<info type="description" value="summary">
 			Unit test application for the EMAC driver.
 			</info>

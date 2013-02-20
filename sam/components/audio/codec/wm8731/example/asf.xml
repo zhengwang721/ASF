@@ -5,7 +5,7 @@
 				A simple example for the WM8731 by playing back a WAV file.
 			</info>
 			<build type="c-source" value="xmodem.c"/>
-			<build type="header-file"  subtype="api" value="xmodem.h"/>
+			<build type="header-file" value="xmodem.h"/>
 			<build type="c-source" value="wm8731_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3x"/>
@@ -23,7 +23,7 @@
 				A simple example for the WM8731 by playing back a WAV file.
 			</info>
 			<build type="c-source" value="xmodem.c"/>
-			<build type="header-file"  subtype="api" value="xmodem.h"/>
+			<build type="header-file"  value="xmodem.h"/>
 			<build type="c-source" value="wm8731_example.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam3u"/>

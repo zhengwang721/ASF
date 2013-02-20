@@ -47,26 +47,37 @@ Example File History
 * ---------------------------------
 */
 
-/*----------------------------------------------------------------------------
-Device Fuse Settings
-----------------------------------------------------------------------------*/
-/*	The default fuse settings for the device will be correct for the
-QT600 Example Project. However it is adviceable to verify
-the fuse settings before trying to run the application.
-
-WDWP:       8 cycles (8ms @ 3.3V)
-WDP:        8 cycles (8ms @ 3.3V)
-BOOTRST:	Application Reset
-BODACT:     BOD Disabled
-BODPD:      BOD Disabled
-JTAGEN:     Programmed
-
-Fusebyte0: 0xFF
-Fusebyte1: 0x00
-Fusebyte2: 0xFF
-Fusebyte4: 0xFE
-Fusebyte5: 0xFF
-*/
+/**
+ * \mainpage ASF Qtouch example on QT600-ATXMEGA128A1-QT16
+ *
+ * \section intro Introduction
+ * This example shows how to implement the Qtouch library and Qtouch Debug
+ * on QT600-ATXMEGA128A1-QT16 board.
+ *
+ * \section QtouchDebug QTouch Debug
+ * The QT600 Bridge must be used to connect QT600-ATXMEGA128A1-QT16 board with
+ * the QTouch Analyser tool.
+ *
+ * \section QT600 QT600 Setting
+ *
+ * Device Fuse Settings
+ * The default fuse settings for the device will be correct for the
+ * QT600 Example Project. However it is adviceable to verify
+ * the fuse settings before trying to run the application.
+ *
+ * WDWP:       8 cycles (8ms @ 3.3V)
+ * WDP:        8 cycles (8ms @ 3.3V)
+ * BOOTRST:	Application Reset
+ * BODACT:     BOD Disabled
+ * BODPD:      BOD Disabled
+ * JTAGEN:     Programmed
+ *
+ * Fusebyte0: 0xFF
+ * Fusebyte1: 0x00
+ * Fusebyte2: 0xFF
+ * Fusebyte4: 0xFE
+ * Fusebyte5: 0xFF
+ */
 
 /*----------------------------------------------------------------------------
 compiler information

@@ -46,8 +46,9 @@
  *
  * \section Purpose
  *
- * This basic example shows how to use the Flash service available on the Atmel SAM flash
- * microcontrollers. It reads and displays the Unique Identifier stored in the Flash.
+ * This basic example shows how to use the Flash service available on the Atmel 
+ * SAM flash microcontrollers. It reads and displays the Unique Identifier 
+ * stored in the Flash.
  *
  * \section Requirements
  *
@@ -56,16 +57,17 @@
  * \section Description
  * To read the Unique Identifier, the sequence is:
  * <ul>
- *  <li>Send the Start Read Unique Identifier command (STUI) by writing the Flash Command
- * Register with the STUI command.</li>
- *  <li>When the Unique Identifier is ready to be read, the FRDY bit in the Flash Programming
- * Status Register (EEFC_FSR) falls.</li>
- *  <li>The Unique Identifier is located in the first 128 bits of the Flash memory mapping. So, at the
- * address 0x80000-0x80003.</li>
- *  <li>To stop the Unique Identifier mode, the user needs to send the Stop Read Unique Identifier
- * command (SPUI) by writing the Flash Command Register with the SPUI command.</li>
- *  <li>When the Stop Read Unique Identifier command (SPUI) has been performed, the
- * FRDY bit in the Flash Programming Status Register (EEFC_FSR) rises.</li>
+ *  <li>Send the Start Read Unique Identifier command (STUI) by writing the 
+ * Flash Command Register with the STUI command.</li>
+ *  <li>When the Unique Identifier is ready to be read, the FRDY bit in the 
+ * Flash Programming Status Register (EEFC_FSR) falls.</li>
+ *  <li>The Unique Identifier is located in the first 128 bits of the Flash 
+ * memory mapping. So, at the address 0x80000-0x80003.</li>
+ *  <li>To stop the Unique Identifier mode, the user needs to send the Stop 
+ * Read Unique Identifier command (SPUI) by writing the Flash Command Register 
+ * with the SPUI command.</li>
+ *  <li>When the Stop Read Unique Identifier command (SPUI) has been performed, 
+ * the FRDY bit in the Flash Programming Status Register (EEFC_FSR) rises.</li>
  * </ul>
  *
  * \section Usage

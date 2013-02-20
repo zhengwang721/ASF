@@ -15,7 +15,7 @@
  *   - specific features;
  *   - etc.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -122,6 +122,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _usb_read_10),\
@@ -135,6 +136,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _usb_read_10),\
@@ -146,6 +148,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(Lun_, lun, _mem_2_ram),\
@@ -157,6 +160,7 @@ static xSemaphoreHandle ctrl_access_semphr = NULL;
   {\
     TPASTE3(Lun_, lun, _test_unit_ready),\
     TPASTE3(Lun_, lun, _read_capacity),\
+    TPASTE3(Lun_, lun, _unload),\
     TPASTE3(Lun_, lun, _wr_protect),\
     TPASTE3(Lun_, lun, _removal),\
     TPASTE3(LUN_, lun, _NAME)\
@@ -168,6 +172,7 @@ static const struct
 {
   Ctrl_status (*test_unit_ready)(void);
   Ctrl_status (*read_capacity)(U32 *);
+  bool (*unload)(bool);
   bool (*wr_protect)(void);
   bool (*removal)(void);
 #if ACCESS_USB == true
@@ -182,27 +187,51 @@ static const struct
 } lun_desc[MAX_LUN] =
 {
 #if LUN_0 == ENABLE
+# ifndef Lun_0_unload
+#  define Lun_0_unload NULL
+# endif
   Lun_desc_entry(0),
 #endif
 #if LUN_1 == ENABLE
+# ifndef Lun_1_unload
+#  define Lun_1_unload NULL
+# endif
   Lun_desc_entry(1),
 #endif
 #if LUN_2 == ENABLE
+# ifndef Lun_2_unload
+#  define Lun_2_unload NULL
+# endif
   Lun_desc_entry(2),
 #endif
 #if LUN_3 == ENABLE
+# ifndef Lun_3_unload
+#  define Lun_3_unload NULL
+# endif
   Lun_desc_entry(3),
 #endif
 #if LUN_4 == ENABLE
+# ifndef Lun_4_unload
+#  define Lun_4_unload NULL
+# endif
   Lun_desc_entry(4),
 #endif
 #if LUN_5 == ENABLE
+# ifndef Lun_5_unload
+#  define Lun_5_unload NULL
+# endif
   Lun_desc_entry(5),
 #endif
 #if LUN_6 == ENABLE
+# ifndef Lun_6_unload
+#  define Lun_6_unload NULL
+# endif
   Lun_desc_entry(6),
 #endif
 #if LUN_7 == ENABLE
+# ifndef Lun_7_unload
+#  define Lun_7_unload NULL
+# endif
   Lun_desc_entry(7)
 #endif
 };
@@ -348,6 +377,32 @@ U8 mem_sector_size(U8 lun)
   return sector_size;
 }
 
+
+bool mem_unload(U8 lun, bool unload)
+{
+  bool unloaded;
+  if (!Ctrl_access_lock()) return false;
+
+  unloaded =
+#if MAX_LUN
+          (lun < MAX_LUN) ?
+              (lun_desc[lun].unload ?
+                  lun_desc[lun].unload(unload) : !unload) :
+#endif
+#if LUN_USB == ENABLE
+# if defined(Lun_usb_unload)
+              Lun_usb_unload(lun - LUN_ID_USB, unload);
+# else
+              !unload; /* Can not unload: load success, unload fail */
+# endif
+#else
+              false; /* No mem, unload/load fail */
+#endif
+
+  Ctrl_access_unlock();
+
+  return unloaded;
+}
 
 bool mem_wr_protect(U8 lun)
 {
@@ -547,11 +602,7 @@ Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram)
 
 Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector)
 {
-#if (defined __GNUC__) && (defined __AVR32__)
-  __attribute__((__aligned__(4)))
-#elif (defined __ICCAVR32__)
-  #pragma data_alignment = 4
-#endif
+  COMPILER_ALIGNED(4)
   static U8 sector_buf[FS_512B];
   Ctrl_status status = CTRL_GOOD;
 

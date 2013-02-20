@@ -3,7 +3,7 @@
  *
  * \brief BPM example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,10 +48,13 @@
  * defines, enums, and typedefs for the Backup Power Manager (BPM) driver.
  * It also comes bundled with an application-example of usage.
  *
- * This example demonstrates how to use the BPM driver.
- * <b>Operating mode: </b>It uses the USART driver connected to
- * board monitor to display power mode switched.
- * The power mode switch is triggered by the interrupt controller module.
+ * This example demonstrates how to use the BPM driver. It requires a
+ * board monitor firmware version V1.3 or greater.
+ *
+ * <b>Operating mode: </b>The user can select the low power mode and power
+ * scaling from the terminal. The example uses the terminal and the board
+ * monitor to provide infomation about the current power save mode and actual
+ * power consumption.
  *
  * \section files Main Files
  * - bpm.c: BPM driver;
@@ -85,452 +88,28 @@
  */
 
 #include <asf.h>
-#include "conf_board.h"
-#include "bpm_example.h"
-#include "ui.h"
+#include "board_monitor.h"
 
-/* Configuration list for example modes. */
-const mode_config_t mode_configures[] = {
-	/* Prompt,  Scaling, Sleep,          Fast wakeup */
-	{""       , PS_18V,  BPM_SM_ACTIVE,  0},
-	{""       , PS_18V,  BPM_SM_WAIT   , PM_FASTSLEEP_FASTRCOSC(2)},
-	{""       , PS_12V,  BPM_SM_ACTIVE,  0},
-	{""       , PS_12V,  BPM_SM_WAIT   , PM_FASTSLEEP_FASTRCOSC(2)},
-	{""       , PS_12V,  BPM_SM_RET    , PM_FASTSLEEP_FASTRCOSC(2)},
-	{""       , PS_12V,  BPM_SM_BACKUP , PM_FASTSLEEP_FASTRCOSC(2)}
+/* Flag to use board monitor */
+static bool ps_status = BPM_PS_1;
+
+/* Current sleep mode */
+static uint32_t current_sleep_mode = SLEEP_MODE_NA;
+
+/* Power scaling value -> board monitor status */
+power_scaling_t ps_statuses[] = {
+	POWER_SCALING_PS0, POWER_SCALING_PS1
 };
-
-/* Mode index */
-static uint8_t mode_index = 0;
-
-/* Wakeup event bits */
-static volatile uint8_t wakeup_events = 0;
-
-/* EIC driver */
-
-/*! \name Mode Trigger Options
- */
-//! @{
-#define EIC_MODE_EDGE_TRIGGERED   0 //!<
-#define EIC_MODE_LEVEL_TRIGGERED  1 //!<
-//! @}
-
-/*! \name Edge level Options
- */
-//! @{
-#define EIC_EDGE_FALLING_EDGE     0 //!<
-#define EIC_EDGE_RISING_EDGE      1 //!<
-//! @}
-
-/*! \name Level Options
- */
-//! @{
-#define EIC_LEVEL_LOW_LEVEL       0 //!<
-#define EIC_LEVEL_HIGH_LEVEL      1 //!<
-//! @}
-
-/*! \name Filter Options
- */
-//! @{
-#define EIC_FILTER_ENABLED        1 //!<
-#define EIC_FILTER_DISABLED       0 //!<
-//! @}
-
-/*! \name Synch Mode Options
- */
-//! @{
-#define EIC_SYNCH_MODE            0 //!<
-#define EIC_ASYNCH_MODE           1 //!<
-//! @}
-
-/* Configuration parameters of the EIC module. */
-typedef struct {
-	/* Line */
-	uint8_t eic_line;
-	/* Mode : EDGE_LEVEL or TRIGGER_LEVEL */
-	uint8_t eic_mode;
-	/* Edge : FALLING_EDGE or RISING_EDGE */
-	uint8_t eic_edge;
-	/* Level :  LOW_LEVEL or HIGH_LEVEL */
-	uint8_t eic_level;
-	/* Filter:  NOT_FILTERED or FILTERED */
-	uint8_t eic_filter;
-	/* Async:  SYNC mode or ASYNC */
-	uint8_t eic_async;
-} eic_options_t;
-
-/**
- * \brief Init the EIC driver with specified configuration value.
- *
- * \param eic Base address of the EIC module
- * \param opt Configuration parameters of the EIC module
- *            (see \ref eic_options_t)
- * \param nb_lines Number of lines to consider, equal to size of opt buffer
- */
-static void eic_init(
-	volatile Eic *eic, const eic_options_t *opt, uint32_t nb_lines)
-{
-	uint32_t i;
-	sysclk_enable_peripheral_clock(EIC);
-	for (i = 0; i < nb_lines; i++) {
-		/* Set up mode level */
-		eic->EIC_MODE = (opt[i].eic_mode == EIC_MODE_LEVEL_TRIGGERED)
-			? (eic->EIC_MODE | (1 << opt[i].eic_line))
-			: (eic->EIC_MODE & ~(1 << opt[i].eic_line));
-		/* Set up edge type */
-		eic->EIC_EDGE = (opt[i].eic_edge == EIC_EDGE_RISING_EDGE)
-			? (eic->EIC_EDGE | (1 << opt[i].eic_line))
-			: (eic->EIC_EDGE & ~(1 << opt[i].eic_line));
-		/* Set up level */
-		eic->EIC_LEVEL = (opt[i].eic_level == EIC_LEVEL_HIGH_LEVEL)
-			? (eic->EIC_LEVEL | (1 << opt[i].eic_line))
-			: (eic->EIC_LEVEL & ~(1 << opt[i].eic_line));
-		/* Set up if filter is used */
-		eic->EIC_FILTER = (opt[i].eic_filter == EIC_FILTER_ENABLED)
-			? (eic->EIC_FILTER | (1 << opt[i].eic_line))
-			: (eic->EIC_FILTER & ~(1 << opt[i].eic_line));
-		/* Set up which mode is used : asynchronous/synchronous */
-		eic->EIC_ASYNC = (opt[i].eic_async == EIC_ASYNCH_MODE)
-			? (eic->EIC_ASYNC | (1 << opt[i].eic_line))
-			: (eic->EIC_ASYNC & ~(1 << opt[i].eic_line));
-	}
-}
-
-/**
- * \brief Enable the external interrupt on some mask pins.
- *
- * \param eic Base address of the EIC module
- * \param mask_lines Mask for current selected lines
- */
-static inline void eic_enable_mask_lines(volatile Eic *eic, uint32_t mask_lines)
-{
-	eic->EIC_EN = mask_lines;
-}
-
-/**
- * \brief Enables the external interrupt from some mask pins to propagate from
- * EIC to interrupt controller.
- *
- * \param eic Base address of the EIC (i.e. EIC).
- * \param mask_lines Mask for current selected lines
- */
-static inline void eic_enable_interrupt_mask_lines(
-	volatile Eic *eic, uint32_t mask_lines)
-{
-	eic->EIC_IER = mask_lines;
-}
-
-/**
- * \brief Clear the interrupt flag of some mask pins.
- *          Call this function once you've handled the interrupt.
- *
- * \param eic Base address of the EIC (i.e. EIC).
- * \param mask_lines Mask for current selected lines
- */
-static inline void eic_clear_interrupt_mask_lines(
-	volatile Eic *eic, uint32_t mask_lines)
-{
-	eic->EIC_ICR = mask_lines;
-	eic->EIC_ISR;
-}
-
-/**
- * \brief Tells whether an EIC interrupt line is pending.
- *
- * \param eic Base address of the EIC module
- * \param line_number Line number to test
- *
- * \return Whether an EIC interrupt line is pending.
- */
-static inline bool eic_is_interrupt_line_pending(
-	volatile Eic *eic, uint32_t line_number)
-{
-	return (eic->EIC_ISR & (1 << line_number)) != 0;
-}
-
-/* AST driver */
-
-/*! Timeout to prevent code hang in clock initialization */
-#define AST_POLL_TIMEOUT 10000
-
-/*! 1KHz clock from 32KHz oscillator (CLK_1K) */
-#define AST_OSC_1KHZ     4
-
-/*
- * The PSEL value to set the AST source clock (after the prescaler) to 1 Hz,
- * when using an external 32-kHz crystal.
- */
-#define AST_PSEL_32KHZ_1HZ    14
-
-/**
- * \brief Check the busy status of AST.
- *
- * \param ast Base address of the AST.
- *
- * \return 1 If AST is busy, else it will return 0.
- */
-static uint32_t ast_is_busy(volatile Ast *ast)
-{
-	return (ast->AST_SR & AST_SR_BUSY) != 0;
-}
-
-/**
- * \brief Check the busy status of AST clock
- *
- * \param ast Base address of the AST.
- *
- * \return 1 If AST clock is busy, else it will return 0.
- */
-static uint32_t ast_is_clkbusy(volatile Ast *ast)
-{
-	return (ast->AST_SR & AST_SR_CLKBUSY) != 0;
-}
-
-/**
- * \brief Enable the AST.
- *
- * \param ast Base address of the AST.
- */
-static void ast_enable(volatile Ast *ast)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Enable the AST */
-	ast->AST_CR |= AST_CR_EN;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function sets the AST current counter value.
- *
- * \param ast         Base address of the AST.
- * \param ast_counter Startup counter value
- */
-static void ast_set_counter_value(volatile Ast *ast,
-		uint32_t ast_counter)
-{
-	/* Wait until we can write into the VAL register */
-	while (ast_is_busy(ast)) {
-	}
-	/* Set the new val value */
-	ast->AST_CV = ast_counter;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function will initialize the AST module in counter Mode.
- *
- * \note  If you use the 32 KHz oscillator, it will enable this module.
- *
- * \param ast Base address of the AST.
- * \param osc_type The oscillator you want to use. If you need a better
- *        accuracy, use the 32 KHz oscillator (i.e. AST_OSC_32KHZ).
- * \param psel The preselector value for the corresponding oscillator (4-bits).
- *        To obtain this value, you can use this formula:
- *        psel = log(Fosc/Fast)/log(2)-1, where Fosc is the frequency of the
- *        oscillator you are using (32 KHz or 115 KHz) and Fast the frequency
- *        desired.
- * \param ast_counter Startup counter value
- *
- * \return 1 if the initialization succeeds otherwise it will return 0.
- */
-static uint32_t ast_init_counter(volatile Ast *ast, uint8_t osc_type,
-		uint8_t psel, uint32_t ast_counter)
-{
-	uint32_t time_out = AST_POLL_TIMEOUT;
-	while (ast_is_clkbusy(ast)) {
-		if (--time_out == 0) {
-			return 0;
-		}
-	}
-	ast->AST_CLOCK = osc_type << AST_CLOCK_CSSEL_Pos;
-	time_out = AST_POLL_TIMEOUT;
-	while (ast_is_clkbusy(ast)) {
-		if (--time_out == 0) {
-			return 0;
-		}
-	}
-	ast->AST_CLOCK |= AST_CLOCK_CEN;
-	time_out = AST_POLL_TIMEOUT;
-	while (ast_is_clkbusy(ast)) {
-		if (--time_out == 0) {
-			return 0;
-		}
-	}
-
-	/* Set the new AST configuration */
-	ast->AST_CR = psel << AST_CR_PSEL_Pos;
-
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-
-	/* Set the calendar */
-	ast_set_counter_value(ast, ast_counter);
-
-	return 1;
-}
-
-/**
- * \brief This function set the AST periodic0 value.
- *
- * \param ast Base address of the AST.
- * \param pir AST periodic0.
- */
-static void ast_set_periodic0_value(volatile Ast *ast, uint32_t pir)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Set the periodic prescaler value */
-	ast->AST_PIR0 = pir;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function enables the AST periodic0 event.
- *
- * \param ast Base address of the AST.
- */
-static void ast_enable_periodic0(volatile Ast *ast)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Enable the AST periodic0 peripheral event */
-	ast->AST_EVE |= AST_EVE_PER0;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function clears the AST status flags.
- *
- * \param ast          Base address of the AST.
- * \param status_mask  AST status flag to be cleared
- */
-static void ast_clear_status_flag(volatile Ast *ast,
-		uint32_t status_mask)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Clear the AST status flags */
-	ast->AST_SCR = status_mask;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function clears the AST Periodic event status flags.
- *
- * \param ast            Base address of the AST.
- * \param periodic_channel  AST wake-up flag to be cleared.
- */
-static void ast_clear_periodic_status_flag(volatile Ast *ast,
-		uint32_t periodic_channel)
-{
-	if (periodic_channel) {
-		/* Clear the AST periodic event status flag */
-		ast_clear_status_flag(ast, AST_SCR_PER1);
-	} else {
-		/* Clear the AST periodic event status flag */
-		ast_clear_status_flag(ast, AST_SCR_PER0);
-	}
-}
-
-/**
- * \brief This function enables the AST interrupts
- *
- * \param ast             Base address of the AST.
- * \param interrupt_mask  AST Interrupts to be enabled
- */
-static void ast_enable_interrupt(volatile Ast *ast,
-		uint32_t interrupt_mask)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Enable the AST interrupt */
-	ast->AST_IER |= interrupt_mask;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function enables the AST Periodic interrupt.
- *
- * \param ast              Base address of the AST.
- * \param periodic_channel AST Periodic Channel
- */
-static void ast_enable_periodic_interrupt(volatile Ast *ast,
-		uint8_t periodic_channel)
-{
-	/* Enable the AST Periodic Asynchronous Wake-up */
-	if (periodic_channel) {
-		ast_enable_interrupt(ast, AST_IER_PER1);
-	} else {
-		ast_enable_interrupt(ast, AST_IER_PER0);
-	}
-}
-
-/**
- * \brief This function enables the AST Asynchronous wake-up.
- *
- * \param ast          Base address of the AST.
- * \param wakeup_mask  AST wake-up flag to be enabled.
- */
-static void ast_enable_async_wakeup(volatile Ast *ast,
-		uint32_t wakeup_mask)
-{
-	/* Wait until the ast CTRL register is up-to-date */
-	while (ast_is_busy(ast)) {
-	}
-	/* Enable the AST Asynchronous Wake-up */
-	ast->AST_WER |= wakeup_mask;
-	/* Wait until write is done */
-	while (ast_is_busy(ast)) {
-	}
-}
-
-/**
- * \brief This function enables the AST Periodic Asynchronous wake-up.
- *
- * \param ast              Base address of the AST.
- * \param periodic_channel AST Periodic Channel
- */
-static void ast_enable_periodic_async_wakeup(volatile Ast *ast,
-		uint8_t periodic_channel)
-{
-	/* Enable the AST Periodic Asynchronous Wake-up */
-	if (periodic_channel) {
-		ast_enable_async_wakeup(ast, AST_WER_PER1);
-	} else {
-		ast_enable_async_wakeup(ast, AST_WER_PER0);
-	}
-}
 
 /**
  * EIC interrupt handler for push button interrupt
  */
-void EIC_5_Handler(void)
+static void eic_5_callback(void)
 {
 	sysclk_enable_peripheral_clock(EIC);
-	if(eic_is_interrupt_line_pending(EIC,GPIO_PUSH_BUTTON_EIC_LINE)) {
-		wakeup_events |= WAKEUP_EIC;
-		ast_set_counter_value(AST,0); /* Reset AST counter */
-		eic_clear_interrupt_mask_lines(EIC,
-				1 << GPIO_PUSH_BUTTON_EIC_LINE);
+	if(eic_line_interrupt_is_pending(EIC, GPIO_PUSH_BUTTON_EIC_LINE)) {
+		ast_write_counter_value(AST,0); /* Reset AST counter */
+		eic_line_clear_interrupt(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
 	}
 	sysclk_disable_peripheral_clock(EIC);
 }
@@ -538,10 +117,9 @@ void EIC_5_Handler(void)
 /**
  * AST interrupt handler
  */
-void AST_PER_Handler(void)
+static void ast_per_callback(void)
 {
-	wakeup_events |= WAKEUP_AST;
-	ast_clear_periodic_status_flag(AST,0);
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
 }
 
 /**
@@ -549,129 +127,107 @@ void AST_PER_Handler(void)
  */
 static void config_ast(void)
 {
-	osc_priv_enable_osc32();
-	sysclk_enable_peripheral_clock(AST);
-	ast_init_counter(AST, AST_OSC_1KHZ, AST_PSEL_32KHZ_1HZ - 6, 0);
-	ast_set_periodic0_value(AST,AST_PSEL_32KHZ_1HZ - 3);
-	ast_enable_periodic_interrupt(AST,0);
-	ast_enable_periodic_async_wakeup(AST,0);
-	ast_enable_periodic0(AST);
-	ast_clear_periodic_status_flag(AST,0);
+	struct ast_config ast_conf;
 
-	/* Enable AST interrupt */
-	NVIC_ClearPendingIRQ(AST_PER_IRQn);
-	NVIC_EnableIRQ(AST_PER_IRQn);
+	/* Enable osc32 oscillator*/
+	if (!osc_is_ready(OSC_ID_OSC32)) {
+		osc_enable(OSC_ID_OSC32);
+		osc_wait_ready(OSC_ID_OSC32);
+	}
 
-	/* Enable the AST */
+	/* Enable the AST. */
 	ast_enable(AST);
+
+	ast_conf.mode = AST_COUNTER_MODE;
+	ast_conf.osc_type = AST_OSC_1KHZ;
+	ast_conf.psel = AST_PSEL_32KHZ_1HZ;
+	ast_conf.counter = 0;
+	ast_set_config(AST, &ast_conf);
+
+	/* Set periodic 0 to interrupt after 8 second in counter mode. */
+	ast_clear_interrupt_flag(AST, AST_INTERRUPT_PER);
+	ast_write_periodic0_value(AST, AST_PSEL_32KHZ_1HZ - 2);
+	/* Set callback for periodic0. */
+	ast_set_callback(AST, AST_INTERRUPT_PER, ast_per_callback,
+		AST_PER_IRQn, 1);
 }
 
-/*! Configure to wakeup device by button. */
 static void config_buttons(void)
 {
-	/* Initialize EIC for button wakeup */
-	sysclk_enable_peripheral_clock(EIC);
-	eic_options_t eic_opt={
-		GPIO_PUSH_BUTTON_EIC_LINE,
+	/* Initialize EIC for button wakeup. */
+	struct eic_line_config eic_line_conf = {
 		EIC_MODE_EDGE_TRIGGERED,
 		EIC_EDGE_FALLING_EDGE,
 		EIC_LEVEL_LOW_LEVEL,
 		EIC_FILTER_DISABLED,
 		EIC_ASYNCH_MODE
 	};
-	eic_init(EIC, &eic_opt, 1);
-	eic_enable_mask_lines(EIC, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
-	eic_enable_interrupt_mask_lines(EIC, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
-	eic_clear_interrupt_mask_lines(EIC, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
-
-	/* Enable EIC interrupt */
-	NVIC_ClearPendingIRQ(EIC_5_IRQn);
-	NVIC_EnableIRQ(EIC_5_IRQn);
+	eic_enable(EIC);
+	eic_line_set_config(EIC, GPIO_PUSH_BUTTON_EIC_LINE, 
+		&eic_line_conf);
+	eic_line_set_callback(EIC, GPIO_PUSH_BUTTON_EIC_LINE, eic_5_callback,
+		EIC_5_IRQn, 1);
+	eic_line_enable(EIC, GPIO_PUSH_BUTTON_EIC_LINE);
 }
 
-/* Misc configurations for wakeup */
-static void config_sleep(void)
+/* configurations for backup mode wakeup */
+static void config_backup_wakeup(void)
 {
 	/* EIC and AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM,
 			(1 << BPM_BKUPWEN_EIC) | (1 << BPM_BKUPWEN_AST));
 	/* EIC can wake the device from backup mode */
 	bpm_enable_backup_pin(BPM, 1 << GPIO_PUSH_BUTTON_EIC_LINE);
-	/* Retain I/O lines after wakeup from backup */
+	/**
+	 * Retain I/O lines after wakeup from backup.
+	 * Disable to undo the previous retention state then enable.
+	 */
 	bpm_disable_io_retention(BPM);
 	bpm_enable_io_retention(BPM);
-
+	/* Enable fast wakeup */
 	bpm_enable_fast_wakeup(BPM);
 }
 
-/* Run selected sleep mode */
-static void execute_mode(void)
+/**
+ *  Configure serial console.
+ */
+static void configure_console(void)
 {
-	ui_show_mode_info(mode_index, &mode_configures[mode_index]);
-	sysclk_disable_hsb_module(SYSCLK_PBA_BRIDGE);
-	/* Enter sleep mode */
-	wakeup_events = 0;
-	/* Power scaling setup */
-	bpm_configure_power_scaling(BPM,
-			BPM_PMCON_PS(mode_configures[mode_index].ps_value),
-			true);
-	while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
-	/* Fast wakeup setup */
-	if (mode_configures[mode_index].fastsleep) {
-		bpm_enable_fast_wakeup(BPM);
-	} else {
-		bpm_disable_fast_wakeup(BPM);
-	}
-	/* Active/Sleep mode */
-	if (mode_configures[mode_index].sleep_mode == BPM_SM_ACTIVE) {
-		/* Do something while waiting event */
-		uint8_t tmp_buf[32], i;
-		for (;0 == wakeup_events;i ++) {
-			if (tmp_buf[i]) {
-				i *= i;
-			}
-		}
-	} else {
-		cpu_irq_disable();
-		bpm_sleep(BPM, mode_configures[mode_index].sleep_mode);
-		/* Wait event */
-		while(0 == wakeup_events);
-	}
-	sysclk_enable_hsb_module(SYSCLK_PBA_BRIDGE);
-	ui_show_wakeup_info(mode_index, wakeup_events);
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_UART_BAUDRATE,
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
+	};
+
+	/* Configure console. */
+	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-/* Switch to next sleep mode */
-static void switch_mode(void)
+/**
+ * \brief Display the user menu on the terminal.
+ */
+static void display_menu(void)
 {
-	mode_index = (mode_index + 1) %
-			(sizeof(mode_configures)/sizeof(mode_config_t));
-}
-
-/* Initialize IOs (input & pull-up) */
-static void io_init(void)
-{
-	ioport_init();
-#ifdef PIN_PA00
-	ioport_set_port_mode(IOPORT_GPIOA, 0xFFFFFFFF, IOPORT_MODE_PULLUP);
-	ioport_set_port_dir(IOPORT_GPIOA, 0xFFFFFFFF, IOPORT_DIR_INPUT);
-#endif
-#ifdef PIN_PB00
-	ioport_set_port_mode(IOPORT_GPIOB, 0xFFFFFFFF, IOPORT_MODE_PULLUP);
-	ioport_set_port_dir(IOPORT_GPIOB, 0xFFFFFFFF, IOPORT_DIR_INPUT);
-#endif
-#ifdef PIN_PC00
-	ioport_set_port_mode(IOPORT_GPIOC, 0xFFFFFFFF, IOPORT_MODE_PULLUP);
-	ioport_set_port_dir(IOPORT_GPIOC, 0xFFFFFFFF, IOPORT_DIR_INPUT);
-#endif
-#ifdef LED0_GPIO
-	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED0_GPIO, IOPORT_PIN_LEVEL_LOW);
-#endif
-#ifdef LCD_BL_GPIO
-	ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_BL_GPIO, IOPORT_PIN_LEVEL_LOW);
-#endif
+	printf("Menu :\r\n"
+			"  -- Select the action:\r\n"
+			"  s: Switch Power scale. \r\n"
+			"  0: Enter Sleep mode 0. \r\n"
+			"  1: Enter Sleep mode 1. \r\n"
+			"  2: Enter Sleep mode 2. \r\n"
+			"  3: Enter Sleep mode 3. \r\n"
+			"  4: Enter Wait mode. \r\n"
+			"  5: Enter Retention mode. \r\n"
+			"  6: Enter Backup mode. \r\n"
+			"  h: Display menu \r\n"
+			"  --Push button can also be used to exit low power mode--\r\n"
+			"\r\n");
+	printf("-- IMPORTANT: This example requires a board "
+			"monitor firmware version V1.3 or greater.\r\n\r\n");
 }
 
 /**
@@ -681,24 +237,160 @@ static void io_init(void)
  */
 int main(void)
 {
-	uint32_t wakeup_cause = 0;
-	wakeup_cause = bpm_get_backup_wakeup_cause(BPM);
-	if (!wakeup_cause) {
-		io_init();
-	}
+	uint8_t key;
 
+	/* Initialize the SAM system */
 	sysclk_init();
 	board_init();
 
-	ui_init();
+	/* Initialize the console uart */
+	configure_console();
 
+	/* Output example information */
+	printf("\r\n");
+	printf("-- BPM Example --\r\n");
+	printf("-- %s\r\n", BOARD_NAME);
+	printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
+
+	/* Initialize the board monitor  */
+	bm_init();
+
+	/* Configurate the AST to wake up */
 	config_ast();
-	config_buttons();
-	config_sleep();
 
-	ui_show_backup_wakeup_cause(wakeup_cause);
+	/* Configurate the EIC */
+	config_buttons();
+
+	/* Configurate the backup wakeup source */
+	config_backup_wakeup();
+
+	/* Display menu */
+	display_menu();
+
 	while(1) {
-		execute_mode();
-		switch_mode();
+		scanf("%c", (char *)&key);
+
+		switch (key) {
+		case 'h':
+			display_menu();
+			break;
+
+		case 's':
+			if (ps_status == BPM_PS_1) {
+				printf("\r\n--Switch Power scale to 1.8V\r\n");
+				ps_status = BPM_PS_0;
+			} else {
+				printf("\r\n--Switch Power scale to 1.2V\r\n");
+				ps_status = BPM_PS_1;
+			}
+			/* Power scaling setup */
+			bpm_configure_power_scaling(BPM, ps_status,
+					BPM_PSCM_CPU_NOT_HALT);
+			while((bpm_get_status(BPM) & BPM_SR_PSOK) == 0);
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			break;
+
+		case '0':
+			current_sleep_mode = SLEEP_MODE_0;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Sleep mode 0.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_SLEEP_0);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Sleep mode 0.\r\n");
+			break;
+
+		case '1':
+			current_sleep_mode = SLEEP_MODE_1;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Sleep mode 1.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_SLEEP_1);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Sleep mode 1.\r\n");
+			break;
+
+		case '2':
+			current_sleep_mode = SLEEP_MODE_2;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Sleep mode 2.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_SLEEP_2);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Sleep mode 2.\r\n");
+			break;
+
+		case '3':
+			current_sleep_mode = SLEEP_MODE_3;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Sleep mode 3.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_SLEEP_3);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Sleep mode 3.\r\n");
+			break;
+
+		case '4':
+			current_sleep_mode = SLEEP_MODE_WAIT;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Wait mode.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_WAIT);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Wait mode.\r\n");
+			break;
+
+		case '5':
+			current_sleep_mode = SLEEP_MODE_RETENTION;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Retention mode.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_RET);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Retention mode.\r\n");
+			break;
+
+		case '6':
+			current_sleep_mode = SLEEP_MODE_BACKUP;
+			bm_send_mcu_status(ps_statuses[ps_status], current_sleep_mode,
+					12000000, CPU_SRC_RC4M);
+			printf("\r\n--Enter Backup mode.\r\n");
+			ast_enable_wakeup(AST, AST_WAKEUP_PER);
+			/* Wait for the printf operation to finish before
+			setting the device in a power save mode. */
+			delay_ms(30);
+			bpm_sleep(BPM, BPM_SM_BACKUP);
+			ast_disable_wakeup(AST, AST_WAKEUP_PER);
+			printf("\r\n--Exit Backup mode.\r\n");
+			break;
+
+		default:
+			break;
+		}
 	}
 }

@@ -52,10 +52,16 @@
 #include "ast.h"
 #include "eic.h"
 #include "bpm.h"
+#include "board_monitor.h"
+#include "ui.h"
+#include "event.h"
 #include <math.h>
 #include <time.h>
 
 void app_init(void);
 void app_init_lowpower(void);
+void app_prime_number_run(void);
+void app_switch_power_scaling(power_scaling_t power_scaling);
+void app_enter_sleep_mode(sleep_mode_t sleep_mode);
 
 #endif  // _APP_H

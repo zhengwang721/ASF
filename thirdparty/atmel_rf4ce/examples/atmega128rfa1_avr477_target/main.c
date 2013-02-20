@@ -3,7 +3,7 @@
  *
  * \brief Terminal Target application.
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -109,7 +109,7 @@
 
 #include "qdebug_transport.h"
 #include "twi_master.h"
-
+#include "compiler.h"
 
 /* === TYPES =============================================================== */
 
@@ -348,6 +348,8 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
               * TWI interface 
               */
             int i;
+            /* Keep compiler happy */
+            UNUSED(i);
 #ifdef _GENERIC_QDEBUG_ 
             for(i = 1 ; i < nsduLength ; i++)
                 PutChar(nsdu[i]);
@@ -362,9 +364,9 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
     }
 
     /* Keep compiler happy */
-    RxFlags = RxFlags;
-    PairingRef = PairingRef;
-    RxLinkQuality = RxLinkQuality;
+    UNUSED(RxFlags);
+    UNUSED(PairingRef);
+    UNUSED(RxLinkQuality);
 }
 
 
@@ -379,9 +381,9 @@ void zrc_cmd_indication(uint8_t PairingRef, uint8_t nsduLength, uint8_t *nsdu,
 void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId)
 {
     /* Keep compiler happy. */
-    Status = Status;
-    PairingRef = PairingRef;
-    ProfileId = ProfileId;
+    UNUSED(Status);
+    UNUSED(PairingRef);
+    UNUSED(ProfileId);
 }
 
 
@@ -431,12 +433,12 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
                       uint8_t OrgUserString[15], uint8_t KeyExTransferCount)
 {
     /* Keep compiler happy */
-    Status = Status;
-    SrcIEEEAddr = SrcIEEEAddr;
-    OrgVendorId = OrgVendorId;
-    OrgVendorString[0] = OrgVendorString[0];
-    OrgUserString[0] = OrgUserString[0];
-    KeyExTransferCount = KeyExTransferCount;
+    UNUSED(Status);
+    UNUSED(SrcIEEEAddr);
+    UNUSED(OrgVendorId);
+    UNUSED(OrgVendorString[0]);
+    UNUSED(OrgUserString[0]);
+    UNUSED(KeyExTransferCount);
 
     return true;
 }
@@ -454,9 +456,9 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr,
 void zrc_cmd_disc_confirm(nwk_enum_t Status, uint8_t PairingRef, uint8_t *SupportedCmd)
 {
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
-    SupportedCmd = SupportedCmd;
+    UNUSED(Status);
+    UNUSED(PairingRef);
+    UNUSED(SupportedCmd);
 }
 #endif
 
@@ -529,7 +531,7 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
 void nwk_ch_agility_indication(uint8_t LogicalChannel)
 {
     /* keep compiler happy */
-    LogicalChannel = LogicalChannel;
+    UNUSED(LogicalChannel);
 }
 /**
  * @brief Notify the application of the status of its request to reset the NWK
@@ -554,8 +556,8 @@ void nlme_reset_confirm(nwk_enum_t Status)
  */
 void nlme_rx_enable_confirm(nwk_enum_t Status)
 {
-  /* Keep compiler happy */
-    Status = Status;
+    /* Keep compiler happy */
+    UNUSED(Status);
 }
 
 
@@ -595,7 +597,7 @@ void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t N
 
   
     /* Keep compiler happy */
-    NIBAttributeIndex = NIBAttributeIndex;
+    UNUSED(NIBAttributeIndex);
 }
 
 
@@ -629,7 +631,7 @@ void nlme_start_confirm(nwk_enum_t Status)
 void nlme_unpair_indication(uint8_t PairingRef)
 {
     /* Keep compiler happy */
-    PairingRef = PairingRef;
+    UNUSED(PairingRef);
 }
 
 
@@ -650,8 +652,8 @@ void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
     }
 
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
+    UNUSED(Status);
+    UNUSED(PairingRef);
 }
 
 
@@ -664,11 +666,11 @@ void nlme_unpair_confirm(uint8_t Status, uint8_t PairingRef)
  */
 void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel)
 {
-     node_status = IDLE;
-     
+    node_status = IDLE;
+
     /*Keep compiler happy */
-    Status = Status;
-    LogicalChannel= LogicalChannel;
+    UNUSED(Status);
+    UNUSED(LogicalChannel);
 }
 
 /**
@@ -686,8 +688,8 @@ void nwk_ch_agility_confirm(nwk_enum_t Status, bool ChannelChanged, uint8_t Logi
 void nlme_update_key_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     /* Keep compiler happy */
-    Status = Status;
-    PairingRef = PairingRef;
+    UNUSED(Status);
+    UNUSED(PairingRef);
 }
 #endif
 
@@ -708,14 +710,14 @@ void vendor_data_ind(uint8_t PairingRef, profile_id_t ProfileId, uint16_t Vendor
                      uint8_t nsduLength, uint8_t *nsdu, uint8_t RxLinkQuality,
                      uint8_t RxFlags)
 {
-      
-       /* Keep compiler happy */
-    PairingRef = PairingRef;
-    ProfileId = ProfileId;
-    VendorId = VendorId;
-    nsduLength = nsduLength;
-    RxLinkQuality = RxLinkQuality;
-    RxFlags = RxFlags;
+
+    /* Keep compiler happy */
+    UNUSED(PairingRef);
+    UNUSED(ProfileId);
+    UNUSED(VendorId);
+    UNUSED(nsduLength);
+    UNUSED(RxLinkQuality);
+    UNUSED(RxFlags);
 }
 
 
@@ -728,8 +730,8 @@ void vendor_data_ind(uint8_t PairingRef, profile_id_t ProfileId, uint16_t Vendor
  */
 void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
-  Status = Status;
-  PairingRef = PairingRef;
+    UNUSED(Status);
+    UNUSED(PairingRef);
  
 }
 
@@ -761,7 +763,7 @@ static void led_handling(void *callback_parameter)
     }
 
     /* Keep compiler happy */
-    callback_parameter = callback_parameter;
+    UNUSED(callback_parameter);
 }
 //! @}
 

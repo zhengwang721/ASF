@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="meta" id="xmega.applications.avrsbin1_common" caption="ATAVRSBIN1 Common Demo Components">
 		<build type="header-file" value="sensor_demo.h"/>
+		<build type="include-path" value="."/>
 		<build type="header-file" value="conf/conf_board.h"/>
 		<build type="header-file" value="conf/conf_st7565r.h"/>
 		<build type="header-file" value="conf/conf_sysfont.h"/>

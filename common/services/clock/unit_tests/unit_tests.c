@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for common clock service
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -140,8 +140,12 @@ int usart_ready = 0;
  */
 static void run_osc_test(const struct test_case *test)
 {
-	uint32_t wait;
+	volatile uint32_t wait;
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(wait);
+	UNUSED(status);
+	
 #ifdef BOARD_OSC0_HZ
 	osc_enable(OSC_ID_OSC0);
 	for (wait  =0; wait < OSC0_STARTUP_TIMEOUT; wait++) {
@@ -243,7 +247,7 @@ static void run_osc32_test(const struct test_case *test)
 {
 #ifdef BOARD_OSC32_HZ
 	uint32_t osc32_startup_timeout;
-	uint32_t wait;
+	volatile uint32_t wait;
 	bool status;
 
 	osc_enable(OSC_ID_OSC32);
@@ -285,6 +289,10 @@ static void run_pll_dfll_test(const struct test_case *test)
 {
 	uint32_t wait;
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(wait);
+	UNUSED(status);
+
 #if (defined CONFIG_PLL0_SOURCE) || (defined CONFIG_PLL1_SOURCE)
 	struct pll_config pllcfg;
 #endif
@@ -371,6 +379,8 @@ static void cleanup_pll_dfll_test(const struct test_case *test)
 static void run_sync_clock_test(const struct test_case *test)
 {
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(status);
 
 	sysclk_init();
 	//PBA clock set, usart can be used

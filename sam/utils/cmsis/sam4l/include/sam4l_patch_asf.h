@@ -54,6 +54,7 @@
 #define US_MR_USART_MODE_IS07816_T_0        US_MR_USART_MODE_ISO7816_T0
 #define US_MR_USART_MODE_IS07816_T_1        US_MR_USART_MODE_ISO7816_T1
 #define US_MR_NBSTOP_2_BIT                  US_MR_NBSTOP_2
+#define US_MR_NBSTOP_1_5_BIT                US_MR_NBSTOP_1_5
 #define US_MR_NBSTOP_1_BIT                  US_MR_NBSTOP_1
 #define US_MR_CHRL_8_BIT                    US_MR_CHRL_8
 #define US_MR_PAR_NO                        US_MR_PAR_NONE
@@ -84,9 +85,9 @@
 
 // These defines are used to keep compatibility with existing 
 // sam/drivers/tc implementation from SAM3/4 products with SAM4L product. 
-#define	TC_SMMR 	           TC_SMC
+#define	TC_SMMR                TC_SMC
 #define	TC_CMR_LDRA_RISING     TC_CMR_LDRA_POS_EDGE_TIOA
-#define	TC_CMR_LDRB_FALLING	   TC_CMR_LDRB_NEG_EDGE_TIOA
+#define	TC_CMR_LDRB_FALLING    TC_CMR_LDRB_NEG_EDGE_TIOA
 #define	TC_CMR_ETRGEDG_FALLING TC_CMR_ETRGEDG_NEG_EDGE
 
 // These defines are used to keep compatibility with existing 

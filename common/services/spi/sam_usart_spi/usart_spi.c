@@ -3,7 +3,7 @@
  *
  * \brief SAM USART in SPI mode driver functions.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,10 +108,10 @@ void usart_spi_setup_device(Usart *p_usart, struct usart_spi_device *device,
 {
 	usart_spi_opt_t opt;
 
-	/* Remove warnings. */
-	device = device;
-	sel_id = sel_id;
-	
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
+	UNUSED(sel_id);
+
 	/* Basic usart SPI configuration. */
 	opt.baudrate = baud_rate;
 	opt.char_length = US_MR_CHRL_8_BIT;
@@ -203,9 +203,9 @@ uint32_t usart_spi_read_packet(Usart *p_usart, uint8_t *data, size_t len)
 		data[i] = (uint8_t)(val & 0xFF);
 		i++;
 		len--;
- 	}
+	}
 	
-	return 0;	
+	return 0;
 }
 
 /**
@@ -216,9 +216,9 @@ uint32_t usart_spi_read_packet(Usart *p_usart, uint8_t *data, size_t len)
  *
  */
 void usart_spi_select_device(Usart *p_usart, struct usart_spi_device *device)
-{	
-	/* Remove the warning. */
-	device = device;
+{
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
 	
 	usart_spi_force_chip_select(p_usart);
 }
@@ -230,9 +230,9 @@ void usart_spi_select_device(Usart *p_usart, struct usart_spi_device *device)
  * \param device  SPI device.
  */
 void usart_spi_deselect_device(Usart *p_usart, struct usart_spi_device *device)
-{	
-	/* Remove the warning. */
-	device = device;
+{
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
 	
 	usart_spi_release_chip_select(p_usart);
 }

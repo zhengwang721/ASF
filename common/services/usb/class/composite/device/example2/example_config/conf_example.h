@@ -70,6 +70,11 @@
 //#define USART_ID         ID_USART1
 
 // -- Interrupt priority setting
+//#define USART_INT_IRQn   UART_IRQn
+#define USART_INT_IRQn   UART0_IRQn
+//#define USART_INT_IRQn   USART0_IRQn
+//#define USART_INT_IRQn   USART1_IRQn
+
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

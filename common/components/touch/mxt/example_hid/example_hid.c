@@ -253,12 +253,6 @@ int main(void)
 	/* Start USB stack to authorize VBus monitoring */
 	udc_start();
 
-	if (!udc_include_vbus_monitoring()) {
-		/* VBUS monitoring is not available on this product
-		 * thereby VBUS has to be considered as present */
-		main_vbus_action(true);
-	}
-
 	/* Check if there are any new touch data pending */
 	while (true) {
 		if (mxt_is_message_pending(&device)) {
@@ -289,22 +283,6 @@ int main(void)
  * \name Callback functions for the USB stack
  * @{
  */
-
-/**
- * \brief Handle Vbus state change
- *
- * Called by USB stack when Vbus line changes state.
- */
-void main_vbus_action(bool b_high)
-{
-	if (b_high) {
-		/* Attach USB Device */
-		udc_attach();
-	} else {
-		/* VBUS not present */
-		udc_detach();
-	}
-}
 
 /**
  * \brief Handle suspend of bus
