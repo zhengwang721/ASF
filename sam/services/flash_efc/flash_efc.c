@@ -153,23 +153,19 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	if (ul_addr >= IFLASH1_ADDR) {
 		if(uc_gpnvm2 == FLASH_RC_YES) {
 			p_efc = EFC0;
-			us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
-			us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 		} else {
 			p_efc = EFC1;
-			us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
-			us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
-		} 
+		}
+		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
 	} else {
 		if(uc_gpnvm2 == FLASH_RC_YES) {
 			p_efc = EFC1;
-			us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
-			us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
 		} else {
 			p_efc = EFC0;
-			us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
-			us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 		}
+		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
 #elif (SAM3SD8)
 	p_efc = EFC;
@@ -217,7 +213,23 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 	ul_addr = (p_efc == EFC0) ?
 			IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset :
 			IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
-
+#if (SAM4SD16 || SAM4SD32)
+	uint32_t uc_gpnvm2;
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (p_efc == EFC0) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	}
+#endif
 /* One bank flash */
 #else
 	/* avoid Cppcheck Warning */
