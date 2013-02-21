@@ -422,7 +422,7 @@ enum status_code i2c_master_read_packet_wait(
 	Assert(packet);
 
 #ifdef I2C_MASTER_ASYNC
-	/* Check if the I2C module is busy doing with a job. */
+	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
