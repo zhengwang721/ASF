@@ -98,6 +98,7 @@
 		</info>
 		<build type="header-file"   value="inc/mac.h"/>
 		<build type="header-file"   value="inc/mac_api.h"/>
+		<build type="header-file"   value="inc/mac_config.h"/>
 		<build type="header-file"   value="inc/mac_msg_types.h"/>
 		<build type="header-file"   value="inc/mac_msg_const.h"/>
 		<build type="header-file"	value="inc/mac_msg_type_data_ind.h"/>
