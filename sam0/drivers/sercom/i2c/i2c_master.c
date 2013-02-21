@@ -326,41 +326,17 @@ static enum status_code _i2c_master_wait_for_bus(
 #endif /* __DOXYGEN__ */
 
 /**
- * \brief Read data packet from slave.
- *
- * Reads a data packet from the specified slave address on the I2C bus.
- *
- * \note This will stall the device from any other operation. For interrupt-driven
- * operation, see \ref i2c_master_read_packet_job.
+ * \internal Start blocking read operation.
  *
  * \param[in,out]     module  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
- * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \return            Status describing progress of reading packet.
  */
-enum status_code i2c_master_read_packet_wait(
+static enum status_code _i2c_master_read(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
-	/* Sanity check */
-	Assert(module);
-	Assert(module->hw);
-	Assert(packet);
-
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-
-#ifdef I2C_MASTER_ASYNC
-	/* Check if the I2C module is busy doing with a job. */
-	if (module->buffer_remaining > 0) {
-		return STATUS_BUSY;
-	}
-#endif
 
 	/* Return value. */
 	enum status_code tmp_status;
@@ -405,17 +381,22 @@ enum status_code i2c_master_read_packet_wait(
 			}
 		}
 
-		/* Send nack and stop command unless arbitration is lost. */
-		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		if (module->repeated_start) {
+			/* Send nack and repeated start command unless arbitration is lost. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(1);
+		} else {
+			/* Send nack and stop command unless arbitration is lost. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
+		}
 	}
 
 	return tmp_status;
 }
 
 /**
- * \brief Write data packet to slave.
+ * \brief Read data packet from slave.
  *
- * Writes a data packet to the specified slave address on the I2C bus.
+ * Reads a data packet from the specified slave address on the I2C bus.
  *
  * \note This will stall the device from any other operation. For interrupt-driven
  * operation, see \ref i2c_master_read_packet_job.
@@ -430,10 +411,8 @@ enum status_code i2c_master_read_packet_wait(
  * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
  *                                address.
  * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
  */
-enum status_code i2c_master_write_packet_wait(
+enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -442,25 +421,82 @@ enum status_code i2c_master_write_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-
 #ifdef I2C_MASTER_ASYNC
-	/* Check if the I2C module is busy with a job */
+	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
 #endif
 
+	module->repeated_start = false;
+
+	return _i2c_master_read(module, packet);
+}
+
+/**
+ * \brief Read data packet from slave followed by a repeated start.
+ *
+ * Reads a data packet from the specified slave address on the I2C bus.
+ *
+ * \note This will stall the device from any other operation. For interrupt-driven
+ * operation, see \ref i2c_master_read_packet_job.
+ *
+ * \param[in,out]     module  Pointer to device instance struct.
+ * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \return          Status describing progress of reading packet.
+ * \retval STATUS_OK If packet was read.
+ * \retval STATUS_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ */
+enum status_code i2c_master_read_packet_wait_no_stop(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet)
+{
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+#ifdef I2C_MASTER_ASYNC
+	/* Check if the I2C module is busy with a job. */
+	if (module->buffer_remaining > 0) {
+		return STATUS_BUSY;
+	}
+#endif
+
+	module->repeated_start = true;
+
+	return _i2c_master_read(module, packet);
+}
+
+/**
+ * \internal Start blocking write operation.
+ *
+ * \param[in,out]     module  Pointer to device instance struct.
+ * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \return            Status describing progress of reading packet.
+ */
+static enum status_code _i2c_master_write_packet(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet)
+{
+
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+
 	/* Return value. */
 	enum status_code tmp_status;
 	uint8_t tmp_data_length = packet->data_length;
 
-        _i2c_master_wait_for_sync(module);
+	_i2c_master_wait_for_sync(module);
 
 	/* Set address and direction bit. Will send start command on bus. */
 	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
 
-        /* Wait for response on bus. */
+	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);
 
 	/* Check for address response error unless previous error is
@@ -504,9 +540,98 @@ enum status_code i2c_master_write_packet_wait(
 			}
 		}
 
-		/* Stop command. */
-		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		if (module->repeated_start) {
+			/* Stop command. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
+		} else {
+			/* Repeated start. */
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		}
 	}
 
 	return tmp_status;
+}
+
+/**
+ * \brief Write data packet to slave.
+ *
+ * Writes a data packet to the specified slave address on the I2C bus.
+ *
+ * \note This will stall the device from any other operation. For interrupt-driven
+ * operation, see \ref i2c_master_read_packet_job.
+ *
+ * \param[in,out]     module  Pointer to device instance struct.
+ * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \return          Status describing progress of reading packet.
+ * \retval STATUS_OK If packet was read.
+ * \retval STATUS_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
+ *                             indicating that slave do not want more data.
+ */
+enum status_code i2c_master_write_packet_wait(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet)
+{
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+#ifdef I2C_MASTER_ASYNC
+	/* Check if the I2C module is busy with a job */
+	if (module->buffer_remaining > 0) {
+		return STATUS_BUSY;
+	}
+#endif
+
+	module->repeated_start = false;
+
+	return _i2c_master_write_packet(module, packet);
+}
+
+/**
+ * \brief Write data packet to slave followed by a repeated start.
+ *
+ * Writes a data packet to the specified slave address on the I2C bus.
+ *
+ * \note This will stall the device from any other operation. For interrupt-driven
+ * operation, see \ref i2c_master_read_packet_job.
+ *
+ * \param[in,out]     module  Pointer to device instance struct.
+ * \param[in,out]     packet    Pointer to I2C packet to transfer.
+ * \return          Status describing progress of reading packet.
+ * \retval STATUS_OK If packet was read.
+ * \retval STATUS_BUSY If master module is busy.
+ * \retval STATUS_ERR_DENIED If error on bus.
+ * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
+ * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
+ *                                address.
+ * \retval STATUS_ERR_TIMEOUT If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
+ *                             indicating that slave do not want more data.
+ */
+enum status_code i2c_master_write_packet_wait_repeated_start(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet)
+{
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+#ifdef I2C_MASTER_ASYNC
+	/* Check if the I2C module is busy with a job */
+	if (module->buffer_remaining > 0) {
+		return STATUS_BUSY;
+	}
+#endif
+
+	module->repeated_start = true;
+
+	return _i2c_master_write_packet(module, packet);
 }

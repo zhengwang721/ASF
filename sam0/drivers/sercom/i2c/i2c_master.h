@@ -170,6 +170,8 @@ struct i2c_master_module {
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
 	uint16_t buffer_timeout;
+	/* Set to send repeated start (instead of stop) after ending read/write */
+	bool repeated_start;
 #ifdef I2C_MASTER_ASYNC
 	/** Pointers to callback functions. */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
@@ -310,13 +312,13 @@ static inline void i2c_master_enable(
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 #endif
 	/* Start timeout if bus state is unknown. */
-	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {		
-                timeout_counter++;
-                if(timeout_counter >= (module->unkown_bus_state_timeout)) {
+	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {
+		timeout_counter++;
+		if(timeout_counter >= (module->unkown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
-                        i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
-                        /* Workaround #1 */
-                        return;
+			i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
+			/* Workaround #1 */
+		return;
 		}
 	}
 }
@@ -363,10 +365,17 @@ enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
+enum status_code i2c_master_read_packet_wait_repeated_start(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet);
+
 enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
+enum status_code i2c_master_write_packet_wait_repeated_start(
+		struct i2c_master_module *const module,
+		struct i2c_packet *const packet);
 
 /** @} */
 /** @} */
