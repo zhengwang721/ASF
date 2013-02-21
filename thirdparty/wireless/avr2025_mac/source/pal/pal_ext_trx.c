@@ -48,6 +48,7 @@
 #include "pal.h"
 #include "delay.h"
 #include "interrupt.h"
+#include "conf_pal.h"
 
 static irq_handler_t irq_hdl_trx = NULL;
 struct spi_device SPI_AT86RFX_DEVICE = {
