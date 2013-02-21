@@ -3,7 +3,7 @@
  *
  * \brief Starter Kit Demo.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,7 +57,7 @@
  * \section Description
  *
  * The demonstration program can operate in 3 different modes; temperature information,
- * light sensor information and SD card status. Each of these being selectable using 
+ * light sensor information and SD card status. Each of these being selectable using
  * Button1 Button2 and Button3 from the OLED1 wing.
  * IO1 wing must be connected on EXT2.
  * OLED1 wing must be connected on EXT3.
@@ -89,10 +89,10 @@ volatile uint32_t sd_status_update = 0;
 static void ProcessButtonEvt(uint8_t uc_button)
 {
 	/* Switch to temperature mode. */
-	if (uc_button == 1 && app_mode != 0) 
+	if (uc_button == 1 && app_mode != 0)
 	{
 		app_mode_switch = 1;
-	} 
+	}
 	/* Switch to light mode. */
 	else if (uc_button == 2 && app_mode != 1)
 	{
@@ -186,7 +186,7 @@ static void configure_buttons(void)
 	NVIC_EnableIRQ((IRQn_Type) PIN_PUSHBUTTON_3_ID);
 	pio_handler_set_priority(PIN_PUSHBUTTON_3_PIO, (IRQn_Type) PIN_PUSHBUTTON_3_ID, IRQ_PRIOR_PIO);
 	pio_enable_interrupt(PIN_PUSHBUTTON_3_PIO, PIN_PUSHBUTTON_3_MASK);
-	
+
 	/* Configure SD card detection. */
 	pmc_enable_periph_clk(SD_MMC_0_CD_ID);
 	pio_set_debounce_filter(SD_MMC_0_CD_PIO, SD_MMC_0_CD_MASK, 10);
@@ -205,7 +205,7 @@ static void configure_adc(void)
 	/* Configure ADC pin for light sensor. */
 	gpio_configure_pin(LIGHT_SENSOR_GPIO, LIGHT_SENSOR_FLAGS);
 
-	/* Enable ADC clock. */	
+	/* Enable ADC clock. */
 	pmc_enable_periph_clk(ID_ADC);
 
 	/* Configure ADC. */
@@ -224,12 +224,12 @@ static void display_sd_info(void)
 	uint8_t sd_card_version;
 	uint32_t sd_card_size;
 	uint8_t size[10];
-	
+
 	// Is SD card present?
 	if (gpio_pin_is_low(SD_MMC_0_CD_GPIO) == false)
 	{
 		ssd1306_write_text("Please insert SD card...");
-	}		
+	}
 	else
 	{
 		ssd1306_write_text("SD card information:");
@@ -241,16 +241,16 @@ static void display_sd_info(void)
 			card_check = sd_mmc_check(0);
 			delay_ms(1);
 		}
-					
+
 		if (card_check == SD_MMC_OK)
 		{
 			sd_card_type = sd_mmc_get_type(0);
 			sd_card_version = sd_mmc_get_version(0);
 			sd_card_size = sd_mmc_get_capacity(0);
-						
+
 			ssd1306_set_page_address(1);
 			ssd1306_set_column_address(0);
-						
+
 			// Card type
 			switch(sd_card_type)
 			{
@@ -269,10 +269,10 @@ static void display_sd_info(void)
 				default:
 				ssd1306_write_text("- Type: unknown");
 			}
-						
+
 			ssd1306_set_page_address(2);
 			ssd1306_set_column_address(0);
-						
+
 			// SD card version
 			switch(sd_card_version)
 			{
@@ -291,14 +291,14 @@ static void display_sd_info(void)
 				default:
 				ssd1306_write_text("- Version: unknown");
 			}
-			
+
 			ssd1306_set_page_address(3);
 			ssd1306_set_column_address(0);
-			
+
 			sprintf(size, "- Total size: %lu KB", sd_card_size);
-			ssd1306_write_text(size);		
+			ssd1306_write_text(size);
 		}
-	}					
+	}
 }
 
 /**
@@ -348,16 +348,16 @@ int main(void)
 
 	// Initialize clocks.
 	sysclk_init();
-	
+
 	// Initialize GPIO states.
 	board_init();
-	
+
 	// Configure ADC for light sensor.
 	configure_adc();
-	
+
 	// Initialize at30tse.
 	at30tse_init();
-	
+
 	// Configure IO1 buttons.
 	configure_buttons();
 
@@ -372,18 +372,18 @@ int main(void)
 		light[i] = 0;
 	}
 
-	while (true) 
+	while (true)
 	{
 		/* Refresh page title only if necessary. */
 		if (app_mode_switch > 0)
 		{
 			app_mode = app_mode_switch - 1;
-			
+
 			// Clear screen.
 			ssd1306_clear();
 			ssd1306_set_page_address(0);
 			ssd1306_set_column_address(0);
-			
+
 			/* Temperature mode. */
 			if (app_mode == 0)
 			{
@@ -410,23 +410,23 @@ int main(void)
 				display_sd_info();
 			}
 			app_mode_switch = 0;
-		}		
+		}
 
 		// Shift graph buffers.
-		for (i = 0; i < BUFFER_SIZE - 1; ++i) 
+		for (i = 0; i < BUFFER_SIZE - 1; ++i)
 		{
 			temperature[i] = temperature[i + 1];
-			light[i] = light[i + 1];			
-		}			
-		
+			light[i] = light[i + 1];
+		}
+
 		// Get temperature in a range from 0 to 40 degrees.
 		if (at30tse_read_temperature(&temp) == TWI_SUCCESS)
-		{		
+		{
 			// Don't care about negative temperature.
 			if (temp < 0)
 				temp = 0;
-					
-			// Update temperature for display. 
+
+			// Update temperature for display.
 			// Note: -12 in order to rescale for better rendering.
 			if (temp < 12)
 				temperature[BUFFER_SIZE - 1] = 0;
@@ -438,7 +438,7 @@ int main(void)
 			// Error print zero values.
 			temperature[BUFFER_SIZE - 1] = 0;
 		}
-		
+
 		// Get light sensor information.
 		// Rescale for better rendering.
 		adc_start(ADC);
@@ -482,16 +482,16 @@ int main(void)
 				ssd1306_clear();
 				ssd1306_set_page_address(0);
 				ssd1306_set_column_address(0);
-				
+
 				// Show SD card info.
 				display_sd_info();
-				
+
 				sd_status_update = 0;
 			}
-			
+
 		}
 
 		/* Wait and stop screen flickers. */
-		delay_ms(50);		
+		delay_ms(50);
 	}
 }

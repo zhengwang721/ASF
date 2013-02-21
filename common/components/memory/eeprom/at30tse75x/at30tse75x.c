@@ -3,7 +3,7 @@
  *
  * \brief AT30TSE75X driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #include "at30tse75x.h"
 
 void at30tse_init(void)
-{	
+{
 	sysclk_enable_peripheral_clock(ID_TWI0);
 
 	twi_options_t opts = {
@@ -53,16 +53,16 @@ void at30tse_init(void)
 		.speed = 10000,
 		.smbus = 0
 	};
-	
+
 	twi_master_init(TWI0, &opts);
 }
 
 uint8_t at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
-{	
+{
 	twi_packet_t packet = {
 		// Internal chip addr
 		// Byte addr in page (0-15) + 4 lower bits of page addr in EEPROM
-		.addr[0] = (word_addr & 0x0F) | ((0x0F & page) << 4), 
+		.addr[0] = (word_addr & 0x0F) | ((0x0F & page) << 4),
 		.addr_length = 1,
 		// Data buffer
 		.buffer = data,
@@ -71,7 +71,7 @@ uint8_t at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, u
 		// TWI addr + 2 upper bytes of page addr.
 		.chip = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 	};
-	
+
 	return twi_master_write(TWI0, &packet);
 }
 
@@ -89,8 +89,8 @@ uint8_t at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, ui
 		// TWI addr + 2 upper bytes of page addr.
 		.chip = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
 	};
-	
-	return twi_master_read(TWI0, &packet);	
+
+	return twi_master_read(TWI0, &packet);
 }
 
 volatile uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
@@ -116,7 +116,7 @@ uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, 
 	uint8_t data[2];
 	data[0] = 0x00FF & (reg_value >> 8);
 	data[1] = 0x00FF & reg_value;
-	
+
 	twi_packet_t packet = {
 		// Internal chip addr
 		.addr[0] = reg | reg_type,
@@ -127,7 +127,7 @@ uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, 
 		// Chip addr
 		.chip = AT30TSE_TEMPERATURE_TWI_ADDR
 	};
-		
+
 	return twi_master_write(TWI0, &packet);
 }
 
@@ -152,20 +152,20 @@ uint8_t at30tse_read_temperature(double *temperature)
 
 	// Read the 16-bit temperature register.
 	uint8_t error_code = at30tse_read_register(AT30TSE_TEMPERATURE_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TEMPERATURE_REG_SIZE, buffer);
-	
+
 	// Only convert temperature data if read success.
 	if (error_code == TWI_SUCCESS)
 	{
 		uint16_t data = (buffer[0] << 8) | buffer[1];
 		int8_t sign = 1;
-		
+
 		// Check if negative and clear sign bit.
 		if (data & (1 << 15))
 		{
 			sign *= -1;
 			data &= ~(1 << 15);
 		}
-		
+
 		// Convert to temperature.
 		switch (resolution)
 		{
@@ -189,6 +189,6 @@ uint8_t at30tse_read_temperature(double *temperature)
 			break;
 		}
 	}
-	
+
 	return error_code;
 }

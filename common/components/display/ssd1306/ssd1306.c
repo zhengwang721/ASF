@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 display controller driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -127,7 +127,7 @@ void ssd1306_init(void)
 	// Enable charge pump regulator
 	ssd1306_write_command(SSD1306_CMD_SET_CHARGE_PUMP_SETTING);
 	ssd1306_write_command(0x14);
-	
+
 	// Set VCOMH Deselect Level
 	ssd1306_write_command(SSD1306_CMD_SET_VCOMH_DESELECT_LEVEL);
 	ssd1306_write_command(0x40); // Default => 0x20 (0.77*VCC)
@@ -147,7 +147,7 @@ void ssd1306_write_text(uint8_t * string)
 {
 	uint8_t *char_ptr;
 	uint8_t i;
-	
+
 	while (*string != 0) {
 		char_ptr = font_table[(*string - 32) & 0x7F];
 		for (i = 1; i <= char_ptr[0]; i++) {

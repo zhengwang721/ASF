@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 OLED display controller driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -412,7 +412,7 @@ static inline void ssd1306_clear(void)
 	uint8_t page = 0;
 	uint8_t col = 0;
 
-	for (page = 0; page < 4; ++page) 
+	for (page = 0; page < 4; ++page)
 	{
 		ssd1306_set_page_address(page);
 		ssd1306_set_column_address(0);
