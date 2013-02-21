@@ -49,7 +49,7 @@
  * This driver for SAMD20 devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
- * date as maintained by the RTC module..
+ * date as maintained by the RTC module.
  *
  * The following peripherals are used by this module:
  *
@@ -81,7 +81,7 @@
  * easy integration of a real time clock and calendar into a user application
  * to track the passing or time and/or perform scheduled tasks.
  *
- * Whilst operating in Calendar mode, the RTC features :
+ * Whilst operating in Calendar mode, the RTC features:
  *  - Time tracking in seconds, minutes and hours
  *   - 12 hour or 24 hour mode
  *  - Date tracking in day, month and year
@@ -150,7 +150,7 @@
  * </tr>
  * </table>
  *
- * \subsection rtc_cal_correction Digital Frequency Correction
+ * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
  * The RTC module contains Digital Frequency Correction logic to compensate for
  * inaccurate source clock frequencies which would otherwise result in skewed
  * time measurements. The correction scheme requires that at least two bits
@@ -162,9 +162,11 @@
  * cycle from the RTC prescaler every 1024 RTC GCLK cycles. The adjustment is
  * applied the specified number of time (max 127) over 976 of these periods. The
  * corresponding correction in PPM will be given by:
+ *
  * \f[
  * Correction(PPM) = \frac{VALUE}{999424}10^6
  * \f]
+ *
  * The RTC clock will tick faster if provided with a positive correction value,
  * and slower when given a negative correction value.
  *
@@ -182,8 +184,8 @@
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
- * resulting clock frequency of 1KHz to the RTC. The internal RTC prescaler is
- * set to 1024 which yields an end-frequency of 1 Hz.
+ * resulting clock frequency of 1024 Hz to the RTC. The internal RTC prescaler
+ * is set to 1024 which yields an end-frequency of 1 Hz.
  *
  * The implementer also has the option to set other end-frequencies. The table
  * below lists the available RTC frequencies for each possible GCLK and RTC
@@ -229,7 +231,7 @@
  *       be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for AC
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for RTC CAL
  *
  * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
  *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
