@@ -146,8 +146,8 @@ static enum status_code _rtc_count_set_config(
  * \brief Initializes the RTC module with given configurations.
  *
  * This initializes the module, setting up all given configurations to provide
- * the desired functionality of the RTC. \note \ref conf_clocks.h should be set
- * up correctly before using this function.
+ * the desired functionality of the RTC. \note The application conf_clocks.h
+ * configuration file should be set up correctly before using this function.
  *
  * \param[in] config Pointer to the configuration structure.
  *
