@@ -52,9 +52,6 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
-#if (!defined HIGHEST_STACK_LAYER)
-#define HIGHEST_STACK_LAYER = PAL
-#endif // (!defined HIGHEST_STACK_LAYER)
 
 /* === Includes ============================================================= */
 
@@ -65,8 +62,10 @@
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (0)
 
+#if (!define TOTAL_NUMBER_OF_TIMERS)
 /** Defines the total number of timers used by the application and the layers below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
+#endif //(!define TOTAL_NUMBER_OF_TIMERS)
 
 /** Defines the number of additional large buffers used by the application */
 #define NUMBER_OF_LARGE_APP_BUFS    (0)
