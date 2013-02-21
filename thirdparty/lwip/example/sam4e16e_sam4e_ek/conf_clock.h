@@ -71,22 +71,4 @@
 #define CONFIG_PLL0_MUL             20
 #define CONFIG_PLL0_DIV             1
 
-// ===== USB Clock Source Options   (Fusb = Fplla / USB_div)
-// Use div effective value here.
-#define CONFIG_USBCLK_DIV           5
-
-// ===== Target frequency (System clock)
-// - XTAL frequency: 12MHz
-// - System clock source: PLLA
-// - System clock prescaler: 2 (divided by 2)
-// - PLLA source: XTAL
-// - PLLA output: XTAL * 20 / 1
-// - System clock: 12 * 20 / 1 / 2 = 120MHz
-// ===== Target frequency (USB Clock)
-// - USB clock source: PLLA
-// - USB clock divider: 5
-// - PLLA output: XTAL * 20 / 1
-// - USB clock: 12 * 20 / 1 / 5 = 48MHz
-
-
 #endif /* CONF_CLOCK_H_INCLUDED */
