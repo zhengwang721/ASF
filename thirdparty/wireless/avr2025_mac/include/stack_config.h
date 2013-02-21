@@ -81,7 +81,7 @@
 #define RF4CE                               (5)
 
 #if (!defined HIGHEST_STACK_LAYER)
-#define HIGHEST_STACK_LAYER = PAL
+#define HIGHEST_STACK_LAYER     PAL
 #endif // (!defined HIGHEST_STACK_LAYER)
 
 #if (HIGHEST_STACK_LAYER == PAL)

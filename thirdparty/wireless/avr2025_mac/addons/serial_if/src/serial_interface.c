@@ -130,9 +130,14 @@ static uint8_t *get_next_tx_buffer(void)
  *
  */
  
+#if defined(ENABLE_TSTAMP)
 void usr_mcps_data_conf(uint8_t msduHandle,
                         uint8_t status,
                         uint32_t Timestamp)
+#else
+void usr_mcps_data_conf(uint8_t msduHandle,
+                        uint8_t status)
+#endif  /* ENABLE_TSTAMP */
 {
     uint8_t *msg_buf;
 
@@ -142,10 +147,12 @@ void usr_mcps_data_conf(uint8_t msduHandle,
     *msg_buf++ = MCPS_DATA_CONFIRM;
     *msg_buf++ = msduHandle;
     *msg_buf++ = status;
+#if defined(ENABLE_TSTAMP)
     *msg_buf++ = Timestamp;
     *msg_buf++ = Timestamp >> 8;
     *msg_buf++ = Timestamp >> 16;
     *msg_buf++ = Timestamp >> 24;
+#endif  /* ENABLE_TSTAMP */
     *msg_buf = EOT;
 }
 
@@ -161,13 +168,32 @@ void usr_mcps_data_conf(uint8_t msduHandle,
  * @param Timestamp        The time, in symbols, at which the data were received
  *                         (only if timestamping is enabled).
  */
+#if defined(MAC_SECURITY_ZIP) || defined(__DOXYGEN__)
 void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
                        wpan_addr_spec_t *DstAddrSpec,
                        uint8_t msduLength,
                        uint8_t *msdu,
                        uint8_t mpduLinkQuality,
                        uint8_t DSN,
+    #if defined(ENABLE_TSTAMP) || defined(__DOXYGEN__)
+                       uint32_t Timestamp,
+    #endif  /* ENABLE_TSTAMP */
+                       uint8_t SecurityLevel,
+                       uint8_t KeyIdMode,
+                       uint8_t KeyIndex)
+#else   /* No MAC_SECURITY */
+void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
+                       wpan_addr_spec_t *DstAddrSpec,
+                       uint8_t msduLength,
+                       uint8_t *msdu,
+                       uint8_t mpduLinkQuality,
+    #ifdef ENABLE_TSTAMP
+                       uint8_t DSN,
                        uint32_t Timestamp)
+    #else
+                       uint8_t DSN)
+    #endif  /* ENABLE_TSTAMP */
+#endif  /* MAC_SECURITY */
 {
     uint8_t *msg_buf;
     /* Pointer to size element - the content is written later. */
@@ -206,10 +232,12 @@ void usr_mcps_data_ind(wpan_addr_spec_t *SrcAddrSpec,
     msg_buf += 8;
     *msg_buf++ = mpduLinkQuality;
     *msg_buf++ = DSN;
+    #ifdef ENABLE_TSTAMP
     *msg_buf++ = Timestamp;
     *msg_buf++ = Timestamp >> 8;
     *msg_buf++ = Timestamp >> 16;
     *msg_buf++ = Timestamp >> 24;
+    #endif  /* ENABLE_TSTAMP */
     *msg_buf++ = msduLength;
     /*
      * The second length of the MSDU is required since the test harness
@@ -371,10 +399,12 @@ void usr_mlme_beacon_notify_ind(uint8_t BSN,
     *msg_buf++ = PANDescriptor->SuperframeSpec >> 8;
     *msg_buf++ = PANDescriptor->GTSPermit;
     *msg_buf++ = PANDescriptor->LinkQuality;
+#ifdef ENABLE_TSTAMP
     *msg_buf++ = PANDescriptor->TimeStamp;
     *msg_buf++ = PANDescriptor->TimeStamp >> 8;
     *msg_buf++ = PANDescriptor->TimeStamp >> 16;
     *msg_buf++ = PANDescriptor->TimeStamp >> 24;
+#endif  /* ENABLE_TSTAMP */
 
     *msg_ptr_to_size += WPAN_DESCRIPTOR_LEN;
 
@@ -761,10 +791,12 @@ void usr_mlme_scan_conf(uint8_t status,
                 *msg_buf++ = wpan_desc_ptr->SuperframeSpec >> 8;
                 *msg_buf++ = wpan_desc_ptr->GTSPermit;
                 *msg_buf++ = wpan_desc_ptr->LinkQuality;
+#ifdef ENABLE_TSTAMP
                 *msg_buf++ = wpan_desc_ptr->TimeStamp;
                 *msg_buf++ = wpan_desc_ptr->TimeStamp >> 8;
                 *msg_buf++ = wpan_desc_ptr->TimeStamp >> 16;
                 *msg_buf++ = wpan_desc_ptr->TimeStamp >> 24;
+#endif  /* ENABLE_TSTAMP */
 
                 wpan_desc_ptr++;
                 *msg_ptr_to_size += WPAN_DESCRIPTOR_LEN;
