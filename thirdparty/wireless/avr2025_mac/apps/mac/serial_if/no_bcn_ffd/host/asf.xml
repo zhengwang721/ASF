@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type ="component" caption="MAC Serial Interface Host Application - NoBeacon FFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.host">
+	<module type ="application" caption="MAC Serial Interface Host Application - NoBeacon FFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.host">
 		<info type="description" value="summary">
 		MAC Serial Interface Host Application - NoBeacon FFD
 		</info>

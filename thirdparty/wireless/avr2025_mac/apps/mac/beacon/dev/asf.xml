@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<module type ="component" caption="MAC Beacon  Application - Device" id="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev">
+	<module type ="meta" caption="MAC Beacon  Application - Device" id="thirdparty.wireless.avr2025_mac.apps.mac.beacon.dev">
 		<info type="description" value="summary">
 		The basic MAC Example Beacon Application deploys a beacon-enabled network with star topology.
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="main.c"/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="MAC"/>
 		<build type="define" name="ENABLE_TSTAMP" value =""/>

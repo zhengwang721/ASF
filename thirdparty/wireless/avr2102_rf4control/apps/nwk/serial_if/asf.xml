@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<module type ="component" caption="SERIAL INTERFACE APPLICATION" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if">
+	<module type ="meta" caption="SERIAL INTERFACE APPLICATION" id="thirdparty.wireless.avr2102_rf4control.apps.nwk.serial_if">
 		<info type="description" value="summary">
 		Serial interface application for RF4CE network stack
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.addons.serial_interface"/>

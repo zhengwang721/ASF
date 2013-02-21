@@ -73,7 +73,6 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf212"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
@@ -85,7 +84,6 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf212b"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
@@ -97,7 +95,6 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf230b"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
@@ -109,7 +106,6 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf231"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
@@ -121,7 +117,6 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf233"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
@@ -132,7 +127,6 @@
         </info>
         <require idref="thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="config.thirdparty.wireless.avr2025_mac.source.tal_helper"/>
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <build type="doxygen-entry-point" value="group_tal_rfr2"/>
         <device-support value="atmega256rfr2"/>
@@ -149,6 +143,8 @@
 
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic" caption="TAL Generic Files">
 		<build type="header-file"   value="inc/tal.h"/>
+		<build type="c-source"   value="src/tal_helper.c"/>
+		<build type="header-file"   value="inc/tal_helper.h"/>
 		<build type="header-file"   value="inc/tal_types.h"/>
 		<build type="header-file"   value="inc/tal_timer_config.h"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
@@ -160,34 +156,5 @@
 		<build type="include-path"  value="inc/"/>
 	</module>
 
-	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tal_helper" name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" caption="TAL HELPER Configuration" default="no">
-		<module type="service" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#no"     caption="Tal Helper support disabled">
-			<info type="description" value="summary">
-			Tal Helper Support is Disabled(Used Only if the Highest Stack Layer is TAL)
-			</info>
-            <device-support-alias value="avr2025_mac_pal_spi_support"/>
-            <device-support-alias value="avr2025_mac_pal_soc_support"/>
-			<build type="doxygen-entry-point" value="group_tal_helper"/>
-		</module>
 
-		<module type="service" id="config.thirdparty.wireless.avr2025_mac.source.tal_helper#yes"    caption="Tal Helper  support enabled">
-			<info type="description" value="summary">
-			Tal Helper Support for applications using TAL as the Highest Layer is Enabled
-			</info>
-			<build type="c-source"   value="src/tal_helper.c"/>
-			<build type="header-file"   value="inc/tal_helper.h"/>
-			<build type="header-file"   value="inc/tal.h"/>
-			<build type="include-path"  value="inc/"/>
-			<build type="header-file"   value="../../include/return_val.h"/>
-			<build type="header-file"   value="../../include/ieee_const.h"/>
-			<build type="include-path"  value="../../include/"/>
-			<build type="header-file"   value="at86rf212/inc/tal_internal.h"/>
-			<build type="include-path"  value="at86rf212/inc/"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.resources.inc"/>
-			<build type="doxygen-entry-point" value="group_tal_helper"/>
-            <device-support-alias value="avr2025_mac_pal_spi_support"/>
-            <device-support-alias value="avr2025_mac_pal_soc_support"/>
-		</module>
-	</select-by-config>
 </asf>

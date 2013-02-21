@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<module type ="component" caption="MAC Serial Interface Application" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if">
+	<module type ="meta" caption="MAC Serial Interface Application" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if">
 		<info type="description" value="summary">
 		MAC Serial Interface  Application 
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
 		<build type="include-path" value="."/>

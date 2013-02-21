@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<module type ="component" caption="MAC Serial Interface  Application - No-Beacon FFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd">
+	<module type ="meta" caption="MAC Serial Interface  Application - No-Beacon FFD" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd">
 		<info type="description" value="summary">
 		MAC Serial Interface  Application - No-Beacon FFD
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="MAC"/>
 		<build type="define" name="FFD" value =""/>
 		<build type="define" name="TEST_HARNESS" value =""/>

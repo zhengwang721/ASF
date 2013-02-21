@@ -57,6 +57,10 @@
 
 
 /* === MACROS ============================================================== */
+#define ANT_CTRL_0              (0)
+#define ANT_CTRL_1              (1)
+#define ANT_CTRL_2              (2)
+#define ANT_CTRL_3              (3)
 
 #define TAL_RADIO_WAKEUP_TIME_SYM       (TAL_CONVERT_US_TO_SYMBOLS(SLEEP_TO_TRX_OFF_TYP_US))
 

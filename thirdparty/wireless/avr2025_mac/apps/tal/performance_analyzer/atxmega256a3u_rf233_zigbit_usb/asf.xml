@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Performance Analyzer Application-AT86RF233 (USB)" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer.atxmega256a3u_rf233_zigbit_usb">
+	<project caption="Performance Analyzer Application-AT86RF233 (USB)" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer.atxmega256a3u_rf233_zigbit_usb" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 			A Serial interface based application,which communicates with Wireless Analyzer to demonstrate
 			various features and capabilities of the of Atmel Transceivers.
@@ -17,8 +17,7 @@
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<require idref="board.xmega_rf233_zigbit"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tal_helper" value="yes"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf233"/>
+				<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf233"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
 
 		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
