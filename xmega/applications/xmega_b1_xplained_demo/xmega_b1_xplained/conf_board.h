@@ -3,7 +3,7 @@
  *
  * \brief Board configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,5 +47,15 @@
 #define CONF_BOARD_ENABLE_LCD
 #define CONF_BOARD_LCD_BACKLIGHT_PWM
 #define CONF_BOARD_AT45DBX
+
+// Enable on-board Light Sensor (ADC)
+#define CONF_BOARD_ENABLE_LIGHT_SENSOR
+
+// Enable on-board Temperature Sensor (ADC)
+#define CONF_BOARD_ENABLE_TEMPERATURE_SENSOR
+
+// Enable on-board Potentiometer Sensor (ADC)
+#define CONF_BOARD_POTENTIOMETER_SENSOR
+
 
 #endif /* CONF_BOARD_H_INCLUDED */
