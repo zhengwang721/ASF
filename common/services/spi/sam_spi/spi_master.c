@@ -3,7 +3,7 @@
  *
  * \brief SPI master common service for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -98,14 +98,17 @@ void spi_master_init(Spi *p_spi)
 void spi_master_setup_device(Spi *p_spi, struct spi_device *device,
 		spi_flags_t flags, uint32_t baud_rate, board_spi_select_id_t sel_id)
 {
-	sel_id = sel_id;
-
+	int16_t baud_div = spi_calc_baudrate_div(baud_rate, sysclk_get_cpu_hz());
+	/* avoid Cppcheck Warning */
+	UNUSED(sel_id);
+	if (-1 == baud_div) {
+		Assert(0 == "Failed to find baudrate divider");
+	}
 	spi_set_transfer_delay(p_spi, device->id, CONFIG_SPI_MASTER_DELAY_BS,
 			CONFIG_SPI_MASTER_DELAY_BCT);
 	spi_set_bits_per_transfer(p_spi, device->id,
 			CONFIG_SPI_MASTER_BITS_PER_TRANSFER);
-	spi_set_baudrate_div(p_spi, device->id,
-			spi_calc_baudrate_div(baud_rate, sysclk_get_cpu_hz()));
+	spi_set_baudrate_div(p_spi, device->id, baud_div);
 	spi_configure_cs_behavior(p_spi, device->id, SPI_CS_KEEP_LOW);
 	spi_set_clock_polarity(p_spi, device->id, flags >> 1);
 	spi_set_clock_phase(p_spi, device->id, ((flags & 0x1) ^ 0x1));
@@ -145,7 +148,8 @@ void spi_select_device(Spi *p_spi, struct spi_device *device)
  */
 void spi_deselect_device(Spi *p_spi, struct spi_device *device)
 {
-	device = device;
+	/* avoid Cppcheck Warning */
+	UNUSED(device);
 	while (!spi_is_tx_empty(p_spi)) {
 	}
 

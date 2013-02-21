@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for the AT45DBX data flash driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,9 +60,13 @@
  */
 //! @{
 
+static bool b_at45dbx_unloaded = false;
 
 Ctrl_status at45dbx_test_unit_ready(void)
 {
+	if (b_at45dbx_unloaded) {
+		return CTRL_NO_PRESENT;
+	}
 	return (at45dbx_mem_check() == true) ? CTRL_GOOD : CTRL_NO_PRESENT;
 }
 
@@ -82,7 +86,12 @@ bool at45dbx_wr_protect(void)
 
 bool at45dbx_removal(void)
 {
-	return false;
+	return true;
+}
+
+bool at45dbx_unload(bool unload)
+{
+	b_at45dbx_unloaded = unload;
 }
 
 

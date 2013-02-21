@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -173,9 +173,7 @@ static int8_t ui_host_x, ui_host_y, ui_host_scroll;
 
 void ui_host_vbus_change(bool b_vbus_present)
 {
-	if (b_vbus_present) {
-	} else {
-	}
+	UNUSED(b_vbus_present);
 }
 
 void ui_host_vbus_error(void)

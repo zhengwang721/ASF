@@ -18,6 +18,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.cdc.host.composite#disable" caption="USB Host CDC disabled">
@@ -47,6 +48,7 @@
 		<device-support value="uc3c"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 </asf>
