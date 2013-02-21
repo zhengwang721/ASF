@@ -3,7 +3,7 @@
  *
  * \brief PWM LED example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,8 @@
  * -# Initialize PWM clock
  * -# Configure PIN_PWM_LED0_CHANNEL
  * -# Configure PIN_PWM_LED1_CHANNEL
- * -# Enable interrupt of counter event and PIN_PWM_LED0_CHANNEL & PIN_PWM_LED1_CHANNEL
+ * -# Enable interrupt of counter event and PIN_PWM_LED0_CHANNEL
+ * & PIN_PWM_LED1_CHANNEL
  * -# Change duty cycle in ISR
  *
  */
@@ -72,8 +73,6 @@
 #include "conf_board.h"
 #include "conf_clock.h"
 
-/** Console baud rate */
-#define CONSOLE_BAUD_RATE  115200
 /** PWM frequency in Hz */
 #define PWM_FREQUENCY      1000
 /** Period value of PWM output waveform */
@@ -100,28 +99,22 @@ void PWM_Handler(void)
 	uint32_t events = pwm_channel_get_interrupt_status(PWM);
 
 	/* Interrupt on PIN_PWM_LED0_CHANNEL */
-	if ((events & (1 << PIN_PWM_LED0_CHANNEL)) == (1 << PIN_PWM_LED0_CHANNEL)) {
-
+	if ((events & (1 << PIN_PWM_LED0_CHANNEL)) ==
+			(1 << PIN_PWM_LED0_CHANNEL)) {
 		ul_count++;
 
 		/* Fade in/out */
 		if (ul_count == (PWM_FREQUENCY / (PERIOD_VALUE - INIT_DUTY_VALUE))) {
-
 			/* Fade in */
 			if (fade_in) {
-
 				ul_duty++;
 				if (ul_duty == PERIOD_VALUE) {
-
 					fade_in = 0;
 				}
-			}
-			/* Fade out */
-			else {
-
+			} else {
+				/* Fade out */
 				ul_duty--;
 				if (ul_duty == INIT_DUTY_VALUE) {
-
 					fade_in = 1;
 				}
 			}
@@ -145,7 +138,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -176,7 +169,7 @@ int main(void)
 	pwm_channel_disable(PWM, PIN_PWM_LED0_CHANNEL);
 	pwm_channel_disable(PWM, PIN_PWM_LED1_CHANNEL);
 
-	/* Set PWM clock A as PWM_FREQUENCY * PERIOD_VALUE (clock B is not used) */
+	/* Set PWM clock A as PWM_FREQUENCY*PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t clock_setting = {
 		.ul_clka = PWM_FREQUENCY * PERIOD_VALUE,
 		.ul_clkb = 0,
@@ -184,10 +177,17 @@ int main(void)
 	};
 	pwm_init(PWM, &clock_setting);
 
-	/* Initialize PWM channel for LED0 (period is left-aligned and output waveform starts at a low level) */
-	g_pwm_channel_led.ul_prescaler = PWM_CMR_CPRE_CLKA;  /* Use PWM clock A as source clock */
-	g_pwm_channel_led.ul_period = PERIOD_VALUE;  /* Period value of output waveform */
-	g_pwm_channel_led.ul_duty = INIT_DUTY_VALUE;  /* Duty cycle value of output waveform */
+	/* Initialize PWM channel for LED0 */
+	/* Period is left-aligned */
+	g_pwm_channel_led.alignment = PWM_ALIGN_LEFT;
+	/* Output waveform starts at a low level */
+	g_pwm_channel_led.polarity = PWM_LOW;
+	/* Use PWM clock A as source clock */
+	g_pwm_channel_led.ul_prescaler = PWM_CMR_CPRE_CLKA;
+	/* Period value of output waveform */
+	g_pwm_channel_led.ul_period = PERIOD_VALUE;
+	/* Duty cycle value of output waveform */
+	g_pwm_channel_led.ul_duty = INIT_DUTY_VALUE;
 	g_pwm_channel_led.channel = PIN_PWM_LED0_CHANNEL;
 	pwm_channel_init(PWM, &g_pwm_channel_led);
 
@@ -195,8 +195,16 @@ int main(void)
 	pwm_channel_enable_interrupt(PWM, PIN_PWM_LED0_CHANNEL, 0);
 
 	/* Initialize PWM channel for LED1 */
-	g_pwm_channel_led.alignment = PWM_ALIGN_CENTER;  /* Period is center-aligned */
-	g_pwm_channel_led.polarity = PWM_HIGH;  /* Output waveform starts at a high level */
+	/* Period is center-aligned */
+	g_pwm_channel_led.alignment = PWM_ALIGN_CENTER;
+	/* Output waveform starts at a high level */
+	g_pwm_channel_led.polarity = PWM_HIGH;
+	/* Use PWM clock A as source clock */
+	g_pwm_channel_led.ul_prescaler = PWM_CMR_CPRE_CLKA;
+	/* Period value of output waveform */
+	g_pwm_channel_led.ul_period = PERIOD_VALUE;
+	/* Duty cycle value of output waveform */
+	g_pwm_channel_led.ul_duty = INIT_DUTY_VALUE;
 	g_pwm_channel_led.channel = PIN_PWM_LED1_CHANNEL;
 	pwm_channel_init(PWM, &g_pwm_channel_led);
 
