@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Slave Example configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,13 @@
  *
  */
 
-/* Configuration of TWI Slave Example */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
-#define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/** Definition of TWI interrupt ID on board. */
-#define BOARD_TWI_IRQn          TWI1_IRQn
-#define BOARD_TWI_Handler       TWI1_Handler
+/** Configure TWI1 pins */
+#define CONF_BOARD_TWI1
 
-/** TWI ID for SLAVE application to use */
-#define BOARD_ID_TWI_SLAVE          ID_TWI1
-/** TWI Base for TWI SLAVE application to use */
-#define BOARD_BASE_TWI_SLAVE        TWI1
-
-#endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

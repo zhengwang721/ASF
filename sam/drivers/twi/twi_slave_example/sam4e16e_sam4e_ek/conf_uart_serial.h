@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Slave Example configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,18 +41,14 @@
  *
  */
 
-/* Configuration of TWI Slave Example */
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
-#define CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/** Definition of TWI interrupt ID on board. */
-#define BOARD_TWI_IRQn          TWI1_IRQn
-#define BOARD_TWI_Handler       TWI1_Handler
-
-/** TWI ID for SLAVE application to use */
-#define BOARD_ID_TWI_SLAVE          ID_TWI1
-/** TWI Base for TWI SLAVE application to use */
-#define BOARD_BASE_TWI_SLAVE        TWI1
-
-#endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
