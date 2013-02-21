@@ -395,11 +395,151 @@
 #define PINS_UART1_FLAGS          (PIO_PERIPH_A | PIO_DEFAULT)
 #define PINS_UART1_PIO            PIOB
 
-#define PIN_PUSHBUTTON_1_MASK     PIO_PA2
-#define PIN_PUSHBUTTON_1_PIO      PIOA
-#define PIN_PUSHBUTTON_1_ID       ID_PIOA
-#define PIN_PUSHBUTTON_1_TYPE     PIO_INPUT
-#define PIN_PUSHBUTTON_1_ATTR     PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE
+//! \name SPI
+//@{
+/** SPI MISO pin definition. */
+#define SPI_MISO_GPIO         (PIO_PA12_IDX)
+#define SPI_MISO_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+/** SPI MOSI pin definition. */
+#define SPI_MOSI_GPIO         (PIO_PA13_IDX)
+#define SPI_MOSI_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+/** SPI SPCK pin definition. */
+#define SPI_SPCK_GPIO         (PIO_PA14_IDX)
+#define SPI_SPCK_FLAGS       (PIO_PERIPH_A | PIO_PULLUP)
+
+/** SPI chip select 0 pin definition. (Only one configuration is possible) */
+#define SPI_NPCS0_GPIO         (PIO_PA11_IDX)
+#define SPI_NPCS0_FLAGS           (PIO_PERIPH_A | PIO_DEFAULT)
+/** SPI chip select 1 pin definition. (multiple configurations are possible) */
+#define SPI_NPCS1_PA9_GPIO     (PIO_PA9_IDX)
+#define SPI_NPCS1_PA9_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS1_PA31_GPIO    (PIO_PA31_IDX)
+#define SPI_NPCS1_PA31_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS1_PB14_GPIO    (PIO_PB14_IDX)
+#define SPI_NPCS1_PB14_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS1_PC4_GPIO     (PIO_PC4_IDX)
+#define SPI_NPCS1_PC4_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+/** SPI chip select 2 pin definition. (multiple configurations are possible) */
+#define SPI_NPCS2_PA10_GPIO    (PIO_PA10_IDX)
+#define SPI_NPCS2_PA10_FLAGS      (PIO_PERIPH_B | PIO_PULLUP)
+#define SPI_NPCS2_PA30_GPIO    (PIO_PA30_IDX)
+#define SPI_NPCS2_PA30_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS2_PB2_GPIO     (PIO_PB2_IDX)
+#define SPI_NPCS2_PB2_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+/** SPI chip select 3 pin definition. (multiple configurations are possible) */
+#define SPI_NPCS3_PA3_GPIO     (PIO_PA3_IDX)
+#define SPI_NPCS3_PA3_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS3_PA5_GPIO     (PIO_PA5_IDX)
+#define SPI_NPCS3_PA5_FLAGS       (PIO_PERIPH_B | PIO_DEFAULT)
+#define SPI_NPCS3_PA22_GPIO    (PIO_PA22_IDX)
+#define SPI_NPCS3_PA22_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
+//@}
+
+//! \name OLED
+//@{
+#define UG_2832HSWEG04_DATA_CMD_GPIO      (PIO_PC21_IDX)
+#define UG_2832HSWEG04_DATA_CMD_FLAGS    (PIO_OUTPUT_1 | PIO_PULLUP)
+#define UG_2832HSWEG04_RESET_GPIO      (PIO_PC31_IDX)
+#define UG_2832HSWEG04_RESET_FLAGS    (PIO_OUTPUT_1 | PIO_PULLUP)
+
+//#define UG_2832HSWEG04_SPI              &USARTC0
+//#define UG_2832HSWEG04_DATA_CMD         IOPORT_CREATE_PIN(PIOC, 0)
+//#define UG_2832HSWEG04_RESET            IOPORT_CREATE_PIN(PIOC, 31)
+//#define UG_2832HSWEG04_SPI_SCK          IOPORT_CREATE_PIN(PIOA, 14)
+//#define UG_2832HSWEG04_SPI_MOSI         IOPORT_CREATE_PIN(PIOA, 13)
+#define UG_2832HSWEG04_SS               2
+#define UG_2832HSWEG04_BAUDRATE         5000000
+//! \name OLED dimensions
+//@{
+#define LCD_WIDTH_PIXELS                (128)
+#define LCD_HEIGHT_PIXELS               (32)
+//@}
+//@}
+
+//! \name TWI
+//@{
+/** TWI0 pin definitions */
+#define TWI0_DATA_GPIO   PIO_PA3_IDX
+#define TWI0_DATA_FLAGS  (PIO_PERIPH_A | PIO_PULLUP)
+#define TWI0_CLK_GPIO    PIO_PA4_IDX
+#define TWI0_CLK_FLAGS   (PIO_PERIPH_A | PIO_PULLUP)
+//@}
+
+
+
+//! \name IO1 led definitions */
+//@{
+#define IO1_LED1_PIN                  EXT3_PIN_7
+#define IO1_LED1_ACTIVE               false
+#define IO1_LED1_INACTIVE             !IO1_LED1_ACTIVE
+
+#define IO1_LED2_PIN                  EXT3_PIN_8
+#define IO1_LED2_ACTIVE               false
+#define IO1_LED2_INACTIVE             !IO1_LED2_ACTIVE
+
+#define IO1_LED3_PIN                  EXT3_PIN_6
+#define IO1_LED3_ACTIVE               false
+#define IO1_LED3_INACTIVE             !IO1_LED3_ACTIVE
+//@}
+
+//! \name IO1 button definitions */
+//@{
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_1_NAME    "BUTTON 1"
+#define GPIO_PUSH_BUTTON_1   (PIO_PA0_IDX)
+#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define PIN_PUSHBUTTON_1    {PIO_PA0, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_1_MASK PIO_PA0
+#define PIN_PUSHBUTTON_1_PIO PIOA
+#define PIN_PUSHBUTTON_1_ID ID_PIOA
+#define PIN_PUSHBUTTON_1_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_1_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+/** Push button #2 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_2_NAME    "BUTTON 2"
+#define GPIO_PUSH_BUTTON_2   (PIO_PC29_IDX)
+#define GPIO_PUSH_BUTTON_2_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define PIN_PUSHBUTTON_2    {PIO_PC29, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_2_MASK PIO_PC29
+#define PIN_PUSHBUTTON_2_PIO PIOC
+#define PIN_PUSHBUTTON_2_ID ID_PIOC
+#define PIN_PUSHBUTTON_2_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+/** Push button #3 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_3_NAME    "BUTTON 3"
+#define GPIO_PUSH_BUTTON_3   (PIO_PC30_IDX)
+#define GPIO_PUSH_BUTTON_3_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+
+#define PIN_PUSHBUTTON_3    {PIO_PC30, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_3_MASK PIO_PC30
+#define PIN_PUSHBUTTON_3_PIO PIOC
+#define PIN_PUSHBUTTON_3_ID ID_PIOC
+#define PIN_PUSHBUTTON_3_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_3_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+//@}
+
+//! \name Light Sensor
+//@{
+#define LIGHT_SENSOR_GPIO   PIO_PB0_IDX
+#define LIGHT_SENSOR_FLAGS  PIO_INPUT
+//@}
+
+//! \name SD Card
+//@{
+#define SD_MMC_0_CD_GPIO            (PIO_PC27_IDX)
+#define SD_MMC_0_CD_PIO_ID          ID_PIOC
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+
+#define SD_MMC_0_CD    {PIO_PC27, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define SD_MMC_0_CD_MASK PIO_PC27
+#define SD_MMC_0_CD_PIO PIOC
+#define SD_MMC_0_CD_ID ID_PIOC
+#define SD_MMC_0_CD_TYPE PIO_INPUT
+#define SD_MMC_0_CD_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_EDGE)
+//@}
 
 /** @} */
 

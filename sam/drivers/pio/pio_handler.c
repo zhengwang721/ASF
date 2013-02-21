@@ -231,21 +231,20 @@ void PIOF_Handler(void)
 /**
  * \brief Initialize PIO interrupt management logic.
  *
- * \note The desired priority of PIO must be provided.
- * Calling this function multiple times result in the reset of currently
- * configured interrupt on the provided PIO.
- *
  * \param p_pio PIO controller base address.
  * \param ul_irqn NVIC line number.
  * \param ul_priority PIO controller interrupts priority.
  */
 void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority)
 {
-	/* Configure PIO interrupt sources */
-	pio_get_interrupt_status(p_pio);
+	uint32_t bitmask = 0;
+	
+	bitmask = pio_get_interrupt_mask(p_pio);
 	pio_disable_interrupt(p_pio, 0xFFFFFFFF);
+	pio_get_interrupt_status(p_pio);
 	NVIC_DisableIRQ(ul_irqn);
 	NVIC_ClearPendingIRQ(ul_irqn);
 	NVIC_SetPriority(ul_irqn, ul_priority);
 	NVIC_EnableIRQ(ul_irqn);
+	pio_enable_interrupt(p_pio, bitmask);
 }
