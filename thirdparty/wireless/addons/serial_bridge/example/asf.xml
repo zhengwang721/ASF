@@ -6,13 +6,8 @@
 		</info>
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source"      value="main.c"/>
-        
 		<require idref="thirdparty.wireless.addons.serial_bridge"/>
-
-		<device-support value="xmega"/>
-		<device-support value="uc3"/>
 		<device-support value="sam4l"/>
-		<device-support value="megarf"/>
         <info type="keyword" value="technology">
             <keyword value="Wireless"/>
             <keyword value="Communication"/>

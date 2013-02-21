@@ -91,14 +91,14 @@
 #if (SAM)
 #define NCP_RESET_GPIO            PIN_PC00
 
-#define USART_NCP                 USART0
+#define USART_NCP                 USART1
 #define USART_NCP_BAUDRATE        9600
 #define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
 #define USART_NCP_PARITY          US_MR_PAR_NO
 #define USART_NCP_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-#define USART_NCP_ISR_VECT()      ISR(USART0_Handler)
-#define USART_NCP_IRQn            USART0_IRQn
+#define USART_NCP_ISR_VECT()      ISR(USART1_Handler)
+#define USART_NCP_IRQn            USART1_IRQn
 #define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
 						              NVIC_EnableIRQ(USART_NCP_IRQn);
 #endif //SAM
