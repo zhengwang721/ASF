@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="MAC Serial Interface - No-Beacon FFD-AT86RF230b-RZ600" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.at32uc3a3256s_rz600_at86rf230b">
+	<project force-caption="true" force-description="true" caption="MAC Serial Interface NoBeacon FFD AT86RF230B-RZ600" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.at32uc3a3256s_rz600_at86rf230b">
 		<info type="description" value="summary">
-		MAC Serial Interface  Application - No-Beacon FFD
+		MAC Serial Interface Application - NoBeacon FFD
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

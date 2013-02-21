@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="MAC Serial Interface -NoBeacon FFD-ATmegarfr2-ATmega256RFR2 Xplained Pro" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.atmega256rfr2_xplained_pro">
+	<project force-caption="true" force-description="true" caption="MAC Serial Interface NoBeacon FFD ATMEGARFR2-ATmega256RFR2 Xplained Pro" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.no_bcn_ffd.ncp.atmega256rfr2_xplained_pro">
 		<info type="description" value="summary">
-		MAC Serial Interface  Application - NoBeacon FFD
+		MAC Serial Interface Application - NoBeacon FFD
 		</info>	
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
