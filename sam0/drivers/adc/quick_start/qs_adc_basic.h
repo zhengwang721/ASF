@@ -42,7 +42,7 @@
  */
 
 /**
- * \page adc_basic_use_case Quick Start Guide for the ADC module - Basic Use Case
+ * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for the ADC module - Basic Use Case
  *
  * In this use case, the ADC will be used for..
  * The ADC will be set up as follows:
@@ -65,16 +65,16 @@
  * - No added sampling time
  * - Pin scan mode disabled
  *
- * \section adc_basic_use_case_setup Quick Start
+ * \section asfdoc_samd20_adc_basic_use_case_setup Quick Start
  *
- * \subsection adc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection adc_basic_use_case_code Code
+ * \subsection asfdoc_samd20_adc_basic_use_case_code Code
  * Add to user application %main():
  * \snippet qs_adc_basic.c main
  *
- * \section adc_basic_use_case_workflow Workflow
+ * \section asfdoc_samd20_adc_basic_use_case_workflow Workflow
  * -# Create variables for device software instance, config and channel config.
  *  - \snippet qs_adc_basic.c variable
  * -# Create variable for storing the ADC result.
