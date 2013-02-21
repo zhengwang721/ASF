@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="MAC No-Beacon Application - Device-AT86RF230b" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.dev.ncp.at32uc3a3256s_rz600_at86rf230b">
+	<project force-caption="true" force-description="true" caption="MAC No-Beacon Application - Device-AT86RF230b-RZ600" id="thirdparty.wireless.avr2025_mac.apps.mac.no_beacon.dev.ncp.at32uc3a3256s_rz600_at86rf230b">
 		<info type="description" value="summary">
 		The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled network.
 		</info>
