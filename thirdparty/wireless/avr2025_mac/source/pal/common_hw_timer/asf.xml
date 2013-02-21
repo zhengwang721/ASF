@@ -17,8 +17,9 @@
             <build type="library" subtype="user" value="xmega/lib/xmegaa3_lib_hw_timer.r90" toolchain="iarew"/>
 			<build type="library" subtype="user" value="xmega/lib/libxmegaa3_hw_timer_lib.a" toolchain="avrgcc"/>
 
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.xmega"/>
             <require idref="xmega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support-alias value="xmega_hw_timer_support"/>
@@ -34,8 +35,9 @@
             <build type="library" subtype="user" value="uc3/lib/uc3_lib_hw_timer.r82" toolchain="iarew32"/>
 			<build type="library" subtype="user" value="uc3/lib/libuc3_lib_hw_timer.a" toolchain="avr32gcc"/>
 
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.uc3"/>
             <require idref="avr32.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support-alias value="uc3_hw_timer_support"/>
@@ -51,8 +53,9 @@
             <build type="library" subtype="user" value="sam/lib/sam4l_lib_hw_timer.a" toolchain="iarewarm"/>
 			<build type="library" subtype="user" value="sam/lib/libsam4l_lib_hw_timer.a" toolchain="armgcc"/>
 
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.sam"/>
 			<require idref="sam.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <require idref="common.utils"/>
@@ -69,8 +72,9 @@
             <build type="library" subtype="user" value="mega/lib/mega_lib_hw_timer.r90" toolchain="iarew"/>
             <build type="library" subtype="user" value="mega/lib/libmega_lib_hw_timer.a" toolchain="avrgcc"/>
 
+            <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer.mega"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support-alias value="mega_hw_timer_support"/>

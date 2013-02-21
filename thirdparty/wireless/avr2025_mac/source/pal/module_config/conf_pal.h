@@ -43,6 +43,8 @@
 #ifndef CONF_PAL_H_INCLUDED
 #define CONF_PAL_H_INCLUDED
 
+#include <parts.h>
+
 #warning "Using default values. Edit this conf_pal.h file to modify define value according to the current board."
 
 #if (UC3)
