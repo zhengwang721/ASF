@@ -170,8 +170,8 @@ struct i2c_master_module {
 	uint16_t unkown_bus_state_timeout;
 	/* Buffer write timeout value. */
 	uint16_t buffer_timeout;
-	/* Set to send STOP after ending read/write */
-	bool no_stop;
+	/* Set to send repeated start (instead of stop) after ending read/write */
+	bool repeated_start;
 #ifdef I2C_MASTER_ASYNC
 	/** Pointers to callback functions. */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
@@ -365,7 +365,7 @@ enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_read_packet_wait_no_stop(
+enum status_code i2c_master_read_packet_wait_repeated_start(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
@@ -373,7 +373,7 @@ enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_write_packet_wait_no_stop(
+enum status_code i2c_master_write_packet_wait_repeated_start(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
