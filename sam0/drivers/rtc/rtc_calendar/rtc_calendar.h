@@ -40,228 +40,86 @@
  * \asf_license_stop
  *
  */
-
 #ifndef RTC_CALENDAR_H_INCLUDED
 #define RTC_CALENDAR_H_INCLUDED
 
-#include <conf_clocks.h>
-
-#if CONF_CLOCK_GCLK_2_RTC == false
-#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
- * \defgroup sam0_rtc_cal_group SAMD20 Real Time Counter (RTC), Calendar Mode
- * Driver for the SAMD20 architecture devices. This driver provides a
- * interface for setting up and utilizing the RTC in calendar mode. This module
- * encompasses the following modules within the SAMD20 devices:
- * - \b RTC (Real Time Counter)
+ * \defgroup asfdoc_samd20_rtc_calendar_group SAMD20 RTC Calendar Driver (RTC CAL)
  *
- * \section rtc_calendar_intro Introduction
- * The RTC is a 32-bit counter with a 10-bit programmable prescaler that
- * typically runs continuously, including in low-power sleep modes, to track
- * time. The RTC can be used as a source to wake up the system using the \ref
- * rtc_cal_alarms "Alarms, Overflows" or \ref rtc_cal_periodic triggers.
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Real Time Clock functionality in Calendar
+ * operating mode, for the configuration and retrieval of the current time and
+ * date as maintained by the RTC module..
  *
- * For this driver, the RTC is operated in calendar mode. This allows for an
- * easy integration of a clock to projects, as the time value is handled by
- * a \ref rtc_calendar_time "Struct" that provides a easy human readable time
- * stamp. Alternatively the RTC can be operated as a regular
- * \ref sam0_rtc_count_group "counter" if the specialized calendar mode is not
- * needed.
+ * The following peripherals are used by this module:
  *
- * For the calendar mode, the RTC features are as follows:
- *  - Time in seconds, minutes and hours.
- *   - 12 hour or 24 hour mode.
- *  - Date in day, month and year.
- *   - Month 1 is January.
- *   - Month 2 is February.
- *   - ...
- *  - Leap year correction.
+ *  - RTC (Real Time Clock)
  *
- * \subsection rtc_cal_alarms Alarms and Overflow
- * The RTC has 4 alarm that can be set up independently.
- * These alarms will be will trigger on match with the current clock
- * value, and can be set up to trigger an interrupt, an event, or both. The RTC
- * can also be configured to clear the clock value on alarm match, meaning
- * the clock will be set to the original start time.
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_rtc_calendar_prerequisites
+ *  - \ref asfdoc_samd20_rtc_calendar_module_overview
+ *  - \ref asfdoc_samd20_rtc_calendar_special_considerations
+ *  - \ref asfdoc_samd20_rtc_calendar_extra_info
+ *  - \ref asfdoc_samd20_rtc_calendar_examples
+ *  - \ref asfdoc_samd20_rtc_calendar_api_overview
  *
- * If the RTC is operated without the \ref rtc_calendar_conf option enabled, the
+ *
+ * \section asfdoc_samd20_rtc_calendar_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_rtc_calendar_module_overview Module Overview
+ *
+ * The RTC module in the SAMD20 devices is a 32-bit counter, with a 10-bit
+ * programmable prescaler. Typically, the RTC clock is run continuously,
+ * including in the device's low-power sleep modes, to track the current time
+ * and date information. The RTC can be used as a source to wake up the system
+ * at a scheduled time or periodically using the alarm functions.
+ *
+ * In this driver, the RTC is operated in Calendar mode. This allows for an
+ * easy integration of a real time clock and calendar into a user application
+ * to track the passing or time and/or perform scheduled tasks.
+ *
+ * Whilst operating in Calendar mode, the RTC features :
+ *  - Time tracking in seconds, minutes and hours
+ *   - 12 hour or 24 hour mode
+ *  - Date tracking in day, month and year
+ *   - Automatic leap year correction
+ *
+ * \subsection asfdoc_samd20_rtc_calendar_module_overview_alarms Alarms and Overflow
+ * The RTC has 4 independent hardware alarms that can be configured by the user
+ * application. These alarms will be will trigger on match with the current
+ * clock value, and can be set up to trigger an interrupt, event, or both. The
+ * RTC can also be configured to clear the clock value on alarm match, resetting
+ * the clock to the original start time.
+ *
+ * If the RTC is operated in clock-only mode (i.e. with calendar disabled), the
  * RTC counter value will instead be cleared on overflow once the maximum count
- * value has been reached (\f$2^{32}-1\f$). When the RTC is operated in the
- * calendar mode and run at the required 1 Hz, a register overflow will happen
- * after 64 years. Below is a figural representation of the two operation modes.
- * \dot
- *     digraph text_box1{
- *     fontsize=20;
- *     label = "Counter with clear on match deactivated.";
- *     }
- * \enddot
- * \dot
- * digraph compare_match_off {
- *     splines = false;
- *     rankdir=LR;
- *     subgraph cluster_a {
- *         node [shape=none];
- *         style="invis";
- *         overflow1 [label=""];
- *         match1 [label=""];
- *         start1 [label="Start"];
- *         overflow1:e -> match1 [style="invis", constraint=false];
- *         match1 -> start1 [style="invis", constraint=false];
- *         start1:n -> overflow1:n [constraint=false, headlabel=
- *         "counter              ", fontsize=20];
- *         {rank="same"; overflow1 match1 start1}
- *     }
- *     subgraph cluster_b {
- *         node [shape=none];
- *         style="invis";
- *         overflow2 [label=""];
- *         match2 [label="Match"];
- *         start2 [label=""];
- *         overflow2 -> match2 [style="invis", constraint=false];
- *         match2 -> start2 [style="invis", constraint=false];
- *         {rank="same"; overflow2 match2 start2 }
- *     }
- *     subgraph cluster_c {
- *         node [shape=none];
- *         style="invis";
- *         overflow3 [label="Overflow"];
- *         match3 [label=""];
- *         start3 [label="Start"];
- *         time [fontsize=20, labelloc="t"];
- *         overflow3 -> match3 [style="invis", constraint=false];
- *         match3 -> start3 [style="invis", constraint=false];
- *         overflow3-> start3 [constraint=false, weight=1];
- *         {rank="same"; overflow3 start3 }
- *     }
- *     subgraph cluster_d {
- *         node [shape=none];
- *         style="invis";
- *         overflow4 [label=""];
- *         match4 [label="Match"];
- *         start4 [label=""];
- *         overflow4 -> match4 [style="invis", constraint=false];
- *         match4 -> start4 [style="invis", constraint=false];
- *         {rank="same"; overflow4 match4 start4 }
- *     }
- *     subgraph cluster_e {
- *         node [shape=none];
- *         style="invis";
- *         overflow5 [label="Overflow"];
- *         match5 [label=""];
- *         start5 [label="Start"];
- *         zeroline5 [label=""];
- *         overflow5 -> match5 [style="invis", constraint=false];
- *         match5 -> start5 [style="invis", constraint=false];
- *         overflow5-> start5 [constraint=false, weight=1];
- *         {rank="same"; overflow5 start5 }
- *     }
- *     start1:n -> match2 [weight=0, constraint=false];
- *     match2 -> overflow3:s [weight=0, constraint=false];
- *     start3:n -> match4 [weight=0, constraint=false];
- *     match4 -> overflow5:s [weight=0, constraint=false];
- *     match1:w -> match5:e [style="dotted", constraint=false, dir="none"];
- *     start1:n -> start5:ne [constraint=false];
+ * value has been reached:
  *
- *     start1 -> start2 [style="invis"];
- *     start2 -> start3 [style="invis"];
- *     start3 -> start4 [style="invis"];
- *     start4 -> start5 [style="invis"];
- * }
- * \enddot
- * \dot
- *     digraph text_box2{
- *     fontsize=20;
- *     label = "Counter with clear on match activated.";
- *     }
- * \enddot
- * \dot
- * digraph compare_match_on {
- *     splines = false;
- *     rankdir=LR;
- *     subgraph cluster_a {
- *         node [shape=none];
- *         style="invis";
- *         overflow1 [label=""];
- *         match1 [label=""];
- *         start1 [label="Start "];
- *         match1 -> start1 [style="invis", constraint=false];
- *         start1:n -> overflow1:n [constraint=false, headlabel=
- *         "counter              ", fontsize=20];
- *         {rank="same"; match1 start1}
- *     }
- *     subgraph cluster_b {
- *         node [shape=none];
- *         style="invis";
- *         match2 [label="Match"];
- *         start2 [label="Start "];
- *         match2 -> start2 [constraint=false];
- *         {rank="same"; match2 start2 }
- *     }
- *     subgraph cluster_c {
- *         node [shape=none];
- *         style="invis";
- *         match3 [label="Match    "];
- *         start3 [label="Start "];
- *         time [fontsize=20, labelloc="t"];
- *         start3 -> match3 [dir="back", constraint=false];
- *         {rank="same"; start3 }
- *     }
- *     subgraph cluster_d {
- *         node [shape=none];
- *         style="invis";
- *         match4 [label="Match"];
- *         start4 [label="Start "];
- *         match4 -> start4 [constraint=false];
- *         {rank="same"; match4 start4 }
- *     }
- *     subgraph cluster_e {
- *         node [shape=none];
- *         style="invis";
- *         match5 [label="Match"];
- *         start5 [label="Start "];
- *         zeroline5 [label=""];
- *         match5 -> start5 [constraint=false];
- *         {rank="same"; start5 }
- *     }
- *     start1:n -> match2 [weight=0, constraint=false];
- *     start2:n -> match3 [weight=0, constraint=false];
- *     start3:n -> match4 [weight=0, constraint=false];
- *     start4:n -> match5 [weight=0, constraint=false];
+ * \f$COUNT_{MAX} = 2^{32}-1\f$
  *
- *     match1:w -> match5:e [style="dotted", constraint=false, dir="none"];
- *     start1:n -> start5:ne [constraint=false];
+ * When the RTC is operated with the calendar enabled and run at the required
+ * 1 Hz input clock frequency, a register overflow will occur after 64 years.
  *
- *     start1 -> start2 [style="invis"];
- *     start2 -> start3 [style="invis"];
- *     start3 -> start4 [style="invis"];
- *     start4 -> start5 [style="invis"];
+ * \subsection asfdoc_samd20_rtc_calendar_module_overview_periodic Periodic Events
+ * The RTC can generate events at periodic intervals, allowing for direct
+ * peripheral actions without CPU intervention. The periodic events can be
+ * generated on the upper 8 bits of the RTC prescaler, and will be generated on
+ * the rising edge transition of the specified bit. The resulting periodic
+ * frequency can be calculated by the following formula:
  *
- * }
- *
- * \enddot
- *
- * \subsection rtc_cal_periodic Periodic Events
- * The RTC can generate events at periodic intervals, allowing for flexible
- * system ticks. The periodic events can be generated on the upper 8 bits of the
- * RTC prescaler, and will be generated on the rising edge transition of the
- * specified bit. The resulting periodic frequency can be calculated by the
- * following formula:
  * \f[
  * f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}}
  * \f]
- * Where \f$f_{ASY}\f$ refers to the <EM>asynchronous</EM>
- * \ref rtc_cal_clock_conf "clock" set up in the \ref sam0_gclk_group "GCLK"
- * configurations. For the RTC to operate correctly in calendar mode, this
- * frequency will need to be 1024 Hz. The <EM>n</EM> parameter is the event
- * source given by the implementer and is available as an enum in the
- * \ref rtc_calendar_events "API". If the \f$f_{ASY}\f$ is operated at the
- * recommended 1024 Hz, the formula gives you:
+ *
+ * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
+ * module configuration. For the RTC to operate correctly in calendar mode, this
+ * frequency must be 1024 Hz. The \b n parameter is the event source generator
+ * index of the RTC module. If the asynchronous clock is operated at the
+ * recommended 1024 Hz, the formula results in the following output:
+ *
  * <table>
  * <tr>
  * <th>n</th><th>Periodic event</th>
@@ -292,14 +150,40 @@ extern "C" {
  * </tr>
  * </table>
  *
- * \subsection rtc_cal_clock_conf Clock Setup
+ * \subsection rtc_cal_correction Digital Frequency Correction
+ * The RTC module contains Digital Frequency Correction logic to compensate for
+ * inaccurate source clock frequencies which would otherwise result in skewed
+ * time measurements. The correction scheme requires that at least two bits
+ * in the RTC module prescaler are reserved by the correction logic. As a
+ * result of this implementation, frequency correction is only available when
+ * the RTC is running from a 1 Hz reference clock.
+ *
+ * The correction procedure is implemented by subtracting or adding a single
+ * cycle from the RTC prescaler every 1024 RTC GCLK cycles. The adjustment is
+ * applied the specified number of time (max 127) over 976 of these periods. The
+ * corresponding correction in PPM will be given by:
+ * \f[
+ * Correction(PPM) = \frac{VALUE}{999424}10^6
+ * \f]
+ * The RTC clock will tick faster if provided with a positive correction value,
+ * and slower when given a negative correction value.
+ *
+ *
+ * \section asfdoc_samd20_rtc_calendar_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_samd20_rtc_calendar_special_considerations_year Year limit
+ * The RTC module has a year range of 63 years from the starting year configured
+ * when the module is initialized. Dates outside the start to end year range
+ * described below will need software adjustment:
+ *
+ * \f[[YEAR_{START}, YEAR_{START}+64)\f]
+ *
+ * \subsection asfdoc_samd20_rtc_calendar_special_considerations_clock Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
- * smaller prescaler than the others. To make it easier for the implementer,
- * the clock is handled by setting the desired end-frequency in the
- * \ref sam0_clock_group "clocks configuration file". By default the RTC clock
- * is on, selected to use the internal 32 kHz RC-oscillator with a prescaler of
- * 32, giving a clock frequency of 1024 Hz to the RTC. The RTC prescaler is set
- * to 1024 which yields an end-frequency of 1 Hz.
+ * smaller prescaler than the others. By default the RTC clock is on, selected
+ * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
+ * resulting clock frequency of 1KHz to the RTC. The internal RTC prescaler is
+ * set to 1024 which yields an end-frequency of 1 Hz.
  *
  * The implementer also has the option to set other end-frequencies. The table
  * below lists the available RTC frequencies for each possible GCLK and RTC
@@ -342,51 +226,44 @@ extern "C" {
  * \enddot
  *
  * \note For the calendar to operate correctly, the default setting of 1Hz must
- * be used.
+ *       be used.
  *
- * \subsection rtc_cal_correction Digital Frequency Correction
- * The RTC can employ counter corrections to compensate inaccurate oscillators.
- * The correction scheme requires that at least two bits
- * in the RTC prescaler are used. Because of this the correction will only be
- * available in 1 Hz mode.
  *
- * The correction procedure is implemented by subtracting or adding a single
- * cycle from the RTC prescaler every 1024 RTC_GCLK cycles. The adjustment is
- * applied the specified number of time (max 127) over 976 of these periods. The
- * corresponding correction in PPM will be given by:
- * \f[
- * Correction(PPM) = \frac{VALUE}{999424}10^6
- * \f]
- * To clock will go faster if provided with a positive value, and slower when
- * given a negative one.
+ * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information for AC
  *
- * \section rtc_cal_dependencies Dependencies
- * The RTC calendar has the following dependencies:
- * - \b GCLK (Generic Clock Management)
- * - \b SYSCTRL (Clock source control)
+ * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
+ *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
+ *  - \ref asfdoc_samd20_rtc_calendar_extra_dependencies
+ *  - \ref asfdoc_samd20_rtc_calendar_extra_errata
+ *  - \ref asfdoc_samd20_rtc_calendar_extra_history
  *
- * \section rtc_cal_special_considerations Special Considerations
- * \subsection rtc_cal_special_limit_year Year limit.
- * If a year other than between 2000 and 2063 is needed, the initial year in
- * the \ref rtc_calendar_conf will have to be altered. The years available will
- * be between value of the initial year and 63 years forward.
  *
- * \subsection rtc_cal_extra_info Extra Information
- * See \ref rtc_cal_extra_info_page
+ * \section asfdoc_samd20_rtc_calendar_examples Examples
  *
- * \section rtc_cal_examples Examples
- * - \ref rtc_cal_quickstart
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_rtc_calendar_basic_use_case
  *
- * \section rtc_cal_api_overview API Overview
+ *
+ * \section asfdoc_samd20_rtc_calendar_api_overview API Overview
  * @{
  */
+
+#include <conf_clocks.h>
+
+#if CONF_CLOCK_GCLK_2_RTC == false
+#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /**
  * \brief Available alarm registers.
  *
  * Available alarm registers.
- * \note Not all alarm registers are available inn all devices.
- *
+ * \note Not all alarm registers are available on all devices.
  */
 enum rtc_calendar_alarm_num {
 	/** Alarm register 0. */
@@ -409,30 +286,30 @@ enum rtc_calendar_alarm_num {
  * \brief Available mask options for alarms.
  *
  * Available mask options for alarms.
- *
  */
 enum rtc_calendar_alarm_mask {
 	/** Alarm disabled */
 	RTC_CALENDAR_ALARM_MASK_DISABLED = 0,
 	/** Alarm match on second */
-	RTC_CALENDAR_ALARM_MASK_SEC = 1,
+	RTC_CALENDAR_ALARM_MASK_SEC      = 1,
 	/** Alarm match on second and minute */
-	RTC_CALENDAR_ALARM_MASK_MIN = 2,
+	RTC_CALENDAR_ALARM_MASK_MIN      = 2,
 	/** Alarm match on second, minute and hour */
-	RTC_CALENDAR_ALARM_MASK_HOUR = 3,
+	RTC_CALENDAR_ALARM_MASK_HOUR     = 3,
 	/** Alarm match on second, minutes hour and day */
-	RTC_CALENDAR_ALARM_MASK_DAY = 4,
-	/** Alarm match on second, minute, hour, day and mont */
-	RTC_CALENDAR_ALARM_MASK_MONTH = 5,
+	RTC_CALENDAR_ALARM_MASK_DAY      = 4,
+	/** Alarm match on second, minute, hour, day and month */
+	RTC_CALENDAR_ALARM_MASK_MONTH    = 5,
 	/** Alarm match on second, minute, hour, day, month and year */
-	RTC_CALENDAR_ALARM_MASK_YEAR = 6,
+	RTC_CALENDAR_ALARM_MASK_YEAR     = 6,
 };
 
 /**
  * \brief Values used to enable and disable events.
  *
  * Values used to enable and disable events.
- * \note Not all alarm events are available in all devices.
+ *
+ * \note Not all alarm events are available on all devices.
  */
 enum rtc_calendar_event {
 	/** To set event off. */
@@ -475,10 +352,9 @@ enum rtc_calendar_event {
  * \brief Time structure.
  *
  * Time structure containing the time given by or set to the RTC calendar.
- * The structure uses seven values to give second, minute, hour, pm/am, day,
- * month and year. It should be initiated with the
- * \ref rtc_calendar_get_time_defaults().
- *
+ * The structure uses seven values to give second, minute, hour, PM/AM, day,
+ * month and year. It should be initialized via the
+ * \ref rtc_calendar_get_time_defaults() function before use.
  */
 struct rtc_calendar_time {
 	/** The second of the time */
@@ -487,7 +363,7 @@ struct rtc_calendar_time {
 	uint8_t minute;
 	/** The hour of the time */
 	uint8_t hour;
-	/** pm/am value. 1 for pm, or 0 for am. */
+	/** PM/AM value. 1 for pm, or 0 for am. */
 	uint8_t pm;
 	/** The day of the time. Day 1 will be the first day of the month. */
 	uint8_t day;
@@ -502,12 +378,11 @@ struct rtc_calendar_time {
  *
  * Alarm structure containing time of the alarm and a mask to determine when
  * the alarm will trigger.
- *
  */
 struct rtc_calendar_alarm {
-	/** Alarm time */
+	/** Alarm time. */
 	struct rtc_calendar_time time;
-	/** Alarm mask */
+	/** Alarm mask. */
 	enum rtc_calendar_alarm_mask mask;
 };
 
@@ -519,12 +394,13 @@ struct rtc_calendar_alarm {
  * user configurations are set.
  */
 struct rtc_calendar_conf {
-	/** If true, clears the clock on alarm match. */
+	/** If \c true, clears the clock on alarm match. */
 	bool clear_on_match;
-	/** Continuously update the clock so no synchronization is
-	 * needed for read. */
+	/** If \c true, the digital counter registers will be continuously updated
+	 *  so that internal synchronization is not needed when reading the current
+	 *  count. */
 	bool continuously_update;
-	/** 24 hour clock. */
+	/** If \true, time is represented in 24 hour mode. */
 	bool clock_24h;
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
@@ -545,10 +421,7 @@ struct rtc_calendar_conf {
  */
 static inline void _rtc_calendar_wait_for_sync(void)
 {
-	/* Initialize module pointer. */
-	Rtc *rtc_module = RTC;
-
-	while(rtc_module->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY){
+	while (RTC->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY){
 		/* Wait for RTC to sync. */
 	}
 }
@@ -654,9 +527,11 @@ void rtc_calendar_init(const struct rtc_calendar_conf *const config);
 
 void rtc_calendar_swap_time_mode(void);
 
+enum status_code rtc_calendar_frequency_correction(int8_t value);
+
 /** @} */
 
-/** \name Set calendar and alarm values
+/** \name Time and alarm management
  * @{
  */
 
@@ -674,7 +549,7 @@ enum status_code rtc_calendar_get_alarm(
 
 /** @} */
 
-/** \name Set, get and clear int flags.
+/** \name Status flag management
  * @{
  */
 
@@ -763,11 +638,9 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
 /** @} */
 
 /**
- * \name Misc
+ * \name Event management
  * @{
  */
-
-enum status_code rtc_calendar_frequency_correction(int8_t value);
 
 /**
  * \brief Enables the given event in the module.
@@ -802,16 +675,18 @@ static inline void rtc_calendar_disable_events(uint16_t events)
 }
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus
 }
 #endif
 
+
 /**
- * \page rtc_cal_extra_info_page Extra Information
+ * \page asfdoc_samd20_rtc_calendar_extra Extra Information
  *
- *\section acronyms Acronyms
+ * \section asfdoc_samd20_rtc_calendar_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -834,14 +709,22 @@ static inline void rtc_calendar_disable_events(uint16_t events)
  *	</tr>
  * </table>
  *
- * \section fixed_erratas Erratas fixed by the driver
- * No erratas are registered for the device.
  *
- * \section module_history Module History
+ * \section asfdoc_samd20_rtc_calendar_extra_dependencies Dependencies
+ * This driver has the following dependencies:
  *
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ *  - None
+ *
+ *
+ * \section asfdoc_samd20_rtc_calendar_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_rtc_calendar_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -854,19 +737,15 @@ static inline void rtc_calendar_disable_events(uint16_t events)
  */
 
 /**
- * \page rtc_cal_quickstart Quick Start Guide for the RTC calendar
+ * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC Calendar Driver
  *
- * This is the quick start guide for the \ref sam0_rtc_cal_group module, with
- * step-by-step instructions on how to implement the module.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple
+ * examples with step-by-step instructions to configure and use this driver in a
+ * selection of use cases. Note that QSGs can be compiled as a standalone
+ * application or be added to the user application.
  *
- * The use case contain some code segments. The code fragments in the
- * guide can be compiled as is in the separate file, or the
- * user can copy fragments into the users application.
- *
- * \see General list of module \ref rtc_cal_examples "examples".
-
- * \section rtc_cal_use_cases RTC calendar use cases:
- * - \subpage rtc_cal_basic_use_case
+ *  - \subpage asfdoc_samd20_rtc_calendar_basic_use_case
  */
 
 #endif /* RTC_CALENDAR_H_INCLUDED */
