@@ -71,12 +71,250 @@
  *
  * \section asfdoc_samd20_adc_module_overview Module Overview
  *
- * TODO
+ * This driver provides an interface for the Analog-to-Digital conversion
+ * functions on the device, to convert analog voltages to a corresponding
+ * digital value. The ADC has up to 12-bit resolution, and is capable of
+ * converting up to 500k samples per second (ksps).
+ *
+ * The ADC has a compare function for accurate monitoring of user defined
+ * thresholds with minimum software intervention required.
+ * The ADC may be configured for 8-, 10- or 12-bit result, reducing the
+ * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
+ * conversion results are provided left or right adjusted which eases
+ * calculation when the result is represented as a signed integer.
+ *
+ * The input selection is flexible, and both single-ended and differential
+ * measurements can be made. For differential measurements, an optional gain
+ * stage is available to increase the dynamic range. In addition, several
+ * internal signal inputs are available. The ADC can provide both signed and
+ * unsigned results.
+ *
+ * The ADC measurements can either be started by application software or an
+ * incoming event from another peripheral in the device, and both internal and
+ * external reference voltages can be selected.
+ *
+ * A simplified block diagram of the ADC can be seen in the following figure:
+ *
+ * \dot
+ * digraph overview {
+ * splines = false;
+ * rankdir=LR;
+ *
+ * mux1 [label="Positive input", shape=box];
+ * mux2 [label="Negative input", shape=box];
+ *
+ *
+ * mux3 [label="Reference", shape=box];
+ *
+ * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ * prescaler [label="PRESCALER", shape=box, style=filled, fillcolor=lightblue];
+ *
+ * mux1 -> adc;
+ * mux2 -> adc;
+ * mux3 -> adc:sw;
+ * prescaler -> adc;
+ *
+ * postproc [label="Post processing", shape=box];
+ * result [label="RESULT", shape=box, style=filled, fillcolor=lightblue];
+ *
+ * adc:e -> postproc:w;
+ * postproc:e -> result:w;
+ *
+ * {rank=same; mux1 mux2}
+ * {rank=same; prescaler adc}
+ *
+ * }
+ * \enddot
+ *
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_prescaler Sample Clock Prescaler
+ * The ADC features a prescaler which enables conversion at lower clock rates
+ * than the input Generic Clock to the ADC module. This feature can be used to
+ * lower the synchronization time of the digital interface to the ADC module
+ * via a high speed Generic Clock frequency, while still allowing the ADC
+ * sampling rate to be reduced.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_resolution ADC Resolution
+ * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Additionally,
+ * hardware oversampling and decimation modes can be configured to increase the
+ * effective resolution at the expense of throughput. In oversampling and
+ * decimation mode the ADC resolution is increased from 12-bits to an effective
+ * 13, 14, 15 or 16-bits.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
+ * ADC conversions can be software triggered on demand by the user application,
+ * if continuous sampling is not required. It is also possible to configure the
+ * ADC in free-running mode, where new conversions are started as soon as a the
+ * previous conversion is completed, or configure the ADC to scan across a
+ * number of input pins (see \ref asfdoc_samd20_adc_module_overview_pin_scan).
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_diff_mode Differential and Single-Ended Conversion
+ * The ADC has two conversion modes; differential and single-ended. When
+ * measuring signals where the positive input pin is always at a higher voltage
+ * than the negative input pin, the single-ended conversion mode should be used
+ * in order to achieve a full 12-bit output resolution.
+ *
+ * If however the positive input pin voltage may drop below the negative input
+ * pin the signed differential mode should be used.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_sample_time Sample Time
+ * The sample time for each ADC conversion is configurable as a number of half
+ * prescaled ADC clock cycles (depending on the prescaler value), allowing the
+ * user application to achieve faster or slower sampling depending on the
+ * source impedance of the ADC input channels. For applications with high
+ * impedance inputs the sample time can be increased to give the ADC an adequate
+ * time to sample and convert the input channel.
+ *
+ * The resulting sampling time is given by the following equation:
+ * \f[
+ * t_{SAMPLE} = (sample\_length+1) \times \frac{ADC_{CLK}} {2}
+ * \f]
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_averaging Averaging
+ * The ADC can be configured to trade conversion speed for accuracy by averaging
+ * multiple samples in hardware. This feature is suitable when operating in
+ * noisy conditions.
+ *
+ * The effective ADC sample rate will be reduced when averaging is enabled,
+ * however the effective resolution will be increased according to the following
+ * table:
+ *
+ * <table>
+ *   <tr>
+ *     <th>Number of Samples</th>
+ *     <th>Final Result</th>
+ *   </tr>
+ *   <tr>
+ *     <td>1</td>
+ *     <td>12-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>2</td>
+ *     <td>13-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>4</td>
+ *     <td>14-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>8</td>
+ *     <td>15-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>16</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>32</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>64</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>128</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>256</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>512</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ *  <tr>
+ *     <td>1024</td>
+ *     <td>16-bits</td>
+ *  </tr>
+ * </table>
+ *
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_offset_corr Offset and Gain Correction
+ * Inherent gain and offset errors affect the absolute accuracy of the ADC.
+ *
+ * The offset error is defined as the deviation of the ADC’s actual transfer
+ * function from ideal straight line at zero input voltage.
+ *
+ * The gain error is defined as the deviation of the last output step's
+ * midpoint from the ideal straight line, after compensating for offset error.
+ *
+ * The offset correction value is subtracted from the converted data before the
+ * result is ready. The gain correction value is multiplied with the offset
+ * corrected value.
+ *
+ * The equation for both offset and gain error compensation is shown below:
+ * \f[
+ * ADC_{RESULT} = (VALUE_{CONV} + CORR_{OFFSET}) \times CORR_{GAIN}
+ * \f]
+ *
+ * When enabled, a given set of offset and gain correction values can be applied
+ * to the sampled data in hardware, giving a corrected stream of sample data to
+ * the user application at the cost of an increased sample latency.
+ *
+ * In single conversion, a latency of 13 ADC Generic Clock cycles is added for
+ * the final sample result availability. As the correction time is always less
+ * than the propagation delay, in free running mode this latency appears only
+ * during the first conversion. After the first conversion is complete future
+ * conversion results are available at the defined sampling rate.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_pin_scan Pin Scan
+ * In pin scan mode, the first ADC conversion will begin from the configured
+ * positive channel, plus the requested starting offset. When the first
+ * conversion is completed, the next conversion will start at the next positive
+ * input channel and so on, until all requested pins to scan have been sampled
+ * and converted.
+ *
+ * Pin scanning gives a simple mechanism to sample a large number of physical
+ * input channel samples, using a single physical ADC channel.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_window_monitor Window Monitor
+ * The ADC module window monitor function can be used to automatically compare
+ * the conversion result against a preconfigured pair of upper and lower
+ * threshold values.
+ *
+ * The threshold values are evaluated differently, depending on whether
+ * differential or single-ended mode is selected. In differential mode, the
+ * upper and lower thresholds are evaluated as signed values for the comparison,
+ * while in single-ended mode the comparisons are made as a set of unsigned
+ * values.
+ *
+ * The significant bits of the lower window monitor threshold and upper window
+ * monitor threshold values are user-configurable, and follow the overall ADC
+ * sampling bit precision set when the ADC is configured by the user application.
+ * For example, only the eight lower bits of the window threshold values will be
+ * compares to the sampled data whilst the ADC is configured in 8-bit mode. In
+ * In addition, if using differential mode, the 8th bit will be considered as
+ * the sign bit even if bit 9 is zero.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_events Events
+ * Event generation and event actions are configurable in the ADC.
+ *
+ * The ADC has two actions that can be triggered upon event reception:
+ * \li Start conversion
+ * \li Flush pipeline and start conversion
+ *
+ * The ADC can generate two events:
+ * \li Window monitor
+ * \li Result ready
+ *
+ * If the event actions are enabled in the configuration, any incoming event
+ * will trigger the action.
+ *
+ * If the window monitor event is enabled, an event will be generated
+ * when the configured window condition is detected.
+ *
+ * If the result ready event is enabled, an event will be generated when a
+ * conversion is completed.
  *
  *
  * \section asfdoc_samd20_adc_special_considerations Special Considerations
  *
- * TODO
+ * An integrated analog temperature sensor is available for use with the ADC.
+ * The bandgap voltage, as well as the scaled IO and core voltages can also be
+ * measured by the ADC. For internal ADC inputs, the internal source(s) may need
+ * to be manually enabled by the user application before they can be measured.
  *
  *
  * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
