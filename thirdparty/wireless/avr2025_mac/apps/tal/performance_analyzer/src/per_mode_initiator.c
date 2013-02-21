@@ -1593,6 +1593,7 @@ void pulse_cw_transmission(void)
     save_all_settings();
 
     tal_reset(false);
+ 
 
 #if(TAL_TYPE == AT86RF233)
     /* Set the frequency back to already set value after tal_reset */
@@ -1649,7 +1650,14 @@ void start_cw_transmission(uint8_t tx_mode)
 
     /* Added to ensure CW transmission happen in every attempt */
     tal_reset(false);
-
+    
+#if( ANTENNA_DIVERSITY == 1)
+    if ( ANT_DIV_DISABLE == ant_div_before_ct)
+    {
+            tal_ant_div_config(ANT_DIVERSITY_DISABLE,ant_sel_before_ct);
+    
+    }
+#endif
     switch (tx_mode)
     {
         case CW_MODE: /* CW mode*/
