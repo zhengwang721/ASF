@@ -211,7 +211,7 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
         pal_trx_bit_write(SR_PDT_THRES, THRES_ANT_DIV_DISABLE);
 #endif
 
-        pal_trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_DISABLE);
+        pal_trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_ENABLE);
         if (ant_ctrl == ANT_CTRL_1)
         {
             /* Enable A1/X2 */
