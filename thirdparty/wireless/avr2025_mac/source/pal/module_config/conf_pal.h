@@ -46,6 +46,8 @@
 #warning "Using default values. Edit this conf_pal.h file to modify define value according to the current board."
 
 #if (UC3)
+#include "gpio.h"
+
 //! \name SPI Configuration for AT86RFX transceiver in UC3
 //! @{
 #define AT86RFX_SPI                  (&AVR32_SPI0)
@@ -87,6 +89,8 @@
 #define ENTER_TRX_REGION()           DISABLE_TRX_IRQ()
 /** This macro restores the transceiver interrupt status. */
 #define LEAVE_TRX_REGION()           ENABLE_TRX_IRQ()
+
+#define AT86RFX_SPI_BAUDRATE         (3000000)
 //! @}
 #endif //UC3
 
@@ -123,6 +127,8 @@
 #define ENTER_TRX_REGION()   { uint8_t irq_mask = PORTC.INTCTRL; PORTC.INTCTRL &= ~PORT_INT0LVL_gm
 /** This macro restores the transceiver interrupt status. */
 #define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
+
+#define AT86RFX_SPI_BAUDRATE         (3000000)
 //! @}
 #endif //XMEGA
 

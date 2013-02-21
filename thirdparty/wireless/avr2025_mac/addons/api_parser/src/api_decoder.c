@@ -45,7 +45,7 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
  
- #include "compiler.h"
+#include "compiler.h"
 #include "string.h"
 #include "sio2ncp.h"
 #include "api_parser.h"
@@ -88,10 +88,11 @@ void handle_rx_frame(void)
 							  *(rcv_frame_ptr + 2 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t)),
     #ifdef ENABLE_TSTAMP
 							  *(rcv_frame_ptr + 3 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t)),
-							  *((uint32_t *)(rcv_frame_ptr + 4 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t))));
+							  *((uint32_t *)(rcv_frame_ptr + 4 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t)));
     #else
-							  *(rcv_frame_ptr + 3 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t)),
+							  *(rcv_frame_ptr + 3 + sizeof(wpan_addr_spec_t) + sizeof(wpan_addr_spec_t))
     #endif  /* ENABLE_TSTAMP */
+                            );
 				break;
 
         case MCPS_PURGE_CONFIRM:

@@ -8,6 +8,8 @@
 		<build type="header-file" value="inc/private_const.h"/>
 		<build type="include-path" value="inc/"/>
 		<build type="doxygen-entry-point" value="group_mac_serial_if"/>
+        <require idref="thirdparty.wireless.avr2025_mac.includes"/>
+        <require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
 		<device-support value="sam4l"/>
