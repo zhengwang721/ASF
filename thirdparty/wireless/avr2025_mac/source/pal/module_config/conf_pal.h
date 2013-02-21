@@ -43,9 +43,87 @@
 #ifndef CONF_PAL_H_INCLUDED
 #define CONF_PAL_H_INCLUDED
 
-/*! \name Configuration
- */
-//! @{
+#warning "Using default values. Edit this conf_pal.h file to modify define value according to the current board."
 
+#if (UC3)
+//! \name SPI Configuration for AT86RFX transceiver in UC3
+//! @{
+#define AT86RFX_SPI                  (&AVR32_SPI0)
+#define AT86RFX_SPI_NPCS             0
+#define AT86RFX_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
+#define AT86RFX_SPI_SCK_FUNCTION     AVR32_SPI0_SCK_0_0_FUNCTION
+#define AT86RFX_SPI_MISO_PIN         AVR32_SPI0_MISO_0_0_PIN
+#define AT86RFX_SPI_MISO_FUNCTION    AVR32_SPI0_MISO_0_0_FUNCTION
+#define AT86RFX_SPI_MOSI_PIN         AVR32_SPI0_MOSI_0_0_PIN
+#define AT86RFX_SPI_MOSI_FUNCTION    AVR32_SPI0_MOSI_0_0_FUNCTION
+#define AT86RFX_SPI_NPCS_PIN         AVR32_SPI0_NPCS_0_0_PIN
+#define AT86RFX_SPI_NPCS_FUNCTION    AVR32_SPI0_NPCS_0_0_FUNCTION
+
+#define AT86RFX_RST_PIN              (AVR32_PIN_PA00)
+#define AT86RFX_MISC_PIN             
+#define AT86RFX_IRQ_PIN              (AVR32_PIN_PA01)
+#define AT86RFX_SLP_PIN              (AVR32_PIN_PA02)
+
+#define AT86RFX_SPI_CS               AT86RFX_SPI_NPCS
+
+#define AT86RFX_IRQ_PIN_GROUP        2
+#define AT86RFX_IRQ_PIN_PRIORITY     1
+
+#define AT86RFX_ISR()                ISR(ext_int_isr, AT86RFX_IRQ_PIN_GROUP, \
+									 AT86RFX_IRQ_PIN_PRIORITY)
+
+#define AT86RFX_INTC_INIT()          irq_register_handler(ext_int_isr, AVR32_GPIO_IRQ_2, 1)
+
+/** Enables the transceiver interrupts */
+#define ENABLE_TRX_IRQ()             gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN, GPIO_RISING_EDGE)
+
+/** Disable the transceiver interrupts */
+#define DISABLE_TRX_IRQ()            gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN)
+
+/** Clear the transceiver interrupts */
+#define CLEAR_TRX_IRQ()              gpio_clear_pin_interrupt_flag(AT86RFX_IRQ_PIN)
+
+/** This macro saves the trx interrupt status and disables the trx interrupt. */
+#define ENTER_TRX_REGION()           DISABLE_TRX_IRQ()
+/** This macro restores the transceiver interrupt status. */
+#define LEAVE_TRX_REGION()           ENABLE_TRX_IRQ()
 //! @}
-#endif /* CONF_COMMON_SW_TIMER_H_INCLUDED */
+#endif //UC3
+
+
+#if (XMEGA)
+//! \name SPI Configuration for AT86RFX transceiver in XMEGA
+//! @{
+#define AT86RFX_SPI                  &SPIC
+#define AT86RFX_RST_PIN              IOPORT_CREATE_PIN(PORTC, 0)
+#define AT86RFX_MISC_PIN             IOPORT_CREATE_PIN(PORTC, 1)
+#define AT86RFX_IRQ_PIN              IOPORT_CREATE_PIN(PORTC, 2)
+#define AT86RFX_SLP_PIN              IOPORT_CREATE_PIN(PORTC, 3)
+#define AT86RFX_SPI_CS               IOPORT_CREATE_PIN(PORTC, 4)
+#define AT86RFX_SPI_MOSI             IOPORT_CREATE_PIN(PORTC, 5)
+#define AT86RFX_SPI_MISO             IOPORT_CREATE_PIN(PORTC, 6)
+#define AT86RFX_SPI_SCK              IOPORT_CREATE_PIN(PORTC, 7)
+
+#define AT86RFX_INTC_INIT()          ioport_configure_pin(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT); \
+									 PORTC.PIN2CTRL = PORT_ISC0_bm; \
+									 PORTC.INT0MASK = PIN2_bm; \
+									 PORTC.INTFLAGS = PORT_INT0IF_bm;
+
+#define AT86RFX_ISR()                ISR(PORTC_INT0_vect)
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()             (PORTC.INTCTRL |= PORT_INT0LVL_gm)
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()            (PORTC.INTCTRL &= ~PORT_INT0LVL_gm)
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()              (PORTC.INTFLAGS = PORT_INT0IF_bm)
+/** This macro saves the trx interrupt status and disables the trx interrupt. */
+#define ENTER_TRX_REGION()   { uint8_t irq_mask = PORTC.INTCTRL; PORTC.INTCTRL &= ~PORT_INT0LVL_gm
+/** This macro restores the transceiver interrupt status. */
+#define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
+//! @}
+#endif //XMEGA
+
+#endif /* CONF_PAL_H_INCLUDED */

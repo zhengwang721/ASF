@@ -47,14 +47,14 @@
 //! \name Configuration for Xmega
 //! @{
 #if (XMEGA)
-#define USART_NCP                &USARTD0
+#define USART_NCP                &USARTC0
 #define USART_NCP_BAUDRATE       9600
 #define USART_NCP_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
 #define USART_NCP_PARITY         USART_PMODE_DISABLED_gc
 #define USART_NCP_STOP_BITS      1
 
 #define USART_NCP_RX_ISR_ENABLE() usart_set_rx_interrupt_level(USART_NCP, USART_INT_LVL_HI) 
-#define USART_NCP_ISR_VECT()      ISR(USARTD0_RXC_vect)
+#define USART_NCP_ISR_VECT()      ISR(USARTC0_RXC_vect)
 #endif //XMEGA
 //! @}
 
