@@ -64,7 +64,7 @@ enum afec_resolution {
 	AFEC_16_BITS = AFE_EMR_RES_OSR256         /* AFEC 16-bit resolution */
 };
 
-/* Definitions for AFEC resolution */
+/* Definitions for AFEC power mode */
 enum afec_power_mode {
 	/* AFEC core on and reference voltage circuitry on */
 	AFEC_POWER_MODE_0 = 0,
@@ -112,14 +112,6 @@ enum afec_channel_num {
 	AFEC_CHANNEL_13 = 13,
 	AFEC_CHANNEL_14 = 14,
 	AFEC_TEMPERATURE_SENSOR = 15,
-	AFEC_CHANNEL_16  = 16,
-	AFEC_CHANNEL_17  = 17,
-	AFEC_CHANNEL_18 = 18,
-	AFEC_CHANNEL_19 = 19,
-	AFEC_CHANNEL_20 = 20,
-	AFEC_CHANNEL_21 = 21,
-	AFEC_CHANNEL_22 = 22,
-	AFEC_CHANNEL_23 = 23,
 	AFEC_CHANNEL_ALL
 } ;
 
@@ -173,20 +165,6 @@ enum afec_temp_cmp_mode {
 	AFEC_TEMP_CMP_MODE_1 = AFE_TEMPMR_TEMPCMPMOD_HIGH,
 	AFEC_TEMP_CMP_MODE_2 = AFE_TEMPMR_TEMPCMPMOD_IN,
 	AFEC_TEMP_CMP_MODE_3 = AFE_TEMPMR_TEMPCMPMOD_OUT
-};
-
-/**
- * \brief Analog-Front-End Controller driver software instance structure.
- *
- * Device instance structure for a Analog-Front-End Controller driver instance. This
- * structure should be initialized by the \ref afec_init() function to
- * associate the instance with a particular hardware module of the device.
- */
-struct afec_dev_inst {
-	/** Base address of the AFEC module. */
-	Afec *hw_dev;
-	/** Pointer to AFEC configuration structure. */
-	struct afec_config  *afec_cfg;
 };
 
 /**
@@ -279,29 +257,27 @@ typedef void (*afec_callback_t)(void);
 void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
 void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg);
-void afec_init(Afec *const afec, struct afec_config *const config);
-void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config config);
-void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
+enum status_code afec_init(Afec *const afec, struct afec_config *const config);
+void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_config config);
+void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config config);
-void afec_configure_sequence(struct afec_dev_inst *const dev_inst,
-		const enum adc_channel_num_t ch_list[], const uint8_t uc_num);
-void afec_enable(struct afec_dev_inst *const dev_inst);
-void afec_disable(struct afec_dev_inst *const dev_inst);
-void afec_set_callback(struct afec_dev_inst *const dev_inst,
+void afec_configure_sequence(Afec *const afec,
+		const enum afec_channel_num_t ch_list[], const uint8_t uc_num);
+void afec_enable(Afec *const afec);
+void afec_disable(Afec *const afec);
+void afec_set_callback(Afec *const afec,
 		afec_interrupt_source_t source, afec_callback_t callback, uint8_t irq_level);
 
 /**
  * \brief Configure conversion trigger and free run mode.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param trigger Conversion trigger.
  *
  */
-static inline void afec_set_trigger(struct afec_dev_inst *const dev_inst,
+static inline void afec_set_trigger(Afec *const afec,
 		const enum afec_trigger trigger)
 {
-	Afec *afec = dev_inst->hw_dev;
-	
 	if(trigger == AFEC_TRIG_FREERUN) {
 		afec->AFE_MR |= AFE_MR_FREERUN_ON;
 	} else {
@@ -313,40 +289,38 @@ static inline void afec_set_trigger(struct afec_dev_inst *const dev_inst,
 /**
  * \brief Configure comparison mode.
  *
- * \param dev_inst  Device structure pointer..
+ * \param afec  Base address of the AFEC.
  * \param mode AFEC comparison mode.
  */
-static inline void afec_set_comparison_mode(struct afec_dev_inst *const dev_inst, const enum afec_cmp_mode mode,
+static inline void afec_set_comparison_mode(Afec *const afec, const enum afec_cmp_mode mode,
 		const enum afec_channel_num channel, bool all_channel, uint8_t cmp_filter)
 {
-	dev_inst->afec->AFE_EMR = mode | (all_channel) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
+	afec->AFE_EMR = mode | (all_channel) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
 			| AFE_EMR_CMPFILTER(cmp_filter);
 }
 
 /**
  * \brief Get comparison mode.
  *
- * \param dev_inst  Device structure pointer..
+ * \param afec  Base address of the AFEC.
  *
  * \retval Compare mode value.
  */
-afec_cmp_mode afec_get_comparison_mode(struct afec_dev_inst *const dev_inst)
+enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_EMR & AFE_EMR_CMPMODE_Msk;
 }
 
 /**
  * \brief Configure AFEC compare window.
  *
- * \param dev_inst  Device structure pointer.
- * \param w_low_threshold Low threshold of compare window.
- * \param w_high_threshold High threshold of compare window.
+ * \param afec  Base address of the AFEC.
+ * \param us_low_threshold Low threshold of compare window.
+ * \param us_high_threshold High threshold of compare window.
  */
-static inline void afec_set_comparison_window(struct afec_dev_inst *const dev_inst,
+static inline void afec_set_comparison_window(Afec *const afec,
 		const uint16_t us_low_threshold, const uint16_t us_high_threshold)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CWR = AFE_CWR_LOWTHRES(us_low_threshold) |
 			AFE_CWR_HIGHTHRES(us_high_threshold);
 }
@@ -354,40 +328,37 @@ static inline void afec_set_comparison_window(struct afec_dev_inst *const dev_in
 /**
  * \brief Enable or disable write protection of AFEC registers.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param ul_enable 1 to enable, 0 to disable.
  */
-static inline void afec_set_writeprotect(struct afec_dev_inst *const dev_inst,
+static inline void afec_set_writeprotect(Afec *const afec,
 		const uint32_t ul_enable)
 {
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_WPMR |= AFE_WPMR_WPKEY(ul_enable);
+	afec->AFE_WPMR = AFE_WPMR_WPEN | AFE_WPMR_WPKEY(ul_enable);
 }
 
 /**
  * \brief Indicate write protect status.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  *
  * \return 0 if the peripheral is not protected, or 16-bit write protect
- * violation Status.
+ * violation source.
  */
-static inline uint32_t afec_get_writeprotect_status(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
-	return afec->AFE_WPSR & AFE_WPSR_WPVS;
+	return (afec->AFE_WPSR & AFE_WPSR_WPVS) ? (afec->AFE_WPSR & AFE_WPMR_WPKEY_Msk) : 0;
 }
 
 /**
  * \brief Get AFEC overrun error status.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  *
  * \return AFEC overrun error status.
  */
-static inline uint32_t afec_get_overrun_status(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_get_overrun_status(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_OVER;
 }
 
@@ -397,18 +368,17 @@ static inline uint32_t afec_get_overrun_status(struct afec_dev_inst *const dev_i
  * \note If one of the hardware event is selected as AFEC trigger,
  * this function can NOT start analog to digital conversion.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  */
-static inline void afec_start_software_conversion(struct afec_dev_inst *const dev_inst)
+static inline void afec_start_software_conversion(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CR = AFE_CR_START;
 }
 
 /**
  * \brief Configures AFEC power mode.
  *
- * \param afec  Pointer to an AFEC instance.
+ * \param afec  Base address of the AFEC.
  * \param sleep  AFE_MR_SLEEP_NORMAL keeps the AFEC Core and reference voltage 
  * circuitry ON between conversions.
  * AFE_MR_SLEEP_SLEEP keeps the AFEC Core and reference voltage circuitry OFF 
@@ -416,7 +386,7 @@ static inline void afec_start_software_conversion(struct afec_dev_inst *const de
  * \param fwup  AFE_MR_FWUP_OFF configures sleep mode as sleep setting, 
  * AFE_MR_FWUP_ON keeps voltage reference ON and AFEC Core OFF between conversions.
  */
-static inline void afec_configure_power_mode(Afec *afec, const enum afec_power_mode mode)
+static inline void afec_configure_power_mode(Afec *const afec, const enum afec_power_mode mode)
 {
 	switch(mode) {
 		case AFEC_POWER_MODE_0:
@@ -436,56 +406,52 @@ static inline void afec_configure_power_mode(Afec *afec, const enum afec_power_m
 /**
  * \brief Enable the specified AFEC channel.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param afec_ch AFEC channel number.
  */
-static inline void afec_channel_enable(struct afec_dev_inst *const dev_inst,
+static inline void afec_channel_enable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFFFF : 1 << afec_ch;
+	afec->AFE_CHER = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
 /**
  * \brief Disable the specified AFEC channel.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param afec_ch AFEC channel number.
  */
-static inline void afec_channel_disable(struct afec_dev_inst *const dev_inst,
+static inline void afec_channel_disable(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	Afec *afec = dev_inst->hw_dev;
-	afec->AFE_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFFFF : 1 << afec_ch;
+	afec->AFE_CHDR = (afec_ch == AFEC_CHANNEL_ALL) ? 0xFFFF : 1 << afec_ch;
 }
 
 /**
  * \brief Get the AFEC channel status.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param afec_ch AFEC channel number.
  *
  * \retval 1 if channel is enabled.
  * \retval 0 if channel is disabled.
  */
-static inline uint32_t afec_channel_get_status(struct afec_dev_inst *const dev_inst,
+static inline uint32_t afec_channel_get_status(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_CHSR & (1 << afec_ch);
 }
 /**
  * \brief Read the Converted Data of the selected channel.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param afec_ch AFEC channel number.
  *
  * \return AFEC converted value of the selected channel.
  */
-static inline uint32_t afec_channel_get_value(struct afec_dev_inst *const dev_inst
+static inline uint32_t afec_channel_get_value(Afec *const afec,
 		const enum afec_channel_num afec_ch)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CSELR = afec_ch;
 	return afec->AFE_CDR;
 }
@@ -493,90 +459,85 @@ static inline uint32_t afec_channel_get_value(struct afec_dev_inst *const dev_in
 /**
  * \brief Set analog offset to be used for channel CSEL.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  * \param afec_ch AFEC channel number.
+ * \param aoffset  Analog offset value.
  */
-static inline void afec_channel_set_analog_offset(struct afec_dev_inst *const dev_inst,
-		const enum afec_channel_num afec_ch, uint16_t offset)
+static inline void afec_channel_set_analog_offset(Afec *const afec,
+		const enum afec_channel_num afec_ch, uint16_t aoffset)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CSELR = afec_ch;
-	afec->AFE_COCR = offset;
+	afec->AFE_COCR = aoffset;
 }
 
 /**
  * \brief Read the Last Data Converted.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  *
  * \return AFEC latest converted value.
  */
-static inline uint32_t afec_get_latest_value(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_get_latest_value(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_LCDR;
 }
 
 /**
  * \brief Enable AFEC interrupts.
  *
- * \param dev_inst  Device structure pointer.
- * \param ul_source Interrupts to be enabled.
+ * \param afec  Base address of the AFEC.
+ * \param interrupt_source Interrupts to be enabled.
  */
-static inline void afec_enable_interrupt(struct afec_dev_inst *const dev_inst,
+static inline void afec_enable_interrupt(Afec *const afec,
 		afec_interrupt_source_t interrupt_source)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_IER = interrupt_source;
 }
 
 /**
  * \brief Disable AFEC interrupts.
  *
- * \param dev_inst  Device structure pointer.
- * \param ul_source Interrupts to be disabled.
+ * \param afec  Base address of the AFEC.
+ * \param interrupt_source Interrupts to be disabled.
  */
-static inline void afec_disable_interrupt(struct afec_dev_inst *const dev_inst,
+static inline void afec_disable_interrupt(Afec *const afec,
 		afec_interrupt_source_t interrupt_source)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_IDR = interrupt_source;
 }
 
 /**
  * \brief Get AFEC interrupt status.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  *
  * \return The interrupt status value.
  */
-static inline uint32_t afec_get_interrupt_status(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_get_interrupt_status(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_ISR;
 }
 
 /**
  * \brief Get AFEC interrupt mask.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  *
  * \return The interrupt mask value.
  */
-static inline uint32_t afec_get_interrupt_mask(struct afec_dev_inst *const dev_inst)
+static inline uint32_t afec_get_interrupt_mask(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	return afec->AFE_IMR;
 }
 
 /**
  * \brief Get PDC registers base address.
  *
- * \param afec Pointer to a AFEC instance.
+ * \param afec  Base address of the AFEC.
  *
  * \return AFEC PDC register base address.
  */
-static inline Pdc *afec_get_pdc_base(Afec *afec)
+static inline Pdc *afec_get_pdc_base(Afec *const afec)
 {
 	Pdc *p_pdc_base = NULL;
 
@@ -598,11 +559,10 @@ static inline Pdc *afec_get_pdc_base(Afec *afec)
 /**
  * \brief Set AFEC auto calibration mode.
  *
- * \param dev_inst  Device structure pointer.
+ * \param afec  Base address of the AFEC.
  */
-static inline void afec_set_calib_mode(struct afec_dev_inst *const dev_inst)
+static inline void afec_set_calib_mode(Afec *const afec)
 {
-	Afec *afec = dev_inst->hw_dev;
 	afec->AFE_CR = AFE_CR_AUTOCAL;
 }
 

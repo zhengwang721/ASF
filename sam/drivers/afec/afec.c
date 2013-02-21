@@ -97,7 +97,7 @@ static uint32_t afec_find_ch_num(Afec *const afec)
  * \param afec  Base address of the AFEC
  * \param config   Configuration for the AFEC
  */
-static void afec_set_config(Afec *afec, struct afec_config *config)
+static void afec_set_config(Afec *const afec, struct afec_config *config)
 {
 	uint32_t reg = 0;
 	
@@ -125,7 +125,7 @@ static void afec_set_config(Afec *afec, struct afec_config *config)
  * \param channel The channel number
  * \param config   Configuration for the AFEC channel
  */
-void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
+void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
 		struct afec_ch_config *config)
 {
 	afec->AFE_CDOR = (config->offset) ? (0x1u << channel) : 0;
@@ -139,7 +139,7 @@ void afec_ch_set_config(Afec *afec, const enum afec_channel_num channel,
  * \param afec  Base address of the AFEC
  * \param config   Configuration for the AFEC temperature sensor
  */
-void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config *config)
+void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_config *config)
 {
 	uint32_t reg = 0;
 
@@ -157,22 +157,12 @@ void afec_temp_sensor_set_config(Afec *afec, struct afec_temp_sensor_config *con
  * function should be called at the start of any AFEC initiation.
  *
  * The default configuration is as follows:
- * - 7-bit addressing
- * - Self address is 0x50.
+ * - 12 -bit resolution
+ * - AFEC clock frequency is 12MHz
+ * - Analog Change is not allowed
  * - Normal mode
- * - Do not stretch clock on data byte reception
- * - Do not stretch clock on address match
- * - Stretch clock if RHR is full or THR is empty
- * - Do not acknowledge the general call address
- * - Acknowledge the specified slave address
- * - Disable packet error checking
- * - Do not acknowledge the SMBus host header
- * - Do not acknowledge the SMBus default address
- * - 0 data setup cycles in F/S mode and high speed mode
- * - Zero-initialization for slew rate setting in F/S mode and high speed mode
- * - Clock Prescaler is 0
- * - 0 SMBus TIMEOUT cycle
- * - 0 SMBus Low:Sext cycle
+ * - Appends the channel number to the conversion result in AFE_LDCR register
+ * - Only a Single Trigger is required to get an averaged value
  *
  * \param cfg Pointer to configuration structure to be initiated.
  */
@@ -181,28 +171,62 @@ void afec_get_config_defaults(struct afec_config *const cfg)
 	/*Sanity check argument. */
 	Assert(cfg);
 
-	cfg->ten_bit = false;
-	cfg->chip = 0x50;
-	cfg->smbus = false;
-	cfg->stretch_clk_data = false;
-	cfg->stretch_clk_addr = false;
-	cfg->stretch_clk_hr = true;
-	cfg->ack_general_call = false;
-	cfg->ack_slave_addr = true;
-	cfg->enable_pec = false;
-	cfg->ack_smbus_host_header = false;
-	cfg->ack_smbus_default_addr = false;
-	cfg->sudat = 0;
-	cfg->fs_filter = 0;
-	cfg->fs_daslew = 0;
-	cfg->fs_dadrivel = 0;
-	cfg->hddat = 0;
-	cfg->hs_filter = 0;
-	cfg->hs_daslew = 0;
-	cfg->hs_dadrivel = 0;
-	cfg->exp = 0;
-	cfg->ttouts = 0;
-	cfg->tlows = 0;
+	cfg->resolution = AFEC_12_BITS;
+	cfg->mck = sysclk_get_cpu_hz();
+	cfg->afec_clock = 12000000;
+	cfg->startup_time = AFEC_STARTUP_TIME_4;
+	cfg->settling_time = AFEC_SETTLING_TIME_0;
+	cfg->tracktim = 2;
+	cfg->transfer = 1;
+	cfg->anach = false;
+	cfg->useq = false;
+	cfg->tag = true;
+	cfg->stm = true;
+	cfg->ibctl = 1;
+}
+
+/**
+ * \brief Get the AFEC channel default configurations.
+ *
+ * Use to initialize the configuration structure to known default values.
+ *
+ * The default configuration is as follows:
+ * - No Offset
+ * - Single Ended Mode
+ * - Gain value is 1
+ *
+ * \param cfg Pointer to channel configuration structure to be initiated.
+ */
+void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
+{
+	/*Sanity check argument. */
+	Assert(cfg);
+
+	cfg->diff = false;
+	cfg->offset = false;
+	cfg->gain = AFEC_GAINVALUE_1;
+}
+
+/**
+ * \brief Get the AFEC Temperature Sensor default configurations.
+ *
+ * Use to initialize the configuration structure to known default values.
+ *
+ * The default configuration is as follows:
+ * - The temperature sensor measure is not triggered by RTC event
+ * - Generates an event when the converted data is in the comparison window
+ *
+ * \param cfg Pointer to temperature sensor configuration structure to be initiated.
+ */
+void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg)
+{
+	/*Sanity check argument. */
+	Assert(cfg);
+
+	cfg->rctc = false;
+	cfg->mode= AFEC_TEMP_CMP_MODE_2;
+	cfg->low_threshold= 0xFF;
+	cfg->high_threshold= 0xFFF;
 }
 
 /**
@@ -218,7 +242,7 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
 	Assert(afec);
 	Assert(config);
 
-	/* Reset the TWIS module */
+	/* Reset the AFEC module */
 	afec->AFE_CR = AFE_CR_SWRST;
 	afec_set_config(afec, config);
 
@@ -233,7 +257,7 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
  * \param callback  Callback function pointer
  * \param irq_level Interrupt level
  */
-void twis_set_callback(Afec *afec, afec_interrupt_source_t source,
+void afec_set_callback(Afec *const afec, afec_interrupt_source_t source,
 		afec_callback_t callback, uint8_t irq_level)
 {
 	Assert(afec);
@@ -255,7 +279,7 @@ void twis_set_callback(Afec *afec, afec_interrupt_source_t source,
  *
  * \param afec  Base address of the AFEC
  */
-void twis_enable(Afec *afec)
+void afec_enable(Afec *const afec)
 {
 	Assert(afec);
 
@@ -268,12 +292,40 @@ void twis_enable(Afec *afec)
  *
  * \param afec  Base address of the AFEC
  */
-void twis_disable(Afec *afec)
+void afec_disable(Afec *const afec)
 {
 	Assert(afec);
 
 	sysclk_disable_peripheral_clock(afec);
 	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_1);
+}
+
+/**
+ * \brief Configure conversion sequence.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param ch_list Channel sequence list.
+ * \param number Number of channels in the list.
+ */
+void afec_configure_sequence(Afec *const afec, const enum afec_channel_num_t ch_list[],
+		uint8_t uc_num)
+{
+	uint8_t uc_counter;
+	if (uc_num < 8) {
+		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
+			afec->AFE_SEQ1R |=
+					ch_list[uc_counter] << (4 * uc_counter);
+		}
+	} else {
+		for (uc_counter = 0; uc_counter < 8; uc_counter++) {
+			afec->AFE_SEQ1R |=
+					ch_list[uc_counter] << (4 * uc_counter);
+		}
+		for (uc_counter = 0; uc_counter < uc_num - 8; uc_counter++) {
+			afec->AFE_SEQ2R |=
+					ch_list[uc_counter] << (4 * uc_counter);
+		}
+	}
 }
 
 //@}
