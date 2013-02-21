@@ -210,9 +210,6 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 /* Dual bank flash */
 #ifdef EFC1
 	/* Compute address */
-	ul_addr = (p_efc == EFC0) ?
-			IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset :
-			IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 #if (SAM4SD16 || SAM4SD32)
 	uint32_t uc_gpnvm2;
 	uc_gpnvm2 = flash_is_gpnvm_set(2);
@@ -229,6 +226,10 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 		}
 	}
+#else
+	ul_addr = (p_efc == EFC0) ?
+			IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset :
+			IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 #endif
 /* One bank flash */
 #else
