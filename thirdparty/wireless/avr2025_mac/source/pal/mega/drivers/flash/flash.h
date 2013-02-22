@@ -90,7 +90,8 @@
  * @param data          Pointer to data location
  *
  */
-void flash_write(uint32_t flash_addr, uint32_t length, uint8_t *data);
+void flash_write(uint32_t , uint32_t , uint8_t*);
+
 
 
 /**
@@ -99,7 +100,7 @@ void flash_write(uint32_t flash_addr, uint32_t length, uint8_t *data);
  * @param len  		Number of bytes to be read
  * @param ret_buf	Pointer to the  location of the read data
  */
-void flash_read(uint32_t read_addr, uint32_t len ,uint8_t *ret_buf);
+void flash_read(uint32_t , uint32_t  ,uint8_t*);
 
 /**
  * @brief Erases a page 
@@ -107,10 +108,10 @@ void flash_read(uint32_t read_addr, uint32_t len ,uint8_t *ret_buf);
  */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_erase_page(uint32_t page_number);
+void flash_erase_page(uint32_t);
 #endif
 #ifdef __GNUC__
-void flash_erase_page(uint32_t page_number);
+void flash_erase_page(uint32_t )
     __attribute__((section(".bootloader"),noinline));
 #endif
 
@@ -127,10 +128,10 @@ void flash_erase_page(uint32_t page_number);
  */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data );
+void flash_fill_page_buffer(uint32_t , uint16_t , uint8_t* );
 #endif
 #ifdef __GNUC__
-void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data );
+void flash_fill_page_buffer(uint32_t , uint16_t , uint8_t*)
     __attribute__((section(".bootloader"),noinline));
 #endif
 
@@ -146,10 +147,10 @@ void flash_fill_page_buffer(uint32_t flash_addr, uint16_t length, uint8_t *data 
  */
 #ifdef __ICCAVR__
 #pragma location = "bootloader"
-void flash_program_page(uint32_t page_start_addr);
+void flash_program_page(uint32_t ) ;
 #endif
 #ifdef __GNUC__
-void flash_program_page(uint32_t page_start_addr)
+void flash_program_page(uint32_t )
     __attribute__((section(".bootloader"),noinline));
 #endif
 
