@@ -98,7 +98,7 @@ struct _eeprom_page {
 	} header;
 
 	/** Data content of the EEPROM page. */
-	uint8_t data[EEPROM_DATA_SIZE];
+	uint8_t data[EEPROM_PAGE_SIZE];
 };
 COMPILER_PACK_RESET();
 
@@ -285,8 +285,8 @@ static bool _eeprom_emulator_is_page_free_on_row(
  * \param[out] page_trans  Translation map for the given row
  */
 static void _eeprom_emulator_scan_row(
-		uint8_t row_number,
-		struct _eeprom_page_translater *page_trans)
+		const uint8_t row_number,
+		struct _eeprom_page_translater *const page_trans)
 {
 	struct _eeprom_page *row_data =
 			&_eeprom_instance.flash[row_number * NVMCTRL_ROW_SIZE];
@@ -326,9 +326,9 @@ static void _eeprom_emulator_scan_row(
  * \return Status code indicating the status of the operation.
  */
 static enum status_code _eeprom_emulator_move_data_to_spare(
-		uint8_t row_number,
-		uint8_t logical_page,
-		uint8_t *data)
+		const uint8_t row_number,
+		const uint8_t logical_page,
+		const uint8_t *const data)
 {
 	enum status_code err = STATUS_OK;
 	struct _eeprom_page_translater page_trans[2];
@@ -353,7 +353,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 
 			/* Write data to SRAM cache */
 			memcpy(_eeprom_instance.cache.data,
-					data, EEPROM_DATA_SIZE);
+					data, EEPROM_PAGE_SIZE);
 		} else {
 			/* Copy existing EEPROM page to cache buffer wholesale */
 			nvm_read_buffer(
@@ -602,8 +602,8 @@ void eeprom_emulator_erase_memory(void)
  *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_write_page(
-		uint8_t logical_page,
-		uint8_t *data)
+		const uint8_t logical_page,
+		const uint8_t *const data)
 {
 	enum status_code err = STATUS_OK;
 
@@ -661,7 +661,7 @@ enum status_code eeprom_emulator_write_page(
 	/* Update the page cache contents with the new data */
 	memcpy(&_eeprom_instance.cache.data,
 			data,
-			EEPROM_DATA_SIZE);
+			EEPROM_PAGE_SIZE);
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
 	 * flushed in the future if needed due to a low power condition */
@@ -698,8 +698,8 @@ enum status_code eeprom_emulator_write_page(
  *                                      maser emulated EEPROM control page
  */
 enum status_code eeprom_emulator_read_page(
-		uint8_t logical_page,
-		uint8_t *data)
+		const uint8_t logical_page,
+		uint8_t *const data)
 {
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
@@ -723,13 +723,13 @@ enum status_code eeprom_emulator_read_page(
 		/* Copy the potentially newer cached data into the user buffer */
 		memcpy(data,
 				_eeprom_instance.cache.data,
-				EEPROM_DATA_SIZE);
+				EEPROM_PAGE_SIZE);
 	} else {
 		/* Copy the data from non-volatile memory into the user buffer */
 		nvm_read_buffer(
 				_eeprom_instance.page_map[logical_page],
 				data,
-				EEPROM_DATA_SIZE);
+				EEPROM_PAGE_SIZE);
 	}
 
 	return STATUS_OK;
@@ -754,17 +754,17 @@ enum status_code eeprom_emulator_read_page(
  * \return Status code indicating the status of the operation.
  */
 enum status_code eeprom_emulator_write_buffer(
-		uint16_t offset,
-		uint8_t *data,
-		uint16_t length)
+		const uint16_t offset,
+		const uint8_t *const data,
+		const uint16_t length)
 {
 	enum status_code err = STATUS_OK;
-	uint8_t buffer[EEPROM_DATA_SIZE];
-	uint8_t current_page = offset / EEPROM_DATA_SIZE;
+	uint8_t buffer[EEPROM_PAGE_SIZE];
+	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
 
 	/** Perform the initial page read if the starting offset is not aligned  */
-	if (offset % EEPROM_DATA_SIZE) {
-		err = eeprom_emulator_read_page(current_page, buffer);
+	if (offset % EEPROM_PAGE_SIZE) {
+		err = eeprom_emulator_read_page(logical_page, buffer);
 
 		if (err != STATUS_OK) {
 			return err;
@@ -775,24 +775,24 @@ enum status_code eeprom_emulator_write_buffer(
 	for (uint16_t c = offset; c < (length + offset); c++) {
 		/* Copy the next byte of data from the user's buffer to the temporary
 		 * buffer */
-		buffer[c % EEPROM_DATA_SIZE] = data[c - offset];
+		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
 
 		/* Check if we have written up to a new EEPROM page boundary */
-		if ((c % EEPROM_DATA_SIZE) == 0) {
+		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Write the current page to non-volatile memory from the temporary
 			 * buffer */
-			err = eeprom_emulator_write_page(current_page, buffer);
+			err = eeprom_emulator_write_page(logical_page, buffer);
 
 			if (err != STATUS_OK) {
 				break;
 			}
 
 			/* Increment the page number we are looking at */
-			current_page++;
+			logical_page++;
 
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer in case of a partial page write */
-			err = eeprom_emulator_read_page(current_page, buffer);
+			err = eeprom_emulator_read_page(logical_page, buffer);
 
 			if (err != STATUS_OK) {
 				return err;
@@ -818,17 +818,17 @@ enum status_code eeprom_emulator_write_buffer(
  * \return Status code indicating the status of the operation.
  */
 enum status_code eeprom_emulator_read_buffer(
-		uint16_t offset,
-		uint8_t *data,
-		uint16_t length)
+		const uint16_t offset,
+		uint8_t *const data,
+		const uint16_t length)
 {
 	enum status_code err = STATUS_OK;
-	uint8_t buffer[EEPROM_DATA_SIZE];
-	uint8_t current_page = offset / EEPROM_DATA_SIZE;
+	uint8_t buffer[EEPROM_PAGE_SIZE];
+	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
 
 	/** Perform the initial page read if the starting offset is not aligned  */
-	if (offset % EEPROM_DATA_SIZE) {
-		err = eeprom_emulator_read_page(current_page, buffer);
+	if (offset % EEPROM_PAGE_SIZE) {
+		err = eeprom_emulator_read_page(logical_page, buffer);
 
 		if (err != STATUS_OK) {
 			return err;
@@ -838,13 +838,13 @@ enum status_code eeprom_emulator_read_buffer(
 	/* Read in the specified data from the emulated EEPROM memory space */
 	for (uint16_t c = offset; c < (length + offset); c++) {
 		/* Check if we have read up to a new EEPROM page boundary */
-		if ((c % EEPROM_DATA_SIZE) == 0) {
+		if ((c % EEPROM_PAGE_SIZE) == 0) {
 			/* Increment the page number we are looking at */
-			current_page++;
+			logical_page++;
 
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer */
-			err = eeprom_emulator_read_page(current_page, buffer);
+			err = eeprom_emulator_read_page(logical_page, buffer);
 
 			if (err != STATUS_OK) {
 				return err;
@@ -853,7 +853,7 @@ enum status_code eeprom_emulator_read_buffer(
 
 		/* Copy the next byte of data from the temporary buffer to the user's
 		 * buffer */
-		data[c - offset] = buffer[c % EEPROM_DATA_SIZE];
+		data[c - offset] = buffer[c % EEPROM_PAGE_SIZE];
 	}
 
 	return err;
