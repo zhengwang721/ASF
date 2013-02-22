@@ -3,17 +3,31 @@
 		<info type="description" value="summary">
 		Low level driver for FatFS. The driver is based on the ctrl access module of the specific MCU device.
 		</info>
-		<module type="service" id="common.services.fs.fatfs-port#sam" caption="Supported ports of FatFS">
+		<module type="service" id="common.services.fs.fatfs-port#sam_rtc" caption="Supported ports of FatFS">
 			<info type="gui-flag" value="hidden"/>
 			<build type="c-source" value="diskio.c"/>
-			<build type="c-source" value="sam/fattime.c"/>
+			<build type="c-source" value="sam/fattime_rtc.c"/>
 			<build type="include-path" value="sam/"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<build type="include-path" value="../fatfs-r0.09/src"/>
 			<build type="header-file" subtype="api" value="../fatfs-r0.09/src/diskio.h"/>
 			<require idref="common.services.storage.ctrl_access"/>
 			<require idref="sam.drivers.rtc"/>
+			<build type="doxygen-entry-point" value="thirdparty_fatfs_port_group"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		</module>
+		<module type="service" id="common.services.fs.fatfs-port#sam_ast" caption="Supported ports of FatFS">
+			<info type="gui-flag" value="hidden"/>
+			<build type="c-source" value="diskio.c"/>
+			<build type="c-source" value="sam/fattime_ast.c"/>
+			<build type="include-path" value="sam/"/>
+			<device-support value="sam4l"/>
+			<build type="include-path" value="../fatfs-r0.09/src"/>
+			<build type="header-file" subtype="api" value="../fatfs-r0.09/src/diskio.h"/>
+			<require idref="common.services.storage.ctrl_access"/>
+			<require idref="sam.drivers.ast"/>
 			<build type="doxygen-entry-point" value="thirdparty_fatfs_port_group"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>

@@ -517,6 +517,7 @@ void nvm_eeprom_erase_all(void);
 
 // 192K devices
 #  elif AVR8_PART_IS_DEFINED(ATxmega192A3U) | \
+		AVR8_PART_IS_DEFINED(ATxmega192C3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega192D3)
 #    define FLASH_SIZE      (192*1024L)
 #    define FLASH_PAGE_SIZE (512)
