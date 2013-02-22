@@ -102,8 +102,8 @@
  * 16-bit mode, the RTC counter value will instead be cleared on overflow once
  * the maximum count value has been reached:
  *
- * \f$COUNT_{MAX} = 2^{32}-1\f$ for 32-bit counter mode, and
- * \f$COUNT_{MAX} = 2^{16}-1\f$ for 16-bit counter mode.
+ * \f[ COUNT_{MAX} = 2^{32}-1\f ] for 32-bit counter mode, and
+ * \f[ COUNT_{MAX} = 2^{16}-1\f ] for 16-bit counter mode.
  *
  * When running in 16-bit mode, the overflow value is selectable with a period
  * value. The counter overflow will then occur when the counter value reaches
@@ -116,9 +116,7 @@
  * the rising edge transition of the specified bit. The resulting periodic
  * frequency can be calculated by the following formula:
  *
- * \f[
- * f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}}
- * \f]
+ * \f[ f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}} \f]
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
@@ -168,9 +166,7 @@
  * applied the specified number of time (max 127) over 976 of these periods. The
  * corresponding correction in PPM will be given by:
  *
- * \f[
- * Correction(PPM) = \frac{VALUE}{999424}10^6
- * \f]
+ * \f[ Correction(PPM) = \frac{VALUE}{999424}10^6 \f]
  *
  * The RTC clock will tick faster if provided with a positive correction value,
  * and slower when given a negative correction value.
@@ -260,14 +256,15 @@ extern "C" {
  * \brief Available operation modes for the RTC.
  */
 enum rtc_count_mode {
-	/** To operate in 16 bit mode. */
+	/** RTC Count module operates in 16 bit mode. */
 	RTC_COUNT_MODE_16BIT = 0,
-	/** To operate in 32 bit mode. */
+	/** RTC Count module operates in 32 bit mode. */
 	RTC_COUNT_MODE_32BIT = 1,
 };
 
 /**
  * \brief Available compare registers.
+ *
  * \note Not all compare registers are available in all devices and modes.
  */
 enum rtc_count_compare {
@@ -299,9 +296,10 @@ enum rtc_count_compare {
  * \brief Values used to enable and disable events.
  *
  * Use these values when disabling or enabling the RTC events.
+ *
  * \note Not all compare events are available in all devices and modes.
  */
-enum rtc_count_events {
+enum rtc_count_event {
 	/** To set event off. */
 	RTC_COUNT_EVENT_OFF        = 0,
 	/** Overflow event. */
@@ -347,7 +345,7 @@ enum rtc_count_events {
 };
 
 /**
- * \brief RTC configuration structure
+ * \brief RTC Count configuration structure
  *
  * Configuration structure for the RTC instance. This structure should
  * be initialized using the \ref rtc_count_get_config_defaults() before any
@@ -370,6 +368,7 @@ struct rtc_count_config {
 	 */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
+
 
 /**
  * \name Configuration and initialization
@@ -404,8 +403,8 @@ static inline void _rtc_count_wait_for_sync(void)
  *  - No event source on.
  *  - All compare values equal 0.
  *
- *  \param[out] config Configuration structure to be initialized to default
- *  values.
+ *  \param[out] config  Configuration structure to be initialized to default
+ *                      values.
  */
 static inline void rtc_count_get_config_defaults(
 		struct rtc_count_config *const config)
@@ -414,24 +413,20 @@ static inline void rtc_count_get_config_defaults(
 	Assert(config);
 
 	/* Set default into configuration structure */
-	config->mode = RTC_COUNT_MODE_32BIT;
-	config->clear_on_match = false;
+	config->mode                = RTC_COUNT_MODE_32BIT;
+	config->clear_on_match      = false;
 	config->continuously_update = false;
-	config->event_generators = RTC_COUNT_EVENT_OFF;
-	config->compare_values[0] = 0;
-	config->compare_values[1] = 0;
-	config->compare_values[2] = 0;
-	config->compare_values[3] = 0;
-	config->compare_values[4] = 0;
-	config->compare_values[5] = 0;
+	config->event_generators    = RTC_COUNT_EVENT_OFF;
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		config->compare_values[i] = 0;
+	}
 }
 
 /**
  * \brief Enables the RTC module.
  *
- * This will enable the RTC module. Most configurations cannot be altered
- * while the module is enabled. \ref rtc_count_disable "Disable" module to
- * change configurations.
+ * Enables the RTC module once it has been configured, ready for use. Most
+ * module configuration parameters cannot be altered while the module is enabled.
  */
 static inline void rtc_count_enable(void)
 {
@@ -448,7 +443,7 @@ static inline void rtc_count_enable(void)
 /**
  * \brief Disables the RTC module.
  *
- * This will disable the RTC module.
+ * Disables the RTC module.
  */
 static inline void rtc_count_disable(void)
 {
@@ -494,16 +489,23 @@ enum status_code rtc_count_get_period(
 
 /** @} */
 
+
 /** \name Status management
  * @{
  */
 
 /**
- * \brief Check if RTC overflow has occurred.
+ * \brief Check if an RTC overflow has occurred.
  *
- * Checks the overflow flag. The flag is set when there
- * is an overflow in the counter.
+ * Checks the overflow flag in the RTC. The flag is set when there
+ * is an overflow in the clock.
+ *
+ * \return Overflow state of the RTC module.
+ *
+ * \retval true   If the RTC count value has overflowed
+ * \retval false  If the RTC count value has not overflowed
  */
+
 static inline bool rtc_count_is_overflow(void)
 {
 	/* Initialize module pointer. */
@@ -514,10 +516,10 @@ static inline bool rtc_count_is_overflow(void)
 }
 
 /**
- * \brief Clear the RTC overflow flag.
+ * \brief Clears the RTC overflow flag.
  *
- * Clear the overflow flag. The flag is set when
- * there is an overflow in the counter.
+ * Clears the RTC module counter overflow flag, so that new overflow conditions
+ * can be detected.
  */
 static inline void rtc_count_clear_overflow(void)
 {
@@ -535,6 +537,7 @@ enum status_code rtc_count_clear_compare_match(
 		const enum rtc_count_compare comp_index);
 
 /** @} */
+
 
 /**
  * \name Event management
@@ -576,6 +579,7 @@ static inline void rtc_count_disable_events(
 }
 
 /** @} */
+
 /** @} */
 
 #ifdef __cplusplus
