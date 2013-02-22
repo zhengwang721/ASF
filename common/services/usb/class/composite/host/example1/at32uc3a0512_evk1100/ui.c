@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (C) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -179,6 +179,7 @@ static bool ui_msc_plug = false;
 
 void ui_usb_vbus_change(bool b_vbus_present)
 {
+	UNUSED(b_vbus_present);
 }
 
 void ui_usb_vbus_error(void)

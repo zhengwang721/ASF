@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Implementation of low level disk I/O module skeleton for FatFS.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,46 +40,20 @@
  * \asf_license_stop
  *
  */
-#include "compiler.h"
-#include "rtc.h"
 
-uint32_t get_fattime(void);
-/**
- * \brief Current time returned is packed into a DWORD value.
- *
- * The bit field is as follows:
- *
- * bit31:25  Year from 1980 (0..127)
- *
- * bit24:21  Month (1..12)
- *
- * bit20:16  Day in month(1..31)
- *
- * bit15:11  Hour (0..23)
- *
- * bit10:5   Minute (0..59)
- *
- * bit4:0    Second (0..59)
- *
- * \return Current time.
- */
-uint32_t get_fattime(void)
-{
-	uint32_t ul_time;
-	uint32_t ul_hour, ul_minute, ul_second;
-	uint32_t ul_year, ul_month, ul_day, ul_week;
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-	/* Retrieve date and time */
-	rtc_get_time(RTC, &ul_hour, &ul_minute, &ul_second);
-	rtc_get_date(RTC, &ul_year, &ul_month, &ul_day, &ul_week);
+#define USE_USART
+/** USART Interface */
+#define CONF_UART              USART2
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE     115200
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY       US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-	ul_time = ((ul_year - 1980) << 25)
-			| (ul_month << 21)
-			| (ul_day << 16)
-			| (ul_hour << 11)
-			| (ul_minute << 5)
-			| (ul_second << 0);
-
-	return ul_time;
-}
-
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
