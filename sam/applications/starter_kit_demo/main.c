@@ -48,11 +48,11 @@
  *
  * The Starter Kit Demo will help new users get familiar with Atmel's
  * SAM family of microcontrollers. This demo features the IO1 and OLED1 wing boards for
- * the SAM4 Xplained PRO.
+ * the SAM4 Xplained Pro.
  *
  * \section Requirements
  *
- * This package can be used with SAM Xplained PRO evaluation kits.
+ * This package can be used with SAM Xplained Pro evaluation kits.
  *
  * \section Description
  *

@@ -114,8 +114,8 @@ extern "C" {
 #define XMEGA_E5_XPLAINED          50  //!< ATxmega32E5 Xplained board.
 #define SAM4E_EK                   51  //!< SAM4E-EK board.
 #define ATMEGA256RFR2_XPLAINED_PRO 52  //!< ATMEGA_256RFR2_XPLAINED_PRO board.
-#define SAM4S_XPLAINED_PRO         53  //!< SAM4S Xplained PRO board.
-#define SAM4L_XPLAINED_PRO         54  //!< SAM4L Xplained PRO board.
+#define SAM4S_XPLAINED_PRO         53  //!< SAM4S Xplained Pro board.
+#define SAM4L_XPLAINED_PRO         54  //!< SAM4L Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).

@@ -43,7 +43,7 @@
 #ifndef CONF_SSD1306_H_INCLUDED
 #define CONF_SSD1306_H_INCLUDED
 
-// Interface configuration for SAM4S Xplained PRO
+// Interface configuration for SAM4S Xplained Pro
 #define SSD1306_SPI_INTERFACE
 #define SSD1306_SPI SPI
 
