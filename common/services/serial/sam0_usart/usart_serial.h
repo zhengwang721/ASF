@@ -54,7 +54,7 @@
 /*! \name Serial Management Configuration
  */
 //! @{
-#include "conf_usart_serial.h"
+//#include "conf_usart_serial.h"
 //! @}
 
 typedef Sercom * usart_inst_t;
