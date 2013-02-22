@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.aes.example" caption="AES Example">
 		<info type="description" value="summary">
-		Use the AES module, encrypt and decrypt blocks of data in various mode with and without PDCA.
+		Use the AES module, encrypt and decrypt blocks of data in various mode with and without DMA.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Cryptography"/>

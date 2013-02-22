@@ -113,6 +113,8 @@ typedef enum aes_interrupt_source {
 	AES_INTERRUPT_UNSPECIFIED_REGISTER_ACCESS = AES_IER_URAD,
 } aes_interrupt_source_t;
 
+#define AES_INTERRUPT_SOURCE_NUM 2
+
 /**
  * \brief Interrupt callback function type for AES.
  *
@@ -163,7 +165,7 @@ static inline void aes_reset(Aes *const p_aes)
  */
 static inline void aes_start(Aes *const p_aes)
 {
-	p_aes->AES_CR |= AES_CR_START;
+	p_aes->AES_CR = AES_CR_START;
 }
 
 void aes_enable(void);

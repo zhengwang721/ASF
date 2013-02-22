@@ -52,7 +52,7 @@
  * \internal
  * \brief AES callback function pointer
  */
-aes_callback_t aes_callback_pointer;
+aes_callback_t aes_callback_pointer[AES_INTERRUPT_SOURCE_NUM];
 
 /**
  * \brief Initializes a AES configuration structure to defaults.
@@ -103,6 +103,9 @@ void aes_init(Aes *const p_aes, struct aes_config *const p_cfg)
 
 	/* Enable clock for AES */
 	sysclk_enable_peripheral_clock(ID_AES);
+
+	/* Perform a software reset */
+	aes_reset(p_aes);
 
 	/* Initialize the AES with new configurations */
 	aes_set_config(p_aes, p_cfg);
@@ -278,7 +281,11 @@ void aes_set_callback(Aes *const p_aes,
 		aes_interrupt_source_t source, aes_callback_t callback,
 		uint8_t irq_level)
 {
-	aes_callback_pointer = callback;
+	if (source == AES_INTERRUPT_DATA_READY) {
+		aes_callback_pointer[0] = callback;
+	} else if (source == AES_INTERRUPT_DATA_READY) {
+		aes_callback_pointer[1] = callback;
+	}
 	irq_register_handler((IRQn_Type)AES_IRQn, irq_level);
 	aes_enable_interrupt(p_aes, source);
 }
@@ -288,10 +295,19 @@ void aes_set_callback(Aes *const p_aes,
  */
 void AES_Handler(void)
 {
-	if (aes_callback_pointer) {
-		aes_callback_pointer();
-	} else {
-		Assert(false); /* Catch unexpected interrupt */
+	uint32_t status = aes_read_interrupt_status(AES);
+	uint32_t mask = aes_read_interrupt_mask(AES);
+
+	if ((status & AES_ISR_DATRDY) && (mask & AES_IMR_DATRDY)) {
+		if(aes_callback_pointer[0]) {
+			aes_callback_pointer[0]();
+		}
+	}
+
+	if ((status & AES_ISR_URAD) && (mask & AES_IMR_URAD)) {
+		if(aes_callback_pointer[1]) {
+			aes_callback_pointer[1]();
+		}
 	}
 }
 
