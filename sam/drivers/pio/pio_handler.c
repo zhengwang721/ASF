@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) interrupt handler for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -232,8 +232,6 @@ void PIOF_Handler(void)
  * \brief Initialize PIO interrupt management logic.
  *
  * \note The desired priority of PIO must be provided.
- * Calling this function multiple times result in the reset of currently
- * configured interrupt on the provided PIO.
  *
  * \param p_pio PIO controller base address.
  * \param ul_irqn NVIC line number.
