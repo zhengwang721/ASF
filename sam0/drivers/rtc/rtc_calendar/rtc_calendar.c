@@ -477,33 +477,25 @@ enum status_code rtc_calendar_frequency_correction(
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	bool slower;
-
-	/* Convert to positive value. */
-	if (value < 0) {
-		slower = true;
-		value = -value;
-	}
-
 	/* Check if valid argument. */
 	if (abs(value) > 0x7f) {
 		/* Value bigger than allowed, return invalid argument. */
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	uint32_t new_correction_value = 0;
+
+	/* Convert to positive value and adjust register sign bit. */
+	if (value < 0) {
+		new_correction_value = RTC_FREQCORR_SIGN;
+		value = -value;
+	}
+
 	/* Sync. */
 	_rtc_calendar_wait_for_sync();
 
-	/* Set direction. */
-	if (slower) {
-		rtc_module->MODE2.FREQCORR.reg = RTC_FREQCORR_SIGN;
-	}
-	else {
-		rtc_module->MODE2.FREQCORR.reg = 0;
-	}
-
 	/* Set value. */
-	rtc_module->MODE2.FREQCORR.reg |= value;
+	rtc_module->MODE2.FREQCORR.reg = new_correction_value;
 
 	return STATUS_OK;
 }
