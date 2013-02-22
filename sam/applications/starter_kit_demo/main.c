@@ -89,17 +89,17 @@ volatile uint32_t sd_status_update = 0;
 static void ProcessButtonEvt(uint8_t uc_button)
 {
 	/* Switch to temperature mode. */
-	if (uc_button == 1 && app_mode != 0)
+	if ((uc_button == 1) && (app_mode != 0))
 	{
 		app_mode_switch = 1;
 	}
 	/* Switch to light mode. */
-	else if (uc_button == 2 && app_mode != 1)
+	else if ((uc_button == 2) && (app_mode != 1))
 	{
 		app_mode_switch = 2;
 	}
 	/* Switch to SD mode. */
-	else if (uc_button == 3 && app_mode != 2)
+	else if ((uc_button == 3) && (app_mode != 2))
 	{
 		app_mode_switch = 3;
 	}
@@ -112,7 +112,7 @@ static void ProcessButtonEvt(uint8_t uc_button)
  */
 static void Button1_Handler(uint32_t id, uint32_t mask)
 {
-	if (PIN_PUSHBUTTON_1_ID == id && PIN_PUSHBUTTON_1_MASK == mask)
+	if ((PIN_PUSHBUTTON_1_ID == id) && (PIN_PUSHBUTTON_1_MASK == mask))
 		ProcessButtonEvt(1);
 }
 
@@ -123,7 +123,7 @@ static void Button1_Handler(uint32_t id, uint32_t mask)
  */
 static void Button2_Handler(uint32_t id, uint32_t mask)
 {
-	if (PIN_PUSHBUTTON_2_ID == id && PIN_PUSHBUTTON_2_MASK == mask)
+	if ((PIN_PUSHBUTTON_2_ID == id) && (PIN_PUSHBUTTON_2_MASK == mask))
 		ProcessButtonEvt(2);
 }
 
@@ -134,7 +134,7 @@ static void Button2_Handler(uint32_t id, uint32_t mask)
  */
 static void Button3_Handler(uint32_t id, uint32_t mask)
 {
-	if (PIN_PUSHBUTTON_3_ID == id && PIN_PUSHBUTTON_3_MASK == mask)
+	if ((PIN_PUSHBUTTON_3_ID == id) && (PIN_PUSHBUTTON_3_MASK == mask))
 		ProcessButtonEvt(3);
 }
 
@@ -145,7 +145,7 @@ static void Button3_Handler(uint32_t id, uint32_t mask)
  */
 static void SD_Detect_Handler(uint32_t id, uint32_t mask)
 {
-	if (SD_MMC_0_CD_ID == id && SD_MMC_0_CD_MASK == mask)
+	if ((SD_MMC_0_CD_ID == id) && (SD_MMC_0_CD_MASK == mask))
 		sd_status_update = 1;
 }
 
@@ -236,7 +236,7 @@ static void display_sd_info(void)
 
 		sd_mmc_init();
 		card_check = sd_mmc_check(0);
-		while ((card_check != SD_MMC_OK))
+		while (card_check != SD_MMC_OK)
 		{
 			card_check = sd_mmc_check(0);
 			delay_ms(1);

@@ -63,7 +63,6 @@
  */
 //! @{
 #define SD_MMC_SPI_MEM_CNT          1
-#define SD_MMC_0_CD_DETECT_VALUE    0
 
 #define SD_MMC_SPI_0_CS             1
 #ifdef  SPI

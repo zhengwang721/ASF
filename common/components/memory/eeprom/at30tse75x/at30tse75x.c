@@ -46,14 +46,13 @@
 
 void at30tse_init(void)
 {
-	sysclk_enable_peripheral_clock(ID_TWI0);
-
 	twi_options_t opts = {
 		.master_clk = sysclk_get_main_hz(),
 		.speed = 10000,
 		.smbus = 0
 	};
 
+	sysclk_enable_peripheral_clock(ID_TWI0);
 	twi_master_init(TWI0, &opts);
 }
 
@@ -114,9 +113,6 @@ uint8_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, u
 uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value)
 {
 	uint8_t data[2];
-	data[0] = 0x00FF & (reg_value >> 8);
-	data[1] = 0x00FF & reg_value;
-
 	twi_packet_t packet = {
 		// Internal chip addr
 		.addr[0] = reg | reg_type,
@@ -128,6 +124,9 @@ uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, 
 		.chip = AT30TSE_TEMPERATURE_TWI_ADDR
 	};
 
+	data[0] = 0x00FF & (reg_value >> 8);
+	data[1] = 0x00FF & reg_value;
+	
 	return twi_master_write(TWI0, &packet);
 }
 
@@ -147,11 +146,12 @@ uint8_t at30tse_read_temperature(double *temperature)
 {
 	// Placeholder buffer to put temperature data in.
 	uint8_t buffer[2];
+	uint8_t error_code = 0;
 	buffer[0] = 0;
 	buffer[1] = 0;
 
 	// Read the 16-bit temperature register.
-	uint8_t error_code = at30tse_read_register(AT30TSE_TEMPERATURE_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TEMPERATURE_REG_SIZE, buffer);
+	error_code = at30tse_read_register(AT30TSE_TEMPERATURE_REG, AT30TSE_NON_VOLATILE_REG, AT30TSE_TEMPERATURE_REG_SIZE, buffer);
 
 	// Only convert temperature data if read success.
 	if (error_code == TWI_SUCCESS)
