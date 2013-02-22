@@ -241,6 +241,7 @@ void PIOF_Handler(void)
  */
 void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority)
 {
+	uint32_t mask = pio_get_interrupt_mask(p_pio);
 	/* Configure PIO interrupt sources */
 	pio_get_interrupt_status(p_pio);
 	pio_disable_interrupt(p_pio, 0xFFFFFFFF);
@@ -248,4 +249,5 @@ void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priorit
 	NVIC_ClearPendingIRQ(ul_irqn);
 	NVIC_SetPriority(ul_irqn, ul_priority);
 	NVIC_EnableIRQ(ul_irqn);
+	pio_enable_interrupt(p_pio, mask);
 }
