@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.atmega256rfr2_xplained_pro" caption="ATMEGA256RFR2 Xplained PRO template project" type="template">
+	<project id="common.applications.user_application.atmega256rfr2_xplained_pro" caption="ATMEGA256RFR2 Xplained Pro template project" type="template">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<require idref="common.applications.user_application"/>

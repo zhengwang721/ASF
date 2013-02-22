@@ -166,48 +166,42 @@ enum system_interrupt_vector _sercom_get_interrupt_vector(Sercom *sercom_instanc
  * \internal ISR handler for SERCOM
  */
 #ifdef ID_SERCOM0
-void SERCOM0_IRQn_Handler(void);
-void SERCOM0_IRQn_Handler(void)
+void SERCOM0_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[0] (0);
 }
 #endif
 #ifdef ID_SERCOM1
-void SERCOM1_IRQn_Handler(void);
-void SERCOM1_IRQn_Handler(void)
+void SERCOM1_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[1] (1);
 }
 #endif
 #ifdef ID_SERCOM2
-void SERCOM2_IRQn_Handler(void);
-void SERCOM2_IRQn_Handler(void)
+void SERCOM2_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[2] (2);
 }
 #endif
 #ifdef ID_SERCOM3
-void SERCOM3_IRQn_Handler(void);
-void SERCOM3_IRQn_Handler(void)
+void SERCOM3_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[3] (3);
 }
 #endif
 #ifdef ID_SERCOM4
-void SERCOM4_IRQn_Handler(void);
-void SERCOM4_IRQn_Handler(void)
+void SERCOM4_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[4] (4);
 }
 #endif
 #ifdef ID_SERCOM5
-void SERCOM5_IRQn_Handler(void);
-void SERCOM5_IRQn_Handler(void)
+void SERCOM5_Handler(void)
 {
 	/* Call appropriate interrupt handler. */
 	_sercom_interrupt_handlers[5] (5);

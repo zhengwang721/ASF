@@ -192,8 +192,7 @@ enum status_code extint_chan_disable_callback(
 }
 
 /** Handler for the EXTINT hardware module interrupt. */
-void EIC_IRQn_Handler(void);
-void EIC_IRQn_Handler(void)
+void EIC_Handler(void)
 {
 	/* Find any triggered channels, run associated callback handlers */
 	for (uint32_t i = 0; i < (32 * EIC_INST_NUM); i++) {

@@ -46,30 +46,30 @@
 
 /* ========== Register definition for SYSCTRL peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_SYSCTRL_INTENCLR                  (0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Clear Register */
-#define REG_SYSCTRL_INTENSET                  (0x40000804U) /**< \brief (SYSCTRL) Interrupt Enable Set Register */
-#define REG_SYSCTRL_INTFLAG                   (0x40000808U) /**< \brief (SYSCTRL) Interrupt Flag Status and Clear Register */
-#define REG_SYSCTRL_PCLKSR                    (0x4000080CU) /**< \brief (SYSCTRL) Power and Clocks Status Register */
-#define REG_SYSCTRL_XOSC                      (0x40000810U) /**< \brief (SYSCTRL) XOSC Control Register */
-#define REG_SYSCTRL_XOSC32K                   (0x40000814U) /**< \brief (SYSCTRL) XOSC32K Control Register */
-#define REG_SYSCTRL_XOSC32KTEST               (0x40000816U) /**< \brief (SYSCTRL) XOSC32K Test Register */
-#define REG_SYSCTRL_DFLLCTRL                  (0x40000818U) /**< \brief (SYSCTRL) DFLL Config Register */
-#define REG_SYSCTRL_DFLLVAL                   (0x4000081CU) /**< \brief (SYSCTRL) DFLL Calibration Value Register */
-#define REG_SYSCTRL_DFLLMUL                   (0x40000820U) /**< \brief (SYSCTRL) DFLL Multiplier Register */
-#define REG_SYSCTRL_DFLLSYNC                  (0x40000824U) /**< \brief (SYSCTRL) DFLL Synchronization Register */
-#define REG_SYSCTRL_BOD33                     (0x40000828U) /**< \brief (SYSCTRL) BOD33 Control Register */
-#define REG_SYSCTRL_BOD12                     (0x4000082CU) /**< \brief (SYSCTRL) BOD12 Control Register */
-#define REG_SYSCTRL_OSC32K                    (0x40000830U) /**< \brief (SYSCTRL) OSC32K Control Register */
-#define REG_SYSCTRL_OSCULP32K                 (0x40000834U) /**< \brief (SYSCTRL) OSCULP32K Control Register */
-#define REG_SYSCTRL_OSCULP32KTEST             (0x40000838U) /**< \brief (SYSCTRL) OSCULP32K Test Register */
-#define REG_SYSCTRL_OSC8M                     (0x4000083CU) /**< \brief (SYSCTRL) OSC8M Control Register A */
-#define REG_SYSCTRL_VREG                      (0x40000840U) /**< \brief (SYSCTRL) VREG Control Register */
-#define REG_SYSCTRL_VREGTEST                  (0x40000844U) /**< \brief (SYSCTRL) VREG Test Register */
-#define REG_SYSCTRL_VREF                      (0x40000848U) /**< \brief (SYSCTRL) VREF Control Register A */
-#define REG_SYSCTRL_VREFTESTA                 (0x4000084CU) /**< \brief (SYSCTRL) VREF Test Register A */
-#define REG_SYSCTRL_VREFTESTB                 (0x40000850U) /**< \brief (SYSCTRL) VREF Test Register B */
-#define REG_SYSCTRL_FORCECLKON                (0x40000854U) /**< \brief (SYSCTRL) Force Clock On Register */
-#define REG_SYSCTRL_TESTMODE                  (0x40000858U) /**< \brief (SYSCTRL) Test Mode Register */
+#define REG_SYSCTRL_INTENCLR       (0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Clear Register */
+#define REG_SYSCTRL_INTENSET       (0x40000804U) /**< \brief (SYSCTRL) Interrupt Enable Set Register */
+#define REG_SYSCTRL_INTFLAG        (0x40000808U) /**< \brief (SYSCTRL) Interrupt Flag Status and Clear Register */
+#define REG_SYSCTRL_PCLKSR         (0x4000080CU) /**< \brief (SYSCTRL) Power and Clocks Status Register */
+#define REG_SYSCTRL_XOSC           (0x40000810U) /**< \brief (SYSCTRL) XOSC Control Register */
+#define REG_SYSCTRL_XOSC32K        (0x40000814U) /**< \brief (SYSCTRL) XOSC32K Control Register */
+#define REG_SYSCTRL_XOSC32KTEST    (0x40000816U) /**< \brief (SYSCTRL) XOSC32K Test Register */
+#define REG_SYSCTRL_DFLLCTRL       (0x40000818U) /**< \brief (SYSCTRL) DFLL Config Register */
+#define REG_SYSCTRL_DFLLVAL        (0x4000081CU) /**< \brief (SYSCTRL) DFLL Calibration Value Register */
+#define REG_SYSCTRL_DFLLMUL        (0x40000820U) /**< \brief (SYSCTRL) DFLL Multiplier Register */
+#define REG_SYSCTRL_DFLLSYNC       (0x40000824U) /**< \brief (SYSCTRL) DFLL Synchronization Register */
+#define REG_SYSCTRL_BOD33          (0x40000828U) /**< \brief (SYSCTRL) BOD33 Control Register */
+#define REG_SYSCTRL_BOD12          (0x4000082CU) /**< \brief (SYSCTRL) BOD12 Control Register */
+#define REG_SYSCTRL_OSC32K         (0x40000830U) /**< \brief (SYSCTRL) OSC32K Control Register */
+#define REG_SYSCTRL_OSCULP32K      (0x40000834U) /**< \brief (SYSCTRL) OSCULP32K Control Register */
+#define REG_SYSCTRL_OSCULP32KTEST  (0x40000838U) /**< \brief (SYSCTRL) OSCULP32K Test Register */
+#define REG_SYSCTRL_OSC8M          (0x4000083CU) /**< \brief (SYSCTRL) OSC8M Control Register A */
+#define REG_SYSCTRL_VREG           (0x40000840U) /**< \brief (SYSCTRL) VREG Control Register */
+#define REG_SYSCTRL_VREGTEST       (0x40000844U) /**< \brief (SYSCTRL) VREG Test Register */
+#define REG_SYSCTRL_VREF           (0x40000848U) /**< \brief (SYSCTRL) VREF Control Register A */
+#define REG_SYSCTRL_VREFTESTA      (0x4000084CU) /**< \brief (SYSCTRL) VREF Test Register A */
+#define REG_SYSCTRL_VREFTESTB      (0x40000850U) /**< \brief (SYSCTRL) VREF Test Register B */
+#define REG_SYSCTRL_FORCECLKON     (0x40000854U) /**< \brief (SYSCTRL) Force Clock On Register */
+#define REG_SYSCTRL_TESTMODE       (0x40000858U) /**< \brief (SYSCTRL) Test Mode Register */
 #else
 #define REG_SYSCTRL_INTENCLR       (*(RwReg  *)0x40000800U) /**< \brief (SYSCTRL) Interrupt Enable Clear Register */
 #define REG_SYSCTRL_INTENSET       (*(RwReg  *)0x40000804U) /**< \brief (SYSCTRL) Interrupt Enable Set Register */
