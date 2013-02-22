@@ -47,8 +47,8 @@
  * \section Purpose
  *
  * The Starter Kit Demo will help new users get familiar with Atmel's
- * SAM family of microcontrollers. This demo features the IO1 and OLED1 wing boards for
- * the SAM4 Xplained Pro.
+ * SAM family of microcontrollers. This demo features the IO1 and OLED1
+ * extension boards for the SAM4 Xplained Pro.
  *
  * \section Requirements
  *
@@ -56,11 +56,12 @@
  *
  * \section Description
  *
- * The demonstration program can operate in 3 different modes; temperature information,
- * light sensor information and SD card status. Each of these being selectable using
- * Button1 Button2 and Button3 from the OLED1 wing.
- * IO1 wing must be connected on EXT2.
- * OLED1 wing must be connected on EXT3.
+ * The demonstration program can operate in 3 different modes; temperature
+ * information, light sensor information and SD card status. Each of these
+ * being selectable using Button1 Button2 and Button3 from the OLED1
+ * extension.
+ * IO1 extension must be connected on EXT2.
+ * OLED1 extension must be connected on EXT3.
  *
  */
 
