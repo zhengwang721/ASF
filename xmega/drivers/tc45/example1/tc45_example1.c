@@ -47,39 +47,37 @@
  * \section intro Introduction
  * This simple example shows how to use the \ref tc45_group to toggle LEDs.
  *
- * \section files Main files:
+ * The example will configure TCC4 module in normal mode and use three TCC4
+ * interrupts (overflow, Capture/Compare Channels A and B).
+ *
+ * Each callback interrupts functions are setup to toggle a LED:
+ *  - LED0: Toggles on TC4 overflow interrupt
+ *  - LED1: Toggle on Compare Channel A interrupt
+ *  - LED2: Toggle on Compare Channel B interrupt
+ *
+ * The TCC4 is setup to use a 31250Hz resolution clock and a 31250 period value
+ * resulting in a 1Hz TC4 overflow frequency.
+ *
+ * Compare Channels A and B will be setup at 1/4 and 1/2 of the TC4 period.
+ * Thus, the LEDs sequence produced is LED2/LED1/LED0/LED2....
+ *
+ * \note
+ * All AVR XMEGA E devices can be used.
+ * The TC45 driver API can be found \ref tc45_group "here".
+ *
+ * Main files:
  *  - tc45.c Timer XMEGA Timer Counter driver implementation
  *  - tc45.h Timer XMEGA Timer Counter driver definitions
  *  - tc45_example1.c example application
- *  - conf_example.h: configuration of the example
  *
- * \section driverinfo tc45 Driver
- * The XMEGA tc45 driver can be found \ref tc45_group "here".
+ * \section board_setup Board setup
+ * For STK600 board:
+ * - uses the RC032X routine board with TQFP32 socket
+ * - PortA must be connected to LEDs
  *
- * \section deviceinfo Device Info
- * All AVR XMEGA devices with an tc45 can be used.
- *
- * \section exampledescription Description of the example
- * The example will configure one tc4 module (\ref TIMER_EXAMPLE) in normal
- * mode and use three tc4 interrupts (overflow, Capture/Compare Channels
- * A and B).
- *
- * The tc4 is setup to use a 31250Hz resolution clock and a 31250 period value
- * resulting in a 1Hz TC4 overflow frequency.
- * Compare Channels A and B will be setup at 1/4 and 1/2 of the TC4 period.
- *
- * On STK600, PortA must be connected to LEDs
- *
- * Each callback interrupts functions are setup to toggle a LED.
- * So LEDs sequence is LED2/LED1/LED0/LED2....
- *  - LED0: Toggles on TC4 overflow interrupt
- *  - LED1: Toggle on Compare Channel A
- * In the case of A1 Xplain:
- *  - LED2: Toggle on Compare Channel B interrupts
- * In the case of E5 Xplain:
- *  - There is no LED2 (so no toggle on Compare Channel B interrupts)
- * In the case of A3BU Xplained:
- *  - Status LED: Toggles red on Compare Channel B interrupts
+ * For XMEGA-E5 Xplained board:
+ * - plug USB for the power
+ * - note, no LED2 on this board
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -89,27 +87,30 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-#include <conf_example.h>
-#include <string.h>
 #include <asf.h>
+
+/* Timer resolution (Hz)
+ * Note: This configure a TC prescaler equal to 1024 = SYSCLK 32MHz / 31250Hz
+ */
+#define TIMER_EXAMPLE_RESOLUTION 31250
 
 /**
  * \brief Timer Counter Overflow interrupt callback function
  *
  * This function is called when an overflow interrupt has occurred on
- * TIMER_EXAMPLE and toggles LED0.
+ * TCC4 and toggles LED0.
  */
 static void example_ovf_interrupt_callback(void)
 {
 	gpio_toggle_pin(LED0_GPIO);
-	tc45_clear_overflow(&TIMER_EXAMPLE);
+	tc45_clear_overflow(&TCC4);
 }
 
 /**
  * \brief Timer Counter Capture/Compare A interrupt callback function
  *
  * This function is called when an a capture compare channel A has occurred
- * TIMER_EXAMPLE and toggles LED1.
+ * on TCC4 and toggles LED1.
  */
 static void example_cca_interrupt_callback(void)
 {
@@ -120,7 +121,7 @@ static void example_cca_interrupt_callback(void)
  * \brief Timer Counter Capture/Compare B interrupt callback function
  *
  * This function is called when an a capture compare channel B has occurred
- * TIMER_EXAMPLE and toggles LED2 (only on STK600).
+ * on TCC4 and toggles LED2 (only on STK600).
  */
 static void example_ccb_interrupt_callback(void)
 {
@@ -131,59 +132,54 @@ static void example_ccb_interrupt_callback(void)
 
 int main(void)
 {
-	pmic_init();
+	/* Usual initializations */
 	board_init();
 	sysclk_init();
 	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
 
-#if (BOARD == XMEGA_A3BU_XPLAINED)
+	/* Unmask clock for TCC4 */
+	tc45_enable(&TCC4);
 
-	/* The status LED must be used as LED2, so we turn off
-	 * the green led which is in the same packaging. */
-	ioport_set_pin_high(LED3_GPIO);
-#endif
+	/* Configure TC in normal mode */
+	tc45_set_wgm(&TCC4, TC45_WG_NORMAL);
+
+	/* Configure period equal to resolution to obtain 1Hz */
+	tc45_write_period(&TCC4, TIMER_EXAMPLE_RESOLUTION);
+
+	/* Configure CCA to occur at the middle of TC period */
+	tc45_write_cc(&TCC4, TC45_CCA, TIMER_EXAMPLE_RESOLUTION / 2);
+
+	/* Configure CCB to occur at the quarter of TC period */
+	tc45_write_cc(&TCC4, TC45_CCB, TIMER_EXAMPLE_RESOLUTION / 4);
+
+	/* Enable both CCA and CCB channels */
+	tc45_enable_cc_channels(&TCC4, TC45_CCACOMP);
+	tc45_enable_cc_channels(&TCC4, TC45_CCBCOMP);
 
 	/*
-	 * Unmask clock for TIMER_EXAMPLE
-	 */
-	tc45_enable(&TIMER_EXAMPLE);
-
-	/*
-	 * Configure interrupts callback functions for TIMER_EXAMPLE
+	 * Configure interrupts callback functions for TCC4
 	 * overflow interrupt, CCA interrupt and CCB interrupt
 	 */
-	tc45_set_overflow_interrupt_callback(&TIMER_EXAMPLE,
+	tc45_set_overflow_interrupt_callback(&TCC4,
 			example_ovf_interrupt_callback);
-	tc45_set_cca_interrupt_callback(&TIMER_EXAMPLE,
+	tc45_set_cca_interrupt_callback(&TCC4,
 			example_cca_interrupt_callback);
-	tc45_set_ccb_interrupt_callback(&TIMER_EXAMPLE,
+	tc45_set_ccb_interrupt_callback(&TCC4,
 			example_ccb_interrupt_callback);
-
-	/*
-	 * Configure TC in normal mode, configure period, CCA and CCB
-	 * Enable both CCA and CCB channels
-	 */
-
-	tc45_set_wgm(&TIMER_EXAMPLE, TC45_WG_NORMAL);
-	tc45_write_period(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
-	tc45_write_cc(&TIMER_EXAMPLE, TC45_CCA, TIMER_EXAMPLE_PERIOD / 2);
-	tc45_write_cc(&TIMER_EXAMPLE, TC45_CCB, TIMER_EXAMPLE_PERIOD / 4);
-	tc45_enable_cc_channels(&TIMER_EXAMPLE,
-			(enum tc45_cc_channel_mask_enable_t)(TC45_CCACOMP |
-			TC45_CCBCOMP));
 
 	/*
 	 * Enable TC interrupts (overflow, CCA and CCB)
 	 */
-	tc45_set_overflow_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
-	tc45_set_cca_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
-	tc45_set_ccb_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
+	tc45_set_overflow_interrupt_level(&TCC4, TC45_INT_LVL_LO);
+	tc45_set_cca_interrupt_level(&TCC4, TC45_INT_LVL_LO);
+	tc45_set_ccb_interrupt_level(&TCC4, TC45_INT_LVL_LO);
 
 	/*
-	 * Run TIMER_EXAMPLE at TIMER_EXAMPLE_PERIOD(31250Hz) resolution
+	 * Run TCC4 
 	 */
-	tc45_set_resolution(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
+	tc45_set_resolution(&TCC4, TIMER_EXAMPLE_RESOLUTION);
 
 	do {
 		/* Go to sleep, everything is handled by interrupts. */

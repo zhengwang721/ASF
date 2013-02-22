@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AVR XMEGA TC Driver Example 4
+ * \brief AVR XMEGA TC45 Driver Example 4
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -46,27 +46,30 @@
  *
  * \section intro Introduction
  * This example shows how to use the Capture feature of the \ref tc_group
- * module.
+ * module with event system.
  *
- * \section files Main files:
- *  - tc45.c Timer XMEGA Timer Counter driver implementation
- *  - tc45.h Timer XMEGA Timer Counter driver definitions
- *  - tc_example4.c example application
- *  - conf_example.h: configuration of the example
+ * The example configures the TCD5 modules in frequency capture mode.
+ * The event system is configured to trigger a capture when switch
+ * 0 is pressed and released.
  *
- * \section driverinfo TC Driver
- * The XMEGA TC45 driver can be found \ref tc45_group "here".
+ * The captured value which is the timing between press and release,
+ * is displayed on the leds. The number of LED ON increases according to
+ * measured timing.
  *
- * \section deviceinfo Device Info
- *  AVR XMEGA-E devices with an tc45 can be used.
+ * \note
+ * All AVR XMEGA E devices can be used.
+ * The TC45 driver API can be found \ref tc45_group "here".
  *
- * \section exampledescription Description of the example
- * The example will configure one of the device TC modules in frequency capture
- * mode. The event system is configured to trigger a capture when switch
- * 0 is pressed and released. The resulting value (the interval between press
- * and release) is displayed on the leds. Only the lower 8 bits are displayed.
+ * Main files:
+ * - tc45.c Timer XMEGA Timer Counter driver implementation
+ * - tc45.h Timer XMEGA Timer Counter driver definitions
+ * - tc_example4.c example application
  *
- * The TC is setup to use a 1000Hz resolution clock and a 32767 period value.
+ * \section board_setup Board setup
+ * For STK600 board:
+ * - uses the RC032X routine board with TQFP32 socket
+ * - PA0 must be connected to SW0
+ * - Port D must be connected to header LEDS
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -76,8 +79,11 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-#include <conf_example.h>
 #include <asf.h>
+
+/* Fix header file about Prescaler Filter for XMEGA E */
+#undef EVSYS_PRESCFILT_CH04_gc
+#define EVSYS_PRESCFILT_CH04_gc (1<<4)
 
 /* Interrupt callback function declaration */
 void cca_callback(void);
@@ -90,12 +96,32 @@ void cca_callback(void);
  */
 void cca_callback(void)
 {
+	uint16_t timing_ms, cca_capture;
+	uint8_t level;
+	
 	/* Store the compare channel result */
-	uint16_t cca_capture = tc45_read_cc(&EXAMPLE_TC, TC45_CCA);
+	cca_capture = tc45_read_cc(&TCD5, TC45_CCA);
 
-	/* The high 8-bits of the result are masked away while the lower 8-bits
-	 * are displayed on the LEDs. */
-	LEDPORT.OUT = ~((uint8_t)(cca_capture & 0xff));
+	if (tc45_is_overflow(&TCD5)) {
+		tc45_clear_overflow(&TCD5);
+		/* Turn ON all LEDs */
+		PORTD.OUT = 0x00;
+		return;
+	}
+	/* Compute timing in ms */
+	timing_ms = ((uint32_t)cca_capture * 1000)
+			/ tc45_get_resolution(&TCD5);
+	/* Turn ON the LEDs according to captured value */
+	if (timing_ms < 250) {
+		level = 0;
+	} else if (timing_ms < 500) {
+		level = 1;
+	} else if (timing_ms < 1000) {
+		level = 2;
+	} else {
+		level = (timing_ms / 1000) + 2;
+	}
+	PORTD.OUT = ~(((uint16_t)1 << level) - 1);
 }
 
 /**
@@ -103,53 +129,59 @@ void cca_callback(void)
  */
 int main(void)
 {
-	/* Enable all leds */
-	LEDPORT.DIRSET = 0xff;
+	/* Usual initializations */
+	board_init();
+	sysclk_init();
+	sleepmgr_init();
+	irq_initialize_vectors();
+	cpu_irq_enable();
 
-	/* Enable trigger on both edges */
-	ioport_configure_port_pin(ioport_pin_to_port(GPIO_PUSH_BUTTON_0),
-			ioport_pin_to_mask(GPIO_PUSH_BUTTON_0),
-			PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc);
+	/* Enable and turn off all leds */
+	PORTD.DIRSET = 0xFF;
+	PORTD.OUT = 0xFF;
 
-	/* Setup pin0 (sw0) as input to event system channel 0 */
-	EVSYS_CH0MUX = EVSYS_CHMUX_EXAMPLEPORT_PIN0_gc;
+	/* Enable trigger on both edges for PORT A pin 0 (Switch 0) */
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTA,0),
+			IOPORT_DIR_INPUT | IOPORT_PULL_UP | IOPORT_SENSE_BOTHEDGES | IOPORT_INV_ENABLED);
 
 	/* Enable clock to event sys */
 	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_EVSYS);
+	/* Setup PORT A pin 0 (sw0) as input to event system channel 0 */
+	EVSYS.CH0MUX = EVSYS_CHMUX_PORTA_PIN0_gc;
+	/* Enable prescaler of filter */
+	EVSYS.DFCTRL = EVSYS_PRESCFILT_CH04_gc	| EVSYS_PRESCALER_CLKPER_32768_gc;
+	EVSYS.CH0CTRL = EVSYS_DIGFILT_2SAMPLES_gc;
+	
+	/* Enable clock to timer */
+	tc45_enable(&TCD5);
 
-	/* Set resolution */
-	tc45_set_resolution(&EXAMPLE_TC, TIMER_EXAMPLE_RESOLUTION);
-
-	/* Set period */
-	tc45_write_period(&EXAMPLE_TC, TIMER_EXAMPLE_PERIOD);
+	/* Set maximum period */
+	tc45_write_period(&TCD5, 0xffff);
 
 	/* Enable capture channels */
-	tc45_enable_cc_channels(&EXAMPLE_TC, TC45_CCAMODE_CAPT_gc);
+	tc45_enable_cc_channels(&TCD5, TC45_CCACAPT);
 
 	/* Clear timer interrupts */
-	tc45_clear_cc_interrupt(&EXAMPLE_TC, TC45_CCA);
+	tc45_clear_cc_interrupt(&TCD5, TC45_CCA);
 
 	/* Do capture on event channel 0 (sw0) */
-	tc45_set_input_capture(&EXAMPLE_TC, TC45_EVSEL_CH0_gc,
+	tc45_set_input_capture(&TCD5, TC45_EVSEL_CH0_gc,
 			TC45_EVACT_PWF_gc);
 
 	/* Register callback for interrupt */
-	tc45_set_cca_interrupt_callback(&EXAMPLE_TC, &cca_callback);
-
-	/* Enable pmic module */
-	pmic_init();
+	tc45_set_cca_interrupt_callback(&TCD5, &cca_callback);
 
 	/* Enable CCA interrupt at level low */
-	tc45_set_cca_interrupt_level(&EXAMPLE_TC, TC45_CCAINTLVL_LO_gc);
-	pmic_enable_level(PMIC_LOLVLEN_bm);
+	tc45_set_cca_interrupt_level(&TCD5, TC45_INT_LVL_LO);
 
-	/* Enable clock to timer */
-	tc45_enable(&EXAMPLE_TC);
+	/* Set resolution to minimum and start timer */
+	tc45_set_resolution(&TCD5, 1);
 
 	/* Enable global interrupts */
 	cpu_irq_enable();
 
 	while (1) {
-		/* Do nothing */
+		/* Go to sleep, everything is handled by interrupts. */
+		sleepmgr_enter_sleep();
 	}
 }

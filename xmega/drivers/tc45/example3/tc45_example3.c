@@ -48,39 +48,44 @@
  * This simple example shows how to use the \ref tc45_group for generation of
  * pulsed width modulation signals.
  *
- * \section files Main files:
- * - tc45.c timer/counter driver implementation
- * - tc45.h timer/counter driver definitions
- * - tc45_example3.c: tc driver example application
- * - conf_tc.h: configuration of the tc driver
+ * The example configures the Timer C4 (TCC4) in waveform generator mode.
+ * Waveform Extension (WeX) feature is used to output PWM signals from Compare
+ * modules CCA and CCB. These complementary signals are output on Port C0/C1
+ * and C2/C3. Deadtimes are inserted.
  *
- * \section apiinfo tc driver API
- * The tc driver API can be found \ref tc45_group "here".
- *
- * \section deviceinfo Device Info
- * AVR XMEGA-E devices with tc45 and WeX modules can be used.
- *
- * \section example_description Description of the example
- * The example will configure the Timer C4 (TCC4) in waveform generator mode.
- * Wex is used to output PWM signals from Compare modules CCA and CCB.
- * These complementary signals are output on Port C0/C1 and C2/C3. Deadtimes are
- * inserted. This example is dimming the duty-cycle of the two signals in an
- * opposite way.
- *
+ * This example is dimming the duty-cycle of the two signals in an opposite way.
  * In addition the example configures the CCA and CCB interrupts to update the
- * duty-cycle
+ * duty-cycle.
  *
  * Summary of Timer Counter configuration:
- *  - TCC4 : Timer
- *  - Compare/Capture modules A/B : Compare and waveform generation in Dual
+ *  - TCC4, Timer
+ *  - Compare/Capture modules A/B, Compare and waveform generation in Dual
  *  slope mode
- *  - WeXC : Deadtime Low and High insertion and override of Port C0/C1 and
- *C2/C3
+ *  - WeX, Deadtime Low and High insertion and override of Port C0/C1 and C2/C3.
  *
  * This example uses the on-board LEDs to provide user feedback, the output
  * from the LEDs are as follows:
  *  - LED0: fades out
  *  - LED1: fades in
+ *  - LED2: fades in
+ *  - LED3: fades out
+ *
+ * \note
+ * All AVR XMEGA E devices can be used.
+ * The TC45 driver API can be found \ref tc45_group "here".
+ *
+ * Main files:
+ * - tc45.c timer/counter driver implementation
+ * - tc45.h timer/counter driver definitions
+ * - tc45_example3.c: tc driver example application
+ *
+ * \section board_setup Board setup
+ * For STK600 board:
+ * - uses the RC032X routine board with TQFP32 socket
+ * - PC0 must be connected to LED0
+ * - PC1 must be connected to LED1
+ * - PC2 must be connected to LED2
+ * - PC3 must be connected to LED3
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -90,100 +95,103 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-#include <conf_example.h>
-#include <string.h>
 #include <asf.h>
 
-uint16_t cca_pwm_index = (TIMER_EXAMPLE_PERIOD / 2);
-uint16_t ccb_pwm_index = (TIMER_EXAMPLE_PERIOD / 2);
+/* Timer TCC4 resolution (Hz)
+ * Note: This configure a TC prescaler equal to 32 = SYSCLK 32MHz / 10MHz
+ */
+#define TIMER_TCC4_RESOLUTION  10000000
+
+/* Timer TCC4 periode
+ * Note: 320Hz = SYSCLK 10MHz / 31250
+ */
+#define TIMER_TCC4_PERIOD      31250
+
 
 /**
  * \brief Compare/Capture detection interrupt callback function
  *
  * This function is called when an interrupt has occurred on a Compare A
- *channel.
+ * channel.
  * It increments the CC detection level and thus modify the duty-cycle.
  */
 static void example_cca_interrupt_callback(void)
 {
+	static uint16_t cca_pwm_index = (TIMER_TCC4_PERIOD / 2);
 	cca_pwm_index += 0x10;
-	if (cca_pwm_index >= (TIMER_EXAMPLE_PERIOD - 17)) {
+	if (cca_pwm_index >= (TIMER_TCC4_PERIOD - 17)) {
 		cca_pwm_index = 17;
 	}
 
-	tc45_write_cc_buffer(&TIMER_EXAMPLE, TC45_CCA, cca_pwm_index);
+	tc45_write_cc_buffer(&TCC4, TC45_CCA, cca_pwm_index);
 }
 
 /**
  * \brief Compare/Capture detection interrupt callback function
  *
  * This function is called when an interrupt has occurred on a Compare B
- *channel.
+ * channel.
  * It decrements the CC detection level and thus modify the duty-cycle.
  */
 static void example_ccb_interrupt_callback(void)
 {
+	static uint16_t ccb_pwm_index = (TIMER_TCC4_PERIOD / 2);
 	ccb_pwm_index -= 0x10;
 	if (ccb_pwm_index <= 17) {
-		ccb_pwm_index = (TIMER_EXAMPLE_PERIOD - 17);
+		ccb_pwm_index = (TIMER_TCC4_PERIOD - 17);
 	}
 
-	tc45_write_cc_buffer(&TIMER_EXAMPLE, TC45_CCB, ccb_pwm_index);
+	tc45_write_cc_buffer(&TCC4, TC45_CCB, ccb_pwm_index);
 }
 
 int main(void)
 {
-	pmic_init();
+	/* Usual initializations */
 	board_init();
 	sysclk_init();
 	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
 
-	/* Enables the Timer defined in conf_example.h : TCE0 in this example */
-	tc45_enable(&TIMER_EXAMPLE);
+	/* Enables the Timer */
+	tc45_enable(&TCC4);
 
 	/* Configures the interrupt level of CCA and CCB modules : low */
-	tc45_set_cca_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
-	tc45_set_ccb_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
+	tc45_set_cca_interrupt_level(&TCC4, TC45_INT_LVL_LO);
+	tc45_set_ccb_interrupt_level(&TCC4, TC45_INT_LVL_LO);
 
-	/* Configures the waveform generator of this Timer mode in NORMAL mode
-	 **/
-	tc45_set_wgm(&TIMER_EXAMPLE, TC45_WG_NORMAL);
+	/* Configures the waveform generator of this Timer mode in NORMAL mode */
+	tc45_set_wgm(&TCC4, TC45_WG_NORMAL);
 
 	/* Declares the interrupt functions which will be called when CCA and
-	 * CCB
-	 * interrupts will occur */
-	tc45_set_cca_interrupt_callback(&TIMER_EXAMPLE,
+	 * CCB interrupts will occur */
+	tc45_set_cca_interrupt_callback(&TCC4,
 			example_cca_interrupt_callback);
-	tc45_set_ccb_interrupt_callback(&TIMER_EXAMPLE,
+	tc45_set_ccb_interrupt_callback(&TCC4,
 			example_ccb_interrupt_callback);
 
-	/* Configures the Timer period*/
-	tc45_write_period(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
+	/* Configures the Timer period */
+	tc45_write_period(&TCC4, TIMER_TCC4_PERIOD);
 
-	/* Configures the CCA and CCB levels*/
-	tc45_write_cc(&TIMER_EXAMPLE, TC45_CCA, TIMER_EXAMPLE_PERIOD / 2);
-	tc45_write_cc(&TIMER_EXAMPLE, TC45_CCB, TIMER_EXAMPLE_PERIOD / 2);
+	/* Configures the CCA and CCB levels */
+	tc45_write_cc(&TCC4, TC45_CCA, TIMER_TCC4_PERIOD / 2);
+	tc45_write_cc(&TCC4, TC45_CCB, TIMER_TCC4_PERIOD / 2);
 
-	/* Enables the CCA and CCB channels*/
-	tc45_enable_cc_channels(&TIMER_EXAMPLE, TC45_CCACOMP);
-	tc45_enable_cc_channels(&TIMER_EXAMPLE, TC45_CCBCOMP);
+	/* Enables the CCA and CCB channels */
+	tc45_enable_cc_channels(&TCC4, TC45_CCACOMP);
+	tc45_enable_cc_channels(&TCC4, TC45_CCBCOMP);
 
-	/* Configures the waveform genertaor in Dual Slope mode and Top*/
-	tc45_set_wgm(&TIMER_EXAMPLE, TC45_WG_DS_T);
+	/* Configures the waveform generator in Dual Slope mode and Top */
+	tc45_set_wgm(&TCC4, TC45_WG_DS_T);
 
-	/* Enables and configures the deadtime of CCA and CCB outputs*/
+	/* Enables and configures the deadtime of CCA and CCB outputs */
+	tc45_wex_set_dti_high(&WEXC, TIMER_TCC4_PERIOD / 6);
+	tc45_wex_set_dti_low(&WEXC, TIMER_TCC4_PERIOD / 6);
+	tc45_wex_enable_cca_deadtime(&WEXC);
+	tc45_wex_enable_ccb_deadtime(&WEXC);
 
-	tc45_WEX_set_dti_high(&WEXC, TIMER_EXAMPLE_PERIOD / 6);
-	tc45_WEX_set_dti_low(&WEXC, TIMER_EXAMPLE_PERIOD / 6);
-
-	tc45_WEX_enable_cca_deadtime(&WEXC);
-	tc45_WEX_enable_ccb_deadtime(&WEXC);
-
-	/* Outputs CCA and CCB on Port E0 and E1*/
-	/* tc45_WEX_set_output_override(&WEXC, 0x03); */
-
-	tc45_set_resolution(&TIMER_EXAMPLE, 10000000);
+	/* Configure resolution and start Timer */
+	tc45_set_resolution(&TCC4, TIMER_TCC4_RESOLUTION);
 
 	do {
 		/* Go to sleep, everything is handled by interrupts. */

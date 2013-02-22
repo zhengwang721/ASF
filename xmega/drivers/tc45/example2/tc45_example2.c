@@ -48,26 +48,30 @@
  * This simple example shows how to use the \ref tc45_group to generate
  * single slope PWM.
  *
- * \section files Main files:
+ * The example uses and configures two TC modules.
+ *  - TCD5 is configured to generate single slope PWM on LED0
+ *  - TCC4 is used in generate a 50ms overflow interrupt
+ *
+ * Each time the 50ms overflow interrupt of TCC4 is executed
+ * the TCD5 single slope PWM duty cycle is changed so that it
+ * result visible on LEDO light intensity.
+ *
+ * \note
+ * All AVR XMEGA E devices can be used.
+ * The TC45 driver API can be found \ref tc45_group "here".
+ *
+ * Main files:
  *  - tc45.c Timer XMEGA Timer Counter driver implementation
  *  - tc45.h Timer XMEGA Timer Counter driver definitions
  *  - tc45_example2.c example application
- *  - conf_example.h: configuration of the example
  *
- * \section driverinfo TC45 Driver
- * The XMEGA TC45 driver can be found \ref tc45_group "here".
+ * \section board_setup Board setup
+ * For STK600 board:
+ * - uses the RC032X routine board with TQFP32 socket
+ * - PD4 must be connected to LED0
  *
- * \section deviceinfo Device Info
- * All AVR XMEGA devices with an tc45 can be used.
- *
- * \section exampledescription Description of the example
- * The example uses and configures two TC modules.
- *  - \ref TIMER_PORT_LED is configured to generate single slope PWM on LED0
- *  - \ref TIMER_EXAMPLE is used in generate a 50ms overflow interrupt
- *
- * Each time the 50ms overflow interrupt of \ref TIMER_EXAMPLE is executed
- * the \ref TIMER_PORT_LED single slope PWM duty cycle is changed so that it
- * result visible on LEDO light intensity.
+ * For XMEGA-E5 Xplained board:
+ * - plug USB for the power
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
@@ -77,63 +81,61 @@
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
  */
-#include <conf_example.h>
-#include <string.h>
 #include <asf.h>
 
 /**
  * \brief Timer Counter Overflow interrupt callback function
  *
  * This function is called when an overflow interrupt has occurred (50ms) on
- * TIMER_PORT_LED and change PWM duty single generation on TIMER_PORT_LED CCA.
+ * TCD5 and change PWM duty single generation on TCD5 CCA.
  */
 static void example_overflow_interrupt_callback(void)
 {
-	tc45_write_cc(&TIMER_PORT_LED, TC45_CCA,
-			tc45_read_cc(&TIMER_PORT_LED, TC45_CCA) + 0x2ff);
-	tc45_clear_overflow(&TIMER_EXAMPLE);
+	tc45_write_cc(&TCD5, TC45_CCA,
+			tc45_read_cc(&TCD5, TC45_CCA) + 0xA00);
+	tc45_clear_overflow(&TCC4);
 }
 
 int main(void)
 {
-	pmic_init();
+	/* Usual initializations */
 	board_init();
 	sysclk_init();
 	sleepmgr_init();
+	irq_initialize_vectors();
 	cpu_irq_enable();
         
-        /* configures PortD Pin4 in output mode */
-        ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4), IOPORT_DIR_OUTPUT);
-        
 	/*
-	 * Configure TIMER_EXAMPLE to generate 50ms overflow interrupt
-	 * using 500kHz (2us) resolution clock (50ms=25000*2us)
+	 * Configure TCC4 to generate 50ms overflow interrupt
+	 * using 500kHz (2us) resolution clock (50ms = 25000 * 2us)
 	 */
-	/* Unmask clock for TIMER_EXAMPLE */
-	tc45_enable(&TIMER_EXAMPLE);
+	/* Unmask clock for TCC4 */
+	tc45_enable(&TCC4);
 	/* Enable overflow interrupt */
-	tc45_set_overflow_interrupt_level(&TIMER_EXAMPLE, TC45_INT_LVL_LO);
+	tc45_set_overflow_interrupt_level(&TCC4, TC45_INT_LVL_LO);
 	/* Configure TC in normal mode */
-	tc45_set_wgm(&TIMER_EXAMPLE, TC45_WG_NORMAL);
+	tc45_set_wgm(&TCC4, TC45_WG_NORMAL);
 	/* Configure call back interrupt */
-	tc45_set_overflow_interrupt_callback(&TIMER_EXAMPLE,
+	tc45_set_overflow_interrupt_callback(&TCC4,
 			example_overflow_interrupt_callback);
-	/* Configure TC period and and resolution */
-	tc45_write_period(&TIMER_EXAMPLE, 25000);
-	tc45_set_resolution(&TIMER_EXAMPLE, 500000);
+	/* Configure TC period and resolution */
+	tc45_write_period(&TCC4, 25000);
+	tc45_set_resolution(&TCC4, 500000);
 
 	/*
-	 * Configure TIMER_PORT_LED to generate 2ms Single Slope PWM
+	 * Configure TCD5 to generate 2ms Single Slope PWM
 	 */
-	/* Unmask clock for TIMER_PORT_LED */
-	tc45_enable(&TIMER_PORT_LED);
+	/* Unmask clock for TCD5 */
+	tc45_enable(&TCD5);
 	/* Configure TC in PWM Single Slope PWM */
-	tc45_set_wgm(&TIMER_PORT_LED, TC45_WG_SS);
+	tc45_set_wgm(&TCD5, TC45_WG_SS);
+	/* Use the max period (2MHz / FFFFh = 30Hz) */
+	tc45_write_period(&TCC4, 0xFFFF);
 	/* Initialize and enable Channel A */
-	tc45_write_cc(&TIMER_PORT_LED, TC45_CCA, 0);
-	tc45_enable_cc_channels(&TIMER_PORT_LED, TC45_CCACOMP);
-	/* Run TC at 2MHz clock resolution */
-	tc45_set_resolution(&TIMER_PORT_LED, 20000000);
+	tc45_write_cc(&TCD5, TC45_CCA, 0);
+	tc45_enable_cc_channels(&TCD5, TC45_CCACOMP);
+	/* Run TC at 2MHz clock resolution (CPU frequency 32MHz) */
+	tc45_set_resolution(&TCD5, 20000000);
 
 	do {
 		/* Go to sleep, everything is handled by interrupts. */

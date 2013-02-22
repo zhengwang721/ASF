@@ -7,7 +7,6 @@
 			<keyword value="Timers"/>
 		</info>
 		<build type="c-source" value="tc45_example3.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 		<device-support value="xmega"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="xmega.drivers.tc45"/>
