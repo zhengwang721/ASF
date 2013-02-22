@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file for CDC application
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,6 +104,7 @@
 #define  UDI_CDC_ENABLE_EXT(port)          stdio_usb_enable()
 #define  UDI_CDC_DISABLE_EXT(port)         stdio_usb_disable()
 #define  UDI_CDC_RX_NOTIFY(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)
 #define  UDI_CDC_SET_CODING_EXT(port,cfg)
 #define  UDI_CDC_SET_DTR_EXT(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)

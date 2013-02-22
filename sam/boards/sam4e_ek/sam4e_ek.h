@@ -305,24 +305,24 @@
 #define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
 
 /** PWM LED0 pin definitions. */
-#define PIN_PWM_LED0_GPIO     PIO_PA0_IDX
+#define PIN_PWM_LED0_GPIO     PIO_PD20_IDX
 #define PIN_PWM_LED0_FLAGS    (IOPORT_MODE_MUX_A)
 #define PIN_PWM_LED0_CHANNEL  PWM_CHANNEL_0
 
 /** PWM LED1 pin definitions. */
-#define PIN_PWM_LED1_GPIO     PIO_PD20_IDX
+#define PIN_PWM_LED1_GPIO     PIO_PD21_IDX
 #define PIN_PWM_LED1_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED1_CHANNEL  PWM_CHANNEL_0
+#define PIN_PWM_LED1_CHANNEL  PWM_CHANNEL_1
 
 /** PWM LED2 pin definitions. */
-#define PIN_PWM_LED2_GPIO     PIO_PD21_IDX
+#define PIN_PWM_LED2_GPIO     PIO_PD22_IDX
 #define PIN_PWM_LED2_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED2_CHANNEL  PWM_CHANNEL_1
+#define PIN_PWM_LED2_CHANNEL  PWM_CHANNEL_2
 
 /** PWM LED3 pin definitions. */
-#define PIN_PWM_LED3_GPIO     PIO_PD22_IDX
+#define PIN_PWM_LED3_GPIO     PIO_PA0_IDX
 #define PIN_PWM_LED3_FLAGS    (IOPORT_MODE_MUX_A)
-#define PIN_PWM_LED3_CHANNEL  PWM_CHANNEL_2
+#define PIN_PWM_LED3_CHANNEL  PWM_CHANNEL_0
 
 
 /** SPI MISO pin definition. */
@@ -464,6 +464,42 @@
 /** USB D+ pin (System function) */
 #define PIN_USB_DP      {PIO_PB11}
 
+/* KSZ8051MNL relate PIN definition */
+#define PIN_KSZ8051MNL_RXC_IDX                PIO_PD14_IDX
+#define PIN_KSZ8051MNL_RXC_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXC_IDX                PIO_PD0_IDX
+#define PIN_KSZ8051MNL_TXC_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXEN_IDX                PIO_PD1_IDX
+#define PIN_KSZ8051MNL_TXEN_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXD3_IDX                PIO_PD16_IDX
+#define PIN_KSZ8051MNL_TXD3_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXD2_IDX                PIO_PD15_IDX
+#define PIN_KSZ8051MNL_TXD2_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXD1_IDX                PIO_PD3_IDX
+#define PIN_KSZ8051MNL_TXD1_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXD0_IDX                PIO_PD2_IDX
+#define PIN_KSZ8051MNL_TXD0_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXD3_IDX                PIO_PD12_IDX
+#define PIN_KSZ8051MNL_RXD3_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXD2_IDX                PIO_PD11_IDX
+#define PIN_KSZ8051MNL_RXD2_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXD1_IDX                PIO_PD6_IDX
+#define PIN_KSZ8051MNL_RXD1_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXD0_IDX                PIO_PD5_IDX
+#define PIN_KSZ8051MNL_RXD0_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXER_IDX                PIO_PD7_IDX
+#define PIN_KSZ8051MNL_RXER_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXDV_IDX                PIO_PD4_IDX
+#define PIN_KSZ8051MNL_RXDV_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_CRS_IDX                PIO_PD10_IDX
+#define PIN_KSZ8051MNL_CRS_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_COL_IDX                PIO_PD13_IDX
+#define PIN_KSZ8051MNL_COL_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_MDC_IDX          PIO_PD8_IDX
+#define PIN_KSZ8051MNL_MDC_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_MDIO_IDX                PIO_PD9_IDX
+#define PIN_KSZ8051MNL_MDIO_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_INTRP_IDX                PIO_PD28_IDX
 /*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_usb "SAM4E-EK - USB device"
@@ -563,6 +599,10 @@
 #define PIN_ISO7816_RST_FLAG       (0)
 
 /*----------------------------------------------------------------------------*/
+/* GMAC HW configurations */
+#define BOARD_GMAC_PHY_ADDR 0
+
+/*----------------------------------------------------------------------------*/
 /**
  * \page sam4e_ek_CAN "SAM4E-EK - CAN"
  * This page lists definitions related to CAN0 and CAN1.
@@ -613,7 +653,4 @@
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
 
 /*----------------------------------------------------------------------------*/
-
-
-
 #endif  /* _SAM4E_EK_H_ */

@@ -10,6 +10,15 @@
 // Enable on-board AT45DBX interface (SPI)
 #define CONF_BOARD_AT45DBX
 
+// Enable on-board Light Sensor (ADC)
+#define CONF_BOARD_ENABLE_LIGHT_SENSOR
+
+// Enable on-board Temperature Sensor (ADC)
+#define CONF_BOARD_ENABLE_TEMPERATURE_SENSOR
+
+// Enable on-board Potentiometer Sensor (ADC)
+#define CONF_BOARD_POTENTIOMETER_SENSOR
+
 // Enable on-board LCD backlight interface (PWM and TC)
 // #define CONF_BOARD_LCD_BACKLIGHT_PWM
 
