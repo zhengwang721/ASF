@@ -5,7 +5,7 @@
  *
  * To use this board, define BOARD=STK600_RC032X.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -304,5 +304,24 @@ void board_init(void)
 #ifdef CONF_BOARD_XCL_IN3_PC7_INV
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 7), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
+#endif
+
+	/* TC45 Output Configurations */
+#ifdef CONF_BOARD_TC45_OUT0_PC0
+      ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 0), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC1
+      ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 1), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC2
+      ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 2), IOPORT_DIR_OUTPUT);
+#endif
+      
+#ifdef CONF_BOARD_TC45_OUT0_PC3
+      ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 3), IOPORT_DIR_OUTPUT);
+#endif
+      
+#ifdef CONF_BOARD_TC45_OUT0_PD4
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4), IOPORT_DIR_OUTPUT);
 #endif
 }
