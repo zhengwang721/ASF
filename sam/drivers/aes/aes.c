@@ -283,7 +283,7 @@ void aes_set_callback(Aes *const p_aes,
 {
 	if (source == AES_INTERRUPT_DATA_READY) {
 		aes_callback_pointer[0] = callback;
-	} else if (source == AES_INTERRUPT_DATA_READY) {
+	} else if (source == AES_INTERRUPT_UNSPECIFIED_REGISTER_ACCESS) {
 		aes_callback_pointer[1] = callback;
 	}
 	irq_register_handler((IRQn_Type)AES_IRQn, irq_level);
