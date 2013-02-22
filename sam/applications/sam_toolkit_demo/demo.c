@@ -72,13 +72,15 @@
  *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
  *    IAR EWARM User Guide</a>,
  *    depending on your chosen solution.
+ * -# Unzip the resource files in the resource directory, which is located at
+ * ./sam/applications/sam_toolkit_demo/resources/disk.
  * -# Erase the nand flash through SAM-BA.
  * -# Power OFF and ON the board with the USB cable always connected.
  * -# A new Removable Disk should appear in the computer explorer.
- * -# Copy the demo folder in the root directory of this removable disk : a
- *   demo folder should appear in it. The file path should be "/demo/../..".
+ * -# Copy the resource files to the root directory of this removable disk.
  * -# When the copy operation is achieved, disconnect the USB cable, and
- *    Power OFF and ON the board.
+ * Power OFF and ON the board. The root directory in the removable disk should
+ * be "/demo".
  * -# On the computer, open and configure a terminal application
  *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
