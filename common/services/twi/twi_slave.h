@@ -3,7 +3,7 @@
  *
  * \brief TWI Slave Mode management
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)
 # include "sam_twi/twi_slave.h"
 #elif XMEGA
 # include "xmega_twi/twi_slave.h"

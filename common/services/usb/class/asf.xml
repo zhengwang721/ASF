@@ -2,8 +2,8 @@
 	<select-by-config id="common.services.usb.class.device" name="config.common.services.usb.class.device" caption="USB Device" default="cdc">
 		<info type="description" value="summary">
 		USB Device. Common API.
-
 		A selector is provided to select a single class or a composite device.
+		The provided classes are: CDC, MSC, HID mouse, HID Keyboard, HID Generic, DFU Atmel, PHDC, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.device#cdc" caption="USB Device CDC">
 			<info type="keyword" value="technology">
@@ -308,14 +308,15 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="common.services.usb.class.host" name="config.common.services.usb.class.host" caption="USB Host" default="android">
 		<info type="description" value="summary">
 		USB Host. Common API.
-
 		A selector is provided to select a single class support or a multiple classes support.
+		The provided classes are: Android, CDC, MSC, HID mouse, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.host#android" caption="USB Host Android Accessory Class">
 			<info type="keyword" value="technology">
