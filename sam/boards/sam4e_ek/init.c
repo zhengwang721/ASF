@@ -264,6 +264,11 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_TWI1
+	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_KSZ8051MNL
 	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_RXC_IDX,
 			PIN_KSZ8051MNL_RXC_FLAGS);
@@ -300,5 +305,29 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_KSZ8051MNL_MDIO_IDX,
 			PIN_KSZ8051MNL_MDIO_FLAGS);
 	ioport_set_pin_dir(PIN_KSZ8051MNL_INTRP_IDX, IOPORT_DIR_INPUT);
+#endif
+
+#ifdef CONF_BOARD_TFDU4300_SD
+	/* Configure IrDA transceiver shutdown pin */
+	ioport_set_pin_dir(PIN_IRDA_SD_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_IRDA_SD_IDX, IOPORT_PIN_LEVEL_HIGH);
+#endif
+
+#ifdef CONF_BOARD_ADM3485_RE
+	/* Configure RS485 transceiver RE pin */
+	ioport_set_pin_dir(PIN_RE_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_RE_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816_RST
+	/* Configure ISO7816 card reset pin */
+	ioport_set_pin_dir(PIN_ISO7816_RST_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PIN_ISO7816_RST_IDX, IOPORT_PIN_LEVEL_LOW);
+#endif
+
+#ifdef CONF_BOARD_ISO7816
+	/* Configure ISO7816 interface TXD & SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_TXD_IDX, PIN_USART1_TXD_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX, PIN_USART1_SCK_FLAGS);
 #endif
 }
