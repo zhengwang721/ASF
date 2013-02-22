@@ -46,27 +46,27 @@
 
 /* ========== Register definition for TC7 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TC7_CTRLA                         (0x42003C00U) /**< \brief (TC7) Control A Register */
-#define REG_TC7_READREQ                       (0x42003C02U) /**< \brief (TC7) Read Request Register */
-#define REG_TC7_CTRLBCLR                      (0x42003C04U) /**< \brief (TC7) Control B Clear Register */
-#define REG_TC7_CTRLBSET                      (0x42003C05U) /**< \brief (TC7) Control B Set Register */
-#define REG_TC7_CTRLC                         (0x42003C06U) /**< \brief (TC7) Control C Register */
-#define REG_TC7_DEBUG                         (0x42003C08U) /**< \brief (TC7) Debug Register */
-#define REG_TC7_EVCTRL                        (0x42003C0AU) /**< \brief (TC7) Event Control Register */
-#define REG_TC7_INTENCLR                      (0x42003C0CU) /**< \brief (TC7) Interrupt Enable Clear Register */
-#define REG_TC7_INTENSET                      (0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set Register */
-#define REG_TC7_INTFLAG                       (0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear Register */
-#define REG_TC7_STATUS                        (0x42003C0FU) /**< \brief (TC7) Status Register */
-#define REG_TC7_COUNT8_COUNT                  (0x42003C10U) /**< \brief (TC7) COUNT8 Count Register */
-#define REG_TC7_COUNT16_COUNT                 (0x42003C10U) /**< \brief (TC7) COUNT16 Count Register */
-#define REG_TC7_COUNT32_COUNT                 (0x42003C10U) /**< \brief (TC7) COUNT32 Count Register */
-#define REG_TC7_COUNT8_PER                    (0x42003C14U) /**< \brief (TC7) COUNT8 Period Register */
-#define REG_TC7_COUNT8_CC0                    (0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture Register 0 */
-#define REG_TC7_COUNT8_CC1                    (0x42003C19U) /**< \brief (TC7) COUNT8 Compare and Capture Register 1 */
-#define REG_TC7_COUNT16_CC0                   (0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture Register 0 */
-#define REG_TC7_COUNT16_CC1                   (0x42003C1AU) /**< \brief (TC7) COUNT16 Compare and Capture Register 1 */
-#define REG_TC7_COUNT32_CC0                   (0x42003C18U) /**< \brief (TC7) COUNT32 Compare and Capture Register 0 */
-#define REG_TC7_COUNT32_CC1                   (0x42003C1CU) /**< \brief (TC7) COUNT32 Compare and Capture Register 1 */
+#define REG_TC7_CTRLA              (0x42003C00U) /**< \brief (TC7) Control A Register */
+#define REG_TC7_READREQ            (0x42003C02U) /**< \brief (TC7) Read Request Register */
+#define REG_TC7_CTRLBCLR           (0x42003C04U) /**< \brief (TC7) Control B Clear Register */
+#define REG_TC7_CTRLBSET           (0x42003C05U) /**< \brief (TC7) Control B Set Register */
+#define REG_TC7_CTRLC              (0x42003C06U) /**< \brief (TC7) Control C Register */
+#define REG_TC7_DEBUG              (0x42003C08U) /**< \brief (TC7) Debug Register */
+#define REG_TC7_EVCTRL             (0x42003C0AU) /**< \brief (TC7) Event Control Register */
+#define REG_TC7_INTENCLR           (0x42003C0CU) /**< \brief (TC7) Interrupt Enable Clear Register */
+#define REG_TC7_INTENSET           (0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set Register */
+#define REG_TC7_INTFLAG            (0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear Register */
+#define REG_TC7_STATUS             (0x42003C0FU) /**< \brief (TC7) Status Register */
+#define REG_TC7_COUNT8_COUNT       (0x42003C10U) /**< \brief (TC7) COUNT8 Count Register */
+#define REG_TC7_COUNT16_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT16 Count Register */
+#define REG_TC7_COUNT32_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT32 Count Register */
+#define REG_TC7_COUNT8_PER         (0x42003C14U) /**< \brief (TC7) COUNT8 Period Register */
+#define REG_TC7_COUNT8_CC0         (0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture Register 0 */
+#define REG_TC7_COUNT8_CC1         (0x42003C19U) /**< \brief (TC7) COUNT8 Compare and Capture Register 1 */
+#define REG_TC7_COUNT16_CC0        (0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture Register 0 */
+#define REG_TC7_COUNT16_CC1        (0x42003C1AU) /**< \brief (TC7) COUNT16 Compare and Capture Register 1 */
+#define REG_TC7_COUNT32_CC0        (0x42003C18U) /**< \brief (TC7) COUNT32 Compare and Capture Register 0 */
+#define REG_TC7_COUNT32_CC1        (0x42003C1CU) /**< \brief (TC7) COUNT32 Compare and Capture Register 1 */
 #else
 #define REG_TC7_CTRLA              (*(RwReg16*)0x42003C00U) /**< \brief (TC7) Control A Register */
 #define REG_TC7_READREQ            (*(RwReg16*)0x42003C02U) /**< \brief (TC7) Read Request Register */

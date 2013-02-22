@@ -46,32 +46,32 @@
 
 /* ========== Register definition for RTC peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_RTC_MODE0_CTRL                    (0x40001400U) /**< \brief (RTC) MODE0 Control Register */
-#define REG_RTC_MODE1_CTRL                    (0x40001400U) /**< \brief (RTC) MODE1 Control Register */
-#define REG_RTC_MODE2_CTRL                    (0x40001400U) /**< \brief (RTC) MODE2 Control Register */
-#define REG_RTC_READREQ                       (0x40001402U) /**< \brief (RTC) Read Request Register */
-#define REG_RTC_MODE0_EVCTRL                  (0x40001404U) /**< \brief (RTC) MODE0 Event Control Register */
-#define REG_RTC_MODE1_EVCTRL                  (0x40001404U) /**< \brief (RTC) MODE1 Event Control Register */
-#define REG_RTC_MODE2_EVCTRL                  (0x40001404U) /**< \brief (RTC) MODE2 Event Control Register */
-#define REG_RTC_MODE0_INTENCLR                (0x40001406U) /**< \brief (RTC) MODE0 Interrupt Enable Clear Register */
-#define REG_RTC_MODE1_INTENCLR                (0x40001406U) /**< \brief (RTC) MODE1 Interrupt Enable Clear Register */
-#define REG_RTC_MODE2_INTENCLR                (0x40001406U) /**< \brief (RTC) MODE2 Interrupt Enable Clear Register */
-#define REG_RTC_MODE0_INTENSET                (0x40001407U) /**< \brief (RTC) MODE0 Interrupt Enable Set Register */
-#define REG_RTC_MODE1_INTENSET                (0x40001407U) /**< \brief (RTC) MODE1 Interrupt Enable Set Register */
-#define REG_RTC_MODE2_INTENSET                (0x40001407U) /**< \brief (RTC) MODE2 Interrupt Enable Set Register */
-#define REG_RTC_MODE0_INTFLAG                 (0x40001408U) /**< \brief (RTC) MODE0 Interrupt Flag Status and Clear Register */
-#define REG_RTC_MODE1_INTFLAG                 (0x40001408U) /**< \brief (RTC) MODE1 Interrupt Flag Status and Clear Register */
-#define REG_RTC_MODE2_INTFLAG                 (0x40001408U) /**< \brief (RTC) MODE2 Interrupt Flag Status and Clear Register */
-#define REG_RTC_STATUS                        (0x4000140AU) /**< \brief (RTC) Status Register */
-#define REG_RTC_DEBUG                         (0x4000140BU) /**< \brief (RTC) Debug Register */
-#define REG_RTC_FREQCORR                      (0x4000140CU) /**< \brief (RTC) Frequency Correction Register */
-#define REG_RTC_MODE0_COUNT                   (0x40001410U) /**< \brief (RTC) MODE0 Count Register */
-#define REG_RTC_MODE1_COUNT                   (0x40001410U) /**< \brief (RTC) MODE1 Count Register */
-#define REG_RTC_MODE2_CLOCK                   (0x40001410U) /**< \brief (RTC) MODE2 Clock Register */
-#define REG_RTC_MODE1_PER                     (0x40001414U) /**< \brief (RTC) MODE1 Period Register */
-#define REG_RTC_MODE0_COMP0                   (0x40001418U) /**< \brief (RTC) MODE0 Compare Register 0 */
-#define REG_RTC_MODE1_COMP0                   (0x40001418U) /**< \brief (RTC) MODE1 Compare Register 0 */
-#define REG_RTC_MODE1_COMP1                   (0x4000141AU) /**< \brief (RTC) MODE1 Compare Register 1 */
+#define REG_RTC_MODE0_CTRL         (0x40001400U) /**< \brief (RTC) MODE0 Control Register */
+#define REG_RTC_MODE1_CTRL         (0x40001400U) /**< \brief (RTC) MODE1 Control Register */
+#define REG_RTC_MODE2_CTRL         (0x40001400U) /**< \brief (RTC) MODE2 Control Register */
+#define REG_RTC_READREQ            (0x40001402U) /**< \brief (RTC) Read Request Register */
+#define REG_RTC_MODE0_EVCTRL       (0x40001404U) /**< \brief (RTC) MODE0 Event Control Register */
+#define REG_RTC_MODE1_EVCTRL       (0x40001404U) /**< \brief (RTC) MODE1 Event Control Register */
+#define REG_RTC_MODE2_EVCTRL       (0x40001404U) /**< \brief (RTC) MODE2 Event Control Register */
+#define REG_RTC_MODE0_INTENCLR     (0x40001406U) /**< \brief (RTC) MODE0 Interrupt Enable Clear Register */
+#define REG_RTC_MODE1_INTENCLR     (0x40001406U) /**< \brief (RTC) MODE1 Interrupt Enable Clear Register */
+#define REG_RTC_MODE2_INTENCLR     (0x40001406U) /**< \brief (RTC) MODE2 Interrupt Enable Clear Register */
+#define REG_RTC_MODE0_INTENSET     (0x40001407U) /**< \brief (RTC) MODE0 Interrupt Enable Set Register */
+#define REG_RTC_MODE1_INTENSET     (0x40001407U) /**< \brief (RTC) MODE1 Interrupt Enable Set Register */
+#define REG_RTC_MODE2_INTENSET     (0x40001407U) /**< \brief (RTC) MODE2 Interrupt Enable Set Register */
+#define REG_RTC_MODE0_INTFLAG      (0x40001408U) /**< \brief (RTC) MODE0 Interrupt Flag Status and Clear Register */
+#define REG_RTC_MODE1_INTFLAG      (0x40001408U) /**< \brief (RTC) MODE1 Interrupt Flag Status and Clear Register */
+#define REG_RTC_MODE2_INTFLAG      (0x40001408U) /**< \brief (RTC) MODE2 Interrupt Flag Status and Clear Register */
+#define REG_RTC_STATUS             (0x4000140AU) /**< \brief (RTC) Status Register */
+#define REG_RTC_DEBUG              (0x4000140BU) /**< \brief (RTC) Debug Register */
+#define REG_RTC_FREQCORR           (0x4000140CU) /**< \brief (RTC) Frequency Correction Register */
+#define REG_RTC_MODE0_COUNT        (0x40001410U) /**< \brief (RTC) MODE0 Count Register */
+#define REG_RTC_MODE1_COUNT        (0x40001410U) /**< \brief (RTC) MODE1 Count Register */
+#define REG_RTC_MODE2_CLOCK        (0x40001410U) /**< \brief (RTC) MODE2 Clock Register */
+#define REG_RTC_MODE1_PER          (0x40001414U) /**< \brief (RTC) MODE1 Period Register */
+#define REG_RTC_MODE0_COMP0        (0x40001418U) /**< \brief (RTC) MODE0 Compare Register 0 */
+#define REG_RTC_MODE1_COMP0        (0x40001418U) /**< \brief (RTC) MODE1 Compare Register 0 */
+#define REG_RTC_MODE1_COMP1        (0x4000141AU) /**< \brief (RTC) MODE1 Compare Register 1 */
 #define REG_RTC_MODE2_ALARM_ALARM0 (0x40001418U) /**< \brief (RTC) MODE2_ALARM Alarm Register 0 */
 #define REG_RTC_MODE2_ALARM_MASK0  (0x4000141CU) /**< \brief (RTC) MODE2_ALARM Alarm Mask Register 0 */
 #else

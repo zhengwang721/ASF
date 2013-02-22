@@ -46,8 +46,8 @@
 
 /* ========== Register definition for PAC2 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_PAC2_WPCLR                        (0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
-#define REG_PAC2_WPSET                        (0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
+#define REG_PAC2_WPCLR             (0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
+#define REG_PAC2_WPSET             (0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
 #else
 #define REG_PAC2_WPCLR             (*(RwReg  *)0x42000000U) /**< \brief (PAC2) Write Protection Clear Register */
 #define REG_PAC2_WPSET             (*(RwReg  *)0x42000004U) /**< \brief (PAC2) Write Protection Set Register */
