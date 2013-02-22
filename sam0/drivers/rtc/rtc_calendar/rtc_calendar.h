@@ -267,7 +267,7 @@ extern "C" {
  * Available alarm registers.
  * \note Not all alarm registers are available on all devices.
  */
-enum rtc_calendar_alarm_num {
+enum rtc_calendar_alarm {
 	/** Alarm register 0. */
 	RTC_CALENDAR_ALARM_0 = 0,
 #if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
@@ -531,7 +531,7 @@ void rtc_calendar_init(
 void rtc_calendar_swap_time_mode(void);
 
 enum status_code rtc_calendar_frequency_correction(
-		const int8_t value);
+		int8_t value);
 
 /** @} */
 
@@ -547,11 +547,11 @@ void rtc_calendar_get_time(
 
 enum status_code rtc_calendar_set_alarm(
 		const struct rtc_calendar_alarm *const alarm,
-		const enum rtc_calendar_alarm_num alarm_index);
+		const enum rtc_calendar_alarm alarm_index);
 
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_calendar_alarm *const alarm,
-		const enum rtc_calendar_alarm_num alarm_index);
+		const enum rtc_calendar_alarm alarm_index);
 
 /** @} */
 
@@ -597,7 +597,7 @@ static inline void rtc_calendar_clear_overflow(void)
  * \param[in] alarm_index Index of the alarm to check.
  */
 static inline bool rtc_calendar_is_alarm_match(
-		const enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -624,7 +624,7 @@ static inline bool rtc_calendar_is_alarm_match(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 static inline enum status_code rtc_calendar_clear_alarm_match(
-		const enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;

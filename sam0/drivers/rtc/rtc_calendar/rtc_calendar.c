@@ -389,7 +389,7 @@ void rtc_calendar_get_time(
  */
 enum status_code rtc_calendar_set_alarm(
 		const struct rtc_calendar_alarm *const alarm,
-		const enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -429,7 +429,7 @@ enum status_code rtc_calendar_set_alarm(
  */
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_calendar_alarm *const alarm,
-		const enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
