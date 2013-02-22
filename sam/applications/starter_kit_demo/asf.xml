@@ -2,7 +2,7 @@
 	<select-by-device id="sam.applications.starter_kit_demo" caption="Starter Kit Demo">
 		<module type="application" id="sam.applications.starter_kit_demo#0" caption="Starter Kit Demo">
 			<info type="description" value="summary">
-				This demo for the SAM Xplained PRO features the following wings: IO1, OLED1.
+				This demo for the SAM Xplained Pro features the following wings: IO1, OLED1.
 			</info>
 			<build type="include-path" value="."/>
 			<device-support value="sam3"/>
