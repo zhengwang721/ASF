@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<project caption="Unit Test for the SAMD20 USART driver" id="sam0.drivers.sercom.usart.unit_test.samd20_xplained_pro">
+		<build type ="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<require idref="board.samd20_xplained_pro"/>
+		<require idref="sam0.drivers.sercom.usart.unit_test"/>
+		<config name="sam0.drivers.sercom.usart" value="polled"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd20j18a"/>
+	</project>
+</asf>
