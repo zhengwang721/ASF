@@ -136,31 +136,20 @@ static void ProcessButtonEvt(uint8_t uc_button)
 {
 	if (uc_button == 0) {
 		g_b_led0_active = !g_b_led0_active;
-		if (!g_b_led0_active)
-#if SAM4E
-		ioport_set_pin_level(LED1_GPIO, IOPORT_PIN_LEVEL_HIGH);
-#else
-		gpio_set_pin_high(LED0_GPIO);
-#endif
+		if (!g_b_led0_active) {
+			ioport_set_pin_level(LED0_GPIO, IOPORT_PIN_LEVEL_HIGH);
+		}
 	} else {
 		g_b_led1_active = !g_b_led1_active;
 
 		/* Enable LED#2 and TC if they were enabled */
 		if (g_b_led1_active) {
-#if SAM4E
 			ioport_set_pin_level(LED1_GPIO, IOPORT_PIN_LEVEL_LOW);
-#else
-			gpio_set_pin_low(LED1_GPIO);
-#endif
 			tc_start(TC0, 0);
 		}
 		/* Disable LED#2 and TC if they were disabled */
 		else {
-#if SAM4E
 			ioport_set_pin_level(LED1_GPIO, IOPORT_PIN_LEVEL_HIGH);
-#else
-			gpio_set_pin_high(LED1_GPIO);
-#endif
 			tc_stop(TC0, 0);
 		}
 	}
@@ -224,13 +213,6 @@ static void configure_buttons(void)
 
 #ifndef BOARD_NO_PUSHBUTTON_2
 	/* Configure Pushbutton 2 */
-#if ((BOARD == SAM4E_EK) || (BOARD == SAM3U_EK))
-	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK, 10);
-	/* Interrupt on falling edge */
-	pio_handler_set(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID,
-			PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR, Button2_Handler);
-	pio_enable_interrupt(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK);
-#else
 	pmc_enable_periph_clk(PIN_PUSHBUTTON_2_ID);
 	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK, 10);
 	/* Interrupt on falling edge */
@@ -240,7 +222,6 @@ static void configure_buttons(void)
 	pio_handler_set_priority(PIN_PUSHBUTTON_2_PIO,
 			(IRQn_Type) PIN_PUSHBUTTON_2_ID, IRQ_PRIOR_PIO);
 	pio_enable_interrupt(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK);
-#endif
 #endif
 }
 
@@ -258,11 +239,7 @@ void TC0_Handler(void)
 	UNUSED(ul_dummy);
 
 	/** Toggle LED state. */
-#if SAM4E
 	ioport_toggle_pin_level(LED1_GPIO);
-#else
-	gpio_toggle_pin(LED1_GPIO);
-#endif
 	printf("2 ");
 }
 
@@ -366,11 +343,7 @@ int main(void)
 
 		/* Toggle LED state if active */
 		if (g_b_led0_active) {
-#if SAM4E
 			ioport_toggle_pin_level(LED0_GPIO);
-#else
-			gpio_toggle_pin(LED0_GPIO);
-#endif
 			printf("1 ");
 		}
 
