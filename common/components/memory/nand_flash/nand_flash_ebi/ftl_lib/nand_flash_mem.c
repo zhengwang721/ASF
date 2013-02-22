@@ -98,6 +98,9 @@ Ctrl_status nand_flash_test_unit_ready(void)
 	case NAND_FLASH_BUSY:
 		return CTRL_BUSY;
 
+	case NAND_FLASH_UNLOADED:
+		return CTRL_NO_PRESENT;
+
 	default:
 		return CTRL_BUSY;
 	}
@@ -112,6 +115,10 @@ Ctrl_status nand_flash_test_unit_ready(void)
  */
 Ctrl_status nand_flash_read_capacity(uint32_t *nb_sector)
 {
+	if (nand_flash_status == NAND_FLASH_UNLOADED) {
+		return CTRL_NO_PRESENT;
+	}
+
 	if (nand_flash_status == NAND_FLASH_NOT_INIT) {
 		if (nand_flash_translation_initialize(&nf_translation, 0,
 				cmd_address, addr_address, data_address, 0,	0)) {
@@ -146,7 +153,36 @@ bool nand_flash_wr_protect(void)
  */
 bool nand_flash_removal(void)
 {
-	return false;
+	return true;
+}
+
+/**
+ * \brief This function unloads/loads the memory
+ *
+ * \return true if memory unload/load success
+ */
+bool nand_flash_unload(bool unload)
+{
+	if (!unload && nand_flash_status == NAND_FLASH_UNLOADED) {
+			nand_flash_status = NAND_FLASH_NOT_INIT;
+	} else {
+		switch (nand_flash_status) {
+		case NAND_FLASH_NOT_INIT:
+			nand_flash_status = NAND_FLASH_UNLOADED;
+			return true;
+	
+		case NAND_FLASH_READY:
+			nand_flash_flush();
+			nand_flash_status = NAND_FLASH_UNLOADED;
+			return true;
+	
+		case NAND_FLASH_UNLOADED:
+			return true;
+	
+		default:
+			return false;
+		}
+	}
 }
 
 /* ------------ SPECIFIC FUNCTIONS FOR TRANSFER BY USB --------------- */

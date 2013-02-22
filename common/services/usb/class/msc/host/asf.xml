@@ -18,6 +18,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.msc.host.composite.ctrl_access#disable" caption="USB Host MSC disabled">
@@ -44,6 +45,7 @@
 		<device-support value="uc3c"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="service" id="common.services.usb.class.msc.host.ctrl_access" caption="USB Host MSC (Single Class support)">
@@ -63,6 +65,7 @@
 		<device-support value="uc3c"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="service" id="common.services.usb.class.msc.host" caption="USB Host MSC (Single Class support)">
@@ -84,6 +87,7 @@
 		<device-support value="uc3c"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 
