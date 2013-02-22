@@ -47,7 +47,7 @@ static void config_rtc_count(void)
 {
 
 //! [set_conf]
-	struct rtc_count_conf config;
+	struct rtc_count_config config;
 //! [set_conf]
 
 //! [get_default]

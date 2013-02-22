@@ -249,7 +249,7 @@
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
-#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
+#  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
 #ifdef __cplusplus
@@ -353,7 +353,7 @@ enum rtc_count_events {
  * be initialized using the \ref rtc_count_get_config_defaults() before any
  * user configurations are set.
  */
-struct rtc_count_conf {
+struct rtc_count_config {
 	/** Select the operation mode of the RTC.*/
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only
@@ -408,7 +408,7 @@ static inline void _rtc_count_wait_for_sync(void)
  *  values.
  */
 static inline void rtc_count_get_config_defaults(
-		struct rtc_count_conf *const config)
+		struct rtc_count_config *const config)
 {
 	/* Sanity check argument */
 	Assert(config);
@@ -462,28 +462,35 @@ static inline void rtc_count_disable(void)
 	rtc_module->MODE0.CTRL.reg &= ~RTC_MODE0_CTRL_ENABLE;
 }
 
-enum status_code rtc_count_init(const struct rtc_count_conf *const config);
+enum status_code rtc_count_init(
+		const struct rtc_count_config *const config);
 
-enum status_code rtc_count_frequency_correction(int8_t value);
+enum status_code rtc_count_frequency_correction(
+		int8_t value);
 
 /** @} */
 
 /** \name Count and compare value management
  * @{
  */
-enum status_code rtc_count_set_count(uint32_t count_value);
+enum status_code rtc_count_set_count(
+		const uint32_t count_value);
 
 uint32_t rtc_count_get_count(void);
 
-enum status_code rtc_count_set_compare(uint32_t comp_value,
-		enum rtc_count_compare comp_index);
+enum status_code rtc_count_set_compare(
+		const uint32_t comp_value,
+		const enum rtc_count_compare comp_index);
 
-enum status_code rtc_count_get_compare(uint32_t *const comp_value,
-		enum rtc_count_compare comp_index);
+enum status_code rtc_count_get_compare(
+		uint32_t *const comp_value,
+		const enum rtc_count_compare comp_index);
 
-enum status_code rtc_count_set_period(uint16_t period_value);
+enum status_code rtc_count_set_period(
+		uint16_t period_value);
 
-enum status_code rtc_count_get_period(uint16_t *const period_value);
+enum status_code rtc_count_get_period(
+		uint16_t *const period_value);
 
 /** @} */
 
@@ -521,10 +528,11 @@ static inline void rtc_count_clear_overflow(void)
 	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_OVF;
 }
 
-bool rtc_count_is_compare_match(enum rtc_count_compare comp_index);
+bool rtc_count_is_compare_match(
+		const enum rtc_count_compare comp_index);
 
 enum status_code rtc_count_clear_compare_match(
-		enum rtc_count_compare comp_index);
+		const enum rtc_count_compare comp_index);
 
 /** @} */
 
@@ -540,7 +548,8 @@ enum status_code rtc_count_clear_compare_match(
  *
  * \param[in] events Bitmask to the events to enable. See \ref rtc_count_events .
  */
-static inline void rtc_count_enable_events(uint16_t events)
+static inline void rtc_count_enable_events(
+		const uint16_t events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -556,7 +565,8 @@ static inline void rtc_count_enable_events(uint16_t events)
  *
  * \param[in] events Bitmask to the events to disable. See \ref rtc_count_events
  */
-static inline void rtc_count_disable_events(uint16_t events)
+static inline void rtc_count_disable_events(
+		const uint16_t events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;

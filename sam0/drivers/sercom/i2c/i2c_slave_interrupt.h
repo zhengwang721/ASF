@@ -59,7 +59,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_slave_group_async I2C Slave Asynchronous
+ * \addtogroup sam0_i2c_slave_group I2C Slave Asynchronous
  * @{
  *
  * This is an overview of the API for the asynchronous I2C slave

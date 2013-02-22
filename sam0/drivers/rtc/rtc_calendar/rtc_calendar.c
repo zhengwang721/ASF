@@ -56,6 +56,7 @@ struct _rtc_device {
 
 static struct _rtc_device _rtc_dev;
 
+
 /**
  * \internal Reset the RTC module.
  */
@@ -115,7 +116,7 @@ static uint32_t _rtc_calendar_time_to_register_value(
  * \internal Convert register_value to time structure.
  */
 static void _rtc_calendar_register_value_to_time(
-		uint32_t register_value,
+		const uint32_t register_value,
 		struct rtc_calendar_time *const time)
 {
 	/* Set year plus value of initial year. */
@@ -165,7 +166,7 @@ static void _rtc_calendar_register_value_to_time(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) where given.
  */
 static void _rtc_calendar_set_config(
-		const struct rtc_calendar_conf *const config)
+		const struct rtc_calendar_config *const config)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -219,7 +220,8 @@ static void _rtc_calendar_set_config(
  * \retval STATUS_OK If the initialization was run successfully.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
  */
-void rtc_calendar_init(const struct rtc_calendar_conf *const config)
+void rtc_calendar_init(
+		const struct rtc_calendar_config *const config)
 {
 	/* Sanity check. */
 	Assert(config);
@@ -350,7 +352,8 @@ void rtc_calendar_set_time(
  *
  * \param[out] time Pointer to value that will be filled with current time.
  */
-void rtc_calendar_get_time(struct rtc_calendar_time *const time)
+void rtc_calendar_get_time(
+		struct rtc_calendar_time *const time)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -386,7 +389,7 @@ void rtc_calendar_get_time(struct rtc_calendar_time *const time)
  */
 enum status_code rtc_calendar_set_alarm(
 		const struct rtc_calendar_alarm *const alarm,
-		enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -424,8 +427,9 @@ enum status_code rtc_calendar_set_alarm(
  * \retval STATUS_OK If alarm was read correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-enum status_code rtc_calendar_get_alarm(struct rtc_calendar_alarm *const alarm,
-		enum rtc_calendar_alarm_num alarm_index)
+enum status_code rtc_calendar_get_alarm(
+		struct rtc_calendar_alarm *const alarm,
+		const enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -467,7 +471,8 @@ enum status_code rtc_calendar_get_alarm(struct rtc_calendar_alarm *const alarm,
  * \retval STATUS_OK If calibration was done correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-enum status_code rtc_calendar_frequency_correction(int8_t value)
+enum status_code rtc_calendar_frequency_correction(
+		int8_t value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;

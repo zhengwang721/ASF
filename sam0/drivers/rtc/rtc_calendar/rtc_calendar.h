@@ -253,7 +253,7 @@
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
-#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
+#  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
 #ifdef __cplusplus
@@ -395,7 +395,7 @@ struct rtc_calendar_alarm {
  * be initialized using the \ref rtc_calendar_get_config_defaults() before any
  * user configurations are set.
  */
-struct rtc_calendar_conf {
+struct rtc_calendar_config {
 	/** If \c true, clears the clock on alarm match. */
 	bool clear_on_match;
 	/** If \c true, the digital counter registers will be continuously updated
@@ -468,7 +468,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  values.
  */
 static inline void rtc_calendar_get_config_defaults(
-		struct rtc_calendar_conf *const config)
+		struct rtc_calendar_config *const config)
 {
 	/* Sanity check argument */
 	Assert(config);
@@ -525,11 +525,13 @@ static inline void rtc_calendar_disable(void)
 	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;
 }
 
-void rtc_calendar_init(const struct rtc_calendar_conf *const config);
+void rtc_calendar_init(
+		const struct rtc_calendar_config *const config);
 
 void rtc_calendar_swap_time_mode(void);
 
-enum status_code rtc_calendar_frequency_correction(int8_t value);
+enum status_code rtc_calendar_frequency_correction(
+		const int8_t value);
 
 /** @} */
 
@@ -537,17 +539,19 @@ enum status_code rtc_calendar_frequency_correction(int8_t value);
  * @{
  */
 
-void rtc_calendar_set_time(const struct rtc_calendar_time *const time);
+void rtc_calendar_set_time(
+		const struct rtc_calendar_time *const time);
 
-void rtc_calendar_get_time(struct rtc_calendar_time *const time);
+void rtc_calendar_get_time(
+		struct rtc_calendar_time *const time);
 
 enum status_code rtc_calendar_set_alarm(
 		const struct rtc_calendar_alarm *const alarm,
-	        enum rtc_calendar_alarm_num alarm_index);
+		const enum rtc_calendar_alarm_num alarm_index);
 
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_calendar_alarm *const alarm,
-		enum rtc_calendar_alarm_num alarm_index);
+		const enum rtc_calendar_alarm_num alarm_index);
 
 /** @} */
 
@@ -593,7 +597,7 @@ static inline void rtc_calendar_clear_overflow(void)
  * \param[in] alarm_index Index of the alarm to check.
  */
 static inline bool rtc_calendar_is_alarm_match(
-		enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -620,7 +624,7 @@ static inline bool rtc_calendar_is_alarm_match(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 static inline enum status_code rtc_calendar_clear_alarm_match(
-		enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm_num alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -651,7 +655,8 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
  *
  * \param[in] events Bitmask containing events to enable.
  */
-static inline void rtc_calendar_enable_events(uint16_t events)
+static inline void rtc_calendar_enable_events(
+		const uint16_t events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -667,7 +672,8 @@ static inline void rtc_calendar_enable_events(uint16_t events)
  *
  * \param[in] events Bitmask to the events to disable.
  */
-static inline void rtc_calendar_disable_events(uint16_t events)
+static inline void rtc_calendar_disable_events(
+		const uint16_t events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;

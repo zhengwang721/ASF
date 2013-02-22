@@ -54,6 +54,7 @@ struct _rtc_device {
 
 static struct _rtc_device _rtc_dev;
 
+
 /**
  * \internal Reset the RTC module.
  */
@@ -85,7 +86,7 @@ static inline void _rtc_count_reset(void)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
  */
 static enum status_code _rtc_count_set_config(
-		const struct rtc_count_conf *const config)
+		const struct rtc_count_config *const config)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -155,7 +156,8 @@ static enum status_code _rtc_count_set_config(
  * \retval STATUS_OK If the initialization was run stressfully.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were given.
  */
-enum status_code rtc_count_init(const struct rtc_count_conf *const config)
+enum status_code rtc_count_init(
+		const struct rtc_count_config *const config)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -200,7 +202,8 @@ enum status_code rtc_count_init(const struct rtc_count_conf *const config)
  * \retval STATUS_OK If everything was executed correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-enum status_code rtc_count_set_count(uint32_t count_value)
+enum status_code rtc_count_set_count(
+		const uint32_t count_value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -301,8 +304,9 @@ uint32_t rtc_count_get_count(void)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
  */
-enum status_code rtc_count_set_compare(uint32_t comp_value,
-		enum rtc_count_compare comp_index)
+enum status_code rtc_count_set_compare(
+		const uint32_t comp_value,
+		const enum rtc_count_compare comp_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -366,8 +370,9 @@ enum status_code rtc_count_set_compare(uint32_t comp_value,
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
  */
-enum status_code rtc_count_get_compare(uint32_t *const comp_value,
-		enum rtc_count_compare comp_index)
+enum status_code rtc_count_get_compare(
+		uint32_t *const comp_value,
+		const enum rtc_count_compare comp_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -417,7 +422,8 @@ enum status_code rtc_count_get_compare(uint32_t *const comp_value,
  * \retval STATUS_OK If the period value was read correctly.
  * \retval STATUS_ERR_UNSUPPORTED_DEV If incorrect mode was set.
  */
-enum status_code rtc_count_get_period(uint16_t *const period_value)
+enum status_code rtc_count_get_period(
+		uint16_t *const period_value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -446,7 +452,8 @@ enum status_code rtc_count_get_period(uint16_t *const period_value)
  * \retval STATUS_OK If the period was set correctly.
  * \retval STATUS_ERR_UNSUPPORTED_DEV If module is not operated in 16 bit mode.
  */
-enum status_code rtc_count_set_period(uint16_t period_value)
+enum status_code rtc_count_set_period(
+		const uint16_t period_value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -475,7 +482,8 @@ enum status_code rtc_count_set_period(uint16_t period_value)
  *
  * \param[in] comp_index Index of compare to check current flag.
  */
-bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
+bool rtc_count_is_compare_match(
+		const enum rtc_count_compare comp_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -522,7 +530,8 @@ bool rtc_count_is_compare_match(enum rtc_count_compare comp_index)
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_ERR_BAD_FORMAT If the module was not initialized in a mode.
  */
-enum status_code rtc_count_clear_compare_match(enum rtc_count_compare comp_index)
+enum status_code rtc_count_clear_compare_match(
+		const enum rtc_count_compare comp_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -574,7 +583,8 @@ enum status_code rtc_count_clear_compare_match(enum rtc_count_compare comp_index
  * \retval STATUS_OK If calibration was executed correctly.
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
-enum status_code rtc_count_frequency_correction(int8_t value)
+enum status_code rtc_count_frequency_correction(
+		int8_t value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
