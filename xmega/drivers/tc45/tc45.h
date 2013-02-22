@@ -54,29 +54,26 @@ extern "C" {
  */
 #if defined(__IAR_SYSTEMS_ICC__)
 /* Fault A Halt Action Selection */
-typedef enum FAULT_HALTA_enum
-{
-	FAULT_HALTA_DISABLE_gc = (0x00<<0),  /* Halt Action Disabled */
-	FAULT_HALTA_HW_gc = (0x01<<0),       /* Hardware Halt Action */
-	FAULT_HALTA_SW_gc = (0x02<<0),       /* Software Halt Action */
+typedef enum FAULT_HALTA_enum {
+	FAULT_HALTA_DISABLE_gc = (0x00 << 5),  /* Halt Action Disabled */
+	FAULT_HALTA_HW_gc = (0x01 << 5),       /* Hardware Halt Action */
+	FAULT_HALTA_SW_gc = (0x02 << 5),       /* Software Halt Action */
 } FAULT_HALTA_t;
 
-
 /* Fault B Halt Action Selection */
-typedef enum FAULT_HALTB_enum
-{
-	FAULT_HALTB_DISABLE_gc = (0x00<<0),  /* Halt Action Disabled */
-	FAULT_HALTB_HW_gc = (0x01<<0),       /* Hardware Halt Action */
-	FAULT_HALTB_SW_gc = (0x02<<0),       /* Software Halt Action */
+typedef enum FAULT_HALTB_enum {
+	FAULT_HALTB_DISABLE_gc = (0x00 << 5),  /* Halt Action Disabled */
+	FAULT_HALTB_HW_gc = (0x01 << 5),       /* Hardware Halt Action */
+	FAULT_HALTB_SW_gc = (0x02 << 5),       /* Software Halt Action */
 } FAULT_HALTB_t;
 
 /* Channel index Command */
-typedef enum FAULT_IDXCMD_enum
-{
-	FAULT_IDXCMD_DISABLE_gc = (0x00<<0),  /* Command Disabled */
-	FAULT_IDXCMD_SET_gc = (0x01<<0),      /* Force Cycle B in Next Cycle */
-	FAULT_IDXCMD_CLEAR_gc = (0x02<<0),    /* Force Cycle A in Next Cycle */
-	FAULT_IDXCMD_HOLD_gc = (0x03<<0),     /* Hold Current Cycle Index in Next Cycle  */
+typedef enum FAULT_IDXCMD_enum {
+	FAULT_IDXCMD_DISABLE_gc = (0x00 << 3), /* Command Disabled */
+	FAULT_IDXCMD_SET_gc = (0x01 << 3),     /* Force Cycle B in Next Cycle */
+	FAULT_IDXCMD_CLEAR_gc = (0x02 << 3),   /* Force Cycle A in Next Cycle */
+	FAULT_IDXCMD_HOLD_gc = (0x03 << 3),    /* Hold Current Cycle Index in
+	                                        * Next Cycle  */
 } FAULT_IDXCMD_t;
 #endif
 
@@ -117,7 +114,7 @@ enum tc45_cc_channel_t {
 	TC45_CCD = 4,
 };
 
-/* !  Timer Counter Capture Compare Channel index */
+/* !  Timer Counter Capture Compare Channel Mode index */
 enum tc45_cc_channel_mask_enable_t {
 	/* ! Channel A Enable mask */
 	TC45_CCACOMP = TC45_CCAMODE_COMP_gc,
@@ -227,7 +224,7 @@ enum wex_otmx_mode_t {
 	WEX_OTMX_4 = WEX_OTMX_FOURTH_gc,
 };
 
-/* ! TC interrupt levels */
+/* ! TC45 interrupt levels */
 enum TC45_INT_LEVEL_t {
 	TC45_INT_LVL_OFF = 0x00,
 	TC45_INT_LVL_LO = 0x01,
@@ -235,126 +232,126 @@ enum TC45_INT_LEVEL_t {
 	TC45_INT_LVL_HI = 0x03,
 };
 
-/* ! Macro to check if type of passed TC is TC5_t */
+/* ! Macro to check if the type of passed TC is TC5_t */
 #define tc45_is_TC5(void) ((uint16_t)tc & 0x40 ? true : false)
-/* ! Macro to check if type of passed TC is TC4_t */
+/* ! Macro to check if the type of passed TC is TC4_t */
 #define tc45_is_TC4(void) ((uint16_t)tc & 0x40 ? false : true)
 
 /**
- * \brief Enable TC
+ * \brief Enable TC45
  *
- * Enables the TC.
+ * Enables the TC45.
  *
- * \param tc Pointer to TC module
+ * \param tc Pointer to TC45 module
  *
  * \note
- * unmask TC clock (sysclk), but does not configure the TC clock source.
+ * unmask TC45 clock (sysclk), but does not configure the TC45 clock source.
  */
 void tc45_enable(volatile void *tc);
 
 /**
- * \brief Disable TC
+ * \brief Disable TC45
  *
- * Disables the TC.
+ * Disables the TC45.
  *
- * \param tc Pointer to TC module
+ * \param tc Pointer to TC45 module
  *
  * \note
- * mask TC clock (sysclk).
+ * mask TC45 clock (sysclk).
  */
 void tc45_disable(volatile void *tc);
 
 /**
  * \ingroup tc45_group
- * \defgroup tc45_interrupt_group Timer Counter (TC) interrupt management
- * This group provides functions to configure TC module interrupts
+ * \defgroup tc45_interrupt_group Timer Counter (TC45) interrupt management
+ * This group provides functions to configure TC45 module interrupts
  *
  *
  * @{
  */
 
 /**
- * \brief Set TC overflow interrupt callback function
+ * \brief Set TC45 overflow interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_overflow_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Set TC error interrupt callback function
+ * \brief Set TC45 error interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_error_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Set TC Capture Compare Channel A interrupt callback function
+ * \brief Set TC45 Capture Compare Channel A interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_cca_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Set TC Capture Compare Channel B interrupt callback function
+ * \brief Set TC45 Capture Compare Channel B interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_ccb_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Set TC Capture Compare Channel C interrupt callback function
+ * \brief Set TC45 Capture Compare Channel C interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_ccc_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Set TC Capture Compare Channel D interrupt callback function
+ * \brief Set TC45 Capture Compare Channel D interrupt callback function
  *
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
- * \param tc Pointer to the Timer Counter (TC) base address
+ * \param tc Pointer to the Timer Counter (TC45) base address
  * \param callback Reference to a callback function
  */
 void tc45_set_ccd_interrupt_callback(volatile void *tc,
 		tc45_callback_t callback);
 
 /**
- * \brief Configures TC overflow Interrupt level
+ * \brief Configures TC45 overflow Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level Overflow interrupt level
  * \note  Configures OVFINTLVL in INTCTRLA
  */
@@ -375,9 +372,9 @@ static inline void tc45_set_overflow_interrupt_level(volatile void *tc,
 }
 
 /**
- * \brief Configures TC error Interrupt level
+ * \brief Configures TC45 error Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level Error interrupt level
  * \note  Configures ERRINTLVL in INTCTRLA
  */
@@ -398,9 +395,9 @@ static inline void tc45_set_error_interrupt_level(volatile void *tc,
 }
 
 /**
- * \brief Configures TC Capture Compare A Interrupt level
+ * \brief Configures TC45 Capture Compare A Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level CCA interrupt level
  * \note Configures CCAINTLVL in INTCTRLB
  */
@@ -421,9 +418,9 @@ static inline void tc45_set_cca_interrupt_level(volatile void *tc,
 }
 
 /**
- * \brief Configures TC Capture Compare B Interrupt level
+ * \brief Configures TC45 Capture Compare B Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level CCB interrupt level
  * \note Configures CCBINTLVL in INTCTRLB
  */
@@ -444,9 +441,9 @@ static inline void tc45_set_ccb_interrupt_level(volatile void *tc,
 }
 
 /**
- * \brief Configures TC Capture Compare C Interrupt level
+ * \brief Configures TC45 Capture Compare C Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level CCC interrupt level
  * \note Configures CCCINTLVL in INTCTRLB
  */
@@ -459,9 +456,9 @@ static inline void tc45_set_ccc_interrupt_level(volatile void *tc,
 }
 
 /**
- * \brief Configures TC Capture Compare D Interrupt level
+ * \brief Configures TC45 Capture Compare D Interrupt level
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param level CCD interrupt level
  * \note Configures CCDINTLVL in INTCTRLB
  */
@@ -478,8 +475,9 @@ static inline void tc45_set_ccd_interrupt_level(volatile void *tc,
 /**
  * \brief Configures Synchronization on prescaler
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param
+ * \note Configures SYNCHEN in CTRLA
  */
 static inline void tc45_write_synchen(volatile void *tc)
 {
@@ -495,8 +493,9 @@ static inline void tc45_write_synchen(volatile void *tc)
 /**
  * \brief Set Evstart bit
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note
+ * \note Configures EVSTART in CTRLA
  */
 static inline void tc45_set_evstart(volatile void *tc)
 {
@@ -510,8 +509,9 @@ static inline void tc45_set_evstart(volatile void *tc)
 /**
  * \brief Set Upstop bit
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note
+ * \note Configures UPSTOP in CTRLA
  */
 static inline void tc45_set_up3(volatile void *tc)
 {
@@ -525,8 +525,9 @@ static inline void tc45_set_up3(volatile void *tc)
 /**
  * \brief Set Stop bit
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note
+ * \note Configures STOP in CTRLGSET
  */
 static inline void tc45_set_stop(volatile void *tc)
 {
@@ -540,7 +541,7 @@ static inline void tc45_set_stop(volatile void *tc)
 /**
  * \brief Configure Timer Clock Source
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param TC45_CLKSEL_enum Clock source selection
  * \note Configuring the clock starts alos the timer
  */
@@ -561,7 +562,8 @@ static inline void tc45_write_clock_source(volatile void *tc,
 /**
  * \brief Read Timer Clock Source
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return TC45_CLKSEL_enum Clock source selection
  */
 static inline TC45_CLKSEL_t tc45_read_clock_source(volatile void *tc)
@@ -571,22 +573,23 @@ static inline TC45_CLKSEL_t tc45_read_clock_source(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (TC45_CLKSEL_t)(((TC5_t *)tc)->CTRLA & TC5_CLKSEL_gm);
 	}
+
 	Assert(false);
 	return TC45_CLKSEL_OFF_gc;
 }
 
 /**
- * \brief Select clock for a specified TC and resolution.
+ * \brief Select clock for a specified TC45 and resolution.
  *
  * This function configures the clock selection, as prescaled CLKper, for a
- * specified TC that gives a resolution at least as high as the one specified.
- * The resolution of a TC is synonymous with its clock frequency.
+ * specified TC45 that gives a resolution at least as high as the one specified.
+ * The resolution of a TC45 is synonymous with its clock frequency.
  *
  * \note It is also possible to clock TCs with event channels. This is not
  * handled by this implementation.
  *
- * \param tc   ID of TC to get clock selection for.
- * \param resolution Desired resolution for the TC in Hz.
+ * \param tc   ID of TC45 to get clock selection for.
+ * \param resolution Desired resolution for the TC45 in Hz.
  */
 static inline void tc45_set_resolution(volatile void *tc, uint32_t resolution)
 {
@@ -610,17 +613,17 @@ static inline void tc45_set_resolution(volatile void *tc, uint32_t resolution)
 }
 
 /**
- * \brief Get real resolution for a specified TC.
+ * \brief Get real resolution for a specified TC45.
  *
  * This function returns the resolution which the specified clock selection
- * of TC will result in. The resolution of a TC is synonymous with its clock
+ * of TC45 will result in. The resolution of a TC45 is synonymous with its clock
  * frequency.
  *
  * \note This function does not handle event channel clock selections.
  *
- * \param tc Pointer of TC module to get resolution for.
+ * \param tc Pointer of TC45 module to get resolution for.
  *
- * \return The resolution of \a tc.
+ * \return The resolution of a tc.
  */
 static inline uint32_t tc45_get_resolution(volatile void *tc)
 {
@@ -667,8 +670,8 @@ static inline uint32_t tc45_get_resolution(volatile void *tc)
 /**
  * \brief Configure Timer Direction
  *
- * \param tc Pointer to TC module.
- * \param dir Timer direction :
+ * \param tc Pointer to TC45 module.
+ * \param dir Timer direction
  */
 static inline void tc45_set_direction(volatile void *tc, enum tc45_dir_t dir)
 {
@@ -688,10 +691,10 @@ static inline void tc45_set_direction(volatile void *tc, enum tc45_dir_t dir)
 }
 
 /**
- * \brief Write the Counter value of the Timer
+ * \brief Writes the Counter value of the Timer
  *
- * \param tc Pointer to TC module.
- * \param cnt_value Counter value :
+ * \param tc Pointer to TC45 module.
+ * \param cnt_value Counter value
  */
 static inline void tc45_write_count(volatile void *tc, uint16_t cnt_value)
 {
@@ -705,8 +708,10 @@ static inline void tc45_write_count(volatile void *tc, uint16_t cnt_value)
 /**
  * \brief Reads the Counter value of the Timer
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note Output the Counter value CNT
+ *
+ * \return The counter (CNT) value of a tc.
  */
 static inline uint16_t tc45_read_count(volatile void *tc)
 {
@@ -715,6 +720,7 @@ static inline uint16_t tc45_read_count(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->CNT);
 	}
+
 	Assert(false);
 	return 0;
 }
@@ -722,7 +728,7 @@ static inline uint16_t tc45_read_count(volatile void *tc)
 /**
  * \brief Writes the Period value of the Timer
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param per_value Period value : PER
  */
 static inline void tc45_write_period(volatile void *tc, uint16_t per_value)
@@ -737,7 +743,8 @@ static inline void tc45_write_period(volatile void *tc, uint16_t per_value)
 /**
  * \brief Reads the Period value of the Timer
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return Period value : PER
  */
 static inline uint16_t tc45_read_period(volatile void *tc)
@@ -747,6 +754,7 @@ static inline uint16_t tc45_read_period(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->PER);
 	}
+
 	Assert(false);
 	return 0;
 }
@@ -754,7 +762,7 @@ static inline uint16_t tc45_read_period(volatile void *tc)
 /**
  * \brief Writes the Period Buffer value of the Timer
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param per_buf Period Buffer value : PERH/PERL
  */
 static inline void tc45_write_period_buffer(volatile void *tc, uint16_t per_buf)
@@ -769,7 +777,8 @@ static inline void tc45_write_period_buffer(volatile void *tc, uint16_t per_buf)
 /**
  * \brief Reads the Period Buffer value of the Timer
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return Period Buffer value : PERH/PERL
  */
 static inline uint16_t tc45_read_period_buffer(volatile void *tc)
@@ -779,6 +788,7 @@ static inline uint16_t tc45_read_period_buffer(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->PERBUF);
 	}
+
 	Assert(false);
 	return 0;
 }
@@ -786,7 +796,8 @@ static inline uint16_t tc45_read_period_buffer(volatile void *tc)
 /**
  * \brief Tests if the Period Buffer is valid
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return  period Buffer is valid or not:PERBV
  */
 static inline bool tc45_period_buffer_is_valid(volatile void *tc)
@@ -796,6 +807,7 @@ static inline bool tc45_period_buffer_is_valid(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->CTRLHCLR & TC5_PERBV_bm);
 	}
+
 	Assert(false);
 	return false;
 }
@@ -803,7 +815,7 @@ static inline bool tc45_period_buffer_is_valid(volatile void *tc)
 /**
  * \brief Enables delay (used for 32bit timer mode)
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note  enables Delay mode
  */
 static inline void tc45_enable_delay(volatile void *tc)
@@ -820,7 +832,7 @@ static inline void tc45_enable_delay(volatile void *tc)
 /**
  * \brief Disables delay
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note  disables Delay mode
  */
 static inline void tc45_disable_delay(volatile void *tc)
@@ -835,7 +847,8 @@ static inline void tc45_disable_delay(volatile void *tc)
 /**
  * \brief Tests if the Overflow flag is set
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return  overflow has occured or not : OVFIF
  */
 static inline bool tc45_is_overflow(volatile void *tc)
@@ -845,6 +858,7 @@ static inline bool tc45_is_overflow(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->INTFLAGS & TC5_OVFIF_bm);
 	}
+
 	Assert(false);
 	return false;
 }
@@ -852,7 +866,7 @@ static inline bool tc45_is_overflow(volatile void *tc)
 /**
  * \brief Clears the Overflow flag
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note  OVFIF is cleared
  */
 static inline void tc45_clear_overflow(volatile void *tc)
@@ -867,7 +881,8 @@ static inline void tc45_clear_overflow(volatile void *tc)
 /**
  * \brief Tests if the Error flag is set
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ *
  * \return  Error has occured or not : ERRIF
  */
 static inline bool tc45_read_error(volatile void *tc)
@@ -877,6 +892,7 @@ static inline bool tc45_read_error(volatile void *tc)
 	} else if (tc45_is_TC5(void *tc)) {
 		return (((TC5_t *)tc)->INTFLAGS & TC5_ERRIF_bm);
 	}
+
 	Assert(false);
 	return false;
 }
@@ -884,7 +900,7 @@ static inline bool tc45_read_error(volatile void *tc)
 /**
  * \brief Clears the Error flag
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \note  ERRIF is cleared
  */
 static inline void tc45_clear_error(volatile void *tc)
@@ -897,10 +913,10 @@ static inline void tc45_clear_error(volatile void *tc)
 }
 
 /**
- * \brief Restart the Timer
+ * \brief Restarts the Timer
  *
- * \param tc Pointer to TC module.
- * \note  CMD[3] in CTRLFSET is set to 1 and CMD[2] in CTRLFCLR is set
+ * \param tc Pointer to TC45 module.
+ * \note CMD[3:2] in CTRLGSET are set to 10
  */
 static inline void tc45_restart(volatile void *tc)
 {
@@ -914,8 +930,8 @@ static inline void tc45_restart(volatile void *tc)
 /**
  * \brief Reset the Timer
  *
- * \param tc Pointer to TC module.
- * \note  CMD[3:2] in CTRLFSET are set to 1
+ * \param tc Pointer to TC45 module.
+ * \note  CMD[3:2] in CTRLGSET are set to 11
  */
 static inline void tc45_reset(volatile void *tc)
 {
@@ -927,10 +943,10 @@ static inline void tc45_reset(volatile void *tc)
 }
 
 /**
- * \brief Update the Timer
+ * \brief Updates the Timer
  *
- * \param tc Pointer to TC module.
- * \note  CMD[2] in CTRLFSET is set to 1 and CMD[3] in CTRLFCLR is set
+ * \param tc Pointer to TC45 module.
+ * \note  CMD[3:2] in CTRLGSET are set to 01
  */
 static inline void tc45_update(volatile void *tc)
 {
@@ -944,8 +960,8 @@ static inline void tc45_update(volatile void *tc)
 /**
  * \brief Configures the Timer in Byte mode
  *
- * \param tc Pointer to TC module.
- * \note Configures  BYTEM in CTRLE
+ * \param tc Pointer to TC45 module.
+ * \note Configures  BYTEM in CTRLB
  */
 static inline void tc45_set_8bits_mode(volatile void *tc)
 {
@@ -967,7 +983,8 @@ static inline void tc45_set_8bits_mode(volatile void *tc)
 /**
  * \brief Locks the Update of the Buffered registers
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
+ * \note  Configures LUPD in CTRLGSET
  *
  *  */
 static inline void tc45_lock_update_buffers(volatile void *tc)
@@ -982,8 +999,8 @@ static inline void tc45_lock_update_buffers(volatile void *tc)
 /**
  * \brief Unlocks the Update of the Buffered registers
  *
- * \param tc Pointer to TC module.
- * \note  Configures LUPD in CTRLFCLR
+ * \param tc Pointer to TC45 module.
+ * \note  Configures LUPD in CTRLGCLR
  */
 static inline void tc45_unlock_update_buffers(volatile void *tc)
 {
@@ -997,8 +1014,8 @@ static inline void tc45_unlock_update_buffers(volatile void *tc)
 /**
  * \brief Change the polarity of outputs
  *
- * \param tc Pointer to TC module.
- * \note  Configures LUPD in CTRLFCLR
+ * \param tc Pointer to TC45 module.
+ * \note  Configures POL bits in CTRLC
  */
 static inline void tc45_pol(volatile void *tc)
 {
@@ -1014,7 +1031,7 @@ static inline void tc45_pol(volatile void *tc)
 /**
  * \brief Enables Compare channel
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param enablemask CC channel
  */
 static inline void tc45_enable_cc_channels(volatile void *tc,
@@ -1035,7 +1052,7 @@ static inline void tc45_enable_cc_channels(volatile void *tc,
 /**
  * \brief Disables Compare/Capture channel
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param disablemask CC channel
  */
 static inline void tc45_disable_cc_channels(volatile void *tc,
@@ -1054,7 +1071,7 @@ static inline void tc45_disable_cc_channels(volatile void *tc,
 /**
  * \brief Enables Input capture mode
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param eventsource Source for the capture
  * \param eventaction Event action capture type
  */
@@ -1063,19 +1080,22 @@ static inline void tc45_set_input_capture(volatile void *tc,
 {
 	if (tc45_is_TC4(void *tc)) {
 		((TC4_t *)tc)->CTRLD &= ~(TC4_EVSEL_gm | TC4_EVACT_gm);
-		((TC4_t *)tc)->CTRLD |= ((uint8_t)eventsource | (uint8_t)eventaction);
+		((TC4_t *)tc)->CTRLD
+			|= ((uint8_t)eventsource | (uint8_t)eventaction);
 	} else if (tc45_is_TC5(void *tc)) {
 		((TC5_t *)tc)->CTRLD &= ~(TC5_EVSEL_gm | TC5_EVACT_gm);
-		((TC5_t *)tc)->CTRLD |= ((uint8_t)eventsource | (uint8_t)eventaction);
+		((TC5_t *)tc)->CTRLD
+			|= ((uint8_t)eventsource | (uint8_t)eventaction);
 	}
 }
 
 /**
  * \brief Reads the Capture value
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index Channel x
- * \return  Read value of CCx
+ *
+ * \return  Value of CCx
  */
 static inline uint16_t tc45_read_cc(volatile void *tc,
 		enum tc45_cc_channel_t channel_index)
@@ -1113,7 +1133,7 @@ static inline uint16_t tc45_read_cc(volatile void *tc,
 /**
  * \brief Writes the CC value
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
  * \param value Counter value
  */
@@ -1157,7 +1177,7 @@ static inline void tc45_write_cc(volatile void *tc,
 /**
  * \brief Writes the Capture/Compare Buffer value
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
  * \param buffer_value Counter Buffer value
  */
@@ -1201,8 +1221,9 @@ static inline void tc45_write_cc_buffer(volatile void *tc,
 /**
  * \brief Reads the Capture/Compare Buffer value
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
+ *
  * \return  CCx Buffer value
  */
 static inline uint16_t tc45_read_cc_buffer(volatile void *tc,
@@ -1239,10 +1260,11 @@ static inline uint16_t tc45_read_cc_buffer(volatile void *tc,
 }
 
 /**
- * \brief Reports is Capture/Compare Buffer is valid
+ * \brief Reports if Capture/Compare Buffer is valid
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
+ *
  * \return  CCx Buffer is valid or not
  */
 static inline bool tc45_cc_buffer_is_valid(volatile void *tc,
@@ -1283,8 +1305,9 @@ static inline bool tc45_cc_buffer_is_valid(volatile void *tc,
 /**
  * \brief Reports if Capture/Compare interrupt has occured
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
+ *
  * \return  CCx Interrupt or not
  */
 static inline bool tc45_is_cc_interrupt(volatile void *tc,
@@ -1325,7 +1348,7 @@ static inline bool tc45_is_cc_interrupt(volatile void *tc,
 /**
  * \brief Clears Capture/Compare interrupt
  *
- * \param tc Pointer to TC module.
+ * \param tc Pointer to TC45 module.
  * \param channel_index CC Channel
  */
 static inline void tc45_clear_cc_interrupt(volatile void *tc,
@@ -1368,8 +1391,8 @@ static inline void tc45_clear_cc_interrupt(volatile void *tc,
 /**
  * \brief Configures TC in the specified Waveform generator mode
  *
- * \param tc Pointer to TC module.
- * \param wgm : waveform generator
+ * \param tc Pointer to TC45 module.
+ * \param wgm : waveform generator mode
  */
 static inline void tc45_set_wgm(volatile void *tc, enum tc45_wg_mode_t wgm)
 {
@@ -1387,7 +1410,8 @@ static inline void tc45_set_wgm(volatile void *tc, enum tc45_wg_mode_t wgm)
 *******************************************************/
 
 /**
- * \brief FAULT module : configures the RAMP2 mode of Fault *
+ * \brief FAULT module : configures the RAMP2 mode of Fault
+ *
  * \param FAULT Pointer to FAULT module
  */
 
@@ -1408,7 +1432,7 @@ static inline void tc45_fault_set_qualA_mode(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : configures the QUAL mode of fault B
+ * \brief FAULT module : configures the QUAL mode of Fault B
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1419,7 +1443,7 @@ static inline void tc45_fault_set_qualB_mode(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : configures the BLANK mode of fault A
+ * \brief FAULT module : configures the BLANK mode of Fault A
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1430,7 +1454,7 @@ static inline void tc45_fault_set_blankA_mode(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module: configures the BLANK mode of fault B
+ * \brief FAULT module: configures the BLANK mode of Fault B
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1443,7 +1467,7 @@ static inline void tc45_fault_set_blankB_mode(FAULT_t *FAULT)
 /**
  * \brief WEX extension : configures the blanking time
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  * \param value :  blanking value
  */
 static inline void tc45_fault_set_blank_time(WEX_t *WEX, int16_t value)
@@ -1451,7 +1475,8 @@ static inline void tc45_fault_set_blank_time(WEX_t *WEX, int16_t value)
 	((WEX_t *)WEX)->DTLS = value; /* blanking time*/
 }
 
-/* \brief FAULT module : configures the Fault A input
+/**
+ * \brief FAULT module : configures the Fault A input
  *
  * \param FAULT Pointer to FAULT module
  * \ param Fault source mode : Event channel N,N+1...
@@ -1570,7 +1595,7 @@ static inline void tc45_fault_set_keepB_mode(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : cSet the Soft mode of Fault A
+ * \brief FAULT module : Set the Soft mode of Fault A
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1617,7 +1642,7 @@ static inline void tc45_fault_set_captB_mode(FAULT_t *FAULT)
  * \brief FAULT module : configures the Halt mode of Fault A
  *
  * \param FAULT Pointer to FAULT module
- * \param Halt mode
+ * \param fault Halt mode
  */
 
 static inline void tc45_fault_set_haltA_mode(FAULT_t *FAULT,
@@ -1631,7 +1656,7 @@ static inline void tc45_fault_set_haltA_mode(FAULT_t *FAULT,
  * \brief FAULT module : configures the Halt mode of Fault B
  *
  * \param FAULT Pointer to FAULT module
- * \param Halt mode
+ * \param fault Halt mode
  */
 
 static inline void tc45_fault_set_haltB_mode(FAULT_t *FAULT,
@@ -1642,8 +1667,9 @@ static inline void tc45_fault_set_haltB_mode(FAULT_t *FAULT,
 }
 
 /*! \brief Configures the Timer/Counter event channel source
+ *
  *  \param tc               Timer/Counter module instance.
- *  \param  eventSource   Event channel base
+ *  \param  eventSource     Event channel base
  */
 static inline void tc45_config_fault_input_evsel(volatile void *tc,
 		TC45_EVSEL_t eventSource )
@@ -1661,7 +1687,7 @@ static inline void tc45_config_fault_input_evsel(volatile void *tc,
 
 /*! \brief Configures the Timer/Counter Event operation.
  *  \param tc               Timer/Counter module instance.
- *  \param    eventAction : capture, qdec....
+ *  \param eventAction      Capture, qdec....
  */
 static inline void tc45_config_fault_input_evact(volatile void *tc,
 		TC45_EVSEL_t eventAction )
@@ -1680,7 +1706,7 @@ static inline void tc45_config_fault_input_evact(volatile void *tc,
 /*! \brief Configures the Timer/Counter FMODE1.
  *
  *  \param tc               Timer/Counter module instance.
- *  \param
+ *  \param eventSource      Event channel base
  */
 static inline void tc45_config_fault_input_fmode1(volatile void *tc,
 		TC45_EVSEL_t eventSource )
@@ -1703,7 +1729,7 @@ static inline void tc45_config_fault_input_fmode1(volatile void *tc,
 /*! \brief Configures the Timer/Counter FMODE2.
  *
  *  \param tc               Timer/Counter module instance.
- *  \param
+ *  \param eventSource      Event channel base
  */
 static inline void tc45_config_fault_input_fmode2(volatile void *tc,
 		TC45_EVSEL_t eventSource )
@@ -1722,9 +1748,11 @@ static inline void tc45_config_fault_input_fmode2(volatile void *tc,
 }
 
 /**
- * \brief FAULT module : returns if fault is present
+ * \brief FAULT module : returns if FaultA is present
  *
  * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault A is present or not
  */
 
 static inline bool tc45_fault_faultAin_is_detected(FAULT_t *FAULT)
@@ -1733,9 +1761,11 @@ static inline bool tc45_fault_faultAin_is_detected(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : returns if fault is present
+ * \brief FAULT module : returns if FaultB is present
  *
  * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault B is present or not
  */
 
 static inline bool tc45_fault_faultBin_is_detected(FAULT_t *FAULT)
@@ -1744,9 +1774,11 @@ static inline bool tc45_fault_faultBin_is_detected(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : returns if fault is present
+ * \brief FAULT module : returns if FaultE is present
  *
  * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault E is present or not
  */
 
 static inline bool tc45_fault_faultEin_is_detected(FAULT_t *FAULT)
@@ -1755,9 +1787,11 @@ static inline bool tc45_fault_faultEin_is_detected(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : returns if fault is detected in STATEA
+ * \brief FAULT module : returns if FaultA is detected in STATEA
  *
  * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault A state
  */
 
 static inline bool tc45_fault_stateA_is_detected(FAULT_t *FAULT)
@@ -1766,7 +1800,33 @@ static inline bool tc45_fault_stateA_is_detected(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : clears the STATEA Fault status
+ * \brief FAULT module : returns if FaultB is detected in STATEB
+ *
+ * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault B state
+ */
+
+static inline bool tc45_fault_stateB_is_detected(FAULT_t *FAULT)
+{
+	return ((FAULT_t *)FAULT)->STATUS & FAULT_STATEB_bm;
+}
+
+/**
+ * \brief FAULT module : returns if fault is detected in STATEE
+ *
+ * \param FAULT Pointer to FAULT module
+ *
+ * \return  Fault E state
+ */
+
+static inline bool tc45_fault_stateE_is_detected(FAULT_t *FAULT)
+{
+	return ((FAULT_t *)FAULT)->STATUS & FAULT_STATEE_bm;
+}
+
+/**
+ * \brief FAULT module : clears the HALTA Fault status
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1777,18 +1837,7 @@ static inline void tc45_fault_clear_haltA(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : returns if fault is detected in STATEA
- *
- * \param FAULT Pointer to FAULT module
- */
-
-static inline bool tc45_fault_stateB_is_detected(FAULT_t *FAULT)
-{
-	return ((FAULT_t *)FAULT)->STATUS & FAULT_STATEB_bm;
-}
-
-/**
- * \brief FAULT module : clears the STATEB Fault status
+ * \brief FAULT module : clears the HALTB Fault status
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1798,18 +1847,7 @@ static inline void tc45_fault_clear_haltB(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : returns if fault is detected in STATEE
- *
- * \param FAULT Pointer to FAULT module
- */
-
-static inline bool tc45_fault_stateE_is_detected(FAULT_t *FAULT)
-{
-	return ((FAULT_t *)FAULT)->STATUS & FAULT_STATEB_bm;
-}
-
-/**
- * \brief FAULT module : clears the STATEE Fault status
+ * \brief FAULT module : clears the HALTE Fault status
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1885,7 +1923,7 @@ static inline void tc45_fault_set_softwareE(FAULT_t *FAULT)
 }
 
 /**
- * \brief FAULT module : set the Portcontrol from Fault module
+ * \brief FAULT module : set the Port control from Fault module
  *
  * \param FAULT Pointer to FAULT module
  */
@@ -1895,9 +1933,9 @@ static inline void tc45_fault_set_portcontrol(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : reset the Fault Port control
+ * \brief FAULT module : reset the Fault Port control
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
  */
 
 static inline void tc45_fault_reset_portcontrol(FAULT_t *FAULT)
@@ -1906,9 +1944,9 @@ static inline void tc45_fault_reset_portcontrol(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : force the Cycle B (IDX set) in RAMP2 mode
+ * \brief FAULT module : forces the Cycle B (IDX set) in RAMP2 mode
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
  */
 
 static inline void tc45_fault_set_idx(FAULT_t *FAULT)
@@ -1919,9 +1957,9 @@ static inline void tc45_fault_set_idx(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : force the Cycle A (IDX clear) in RAMP2 mode
+ * \brief FAULT module : forces the Cycle A (IDX clear) in RAMP2 mode
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
  */
 
 static inline void tc45_fault_clear_idx(FAULT_t *FAULT)
@@ -1932,9 +1970,9 @@ static inline void tc45_fault_clear_idx(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : Hold the Cycle N (IDX Hold) in RAMP2 mode
+ * \brief FAULT module : Holds the Cycle N (IDX Hold) in RAMP2 mode
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
  */
 
 static inline void tc45_fault_hold_idx(FAULT_t *FAULT)
@@ -1945,9 +1983,9 @@ static inline void tc45_fault_hold_idx(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : Default IDX in RAMP2 mode
+ * \brief FAULT module : Default IDX in RAMP2 mode
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
  */
 
 static inline void tc45_fault_default_idx(FAULT_t *FAULT)
@@ -1957,9 +1995,11 @@ static inline void tc45_fault_default_idx(FAULT_t *FAULT)
 }
 
 /**
- * \brief WEX extension : reads IDX in RAMP2 mode
+ * \brief FAULT module : reads IDX in RAMP2 mode
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param FAULT Pointer to FAULT module
+ *
+ * \return  IDX configuration
  */
 
 static inline bool tc45_fault_read_idx(FAULT_t *FAULT)
@@ -1974,7 +2014,8 @@ static inline bool tc45_fault_read_idx(FAULT_t *FAULT)
 /**
  * \brief WEX extension : Configures WEX in the specified output matrix mode
  *
- * \param WEX Pointer to WEX module (WEXC )tmx
+ * \param WEX   Pointer to WEX module
+ * \param otmx  Output Matrix mode
  *
  */
 static inline void tc45_WEX_set_otmx(WEX_t *WEX, enum wex_otmx_mode_t otmx)
@@ -1983,9 +2024,9 @@ static inline void tc45_WEX_set_otmx(WEX_t *WEX, enum wex_otmx_mode_t otmx)
 }
 
 /**
- * \brief WEX extension : Read the output matrix mode
+ * \brief WEX extension : Reads the output matrix mode
  *
- * \param WEX Pointer to WEX module (WEXC )tmx
+ * \param WEX Pointer to WEX module
  *
  */
 static inline uint16_t tc45_WEX_read_otmx(WEX_t *WEX)
@@ -1994,9 +2035,9 @@ static inline uint16_t tc45_WEX_read_otmx(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : enable Deadtime insertion on ccA
+ * \brief WEX extension : enables Deadtime insertion on ccA
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_enable_cca_deadtime(WEX_t *WEX)
 {
@@ -2004,9 +2045,9 @@ static inline void tc45_WEX_enable_cca_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : disable Deadtime insertion on ccA
+ * \brief WEX extension : disables Deadtime insertion on ccA
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_disable_cca_deadtime(WEX_t *WEX)
 {
@@ -2014,9 +2055,9 @@ static inline void tc45_WEX_disable_cca_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : enable Deadtime insertion on ccB
+ * \brief WEX extension : enables Deadtime insertion on ccB
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_enable_ccb_deadtime(WEX_t *WEX)
 {
@@ -2024,9 +2065,9 @@ static inline void tc45_WEX_enable_ccb_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : disable Deadtime insertion on ccB
+ * \brief WEX extension : disables Deadtime insertion on ccB
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_disable_ccb_deadtime(WEX_t *WEX)
 {
@@ -2034,9 +2075,9 @@ static inline void tc45_WEX_disable_ccb_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : enable Deadtime insertion on ccC
+ * \brief WEX extension : enables Deadtime insertion on ccC
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_enable_ccc_deadtime(WEX_t *WEX)
 {
@@ -2044,9 +2085,9 @@ static inline void tc45_WEX_enable_ccc_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : disable Deadtime insertion on ccD
+ * \brief WEX extension : disables Deadtime insertion on ccD
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_disable_ccc_deadtime(WEX_t *WEX)
 {
@@ -2054,9 +2095,9 @@ static inline void tc45_WEX_disable_ccc_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : enable Deadtime insertion on ccD
+ * \brief WEX extension : enables Deadtime insertion on ccD
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_enable_ccd_deadtime(WEX_t *WEX)
 {
@@ -2064,9 +2105,9 @@ static inline void tc45_WEX_enable_ccd_deadtime(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : disable Deadtime insertion on ccD
+ * \brief WEX extension : disables Deadtime insertion on ccD
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  */
 static inline void tc45_WEX_disable_ccd_deadtime(WEX_t *WEX)
 {
@@ -2076,7 +2117,7 @@ static inline void tc45_WEX_disable_ccd_deadtime(WEX_t *WEX)
 /**
  * \brief WEX extension : configures high side deadtime
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
 static inline void tc45_WEX_set_dti_high(WEX_t *WEX, int16_t value)
@@ -2087,7 +2128,7 @@ static inline void tc45_WEX_set_dti_high(WEX_t *WEX, int16_t value)
 /**
  * \brief WEX extension : configures low side deadtime
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
 static inline void tc45_WEX_set_dti_low(WEX_t *WEX, int16_t value)
@@ -2098,7 +2139,7 @@ static inline void tc45_WEX_set_dti_low(WEX_t *WEX, int16_t value)
 /**
  * \brief WEX extension : configures symetrical deadtime
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
 static inline void tc45_WEX_set_dti_both(WEX_t *WEX, int16_t value)
@@ -2107,9 +2148,9 @@ static inline void tc45_WEX_set_dti_both(WEX_t *WEX, int16_t value)
 }
 
 /**
- * \brief WEX extension : Enable Swap on OTMX 0  and 1
+ * \brief WEX extension : Enables Swap on OTMX 0  and 1
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap0(WEX_t *WEX)
@@ -2118,9 +2159,9 @@ static inline void tc45_WEX_enable_swap0(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 0  and 1
+ * \brief WEX extension : Disables Swap on OTMX 0  and 1
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap0(WEX_t *WEX)
@@ -2129,9 +2170,9 @@ static inline void tc45_WEX_disable_swap0(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap Buffer on OTMX 0  and 1
+ * \brief WEX extension : Enables Swap Buffer on OTMX 0  and 1
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap0_buffer(WEX_t *WEX)
@@ -2140,9 +2181,9 @@ static inline void tc45_WEX_enable_swap0_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 0  and 1
+ * \brief WEX extension : Disables Swap on OTMX 0  and 1
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap0_buffer(WEX_t *WEX)
@@ -2151,9 +2192,9 @@ static inline void tc45_WEX_disable_swap0_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap on OTMX 2  and 3
+ * \brief WEX extension : Enables Swap on OTMX 2  and 3
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap1(WEX_t *WEX)
@@ -2162,9 +2203,9 @@ static inline void tc45_WEX_enable_swap1(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 2  and 3
+ * \brief WEX extension : Disables Swap on OTMX 2  and 3
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap1(WEX_t *WEX)
@@ -2173,9 +2214,9 @@ static inline void tc45_WEX_disable_swap1(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap buffer on OTMX 2  and 3
+ * \brief WEX extension : Enables Swap buffer on OTMX 2  and 3
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap1_buffer(WEX_t *WEX)
@@ -2184,9 +2225,9 @@ static inline void tc45_WEX_enable_swap1_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 2  and 3
+ * \brief WEX extension : Disables Swap on OTMX 2  and 3
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap1_buffer(WEX_t *WEX)
@@ -2195,9 +2236,9 @@ static inline void tc45_WEX_disable_swap1_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap on OTMX 4  and 5
+ * \brief WEX extension : Enables Swap on OTMX 4  and 5
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap2(WEX_t *WEX)
@@ -2206,9 +2247,9 @@ static inline void tc45_WEX_enable_swap2(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 4  and 5
+ * \brief WEX extension : Disables Swap on OTMX 4  and 5
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap2(WEX_t *WEX)
@@ -2217,9 +2258,9 @@ static inline void tc45_WEX_disable_swap2(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Ennable Swap buffer on OTMX 4  and 5
+ * \brief WEX extension : Ennables Swap buffer on OTMX 4  and 5
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap2_buffer(WEX_t *WEX)
@@ -2228,9 +2269,9 @@ static inline void tc45_WEX_enable_swap2_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 4  and 5
+ * \brief WEX extension : Disables Swap on OTMX 4  and 5
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap2_buffer(WEX_t *WEX)
@@ -2239,9 +2280,9 @@ static inline void tc45_WEX_disable_swap2_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap on OTMX 6  and 7
+ * \brief WEX extension : Enables Swap on OTMX 6  and 7
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap3(WEX_t *WEX)
@@ -2250,9 +2291,9 @@ static inline void tc45_WEX_enable_swap3(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 6  and 7
+ * \brief WEX extension : Disables Swap on OTMX 6  and 7
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap3(WEX_t *WEX)
@@ -2261,9 +2302,9 @@ static inline void tc45_WEX_disable_swap3(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Enable Swap buffer on OTMX 6  and 7
+ * \brief WEX extension : Enables Swap buffer on OTMX 6  and 7
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_enable_swap3_buffer(WEX_t *WEX)
@@ -2272,9 +2313,9 @@ static inline void tc45_WEX_enable_swap3_buffer(WEX_t *WEX)
 }
 
 /**
- * \brief WEX extension : Disable Swap on OTMX 6  and 7
+ * \brief WEX extension : Disables Swap on OTMX 6  and 7
  *
- * \param WEX Pointer to WEX module (WEXC )
+ * \param WEX Pointer to WEX module
  *
  */
 static inline void tc45_WEX_disable_swap3_buffer(WEX_t *WEX)
@@ -2285,34 +2326,31 @@ static inline void tc45_WEX_disable_swap3_buffer(WEX_t *WEX)
 /**
  * \brief WEX extension : configures Pattern Generator output enable
  *
- * \param WEX Pointer to WEX module (WEXC )
- * \param PGO enable
+ * \param WEX    Pointer to WEX module
+ * \param value  Pattern Genarator enable
  */
 
 static inline void tc45_WEX_write_pgo(WEX_t *WEX, int16_t value)
 {
-	((WEX_t *)WEX)->PGO = (((WEX_t *)WEX)->PGO & 0x00) |
-			value;
+	((WEX_t *)WEX)->PGO = value;
 }
 
 /**
  * \brief WEX extension : configures Pattern Generator Buffer output enable
  *
- * \param WEX Pointer to WEX module (WEXC )
- * \param PGO enable
+ * \param WEX    Pointer to WEX module
+ * \param value  Pattern Genarator enable
  */
 
 static inline void tc45_WEX_write_pgo_buffer(WEX_t *WEX, int16_t value)
 {
-	/*	((WEX_t *)WEX)->PGOBUF = (((WEX_t *)WEX)->PGOBUF & 0x00) | */
-	/*		value ; */
 	((WEX_t *)WEX)->PGOBUF = value;
 }
 
 /**
  * \brief Reads the Pattern generator Output buffer
  *
- * \param tc Pointer to TC module.
+ * \param WEX Pointer to WEX module
  * \return Patter Generator Buffer PGOBUF
  */
 static inline uint16_t tc45_WEX_read_pgo_buffer(volatile void *WEX)
@@ -2323,8 +2361,8 @@ static inline uint16_t tc45_WEX_read_pgo_buffer(volatile void *WEX)
 /**
  * \brief WEX extension : configures Pattern Generator Value
  *
- * \param WEX Pointer to WEX module (WEXC )
- * \param PGO value
+ * \param WEX    Pointer to WEX module
+ * \param value  PGO value
  */
 
 static inline void tc45_WEX_write_pgv(WEX_t *WEX, int16_t value)
@@ -2336,8 +2374,8 @@ static inline void tc45_WEX_write_pgv(WEX_t *WEX, int16_t value)
 /**
  * \brief WEX extension : configures Pattern Generator Value Buffer
  *
- * \param WEX Pointer to WEX module (WEXC )
- * \param PGO value
+ * \param WEX    Pointer to WEX module
+ * \param value  PGO value
  */
 
 static inline void tc45_WEX_write_pgv_buffer(WEX_t *WEX, int16_t value)
@@ -2349,8 +2387,8 @@ static inline void tc45_WEX_write_pgv_buffer(WEX_t *WEX, int16_t value)
 /**
  * \brief WEX extension : configures Output override
  *
- * \param WEX Pointer to WEX module (WEXC )
- * \param PGO value
+ * \param WEX    Pointer to WEX module
+ * \param value  Override value
  */
 
 static inline void tc45_WEX_set_output_override(WEX_t *WEX, int16_t value)
@@ -2375,8 +2413,8 @@ static inline void tc45_WEX_set_output_override(WEX_t *WEX, int16_t value)
 /**
  * \brief Hi-Res Extension : configures the Hi-Res
  *
- * \param hires Pointer to WEX module (WEXC )
- * \param hi_res_mode HIRES configuration
+ * \param hires         Pointer to HIRES module
+ * \param hi_res_mode   HIRES configuration
  */
 static inline void tc45_hires_set_mode(HIRES_t *hires, HIRES_HREN_t hi_res_mode)
 {
