@@ -190,6 +190,7 @@ extern "C" {
  */
 
 #if !defined(__DOXYGEN__)
+#  define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
 #  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
 #  define EEPROM_INVALID_PAGE_NUMBER  0xFF
 #  define EEPROM_HEADER_SIZE          4
@@ -212,18 +213,8 @@ extern "C" {
 /** Emulator revision version number, identifying the emulator revision. */
 #define EEPROM_REVISION             0
 
-/** @} */
-
-
-/** \name Emulated EEPROM size information
- * @{
- */
-
 /** Size of each logical EEPROM page, in bytes. */
-#define EEPROM_DATA_SIZE            (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
-
-/** Maximum number of physical EEPROM pages that can be reserved. */
-#define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
+#define EEPROM_PAGE_SIZE            (NVMCTRL_PAGE_SIZE - EEPROM_HEADER_SIZE)
 
 /** @} */
 
@@ -246,13 +237,13 @@ void eeprom_emulator_erase_memory(void);
 enum status_code eeprom_emulator_flush_page_buffer(void);
 
 enum status_code eeprom_emulator_write_page(
-		uint8_t logical_page,
-		uint8_t *data);
+		const uint8_t logical_page,
+		const uint8_t *const data);
 
 
 enum status_code eeprom_emulator_read_page(
-		uint8_t logical_page,
-		uint8_t *data);
+		const uint8_t logical_page,
+		uint8_t *const data);
 
 /** @} */
 
@@ -261,14 +252,14 @@ enum status_code eeprom_emulator_read_page(
  */
 
 enum status_code eeprom_emulator_write_buffer(
-		uint16_t offset,
-		uint8_t *data,
-		uint16_t length);
+		const uint16_t offset,
+		const uint8_t *const data,
+		const uint16_t length);
 
 enum status_code eeprom_emulator_read_buffer(
-		uint16_t offset,
-		uint8_t *data,
-		uint16_t length);
+		const uint16_t offset,
+		uint8_t *const data,
+		const uint16_t length);
 
 /** @} */
 
