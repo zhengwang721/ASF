@@ -212,8 +212,8 @@ void DAC_Handler                 ( void );
  * \brief Configuration of the Cortex-M0+ Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1
-#define __CM0P_REV             0         /*!< Core revision r0p0 */
+#define LITTLE_ENDIAN          1        
+#define __CM0PLUS_REV          0         /*!< Core revision r0p0 */
 #define __FPU_PRESENT          0         /*!< FPU present or not */
 #define __MPU_PRESENT          0         /*!< MPU present or not */
 #define __NVIC_PRIO_BITS       2         /*!< Number of bits used for Priority Levels */
@@ -269,7 +269,7 @@ void DAC_Handler                 ( void );
 #include "instance/instance_eic.h"
 #include "instance/instance_evsys.h"
 #include "instance/instance_gclk.h"
-#include "instance/instance_hmatrix.h"
+#include "instance/instance_sbmatrix.h"
 #include "instance/instance_nvmctrl.h"
 #include "instance/instance_pac0.h"
 #include "instance/instance_pac1.h"
@@ -315,7 +315,7 @@ void DAC_Handler                 ( void );
 #define ID_DSU           33 /**< \brief Device Service Unit (DSU) */
 #define ID_NVMCTRL       34 /**< \brief Non-Volatile Memory Controller (NVMCTRL) */
 #define ID_PORT          35 /**< \brief Port Module (PORT) */
-#define ID_HMATRIX       36 /**< \brief HSB Matrix (HMATRIX) */
+#define ID_SBMATRIX      36 /**< \brief HSB Matrix (SBMATRIX) */
 
 // Peripheral instances on HPB2 bridge
 #define ID_PAC2          64 /**< \brief Peripheral Access Controller PAC (PAC2) */
@@ -355,7 +355,7 @@ void DAC_Handler                 ( void );
 #define EIC                           (0x40001800U) /**< \brief (EIC) APB Base Address */
 #define EVSYS                         (0x42000400U) /**< \brief (EVSYS) APB Base Address */
 #define GCLK                          (0x40000C00U) /**< \brief (GCLK) APB Base Address */
-#define HMATRIX                       (0x41004800U) /**< \brief (HMATRIX) APB Base Address */
+#define SBMATRIX                      (0x41004800U) /**< \brief (SBMATRIX) APB Base Address */
 #define NVMCTRL                       (0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
 #define NVMCTRL_CAL                   (0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */
 #define NVMCTRL_LOCKBIT               (0x00802000U) /**< \brief (NVMCTRL) LOCKBIT Base Address */
@@ -415,9 +415,9 @@ void DAC_Handler                 ( void );
 #define GCLK_INST_NUM     1                         /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                  /**< \brief (GCLK) Instances List */
 
-#define HMATRIX           ((Hmatrixb *)0x41004800U) /**< \brief (HMATRIX) APB Base Address */
+#define SBMATRIX          ((Hmatrixb *)0x41004800U) /**< \brief (SBMATRIX) APB Base Address */
 #define HMATRIXB_INST_NUM 1                         /**< \brief (HMATRIXB) Number of instances */
-#define HMATRIXB_INSTS    { HMATRIX }               /**< \brief (HMATRIXB) Instances List */
+#define HMATRIXB_INSTS    { SBMATRIX }              /**< \brief (HMATRIXB) Instances List */
 
 #define NVMCTRL           ((Nvmctrl  *)0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
 #define NVMCTRL_CAL       ((Nvmctrl  *)0x00800000U) /**< \brief (NVMCTRL) CAL Base Address */

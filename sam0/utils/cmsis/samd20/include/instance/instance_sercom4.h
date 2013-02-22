@@ -46,44 +46,44 @@
 
 /* ========== Register definition for SERCOM4 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_SERCOM4_I2CM_CTRLA                (0x42001800U) /**< \brief (SERCOM4) I2CM Control Register A */
-#define REG_SERCOM4_I2CS_CTRLA                (0x42001800U) /**< \brief (SERCOM4) I2CS Control Register A */
-#define REG_SERCOM4_SPI_CTRLA                 (0x42001800U) /**< \brief (SERCOM4) SPI Control Register A */
-#define REG_SERCOM4_USART_CTRLA               (0x42001800U) /**< \brief (SERCOM4) USART Control Register A */
-#define REG_SERCOM4_I2CM_CTRLB                (0x42001804U) /**< \brief (SERCOM4) I2CM Control Register B */
-#define REG_SERCOM4_I2CS_CTRLB                (0x42001804U) /**< \brief (SERCOM4) I2CS Control Register B */
-#define REG_SERCOM4_SPI_CTRLB                 (0x42001804U) /**< \brief (SERCOM4) SPI Control Register B */
-#define REG_SERCOM4_USART_CTRLB               (0x42001804U) /**< \brief (SERCOM4) USART Control Register B */
-#define REG_SERCOM4_I2CM_DEBUG                (0x42001808U) /**< \brief (SERCOM4) I2CM Debug Register */
-#define REG_SERCOM4_I2CS_DEBUG                (0x42001808U) /**< \brief (SERCOM4) I2CS Debug Register */
-#define REG_SERCOM4_SPI_DEBUG                 (0x42001808U) /**< \brief (SERCOM4) SPI Debug Register */
-#define REG_SERCOM4_USART_DEBUG               (0x42001808U) /**< \brief (SERCOM4) USART Debug Register */
-#define REG_SERCOM4_I2CM_BAUD                 (0x4200180AU) /**< \brief (SERCOM4) I2CM Baud Rate Register */
-#define REG_SERCOM4_SPI_BAUD                  (0x4200180AU) /**< \brief (SERCOM4) SPI Baud Rate Register */
-#define REG_SERCOM4_USART_BAUD                (0x4200180AU) /**< \brief (SERCOM4) USART Baud Rate Register */
-#define REG_SERCOM4_I2CM_INTENCLR             (0x4200180CU) /**< \brief (SERCOM4) I2CM Interrupt Enable Clear Register */
-#define REG_SERCOM4_I2CS_INTENCLR             (0x4200180CU) /**< \brief (SERCOM4) I2CS Interrupt Enable Clear Register */
-#define REG_SERCOM4_SPI_INTENCLR              (0x4200180CU) /**< \brief (SERCOM4) SPI Interrupt Enable Clear Register */
-#define REG_SERCOM4_USART_INTENCLR            (0x4200180CU) /**< \brief (SERCOM4) USART Interrupt Enable Clear Register */
-#define REG_SERCOM4_I2CM_INTENSET             (0x4200180DU) /**< \brief (SERCOM4) I2CM Interrupt Enable Set Register */
-#define REG_SERCOM4_I2CS_INTENSET             (0x4200180DU) /**< \brief (SERCOM4) I2CS Interrupt Enable Set Register */
-#define REG_SERCOM4_SPI_INTENSET              (0x4200180DU) /**< \brief (SERCOM4) SPI Interrupt Enable Set Register */
-#define REG_SERCOM4_USART_INTENSET            (0x4200180DU) /**< \brief (SERCOM4) USART Interrupt Enable Set Register */
-#define REG_SERCOM4_I2CM_INTFLAG              (0x4200180EU) /**< \brief (SERCOM4) I2CM Interrupt Flag Status and Clear Register */
-#define REG_SERCOM4_I2CS_INTFLAG              (0x4200180EU) /**< \brief (SERCOM4) I2CS Interrupt Flag Status and Clear Register */
-#define REG_SERCOM4_SPI_INTFLAG               (0x4200180EU) /**< \brief (SERCOM4) SPI Interrupt Flag Status and Clear Register */
-#define REG_SERCOM4_USART_INTFLAG             (0x4200180EU) /**< \brief (SERCOM4) USART Interrupt Flag Status and Clear Register */
-#define REG_SERCOM4_I2CM_STATUS               (0x42001810U) /**< \brief (SERCOM4) I2CM Status Register */
-#define REG_SERCOM4_I2CS_STATUS               (0x42001810U) /**< \brief (SERCOM4) I2CS Status Register */
-#define REG_SERCOM4_SPI_STATUS                (0x42001810U) /**< \brief (SERCOM4) SPI Status Register */
-#define REG_SERCOM4_USART_STATUS              (0x42001810U) /**< \brief (SERCOM4) USART Status Register */
-#define REG_SERCOM4_I2CM_ADDR                 (0x42001814U) /**< \brief (SERCOM4) I2CM Address Register */
-#define REG_SERCOM4_I2CS_ADDR                 (0x42001814U) /**< \brief (SERCOM4) I2CS Address Register */
-#define REG_SERCOM4_SPI_ADDR                  (0x42001814U) /**< \brief (SERCOM4) SPI Address Register */
-#define REG_SERCOM4_I2CM_DATA                 (0x42001818U) /**< \brief (SERCOM4) I2CM Data Register */
-#define REG_SERCOM4_I2CS_DATA                 (0x42001818U) /**< \brief (SERCOM4) I2CS Data Register */
-#define REG_SERCOM4_SPI_DATA                  (0x42001818U) /**< \brief (SERCOM4) SPI Data Register */
-#define REG_SERCOM4_USART_DATA                (0x42001818U) /**< \brief (SERCOM4) USART Data Register */
+#define REG_SERCOM4_I2CM_CTRLA     (0x42001800U) /**< \brief (SERCOM4) I2CM Control Register A */
+#define REG_SERCOM4_I2CS_CTRLA     (0x42001800U) /**< \brief (SERCOM4) I2CS Control Register A */
+#define REG_SERCOM4_SPI_CTRLA      (0x42001800U) /**< \brief (SERCOM4) SPI Control Register A */
+#define REG_SERCOM4_USART_CTRLA    (0x42001800U) /**< \brief (SERCOM4) USART Control Register A */
+#define REG_SERCOM4_I2CM_CTRLB     (0x42001804U) /**< \brief (SERCOM4) I2CM Control Register B */
+#define REG_SERCOM4_I2CS_CTRLB     (0x42001804U) /**< \brief (SERCOM4) I2CS Control Register B */
+#define REG_SERCOM4_SPI_CTRLB      (0x42001804U) /**< \brief (SERCOM4) SPI Control Register B */
+#define REG_SERCOM4_USART_CTRLB    (0x42001804U) /**< \brief (SERCOM4) USART Control Register B */
+#define REG_SERCOM4_I2CM_DEBUG     (0x42001808U) /**< \brief (SERCOM4) I2CM Debug Register */
+#define REG_SERCOM4_I2CS_DEBUG     (0x42001808U) /**< \brief (SERCOM4) I2CS Debug Register */
+#define REG_SERCOM4_SPI_DEBUG      (0x42001808U) /**< \brief (SERCOM4) SPI Debug Register */
+#define REG_SERCOM4_USART_DEBUG    (0x42001808U) /**< \brief (SERCOM4) USART Debug Register */
+#define REG_SERCOM4_I2CM_BAUD      (0x4200180AU) /**< \brief (SERCOM4) I2CM Baud Rate Register */
+#define REG_SERCOM4_SPI_BAUD       (0x4200180AU) /**< \brief (SERCOM4) SPI Baud Rate Register */
+#define REG_SERCOM4_USART_BAUD     (0x4200180AU) /**< \brief (SERCOM4) USART Baud Rate Register */
+#define REG_SERCOM4_I2CM_INTENCLR  (0x4200180CU) /**< \brief (SERCOM4) I2CM Interrupt Enable Clear Register */
+#define REG_SERCOM4_I2CS_INTENCLR  (0x4200180CU) /**< \brief (SERCOM4) I2CS Interrupt Enable Clear Register */
+#define REG_SERCOM4_SPI_INTENCLR   (0x4200180CU) /**< \brief (SERCOM4) SPI Interrupt Enable Clear Register */
+#define REG_SERCOM4_USART_INTENCLR (0x4200180CU) /**< \brief (SERCOM4) USART Interrupt Enable Clear Register */
+#define REG_SERCOM4_I2CM_INTENSET  (0x4200180DU) /**< \brief (SERCOM4) I2CM Interrupt Enable Set Register */
+#define REG_SERCOM4_I2CS_INTENSET  (0x4200180DU) /**< \brief (SERCOM4) I2CS Interrupt Enable Set Register */
+#define REG_SERCOM4_SPI_INTENSET   (0x4200180DU) /**< \brief (SERCOM4) SPI Interrupt Enable Set Register */
+#define REG_SERCOM4_USART_INTENSET (0x4200180DU) /**< \brief (SERCOM4) USART Interrupt Enable Set Register */
+#define REG_SERCOM4_I2CM_INTFLAG   (0x4200180EU) /**< \brief (SERCOM4) I2CM Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_I2CS_INTFLAG   (0x4200180EU) /**< \brief (SERCOM4) I2CS Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_SPI_INTFLAG    (0x4200180EU) /**< \brief (SERCOM4) SPI Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_USART_INTFLAG  (0x4200180EU) /**< \brief (SERCOM4) USART Interrupt Flag Status and Clear Register */
+#define REG_SERCOM4_I2CM_STATUS    (0x42001810U) /**< \brief (SERCOM4) I2CM Status Register */
+#define REG_SERCOM4_I2CS_STATUS    (0x42001810U) /**< \brief (SERCOM4) I2CS Status Register */
+#define REG_SERCOM4_SPI_STATUS     (0x42001810U) /**< \brief (SERCOM4) SPI Status Register */
+#define REG_SERCOM4_USART_STATUS   (0x42001810U) /**< \brief (SERCOM4) USART Status Register */
+#define REG_SERCOM4_I2CM_ADDR      (0x42001814U) /**< \brief (SERCOM4) I2CM Address Register */
+#define REG_SERCOM4_I2CS_ADDR      (0x42001814U) /**< \brief (SERCOM4) I2CS Address Register */
+#define REG_SERCOM4_SPI_ADDR       (0x42001814U) /**< \brief (SERCOM4) SPI Address Register */
+#define REG_SERCOM4_I2CM_DATA      (0x42001818U) /**< \brief (SERCOM4) I2CM Data Register */
+#define REG_SERCOM4_I2CS_DATA      (0x42001818U) /**< \brief (SERCOM4) I2CS Data Register */
+#define REG_SERCOM4_SPI_DATA       (0x42001818U) /**< \brief (SERCOM4) SPI Data Register */
+#define REG_SERCOM4_USART_DATA     (0x42001818U) /**< \brief (SERCOM4) USART Data Register */
 #else
 #define REG_SERCOM4_I2CM_CTRLA     (*(RwReg  *)0x42001800U) /**< \brief (SERCOM4) I2CM Control Register A */
 #define REG_SERCOM4_I2CS_CTRLA     (*(RwReg  *)0x42001800U) /**< \brief (SERCOM4) I2CS Control Register A */

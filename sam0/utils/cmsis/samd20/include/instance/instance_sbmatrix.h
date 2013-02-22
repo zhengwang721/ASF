@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Instance description for PAC0
+ * \brief Instance description for SBMATRIX
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,26 @@
  *
  */
 
-#ifndef _SAMD20_PAC0_INSTANCE_
-#define _SAMD20_PAC0_INSTANCE_
+#ifndef _SAMD20_SBMATRIX_INSTANCE_
+#define _SAMD20_SBMATRIX_INSTANCE_
 
-/* ========== Register definition for PAC0 peripheral ========== */
+/* ========== Register definition for SBMATRIX peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_PAC0_WPCLR             (0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
-#define REG_PAC0_WPSET             (0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
 #else
-#define REG_PAC0_WPCLR             (*(RwReg  *)0x40000000U) /**< \brief (PAC0) Write Protection Clear Register */
-#define REG_PAC0_WPSET             (*(RwReg  *)0x40000004U) /**< \brief (PAC0) Write Protection Set Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* ========== Instance parameters for PAC0 peripheral ========== */
-#define PAC0_WPROT_DEFAULT_VAL      0x00000000
+/* ========== Instance parameters for SBMATRIX peripheral ========== */
+#define SBMATRIX_DEFINED            
+/* ========== Instance parameters for SBMATRIX ========== */
+#define SBMATRIX_SLAVE_FLASH        0
+#define SBMATRIX_SLAVE_HPB0         1
+#define SBMATRIX_SLAVE_HPB1         2
+#define SBMATRIX_SLAVE_HPB2         3
+#define SBMATRIX_SLAVE_HRAMC0       4
+#define SBMATRIX_SLAVE_NUM          5
 
-#endif /* _SAMD20_PAC0_INSTANCE_ */
+#define SBMATRIX_MASTER_CM0PLUS     0
+#define SBMATRIX_MASTER_DSU         1
+#define SBMATRIX_MASTER_NUM         2
+
+#endif /* _SAMD20_SBMATRIX_INSTANCE_ */
