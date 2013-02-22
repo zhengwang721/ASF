@@ -75,10 +75,19 @@ typedef enum FAULT_IDXCMD_enum {
 	FAULT_IDXCMD_HOLD_gc = (0x03 << 3),    /* Hold Current Cycle Index in
 	                                        * Next Cycle  */
 } FAULT_IDXCMD_t;
+
+/* Fix IAREW V6.12 which contains wrong values */
+#undef TC45_WGMODE_SINGLESLOPE_gc
+#undef TC45_WGMODE_DSTOP_gc
+#define TC45_WGMODE_SINGLESLOPE_gc (0x03<<0) /* Single Slope */
+#define TC45_WGMODE_DSTOP_gc       (0x05<<0) /* Dual Slope, Update on TOP */
+
 #endif
 
 /**
  * \defgroup tc45_group Timer Counter type 4/5(TC4/5)
+ *
+ * See \ref xmega_tc45_quickstart
  *
  * This is a driver for the AVR XMEGA Timer Counter type 4 and 5(TC4/5).
  * It provides functions for enabling, disabling and configuring the TC4/5
@@ -140,17 +149,17 @@ enum tc45_dir_t {
 
 /* ! Timer Counter Waveform Generator mode */
 enum tc45_wg_mode_t {
-	/* ! TC in normal Mode */
+	/* ! TC45 in normal Mode */
 	TC45_WG_NORMAL = TC45_WGMODE_NORMAL_gc,
-	/* ! TC in Frequency Generator mode */
+	/* ! TC45 in Frequency Generator mode */
 	TC45_WG_FRQ = TC45_WGMODE_FRQ_gc,
-	/* ! TC in single slope PWM mode */
+	/* ! TC45 in single slope PWM mode */
 	TC45_WG_SS = TC45_WGMODE_SINGLESLOPE_gc,
-	/* ! TC in dual slope Top PWM mode */
+	/* ! TC45 in dual slope Top PWM mode */
 	TC45_WG_DS_T = TC45_WGMODE_DSTOP_gc,
-	/* ! TC in dual slope Top Bottom PWM mode */
+	/* ! TC45 in dual slope Top Bottom PWM mode */
 	TC45_WG_DS_TB = TC45_WGMODE_DSBOTH_gc,
-	/* ! TC in dual slope Bottom PWM mode */
+	/* ! TC45 in dual slope Bottom PWM mode */
 	TC45_WG_DS_B = TC45_WGMODE_DSBOTTOM_gc
 };
 
@@ -232,9 +241,9 @@ enum TC45_INT_LEVEL_t {
 	TC45_INT_LVL_HI = 0x03,
 };
 
-/* ! Macro to check if the type of passed TC is TC5_t */
+/* ! Macro to check if the type of passed TC45 is TC5_t */
 #define tc45_is_TC5(void) ((uint16_t)tc & 0x40 ? true : false)
-/* ! Macro to check if the type of passed TC is TC4_t */
+/* ! Macro to check if the type of passed TC45 is TC4_t */
 #define tc45_is_TC4(void) ((uint16_t)tc & 0x40 ? false : true)
 
 /**
@@ -1389,7 +1398,7 @@ static inline void tc45_clear_cc_interrupt(volatile void *tc,
 }
 
 /**
- * \brief Configures TC in the specified Waveform generator mode
+ * \brief Configures TC45 in the specified Waveform generator mode
  *
  * \param tc Pointer to TC45 module.
  * \param wgm : waveform generator mode
@@ -2018,7 +2027,7 @@ static inline bool tc45_fault_read_idx(FAULT_t *FAULT)
  * \param otmx  Output Matrix mode
  *
  */
-static inline void tc45_WEX_set_otmx(WEX_t *WEX, enum wex_otmx_mode_t otmx)
+static inline void tc45_wex_set_otmx(WEX_t *WEX, enum wex_otmx_mode_t otmx)
 {
 	((WEX_t *)WEX)->CTRL = (((WEX_t *)WEX)->CTRL & ~WEX_OTMX_gm) | otmx;
 }
@@ -2029,7 +2038,7 @@ static inline void tc45_WEX_set_otmx(WEX_t *WEX, enum wex_otmx_mode_t otmx)
  * \param WEX Pointer to WEX module
  *
  */
-static inline uint16_t tc45_WEX_read_otmx(WEX_t *WEX)
+static inline uint16_t tc45_wex_read_otmx(WEX_t *WEX)
 {
 	return (((WEX_t *)WEX)->CTRL & WEX_OTMX_gm);
 }
@@ -2039,7 +2048,7 @@ static inline uint16_t tc45_WEX_read_otmx(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_enable_cca_deadtime(WEX_t *WEX)
+static inline void tc45_wex_enable_cca_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL |= WEX_DTI0EN_bm;
 }
@@ -2049,7 +2058,7 @@ static inline void tc45_WEX_enable_cca_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_disable_cca_deadtime(WEX_t *WEX)
+static inline void tc45_wex_disable_cca_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL &= ~WEX_DTI0EN_bm;
 }
@@ -2059,7 +2068,7 @@ static inline void tc45_WEX_disable_cca_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_enable_ccb_deadtime(WEX_t *WEX)
+static inline void tc45_wex_enable_ccb_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL |= WEX_DTI1EN_bm;
 }
@@ -2069,7 +2078,7 @@ static inline void tc45_WEX_enable_ccb_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_disable_ccb_deadtime(WEX_t *WEX)
+static inline void tc45_wex_disable_ccb_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL &= ~WEX_DTI1EN_bm;
 }
@@ -2079,7 +2088,7 @@ static inline void tc45_WEX_disable_ccb_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_enable_ccc_deadtime(WEX_t *WEX)
+static inline void tc45_wex_enable_ccc_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL |= WEX_DTI2EN_bm;
 }
@@ -2089,7 +2098,7 @@ static inline void tc45_WEX_enable_ccc_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_disable_ccc_deadtime(WEX_t *WEX)
+static inline void tc45_wex_disable_ccc_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL &= ~WEX_DTI2EN_bm;
 }
@@ -2099,7 +2108,7 @@ static inline void tc45_WEX_disable_ccc_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_enable_ccd_deadtime(WEX_t *WEX)
+static inline void tc45_wex_enable_ccd_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL |= WEX_DTI3EN_bm;
 }
@@ -2109,7 +2118,7 @@ static inline void tc45_WEX_enable_ccd_deadtime(WEX_t *WEX)
  *
  * \param WEX Pointer to WEX module
  */
-static inline void tc45_WEX_disable_ccd_deadtime(WEX_t *WEX)
+static inline void tc45_wex_disable_ccd_deadtime(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->CTRL &= ~WEX_DTI3EN_bm;
 }
@@ -2120,7 +2129,7 @@ static inline void tc45_WEX_disable_ccd_deadtime(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
-static inline void tc45_WEX_set_dti_high(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_set_dti_high(WEX_t *WEX, int16_t value)
 {
 	((WEX_t *)WEX)->DTHS = value;
 }
@@ -2131,7 +2140,7 @@ static inline void tc45_WEX_set_dti_high(WEX_t *WEX, int16_t value)
  * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
-static inline void tc45_WEX_set_dti_low(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_set_dti_low(WEX_t *WEX, int16_t value)
 {
 	((WEX_t *)WEX)->DTLS = value;
 }
@@ -2142,7 +2151,7 @@ static inline void tc45_WEX_set_dti_low(WEX_t *WEX, int16_t value)
  * \param WEX Pointer to WEX module
  * \param value : deadtime value
  */
-static inline void tc45_WEX_set_dti_both(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_set_dti_both(WEX_t *WEX, int16_t value)
 {
 	((WEX_t *)WEX)->DTBOTH = value;
 }
@@ -2153,7 +2162,7 @@ static inline void tc45_WEX_set_dti_both(WEX_t *WEX, int16_t value)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap0(WEX_t *WEX)
+static inline void tc45_wex_enable_swap0(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP |= WEX_SWAP0_bm;
 }
@@ -2164,7 +2173,7 @@ static inline void tc45_WEX_enable_swap0(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap0(WEX_t *WEX)
+static inline void tc45_wex_disable_swap0(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP &= ~WEX_SWAP0_bm;
 }
@@ -2175,7 +2184,7 @@ static inline void tc45_WEX_disable_swap0(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap0_buffer(WEX_t *WEX)
+static inline void tc45_wex_enable_swap0_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF |= WEX_SWAP0BUF_bm;
 }
@@ -2186,7 +2195,7 @@ static inline void tc45_WEX_enable_swap0_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap0_buffer(WEX_t *WEX)
+static inline void tc45_wex_disable_swap0_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF &= ~WEX_SWAP0BUF_bm;
 }
@@ -2197,7 +2206,7 @@ static inline void tc45_WEX_disable_swap0_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap1(WEX_t *WEX)
+static inline void tc45_wex_enable_swap1(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP |= WEX_SWAP1_bm;
 }
@@ -2208,7 +2217,7 @@ static inline void tc45_WEX_enable_swap1(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap1(WEX_t *WEX)
+static inline void tc45_wex_disable_swap1(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP &= ~WEX_SWAP1_bm;
 }
@@ -2219,7 +2228,7 @@ static inline void tc45_WEX_disable_swap1(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap1_buffer(WEX_t *WEX)
+static inline void tc45_wex_enable_swap1_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF |= WEX_SWAP1BUF_bm;
 }
@@ -2230,7 +2239,7 @@ static inline void tc45_WEX_enable_swap1_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap1_buffer(WEX_t *WEX)
+static inline void tc45_wex_disable_swap1_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF &= ~WEX_SWAP1BUF_bm;
 }
@@ -2241,7 +2250,7 @@ static inline void tc45_WEX_disable_swap1_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap2(WEX_t *WEX)
+static inline void tc45_wex_enable_swap2(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP |= WEX_SWAP2_bm;
 }
@@ -2252,7 +2261,7 @@ static inline void tc45_WEX_enable_swap2(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap2(WEX_t *WEX)
+static inline void tc45_wex_disable_swap2(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP &= ~WEX_SWAP2_bm;
 }
@@ -2263,7 +2272,7 @@ static inline void tc45_WEX_disable_swap2(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap2_buffer(WEX_t *WEX)
+static inline void tc45_wex_enable_swap2_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF |= WEX_SWAP2BUF_bm;
 }
@@ -2274,7 +2283,7 @@ static inline void tc45_WEX_enable_swap2_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap2_buffer(WEX_t *WEX)
+static inline void tc45_wex_disable_swap2_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF &= ~WEX_SWAP2BUF_bm;
 }
@@ -2285,7 +2294,7 @@ static inline void tc45_WEX_disable_swap2_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap3(WEX_t *WEX)
+static inline void tc45_wex_enable_swap3(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP |= WEX_SWAP3_bm;
 }
@@ -2296,7 +2305,7 @@ static inline void tc45_WEX_enable_swap3(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap3(WEX_t *WEX)
+static inline void tc45_wex_disable_swap3(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAP &= ~WEX_SWAP3_bm;
 }
@@ -2307,7 +2316,7 @@ static inline void tc45_WEX_disable_swap3(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_enable_swap3_buffer(WEX_t *WEX)
+static inline void tc45_wex_enable_swap3_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF |= WEX_SWAP3BUF_bm;
 }
@@ -2318,7 +2327,7 @@ static inline void tc45_WEX_enable_swap3_buffer(WEX_t *WEX)
  * \param WEX Pointer to WEX module
  *
  */
-static inline void tc45_WEX_disable_swap3_buffer(WEX_t *WEX)
+static inline void tc45_wex_disable_swap3_buffer(WEX_t *WEX)
 {
 	((WEX_t *)WEX)->SWAPBUF &= ~WEX_SWAP3BUF_bm;
 }
@@ -2330,7 +2339,7 @@ static inline void tc45_WEX_disable_swap3_buffer(WEX_t *WEX)
  * \param value  Pattern Genarator enable
  */
 
-static inline void tc45_WEX_write_pgo(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_write_pgo(WEX_t *WEX, int16_t value)
 {
 	((WEX_t *)WEX)->PGO = value;
 }
@@ -2342,7 +2351,7 @@ static inline void tc45_WEX_write_pgo(WEX_t *WEX, int16_t value)
  * \param value  Pattern Genarator enable
  */
 
-static inline void tc45_WEX_write_pgo_buffer(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_write_pgo_buffer(WEX_t *WEX, int16_t value)
 {
 	((WEX_t *)WEX)->PGOBUF = value;
 }
@@ -2353,7 +2362,7 @@ static inline void tc45_WEX_write_pgo_buffer(WEX_t *WEX, int16_t value)
  * \param WEX Pointer to WEX module
  * \return Patter Generator Buffer PGOBUF
  */
-static inline uint16_t tc45_WEX_read_pgo_buffer(volatile void *WEX)
+static inline uint16_t tc45_wex_read_pgo_buffer(volatile void *WEX)
 {
 	return (((WEX_t *)WEX)->PGOBUF);
 }
@@ -2365,10 +2374,9 @@ static inline uint16_t tc45_WEX_read_pgo_buffer(volatile void *WEX)
  * \param value  PGO value
  */
 
-static inline void tc45_WEX_write_pgv(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_write_pgv(WEX_t *WEX, uint8_t value)
 {
-	((WEX_t *)WEX)->PGV = (((WEX_t *)WEX)->PGV & 0x00) |
-			value;
+	((WEX_t *)WEX)->PGV = value;
 }
 
 /**
@@ -2378,10 +2386,9 @@ static inline void tc45_WEX_write_pgv(WEX_t *WEX, int16_t value)
  * \param value  PGO value
  */
 
-static inline void tc45_WEX_write_pgv_buffer(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_write_pgv_buffer(WEX_t *WEX, uint8_t value)
 {
-	((WEX_t *)WEX)->PGVBUF = (((WEX_t *)WEX)->PGVBUF & 0x00) |
-			value;
+	((WEX_t *)WEX)->PGVBUF = value;
 }
 
 /**
@@ -2391,17 +2398,11 @@ static inline void tc45_WEX_write_pgv_buffer(WEX_t *WEX, int16_t value)
  * \param value  Override value
  */
 
-static inline void tc45_WEX_set_output_override(WEX_t *WEX, int16_t value)
+static inline void tc45_wex_set_output_override(WEX_t *WEX, uint8_t value)
 {
-	((WEX_t *)WEX)->OUTOVDIS = (((WEX_t *)WEX)->OUTOVDIS & 0x00) |
-			value;
+	((WEX_t *)WEX)->OUTOVDIS = value;
 }
-
-/*******************************************************
-*      HIRES extension                                *
-*******************************************************/
-
-/* @} */
+/** @} */
 
 /**
  * \ingroup tc45_group
@@ -2420,13 +2421,281 @@ static inline void tc45_hires_set_mode(HIRES_t *hires, HIRES_HREN_t hi_res_mode)
 {
 	((HIRES_t *)hires)->CTRLA = hi_res_mode;
 }
-
-/* @} */
-
 /** @} */
 
 #ifdef __cplusplus
 }
 #endif
+
+/**
+ * \page xmega_tc45_quickstart Quick Start Guide for the XMEGA TC45 Driver
+ *
+ * This is the quick start guide for the \ref tc45_group , with step-by-step 
+ * instructions on how to configure and use the driver for a specific use case. 
+ * The code examples can be copied into e.g the main application loop or any
+ * other function that will need to control the timer/counters.
+ *
+ *
+ * \section xmega_tc45_qs_use_cases Use cases
+ * - \ref xmega_tc45_qs_ovf
+ * - \ref xmega_tc45_qs_cc
+ * - \ref xmega_tc45_qs_pwm
+ *
+ *
+ * \section xmega_tc45_qs_ovf Timer/counter overflow (interrupt based)
+ *
+ * This use case will prepare a timer to trigger an interrupt when the timer
+ * overflows. The interrupt is handled by a cutomisable callback function.
+ *
+ * We will setup the timer in this mode:
+ * - Normal WGM mode (incrementing timer)
+ * - Use the system clock as clock source
+ * - No prescaling (clock divider set to 1)
+ * - Overflow interrupt after 1000 counts. This will be done by setting the top
+ *   value to 1000.
+ *
+ *
+ * \section xmega_tc45_qs_ovf_setup Setup steps
+ *
+ * \subsection xmega_tc45_qs_ovf_usage_prereq Prequisites
+ *
+ * For the setup code of this use case to work, the following must
+ * be added to the project:
+ * - \ref interrupt_group "Global Interrupt Management"
+ * - \ref clk_group "Clock Management"
+ *
+ * \subsection xmega_tc45_qs_ovf_setup_code Example code
+ *
+ * Add a callback function that will be executed when the overflow interrupt
+ * trigger.
+ * \code
+ * static void my_callback(void)
+ * {
+ *     // User code to execute when the overflow occurs here
+ * }
+ * \endcode
+ * Add to, e.g., the main loop in the application C-file:
+ * \code
+ * sysclk_init();
+ * tc45_enable(&TCC4);
+ * tc45_set_overflow_interrupt_callback(&TCC4, my_callback);
+ * tc45_set_wgm(&TCC4, TC45_WG_NORMAL);
+ * tc45_write_period(&TCC4, 1000);
+ * tc45_set_overflow_interrupt_level(&TCC4, TC45_INT_LVL_LO);
+ * irq_initialize_vectors();
+ * cpu_irq_enable();
+ * tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1_gc);
+ * \endcode
+ *
+ * \subsection xmega_tc45_qs_ovf_setup_code_workflow Workflow
+ *
+ * -# Enable the interrupt controller:
+ *  - \code irq_initialize_vectors(); \endcode
+ * -# Enable the clock system:
+ *  - \code sysclk_init(); \endcode
+ * -#  Enable timer/counter TCC4
+ *  - \code tc45_enable(&TCC4); \endcode
+ *    \note This will enable the clock system for the module
+ * -# Set the callback function for overflow interrupt
+ *  - \code tc45_set_overflow_interrupt_callback(&TCC4, my_callback); \endcode
+ *    \warning This function requires that the my_callback function is defined
+ * -# Set the desired waveform mode
+ *  - \code tc45_set_wgm(&TCC4, TC45_WG_NORMAL); \endcode
+ *    \note In this case, we use normal mode where the timer increments it
+            count value until the TOP value is reached. The timer then reset
+            its count value to 0.
+ * -# Set the period 
+ *  - \code tc45_write_period(&TCC4, 1000); \endcode
+ *    \note This will specify the TOP value of the counter. The timer will
+ *          overflow and reset when this value is reached.
+ * -# Set the overflow interrupt level 
+ *   - \code tc45_set_overflow_interrupt_level(&TCC4, TC45_INT_LVL_LO); \endcode
+ * -# Enable interrupts:
+ *  - \code cpu_irq_enable(); \endcode
+ * -# Set the clock source
+ *  - \code tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1_gc); \endcode
+ *    \warning When the clock source is set, the timer will start counting
+ *
+ * \section xmega_tc45_qs_ovf_usage Usage steps
+ *
+ * - None. The timer will run in the background, and the code written in the 
+ *   call back function will execute each time the timer overflows. 
+ *
+ *
+ * \section xmega_tc45_qs_cc Timer/counter compare match (interrupt based)
+ *
+ * This use case will prepare a timer to trigger two independent interrupts
+ * when it reaches two different compare values. The period of the timer
+ * is customizable and the two compare matches will be handled by two separate
+ * interrupts implemented in call back functions.
+ *
+ * We will setup the timer in this mode:
+ * - Normal WGM mode - incrementing timer
+ * - Use the system clock as clock source
+ * - No prescaling (divider set to 1)
+ * - Period of timer 10000 counts
+ * - Compare match A interrupt trigger after 100 counts
+ * - Compare match B interrupt trigger after 1000 counts
+ * - If compare A and compare B match occurs simultaneously, compare B
+ *   should have higher priority
+ *
+ *
+ * \section xmega_tc45_qs_cc_setup Setup steps
+ *
+ * \subsection xmega_tc45_qs_cc_usage_prereq Prequisites
+ * For the setup code of this use case to work, the following must
+ * be added to the project:
+ * - \ref interrupt_group "Global Interrupt Management"
+ * - \ref clk_group "Clock Management"
+ *
+ * \subsection xmega_tc45_qs_cc_setup_code Example code
+ *
+ * Add two callback functions that will be executed when compare match A and 
+ * compare match B occurs
+ * \code
+ * static void my_cca_callback(void)
+ * {
+ *    // User code here to execute when a channel A compare match occurs
+ * }
+ * static void my_ccb_callback(void)
+ * {
+ *    // User code here to execute when a channel B compare match occurs
+ * }
+ * \endcode
+ * Add to, e.g., the main loop in the application C-file:
+ * \code
+ * sysclk_init();
+ * irq_initialize_vectors();
+ * cpu_irq_enable();
+ * tc45_enable(&TCC4);
+ * tc45_set_cca_interrupt_callback(&TCC4, my_cca_callback);
+ * tc45_set_ccb_interrupt_callback(&TCC4, my_ccb_callback);
+ * tc45_set_wgm(&TCC4, TC45_WG_NORMAL);
+ * tc45_write_period(&TCC4, 10000);
+ * tc45_write_cc(&TCC4, TC45_CCA, 100);
+ * tc45_write_cc(&TCC4, TC45_CCB, 1000);
+ * tc45_enable_cc_channels(&TCC4,(TC45_CCAEN | TC45_CCBEN));
+ * tc45_set_cca_interrupt_level(&TCC4, TC45_INT_LVL_LO);
+ * tc45_set_ccb_interrupt_level(&TCC4, TC45_INT_LVL_MED);
+ * tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1_gc);
+ * \endcode
+ *
+ * \subsection xmega_tc45_qs_cc_setup_code_workflow Workflow
+ *
+ * -# Enable the interrupt controller:
+ *  - \code irq_initialize_vectors(); \endcode
+ * -# Enable the clock system:
+ *  - \code sysclk_init(); \endcode
+ * -# Enable interrupts:
+ *  - \code cpu_irq_enable(); \endcode
+ * -#  Enable timer/counter TCC4
+ *  - \code tc45_enable(&TCC4); \endcode
+ *    \note This will enable the clock system for the module
+ * -# Set call back function for CCA interrupt
+ *  - \code tc45_set_cca_interrupt_callback(&TCC4, my_cca_callback); \endcode
+ *    \warning This function requires that the call back function is defined
+ * -# Set call back function for CCB interrupt
+ *  - \code tc45_set_ccb_interrupt_callback(&TCC4, my_ccb_callback); \endcode
+ *    \warning This function requires that the call back function is defined
+ * -# Set the desired waveform mode
+ *  - \code tc45_set_wgm(&TCC4, TC45_WG_NORMAL); \endcode
+ *    \note In this case, we use normal mode where the timer increments it
+            count value until the TOP value is reached. The timer then reset
+            its count value to 0.
+ * -# Set the period 
+ *  - \code tc45_write_period(&TCC4, 10000); \endcode
+ *    \note This will specify the TOP value of the counter. The timer will
+ *          overflow and reset when this value is reached.
+ * -# Set compare match value on CCA
+ *   - \code tc45_write_cc(&TCC4, TC45_CCA, 100); \endcode
+ * -# Set compare match value on CCB
+ *   - \code tc45_write_cc(&TCC4, TC45_CCB, 1000); \endcode
+ * -# Enable compare channel A and compare channel B
+ *  -\code tc45_enable_cc_channels(&TCC4, (TC45_CCAEN | TC45_CCBEN)); \endcode
+ * -# Set interrupt level on channel A (low priority, see \ref TC45_INT_LEVEL_t)
+ *   - \code tc45_set_cca_interrupt_level(&TCC4, TC45_INT_LVL_LO); \endcode
+ * -# Set interrupt level on channel B (medium priority \ref TC45_INT_LEVEL_t)
+ *   - \code tc45_set_ccb_interrupt_level(&TCC4, TC45_INT_LVL_MED); \endcode
+ * -# Set the clock source
+ *  - \code tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1_gc); \endcode
+ *    \warning When the clock source is set, the timer will start counting
+ *
+ * \section xmega_tc45_qs_cc_usage Usage steps
+ *
+ * - None. The timer will run in the background, and the code written in the 
+ *   call back functions will execute each time a compare match occur.
+ *
+ *
+ * \section xmega_tc45_qs_pwm Timer/counter PWM
+ * 
+ * This use case will setup a timer in PWM mode. For more details you can 
+ * also look at the XMEGA PWM service.
+ *
+ * We will setup the timer in this mode:
+ * - Normal WGM mode - incrementing timer
+ * - Use the 2MHz oscillator as clock source (default)
+ * - 1Hz PWM frequency (2MHz clock, 1024x prescale, TOP value 1950) 
+ * - 10% duty cycle (1:10 ratio between PER and CC register)
+ * - Output the PWM signal to a I/O port
+ *
+ * \section xmega_tc45_qs_pwm_setup Setup steps
+ *
+ * \subsection xmega_tc45_qs_pwm_usage_prereq Prequisites
+ * For the setup code of this use case to work, the following must
+ * be added to the project:
+ * - \ref clk_group "Clock Management"
+ *
+ * \subsection xmega_tc45_qs_pwm_setup_code Example code
+ *
+ * Add to, e.g., the main loop in the application C-file:
+ * \code
+ * board_init();
+ * sysclk_init();
+ * tc45_enable(&TCC4);
+ * tc45_set_wgm(&TCC4, TC45_WG_SS);
+ * tc45_write_period(&TCC4, 1950);
+ * tc45_write_cc(&TCC4, TC45_CCA, 195);
+ * tc45_enable_cc_channels(&TCC4,TC45_CCAEN);
+ * tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1024_gc);
+ * \endcode
+ *
+ * \subsection xmega_tc45_qs_pwm_setup_code_workflow Workflow
+ *
+ * -# Ensure that PWM I/O pin is configured as output
+ *  - \code board_init(); \endcode
+ *    \note The board_init(); function configures the I/O pins. If this function
+ *          is not executed, the I/O pin must be configured as output manually
+ * -# Enable the clock system:
+ *  - \code sysclk_init(); \endcode
+ * -#  Enable timer/counter TCC4
+ *  - \code tc45_enable(&TCC4); \endcode
+ *    \note This will enable the clock system for the module
+ * -# Set the desired waveform mode
+ *  - \code tc45_set_wgm(&TCC4, TC45_WG_NORMAL); \endcode
+ *    \note In this case, we use normal mode where the timer increments it
+ *          count value until the TOP value is reached. The timer then reset
+  *         its count value to 0.
+ * -# Set the period 
+ *  - \code tc45_write_period(&TCC4, 1950); \endcode
+ *    \note This will specify the TOP value of the counter. The timer will
+ *          overflow and reset when this value is reached.
+ * -# Set compare match value on CCA
+ *   - \code tc45_write_cc(&TCC4, TC45_CCA, 195); \endcode
+ *     \note The PWM duty cycle will be the ratio between PER and CCA, which
+ *           is set by the tc45_write_period() and tc45_write_cc() functions. Use
+ *           tc45_write_cc() to change duty cycle run time (e.g to dim a LED).
+ *           When CCA = 0, the duty cycle will be 0%. When CCA = PER (top value)
+ *           the duty cycle will be 100%.
+ * -# Enable compare channel A 
+ *  -\code tc45_enable_cc_channels(&TCC4,TC45_CCAEN); \endcode
+ * -# Set the clock source
+ *  - \code tc45_write_clock_source(&TCC4, TC45_CLKSEL_DIV1024_gc); \endcode
+ *    \warning When the clock source is set, the timer will start counting
+ *
+ * \section xmega_tc45_qs_pwm_usage Usage steps
+ *  - Use tc45_write_cc() to change the duty cycle of the PWM signal
+ *  - Use tc45_write_period() to change the PWM frequency
+ */
+
 
 #endif /* TC45_H */
