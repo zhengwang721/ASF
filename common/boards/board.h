@@ -113,9 +113,12 @@ extern "C" {
 #define SAM4S_EK2                  49  //!< SAM4S-EK2 board.
 #define XMEGA_E5_XPLAINED          50  //!< ATxmega32E5 Xplained board.
 #define SAM4E_EK                   51  //!< SAM4E-EK board.
-#define ATMEGA256RFR2_XPLAINED_PRO 52  //!< ATMEGA_256RFR2_XPLAINED_PRO board.
+#define ATMEGA256RFR2_XPLAINED_PRO 52  //!< ATmega256RFR2 Xplained Pro board.
 #define SAM4S_XPLAINED_PRO         53  //!< SAM4S Xplained Pro board.
 #define SAM4L_XPLAINED_PRO         54  //!< SAM4L Xplained Pro board.
+#define ATMEGA256RFR2_ZIGBIT       55  //!< ATmega256RFR2 zigbit
+#define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 zigbit
+#define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B zigbit
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< AVR SIMULATOR for AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -133,8 +136,8 @@ extern "C" {
 #define SENSORS_XPLAINED_LIGHTPROX_1 6  //!< Xplained light & proximity sensor board
 #define SENSORS_XPLAINED_INERTIAL_A1 7  //!< Xplained inertial sensor board "A"
 #define RZ600_AT86RF231              8  //!< AT86RF231 RF board in RZ600
-#define RZ600_AT86RF230B             9  //!< AT86RF231 RF board in RZ600
-#define RZ600_AT86RF212             10  //!< AT86RF231 RF board in RZ600
+#define RZ600_AT86RF230B             9  //!< AT86RF230B RF board in RZ600
+#define RZ600_AT86RF212             10  //!< AT86RF212 RF board in RZ600
 #define SENSORS_XPLAINED_BREADBOARD 11  //!< Xplained sensor development breadboard
 #define SECURITY_XPLAINED           12  //!< Xplained ATSHA204 board
 #define USER_EXT_BOARD              99  //!< User-reserved extension board (if any).
@@ -164,6 +167,8 @@ extern "C" {
 #  include "stk600.h"
 #elif BOARD == ATMEGA256RFR2_XPLAINED_PRO
 #  include "atmega256rfr2_xplained_pro/atmega256rfr2_xplained_pro.h"
+#elif BOARD == ATMEGA256RFR2_ZIGBIT
+#  include "atmega256rfr2_zigbit/atmega256rfr2_zigbit.h"
 #elif BOARD == STK600_RC032X
 #  include "stk600/rc032x/stk600_rc032x.h"
 #elif BOARD == STK600_RC044X
@@ -242,7 +247,7 @@ extern "C" {
 #elif BOARD == ATXMEGA128A1_QT600
 #  include "atxmega128a1_qt600/atxmega128a1_qt600.h"
 #elif BOARD == STK600_RCUC3L3
-  #include "stk600/rcuc3l3/stk600_rcuc3l3.h"
+#  include "stk600/rcuc3l3/stk600_rcuc3l3.h"
 #elif BOARD == SAM4S_XPLAINED_PRO
 #  include "sam4s_xplained_pro/sam4s_xplained_pro.h"
 #elif BOARD == SAM4L_XPLAINED_PRO
@@ -251,6 +256,10 @@ extern "C" {
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
 #  include "xmega_c3_xplained/xmega_c3_xplained.h"
+#elif BOARD == XMEGA_RF233_ZIGBIT
+#  include "xmega_rf233_zigbit/xmega_rf233_zigbit.h"
+#elif BOARD == XMEGA_RF212B_ZIGBIT
+#  include "xmega_rf212b_zigbit/xmega_rf212b_zigbit.h"
 #elif BOARD == AVR_SIMULATOR_UC3
 #  include "avr_simulator_uc3/avr_simulator_uc3.h"
 #elif BOARD == USER_BOARD

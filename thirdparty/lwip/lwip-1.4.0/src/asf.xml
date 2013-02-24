@@ -208,7 +208,6 @@
 			<build type="header-file" subtype="api" value="netif/ppp/randm.h"/>
 			<build type="c-source" value="netif/ppp/vj.c"/>
 			<build type="header-file" subtype="api" value="netif/ppp/vj.h"/>
-			<build type="header-file" subtype="api" value="netif/ppp/vjbsdhdr.h"/>
 			<device-support value="uc3"/>
 			<device-support value="sam3x"/>
 		</module>

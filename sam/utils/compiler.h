@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,6 +85,7 @@
 
 #endif
 
+#define FUNC_PTR                            void *
 /**
  * \def UNUSED
  * \brief Marking \a v as a unused parameter or value.
@@ -1022,6 +1023,38 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define div_ceil(a, b)      (((a) + (b) - 1) / (b))
 
 #endif  // #ifndef __ASSEMBLY__
+
+
+#if defined(__ICCARM__)
+#define SHORTENUM           __packed
+#elif defined(__GNUC__)
+#define SHORTENUM           __attribute__((packed))
+#endif
+
+#define FLASH_DECLARE(x)  const x
+#define FLASH_EXTERN(x) extern const x
+#define PGM_READ_BYTE(x) *(x)
+#define PGM_READ_WORD(x) *(x)
+#define MEMCPY_ENDIAN memcpy
+#define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
+
+/* Converting of values from CPU endian to little endian. */
+#define CPU_ENDIAN_TO_LE16(x)   (x)
+#define CPU_ENDIAN_TO_LE32(x)   (x)
+#define CPU_ENDIAN_TO_LE64(x)   (x)
+
+/* Converting of values from little endian to CPU endian. */
+#define LE16_TO_CPU_ENDIAN(x)   (x)
+#define LE32_TO_CPU_ENDIAN(x)   (x)
+#define LE64_TO_CPU_ENDIAN(x)   (x)
+
+/* Converting of constants from CPU endian to little endian. */
+#define CCPU_ENDIAN_TO_LE16(x)  (x)
+#define CCPU_ENDIAN_TO_LE32(x)  (x)
+#define CCPU_ENDIAN_TO_LE64(x)  (x)
+
+#define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
+#define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
 
 /**
  * \}
