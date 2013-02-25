@@ -247,6 +247,32 @@ static void _i2c_master_wait_for_sync(
 #endif
 
 /**
+ * \brief Returns the synchronization status of the module.
+ *
+ * Returns the synchronization status of the module.
+ *
+ * \param[out] module Pointer to device instance structure.
+ *
+ * \return       Status of the synchronization
+ * \retval true  Module is busy synchronizing
+ * \retval false Module is not synchronizing
+ */
+static inline bool i2c_master_is_syncing (const struct i2c_master_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
  * \brief Get the I2C master default configurations.
  *
  * Use to initialize the configuration structure to known default values. This
