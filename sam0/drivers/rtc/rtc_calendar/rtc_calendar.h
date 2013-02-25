@@ -590,7 +590,7 @@ static inline bool rtc_calendar_is_alarm_match(
 	}
 
 	/* Return int flag status. */
-	return (rtc_module->MODE2.INTFLAG.reg & (1 << alarm_index));
+	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_ALARM(alarm_index));
 }
 
 /**
@@ -619,7 +619,7 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
 	}
 
 	/* Clear flag. */
-	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_CMP(alarm_index);
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_ALARM(alarm_index);
 
 	return STATUS_OK;
 }
