@@ -104,7 +104,6 @@ enum status_code _usart_set_config(struct usart_module *const module,
 	_usart_wait_for_sync(module);
 
 	/*Set baud val */
-	baud_val = 63975;
 	usart_hw->BAUD.reg = baud_val;
 
 	/* Set sample mode */
