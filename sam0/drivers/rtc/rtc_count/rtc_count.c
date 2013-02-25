@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Driver for count mode
+ * \brief SAMD20 RTC Driver (Count Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -584,23 +584,25 @@ enum status_code rtc_count_clear_compare_match(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 enum status_code rtc_count_frequency_correction(
-		int8_t value)
+		const int8_t value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
 	/* Check if valid argument. */
-	if (abs(value) > 0x7f) {
+	if (abs(value) > 0x7F) {
 		/* Value bigger than allowed, return invalid argument. */
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint32_t new_correction_value = 0;
+	uint32_t new_correction_value;
+
+	/* Load the new correction value as a positive value, sign added later */
+	new_correction_value = abs(value);
 
 	/* Convert to positive value and adjust register sign bit. */
 	if (value < 0) {
-		new_correction_value = RTC_FREQCORR_SIGN;
-		value = -value;
+		new_correction_value |= RTC_FREQCORR_SIGN;
 	}
 
 	/* Sync. */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Count Driver for count mode
+ * \brief SAMD20 RTC Driver (Count Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -299,7 +299,7 @@ enum rtc_count_compare {
  *
  * \note Not all compare events are available in all devices and modes.
  */
-enum rtc_count_event {
+enum rtc_count_events {
 	/** To set event off. */
 	RTC_COUNT_EVENT_OFF        = 0,
 	/** Overflow event. */
@@ -461,7 +461,7 @@ enum status_code rtc_count_init(
 		const struct rtc_count_config *const config);
 
 enum status_code rtc_count_frequency_correction(
-		int8_t value);
+		const int8_t value);
 
 /** @} */
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -124,8 +124,8 @@ static void _rtc_calendar_register_value_to_time(
 			RTC_MODE2_CLOCK_YEAR_Pos) + _rtc_dev.year_init_value;
 
 	/* Set month value into time struct. */
-	time->month = ((register_value & RTC_MODE2_CLOCK_MONTH_Msk)
-			>> RTC_MODE2_CLOCK_MONTH_Pos);
+	time->month = ((register_value & RTC_MODE2_CLOCK_MONTH_Msk) >>
+			RTC_MODE2_CLOCK_MONTH_Pos);
 
 	/* Set day value into time struct. */
 	time->day = ((register_value & RTC_MODE2_CLOCK_DAY_Msk) >>
@@ -133,25 +133,25 @@ static void _rtc_calendar_register_value_to_time(
 
 	if (_rtc_dev.clock_24h) {
 		/* Set hour in 24h mode. */
-		time->hour = ((register_value & RTC_MODE2_CLOCK_HOUR_Msk)
-				>> RTC_MODE2_CLOCK_HOUR_Pos);
+		time->hour = ((register_value & RTC_MODE2_CLOCK_HOUR_Msk) >>
+				RTC_MODE2_CLOCK_HOUR_Pos);
 	} else {
 		/* Set hour in 12h mode. */
 		time->hour = ((register_value &
-				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_HOUR_PM))
-				>> RTC_MODE2_CLOCK_HOUR_Pos);
+				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_HOUR_PM)) >>
+				RTC_MODE2_CLOCK_HOUR_Pos);
 
 		/* Set pm flag */
 		time->pm = ((register_value & RTC_MODE2_CLOCK_HOUR_PM) != 0);
 	}
 
 	/* Set minute value into time struct. */
-	time->minute = ((register_value & RTC_MODE2_CLOCK_MINUTE_Msk)
-			>> RTC_MODE2_CLOCK_MINUTE_Pos);
+	time->minute = ((register_value & RTC_MODE2_CLOCK_MINUTE_Msk) >>
+			RTC_MODE2_CLOCK_MINUTE_Pos);
 
 	/* Set second value into time struct. */
-	time->second = ((register_value & RTC_MODE2_CLOCK_SECOND_Msk)
-			>> RTC_MODE2_CLOCK_SECOND_Pos);
+	time->second = ((register_value & RTC_MODE2_CLOCK_SECOND_Msk) >>
+			RTC_MODE2_CLOCK_SECOND_Pos);
 }
 
 /**
@@ -159,6 +159,7 @@ static void _rtc_calendar_register_value_to_time(
  *
  * Set the configurations given from the configuration structure to the
  * hardware module.
+ *
  * \param[in] config Pointer to the configuration structure.
  *
  * \return Status of the configuration procedure.
@@ -262,7 +263,7 @@ void rtc_calendar_swap_time_mode(void)
 
 	/* Initialize time structure. */
 	struct rtc_calendar_time time;
-	struct rtc_calendar_alarm alarm;
+	struct rtc_calendar_alarm_time alarm;
 
 	/* Get current time. */
 	rtc_calendar_get_time(&time);
@@ -388,7 +389,7 @@ void rtc_calendar_get_time(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_set_alarm(
-		const struct rtc_calendar_alarm *const alarm,
+		const struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
@@ -428,7 +429,7 @@ enum status_code rtc_calendar_set_alarm(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_get_alarm(
-		struct rtc_calendar_alarm *const alarm,
+		struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
@@ -472,23 +473,25 @@ enum status_code rtc_calendar_get_alarm(
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  */
 enum status_code rtc_calendar_frequency_correction(
-		int8_t value)
+		const int8_t value)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
 	/* Check if valid argument. */
-	if (abs(value) > 0x7f) {
+	if (abs(value) > 0x7F) {
 		/* Value bigger than allowed, return invalid argument. */
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	uint32_t new_correction_value = 0;
+	uint32_t new_correction_value;
+
+	/* Load the new correction value as a positive value, sign added later */
+	new_correction_value = abs(value);
 
 	/* Convert to positive value and adjust register sign bit. */
 	if (value < 0) {
-		new_correction_value = RTC_FREQCORR_SIGN;
-		value = -value;
+		new_correction_value |= RTC_FREQCORR_SIGN;
 	}
 
 	/* Sync. */

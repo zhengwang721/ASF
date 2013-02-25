@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -377,7 +377,7 @@ struct rtc_calendar_time {
  * Alarm structure containing time of the alarm and a mask to determine when
  * the alarm will trigger.
  */
-struct rtc_calendar_alarm {
+struct rtc_calendar_alarm_time {
 	/** Alarm time. */
 	struct rtc_calendar_time time;
 	/** Alarm mask. */
@@ -405,7 +405,7 @@ struct rtc_calendar_config {
 	/** Set bitmask of events to enable. */
 	uint16_t event_generators;
 	/** Alarm values. */
-	struct rtc_calendar_alarm alarm[RTC_NUM_OF_ALARMS];
+	struct rtc_calendar_alarm_time alarm[RTC_NUM_OF_ALARMS];
 };
 
 
@@ -527,7 +527,7 @@ void rtc_calendar_init(
 void rtc_calendar_swap_time_mode(void);
 
 enum status_code rtc_calendar_frequency_correction(
-		int8_t value);
+		const int8_t value);
 
 /** @} */
 
@@ -543,11 +543,11 @@ void rtc_calendar_get_time(
 		struct rtc_calendar_time *const time);
 
 enum status_code rtc_calendar_set_alarm(
-		const struct rtc_calendar_alarm *const alarm,
+		const struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index);
 
 enum status_code rtc_calendar_get_alarm(
-		struct rtc_calendar_alarm *const alarm,
+		struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index);
 
 /** @} */
