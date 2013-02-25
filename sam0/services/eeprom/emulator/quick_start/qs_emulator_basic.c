@@ -48,8 +48,8 @@ int main(void)
 
 //! [main]
 //! [variable]
-	uint8_t write_buffer[EEPROM_DATA_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
-	uint8_t read_buffer[EEPROM_DATA_SIZE];
+	uint8_t write_buffer[EEPROM_PAGE_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
+	uint8_t read_buffer[EEPROM_PAGE_SIZE];
 //! [variable]
 
 	/* Setup EEPROM emulator service*/

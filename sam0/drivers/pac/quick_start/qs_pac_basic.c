@@ -47,7 +47,7 @@ void config_port_pins(void);
 //! [pin_setup]
 void config_port_pins(void)
 {
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;

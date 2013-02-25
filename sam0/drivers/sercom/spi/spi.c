@@ -48,7 +48,7 @@
  * This function will reset the SPI module to its power on default values and
  * disable it.
  *
- * \param dev_inst Pointer to the software instance struct
+ * \param[in,out] dev_inst Pointer to the software instance struct
  */
 void spi_reset(struct spi_dev_inst *const dev_inst)
 {
@@ -245,7 +245,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up GCLK */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;

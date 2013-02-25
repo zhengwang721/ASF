@@ -48,7 +48,7 @@ void config_port_pins(void);
 void config_port_pins(void)
 {
 //! [setup_1]
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 //! [setup_1]
 //! [setup_2]
 	port_get_config_defaults(&pin_conf);

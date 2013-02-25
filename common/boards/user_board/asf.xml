@@ -1,9 +1,17 @@
 <asf xmlversion="1.0">
+	<select-by-config id="config.common.boards.user_board.init" name="config.common.boards.user_board.init" caption="Common board initialization support" default="yes">
+		<module type="meta" id="config.common.boards.user_board.init#no" caption="Common board initialization support disabled">
+		</module>
+		<module type="meta" id="config.common.boards.user_board.init#yes" caption="Common board initialization support enabled">
+			<build type="c-source" value="init.c"/>
+		</module>
+	</select-by-config>
+
 	<module type="meta" id="common.boards.user_board.common" caption="Common build items for user board support templates">
 		<build type="define" name="BOARD" value="USER_BOARD"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="user_board.h"/>
-		<build type="c-source" value="init.c"/>
+		<require idref="config.common.boards.user_board.init"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 		<require idref="common.boards"/>

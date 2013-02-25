@@ -56,13 +56,13 @@
  * \retval STATUS_OK                The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  */
-static enum status_code _adc_set_config (Adc *const hw_dev,
-		struct adc_conf *const config)
+static enum status_code _adc_set_config (
+		Adc *const hw_dev,
+		struct adc_config *const config)
 {
 	uint8_t adjres;
 	enum adc_average_samples average;
-	struct system_gclk_chan_conf gclk_chan_conf;
-
+	struct system_gclk_chan_config gclk_chan_conf;
 
 	/* Configure GCLK channel and enable clock */
 	gclk_chan_conf.source_generator = config->clock_source;
@@ -283,8 +283,10 @@ static enum status_code _adc_set_config (Adc *const hw_dev,
  * \retval STATUS_BUSY          The module is busy with a reset operation
  * \retval STATUS_ERR_DENIED        The module is enabled
  */
-enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
-		struct adc_conf *config)
+enum status_code adc_init(
+		struct adc_module *const dev_inst,
+		Adc *hw_dev,
+		struct adc_config *config)
 {
 
 	dev_inst->hw_dev = hw_dev;

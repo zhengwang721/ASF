@@ -42,7 +42,7 @@
  */
 
 /**
- * \page ac_basic_use_case Quick Start Guide for the Analog Comparator module - Basic Use Case
+ * \page asfdoc_samd20_ac_basic_use_case Quick Start Guide for the Analog Comparator module - Basic Use Case
  *
  * In this use case, the Analog Comparator module is configured for:
  *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)
@@ -57,19 +57,19 @@
  * be used in a user application to alter the system behavior based on the
  * comparison result.
  *
- * \section ac_basic_use_case_setup Setup
+ * \section asfdoc_samd20_ac_basic_use_case_setup Setup
  *
- * \subsection ac_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samd20_ac_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection ac_basic_use_case_setup_code Code
+ * \subsection asfdoc_samd20_ac_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_ac_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_ac_basic.c setup_init
  *
- * \subsection ac_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samd20_ac_basic_use_case_setup_flow Workflow
  * -# Create an AC device instance struct, which will be associated with an
  *    Analog Comparator peripheral hardware instance.
  *    \note Device instance structures should \b never go out of scope when in
@@ -105,7 +105,7 @@
  *    mode, with the correct negative and positive MUX selections and the
  *    desired voltage scaler.
  *    \note The voltage scalar formula is documented
- *          \ref ac_chan_conf.vcc_scale_factor "here".
+ *          \ref ac_chan_config.vcc_scale_factor "here".
  *
  *  - \snippet qs_ac_basic.c setup_10
  * -# Initialize the Analog Comparator channel and configure it with the desired
@@ -117,13 +117,13 @@
  * -# Enable the now initialized Analog Comparator peripheral.
  *  - \snippet qs_ac_basic.c setup_13
  *
- * \section ac_basic_use_case_imp Implementation
+ * \section asfdoc_samd20_ac_basic_use_case_imp Implementation
  *
- * \subsection ac_basic_use_case_imp_code Code
+ * \subsection asfdoc_samd20_ac_basic_use_case_imp_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_ac_basic.c main
  *
- * \subsection ac_basic_use_case_imp_flow Workflow
+ * \subsection asfdoc_samd20_ac_basic_use_case_imp_flow Workflow
  * -# Trigger the first comparison on the comparator channel.
  *  - \snippet qs_ac_basic.c main_1
  * -# Create a local variable to maintain the current comparator state. Since no

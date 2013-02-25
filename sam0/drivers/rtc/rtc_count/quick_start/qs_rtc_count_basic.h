@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 PAC Quick Start
+ * \brief SAMD20 RTC Count Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,25 +42,25 @@
  */
 
 /**
- * \page rtc_count_basic_use_case Quick Start Guide for the RTC count - Basic
+ * \page asfdoc_samd20_rtc_count_basic_use_case Quick Start Guide for the RTC count - Basic
  * In this use case, the RTC is set up in count mode. The quick start
  * implements the RTC in 16 bit mode and to continuously update COUNT register,
  * together with a set compare register value. The rest according to the
  * \ref rtc_count_get_config_defaults "default". After initiating the count
  * value is set to 1000.
  *
- * \section rtc_count_basic_use_case_prereq Prerequisites
+ * \section asfdoc_samd20_rtc_count_basic_use_case_prereq Prerequisites
  * The clocks need be be set up correctly in the clock domain, and the drivers
  * also needs to be included in the project.
  *
- * \section rtc_count_basic_setup Setup
+ * \section asfdoc_samd20_rtc_count_basic_use_case_setup Setup
  * Set up the RTC as intended.
  *
- * \subsection rtc_count_init_code Initialization Code
+ * \subsection asfdoc_samd20_rtc_count_basic_use_case_init_code Initialization Code
  * Copy-paste the following setup code to your applications main():
  * \snippet qs_rtc_count_basic.c initiate
  *
- * \subsection rtc_count_main_code Add to Main
+ * \subsection asfdoc_samd20_rtc_count_basic_use_case_main_code Add to Main
  * Add the following to your main().
  * \snippet qs_rtc_count_basic.c add_main
  *
@@ -76,14 +76,14 @@
  * -# Enable module
  *  - \snippet qs_rtc_count_basic.c enable
  *
- * \section rtc_count_basic_implement Implementation
+ * \section asfdoc_samd20_rtc_count_basic_use_case_implement Implementation
  * Code used to implement the initialized module.
  *
- * \subsection rtc_count_basic_imp_code Code
+ * \subsection asfdoc_samd20_rtc_count_basic_use_case_imp_code Code
  * Add after initialization in main().
  * \snippet qs_rtc_count_basic.c implementation_code
  *
- * \subsection rtc_count_basic_imp_workflow Workflow
+ * \subsection asfdoc_samd20_rtc_count_basic_use_case_imp_workflow Workflow
  * -# Set RTC period to 20
  *  - \snippet qs_rtc_count_basic.c period
  * -# Poll on compare match flag. Clear compare match flag when set.

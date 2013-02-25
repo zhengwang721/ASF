@@ -56,7 +56,7 @@
  */
 void port_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct port_conf *const config)
+		const struct port_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -87,7 +87,7 @@ void port_pin_set_config(
 void port_group_set_config(
 		PortGroup *const port,
 		const uint32_t mask,
-		const struct port_conf *const config)
+		const struct port_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(port);

@@ -84,9 +84,9 @@ void extint_enable(void)
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	/* Configure the generic clock for the module */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = 0;
+	gclk_chan_conf.source_generator = GCLK_GENERATOR_0;
 	gclk_chan_conf.run_in_standby   = false;
 	system_gclk_chan_set_config(EIC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(EIC_GCLK_ID);
@@ -137,8 +137,8 @@ void extint_disable(void)
  * configuration to the hardware module. If the channel is already configured,
  * the new configuration will replace the existing one.
  *
- * \param channel   External Interrupt channel to configure
- * \param config    Configuration settings for the channel
+ * \param[in] channel   External Interrupt channel to configure
+ * \param[in] config    Configuration settings for the channel
 
  */
 void extint_chan_set_config(
@@ -191,8 +191,8 @@ void extint_chan_set_config(
  *  configuration to the hardware module. If the channel is already configured,
  *  the new configuration will replace the existing one.
  *
- *  \param nmi_channel   External Interrupt NMI channel to configure
- *  \param config        Configuration settings for the channel
+ *  \param[in] nmi_channel   External Interrupt NMI channel to configure
+ *  \param[in] config        Configuration settings for the channel
  *
  * \returns Status code indicating the success or failure of the request.
  * \retval  STATUS_OK                   Configuration succeeded

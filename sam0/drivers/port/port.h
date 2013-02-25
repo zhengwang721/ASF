@@ -208,7 +208,7 @@ enum port_pin_pull {
  *  structure should be initialized by the \ref port_get_config_defaults()
  *  function before being modified by the user application.
  */
-struct port_conf {
+struct port_config {
 	/** Port buffer input/output direction. */
 	enum port_pin_dir  direction;
 
@@ -317,7 +317,7 @@ static inline void port_group_toggle_output_level(
  *  \param[out] config  Configuration structure to initialize to default values.
  */
 static inline void port_get_config_defaults(
-		struct port_conf *const config)
+		struct port_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -329,12 +329,12 @@ static inline void port_get_config_defaults(
 
 void port_pin_set_config(
 		const uint8_t gpio_pin,
-		const struct port_conf *const config);
+		const struct port_config *const config);
 
 void port_group_set_config(
 		PortGroup *const port,
 		const uint32_t mask,
-		const struct port_conf *const config);
+		const struct port_config *const config);
 
 /** @} */
 

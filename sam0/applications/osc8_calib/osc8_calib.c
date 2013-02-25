@@ -40,12 +40,12 @@
  */
 #include <asf.h>
 
-#define RES 255
+#define RES 256
 #define CAL_CLOCK_HZ 32768
 
-static struct usart_dev_inst usart_edbg;
+static struct usart_module usart_edbg;
 
-void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string);
+void debug_write_string(struct usart_module *const dev, uint8_t const *string);
 
 void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer);
 
@@ -58,10 +58,11 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 void debug_wait(uint16_t ticks);
 
 /* Write string to usart. */
-void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string)
+void debug_write_string(struct usart_module *const dev, uint8_t const *string)
+
 {
 	do {
-		while (usart_write(dev, *string) != STATUS_OK) {
+		while (usart_write_wait(dev, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
@@ -92,7 +93,8 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 {
 	events_init();
 
-	struct tc_conf config;
+	struct tc_config config;
+
 	tc_get_config_defaults(&config);
 
 	config.counter_size = TC_COUNTER_SIZE_32BIT;
@@ -109,41 +111,41 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 	tc_init(comp_chan, TC2, &config);
 
 	struct tc_events events;
+	tc_get_events_config_default(&events);
 
 	events.generate_event_on_compare_channel[0] = true;
-	events.generate_event_on_compare_channel[1] = false;
-	events.generate_event_on_overflow = false;
-	events.on_event_perform_action = false;
 
 	tc_enable_events(comp_chan, &events);
 
-	events.generate_event_on_overflow = false;
 	events.generate_event_on_compare_channel[0] = false;
-	events.on_event_perform_action = true;
+	events.enable_incoming_events = true;
 
 	tc_enable_events(calib_chan, &events);
 
 	tc_enable(calib_chan);
 	tc_enable(comp_chan);
 
-	struct events_chan_conf evch_conf;
-
+	struct events_chan_config evch_conf;
 	events_chan_get_config_defaults(&evch_conf);
+
 	evch_conf.edge_detection = EVENT_EDGE_RISING;
 	evch_conf.path = EVENT_PATH_SYNCHRONOUS;
 	evch_conf.generator_id = EVSYS_ID_GEN_TC2_MCX_0;
 
-	struct events_user_conf evus_conf;
+	struct events_user_config evus_conf;
 	evus_conf.event_channel_id = EVENT_CHANNEL_0;
 
 	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
+
+	//tc_stop_counter(calib_chan);
+	//tc_stop_counter(comp_chan);
 }
 
 /* Setup and initialize USART device. */
 void setup_usart_channel(void)
 {
-	struct usart_conf config_struct;
+	struct usart_config config_struct;
 
 	usart_get_config_defaults(&config_struct);
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
@@ -167,22 +169,28 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 
 	tc_clear_interrupt_flag(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0);
 
-	calib_chan->hw_dev->COUNT32.COUNT.reg = 0;
-	comp_chan->hw_dev->COUNT16.COUNT.reg = 0;
+	//calib_chan->hw->COUNT32.COUNT.reg = 0;
+	//comp_chan->hw->COUNT16.COUNT.reg = 0;
 
-	while (!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
+	tc_start_counter(calib_chan);
+	tc_start_counter(comp_chan);
+
+
+	while(!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
 
 	tmp = (uint64_t)tc_get_capture_value(calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0);
 	tmp = tmp * CAL_CLOCK_HZ;
+
+	//tc_stop_counter(calib_chan);
+	//tc_stop_counter(comp_chan);
 
 	return (uint32_t)(tmp / RES);
 }
 
 /* Wait loop */
 void debug_wait(uint16_t ticks) {
-	while(ticks--)
-	{
-		__asm__ ("NOP");
+	while(ticks--) {
+		__asm__("NOP");
 	}
 }
 
@@ -214,7 +222,7 @@ int main(void)
 	/* Run calibration */
 	for (frange_cal = 1; frange_cal < 3; frange_cal++) {
 		for (comm_cal = 0; comm_cal < 0x7ff; comm_cal++) {
-			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | 8 << 7, frange_cal);
+			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal, frange_cal);
 
 			debug_wait(1000);
 			tmp = debug_get_freq(&calib_chan, &comp_chan);
@@ -230,16 +238,17 @@ int main(void)
 	/* Set the found best calibration. */
 
 	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best, frange_best);
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1099, 1);
+	//system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1576, 1);
 
 	/* Setup usart module to give information back. */
 	setup_usart_channel();
 
 	/* Get calibrated value. */
-	debug_wait(1000);
+	debug_wait(10000);
 
 	/* Write freq. before and now, together with calibration values to usart. */
-	uint2str(string, 10, freq_before, 10);
-	//debug_int_to_string(string, 10, freq_before);
+	debug_int_to_string(string, 10, freq_before);
 	debug_write_string(&usart_edbg, (uint8_t*)"Before: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");

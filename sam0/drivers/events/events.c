@@ -76,7 +76,7 @@ void events_init(void)
  */
 void events_chan_set_config(
 		const enum events_channel event_channel,
-		struct events_chan_conf *const config)
+		struct events_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -89,7 +89,7 @@ void events_chan_set_config(
 	if (config->path != EVENT_PATH_ASYNCHRONOUS) {
 
 		/* Set up a GLCK channel to use with the specific channel */
-		struct system_gclk_chan_conf gclk_chan_conf;
+		struct system_gclk_chan_config gclk_chan_conf;
 
 		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 
@@ -119,7 +119,7 @@ void events_chan_set_config(
  */
 void events_user_set_config(
 		const uint8_t user,
-		struct events_user_conf *const config)
+		struct events_user_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);

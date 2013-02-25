@@ -41,41 +41,40 @@
  *
  */
 
-#ifndef _ADC_H_INCLUDED_
-#define _ADC_H_INCLUDED_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <compiler.h>
-#include <system.h>
+#ifndef ADC_H_INCLUDED
+#define ADC_H_INCLUDED
 
 /**
- * \defgroup sam0_adc_group SAMD20 Analog-to-Digital Converter Driver (ADC)
+ * \defgroup asfdoc_samd20_adc_group SAMD20 Analog to Digital Converter Driver (ADC)
  *
- * Driver for the SAMD20 architecture devices. This driver provides an
- * interface for converting analog signals to digital values.
- * This driver encompasses the following module within the SAMD20 devices:
- * \li \b ADC \b (Analog-to-Digital Converter)
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Analog to Digital Converter functionality, for
+ * the conversion of analog voltages into a corresponding digital form.
  *
- * \section module_introduction Introduction
+ * The following peripherals are used by this module:
  *
- * \subsection module_overview ADC Overview
- * The analog-to-digital converter converts an analog signal to a digital value.
- * The ADC has up to 12-bit resolution, and is capable of converting up to 500k
- * samples per second (ksps).
- * The input selection is flexible, and both single-ended and differential
- * measurements can be done. For differential measurements, an optional gain
- * stage is available to increase the dynamic range. In addition, several
- * internal signal inputs are available. The ADC can provide both signed and
- * unsigned results.
+ *  - ADC (Analog to Digital Converter)
  *
- * The ADC measurements can either be started by application software or an
- * incoming event from another peripheral in the device.
- * Both internal and external reference voltages can be used. An integrated
- * temperature sensor is available for use with the ADC. The bandgap voltage, as
- * well as the scaled IO and core voltages can also be measured by the ADC.
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_adc_prerequisites
+ *  - \ref asfdoc_samd20_adc_module_overview
+ *  - \ref asfdoc_samd20_adc_special_considerations
+ *  - \ref asfdoc_samd20_adc_extra_info
+ *  - \ref asfdoc_samd20_adc_examples
+ *  - \ref asfdoc_samd20_adc_api_overview
+ *
+ *
+ * \section asfdoc_samd20_adc_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_adc_module_overview Module Overview
+ *
+ * This driver provides an interface for the Analog-to-Digital conversion
+ * functions on the device, to convert analog voltages to a corresponding
+ * digital value. The ADC has up to 12-bit resolution, and is capable of
+ * converting up to 500k samples per second (ksps).
  *
  * The ADC has a compare function for accurate monitoring of user defined
  * thresholds with minimum software intervention required.
@@ -83,72 +82,18 @@ extern "C" {
  * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
  * conversion results are provided left or right adjusted which eases
  * calculation when the result is represented as a signed integer.
- * \n\n
+ *
+ * The input selection is flexible, and both single-ended and differential
+ * measurements can be made. For differential measurements, an optional gain
+ * stage is available to increase the dynamic range. In addition, several
+ * internal signal inputs are available. The ADC can provide both signed and
+ * unsigned results.
+ *
+ * The ADC measurements can either be started by application software or an
+ * incoming event from another peripheral in the device, and both internal and
+ * external reference voltages can be selected.
+ *
  * A simplified block diagram of the ADC can be seen in the following figure:
- *
- * \dot
- * digraph overview {
- * splines = false;
- * rankdir=LR;
- *
- * adc0top [label="ADC0", shape=none];
- * dotstop [label="...", shape=none];
- * adcntop [label="ADCn", shape=none];
- * sigtop [label="Int. Sig", shape=none];
- *
- * adc0bot [label="ADC0", shape=none];
- * dotsbot [label="...", shape=none];
- * adcnbot [label="ADCn", shape=none];
- * sigbot [label="Int. Sig", shape=none];
- *
- *
- * mux1 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- * mux2 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- *
- *
- * int1v [label="INT1V", shape=none];
- * intvcc [label="INTVCC", shape=none];
- * arefa [label="AEFA", shape=none];
- * arefb [label="AREFB", shape=none];
- *
- * mux3 [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2];
- *
- * adc0top -> mux1;
- * dotstop -> mux1;
- * adcntop -> mux1;
- * sigtop -> mux1;
- *
- * adc0bot -> mux2:nw;
- * dotsbot -> mux2:w;
- * adcnbot -> mux2:w;
- * sigbot -> mux2:sw;
- *
- * int1v -> mux3;
- * intvcc -> mux3;
- * arefa -> mux3;
- * arefb -> mux3;
- *
- *
- * adc [label="ADC", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- * prescaler [label="PRESCALER", shape=box];
- *
- * mux1 -> adc;
- * mux2 -> adc;
- * mux3 -> adc:sw;
- * prescaler -> adc;
- *
- * postproc [label="Post processing", shape=box];
- * result [label="RESULT", shape=box];
- *
- * adc:e -> postproc:w;
- * postproc:e -> result:w;
- *
- * {rank=same; adc0top dotstop adcntop sigtop adc0bot dotsbot adcnbot sigbot }
- * {rank=same; mux1 mux2 int1v intvcc arefa arefb}
- * {rank=same; prescaler adc}
- *
- * }
- * \enddot
  *
  * \dot
  * digraph overview {
@@ -181,61 +126,59 @@ extern "C" {
  * }
  * \enddot
  *
- * \subsection prescaler Prescaler
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_prescaler Sample Clock Prescaler
  * The ADC features a prescaler which enables conversion at lower clock rates
- * than the specified GCLK settings. The prescaler can be configured in the
- * \ref adc_conf struct.
+ * than the input Generic Clock to the ADC module. This feature can be used to
+ * lower the synchronization time of the digital interface to the ADC module
+ * via a high speed Generic Clock frequency, while still allowing the ADC
+ * sampling rate to be reduced.
  *
- * \subsection resolution ADC Resolution
- * The ADC supports 8-bit, 10-bit or 12-bit resolution. The resolution can be
- * configured in the \ref adc_conf struct.
+ * \subsection asfdoc_samd20_adc_module_overview_resolution ADC Resolution
+ * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Additionally,
+ * hardware oversampling and decimation modes can be configured to increase the
+ * effective resolution at the expense of throughput. In oversampling and
+ * decimation mode the ADC resolution is increased from 12-bits to an effective
+ * 13, 14, 15 or 16-bits.
  *
- * \subsubsection oversampling Oversampling and Decimation
- * Oversampling and decimation can be configured with the
- * \ref adc_oversampling_and_decimation in the \ref adc_conf struct.
- * In oversampling and decimation mode the ADC resolution is increased from
- * 12-bits to programmed 13, 14, 15 or 16-bits.
+ * \subsection asfdoc_samd20_adc_module_overview_conversion Conversion Modes
+ * ADC conversions can be software triggered on demand by the user application,
+ * if continuous sampling is not required. It is also possible to configure the
+ * ADC in free-running mode, where new conversions are started as soon as a the
+ * previous conversion is completed, or configure the ADC to scan across a
+ * number of input pins (see \ref asfdoc_samd20_adc_module_overview_pin_scan).
  *
- *
- * \subsection conversion Conversion
- * An ADC conversion can be started with the \ref adc_start_conversion
- * function. It is also possible configure the ADC in free-running mode where
- * new conversions are started as soon as a conversion is finished, or
- * configure a number of input pins to scan. See \ref pin_scan for more
- * information about the latter.
- *
- * The result of a conversion can be retrieved with the \ref adc_read
- * function.
- *
- * \subsubsection diff_mode Differential and Single-Ended Conversion
+ * \subsection asfdoc_samd20_adc_module_overview_diff_mode Differential and Single-Ended Conversion
  * The ADC has two conversion modes; differential and single-ended. When
- * measuring signals where the positive input always is at a higher voltage
- * than the negative input, the single-ended conversion mode should be used in
- * order to have full 12-bit resolution in the conversion mode, which has only
- * positive values.
- * If however the positive input may go below the negative input, creating
- * some negative results, the differential mode should be used
- * in order to get correct results. The configuration of the conversion mode
- * is done in the \ref adc_conf struct.
+ * measuring signals where the positive input pin is always at a higher voltage
+ * than the negative input pin, the single-ended conversion mode should be used
+ * in order to achieve a full 12-bit output resolution.
  *
- * \subsubsection sample_time Sample Time
- * Sample time is configurable with \ref adc_conf.sample_length. This value
- * (0-63) controls the ADC sampling time in number of half-ADC prescaled clock
- * cycles (depending on the prescaler value), thus controlling the ADC input
- * impedance.
+ * If however the positive input pin voltage may drop below the negative input
+ * pin the signed differential mode should be used.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_sample_time Sample Time
+ * The sample time for each ADC conversion is configurable as a number of half
+ * prescaled ADC clock cycles (depending on the prescaler value), allowing the
+ * user application to achieve faster or slower sampling depending on the
+ * source impedance of the ADC input channels. For applications with high
+ * impedance inputs the sample time can be increased to give the ADC an adequate
+ * time to sample and convert the input channel.
  *
  * The resulting sampling time is given by the following equation:
  * \f[
  * t_{SAMPLE} = (sample\_length+1) \times \frac{ADC_{CLK}} {2}
  * \f]
  *
- * \subsubsection averaging Averaging
- * The ADC can be configured to trade conversion speed for accuracy by
- * averaging multiple samples. This feature is suitable when operating in noisy
- * conditions. The numbers of samples to be averaged is specified with the
- * \ref adc_average_samples enum in the \ref adc_conf struct.
- * When reading the ADC result, this will be the output.
- * The effective ADC sample rate will be reduced with:
+ * \subsection asfdoc_samd20_adc_module_overview_averaging Averaging
+ * The ADC can be configured to trade conversion speed for accuracy by averaging
+ * multiple samples in hardware. This feature is suitable when operating in
+ * noisy conditions.
+ *
+ * The effective ADC sample rate will be reduced when averaging is enabled,
+ * however the effective resolution will be increased according to the following
+ * table:
+ *
  * <table>
  *   <tr>
  *     <th>Number of Samples</th>
@@ -288,12 +231,15 @@ extern "C" {
  * </table>
  *
  *
- * \subsubsection offset_corr Offset and Gain Correction
- * Inherent gain and offset errors affect the absolute accuracy of the ADC. The
- * offset error is defined as the deviation of the ADC’s actual transfer
+ * \subsection asfdoc_samd20_adc_module_overview_offset_corr Offset and Gain Correction
+ * Inherent gain and offset errors affect the absolute accuracy of the ADC.
+ *
+ * The offset error is defined as the deviation of the ADC’s actual transfer
  * function from ideal straight line at zero input voltage.
+ *
  * The gain error is defined as the deviation of the last output step's
  * midpoint from the ideal straight line, after compensating for offset error.
+ *
  * The offset correction value is subtracted from the converted data before the
  * result is ready. The gain correction value is multiplied with the offset
  * corrected value.
@@ -303,52 +249,46 @@ extern "C" {
  * ADC_{RESULT} = (VALUE_{CONV} + CORR_{OFFSET}) \times CORR_{GAIN}
  * \f]
  *
- * Offset and gain correction is enabled with the
- * \ref adc_conf.correction_enable bool, and the correction values are
- * written to the \ref adc_conf.gain_correction and
- * \ref adc_conf.offset_correction values.
+ * When enabled, a given set of offset and gain correction values can be applied
+ * to the sampled data in hardware, giving a corrected stream of sample data to
+ * the user application at the cost of an increased sample latency.
  *
- * In single conversion, a latency of 13 GCLK_ADC is added for the final
- * RESULT availability. Since the correction time is always less than
- * propagation delay, in free running mode this latency appears only during the
- * first conversion. All other conversion results are available at the defined
- * sampling rate.
-
- * \subsubsection pin_scan Pin Scan
- * In pin scan mode, the first conversion will start at the configured positive
- * input (\ref adc_conf.positive_input) plus a start offset
- * (\ref adc_conf.offset_start_scan). When a conversion is done, the next
- * conversion will start at the next input and so on, until the configured
- * number of input pins to scan (\ref adc_conf.inputs_to_scan) conversions
- * are done.
+ * In single conversion, a latency of 13 ADC Generic Clock cycles is added for
+ * the final sample result availability. As the correction time is always less
+ * than the propagation delay, in free running mode this latency appears only
+ * during the first conversion. After the first conversion is complete future
+ * conversion results are available at the defined sampling rate.
  *
- * Pin scan mode can be configured in the \ref adc_conf struct before
- * initializing the ADC, or run-time with the \ref adc_set_pin_scan_mode and
- * \ref adc_disable_pin_scan_mode functions.
+ * \subsection asfdoc_samd20_adc_module_overview_pin_scan Pin Scan
+ * In pin scan mode, the first ADC conversion will begin from the configured
+ * positive channel, plus the requested starting offset. When the first
+ * conversion is completed, the next conversion will start at the next positive
+ * input channel and so on, until all requested pins to scan have been sampled
+ * and converted.
  *
- * \subsection window_monitor Window Monitor
- * The window monitor allows comparing the conversion result to predefined
+ * Pin scanning gives a simple mechanism to sample a large number of physical
+ * input channel samples, using a single physical ADC channel.
+ *
+ * \subsection asfdoc_samd20_adc_module_overview_window_monitor Window Monitor
+ * The ADC module window monitor function can be used to automatically compare
+ * the conversion result against a preconfigured pair of upper and lower
  * threshold values.
+ *
  * The threshold values are evaluated differently, depending on whether
- * differential or single-ended mode is selected.
- * The upper and lower thresholds are evaluated as signed values in
- * differential mode, otherwise they are evaluated as unsigned values.
+ * differential or single-ended mode is selected. In differential mode, the
+ * upper and lower thresholds are evaluated as signed values for the comparison,
+ * while in single-ended mode the comparisons are made as a set of unsigned
+ * values.
  *
  * The significant bits of the lower window monitor threshold and upper window
- * monitor threshold are given by the precision selected by the resolution
- * option in the \ref adc_conf struct. That means that only the eight lower
- * bits will be considered in 8-bit mode. In addition, if using differential
- * mode, the 8th bit will be considered as the sign bit even if bit 9 is a
- * zero.
-
- * The window mode can be configured with the configuration struct before
- * initializing the ADC, or run-time with the \ref adc_set_window_mode function.
- * The window monitor result can be polled with the
- * \ref adc_is_interrupt_flag_set function. If this flag is set, it must be
- * cleared with the \ref adc_clear_interrupt_flag function before checking for
- * a new match.
+ * monitor threshold values are user-configurable, and follow the overall ADC
+ * sampling bit precision set when the ADC is configured by the user application.
+ * For example, only the eight lower bits of the window threshold values will be
+ * compares to the sampled data whilst the ADC is configured in 8-bit mode. In
+ * In addition, if using differential mode, the 8th bit will be considered as
+ * the sign bit even if bit 9 is zero.
  *
- * \subsection events Events
+ * \subsection asfdoc_samd20_adc_module_overview_events Events
  * Event generation and event actions are configurable in the ADC.
  *
  * The ADC has two actions that can be triggered upon event reception:
@@ -361,50 +301,47 @@ extern "C" {
  *
  * If the event actions are enabled in the configuration, any incoming event
  * will trigger the action.
- * \n
+ *
  * If the window monitor event is enabled, an event will be generated
  * when the configured window condition is detected.
+ *
  * If the result ready event is enabled, an event will be generated when a
- * conversion is done.
+ * conversion is completed.
  *
- * \subsection module_clk_sources Clock Sources
- * The clock for the ADC interface (CLK_ADC) is generated by
- * the Power Manager. This clock is turned on by default, and can be enabled
- * and disabled in the Power Manager.
- *\n\n
- * Additionally, an asynchronous clock source (GCLK_ADC) is required.
- * These clocks are normally disabled by default. The selected clock source
- * must be enabled in the Power Manager before it can be used by the ADC.
- * The ADC core operates asynchronously from the user interface and
- * peripheral bus. As a consequence, the ADC needs two clock cycles of both
- * CLK_ADC and GCLK_ADC to synchronize the values written to some of the
- * control and data registers.
- * The oscillator source for the GCLK_ADC clock is selected in the System
- * Control Interface (SCIF).
  *
- * \section dependencies Dependencies
- * The ADC driver has the following dependencies:
- * \li \ref system_group "System" - The ADC can only do conversions in active or
- * idle mode. The clock for the ADC interface (CLK_ADC) is generated by
- * the Power Manager. This clock is turned on by default, and can be enabled
- * and disabled in the Power Manager.
- * Additionally, an asynchronous clock source (GCLK_ADC) is required.
- * These clocks are normally disabled by default. The selected clock source
- * must be enabled in the Power Manager before it can be used by the ADC.
- * \li \ref sam0_events_group "Events" - Event generation and event actions are
- * configurable in the ADC.
+ * \section asfdoc_samd20_adc_special_considerations Special Considerations
  *
- * \section special_cons Special Considerations
+ * An integrated analog temperature sensor is available for use with the ADC.
+ * The bandgap voltage, as well as the scaled IO and core voltages can also be
+ * measured by the ADC. For internal ADC inputs, the internal source(s) may need
+ * to be manually enabled by the user application before they can be measured.
  *
- * \subsection extra_info Extra Information
- * For extra information see \ref adc_extra_info.
  *
- * \section module_examples Examples
- * - \ref quickstart
+ * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
  *
- * \section api_overview API Overview
+ * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
+ *  - \ref asfdoc_samd20_adc_extra_acronyms
+ *  - \ref asfdoc_samd20_adc_extra_dependencies
+ *  - \ref asfdoc_samd20_adc_extra_errata
+ *  - \ref asfdoc_samd20_adc_extra_history
+ *
+ *
+ * \section asfdoc_samd20_adc_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_adc_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_adc_api_overview API Overview
  * @{
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <compiler.h>
+#include <system.h>
 
 /**
  * \brief ADC interrupt flags
@@ -479,7 +416,7 @@ enum adc_resolution {
 	/** ADC 10-bit resolution */
 	ADC_RESOLUTION_10BIT = ADC_CTRLB_RESSEL_10BIT,
 	/** ADC 8-bit resolution */
-	ADC_RESOLUTION_8BIT = ADC_CTRLB_RESSEL_8BIT,
+	ADC_RESOLUTION_8BIT  = ADC_CTRLB_RESSEL_8BIT,
 };
 
 /**
@@ -530,13 +467,12 @@ enum adc_gain_factor {
  */
 enum adc_event_action {
 	/** Event action disabled */
-	ADC_EVENT_ACTION_DISABLED = 0,
+	ADC_EVENT_ACTION_DISABLED         = 0,
 	/** Flush ADC and start conversion */
-	ADC_EVENT_ACTION_FLUSH_START_CONV   = ADC_EVCTRL_SYNCEI,
+	ADC_EVENT_ACTION_FLUSH_START_CONV = ADC_EVCTRL_SYNCEI,
 	/** Start conversion */
-	ADC_EVENT_ACTION_START_CONV   = ADC_EVCTRL_STARTEI,
+	ADC_EVENT_ACTION_START_CONV       = ADC_EVCTRL_STARTEI,
 };
-
 
 /**
  * \brief ADC positive MUX input selection enum
@@ -720,25 +656,25 @@ enum adc_oversampling_and_decimation {
 /**
  * \brief Window monitor configuration structure
  *
- * Window monitor configuration structure. Part of the \ref adc_conf struct
+ * Window monitor configuration structure. Part of the \ref adc_config struct
  * and will be initialized by \ref adc_get_config_defaults .
  */
-struct adc_window_conf {
+struct adc_window_config {
 	/** Selected window mode */
-	enum adc_window_mode     window_mode;
+	enum adc_window_mode window_mode;
 	/** Lower window value */
-	int32_t                  window_lower_value;
+	int32_t window_lower_value;
 	/** Upper window value */
-		int32_t                  window_upper_value;
+	int32_t window_upper_value;
 };
 
 /**
  * \brief Event configuration structure
  *
- * Event configuration structure. Part of the \ref adc_conf struct and will
+ * Event configuration structure. Part of the \ref adc_config struct and will
  * be initialized by \ref adc_get_config_defaults .
  */
-struct adc_event_conf {
+struct adc_event_config {
 	/** Event action to take on incoming event */
 	enum adc_event_action event_action;
 	/** Enable event generation on conversion done */
@@ -751,10 +687,10 @@ struct adc_event_conf {
  * \brief Gain and offsett correction configuration structure
  *
  * Gain and offsett correction configuration structure.
- * Part of the \ref adc_conf struct and will  be initialized by
+ * Part of the \ref adc_config struct and will  be initialized by
  * \ref adc_get_config_defaults .
  */
-struct adc_correction_conf {
+struct adc_correction_config {
 	/**
 	Enables correction for gain and offset based on values of gain_correction and
 	offset_correction if set to true.
@@ -779,10 +715,10 @@ struct adc_correction_conf {
 /**
  * \brief Pin scan configuration structure
  *
- * Pin scan configuration structure. Part of the \ref adc_conf struct and will
+ * Pin scan configuration structure. Part of the \ref adc_config struct and will
  * be initialized by \ref adc_get_config_defaults .
  */
-struct adc_pin_scan_conf {
+struct adc_pin_scan_config {
 	/**
 	 * Offset (relative to selected positive input) of first input pin to be
 	 * used in pin scan mode.
@@ -802,7 +738,7 @@ struct adc_pin_scan_conf {
  * initialized by the \ref adc_get_config_defaults()
  * function before being modified by the user application.
  */
-struct adc_conf {
+struct adc_config {
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator       clock_source;
 	/** Voltage reference */
@@ -844,13 +780,13 @@ struct adc_conf {
 	*/
 	uint8_t sample_length;
 	/** Window monitor configuration structure */
-	struct adc_window_conf window;
+	struct adc_window_config window;
 	/** Gain and offsett correction configuration structure */
-	struct adc_correction_conf correction;
+	struct adc_correction_config correction;
 	/** Event configuration structure */
-	struct adc_event_conf event;
+	struct adc_event_config event;
 	/** Pin scan configuration structure */
-	struct adc_pin_scan_conf pin_scan;
+	struct adc_pin_scan_config pin_scan;
 };
 
 /**
@@ -859,7 +795,7 @@ struct adc_conf {
  * ADC software instance structure.
  *
  */
-struct adc_dev_inst {
+struct adc_module {
 	/** Pointer to ADC hardware module */
 	Adc *hw_dev;
 };
@@ -871,7 +807,8 @@ struct adc_dev_inst {
  *
  * \param[in] hw_dev Pointer to hardware module
  */
-static inline void _adc_wait_for_sync(Adc *const hw_dev)
+static inline void _adc_wait_for_sync(
+		Adc *const hw_dev)
 {
 	while (hw_dev->STATUS.reg & ADC_STATUS_SYNCBUSY) {
 	}
@@ -881,8 +818,10 @@ static inline void _adc_wait_for_sync(Adc *const hw_dev)
  * \name Driver initialization and configuration
  * @{
  */
-enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
-		struct adc_conf *config);
+enum status_code adc_init(
+		struct adc_module *const module_inst,
+		Adc *hw_dev,
+		struct adc_config *config);
 
 /**
  * \brief Initializes an ADC configuration structure to defaults
@@ -916,36 +855,36 @@ enum status_code adc_init(struct adc_dev_inst *const dev_inst, Adc *hw_dev,
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
  */
-static inline void adc_get_config_defaults(struct adc_conf *const config)
+static inline void adc_get_config_defaults(struct adc_config *const config)
 {
 	Assert(config);
-	config->clock_source = GCLK_GENERATOR_0;
-	config->reference = ADC_REFERENCE_INT1V;
-	config->clock_prescaler = ADC_CLOCK_PRESCALER_DIV4;
-	config->resolution = ADC_RESOLUTION_12BIT;
-	config->window.window_mode = ADC_WINDOW_MODE_DISABLE;
-	config->window.window_upper_value = 0;
-	config->window.window_lower_value = 0;
-	config->gain_factor = ADC_GAIN_FACTOR_1X;
-	config->positive_input = ADC_POSITIVE_INPUT_PIN0 ;
-	config->negative_input = ADC_NEGATIVE_INPUT_PIN1 ;
-	config->average_samples = ADC_AVERAGE_DISABLE;
-	config->oversampling_and_decimation =
+	config->clock_source                  = GCLK_GENERATOR_0;
+	config->reference                     = ADC_REFERENCE_INT1V;
+	config->clock_prescaler               = ADC_CLOCK_PRESCALER_DIV4;
+	config->resolution                    = ADC_RESOLUTION_12BIT;
+	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
+	config->window.window_upper_value     = 0;
+	config->window.window_lower_value     = 0;
+	config->gain_factor                   = ADC_GAIN_FACTOR_1X;
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
+	config->negative_input                = ADC_NEGATIVE_INPUT_PIN1 ;
+	config->average_samples               = ADC_AVERAGE_DISABLE;
+	config->oversampling_and_decimation   =
 			ADC_OVERSAMPLING_AND_DECIMATION_DISABLE;
-	config->left_adjust = false;
-	config->differential_mode = false;
-	config->freerunning = false;
-	config->event.event_action = ADC_EVENT_ACTION_DISABLED;
+	config->left_adjust                   = false;
+	config->differential_mode             = false;
+	config->freerunning                   = false;
+	config->event.event_action            = ADC_EVENT_ACTION_DISABLED;
 	config->event.generate_event_on_conversion_done = false;
-	config->event.generate_event_on_window_monitor = false;
-	config->run_in_standby = false;
+	config->event.generate_event_on_window_monitor  = false;
+	config->run_in_standby                = false;
 	config->reference_compensation_enable = false;
-	config->correction.correction_enable = false;
-	config->correction.gain_correction = 0;
-	config->correction.offset_correction = 0;
-	config->sample_length = 0;
-	config->pin_scan.offset_start_scan = 0;
-	config->pin_scan.inputs_to_scan = 0;
+	config->correction.correction_enable  = false;
+	config->correction.gain_correction    = 0;
+	config->correction.offset_correction  = 0;
+	config->sample_length                 = 0;
+	config->pin_scan.offset_start_scan    = 0;
+	config->pin_scan.inputs_to_scan       = 0;
 }
 
 /** @} */
@@ -960,14 +899,15 @@ static inline void adc_get_config_defaults(struct adc_conf *const config)
  *
  * This function will enable the ADC module.
  *
- * \param[in] dev_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst    Pointer to the ADC software instance struct
  */
-static inline void adc_enable(struct adc_dev_inst *const dev_inst)
+static inline void adc_enable(
+		struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
@@ -978,14 +918,15 @@ static inline void adc_enable(struct adc_dev_inst *const dev_inst)
  *
  * This function will disable the ADC module.
  *
- * \param[in] dev_inst Pointer to the ADC software instance struct
+ * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_disable(struct adc_dev_inst *const dev_inst)
+static inline void adc_disable(
+		struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
@@ -996,18 +937,19 @@ static inline void adc_disable(struct adc_dev_inst *const dev_inst)
  *
  * This function will reset the ADC module.
  *
- * \param[in] dev_inst Pointer to the ADC software instance struct
+ * \param[in] module_inst Pointer to the ADC software instance struct
  */
-static inline void adc_reset(struct adc_dev_inst *const dev_inst)
+static inline void adc_reset(
+		struct adc_module *const module_inst)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Disable to make sure the pipeline is flushed before reset */
-	adc_disable(dev_inst);
+	adc_disable(module_inst);
 
 	/* Software reset the module */
 	_adc_wait_for_sync(adc_module);
@@ -1019,24 +961,27 @@ static inline void adc_reset(struct adc_dev_inst *const dev_inst)
  *
  * This function will start an ADC conversion
  *
- * \param[in] dev_inst      Pointer to the ADC software instance struct
+ * \param[in] module_inst      Pointer to the ADC software instance struct
  */
-static inline void adc_start_conversion(struct adc_dev_inst *const dev_inst)
+static inline void adc_start_conversion(
+		struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
 }
 
 /* Prototype for adc_is_interrupt_flag_set */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+static inline bool adc_is_interrupt_flag_set(
+		struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag);
 /* Prototype for adc_clear_interrupt_flag */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+static inline void adc_clear_interrupt_flag(
+		struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag);
 /**
  * \brief Reads the ADC result
@@ -1044,7 +989,7 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * This function will read the result from an ADC conversion. It will clear
  * the ADC_INTERRUPT_RESULT_READY flag after reading.
  *
- * \param[in] dev_inst      Pointer to the ADC software instance struct
+ * \param[in] module_inst      Pointer to the ADC software instance struct
  * \param[out] result       Pointer to store the result value in
  *
  * \return Status of the procedure
@@ -1052,24 +997,25 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  * \retval STATUS_BUSY          The result is not ready
  */
 static inline enum status_code adc_read(
-		struct adc_dev_inst *const dev_inst, uint16_t *result)
+		struct adc_module *const module_inst,
+		uint16_t *result)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 	Assert(result);
 
-	if (!adc_is_interrupt_flag_set(dev_inst, ADC_INTERRUPT_RESULT_READY)) {
+	if (!adc_is_interrupt_flag_set(module_inst, ADC_INTERRUPT_RESULT_READY)) {
 		/* Result not ready */
 		return STATUS_BUSY;
 	}
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;
 	/* Reset ready flag */
-	adc_clear_interrupt_flag(dev_inst, ADC_INTERRUPT_RESULT_READY);
+	adc_clear_interrupt_flag(module_inst, ADC_INTERRUPT_RESULT_READY);
 
 	return STATUS_OK;
 }
@@ -1089,14 +1035,15 @@ static inline enum status_code adc_read(
  * All conversions in progress will be lost.
  * When flush is complete, the module will resume where it left off.
  *
- * \param[in] dev_inst    Pointer to the ADC software instance struct
+ * \param[in] module_inst    Pointer to the ADC software instance struct
  */
-static inline void adc_flush(struct adc_dev_inst *const dev_inst)
+static inline void adc_flush(
+		struct adc_module *const module_inst)
 {
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	_adc_wait_for_sync(adc_module);
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
@@ -1107,21 +1054,22 @@ static inline void adc_flush(struct adc_dev_inst *const dev_inst)
  *
  * This function will set the ADC window mode.
  *
- * \param[in] dev_inst           Pointer to the ADC software instance struct
+ * \param[in] module_inst           Pointer to the ADC software instance struct
  * \param[in] adc_window_mode    Window monitor mode to set
  * \param[in] window_lower_value Lower window monitor threshold value
  * \param[in] window_upper_value Upper window monitor threshold value
   */
-static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_window_mode(
+		struct adc_module *const module_inst,
 		enum adc_window_mode window_mode,
-		int16_t              window_lower_value,
-		int16_t              window_upper_value)
+		int16_t window_lower_value,
+		int16_t window_upper_value)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1145,17 +1093,18 @@ static inline void adc_set_window_mode(struct adc_dev_inst *const dev_inst,
  *
  * This function will set the ADC gain factor.
  *
- * \param[in] dev_inst       Pointer to the ADC software instance struct
+ * \param[in] module_inst       Pointer to the ADC software instance struct
  * \param[in] gain_factor    Gain factor value to set
  */
-static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_gain(
+		struct adc_module *const module_inst,
 		enum adc_gain_factor gain_factor)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1174,7 +1123,7 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * positive input + start_offset. When a conversion is done, a conversion will
  * start on the next input, until inputs_to_scan conversions are made.
  *
- * \param[in] dev_inst          Pointer to the ADC software instance struct
+ * \param[in] module_inst          Pointer to the ADC software instance struct
  * \param[in] inputs_to_scan    Number of input pins to do conversion on
  *                              (must be two or more)
  * \param[in] start_offset      Offset of first pin to scan (relative to
@@ -1185,15 +1134,17 @@ static inline void adc_set_gain(struct adc_dev_inst *const dev_inst,
  * \retval STATUS_ERR_INVALID_ARG Number of input pins to scan or offset
  *                                has an invalid value
  */
-static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const dev_inst,
-		uint8_t inputs_to_scan, uint8_t start_offset)
+static inline enum status_code adc_set_pin_scan_mode(
+		struct adc_module *const module_inst,
+		uint8_t inputs_to_scan,
+		uint8_t start_offset)
 
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	if (inputs_to_scan > 0) {
 		/*
@@ -1227,12 +1178,13 @@ static inline enum status_code adc_set_pin_scan_mode(struct adc_dev_inst *const 
  * This function will disable pin scan mode. Next conversion will be done
  * on only one pin.
  *
- * \param[in] dev_inst     Pointer to the ADC software instance struct
+ * \param[in] module_inst     Pointer to the ADC software instance struct
  */
-static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst)
+static inline void adc_disable_pin_scan_mode(
+		struct adc_module *const module_inst)
 {
 	/* Disable pin scan mode */
-	adc_set_pin_scan_mode(dev_inst, 0, 0);
+	adc_set_pin_scan_mode(module_inst, 0, 0);
 }
 
 
@@ -1241,17 +1193,18 @@ static inline void adc_disable_pin_scan_mode(struct adc_dev_inst *const dev_inst
  *
  * This function will set the positive ADC input pin.
  *
- * \param[in] dev_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst        Pointer to the ADC software instance struct
  * \param[in] positive_input  Positive input pin
  */
-static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_positive_input(
+		struct adc_module *const module_inst,
 		enum adc_positive_input positive_input)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1269,17 +1222,18 @@ static inline void adc_set_positive_input(struct adc_dev_inst *const dev_inst,
  * This function will set the negative ADC input pin to be used in
  * differential mode.
  *
- * \param[in] dev_inst        Pointer to the ADC software instance struct
+ * \param[in] module_inst        Pointer to the ADC software instance struct
  * \param[in] negative_input  Negative input pin
  */
-static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
+static inline void adc_set_negative_input(
+		struct adc_module *const module_inst,
 		enum adc_negative_input negative_input)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Wait for synchronization to finish */
 	_adc_wait_for_sync(adc_module);
@@ -1301,21 +1255,22 @@ static inline void adc_set_negative_input(struct adc_dev_inst *const dev_inst,
  *
  * This function will check if a given interrupt flag is set.
  *
- * \param[in] dev_inst         Pointer to the ADC software instance struct
+ * \param[in] module_inst         Pointer to the ADC software instance struct
  * \param[in] interrupt_flag   Interrupt flag to check
  *
  * \return Boolean value to indicate if the interrupt flag is set or not.
  * \retval true   The flag is set
  * \retval false  The flag is not set
  */
-static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst,
+static inline bool adc_is_interrupt_flag_set(
+		struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 	return adc_module->INTFLAG.reg & interrupt_flag;
 }
 
@@ -1324,17 +1279,18 @@ static inline bool adc_is_interrupt_flag_set(struct adc_dev_inst *const dev_inst
  *
  * This function will clear a given interrupt flag.
  *
- * \param[in] dev_inst         Pointer to the ADC software instance struct
+ * \param[in] module_inst         Pointer to the ADC software instance struct
  * \param[in] interrupt_flag   Interrupt flag to clear
  */
-static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
+static inline void adc_clear_interrupt_flag(
+		struct adc_module *const module_inst,
 		enum adc_interrupt_flag interrupt_flag)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module_inst);
+	Assert(module_inst->hw_dev);
 
-	Adc *const adc_module = dev_inst->hw_dev;
+	Adc *const adc_module = module_inst->hw_dev;
 
 	/* Clear interrupt flag */
 	adc_module->INTFLAG.reg = interrupt_flag;
@@ -1347,10 +1303,11 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
 
 /** @} */
 
+
 /**
- * \page adc_extra_info Extra Information
+ * \page asfdoc_samd20_adc_extra Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_samd20_adc_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1381,13 +1338,22 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  *	</tr>
  * </table>
  *
- * \section workarounds Workarounds Implemented by Driver
- * No workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_adc_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *
+ *
+ * \section asfdoc_samd20_adc_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_adc_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -1400,21 +1366,15 @@ static inline void adc_clear_interrupt_flag(struct adc_dev_inst *const dev_inst,
  */
 
 /**
- * \page quickstart Quick Start Guides for the ADC Module
+ * \page asfdoc_samd20_adc_exqsg Examples for ADC Driver
  *
- * This is the quick start guide list for the \ref sam0_adc_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_adc_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section adc_use_cases ADC driver use cases
- * - \subpage adc_basic_use_case
+ *  - \subpage asfdoc_samd20_adc_basic_use_case
  */
 
-#endif /* _ADC_H_INCLUDED_ */
+#endif /* ADC_H_INCLUDED */

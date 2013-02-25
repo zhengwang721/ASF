@@ -62,7 +62,7 @@ static void board_extint_handler(uint32_t channel)
 
 static void configure_led(void)
 {
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
@@ -72,7 +72,7 @@ static void configure_led(void)
 static void configure_button(void)
 {
 #if USE_EIC == false
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;

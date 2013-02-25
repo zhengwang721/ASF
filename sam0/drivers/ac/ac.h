@@ -44,16 +44,122 @@
 #define AC_H_INCLUDED
 
 /**
- * \defgroup sam0_ac_group SAMD20 Analog Comparator Driver (AC)
+ * \defgroup asfdoc_samd20_ac_group SAMD20 Analog Comparator Driver (AC)
  *
- * Driver for the SAMD20 Analog Comparator. Provides a unified interface
- * for the configuration and management of the Analog Comparator
- * module, including the channel comparator input selections, window
- * modes and event generation within the device. This driver encompasses the
- * following module within the SAM0 devices:
+ * This driver for SAMD20 devices provides an interface for the configuration
+ * and management of the device's Analog Comparator functionality, for the
+ * comparison of analog voltages against a known reference voltage to determine
+ * its relative level.
  *
- * \li \b AC (Analog Comparator)
+ * The following peripherals are used by this module:
  *
+ *  - AC (Analog Comparator)
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samd20_ac_prerequisites
+ *  - \ref asfdoc_samd20_ac_module_overview
+ *  - \ref asfdoc_samd20_ac_special_considerations
+ *  - \ref asfdoc_samd20_ac_extra_info
+ *  - \ref asfdoc_samd20_ac_examples
+ *  - \ref asfdoc_samd20_ac_api_overview
+ *
+ *
+ * \section asfdoc_samd20_ac_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samd20_ac_module_overview Module Overview
+ *
+ * The Analog Comparator module provides an interface for the comparison of one
+ * or more analog voltage inputs (sourced from external or internal inputs)
+ * against a known reference voltage, to determine if the unknown voltage is
+ * higher or lower than the reference. Additionally, window functions are
+ * provided so that two comparators can be connected together to determine if
+ * an input is below, inside, above or outside the two reference points of the
+ * window.
+ *
+ * Each comparator requires two analog input voltages, a positive and negative
+ * channel input. The result of the comparison is a binary \c true if the
+ * comparator's positive channel input is higher than the comparator's negative
+ * input channel, and \c false if otherwise.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_pairs Window Comparators and Comparator Pairs
+ * Each comparator module contains one or more comparator pairs, a set of two
+ * distinct comparators which can be used independently or linked together for
+ * Window Comparator mode. In this latter mode, the two comparator units in a
+ * comparator pair are linked together to allow the module to detect if an input
+ * voltage is below, inside, above or outside a window set by the upper and
+ * lower threshold voltages set by the two comparators. If not required, window
+ * comparison mode can be turned off and the two comparator units can be
+ * configured and used separately.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_pos_neg_mux Positive and Negative Input MUXs
+ * Each comparator unit requires two input voltages, a positive and negative
+ * channel (note that these names refer to the logical operation that the unit
+ * performs, and both voltages should be above GND) which are then compared with
+ * one another. Both the positive and negative channel inputs are connected to
+ * a pair of MUXs, which allows one of several possible inputs to be selected
+ * for each comparator channel.
+ *
+ * The exact channels available for each comparator differ for the positive and
+ * negative inputs, but the same MUX choices are available for all comparator
+ * units (i.e. all positive MUXes are identical, all negative MUXes are
+ * identical). This allows the user application to select which voltages are
+ * compared to one-another.
+ *
+ * When used in window mode, both comparators in the window pair should have
+ * their positive channel input MUXs configured to the same input channel, with
+ * the negative channel input MUXs used to set the lower and upper window
+ * bounds.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_output_filtering Output Filtering
+ * The output of each comparator unit can either be used directly with no
+ * filtering (giving a lower latency signal, with potentially more noise around
+ * the comparison threshold) or it can be passed through a multiple stage
+ * digital majority filter. Several filter lengths are available, with the
+ * longer stages producing a more stable result, at the expense of a higher
+ * latency.
+ *
+ * When output filtering is used in single shot mode, a single trigger of the
+ * comparator will automatically perform the required number of samples to
+ * produce a correctly filtered result.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_input_hysteresis Input Hysteresis
+ * To prevent unwanted noise around the threshold where the comparator unit's
+ * positive and negative input channels are close in voltage to one another, an
+ * optional hysteresis can be used to widen the point at which the output result
+ * flips. This mode will prevent a change in the comparison output unless the
+ * inputs cross one-another beyond the hysteresis gap introduces by this mode.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_sampling Single Shot and Continuous Sampling Modes
+ * Comparators can be configured to run in either Single Shot or Continuous
+ * sampling modes; when in Single Shot mode, the comparator will only perform a
+ * comparison (and any resulting filtering, see
+ * \ref asfdoc_samd20_ac_module_overview_output_filtering) when triggered via a
+ * software or event trigger. This mode improves the power efficiency of the
+ * system by only performing comparisons when actually required by the
+ * application.
+ *
+ * For systems requiring a lower latency or more frequent comparisons,
+ * continuous mode will place the comparator into continuous sampling mode,
+ * which increases the module power consumption but decreases the latency
+ * between each comparison result by automatically performing a comparison on
+ * every cycle of the module's clock.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_events Input and Output Events
+ * Each comparator unit is capable of being triggered by a both software and
+ * hardware triggers. Hardware input events allow for other peripherals to
+ * automatically trigger a comparison on demand - for example, a timer output
+ * event could be used to trigger comparisons at a desired regular interval.
+ *
+ * The module's output events can similarly be used to trigger other hardware
+ * modules each time a new comparison result is available. This scheme allows
+ * for reduced levels of CPU usage in an application and lowers the overall
+ * system response latency by directly triggering hardware peripherals from one
+ * another without requiring software intervention.
+ *
+ * \subsection asfdoc_samd20_ac_module_overview_physical Physical Connection
  * Physically, the modules are interconnected within the device as shown in the
  * following diagram:
  *
@@ -112,113 +218,31 @@
  * }
  * \enddot
  *
- * \section module_introduction Introduction
  *
- * \subsection module_overview Overview of the Analog Comparator
- * The Analog Comparator module compares a pair of analog input voltages, to
- * determine which one of the two is higher. This module can be used in
- * applications where a binary output indicating a higher/lower input voltage is
- * required. The comparison result can be used internally in the user
- * application, output to a GPIO pin of the device, or both.
- *
- * Each comparator requires two analog input voltages, a positive and negative
- * channel input. The result of the comparison is a binary \c true if the
- * comparator's positive channel input is higher than the comparator's negative
- * input channel, and \c false if otherwise.
- *
- * \subsection pairs_and_window_comps Window Comparators and Comparator Pairs
- * Each comparator module contains one or more comparator pairs, a set of two
- * distinct comparators which can be used independently or linked together for
- * Window Comparator mode. In this latter mode, the two comparator units in a
- * comparator pair are linked together to allow the module to detect if an input
- * voltage is below, inside, above or outside a window set by the upper and
- * lower threshold voltages set by the two comparators. If not required, window
- * comparison mode can be turned off and the two comparator units can be
- * configured and used separately.
- *
- * \subsection pos_neg_comp_mux Positive and Negative Input MUXs
- * Each comparator unit requires two input voltages, a positive and negative
- * channel (note that these names refer to the logical operation that the unit
- * performs, and both voltages should be above GND) which are then compared with
- * one another. Both the positive and negative channel inputs are connected to
- * a pair of MUXs, which allows one of several possible inputs to be selected
- * for each comparator channel.
- *
- * The exact channels available for each comparator differ for the positive and
- * negative inputs, but the same MUX choices are available for all comparator
- * units (i.e. all positive MUXes are identical, all negative MUXes are
- * identical). This allows the user application to select which voltages are
- * compared to one-another.
- *
- * When used in window mode, both comparators in the window pair should have
- * their positive channel input MUXs configured to the same input channel, with
- * the negative channel input MUXs used to set the lower and upper window
- * bounds.
- *
- * \subsection output_filtering Output Filtering
- * The output of each comparator unit can either be used directly with no
- * filtering (giving a lower latency signal, with potentially more noise around
- * the comparison threshold) or it can be passed through a multiple stage
- * digital majority filter. Several filter lengths are available, with the
- * longer stages producing a more stable result, at the expense of a higher
- * latency.
- *
- * When output filtering is used in single shot mode, a single trigger of the
- * comparator will automatically perform the required number of samples to
- * produce a correctly filtered result.
- *
- * \subsection input_hysteresis Input Hysteresis
- * To prevent unwanted noise around the threshold where the comparator unit's
- * positive and negative input channels are close in voltage to one another, an
- * optional hysteresis can be used to widen the point at which the output result
- * flips. This mode will prevent a change in the comparison output unless the
- * inputs cross one-another beyond the hysteresis gap introduces by this mode.
- *
- * \subsection single_shot_cont_sampling Single Shot and Continuous Sampling Modes
- * Comparators can be configured to run in either Single Shot or Continuous
- * sampling modes; when in Single Shot mode, the comparator will only perform a
- * comparison (and any resulting filtering, see \ref output_filtering) when
- * triggered via a software or event trigger. This mode improves the power
- * efficiency of the system by only performing comparisons when actually
- * required by the application.
- *
- * For systems requiring a lower latency or more frequent comparisons,
- * continuous mode will place the comparator into continuous sampling mode,
- * which increases the module power consumption but decreases the latency
- * between each comparison result by automatically performing a comparison on
- * every cycle of the module's clock.
- *
- * \subsection input_output_comp_events Input and Output Events
- * Each comparator unit is capable of being triggered by a both software and
- * hardware triggers. Hardware input events allow for other peripherals to
- * automatically trigger a comparison on demand - for example, a timer output
- * event could be used to trigger comparisons at a desired regular interval.
- *
- * The module's output events can similarly be used to trigger other hardware
- * modules each time a new comparison result is available. This scheme allows
- * for reduced levels of CPU usage in an application and lowers the overall
- * system response latency by directly triggering hardware peripherals from one
- * another without requiring software intervention.
- *
- * \section module_dependencies Dependencies
- * The Analog Comparator driver has the following dependencies.
- *
- * \li \ref asfdoc_samd20_gclk_group "GCLK" (Generic Clock Management)
- *
- * \section special_considerations Special Considerations
+ * \section asfdoc_samd20_ac_special_considerations Special Considerations
  *
  * The number of comparator pairs (and, thus, window comparators) within a
  * single hardware instance of the Analog Comparator module is device-specific.
  * Some devices will contain a single comparator pair, while others may have two
  * pairs; refer to your device specific datasheet for details.
  *
- * \section module_extra_info Extra Information
- * For extra information see \ref ac_extra_info.
  *
- * \section module_examples Examples
- * - \ref ac_quickstart
+ * \section asfdoc_samd20_ac_extra_info Extra Information for AC
  *
- * \section api_overview API Overview
+ * For extra information see \ref asfdoc_samd20_ac_extra. This includes:
+ *  - \ref asfdoc_samd20_ac_extra_acronyms
+ *  - \ref asfdoc_samd20_ac_extra_dependencies
+ *  - \ref asfdoc_samd20_ac_extra_errata
+ *  - \ref asfdoc_samd20_ac_extra_history
+ *
+ *
+ * \section asfdoc_samd20_ac_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_ac_basic_use_case
+ *
+ *
+ * \section asfdoc_samd20_ac_api_overview API Overview
  * @{
  */
 
@@ -493,7 +517,7 @@ struct ac_chan_config {
  *  Configuration structure for a Window Comparator channel, to configure the
  *  detection characteristics of the window.
  */
-struct ac_win_conf {
+struct ac_win_config {
 	/** Window detection criteria that should be used to determine the state
 	 *  of the window detection flag. */
 	enum ac_win_detect window_detection;
@@ -918,7 +942,7 @@ static inline enum ac_chan_state ac_chan_get_state(
  *                      default values
  */
 static inline void ac_win_get_config_defaults(
-		struct ac_win_conf *const config)
+		struct ac_win_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -930,7 +954,7 @@ static inline void ac_win_get_config_defaults(
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel,
-		struct ac_win_conf *const config);
+		struct ac_win_config *const config);
 
 enum status_code ac_win_enable(
 		struct ac_module *const module_inst,
@@ -1044,10 +1068,11 @@ static inline void ac_win_clear_detected(
 
 /** @} */
 
+
 /**
- * \page ac_extra_info Extra Information
+ * \page asfdoc_samd20_ac_extra Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_samd20_ac_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1070,13 +1095,22 @@ static inline void ac_win_clear_detected(
  *	</tr>
  * </table>
  *
- * \section fixed_errata Erratas fixed by driver
- * No errata workarounds in driver.
  *
- * \section module_history Module History
- * Below is an overview of the module history, detailing enhancements and fixes
- * made to the module since its first release. The current version of this
- * corresponds to the newest version listed in the table below.
+ * \section asfdoc_samd20_ac_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+ *
+ *
+ * \section asfdoc_samd20_ac_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samd20_ac_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
  *
  * <table>
  *	<tr>
@@ -1089,21 +1123,15 @@ static inline void ac_win_clear_detected(
  */
 
 /**
- * \page ac_quickstart Quick Start Guides for the AC module
+ * \page asfdoc_samd20_ac_exqsg Examples for AC Driver
  *
- * This is the quick start guide list for the \ref sam0_ac_group module, with
- * step-by-step instructions on how to configure and use the driver in a
- * selection of use cases.
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samd20_ac_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
  *
- * The use cases contain several code fragments. The code fragments in the
- * steps for setup can be copied into a custom initialization function of the
- * user application and run at system startup, while the steps for usage can be
- * copied into the normal user application program flow.
- *
- * \see General list of module \ref module_examples "examples".
- *
- * \section ac_use_cases AC module use cases
- * - \subpage ac_basic_use_case
+ *  - \subpage asfdoc_samd20_ac_basic_use_case
  */
 
 #endif

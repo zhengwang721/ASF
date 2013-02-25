@@ -22,6 +22,7 @@
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 			<require idref="xmega.utils"/>
 		</module>
@@ -41,6 +42,7 @@
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 			<require idref="xmega.utils"/>
 		</module>
@@ -58,6 +60,7 @@
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="xmegad"/>
+			<device-support value="xmegae"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 			<require idref="xmega.utils"/>
 		</module>

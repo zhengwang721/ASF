@@ -375,12 +375,14 @@
 extern "C" {
 #endif
 
+#if !defined(__DOXYGEN__)
 /**
  * \brief Mask for the error flags in the status register.
  */
-#define NVM_ERRORS_MASK     (NVMCTRL_STATUS_PROGE | \
-                             NVMCTRL_STATUS_LOCKE | \
-                             NVMCTRL_STATUS_NVME)
+#  define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | \
+                           NVMCTRL_STATUS_LOCKE | \
+                           NVMCTRL_STATUS_NVME)
+#endif
 
 /**
  * \brief NVM error flags.

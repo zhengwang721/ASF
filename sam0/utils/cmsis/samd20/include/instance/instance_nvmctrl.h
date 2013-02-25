@@ -46,15 +46,15 @@
 
 /* ========== Register definition for NVMCTRL peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_NVMCTRL_CTRLA                     (0x41004000U) /**< \brief (NVMCTRL) NVM Control Register A */
-#define REG_NVMCTRL_CTRLB                     (0x41004004U) /**< \brief (NVMCTRL) NVM Control Register B */
-#define REG_NVMCTRL_PARAM                     (0x41004008U) /**< \brief (NVMCTRL) Parameter Register */
-#define REG_NVMCTRL_INTENCLR                  (0x4100400CU) /**< \brief (NVMCTRL) Interrupt Enable Clear Register */
-#define REG_NVMCTRL_INTENSET                  (0x41004010U) /**< \brief (NVMCTRL) Interrupt Enable Set Register */
-#define REG_NVMCTRL_INTFLAG                   (0x41004014U) /**< \brief (NVMCTRL) Interrupt Flag Status and Clear Register */
-#define REG_NVMCTRL_STATUS                    (0x41004018U) /**< \brief (NVMCTRL) Status Register */
-#define REG_NVMCTRL_ADDR                      (0x4100401CU) /**< \brief (NVMCTRL) Address Register */
-#define REG_NVMCTRL_LOCK                      (0x41004020U) /**< \brief (NVMCTRL) Lock Register */
+#define REG_NVMCTRL_CTRLA          (0x41004000U) /**< \brief (NVMCTRL) NVM Control Register A */
+#define REG_NVMCTRL_CTRLB          (0x41004004U) /**< \brief (NVMCTRL) NVM Control Register B */
+#define REG_NVMCTRL_PARAM          (0x41004008U) /**< \brief (NVMCTRL) Parameter Register */
+#define REG_NVMCTRL_INTENCLR       (0x4100400CU) /**< \brief (NVMCTRL) Interrupt Enable Clear Register */
+#define REG_NVMCTRL_INTENSET       (0x41004010U) /**< \brief (NVMCTRL) Interrupt Enable Set Register */
+#define REG_NVMCTRL_INTFLAG        (0x41004014U) /**< \brief (NVMCTRL) Interrupt Flag Status and Clear Register */
+#define REG_NVMCTRL_STATUS         (0x41004018U) /**< \brief (NVMCTRL) Status Register */
+#define REG_NVMCTRL_ADDR           (0x4100401CU) /**< \brief (NVMCTRL) Address Register */
+#define REG_NVMCTRL_LOCK           (0x41004020U) /**< \brief (NVMCTRL) Lock Register */
 #else
 #define REG_NVMCTRL_CTRLA          (*(RwReg16*)0x41004000U) /**< \brief (NVMCTRL) NVM Control Register A */
 #define REG_NVMCTRL_CTRLB          (*(RwReg  *)0x41004004U) /**< \brief (NVMCTRL) NVM Control Register B */

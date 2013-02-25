@@ -45,20 +45,20 @@
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string);
+void write_string(struct usart_module *const mod, uint8_t *string);
 
-void write_string(struct usart_dev_inst *const dev, uint8_t *string)
+void write_string(struct usart_module *const mod, uint8_t *string)
 {
 	do {
-		while (usart_write(dev, *string) != STATUS_OK) {
+		while (usart_write_wait(mod, *string) != STATUS_OK) {
 		}
 	} while (*(++string) != 0);
 }
 
 int main(void)
 {
-	struct usart_dev_inst usart_edbg;
-	struct usart_conf config_struct;
+	struct usart_module usart_edbg;
+	struct usart_config config_struct;
 	uint16_t temp;
 
 	uint8_t string[] = "Hello world!\n\r\0";
@@ -72,8 +72,11 @@ int main(void)
 	usart_get_config_defaults(&config_struct);
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
 
+	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
+	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+
 	/* Apply configuration */
-	while (usart_init(&usart_edbg, QUICKSTART_USART,
+	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
 			&config_struct) != STATUS_OK) {
 	}
 
@@ -88,8 +91,8 @@ int main(void)
 
 	/* Echo back characters received */
 	while (1) {
-		if (usart_read(&usart_edbg, &temp) == STATUS_OK) {
-			while (usart_write(&usart_edbg, temp) != STATUS_OK) {
+		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
+			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {
 			}
 		}
 	}

@@ -144,13 +144,13 @@ enum bod_mode {
 
 /** Configuration structure for a BOD module. */
 struct bod_config {
-	/** Sampled or continuous mode */
+	/** Sampling configuration mode for the BOD. */
 	enum bod_mode mode;
-	/** Action on detect; reset or interrupt */
+	/** Action to perform when a low power detection is made. */
 	enum bod_action action;
-	/** BOD level */
+	/** BOD level to trigger at. */
 	uint8_t level; /* TODO: document this more */
-	/** Enable hysteresis */
+	/** If \c true, enables detection hysteresis. */
 	bool hysteresis;
 };
 
