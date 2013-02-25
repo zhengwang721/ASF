@@ -9,7 +9,7 @@
 		<build type="header-file" value="conf_eth.h"/>
 		<build type="include-path" value="."/>
 		<config name="config.board.sam3x_ek.init" value="no"/>
-		<config name="config.thirdparty.lwip-port.140" value="standalone_sam"/>
+		<config name="config.thirdparty.lwip-port.140" value="standalone_sam3x"/>
 		<config name="config.thirdparty.lwip.version" value="1.4.0"/>
 		<require idref="common.services.network.tcpip.lwip.example"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
