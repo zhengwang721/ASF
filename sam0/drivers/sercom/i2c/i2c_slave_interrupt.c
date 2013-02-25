@@ -473,7 +473,6 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 				/* ACK address */
 				i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 			}
-			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
 
 		/* ACK or NACK address */
