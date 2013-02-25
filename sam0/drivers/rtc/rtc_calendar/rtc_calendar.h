@@ -119,33 +119,33 @@
  * recommended 1024 Hz, the formula results in the following output:
  *
  * <table>
- * <tr>
- * <th>n</th><th>Periodic event</th>
- * </tr>
- * <tr>
- * <td>7</td><td>1 Hz</td>
- * </tr>
- * <tr>
- * <td>6</td><td>2 Hz</td>
- * </tr>
- * <tr>
- * <td>5</td><td>4 Hz</td>
- * </tr>
- * <tr>
- * <td>4</td><td>8 Hz</td>
- * </tr>
- * <tr>
- * <td>3</td><td>16 Hz</td>
- * </tr>
- * <tr>
- * <td>2</td><td>32 Hz</td>
- * </tr>
- * <tr>
- * <td>1</td><td>64 Hz</td>
- * </tr>
- * <tr>
- * <td>0</td><td>128 Hz</td>
- * </tr>
+ *   <tr>
+ *      <th>n</th>	<th>Periodic event</th>
+ *   </tr>
+ *   <tr>
+ *      <td>7</td>	<td>1 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>6</td>	<td>2 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>5</td>	<td>4 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>4</td>	<td>8 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>3</td>	<td>16 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>2</td>	<td>32 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>1</td>	<td>64 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>0</td>	<td>128 Hz</td>
+ *   </tr>
  * </table>
  *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
