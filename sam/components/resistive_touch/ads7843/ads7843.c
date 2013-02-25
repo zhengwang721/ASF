@@ -153,7 +153,7 @@ static uint32_t ads7843_send_cmd(uint8_t uc_cmd)
 uint32_t ads7843_is_pressed(void)
 {
 #if SAM4E
-	return (ioport_get_pin_level(BOARD_ADS7843_IRQ_GPIO) == 
+	return (ioport_get_pin_level(BOARD_ADS7843_IRQ_GPIO) ==
 										IOPORT_PIN_LEVEL_LOW);
 #else
 	return gpio_pin_is_low(BOARD_ADS7843_IRQ_GPIO);
