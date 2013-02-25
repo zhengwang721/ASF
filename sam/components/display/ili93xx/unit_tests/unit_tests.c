@@ -67,10 +67,6 @@
  * \section device_info Device Info
  * SAM3S ans SAM4E devices can be used.
  * This example has been tested with the following setup:
- * - sam3s4c_sam3s_ek
- * - sam3sd8c_sam3s_ek2
- * - sam4s16c_sam4s_ek
- * - sam4sd32c_sam4s_ek2
  * - sam4e16e_sam4e_ek
  *
  * \section compinfo Compilation info

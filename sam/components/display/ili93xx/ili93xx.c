@@ -425,8 +425,8 @@ static uint32_t ili93xx_read_ram(void)
  * \brief Read data from LCD Register.
  *
  * \param uc_reg register address.
- *
- * \return register value.
+ * \param p_data the pointer to the read data.
+ * \param uc_datacnt the number of the read data
  */
 static void ili93xx_read_register(uint8_t uc_reg, uint8_t *p_data,
 		uint8_t uc_datacnt)
@@ -1020,7 +1020,7 @@ void ili93xx_disable_scroll(void)
  * \brief Set display direction.
  *
  * \param e_dd 0: horizontal direction, 1: vertical direction
- * \param e_shd: horizontal increase(1) or decrease(0)
+ * \param e_shd: horizontal increase(0) or decrease(1)
  * \param e_scd: vertical increase(1) or decrease(0)
  */
 void ili93xx_set_display_direction(enum ili93xx_display_direction e_dd,
