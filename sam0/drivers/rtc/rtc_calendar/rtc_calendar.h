@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 RTC Driver for calendar mode
+ * \brief SAMD20 RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -98,7 +98,7 @@
  * RTC counter value will instead be cleared on overflow once the maximum count
  * value has been reached:
  *
- * \f$COUNT_{MAX} = 2^{32}-1\f$
+ * \f[ COUNT_{MAX} = 2^{32}-1 \f]
  *
  * When the RTC is operated with the calendar enabled and run at the required
  * 1 Hz input clock frequency, a register overflow will occur after 64 years.
@@ -110,9 +110,7 @@
  * the rising edge transition of the specified bit. The resulting periodic
  * frequency can be calculated by the following formula:
  *
- * \f[
- * f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}}
- * \f]
+ * \f[ f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}} \f]
  *
  * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
  * module configuration. For the RTC to operate correctly in calendar mode, this
@@ -121,33 +119,33 @@
  * recommended 1024 Hz, the formula results in the following output:
  *
  * <table>
- * <tr>
- * <th>n</th><th>Periodic event</th>
- * </tr>
- * <tr>
- * <td>7</td><td>1 Hz</td>
- * </tr>
- * <tr>
- * <td>6</td><td>2 Hz</td>
- * </tr>
- * <tr>
- * <td>5</td><td>4 Hz</td>
- * </tr>
- * <tr>
- * <td>4</td><td>8 Hz</td>
- * </tr>
- * <tr>
- * <td>3</td><td>16 Hz</td>
- * </tr>
- * <tr>
- * <td>2</td><td>32 Hz</td>
- * </tr>
- * <tr>
- * <td>1</td><td>64 Hz</td>
- * </tr>
- * <tr>
- * <td>0</td><td>128 Hz</td>
- * </tr>
+ *   <tr>
+ *      <th>n</th>	<th>Periodic event</th>
+ *   </tr>
+ *   <tr>
+ *      <td>7</td>	<td>1 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>6</td>	<td>2 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>5</td>	<td>4 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>4</td>	<td>8 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>3</td>	<td>16 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>2</td>	<td>32 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>1</td>	<td>64 Hz</td>
+ *   </tr>
+ *   <tr>
+ *      <td>0</td>	<td>128 Hz</td>
+ *   </tr>
  * </table>
  *
  * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
@@ -163,9 +161,7 @@
  * applied the specified number of time (max 127) over 976 of these periods. The
  * corresponding correction in PPM will be given by:
  *
- * \f[
- * Correction(PPM) = \frac{VALUE}{999424}10^6
- * \f]
+ * \f[ Correction(PPM) = \frac{VALUE}{999424}10^6 \f]
  *
  * The RTC clock will tick faster if provided with a positive correction value,
  * and slower when given a negative correction value.
@@ -178,7 +174,7 @@
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
  *
- * \f[[YEAR_{START}, YEAR_{START}+64)\f]
+ * \f[ [YEAR_{START}, YEAR_{START}+64) \f]
  *
  * \subsection asfdoc_samd20_rtc_calendar_special_considerations_clock Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
@@ -253,7 +249,7 @@
 #include <conf_clocks.h>
 
 #if CONF_CLOCK_GCLK_2_RTC == false
-#error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
+#  error "Application conf_clocks.h configuration header has invalid settings for the RTC module."
 #endif
 
 #ifdef __cplusplus
@@ -262,24 +258,25 @@ extern "C" {
 
 
 /**
- * \brief Available alarm registers.
+ * \brief Available alarm channels.
  *
- * Available alarm registers.
- * \note Not all alarm registers are available on all devices.
+ * Available alarm channels.
+ *
+ * \note Not all alarm channels are available on all devices.
  */
-enum rtc_calendar_alarm_num {
-	/** Alarm register 0. */
+enum rtc_calendar_alarm {
+	/** Alarm channel 0. */
 	RTC_CALENDAR_ALARM_0 = 0,
 #if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Alarm register 1. */
+	/** Alarm channel 1. */
 	RTC_CALENDAR_ALARM_1 = 1,
 #endif
 #if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Alarm register 2. */
+	/** Alarm channel 2. */
 	RTC_CALENDAR_ALARM_2 = 2,
 #endif
 #if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
-	/** Alarm register 3. */
+	/** Alarm channel 3. */
 	RTC_CALENDAR_ALARM_3 = 3,
 #endif
 };
@@ -291,63 +288,37 @@ enum rtc_calendar_alarm_num {
  */
 enum rtc_calendar_alarm_mask {
 	/** Alarm disabled */
-	RTC_CALENDAR_ALARM_MASK_DISABLED = 0,
+	RTC_CALENDAR_ALARM_MASK_DISABLED = RTC_MODE2_MASK_SEL_OFF,
 	/** Alarm match on second */
-	RTC_CALENDAR_ALARM_MASK_SEC      = 1,
+	RTC_CALENDAR_ALARM_MASK_SEC      = RTC_MODE2_MASK_SEL_SS,
 	/** Alarm match on second and minute */
-	RTC_CALENDAR_ALARM_MASK_MIN      = 2,
+	RTC_CALENDAR_ALARM_MASK_MIN      = RTC_MODE2_MASK_SEL_MMSS,
 	/** Alarm match on second, minute and hour */
-	RTC_CALENDAR_ALARM_MASK_HOUR     = 3,
+	RTC_CALENDAR_ALARM_MASK_HOUR     = RTC_MODE2_MASK_SEL_HHMMSS,
 	/** Alarm match on second, minutes hour and day */
-	RTC_CALENDAR_ALARM_MASK_DAY      = 4,
+	RTC_CALENDAR_ALARM_MASK_DAY      = RTC_MODE2_MASK_SEL_DDHHMMSS,
 	/** Alarm match on second, minute, hour, day and month */
-	RTC_CALENDAR_ALARM_MASK_MONTH    = 5,
+	RTC_CALENDAR_ALARM_MASK_MONTH    = RTC_MODE2_MASK_SEL_MMDDHHMMSS,
 	/** Alarm match on second, minute, hour, day, month and year */
-	RTC_CALENDAR_ALARM_MASK_YEAR     = 6,
+	RTC_CALENDAR_ALARM_MASK_YEAR     = RTC_MODE2_MASK_SEL_YYMMDDHHMMSS,
 };
 
 /**
- * \brief Values used to enable and disable events.
+ * \brief RTC Calendar event enable/disable structure.
  *
- * Values used to enable and disable events.
- *
- * \note Not all alarm events are available on all devices.
+ * Event flags for the \ref rtc_calendar_enable_events() and
+ * \ref rtc_calendar_disable_events().
  */
-enum rtc_calendar_event {
-	/** To set event off. */
-	RTC_CALENDAR_EVENT_OFF        = 0,
-	/** Overflow event. */
-	RTC_CALENDAR_EVENT_OVF        = RTC_MODE2_EVCTRL_OVFEO,
-	/** Alarm 0 match event. */
-	RTC_CALENDAR_EVENT_ALARM_0    = RTC_MODE2_EVCTRL_ALARMEO(1 << 0),
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Alarm 1 match event. */
-	RTC_CALENDAR_EVENT_ALARM_1    = RTC_MODE2_EVCTRL_ALARMEO(1 << 1),
-#endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Alarm 2 match event. */
-	RTC_CALENDAR_EVENT_ALARM_2    = RTC_MODE2_EVCTRL_ALARMEO(1 << 2),
-#endif
-#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
-	/** Alarm 3 match event. */
-	RTC_CALENDAR_EVENT_ALARM_3    = RTC_MODE2_EVCTRL_ALARMEO(1 << 3),
-#endif
-	/** Periodic event 0. */
-	RTC_CALENDAR_EVENT_PERIODIC_0 = RTC_MODE2_EVCTRL_PEREO(1 << 0),
-	/** Periodic event 1. */
-	RTC_CALENDAR_EVENT_PERIODIC_1 = RTC_MODE2_EVCTRL_PEREO(1 << 1),
-	/** Periodic event 2. */
-	RTC_CALENDAR_EVENT_PERIODIC_2 = RTC_MODE2_EVCTRL_PEREO(1 << 2),
-	/** Periodic event 3. */
-	RTC_CALENDAR_EVENT_PERIODIC_3 = RTC_MODE2_EVCTRL_PEREO(1 << 3),
-	/** Periodic event 4. */
-	RTC_CALENDAR_EVENT_PERIODIC_4 = RTC_MODE2_EVCTRL_PEREO(1 << 4),
-	/** Periodic event 5. */
-	RTC_CALENDAR_EVENT_PERIODIC_5 = RTC_MODE2_EVCTRL_PEREO(1 << 5),
-	/** Periodic event 6. */
-	RTC_CALENDAR_EVENT_PERIODIC_6 = RTC_MODE2_EVCTRL_PEREO(1 << 6),
-	/** Periodic event 7. */
-	RTC_CALENDAR_EVENT_PERIODIC_7 = RTC_MODE2_EVCTRL_PEREO(1 << 7),
+struct rtc_calendar_events {
+	/** Generate an output event on each overflow of the RTC count. */
+	bool generate_event_on_overflow;
+	/** Generate an output event on a alarm channel match against the RTC
+	 *  count. */
+	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
+	/** Generate an output event periodically at a binary division of the RTC
+	 *  counter frequency (see
+	 * \ref asfdoc_samd20_rtc_calendar_module_overview_periodic). */
+	bool generate_event_on_periodic[8];
 };
 
 /**
@@ -359,19 +330,19 @@ enum rtc_calendar_event {
  * \ref rtc_calendar_get_time_defaults() function before use.
  */
 struct rtc_calendar_time {
-	/** The second of the time */
-	uint8_t second;
-	/** The minute of the time */
-	uint8_t minute;
-	/** The hour of the time */
-	uint8_t hour;
-	/** PM/AM value. 1 for pm, or 0 for am. */
-	uint8_t pm;
-	/** The day of the time. Day 1 will be the first day of the month. */
-	uint8_t day;
-	/** The month of the time. Month 1 will be January. */
-	uint8_t month;
-	/** The year of the time */
+	/** Second value. */
+	uint8_t  second;
+	/** Minute value. */
+	uint8_t  minute;
+	/** Hour value. */
+	uint8_t  hour;
+	/** PM/AM value, \c true for PM, or \c false for AM. */
+	bool     pm;
+	/** Day value, where day 1 is the first day of the month. */
+	uint8_t  day;
+	/** Month value, where month 1 is January. */
+	uint8_t  month;
+	/** Year value.*/
 	uint16_t year;
 };
 
@@ -381,10 +352,10 @@ struct rtc_calendar_time {
  * Alarm structure containing time of the alarm and a mask to determine when
  * the alarm will trigger.
  */
-struct rtc_calendar_alarm {
+struct rtc_calendar_alarm_time {
 	/** Alarm time. */
 	struct rtc_calendar_time time;
-	/** Alarm mask. */
+	/** Alarm mask to determine on what precision the alarm will match. */
 	enum rtc_calendar_alarm_mask mask;
 };
 
@@ -395,22 +366,21 @@ struct rtc_calendar_alarm {
  * be initialized using the \ref rtc_calendar_get_config_defaults() before any
  * user configurations are set.
  */
-struct rtc_calendar_conf {
+struct rtc_calendar_config {
 	/** If \c true, clears the clock on alarm match. */
 	bool clear_on_match;
 	/** If \c true, the digital counter registers will be continuously updated
 	 *  so that internal synchronization is not needed when reading the current
 	 *  count. */
 	bool continuously_update;
-	/** If \true, time is represented in 24 hour mode. */
+	/** If \c true, time is represented in 24 hour mode. */
 	bool clock_24h;
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
-	/** Set bitmask of events to enable. */
-	uint16_t event_generators;
 	/** Alarm values. */
-	struct rtc_calendar_alarm alarm[RTC_NUM_OF_ALARMS];
+	struct rtc_calendar_alarm_time alarm[RTC_NUM_OF_ALARMS];
 };
+
 
 /**
  * \name Configuration and initialization
@@ -435,7 +405,7 @@ static inline void _rtc_calendar_wait_for_sync(void)
  * This will initialize a given time structure to the time 00:00:00 (hh:mm:ss)
  * and date 2000-01-01 (YYYY-MM-DD).
  *
- * \param[out] time Time structure to initialize.
+ * \param[out] time  Time structure to initialize.
  */
 static inline void rtc_calendar_get_time_defaults(
 		struct rtc_calendar_time *const time)
@@ -462,13 +432,13 @@ static inline void rtc_calendar_get_time_defaults(
  * - Start year 2000 (Year 0 in the counter will be year 2000).
  * - Events off.
  * - Alarms set to January 1. 2000, 00:00:00.
- * - Alarm will match on second, minute, hour, day, month and year .
+ * - Alarm will match on second, minute, hour, day, month and year.
  *
- *  \param[out] config Configuration structure to be initialized to default
- *  values.
+ *  \param[out] config  Configuration structure to be initialized to default
+ *                      values.
  */
 static inline void rtc_calendar_get_config_defaults(
-		struct rtc_calendar_conf *const config)
+		struct rtc_calendar_config *const config)
 {
 	/* Sanity check argument */
 	Assert(config);
@@ -477,12 +447,11 @@ static inline void rtc_calendar_get_config_defaults(
 	struct rtc_calendar_time time;
 	rtc_calendar_get_time_defaults(&time);
 
-	/* Set default into configuration structure */
+	/* Set defaults into configuration structure */
 	config->clear_on_match = false;
 	config->continuously_update = false;
 	config->clock_24h = false;
 	config->year_init_value = 2000;
-	config->event_generators = RTC_CALENDAR_EVENT_OFF;
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		config->alarm[i].time = time;
 		config->alarm[i].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
@@ -492,9 +461,8 @@ static inline void rtc_calendar_get_config_defaults(
 /**
  * \brief Enables the RTC module.
  *
- * This will enable the RTC module. Most configurations cannot be altered
- * while the module is enabled. \ref rtc_calendar_disable "Disable" module to
- * change configurations.
+ * Enables the RTC module once it has been configured, ready for use. Most
+ * module configuration parameters cannot be altered while the module is enabled.
  */
 static inline void rtc_calendar_enable(void)
 {
@@ -511,7 +479,7 @@ static inline void rtc_calendar_enable(void)
 /**
  * \brief Disables the RTC module.
  *
- * This will disable the RTC module.
+ * Disables the RTC module.
  */
 static inline void rtc_calendar_disable(void)
 {
@@ -525,41 +493,52 @@ static inline void rtc_calendar_disable(void)
 	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;
 }
 
-void rtc_calendar_init(const struct rtc_calendar_conf *const config);
+void rtc_calendar_init(
+		const struct rtc_calendar_config *const config);
 
 void rtc_calendar_swap_time_mode(void);
 
-enum status_code rtc_calendar_frequency_correction(int8_t value);
+enum status_code rtc_calendar_frequency_correction(
+		const int8_t value);
 
 /** @} */
+
 
 /** \name Time and alarm management
  * @{
  */
 
-void rtc_calendar_set_time(const struct rtc_calendar_time *const time);
+void rtc_calendar_set_time(
+		const struct rtc_calendar_time *const time);
 
-void rtc_calendar_get_time(struct rtc_calendar_time *const time);
+void rtc_calendar_get_time(
+		struct rtc_calendar_time *const time);
 
 enum status_code rtc_calendar_set_alarm(
-		const struct rtc_calendar_alarm *const alarm,
-	        enum rtc_calendar_alarm_num alarm_index);
+		const struct rtc_calendar_alarm_time *const alarm,
+		const enum rtc_calendar_alarm alarm_index);
 
 enum status_code rtc_calendar_get_alarm(
-		struct rtc_calendar_alarm *const alarm,
-		enum rtc_calendar_alarm_num alarm_index);
+		struct rtc_calendar_alarm_time *const alarm,
+		const enum rtc_calendar_alarm alarm_index);
 
 /** @} */
+
 
 /** \name Status flag management
  * @{
  */
 
 /**
- * \brief Check if RTC overflow has occurred.
+ * \brief Check if an RTC overflow has occurred.
  *
  * Checks the overflow flag in the RTC. The flag is set when there
  * is an overflow in the clock.
+ *
+ * \return Overflow state of the RTC module.
+ *
+ * \retval true   If the RTC count value has overflowed
+ * \retval false  If the RTC count value has not overflowed
  */
 static inline bool rtc_calendar_is_overflow(void)
 {
@@ -571,9 +550,10 @@ static inline bool rtc_calendar_is_overflow(void)
 }
 
 /**
- * \brief Clear the RTC overflow flag.
+ * \brief Clears the RTC overflow flag.
  *
- * Clear the overflow flag.
+ * Clears the RTC module counter overflow flag, so that new overflow conditions
+ * can be detected.
  */
 static inline void rtc_calendar_clear_overflow(void)
 {
@@ -587,13 +567,18 @@ static inline void rtc_calendar_clear_overflow(void)
 /**
  * \brief Check the RTC alarm flag.
  *
- * Check if the  specified alarm flag is set. The flag is set when there
+ * Check if the specified alarm flag is set. The flag is set when there
  * is an compare match between the alarm value and the clock.
  *
- * \param[in] alarm_index Index of the alarm to check.
+ * \param[in] alarm_index  Index of the alarm to check.
+ *
+ * \returns Match status of the specified alarm.
+ *
+ * \retval true   If the specified alarm has matched the current time
+ * \retval false  If the specified alarm has not matched the current time
  */
 static inline bool rtc_calendar_is_alarm_match(
-		enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -605,22 +590,24 @@ static inline bool rtc_calendar_is_alarm_match(
 	}
 
 	/* Return int flag status. */
-	return (rtc_module->MODE2.INTFLAG.reg & (1 << alarm_index));
+	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_ALARM(alarm_index));
 }
 
 /**
- * \brief Clears the RTC alarm flag.
+ * \brief Clears the RTC alarm match flag.
  *
- * Clear the requested alarm flag.
+ * Clear the requested alarm match flag, so that future alarm matches can be
+ * determined.
  *
- * \param[in] alarm_index The index of the alarm to clear.
+ * \param[in] alarm_index  The index of the alarm match to clear.
  *
- * \return Status of clearing the alarm is match flag.
- * \retval STATUS_OK If flag was cleared correctly.
- * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
+ * \return Status of the alarm match clear operation.
+ *
+ * \retval STATUS_OK               If flag was cleared correctly.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 static inline enum status_code rtc_calendar_clear_alarm_match(
-		enum rtc_calendar_alarm_num alarm_index)
+		const enum rtc_calendar_alarm alarm_index)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
@@ -632,12 +619,13 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
 	}
 
 	/* Clear flag. */
-	rtc_module->MODE2.INTFLAG.reg = (1 << alarm_index);
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_ALARM(alarm_index);
 
 	return STATUS_OK;
 }
 
 /** @} */
+
 
 /**
  * \name Event management
@@ -645,35 +633,85 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
  */
 
 /**
- * \brief Enables the given event in the module.
+ * \brief Enables a RTC event output.
  *
- * This will enable the given event so it can be used by the event system.
+ *  Enables one or more output events from the RTC module. See
+ *  \ref rtc_calendar_events for a list of events this module supports.
  *
- * \param[in] events Bitmask containing events to enable.
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to enable
  */
-static inline void rtc_calendar_enable_events(uint16_t events)
+static inline void rtc_calendar_enable_events(
+		struct rtc_calendar_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Enable given event. */
-	rtc_module->MODE2.EVCTRL.reg |= events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE2_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any alarm events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_alarm[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Enable given event(s). */
+	rtc_module->MODE2.EVCTRL.reg |= event_mask;
 }
 
 /**
- * \brief Disables the given event in the module.
+ * \brief Disables a RTC event output.
  *
- * This will disable the given event so it cannot be used by the event system.
+ *  Disabled one or more output events from the RTC module. See
+ *  \ref rtc_calendar_events for a list of events this module supports.
  *
- * \param[in] events Bitmask to the events to disable.
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to disable
  */
-static inline void rtc_calendar_disable_events(uint16_t events)
+static inline void rtc_calendar_disable_events(
+		struct rtc_calendar_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Disable given events. */
-	rtc_module->MODE2.EVCTRL.reg &= ~events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE2_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any alarm events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_alarm[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Disable given event(s). */
+	rtc_module->MODE2.EVCTRL.reg &= ~event_mask;
 }
 
 /** @} */

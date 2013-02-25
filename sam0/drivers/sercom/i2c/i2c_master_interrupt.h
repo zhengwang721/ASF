@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_master_group_async I2C Master Asynchronous
+ * \addtogroup sam0_i2c_master_group I2C Master Asynchronous
  * @{
  *
  * This is an overview of the API for the asynchronous I2C master
