@@ -113,6 +113,7 @@
 #include "stdio_serial.h"
 #include <compiler.h>
 #include "led.h"
+#include "conf_board.h"
 
 #define TASK_LED_STACK_SIZE                (128 / sizeof(portSTACK_TYPE))
 #define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
@@ -181,11 +182,7 @@ extern void vApplicationTickHook(void)
 static void task_led(void *pvParameters)
 {
 	for (;;) {
-#if SAM3XA
-		LED_Toggle(LED0_GPIO);
-#else
 		LED_Toggle(LED0);
-#endif
 		vTaskDelay(1000);
 	}
 }

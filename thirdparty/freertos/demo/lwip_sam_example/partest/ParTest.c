@@ -45,19 +45,14 @@
 #include "task.h"
 #include "partest.h"
 #include "led.h"
+#include "conf_board.h"
 
 void vParTestInitialise( void )
 {
 	/* Start with all LEDs off. */
-#if SAM4E
 	LED_Off(LED0);
 	LED_Off(LED1);
 	LED_Off(LED2);
-#else
-	LED_Off(LED0_GPIO);
-	LED_Off(LED1_GPIO);
-	LED_Off(LED2_GPIO);
-#endif
 }
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
@@ -65,7 +60,6 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 	vTaskSuspendAll();
 
 	if (xValue == pdTRUE) {
-#if SAM4E
 	switch (uxLED) {
 		case 0:
 			LED_On(LED0);
@@ -82,11 +76,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		default :
 		break;
 	}
-#else
-		LED_On(uxLED);
-#endif
 	} else {
-#if SAM4E
 	switch (uxLED) {
 		case 0:
 			LED_Off(LED0);
@@ -103,9 +93,6 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		default :
 		break;
 	}
-#else
-		LED_Off(uxLED);
-#endif
 	}
 
 	xTaskResumeAll();
@@ -115,7 +102,6 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	vTaskSuspendAll();
 
-#if SAM4E
 	switch (uxLED) {
 		case 0:
 			LED_Toggle(LED0);
@@ -132,9 +118,6 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		default :
 		break;
 	}
-#else
-		LED_Toggle(uxLED);
-#endif
 
 	xTaskResumeAll();
 }
