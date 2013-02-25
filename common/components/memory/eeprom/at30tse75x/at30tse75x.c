@@ -126,6 +126,7 @@ uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, 
 
 	// cppcheck-suppress unreadVariable
 	data[0] = 0x00FF & (reg_value >> 8);
+	// cppcheck-suppress unreadVariable
 	data[1] = 0x00FF & reg_value;
 
 	return twi_master_write(TWI0, &packet);
