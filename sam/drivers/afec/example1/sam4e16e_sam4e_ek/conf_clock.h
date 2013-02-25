@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief FPU support for SAM.
+ * \brief SAM4E clock configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,49 +41,42 @@
  *
  */
 
-#ifndef _FPU_H_INCLUDED_
-#define _FPU_H_INCLUDED_
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#include <compiler.h>
+// ===== System Clock (MCK) Source Options
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/** Address for ARM CPACR */
-#define ADDR_CPACR 0xE000ED88
+// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
-/** CPACR Register */
-#define REG_CPACR  (*((volatile uint32_t *)ADDR_CPACR))
+// ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+// Use mul and div effective values here.
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
+#define CONFIG_PLL0_MUL             20
+#define CONFIG_PLL0_DIV             1
 
-/**
- * Enable FPU
- */
-__always_inline static void fpu_enable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR |=  (0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
+// ===== Target frequency (System clock)
+// - XTAL frequency: 12MHz
+// - System clock source: PLLA
+// - System clock prescaler: 2 (divided by 2)
+// - PLLA source: XTAL
+// - PLLA output: XTAL * 20 / 1
+// - System clock: 12 * 20 / 1 / 2 = 120MHz
 
-/**
- * Disable FPU
- */
-__always_inline static void fpu_disable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR &= ~(0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Check if FPU is enabled
- */
-__always_inline static bool fpu_is_enabled(void)
-{
-	return (REG_CPACR & (0xFu << 20));
-}
-
-#endif /* _FPU_H_INCLUDED_ */
+#endif /* CONF_CLOCK_H_INCLUDED */

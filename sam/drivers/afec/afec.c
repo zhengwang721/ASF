@@ -43,6 +43,9 @@
 
 #include "afec.h"
 #include "sleepmgr.h"
+#include "status_codes.h"
+#include "sysclk.h"
+#include "pmc.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -57,14 +60,13 @@ extern "C" {
  *
  * See \ref sam_afec_quickstart.
  *
- * Driver for the Analog-Front-End Controller. This driver provides access to the main 
+ * Driver for the Analog-Front-End Controller. This driver provides access to the main
  * features of the AFEC controller.
  *
  * @{
  */
 
 afec_callback_t afec_callback_pointer[2];
-struct afec_dev_inst *afec_instances[2];
 
 /**
  * \internal
@@ -72,22 +74,44 @@ struct afec_dev_inst *afec_instances[2];
  *
  * \param afec  Base address of the AFEC
  *
- * \return      AFEC instancel number
+ * \return   AFEC instance number
  */
-static uint32_t afec_find_ch_num(Afec *const afec)
+static uint32_t afec_find_inst_num(Afec *const afec)
 {
-#if defined(ID_AFEC1)
+#if defined(AFEC1)
 	if (afec == AFEC1) {
 		return 1;
 	}
 #endif
-#if defined(ID_AFEC0)
+#if defined(AFEC0)
 	if (afec == AFEC0) {
 		return 0;
 	}
 #endif
-
 	return 0;
+}
+
+/**
+ * \internal
+ * \brief Get AFEC Peripheral ID.
+ *
+ * \param afec  Base address of the AFEC
+ *
+ * \return   AFEC Peripheral ID
+ */
+static uint32_t afec_find_pid(Afec *const afec)
+{
+#if defined(ID_AFEC1)
+	if (afec == AFEC1) {
+		return ID_AFEC1;
+	}
+#endif
+#if defined(ID_AFEC0)
+	if (afec == AFEC0) {
+		return ID_AFEC0;
+	}
+#endif
+	return ID_AFEC0;
 }
 
 /**
@@ -100,18 +124,18 @@ static uint32_t afec_find_ch_num(Afec *const afec)
 static void afec_set_config(Afec *const afec, struct afec_config *config)
 {
 	uint32_t reg = 0;
-	
+
 	reg = (config->anach? AFE_MR_ANACH_ALLOWED : 0) |
 			(config->useq ? AFE_MR_USEQ_REG_ORDER : 0) |
 			AFE_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
 			AFE_MR_TRACKTIM(config->tracktim) |
 			AFE_MR_TRANSFER(config->transfer) |
-			(config->resolution) | 
+			(config->resolution) |
 			(config->settling_time)|
 			(config->startup_time);
-	
+
 	afec->AFE_MR = reg;
-	
+
 	afec->AFE_EMR = (config->tag ? AFE_EMR_TAG : 0) |
 			(config->stm ? AFE_EMR_STM : 0);
 
@@ -145,7 +169,7 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
 
 	reg = (config->rctc) ? AFE_TEMPMR_RTCT : 0 | (config->mode);
 	afec->AFE_TEMPMR = reg;
-	
+
 	afec->AFE_TEMPCWR = AFE_TEMPCWR_TLOWTHRES(config->low_threshold) |
 			AFE_TEMPCWR_THIGHTHRES(config->high_threshold);
 }
@@ -263,7 +287,7 @@ void afec_set_callback(Afec *const afec, afec_interrupt_source_t source,
 	Assert(afec);
 	Assert(callback);
 
-	uint32_t i = afec_find_ch_num(afec);
+	uint32_t i = afec_find_inst_num(afec);
 	afec_callback_pointer[i] = callback;
 	if (!i) {
 		irq_register_handler(AFEC0_IRQn, irq_level);
@@ -275,6 +299,40 @@ void afec_set_callback(Afec *const afec, afec_interrupt_source_t source,
 }
 
 /**
+ * \internal
+ * \brief Common AFEC interrupt handler
+ *
+ * The optional callback used by the interrupt handler is set by the
+ * afec_set_callback() function.
+ *
+ * \param inst_num AFEC instance number to handle interrupt for
+ */
+static void afec_interrupt(uint8_t inst_num)
+{
+	if (afec_callback_pointer[inst_num]) {
+		afec_callback_pointer[inst_num]();
+	} else {
+		Assert(false); /* Catch unexpected interrupt */
+	}
+}
+
+/**
+ * \brief Interrupt handler for AFEC0.
+ */
+void AFEC0_Handler(void)
+{
+	afec_interrupt(0);
+}
+
+/**
+ * \brief Interrupt handler for AFEC1.
+ */
+void AFEC1_Handler(void)
+{
+	afec_interrupt(1);
+}
+
+/**
  * \brief Enable AFEC Module.
  *
  * \param afec  Base address of the AFEC
@@ -282,9 +340,12 @@ void afec_set_callback(Afec *const afec, afec_interrupt_source_t source,
 void afec_enable(Afec *const afec)
 {
 	Assert(afec);
-
-	sleepmgr_lock_mode(SLEEPMGR_SLEEP_1);
-	sysclk_enable_peripheral_clock(afec);
+	uint32_t pid;
+		
+	pid = afec_find_pid(afec);
+	/* Enable peripheral clock. */
+	pmc_enable_periph_clk(pid);
+	sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
 }
 
 /**
@@ -295,9 +356,12 @@ void afec_enable(Afec *const afec)
 void afec_disable(Afec *const afec)
 {
 	Assert(afec);
-
-	sysclk_disable_peripheral_clock(afec);
-	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_1);
+	uint32_t pid;
+	
+	pid = afec_find_pid(afec);
+	/* Enable peripheral clock. */
+	pmc_disable_periph_clk(pid);
+	sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
 }
 
 /**
@@ -307,7 +371,7 @@ void afec_disable(Afec *const afec)
  * \param ch_list Channel sequence list.
  * \param number Number of channels in the list.
  */
-void afec_configure_sequence(Afec *const afec, const enum afec_channel_num_t ch_list[],
+void afec_configure_sequence(Afec *const afec, const enum afec_channel_num ch_list[],
 		uint8_t uc_num)
 {
 	uint8_t uc_counter;

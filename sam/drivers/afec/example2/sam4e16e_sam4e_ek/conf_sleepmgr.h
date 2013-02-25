@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief FPU support for SAM.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,50 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef _FPU_H_INCLUDED_
-#define _FPU_H_INCLUDED_
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include <compiler.h>
-
-/** Address for ARM CPACR */
-#define ADDR_CPACR 0xE000ED88
-
-/** CPACR Register */
-#define REG_CPACR  (*((volatile uint32_t *)ADDR_CPACR))
-
-/**
- * Enable FPU
- */
-__always_inline static void fpu_enable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR |=  (0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Disable FPU
- */
-__always_inline static void fpu_disable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR &= ~(0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Check if FPU is enabled
- */
-__always_inline static bool fpu_is_enabled(void)
-{
-	return (REG_CPACR & (0xFu << 20));
-}
-
-#endif /* _FPU_H_INCLUDED_ */
+#endif /* CONF_SLEEPMGR_H */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief FPU support for SAM.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,49 +41,16 @@
  *
  */
 
-#ifndef _FPU_H_INCLUDED_
-#define _FPU_H_INCLUDED_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include <compiler.h>
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/** Address for ARM CPACR */
-#define ADDR_CPACR 0xE000ED88
+/** Usart Hw ID used by the console (UART0). */
+#define CONSOLE_UART_ID          ID_UART0
 
-/** CPACR Register */
-#define REG_CPACR  (*((volatile uint32_t *)ADDR_CPACR))
+/** Enable AFEC Channel. */
+#define CONF_BOARD_AFEC_CHANNEL
 
-/**
- * Enable FPU
- */
-__always_inline static void fpu_enable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR |=  (0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Disable FPU
- */
-__always_inline static void fpu_disable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR &= ~(0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Check if FPU is enabled
- */
-__always_inline static bool fpu_is_enabled(void)
-{
-	return (REG_CPACR & (0xFu << 20));
-}
-
-#endif /* _FPU_H_INCLUDED_ */
+#endif /* CONF_BOARD_H_INCLUDED */

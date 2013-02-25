@@ -69,9 +69,9 @@ enum afec_power_mode {
 	/* AFEC core on and reference voltage circuitry on */
 	AFEC_POWER_MODE_0 = 0,
 	/* AFEC core off and reference voltage circuitry on */
-	AFEC_POWER_MODE_1, 
+	AFEC_POWER_MODE_1,
 	/* AFEC core off and reference voltage circuitry off */
-	AFEC_POWER_MODE_2        
+	AFEC_POWER_MODE_2
 };
 
 /* Definitions for AFEC trigger */
@@ -203,16 +203,23 @@ struct afec_config {
 
 /** AFEC channel configuration structure.*/
 struct afec_ch_config {
+	/** Differential Mode */
 	bool diff;
+	/** DC Offset */
 	bool offset;
+	/** Gain Value */
 	enum afec_gainvalue gain;
 };
 
 /** AFEC Temperature Sensor configuration structure.*/
 struct afec_temp_sensor_config {
+	/** RTC Trigger mode */
 	bool rctc;
+	/** Temperature Comparison Mode */
 	enum afec_temp_cmp_mode mode;
+	/** Temperature Low Threshold */
 	uint16_t low_threshold;
+	/** Temperature High Threshold */
 	uint16_t high_threshold;
 };
 
@@ -249,7 +256,7 @@ typedef enum afec_interrupt_source {
 	AFEC_INTERRUPT_RXBUF_FULL     = AFE_IER_RXBUFF,
 	AFEC_INTERRUPT_TEMP_CHANGE     = AFE_IER_TEMPCHG,
 	AFEC_INTERRUPT_END_CAL     = AFE_IER_EOCAL,
-	TWIS_INTERRUPT_ALL                 = ~0UL
+	AFEC_INTERRUPT_ALL                 = ~0UL
 } afec_interrupt_source_t;
 
 typedef void (*afec_callback_t)(void);
@@ -258,11 +265,12 @@ void afec_get_config_defaults(struct afec_config *const cfg);
 void afec_ch_get_config_defaults(struct afec_ch_config *const cfg);
 void afec_temp_sensor_get_config_defaults(struct afec_temp_sensor_config *const cfg);
 enum status_code afec_init(Afec *const afec, struct afec_config *const config);
-void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_config config);
+void afec_temp_sensor_set_config(Afec *const afec,
+		struct afec_temp_sensor_config *config);
 void afec_ch_set_config(Afec *const afec, const enum afec_channel_num channel,
-		struct afec_ch_config config);
+		struct afec_ch_config *config);
 void afec_configure_sequence(Afec *const afec,
-		const enum afec_channel_num_t ch_list[], const uint8_t uc_num);
+		const enum afec_channel_num ch_list[], const uint8_t uc_num);
 void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec,
@@ -287,15 +295,30 @@ static inline void afec_set_trigger(Afec *const afec,
 }
 
 /**
+ * \brief Configure conversion resolution.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param res Conversion resolution.
+ *
+ */
+static inline void afec_set_resolution(Afec *const afec,
+		const enum afec_resolution res)
+{
+	afec->AFE_MR |= res;
+}
+
+/**
  * \brief Configure comparison mode.
  *
  * \param afec  Base address of the AFEC.
  * \param mode AFEC comparison mode.
  */
-static inline void afec_set_comparison_mode(Afec *const afec, const enum afec_cmp_mode mode,
-		const enum afec_channel_num channel, bool all_channel, uint8_t cmp_filter)
+static inline void afec_set_comparison_mode(Afec *const afec,
+		const enum afec_cmp_mode mode,
+		const enum afec_channel_num channel, uint8_t cmp_filter)
 {
-	afec->AFE_EMR = mode | (all_channel) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
+	afec->AFE_EMR = mode |
+			(channel == AFEC_CHANNEL_ALL) ? AFE_EMR_CMPALL : AFE_EMR_CMPSEL(channel)
 			| AFE_EMR_CMPFILTER(cmp_filter);
 }
 
@@ -306,7 +329,7 @@ static inline void afec_set_comparison_mode(Afec *const afec, const enum afec_cm
  *
  * \retval Compare mode value.
  */
-enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
+static inline enum afec_cmp_mode afec_get_comparison_mode(Afec *const afec)
 {
 	return afec->AFE_EMR & AFE_EMR_CMPMODE_Msk;
 }
@@ -379,14 +402,10 @@ static inline void afec_start_software_conversion(Afec *const afec)
  * \brief Configures AFEC power mode.
  *
  * \param afec  Base address of the AFEC.
- * \param sleep  AFE_MR_SLEEP_NORMAL keeps the AFEC Core and reference voltage 
- * circuitry ON between conversions.
- * AFE_MR_SLEEP_SLEEP keeps the AFEC Core and reference voltage circuitry OFF 
- * between conversions.
- * \param fwup  AFE_MR_FWUP_OFF configures sleep mode as sleep setting, 
- * AFE_MR_FWUP_ON keeps voltage reference ON and AFEC Core OFF between conversions.
+ * \param mode   AFEC power mode value.
  */
-static inline void afec_configure_power_mode(Afec *const afec, const enum afec_power_mode mode)
+static inline void afec_configure_power_mode(Afec *const afec,
+		const enum afec_power_mode mode)
 {
 	switch(mode) {
 		case AFEC_POWER_MODE_0:
@@ -399,7 +418,7 @@ static inline void afec_configure_power_mode(Afec *const afec, const enum afec_p
 		case AFEC_POWER_MODE_2:
 			afec->AFE_MR |= AFE_MR_SLEEP_SLEEP;
 			afec->AFE_MR |= AFE_MR_FWUP_ON;
-			break;	
+			break;
 	}
 }
 
@@ -450,7 +469,7 @@ static inline uint32_t afec_channel_get_status(Afec *const afec,
  * \return AFEC converted value of the selected channel.
  */
 static inline uint32_t afec_channel_get_value(Afec *const afec,
-		const enum afec_channel_num afec_ch)
+		enum afec_channel_num afec_ch)
 {
 	afec->AFE_CSELR = afec_ch;
 	return afec->AFE_CDR;
@@ -464,7 +483,7 @@ static inline uint32_t afec_channel_get_value(Afec *const afec,
  * \param aoffset  Analog offset value.
  */
 static inline void afec_channel_set_analog_offset(Afec *const afec,
-		const enum afec_channel_num afec_ch, uint16_t aoffset)
+		enum afec_channel_num afec_ch, uint16_t aoffset)
 {
 	afec->AFE_CSELR = afec_ch;
 	afec->AFE_COCR = aoffset;
@@ -553,7 +572,7 @@ static inline Pdc *afec_get_pdc_base(Afec *const afec)
 	}
 #endif
 
-	return p_pdc_base;	
+	return p_pdc_base;
 }
 
 /**

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief FPU support for SAM.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,49 +41,14 @@
  *
  */
 
-#ifndef _FPU_H_INCLUDED_
-#define _FPU_H_INCLUDED_
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include <compiler.h>
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/** Address for ARM CPACR */
-#define ADDR_CPACR 0xE000ED88
-
-/** CPACR Register */
-#define REG_CPACR  (*((volatile uint32_t *)ADDR_CPACR))
-
-/**
- * Enable FPU
- */
-__always_inline static void fpu_enable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR |=  (0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Disable FPU
- */
-__always_inline static void fpu_disable(void)
-{
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR &= ~(0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
-}
-
-/**
- * Check if FPU is enabled
- */
-__always_inline static bool fpu_is_enabled(void)
-{
-	return (REG_CPACR & (0xFu << 20));
-}
-
-#endif /* _FPU_H_INCLUDED_ */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

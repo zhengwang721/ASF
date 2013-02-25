@@ -652,5 +652,9 @@
 #define PIN_CAN1_TX_IDX           PIO_PC15_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
 
+/** AFEC0 Channel 5 PIN. */
+#define PIN_AFEC0_AD5_IDX           PIO_PB1_IDX
+#define PIN_AFEC0_AD5_FLAGS         IOPORT_MODE_MUX_D
+
 /*----------------------------------------------------------------------------*/
 #endif  /* _SAM4E_EK_H_ */
