@@ -303,47 +303,21 @@ enum rtc_calendar_alarm_mask {
 };
 
 /**
- * \brief Values used to enable and disable events.
+ * \brief RTC Calendar event enable/disable structure.
  *
- * Values used to enable and disable events.
- *
- * \note Not all alarm events are available on all devices.
+ * Event flags for the \ref rtc_calendar_enable_events() and
+ * \ref rtc_calendar_disable_events().
  */
-enum rtc_calendar_event {
-	/** To set event off. */
-	RTC_CALENDAR_EVENT_OFF        = 0,
-	/** Overflow event. */
-	RTC_CALENDAR_EVENT_OVF        = RTC_MODE2_EVCTRL_OVFEO,
-	/** Alarm 0 match event. */
-	RTC_CALENDAR_EVENT_ALARM_0    = RTC_MODE2_EVCTRL_ALARMEO(1 << 0),
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Alarm 1 match event. */
-	RTC_CALENDAR_EVENT_ALARM_1    = RTC_MODE2_EVCTRL_ALARMEO(1 << 1),
-#endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Alarm 2 match event. */
-	RTC_CALENDAR_EVENT_ALARM_2    = RTC_MODE2_EVCTRL_ALARMEO(1 << 2),
-#endif
-#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
-	/** Alarm 3 match event. */
-	RTC_CALENDAR_EVENT_ALARM_3    = RTC_MODE2_EVCTRL_ALARMEO(1 << 3),
-#endif
-	/** Periodic event 0. */
-	RTC_CALENDAR_EVENT_PERIODIC_0 = RTC_MODE2_EVCTRL_PEREO(1 << 0),
-	/** Periodic event 1. */
-	RTC_CALENDAR_EVENT_PERIODIC_1 = RTC_MODE2_EVCTRL_PEREO(1 << 1),
-	/** Periodic event 2. */
-	RTC_CALENDAR_EVENT_PERIODIC_2 = RTC_MODE2_EVCTRL_PEREO(1 << 2),
-	/** Periodic event 3. */
-	RTC_CALENDAR_EVENT_PERIODIC_3 = RTC_MODE2_EVCTRL_PEREO(1 << 3),
-	/** Periodic event 4. */
-	RTC_CALENDAR_EVENT_PERIODIC_4 = RTC_MODE2_EVCTRL_PEREO(1 << 4),
-	/** Periodic event 5. */
-	RTC_CALENDAR_EVENT_PERIODIC_5 = RTC_MODE2_EVCTRL_PEREO(1 << 5),
-	/** Periodic event 6. */
-	RTC_CALENDAR_EVENT_PERIODIC_6 = RTC_MODE2_EVCTRL_PEREO(1 << 6),
-	/** Periodic event 7. */
-	RTC_CALENDAR_EVENT_PERIODIC_7 = RTC_MODE2_EVCTRL_PEREO(1 << 7),
+struct rtc_calendar_events {
+	/** Generate an output event on each overflow of the RTC count. */
+	bool generate_event_on_overflow;
+	/** Generate an output event on a alarm channel match against the RTC
+	 *  count. */
+	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
+	/** Generate an output event periodically at a binary division of the RTC
+	 *  counter frequency (see
+	 * \ref asfdoc_samd20_rtc_calendar_module_overview_periodic). */
+	bool generate_event_on_periodic[8];
 };
 
 /**
@@ -356,17 +330,17 @@ enum rtc_calendar_event {
  */
 struct rtc_calendar_time {
 	/** Second value. */
-	uint8_t second;
+	uint8_t  second;
 	/** Minute value. */
-	uint8_t minute;
+	uint8_t  minute;
 	/** Hour value. */
-	uint8_t hour;
+	uint8_t  hour;
 	/** PM/AM value, \c true for PM, or \c false for AM. */
-	bool pm;
+	bool     pm;
 	/** Day value, where day 1 is the first day of the month. */
-	uint8_t day;
+	uint8_t  day;
 	/** Month value, where month 1 is January. */
-	uint8_t month;
+	uint8_t  month;
 	/** Year value.*/
 	uint16_t year;
 };
@@ -398,12 +372,10 @@ struct rtc_calendar_config {
 	 *  so that internal synchronization is not needed when reading the current
 	 *  count. */
 	bool continuously_update;
-	/** If \true, time is represented in 24 hour mode. */
+	/** If \c true, time is represented in 24 hour mode. */
 	bool clock_24h;
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
-	/** Set bitmask of events to enable. */
-	uint16_t event_generators;
 	/** Alarm values. */
 	struct rtc_calendar_alarm_time alarm[RTC_NUM_OF_ALARMS];
 };
@@ -479,7 +451,6 @@ static inline void rtc_calendar_get_config_defaults(
 	config->continuously_update = false;
 	config->clock_24h = false;
 	config->year_init_value = 2000;
-	config->event_generators = RTC_CALENDAR_EVENT_OFF;
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		config->alarm[i].time = time;
 		config->alarm[i].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
@@ -661,37 +632,85 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
  */
 
 /**
- * \brief Enables the given event in the module.
+ * \brief Enables a RTC event output.
  *
- * This will enable the given event so it can be used by the event system.
+ *  Enables one or more output events from the RTC module. See
+ *  \ref rtc_calendar_events for a list of events this module supports.
  *
- * \param[in] events  Bitmask containing events to enable.
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void rtc_calendar_enable_events(
-		const uint16_t events)
+		struct rtc_calendar_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Enable given event. */
-	rtc_module->MODE2.EVCTRL.reg |= events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE2_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any alarm events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_alarm[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Enable given event(s). */
+	rtc_module->MODE2.EVCTRL.reg |= event_mask;
 }
 
 /**
- * \brief Disables the given event in the module.
+ * \brief Disables a RTC event output.
  *
- * This will disable the given event so it cannot be used by the event system.
+ *  Disabled one or more output events from the RTC module. See
+ *  \ref rtc_calendar_events for a list of events this module supports.
  *
- * \param[in] events  Bitmask to the events to disable.
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void rtc_calendar_disable_events(
-		const uint16_t events)
+		struct rtc_calendar_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Disable given events. */
-	rtc_module->MODE2.EVCTRL.reg &= ~events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE2_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any alarm events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_alarm[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Disable given event(s). */
+	rtc_module->MODE2.EVCTRL.reg &= ~event_mask;
 }
 
 /** @} */

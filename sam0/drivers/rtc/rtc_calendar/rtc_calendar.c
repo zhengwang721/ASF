@@ -203,9 +203,6 @@ static void _rtc_calendar_set_config(
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		rtc_calendar_set_alarm(&(config->alarm[i]), i);
 	}
-
-	/* Set event source. */
-	rtc_calendar_enable_events(config->event_generators);
 }
 
 /**

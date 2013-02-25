@@ -90,7 +90,7 @@
  *   - Clear counter value on match
  *   - Up to 4 configurable compare values
  *
-
+ *
  * \section asfdoc_samd20_rtc_count_module_overview_compares Compare and Overflow
  * The RTC can be used with up to 4/6 compare values (depending on selected
  * operation mode). These compare values will trigger on match with the current
