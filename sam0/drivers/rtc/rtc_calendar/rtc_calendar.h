@@ -258,24 +258,25 @@ extern "C" {
 
 
 /**
- * \brief Available alarm registers.
+ * \brief Available alarm channels.
  *
- * Available alarm registers.
- * \note Not all alarm registers are available on all devices.
+ * Available alarm channels.
+ *
+ * \note Not all alarm channels are available on all devices.
  */
 enum rtc_calendar_alarm {
-	/** Alarm register 0. */
+	/** Alarm channel 0. */
 	RTC_CALENDAR_ALARM_0 = 0,
 #if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Alarm register 1. */
+	/** Alarm channel 1. */
 	RTC_CALENDAR_ALARM_1 = 1,
 #endif
 #if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Alarm register 2. */
+	/** Alarm channel 2. */
 	RTC_CALENDAR_ALARM_2 = 2,
 #endif
 #if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
-	/** Alarm register 3. */
+	/** Alarm channel 3. */
 	RTC_CALENDAR_ALARM_3 = 3,
 #endif
 };
@@ -287,19 +288,19 @@ enum rtc_calendar_alarm {
  */
 enum rtc_calendar_alarm_mask {
 	/** Alarm disabled */
-	RTC_CALENDAR_ALARM_MASK_DISABLED = 0,
+	RTC_CALENDAR_ALARM_MASK_DISABLED = RTC_MODE2_MASK_SEL_OFF,
 	/** Alarm match on second */
-	RTC_CALENDAR_ALARM_MASK_SEC      = 1,
+	RTC_CALENDAR_ALARM_MASK_SEC      = RTC_MODE2_MASK_SEL_SS,
 	/** Alarm match on second and minute */
-	RTC_CALENDAR_ALARM_MASK_MIN      = 2,
+	RTC_CALENDAR_ALARM_MASK_MIN      = RTC_MODE2_MASK_SEL_MMSS,
 	/** Alarm match on second, minute and hour */
-	RTC_CALENDAR_ALARM_MASK_HOUR     = 3,
+	RTC_CALENDAR_ALARM_MASK_HOUR     = RTC_MODE2_MASK_SEL_HHMMSS,
 	/** Alarm match on second, minutes hour and day */
-	RTC_CALENDAR_ALARM_MASK_DAY      = 4,
+	RTC_CALENDAR_ALARM_MASK_DAY      = RTC_MODE2_MASK_SEL_DDHHMMSS,
 	/** Alarm match on second, minute, hour, day and month */
-	RTC_CALENDAR_ALARM_MASK_MONTH    = 5,
+	RTC_CALENDAR_ALARM_MASK_MONTH    = RTC_MODE2_MASK_SEL_MMDDHHMMSS,
 	/** Alarm match on second, minute, hour, day, month and year */
-	RTC_CALENDAR_ALARM_MASK_YEAR     = 6,
+	RTC_CALENDAR_ALARM_MASK_YEAR     = RTC_MODE2_MASK_SEL_YYMMDDHHMMSS,
 };
 
 /**
@@ -354,7 +355,7 @@ struct rtc_calendar_time {
 struct rtc_calendar_alarm_time {
 	/** Alarm time. */
 	struct rtc_calendar_time time;
-	/** Alarm mask. */
+	/** Alarm mask to determine on what precision the alarm will match. */
 	enum rtc_calendar_alarm_mask mask;
 };
 
@@ -618,7 +619,7 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
 	}
 
 	/* Clear flag. */
-	rtc_module->MODE2.INTFLAG.reg = (1 << alarm_index);
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_CMP(alarm_index);
 
 	return STATUS_OK;
 }

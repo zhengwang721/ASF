@@ -557,7 +557,7 @@ enum status_code rtc_count_clear_compare_match(
 	}
 
 	/* Clear INTFLAG. */
-	rtc_module->MODE0.INTFLAG.reg = (1 << comp_index);
+	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_CMP(comp_index);
 
 	return STATUS_OK;
 }

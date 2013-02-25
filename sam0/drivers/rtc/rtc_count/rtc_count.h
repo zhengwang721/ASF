@@ -254,40 +254,43 @@ extern "C" {
 
 /**
  * \brief Available operation modes for the RTC.
+ *
+ * RTC Count operating modes, to select the counting width and associated module
+ * operation.
  */
 enum rtc_count_mode {
-	/** RTC Count module operates in 16 bit mode. */
+	/** RTC Count module operates in 16-bit mode. */
 	RTC_COUNT_MODE_16BIT = 0,
-	/** RTC Count module operates in 32 bit mode. */
+	/** RTC Count module operates in 32-bit mode. */
 	RTC_COUNT_MODE_32BIT = 1,
 };
 
 /**
- * \brief Available compare registers.
+ * \brief Available compare channels.
  *
- * \note Not all compare registers are available in all devices and modes.
+ * \note Not all compare channels are available in all devices and modes.
  */
 enum rtc_count_compare {
-	/** Compare register 0. */
+	/** Compare channel 0. */
 	RTC_COUNT_COMPARE_0 = 0,
 #if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Compare register 1. */
+	/** Compare channel 1. */
 	RTC_COUNT_COMPARE_1 = 1,
 #endif
 #if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Compare register 2. */
+	/** Compare channel 2. */
 	RTC_COUNT_COMPARE_2 = 2,
 #endif
 #if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
-	/** Compare register 3. */
+	/** Compare channel 3. */
 	RTC_COUNT_COMPARE_3 = 3,
 #endif
 #if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
-	/** Compare register 4. */
+	/** Compare channel 4. */
 	RTC_COUNT_COMPARE_4 = 4,
 #endif
 #if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
-	/** Compare register 5. */
+	/** Compare channel 5. */
 	RTC_COUNT_COMPARE_5 = 5,
 #endif
 };
