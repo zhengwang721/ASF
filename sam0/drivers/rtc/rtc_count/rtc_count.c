@@ -136,9 +136,6 @@ static enum status_code _rtc_count_set_config(
 		rtc_module->MODE0.READREQ.reg |= RTC_READREQ_RCONT;
 	}
 
-	/* Set event source. */
-	rtc_count_enable_events(config->event_generators);
-
 	/* Return status OK if everything was configured. */
 	return STATUS_OK;
 }

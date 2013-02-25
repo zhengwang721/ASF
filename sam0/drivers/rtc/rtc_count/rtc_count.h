@@ -292,56 +292,11 @@ enum rtc_count_compare {
 #endif
 };
 
-/**
- * \brief Values used to enable and disable events.
- *
- * Use these values when disabling or enabling the RTC events.
- *
- * \note Not all compare events are available in all devices and modes.
- */
-enum rtc_count_events {
-	/** To set event off. */
-	RTC_COUNT_EVENT_OFF        = 0,
-	/** Overflow event. */
-	RTC_COUNT_EVENT_OVF        = RTC_MODE0_EVCTRL_OVFEO,
-	/** Compare 0 match event. */
-	RTC_COUNT_EVENT_CMP_0      = RTC_MODE0_EVCTRL_CMPEO(1 << 0),
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Compare 1 match event. */
-	RTC_COUNT_EVENT_CMP_1      = RTC_MODE0_EVCTRL_CMPEO(1 << 1),
-#endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Compare 2 match event. */
-	RTC_COUNT_EVENT_CMP_2      = RTC_MODE0_EVCTRL_CMPEO(1 << 2),
-#endif
-#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
-	/** Compare 3 match event. */
-	RTC_COUNT_EVENT_CMP_3      = RTC_MODE0_EVCTRL_CMPEO(1 << 3),
-#endif
-#if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
-	/** Compare 4 match event. */
-	RTC_COUNT_EVENT_CMP_4      = RTC_MODE0_EVCTRL_CMPEO(1 << 4),
-#endif
-#if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
-	/** Compare 5 match event. */
-	RTC_COUNT_EVENT_CMP_5      = RTC_MODE0_EVCTRL_CMPEO(1 << 5),
-#endif
-	/** To set periodic event 0. */
-	RTC_COUNT_EVENT_PERIODIC_0 = RTC_MODE0_EVCTRL_PEREO(1 << 0),
-	/** Periodic event 1. */
-	RTC_COUNT_EVENT_PERIODIC_1 = RTC_MODE0_EVCTRL_PEREO(1 << 1),
-	/** Periodic event 2. */
-	RTC_COUNT_EVENT_PERIODIC_2 = RTC_MODE0_EVCTRL_PEREO(1 << 2),
-	/** Periodic event 3. */
-	RTC_COUNT_EVENT_PERIODIC_3 = RTC_MODE0_EVCTRL_PEREO(1 << 3),
-	/** Periodic event 4. */
-	RTC_COUNT_EVENT_PERIODIC_4 = RTC_MODE0_EVCTRL_PEREO(1 << 4),
-	/** Periodic event 5. */
-	RTC_COUNT_EVENT_PERIODIC_5 = RTC_MODE0_EVCTRL_PEREO(1 << 5),
-	/** Periodic event 6. */
-	RTC_COUNT_EVENT_PERIODIC_6 = RTC_MODE0_EVCTRL_PEREO(1 << 6),
-	/** Periodic event 7. */
-	RTC_COUNT_EVENT_PERIODIC_7 = RTC_MODE0_EVCTRL_PEREO(1 << 7),
+// TODO
+struct rtc_count_events {
+	bool generate_event_on_overflow;
+	bool generate_event_on_compare[RTC_NUM_OF_COMP16];
+	bool generate_event_on_periodic[8];
 };
 
 /**
@@ -354,18 +309,14 @@ enum rtc_count_events {
 struct rtc_count_config {
 	/** Select the operation mode of the RTC.*/
 	enum rtc_count_mode mode;
-	/** If true, clears the counter value on compare match. Only
-	 * available in 32 bit mode. */
+	/** If true, clears the counter value on compare match. Only available
+	 *  whilst running in 32-bit mode. */
 	bool clear_on_match;
 	/** Continuously update the counter value so no synchronization is
-	 * needed for reading. */
+	 *  needed for reading. */
 	bool continuously_update;
-	/** Set event output generators. */
-	enum rtc_count_events event_generators;
-	/**
-	 * Array of Compare values. Not all Compare values are available in 32-bit
-	 * mode.
-	 */
+	/** Array of Compare values. Not all Compare values are available in 32-bit
+	 *  mode. */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
 
@@ -416,7 +367,6 @@ static inline void rtc_count_get_config_defaults(
 	config->mode                = RTC_COUNT_MODE_32BIT;
 	config->clear_on_match      = false;
 	config->continuously_update = false;
-	config->event_generators    = RTC_COUNT_EVENT_OFF;
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
 		config->compare_values[i] = 0;
 	}
@@ -545,37 +495,85 @@ enum status_code rtc_count_clear_compare_match(
  */
 
 /**
- * \brief Enables the periodic event.
+ * \brief Enables a RTC event output.
  *
- * This enables the given periodic event
+ *  Enables one or more output events from the RTC module. See
+ *  \ref rtc_count_events for a list of events this module supports.
  *
- * \param[in] events Bitmask to the events to enable. See \ref rtc_count_events .
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void rtc_count_enable_events(
-		const uint16_t events)
+		struct rtc_count_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Enable given event. */
-	rtc_module->MODE0.EVCTRL.reg |= events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any compare events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_compare[i]) {
+			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Enable given event(s). */
+	rtc_module->MODE0.EVCTRL.reg |= event_mask;
 }
 
 /**
- * \brief Disables the given event in the module.
+ * \brief Disables a RTC event output.
  *
- * This will disable the given event so it cannot be used by the event system.
+ *  Disabled one or more output events from the RTC module. See
+ *  \ref rtc_count_events for a list of events this module supports.
  *
- * \param[in] events Bitmask to the events to disable. See \ref rtc_count_events
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void rtc_count_disable_events(
-		const uint16_t events)
+		struct rtc_count_events *const events)
 {
 	/* Initialize module pointer. */
 	Rtc *const rtc_module = RTC;
 
-	/* Disable given events. */
-	rtc_module->MODE0.EVCTRL.reg &= ~events;
+	uint32_t event_mask = 0;
+
+	/* Check if the user has requested an overflow event. */
+	if (events->generate_event_on_overflow) {
+		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
+	}
+
+	/* Check if the user has requested any compare events. */
+	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+		if (events->generate_event_on_compare[i]) {
+			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
+		}
+	}
+
+	/* Check if the user has requested any periodic events. */
+	for (uint8_t i = 0; i < 8; i++) {
+		if (events->generate_event_on_periodic[i]) {
+			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
+		}
+	}
+
+	/* Disable given event(s). */
+	rtc_module->MODE0.EVCTRL.reg &= ~event_mask;
 }
 
 /** @} */
