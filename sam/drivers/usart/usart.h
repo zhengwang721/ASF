@@ -4,7 +4,7 @@
  * \brief Universal Synchronous Asynchronous Receiver Transmitter (USART) driver
  * for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -202,7 +202,7 @@ uint32_t usart_init_rs232(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
 uint32_t usart_init_hw_handshaking(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 uint32_t usart_init_modem(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
 #endif
@@ -264,7 +264,7 @@ uint32_t usart_send_address(Usart *p_usart, uint32_t ul_addr);
 void usart_reset_iterations(Usart *p_usart);
 void usart_reset_nack(Usart *p_usart);
 void usart_restart_rx_timeout(Usart *p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 void usart_drive_DTR_pin_low(Usart *p_usart);
 void usart_drive_DTR_pin_high(Usart *p_usart);
 #endif
@@ -295,7 +295,7 @@ void usart_enable_writeprotect(Usart *p_usart);
 void usart_disable_writeprotect(Usart *p_usart);
 uint32_t usart_get_writeprotect_status(Usart *p_usart);
 uint8_t usart_get_error_number(Usart *p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E)
 void usart_man_set_tx_pre_len(Usart *p_usart, uint8_t uc_len);
 void usart_man_set_tx_pre_pattern(Usart *p_usart, uint8_t uc_pattern);
 void usart_man_set_tx_polarity(Usart *p_usart, uint8_t uc_polarity);

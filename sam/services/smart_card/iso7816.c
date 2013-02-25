@@ -3,7 +3,7 @@
  *
  * \brief Smart Card Standard ISO7816 driver.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -184,7 +184,11 @@ static uint32_t iso7816_send_char(uint8_t uc_char)
 static void iso7816_icc_power_on(void)
 {
 	/* Set RESET Master Card. */
+#if defined(SMART_CARD_USING_GPIO)
 	gpio_set_pin_high(gs_ul_rst_pin_idx);
+#elif defined(SMART_CARD_USING_IOPORT)
+	ioport_set_pin_level(gs_ul_rst_pin_idx, IOPORT_PIN_LEVEL_HIGH);
+#endif
 }
 
 /**
@@ -193,7 +197,11 @@ static void iso7816_icc_power_on(void)
 void iso7816_icc_power_off(void)
 {
 	/* Clear RESET Master Card. */
+#if defined(SMART_CARD_USING_GPIO)
 	gpio_set_pin_low(gs_ul_rst_pin_idx);
+#elif defined(SMART_CARD_USING_IOPORT)
+	ioport_set_pin_level(gs_ul_rst_pin_idx, IOPORT_PIN_LEVEL_LOW);
+#endif
 }
 
 /**
@@ -365,7 +373,11 @@ void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length)
  */
 uint8_t iso7816_get_reset_statuts(void)
 {
+#if defined(SMART_CARD_USING_GPIO)
 	return gpio_pin_is_high(gs_ul_rst_pin_idx);
+#elif defined(SMART_CARD_USING_IOPORT)
+	return (ioport_get_pin_level(gs_ul_rst_pin_idx) == IOPORT_PIN_LEVEL_HIGH);
+#endif
 }
 
 /**
@@ -463,8 +475,11 @@ void iso7816_init(const usart_iso7816_opt_t *p_usart_opt,
 {
 	/* Pin RST of ISO7816 initialize. */
 	gs_ul_rst_pin_idx = ul_rst_pin_idx;
+#if defined(SMART_CARD_USING_GPIO)
 	gpio_set_pin_low(gs_ul_rst_pin_idx);
-
+#elif defined(SMART_CARD_USING_IOPORT)
+	ioport_set_pin_level(gs_ul_rst_pin_idx, IOPORT_PIN_LEVEL_LOW);
+#endif
 	/* Init the global variable for ISO7816. */
 	g_ul_clk = ul_mck;
 

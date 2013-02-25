@@ -407,6 +407,13 @@ int udi_cdc_getc(void);
 iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size);
 
 /**
+ * \brief Gets the number of free byte in TX buffer
+ *
+ * \return the number of free byte in TX buffer
+ */
+iram_size_t udi_cdc_get_free_tx_buffer(void);
+
+/**
  * \brief This function checks if a new character sent is possible
  * The type int is used to support scanf redirection from compiler LIB.
  *
@@ -514,6 +521,15 @@ int udi_cdc_multi_getc(uint8_t port);
  * \return the number of data remaining
  */
 iram_size_t udi_cdc_multi_read_buf(uint8_t port, void* buf, iram_size_t size);
+
+/**
+ * \brief Gets the number of free byte in TX buffer
+ *
+ * \param port       Communication port number to manage
+ *
+ * \return the number of free byte in TX buffer
+ */
+iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port);
 
 /**
  * \brief This function checks if a new character sent is possible

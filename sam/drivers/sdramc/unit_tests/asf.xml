@@ -6,7 +6,6 @@
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
-		<build type="include-path" value="../components/memory/sdram/mt48lc16m16a2"/>
 		<device-support value="atsam3x8h"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.pmc"/>

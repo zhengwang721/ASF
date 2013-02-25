@@ -3,7 +3,7 @@
  *
  * \brief AT32UC3A3 RZ600 board LEDs support package.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

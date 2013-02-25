@@ -3,7 +3,7 @@
  *
  * \brief Pulse Width Modulation (PWM) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,8 +78,11 @@ typedef enum {
 
 /** Definitions for PWM level */
 typedef enum {
+	PWM_LOW = LOW,     /* Low level */
 	PWM_HIGH = HIGH,  /* High level */
-	PWM_LOW = LOW     /* Low level */
+#if SAM4E
+	PWM_HIGHZ,  /* High Impedance */
+#endif
 } pwm_level_t;
 
 /** Input parameters when initializing PWM */
@@ -92,7 +95,7 @@ typedef struct {
 	uint32_t ul_mck;
 } pwm_clock_t;
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 /** Definitions for PWM channels used by motor stepper */
 typedef enum {
 	PWM_STEPPER_MOTOR_CH_0_1 = 0,  /* Channel 0 and 1 */
@@ -123,7 +126,7 @@ typedef enum {
 	PWM_FAULT_PWMFI2 = (1 << 1),
 	PWM_FAULT_PWMFI0 = (1 << 2),
 	PWM_FAULT_PWMFI1 = (1 << 3)
-#elif (SAM3S || SAM4S)
+#elif (SAM3S || SAM4S || SAM4E)
 	PWM_FAULT_PWMFI1 = (1 << 0),
 	PWM_FAULT_MAINOSC = (1 << 1),
 	PWM_FAULT_ADC = (1 << 2),
@@ -185,6 +188,18 @@ typedef enum {
 	PWM_SYNC_WRITE_READY = (1 << 0),  /* Write Ready for Synchronous Channels Update */
 	PWM_SYNC_UNDERRUN = (1 << 3)      /* Synchronous Channels Update Underrun Error */
 } pwm_sync_interrupt_t;
+
+#if SAM4E
+typedef enum {
+	PWM_SPREAD_SPECTRUM_MODE_TRIANGULAR = 0,
+	PWM_SPREAD_SPECTRUM_MODE_RANDOM
+} pwm_spread_spectrum_mode_t;
+typedef enum {
+	PWM_ADDITIONAL_EDGE_MODE_INC = PWM_CAE_ADEDGM_INC,
+	PWM_ADDITIONAL_EDGE_MODE_DEC = PWM_CAE_ADEDGM_DEC,
+	PWM_ADDITIONAL_EDGE_MODE_BOTH = PWM_CAE_ADEDGM_BOTH,
+} pwm_additional_edge_mode_t;
+#endif
 
 /** Configurations of a PWM channel output */
 typedef struct {
@@ -258,7 +273,7 @@ typedef struct {
 	/** Period Cycle Value */
 	uint32_t ul_period;
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
     /** Channel counter event */
 	pwm_counter_event_t counter_event;
     /** Boolean of channel dead-time generator */
@@ -281,7 +296,17 @@ typedef struct {
 	pwm_level_t ul_fault_output_pwmh;
 	/** Channel PWML output level in fault protection */
 	pwm_level_t ul_fault_output_pwml;
-#endif /* (SAM3U || SAM3S || SAM3XA) */
+#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E) */
+#if SAM4E
+	/** Spread Spectrum Value */
+	uint32_t ul_spread;
+	/** Spread Spectrum Mode */
+	pwm_spread_spectrum_mode_t spread_spectrum_mode;
+	/** Additional Edge Value */
+	uint32_t ul_additional_edge;
+	/** Additional Edge Mode */
+	pwm_additional_edge_mode_t additional_edge_mode;
+#endif
 } pwm_channel_t;
 
 
@@ -302,7 +327,7 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault);
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
 void pwm_channel_update_output(Pwm *p_pwm, pwm_channel_t *p_channel,
 		pwm_output_t *p_output, bool b_sync);
 void pwm_channel_update_dead_time(Pwm *p_pwm, pwm_channel_t *p_channel,
@@ -341,12 +366,22 @@ bool pwm_get_protect_status(Pwm *p_pwm, pwm_protect_t * p_protect);
 
 uint32_t pwm_get_interrupt_status(Pwm *p_pwm);
 uint32_t pwm_get_interrupt_mask(Pwm *p_pwm);
-#endif /* (SAM3U || SAM3S || SAM3XA) */
+#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM4S)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E)
 void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
 		bool b_enable_gray, bool b_down);
-#endif /* (SAM3S || SAM3XA) */
+#endif /* (SAM3S || SAM3XA || SAM4S || SAM4E) */
+
+#if SAM4E
+void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_spread);
+void pwm_channel_update_additional_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_additional_edge,
+		pwm_additional_edge_mode_t additional_edge_mode);
+void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
+		bool polarity_inversion_flag, pwm_level_t polarity_value);
+#endif
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -411,7 +446,7 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
  * -# Disable PWM channel 0:
  *   - \code pwm_channel_disable(PWM, PWM_CHANNEL_0); \endcode
  * -# Setup clock for PWM module:
- *   - \code 
+ *   - \code
  *    pwm_clock_t clock_setting = {
  *        .ul_clka = 1000 * 100,
  *        .ul_clkb = 0,
@@ -451,7 +486,7 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
  * - \subpage pwm_use_case_1 : PWM channel 0 outputs square wave and duty cycle
  *  is updated in the PWM ISR.
  */
- 
+
 /**
  * \page pwm_use_case_1 Use case #1
  *
@@ -565,7 +600,7 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
  * -# Disable PWM channel 0:
  *   - \code pwm_channel_disable(PWM, PWM_CHANNEL_0); \endcode
  * -# Setup clock for PWM module:
- *   - \code 
+ *   - \code
  *    pwm_clock_t clock_setting = {
  *        .ul_clka = 1000 * 100,
  *        .ul_clkb = 0,
