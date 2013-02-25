@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1263,10 +1263,189 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
  */
 #define div_ceil(a, b)	(((a) + (b) - 1) / (b))
 
-#endif  // __AVR32_ABI_COMPILER__
+#if (defined __GNUC__)
+  #define SHORTENUM                           __attribute__ ((packed))
+#elif (defined __ICCAVR32__)
+  #define SHORTENUM                           /**/
+#endif
+
+#define FUNC_PTR                            void *
+
+
+#if (defined __GNUC__)
+  #define FLASH_DECLARE(x)  const x
+#elif (defined __ICCAVR32__)
+  #define FLASH_DECLARE(x) x
+#endif
+
+#if (defined __GNUC__)
+  #define FLASH_EXTERN(x) extern const x
+#elif (defined __ICCAVR32__)
+  #define FLASH_EXTERN(x) extern x
+#endif
+
+/*Program Memory Space Storage abstraction definition*/
+#if (defined __GNUC__)
+  #define CMD_ID_OCTET    (0)
+#elif (defined __ICCAVR32__)
+  #define CMD_ID_OCTET    (3)
+#endif
+
+
+/* Converting of values from CPU endian to little endian. */
+#define CPU_ENDIAN_TO_LE16(x) swap16(x)
+#define CPU_ENDIAN_TO_LE32(x) swap32(x)
+#define CPU_ENDIAN_TO_LE64(x) swap64(x)
+
+/* Converting of values from little endian to CPU endian. */
+#define LE16_TO_CPU_ENDIAN(x) swap16(x)
+#define LE32_TO_CPU_ENDIAN(x) swap32(x)
+#define LE64_TO_CPU_ENDIAN(x) swap64(x)
+
+/* Converting of constants from CPU endian to little endian. */
+#define CCPU_ENDIAN_TO_LE16(x) ((uint16_t)(\
+  (((uint16_t)(x) & (uint16_t)0x00ffU) << 8) | \
+  (((uint16_t)(x) & (uint16_t)0xff00U) >> 8)))
+
+#define CCPU_ENDIAN_TO_LE32(x) ((uint32_t)(\
+  (((uint32_t)(x) & (uint32_t)0x000000ffUL) << 24) | \
+  (((uint32_t)(x) & (uint32_t)0x0000ff00UL) <<  8) | \
+  (((uint32_t)(x) & (uint32_t)0x00ff0000UL) >>  8) | \
+  (((uint32_t)(x) & (uint32_t)0xff000000UL) >> 24)))
+
+#define CCPU_ENDIAN_TO_LE64(x) ((uint64_t)(\
+  (((uint64_t)(x) & (uint64_t)0x00000000000000ffULL) << 56) | \
+  (((uint64_t)(x) & (uint64_t)0x000000000000ff00ULL) << 40) | \
+  (((uint64_t)(x) & (uint64_t)0x0000000000ff0000ULL) << 24) | \
+  (((uint64_t)(x) & (uint64_t)0x00000000ff000000ULL) <<  8) | \
+  (((uint64_t)(x) & (uint64_t)0x000000ff00000000ULL) >>  8) | \
+  (((uint64_t)(x) & (uint64_t)0x0000ff0000000000ULL) >> 24) | \
+  (((uint64_t)(x) & (uint64_t)0x00ff000000000000ULL) >> 40) | \
+  (((uint64_t)(x) & (uint64_t)0xff00000000000000ULL) >> 56)))
+
+/* Converting of constants from little endian to CPU endian. */
+#define CLE16_TO_CPU_ENDIAN(x) CCPU_ENDIAN_TO_LE16(x)
+#define CLE32_TO_CPU_ENDIAN(x) CCPU_ENDIAN_TO_LE32(x)
+#define CLE64_TO_CPU_ENDIAN(x) CCPU_ENDIAN_TO_LE64(x)
+
+/**
+ * Address copy from the source to the Destination Memory
+ */
+#define ADDR_COPY_DST_SRC_16(dst, src)  memcpy((&(dst)), (&(src)), sizeof(uint16_t))
+#define ADDR_COPY_DST_SRC_64(dst, src)  do {dst=src;}while(0)
+
+#define MEMCPY_ENDIAN memcpy_be
+
+#ifndef FREERTOS_USED
+#if (EXT_BOARD != SPB104)
+#ifndef BIG_ENDIAN
+#define BIG_ENDIAN
+#endif
+#endif
+#endif
+
+/* Converts a 8 Byte array into a 64-Bit value */
+static inline uint64_t convert_byte_array_to_64_bit(uint8_t *data)
+{
+    union
+    {
+        uint64_t u64;
+        uint8_t u8[8];
+    }long_addr;
+    uint8_t index;
+    for (index = 0; index <= 7; index++)
+    {
+        long_addr.u8[index] = *data++;
+    }
+
+    return long_addr.u64;
+}
+
+/* Converts a 64-Bit value into a 2 Byte array */
+#define convert_64_bit_to_byte_array(value, data) \
+    memcpy((data), (&(value)), sizeof(uint64_t))
+
+
+/* Converts a 2 Byte array into a 16-Bit value */
+static inline uint16_t convert_byte_array_to_16_bit(uint8_t *data)
+{
+    return (data[1] | ((uint16_t)data[0] << 8));
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[1] = value & 0xFF;
+    data[0] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 8 Byte array into a 32-Bit value */
+static inline uint32_t convert_byte_array_to_32_bit(uint8_t *data)
+{
+    union
+    {
+        uint32_t u32;
+        uint8_t u8[8];
+    }long_addr;
+    uint8_t index;
+    for (index = 0; index <= 4; index++)
+    {
+        long_addr.u8[index] = *data++;
+    }
+    return long_addr.u32;
+}
+
+/* Converts a 32-Bit value into a 2 Byte array */
+#define convert_32_bit_to_byte_array(value, data) \
+    memcpy((data), (&(value)), sizeof(uint32_t))
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_spec_16_bit_to_byte_array(uint16_t value, uint8_t *data)
+{
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8) & 0xFF;
+}
+
+/* Converts a 16-Bit value into a 2 Byte array */
+static inline void convert_16_bit_to_byte_address(uint64_t value, uint8_t *data)
+{
+    data[1] = (value >> 48) & 0xFF;
+    data[0] = (value >> 56) & 0xFF;
+}
+
+
+#define PGM_READ_BYTE(x) *(x)
+#define PGM_READ_WORD(x) *(x)
+#define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
+
+
+#if (defined __GNUC__)
+  #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
+#elif (defined __ICCAVR32__)
+  #define nop() __no_operation()
+#endif
+
+/* Copy char s2[n] to s1[n] in any order */
+static inline void *memcpy_be(void *s1, const void *s2, char n)
+{
+    char *su1 = (char *)s1;
+    const char *su2 = (const char *)s2;
+    signed char count = 0x00, count1 = 0x00;
+    if ((n - 1) == 0)
+    {
+        *(su1 + count1) = *(su2 + count);
+    }
+    for (count = (n - 1), count1 = 0; count >= 0;)
+    {
+        *(su1 + count1++) = *(su2 + count--);
+    }
+    return (s1);
+}
+
 
 /**
  * \}
  */
+#endif  // __AVR32_ABI_COMPILER__
 
 #endif  // _COMPILER_AVR32_H_

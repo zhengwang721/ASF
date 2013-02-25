@@ -3,7 +3,7 @@
  *
  * \brief RZ600 board init.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@ void board_init(void)
 	gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
 	gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
 
-#if defined (CONF_BOARD_AT86RFX_SPI)
+#if defined (CONF_BOARD_AT86RFX)
     // AT86RFX SPI GPIO options.
     static  gpio_map_t AT86RFX_SPI_GPIO_MAP =
     {
@@ -66,8 +66,14 @@ void board_init(void)
         {AT86RFX_SPI_NPCS_PIN, AT86RFX_SPI_NPCS_FUNCTION}
     };
 
-  // Assign GPIO to SPI.
-  gpio_enable_module(AT86RFX_SPI_GPIO_MAP, sizeof(AT86RFX_SPI_GPIO_MAP) / sizeof(AT86RFX_SPI_GPIO_MAP[0]));
+	// Assign GPIO to SPI.
+	gpio_enable_module(AT86RFX_SPI_GPIO_MAP, sizeof(AT86RFX_SPI_GPIO_MAP) / sizeof(AT86RFX_SPI_GPIO_MAP[0]));
+
+	gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN, GPIO_RISING_EDGE);
+	gpio_clear_pin_interrupt_flag(AT86RFX_IRQ_PIN);
+
+	gpio_configure_pin(AT86RFX_RST_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
+	gpio_configure_pin(AT86RFX_SLP_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);
 #endif
 
 }
