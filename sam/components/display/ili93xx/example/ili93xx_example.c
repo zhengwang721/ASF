@@ -85,14 +85,6 @@
 
 struct ili93xx_opt_t g_ili93xx_display_opt;
 
-static void ili93xx_write_register_word(uint8_t uc_reg, uint16_t us_data)
-{
-	LCD_IR(0);
-	LCD_IR(uc_reg);
-	LCD_WD((us_data >> 8) & 0xFF);
-	LCD_WD(us_data & 0xFF);
-}
-
 /**
  *  Configure UART console.
  */
