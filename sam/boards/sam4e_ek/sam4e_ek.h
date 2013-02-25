@@ -373,6 +373,13 @@
 #define BOARD_ADS7843_IRQ_FLAGS  IOPORT_MODE_PULLUP
 #define BOARD_ADS7843_BUSY_GPIO  (PIO_PA17_IDX)
 #define BOARD_ADS7843_BUSY_FLAGS  IOPORT_MODE_PULLUP
+/**
+* SPI instance, which can be SPI, SPI0 or SPI1, depends on which SPI
+* channel is used.
+*/
+#define BOARD_ADS7843_SPI_BASE    SPI
+/* SPI chip select NO., depends on which SPI CS pin is used by ADS7843. */
+#define BOARD_ADS7843_SPI_NPCS    0
 
 /** TWI0 pins definition */
 #define TWI0_DATA_GPIO   PIO_PA3_IDX
