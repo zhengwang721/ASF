@@ -4,7 +4,7 @@
 *
 * \brief FreeRTOS Led Driver example for SAM.
 *
-* Copyright (c) 2012 Atmel Corporation. All rights reserved.
+* Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -41,8 +41,6 @@
 * \asf_license_stop
 *
 *****************************************************************************/
-
-#include "gpio.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "partest.h"
@@ -51,12 +49,15 @@
 void vParTestInitialise( void )
 {
 	/* Start with all LEDs off. */
-	gpio_configure_pin(LED0_GPIO, LED0_FLAGS);
-	gpio_configure_pin(LED1_GPIO, LED1_FLAGS);
-	gpio_configure_pin(LED2_GPIO, LED2_FLAGS);
+#if SAM4E
+	LED_Off(LED0);
+	LED_Off(LED1);
+	LED_Off(LED2);
+#else
 	LED_Off(LED0_GPIO);
 	LED_Off(LED1_GPIO);
 	LED_Off(LED2_GPIO);
+#endif
 }
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
@@ -64,9 +65,47 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 	vTaskSuspendAll();
 
 	if (xValue == pdTRUE) {
+#if SAM4E
+	switch (uxLED) {
+		case 0:
+			LED_On(LED0);
+		break;
+
+		case 1:
+			LED_On(LED1);
+		break;
+
+		case 2:
+			LED_On(LED2);
+		break;
+
+		default :
+		break;
+	}
+#else
 		LED_On(uxLED);
+#endif
 	} else {
+#if SAM4E
+	switch (uxLED) {
+		case 0:
+			LED_Off(LED0);
+		break;
+
+		case 1:
+			LED_Off(LED1);
+		break;
+
+		case 2:
+			LED_Off(LED2);
+		break;
+
+		default :
+		break;
+	}
+#else
 		LED_Off(uxLED);
+#endif
 	}
 
 	xTaskResumeAll();
@@ -75,6 +114,27 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	vTaskSuspendAll();
-	LED_Toggle(uxLED);
+
+#if SAM4E
+	switch (uxLED) {
+		case 0:
+			LED_Toggle(LED0);
+		break;
+
+		case 1:
+			LED_Toggle(LED1);
+		break;
+
+		case 2:
+			LED_Toggle(LED2);
+		break;
+
+		default :
+		break;
+	}
+#else
+		LED_Toggle(uxLED);
+#endif
+
 	xTaskResumeAll();
 }
