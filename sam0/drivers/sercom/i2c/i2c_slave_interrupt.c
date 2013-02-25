@@ -449,7 +449,13 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 			/* Setting total length of buffer. */
 			module->buffer_length = module->buffer_remaining;
-			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+			if (module->buffer_length == 0) {
+				/* Data buffer not set up, NACK address */
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+			} else {
+				/* ACK address */
+				i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+			}
 		} else {
 			/* Set transfer direction in dev inst */
 			module->transfer_direction = 0;
@@ -460,6 +466,13 @@ void _i2c_slave_interrupt_handler(uint8_t instance)
 
 			/* Setting total length of buffer. */
 			module->buffer_length = module->buffer_remaining;
+			if (module->buffer_length == 0) {
+				/* Data buffer not set up, NACK address */
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+			} else {
+				/* ACK address */
+				i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+			}
 			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
 		}
 
