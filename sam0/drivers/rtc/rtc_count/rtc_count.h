@@ -102,8 +102,8 @@
  * 16-bit mode, the RTC counter value will instead be cleared on overflow once
  * the maximum count value has been reached:
  *
- * \f[ COUNT_{MAX} = 2^{32}-1\f ] for 32-bit counter mode, and
- * \f[ COUNT_{MAX} = 2^{16}-1\f ] for 16-bit counter mode.
+ * \f[ COUNT_{MAX} = 2^{32}-1 \f] for 32-bit counter mode, and
+ * \f[ COUNT_{MAX} = 2^{16}-1 \f] for 16-bit counter mode.
  *
  * When running in 16-bit mode, the overflow value is selectable with a period
  * value. The counter overflow will then occur when the counter value reaches
@@ -292,10 +292,21 @@ enum rtc_count_compare {
 #endif
 };
 
-// TODO
+/**
+ * \brief RTC Count event enable/disable structure.
+ *
+ * Event flags for the \ref rtc_count_enable_events() and
+ * \ref rtc_count_disable_events().
+ */
 struct rtc_count_events {
+	/** Generate an output event on each overflow of the RTC count. */
 	bool generate_event_on_overflow;
+	/** Generate an output event on a compare channel match against the RTC
+	 *  count. */
 	bool generate_event_on_compare[RTC_NUM_OF_COMP16];
+	/** Generate an output event periodically at a binary division of the RTC
+	 *  counter frequency (see
+	 * \ref asfdoc_samd20_rtc_count_module_overview_periodic). */
 	bool generate_event_on_periodic[8];
 };
 
