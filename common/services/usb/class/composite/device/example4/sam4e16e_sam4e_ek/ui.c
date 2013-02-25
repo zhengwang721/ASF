@@ -142,6 +142,7 @@ void ui_process(uint16_t framenumber)
  * - SAM4E USART used UART on J7 connector
  * - Led 0 (D2) blinks when USB host has checked and enabled All interfaces
  * - Led 1 (D3) is on when CDC UART port is open
- * - Led 2 (D4) is on during read/write operation
+ * - Led 2 (D4) is on during MSC read/write operation
+ * - Led 2 (D4) is on during CDC TX/RX operation
  *
  */

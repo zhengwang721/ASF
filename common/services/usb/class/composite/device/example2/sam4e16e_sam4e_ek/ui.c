@@ -332,7 +332,8 @@ void ui_kbd_led(uint8_t value)
  * - SAM4E USART used UART on J7 connector
  * - Led 0 (D2) blinks when USB host has checked and enabled All interfaces
  * - Led 1 (D3) is on when CDC UART port is open
- * - Led 2 (D4) is on during read/write operation
+ * - Led 2 (D4) is on during MSC read/write operation
+ * - Led 2 (D4) is on during CDC TX/RX operation
  * - Push button 2 (BP3) is linked to mouse button left
  * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up and
  *   down

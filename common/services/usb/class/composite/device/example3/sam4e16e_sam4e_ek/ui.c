@@ -131,7 +131,6 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 	if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
 		/* It is a wakeup then send wakeup USB */
 		udc_remotewakeup();
-		LED_On(LED0);
 	}
 }
 
