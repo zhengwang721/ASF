@@ -39,7 +39,6 @@
  *
  */
 #include <asf.h>
-#include <stdlib.h>
 
 #define RES 255
 #define CAL_CLOCK_HZ 32768
