@@ -39,9 +39,9 @@
  *
  */
 #include <asf.h>
-#include <math.h>
+#include <stdlib.h>
 
-#define RES 256
+#define RES 255
 #define CAL_CLOCK_HZ 32768
 
 static struct usart_dev_inst usart_edbg;
@@ -56,6 +56,9 @@ void setup_usart_channel(void);
 
 uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan);
 
+void debug_wait(uint16_t ticks);
+
+/* Write string to usart. */
 void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string)
 {
 	do {
@@ -64,44 +67,28 @@ void debug_write_string(struct usart_dev_inst *const dev, uint8_t const *string)
 	} while (*(++string) != 0);
 }
 
+/* Convert number to string */
 void debug_int_to_string(uint8_t *ret_val, uint8_t size, uint32_t integer)
 {
-    uint32_t cnt = 10;
-    uint32_t left;
-    uint8_t counter=0;
+	uint8_t i = 0;
+	uint32_t temp_int = integer;
 
-    for(counter = 0; counter < size; counter++){
-        ret_val[counter] = 0;
-    }
+	while (temp_int) {
+		temp_int /= 10;
+		i++;
+	}
 
-    counter = 0;
-
-    while(1) {
-        if(integer / cnt != 0){
-            cnt *= 10;
-        } else {
-            cnt /= 10;
-            break;
-        }
-        counter++;
-    }
-
-    if (counter > size) {
-    	return;
-    }
-
-    counter = 0;
-
-    while (1) {
-        left = integer/cnt;
-        integer -= left*cnt;
-        ret_val[counter++] = left+48;
-
-        cnt /= 10;
-        if (cnt < 1) break;
-    }
+	while (size--) {
+		if (size < i || size == 0) {
+			ret_val[size] = integer % 10 + 48;
+			integer /= 10;
+		} else {
+			ret_val[size] = 0;
+		}
+	}
 }
 
+/* Set up tc and events */
 void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *const comp_chan)
 {
 	events_init();
@@ -152,10 +139,9 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 
 	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
-
-
 }
 
+/* Setup and initialize USART device. */
 void setup_usart_channel(void)
 {
 	struct usart_conf config_struct;
@@ -175,6 +161,7 @@ void setup_usart_channel(void)
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 }
 
+/* Get current frequency */
 uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_chan)
 {
 	uint64_t tmp;
@@ -192,15 +179,12 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 	return (uint32_t)(tmp / RES);
 }
 
-void write_freq(uint32_t freq)
-{
-	uint8_t string[10];
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1036, 2);
-
-	debug_int_to_string(string, 10, freq);
-	debug_write_string(&usart_edbg, (uint8_t*)"Current: ");
-	debug_write_string(&usart_edbg, string);
-	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
+/* Wait loop */
+void debug_wait(uint16_t ticks) {
+	while(ticks--)
+	{
+		__asm__ ("NOP");
+	}
 }
 
 int main(void)
@@ -220,23 +204,24 @@ int main(void)
 	setup_tc_channels(&calib_chan, &comp_chan);
 
 	/* Values for calculating current frequency of osc. */
-	uint8_t comm_cal;
+	uint16_t comm_cal;
 	uint8_t frange_cal;
-	uint8_t comm_best=0;
+	uint16_t comm_best=0;
 	uint8_t frange_best=0;
 	uint32_t freq_best = 0xffffffff;
 	uint32_t freq_before = debug_get_freq(&calib_chan, &comp_chan);
 	uint32_t gen_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 
-	for (frange_cal = 1; frange_cal < 4; frange_cal++) {
-		for (comm_cal = 0; comm_cal < 128; comm_cal++) {
+	/* Run calibration */
+	for (frange_cal = 1; frange_cal < 3; frange_cal++) {
+		for (comm_cal = 0; comm_cal < 0x7ff; comm_cal++) {
 			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | 8 << 7, frange_cal);
 
+			debug_wait(1000);
 			tmp = debug_get_freq(&calib_chan, &comp_chan);
 
 			if (abs(tmp - gen_freq) < abs(freq_best - gen_freq))
 			{
-				//write_freq(comm_cal);
 				freq_best = tmp;
 				comm_best = comm_cal;
 				frange_best = frange_cal;
@@ -244,22 +229,23 @@ int main(void)
 		}
 	}
 	/* Set the found best calibration. */
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | 8 << 7, frange_best);
-	//system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1036, 2);
+
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best, frange_best);
 
 	/* Setup usart module to give information back. */
 	setup_usart_channel();
 
 	/* Get calibrated value. */
-	tmp = debug_get_freq(&calib_chan, &comp_chan);
+	debug_wait(1000);
 
 	/* Write freq. before and now, together with calibration values to usart. */
-	debug_int_to_string(string, 10, freq_before);
+	uint2str(string, 10, freq_before, 10);
+	//debug_int_to_string(string, 10, freq_before);
 	debug_write_string(&usart_edbg, (uint8_t*)"Before: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 
-	debug_int_to_string(string, 10, tmp);
+	debug_int_to_string(string, 10, freq_best);
 	debug_write_string(&usart_edbg, (uint8_t*)"Now: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
@@ -269,18 +255,10 @@ int main(void)
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 
-	debug_int_to_string(string, 10, comm_best | 8 << 7);
+	debug_int_to_string(string, 10, comm_best);
 	debug_write_string(&usart_edbg, (uint8_t*)"Calibration value: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
-
-	while (1) {
-		//debug_int_to_string(string, 10, tc_get_capture_value(&calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0));//EVSYS->INTFLAG.reg);
-		debug_int_to_string(string, 10, gen_freq);
-	    	debug_write_string(&usart_edbg, string);
-	    	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
-	    	break;
-	}
 
 	/* Deactivate tc modules. */
 	tc_disable(&calib_chan);
