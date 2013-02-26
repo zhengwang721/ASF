@@ -277,7 +277,8 @@ uint32_t dacc_get_writeprotect_status(Dacc *p_dacc)
  */
 Pdc *dacc_get_pdc_base(Dacc *p_dacc)
 {
-	p_dacc = p_dacc;
+	/* avoid Cppcheck Warning */
+	UNUSED(p_dacc);
 	return PDC_DACC;
 }
 #endif

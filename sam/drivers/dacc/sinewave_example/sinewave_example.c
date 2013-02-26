@@ -304,7 +304,6 @@ void SysTick_Handler(void)
 				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
 					 g_l_amplitude,
 					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
-                                  
 		dacc_write_conversion_data(DACC_BASE, dac_val);
 	}
 }
