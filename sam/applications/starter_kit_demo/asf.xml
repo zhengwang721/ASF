@@ -21,6 +21,8 @@
 			<require idref="common.components.display.ssd1306"/>
 			<require idref="common.components.memory.sd_mmc"/>
 			<require idref="common.components.memory.eeprom.at30tse75x"/>
+			<require idref="common.components.memory.sd_mmc.ctrl_access"/>
+			<require idref="common.services.fs.fatfs"/>
 			<build type="c-source" value="main.c"/>
 		</module>
 	</select-by-device>
