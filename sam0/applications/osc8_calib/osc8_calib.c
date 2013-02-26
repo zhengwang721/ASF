@@ -40,7 +40,7 @@
  */
 #include <asf.h>
 
-#define RES 255
+#define RES 4096
 #define CAL_CLOCK_HZ 32768
 
 static struct usart_module usart_edbg;
@@ -59,6 +59,7 @@ void debug_wait(uint16_t ticks);
 
 /* Write string to usart. */
 void debug_write_string(struct usart_module *const dev, uint8_t const *string)
+
 {
 	do {
 		while (usart_write_wait(dev, *string) != STATUS_OK) {
@@ -93,6 +94,7 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 	events_init();
 
 	struct tc_config config;
+
 	tc_get_config_defaults(&config);
 
 	config.counter_size = TC_COUNTER_SIZE_32BIT;
@@ -135,6 +137,7 @@ void setup_tc_channels(struct tc_module *const calib_chan, struct tc_module *con
 
 	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
+
 }
 
 /* Setup and initialize USART device. */
@@ -164,10 +167,11 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 
 	tc_clear_interrupt_flag(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0);
 
-	calib_chan->hw->COUNT32.COUNT.reg = 0;
-	comp_chan->hw->COUNT16.COUNT.reg = 0;
+	tc_start_counter(calib_chan);
+	tc_start_counter(comp_chan);
 
-	while (!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
+
+	while(!tc_is_interrupt_flag_set(comp_chan, TC_INTERRUPT_FLAG_CHANNEL_0));
 
 	tmp = (uint64_t)tc_get_capture_value(calib_chan, TC_COMPARE_CAPTURE_CHANNEL_0);
 	tmp = tmp * CAL_CLOCK_HZ;
@@ -177,9 +181,8 @@ uint32_t debug_get_freq(struct tc_module *calib_chan, struct tc_module *comp_cha
 
 /* Wait loop */
 void debug_wait(uint16_t ticks) {
-	while(ticks--)
-	{
-		__asm__ ("NOP");
+	while(ticks--) {
+		__asm__("NOP");
 	}
 }
 
@@ -191,6 +194,12 @@ int main(void)
 	//setup_usart_channel();
 
 	uint32_t tmp;
+
+	/* Set up to clock out osc 8 on pin */
+	struct system_pinmux_config pin_mux;
+	system_pinmux_get_config_defaults(&pin_mux);
+	pin_mux.mux_position = MUX_PA31G_GCLK_IO0;
+	system_pinmux_pin_set_config(PIN_PA31, &pin_mux);
 
 	/* Structures for config and software device instance */
 	struct tc_module calib_chan;
@@ -209,9 +218,9 @@ int main(void)
 	uint32_t gen_freq = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
 
 	/* Run calibration */
-	for (frange_cal = 1; frange_cal < 3; frange_cal++) {
-		for (comm_cal = 0; comm_cal < 0x7ff; comm_cal++) {
-			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal, frange_cal);
+	for (frange_cal = 0; frange_cal < 4; frange_cal++) {
+		for (comm_cal = 0; comm_cal < 128; comm_cal++) {
+			system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_cal | 8 << 7, frange_cal);
 
 			debug_wait(1000);
 			tmp = debug_get_freq(&calib_chan, &comp_chan);
@@ -225,9 +234,7 @@ int main(void)
 		}
 	}
 	/* Set the found best calibration. */
-
-	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best, frange_best);
-	//system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 1099, 1);
+	system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, comm_best | 8 << 7, frange_best);
 
 	/* Setup usart module to give information back. */
 	setup_usart_channel();
@@ -251,7 +258,7 @@ int main(void)
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
 
-	debug_int_to_string(string, 10, comm_best);
+	debug_int_to_string(string, 10, comm_best  | 8 << 7);
 	debug_write_string(&usart_edbg, (uint8_t*)"Calibration value: ");
 	debug_write_string(&usart_edbg, string);
 	debug_write_string(&usart_edbg, (uint8_t*)"\r\n");
@@ -259,6 +266,7 @@ int main(void)
 	/* Deactivate tc modules. */
 	tc_disable(&calib_chan);
 	tc_disable(&comp_chan);
+
 
 	while (1) {
 		/* Inf loop */

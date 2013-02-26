@@ -104,7 +104,6 @@ enum status_code _usart_set_config(struct usart_module *const module,
 	_usart_wait_for_sync(module);
 
 	/*Set baud val */
-	baud_val = 63975;
 	usart_hw->BAUD.reg = baud_val;
 
 	/* Set sample mode */
@@ -330,6 +329,10 @@ enum status_code usart_write_wait(struct usart_module *const module,
 
 	/* Write data to USART module */
 	usart_hw->DATA.reg = tx_data;
+
+	/* Wait until data is sent */
+	while(!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF)) {
+	}
 
 	return STATUS_OK;
 }
