@@ -3,7 +3,7 @@
  *
  * \brief API driver for component AT24CXX.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,6 +73,7 @@ extern "C" {
 #define AT24C_READ_SUCCESS      0
 #define AT24C_READ_FAIL         1
 
+void at24cxx_reset(void);
 uint32_t at24cxx_write_byte(uint16_t us_address, uint8_t uc_value);
 uint32_t at24cxx_write_continuous(uint16_t us_start_address,
 		uint16_t us_length, uint8_t const *p_wr_buffer);
