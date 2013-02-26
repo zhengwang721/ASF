@@ -135,6 +135,15 @@ static status_code_t init_test(void)
 		.data_setup_cycles = 0,
 		.hsmode_data_setup_cycles = 0,
 		.smbus = false,
+		.clock_slew_limit = 0,
+		.clock_drive_strength_low = 0,
+		.data_slew_limit = 0,
+		.data_drive_strength_low = 0,
+		.hs_clock_slew_limit = 0,
+		.hs_clock_drive_strength_high = 0,
+		.hs_clock_drive_strength_low = 0,
+		.hs_data_slew_limit = 0,
+		.hs_data_drive_strength_low = 0,
 	};
 	/* Initialize the TWIM Module */
 	twim_set_callback(EXAMPLE_TWIM, 0, twim_default_callback, 1);
