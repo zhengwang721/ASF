@@ -55,6 +55,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "freertos_twi_master.h"
+#include "at24cxx.h"
 
 /*-----------------------------------------------------------*/
 
@@ -392,6 +393,8 @@ static void prvSetupHardware(void)
 
 	/* Atmel library function to setup for the evaluation kit being used. */
 	board_init();
+	/* Reset TWI EEPROM state to release TWI */
+	at24cxx_reset();
 
 	/* Enable unit test output peripheral. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
