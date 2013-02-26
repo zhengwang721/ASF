@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for SSC driver.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,9 +51,6 @@
 #include <stdio_serial.h>
 #include <conf_test.h>
 #include <conf_board.h>
-#ifdef BOARD_BASE_TWI_EEPROM
-#  include "at24cxx.h"
-#endif
 
 /**
  * \mainpage
@@ -247,10 +244,6 @@ int main(void)
 
 	sysclk_init();
 	board_init();
-#ifdef BOARD_BASE_TWI_EEPROM
-	/* Reset TWI EEPROM state to release TWI */
-	at24cxx_reset();
-#endif
 
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
