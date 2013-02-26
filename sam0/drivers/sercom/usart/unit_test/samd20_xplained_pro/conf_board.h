@@ -1,11 +1,9 @@
 /**
- *
  * \file
  *
- * \brief USART Serial driver functions.
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,45 +40,8 @@
  * \asf_license_stop
  *
  */
-#include "serial.h"
 
-/**
- * \brief Send a sequence of bytes to USART device
- *
- * \param usart  Base address of the USART instance.
- * \param data   Data buffer to read
- * \param len    Length of data
- *
- */
-#if API_CONVENTION == 0
-status_code_t usart_serial_write_packet(usart_if usart, const uint8_t *data,
-		size_t len)
-{
-	while (len) {
-		usart_serial_putchar(usart, *data);
-		len--;
-		data++;
-	}
-	return STATUS_OK;
-}
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-
-/**
- * \brief Receive a sequence of bytes from USART device
- *
- * \param usart  Base address of the USART instance.
- * \param data   Data buffer to write
- * \param len    Length of data
- *
- */
-status_code_t usart_serial_read_packet(usart_if usart, uint8_t *data,
-		size_t len)
-{
-	while (len) {
-		usart_serial_getchar(usart, data);
-		len--;
-		data++;
-	}
-	return STATUS_OK;
-}
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */
