@@ -54,8 +54,7 @@ void _usart_read_buffer(struct usart_module *const module,
 		uint8_t *rx_data, uint16_t length);
 #endif
 /**
- * \defgroup asfdoc_samd20_sercom_usart_async Interrupt USART API
- * @{
+ * \defgroup asfdoc_samd20_sercom_usart_interrupt Interrupt USART API
  *
  * This is the overview of the interrupt driven API for the SERCOM USART driver.
  *
@@ -79,12 +78,12 @@ void _usart_read_buffer(struct usart_module *const module,
  * main application that an interrupt event has happened, and only do the
  * minimal needed processing in the callback.
  *
- *
+ * @{
  */
 
 /**
  * \name Callback Management
- * {@
+ * @{
  */
 void usart_register_callback(struct usart_module *const module,
 		usart_callback_t callback_func,
@@ -154,7 +153,7 @@ static inline void usart_disable_callback(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 enum status_code usart_write_job(struct usart_module *const module,
 		const uint16_t tx_data);
@@ -180,7 +179,7 @@ enum status_code usart_get_job_status(
 
 /**
  * \name Writing and reading
- * {@
+ * @{
  */
 
 void _usart_interrupt_handler(uint8_t instance);

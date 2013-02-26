@@ -422,9 +422,9 @@ enum status_code usart_read_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Transmit a buffer of \ref length length characters via USART
+ * \brief Transmit a buffer of \c length characters via USART
  *
- * This blocking function will transmit a block of \ref length length characters
+ * This blocking function will transmit a block of \c length characters
  * via the USART
  *
  * \note Using this function in combination with the asynchronous functions is
@@ -433,7 +433,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
  *
  * \param[in]     module Pointer to USART software instance struct
  * \param[out]    tx_data  Pointer to data to transmit
- * \param[length] number   Number of characters to transmit
+ * \param[in]     length   Number of characters to transmit
  *
  * \return        Status of the operation
  * \retval        STATUS_OK                If operation was completed
@@ -506,9 +506,9 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Receive a buffer of \ref length length characters via USART
+ * \brief Receive a buffer of \c length characters via USART
  *
- * This blocking function will receive a block of \ref length length characters
+ * This blocking function will receive a block of \c length characters
  * via the USART.
  *
  * \note Using this function in combination with the asynchronous functions is
@@ -516,8 +516,8 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  *       ongoing asynchronous operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[out]    tx_data  Pointer to data to transmit
- * \param[length] number   Number of characters to transmit
+ * \param[out]    rx_data  Pointer to receive buffer
+ * \param[in]     length   Number of characters to receive
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If operation was completed

@@ -45,50 +45,55 @@
 /* SERCOM 4 is the Embedded debugger */
 #define QUICKSTART_USART SERCOM4
 
-void write_string(struct usart_module *const mod, uint8_t *string);
-
-void write_string(struct usart_module *const mod, uint8_t *string)
-{
-	do {
-		while (usart_write_wait(mod, *string) != STATUS_OK) {
-		}
-	} while (*(++string) != 0);
-}
-
 int main(void)
 {
+//! [main]
+//! [module_inst]
 	struct usart_module usart_edbg;
+//! [module_inst]
+//! [config]
 	struct usart_config config_struct;
+//! [config]
+//! [temp_variable]
 	uint16_t temp;
+//! [temp_variable]
 
-	uint8_t string[] = "Hello world!\n\r\0";
-
+//! [system_init]
 	/* Initialize system clocks */
 	system_init();
+//! [system_init]
 
+//! [conf_defaults]
 	/* Get configuration defaults for the USART
 	 * 9600 8N1
 	 */
 	usart_get_config_defaults(&config_struct);
+//! [conf_defaults]
+//! [conf_modify]
 	config_struct.mux_settings = USART_RX_3_TX_2_XCK_3;
-
 	config_struct.pinout_pad3 = EDBG_CDC_RX_PINMUX;
 	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
+//! [conf_modify]
 
+//! [init]
 	/* Apply configuration */
 	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
 			&config_struct) != STATUS_OK) {
 	}
+//! [init]
 
+//! [enable]
 	/* Enable USARTs */
 	usart_enable(&usart_edbg);
+//! [enable]
 
+//! [enable_transceivers]
 	/* Enable transmitter */
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
+//! [enable_transceivers]
 
-	write_string(&usart_edbg, string);
-
+//! [echo_characters]
 	/* Echo back characters received */
 	while (1) {
 		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
@@ -96,4 +101,6 @@ int main(void)
 			}
 		}
 	}
+//! [echo_characters]
+//! [main]
 }
