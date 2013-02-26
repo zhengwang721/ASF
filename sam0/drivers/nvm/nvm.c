@@ -291,8 +291,8 @@ enum status_code nvm_write_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Read out from NVM memory space */
-	memcpy(&NVM_MEMORY[destination_page * _nvm_dev.page_size], buffer, length);
+	/* Copy into NVM memory space */
+	memcpy(&NVM_MEMORY[(uint32_t)destination_page * _nvm_dev.page_size], buffer, length);
 
 	return STATUS_OK;
 }
@@ -345,8 +345,8 @@ enum status_code nvm_read_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Copy into NVM memory space */
-	memcpy(buffer, &NVM_MEMORY[source_page * _nvm_dev.page_size], length);
+	/* Read out from NVM memory space */
+	memcpy(buffer, &NVM_MEMORY[(uint32_t)source_page * _nvm_dev.page_size], length);
 
 	return STATUS_OK;
 }
@@ -387,7 +387,7 @@ enum status_code nvm_erase_row(
 	}
 
 	/* Convert row index to a address within NVM memory space */
-	uint16_t row_addr = row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
+	volatile uint32_t row_addr = (uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = row_addr;

@@ -43,12 +43,6 @@
 #ifndef EEPROM_EMULATOR_H_INCLUDED
 #define EEPROM_EMULATOR_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <compiler.h>
-
 /**
  * \defgroup asfdoc_samd20_eeprom_group SAMD20 EEPROM Emulator Service (EEPROM)
  *
@@ -189,6 +183,12 @@ extern "C" {
  * @{
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <compiler.h>
+
 #if !defined(__DOXYGEN__)
 #  define EEPROM_MAX_PAGES            (64 * NVMCTRL_ROW_PAGES)
 #  define EEPROM_MASTER_PAGE_NUMBER   (EEPROM_MAX_PAGES - 1)
@@ -239,7 +239,6 @@ enum status_code eeprom_emulator_flush_page_buffer(void);
 enum status_code eeprom_emulator_write_page(
 		const uint8_t logical_page,
 		const uint8_t *const data);
-
 
 enum status_code eeprom_emulator_read_page(
 		const uint8_t logical_page,

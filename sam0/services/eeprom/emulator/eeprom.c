@@ -93,8 +93,8 @@ COMPILER_PACK_SET(1);
 struct _eeprom_page {
 	/** Header information of the EEPROM page. */
 	struct {
-		uint8_t       logical_page;
-		const uint8_t reserved[EEPROM_HEADER_SIZE - 1];
+		uint8_t logical_page;
+		uint8_t reserved[EEPROM_HEADER_SIZE - 1];
 	} header;
 
 	/** Data content of the EEPROM page. */
@@ -177,10 +177,18 @@ static void _eeprom_emulator_format_memory(void)
 			do {
 				err = nvm_write_buffer(
 						_eeprom_instance.flash_start_page + physical_page,
-						(uint8_t *)&data.data,
-						NVMCTRL_PAGE_SIZE);
+						(uint8_t *)&data,
+						sizeof(data));
 			} while (err == STATUS_BUSY);
 
+			/* Write the page out to physical memory */
+			do {
+				err = nvm_execute_command(
+						NVM_COMMAND_WRITE_PAGE,
+						(_eeprom_instance.flash_start_page +
+						 physical_page) * NVMCTRL_PAGE_SIZE, 0);
+			} while (err == STATUS_BUSY);			
+			
 			/* Increment the logical EEPROM page address now that the current
 			 * address' page has been initialized */
 			logical_page++;
@@ -207,6 +215,10 @@ static void _eeprom_emulator_update_page_mapping(void)
 			_eeprom_instance.page_map[logical_page] = c;
 		}
 	}
+
+	/* Use an invalid page number as the spare row until a valid one has been
+	 * found */
+	_eeprom_instance.spare_row = -1;
 
 	/* Scan through all physical rows, to find an erased row to use as the
 	 * spare */
@@ -413,6 +425,9 @@ static void _eeprom_emulator_create_master_page(void)
 	master_page.minor_version = EEPROM_MINOR_VERSION;
 	master_page.revision      = EEPROM_REVISION;
 
+	nvm_erase_row( (_eeprom_instance.flash_start_page +
+			 EEPROM_MASTER_PAGE_NUMBER) / NVMCTRL_ROW_PAGES);
+		      
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
 	 * flushed in the future if needed due to a low power condition */
 	do {
@@ -448,13 +463,16 @@ static void _eeprom_emulator_create_master_page(void)
 static enum status_code _eeprom_emulator_verify_master_page(void)
 {
 	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
+	enum status_code err = STATUS_OK;
 	struct _eeprom_master_page master_page;
 
 	/* Copy the master page to the RAM buffer so that it can be inspected */
-	nvm_read_buffer(
-			_eeprom_instance.flash_start_page + EEPROM_MASTER_PAGE_NUMBER,
-			(uint8_t*)&master_page,
-			NVMCTRL_PAGE_SIZE);
+	do {
+		err = nvm_read_buffer(
+				_eeprom_instance.flash_start_page + EEPROM_MASTER_PAGE_NUMBER,
+				(uint8_t*)&master_page,
+				NVMCTRL_PAGE_SIZE);
+	} while (err == STATUS_BUSY);
 
 	/* Verify magic key is correct in the master page header */
 	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
@@ -545,7 +563,7 @@ enum status_code eeprom_emulator_init(void)
 	_eeprom_emulator_update_page_mapping();
 
 	/* Could not find spare row - abort as the memory appears to be corrupt */
-	if (_eeprom_instance.spare_row == 0) {
+	if (_eeprom_instance.spare_row == -1) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
