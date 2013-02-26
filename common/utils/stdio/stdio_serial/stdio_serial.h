@@ -61,7 +61,9 @@
 
 #include <stdio.h>
 #include "compiler.h"
-#include "sysclk.h"
+#ifndef SAMD20
+# include "sysclk.h"
+#endif
 #include "serial.h"
 
 #if (XMEGA || MEGA_RF) && defined(__GNUC__)
@@ -74,6 +76,7 @@
 extern volatile void *volatile stdio_base;
 //! Pointer to the external low level write function.
 extern int (*ptr_put)(void volatile*, char);
+
 //! Pointer to the external low level read function.
 extern void (*ptr_get)(void volatile*, char*);
 
@@ -83,27 +86,21 @@ extern void (*ptr_get)(void volatile*, char*);
  * \param opt         Options needed to set up RS232 communication (see \ref usart_options_t).
  *
  */
-static inline void stdio_serial_init(volatile void *usart, const usart_serial_options_t *opt)
+#if API_CONVENTION == 1
+static inline void stdio_serial_init(struct usart_module *const module,
+		usart_inst_t const hw, const struct usart_config *const config)
 {
-	stdio_base = (void *)usart;
+	stdio_base = (void *)module;
 	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
 	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
-#if (XMEGA || MEGA_RF)
-	usart_serial_init((USART_t *)usart,opt);
-#elif UC3
-	usart_serial_init(usart,(usart_serial_options_t *)opt);
-#elif SAM
-	usart_serial_init((Usart *)usart,(usart_serial_options_t *)opt);
-#else
-# error Unsupported chip type
-#endif
 
-#if defined(__GNUC__)
-# if (XMEGA || MEGA_RF)
+	usart_serial_init(module, hw, config);
+# if defined(__GNUC__)
+#  if (XMEGA || MEGA_RF)
 	// For AVR GCC libc print redirection uses fdevopen.
 	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
-# endif
-# if UC3 || SAM
+#  endif
+#  if UC3 || SAM
 	// For AVR32 and SAM GCC
 	// Specify that stdout and stdin should not be buffered.
 	setbuf(stdout, NULL);
@@ -112,9 +109,43 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 	// and AVR GCC library:
 	// - printf() emits one character at a time.
 	// - getchar() requests only 1 byte to exit.
+#  endif
 # endif
-#endif
 }
+#else
+static inline void stdio_serial_init(volatile void *usart, const usart_serial_options_t *opt)
+{
+	stdio_base = (void *)usart;
+	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
+	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
+# if (XMEGA || MEGA_RF)
+	usart_serial_init((USART_t *)usart,opt);
+# elif UC3
+	usart_serial_init(usart,(usart_serial_options_t *)opt);
+# elif SAM
+	usart_serial_init((Usart *)usart,(usart_serial_options_t *)opt);
+# else
+#  error Unsupported chip type
+# endif
+
+# if defined(__GNUC__)
+#  if (XMEGA || MEGA_RF)
+	// For AVR GCC libc print redirection uses fdevopen.
+	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
+#  endif
+#  if UC3 || SAM
+	// For AVR32 and SAM GCC
+	// Specify that stdout and stdin should not be buffered.
+	setbuf(stdout, NULL);
+	setbuf(stdin, NULL);
+	// Note: Already the case in IAR's Normal DLIB default configuration
+	// and AVR GCC library:
+	// - printf() emits one character at a time.
+	// - getchar() requests only 1 byte to exit.
+#  endif
+# endif
+}
+#endif
 
 /**
  * \}
