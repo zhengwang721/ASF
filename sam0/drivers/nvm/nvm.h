@@ -721,12 +721,12 @@ static inline void nvm_get_parameters(
 
 enum status_code nvm_write_buffer(
 		const uint16_t destination_page,
-		const uint32_t *buffer,
+		const uint8_t *buffer,
 		uint16_t length);
 
 enum status_code nvm_read_buffer(
 		const uint16_t source_page,
-		uint32_t *const buffer,
+		uint8_t *const buffer,
 		uint16_t length);
 
 enum status_code nvm_erase_row(
