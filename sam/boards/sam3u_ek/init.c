@@ -277,7 +277,7 @@ void board_init(void)
 	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
-	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+	gpio_configure_pin(SPI_NPCS2_PC14_GPIO, SPI_NPCS2_PC14_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_ISO7816_RST

@@ -443,7 +443,7 @@
 /** Identifier of SPI peripheral connected to the touchscreen controller. */
 #define BOARD_ADS7843_SPI_ID        ID_SPI
 /** Chip select connected to the touchscreen controller. */
-#define BOARD_ADS7843_SPI_NPCS      0
+#define BOARD_ADS7843_SPI_NPCS      2
 
 //! SSC pins definition.
 /** SSC pin Transmitter Data (TD) */
