@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -16069,7 +16069,7 @@ Register */
 /**  MEMORY MAPPING DEFINITIONS FOR SAM4L */
 /* ************************************************************************** */
 
-#if defined __ATSAM4LC2A__
+#if defined __SAM4LC2A__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16077,7 +16077,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LC2B__
+#elif defined __SAM4LC2B__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16085,7 +16085,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LC2C__
+#elif defined __SAM4LC2C__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16093,7 +16093,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LC4A__
+#elif defined __SAM4LC4A__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512
@@ -16101,7 +16101,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LC4B__
+#elif defined __SAM4LC4B__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512
@@ -16109,7 +16109,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LC4C__
+#elif defined __SAM4LC4C__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512
@@ -16117,7 +16117,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS2A__
+#elif defined __SAM4LS2A__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16125,7 +16125,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS2B__
+#elif defined __SAM4LS2B__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16133,7 +16133,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS2C__
+#elif defined __SAM4LS2C__
   #define FLASH_SIZE          0x20000 /* 128 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   256
@@ -16141,7 +16141,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS4A__
+#elif defined __SAM4LS4A__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512
@@ -16149,7 +16149,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS4B__
+#elif defined __SAM4LS4B__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512
@@ -16157,7 +16157,7 @@ Register */
   #define HRAMC0_SIZE         0x8000 /* 32 kB */
   #define HRAMC1_SIZE         0xc00 /* 3 kB */
 
-#elif defined __ATSAM4LS4C__
+#elif defined __SAM4LS4C__
   #define FLASH_SIZE          0x40000 /* 256 kB */
   #define FLASH_PAGE_SIZE     512
   #define FLASH_NB_OF_PAGES   512

@@ -3,7 +3,7 @@
  *
  * \brief SAM3X-EK Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -602,6 +602,10 @@
 #define PINS_UART_ID   ID_PIOA
 #define PINS_UART_TYPE PIO_PERIPH_A
 #define PINS_UART_ATTR PIO_DEFAULT
+
+#define PINS_UART0        PINS_UART
+#define PINS_UART0_PORT   IOPORT_PIOA
+#define PINS_UART0_MASK   PINS_UART_MASK
 
 /**
  * \file
