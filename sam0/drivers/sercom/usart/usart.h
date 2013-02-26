@@ -57,6 +57,143 @@
 #define USART_DEFAULT_TIMEOUT  0xFFFF
 
 /**
+ * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 USART driver
+ * This driver for the SAMD20 provides an interface to configure
+ * and use the SERCOM in its USART mode to transfer or receive
+ * USART dataframes.
+ *
+ * The following peripherals are used by this module:
+ *
+ * - SERCOM (Serial Communication Interface)
+ *
+ * The outline of this documentation is as follows:
+ * - \ref asfdoc_samd20_sercom_usart_prerequisites
+ * - \ref asfdoc_samd20_sercom_usart_overview
+ * - \ref asfdoc_samd20_sercom_usart_special_considerations
+ * - \ref asfdoc_samd20_sercom_usart_extra_info
+ * - \ref asfdoc_samd20_sercom_usart_examples
+ * - \ref asfdoc_samd20_sercom_usart_api_overview
+ * - \ref asfdoc_samd20_sercom_usart_async
+ *
+ * \section asfdoc_samd20_sercom_usart_prerequisites Prerequisites
+ *
+ * To use the USART you need to have a GCLK generator enabled and running
+ * that can be used as the SERCOM clock source. This can either be configured
+ * in conf_clock.h or by using the system clock driver.
+ *
+ * \section asfdoc_samd20_sercom_usart_overview Module Overview
+ *
+ * This driver will use one (or more) SERCOM interfaces on the system
+ * and configure it to run as a USART interface in either synchronous
+ * or asynchronous mode.
+ *
+ * \subsection asfdoc_samd20_sercom_usart_overview_frame_format
+ *
+ * Communication is based on frames, where the frame format can be customized
+ * to accomodate a wide range of standards. A frame consists of a start bit,
+ * a number of data bits, an optional parity bit for error detection as well
+ * as a configurable length stop bit(s).
+ * The table below shows the available parameters you can change in a frame
+ * <table>
+ *  <tr>
+ *      <th>Parameter</th>
+ *      <th>Available Options</th>
+ *  </tr>
+ *  <tr>
+ *      <th>Start bit</th>
+ *      <td>1</td>
+ *  </tr>
+ *  <tr>
+ *      <th>Data bits</th>
+ *      <td>5, 6, 7, 8, 9</td>
+ *  </tr>
+ *  <tr>
+ *      <th>Parity bit</th>
+ *      <td>None, Even, Odd</td>
+ *  </tr>
+ *  <tr>
+ *      <th>Stop bits</th>
+ *      <td>1, 2</td>
+ *  </tr>
+ * </table>
+ * \par Frame layout
+ * <table>
+ *  <tr>
+ *      <th>Start bit</th>
+ *      <th>Data bits</th>
+ *      <th>(Parity bit)</th>
+ *      <th>Stop bit(s)</th>
+ *  </tr>
+ *  <tr>
+ *      <td>1</td>
+ *      <td>5-9</td>
+ *      <td>1</td>
+ *      <td>1-2</td>
+ *  </tr>
+ * </table>
+ *
+ * \subsection asfdoc_samd20_sercom_usart_overview_sync Synchronous mode
+ *
+ * In synchronous mode a dedicated clock line is provided; either by the USART
+ * itself if in master mode, or by an external master if in slave mode.
+ * Maximum transmission speed is the same as the GCLK clocking the USART
+ * peripheral when in slave mode, and the GCLK divided by two if in
+ * master mode. In synchronous mode the interface needs three lines to
+ * communicate:
+ * - TX (Transmit pin)
+ * - RX (Receive pin)
+ * - XCK (Clock pin)
+ *
+ * \subsubsection asfdoc_samd20_sercom_usart_overview_sync_sampling Data sampling
+ * In synchronous mode the data is sampled on either the rising or falling edge
+ * of the clock signal. This is configured by setting the clock polarity in the
+ * configuration struct.
+ *
+ * \subsection asfdoc_samd20_sercom_usart_overview_async Asynchronous mode
+ *
+ * In asynchronous mode no dedicated clock line is used, and the communication
+ * is based on matching the clock speed on the transmitter and receiver. The
+ * clock is generated from the internal SERCOM baudrate generator, and the
+ * frames are synchronized by using the frame start bits. Maximum transmission
+ * speed is limited to the SERCOM GCLK divided by 16.
+ * In asynchronous mode the interface only needs to lines to communicate:
+ * - TX (Transmit pin)
+ * - RX (Receive pin)
+ *
+ * \subsubsection asfdoc_samd20_sercom_usart_overview_async_clock matching Transmitter/receiver clock matching
+ *
+ * For successfull transmit and receive using the asynchronous mode the receiver
+ * and transmitter clocks needs to be closely matched. When receiving a frame
+ * that does not match the selected baud rate closely enough the receiver will
+ * be unable synchronize the frame(s), and garbage transmissions will result.
+ *
+ * \subsection asfdoc_samd20_sercom_usart_overview_pin_configuration GPIO configuration
+ *
+ * the SERCOM module have four internal PADS where the RX pin can be placed at all
+ * the PADS, and the TX and XCK pins have two predefined positions that can be changed.
+ * The PADS can then be routed to an external GPIO pin using the normal pin
+ * multiplxing scheme on the SAMD20.
+ *
+ * \section asfdoc_samd20_sercom_usart_special_considerations Special considerations
+ *
+ * \section asfdoc_samd20_sercom_usart_extra_info Extra Information
+ *
+ * For extra information see \ref asfdoc_samd20_sercom_usart_extra. This includes:
+ * - \ref asfdoc_samd20_sercom_usart_extra_acronyms
+ * - \ref asfdoc_samd20_sercom_usart_extra_dependencies
+ * - \ref asfdoc_samd20_sercom_usart_extra_errata
+ * - \ref asfdoc_samd20_sercom_usart_extra_history
+ *
+ * \section asfdoc_samd20_sercom_usart_examples Examples
+ *
+ * The following Quick Start guides and application examples are available for this driver:
+ * - \ref asfdoc_samd20_sercom_usart_basic_use_case
+ *
+ * \section asfdoc_samd20_sercom_usart_api_overview
+ * @{
+ */
+
+/**
  * \brief USART Callback enum
  *
  * Callbacks for the Asynchronous USART driver
@@ -559,5 +696,62 @@ static inline void usart_disable_transceiver(const struct usart_module
 /*
  * @}
  */
+/**
+* \page asfdoc_samd20_sercom_usart_extra Extra Information
+*
+* \section asfdoc_samd20_sercom_usart_extra_acronyms Acronyms
+* Below is a table listing the acronyms used in this module, along with their
+* intended meanings.
+*
+* <table>
+* <tr>
+* <th>Acronym</th>
+* <th>Description</th>
+* </tr>
+* <tr>
+* <td>SERCOM</td>
+* <td>Serial Communication interface</td>
+* </tr>
+* <tr>
+* <td>USART</td>
+* <td>Universal Synchronous and Asynchronous Serial Receiver and Transmitter</td>
+* </tr>
+* <tr>
+* <td>LSB</td>
+* <td>Least Significant Bit</td>
+* </tr>
+* <tr>
+* <td>MSB</td>
+* <td>Most Significant Bit</td>
+* </tr>
+* </table>
+*
+*
+* \section asfdoc_samd20_sercom_usart_extra_dependencies Dependencies
+* This driver has the following dependencies:
+*
+* - \ref asfdoc_samd20_pinmux_group "System Pin Multiplexer Driver"
+* - \ref asfdoc_samd20_system_clock_group "System clock configuration"
+*
+*
+* \section asfdoc_samd20_sercom_usart_extra_errata Errata
+* There are no errata related to this driver.
+*
+*
+* \section asfdoc_samd20_sercom_usart_extra_history Module History
+* An overview of the module history is presented in the table below, with
+* details on the enhancements and fixes made to the module since its first
+* release. The current version of this corresponds to the newest version in
+* the table.
+*
+* <table>
+* <tr>
+* <th>Changelog</th>
+* </tr>
+* <tr>
+* <td>Initial Release</td>
+* </tr>
+* </table>
+*/
 
 #endif /* USART_H_INCLUDED */
