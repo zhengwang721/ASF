@@ -168,6 +168,8 @@ __always_inline static void pmc_restore_clock_setting(
 
 /** If clocks are switched to FASTRC for WAIT mode */
 static volatile bool b_is_fastrc_used = false;
+/** Callback invoked once when clocks are restored */
+static pmc_callback_wakeup_clocks_restored_t callback_clocks_restored = NULL;
 
 void pmc_sleep(int sleep_mode)
 {
@@ -202,6 +204,10 @@ void pmc_sleep(int sleep_mode)
 		cpu_irq_disable();
 		pmc_restore_clock_setting(mor, pllr0, pllr1, mckr);
 		b_is_fastrc_used = false;
+		if (callback_clocks_restored) {
+			callback_clocks_restored();
+			callback_clocks_restored = NULL;
+		}
 		cpu_irq_enable();
 		break;
 	}
@@ -223,6 +229,17 @@ void pmc_sleep(int sleep_mode)
 bool pmc_is_wakeup_clocks_restored(void)
 {
 	return !b_is_fastrc_used;
+}
+
+void pmc_wait_wakeup_clocks_restore(
+		pmc_callback_wakeup_clocks_restored_t callback)
+{
+	if (b_is_fastrc_used) {
+		cpu_irq_disable();
+		callback_clocks_restored = callback;
+	} else if (callback) {
+		callback();
+	}
 }
 
 #endif /* #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E) */

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="RZ600 with AT86RF30b - UC3A USB-Wireless Application" id="avr32.applications.rz600-uc3a-wireless-uart-at86rf230b">
 		<require idref="avr32.applications.rz600-uc3a-wireless-uart"/>
-		<require idref="board.rz600s"/>
+		<require idref="board.rz600"/>
 		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<config name="config.common.wireless.at86rf" value="230b"/>
 		<config name="config.board.rz600.init" value="yes"/>

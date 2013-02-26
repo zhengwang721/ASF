@@ -330,6 +330,10 @@ enum status_code usart_write_wait(struct usart_module *const module,
 	/* Write data to USART module */
 	usart_hw->DATA.reg = tx_data;
 
+	/* Wait until data is sent */
+	while(!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXCIF)) {
+	}
+
 	return STATUS_OK;
 }
 
