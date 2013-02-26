@@ -167,7 +167,7 @@ void afec_temp_sensor_set_config(Afec *const afec, struct afec_temp_sensor_confi
 {
 	uint32_t reg = 0;
 
-	reg = (config->rctc) ? AFE_TEMPMR_RTCT : 0 | (config->mode);
+	reg = ((config->rctc) ? AFE_TEMPMR_RTCT : 0) | (config->mode);
 	afec->AFE_TEMPMR = reg;
 
 	afec->AFE_TEMPCWR = AFE_TEMPCWR_TLOWTHRES(config->low_threshold) |
@@ -341,7 +341,7 @@ void afec_enable(Afec *const afec)
 {
 	Assert(afec);
 	uint32_t pid;
-		
+
 	pid = afec_find_pid(afec);
 	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(pid);
@@ -357,7 +357,7 @@ void afec_disable(Afec *const afec)
 {
 	Assert(afec);
 	uint32_t pid;
-	
+
 	pid = afec_find_pid(afec);
 	/* Enable peripheral clock. */
 	pmc_disable_periph_clk(pid);

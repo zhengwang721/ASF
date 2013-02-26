@@ -55,16 +55,19 @@
  *
  * \section Description
  *
- * The adc_temp_sensor is aimed to demonstrate the temperature sensor feature
- * inside the device. To use this feature, the temperature sensor should be
- * turned on by setting TSON bit in ADC_ACR. The channel 15 is connected to the
- * sensor by default. With PDC support, the Interrupt Handler of ADC is designed
- * to handle RXBUFF interrupt.
+ * The example is aimed to demonstrate the temperature sensor feature
+ * inside the device. To use this feature, the temperature sensor should be automatically
+ * turned on by RTC event. The channel 15 is connected to the sensor by default.
+ * If set RTCT = 1, then if TRGEN is disabled and all channels are disabled (AFE_CHSR = 0),
+ * then only channel 15 is converted at a rate of 1 conversion per second.
  *
  * The temperature sensor provides an output voltage (VT) that is proportional
  * to absolute temperature (PTAT). The relationship between measured voltage and
  * actual temperature could be found in Electrical Characteristics part of the
  * datasheet.
+ *
+ * By configuring the temp sensor register, it will work in comparison window mode and will ouput
+ * information when the temperature is in the comparison window.
  *
  * \section Usage
  *
@@ -96,11 +99,7 @@
  *
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
 #include "asf.h"
-#include "conf_board.h"
 
 /** Reference voltage for AFEC,in mv. */
 #define VOLT_REF        (3300)
@@ -113,46 +112,6 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/** 
- * \brief Simple function to replace printf with float formatting.
- * One decimal with rounding support.
- */
-static void print_temp(float temp)
-{
-	int16_t s_integer1 = 0;
-	int32_t l_integer2 = 0;
-
-	Assert(INT16_MAX > (temp * 100.0) && INT16_MIN < (temp * 100.0));
-
-	/* Cast to integer */
-	s_integer1 = (int16_t) (temp * 100.0);
-
-	/* Rounding */
-	l_integer2 = s_integer1 / 10;
-	if ((s_integer1 - l_integer2 * 10) > 4) {
-		s_integer1 = l_integer2 + 1;
-	} else {
-		if ((s_integer1 - l_integer2 * 10) < -4) {
-			s_integer1 = l_integer2 - 1;
-		} else {
-			s_integer1 = l_integer2;
-		}
-	}
-
-	/* Quotient */
-	l_integer2 = s_integer1 / 10;
-	/* Remainder */
-	s_integer1 = s_integer1 - l_integer2 * 10;
-
-	if (s_integer1 < 0) {
-		printf("Temp:-%d.%d \n\r", (int16_t) ((l_integer2) * (-1)),
-				(int16_t) ((s_integer1) * (-1)));
-	} else {
-		printf("Temp:%d.%d \n\r", (int16_t) l_integer2,
-				(int16_t) s_integer1);
-	}
-}
-
 /**
  * \brief Configure UART console.
  */
@@ -162,7 +121,7 @@ static void configure_console(void)
 		.baudrate = CONF_UART_BAUDRATE,
 		.paritytype = CONF_UART_PARITY
 	};
-	
+
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
@@ -173,20 +132,22 @@ static void configure_console(void)
  */
 static void afec_temp_sensor_data_ready(void)
 {
-	int32_t l_vol;
-	float f_temp;
+	uint32_t ul_vol;
 	uint32_t ul_value = 0;
+	uint32_t ul_temp;
 
-	if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
+	if ((afec_get_interrupt_status(AFEC0) & (AFE_ISR_EOC15 | AFE_ISR_TEMPCHG)) ==
+			(AFE_ISR_EOC15 | AFE_ISR_TEMPCHG)) {
 
-		ul_value = afec_get_latest_value(AFEC0);
+		ul_value = afec_channel_get_value(AFEC0, AFEC_TEMPERATURE_SENSOR);
 
-		l_vol = ul_value * VOLT_REF / MAX_DIGITAL;
-	
+		ul_vol = ul_value * VOLT_REF / MAX_DIGITAL;
+
 		/* Using multiplication (*0.21186) instead of division (/4.72). */
-		f_temp = (float)(l_vol - 1440) * 0.21186 + 27.0;
+		ul_temp = (ul_vol - 1440) * 0.21186 + 27.0;
 
-		print_temp(f_temp);
+		printf("Tempature:%d \n\r", (int32_t)ul_temp);
+		puts("The tempature is in comparison window \n\r");
 	}
 }
 
@@ -202,25 +163,19 @@ int main(void)
 	board_init();
 
 	configure_console();
-	
+
 	/* Output example information. */
 	puts(STRING_HEADER);
 
-	/* Enable peripheral clock. */
-	pmc_enable_periph_clk(ID_AFEC0);
-
 	afec_enable(AFEC0);
-	
+
 	struct afec_config afec_cfg;
-	
+
 	afec_get_config_defaults(&afec_cfg);
-	
+
 	afec_init(AFEC0, &afec_cfg);
 
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
-
-	/* Enable channel for temp sensor. */
-	afec_channel_enable(AFEC0, AFEC_TEMPERATURE_SENSOR);
 
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
 
@@ -228,8 +183,9 @@ int main(void)
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY, afec_temp_sensor_data_ready, 1);
-		
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_TEMP_CHANGE | AFEC_INTERRUPT_EOC_15,
+			afec_temp_sensor_data_ready, 1);
+
 	while (1) {
 	}
 }

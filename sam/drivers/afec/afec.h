@@ -78,6 +78,8 @@ enum afec_power_mode {
 enum afec_trigger {
 	/* Starting a conversion is only possible by software. */
 	AFEC_TRIG_SW = AFE_MR_TRGEN_DIS,
+	/* Hardware trigger is enabled. */
+	AFEC_TRIG_HW = AFE_MR_TRGEN,
 	/* External trigger */
 	AFEC_TRIG_EXT = AFE_MR_TRGSEL_AFE_TRIG0 | AFE_MR_TRGEN,
 	/* TIO Output of the Timer Counter Channel 0 */
@@ -486,7 +488,7 @@ static inline void afec_channel_set_analog_offset(Afec *const afec,
 		enum afec_channel_num afec_ch, uint16_t aoffset)
 {
 	afec->AFE_CSELR = afec_ch;
-	afec->AFE_COCR = aoffset;
+	afec->AFE_COCR = (aoffset & AFE_COCR_AOFF_Msk);
 }
 
 /**
