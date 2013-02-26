@@ -205,7 +205,7 @@ enum status_code nvm_execute_command(
 			}
 
 			/* Set address and command */
-			nvm_module->ADDR.reg  = address;
+			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4] / 2;
 			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
 					NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
@@ -217,7 +217,7 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_UNLOCK_REGION:
 
 			/* Set address and command */
-			nvm_module->ADDR.reg  = address;
+			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4] / 2;
 			nvm_module->CTRLA.reg = (command << NVMCTRL_CTRLA_CMD_Pos) |
 					NVMCTRL_CTRLA_CMDEX_KEY;
 			break;
@@ -400,7 +400,7 @@ enum status_code nvm_erase_row(
 	uint32_t row_addr = (uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
 
 	/* Set address and command */
-	nvm_module->ADDR.reg  = row_addr;
+	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_addr / 4] / 2;
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 
 	return STATUS_OK;
