@@ -63,6 +63,14 @@ extern "C" {
 # warning The AT24C TWI address has not been defined. Using default settings.
 # define BOARD_AT24C_ADDRESS 0 /* TWI eeprom address (0x50u) */
 #endif
+#if !defined(BOARD_CLK_TWI_EEPROM)
+# warning The AT24C TWI CLK pin index has not been defined. Using default.
+# define BOARD_CLK_TWI_EEPROM 0 /* TWI eeprom clock pin index */
+#endif
+#if !defined(BOARD_CLK_TWI_MUX_EEPROM)
+# warning The AT24C TWI CLK peripheral has not been defined. Using default.
+# define BOARD_CLK_TWI_MUX_EEPROM 0 /* TWI eeprom clock pin peripheral */
+#endif
 
 /* AT24CXX internal address length */
 #define AT24C_MEM_ADDR_LEN   2
