@@ -69,7 +69,7 @@ static struct _nvm_module _nvm_dev;
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
-#define NVM_MEMORY ((uint8_t *)FLASH_ADDR)
+#define NVM_MEMORY ((uint32_t *)FLASH_ADDR)
 
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
@@ -266,7 +266,7 @@ enum status_code nvm_execute_command(
  */
 enum status_code nvm_write_buffer(
 		const uint16_t destination_page,
-		const uint8_t *buffer,
+		const uint32_t *buffer,
 		uint16_t length)
 {
 	/* Sanity check arguments */
@@ -291,8 +291,13 @@ enum status_code nvm_write_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Copy into NVM memory space */
-	memcpy(&NVM_MEMORY[(uint32_t)destination_page * _nvm_dev.page_size], buffer, length);
+	/* 32 bit addressing the NVM */
+	uint32_t nvm_address = destination_page * (_nvm_dev.page_size / 4);
+
+	/* Write to the NVM memory 4 bytes at a time */
+	for (uint8_t i = 0; i < (length / 4); i++) {
+		NVM_MEMORY[nvm_address++] = buffer[i];
+	}
 
 	return STATUS_OK;
 }
@@ -320,7 +325,7 @@ enum status_code nvm_write_buffer(
  */
 enum status_code nvm_read_buffer(
 		const uint16_t source_page,
-		uint8_t *const buffer,
+		uint32_t *const buffer,
 		uint16_t length)
 {
 	/* Sanity check arguments */
@@ -345,8 +350,13 @@ enum status_code nvm_read_buffer(
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
-	/* Read out from NVM memory space */
-	memcpy(buffer, &NVM_MEMORY[(uint32_t)source_page * _nvm_dev.page_size], length);
+	/* 32 bit addressing the NVM */
+	uint32_t nvm_address = source_page * (_nvm_dev.page_size / 4);
+
+	/* Write to the NVM memory 4 bytes at a time */
+	for (uint8_t i = 0; i < (length / 4); i++) {
+		buffer[i] = NVM_MEMORY[nvm_address++];
+	}
 
 	return STATUS_OK;
 }
@@ -378,16 +388,16 @@ enum status_code nvm_erase_row(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
-
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
 		return STATUS_BUSY;
 	}
 
+	/* Clear error flags */
+	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;	
+
 	/* Convert row index to a address within NVM memory space */
-	volatile uint32_t row_addr = (uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
+	uint32_t row_addr = (uint32_t)row_number * (_nvm_dev.page_size * NVMCTRL_ROW_PAGES);
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = row_addr;

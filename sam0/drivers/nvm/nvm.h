@@ -578,7 +578,7 @@ enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode when the device exits sleep mode. */
 	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE     = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**
@@ -721,12 +721,12 @@ static inline void nvm_get_parameters(
 
 enum status_code nvm_write_buffer(
 		const uint16_t destination_page,
-		const uint8_t *buffer,
+		const uint32_t *buffer,
 		uint16_t length);
 
 enum status_code nvm_read_buffer(
 		const uint16_t source_page,
-		uint8_t *const buffer,
+		uint32_t *const buffer,
 		uint16_t length);
 
 enum status_code nvm_erase_row(
