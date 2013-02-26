@@ -297,6 +297,14 @@ void ui_process(uint16_t framenumber)
 void ui_kbd_led(uint8_t value)
 {
 	UNUSED(value);
+	/*
+	if (value & HID_LED_NUM_LOCK) {
+	} else {
+	}
+	if (value & HID_LED_CAPS_LOCK) {
+	} else {
+	}
+	*/
 }
 
 /**

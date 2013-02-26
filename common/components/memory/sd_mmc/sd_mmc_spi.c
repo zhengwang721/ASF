@@ -3,7 +3,7 @@
  *
  * \brief Common SPI interface for SD/MMC stack
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 #include "conf_sd_mmc.h"
 #include "sd_mmc_protocol.h"
 #include "sd_mmc_spi.h"
-#include "gpio.h"
+#include "ioport.h"
 
 #ifdef SD_MMC_SPI_MODE
 
@@ -83,8 +83,6 @@
 #define sd_mmc_spi_drv_setup_device     ATPASTE2(driver, _setup_device)
 #define sd_mmc_spi_drv_select_device    ATPASTE2(driver, _select_device)
 #define sd_mmc_spi_drv_deselect_device  ATPASTE2(driver, _deselect_device)
-#define sd_mmc_spi_drv_is_tx_ready      ATPASTE2(driver, _is_tx_ready)
-#define sd_mmc_spi_drv_write_single     ATPASTE2(driver, _write_single)
 #define sd_mmc_spi_drv_write_packet     ATPASTE2(driver, _write_packet)
 #define sd_mmc_spi_drv_read_packet      ATPASTE2(driver, _read_packet)
 
@@ -246,13 +244,19 @@ static void sd_mmc_spi_stop_read_block(void)
  */
 static void sd_mmc_spi_start_write_block(void)
 {
+	uint8_t dummy = 0xFF;
 	Assert(!(sd_mmc_spi_transfert_pos % sd_mmc_spi_block_size));
 	// Delay before start write block:
 	// Nwr timing minimum = 8 cylces
-	sd_mmc_spi_drv_write_single(SD_MMC_SPI, 0xFF);
+	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &dummy, 1);
 	// Send start token
-	sd_mmc_spi_drv_write_single(SD_MMC_SPI, (1 == sd_mmc_spi_nb_block) ?
-			SPI_TOKEN_SINGLE_WRITE : SPI_TOKEN_MULTI_WRITE);
+	uint8_t token;
+	if (1 == sd_mmc_spi_nb_block) {
+		token = SPI_TOKEN_SINGLE_WRITE;
+	} else {
+		token = SPI_TOKEN_MULTI_WRITE;
+	}
+	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &token, 1);
 }
 
 /**
@@ -303,6 +307,8 @@ static bool sd_mmc_spi_stop_write_block(void)
  */
 static bool sd_mmc_spi_stop_multiwrite_block(void)
 {
+	uint8_t value;
+
 	if (1 == sd_mmc_spi_nb_block) {
 		return true; // Single block write
 	}
@@ -313,11 +319,11 @@ static bool sd_mmc_spi_stop_multiwrite_block(void)
 
 	// Delay before start write block:
 	// Nwr timing minimum = 8 cylces
-	while (!sd_mmc_spi_drv_is_tx_ready(SD_MMC_SPI));
-	sd_mmc_spi_drv_write_single(SD_MMC_SPI, 0xFF);
+	value = 0xFF;
+	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &value, 1);
 	// Send stop token
-	while (!sd_mmc_spi_drv_is_tx_ready(SD_MMC_SPI));
-	sd_mmc_spi_drv_write_single(SD_MMC_SPI, SPI_TOKEN_STOP_TRAN);
+	value = SPI_TOKEN_STOP_TRAN;
+	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &value, 1);
 	// Wait busy
 	if (!sd_mmc_spi_wait_busy()) {
 		sd_mmc_spi_err = SD_MMC_SPI_ERR_WRITE_TIMEOUT;
@@ -371,11 +377,12 @@ void sd_mmc_spi_deselect_device(uint8_t slot)
 void sd_mmc_spi_send_clock(void)
 {
 	uint8_t i;
+	uint8_t dummy = 0xFF;
+
 	sd_mmc_spi_err = SD_MMC_SPI_NO_ERR;
 	//! Send 80 cycles
 	for (i = 0; i < 10; i++) {
-		while (!sd_mmc_spi_drv_is_tx_ready(SD_MMC_SPI));
-		sd_mmc_spi_drv_write_single(SD_MMC_SPI, 0xFF); // 8 cycles
+		sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &dummy, 1); // 8 cycles
 	}
 }
 
@@ -387,6 +394,7 @@ bool sd_mmc_spi_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg)
 bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg,
 		uint16_t block_size, uint16_t nb_block, bool access_block)
 {
+	uint8_t dummy = 0xFF;
 	uint8_t cmd_token[6];
 	uint8_t ncr_timeout;
 	uint8_t r1; //! R1 response
@@ -406,8 +414,7 @@ bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg,
 	// 8 cycles to respect Ncs timing
 	// Note: This byte does not include start bit "0",
 	// thus it is ignored by card.
-	while (!sd_mmc_spi_drv_is_tx_ready(SD_MMC_SPI));
-	sd_mmc_spi_drv_write_single(SD_MMC_SPI, 0xFF);
+	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, &dummy, 1);
 	// Send command
 	sd_mmc_spi_drv_write_packet(SD_MMC_SPI, cmd_token, sizeof(cmd_token));
 

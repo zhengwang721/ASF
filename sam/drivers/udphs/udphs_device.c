@@ -1731,7 +1731,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_n
 	}
 	if (Is_udd_endpoint_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
-	}	
+	}
 	ptr_job->call_trans((b_abort) ? UDD_EP_TRANSFER_ABORT :
 			UDD_EP_TRANSFER_OK, ptr_job->buf_size, ep_num);
 }

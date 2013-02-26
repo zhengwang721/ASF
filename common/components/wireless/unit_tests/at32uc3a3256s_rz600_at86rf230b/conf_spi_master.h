@@ -3,7 +3,7 @@
  *
  * \brief Spi Master configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,5 +59,7 @@
 
 //! Default Config Spi Master Dummy Field
 // #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#define AT86RFX_SPI_BAUDRATE                     (48000)
 
 #endif /* CONF_SPI_MASTER_H_INCLUDED */

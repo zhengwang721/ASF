@@ -31,7 +31,7 @@
 
 		<!-- Device support -->
 		<device-support value="atsam4lc4c"/>
-		<build type="define" name="__ATSAM4LC4C__" value=""/>
+		<build type="define" name="__SAM4LC4C__" value=""/>
 
 		<!-- Source code -->
 		<build type="include-path" value="."/>
