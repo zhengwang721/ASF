@@ -288,11 +288,11 @@ enum status_code usart_init(struct usart_module *const module,
 /**
  * \brief Transmit a character via the USART
  *
- * This non-blocking function will transmit a single character via the
+ * This blocking function will transmit a single character via the
  * USART.
  *
- * param[in]   module Pointer to the software instance struct
- * param[out]  tx_data  Data to transfer
+ * \param[in]   module Pointer to the software instance struct
+ * \param[in]  tx_data  Data to transfer
  *
  * \return     Status of the operation
  * \retval     STATUS_OK           If the operation was completed
@@ -338,11 +338,11 @@ enum status_code usart_write_wait(struct usart_module *const module,
 /**
  * \brief Receive a character via the USART
  *
- * This non-blocking function will receive a character via the
+ * This blocking function will receive a character via the
  * USART.
  *
- * param[in]   module Pointer to the software instance struct
- * param[out]  rx_data  Pointer to received data
+ * \param[in]   module Pointer to the software instance struct
+ * \param[out]  rx_data  Pointer to received data
  *
  * \return     Status of the operation
  * \retval     STATUS_OK                If the operation was completed
@@ -425,12 +425,12 @@ enum status_code usart_read_wait(struct usart_module *const module,
  * This blocking function will transmit a block of \c length characters
  * via the USART
  *
- * \note Using this function in combination with the interrupt (_job) functions is
+ * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
  *       ongoing operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
- * \param[out]    tx_data  Pointer to data to transmit
+ * \param[in]     tx_data  Pointer to data to transmit
  * \param[in]     length   Number of characters to transmit
  *
  * \return        Status of the operation
@@ -441,7 +441,7 @@ enum status_code usart_read_wait(struct usart_module *const module,
  *                                         due to USART module timing out
  */
 enum status_code usart_write_buffer_wait(struct usart_module *const module,
-		const uint8_t *tx_data, uint16_t length)
+		uint8_t *const tx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -533,7 +533,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  *                                      to data being corrupted.
  */
 enum status_code usart_read_buffer_wait(struct usart_module *const module,
-		const uint8_t *rx_data, uint16_t length)
+		uint8_t *const rx_data, uint16_t length)
 {
 	/* Sanity check arguments */
 	Assert(module);

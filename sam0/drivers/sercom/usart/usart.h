@@ -190,6 +190,7 @@
  * @{
  */
 
+#ifdef USART_ASYNC
 /**
  * \brief USART Callback enum
  *
@@ -197,7 +198,6 @@
  *
  */
 /* TODO: Add support for RX started interrupt. */
-#ifdef USART_ASYNC
 enum usart_callback {
 	/** Callback for buffer transmitted */
 	USART_CALLBACK_BUFFER_TRANSMITTED,
@@ -230,7 +230,7 @@ enum usart_dataorder {
 /**
  * \brief USART Transfer mode enum
  *
- *
+ * Select USART transfer mode
  */
 enum usart_transfer_mode {
 	/* Transfer of data is done synchronously */
@@ -242,11 +242,7 @@ enum usart_transfer_mode {
 /**
  * \brief USART Parity enum
  *
- * Parity is enabled for error checking of the data transferred. If even parity
- * is selected, the parity bit will be set if number of ones being transferred
- * is odd. If odd parity is selected, the parity bit will be set if number of
- * ones being transferred is even.
- *
+ * Select parity USART parity mode
  */
 enum usart_parity {
 	/** For odd parity checking, the parity bit will be set if number of
@@ -266,8 +262,6 @@ enum usart_parity {
  * \brief USART signal mux settings
  *
  * Set the functionality of the SERCOM pins.
- * TODO: As not all settings can be used in different modes of operation, proper
- * settings must be chosen according to the rest of the configuration.
  *
  */
 enum usart_signal_mux_settings {
@@ -331,15 +325,15 @@ enum usart_char_size {
 
 
 /**
- * \brief USART Transceiver Mode
+ * \brief USART Transceiver
  *
- * States if a parameter is for the RX or TX line
+ * Select Receiver or Transmitter
  *
  */
 enum usart_transceiver_type {
-	/** The parameter is for the receiver/reception/read */
+	/** The parameter is for the Receiver */
 	USART_TRANSCEIVER_RX,
-	/** The parameter is for the transmitter/transmission/write */
+	/** The parameter is for the Transmitter */
 	USART_TRANSCEIVER_TX,
 };
 
@@ -365,21 +359,21 @@ struct usart_config {
 
 	/** USART Clock Polarity.
 	 * If true, data changes on falling XCK edge and
-	 * is sampled at rising edge
+	 * is sampled at rising edge.
 	 * If false, data changes on rising XCK edge and
-	 * is sampled at falling edge
+	 * is sampled at falling edge.
 	 * */
 	bool clock_polarity_inverted;
 
 	/** States whether to use the external clock applied to the XCK pin.
-	 * In SYNC mode the shift register will act directly on the XCK clock.
-	 * In ASYNC mode the XCK will be the input to the USART hardware module.
+	 * In synchronous mode the shift register will act directly on the XCK clock.
+	 * In asynchronous mode the XCK will be the input to the USART hardware module.
 	 */
 	bool use_external_clock;
 	/** External clock frequency in synchronous mode.
 	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
-	/** If true the clock used by USART will run in standby mode */
+	/** If true the USART will be kept running in Standby sleep mode */
 	bool run_in_standby;
 	/** GCLK generator source */
 	enum gclk_generator generator_source;
@@ -457,11 +451,17 @@ static inline void _usart_wait_for_sync(const struct usart_module
 /**
  * \brief Check if peripheral is busy syncing registers across clock domains
  *
- * This function will return the status of the sync of the peripheral. If
- * doing a non-blocking implementation this function can be used to check
- * the sync state and hold of any new actions until sync is complete.
- * If this functions is not run; the functions will block until the sync
- * has completed.
+ * Return peripheral synchronization status. If doing a non-blocking
+ * implementation this function can be used to check the sync state and hold of
+ * any new actions until sync is complete.If this functions is not run; the
+ * functions will block until the sync has completed.
+ *
+ *  \param[in] module Pointer to peripheral module
+ *  \return     Peripheral sync status
+ *
+ *  \retval     true                Peripheral is busy syncing
+ *  \retval     false               Peripheral is not busy syncing and can be
+ *                                  read/written without stalling the bus.
  */
 static inline bool usart_is_syncing(const struct usart_module *const module)
 {
@@ -492,7 +492,7 @@ static inline bool usart_is_syncing(const struct usart_module *const module)
  * The configuration struct will be updated with the default
  * configuration.
  *
- * \param[out] config Pointer to configuration struct
+ * \param[in/out] config Pointer to configuration struct
  *
  */
 static inline void usart_get_config_defaults(struct usart_config *const config)
@@ -550,7 +550,7 @@ static inline void usart_enable(const struct usart_module *const module)
 }
 
 /**
- * /brief Disable module
+ * \brief Disable module
  *
  * Disables the USART module
  *
