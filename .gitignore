@@ -21,9 +21,6 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-#doxygen
-*/doxygen/*
-
 # Ignore all project-generator folders
 project-generator
 project_generator

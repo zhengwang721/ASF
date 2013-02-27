@@ -51,7 +51,7 @@
 #include <sercom.h>
 
 #ifdef USART_ASYNC
-#include <sercom_interrupts.h>
+#include <sercom_interrupt.h>
 #endif
 
 #define USART_DEFAULT_TIMEOUT  0xFFFF
@@ -87,11 +87,10 @@ enum usart_callback {
 enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
-	USART_DATAORDER_MSB = SERCOM_USART_CTRLA_DORD,
-
+	USART_DATAORDER_MSB = 0,
 	/** The LSB will be shifted out first during transmission,
 	 *  and shifted in first during reception */
-	USART_DATAORDER_LSB = 0,
+	USART_DATAORDER_LSB = SERCOM_USART_CTRLA_DORD,
 };
 
 /**
@@ -197,20 +196,6 @@ enum usart_char_size {
 	USART_CHAR_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
-/**
- * \brief USART Interrupt Flags
- *
- * Interrupt flags for the USART module
- *
- */
-enum usart_interrupt_flag {
-	/** This flag is set when the hardware Data Buffer is Empty */
-	USART_INTERRUPT_FLAG_DATA_BUFFER_EMPTY = SERCOM_USART_INTFLAG_DREIF,
-	/** This flag is set when a single Transmission is Complete */
-	USART_INTERRUPT_FLAG_TX_COMPLETE       = SERCOM_USART_INTFLAG_TXCIF,
-	/** This flag is set when a single Reception is Complete */
-	USART_INTERRUPT_FLAG_RX_COMPLETE       = SERCOM_USART_INTFLAG_RXCIF,
-};
 
 /**
  * \brief USART Transceiver Mode
@@ -229,7 +214,7 @@ enum usart_transceiver_type {
  * \name USART configuration struct
  * \note Configuration options for USART
  */
-struct usart_conf {
+struct usart_config {
 	/** USART bit order (MSB or LSB first) */
 	enum usart_dataorder data_order;
 	/** USART in asynchronous or synchronous mode */
@@ -280,25 +265,25 @@ struct usart_conf {
 
 #ifdef USART_ASYNC
 /* Prototype for the device instance */
-struct usart_dev_inst;
+struct usart_module;
 
 /* Type of the callback functions */
-typedef void (*usart_async_callback_t)(const struct usart_dev_inst *const
-		dev_inst);
+typedef void (*usart_callback_t)(const struct usart_module *const
+		module);
 #endif
 
 /**
  * \name USART device struct
  * \note Device information for USART
  */
-struct usart_dev_inst {
+struct usart_module {
 	/** Pointer to the hardware instance */
-	Sercom *hw_dev;
+	Sercom *hw;
 	/** Character size of the data being transferred */
 	enum usart_char_size char_size;
 #ifdef USART_ASYNC
 	/** Array to store callback function pointers in */
-	usart_async_callback_t *callback[USART_CALLBACK_N];
+	usart_callback_t callback[USART_CALLBACK_N];
 	/** Buffer pointer to where the next received character will be put */
 	volatile uint8_t *rx_buffer_ptr;
 
@@ -325,18 +310,34 @@ struct usart_dev_inst {
 /**
  * \internal Wait until synchronization is complete
  */
-static inline void _usart_wait_for_sync(const struct usart_dev_inst
-		*const dev_inst)
+static inline void _usart_wait_for_sync(const struct usart_module
+		*const module)
 {
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until the synchronization is complete */
-	while (usart_module->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
+	while (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
 }
+
 #endif
+
+static inline bool usart_is_syncing(const struct usart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	if(usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 /**
  * \brief Initializes the device to predefined defaults
@@ -350,16 +351,16 @@ static inline void _usart_wait_for_sync(const struct usart_dev_inst
  * The configuration struct will be updated with the default
  * configuration.
  *
- * \param[out] dev_inst Pointer to configuration struc
+ * \param[out] module Pointer to configuration struc
  *
  */
-static inline void usart_get_config_defaults(struct usart_conf *const config)
+static inline void usart_get_config_defaults(struct usart_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Set default config in the config struct */
-	config->data_order = USART_DATAORDER_MSB;
+	config->data_order = USART_DATAORDER_LSB;
 	config->transfer_mode = USART_TRANSFER_ASYNCHRONOUSLY;
 	config->parity = USART_PARITY_NONE;
 	config->stopbits = USART_STOPBITS_1;
@@ -377,31 +378,34 @@ static inline void usart_get_config_defaults(struct usart_conf *const config)
 	config->pinout_pad3 = PINMUX_DEFAULT;
 }
 
-enum status_code usart_init(struct usart_dev_inst *const dev_inst,
-		Sercom *const hw_dev, const struct usart_conf *const config);
+enum status_code usart_init(struct usart_module *const module,
+		Sercom *const hw, const struct usart_config *const config);
 
 /**
  * \brief Enable the module
  *
  * Enables the USART module
  *
- * \param[in] dev_inst Pointer to USART software instance struct
+ * \param[in] module Pointer to USART software instance struct
  *
  */
-static inline void usart_enable(const struct usart_dev_inst *const dev_inst)
+static inline void usart_enable(const struct usart_module *const module)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Enable Global interrupt for module */
+	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Enable USART module */
-	usart_module->CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
+	usart_hw->CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -409,22 +413,25 @@ static inline void usart_enable(const struct usart_dev_inst *const dev_inst)
  *
  * Disables the USART module
  *
- * \param[in] dev_inst Pointer to USART software instance struct
+ * \param[in] module Pointer to USART software instance struct
  */
-static inline void usart_disable(const struct usart_dev_inst *const dev_inst)
+static inline void usart_disable(const struct usart_module *const module)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Enable Global interrupt for module */
+	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Disable USART module */
-	usart_module->CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
+	usart_hw->CTRLA.reg &= ~SERCOM_USART_CTRLA_ENABLE;
 }
 
 /**
@@ -432,25 +439,25 @@ static inline void usart_disable(const struct usart_dev_inst *const dev_inst)
  *
  * Disables and resets the USART module.
  *
- * \param[in] dev_inst Pointer to the USART software instance struct
+ * \param[in] module Pointer to the USART software instance struct
  *
  */
-static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
+static inline void usart_reset(const struct usart_module *const module)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
-	usart_disable(dev_inst);
+	usart_disable(module);
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	/* Reset module */
-	usart_module->CTRLA.reg = SERCOM_USART_CTRLA_SWRST;
+	usart_hw->CTRLA.reg = SERCOM_USART_CTRLA_SWRST;
 }
 
 /**
@@ -458,16 +465,16 @@ static inline void usart_reset(const struct usart_dev_inst *const dev_inst)
  * {@
  */
 /* TODO: Would it be enough with write/read_buffer? */
-enum status_code usart_write(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write_wait(struct usart_module *const module,
 		const uint16_t tx_data);
 
-enum status_code usart_read(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read_wait(struct usart_module *const module,
 		uint16_t *const rx_data);
 
-enum status_code usart_write_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_write_buffer_wait(struct usart_module *const module,
 		const uint8_t *tx_data, uint16_t length);
 
-enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
+enum status_code usart_read_buffer_wait(struct usart_module *const module,
 		const uint8_t *rx_data, uint16_t length);
 
 /**
@@ -484,32 +491,32 @@ enum status_code usart_read_buffer(struct usart_dev_inst *const dev_inst,
  *
  * Enable the given transceiver. Either RX or TX.
  *
- * \param[in] dev_inst   Pointer to USART software instance struct
+ * \param[in] module   Pointer to USART software instance struct
  * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_enable_transceiver(const struct usart_dev_inst
-		*const dev_inst,
+static inline void usart_enable_transceiver(const struct usart_module
+		*const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	switch (transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Enable RX */
-		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
+		usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_RXEN;
 		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Enable TX */
-		usart_module->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
+		usart_hw->CTRLB.reg |= SERCOM_USART_CTRLB_TXEN;
 		break;
 	}
 }
@@ -519,32 +526,32 @@ static inline void usart_enable_transceiver(const struct usart_dev_inst
  *
  * Disable the given transceiver. Either RX or TX.
  *
- * \param[in] dev_inst          Pointer to USART software instance struct
+ * \param[in] module          Pointer to USART software instance struct
  * \param[in] transceiver_type  Transceiver type.
  */
-static inline void usart_disable_transceiver(const struct usart_dev_inst
-		*const dev_inst,
+static inline void usart_disable_transceiver(const struct usart_module
+		*const module,
 		enum usart_transceiver_type transceiver_type)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
+	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	/* Wait until synchronization is complete */
-	_usart_wait_for_sync(dev_inst);
+	_usart_wait_for_sync(module);
 
 	switch (transceiver_type) {
 	case USART_TRANSCEIVER_RX:
 		/* Disable RX */
-		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
+		usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_RXEN;
 		break;
 
 	case USART_TRANSCEIVER_TX:
 		/* Disable TX */
-		usart_module->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
+		usart_hw->CTRLB.reg &= ~SERCOM_USART_CTRLB_TXEN;
 		break;
 	}
 }
@@ -553,41 +560,4 @@ static inline void usart_disable_transceiver(const struct usart_dev_inst
  * @}
  */
 
-/**
- * \name Interrupt flags
- * {@
- */
-
-static inline bool usart_is_interrupt_flag_set(
-		const struct usart_dev_inst *const dev_inst,
-		enum usart_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
-
-	return (usart_module->INTFLAG.reg & interrupt_flag);
-}
-
-static inline void usart_clear_interrupt_flag(
-		const struct usart_dev_inst *const dev_inst,
-		enum usart_interrupt_flag interrupt_flag)
-{
-	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
-
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_module = &(dev_inst->hw_dev->USART);
-
-	/* Clear requested status flag by writing a one to it */
-	usart_module->INTFLAG.reg |= interrupt_flag;
-}
-
-/**
- * @}
- */
 #endif /* USART_H_INCLUDED */

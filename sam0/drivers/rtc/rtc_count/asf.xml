@@ -11,7 +11,7 @@
 		<build type="header-file" subtype="api" value="rtc_count.h"/>
 		<build type="c-source" value="rtc_count.c"/>
 		<build type="header-file" subtype="example" value="quick_start/qs_rtc_count_basic.h"/>
-		<build type="doxygen-entry-point" value="sam0_rtc_count_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samd20_rtc_count_group"/>
 		<device-support value="samd20"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>

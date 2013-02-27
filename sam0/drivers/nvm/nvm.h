@@ -375,12 +375,14 @@
 extern "C" {
 #endif
 
+#if !defined(__DOXYGEN__)
 /**
  * \brief Mask for the error flags in the status register.
  */
-#define NVM_ERRORS_MASK     (NVMCTRL_STATUS_PROGE | \
-                             NVMCTRL_STATUS_LOCKE | \
-                             NVMCTRL_STATUS_NVME)
+#  define NVM_ERRORS_MASK (NVMCTRL_STATUS_PROGE | \
+                           NVMCTRL_STATUS_LOCKE | \
+                           NVMCTRL_STATUS_NVME)
+#endif
 
 /**
  * \brief NVM error flags.
@@ -576,7 +578,7 @@ enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode when the device exits sleep mode. */
 	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE     = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**

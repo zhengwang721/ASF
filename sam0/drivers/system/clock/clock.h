@@ -91,7 +91,7 @@
  * DFLL modules, as well as external crystal oscillators and/or clock inputs.
  *
  * \subsection asfdoc_samd20_system_clock_module_overview_cpu_clock CPU / Bus Clocks
- * The CPU and APH/APBx buses are clocked by the same physical clock source
+ * The CPU and AHB/APBx buses are clocked by the same physical clock source
  * (referred in this module as the Main Clock), however the APBx buses may
  * have additional prescaler division ratios set to give each peripheral bus a
  * different clock speed.
@@ -102,20 +102,20 @@
  *   rankdir=LR;
  *   clk_src [label="Clock Sources", shape=none, height=0];
  *   node [label="CPU Bus" shape=ellipse] cpu_bus;
- *   node [label="APH Bus" shape=ellipse] aph_bus;
+ *   node [label="AHB Bus" shape=ellipse] ahb_bus;
  *   node [label="APBA Bus" shape=ellipse] apb_a_bus;
  *   node [label="APBB Bus" shape=ellipse] apb_b_bus;
  *   node [label="APBC Bus" shape=ellipse] apb_c_bus;
  *   node [label="Main Bus\nPrescaler" shape=square] main_prescaler;
  *   node [label="APBA Bus\nPrescaler" shape=square] apb_a_prescaler;
  *   node [label="APBB Bus\nPrescaler" shape=square] apb_b_prescaler;
- *   node [label="APBB Bus\nPrescaler" shape=square] apb_c_prescaler;
+ *   node [label="APBC Bus\nPrescaler" shape=square] apb_c_prescaler;
  *   node [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2] main_clock_mux;
  *
  *   clk_src         -> main_clock_mux;
  *   main_clock_mux  -> main_prescaler;
  *   main_prescaler  -> cpu_bus;
- *   main_prescaler  -> aph_bus;
+ *   main_prescaler  -> ahb_bus;
  *   main_prescaler  -> apb_a_prescaler;
  *   main_prescaler  -> apb_b_prescaler;
  *   main_prescaler  -> apb_c_prescaler;
@@ -148,7 +148,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="Clock\nSource a" shape=square] system_clock_source;
- *   node [label="Generator b" shape=square] clock_gen;
+ *   node [label="Generator 1" shape=square] clock_gen;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Peripheral x" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
@@ -168,7 +168,7 @@
  * digraph overview {
  *   rankdir=LR;
  *   node [label="External\nOscillator" shape=square] system_clock_source0;
- *   node [label="Generator a" shape=square] clock_gen0;
+ *   node [label="Generator 0" shape=square] clock_gen0;
  *   node [label="Channel x" shape=square] clock_chan0;
  *   node [label="Core CPU" shape=ellipse  style=filled fillcolor=lightgray] peripheral0;
  *
@@ -176,8 +176,8 @@
  *   clock_gen0    -> clock_chan0;
  *   clock_chan0   -> peripheral0;
  *
- *   node [label="8MHz R/C\nOscillator" shape=square style=outline] system_clock_source1;
- *   node [label="Generator b" shape=square] clock_gen1;
+ *   node [label="8MHz R/C\nOscillator (OSC8M)" shape=square style=outline] system_clock_source1;
+ *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Channel z" shape=square] clock_chan2;
  *   node [label="SERCOM\nModule" shape=ellipse  style=filled fillcolor=lightgray] peripheral1;
@@ -200,8 +200,8 @@
  * disable the clocks to multiple peripherals as a group.
  *
  * \subsubsection asfdoc_samd20_system_clock_module_overview_gclk_channels Generic Clock Channels
- * To connect a Generic Clock Generator to a peripheral module within the
- * device, a Generic Clock Channel module must be used. Each peripheral or
+ * To connect a Generic Clock Generator to a peripheral within the
+ * device, a Generic Clock Channel is used. Each peripheral or
  * peripheral group has an associated Generic Clock Channel, which serves as the
  * clock input for the peripheral(s). To supply a clock to the peripheral
  * module(s), the associated channel must be connected to a running Generic
@@ -251,83 +251,6 @@ enum conf_clock_rtc_freq {
 	CONF_CLOCK_RTC_FREQ_1KHZ  = 32,
 	/** 32kHz counter speed for the RTC. */
 	CONF_CLOCK_RTC_FREQ_32KHZ = 1,
-};
-
-/**
- * \brief List of available GCLK generators.
- *
- * List of Available GCLK generators. This enum is used in the peripheral
- * device drivers to select the GCLK generator to be used for its operation.
- *
- * The number of GCLK generators available is device dependent.
- */
-enum gclk_generator {
-	/** GCLK generator channel 0. */
-	GCLK_GENERATOR_0,
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 0)
-	/** GCLK generator channel 1. */
-	GCLK_GENERATOR_1,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 1)
-	/** GCLK generator channel 2. */
-	GCLK_GENERATOR_2,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 2)
-	/** GCLK generator channel 3. */
-	GCLK_GENERATOR_3,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 3)
-	/** GCLK generator channel 4. */
-	GCLK_GENERATOR_4,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 4)
-	/** GCLK generator channel 5. */
-	GCLK_GENERATOR_5,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 5)
-	/** GCLK generator channel 6. */
-	GCLK_GENERATOR_6,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 6)
-	/** GCLK generator channel 7. */
-	GCLK_GENERATOR_7,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 7)
-	/** GCLK generator channel 8. */
-	GCLK_GENERATOR_8,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 8)
-	/** GCLK generator channel 9. */
-	GCLK_GENERATOR_9,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 9)
-	/** GCLK generator channel 10. */
-	GCLK_GENERATOR_10,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 10)
-	/** GCLK generator channel 11. */
-	GCLK_GENERATOR_11,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 11)
-	/** GCLK generator channel 12. */
-	GCLK_GENERATOR_12,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 12)
-	/** GCLK generator channel 13. */
-	GCLK_GENERATOR_13,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 13)
-	/** GCLK generator channel 14. */
-	GCLK_GENERATOR_14,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 14)
-	/** GCLK generator channel 15. */
-	GCLK_GENERATOR_15,
-#endif
-#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 15)
-	/** GCLK generator channel 16. */
-	GCLK_GENERATOR_16,
-#endif
 };
 
 /**
@@ -679,7 +602,7 @@ struct system_clock_source_dfll_config {
 };
 
 /**
- * \name External Oscillator configuration and management
+ * \name External Oscillator management
  * @{
  */
 
@@ -713,7 +636,7 @@ void system_clock_source_xosc_set_config(
 
 
 /**
- * \name External 32KHz Oscillator configuration and management
+ * \name External 32KHz Oscillator management
  * @{
  */
 
@@ -750,7 +673,7 @@ void system_clock_source_xosc32k_set_config(
 
 
 /**
- * \name Internal 32KHz Oscillator configuration and management
+ * \name Internal 32KHz Oscillator management
  * @{
  */
 
@@ -780,7 +703,7 @@ void system_clock_source_osc32k_set_config(
 
 
 /**
- * \name Internal 8MHz Oscillator configuration and management
+ * \name Internal 8MHz Oscillator management
  * @{
  */
 
@@ -808,7 +731,7 @@ void system_clock_source_osc8m_set_config(
 
 
 /**
- * \name DFLL configuration and management
+ * \name Internal DFLL management
  * @{
  */
 
@@ -854,7 +777,7 @@ void system_clock_source_dfll_set_config(
  */
 
 /**
- * \name Clock source configuration
+ * \name Clock source management
  * @{
  */
 enum status_code system_clock_source_write_calibration(
@@ -879,7 +802,7 @@ uint32_t system_clock_source_get_hz(
  */
 
 /**
- * \name Main clock configuration
+ * \name Main clock management
  * @{
  */
 
@@ -1100,7 +1023,17 @@ static inline enum status_code system_apb_clock_clear_mask(
  * @}
  */
 
+/**
+ * \name System Clock Initialization
+ * @{
+ */
+
 void system_clock_init(void);
+
+/**
+ * @}
+ */
+
 
 /**
  * @}
@@ -1149,6 +1082,14 @@ void system_clock_init(void);
  *	<tr>
  *		<td>XOSC32K</td>
  *		<td>External 32KHz Oscillator</td>
+ *	</tr>
+ *	<tr>
+ *		<td>AHB</td>
+ *		<td>Advanced High-performance Bus</td>
+ *	</tr>
+ *	<tr>
+ *		<td>APB</td>
+ *		<td>Advanced Peripheral Bus</td>
  *	</tr>
  * </table>
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD20 PAC Quick Start
+ * \brief SAMD20 RTC Calendar Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,27 +42,27 @@
  */
 
 /**
- * \page rtc_cal_basic_use_case Quick Start Guide for the RTC calendar - Basic
+ * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for the RTC calendar - Basic
  * In this use case, the RTC is set up in calendar mode. The time is set and
  * also a alarm is set to show a general use of the RTC in calendar mode. Also
  * the clock is swapped from 24h to 12h mode after initialization.
  *
- * \section rtc_cal_basic_use_case_prereq Prerequisites
+ * \section asfdoc_samd20_rtc_calendar_basic_use_case_prereq Prerequisites
  * The clocks need be be set up correctly in the clock domain, and the drivers
  * also needs to be included in the project.
  *
- * \section rtc_cal_basic_setup Setup
+ * \section asfdoc_samd20_rtc_calendar_basic_use_case_setup Setup
  * Set up the RTC as intended.
  *
- * \subsection rtc_cal_init_code Initialization Code
+ * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_init_code Initialization Code
  * Copy-paste the following setup code to your application:
  * \snippet qs_rtc_calendar_basic.c initiate
  *
- * \subsection rtc_cal_main_code Add to Main
+ * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_main_code Add to Main
  * Add the following to your main().
  * \snippet qs_rtc_calendar_basic.c add_main
  *
- * \subsection rtc_cal_basic_use_workflow Workflow
+ * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
  * -# Make configuration structure.
  *  - \snippet qs_rtc_calendar_basic.c set_conf
  * -# Set default in configuration structure.
@@ -76,6 +76,6 @@
  * -# Enable module
  *  - \snippet qs_rtc_calendar_basic.c enable
  *
- * \section rtc_count_basic_implement Implementation
+ * \section asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_implement Implementation
  * There is no implementation for this quick start.
  */

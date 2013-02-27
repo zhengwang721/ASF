@@ -48,21 +48,22 @@
  * This function will reset the SPI module to its power on default values and
  * disable it.
  *
- * \param[in,out] dev_inst Pointer to the software instance struct
+ * \param[in,out] module Pointer to the software instance struct
  */
-void spi_reset(struct spi_dev_inst *const dev_inst)
+void spi_reset(struct spi_module *const module)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
-	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+	SercomSpi *const spi_module = &(module->hw->SPI);
 
 	/* Disable the module */
-	spi_disable(dev_inst);
+	spi_disable(module);
 
-	/* Wait until the synchronization is complete */
-	_spi_wait_for_sync(dev_inst);
+	while (spi_is_syncing(module)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	/* Software reset the module */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
@@ -74,23 +75,23 @@ void spi_reset(struct spi_dev_inst *const dev_inst)
  * This function will write out a given configuration to the hardware module.
  * Can only be done when the module is disabled.
  *
- * \param[in] dev_inst  Pointer to the software instance struct
+ * \param[in] module  Pointer to the software instance struct
  * \param[in] config    Pointer to the configuration struct
  *
  * \return The status of the configuration
  * \retval STATUS_ERR_INVALID_ARG If invalid argument(s) were provided.
  * \retval STATUS_OK              If the configuration was written
  */
-static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
-		struct spi_conf *config)
+static enum status_code _spi_set_config(struct spi_module *const module,
+		struct spi_config *config)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 	Assert(config);
-	Assert(dev_inst->hw_dev);
+	Assert(module->hw);
 
-	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
-	Sercom *const sercom_module = dev_inst->hw_dev;
+	SercomSpi *const spi_module = &(module->hw->SPI);
+	Sercom *const sercom_module = module->hw;
 	struct system_pinmux_config pin_conf;
 	uint32_t pad0 = config->pinmux_pad0;
 	uint32_t pad1 = config->pinmux_pad1;
@@ -126,8 +127,8 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
 	pin_conf.mux_position = pad3 & 0xFFFF;
 	system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
 
-	dev_inst->mode = config->mode;
-	dev_inst->chsize = config->chsize;
+	module->mode = config->mode;
+	module->chsize = config->chsize;
 
 	/* Value to write to BAUD register */
 	uint16_t baud;
@@ -205,7 +206,7 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * This function will initialize the SERCOM SPI module, based on the values
  * of the config struct.
  *
- * \param[out] dev_inst   Pointer to the software instance struct
+ * \param[out] module   Pointer to the software instance struct
  * \param[in] module      Pointer to hardware instance
  * \param[in] config      Pointer to the config struct
  *
@@ -215,19 +216,19 @@ static enum status_code _spi_set_config(struct spi_dev_inst *const dev_inst,
  * \retval STATUS_BUSY               If module is busy resetting.
  * \retval STATUS_ERR_INVALID_ARG        If invalid argument(s) were provided.
  */
-enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
-		struct spi_conf *config)
+enum status_code spi_init(struct spi_module *const module, Sercom *hw,
+		struct spi_config *config)
 {
 
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 	Assert(module);
 	Assert(config);
 
 	/* Initialize device instance */
-	dev_inst->hw_dev = module;
+	module->hw = hw;
 
-	SercomSpi *const spi_module = &(dev_inst->hw_dev->SPI);
+	SercomSpi *const spi_module = &(module->hw->SPI);
 
 		/* Check if module is enabled. */
 	if (spi_module->CTRLA.reg & SERCOM_SPI_CTRLA_ENABLE) {
@@ -240,14 +241,14 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	}
 
 	/* Turn on module in PM */
-	uint32_t pm_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev)
+	uint32_t pm_index = _sercom_get_sercom_inst_index(module->hw)
 			+ PM_APBCMASK_SERCOM0_Pos;
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 
 	/* Set up GCLK */
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	uint32_t gclk_index = _sercom_get_sercom_inst_index(dev_inst->hw_dev) + 13;
+	uint32_t gclk_index = _sercom_get_sercom_inst_index(module->hw) + 13;
 	gclk_chan_conf.source_generator = config->generator_source;
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
 	system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
@@ -257,8 +258,35 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
 	/* Set the SERCOM in SPI mode */
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x1);
 
+#ifdef SPI_ASYNC
+	/* Temporary variables */
+	uint8_t i;
+	uint8_t instance_index;
+
+	/* Initialize parameters */
+	for (i = 0; i < SPI_CALLBACK_N; i++) {
+		module->callback[i]        = NULL;
+	}
+	module->tx_buffer_ptr              = NULL;
+	module->rx_buffer_ptr              = NULL;
+	module->remaining_tx_buffer_length = 0x0000;
+	module->remaining_rx_buffer_length = 0x0000;
+	module->registered_callback        = 0x00;
+	module->enabled_callback           = 0x00;
+	module->rx_status                  = STATUS_OK;
+	module->tx_status                  = STATUS_OK;
+	module->dir                        = SPI_DIRECTION_IDLE;
+	/*
+	 * Set interrupt handler and register SPI software module struct in
+	 * look-up table
+	 */
+	instance_index = _sercom_get_sercom_inst_index(module->hw);
+	_sercom_set_handler(instance_index, spi_interrupt_handler);
+	_sercom_instances[instance_index] = module;
+#endif
+
 	/* Write configuration to module and return status code */
-	return _spi_set_config(dev_inst, config);
+	return _spi_set_config(module, config);
 }
 
 /**
@@ -270,7 +298,7 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
  * \note Data buffer for received data must be uint16_t and cast to uint8_t if
  * SPI character size is 9 bit.
  *
- * \param[in] dev_inst  Pointer to the software instance struct
+ * \param[in] module  Pointer to the software instance struct
  * \param[out] rx_data  Data buffer for received data
  * \param[in] length    Length of data to receive
  * \param[in] dummy     8- or 9-bit dummy byte to shift out in master mode
@@ -282,12 +310,12 @@ enum status_code spi_init(struct spi_dev_inst *const dev_inst, Sercom *module,
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
+enum status_code spi_read_buffer_wait(struct spi_module *const module,
 		uint8_t *rx_data, uint8_t length, uint16_t dummy)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
-	Assert(dev_inst->hw_dev);
+	Assert(module);
+	Assert(module->hw);
 
 	/* Sanity check arguments */
 	if (length == 0) {
@@ -297,18 +325,18 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 	uint8_t i = 0;
 	uint16_t j = 0;
 	while (length--) {
-		if (dev_inst->mode == SPI_MODE_MASTER) {
+		if (module->mode == SPI_MODE_MASTER) {
 			/* Wait until the module is ready to write a character */
-			while (!spi_is_ready_to_write(dev_inst)) {
+			while (!spi_is_ready_to_write(module)) {
 			}
 			/* Send dummy SPI character to read in master mode */
-			spi_write(dev_inst, dummy);
+			spi_write(module, dummy);
 		}
 
 		/* Start timeout period for slave */
-		if (dev_inst->mode == SPI_MODE_SLAVE) {
+		if (module->mode == SPI_MODE_SLAVE) {
 			for (j = 0; j <= SPI_TIMEOUT; j++) {
-				if (spi_is_ready_to_read(dev_inst)) {
+				if (spi_is_ready_to_read(module)) {
 					break;
 				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to read data within timeout period */
@@ -319,25 +347,81 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
 
 		/* Wait until the module is ready to read a character */
 
-		while (!spi_is_ready_to_read(dev_inst)) {
+		while (!spi_is_ready_to_read(module)) {
 		}
 
 		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
-		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+			retval = spi_read(module, &(((uint16_t*)(rx_data))[i++]));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		} else {
-			retval = spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		}
 	}
+	return STATUS_OK;
+}
+
+ /**
+ * \brief Selects slave device
+ *
+ * This function will drive the slave select pin of the selected device low or
+ * high depending on the select boolean.
+ * If slave address recognition is enabled, the address will be sent to the
+ * slave when selecting it.
+ *
+ * \param[in] module      Pointer to the software module struct
+ * \param[in] slave       Pointer to the attached slave
+ * \param[in] select      Boolean stating if the slave should be selected or
+ *                        deselected
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK                  If the slave device was selected
+ * \retval STATUS_ERR_UNSUPPORTED_DEV If the SPI module is operating in slave
+ *                                    mode
+ * \retval STATUS_BUSY                If the SPI module is not ready to write
+ *                                    the slave address
+ */
+enum status_code spi_select_slave(struct spi_module *module,
+		struct spi_slave_inst *slave, bool select)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+	Assert(slave);
+
+	/* Check that the SPI module is operating in master mode */
+	if (module->mode != SPI_MODE_MASTER) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	if (select) {
+		/* Drive Slave Select low */
+		port_pin_set_output_level(slave->ss_pin, false);
+
+		/* Check if address recognition is enabled */
+		if (slave->address_enabled) {
+			/* Check if the module is ready to write the address */
+			if (!spi_is_ready_to_write(module)) {
+				/* Not ready, do not select slave and return */
+				port_pin_set_output_level(slave->ss_pin, true);
+				return STATUS_BUSY;
+			}
+			/* Write address to slave */
+			spi_write(module, slave->address);
+		}
+	} else {
+		/* Drive Slave Select high */
+		port_pin_set_output_level(slave->ss_pin, true);
+	}
+
 	return STATUS_OK;
 }
 
@@ -354,7 +438,7 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * \note Data buffer to send must be of type uint16_t and cast to uint8_t if
  * SPI character size is 9 bit.
  *
- * \param[in] dev_inst  Pointer to the software instance struct
+ * \param[in] module  Pointer to the software instance struct
  * \param[in] data      Pointer to the buffer to transmit
  * \param[in] length    Number of SPI characters to transfer
  *
@@ -364,11 +448,11 @@ enum status_code spi_read_buffer(struct spi_dev_inst *const dev_inst,
  * \retval STATUS_ERR_TIMEOUT     If the operation was not completed within the
  *                                timeout in slave mode.
  */
-enum status_code spi_write_buffer(struct spi_dev_inst
-		*const dev_inst, const uint8_t *tx_data, uint8_t length)
+enum status_code spi_write_buffer_wait(struct spi_module
+		*const module, const uint8_t *tx_data, uint8_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
@@ -380,9 +464,9 @@ enum status_code spi_write_buffer(struct spi_dev_inst
 	/* Write block */
 	while (length--) {
 		/* Start timeout period for slave */
-		if (dev_inst->mode == SPI_MODE_SLAVE) {
+		if (module->mode == SPI_MODE_SLAVE) {
 			for (j = 0; j <= SPI_TIMEOUT; j++) {
-				if (spi_is_ready_to_write(dev_inst)) {
+				if (spi_is_ready_to_write(module)) {
 					break;
 				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to write data within timeout period */
@@ -392,15 +476,15 @@ enum status_code spi_write_buffer(struct spi_dev_inst
 		}
 
 		/* Wait until the module is ready to write a character */
-		while (!spi_is_ready_to_write(dev_inst)) {
+		while (!spi_is_ready_to_write(module)) {
 		}
 
-		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
-			spi_write(dev_inst, ((uint16_t*)(tx_data))[i++]);
+			spi_write(module, ((uint16_t*)(tx_data))[i++]);
 		} else {
 			/* Write 8 bit character*/
-			spi_write(dev_inst, (uint16_t)tx_data[i++]);
+			spi_write(module, (uint16_t)tx_data[i++]);
 		}
 	}
 
@@ -423,7 +507,7 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  * \note Data buffer for receive data and data buffer to send must be of type
  * uint16_t and cast to uint8_t if SPI character size is 9 bit.
  *
- * \param[in] dev_inst Pointer to the software instance struct
+ * \param[in] module Pointer to the software instance struct
  * \param[in] tx_data  Pointer to the buffer to transmit
  * \param[out] rx_data Pointer to the buffer where received data will be stored
  * \param[in] length   Number of SPI characters to transfer
@@ -435,11 +519,11 @@ enum status_code spi_write_buffer(struct spi_dev_inst
  *                                timeout in slave mode.
  * \retval STATUS_ERR_OVERFLOW    If the data is overflown
  */
-enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
+enum status_code spi_tranceive_buffer_wait(struct spi_module *const module,
 		uint8_t *tx_data, uint8_t *rx_data, uint8_t length)
 {
 	/* Sanity check arguments */
-	Assert(dev_inst);
+	Assert(module);
 
 	/* Sanity check arguments */
 	if (length == 0) {
@@ -451,9 +535,9 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 	/* Send and receive buffer */
 	while (length--) {
 		/* Start timeout period for slave */
-		if (dev_inst->mode == SPI_MODE_SLAVE) {
+		if (module->mode == SPI_MODE_SLAVE) {
 			for (j = 0; j <= SPI_TIMEOUT; j++) {
-				if (spi_is_ready_to_write(dev_inst)) {
+				if (spi_is_ready_to_write(module)) {
 					break;
 				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to write data within timeout period */
@@ -463,21 +547,21 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 		}
 
 		/* Wait until the module is ready to write a character */
-		while (!spi_is_ready_to_write(dev_inst)) {
+		while (!spi_is_ready_to_write(module)) {
 		}
 
-		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
+		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
 			/* Write the 9 bit character */
-			spi_write(dev_inst, ((uint16_t*)(tx_data))[i++]);
+			spi_write(module, ((uint16_t*)(tx_data))[i++]);
 		} else {
 			/* Write character */
-			spi_write(dev_inst, (uint16_t)tx_data[i++]);
+			spi_write(module, (uint16_t)tx_data[i++]);
 		}
 
 		/* Start timeout period for slave */
-		if (dev_inst->mode == SPI_MODE_SLAVE) {
+		if (module->mode == SPI_MODE_SLAVE) {
 			for (j = 0; j <= SPI_TIMEOUT; j++) {
-				if (spi_is_ready_to_read(dev_inst)) {
+				if (spi_is_ready_to_read(module)) {
 					break;
 				} else if (j == SPI_TIMEOUT) {
 					/* Not ready to read data within timeout period */
@@ -487,19 +571,19 @@ enum status_code spi_tranceive_buffer(struct spi_dev_inst *const dev_inst,
 		}
 
 		/* Wait until the module is ready to read a character */
-		while (!spi_is_ready_to_read(dev_inst)) {
+		while (!spi_is_ready_to_read(module)) {
 		}
 
 		enum status_code retval = STATUS_OK;
 		/* Read SPI character */
-		if (dev_inst->chsize == SPI_CHARACTER_SIZE_9BIT) {
-			retval = spi_read(dev_inst, &(((uint16_t*)(rx_data))[i++]));
+		if (module->chsize == SPI_CHARACTER_SIZE_9BIT) {
+			retval = spi_read(module, &(((uint16_t*)(rx_data))[i++]));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;
 			}
 		} else {
-			retval = spi_read(dev_inst, ((uint16_t*)(&(rx_data)[i++])));
+			retval = spi_read(module, ((uint16_t*)(&(rx_data)[i++])));
 			if (retval != STATUS_OK) {
 				/* Overflow, abort */
 				return retval;

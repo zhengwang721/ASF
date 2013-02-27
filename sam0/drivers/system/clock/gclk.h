@@ -56,6 +56,83 @@ extern "C" {
 #endif
 
 /**
+ * \brief List of available GCLK generators.
+ *
+ * List of Available GCLK generators. This enum is used in the peripheral
+ * device drivers to select the GCLK generator to be used for its operation.
+ *
+ * The number of GCLK generators available is device dependent.
+ */
+enum gclk_generator {
+	/** GCLK generator channel 0. */
+	GCLK_GENERATOR_0,
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 0)
+	/** GCLK generator channel 1. */
+	GCLK_GENERATOR_1,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 1)
+	/** GCLK generator channel 2. */
+	GCLK_GENERATOR_2,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 2)
+	/** GCLK generator channel 3. */
+	GCLK_GENERATOR_3,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 3)
+	/** GCLK generator channel 4. */
+	GCLK_GENERATOR_4,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 4)
+	/** GCLK generator channel 5. */
+	GCLK_GENERATOR_5,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 5)
+	/** GCLK generator channel 6. */
+	GCLK_GENERATOR_6,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 6)
+	/** GCLK generator channel 7. */
+	GCLK_GENERATOR_7,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 7)
+	/** GCLK generator channel 8. */
+	GCLK_GENERATOR_8,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 8)
+	/** GCLK generator channel 9. */
+	GCLK_GENERATOR_9,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 9)
+	/** GCLK generator channel 10. */
+	GCLK_GENERATOR_10,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 10)
+	/** GCLK generator channel 11. */
+	GCLK_GENERATOR_11,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 11)
+	/** GCLK generator channel 12. */
+	GCLK_GENERATOR_12,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 12)
+	/** GCLK generator channel 13. */
+	GCLK_GENERATOR_13,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 13)
+	/** GCLK generator channel 14. */
+	GCLK_GENERATOR_14,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 14)
+	/** GCLK generator channel 15. */
+	GCLK_GENERATOR_15,
+#endif
+#if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 15)
+	/** GCLK generator channel 16. */
+	GCLK_GENERATOR_16,
+#endif
+};
+
+/**
  * \brief Generic Clock Generator configuration structure.
  *
  * Configuration structure for a Generic Clock Generator channel. This
@@ -63,7 +140,7 @@ extern "C" {
  * \ref system_gclk_gen_get_config_defaults() function before being modified by
  * the user application.
  */
-struct system_gclk_gen_conf {
+struct system_gclk_gen_config {
 	/** Source clock input channel index. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
@@ -83,15 +160,14 @@ struct system_gclk_gen_conf {
  * should be initialized by the \ref system_gclk_chan_get_config_defaults()
  * function before being modified by the user application.
  */
-struct system_gclk_chan_conf {
+struct system_gclk_chan_config {
 	/** Generic Clock Generator source channel. */
-	uint8_t source_generator;
+	enum gclk_generator source_generator;
 	/** If \c true, the clock is kept enabled during device standby mode. */
 	bool run_in_standby;
 };
 
-
-/** \name Generic Clock configuration and initialization
+/** \name Generic Clock management
  * @{
  */
 
@@ -124,7 +200,7 @@ void system_gclk_init(void);
 
 
 /**
- * \name Generic Clock configuration and initialization (Generators)
+ * \name Generic Clock management (Generators)
  * @{
  */
 
@@ -144,7 +220,7 @@ void system_gclk_init(void);
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_gen_get_config_defaults(
-		struct system_gclk_gen_conf *const config)
+		struct system_gclk_gen_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -159,7 +235,7 @@ static inline void system_gclk_gen_get_config_defaults(
 
 void system_gclk_gen_set_config(
 		const uint8_t generator,
-		struct system_gclk_gen_conf *const config);
+		struct system_gclk_gen_config *const config);
 
 void system_gclk_gen_enable(
 		const uint8_t generator);
@@ -171,7 +247,7 @@ void system_gclk_gen_disable(
 
 
 /**
- * \name Generic Clock configuration and initialization (Channels)
+ * \name Generic Clock management (Channels)
  * @{
  */
 
@@ -190,13 +266,13 @@ void system_gclk_gen_disable(
  * \param[out] config  Configuration structure to initialize to default values
  */
 static inline void system_gclk_chan_get_config_defaults(
-		struct system_gclk_chan_conf *const config)
+		struct system_gclk_chan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Default configuration values */
-	config->source_generator = 0;
+	config->source_generator = GCLK_GENERATOR_0;
 
 	#if !defined (REVB)
 	config->run_in_standby = false;
@@ -205,7 +281,7 @@ static inline void system_gclk_chan_get_config_defaults(
 
 void system_gclk_chan_set_config(
 		const uint8_t channel,
-		struct system_gclk_chan_conf *const config);
+		struct system_gclk_chan_config *const config);
 
 void system_gclk_chan_enable(
 		const uint8_t channel);

@@ -122,7 +122,7 @@ enum status_code ac_init(
 		Ac *const module,
 		struct ac_config *const config)
 {
-	struct system_gclk_chan_conf gclk_chan_conf;
+	struct system_gclk_chan_config gclk_chan_conf;
 
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -208,7 +208,7 @@ enum status_code ac_chan_set_config(
 enum status_code ac_win_set_config(
 		struct ac_module *const module_inst,
 		const enum ac_win_channel win_channel,
-		struct ac_win_conf *const config)
+		struct ac_win_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);

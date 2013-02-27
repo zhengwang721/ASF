@@ -48,7 +48,7 @@
 
 void board_init(void)
 {
-	struct port_conf pin_conf;
+	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
 
 	/* Configure LEDs as outputs, turn them off */

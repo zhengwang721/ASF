@@ -84,8 +84,6 @@
  *  - \snippet qs_i2c_slave_basic_use.c enable_module
  * -# Register and enable callback functions.
  *  - \snippet qs_i2c_slave_basic_use.c reg_en_i2c_callback
- * -# Enable global interrupts (I2C interrupts are enabled in \ref i2c_slave_enable).
- *  - \snippet qs_i2c_slave_basic_use.c enable_global_i2c_interrupts
  *
  * \section i2c_slave_basic_use_implementation Implementation
  * To use the I2C, you must make a packet that can be used for the reading:

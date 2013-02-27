@@ -102,7 +102,7 @@ static void configure_dac(struct dac_module *dac_module)
 
 static void configure_tc(struct tc_module *tc_module)
 {
-	struct tc_conf config;
+	struct tc_config config;
 	struct tc_events events;
 
 	tc_get_config_defaults(&config);

@@ -50,7 +50,7 @@ void config_rtc_calendar(void)
 
 	/* Initialize RTC in calendar mode. */
 //! [set_conf]
-	struct rtc_calendar_conf config;
+	struct rtc_calendar_config config;
 //! [set_conf]
 //! [get_default]
 	rtc_calendar_get_config_defaults(&config);

@@ -44,7 +44,7 @@
 #include <asf.h>
 
 //! [packet]
-static i2c_packet_t packet;
+static struct i2c_packet packet;
 //! [packet]
 
 
@@ -133,10 +133,6 @@ static void configure_callbacks(void)
 
 	//![reg_en_i2c_callback]
 
-	/* Enable global interrupts for SERCOM instance. */
-	//![enable_global_i2c_interrupts]
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM2);
-	//![enable_global_i2c_interrupts]
 }
 //! [setup_i2c_callback]
 

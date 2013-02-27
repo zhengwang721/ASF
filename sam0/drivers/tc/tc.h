@@ -524,9 +524,9 @@ enum tc_capture_enable {
 	/** No channels are enabled for capture. */
 	TC_CAPTURE_ENABLE_NONE                 = 0,
 	/** Enable channel 0 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_0            = TC_CTRLC_CPTEN(1),
+	TC_CAPTURE_ENABLE_CHANNEL_0               = TC_CTRLC_CPTEN(1),
 	/** Enable channel 1 for capture. */
-	TC_CAPTURE_ENABLE_CHANNEL_1            = TC_CTRLC_CPTEN(2),
+	TC_CAPTURE_ENABLE_CHANNEL_1               = TC_CTRLC_CPTEN(2),
 };
 
 /**
@@ -538,9 +538,9 @@ enum tc_waveform_invert_output {
 	/** No inversion of the waveform output. */
 	TC_WAVEFORM_INVERT_OUTPUT_NONE      = 0,
 	/** Invert output from compare channel 0. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0 = TC_CTRLC_INVEN(1),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_0    = TC_CTRLC_INVEN(1),
 	/** Invert output from compare channel 1. */
-	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1 = TC_CTRLC_INVEN(2),
+	TC_WAVEFORM_INVERT_OUTPUT_CHANNEL_1    = TC_CTRLC_INVEN(2),
 };
 
 /**
@@ -574,9 +574,9 @@ enum tc_event_action {
  */
 enum tc_interrupt_flag {
 	/** Interrupt flag for channel 0 */
-	TC_INTERRUPT_FLAG_CHANNEL_0 =  TC_INTFLAG_MC(1),
+	TC_INTERRUPT_FLAG_CHANNEL_0    =  TC_INTFLAG_MC(1),
 	/** Interrupt flag for channel 1 */
-	TC_INTERRUPT_FLAG_CHANNEL_1 =  TC_INTFLAG_MC(2),
+	TC_INTERRUPT_FLAG_CHANNEL_1    =  TC_INTFLAG_MC(2),
 	/** Interrupt flag for generating interrupts when
 	 *  synchronization is done. This is flag is meant for the
 	 *  async driver. */
@@ -609,7 +609,7 @@ struct tc_events {
 /**
  * \brief Configuration struct for TC module in 8-bit size counter mode.
  */
-struct tc_8bit_conf {
+struct tc_8bit_config {
 	/** Initial count value. */
 	uint8_t count;
 	/** Where to count to or from depending on the direction on the counter. */
@@ -621,7 +621,7 @@ struct tc_8bit_conf {
 /**
  * \brief Configuration struct for TC module in 16-bit size counter mode.
  */
-struct tc_16bit_conf {
+struct tc_16bit_config {
 	/** Initial count value */
 	uint16_t count;
 	/** Value to be used for compare match on each channel. */
@@ -631,7 +631,7 @@ struct tc_16bit_conf {
 /**
  * \brief Configuration struct for TC module in 32-bit size counter mode.
  */
-struct tc_32bit_conf {
+struct tc_32bit_config {
 	/** Initial count value. */
 	uint32_t count;
 	/** Value to be used for compare match on each channel. */
@@ -645,7 +645,7 @@ struct tc_32bit_conf {
  * initialized by the \ref tc_get_config_defaults function before being
  * modified by the user application.
  */
-struct tc_conf {
+struct tc_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 
@@ -700,11 +700,11 @@ struct tc_conf {
 	/** This setting determines what size counter is used. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
-		struct tc_8bit_conf  size_8_bit;
+		struct tc_8bit_config  size_8_bit;
 		/** Struct for 16-bit specific timer configuration. */
-		struct tc_16bit_conf size_16_bit;
+		struct tc_16bit_config size_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
-		struct tc_32bit_conf size_32_bit;
+		struct tc_32bit_config size_32_bit;
 	} size_specific;
 };
 
@@ -715,10 +715,10 @@ struct tc_conf {
  */
 struct tc_module {
 	/** Pointer to the TC Hardware module */
-	Tc *hw_dev;
+	Tc *hw;
 
 	/** Which counter size the counter should use. This value is set
-	 *  when running tc_init. Use the \ref tc_conf struct to set the
+	 *  when running tc_init. Use the \ref tc_config struct to set the
 	 *  counter size. Do not alter this, it is only for internal
 	 *  checks
 	 */
@@ -751,9 +751,9 @@ static inline bool tc_is_syncing(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
-	return (module_inst->hw_dev->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
+	return (module_inst->hw->COUNT8.STATUS.reg & TC_STATUS_SYNCBUSY);
 }
 
 /**
@@ -785,7 +785,7 @@ static inline bool tc_is_syncing(
  * \param[out]  config  Pointer to a TC module configuration structure to set
  */
 static inline void tc_get_config_defaults(
-		struct tc_conf *const config)
+		struct tc_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -850,8 +850,8 @@ static inline void tc_get_events_config_default(
 
 enum status_code tc_init(
 		struct tc_module *const module_inst,
-		Tc *const tc_module,
-		const struct tc_conf *const config);
+		Tc *const hw,
+		const struct tc_config *const config);
 
 /** @} */
 
@@ -877,10 +877,10 @@ static inline void tc_enable_events(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
@@ -918,10 +918,10 @@ static inline void tc_disable_events(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(events);
 
-	Tc *const tc_module = module_inst->hw_dev;
+	Tc *const tc_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
 
@@ -968,10 +968,10 @@ static inline void tc_enable(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -993,10 +993,10 @@ static inline void tc_disable(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -1042,10 +1042,10 @@ static inline void tc_stop_counter(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -1067,10 +1067,10 @@ static inline void tc_start_counter(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 
 	/* Get a pointer to the module's hardware instance */
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
@@ -1140,10 +1140,10 @@ static inline bool tc_is_interrupt_flag_set(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(interrupt_flag);
 
-	TcCount8 *tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *tc_module = &(module_inst->hw->COUNT8);
 
 	if (tc_module->INTFLAG.reg & interrupt_flag) {
 		return true;
@@ -1168,10 +1168,10 @@ static inline void tc_clear_interrupt_flag(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(module_inst->hw_dev);
+	Assert(module_inst->hw);
 	Assert(interrupt_flag);
 
-	TcCount8 *const tc_module = &(module_inst->hw_dev->COUNT8);
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
 	tc_module->INTFLAG.reg |= interrupt_flag;
 }
