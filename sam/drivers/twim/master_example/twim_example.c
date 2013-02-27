@@ -127,7 +127,7 @@ static void configure_console(void)
 static status_code_t init_test(void)
 {
 	/* Set TWIM options */
-	cpu_speed = sysclk_get_cpu_hz();
+	cpu_speed = sysclk_get_peripheral_bus_hz(EXAMPLE_TWIM);
 	struct twim_config opts = {
 		.twim_clk = cpu_speed,
 		.speed = TWIM_MASTER_SPEED,
