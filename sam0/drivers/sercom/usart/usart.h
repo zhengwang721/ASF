@@ -713,7 +713,7 @@ static inline void usart_disable_transceiver(const struct usart_module
 * </tr>
 * <tr>
 * <td>SERCOM</td>
-* <td>Serial Communication interface</td>
+* <td>Serial Communication Interface</td>
 * </tr>
 * <tr>
 * <td>USART</td>
@@ -764,7 +764,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_a MUX Setting A
  *
- * Enum: USART_RX_0_TX_0_XCK_1
+ * Enum: \ref USART_RX_0_TX_0_XCK_1
  *
  * <table>
  *   <tr>
@@ -801,7 +801,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_b MUX Setting B
  *
- * Enum: USART_RX_0_TX_2_XCK_3
+ * Enum: \ref USART_RX_0_TX_2_XCK_3
  *
  * <table>
  *   <tr>
@@ -838,7 +838,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  * 
  * \section asfdoc_samd20_sercom_usart_mux_setting_c MUX Setting C
  *
- * Enum: USART_RX_1_TX_0_XCK_2
+ * Enum: \ref USART_RX_1_TX_0_XCK_2
  *
  * <table>
  *   <tr>
@@ -875,7 +875,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  * 
  * \section asfdoc_samd20_sercom_usart_mux_setting_d MUX Setting D
  *
- * Enum: USART_RX_1_TX_2_XCK_3
+ * Enum: \ref SART_RX_1_TX_2_XCK_3
  *
  * <table>
  *   <tr>
@@ -912,7 +912,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_e MUX Setting E
  *
- * Enum: USART_RX_2_TX_0_XCK_1
+ * Enum: \ref USART_RX_2_TX_0_XCK_1
  *
  * <table>
  *   <tr>
@@ -949,7 +949,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_f MUX Setting F
  *
- * Enum: USART_RX_2_TX_2_XCK_3
+ * Enum: \ref USART_RX_2_TX_2_XCK_3
  *
  * <table>
  *   <tr>
@@ -986,7 +986,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_g MUX Setting G
  *
- * Enum: USART_RX_3_TX_0_XCK_1
+ * Enum: \ref USART_RX_3_TX_0_XCK_1
  *
  * <table>
  *   <tr>
@@ -1023,7 +1023,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  *
  * \section asfdoc_samd20_sercom_usart_mux_setting_h MUX Setting H
  *
- * Enum: USART_RX_3_TX_2_XCK_3
+ * Enum: \ref USART_RX_3_TX_2_XCK_3
  *
  * <table>
  *   <tr>

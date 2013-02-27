@@ -58,15 +58,15 @@ int main(void)
 	uint16_t temp;
 //! [temp_variable]
 
-//! [system_init]
 	/* Initialize system clocks */
+//! [system_init]
 	system_init();
 //! [system_init]
 
-//! [conf_defaults]
 	/* Get configuration defaults for the USART
 	 * 9600 8N1
 	 */
+//! [conf_defaults]
 	usart_get_config_defaults(&config_struct);
 //! [conf_defaults]
 //! [conf_modify]
@@ -75,26 +75,25 @@ int main(void)
 	config_struct.pinout_pad2 = EDBG_CDC_TX_PINMUX;
 //! [conf_modify]
 
-//! [init]
 	/* Apply configuration */
+//! [init]
 	while (usart_init(&usart_edbg, EDBG_CDC_MODULE,
 			&config_struct) != STATUS_OK) {
 	}
 //! [init]
 
+	/* Enable USART */
 //! [enable]
-	/* Enable USARTs */
 	usart_enable(&usart_edbg);
 //! [enable]
 
 //! [enable_transceivers]
-	/* Enable transmitter */
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(&usart_edbg, USART_TRANSCEIVER_RX);
 //! [enable_transceivers]
 
-//! [echo_characters]
 	/* Echo back characters received */
+//! [echo_characters]
 	while (1) {
 		if (usart_read_wait(&usart_edbg, &temp) == STATUS_OK) {
 			while (usart_write_wait(&usart_edbg, temp) != STATUS_OK) {

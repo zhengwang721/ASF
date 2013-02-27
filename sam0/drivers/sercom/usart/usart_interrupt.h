@@ -61,8 +61,8 @@ void _usart_read_buffer(struct usart_module *const module,
  * Configuration of the driver is done by using the base polled init function.
  * When the asynchronous part of the driver is included the polled API will
  * be extended with the interrupt API listed below. All functions that are run
- * from interrupt context (and are none-blocking) have the postfix _job appended
- * to the function name.
+ * from interrupt context (and are none-blocking) have the postfix \c _job 
+ * appended to the function name.
  *
  * Interrupt operations are based on callbacks that are registered with
  * the driver using the \ref usart_register_callback function. The
@@ -74,7 +74,7 @@ void _usart_read_buffer(struct usart_module *const module,
  * \warning Never execute large portions of code in the callbacks. These
  * are run from the interrupt routine, and thus having long callbacks will
  * keep the processor in the interrupt handler for an equally long time.
- * An oft used way to handle this is to use global flags signalling the
+ * A common way to handle this is to use global flags signalling the
  * main application that an interrupt event has happened, and only do the
  * minimal needed processing in the callback.
  *
