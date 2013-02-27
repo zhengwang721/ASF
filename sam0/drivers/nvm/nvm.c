@@ -198,25 +198,24 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_ERASE_AUX_ROW:
 		case NVM_COMMAND_WRITE_AUX_ROW:
 
-			/* Auxiliary space cannot be accessed if the security
-			 * is set */
+			/* Auxiliary space cannot be accessed if the security bit is set */
 			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
-			
-			/* Set address and command */
-			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
+
+			/* Set address, command will be issued elsewhere */
+			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
 
 		case NVM_COMMAND_ERASE_ROW:
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
-		  
-			/* Set address and command */
-			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
+
+			/* Set address, command will be issued elsewhere */
+			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
-			
+
 		/* Commands not requiring address */
 		case NVM_COMMAND_PAGE_BUFFER_CLEAR:
 		case NVM_COMMAND_SET_SECURITY_BIT:
