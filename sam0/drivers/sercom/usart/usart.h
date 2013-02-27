@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief SAMD20 SERCOM USART Driver
+ * \brief SAM D20 SERCOM USART Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -57,9 +57,9 @@
 #define USART_DEFAULT_TIMEOUT  0xFFFF
 
 /**
- * \defgroup asfdoc_samd20_sercom_usart_group SAMD20 USART driver
+ * \defgroup asfdoc_samd20_sercom_usart_group SAM D20 USART driver
  *
- * This driver for the SAMD20 provides an interface to configure
+ * This driver for the SAM D20 provides an interface to configure
  * and use the SERCOM in its USART mode to transfer or receive
  * USART dataframes.
  *
@@ -169,7 +169,7 @@
  * the SERCOM module have four internal PADS where the RX pin can be placed at all
  * the PADS, and the TX and XCK pins have two predefined positions that can be changed.
  * The PADS can then be routed to an external GPIO pin using the normal pin
- * multiplexing scheme on the SAMD20.
+ * multiplexing scheme on the SAM D20.
  *
  * \section asfdoc_samd20_sercom_usart_special_considerations Special considerations
  * No special considerations
