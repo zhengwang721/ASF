@@ -242,7 +242,8 @@ static void _eeprom_emulator_update_page_mapping(void)
 
 	/* Use an invalid page number as the spare row until a valid one has been
 	 * found */
-	_eeprom_instance.spare_row = -1;
+	_eeprom_instance.spare_row =
+			EEPROM_PHYSICAL_ROW_NUMBER(EEPROM_MASTER_PAGE_NUMBER);
 
 	/* Scan through all physical rows, to find an erased row to use as the
 	 * spare */
@@ -581,7 +582,8 @@ enum status_code eeprom_emulator_init(void)
 	_eeprom_emulator_update_page_mapping();
 
 	/* Could not find spare row - abort as the memory appears to be corrupt */
-	if (_eeprom_instance.spare_row == -1) {
+	if (_eeprom_instance.spare_row ==
+			EEPROM_PHYSICAL_ROW_NUMBER(EEPROM_MASTER_PAGE_NUMBER)) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
@@ -916,14 +918,21 @@ enum status_code eeprom_emulator_read_buffer(
 enum status_code eeprom_emulator_flush_page_buffer(void)
 {
 	enum status_code err  = STATUS_OK;
-	uint8_t page_to_write = _eeprom_instance.cache.header.logical_page;
+	uint8_t page_to_write = _eeprom_instance.page_map[_eeprom_instance.cache.header.logical_page];
 
+	if (_eeprom_instance.cache_active == false) {
+	  return STATUS_OK;
+	}
+	
 	/* Perform the page write to commit the NVM page buffer to FLASH */
 	do {
 		err = nvm_execute_command(
 				NVM_COMMAND_WRITE_PAGE,
 				EEPROM_PHYSICAL_PAGE_ADDRESS(page_to_write), 0);
 	} while (err == STATUS_BUSY);
+	
+	barrier(); // Enforce ordering to prevent incorrect cache state
+	_eeprom_instance.cache_active = false;
 
 	return err;
 }
