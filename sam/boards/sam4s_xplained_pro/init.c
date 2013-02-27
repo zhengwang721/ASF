@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4S Xplained PRO board initialization
+ * \brief SAM4S Xplained Pro board initialization
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -41,6 +41,7 @@
  */
 
 #include <board.h>
+#include <gpio.h>
 #include <ioport.h>
 #include <wdt.h>
 
@@ -64,6 +65,72 @@ void board_init(void)
 
 	// Initialize SW0
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON_0_PIN, (BUTTON_0_ACTIVE ?
+				IOPORT_MODE_PULLDOWN : IOPORT_MODE_PULLUP));
+
+	// Initialize EXT3 LED0, LED1 & LED2, turned off
+	ioport_set_pin_level(IO1_LED1_PIN, !IO1_LED1_ACTIVE);
+	ioport_set_pin_dir(IO1_LED1_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(IO1_LED2_PIN, !IO1_LED2_ACTIVE);
+	ioport_set_pin_dir(IO1_LED2_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(IO1_LED3_PIN, !IO1_LED3_ACTIVE);
+	ioport_set_pin_dir(IO1_LED3_PIN, IOPORT_DIR_OUTPUT);
+
+#ifdef CONF_BOARD_TWI0
+	gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+
+	/* Configure SPI pins */
+#ifdef CONF_BOARD_SPI
+	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+	/**
+	 * For NPCS 1, 2, and 3, different PINs can be used to access the same NPCS line.
+	 * Depending on the application requirements, the default PIN may not be available.
+	 * Hence a different PIN should be selected using the CONF_BOARD_SPI_NPCS_GPIO and
+	 * CONF_BOARD_SPI_NPCS_FLAGS macros.
+	 */
+#ifdef CONF_BOARD_SPI_NPCS0
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS1
+#if defined(CONF_BOARD_SPI_NPCS1_GPIO) && defined(CONF_BOARD_SPI_NPCS1_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS1_GPIO, CONF_BOARD_SPI_NPCS1_FLAGS);
+#else
+	gpio_configure_pin(SPI_NPCS1_PA9_GPIO, SPI_NPCS1_PA9_FLAGS);
+#endif
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS2
+#if defined(CONF_BOARD_SPI_NPCS2_GPIO) && defined(CONF_BOARD_SPI_NPCS2_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS2_GPIO, CONF_BOARD_SPI_NPCS2_FLAGS);
+#else
+	gpio_configure_pin(SPI_NPCS2_PA10_GPIO, SPI_NPCS2_PA10_FLAGS);
+#endif
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS3
+#if defined(CONF_BOARD_SPI_NPCS3_GPIO) && defined(CONF_BOARD_SPI_NPCS3_FLAGS)
+	gpio_configure_pin(CONF_BOARD_SPI_NPCS3_GPIO, CONF_BOARD_SPI_NPCS3_FLAGS);
+#else
+	gpio_configure_pin(SPI_NPCS3_PA22_GPIO, SPI_NPCS3_PA22_FLAGS);
+#endif
+#endif
+#endif /* CONF_BOARD_SPI */
+
+#ifdef CONF_BOARD_OLED_UG_2832HSWEG04
+	gpio_configure_pin(UG_2832HSWEG04_DATA_CMD_GPIO, UG_2832HSWEG04_DATA_CMD_FLAGS);
+	gpio_configure_pin(UG_2832HSWEG04_RESET_GPIO, UG_2832HSWEG04_RESET_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SD_MMC_SPI
+	gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
+
   if ( BUTTON_0_ACTIVE ) {
 		ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLDOWN);
 	}

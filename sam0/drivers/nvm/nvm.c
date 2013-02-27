@@ -288,15 +288,21 @@ enum status_code nvm_write_buffer(
 
 	uint32_t nvm_address = ((uint32_t)destination_page * _nvm_dev.page_size) / 2;
 
+	/* NVM *must* be accessed as a series of 16-bit words, perform manual
+	 * copy to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		uint16_t data;
 
+		/* Copy first byte of the 16-bit chunk to the temporary buffer */
 		data = buffer[i];
 
+		/* If we are not at the end of a write request with an odd byte count,
+		 * store the next byte of data as well */
 		if (i < (length - 1)) {
 			data |= (buffer[i + 1] << 8);
 		}
 
+		/* Store next 16-bit chunk to the NVM memory space */
 		NVM_MEMORY[nvm_address++] = data;
 	}
 
@@ -353,11 +359,17 @@ enum status_code nvm_read_buffer(
 
 	uint32_t nvm_address = ((uint32_t)source_page * _nvm_dev.page_size) / 2;
 
+	/* NVM *must* be accessed as a series of 16-bit words, perform manual
+	 * copy to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
+		/* Fetch next 16-bit chunk from the NVM memory space */
 		uint16_t data = NVM_MEMORY[nvm_address++];
 
+		/* Copy first byte of the 16-bit chunk to the destination buffer */
 		buffer[i] = (data & 0xFF);
 
+		/* If we are not at the end of a read request with an odd byte count,
+		 * store the next byte of data as well */
 		if (i < (length - 1)) {
 			buffer[i + 1] = (data >> 8);
 		}

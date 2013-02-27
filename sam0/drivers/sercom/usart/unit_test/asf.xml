@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.drivers.sercom.usart.unit_test" caption="SERCOM USART Unit Test">
+		<info type="description" value="summary">
+		Unit test for the SERCOM USART interface module testing all functionality against hardware.
+		</info>
+		<build type="c-source" value="unit_test.c"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="API_CONVENTION" value="true"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="common.utils.unit_test"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<device-support value="samd20"/>
+	</module>
+</asf>

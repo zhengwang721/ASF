@@ -9,6 +9,7 @@
 			<device-support value="uc3a3"/>
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
+			<device-support value="sam4e"/>
 			<require idref="avr32.services.network.tcpip.lwip"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -21,6 +22,7 @@
 			<device-support value="uc3a3"/>
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
+			<device-support value="sam4e"/>
 			<require idref="thirdparty.lwip.140"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
