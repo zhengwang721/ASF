@@ -1,12 +1,21 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.applications.continuous_capture_without_external_sram" caption=" Continuous capture demonstration without external sram ">
+	<module type="application" id="sam.applications.continuous_capture_without_external_sram" caption="Continuous capture demonstration without external sram">
+		<!-- Summary description -->
 		<info type="description" value="summary">
-		This demonstration work as a camera by configuring microcontroller and ov7740 image sensor in order to continually 
-		take picture,decode it in internal sram and display it on LCD.
+			This demonstration works as a camera by configuring microcontroller and ov7740 image sensor in order to continually take picture using PDC, decode it in internal sram and display it on LCD.
 		</info>
-		<build type="c-source" value="continuous_capture_without_external_sram.c"/>
+
+		<!-- Keyword -->
+		<info type="keyword" value="technology">
+			<keyword value="Sensors"/>
+		</info>
+
+		<!-- Files -->
 		<build type="include-path" value="."/>
-		<device-support value="sam4s"/>
+		<build type="c-source" value="continuous_capture_without_external_sram.c"/>
+
+		<!-- Required modules -->
+		<require idref="board.sam4s_wpir_rd"/>
 		<require idref="sam.drivers.smc"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
@@ -18,5 +27,8 @@
 		<require idref="sam.components.display.aat31xx"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+
+		<!-- Device support -->
+		<device-support value="sam4s"/>
 	</module>
 </asf>

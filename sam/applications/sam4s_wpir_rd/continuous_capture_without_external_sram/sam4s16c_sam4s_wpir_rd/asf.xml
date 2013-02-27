@@ -1,23 +1,27 @@
 <asf xmlversion="1.0">
-	<project caption="continuous capture demo without external sram for SAM4S_WPIR_RD" id="sam.applications.continuous_capture_without_external_sram.sam4s16c_sam4s_wpir_rd">
-		<info type="description" value="summary">
-		This demonstration work as a camera by configuring sam4s and ov7740 image sensor in order to continually 
-		take picture,decode it in internal sram and display it on LCD.
-		</info>
+	<project id="sam.applications.continuous_capture_without_external_sram.sam4s16c_sam4s_wpir_rd" caption="Continuous capture demo without external sram for SAM4S-WPIR-RD">
+		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_ili9325.h"/>
 		<build type="header-file" value="conf_aat31xx.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+
+		<!-- Required modules -->
 		<require idref="sam.applications.continuous_capture_without_external_sram"/>
 		<require idref="board.sam4s_wpir_rd"/>
-		<config name="config.compiler.iarewarm.create_aux" value="no"/>
-		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+
+		<!-- Device support -->
+		<device-support value="atsam4s16c"/>
+
+		<!-- Generator options -->
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 	</project>
 </asf>
