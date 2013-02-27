@@ -186,7 +186,7 @@
  * The following Quick Start guides and application examples are available for this driver:
  * - \ref asfdoc_samd20_sercom_usart_basic_use_case
  *
- * \section asfdoc_samd20_sercom_usart_api_overview API overview
+ * \section asfdoc_samd20_sercom_usart_api_overview API Overview
  * @{
  */
 
@@ -486,7 +486,8 @@ static inline bool usart_is_syncing(const struct usart_module *const module)
  * - no parity
  * - 1 stop bit
  * - 9600 baud
- *   GCLK generator 0 as clock source
+ * - GCLK generator 0 as clock source
+ * - Default pin configuration
  *
  * The configuration struct will be updated with the default
  * configuration.

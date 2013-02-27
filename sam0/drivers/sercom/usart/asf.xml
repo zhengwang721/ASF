@@ -6,7 +6,6 @@
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.port"/>
-		<build type="doxygen-image-path" value="docimg"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="USART driver" default="polled">
@@ -23,6 +22,7 @@
 			<build type="header-file" subtype="example" value="quick_start/qs_usart_basic_use.h"/>
 					<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<require idref="sam0.drivers.sercom.usart.common"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<device-support value="samd20"/>
 		</module>
 		<module type="driver" id="sam0.drivers.sercom.usart#interrupt" caption=
@@ -41,6 +41,7 @@
 			<build type="define" name="USART_ASYNC" value=""/>
 			<build type="doxygen-entry-point" value="sam0_usart_group"/>
 			<build type="doxygen-entry-point" value="sam0_usart_async_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<require idref="sam0.drivers.sercom.usart.common"/>
 			<device-support value="samd20"/>
 		</module>
