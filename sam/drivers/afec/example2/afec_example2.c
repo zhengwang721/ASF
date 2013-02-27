@@ -204,8 +204,6 @@ static void set_afec_resolution(void)
  */
 static void afec_data_ready(void)
 {
-	uint32_t ul_value = 0;
-
 	if ((afec_get_interrupt_status(AFEC0) & AFE_ISR_DRDY) == AFE_ISR_DRDY) {
 		g_afec_sample_data.us_value = afec_get_latest_value(AFEC0);
 		g_afec_sample_data.is_done = true;
@@ -250,7 +248,7 @@ int main(void)
 
 	while (1) {
 		afec_start_software_conversion(AFEC0);
-		delay_ms(10);
+		delay_ms(1000);
 		
 		/* Check if the user enters a key. */
 		if (!uart_read(CONF_UART, &uc_key)) {
