@@ -143,7 +143,7 @@
  * clock is generated from the internal SERCOM baudrate generator, and the
  * frames are synchronized by using the frame start bits. Maximum transmission
  * speed is limited to the SERCOM GCLK divided by 16.
- * In asynchronous mode the interface only needs to lines to communicate:
+ * In asynchronous mode the interface only needs two lines to communicate:
  * - TX (Transmit pin)
  * - RX (Receive pin)
  *
@@ -371,7 +371,7 @@ struct usart_config {
 	 */
 	bool use_external_clock;
 	/** External clock frequency in synchronous mode.
-	 * Must be given if clock source (XCK) is set to external. */
+	 * This must be set if \c use_external_clock is true. */
 	uint32_t ext_clock_freq;
 	/** If true the USART will be kept running in Standby sleep mode */
 	bool run_in_standby;

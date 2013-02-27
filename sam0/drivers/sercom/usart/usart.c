@@ -420,14 +420,14 @@ enum status_code usart_read_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Transmit a buffer of \c length characters via USART
+ * \brief Transmit a buffer of \c length characters via the USART
  *
  * This blocking function will transmit a block of \c length characters
  * via the USART
  *
  * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
- *       ongoing operation running or not.
+ *       ongoing interrupt driven operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
  * \param[in]     tx_data  Pointer to data to transmit
@@ -504,14 +504,14 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
 }
 
 /**
- * \brief Receive a buffer of \c length characters via USART
+ * \brief Receive a buffer of \c length characters via the USART
  *
  * This blocking function will receive a block of \c length characters
  * via the USART.
  *
- * \note Using this function in combination with the asynchronous functions is
+ * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
+ *       ongoing interrupt driven operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
  * \param[out]    rx_data  Pointer to receive buffer
@@ -524,7 +524,7 @@ enum status_code usart_write_buffer_wait(struct usart_module *const module,
  * \retval     STATUS_ERR_TIMEOUT       If operation was not completed, due
  *                                      to USART module timing out
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to mismatch configuration mismatch
+ *                                      due to a configuration mismatch
  *                                      between USART and the sender.
  * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
  *                                      due to the baud rate being to low or the
