@@ -492,7 +492,7 @@ static inline bool usart_is_syncing(const struct usart_module *const module)
  * The configuration struct will be updated with the default
  * configuration.
  *
- * \param[in/out] config Pointer to configuration struct
+ * \param[in,out] config Pointer to configuration struct
  *
  */
 static inline void usart_get_config_defaults(struct usart_config *const config)
@@ -839,7 +839,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  * 
  * \section asfdoc_samd20_sercom_usart_mux_setting_c MUX Setting C
  *
- * Enum: \ref USART_RX_1_TX_0_XCK_2
+ * Enum: \ref USART_RX_1_TX_0_XCK_1
  *
  * <table>
  *   <tr>
@@ -858,13 +858,13 @@ static inline void usart_disable_transceiver(const struct usart_module
  *      <th> PAD1 </th>
  *      <td> x </td>
  *      <td>  </td>
- *      <td>  </td>
+ *      <td> x </td>
  *   </tr>
  *   <tr>
  *      <th> PAD2 </th>
  *      <td>  </td>
  *      <td>  </td>
- *      <td> x </td>
+ *      <td>  </td>
  *   </tr>
  *   <tr>
  *      <th> PAD3 </th>
@@ -876,7 +876,7 @@ static inline void usart_disable_transceiver(const struct usart_module
  * 
  * \section asfdoc_samd20_sercom_usart_mux_setting_d MUX Setting D
  *
- * Enum: \ref SART_RX_1_TX_2_XCK_3
+ * Enum: \ref USART_RX_1_TX_2_XCK_3
  *
  * <table>
  *   <tr>
