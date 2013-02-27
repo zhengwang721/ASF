@@ -194,7 +194,8 @@ enum status_code nvm_execute_command(
 	}
 
 	switch (command) {
-		/* Aux Row commands (row address) */
+
+		/* Commands requiring address (protected) */
 		case NVM_COMMAND_ERASE_AUX_ROW:
 		case NVM_COMMAND_WRITE_AUX_ROW:
 
@@ -207,6 +208,7 @@ enum status_code nvm_execute_command(
 			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
 
+		/* Commands requiring address (unprotected) */
 		case NVM_COMMAND_ERASE_ROW:
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
