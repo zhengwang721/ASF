@@ -179,7 +179,7 @@ DRESULT disk_read(BYTE drv, BYTE *buff, DWORD sector, BYTE count)
 	/* Read the data */
 	for (i = 0; i < count; i++) {
 		if (memory_2_ram(drv, sector + uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i,
+				 i,
 				buff +
 				uc_sector_size *
 				SECTOR_SIZE_DEFAULT * i) !=
@@ -229,10 +229,10 @@ DRESULT disk_write(BYTE drv, BYTE const *buff, DWORD sector, BYTE count)
 		return RES_PARERR;
 	}
 
-	/* Read the data */
+	/* Write the data */
 	for (i = 0; i < count; i++) {
 		if (ram_2_memory(drv, sector + uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i,
+				i,
 				buff +
 				uc_sector_size *
 				SECTOR_SIZE_DEFAULT * i) !=

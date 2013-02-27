@@ -3,7 +3,7 @@
  *
  * \brief SAM HSMCI driver
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,7 +94,7 @@
 #  define hsmci_debug(...)
 #endif
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4E)
   // PDC is used for transferts
 #elif (SAM3U || SAM3XA)
   // DMA is used for transferts
