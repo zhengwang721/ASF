@@ -50,23 +50,44 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_group SAMD20 I2C Driver (I2C)
+ * \defgroup asfdoc_sam0_i2c_group I2C Common
  *
- * Driver for the SAMD20 architecture devices. This driver provides an
- * interface for configuration and management of the SERCOM I2C module in
- * master mode, as well as data transfer via I2C.
- * This driver encompasses the following module within the SAMD20 devices:
- * - \b I2C (Inter-Integrated Circuit)
- *  - I2C Master
- *   - \ref sam0_i2c_master_group
- *   - \ref sam0_i2c_master_group_async
- *  - I2C Slave
- *    - \ref sam0_i2c_slave_group
- *    - \ref sam0_i2c_slave_group_async
+ * \section asfdoc_sam0_i2c_introduction Introduction
  *
- * \section module_introduction Introduction
+ * This is a driver for the SAM D20 devices. This driver provides an
+ * interface for configuration and management of the SERCOM I2C module,
+ * as well as data transfer via I2C.
+ * The following peripherals are used by this module:
+ * - SERCOM
+ *   - I2C Master Mode:
+ *     - \ref asfdoc_sam0_i2c_master_group
+ *     - \ref asfdoc_sam0_i2c_master_interrupt_group
+ *   - I2C Slave Mode:
+ *     - \ref asfdoc_sam0_i2c_slave_interrupt_group
+ *   
  *
- * \subsection module_overview I2C Overview
+ * The outline of this documentation is as follows:
+ * - \ref asfdoc_sam0_i2c_prerequisites
+ * - \ref asfdoc_sam0_i2c_overview
+ * - \ref asfdoc_sam0_i2c_special_considerations
+ * - \ref asfdoc_sam0_i2c_extra
+ * - \ref asfdoc_sam0_i2c_examples
+ * - \ref asfdoc_sam0_i2c_api_overview
+ *
+ * \section asfdoc_sam0_i2c_prerequisites Prerequisites
+ * There are no prerequisites.
+ *
+ * \section asfdoc_sam0_i2c_overview Module Overview
+ * The outline of this section is as follows:
+ * - \ref asfdoc_sam0_i2c_functional_desc 
+ * - \ref asfdoc_sam0_i2c_bus_topology 
+ * - \ref asfdoc_sam0_i2c_transactions
+ * - \ref asfdoc_sam0_i2c_multi_master
+ * - \ref asfdoc_sam0_i2c_bus_states
+ * - \ref asfdoc_sam0_i2c_timeout
+ * - \ref asfdoc_sam0_i2c_sleep_modes
+ *
+ * \subsection asfdoc_sam0_i2c_functional_desc Functional Description
  * The I2C provides a simple two-wire bidirectional bus consisting of a
  * wired-AND type serial clock line (SCA) and a wired-AND type serial data line
  * (SDA).
@@ -81,7 +102,7 @@ extern "C" {
  * device can contain both master and slave logic, and can emulate multiple slave
  * devices by responding to more than one address.
  *
- * \subsection bus_topology Bus Topology
+ * \subsection asfdoc_sam0_i2c_bus_topology Bus Topology
  * The I2C bus topology is illustrated in the figure below. The pullup
  * resistors (Rs) will provide a high level on the bus lines when none of the
  * I2C devices are driving the bus. These are optional, and can be replaced
@@ -196,7 +217,7 @@ extern "C" {
  * }
  * \enddot
  *
- * \subsection Transactions
+ * \subsection asfdoc_sam0_i2c_transactions Transactions
  * There are two fundamental transaction methods implemented in the driver:
  * \li Master Write
  *   - The master transmits data packets to the slave after addressing it.
@@ -217,17 +238,17 @@ extern "C" {
  * cannot receive any more data and issue a \b Stop condition to end the
  * transaction.
  *
- * \subsubsection address_packets Address Packets
+ * \subsubsection asfdoc_sam0_i2c_address_packets Address Packets
  * The slave address consists of seven bits. The 8th bit in the transfer
  * determines the data direction (read or write). An address packet always
  * succeeds a \b Start or \b Repeated \b Start condition. The 8th bit is handled
  * in the driver, and the user will only have to provide the 7 bit address.
  *
- * \subsubsection data_packets Data Packets
+ * \subsubsection asfdoc_sam0_i2c_data_packets Data Packets
  * 9 bits long, consists of one data byte and an acknowledgment bit.
  * Data packets succeed either an address packet or another data packet.
  *
- * \subsubsection trans_examples Transaction Examples
+ * \subsubsection asfdoc_sam0_i2c_trans_examples Transaction Examples
  * The gray bits in the following examples are sent from master to slave, and
  * the white bits are sent from slave to master.
  *
@@ -335,7 +356,7 @@ extern "C" {
  *   </tr>
  * </table>
  *
- * \subsubsection i2c_packet_timeout Packet Timeout
+ * \subsubsection asfdoc_sam0_i2c_packet_timeout Packet Timeout
  * When sending an I2C packet, there is no way of being sure that someone will acknowledge your
  * packet. To avoid stalling the device forever while waiting for an acknowledge, a user
  * selectable timeout is provided in the configuration structure that lets the driver exit a
@@ -345,7 +366,7 @@ extern "C" {
  * The time before the timeout occurs, can be found by same formula as that provided for \ref timeout
  * "unknown bus state" timeout.
  *
- * \subsection multi_master Multi Master
+ * \subsection asfdoc_sam0_i2c_multi_master Multi Master
  *
  * In a multi master environment, arbitration of the bus is important, as only
  * one master can own the bus at any point.
@@ -376,7 +397,7 @@ extern "C" {
  * principles used for clock stretching is necessary.
  *
  *
- * \subsection bus_states Bus States
+ * \subsection asfdoc_sam0_i2c_bus_states Bus States
  * As the I2C bus is limited to one transaction at the time, a master that
  * wants to perform a bus transaction must wait until the bus is free.
  * Because of this, it is necessary for all masters in a multi-master system to
@@ -416,13 +437,13 @@ extern "C" {
  * }
  * \enddot
  *
- * \subsection timeout Bus Timing
+ * \subsection asfdoc_sam0_i2c_timeout Bus Timing
  * Inactive bus timeout and sda hold time is configurable in the driver.
  *
- * \subsubsection inactive_bus Unknown Bus State Timeout
+ * \subsubsection asfdoc_sam0_i2c_inactive_bus Unknown Bus State Timeout
  * When a master is enabled or connected to the bus, the bus state will be
  * unknown until either a given timeout or a stop command has occurred. The
- * timeout is configurable in the device config struct i2c_master_conf and can
+ * timeout is configurable in the i2c_master_config struct and can
  * roughly be calculated with:
  * \f[
  *    t_{timeout} = \frac{VALUE}{(5-7)*f_{GCLK}}
@@ -441,7 +462,7 @@ extern "C" {
  * The SDA hold time is also available for the master driver, but will not be a
  * necessity.
  *
- * \subsection sleep_modes Operation in Sleep Modes
+ * \subsection asfdoc_sam0_i2c_sleep_modes Operation in Sleep Modes
  * The I2C module can operate in all sleep modes by setting the run_in_standby
  * option in the \ref i2c_master_conf or \ref i2c_slave_conf struct. The operation in Slave and Master Mode
  * is shown in the table below.
@@ -464,48 +485,41 @@ extern "C" {
  *   </tr>
  * </table>
  *
- * \section dependencies Dependencies
- * The I2C driver has the following dependencies:
- * \li \b SERCOM
- * \li \b SYSTEM
- * \li \b NVIC when used in asynchronous mode.
  *
- * \section special_cons Special Considerations
- * \subsection i2c_common_async Asynchronous Operation
- * When asynchronous operation is used, the functions will be available under the "async" namespace,
- * i.e. i2c_master_async_ and i2c_slave_async_.
+ * \section asfdoc_sam0_i2c_special_considerations Special Considerations
  *
- * While asynchronous operation is in progress, subsequent calls to a write or read operation
- * will return the STATUS_BUSY flag, indicating that only one operation is allowed at any given
- * time.
+ * \subsection asfdoc_sam0_i2c_common_interrupt Interrupt-Driven Operation
+ * While an interrupt-driven operation is in progress, subsequent calls to a
+ * write or read operation will return the STATUS_BUSY flag, indicating that
+ * only one operation is allowed at any given time.
  *
- * To check if another transmission can be initiated, the user can either call another transfer operation,
- * or use the \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions depending on mode.
+ * To check if another transmission can be initiated, the user can either call
+ * another transfer operation, or use the
+ * \ref i2c_master_get_job_status/\ref i2c_slave_get_job_status functions depending on mode.
  *
- * If the user would like to get callback from operations while using the asynchronous driver, then
- * the callback would have to be both registered and enabled using the "register_callback" and
- * "enable_callback" functions.
+ * If the user would like to get callback from operations while using the
+ * interrupt-driven driver, the callback must be registered and then enabled
+ * using the "register_callback" and "enable_callback" functions.
  *
- * API for the asynchronous drivers can be found here:
- * - \ref sam0_i2c_master_group_async
- * - \ref sam0_i2c_slave_group_async
+ * API for the interrupt-driven drivers can be found here:
+ * - \ref asfdoc_sam0_i2c_master_interrupt_group
+ * - \ref asfdoc_sam0_i2c_slave_interrupt_group
  *
- * \section extra_info Extra Information
- * For extra information see \ref i2c_extra_info.
+ * \section asfdoc_sam0_i2c_extra Extra Information
+ * For extra information see \ref asfdoc_sam0_i2c_extra_info_page.
  *
- * \section module_examples Examples
+ * \section asfdoc_sam0_i2c_examples Examples
  * - \ref quickstart
  *
- * \section i2c_api_overview API Overview
+ * \section asfdoc_sam0_i2c_api_overview API Overview
  * @{
  *
  * I2C Master
- *  - \ref sam0_i2c_master_group
- *  - \ref sam0_i2c_master_group_async
+ *  - \ref asfdoc_sam0_i2c_master_api_overview
+ *  - \ref asfdoc_sam0_i2c_master_interrupt_api_overview
  *
  * I2C Slave
- *  - \ref sam0_i2c_slave_group
- *  - \ref sam0_i2c_slave_group_async
+ *  - \ref asfdoc_sam0_i2c_slave_interrupt_api_overview
  */
 
 /**
@@ -531,9 +545,15 @@ struct i2c_packet {
 #endif
 
 /**
- * \page i2c_extra_info Extra Information
+ * \page asfdoc_sam0_i2c_extra_info_page Extra Information
  *
- * \section acronyms Acronyms
+ * \section asfdoc_sam0_i2c_dependencies Dependencies
+ * The I2C driver has the following dependencies:
+ * \li \b SERCOM
+ * \li \b SYSTEM
+ * \li \b NVIC when used in interrupt-driven mode.
+ *
+ * \section asfdoc_sam0_i2c_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -552,8 +572,18 @@ struct i2c_packet {
  *	</tr>
   * </table>
  *
- * \section workarounds Workarounds implemented by driver
- * No workarounds in driver.
+ * \section asfdoc_sam0_i2c_workarounds Workarounds implemented by driver
+ * Master:
+ * - A bug in hardware makes the master go straigth from IDLE to BUSY bus state.
+ * As a workaround the inactive timeout is enabled, which will force the bus state
+ * back to IDLE. If a address is written while the bus state was in BUSY, the
+ * hardware will be able to generate a start condition and enter OWNER
+ * before the hardware bug makes it go into the internal BUSY state.
+ * As result of the timeout, there will be generated at BUSERR, thus the
+ * workaround ignores all these errors.
+ *
+ * Slave:
+ * - A bug in hardware makes the PIF (Stop condition) interrupt not 
  *
  * \section module_history Module History
  * Below is an overview of the module history, detailing enhancements and fixes

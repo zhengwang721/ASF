@@ -59,20 +59,13 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup sam0_i2c_slave_group I2C Slave Asynchronous
+ * \addtogroup asfdoc_sam0_i2c_slave_interrupt_group I2C Slave Interrupt
  * @{
  *
- * This is an overview of the API for the asynchronous I2C slave
+ * This is an overview of the API for the I2C slave interrupt
  * driver.
  *
- * The user will still have to use the initialization from the basic use part
- * of the driver, which can be found \ref sam0_i2c_slave_group "here". When the
- * asynchronous driver is included in the project, an asynchronous part in the basic driver
- * will be unlocked. This will allow the user to implement the driver in the same way as
- * for the basic polled driver, but will additionally get the asynchronous functions
- * documented below.
- *
- * \section i2c_slave_async_api API Overview
+ * \section asfdoc_sam0_i2c_slave_interrupt_api_overview I2C Slave Interrupt API Overview
  *
  */
 
@@ -172,7 +165,7 @@ struct i2c_slave_module {
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
 	volatile uint8_t *buffer;
-	/** Save direction of async request. 1 = read, 0 = write. */
+	/** Save direction of request from master. 1 = read, 0 = write. */
 	volatile uint8_t transfer_direction;
 	/** Status for status read back in error callback. */
 	volatile enum status_code status;
@@ -436,7 +429,7 @@ static inline void i2c_slave_disable_callback(
 /** @} */
 
 /**
-* \name Read and Write, Asynchronously
+* \name Read and Write, Interrupt-Driven
 * @{
 */
 
@@ -468,11 +461,10 @@ static inline void i2c_slave_abort_job(
 }
 
 /**
- * \brief Get last error from asynchronous operation.
+ * \brief Get last error from operation.
  *
- * Will return the last error that occurred in the last asynchronous transfer
- * operation. Most errors will not be set until a new start condition has been
- * detected on the bus.
+ * Will return the last error that occurred in the last transfer
+ * operation.
  * The status will be cleared on next operation.
  *
  * \param[in,out] module Pointer to device instance structure

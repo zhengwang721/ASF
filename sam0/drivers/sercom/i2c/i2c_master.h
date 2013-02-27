@@ -61,12 +61,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup sam0_i2c_master_group I2C Master Basic
+ * \defgroup asfdoc_sam0_i2c_master_group I2C Master Basic
  *
  * This is the API overview for the basic use of I2C master. For more
- * advance use with the asynchronous driver, see \subpage sam0_i2c_master_group_async.
+ * advance use with the asynchronous driver, see \subpage asfdoc_sam0_i2c_master_group_async.
  *
- * \section i2c_master_api_overview API Overview
+ * \section asfdoc_sam0_i2c_master_api_overview I2C Master API Overview
  * @{
  *
  */
@@ -167,7 +167,7 @@ struct i2c_master_module {
 	/** Hardware instance initialized for the struct. */
 	Sercom *hw;
 	/** Unknown bus state timeout. */
-	uint16_t unkown_bus_state_timeout;
+	uint16_t unknown_bus_state_timeout;
 	/* Buffer write timeout value. */
 	uint16_t buffer_timeout;
 	/* Set to send repeated start (instead of stop) after ending read/write */
@@ -210,7 +210,7 @@ struct i2c_master_config {
 	/** Bus hold time after start signal on data line. */
 	enum i2c_master_start_hold_time start_hold_time;
 	/** Unknown bus state timeout. */
-	uint16_t unkown_bus_state_timeout;
+	uint16_t unknown_bus_state_timeout;
 	/** Timeout for packet write to wait for slave. */
 	uint16_t buffer_timeout;
 	/** Set to keep module active in sleep modes. */
@@ -298,7 +298,7 @@ static inline void i2c_master_get_config_defaults(
 	config->run_in_standby = false;
 	config->start_hold_time = I2C_MASTER_START_HOLD_TIME_300NS_600NS;
 	config->buffer_timeout = 65535;
-	config->unkown_bus_state_timeout = 65535;
+	config->unknown_bus_state_timeout = 65535;
 	config->pinmux_pad0 = PINMUX_DEFAULT;
 	config->pinmux_pad1 = PINMUX_DEFAULT;
 }
@@ -340,7 +340,7 @@ static inline void i2c_master_enable(
 	/* Start timeout if bus state is unknown. */
 	while (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(1))) {
 		timeout_counter++;
-		if(timeout_counter >= (module->unkown_bus_state_timeout)) {
+		if(timeout_counter >= (module->unknown_bus_state_timeout)) {
 			/* Timeout, force bus state to idle. */
 			i2c_module->STATUS.reg = SERCOM_I2CM_STATUS_BUSSTATE(1);
 			/* Workaround #1 */
