@@ -4,7 +4,6 @@
 			<info type="description" value="summary">
 			Basic web server and basic TFTP server applicaitons with DHCP enabled through the lwIP TCP/IP stack and FreeRTOS of SAM port.
 			</info>
-			<build type="header-file" value="conf_lwip_threads.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>
 			<build type="header-file" value="lwipopts.h"/>
 			<build type="c-source" value="main.c"/>
@@ -39,7 +38,6 @@
 			<info type="description" value="summary">
 			Basic web server and basic TFTP server applicaitons with DHCP enabled through the lwIP TCP/IP stack and FreeRTOS of SAM port.
 			</info>
-			<build type="header-file" value="conf_lwip_threads.h"/>
 			<build type="header-file" value="FreeRTOSConfig.h"/>
 			<build type="header-file" value="lwipopts.h"/>
 			<build type="c-source" value="main.c"/>

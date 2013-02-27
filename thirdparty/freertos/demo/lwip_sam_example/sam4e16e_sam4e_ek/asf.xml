@@ -6,6 +6,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_eth.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_lwip_threads.h"/>
 		<require idref="common.services.freertos.sam_lwip_dhcp_example"/>
 		<config name="config.board.sam4e_ek.init" value="no"/>
 		<require idref="board.sam4e_ek"/>
@@ -18,6 +19,8 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x8000"/>
 		<config name="config.compiler.iarewarm.stack_size" value="0x4000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>

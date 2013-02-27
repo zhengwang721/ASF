@@ -283,6 +283,8 @@
 #define PIN_LED_3_TYPE   PIO_OUTPUT_1
 #define PIN_LED_3_ATTR   PIO_DEFAULT
 
+#define LED3_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 #define BOARD_NUM_OF_LED 4
 
 /* ------------------------------------------------------------------------ */

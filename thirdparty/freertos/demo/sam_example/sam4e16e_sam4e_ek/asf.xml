@@ -12,6 +12,8 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x1000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
 		<generator value="doxygen"/>
