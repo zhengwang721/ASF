@@ -363,7 +363,7 @@ struct usart_config {
 	/** USART baud rate */
 	uint32_t baudrate;
 
-	/** USART Clock Polarity
+	/** USART Clock Polarity.
 	 * If true, data changes on falling XCK edge and
 	 * is sampled at rising edge
 	 * If false, data changes on rising XCK edge and
@@ -376,23 +376,20 @@ struct usart_config {
 	 * In ASYNC mode the XCK will be the input to the USART hardware module.
 	 */
 	bool use_external_clock;
-
 	/** External clock frequency in synchronous mode.
 	 * Must be given if clock source (XCK) is set to external. */
 	uint32_t ext_clock_freq;
-	/** Generator source for the clock used by USART */
-	/* enum gclk_generator generator_source; */
 	/** If true the clock used by USART will run in standby mode */
 	bool run_in_standby;
 	/** GCLK generator source */
 	enum gclk_generator generator_source;
 	/** PAD0 Pinout */
 	uint32_t pinout_pad0;
-	/** PAD0 Pinout */
+	/** PAD1 Pinout */
 	uint32_t pinout_pad1;
-	/** PAD0 Pinout */
+	/** PAD2 Pinout */
 	uint32_t pinout_pad2;
-	/** PAD0 Pinout */
+	/** PAD3 Pinout */
 	uint32_t pinout_pad3;
 };
 
@@ -457,6 +454,15 @@ static inline void _usart_wait_for_sync(const struct usart_module
 
 #endif
 
+/**
+ * \brief Check if peripheral is busy syncing registers across clock domains
+ *
+ * This function will return the status of the sync of the peripheral. If
+ * doing a non-blocking implementation this function can be used to check
+ * the sync state and hold of any new actions until sync is complete.
+ * If this functions is not run; the functions will block until the sync
+ * has completed.
+ */
 static inline bool usart_is_syncing(const struct usart_module *const module)
 {
 	/* Sanity check arguments */
@@ -480,6 +486,7 @@ static inline bool usart_is_syncing(const struct usart_module *const module)
  * - no parity
  * - 1 stop bit
  * - 9600 baud
+ *   GCLK generator 0 as clock source
  *
  * The configuration struct will be updated with the default
  * configuration.

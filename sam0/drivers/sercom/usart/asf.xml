@@ -6,6 +6,7 @@
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.port"/>
+		<build type="doxygen-image-path" value="docimg"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 	<select-by-config id="sam0.drivers.sercom.usart" name="sam0.drivers.sercom.usart" caption="USART driver" default="polled">
