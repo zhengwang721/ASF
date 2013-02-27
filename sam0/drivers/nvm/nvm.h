@@ -578,7 +578,7 @@ enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode when the device exits sleep mode. */
 	NVM_AUTO_WAKE_MODE_WAKEUPINSTANT    = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_AUTO_WAKE_MODE_ALWAYS_AWAKE     = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
 };
 
 /**
