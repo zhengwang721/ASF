@@ -203,7 +203,7 @@ enum status_code nvm_execute_command(
 			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
-			
+
 			/* Set address and command */
 			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
@@ -212,11 +212,11 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
-		  
+
 			/* Set address and command */
 			nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[address / 4];
 			break;
-			
+
 		/* Commands not requiring address */
 		case NVM_COMMAND_PAGE_BUFFER_CLEAR:
 		case NVM_COMMAND_SET_SECURITY_BIT:
@@ -288,15 +288,21 @@ enum status_code nvm_write_buffer(
 
 	uint32_t nvm_address = ((uint32_t)destination_page * _nvm_dev.page_size) / 2;
 
+	/* NVM *must* be accessed as a series of 16-bit words, perform manual
+	 * copy to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		uint16_t data;
 
+		/* Copy first byte of the 16-bit chunk to the temporary buffer */
 		data = buffer[i];
 
+		/* If we are not at the end of a write request with an odd byte count,
+		 * store the next byte of data as well */
 		if (i < (length - 1)) {
 			data |= (buffer[i + 1] << 8);
 		}
 
+		/* Store next 16-bit chunk to the NVM memory space */
 		NVM_MEMORY[nvm_address++] = data;
 	}
 
@@ -353,11 +359,17 @@ enum status_code nvm_read_buffer(
 
 	uint32_t nvm_address = ((uint32_t)source_page * _nvm_dev.page_size) / 2;
 
+	/* NVM *must* be accessed as a series of 16-bit words, perform manual
+	 * copy to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
+		/* Fetch next 16-bit chunk from the NVM memory space */
 		uint16_t data = NVM_MEMORY[nvm_address++];
 
+		/* Copy first byte of the 16-bit chunk to the destination buffer */
 		buffer[i] = (data & 0xFF);
 
+		/* If we are not at the end of a read request with an odd byte count,
+		 * store the next byte of data as well */
 		if (i < (length - 1)) {
 			buffer[i + 1] = (data >> 8);
 		}
