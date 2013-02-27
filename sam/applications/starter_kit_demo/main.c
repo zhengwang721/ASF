@@ -301,7 +301,7 @@ static void display_sd_info(void)
 	uint8_t card_check;
 	uint8_t sd_card_type;
 	uint32_t sd_card_size;
-	char size[10];
+	char size[64];
 
 	// Is SD card present?
 	if (gpio_pin_is_low(SD_MMC_0_CD_GPIO) == false)
@@ -474,7 +474,7 @@ static void ssd1306_draw_graph(uint8_t col, uint8_t page, uint8_t width, uint8_t
 }
 
 /**
- * \brief Clear one character at the cursor current position on the OLED 
+ * \brief Clear one character at the cursor current position on the OLED
  * screen.
  */
 static void ssd1306_clear_char(void)
@@ -609,7 +609,7 @@ int main(void)
 			ssd1306_write_text(" ");
 			// Avoid character overlapping.
 			if (temp < 10)
-				ssd1306_clear_char();		
+				ssd1306_clear_char();
 			ssd1306_write_text(value_disp);
 			// Display degree symbol.
 			ssd1306_write_data(0x06);
