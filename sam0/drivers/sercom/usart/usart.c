@@ -142,8 +142,7 @@ enum status_code _usart_set_config(struct usart_module *const module,
  * \brief Initializes the device
  *
  * Initializes the USART device based on the setting specified in the
- * configuration struct. This will leave the device in an enabled state
- * after initialization.
+ * configuration struct.
  *
  * \param[out] module Pointer to USART device
  * \param[in]  hw   Pointer to USART hardware instance
@@ -152,20 +151,19 @@ enum status_code _usart_set_config(struct usart_module *const module,
  * \return Status of the initialization
  *
  * \retval STATUS_OK                       The initialization was successful
- * \retval STATUS_BUSY                 The USART module is occupied with
- *                                         resetting itself
+ * \retval STATUS_BUSY                     The USART module is busy
+ *                                         resetting
  * \retval STATUS_ERR_DENIED               The USART have not been disabled in
  *                                         advance of initialization
  * \retval STATUS_ERR_INVALID_ARG          The configuration struct contains
- *                                         invalid configuration for the
- * sample_mode
+ *                                         invalid configuration
  * \retval STATUS_ERR_ALREADY_INITIALIZED  The SERCOM instance has already been
  *                                         initialized with different clock
- * configuration
+ *                                         configuration
  * \retval STATUS_ERR_BAUD_UNAVAILABLE     The BAUD rate given by the
- * configuration
- *                                         struct due to sample_mode or clock
- * frequency
+ *                                         configuration
+ *                                         struct cannot be reached with
+ *                                         the current clock configuration
  */
 enum status_code usart_init(struct usart_module *const module,
 		Sercom *const hw, const struct usart_config *const config)
@@ -290,7 +288,7 @@ enum status_code usart_init(struct usart_module *const module,
 /**
  * \brief Transmit a character via the USART
  *
- * This non-blocking function will receive a character via the
+ * This non-blocking function will transmit a single character via the
  * USART.
  *
  * param[in]   module Pointer to the software instance struct
@@ -351,7 +349,7 @@ enum status_code usart_write_wait(struct usart_module *const module,
  * \retval     STATUS_BUSY          If the operation was not completed,
  *                                      due to the USART module being busy.
  * \retval     STATUS_ERR_BAD_FORMAT    If the operation was not completed,
- *                                      due to mismatch configuration mismatch
+ *                                      due to configuration mismatch
  *                                      between USART and the sender.
  * \retval     STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
  *                                      due to the baud rate being to low or the
@@ -427,9 +425,9 @@ enum status_code usart_read_wait(struct usart_module *const module,
  * This blocking function will transmit a block of \c length characters
  * via the USART
  *
- * \note Using this function in combination with the asynchronous functions is
+ * \note Using this function in combination with the interrupt (_job) functions is
  *       not recommended as it has no functionality to check if there is an
- *       ongoing asynchronous operation running or not.
+ *       ongoing operation running or not.
  *
  * \param[in]     module Pointer to USART software instance struct
  * \param[out]    tx_data  Pointer to data to transmit
