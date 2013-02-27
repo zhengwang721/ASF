@@ -255,7 +255,6 @@ static void get_num_files_on_sd(void)
 	FRESULT res;
 	FILINFO fno;
 	DIR dir;
-	int32_t i;
 	char *pc_fn;
 	char *path = "0:";
 #if _USE_LFN
@@ -270,7 +269,6 @@ static void get_num_files_on_sd(void)
 	res = f_opendir(&dir, path);
 	if (res == FR_OK)
 	{
-		i = strlen(path);
 		for (;;)
 		{
 			res = f_readdir(&dir, &fno);
@@ -292,8 +290,6 @@ static void get_num_files_on_sd(void)
 			sd_num_files += 1;
 		}
 	}
-
-	return res;
 }
 
 /**
@@ -441,8 +437,6 @@ static void display_sd_files(void)
 			pos += 1;
 		}
 	}
-
-	return res;
 }
 
 /**
@@ -455,11 +449,11 @@ static void display_sd_files(void)
  */
 static void ssd1306_draw_graph(uint8_t col, uint8_t page, uint8_t width, uint8_t height, uint8_t *tab)
 {
-	volatile register uint8_t page_start;
-	volatile register uint8_t i, j, k, s;
+	uint8_t page_start;
+	uint8_t i, j, k, s;
 	uint8_t scale;
 
-	for (i = 0; i < width; ++i) {
+	for (i = col; i < width; ++i) {
 		for (page_start = page; page_start <= height; ++page_start) {
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(page_start));
 			ssd1306_set_column_address(i);
@@ -609,7 +603,7 @@ int main(void)
 		}
 		else if (app_mode == 1)
 		{
-			sprintf(value_disp, "%lu", 100 - (adc_value * 100 / 4096));
+			sprintf(value_disp, "%lu", (100 - (adc_value * 100 / 4096)));
 			ssd1306_set_column_address(98);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
 			ssd1306_write_text(" ");
