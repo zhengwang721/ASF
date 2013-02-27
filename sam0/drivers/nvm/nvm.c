@@ -58,7 +58,7 @@ struct _nvm_module {
 	uint16_t number_of_pages;
 	/** If \c false, a page write command will be issued automatically when the
 	 *  page buffer is full. */
-	bool man_page_write;
+	bool manual_page_write;
 };
 
 /**
@@ -122,9 +122,9 @@ enum status_code nvm_set_config(
 			(config->wait_states       << NVMCTRL_CTRLB_RWS_Pos);
 
 	/* Initialize the internal device struct */
-	_nvm_dev.page_size       = (8 << nvm_module->PARAM.bit.PSZ);
-	_nvm_dev.number_of_pages = nvm_module->PARAM.bit.NVMP;
-	_nvm_dev.man_page_write  = config->manual_page_write;
+	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
+	_nvm_dev.number_of_pages   = nvm_module->PARAM.bit.NVMP;
+	_nvm_dev.manual_page_write = config->manual_page_write;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
