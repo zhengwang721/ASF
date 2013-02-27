@@ -713,6 +713,8 @@ enum status_code eeprom_emulator_read_page(
 		const uint8_t logical_page,
 		uint8_t *const data)
 {
+	enum status_code error_code = STATUS_OK;
+
 	/* Ensure the emulated EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
 		return STATUS_ERR_NOT_INITALIZATED;
@@ -733,15 +735,20 @@ enum status_code eeprom_emulator_read_page(
 	if ((_eeprom_instance.cache_active == true) &&
 		 (_eeprom_instance.cache.header.logical_page == logical_page)) {
 		/* Copy the potentially newer cached data into the user buffer */
-		memcpy(data,
-				_eeprom_instance.cache.data,
-				EEPROM_PAGE_SIZE);
+		memcpy(data, _eeprom_instance.cache.data, EEPROM_PAGE_SIZE);
 	} else {
-		/* Copy the data from non-volatile memory into the user buffer */
-		nvm_read_buffer(
-				_eeprom_instance.page_map[logical_page],
-				(uint8_t*)data,
-				EEPROM_PAGE_SIZE);
+		struct _eeprom_page temp;
+
+		do {
+			/* Copy the data from non-volatile memory into the temporary buffer */
+			error_code = nvm_read_buffer(
+					EEPROM_PHYSICAL_PAGE_NUMBER(_eeprom_instance.page_map[logical_page]),
+					(uint8_t*)&temp,
+					NVMCTRL_PAGE_SIZE);
+
+			/* Copy the data portion of the read page to the user's buffer */
+			memcpy(data, temp.data, EEPROM_PAGE_SIZE);
+		} while (error_code == STATUS_BUSY);
 	}
 
 	return STATUS_OK;
