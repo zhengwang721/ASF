@@ -284,13 +284,21 @@ enum status_code nvm_write_buffer(
 		return STATUS_BUSY;
 	}
 
+	/* Erase the page buffer before buffering new data */
+	nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
+
+	/* Check if the module is busy */
+	while (!nvm_is_ready()) {
+		/* Force-wait for the buffer clear to complete */
+	}
+
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
 
 	uint32_t nvm_address = ((uint32_t)destination_page * _nvm_dev.page_size) / 2;
 
-	/* NVM *must* be accessed as a series of 16-bit words, perform manual
-	 * copy to ensure alignment */
+	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
+	 * to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		uint16_t data;
 
@@ -360,8 +368,8 @@ enum status_code nvm_read_buffer(
 
 	uint32_t nvm_address = ((uint32_t)source_page * _nvm_dev.page_size) / 2;
 
-	/* NVM *must* be accessed as a series of 16-bit words, perform manual
-	 * copy to ensure alignment */
+	/* NVM _must_ be accessed as a series of 16-bit words, perform manual copy
+	 * to ensure alignment */
 	for (uint16_t i = 0; i < length; i += 2) {
 		/* Fetch next 16-bit chunk from the NVM memory space */
 		uint16_t data = NVM_MEMORY[nvm_address++];
