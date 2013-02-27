@@ -256,7 +256,7 @@ static void get_num_files_on_sd(void)
 	FILINFO fno;
 	DIR dir;
 	char *pc_fn;
-	char *path = "0:";
+	const char *path = "0:";
 #if _USE_LFN
 	char c_lfn[_MAX_LFN + 1];
 	fno.lfname = c_lfn;
@@ -301,7 +301,7 @@ static void display_sd_info(void)
 	uint8_t card_check;
 	uint8_t sd_card_type;
 	uint32_t sd_card_size;
-	uint8_t size[10];
+	char size[10];
 
 	// Is SD card present?
 	if (gpio_pin_is_low(SD_MMC_0_CD_GPIO) == false)
@@ -391,10 +391,10 @@ static void display_sd_files(void)
 	FRESULT res;
 	FILINFO fno;
 	DIR dir;
-	int32_t line;
-	int32_t pos;
+	uint32_t line;
+	uint32_t pos;
 	char *pc_fn;
-	char *path = "0:";
+	const char *path = "0:";
 #if _USE_LFN
 	char c_lfn[_MAX_LFN + 1];
 	fno.lfname = c_lfn;
@@ -473,6 +473,20 @@ static void ssd1306_draw_graph(uint8_t col, uint8_t page, uint8_t width, uint8_t
 	}
 }
 
+/**
+ * \brief Clear one character at the cursor current position on the OLED 
+ * screen.
+ */
+static void ssd1306_clear_char(void)
+{
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+	ssd1306_write_data(0x00);
+}
+
 #define BUFFER_SIZE 128
 
 int main(void)
@@ -480,8 +494,9 @@ int main(void)
 	uint8_t i;
 	uint8_t temperature[BUFFER_SIZE];
 	uint8_t light[BUFFER_SIZE];
-	uint8_t value_disp[5];
+	char value_disp[5];
 	uint32_t adc_value;
+	uint32_t light_value;
 	double temp;
 
 	// Initialize clocks.
@@ -592,6 +607,9 @@ int main(void)
 			ssd1306_set_column_address(95);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
 			ssd1306_write_text(" ");
+			// Avoid character overlapping.
+			if (temp < 10)
+				ssd1306_clear_char();		
 			ssd1306_write_text(value_disp);
 			// Display degree symbol.
 			ssd1306_write_data(0x06);
@@ -603,12 +621,19 @@ int main(void)
 		}
 		else if (app_mode == 1)
 		{
-			sprintf(value_disp, "%lu", (100 - (adc_value * 100 / 4096)));
+			light_value = 100 - (adc_value * 100 / 4096);
+			sprintf(value_disp, "%lu", light_value);
 			ssd1306_set_column_address(98);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
 			ssd1306_write_text(" ");
+			// Avoid character overlapping.
+			if (light_value < 10)
+				ssd1306_clear_char();
 			ssd1306_write_text(value_disp);
 			ssd1306_write_text("%");
+			// Avoid character overlapping.
+			if (light_value < 100)
+				ssd1306_clear_char();
 
 			// Refresh graph.
 			ssd1306_draw_graph(0, 1, BUFFER_SIZE, 3, light);

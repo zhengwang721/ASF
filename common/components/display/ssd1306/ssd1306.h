@@ -431,7 +431,7 @@ void ssd1306_init(void);
 
 //! \name Write text routine
 //@{
-void ssd1306_write_text(uint8_t * string);
+void ssd1306_write_text(const char *string);
 //@}
 
 /** @} */
