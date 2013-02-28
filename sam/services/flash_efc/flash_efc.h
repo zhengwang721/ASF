@@ -59,8 +59,8 @@
 //! @{
 typedef enum flash_rc {
 	FLASH_RC_OK = 0,        //!< Operation OK
-	FLASH_RC_YES = 0,       //!< Yes
-	FLASH_RC_NO = 1,        //!< No
+	FLASH_RC_YES = 1,       //!< Yes
+	FLASH_RC_NO = 0,        //!< No
 	FLASH_RC_ERROR = 0x10,  //!< General error
 	FLASH_RC_INVALID,       //!< Invalid argument input
 	FLASH_RC_NOT_SUPPORT = 0xFFFFFFFF    //!< Operation is not supported

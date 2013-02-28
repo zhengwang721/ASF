@@ -84,6 +84,13 @@ extern "C" {
 #define SCR_SLEEPDEEP   (0x1 <<  2)
 
 /**
+ * Clocks restored callback function type.
+ * Registered by routine pmc_wait_wakeup_clocks_restore()
+ * Callback called when all clocks are restored.
+ */
+typedef void (*pmc_callback_wakeup_clocks_restored_t) (void);
+
+/**
  * Enter sleep mode
  * \param sleep_mode Sleep mode to enter
  */
@@ -96,6 +103,13 @@ void pmc_sleep(int sleep_mode);
  *  ISR should not be served, otherwise there may be timing or clock issue.)
  */
 bool pmc_is_wakeup_clocks_restored(void);
+
+/**
+ * 
+ * \return true if start waiting
+ */
+void pmc_wait_wakeup_clocks_restore(
+		pmc_callback_wakeup_clocks_restored_t callback);
 
 #endif
 
