@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -103,7 +103,7 @@
 #define PIN_TEST_ID			ID_PIOA
 
 /* PIO input/ouput mapping */
-#define PIOA_INPUT			0x200802              
+#define PIOA_INPUT			0x200802
 #define PIOB_INPUT			0xd8
 #define PIOC_INPUT			0x03600
 #define PIOA_OUTPUT			0xffbff7fb
