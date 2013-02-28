@@ -63,6 +63,7 @@ static void _i2c_master_read(struct i2c_master_module *const module)
 	}
 
 	/* Read byte from slave and put in buffer */
+	_i2c_master_wait_for_sync(module);
 	module->buffer[buffer_index] = i2c_module->DATA.reg;
 }
 
@@ -95,6 +96,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 			module->buffer_remaining--;
 
 	/* Write byte from buffer to slave. */
+	_i2c_master_wait_for_sync(module);
 	i2c_module->DATA.reg = module->buffer[buffer_index];
 }
 
@@ -122,12 +124,9 @@ static void _i2c_master_async_address_response(
 			module->status = STATUS_ERR_PACKET_COLLISION;
 		}
 	} else if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK) {
-		/* Slave busy. Issue ack and stop command. */
-		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT |
-				SERCOM_I2CM_CTRLB_CMD(3);
-
 		/* Return bad address value. */
 		module->status = STATUS_ERR_BAD_ADDRESS;
+		module->buffer_remaining = 0;
 	}
 
 	module->buffer_length = module->buffer_remaining;
@@ -432,6 +431,7 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 
 		if (module->send_stop) {
 			/* Send nack and stop command. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
 		}
 
@@ -455,7 +455,8 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 		module->buffer_length = 0;
 
 		/* Send nack and stop command unless arbitration is lost. */
-		if (module->status != STATUS_ERR_PACKET_COLLISION) {
+		if (module->status != STATUS_ERR_PACKET_COLLISION && module->send_stop) {
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(3);
 		}
 

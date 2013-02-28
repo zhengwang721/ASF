@@ -403,7 +403,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet);
 
-enum status_code i2c_master_send_stop_condition(struct i2c_master_module *const module);
+void i2c_master_send_stop(struct i2c_master_module *const module);
 
 /** @} */
 /** @} */

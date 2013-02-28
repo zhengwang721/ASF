@@ -536,11 +536,9 @@ static enum status_code _i2c_master_write_packet(
 			/* Check for NACK from slave. */
 			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 			{
-				if(tmp_data_length) {
 					/* Return bad data value. */
 					tmp_status = STATUS_ERR_OVERFLOW;
-					break;
-				}
+					break;				
 			}
 		}
 
@@ -604,18 +602,20 @@ enum status_code i2c_master_write_packet_wait(
  * \note This will stall the device from any other operation. For interrupt-driven
  * operation, see \ref i2c_master_read_packet_job.
  *
- * \param[in,out]     module  Pointer to device instance struct.
- * \param[in,out]     packet    Pointer to I2C packet to transfer.
- * \return          Status describing progress of reading packet.
- * \retval STATUS_OK If packet was read.
- * \retval STATUS_BUSY If master module is busy.
- * \retval STATUS_ERR_DENIED If error on bus.
+ * \param[in,out]     module    Pointer to device instance struct
+ * \param[in,out]     packet    Pointer to I2C packet to transfer
+ *
+ * \return          Status describing progress of reading packet
+ * \retval STATUS_OK                   If packet was read.
+ * \retval STATUS_BUSY                 If master module is busy.
+ * \retval STATUS_ERR_DENIED           If error on bus.
  * \retval STATUS_ERR_PACKET_COLLISION If arbitration is lost.
- * \retval STATUS_ERR_BAD_ADDRESS If slave is busy, or no slave acknowledged the
- *                                address.
- * \retval STATUS_ERR_TIMEOUT If timeout occurred.
- * \retval STATUS_ERR_OVERFLOW If slave did not acknowledge last sent data,
- *                             indicating that slave do not want more data.
+ * \retval STATUS_ERR_BAD_ADDRESS      If slave is busy, or no slave
+ *                                     acknowledged the address
+ * \retval STATUS_ERR_TIMEOUT          If timeout occurred.
+ * \retval STATUS_ERR_OVERFLOW         If slave did not acknowledge last sent
+ *                                     data, indicating that slave do not want
+ *                                     more data.
  */
 enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
@@ -636,4 +636,25 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 	module->send_stop = false;
 
 	return _i2c_master_write_packet(module, packet);
+}
+
+/**
+ * \brief Sends stop condition on bus
+ *
+ * Sends stop condition on bus.
+ *
+ * \param[in] module  Pointer to the software instance struct
+ */
+void i2c_master_send_stop(struct i2c_master_module *const module) {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+
+	/* Send stop command */
+	_i2c_master_wait_for_sync(module);
+	i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+	
 }
