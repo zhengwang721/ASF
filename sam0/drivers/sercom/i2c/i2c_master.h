@@ -64,7 +64,7 @@ extern "C" {
  * \defgroup asfdoc_sam0_i2c_master_group I2C Master Basic
  *
  * This is the API overview for the basic use of I2C master. For more
- * advance use with the asynchronous driver, see \subpage asfdoc_sam0_i2c_master_group_async.
+ * advance use with the interrupt-driven driver, see \subpage asfdoc_sam0_i2c_master_interrupt_group.
  *
  * \section asfdoc_sam0_i2c_master_api_overview I2C Master API Overview
  * @{
