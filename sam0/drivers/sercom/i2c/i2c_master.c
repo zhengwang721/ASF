@@ -100,7 +100,7 @@ static enum status_code _i2c_master_set_config(
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
 	/* Save timeout on unknown bus state in device instance. */
-	module->unkown_bus_state_timeout = config->unkown_bus_state_timeout;
+	module->unknown_bus_state_timeout = config->unknown_bus_state_timeout;
 
 	/* Save timeout on buffer write. */
 	module->buffer_timeout = config->buffer_timeout;
@@ -373,10 +373,13 @@ static enum status_code _i2c_master_read(
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 			}
 			/* Save data to buffer. */
+			_i2c_master_wait_for_sync(module);
 			packet->data[counter++] = i2c_module->DATA.reg;
 
 			/* Wait for response. */
-			tmp_status = _i2c_master_wait_for_bus(module);
+			if (tmp_data_length != 0) {
+				tmp_status = _i2c_master_wait_for_bus(module);
+			}
 
 			/* Check for error. */
 			if (tmp_status != STATUS_OK) {
@@ -386,6 +389,7 @@ static enum status_code _i2c_master_read(
 
 		if (module->send_stop) {
 			/* Send stop command unless arbitration is lost. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		} 
 	}
@@ -434,7 +438,7 @@ enum status_code i2c_master_read_packet_wait(
 }
 
 /**
- * \brief Read data packet from slave followed without sending a stop condition when done.
+ * \brief Read data packet from slave without sending a stop condition when done.
  *
  * Reads a data packet from the specified slave address on the I2C bus.
  *
@@ -518,6 +522,7 @@ static enum status_code _i2c_master_write_packet(
 			}
 
 			/* Write byte to slave. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->DATA.reg = packet->data[buffer_counter++];
 
 			/* Wait for response. */
@@ -531,7 +536,6 @@ static enum status_code _i2c_master_write_packet(
 			/* Check for NACK from slave. */
 			if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 			{
-				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 				if(tmp_data_length) {
 					/* Return bad data value. */
 					tmp_status = STATUS_ERR_OVERFLOW;
@@ -541,7 +545,8 @@ static enum status_code _i2c_master_write_packet(
 		}
 
 		if (module->send_stop) {
-			/* Stop command. */
+			/* Stop command */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
 	}
