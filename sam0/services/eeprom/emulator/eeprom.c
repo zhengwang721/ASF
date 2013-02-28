@@ -428,7 +428,7 @@ static void _eeprom_emulator_create_master_page(void)
 	master_page.minor_version = EEPROM_MINOR_VERSION;
 	master_page.revision      = EEPROM_REVISION;
 
-	nvm_erase_row( EEPROM_PHYSICAL_ROW_NUMBER(EEPROM_MASTER_PAGE_NUMBER) );
+	nvm_erase_row(EEPROM_PHYSICAL_ROW_NUMBER(EEPROM_MASTER_PAGE_NUMBER));
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
 	 * flushed in the future if needed due to a low power condition */
