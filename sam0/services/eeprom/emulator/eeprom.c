@@ -519,6 +519,8 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
  *
  * \retval STATUS_OK              EEPROM emulation service was successfully
  *                                initialized
+ * \retval STATUS_ERR_NO_MEMORY   No EEPROM section has been allocated in the
+ *                                device
  * \retval STATUS_ERR_BAD_FORMAT  Emulated EEPROM memory is corrupt or not
  *                                formatted
  * \retval STATUS_ERR_IO          EEPROM data is incompatible with this version

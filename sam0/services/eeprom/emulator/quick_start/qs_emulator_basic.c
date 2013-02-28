@@ -52,10 +52,19 @@ int main(void)
 
 	/* Setup EEPROM emulator service*/
 //! [init_eeprom_emulator]
-	if (eeprom_emulator_init() != STATUS_OK) {
+	enum status_code error_code;
+
+	error_code = eeprom_emulator_init();
+
+	if (error_code == STATUS_ERR_NO_MEMORY) {
+		/* No EEPROM section has been set in the device's fuses */
+		for (;;);
+	}
+	else if (error_code != STATUS_OK) {
 		eeprom_emulator_erase_memory();
 		eeprom_emulator_init();
 	}
+
 //! [init_eeprom_emulator]
 
 	/* Write data to page 0 */

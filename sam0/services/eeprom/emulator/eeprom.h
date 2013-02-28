@@ -65,7 +65,10 @@
  *
  * \section asfdoc_samd20_eeprom_prerequisites Prerequisites
  *
- * There are no prerequisites for this module.
+ * The SAMD20 device fuses must be configured via an external programmer or
+ * debugger, so that an EEPROM section is allocated in the main NVM flash
+ * memory contents. If a NVM section is not allocated for the EEPROM emulator,
+ * the module will fail to initialize.
  *
  *
  * \section asfdoc_samd20_eeprom_module_overview Module Overview
