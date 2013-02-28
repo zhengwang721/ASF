@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 /** USART Interface */
 #define CONF_TEST_USART      CONSOLE_UART
 /** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
+#define CONF_TEST_BAUDRATE   (115200UL)
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 

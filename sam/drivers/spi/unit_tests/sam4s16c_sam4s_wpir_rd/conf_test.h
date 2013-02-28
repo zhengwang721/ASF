@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,19 +49,19 @@
 /** unit test SPI ID */
 #define CONF_TEST_SPI_ID      ID_SPI
 /** unit test SPI NPCS */
-#define CONF_TEST_SPI_NPCS    1
+#define CONF_TEST_SPI_NPCS    (1UL)
 /** unit test SPI handler in vector table */
 #define CONF_TEST_SPI_HANDLER SPI_Handler
 
 /** USART Interface  : Console UART */
 #define CONF_TEST_USART      CONSOLE_UART
 /** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
+#define CONF_TEST_BAUDRATE   (115200UL)
 /** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH 0
+#define CONF_TEST_CHARLENGTH (0)
 /** Parity setting   : No parity check */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 /** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART */
-#define CONF_TEST_STOPBITS   false
+#define CONF_TEST_STOPBITS   (false)
 
 #endif /* CONF_TEST_H_INCLUDED */

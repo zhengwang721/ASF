@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,52 +61,52 @@
 #define CONF_BOARD_SRAM
 
 /* TWI Board define */
-#define ID_BOARD_TWI		ID_TWI0
-#define BOARD_TWI		TWI0
-#define BOARD_TWI_IRQn		TWI0_IRQn
+#define ID_BOARD_TWI		    ID_TWI0
+#define BOARD_TWI		        TWI0
+#define BOARD_TWI_IRQn		  TWI0_IRQn
 
 /* Push button board define */
-#define PUSH_BUTTON_ID		PIN_PUSHBUTTON_1_ID
-#define PUSH_BUTTON_PIO		PIN_PUSHBUTTON_1_PIO
+#define PUSH_BUTTON_ID		  PIN_PUSHBUTTON_1_ID
+#define PUSH_BUTTON_PIO		  PIN_PUSHBUTTON_1_PIO
 #define PUSH_BUTTON_PIN_MSK	PIN_PUSHBUTTON_1_MASK
-#define PUSH_BUTTON_ATTR	PIN_PUSHBUTTON_1_ATTR
+#define PUSH_BUTTON_ATTR	  PIN_PUSHBUTTON_1_ATTR
 
 /* SRAM board define */
-#define SRAM_BASE			(0x60000000)//SRAM adress
-#define SRAM_CS				0
-#define CAP_DEST			(SRAM_BASE)
+#define SRAM_BASE			      (0x60000000UL) // SRAM adress
+#define SRAM_CS				      (0UL)
+#define CAP_DEST			      (SRAM_BASE)
 
 /* LCD board define */
-#define ILI9325_LCD_CS		2//Chip select number
-#define IMAGE_WIDTH			320
-#define IMAGE_HEIGHT		240
+#define ILI9325_LCD_CS		  (2UL) // Chip select number
+#define IMAGE_WIDTH			    (320UL)
+#define IMAGE_HEIGHT		    (240UL)
 
 /* Image sensor board define */
 //image sensor Power pin
-#define OV_POWER_PIO		OV_SW_OVT_PIO
-#define OV_POWER_MASK		OV_SW_OVT_MASK
+#define OV_POWER_PIO		    OV_SW_OVT_PIO
+#define OV_POWER_MASK		    OV_SW_OVT_MASK
 //image sensor VSYNC pin
-#define OV7740_VSYNC_PIO	OV_VSYNC_PIO
-#define OV7740_VSYNC_ID		OV_VSYNC_ID
-#define OV7740_VSYNC_MASK	OV_VSYNC_MASK
-#define OV7740_VSYNC_TYPE	OV_VSYNC_TYPE
+#define OV7740_VSYNC_PIO	  OV_VSYNC_PIO
+#define OV7740_VSYNC_ID		  OV_VSYNC_ID
+#define OV7740_VSYNC_MASK	  OV_VSYNC_MASK
+#define OV7740_VSYNC_TYPE	  OV_VSYNC_TYPE
 //image sensor data pin
 #define OV7740_DATA_BUS_PIO	OV_DATA_BUS_PIO
 #define OV7740_DATA_BUS_ID	OV_DATA_BUS_ID
-//define pio capture handler
+//#define pio capture handler
 //#define pio_capture_handler     PIOA_Handler
 
 /* pin test */
-#define PIN_TEST_GPIO		PIO_PA5_IDX
-#define PIN_TEST_FLAGS		(PIO_OUTPUT_1 | PIO_DEFAULT)
-#define PIN_TEST_ID			ID_PIOA
+#define PIN_TEST_GPIO		    PIO_PA5_IDX
+#define PIN_TEST_FLAGS		  (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define PIN_TEST_ID			    ID_PIOA
 
 /* PIO input/ouput mapping */
-#define PIOA_INPUT			0x200802              
-#define PIOB_INPUT			0xd8
-#define PIOC_INPUT			0x13200
-#define PIOA_OUTPUT			0xffbff7fb
-#define PIOB_OUTPUT			0xffffff27
-#define PIOC_OUTPUT			0xfffecdff
+#define PIOA_INPUT			    (0x200802UL)
+#define PIOB_INPUT			    (0xd8UL)
+#define PIOC_INPUT			    (0x13200UL)
+#define PIOA_OUTPUT			    (0xffbff7fbUL)
+#define PIOB_OUTPUT			    (0xffffff27UL)
+#define PIOC_OUTPUT			    (0xfffecdffUL)
 
 #endif /* CONF_BOARD_H_INCLUDED */

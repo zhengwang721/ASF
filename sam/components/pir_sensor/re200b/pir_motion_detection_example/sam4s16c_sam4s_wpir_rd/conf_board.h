@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -53,7 +55,7 @@
 #define CONF_BOARD_UART_CONSOLE
 
 /* LCD board define */
-#define ILI9325_LCD_CS  2   //Chip select number
+#define ILI9325_LCD_CS  (2UL)   // Chip select number
 
 
 #endif /* CONF_BOARD_H_INCLUDED */

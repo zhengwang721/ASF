@@ -1,20 +1,27 @@
-<asf xmlversion="1.0">
-	<project caption="single snapshot demo for SAM4S_WPIR_RD" id="sam.applications.single_snapshot.sam4s16c_sam4s_wpir_rd">
-		<info type="description" value="summary">
-		In this demonstration microcontroller stay in backup mode. When users press push-button a picture will be taken and displayed
-		on LCD before microcontroller come back in backup mode.
-		</info>
+﻿<asf xmlversion="1.0">
+	<project id="sam.applications.single_snapshot.sam4s16c_sam4s_wpir_rd" caption="Single snapshot demo for SAM4S-WPIR-RD">
+		<!-- Files -->
 		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_ili9325.h"/>
 		<build type="header-file" value="conf_aat31xx.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
-		<require idref="sam.applications.single_snapshot"/>
+
+		<!-- Device support -->
+		<device-support value="atsam4s16c"/>
+
+		<!-- Required modules -->
 		<require idref="board.sam4s_wpir_rd"/>
+		<require idref="sam.applications.single_snapshot"/>
+
+		<!-- Generator options -->
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 	</project>
 </asf>

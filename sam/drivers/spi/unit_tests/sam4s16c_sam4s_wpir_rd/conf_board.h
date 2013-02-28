@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Usart Hw ID used by the console (UART0). */
+/** Uart ID used by the console (UART0). */
 #define CONSOLE_UART_ID          ID_UART0
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@ void ui_wakeup(void)
 
 void ui_loop_back_state(bool b_started)
 {
-  
+
 }
 
 void ui_process(uint16_t framenumber)

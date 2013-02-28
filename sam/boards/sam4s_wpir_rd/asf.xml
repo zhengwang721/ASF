@@ -1,9 +1,9 @@
-<asf xmlversion="1.0">
+﻿<asf xmlversion="1.0">
 	<select-by-config id="config.board.sam4s_wpir_rd.led" name="config.board.sam4s_wpir_rd.led" caption="SAM4S-WPIR-RD LED support" default="yes">
 		<module type="meta" id="config.board.sam4s_wpir_rd.led#no" caption="SAM4S-WPIR-RD LED support disabled"/>
 
 		<module type="meta" id="config.board.sam4s_wpir_rd.led#yes" caption="SAM4S-WPIR-RD LED support enabled">
-			<!-- Source code -->
+			<!-- Files -->
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="led.h"/>
 
@@ -17,7 +17,7 @@
 		<module type="meta" id="config.board.sam4s_wpir_rd.init#no" caption="SAM4S-WPIR-RD initialization support disabled"/>
 
 		<module type="meta" id="config.board.sam4s_wpir_rd.init#yes" caption="SAM4S-WPIR-RD initialization support enabled">
-			<!-- Source code -->
+			<!-- Files -->
 			<build type="c-source" value="init.c"/>
 
 			<!-- Required modules -->
@@ -34,7 +34,7 @@
 		<build type="define" name="__SAM4S16C__" value=""/>
 		<device-support value="atsam4s16c"/>
 
-		<!-- Source code -->
+		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
 		<build type="header-file" value="sam4s_wpir_rd.h"/>

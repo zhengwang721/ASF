@@ -3,7 +3,7 @@
  *
  * \brief Unit test configuration.
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,15 +47,15 @@
 /** USART Interface */
 #define CONF_TEST_USART      CONSOLE_UART
 /** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
+#define CONF_TEST_BAUDRATE   (115200UL)
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
 /* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE/4 - IFLASH_PAGE_SIZE)
+#define LAST_PAGE_ADDRESS    (IFLASH_ADDR + IFLASH_SIZE/4 - IFLASH_PAGE_SIZE)
 
 /* default page count number */
-#define DEFAULT_PAGE_COUNT (IFLASH_SIZE/IFLASH_PAGE_SIZE)
+#define DEFAULT_PAGE_COUNT   (IFLASH_SIZE/IFLASH_PAGE_SIZE)
 
 /* Default region count number */
 #define DEFAULT_REGION_COUNT 1

@@ -1,17 +1,24 @@
-<asf xmlversion="1.0">
-	<project caption="Common API for Clocks Control / Example 1 for SAM4S_WPIR_RD" id="common.services.basic.clock.example1.sam4s_wpir_rd">
-		<info type="description" value="summary">
-		Initialize the system clock and blink a LED at a constant 1Hz frequency.
-		</info>
+﻿<asf xmlversion="1.0">
+	<project id="common.services.basic.clock.example1.sam4s_wpir_rd" caption="Common API for Clocks Control / Example 1 for SAM4S-WPIR-RD">
+		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<require idref="common.services.basic.clock.example1"/>
+
+		<!-- Device support -->
+		<device-support value="atsam4s16c"/>
+
+		<!-- Required modules -->
 		<require idref="board.sam4s_wpir_rd"/>
+		<require idref="common.services.basic.clock.example1"/>
+
+		<!-- Generator options -->
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
-		<device-support value="atsam4s16c"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 	</project>
 </asf>

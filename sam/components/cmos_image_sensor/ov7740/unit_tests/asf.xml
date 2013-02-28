@@ -1,12 +1,20 @@
-<asf xmlversion="1.0">
+﻿<asf xmlversion="1.0">
 	<module type="application" id="sam.components.cmos_image_sensor.ov7740.unit_tests" caption="Unit Tests for the OV7740 driver">
+		<!-- Summary description -->
 		<info type="description" value="summary">
 			Unit test application for the OV7740 driver.
 		</info>
+
+		<!-- Files -->
+		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
-		<build type="include-path" value="."/>
-		<device-support value="sam"/>
+
+		<!-- Device support -->
+		<device-support value="sam3s"/>
+		<device-support value="sam4s"/>
+
+		<!-- Required modules -->
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.twi"/>
