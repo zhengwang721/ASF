@@ -1,5 +1,5 @@
 ﻿<asf xmlversion="1.0">
-	<project caption="ChipID example for SAM4S-WPIR-RD" id="sam.drivers.chipid.example.sam4s_wpir_rd">
+	<project caption="ChipID example for SAM4S-WPIR-RD" id="sam.drivers.chipid.example.sam4s16c_sam4s_wpir_rd">
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

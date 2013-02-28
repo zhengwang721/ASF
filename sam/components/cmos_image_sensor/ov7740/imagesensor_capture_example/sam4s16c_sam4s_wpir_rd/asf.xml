@@ -1,5 +1,5 @@
 ﻿<asf xmlversion="1.0">
-	<project id="sam.components.cmos_image_sensor.ov7740.imagesensor_capture_example.sam4s_wpir_rd" caption="OV7740 CMOS image sensor example for SAM4S-WPIR-RD">
+	<project id="sam.components.cmos_image_sensor.ov7740.imagesensor_capture_example.sam4s16c_sam4s_wpir_rd" caption="OV7740 CMOS image sensor example for SAM4S-WPIR-RD">
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

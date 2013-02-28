@@ -1,8 +1,9 @@
-<asf xmlversion="1.0">
-	<project caption="CMSIS Example for SAM4S-WPIR-RD" id="sam.utils.cmsis.cm4_cmsis_example.sam4s_wpir_rd">
+﻿<asf xmlversion="1.0">
+	<project id="sam.utils.cmsis.cm4_cmsis_example.sam4s16c_sam4s_wpir_rd" caption="CMSIS Example for SAM4S-WPIR-RD">
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 
 		<!-- Device support -->
 		<device-support value="atsam4s16c"/>

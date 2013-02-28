@@ -1,5 +1,5 @@
 ﻿<asf xmlversion="1.0">
-	<project id="common.services.usb.class.vendor.device.example.sam4s_wpir_rd" caption="USB Device Vendor Class Example for SAM4S-WPIR-RD">
+	<project id="common.services.usb.class.vendor.device.example.sam4s16c_sam4s_wpir_rd" caption="USB Device Vendor Class Example for SAM4S-WPIR-RD">
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

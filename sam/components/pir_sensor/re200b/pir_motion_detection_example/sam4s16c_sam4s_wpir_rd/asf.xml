@@ -1,5 +1,5 @@
 ﻿<asf xmlversion="1.0">
-	<project id="sam.components.pir_sensor.re200b.pir_motion_detection_example.sam4s_wpir_rd" caption="RE200B PIR sensor motion detection example for SAM4S-WPIR-RD">
+	<project id="sam.components.pir_sensor.re200b.pir_motion_detection_example.sam4s16c_sam4s_wpir_rd" caption="RE200B PIR sensor motion detection example for SAM4S-WPIR-RD">
 		<!-- Files -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

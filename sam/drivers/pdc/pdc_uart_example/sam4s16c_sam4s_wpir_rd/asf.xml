@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Peripheral DMA Controller example for SAM4S-WPIR-RD" id="sam.drivers.pdc.pdc_uart_example.sam4s_wpir_rd">
+	<project caption="Peripheral DMA Controller example for SAM4S-WPIR-RD" id="sam.drivers.pdc.pdc_uart_example.sam4s16c_sam4s_wpir_rd">
 		<!-- Summary description -->
 		<info type="description" value="summary">
 			This example shows how to configure PDC for receiving data from UART.
