@@ -60,6 +60,11 @@ static void _i2c_master_read(struct i2c_master_module *const module)
 	if (!module->buffer_remaining) {
 		/* Send nack */
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+		if (module->send_stop) {
+			/* Send stop condition */
+			_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		}
 	}
 
 	/* Read byte from slave and put in buffer */
@@ -81,14 +86,16 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 	/* Check for ack from slave. */
 	if (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
 	{
-		/* Not acknowledged */
-		if (module->buffer_remaining) {
-			/* Set status */
-			module->status = STATUS_ERR_OVERFLOW;
-			/* End transaction */
-			module->buffer_remaining = 0;
-			return;
+		/* Set status */
+		module->status = STATUS_ERR_OVERFLOW;
+		/* End transaction */
+		module->buffer_remaining = 0;
+		if (module->send_stop) {
+			/* Send stop condition */
+			_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
+		return;
 	}
 
 	/* Find index to get next byte in buffer. */
@@ -127,6 +134,11 @@ static void _i2c_master_async_address_response(
 		/* Return bad address value. */
 		module->status = STATUS_ERR_BAD_ADDRESS;
 		module->buffer_remaining = 0;
+		if (module->send_stop) {
+			/* Send stop condition */
+			_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		}
 	}
 
 	module->buffer_length = module->buffer_remaining;
