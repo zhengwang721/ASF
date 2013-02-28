@@ -253,7 +253,7 @@ enum status_code i2c_master_read_packet_job(
 		return STATUS_BUSY;
 	}
 	/* Make sure we send STOP */
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	/* Start reading */
 	return _i2c_master_read_packet(module, packet);
@@ -286,7 +286,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
 		return STATUS_BUSY;
 	}
 	/* Make sure we don't send STOP */
-	module->repeated_start = true;
+	module->send_stop = false;
 
 	/* Start reading */
 	return _i2c_master_read_packet(module, packet);
@@ -348,17 +348,17 @@ enum status_code i2c_master_write_packet_job(
 	}
 
 	/* Make sure we send STOP at end*/
-	module->repeated_start = false;
+	module->send_stop = true;
 
 	/* Start write operation */
 	return _i2c_master_write_packet(module, packet);
 }
 
 /**
- * \brief Iniatiates a write packet operation followed by a repeated start
+ * \brief Iniatiates a write packet operation without sending a stop condition when done
  *
  * Writes a data packet to the specified slave address on the I2C bus. This
- * is the non-blocking equivalent of \ref i2c_master_write_packet.
+ * is the non-blocking equivalent of \ref i2c_master_write_packet_no_stop.
  *
  * \param[in,out]     module  Pointer to device instance struct.
  * \param[in,out]     packet    Pointer to I2C packet to transfer.
@@ -367,7 +367,7 @@ enum status_code i2c_master_write_packet_job(
  * \retval STATUS_OK If writing was started successfully.
  * \retval STATUS_BUSY If module is currently busy with transfer operation.
  */
-enum status_code i2c_master_write_packet_job_repeated_start(
+enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_packet *const packet)
 {
@@ -381,8 +381,8 @@ enum status_code i2c_master_write_packet_job_repeated_start(
 		return STATUS_BUSY;
 	}
 
-	/* Make sure we send repeated start at end*/
-	module->repeated_start = true;
+	/* Do not send stop condition when done */
+	module->send_stop = false;
 
 	/* Start write operation */
 	return _i2c_master_write_packet(module, packet);
@@ -417,7 +417,7 @@ void _i2c_master_interrupt_handler(uint8_t instance)
 
 		/* No nack from slave, no recent stop condition has been issued. */
 		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)) {
-			if (module->repeated_start) {
+			if (module->no_stop) {
 				/* Send nack and repeated start*/
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT | SERCOM_I2CM_CTRLB_CMD(1);
 			} else {
