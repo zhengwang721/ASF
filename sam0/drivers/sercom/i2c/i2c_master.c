@@ -371,13 +371,11 @@ static enum status_code _i2c_master_read(
 			if (tmp_data_length == 0) {
 				/* Set action to NACK */
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
-			}
-			/* Save data to buffer. */
-			_i2c_master_wait_for_sync(module);
-			packet->data[counter++] = i2c_module->DATA.reg;
-
-			/* Wait for response. */
-			if (tmp_data_length != 0) {
+			} else {
+				/* Save data to buffer. */
+				_i2c_master_wait_for_sync(module);
+				packet->data[counter++] = i2c_module->DATA.reg;
+				/* Wait for response. */
 				tmp_status = _i2c_master_wait_for_bus(module);
 			}
 
@@ -391,7 +389,11 @@ static enum status_code _i2c_master_read(
 			/* Send stop command unless arbitration is lost. */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-		} 
+		}
+
+		/* Save last data to buffer. */
+		_i2c_master_wait_for_sync(module);
+		packet->data[counter] = i2c_module->DATA.reg;
 	}
 
 	return tmp_status;
